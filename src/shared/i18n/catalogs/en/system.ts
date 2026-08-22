@@ -328,7 +328,7 @@ export const system: Catalog = {
   "status.hero.subLive": "Public uptime monitoring is on the way.",
   "status.live.title": "Live status reporting is coming soon",
   "status.live.description":
-    "We're setting up public uptime monitoring, service health and incident history. Check back soon.",
+    "We're setting up public uptime monitoring, service health and incident history. Email alerts for incidents are part of the same work. Check back soon.",
   "status.services.sectionEye": "Services",
   "status.serviceStatus.operational": "Operational",
   "status.serviceStatus.degraded": "Degraded",

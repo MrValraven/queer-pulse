@@ -55,4 +55,11 @@
 /* Shorthand alias for components that still reference the old name */
 :root {
   --card-radius: var(--radius-card);
+
+  /* ── Touch targets ──
+     WCAG 2.2 Target Size (Minimum) asks for 24px; Apple HIG and Material both
+     ask for 44px, which is the floor this app uses. Small round close and
+     remove buttons are drawn at 26 to 34px on purpose, so the fix is to grow
+     the HIT AREA, not the ink: see the `tap-target` helper in base.css. */
+  --tap-min: 44px;
 }

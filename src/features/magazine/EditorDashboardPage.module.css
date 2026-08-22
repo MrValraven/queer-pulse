@@ -62,7 +62,7 @@
   font-size: 16px;
   font-weight: 600;
   color: var(--text-strong);
-  border: 1.5px solid rgba(45, 27, 61, 0.18);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
   background: var(--paper);
   border-radius: 999px;
   padding: 7px 12px;
@@ -92,7 +92,7 @@
 .needsCard {
   text-align: left;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-left: 3px solid var(--ink-40);
   border-radius: 12px;
   padding: 14px 16px;
@@ -170,7 +170,7 @@
 .stat {
   padding: 16px 20px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
 }
 .stat b {
@@ -211,7 +211,7 @@
   font-size: 16px;
   color: var(--ink);
   background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 11px 40px 11px 40px;
   transition: border-color 0.2s;
@@ -237,7 +237,7 @@
   width: 22px;
   height: 22px;
   border: none;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -251,7 +251,7 @@
   font-weight: 500;
   color: var(--ink);
   background: var(--paper);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 9px 14px;
   cursor: pointer;
@@ -262,7 +262,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1.5px solid rgba(45, 27, 61, 0.18);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
   border-radius: 999px;
   padding: 9px 15px;
   cursor: pointer;
@@ -292,8 +292,8 @@
 }
 .kbdHint kbd {
   font-family: var(--sans);
-  background: rgba(45, 27, 61, 0.07);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  background: rgba(var(--plum-rgb), 0.07);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 5px;
   padding: 1px 6px;
   font-size: 11px;
@@ -341,7 +341,7 @@
 /* ── Pieces table ── */
 .pieces {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   overflow: hidden;
 }
@@ -354,7 +354,7 @@
   align-items: start;
 }
 .pieceHead {
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -363,12 +363,12 @@
   padding: var(--gap-xs) var(--gap-grid);
 }
 .pieceRow {
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: 13.5px;
   transition: background 0.15s;
 }
 .pieceRow:hover {
-  background: rgba(45, 27, 61, 0.02);
+  background: rgba(var(--plum-rgb), 0.02);
 }
 .pieceRow.kbd {
   background: rgba(var(--accent-rgb), 0.06);
@@ -410,7 +410,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 7px;
   padding: 4px 8px;
   cursor: pointer;
@@ -439,7 +439,7 @@
   font-size: 11.5px;
   font-weight: 500;
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.045);
+  background: rgba(var(--plum-rgb), 0.045);
   border-radius: 7px;
   padding: 4px 8px;
 }
@@ -490,7 +490,7 @@
 }
 .pieceStatus.neutral {
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 .pieceStatus.drafting {
   color: var(--accent-ink);
@@ -498,22 +498,22 @@
 }
 .pieceStatus.review {
   color: var(--text-strong);
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
 }
 .pieceStatus.editing {
   color: var(--accent-ink);
   background: rgba(var(--accent-rgb), 0.14);
 }
 .pieceStatus.check {
-  color: #7a5b1e;
-  background: rgba(180, 140, 50, 0.16);
+  color: var(--amber-ink);
+  background: rgba(var(--amber-rgb), 0.16);
 }
 .pieceStatus.sens {
   color: var(--jade);
   background: rgba(var(--jade-rgb), 0.12);
 }
 .pieceStatus.ready {
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   background: var(--jade);
 }
 .lateFlag {
@@ -521,7 +521,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   background: var(--accent);
   padding: 3px 7px;
   border-radius: 5px;
@@ -595,7 +595,7 @@
   align-items: center;
 }
 .rowMore:hover {
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   color: var(--text-strong);
 }
 @media (--md) {
@@ -626,7 +626,7 @@
 .emptyMark {
   width: 40px;
   height: 40px;
-  border: 2px solid rgba(45, 27, 61, 0.16);
+  border: 2px solid rgba(var(--line-rgb), 0.16);
   border-radius: 50%;
   margin-bottom: 6px;
   position: relative;
@@ -635,7 +635,7 @@
   content: "";
   position: absolute;
   inset: 11px;
-  border: 2px solid rgba(45, 27, 61, 0.16);
+  border: 2px solid rgba(var(--line-rgb), 0.16);
   transform: rotate(45deg);
 }
 .empty b {
@@ -662,7 +662,7 @@
 }
 .deckStatusDraft {
   color: var(--ink-60);
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
 }
 .deckStatusPublished {
   color: var(--jade);
@@ -681,7 +681,7 @@
   grid-template-columns: 22px 34px 1fr auto;
   gap: 12px;
   padding: 13px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
   align-items: center;
   cursor: pointer;
   transition:
@@ -729,7 +729,7 @@
   color: var(--jade);
 }
 .pitchAv.tintPlum {
-  background: rgba(45, 27, 61, 0.1);
+  background: rgba(var(--plum-rgb), 0.1);
   color: var(--text-strong);
 }
 .pitchInfo b {
@@ -754,7 +754,7 @@
 }
 .pitchQuick button {
   background: transparent;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   color: var(--ink-60);
   font-family: var(--sans);
   font-size: 11.5px;
@@ -769,22 +769,22 @@
   border-color: var(--line-strong);
 }
 .pitchQuick button.yes:hover {
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   background: var(--jade);
   border-color: var(--jade);
 }
 .pitchQuick button.no:hover {
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   background: var(--accent);
   border-color: var(--accent);
 }
 .pitchFoot {
   padding: 12px 22px;
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   font-size: 12.5px;
   color: var(--ink-60);
   text-align: center;
-  border-top: 1px solid rgba(45, 27, 61, 0.06);
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 .pitchFoot button {
   color: var(--text-strong);
@@ -806,7 +806,7 @@
 }
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 17px 19px;
 }
@@ -844,7 +844,7 @@
 }
 .bar {
   height: 6px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -903,7 +903,7 @@
   align-items: center;
   padding: 6px 0;
   font-size: 12.5px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.05);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
 }
 .secRow:last-child {
   border-bottom: none;
@@ -920,7 +920,7 @@
   width: 8px;
   height: 8px;
   border-radius: 2px;
-  background: rgba(45, 27, 61, 0.12);
+  background: rgba(var(--plum-rgb), 0.12);
 }
 .slot.on {
   background: var(--jade);
@@ -967,7 +967,7 @@
   margin-bottom: 14px;
 }
 .mixCell {
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border-radius: 9px;
   padding: 10px 12px;
 }
@@ -988,7 +988,7 @@
   color: var(--ink-60);
 }
 .pay {
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
   padding-top: 13px;
 }
 .payHead {
@@ -1013,7 +1013,7 @@
   background: var(--accent);
 }
 .paySeg.none {
-  background: rgba(45, 27, 61, 0.14);
+  background: rgba(var(--plum-rgb), 0.14);
 }
 .payKey {
   display: flex;
@@ -1041,7 +1041,7 @@
   background: var(--accent);
 }
 .payKey i.none {
-  background: rgba(45, 27, 61, 0.14);
+  background: rgba(var(--plum-rgb), 0.14);
 }
 .payFlag {
   font-size: 12px;
@@ -1064,7 +1064,7 @@
   color: var(--ink-60);
   margin-top: 11px;
   padding-top: 11px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .contribMatch {
   font-size: 11.5px;
@@ -1085,7 +1085,7 @@
   grid-template-columns: 14px 1fr;
   gap: 9px;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.05);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
 }
 .actRow:last-child {
   border-bottom: none;
@@ -1163,9 +1163,9 @@
   position: fixed;
   z-index: 500;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
-  box-shadow: 0 18px 44px -16px rgba(45, 27, 61, 0.4);
+  box-shadow: 0 18px 44px -16px rgba(var(--plum-rgb), 0.4);
   padding: 6px;
   min-width: 210px;
   max-width: 280px;
@@ -1206,7 +1206,7 @@
   text-decoration: none;
 }
 .popItem:hover {
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
 }
 .popItem.cur {
   color: var(--accent-ink);
@@ -1222,7 +1222,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--ink-60);
   font-size: 10.5px;
   font-weight: 700;
@@ -1232,7 +1232,7 @@
   flex: none;
 }
 .popItem.handoff {
-  border-top: 1px solid rgba(45, 27, 61, 0.08);
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
   margin-top: 4px;
   padding-top: 11px;
   color: var(--text-strong);
@@ -1282,7 +1282,7 @@
   font-size: 13.5px;
   color: var(--ink);
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 10px;
   padding: 11px 13px;
   line-height: 1.5;
@@ -1324,8 +1324,8 @@
   font-weight: 700;
   font-size: 12px;
   color: var(--text-strong);
-  background: rgba(45, 27, 61, 0.07);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  background: rgba(var(--plum-rgb), 0.07);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 6px;
   padding: 4px 9px;
   text-align: center;
@@ -1418,7 +1418,7 @@
 }
 .skelCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 18px 22px;
   margin-bottom: 14px;

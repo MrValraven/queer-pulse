@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Outro } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -43,10 +44,21 @@ const FILENAME: Record<Format, string> = {
 export function DataExportPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { job, start, reset } = useExportFlow();
-  const [checked, setChecked] = useState<boolean[]>(
-    DATA_TYPES.map((d) => d.defaultChecked),
-  );
+  const { job, start, reset, isStarting } = useExportFlow();
+  const [searchParams] = useSearchParams();
+  // `?categories=messages,events` seeds the selection, so a scoped entry point
+  // (the "Download your messages" card in Settings) lands on a form that is
+  // already narrowed to what it promised.
+  const [checked, setChecked] = useState<boolean[]>(() => {
+    const requestedIds = (searchParams.get("categories") ?? "")
+      .split(",")
+      .map((id) => id.trim())
+      .filter((id) => DATA_TYPES.some((dataType) => dataType.id === id));
+    if (requestedIds.length === 0) {
+      return DATA_TYPES.map((dataType) => dataType.defaultChecked);
+    }
+    return DATA_TYPES.map((dataType) => requestedIds.includes(dataType.id));
+  });
   const [format, setFormat] = useState<Format>("JSON");
   const [openAcc, setOpenAcc] = useState<number | null>(null);
 
@@ -101,7 +113,7 @@ export function DataExportPage() {
               format={format}
               setFormat={setFormat}
               onSubmit={handleSubmit}
-              submitting={false}
+              submitting={isStarting}
             />
           ) : (
             <DataExportStatus

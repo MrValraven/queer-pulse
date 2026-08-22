@@ -62,7 +62,14 @@ export function AdminHousingCoopForm({
             onClose();
           },
           onError: (error) =>
-            showToast(describeError("Couldn't save those changes", error), "error"),
+            showToast(
+              describeError(
+                t("admin:errors.saveChanges"),
+                error,
+                t("shared:apiError.tryAgainTail"),
+              ),
+              "error",
+            ),
         },
       );
     } else {
@@ -75,7 +82,14 @@ export function AdminHousingCoopForm({
           onClose();
         },
         onError: (error) =>
-          showToast(describeError("Couldn't create that co-op", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.createCoop"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       });
     }
   }

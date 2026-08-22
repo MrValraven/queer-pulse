@@ -1,4 +1,4 @@
-import { TAX_DISCLAIMER } from "./tax.constants";
+import { TAX_DISCLAIMER_KEY } from "./tax.constants";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import styles from "./DayRateCalculatorPage.module.css";
@@ -44,7 +44,7 @@ export function DayRateResult({ base, withIva, hourly }: DayRateResultProps) {
       </div>
 
       <p className={styles.note}>{t("economy:dayRate.result.note")}</p>
-      <p className={styles.disclaimer}>{TAX_DISCLAIMER}</p>
+      <p className={styles.disclaimer}>{t(TAX_DISCLAIMER_KEY)}</p>
     </div>
   );
 }

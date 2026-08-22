@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTablistKeys } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DRAFT_TABS, type DraftCategory } from "./drafts.data";
 import styles from "./DraftsPage.module.css";
@@ -24,6 +25,12 @@ export function DraftsTabs({
   totalCount: number;
 }) {
   const { t } = useTranslation();
+  // Arrow/Home/End across the category strip, with a roving tabIndex so Tab
+  // enters and leaves it in one press (APG tablist contract).
+  const { tabProps } = useTablistKeys(DRAFT_TABS.length, (index) => {
+    const nextTab = DRAFT_TABS[index];
+    if (nextTab) onCategory(nextTab.key);
+  });
   const selectAllRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (selectAllRef.current) selectAllRef.current.indeterminate = someSelected;
@@ -36,7 +43,7 @@ export function DraftsTabs({
         role="tablist"
         aria-label={t("members:drafts.tabsAriaLabel")}
       >
-        {DRAFT_TABS.map((tab) => (
+        {DRAFT_TABS.map((tab, index) => (
           <button
             type="button"
             key={tab.key}
@@ -44,6 +51,7 @@ export function DraftsTabs({
             aria-selected={category === tab.key}
             className={`${styles.tab} ${category === tab.key ? styles.active : ""}`}
             onClick={() => onCategory(tab.key)}
+            {...tabProps(index, category === tab.key)}
           >
             {t(tab.labelKey)}{" "}
             <span className={styles.tabCount}>{counts[tab.key]}</span>

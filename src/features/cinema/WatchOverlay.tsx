@@ -47,7 +47,7 @@ export function WatchOverlay({ onDismiss }: { onDismiss: () => void }) {
             <div key={note.k} className={styles.overlayRow}>
               <span className="k">{note.k}</span>
               <span>{note.detail}</span>
-              <span className="t">{note.tc}</span>
+              {note.tc ? <span className="t">{note.tc}</span> : null}
             </div>
           ))}
         </div>

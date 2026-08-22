@@ -24,6 +24,7 @@ export const feed: Catalog = {
   "tab.gatherings": "Convívios",
   "tab.people": "Pessoas",
   "tab.posts": "Publicações",
+  "tab.listAria": "Filtrar o teu feed",
 
   // ── Cópia de vazio/erro por separador (FEED_TAB_COPY) — mantida distinta ─
   "tab.all.empty.title": "O teu feed está tranquilo",
@@ -165,6 +166,9 @@ export const feed: Catalog = {
     "Diz-nos o que está errado. As denúncias são confidenciais e revistas pela nossa equipa de segurança.",
   "moderation.reportDialog.detailPlaceholder": "Adiciona detalhes (opcional)",
   "moderation.reportDialog.submitCta": "Submeter denúncia",
+  "moderation.reportDialog.retryCta": "Tentar outra vez",
+  "moderation.reportDialog.failed":
+    "Não conseguimos enviar essa denúncia. Ainda não foi submetida. Verifica a tua ligação e tenta outra vez.",
   "moderation.sending": "A enviar…",
 
   // ── FeedSidebar ─────────────────────────────────────────────────────────

@@ -100,26 +100,37 @@ export function useCancelEvent(slug: string) {
 }
 
 /**
+ * What the member is asking for when they RSVP.
+ *
+ * `"waitlisted"` is a CLIENT-side intent, not a wire value: the request body
+ * still says `"going"` (capacity, and therefore waitlist placement, is the
+ * backend's call), but it tells `onMutate` this RSVP will NOT land in the
+ * going list — so the optimistic head-count stays put instead of flashing
+ * "41 going" on a 40-cap gathering until the refetch snaps it back.
+ */
+export type RsvpIntent = "going" | "maybe" | "waitlisted";
+
+/**
  * POST /events/:slug/rsvp — EventRsvpCard / RsvpPage.
  *
  * Optimistic: the going head-count bumps immediately (and rolls back if the
  * request fails), then `onSettled` re-syncs from the server. The attendees
  * query is keyed via `eventKeys.attendees(slug, demoMode)`, so we patch that
- * exact key.
+ * exact key. Only a `"going"` intent bumps it — see `RsvpIntent`.
  */
 export function useRsvp(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, "going" | "maybe", RsvpContext>({
-    mutationFn: async (status) => {
+  return useMutation<void, Error, RsvpIntent, RsvpContext>({
+    mutationFn: async (intent) => {
       if (demoMode) return;
-      await rsvpEvent(slug, status);
+      await rsvpEvent(slug, intent === "waitlisted" ? "going" : intent);
     },
-    onMutate: async (status) => {
+    onMutate: async (intent) => {
       const key = eventKeys.attendees(slug, demoMode);
       await queryClient.cancelQueries({ queryKey: key });
       const prev = queryClient.getQueryData<AttendeesResult>(key);
-      if (prev && status === "going") {
+      if (prev && intent === "going") {
         queryClient.setQueryData<AttendeesResult>(key, {
           ...prev,
           goingCount: prev.goingCount + 1,
@@ -127,7 +138,7 @@ export function useRsvp(slug: string) {
       }
       return { key, prev };
     },
-    onError: (_e, _status, ctx) => {
+    onError: (_e, _intent, ctx) => {
       if (ctx) queryClient.setQueryData(ctx.key, ctx.prev);
     },
     onSettled: () => {

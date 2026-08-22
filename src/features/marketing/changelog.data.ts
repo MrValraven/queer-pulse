@@ -90,6 +90,78 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "membership-cards",
+        category: "feature",
+        date: "22 Aug 2026",
+        ...entryKeys("membership-cards"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
+        id: "push-preview-privacy",
+        category: "feature",
+        date: "21 Aug 2026",
+        ...entryKeys("push-preview-privacy"),
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.settings,
+        },
+      },
+      {
+        id: "honest-success-states",
+        category: "fix",
+        date: "21 Aug 2026",
+        ...entryKeys("honest-success-states"),
+      },
+      {
+        id: "reports-really-filed",
+        category: "fix",
+        date: "21 Aug 2026",
+        ...entryKeys("reports-really-filed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safety",
+          to: routes.safety,
+        },
+      },
+      {
+        id: "message-previews-and-drafts",
+        category: "fix",
+        date: "21 Aug 2026",
+        ...entryKeys("message-previews-and-drafts"),
+        tag: {
+          labelKey: "marketing:changelog.tag.messages",
+          to: routes.messages,
+        },
+      },
+      {
+        id: "moderation-holds",
+        category: "improvement",
+        date: "21 Aug 2026",
+        ...entryKeys("moderation-holds"),
+      },
+      {
+        id: "housing-listings-stay-reviewed",
+        category: "improvement",
+        date: "21 Aug 2026",
+        ...entryKeys("housing-listings-stay-reviewed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "article-titles-render-plain",
+        category: "fix",
+        date: "21 Aug 2026",
+        ...entryKeys("article-titles-render-plain"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
         id: "communities-hub-hero-restore",
         category: "improvement",
         date: "21 Aug 2026",

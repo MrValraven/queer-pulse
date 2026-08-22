@@ -37,6 +37,47 @@
   min-height: 40px;
 }
 
+/* Icon-only. A square, quiet control for a lone react-icon: an × on a modal, a
+   kebab on a row, a remove on a chip. Deliberately keeps the 44x44 tap-target
+   floor from `.button` (WCAG 2.5.5), which the ~30x30 hand-rolled close buttons
+   scattered across the features all miss. Use through <IconButton>, which also
+   makes `aria-label` mandatory: an icon-only control with no label is
+   unannounced. */
+.icon {
+  background: none;
+  color: var(--ink-60);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  padding: 0;
+  width: 44px;
+  min-width: 44px;
+  /* Sizes the react-icons <svg>, which inherits `1em`. */
+  font-size: 18px;
+  gap: 0;
+}
+@media (hover: hover) {
+  .icon:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--ink-rgb), 0.06);
+    color: var(--ink);
+  }
+}
+/* Icon + sm: still square, still at the 44px floor on touch. Only the glyph
+   shrinks, so the target never drops below the minimum. */
+.icon.sm {
+  font-size: 16px;
+  padding: 0;
+}
+/* On a plum/dark ground the ink tokens disappear; follow ghost-dark's cream. */
+.iconDark {
+  color: rgba(var(--cream-rgb), 0.8);
+}
+@media (hover: hover) {
+  .iconDark:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--cream-rgb), 0.12);
+    color: rgba(var(--cream-rgb), 1);
+  }
+}
+
 /* Disabled — applies to <button> only (links are never disabled).
    `[aria-disabled="true"]` gets the identical treatment on purpose: a submit
    button that is merely *invalid* should stay focusable and clickable so the
@@ -59,7 +100,7 @@
      --accent is still the brand colour everywhere it isn't carrying text.
      See docs/production-readiness/contrast-audit.md §4. */
   background: var(--accent-fill);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   box-shadow: 0 8px 22px -10px rgba(var(--accent-rgb), 0.8);
 }
 @media (hover: hover) {
@@ -108,7 +149,7 @@
 .jade {
   /* --jade behind white is 3.98:1 — large text only. --jade-fill is 4.52:1. */
   background: var(--jade-fill);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   box-shadow: 0 8px 22px -10px rgba(var(--jade-rgb), 0.7);
 }
 @media (hover: hover) {
@@ -121,7 +162,7 @@
 /* Plum — irreversible, high-stakes actions (Publish) */
 .plum {
   background: var(--plum);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   box-shadow: 0 8px 22px -10px rgba(var(--plum-rgb), 0.6);
 }
 @media (hover: hover) {
@@ -135,7 +176,7 @@
 /* Danger — destructive (remove, ban) */
 .danger {
   background: var(--danger);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   box-shadow: 0 8px 22px -10px rgba(var(--danger-rgb), 0.7);
 }
 @media (hover: hover) {

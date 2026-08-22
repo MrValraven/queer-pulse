@@ -190,7 +190,8 @@ export const gatherings: Catalog = {
     "We'll email you the moment a spot opens. Leaving the waitlist is one click.",
   "event.rsvp.confirmationEmailNote": "Your place is saved. You'll find it under your gatherings.",
   "event.rsvp.cancelPolicy": "You can cancel up to 48 hours before the event.",
-  "event.rsvp.waitlistTitle": "You're <em>#{position}</em> on the waitlist.",
+  "event.rsvp.waitlistTitle": "You're on the <em>waitlist.</em>",
+  "event.rsvp.errorToast": "That didn't go through. Try again in a moment.",
   "event.rsvp.waitlistBody":
     "This gathering is full, but we'll <strong>email {email}</strong> the moment a spot opens, usually within a day or two of someone cancelling.",
   "event.rsvp.waitlistMeta": "You can leave the waitlist at any time.",
@@ -254,6 +255,8 @@ export const gatherings: Catalog = {
   "rsvp.inviteCta": "Tell a friend: copy invite link",
   "rsvp.inviteCopiedToast":
     "Invite link copied. Share it with someone who should come.",
+  "rsvp.inviteCopyFailedToast":
+    "We couldn't reach your clipboard. Copy the link from the address bar instead.",
   "rsvp.coc.title": "What to <em>expect</em>",
   "rsvp.coc.affirming.strong": "This is an affirming space.",
   "rsvp.coc.affirming.rest":
@@ -271,6 +274,8 @@ export const gatherings: Catalog = {
   "rsvp.footer.membership": "You RSVPed as a QueerPulse member.",
   "rsvp.footer.cancelCta": "Cancel RSVP",
   "rsvp.footer.cancelledToast": "Your RSVP has been cancelled.",
+  "rsvp.footer.cancelErrorToast":
+    "We couldn't cancel that just now. Try again in a moment.",
   "rsvp.footer.privacyCta": "Privacy policy",
 
   // CoHostInvitePage

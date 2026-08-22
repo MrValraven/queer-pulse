@@ -1,14 +1,7 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { FiArrowRight, FiHeart, FiPlus, FiUsers } from "react-icons/fi";
+import { FiArrowRight, FiPlus, FiUsers } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  Outro,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -19,58 +12,9 @@ import type { VolunteerCause } from "./volunteerOpportunities.types";
 import type { Cause, Commit } from "./api/volunteering.api";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
+import { CAUSE_FILTERS } from "./volunteerPage.data";
+import { VolunteerRoles } from "./VolunteerRoles";
 import s from "./VolunteerPage.module.css";
-
-const CAUSE_FILTERS = new Set<string>([
-  "Rights",
-  "Health",
-  "Youth",
-  "Housing",
-  "Arts",
-]);
-
-const FILTERS = [
-  { f: "all", labelKey: "marketing:volunteer.filter.all" },
-  { f: "low", labelKey: "marketing:volunteer.filter.low" },
-  { f: "medium", labelKey: "marketing:volunteer.filter.medium" },
-  { f: "Rights", labelKey: "marketing:volunteer.filter.rights" },
-  { f: "Health", labelKey: "marketing:volunteer.filter.health" },
-  { f: "Youth", labelKey: "marketing:volunteer.filter.youth" },
-  { f: "Housing", labelKey: "marketing:volunteer.filter.housing" },
-  { f: "Arts", labelKey: "marketing:volunteer.filter.arts" },
-];
-
-function VolunteerCardSkeleton() {
-  // Mirrors the real .card: org row (40px avatar + name/cause), role, desc, meta pills, skills, foot.
-  return (
-    <div className={s.card} aria-hidden>
-      <div className={s.org}>
-        <SkeletonLine
-          width={40}
-          height={40}
-          style={{ borderRadius: 10, flex: "none" }}
-        />
-        <div style={{ flex: 1 }}>
-          <SkeletonLine width="55%" height={14} />
-          <SkeletonLine width="35%" height={12} style={{ marginTop: 5 }} />
-        </div>
-      </div>
-      <SkeletonLine width="75%" height={19} />
-      <div style={{ flex: 1 }}>
-        <SkeletonLine width="100%" height={13.5} />
-        <SkeletonLine width="85%" height={13.5} style={{ marginTop: 6 }} />
-      </div>
-      <div className={s.metaRow}>
-        <SkeletonLine width={120} height={20} style={{ borderRadius: 6 }} />
-        <SkeletonLine width={70} height={20} style={{ borderRadius: 6 }} />
-      </div>
-      <div className={s.cardFoot} style={{ borderTopColor: "transparent" }}>
-        <SkeletonLine width={90} height={13} />
-        <SkeletonLine width={110} height={30} style={{ borderRadius: 999 }} />
-      </div>
-    </div>
-  );
-}
 
 export function VolunteerPage() {
   const { t } = useTranslation();
@@ -141,7 +85,10 @@ export function VolunteerPage() {
         </div>
       </PageHero>
 
-      <section className={s.guideWrap} aria-label={t("marketing:volunteer.guide.eyebrow")}>
+      <section
+        className={s.guideWrap}
+        aria-label={t("marketing:volunteer.guide.eyebrow")}
+      >
         <div className="wrap">
           <div className={s.guide}>
             <div className={s.guideText}>
@@ -154,7 +101,9 @@ export function VolunteerPage() {
                   components={{ em: <em /> }}
                 />
               </h2>
-              <p className={s.guideBody}>{t("marketing:volunteer.guide.body")}</p>
+              <p className={s.guideBody}>
+                {t("marketing:volunteer.guide.body")}
+              </p>
             </div>
             <Button to={routes.activism} variant="ghost-dark">
               {t("marketing:volunteer.guide.cta")} <FiArrowRight aria-hidden />
@@ -163,121 +112,16 @@ export function VolunteerPage() {
         </div>
       </section>
 
-      <section className={s.body}>
-        <div className="wrap">
-          <div className={s.filters}>
-            {FILTERS.map((f) => (
-              <button
-                type="button"
-                key={f.f}
-                className={[s.chip, filter === f.f && s.chipOn]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => setFilter(f.f)}
-              >
-                {t(f.labelKey)}
-              </button>
-            ))}
-          </div>
-
-          {!loading && visible.length === 0 ? (
-            opps.length === 0 ? (
-              <EmptyState
-                icon={<FiHeart />}
-                title={t("marketing:volunteer.empty.noneTitle")}
-                description={t("marketing:volunteer.empty.noneDescription")}
-                action={{
-                  label: t("marketing:volunteer.empty.noneCta"),
-                  to: routes.postVolunteer,
-                }}
-              />
-            ) : (
-              <EmptyState
-                icon={<FiHeart />}
-                title={t("marketing:volunteer.empty.filteredTitle")}
-                description={t("marketing:volunteer.empty.filteredDescription")}
-                action={{
-                  label: t("marketing:volunteer.empty.clearCta"),
-                  onClick: () => setFilter("all"),
-                }}
-              />
-            )
-          ) : (
-            <div className={s.grid}>
-              {loading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                    <VolunteerCardSkeleton key={i} />
-                  ))
-                : visible.map((o, i) => (
-                    <FadeIn
-                      key={o.slug}
-                      delay={Math.min(i, 8) * 60}
-                      style={{ height: "100%" }}
-                    >
-                      <div className={s.card} style={{ height: "100%" }}>
-                        <div className={s.org}>
-                          <span
-                            className={s.orgAv}
-                            style={{ background: o.background, color: o.color }}
-                          >
-                            {o.avatar}
-                          </span>
-                          <div>
-                            <div className={s.orgName}>{o.org}</div>
-                            <div className={s.orgCause}>{o.cause}</div>
-                          </div>
-                        </div>
-                        <div className={s.role}>{o.role}</div>
-                        <p className={s.desc}>{o.description}</p>
-                        <div className={s.metaRow}>
-                          <span
-                            className={`${s.commit} ${o.commit === "low" ? s.commitGreen : s.commitAmber}`}
-                          >
-                            {o.commit === "low"
-                              ? t("marketing:volunteer.card.commitLow")
-                              : t("marketing:volunteer.card.commitMedium")}
-                          </span>
-                          <span className={s.metaPill}>{o.location}</span>
-                        </div>
-                        <div className={s.skills}>
-                          {o.skills.map((sk) => (
-                            <span key={sk} className={s.skill}>
-                              #{sk}
-                            </span>
-                          ))}
-                        </div>
-                        <div className={s.cardFoot}>
-                          <span className={s.time}>{o.time}</span>
-                          <Link
-                            className={s.express}
-                            to={`${routes.volunteer}/opportunity/${o.slug}`}
-                          >
-                            {t("marketing:volunteer.card.expressInterest")}{" "}
-                            <FiArrowRight aria-hidden />
-                          </Link>
-                        </div>
-                      </div>
-                    </FadeIn>
-                  ))}
-            </div>
-          )}
-
-          {hasNextPage && (
-            <div className={s.loadMore}>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={isFetchingNextPage}
-                onClick={fetchNextPage}
-              >
-                {isFetchingNextPage
-                  ? t("marketing:volunteer.loadingMore")
-                  : t("marketing:volunteer.loadMoreCta")}
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
+      <VolunteerRoles
+        filter={filter}
+        onFilterChange={setFilter}
+        visibleOpportunities={visible}
+        loadedCount={opps.length}
+        isLoading={loading}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onLoadMore={fetchNextPage}
+      />
 
       <Outro
         title={

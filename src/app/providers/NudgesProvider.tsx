@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
 import { useScopedLocalStorage } from "./useScopedLocalStorage";
 import { useStorageScope } from "./useStorageScope";
 import {
@@ -35,6 +36,7 @@ const isNudgeKeyList = (value: unknown): value is NudgeKey[] =>
  */
 export function NudgesProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
+  const { loggedIn, checking } = useAuth();
   // Per-member bucket — a shared device must never surface one member's
   // dismissals to the next (see `useStorageScope`/`useScopedLocalStorage`).
   const scopeId = useStorageScope();
@@ -45,10 +47,14 @@ export function NudgesProvider({ children }: { children: ReactNode }) {
     isNudgeKeyList,
   );
 
-  // Live mode: reconcile with the caller's current dismissal state on mount,
-  // so a dismissal made on another device is honored here too.
+  // Live mode: reconcile with the caller's current dismissal state once a
+  // session is confirmed, so a dismissal made on another device is honored here
+  // too. `/nudges/me` is member-scoped: firing it for an anonymous visitor only
+  // bought a guaranteed 401 and the whole recovery path behind it (a
+  // POST /auth/refresh, an `onAuthLost` reconcile, an error to monitoring).
   const reconciled = useRef(false);
   useEffect(() => {
+    if (checking || !loggedIn) return;
     if (reconciled.current) return;
     reconciled.current = true;
     let cancelled = false;
@@ -59,7 +65,7 @@ export function NudgesProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [demoMode, setDismissedKeys]);
+  }, [checking, loggedIn, demoMode, setDismissedKeys]);
 
   const isDismissed = useCallback(
     (key: NudgeKey) => dismissedKeys.includes(key),

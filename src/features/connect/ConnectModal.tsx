@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
+import { FiX } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { Spinner } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Spinner, useDismiss } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMemberProfile } from "../members/api/useMemberProfile";
 import {
@@ -53,7 +53,15 @@ export function ConnectModal({
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<NoticeView | null>(null);
-  useScrollLock();
+
+  // Scroll-lock, Escape-to-close, initial focus, a Tab focus-trap and focus
+  // restore to the trigger — all from the shared modal a11y hook, so this
+  // bespoke bottom-sheet behaves like every other dialog in the app. A
+  // dismissal is refused mid-send, exactly as the scrim click already was.
+  const dismiss = useCallback(() => {
+    if (phase !== "sending") onClose();
+  }, [phase, onClose]);
+  const dialogRef = useDismiss(dismiss);
 
   const sent = phase === "sent";
   // Both the success and terminal-notice panels use the plum-panel chrome.
@@ -99,11 +107,17 @@ export function ConnectModal({
       className={styles.overlay}
       role="presentation"
       onClick={(event) => {
-        if (event.target === event.currentTarget && phase !== "sending")
-          onClose();
+        if (event.target === event.currentTarget) dismiss();
       }}
     >
-      <div className={`${styles.modal} ${plum ? styles.modalSent : ""}`}>
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("connect:modal.ariaLabel")}
+        tabIndex={-1}
+        className={`${styles.modal} ${plum ? styles.modalSent : ""}`}
+      >
         {!plum && <div className={styles.grabber} aria-hidden />}
         {phase !== "sending" && (
           <button
@@ -112,7 +126,7 @@ export function ConnectModal({
             onClick={onClose}
             aria-label={t("connect:modal.close")}
           >
-            ×
+            <FiX aria-hidden />
           </button>
         )}
 

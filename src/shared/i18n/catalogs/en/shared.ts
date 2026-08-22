@@ -90,6 +90,7 @@ export const shared: Catalog = {
   // which is a pre-existing, differently-worded entry.
   "accountMenu.items.personas": "Your personas",
   "accountMenu.items.events": "Events",
+  "accountMenu.items.cards": "Cards",
   "accountMenu.items.feed": "Feed",
   "accountMenu.items.drafts": "Drafts",
   "accountMenu.items.pitches": "Pitches",
@@ -178,6 +179,22 @@ export const shared: Catalog = {
   "adminNav.items.roadmap": "Roadmap",
   "adminNav.items.reports": "Reports",
   "adminNav.items.systemAccounts": "System accounts",
+
+  "adminNav.items.joinRequests": "Join requests",
+
+  // errorHandling.ts / errorMessage.ts — API failure copy, resolved through
+  // setQueryErrorTranslator so non-React modules can stay i18n-aware.
+  "apiError.server": "Something went wrong on our end. Please try again.",
+  "apiError.forbidden": "You don't have access to that.",
+  "apiError.generic": "Something went wrong.",
+  "apiError.genericRetry": "Something went wrong. Please try again.",
+  "apiError.tryAgainTail": " Please try again.",
+
+  // PullToRefresh live region
+  "pullToRefresh.refreshing": "Refreshing…",
+
+  // deviceUserAgent.ts
+  "device.unknown": "Unknown device",
 
   // BackToSettingsLink
   "backToSettingsLink.label": "Back to settings",

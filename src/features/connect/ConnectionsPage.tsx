@@ -52,7 +52,6 @@ export function ConnectionsPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-    total,
   } = useConnectionsList(tab);
   const loading = simulating || fetching;
 
@@ -78,21 +77,17 @@ export function ConnectionsPage() {
    * exact and render immediately.
    *
    * Live: those arrays are empty by design, which is why every badge used to
-   * read 0. Now `useConnectionCounts` fetches every tab's total in one cheap
-   * call, so all badges are accurate on first paint. As the user opens a tab,
-   * its list endpoint returns a fresher `total` in the paginated envelope; we
-   * remember that and prefer it, so a badge tracks any change the action layer
-   * makes before the counts query refetches. (The blocked tab has no API
-   * counterpart at all; SocialProvider owns it in both modes, so its count is
-   * always exact.)
+   * read 0. `useConnectionCounts` fetches every tab's total in one cheap call,
+   * so all badges are accurate on first paint, and every connection action
+   * invalidates the `["connections"]` prefix — which that query lives under —
+   * so they stay accurate afterwards. (A per-tab cache of the freshest list
+   * `total` used to be preferred over these counts, but only the mounted tab's
+   * list refetches, so an inactive tab's remembered total went stale and beat
+   * the corrected count. The counts query is the single source now.) The
+   * blocked tab has no /connections counterpart; SocialProvider owns that
+   * count in both modes, so it is always exact.
    */
   const counts = useConnectionCounts();
-  const [seenTotals, setSeenTotals] = useState<Partial<Record<TabId, number>>>(
-    {},
-  );
-  if (total != null && seenTotals[tab] !== total) {
-    setSeenTotals((prev) => ({ ...prev, [tab]: total }));
-  }
 
   const demoCounts: Record<TabId, number> = {
     all: connected.length,
@@ -104,9 +99,7 @@ export function ConnectionsPage() {
   const countFor = (id: TabId): number | undefined => {
     if (demoMode) return demoCounts[id];
     if (id === "blocked") return blocked.length;
-    // The freshest per-tab total (from a list the user opened) wins; otherwise
-    // fall back to the one-shot counts call so the badge is right on first paint.
-    return seenTotals[id] ?? counts[id];
+    return counts[id];
   };
 
   const tabs: ConnectionsTab[] = [
@@ -130,20 +123,28 @@ export function ConnectionsPage() {
     },
   ];
 
+  // Every confirmation waits for the action to resolve. A failure resolves
+  // `false` after the hook has rolled the card back and toasted the reason, so
+  // the member is never told an accept/decline/withdraw went through when the
+  // server rejected it.
   function onAccept(v: ConnectionView) {
-    void acceptRequest({ slug: v.slug, id: v.meta.id });
-    showToast(
-      t("connect:toast.connected", { name: v.name.split(" ")[0]! }),
-      "success",
-    );
+    void acceptRequest({ slug: v.slug, id: v.meta.id }).then((ok) => {
+      if (!ok) return;
+      showToast(
+        t("connect:toast.connected", { name: v.name.split(" ")[0]! }),
+        "success",
+      );
+    });
   }
   function onDecline(v: ConnectionView) {
-    void declineRequest({ slug: v.slug, id: v.meta.id });
-    showToast(t("connect:toast.declined"), "info");
+    void declineRequest({ slug: v.slug, id: v.meta.id }).then((ok) => {
+      if (ok) showToast(t("connect:toast.declined"), "info");
+    });
   }
   function onWithdraw(v: ConnectionView) {
-    void withdrawRequest({ slug: v.slug, id: v.meta.id });
-    showToast(t("connect:toast.withdrawn"), "info");
+    void withdrawRequest({ slug: v.slug, id: v.meta.id }).then((ok) => {
+      if (ok) showToast(t("connect:toast.withdrawn"), "info");
+    });
   }
   function onUnblock(v: ConnectionView) {
     void unblockAction({ slug: v.slug, id: v.meta.id });
@@ -196,7 +197,9 @@ export function ConnectionsPage() {
           <VouchedPanel
             loading={loading}
             views={views}
-            noteFor={(v) => t(vouchNoteKey(v.slug, hasVouched(v.slug)))}
+            noteFor={(v) =>
+              t(vouchNoteKey(v.meta.vouchBadge, hasVouched(v.slug)))
+            }
           />
         )}
 

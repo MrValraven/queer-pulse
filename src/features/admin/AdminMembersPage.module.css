@@ -161,6 +161,56 @@
   }
 }
 
+/* A flagged row holds two sibling controls (open the member, open their
+   reports), so the row itself stays inert and each control carries its own
+   pointer + hover affordance. The identity half is a plain button reset back
+   to the row's own flex layout. */
+.flaggedIdentity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .flaggedIdentity:hover .rowHandle {
+    color: var(--accent);
+  }
+}
+
+.flaggedGoto {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  transition: color 0.18s var(--ease);
+}
+
+@media (hover: hover) {
+  .flaggedGoto:hover {
+    color: var(--accent);
+  }
+}
+
+.flaggedIdentity:focus-visible,
+.flaggedGoto:focus-visible {
+  outline: 2px solid var(--line-strong);
+  outline-offset: 3px;
+  border-radius: var(--radius-pill, 999px);
+}
+
 .rowMain {
   flex: 1 1 auto;
   min-width: 0;
@@ -1230,7 +1280,7 @@
   top: 2px;
   width: 5px;
   height: 10px;
-  border: solid #fff;
+  border: solid var(--paper);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }

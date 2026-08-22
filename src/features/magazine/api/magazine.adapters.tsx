@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import { leadingInitials } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { Author, AuthorArticle } from "../authorContent.data";
 import type { Article } from "../data/articles";
 import type { SlideDeck } from "../data/decks";
@@ -117,6 +118,7 @@ export function issueToTile(
   index: number,
   total: number,
   fmt: Formatters,
+  t: TFunction,
 ): IssueTile {
   const d = new Date(dto.publishedOn);
   const season = Number.isNaN(d.getTime()) ? "" : SEASON_BY_MONTH[d.getMonth()];
@@ -127,19 +129,24 @@ export function issueToTile(
   return {
     number: dto.number,
     numberLabel: current
-      ? `Issue ${dto.number} · Current`
+      ? t("magazine:live.issueBadgeCurrent", { number: dto.number })
       : inaugural
-        ? `Issue ${dto.number} · Inaugural`
-        : `Issue ${dto.number}`,
+        ? t("magazine:live.issueBadgeInaugural", { number: dto.number })
+        : t("magazine:live.issueBadge", { number: dto.number }),
     current,
     title: issueTitleNode(dto.title),
     date: [season, year].filter(Boolean).join(" · "),
     tint: TILE_TINTS[index % TILE_TINTS.length]!,
-    cover: `Issue ${dto.number} · ${dto.title.replace(/\.$/, "")}`,
+    cover: t("magazine:live.issueCover", {
+      number: dto.number,
+      title: dto.title.replace(/\.$/, ""),
+    }),
     dek: dto.dek,
     meta: {
       season: [season, year].filter(Boolean).join(" ") || dto.publishedOn,
-      detail: `Published ${formatDayMonthYear(dto.publishedOn, fmt)}`,
+      detail: t("magazine:live.publishedOn", {
+        date: formatDayMonthYear(dto.publishedOn, fmt),
+      }),
     },
   };
 }
@@ -150,16 +157,19 @@ export function issueToTile(
 export function articleListItemToArticle(
   dto: ArticleListItemDTO,
   fmt: Formatters,
+  t: TFunction,
 ): Article {
   return {
     id: dto.slug,
-    kicker: dto.issueNumber ? `Issue ${dto.issueNumber}` : "From the magazine",
-    section: dto.tags[0] ?? "Feature",
+    kicker: dto.issueNumber
+      ? t("magazine:live.issueBadge", { number: dto.issueNumber })
+      : t("magazine:live.fromTheMagazine"),
+    section: dto.tags[0] ?? t("magazine:live.sectionFallback"),
     title: dto.title,
     byline: dto.author.displayName,
     role: null,
     date: formatMonthYear(dto.publishedAt, fmt),
-    readTime: `${dto.readMinutes} min`,
+    readTime: t("magazine:live.readMinutes", { minutes: dto.readMinutes }),
     initials: initialsFor(dto.author.displayName),
     tint: tintFor(dto.author.handle),
     imgDesc: dto.title,
@@ -175,10 +185,11 @@ export function articleListItemToArticle(
 export function articleResponseToArticle(
   dto: ArticleDTO,
   fmt: Formatters,
+  t: TFunction,
   authorBio?: string | null,
 ): Article {
   return {
-    ...articleListItemToArticle(dto, fmt),
+    ...articleListItemToArticle(dto, fmt, t),
     authorBio: authorBio ?? "",
     body: dto.body
       .split(/\n{2,}/)
@@ -245,6 +256,7 @@ export function authorFromDto(
   dto: AuthorDTO,
   liveArticles: ArticleListItemDTO[],
   fmt: Formatters,
+  t: TFunction,
 ): Author {
   const featured = liveArticles[0];
   return {
@@ -262,8 +274,8 @@ export function authorFromDto(
     featured: featured
       ? {
           kicker: featured.issueNumber
-            ? `Feature · Issue ${featured.issueNumber}`
-            : "Feature",
+            ? t("magazine:live.featureIssue", { number: featured.issueNumber })
+            : t("magazine:live.sectionFallback"),
           title: featured.title,
           dek: featured.dek,
           publishedDate: featured.publishedAt
@@ -287,11 +299,13 @@ export function authorFromDto(
     articles: liveArticles.map(
       (article): AuthorArticle => ({
         id: article.slug,
-        kicker: article.issueNumber ? `Issue ${article.issueNumber}` : "Web",
+        kicker: article.issueNumber
+          ? t("magazine:live.issueBadge", { number: article.issueNumber })
+          : t("magazine:live.web"),
         title: article.title,
         dek: article.dek,
         meta: article.issueNumber
-          ? `Issue ${article.issueNumber}`
+          ? t("magazine:live.issueBadge", { number: article.issueNumber })
           : formatMonthYear(article.publishedAt, fmt),
       }),
     ),
@@ -315,6 +329,7 @@ export function mergeAuthor(
   dto: AuthorDTO,
   liveArticles: ArticleListItemDTO[],
   fmt: Formatters,
+  t: TFunction,
 ): Author {
   const featured = liveArticles[0];
   return {
@@ -324,8 +339,8 @@ export function mergeAuthor(
     featured: featured
       ? {
           kicker: featured.issueNumber
-            ? `Feature · Issue ${featured.issueNumber}`
-            : "Feature",
+            ? t("magazine:live.featureIssue", { number: featured.issueNumber })
+            : t("magazine:live.sectionFallback"),
           title: featured.title,
           dek: featured.dek,
           publishedDate: featured.publishedAt
@@ -340,15 +355,19 @@ export function mergeAuthor(
         }
       : base.featured,
     articles: liveArticles.length
-      ? liveArticles.map((a): AuthorArticle => ({
-          id: a.slug,
-          kicker: a.issueNumber ? `Issue ${a.issueNumber}` : "Web",
-          title: a.title,
-          dek: a.dek,
-          meta: a.issueNumber
-            ? `Issue ${a.issueNumber}`
-            : formatMonthYear(a.publishedAt, fmt),
-        }))
+      ? liveArticles.map(
+          (article): AuthorArticle => ({
+            id: article.slug,
+            kicker: article.issueNumber
+              ? t("magazine:live.issueBadge", { number: article.issueNumber })
+              : t("magazine:live.web"),
+            title: article.title,
+            dek: article.dek,
+            meta: article.issueNumber
+              ? t("magazine:live.issueBadge", { number: article.issueNumber })
+              : formatMonthYear(article.publishedAt, fmt),
+          }),
+        )
       : base.articles,
   };
 }

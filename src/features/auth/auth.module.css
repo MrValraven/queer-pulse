@@ -516,8 +516,14 @@
     border-color 0.2s,
     background 0.2s;
 }
+/* Matches the shared Button's disabled treatment (opacity .4 + not-allowed), so
+   the busy/disabled state of this CTA reads the same as every other one. */
+.google:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 @media (hover: hover) {
-  .google:hover {
+  .google:hover:not(:disabled) {
     border-color: rgba(var(--line-rgb), 0.3);
   }
 }

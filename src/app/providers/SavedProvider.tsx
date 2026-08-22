@@ -91,11 +91,16 @@ export function SavedProvider({ children }: { children: ReactNode }) {
 
   const save = useCallback(
     (item: SavedItem) => {
-      let existed = false;
-      setItems((prev) => {
-        existed = prev.some((it) => it.id === item.id);
-        return existed ? prev : [item, ...prev];
-      });
+      // Decide from the current snapshot, the way `toggleSave` below already
+      // does. A flag assigned inside a state updater is only set synchronously
+      // when React takes its eager fast path (an empty update queue); with any
+      // pending update on this component the updater is deferred, `existed`
+      // stays false, and the PUT below never fires — the heart fills and
+      // nothing persists.
+      const existed = items.some((it) => it.id === item.id);
+      setItems((prev) =>
+        prev.some((it) => it.id === item.id) ? prev : [item, ...prev],
+      );
       if (demoMode || existed) return;
       putSaved(item.id, savedItemToBody(item)).catch(() => {
         // Roll back the optimistic add on failure, and tell the user — the
@@ -104,16 +109,14 @@ export function SavedProvider({ children }: { children: ReactNode }) {
         showToast(t("common:toast.saveFailed"), "error");
       });
     },
-    [setItems, demoMode, showToast, t],
+    [items, setItems, demoMode, showToast, t],
   );
 
   const unsave = useCallback(
     (id: string) => {
-      let removed: SavedItem | undefined;
-      setItems((prev) => {
-        removed = prev.find((it) => it.id === id);
-        return prev.filter((it) => it.id !== id);
-      });
+      // Same rule as `save` above: read the current snapshot, then apply.
+      const removed = items.find((it) => it.id === id);
+      setItems((prev) => prev.filter((it) => it.id !== id));
       if (demoMode || !removed) return;
       const restore = removed;
       deleteSaved(id).catch(() => {
@@ -125,7 +128,7 @@ export function SavedProvider({ children }: { children: ReactNode }) {
         showToast(t("common:toast.removeFailed"), "error");
       });
     },
-    [setItems, demoMode, showToast, t],
+    [items, setItems, demoMode, showToast, t],
   );
 
   const toggleSave = useCallback(

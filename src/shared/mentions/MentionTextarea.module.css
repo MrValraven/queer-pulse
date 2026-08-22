@@ -9,9 +9,9 @@
   padding: 4px;
   list-style: none;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(45, 27, 61, 0.12);
+  box-shadow: 0 12px 32px rgba(var(--plum-rgb), 0.12);
   max-height: 260px;
   overflow-y: auto;
   /* Grow gently down from the anchored top edge rather than popping in. */
@@ -42,7 +42,7 @@
   font: inherit;
   color: var(--ink);
 }
-.optionOn { background: rgba(45, 27, 61, 0.06); }
+.optionOn { background: rgba(var(--plum-rgb), 0.06); }
 .avatar {
   display: inline-flex;
   align-items: center;

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Community } from "../../homepage/data/types";
 import { cardDtoToCommunity } from "./communities.adapters";
 import { getRelatedCommunities } from "./communities.api";
@@ -27,6 +28,7 @@ export function useSimilarCommunities(
   slug: string | undefined,
 ): UseSimilarCommunitiesResult {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const query = useQuery({
     queryKey: ["community-related", slug],
     enabled: !demoMode && Boolean(slug),
@@ -36,5 +38,10 @@ export function useSimilarCommunities(
   if (demoMode || !query.data) {
     return { communities: [], isLoading: !demoMode && query.isLoading };
   }
-  return { communities: query.data.map(cardDtoToCommunity), isLoading: false };
+  // Mapped outside `queryFn`, so a language switch re-renders the labels
+  // straight off the cached DTOs with no refetch.
+  return {
+    communities: query.data.map((card) => cardDtoToCommunity(card, t)),
+    isLoading: false,
+  };
 }

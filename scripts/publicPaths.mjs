@@ -66,6 +66,21 @@ const GATED_PATTERNS = [
   "/vouch",
   "/qr-scanner",
   "/magazine/submit-story",
+  // Organiser-side volunteer surfaces. The listing (/about/volunteer) and each
+  // opportunity's detail page stay public; posting, editing and triaging do not.
+  "/about/volunteer/post",
+  "/about/volunteer/manage",
+  // (authGate also gates /about/volunteer/opportunity/:slug/edit; this matcher
+  // has no :param support, and no :slug path is ever emitted here — see the
+  // "Dynamic :slug routes are excluded" note on QUIET_PUBLIC_PATHS. The
+  // opportunity DETAIL page stays public either way.)
+  // The writer pitch tracker (also capability-gated on magazine_writer).
+  "/magazine/pitches",
+  // Block & mute is account settings living under the public /safety prefix.
+  "/safety/block-mute",
+  // The one-time onboarding wizard and its legacy alias.
+  "/auth/onboarding",
+  "/auth/welcome",
   "/local/directory",
   "/local/directory/*",
   "/local/map",

@@ -124,6 +124,16 @@
   gap: 14px;
   padding: 12px 16px;
 }
+/* Each request sits inside a <FadeIn>, whose `will-change: transform` makes it
+   its own stacking context, so the kebab menu's z-index only wins INSIDE its
+   own row and an open menu paints under the row below. Lift the row while its
+   menu is open. Matched on `aria-expanded` rather than the menu's class,
+   because that class comes from the connect feature's own CSS module and is
+   hashed separately: a class selector here would never match it. */
+.requestsList > *:has([aria-expanded="true"]) {
+  position: relative;
+  z-index: 3;
+}
 .threadRow {
   display: flex;
   align-items: center;
@@ -542,6 +552,9 @@
   inset-inline: 0;
   margin-inline: auto;
   width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 7px 14px;
   border-radius: var(--radius-pill);
   background: var(--plum);
@@ -1348,6 +1361,30 @@
      already played). `object-fit` covers the fallback case, where the real
      image's ratio won't exactly match the assumed 1:1 box. */
   object-fit: cover;
+}
+/* A restored outbox entry whose local `blob:` preview was stripped before
+   persisting (see `outbox.ts`'s `stripDeadBlobPreview`) — a neutral stand-in
+   for `.gifBubble` so `MessageBubbleBody` never points an `<img>` at a dead
+   object URL after a reload. */
+.imagePreviewUnavailable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 160px;
+  max-width: 220px;
+  aspect-ratio: 1;
+  border-radius: var(--bubble-radius);
+  background: rgba(var(--plum-rgb), 0.06);
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
+  color: var(--ink-60);
+  font-size: 0.82rem;
+  text-align: center;
+  padding: 12px;
+}
+.imagePreviewUnavailable svg {
+  opacity: 0.7;
 }
 /* Holds the composer's popover controls (GIF + shortcut hint) as a matched
    pair to the left of the input; also the shared outside-click boundary that

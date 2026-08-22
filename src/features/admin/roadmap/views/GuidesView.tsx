@@ -23,7 +23,7 @@ import {
 import styles from "./GuidesView.module.css";
 
 // `category` is admin free text (see `roadmapChrome.data.ts`'s
-// `getUniqueCategories` doc) — only these 9 have a translated label, so an
+// `getUniqueCategories` doc), and only these 9 have a translated label, so an
 // unrecognized category falls back to the raw string rather than leaking a
 // literal "roadmap.categories.xxx" key through `t()`'s missing-key fallback.
 const KNOWN_CATEGORIES = new Set([
@@ -44,11 +44,11 @@ function categoryLabel(t: TFunction, category: string): string {
     : category;
 }
 
-/** One flags-lite icon, shown only when its condition is true — mirrors the
+/** One flags-lite icon, shown only when its condition is true. Mirrors the
  *  Board card's flag icons (`admin:roadmap.board.flag.*`) at a smaller,
  *  read-only size for this row. The icon is decorative; the label carries
  *  the meaning for screen readers via the global `.visuallyHidden` utility
- *  (`title` alone would not reach touch users — see `StaffBadge`'s doc). */
+ *  (`title` alone would not reach touch users; see `StaffBadge`'s doc). */
 function GuideFlag({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <span className={styles.flag}>
@@ -79,15 +79,16 @@ function GuideRow({
   const dueDays = reVerifyDueDays(item, today);
   const danger = isReviewSoon(item, today);
   // `reVerifyDueDays` already guards an unparseable `reVerifyBy` (returns
-  // `null`) — reuse that guard here too, so a bad date never reaches
-  // `toLocaleDateString` and renders "Invalid Date" instead of "—".
+  // `null`), so reuse that guard here too: a bad date never reaches
+  // `toLocaleDateString` and renders "Invalid Date" instead of the
+  // no-value label.
   const reVerifyLabel =
     guide.reVerifyBy && dueDays !== null
       ? new Date(guide.reVerifyBy).toLocaleDateString(intlLocale(language), {
           month: "short",
           year: "numeric",
         })
-      : "—";
+      : t("admin:common.notSet");
 
   return (
     <li>
@@ -230,12 +231,12 @@ function GuideRow({
 }
 
 /**
- * Guides view (`admin:roadmap.tabs.guides`) — every non-archived roadmap
+ * Guides view (`admin:roadmap.tabs.guides`): every non-archived roadmap
  * item tagged as a resource guide (`item.guide !== null`), each row a
  * 6-step review checklist, reviewer/credential, re-verify-by date and
  * language coverage. Health/legal content rots, so a guide whose
  * `reVerifyBy` is within 90 days (or already past) surfaces both on its own
- * row (danger tone) and in a page-level banner — the prototype's editorial
+ * row (danger tone) and in a page-level banner, the prototype's editorial
  * point that this list needs regular, not one-time, attention.
  */
 export function GuidesView({ items }: { items: AdminRoadmapItemDTO[] }) {

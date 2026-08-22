@@ -91,6 +91,10 @@
   grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
   gap: 18px;
 }
+/* Space below the lead (or the demo-only stat row) above it. */
+.offerGrid {
+  margin-top: 40px;
+}
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -167,7 +171,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--jade);
-  background: rgba(74, 124, 89, 0.1);
+  background: rgba(var(--jade-rgb), 0.1);
   padding: 5px 11px;
   border-radius: 999px;
 }

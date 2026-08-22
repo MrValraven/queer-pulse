@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
+import { useFormat } from "../../../../shared/i18n/format";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { Translation } from "../../../../shared/i18n/Translation";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
@@ -18,10 +19,13 @@ import styles from "./roadmapModals.module.css";
  */
 export function DigestModal() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { modal, close } = useRoadmapModals();
   const { items, ideas } = useAdminRoadmap();
-  const [draft, setDraft] = useState(() => buildDigestMarkdown(items, ideas, t));
+  const [draft, setDraft] = useState(() =>
+    buildDigestMarkdown(items, ideas, t, fmt),
+  );
 
   if (modal !== "digest") return null;
 

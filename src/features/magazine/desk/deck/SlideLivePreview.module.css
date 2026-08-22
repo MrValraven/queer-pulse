@@ -6,7 +6,7 @@
   padding: 18px;
   border-radius: 18px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -43,7 +43,7 @@
   overflow: hidden;
   container-type: inline-size;
   border-radius: var(--radius-card);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
   box-shadow: var(--shadow-card);
   --deck-slide-pad: clamp(14px, 6cqw, 28px);

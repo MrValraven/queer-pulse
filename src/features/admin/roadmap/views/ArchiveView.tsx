@@ -61,7 +61,14 @@ function ArchiveRow({ item }: { item: AdminRoadmapItemDTO }) {
             "info",
           ),
         onError: (error) =>
-          showToast(describeError("Couldn't restore that item", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.restoreItem"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       },
     );
   }
@@ -74,7 +81,14 @@ function ArchiveRow({ item }: { item: AdminRoadmapItemDTO }) {
       },
       onError: (error) => {
         setConfirmingDelete(false);
-        showToast(describeError("Couldn't delete that item", error), "error");
+        showToast(
+          describeError(
+            t("admin:errors.deleteItem"),
+            error,
+            t("shared:apiError.tryAgainTail"),
+          ),
+          "error",
+        );
       },
     });
   }

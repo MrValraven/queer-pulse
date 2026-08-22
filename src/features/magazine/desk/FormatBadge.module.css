@@ -2,7 +2,6 @@
    The design's "Deck" violet doesn't match any repo token exactly (repo
    --violet is a different, more saturated hue). Centralized here once. */
 .badge {
-  --desk-violet: #5c3e92;
   --desk-violet-soft: rgba(92, 62, 146, 0.14);
 
   display: inline-flex;

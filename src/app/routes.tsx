@@ -22,6 +22,7 @@ import { useDemoMode } from "./providers/DemoModeProvider";
 // declaration order, and there are no equal-rank path collisions across groups.
 import { memberRoutes } from "../features/members/routes";
 import { subprofileRoutes } from "../features/subprofiles/routes";
+import { cardRoutes } from "../features/cards/routes";
 import { connectRoutes } from "../features/connect/routes";
 import { communityRoutes } from "../features/community/routes";
 import { feedRoutes } from "../features/feed/routes";
@@ -91,6 +92,7 @@ export function AppRoutes() {
           {feedRoutes()}
           {memberRoutes()}
           {subprofileRoutes()}
+          {cardRoutes()}
           {connectRoutes()}
           {myEventsRoutes()}
           {communityRoutes()}

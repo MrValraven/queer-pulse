@@ -4,7 +4,7 @@ import type { FinLine } from "../../governance/governance.data";
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
 // Shapes the NestJS `governance` domain returns for the admin finances tab
-// (GET /governance/admin/finances). Reuses the public `FinLine` shape
+// (GET /admin/governance/finances). Reuses the public `FinLine` shape
 // (`governance/governance.data`) so income/expense lines stay consistent
 // with the public transparency-report response.
 
@@ -92,10 +92,10 @@ export interface AdminFinanceChangeDTO {
 }
 
 export const getAdminFinances = () =>
-  apiGet<AdminFinanceResponseDTO>("/governance/admin/finances");
+  apiGet<AdminFinanceResponseDTO>("/admin/governance/finances");
 
 export const updateAdminFinances = (body: UpdateAdminFinancesBody) =>
-  apiPatch<AdminFinanceResponseDTO>("/governance/admin/finances", body);
+  apiPatch<AdminFinanceResponseDTO>("/admin/governance/finances", body);
 
 export const getAdminFinanceChanges = () =>
-  apiGet<AdminFinanceChangeDTO[]>("/governance/admin/finances/changes");
+  apiGet<AdminFinanceChangeDTO[]>("/admin/governance/finances/changes");

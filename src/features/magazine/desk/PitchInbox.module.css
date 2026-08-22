@@ -77,7 +77,7 @@
 .checkbox[aria-pressed="true"] {
   background: var(--plum);
   border-color: var(--plum);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .checkbox:focus-visible {

@@ -1,0 +1,208 @@
+/* ── Community governance log (admin community detail · Governance tab) ──── */
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.intro {
+  flex: 1 1 260px;
+  margin: 0;
+  max-width: 52ch;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+/* ── The trail ───────────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card, 22px);
+}
+.entryBody {
+  flex: 1;
+  min-width: 0;
+}
+.entryHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.entrySummary {
+  margin: 9px 0 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+[data-theme="dark"] .entrySummary {
+  color: var(--ink);
+}
+.entryFooter {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+
+/* ── Server-written metadata, rendered as label/value lines ──────────────── */
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  background: rgba(var(--plum-rgb), 0.04);
+  border-radius: 12px;
+}
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.metaLabel {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+.metaValue {
+  margin: 0;
+  min-width: 0;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* ── Failure, kept visibly distinct from an empty trail ──────────────────── */
+.errorPanel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px 18px;
+  background: rgba(var(--danger-rgb), 0.08);
+  border-radius: var(--radius-card, 22px);
+}
+.errorText {
+  flex: 1 1 220px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+}
+
+/* ── Genuinely empty trail ───────────────────────────────────────────────── */
+.emptyPanel {
+  position: relative;
+  padding: 30px 28px;
+  background: var(--plum);
+  border-radius: var(--radius-card, 22px);
+  text-align: center;
+}
+.emptyTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.15;
+  color: rgba(var(--cream-rgb), 1);
+}
+.emptyTitle em {
+  color: var(--accent);
+  font-style: italic;
+}
+.emptyText {
+  margin: 12px auto 0;
+  max-width: 440px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.78);
+}
+.emptyCta {
+  margin-top: 18px;
+}
+
+/* ── Pager ───────────────────────────────────────────────────────────────── */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 12px 4px 2px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.pagerMeta {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+.pagerNav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.pagerPage {
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+.pagerBtn {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 9px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition:
+    background 0.14s var(--ease),
+    color 0.14s var(--ease);
+}
+@media (hover: hover) {
+  .pagerBtn:hover:not(:disabled) {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--text-strong);
+  }
+}
+.pagerBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 560px) {
+  .entry {
+    padding: 14px 15px;
+  }
+  .head {
+    align-items: stretch;
+  }
+}

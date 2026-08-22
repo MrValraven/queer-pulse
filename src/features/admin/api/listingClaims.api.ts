@@ -24,16 +24,16 @@ export interface ListingClaimDTO {
   createdAt: string;
 }
 
-/** GET /listings/admin/claims — the pending claim review queue, oldest first.
+/** GET /admin/listings/claims — the pending claim review queue, oldest first.
  *  Moderator/Admin only. */
 export const getListingClaims = () =>
-  apiGet<ListingClaimDTO[]>("/listings/admin/claims");
+  apiGet<ListingClaimDTO[]>("/admin/listings/claims");
 
-/** PATCH /listings/admin/claims/:id — approve or decline a claim. On
+/** PATCH /admin/listings/claims/:id — approve or decline a claim. On
  *  approval the backend reassigns the listing's owner to the claimant.
  *  Moderator/Admin only. */
 export const patchListingClaim = (
   id: string,
   decision: "approved" | "declined",
 ) =>
-  apiPatch<ListingClaimDTO>(`/listings/admin/claims/${id}`, { decision });
+  apiPatch<ListingClaimDTO>(`/admin/listings/claims/${id}`, { decision });

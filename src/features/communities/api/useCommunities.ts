@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getCommunities, type CommunitiesQuery } from "./communities.api";
 import { cardDtoToCommunity } from "./communities.adapters";
 import { communities } from "../../homepage/data/communities";
@@ -48,8 +49,12 @@ export function useCommunities(
 ): CommunitiesResult {
   const { enabled = true } = options;
   const { demoMode } = useDemoMode();
+  // `language` sits in the key because `cardDtoToCommunity` resolves catalog
+  // keys ("48 members" / "Members only") — a language switch has to re-map the
+  // already-fetched DTOs, not just re-render stale English strings.
+  const { t, language } = useTranslation();
   const query = useInfiniteQuery<CommunitiesPageVM>({
-    queryKey: ["communities", demoMode, params],
+    queryKey: ["communities", demoMode, params, language],
     // Callers may gate this fetch off when its result isn't consumed (e.g. a
     // profile viewing another member). Demo mode's queryFn is a local no-network
     // read, but gating it too keeps the discarded-path behaviour consistent.
@@ -106,7 +111,7 @@ export function useCommunities(
         page: pageParam as number,
       });
       return {
-        items: res.items.map(cardDtoToCommunity),
+        items: res.items.map((card) => cardDtoToCommunity(card, t)),
         total: res.total,
         page: res.page,
       };

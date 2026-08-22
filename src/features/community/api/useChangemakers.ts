@@ -12,8 +12,8 @@ export interface HeroStat {
   labelKey: string;
 }
 
-// Demo-mode hero numbers — the prototype's original figures. Live mode replaces
-// these with the values in the list payload.
+// Demo-mode hero numbers — the prototype's original figures. Demo mode only:
+// live mode shows the server's real counts, or no stat row until they arrive.
 const DEMO_STATS: HeroStat[] = [
   { value: "34", labelKey: "community:changemakers.stat.profiled" },
   { value: "6", labelKey: "community:changemakers.stat.causeAreas" },
@@ -77,10 +77,14 @@ export function useChangemakers(): ChangemakersResult {
     };
   }
 
+  // No fallback to DEMO_STATS in live: the prototype's figures ("1.2k people
+  // helped") are invented, and painting them into the hero while the request
+  // is in flight — or permanently, when it fails — is a claim the platform
+  // cannot back. An empty list renders no stat row at all.
   return {
     profiles: query.data?.profiles ?? [],
     featured: query.data?.featured,
-    stats: query.data?.stats ?? DEMO_STATS,
+    stats: query.data?.stats ?? [],
     isLoading: query.isLoading,
   };
 }

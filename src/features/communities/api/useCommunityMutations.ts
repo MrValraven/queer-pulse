@@ -25,6 +25,7 @@ import {
   updateCommunity,
   updatePost,
   type CommunityDetailDTO,
+  type CommunityReplyDTO,
   type CreateCommunityDto,
   type CreatePostDto,
   type JoinResultDTO,
@@ -54,7 +55,9 @@ export function useCreatePost(slug: string) {
       await createPost(slug, dto);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
     },
   });
@@ -72,7 +75,9 @@ export function useUpdatePost(slug: string) {
       await updatePost(slug, id, dto);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }
@@ -89,7 +94,9 @@ export function useReact(slug: string) {
       await reactToPost(slug, id, key);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }
@@ -106,24 +113,41 @@ export function useUnreact(slug: string) {
       await unreactToPost(slug, id, key);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }
 
-/** POST /communities/:slug/posts/:id/replies — reply to a Pulse post. */
+/** POST /communities/:slug/posts/:id/replies — reply to a Pulse post. Resolves
+ *  with the stored reply so the caller can keep the author's own reply on
+ *  screen: the post's embedded `replies` array is a bounded oldest-first
+ *  PREVIEW, so on a busy thread a brand-new (newest) reply is outside that
+ *  window and would vanish if the caller dropped its local copy on success. */
 export function useReply(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { id: string; text: string }>({
+  return useMutation<
+    CommunityReplyDTO | null,
+    Error,
+    { id: string; text: string }
+  >({
     // CommunityThread toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async ({ id, text }) => {
-      if (demoMode) return;
-      await replyToPost(slug, id, text);
+      if (demoMode) return null;
+      return replyToPost(slug, id, text);
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+    onSuccess: (_data, { id }) => {
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
+      // The "load more replies" pages for this post are now stale too (a
+      // reply was appended past the preview window).
+      void queryClient.invalidateQueries({
+        queryKey: ["community-post-replies", slug, id],
+      });
     },
   });
 }
@@ -134,6 +158,10 @@ export function useJoinCommunity(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<JoinResultDTO | null, Error, { note?: string }>({
+    // JoinModal keeps the applicant on the form and shows the reason inline
+    // (a frozen space, an already-pending request, a lost connection), so the
+    // global duplicate toast would land under its own error line.
+    meta: { silentError: true },
     mutationFn: async ({ note }) => {
       if (demoMode) return null;
       return joinCommunity(slug, note);
@@ -179,6 +207,11 @@ export function useReviewJoinRequest(slug: string) {
     Error,
     { id: string; action: "approve" | "decline" }
   >({
+    // The mod-tools callers own the error UI (they roll their optimistic row
+    // back and toast the specific reason), so the app-wide MutationCache
+    // handler must not stack a second generic toast on top: during a bulk
+    // approve that would fire once per request.
+    meta: { silentError: true },
     mutationFn: async ({ id, action }) => {
       if (demoMode) return;
       await reviewJoinRequest(slug, id, action);
@@ -196,6 +229,11 @@ export function useRemoveMember(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
+    // The mod-tools callers own the error UI (they roll their optimistic row
+    // back and toast the specific reason), so the app-wide MutationCache
+    // handler must not stack a second generic toast on top: during a bulk
+    // approve that would fire once per request.
+    meta: { silentError: true },
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
       await removeMember(slug, memberSlug);
@@ -220,6 +258,11 @@ export function useSetMemberRole(slug: string) {
     Error,
     { memberSlug: string; role: "member" | "mod" }
   >({
+    // The mod-tools callers own the error UI (they roll their optimistic row
+    // back and toast the specific reason), so the app-wide MutationCache
+    // handler must not stack a second generic toast on top: during a bulk
+    // approve that would fire once per request.
+    meta: { silentError: true },
     mutationFn: async ({ memberSlug, role }) => {
       if (demoMode) return;
       await setMemberRole(slug, memberSlug, role);
@@ -363,7 +406,9 @@ export function useDismissCommunityReport(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["community-reports", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-reports", slug],
+      });
     },
   });
 }
@@ -374,11 +419,7 @@ export function useDismissCommunityReport(slug: string) {
 export function useTransferOwnership(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<
-    CommunityDetailDTO | null,
-    Error,
-    { memberSlug: string }
-  >({
+  return useMutation<CommunityDetailDTO | null, Error, { memberSlug: string }>({
     // The transfer modal toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async ({ memberSlug }) => {
@@ -407,7 +448,9 @@ export function useDeleteCommunityPost(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }
@@ -425,7 +468,9 @@ export function useRestoreCommunityPost(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }
@@ -434,7 +479,11 @@ export function useRestoreCommunityPost(slug: string) {
 export function useEditCommunityReply(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { postId: string; replyId: string; text: string }>({
+  return useMutation<
+    void,
+    Error,
+    { postId: string; replyId: string; text: string }
+  >({
     // CommunityThread toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async ({ postId, replyId, text }) => {
@@ -443,7 +492,9 @@ export function useEditCommunityReply(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }
@@ -461,7 +512,9 @@ export function useDeleteCommunityReply(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }
@@ -479,7 +532,9 @@ export function useRestoreCommunityReply(slug: string) {
     },
     onSuccess: () => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["community-posts", slug] });
+      void queryClient.invalidateQueries({
+        queryKey: ["community-posts", slug],
+      });
     },
   });
 }

@@ -7,7 +7,6 @@
   --text-40: rgba(var(--cream-rgb), 0.4);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
-  --jade-light: #9be0bd;
 
   background: var(--studio-bg);
   color: var(--text);
@@ -300,7 +299,7 @@ a.track:hover {
   border: none;
   cursor: pointer;
   background: var(--accent);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -473,7 +472,7 @@ a.track:hover {
   padding: 14px;
   font-size: 12px;
   font-weight: 600;
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   background: linear-gradient(to top, rgba(10, 4, 20, 0.82), transparent 60%);
   opacity: 0;
   transition: opacity 0.2s var(--ease);
@@ -593,7 +592,7 @@ a.track:hover {
 }
 .cp:hover {
   background: var(--accent);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 
 /* ── Contact ────────────────────────────────────────────────── */

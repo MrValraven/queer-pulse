@@ -1,0 +1,80 @@
+/* Card designer modal — a live preview beside a compact settings form,
+   mirroring EditCommunityModal's plain-vertical-form pattern (FormField
+   carries its own rhythm; the non-FormField blocks below match its 16px
+   bottom margin so the whole column reads as one rhythm). */
+
+.body {
+  display: grid;
+  gap: var(--gap-lg);
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  align-items: start;
+}
+
+@media (max-width: 640px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.preview {
+  position: sticky;
+  top: 0;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.legend {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.skins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+.skinOption {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  cursor: pointer;
+  font-size: 14.5px;
+  color: var(--ink);
+}
+
+.skinOption input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+
+.swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
+  flex: 0 0 auto;
+}
+
+.swatch[data-skin="plum"] { background: var(--plum); }
+.swatch[data-skin="cream"] { background: var(--cream); }
+.swatch[data-skin="jade"] { background: var(--jade); }
+.swatch[data-skin="coral"] { background: var(--accent); }
+.swatch[data-skin="ink"] { background: var(--ink); }

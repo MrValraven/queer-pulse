@@ -1,4 +1,5 @@
 import { FiExternalLink } from "react-icons/fi";
+import { safeHref } from "../../shared/lib/safeHref";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./housingVirtualTour.module.css";
@@ -26,7 +27,7 @@ function toEmbedUrl(rawUrl: string): string | null {
     const id = url.searchParams.get("v");
     return id ? `https://www.youtube.com/embed/${id}` : null;
   }
-  if (host.endsWith("matterport.com")) {
+  if (host === "matterport.com" || host.endsWith(".matterport.com")) {
     return rawUrl;
   }
   return null;
@@ -37,6 +38,7 @@ function toEmbedUrl(rawUrl: string): string | null {
 export function HousingVirtualTour({ url }: { url: string }) {
   const { t } = useTranslation();
   const embedUrl = toEmbedUrl(url);
+  const linkOutHref = safeHref(url);
 
   if (embedUrl) {
     return (
@@ -54,6 +56,8 @@ export function HousingVirtualTour({ url }: { url: string }) {
     );
   }
 
+  if (!linkOutHref) return null;
+
   return (
     <div className={styles.linkOut}>
       <p className={styles.linkNote}>
@@ -61,7 +65,7 @@ export function HousingVirtualTour({ url }: { url: string }) {
       </p>
       <Button
         variant="ghost"
-        href={url}
+        href={linkOutHref}
         target="_blank"
         rel="noopener noreferrer nofollow"
       >

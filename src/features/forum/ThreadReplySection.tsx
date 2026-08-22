@@ -62,7 +62,7 @@ export function ThreadReplySection({
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
   demoMode: boolean;
-  demoOwns: (person: { slug?: string; name?: string }) => boolean;
+  demoOwns: (person: { slug?: string; isMine?: boolean }) => boolean;
   moderation: ReturnType<typeof useThreadModeration>;
   nestedReplies: ReturnType<typeof useNestedReplyComposer>;
   authorName: string;

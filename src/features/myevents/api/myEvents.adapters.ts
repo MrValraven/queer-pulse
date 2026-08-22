@@ -136,7 +136,13 @@ export function eventCardToMyEvent(
     date,
     start: time,
     end,
-    venue: dto.isOnline ? "Online" : (dto.venue ?? dto.neighbourhood ?? ""),
+    // The raw instants ride along for the .ics exporter, which must not export
+    // the browser-local rendering above as a floating time (FE-MSG-09).
+    startAtIso: dto.startAt,
+    endAtIso: dto.endAt,
+    venue: dto.isOnline
+      ? t("myevents:card.online")
+      : (dto.venue ?? dto.neighbourhood ?? ""),
     community: dto.org,
     hostSlug: dto.host?.slug,
     hostName: dto.host
@@ -240,18 +246,26 @@ function formatNotifTime(iso: string | undefined, fmt: Formatters): string {
 /** GET /event-invites entry → `MyEvent` (the "invite" category, under the Saved pill).
  *  The backend's invite row nests a lean event summary (no attendee counts /
  *  org label yet — those are fetched via GET /events/:slug once opened), so
- *  those fields are left undefined rather than faked. */
-export function eventInviteToMyEvent(dto: EventInviteDTO): MyEvent {
+ *  those fields are left undefined rather than faked. `t` covers the two spots
+ *  where the row carries a flag rather than authored text: an online
+ *  gathering's missing venue string, and an invite whose event summary the API
+ *  left out entirely. */
+export function eventInviteToMyEvent(
+  dto: EventInviteDTO,
+  t: TFunction,
+): MyEvent {
   const ev = dto.event;
   const { date, time } = splitIso(ev?.startAt);
   return {
     id: dto.id,
     category: "invite",
     slug: ev?.slug,
-    title: ev?.title ?? "Event invitation",
+    title: ev?.title ?? t("myevents:invite.defaultTitle"),
     date,
     start: time,
-    venue: ev?.isOnline ? "Online" : (ev?.venue ?? ""),
+    startAtIso: ev?.startAt,
+    endAtIso: ev?.endAt ?? undefined,
+    venue: ev?.isOnline ? t("myevents:card.online") : (ev?.venue ?? ""),
     going: 0,
     online: ev?.isOnline,
     from: dto.inviter

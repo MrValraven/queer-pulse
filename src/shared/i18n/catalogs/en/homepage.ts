@@ -117,7 +117,7 @@ export const homepage: Catalog = {
   "painPoints.marker2": "And beyond the room, the harder questions.",
 
   "painPoints.exchange5.question":
-    '"I want to do something, not just post about it."',
+    '"I want to do something about it, beyond posting."',
   "painPoints.exchange5.heading": "So we built <em>a way to act.</em>",
   "painPoints.exchange5.body":
     "Find local campaigns, mutual aid initiatives, volunteer opportunities, and ways to turn care into action.",
@@ -187,6 +187,10 @@ export const homepage: Catalog = {
   "stories.subtitle":
     "Essays, profiles, and reporting from inside the community: no outside gaze, no explaining ourselves.",
   "stories.imagePlaceholder": "story image",
+  // LiveStories.tsx — the same section sourced from published magazine pieces.
+  "liveStories.byline": "{author} · {minutes} min read",
+  "liveStories.issueKicker": "Issue {number}",
+  "liveStories.magazineKicker": "From the magazine",
 
   // ── ChangeMakers ───────────────────────────────────────────────────────────
   "changeMakers.eyebrow": "Changemakers",

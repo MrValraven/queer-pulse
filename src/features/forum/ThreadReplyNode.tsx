@@ -24,7 +24,7 @@ interface ThreadReplyNodeProps {
   likedReplies: Record<string, boolean>;
   toggleReplyLike: (reply: Reply) => void;
   demoMode: boolean;
-  demoOwns: (person: { slug?: string; name?: string }) => boolean;
+  demoOwns: (person: { slug?: string; isMine?: boolean }) => boolean;
   editingReplyPostId: string | null;
   onStartEdit: (reply: Reply) => void;
   onCancelEdit: () => void;
@@ -122,7 +122,14 @@ export function ThreadReplyNode({
         onDelete={onDelete}
         onRestore={onRestore}
         onHistory={onHistory}
-        onReply={isLocked ? undefined : onStartReply}
+        // Live replies nest by BACKEND post id. A reply still waiting for its
+        // create response has only a client uuid, which the server rejects as
+        // a `parentPostId`, so the action is withheld until the id lands.
+        onReply={
+          isLocked || (!demoMode && !node.reply.postId)
+            ? undefined
+            : onStartReply
+        }
         onReport={onReport}
         collapse={
           hasChildren

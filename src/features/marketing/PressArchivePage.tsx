@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiFileText } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -8,13 +9,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import styles from "./PressArchivePage.module.css";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  HubBackLink,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { Button, EmptyState, HubBackLink } from "../../shared/components/ui";
 import {
   PRESS_CHIPS,
   PRESS_DATA,
@@ -22,24 +17,8 @@ import {
   type Piece,
   type YearGroup,
 } from "./pressArchive.data";
-
-function PressRowSkeleton() {
-  // Mirrors the real .row grid: date column (auto), title block (1fr), outlet (auto).
-  return (
-    <div className={styles.row} aria-hidden>
-      <div className={styles.date}>
-        <SkeletonLine width={56} height={17} />
-        <SkeletonLine width={44} height={11} style={{ marginTop: 6 }} />
-      </div>
-      <div>
-        <SkeletonLine width={120} height={11} />
-        <SkeletonLine width="70%" height={18} style={{ marginTop: 8 }} />
-        <SkeletonLine width="45%" height={12} style={{ marginTop: 6 }} />
-      </div>
-      <SkeletonLine width={72} height={12} />
-    </div>
-  );
-}
+import { PressArchiveFilters } from "./PressArchiveFilters";
+import { PressArchiveList, PressArchiveYearSkeleton } from "./PressArchiveList";
 
 /** Text a piece is searched against. The title/source can be JSX, so we match
  *  the string fields (outlet, source kind, kind, and source when it's a string). */
@@ -90,6 +69,11 @@ export function PressArchivePage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("marketing:pressArchive.meta.title")}
+        description={t("marketing:pressArchive.meta.description")}
+        canonical={routes.pressArchive}
+      />
       <div className={styles.page}>
         <HubBackLink
           to={routes.pressKit}
@@ -147,136 +131,49 @@ export function PressArchivePage() {
           />
         ) : (
           <>
-        <div className={styles.controls}>
-          <div className={styles.search}>
-            <svg viewBox="0 0 24 24" aria-hidden>
-              <circle cx="11" cy="11" r="7" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={t("marketing:pressArchive.search.placeholder")}
-              aria-label={t("marketing:pressArchive.search.placeholder")}
+            <PressArchiveFilters
+              query={query}
+              onQueryChange={setQuery}
+              chipIndex={chipIndex}
+              onChipIndexChange={setChipIndex}
             />
-          </div>
-          {PRESS_CHIPS.map((chip, index) => (
-            <button
-              key={chip.labelKey}
-              type="button"
-              className={[styles.chip, chipIndex === index && styles.chipActive]
-                .filter(Boolean)
-                .join(" ")}
-              aria-pressed={chipIndex === index}
-              onClick={() => setChipIndex(index)}
-            >
-              {t(chip.labelKey, { count: chip.count })}
-            </button>
-          ))}
-        </div>
 
-        {loading ? (
-          <div>
-            <h2 className={styles.year} aria-hidden>
-              <SkeletonLine width={90} height={42} />
-            </h2>
-            {Array.from({ length: 5 }).map((_unused, skeletonIndex) => (
-              <PressRowSkeleton key={skeletonIndex} />
-            ))}
-          </div>
-        ) : visibleGroups.length === 0 ? (
-          <p className={styles.empty}>
-            {t("marketing:pressArchive.noResults")}
-          </p>
-        ) : (
-          visibleGroups.map((yearGroup) => (
-            <div key={yearGroup.year}>
-              <h2 className={styles.year}>
-                {yearGroup.year.slice(0, 3)}
-                <em>{yearGroup.year.slice(3)}</em>
-                <span className={styles.ct}>{yearGroup.count}</span>
-              </h2>
-              {yearGroup.pieces.map((piece, pieceIndex) => (
-                <FadeIn key={piece.id} delay={Math.min(pieceIndex, 8) * 60}>
-                  <button
-                    type="button"
-                    className={styles.row}
-                    onClick={() => {
-                      showToast(
-                        t("marketing:pressArchive.toast.opening", {
-                          source: piece.out,
-                        }),
-                        "info",
-                      );
-                    }}
-                  >
-                    <div className={styles.date}>
-                      {piece.day} <em>{piece.month}</em>
-                      <span>{piece.kind}</span>
-                    </div>
-                    <div>
-                      <div
-                        className={styles.source}
-                        style={
-                          piece.sourceMuted
-                            ? { color: "var(--ink-60)" }
-                            : undefined
-                        }
-                      >
-                        {piece.pin && (
-                          <span className={styles.pin}>
-                            {t("marketing:pressArchive.pinBadge")}
-                          </span>
-                        )}
-                        {piece.source}
-                        <span className={styles.kind}>
-                          · {piece.sourceKind}
-                        </span>
-                      </div>
-                      <div className={styles.title}>{piece.title}</div>
-                      <div className={styles.meta}>{piece.meta}</div>
-                    </div>
-                    <div className={styles.out}>{piece.out}</div>
-                  </button>
-                </FadeIn>
-              ))}
-            </div>
-          ))
-        )}
+            <PressArchiveList
+              groups={visibleGroups}
+              isLoading={loading}
+              onOpenPiece={(piece) => {
+                showToast(
+                  t("marketing:pressArchive.toast.opening", {
+                    source: piece.out,
+                  }),
+                  "info",
+                );
+              }}
+            />
 
-        {loadingMore && (
-          <div>
-            <h2 className={styles.year} aria-hidden>
-              <SkeletonLine width={90} height={42} />
-            </h2>
-            {Array.from({ length: 5 }).map((_unused, skeletonIndex) => (
-              <PressRowSkeleton key={skeletonIndex} />
-            ))}
-          </div>
-        )}
+            {loadingMore && <PressArchiveYearSkeleton />}
 
-        {!loading && !allLoaded && (
-          <div className={styles.loadMore}>
-            <Button
-              variant="ghost"
-              onClick={loadMore}
-              disabled={loadingMore}
-              aria-busy={loadingMore}
-            >
-              {loadingMore
-                ? t("marketing:pressArchive.loadingMore")
-                : t("marketing:pressArchive.loadMoreCta")}
-            </Button>
-          </div>
-        )}
-        {!loading && allLoaded && (
-          <div className={styles.loadMore}>
-            <span className={styles.end}>
-              {t("marketing:pressArchive.endOfArchive")}
-            </span>
-          </div>
-        )}
+            {!loading && !allLoaded && (
+              <div className={styles.loadMore}>
+                <Button
+                  variant="ghost"
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  aria-busy={loadingMore}
+                >
+                  {loadingMore
+                    ? t("marketing:pressArchive.loadingMore")
+                    : t("marketing:pressArchive.loadMoreCta")}
+                </Button>
+              </div>
+            )}
+            {!loading && allLoaded && (
+              <div className={styles.loadMore}>
+                <span className={styles.end}>
+                  {t("marketing:pressArchive.endOfArchive")}
+                </span>
+              </div>
+            )}
           </>
         )}
       </div>

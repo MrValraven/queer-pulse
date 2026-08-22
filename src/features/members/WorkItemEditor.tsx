@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiCamera, FiPlus, FiTrash2 } from "react-icons/fi";
 import { ImageSlot, PhotoReframeModal } from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
@@ -130,6 +130,19 @@ export function WorkItemEditor({
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
+
+  // Same ownership contract as `AvatarEditor`: `useUploadImage` drops the URL
+  // from its own unmount sweep once it hands it over, so this component has to
+  // revoke it. Doing that only in the replace/remove handlers leaked one
+  // decoded image whenever the edit was discarded (or the row removed) with a
+  // fresh preview still showing. Revoking an already-revoked URL is a no-op, so
+  // the change-time cleanup is harmless alongside those handlers.
+  useEffect(
+    () => () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    },
+    [previewUrl],
+  );
 
   /** Replace (or, when `link` is undefined, drop) the link at `linkIndex`,
    *  keeping `item.links` compact (0-2 entries, no holes). */

@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { FiArrowRight, FiFolder } from "react-icons/fi";
+import { FiArrowRight, FiFolder, FiPlus } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import {
   Button,
@@ -161,6 +161,10 @@ export function CollectionsPage() {
     createCollection,
     addSaveToCollection,
     removeSaveFromCollection,
+    renameCollection,
+    deleteCollection,
+    isRenaming,
+    isDeleting,
     viewing,
     viewingItems,
   } = useCollectionsController();
@@ -218,7 +222,9 @@ export function CollectionsPage() {
                 className={styles.newCard}
                 onClick={() => setModal({ type: "new" })}
               >
-                <div className={styles.plus}>+</div>
+                <div className={styles.plus}>
+                  <FiPlus aria-hidden />
+                </div>
                 <b>{t("members:collections.newCard.title")}</b>
                 <span>{t("members:collections.newCard.subtitle")}</span>
               </button>
@@ -271,6 +277,10 @@ export function CollectionsPage() {
               ? undefined
               : (ref) => removeSaveFromCollection(viewing.id, ref)
           }
+          onRename={(nextName) => renameCollection(viewing.id, nextName)}
+          onDelete={deleteCollection}
+          isRenaming={isRenaming}
+          isDeleting={isDeleting}
         />
       )}
       {modal?.type === "add" && (

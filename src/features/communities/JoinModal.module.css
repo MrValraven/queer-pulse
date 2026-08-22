@@ -180,3 +180,13 @@
   gap: 10px;
   flex-wrap: wrap;
 }
+
+/* Why the last join attempt failed, under the submit button on the About step.
+   The applicant stays on the form, so the reason sits with the action that
+   produced it rather than in a toast that outlives the modal. */
+.error {
+  margin-top: 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--danger);
+}

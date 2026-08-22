@@ -881,6 +881,18 @@ export const revokeSubprofileInvite = (id: string, inviteId: string) =>
 export const leaveSubprofile = (id: string) =>
   apiDelete<{ ok: true }>(`/subprofiles/${id}/members/me`);
 
+/**
+ * Remove another co-owner from a persona, addressed by their profile SLUG
+ * (the repo convention for member-addressed routes). Creator-only server-side;
+ * the creator can't remove themselves this way (that's delete, or leave).
+ * Without this the creator's only recourse against a co-owner who turned
+ * hostile was deleting the whole persona.
+ */
+export const removeSubprofileMember = (id: string, slug: string) =>
+  apiDelete<{ ok: true }>(
+    `/subprofiles/${id}/members/${encodeURIComponent(slug)}`,
+  );
+
 /** The current member's own incoming co-owner invites, across all personas. */
 export const listMyPersonaInvites = (signal?: AbortSignal) =>
   apiGet<MyInviteDTO[]>(

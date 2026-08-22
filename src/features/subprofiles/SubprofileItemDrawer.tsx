@@ -1,7 +1,7 @@
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { FiClock, FiX } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   SubprofileItemView,
@@ -43,7 +43,10 @@ interface SubprofileItemDrawerProps {
  * `SubprofileItemEditor`) to keep this shell under the line cap.
  *
  * Edits a LOCAL draft copy — nothing reaches the section's working `rows`
- * list until Save; Cancel/Escape/scrim-click discard the draft untouched.
+ * list until Save. Cancel discards outright (an explicit choice), while the
+ * accidental dismissals (scrim tap, Escape, the header close) ask first once
+ * anything has been typed: on a phone a stray tap outside the sheet used to
+ * throw away a finished poem or a six-field gig with no way back.
  * `SubprofileSectionEditor` applies the cross-item feature exclusivity when
  * it commits the saved draft into `rows`, then persists via `replaceSection`.
  */
@@ -61,8 +64,27 @@ export function SubprofileItemDrawer({
   const { reseedSection } = useSubprofileEditorContext();
   const [draft, setDraft] = useState(item);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const dialogRef = useDrawerDismiss(onClose);
+  const [isConfirmingDiscard, setIsConfirmingDiscard] = useState(false);
   const titleId = useId();
+
+  // `draft` always starts as a copy of `item` and is only ever updated by
+  // spreading over it, so key order is stable and a serialized compare is an
+  // honest "has anything been typed yet".
+  const isDraftDirty = useMemo(
+    () => JSON.stringify(draft) !== JSON.stringify(item),
+    [draft, item],
+  );
+
+  /** Dismissals that can happen by accident: ask before throwing work away. */
+  function requestClose() {
+    if (isDraftDirty) {
+      setIsConfirmingDiscard(true);
+      return;
+    }
+    onClose();
+  }
+
+  const dialogRef = useDrawerDismiss(requestClose);
 
   // A restore rewrites the saved item server-side, which the drawer's local
   // `draft` state has no way to pick up, so a restore closes the history
@@ -94,7 +116,7 @@ export function SubprofileItemDrawer({
       className="scrim bottom"
       role="presentation"
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) requestClose();
       }}
     >
       <div
@@ -123,7 +145,7 @@ export function SubprofileItemDrawer({
             <button
               type="button"
               className={styles.smallBtn}
-              onClick={onClose}
+              onClick={requestClose}
               aria-label={t("shared:modal.close")}
             >
               <FiX size={16} aria-hidden />
@@ -184,8 +206,23 @@ export function SubprofileItemDrawer({
         </div>
       </div>
 
-      {/* Portals itself to document.body via the shared `Modal` primitive, so
-          nesting it here (inside this drawer's own portal) is harmless. */}
+      {/* Both of these portal themselves to document.body via the shared
+          `Modal` primitive, so nesting them here (inside this drawer's own
+          portal) is harmless, and the modal stack keeps Escape from closing
+          the drawer underneath them. */}
+      <ConfirmDialog
+        open={isConfirmingDiscard}
+        tone="destructive"
+        title={t("subprofiles:itemDrawer.discardTitle")}
+        description={t("subprofiles:itemDrawer.discardBody")}
+        confirmLabel={t("subprofiles:itemDrawer.discardConfirm")}
+        cancelLabel={t("subprofiles:itemDrawer.discardKeep")}
+        onConfirm={() => {
+          setIsConfirmingDiscard(false);
+          onClose();
+        }}
+        onClose={() => setIsConfirmingDiscard(false)}
+      />
       {historyOpen && (
         <ItemRevisionHistoryModal
           subprofileId={subprofileId}

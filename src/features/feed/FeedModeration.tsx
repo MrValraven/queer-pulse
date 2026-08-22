@@ -6,6 +6,7 @@ import {
   FiVolumeX,
   FiSlash,
   FiCheck,
+  FiAlertTriangle,
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -277,6 +278,11 @@ export function ReportModal({
   const [reason, setReason] = useState<ReasonCode | "">("");
   const [detail, setDetail] = useState("");
   const [sent, setSent] = useState(false);
+  // A report that FAILED must never render the "we received your report"
+  // confirmation: the reporter would believe moderators had it when nothing was
+  // persisted. Failure keeps the form (and their reason/detail) on screen with
+  // an honest retry note instead.
+  const [hasFailed, setHasFailed] = useState(false);
   const createReport = useCreateReport();
   const reasons = reasonsFor(subjectType);
 
@@ -291,14 +297,16 @@ export function ReportModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!reason) return;
-    // Live mode POSTs /reports; demo resolves locally. Same success UI either way.
+    setHasFailed(false);
+    // Live mode POSTs /reports; demo resolves locally. Only a resolved request
+    // confirms.
     createReport.mutate(
       { subjectType, subjectId, reasonCode: reason, detail: detail.trim() },
       {
         onSuccess: () => setSent(true),
         onError: (err) => {
           logError(err, { scope: "feed.report" });
-          setSent(true);
+          setHasFailed(true);
         },
       },
     );
@@ -376,6 +384,12 @@ export function ReportModal({
               onChange={(e) => setDetail(e.target.value)}
               rows={3}
             />
+            {hasFailed && (
+              <p className={styles.reportError} role="alert">
+                <FiAlertTriangle aria-hidden />
+                {t("feed:moderation.reportDialog.failed")}
+              </p>
+            )}
             <div className={styles.dialogActions}>
               <Button variant="ghost" type="button" onClick={onClose}>
                 {t("feed:action.cancel")}
@@ -387,7 +401,9 @@ export function ReportModal({
               >
                 {createReport.isPending
                   ? t("feed:moderation.sending")
-                  : t("feed:moderation.reportDialog.submitCta")}
+                  : hasFailed
+                    ? t("feed:moderation.reportDialog.retryCta")
+                    : t("feed:moderation.reportDialog.submitCta")}
               </Button>
             </div>
           </form>

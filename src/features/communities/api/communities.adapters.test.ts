@@ -3,6 +3,12 @@ import { postDtoToPost, postToThread } from "./communities.adapters";
 import type { Post } from "../community.model";
 import type { CommunityPostDTO } from "./communities.api";
 
+// The adapters localize their own copy now, so they take a `t`. The stub
+// echoes the key: these assertions are about the post/reply FLAGS, not copy.
+const translate = ((key: string) => key) as unknown as Parameters<
+  typeof postDtoToPost
+>[2];
+
 function makePost(overrides: Partial<Post> = {}): Post {
   return {
     id: "post-1",
@@ -12,7 +18,12 @@ function makePost(overrides: Partial<Post> = {}): Post {
     pinned: false,
     reactions: [{ key: "heart", count: 3, reacted: true }],
     replies: [
-      { id: "reply-1", author: { initials: "JD", name: "Jo D", tint: "jade" }, text: "hi", time: "1m" },
+      {
+        id: "reply-1",
+        author: { initials: "JD", name: "Jo D", tint: "jade" },
+        text: "hi",
+        time: "1m",
+      },
     ],
     time: "2m",
     createdAt: "2026-07-23T10:00:00Z",
@@ -62,7 +73,12 @@ function post(overrides: Partial<CommunityPostDTO> = {}): CommunityPostDTO {
     replies: [
       {
         id: "reply-1",
-        author: { slug: "sam", firstName: "Sam", lastName: "T", avatarUrl: null },
+        author: {
+          slug: "sam",
+          firstName: "Sam",
+          lastName: "T",
+          avatarUrl: null,
+        },
         text: "nice",
         createdAt: "2026-07-23T10:05:00Z",
         editedAt: null,
@@ -80,14 +96,16 @@ function post(overrides: Partial<CommunityPostDTO> = {}): CommunityPostDTO {
 
 describe("communities adapters carry the post/reply flags", () => {
   it("postDtoToPost carries the OP flags + reply flags", () => {
-    const mapped = postDtoToPost(post(), "queer-runners");
+    const mapped = postDtoToPost(post(), "queer-runners", translate);
     expect(mapped.canEdit).toBe(true);
     expect(mapped.replies[0]?.canDelete).toBe(true);
     expect(mapped.replies[0]?.id).toBe("reply-1");
   });
 
   it("postToThread attaches OP id + flags and maps replies", () => {
-    const thread = postToThread(postDtoToPost(post({ id: "op-1" }), "queer-runners"));
+    const thread = postToThread(
+      postDtoToPost(post({ id: "op-1" }), "queer-runners", translate),
+    );
     expect(thread.id).toBe("op-1");
     expect(thread.canDelete).toBe(true);
     expect(thread.replies[0]?.id).toBe("reply-1");

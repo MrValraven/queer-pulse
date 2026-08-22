@@ -11,22 +11,57 @@ import { urlBase64ToUint8Array } from "./urlBase64ToUint8Array";
 
 const vapidPublicKey = (import.meta.env.VITE_VAPID_PUBLIC_KEY ?? "").trim();
 
+/**
+ * A deploy with no `VITE_VAPID_PUBLIC_KEY` cannot create a subscription at
+ * all, so it counts as unsupported rather than as a toggle that flips back
+ * with no explanation. The row then shows its "your browser can't do this yet"
+ * helper, which is at least an honest dead end.
+ */
 function isSupported(): boolean {
   return (
     typeof navigator !== "undefined" &&
     "serviceWorker" in navigator &&
     typeof window !== "undefined" &&
     "PushManager" in window &&
-    "Notification" in window
+    "Notification" in window &&
+    vapidPublicKey.length > 0
   );
 }
+
+/**
+ * Whether an existing browser subscription was created with the VAPID key this
+ * build uses. A mismatch (a redeploy with rotated keys, a shared device) makes
+ * `pushManager.subscribe()` throw `InvalidStateError` forever, so the stale one
+ * has to be dropped before re-subscribing.
+ */
+function matchesApplicationServerKey(
+  subscription: PushSubscription,
+  key: Uint8Array,
+): boolean {
+  const existing = subscription.options?.applicationServerKey;
+  if (!existing) return false;
+  const bytes = new Uint8Array(existing);
+  if (bytes.length !== key.length) return false;
+  return bytes.every((byte, index) => byte === key[index]);
+}
+
+/**
+ * How an `enable()` attempt ended. `denied` is the member's own choice (the
+ * calling row already explains it through `permission`); `failed` carries the
+ * error so the caller can say WHY instead of just snapping the toggle back.
+ */
+export type PushEnableResult =
+  | { status: "enabled" }
+  | { status: "denied" }
+  | { status: "unsupported" }
+  | { status: "failed"; error: unknown };
 
 export interface PushSubscriptionApi {
   supported: boolean;
   permission: NotificationPermission;
   isSubscribed: boolean;
   busy: boolean;
-  enable: () => Promise<void>;
+  enable: () => Promise<PushEnableResult>;
   disable: () => Promise<void>;
 }
 
@@ -113,8 +148,8 @@ export function usePushSubscription(): PushSubscriptionApi {
     };
   }, [supported, demoMode]);
 
-  const enable = useCallback(async () => {
-    if (!supported || !vapidPublicKey) return;
+  const enable = useCallback(async (): Promise<PushEnableResult> => {
+    if (!supported) return { status: "unsupported" };
     setBusy(true);
     // Track the browser subscription so we can roll it back if the server call
     // fails — otherwise a failed enable leaves a PushSubscription the server
@@ -124,11 +159,19 @@ export function usePushSubscription(): PushSubscriptionApi {
     try {
       const result = await Notification.requestPermission();
       setPermission(result);
-      if (result !== "granted") return;
+      if (result !== "granted") return { status: "denied" };
       const registration = await navigator.serviceWorker.ready;
+      const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey);
+      // Drop a subscription left over from a different VAPID key first, or
+      // subscribe() below throws InvalidStateError and every future attempt
+      // fails the same way with nothing to show for it.
+      const stale = await registration.pushManager.getSubscription();
+      if (stale && !matchesApplicationServerKey(stale, applicationServerKey)) {
+        await stale.unsubscribe().catch(() => {});
+      }
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+        applicationServerKey,
       });
       if (!demoMode) {
         const json = subscription.toJSON();
@@ -143,14 +186,17 @@ export function usePushSubscription(): PushSubscriptionApi {
         }
       }
       setIsSubscribed(true);
-    } catch {
+      return { status: "enabled" };
+    } catch (error) {
       // Server registration failed after the browser created a subscription:
       // unsubscribe the browser so it doesn't orphan, and reflect the failure
-      // by leaving the toggle off.
+      // by leaving the toggle off. The error travels back to the caller so the
+      // member is told what went wrong rather than watching the toggle snap.
       if (subscription) {
         await subscription.unsubscribe().catch(() => {});
       }
       setIsSubscribed(false);
+      return { status: "failed", error };
     } finally {
       setBusy(false);
     }

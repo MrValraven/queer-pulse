@@ -41,7 +41,8 @@ export const economy: Catalog = {
   "incubator.programme.title": "Como <em>funciona</em> o programa.",
   "incubator.mentors.title": "Pessoas <em>mentoras</em> atuais.",
   "incubator.mentors.requestCta": "Pedir sessão",
-  "incubator.mentors.empty.title": "O emparelhamento com mentores está a chegar",
+  "incubator.mentors.empty.title":
+    "O emparelhamento com mentores está a chegar",
   "incubator.mentors.empty.description":
     "Assim que a bolsa de mentores da comunidade estiver ativa, vais ser emparelhado com alguém do teu setor aqui mesmo.",
   "incubator.step.apply.title": "Candidatar",
@@ -187,7 +188,8 @@ export const economy: Catalog = {
   "workHub.card.apps.label": "Candidaturas",
   "workHub.card.apps.primary": "{active} ativas / {sent} enviadas",
   "workHub.card.apps.noOffers": "Ainda sem propostas",
-  "workHub.card.apps.trackAll": "Acompanha todas as vagas a que te candidataste",
+  "workHub.card.apps.trackAll":
+    "Acompanha todas as vagas a que te candidataste",
   "workHub.card.apps.viewAll": "Ver todas as candidaturas",
   "workHub.card.mentor.label": "Mentoria",
   "workHub.card.mentor.primary": "1 mentoria ativa",
@@ -373,7 +375,7 @@ export const economy: Catalog = {
   // ── Distintivos de segurança (vocabulário partilhado) ──────────────────
   "safetyBadge.verified.label": "Verificada como segura",
   "safetyBadge.verified.blurb":
-    "Conquistado, não reclamado. Confirmamos as políticas inclusivas no papel e cruzamos com pelo menos três avaliações anónimas de pessoas LGBTQ+ que ali trabalham ou trabalharam. Reavaliado todos os anos.",
+    "Conquistado. Confirmamos as políticas inclusivas no papel e cruzamos com pelo menos três avaliações anónimas",
   "safetyBadge.trans.label": "Amiga de pessoas trans",
   "safetyBadge.trans.blurb":
     "Prática documentada de inclusão trans: cuidados de saúde de afirmação de género no plano, um processo de mudança de nome e pronomes, e instalações neutras quanto ao género, confirmado por avaliações de quem lá trabalha.",
@@ -427,6 +429,37 @@ export const economy: Catalog = {
   "jobDetail.sidebar.category": "Categoria",
   "jobDetail.sidebar.deadline": "Prazo",
   "jobDetail.sidebar.applyCta": "Candidatar agora",
+  "jobDetail.sidebar.shareToCommunityCta": "Partilhar numa comunidade",
+
+  // ── ShareToCommunityModal ───────────────────────────────────────────────
+  "shareToCommunity.eyebrow": "Passa a palavra",
+  "shareToCommunity.title": "Partilha numa <em>comunidade.</em>",
+  "shareToCommunity.sub":
+    "Publica isto numa das tuas salas. Aparece no mural da sala e no feed, sob as regras dessa comunidade.",
+  "shareToCommunity.communityLabel": "Que comunidade",
+  "shareToCommunity.communityPlaceholder": "Escolhe uma comunidade",
+  "shareToCommunity.noteLabel": "Diz alguma coisa sobre isto",
+  "shareToCommunity.notePlaceholder":
+    "Porque é que isto pode servir a alguém daqui…",
+  "shareToCommunity.defaultNote":
+    "Partilho isto caso sirva a alguém daqui: {title} na {organization}.",
+  "shareToCommunity.moderationNote":
+    "Publicado em teu nome, nessa comunidade. A moderação de lá pode editar ou remover, como em qualquer publicação.",
+  "shareToCommunity.noCommunities":
+    "Ainda não estás em nenhuma comunidade. Junta-te a uma e podes partilhar coisas lá.",
+  "shareToCommunity.cancel": "Cancelar",
+  "shareToCommunity.shareCta": "Publicar",
+  "shareToCommunity.sending": "A publicar…",
+  "shareToCommunity.errorNotAllowed":
+    "De momento não podes publicar nessa comunidade. Pode estar congelada, arquivada, ou podes já ter saído.",
+  "shareToCommunity.errorGone": "Essa comunidade já não existe. Escolhe outra.",
+  "shareToCommunity.errorFailed":
+    "A tua publicação não foi enviada. Tenta outra vez daqui a um bocado.",
+  "shareToCommunity.success.title": "Está",
+  "shareToCommunity.success.em": "publicado.",
+  "shareToCommunity.success.body":
+    "A tua publicação está no <strong>{community}</strong> e no feed.",
+  "shareToCommunity.success.closeLabel": "Concluído",
   "jobDetail.report.cta": "Denunciar esta vaga",
   "jobDetail.report.ariaLabel": "Denunciar {name}",
 
@@ -450,6 +483,8 @@ export const economy: Catalog = {
   "housing.filter.short": "Curta duração",
   "housing.filter.studio": "Estúdio / apartamento inteiro",
   "housing.listSpaceCta": "+ Anunciar o teu espaço",
+  "housing.loadMore": "Ver mais casas",
+  "housing.loadingMore": "A carregar mais casas…",
   "housing.filterBar.area": "Bairro",
   "housing.filterBar.areaAny": "Qualquer bairro",
   "housing.filterBar.areaSelected": "{count} selecionados",
@@ -471,7 +506,8 @@ export const economy: Catalog = {
   "housing.filterBar.verified": "Só verificados",
   "housing.filterBar.clear": "Limpar filtros",
   "housing.map.ariaLabel": "Mapa de anúncios por bairro",
-  "housing.map.error": "Não foi possível carregar o mapa. Use a vista de lista.",
+  "housing.map.error":
+    "Não foi possível carregar o mapa. Use a vista de lista.",
   "housing.map.count": "{count} casas",
   "housing.map.empty": "Ainda não há casas com estes filtros.",
   "housing.map.jumpToList": "Ir para {count} casas",
@@ -484,7 +520,8 @@ export const economy: Catalog = {
   "housing.saveSearch.cancel": "Cancelar",
   "housing.saveSearch.saved":
     "Procura guardada, avisamos-te quando aparecer uma casa assim.",
-  "housing.saveSearch.error": "Não deu para guardar essa procura. Tenta outra vez daqui a pouco.",
+  "housing.saveSearch.error":
+    "Não deu para guardar essa procura. Tenta outra vez daqui a pouco.",
   "housing.savedSearches.title": "As tuas procuras guardadas",
   "housing.savedSearches.alertsOn": "Alertas ativos",
   "housing.savedSearches.remove": "Remover procura guardada {name}",
@@ -511,7 +548,8 @@ export const economy: Catalog = {
     "A comunidade já confirmou que estas pessoas proprietárias são queer-friendly, de confiança e justas. Não é uma garantia, faz sempre a tua própria verificação.",
   "housing.landlords.endorsedBadge": "Recomendação da comunidade",
   "housing.landlords.suggestCta": "Sugerir uma pessoa proprietária",
-  "housing.landlords.emptyTitle": "Ainda sem pessoas proprietárias recomendadas",
+  "housing.landlords.emptyTitle":
+    "Ainda sem pessoas proprietárias recomendadas",
   "housing.landlords.emptyBody":
     "Sê a primeira pessoa a indicar alguém em quem confiaste, queer-friendly, de confiança e justa.",
 
@@ -565,6 +603,8 @@ export const economy: Catalog = {
   "housingModal.message.successTitle": "Mensagem <em>enviada.</em>",
   "housingModal.message.successBody":
     "A tua mensagem está a caminho de <strong>{toName}</strong>, que costuma responder <strong>{responseTime}</strong>. Vais receber aqui uma notificação quando o fizer. Os contactos são partilhados assim que ambas as partes concordarem em avançar.",
+  "housingModal.message.successBodyNoReplyTime":
+    "A tua mensagem está a caminho de <strong>{toName}</strong>. Vais receber aqui uma notificação quando responder. Os contactos são partilhados assim que ambas as partes concordarem em avançar.",
   "housingModal.message.eyebrow": "Enviar mensagem a quem anunciou",
   "housingModal.message.title": "Enviar mensagem a <em>{toName}</em>",
   "housingModal.message.body":
@@ -628,16 +668,20 @@ export const economy: Catalog = {
   "listSpace.accessPlaceholder":
     "ex.: Segundo andar, sem elevador, um lance de escadas. Sem degraus lá dentro.",
   "listSpace.photoGuide.title": "Umas boas fotos fazem toda a diferença",
-  "listSpace.photoGuide.lit": "Fotografa com luz natural, quartos bem iluminados passam confiança.",
-  "listSpace.photoGuide.rooms": "Mostra mais do que um quarto, e também a cozinha e a casa de banho.",
+  "listSpace.photoGuide.lit":
+    "Fotografa com luz natural, quartos bem iluminados passam confiança.",
+  "listSpace.photoGuide.rooms":
+    "Mostra mais do que um quarto, e também a cozinha e a casa de banho.",
   "listSpace.photoGuide.consent":
     "Deixa de fora os rostos de colegas de casa, a menos que tenham dado autorização.",
   "listSpace.tourLabel": "Link de visita virtual",
   "listSpace.tourPlaceholder": "Matterport, um passeio em vídeo no YouTube…",
-  "listSpace.tourHint": "Opcional, um link https que as pessoas podem abrir para ver antes de visitar.",
+  "listSpace.tourHint":
+    "Opcional, um link https que as pessoas podem abrir para ver antes de visitar.",
   "listSpace.tourError": "Esse link tem de começar por https://",
   "listSpace.billsLabel": "As despesas estão incluídas na renda",
-  "listSpace.billsHint": "Água, luz, internet, para as pessoas saberem o que pagam.",
+  "listSpace.billsHint":
+    "Água, luz, internet, para as pessoas saberem o que pagam.",
   "listSpace.agentLabel": "Estou a anunciar como agente ou agência",
   "listSpace.agentHint":
     "Agentes são bem-vindos aqui. Só mostramos um pequeno selo para ficar claro quem oferece o espaço.",
@@ -705,7 +749,8 @@ export const economy: Catalog = {
   "suggestLandlord.hoodLabel": "Bairro",
   "suggestLandlord.hoodPlaceholder": "ex.: Arroios, Lisboa",
   "suggestLandlord.taglineLabel": "Frase de apresentação",
-  "suggestLandlord.taglinePlaceholder": "ex.: Rendas justas, reparações rápidas",
+  "suggestLandlord.taglinePlaceholder":
+    "ex.: Rendas justas, reparações rápidas",
   "suggestLandlord.noteLabel": "Nota curta para o cartão do quadro",
   "suggestLandlord.notePlaceholder":
     "O que é que as pessoas membro devem saber rapidamente?",
@@ -723,7 +768,8 @@ export const economy: Catalog = {
   "suggestLandlord.success.em": "Enviado para revisão.",
   "suggestLandlord.success.body":
     "Uma pessoa moderadora vai rever <strong>{name}</strong> antes de a adicionar ao quadro. Avisamos-te se precisarmos de mais alguma coisa.",
-  "suggestLandlord.error": "Não foi possível enviar, importas-te de tentar outra vez?",
+  "suggestLandlord.error":
+    "Não foi possível enviar, importas-te de tentar outra vez?",
 
   // ── HousingListingPage (+ secções) ─────────────────────────────────────
   "housingListing.back": "Quadro de habitação",
@@ -747,7 +793,7 @@ export const economy: Catalog = {
   "housingListing.billsExcluded": "Despesas não incluídas",
   "housingListing.agentBadge.label": "Anúncio de agente",
   "housingListing.agentBadge.tooltip":
-    "Anunciado por um agente ou agência, não por quem lá vive. Agentes são bem-vindos. Este selo só o torna claro.",
+    "Anunciado por um agente ou agência em nome de quem lá vive. Agentes são bem-vindos. Este selo só o torna claro.",
   "housingListing.messageCtaArrow": "Enviar mensagem a {name}",
   "housingListing.messageCta": "Enviar mensagem a {name}",
   "housingListing.listedBy": "Anunciado por",
@@ -764,7 +810,7 @@ export const economy: Catalog = {
   "affirmingPledge.ariaLabel": "O compromisso de habitação afirmativa LGBTQ+",
   "affirmingPledge.title": "Casas onde és <em>afirmada</em>",
   "affirmingPledge.sub":
-    "Todas as casas e todos os colegas de casa na QueerPulse são afirmativos LGBTQ+. É o padrão aqui, não um extra. Antes de publicar ou contactar, assume o compromisso.",
+    "Todas as casas e todos os colegas de casa na QueerPulse são afirmativos LGBTQ+. É o padrão aqui, para toda a gente. Antes de publicar ou contactar, assume o compromisso.",
   "affirmingPledge.point.affirm":
     "Vou manter as casas e os colegas de casa afirmativos, pessoas trans, não binárias e queer são bem-vindas e respeitadas aqui.",
   "affirmingPledge.point.noHarm":
@@ -778,11 +824,11 @@ export const economy: Catalog = {
     "Não foi possível guardar o compromisso agora. Tenta de novo.",
   "affirmingBaseline.badge": "Afirmativo LGBTQ+",
   "affirmingBaseline.badgeTooltip":
-    "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+. É a base, não um extra do anúncio.",
+    "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+. É a base de que todos os anúncios partem.",
   "affirmingBaseline.note":
     "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+. É o <em>padrão.</em>",
   "affirmingBaseline.detailNote":
-    "Esta é a base de todas as casas aqui, não um extra do anúncio.",
+    "Esta é a base de todas as casas aqui, em todos os anúncios.",
   // ── Pedidos de verificação — enviar, acompanhar, recorrer (Fase 2) ─────
   "verification.request.ariaLabel": "Pedir verificação",
   "verification.request.title": "Pedir verificação",
@@ -872,6 +918,10 @@ export const economy: Catalog = {
   "housingViewing.request.inPerson": "Presencial",
   "housingViewing.request.slotOne": "Uma hora que te dê jeito",
   "housingViewing.request.slotTwo": "Outra opção (opcional)",
+  "housingViewing.request.slotPastError":
+    "Escolhe uma hora que ainda esteja por vir.",
+  "housingViewing.request.slotOrderError":
+    "A segunda opção tem de ser depois da primeira.",
   "housingViewing.request.noteLabel": "Uma nota para quem anuncia",
   "housingViewing.request.notePlaceholder":
     "Diz olá e menciona o que gostavas de ver ou perguntar.",
@@ -1075,6 +1125,8 @@ export const economy: Catalog = {
 
   "flatmates.count_one": "{count} perfil ativo esta semana",
   "flatmates.count_other": "{count} perfis ativos esta semana",
+  "flatmates.loadMore": "Ver mais pessoas",
+  "flatmates.loadingMore": "A carregar mais pessoas…",
   "flatmates.postProfileCta": "Publicar o teu perfil",
 
   "flatmates.empty.title":
@@ -1094,7 +1146,8 @@ export const economy: Catalog = {
   "flatmates.card.memberSince": "Membro desde {date}",
   "flatmates.card.sayHello": "Dizer olá",
   "flatmates.card.helloSent": "Olá enviado",
-  "flatmates.card.sayHelloError": "Não foi possível enviar o teu olá. Tenta novamente daqui a pouco.",
+  "flatmates.card.sayHelloError":
+    "Não foi possível enviar o teu olá. Tenta novamente daqui a pouco.",
   "flatmates.card.matchScore": "{score}% compatível",
   "flatmates.card.save": "Guardar",
   "flatmates.card.saved": "Guardado",
@@ -1302,8 +1355,7 @@ export const economy: Catalog = {
   "employerReviews.recent.title": "Avaliações <em>recentes</em>",
   "employerReviews.recent.sub":
     "Escritas por pessoas membro · anónimas · atualizadas continuamente",
-  "employerReviews.recent.browseCta":
-    "Ver vagas inclusivas para pessoas queer",
+  "employerReviews.recent.browseCta": "Ver vagas inclusivas para pessoas queer",
   "employerReviews.recent.writeCta": "Escrever uma avaliação",
   "employerReviews.emptyLive.title": "Ainda sem empregadores avaliados",
   "employerReviews.emptyLive.description":
@@ -1333,8 +1385,7 @@ export const economy: Catalog = {
     "Verificamos que és uma pessoa membro da QueerPulse, nada mais",
   "employerReviews.write.rule.noEdit":
     "As empresas não podem editar, remover ou responder a avaliações",
-  "employerReviews.write.rule.moderation":
-    "Moderamos por rigor factual, não por conforto",
+  "employerReviews.write.rule.moderation": "Moderamos por rigor factual",
   "employerReviews.write.rule.retract":
     "Podes atualizar ou retirar a tua avaliação a qualquer momento",
   "employerReviews.write.rule.noBuying":
@@ -1579,6 +1630,7 @@ export const economy: Catalog = {
   "barter.card.offeringLabel": "A oferecer",
   "barter.card.wantLabel": "À procura de",
   "barter.card.proposeCta": "Propor uma troca",
+  "barter.card.yoursCta": "A tua troca",
   "barter.toast.messageSent": "Mensagem enviada a {name}",
   "barter.postedToday": "Hoje",
   "barter.postedDaysAgo_one": "há {count} dia",
@@ -1587,6 +1639,10 @@ export const economy: Catalog = {
   "barter.emptyLive.title": "Ainda não há trocas publicadas",
   "barter.emptyLive.description":
     "Sê a primeira pessoa a oferecer uma competência ou um bem, põe algo em cima da mesa aqui em baixo e deixa que a troca certa te encontre.",
+  "barter.errorLive.title": "A troca não carregou",
+  "barter.errorLive.description":
+    "Correu algo mal do nosso lado ao ir buscar o quadro. Tenta outra vez daqui a um bocado.",
+  "barter.errorLive.retry": "Tentar outra vez",
   "barter.empty.title": "Nada corresponde aos teus filtros",
   "barter.empty.description":
     "Ainda não há trocas que encaixem nessa combinação. Tenta alargar a pesquisa, ou publica o que tens para oferecer e deixa que a troca certa te encontre.",
@@ -1603,7 +1659,14 @@ export const economy: Catalog = {
     "Posso oferecer, ex.: aulas de português, design de logótipo…",
   "barter.postStrip.wantPlaceholder":
     "Procuro, ex.: ajuda com impostos, ajuda numa mudança…",
+  "barter.postStrip.categoryLabel": "Categoria",
+  "barter.postStrip.categoryPlaceholder": "Escolhe uma categoria",
   "barter.postStrip.submitCta": "Publicar na troca",
+  "barter.postStrip.submitting": "A publicar…",
+  "barter.postStrip.errorInvalid":
+    "Confirma as duas linhas e a categoria e tenta outra vez.",
+  "barter.postStrip.errorFailed":
+    "A tua troca não foi publicada. Tenta outra vez daqui a um bocado.",
   "barter.postStrip.namePlaceholder": "Tu",
   "barter.postStrip.hoodPlaceholder": "A tua publicação",
   "barter.postStrip.detailPlaceholder":
@@ -1618,9 +1681,9 @@ export const economy: Catalog = {
 
   // ── BarterDetailPage (+ ProposeCard / QuestionModal) ────────────────────
   "barterDetail.back": "Troca de competências",
-  "barterDetail.emptyLive.title": "Esta troca ainda não está ativa",
-  "barterDetail.emptyLive.description":
-    "A troca de competências começa vazia no lançamento e enche-se com as trocas que os membros realmente publicam. Ainda não há nada para mostrar neste link.",
+  "barterDetail.goneLive.title": "Esta troca já não existe",
+  "barterDetail.goneLive.description":
+    "A publicação foi retirada do quadro, ou já não está disponível para ti. Vê o que mais há na troca de competências.",
   "barterDetail.emptyLive.cta": "Voltar à troca de competências",
   "barterDetail.sub.offering":
     "Disponível para a comunidade, troca por algo que a pessoa precisa.",
@@ -1628,7 +1691,6 @@ export const economy: Catalog = {
   "barterDetail.sub.both":
     "A oferecer uma coisa, à procura de outra. Propõe uma troca que funcione para os dois lados.",
   "barterDetail.locationWithHood": "{hood} · Lisboa",
-  "barterDetail.locationLisbon": "Lisboa",
   "barterDetail.repliesFast": "Costuma responder rápido",
   "barterDetail.messageCta": "Enviar mensagem a {firstName}",
   "barterDetail.section.offering": "O que <em>tem para oferecer</em>",
@@ -1663,8 +1725,24 @@ export const economy: Catalog = {
   "barterDetail.propose.askFirst": "Perguntar antes",
   "barterDetail.propose.footNote":
     "Nada fica combinado até os dois dizerem que sim. As trocas são entre pessoas, a QueerPulse nunca fica com uma parte.",
+  "barterDetail.propose.footNoteLive":
+    "A tua proposta vai direta para a caixa de entrada da pessoa, e a conversa continua aí. Nada fica combinado até os dois dizerem que sim.",
   "barterDetail.propose.errorEmpty": "Escreve uma linha sobre o que trocarias.",
   "barterDetail.propose.toastSent": "Troca proposta a {name}.",
+  "barterDetail.propose.sending": "A enviar…",
+  "barterDetail.propose.alreadySent":
+    "Já tens uma proposta com {firstName}. O que enviares agora chega como seguimento.",
+  "barterDetail.propose.errorAlreadySent":
+    "Já tens uma proposta nesta troca. Continua a conversa nas tuas mensagens.",
+  "barterDetail.propose.errorNotAllowed":
+    "Não podes propor uma troca aqui. Pode ser a tua própria publicação, ou tu e esta pessoa não se conseguem contactar.",
+  "barterDetail.propose.errorGone":
+    "Esta troca já não existe. Vê o que mais há na troca de competências.",
+  "barterDetail.propose.errorFailed":
+    "A tua proposta não foi enviada. Tenta outra vez daqui a um bocado.",
+  "barterDetail.propose.yoursTitle": "Esta troca é tua",
+  "barterDetail.propose.yoursLead":
+    "As propostas de outras pessoas chegam à tua caixa de entrada. Responde aí para combinar a troca.",
 
   "barterQuestion.eyebrow": "Antes de propores",
   "barterQuestion.title": "Faz uma pergunta a <em>{firstName}</em>.",
@@ -1696,11 +1774,11 @@ export const economy: Catalog = {
   "postJob.gate.affiliateCta": "Afiliar a tua empresa",
   "postJob.gate.backCta": "Voltar à bolsa",
   "postJob.gate.point1":
-    "Confirmamos que as empresas são genuinamente queer-inclusivas, não apenas de fachada.",
+    "Confirmamos que as empresas são genuinamente queer-inclusivas na prática.",
   "postJob.gate.point2":
     "As vagas são publicadas em nome da tua empresa verificada, com o logótipo e o selo.",
   "postJob.gate.point3":
-    "Sem comissões de colocação. Isto é uma bolsa da comunidade, não um mercado.",
+    "Sem comissões de colocação. Isto é uma bolsa da comunidade.",
 
   "postJob.stepLabels.type": "Tipo e função",
   "postJob.stepLabels.details": "Detalhes",
@@ -1879,13 +1957,13 @@ export const economy: Catalog = {
   "postJob.step5.linkLabel": "Link externo",
   "postJob.step5.linkPlaceholder": "https://…",
   "postJob.step5.summaryTitle": "Resumo",
-  "postJob.step5.dash": "—",
+  "postJob.step5.dash": "Por definir",
   "postJob.step5.notSpecified": "Não especificado",
   "postJob.step5.questionCount_one": "{count} pergunta",
   "postJob.step5.questionCount_other": "{count} perguntas",
   "postJob.step5.editCta": "Editar",
   "postJob.step5.agreement":
-    "Confirmo que esta vaga cumpre o <link>Código de Cuidado</link>, sem discriminação de identidade, e uma remuneração justa. <strong>A QueerPulse é um espaço de solidariedade, não um canal de exploração.</strong>",
+    "Confirmo que esta vaga cumpre o <link>Código de Cuidado</link>, sem discriminação de identidade, e uma remuneração justa. <strong>A QueerPulse é um espaço de solidariedade.</strong>",
 
   "postJob.sidebar.livePreview": "Pré-visualização",
   "postJob.sidebar.fullView": "Ver tudo",
@@ -1899,7 +1977,7 @@ export const economy: Catalog = {
   "postJob.sidebar.point2":
     "As vagas <strong>expiram ao fim de 60 dias</strong>, aviso ao dia 45.",
   "postJob.sidebar.point3":
-    "<strong>Sem comissões de colocação.</strong> Uma bolsa da comunidade, não um mercado.",
+    "<strong>Sem comissões de colocação.</strong> Uma bolsa da comunidade.",
   "postJob.sidebar.point4":
     "<strong>Edita ou fecha</strong> a qualquer momento a partir do perfil da tua empresa.",
 
@@ -1929,10 +2007,9 @@ export const economy: Catalog = {
     "As respostas ficam todas num só lugar. Revê, envia mensagem, ou marca como preenchida a partir do teu gestor de vagas.",
   "postJob.confirm.responses.openManager": "Abrir gestor de vagas",
   "postJob.confirm.share.title": "Partilha",
-  "postJob.confirm.share.body": "Aumenta o alcance dentro da comunidade.",
-  "postJob.confirm.share.postToFeed": "Publicar no Feed",
+  "postJob.confirm.share.body":
+    "Copia o link e põe-no onde as tuas pessoas já estão.",
   "postJob.confirm.share.copyLink": "Copiar link",
-  "postJob.confirm.share.toastFeed": "Partilhado no teu feed",
   "postJob.confirm.share.toastLink": "Link copiado",
   "postJob.confirm.whatsNext.title": "A seguir",
   "postJob.confirm.whatsNext.body":
@@ -2105,7 +2182,8 @@ export const economy: Catalog = {
     "Quando te candidatares a uma vaga, bolsa ou oportunidade, vais poder acompanhar todas, e comparar ofertas lado a lado, aqui mesmo.",
   "applicationStatus.empty.browseCta": "Explorar vagas",
 
-  "applicationStatus.error.title": "Não foi possível carregar as tuas candidaturas",
+  "applicationStatus.error.title":
+    "Não foi possível carregar as tuas candidaturas",
   "applicationStatus.error.description":
     "Algo correu mal ao obter as tuas candidaturas. Espera um momento e tenta de novo, nada do que enviaste se perdeu.",
 
@@ -2221,8 +2299,7 @@ export const economy: Catalog = {
   "negotiate.holiday": "Férias",
   "negotiate.whatMattersMost": "O que mais te importa",
   "negotiate.pickAngle": "Escolhe a tua abordagem",
-  "negotiate.draftLabel":
-    "O teu rascunho de resposta. Edita para soar como tu",
+  "negotiate.draftLabel": "O teu rascunho de resposta. Edita para soar como tu",
   "negotiate.copyDraft": "Copiar rascunho",
   "negotiate.copiedToast": "Rascunho copiado",
   "negotiate.sendingLabel": "A enviar…",
@@ -2242,8 +2319,7 @@ export const economy: Catalog = {
     "Diz um número claro e depois fica em silêncio, deixa-os responder.",
   "principle.trade":
     "Se o salário base não mexer, troca: dias, orçamento, título, flexibilidade.",
-  "principle.stayWarm":
-    "Mantém a proximidade. Isto é uma relação.",
+  "principle.stayWarm": "Mantém a proximidade. Isto é uma relação.",
   "negotiate.angle.collaborative.name": "O pedido colaborativo",
   "negotiate.angle.collaborative.blurb":
     "Caloroso, focado na parceria. Melhor quando já há sintonia.",
@@ -2757,7 +2833,7 @@ export const economy: Catalog = {
   "scopeTool.preview.total": "Total",
   "scopeTool.preview.validUntil": "Válido até {date}",
   "scopeTool.disclaimer":
-    "Este documento é um âmbito de trabalho, não um contrato vinculativo. Tudo o que não conste em “O que está incluído” fica fora do âmbito e é orçamentado à parte.",
+    "Este documento é um âmbito de trabalho. Só um contrato assinado cria obrigações vinculativas. Tudo o que não conste em “O que está incluído” fica fora do âmbito e é orçamentado à parte.",
   "scopeTool.plainText.quote": "ORÇAMENTO",
   "scopeTool.plainText.scopeOfWork": "ÂMBITO DE TRABALHO",
   "scopeTool.plainText.from": "De: {name}",
@@ -2853,9 +2929,9 @@ export const economy: Catalog = {
     "Mas: despesas dedutíveis, autonomia, e podes cobrar mais.",
 
   // ── RateBoardForm / RateBoardStats / RateBoardPage ─────────────────────
-  "rateBoard.title": "O que <em>cobramos</em> mesmo.",
+  "rateBoard.title": "O que <em>cobras</em> mesmo.",
   "rateBoard.sub":
-    "Tarifas diárias anónimas partilhadas pela comunidade, para ninguém ter de adivinhar. Adiciona a tua, vê onde te situas. Guardado neste dispositivo.",
+    "Um quadro de tarifas privado que vive neste dispositivo. Adiciona as tuas tarifas, vê a distribuição a crescer e exporta o ficheiro quando quiseres comparar com pessoas em quem confias.",
   "rateBoard.form.title": "Adiciona a tua tarifa",
   "rateBoard.form.hint":
     "Sem nome, sem email. Só os números. Fica neste dispositivo até exportares.",
@@ -2868,8 +2944,8 @@ export const economy: Catalog = {
   "rateBoard.form.compareLabel": "Vê onde te situas",
   "rateBoard.form.comparePlaceholder": "A tua tarifa diária (€)",
   "rateBoard.form.compareHint":
-    "Mostramos o teu percentil em relação a todas as pessoas aqui, nada é adicionado ao quadro.",
-  "rateBoard.form.addedToast": "Adicionado anonimamente",
+    "Mostramos o teu percentil face às tarifas deste quadro. Nada é adicionado ao quadro.",
+  "rateBoard.form.addedToast": "Adicionado ao teu quadro",
   "rateBoard.experienceOption.junior": "Júnior (0–2 anos)",
   "rateBoard.experienceOption.mid": "Intermédio (3–5 anos)",
   "rateBoard.experienceOption.senior": "Sénior (6–9 anos)",
@@ -2884,8 +2960,8 @@ export const economy: Catalog = {
   "rateBoard.roleOption.other": "Outro",
   "rateBoard.stats.emptyTitle": "Ainda nada <em>aqui.</em>",
   "rateBoard.stats.emptyBody":
-    "Sê a primeira pessoa a adicionar uma tarifa, ou importa um ficheiro JSON que alguém te tenha partilhado. A distribuição aparece aqui assim que houver dados.",
-  "rateBoard.stats.communityMedian": "Tarifa diária mediana da comunidade",
+    "Adiciona a tua primeira tarifa, ou importa um ficheiro JSON que alguém te tenha partilhado. A distribuição aparece aqui assim que este dispositivo tiver dados.",
+  "rateBoard.stats.communityMedian": "Tarifa diária mediana neste quadro",
   "rateBoard.stats.across": "em",
   "rateBoard.stats.rateCount_one": "{count} tarifa",
   "rateBoard.stats.rateCount_other": "{count} tarifas",
@@ -2893,12 +2969,11 @@ export const economy: Catalog = {
   "rateBoard.stats.roleCount_other": "{count} funções",
   "rateBoard.stats.yourRateSits": "A tua tarifa de {rate} situa-se no",
   "rateBoard.stats.percentileValue": "percentil {percentile}",
-  "rateBoard.stats.aboveMost":
-    "Acima de {percent}% das tarifas partilhadas aqui.",
+  "rateBoard.stats.aboveMost": "Acima de {percent}% das tarifas deste quadro.",
   "rateBoard.stats.belowMost":
-    "Abaixo da maioria das tarifas aqui. Podes estar a deixar dinheiro em cima da mesa.",
+    "Abaixo da maioria das tarifas deste quadro. Podes estar a deixar dinheiro em cima da mesa.",
   "rateBoard.disclaimer":
-    "Partilhado anonimamente por membros da comunidade e não verificado, os valores são autodeclarados e cada situação é diferente. Trata isto como um ponto de partida para a conversa, não uma garantia. Guardado apenas neste dispositivo.",
+    "Tudo o que está aqui foi escrito por ti e pelas pessoas que te enviaram um ficheiro: valores autodeclarados e não verificados. Cada situação é diferente, por isso trata estes números como um ponto de partida para a conversa. Guardado apenas neste dispositivo e nunca enviado para lado nenhum.",
   "rateBoard.export": "Exportar JSON",
   "rateBoard.import": "Importar JSON",
   "rateBoard.importAriaLabel": "Importar um ficheiro JSON do quadro de tarifas",
@@ -3021,11 +3096,11 @@ export const economy: Catalog = {
   "slidingScale.preview.yourNameFallback": "O teu nome",
   "slidingScale.preview.offeringFallback": "A tua oferta",
   "slidingScale.preview.tierFallback": "Nível",
-  "slidingScale.preview.priceFallback": "—",
+  "slidingScale.preview.priceFallback": "Por definir",
   "slidingScale.preview.outro":
     "Paga o nível que for honesto para ti. Escolher um valor mais alto mantém este trabalho acessível a todas as pessoas.",
   "slidingScale.disclaimer":
-    "Estes níveis são o preço definido por esta pessoa profissional, uma escala variável oferecida de boa fé, não uma tarifa de mercado fixa nem um teste de meios.",
+    "Estes níveis são o preço definido por esta pessoa profissional, uma escala variável oferecida de boa fé. Os valores variam de profissional para profissional, e ninguém te pede prova de rendimentos.",
 
   // ── ReciboVerdeGuidePage (page chrome only — see report re: GUIDE_SECTIONS) ──
   // Scope note: the guide's own section titles/bodies (reciboVerdeGuide.data.tsx
@@ -3098,7 +3173,8 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.titleEm": "fundadores",
   "coopTemplate.doc.founding-values.intro":
     "A vossa carta de valores fundadores é a primeira coisa que o grupo escreve em conjunto, antes de um pedido de crédito, antes de um contrato de arrendamento, antes de alguém assinar seja o que for com um banco ou um notário. Põe por palavras o que estão a construir e para quem, para que daqui a seis meses, quando o dinheiro apertar ou uma decisão for difícil, tenham algo a que voltar em conjunto. Trata tudo o que se segue como um primeiro rascunho: lê-o em voz alta em grupo, risca o que não encaixa, e reescreve-o pelas tuas próprias palavras até soar a vocês.",
-  "coopTemplate.doc.founding-values.s0.h": "Porque estamos a formar esta cooperativa",
+  "coopTemplate.doc.founding-values.s0.h":
+    "Porque estamos a formar esta cooperativa",
   "coopTemplate.doc.founding-values.s0.b0":
     "Começa com uma ou duas frases que digam, com clareza, para que serve esta cooperativa. Não uma declaração de missão para quem está de fora, uma resposta privada para quem vai assinar os títulos de capital. Do que se estão a proteger uns aos outros, e o que estão a construir?",
   "coopTemplate.doc.founding-values.s0.b1.0":
@@ -3107,7 +3183,8 @@ export const economy: Catalog = {
     "Queremos uma casa onde o envelhecimento, a deficiência e as necessidades de cuidados sejam planeados, e não descobertos tarde demais.",
   "coopTemplate.doc.founding-values.s0.b1.2":
     "Estamos a juntar o que temos para que quem, sozinho, seria expulso pelos preços possa continuar na cidade a que chama casa.",
-  "coopTemplate.doc.founding-values.s1.h": "Quem somos, e para quem é esta casa",
+  "coopTemplate.doc.founding-values.s1.h":
+    "Quem somos, e para quem é esta casa",
   "coopTemplate.doc.founding-values.s1.b0":
     "Diz explicitamente quem pertence aqui e em que termos. O silêncio sobre este ponto tende a favorecer quem já tem poder na sala, por isso, põe-no por escrito.",
   "coopTemplate.doc.founding-values.s1.b1.0":
@@ -3129,7 +3206,7 @@ export const economy: Catalog = {
     "Quando não se chega a consenso depois de um esforço genuíno, recorremos a [uma maioria qualificada, um período de reflexão e nova votação, uma pessoa facilitadora externa]. Decide isto agora, enquanto ainda é hipotético.",
   "coopTemplate.doc.founding-values.s3.h": "Como cuidamos uns dos outros",
   "coopTemplate.doc.founding-values.s3.b0":
-    "Os compromissos de segurança e de cuidado pertencem aqui, e não apenas a uma política à parte que ninguém lê.",
+    "Os compromissos de segurança e de cuidado pertencem aqui, dentro do documento que o grupo lê mesmo.",
   "coopTemplate.doc.founding-values.s3.b1.0":
     "Verificamos como está cada pessoa, sobretudo os membros que atravessam um momento difícil, sem que isso seja tarefa de uma só pessoa.",
   "coopTemplate.doc.founding-values.s3.b1.1":
@@ -3147,29 +3224,31 @@ export const economy: Catalog = {
     "A informação financeira da cooperativa está sempre disponível a todos os membros. Aqui não há contas fechadas.",
   "coopTemplate.doc.founding-values.s5.h": "Rever estes valores",
   "coopTemplate.doc.founding-values.s5.b0":
-    "Os valores desviam-se se ninguém os voltar a ler. Marca uma data, não apenas uma boa intenção.",
+    "Os valores desviam-se se ninguém os voltar a ler. Marca uma data concreta no calendário.",
   "coopTemplate.doc.founding-values.s5.b1.0":
     "Voltamos a ler esta carta em conjunto pelo menos uma vez por ano, e depois de qualquer acontecimento importante que a tenha posto à prova.",
   "coopTemplate.doc.founding-values.s5.b1.1":
     "As alterações precisam de [uma maioria qualificada / consenso total, decidam qual] e só produzem efeito depois de todos os membros terem visto a redação proposta.",
   "coopTemplate.doc.founding-values.s5.b2":
-    "Esta carta é um modelo de partida, não um documento acabado, a versão que conta é aquela em que o vosso grupo desagua depois de discutir, e que revê todos os anos.",
+    "Esta carta é um modelo de partida. A versão que conta é aquela em que o vosso grupo desagua depois de discutir, e que revê todos os anos.",
   // financial-honesty
   "coopTemplate.doc.financial-honesty.tag": "Fase 1 · modelo",
   "coopTemplate.doc.financial-honesty.title": "Acordo de honestidade",
   "coopTemplate.doc.financial-honesty.titleEm": "financeira",
   "coopTemplate.doc.financial-honesty.intro":
-    "As cooperativas de habitação falham mais vezes por problemas de dinheiro não ditos do que por qualquer questão jurídica. Este acordo existe para que um membro que esteja com dificuldades o diga na segunda semana, e não ao oitavo mês, e para que ninguém tenha de adivinhar quanto os outros ganham, devem ou receiam. Adapta os pormenores ao vosso grupo; mantém o princípio de que todos veem os mesmos números.",
-  "coopTemplate.doc.financial-honesty.s0.h": "O que significa aqui total transparência",
+    "As cooperativas de habitação falham mais vezes por problemas de dinheiro não ditos do que por qualquer questão jurídica. Este acordo existe para que um membro que esteja com dificuldades o diga logo na segunda semana, e para que ninguém tenha de adivinhar quanto os outros ganham, devem ou receiam. Adapta os pormenores ao vosso grupo; mantém o princípio de que todos veem os mesmos números.",
+  "coopTemplate.doc.financial-honesty.s0.h":
+    "O que significa aqui total transparência",
   "coopTemplate.doc.financial-honesty.s0.b0":
     "Transparência financeira não significa que todos revelam a totalidade das suas finanças pessoais. Significa que todos veem os mesmos números sobre a cooperativa, e que o grupo acorda antecipadamente que informação individual é partilhada, e porquê.",
   "coopTemplate.doc.financial-honesty.s0.b1.0":
-    "Cada membro pode consultar o livro de contas partilhado da cooperativa a qualquer momento, e não apenas na reunião anual.",
+    "Cada membro pode consultar o livro de contas partilhado da cooperativa a qualquer momento, em qualquer altura do ano.",
   "coopTemplate.doc.financial-honesty.s0.b1.1":
     "Os valores das contribuições individuais (se ajustados ao rendimento) são visíveis para o grupo, mas os recibos de vencimento ou as declarações de IRS que lhes dão origem não o são, a menos que um membro opte por partilhá-los.",
   "coopTemplate.doc.financial-honesty.s0.b1.2":
     "Não existem acordos paralelos sobre dinheiro fora deste documento e do livro de contas partilhado.",
-  "coopTemplate.doc.financial-honesty.s1.h": "O que cada membro revela, e quando",
+  "coopTemplate.doc.financial-honesty.s1.h":
+    "O que cada membro revela, e quando",
   "coopTemplate.doc.financial-honesty.s1.b0":
     "Sê específico quanto ao que é pedido na entrada face ao que é contínuo.",
   "coopTemplate.doc.financial-honesty.s1.b1.0":
@@ -3180,25 +3259,27 @@ export const economy: Catalog = {
     "Anualmente: uma revisão conjunta para verificar se as contribuições ainda refletem as circunstâncias reais das pessoas.",
   "coopTemplate.doc.financial-honesty.s2.h": "O livro de contas partilhado",
   "coopTemplate.doc.financial-honesty.s2.b0":
-    "Nomeia a ferramenta e a regra de acesso, não apenas a intenção.",
+    "Nomeia a ferramenta e a regra de acesso concretas.",
   "coopTemplate.doc.financial-honesty.s2.b1.0":
     "O livro de contas vive em [uma folha de cálculo partilhada, um programa de contabilidade] que qualquer membro pode abrir, ler e exportar a qualquer momento.",
   "coopTemplate.doc.financial-honesty.s2.b1.1":
-    "Um ou dois membros funcionam como responsáveis pelas finanças, com rotação a cada [ano], encarregues dos registos, não de controlar quem os pode ver.",
+    "Um ou dois membros funcionam como responsáveis pelas finanças, com rotação a cada [ano], encarregues de manter os registos abertos a toda a gente.",
   "coopTemplate.doc.financial-honesty.s2.b1.2":
     "Cada pagamento, de entrada ou de saída, é registado no prazo de [uma semana], com uma nota em linguagem simples. Nenhuma rubrica que ninguém saiba explicar.",
-  "coopTemplate.doc.financial-honesty.s3.h": "Lidar com atrasos de pagamento com dignidade",
+  "coopTemplate.doc.financial-honesty.s3.h":
+    "Lidar com atrasos de pagamento com dignidade",
   "coopTemplate.doc.financial-honesty.s3.b0":
     "Escreve este processo antes de alguém estar realmente em atraso. É muito mais difícil chegar a acordo quando já é pessoal.",
   "coopTemplate.doc.financial-honesty.s3.b1.0":
-    "Um pagamento em falta dá origem a uma conversa privada e não punitiva no prazo de duas semanas, e não a um anúncio ao grupo.",
+    "Um pagamento em falta dá origem a uma conversa privada e não punitiva no prazo de duas semanas, entre as pessoas diretamente envolvidas.",
   "coopTemplate.doc.financial-honesty.s3.b1.1":
-    "O membro e uma pessoa responsável pelas finanças acordam em conjunto um plano de pagamento; ao grupo diz-se que existe um plano, não os pormenores pessoais por detrás dele, a menos que o membro os queira partilhar.",
+    "O membro e uma pessoa responsável pelas finanças acordam em conjunto um plano de pagamento; ao grupo diz-se apenas que existe um plano, e os pormenores pessoais ficam com o membro, a menos que este os queira partilhar.",
   "coopTemplate.doc.financial-honesty.s3.b1.2":
     "O fundo de solidariedade (abaixo) é oferecido antes de qualquer conversa sobre a saída de um membro.",
-  "coopTemplate.doc.financial-honesty.s4.h": "Fundo de solidariedade e de emergência",
+  "coopTemplate.doc.financial-honesty.s4.h":
+    "Fundo de solidariedade e de emergência",
   "coopTemplate.doc.financial-honesty.s4.b0":
-    "Um fundo concreto, e não apenas um sentimento generoso, é o que faz com que o «cuidamos uns dos outros» sobreviva a uma emergência real.",
+    "Um fundo concreto é o que faz com que o «cuidamos uns dos outros» sobreviva a uma emergência real.",
   "coopTemplate.doc.financial-honesty.s4.b1.0":
     "Cada membro contribui, a título de exemplo ilustrativo, com 10–20 € por mês para um fundo de emergência partilhado, separado dos custos de funcionamento.",
   "coopTemplate.doc.financial-honesty.s4.b1.1":
@@ -3207,7 +3288,7 @@ export const economy: Catalog = {
     "Os pedidos são aprovados por [as pessoas responsáveis pelas finanças / maioria simples] no prazo de uma semana, sem obrigação de justificar a dificuldade em pormenor.",
   "coopTemplate.doc.financial-honesty.s5.h": "Revisão anual",
   "coopTemplate.doc.financial-honesty.s5.b0":
-    "Marca uma data fixa para que isto seja revisto no prazo previsto, e não apenas durante uma crise.",
+    "Marca uma data fixa para que isto seja revisto no prazo previsto, em calma e fora de qualquer crise.",
   "coopTemplate.doc.financial-honesty.s5.b1.0":
     "Uma vez por ano, o grupo revê: se as contribuições ainda correspondem às circunstâncias, se o fundo de emergência está devidamente dotado, e se alguém tem preocupações de dinheiro por dizer.",
   "coopTemplate.doc.financial-honesty.s5.b2":
@@ -3223,8 +3304,7 @@ export const economy: Catalog = {
     "Os teus estatutos abrem com o nome da cooperativa e a sua morada registada (sede social), habitualmente o próprio imóvel ou a morada de um membro até à escritura do imóvel.",
   "coopTemplate.doc.crl-statutes.s0.b1.0":
     "Denominação legal, incluindo a designação obrigatória «Cooperativa de Responsabilidade Limitada» ou «CRL».",
-  "coopTemplate.doc.crl-statutes.s0.b1.1":
-    "Sede: município e morada completa.",
+  "coopTemplate.doc.crl-statutes.s0.b1.1": "Sede: município e morada completa.",
   "coopTemplate.doc.crl-statutes.s0.b1.2":
     "Duração: a maioria das cooperativas regista-se por tempo indeterminado.",
   "coopTemplate.doc.crl-statutes.s1.h": "Objeto e âmbito (objeto)",
@@ -3247,7 +3327,7 @@ export const economy: Catalog = {
     "Fundamentos e processo para a saída involuntária, remete para o teu Processo de resolução de conflitos, para que isto não seja decidido caso a caso sem regra.",
   "coopTemplate.doc.crl-statutes.s3.h": "Direitos e deveres dos membros",
   "coopTemplate.doc.crl-statutes.s3.b0.0":
-    "Direito a participar e votar na assembleia geral, um membro, um voto, independentemente da dimensão do título de capital. Este é um princípio cooperativo fundamental, não uma opção.",
+    "Direito a participar e votar na assembleia geral, um membro, um voto, independentemente da dimensão do título de capital. Este é um princípio cooperativo fundamental, e vale sempre.",
   "coopTemplate.doc.crl-statutes.s3.b0.1":
     "Direito a informação financeira completa sobre a cooperativa (remete para o teu Acordo de honestidade financeira).",
   "coopTemplate.doc.crl-statutes.s3.b0.2":
@@ -3295,7 +3375,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.share-agreement.s0.b1.1":
     "Uma quota não é a propriedade de uma fração ou de um metro quadrado específicos. É a adesão à cooperativa, que detém o imóvel coletivamente.",
   "coopTemplate.doc.share-agreement.s0.b1.2":
-    "A quota não valoriza com o valor de mercado do imóvel; à saída é reembolsada pelo seu valor nominal ajustado (ver abaixo), e não a um preço de mercado.",
+    "A quota não valoriza com o valor de mercado do imóvel; à saída é reembolsada pelo seu valor nominal ajustado (ver abaixo).",
   "coopTemplate.doc.share-agreement.s1.h": "Calendário de pagamento",
   "coopTemplate.doc.share-agreement.s1.b0":
     "Define como a quota é paga, já que poucos membros conseguem pagar o valor total à cabeça.",
@@ -3314,7 +3394,7 @@ export const economy: Catalog = {
     "Não se aplica qualquer penalização de saída aos membros que saem em situação regular; as saídas motivadas por dificuldades passam primeiro pelo fundo de solidariedade.",
   "coopTemplate.doc.share-agreement.s3.h": "Quem pode deter uma quota",
   "coopTemplate.doc.share-agreement.s3.b0.0":
-    "As quotas são detidas por membros individuais e maiores de idade, não sendo transmitidas por herança, venda ou doação sem a aprovação da assembleia. Isto mantém a adesão ligada à participação real, e não ao investimento.",
+    "As quotas são detidas por membros individuais e maiores de idade, e a sua transmissão por herança, venda ou doação carece de aprovação da assembleia. Isto mantém a adesão ligada à participação real.",
   "coopTemplate.doc.share-agreement.s3.b0.1":
     "O agregado de um membro, parceiros, filhos, família escolhida que viva com essa pessoa, não precisa de uma quota separada para cada um, mas indica com clareza quem conta como vivendo ao abrigo de uma só adesão.",
   "coopTemplate.doc.share-agreement.s4.h": "Proteção do valor entregue",
@@ -3327,7 +3407,8 @@ export const economy: Catalog = {
   "coopTemplate.doc.share-agreement.s5.h": "Assinaturas",
   "coopTemplate.doc.share-agreement.s5.b0":
     "Um bloco de assinaturas simples, datado, com o membro e um representante da direção da cooperativa, mais uma linha que torna explícita a natureza de modelo:",
-  "coopTemplate.doc.share-agreement.s5.b1.0": "Nome do membro, data, assinatura.",
+  "coopTemplate.doc.share-agreement.s5.b1.0":
+    "Nome do membro, data, assinatura.",
   "coopTemplate.doc.share-agreement.s5.b1.1":
     "Nome do representante da cooperativa, cargo, data, assinatura.",
   "coopTemplate.doc.share-agreement.s5.b1.2":
@@ -3361,7 +3442,7 @@ export const economy: Catalog = {
     "O apoio municipal, um arrendamento de longa duração sobre um imóvel do município, um subsídio de renovação, ou um coinvestimento de um fundo de habitação, pode, em alguns casos, reduzir ou substituir totalmente o custo de aquisição. Pergunta à pessoa de ligação ao fundo de habitação da QueerPulse o que está atualmente disponível na tua cidade.",
   "coopTemplate.doc.finance-model.s2.h": "Definir as contribuições mensais",
   "coopTemplate.doc.finance-model.s2.b0":
-    "Trabalha de trás para a frente, a partir do que as pessoas conseguem realmente pagar, e depois confirma que o número cobre os custos reais, e não ao contrário.",
+    "Trabalha de trás para a frente, a partir do que as pessoas conseguem realmente pagar, e só depois confirma que o número cobre os custos reais.",
   "coopTemplate.doc.finance-model.s2.b1.0":
     "Soma o total dos custos correntes mensais: prestação do empréstimo mais reserva mais seguros mais administração.",
   "coopTemplate.doc.finance-model.s2.b1.1":
@@ -3375,13 +3456,14 @@ export const economy: Catalog = {
     "Um valor-alvo para a reserva, muitas vezes falado como vários meses de custos correntes, acordado pelo grupo em vez de presumido.",
   "coopTemplate.doc.finance-model.s3.b0.2":
     "A reserva é separada do fundo de emergência/solidariedade, uma protege o edifício, o outro protege os membros.",
-  "coopTemplate.doc.finance-model.s4.h": "Onde encaixam os parceiros da QueerPulse",
+  "coopTemplate.doc.finance-model.s4.h":
+    "Onde encaixam os parceiros da QueerPulse",
   "coopTemplate.doc.finance-model.s4.b0.0":
     "A CCAM e financiadores semelhantes, favoráveis a cooperativas: financiamento estruturado para mutuários coletivos em vez de créditos individuais.",
   "coopTemplate.doc.finance-model.s4.b0.1":
     "O fundo municipal de habitação: coinvestimento, arrendamentos de longa duração sobre edifícios municipais, ou subsídios associados a metas de habitação acessível. As condições variam de cidade para cidade e mudam ao longo do tempo, por isso confirma as condições atuais com a pessoa de ligação ao fundo de habitação da QueerPulse em vez de te fiares neste documento.",
   "coopTemplate.doc.finance-model.s4.b0.2":
-    "A equipa jurídica da QueerPulse: uma primeira leitura das condições de financiamento antes de assinares, não um substituto de aconselhamento jurídico e financeiro independente.",
+    "A equipa jurídica da QueerPulse: uma primeira leitura das condições de financiamento antes de assinares. Procura também aconselhamento jurídico e financeiro independente.",
   "coopTemplate.doc.finance-model.s5.h":
     "Um exemplo resolvido (apenas números ilustrativos)",
   "coopTemplate.doc.finance-model.s5.b0":
@@ -3397,14 +3479,15 @@ export const economy: Catalog = {
   "coopTemplate.doc.finance-model.s5.b1.4":
     "Custo corrente mensal estimado por agregado, incluindo reserva: 420–480 € (ilustrativo)",
   "coopTemplate.doc.finance-model.s5.b2":
-    "Trata este modelo como uma estrutura de partida, não uma previsão. Constrói os teus números reais com o teu financiador, o teu município e, para tudo o que for vinculativo, um contabilista ou advogado.",
+    "Trata este modelo como uma estrutura de partida. Constrói os teus números reais com o teu financiador, o teu município e, para tudo o que for vinculativo, um contabilista ou advogado.",
   // conflict-resolution
   "coopTemplate.doc.conflict-resolution.tag": "Fase 5 · governação",
   "coopTemplate.doc.conflict-resolution.title": "Processo de resolução de",
   "coopTemplate.doc.conflict-resolution.titleEm": "conflitos",
   "coopTemplate.doc.conflict-resolution.intro":
     "Todas as cooperativas têm conflitos, a diferença entre as que duram e as que não duram está normalmente em terem ou não construído um processo antes de precisarem dele. Este está adaptado do que a Casa Sambizanga usa no dia a dia; trata-o como uma estrutura de partida para percorrer e ajustar com o teu próprio grupo, sobretudo os passos que envolvem a possível saída de alguém.",
-  "coopTemplate.doc.conflict-resolution.s0.h": "Princípios: reparar em vez de punir",
+  "coopTemplate.doc.conflict-resolution.s0.h":
+    "Princípios: reparar em vez de punir",
   "coopTemplate.doc.conflict-resolution.s0.b0":
     "Define o tom antes dos passos. Um processo que só existe para punir tende a levar as pessoas a esconder problemas em vez de os levantar.",
   "coopTemplate.doc.conflict-resolution.s0.b1.0":
@@ -3419,7 +3502,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s1.b1.0":
     "Barulho, tarefas, visitas, uso dos espaços partilhados: levantados diretamente, a sós, o mais próximo possível do momento em que acontecem.",
   "coopTemplate.doc.conflict-resolution.s1.b1.1":
-    "Se começar uma conversa direta sozinho parecer difícil demais, pede a um terceiro membro para estar presente, não para tomar partido, apenas para que não sejam duas pessoas sozinhas num momento difícil.",
+    "Se começar uma conversa direta sozinho parecer difícil demais, pede a um terceiro membro para estar presente, apenas para que não sejam duas pessoas sozinhas num momento difícil.",
   "coopTemplate.doc.conflict-resolution.s2.h": "O processo por etapas",
   "coopTemplate.doc.conflict-resolution.s2.b0":
     "Quando uma conversa direta não resolve algo, ou parece inseguro tentá-la sozinho, o processo agrava-se por etapas, cada uma menos exigente do que a seguinte, para que a maioria das coisas se resolva antes de chegar à assembleia.",
@@ -3442,7 +3525,7 @@ export const economy: Catalog = {
     "A cooperativa não investiga nem julga por si própria matérias criminais; apoia a pessoa afetada no acesso a ajuda externa, se a quiser, e toma decisões sobre a segurança da habitação partilhada em paralelo.",
   "coopTemplate.doc.conflict-resolution.s4.h": "Limites e responsabilização",
   "coopTemplate.doc.conflict-resolution.s4.b0.0":
-    "Responsabilização, aqui, significa alguém mudar efetivamente o comportamento que causou o dano, com apoio, e não apenas um pedido de desculpas sem seguimento.",
+    "Responsabilização, aqui, significa alguém mudar efetivamente o comportamento que causou o dano, com apoio e com seguimento.",
   "coopTemplate.doc.conflict-resolution.s4.b0.1":
     "Os acordos feitos em qualquer etapa, um comportamento alterado, um limite, uma ação de reparação, são postos por escrito e recebem uma data de revisão, para que sejam verificados em vez de dados como resolvidos.",
   "coopTemplate.doc.conflict-resolution.s5.h": "Quando alguém tem de sair",
@@ -3453,10 +3536,10 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s5.b1.1":
     "A decisão exige [um limiar acordado, por exemplo, uma maioria qualificada da assembleia, excluindo quem está diretamente envolvido] e segue as condições de saída dos teus estatutos CRL e do Acordo de quota do sócio.",
   "coopTemplate.doc.conflict-resolution.s5.b1.2":
-    "Sempre que possível, a cooperativa apoia o membro que sai a encontrar habitação alternativa. Isto é uma rede de segurança habitacional, não uma máquina de despejos.",
+    "Sempre que possível, a cooperativa apoia o membro que sai a encontrar habitação alternativa. Isto é uma rede de segurança habitacional.",
   "coopTemplate.doc.conflict-resolution.s6.h": "Rever o processo",
   "coopTemplate.doc.conflict-resolution.s6.b0":
-    "Revê isto depois de ser efetivamente usado, não apenas segundo um calendário.",
+    "Revê isto depois de ser efetivamente usado, além do calendário previsto.",
   "coopTemplate.doc.conflict-resolution.s6.b1.0":
     "Depois de qualquer uso da etapa 3 ou seguinte, o grupo revê se o próprio processo funcionou, separando isso do desfecho daquele conflito em concreto.",
   "coopTemplate.doc.conflict-resolution.s6.b1.1":
@@ -3555,8 +3638,6 @@ export const economy: Catalog = {
   "housingCoop.toast.postHelp":
     "Vamos ajudar-te a encontrar o teu grupo. Confirma a tua caixa de entrada.",
   "housingCoop.toast.story": "A história da Casa Sambizanga está a chegar.",
-  "housingCoop.toast.liveComingSoon":
-    "Ainda está a ser construído. Esta ação ainda não está ligada.",
 
   // ── JoinCoopModal ────────────────────────────────────────────────────────
   "joinCoop.askToJoinAriaLabel": "Pedir para te juntares a {name}",
@@ -3576,7 +3657,7 @@ export const economy: Catalog = {
   "joinCoop.notePlaceholder":
     "O que te atrai nesta cooperativa? A tua situação, prazos, esperanças…",
   "joinCoop.disclaimer":
-    "O teu pedido é partilhado apenas com a organização desta cooperativa. Juntar-se a uma cooperativa é uma conversa longa, não um clique, leva o teu tempo.",
+    "O teu pedido é partilhado apenas com a organização desta cooperativa. Juntar-se a uma cooperativa é uma conversa longa, por isso leva o teu tempo.",
   "joinCoop.cancel": "Cancelar",
   "joinCoop.sending": "A enviar…",
   "joinCoop.sendCta": "Enviar pedido",
@@ -3744,7 +3825,7 @@ export const economy: Catalog = {
   "housingSafety.tips.videoCall":
     "Pede uma videochamada. Vê a pessoa e o espaço em direto.",
   "housingSafety.tips.lowPrice":
-    "Um preço muito abaixo do normal costuma ser um aviso, não uma pechincha.",
+    "Um preço muito abaixo do normal costuma ser um aviso.",
   "housingSafety.tips.noTransfers":
     "Sem transferências nem sinais antes de confirmares com quem estás a falar.",
   "housingSafety.tips.stayOnPlatform":
@@ -3754,18 +3835,20 @@ export const economy: Catalog = {
   "housingSafety.price.title": "Quanto custa mesmo arrendar em Lisboa",
   "housingSafety.price.lead":
     "Uma referência rápida. Se um espaço estiver muito abaixo destes valores, pergunta-te porquê antes de avançares.",
-  "housingSafety.price.room.label": "Quarto individual num apartamento partilhado",
+  "housingSafety.price.room.label":
+    "Quarto individual num apartamento partilhado",
   "housingSafety.price.double.label": "Quarto partilhado, por pessoa",
   "housingSafety.price.studio.label": "Estúdio só para ti",
   "housingSafety.price.perMonth": "/ mês",
   "housingSafety.price.note":
-    "Intervalos aproximados para Lisboa, como referência, não uma avaliação.",
+    "Intervalos aproximados para Lisboa, como referência. Uma avaliação formal é outra coisa.",
   "housingSafety.page.eyebrow": "Segurança na habitação",
   "housingSafety.page.title": "Arrendar, com <em>segurança</em>",
   "housingSafety.page.lead":
     "Um guia curto e claro para detetar uma burla e conhecer os teus direitos enquanto inquilino em Portugal, para encontrares casa sem ficares na dúvida.",
   "housingSafety.page.antiScamTitle": "Detetar uma <em>burla</em>",
-  "housingSafety.page.rightsTitle": "Os teus direitos enquanto inquilino em Portugal",
+  "housingSafety.page.rightsTitle":
+    "Os teus direitos enquanto inquilino em Portugal",
   "housingSafety.rights.lease.title": "Um contrato escrito e registado",
   "housingSafety.rights.lease.point.1":
     "O teu arrendamento deve ser um contrato escrito, um acordo verbal deixa-te com muito menos para te defenderes.",
@@ -3794,12 +3877,14 @@ export const economy: Catalog = {
     "O senhorio não pode mudar as fechaduras, cortar-te a água ou a luz, nem retirar os teus bens para te obrigar a sair.",
   "housingSafety.rights.eviction.point.3":
     "Esse tipo de assédio é crime segundo a Lei n.º 12/2019. Tens o direito de denunciar.",
-  "housingSafety.rights.discrimination.title": "Se fores tratado de forma injusta",
+  "housingSafety.rights.discrimination.title":
+    "Se fores tratado de forma injusta",
   "housingSafety.rights.discrimination.point.1":
     "A lei do arrendamento não prevê proteções específicas para pessoas LGBTQ+, mas a discriminação pode na mesma ser denunciada a um organismo para a igualdade.",
   "housingSafety.rights.discrimination.point.2":
     "Guarda as mensagens e os apontamentos, um registo escrito ajuda se decidires avançar.",
-  "housingSafety.disclaimer.title": "Orientação, não <em>aconselhamento jurídico</em>",
+  "housingSafety.disclaimer.title":
+    "Orientação, não <em>aconselhamento jurídico</em>",
   "housingSafety.disclaimer.body":
     "Mantivemos isto rigoroso e claro, mas cada situação é única. Para algo que conte mesmo, fala com uma associação de inquilinos ou com um advogado.",
   "housingSafety.backToHousing": "Voltar à habitação",
@@ -3860,7 +3945,8 @@ export const economy: Catalog = {
   // ── Grupos de habitação verificados + pedido de entrada (Wave A) ──
   "housingGroups.backLabel": "Habitação",
   "housingGroups.hero.eyebrow": "Habitação verificada",
-  "housingGroups.hero.title": "Grupos em que quem arrenda queer <em>confia</em>",
+  "housingGroups.hero.title":
+    "Grupos em que quem arrenda queer <em>confia</em>",
   "housingGroups.hero.sub":
     "Grupos de habitação pequenos e triados, onde cada anúncio indica a renda, descreve a acessibilidade com honestidade e nenhum intermediário entra.",
   "housingGroups.grid.title": "Encontra as tuas <em>pessoas</em>",
@@ -3912,4 +3998,256 @@ export const economy: Catalog = {
 
   // ── Cooperativa de habitação — marca de operador verificado (Wave A) ──
   "housingCoop.operatorVerified": "Operador verificado",
+
+  // ── 2026-08-21 code-review 4.6 fixes ──
+  "placeholder.notSet": "Sem dados",
+  "member.fallbackName": "Uma pessoa da comunidade",
+  "housing.fact.rent": "Renda",
+  "housing.fact.rentPerMonth": "{amount} / mês",
+  "housing.fact.area": "Zona",
+  "housing.fact.available": "Disponível",
+  "housing.fact.availableNow": "Já",
+  "housing.fact.minimumStay": "Estadia mínima",
+  "housing.fact.minimumStayMonths_one": "{count} mês",
+  "housing.fact.minimumStayMonths_other": "{count} meses",
+  "housing.fact.bills": "Despesas",
+  "housing.fact.billsIncluded": "Incluídas",
+  "housing.fact.billsNotIncluded": "Não incluídas",
+  "housing.beds.count_one": "{count} quarto",
+  "housing.beds.count_other": "{count} quartos",
+  "housing.period.month": "mês",
+  "company.badge.queerRun": "Gerida por pessoas queer",
+  "company.badge.queerRunVerified": "Gerida por pessoas queer · verificada",
+  "company.badge.queerLed": "Liderada por pessoas queer",
+  "company.badge.queerLedVerified": "Liderada por pessoas queer · verificada",
+  "company.badge.verified": "Verificada",
+  "company.badge.employer": "Entidade empregadora",
+  "company.reviews.starsBar_one": "{count} estrela",
+  "company.reviews.starsBar_other": "{count} estrelas",
+  "company.stats.founded": "Fundada em",
+  "company.stats.people_one": "Pessoa",
+  "company.stats.people_other": "Pessoas",
+  "company.stats.avgReview_one": "Avaliação média · {count} avaliação",
+  "company.stats.avgReview_other": "Avaliação média · {count} avaliações",
+  "company.stats.noScore": "Sem nota",
+  "company.membersLabel_one": "Ver {count} membro",
+  "company.membersLabel_other": "Ver os {count} membros",
+  "company.hiringContact.fallbackName": "A equipa",
+  "company.hiringContact.fallbackRole":
+    "As candidaturas são lidas pela equipa daqui.",
+  "landlord.recommendation.when": "Recomendação de {date}",
+  "housingCoop.card.phaseLabel": "Fase {number} · {phase}",
+  "housingCoop.card.phaseWord.forming": "formação",
+  "housingCoop.card.phaseWord.legal": "constituição legal",
+  "housingCoop.card.phaseWord.finance": "financiamento",
+  "housingCoop.card.phaseWord.property": "imóvel",
+  "housingCoop.card.phaseWord.daily": "dia a dia",
+  "housingCoop.card.cta.join": "Pedir para entrar",
+  "housingCoop.card.cta.updates": "Ler novidades",
+  "housingCoop.card.cta.mentor": "Pedir mentoria",
+  "housingCoop.card.location_one": "{area}, {city} · {count} agregado",
+  "housingCoop.card.location_other": "{area}, {city} · {count} agregados",
+  "housingCoop.card.meta.targetShares": "Quotas-alvo",
+  "housingCoop.card.meta.memberShares": "Quotas dos membros",
+  "housingCoop.card.meta.monthly": "Mensal",
+  "housingCoop.card.meta.operating": "Em funcionamento",
+  "housingCoop.card.meta.formingSince": "Em formação desde",
+  "housingCoop.card.operationalSince": "A funcionar desde",
+  "housingCoop.card.duration.years_one": "{count} ano",
+  "housingCoop.card.duration.years_other": "{count} anos",
+  "housingCoop.card.duration.months_one": "{count} mês",
+  "housingCoop.card.duration.months_other": "{count} meses",
+  "housingCoop.card.duration.justOpened": "abriu agora",
+  "tax.disclaimer":
+    "Informação geral, sem valor de aconselhamento fiscal ou jurídico. As regras " +
+    "mudam e cada situação é diferente. Confirma com um contabilista certificado " +
+    "antes de te guiares por isto.",
+  "tax.retentionRate.23": "23% (valor por defeito desde 2025)",
+  "tax.retentionRate.25": "25% (opcional)",
+  "tax.retentionRate.16_5": "16,5% (propriedade intelectual ou industrial)",
+  "tax.retentionRate.11_5": "11,5% (atividades fora da tabela do art. 151.º)",
+  "tax.retentionRate.0": "Sem retenção (dispensa, art. 101.º-B)",
+  "postJob.step3.maxPlaceholder": "Opcional",
+  "postJob.confirm.share.linkCopied": "Copiado",
+  "postJob.confirm.share.toastLinkFailed":
+    "Não conseguimos aceder à área de transferência. Abre o anúncio e copia o link da barra de endereço do navegador.",
+  "rateBoard.eyebrow": "Neste dispositivo",
+  "housingCoop.empty.bodyComingSoon":
+    "É aqui que vais encontrar grupos a organizar habitação em conjunto. Ainda ninguém começou uma por aqui, e publicar que estás a começar abre em breve.",
+  "housingCoop.startCta.comingSoonNote":
+    "Publicar que estás a começar abre em breve. Até lá, podes pedir para entrar em qualquer cooperativa já em formação aqui em cima.",
+  "myHousingListings.edit.backToReviewWarning":
+    "Este anúncio está publicado neste momento. Ao guardares uma alteração, ele volta para revisão e sai do quadro público até um moderador o aprovar de novo. Normalmente é rápido.",
+  "myHousingListings.toast.backToReview":
+    "Guardado. O teu anúncio voltou para revisão, por isso está fora do quadro até um moderador o aprovar.",
+  // ── Anúncios em grupos de habitação: editar e retirar o teu (BE-HSG-20) ──
+  "groupListing.manage.startCta": "Gerir um quarto que publicaste",
+  "groupListing.manage.doneCta": "Terminar",
+  "groupListing.manage.note":
+    "Só quem publicou um quarto o pode editar ou retirar. Escolhe o teu aqui em baixo e nós confirmamos com o grupo.",
+  "groupListing.manage.editCta": "Editar",
+  "groupListing.manage.editAriaLabel": "Editar o anúncio {title}",
+  "groupListing.manage.withdrawCta": "Retirar",
+  "groupListing.manage.withdrawAriaLabel": "Retirar o anúncio {title}",
+
+  "groupListing.edit.ariaLabel": "Editar o anúncio {title}",
+  "groupListing.edit.eyebrow": "O teu quarto",
+  "groupListing.edit.title": "Corrige <em>o teu anúncio</em>",
+  "groupListing.edit.sub":
+    "Corrige a renda, reescreve a descrição ou atualiza o que disseste sobre acessibilidade.",
+  "groupListing.edit.backToReviewWarning":
+    "Tudo neste formulário aparece na página do grupo, por isso guardar uma alteração envia o quarto de volta para revisão. Sai da página do grupo até um moderador o aprovar de novo. Normalmente é rápido.",
+  "groupListing.edit.submitCta": "Guardar e enviar para revisão",
+  "groupListing.edit.submitting": "A guardar…",
+
+  "groupListing.field.titleLabel": "Quarto ou apartamento",
+  "groupListing.field.titlePlaceholder":
+    "Quarto soalheiro num apartamento partilhado",
+  "groupListing.field.neighbourhoodLabel": "Zona",
+  "groupListing.field.neighbourhoodPlaceholder": "Arroios",
+  "groupListing.field.priceLabel": "Renda por mês",
+  "groupListing.field.pricePlaceholder": "480",
+  "groupListing.field.priceHint":
+    "Um valor real em euros. Indicar a renda à partida é uma regra da casa por aqui.",
+  "groupListing.field.priceError":
+    "Indica um valor inteiro em euros, no mínimo 1.",
+  "groupListing.field.descriptionLabel": "Como é o sítio",
+  "groupListing.field.descriptionPlaceholder":
+    "Quem lá vive, como é o apartamento, o que procuras em quem vier partilhar.",
+  "groupListing.field.accessLabel": "Acessibilidade",
+  "groupListing.field.accessPlaceholder":
+    "Terceiro andar, sem elevador. A porta da casa de banho tem 70cm. Entrada do prédio sem degraus.",
+  "groupListing.field.accessHint":
+    "Descreve escadas, elevador, percursos sem degraus e larguras de porta com honestidade. Todos os anúncios aqui têm de o fazer.",
+
+  "groupListing.withdraw.confirmTitle": "Retirar este quarto?",
+  "groupListing.withdraw.confirmBody":
+    "{title} sai da página do grupo para toda a gente. Isto não se pode desfazer, por isso publica outra vez se o quarto voltar a ficar livre.",
+  "groupListing.withdraw.confirmCta": "Retirar o anúncio",
+
+  "groupListing.toast.backToReview":
+    "Guardado. O teu quarto voltou para revisão, por isso está fora da página do grupo até um moderador o aprovar.",
+  "groupListing.toast.editFailed": "Não foi possível guardar essa alteração",
+  "groupListing.toast.withdrawn":
+    "Esse quarto está fora. Obrigado por manteres o grupo em ordem.",
+  "groupListing.toast.withdrawFailed": "Não foi possível retirar esse anúncio",
+
+  // ── Recomendações de senhorios: retirar a tua (BE-HSG-18) ──
+  "landlordPage.recommendation.yoursBadge": "Tua",
+  "landlordPage.recommendation.withdrawCta": "Retirar",
+  "landlordPage.withdraw.confirmTitle": "Retirar a tua recomendação?",
+  "landlordPage.withdraw.confirmBody":
+    "Sai da página de {name} e deixa de contar para a avaliação. Podes escrever outra quando quiseres.",
+  "landlordPage.withdraw.confirmCta": "Retirar",
+  "landlordPage.toast.recommendationWithdrawn": "A tua recomendação está fora.",
+  "landlordPage.toast.withdrawFailed":
+    "Não foi possível retirar essa recomendação",
+
+  // ── Consola de candidaturas do lado de quem publica (BE-HSG-16) ──
+  "jobDetail.sidebar.reviewApplicationsCta": "Ver candidaturas",
+  "jobApplications.eyebrow": "Candidaturas",
+  "jobApplications.fallbackJobTitle": "O teu anúncio",
+  "jobApplications.countTotal_one": "{count} pessoa candidatou-se.",
+  "jobApplications.countTotal_other": "{count} pessoas candidataram-se.",
+  "jobApplications.countWaiting_one": "{count} está à espera de uma decisão.",
+  "jobApplications.countWaiting_other":
+    "{count} estão à espera de uma decisão.",
+  "jobApplications.countWaitingNone": "Neste momento não há nada à tua espera.",
+  "jobApplications.notifyNote":
+    "Quem aceitares ou recusares recebe uma mensagem direta tua, por isso fica atento à tua caixa de entrada para a resposta.",
+  "jobApplications.viewListing": "Ver o anúncio",
+  "jobApplications.appliedOn": "Candidatou-se a {date}",
+  "jobApplications.applicantRemoved": "Alguém que entretanto saiu",
+  "jobApplications.status.submitted": "Nova",
+  "jobApplications.status.reviewing": "Em análise",
+  "jobApplications.status.accepted": "Aceite",
+  "jobApplications.status.declined": "Recusada",
+  "jobApplications.action.startReview": "Começar a analisar",
+  "jobApplications.action.decline": "Recusar",
+  "jobApplications.action.accept": "Aceitar",
+  "jobApplications.decisionFinal":
+    "Esta decisão é final e a pessoa já foi avisada.",
+  "jobApplications.decideFailed": "Não foi possível atualizar essa candidatura",
+  "jobApplications.confirmAccept.title": "Aceitar esta candidatura?",
+  "jobApplications.confirmAccept.body":
+    "A pessoa recebe uma mensagem direta tua a dizê-lo. Aceitar é final, por isso pensa um momento antes.",
+  "jobApplications.confirmAccept.cta": "Aceitar",
+  "jobApplications.confirmDecline.title": "Recusar esta candidatura?",
+  "jobApplications.confirmDecline.body":
+    "A pessoa recebe uma mensagem direta tua a dizê-lo. Recusar é final, e uma palavra amável na tua resposta faz toda a diferença.",
+  "jobApplications.confirmDecline.cta": "Recusar",
+  "jobApplications.empty.title": "Ainda sem candidaturas",
+  "jobApplications.empty.description":
+    "Quando alguém se candidatar, aparece aqui, com o que te tiver escrito.",
+  "jobApplications.forbidden.title": "Este anúncio é de outra pessoa",
+  "jobApplications.forbidden.description":
+    "Só quem publicou uma vaga pode ler as candidaturas dela. Se o anúncio é teu, entra com a conta com que o publicaste.",
+  "jobApplications.forbidden.cta": "Voltar ao quadro",
+  "jobApplications.missing.title": "Esse anúncio já não existe",
+  "jobApplications.missing.description":
+    "Pode ter sido retirado. Vê o que mais está aberto.",
+  "jobApplications.error.title": "Não conseguimos carregar as candidaturas",
+  "jobApplications.error.description":
+    "Algo correu mal do nosso lado. Tenta outra vez daqui a pouco.",
+  "jobApplications.error.retry": "Tentar outra vez",
+
+  // ── Paginação da bolsa de competências + caixa de propostas de quem publica ──
+  "barter.loadMore": "Ver mais trocas",
+  "barter.loadingMore": "A carregar mais trocas…",
+
+  "barterProposals.entryLink": "As tuas trocas e propostas",
+  "barterProposals.eyebrow": "Bolsa de competências",
+  "barterProposals.title": "Propostas nas tuas trocas",
+  "barterProposals.countListings_one": "{count} troca publicada.",
+  "barterProposals.countListings_other": "{count} trocas publicadas.",
+  "barterProposals.countWaiting_one": "{count} proposta está à tua espera.",
+  "barterProposals.countWaiting_other": "{count} propostas estão à tua espera.",
+  "barterProposals.countWaitingNone":
+    "Não tens nada à espera de resposta neste momento.",
+  "barterProposals.backToBoard": "Voltar à bolsa de competências",
+  "barterProposals.pickerLegend": "Escolhe qual das tuas trocas queres ler",
+  "barterProposals.pendingBadgeLabel_one": "{count} proposta à espera",
+  "barterProposals.pendingBadgeLabel_other": "{count} propostas à espera",
+  "barterProposals.proposedOn": "Proposta a {date}",
+  "barterProposals.proposerRemoved": "Um membro que entretanto saiu",
+  "barterProposals.status.pending": "À tua espera",
+  "barterProposals.status.accepted": "Aceite",
+  "barterProposals.status.declined": "Recusada",
+  "barterProposals.action.accept": "Aceitar",
+  "barterProposals.action.decline": "Recusar",
+  "barterProposals.decisionFinal":
+    "Esta resposta é final e a pessoa já foi avisada.",
+  "barterProposals.confirmAccept.title": "Aceitar esta troca?",
+  "barterProposals.confirmAccept.body":
+    "A pessoa recebe a tua resposta nas mensagens, onde podem combinar a troca em conjunto. Aceitar é definitivo, por isso pensa um momento.",
+  "barterProposals.confirmAccept.cta": "Aceitar",
+  "barterProposals.confirmDecline.title": "Recusar esta troca?",
+  "barterProposals.confirmDecline.body":
+    "A pessoa recebe a tua resposta nas mensagens. Recusar é definitivo, e uma palavra simpática faz toda a diferença.",
+  "barterProposals.confirmDecline.cta": "Recusar",
+  "barterProposals.decide.errorFailed":
+    "A tua resposta não ficou guardada. Tenta outra vez daqui a pouco.",
+  "barterProposals.decide.errorNotOwner":
+    "Esta troca é de outra pessoa, por isso só ela pode responder às propostas.",
+  "barterProposals.decide.errorGone":
+    "Esta troca ou esta proposta já não existe. Atualiza para veres o que ainda cá está.",
+  "barterProposals.decide.errorAlreadyDecided":
+    "Esta proposta já tem resposta. Atualiza para veres como ficou.",
+  "barterProposals.empty.title": "Ainda não há propostas nesta troca",
+  "barterProposals.empty.description":
+    "Quando alguém propuser uma troca aparece aqui, com o que te escreveu.",
+  "barterProposals.noListings.title": "Ainda não publicaste nenhuma troca",
+  "barterProposals.noListings.description":
+    "Põe alguma coisa em cima da mesa e as propostas de outros membros chegam aqui.",
+  "barterProposals.noListings.cta": "Ir para a bolsa de competências",
+  "barterProposals.forbidden.title": "Esta troca é de outra pessoa",
+  "barterProposals.forbidden.description":
+    "Só quem publicou uma troca pode ler as suas propostas. Se esta é tua, entra com a conta com que a publicaste.",
+  "barterProposals.missing.title": "Essa troca já não existe",
+  "barterProposals.missing.description":
+    "Pode ter sido retirada do quadro. Vê o que mais há na bolsa.",
+  "barterProposals.error.title": "Não conseguimos carregar as propostas",
+  "barterProposals.error.description":
+    "Algo correu mal do nosso lado. Tenta outra vez daqui a pouco.",
+  "barterProposals.error.retry": "Tentar outra vez",
 };

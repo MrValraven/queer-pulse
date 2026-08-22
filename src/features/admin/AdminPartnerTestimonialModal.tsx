@@ -59,7 +59,11 @@ export function AdminPartnerTestimonialModal({
           showToast(
             error instanceof ApiError && error.status === 409
               ? t("admin:partnerTestimonial.quoteNeedsAuthor")
-              : describeError("Couldn't save that testimonial", error),
+              : describeError(
+                  t("admin:errors.saveTestimonial"),
+                  error,
+                  t("shared:apiError.tryAgainTail"),
+                ),
             "error",
           ),
       },

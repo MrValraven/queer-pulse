@@ -190,7 +190,7 @@
   color: var(--accent);
 }
 .lsV.jade em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .lsL {
   font-size: 11.5px;
@@ -373,7 +373,7 @@
 }
 .mAv.jade {
   background: rgba(var(--jade-rgb), 0.2);
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .mAv.plum {
   background: rgba(var(--cream-rgb), 0.1);
@@ -385,7 +385,7 @@
   color: var(--text, var(--cream));
 }
 .mName.curator {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .mRole {
   font-size: 9.5px;
@@ -396,7 +396,7 @@
   margin-left: 6px;
 }
 .mRole.cu {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .mRole.artist {
   color: var(--accent);

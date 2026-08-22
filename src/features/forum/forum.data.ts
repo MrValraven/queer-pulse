@@ -59,6 +59,10 @@ export interface Reply {
   official?: boolean;
   /** Slug of the moderator posting on the platform's behalf (for an official byline). */
   mod?: string;
+  /** The viewer authored this reply. Set on an optimistic reply the member
+   *  just posted, so ownership checks key on a FLAG rather than on the
+   *  display string "You" — which broke the moment the UI was translated. */
+  isMine?: boolean;
   time: string;
   isOP?: boolean;
   helpful?: boolean;
@@ -102,9 +106,16 @@ export interface Thread {
     photo?: string;
     official?: boolean;
     mod?: string;
+    /** The viewer authored this thread (optimistic just-published card). A
+     *  flag rather than the display string "You", which is translated. */
+    isMine?: boolean;
   };
   posted: string;
-  views: number;
+  /** View count. OPTIONAL because the backend's `ForumThreadResponse` carries
+   *  none: live threads leave it undefined and the OP card hides the stat
+   *  rather than printing a permanent, untrue "0 views". Demo threads carry
+   *  the mock's curated numbers. */
+  views?: number;
   upvotes: number;
   comments: number;
   tags: string[];
@@ -225,10 +236,15 @@ const qpReply = (
 /** Author block for the logged-in member, shown when they publish a thread —
  *  DEMO ONLY. It is built from the mock `currentUser` (the "Tiago Costa"
  *  persona), so it must never author a live post. Live mode uses
- *  `selfAuthorFromProfile` with the real session identity instead. */
+ *  `selfAuthorFromProfile` with the real session identity instead.
+ *
+ *  `name` is a PLACEHOLDER: the caller overwrites it with `t("forum:author.you")`
+ *  (this module has no translator). Ownership is read off `isMine`, never off
+ *  the display string. */
 export const SELF_AUTHOR: Thread["author"] = {
   initials: currentUser.initials,
-  name: "You",
+  name: "",
+  isMine: true,
   background: solid(currentUser.tint).background,
   color: solid(currentUser.tint).color,
   slug: currentUser.slug,
@@ -240,11 +256,14 @@ export const SELF_AUTHOR: Thread["author"] = {
  * profile isn't available. Compose is auth-gated, so this is a defensive
  * fallback only — it exists so live can NEVER borrow the demo `SELF_AUTHOR`
  * ("Tiago Costa") persona. It carries no slug/photo (links nowhere) and reads as
- * the viewer's own post ("You") until the create response reconciles the card.
+ * the viewer's own post until the create response reconciles the card.
+ *
+ * `name` is a PLACEHOLDER the caller fills with `t("forum:author.you")`.
  */
 export const NEUTRAL_AUTHOR: Thread["author"] = {
   initials: "",
-  name: "You",
+  name: "",
+  isMine: true,
   background: "var(--plum)",
   color: "var(--cream)",
 };

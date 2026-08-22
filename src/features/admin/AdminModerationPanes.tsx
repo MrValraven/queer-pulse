@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
-import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import {
   ReportCard,
   BulkBar,
-  BulkSuspendModal,
   EmergencyBand,
   SectionLabel,
   CaughtUpPanel,
   AppealCard,
   ResolvedRow,
 } from "./AdminModerationCards";
+import { BulkActionModal } from "./AdminModerationBulkModal";
+import type { ModActionCode } from "./api/moderation.api";
 import styles from "./AdminModerationPage.module.css";
-import type { useModerationQueue } from "./useModerationQueue";
+import type { BulkVerb, useModerationQueue } from "./useModerationQueue";
 
 type Queue = ReturnType<typeof useModerationQueue>;
 
@@ -39,7 +40,14 @@ function QueueErrorPane({ onRetry }: { onRetry: () => void }) {
 export function OpenPane({ q }: { q: Queue }) {
   const { t } = useTranslation();
   const { open, visible, emergencies, others, picked, leaving, oldest } = q;
-  const [suspending, setSuspending] = useState(false);
+  // Ban / warn / remove-content / suspend all pass through the confirm modal,
+  // which collects the reason code and the member-facing note the single-report
+  // drawer already requires. Dismiss and escalate stay one-click: neither
+  // sanctions the member.
+  const [confirming, setConfirming] = useState<{
+    verb: BulkVerb;
+    action: ModActionCode;
+  } | null>(null);
 
   const renderReport = (r: (typeof open)[number], i: number) => (
     <FadeIn key={r.id} delay={Math.min(i, 6) * 55}>
@@ -83,22 +91,28 @@ export function OpenPane({ q }: { q: Queue }) {
         <BulkBar
           count={picked.size}
           onDismiss={() => q.bulkAct("dismissed", "dismiss")}
-          onSpam={() => q.bulkAct("removedAsSpam", "remove_content")}
-          onReassign={() => q.bulkAct("reassigned", "escalate")}
-          onWarn={() => q.bulkAct("warned", "warn")}
-          onSuspendClick={() => setSuspending(true)}
-          onBan={() => q.bulkAct("banned", "ban")}
+          onSpam={() =>
+            setConfirming({ verb: "removedAsSpam", action: "remove_content" })
+          }
+          onEscalate={() => q.bulkAct("escalated", "escalate")}
+          onWarn={() => setConfirming({ verb: "warned", action: "warn" })}
+          onSuspendClick={() =>
+            setConfirming({ verb: "suspended", action: "suspend" })
+          }
+          onBan={() => setConfirming({ verb: "banned", action: "ban" })}
           onCancel={q.clearPicked}
         />
       )}
 
-      {suspending && (
-        <BulkSuspendModal
+      {confirming && (
+        <BulkActionModal
           count={picked.size}
-          onClose={() => setSuspending(false)}
-          onConfirm={(duration) => {
-            setSuspending(false);
-            q.bulkAct("suspended", "suspend", duration);
+          action={confirming.action}
+          onClose={() => setConfirming(null)}
+          onConfirm={(decision) => {
+            const pending = confirming;
+            setConfirming(null);
+            q.bulkAct(pending.verb, pending.action, decision);
           }}
         />
       )}
@@ -119,7 +133,11 @@ export function OpenPane({ q }: { q: Queue }) {
           <SectionLabel>{t("admin:moderation.everythingElse")}</SectionLabel>
           {oldest && (
             <p className={styles.countNote}>
-              {t("admin:moderation.countNote", {
+              {/* `oldest` is now a full localized relative-time phrase ("3
+                  hours ago" / "há 3 horas") instead of a bare "3h", so it needs
+                  a sentence that doesn't supply its own "ago" — the older
+                  `countNote` key did. */}
+              {t("admin:moderation.oldestNote", {
                 count: visible.length,
                 oldest,
               })}
@@ -135,6 +153,25 @@ export function OpenPane({ q }: { q: Queue }) {
         <p className={styles.filterEmpty}>
           {t("admin:moderation.filterEmpty")}
         </p>
+      )}
+
+      {/* The queue is cursor-paginated: without this, everything past the
+          backend's first page was unreachable while the header counted it. */}
+      {q.hasMoreOpen && (
+        <div className={styles.loadMoreRow}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={q.loadMoreOpen}
+            disabled={q.isLoadingMoreOpen}
+          >
+            {t(
+              q.isLoadingMoreOpen
+                ? "admin:moderation.loadingMore"
+                : "admin:moderation.loadMore",
+            )}
+          </Button>
+        </div>
       )}
     </div>
   );

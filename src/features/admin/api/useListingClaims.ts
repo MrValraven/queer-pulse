@@ -11,7 +11,7 @@ export const LISTING_CLAIMS_KEY = "admin-listing-claims";
  * The pending "claim this listing" review queue. Demo mode reads the
  * colocated fixture and never hits the network — this is a Moderator/Admin-
  * only endpoint that 403s for anyone else. Live mode calls
- * `GET /listings/admin/claims`.
+ * `GET /admin/listings/claims`.
  */
 export function useListingClaims() {
   const { demoMode } = useDemoMode();

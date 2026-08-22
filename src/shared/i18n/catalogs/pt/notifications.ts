@@ -284,12 +284,29 @@ export const notifications: Catalog = {
     "A tua nomeação de {nomineeName} não avançou desta vez.",
   "type.changemaker_nomination_dismissed.meta": "Nomeação de changemaker",
 
+  // Proposta de troca numa das tuas publicações na bolsa de competências. O
+  // payload só traz o id da publicação e a linha da oferta, por isso é o meta
+  // que diz qual a troca e a linha encaminha para a caixa de propostas. A
+  // oferta vai no `meta` e não no `textNamed`, cujo único token é `{name}`
+  // (ver `NotificationItem`).
+  "type.barter_proposal_received.text":
+    "Alguém propôs uma troca numa das tuas publicações.",
+  "type.barter_proposal_received.textNamed":
+    "<profile>{name}</profile> propôs uma troca numa das tuas publicações.",
+  "type.barter_proposal_received.meta":
+    "Bolsa de competências · {listingOffer}",
+  "type.barter_proposal_received.offerFallback": "uma troca que publicaste",
+
   "type.unknown.text": "Tens uma nova notificação.",
   "type.unknown.meta": "Notificação",
 
   // Chrome da página de notificações
   "page.title": "Notificações",
   "page.markAllRead": "Marcar tudo como lido",
+  "page.markReadError":
+    "Não conseguimos marcar como lido. Continua à tua espera. Tenta novamente daqui a pouco.",
+  "page.markAllReadError":
+    "Não conseguimos marcar como lido. Continuam à tua espera. Tenta novamente daqui a pouco.",
   "page.dayRecent": "Hoje e recentes",
   "page.dayEarlier": "Anteriores",
   "page.empty.title": "Tudo em dia",
@@ -380,6 +397,8 @@ export const notifications: Catalog = {
   "mentions.unreadSummary_one": "{count} não lida",
   "mentions.unreadSummary_other": "{count} não lidas",
   "mentions.oldestFrom": "· a mais antiga de {when}",
+  "mentions.ago.justNow": "agora mesmo",
+  "mentions.ago.unknown": "há pouco",
   "mentions.allCaughtUp": "Tudo em dia",
   "mentions.markAllRead": "Marcar tudo como lido",
   "mentions.markAllReadToast": "Tudo marcado como lido",

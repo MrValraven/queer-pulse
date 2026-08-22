@@ -7,7 +7,7 @@ import {
   type PatternKey,
 } from "./profileTheme.data";
 import { useProfileTheme } from "../../app/providers/useProfileTheme";
-import { Select } from "../../shared/components/ui";
+import { Select, Toggle } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ThemeStudioPreview } from "./ThemeStudioPreview";
 import styles from "./ThemeStudio.module.css";
@@ -125,35 +125,29 @@ export function ThemeStudio({ onChange }: { onChange?: () => void }) {
           {t("settings:themeStudio.badgeDisplayLabel")}
         </div>
         <div className={styles.tglRows}>
+          {/* Shared Toggle, like every other settings pane: this used to be a
+              third hand-rolled switch style sitting next to two others. */}
           <div className={styles.tglRow}>
             <div className={styles.tglTitle}>
               {t("settings:themeStudio.showBadgesToggle")}
             </div>
-            <label className={styles.tglSw}>
-              <input
-                type="checkbox"
-                aria-label={t("settings:themeStudio.showBadgesToggle")}
-                checked={showBadges}
-                onChange={(e) => edit({ showBadges: e.target.checked })}
-              />
-              <div className={styles.tglTrack} />
-              <div className={styles.tglThumb} />
-            </label>
+            <Toggle
+              tone="coral"
+              checked={showBadges}
+              label={t("settings:themeStudio.showBadgesToggle")}
+              onChange={(next) => edit({ showBadges: next })}
+            />
           </div>
           <div className={styles.tglRow}>
             <div className={styles.tglTitle}>
               {t("settings:themeStudio.showLevelToggle")}
             </div>
-            <label className={styles.tglSw}>
-              <input
-                type="checkbox"
-                aria-label={t("settings:themeStudio.showLevelToggle")}
-                checked={showLevel}
-                onChange={(e) => edit({ showLevel: e.target.checked })}
-              />
-              <div className={styles.tglTrack} />
-              <div className={styles.tglThumb} />
-            </label>
+            <Toggle
+              tone="coral"
+              checked={showLevel}
+              label={t("settings:themeStudio.showLevelToggle")}
+              onChange={(next) => edit({ showLevel: next })}
+            />
           </div>
         </div>
         <Select

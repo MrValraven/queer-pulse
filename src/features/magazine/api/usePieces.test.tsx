@@ -130,7 +130,12 @@ describe("usePieces (live mode via MSW)", () => {
 
     server.use(
       http.get(`${API_V1}/magazine/admin/pieces`, () =>
-        HttpResponse.json(pieceDtos),
+        HttpResponse.json({
+          items: pieceDtos,
+          total: pieceDtos.length,
+          page: 1,
+          pageSize: 200,
+        }),
       ),
     );
 

@@ -4,6 +4,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { SlideDeck } from "../data/decks";
 import { deckListItemToDeck, deckResponseToDeck } from "./magazine.adapters";
+import { ignoreEnrichmentError, nullOnNotFound } from "./loadErrors";
 import { getDeck, getDecks } from "./magazine.api";
 
 export interface DeckData {
@@ -37,14 +38,16 @@ export function useDeck(id: string) {
         return { deck, related };
       }
 
-      const dto = await getDeck(id).catch(() => null);
+      // 404 means "no such deck"; anything else is rethrown for react-query
+      // to retry so an outage never renders as a missing deck (FE-CNT-08).
+      const dto = await getDeck(id).catch(nullOnNotFound);
       if (!dto) return { deck: null, related: [] };
 
       const deck = deckResponseToDeck(dto, fmt);
 
       const tag = dto.tags[0];
       const relatedPage = tag
-        ? await getDecks({ tag }).catch(() => null)
+        ? await getDecks({ tag }).catch(ignoreEnrichmentError)
         : null;
       const related = (relatedPage?.items ?? [])
         .filter((item) => item.slug !== dto.slug)

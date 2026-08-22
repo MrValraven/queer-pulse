@@ -41,7 +41,7 @@ export function StepSafety({ form }: { form: CommunityForm }) {
       <div className={styles.accStack}>
         {ACCESS_OPTIONS.map((opt) => {
           const Icon = ICONS[opt.tier];
-          const selected = draft.accessTier === opt.tier;
+          const isSelected = draft.accessTier === opt.tier;
           return (
             <button
               key={opt.tier}
@@ -49,11 +49,11 @@ export function StepSafety({ form }: { form: CommunityForm }) {
               className={[
                 styles.accCard,
                 opt.private && styles.accPrivate,
-                selected && styles.accCardSelected,
+                isSelected && styles.accCardSelected,
               ]
                 .filter(Boolean)
                 .join(" ")}
-              aria-pressed={selected}
+              aria-pressed={isSelected}
               onClick={() => pick(opt.tier)}
             >
               <span className={styles.accIc}>

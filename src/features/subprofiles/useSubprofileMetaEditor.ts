@@ -89,6 +89,33 @@ export interface SubprofileMetaEditor {
   markSaved: (snapshot: MetaSnapshot) => void;
 }
 
+/** The persisted persona, mapped to the comparable flat meta shape. */
+function metaSnapshotOf(subprofile: SubprofileView): MetaSnapshot {
+  return {
+    displayName: subprofile.displayName,
+    tagline: subprofile.tagline,
+    bio: subprofile.bio,
+    avatarUrl: subprofile.avatarUrl ?? "",
+    coverUrl: subprofile.coverUrl ?? "",
+    slug: subprofile.slug,
+    handle: subprofile.handle ?? "",
+    link: subprofile.linkVisibility,
+    visibility: subprofile.visibility,
+    accent: subprofile.accent ?? "",
+    availability: subprofile.availability ?? "",
+    ctaLabel: subprofile.ctaLabel,
+    ctaUrl: subprofile.ctaUrl,
+    coverBleed: subprofile.skinData?.coverBleed ?? false,
+  };
+}
+
+/** Field-by-field equality for two meta snapshots (all values are primitives). */
+function sameMetaSnapshot(a: MetaSnapshot, b: MetaSnapshot): boolean {
+  return (Object.keys(a) as (keyof MetaSnapshot)[]).every(
+    (key) => a[key] === b[key],
+  );
+}
+
 /**
  * The subprofile's meta editor state: identity (avatar/name/tagline/bio),
  * presence (cover/accent/availability/CTA), and link/visibility (linked vs.
@@ -135,6 +162,9 @@ export function useSubprofileMetaEditor(
   const [ctaLabel, setCtaLabel] = useState(subprofile.ctaLabel);
   const [ctaUrl, setCtaUrl] = useState(subprofile.ctaUrl);
 
+  // What the SERVER currently holds, in the same comparable shape.
+  const serverMeta = metaSnapshotOf(subprofile);
+
   // The editor's OWN baseline — what "saved" currently means. Seeded from the
   // loaded persona and advanced by `markSaved()` after a successful save. This
   // is why `dirty` must NOT depend on the post-save refetch: in demo mode the
@@ -143,22 +173,76 @@ export function useSubprofileMetaEditor(
   // so comparing local state to the refetched prop would leave the editor stuck
   // dirty after a successful save. The list editors advance their own baseline
   // the same way in `SubprofileEditorProvider`.
-  const [baseline, setBaseline] = useState<MetaSnapshot>(() => ({
-    displayName: subprofile.displayName,
-    tagline: subprofile.tagline,
-    bio: subprofile.bio,
-    avatarUrl: subprofile.avatarUrl ?? "",
-    coverUrl: subprofile.coverUrl ?? "",
-    slug: subprofile.slug,
-    handle: subprofile.handle ?? "",
-    link: subprofile.linkVisibility,
-    visibility: subprofile.visibility,
-    accent: subprofile.accent ?? "",
-    availability: subprofile.availability ?? "",
-    ctaLabel: subprofile.ctaLabel,
-    ctaUrl: subprofile.ctaUrl,
-    coverBleed: subprofile.skinData?.coverBleed ?? false,
-  }));
+  const [baseline, setBaseline] = useState<MetaSnapshot>(() =>
+    metaSnapshotOf(subprofile),
+  );
+
+  // ── Server resync ───────────────────────────────────────────────────────
+  // Every field above is seeded ONCE, and the shell only remounts on a
+  // different persona — so a refetch that changes a value server-side used to
+  // go unnoticed. Unpublish is the sharp case: it NULLs an unlinked persona's
+  // handle, while local `handle` and `baseline.handle` kept the old value, so
+  // `handleChanged` computed false, the handle was never re-sent, and `dirty`
+  // stayed false with Save disabled. The address silently stopped saving and
+  // Publish then failed a "handle" completeness check against a null row.
+  //
+  // So: when the server value for a field changes and the member has NOT
+  // edited that field locally (local === baseline), adopt the new value into
+  // both the field and the baseline. A locally-edited field keeps the edit and
+  // stays dirty, so their work is never overwritten by a background refetch.
+  // Snap-during-render (React's "adjust state while rendering"), not an effect,
+  // so the fresh values are already in place on this same paint.
+  const [appliedServerMeta, setAppliedServerMeta] =
+    useState<MetaSnapshot>(serverMeta);
+  if (!sameMetaSnapshot(appliedServerMeta, serverMeta)) {
+    const local: MetaSnapshot = {
+      displayName,
+      tagline,
+      bio,
+      avatarUrl,
+      coverUrl,
+      slug,
+      handle,
+      link,
+      visibility,
+      accent,
+      availability,
+      ctaLabel,
+      ctaUrl,
+      coverBleed,
+    };
+    const adopters: [keyof MetaSnapshot, (server: MetaSnapshot) => void][] = [
+      ["displayName", (server) => setDisplayName(server.displayName)],
+      ["tagline", (server) => setTagline(server.tagline)],
+      ["bio", (server) => setBio(server.bio)],
+      ["avatarUrl", (server) => setAvatarUrl(server.avatarUrl)],
+      ["coverUrl", (server) => setCoverUrl(server.coverUrl)],
+      ["slug", (server) => setSlug(server.slug)],
+      ["handle", (server) => setHandle(server.handle)],
+      ["link", (server) => setLink(server.link as LinkVisibility)],
+      ["visibility", (server) => setVisibility(server.visibility as Visibility)],
+      ["accent", (server) => setAccent(server.accent as AccentKey)],
+      [
+        "availability",
+        (server) => setAvailability(server.availability as AvailabilityKey | ""),
+      ],
+      ["ctaLabel", (server) => setCtaLabel(server.ctaLabel)],
+      ["ctaUrl", (server) => setCtaUrl(server.ctaUrl)],
+      ["coverBleed", (server) => setCoverBleed(server.coverBleed)],
+    ];
+    const nextBaseline: MetaSnapshot = { ...baseline };
+    for (const [key, adopt] of adopters) {
+      if (serverMeta[key] === appliedServerMeta[key]) continue;
+      if (local[key] !== baseline[key]) continue;
+      adopt(serverMeta);
+      // `MetaSnapshot` has no index signature, so the write goes through
+      // `unknown` rather than asserting a shape the type does not have.
+      (nextBaseline as unknown as Record<string, string | boolean>)[key] =
+        serverMeta[key];
+    }
+    setAppliedServerMeta(serverMeta);
+    setBaseline(nextBaseline);
+  }
 
   const nameMissing = displayName.trim().length === 0;
   // A standalone (unlinked) handle shares the global namespace — don't let a

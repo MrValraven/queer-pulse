@@ -3,7 +3,7 @@
   top: var(--nav-top);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: var(--z-nav);
   /* The floating pill is centred (left: 50% + translateX(-50%)), so it stays
      centred and simply narrows by the larger of the two horizontal safe-area
      insets on each side. A landscape iPhone puts the notch on one side only;
@@ -109,7 +109,7 @@
   padding: 0 4px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-size: 9px;
   font-weight: 800;
   display: flex;

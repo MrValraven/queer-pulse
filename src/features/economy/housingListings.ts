@@ -26,8 +26,16 @@ export interface Poster {
   name: string;
   fullName: string;
   tint: AvatarTint;
+  /** Empty when we have no join date on file (live listings): the line is
+   *  omitted rather than rendered blank. */
   memberSince: string;
-  responseTime: string;
+  /**
+   * A MEASURED reply time, e.g. "within a day". Optional and absent in live
+   * mode: the listing DTO carries no response metric, and promising one the
+   * platform cannot back would contradict the honest-signals rule the
+   * verification badges follow. Demo fixtures author it directly.
+   */
+  responseTime?: string;
   bio: string;
   /** The lister's real identity-verification level. Optional in demo fixtures
    * (absent → no badge, the honest default when we have no verification data). */

@@ -34,7 +34,7 @@ export interface SafeSpaceVouchInput {
   when: string;
 }
 
-/** `PATCH /listings/:ref/safe-space` request body — mirrors `UpdateSafeSpaceDto` exactly. */
+/** `PATCH /admin/listings/:ref/safe-space` request body — mirrors `UpdateSafeSpaceDto` exactly. */
 export interface SetSafeSpaceInput {
   status: SafeSpaceStatus;
   tier?: number;
@@ -48,8 +48,8 @@ export interface SetSafeSpaceInput {
 
 /** Every listing a moderator may verify/remove/reinstate as a Safe Space, plus its current status. Moderator/Admin only. */
 export const getSafeSpaceCandidates = () =>
-  apiGet<SafeSpaceCandidate[]>("/listings/admin/safe-space-candidates");
+  apiGet<SafeSpaceCandidate[]>("/admin/listings/safe-space-candidates");
 
 /** Toggle or edit one listing's Safe Space status. Returns the updated listing. Moderator/Admin only. */
 export const setSafeSpace = (ref: string, body: SetSafeSpaceInput) =>
-  apiPatch<ListingDTO>(`/listings/${encodeURIComponent(ref)}/safe-space`, body);
+  apiPatch<ListingDTO>(`/admin/listings/${encodeURIComponent(ref)}/safe-space`, body);

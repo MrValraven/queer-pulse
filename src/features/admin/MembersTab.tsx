@@ -1,16 +1,10 @@
 import { useState } from "react";
-import { FiX, FiSearch, FiUserPlus, FiShield } from "react-icons/fi";
-import { Avatar } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { FiSearch } from "react-icons/fi";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import {
-  useRemoveMember,
-  useSetMemberRole,
-} from "../communities/api/useCommunityMutations";
 import { useRoster } from "../communities/api/useRoster";
-import { photoOf } from "../communities/communityPeople";
-import { RoleBadge } from "../communities/CommunityBadges";
+import { MembersTabRow } from "./MembersTabRow";
+import { memberKey, useMembersTabActions } from "./useMembersTabActions";
 import styles from "./ModPanel.module.css";
 
 const ROLE_FILTER_KEYS = [
@@ -19,52 +13,30 @@ const ROLE_FILTER_KEYS = [
   ["member", "modPanel.members.roleFilter.member"],
 ] as const;
 
+/**
+ * The mod panel's Members tab: search, role filter, promote/demote and remove.
+ *
+ * The writes and their optimistic bookkeeping live in `useMembersTabActions`;
+ * a row is `MembersTabRow`. Taking someone off the roster goes through a
+ * confirm dialog rather than a single tap, because there is nothing to undo it
+ * with afterwards.
+ */
 export function MembersTab({ slug }: { slug: string }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const { showToast } = useToast();
   // Live: GET /communities/:slug/roster (real member slugs); demo: the mock
-  // roster. The role/remove mutations below already key off `slug`, so a live
-  // promote/demote/remove now targets a real member instead of a mock id.
+  // roster. The role/remove mutations already key off `slug`, so a live
+  // promote/demote/remove targets a real member instead of a mock id.
   const { roster } = useRoster(slug);
-  const setMemberRole = useSetMemberRole(slug);
-  const removeMemberMutation = useRemoveMember(slug);
-  const [promoted, setPromoted] = useState<string[]>([]);
-  const [removed, setRemoved] = useState<string[]>([]);
+  const actions = useMembersTabActions(slug);
   const [roleFilter, setRoleFilter] = useState<"all" | "mod" | "member">("all");
   const [search, setSearch] = useState("");
 
-  const memberKey = (slug?: string, name?: string) => slug ?? name ?? "";
-
-  const promote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name);
-    // Local list drives the row's badge + the role filter immediately; the PATCH
-    // is the real change, and its invalidation refetches the roster.
-    setPromoted((p) => [...p, key]);
-    if (slug) setMemberRole.mutate({ memberSlug: slug, role: "mod" });
-    showToast(t("admin:modPanel.members.promotedToast", { name }), "success");
-  };
-  const demote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name);
-    setPromoted((p) => p.filter((k) => k !== key));
-    if (slug) setMemberRole.mutate({ memberSlug: slug, role: "member" });
-    showToast(t("admin:modPanel.members.demotedToast", { name }), "info");
-  };
-  const removeMember = (slug: string | undefined, name: string) => {
-    // Local list hides the row immediately; the DELETE is the real change and
-    // its invalidation refetches the roster (same optimistic pattern as
-    // promote/demote above).
-    setRemoved((p) => [...p, memberKey(slug, name)]);
-    if (slug) removeMemberMutation.mutate(slug);
-    showToast(t("admin:modPanel.members.removedToast", { name }), "info");
-  };
-
   const manageable = roster
-    .filter((m) => !removed.includes(memberKey(m.slug, m.name)))
+    .filter((m) => !actions.removed.includes(memberKey(m.slug, m.name)))
     .filter((m) => m.name.toLowerCase().includes(search.toLowerCase()))
     .filter((m) => {
       if (roleFilter === "all") return true;
-      const effectiveRole = promoted.includes(memberKey(m.slug, m.name))
+      const effectiveRole = actions.promoted.includes(memberKey(m.slug, m.name))
         ? "mod"
         : m.role;
       return (
@@ -72,6 +44,8 @@ export function MembersTab({ slug }: { slug: string }) {
         (roleFilter === "mod" && m.role === "owner")
       );
     });
+
+  const removalTarget = actions.removalTarget;
 
   return (
     <div>
@@ -105,83 +79,41 @@ export function MembersTab({ slug }: { slug: string }) {
       </div>
       {manageable.map((m) => {
         const key = memberKey(m.slug, m.name);
-        const isMod = m.role !== "member" || promoted.includes(key);
-        const isPromotedMod = promoted.includes(key) && m.role === "member";
         return (
-          <div className={styles.modRow} key={key}>
-            <Avatar
-              initials={m.initials}
-              tint={m.tint}
-              src={photoOf(m, demoMode)}
-              size={38}
-              alt={m.name}
-            />
-            <div className={styles.modMain}>
-              <div className={styles.modName}>
-                {m.name} <RoleBadge role={isPromotedMod ? "mod" : m.role} />
-              </div>
-              {m.title && <div className={styles.modMeta}>{m.title}</div>}
-            </div>
-            <div className={styles.modActions}>
-              {!isMod && (
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className={styles.declineBtn}
-                  onClick={() => promote(m.slug, m.name)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      promote(m.slug, m.name);
-                    }
-                  }}
-                >
-                  <FiUserPlus aria-hidden />{" "}
-                  {t("admin:modPanel.members.makeModCta")}
-                </span>
-              )}
-              {isPromotedMod && (
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className={styles.declineBtn}
-                  onClick={() => demote(m.slug, m.name)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      demote(m.slug, m.name);
-                    }
-                  }}
-                >
-                  <FiX aria-hidden /> {t("admin:modPanel.members.removeModCta")}
-                </span>
-              )}
-              {m.role !== "owner" && (
-                <span
-                  role="button"
-                  tabIndex={0}
-                  className={[styles.declineBtn, styles.removeBtn].join(" ")}
-                  onClick={() => removeMember(m.slug, m.name)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      removeMember(m.slug, m.name);
-                    }
-                  }}
-                >
-                  <FiX aria-hidden /> {t("admin:modPanel.members.removeCta")}
-                </span>
-              )}
-              {m.role === "owner" && (
-                <span className={styles.ownerTag}>
-                  <FiShield aria-hidden />{" "}
-                  {t("admin:modPanel.members.ownerTag")}
-                </span>
-              )}
-            </div>
-          </div>
+          <MembersTabRow
+            key={key}
+            member={m}
+            isMod={m.role !== "member" || actions.promoted.includes(key)}
+            isPromotedMod={
+              actions.promoted.includes(key) && m.role === "member"
+            }
+            isBusy={actions.busyKey === key}
+            onPromote={() => actions.setRole(m.slug, m.name, "mod")}
+            onDemote={() => actions.setRole(m.slug, m.name, "member")}
+            onRequestRemove={() =>
+              actions.setRemovalTarget({ memberSlug: m.slug, name: m.name })
+            }
+          />
         );
       })}
+
+      {removalTarget && (
+        <ConfirmDialog
+          open
+          onClose={() => actions.setRemovalTarget(null)}
+          onConfirm={actions.confirmRemoval}
+          title={t("admin:modPanel.members.removeConfirm.title", {
+            name: removalTarget.name,
+          })}
+          description={t("admin:modPanel.members.removeConfirm.body", {
+            name: removalTarget.name,
+          })}
+          tone="destructive"
+          loading={actions.isRemoving}
+          confirmLabel={t("admin:modPanel.members.removeConfirm.cta")}
+          cancelLabel={t("admin:modPanel.settings.cancel")}
+        />
+      )}
     </div>
   );
 }

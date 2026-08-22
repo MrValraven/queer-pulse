@@ -6,11 +6,11 @@ import { logError } from "../../../shared/observability/logger";
 import { currentUser, currentUserEmail } from "../../members/data/members";
 import {
   getExportJob,
-  reauth,
   requestExport,
   type ExportJob,
   type ExportFormat,
 } from "./account.api";
+import { useReauth } from "./useAccountMutations";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -66,15 +66,27 @@ type StartArgs = {
 export function useExportFlow() {
   const { demoMode } = useDemoMode();
   const { t } = useTranslation();
+  const { getReauthToken, beginReauth } = useReauth();
   const [job, setJob] = useState<ExportJob | null>(null);
+  // True from the click until the POST resolves, so the form can disable itself
+  // instead of letting a second click enqueue a second full dump of the account.
+  const [isStarting, setIsStarting] = useState(false);
   const pollRef = useRef<number | null>(null);
   const blobRef = useRef<string | null>(null);
+  // Mirrors `isStarting` for the re-entry guard: state is a render behind, and
+  // two clicks in the same tick would both get through.
+  const isStartingRef = useRef(false);
+  // Demo-mode progression timers, kept so they can be cancelled: they used to
+  // fire into an unmounted hook.
+  const demoTimersRef = useRef<number[]>([]);
 
   const stopPoll = useCallback(() => {
     if (pollRef.current !== null) {
       window.clearInterval(pollRef.current);
       pollRef.current = null;
     }
+    for (const timerId of demoTimersRef.current) window.clearTimeout(timerId);
+    demoTimersRef.current = [];
   }, []);
 
   // Clean up any polling timer + object URL when the flow unmounts.
@@ -88,6 +100,7 @@ export function useExportFlow() {
 
   const start = useCallback(
     async ({ categories, format }: StartArgs) => {
+      if (isStartingRef.current) return;
       stopPoll();
       if (demoMode) {
         setJob({
@@ -95,34 +108,47 @@ export function useExportFlow() {
           status: "queued",
           requestedAt: new Date().toISOString(),
         });
-        window.setTimeout(
-          () => setJob((j) => (j ? { ...j, status: "processing" } : j)),
-          800,
+        demoTimersRef.current.push(
+          window.setTimeout(
+            () => setJob((j) => (j ? { ...j, status: "processing" } : j)),
+            800,
+          ),
         );
-        window.setTimeout(() => {
-          if (blobRef.current) URL.revokeObjectURL(blobRef.current);
-          const url = buildDemoArchive(categories, format, t);
-          blobRef.current = url;
-          setJob({
-            jobId: "demo-export",
-            status: "ready",
-            requestedAt: new Date().toISOString(),
-            downloadUrl: url,
-            sizeBytes: 2048,
-            expiresAt: new Date(Date.now() + 7 * DAY_MS).toISOString(),
-          });
-        }, 2200);
+        demoTimersRef.current.push(
+          window.setTimeout(() => {
+            if (blobRef.current) URL.revokeObjectURL(blobRef.current);
+            const url = buildDemoArchive(categories, format, t);
+            blobRef.current = url;
+            setJob({
+              jobId: "demo-export",
+              status: "ready",
+              requestedAt: new Date().toISOString(),
+              downloadUrl: url,
+              sizeBytes: 2048,
+              expiresAt: new Date(Date.now() + 7 * DAY_MS).toISOString(),
+            });
+          }, 2200),
+        );
         return;
       }
 
+      // Step-up auth. An export is a full dump of everything we hold on a
+      // person, so it sits behind the same real OAuth step-up the deletion and
+      // deactivation flows use — a stolen session cookie alone shouldn't be
+      // enough to exfiltrate someone's entire account. Resolved here rather
+      // than by the caller so the demo branch above never touches the network
+      // and no page has to know the flow needs a token at all. No fresh token
+      // cached yet: redirect instead of proceeding — no job state change, the
+      // member just presses "start" again after landing back.
+      const reauthToken = getReauthToken();
+      if (!reauthToken) {
+        beginReauth();
+        return;
+      }
+
+      isStartingRef.current = true;
+      setIsStarting(true);
       try {
-        // Step-up auth. An export is a full dump of everything we hold on a
-        // person, so it sits behind the same short-lived token the deletion and
-        // deactivation flows use — a stolen session cookie alone shouldn't be
-        // enough to exfiltrate someone's entire account. Minted here rather than
-        // by the caller so the demo branch above never touches the network and
-        // no page has to know the flow needs a token at all.
-        const { reauthToken } = await reauth();
         const created = await requestExport({
           categories,
           format,
@@ -156,9 +182,12 @@ export function useExportFlow() {
           requestedAt: new Date().toISOString(),
           error: err instanceof Error ? err.message : "Request failed",
         });
+      } finally {
+        isStartingRef.current = false;
+        setIsStarting(false);
       }
     },
-    [demoMode, stopPoll, t],
+    [demoMode, stopPoll, t, getReauthToken, beginReauth],
   );
 
   const reset = useCallback(() => {
@@ -166,5 +195,5 @@ export function useExportFlow() {
     setJob(null);
   }, [stopPoll]);
 
-  return { job, start, reset };
+  return { job, start, reset, isStarting };
 }

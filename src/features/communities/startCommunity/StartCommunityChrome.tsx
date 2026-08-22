@@ -1,23 +1,38 @@
 import { Fragment, type ReactNode } from "react";
 import { FiAlertCircle, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { Button, Stepper, type StepperStep } from "../../../shared/components/ui";
+import {
+  Button,
+  Stepper,
+  type StepperStep,
+} from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { PANELS, TOTAL_STEPS } from "./startCommunity.data";
+import { PANELS } from "./startCommunity.data";
 import styles from "./StartCommunityPage.module.css";
 
-/** The "founding thread" rail (Stepper); done nodes jump back to their step. */
+/** The "founding thread" rail (Stepper); done nodes jump back to their step.
+ *  `hiddenStep` drops one chapter from the rail entirely (and from the "step X
+ *  of Y" count), for a chapter the current mode doesn't run — see the invites
+ *  chapter in `StartCommunityPage`. */
 export function FoundingThread({
   step,
   onJump,
+  hiddenStep,
 }: {
   step: number;
   onJump: (n: number) => void;
+  hiddenStep?: number;
 }) {
   const { t } = useTranslation();
   const current = PANELS[step];
   const currentThread = current ? t(current.threadKey) : "";
-  const steps: StepperStep[] = PANELS.map((panel) => {
+  // Rail positions vs. real chapter indices: with a chapter hidden the two
+  // stop matching, so every index crossing the Stepper boundary is mapped.
+  const visibleIndices = PANELS.map((_, index) => index).filter(
+    (index) => index !== hiddenStep,
+  );
+  const steps: StepperStep[] = visibleIndices.map((index) => {
+    const panel = PANELS[index]!;
     const threadLabel = t(panel.threadKey);
     return {
       key: panel.key,
@@ -25,18 +40,20 @@ export function FoundingThread({
       ariaLabel: t("communities:start.thread.backTo", { thread: threadLabel }),
     };
   });
+  const railPosition = Math.max(visibleIndices.indexOf(step), 0);
+  const total = visibleIndices.length;
   return (
     <div className={styles.threadWrap}>
       <div className={styles.threadRail}>
         <Stepper
           steps={steps}
-          current={step}
+          current={railPosition}
           size="sm"
           marker="check"
-          onStepClick={onJump}
+          onStepClick={(index) => onJump(visibleIndices[index] ?? 0)}
           ariaLabel={t("communities:start.thread.stepOf", {
-            step: step + 1,
-            total: TOTAL_STEPS,
+            step: railPosition + 1,
+            total,
             thread: currentThread,
           }).replace(/<[^>]*>/g, "")}
         />
@@ -45,7 +62,11 @@ export function FoundingThread({
         <Translation
           i18nKey="communities:start.thread.stepOf"
           components={{ b: <b /> }}
-          values={{ step: step + 1, total: TOTAL_STEPS, thread: currentThread }}
+          values={{
+            step: railPosition + 1,
+            total,
+            thread: currentThread,
+          }}
         />
       </div>
     </div>
@@ -69,14 +90,14 @@ export function PanelActions({
   flush?: boolean;
 }) {
   const { t } = useTranslation();
-  const blocked = missing.length > 0;
+  const isBlocked = missing.length > 0;
   return (
     <div
       className={[styles.paneFooter, flush && styles.paneFooterFlush]
         .filter(Boolean)
         .join(" ")}
     >
-      {blocked && (
+      {isBlocked && (
         <div className={styles.neededBar}>
           <FiAlertCircle size={15} aria-hidden />
           <span>{t("communities:start.actions.stillNeeded")}</span>
@@ -100,13 +121,12 @@ export function PanelActions({
         <Button
           variant="primary"
           onClick={onNext}
-          disabled={blocked}
+          disabled={isBlocked}
           title={
-            blocked ? t("communities:start.actions.blockedTitle") : undefined
+            isBlocked ? t("communities:start.actions.blockedTitle") : undefined
           }
         >
-          {nextLabel}{" "}
-          <FiArrowRight aria-hidden />
+          {nextLabel} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>

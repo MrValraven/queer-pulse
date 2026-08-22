@@ -32,7 +32,10 @@ export function CommunityDetailPage() {
               icon={<FiAlertTriangle />}
               title={t("common:error.title")}
               description={t("common:error.description")}
-              action={{ label: t("common:error.retry"), onClick: state.refetch }}
+              action={{
+                label: t("common:error.retry"),
+                onClick: state.refetch,
+              }}
             />
           </div>
         </div>
@@ -177,6 +180,7 @@ export function CommunityDetailPage() {
         <EditCommunityModal
           slug={slug}
           editable={editable}
+          canChangeAccess={role === "owner"}
           onClose={() => setEditing(false)}
         />
       )}

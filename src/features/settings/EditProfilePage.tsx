@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
+import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -18,9 +19,52 @@ export function EditProfilePage() {
     null,
   );
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { save, isSaving, saveError, cancelEditing } = useProfileEdit();
+  const { save, isSaving, saveError, cancelEditing, startEditing, isEditing } =
+    useProfileEdit();
+  const cancelEditingRef = useRef(cancelEditing);
+  // Tracks that this page is the one that opened the edit session.
+  const openedRef = useRef(false);
 
-  const unsaved = changed.size > 0;
+  const hasUnsavedChanges = changed.size > 0;
+
+  // Keep the ref current after every render (outside render, so this is safe),
+  // so the unmount-only cleanup below always calls the latest cancelEditing
+  // without depending on it (its identity changes on every save).
+  useEffect(() => {
+    cancelEditingRef.current = cancelEditing;
+  });
+
+  // Hold an edit session open for as long as this page is mounted. Without one,
+  // ProfileProvider's re-seed effect is free to replace the draft mid-typing the
+  // moment /auth/me or the own-profile query resolves, and `isDirty` (which is
+  // `isEditing && ...`) never becomes true. Re-runs after a successful save,
+  // which closes the session provider-side, so the next edit is protected too.
+  useEffect(() => {
+    if (isEditing) return;
+    startEditing();
+    openedRef.current = true;
+  }, [isEditing, startEditing]);
+
+  // Leaving the page drops a session WE opened, mirroring Discard. One opened
+  // elsewhere (the members profile inline editor) is left intact.
+  useEffect(
+    () => () => {
+      if (openedRef.current) cancelEditingRef.current();
+    },
+    [],
+  );
+
+  // Nothing else warns before a dirty editor is abandoned: the save bar was the
+  // only signal, and any nav link silently threw the edits away.
+  useUnsavedChangesGuard({
+    active: hasUnsavedChanges,
+    confirmMessage: t("settings:editProfile.leaveConfirm"),
+    onConfirmLeave: () => {
+      cancelEditing();
+      setChanged(new Set());
+      setSavedSections(null);
+    },
+  });
 
   function markChanged(section: ProfileSection) {
     setChanged((prev) => {
@@ -62,13 +106,12 @@ export function EditProfilePage() {
         <div className={styles.main}>
           <EditProfileMobileNav />
           <EditProfilePane onChange={markChanged} />
-          <div style={{ height: "80px" }} />
         </div>
       </div>
 
       {savedSections && (
-        <div className={styles.savedBar}>
-          <span className={styles.savedIcon}>
+        <div className={styles.savedBar} role="status" aria-live="polite">
+          <span className={styles.savedIcon} aria-hidden>
             <FiCheck />
           </span>
           <span className={styles.savedText}>
@@ -89,7 +132,7 @@ export function EditProfilePage() {
         </div>
       )}
 
-      {unsaved && (
+      {hasUnsavedChanges && (
         <div className={styles.saveBar}>
           <span className={styles.unsavedLabel}>
             {t("settings:editProfile.saveBar.unsavedLabel", {
@@ -99,7 +142,11 @@ export function EditProfilePage() {
             })}
           </span>
           <div className={styles.saveActions}>
-            {saveError && <span className={styles.saveError}>{saveError}</span>}
+            {saveError && (
+              <span className={styles.saveError} role="alert">
+                {saveError}
+              </span>
+            )}
             <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>
               {t("settings:editProfile.saveBar.discard")}
             </Button>

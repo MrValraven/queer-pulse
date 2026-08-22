@@ -827,6 +827,7 @@ export const subprofiles: Catalog = {
   "hero.more.ariaLabel": "More actions for {name}",
   "hero.viewPhotoAria": "View photo of {name}",
   "hero.standalone": "Standalone · {address}",
+  "hero.noAddressYet": "No address yet: set a handle to give it one",
 
   // Workshop-skin title block (SubprofileTitleBlock) — decorative dl shown
   // only on the workshop skin (CSS-gated); `state` reads "Draft" in preview
@@ -885,6 +886,12 @@ export const subprofiles: Catalog = {
   "share.cta": "Share",
   "share.ariaLabel": "Share this persona",
   "share.copied": "Link copied",
+  "share.copyFailed":
+    "Your browser wouldn't let us copy that. The link is right there, select it and copy it by hand.",
+  "share.copyFailedWithUrl":
+    "Your browser wouldn't let us copy that. Here is the link: {url}",
+  "share.resolvingAddress":
+    "One moment, we're looking up this persona's address.",
 
   // Share-card modal (SubprofileShareCard) + QR code (SubprofileQR) —
   // entry points in SubprofileHero (public) and MySubprofilesPage (owner).
@@ -1052,6 +1059,13 @@ export const subprofiles: Catalog = {
   "owners.leaveModalLeaving": "Leaving…",
   "owners.toastLeft": "You've left this persona",
   "owners.toastLeaveError": "We couldn't do that just now. Try again.",
+  "owners.removeAria": "Remove {name} as a co-owner",
+  "owners.removeConfirmTitle": "Remove {name}?",
+  "owners.removeConfirmBody":
+    "{name} loses every bit of access to this persona: editing, publishing, invites. They keep nothing. You can invite them back later if you want to.",
+  "owners.removeConfirmAction": "Remove co-owner",
+  "owners.toastRemoved": "{name} no longer co-owns this persona",
+  "owners.toastRemoveError": "We couldn't remove them just now. Try again.",
 
   // Invite-a-co-owner modal (InviteCoOwnerModal)
   "invite.title": "Invite a co-owner",
@@ -1471,6 +1485,11 @@ export const subprofiles: Catalog = {
   "itemDrawer.addTitle": "Add to {section}",
   "itemDrawer.editTitle": "Edit this {section} item",
   "itemDrawer.cancel": "Cancel",
+  "itemDrawer.discardTitle": "Throw this away?",
+  "itemDrawer.discardBody":
+    "You've written something here and it hasn't been saved yet. Close this and it's gone.",
+  "itemDrawer.discardConfirm": "Throw it away",
+  "itemDrawer.discardKeep": "Keep editing",
   "itemDrawer.saveItem": "Save item",
   "itemRow.edit": "Edit",
 
@@ -1485,6 +1504,18 @@ export const subprofiles: Catalog = {
   "protect.copied": "Copied to clipboard",
   "protect.email": "Email it to me",
   "protect.failed": "Could not generate the record. Please try again.",
+  "protect.emailSubject": "Authorship record: {title}",
+  // The downloadable/emailed record's own wording (rights/authorshipRecord.ts).
+  // Only the labels translate; the values beside them (title, author,
+  // timestamp, hash) are data, and the hash covers the work itself, so a
+  // translated record verifies exactly like an English one.
+  "protect.record.heading": "AUTHORSHIP RECORD: QueerPulse",
+  "protect.record.work": "Work",
+  "protect.record.author": "Author",
+  "protect.record.firstPublished": "First published",
+  "protect.record.contentHash": "Content SHA-256",
+  "protect.record.canonicalForm":
+    "Canonical form: title + plain-text body, LF-normalized, trimmed",
 
   // Version history (ItemRevisionHistoryModal): saved-revision list + view +
   // restore, opened from the "History" button in the item editor drawer once

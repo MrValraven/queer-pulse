@@ -1,8 +1,7 @@
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiRefreshCw } from "react-icons/fi";
 import { Button, SegmentedControl, Tag } from "../../../../shared/components/ui";
 import { routes } from "../../../../app/routeMap";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { stripHtml } from "./articleWordCount";
 import type { EditorMode } from "./editorMode";
 import type { PublishStatus } from "./PublishRail";
 import styles from "../../ArticleEditorPage.module.css";
@@ -15,6 +14,11 @@ export interface ArticleEditorHeaderProps {
   section: string;
   issueLabel: string;
   savedLabel: string;
+  /** True while the last autosave is still unsent because it failed. The
+   * retry matters because a failed save leaves that content only in the
+   * browser until something else changes. */
+  canRetrySave: boolean;
+  onRetrySave: () => void;
   mode: EditorMode;
   onModeChange: (mode: EditorMode) => void;
   /** Derived from `article.publishedAt` against the clock — `"scheduled"`
@@ -33,7 +37,8 @@ export interface ArticleEditorHeaderProps {
 
 /**
  * The editor's sticky `.ebar` header: back to the piece record, the plain-
- * text title + "Article · {section} · {issue}" sub-line + a status `<Tag>` +
+ * text title (plain by contract now — see `plainText.ts` — so it is rendered
+ * as-is rather than run through a tag stripper) + "Article · {section} · {issue}" sub-line + a status `<Tag>` +
  * saved indicator, the Draft/Shape/Read mode seg, Send on (advances the piece
  * to its next pipeline stage via `moveStage` — disabled once it's already at
  * "Ready", the last stage), and Publish/Schedule/Unpublish — a real action
@@ -49,6 +54,8 @@ export function ArticleEditorHeader({
   section,
   issueLabel,
   savedLabel,
+  canRetrySave,
+  onRetrySave,
   mode,
   onModeChange,
   liveStatus,
@@ -78,7 +85,7 @@ export function ArticleEditorHeader({
         <FiArrowLeft aria-hidden />
       </Button>
       <div className={styles.title}>
-        <b>{stripHtml(title).trim() || t("magazine:write.header.untitled")}</b>
+        <b>{title.trim() || t("magazine:write.header.untitled")}</b>
         <span className={styles.titleSub}>
           {t("magazine:write.header.subtitle", {
             section: section || t("magazine:write.header.unsectioned"),
@@ -87,6 +94,12 @@ export function ArticleEditorHeader({
           })}
         </span>
       </div>
+      {canRetrySave && (
+        <Button variant="ghost" size="sm" onClick={onRetrySave}>
+          <FiRefreshCw aria-hidden />
+          {t("magazine:write.header.retrySave")}
+        </Button>
+      )}
       <Tag>
         {liveStatus === "published"
           ? t("magazine:write.header.statusPublished")

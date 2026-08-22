@@ -1,9 +1,12 @@
 import { useMemo } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useConnections } from "../../../app/providers/useConnections";
 import { useSocial } from "../../../app/providers/useSocial";
 import { useVouchActions } from "../../../app/providers/useVouch";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
+import { getBlocks } from "../../social/api/social.api";
 import {
   CONNECTION_META,
   connectionViews,
@@ -11,7 +14,11 @@ import {
   type TabId,
 } from "../connections.data";
 import { getConnections, type ConnectionsPageDTO } from "./connections.api";
-import { API_TAB, connectionDtoToView } from "./connections.adapters";
+import {
+  API_TAB,
+  blockDtoToView,
+  connectionDtoToView,
+} from "./connections.adapters";
 
 export interface ConnectionsListResult {
   /** The cards to render for this tab (all pages fetched so far in live mode). */
@@ -48,11 +55,16 @@ interface ConnPageVM {
  * touches the network.
  *
  * Live mode calls GET /connections?tab=&page= and appends each page, stopping
- * at the server `total`. The "blocked" tab has no API counterpart (it's owned
- * by SocialProvider), so it always resolves locally.
+ * at the server `total`. The "blocked" tab has no /connections counterpart —
+ * blocks are their own resource — so live mode reads `GET /blocks` (the same
+ * query SocialProvider hydrates from, so the cache is shared) and adapts each
+ * row. It must never fall through to the demo registry: a real block names a
+ * member the mock registry has never heard of, and the tab would render empty.
  */
 export function useConnectionsList(tab: TabId): ConnectionsListResult {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
   const { connected, incoming, sent } = useConnections();
   const { blocked } = useSocial();
   const { vouched } = useVouchActions();
@@ -81,11 +93,23 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
   }, [tab, connected, incoming, sent, blocked, vouched]);
 
   const apiTab = API_TAB[tab];
+  const isLiveBlocked = !demoMode && tab === "blocked";
+
+  // Same key/queryFn as SocialProvider's hydration, so opening the tab reuses
+  // the already-warm cache instead of firing a second request.
+  const blocksQuery = useQuery({
+    queryKey: ["blocks", demoMode],
+    enabled: isLiveBlocked,
+    queryFn: () => getBlocks(),
+  });
 
   const query = useInfiniteQuery<ConnPageVM>({
-    queryKey: ["connections", tab, demoMode],
-    // Blocked has no endpoint; demo mode never fetches. In both cases we short
-    // out to the locally-resolved views below and keep the query idle.
+    // `language` is part of the key because the adapted rows now carry a
+    // localized "sent 3 days ago" label — switching language must rebuild the
+    // list rather than serve the previous language's strings.
+    queryKey: ["connections", tab, demoMode, language],
+    // Blocked has no /connections endpoint; demo mode never fetches. In both
+    // cases we short out to the resolved views below and keep the query idle.
     enabled: !demoMode && apiTab !== undefined,
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
@@ -94,7 +118,7 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
         pageParam as number,
       );
       return {
-        views: res.items.map(connectionDtoToView),
+        views: res.items.map((dto) => connectionDtoToView(dto, t, fmt)),
         total: res.total,
         page: res.page,
       };
@@ -107,7 +131,19 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
 
   const demoViews = useMemo(() => connectionViews(demoSlugs), [demoSlugs]);
 
-  // Demo, or a tab with no live endpoint (blocked): resolve from local state.
+  // Live blocked: the /blocks resource, never the mock registry.
+  if (isLiveBlocked) {
+    return {
+      views: (blocksQuery.data?.items ?? []).map(blockDtoToView),
+      loading: blocksQuery.isPending,
+      hasNextPage: false,
+      fetchNextPage: () => {},
+      isFetchingNextPage: false,
+      total: blocksQuery.data?.total,
+    };
+  }
+
+  // Demo, or a tab with no live endpoint: resolve from local state.
   if (demoMode || apiTab === undefined) {
     return {
       views: demoViews,

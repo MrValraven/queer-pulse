@@ -160,11 +160,11 @@
 }
 .stepActive .stepNum {
   background: var(--accent);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 .stepDone .stepNum {
   background: var(--jade);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 .stepLabel {
   display: block;
@@ -579,7 +579,7 @@
 .confirmOn .confirmBox {
   border-color: var(--jade);
   background: var(--jade);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 .confirmText {
   font-size: 13.5px;

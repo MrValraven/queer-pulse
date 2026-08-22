@@ -1,7 +1,10 @@
 import {
+  useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type PointerEvent as ReactPointerEvent,
 } from "react";
@@ -22,8 +25,13 @@ const FOCUSABLE =
  * Returns a ref to attach to the dialog container. Mount the modal only while
  * open (self-contained modals own their state), so this runs per open.
  */
-export function useDismiss(onClose: () => void) {
-  const dialogRef = useRef<HTMLDivElement>(null);
+export function useDismiss<
+  ElementType extends HTMLElement = HTMLDivElement,
+>(onClose: () => void) {
+  // Generic so a dialog that is semantically something other than a div can
+  // still use it: AdminDrawer's container is an <aside>, and weakening that to
+  // a div just to satisfy the ref type would lose the landmark.
+  const dialogRef = useRef<ElementType>(null);
   // Stable per-instance id so this dialog can register itself on the shared
   // modal stack (see `./modalStack`) and only act on Escape while topmost.
   const modalId = useId();
@@ -92,6 +100,44 @@ export function useDismiss(onClose: () => void) {
   return dialogRef;
 }
 
+/**
+ * Backdrop-dismiss props for a scrim, safe against text-selection drags.
+ *
+ * A `click` event's target is the nearest common ancestor of the `mousedown`
+ * and the `mouseup` elements, so dragging to select text inside a dialog and
+ * releasing a few pixels past its edge fires a click whose target IS the scrim.
+ * A `target === currentTarget` test alone therefore closes the dialog and
+ * throws away whatever the member had typed into it. Requiring the pointer to
+ * have gone DOWN on the scrim as well makes "click the backdrop" mean what it
+ * looks like.
+ *
+ * Spread onto the scrim element: `<div className={scrim} {...scrimProps} />`.
+ */
+export function useScrimDismiss(onClose: () => void): {
+  onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
+  onClick: (event: ReactMouseEvent<HTMLElement>) => void;
+} {
+  const didPressScrim = useRef(false);
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
+  const onPointerDown = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    didPressScrim.current = event.target === event.currentTarget;
+  }, []);
+
+  const onClick = useCallback((event: ReactMouseEvent<HTMLElement>) => {
+    const wasPressOnScrim = didPressScrim.current;
+    didPressScrim.current = false;
+    if (event.target === event.currentTarget && wasPressOnScrim) {
+      onCloseRef.current();
+    }
+  }, []);
+
+  return useMemo(() => ({ onPointerDown, onClick }), [onPointerDown, onClick]);
+}
+
 interface ModalProps {
   title: ReactNode;
   onClose: () => void;
@@ -119,6 +165,7 @@ export function Modal({
 }: ModalProps) {
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
+  const scrimProps = useScrimDismiss(onClose);
   const titleId = useId();
   // Portal to <body> so the fixed scrim is anchored to the viewport, never to a
   // transformed/contained ancestor. A `transform`, `filter`, `contain: paint`
@@ -129,13 +176,7 @@ export function Modal({
   // through <body> escapes all of them. React events still bubble via the React
   // tree, so onClose et al. work unchanged.
   return createPortal(
-    <div
-      className={styles.scrim}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className={styles.scrim} role="presentation" {...scrimProps}>
       <div
         ref={dialogRef}
         tabIndex={-1}
@@ -197,6 +238,7 @@ export function ModalSheet({
 }: ModalSheetProps) {
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
+  const scrimProps = useScrimDismiss(onClose);
   // Drag-to-dismiss for the mobile sheet. Touch-only (mouse is ignored so the
   // desktop centered dialog is untouched); a downward drag past the threshold
   // closes, anything shorter springs back. The transform is written directly to
@@ -239,13 +281,7 @@ export function ModalSheet({
   // Portal to <body> for the same reason as <Modal> above: the fixed overlay
   // must anchor to the viewport, not to any transformed/contained ancestor.
   return createPortal(
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className={styles.overlay} role="presentation" {...scrimProps}>
       <div
         ref={dialogRef}
         tabIndex={-1}
@@ -304,15 +340,10 @@ interface SideSheetProps {
 export function SideSheet({ title, onClose, footer, className, children }: SideSheetProps) {
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
+  const scrimProps = useScrimDismiss(onClose);
   const titleId = useId();
   return createPortal(
-    <div
-      className={styles.sideScrim}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className={styles.sideScrim} role="presentation" {...scrimProps}>
       <div
         ref={dialogRef}
         tabIndex={-1}

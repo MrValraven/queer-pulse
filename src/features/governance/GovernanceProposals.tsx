@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiCheckCircle, FiThumbsDown, FiThumbsUp, FiXCircle } from "react-icons/fi";
-import { Reveal, SkeletonLine } from "../../shared/components/ui";
+import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -136,37 +136,33 @@ function ProposalCard({ proposal }: { proposal: GovernanceProposalDTO }) {
               date: fmt.date(new Date(proposal.closesAt)),
             })}
           </p>
+          {/* The shared <Button>, not hand-rolled <button>s: the cast vote
+              reads as a filled jade/plum pill and the untaken option stays a
+              ghost outline, with the design system's focus + disabled states
+              instead of a local reimplementation of them. */}
           <div className={styles.proposalVoteRow}>
-            <button
+            <Button
               type="button"
-              className={[
-                styles.proposalVoteBtn,
-                myChoice === "for" && styles.proposalVoteBtnFor,
-              ]
-                .filter(Boolean)
-                .join(" ")}
+              size="sm"
+              variant={myChoice === "for" ? "jade" : "ghost"}
               onClick={() => handleVote("for")}
               disabled={!!myChoice}
               aria-pressed={myChoice === "for"}
             >
-              <FiThumbsUp aria-hidden />{" "}
+              <FiThumbsUp aria-hidden />
               {t("governance:sections.proposals.voteFor")}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className={[
-                styles.proposalVoteBtn,
-                myChoice === "against" && styles.proposalVoteBtnAgainst,
-              ]
-                .filter(Boolean)
-                .join(" ")}
+              size="sm"
+              variant={myChoice === "against" ? "plum" : "ghost"}
               onClick={() => handleVote("against")}
               disabled={!!myChoice}
               aria-pressed={myChoice === "against"}
             >
-              <FiThumbsDown aria-hidden />{" "}
+              <FiThumbsDown aria-hidden />
               {t("governance:sections.proposals.voteAgainst")}
-            </button>
+            </Button>
           </div>
           {myChoice && (
             <p className={styles.proposalVotedNote}>

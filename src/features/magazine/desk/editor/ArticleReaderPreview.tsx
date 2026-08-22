@@ -1,11 +1,12 @@
 import type { ArticleBlock } from "../../api/pieces.api";
 import { ArticleBlocksView } from "../../ArticleBlocksView";
-import { sanitizeArticleHtml } from "./sanitizeArticleHtml";
 import styles from "./ArticleDocument.module.css";
 
 export interface ArticleReaderPreviewProps {
   kicker: string;
+  /** Plain text (see `plainText.ts`), rendered as text. */
   title: string;
+  /** Plain text (see `plainText.ts`), rendered as text. */
   standfirst: string;
   blocks: ArticleBlock[];
 }
@@ -16,6 +17,11 @@ export interface ArticleReaderPreviewProps {
  * so what an editor previews here matches what a reader would actually see —
  * no separate "preview renderer" to drift out of sync. No tools, no
  * `RichText`, no `SelectionToolbar`.
+ *
+ * Headline and standfirst render as TEXT here, exactly as `ArticlePage` does
+ * on the public page — they are plain text by contract (see `plainText.ts`),
+ * so running them back through an HTML renderer would make this preview
+ * disagree with what a reader gets.
  */
 export function ArticleReaderPreview({
   kicker,
@@ -27,16 +33,8 @@ export function ArticleReaderPreview({
     <div className={`${styles.doc} ${styles.reader}`}>
       <div className={styles.docwrap}>
         {kicker && <div className={styles.kicker}>{kicker}</div>}
-        <h1
-          className={styles.title}
-          dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(title) }}
-        />
-        {standfirst && (
-          <p
-            className={styles.standfirst}
-            dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(standfirst) }}
-          />
-        )}
+        <h1 className={styles.title}>{title}</h1>
+        {standfirst && <p className={styles.standfirst}>{standfirst}</p>}
         <ArticleBlocksView blocks={blocks} />
       </div>
     </div>

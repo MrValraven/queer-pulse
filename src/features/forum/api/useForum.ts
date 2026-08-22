@@ -243,6 +243,11 @@ export function useThread(routeParam: string) {
   // if the thread had been deleted, with no way to retry.
   const metaError = metaQuery.error;
   const isHttp404 = metaError instanceof ApiError && metaError.status === 404;
+  // A thread scoped to a PRIVATE community is no longer readable by
+  // non-members: the backend answers 403 rather than 404. That is neither
+  // "deleted" nor "our servers fell over", so it gets its own honest state
+  // instead of a retry button that can only ever fail again.
+  const isHttp403 = metaError instanceof ApiError && metaError.status === 403;
 
   return {
     thread,
@@ -250,8 +255,10 @@ export function useThread(routeParam: string) {
     isLoading: live && (metaQuery.isLoading || postsQuery.isLoading),
     // A genuine 404 — the thread doesn't exist.
     isNotFound: live && metaQuery.isError && isHttp404,
-    // A retryable failure (anything that isn't a 404).
-    isError: live && metaQuery.isError && !isHttp404,
+    /** The thread exists but sits in a community the viewer isn't part of. */
+    isForbidden: live && metaQuery.isError && isHttp403,
+    // A retryable failure (anything that isn't a 404 or a 403).
+    isError: live && metaQuery.isError && !isHttp404 && !isHttp403,
     refetch: () => {
       void metaQuery.refetch();
       void postsQuery.refetch();

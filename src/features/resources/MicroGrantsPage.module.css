@@ -543,6 +543,7 @@
   letter-spacing: -0.01em;
 }
 .close {
+  position: relative;
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -555,6 +556,18 @@
   justify-content: center;
   transition: background 0.18s var(--ease);
   color: var(--text-strong);
+}
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
 }
 @media (hover: hover) {
   .close:hover {
@@ -724,6 +737,7 @@
   margin-bottom: 0;
 }
 .remove {
+  position: relative;
   width: 30px;
   height: 30px;
   border-radius: 8px;
@@ -739,6 +753,18 @@
     background 0.18s var(--ease),
     color 0.18s var(--ease);
   font-family: var(--sans);
+}
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.remove::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
 }
 @media (hover: hover) {
   .remove:hover {

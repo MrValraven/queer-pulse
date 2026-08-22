@@ -4,6 +4,7 @@ import {
   type QueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   patchConversationPreview,
   patchConversationRead,
@@ -92,13 +93,14 @@ export function useSendMessage() {
 /** POST /conversations — New Message modal. Returns the opened thread view. */
 export function useStartConversation() {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   return useMutation<Conversation | null, Error, string>({
     mutationFn: async (recipientHandle) => {
       if (demoMode) return null;
       const dto: ConversationResponse =
         await startConversation(recipientHandle);
-      return conversationToView(dto);
+      return conversationToView(dto, t);
     },
     onSuccess: () => {
       if (demoMode) return;
@@ -111,6 +113,7 @@ export function useStartConversation() {
  *  (null in demo, where the controller builds the local mock group instead). */
 export function useCreateGroup() {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   return useMutation<
     Conversation | null,
@@ -120,7 +123,7 @@ export function useCreateGroup() {
     mutationFn: async ({ title, memberHandles, avatarUrl }) => {
       if (demoMode) return null;
       const dto = await createGroup(title, memberHandles, avatarUrl);
-      return conversationToView(dto);
+      return conversationToView(dto, t);
     },
     onSuccess: () => {
       if (demoMode) return;
@@ -174,6 +177,7 @@ function patchConversationInList(
  */
 export function useAddGroupMembers() {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   return useMutation<
     Conversation | null,
@@ -182,7 +186,7 @@ export function useAddGroupMembers() {
   >({
     mutationFn: async ({ conversationId, memberHandles }) => {
       if (demoMode) return null;
-      return conversationToView(await addGroupMembers(conversationId, memberHandles));
+      return conversationToView(await addGroupMembers(conversationId, memberHandles), t);
     },
     onSuccess: (updated) => {
       if (demoMode || !updated) return;
@@ -193,6 +197,7 @@ export function useAddGroupMembers() {
 
 export function useRemoveGroupMember() {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   return useMutation<
     Conversation | null,
@@ -201,7 +206,7 @@ export function useRemoveGroupMember() {
   >({
     mutationFn: async ({ conversationId, userId }) => {
       if (demoMode) return null;
-      return conversationToView(await removeGroupMember(conversationId, userId));
+      return conversationToView(await removeGroupMember(conversationId, userId), t);
     },
     onSuccess: (updated) => {
       if (demoMode || !updated) return;
@@ -212,6 +217,7 @@ export function useRemoveGroupMember() {
 
 export function useChangeGroupMemberRole() {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   return useMutation<
     Conversation | null,
@@ -222,6 +228,7 @@ export function useChangeGroupMemberRole() {
       if (demoMode) return null;
       return conversationToView(
         await changeGroupMemberRole(conversationId, userId, role),
+        t,
       );
     },
     onSuccess: (updated) => {
@@ -233,6 +240,7 @@ export function useChangeGroupMemberRole() {
 
 export function useUpdateGroup() {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   return useMutation<
     Conversation | null,
@@ -243,6 +251,7 @@ export function useUpdateGroup() {
       if (demoMode) return null;
       return conversationToView(
         await updateGroup(conversationId, { title, avatarUrl }),
+        t,
       );
     },
     onSuccess: (updated) => {

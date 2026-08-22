@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useFormat } from "../../../shared/i18n/format";
 import { FORMING_COOPS, type FormingCoop } from "../housingCoop.data";
 import { getHousingCoops } from "./housingCoop.api";
 import { coopDtoToFormingCoop } from "./housingCoop.adapters";
@@ -13,19 +15,22 @@ const HOUSING_COOPS_KEY = "housing-coops";
  * expected result here — the grid renders `CoopEmptyState` for it rather
  * than treating it as a loading or error condition.
  *
- * `coopDtoToFormingCoop` composes plain display strings itself (no `t`/`fmt`
- * dependency, unlike `cardDtoToCommunity`), so `demoMode` is the only value
- * that needs to sit in the query key.
+ * `coopDtoToFormingCoop` composes the card's phase line, meta labels and CTA
+ * through `t`/`fmt`, so `language` sits in the query key alongside `demoMode`:
+ * switching language has to re-derive the cards rather than hand back the ones
+ * built in the previous language.
  */
 export function useHousingCoops() {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
   return useQuery<FormingCoop[]>({
-    queryKey: [HOUSING_COOPS_KEY, demoMode],
+    queryKey: [HOUSING_COOPS_KEY, demoMode, language],
     initialData: demoMode ? FORMING_COOPS : undefined,
     queryFn: async () => {
       if (demoMode) return FORMING_COOPS;
       const dtos = await getHousingCoops();
-      return dtos.map(coopDtoToFormingCoop);
+      return dtos.map((dto) => coopDtoToFormingCoop(dto, t, fmt));
     },
   });
 }

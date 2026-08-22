@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { FiAlertTriangle, FiArrowRight } from "react-icons/fi";
-import { Button, EmptyState, FeatureHelp, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FeatureHelp,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
@@ -98,7 +103,10 @@ export function EventsTab({
         description={t("communities:detail.events.error.description")}
         action={
           onRetry
-            ? { label: t("communities:detail.events.error.retryCta"), onClick: onRetry }
+            ? {
+                label: t("communities:detail.events.error.retryCta"),
+                onClick: onRetry,
+              }
             : undefined
         }
       />

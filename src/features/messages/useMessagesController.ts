@@ -1,17 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery, useSimulatedLoad } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSocial } from "../../app/providers/useSocial";
 import { useAuth } from "../../app/providers/authContext";
+import { useStorageScope } from "../../app/providers/useStorageScope";
 import {
   useJoinConversation,
   useRealtimeConnection,
 } from "../../shared/api/realtime";
 import { type ChatMessage, type Conversation } from "./data";
 import { clearConversationPrefs } from "./conversationPrefs";
-import { clearOutbox, loadOutbox } from "./outbox";
+import { clearOutbox, loadOutbox, setMessageOutboxScope } from "./outbox";
 import { clearDrafts } from "./drafts";
 import { useConversations, useUnreadMessages } from "./api/useConversations";
 import { useMessageThread } from "./api/useMessageThread";
@@ -57,6 +58,19 @@ export function useMessagesController() {
   const { user } = useAuth();
   const myUserId = user?.id ?? null;
   const simLoading = useSimulatedLoad();
+  // The same per-user cache scope drafts/saved/vouches already key off (see
+  // `useStorageScope`'s own doc) — so a shared device never replays one
+  // signed-in member's persisted outbox in the next member's session. Pushed
+  // into the module-level store in an effect (declared before any hook below
+  // that can trigger a `saveOutbox`, so it's flushed first on every commit —
+  // see `outbox.ts`'s own comment); the INITIAL `sent` hydration further down
+  // passes this value straight in rather than waiting for that effect, so the
+  // very first read of a freshly-mounted Messages page already uses the
+  // correct scope.
+  const outboxScope = useStorageScope();
+  useEffect(() => {
+    setMessageOutboxScope(outboxScope);
+  }, [outboxScope]);
   // Messaging uses a 768px tablet cutover (list vs thread split), intentionally
   // off the shared ladder — the two-pane layout needs the extra width.
   const isMobile = useMediaQuery(mediaMax(768));
@@ -93,22 +107,28 @@ export function useMessagesController() {
    *  PERSISTED outbox (localStorage) so a send in flight — or a demo message —
    *  survives a reload; live `sending`/`failed` entries are replayed on mount. */
   const [sent, setSent] = useState<Record<string, ChatMessage[]>>(() =>
-    loadOutbox(),
+    loadOutbox(outboxScope),
   );
-  // A demo↔live flip wipes the outbox: demo's optimistic fiction must never
-  // bleed into a real session (nor a real pending send into demo). Mirrors
-  // DeletedConversationsProvider's mode-flip reset; setState-during-render is the
-  // documented way to reset state on a prop change without an extra frame.
-  const [previousDemoMode, setPreviousDemoMode] = useState(demoMode);
-  if (previousDemoMode !== demoMode) {
-    setPreviousDemoMode(demoMode);
+  // Any storage-scope change wipes the outbox — a demo↔live flip, a sign-out,
+  // or switching accounts on the same device. Demo's optimistic fiction must
+  // never bleed into a real session (nor a real pending send into demo), and
+  // just as importantly, member A's unsent outbox must never surface — let
+  // alone REPLAY — in member B's session on a shared device (the outbox is
+  // persisted; without this, only a demo↔live flip ever cleared it). Mirrors
+  // DeletedConversationsProvider's mode-flip reset; setState-during-render is
+  // the documented way to reset state on a prop change without an extra frame.
+  // `clearOutbox()` runs here — during render, before the scope effect above
+  // has flushed for the NEW `outboxScope` — so it still clears under the
+  // OUTGOING scope, not the incoming one.
+  const [previousOutboxScope, setPreviousOutboxScope] = useState(outboxScope);
+  if (previousOutboxScope !== outboxScope) {
+    setPreviousOutboxScope(outboxScope);
     setSent({});
     clearOutbox();
-    // Drafts are equally mode-scoped: a draft typed in demo must not surface in
-    // a real session (nor vice-versa). Wipe the persisted store — the composer
-    // itself remounts (its `key` is the newly-selected thread's id, which is
-    // never the same string across a demo↔live flip) so its in-memory text
-    // resets too.
+    // Drafts are equally scoped: a draft typed under one identity must not
+    // surface under another. Wipe the persisted store — the composer itself
+    // remounts (its `key` is the newly-selected thread's id, which is never
+    // the same string across a scope change) so its in-memory text resets too.
     clearDrafts();
     // Session-scoped group state must not cross the boundary either.
     setLeftGroupIds(new Set());
@@ -261,8 +281,15 @@ export function useMessagesController() {
     t,
     sendMessage,
   });
-  const { send, sendGif, sendImage, retrySend, appendOptimistic, deliver } =
-    sending;
+  const {
+    send,
+    sendGif,
+    sendImage,
+    retrySend,
+    appendOptimistic,
+    deliver,
+    migrateOutboxConversation,
+  } = sending;
 
   // Thread + group creation, forwarding, and the deep-link effects.
   const creation = useMessageCreation({
@@ -270,6 +297,7 @@ export function useMessagesController() {
     allThreads,
     myProfile: user?.profile,
     t,
+    activeId,
     setComposing,
     setQuery,
     setExtraThreads,
@@ -282,6 +310,7 @@ export function useMessagesController() {
     openThread,
     appendOptimistic,
     deliver,
+    migrateOutboxConversation,
   });
 
   // Group management (feature #17 Phase 2): leave, add/remove, role, edit info.
@@ -329,5 +358,6 @@ export function useMessagesController() {
     sendGif,
     sendImage,
     retrySend,
+    markThreadRead: markRead.mutate,
   };
 }

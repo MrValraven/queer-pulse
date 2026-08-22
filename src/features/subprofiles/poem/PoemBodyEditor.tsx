@@ -1,28 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  FiArrowDown,
-  FiArrowUp,
-  FiFeather,
-  FiMoreVertical,
-  FiPlus,
-  FiTrash2,
-} from "react-icons/fi";
 import { SegmentedControl } from "../../../shared/components/ui";
 import { useMediaQuery } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { mediaMin } from "../../../shared/theme/breakpoints";
 import type { PoemBlock, PoemLine } from "../api/subprofiles.api";
 import { useRowDragReorder } from "../useRowDragReorder";
-import {
-  newBreak,
-  newNote,
-  newStanza,
-  poemFromDescription,
-} from "./poemBlocks";
+import { newStanza, poemFromDescription } from "./poemBlocks";
 import { normalizePoemBlocks } from "./poemModel";
+import { PoemBlockList } from "./PoemBlockList";
 import { PoemPreviewPane } from "./PoemPreviewPane";
 import { PoemResplitHint } from "./PoemResplitHint";
-import { PoemRichLine, type PoemRichLineHandle } from "./PoemRichLine";
+import type { PoemRichLineHandle } from "./PoemRichLine";
 import { PoemSelectionToolbar } from "./PoemSelectionToolbar";
 import styles from "./PoemBodyEditor.module.css";
 
@@ -143,10 +131,13 @@ export function PoemBodyEditor({
 
   function handleResplit() {
     if (!resplitCandidate) return;
-    patchLines(
-      resplitCandidate.blockId,
-      splitMergedLineIntoLines(resplitCandidate.lineText),
-    );
+    const lines = splitMergedLineIntoLines(resplitCandidate.lineText);
+    patchLines(resplitCandidate.blockId, lines);
+    // `PoemRichLine` seeds its contentEditable on mount only, so updating the
+    // model alone left the field showing the single merged line: the next blur
+    // re-parsed that untouched DOM and reverted the split. Write the new lines
+    // into the DOM too, so the field and the model stay one thing.
+    richLineHandles.current[resplitCandidate.blockId]?.setLines(lines);
   }
 
   function addBlock(block: PoemBlock) {
@@ -214,29 +205,6 @@ export function PoemBodyEditor({
     reorderBlocks,
   );
 
-  const stanzaTotal = blocks.filter((block) => block.kind === "stanza").length;
-  // Precomputed once per render, outside the JSX-producing map below — a
-  // running counter mutated *inside* that map (and read back the same
-  // iteration via `blockAriaLabel`) is a render-purity violation the
-  // react-compiler lint flags, since it can't prove the mutation/read pair
-  // stays safe across memoization.
-  const stanzaIndexByBlockId = new Map<string, number>();
-  {
-    let counter = 0;
-    for (const block of blocks) {
-      if (block.kind === "stanza") stanzaIndexByBlockId.set(block.id, ++counter);
-    }
-  }
-
-  function blockAriaLabel(block: PoemBlock): string {
-    if (block.kind === "break") return t("subprofiles:poem.editor.blockLabel.break");
-    if (block.kind === "note") return t("subprofiles:poem.editor.blockLabel.note");
-    return t("subprofiles:poem.editor.blockLabel.stanza", {
-      index: stanzaIndexByBlockId.get(block.id) ?? 0,
-      total: stanzaTotal,
-    });
-  }
-
   // Kept as a single JSX value (not a component) so it is written once but
   // rendered from exactly one place per breakpoint — desktop always mounts
   // it (caret-preserving), mobile mounts it only on the "edit" tab.
@@ -246,100 +214,24 @@ export function PoemBodyEditor({
 
       {resplitCandidate && <PoemResplitHint onResplit={handleResplit} />}
 
-      <div
-        className={styles.blocks}
-        ref={(node) => {
+      <PoemBlockList
+        blocks={blocks}
+        containerRef={(node) => {
           scopeRef.current = node;
           containerRef.current = node;
         }}
-      >
-        {blocks.map((block, index) => {
-          const isBreak = block.kind === "break";
-          return (
-            <div
-              key={block.id}
-              className={
-                draggingIndex === index
-                  ? `${styles.block} ${styles.dragging}`
-                  : styles.block
-              }
-              data-kind={block.kind}
-              role={isBreak ? "separator" : undefined}
-              aria-label={isBreak ? blockAriaLabel(block) : undefined}
-            >
-              <span
-                className={styles.grip}
-                aria-hidden
-                title={t("subprofiles:poem.editor.dragToReorder")}
-                {...gripHandlers(index)}
-              >
-                <FiMoreVertical size={16} />
-              </span>
-              <div className={styles.blockMain}>
-                {isBreak ? (
-                  <div className={styles.breakRow} aria-hidden>
-                    * * *
-                  </div>
-                ) : (
-                  <PoemRichLine
-                    ref={(handle) => {
-                      richLineHandles.current[block.id] = handle;
-                    }}
-                    lines={block.lines}
-                    onChange={(lines) => patchLines(block.id, lines)}
-                    placeholder={t(
-                      block.kind === "note"
-                        ? "subprofiles:poem.editor.notePlaceholder"
-                        : "subprofiles:poem.editor.stanzaPlaceholder",
-                    )}
-                    ariaLabel={blockAriaLabel(block)}
-                    className={block.kind === "note" ? styles.note : undefined}
-                    onSplitBlock={() => handleSplitBlock(block.id)}
-                    onMergeBack={() => handleMergeBack(block.id)}
-                  />
-                )}
-              </div>
-              <div className={styles.blockOps}>
-                <button
-                  type="button"
-                  onClick={() => moveBlock(block.id, -1)}
-                  disabled={index === 0}
-                  aria-label={t("subprofiles:poem.editor.moveUp")}
-                >
-                  <FiArrowUp aria-hidden />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => moveBlock(block.id, 1)}
-                  disabled={index === blocks.length - 1}
-                  aria-label={t("subprofiles:poem.editor.moveDown")}
-                >
-                  <FiArrowDown aria-hidden />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => removeBlock(block.id)}
-                  aria-label={t("subprofiles:poem.editor.remove")}
-                >
-                  <FiTrash2 aria-hidden />
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className={styles.addBar}>
-        <button type="button" onClick={() => addBlock(newStanza())}>
-          <FiPlus aria-hidden /> {t("subprofiles:poem.editor.addStanza")}
-        </button>
-        <button type="button" onClick={() => addBlock(newBreak())}>
-          <FiPlus aria-hidden /> {t("subprofiles:poem.editor.addBreak")}
-        </button>
-        <button type="button" onClick={() => addBlock(newNote())}>
-          <FiFeather aria-hidden /> {t("subprofiles:poem.editor.addNote")}
-        </button>
-      </div>
+        draggingIndex={draggingIndex}
+        gripHandlers={gripHandlers}
+        registerRichLine={(id, handle) => {
+          richLineHandles.current[id] = handle;
+        }}
+        onPatchLines={patchLines}
+        onMove={moveBlock}
+        onRemove={removeBlock}
+        onSplitBlock={handleSplitBlock}
+        onMergeBack={handleMergeBack}
+        onAddBlock={addBlock}
+      />
 
       <PoemSelectionToolbar scopeRef={scopeRef} />
     </div>

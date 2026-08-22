@@ -12,14 +12,18 @@ export interface ArticleDocumentProps {
    * page) knows "a selection inside here is this article's". */
   docRef: RefObject<HTMLDivElement | null>;
   kicker: string;
+  /** PLAIN TEXT, never markup — the public reader renders it as JSX text.
+   * Both fields are edited in `RichText`'s `plainText` mode, which commits
+   * `textContent`. See `plainText.ts`. */
   title: string;
+  /** Plain text, same contract as `title`. */
   standfirst: string;
   blocks: ArticleBlock[];
   selectedId: string | null;
   wordCount: number;
   readMinutes: number;
-  onTitleChange: (html: string) => void;
-  onStandfirstChange: (html: string) => void;
+  onTitleChange: (text: string) => void;
+  onStandfirstChange: (text: string) => void;
   onSelectBlock: (id: string) => void;
   onChangeBlock: (id: string, next: ArticleBlock) => void;
   onMoveBlock: (id: string, direction: "up" | "down") => void;
@@ -110,6 +114,7 @@ export function ArticleDocument({
           onPaste={handleHeadlinePaste}
           className={styles.title}
           placeholder={t("magazine:write.document.headlinePlaceholder")}
+          plainText
         />
         <RichText
           html={standfirst}
@@ -117,6 +122,7 @@ export function ArticleDocument({
           onPaste={handleHeadlinePaste}
           className={styles.standfirst}
           placeholder={t("magazine:write.document.standfirstPlaceholder")}
+          plainText
         />
         <div className={styles.byline}>
           <span>{t("magazine:format.words", { count: wordCount })}</span>

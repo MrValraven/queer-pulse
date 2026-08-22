@@ -30,7 +30,7 @@ interface SetQueerOwnedVerifiedContext {
  * status move, verification never changes which status tab a row belongs to,
  * so there's no per-ref demo-mutation registry to keep in sync (mirrors
  * `useSetListingStatus`'s doc comment on why that registry exists at all).
- * Live mode PATCHes `/listings/:ref/queer-owned-verified`.
+ * Live mode PATCHes `/admin/listings/:ref/queer-owned-verified`.
  */
 export function useSetQueerOwnedVerified() {
   const { demoMode } = useDemoMode();

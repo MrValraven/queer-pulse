@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Button, Reveal } from "../../../shared/components/ui";
+import {
+  Button,
+  Reveal,
+  useTablistKeys,
+} from "../../../shared/components/ui";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { EVENT_CATEGORIES } from "../eventsPage.data";
@@ -27,18 +31,25 @@ function FilterChips({
   onChange: (key: string) => void;
 }) {
   const { t } = useTranslation();
+  // APG tablist keys: Arrow/Home/End with a roving tabIndex.
+  const { tabProps } = useTablistKeys(EVENT_CATEGORIES.length, (index) => {
+    const nextCategory = EVENT_CATEGORIES[index];
+    if (nextCategory) onChange(nextCategory.key);
+  });
+
   return (
     <div
       className={styles.filters}
       role="tablist"
       aria-label={t("gatherings:events.filterAriaLabel")}
     >
-      {EVENT_CATEGORIES.map((cat) => (
+      {EVENT_CATEGORIES.map((cat, index) => (
         <button
           key={cat.key}
           type="button"
           role="tab"
           aria-selected={active === cat.key}
+          {...tabProps(index, active === cat.key)}
           className={`${styles.chip} ${active === cat.key ? styles.chipActive : ""}`}
           onClick={() => onChange(cat.key)}
         >

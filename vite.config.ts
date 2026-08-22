@@ -5,11 +5,21 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://vite.dev/config/
 export default defineConfig({
   build: {
-    // "hidden" emits .map files alongside the bundle but omits the
-    // //# sourceMappingURL comment, so browsers/devtools don't fetch them —
-    // yet a monitor (e.g. Sentry) can still resolve production stack traces
-    // back to original source. Readable traces without shipping maps to users.
-    sourcemap: "hidden",
+    // No source maps in the production bundle.
+    //
+    // This used to be `"hidden"`, which still WRITES a .map next to every chunk
+    // and only omits the `//# sourceMappingURL` comment. Vercel serves `dist/`
+    // as static files before the SPA rewrite, so anyone could fetch
+    // `/assets/index-<hash>.js.map` (the hash is right there in the page's own
+    // <script> tag) and read the whole un-minified frontend, auth gate and
+    // admin routing included. Nothing in the pipeline deleted them afterwards
+    // and no monitor consumed them either: the Sentry source-map upload step
+    // does not exist yet (see shared/observability/sentry.ts).
+    //
+    // Turn this back to "hidden" only together with `@sentry/vite-plugin`
+    // configured with `sourcemaps.filesToDeleteAfterUpload: ["dist/**/*.map"]`,
+    // so the maps reach the monitor and never the public bundle.
+    sourcemap: false,
     rollupOptions: {
       output: {
         // Split the stable, rarely-changing vendor libraries out of the app

@@ -20,8 +20,9 @@ import { useAdminGovernanceFinances } from "./api/useAdminGovernanceFinances";
 import type {
   AdminFinanceLatest,
   AdminFinLine,
+  FinanceMetricSource,
 } from "./api/adminGovernanceFinances.api";
-import { type FinanceStat } from "./adminGovernance.data";
+import { financeAmountOrZero } from "./adminFinanceAmount";
 import styles from "./AdminGovernancePage.module.css";
 
 /** Fixed colour cycle for ledger meter bars — `FinLine` carries no colour, so
@@ -32,20 +33,36 @@ function ledgerColorAt(index: number) {
   return LEDGER_COLOR_CYCLE[index % LEDGER_COLOR_CYCLE.length]!;
 }
 
-/** `FinLine.amount` is a formatted string in live mode ("€1,840") and a plain
- *  number string in demo mode ("23150") — strip everything but digits/sign
- *  and re-format through `fmt.currency` so both render consistently. */
-function financeAmount(amount: string): number {
-  return Number(amount.replace(/[^0-9.-]/g, "")) || 0;
+/**
+ * One headline figure on the Finances tab. `value` is the count-up target and
+ * `kind` decides how it is written, so no call site hand-rolls a `€` prefix:
+ * pt-PT suffixes the symbol with a space ("2 200 €") and `Intl` knows that.
+ */
+interface FinanceStatTile {
+  labelKey: string;
+  /** Numeric count-up target. */
+  value: number;
+  kind: "currency" | "percent";
+  /** Highlight the number in jade (e.g. the surplus). */
+  isJadeHighlighted?: boolean;
+  footKey: string;
+  /** `{token}` interpolation values for `footKey`, if any. */
+  footValues?: Record<string, string | number>;
+  /** Provenance of `value`, shown as a badge next to the label. */
+  source?: FinanceMetricSource;
 }
 
-function buildFinanceStats(latest: AdminFinanceLatest): FinanceStat[] {
+/** Headline tiles round to whole euros: `useCountUp` steps through integers,
+ *  so animating cents would flicker a meaningless ",00" through the whole
+ *  count. The exact figures, cents included, are in the ledger below. */
+const STAT_CURRENCY: Intl.NumberFormatOptions = { maximumFractionDigits: 0 };
+
+function buildFinanceStats(latest: AdminFinanceLatest): FinanceStatTile[] {
   return [
     {
       labelKey: "governance.finances.stat.sustainerMrr",
       value: latest.mrr,
-      prefix: "€",
-      comma: true,
+      kind: "currency",
       footKey: "governance.finances.foot.sustainersCount",
       footValues: { count: latest.sustainerCount },
       source: latest.sources.mrr,
@@ -53,24 +70,22 @@ function buildFinanceStats(latest: AdminFinanceLatest): FinanceStat[] {
     {
       labelKey: "governance.finances.stat.totalIncome",
       value: latest.incomeTotal,
-      prefix: "€",
-      comma: true,
+      kind: "currency",
       footKey: "governance.finances.foot.sources",
       source: latest.sources.incomeTotal,
     },
     {
       labelKey: "governance.finances.stat.surplus",
       value: latest.surplus,
-      prefix: "€",
-      comma: true,
-      jade: true,
+      kind: "currency",
+      isJadeHighlighted: true,
       footKey: "governance.finances.foot.reserve",
       source: latest.sources.surplus,
     },
     {
       labelKey: "governance.finances.stat.solidarity",
       value: latest.solidarityRate,
-      suffix: "%",
+      kind: "percent",
       footKey: "governance.finances.foot.solidarityRate",
       source: latest.sources.solidarityRate,
     },
@@ -214,16 +229,14 @@ function FinanceStatCard({
   stat,
   onEdit,
 }: {
-  stat: FinanceStat;
+  stat: FinanceStatTile;
   onEdit: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
-  const { labelKey, value, prefix, suffix, comma, jade, footKey, footValues } =
-    stat;
+  const { labelKey, value, kind, isJadeHighlighted, footKey, footValues } = stat;
   const countValue = useCountUp(value, { durationMs: 1200 });
-  const display = comma ? fmt.number(countValue) : String(countValue);
   const showPlaceholder = !demoMode && !isVerified(stat.source);
 
   return (
@@ -239,13 +252,18 @@ function FinanceStatCard({
           <NotVerifiedPlaceholder onEdit={onEdit} />
         ) : (
           <span
-            className={[styles.statNum, jade && styles.statNumJade]
+            className={[styles.statNum, isJadeHighlighted && styles.statNumJade]
               .filter(Boolean)
               .join(" ")}
           >
-            {prefix}
-            {display}
-            {suffix && <small>{suffix}</small>}
+            {kind === "currency" ? (
+              fmt.currency(countValue, "EUR", STAT_CURRENCY)
+            ) : (
+              <>
+                {fmt.number(countValue)}
+                <small>%</small>
+              </>
+            )}
           </span>
         )
       }
@@ -284,7 +302,7 @@ function IncomeLedgerCard({
         </h2>
         <p className={styles.cardSub}>
           {t("admin:governance.income.sub", {
-            amount: fmt.currency(latest.incomeTotal),
+            amount: fmt.currency(latest.incomeTotal, "EUR"),
           })}
         </p>
       </div>
@@ -323,7 +341,7 @@ function SpendLedgerCard({
         </h2>
         <p className={styles.cardSub}>
           {t("admin:governance.spend.sub", {
-            amount: fmt.currency(latest.expenseTotal),
+            amount: fmt.currency(latest.expenseTotal, "EUR"),
           })}
         </p>
       </div>
@@ -360,7 +378,7 @@ function Meter({
           <NotVerifiedPlaceholder onEdit={onEdit} />
         ) : (
           <span className={styles.meterAmount}>
-            {fmt.currency(financeAmount(line.amount))}
+            {fmt.currency(financeAmountOrZero(line.amount), "EUR")}
           </span>
         )}
       </div>
@@ -407,7 +425,9 @@ function LiveMrrPanel({
           {t("admin:governance.finances.provenance.notVerifiedCta")}
         </button>
       ) : (
-        <div className={styles.panelNum}>€{fmt.number(mrr)}</div>
+        <div className={styles.panelNum}>
+          {fmt.currency(mrr, "EUR", STAT_CURRENCY)}
+        </div>
       )}
       <p className={styles.panelLead}>
         <Translation
@@ -420,7 +440,7 @@ function LiveMrrPanel({
           <div key={line.label} className={styles.panelStat}>
             <FiActivity className={styles.panelStatIco} aria-hidden />
             <span className={styles.panelStatVal}>
-              {fmt.currency(financeAmount(line.amount))}
+              {fmt.currency(financeAmountOrZero(line.amount), "EUR")}
             </span>
             <span className={styles.panelStatLbl}>{line.label}</span>
           </div>

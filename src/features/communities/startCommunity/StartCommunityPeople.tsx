@@ -1,6 +1,6 @@
 import { FiCheck } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { Avatar } from "../../../shared/components/ui";
+import { Avatar, Button } from "../../../shared/components/ui";
 import { useConnectionsList } from "../../connect/api/useConnectionsList";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
@@ -14,7 +14,15 @@ import styles from "./StartCommunityPage.module.css";
 export function StepPeople({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
   const { draft, toggleInvite } = form;
-  const { views: connections } = useConnectionsList("all");
+  // The picker pages through the whole connections list: with only the first
+  // page loaded, a member with more connections than fit on it simply could
+  // not invite the rest.
+  const {
+    views: connections,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useConnectionsList("all");
   return (
     <div>
       <div className={styles.field}>
@@ -26,26 +34,26 @@ export function StepPeople({ form }: { form: CommunityForm }) {
           <p className={styles.hint}>{t("communities:start.people.empty")}</p>
         ) : (
           <div className={styles.inviteList}>
-            {connections.map((c) => {
-              const on = draft.invites.includes(c.slug);
+            {connections.map((connection) => {
+              const isOn = draft.invites.includes(connection.slug);
               return (
                 <button
-                  key={c.slug}
+                  key={connection.slug}
                   type="button"
-                  className={[styles.inviteChip, on && styles.inviteOn]
+                  className={[styles.inviteChip, isOn && styles.inviteOn]
                     .filter(Boolean)
                     .join(" ")}
-                  aria-pressed={on}
-                  onClick={() => toggleInvite(c.slug)}
+                  aria-pressed={isOn}
+                  onClick={() => toggleInvite(connection.slug)}
                 >
                   <Avatar
-                    src={c.photo}
-                    initials={c.initials}
-                    tint={c.tint}
+                    src={connection.photo}
+                    initials={connection.initials}
+                    tint={connection.tint}
                     size={28}
                   />
-                  <span className={styles.icName}>{c.name}</span>
-                  {on && (
+                  <span className={styles.icName}>{connection.name}</span>
+                  {isOn && (
                     <span className={styles.icCheck}>
                       <FiCheck size={14} aria-hidden />
                     </span>
@@ -54,6 +62,18 @@ export function StepPeople({ form }: { form: CommunityForm }) {
               );
             })}
           </div>
+        )}
+        {hasNextPage && (
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={isFetchingNextPage}
+            onClick={fetchNextPage}
+          >
+            {isFetchingNextPage
+              ? t("communities:common.loading")
+              : t("communities:start.people.loadMore")}
+          </Button>
         )}
       </div>
       <p className={styles.seedNote}>

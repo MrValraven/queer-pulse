@@ -70,9 +70,14 @@ export function GatheringRsvpControl({
     : t("gatherings:common.connectCta");
 
   const handleGoing = () => {
-    const next: RsvpStatus = gathering.isFull ? "waitlisted" : "going";
+    // A full gathering puts the member on the waitlist, so the mutation is
+    // told that up front: the request body is still "going", but the
+    // optimistic going head-count must not bump (see `RsvpIntent`).
+    const next: "going" | "waitlisted" = gathering.isFull
+      ? "waitlisted"
+      : "going";
     setStatus(next);
-    rsvp.mutate("going", {
+    rsvp.mutate(next, {
       onSuccess: () =>
         showToast(
           t(

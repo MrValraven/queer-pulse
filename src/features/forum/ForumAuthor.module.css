@@ -19,7 +19,9 @@
   height: 17px;
   border-radius: 50%;
   background: var(--accent-fill);
-  color: #fff;
+  /* Theme-STABLE light ink: the QP monogram sits on a fixed coral fill in
+     both themes, so var(--paper) (which flips dark) would invert it. */
+  color: rgba(var(--cream-rgb), 1);
   display: grid;
   place-items: center;
   font-size: 8px;

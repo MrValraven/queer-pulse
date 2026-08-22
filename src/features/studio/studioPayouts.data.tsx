@@ -17,7 +17,9 @@ export interface PayoutRow {
 }
 
 export interface PayoutBreakdownRow {
-  n: string;
+  /** Track number on the release. Absent on the aggregate "other tracks" row,
+      which stands for several tracks and so has no single number. */
+  n?: string;
   nm: ReactNode;
   plays: string;
   total: string;
@@ -153,7 +155,6 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
     total: "46.00",
   },
   {
-    n: "—",
     nm: (
       <>
         Seven other tracks <em>· combined</em>

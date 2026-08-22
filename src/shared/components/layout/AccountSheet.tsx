@@ -7,7 +7,7 @@ import {
 import { Link } from "react-router-dom";
 import { FiX, FiLogOut } from "react-icons/fi";
 import { m, useDragControls, type PanInfo } from "motion/react";
-import { Avatar } from "../ui";
+import { Avatar, useScrimDismiss } from "../ui";
 import { useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
@@ -97,16 +97,14 @@ export function AccountSheet() {
     onClose: closeSheet,
   });
 
+  // Backdrop dismiss that ignores a click whose press started inside the panel
+  // (a text-selection drag released past the edge) — see `useScrimDismiss`.
+  const scrimProps = useScrimDismiss(closeSheet);
+
   if (activeSheet !== "account") return null;
 
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) closeSheet();
-      }}
-    >
+    <div className={styles.overlay} role="presentation" {...scrimProps}>
       <m.div
         ref={panelRef}
         className={styles.panel}

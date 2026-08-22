@@ -324,9 +324,9 @@ export async function getPostReplies(
   postId: string,
   page: number,
 ) {
-  const res = await apiGet<
-    CommunityReplyDTO[] | Paginated<CommunityReplyDTO>
-  >(`/communities/${slug}/posts/${postId}/replies?page=${page}`);
+  const res = await apiGet<CommunityReplyDTO[] | Paginated<CommunityReplyDTO>>(
+    `/communities/${slug}/posts/${postId}/replies?page=${page}`,
+  );
   return toItemsPage(res);
 }
 

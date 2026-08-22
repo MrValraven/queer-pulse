@@ -1,46 +1,51 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiCheck, FiInfo, FiMapPin, FiStar } from "react-icons/fi";
-import { Button, EmptyState, FilterChips } from "../../shared/components/ui";
+import { FiArrowRight, FiCheck, FiInfo } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import {
-  CLINICS,
-  CLINIC_FILTERS,
   GUIDES,
   HIV_INFO,
   PREP_FAQ,
   PREP_STEPS,
   TESTING_INFO,
-  TYPE_CLASS,
-  type ClinicType,
 } from "./sexualHealth.data";
-import { TestingNominate } from "./SexualHealthTestingNominate";
-import { useResourceListings } from "./api/useResourceListings";
-import { contactHrefForListing } from "./api/resources.adapters";
-import { CardGrid, ResourceCard, ResourceCardSkeleton } from "./ResourceCard";
+import { TestingClinics } from "./SexualHealthTestingClinics";
+import { TestingListings } from "./SexualHealthTestingListings";
 import { SuggestResourceModal } from "./SuggestResourceModal";
 import { GuideRatingWidget } from "./GuideRatingWidget";
 import styles from "./SexualHealthPage.module.css";
 
+/** The "what to expect" info cards sitting above the testing directory. */
+function TestingInfoCards() {
+  return (
+    <div className={styles.infoGrid}>
+      {TESTING_INFO.map((card) => (
+        <div
+          key={card.title}
+          className={styles.infoCard}
+          style={{ background: card.background, borderColor: card.border }}
+        >
+          <div className={styles.infoIcon}>
+            <card.icon />
+          </div>
+          <div className={styles.infoTitle} style={{ color: card.color }}>
+            {card.title}
+          </div>
+          <div className={styles.infoBody}>{card.body}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function TestingTab() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const [clinicFilter, setClinicFilter] = useState<ClinicType | "all">("all");
-  const [openClinic, setOpenClinic] = useState<string | null>(null);
-  const { listings, isLoading: listingsLoading } = useResourceListings(
-    "sexual_health_testing",
-  );
-  const [suggestOpen, setSuggestOpen] = useState(false);
-  const clinics = CLINICS.filter(
-    (c) => clinicFilter === "all" || c.type === clinicFilter,
-  );
-  const clinicFilterOptions = useMemo(
-    () => CLINIC_FILTERS.map((f) => ({ value: f.id, label: t(f.labelKey) })),
-    [t],
-  );
+  const [isSuggestOpen, setIsSuggestOpen] = useState(false);
 
   return (
     <>
@@ -51,191 +56,16 @@ export function TestingTab() {
         />
       </h2>
       <p className={styles.sub}>{t("resources:sexualHealth.testing.lead")}</p>
-      <div className={styles.infoGrid}>
-        {TESTING_INFO.map((c) => (
-          <div
-            key={c.title}
-            className={styles.infoCard}
-            style={{ background: c.background, borderColor: c.border }}
-          >
-            <div className={styles.infoIcon}>
-              <c.icon />
-            </div>
-            <div className={styles.infoTitle} style={{ color: c.color }}>
-              {c.title}
-            </div>
-            <div className={styles.infoBody}>{c.body}</div>
-          </div>
-        ))}
-      </div>
-
-      {!demoMode ? (
-        listingsLoading ? (
-          <CardGrid busy>
-            {Array.from({ length: 3 }).map((_, index) => (
-              <ResourceCardSkeleton key={index} />
-            ))}
-          </CardGrid>
-        ) : listings.length > 0 ? (
-          <>
-            <CardGrid>
-              {listings.map((listing, index) => (
-                <ResourceCard
-                  key={listing.id}
-                  name={listing.title}
-                  spec={listing.description}
-                  tags={listing.region ? [listing.region] : []}
-                  loc={listing.region ?? ""}
-                  nameSize={19}
-                  ctaLabel={t("resources:directory.contactCta")}
-                  onCta={() => {
-                    const href = contactHrefForListing(listing);
-                    if (href) {
-                      window.open(href, listing.website ? "_blank" : "_self");
-                    }
-                  }}
-                  animation="fade"
-                  delay={Math.min(index, 8) * 60}
-                />
-              ))}
-            </CardGrid>
-            <div style={{ marginTop: 20, textAlign: "center" }}>
-              <Button variant="ghost" onClick={() => setSuggestOpen(true)}>
-                {t("resources:suggest.cta")}
-              </Button>
-            </div>
-          </>
-        ) : (
-          <EmptyState
-            icon={<FiMapPin />}
-            title={t("resources:sexualHealth.testing.live.title")}
-            description={t("resources:sexualHealth.testing.live.body")}
-            action={{
-              label: t("resources:suggest.cta"),
-              onClick: () => setSuggestOpen(true),
-            }}
-          />
-        )
+      <TestingInfoCards />
+      {demoMode ? (
+        <TestingClinics />
       ) : (
-        <>
-      <FilterChips
-        className={styles.clinicFilters}
-        label={t("resources:sexualHealth.testing.filterAria")}
-        options={clinicFilterOptions}
-        value={clinicFilter}
-        onChange={(v) => setClinicFilter(v as ClinicType | "all")}
-      />
-
-      <div className={styles.clinicList}>
-        {clinics.length === 0 && (
-          <EmptyState
-            compact
-            icon={<FiMapPin />}
-            title={t("resources:sexualHealth.testing.empty.title")}
-            description={t("resources:sexualHealth.testing.empty.description")}
-            action={{
-              label: t("resources:sexualHealth.testing.empty.clearCta"),
-              onClick: () => setClinicFilter("all"),
-            }}
-          />
-        )}
-        {clinics.map((c) => {
-          const isOpen = openClinic === c.name;
-          return (
-            <div className={styles.clinicCard} key={c.name}>
-              <div>
-                <div
-                  className={`${styles.ccType} ${styles[TYPE_CLASS[c.type]]}`}
-                >
-                  {c.typeLabel}
-                </div>
-                <div className={styles.ccName}>{c.name}</div>
-                <div className={styles.ccDesc}>{c.description}</div>
-                <div className={styles.ccMeta}>
-                  {c.meta.map((m) => (
-                    <span key={m.text}>
-                      <m.icon /> {m.text}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className={styles.ccRight}>
-                {c.verified && (
-                  <div className={styles.ccBadge}>
-                    {t(
-                      "resources:sexualHealth.testing.clinicCard.verifiedBadge",
-                    )}{" "}
-                    <FiCheck />
-                  </div>
-                )}
-                <button
-                  type="button"
-                  className={[styles.ccBtn, isOpen && styles.ccBtnOpen]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => setOpenClinic(isOpen ? null : c.name)}
-                  aria-expanded={isOpen}
-                >
-                  {isOpen
-                    ? t(
-                        "resources:sexualHealth.testing.clinicCard.hideDetailsCta",
-                      )
-                    : t(
-                        "resources:sexualHealth.testing.clinicCard.viewDetailsCta",
-                      )}
-                </button>
-                {c.review && (
-                  <div className={styles.ccReview}>
-                    <FiStar /> {c.review}
-                  </div>
-                )}
-              </div>
-              {isOpen && (
-                <div className={styles.ccDetails}>
-                  <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>
-                      {t(
-                        "resources:sexualHealth.testing.clinicCard.testsLabel",
-                      )}
-                    </div>
-                    <div className={styles.ccDetailVal}>{c.details.tests}</div>
-                  </div>
-                  <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>
-                      {t(
-                        "resources:sexualHealth.testing.clinicCard.bringLabel",
-                      )}
-                    </div>
-                    <div className={styles.ccDetailVal}>{c.details.bring}</div>
-                  </div>
-                  <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>
-                      {t(
-                        "resources:sexualHealth.testing.clinicCard.accessLabel",
-                      )}
-                    </div>
-                    <div className={styles.ccDetailVal}>{c.details.access}</div>
-                  </div>
-                  <div className={styles.ccDetailRow}>
-                    <div className={styles.ccDetailLabel}>
-                      {t("resources:sexualHealth.testing.clinicCard.noteLabel")}
-                    </div>
-                    <div className={styles.ccDetailVal}>{c.details.note}</div>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <TestingNominate />
-        </>
+        <TestingListings onSuggest={() => setIsSuggestOpen(true)} />
       )}
-      {suggestOpen && (
+      {isSuggestOpen && (
         <SuggestResourceModal
           category="sexual_health_testing"
-          onClose={() => setSuggestOpen(false)}
+          onClose={() => setIsSuggestOpen(false)}
         />
       )}
     </>

@@ -1,130 +1,88 @@
-import { useState } from "react";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { LivingCommunity, ModReport } from "./community.model";
+import type { LivingCommunity } from "./community.model";
 import type { CommunityRole } from "./membership.types";
-import { useJoinRequests } from "./api/useJoinRequests";
-import { useCommunityReports } from "./api/useCommunityReports";
-import {
-  useDeleteCommunityPost,
-  useDismissCommunityReport,
-  useRemoveMember,
-  useReviewJoinRequest,
-  useSetMemberRole,
-} from "./api/useCommunityMutations";
+import type { PulsePaging } from "./api/useCommunityPosts";
+
+type RosterPaging = Pick<
+  PulsePaging,
+  "hasNextPage" | "fetchNextPage" | "isFetchingNextPage"
+>;
 import {
   ModJoinRequests,
   ModMemberManagement,
   ModReportedPosts,
+  ModToolsCardSection,
 } from "./ModToolsSections";
 import { ModToolsInsights } from "./ModToolsInsights";
 import { CommunityDangerZone } from "./CommunityDangerZone";
+import { useModToolsActions } from "./useModToolsActions";
 
 export function ModToolsTab({
   living,
   role,
   communityName,
+  rosterPaging,
 }: {
   living: LivingCommunity;
   role: CommunityRole | null;
   communityName: string;
+  /** The roster's pagination, threaded straight through to the member-
+   *  management list so a mod can reach members past the first page. */
+  rosterPaging: RosterPaging;
 }) {
-  const { showToast } = useToast();
   const { t } = useTranslation();
-  const reviewRequest = useReviewJoinRequest(living.slug);
-  const removeMember = useRemoveMember(living.slug);
-  const setMemberRole = useSetMemberRole(living.slug);
-  const deletePost = useDeleteCommunityPost(living.slug);
-  const dismissReport = useDismissCommunityReport(living.slug);
+  const {
+    requests,
+    requestsState,
+    reports,
+    reportsState,
+    manageable,
+    memberKey,
+    promoted,
+    demoted,
+    resolveRequest,
+    promote,
+    demote,
+    dismissReportRow,
+    confirming,
+    setConfirming,
+    confirmRemoveMember,
+    confirmRemoveReport,
+    isConfirmPending,
+  } = useModToolsActions(living);
 
-  // Join requests come from the join-requests endpoint (demo returns the mock
-  // queue synchronously). A local resolved-id set owns the moderator's in-session
-  // approve/dismiss; the visible list derives from the (re-syncing) hook minus
-  // those ids, so a live invalidation refetch flows through without an effect.
-  const joinRequests = useJoinRequests(living.slug);
-  const [resolvedRequests, setResolvedRequests] = useState<Set<string>>(
-    new Set(),
-  );
-  const requests = joinRequests.filter((r) => !resolvedRequests.has(r.id));
-
-  // Reports mirror the same pattern, now backed by GET /communities/:slug/reports
-  // (owner/mod-only) instead of the permanently-empty `living.reports` live had
-  // before — demo keeps reading the flagship's mock queue via the same hook.
-  const communityReports = useCommunityReports(living.slug);
-  const [resolvedReports, setResolvedReports] = useState<Set<string>>(
-    new Set(),
-  );
-  const reports = communityReports.filter((r) => !resolvedReports.has(r.id));
-
-  const [promoted, setPromoted] = useState<string[]>([]);
-  const [demoted, setDemoted] = useState<string[]>([]);
-  const [removed, setRemoved] = useState<string[]>([]);
-
-  const resolveRequest = (id: string, name: string, approved: boolean) => {
-    setResolvedRequests((prev) => new Set(prev).add(id));
-    reviewRequest.mutate({ id, action: approved ? "approve" : "decline" });
-    showToast(
-      approved
-        ? t("communities:detail.modtools.toast.approved", { name })
-        : t("communities:detail.modtools.toast.declined", { name }),
-      approved ? "success" : "info",
-    );
-  };
-  // "Remove post" reuses the existing owner/mod delete-post action; only wired
-  // for post-subject reports (see `ModReportedPosts`'s `canRemove`). "Dismiss"
-  // hits the platform moderation-action endpoint (see `useDismissCommunityReport`
-  // for the known community-mod/platform-role gap that can 403 here).
-  const removeReport = (report: ModReport) => {
-    setResolvedReports((prev) => new Set(prev).add(report.id));
-    if (report.subjectId) deletePost.mutate({ id: report.subjectId });
-    showToast(t("communities:detail.modtools.toast.postRemoved"), "success");
-  };
-  const dismissReportRow = (report: ModReport) => {
-    setResolvedReports((prev) => new Set(prev).add(report.id));
-    dismissReport.mutate({ id: report.id });
-    showToast(t("communities:detail.modtools.toast.reportDismissed"), "info");
-  };
-
-  const memberKey = (slug?: string, name?: string) => slug ?? name ?? "";
-  const promote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name);
-    // Local list drives the row's badge immediately (same shape as `removed`);
-    // the PATCH is the real change, and its invalidation refetches the roster.
-    setPromoted((p) => [...p, key]);
-    setDemoted((d) => d.filter((k) => k !== key));
-    if (slug) setMemberRole.mutate({ memberSlug: slug, role: "mod" });
-    showToast(
-      t("communities:detail.modtools.toast.promoted", { name }),
-      "success",
-    );
-  };
-  const demote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name);
-    setDemoted((d) => [...d, key]);
-    setPromoted((p) => p.filter((k) => k !== key));
-    if (slug) setMemberRole.mutate({ memberSlug: slug, role: "member" });
-    showToast(
-      t("communities:detail.modtools.toast.demoted", { name }),
-      "info",
-    );
-  };
-  const remove = (slug: string | undefined, name: string) => {
-    setRemoved((p) => [...p, memberKey(slug, name)]);
-    if (slug) removeMember.mutate(slug);
-    showToast(t("communities:detail.modtools.toast.removed", { name }), "info");
-  };
-
-  const manageable = living.roster.filter(
-    (m) => !removed.includes(memberKey(m.slug, m.name)),
-  );
+  const confirmCopy =
+    confirming == null
+      ? null
+      : confirming.kind === "removeMember"
+        ? {
+            title: t("communities:detail.modtools.confirm.removeMember.title", {
+              name: confirming.name,
+            }),
+            body: t("communities:detail.modtools.confirm.removeMember.body"),
+            cta: t(
+              "communities:detail.modtools.confirm.removeMember.confirmCta",
+            ),
+          }
+        : {
+            title: t("communities:detail.modtools.confirm.removePost.title"),
+            body: t("communities:detail.modtools.confirm.removePost.body"),
+            cta: t("communities:detail.modtools.confirm.removePost.confirmCta"),
+          };
 
   return (
     <div>
       <ModToolsInsights slug={living.slug} />
-      <ModJoinRequests requests={requests} onResolve={resolveRequest} />
+      <ModJoinRequests
+        requests={requests}
+        state={requestsState}
+        onResolve={resolveRequest}
+      />
       <ModReportedPosts
         reports={reports}
-        onRemove={removeReport}
+        state={reportsState}
+        onRemove={(report) => setConfirming({ kind: "removeReport", report })}
         onDismiss={dismissReportRow}
       />
       <ModMemberManagement
@@ -132,16 +90,49 @@ export function ModToolsTab({
         memberKey={memberKey}
         promoted={promoted}
         demoted={demoted}
+        paging={rosterPaging}
         onPromote={promote}
         onDemote={demote}
-        onRemove={remove}
+        onRemove={(memberSlug, name) =>
+          setConfirming({ kind: "removeMember", memberSlug, name })
+        }
       />
+      <ModToolsCardSection
+        slug={living.slug}
+        communityName={communityName}
+        role={role}
+      />
+
       <CommunityDangerZone
         slug={living.slug}
         name={communityName}
         role={role}
         roster={manageable}
       />
+
+      {/* Removing a member and taking a post down are both irreversible from
+          here, so each is confirmed first — the same rule the danger zone
+          below already follows. */}
+      {confirming && confirmCopy && (
+        <ConfirmDialog
+          open
+          tone="destructive"
+          loading={isConfirmPending}
+          title={confirmCopy.title}
+          description={confirmCopy.body}
+          confirmLabel={
+            isConfirmPending ? t("communities:common.loading") : confirmCopy.cta
+          }
+          onClose={() => setConfirming(null)}
+          onConfirm={() => {
+            if (confirming.kind === "removeMember") {
+              confirmRemoveMember(confirming.memberSlug, confirming.name);
+            } else {
+              confirmRemoveReport(confirming.report);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

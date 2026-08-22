@@ -18,11 +18,23 @@ import { I18nProvider } from "../../app/providers/I18nProvider";
 
 const demoState = vi.hoisted(() => ({ demoMode: false }));
 
+// `addItem`/`rename`/`remove` are awaited by the controller (the picker only
+// shows its success panel once the write lands), so they need a `mutateAsync`
+// spy as well as `mutate`.
 const mutations = vi.hoisted(() => ({
   create: { mutate: vi.fn() },
-  rename: { mutate: vi.fn() },
-  remove: { mutate: vi.fn() },
-  addItem: { mutate: vi.fn() },
+  rename: {
+    mutate: vi.fn(),
+    mutateAsync: vi.fn(async (_variables: unknown) => undefined),
+  },
+  remove: {
+    mutate: vi.fn(),
+    mutateAsync: vi.fn(async (_variables: unknown) => undefined),
+  },
+  addItem: {
+    mutate: vi.fn(),
+    mutateAsync: vi.fn(async (_variables: unknown) => undefined),
+  },
   removeItem: { mutate: vi.fn() },
 }));
 
@@ -40,6 +52,7 @@ vi.mock("./api/useCollections", () => ({
   },
   useMyCollections: () => ({ data: [], isLoading: false }),
   useCollectionDetail: () => ({ data: undefined }),
+  useFiledRefs: () => ({ data: [] }),
   useCollectionMutations: () => mutations,
 }));
 
@@ -59,7 +72,10 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 );
 
 afterEach(() => {
-  Object.values(mutations).forEach((m) => m.mutate.mockReset());
+  Object.values(mutations).forEach((mutation) => {
+    mutation.mutate.mockReset();
+    if ("mutateAsync" in mutation) mutation.mutateAsync.mockReset();
+  });
   showToast.mockReset();
 });
 
@@ -79,10 +95,10 @@ describe("useCollectionsController — live mode calls the API", () => {
     });
   });
 
-  it("adds a saved item to a collection via the API using its real ref", () => {
+  it("adds a saved item to a collection via the API using its real ref", async () => {
     const { result } = renderHook(() => useCollectionsController(), { wrapper });
 
-    act(() =>
+    await act(() =>
       result.current.addSaveToCollection("col-1", {
         id: "post:abc-123",
         kind: "ART",
@@ -92,8 +108,8 @@ describe("useCollectionsController — live mode calls the API", () => {
       }),
     );
 
-    expect(mutations.addItem.mutate).toHaveBeenCalledTimes(1);
-    expect(mutations.addItem.mutate.mock.calls[0]?.[0]).toEqual({
+    expect(mutations.addItem.mutateAsync).toHaveBeenCalledTimes(1);
+    expect(mutations.addItem.mutateAsync.mock.calls[0]?.[0]).toEqual({
       id: "col-1",
       ref: "post:abc-123",
     });

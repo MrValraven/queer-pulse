@@ -38,7 +38,7 @@
   gap: 12px;
   padding: 12px 14px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
 }
 .cohostInfo {
@@ -81,7 +81,7 @@
   color: var(--ink-60);
   padding: 14px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   margin-bottom: 4px;
 }
@@ -94,7 +94,7 @@
   max-height: 340px;
   overflow-y: auto;
   margin: 6px 0 4px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 6px;
 }
@@ -149,7 +149,7 @@
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  border: 1.5px solid rgba(45, 27, 61, 0.22);
+  border: 1.5px solid rgba(var(--line-rgb), 0.22);
   display: flex;
   align-items: center;
   justify-content: center;

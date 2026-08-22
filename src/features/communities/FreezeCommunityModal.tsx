@@ -47,7 +47,11 @@ export function FreezeCommunityModal({
           <Button variant="ghost" onClick={onClose} disabled={freeze.isPending}>
             {t("communities:detail.dangerZone.freeze.confirm.cancel")}
           </Button>
-          <Button variant="danger" onClick={onConfirm} disabled={freeze.isPending}>
+          <Button
+            variant="danger"
+            onClick={onConfirm}
+            disabled={freeze.isPending}
+          >
             {t("communities:detail.dangerZone.freeze.confirm.confirmCta")}
           </Button>
         </>

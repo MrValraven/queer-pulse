@@ -49,7 +49,14 @@ export function HeroStatsView({
     updateSettings(nextHeroStats, {
       onSuccess: () => showToast(t("admin:roadmap.toasts.saved"), "success"),
       onError: (error) =>
-        showToast(describeError("Couldn't save that stat", error), "error"),
+        showToast(
+          describeError(
+            t("admin:errors.saveStat"),
+            error,
+            t("shared:apiError.tryAgainTail"),
+          ),
+          "error",
+        ),
     });
   }
 

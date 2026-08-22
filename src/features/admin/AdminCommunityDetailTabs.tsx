@@ -75,8 +75,10 @@ function ReportRow({ item }: { item: QueueItem }) {
         aria-hidden
       />
       <div className={styles.reportBody}>
-        {/* item.categoryLabel/title/meta: report content, mirrors API-fetched
-            report text in live mode — left in English per the scope rule. */}
+        {/* `categoryLabel` and `meta` are resolved through the catalog by
+            `adminCommunities.adapters.ts` (FE-ADM-26), so they arrive already
+            translated. `title` is the reporter's own words when the report
+            carries a detail, and the translated reason label otherwise. */}
         <AdminCat tone={categoryTone}>{item.categoryLabel}</AdminCat>
         <div className={styles.reportTitle}>{item.title}</div>
         <div className={styles.reportMeta}>{item.meta}</div>

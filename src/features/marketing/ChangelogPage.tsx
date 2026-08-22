@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { FiArrowRight, FiClock } from "react-icons/fi";
 import {
   EmptyState,
@@ -50,6 +51,11 @@ export function ChangelogPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("marketing:changelog.meta.title")}
+        description={t("marketing:changelog.meta.description")}
+        canonical={routes.changelog}
+      />
       <div className={styles.page}>
         <div className={`wrap ${styles.wrap}`}>
           <HubBackLink

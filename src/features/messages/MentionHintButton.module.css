@@ -51,7 +51,7 @@
   border-radius: var(--radius-card);
   /* Fixed plum shadow (matches --shadow-* tokens) — NOT --ink-rgb, which flips
      to a light channel in dark mode and would cast a white glow around the panel. */
-  box-shadow: 0 4px 14px rgba(45, 27, 61, 0.22);
+  box-shadow: 0 4px 14px rgba(var(--plum-rgb), 0.22);
   animation: hintPanelIn var(--dur-fast) var(--ease);
 }
 

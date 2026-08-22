@@ -30,6 +30,11 @@ const FORM_ID = "edit-community-form";
 interface EditCommunityModalProps {
   slug: string;
   editable: EditableCommunityFields;
+  /** Owner-only settings. The backend refuses a MOD who changes who can find
+   *  the community or whether the member list is visible, so a mod sees them
+   *  as read-only rather than editing into a 403. Defaults to true for callers
+   *  that only ever open this as the owner. */
+  canChangeAccess?: boolean;
   onClose: () => void;
   onSaved?: () => void;
 }
@@ -42,6 +47,7 @@ interface EditCommunityModalProps {
 export function EditCommunityModal({
   slug,
   editable,
+  canChangeAccess = true,
   onClose,
   onSaved,
 }: EditCommunityModalProps) {
@@ -125,6 +131,7 @@ export function EditCommunityModal({
             toggleRule={toggleRule}
             error={error}
             onSuggestTag={() => setSuggestingTag(true)}
+            canChangeAccess={canChangeAccess}
           />
         </form>
       </Modal>
@@ -147,9 +154,13 @@ interface EditCommunityFieldsProps {
   toggleRule: (rule: string) => void;
   error: boolean;
   onSuggestTag: () => void;
+  /** False for a community mod: the backend now 403s a non-owner changing
+   *  `accessTier`/`rosterVisible`, so those controls render read-only rather
+   *  than letting a mod submit into a guaranteed failure. */
+  canChangeAccess: boolean;
 }
 
-/** The form body — split out so the modal shell stays well under 200 lines. */
+/** The form body, split out so the modal shell stays well under 200 lines. */
 function EditCommunityFields({
   draft,
   set,
@@ -158,6 +169,7 @@ function EditCommunityFields({
   toggleRule,
   error,
   onSuggestTag,
+  canChangeAccess,
 }: EditCommunityFieldsProps) {
   const { t } = useTranslation();
   return (
@@ -216,9 +228,16 @@ function EditCommunityFields({
         />
       </FormField>
 
-      <FormField label={t("communities:edit.field.access")} required>
+      <FormField
+        label={t("communities:edit.field.access")}
+        required
+        helper={
+          canChangeAccess ? undefined : t("communities:edit.ownerOnlyHint")
+        }
+      >
         <Select
           value={draft.accessTier}
+          disabled={!canChangeAccess}
           onChange={(value) => set({ accessTier: value as AccessTier })}
           options={ACCESS_OPTIONS.map((option) => ({
             value: option.tier,
@@ -236,23 +255,31 @@ function EditCommunityFields({
         onChange={(tags) => set({ tags })}
       />
 
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         className={styles.suggestTagTrigger}
         onClick={onSuggestTag}
       >
         {t("communities:edit.suggestTag.trigger")}
-      </button>
+      </Button>
 
       <div className={styles.block}>
         <label className={styles.check}>
           <input
             type="checkbox"
             checked={draft.rosterVisible}
+            disabled={!canChangeAccess}
             onChange={(event) => set({ rosterVisible: event.target.checked })}
           />
           <span className={styles.checkText}>
             {t("communities:edit.field.rosterVisible")}
+            {!canChangeAccess && (
+              <span className={styles.ownerOnlyHint}>
+                {" "}
+                {t("communities:edit.ownerOnlyHint")}
+              </span>
+            )}
           </span>
         </label>
       </div>

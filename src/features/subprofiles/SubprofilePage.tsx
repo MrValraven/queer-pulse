@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { SkeletonAvatar, SkeletonLine } from "../../shared/components/ui";
 import { PageMeta, JsonLd, buildPersonProfileSchema } from "../../shared/seo";
 import { socialHref } from "../../shared/social/socialPlatforms";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,6 +11,7 @@ import {
 } from "./api/usePublicSubprofile";
 import { SubprofilePageBody } from "./SubprofilePageBody";
 import { SubprofilePageStates } from "./SubprofilePageStates";
+import { SubprofilePageSkeleton } from "./SubprofilePageSkeleton";
 import { SubprofileDraftBanner } from "./SubprofileDraftBanner";
 import { SubprofileReportModal } from "./SubprofileReportModal";
 import { SubprofilePeopleModal } from "./SubprofilePeopleModal";
@@ -20,6 +20,7 @@ import { GalleryLightbox } from "./skins/GalleryLightbox";
 import { getGalleryWorks } from "./skins/galleryWorks";
 import { useStudioLightbox } from "./useStudioLightbox";
 import { useImageLightbox } from "./useImageLightbox";
+import { usePoemDeepLink } from "./usePoemDeepLink";
 import { PoemReaderModal } from "./poem/PoemReaderModal";
 import { slugify } from "./poem/poemModel";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
@@ -29,8 +30,6 @@ import { skinFor } from "./subprofile-skins";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import { PAGE_STATE_COPY, type PersonaPageState } from "./subprofilePageStates.data";
-import type { SubprofileItemView } from "./api/subprofiles.adapters";
-import styles from "./SubprofilePage.module.css";
 
 type PeopleModalMode = "followers" | "endorsements";
 
@@ -85,59 +84,7 @@ export function SubprofilePage() {
   const [peopleModalMode, setPeopleModalMode] = useState<PeopleModalMode | null>(
     null,
   );
-  const [poemItem, setPoemItem] = useState<SubprofileItemView | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const poemSlugParam = searchParams.get("poem");
-  // The slug `openPoem` itself just set, so the resolve effect below can tell
-  // "the param changed because we opened this exact item" apart from "the
-  // param changed some other way (mount, back/forward, pasted URL)". Without
-  // this, a title collision (two poems slugify the same — realistic with no
-  // id, e.g. two "Untitled" poems) would have the effect immediately
-  // re-resolve the just-set slug via first-match and silently swap the
-  // reader to the WRONG same-titled poem right after opening the second one.
-  const internalSlugRef = useRef<string | null>(null);
-
-  // Deep-link: `?poem=<slug>` resolves against the poems section's items
-  // (both demo and live share the same `data.sections` view — no mock-only
-  // branch) and opens the reader on mount / whenever the param changes
-  // externally (initial load, back/forward, a pasted/shared URL). A param
-  // that doesn't resolve to a poem is a silent no-op, never a crash or an
-  // empty modal.
-  useEffect(() => {
-    if (!poemSlugParam) return;
-    // The param already matches the slug `openPoem` set for the item that's
-    // currently open — don't second-guess a direct open with a first-match
-    // lookup that could resolve to a different, same-titled poem.
-    if (internalSlugRef.current === poemSlugParam) return;
-    const poemsSection = sections?.find((section) => section.section === "poems");
-    if (!poemsSection) return;
-    const targetSlug = poemSlugParam.toLowerCase();
-    const matchedPoem = poemsSection.items.find(
-      (item) => slugify(item.title) === targetSlug,
-    );
-    if (matchedPoem) setPoemItem(matchedPoem);
-  }, [poemSlugParam, sections]);
-
-  /** Row tap: opens the reader AND sets `?poem=<slug>` (replace, so the back
-   *  button doesn't have to step through every poem opened in the session). */
-  function openPoem(item: SubprofileItemView) {
-    const slug = slugify(item.title);
-    internalSlugRef.current = slug;
-    setPoemItem(item);
-    const next = new URLSearchParams(searchParams);
-    next.set("poem", slug);
-    setSearchParams(next, { replace: true });
-  }
-
-  /** Close: clears the reader AND the `?poem=` param together, so the URL
-   *  never points at a closed reader. */
-  function closePoem() {
-    internalSlugRef.current = null;
-    setPoemItem(null);
-    const next = new URLSearchParams(searchParams);
-    next.delete("poem");
-    setSearchParams(next, { replace: true });
-  }
+  const { poemItem, openPoem, closePoem } = usePoemDeepLink(sections);
 
   function handleAction(action: PersonaAction) {
     if (action === "report") setReportOpen(true);
@@ -146,34 +93,9 @@ export function SubprofilePage() {
   }
 
   if (result.state === "loading") {
-    // A skeleton that reserves the real page's shape — a full-bleed cover band
-    // above a hero identity block (avatar + name + tagline + bio lines) — so the
-    // content swap barely shifts layout (low CLS), instead of a centered spinner
-    // that then jumps to a full page.
     return (
       <PageShell>
-        <div
-          className={styles.skeleton}
-          role="status"
-          aria-busy="true"
-          aria-live="polite"
-        >
-          <span className={styles.skeletonLabel}>
-            {t("subprofiles:page.loading")}
-          </span>
-          <div className={styles.skeletonCover} aria-hidden />
-          <div className="wrap">
-            <div className={styles.skeletonHero} aria-hidden>
-              <SkeletonAvatar size={96} />
-              <div className={styles.skeletonHeroText}>
-                <SkeletonLine width="55%" height={30} />
-                <SkeletonLine width="38%" height={16} />
-                <SkeletonLine width="82%" height={14} />
-                <SkeletonLine width="68%" height={14} />
-              </div>
-            </div>
-          </div>
-        </div>
+        <SubprofilePageSkeleton />
       </PageShell>
     );
   }
@@ -301,7 +223,7 @@ export function SubprofilePage() {
 
       {reportOpen && (
         <SubprofileReportModal
-          subjectId={data.slug}
+          subjectId={data.id}
           subjectName={data.displayName}
           onClose={() => setReportOpen(false)}
         />

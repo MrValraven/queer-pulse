@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
+import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -62,7 +63,7 @@ function CommissionInterestRow({
         </div>
         <div className={styles.rowMeta}>
           {t("admin:adminCommissionInterests.row.from", { name: memberName })}
-          {" → "}
+          <AdminArrowSeparator />
           {t("admin:adminCommissionInterests.row.to", {
             name: interest.recipientName,
           })}
@@ -96,8 +97,8 @@ function RowsSkeleton() {
 
 /**
  * Admin commission-interest oversight: every "express interest" a member has
- * sent on the Commission Board — who, which project/category, to whom, and their
- * optional note — filterable by category. Demo mode reads the colocated fixture;
+ * sent on the Commission Board: who, which project/category, to whom, and their
+ * optional note, all filterable by category. Demo mode reads the colocated fixture;
  * live mode calls `GET /admin/commission-interests` with pagination.
  */
 export function AdminCommissionInterestsPage() {

@@ -111,10 +111,7 @@ export function RosterTab({
             <div className={styles.rosterName}>
               <span className={styles.nameRow}>
                 {m.slug ? (
-                  <Link
-                    to={`/members/${m.slug}`}
-                    className={styles.rosterLink}
-                  >
+                  <Link to={`/members/${m.slug}`} className={styles.rosterLink}>
                     {m.name}
                   </Link>
                 ) : (

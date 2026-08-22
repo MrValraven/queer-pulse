@@ -1293,6 +1293,10 @@ export const magazine: Catalog = {
   "write.header.savedSaving": "A guardar…",
   "write.header.savedError": "Não foi possível guardar, vamos tentar de novo",
   "write.header.savedOk": "Todas as alterações guardadas",
+  "write.header.savedUnsaved": "Alterações por guardar",
+  "write.header.retrySave": "Tentar guardar de novo",
+  "write.header.leaveConfirm":
+    "Há edições que ainda não chegaram ao servidor. Queres sair do editor?",
   "write.header.issueScheduled": "Agendado numa edição",
 
   // ── Alternador Rascunho/Composição/Leitura (editorMode.ts) ───────────────
@@ -1376,6 +1380,12 @@ export const magazine: Catalog = {
   "write.selection.emphasis": "Ênfase",
   "write.selection.strong": "Negrito",
   "write.selection.link": "Hiperligação",
+  "write.selection.linkFieldLabel": "Endereço da hiperligação",
+  "write.selection.linkPlaceholder": "https://exemplo.com",
+  "write.selection.linkApply": "Adicionar hiperligação",
+  "write.selection.linkCancel": "Cancelar hiperligação",
+  "write.selection.linkInvalid":
+    "Usa um endereço completo, como https://exemplo.com, ou um email, como mailto:ola@exemplo.com.",
 
   // ── PublishRail ────────────────────────────────────────────────────────────
   "write.publish.title": "Publicar",
@@ -1616,7 +1626,7 @@ export const magazine: Catalog = {
   "writer.work.setActive": "Usar para assinatura e termos",
 
   // ── BriefDetailModal ─────────────────────────────────────────────────────
-  "writer.brief.title": "Briefing — {title}",
+  "writer.brief.title": "Briefing: {title}",
   "writer.brief.angleLabel": "Ângulo",
   "writer.brief.wantsLabel": "O que queremos",
   "writer.brief.emptyWants": "Sem pedidos específicos registados.",
@@ -1762,4 +1772,48 @@ export const magazine: Catalog = {
   "comments.report.errorTitle": "Algo correu mal",
   "comments.report.errorBody": "Não foi possível enviar a tua denúncia. Tenta novamente.",
   "comments.report.retryCta": "Tentar novamente",
+
+  // ── Painel partilhado de falha ao carregar (MagazineLoadError, FE-CNT-08) ─
+  "load.errorMetaTitle": "Não foi possível carregar: Revista QueerPulse",
+  "load.errorTitle": "Não conseguimos carregar isto.",
+  "load.errorBody":
+    "Algo nos interrompeu pelo caminho. O artigo continua lá, por isso tenta outra vez.",
+  "load.retryCta": "Tentar de novo",
+  "load.backCta": "Voltar à revista",
+
+  // ── Metadados das páginas públicas de leitura (FE-CNT-12) ────────────────
+  "author.notFoundMetaTitle": "Autoria não encontrada: Revista QueerPulse",
+  "author.metaTitle": "{name}: Revista QueerPulse",
+  "author.metaDescription":
+    "Tudo o que {name} escreveu para a Revista QueerPulse.",
+  "issue.metaTitle": "Edição {number}, {title}: Revista QueerPulse",
+  "issue.metaTitleNumberOnly": "Edição {number}: Revista QueerPulse",
+  "issue.metaTitleFallback": "A edição: Revista QueerPulse",
+  "issue.metaDescription":
+    "Uma edição da Revista QueerPulse, de capa a capa.",
+  "sectionArticles.metaTitle": "{section}: Revista QueerPulse",
+  "sectionArticles.metaDescription": "Tudo o que publicámos em {section}.",
+
+  // ── Adaptadores do modo live (magazine.adapters.tsx, FE-CNT-16) ──────────
+  "live.issueBadge": "Edição {number}",
+  "live.issueBadgeCurrent": "Edição {number} · Atual",
+  "live.issueBadgeInaugural": "Edição {number} · Inaugural",
+  "live.issueCover": "Edição {number} · {title}",
+  "live.publishedOn": "Publicado a {date}",
+  "live.fromTheMagazine": "Da revista",
+  "live.sectionFallback": "Reportagem",
+  "live.featureIssue": "Reportagem · Edição {number}",
+  "live.readMinutes": "{minutes} min",
+  "live.web": "Web",
+
+  // ── Editor de artigos: menu de barra e anulação da remoção de bloco ──────
+  "write.slash.menuAria": "Inserir um bloco",
+  "write.block.removedToast": "Bloco removido.",
+  "write.block.undoRemove": "Anular",
+
+  // ── Comentários: confirmação de eliminação (FE-CNT-11) ───────────────────
+  "comments.deleteConfirm.title": "Eliminar este comentário?",
+  "comments.deleteConfirm.body":
+    "Passa a mostrar uma nota a dizer que o comentário foi eliminado. Isto não pode ser anulado.",
+  "comments.deleteConfirm.cta": "Eliminar comentário",
 };

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   FadeIn,
@@ -14,13 +14,19 @@ import { AdminMemberRows, AdminFlaggedRows } from "./AdminMemberRows";
 import { AdminVerifyQueue } from "./AdminVerifyQueue";
 import { AdminJoinRequestSamplePage } from "./AdminJoinRequestSamplePage";
 import { AdminMemberDrawer } from "./AdminMemberDrawer";
+import {
+  AdminMemberCardLoadingDrawer,
+  useAdminMemberCardSelection,
+} from "./AdminMemberCardSelection";
+import {
+  AdminMembersSearchControls,
+  type StatusFilter,
+} from "./AdminMembersSearchControls";
 import { useAdminMembers, useAdminFlagged } from "./api/useAdminMembers";
 import { useJoinRequests } from "./api/useJoinRequests";
-import { type AdminMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
 type TabId = "all" | "pending" | "flagged" | "sample";
-type StatusFilter = "all" | "verified" | "new";
 
 export function AdminMembersPage() {
   const { t } = useTranslation();
@@ -28,7 +34,15 @@ export function AdminMembersPage() {
   const [tab, setTab] = useState<TabId>("all");
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState<AdminMember | null>(null);
+  // Only the selected member's id is held here. The drawer reads the member
+  // object back out of the live roster below, so a verify/restrict that
+  // refetches the list updates the open drawer instead of leaving it pinned to
+  // the row object as it looked when it was clicked.
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  // The flagged queue lists people who are usually not on the loaded roster
+  // page, so its selection is fetched by id instead of resolved from `members`
+  // below. Both feed the one drawer at the bottom of this page.
+  const flaggedSelection = useAdminMemberCardSelection();
 
   const {
     members,
@@ -57,6 +71,35 @@ export function AdminMembersPage() {
     [members, query],
   );
 
+  // Resolved from the full roster on every render, so the drawer always shows
+  // the member as the list currently has them, and typing in the search box
+  // behind the drawer leaves it open.
+  const selectedMember = useMemo(
+    () => members.find((member) => member.id === selectedMemberId) ?? null,
+    [members, selectedMemberId],
+  );
+
+  // A member who leaves the roster (filtered out, or gone after a refetch)
+  // takes the drawer with them, and the stale id is dropped so they can't pop
+  // back open later.
+  useEffect(() => {
+    if (
+      selectedMemberId !== null &&
+      !isLoading &&
+      !members.some((member) => member.id === selectedMemberId)
+    ) {
+      setSelectedMemberId(null);
+    }
+  }, [members, selectedMemberId, isLoading]);
+
+  // One drawer serves both tabs: a roster row resolves to a member object
+  // straight away, a flagged row arrives once its card has been fetched.
+  const drawerMember = selectedMember ?? flaggedSelection.memberCard;
+  const closeDrawer = () => {
+    setSelectedMemberId(null);
+    flaggedSelection.clearSelection();
+  };
+
   const TABS: AdminTab[] = [
     { id: "all", label: t("admin:members.tabs.all") },
     {
@@ -70,12 +113,6 @@ export function AdminMembersPage() {
       count: flagged.length,
     },
     { id: "sample", label: t("admin:members.tabs.sample") },
-  ];
-
-  const FILTERS: { id: StatusFilter; label: string }[] = [
-    { id: "all", label: t("admin:members.filters.all") },
-    { id: "verified", label: t("admin:members.filters.verified") },
-    { id: "new", label: t("admin:members.filters.new") },
   ];
 
   return (
@@ -120,36 +157,12 @@ export function AdminMembersPage() {
             onChange={(id) => setTab(id as TabId)}
           />
           {tab === "all" && (
-            <div className={styles.allControls}>
-              <div className={styles.search}>
-                <SearchIcon />
-                <input
-                  type="search"
-                  className={styles.searchInput}
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder={t("admin:members.searchPlaceholder")}
-                  aria-label={t("admin:members.searchAriaLabel")}
-                />
-              </div>
-              <div
-                className={styles.filters}
-                role="group"
-                aria-label={t("admin:members.filterAriaLabel")}
-              >
-                {FILTERS.map((statusFilter) => (
-                  <button
-                    key={statusFilter.id}
-                    type="button"
-                    className={`${styles.filterPill} ${filter === statusFilter.id ? styles.filterPillOn : ""}`}
-                    aria-pressed={filter === statusFilter.id}
-                    onClick={() => setFilter(statusFilter.id)}
-                  >
-                    {statusFilter.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <AdminMembersSearchControls
+              search={search}
+              onSearchChange={setSearch}
+              filter={filter}
+              onFilterChange={setFilter}
+            />
           )}
         </div>
       </FadeIn>
@@ -160,7 +173,10 @@ export function AdminMembersPage() {
             <MemberRowsSkeleton />
           ) : (
             <>
-              <AdminMemberRows members={visibleMembers} onSelect={setSelected} />
+              <AdminMemberRows
+                members={visibleMembers}
+                onSelect={(member) => setSelectedMemberId(member.id)}
+              />
               {hasNextPage && !query && (
                 <div className={styles.loadMore}>
                   <Button
@@ -176,36 +192,22 @@ export function AdminMembersPage() {
             </>
           ))}
         {tab === "pending" && <AdminVerifyQueue />}
-        {tab === "flagged" && <AdminFlaggedRows members={flagged} />}
+        {tab === "flagged" && (
+          <AdminFlaggedRows
+            members={flagged}
+            onOpenMember={flaggedSelection.selectMember}
+          />
+        )}
         {tab === "sample" && <AdminJoinRequestSamplePage />}
       </FadeIn>
 
-      {selected && (
-        <AdminMemberDrawer
-          member={selected}
-          onClose={() => setSelected(null)}
-        />
+      {drawerMember && (
+        <AdminMemberDrawer member={drawerMember} onClose={closeDrawer} />
+      )}
+      {!drawerMember && flaggedSelection.isPending && (
+        <AdminMemberCardLoadingDrawer onClose={closeDrawer} />
       )}
     </AdminShell>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="7" />
-      <line x1="21" y1="21" x2="16.5" y2="16.5" />
-    </svg>
   );
 }
 

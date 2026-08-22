@@ -1,11 +1,10 @@
-import { useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiCheck, FiAtSign } from "react-icons/fi";
-import { EmptyState, FadeIn } from "../../shared/components/ui";
+import { EmptyState, FadeIn, Tabs } from "../../shared/components/ui";
 import { useFocusOnMount } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { relativeAgo } from "../../shared/lib/relativeAgo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -16,12 +15,17 @@ import {
   type MentionTabId,
 } from "./mentions.data";
 import { useMentions } from "./api/useMentions";
-import { markNotificationRead } from "./api/notifications.api";
-import { markAllMentionsRead } from "./api/mentions.api";
+import { useMentionsReadState } from "./useMentionsReadState";
 import { MentionsListSkeleton } from "./MentionsSkeleton";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./MentionsPanel.module.css";
 import type { TFunction } from "../../shared/i18n/types";
+
+/** The two non-numeric idioms the "oldest unread" label needs. */
+const MENTION_AGO_KEYS = {
+  justNow: "notifications:mentions.ago.justNow",
+  unknown: "notifications:mentions.ago.unknown",
+};
 
 const avClass: Record<Mention["tint"], string | undefined> = {
   coral: styles.avCoral,
@@ -145,7 +149,11 @@ function MentionRow({
         <div className={`${styles.av} ${avClass[m.tint]}`}>{m.initials}</div>
         <div className={styles.who}>
           <span className={styles.whoName}>
-            <Link to={routes.members}>{m.name}</Link>
+            <Link
+              to={m.actorSlug ? `${routes.members}/${m.actorSlug}` : routes.members}
+            >
+              {m.name}
+            </Link>
             <MemberStaffBadge slug={m.actorSlug} />
           </span>
           <span> · {m.context}</span>
@@ -218,74 +226,18 @@ function MentionRow({
 export function MentionsPanel() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { demoMode } = useDemoMode();
   const { data: mentionDays = [], isLoading: loading } = useMentions();
-  const { showToast } = useToast();
-  const queryClient = useQueryClient();
-  const [tab, setTab] = useState(0);
-  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [activeTabId, setActiveTabId] = useState<MentionTabId>("all");
+  const {
+    readIds,
+    unreadCount,
+    oldestUnreadIso,
+    tabCounts,
+    markRead,
+    markAllRead,
+  } = useMentionsReadState(mentionDays);
   let rowIndex = 0;
 
-  const allMentions = useMemo(
-    () => mentionDays.flatMap((group) => group.items),
-    [mentionDays],
-  );
-  const unreadIds = useMemo(
-    () =>
-      allMentions
-        .filter((mention) => mention.unread)
-        .map((mention) => mention.id),
-    [allMentions],
-  );
-  const unreadCount = unreadIds.filter((id) => !readIds.has(id)).length;
-
-  // Tab badge counts derived from the live data, so they stay correct in demo
-  // and live mode alike (and never show mock totals when the thread is empty).
-  const tabCounts: Record<MentionTabId, number> = useMemo(
-    () => ({
-      all: allMentions.length,
-      unread: allMentions.filter(
-        (mention) => mention.unread && !readIds.has(mention.id),
-      ).length,
-      posts: allMentions.filter((mention) => mention.category === "post").length,
-      articles: allMentions.filter((mention) => mention.category === "article")
-        .length,
-      events: allMentions.filter((mention) => mention.category === "event")
-        .length,
-    }),
-    [allMentions, readIds],
-  );
-
-  function markRead(id: string) {
-    setReadIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
-    // Live: a mention id is a notification id, so the existing per-notification
-    // read endpoint persists it. Best-effort (local state already gave instant
-    // feedback); refresh the bell badge on success. Demo stays local-only.
-    if (!demoMode) {
-      void markNotificationRead(id)
-        .then(() =>
-          queryClient.invalidateQueries({ queryKey: ["notifications"] }),
-        )
-        .catch(() => {});
-    }
-  }
-  function markAllRead() {
-    if (unreadCount === 0) return;
-    setReadIds(new Set(unreadIds));
-    showToast(t("notifications:mentions.markAllReadToast"), "success");
-    // Live: scoped to mentions on the server, so it never clears other
-    // notification categories. Refresh both the mentions thread and the bell.
-    if (!demoMode) {
-      void markAllMentionsRead()
-        .then(() => {
-          void queryClient.invalidateQueries({ queryKey: ["mentions"] });
-          void queryClient.invalidateQueries({ queryKey: ["notifications"] });
-        })
-        .catch(() => {});
-    }
-  }
-
-  const activeTabId = MENTION_TAB_DEFS[tab]?.id ?? "all";
   const filteredDays = mentionDays
     .map((group) => ({
       ...group,
@@ -313,19 +265,17 @@ export function MentionsPanel() {
   // not a coming-soon.
   return (
     <div className={styles.panel}>
-      <div className={styles.tabs}>
-        {MENTION_TAB_DEFS.map((tabDef, index) => (
-          <button
-            type="button"
-            key={tabDef.id}
-            className={`${styles.tab} ${tab === index ? styles.active : ""}`}
-            onClick={() => setTab(index)}
-          >
-            {t(tabDef.labelKey)}{" "}
-            <span className={styles.tabCount}>{tabCounts[tabDef.id]}</span>
-          </button>
-        ))}
-      </div>
+      <Tabs
+        className={styles.tabs}
+        variant="underline"
+        tabs={MENTION_TAB_DEFS.map((tabDef) => ({
+          id: tabDef.id,
+          label: t(tabDef.labelKey),
+          count: tabCounts[tabDef.id],
+        }))}
+        active={activeTabId}
+        onChange={(id) => setActiveTabId(id as MentionTabId)}
+      />
 
       <div className={styles.markRow}>
         <p>
@@ -336,9 +286,11 @@ export function MentionsPanel() {
                   count: unreadCount,
                 })}
               </b>{" "}
-              {t("notifications:mentions.oldestFrom", {
-                when: fmt.relativeTime(-14, "hour"),
-              })}
+              {oldestUnreadIso
+                ? t("notifications:mentions.oldestFrom", {
+                    when: relativeAgo(oldestUnreadIso, t, fmt, MENTION_AGO_KEYS),
+                  })
+                : null}
             </>
           ) : (
             <b>{t("notifications:mentions.allCaughtUp")}</b>

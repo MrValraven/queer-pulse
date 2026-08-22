@@ -1,4 +1,5 @@
 import type { HousingListingFilters } from "./api/housingListing.api";
+import { FILTERS } from "./housing.data";
 import type { HousingListing } from "./housingListings";
 
 /**
@@ -33,6 +34,94 @@ export function anyFilterActive(filters: HousingFilters): boolean {
     (filters.type !== undefined && filters.type !== "all") ||
     activeFilterCount(filters) > 0
   );
+}
+
+/** The type-chip values the board offers, as an allow-list for URLs: a stale or
+ * hand-edited `?type=` that this build doesn't recognise falls back to "all"
+ * instead of silently emptying the board. */
+const HOUSING_TYPE_VALUES = new Set(FILTERS.map((option) => option.value));
+
+/** A move-in-by date is only carried through the URL in the `YYYY-MM-DD` shape
+ * the backend expects. */
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * The board's filters written as URL query params, using the SAME key names
+ * `getHousingListings` sends to the backend, so a shared link reads exactly
+ * like the request behind it. Empty and default values are omitted, which keeps
+ * an unfiltered board on a clean path. `page` is deliberately left out: the
+ * board pages by fetching more, not by moving through the URL.
+ */
+export function housingFiltersToSearchParams(
+  filters: HousingFilters,
+): URLSearchParams {
+  const params = new URLSearchParams();
+  if (filters.type && filters.type !== "all") params.set("type", filters.type);
+  if (filters.area) params.set("area", filters.area);
+  for (const area of filters.areas ?? []) params.append("areas", area);
+  if (filters.priceMin !== undefined) {
+    params.set("priceMin", String(filters.priceMin));
+  }
+  if (filters.priceMax !== undefined) {
+    params.set("priceMax", String(filters.priceMax));
+  }
+  if (filters.bedroomsMin !== undefined) {
+    params.set("bedroomsMin", String(filters.bedroomsMin));
+  }
+  if (filters.billsIncluded) params.set("billsIncluded", "true");
+  if (filters.hasAccessibilityInfo) params.set("hasAccessibilityInfo", "true");
+  if (filters.verifiedOnly) params.set("verifiedOnly", "true");
+  if (filters.availableBy) params.set("availableBy", filters.availableBy);
+  return params;
+}
+
+/** A finite number from a query param, or undefined when the param is absent,
+ * blank, or junk a hand-edited link supplied. */
+function readNumberParam(
+  params: URLSearchParams,
+  key: string,
+): number | undefined {
+  const raw = params.get(key);
+  if (raw === null || raw.trim() === "") return undefined;
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : undefined;
+}
+
+/** A boolean flag is present-and-"true" in the URL, matching what
+ * `housingFiltersToSearchParams` writes; anything else reads as off. */
+function readFlagParam(params: URLSearchParams, key: string): true | undefined {
+  return params.get(key) === "true" ? true : undefined;
+}
+
+/**
+ * The inverse of `housingFiltersToSearchParams`: rebuilds the filter set from a
+ * URL so the board can be linked, reloaded, and restored by the browser's Back
+ * button after opening a listing. Unknown or malformed values are dropped
+ * rather than passed through, so a stale link degrades to a wider board instead
+ * of an error. Params the page owns for other purposes (`tab`) are ignored.
+ */
+export function housingFiltersFromSearchParams(
+  params: URLSearchParams,
+): HousingFilters {
+  const type = params.get("type");
+  const area = params.get("area");
+  const areas = params.getAll("areas").filter((value) => value.trim() !== "");
+  const availableBy = params.get("availableBy");
+  return {
+    type: type && HOUSING_TYPE_VALUES.has(type) ? type : "all",
+    area: area && area.trim() !== "" ? area : undefined,
+    areas: areas.length > 0 ? areas : undefined,
+    priceMin: readNumberParam(params, "priceMin"),
+    priceMax: readNumberParam(params, "priceMax"),
+    bedroomsMin: readNumberParam(params, "bedroomsMin"),
+    billsIncluded: readFlagParam(params, "billsIncluded"),
+    hasAccessibilityInfo: readFlagParam(params, "hasAccessibilityInfo"),
+    verifiedOnly: readFlagParam(params, "verifiedOnly"),
+    availableBy:
+      availableBy && ISO_DATE_PATTERN.test(availableBy)
+        ? availableBy
+        : undefined,
+  };
 }
 
 /** The numeric monthly-ish rent parsed from a demo fixture's `price` string

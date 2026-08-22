@@ -1,3 +1,4 @@
+import { useFormat } from "../../../../shared/i18n/format";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type {
   RoadmapConfidence,
@@ -5,13 +6,14 @@ import type {
   RoadmapSlipEntryDTO,
 } from "../../api/roadmapAdmin.types";
 import { AdminSeg, AdminToggle } from "../../ui";
+import { AdminArrowSeparator, AdminNotSet } from "../../ui/AdminInlineMarkers";
 import styles from "./ItemDrawer.module.css";
 
 const CONFIDENCE_VALUES: RoadmapConfidence[] = ["likely", "maybe", "hoping"];
 
 /**
  * Confidence (3-way) + the "this is a promise" toggle + the read-only slip
- * history — why members should believe (or not) the current target date.
+ * history: why members should believe (or not) the current target date.
  */
 export function CommitmentSection({
   confidence,
@@ -25,6 +27,7 @@ export function CommitmentSection({
   onFieldChange: (patch: RoadmapItemUpdateBody) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const confidenceOptions = CONFIDENCE_VALUES.map((value) => ({
     value,
     label: t(`admin:roadmap.drawer.commitment.confidence.${value}.label`),
@@ -85,12 +88,14 @@ export function CommitmentSection({
               className={styles.slipRow}
             >
               <span className={styles.slipMove}>
-                {slip.from || "—"} → {slip.to || "—"}
+                {slip.from || <AdminNotSet />}
+                <AdminArrowSeparator />
+                {slip.to || <AdminNotSet />}
               </span>
               {": "}
               {slip.reason}
               <span className={styles.slipMeta}>
-                {slip.movedByName} · {new Date(slip.movedAt).toLocaleDateString()}
+                {slip.movedByName} · {fmt.date(new Date(slip.movedAt))}
               </span>
             </li>
           ))}

@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { useCreatedCommunities } from "./startCommunity/createdCommunities.store";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityEdits } from "../../app/providers/useCommunityEdits";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { TFunction } from "../../shared/i18n/types";
 import { applyCommunityOverride } from "./api/communities.adapters";
 import { communities } from "../homepage/data/communities";
 import type { Community } from "../homepage/data/types";
@@ -11,7 +14,11 @@ import {
 import type { CommunityDetail, Person, Tint } from "./communityDetails";
 
 /** Map a founded community into the `Community` card shape used across the app. */
-export function createdToCommunity(c: CreatedCommunity): Community {
+export function createdToCommunity(
+  community: CreatedCommunity,
+  translate: TFunction,
+): Community {
+  const c = community;
   return {
     slug: c.slug,
     href: `/community/${c.slug}`,
@@ -19,8 +26,8 @@ export function createdToCommunity(c: CreatedCommunity): Community {
     typeLabel: typeLabelFor(c.type),
     name: c.name,
     description: c.purpose,
-    count: "1 member",
-    joinLabel: "Join",
+    count: translate("communities:common.count.members", { count: 1 }),
+    joinLabel: translate("communities:card.join.public"),
     privateBadge: c.accessTier === "private",
     // Carry the founder's chosen join policy through so gated (invite/request)
     // communities render their real tier — without this the card/detail tier
@@ -31,71 +38,97 @@ export function createdToCommunity(c: CreatedCommunity): Community {
   };
 }
 
-/** Static directory + everything founded this session (created first), with any
- *  session edit overrides applied so an owner/mod's demo edit shows on the
- *  discover grid too — not just the detail page. Live mode leaves `overrides`
- *  empty (the server owns the data + the grid refetches on `["communities"]`),
- *  so the map is a no-op there. */
+/** The DEMO directory: the static registry plus everything founded this
+ *  session (created first), with any session edit overrides applied so an
+ *  owner/mod's demo edit shows on the discover grid too, not just the detail
+ *  page.
+ *
+ *  Empty in live mode by design — every one of these rows is a prototype
+ *  fixture, and a real community whose slug or name happened to match one
+ *  would be described by the mock instead of by the server. Live callers read
+ *  the directory through `useCommunities` / `useCommunity` instead. */
 export function useAllCommunities(): Community[] {
+  const { demoMode } = useDemoMode();
   const { created } = useCreatedCommunities();
   const { overrides } = useCommunityEdits();
+  const { t } = useTranslation();
   return useMemo(
     () =>
-      [...created.map(createdToCommunity), ...communities].map((community) => {
-        const override = community.slug
-          ? overrides[community.slug]
-          : undefined;
-        return override
-          ? applyCommunityOverride(community, override)
-          : community;
-      }),
-    [created, overrides],
+      demoMode
+        ? [
+            ...created.map((community) => createdToCommunity(community, t)),
+            ...communities,
+          ].map((community) => {
+            const override = community.slug
+              ? overrides[community.slug]
+              : undefined;
+            return override
+              ? applyCommunityOverride(community, override, t)
+              : community;
+          })
+        : [],
+    [demoMode, created, overrides, t],
   );
 }
 
 /** Synthesize a full detail record for a freshly-founded community. */
-export function buildCreatedDetail(c: CreatedCommunity): CommunityDetail {
+export function buildCreatedDetail(
+  community: CreatedCommunity,
+  translate: TFunction,
+): CommunityDetail {
+  const c = community;
   // The founder is whoever actually created the community — captured at creation
   // time as the locked "owner" steward (derived from the signed-in member via
   // `ownerStewardFrom`), never a hardcoded persona.
   const owner = c.stewards.find((steward) => steward.key === "owner");
+  const founderLabel = translate("communities:detail.organiser.founder");
   const organiser: Person & { bio: string } = {
-    name: owner?.name || "Founder",
+    name: owner?.name || founderLabel,
     initials: owner?.initials || "?",
     tint: (owner?.tint as Tint) ?? "plum",
-    role: "Founder",
+    role: founderLabel,
     slug: c.ownerSlug,
     // The founder's real profile picture, captured on the owner steward at
     // creation time — so the organiser card + hero show their actual face
     // rather than initials when their slug isn't in the static registry.
     avatarUrl: owner?.src ?? null,
-    bio: `Just opened ${c.name}. ${c.tagline || c.purpose}`,
+    bio: translate("communities:detail.organiser.justOpened", {
+      name: c.name,
+      blurb: c.tagline || c.purpose,
+    }),
   };
   return {
     badge: typeLabelFor(c.type),
-    founded: "Founded just now",
-    cadence: "Finding its rhythm",
-    about: [c.purpose, `Who it's for: ${c.whoFor}`],
+    founded: translate("communities:detail.foundedJustNow"),
+    cadence: translate("communities:detail.cadenceDefault"),
+    about: [
+      c.purpose,
+      translate("communities:detail.about.whoForLine", { whoFor: c.whoFor }),
+    ],
     whoFor: [c.whoFor],
     tags: [typeLabelFor(c.type), ...(c.tagline ? [c.tagline] : [])],
     organiser,
     nextEvent: {
       dd: "-",
-      mm: "soon",
-      title: "First gathering, to be announced",
-      meta: "Once a few people are in",
-      spots: "Open to all members",
+      mm: translate("communities:detail.nextEvent.soonChip"),
+      title: translate("communities:detail.nextEvent.firstTitle"),
+      meta: translate("communities:detail.nextEvent.onceFewPeople"),
+      spots: translate("communities:detail.nextEvent.openToAllMembers"),
       tba: true,
     },
     topicThread: {
       votes: 1,
-      title: `Welcome to ${c.name}: say hello`,
+      title: translate("communities:detail.topicThread.welcomeSayHello", {
+        name: c.name,
+      }),
       author: organiser,
-      time: "just now",
+      time: translate("communities:detail.topicThread.justNow"),
       replyCount: 0,
       post:
         c.tagline ||
-        `This is the very beginning of ${c.name}. Introduce yourself and tell us what brought you here.`,
+        translate("communities:detail.topicThread.beginningPost", {
+          name: c.name,
+        }),
       replies: [],
     },
   };
@@ -106,8 +139,9 @@ export function useCreatedDetail(
   slug: string | undefined,
 ): CommunityDetail | undefined {
   const { created } = useCreatedCommunities();
+  const { t } = useTranslation();
   return useMemo(() => {
-    const c = created.find((x) => x.slug === slug);
-    return c ? buildCreatedDetail(c) : undefined;
-  }, [created, slug]);
+    const found = created.find((community) => community.slug === slug);
+    return found ? buildCreatedDetail(found, t) : undefined;
+  }, [created, slug, t]);
 }

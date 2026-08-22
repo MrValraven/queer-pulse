@@ -26,6 +26,17 @@ const COMMIT_IDLE_DELAY_MS = 600;
 export interface PoemRichLineHandle {
   /** Focuses the editable surface and places the caret at its end. */
   focus(): void;
+  /**
+   * Overwrite the field's DOM with `lines`.
+   *
+   * The seed effect below is mount-only, so a parent that rewrites a block's
+   * lines in the MODEL (the legacy re-split hint) leaves this contentEditable
+   * showing the old text; the next blur then re-parses that stale DOM and
+   * reverts the change. Call this alongside the model update so both sides
+   * agree. Only for a wholesale, non-keystroke rewrite: it replaces the
+   * content outright and drops the caret.
+   */
+  setLines(lines: PoemLine[]): void;
 }
 
 export interface PoemRichLineProps {
@@ -144,6 +155,18 @@ export const PoemRichLine = forwardRef<PoemRichLineHandle, PoemRichLineProps>(
           if (!element) return;
           element.focus();
           collapseCaretToEnd(element);
+        },
+        setLines(next: PoemLine[]) {
+          const element = elementRef.current;
+          if (!element) return;
+          // Drop any pending debounce first, or it would fire afterwards and
+          // commit a parse of the DOM we are about to replace.
+          if (idleTimeoutRef.current) {
+            clearTimeout(idleTimeoutRef.current);
+            idleTimeoutRef.current = null;
+          }
+          element.innerHTML = serializePoemLines(next);
+          element.setAttribute("data-empty", String(element.textContent === ""));
         },
       }),
       [],

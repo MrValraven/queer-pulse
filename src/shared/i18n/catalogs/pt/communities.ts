@@ -129,9 +129,16 @@ export const communities: Catalog = {
   // ── Pequenos elementos partilhados (tempo relativo, "agora mesmo") ───────
   "common.timeAgo": "há {time}",
   "common.justNow": "agora mesmo",
+  "common.unknownTime": "há algum tempo",
+  "common.someMember": "Alguém da comunidade",
   "common.error": "Algo correu mal. Tenta de novo daqui a um instante.",
   "common.loading": "A carregar…",
   "common.attachImageAria": "Anexar uma imagem",
+  "common.removeImageAria": "Remover esta imagem",
+  "common.imageUploadError":
+    "Não foi possível carregar essa imagem. Experimenta outra.",
+  "common.pinnedToast": "Fixado no topo.",
+  "common.unpinnedToast": "Deixou de estar fixado.",
 
   // ── Página de detalhe da comunidade (hero + sidebar) ──────────────────────
   "detail.breadcrumb": "Comunidades e Coletivos",
@@ -181,7 +188,8 @@ export const communities: Catalog = {
   "detail.tabs.events": "Eventos",
   "detail.tabs.modtools": "Ferramentas de moderação",
   // Mostrado a um dono/moderador num separador escondido dos membros.
-  "detail.hiddenFromMembers": "Escondido dos membros — só donos e moderadores veem este separador.",
+  "detail.hiddenFromMembers":
+    "Escondido dos membros. Só donos e moderadores veem este separador.",
 
   // ── Rótulos partilhados de Sobre / Sobre+Recursos ─────────────────────────
   "detail.about.whoFor": "Para quem é",
@@ -257,7 +265,8 @@ export const communities: Catalog = {
 
   // ── Separador de ferramentas de moderação (hub completo) ──────────────────
   "detail.modtools.insights.label": "Estatísticas da comunidade",
-  "detail.modtools.insights.error.title": "Não foi possível carregar as estatísticas",
+  "detail.modtools.insights.error.title":
+    "Não foi possível carregar as estatísticas",
   "detail.modtools.insights.error.description":
     "Algo correu mal ao carregar os números. Tenta novamente.",
   "detail.modtools.insights.error.retryCta": "Tentar novamente",
@@ -276,6 +285,10 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.declineCta": "Recusar",
   "detail.modtools.reports.label": "Publicações denunciadas",
   "detail.modtools.reports.empty.title": "Tudo em ordem",
+  "detail.modtools.queueError.title": "Não foi possível carregar esta fila",
+  "detail.modtools.queueError.description":
+    "A fila não carregou, por isso trata-a como desconhecida. Tenta novamente e avisa-nos se continuar a acontecer.",
+  "detail.modtools.queueError.retry": "Tentar novamente",
   "detail.modtools.reports.empty.description":
     "Nada foi assinalado. A comunidade cuida de si mesma.",
   "detail.modtools.reports.meta":
@@ -284,7 +297,7 @@ export const communities: Catalog = {
   "detail.modtools.reports.removeCta": "Remover publicação",
   "detail.modtools.reports.dismissCta": "Ignorar",
   "detail.modtools.reports.replyNote":
-    "Esta denúncia é sobre uma resposta, não sobre a publicação em si — pode ser ignorada mas não removida diretamente.",
+    "Esta denúncia é sobre uma resposta. Pode ser ignorada aqui; para a remover é preciso abrir a publicação onde está.",
   "detail.modtools.members.label": "Pessoas",
   "detail.modtools.members.makeModCta": "Tornar mod",
   "detail.modtools.members.demoteCta": "Remover como mod",
@@ -297,7 +310,16 @@ export const communities: Catalog = {
     "Publicação removida. Já foi contactada a pessoa autora.",
   "detail.modtools.toast.reportDismissed": "Denúncia ignorada.",
   "detail.modtools.toast.promoted": "{name} é agora mod.",
+  "detail.modtools.toast.demoted": "{name} volta a ser membro.",
   "detail.modtools.toast.removed": "{name} foi removide.",
+  "detail.modtools.confirm.removeMember.title": "Remover {name} da comunidade?",
+  "detail.modtools.confirm.removeMember.body":
+    "Perde o acesso às publicações, encontros e pessoas daqui. Pode voltar a pedir para entrar mais tarde.",
+  "detail.modtools.confirm.removeMember.confirmCta": "Remover pessoa",
+  "detail.modtools.confirm.removePost.title": "Remover esta publicação?",
+  "detail.modtools.confirm.removePost.body":
+    "A publicação deixa de estar visível para toda a gente e a denúncia sai da tua fila. Não é possível anular aqui.",
+  "detail.modtools.confirm.removePost.confirmCta": "Remover publicação",
 
   // ── Zona de risco (separador de ferramentas de moderação, hub completo) ───
   "detail.dangerZone.heading": "Zona de risco",
@@ -352,6 +374,15 @@ export const communities: Catalog = {
   "detail.pulse.sharedToast": "Partilhado com a comunidade.",
   "detail.pulse.loadingMore": "A carregar…",
   "detail.pulse.loadMoreCta": "Carregar mais publicações",
+  "detail.events.error.title": "Não foi possível carregar os convívios",
+  "detail.events.error.description":
+    "Algo correu mal ao chegar ao calendário desta comunidade. Tenta de novo daqui a pouco.",
+  "detail.events.error.retryCta": "Tentar novamente",
+  "detail.pulse.empty.title": "Ainda não há nada por aqui",
+  "detail.pulse.empty.description":
+    "Publica o primeiro olá. Uma linha sobre a tua semana chega para pôr a sala a conversar.",
+  "detail.pulse.empty.visitorDescription":
+    "Esta comunidade ainda não publicou nada. Junta-te para fazer parte do que vem a seguir.",
 
   // ── Separador Sobre + Recursos (hub completo) ─────────────────────────────
   "detail.aboutResources.houseRules": "Regras da casa",
@@ -388,6 +419,9 @@ export const communities: Catalog = {
   "join.about.hint":
     "Opcional: um pouco de contexto ajuda as pessoas a saberem quem és.",
   "join.about.aboutPlaceholder": "Uma frase sobre ti: o que te traz até aqui?",
+  "join.about.submitting": "A enviar…",
+  "join.about.errorFallback":
+    "Não foi possível concluir. Tenta novamente daqui a pouco.",
   "join.involvement.eyebrow": "Quase pronto",
   "join.involvement.title": "Como gostarias de participar?",
   "join.involvement.emailPlaceholder": "O teu endereço de email",
@@ -566,7 +600,7 @@ export const communities: Catalog = {
   // ── Capítulo 4 — Gestão ────────────────────────────────────────────────────
   "start.running.stewardsHeading": "Pessoas responsáveis",
   "start.running.stewardsSub":
-    "As pessoas corresponsáveis podem dar as boas-vindas a quem chega, manter as conversas vivas, e substituir-te quando não podes. Podes adicioná-las ou mudá-las a qualquer momento.",
+    "As pessoas corresponsáveis podem dar as boas-vindas a quem chega, manter as conversas vivas, e substituir-te quando não podes. Quem escolheres recebe um convite para ser corresponsável contigo e entra assim que aceitar. Podes adicioná-las ou mudá-las a qualquer momento.",
   "start.running.ownerTag": "Tu · responsável",
   "start.running.coStewardTag": "Corresponsável",
   "start.running.removeAria": "Remover {name}",
@@ -576,6 +610,7 @@ export const communities: Catalog = {
   "start.running.addStewardModal.sub":
     "As pessoas corresponsáveis só podem ser membros a quem já estás ligada. Pesquisa nas tuas ligações abaixo.",
   "start.running.addStewardModal.searchLabel": "Pesquisar nas tuas ligações",
+  "start.running.addStewardModal.loadMore": "Mostrar mais ligações",
   "start.running.addStewardModal.searchPlaceholder":
     "Pesquisa por nome ou @slug…",
   "start.running.addStewardModal.closeAria": "Fechar",
@@ -643,6 +678,7 @@ export const communities: Catalog = {
     "Vão receber um convite caloroso quando abrires: sem pressão, sem spam.",
   "start.people.empty":
     "Ainda não estás em contacto com ninguém. Assim que te ligares a pessoas, poderás convidá-las aqui.",
+  "start.people.loadMore": "Mostrar mais ligações",
   "start.people.seedNote":
     "Também podes partilhar o link da tua comunidade assim que abrir. É muitas vezes assim que as primeiras dez pessoas chegam de verdade.",
 
@@ -666,7 +702,10 @@ export const communities: Catalog = {
   "start.confirm.rosterHidden": "Escondida",
   "start.confirm.recap.running": "Gestão",
   "start.confirm.recap.stewards": "Pessoas responsáveis",
-  "start.confirm.stewardsValue": "{count} (tu + {co} corresponsáveis)",
+  "start.confirm.stewardsValue":
+    "{count} convidadas (tu + {co} corresponsáveis)",
+  "start.confirm.handleTaken":
+    "Esse endereço já está ocupado. Experimenta outro.",
   "start.confirm.recap.inside": "Incluído",
   "start.confirm.recap.toneFeeling": "Tom e sentir",
   "start.confirm.recap.sharedValues": "Valores partilhados",
@@ -735,6 +774,7 @@ export const communities: Catalog = {
   "detail.foundedRecently": "Fundada recentemente",
   "detail.foundedJustNow": "Fundada agora mesmo",
   "detail.cadenceDefault": "A encontrar o seu ritmo",
+  "detail.nextEvent.soonChip": "em breve",
   "detail.nextEvent.tbaTitle": "Próximo convívio a anunciar",
   "detail.nextEvent.checkEventsTab": "Vê o separador de eventos",
   "detail.nextEvent.openToMembers": "Aberto às pessoas da comunidade",
@@ -749,6 +789,8 @@ export const communities: Catalog = {
   "detail.topicThread.beginningPost":
     "Isto é o início de {name}. Apresenta-te e diz-nos o que te trouxe até aqui.",
   "detail.organiser.founder": "Pessoa fundadora",
+  "detail.organiser.justOpened": "Acabou de abrir {name}. {blurb}",
+  "detail.about.whoForLine": "Para quem é: {whoFor}",
 
   // ── Editar comunidade (EditCommunityModal) ────────────────────────────────
   "edit.cta": "Editar comunidade",
@@ -760,29 +802,37 @@ export const communities: Catalog = {
   "edit.field.name": "Nome",
   "edit.field.tagline": "Frase de assinatura",
   "edit.field.cover": "Imagem de capa",
-  "edit.field.coverHint": "Uma foto larga mostrada no cartão da tua comunidade. Pelo menos 1200 × 600px.",
+  "edit.field.coverHint":
+    "Uma foto larga mostrada no cartão da tua comunidade. Pelo menos 1200 × 600px.",
   "edit.field.type": "Que tipo de espaço",
   "edit.field.whoFor": "Para quem é",
   "edit.field.purpose": "Para que serve",
   "edit.field.access": "Quem a pode encontrar",
   "edit.field.rosterVisible": "Mostrar a lista de pessoas às pessoas",
+  "edit.ownerOnlyHint": "Só quem é dona da comunidade pode mudar isto.",
   "edit.field.features": "O que há por dentro",
   "edit.field.rules": "Valores partilhados",
   "edit.field.tags": "Etiquetas",
-  "edit.field.tagsHint": "Escolhe até {count}, aparecem no cartão da tua comunidade e são pesquisáveis no Descobrir.",
-  "tagPicker.overlapHint": "Estas etiquetas costumam sobrepor-se, escolhe a que encaixa melhor.",
-  "edit.suggestTag.trigger": "Não encontras a etiqueta que precisas? Sugere uma",
+  "edit.field.tagsHint":
+    "Escolhe até {count}, aparecem no cartão da tua comunidade e são pesquisáveis no Descobrir.",
+  "tagPicker.overlapHint":
+    "Estas etiquetas costumam sobrepor-se, escolhe a que encaixa melhor.",
+  "edit.suggestTag.trigger":
+    "Não encontras a etiqueta que precisas? Sugere uma",
   "edit.suggestTag.title": "Sugerir uma etiqueta",
-  "edit.suggestTag.sub": "Vamos analisar e podemos adicioná-la à lista selecionada.",
+  "edit.suggestTag.sub":
+    "Vamos analisar e podemos adicioná-la à lista selecionada.",
   "edit.suggestTag.labelField": "Nome da etiqueta",
   "edit.suggestTag.labelPlaceholder": "ex.: Família Escolhida",
   "edit.suggestTag.noteField": "Nota (opcional)",
-  "edit.suggestTag.notePlaceholder": "Porque é que esta etiqueta ajudaria a tua comunidade?",
+  "edit.suggestTag.notePlaceholder":
+    "Porque é que esta etiqueta ajudaria a tua comunidade?",
   "edit.suggestTag.cancel": "Cancelar",
   "edit.suggestTag.submit": "Enviar sugestão",
   "edit.suggestTag.submitting": "A enviar…",
   "edit.suggestTag.successToast": "Obrigado, vamos analisar essa etiqueta.",
-  "edit.suggestTag.errorToast": "Não foi possível enviar a tua sugestão. Tenta novamente.",
+  "edit.suggestTag.errorToast":
+    "Não foi possível enviar a tua sugestão. Tenta novamente.",
   "edit.rules.add": "Adicionar",
   "edit.rules.addPlaceholder": "Adiciona um valor partilhado…",
   "edit.rules.remove": "Remover regra",

@@ -31,7 +31,7 @@ export const auth: Catalog = {
     "O QueerPulse funciona só por convite. Pede a alguém que já conheças, ou pede um convite e tratamos do resto.",
   "signIn.notice.accountSuppressed.title": "Esta conta foi eliminada",
   "signIn.notice.accountSuppressed.body":
-    "Pediste-nos para eliminar esta conta, por isso não a vamos recriar em silêncio. Se quiseres voltar, pede um novo convite a alguém da comunidade — ou fala connosco que ajudamos.",
+    "Pediste-nos para eliminar esta conta, por isso não a vamos recriar em silêncio. Se quiseres voltar, pede um novo convite a alguém da comunidade, ou fala connosco que ajudamos.",
   "signIn.notice.ageAttestationRequired.title": "Falta confirmar uma coisa",
   "signIn.notice.ageAttestationRequired.body":
     "A QueerPulse é para maiores de 18 anos. Volta ao teu link de convite e confirma que tens 18 anos ou mais para entrares.",
@@ -46,7 +46,7 @@ export const auth: Catalog = {
     "A pessoa que enviou este convite já não está ativa no QueerPulse, por isso não te consegue trazer para dentro. Pede um novo convite a outra pessoa que conheças, ou pede um diretamente.",
   "signIn.notice.accessDenied.title": "O início de sessão foi cancelado",
   "signIn.notice.accessDenied.body":
-    "Parece que cancelaste o ecrã de consentimento da Google. Sem problema — tenta outra vez quando quiseres.",
+    "Parece que cancelaste o ecrã de consentimento da Google. Sem problema, tenta outra vez quando quiseres.",
   "signIn.notice.noEmail.title": "Não conseguimos obter o teu email",
   "signIn.notice.noEmail.body":
     "A Google não partilhou um endereço de email connosco, por isso não conseguimos iniciar a tua sessão. Verifica as definições de partilha da tua conta Google e tenta novamente.",
@@ -54,18 +54,21 @@ export const auth: Catalog = {
     "Verifica primeiro o teu email da Google",
   "signIn.notice.emailUnverified.body":
     "O email da tua conta Google ainda não está verificado. Verifica-o junto da Google e volta a tentar.",
+  "signIn.notice.emailInUse.title": "Esse email já tem uma conta",
+  "signIn.notice.emailInUse.body":
+    "Este endereço já está associado a uma conta QueerPulse, por isso não podemos abrir uma segunda. Inicia sessão com a conta Google com que entraste da primeira vez.",
   "signIn.notice.oauthFailed.title": "Algo correu mal",
   "signIn.notice.oauthFailed.body":
-    "O início de sessão não terminou do lado da Google. Nada foi alterado — tenta outra vez daqui a pouco.",
+    "O início de sessão não terminou do lado da Google. Nada foi alterado, tenta outra vez daqui a pouco.",
   "signIn.notice.offline.title": "Estás offline",
   "signIn.notice.offline.body":
     "Não conseguimos chegar ao QueerPulse sem ligação. Verifica o teu Wi-Fi ou dados móveis e tenta novamente.",
   "signIn.notice.serverError.title": "Algo correu mal do nosso lado",
   "signIn.notice.serverError.body":
-    "O nosso servidor teve um problema{status}. A responsabilidade é nossa, não tua — tenta novamente dentro de momentos.",
+    "O nosso servidor teve um problema{status}. A responsabilidade é nossa. Tenta novamente dentro de momentos.",
   "signIn.notice.unreachable.title": "Não conseguimos chegar ao QueerPulse",
   "signIn.notice.unreachable.body":
-    "O servidor não respondeu. Pode estar a arrancar — espera um momento e tenta novamente.",
+    "O servidor não respondeu. Pode estar a arrancar, espera um momento e tenta novamente.",
 
   // Mostrado por baixo de um aviso de porta fechada do OAuth acima (não nos
   // avisos de sonda de rede). Cobre membros bloqueados de forma permanente da
@@ -125,7 +128,7 @@ export const auth: Catalog = {
   "invite.email.email.placeholder": "tu@exemplo.com",
   "invite.email.howYouKnowThem.label": "Como a conheces",
   "invite.email.howYouKnowThem.helper":
-    "Ajuda-nos a perceber a ligação — nunca é mostrado publicamente.",
+    "Ajuda-nos a perceber a ligação. Nunca é mostrado publicamente.",
   "invite.email.howYouKnowThem.placeholder": "Conhecemo-nos em…",
   "invite.email.note.label": "Nota pessoal",
   "invite.email.note.placeholder": "Adiciona uma nota pessoal (opcional)",
@@ -144,7 +147,9 @@ export const auth: Catalog = {
   "invite.link.generateCta": "Gerar link de convite",
   "invite.link.generating": "A gerar…",
   "invite.link.error.generic":
-    "Algo correu mal ao gerar o teu link — tenta outra vez.",
+    "Algo correu mal ao gerar o teu link. Tenta outra vez.",
+  "invite.link.error.quota":
+    "Já usaste todos os convites da tua quota deste mês. Volta a encher quando o mês reiniciar.",
   "invite.link.formNote": "Este link funciona uma vez, para uma pessoa.",
   "invite.link.defaultVouch":
     "Alguém da comunidade acha que devias estar aqui. QueerPulse: uma rede queer avalizada em Lisboa, construída sobre confiança.",
@@ -153,14 +158,14 @@ export const auth: Catalog = {
 
   "invite.ready.headline": "O teu convite está <em>pronto</em>",
   "invite.ready.sub":
-    "Partilha da forma que fizer mais sentido — é válido para uma utilização.",
+    "Partilha da forma que fizer mais sentido. É válido para uma utilização.",
   "invite.ready.linkCopied": "Link copiado",
   "invite.ready.copyFailed":
-    "Não foi possível copiar — tenta selecionar o link",
+    "Não foi possível copiar. Tenta selecionar o link",
   "invite.ready.copyLinkAriaLabel": "Copiar link de convite",
   "invite.ready.shareThrough": "Partilhar através de",
   "invite.ready.qrHint": "Ou deixa que o leiam",
-  "invite.ready.qrLabel": "Código QR deste link de convite — lê-o para abrir o convite",
+  "invite.ready.qrLabel": "Código QR deste link de convite, lê-o para abrir o convite",
   "invite.ready.oneTimeLink": "Link de utilização única",
   "invite.ready.expiresIn7Days": "Expira em 7 dias",
   "invite.ready.expiresOn": "Expira a {date}",
@@ -178,24 +183,31 @@ export const auth: Catalog = {
   "invite.sentList.status.used": "Aceite",
   "invite.sentList.status.expired": "Expirado",
   "invite.sentList.status.revoked": "Revogado",
-  "invite.sentList.detail.joined": "Entrou — bem-vinde {name}",
+  "invite.sentList.detail.joined": "Entrou. Bem-vinde {name}",
   "invite.sentList.detail.sentExpires": "Enviado {sent} · expira {expires}",
   "invite.sentList.detail.sentExpired": "Enviado {sent} · expirou {expires}",
   "invite.sentList.detail.sent": "Enviado {sent}",
   "invite.sentList.revokeCta": "Revogar",
   "invite.sentList.revoking": "A revogar…",
-  "invite.sentList.revokedToast": "Convite revogado — o link deixou de funcionar.",
+  "invite.sentList.revokedToast": "Convite revogado. O link deixou de funcionar.",
+  "invite.sentList.revokeConfirm.title": "Revogar este convite?",
+  "invite.sentList.revokeConfirm.body":
+    "O código {code} deixa de funcionar assim que o revogares e não há forma de o recuperar. Se já o entregaste a alguém, essa pessoa não vai conseguir entrar com ele.",
+  "invite.sentList.revokeConfirm.confirm": "Revogar",
+  "invite.sentList.revokeConfirm.cancel": "Manter ativo",
+  "invite.sentList.revokeError":
+    "Não conseguimos revogar esse convite agora. Continua ativo, por isso tenta novamente daqui a pouco.",
   "invite.sentList.resendCta": "Enviar de novo",
   "invite.sentList.resending": "A enviar…",
-  "invite.sentList.resentToast": "Convite enviado de novo — o mesmo link, válido por mais uma semana.",
+  "invite.sentList.resentToast": "Convite enviado de novo: o mesmo link, válido por mais uma semana.",
   "invite.sentList.resendError.notYours":
     "Este convite não é teu para voltares a enviar.",
   "invite.sentList.resendError.notFound":
-    "Não encontrámos esse convite — pode já ter sido removido.",
+    "Não encontrámos esse convite. Pode já ter sido removido.",
   "invite.sentList.resendError.notResendable":
-    "Só um convite expirado pode ser enviado de novo — este já foi usado, foi retirado, ou ainda está válido.",
+    "Só um convite expirado pode ser enviado de novo. Este já foi usado, foi retirado, ou ainda está válido.",
   "invite.sentList.resendError.generic":
-    "Não foi possível voltar a enviar agora — tenta outra vez daqui a pouco.",
+    "Não foi possível voltar a enviar agora. Tenta outra vez daqui a pouco.",
 
   // ── Cartão de pré-visualização do convite (espelha as tags Open Graph) ──
   "sharePreview.heroTitle.line1": "Entra numa sala",
@@ -208,7 +220,7 @@ export const auth: Catalog = {
   // ── Autoatestação 18+ (partilhada por onboarding + pedir convite) ──
   "ageAttestation.confirmLabel": "Confirmo que tenho 18 anos ou mais.",
   "ageAttestation.helper":
-    "O QueerPulse é uma comunidade só para adultos — <eligibility>percebe porquê</eligibility>. Não precisas de identificação; confiamos em ti. <under18>Ainda não tens 18?</under18>",
+    "O QueerPulse é uma comunidade só para adultos, <eligibility>percebe porquê</eligibility>. Não precisas de identificação; confiamos em ti. <under18>Ainda não tens 18?</under18>",
   "adultsOnly.eyebrow": "Adesão",
   "adultsOnly.ariaLabel": "Porque o QueerPulse é só para adultos",
   "adultsOnly.title": "Porque o QueerPulse é <em>só para adultos</em>",
@@ -222,14 +234,18 @@ export const auth: Catalog = {
   // ── Bloco humano para menores de 18 ──
   "under18.title": "Vamos estar aqui <em>quando estiveres preparade</em>",
   "under18.body1":
-    "A parte comunitária do QueerPulse é 18+ por agora, por isso ainda não podemos criar-te uma conta — e isto não é um julgamento sobre ti. Mas quase tudo o que fazemos está aberto a toda a gente, sem precisares de iniciar sessão. Pertences à comunidade queer, e há muita dela à tua espera aqui mesmo.",
+    "A parte comunitária do QueerPulse é 18+ por agora, por isso ainda não podemos criar-te uma conta. Isto não diz nada sobre ti. Mas quase tudo o que fazemos está aberto a toda a gente, sem precisares de iniciar sessão. Pertences à comunidade queer, e há muita dela à tua espera aqui mesmo.",
   "under18.body2": "Dá uma vista de olhos à biblioteca e a tudo o resto que já é teu:",
-  "under18.link.library": "A biblioteca — livre para explorares, sem conta",
-  "under18.link.queer101": "Queer 101 — o essencial, sem barreiras",
+  "under18.link.library": "A biblioteca: livre para explorares, sem conta",
+  "under18.link.queer101": "Queer 101: o essencial, sem barreiras",
   "under18.link.comingOut": "Assumir-te, ao teu próprio ritmo",
   "under18.link.resources": "Recursos e apoio da comunidade",
   "under18.link.eligibility": "Porque somos 18+ (os nossos Termos)",
   "under18.backDefault": "Voltar",
+  "under18.link.contact": "Fala connosco se algo aqui parecer errado",
+  "under18.signedIn.body":
+    "Neste momento tens sessão iniciada, por isso vamos fechá-la aqui. Volta quando fizeres 18 anos e alguém te convidará com todo o gosto.",
+  "under18.signOut": "Terminar sessão",
 
   // ── Confirmar email (código de seis dígitos) ──
 
@@ -239,7 +255,7 @@ export const auth: Catalog = {
   "requestInvite.eyebrow": "Pedir um convite",
   "requestInvite.title": "Pede para <em>entrar.</em>",
   "requestInvite.sub":
-    "O QueerPulse cresce através de confiança, não de publicidade. A forma mais certa de entrar é uma pessoa que já cá está avalizar-te — se conheces alguém aqui, pede-lhe. Se não conheces, conta-nos um pouco sobre ti e tratamos do resto.",
+    "O QueerPulse cresce através de confiança. A forma mais certa de entrar é uma pessoa que já cá está avalizar-te, por isso se conheces alguém aqui, pede-lhe. Se não conheces, conta-nos um pouco sobre ti e tratamos do resto.",
   "requestInvite.alreadyMember": "Já fazes parte? Entrar",
   "requestInvite.field.name.label": "O teu nome",
   "requestInvite.field.name.placeholder": "Alex",
@@ -249,13 +265,13 @@ export const auth: Catalog = {
   "requestInvite.field.email.label": "Email",
   "requestInvite.field.email.placeholder": "tu@exemplo.com",
   "requestInvite.field.email.error":
-    "Esse email não parece estar certo — importas-te de verificar?",
+    "Esse email não parece estar certo. Importas-te de verificar?",
   "requestInvite.field.email.errorRequired":
     "Precisamos de um email para te podermos responder.",
   "requestInvite.field.mutual.label":
     "Email de um membro <optional>(opcional)</optional>",
   "requestInvite.field.mutual.helper":
-    "O email de um membro que possa avalizar-te — é como o encontramos, e a forma mais rápida de entrar.",
+    "O email de um membro que possa avalizar-te. É como o encontramos, e a forma mais rápida de entrar.",
   "requestInvite.field.mutual.placeholder": "membro@exemplo.com",
   "requestInvite.field.mutual.error":
     "Introduz um email válido, ou deixa em branco.",
@@ -273,7 +289,7 @@ export const auth: Catalog = {
   "requestInvite.submit": "Enviar o meu pedido",
   "requestInvite.sending": "A enviar o teu pedido…",
   "requestInvite.submitError":
-    "Não foi possível enviar o teu pedido — tenta outra vez",
+    "Não foi possível enviar o teu pedido. Tenta outra vez",
   // 429: o formulário público tem um limite de 3 pedidos/hora por IP. Tentar
   // de imediato não vai resultar, por isso a mensagem define a expectativa
   // com clareza em vez de convidar a essa tentativa.
@@ -282,20 +298,20 @@ export const auth: Catalog = {
   "requestInvite.under18BackLabel": "Voltar ao formulário",
   "requestInvite.sent.title": "Estás na <em>lista.</em>",
   "requestInvite.sent.sub_withName":
-    "Obrigade, {name} — o teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
+    "Obrigade, {name}. O teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
   "requestInvite.sent.sub_noName":
-    "Obrigade — o teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
+    "Obrigade. O teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
   "requestInvite.sent.backHome": "Voltar ao início",
   // O caso 409: já existe um pedido em aberto para este email. Não correu nada
   // mal, por isso isto lê-se como confirmação e nunca como falha.
   "requestInvite.already.title": "Já <em>o temos.</em>",
   "requestInvite.already.sub_withName":
-    "Já nos tinhas pedido, {name} — o teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
+    "Já nos tinhas pedido, {name}. O teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
   "requestInvite.already.sub_noName":
-    "Já nos tinhas pedido — o teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
+    "Já nos tinhas pedido. O teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
   "requestInvite.whatNext.readsIt.title": "Uma pessoa real lê-o",
   "requestInvite.whatNext.readsIt.body":
-    "Sem algoritmo, sem pontuação de lista de espera — uma pessoa da comunidade vê cada pedido.",
+    "Uma pessoa da comunidade vê cada pedido, sem algoritmo e sem pontuação de lista de espera.",
   "requestInvite.whatNext.connection.title": "Procuramos uma ligação",
   "requestInvite.whatNext.connection.body":
     "Se já houver alguém aqui que te possa avalizar, essa é a forma mais certa de entrar. Partilhar o email dessa pessoa ajuda-nos a encontrá-la.",
@@ -349,15 +365,15 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.body":
     "Uma foto e alguns detalhes rápidos ajudam as pessoas a sentirem-se confortáveis a ligar-se a ti. Podes sempre adicionar ou mudar isto depois.",
   "onboarding.stepPhoto.captionPreview":
-    "Ótimo aspeto — toca na foto para a alterar",
+    "Ótimo aspeto. Toca na foto para a alterar",
   "onboarding.stepPhoto.captionGoogle":
-    "Da tua conta Google — toca na foto para a alterar",
+    "Da tua conta Google. Toca na foto para a alterar",
   "onboarding.stepPhoto.captionUpload": "Toca para carregar uma foto",
   "onboarding.stepPhoto.uploadAriaLabel": "Carregar uma foto de perfil",
   "onboarding.stepPhoto.photoAlt": "A tua foto de perfil",
   "onboarding.stepPhoto.placeholder": "a tua foto",
   "onboarding.stepPhoto.continue": "Continuar",
-  "onboarding.stepPhoto.skip": "Saltar por agora — podes adicionar isto depois",
+  "onboarding.stepPhoto.skip": "Saltar por agora, podes adicionar isto depois",
   "onboarding.stepPhoto.back": "Voltar",
   "onboarding.stepPhoto.uploadError":
     "Não conseguimos adicionar essa foto. Tenta novamente.",
@@ -385,7 +401,7 @@ export const auth: Catalog = {
     "Dá às conversas a tua atenção genuína. Passar ao lado tudo bem; envolveres-te a meio gás não.",
   "onboarding.stepNorms.norm.namesPronouns.title": "Respeita nomes e pronomes",
   "onboarding.stepNorms.norm.namesPronouns.desc":
-    "Usa o nome e os pronomes que cada pessoa partilha. Se tiveres dúvidas, pergunta — isso é sempre bem-vindo aqui.",
+    "Usa o nome e os pronomes que cada pessoa partilha. Se tiveres dúvidas, pergunta. Isso é sempre bem-vindo aqui.",
   "onboarding.stepNorms.norm.staysHere.title":
     "O que se partilha aqui, fica aqui",
   "onboarding.stepNorms.norm.staysHere.desc":
@@ -406,12 +422,17 @@ export const auth: Catalog = {
 
   "onboarding.stepIntents.heading": "O que te traz <em>aqui?</em>",
   "onboarding.stepIntents.hint":
-    "Escolhe pelo menos uma — escolhe quantas fizerem sentido.",
+    "Escolhe pelo menos uma, e quantas fizerem sentido.",
   "onboarding.stepIntents.continue": "Continuar",
   "onboarding.stepIntents.skip": "Saltar por agora, podes partilhar isto depois",
   "onboarding.stepIntents.back": "Voltar",
   "onboarding.stepIntents.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
+  "onboarding.stepIntents.visibility.title": "Mostrar isto no meu perfil",
+  "onboarding.stepIntents.visibility.descPublic":
+    "Outros membros vão ver no teu perfil o que procuras.",
+  "onboarding.stepIntents.visibility.descPrivate":
+    "Fica só para ti. Podes ativar quando quiseres nas Definições.",
   "onboarding.intent.community": "Comunidade",
   "onboarding.intent.gatherings": "Convívios e eventos",
   "onboarding.intent.professional": "Ligações profissionais",
@@ -436,16 +457,21 @@ export const auth: Catalog = {
   "onboarding.stepCommunities.requested": "Pedido enviado",
   "onboarding.stepCommunities.continue": "Continuar",
   "onboarding.stepCommunities.skip":
-    "Saltar por agora — explora e junta-te depois",
+    "Saltar por agora, explora e junta-te depois",
   "onboarding.stepCommunities.back": "Voltar",
   "onboarding.stepCommunities.empty":
-    "Sem sugestões de momento — podes explorar e juntar-te a comunidades quando quiseres.",
+    "Sem sugestões de momento. Podes explorar e juntar-te a comunidades quando quiseres.",
 
   "onboarding.stepDone.heading": "Já fazes <em>parte disto</em>",
   "onboarding.stepDone.cta": "Ir para o meu início",
   "onboarding.stepDone.notifications.title": "Fica a par de tudo",
   "onboarding.stepDone.notifications.desc":
     "Recebe notificações de mensagens, convites e lembretes de convívios no teu telemóvel. Podes mudar isto a qualquer momento nas Definições.",
+  "onboarding.stepDone.stampFailed.title":
+    "Não conseguimos guardar que terminaste",
+  "onboarding.stepDone.stampFailed.desc":
+    "Estás dentro à mesma. Sem isto, podemos voltar a levar-te por esta mesma configuração da próxima vez.",
+  "onboarding.stepDone.stampFailed.retry": "Tentar de novo",
   "onboarding.quickStart.browseDirectory.title":
     "Explora o diretório de pessoas",
   "onboarding.quickStart.browseDirectory.desc":
@@ -472,7 +498,7 @@ export const auth: Catalog = {
   "gettingStarted.eyebrow": "Novo por aqui",
   "gettingStarted.title": "Primeiros <em>passos</em>",
   "gettingStarted.lede":
-    "Alguns primeiros passos para encontrares a tua gente e te instalares. Sem pressa — pela ordem que quiseres, quando quiseres.",
+    "Alguns primeiros passos para encontrares a tua gente e te instalares. Sem pressa: pela ordem que quiseres, quando quiseres.",
   "gettingStarted.ledeProgress":
     "Bom progresso até agora: já fizeste {done} de {total}. Faltam mais alguns passos para encontrares a tua gente e te instalares.",
   "gettingStarted.progress": "{done} de {total} feitos",
@@ -497,19 +523,19 @@ export const auth: Catalog = {
   "gettingStarted.steps.profile.cta": "Editar perfil",
   "gettingStarted.steps.community.title": "Entra numa comunidade",
   "gettingStarted.steps.community.desc":
-    "Encontra os círculos que combinam contigo — livros, noite, ativismo — e aparece.",
-  "gettingStarted.steps.community.done": "Estás dentro — bem-vindo ao círculo.",
+    "Encontra os círculos que combinam contigo (livros, noite, ativismo) e aparece.",
+  "gettingStarted.steps.community.done": "Estás dentro. Bem-vinde ao círculo.",
   "gettingStarted.steps.community.cta": "Ver comunidades",
   "gettingStarted.steps.persona.title": "Cria uma persona",
   "gettingStarted.steps.persona.desc":
-    "Dá a um lado teu o seu próprio espaço — o teu nome de DJ, a tua arte, a tua escrita.",
+    "Dá a um lado teu o seu próprio espaço: o teu nome de DJ, a tua arte, a tua escrita.",
   "gettingStarted.steps.persona.done": "A tua persona já tem o seu cantinho.",
   "gettingStarted.steps.persona.cta": "Criar uma persona",
   "gettingStarted.steps.vouch.title": "Avaliza alguém",
   "gettingStarted.steps.vouch.desc":
     "Avaliza alguém em quem confias. É assim que a rede se mantém genuína.",
   "gettingStarted.steps.vouch.done":
-    "Avalizaste — obrigado por manteres tudo genuíno.",
+    "Avalizaste. Obrigade por manteres tudo genuíno.",
   "gettingStarted.steps.vouch.cta": "Ver membros",
   "gettingStarted.steps.connect.title": "Liga-te a alguém",
   "gettingStarted.steps.connect.desc":
@@ -518,13 +544,13 @@ export const auth: Catalog = {
   "gettingStarted.steps.connect.cta": "Ver membros",
   "gettingStarted.steps.post.title": "Publica pela primeira vez",
   "gettingStarted.steps.post.desc":
-    "Diz olá numa comunidade onde entraste. Sem pressão — uma frase chega.",
+    "Diz olá numa comunidade onde entraste. Sem pressão, uma frase chega.",
   "gettingStarted.steps.post.done": "Já disseste o teu primeiro olá.",
   "gettingStarted.steps.post.cta": "Abrir uma comunidade",
   "gettingStarted.allDone.title": "Está tudo",
   "gettingStarted.allDone.em": "pronto",
   "gettingStarted.allDone.body":
-    "Já fizeste o essencial. O resto do QueerPulse é teu para explorares — com calma.",
+    "Já fizeste o essencial. O resto do QueerPulse é teu para explorares, com calma.",
   "gettingStarted.allDone.cta": "Explorar o QueerPulse",
   "gettingStarted.sideQuests.eyebrow": "A seguir",
   "gettingStarted.sideQuests.title": "Missões <em>secundárias</em>",

@@ -151,7 +151,7 @@
   height: 36px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.22);
-  color: #ffc4af;
+  color: var(--accent-soft);
   font-family: var(--serif);
   font-size: 13px;
   font-weight: 500;

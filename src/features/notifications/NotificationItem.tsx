@@ -1,4 +1,3 @@
-import { type KeyboardEvent, type MouseEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -34,16 +33,17 @@ export function NotificationItem({
   const rowHref = notification.sourceHref ?? notification.actor?.href;
   const rowGoesToProfile = !notification.sourceHref && Boolean(rowHref);
 
-  // A click/keypress that landed on the avatar or the inline profile link
-  // (both render as <a>) is that link's own navigation — the actor
-  // profile — and must not be overridden by the row's own navigation.
-  function activateRow(target: EventTarget | null) {
-    onMarkRead(notification.id);
-    const clickedLink = (target as HTMLElement).closest?.("a");
-    if (rowHref && !clickedLink) {
-      void navigate(linkToPath(rowHref));
-    }
-  }
+  // The row's accessible name for the overlay link below.
+  const rowLabel = `${
+    typeof notification.text === "string"
+      ? notification.text
+      : notification.meta
+  }. ${t(
+    rowGoesToProfile
+      ? "notifications:actions.viewProfile"
+      : "notifications:actions.viewThread",
+  )}`;
+
   return (
     <FadeIn
       key={notification.id}
@@ -51,37 +51,18 @@ export function NotificationItem({
       className={[styles.item, isUnread && styles.unread]
         .filter(Boolean)
         .join(" ")}
-      onClick={(event: MouseEvent<HTMLElement>) => activateRow(event.target)}
-      // Only a row with somewhere to go (a source deep-link, or an actor
-      // profile to fall back to) is keyboard-operable — a row with neither
-      // stays a plain (mark-read-on-click) div.
-      role={rowHref ? "button" : undefined}
-      tabIndex={rowHref ? 0 : undefined}
-      aria-label={
-        rowHref
-          ? `${
-              typeof notification.text === "string"
-                ? notification.text
-                : notification.meta
-            }. ${t(
-              rowGoesToProfile
-                ? "notifications:actions.viewProfile"
-                : "notifications:actions.viewThread",
-            )}`
-          : undefined
-      }
-      onKeyDown={
-        rowHref
-          ? (event: KeyboardEvent<HTMLElement>) => {
-              if (event.key !== "Enter" && event.key !== " ") return;
-              // Space's default is page scroll; Enter has no default to guard
-              // here, but preventDefault is harmless on it.
-              event.preventDefault();
-              activateRow(event.target);
-            }
-          : undefined
-      }
+      // The container is plain, non-interactive markup: it holds real links
+      // (avatar, actor name) and action buttons, and ARIA forbids interactive
+      // content inside a role="button". Row-level navigation lives on the
+      // overlay link below instead; clicking or keyboard-activating anything
+      // in the row bubbles here and marks it read.
+      onClick={() => onMarkRead(notification.id)}
     >
+      {rowHref && (
+        <Link to={linkToPath(rowHref)} className={styles.rowLink}>
+          <span className="visuallyHidden">{rowLabel}</span>
+        </Link>
+      )}
       {isUnread && <span className={styles.unreadDot} aria-hidden />}
       {notification.avatar ? (
         notification.actor ? (

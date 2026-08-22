@@ -4,7 +4,7 @@ import type { MemberRefDTO } from "../../../shared/api/refs";
 // ── Backend DTOs ────────────────────────────────────────────────────────────
 // Mirrors `GovernanceOverviewResponseDTO` (`governance/api/governance.api`)
 // plus per-section audit metadata. Backs the admin Policy tab
-// (GET/PATCH /governance/admin/overview).
+// (GET/PATCH /admin/governance/overview).
 
 export interface HealthStatDTO {
   key: string;
@@ -76,10 +76,10 @@ export interface AdminOverviewChangeDTO {
 }
 
 export const getAdminOverview = () =>
-  apiGet<AdminOverviewResponseDTO>("/governance/admin/overview");
+  apiGet<AdminOverviewResponseDTO>("/admin/governance/overview");
 
 export const updateAdminOverview = (body: UpdateAdminOverviewBody) =>
-  apiPatch<AdminOverviewResponseDTO>("/governance/admin/overview", body);
+  apiPatch<AdminOverviewResponseDTO>("/admin/governance/overview", body);
 
 export const getAdminOverviewChanges = () =>
-  apiGet<AdminOverviewChangeDTO[]>("/governance/admin/overview/changes");
+  apiGet<AdminOverviewChangeDTO[]>("/admin/governance/overview/changes");

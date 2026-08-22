@@ -18,6 +18,11 @@ export const topics: Catalog = {
   "header.writePostCta": "Escrever uma publicação",
   "header.followToast": "Agora a seguir #{tag}",
   "header.unfollowToast": "Já não segues #{tag}",
+  "header.followFailedToast":
+    "Não foi possível atualizar. Tenta novamente daqui a pouco.",
+  "header.followCapToast":
+    "Já segues tantos tópicos quantos uma conta pode ter. Deixa de seguir um para abrires espaço para este.",
+  "header.followInvalidToast": "Essa etiqueta não é uma que possamos seguir.",
 
   "feed.filters.all": "Todas",
   "feed.filters.threads": "Threads",
@@ -53,6 +58,11 @@ export const topics: Catalog = {
   "notFound.description":
     "Não encontrámos um tópico para essa etiqueta. Pode ter sido renomeado ou removido. Volta ao fórum para veres onde a conversa continua.",
   "notFound.backCta": "Voltar ao fórum",
+
+  "error.title": "Não foi possível carregar este tópico",
+  "error.description":
+    "Algo correu mal do nosso lado. A culpa não é tua. Tenta novamente daqui a pouco.",
+  "error.retryCta": "Tentar novamente",
 
   "directory.eyebrow": "Tópicos",
   "directory.title": "Cada conversa, pela etiqueta.",

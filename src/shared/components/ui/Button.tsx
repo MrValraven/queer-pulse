@@ -3,7 +3,17 @@ import { Link, type LinkProps } from "react-router-dom";
 import styles from "./Button.module.css";
 
 export type ButtonVariant =
-  "primary" | "ghost" | "ghost-dark" | "jade" | "plum" | "danger";
+  | "primary"
+  | "ghost"
+  | "ghost-dark"
+  | "jade"
+  | "plum"
+  | "danger"
+  /** Square, quiet, icon-only. Reach for it through `<IconButton>`, which
+   *  makes the `aria-label` mandatory. */
+  | "icon"
+  /** `icon` on a plum/dark ground. */
+  | "icon-dark";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const variantClass: Record<ButtonVariant, string | undefined> = {
@@ -13,6 +23,8 @@ const variantClass: Record<ButtonVariant, string | undefined> = {
   jade: styles.jade,
   plum: styles.plum,
   danger: styles.danger,
+  icon: styles.icon,
+  "icon-dark": `${styles.icon} ${styles.iconDark}`,
 };
 
 interface BaseProps {

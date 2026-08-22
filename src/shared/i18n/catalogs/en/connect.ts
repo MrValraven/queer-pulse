@@ -46,6 +46,10 @@ export const connect: Catalog = {
   "moreMenu.toastUnmuted": "Unmuted {name}",
   "moreMenu.toastBlocked": "Blocked {name}",
   "moreMenu.toastUnblocked": "Unblocked {name}",
+  "moreMenu.blockConfirm.title": "Block {name}?",
+  "moreMenu.blockConfirm.body":
+    "Blocking removes your connection, stops {name} messaging you, and hides your updates from them. You can undo it any time from the Blocked tab.",
+  "moreMenu.blockConfirm.action": "Block",
 
   // Card chrome (ConnectionCards)
   "card.profileAria": "{name}'s profile",
@@ -104,7 +108,13 @@ export const connect: Catalog = {
   "panels.blockedEmptyDescription":
     "If someone makes the room feel unsafe, blocking them stops their messages and hides your updates. They'll show up here if you ever need to undo it.",
 
+  // Relative age of a request (connections.adapters), for the two idioms the
+  // shared localized helper can't derive from Intl.RelativeTimeFormat.
+  "ago.justNow": "just now",
+  "ago.unknown": "recently",
+
   // Connect modal shell (ConnectModal)
+  "modal.ariaLabel": "Reach out",
   "modal.close": "Close",
   "modal.loading": "Loading…",
   "modal.error":

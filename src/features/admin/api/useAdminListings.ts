@@ -152,7 +152,7 @@ export function patchListingInCache(
  * (`fetchNextPage`/`hasNextPage` accumulate `items` across pages instead of
  * truncating at page 1). `counts` reflects the `q` search but is NOT scoped
  * by `status` — it's the axis the four status tabs vary across, per
- * `GET /listings/admin/queue`.
+ * `GET /admin/listings/queue`.
  *
  * Demo mode returns the colocated fixture filtered/sorted in-memory (never
  * hits the network) as a single full page — this is a Moderator/Admin-only

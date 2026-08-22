@@ -6,6 +6,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import type { Post } from "./community.model";
 import { photoOf } from "./communityPeople";
+import { useCommunityTime } from "./communityTime";
 import styles from "./CommunitiesHomePage.module.css";
 
 export interface HubPost {
@@ -19,6 +20,7 @@ export interface HubPost {
 export function HubPulseCard({ item }: { item: HubPost }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const communityTime = useCommunityTime();
   const { post, communityName, communitySlug } = item;
   const reactionTotal = post.reactions.reduce((sum, r) => sum + r.count, 0);
   return (
@@ -46,9 +48,7 @@ export function HubPulseCard({ item }: { item: HubPost }) {
               <MemberStaffBadge slug={post.author.slug} />
             </span>
           </div>
-          <div className={styles.pulseTime}>
-            {t("communities:common.timeAgo", { time: post.time })}
-          </div>
+          <div className={styles.pulseTime}>{communityTime.ago(post)}</div>
         </div>
       </div>
       <p className={styles.pulseBody}>{post.body}</p>

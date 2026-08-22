@@ -15,9 +15,92 @@ import { StepPhotoPreview } from "./StepPhotoPreview";
 import { SkipLink, type StepProps } from "./OnboardingStepChrome";
 import styles from "./OnboardingPage.module.css";
 
+/** The fields the member actually changed on this step, as a PATCH body.
+ *  An untouched field is left out entirely, so a replay of onboarding can never
+ *  clobber a value set elsewhere (e.g. in Settings) with a blank one. */
+function buildProfileUpdates(
+  entered: {
+    firstName: string;
+    lastName: string;
+    pronouns: string;
+    bio: string;
+  },
+  initial: { firstName: string; lastName: string; pronouns: string },
+  pendingKey: string | null,
+): UpdateProfileDTO {
+  const trimmedFirstName = entered.firstName.trim();
+  const trimmedLastName = entered.lastName.trim();
+  const trimmedPronouns = entered.pronouns.trim();
+  const trimmedBio = entered.bio.trim();
+  const updates: UpdateProfileDTO = {};
+  if (pendingKey) updates.avatarUrl = pendingKey;
+  if (trimmedFirstName !== initial.firstName) {
+    updates.firstName = trimmedFirstName;
+  }
+  if (trimmedLastName !== initial.lastName) updates.lastName = trimmedLastName;
+  if (trimmedPronouns && trimmedPronouns !== initial.pronouns) {
+    updates.pronouns = trimmedPronouns;
+  }
+  if (trimmedBio) updates.bio = trimmedBio;
+  return updates;
+}
+
+/** The tappable avatar frame: the current (or freshly picked) photo, the hidden
+ *  file input that sits over it, and the caption/error line underneath. */
+function PhotoPicker({
+  photo,
+  initials,
+  caption,
+  error,
+  isDisabled,
+  onPick,
+}: {
+  photo?: string;
+  initials: string;
+  caption: string;
+  error: string | null;
+  isDisabled: boolean;
+  onPick: (event: ChangeEvent<HTMLInputElement>) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.photoWrap}>
+      <label className={styles.photoFrame}>
+        <input
+          type="file"
+          accept="image/*"
+          className={styles.photoInput}
+          onChange={onPick}
+          disabled={isDisabled}
+          aria-label={t("auth:onboarding.stepPhoto.uploadAriaLabel")}
+        />
+        <ImageSlot
+          shape="circle"
+          tint="coral"
+          width={132}
+          height={132}
+          placeholder={t("auth:onboarding.stepPhoto.placeholder")}
+          src={photo}
+          initials={initials}
+          alt={t("auth:onboarding.stepPhoto.photoAlt")}
+        />
+        <span className={styles.photoEdit} aria-hidden>
+          <FiCamera />
+        </span>
+      </label>
+      <p className={styles.photoCaption}>{caption}</p>
+      {error && (
+        <p className={styles.photoCaption} role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, refresh } = useAuth();
   const uploadAvatar = useUploadImage("avatar");
   const updateProfile = useUpdateProfile();
 
@@ -45,13 +128,16 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   // Pronouns and a short bio: the two identity fields signup never asks for
   // (only what Google OAuth supplies), added to this step rather than an extra
   // wizard step. Both are optional and, like the photo, saved only when the
-  // member actually typed something — an untouched field writes nothing, so a
-  // replay of onboarding can never clobber a value set elsewhere (e.g. in
-  // Settings) with a blank one. Pronouns pre-fill from the session (already on
-  // `useAuth().user`) so a returning member sees what's already saved.
+  // member actually typed something (see `buildProfileUpdates`). Pronouns
+  // pre-fill from the session (already on `useAuth().user`) so a returning
+  // member sees what's already saved.
   const initialPronouns = user?.profile.pronouns ?? "";
   const [pronouns, setPronouns] = useState(initialPronouns);
   const [bio, setBio] = useState("");
+  // True while the saved name/photo is being pulled back onto the cached
+  // session (see `handleContinue`) — folded into the same busy state as the
+  // save so Continue can't be double-fired mid-refresh.
+  const [isRefreshingSession, setIsRefreshingSession] = useState(false);
 
   /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
   async function uploadAndApply(file: File, crop?: CropRect) {
@@ -96,18 +182,15 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
   }
 
   async function handleContinue() {
-    const trimmedFirstName = firstName.trim();
-    const trimmedLastName = lastName.trim();
-    const trimmedPronouns = pronouns.trim();
-    const trimmedBio = bio.trim();
-    const updates: UpdateProfileDTO = {};
-    if (pendingKey) updates.avatarUrl = pendingKey;
-    if (trimmedFirstName !== initialFirstName) updates.firstName = trimmedFirstName;
-    if (trimmedLastName !== initialLastName) updates.lastName = trimmedLastName;
-    if (trimmedPronouns && trimmedPronouns !== initialPronouns) {
-      updates.pronouns = trimmedPronouns;
-    }
-    if (trimmedBio) updates.bio = trimmedBio;
+    const updates = buildProfileUpdates(
+      { firstName, lastName, pronouns, bio },
+      {
+        firstName: initialFirstName,
+        lastName: initialLastName,
+        pronouns: initialPronouns,
+      },
+      pendingKey,
+    );
 
     if (Object.keys(updates).length === 0) {
       onNext();
@@ -116,8 +199,21 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
     setError(null);
     try {
       await updateProfile.mutateAsync(updates);
+      // Pull the saved values back onto the cached session. `useUpdateProfile`
+      // only invalidates the profile/members queries; `useAuth().user` comes
+      // from /auth/me and would otherwise keep the Google-supplied name and
+      // photo for the rest of this session — which is how a member who just
+      // corrected their name still gets deadnamed in share messages, vouch and
+      // endorse modals, the community-start opener and the wizard's Back path.
+      // `refresh()` is a no-op in demo mode and never throws, so a failure at
+      // worst leaves the old cached name until the next load; it must not block
+      // the member from continuing.
+      setIsRefreshingSession(true);
+      await refresh();
+      setIsRefreshingSession(false);
       onNext();
     } catch {
+      setIsRefreshingSession(false);
       setError(t("auth:onboarding.stepPhoto.saveError"));
     }
   }
@@ -128,7 +224,7 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
     : googlePhoto
       ? t("auth:onboarding.stepPhoto.captionGoogle")
       : t("auth:onboarding.stepPhoto.captionUpload");
-  const saving = updateProfile.isPending;
+  const saving = updateProfile.isPending || isRefreshingSession;
 
   return (
     <>
@@ -140,37 +236,14 @@ export function StepPhoto({ onNext, onBack, stepLabel }: StepProps) {
         />
       </div>
       <div className={styles.p}>{t("auth:onboarding.stepPhoto.body")}</div>
-      <div className={styles.photoWrap}>
-        <label className={styles.photoFrame}>
-          <input
-            type="file"
-            accept="image/*"
-            className={styles.photoInput}
-            onChange={(event) => void handleFile(event)}
-            disabled={uploading || saving}
-            aria-label={t("auth:onboarding.stepPhoto.uploadAriaLabel")}
-          />
-          <ImageSlot
-            shape="circle"
-            tint="coral"
-            width={132}
-            height={132}
-            placeholder={t("auth:onboarding.stepPhoto.placeholder")}
-            src={shownPhoto}
-            initials={initials}
-            alt={t("auth:onboarding.stepPhoto.photoAlt")}
-          />
-          <span className={styles.photoEdit} aria-hidden>
-            <FiCamera />
-          </span>
-        </label>
-        <p className={styles.photoCaption}>{caption}</p>
-        {error && (
-          <p className={styles.photoCaption} role="alert">
-            {error}
-          </p>
-        )}
-      </div>
+      <PhotoPicker
+        photo={shownPhoto}
+        initials={initials}
+        caption={caption}
+        error={error}
+        isDisabled={uploading || saving}
+        onPick={(event) => void handleFile(event)}
+      />
       <IdentityFields
         firstName={firstName}
         onFirstNameChange={setFirstName}

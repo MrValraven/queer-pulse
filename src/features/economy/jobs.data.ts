@@ -37,6 +37,14 @@ export interface Job {
   description: string;
   tags: string[];
   detail: JobDetail;
+  /**
+   * True when the signed-in member posted this listing, which is what unlocks
+   * the applications console (`GET /jobs/:slug/applications`, poster only).
+   * Live mode reads it from `JobDetailDTO.isPoster`; the demo board resolves it
+   * from the jobs the demo member published in this session, so the fixtures
+   * below leave it unset.
+   */
+  isPoster?: boolean;
 }
 
 export const JOBS: Job[] = [

@@ -4,6 +4,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
+import { useSocial } from "../../app/providers/useSocial";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { type Thread } from "./forum.data";
 import { useForumCounts, usePinnedThreads, useThreads } from "./api/useForum";
@@ -97,11 +98,27 @@ export function useForumPageState() {
   const countsResult = useForumCounts(q || undefined, tag);
   const counts: ForumThreadCounts = countsResult.counts ?? { all: 0 };
 
+  // Safety filter, mirroring `useFeed`: threads by a member the viewer has
+  // muted or blocked never render in the list. The live endpoint already
+  // block-filters server-side; this covers the window before a fresh
+  // mute/block propagates, and is the whole mechanism in demo mode.
+  const { blocked, muted } = useSocial();
+  const hiddenAuthorHandles = useMemo(
+    () => new Set([...blocked, ...muted]),
+    [blocked, muted],
+  );
+
   // The sticky pinned bucket above the list. It only takes a category filter
   // (see `usePinnedThreads`), so hide it during a tag/text search — a pinned
   // thread the search doesn't match would otherwise look like a stray result.
   const pinnedThreadsQuery = usePinnedThreads(cat);
-  const pinnedThreads = tag || q ? [] : pinnedThreadsQuery.pinned;
+  const pinnedThreads =
+    tag || q
+      ? []
+      : pinnedThreadsQuery.pinned.filter(
+          (thread) =>
+            !thread.author.slug || !hiddenAuthorHandles.has(thread.author.slug),
+        );
 
   const votePost = useVotePost();
   const moderation = useForumRowModeration();
@@ -110,7 +127,6 @@ export function useForumPageState() {
   const [editingTitleThreadId, setEditingTitleThreadId] = useState<
     number | null
   >(null);
-  const editThreadTitle = useEditThreadTitle(editingTitleThreadId ?? 0);
   const [promptDismissed, setPromptDismissed] = useState(
     () =>
       typeof localStorage !== "undefined" &&
@@ -147,6 +163,7 @@ export function useForumPageState() {
     composing,
     composeSeed,
     composeTags,
+    publishStatus,
     openCompose,
     closeCompose,
     publishThread,
@@ -206,11 +223,13 @@ export function useForumPageState() {
   // OR delete / restore / view-history (moderator who isn't the author).
   // Narrowing this to `canEdit` alone hid the menu for moderators, so
   // delete/restore/history never rendered.
-  // Demo: the persona owns threads it authored ("You" / its slug); currentUser
-  // is only touched inside this demoMode branch.
+  // Demo: the persona owns threads it authored (the optimistic card's `isMine`
+  // flag, or its slug); currentUser is only touched inside this demoMode
+  // branch. `isMine` replaced a `name === "You"` comparison, which stopped
+  // matching the moment the card's byline was translated.
   const canEditThread = (thread: Thread): boolean =>
     demoMode
-      ? thread.author.slug === currentUser.slug || thread.author.name === "You"
+      ? thread.author.slug === currentUser.slug || !!thread.author.isMine
       : !!thread.canEdit ||
         !!thread.canDelete ||
         !!thread.canRestore ||
@@ -221,26 +240,39 @@ export function useForumPageState() {
     editingTitleThreadId != null
       ? allThreads.find((thread) => thread.id === editingTitleThreadId)
       : undefined;
+  // The mutation takes the thread's REAL backend slug, read off the card being
+  // edited. It used to take the numeric view-model id and look the slug up in a
+  // render-populated registry, which silently no-opped (while still toasting
+  // "Saved") whenever the lookup missed.
+  const editThreadTitle = useEditThreadTitle(editingThread?.slug);
 
   function closeEditTitle() {
     setEditingTitleThreadId(null);
   }
 
   function saveThreadTitle(title: string) {
+    const editedThreadId = editingTitleThreadId;
     if (demoMode) {
       setExtraThreads((prev) =>
         prev.map((thread) =>
-          thread.id === editingTitleThreadId ? { ...thread, title } : thread,
+          thread.id === editedThreadId ? { ...thread, title } : thread,
         ),
       );
-    } else {
-      editThreadTitle.mutate(
-        { title },
-        { onError: () => showToast(t("forum:toast.error"), "error") },
-      );
+      setEditingTitleThreadId(null);
+      showToast(t("forum:toast.editSaved"), "success");
+      return;
     }
+    // Live: the title is only "saved" once the server says so. The modal closes
+    // straight away (the request is short and the list refetches on success),
+    // but no success toast fires until then.
     setEditingTitleThreadId(null);
-    showToast(t("forum:toast.editSaved"), "success");
+    editThreadTitle.mutate(
+      { title },
+      {
+        onSuccess: () => showToast(t("forum:toast.editSaved"), "success"),
+        onError: () => showToast(t("forum:toast.error"), "error"),
+      },
+    );
   }
 
   const filtered = cat !== "all" || !!tag || !!q;
@@ -252,10 +284,14 @@ export function useForumPageState() {
   }
 
   const threads = useMemo(() => {
+    const visible = allThreads.filter(
+      (thread) =>
+        !thread.author.slug || !hiddenAuthorHandles.has(thread.author.slug),
+    );
     // Live: the server already applied category + tag + q + sort; render as-is
     // (optimistic posts first). Demo: no server, so filter + sort the mock here.
-    if (!demoMode) return allThreads;
-    let list = allThreads.filter(
+    if (!demoMode) return visible;
+    let list = visible.filter(
       (thread) => cat === "all" || thread.category === cat,
     );
     if (tag) list = list.filter((thread) => thread.tags.includes(tag));
@@ -274,7 +310,7 @@ export function useForumPageState() {
       (a, b) =>
         (b.pinned ? 1000 : 0) + b.upvotes - ((a.pinned ? 1000 : 0) + a.upvotes),
     );
-  }, [demoMode, allThreads, cat, tag, q, sort]);
+  }, [demoMode, allThreads, cat, tag, q, sort, hiddenAuthorHandles]);
 
   // Vote on the list row: acts on the thread's OPENING post. Live threads carry
   // a real `opPostId`; demo threads carry a SYNTHETIC one (`demo-op-<id>`, see
@@ -307,6 +343,7 @@ export function useForumPageState() {
     composing,
     composeSeed,
     composeTags,
+    publishStatus,
     openCompose,
     closeCompose,
     showFirstPostPrompt,

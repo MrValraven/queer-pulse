@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { SkeletonLine } from "../../../shared/components/ui";
+import { ConfirmDialog, SkeletonLine } from "../../../shared/components/ui";
 import { useProfileData } from "../../../app/providers/useProfile";
 import { useReaderComments } from "./useReaderComments";
 import { useReaderCommentMutations } from "./useReaderCommentMutations";
@@ -24,6 +24,24 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
   const [reportTarget, setReportTarget] = useState<ReaderCommentDTO | null>(
     null,
   );
+  // FE-CNT-11: deleting used to fire straight from the click, with no confirm
+  // and no undo. The shared ConfirmDialog is the same pattern the deck editor
+  // already routes its destructive actions through.
+  const [deleteTarget, setDeleteTarget] = useState<ReaderCommentDTO | null>(
+    null,
+  );
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    try {
+      await remove.mutateAsync(deleteTarget.id);
+    } catch {
+      // The global mutation toast reports it; keep the dialog's own state
+      // tidy either way.
+    } finally {
+      setDeleteTarget(null);
+    }
+  }
 
   return (
     <section
@@ -39,7 +57,7 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
           <ArticleCommentComposer
             placeholderKey="magazine:comments.composer.placeholder"
             submitLabelKey="magazine:comments.composer.post"
-            onSubmit={(body) => create.mutate({ body })}
+            onSubmit={(body) => create.mutateAsync({ body })}
           />
         </div>
 
@@ -56,15 +74,28 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
               <ArticleCommentItem
                 key={comment.id}
                 comment={comment}
-                onReply={(parentId, body) => create.mutate({ body, parentId })}
-                onEdit={(id, body) => edit.mutate({ id, body })}
-                onDelete={(id) => remove.mutate(id)}
+                onReply={(parentId, body) =>
+                  create.mutateAsync({ body, parentId })
+                }
+                onEdit={(id, body) => edit.mutateAsync({ id, body })}
+                onDelete={setDeleteTarget}
                 onReport={setReportTarget}
               />
             ))}
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => void confirmDelete()}
+        tone="destructive"
+        loading={remove.isPending}
+        title={t("magazine:comments.deleteConfirm.title")}
+        description={t("magazine:comments.deleteConfirm.body")}
+        confirmLabel={t("magazine:comments.deleteConfirm.cta")}
+      />
 
       {reportTarget && (
         <ReportCommentModal

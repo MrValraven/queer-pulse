@@ -91,24 +91,16 @@
   font-style: italic;
   margin-top: 2px;
 }
+/* The per-comment actions are shared <Button variant="ghost" size="sm">
+   pills now (FE-CNT-20), so the row only owns their spacing — the focus ring,
+   hover and disabled treatment all come from the primitive. The negative
+   inline offset pulls the first pill's own padding back to the text column. */
 .commentActions {
   display: flex;
-  gap: 14px;
-  margin-top: 6px;
-}
-.actionLink {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-60);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-@media (hover: hover) {
-  .actionLink:hover {
-    color: var(--text-strong);
-  }
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+  margin-inline-start: -16px;
 }
 .repliesList {
   display: flex;

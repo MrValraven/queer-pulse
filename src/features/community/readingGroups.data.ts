@@ -141,11 +141,11 @@ export const GROUPS: Group[] = [
 ];
 
 export const GENRE_BG: Record<Genre, string> = {
-  fiction: "rgba(45,27,61,.07)",
-  nonfiction: "rgba(74,140,111,.1)",
-  theory: "rgba(232,119,90,.09)",
-  poetry: "rgba(74,140,111,.08)",
-  memoir: "rgba(45,27,61,.06)",
+  fiction: "rgba(var(--plum-rgb), .07)",
+  nonfiction: "rgba(var(--jade-rgb), .1)",
+  theory: "rgba(var(--accent-rgb), .09)",
+  poetry: "rgba(var(--jade-rgb), .08)",
+  memoir: "rgba(var(--plum-rgb), .06)",
 };
 export const GENRE_FG: Record<Genre, string> = {
   fiction: "var(--plum)",

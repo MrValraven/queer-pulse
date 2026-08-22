@@ -19,7 +19,10 @@ import {
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminDrawer, AdminPageHeader } from "./ui";
 import { AdminMediaCard } from "./AdminMediaCard";
-import { AdminMediaDeleteConfirm } from "./AdminMediaDeleteConfirm";
+import {
+  AdminMediaDeleteConfirm,
+  type AdminMediaDeleteRefusal,
+} from "./AdminMediaDeleteConfirm";
 import { AdminMediaReferenceList } from "./AdminMediaReferences";
 import { AdminMediaUploaderPicker } from "./AdminMediaUploaderPicker";
 import { Translation } from "../../shared/i18n/Translation";
@@ -27,9 +30,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { absoluteFileUrl } from "./adminMedia.format";
+import { ApiError } from "../../shared/api/client";
+import { describeError } from "../../shared/api/errorMessage";
 import {
   ADMIN_MEDIA_KINDS,
   getAdminMediaHead,
+  type AdminMediaDeleteConflict,
   type AdminMediaHead,
   type AdminMediaKind,
   type AdminMediaObject,
@@ -233,6 +239,8 @@ function AdminMediaDrawer({
   const [head, setHead] = useState<AdminMediaHead | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [deleteRefusal, setDeleteRefusal] =
+    useState<AdminMediaDeleteRefusal | null>(null);
   const deleteMedia = useDeleteAdminMedia();
   const uploader = object.uploader;
 
@@ -245,14 +253,46 @@ function AdminMediaDrawer({
     }
   }
 
-  function confirmDelete() {
-    deleteMedia.mutate(object.key, {
-      onSuccess: () => {
-        showToast(t("admin:media.delete.success"));
-        setIsConfirmingDelete(false);
-        onClose();
+  /**
+   * The route refuses by default: `409` when the key is still referenced (the
+   * body lists where) and `503` when the check could not run. Neither is a
+   * generic failure, so instead of a toast the modal switches to the server's
+   * own answer and an explicit "delete anyway" second click.
+   */
+  function confirmDelete(isForced: boolean) {
+    deleteMedia.mutate(
+      { key: object.key, isForced },
+      {
+        onSuccess: () => {
+          showToast(t("admin:media.delete.success"));
+          setDeleteRefusal(null);
+          setIsConfirmingDelete(false);
+          onClose();
+        },
+        onError: (error) => {
+          if (error instanceof ApiError && error.status === 409) {
+            const conflict = error.data as AdminMediaDeleteConflict | null;
+            setDeleteRefusal({
+              references: conflict?.references ?? [],
+              isUnverified: false,
+            });
+            return;
+          }
+          if (error instanceof ApiError && error.status === 503) {
+            setDeleteRefusal({ references: [], isUnverified: true });
+            return;
+          }
+          showToast(
+            describeError(
+              t("admin:errors.deleteMediaObject"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          );
+        },
       },
-    });
+    );
   }
 
   const declaredContentType = object.contentType ?? t("admin:media.unknown");
@@ -278,7 +318,7 @@ function AdminMediaDrawer({
             className={styles.actionLink}
             href={absoluteFileUrl(object.fileUrl)}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             <FiExternalLink aria-hidden /> {t("admin:media.openFile")}
           </a>
@@ -366,7 +406,11 @@ function AdminMediaDrawer({
         references={object.references}
         degraded={degraded}
         isPending={deleteMedia.isPending}
-        onCancel={() => setIsConfirmingDelete(false)}
+        refusal={deleteRefusal}
+        onCancel={() => {
+          setDeleteRefusal(null);
+          setIsConfirmingDelete(false);
+        }}
         onConfirm={confirmDelete}
       />
     )}

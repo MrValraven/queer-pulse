@@ -18,6 +18,8 @@ export const feed: Catalog = {
   "tab.gatherings": "Gatherings",
   "tab.people": "People",
   "tab.posts": "Posts",
+  // Accessible name for the tablist itself (shared <Tabs label>).
+  "tab.listAria": "Filter your feed",
 
   // ── Per-tab empty/error copy (FEED_TAB_COPY) — kept distinct per tab ────
   "tab.all.empty.title": "Your feed is quiet",
@@ -157,6 +159,9 @@ export const feed: Catalog = {
     "Tell us what's wrong. Reports are confidential and reviewed by our safety team.",
   "moderation.reportDialog.detailPlaceholder": "Add any details (optional)",
   "moderation.reportDialog.submitCta": "Submit report",
+  "moderation.reportDialog.retryCta": "Try again",
+  "moderation.reportDialog.failed":
+    "We couldn't send that report. Nothing has been submitted yet. Check your connection and try again.",
   "moderation.sending": "Sending…",
 
   // ── FeedSidebar ─────────────────────────────────────────────────────────

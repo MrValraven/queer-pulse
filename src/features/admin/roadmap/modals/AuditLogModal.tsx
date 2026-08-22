@@ -17,11 +17,11 @@ import { buildAuditCsv, downloadTextFile } from "./auditCsv";
 import styles from "./roadmapModals.module.css";
 
 /**
- * Read-only trail of every admin roadmap change — "on the record" is the
+ * Read-only trail of every admin roadmap change. "On the record" is the
  * whole feature. Export mirrors the two data sources the rest of this file
  * already branches on: live downloads the server's real CSV
  * (`getRoadmapAuditCsv`), demo builds the same shape client-side from
- * `audit` (there's no backend to ask). "Reset board" only exists in demo —
+ * `audit` (there's no backend to ask). "Reset board" only exists in demo:
  * it's the escape hatch back to the seeded fixture after a demo session's
  * accumulated edits, not a real destructive action against live data.
  */
@@ -84,7 +84,9 @@ export function AuditLogModal() {
       </div>
 
       {audit.length === 0 ? (
-        <p className={styles.emptyOption}>—</p>
+        <p className={styles.emptyOption}>
+          {t("admin:roadmap.modals.auditLog.empty")}
+        </p>
       ) : (
         <ul className={styles.auditList}>
           {audit.map((entry) => (
@@ -108,7 +110,7 @@ export function AuditLogModal() {
       {demoMode && (
         <div className={styles.dangerZone}>
           {/* "Reset board" is demo-only tooling, not a documented product
-              surface — gated behind a confirm step, same as the other
+              surface. It is gated behind a confirm step, same as the other
               irreversible action in this feature (BulkBar's bulk delete),
               rather than firing on the first click. */}
           <p className={styles.dangerHint}>

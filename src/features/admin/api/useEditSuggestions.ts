@@ -17,7 +17,7 @@ export const EDIT_SUGGESTIONS_KEY = "admin-edit-suggestions";
  * lifecycle status. Demo mode filters the colocated fixture locally and
  * never hits the network — this is a Moderator/Admin-only endpoint that 403s
  * for anyone else. Live mode forwards `status` as the `?status=` query param
- * `GET /listings/admin/edit-suggestions` accepts.
+ * `GET /admin/listings/edit-suggestions` accepts.
  */
 export function useEditSuggestions(status?: EditSuggestionStatus) {
   const { demoMode } = useDemoMode();

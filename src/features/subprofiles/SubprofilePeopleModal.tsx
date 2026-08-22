@@ -11,12 +11,11 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import {
-  getEndorsers,
   getFollowers,
-  type EndorserDTO,
   type FollowerDTO,
 } from "./api/subprofiles.api";
 import { useEndorsement } from "./api/useEndorsement";
+import { useEndorsers } from "./api/useEndorsers";
 import { demoFollowersFor } from "./subprofilePeopleModal.data";
 import styles from "./SubprofilePeopleModal.module.css";
 
@@ -127,17 +126,10 @@ export function SubprofilePeopleModal({
   const viewerSlug = user?.profile.slug ?? null;
   const isOwner = persona.viewerIsMember;
 
-  const { data: endorsersResult, isLoading: endorsersLoading } = useQuery({
-    queryKey: ["subprofile", "endorsers", persona.id],
-    queryFn: async ({
-      signal,
-    }): Promise<{ count: number; endorsers: EndorserDTO[] }> => {
-      if (!demoMode) return getEndorsers(persona.id, signal);
-      const { mockEndorsersById } = await import("./data/subprofiles.data");
-      return mockEndorsersById(persona.id) ?? { count: 0, endorsers: [] };
-    },
-    enabled: mode === "endorsements" && Boolean(persona.id),
-  });
+  const { data: endorsersResult, isLoading: endorsersLoading } = useEndorsers(
+    persona.id,
+    mode === "endorsements",
+  );
   const endorsers = endorsersResult?.endorsers ?? [];
 
   // Followers are owner-only. LIVE hits the 403-guarded endpoint, so we never

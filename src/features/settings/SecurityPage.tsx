@@ -5,15 +5,11 @@ import { PageShell } from "../../shared/components/layout";
 import { useClipboard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import {
+  SECURITY_HALL_OF_FAME,
+  SECURITY_PGP_KEY,
+} from "./security.data";
 import styles from "./SecurityPage.module.css";
-
-const PGP_KEY = `-----BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQINBGX4tQ8BEAC7k2rZvWJhxS3mPn...
-[Key fingerprint: A7F2 B4E1 93DC 5201 8BF3
-                  4A9E 2D70 C1F8 E6B4 3A29]
-
------END PGP PUBLIC KEY BLOCK-----`;
 
 // Copy for the scope lists and process timeline lives in the `settings:security.*`
 // catalog; these hold the i18n keys in render order so the words stay translated.
@@ -65,22 +61,16 @@ const PROCESS_STEPS = [
   },
 ];
 
-// Hall-of-Fame credits are attribution records (researcher name + the vuln type
-// and date they reported), left in English like other stored values — see the
-// note in the `settings` catalog.
-const HALL = [
-  { init: "AK", name: "Alex K.", note: "XSS · Mar 2025" },
-  { init: "SM", name: "Sara M.", note: "IDOR · Jan 2025" },
-  { init: "TB", name: "Tiago B.", note: "Auth bypass · Oct 2024" },
-];
-
 export function SecurityPage() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const { copy } = useClipboard();
+  const hasPgpKey = Boolean(SECURITY_PGP_KEY?.trim());
+  const hasCredits = SECURITY_HALL_OF_FAME.length > 0;
 
-  async function copyPGP() {
-    const didCopy = await copy(PGP_KEY);
+  async function copyPgpKey() {
+    if (!SECURITY_PGP_KEY) return;
+    const didCopy = await copy(SECURITY_PGP_KEY);
     showToast(
       didCopy
         ? t("settings:security.pgp.copied")
@@ -194,6 +184,8 @@ export function SecurityPage() {
                 />
               </div>
 
+              {/* Credits appear only once a real disclosure has been made. An
+                  invented Hall of Fame asserts vulnerabilities nobody reported. */}
               <div className={styles.proseSection}>
                 <div className={styles.proseEye}>
                   {t("settings:security.ack.eyebrow")}
@@ -204,16 +196,35 @@ export function SecurityPage() {
                     components={{ em: <em /> }}
                   />
                 </h2>
-                <p className={styles.prose}>{t("settings:security.ack.body")}</p>
-                <div className={styles.hallGrid}>
-                  {HALL.map((researcher) => (
-                    <div key={researcher.init} className={styles.hallCard}>
-                      <div className={styles.hallInit}>{researcher.init}</div>
-                      <div className={styles.hallName}>{researcher.name}</div>
-                      <div className={styles.hallNote}>{researcher.note}</div>
+                {hasCredits ? (
+                  <>
+                    <p className={styles.prose}>
+                      {t("settings:security.ack.body")}
+                    </p>
+                    <div className={styles.hallGrid}>
+                      {SECURITY_HALL_OF_FAME.map((researcher) => (
+                        <div
+                          key={researcher.initials}
+                          className={styles.hallCard}
+                        >
+                          <div className={styles.hallInit}>
+                            {researcher.initials}
+                          </div>
+                          <div className={styles.hallName}>
+                            {researcher.name}
+                          </div>
+                          <div className={styles.hallNote}>
+                            {researcher.note}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </>
+                ) : (
+                  <p className={styles.prose}>
+                    {t("settings:security.ack.empty")}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -232,18 +243,28 @@ export function SecurityPage() {
                   {t("settings:security.report.cta")}
                 </Button>
               </div>
+              {/* No key published yet: say so rather than hand a researcher a
+                  truncated block they cannot import. */}
               <div className={styles.pgpCard}>
                 <div className={styles.pgpLabel}>
                   {t("settings:security.pgp.label")}
                 </div>
-                <pre className={styles.pgpBlock}>{PGP_KEY}</pre>
-                <Button
-                  variant="ghost"
-                  onClick={() => void copyPGP()}
-                  style={{ width: "100%", justifyContent: "center" }}
-                >
-                  {t("settings:security.pgp.copyCta")}
-                </Button>
+                {hasPgpKey ? (
+                  <>
+                    <pre className={styles.pgpBlock}>{SECURITY_PGP_KEY}</pre>
+                    <Button
+                      variant="ghost"
+                      onClick={() => void copyPgpKey()}
+                      style={{ width: "100%", justifyContent: "center" }}
+                    >
+                      {t("settings:security.pgp.copyCta")}
+                    </Button>
+                  </>
+                ) : (
+                  <p className={styles.pgpUnavailable}>
+                    {t("settings:security.pgp.unavailable")}
+                  </p>
+                )}
               </div>
             </aside>
           </div>

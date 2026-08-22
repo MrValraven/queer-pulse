@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { FiArrowLeft, FiMonitor } from "react-icons/fi";
+import { FiArrowLeft, FiMonitor, FiSmartphone } from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -23,24 +23,6 @@ import { useSessions } from "./api/useSessions";
 import { routes } from "../../app/routeMap";
 import { type Session } from "./sessions.data";
 import styles from "./SessionsPage.module.css";
-
-function DesktopIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <rect x="3" y="4" width="18" height="14" rx="2" />
-      <line x1="8" y1="21" x2="16" y2="21" />
-      <line x1="12" y1="17" x2="12" y2="21" />
-    </svg>
-  );
-}
-function MobileIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <rect x="6" y="2" width="12" height="20" rx="3" />
-      <line x1="11" y1="18" x2="13" y2="18" />
-    </svg>
-  );
-}
 
 function SessionCard({
   session,
@@ -70,7 +52,13 @@ function SessionCard({
   return (
     <div className={cardCls}>
       <div className={icCls}>
-        {session.deviceType === "mobile" ? <MobileIcon /> : <DesktopIcon />}
+        {/* Same icon set as PushDevicesPage, rather than a second hand-drawn
+            pair of SVGs for the same two device types. */}
+        {session.deviceType === "mobile" ? (
+          <FiSmartphone aria-hidden />
+        ) : (
+          <FiMonitor aria-hidden />
+        )}
       </div>
       <div className={styles.details}>
         <div className={styles.metaRow}>

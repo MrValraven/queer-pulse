@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
 import { applyConversationPrefs } from "../conversationPrefs";
 import { conversations as mockConversations, type Conversation } from "../data";
@@ -15,6 +16,7 @@ import { conversationToView } from "./messages.adapters";
 export function useConversations() {
   const { demoMode } = useDemoMode();
   const { deletedIds } = useDeletedConversations();
+  const { t } = useTranslation();
   // Stable, order-independent token so the demo query re-derives when a chat is
   // deleted. Live mode never writes deletedIds, so this stays "".
   const deletedToken = [...deletedIds].sort().join(",");
@@ -31,7 +33,7 @@ export function useConversations() {
         );
       }
       const rows = await getConversations();
-      return rows.map(conversationToView);
+      return rows.map((row) => conversationToView(row, t));
     },
   });
 }

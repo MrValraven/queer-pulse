@@ -4,12 +4,14 @@ import {
   cancelDeletionRequest,
   deactivateAccount,
   getDeletionRequest,
-  reauth,
   requestAccountDeletion,
   simulateOr,
   type DeletionRequest,
-  type ReauthResult,
 } from "./account.api";
+import {
+  beginReauth as beginReauthRedirect,
+  getCachedReauthToken,
+} from "./useReauthToken";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const GRACE_DAYS = 30;
@@ -20,22 +22,36 @@ function daysFromNow(days: number): string {
 }
 
 /**
- * Step-up re-auth. Live mode confirms the caller's cookie session server-side
- * and returns the single-purpose token the destructive/export routes require;
- * demo resolves a fake token so the flow still runs end to end. No credential
- * is passed — see the note on `reauth` in `account.api.ts`.
+ * Step-up re-auth, demo/live combined. `getReauthToken()` reads FRESH each
+ * call — deliberately not a pre-computed value off the hook's return, since
+ * the redirect landing writes the cache via an effect (`useReauthCompletion`)
+ * that commits after this hook's own render; a snapshotted value could read
+ * stale-null on the very render where the token just became available.
+ * Live: reads whatever `useReauthToken.ts`'s redirect flow has cached (`null`
+ * until the member completes it); `beginReauth()` starts that OAuth round
+ * trip. Demo: a fixed fake token is always "already valid" — there's no real
+ * backend to step up against — and `beginReauth()` is a no-op, so the flow
+ * runs end-to-end without ever leaving the prototype.
+ *
+ * Every gated call site (DeleteAccountSection, AccountDataStepAway,
+ * AccountDataExport, useDsar, useExportFlow) follows the same shape, called
+ * fresh inside the action itself (never hoisted to render time):
+ * `const reauthToken = getReauthToken(); if (!reauthToken) { beginReauth(); return; }`.
+ * On live, that first click redirects away and the member has to press
+ * confirm again after landing back — deliberate: nothing destructive ever
+ * fires as a side effect of the redirect itself.
  */
 export function useReauth() {
   const { demoMode } = useDemoMode();
-  return useCallback(
-    (): Promise<ReauthResult> =>
-      simulateOr(
-        demoMode,
-        { reauthToken: "demo-reauth", expiresAt: daysFromNow(0) },
-        reauth,
-      ),
+  const getReauthToken = useCallback(
+    (): string | null => (demoMode ? "demo-reauth" : getCachedReauthToken()),
     [demoMode],
   );
+  const beginReauth = useCallback(() => {
+    if (demoMode) return;
+    beginReauthRedirect();
+  }, [demoMode]);
+  return { getReauthToken, beginReauth };
 }
 
 /**

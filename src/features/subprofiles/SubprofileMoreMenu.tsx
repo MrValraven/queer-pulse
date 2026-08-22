@@ -104,7 +104,7 @@ export function SubprofileMoreMenu({
   };
 
   return (
-    <div ref={containerRef} className={styles.container}>
+    <div ref={containerRef} className={`pp-moreMenu ${styles.container}`}>
       <button
         ref={triggerRef}
         type="button"
@@ -126,7 +126,7 @@ export function SubprofileMoreMenu({
           ref={menuRef}
           role="menu"
           tabIndex={-1}
-          className={styles.menu}
+          className={`pp-moreMenuPanel ${styles.menu}`}
           onKeyDown={onMenuKeyDown}
         >
           <button

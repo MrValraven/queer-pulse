@@ -305,7 +305,7 @@ export function PlatformsPage() {
                             <a
                               href={`https://${platform.url}`}
                               target="_blank"
-                              rel="noreferrer"
+                              rel="noopener noreferrer"
                               className={s.card}
                               style={{ height: "100%" }}
                             >

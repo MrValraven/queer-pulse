@@ -50,6 +50,11 @@
   font-weight: 600;
   color: var(--ink);
 }
+.slotError {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--danger);
+}
 /* ── Viewings page ───────────────────────────────────────────────────────── */
 .page {
   max-width: 760px;
@@ -100,7 +105,7 @@
   gap: 14px;
 }
 .card {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card, 22px);
   background: var(--paper);
   padding: 18px 20px;
@@ -176,7 +181,7 @@
 }
 
 .empty {
-  border: 1px dashed rgba(45, 27, 61, 0.16);
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
   border-radius: var(--radius-card, 22px);
   padding: 32px 24px;
   text-align: center;
@@ -211,7 +216,7 @@
   color: var(--ink-60);
 }
 .reviewCard {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   background: var(--paper);
   padding: 16px 18px;

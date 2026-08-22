@@ -638,7 +638,7 @@
 }
 
 .mapListItem:hover {
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
 }
 
 .mapListTitle {
@@ -647,7 +647,7 @@
 
 .mapListMeta {
   font-size: 13px;
-  color: rgba(45, 27, 61, 0.6);
+  color: rgba(var(--plum-rgb), 0.6);
 }
 
 .viewRow {
@@ -656,11 +656,17 @@
   margin: 8px 0 16px;
 }
 
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
 .viewToggle {
   display: inline-flex;
   gap: 2px;
   padding: 3px;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   background: var(--paper);
 }

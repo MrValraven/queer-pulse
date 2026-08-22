@@ -1,8 +1,9 @@
-import { FiCheck, FiLock, FiUsers } from "react-icons/fi";
+import { FiCheck, FiLock, FiSettings, FiUsers } from "react-icons/fi";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GroupListing, VettedGroup } from "./housingGroups.data";
+import { GroupListingCard } from "./GroupListingCard";
 import styles from "./HousingGroupsPage.module.css";
 
 /** Header: name, city, member count, gated badge, and the ask-to-join CTA. */
@@ -72,39 +73,56 @@ export function GroupNorms({ norms }: { norms: string[] }) {
   );
 }
 
-function ListingCard({ listing }: { listing: GroupListing }) {
-  const { t } = useTranslation();
-  return (
-    <article className={styles.listing}>
-      <div className={styles.listingHead}>
-        <h3 className={styles.listingTitle}>{listing.title}</h3>
-        <span className={styles.price}>
-          {t("economy:housingGroups.listings.perMonth", {
-            price: listing.priceEuros,
-          })}
-        </span>
-      </div>
-      <div className={styles.listingLoc}>{listing.neighbourhood}</div>
-      <p className={styles.listingDesc}>{listing.description}</p>
-      <div className={styles.access}>
-        <span className={styles.accessLabel}>
-          {t("economy:housingGroups.listings.accessLabel")}
-        </span>{" "}
-        {listing.accessibilityInfo}
-      </div>
-    </article>
-  );
-}
-
-/** The group's norm-compliant listings (each carries price + accessibility). */
-export function GroupListings({ listings }: { listings: GroupListing[] }) {
+/** The group's norm-compliant listings (each carries price + accessibility),
+ *  plus the poster's own manage mode. */
+export function GroupListings({
+  listings,
+  canManage,
+  isManaging,
+  onToggleManaging,
+  busyListingId,
+  onEdit,
+  onWithdraw,
+}: {
+  listings: GroupListing[];
+  /** Signed-in members can ask to manage a room; signed-out readers cannot. */
+  canManage: boolean;
+  isManaging: boolean;
+  onToggleManaging: () => void;
+  /** The listing with a write in flight, so its controls stay disabled. */
+  busyListingId: string | null;
+  onEdit: (listing: GroupListing) => void;
+  onWithdraw: (listing: GroupListing) => void;
+}) {
   const { t } = useTranslation();
   return (
     <section className={styles.listingsSection}>
       <div className="wrap">
-        <h2 className={styles.listingsTitle}>
-          {t("economy:housingGroups.listings.title")}
-        </h2>
+        <div className={styles.listingsHead}>
+          <h2 className={styles.listingsTitle}>
+            {t("economy:housingGroups.listings.title")}
+          </h2>
+          {canManage && listings.length > 0 && (
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={onToggleManaging}
+              aria-pressed={isManaging}
+            >
+              <FiSettings aria-hidden />
+              {t(
+                isManaging
+                  ? "economy:groupListing.manage.doneCta"
+                  : "economy:groupListing.manage.startCta",
+              )}
+            </Button>
+          )}
+        </div>
+        {isManaging && (
+          <p className={styles.manageNote}>
+            {t("economy:groupListing.manage.note")}
+          </p>
+        )}
         {listings.length === 0 ? (
           <p className={styles.listingsEmpty}>
             {t("economy:housingGroups.listings.empty")}
@@ -112,7 +130,14 @@ export function GroupListings({ listings }: { listings: GroupListing[] }) {
         ) : (
           <div className={styles.listingsGrid}>
             {listings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
+              <GroupListingCard
+                key={listing.id}
+                listing={listing}
+                isManaging={isManaging}
+                isBusy={busyListingId === listing.id}
+                onEdit={() => onEdit(listing)}
+                onWithdraw={() => onWithdraw(listing)}
+              />
             ))}
           </div>
         )}

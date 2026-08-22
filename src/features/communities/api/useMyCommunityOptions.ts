@@ -38,7 +38,9 @@ export function useMyCommunityOptions(
   return useMemo(
     () =>
       Object.entries(memberships)
-        .filter(([, membership]) => !roles?.length || roles.includes(membership.role))
+        .filter(
+          ([, membership]) => !roles?.length || roles.includes(membership.role),
+        )
         .map(([slug, membership]) => {
           const directoryEntry = demoMode
             ? communities.find((community) => community.slug === slug)

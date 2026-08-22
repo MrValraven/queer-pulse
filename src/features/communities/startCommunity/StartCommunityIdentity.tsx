@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useDebouncedValue } from "../../../shared/hooks";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CommunityType } from "../../homepage/data/types";
@@ -9,7 +10,7 @@ import {
   TYPE_TAG_SUGGESTIONS,
   initialsOf,
 } from "./startCommunity.data";
-import { useAllCommunities } from "../useAllCommunities";
+import { useCommunities } from "../api/useCommunities";
 import type { CommunityForm } from "./useCommunityForm";
 import styles from "./StartCommunityPage.module.css";
 
@@ -17,7 +18,6 @@ import styles from "./StartCommunityPage.module.css";
 export function StepWhy({ form }: { form: CommunityForm }) {
   const { t } = useTranslation();
   const { draft, set } = form;
-  const all = useAllCommunities();
   // Tracks which tag ids were auto-applied for the *previously* selected
   // category, so switching category again swaps out only the tags this
   // suggestion added — anything the founder picked or removed themselves is
@@ -39,16 +39,19 @@ export function StepWhy({ form }: { form: CommunityForm }) {
     previousSuggestionRef.current = suggested;
     set({ type, tags: nextTags });
   };
-  const q = draft.name.trim().toLowerCase();
-  const similar =
-    q.length >= 3
-      ? all
-          .filter((c) => {
-            const n = c.name.toLowerCase();
-            return n.includes(q) || q.includes(n.split(" ")[0] ?? n);
-          })
-          .slice(0, 3)
-      : [];
+  // "A few spaces already sound a little like this" has to be measured against
+  // the real directory: the static mock registry would show a live founder
+  // prototype communities that do not exist on the platform while missing the
+  // actual collisions. `useCommunities` is the one search that is right in both
+  // modes (server ILIKE in live, the same registry filter in demo), debounced
+  // so it fans out once the founder pauses rather than per keystroke.
+  const debouncedName = useDebouncedValue(draft.name.trim(), 300);
+  const hasEnoughToSearch = debouncedName.length >= 3;
+  const { items: nameMatches } = useCommunities(
+    { q: debouncedName || undefined },
+    { enabled: hasEnoughToSearch },
+  );
+  const similar = hasEnoughToSearch ? nameMatches.slice(0, 3) : [];
 
   return (
     <div>

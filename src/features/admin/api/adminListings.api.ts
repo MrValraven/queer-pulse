@@ -72,7 +72,7 @@ export interface ListingQueueCounts {
   live: number;
 }
 
-/** `GET /listings/admin/queue` response envelope. */
+/** `GET /admin/listings/queue` response envelope. */
 export interface ListingQueuePage {
   items: ListingDTO[];
   total: number;
@@ -137,7 +137,7 @@ export async function getListingQueue(
   if (q) searchParams.set("q", q);
   if (sort) searchParams.set("sort", sort);
   const res = await apiGet<Partial<ListingQueuePage>>(
-    `/listings/admin/queue?${searchParams.toString()}`,
+    `/admin/listings/queue?${searchParams.toString()}`,
   );
   const items = res?.items ?? [];
   return {
@@ -159,7 +159,7 @@ export interface BulkListingResultDTO {
   failed: string[];
 }
 
-/** PATCH /listings/admin/bulk-status — moves many listings to one status in a
+/** PATCH /admin/listings/bulk-status — moves many listings to one status in a
  *  single server-side transaction (cap 200 refs, server-enforced).
  *  Moderator/Admin only. `reason` is optional free text recorded on each
  *  listing's moderation event. */
@@ -168,17 +168,17 @@ export const bulkSetListingStatus = (
   status: ListingStatus,
   reason?: string,
 ) =>
-  apiPatch<BulkListingResultDTO>("/listings/admin/bulk-status", {
+  apiPatch<BulkListingResultDTO>("/admin/listings/bulk-status", {
     refs,
     status,
     reason,
   });
 
-/** POST /listings/admin/bulk-remove — hard-deletes many listings in a single
+/** POST /admin/listings/bulk-remove — hard-deletes many listings in a single
  *  server-side transaction (cap 200 refs, server-enforced). Moderator/Admin
  *  only. */
 export const bulkRemoveListings = (refs: string[], reason?: string) =>
-  apiPost<BulkListingResultDTO>("/listings/admin/bulk-remove", {
+  apiPost<BulkListingResultDTO>("/admin/listings/bulk-remove", {
     refs,
     reason,
   });
@@ -218,7 +218,7 @@ export interface ListingQuestionDTO {
   createdAt: string;
 }
 
-/** `GET /listings/admin/:ref/history` response — the moderation event
+/** `GET /admin/listings/:ref/history` response — the moderation event
  *  timeline and the Q&A thread for one listing, both newest-first. */
 export interface ListingHistoryDTO {
   events: ListingModerationEventDTO[];
@@ -228,13 +228,13 @@ export interface ListingHistoryDTO {
 /** The moderation audit trail + Q&A thread for one listing. Moderator/Admin
  *  only. */
 export const getListingHistory = (ref: string) =>
-  apiGet<ListingHistoryDTO>(`/listings/admin/${ref}/history`);
+  apiGet<ListingHistoryDTO>(`/admin/listings/${ref}/history`);
 
 /** PATCH /listings/:ref/queer-owned-verified — moderator-verified confirmation
  *  of the "queer-owned" badge, distinct from the submitter's own self-reported
  *  `linkToProfile` claim. Returns the updated listing. Moderator/Admin only. */
 export const setQueerOwnedVerified = (ref: string, verified: boolean) =>
   apiPatch<ListingDTO>(
-    `/listings/${encodeURIComponent(ref)}/queer-owned-verified`,
+    `/admin/listings/${encodeURIComponent(ref)}/queer-owned-verified`,
     { verified },
   );

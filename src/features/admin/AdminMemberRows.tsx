@@ -1,5 +1,8 @@
+import { FiChevronRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { routes } from "../../app/routeMap";
 import { AdminAvatar, AdminChip } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { STAFF_ROLES } from "./staffRoles.registry";
@@ -10,6 +13,14 @@ import type {
 } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
+/**
+ * A vouch avatar as the live adapter emits it: `VouchAvatarRow` carries the
+ * vouching member's `slug`, which the shared view model has no field for. Demo
+ * fixtures predate it, so it stays optional here and the key falls back to the
+ * avatar's own initials.
+ */
+type VouchAvatarWithSlug = VouchAvatar & { slug?: string };
+
 /* ── All members ─────────────────────────────────────────── */
 
 export function AdminMemberRows({
@@ -17,7 +28,7 @@ export function AdminMemberRows({
   onSelect,
 }: {
   members: AdminMember[];
-  onSelect: (m: AdminMember) => void;
+  onSelect: (member: AdminMember) => void;
 }) {
   const { t } = useTranslation();
   if (members.length === 0) {
@@ -25,55 +36,58 @@ export function AdminMemberRows({
   }
   return (
     <div className={styles.rows}>
-      {members.map((m, i) => (
-        <FadeIn key={m.id} delay={Math.min(i, 8) * 50}>
+      {members.map((member, position) => (
+        <FadeIn key={member.id} delay={Math.min(position, 8) * 50}>
           <div
             className={styles.row}
             role="button"
             tabIndex={0}
-            aria-label={t("admin:members.openAriaLabel", { name: m.name })}
-            onClick={() => onSelect(m)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onSelect(m);
+            aria-label={t("admin:members.openAriaLabel", { name: member.name })}
+            onClick={() => onSelect(member)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onSelect(member);
               }
             }}
           >
             <AdminAvatar
-              initials={m.initials}
-              tone={m.tone}
+              initials={member.initials}
+              tone={member.tone}
               size="md"
-              verified={m.verified}
-              src={m.avatarUrl ?? portrait(m.name)}
+              verified={member.verified}
+              src={member.avatarUrl ?? portrait(member.name)}
             />
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>
-                <span className={styles.rowName}>{m.name}</span>
-                <span className={styles.pronoun}>{m.pronoun}</span>
-                <AdminChip tone={m.statusTone} dot>
-                  {m.verified
+                <span className={styles.rowName}>{member.name}</span>
+                <span className={styles.pronoun}>{member.pronoun}</span>
+                <AdminChip tone={member.statusTone} dot>
+                  {member.verified
                     ? t("admin:members.status.verified")
                     : t("admin:members.status.openReports", {
-                        count: m.openReportsCount ?? 0,
+                        count: member.openReportsCount ?? 0,
                       })}
                 </AdminChip>
-                {m.role !== "member" && (
-                  <AdminChip tone={m.role === "admin" ? "violet" : "plum"}>
-                    {t(`admin:members.role.value.${m.role}`)}
+                {member.role !== "member" && (
+                  <AdminChip tone={member.role === "admin" ? "violet" : "plum"}>
+                    {t(`admin:members.role.value.${member.role}`)}
                   </AdminChip>
                 )}
                 {STAFF_ROLES.filter((staffRole) =>
-                  m.staffRoles.includes(staffRole.id),
+                  member.staffRoles.includes(staffRole.id),
                 ).map((staffRole) => (
                   <AdminChip key={staffRole.id} tone="ghost">
                     {t(staffRole.labelKey)}
                   </AdminChip>
                 ))}
               </div>
-              <div className={styles.rowMeta}>{m.meta}</div>
+              <div className={styles.rowMeta}>{member.meta}</div>
             </div>
-            <VouchStrip vouchedBy={m.vouchedBy} total={m.vouchCount} />
+            <VouchStrip
+              vouchedBy={member.vouchedBy}
+              total={member.vouchCount}
+            />
           </div>
         </FadeIn>
       ))}
@@ -85,7 +99,7 @@ function VouchStrip({
   vouchedBy,
   total,
 }: {
-  vouchedBy: VouchAvatar[];
+  vouchedBy: VouchAvatarWithSlug[];
   total: number;
 }) {
   const { t } = useTranslation();
@@ -94,17 +108,17 @@ function VouchStrip({
   return (
     <div className={styles.vouchStrip}>
       <div className={styles.stack}>
-        {shown.map((v, i) => (
+        {shown.map((vouchAvatar, position) => (
           <span
-            key={i}
+            key={vouchAvatar.slug ?? `${vouchAvatar.initials}-${position}`}
             className={styles.stackItem}
-            style={{ zIndex: shown.length - i }}
+            style={{ zIndex: shown.length - position }}
           >
             <AdminAvatar
-              initials={v.initials}
-              tone={v.tone}
+              initials={vouchAvatar.initials}
+              tone={vouchAvatar.tone}
               size="sm"
-              src={v.avatarUrl ?? undefined}
+              src={vouchAvatar.avatarUrl ?? undefined}
             />
           </span>
         ))}
@@ -119,38 +133,90 @@ function VouchStrip({
 
 /* ── Flagged ─────────────────────────────────────────────── */
 
-export function AdminFlaggedRows({ members }: { members: FlaggedMember[] }) {
-  const { t } = useTranslation();
+export function AdminFlaggedRows({
+  members,
+  onOpenMember,
+}: {
+  members: FlaggedMember[];
+  /**
+   * Opens the member drawer on one flagged member. Receives their `id`,
+   * which is what `GET /admin/members/:id` takes. The demo fixtures use the
+   * handle without its leading "@" as both `id` and `slug`, so either
+   * resolves there.
+   */
+  onOpenMember: (memberId: string) => void;
+}) {
   return (
     <div className={styles.rows}>
-      {members.map((m, i) => (
-        <FadeIn key={m.id} delay={Math.min(i, 8) * 50}>
-          <div className={`${styles.row} ${styles.rowFlagged}`}>
-            <AdminAvatar
-              initials={m.initials}
-              tone={m.tone}
-              size="md"
-              src={m.avatarUrl ?? undefined}
-            />
-            <div className={styles.rowMain}>
-              <div className={styles.rowTop}>
-                <span className={styles.rowHandle}>{m.handle}</span>
-                <AdminChip tone={m.categoryTone}>
-                  {m.category.kind === "reportsCount"
-                    ? t("admin:members.flagged.reportsCount", {
-                        count: m.category.count,
-                      })
-                    : t(`admin:members.flagged.category.${m.category.kind}`)}
-                </AdminChip>
-              </div>
-              <div className={styles.rowMeta}>{m.meta}</div>
-            </div>
-            <AdminChip tone={m.statusTone} dot>
-              {t(`admin:members.flagged.status.${m.statusId}`)}
-            </AdminChip>
-          </div>
+      {members.map((member, position) => (
+        <FadeIn key={member.id} delay={Math.min(position, 8) * 50}>
+          <AdminFlaggedRow member={member} onOpenMember={onOpenMember} />
         </FadeIn>
       ))}
+    </div>
+  );
+}
+
+/**
+ * One flagged row carries two destinations, so it is a plain container
+ * holding two SIBLING controls rather than one control nested in the other:
+ * the identity half is a button that opens the member drawer, and "Open
+ * reports" is a link into the moderation queue narrowed to this member's
+ * reports. The queue matches a report's `subjectId` against the member's
+ * stable slug, which in the demo fixtures is the handle without its "@",
+ * exactly what the demo queue matches on.
+ */
+function AdminFlaggedRow({
+  member,
+  onOpenMember,
+}: {
+  member: FlaggedMember;
+  onOpenMember: (memberId: string) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={`${styles.row} ${styles.rowFlagged}`}>
+      <button
+        type="button"
+        className={styles.flaggedIdentity}
+        onClick={() => onOpenMember(member.id)}
+        aria-label={t("admin:members.flagged.openMemberAriaLabel", {
+          handle: member.handle,
+        })}
+      >
+        <AdminAvatar
+          initials={member.initials}
+          tone={member.tone}
+          size="md"
+          src={member.avatarUrl ?? undefined}
+        />
+        <div className={styles.rowMain}>
+          <div className={styles.rowTop}>
+            <span className={styles.rowHandle}>{member.handle}</span>
+            <AdminChip tone={member.categoryTone}>
+              {member.category.kind === "reportsCount"
+                ? t("admin:members.flagged.reportsCount", {
+                    count: member.category.count,
+                  })
+                : t(`admin:members.flagged.category.${member.category.kind}`)}
+            </AdminChip>
+          </div>
+          <div className={styles.rowMeta}>{member.meta}</div>
+        </div>
+      </button>
+      <AdminChip tone={member.statusTone} dot>
+        {t(`admin:members.flagged.status.${member.statusId}`)}
+      </AdminChip>
+      <Link
+        className={styles.flaggedGoto}
+        to={`${routes.adminModeration}?tab=open&subjectId=${encodeURIComponent(member.slug)}`}
+        aria-label={t("admin:members.flagged.openReportsAriaLabel", {
+          handle: member.handle,
+        })}
+      >
+        {t("admin:members.flagged.openReportsCta")}
+        <FiChevronRight aria-hidden />
+      </Link>
     </div>
   );
 }

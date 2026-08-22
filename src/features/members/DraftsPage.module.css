@@ -346,7 +346,7 @@
   top: 1.5px;
   width: 5px;
   height: 9px;
-  border: solid #fff;
+  border: solid rgba(var(--cream-rgb), 1);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
@@ -357,7 +357,7 @@
   right: 3px;
   top: 7.5px;
   height: 2px;
-  background: #fff;
+  background: rgba(var(--cream-rgb), 1);
   border-radius: 1px;
 }
 .cbx:focus-visible {
@@ -519,7 +519,7 @@
   background: rgba(var(--plum-rgb), 0.09);
 }
 .chipAtrisk {
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   background: var(--accent);
 }
 

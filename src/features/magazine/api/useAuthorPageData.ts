@@ -4,6 +4,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Author } from "../authorContent.data";
 import { authorFromDto, mergeAuthor } from "./magazine.adapters";
+import { ignoreEnrichmentError, nullOnNotFound } from "./loadErrors";
 import { getArticles, getAuthor } from "./magazine.api";
 
 /**
@@ -24,15 +25,17 @@ import { getArticles, getAuthor } from "./magazine.api";
 export function useAuthorPageData(slug: string) {
   const { demoMode } = useDemoMode();
   const fmt = useFormat();
-  const { language } = useTranslation();
+  const { t, language } = useTranslation();
   return useQuery<Author | null>({
     queryKey: ["magazine-author", demoMode, language, slug],
     queryFn: async () => {
       if (demoMode) return null;
 
       const [dto, articlesPage] = await Promise.all([
-        getAuthor(slug).catch(() => null),
-        getArticles({ author: slug }).catch(() => null),
+        // The author is the page (404 becomes the not-found wall, anything
+        // else is rethrown and retried); their article list only enriches it.
+        getAuthor(slug).catch(nullOnNotFound),
+        getArticles({ author: slug }).catch(ignoreEnrichmentError),
       ]);
       if (!dto) return null;
 
@@ -46,8 +49,8 @@ export function useAuthorPageData(slug: string) {
       const base = AUTHORS[slug];
 
       return base
-        ? mergeAuthor(base, dto, liveArticles, fmt)
-        : authorFromDto(dto, liveArticles, fmt);
+        ? mergeAuthor(base, dto, liveArticles, fmt, t)
+        : authorFromDto(dto, liveArticles, fmt, t);
     },
   });
 }

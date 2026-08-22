@@ -36,4 +36,17 @@
   --ls-heading: -0.01em;
   --ls-eyebrow: 0.04em;
   --ls-label: 0.1em;
+
+  /* ── Monospace ──
+     STYLE-RULES bans monospace in the product UI, and that still holds: for
+     figures that need to line up, use `font-variant-numeric: tabular-nums` on
+     the normal face instead of reaching for this.
+     The one legitimate use is a surface where the member is editing RAW TEXT
+     and column position carries meaning: today that is the admin roadmap's
+     digest textarea, which holds hand-edited markdown. It was already being
+     referenced as an undefined token with a bare `monospace` fallback, which
+     left the actual face up to the operating system. */
+  --mono:
+    ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas,
+    monospace;
 }

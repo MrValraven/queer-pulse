@@ -31,10 +31,13 @@ interface ProfileRailProps {
  * they moved out of an always-visible rail card into a top-of-profile kebab
  * menu, mirroring the visitor-facing `ProfileSafetyMenu` in the same row.
  *
- * `photoVisible`/`hoodVisible` (backend Task 7) haven't reached the FE
- * `Member` type/mapper yet, so the portrait and location render ungated here,
- * exactly like the current `ProfileHero` does today — see the task report's
- * concerns section.
+ * The location line is gated two ways. The backend already nulls `location`
+ * for a non-owner when `hoodVisible` is off (or the profile is
+ * network/private), which the adapter maps to `hood: ""`; rendering that
+ * unconditionally printed a pin followed by a bare ", Lisbon" on every hidden
+ * profile, so an empty `hood` now renders nothing at all. And in "preview as
+ * visitor" the owner's own `hood` IS present, so `hoodVisible` is honoured
+ * directly there: the preview has to agree with the toggle in Who sees what.
  */
 export function ProfileRail({
   profile,
@@ -46,6 +49,12 @@ export function ProfileRail({
   const fullName = `${profile.first} ${profile.last}`;
   const portraitTint = profile.tint === "auth" ? "plum" : profile.tint;
   const [photoOpen, setPhotoOpen] = useState(false);
+  // See the docblock: an empty `hood` means the viewer isn't entitled to it (or
+  // the member never set one), and the visitor preview additionally honours the
+  // owner's own `hoodVisible` toggle.
+  const isLocationShown =
+    profile.hood.trim().length > 0 &&
+    (realSelf || profile.hoodVisible !== false);
 
   const portrait = (
     <ImageSlot
@@ -88,17 +97,21 @@ export function ProfileRail({
         )}
       </Reveal>
 
-      <div className={styles.meta}>
-        <span className={styles.loc}>
-          <span className={styles.pin} aria-hidden />
-          {t("members:profile.hero.location", { hood: profile.hood })}
-        </span>
-        {profile.since && (
-          <span className={styles.muted}>
-            {t("members:profile.hero.memberSince", { since: profile.since })}
-          </span>
-        )}
-      </div>
+      {(isLocationShown || profile.since) && (
+        <div className={styles.meta}>
+          {isLocationShown && (
+            <span className={styles.loc}>
+              <span className={styles.pin} aria-hidden />
+              {t("members:profile.hero.location", { hood: profile.hood })}
+            </span>
+          )}
+          {profile.since && (
+            <span className={styles.muted}>
+              {t("members:profile.hero.memberSince", { since: profile.since })}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* A real self's own network numbers (below) already include their
           vouch count, so showing both here would repeat the same fact twice

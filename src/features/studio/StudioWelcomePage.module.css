@@ -5,7 +5,6 @@
   --text-40: rgba(var(--cream-rgb), 0.4);
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
-  --jade-light: #9be0bd;
   background: var(--studio-bg);
   color: var(--text);
   min-height: 100svh;

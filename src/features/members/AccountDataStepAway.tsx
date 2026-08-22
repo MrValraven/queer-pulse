@@ -23,9 +23,8 @@ import {
   type AccountDependencyCommunity,
   type AccountDependencyListing,
 } from "./api/useAccountDependencies";
+import { StepAwayDialogs, type ConfirmKind } from "./StepAwayDialogs";
 import styles from "./AccountData.module.css";
-
-type ConfirmKind = "hide" | "erase" | null;
 
 /** Already-pending deletion request banner, shown in place of the step-away
  *  actions — mirrors `DeleteAccountSections`' `DeletePendingBanner`. */
@@ -201,7 +200,7 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { signOut } = useAuth();
-  const reauth = useReauth();
+  const { getReauthToken, beginReauth } = useReauth();
   const deactivate = useDeactivate();
   const requestDeletion = useRequestDeletion();
   const cancelDeletion = useCancelDeletion();
@@ -252,14 +251,21 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
     }
   }
 
-  // No password is collected or sent — `POST /account/reauth` takes no
-  // credential to check (OAuth-only auth), see the note on `reauth` in
-  // `account.api.ts`. The real gate here is the typed `ConfirmDialog`.
+  // No password is collected or sent — auth is OAuth-only, so there is
+  // nothing to verify one against. The real step-up is a Google OAuth round
+  // trip (`beginReauth`, see `useReauthToken.ts`): if no fresh token is
+  // cached yet, this redirects away instead of proceeding, and the member
+  // presses confirm again after landing back. The typed `ConfirmDialog` is a
+  // separate, real, checked gate on top of that.
   async function handleConfirm() {
     if (!confirmKind) return;
+    const reauthToken = getReauthToken();
+    if (!reauthToken) {
+      beginReauth();
+      return;
+    }
     setSubmitting(true);
     try {
-      const { reauthToken } = await reauth();
       if (confirmKind === "erase") {
         const request = await requestDeletion(
           reauthToken,
@@ -348,49 +354,17 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
         )}
       </div>
 
-      <ConfirmDialog
-        open={confirmKind === "hide"}
-        onClose={() => setConfirmKind(null)}
-        onConfirm={() => void handleConfirm()}
-        title={t("members:profile.accountData.stepAway.hide.confirm.title")}
-        description={t(
-          "members:profile.accountData.stepAway.hide.confirm.body",
-        )}
-        confirmLabel={t(
-          "members:profile.accountData.stepAway.hide.confirm.cta",
-        )}
-        loading={submitting}
-      />
-
-      <ConfirmDialog
-        open={confirmKind === "erase"}
-        onClose={() => {
+      <StepAwayDialogs
+        confirmKind={confirmKind}
+        onCancel={() => {
           setConfirmKind(null);
           setReason("");
         }}
         onConfirm={() => void handleConfirm()}
-        title={t(
-          "members:profile.accountData.stepAway.erase.confirm.title",
-        )}
-        description={t(
-          "members:profile.accountData.stepAway.erase.confirm.body",
-          { profile: `/members/${ownerSlug}` },
-        )}
-        confirmLabel={t(
-          "members:profile.accountData.stepAway.erase.confirm.cta",
-        )}
-        tone="destructive"
-        loading={submitting}
-        reason={{
-          value: reason,
-          onChange: setReason,
-          label: t(
-            "members:profile.accountData.stepAway.erase.confirm.reasonLabel",
-          ),
-          placeholder: t(
-            "members:profile.accountData.stepAway.erase.confirm.reasonPlaceholder",
-          ),
-        }}
+        isSubmitting={submitting}
+        reason={reason}
+        onReasonChange={setReason}
+        ownerSlug={ownerSlug}
       />
     </section>
   );

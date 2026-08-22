@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Button } from "../../../../shared/components/ui";
 import { cx } from "../../../../shared/lib/cx";
+import { useTablistKeys } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { Slide } from "../../data/decks";
 import { TextSlide } from "../../TextSlide";
@@ -82,6 +83,8 @@ export interface SlideLivePreviewProps {
  */
 export function SlideLivePreview({ slide, index, total, onGo }: SlideLivePreviewProps) {
   const { t } = useTranslation();
+  // APG tablist keys across the slide dots.
+  const { tabProps } = useTablistKeys(total, onGo);
 
   return (
     <div className={styles.card}>
@@ -117,6 +120,7 @@ export function SlideLivePreview({ slide, index, total, onGo }: SlideLivePreview
                 type="button"
                 role="tab"
                 aria-selected={dotIndex === index}
+                {...tabProps(dotIndex, dotIndex === index)}
                 aria-label={t("magazine:deck.goToSlide", { n: dotIndex + 1 })}
                 className={cx(styles.dot, dotIndex === index && styles.dotOn)}
                 onClick={() => onGo(dotIndex)}

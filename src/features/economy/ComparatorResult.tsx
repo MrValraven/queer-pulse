@@ -8,7 +8,7 @@ import {
   type TakeHome,
   type TaxYear,
 } from "./tax.calc";
-import { SIMPLIFIED_COEFFICIENTS, TAX_DISCLAIMER } from "./tax.constants";
+import { SIMPLIFIED_COEFFICIENTS, TAX_DISCLAIMER_KEY } from "./tax.constants";
 import {
   HIDDEN_COSTS,
   type ActivityKey,
@@ -165,7 +165,7 @@ export function ComparatorResult({
         </ul>
       </div>
 
-      <p className={styles.disclaimer}>{TAX_DISCLAIMER}</p>
+      <p className={styles.disclaimer}>{t(TAX_DISCLAIMER_KEY)}</p>
     </div>
   );
 }

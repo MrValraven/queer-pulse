@@ -464,17 +464,15 @@ export const admin: Catalog = {
   "members.drawer.verifiedToast": "{name} is verified.",
   "members.drawer.messageCta": "Message",
   "members.drawer.restrictCta": "Restrict…",
-  "members.drawer.removeCta": "Remove member…",
-  "members.drawer.reasonRequiredToast": "A reason is required before removal",
+  // There is no account-removal endpoint. The most severe real action is a
+  // permanent, appealable ban, so that is what this button says and does.
+  "members.drawer.banCta": "Ban permanently…",
   "members.drawer.glanceTitle": "At a glance",
   "members.drawer.graphTitle": "Vouch graph: trust both ways",
   "members.drawer.graphAriaLabel": "Open the full trust network",
   "members.drawer.exploreCta": "Explore network",
   "members.drawer.communitiesTitle": "Communities",
   "members.drawer.contributionsTitle": "Contribution history",
-  "members.drawer.removePanel.title": "Removing a member is permanent.",
-  "members.drawer.removePanel.keepCta": "Keep member",
-  "members.drawer.removePanel.continueCta": "I understand, continue",
   "members.drawer.messageSentToast": "Message sent",
   "members.drawer.missingReasonToast":
     "A reason is required. {name} will see it",
@@ -580,6 +578,8 @@ export const admin: Catalog = {
   "members.restrict.duration.7d": "7 days",
   "members.restrict.duration.30d": "30 days",
   "members.restrict.duration.permanent": "Permanent",
+  "members.restrict.permanentNote":
+    "Permanent means a ban with no end date: {name} loses access to their account until an admin lifts it. They are told why and can appeal.",
   "members.restrict.scope.community": "This community",
   "members.restrict.scope.platform": "Platform-wide",
   "members.restrict.reason.harassment": "Repeated harassment after a warning",
@@ -753,6 +753,15 @@ export const admin: Catalog = {
   "adminInvites.quota.invalid": "Enter a whole number of 0 or more, or clear the field.",
   "adminInvites.quota.saved": "Saved {name}'s invite quota.",
   "adminInvites.quota.cleared": "{name} is back on the default invite quota.",
+  "adminInvites.revoke.cta": "Revoke this invite",
+  "adminInvites.revoke.confirmTitle": "Revoke invite {code}?",
+  "adminInvites.revoke.confirmBody":
+    "The link stops working straight away, and {name} keeps the slot it used from this month's allowance. Whoever holds the link will see it as revoked. This can't be undone, though {name} can send a fresh invite.",
+  "adminInvites.revoke.confirmCta": "Revoke invite",
+  "adminInvites.revoke.doneToast": "Invite {code} is revoked.",
+  "adminInvites.revoke.movedOnToast":
+    "That invite has already been accepted, revoked or expired. Reopen the list for its current state.",
+  "adminInvites.revoke.failedToast": "Couldn't revoke that invite. Try again.",
 
   "adminCommissionInterests.title": "Commission <em>interest</em>",
   "adminCommissionInterests.header.eyebrow": "Culture",
@@ -1146,18 +1155,36 @@ export const admin: Catalog = {
   "moderation.bulk.selectedCount_other": "{count} selected",
   "moderation.bulk.dismissCta": "Dismiss",
   "moderation.bulk.spamCta": "Remove as spam",
-  "moderation.bulk.reassignCta": "Reassign…",
+  "moderation.bulk.escalateCta": "Escalate",
   "moderation.bulk.warnCta": "Warn",
   "moderation.bulk.suspendCta": "Suspend…",
   "moderation.bulk.banCta": "Ban",
   "moderation.bulk.cancelCta": "Cancel",
-  "moderation.bulk.suspendModal.title_one": "Suspend {count} member",
-  "moderation.bulk.suspendModal.title_other": "Suspend {count} members",
-  "moderation.bulk.suspendModal.body_one":
-    "Choose how long the account behind this report stays suspended.",
-  "moderation.bulk.suspendModal.body_other":
-    "Choose how long the accounts behind these {count} reports stay suspended.",
-  "moderation.bulk.suspendModal.confirmCta": "Confirm suspension",
+  // Bulk confirm modal: a reason code and the member-facing note are required
+  // for every sanctioning bulk action, exactly as in the single-report drawer.
+  "moderation.bulk.confirm.title.removeContent_one":
+    "Remove the content in {count} report",
+  "moderation.bulk.confirm.title.removeContent_other":
+    "Remove the content in {count} reports",
+  "moderation.bulk.confirm.title.warn_one": "Warn {count} member",
+  "moderation.bulk.confirm.title.warn_other": "Warn {count} members",
+  "moderation.bulk.confirm.title.suspend_one": "Suspend {count} member",
+  "moderation.bulk.confirm.title.suspend_other": "Suspend {count} members",
+  "moderation.bulk.confirm.title.ban_one": "Ban {count} member",
+  "moderation.bulk.confirm.title.ban_other": "Ban {count} members",
+  "moderation.bulk.confirm.body_one":
+    "This applies to the 1 report you selected. Give a reason and write the note the member will read.",
+  "moderation.bulk.confirm.body_other":
+    "This applies to all {count} reports you selected. Give a reason and write the note every one of those members will read.",
+  "moderation.bulk.confirm.durationLabel": "How long",
+  "moderation.bulk.confirm.notePlaceholder":
+    "What happened, and what happens next. Everyone in this batch reads this.",
+  "moderation.bulk.confirm.applyCta_one": "Apply to 1 report",
+  "moderation.bulk.confirm.applyCta_other": "Apply to {count} reports",
+  "moderation.bulk.confirm.transparency_one":
+    "The member is notified with this reason and note, and can appeal.",
+  "moderation.bulk.confirm.transparency_other":
+    "All {count} members are notified with this reason and note, and can appeal.",
 
   "moderation.emergency.ariaLabel": "Safety emergencies",
   "moderation.emergency.count_one": "{count} safety emergency",
@@ -1166,11 +1193,10 @@ export const admin: Catalog = {
     "· outing & doxxing are treated as urgent harm, on a 1-hour clock. Handle these before anything else.",
 
   "moderation.everythingElse": "Everything else",
-  "moderation.countNote_one": "Showing {count} open report · oldest {oldest}",
-  "moderation.countNote_other":
-    "Showing {count} open reports · oldest {oldest}",
   "moderation.filterEmpty":
     "No open reports match this filter. Try “All severities”.",
+  "moderation.loadMore": "Show more reports",
+  "moderation.loadingMore": "Loading more reports…",
 
   "moderation.caughtUp.titleLine1": "You're <em>caught up</em>.",
   "moderation.caughtUp.titleLine2": "Nothing needs you right now.",
@@ -1250,7 +1276,7 @@ export const admin: Catalog = {
     "View the original report & thread",
   "moderation.appealDrawer.originalContentTitle": "What was originally reported",
   "moderation.appealDrawer.originalContentUnavailable":
-    "The original report's content isn't available — it may have been erased or this appeal has no linked report.",
+    "The original report's content isn't available. It may have been erased, or this appeal has no linked report.",
   "moderation.appealDrawer.argumentTitle": "Their argument",
   "moderation.appealDrawer.supportersTitle": "Who's backing them",
   "moderation.appealDrawer.noSupport":
@@ -1352,7 +1378,7 @@ export const admin: Catalog = {
   "moderation.queue.bulkToast_other": "{count} reports {verb}",
   "moderation.queue.bulkVerb.dismissed": "dismissed",
   "moderation.queue.bulkVerb.removedAsSpam": "removed as spam",
-  "moderation.queue.bulkVerb.reassigned": "reassigned",
+  "moderation.queue.bulkVerb.escalated": "escalated",
   "moderation.queue.bulkVerb.warned": "warned",
   "moderation.queue.bulkVerb.suspended": "suspended",
   "moderation.queue.bulkVerb.banned": "banned",
@@ -1525,6 +1551,90 @@ export const admin: Catalog = {
   "communities.settings.overrides.reassignConfirmCta": "Reassign ownership",
   "communities.settings.overrides.reassignPickLabel": "Pick the new owner",
 
+  // ── Governance log (the community's own audit trail) ──────────────────────
+  "communities.detail.tabs.governanceLog": "Governance log",
+  "communities.governanceLog.intro":
+    "Every governance action recorded against this community, newest first. Entries are written by the server and can never be edited.",
+  "communities.governanceLog.filterLabel": "Filter by action",
+  "communities.governanceLog.allActions": "All actions",
+  "communities.governanceLog.loadError": "The governance log didn't load.",
+  "communities.governanceLog.retryCta": "Try again",
+  "communities.governanceLog.emptyTitle": "Nothing recorded <em>yet</em>.",
+  "communities.governanceLog.emptyText":
+    "Role changes, removals, ownership handovers, freezes and settings edits all land here the moment they happen.",
+  "communities.governanceLog.emptyFilteredTitle":
+    "Nothing of <em>this kind</em>.",
+  "communities.governanceLog.emptyFilteredText":
+    "This community has governance history, and none of it matches the action you picked. Clear the filter to read the whole trail.",
+  "communities.governanceLog.clearFilterCta": "Clear the filter",
+  "communities.governanceLog.pagerMeta": "{start} to {end} of {total}",
+  "communities.governanceLog.pagerPage": "Page {page} of {pageCount}",
+  "communities.governanceLog.prevPage": "Previous page",
+  "communities.governanceLog.nextPage": "Next page",
+
+  "communities.governanceLog.action.role_changed": "Role changed",
+  "communities.governanceLog.action.member_removed": "Member removed",
+  "communities.governanceLog.action.ownership_transferred":
+    "Ownership transferred",
+  "communities.governanceLog.action.owner_auto_promoted":
+    "Owner auto-promoted",
+  "communities.governanceLog.action.frozen": "Frozen",
+  "communities.governanceLog.action.unfrozen": "Unfrozen",
+  "communities.governanceLog.action.archived": "Archived",
+  "communities.governanceLog.action.unarchived": "Unarchived",
+  "communities.governanceLog.action.settings_changed": "Settings changed",
+
+  "communities.governanceLog.summary.role_changed": "{name}'s role changed",
+  "communities.governanceLog.summary.member_removed":
+    "{name} was removed from the roster",
+  "communities.governanceLog.summary.ownership_transferred":
+    "{name} became the owner",
+  "communities.governanceLog.summary.owner_auto_promoted":
+    "{name} was promoted to owner automatically",
+  "communities.governanceLog.summary.frozen": "The community was frozen",
+  "communities.governanceLog.summary.unfrozen": "The freeze was lifted",
+  "communities.governanceLog.summary.archived": "The community was archived",
+  "communities.governanceLog.summary.unarchived":
+    "The community was restored from the archive",
+  "communities.governanceLog.summary.settings_changed":
+    "Community settings changed",
+
+  "communities.governanceLog.unknownMember": "A former member",
+  "communities.governanceLog.byLine": "by {name}",
+  "communities.governanceLog.unattributed": "No named actor",
+  "communities.governanceLog.unattributedHint":
+    "Either the platform acted automatically, or the person who acted has since erased their account.",
+  "communities.governanceLog.override.label": "Platform override",
+  "communities.governanceLog.override.hint":
+    "Platform staff took this action over the community's own owner and moderators.",
+
+  "communities.governanceLog.meta.roleLabel": "Role",
+  "communities.governanceLog.meta.role.owner": "Owner",
+  "communities.governanceLog.meta.role.mod": "Moderator",
+  "communities.governanceLog.meta.role.member": "Member",
+  "communities.governanceLog.meta.reasonLabel": "Reason",
+  "communities.governanceLog.meta.fromTo": "{from} to {to}",
+  "communities.governanceLog.meta.on": "On",
+  "communities.governanceLog.meta.off": "Off",
+  "communities.governanceLog.meta.empty": "Empty",
+  "communities.governanceLog.meta.notSet": "Not set",
+  "communities.governanceLog.meta.field.requiresSecondVouch":
+    "Second vouch required to join",
+  "communities.governanceLog.meta.field.autoFreezeOnReports":
+    "Auto-freeze on reports",
+  "communities.governanceLog.meta.field.isFeatured": "Featured on Discover",
+  "communities.governanceLog.meta.field.name": "Name",
+  "communities.governanceLog.meta.field.purpose": "Purpose",
+  "communities.governanceLog.meta.field.type": "Type",
+  "communities.governanceLog.meta.field.whoFor": "Who it is for",
+  "communities.governanceLog.meta.field.tagline": "Tagline",
+  "communities.governanceLog.meta.field.accessTier": "Who can join",
+  "communities.governanceLog.meta.field.rosterVisible": "Roster visible",
+  "communities.governanceLog.meta.field.features": "Features",
+  "communities.governanceLog.meta.field.rules": "Rules",
+  "communities.governanceLog.meta.field.tags": "Tags",
+  "communities.governanceLog.meta.field.coverImageUrl": "Cover image",
+
   "communities.health.modalTitle": "Why <em>{score}</em>?",
   "communities.health.howCalculatedCta": "How it's calculated",
   "communities.health.offerSupportCta": "Offer support",
@@ -1625,7 +1735,7 @@ export const admin: Catalog = {
   // this change's `AdminGovernanceHealthEditor` edit needs is added below, so
   // it renders correctly whenever that broader gap gets backfilled.
   "governance.overview.health.field.valueComputedHint":
-    "Computed live from active member accounts — not editable here.",
+    "Computed live from active member accounts. Read-only here.",
 
   // ── Proposals tab (COM-1) ──────────────────────────────────────────────────
   // Admin-only create form + list for the real member-vote proposals backing
@@ -1700,7 +1810,7 @@ export const admin: Catalog = {
   "governance.finances.edit.eyebrow": "Finances",
   "governance.finances.edit.title": "Correct the <em>figures</em>",
   "governance.finances.edit.sub":
-    "These figures are reported by QueerPulse each quarter and reviewed by the finance team — not computed automatically. Fix any number that's wrong; every change is recorded and marked as admin-entered.",
+    "These figures are reported by QueerPulse each quarter and reviewed by the finance team, and entered by hand. Fix any number that's wrong; every change is recorded and marked as admin-entered.",
   "governance.finances.edit.section.headline": "Headline figures",
   "governance.finances.edit.section.income": "Income lines",
   "governance.finances.edit.section.spend": "Spending lines",
@@ -1909,15 +2019,17 @@ export const admin: Catalog = {
   // this is the fallback when those fields are missing.
   "modPanel.reports.metaLiveLine": "Flagged · {time} ago",
   "modPanel.reports.removeCta": "Remove post",
-  "modPanel.reports.warnCta": "Warn author",
   "modPanel.reports.dismissCta": "Dismiss",
-  "modPanel.reports.escalateCta": "Escalate to staff",
-  "modPanel.reports.removedToast":
-    "Post removed. The author has been notified.",
-  "modPanel.reports.warnedToast": "A warning has been sent to {name}.",
-  "modPanel.reports.dismissedToast": "Report dismissed.",
-  "modPanel.reports.escalatedToast":
-    "Escalated to the QueerPulse team. It's now in the platform queue.",
+  // What a community owner/mod can actually do from here, and where the rest of
+  // it is decided. Warn / suspend / escalate need a platform moderator role.
+  "modPanel.reports.escalationNote":
+    "You can take a post down or dismiss a report here. Warnings, suspensions and escalations are decided by the QueerPulse moderation team, and every open report is already in their queue.",
+  "modPanel.reports.replyNote":
+    "This report is about a reply. You can dismiss it here, and removing the reply itself happens in the thread.",
+  "modPanel.reports.openInQueueCta": "Open in the moderation queue",
+  "modPanel.reports.removedToast": "Post removed and the report closed.",
+  "modPanel.reports.removeErrorToast": "Couldn't remove that post",
+  "modPanel.reports.dismissedToast": "Report dismissed. The post stays up.",
 
   "modPanel.members.searchPlaceholder": "Search members…",
   "modPanel.members.roleFilter.all": "All",
@@ -3284,7 +3396,7 @@ export const admin: Catalog = {
 
   "pressKit.facts.title": "Facts (auto)",
   "pressKit.facts.sub":
-    "Derived from platform data. Shown on the public press kit, not editable here.",
+    "Derived from platform data. Shown on the public press kit, and read-only here.",
   "pressKit.facts.empty": "No facts available yet.",
 
   // ── Housing listing integrity (Wave B1) — risk-sorted moderation queue ──
@@ -3327,7 +3439,7 @@ export const admin: Catalog = {
   "reports.finance.surplus": "Surplus: {amount}",
   "reports.communityHealth.title": "Community health",
   "reports.communityHealth.sub": "A snapshot of every community's health score.",
-  "reports.communityHealth.asOfNow": "As of {time}. A snapshot, not a trend.",
+  "reports.communityHealth.asOfNow": "As of {time}. A snapshot in time.",
   "reports.communityHealth.notMeasured": "Not measured yet",
   "reports.communityHealth.averageScore": "Average score: {score}",
   "reports.communityHealth.needingSupport": "{count} needing support",
@@ -3344,9 +3456,9 @@ export const admin: Catalog = {
   "adminResourceListings.title": "Resource <em>listings</em>",
   "adminResourceListings.header.eyebrow": "Directory",
   "adminResourceListings.header.sub":
-    "The real, vetted Legal Aid and Sexual Health Testing organisations members can contact. Publishing here is always a deliberate step — approving a suggestion never creates a listing automatically.",
+    "The real, vetted Legal Aid and Sexual Health Testing organisations members can contact. Publishing here is always a deliberate step: approving a suggestion records the decision and leaves the listing to you.",
   "adminResourceListings.newCta": "New listing",
-  "adminResourceListings.empty": "No listings yet — create the first one, or check the suggestions queue for ideas.",
+  "adminResourceListings.empty": "No listings yet. Create the first one, or check the suggestions queue for ideas.",
   "adminResourceListings.loadError": "Couldn't load resource listings.",
   "adminResourceListings.category.legal_aid": "Legal Aid",
   "adminResourceListings.category.sexual_health_testing": "Sexual Health Testing",
@@ -3378,7 +3490,7 @@ export const admin: Catalog = {
   "adminResourceSuggestions.header.eyebrow": "Review queue",
   "adminResourceSuggestions.header.title": "Resource <em>suggestions</em>",
   "adminResourceSuggestions.header.sub":
-    "Every Legal Aid / Sexual Health Testing resource a member has suggested. Approving here only records the decision — publish the real, verified listing by hand on Resource listings.",
+    "Every Legal Aid / Sexual Health Testing resource a member has suggested. Approving here only records the decision. Publish the real, verified listing by hand on Resource listings.",
   "adminResourceSuggestions.filter.all": "All categories",
   "adminResourceSuggestions.category.legal_aid": "Legal Aid",
   "adminResourceSuggestions.category.sexual_health_testing": "Sexual Health Testing",
@@ -3422,4 +3534,229 @@ export const admin: Catalog = {
   "adminCommunityTagRequests.loadingMore": "Loading…",
   "adminCommunityTagRequests.toast.resolved": "Tag request resolved.",
   "adminCommunityTagRequests.toast.error": "Couldn't resolve that request.",
+
+  // ── 2026-08-21 code-review 4.6 fixes ──
+  "members.flagged.openMemberAriaLabel": "Open the member details for {handle}",
+  "members.flagged.loadingDrawerLabel": "Loading member details",
+  "members.flagged.loadErrorToast":
+    "Couldn't load this member's details. Please try again",
+  "adminListings.queerOwned.verifyCta": "Confirm queer-owned",
+  "adminListings.queerOwned.unverifyCta": "Withdraw queer-owned",
+  "adminListings.queerOwned.toast.verified":
+    "{name} is now marked verified queer-owned.",
+  "adminListings.queerOwned.toast.unverified":
+    "The verified queer-owned badge was withdrawn from {name}.",
+  "listingClaims.empty": "No claims in this filter right now.",
+  "listingClaims.claimedBy": "Claimed by {name}",
+  "listingClaims.unknownClaimant": "an unknown member",
+  "listingClaims.approveCta": "Approve",
+  "listingClaims.declineCta": "Decline",
+  "communities.grid.truncatedNotice":
+    "The report scan hit its limit. Some recent reports may be missing from these health numbers.",
+  "communities.queue.truncatedNotice":
+    "The report scan hit its limit. Some of this community's reports may be missing from the list below.",
+  "communities.settings.mod.removeFromCommunityAriaLabel":
+    "Remove {name} from the community",
+  "communities.settings.mod.removeFromCommunityConfirmTitle":
+    "Remove {name} from this community?",
+  "communities.settings.mod.removeFromCommunityConfirmBody":
+    "{name} loses their moderator role and their place on the roster, and is notified that they were removed. Their posts stay. They can ask to join again, subject to the community's join rules.",
+  "communities.settings.mod.removeFromCommunityCta": "Remove from community",
+  "communities.settings.mod.removedFromCommunityToast":
+    "{name} was removed from the community",
+  "communities.settings.mod.removeFromCommunityFailedToast":
+    "Couldn't remove {name} from the community",
+  "communities.settings.mod.removeFromCommunityOwnerError":
+    "The founder can't be removed from their own community.",
+  "governance.overview.badge.neverEdited": "Never edited",
+  "governance.overview.badge.editedBy": "Edited by {name} on {date}",
+  "governance.overview.edit.dragToReorder": "Drag to reorder",
+  "governance.overview.edit.removeRow": "Remove this row",
+  "governance.overview.edit.addRow": "Add a row",
+  "governance.overview.edit.section.note": "Reason (optional)",
+  "governance.overview.edit.save": "Save section",
+  "governance.overview.edit.saved": "Section updated.",
+  "governance.overview.edit.noChanges": "Nothing changed.",
+  "governance.overview.edit.error": "Couldn't save. Please try again.",
+  "governance.overview.health.title": "Community <em>health</em>",
+  "governance.overview.health.sub":
+    "The stats on the public Governance page, in the order members see them. Active members is counted live and can't be typed here.",
+  "governance.overview.health.field.value": "Figure",
+  "governance.overview.health.field.trend": "Trend line",
+  "governance.overview.health.field.trendCount": "Trend number",
+  "governance.overview.health.field.up": "Show as an increase",
+  "governance.overview.moderation.title": "How moderation <em>works</em>",
+  "governance.overview.moderation.sub":
+    "The steps members read on the public Governance page, in the order they happen.",
+  "governance.overview.council.title": "Advisory <em>council</em>",
+  "governance.overview.council.sub":
+    "Who sits on the council, and in what order they appear on the public Governance page.",
+  "governance.overview.council.field.name": "Name",
+  "governance.overview.council.field.initials": "Initials",
+  "governance.overview.council.field.role": "Role",
+  "governance.overview.council.field.tint": "Avatar colour",
+  "governance.overview.council.addSeat": "Add a seat",
+  "governance.overview.principles.title": "Platform <em>principles</em>",
+  "governance.overview.principles.sub":
+    "The promises listed on the public Governance page, in the order members read them.",
+  "governance.overview.principles.field.icon": "Icon",
+  "governance.overview.decisions.title": "Recent <em>decisions</em>",
+  "governance.overview.decisions.sub":
+    "Which decisions appear in the public log, newest first.",
+  "members.verify.mutualLabel": "Mutual member",
+  "errors.updatePartner": "Couldn't update that partner",
+  "errors.saveChanges": "Couldn't save those changes",
+  "errors.createCoop": "Couldn't create that co-op",
+  "errors.createTier": "Couldn't create that tier",
+  "errors.saveDecision": "Couldn't save that decision",
+  "errors.removeListing": "Couldn't remove that listing",
+  "errors.updateCoop": "Couldn't update that co-op",
+  "errors.removeCoop": "Couldn't remove that co-op",
+  "errors.saveTestimonial": "Couldn't save that testimonial",
+  "errors.updateTier": "Couldn't update that tier",
+  "errors.removeTier": "Couldn't remove that tier",
+  "errors.createListing": "Couldn't create that listing",
+  "errors.saveChange": "Couldn't save that change",
+  "errors.updateTargetDate": "Couldn't update the target date",
+  "errors.updateVisibility": "Couldn't update visibility",
+  "errors.createItem": "Couldn't create that item",
+  "errors.archiveItem": "Couldn't archive that item",
+  "errors.deleteItem": "Couldn't delete that item",
+  "errors.restoreItem": "Couldn't restore that item",
+  "errors.saveStat": "Couldn't save that stat",
+  "governance.finances.edit.field.amountInvalid":
+    "Write this as a number. 1840, 1840.50 and 1 840,50 all work.",
+  "governance.finances.edit.field.amountRequired":
+    "This line needs an amount. Switch the line off if it no longer applies.",
+  "governance.finances.edit.blockedByAmounts":
+    "Saving is on hold until every highlighted amount reads as a number.",
+  "moderation.action.created": "Report received",
+  "moderation.action.appealOverturned": "Appeal overturned",
+  "moderation.oldestNote_one":
+    "Showing {count} open report · the oldest landed {oldest}",
+  "moderation.oldestNote_other":
+    "Showing {count} open reports · the oldest landed {oldest}",
+  "members.drawer.label": "{name}, member detail",
+  "members.flagged.openReportsCta": "Open reports",
+  "members.flagged.openReportsAriaLabel": "Open the reports about {handle}",
+  "modPanel.members.unavailableToast":
+    "We couldn't act on {name}'s row. Reload the members list and try again.",
+  "modPanel.members.roleErrorToast":
+    "{name}'s role didn't change. Nothing was saved, so try again in a moment.",
+  "modPanel.members.removeErrorToast":
+    "{name} is still in the community. The removal didn't go through.",
+  "modPanel.members.removeConfirm.title": "Remove {name}?",
+  "modPanel.members.removeConfirm.body":
+    "{name} loses access to this community's posts and events straight away. They can ask to join again later, and you'd review that like any other request.",
+  "modPanel.members.removeConfirm.cta": "Yes, remove them",
+  "modPanel.requests.errorToast":
+    "{name}'s request is still waiting. That decision didn't go through.",
+  "modPanel.requests.approveAllConfirm.title_one": "Approve this request?",
+  "modPanel.requests.approveAllConfirm.title_other":
+    "Approve all {count} requests?",
+  "modPanel.requests.approveAllConfirm.body_one":
+    "They join the community right away. You can still remove someone later from the Members tab.",
+  "modPanel.requests.approveAllConfirm.body_other":
+    "All {count} of them join the community right away. You can still remove someone later from the Members tab.",
+  "modPanel.requests.approveAllConfirm.cta": "Yes, approve them",
+  "modPanel.requests.approvedSomeToast":
+    "{approved} approved. {failed} didn't go through and are still waiting for you.",
+  "modPanel.requests.approveAllFailedToast_one":
+    "That request didn't go through. It's still waiting for you.",
+  "modPanel.requests.approveAllFailedToast_other":
+    "None of the {count} requests went through. They're all still waiting for you.",
+  "common.notSet": "Not set",
+  "vouchGraph.pathSeparator": "to",
+  "roadmap.modals.auditLog.empty": "No changes recorded yet.",
+  "media.delete.confirmAnyway": "Delete anyway",
+  "media.delete.refusedTitle": "This file is still in use",
+  "media.delete.refusedInUse_one":
+    "The server checked again and this file is still used in {count} place, listed below. Deleting it now breaks that image for good, and the override is logged.",
+  "media.delete.refusedInUse_other":
+    "The server checked again and this file is still used in {count} places, listed below. Deleting it now breaks those images for good, and the override is logged.",
+  "media.delete.refusedUnverified":
+    "The server couldn't check where this file is used, so it refused to delete it. Try again in a moment, or delete anyway if this is a takedown that can't wait. The override is logged.",
+  "errors.deleteMediaObject": "Couldn't delete that file",
+  "roadmap.modals.digest.movedLine": "moved from {from} to {to}",
+
+  // ── 2026-08-21 code-review 4.6: dynamic-key siblings ──
+  "listingClaims.filter.pending": "Pending",
+  "listingClaims.filter.approved": "Approved",
+  "listingClaims.filter.declined": "Declined",
+  "listingClaims.filter.all": "All",
+  "listingClaims.status.pending": "Pending",
+  "listingClaims.status.approved": "Approved",
+  "listingClaims.status.declined": "Declined",
+  "listingClaims.toast.approved": "{name} now belongs to its claimant.",
+  "listingClaims.toast.declined": "The claim on {name} was declined.",
+  "governance.overview.health.stat.activeMembers": "Active members",
+  "governance.overview.health.stat.retention": "Member retention rate",
+  "governance.overview.health.stat.reportsFiled": "Reports filed this quarter",
+  "governance.overview.health.stat.membersRemoved": "Members removed",
+  "governance.overview.health.stat.gatheringsHosted": "Gatherings hosted",
+  "governance.overview.health.stat.appealUpheld": "Moderation appeal upheld",
+  "governance.overview.health.trend.upThisQuarter": "Up this quarter",
+  "governance.overview.health.trend.steady": "Steady",
+  "governance.overview.health.trend.allResolved": "All resolved",
+  "governance.overview.health.trend.cocViolations": "Code of care violations",
+  "governance.overview.health.trend.upVsQ1": "Up vs Q1",
+  "governance.overview.health.trend.ofFiled": "of those filed",
+  "governance.overview.moderation.step.reportFiled": "Report filed",
+  "governance.overview.moderation.step.review": "Review within 48 hours",
+  "governance.overview.moderation.step.decision": "Decision and communication",
+  "governance.overview.moderation.step.appeal": "Right to appeal",
+  "governance.overview.council.role.psychologistChair": "Psychologist · Chair",
+  "governance.overview.council.role.lawyerLegalAdvisor":
+    "Lawyer · Legal advisor",
+  "governance.overview.council.role.housingActivist": "Housing activist",
+  "governance.overview.council.role.healthcareAdvocate": "Healthcare advocate",
+  "governance.overview.council.tint.jade": "Jade",
+  "governance.overview.council.tint.violet": "Violet",
+  "governance.overview.council.tint.plum": "Plum",
+  "governance.overview.principles.key.noSellingData":
+    "We will never sell member data",
+  "governance.overview.principles.key.visibilityChoice":
+    "Visibility is always your choice",
+  "governance.overview.principles.key.noAlgorithms":
+    "No algorithms deciding who you see",
+  "governance.overview.principles.key.communityVoice":
+    "Community has a voice in decisions",
+  "governance.overview.principles.key.transparency":
+    "Transparency is non-negotiable",
+  "governance.overview.principles.key.accessNotConditional":
+    "Access is not conditional on ability to pay",
+  "governance.overview.principles.icon.lock": "Padlock",
+  "governance.overview.principles.icon.eye": "Eye",
+  "governance.overview.principles.icon.slash": "Crossed circle",
+  "governance.overview.principles.icon.message": "Message bubble",
+  "governance.overview.principles.icon.book": "Book",
+  "governance.overview.principles.icon.accessible": "Accessibility",
+  "governance.overview.decisions.key.slidingScale":
+    "May 2026: Sliding scale introduced for gatherings",
+  "governance.overview.decisions.key.forumLaunched":
+    "April 2026: Forum launched",
+  "governance.overview.decisions.key.visibilityDefaults":
+    "March 2026: Visibility defaults made more conservative",
+  "governance.overview.decisions.key.languageToggle":
+    "February 2026: Language toggle added",
+
+  // ── 2026-08-21 code-review 4.6 fixes ──
+  "moderation.resolved.closedAt":
+    "Closed {age}",
+  "moderation.resolved.resolvedBy":
+    "Resolved by {name}: {note}",
+  "moderation.notified.member":
+    "Member notified",
+  "moderation.notified.reporter":
+    "Reporter notified",
+  "moderation.notified.affected":
+    "Affected member supported",
+  "moderation.reporter.anonymous":
+    "anonymous",
+  "communities.queue.status.open":
+    "Open",
+  "communities.queue.status.resolved":
+    "Resolved",
+  "communities.queue.status.escalated":
+    "Escalated",
 };

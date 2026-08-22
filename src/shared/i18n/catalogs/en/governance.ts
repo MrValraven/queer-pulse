@@ -92,7 +92,7 @@ export const governance: Catalog = {
   "sections.council.eyebrow": "Advisory council",
   "sections.council.title": "Who <em>oversees</em> this.",
   "sections.council.intro":
-    "The advisory council reviews moderation appeals, proposes platform changes, and serves as an accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote — see Proposals & votes below.",
+    "The advisory council reviews moderation appeals, proposes platform changes, and serves as an accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote. See Proposals & votes below.",
 
   "council.psychologistChair": "Psychologist · Chair",
   "council.lawyerLegalAdvisor": "Lawyer · Legal advisor",
@@ -140,6 +140,7 @@ export const governance: Catalog = {
     "Quarterly surpluses go into an operational reserve. Our target is three months of running costs, ~{target}.",
   "sections.finances.reserveProgress":
     "Operational reserve: {current} of {target} target",
+  "sections.finances.reserveBarAria": "Operational reserve progress",
   "sections.finances.surplusRedirect":
     "Once we reach the target, additional surplus is redirected in full to the community micro-grants fund. We do not accumulate capital. We redistribute it.",
   "sections.finances.partnerRestriction":
@@ -147,7 +148,7 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.mentalHealthFund": "the Mental Health Fund",
   "sections.finances.partnerScope.communityEvents": "community events",
   "sections.finances.noCorporateFunding":
-    "We do not accept funding from corporations, brands, or government bodies whose interests could conflict with community autonomy. If that ever changes, we'll say so here first, and put it to a community vote — see Proposals & votes below.",
+    "We do not accept funding from corporations, brands, or government bodies whose interests could conflict with community autonomy. If that ever changes, we'll say so here first, and put it to a community vote. See Proposals & votes below.",
 
   // ── Proposals & votes ────────────────────────────────────────────────────
   "sections.proposals.eyebrow": "Proposals & votes",

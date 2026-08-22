@@ -46,7 +46,14 @@ export function AdminHousingCoopsPage() {
       { id: coop.id, body: { published: !coop.published } },
       {
         onError: (error) =>
-          showToast(describeError("Couldn't update that co-op", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.updateCoop"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       },
     );
   }
@@ -58,7 +65,14 @@ export function AdminHousingCoopsPage() {
       onSuccess: () =>
         showToast(t("admin:housingCoop.toast.removed", { name }), "info"),
       onError: (error) =>
-        showToast(describeError("Couldn't remove that co-op", error), "error"),
+        showToast(
+          describeError(
+            t("admin:errors.removeCoop"),
+            error,
+            t("shared:apiError.tryAgainTail"),
+          ),
+          "error",
+        ),
     });
     setDeleteTarget(null);
   }

@@ -23,6 +23,56 @@ export const API_VERSION_PREFIX = "/v1";
 // with a legitimately long-running endpoint can pass a per-call override.
 const DEFAULT_TIMEOUT_MS = 15_000;
 
+/**
+ * `fetch` with the same fail-fast ceiling `request()` enforces, for the direct
+ * calls in this file that bypass the generic builder (`/csrf-token`,
+ * `/auth/refresh`, the unversioned logout). Without it a single stalled backend
+ * connection on one of those endpoints freezes authentication for the whole
+ * browser profile: `runRefresh` runs inside a cross-tab Web Lock, and every
+ * mutation awaits `ensureCsrf()` before its own timed fetch even starts.
+ *
+ * Returns the `AbortSignal` alongside the response promise so callers that need
+ * to hand the same deadline to another API (the Web Lock below) can reuse it.
+ */
+function timedFetch(
+  url: string,
+  init: RequestInit = {},
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...init, signal: controller.signal }).finally(() => {
+    clearTimeout(timeout);
+  });
+}
+
+/**
+ * What this tab knows about the member's session, used to keep anonymous
+ * visitors off the authenticated recovery paths.
+ *
+ * - `unknown` — before `/auth/me` settles. A 401 here still tries a refresh:
+ *   this is the returning member whose 15-minute access cookie lapsed while the
+ *   refresh cookie is perfectly good.
+ * - `active`  — `/auth/me` confirmed a session.
+ * - `none`    — `/auth/me` came back 401. Every other 401 in the app is then
+ *   just "you are not signed in": no POST /auth/refresh round trip, no
+ *   `onAuthLost` reconcile, no error telemetry for a visitor who simply never
+ *   signed in.
+ */
+export type SessionState = "unknown" | "active" | "none";
+
+let sessionState: SessionState = "unknown";
+
+/** Told by `AuthProvider` once `GET /auth/me` settles. */
+export function setSessionState(next: SessionState): void {
+  sessionState = next;
+}
+
+/** Whether a 401 should attempt the refresh + reconcile recovery at all. */
+function shouldAttemptRecovery(): boolean {
+  return sessionState !== "none";
+}
+
 /** Normalized API failure carrying the HTTP status. */
 export class ApiError extends Error {
   status: number;
@@ -92,7 +142,7 @@ export async function probeBackend(): Promise<BackendProbe> {
     return { ok: false, reason: "offline" };
   }
   try {
-    const res = await fetch(`${API_BASE_URL}/csrf-token`, {
+    const res = await timedFetch(`${API_BASE_URL}/csrf-token`, {
       credentials: "include",
     });
     if (res.status >= 500) {
@@ -108,7 +158,7 @@ let csrfFetch: Promise<void> | null = null;
 
 async function fetchCsrf(): Promise<void> {
   try {
-    const res = await fetch(`${API_BASE_URL}/csrf-token`, {
+    const res = await timedFetch(`${API_BASE_URL}/csrf-token`, {
       credentials: "include",
     });
     if (res.ok) {
@@ -159,12 +209,28 @@ function lockManager(): LockManager | undefined {
   return navigator.locks;
 }
 
-/** Run `task` while holding the cross-tab refresh lock, or directly when the
- *  Web Locks API is unavailable. */
-function withRefreshLock<T>(task: () => Promise<T>): Promise<T> {
+/**
+ * Run `task` while holding the cross-tab refresh lock, or directly when the Web
+ * Locks API is unavailable.
+ *
+ * The wait for the lock is itself bounded: `locks.request(name, { signal }, …)`
+ * rejects with an `AbortError` once the signal fires, so a tab whose holder is
+ * wedged (a browser killed mid-refresh, a lock the previous page never released)
+ * gives up instead of queueing forever behind it. A caller that loses the race
+ * gets `false` — the same answer a failed refresh gives — rather than a promise
+ * that never settles and pins every gated route on its loader.
+ */
+function withRefreshLock(task: () => Promise<boolean>): Promise<boolean> {
   const locks = lockManager();
   if (!locks) return task();
-  return locks.request(REFRESH_LOCK, task);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
+  return locks
+    .request(REFRESH_LOCK, { signal: controller.signal }, task)
+    .catch(() => false)
+    .finally(() => {
+      clearTimeout(timeout);
+    });
 }
 
 /**
@@ -186,7 +252,7 @@ function withRefreshLock<T>(task: () => Promise<T>): Promise<T> {
  */
 async function runRefresh(): Promise<boolean> {
   const attempt = () =>
-    fetch(`${API_BASE_URL}/auth/refresh`, {
+    timedFetch(`${API_BASE_URL}/auth/refresh`, {
       method: "POST",
       credentials: "include",
       headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
@@ -245,7 +311,7 @@ export function refreshSession(): Promise<boolean> {
 export async function postUnversioned(path: string): Promise<boolean> {
   try {
     await ensureCsrf();
-    const res = await fetch(`${API_BASE_URL}${path}`, {
+    const res = await timedFetch(`${API_BASE_URL}${path}`, {
       method: "POST",
       credentials: "include",
       headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
@@ -384,6 +450,14 @@ async function request<T>(
     externalSignal?.removeEventListener("abort", onExternalAbort);
   }
 
+  // A 401 for a visitor we already know is signed out is not a recoverable
+  // session loss, it is the expected answer. Skipping the refresh + reconcile
+  // here keeps an anonymous page load from firing POST /auth/refresh (the most
+  // expensive auth path on the backend) and from tripping `onAuthLost`.
+  if (res.status === 401 && retry && !shouldAttemptRecovery()) {
+    throw new ApiError(401, "Not authenticated");
+  }
+
   if (res.status === 401 && retry) {
     const ok = await refreshOnce();
     if (ok) {
@@ -414,14 +488,16 @@ async function request<T>(
       /* non-JSON error body */
     }
 
-    // A 403 from a stale/missing CSRF token: drop the cached token, fetch a fresh
-    // one, and retry the mutation once. Other 403s (e.g. quota) fall through.
-    if (
-      res.status === 403 &&
-      retry &&
-      !SAFE.has(method) &&
-      /csrf/i.test(message)
-    ) {
+    // A 403 on a mutation: drop the cached token, fetch a fresh one, and retry
+    // ONCE. We deliberately do not key this on the backend's error text — a
+    // reworded, localized or non-JSON body (in which case `message` is just
+    // "Forbidden") would leave the stale token cached for the rest of the tab's
+    // life, and every write would then fail with a toast that reads as a
+    // permissions problem. Retrying any non-safe 403 once is safe for the same
+    // reason `runRefresh` gives: the CsrfGuard rejects BEFORE the controller
+    // runs, so nothing was performed. A genuine permission denial simply fails
+    // the same way a second time and falls through to the throw below.
+    if (res.status === 403 && retry && !SAFE.has(method)) {
       csrfToken = null;
       await ensureCsrf();
       return request<T>(

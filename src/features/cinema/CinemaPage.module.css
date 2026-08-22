@@ -132,7 +132,7 @@
   flex-direction: column;
   justify-content: flex-end;
   min-height: 420px;
-  background: #1a1030;
+  background: var(--cinema-surface);
   overflow: hidden;
 }
 .cvOverlay {

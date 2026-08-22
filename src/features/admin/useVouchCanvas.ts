@@ -67,7 +67,11 @@ function edgeTip(
   graph: TrustGraph,
   t: (key: string) => string,
 ): TipData {
-  const label = `${graph.peopleById[e.from]!.initials} → ${graph.peopleById[e.to]!.initials}${e.mutual ? ` · ${mutualLabel}` : ""}`;
+  // Reads as words rather than an arrow glyph: this label is a plain string
+  // painted into the canvas tooltip, so there is no element to hang an icon on
+  // and a literal U+2192 would be announced as "rightwards arrow" (FE-ADM-23).
+  const connector = t("admin:vouchGraph.pathSeparator");
+  const label = `${graph.peopleById[e.from]!.initials} ${connector} ${graph.peopleById[e.to]!.initials}${e.mutual ? ` · ${mutualLabel}` : ""}`;
   return {
     kind: "edge",
     label,
@@ -202,7 +206,7 @@ function applyZoomAt(
   paint();
 }
 
-/** Everything the pointer handlers close over — the hook's own refs and state. */
+/** Everything the pointer handlers close over: the hook's own refs and state. */
 interface HandlerContext {
   focus: string;
   graph: TrustGraph;
@@ -236,8 +240,8 @@ interface HandlerContext {
  * The pointer-handler logic lives in these module-scope functions rather than
  * inline in the hook (which would push it over the line budget). They are plain
  * functions, not components/hooks, so they may read `ctx.<ref>.current` freely;
- * the hook only ever calls them from *inside* its event callbacks — never during
- * render — so no ref is read while React is rendering.
+ * the hook only ever calls them from *inside* its event callbacks, never during
+ * render, so no ref is read while React is rendering.
  */
 
 /** Begin a node drag: record the start point and capture the pointer. */
@@ -384,7 +388,7 @@ interface Args {
 }
 
 /**
- * Owns everything imperative about the canvas — the force simulation, painting
+ * Owns everything imperative about the canvas: the force simulation, painting
  * node/edge positions, pan/zoom, node dragging (with manual pins), hover
  * tooltips, and reset. Keeps the presentational component to plain JSX.
  */

@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { FiSearch, FiSliders, FiUsers } from "react-icons/fi";
+import { FiSearch, FiSliders, FiUsers, FiX } from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -202,7 +202,7 @@ export function MemberResultsColumn({
                 })}
                 onClick={() => onApplyFilters(removeChip(filters, chip))}
               >
-                ×
+                <FiX aria-hidden />
               </button>
             </span>
           ))}

@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { changeLabelKey } from "./settings.data";
 import styles from "./SettingsSaveBar.module.css";
@@ -42,7 +43,8 @@ export function SettingsSaveBar({
       )}
       <div className={styles.saveBar}>
         {saveError ? (
-          <p>{saveError}</p>
+          // Announced: a failed save used to be silent for screen-reader users.
+          <p role="alert">{saveError}</p>
         ) : hasChanges ? (
           <button
             type="button"
@@ -64,17 +66,13 @@ export function SettingsSaveBar({
           <p>{t("settings:page.saveBar.unsaved")}</p>
         )}
         <div className={styles.actions}>
-          <button type="button" className={styles.discard} onClick={onDiscard}>
+          {/* On a plum panel the house style is ghost-dark + primary coral. */}
+          <Button variant="ghost-dark" onClick={onDiscard} disabled={isSaving}>
             {t("settings:page.saveBar.discard")}
-          </button>
-          <button
-            type="button"
-            className={styles.saveBtn}
-            disabled={isSaving}
-            onClick={onSave}
-          >
+          </Button>
+          <Button variant="primary" onClick={onSave} disabled={isSaving}>
             {t("settings:page.saveBar.save")}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

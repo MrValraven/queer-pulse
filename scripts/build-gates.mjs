@@ -10,6 +10,9 @@
  *
  * The steps:
  *   - lint:a11y          — the jsx-a11y ratchet gate (must pass before we build)
+ *   - tokens             — the design-token ratchet: no raw hex and no raw
+ *                          plum channels in CSS Modules (see
+ *                          scripts/check-design-tokens.mjs)
  *   - typecheck (tsc -b) — the type gate (must pass before we build)
  *   - sitemap            — writes public/sitemap.xml, which `vite build` copies
  *                          into dist/, so it has to land before the bundle
@@ -40,6 +43,7 @@ const childEnv = {
 
 const STEPS = [
   { name: "lint:a11y", command: "pnpm lint:a11y" },
+  { name: "tokens", command: "node scripts/check-design-tokens.mjs" },
   { name: "typecheck", command: "tsc -b" },
   { name: "sitemap", command: "pnpm sitemap" },
   { name: "browser", command: "pnpm prerender:browser" },

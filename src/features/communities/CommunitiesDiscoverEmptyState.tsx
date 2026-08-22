@@ -18,8 +18,8 @@ import type { CommunityType } from "../homepage/data/types";
 export function CommunitiesDiscoverEmptyState({
   q,
   filter,
-  openOnly,
-  busyOnly,
+  isOpenOnly,
+  isBusyOnly,
   tagIds,
   setSearchInput,
   setFilter,
@@ -29,8 +29,8 @@ export function CommunitiesDiscoverEmptyState({
 }: {
   q: string;
   filter: "all" | CommunityType;
-  openOnly: boolean;
-  busyOnly: boolean;
+  isOpenOnly: boolean;
+  isBusyOnly: boolean;
   tagIds: string[];
   setSearchInput: Dispatch<SetStateAction<string>>;
   setFilter: Dispatch<SetStateAction<"all" | CommunityType>>;
@@ -54,7 +54,7 @@ export function CommunitiesDiscoverEmptyState({
     );
   }
 
-  if (filter !== "all" || openOnly || busyOnly || tagIds.length > 0) {
+  if (filter !== "all" || isOpenOnly || isBusyOnly || tagIds.length > 0) {
     return (
       <EmptyState
         icon={<FiUsers />}

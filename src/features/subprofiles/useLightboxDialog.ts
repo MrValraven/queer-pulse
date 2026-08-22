@@ -1,4 +1,4 @@
-import { useEffect, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -13,11 +13,26 @@ const FOCUSABLE =
  *
  * The caller owns the `dialogRef` (attached to its overlay element) and the
  * `useScrollLock()` call, so this hook adds no rendering of its own.
+ *
+ * `onClose`/`onMove` are held in latest-callback refs so the setup effect runs
+ * exactly once per open, the way `useDrawerDismiss` already does. Keying it on
+ * the callbacks meant every Next/Prev press (a `setIndex` → parent re-render →
+ * fresh callback identities) tore the whole thing down and set it up again,
+ * which restored focus to the previously-focused element and then re-focused
+ * the first control: a keyboard user who tabbed to "Next" had focus yanked back
+ * to the close button after every single image.
  */
 export function useLightboxDialog(
   dialogRef: RefObject<HTMLDivElement | null>,
   { onClose, onMove }: { onClose: () => void; onMove: (delta: number) => void },
 ): void {
+  const onCloseRef = useRef(onClose);
+  const onMoveRef = useRef(onMove);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+    onMoveRef.current = onMove;
+  });
+
   useEffect(() => {
     const dialog = dialogRef.current;
     const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -35,15 +50,15 @@ export function useLightboxDialog(
 
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (event.key === "ArrowLeft") {
-        onMove(-1);
+        onMoveRef.current(-1);
         return;
       }
       if (event.key === "ArrowRight") {
-        onMove(1);
+        onMoveRef.current(1);
         return;
       }
       if (event.key !== "Tab" || !dialog) return;
@@ -70,5 +85,9 @@ export function useLightboxDialog(
       document.removeEventListener("keydown", onKey);
       previouslyFocused?.focus?.();
     };
-  }, [dialogRef, onClose, onMove]);
+    // Setup runs once per open (the lightbox is only mounted while open), so
+    // focus is never stolen mid-interaction. `onClose`/`onMove` are read
+    // through refs above, so they are deliberately not dependencies.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dialogRef]);
 }

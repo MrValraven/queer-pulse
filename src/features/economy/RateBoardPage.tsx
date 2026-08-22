@@ -143,9 +143,12 @@ export function RateBoardPage() {
     </>
   );
 
+  // The eyebrow, title and subtitle all lead with the same truth: this board is
+  // a `localStorage` store on one device. Earlier copy called it community data,
+  // which promised a shared dataset the page has no way to fetch.
   return (
     <ToolPage
-      eyebrow={t("economy:toolPage.eyebrowCommunity")}
+      eyebrow={t("economy:rateBoard.eyebrow")}
       title={
         <Translation
           i18nKey="economy:rateBoard.title"

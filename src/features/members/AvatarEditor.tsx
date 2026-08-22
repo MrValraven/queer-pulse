@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ImageSlot, type ImageSlotTint } from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
@@ -63,6 +63,20 @@ export function AvatarEditor({
   // The avatar captured from the member's Google sign-in, offered as a
   // one-tap fill in the picker whenever the member has one on file.
   const googlePhoto = user?.profile.avatarUrl ?? undefined;
+
+  // Revoke the blob on unmount too, not only on replace/remove. `useUploadImage`
+  // hands ownership of the URL to this component and drops it from its own
+  // sweep, so discarding the edit (ProfileEditBar's "Discard" unmounts the
+  // editor) used to leave one decoded image retained per edit session. The
+  // cleanup runs whenever `localPreview` changes as well, which is harmless:
+  // the handlers below already revoked the old value before setting the new
+  // one, and revoking an already-revoked URL is a no-op.
+  useEffect(
+    () => () => {
+      if (localPreview) URL.revokeObjectURL(localPreview);
+    },
+    [localPreview],
+  );
 
   function handlePick(value: string, previewUrl: string, crop?: CropRect) {
     if (localPreview) URL.revokeObjectURL(localPreview); // only revoke blob previews

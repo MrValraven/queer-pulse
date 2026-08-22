@@ -442,9 +442,13 @@ button.cal-cell.has {
   width: 5px;
   height: 5px;
 }
+/* "No events this month". Drawn rather than typed, so assistive tech does not
+   announce a stray dash on every empty cell (the element is aria-hidden). */
 .cy-empty {
-  font-size: 10px;
-  color: var(--ink-40);
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink-40);
 }
 
 .cal-legend {
@@ -1188,7 +1192,12 @@ button.cal-cell.has {
   margin-left: 0;
 }
 .ev-card.hosting .av-stack .av {
-  border-color: #fbf2ee;
+  /* The stacked-avatar ring reads as a cut-out of the card behind it, so it
+     matches the hosting card's own coral-tinted surface (`.ev-card.hosting`
+     above: 5% accent over the paper card). Built from tokens rather than the
+     baked hex it replaces, which stayed a pale peach on the dark theme where
+     the card underneath is deep plum. */
+  border-color: color-mix(in srgb, var(--accent) 5%, var(--paper));
 }
 .ev-foot-text {
   font-size: 12.5px;
@@ -2276,7 +2285,7 @@ button.cal-cell.has {
   flex-wrap: wrap;
   margin-top: 12px;
   font-size: 12.5px;
-  color: var(--ink-60, rgba(45, 27, 61, 0.6));
+  color: var(--ink-60, rgba(var(--plum-rgb), 0.6));
   line-height: 1.45;
 }
 .set-preview {

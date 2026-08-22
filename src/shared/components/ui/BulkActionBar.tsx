@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { FiX } from "react-icons/fi";
 import styles from "./BulkActionBar.module.css";
 
 export type BulkActionBarVariant = "floating" | "inline";
@@ -76,7 +77,10 @@ export function BulkActionBar({
         aria-label={clearLabel}
         onClick={onClear}
       >
-        ×
+        {/* An icon, never a bare glyph: the multiplication sign was this
+            button's only content and was NOT aria-hidden, so screen readers
+            read "multiplication sign" alongside the button's own label. */}
+        <FiX aria-hidden />
       </button>
     </div>
   );

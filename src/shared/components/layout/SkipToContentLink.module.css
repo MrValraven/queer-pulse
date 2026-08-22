@@ -5,7 +5,8 @@
   position: fixed;
   top: 12px;
   left: 12px;
-  z-index: 1000;
+  /* must outrank every overlay so a keyboard user can always reach it */
+  z-index: var(--z-skip-link);
   padding: 12px 20px;
   border-radius: var(--radius-pill);
   background: var(--plum);
@@ -14,7 +15,7 @@
   font-size: var(--text-body);
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 10px 30px rgba(45, 27, 61, 0.28);
+  box-shadow: 0 10px 30px rgba(var(--plum-rgb), 0.28);
   /* Parked above the viewport rather than clipped, so focus brings it in. */
   transform: translateY(calc(-100% - 24px));
   transition: transform 0.2s var(--ease);

@@ -142,6 +142,7 @@ function toMention(dto: MentionDTO, t: TFunction, fmt: Formatters): Mention {
     category: categoryFor(dto),
     context: contextFor(dto, t),
     when: relativeWhen(createdAt, fmt),
+    createdAtIso: dto.createdAt,
     fresh,
     unread: !dto.read,
     content: dto.excerpt,

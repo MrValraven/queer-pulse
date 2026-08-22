@@ -7,9 +7,11 @@ import { useAuth } from "../../app/providers/authContext";
 import { PostActionsMenu } from "../forum/PostActionsMenu";
 import { ConfirmDeleteModal } from "../forum/ConfirmDeleteModal";
 import { ReportReplyModal } from "../forum/ReportReplyModal";
-import type { Reply, Thread as ThreadData } from "./communityDetails";
+import type { Person, Reply, Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
+import { viewerPerson } from "./communityPeople";
 import { CommunityThreadHead } from "./CommunityThreadHead";
+import { CommunityInlineTextEditor } from "./CommunityInlineTextEditor";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import {
   useReact,
@@ -94,7 +96,9 @@ function useCommunityThreadState(
   const [editingOp, setEditingOp] = useState(false);
   const [editingReplyId, setEditingReplyId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<DeleteTarget | null>(null);
-  const [historyTarget, setHistoryTarget] = useState<HistoryTarget | null>(null);
+  const [historyTarget, setHistoryTarget] = useState<HistoryTarget | null>(
+    null,
+  );
   const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
   const [opOverride, setOpOverride] = useState<{
     post?: string;
@@ -134,112 +138,237 @@ function useCommunityThreadState(
   // Report is offered to any member on content that isn't their own.
   const opCanReport = isMember && !opIsMine && !opDeleted;
 
-  const loadedMoreReplies = repliesPaging.extraReplies.map(
-    replyDtoToThreadReply,
+  const loadedMoreReplies = repliesPaging.extraReplies.map((dto) =>
+    replyDtoToThreadReply(dto, t),
   );
+  // Server rows first, the viewer's own just-posted replies last, deduped by
+  // id keeping the first occurrence: a reply the author keeps locally (see
+  // `postReply`) disappears from `extraReplies` the moment the refetched
+  // server list carries the same id, so it never renders twice.
+  const seenReplyIds = new Set<string>();
   const replies: Reply[] = [
     ...data.replies,
     ...loadedMoreReplies,
     ...extraReplies,
-  ].map((item) =>
-    item.id && replyOverrides[item.id]
-      ? { ...item, ...replyOverrides[item.id] }
-      : item,
-  );
+  ]
+    .filter((item) => {
+      if (!item.id) return true;
+      if (seenReplyIds.has(item.id)) return false;
+      seenReplyIds.add(item.id);
+      return true;
+    })
+    .map((item) =>
+      item.id && replyOverrides[item.id]
+        ? { ...item, ...replyOverrides[item.id] }
+        : item,
+    );
 
   function toggleVote() {
     const next = !voted;
     setVoted(next);
     if (demoMode || !data.id) return;
-    if (next) react.mutate({ id: data.id, key: "heart" }, { onError });
-    else unreact.mutate({ id: data.id, key: "heart" }, { onError });
+    // A refused vote puts the arrow (and the count derived from it) back where
+    // it was; before this the toast said "something went wrong" while the UI
+    // kept showing a vote the server never recorded.
+    const callbacks = {
+      onError: () => {
+        setVoted(!next);
+        onError();
+      },
+    };
+    if (next) react.mutate({ id: data.id, key: "heart" }, callbacks);
+    else unreact.mutate({ id: data.id, key: "heart" }, callbacks);
   }
 
   function postReply() {
     const text = replyText.trim();
     if (!text) return;
+    const optimisticId = nextOptimisticReplyId();
+    const viewer = viewerPerson(user);
     setExtraReplies((prev) => [
       ...prev,
-      { id: nextOptimisticReplyId(), initials: "Me", name: "You", tint: "plum", text },
+      {
+        id: optimisticId,
+        initials: viewer?.initials ?? "?",
+        name: viewer?.name ?? "",
+        tint: viewer?.tint ?? "plum",
+        authorSlug: viewer?.slug,
+        createdAt: new Date().toISOString(),
+        text,
+      },
     ]);
     setReplyText("");
-    showToast(t("communities:detail.thread.replyToast"), "success");
-    if (demoMode || !data.id) return;
-    // Live mode keeps the refetched row as its record, not the optimistic
-    // copy — clear extraReplies once the mutation settles so the reply
-    // doesn't render twice (optimistic + refetched-from-invalidation).
+    if (demoMode || !data.id) {
+      showToast(t("communities:detail.thread.replyToast"), "success");
+      return;
+    }
     reply.mutate(
       { id: data.id, text },
-      { onSuccess: () => setExtraReplies([]), onError },
+      {
+        // Swap the optimistic copy for the stored reply rather than dropping
+        // it: a new reply is the NEWEST one, so on a thread with more replies
+        // than the post's bounded preview it sits outside that window and the
+        // refetch would not bring it back — the author would watch their own
+        // reply vanish. `replies` dedupes by id, so this copy falls away by
+        // itself once the server list carries it.
+        onSuccess: (dto) => {
+          if (dto) {
+            const stored = replyDtoToThreadReply(dto, t);
+            setExtraReplies((prev) =>
+              prev.map((item) => (item.id === optimisticId ? stored : item)),
+            );
+          }
+          showToast(t("communities:detail.thread.replyToast"), "success");
+        },
+        // Roll the optimistic reply back and hand the words back to the
+        // composer so nothing typed is lost.
+        onError: () => {
+          setExtraReplies((prev) =>
+            prev.filter((item) => item.id !== optimisticId),
+          );
+          setReplyText(text);
+          onError();
+        },
+      },
     );
   }
 
   function saveOpEdit(next: string) {
-    setEditingOp(false);
     if (demoMode) {
+      setEditingOp(false);
       setOpOverride((prev) => ({
         ...prev,
         post: next,
         editedAt: new Date().toISOString(),
       }));
-    } else if (data.id) {
-      updatePost.mutate({ id: data.id, dto: { body: next } }, { onError });
+      showToast(t("communities:detail.thread.editSavedToast"), "success");
+      return;
     }
-    showToast(t("communities:detail.thread.editSavedToast"), "success");
+    if (!data.id) {
+      setEditingOp(false);
+      return;
+    }
+    // The editor stays open (and busy) until the PATCH lands, so a failure
+    // hands the edit back instead of confirming a save that never happened.
+    updatePost.mutate(
+      { id: data.id, dto: { body: next } },
+      {
+        onSuccess: () => {
+          setEditingOp(false);
+          showToast(t("communities:detail.thread.editSavedToast"), "success");
+        },
+        onError,
+      },
+    );
   }
 
   function saveReplyEdit(replyId: string, next: string) {
-    setEditingReplyId(null);
     if (demoMode) {
+      setEditingReplyId(null);
       setReplyOverrides((prev) => ({
         ...prev,
-        [replyId]: { ...prev[replyId], text: next, editedAt: new Date().toISOString() },
+        [replyId]: {
+          ...prev[replyId],
+          text: next,
+          editedAt: new Date().toISOString(),
+        },
       }));
-    } else if (data.id) {
-      editReply.mutate(
-        { postId: data.id, replyId, text: next },
-        { onError },
-      );
+      showToast(t("communities:detail.thread.editSavedToast"), "success");
+      return;
     }
-    showToast(t("communities:detail.thread.editSavedToast"), "success");
+    if (!data.id) {
+      setEditingReplyId(null);
+      return;
+    }
+    editReply.mutate(
+      { postId: data.id, replyId, text: next },
+      {
+        onSuccess: () => {
+          setEditingReplyId(null);
+          showToast(t("communities:detail.thread.editSavedToast"), "success");
+        },
+        onError,
+      },
+    );
   }
 
   function runDelete(target: DeleteTarget) {
-    setConfirmDelete(null);
-    if (target.kind === "post") {
-      if (demoMode) setOpOverride((prev) => ({ ...prev, deleted: true }));
-      else if (data.id) deletePost.mutate({ id: data.id }, { onError });
-    } else if (demoMode) {
-      setReplyOverrides((prev) => ({
-        ...prev,
-        [target.replyId]: { ...prev[target.replyId], deleted: true },
-      }));
-    } else if (data.id) {
-      deleteReply.mutate({ postId: data.id, replyId: target.replyId }, { onError });
+    if (demoMode) {
+      setConfirmDelete(null);
+      if (target.kind === "post") {
+        setOpOverride((prev) => ({ ...prev, deleted: true }));
+      } else {
+        setReplyOverrides((prev) => ({
+          ...prev,
+          [target.replyId]: { ...prev[target.replyId], deleted: true },
+        }));
+      }
+      showToast(t("communities:detail.thread.deletedToast"), "success");
+      return;
     }
-    showToast(t("communities:detail.thread.deletedToast"), "success");
+    if (!data.id) {
+      setConfirmDelete(null);
+      return;
+    }
+    // The confirm modal stays mounted (and busy) until the delete resolves,
+    // so the "Deleted" toast only ever follows a delete that happened.
+    const callbacks = {
+      onSuccess: () => {
+        setConfirmDelete(null);
+        showToast(t("communities:detail.thread.deletedToast"), "success");
+      },
+      onError: () => {
+        setConfirmDelete(null);
+        onError();
+      },
+    };
+    if (target.kind === "post") {
+      deletePost.mutate({ id: data.id }, callbacks);
+    } else {
+      deleteReply.mutate(
+        { postId: data.id, replyId: target.replyId },
+        callbacks,
+      );
+    }
   }
 
   function runRestorePost() {
-    if (demoMode) setOpOverride((prev) => ({ ...prev, deleted: false }));
-    else if (data.id) restorePost.mutate({ id: data.id }, { onError });
-    showToast(t("communities:detail.thread.restoredToast"), "success");
+    if (demoMode) {
+      setOpOverride((prev) => ({ ...prev, deleted: false }));
+      showToast(t("communities:detail.thread.restoredToast"), "success");
+      return;
+    }
+    if (!data.id) return;
+    restorePost.mutate(
+      { id: data.id },
+      {
+        onSuccess: () =>
+          showToast(t("communities:detail.thread.restoredToast"), "success"),
+        onError,
+      },
+    );
   }
 
   function runTogglePinOp() {
     const next = !opPinned;
+    const pinToast = () =>
+      showToast(
+        t(
+          next
+            ? "communities:common.pinnedToast"
+            : "communities:common.unpinnedToast",
+        ),
+        "success",
+      );
     if (demoMode) {
       setOpOverride((prev) => ({ ...prev, pinned: next }));
-    } else if (data.id) {
-      updatePost.mutate({ id: data.id, dto: { pinned: next } }, { onError });
+      pinToast();
+      return;
     }
-    showToast(
-      t(
-        next
-          ? "communities:common.pinnedToast"
-          : "communities:common.unpinnedToast",
-      ),
-      "success",
+    if (!data.id) return;
+    updatePost.mutate(
+      { id: data.id, dto: { pinned: next } },
+      { onSuccess: pinToast, onError },
     );
   }
 
@@ -280,17 +409,31 @@ function useCommunityThreadState(
         ...prev,
         [replyId]: { ...prev[replyId], deleted: false },
       }));
-    } else if (data.id) {
-      restoreReply.mutate({ postId: data.id, replyId }, { onError });
+      showToast(t("communities:detail.thread.restoredToast"), "success");
+      return;
     }
-    showToast(t("communities:detail.thread.restoredToast"), "success");
+    if (!data.id) return;
+    restoreReply.mutate(
+      { postId: data.id, replyId },
+      {
+        onSuccess: () =>
+          showToast(t("communities:detail.thread.restoredToast"), "success"),
+        onError,
+      },
+    );
   }
 
   return {
     t,
     demoMode,
+    viewer: viewerPerson(user),
     deletePost,
     deleteReply,
+    // In-flight flags, so the UI keeps showing "working on it" between the
+    // click and the server's answer instead of confirming early.
+    isReplyPending: reply.isPending,
+    isSavingOpEdit: updatePost.isPending,
+    isSavingReplyEdit: editReply.isPending,
     open,
     setOpen,
     voted,
@@ -353,8 +496,12 @@ export function CommunityThread({
   const {
     t,
     demoMode,
+    viewer,
     deletePost,
     deleteReply,
+    isReplyPending,
+    isSavingOpEdit,
+    isSavingReplyEdit,
     open,
     setOpen,
     voted,
@@ -399,7 +546,7 @@ export function CommunityThread({
     <div className={styles.thread}>
       <CommunityThreadHead
         data={data}
-        open={open}
+        isOpen={open}
         onToggleOpen={() => setOpen((value) => !value)}
         voted={voted}
         onToggleVote={toggleVote}
@@ -430,8 +577,9 @@ export function CommunityThread({
                 {t("communities:detail.thread.tombstone")}
               </p>
             ) : editingOp ? (
-              <InlineTextEditor
+              <CommunityInlineTextEditor
                 initial={opBody}
+                isBusy={isSavingOpEdit}
                 onCancel={() => setEditingOp(false)}
                 onSave={saveOpEdit}
               />
@@ -442,10 +590,15 @@ export function CommunityThread({
             )}
             {replies.map((threadReply) => (
               <ThreadReplyRow
-                key={threadReply.id ?? `${threadReply.name}:${threadReply.text}`}
+                key={
+                  threadReply.id ?? `${threadReply.name}:${threadReply.text}`
+                }
                 reply={threadReply}
                 demoMode={demoMode}
-                editing={!!threadReply.id && editingReplyId === threadReply.id}
+                isEditing={
+                  !!threadReply.id && editingReplyId === threadReply.id
+                }
+                isSavingEdit={isSavingReplyEdit}
                 canReport={canReportReply(threadReply)}
                 onStartEdit={() =>
                   threadReply.id && setEditingReplyId(threadReply.id)
@@ -484,37 +637,73 @@ export function CommunityThread({
                 </Button>
               </div>
             )}
-            {frozen ? (
-              <div className={styles.replyBar}>
-                <CommunityFrozenComposerNotice />
-              </div>
-            ) : (
-              <div className={styles.replyBar}>
-                <div className={[styles.rAv, styles.tPlum].join(" ")}>Me</div>
-                <MentionTextarea
-                  className={styles.replyTa}
-                  rows={1}
-                  placeholder={t("communities:detail.thread.replyPlaceholder")}
+            {/* A visitor can read the thread but never gets a composer: the
+                POST would 403, and before this gate they could type a reply,
+                see a "Reply posted" toast, and then an error toast on top of
+                an optimistic reply that stayed on screen. */}
+            {isMember &&
+              (frozen ? (
+                <div className={styles.replyBar}>
+                  <CommunityFrozenComposerNotice />
+                </div>
+              ) : (
+                <ThreadReplyBar
+                  viewer={viewer}
                   value={replyText}
                   onChange={setReplyText}
+                  onPost={postReply}
+                  isPending={isReplyPending}
                 />
-                <Button
-                  variant="primary"
-                  onClick={postReply}
-                  style={{ padding: "9px 16px", fontSize: 13 }}
-                >
-                  {t("communities:detail.thread.replyCta")}
-                </Button>
-              </div>
-            )}
+              ))}
           </div>
         </MentionNamesProvider>
       )}
+      <ThreadModals
+        slug={slug}
+        confirmDelete={confirmDelete}
+        isDeletePending={deletePost.isPending || deleteReply.isPending}
+        onConfirmDelete={runDelete}
+        onCloseDelete={() => setConfirmDelete(null)}
+        historyTarget={historyTarget}
+        onCloseHistory={() => setHistoryTarget(null)}
+        reportTarget={reportTarget}
+        onCloseReport={() => setReportTarget(null)}
+      />
+    </div>
+  );
+}
+
+/** The three dialogs a thread can raise (confirm delete, edit history, report),
+ *  lifted out of `CommunityThread` so that component stays under the repo's
+ *  200-line limit. */
+function ThreadModals({
+  slug,
+  confirmDelete,
+  isDeletePending,
+  onConfirmDelete,
+  onCloseDelete,
+  historyTarget,
+  onCloseHistory,
+  reportTarget,
+  onCloseReport,
+}: {
+  slug: string;
+  confirmDelete: DeleteTarget | null;
+  isDeletePending: boolean;
+  onConfirmDelete: (target: DeleteTarget) => void;
+  onCloseDelete: () => void;
+  historyTarget: HistoryTarget | null;
+  onCloseHistory: () => void;
+  reportTarget: ReportTarget | null;
+  onCloseReport: () => void;
+}) {
+  return (
+    <>
       {confirmDelete && (
         <ConfirmDeleteModal
-          busy={deletePost.isPending || deleteReply.isPending}
-          onConfirm={() => runDelete(confirmDelete)}
-          onClose={() => setConfirmDelete(null)}
+          busy={isDeletePending}
+          onConfirm={() => onConfirmDelete(confirmDelete)}
+          onClose={onCloseDelete}
         />
       )}
       {historyTarget && (
@@ -522,7 +711,7 @@ export function CommunityThread({
           slug={slug}
           postId={historyTarget.postId}
           replyId={historyTarget.replyId}
-          onClose={() => setHistoryTarget(null)}
+          onClose={onCloseHistory}
         />
       )}
       {reportTarget && (
@@ -530,47 +719,54 @@ export function CommunityThread({
           authorName={reportTarget.authorName}
           subjectId={reportTarget.subjectId}
           subjectType={reportTarget.subjectType}
-          onClose={() => setReportTarget(null)}
+          onClose={onCloseReport}
         />
       )}
-    </div>
+    </>
   );
 }
 
-function InlineTextEditor({
-  initial,
-  onCancel,
-  onSave,
+/** The thread's own reply composer: avatar, mention-aware textarea, and a
+ *  send button that stays disabled (and says so) while the reply is in
+ *  flight. */
+function ThreadReplyBar({
+  viewer,
+  value,
+  onChange,
+  onPost,
+  isPending,
 }: {
-  initial: string;
-  onCancel: () => void;
-  onSave: (next: string) => void;
+  /** The signed-in member, so the composer shows their own initials rather
+   *  than a hardcoded chip. `null` while the session is still resolving. */
+  viewer: Person | null;
+  value: string;
+  onChange: (next: string) => void;
+  onPost: () => void;
+  isPending: boolean;
 }) {
   const { t } = useTranslation();
-  const [value, setValue] = useState(initial);
-  const trimmed = value.trim();
   return (
-    <div className={styles.inlineEdit}>
-      <MentionTextarea
-        className={styles.inlineTa}
-        aria-label={t("communities:detail.thread.editAria")}
-        value={value}
-        onChange={setValue}
-        rows={3}
-      />
-      <div className={styles.inlineActions}>
-        <Button variant="ghost" onClick={onCancel} style={{ padding: "6px 12px", fontSize: 13 }}>
-          {t("communities:detail.thread.editCancel")}
-        </Button>
-        <Button
-          variant="primary"
-          disabled={!trimmed || trimmed === initial}
-          onClick={() => onSave(trimmed)}
-          style={{ padding: "6px 12px", fontSize: 13 }}
-        >
-          {t("communities:detail.thread.editSave")}
-        </Button>
+    <div className={styles.replyBar}>
+      <div className={[styles.rAv, AV_CLASS[viewer?.tint ?? "plum"]].join(" ")}>
+        {viewer?.initials ?? "?"}
       </div>
+      <MentionTextarea
+        className={styles.replyTa}
+        rows={1}
+        placeholder={t("communities:detail.thread.replyPlaceholder")}
+        value={value}
+        onChange={onChange}
+      />
+      <Button
+        variant="primary"
+        onClick={onPost}
+        disabled={isPending}
+        style={{ padding: "9px 16px", fontSize: 13 }}
+      >
+        {isPending
+          ? t("communities:common.loading")
+          : t("communities:detail.thread.replyCta")}
+      </Button>
     </div>
   );
 }
@@ -578,7 +774,8 @@ function InlineTextEditor({
 function ThreadReplyRow({
   reply,
   demoMode,
-  editing,
+  isEditing,
+  isSavingEdit,
   canReport,
   onStartEdit,
   onCancelEdit,
@@ -590,7 +787,9 @@ function ThreadReplyRow({
 }: {
   reply: Reply;
   demoMode: boolean;
-  editing: boolean;
+  isEditing: boolean;
+  /** True while this row's edit is being saved. */
+  isSavingEdit: boolean;
   canReport: boolean;
   onStartEdit: () => void;
   onCancelEdit: () => void;
@@ -634,9 +833,10 @@ function ThreadReplyRow({
           <div className={styles.tombstone}>
             {t("communities:detail.thread.tombstone")}
           </div>
-        ) : editing ? (
-          <InlineTextEditor
+        ) : isEditing ? (
+          <CommunityInlineTextEditor
             initial={reply.text}
+            isBusy={isSavingEdit}
             onCancel={onCancelEdit}
             onSave={onSaveEdit}
           />

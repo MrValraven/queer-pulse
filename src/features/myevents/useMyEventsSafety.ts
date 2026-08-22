@@ -8,7 +8,7 @@ import type { MyEvent } from "./myEvents.types";
 
 interface SafetyDeps {
   byId: (id: string) => MyEvent | undefined;
-  toast: (msg: string, type?: "success" | "info") => void;
+  toast: (msg: string, type?: "success" | "info" | "error") => void;
   closeMore: () => void;
   t: TFunction;
 }
@@ -43,7 +43,10 @@ export function useMyEventsSafety({
   const createReport = useCreateReport();
   // Dual-mode already (no-op in demo, real `POST/DELETE /blocks/:slug` in
   // live) — the same primitive `ProfileSafetyMenu`'s "Block" wires to.
-  const { toggleBlock } = useSocial();
+  // `toggleBlock` is a TOGGLE, so `isBlocked` has to gate it: this surface only
+  // ever means "block", and calling the toggle on an already-blocked host
+  // would silently UNBLOCK them (see `confirmBlock`).
+  const { isBlocked, toggleBlock } = useSocial();
 
   const openReport = useCallback(
     (eventId: string) => {
@@ -64,13 +67,10 @@ export function useMyEventsSafety({
       // Both modes resolve with a ReportDTO: live mode POSTs `/reports`
       // (subjectType "event", the event's id as subjectId); demo mode never
       // touches the network and resolves a synthetic DTO after a short delay.
-      // Either way the existing success UX — close the modal, toast — is
-      // preserved. We fail open (still confirm on error) so a backend hiccup
-      // never discourages a member from reporting, matching ReportListingModal.
-      const finish = () => {
-        setReport((r) => ({ ...r, open: false }));
-        toast(t("myevents:reportModal.sentToast"), "success");
-      };
+      // A safety report must never show "sent" when it wasn't — on error, keep
+      // the modal open (so the member can retry with the same reason/detail)
+      // and surface an honest failure, matching `ConversationReportModal`/
+      // `MessageReportModal`. Only a genuine server ack closes the modal.
       createReport.mutate(
         {
           subjectType: "event",
@@ -79,10 +79,13 @@ export function useMyEventsSafety({
           detail: trimmedDetail.length > 0 ? trimmedDetail : undefined,
         },
         {
-          onSuccess: finish,
+          onSuccess: () => {
+            setReport((r) => ({ ...r, open: false }));
+            toast(t("myevents:reportModal.sentToast"), "success");
+          },
           onError: (error) => {
             logError(error, { scope: "myevents.reportEvent" });
-            finish();
+            toast(t("safety:flag.error"), "error");
           },
         },
       );
@@ -93,11 +96,15 @@ export function useMyEventsSafety({
     (eventId: string) => {
       const ev = byId(eventId);
       closeMore();
-      // The host's own display name — NOT `ev.community` (the previous code
-      // showed the community/org label here, which isn't who's being
-      // blocked). Absent for an org-hosted event with no individual member
-      // host; `confirmBlock` below no-ops when there's no real target.
-      setBlock({ open: true, eventId, host: ev?.hostName ?? "" });
+      // No member behind this event (an org-hosted gathering) means there is
+      // nothing to block, so the flow never opens — `MoreMenu` already leaves
+      // the "Block the host" item out in that case, and this guard keeps any
+      // future entry point from opening a dialog that could only ever fake a
+      // result. `host` is the host's own display name, NOT `ev.community`
+      // (the community/org label isn't who's being blocked); it can still be
+      // empty here, and `BlockHostConfirm` has unnamed copy for that.
+      if (!ev?.hostSlug) return;
+      setBlock({ open: true, eventId, host: ev.hostName ?? "" });
     },
     [byId, closeMore],
   );
@@ -108,14 +115,22 @@ export function useMyEventsSafety({
   const confirmBlock = useCallback(() => {
     const ev = block.eventId ? byId(block.eventId) : undefined;
     setBlock((b) => ({ ...b, open: false }));
-    if (!ev?.hostSlug) {
-      // No real member to block (org-hosted event) — nothing to wire to.
-      toast(t("myevents:blockModal.blockedToast"), "success");
+    const hostSlug = ev?.hostSlug;
+    // Unreachable in practice (`openBlock` refuses to open without a host
+    // slug) — and if it ever were reached there is no block to report, so it
+    // closes silently rather than toasting a success that didn't happen.
+    if (!hostSlug) return;
+    // `toggleBlock` flips state. A host the member already blocked elsewhere
+    // (from their profile, say) would be UNBLOCKED by a second call, under a
+    // "Blocked." toast — so an existing block is reported as-is and left
+    // alone.
+    if (isBlocked(hostSlug)) {
+      toast(t("myevents:blockModal.alreadyBlockedToast"), "info");
       return;
     }
-    toggleBlock(ev.hostSlug);
+    toggleBlock(hostSlug);
     toast(t("myevents:blockModal.blockedToast"), "success");
-  }, [block.eventId, byId, t, toast, toggleBlock]);
+  }, [block.eventId, byId, isBlocked, t, toast, toggleBlock]);
 
   return {
     report,

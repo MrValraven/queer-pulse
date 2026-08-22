@@ -3,9 +3,24 @@ import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { ModReport, Appeal } from "./adminModeration.data";
+import { useFormat } from "../../shared/i18n/format";
+import {
+  ageLabelOf,
+  oldestRowOf,
+  type AppealView,
+  type ModReportView,
+} from "./moderationAge";
+import {
+  captureRemovedRows,
+  withRowsRestored,
+  type RemovalHandle,
+} from "./moderationUndo";
 import { useModReports } from "./api/useModReports";
-import { useModAction, useModBulkAction } from "./api/useModAction";
+import {
+  useModAction,
+  useModBulkAction,
+  type ModBulkVars,
+} from "./api/useModAction";
 import { useReportAssignment } from "./api/useReportAssignment";
 import { useReviewAppeal } from "./api/useReviewAppeal";
 import type { ModActionCode } from "./api/moderation.api";
@@ -47,7 +62,7 @@ export interface ResolveOpts {
 export type BulkVerb =
   | "dismissed"
   | "removedAsSpam"
-  | "reassigned"
+  | "escalated"
   | "warned"
   | "suspended"
   | "banned";
@@ -122,7 +137,6 @@ export function useModerationQueue() {
   // "prior reports" chip (COM-6): narrows the queue to one subject.
   const subjectId = searchParams.get("subjectId") ?? undefined;
   const { user } = useAuth();
-  const { data, isLoading, isError, refetch } = useModReports(subjectId);
   const modAction = useModAction();
   const modBulk = useModBulkAction();
   const reviewAppeal = useReviewAppeal();
@@ -138,13 +152,26 @@ export function useModerationQueue() {
   const [filter, setFilter] = useState<FilterId>(
     deepLink === "emergencies" ? "emergencies" : "all",
   );
-  const [open, setOpen] = useState<ModReport[]>(data?.open ?? []);
-  const [appeals, setAppeals] = useState<Appeal[]>(data?.appeals ?? []);
+  // `filter` is passed through so the server narrows the whole queue, not just
+  // whatever landed on page one; `matchesFilter` below still applies it to the
+  // locally-held rows (demo mode has no server to ask).
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    hasMoreOpen,
+    isLoadingMoreOpen,
+    loadMoreOpen,
+  } = useModReports(subjectId, filter);
+  const [open, setOpen] = useState<ModReportView[]>(data?.open ?? []);
+  const [appeals, setAppeals] = useState<AppealView[]>(data?.appeals ?? []);
   const [leaving, setLeaving] = useState<Set<string>>(new Set());
   const [picked, setPicked] = useState<Set<string>>(new Set());
-  const [selected, setSelected] = useState<ModReport | null>(null);
-  const [appeal, setAppeal] = useState<Appeal | null>(null);
+  const [selected, setSelected] = useState<ModReportView | null>(null);
+  const [appeal, setAppeal] = useState<AppealView | null>(null);
   const { showToast } = useToast();
+  const fmt = useFormat();
 
   // Ids optimistically removed from a tab whose deferred commit hasn't settled
   // yet. Guards the query-mirror antipattern: a background react-query refetch
@@ -191,7 +218,7 @@ export function useModerationQueue() {
       return next;
     });
 
-  const matchesFilter = (r: ModReport) => {
+  const matchesFilter = (r: ModReportView) => {
     if (filter === "emergencies") return r.severity === "emergency";
     if (filter === "mine")
       return user != null && r.assignedModeratorId === user.id;
@@ -201,7 +228,13 @@ export function useModerationQueue() {
   const visible = open.filter(matchesFilter);
   const emergencies = visible.filter((r) => r.severity === "emergency");
   const others = visible.filter((r) => r.severity !== "emergency");
-  const oldest = visible.length > 0 ? visible[visible.length - 1]!.age : "";
+  // FE-ADM-29: the queue is fetched `sort: "priority"`, so the LAST row is the
+  // lowest-priority one and reading its age as "the oldest" understated a
+  // three-day-old medium-severity report sitting mid-list. Compare the real
+  // timestamps instead, then format the winner the same localized way the cards
+  // do.
+  const oldestReport = oldestRowOf(visible);
+  const oldest = oldestReport ? ageLabelOf(oldestReport, fmt) : "";
 
   const counts = {
     open: open.length,
@@ -215,14 +248,32 @@ export function useModerationQueue() {
     if (dataOpen) setOpen(dataOpen);
   };
 
-  /** Animate ids out of the open queue, then drop them. */
-  const removeReports = (ids: string[]) => {
+  /**
+   * Animate ids out of the open queue, then drop them.
+   *
+   * Returns a handle (FE-ADM-15) carrying the removed rows with their original
+   * positions, plus a `cancel` that clears THIS removal's own 340ms drop timer
+   * and only its own leave flags. Without the cancel, an Undo clicked inside
+   * that 340ms window was immediately overwritten by the timer that was already
+   * scheduled; without the per-action scoping, one Undo wiped every other
+   * in-flight action's leave animation too.
+   */
+  const removeReports = (ids: string[]): RemovalHandle<ModReportView> => {
+    const removingIds = new Set(ids);
+    const removed = captureRemovedRows(open, ids);
     setLeaving((prev) => new Set([...prev, ...ids]));
     setPicked(new Set());
-    window.setTimeout(() => {
-      setOpen((q) => q.filter((r) => !ids.includes(r.id)));
+    const dropTimer = window.setTimeout(() => {
+      setOpen((queue) => queue.filter((row) => !removingIds.has(row.id)));
       clearLeaving(ids);
     }, 340);
+    return {
+      removed,
+      cancel: () => {
+        window.clearTimeout(dropTimer);
+        clearLeaving(ids);
+      },
+    };
   };
 
   const undoToast = (message: string, restore: () => void, restored: string) =>
@@ -239,8 +290,7 @@ export function useModerationQueue() {
 
   const resolveReport = (id: string, opts: ResolveOpts = {}) => {
     const verb = opts.verb ?? "resolved";
-    const snapshot = open;
-    removeReports([id]);
+    const removal = removeReports([id]);
     // Mark the row pending-removed so a background refetch during the undo
     // window can't resurrect it (query-mirror guard).
     pendingOpenRemoval.current.add(id);
@@ -275,11 +325,14 @@ export function useModerationQueue() {
       t("admin:moderation.queue.actionToast", {
         verb: t(`admin:moderation.queue.verb.${verb}`),
       }),
+      // Undo restores BY ID into the CURRENT queue and cancels only this
+      // action's own timers and shield (FE-ADM-15) — a report actioned later in
+      // the same undo window keeps its removal and its pending commit.
       () => {
         cancelCommit(handle);
+        removal.cancel();
         pendingOpenRemoval.current.delete(id);
-        setLeaving(new Set());
-        setOpen(snapshot);
+        setOpen((queue) => withRowsRestored(queue, removal.removed));
       },
       t("admin:moderation.queue.restoredToast"),
     );
@@ -288,7 +341,7 @@ export function useModerationQueue() {
   // Opening a report never resolves it — it presents the decision drawer (the
   // action grid + reason + member-facing note). The drawer fetches / falls back
   // to context on its own when the list item carries no `detail`.
-  const openReport = (r: ModReport) => setSelected(r);
+  const openReport = (r: ModReportView) => setSelected(r);
 
   const togglePick = (id: string) =>
     setPicked((prev) => {
@@ -298,22 +351,35 @@ export function useModerationQueue() {
       return next;
     });
 
+  /**
+   * Apply one action to every picked report. `decision` carries the reason code
+   * and the exact member-facing note for the sanctioning actions (ban / warn /
+   * remove-content / suspend), collected by `BulkActionModal` before this runs.
+   * Dismiss and escalate need neither, so they still fire straight from the
+   * bulk bar and fall back to the unspecified reason code.
+   */
   const bulkAct = (
     verb: BulkVerb,
     action: ModActionCode = "dismiss",
-    duration?: string,
+    decision?: { reasonCode?: string; note?: string; duration?: string },
   ) => {
     const ids = [...picked];
     if (ids.length === 0) return;
-    const snapshot = open;
-    removeReports(ids);
+    const removal = removeReports(ids);
     // Shield every removed id from a background refetch (query-mirror guard).
     ids.forEach((id) => pendingOpenRemoval.current.add(id));
     // Deferred, like resolveReport — a bulk PATCH also notifies members, so it
     // waits out the undo window and is cancelled outright if Undo is clicked.
     const handle = scheduleCommit(() =>
       modBulk.mutate(
-        { ids, action, reasonCode: "other", duration },
+        {
+          ids,
+          action,
+          reasonCode: (decision?.reasonCode ??
+            "other") as ModBulkVars["reasonCode"],
+          note: decision?.note,
+          duration: decision?.duration,
+        },
         {
           // Continue-on-error (P0-16): the backend never throws for a partial
           // batch, so a failure here means EVERY report failed rather than
@@ -353,11 +419,13 @@ export function useModerationQueue() {
         count: ids.length,
         verb: t(`admin:moderation.queue.bulkVerb.${verb}`),
       }),
+      // Same by-id restore as `resolveReport` (FE-ADM-15): only this batch's
+      // rows come back, only this batch's shields are dropped.
       () => {
         cancelCommit(handle);
+        removal.cancel();
         ids.forEach((id) => pendingOpenRemoval.current.delete(id));
-        setLeaving(new Set());
-        setOpen(snapshot);
+        setOpen((queue) => withRowsRestored(queue, removal.removed));
       },
       t("admin:moderation.queue.bulkRestoredToast"),
     );
@@ -371,14 +439,14 @@ export function useModerationQueue() {
     assignedModeratorId: string | null,
     assignedModeratorName: string | undefined,
   ) => {
-    const apply = (r: ModReport): ModReport =>
+    const apply = (r: ModReportView): ModReportView =>
       r.id === id ? { ...r, assignedModeratorId, assignedModeratorName } : r;
     setOpen((current) => current.map(apply));
     setSelected((current) => (current ? apply(current) : current));
   };
 
   /** Self-assign (COM-5) — claims a report for the signed-in moderator. */
-  const assignToMe = (report: ModReport) => {
+  const assignToMe = (report: ModReportView) => {
     reportAssignment.mutate(
       { id: report.id, assign: true },
       {
@@ -395,7 +463,7 @@ export function useModerationQueue() {
   };
 
   /** Releases a report the signed-in moderator had claimed. */
-  const unassignReport = (report: ModReport) => {
+  const unassignReport = (report: ModReportView) => {
     reportAssignment.mutate(
       { id: report.id, assign: false },
       {
@@ -412,9 +480,11 @@ export function useModerationQueue() {
     note = "",
   ) => {
     const a = appeals.find((x) => x.id === id);
-    const snapshot = appeals;
+    // Same by-id undo contract as the open queue (FE-ADM-15): capture just this
+    // appeal and where it sat, and keep a handle on its own drop timer.
+    const removed = captureRemovedRows(appeals, [id]);
     setLeaving((prev) => new Set([...prev, id]));
-    window.setTimeout(() => {
+    const dropTimer = window.setTimeout(() => {
       setAppeals((list) => list.filter((x) => x.id !== id));
       clearLeaving([id]);
     }, 340);
@@ -446,9 +516,10 @@ export function useModerationQueue() {
       }),
       () => {
         cancelCommit(handle);
+        window.clearTimeout(dropTimer);
+        clearLeaving([id]);
         pendingAppealRemoval.current.delete(id);
-        setLeaving(new Set());
-        setAppeals(snapshot);
+        setAppeals((list) => withRowsRestored(list, removed));
       },
       t("admin:moderation.queue.appealRestoredToast"),
     );
@@ -465,7 +536,7 @@ export function useModerationQueue() {
    *  every other report about this exact subject, via the `?subjectId=`
    *  deep-link `useModReports` already understands. Closes the drawer first
    *  (if open) so the filtered list is what the moderator lands on. */
-  const viewSubjectHistory = (report: ModReport) => {
+  const viewSubjectHistory = (report: ModReportView) => {
     setSelected(null);
     setSearchParams((previous) => {
       const next = new URLSearchParams(previous);
@@ -495,6 +566,9 @@ export function useModerationQueue() {
     others,
     oldest,
     counts,
+    hasMoreOpen,
+    isLoadingMoreOpen,
+    loadMoreOpen,
     loading: isLoading,
     // Live-fetch failure (P1-14): the panes render a retryable error state
     // instead of a false "all caught up". Demo seeds via initialData → never errors.

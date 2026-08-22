@@ -145,8 +145,22 @@
 .pp-nameRow{display:flex;align-items:center}
 .pp-tagline{font-size:clamp(16px,1.7cqw,19px);color:var(--ink-60);line-height:1.45;max-width:48ch}
 .pp-acts{display:flex;gap:9px;flex-wrap:wrap;align-items:center;padding-top:6px}
+/* The open more-menu panel is absolutely positioned off .pp-moreMenu, but
+   persona-motion.css animates .pp-acts and .pp-meta in as siblings, which
+   makes each its own stacking context — .pp-meta (later in DOM) then paints
+   over the panel regardless of its own z-index, swallowing clicks. Promote
+   .pp-acts itself while the panel is open, mirroring the same fix already
+   used for FadeIn row menus in MessagesPage/AdminListingsPage. */
+.pp-acts:has(.pp-moreMenuPanel){position:relative;z-index:3}
 .pp-meta{display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:13.5px;color:var(--ink-40);padding-top:4px}
 .pp-meta b{color:var(--ink);font-weight:600}
+/* The quiet count buttons inside `.pp-meta`. Structural buttons that must read
+   exactly like the plain text beside them, so they only reset browser chrome
+   (same shape as `.pp-gallery-btn` below). Replaces an inline `style` object
+   in SubprofileHero, which also left them with no visible focus ring. */
+.pp-metabtn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer}
+.pp-metabtn:disabled{cursor:default}
+.pp-metabtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 .pp-owner{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:14px;font-weight:600;color:var(--ink-60)}
 .pp-owner em{color:var(--accent-ink)}
 .pp-bio{max-width:62ch;line-height:1.7;color:var(--ink);font-size:16px;padding-top:20px}
@@ -235,9 +249,13 @@
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts{
     width:100%;justify-content:center;row-gap:12px;padding-top:12px
   }
-  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > :not(.pp-avail){
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > :not(.pp-avail):not(.pp-moreMenu){
     flex:1 1 auto;min-width:0;justify-content:center
   }
+  /* .pp-moreMenu is excluded above so it keeps its natural (48px) width — the
+     open panel is anchored `right:0` off this wrapper, so letting it stretch
+     to fill the row (like the growable action buttons) drags the panel's
+     right edge away from the visible trigger button. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-acts > .pp-avail{
     flex:0 0 100%;justify-content:center
   }
@@ -289,6 +307,12 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp-tile b{font-weight:600;font-size:16px;overflow-wrap:break-word;word-break:normal;hyphens:none}
 .pp-tile .gigstate{align-self:flex-start}
 .pp-tile small{color:var(--ink-60);font-size:13.5px;line-height:1.45}
+/* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
 .plate{display:none}
 /* `.pp-gallery` — the universal caption-less `gallery` section: a plain
    image-only grid, no title/subtitle/date (unlike `.pp-tiles`). */
@@ -519,7 +543,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="workshop"] .pp-row b{font-size:18px;font-weight:600}
 .pp[data-skin="workshop"] .pp-tiles{grid-template-columns:1fr}
 .pp[data-skin="workshop"] .pp-tile{border-top:1px dashed rgba(var(--plum-rgb),.24);padding:16px 4px}
-.pp[data-skin="workshop"] .pp-tile .art,.pp[data-skin="workshop"] .plate{display:none}
+.pp[data-skin="workshop"] .pp-tile .art,.pp[data-skin="workshop"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="workshop"] .tag{background:none;border-radius:0;padding:0 6px 0 0;color:var(--ink-40);font-size:12px}
 .pp[data-skin="workshop"] .tag::before{content:"["}
 .pp[data-skin="workshop"] .tag::after{content:"]"}
@@ -553,7 +583,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="practice"] .pp-row .when{display:block;margin-top:6px}
 .pp[data-skin="practice"] .pp-row small{display:block;margin-top:4px}
 .pp[data-skin="practice"] .pp-tiles{grid-template-columns:1fr}
-.pp[data-skin="practice"] .pp-tile .art,.pp[data-skin="practice"] .plate{display:none}
+.pp[data-skin="practice"] .pp-tile .art,.pp[data-skin="practice"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="practice"] .pp-spot{border-radius:4px;background:none;border:1px solid color-mix(in srgb,var(--sk-tint) 40%,transparent);border-left-width:3px;padding:clamp(22px,3cqw,32px)}
 .pp[data-skin="practice"] .pp-spot h2{font-family:var(--sans);font-weight:500;font-size:24px}
 .pp[data-skin="practice"] .pp-spot .art{display:none}
@@ -633,7 +669,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="table"] .pp-tile{text-align:center;align-items:center}
 .pp[data-skin="table"] .pp-tile .art{aspect-ratio:5/4;width:100%;border-radius:2px;border:1px solid color-mix(in srgb,var(--sk-tint) 40%,transparent)}
 .pp[data-skin="table"] .pp-tile b{font-family:var(--serif);font-weight:400;font-size:21px}
-.pp[data-skin="table"] .plate{display:none}
+.pp[data-skin="table"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="table"] .pp-spot{background:color-mix(in srgb,var(--paper) 50%,transparent);border:1px solid color-mix(in srgb,var(--sk-tint) 50%,transparent);border-radius:2px;text-align:center;flex-direction:column;padding:clamp(24px,3.4cqw,40px)}
 .pp[data-skin="table"] .pp-spot .txt{align-items:center}
 .pp[data-skin="table"] .pp-spot .art{width:100%;max-width:320px;height:170px;border-radius:2px}
@@ -700,7 +742,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="chart"] .pp-link .href{grid-column:3;grid-row:1;justify-self:start;margin:0;text-align:left;color:rgba(var(--chart-ink-rgb),.45)}
 @container (max-width:680px){.pp[data-skin="chart"] .pp-row{grid-template-columns:1fr;gap:0}.pp[data-skin="chart"] .pp-row::before,.pp[data-skin="chart"] .pp-row b,.pp[data-skin="chart"] .pp-row small,.pp[data-skin="chart"] .pp-row .when,.pp[data-skin="chart"] .pp-row p,.pp[data-skin="chart"] .pp-link .href{grid-column:1;grid-row:auto;justify-self:center;text-align:center}.pp[data-skin="chart"] .pp-row .when,.pp[data-skin="chart"] .pp-link .href{margin-top:8px}}
 .pp[data-skin="chart"] .pp-tiles{grid-template-columns:1fr}
-.pp[data-skin="chart"] .pp-tile .art,.pp[data-skin="chart"] .plate{display:none}
+.pp[data-skin="chart"] .pp-tile .art,.pp[data-skin="chart"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="chart"] .pp-spot{background:rgba(var(--chart-ink-rgb),.04);border:1px solid rgba(var(--chart-gold-rgb),.3);border-radius:2px;flex-direction:column;text-align:center;padding:clamp(28px,4cqw,46px);position:relative}
 .pp[data-skin="chart"] .pp-spot::after{content:"";position:absolute;inset:6px;border:1px solid rgba(var(--chart-gold-rgb),.14);pointer-events:none}
 .pp[data-skin="chart"] .pp-spot .art{display:none}
@@ -1059,7 +1107,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="chair"] .pp-tiles{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
 .pp[data-skin="chair"] .pp-tile .art{aspect-ratio:3/4;border-radius:999px 999px 14px 14px;border:1px solid rgba(242,217,184,.24)}
 .pp[data-skin="chair"] .pp-tile b{font-family:"Bodoni Moda",var(--serif);font-weight:400;font-size:19px;color:var(--ch-lit)}
-.pp[data-skin="chair"] .plate{display:none}
+.pp[data-skin="chair"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="chair"] .pp-spot{background:rgba(251,243,234,.04);border:1px solid rgba(242,217,184,.3);border-radius:4px}
 .pp[data-skin="chair"] .pp-spot h2{font-family:"Bodoni Moda",var(--serif);font-weight:400;color:var(--ch-lit)}
 .pp[data-skin="chair"] .pp-spot .art{border-radius:999px 999px 8px 8px}
@@ -1270,7 +1324,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="history"] .pp-tiles{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 .pp[data-skin="history"] .pp-tile .art{border-radius:2px;border:1px solid var(--hs-rule);aspect-ratio:4/3}
 .pp[data-skin="history"] .pp-tile b{font-family:"Libre Caslon Text",var(--serif);font-weight:400;font-size:19px}
-.pp[data-skin="history"] .plate{display:none}
+.pp[data-skin="history"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="history"] .pp-spot{background:rgba(255,255,255,.5);border:1px solid var(--hs-rule);border-radius:2px;box-shadow:inset 0 0 30px rgba(122,91,51,.07)}
 .pp[data-skin="history"] .pp-spot h2{font-family:"Libre Caslon Text",var(--serif);font-weight:400}
 .pp[data-skin="history"] .endo,.pp[data-skin="history"] .partof>*{background:rgba(255,255,255,.5);border-color:var(--hs-rule);border-radius:2px}
@@ -1310,7 +1370,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="collective"] .pp-tiles{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .pp[data-skin="collective"] .pp-tile .art{border-radius:0;border:2px solid var(--ink)}
 .pp[data-skin="collective"] .pp-tile b{font-family:"Archivo Black",var(--sans);font-weight:400;text-transform:uppercase;font-size:17px}
-.pp[data-skin="collective"] .plate{display:none}
+.pp[data-skin="collective"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="collective"] .pp-spot{background:var(--sk-tint);color:var(--sk-on);border:none;border-radius:0}
 .pp[data-skin="collective"] .pp-spot h2{font-family:"Archivo Black",var(--sans);font-weight:400;text-transform:uppercase;font-size:clamp(28px,4.4cqw,52px);line-height:.92;letter-spacing:-.03em;color:var(--sk-on)}
 .pp[data-skin="collective"] .pp-spot .art{border-radius:0}
@@ -1362,7 +1428,13 @@ button.pp-row{background:none;border:0;border-top:1px solid var(--line);font:inh
 .pp[data-skin="classroom"] .pp-link .href{grid-column:3;grid-row:1;margin:0}
 .pp[data-skin="classroom"] .pp-tiles{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
 .pp[data-skin="classroom"] .pp-tile .art{border-radius:8px}
-.pp[data-skin="classroom"] .plate{display:none}
+.pp[data-skin="classroom"] /* An interactive (studio) tile: the whole `.pp-tile` becomes the button that
+   opens the lightbox, so it resets browser chrome and stays visually identical
+   to the plain tile every other skin renders. Replaces an inline `style`
+   object in SubprofileItemTile. */
+.pp-tile-btn{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer}
+.pp-tile-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:14px}
+.plate{display:none}
 .pp[data-skin="classroom"] .pp-spot{background:var(--cl-board);color:#f6f4ee;border:none;border-radius:10px}
 .pp[data-skin="classroom"] .pp-spot .art{border-radius:8px}
 .pp[data-skin="classroom"] .endo,.pp[data-skin="classroom"] .partof>*{border-radius:10px;background:rgba(36,56,47,.04);border-color:rgba(32,38,31,.14)}

@@ -55,7 +55,7 @@ export const safety: Catalog = {
     "Através do botão em qualquer perfil, mensagem ou publicação do fórum, ou diretamente por esta página. Podes denunciar de forma anónima, se precisares.",
   "report.flow.step2.title": "Confirmação imediata",
   "report.flow.step2.desc":
-    "Recebes uma confirmação no prazo de 1 hora. Uma pessoa real fica responsável pela tua denúncia, não uma fila automática.",
+    "Recebes uma confirmação no prazo de 1 hora. Uma pessoa real fica responsável pela tua denúncia.",
   "report.flow.step3.title": "Revisão no prazo de 24 horas",
   "report.flow.step3.desc":
     "Analisamos as provas, o contexto e o histórico. Em casos graves, o acesso da pessoa denunciada é suspenso temporariamente durante a análise.",
@@ -74,8 +74,12 @@ export const safety: Catalog = {
   "report.category.discrimination": "Discriminação",
   "report.category.venueSafety": "Comportamento inseguro num convívio",
   "report.category.other": "Outra coisa",
-  "report.form.involvedLabel": "Pessoa ou conteúdo envolvido (opcional)",
-  "report.form.involvedPlaceholder": "Nome de utilizador ou URL",
+  "report.form.involvedLabel": "Quem ou o que esteve envolvido (opcional)",
+  "report.form.involvedPlaceholder": "Um nome, um lugar, um link, o que tiveres",
+  "report.form.involvedHelper":
+    "Escrito por ti, com as tuas palavras. Este formulário ainda não consegue ligar uma denúncia a um perfil ou a uma publicação, por isso alguém da moderação lê o que escreveres aqui e procura o registo.",
+  // Prefixo da linha "quem ou o quê" dentro do corpo da denúncia enviado à moderação.
+  "report.detail.involvedLine": "Quem ou o que esteve envolvido: {involved}",
   "report.form.detailLabel": "O que aconteceu?",
   "report.form.detailPlaceholder":
     "Conta-nos o que aconteceu, com o detalhe com que te sintas confortável a partilhar. Não há respostas erradas.",
@@ -187,10 +191,9 @@ export const safety: Catalog = {
   "blockMute.choose.muteTitle": "Silenciar {name}",
   "blockMute.choose.muteDesc":
     "Não vais ver as publicações nem a atividade desta pessoa. Não vai saber que foi silenciada. Podes dessilenciar a qualquer momento.",
-  "blockMute.choose.muteScopeLabel": "O que silenciar",
-  "blockMute.choose.postsUpdates": "Publicações e atualizações",
-  "blockMute.choose.commentsReplies": "Comentários e respostas",
-  "blockMute.choose.gatheringInvites": "Convites para convívios",
+  "blockMute.choose.muteScopeLabel": "O que o silenciamento abrange",
+  "blockMute.choose.muteScopeNote":
+    "Silenciar abrange tudo de uma vez: as publicações, os comentários e as respostas desta pessoa deixam de te aparecer. Não é possível silenciar apenas uma parte do que alguém partilha.",
   "blockMute.choose.durationLabel": "Duração",
   "blockMute.duration.untilUnmute": "Até eu dessilenciar",
   "blockMute.duration.sevenDays": "7 dias",
@@ -215,7 +218,7 @@ export const safety: Catalog = {
   "blockMute.muted.sub":
     "As publicações e respostas desta pessoa estão agora escondidas do teu feed. Não fica a saber.",
   "blockMute.muted.summaryLabel": "O que está silenciado",
-  "blockMute.muted.postsComments": "Publicações e comentários",
+  "blockMute.muted.everythingTheyPost": "Tudo o que esta pessoa publica",
   "blockMute.muted.durationLabel": "Duração",
   "blockMute.muted.notifiedLabel": "{name} foi notificade?",
   "blockMute.muted.manageLink": "Gerir pessoas silenciadas",

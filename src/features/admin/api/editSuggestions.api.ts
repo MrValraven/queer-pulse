@@ -31,19 +31,19 @@ export interface EditSuggestionDTO {
   createdAt: string;
 }
 
-/** GET /listings/admin/edit-suggestions — Moderator/Admin only. Omit `status`
+/** GET /admin/listings/edit-suggestions — Moderator/Admin only. Omit `status`
  *  to fetch every suggestion regardless of where it is in its lifecycle. */
 export const getEditSuggestions = (status?: EditSuggestionStatus) =>
   apiGet<EditSuggestionDTO[]>(
-    `/listings/admin/edit-suggestions${status ? `?status=${status}` : ""}`,
+    `/admin/listings/edit-suggestions${status ? `?status=${status}` : ""}`,
   );
 
-/** PATCH /listings/admin/edit-suggestions/:id — accept or dismiss a
+/** PATCH /admin/listings/edit-suggestions/:id — accept or dismiss a
  *  suggestion. Moderator/Admin only. */
 export const patchEditSuggestionStatus = (
   id: string,
   status: "accepted" | "dismissed",
 ) =>
-  apiPatch<EditSuggestionDTO>(`/listings/admin/edit-suggestions/${id}`, {
+  apiPatch<EditSuggestionDTO>(`/admin/listings/edit-suggestions/${id}`, {
     status,
   });

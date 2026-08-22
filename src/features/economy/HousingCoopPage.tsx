@@ -19,18 +19,19 @@ export function HousingCoopPage() {
   const { demoMode } = useDemoMode();
   const [joining, setJoining] = useState<FormingCoop | null>(null);
 
-  // These secondary CTAs (updates / mentoring / see-all / post-help / story)
-  // have no backend yet. Only the prototype fires a "success" toast; live shows
-  // an honest coming-soon note instead of confirming an action that never ran.
-  const comingSoon = () =>
-    showToast(t("economy:housingCoop.toast.liveComingSoon"), "info");
-
+  // "Ask to join" is real in both modes (JoinCoopModal posts through
+  // useSubmitCoopJoinRequest). The secondary CTAs (updates / mentoring /
+  // see-all / post-help / story) have no backend, and a toast saying they
+  // worked was a fake success. Live mode now passes no handler at all, so each
+  // section hides or disables its own control and says why up front. Demo mode
+  // keeps the prototype toasts exactly as they were.
   const onCta = (coop: FormingCoop) => {
     if (coop.cta.kind === "join") {
       setJoining(coop);
-    } else if (!demoMode) {
-      comingSoon();
-    } else if (coop.cta.kind === "updates") {
+      return;
+    }
+    if (!demoMode) return;
+    if (coop.cta.kind === "updates") {
       showToast(
         t("economy:housingCoop.toast.updates", { name: coop.name }),
         "success",
@@ -40,30 +41,30 @@ export function HousingCoopPage() {
     }
   };
 
+  const postHelp = () =>
+    showToast(t("economy:housingCoop.toast.postHelp"), "success");
+
   return (
     <PageShell>
       <CoopHero />
       <CoopPhases />
       <CoopGrid
         onCta={onCta}
-        onSeeAll={() =>
-          demoMode ? showToast(t("economy:housingCoop.toast.seeAll")) : comingSoon()
-        }
-        onStart={() =>
+        isSecondaryCtaAvailable={demoMode}
+        onSeeAll={
           demoMode
-            ? showToast(t("economy:housingCoop.toast.postHelp"), "success")
-            : comingSoon()
+            ? () => showToast(t("economy:housingCoop.toast.seeAll"))
+            : undefined
         }
+        onStart={demoMode ? postHelp : undefined}
       />
       <CoopTemplates />
       <CoopStartCta
-        onPost={() =>
+        onPost={demoMode ? postHelp : undefined}
+        onStory={
           demoMode
-            ? showToast(t("economy:housingCoop.toast.postHelp"), "success")
-            : comingSoon()
-        }
-        onStory={() =>
-          demoMode ? showToast(t("economy:housingCoop.toast.story")) : comingSoon()
+            ? () => showToast(t("economy:housingCoop.toast.story"))
+            : undefined
         }
       />
 

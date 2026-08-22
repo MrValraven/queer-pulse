@@ -68,6 +68,9 @@ export function RateBoardStats({ entries, compareRate }: RateBoardStatsProps) {
   return (
     <div className={styles.stats}>
       <div className={styles.overall}>
+        {/* `entries` is the on-device store, so this median describes the rates
+            on this board alone. The catalog string was reworded to match;
+            the key name is kept so nothing else has to move. */}
         <span className={styles.overallLabel}>
           {t("economy:rateBoard.stats.communityMedian")}
         </span>

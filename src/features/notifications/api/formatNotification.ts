@@ -150,7 +150,17 @@ export type NotificationKind =
   // `{ nomineeName, reviewNote }`; `nomineeName` interpolates into the copy
   // via `interpolationTokens`.
   | "changemaker_nomination_approved"
-  | "changemaker_nomination_dismissed";
+  | "changemaker_nomination_dismissed"
+  // Sent to a swap listing's owner when a member proposes an exchange against
+  // it (mirrors the backend `notifications_type_enum` value added with the
+  // barter module, emitted from `BarterService.createProposal`). Member-driven
+  // — the proposer is resolved into the standard `actor` field. The payload
+  // carries `barterListingId` and `listingOffer` ONLY: the proposal's own
+  // message is deliberately dropped at the payload allowlist, because that
+  // boundary does not carry member-authored text, so the copy never tries to
+  // quote it. `listingOffer` is empty on a listing that only asks for
+  // something, which is why `barterOfferToken` resolves it defensively.
+  | "barter_proposal_received";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -220,6 +230,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // on your own submission — same tab as writer_application_approved/declined.
   changemaker_nomination_approved: "platform",
   changemaker_nomination_dismissed: "platform",
+  // A proposal landing on one of your swap listings is board activity about
+  // your own post, same tab as job_application/volunteer_application_received.
+  barter_proposal_received: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -424,6 +437,29 @@ function verificationReasonToken(payload: unknown, t: TFunction): string {
 }
 
 /**
+ * Resolves the `{listingOffer}` token a `barter_proposal_received`
+ * notification's META line interpolates — the swap the proposal landed on, as
+ * its owner wrote it (`payload.listingOffer`).
+ *
+ * It lives in the meta rather than the headline because the personalized
+ * `textNamed` variant is rendered by `NotificationItem` with `{name}` as its
+ * only interpolation value; a second token there would print literally.
+ *
+ * A listing posted in `seeking` mode offers nothing, so `listingOffer` comes
+ * through as an empty string: the token falls back to a generic phrase for the
+ * post rather than leaving the meta trailing off after its separator. The
+ * proposal's own message is never available here by design — the payload
+ * allowlist drops member-authored text at that boundary — so there is nothing
+ * else to name the swap by.
+ */
+function barterOfferToken(payload: unknown, t: TFunction): string {
+  const offer = (payload as { listingOffer?: string } | null)?.listingOffer;
+  return typeof offer === "string" && offer.trim() !== ""
+    ? offer
+    : t("notifications:type.barter_proposal_received.offerFallback");
+}
+
+/**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
  * formatting lives on the frontend at all: it keeps the API language-neutral
@@ -473,6 +509,12 @@ export function formatNotification(
       // (`decision` absent) and the `approved` decision.
       tokens.level = verificationLevelToken(payload, t);
     }
+  }
+  if (type === "barter_proposal_received") {
+    // Overrides the raw `listingOffer` `interpolationTokens` already copied
+    // through, so a listing that only asks for something reads as a phrase
+    // instead of leaving a gap where the swap's name should be.
+    tokens.listingOffer = barterOfferToken(payload, t);
   }
   return {
     text: t(`notifications:type.${key}.text`, tokens),

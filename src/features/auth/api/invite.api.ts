@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
+import { ApiError, apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 
 /** The person who created the invite — resolved server-side from the code. */
 export interface InviteInviterDTO {
@@ -57,6 +57,28 @@ export interface CreatedInviteDTO {
  */
 export const createInvite = (payload: CreateInvitePayload) =>
   apiPost<CreatedInviteDTO>("/invites", payload);
+
+/**
+ * True for the typed `403 { code: "INVITE_QUOTA_EXCEEDED" }` refusal — the
+ * member has already used up this month's personal-invite allowance.
+ *
+ * The `code` IS the contract, the same shape `isUnder18Error` reads
+ * (`joinRequest.api.ts`). This used to fall back to a `/limit|month/i` regex
+ * against the backend's English sentence while the typed code was still being
+ * built; the code has landed (`InvitesService.assertWithinMonthlyQuota`), so
+ * that bridge is gone — it would have broken the instant the sentence was
+ * reworded or localized. Never render `err.message` either: it is backend
+ * English, and the UI needs a catalog string it can show in the member's own
+ * language.
+ */
+export function isInviteQuotaError(err: unknown): boolean {
+  return (
+    err instanceof ApiError &&
+    err.status === 403 &&
+    (err.data as { code?: string } | null | undefined)?.code ===
+      "INVITE_QUOTA_EXCEEDED"
+  );
+}
 
 // NOTE: `acceptInvite` (POST /invites/:code/accept) is gone — the backend
 // removed the route because it was unreachable by construction. Redeeming it

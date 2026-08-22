@@ -79,6 +79,16 @@ export const ADMIN_NAV: AdminNavItem[] = [
     tone: "warn",
   },
   {
+    // The join-request queue. It is also the "pending" tab of Members above,
+    // but that page is admin-only while the backend authorizes moderators for
+    // the queue itself, so this is the entry a moderator can actually follow.
+    labelKey: "admin:settings.joinRequests.title",
+    to: routes.adminJoinRequests,
+    icon: FiUserPlus,
+    badge: "members",
+    tone: "warn",
+  },
+  {
     labelKey: "shared:adminNav.items.staff",
     to: routes.adminStaff,
     icon: FiKey,

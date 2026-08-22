@@ -3,7 +3,11 @@ import { currentUser } from "../members/data/members";
 import { ThreadOpSection } from "./ThreadOpSection";
 import { ThreadReplySection } from "./ThreadReplySection";
 import { ThreadTopbar } from "./ThreadTopbar";
-import { ThreadNotFoundState, ThreadErrorState } from "./ThreadNotFoundState";
+import {
+  ThreadNotFoundState,
+  ThreadErrorState,
+  ThreadPrivateState,
+} from "./ThreadNotFoundState";
 import { ThreadPageModals } from "./ThreadPageModals";
 import { deriveOpView } from "./useThreadModeration";
 import { useThreadPageState } from "./useThreadPageState";
@@ -42,6 +46,9 @@ export function ThreadPage() {
   // retryable failure (500 / network) is surfaced distinctly from a genuine 404
   // so an outage doesn't masquerade as a deleted thread.
   if (!threadData) {
+    // A private-community thread (403) is neither missing nor broken, so it
+    // gets its own state ahead of the retryable one.
+    if (threadQuery.isForbidden) return <ThreadPrivateState />;
     if (threadQuery.isError)
       return <ThreadErrorState onRetry={threadQuery.refetch} />;
     return <ThreadNotFoundState loading={loading} />;
@@ -53,10 +60,15 @@ export function ThreadPage() {
 
   // In demo there are no server flags; ownership is the demo persona. In live,
   // permission flags come only from the DTO (already on the view-model).
-  const demoOwns = (person: { slug?: string; name?: string }) =>
-    demoMode && (person.slug === currentUser.slug || person.name === "You");
+  // `isMine` is the sentinel an optimistic post carries — a FLAG, so the check
+  // survives translation (it used to compare the display name to "You").
+  const demoOwns = (person: { slug?: string; isMine?: boolean }) =>
+    demoMode && (person.slug === currentUser.slug || !!person.isMine);
 
-  const ownsOp = demoOwns({ slug: thread.author.slug, name: thread.author.name });
+  const ownsOp = demoOwns({
+    slug: thread.author.slug,
+    isMine: thread.author.isMine,
+  });
   const opView = deriveOpView(thread, demoMode, ownsOp, moderation.opOverride);
 
   // DEMO overlays the local OP-vote toggle onto the mock thread so the button's

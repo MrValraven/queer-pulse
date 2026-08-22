@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiStar, FiHeart } from "react-icons/fi";
+import { FiStar, FiHeart, FiPlus, FiMinus } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Reply } from "./forum.data";
@@ -46,7 +46,7 @@ export function ThreadReplyItem({
   isLiked: boolean;
   toggleReplyLike: (reply: Reply) => void;
   demoMode: boolean;
-  demoOwns: (person: { slug?: string; name?: string }) => boolean;
+  demoOwns: (person: { slug?: string; isMine?: boolean }) => boolean;
   isEditing: boolean;
   onStartEdit: (reply: Reply) => void;
   onCancelEdit: () => void;
@@ -100,24 +100,7 @@ export function ThreadReplyItem({
       </ProfileLink>
       <div>
         <div className={styles.replyTop}>
-          {collapse && (
-            <button
-              type="button"
-              className={styles.collapseToggle}
-              aria-expanded={!collapse.collapsed}
-              aria-label={t(
-                collapse.collapsed
-                  ? "forum:replies.expandAria"
-                  : "forum:replies.collapseAria",
-              )}
-              onClick={collapse.onToggle}
-            >
-              {collapse.collapsed ? "+" : "–"}
-            </button>
-          )}
-          {collapse?.collapsed && (
-            <span className={styles.collapsedCount}>{collapse.count}</span>
-          )}
+          <ReplyCollapseToggle collapse={collapse} />
           <span className={styles.replyName}>
             <ProfileLink
               to={authorHref(reply)}
@@ -145,6 +128,13 @@ export function ThreadReplyItem({
               canDelete={canDelete}
               canRestore={canRestore}
               canViewHistory={canViewHistory}
+              // Adds Mute / Block for this reply's author (no-op on your own
+              // replies and on the QueerPulse Official account).
+              author={{
+                slug: reply.slug,
+                name: reply.name,
+                official: reply.official,
+              }}
               onEdit={() => onStartEdit(reply)}
               onDelete={() => onDelete(reply)}
               onRestore={() => onRestore(reply)}
@@ -189,47 +179,106 @@ export function ThreadReplyItem({
                 </span>
               )}
             </div>
-            <div className={styles.replyActions}>
-              <button
-                type="button"
-                aria-pressed={isLiked}
-                aria-label={
-                  isLiked
-                    ? t("forum:replies.unlikeAria")
-                    : t("forum:replies.likeAria")
-                }
-                className={[styles.replyReact, isLiked && styles.replyReactOn]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => toggleReplyLike(reply)}
-              >
-                {/* Raw server count — the vote mutation patches `reactions` in
-                    place, so a local `+1` here would double-count. */}
-                <FiHeart aria-hidden="true" /> {reply.reactions}
-              </button>
-              {onReply && (
-                <button
-                  type="button"
-                  className={styles.replyReplyBtn}
-                  onClick={() => onReply(reply)}
-                >
-                  {t("forum:replies.reply")}
-                </button>
-              )}
-              {onReport && (
-                <button
-                  type="button"
-                  className={styles.replyReplyBtn}
-                  onClick={() => onReport(reply)}
-                >
-                  {t("forum:threadOp.report")}
-                </button>
-              )}
-            </div>
+            <ReplyActionsRow
+              reply={reply}
+              isLiked={isLiked}
+              toggleReplyLike={toggleReplyLike}
+              onReply={onReply}
+              onReport={onReport}
+            />
           </>
         )}
       </div>
     </FadeIn>
+  );
+}
+
+/** The like / reply / report row under a reply body. */
+function ReplyActionsRow({
+  reply,
+  isLiked,
+  toggleReplyLike,
+  onReply,
+  onReport,
+}: {
+  reply: Reply;
+  isLiked: boolean;
+  toggleReplyLike: (reply: Reply) => void;
+  onReply?: (reply: Reply) => void;
+  onReport?: (reply: Reply) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.replyActions}>
+      <button
+        type="button"
+        aria-pressed={isLiked}
+        aria-label={
+          isLiked ? t("forum:replies.unlikeAria") : t("forum:replies.likeAria")
+        }
+        className={[styles.replyReact, isLiked && styles.replyReactOn]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={() => toggleReplyLike(reply)}
+      >
+        {/* Raw server count — the vote mutation patches `reactions` in place,
+            so a local `+1` here would double-count. */}
+        <FiHeart aria-hidden="true" /> {reply.reactions}
+      </button>
+      {onReply && (
+        <button
+          type="button"
+          className={styles.replyReplyBtn}
+          onClick={() => onReply(reply)}
+        >
+          {t("forum:replies.reply")}
+        </button>
+      )}
+      {onReport && (
+        <button
+          type="button"
+          className={styles.replyReplyBtn}
+          onClick={() => onReport(reply)}
+        >
+          {t("forum:threadOp.report")}
+        </button>
+      )}
+    </div>
+  );
+}
+
+/** Expand/collapse a reply's nested subtree, plus the count of what's hidden
+ *  while collapsed. Renders nothing for a reply with no descendants. */
+function ReplyCollapseToggle({
+  collapse,
+}: {
+  collapse?: ThreadReplyCollapseProps;
+}) {
+  const { t } = useTranslation();
+  if (!collapse) return null;
+  return (
+    <>
+      <button
+        type="button"
+        className={styles.collapseToggle}
+        aria-expanded={!collapse.collapsed}
+        aria-label={t(
+          collapse.collapsed
+            ? "forum:replies.expandAria"
+            : "forum:replies.collapseAria",
+        )}
+        onClick={collapse.onToggle}
+      >
+        {collapse.collapsed ? (
+          <FiPlus aria-hidden="true" />
+        ) : (
+          <FiMinus aria-hidden="true" />
+        )}
+      </button>
+      {collapse.collapsed && (
+        <span className={styles.collapsedCount}>{collapse.count}</span>
+      )}
+    </>
   );
 }
 

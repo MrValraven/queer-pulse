@@ -109,7 +109,9 @@ export function useMyEventsData(options?: {
       // slug back under two filters (e.g. "going" and "hosting") — merge
       // collapses that into one card instead of rendering it twice.
       const fromFilters = mergeEventPages(pages, LIVE_FILTERS, t);
-      const fromInvites = invites.map(eventInviteToMyEvent);
+      const fromInvites = invites.map((invite) =>
+        eventInviteToMyEvent(invite, t),
+      );
       // Keep only the event-change kinds the "What's changed" panel is about;
       // every other notification stays in the main notifications centre.
       const notifs = notifications

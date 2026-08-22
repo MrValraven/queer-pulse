@@ -113,11 +113,15 @@ export function NotFoundPage() {
               aria-label={t("system:notFound.searchPlaceholder")}
               placeholder={t("system:notFound.searchPlaceholder")}
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(event) => setQuery(event.target.value)}
             />
-            <button type="submit" className={styles.searchBtn}>
+            <Button
+              variant="plum"
+              type="submit"
+              className={styles.searchBtn}
+            >
               {t("system:notFound.searchCta")}
-            </button>
+            </Button>
           </form>
         </div>
       </div>

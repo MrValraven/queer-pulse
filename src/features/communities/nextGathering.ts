@@ -9,11 +9,27 @@ import type { CommunityEvent } from "./community.model";
 // destination (`/gatherings/:slug`) then always describe the same event.
 
 const MONTHS_SHORT = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 const WEEKDAYS_LONG = [
-  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ];
 
 /**
@@ -60,7 +76,9 @@ function fieldsFromGathering(slug: string) {
 }
 
 /** The sidebar "Next Gathering" card, mirrored from a real gathering. */
-export function nextEventFromGathering(slug: string): CommunityDetail["nextEvent"] {
+export function nextEventFromGathering(
+  slug: string,
+): CommunityDetail["nextEvent"] {
   return fieldsFromGathering(slug);
 }
 

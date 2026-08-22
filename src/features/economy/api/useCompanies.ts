@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getCompanies } from "./companies.api";
 import { companyCardToEmployer, type EmployerCard } from "./companies.adapters";
 import { economyKeys } from "./economyKeys";
@@ -55,9 +56,14 @@ interface CompaniesPageVM {
  */
 export function useCompanies(): CompaniesResult {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
 
   const query = useInfiniteQuery<CompaniesPageVM>({
-    queryKey: economyKeys.companies(demoMode),
+    // `language` is appended to the shared key rather than baked into the
+    // factory: the adapter now resolves each card's badge through `t`, so a
+    // language switch has to re-derive. Appending keeps `companiesRoot`
+    // (`["companies"]`) matching for every existing prefix invalidation.
+    queryKey: [...economyKeys.companies(demoMode), language],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
@@ -70,7 +76,7 @@ export function useCompanies(): CompaniesResult {
       }
       const res = await getCompanies({ page: pageParam as number });
       return {
-        items: res.items.map(companyCardToEmployer),
+        items: res.items.map((card) => companyCardToEmployer(card, t)),
         total: res.total,
         page: res.page,
       };

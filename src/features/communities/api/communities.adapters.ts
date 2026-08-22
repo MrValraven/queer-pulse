@@ -1,7 +1,14 @@
 import { memberRefToPerson, type MemberRefDTO } from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { Community } from "../../homepage/data/types";
-import type { CommunityDetail, Person, Reply, Thread, Tint } from "../communityDetails";
+import type {
+  CommunityDetail,
+  Person,
+  Reply,
+  Thread,
+  Tint,
+} from "../communityDetails";
 import type {
   CommunityEvent,
   LivingCommunity,
@@ -47,47 +54,46 @@ const TYPE_SHORT: Record<CommunityType, string> = {
 };
 
 /** Join-CTA label per access tier, matching the mock grid copy. */
-function joinLabelFor(tier: AccessTier): string {
+function joinLabelFor(tier: AccessTier, translate: TFunction): string {
   return tier === "public"
-    ? "Join →"
+    ? translate("communities:card.join.public")
     : tier === "invite"
-      ? "Join with invite →"
-      : "Request →";
+      ? translate("communities:card.join.invite")
+      : translate("communities:card.join.request");
 }
 
 /**
- * A coarse "N ago" label from an ISO timestamp — the community feed shows a
- * short relative time next to posts/replies. Falls back to "just now".
+ * Relative times are NOT resolved here. An adapter runs once, outside a render,
+ * with no locale bound to it — a hand-rolled `"4mo"` token baked in at map time
+ * is English forever and goes stale as the page stays open. So every mapper
+ * below carries the raw ISO `createdAt` through onto the view-model and the
+ * render layer turns it into words via `useCommunityTime()` (which wraps the
+ * shared `relativeAgo` + `Intl.RelativeTimeFormat`). See `communityTime.ts`.
  */
-export function relTime(iso: string): string {
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return "just now";
-  const secs = Math.max(0, (Date.now() - then) / 1000);
-  if (secs < 60) return "just now";
-  const mins = Math.floor(secs / 60);
-  if (mins < 60) return `${mins}m`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h`;
-  const days = Math.floor(hrs / 24);
-  if (days < 7) return `${days}d`;
-  const weeks = Math.floor(days / 7);
-  if (weeks < 5) return `${weeks}w`;
-  const months = Math.floor(days / 30);
-  return months < 12 ? `${months}mo` : `${Math.floor(days / 365)}y`;
-}
 
 /** Format an ISO date to the "Founded 2025" line the detail hero shows. */
-function foundedLabel(iso: string): string {
+function foundedLabel(iso: string, translate: TFunction): string {
   const year = iso?.slice(0, 4) ?? "";
-  return /^\d{4}$/.test(year) ? `Founded ${year}` : "Founded recently";
+  return /^\d{4}$/.test(year)
+    ? translate("communities:detail.founded", { year })
+    : translate("communities:detail.foundedRecently");
 }
 
 /** Map a (possibly null) member ref to the community's local `Person` shape.
  *  The shared `memberRefToPerson` carries the same slug/name/initials/tint; the
  *  community `Tint` union is a subset of `AvatarTint` so we narrow with a cast. */
-export function refToPerson(ref: MemberRefDTO | null | undefined): Person {
+export function refToPerson(
+  ref: MemberRefDTO | null | undefined,
+  translate: TFunction,
+): Person {
   const p = memberRefToPerson(ref);
-  if (!p) return { initials: "··", name: "A member", tint: "plum" };
+  if (!p) {
+    return {
+      initials: "?",
+      name: translate("communities:common.someMember"),
+      tint: "plum",
+    };
+  }
   return {
     initials: p.initials,
     name: p.name,
@@ -98,7 +104,10 @@ export function refToPerson(ref: MemberRefDTO | null | undefined): Person {
 }
 
 /** GET /communities card → the discover-grid `Community` view-model. */
-export function cardDtoToCommunity(dto: CommunityCardDTO): Community {
+export function cardDtoToCommunity(
+  dto: CommunityCardDTO,
+  translate: TFunction,
+): Community {
   return {
     slug: dto.slug,
     href: `/community/${dto.slug}`,
@@ -108,9 +117,11 @@ export function cardDtoToCommunity(dto: CommunityCardDTO): Community {
     description: dto.tagline,
     count:
       dto.accessTier === "private"
-        ? "Members only"
-        : `${dto.memberCount} members`,
-    joinLabel: joinLabelFor(dto.accessTier),
+        ? translate("communities:common.count.membersOnly")
+        : translate("communities:common.count.members", {
+            count: dto.memberCount,
+          }),
+    joinLabel: joinLabelFor(dto.accessTier, translate),
     dashed: dto.accessTier === "private",
     privateBadge: dto.accessTier === "private",
     // Carry the raw tier through so consumers can filter on join policy (e.g.
@@ -133,36 +144,56 @@ export function cardDtoToCommunity(dto: CommunityCardDTO): Community {
 }
 
 /** The detail DTO also carries card fields, so reuse the card mapping. */
-export function detailDtoToCommunity(dto: CommunityDetailDTO): Community {
-  return cardDtoToCommunity(dto);
+export function detailDtoToCommunity(
+  dto: CommunityDetailDTO,
+  translate: TFunction,
+): Community {
+  return cardDtoToCommunity(dto, translate);
 }
 
 /** GET /communities/:slug → the `CommunityDetail` "info" object. Event-chip,
  *  cadence and topic-thread copy are prototype-only, defaulted gracefully. */
-export function detailDtoToDetail(dto: CommunityDetailDTO): CommunityDetail {
+export function detailDtoToDetail(
+  dto: CommunityDetailDTO,
+  translate: TFunction,
+): CommunityDetail {
   const badge = TYPE_SHORT[dto.type] ?? "Community";
-  const organiser = { ...refToPerson(dto.owner), bio: "", role: "Organiser" };
+  const organiser = {
+    ...refToPerson(dto.owner, translate),
+    bio: "",
+    role: translate("communities:detail.sidebar.organiser"),
+  };
   return {
     badge,
-    founded: foundedLabel(dto.createdAt),
-    cadence: "Finding its rhythm",
+    founded: foundedLabel(dto.createdAt, translate),
+    cadence: translate("communities:detail.cadenceDefault"),
     about: [dto.purpose],
     whoFor: [dto.whoFor],
     tags: [badge],
     organiser,
     nextEvent: {
       dd: "-",
-      mm: "soon",
-      title: "Next gathering to be announced",
-      meta: "Check the events tab",
-      spots: "Open to members",
+      mm: translate("communities:detail.nextEvent.soonChip"),
+      title: translate("communities:detail.nextEvent.tbaTitle"),
+      meta: translate("communities:detail.nextEvent.checkEventsTab"),
+      spots: translate("communities:detail.nextEvent.openToMembers"),
       tba: true,
     },
     topicThread: {
       votes: 0,
-      title: `Welcome to ${dto.name}`,
-      author: organiser,
-      time: "recently",
+      title: translate("communities:detail.topicThread.welcomeTitle", {
+        name: dto.name,
+      }),
+      // No timestamp exists for this synthetic thread, so it carries the
+      // "recently" idiom as a translated phrase rather than an ISO date.
+      time: translate("communities:detail.topicThread.recently"),
+      // The welcome thread is written by the space itself, not a member, so
+      // it carries the community's own byline rather than a person.
+      author: {
+        initials: dto.name.slice(0, 2).toUpperCase(),
+        name: dto.name,
+        tint: "plum",
+      },
       replyCount: 0,
       post: dto.purpose,
       replies: [],
@@ -203,12 +234,15 @@ function summaryToReaction(s: CommunityReactionSummary): Reaction {
   return { key: s.key, count: s.count, reacted: s.mine };
 }
 
-function replyDtoToPostReply(dto: CommunityReplyDTO): PostReply {
+function replyDtoToPostReply(
+  dto: CommunityReplyDTO,
+  translate: TFunction,
+): PostReply {
   return {
     id: dto.id,
-    author: refToPerson(dto.author),
+    author: refToPerson(dto.author, translate),
     text: dto.text,
-    time: relTime(dto.createdAt),
+    createdAt: dto.createdAt,
     editedAt: dto.editedAt,
     deleted: dto.deleted,
     canEdit: dto.canEdit,
@@ -219,18 +253,21 @@ function replyDtoToPostReply(dto: CommunityReplyDTO): PostReply {
 }
 
 /** GET /communities/:slug/posts item → a Pulse `Post`. */
-export function postDtoToPost(dto: CommunityPostDTO, slug: string): Post {
+export function postDtoToPost(
+  dto: CommunityPostDTO,
+  slug: string,
+  translate: TFunction,
+): Post {
   return {
     id: dto.id,
-    author: refToPerson(dto.author),
+    author: refToPerson(dto.author, translate),
     body: dto.body,
     image: dto.image ?? undefined,
     kind: dto.kind,
     pinned: dto.pinned,
     reactions: dto.reactions.map(summaryToReaction),
-    replies: dto.replies.map(replyDtoToPostReply),
+    replies: dto.replies.map((reply) => replyDtoToPostReply(reply, translate)),
     replyCount: dto.replyCount,
-    time: relTime(dto.createdAt),
     createdAt: dto.createdAt,
     communitySlug: slug,
     editedAt: dto.editedAt,
@@ -246,8 +283,9 @@ export function postDtoToPost(dto: CommunityPostDTO, slug: string): Post {
 export function postsToPulse(
   posts: CommunityPostDTO[],
   slug: string,
+  translate: TFunction,
 ): { pinned: Post[]; pulse: Post[] } {
-  const mapped = posts.map((p) => postDtoToPost(p, slug));
+  const mapped = posts.map((post) => postDtoToPost(post, slug, translate));
   return {
     pinned: mapped.filter((p) => p.pinned),
     pulse: mapped.filter((p) => !p.pinned),
@@ -255,20 +293,23 @@ export function postsToPulse(
 }
 
 /** GET /communities/:slug/roster entry → a `RosterMember`. */
-export function rosterEntryToRosterMember(dto: RosterEntryDTO): RosterMember {
-  const p = refToPerson(dto.member);
-  return { ...p, role: dto.role };
+export function rosterEntryToRosterMember(
+  dto: RosterEntryDTO,
+  translate: TFunction,
+): RosterMember {
+  return { ...refToPerson(dto.member, translate), role: dto.role };
 }
 
 /** A pending join request → the mod-tools `ModRequest`. */
 export function joinRequestToModRequest(
   dto: CommunityJoinRequestDTO,
+  translate: TFunction,
 ): ModRequest {
   return {
     id: dto.id,
-    person: refToPerson(dto.member),
+    person: refToPerson(dto.member, translate),
     note: dto.note ?? undefined,
-    time: relTime(dto.createdAt),
+    createdAt: dto.createdAt,
   };
 }
 
@@ -279,7 +320,7 @@ export function joinRequestToModRequest(
 export function communityReportToModReport(dto: CommunityReportDTO): ModReport {
   return {
     id: dto.id,
-    time: relTime(dto.createdAt),
+    createdAt: dto.createdAt,
     reasonCode: dto.reasonCode,
     subjectType: dto.subjectType,
     subjectId: dto.subjectId,
@@ -300,6 +341,7 @@ function headingFromBody(body: string): string {
 function postReplyToThreadReply(reply: PostReply): Reply {
   return {
     id: reply.id,
+    createdAt: reply.createdAt,
     initials: reply.author.initials,
     name: reply.author.name,
     tint: reply.author.tint,
@@ -318,8 +360,11 @@ function postReplyToThreadReply(reply: PostReply): Reply {
  *  `Reply` view-model — the same two-step DTO→PostReply→Reply mapping
  *  `postToThread` already applies to the embedded preview, so a loaded-more
  *  reply renders identically to one that arrived in the post's own payload. */
-export function replyDtoToThreadReply(dto: CommunityReplyDTO): Reply {
-  return postReplyToThreadReply(replyDtoToPostReply(dto));
+export function replyDtoToThreadReply(
+  dto: CommunityReplyDTO,
+  translate: TFunction,
+): Reply {
+  return postReplyToThreadReply(replyDtoToPostReply(dto, translate));
 }
 
 /** A community `Post` → the Discussion widget's `Thread` view-model. Heading is
@@ -391,7 +436,9 @@ export interface EditableCommunityFields {
 }
 
 /** Live seed: the authoritative current values straight off the detail DTO. */
-export function dtoToEditable(dto: CommunityDetailDTO): EditableCommunityFields {
+export function dtoToEditable(
+  dto: CommunityDetailDTO,
+): EditableCommunityFields {
   return {
     name: dto.name,
     tagline: dto.tagline,
@@ -413,6 +460,7 @@ export function dtoToEditable(dto: CommunityDetailDTO): EditableCommunityFields 
 export function applyCommunityOverride(
   community: Community,
   patch: UpdateCommunityDto,
+  translate: TFunction,
 ): Community {
   const next: Community = { ...community };
   if (patch.name !== undefined) next.name = patch.name;
@@ -425,7 +473,7 @@ export function applyCommunityOverride(
     next.accessTier = patch.accessTier;
     next.privateBadge = patch.accessTier === "private";
     next.dashed = patch.accessTier === "private";
-    next.joinLabel = joinLabelFor(patch.accessTier);
+    next.joinLabel = joinLabelFor(patch.accessTier, translate);
   }
   if (patch.tags !== undefined) next.tags = patch.tags;
   return next;
@@ -437,7 +485,9 @@ export function applyDetailOverride(
   patch: UpdateCommunityDto,
 ): CommunityDetail {
   const badge =
-    patch.type !== undefined ? TYPE_SHORT[patch.type] ?? detail.badge : detail.badge;
+    patch.type !== undefined
+      ? (TYPE_SHORT[patch.type] ?? detail.badge)
+      : detail.badge;
   return {
     ...detail,
     badge,

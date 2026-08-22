@@ -15,6 +15,7 @@ import { ThreadRowMenu } from "./ThreadRowMenu";
 import { ThreadRowSwipeAffordances } from "./ThreadRowSwipeAffordances";
 import { isThreadUnread } from "./threadFilters";
 import { useThreadRowSwipe } from "./useThreadRowSwipe";
+import { useThreadRowTimeLabel } from "./useThreadRowTimeLabel";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
@@ -70,6 +71,7 @@ function MessagesThreadRowImpl({
   const togglePin = useTogglePin();
   const toggleFavorite = useToggleFavorite();
   const toggleMute = useToggleMute();
+  const displayedTime = useThreadRowTimeLabel(thread.time, thread.updatedAt);
 
   // Shared by BOTH the ⋯ menu items and the mobile swipe gesture below — one
   // toggle callback per action, never two paths computing the same mutation.
@@ -168,7 +170,7 @@ function MessagesThreadRowImpl({
                     <TbPinnedFilled aria-hidden />
                   </span>
                 )}
-                <span className={styles.trTime}>{thread.time}</span>
+                <span className={styles.trTime}>{displayedTime}</span>
               </span>
             </div>
             <div className={styles.trPreviewRow}>

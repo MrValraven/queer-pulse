@@ -58,7 +58,14 @@ export function useItemDrawerHandlers({
       { id: editItem.id, body: fields },
       {
         onError: (error) =>
-          showToast(describeError("Couldn't save that change", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.saveChange"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       },
     );
   }
@@ -81,7 +88,11 @@ export function useItemDrawerHandlers({
         {
           onError: (error) =>
             showToast(
-              describeError("Couldn't update the target date", error),
+              describeError(
+                t("admin:errors.updateTargetDate"),
+                error,
+                t("shared:apiError.tryAgainTail"),
+              ),
               "error",
             ),
         },
@@ -118,7 +129,14 @@ export function useItemDrawerHandlers({
             "success",
           ),
         onError: (error) =>
-          showToast(describeError("Couldn't update visibility", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.updateVisibility"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       },
     );
   }
@@ -131,7 +149,14 @@ export function useItemDrawerHandlers({
           close();
         },
         onError: (error) =>
-          showToast(describeError("Couldn't create that item", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.createItem"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       });
       return;
     }
@@ -159,7 +184,14 @@ export function useItemDrawerHandlers({
           close();
         },
         onError: (error) =>
-          showToast(describeError("Couldn't archive that item", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.archiveItem"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       },
     );
   }
@@ -173,7 +205,14 @@ export function useItemDrawerHandlers({
         close();
       },
       onError: (error) =>
-        showToast(describeError("Couldn't delete that item", error), "error"),
+        showToast(
+          describeError(
+            t("admin:errors.deleteItem"),
+            error,
+            t("shared:apiError.tryAgainTail"),
+          ),
+          "error",
+        ),
     });
   }
 

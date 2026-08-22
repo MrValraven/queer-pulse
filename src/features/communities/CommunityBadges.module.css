@@ -57,6 +57,10 @@
   flex-wrap: wrap;
   gap: 7px;
 }
+/* The interactive pill is a shared <Button variant="ghost" size="sm">; the
+   read-only twin a visitor sees is a plain span wearing the same class. These
+   rules give both the compact reaction shape, and override the primitive's
+   pill padding/height back down to feed scale. */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -68,6 +72,7 @@
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 4px 11px;
+  min-height: 34px;
   cursor: pointer;
   user-select: none;
   transition:

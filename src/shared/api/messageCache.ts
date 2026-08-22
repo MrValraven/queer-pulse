@@ -225,6 +225,11 @@ export function patchConversationPreview(
         ...conversation,
         preview: previewForMessage(!!conversation.isGroup, message),
         time: timeLabel(message.createdAt),
+        // Keep the machine-readable instant in step with the rendered label.
+        // `time` is a frozen string ("14:32", "Yesterday"), so without this the
+        // row's age stops advancing for an actively-chatting thread and
+        // `useThreadRowTimeLabel` has nothing newer to re-derive from.
+        updatedAt: message.createdAt,
       };
       const next = previous.slice();
       next.splice(index, 1);

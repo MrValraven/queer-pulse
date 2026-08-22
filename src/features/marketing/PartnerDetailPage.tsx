@@ -4,6 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { PageMeta } from "../../shared/seo";
 import { usePartner } from "./api/usePartner";
 import { routes } from "../../app/routeMap";
 import {
@@ -24,8 +25,15 @@ function emName(name: string) {
 }
 
 function PartnerDetailLoading() {
+  const { t } = useTranslation();
   return (
     <PageShell>
+      {/* Transient skeleton: name the tab honestly and keep the placeholder
+          out of the index until the real partner resolves. */}
+      <PageMeta
+        title={t("marketing:partnerDetail.meta.loadingTitle")}
+        noIndex
+      />
       <div className={s.page} aria-busy>
         <SkeletonLine width={110} height={14} />
         <header className={s.hero} style={{ marginTop: 24 }}>
@@ -59,6 +67,10 @@ export function PartnerDetailPage() {
   if (isError || !p) {
     return (
       <PageShell>
+        <PageMeta
+          title={t("marketing:partnerDetail.meta.errorTitle")}
+          noIndex
+        />
         <div className={s.page}>
           <p className={s.error}>{t("marketing:partnerDetail.loadError")}</p>
           <Button variant="ghost" to={routes.partners}>
@@ -73,6 +85,11 @@ export function PartnerDetailPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("marketing:partnerDetail.meta.title", { name: p.name })}
+        description={p.tagline}
+        canonical={`${routes.partners}/${p.slug}`}
+      />
       <div className={s.page}>
         <Link to={routes.partners} className={s.back}>
           <FiArrowLeft aria-hidden /> {t("marketing:partnerDetail.backCta")}

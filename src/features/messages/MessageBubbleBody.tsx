@@ -1,4 +1,5 @@
 // src/features/messages/MessageBubbleBody.tsx
+import { FiImage } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { isEmojiOnly } from "./messageRuns";
@@ -99,6 +100,35 @@ export function MessageBubbleBody({
           loading="lazy"
           alt={imageAlt}
         />
+        {isLast && (
+          <MessageMeta
+            time={message.time}
+            isSent={isSent}
+            metaStatus={metaStatus}
+            floating={false}
+          />
+        )}
+      </>
+    );
+  }
+  // A restored outbox entry (page reload) whose local `blob:` preview was
+  // stripped before persisting — see `outbox.ts`'s `stripDeadBlobPreview`.
+  // `sendAttachment` still holds the real storage key for replay, but there's
+  // nothing fetchable to paint, so render a neutral stand-in instead of an
+  // `<img>` pointed at a dead object URL.
+  if (
+    (message.kind === "gif" || message.kind === "image") &&
+    !message.attachment &&
+    message.sendAttachment
+  ) {
+    return (
+      <>
+        {forwardedNode}
+        {replyQuoteNode}
+        <div className={styles.imagePreviewUnavailable} role="img" aria-label={t("messages:attachments.previewUnavailable")}>
+          <FiImage aria-hidden size={20} />
+          <span>{t("messages:attachments.previewUnavailable")}</span>
+        </div>
         {isLast && (
           <MessageMeta
             time={message.time}

@@ -426,9 +426,26 @@
   margin-bottom: 14px;
   overflow: hidden;
 }
+/* Two things used to hide an open post-actions dropdown, and both are lifted
+   only while a menu is actually mounted (`[role="menu"]` exists in the DOM
+   only when the menu is open, so a closed row is untouched):
+   1. the card's own `overflow: hidden`, which keeps the rounded corners but
+      clips anything escaping the card;
+   2. each row being a <FadeIn>, whose `will-change: transform` makes it a
+      stacking context — so the menu's z-index only wins inside its own row and
+      the NEXT row paints over it.
+   Mirrors the forum's `.rowFade:has(.threadMenu [aria-expanded="true"])`. */
+.thread:has([role="menu"]) {
+  overflow: visible;
+}
+.rowFade:has([role="menu"]) {
+  position: relative;
+  z-index: 3;
+}
+/* No longer a click target itself: only the title inside it toggles the
+   thread, so the row is plain layout. */
 .thHead {
   padding: 18px 22px 14px;
-  cursor: pointer;
   display: flex;
   align-items: flex-start;
   gap: 14px;
@@ -440,20 +457,17 @@
   gap: 3px;
   flex: none;
 }
+/* The vote control is a shared <IconButton>; these overrides only give it the
+   compact square shape the thread rail wants. Focus ring, disabled treatment
+   and the react-icons sizing come from the primitive. */
 .vbtn {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
   border-radius: 8px;
   border: 1.5px solid rgba(var(--line-rgb), 0.14);
   background: transparent;
-  cursor: pointer;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    color 0.2s var(--ease),
-    border-color 0.2s var(--ease);
+  font-size: 15px;
 }
 @media (hover: hover) {
   .vbtn:hover {
@@ -497,6 +511,27 @@
   letter-spacing: -0.01em;
   margin-bottom: 6px;
   line-height: 1.25;
+}
+/* The title doubles as the thread's disclosure control, so it is a real
+   <Button> for the semantics and keyboard behaviour; this strips the pill
+   chrome back to a full-width block of running text. */
+.thTitleBtn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  min-height: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  white-space: normal;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .thTitleBtn:hover {
+    background: transparent;
+    color: var(--accent-ink);
+  }
 }
 .thMeta {
   display: flex;
@@ -823,7 +858,7 @@
 .inlineTa {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid rgba(45, 27, 61, 0.18);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
   border-radius: 10px;
   background: var(--cream);
   color: var(--ink);

@@ -3,7 +3,7 @@ import { DocPreview } from "./tools/DocPreview";
 import type { Issuer } from "./tools/useIssuer";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { TAX_DISCLAIMER } from "./tax.constants";
+import { TAX_DISCLAIMER_KEY } from "./tax.constants";
 import type { ScopeState } from "./scope.data";
 import styles from "./ScopeGeneratorPage.module.css";
 
@@ -25,7 +25,7 @@ export function ScopePreview({ scope, issuer }: ScopePreviewProps) {
     month: "long",
     year: "numeric",
   });
-  const scopeDisclaimer = `${t("economy:scopeTool.disclaimer")} ${TAX_DISCLAIMER}`;
+  const scopeDisclaimer = `${t("economy:scopeTool.disclaimer")} ${t(TAX_DISCLAIMER_KEY)}`;
 
   return (
     <DocPreview>

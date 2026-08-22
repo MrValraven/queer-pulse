@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
-import { FiShield } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { FiShield, FiX } from "react-icons/fi";
+import {
+  Button,
+  useDismiss,
+  useScrimDismiss,
+} from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSafeSpaceVouch } from "./api/useSafeSpaceVouch";
@@ -73,17 +76,23 @@ export function VouchModal({
   const [note, setNote] = useState("");
   const [status, setStatus] = useState<"form" | "loading" | "done">("form");
   const vouch = useSafeSpaceVouch();
-  useScrollLock();
 
   const isSubmitting = status === "loading" || vouch.isPending;
 
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape" && !isSubmitting) onClose();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose, isSubmitting]);
+  // A submit is already in flight: closing here would leave the mutation
+  // running with nothing to show its result, so every dismissal route
+  // (Escape, the backdrop, the × and Cancel buttons) goes through this guard.
+  const requestClose = () => {
+    if (!isSubmitting) onClose();
+  };
+
+  // The shared modal a11y contract: scroll lock, initial focus into the
+  // dialog, a Tab focus-trap, Escape while topmost, and focus restore to the
+  // trigger on unmount. `useScrimDismiss` also requires the pointer to have
+  // gone DOWN on the backdrop, so a text-selection drag that ends outside the
+  // dialog no longer throws away a half-written vouch note.
+  const dialogRef = useDismiss(requestClose);
+  const scrimProps = useScrimDismiss(requestClose);
 
   const canSubmit = note.trim().length >= 12;
 
@@ -107,14 +116,10 @@ export function VouchModal({
   const charsLeft = 12 - note.trim().length;
 
   return createPortal(
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className={styles.overlay} role="presentation" {...scrimProps}>
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
@@ -123,10 +128,11 @@ export function VouchModal({
         <button
           type="button"
           className={styles.close}
-          onClick={onClose}
+          onClick={requestClose}
+          disabled={isSubmitting}
           aria-label={t("safety:vouchModal.closeAriaLabel")}
         >
-          ×
+          <FiX aria-hidden />
         </button>
 
         <div className={styles.scroll}>
@@ -199,7 +205,11 @@ export function VouchModal({
               )}
 
               <div className={styles.actions}>
-                <Button variant="ghost" onClick={onClose}>
+                <Button
+                  variant="ghost"
+                  onClick={requestClose}
+                  disabled={isSubmitting}
+                >
                   {t("safety:vouchModal.form.cancelCta")}
                 </Button>
                 <Button

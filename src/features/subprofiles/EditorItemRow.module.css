@@ -40,6 +40,6 @@
   position: relative;
   z-index: 1;
   border-color: var(--line-2);
-  box-shadow: 0 8px 22px rgba(45, 27, 61, 0.16);
+  box-shadow: 0 8px 22px rgba(var(--plum-rgb), 0.16);
   cursor: grabbing;
 }

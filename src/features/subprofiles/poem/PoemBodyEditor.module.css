@@ -38,7 +38,7 @@
   gap: 0.5rem;
   align-items: start;
   padding: 0.4rem 0.5rem;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 10px;
   background: var(--paper);
 }
@@ -53,7 +53,7 @@
   position: relative;
   z-index: 1;
   border-color: var(--line-2);
-  box-shadow: 0 8px 22px rgba(45, 27, 61, 0.16);
+  box-shadow: 0 8px 22px rgba(var(--plum-rgb), 0.16);
 }
 .grip {
   display: inline-grid;

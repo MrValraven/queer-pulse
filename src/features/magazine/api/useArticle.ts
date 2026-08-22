@@ -7,6 +7,7 @@ import {
   articleListItemToArticle,
   articleResponseToArticle,
 } from "./magazine.adapters";
+import { ignoreEnrichmentError, nullOnNotFound } from "./loadErrors";
 import { getArticle, getArticles, getAuthor } from "./magazine.api";
 
 export interface ArticleData {
@@ -29,7 +30,7 @@ export interface ArticleData {
 export function useArticle(id: string) {
   const { demoMode } = useDemoMode();
   const fmt = useFormat();
-  const { language } = useTranslation();
+  const { t, language } = useTranslation();
   return useQuery<ArticleData>({
     queryKey: ["magazine-article", demoMode, language, id],
     queryFn: async () => {
@@ -46,7 +47,10 @@ export function useArticle(id: string) {
         return { article, related };
       }
 
-      const dto = await getArticle(id).catch(() => null);
+      // Only a real 404 renders the not-found wall — every other failure is
+      // rethrown so react-query retries and the page shows a retry state
+      // (FE-CNT-08). An API blip must never be reported as "no such article".
+      const dto = await getArticle(id).catch(nullOnNotFound);
       if (!dto) return { article: null, related: [] };
 
       // CNT-17 fix: the author lookup and the related-articles lookup only
@@ -54,15 +58,19 @@ export function useArticle(id: string) {
       // to run as a serial waterfall (author, then related) for no reason.
       const tag = dto.tags[0];
       const [authorDetail, relatedPage] = await Promise.all([
-        getAuthor(dto.author.handle).catch(() => null),
-        tag ? getArticles({ tag }).catch(() => null) : Promise.resolve(null),
+        // Both are enrichment: the bio and the rail degrade to absent rather
+        // than failing an article that already loaded.
+        getAuthor(dto.author.handle).catch(ignoreEnrichmentError),
+        tag
+          ? getArticles({ tag }).catch(ignoreEnrichmentError)
+          : Promise.resolve(null),
       ]);
 
-      const article = articleResponseToArticle(dto, fmt, authorDetail?.bio);
+      const article = articleResponseToArticle(dto, fmt, t, authorDetail?.bio);
       const related = (relatedPage?.items ?? [])
         .filter((item) => item.slug !== dto.slug)
         .slice(0, 3)
-        .map((dtoItem) => articleListItemToArticle(dtoItem, fmt));
+        .map((dtoItem) => articleListItemToArticle(dtoItem, fmt, t));
 
       return { article, related };
     },

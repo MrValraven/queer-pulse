@@ -5,7 +5,7 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { FiX } from "react-icons/fi";
+import { FiPlus, FiX } from "react-icons/fi";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_PRESETS } from "../../shared/identity/pronouns";
@@ -289,7 +289,7 @@ export function TagEditor({
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => add(option)}
                 >
-                  <span aria-hidden>+</span>
+                  <FiPlus aria-hidden />
                   {option}
                 </button>
               ))}
@@ -310,7 +310,7 @@ export function TagEditor({
               className={styles.tagAdd}
               onClick={() => add(option)}
             >
-              <span aria-hidden>+</span>
+              <FiPlus aria-hidden />
               {option}
             </button>
           ))}

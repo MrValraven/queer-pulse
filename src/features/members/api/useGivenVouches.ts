@@ -31,6 +31,14 @@ export interface GivenVouchFace {
  * — a vouch visibly un-doing itself. The old effect ran exactly once for the
  * same reason; this preserves it.
  *
+ * Not invalidating is not the same as never updating, though. Both vouch
+ * mutations WRITE this cache entry directly: `useVouchMember` prepends the new
+ * row on success, `useVouchMutations` filters the withdrawn slug out on mutate
+ * (restoring it on error). Without that, the owner's "You vouched for" stat and
+ * `NetworkListModal` — which both read this query through `useProfileNetwork` —
+ * stayed frozen at the session's first answer. Any future writer must patch the
+ * cache the same way rather than reaching for `invalidateQueries`.
+ *
  * Note `useVouchers(slug)` (`./useVouchers.ts`) is a different query — the
  * faces on someone else's profile, keyed `["vouchers", demoMode, slug]`. Don't
  * conflate them.

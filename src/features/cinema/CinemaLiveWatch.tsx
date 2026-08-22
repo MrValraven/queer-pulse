@@ -1,40 +1,44 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { WatchNotice, WatchShell } from "./CinemaWatchShell";
+import { hasNativeHlsSupport } from "./hlsSupport";
 import { useCinemaTitle } from "./api/useCinemaTitle";
-import {
-  usePlaybackSession,
-  useReportProgress,
-} from "./api/useCinemaPlayback";
+import { usePlaybackSession } from "./api/useCinemaPlayback";
+import { useWatchProgress } from "./useWatchProgress";
 import type { PlaybackSessionDTO } from "./api/cinema.api";
 import styles from "./WatchPage.module.css";
 import { routes } from "../../app/routeMap";
-
-// Persist the watch position at most this often while playing.
-const PROGRESS_INTERVAL_SECONDS = 15;
 
 /**
  * Live-mode watch experience. Fetches the real title (GET /cinema/titles/:id),
  * mints a fresh signed playback session on play (POST …/playback — never
  * cached), streams it in a real `<video>`, and persists the member's position
- * (PUT …/progress) periodically and on pause/ended. Native HLS plays on Safari
+ * (PUT …/progress) periodically, on pause/ended, and when they leave
+ * mid-playback (see `useWatchProgress`). Native HLS plays on Safari
  * and iOS; a browser without native HLS support surfaces a friendly notice
- * (hls.js for Chrome/Firefox is a deferred enhancement).
+ * BEFORE a session is minted (hls.js for Chrome/Firefox is a deferred
+ * enhancement), and a source that fails once playing drops back to the Play
+ * control with that failure spelled out rather than leaving a black frame.
  */
 export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
   const { t } = useTranslation();
   const { loggedIn, checking } = useAuth();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const lastReportedRef = useRef(0);
   const [session, setSession] = useState<PlaybackSessionDTO | null>(null);
   const [playbackError, setPlaybackError] = useState(false);
 
   const { title, isLoading, isError } = useCinemaTitle(
     loggedIn ? titleId : null,
   );
+  // Probed once: a `<video>` element's answer for this MIME type never
+  // changes within a session.
+  const isHlsPlayable = useMemo(() => hasNativeHlsSupport(), []);
   const playback = usePlaybackSession();
-  const reportProgress = useReportProgress(titleId ?? "");
+  const { markPosition, onTimeUpdate, flushProgress } = useWatchProgress(
+    titleId,
+    videoRef,
+  );
 
   const startPlayback = useCallback(() => {
     if (!titleId || playback.isPending) return;
@@ -45,15 +49,6 @@ export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
     });
   }, [playback, titleId]);
 
-  const saveProgress = useCallback(
-    (positionSeconds: number) => {
-      if (!titleId || positionSeconds <= 0) return;
-      lastReportedRef.current = positionSeconds;
-      reportProgress.mutate(Math.floor(positionSeconds));
-    },
-    [reportProgress, titleId],
-  );
-
   // Resume from the saved position once the signed source has loaded, then play.
   useEffect(() => {
     const video = videoRef.current;
@@ -61,27 +56,13 @@ export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
     const onLoaded = () => {
       if (session.resumePositionSeconds > 0) {
         video.currentTime = session.resumePositionSeconds;
-        lastReportedRef.current = session.resumePositionSeconds;
+        markPosition(session.resumePositionSeconds);
       }
       void video.play().catch(() => undefined);
     };
     video.addEventListener("loadedmetadata", onLoaded, { once: true });
     return () => video.removeEventListener("loadedmetadata", onLoaded);
-  }, [session]);
-
-  const onTimeUpdate = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    const current = Math.floor(video.currentTime);
-    if (current - lastReportedRef.current >= PROGRESS_INTERVAL_SECONDS) {
-      saveProgress(current);
-    }
-  };
-
-  const flushProgress = () => {
-    const video = videoRef.current;
-    if (video) saveProgress(video.currentTime);
-  };
+  }, [markPosition, session]);
 
   if (checking || isLoading) {
     return (
@@ -120,6 +101,16 @@ export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
       />
     );
   }
+  if (!isHlsPlayable) {
+    return (
+      <WatchNotice
+        titleKey="cinema:live.unsupported.title"
+        descKey="cinema:live.unsupported.description"
+        ctaKey="cinema:live.unsupported.cta"
+        to={routes.cinemaBrowse}
+      />
+    );
+  }
 
   return (
     <WatchShell>
@@ -138,7 +129,14 @@ export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
                 onTimeUpdate={onTimeUpdate}
                 onPause={flushProgress}
                 onEnded={flushProgress}
-                onError={() => setPlaybackError(true)}
+                // Clearing the session is what puts the Play control (and the
+                // message below it) back on screen: `playbackError` is only
+                // rendered there, so a failure with a session still set left
+                // the member on a dead black frame with no way to retry.
+                onError={() => {
+                  setPlaybackError(true);
+                  setSession(null);
+                }}
               />
             ) : (
               <div className={styles.playState}>

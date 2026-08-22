@@ -1,17 +1,13 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import { AuthContext, type AuthErrorCode } from "./authContext";
-import { AUTH_STORAGE_KEY as STORAGE_KEY } from "../../features/marketing/cookies.data";
 import { useDemoMode } from "./DemoModeProvider";
-import { ApiError, refreshSession, setOnAuthLost } from "../../shared/api/client";
 import {
-  bootstrapCsrf,
+  ApiError,
+  refreshSession,
+  setSessionState,
+} from "../../shared/api/client";
+import { queryClient } from "../../shared/api/queryClient";
+import {
   fetchMe,
   postLogout,
   redirectToGoogle,
@@ -21,11 +17,11 @@ import {
   currentUser,
   currentUserSlug,
 } from "../../features/members/data/demoCurrentUser";
-
-function getInitialLoggedIn(): boolean {
-  if (typeof window === "undefined") return true;
-  return window.localStorage.getItem(STORAGE_KEY) !== "false";
-}
+import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
+import {
+  useLiveSessionBootstrap,
+  useReconcileSession,
+} from "./useLiveSessionBootstrap";
 
 /**
  * Live-mode sign-in leaves the SPA entirely (full-page redirect to Google, then
@@ -94,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // authed requests that 401. Instead we start logged-out + `checking`, and only
   // trust `loggedIn` once GET /auth/me settles.
   const [loggedIn, setLoggedIn] = useState<boolean>(() =>
-    demoMode ? getInitialLoggedIn() : false,
+    demoMode ? getInitialDemoLoggedIn() : false,
   );
   const [checking, setChecking] = useState<boolean>(() => !demoMode);
   // True from the very first render when we've just come back from the OAuth
@@ -105,10 +101,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
   const [user, setUser] = useState<AuthUser | null>(null);
   const [authError, setAuthError] = useState<AuthErrorCode | null>(null);
-  // Single-flights the authoritative recovery kicked off by `onAuthLost`, so a
-  // storm of 401s (e.g. a tabful of queries refetching on focus) triggers ONE
-  // reconcile rather than one per failed request.
-  const reconciling = useRef<Promise<void> | null>(null);
   // Whether this tab has ever confirmed a real session. A failed reconcile
   // only means "your session expired" if there was a session to lose — without
   // this, a never-signed-in visitor whose concurrent 401 (e.g. the consent or
@@ -116,113 +108,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // session "expired."
   const wasEverLoggedIn = useRef(false);
 
-  // A request's on-401 refresh coming back false is NOT authoritative proof the
-  // session is gone. It routinely happens on a transient/racing refresh — a
-  // sibling tab rotated the refresh token, or an in-flight request lagged behind
-  // a refresh that already succeeded — that the very next refresh recovers from.
-  // That's why a returning member sees the app repopulate in place. So rather
-  // than declaring the session expired on the spot (and flashing a "session
-  // expired" toast over an app that's about to come back), reconcile once,
-  // authoritatively: try a fresh refresh + /auth/me, and only surface `expired`
-  // if THAT round trip also fails. On the happy path nothing changes on screen —
-  // the recovery is fully silent.
-  const reconcileSession = useCallback((): Promise<void> => {
-    if (reconciling.current) return reconciling.current;
-    const run = (async () => {
-      const ok = await refreshSession();
-      if (ok) {
-        try {
-          const freshUser = await fetchMe();
-          setUser(freshUser);
-          setLoggedIn(true);
-          wasEverLoggedIn.current = true;
-          setAuthError(null);
-          return;
-        } catch {
-          // Refresh rotated a token but /auth/me still refused it — fall through
-          // and treat it as a genuine loss, same as a failed refresh.
-        }
-      }
-      setUser(null);
-      setLoggedIn(false);
-      // Only a tab that previously confirmed a real session can "expire" —
-      // otherwise this is just a never-signed-in visitor, same treatment as
-      // the bootstrap effect's own isSignedOut suppression below.
-      if (wasEverLoggedIn.current) {
-        setAuthError({ kind: "expired" });
-      }
-    })().finally(() => {
-      reconciling.current = null;
-    });
-    reconciling.current = run;
-    return run;
-  }, []);
+  const reconcileSession = useReconcileSession({
+    wasEverLoggedIn,
+    setUser,
+    setLoggedIn,
+    setAuthError,
+  });
 
-  // Demo mode: mirror the prototype's localStorage-driven mock session. The
-  // session is known synchronously, so there's nothing to "check".
-  useEffect(() => {
-    if (!demoMode) return;
-    // Mirrors the localStorage-driven mock session (loggedIn) into auth state.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setChecking(false);
-    setUser(loggedIn ? DEMO_USER : null);
-  }, [demoMode, loggedIn]);
+  // Demo mode's mock session (localStorage-driven, known synchronously) and the
+  // live cookie session (CSRF bootstrap then GET /auth/me) each live in their
+  // own hook, so this provider stays inside the 200-line component rule.
+  useDemoSession({
+    demoMode,
+    loggedIn,
+    demoUser: DEMO_USER,
+    setChecking,
+    setUser,
+  });
 
-  useEffect(() => {
-    if (!demoMode) return;
-    window.localStorage.setItem(STORAGE_KEY, loggedIn ? "true" : "false");
-  }, [demoMode, loggedIn]);
-
-  // Live mode: bootstrap CSRF, then load the current user from /auth/me.
-  useEffect(() => {
-    if (demoMode) return;
-    let active = true;
-    setOnAuthLost(() => {
-      // Don't declare defeat on a single failed refresh — reconcile once and
-      // stay silent if the session comes back (the common returning-member
-      // case). Only a failed reconcile logs out and surfaces `expired`, so a
-      // user-initiated signOut() and a genuine involuntary loss stay distinct.
-      void reconcileSession();
-    });
-    // Reset before the async /auth/me bootstrap round trip resolves below.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAuthError(null);
-    setChecking(true);
-    bootstrapCsrf()
-      .then(fetchMe)
-      .then((u) => {
-        if (!active) return;
-        setUser(u);
-        setLoggedIn(true);
-        wasEverLoggedIn.current = true;
-        // A confirmed live session clears any stale error left by an earlier
-        // recovered blip, so a "session expired" toast can never linger over it.
-        setAuthError(null);
-      })
-      .catch((err: unknown) => {
-        if (!active) return;
-        setUser(null);
-        setLoggedIn(false);
-        // The round trip didn't produce a session after all (rejected sign-in,
-        // expired cookie) — drop the loader so it can't sit over the sign-in page.
-        setPreparing(false);
-        // A 401 just means "not signed in" — normal, no error to show. Anything
-        // else (5xx, network failure) is a real fault the member should hear about.
-        const isSignedOut = err instanceof ApiError && err.status === 401;
-        if (!isSignedOut) {
-          const status = err instanceof ApiError ? err.status : null;
-          setAuthError(
-            status ? { kind: "server", status } : { kind: "network" },
-          );
-        }
-      })
-      .finally(() => {
-        if (active) setChecking(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [demoMode, reconcileSession]);
+  useLiveSessionBootstrap({
+    demoMode,
+    reconcileSession,
+    wasEverLoggedIn,
+    setUser,
+    setLoggedIn,
+    setChecking,
+    setPreparing,
+    setAuthError,
+  });
 
   const signIn = useCallback(
     (redirectTo?: string, invite?: string, ageAttested?: boolean) => {
@@ -243,10 +156,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoggedIn(false);
       return;
     }
-    void postLogout().finally(() => {
-      setUser(null);
-      setLoggedIn(false);
-    });
+    // Clear local session state FIRST, then fire the logout best-effort. Waiting
+    // on the round trip meant a hung or slow backend left the member looking
+    // signed in on a device they just asked to be signed out of.
+    setSessionState("none");
+    setUser(null);
+    setLoggedIn(false);
+    // Drop every authenticated query (conversations, messages, profile, blocks,
+    // the Infinity-staleTime bootstrap) so a shared device cannot render the
+    // previous member's data from cache after they sign out.
+    queryClient.clear();
+    void postLogout();
   }, [demoMode]);
 
   const endPreparing = useCallback(() => setPreparing(false), []);
@@ -267,16 +187,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // session. A false result means the rotation failed: treat it as logged out.
     const ok = await refreshSession();
     if (!ok) {
+      setSessionState("none");
       setUser(null);
       setLoggedIn(false);
       return;
     }
     try {
       const u = await fetchMe();
+      setSessionState("active");
       setUser(u);
       setLoggedIn(true);
       setAuthError(null);
-    } catch {
+    } catch (err: unknown) {
+      // Only a confirmed 401 means the session is gone. A 5xx or a network
+      // fault during a role-change refresh is transient: keeping the current
+      // user avoids dumping the member on the sign-in page (and being bounced
+      // off the page they were on) over a blip the next request recovers from.
+      const isSignedOut = err instanceof ApiError && err.status === 401;
+      if (!isSignedOut) {
+        const status = err instanceof ApiError ? err.status : null;
+        setAuthError(status ? { kind: "server", status } : { kind: "network" });
+        return;
+      }
+      setSessionState("none");
       setUser(null);
       setLoggedIn(false);
     }

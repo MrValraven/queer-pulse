@@ -56,11 +56,22 @@ export function reasonFor(error: unknown): string | null {
  *     → "Couldn't save that co-op — please try again."     (no reason)
  * `action` is a capitalized phrase with no trailing punctuation.
  */
-export function describeError(action: string, error: unknown): string {
+export function describeError(
+  action: string,
+  error: unknown,
+  /**
+   * The "please try again" tail, so a caller with a `t()` in hand can hand in
+   * the member's language. Defaults to the English this has always emitted, so
+   * every existing call site is unchanged; new call sites should pass
+   * `t("shared:apiError.tryAgainTail")`. The `action` frame is the caller's to
+   * translate too — pass a `t()` string, never a literal.
+   */
+  retryTail = " Please try again.",
+): string {
   const reason = reasonFor(error);
   if (reason) {
     const withoutTrailingPeriod = reason.replace(/\.$/, "");
     return `${action}: ${withoutTrailingPeriod}.`;
   }
-  return `${action}. Please try again.`;
+  return `${action}.${retryTail}`;
 }

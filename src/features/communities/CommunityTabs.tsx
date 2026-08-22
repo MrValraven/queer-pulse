@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  Avatar,
   Button,
   FadeIn,
   SkeletonAvatar,
@@ -9,6 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
 import type {
@@ -18,7 +20,7 @@ import type {
 } from "./communityDetails";
 import { CommunityThread } from "./CommunityThread";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
-import { photoOf } from "./communityPeople";
+import { photoOf, viewerPerson } from "./communityPeople";
 import { AV_CLASS } from "./communityAvatar";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useCreatePost } from "./api/useCommunityMutations";
@@ -189,6 +191,8 @@ export function ForumTab({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
+  const viewer = viewerPerson(user);
   const createPost = useCreatePost(slug);
   const [newPost, setNewPost] = useState("");
   const [extraThreads, setExtraThreads] = useState<ThreadData[]>([]);
@@ -197,13 +201,16 @@ export function ForumTab({
     const text = newPost.trim();
     if (!text) return;
     const heading = text.length > 70 ? `${text.slice(0, 67)}…` : text;
+    // Tag the optimistic thread with its own id so a failed POST rolls back
+    // exactly this one, leaving no phantom thread behind.
+    const optimisticId = crypto.randomUUID();
     setExtraThreads((prev) => [
       {
-        id: crypto.randomUUID(),
+        id: optimisticId,
         votes: 0,
         title: heading,
-        author: { initials: "Me", name: "You", tint: "plum" },
-        time: t("communities:common.justNow"),
+        author: viewer ?? { initials: "?", name: "", tint: "plum" },
+        createdAt: new Date().toISOString(),
         replyCount: 0,
         post: text,
         replies: [],
@@ -211,13 +218,26 @@ export function ForumTab({
       ...prev,
     ]);
     setNewPost("");
-    showToast(t("communities:detail.forum.postedToast"), "success");
-    if (demoMode) return;
+    if (demoMode) {
+      showToast(t("communities:detail.forum.postedToast"), "success");
+      return;
+    }
     createPost.mutate(
       { body: text },
       {
-        onSuccess: () => setExtraThreads([]),
-        onError: () => showToast(t("communities:common.error"), "error"),
+        // The refetched page carries the real thread, so the optimistic
+        // entries go once the server has it.
+        onSuccess: () => {
+          setExtraThreads([]);
+          showToast(t("communities:detail.forum.postedToast"), "success");
+        },
+        onError: () => {
+          setExtraThreads((prev) =>
+            prev.filter((thread) => thread.id !== optimisticId),
+          );
+          setNewPost(text);
+          showToast(t("communities:common.error"), "error");
+        },
       },
     );
   };
@@ -259,6 +279,7 @@ export function ForumTab({
       {threads.map((thread, index) => (
         <FadeIn
           key={thread.id ?? `thread-${index}`}
+          className={styles.rowFade}
           delay={Math.min(index, 8) * 60}
         >
           <CommunityThread
@@ -290,12 +311,13 @@ export function ForumTab({
           </div>
         ) : (
           <div className={styles.newPost}>
-            <div
-              className={[styles.rAv, styles.tPlum].join(" ")}
-              style={{ width: 30, height: 30 }}
-            >
-              Me
-            </div>
+            <Avatar
+              initials={viewer?.initials ?? "?"}
+              tint={viewer?.tint ?? "plum"}
+              src={viewer ? photoOf(viewer, demoMode) : undefined}
+              size={30}
+              alt={viewer?.name ?? ""}
+            />
             <textarea
               className={styles.npTa}
               rows={1}

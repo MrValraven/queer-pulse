@@ -34,15 +34,15 @@ export function StepTone({ form }: { form: CommunityForm }) {
 
       <div className={styles.rulesList}>
         {shown.map((rule) => {
-          const on = draft.rules.includes(rule);
+          const isOn = draft.rules.includes(rule);
           return (
             <button
               key={rule}
               type="button"
-              className={[styles.rule, on && styles.ruleOn]
+              className={[styles.rule, isOn && styles.ruleOn]
                 .filter(Boolean)
                 .join(" ")}
-              aria-pressed={on}
+              aria-pressed={isOn}
               onClick={() => toggleRule(rule)}
             >
               <span className={styles.ruleBox}>

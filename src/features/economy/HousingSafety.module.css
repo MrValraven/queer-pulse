@@ -22,6 +22,7 @@
   margin: 0;
 }
 .dismiss {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -33,6 +34,18 @@
   color: var(--ink-60);
   cursor: pointer;
   transition: background var(--dur-fast, 0.16s) var(--ease);
+}
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.dismiss::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
 }
 @media (hover: hover) and (pointer: fine) {
   .dismiss:hover {

@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -7,6 +8,19 @@ import { followTopic, getTopicFollows, unfollowTopic } from "./topicFollows.api"
 
 interface ToggleContext {
   previous: string[];
+}
+
+/**
+ * Catalog key for a failed follow toggle. `POST /topics/:slug/follow` answers
+ * 400 for a malformed tag and 409 once a member hits the per-account follow
+ * cap; both deserve their own sentence rather than "Something went wrong".
+ */
+function followErrorKey(error: unknown): string {
+  if (error instanceof ApiError) {
+    if (error.status === 409) return "topics:header.followCapToast";
+    if (error.status === 400) return "topics:header.followInvalidToast";
+  }
+  return "topics:header.followFailedToast";
 }
 
 /**
@@ -42,6 +56,9 @@ export function useTopicFollow(tag: string) {
   const isFollowing = followedSlugs.includes(tag);
 
   const toggle = useMutation<unknown, Error, boolean, ToggleContext>({
+    // This hook shows the failure itself (see `onError`), so the global
+    // mutation toast must not fire a second, vaguer message on top of it.
+    meta: { silentError: true },
     mutationFn: async (nextFollowing) => {
       // Demo mode never touches the network; the optimistic patch is the truth.
       if (demoMode) return;
@@ -58,10 +75,15 @@ export function useTopicFollow(tag: string) {
       );
       return { previous };
     },
-    onError: (_error, _nextFollowing, context) => {
+    onError: (error, _nextFollowing, context) => {
       if (context) {
         queryClient.setQueryData(topicFollowKeys.list(demoMode), context.previous);
       }
+      // The follow endpoint now has two specific refusals worth naming: a
+      // malformed tag (400) and the per-member follow cap (409). Everything
+      // else falls through to the generic copy. This hook owns the message
+      // (see `meta.silentError`), so the button flips back AND says why.
+      showToast(t(followErrorKey(error)), "error");
     },
     onSuccess: (_data, nextFollowing) => {
       showToast(

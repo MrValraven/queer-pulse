@@ -103,9 +103,8 @@ export const COMMUNITY_TAGS: CommunityTagOption[] = [
 /** id → labelKey, for resolving a stored tag id back to a display label
  *  wherever the full `COMMUNITY_TAGS` list isn't at hand (card pills, applied
  *  filter chips). */
-export const COMMUNITY_TAG_LABEL_KEY: Record<string, string> = Object.fromEntries(
-  COMMUNITY_TAGS.map((tag) => [tag.id, tag.labelKey]),
-);
+export const COMMUNITY_TAG_LABEL_KEY: Record<string, string> =
+  Object.fromEntries(COMMUNITY_TAGS.map((tag) => [tag.id, tag.labelKey]));
 
 /** The full set of valid tag ids, for defensively dropping anything a stale
  *  client or backend sends that this build doesn't recognise. */

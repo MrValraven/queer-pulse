@@ -44,8 +44,9 @@
   border: none;
   font-family: var(--sans);
 }
-.skipped {
+.psSkip:disabled {
   opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* World fields */

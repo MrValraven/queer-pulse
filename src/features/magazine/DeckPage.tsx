@@ -11,13 +11,14 @@ import { DeckViewer } from "./DeckViewer";
 import { DeckPresentButton } from "./DeckPresentButton";
 import { DeckRelatedRail } from "./DeckRelatedRail";
 import { useDeck } from "./api/useDeck";
+import { MagazineLoadError } from "./MagazineLoadError";
 import styles from "./DeckPage.module.css";
 
 export function DeckPage() {
   const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const id = params.get("id") ?? "ten-years-mouraria";
-  const { data, isLoading } = useDeck(id);
+  const { data, isLoading, isError, refetch } = useDeck(id);
   const deck = data?.deck ?? null;
 
   const initial = Math.max(0, Number(params.get("slide") ?? 1) - 1);
@@ -29,6 +30,18 @@ export function DeckPage() {
     query.set("slide", String(next + 1));
     setParams(query, { replace: true });
   };
+
+  if (isError) {
+    // A failed request is NOT a missing deck (FE-CNT-08).
+    return (
+      <PageShell>
+        <PageMeta title={t("magazine:load.errorMetaTitle")} noIndex />
+        <div className={`${styles.notFound} wrap`}>
+          <MagazineLoadError onRetry={() => void refetch()} />
+        </div>
+      </PageShell>
+    );
+  }
 
   if (!deck) {
     return (

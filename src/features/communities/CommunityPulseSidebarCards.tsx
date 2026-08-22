@@ -26,7 +26,12 @@ export function CommunityPulseSidebarCards({
   const { t } = useTranslation();
   const { threads, opportunities, isLoading, isError } = pulse;
 
-  if (!isLoading && !isError && threads.length === 0 && opportunities.length === 0) {
+  if (
+    !isLoading &&
+    !isError &&
+    threads.length === 0 &&
+    opportunities.length === 0
+  ) {
     return null;
   }
 
@@ -48,17 +53,26 @@ export function CommunityPulseSidebarCards({
             </p>
           ) : (
             threads.map((th) => (
-              <Link key={th.id} to={threadPath(th.slug || th.id)} className={styles.sbRelItem}>
+              <Link
+                key={th.id}
+                to={threadPath(th.slug || th.id)}
+                className={styles.sbRelItem}
+              >
                 <div
                   className={styles.sbRelIc}
-                  style={{ background: "rgba(var(--jade-rgb),.12)", color: "var(--jade)" }}
+                  style={{
+                    background: "rgba(var(--jade-rgb),.12)",
+                    color: "var(--jade)",
+                  }}
                 >
                   <FiMessageCircle aria-hidden />
                 </div>
                 <div>
                   <div className={styles.sbRelName}>{th.title}</div>
                   <div className={styles.sbRelCt}>
-                    {t("communities:detail.thread.replies", { count: th.replyCount })}
+                    {t("communities:detail.thread.replies", {
+                      count: th.replyCount,
+                    })}
                   </div>
                 </div>
               </Link>
@@ -87,7 +101,10 @@ export function CommunityPulseSidebarCards({
               >
                 <div
                   className={styles.sbRelIc}
-                  style={{ background: "rgba(var(--accent-rgb),.12)", color: "var(--accent-ink)" }}
+                  style={{
+                    background: "rgba(var(--accent-rgb),.12)",
+                    color: "var(--accent-ink)",
+                  }}
                 >
                   <FiBriefcase aria-hidden />
                 </div>

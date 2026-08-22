@@ -10,7 +10,7 @@ import styles from "./AdminGovernancePage.module.css";
 /**
  * The admin Policy tab: five independent section editors (Health, Moderation
  * steps, Council, Principles, Decisions), each saving on its own via
- * `PATCH /governance/admin/overview`. Every editor edits a full-array
+ * `PATCH /admin/governance/overview`. Every editor edits a full-array
  * replacement of its section and is catalog-constrained — no free-text
  * wording, only reordering/hiding/correcting what already has EN+PT
  * translations (see the design doc's "structure in the DB, words in i18n"

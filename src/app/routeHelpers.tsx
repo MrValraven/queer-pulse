@@ -1,5 +1,6 @@
 import { lazy, Suspense, type ComponentType, type ReactNode } from "react";
 import { AuthLoader } from "../shared/components/feedback/AuthLoader";
+import { reloadForStaleChunk } from "../shared/lib/staleChunkReload";
 
 /**
  * Wrap an auth/onboarding route element in its own Suspense boundary so its
@@ -12,32 +13,27 @@ export const auth = (element: ReactNode) => (
 
 /**
  * A stale tab's dynamic `import()` for a route chunk 404s whenever the chunk it
- * asked for no longer exists on the server: a dev-server restart/dep
+ * asked for no longer exists on the server: a dev-server restart or dependency
  * re-optimization locally, or a hashed filename that changed after a prod
  * redeploy. Either way the fix is the same: reload once to pick up the current
- * build, rather than leaving the user stuck on the route's ErrorBoundary.
- * Guarded per-chunk via sessionStorage so a genuinely broken chunk still
- * surfaces an error instead of reload-looping forever.
+ * build, rather than leaving the member stuck on the route's ErrorBoundary.
+ *
+ * The decision itself is `reloadForStaleChunk`, shared with the
+ * `vite:preloadError` listener in `main.tsx`. That listener only covers Vite's
+ * production preload helper, so this path is what catches a failed import in
+ * dev; sharing one cooldown guard means the two can never fire for the same
+ * failure and then disagree on what a second failure should do.
  */
 function loadChunkWithRetry<Module>(
   loader: () => Promise<Module>,
-  chunkKey: string,
 ): Promise<Module> {
-  const storageKey = `chunk-reload:${chunkKey}`;
-  return loader()
-    .then((module) => {
-      sessionStorage.removeItem(storageKey);
-      return module;
-    })
-    .catch((error: unknown) => {
-      if (sessionStorage.getItem(storageKey)) {
-        sessionStorage.removeItem(storageKey);
-        throw error;
-      }
-      sessionStorage.setItem(storageKey, "1");
-      window.location.reload();
-      return new Promise<Module>(() => {});
-    });
+  return loader().catch((error: unknown) => {
+    // Blocked: we already reloaded for this within the cooldown, so a genuinely
+    // broken chunk surfaces its error instead of looping.
+    if (!reloadForStaleChunk()) throw error;
+    // A reload is underway — never resolve, so nothing renders in the meantime.
+    return new Promise<Module>(() => {});
+  });
 }
 
 /**
@@ -55,7 +51,7 @@ export function lazyNamed<
   Module extends Record<Name, ComponentType>,
 >(loader: () => Promise<Module>, name: Name) {
   return lazy(() =>
-    loadChunkWithRetry(loader, name).then((module) => ({
+    loadChunkWithRetry(loader).then((module) => ({
       default: module[name],
     })),
   );

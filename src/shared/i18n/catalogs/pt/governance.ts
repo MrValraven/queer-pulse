@@ -95,7 +95,7 @@ export const governance: Catalog = {
   "sections.council.eyebrow": "Conselho consultivo",
   "sections.council.title": "Quem <em>supervisiona</em> isto.",
   "sections.council.intro":
-    "O conselho consultivo revê contestações de moderação, propõe mudanças na plataforma, e serve como camada de responsabilização. Os mandatos duram um ano e um lugar pode ser encerrado por voto de dois terços da comunidade — vê Propostas e votações abaixo.",
+    "O conselho consultivo revê contestações de moderação, propõe mudanças na plataforma, e serve como camada de responsabilização. Os mandatos duram um ano e um lugar pode ser encerrado por voto de dois terços da comunidade. Vê Propostas e votações abaixo.",
 
   "council.psychologistChair": "Psicologia · Presidência",
   "council.lawyerLegalAdvisor": "Direito · Aconselhamento jurídico",
@@ -146,6 +146,7 @@ export const governance: Catalog = {
     "Os excedentes trimestrais entram numa reserva operacional. A nossa meta é três meses de custos de funcionamento, cerca de {target}.",
   "sections.finances.reserveProgress":
     "Reserva operacional: {current} de uma meta de {target}",
+  "sections.finances.reserveBarAria": "Progresso da reserva operacional",
   "sections.finances.surplusRedirect":
     "Quando atingirmos a meta, o excedente adicional é redirecionado na íntegra para o fundo de micro-apoios da comunidade. Não acumulamos capital. Redistribuímo-lo.",
   "sections.finances.partnerRestriction":
@@ -153,7 +154,7 @@ export const governance: Catalog = {
   "sections.finances.partnerScope.mentalHealthFund": "o Fundo de Saúde Mental",
   "sections.finances.partnerScope.communityEvents": "eventos comunitários",
   "sections.finances.noCorporateFunding":
-    "Não aceitamos financiamento de empresas, marcas, ou entidades governamentais cujos interesses possam entrar em conflito com a autonomia da comunidade. Se isso alguma vez mudar, diremo-lo aqui primeiro, e a comunidade vai votar sobre isso — vê Propostas e votações abaixo.",
+    "Não aceitamos financiamento de empresas, marcas, ou entidades governamentais cujos interesses possam entrar em conflito com a autonomia da comunidade. Se isso alguma vez mudar, diremo-lo aqui primeiro, e a comunidade vai votar sobre isso. Vê Propostas e votações abaixo.",
 
   // ── Propostas e votações ─────────────────────────────────────────────────
   "sections.proposals.eyebrow": "Propostas e votações",

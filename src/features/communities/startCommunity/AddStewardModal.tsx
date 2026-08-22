@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ModalSheet } from "../../../shared/components/ui";
+import { Button, ModalSheet } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { MemberPicker } from "../../gatherings/MemberPicker";
 import type { CohostCandidate } from "../../gatherings/manageCohosts.data";
@@ -19,13 +19,14 @@ export function AddStewardModal({
 }) {
   const { t } = useTranslation();
 
-  const { views } = useConnectionsList("all");
-  const candidates = useMemo(
-    () => views.map(connectionToCandidate),
-    [views],
-  );
+  // Paged through in full: with only the first page loaded, a founder with
+  // more connections than fit on it could not appoint the rest as stewards.
+  const { views, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useConnectionsList("all");
+  const candidates = useMemo(() => views.map(connectionToCandidate), [views]);
   const selectable = useMemo(
-    () => candidates.filter((candidate) => !excludeSlugs.includes(candidate.slug)),
+    () =>
+      candidates.filter((candidate) => !excludeSlugs.includes(candidate.slug)),
     [candidates, excludeSlugs],
   );
 
@@ -66,6 +67,18 @@ export function AddStewardModal({
             "communities:start.running.addStewardModal.searchPlaceholder",
           )}
         />
+      )}
+      {hasNextPage && (
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={isFetchingNextPage}
+          onClick={fetchNextPage}
+        >
+          {isFetchingNextPage
+            ? t("communities:common.loading")
+            : t("communities:start.running.addStewardModal.loadMore")}
+        </Button>
       )}
     </ModalSheet>
   );

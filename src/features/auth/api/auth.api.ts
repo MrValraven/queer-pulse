@@ -107,6 +107,29 @@ export const postCompleteOnboarding = (guidelinesVersion?: string) =>
   apiPost<{ onboardedAt: string }>("/auth/onboarding/complete", {
     guidelinesVersion,
   });
+/** What the backend records for a self-declared under-18 disclosure. */
+export interface UnderAgeDisclosureResult {
+  /** ISO timestamp of the disclosure on record. */
+  disclosedAt: string;
+  /** The account's status once the disclosure was applied. */
+  status: string;
+}
+
+/**
+ * Tell the backend the signed-in member has just declared they are not 18 yet
+ * (`POST /auth/under-18-disclosure`).
+ *
+ * QueerPulse is an adults-only space, so this is not a note in a file: the
+ * server records the disclosure, suspends the account permanently, and revokes
+ * every live session, including open sockets. Coming back at 18 goes through a
+ * human on the contact link the notice shows.
+ *
+ * Idempotent server-side (the first disclosure timestamp wins), and the caller
+ * signs out whatever this answers. Demo mode never calls it.
+ */
+export const postUnderAgeDisclosure = () =>
+  apiPost<UnderAgeDisclosureResult>("/auth/under-18-disclosure", {});
+
 export const bootstrapCsrf = ensureCsrf;
 
 /**

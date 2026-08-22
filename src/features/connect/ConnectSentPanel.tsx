@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,20 +15,29 @@ export function ConnectSentPanel({
 }) {
   const { t } = useTranslation();
   const [secondsLeft, setSecondsLeft] = useState(AUTO_CLOSE_SECONDS);
+  // Latest-callback ref: the countdown must be set up exactly once, when the
+  // panel mounts. Keying the effect on `onClose` restarted the interval (and
+  // reset the text to 6) whenever the callback's identity changed, while the
+  // CSS bar — a plain 6s animation that only restarts on remount — kept
+  // draining, so the two desynced.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
 
   useEffect(() => {
-    // Resets the auto-close countdown driven by the interval/timeout cleared below.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSecondsLeft(AUTO_CLOSE_SECONDS);
     const tick = window.setInterval(() => {
       setSecondsLeft((s) => (s > 1 ? s - 1 : 0));
     }, 1000);
-    const done = window.setTimeout(onClose, AUTO_CLOSE_SECONDS * 1000);
+    const done = window.setTimeout(
+      () => onCloseRef.current(),
+      AUTO_CLOSE_SECONDS * 1000,
+    );
     return () => {
       window.clearInterval(tick);
       window.clearTimeout(done);
     };
-  }, [onClose]);
+  }, []);
 
   return (
     <div className={styles.sent}>

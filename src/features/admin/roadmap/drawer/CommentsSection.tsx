@@ -1,3 +1,4 @@
+import { useFormat } from "../../../../shared/i18n/format";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { AdminItemCommentDTO } from "../../api/roadmapAdmin.types";
 import { AdminChip } from "../../ui";
@@ -18,6 +19,7 @@ export function CommentsSection({
   comments: AdminItemCommentDTO[];
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <div className={styles.section}>
@@ -38,7 +40,7 @@ export function CommentsSection({
                   {comment.authorLabel}
                 </span>
                 <span className={styles.commentDate}>
-                  {new Date(comment.createdAt).toLocaleDateString()}
+                  {fmt.date(new Date(comment.createdAt))}
                 </span>
                 {comment.hidden && (
                   <AdminChip tone="warn">

@@ -19,7 +19,8 @@ import { useEditListingSave, useEditUnsavedGuard } from "./useEditListingSave";
 import { DraftBanner, SendingPanel } from "./ListBusinessChrome";
 import { WizardFormPane } from "./WizardFormPane";
 import { ListBusinessSuccess } from "./ListBusinessSuccess";
-import { WizardServerError, SaveLaterButton } from "./WizardExtras";
+import { WizardFormChrome } from "./WizardExtras";
+import { useListingDraftBanner } from "./useListingDraftBanner";
 import { useListingSubmit } from "./useListingSubmit";
 import styles from "./ListBusinessPage.module.css";
 
@@ -96,7 +97,14 @@ export function ListingWizard(props: ListingWizardProps) {
     offerResume: !isEdit && !isResumed,
     initialDraftId: props.initialDraftId,
   });
-  const [showBanner, setShowBanner] = useState(Boolean(saved));
+  const { isBannerVisible, resumeDraft, discardDraft } = useListingDraftBanner(
+    saved,
+    clearDraft,
+    (resumed) => {
+      form.reset(resumed.draft);
+      setStep(resumed.step);
+    },
+  );
   // Item #4 (server 422 → step routing) + item #11 (save & finish later).
   const {
     serverError,
@@ -170,17 +178,6 @@ export function ListingWizard(props: ListingWizardProps) {
     if (step === 0) void navigate(routes.directory);
     else goToStep(step - 1);
   };
-  const resumeDraft = () => {
-    if (saved) {
-      form.reset(saved.draft);
-      setStep(saved.step);
-    }
-    setShowBanner(false);
-  };
-  const discardDraft = () => {
-    clearDraft();
-    setShowBanner(false);
-  };
   const editSubmission = () => {
     setPhase("form");
     setStep(TOTAL_STEPS - 1);
@@ -200,24 +197,19 @@ export function ListingWizard(props: ListingWizardProps) {
   };
   return (
     <>
-      {phase === "form" && showBanner && saved && (
+      {phase === "form" && isBannerVisible && saved && (
         <DraftBanner onResume={resumeDraft} onDiscard={discardDraft} />
       )}
       <div className="wrap">
         {phase === "form" && (
           <>
-            {serverError && (
-              <WizardServerError
-                message={serverError}
-                onDismiss={() => setServerError(null)}
-              />
-            )}
-            {!isEdit && draft.path !== "" && (
-              <SaveLaterButton
-                onSave={() => void saveAndFinishLater()}
-                saving={savingLater}
-              />
-            )}
+            <WizardFormChrome
+              serverError={serverError}
+              onDismissError={() => setServerError(null)}
+              isSaveLaterVisible={!isEdit && draft.path !== ""}
+              onSaveLater={() => void saveAndFinishLater()}
+              isSavingLater={savingLater}
+            />
             <WizardFormPane
               mode={props.mode}
               editRef={props.editRef}

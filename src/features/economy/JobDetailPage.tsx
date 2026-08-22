@@ -1,3 +1,4 @@
+import { FiChevronRight } from "react-icons/fi";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn } from "../../shared/components/ui";
@@ -35,6 +36,12 @@ export function JobDetailPage() {
       null)
     : (jobQuery.data ?? null);
   const loading = demoMode ? simLoading : jobQuery.isLoading;
+  // Who posted this listing: in demo mode, anything the member published in
+  // this session; in live mode, the backend's own `isPoster` flag. It unlocks
+  // the applications console, which the API gates to the poster regardless.
+  const isPoster = demoMode
+    ? postedJobs.some((postedJob) => postedJob.slug === slug)
+    : Boolean(job?.isPoster);
 
   if (loading) {
     return (
@@ -76,9 +83,13 @@ export function JobDetailPage() {
   const breadcrumb = (
     <div className={styles.breadcrumb}>
       <Link to={routes.jobs}>{t("economy:jobDetail.breadcrumb.jobs")}</Link>
-      <span className={styles.bcSep}>›</span>
+      <span className={styles.bcSep} aria-hidden>
+        <FiChevronRight />
+      </span>
       <span>{d.category}</span>
-      <span className={styles.bcSep}>›</span>
+      <span className={styles.bcSep} aria-hidden>
+        <FiChevronRight />
+      </span>
       <span className={styles.bcCurrent}>{job.title}</span>
     </div>
   );
@@ -110,7 +121,11 @@ export function JobDetailPage() {
 
           <div className={styles.layout}>
             <JobDetailBody job={job} />
-            <JobDetailSidebar job={job} deadlineFull={deadlineFull} />
+            <JobDetailSidebar
+              job={job}
+              deadlineFull={deadlineFull}
+              isPoster={isPoster}
+            />
           </div>
         </FadeIn>
       </div>

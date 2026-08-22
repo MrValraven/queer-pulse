@@ -1,4 +1,9 @@
-import { apiGet, apiPatch } from "../../../shared/api/client";
+import {
+  ApiError,
+  apiDelete,
+  apiGet,
+  apiPatch,
+} from "../../../shared/api/client";
 
 /**
  * Admin invite oversight (`/admin/invites`, admin-only). Lists every invite on
@@ -76,6 +81,32 @@ export const getAdminInvites = (parameters: {
 /** Every member who has sent an invite, for the sender filter's dropdown. */
 export const getAdminInviteInviters = () =>
   apiGet<AdminInviteInviterDTO[]>("/admin/invites/inviters");
+
+/**
+ * Revoke any still-valid invite platform-wide, whoever sent it
+ * (`DELETE /admin/invites/:id`, admin-only, audited server-side). The
+ * member-facing revoke is scoped to its own inviter, so this is the only route
+ * that can pull someone else's live invite link.
+ *
+ * Addressed by the invite's internal `id` (the list already carries it), never
+ * the shared `code`. Returns the invite in its new `revoked` state, so the
+ * caller can patch the row rather than refetch the page.
+ *
+ * Failure modes the UI must tell apart from a generic error:
+ * - `404` — no invite with that id (it was hard-deleted, or the id is stale)
+ * - `409` — the invite is no longer valid: already accepted, revoked, or
+ *   expired ({@link isInviteNotRevocableError}). Expected whenever the drawer
+ *   has been open a while, so it reads as "this moved on", never as a fault.
+ */
+export const deleteAdminInvite = (inviteId: string) =>
+  apiDelete<AdminInviteDTO>(`/admin/invites/${inviteId}`);
+
+/** True when the backend refused a revoke because the invite is not valid any
+ *  more. A conflict, not a failure — the row simply moved on underneath the
+ *  open drawer. */
+export function isInviteNotRevocableError(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 409;
+}
 
 /** The shape returned after setting or clearing a member's invite quota
  *  override. Mirrors the backend's `updateInviteQuota` response. */

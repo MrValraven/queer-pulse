@@ -1,11 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import { Button } from "../../shared/components/ui";
-import { Translation } from "../../shared/i18n/Translation";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { useProfile } from "../../app/providers/useProfile";
 import { useAuth } from "../../app/providers/authContext";
 import { useSocial } from "../../app/providers/useSocial";
@@ -13,120 +8,27 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMediaQuery } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { currentUserSlug } from "./data/memberProfiles";
-import { useMemberProfile } from "./api/useMemberProfile";
-import { ProfileHero, ProfileContent } from "./ProfileSections";
-import { ProfileRail, ProfileSectionNavRail } from "./ProfileRail";
-import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
+import {
+  isMemberMissingError,
+  useMemberProfile,
+} from "./api/useMemberProfile";
+import { ProfileBelowHeroSections } from "./ProfileBelowHeroSections";
+import { ProfileLayoutSwitch } from "./ProfileLayoutSwitch";
+import { ProfileBackBar, ProfilePreviewBanner } from "./ProfilePageChrome";
 import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
-import { PlacesSection } from "./PlacesSection";
-import { EditableProfileHero } from "./EditableProfileHero";
 import { ProfileEditBar } from "./ProfileEditBar";
 import { WhoSeesWhatSheet } from "./WhoSeesWhatSheet";
 import { AccountDataSheet } from "./AccountDataSheet";
 import { useProfileEditGuard } from "./useProfileEditGuard";
-import { MobileProfileView } from "./MobileProfileView";
-import { MobileEditableProfileHero } from "./MobileEditableProfileHero";
+import { useProfilePageSheets } from "./useProfilePageSheets";
 import {
   ProfileLoadingState,
   ProfileErrorState,
   ProfileBlockedState,
   ProfileNotFoundState,
 } from "./ProfileStateScreens";
-import type { ReactNode } from "react";
-import type { MemberProfile } from "./data/memberProfiles";
-import styles from "./ProfilePage.module.css";
-import editStyles from "./ProfileEdit.module.css";
-
-/**
- * Desktop read-mode layout: the sticky rail runs in two pieces here, not
- * one. The portrait/trust-signals/owner-controls block stays paired with
- * the hero (first `.pageGrid`), while "Also working as" — the owner's
- * linked + published personas, surfaced right after the hero as the second
- * thing on the profile — breaks out to full width between the two grids.
- * Public viewers see only linked personas (the hook enforces this); self
- * view adds a manage link and a create prompt when empty. Preview counts as
- * a public view. The section-jump nav resumes in the second grid's rail,
- * sticky alongside "On the board", "Communities" and "Places" — the
- * sections it actually links to. Edit mode skips both grids entirely:
- * `EditableProfileHero` is a self-contained form, not a browsable profile,
- * so it doesn't need the section-jump rail.
- */
-function DesktopProfileGrid({
-  profile,
-  isSelf,
-  previewing,
-  selfView,
-  ownerSlug,
-  restBelowHero,
-  onEdit,
-  onEditLinks,
-  onPreview,
-  onOpenWhoSeesWhat,
-  onOpenAccountData,
-  onToggleHidden,
-}: {
-  profile: MemberProfile;
-  isSelf: boolean;
-  previewing: boolean;
-  selfView: boolean;
-  ownerSlug: string;
-  restBelowHero: ReactNode;
-  onEdit: () => void;
-  onEditLinks: () => void;
-  onPreview: () => void;
-  onOpenWhoSeesWhat: () => void;
-  onOpenAccountData: () => void;
-  onToggleHidden: () => void;
-}) {
-  const asVisitor = isSelf && previewing;
-  return (
-    <>
-      <div className="wrap">
-        <div className={styles.pageGrid}>
-          <div className={styles.railCol}>
-            <ProfileRail profile={profile} self={isSelf} asVisitor={asVisitor} />
-          </div>
-          <div className={styles.pageCol}>
-            <ProfileHero
-              profile={profile}
-              self={isSelf}
-              asVisitor={asVisitor}
-              onEdit={onEdit}
-              onEditLinks={onEditLinks}
-              onPreview={onPreview}
-              onOpenWhoSeesWhat={onOpenWhoSeesWhat}
-              onOpenAccountData={onOpenAccountData}
-              onToggleHidden={onToggleHidden}
-              hiddenUntil={profile.hiddenUntil ?? null}
-            />
-          </div>
-        </div>
-      </div>
-
-      <ProfileSubprofilesSection
-        ownerSlug={ownerSlug}
-        isSelf={selfView}
-        previewing={asVisitor}
-      />
-
-      <div className="wrap">
-        <div className={styles.pageGrid}>
-          <div className={styles.railCol}>
-            <ProfileSectionNavRail
-              profile={profile}
-              self={isSelf}
-              asVisitor={asVisitor}
-            />
-          </div>
-          <div className={styles.pageCol}>{restBelowHero}</div>
-        </div>
-      </div>
-    </>
-  );
-}
 
 export function ProfilePage() {
-  const { t } = useTranslation();
   const { slug } = useParams();
   const {
     profile: liveProfile,
@@ -148,34 +50,17 @@ export function ProfilePage() {
   // When entering edit mode from the "Add/Edit links" affordance, jump the editor
   // straight to the Links section instead of landing at the top of the form.
   const [focusLinks, setFocusLinks] = useState(false);
-  // Desktop-only rail sheets — "who sees what" visibility settings and the
-  // account-data (export/step-away/DSAR) surface. See the guard on their
-  // render below; unreachable on mobile since nothing there can open them.
-  const [whoSeesWhatOpen, setWhoSeesWhatOpen] = useState(false);
-  const [accountDataOpen, setAccountDataOpen] = useState(false);
+  // Owner-only sheets ("Who sees what", "Your data") and the 24h hide toggle.
+  // Reachable from `ProfileSettingsMenu`, which both the desktop hero and the
+  // mobile header render for the owner — these used to be desktop-only, which
+  // put every visibility toggle, per-person hiding, report receipt, data export
+  // and DSAR out of reach for anyone on a phone.
+  const sheets = useProfilePageSheets({ updateDraft, save });
 
   function enterEdit(focus = false) {
     setFocusLinks(focus);
     startEditing();
   }
-
-  // The 24h-hide rail toggle persists immediately (its own copy says "takes
-  // effect right away" — it must not sit staged behind the normal Save
-  // button). `save()` is a `useCallback` closed over the CURRENT `draft`
-  // (see `ProfileProvider.tsx`), so calling it in the same tick as
-  // `updateDraft()` would ship the PRE-toggle draft — React hasn't
-  // re-rendered between the two calls yet, so the `save` reference here is
-  // still stale. This is the exact trap `useInstantVisibilitySave` (in
-  // `WhoSeesWhatFieldToggles.tsx`) works around for the sheet's own instant
-  // toggles: queue the intent, then let an effect keyed on the fresh `save`
-  // identity — which only changes once the provider has committed the
-  // patch — fire the actual persist on the next render.
-  const pendingHiddenToggle = useRef(false);
-  useEffect(() => {
-    if (!pendingHiddenToggle.current) return;
-    pendingHiddenToggle.current = false;
-    void save();
-  }, [save]);
 
   // In live mode, an unauthenticated visitor has no slug — never fall back to
   // the demo persona (`currentUserSlug` === "tiago"), or a logged-out visitor
@@ -187,7 +72,13 @@ export function ProfilePage() {
   // enforced server-side in live mode: the fetch 403s → the not-found wall.)
   const blocked = !isSelf && !!slug && isBlocked(slug);
 
-  const { data, isLoading } = useMemberProfile(isSelf ? undefined : slug);
+  const {
+    data,
+    isLoading,
+    isError: isOtherMemberError,
+    error: otherMemberError,
+    refetch: refetchOtherMember,
+  } = useMemberProfile(isSelf ? undefined : slug);
   const otherMember = data?.member ?? null;
   const limited = data?.limited ?? false;
 
@@ -207,14 +98,19 @@ export function ProfilePage() {
   }
   if (!isSelf && isLoading) return <ProfileLoadingState />;
   if (blocked) return <ProfileBlockedState />;
+  // A 5xx, a timeout or an offline browser is an outage, not an absence. It
+  // used to fall through to the "no such member" wall, which reads as "this
+  // person left" and offers no retry, so a transient failure sent people away
+  // for good. Only a real 404/403 gets that wall now.
+  if (!isSelf && isOtherMemberError && !isMemberMissingError(otherMemberError)) {
+    return <ProfileErrorState onRetry={() => void refetchOtherMember()} />;
+  }
   if (!isSelf && !otherMember) return <ProfileNotFoundState />;
 
-  // At this point: isSelf → profile = liveProfile (always non-null from ProfileProvider);
-  // !isSelf → otherMember is non-null (guarded by the not-found early-return above).
-  // limited: adapter already zeros out bio/work/openTo; ProfileHero/ProfileContent don't
-  // accept a `limited` prop, so we rely on the sparse fields the adapter returns.
+  // Non-null by the guards above: isSelf → liveProfile (ProfileProvider always
+  // has one), !isSelf → otherMember. `limited` needs no prop: the adapter has
+  // already zeroed out bio/work/openTo for a limited card.
   void limited;
-  // profile is non-null here by the invariant above; assert to satisfy ProfileHero/ProfileContent.
   const resolvedProfile = profile!;
 
   // Mobile Instagram-style layout applies to both the view and edit states —
@@ -223,56 +119,39 @@ export function ProfilePage() {
   const useMobileLayout = isMobile;
   const ownerSlug = isSelf ? (selfSlug ?? "") : (slug ?? "");
 
-  // Desktop-only settings-menu control (see `ProfileSettingsMenu`/
-  // `ProfileHeroMain`'s `isSelf` gate) — only ever reachable when `isSelf && !previewing &&
-  // !isEditing`, i.e. exactly when `ProfileHero` (not `EditableProfileHero`)
-  // is on screen. `useProfileEditGuard`'s dirty-navigation warning only
-  // activates when `isEditing && isDirty`, and the provider defines
-  // `isDirty` itself as `isEditing && isDraftDirty(...)` — so with `isEditing`
-  // always false here, this direct draft/save cycle can never trip it.
-  function toggleHidden() {
-    const nextValue =
-      resolvedProfile.hiddenUntil &&
-      new Date(resolvedProfile.hiddenUntil) > new Date()
-        ? null
-        : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    pendingHiddenToggle.current = true;
-    updateDraft({ hiddenUntil: nextValue });
-  }
+  // The settings menu is reachable only when `isSelf && !previewing &&
+  // !isEditing`, i.e. exactly when the read-mode hero (not
+  // `EditableProfileHero`) is on screen. `useProfileEditGuard`'s
+  // dirty-navigation warning only activates when `isEditing && isDirty`, and
+  // the provider defines `isDirty` itself as `isEditing && isDraftDirty(...)`,
+  // so with `isEditing` always false here the hide toggle's direct draft/save
+  // cycle can never trip it.
+  const toggleHidden = () => sheets.toggleHidden(resolvedProfile.hiddenUntil);
 
   // The work/board/skills/groups + communities + places sections, excluding
   // "Also working as" — desktop read-mode renders that section separately,
   // full-width, between the two rail grids (see below).
   const restBelowHero = (
-    <>
-      <ProfileContent
-        profile={resolvedProfile}
-        isSelf={selfView}
-        edit={
-          selfView && isEditing
-            ? {
-                work: draft.work,
-                skills: draft.skills,
-                groups: draft.groups,
-                board: draft.board,
-                shapings: draft.shapings,
-                update: (patch) => updateDraft(patch),
-              }
-            : undefined
-        }
-      />
-      <ProfileCommunitiesSection
-        isSelf={isSelf}
-        previewing={previewing}
-        otherMember={isSelf ? null : otherMember}
-        firstName={resolvedProfile.first}
-      />
-      <PlacesSection
-        memberSlug={ownerSlug}
-        isSelf={selfView}
-        firstName={resolvedProfile.first}
-      />
-    </>
+    <ProfileBelowHeroSections
+      profile={resolvedProfile}
+      isSelf={isSelf}
+      selfView={selfView}
+      previewing={previewing}
+      otherMember={isSelf ? null : otherMember}
+      ownerSlug={ownerSlug}
+      edit={
+        selfView && isEditing
+          ? {
+              work: draft.work,
+              skills: draft.skills,
+              groups: draft.groups,
+              board: draft.board,
+              shapings: draft.shapings,
+              update: (patch) => updateDraft(patch),
+            }
+          : undefined
+      }
+    />
   );
 
   // Shared below-hero sections — rendered after the hero on both the phone-
@@ -292,85 +171,49 @@ export function ProfilePage() {
 
   return (
     <PageShell>
-      <div className={`${styles.backBar} wrap`}>
-        <Link to={routes.members} className={styles.backLink}>
-          <FiArrowLeft aria-hidden /> {t("members:profile.backToRoom")}
-        </Link>
-      </div>
+      <ProfileBackBar />
 
-      {useMobileLayout ? (
-        selfView && isEditing ? (
-          <>
-            <MobileEditableProfileHero focusLinks={focusLinks} />
-            {belowHero}
-          </>
-        ) : (
-          <MobileProfileView
-            profile={resolvedProfile}
-            isSelf={isSelf}
-            selfView={selfView}
-            previewing={previewing}
-            otherMember={isSelf ? null : otherMember}
-            ownerSlug={ownerSlug}
-            onEdit={() => enterEdit(false)}
-            onEditLinks={() => enterEdit(true)}
-            onPreview={() => {
-              setPreviewing(true);
-              window.scrollTo({ top: 0 });
-            }}
-          />
-        )
-      ) : selfView && isEditing ? (
-        <>
-          <EditableProfileHero focusLinks={focusLinks} />
-          {belowHero}
-        </>
-      ) : (
-        <DesktopProfileGrid
-          profile={resolvedProfile}
-          isSelf={isSelf}
-          previewing={previewing}
-          selfView={selfView}
-          ownerSlug={ownerSlug}
-          restBelowHero={restBelowHero}
-          onEdit={() => enterEdit(false)}
-          onEditLinks={() => enterEdit(true)}
-          onPreview={() => {
-            setPreviewing(true);
-            window.scrollTo({ top: 0 });
-          }}
-          onOpenWhoSeesWhat={() => setWhoSeesWhatOpen(true)}
-          onOpenAccountData={() => setAccountDataOpen(true)}
-          onToggleHidden={toggleHidden}
-        />
-      )}
+      <ProfileLayoutSwitch
+        profile={resolvedProfile}
+        isSelf={isSelf}
+        selfView={selfView}
+        previewing={previewing}
+        isEditing={isEditing}
+        focusLinks={focusLinks}
+        useMobileLayout={useMobileLayout}
+        otherMember={isSelf ? null : otherMember}
+        ownerSlug={ownerSlug}
+        restBelowHero={restBelowHero}
+        belowHero={belowHero}
+        onEdit={() => enterEdit(false)}
+        onEditLinks={() => enterEdit(true)}
+        onPreview={() => {
+          setPreviewing(true);
+          window.scrollTo({ top: 0 });
+        }}
+        onOpenWhoSeesWhat={sheets.openWhoSeesWhat}
+        onOpenAccountData={sheets.openAccountData}
+        onToggleHidden={toggleHidden}
+      />
 
       {selfView && <ProfileEditBar />}
 
       {isSelf && previewing && (
-        <div className={editStyles.previewBar}>
-          <span className={editStyles.previewText}>
-            <Translation
-              i18nKey="members:profile.previewBanner"
-              components={{ strong: <strong /> }}
-            />
-          </span>
-          <Button variant="ghost-dark" onClick={() => setPreviewing(false)}>
-            {t("members:profile.exitPreview")}
-          </Button>
-        </div>
+        <ProfilePreviewBanner onExit={() => setPreviewing(false)} />
       )}
 
-      {/* Rail sheets — `SideSheet` already portals to `document.body`, so
-          placement here doesn't matter for layout. Only ever opened from the
-          desktop `ProfileHero`'s rail controls (mobile has no trigger for
-          them), but guarded here too for defense-in-depth. */}
-      {!useMobileLayout && whoSeesWhatOpen && (
-        <WhoSeesWhatSheet onClose={() => setWhoSeesWhatOpen(false)} />
+      {/* Owner sheets — `SideSheet` already portals to `document.body`, so
+          placement here doesn't matter for layout. Both are opened from
+          `ProfileSettingsMenu`, which the desktop hero and the mobile header
+          each render for the owner; the `!useMobileLayout` guard that used to
+          sit here was what made every setting inside them unreachable on a
+          phone. */}
+      {sheets.isWhoSeesWhatOpen && (
+        <WhoSeesWhatSheet onClose={sheets.closeWhoSeesWhat} />
       )}
-      {!useMobileLayout && accountDataOpen && (
+      {sheets.isAccountDataOpen && (
         <AccountDataSheet
-          onClose={() => setAccountDataOpen(false)}
+          onClose={sheets.closeAccountData}
           ownerSlug={ownerSlug}
         />
       )}

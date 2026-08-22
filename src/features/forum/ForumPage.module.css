@@ -306,11 +306,19 @@
 .pinnedSection {
   margin-bottom: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .threadRow {
   position: relative;
+}
+/* Each row is a <FadeIn>, whose `will-change: transform` makes it a stacking
+   context for the life of the element. The row menu's own z-index therefore
+   only wins INSIDE its row, and the next row (later in DOM order) paints over
+   an open dropdown. Raise the whole FadeIn wrapper while its menu is open. */
+.rowFade:has(.threadMenu [aria-expanded="true"]) {
+  position: relative;
+  z-index: 3;
 }
 .threadMenu {
   position: absolute;
@@ -319,6 +327,7 @@
   z-index: 5;
 }
 .thread {
+  position: relative;
   display: grid;
   grid-template-columns: 52px 1fr;
   gap: 16px;
@@ -329,20 +338,33 @@
 }
 @media (hover: hover) {
   .thread:hover {
-    background: rgba(255, 255, 255, 0.45);
+    /* Was rgba(255,255,255,.45) — a pure-white wash on the cream page, and
+       a bright flash on the dark one. --wash is the repo hover tint. */
+    background: var(--wash);
   }
 }
 .threadPinned {
   background: rgba(var(--accent-rgb), 0.03);
 }
+/* A real <button>, so it is no longer a role="button" div nested inside the
+   row's anchor. `z-index` lifts it above the title's stretched-link overlay. */
 .voteCol {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 44px;
   gap: 2px;
+  padding: 0;
+  border: none;
   border-radius: 8px;
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 .voteCol:focus-visible {
   outline: 2px solid var(--accent);
@@ -409,10 +431,16 @@
    so it uses the body ink tier (--ink-60, 4.72:1 on cream) at a slightly larger
    size/weight rather than the metadata tier. */
 .tag {
+  position: relative;
+  z-index: 1;
+  border: none;
+  background: none;
+  font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   color: var(--ink-60);
   cursor: pointer;
+  touch-action: manipulation;
   border-radius: 5px;
   padding: 1px 4px;
   transition:
@@ -437,6 +465,22 @@
   letter-spacing: -0.012em;
   line-height: 1.25;
 }
+/* The card's ONE link: its ::after covers the whole row, so a click anywhere
+   that is not another control still opens the thread. */
+.threadTitleLink {
+  color: inherit;
+  text-decoration: none;
+}
+.threadTitleLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.threadTitleLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
 .threadExcerpt {
   font-size: 14px;
   color: var(--ink-60);
@@ -453,6 +497,8 @@
   color: var(--ink-40);
 }
 .tmWho {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 8px;

@@ -7,11 +7,12 @@ import { describeError } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import { AdminModal } from "../../ui";
+import { AdminArrowSeparator, AdminNotSet } from "../../ui/AdminInlineMarkers";
 import { useRoadmapModals } from "../state/useRoadmapModals";
 import styles from "./roadmapModals.module.css";
 
 /**
- * "Why is this moving?" — required before a target-date change is allowed to
+ * "Why is this moving?" is required before a target-date change is allowed to
  * save. Confirming publishes the reason on the public roadmap right next to
  * the item (the whole point: members forgive a slipped date, not a silent
  * one). Cancelling leaves the item's `targetQuarter` untouched.
@@ -90,7 +91,9 @@ export function SlipReasonModal() {
             {t("admin:roadmap.modals.slipReason.targetLabel")}
           </span>
           <span className={styles.metaValue}>
-            {payload?.from ?? "—"} → {payload?.to ?? "—"}
+            {payload?.from ?? <AdminNotSet />}
+            <AdminArrowSeparator />
+            {payload?.to ?? <AdminNotSet />}
           </span>
         </div>
       </div>

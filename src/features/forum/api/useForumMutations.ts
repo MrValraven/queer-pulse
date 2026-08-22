@@ -20,7 +20,7 @@ import {
   unpinThread,
   votePost,
 } from "./forum.api";
-import { slugForThreadId } from "./forum.adapters";
+import type { ForumPostResponse } from "./forum.api";
 import type { ThreadListPage, ThreadPostsPage } from "./useForum";
 
 /**
@@ -37,16 +37,31 @@ import type { ThreadListPage, ThreadPostsPage } from "./useForum";
 export function useReply(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { body: string; parentPostId?: string | null }>({
+  return useMutation<
+    ForumPostResponse | undefined,
+    Error,
+    { body: string; parentPostId?: string | null }
+  >({
+    // The thread page owns this write's error UI: it rolls the optimistic
+    // reply back out and names the reason (closed thread vs a community the
+    // member isn't in). Without this the global handler toasted on top of it.
+    meta: { silentError: true },
     mutationFn: async ({ body, parentPostId }) => {
-      if (demoMode || !slug) return;
-      await replyToThread(slug, body, parentPostId);
+      if (demoMode || !slug) return undefined;
+      // The created post is RETURNED (not discarded) so the caller can stamp
+      // the server's real post id onto its optimistic reply — nesting a reply
+      // under a client-generated uuid used to POST that fake id and 4xx.
+      return replyToThread(slug, body, parentPostId);
     },
     onSuccess: () => {
       if (demoMode) return;
-      // Refetch the posts so the optimistic "You" reply reconciles with the
-      // server record. Keyed by prefix — every language/param variant refetches.
-      void queryClient.invalidateQueries({ queryKey: ["forum-thread-posts"] });
+      // The reply changes more than the posts list: the thread meta carries
+      // `replyCount` (the sort bar's "N replies") and every list card carries
+      // its own `replyCount`. Invalidating only the posts left both stale
+      // until the 30s staleTime lapsed, so the bar read "3 replies" right
+      // after you posted the 4th.
+      invalidateThread(queryClient);
+      void queryClient.invalidateQueries(THREADS_KEY);
     },
   });
 }
@@ -128,11 +143,14 @@ const THREADS_KEY = { queryKey: ["forum-threads"] } as const;
 const POSTS_KEY = { queryKey: ["forum-thread-posts"] } as const;
 
 /** Optimistically patch the OP card (matched by `opPostId`) inside the infinite
- *  thread-list cache: set `myVote` and move `upvotes` by the vote delta. */
+ *  thread-list cache: set `myVote` and move `upvotes` by the vote delta. Pass
+ *  `serverCount` to write the endpoint's authoritative number instead of a
+ *  delta (the reconcile pass in `onSuccess`). */
 function patchThreadsCache(
   data: InfiniteData<ThreadListPage> | undefined,
   postId: string,
   value: 0 | 1,
+  serverCount?: number,
 ): InfiniteData<ThreadListPage> | undefined {
   if (!data) return data;
   return {
@@ -146,7 +164,8 @@ function patchThreadsCache(
         return {
           ...card,
           myVote: value,
-          upvotes: Math.max(0, card.upvotes + delta),
+          upvotes:
+            serverCount ?? Math.max(0, card.upvotes + delta),
         };
       });
       return changed ? { ...page, items } : page;
@@ -155,11 +174,13 @@ function patchThreadsCache(
 }
 
 /** Optimistically patch the post (matched by `id`) inside the infinite
- *  thread-posts cache: set `myVote` and move `voteCount` by the vote delta. */
+ *  thread-posts cache: set `myVote` and move `voteCount` by the vote delta.
+ *  `serverCount` writes the endpoint's authoritative number instead. */
 function patchPostsCache(
   data: InfiniteData<ThreadPostsPage> | undefined,
   postId: string,
   value: 0 | 1,
+  serverCount?: number,
 ): InfiniteData<ThreadPostsPage> | undefined {
   if (!data) return data;
   return {
@@ -173,7 +194,7 @@ function patchPostsCache(
         return {
           ...post,
           myVote: value,
-          voteCount: Math.max(0, post.voteCount + delta),
+          voteCount: serverCount ?? Math.max(0, post.voteCount + delta),
         };
       });
       return changed ? { ...page, items } : page;
@@ -221,23 +242,24 @@ export function useVotePost() {
   // Number of vote mutations currently in flight. Rapid toggles overlap, and
   // each `onError` rolls back to the snapshot it captured in `onMutate` — which,
   // for a later toggle, is an already-optimistically-patched state. That can
-  // leave the count off by one after concurrent toggles. To self-heal, the LAST
-  // in-flight vote to settle invalidates the two caches so they refetch the
-  // server's authoritative count. Invalidating only when the count reaches zero
-  // avoids refetching out from under a still-pending optimistic patch.
+  // leave the count off by one after concurrent toggles, so the LAST in-flight
+  // vote to settle AFTER A FAILURE refetches the two caches to heal the drift.
   const inFlightVotes = useRef(0);
+  const hasFailedVote = useRef(false);
 
   const mutation = useMutation<
-    void,
+    ForumPostResponse | undefined,
     Error,
     { postId: string; value: 0 | 1 },
     VoteContext
   >({
-    onMutate: async ({ postId, value }) => {
+    onMutate: ({ postId, value }) => {
       inFlightVotes.current += 1;
-      // Stop in-flight refetches so they can't clobber the optimistic patch.
-      await queryClient.cancelQueries(THREADS_KEY);
-      await queryClient.cancelQueries(POSTS_KEY);
+      // Deliberately NOT `cancelQueries`: both keys are prefix filters over
+      // INFINITE queries, so cancelling aborted whatever "Load more" page the
+      // member had in flight the moment they tapped an upvote. The success
+      // path below writes the server's own count, so a refetch landing in
+      // between can no longer leave the cache wrong for long.
       const threads =
         queryClient.getQueriesData<InfiniteData<ThreadListPage>>(THREADS_KEY);
       const posts =
@@ -253,10 +275,28 @@ export function useVotePost() {
       return { threads, posts };
     },
     mutationFn: async ({ postId, value }) => {
-      if (demoMode) return;
-      await votePost(postId, value);
+      if (demoMode) return undefined;
+      return votePost(postId, value);
+    },
+    onSuccess: (post, { postId }) => {
+      // Reconcile from the RESPONSE instead of invalidating: the endpoint
+      // returns the post with its authoritative `voteCount`/`myVote`, so a
+      // single `setQueriesData` pass replaces what used to be a full refetch
+      // of every loaded page of the list AND of the thread's posts on every
+      // settled vote.
+      if (!post) return;
+      const serverValue = (post.myVote ? 1 : 0) as 0 | 1;
+      queryClient.setQueriesData<InfiniteData<ThreadListPage>>(
+        THREADS_KEY,
+        (data) => patchThreadsCache(data, postId, serverValue, post.voteCount),
+      );
+      queryClient.setQueriesData<InfiniteData<ThreadPostsPage>>(
+        POSTS_KEY,
+        (data) => patchPostsCache(data, postId, serverValue, post.voteCount),
+      );
     },
     onError: (_error, _variables, context) => {
+      hasFailedVote.current = true;
       context?.threads.forEach(([key, data]) =>
         queryClient.setQueryData(key, data),
       );
@@ -269,11 +309,11 @@ export function useVotePost() {
       // Demo never hits the network, so there is nothing to reconcile against —
       // the optimistic cache patch is the record. Keep it a no-op.
       if (demoMode) return;
-      // Only the last vote to settle reconciles: refetch the server's true count
-      // once no optimistic patch is still pending. This heals any drift left by
-      // an `onError` rollback of an overlapping toggle, so the count can't stay
-      // permanently wrong.
-      if (inFlightVotes.current === 0) {
+      // Only after a FAILURE, and only once nothing is still pending: a rolled
+      // back snapshot of an overlapping toggle can leave the count off by one,
+      // and this is the one case the response-reconcile above cannot heal.
+      if (inFlightVotes.current === 0 && hasFailedVote.current) {
+        hasFailedVote.current = false;
         void queryClient.invalidateQueries(THREADS_KEY);
         void queryClient.invalidateQueries(POSTS_KEY);
       }
@@ -436,16 +476,25 @@ interface OfficialVars {
   isOfficial: boolean;
 }
 
-/** PATCH /forum/threads/:slug — author edits the thread title. Resolves the
- *  backend slug from the numeric id via the list step's registry. */
-export function useEditThreadTitle(threadId: number) {
+/**
+ * PATCH /forum/threads/:slug — author edits the thread title.
+ *
+ * Takes the thread's REAL backend slug straight from the view-model (every live
+ * `Thread` carries it — see `threadToCard`), the same way `useLockThread` and
+ * `usePinThread` do. It used to resolve the slug from a module-level registry
+ * keyed by a hash of the numeric view-model id, populated as a side effect of
+ * the list render: any caller whose id had not been mapped yet (an optimistic
+ * just-published card, a deep-linked page rendered before the list ran, a hash
+ * collision) silently got a no-op that still reported success. A missing slug
+ * now THROWS, so the caller's `onError` runs instead of a false "Saved".
+ */
+export function useEditThreadTitle(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<void, Error, { title: string }>({
     mutationFn: async ({ title }) => {
       if (demoMode) return;
-      const slug = slugForThreadId(threadId);
-      if (!slug) return;
+      if (!slug) throw new Error("Cannot edit a thread title without its slug");
       await editThreadTitle(slug, title);
     },
     onSuccess: () => {

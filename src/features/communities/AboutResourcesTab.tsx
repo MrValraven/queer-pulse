@@ -60,28 +60,39 @@ export function AboutResourcesTab({
         ))}
       </ol>
 
-      <div className={detail.secLbl}>
-        {t("communities:detail.aboutResources.resources")}
-      </div>
-      <div className={styles.shelf}>
-        {living.resources.map((res) => {
-          const Icon = RESOURCE_ICON[res.kind];
-          return (
-            <a className={styles.resource} href={res.href} key={res.title}>
-              <span className={styles.resourceIc}>
-                <Icon aria-hidden />
-              </span>
-              <span className={styles.resourceMain}>
-                <span className={styles.resourceTitle}>{res.title}</span>
-                {res.note && (
-                  <span className={styles.resourceNote}>{res.note}</span>
-                )}
-              </span>
-              <FiArrowUpRight aria-hidden className={styles.resourceArrow} />
-            </a>
-          );
-        })}
-      </div>
+      {/* A "Resources" heading over an empty shelf is what every live
+          community showed, since nothing populates `living.resources` outside
+          the demo registry. Render the section only when there is something on
+          it. */}
+      {living.resources.length > 0 && (
+        <>
+          <div className={detail.secLbl}>
+            {t("communities:detail.aboutResources.resources")}
+          </div>
+          <div className={styles.shelf}>
+            {living.resources.map((res) => {
+              const Icon = RESOURCE_ICON[res.kind];
+              return (
+                <a className={styles.resource} href={res.href} key={res.title}>
+                  <span className={styles.resourceIc}>
+                    <Icon aria-hidden />
+                  </span>
+                  <span className={styles.resourceMain}>
+                    <span className={styles.resourceTitle}>{res.title}</span>
+                    {res.note && (
+                      <span className={styles.resourceNote}>{res.note}</span>
+                    )}
+                  </span>
+                  <FiArrowUpRight
+                    aria-hidden
+                    className={styles.resourceArrow}
+                  />
+                </a>
+              );
+            })}
+          </div>
+        </>
+      )}
 
       {sisters.length > 0 && (
         <>

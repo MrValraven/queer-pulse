@@ -55,40 +55,24 @@ export function ChangemakersPage() {
           <Reveal as="p" delay={120}>
             {t("community:changemakers.hero.lead")}
           </Reveal>
-          <div className={styles.stats}>
-            {stats.map((stat, index) => (
-              <Reveal
-                as="div"
-                key={stat.labelKey}
-                className={styles.stat}
-                delay={160 + index * 60}
-              >
-                <div
-                  className="n"
-                  style={{
-                    fontFamily: "var(--serif)",
-                    fontWeight: 300,
-                    fontSize: "clamp(34px,4vw,52px)",
-                    color: "var(--cream)",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1,
-                  }}
+          {/* Only real numbers go in the hero: live mode has none until the
+              list request lands (and none at all if it fails), so the row is
+              absent rather than filled with placeholder figures. */}
+          {stats.length > 0 && (
+            <div className={styles.stats}>
+              {stats.map((stat, index) => (
+                <Reveal
+                  as="div"
+                  key={stat.labelKey}
+                  className={styles.stat}
+                  delay={160 + index * 60}
                 >
-                  {stat.value}
-                </div>
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: "rgba(247,243,238,.55)",
-                    marginTop: 6,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {t(stat.labelKey)}
-                </div>
-              </Reveal>
-            ))}
-          </div>
+                  <div className={styles.n}>{stat.value}</div>
+                  <div className={styles.l}>{t(stat.labelKey)}</div>
+                </Reveal>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

@@ -21,7 +21,7 @@
   align-items: center;
   gap: 6px;
   /* Contrast check (see task brief): ink-60 in rgba(26,26,31,.62) composited
-     over --cream #F7F3EE computes to ~4.69:1, and over --paper #FFFFFF to
+     over --cream var(--cream) computes to ~4.69:1, and over --paper rgba(var(--cream-rgb), 1) to
      ~4.86:1 — both clear WCAG AA's 4.5:1 floor for normal-size text (13.5px
      is normal, not "large text" at 18px/24px+). This repo's --ink-60 is not
      the design source's --ink-40 the brief's comment warns about, and this
@@ -59,7 +59,7 @@
 }
 @media (hover: hover) {
   .explain:hover {
-    background: rgba(45, 27, 61, 0.06);
+    background: rgba(var(--plum-rgb), 0.06);
     color: var(--ink);
   }
 }

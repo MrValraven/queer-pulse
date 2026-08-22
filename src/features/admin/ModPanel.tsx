@@ -25,6 +25,8 @@ export function ModPanel({ slug }: { slug: string }) {
   // community always 404'd to "not found"). The join-request / roster tabs now
   // source their rows — and their real ids — from the dual-mode api hooks, so a
   // live PATCH targets a real request instead of a mock id behind a fake toast.
+  // The reports tab does the same via `useCommunityReports(slug)`, so it no
+  // longer reads `living.reports` (hard-coded to `[]` in live).
   const { living, editable, myRole, notFound, isLoading } = useCommunity(slug);
   const [tab, setTab] = useState<(typeof TAB_KEYS)[number][0]>("requests");
 
@@ -62,7 +64,7 @@ export function ModPanel({ slug }: { slug: string }) {
         ))}
       </div>
       {tab === "requests" && <RequestsTab slug={slug} />}
-      {tab === "reports" && <ReportsTab living={living} />}
+      {tab === "reports" && <ReportsTab slug={slug} />}
       {tab === "members" && <MembersTab slug={slug} />}
       {tab === "settings" && (
         <SettingsTab

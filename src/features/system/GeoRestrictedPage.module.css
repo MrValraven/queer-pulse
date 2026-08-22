@@ -112,6 +112,9 @@
   color: var(--ink-60);
 }
 
+/* The Portuguese flag, drawn as CONTENT rather than as UI chrome: #CE1126 and
+   #006633 are the flag's own official colours, so they are deliberately not
+   design tokens and must not shift with the theme or an accent swap. */
 .flag {
   width: 38px;
   height: 28px;

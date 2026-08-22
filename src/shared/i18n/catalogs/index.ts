@@ -50,6 +50,7 @@ export const enNamespaceLoaders: Partial<
   marketing: () => import("./en/marketing").then((module) => module.marketing),
   members: () => import("./en/members").then((module) => module.members),
   magazine: () => import("./en/magazine").then((module) => module.magazine),
+  cards: () => import("./en/cards").then((module) => module.cards),
   communities: () =>
     import("./en/communities").then((module) => module.communities),
   community: () => import("./en/community").then((module) => module.community),
@@ -90,6 +91,7 @@ export const ptNamespaceLoaders: Partial<
   marketing: () => import("./pt/marketing").then((module) => module.marketing),
   members: () => import("./pt/members").then((module) => module.members),
   magazine: () => import("./pt/magazine").then((module) => module.magazine),
+  cards: () => import("./pt/cards").then((module) => module.cards),
   communities: () =>
     import("./pt/communities").then((module) => module.communities),
   community: () => import("./pt/community").then((module) => module.community),
@@ -149,6 +151,7 @@ const en: Record<Namespace, Catalog> = {
   marketing: PENDING_CATALOG,
   members: PENDING_CATALOG,
   magazine: PENDING_CATALOG,
+  cards: PENDING_CATALOG,
   communities: PENDING_CATALOG,
   community: PENDING_CATALOG,
   resources: PENDING_CATALOG,
@@ -187,6 +190,7 @@ const pt: Record<Namespace, Catalog> = {
   marketing: PENDING_CATALOG,
   members: PENDING_CATALOG,
   magazine: PENDING_CATALOG,
+  cards: PENDING_CATALOG,
   communities: PENDING_CATALOG,
   community: PENDING_CATALOG,
   resources: PENDING_CATALOG,

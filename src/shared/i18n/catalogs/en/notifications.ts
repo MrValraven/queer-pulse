@@ -286,12 +286,28 @@ export const notifications: Catalog = {
     "Your nomination of {nomineeName} wasn't taken forward this time.",
   "type.changemaker_nomination_dismissed.meta": "Changemaker nomination",
 
+  // A swap proposal on one of your skill-exchange posts. The payload carries
+  // the listing id and the offer line only, so the meta names which swap and
+  // the row sends you to the inbox to read what they actually wrote. The offer
+  // sits in `meta` rather than in `textNamed`, whose only interpolation slot is
+  // `{name}` (see `NotificationItem`).
+  "type.barter_proposal_received.text":
+    "Someone proposed a swap on your skill exchange post.",
+  "type.barter_proposal_received.textNamed":
+    "<profile>{name}</profile> proposed a swap on your skill exchange post.",
+  "type.barter_proposal_received.meta": "Skill exchange · {listingOffer}",
+  "type.barter_proposal_received.offerFallback": "a swap you posted",
+
   "type.unknown.text": "You have a new notification.",
   "type.unknown.meta": "Notification",
 
   // Notifications page chrome
   "page.title": "Notifications",
   "page.markAllRead": "Mark all as read",
+  "page.markReadError":
+    "We couldn't mark that as read. It's still waiting for you. Try again in a moment.",
+  "page.markAllReadError":
+    "We couldn't mark those as read. They're still waiting for you. Try again in a moment.",
   "page.dayRecent": "Today & recent",
   "page.dayEarlier": "Earlier",
   "page.empty.title": "All caught up",
@@ -385,6 +401,8 @@ export const notifications: Catalog = {
   "mentions.unreadSummary_one": "{count} unread",
   "mentions.unreadSummary_other": "{count} unread",
   "mentions.oldestFrom": "· oldest from {when}",
+  "mentions.ago.justNow": "just now",
+  "mentions.ago.unknown": "recently",
   "mentions.allCaughtUp": "All caught up",
   "mentions.markAllRead": "Mark all read",
   "mentions.markAllReadToast": "All marked as read",

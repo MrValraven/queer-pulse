@@ -4,15 +4,20 @@
  * SINGLE SOURCE OF TRUTH. No component may hardcode a tax figure; import from
  * here. Values verified for 2025 (and 2026 where enacted) — update the dated
  * blocks below when the law changes. This is general information, NOT tax
- * advice; every tool must show TAX_DISCLAIMER.
+ * advice; every tool must show TAX_DISCLAIMER_KEY.
  *
  * Last reviewed: 2026-06-28.
  */
 
-/** Shown on every tool that touches tax/legal/financial figures. */
-export const TAX_DISCLAIMER =
-  "General information, not tax or legal advice. Rules change and individual " +
-  "situations differ. Confirm with a contabilista certificado before relying on this.";
+/**
+ * Shown on every tool that touches tax/legal/financial figures.
+ *
+ * i18n Pattern A — a catalog KEY, not a string: this renders verbatim on ten
+ * surfaces (every calculator, both printable documents and the guide), so it
+ * has to follow the reader's language like the rest of the chrome. Each
+ * consumer resolves it with `t(TAX_DISCLAIMER_KEY)`.
+ */
+export const TAX_DISCLAIMER_KEY = "economy:tax.disclaimer";
 
 /* ── IVA (VAT) — Continente. Source: Art. 18.º CIVA. ───────────────────── */
 /** i18n Pattern A — `labelKey` resolved via t() by InvoiceFormFields / DayRateCalculatorPage. */
@@ -40,13 +45,18 @@ export const IVA_EXEMPT_NOTE = "IVA – regime de isenção (art. 53.º do CIVA)
  * Default dropped from 25% to 23% in 2025; professionals may OPT to keep 25%
  * to avoid a year-end bill. 16.5% for IP/know-how, 11.5% for non-table
  * activities. Source: Art. 101.º CIRS; OE 2025.
+ *
+ * i18n Pattern A — `labelKey` resolved via t() by whichever surface offers the
+ * rate picker, exactly like IVA_RATES above. The percentages themselves are
+ * statutory figures, so they live inside the catalog value (pt-PT writes them
+ * with a decimal comma).
  */
-export const RETENTION_RATES: { value: number; label: string }[] = [
-  { value: 23, label: "23% (default since 2025)" },
-  { value: 25, label: "25% (optional)" },
-  { value: 16.5, label: "16.5% (intellectual/industrial property)" },
-  { value: 11.5, label: "11.5% (activities not in the art. 151.º table)" },
-  { value: 0, label: "No retention (dispensa / art. 101.º-B)" },
+export const RETENTION_RATES: { value: number; labelKey: string }[] = [
+  { value: 23, labelKey: "economy:tax.retentionRate.23" },
+  { value: 25, labelKey: "economy:tax.retentionRate.25" },
+  { value: 16.5, labelKey: "economy:tax.retentionRate.16_5" },
+  { value: 11.5, labelKey: "economy:tax.retentionRate.11_5" },
+  { value: 0, labelKey: "economy:tax.retentionRate.0" },
 ];
 
 /**

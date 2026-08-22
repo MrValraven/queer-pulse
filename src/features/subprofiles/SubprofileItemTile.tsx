@@ -1,24 +1,8 @@
-import type { CSSProperties } from "react";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ItemStateChip } from "./ItemStateChip";
 import { workMeta } from "./personaSkinRender";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
-
-/** Resets `<button>` chrome so an interactive (studio) tile looks identical
- *  to the plain `<div>` tile every other skin renders — mirrors the
- *  `METABTN_STYLE` pattern already used in `SubprofileHero`. */
-const TILE_BUTTON_STYLE: CSSProperties = {
-  background: "none",
-  border: "none",
-  padding: 0,
-  margin: 0,
-  font: "inherit",
-  color: "inherit",
-  textAlign: "left",
-  width: "100%",
-  cursor: "pointer",
-};
 
 /**
  * One `.pp-tile` in a `.pp-tiles` grid (visual sections — portfolio, looks,
@@ -80,8 +64,7 @@ export function SubprofileItemTile({
     return (
       <button
         type="button"
-        className="pp-tile"
-        style={TILE_BUTTON_STYLE}
+        className="pp-tile pp-tile-btn"
         onClick={() => onOpenWork(item)}
       >
         {content}

@@ -1,6 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import { personaPublicPath } from "./personaLinks.data";
+import { personaPublicPathOrNull } from "./personaLinks.data";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
 
 /**
@@ -27,7 +27,9 @@ export function SubprofileTitleBlock({
       <dt>{t("subprofiles:hero.titleblock.craft")}</dt>
       <dd>{t(KIND_LABEL_KEYS[view.kind])}</dd>
       <dt>{t("subprofiles:hero.titleblock.address")}</dt>
-      <dd>{personaPublicPath(view)}</dd>
+      <dd>
+        {personaPublicPathOrNull(view) ?? t("subprofiles:hero.noAddressYet")}
+      </dd>
       <dt>{t("subprofiles:hero.titleblock.sections")}</dt>
       <dd>{view.sections.length}</dd>
       <dt>{t("subprofiles:hero.titleblock.state")}</dt>

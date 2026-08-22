@@ -6,18 +6,13 @@ import {
   type SetStateAction,
 } from "react";
 import { createPortal } from "react-dom";
-import { FiArrowLeft, FiArrowRight, FiSun, FiX } from "react-icons/fi";
-import { Translation } from "../../shared/i18n/Translation";
+import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { submitIntake } from "../../shared/api/intakes";
 import { useScrollLock } from "../../shared/hooks";
-import {
-  STEP_LABEL_KEYS,
-  TOTAL_STEPS,
-  type BudgetRow,
-} from "./microGrants.data";
+import { TOTAL_STEPS, type BudgetRow } from "./microGrants.data";
 import {
   AboutStep,
   BudgetStep,
@@ -25,6 +20,11 @@ import {
   ProjectStep,
   ReviewStep,
 } from "./GrantApplicationSteps";
+import {
+  GrantApplicationFooter,
+  GrantApplicationProgress,
+  GrantApplicationSuccess,
+} from "./GrantApplicationChrome";
 import styles from "./MicroGrantsPage.module.css";
 
 /**
@@ -43,7 +43,7 @@ function useGrantAdvance(args: {
   const { step, setStep, demoMode, buildPayload } = args;
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [sending, setSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const advance = async () => {
     if (step < TOTAL_STEPS) {
@@ -54,19 +54,19 @@ function useGrantAdvance(args: {
       setStep(6);
       return;
     }
-    if (sending) return;
-    setSending(true);
+    if (isSending) return;
+    setIsSending(true);
     try {
       await submitIntake("grant", buildPayload());
       setStep(6);
     } catch {
       showToast(t("shared:intake.errorToast"), "error");
     } finally {
-      setSending(false);
+      setIsSending(false);
     }
   };
 
-  return { sending, advance };
+  return { isSending, advance };
 }
 
 export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
@@ -104,7 +104,7 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
     [rows],
   );
 
-  const { sending, advance } = useGrantAdvance({
+  const { isSending, advance } = useGrantAdvance({
     step,
     setStep,
     demoMode,
@@ -163,31 +163,7 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {step <= TOTAL_STEPS && (
-          <div className={styles.progress}>
-            <div className={styles.stepsRow}>
-              {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map((i) => (
-                <div
-                  key={i}
-                  className={[
-                    styles.stepDot,
-                    i < step && styles.stepDotDone,
-                    i === step && styles.stepDotActive,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                />
-              ))}
-            </div>
-            <div className={styles.stepLabel}>
-              {t("resources:microGrants.apply.stepIndicator", {
-                step,
-                total: TOTAL_STEPS,
-                stepLabel: t(STEP_LABEL_KEYS[step - 1]!),
-              })}
-            </div>
-          </div>
-        )}
+        {step <= TOTAL_STEPS && <GrantApplicationProgress step={step} />}
 
         <div className={styles.modalBody}>
           {step === 1 && <CategoryStep cat={cat} setCat={setCat} />}
@@ -226,51 +202,16 @@ export function GrantApplicationModal({ onClose }: { onClose: () => void }) {
               budgetItems={budgetItems}
             />
           )}
-          {step === 6 && (
-            <div className={styles.success}>
-              <div className={styles.successIcon}>
-                <FiSun />
-              </div>
-              <div className={styles.successTitle}>
-                <Translation
-                  i18nKey="resources:microGrants.apply.success.title"
-                  components={{ em: <em /> }}
-                />
-              </div>
-              <p className={styles.successSub}>
-                {t("resources:microGrants.apply.success.sub")}
-              </p>
-              <button type="button" className={styles.next} onClick={onClose}>
-                {t("resources:microGrants.apply.success.closeCta")}
-              </button>
-            </div>
-          )}
+          {step === 6 && <GrantApplicationSuccess onClose={onClose} />}
         </div>
 
         {step <= TOTAL_STEPS && (
-          <div className={styles.footer}>
-            <button type="button" className={styles.back} onClick={back}>
-              {step === 1 ? (
-                t("resources:microGrants.apply.cancelCta")
-              ) : (
-                <>
-                  <FiArrowLeft aria-hidden />{" "}
-                  {t("resources:microGrants.apply.backCta")}
-                </>
-              )}
-            </button>
-            <button
-              type="button"
-              className={styles.next}
-              onClick={() => void advance()}
-              disabled={sending}
-            >
-              {step === TOTAL_STEPS
-                ? t("resources:microGrants.apply.submitCta")
-                : t("resources:microGrants.apply.continueCta")}{" "}
-              <FiArrowRight aria-hidden />
-            </button>
-          </div>
+          <GrantApplicationFooter
+            step={step}
+            isSending={isSending}
+            onBack={back}
+            onAdvance={() => void advance()}
+          />
         )}
       </div>
     </div>,

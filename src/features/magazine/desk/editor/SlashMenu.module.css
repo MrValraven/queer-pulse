@@ -16,10 +16,14 @@
   border: 1px solid var(--line);
   box-shadow: var(--shadow-panel);
   padding: 6px;
-  max-height: 290px;
+  max-height: 340px;
   overflow: auto;
 }
 
+/* The rows are shared <Button variant="ghost">s (FE-CNT-20) — focus ring,
+   disabled treatment and the 44px tap-target floor come from the primitive.
+   Only the menu-row geometry is overridden, at a specificity (0,1,1) the
+   primitive's own single class cannot beat. */
 .slash button {
   width: 100%;
   display: flex;

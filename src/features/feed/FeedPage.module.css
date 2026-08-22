@@ -45,38 +45,20 @@
   min-width: 0;
 }
 
-.tabs {
+/* The tab row itself is the shared <Tabs variant="underline"> primitive (which
+   brings the tablist semantics and the underline styling with it). This class
+   only adds what that primitive leaves to the caller: the bottom gap, and
+   horizontal scrolling so six tabs never force the page sideways on a phone. */
+.tabsScroll {
   display: flex;
-  gap: 2px;
-  border-bottom: 2px solid rgba(var(--line-rgb), 0.08);
   margin-bottom: 20px;
+  max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  flex-wrap: nowrap;
 }
-.tab {
-  font-family: var(--sans);
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--ink-40);
-  padding: 9px 16px 11px;
-  border: none;
-  background: none;
-  cursor: pointer;
+.tabsScroll > * {
   white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition:
-    color 0.2s,
-    border-color 0.2s;
-}
-@media (hover: hover) {
-  .tab:hover {
-    color: var(--ink);
-  }
-}
-.tabActive {
-  color: var(--text-strong);
-  border-bottom-color: var(--line-strong);
 }
 
 .list {
@@ -603,7 +585,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  /* a dialog-class overlay, so it sits at the same tier as the shared Modal */
+  z-index: var(--z-modal);
   background: rgba(var(--plum-rgb), 0.5);
   display: flex;
   align-items: center;
@@ -948,4 +931,19 @@
 :global([data-theme="dark"]) .card,
 :global([data-theme="dark"]) .sbCard {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* Report failed: an honest inline note above the actions. The form and the
+   reporter's chosen reason stay on screen so they can retry. */
+.reportError {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(var(--danger-rgb), 0.08);
+  color: var(--danger);
+  font-size: 13.5px;
+  line-height: 1.5;
 }

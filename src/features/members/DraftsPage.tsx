@@ -62,8 +62,12 @@ export function DraftsPage() {
   const fmt = useFormat();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const loading = useSimulatedLoad();
+  const simulatedLoad = useSimulatedLoad();
   const { demoMode } = useDemoMode();
+  // The prototype's fake fetch delay is DEMO-ONLY. Drafts come from local
+  // state, so in live mode there is nothing to wait for: showing 600ms of
+  // skeleton there just made the page feel slower than it is.
+  const loading = demoMode && simulatedLoad;
   const { drafts: userDrafts, addDraft, removeDraft } = useDrafts();
   const keptMeta = useMemo(() => buildKeptMeta(t, fmt), [t, fmt]);
 

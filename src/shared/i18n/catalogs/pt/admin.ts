@@ -471,18 +471,13 @@ export const admin: Catalog = {
   "members.drawer.verifiedToast": "Verificámos {name}.",
   "members.drawer.messageCta": "Mensagem",
   "members.drawer.restrictCta": "Restringir…",
-  "members.drawer.removeCta": "Remover pessoa…",
-  "members.drawer.reasonRequiredToast":
-    "É necessário um motivo antes de remover",
+  "members.drawer.banCta": "Banir para sempre…",
   "members.drawer.glanceTitle": "Resumo rápido",
   "members.drawer.graphTitle": "Rede de votos de confiança: confiança nos dois sentidos",
   "members.drawer.graphAriaLabel": "Abrir a rede de confiança completa",
   "members.drawer.exploreCta": "Explorar rede",
   "members.drawer.communitiesTitle": "Comunidades",
   "members.drawer.contributionsTitle": "Histórico de contribuições",
-  "members.drawer.removePanel.title": "Remover uma pessoa é permanente.",
-  "members.drawer.removePanel.keepCta": "Manter pessoa",
-  "members.drawer.removePanel.continueCta": "Percebi, continuar",
   "members.drawer.messageSentToast": "Mensagem enviada",
   "members.drawer.missingReasonToast":
     "É necessário um motivo. {name} vai vê-lo",
@@ -586,6 +581,8 @@ export const admin: Catalog = {
   "members.restrict.duration.7d": "7 dias",
   "members.restrict.duration.30d": "30 dias",
   "members.restrict.duration.permanent": "Permanente",
+  "members.restrict.permanentNote":
+    "Permanente significa um banimento sem data de fim: {name} perde o acesso à conta até que a administração o levante. Recebe o motivo e pode recorrer.",
   "members.restrict.scope.community": "Esta comunidade",
   "members.restrict.scope.platform": "Em toda a plataforma",
   "members.restrict.reason.harassment": "Assédio repetido depois de um aviso",
@@ -761,6 +758,15 @@ export const admin: Catalog = {
   "adminInvites.quota.invalid": "Introduz um número inteiro de 0 ou mais, ou limpa o campo.",
   "adminInvites.quota.saved": "Quota de convites de {name} guardada.",
   "adminInvites.quota.cleared": "{name} voltou à quota de convites predefinida.",
+  "adminInvites.revoke.cta": "Revogar este convite",
+  "adminInvites.revoke.confirmTitle": "Revogar o convite {code}?",
+  "adminInvites.revoke.confirmBody":
+    "A ligação deixa de funcionar de imediato e {name} continua sem a vaga que gastou da quota deste mês. Quem tiver a ligação vai vê-la como revogada. Não dá para anular, mas {name} pode enviar um convite novo.",
+  "adminInvites.revoke.confirmCta": "Revogar convite",
+  "adminInvites.revoke.doneToast": "O convite {code} está revogado.",
+  "adminInvites.revoke.movedOnToast":
+    "Esse convite já foi aceite, revogado ou expirou. Reabre a lista para veres o estado atual.",
+  "adminInvites.revoke.failedToast": "Não foi possível revogar esse convite. Tenta de novo.",
 
   "adminCommissionInterests.title": "Interesse em <em>encomendas</em>",
   "adminCommissionInterests.header.eyebrow": "Cultura",
@@ -1157,18 +1163,34 @@ export const admin: Catalog = {
   "moderation.bulk.selectedCount_other": "{count} selecionadas",
   "moderation.bulk.dismissCta": "Rejeitar",
   "moderation.bulk.spamCta": "Remover como spam",
-  "moderation.bulk.reassignCta": "Reatribuir…",
+  "moderation.bulk.escalateCta": "Escalar",
   "moderation.bulk.warnCta": "Advertir",
   "moderation.bulk.suspendCta": "Suspender…",
   "moderation.bulk.banCta": "Banir",
   "moderation.bulk.cancelCta": "Cancelar",
-  "moderation.bulk.suspendModal.title_one": "Suspender {count} membro",
-  "moderation.bulk.suspendModal.title_other": "Suspender {count} membros",
-  "moderation.bulk.suspendModal.body_one":
-    "Escolha por quanto tempo a conta por trás desta denúncia fica suspensa.",
-  "moderation.bulk.suspendModal.body_other":
-    "Escolha por quanto tempo as contas por trás destas {count} denúncias ficam suspensas.",
-  "moderation.bulk.suspendModal.confirmCta": "Confirmar suspensão",
+  "moderation.bulk.confirm.title.removeContent_one":
+    "Remover o conteúdo de {count} denúncia",
+  "moderation.bulk.confirm.title.removeContent_other":
+    "Remover o conteúdo de {count} denúncias",
+  "moderation.bulk.confirm.title.warn_one": "Advertir {count} membro",
+  "moderation.bulk.confirm.title.warn_other": "Advertir {count} membros",
+  "moderation.bulk.confirm.title.suspend_one": "Suspender {count} membro",
+  "moderation.bulk.confirm.title.suspend_other": "Suspender {count} membros",
+  "moderation.bulk.confirm.title.ban_one": "Banir {count} membro",
+  "moderation.bulk.confirm.title.ban_other": "Banir {count} membros",
+  "moderation.bulk.confirm.body_one":
+    "Isto aplica-se à denúncia que selecionaste. Indica um motivo e escreve a nota que a pessoa vai ler.",
+  "moderation.bulk.confirm.body_other":
+    "Isto aplica-se às {count} denúncias que selecionaste. Indica um motivo e escreve a nota que todas essas pessoas vão ler.",
+  "moderation.bulk.confirm.durationLabel": "Durante quanto tempo",
+  "moderation.bulk.confirm.notePlaceholder":
+    "O que aconteceu e o que se segue. Toda a gente deste lote lê isto.",
+  "moderation.bulk.confirm.applyCta_one": "Aplicar a 1 denúncia",
+  "moderation.bulk.confirm.applyCta_other": "Aplicar a {count} denúncias",
+  "moderation.bulk.confirm.transparency_one":
+    "A pessoa é notificada com este motivo e esta nota, e pode recorrer.",
+  "moderation.bulk.confirm.transparency_other":
+    "As {count} pessoas são notificadas com este motivo e esta nota, e podem recorrer.",
 
   "moderation.emergency.ariaLabel": "Emergências de segurança",
   "moderation.emergency.count_one": "{count} emergência de segurança",
@@ -1177,12 +1199,10 @@ export const admin: Catalog = {
     "· outing e doxxing são tratados como dano urgente, com um prazo de 1 hora. Trata destas antes de tudo o resto.",
 
   "moderation.everythingElse": "Tudo o resto",
-  "moderation.countNote_one":
-    "A mostrar {count} denúncia em aberto · a mais antiga há {oldest}",
-  "moderation.countNote_other":
-    "A mostrar {count} denúncias em aberto · a mais antiga há {oldest}",
   "moderation.filterEmpty":
     "Nenhuma denúncia em aberto corresponde a este filtro. Tenta “Todas as gravidades”.",
+  "moderation.loadMore": "Ver mais denúncias",
+  "moderation.loadingMore": "A carregar mais denúncias…",
 
   "moderation.caughtUp.titleLine1": "Está tudo <em>em dia</em>.",
   "moderation.caughtUp.titleLine2": "Não precisas de fazer nada agora.",
@@ -1265,7 +1285,7 @@ export const admin: Catalog = {
   "moderation.appealDrawer.originalContentTitle":
     "O que foi originalmente denunciado",
   "moderation.appealDrawer.originalContentUnavailable":
-    "O conteúdo da denúncia original não está disponível — pode ter sido apagado, ou este recurso não tem uma denúncia associada.",
+    "O conteúdo da denúncia original não está disponível. Pode ter sido apagado, ou este recurso não tem uma denúncia associada.",
   "moderation.appealDrawer.argumentTitle": "O argumento apresentado",
   "moderation.appealDrawer.supportersTitle": "Quem está a apoiar",
   "moderation.appealDrawer.noSupport":
@@ -1368,7 +1388,7 @@ export const admin: Catalog = {
   "moderation.queue.bulkToast_other": "{verb} de {count} denúncias",
   "moderation.queue.bulkVerb.dismissed": "Rejeição",
   "moderation.queue.bulkVerb.removedAsSpam": "Remoção como spam",
-  "moderation.queue.bulkVerb.reassigned": "Reatribuição",
+  "moderation.queue.bulkVerb.escalated": "Escalamento",
   "moderation.queue.bulkVerb.warned": "Advertência",
   "moderation.queue.bulkVerb.suspended": "Suspensão",
   "moderation.queue.bulkVerb.banned": "Banimento",
@@ -1543,6 +1563,91 @@ export const admin: Catalog = {
   "communities.settings.overrides.reassignConfirmCta": "Reatribuir propriedade",
   "communities.settings.overrides.reassignPickLabel": "Escolhe a nova pessoa dona",
 
+  // ── Registo de governação (o histórico da própria comunidade) ─────────────
+  "communities.detail.tabs.governanceLog": "Registo de governação",
+  "communities.governanceLog.intro":
+    "Todas as ações de governação registadas nesta comunidade, das mais recentes para as mais antigas. As entradas são escritas pelo servidor e nunca podem ser editadas.",
+  "communities.governanceLog.filterLabel": "Filtrar por ação",
+  "communities.governanceLog.allActions": "Todas as ações",
+  "communities.governanceLog.loadError":
+    "O registo de governação não carregou.",
+  "communities.governanceLog.retryCta": "Tentar de novo",
+  "communities.governanceLog.emptyTitle": "Ainda <em>sem registos</em>.",
+  "communities.governanceLog.emptyText":
+    "Mudanças de papel, remoções, passagens de propriedade, congelamentos e alterações de definições aparecem aqui no momento em que acontecem.",
+  "communities.governanceLog.emptyFilteredTitle": "Nada <em>deste tipo</em>.",
+  "communities.governanceLog.emptyFilteredText":
+    "Esta comunidade tem histórico de governação e nenhuma entrada corresponde à ação escolhida. Limpa o filtro para leres o registo completo.",
+  "communities.governanceLog.clearFilterCta": "Limpar o filtro",
+  "communities.governanceLog.pagerMeta": "{start} a {end} de {total}",
+  "communities.governanceLog.pagerPage": "Página {page} de {pageCount}",
+  "communities.governanceLog.prevPage": "Página anterior",
+  "communities.governanceLog.nextPage": "Página seguinte",
+
+  "communities.governanceLog.action.role_changed": "Papel alterado",
+  "communities.governanceLog.action.member_removed": "Membro removido",
+  "communities.governanceLog.action.ownership_transferred":
+    "Propriedade transferida",
+  "communities.governanceLog.action.owner_auto_promoted":
+    "Promoção automática a pessoa dona",
+  "communities.governanceLog.action.frozen": "Congelada",
+  "communities.governanceLog.action.unfrozen": "Descongelada",
+  "communities.governanceLog.action.archived": "Arquivada",
+  "communities.governanceLog.action.unarchived": "Desarquivada",
+  "communities.governanceLog.action.settings_changed": "Definições alteradas",
+
+  "communities.governanceLog.summary.role_changed": "O papel de {name} mudou",
+  "communities.governanceLog.summary.member_removed":
+    "Remoção de {name} do quadro",
+  "communities.governanceLog.summary.ownership_transferred":
+    "A propriedade passou para {name}",
+  "communities.governanceLog.summary.owner_auto_promoted":
+    "A propriedade passou automaticamente para {name}",
+  "communities.governanceLog.summary.frozen": "A comunidade foi congelada",
+  "communities.governanceLog.summary.unfrozen":
+    "O congelamento foi levantado",
+  "communities.governanceLog.summary.archived": "A comunidade foi arquivada",
+  "communities.governanceLog.summary.unarchived":
+    "A comunidade foi restaurada do arquivo",
+  "communities.governanceLog.summary.settings_changed":
+    "As definições da comunidade mudaram",
+
+  "communities.governanceLog.unknownMember": "um membro anterior",
+  "communities.governanceLog.byLine": "por {name}",
+  "communities.governanceLog.unattributed": "Sem autoria identificada",
+  "communities.governanceLog.unattributedHint":
+    "Ou a plataforma agiu automaticamente, ou quem agiu apagou entretanto a sua conta.",
+  "communities.governanceLog.override.label": "Intervenção da plataforma",
+  "communities.governanceLog.override.hint":
+    "A equipa da plataforma agiu por cima da pessoa dona e da moderação da própria comunidade.",
+
+  "communities.governanceLog.meta.roleLabel": "Papel",
+  "communities.governanceLog.meta.role.owner": "Pessoa dona",
+  "communities.governanceLog.meta.role.mod": "Pessoa moderadora",
+  "communities.governanceLog.meta.role.member": "Membro",
+  "communities.governanceLog.meta.reasonLabel": "Motivo",
+  "communities.governanceLog.meta.fromTo": "{from} para {to}",
+  "communities.governanceLog.meta.on": "Ligado",
+  "communities.governanceLog.meta.off": "Desligado",
+  "communities.governanceLog.meta.empty": "Vazio",
+  "communities.governanceLog.meta.notSet": "Sem valor",
+  "communities.governanceLog.meta.field.requiresSecondVouch":
+    "Segundo voto de confiança obrigatório",
+  "communities.governanceLog.meta.field.autoFreezeOnReports":
+    "Congelamento automático em denúncias",
+  "communities.governanceLog.meta.field.isFeatured": "Destaque no Descobrir",
+  "communities.governanceLog.meta.field.name": "Nome",
+  "communities.governanceLog.meta.field.purpose": "Propósito",
+  "communities.governanceLog.meta.field.type": "Tipo",
+  "communities.governanceLog.meta.field.whoFor": "Para quem é",
+  "communities.governanceLog.meta.field.tagline": "Frase de apresentação",
+  "communities.governanceLog.meta.field.accessTier": "Quem pode entrar",
+  "communities.governanceLog.meta.field.rosterVisible": "Quadro visível",
+  "communities.governanceLog.meta.field.features": "Funcionalidades",
+  "communities.governanceLog.meta.field.rules": "Regras",
+  "communities.governanceLog.meta.field.tags": "Etiquetas",
+  "communities.governanceLog.meta.field.coverImageUrl": "Imagem de capa",
+
   "communities.health.modalTitle": "Porquê <em>{score}</em>?",
   "communities.health.howCalculatedCta": "Como é calculada",
   "communities.health.offerSupportCta": "Oferecer apoio",
@@ -1644,7 +1749,7 @@ export const admin: Catalog = {
   // este `AdminGovernanceHealthEditor` precisa, para que traduza
   // corretamente quando essa lacuna for preenchida.
   "governance.overview.health.field.valueComputedHint":
-    "Calculado em tempo real a partir das contas ativas — não editável aqui.",
+    "Calculado em tempo real a partir das contas ativas. Não é editável aqui.",
 
   // ── Separador Propostas (COM-1) ─────────────────────────────────────────────
   "governance.proposals.header.eyebrow": "Propostas",
@@ -1720,7 +1825,7 @@ export const admin: Catalog = {
   "governance.finances.edit.eyebrow": "Finanças",
   "governance.finances.edit.title": "Corrigir os <em>valores</em>",
   "governance.finances.edit.sub":
-    "Estes valores são reportados pela QueerPulse a cada trimestre e revistos pela equipa financeira — não são calculados automaticamente. Corrige qualquer número errado; cada alteração é registada e marcada como introduzida por um administrador.",
+    "Estes valores são reportados pela QueerPulse a cada trimestre e revistos pela equipa financeira, sem cálculo automático. Corrige qualquer número errado; cada alteração é registada e marcada como introduzida por um administrador.",
   "governance.finances.edit.section.headline": "Valores principais",
   "governance.finances.edit.section.income": "Linhas de receita",
   "governance.finances.edit.section.spend": "Linhas de despesa",
@@ -1926,15 +2031,17 @@ export const admin: Catalog = {
     "De {author} · sinalizado por {reporter} · há {time}",
   "modPanel.reports.metaLiveLine": "Sinalizado · há {time}",
   "modPanel.reports.removeCta": "Remover publicação",
-  "modPanel.reports.warnCta": "Avisar autoria",
   "modPanel.reports.dismissCta": "Rejeitar",
-  "modPanel.reports.escalateCta": "Escalar para a equipa",
+  "modPanel.reports.escalationNote":
+    "Aqui podes remover uma publicação ou rejeitar uma denúncia. Avisos, suspensões e escalonamentos são decididos pela equipa de moderação da QueerPulse, e todas as denúncias abertas já estão na fila dela.",
+  "modPanel.reports.replyNote":
+    "Esta denúncia é sobre uma resposta. Podes rejeitá-la aqui, e a remoção da resposta faz-se na conversa.",
+  "modPanel.reports.openInQueueCta": "Abrir na fila de moderação",
   "modPanel.reports.removedToast":
-    "Publicação removida. A autoria foi notificada.",
-  "modPanel.reports.warnedToast": "Enviámos um aviso a {name}.",
-  "modPanel.reports.dismissedToast": "Denúncia rejeitada.",
-  "modPanel.reports.escalatedToast":
-    "Escalado para a equipa da QueerPulse. Está agora na fila da plataforma.",
+    "Publicação removida e denúncia encerrada.",
+  "modPanel.reports.removeErrorToast": "Não foi possível remover essa publicação",
+  "modPanel.reports.dismissedToast":
+    "Denúncia rejeitada. A publicação continua no lugar.",
 
   "modPanel.members.searchPlaceholder": "Procurar pessoas…",
   "modPanel.members.roleFilter.all": "Todas",
@@ -3365,7 +3472,7 @@ export const admin: Catalog = {
   "reports.finance.surplus": "Excedente: {amount}",
   "reports.communityHealth.title": "Saúde das comunidades",
   "reports.communityHealth.sub": "Uma fotografia da pontuação de saúde de cada comunidade.",
-  "reports.communityHealth.asOfNow": "A partir das {time}. Uma fotografia, não uma tendência.",
+  "reports.communityHealth.asOfNow": "A partir das {time}. Uma fotografia num momento.",
   "reports.communityHealth.notMeasured": "Ainda não medido",
   "reports.communityHealth.averageScore": "Pontuação média: {score}",
   "reports.communityHealth.needingSupport": "{count} a precisar de apoio",
@@ -3382,10 +3489,10 @@ export const admin: Catalog = {
   "adminResourceListings.title": "Diretório de <em>recursos</em>",
   "adminResourceListings.header.eyebrow": "Diretório",
   "adminResourceListings.header.sub":
-    "As organizações reais e verificadas de Apoio Jurídico e Testagem de Saúde Sexual que os membros podem contactar. Publicar aqui é sempre um passo deliberado — aprovar uma sugestão nunca cria um recurso automaticamente.",
+    "As organizações reais e verificadas de Apoio Jurídico e Testagem de Saúde Sexual que os membros podem contactar. Publicar aqui é sempre um passo deliberado: aprovar uma sugestão nunca cria um recurso automaticamente.",
   "adminResourceListings.newCta": "Novo recurso",
   "adminResourceListings.empty":
-    "Ainda não há recursos — crie o primeiro, ou consulte a fila de sugestões para ideias.",
+    "Ainda não há recursos. Crie o primeiro, ou consulte a fila de sugestões para ideias.",
   "adminResourceListings.loadError": "Não foi possível carregar os recursos.",
   "adminResourceListings.category.legal_aid": "Apoio Jurídico",
   "adminResourceListings.category.sexual_health_testing": "Testagem de Saúde Sexual",
@@ -3417,7 +3524,7 @@ export const admin: Catalog = {
   "adminResourceSuggestions.header.eyebrow": "Fila de revisão",
   "adminResourceSuggestions.header.title": "Sugestões de <em>recursos</em>",
   "adminResourceSuggestions.header.sub":
-    "Todos os recursos de Apoio Jurídico / Testagem de Saúde Sexual sugeridos por membros. Aprovar aqui apenas regista a decisão — publique o recurso real e verificado manualmente em Diretório de recursos.",
+    "Todos os recursos de Apoio Jurídico / Testagem de Saúde Sexual sugeridos por membros. Aprovar aqui apenas regista a decisão: publique o recurso real e verificado manualmente em Diretório de recursos.",
   "adminResourceSuggestions.filter.all": "Todas as categorias",
   "adminResourceSuggestions.category.legal_aid": "Apoio Jurídico",
   "adminResourceSuggestions.category.sexual_health_testing": "Testagem de Saúde Sexual",
@@ -3461,4 +3568,236 @@ export const admin: Catalog = {
   "adminCommunityTagRequests.loadingMore": "A carregar…",
   "adminCommunityTagRequests.toast.resolved": "Pedido de etiqueta resolvido.",
   "adminCommunityTagRequests.toast.error": "Não foi possível resolver o pedido.",
+
+  // ── 2026-08-21 code-review 4.6 fixes ──
+  "members.flagged.openMemberAriaLabel": "Abrir os detalhes de {handle}",
+  "members.flagged.loadingDrawerLabel": "A carregar os detalhes do membro",
+  "members.flagged.loadErrorToast":
+    "Não foi possível carregar os detalhes deste membro. Tenta outra vez",
+  "adminListings.queerOwned.verifyCta": "Confirmar negócio queer",
+  "adminListings.queerOwned.unverifyCta": "Retirar negócio queer",
+  "adminListings.queerOwned.toast.verified":
+    "{name} passou a ter o selo de negócio queer verificado.",
+  "adminListings.queerOwned.toast.unverified":
+    "Retirámos o selo de negócio queer verificado a {name}.",
+  "listingClaims.empty": "Sem reivindicações neste filtro, por agora.",
+  "listingClaims.claimedBy": "Reivindicado por {name}",
+  "listingClaims.unknownClaimant": "um membro desconhecido",
+  "listingClaims.approveCta": "Aprovar",
+  "listingClaims.declineCta": "Recusar",
+  "communities.grid.truncatedNotice":
+    "A leitura das denúncias atingiu o limite. Podem faltar denúncias recentes nestes números de saúde.",
+  "communities.queue.truncatedNotice":
+    "A leitura das denúncias atingiu o limite. Podem faltar denúncias desta comunidade na lista abaixo.",
+  "communities.settings.mod.removeFromCommunityAriaLabel":
+    "Remover {name} da comunidade",
+  "communities.settings.mod.removeFromCommunityConfirmTitle":
+    "Remover {name} desta comunidade?",
+  "communities.settings.mod.removeFromCommunityConfirmBody":
+    "{name} perde o papel de moderação e o lugar na comunidade, e recebe um aviso de que já não faz parte dela. As publicações ficam. Pode voltar a pedir para entrar, segundo as regras de entrada da comunidade.",
+  "communities.settings.mod.removeFromCommunityCta": "Remover da comunidade",
+  "communities.settings.mod.removedFromCommunityToast":
+    "Removemos {name} da comunidade",
+  "communities.settings.mod.removeFromCommunityFailedToast":
+    "Não foi possível remover {name} da comunidade",
+  "communities.settings.mod.removeFromCommunityOwnerError":
+    "Não é possível remover da comunidade quem a fundou.",
+  "governance.overview.badge.neverEdited": "Ainda sem edições",
+  "governance.overview.badge.editedBy": "Editado por {name} em {date}",
+  "governance.overview.edit.dragToReorder": "Arrasta para reordenar",
+  "governance.overview.edit.removeRow": "Remover esta linha",
+  "governance.overview.edit.addRow": "Adicionar uma linha",
+  "governance.overview.edit.section.note": "Motivo (opcional)",
+  "governance.overview.edit.save": "Guardar secção",
+  "governance.overview.edit.saved": "Secção atualizada.",
+  "governance.overview.edit.noChanges": "Nada foi alterado.",
+  "governance.overview.edit.error":
+    "Não foi possível guardar. Tenta novamente.",
+  "governance.overview.health.title": "Saúde da <em>comunidade</em>",
+  "governance.overview.health.sub":
+    "Os números da página pública de Governação, na ordem em que as pessoas os veem. As pessoas ativas são contadas em direto e não se escrevem aqui.",
+  "governance.overview.health.field.value": "Valor",
+  "governance.overview.health.field.trend": "Linha de tendência",
+  "governance.overview.health.field.trendCount": "Número da tendência",
+  "governance.overview.health.field.up": "Mostrar como subida",
+  "governance.overview.moderation.title": "Como funciona a <em>moderação</em>",
+  "governance.overview.moderation.sub":
+    "Os passos que as pessoas leem na página pública de Governação, pela ordem em que acontecem.",
+  "governance.overview.council.title": "Conselho <em>consultivo</em>",
+  "governance.overview.council.sub":
+    "Quem tem assento no conselho, e por que ordem aparece na página pública de Governação.",
+  "governance.overview.council.field.name": "Nome",
+  "governance.overview.council.field.initials": "Iniciais",
+  "governance.overview.council.field.role": "Papel",
+  "governance.overview.council.field.tint": "Cor do avatar",
+  "governance.overview.council.addSeat": "Adicionar um assento",
+  "governance.overview.principles.title": "Princípios da <em>plataforma</em>",
+  "governance.overview.principles.sub":
+    "As promessas listadas na página pública de Governação, pela ordem em que as pessoas as leem.",
+  "governance.overview.principles.field.icon": "Ícone",
+  "governance.overview.decisions.title": "Decisões <em>recentes</em>",
+  "governance.overview.decisions.sub":
+    "Que decisões aparecem no registo público, das mais recentes para as mais antigas.",
+  "members.verify.mutualLabel": "Conhecimento em comum",
+  "errors.updatePartner":
+    "Não foi possível atualizar essa organização parceira",
+  "errors.saveChanges": "Não foi possível guardar essas alterações",
+  "errors.createCoop": "Não foi possível criar essa cooperativa",
+  "errors.createTier": "Não foi possível criar esse escalão",
+  "errors.saveDecision": "Não foi possível guardar essa decisão",
+  "errors.removeListing": "Não foi possível remover esse recurso",
+  "errors.updateCoop": "Não foi possível atualizar essa cooperativa",
+  "errors.removeCoop": "Não foi possível remover essa cooperativa",
+  "errors.saveTestimonial": "Não foi possível guardar esse testemunho",
+  "errors.updateTier": "Não foi possível atualizar esse escalão",
+  "errors.removeTier": "Não foi possível remover esse escalão",
+  "errors.createListing": "Não foi possível criar esse recurso",
+  "errors.saveChange": "Não foi possível guardar essa alteração",
+  "errors.updateTargetDate": "Não foi possível atualizar a data da meta",
+  "errors.updateVisibility": "Não foi possível atualizar a visibilidade",
+  "errors.createItem": "Não foi possível criar esse item",
+  "errors.archiveItem": "Não foi possível arquivar esse item",
+  "errors.deleteItem": "Não foi possível eliminar esse item",
+  "errors.restoreItem": "Não foi possível restaurar esse item",
+  "errors.saveStat": "Não foi possível guardar essa estatística",
+  "governance.finances.edit.field.amountInvalid":
+    "Escreve isto como número. 1840, 1840,50 e 1 840,50 funcionam todos.",
+  "governance.finances.edit.field.amountRequired":
+    "Esta linha precisa de um valor. Desliga a linha se já não se aplica.",
+  "governance.finances.edit.blockedByAmounts":
+    "Só podes guardar quando todos os valores assinalados forem números.",
+  "moderation.action.created": "Denúncia recebida",
+  "moderation.action.appealOverturned": "Recurso revogado",
+  "moderation.oldestNote_one":
+    "A mostrar {count} denúncia em aberto · a mais antiga chegou {oldest}",
+  "moderation.oldestNote_other":
+    "A mostrar {count} denúncias em aberto · a mais antiga chegou {oldest}",
+  "members.drawer.label": "{name}, detalhe do membro",
+  "members.flagged.openReportsCta": "Ver denúncias",
+  "members.flagged.openReportsAriaLabel": "Abrir as denúncias sobre {handle}",
+  "modPanel.members.unavailableToast":
+    "Não foi possível agir sobre a linha de {name}. Recarrega a lista de membros e tenta outra vez.",
+  "modPanel.members.roleErrorToast":
+    "O papel de {name} não mudou. Nada foi guardado, por isso tenta novamente daqui a pouco.",
+  "modPanel.members.removeErrorToast":
+    "{name} continua na comunidade. A remoção não foi concluída.",
+  "modPanel.members.removeConfirm.title": "Remover {name}?",
+  "modPanel.members.removeConfirm.body":
+    "{name} perde acesso às publicações e aos eventos desta comunidade de imediato. Pode voltar a pedir para entrar mais tarde, e analisas esse pedido como qualquer outro.",
+  "modPanel.members.removeConfirm.cta": "Sim, remover",
+  "modPanel.requests.errorToast":
+    "O pedido de {name} continua à espera. Essa decisão não foi concluída.",
+  "modPanel.requests.approveAllConfirm.title_one": "Aprovar este pedido?",
+  "modPanel.requests.approveAllConfirm.title_other":
+    "Aprovar todos os {count} pedidos?",
+  "modPanel.requests.approveAllConfirm.body_one":
+    "Entra na comunidade de imediato. Podes remover alguém mais tarde no separador Membros.",
+  "modPanel.requests.approveAllConfirm.body_other":
+    "Os {count} entram na comunidade de imediato. Podes remover alguém mais tarde no separador Membros.",
+  "modPanel.requests.approveAllConfirm.cta": "Sim, aprovar",
+  "modPanel.requests.approvedSomeToast":
+    "{approved} aprovados. {failed} não foram concluídos e continuam à espera de ti.",
+  "modPanel.requests.approveAllFailedToast_one":
+    "O pedido não foi concluído. Continua à espera de ti.",
+  "modPanel.requests.approveAllFailedToast_other":
+    "Nenhum dos {count} pedidos foi concluído. Continuam todos à espera de ti.",
+  "common.notSet": "Por definir",
+  "vouchGraph.pathSeparator": "para",
+  "roadmap.modals.auditLog.empty": "Ainda não há alterações registadas.",
+  "media.delete.confirmAnyway": "Eliminar mesmo assim",
+  "media.delete.refusedTitle": "Este ficheiro ainda está em uso",
+  "media.delete.refusedInUse_one":
+    "O servidor voltou a verificar e este ficheiro ainda é usado num local, listado abaixo. Eliminá-lo agora quebra essa imagem de vez, e a decisão fica registada.",
+  "media.delete.refusedInUse_other":
+    "O servidor voltou a verificar e este ficheiro ainda é usado em {count} locais, listados abaixo. Eliminá-lo agora quebra essas imagens de vez, e a decisão fica registada.",
+  "media.delete.refusedUnverified":
+    "O servidor não conseguiu verificar onde este ficheiro é usado, por isso recusou eliminá-lo. Tenta outra vez daqui a pouco, ou elimina mesmo assim se for uma remoção urgente. A decisão fica registada.",
+  "errors.deleteMediaObject": "Não foi possível eliminar esse ficheiro",
+  "roadmap.modals.digest.movedLine": "mudou de {from} para {to}",
+
+  // ── 2026-08-21 code-review 4.6: dynamic-key siblings ──
+  "listingClaims.filter.pending": "Pendentes",
+  "listingClaims.filter.approved": "Aprovadas",
+  "listingClaims.filter.declined": "Recusadas",
+  "listingClaims.filter.all": "Todas",
+  "listingClaims.status.pending": "Pendente",
+  "listingClaims.status.approved": "Aprovada",
+  "listingClaims.status.declined": "Recusada",
+  "listingClaims.toast.approved":
+    "{name} passou a pertencer a quem o reivindicou.",
+  "listingClaims.toast.declined": "A reivindicação de {name} foi recusada.",
+  "governance.overview.health.stat.activeMembers": "Pessoas ativas",
+  "governance.overview.health.stat.retention": "Taxa de retenção de pessoas",
+  "governance.overview.health.stat.reportsFiled":
+    "Denúncias apresentadas este trimestre",
+  "governance.overview.health.stat.membersRemoved": "Pessoas afastadas",
+  "governance.overview.health.stat.gatheringsHosted": "Convívios realizados",
+  "governance.overview.health.stat.appealUpheld":
+    "Contestação de moderação aceite",
+  "governance.overview.health.trend.upThisQuarter": "Subiu este trimestre",
+  "governance.overview.health.trend.steady": "Estável",
+  "governance.overview.health.trend.allResolved": "Todas resolvidas",
+  "governance.overview.health.trend.cocViolations":
+    "Violações do Código de Cuidado",
+  "governance.overview.health.trend.upVsQ1": "Subiu face ao T1",
+  "governance.overview.health.trend.ofFiled": "das apresentadas",
+  "governance.overview.moderation.step.reportFiled": "Denúncia apresentada",
+  "governance.overview.moderation.step.review": "Revisão em 48 horas",
+  "governance.overview.moderation.step.decision": "Decisão e comunicação",
+  "governance.overview.moderation.step.appeal": "Direito a contestar",
+  "governance.overview.council.role.psychologistChair":
+    "Psicologia · Presidência",
+  "governance.overview.council.role.lawyerLegalAdvisor":
+    "Direito · Aconselhamento jurídico",
+  "governance.overview.council.role.housingActivist": "Ativismo pela habitação",
+  "governance.overview.council.role.healthcareAdvocate": "Defesa da saúde",
+  "governance.overview.council.tint.jade": "Jade",
+  "governance.overview.council.tint.violet": "Violeta",
+  "governance.overview.council.tint.plum": "Ameixa",
+  "governance.overview.principles.key.noSellingData":
+    "Nunca vendemos dados de pessoas",
+  "governance.overview.principles.key.visibilityChoice":
+    "A visibilidade é sempre uma escolha tua",
+  "governance.overview.principles.key.noAlgorithms":
+    "Nenhum algoritmo decide quem vês",
+  "governance.overview.principles.key.communityVoice":
+    "A comunidade tem voz nas decisões",
+  "governance.overview.principles.key.transparency":
+    "A transparência não é negociável",
+  "governance.overview.principles.key.accessNotConditional":
+    "O acesso não depende da capacidade de pagar",
+  "governance.overview.principles.icon.lock": "Cadeado",
+  "governance.overview.principles.icon.eye": "Olho",
+  "governance.overview.principles.icon.slash": "Círculo cortado",
+  "governance.overview.principles.icon.message": "Balão de mensagem",
+  "governance.overview.principles.icon.book": "Livro",
+  "governance.overview.principles.icon.accessible": "Acessibilidade",
+  "governance.overview.decisions.key.slidingScale":
+    "Maio de 2026: Introduzida escala progressiva para os convívios",
+  "governance.overview.decisions.key.forumLaunched":
+    "Abril de 2026: Fórum lançado",
+  "governance.overview.decisions.key.visibilityDefaults":
+    "Março de 2026: Predefinições de visibilidade tornadas mais conservadoras",
+  "governance.overview.decisions.key.languageToggle":
+    "Fevereiro de 2026: Alternador de idioma adicionado",
+
+  // ── 2026-08-21 code-review 4.6 fixes ──
+  "moderation.resolved.closedAt":
+    "Fechada {age}",
+  "moderation.resolved.resolvedBy":
+    "Resolvida por {name}: {note}",
+  "moderation.notified.member":
+    "Membro notificado",
+  "moderation.notified.reporter":
+    "Quem denunciou foi notificado",
+  "moderation.notified.affected":
+    "Membro afetado apoiado",
+  "moderation.reporter.anonymous":
+    "anónimo",
+  "communities.queue.status.open":
+    "Aberta",
+  "communities.queue.status.resolved":
+    "Resolvida",
+  "communities.queue.status.escalated":
+    "Encaminhada",
 };

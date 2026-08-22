@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import {
   FiAlertTriangle,
   FiFlag,
@@ -10,18 +10,24 @@ import {
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
-import { AdminChip, AdminCat, AdminModal, AdminSeg, type AdminSegOption } from "./ui";
+import { AdminChip, AdminCat } from "./ui";
 import {
   SEVERITY,
   chipKey,
   chipLabel,
   priorReportsText,
   reporterCredibilityText,
-  type ModReport,
-  type Appeal,
-  type ResolvedItem,
 } from "./adminModeration.data";
+import {
+  ageLabelOf,
+  closedLabelOf,
+  type AppealView,
+  type ModReportView,
+  type ResolvedItemView,
+} from "./moderationAge";
+import { reporterDisplayName } from "./moderationReporter";
 import styles from "./AdminModerationPage.module.css";
 
 /** Server-computed SLA deadline check (COM-8) — past-due only matters while the
@@ -40,16 +46,17 @@ export function ReportCard({
   onOpen,
   onViewHistory,
 }: {
-  report: ModReport;
+  report: ModReportView;
   leaving?: boolean;
   selected?: boolean;
   onToggle?: (id: string) => void;
-  onOpen: (r: ModReport) => void;
+  onOpen: (r: ModReportView) => void;
   /** Opens a filtered view of this report's subject's other reports (COM-6).
    *  Omitted entirely when `report.priorReports` is unset — nothing to view. */
-  onViewHistory?: (r: ModReport) => void;
+  onViewHistory?: (r: ModReportView) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const sev = SEVERITY[report.severity];
   const overdue = isOverdue(report.slaDueAt);
   return (
@@ -114,7 +121,7 @@ export function ReportCard({
         <span className={styles.reportMeta}>
           <span>
             {t("admin:moderation.reportedByLabel")}{" "}
-            <strong>{report.reporterName}</strong>
+            <strong>{reporterDisplayName(report.reporterName, t)}</strong>
           </span>
           <span aria-hidden className={styles.metaDot}>
             ·
@@ -172,7 +179,7 @@ export function ReportCard({
           </AdminChip>
         )}
         <span className={styles.reportAge}>
-          <FiClock aria-hidden /> {report.age}
+          <FiClock aria-hidden /> {ageLabelOf(report, fmt)}
         </span>
         <AdminChip tone={report.risk.tone}>{t(report.risk.key)}</AdminChip>
       </div>
@@ -186,7 +193,7 @@ export function BulkBar({
   count,
   onDismiss,
   onSpam,
-  onReassign,
+  onEscalate,
   onWarn,
   onSuspendClick,
   onBan,
@@ -194,14 +201,18 @@ export function BulkBar({
 }: {
   count: number;
   onDismiss: () => void;
+  /** Opens the confirm modal: removing content is a sanction, so it collects a
+   *  reason code and the member-facing note first. */
   onSpam: () => void;
-  onReassign: () => void;
-  /** Bulk-warn every selected report (COM-9) — a light-touch outcome, no
-   *  duration, applied straight away like dismiss/spam/reassign. */
+  /** Hands every selected report up to the escalation queue. No sanction and no
+   *  member notification, so it applies straight away. */
+  onEscalate: () => void;
+  /** Opens the confirm modal (reason + member-facing note). */
   onWarn: () => void;
-  /** Opens the duration picker (`BulkSuspendModal`) — a bulk suspend always
-   *  needs a duration, so it can't fire on a single click like the others. */
+  /** Opens the confirm modal, which for a suspend also collects the duration
+   *  the backend requires. */
   onSuspendClick: () => void;
+  /** Opens the confirm modal. The most severe bulk outcome there is. */
   onBan: () => void;
   onCancel: () => void;
 }) {
@@ -222,8 +233,8 @@ export function BulkBar({
         <Button variant="ghost" onClick={onSpam}>
           {t("admin:moderation.bulk.spamCta")}
         </Button>
-        <Button variant="ghost" onClick={onReassign}>
-          {t("admin:moderation.bulk.reassignCta")}
+        <Button variant="ghost" onClick={onEscalate}>
+          {t("admin:moderation.bulk.escalateCta")}
         </Button>
         <Button variant="ghost" onClick={onWarn}>
           {t("admin:moderation.bulk.warnCta")}
@@ -239,52 +250,6 @@ export function BulkBar({
         </Button>
       </div>
     </div>
-  );
-}
-
-/* ── Bulk-suspend duration picker (COM-9) ───────────────────────────────── */
-
-const BULK_SUSPEND_DURATIONS = ["24h", "7d", "30d"] as const;
-
-/** Confirms a bulk suspend with a required duration — mirrors the drawer's
- *  single-report restrict-duration picker (`AdminReportDrawer.tsx`), since a
- *  bulk `suspend` is rejected by the backend without one, same as `restrict`. */
-export function BulkSuspendModal({
-  count,
-  onClose,
-  onConfirm,
-}: {
-  count: number;
-  onClose: () => void;
-  onConfirm: (duration: string) => void;
-}) {
-  const { t } = useTranslation();
-  const [duration, setDuration] = useState<string>("7d");
-  const options = BULK_SUSPEND_DURATIONS.map((id) => ({
-    value: id,
-    label: t(`admin:moderation.reportDrawer.restrictDuration.${id}`),
-  })) satisfies AdminSegOption[];
-
-  return (
-    <AdminModal
-      title={t("admin:moderation.bulk.suspendModal.title", { count })}
-      onClose={onClose}
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            {t("admin:common.cancel")}
-          </Button>
-          <Button variant="primary" onClick={() => onConfirm(duration)}>
-            {t("admin:moderation.bulk.suspendModal.confirmCta")}
-          </Button>
-        </>
-      }
-    >
-      <p className={styles.dTransparency}>
-        {t("admin:moderation.bulk.suspendModal.body", { count })}
-      </p>
-      <AdminSeg options={options} value={duration} onChange={setDuration} />
-    </AdminModal>
   );
 }
 
@@ -366,11 +331,12 @@ export function AppealCard({
   leaving,
   onOpen,
 }: {
-  appeal: Appeal;
+  appeal: AppealView;
   leaving?: boolean;
-  onOpen: (a: Appeal) => void;
+  onOpen: (a: AppealView) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const sev = SEVERITY[appeal.severity];
   return (
     <div
@@ -433,7 +399,7 @@ export function AppealCard({
 
       <div className={styles.reportSide}>
         <span className={styles.reportAge}>
-          <FiClock aria-hidden /> {appeal.age}
+          <FiClock aria-hidden /> {ageLabelOf(appeal, fmt)}
         </span>
         <AdminChip tone={appeal.status.tone}>{t(appeal.status.key)}</AdminChip>
       </div>
@@ -443,8 +409,9 @@ export function AppealCard({
 
 /* ── Resolved list ──────────────────────────────────────────────────────── */
 
-export function ResolvedRow({ item }: { item: ResolvedItem }) {
+export function ResolvedRow({ item }: { item: ResolvedItemView }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const sev = SEVERITY[item.severity];
   return (
     <article
@@ -465,7 +432,7 @@ export function ResolvedRow({ item }: { item: ResolvedItem }) {
         <p className={styles.reportPreview}>{item.preview}</p>
 
         <div className={styles.reportMeta}>
-          <span>{item.closed}</span>
+          <span>{closedLabelOf(item, t, fmt)}</span>
           {item.notified.map((line) => (
             <span key={line} className={styles.resolvedNotified}>
               <FiCheck aria-hidden />

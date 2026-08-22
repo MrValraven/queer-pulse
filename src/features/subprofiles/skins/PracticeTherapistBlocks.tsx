@@ -4,8 +4,7 @@ import type { EndorserDTO } from "../api/subprofiles.api";
 import type { SkinExtrasPersona } from "../SubprofileSkinExtras";
 import { SkinDefList } from "./SkinDefList";
 import { deriveCalendar } from "./practiceAvailability";
-
-const WEEKDAY_LETTERS = ["M", "T", "W", "T", "F", "S", "S"];
+import { useWeekdayLetters } from "../useWeekdayLetters";
 
 /** Practice skin (therapist): how the therapist works, one prose paragraph
  *  per entry (`skinData.approach`). `null` when the persona hasn't set any. */
@@ -87,6 +86,7 @@ export function PracticeAvailability({
   persona: SkinExtrasPersona;
 }) {
   const { t } = useTranslation();
+  const weekdayLetters = useWeekdayLetters();
   const cal = deriveCalendar(persona.skinData?.availability);
   if (!cal) return null;
 
@@ -94,7 +94,7 @@ export function PracticeAvailability({
     <div className="availability">
       <h2>{t("subprofiles:skinExtras.practice.availabilityTitle")}</h2>
       <div className="av-weekdays">
-        {WEEKDAY_LETTERS.map((letter, index) => (
+        {weekdayLetters.map((letter, index) => (
           <span className="av-weekday" key={`${letter}-${index}`}>
             {letter}
           </span>

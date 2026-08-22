@@ -5,11 +5,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { RsvpConfirmationCard, RsvpCodeOfCare } from "./RsvpSections";
+import { RSVP_GATHERING_SLUG } from "./rsvpPage.data";
 import { useUnrsvp } from "./api/useEventMutations";
 import styles from "./RsvpPage.module.css";
-
-/** Slug of the reading-group gathering the demo confirmation is fixed to. */
-const RSVP_SLUG = "reading-group-8";
 
 /** Brand chrome + footer shared by every state of this standalone page. */
 function RsvpFrame({ children }: { children: ReactNode }) {
@@ -40,7 +38,7 @@ function RsvpFrame({ children }: { children: ReactNode }) {
 export function RsvpPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const unrsvp = useUnrsvp(RSVP_SLUG);
+  const unrsvp = useUnrsvp(RSVP_GATHERING_SLUG);
 
   return (
     <RsvpFrame>
@@ -56,8 +54,20 @@ export function RsvpPage() {
           <Link
             to={routes.gatherings}
             onClick={() => {
-              unrsvp.mutate();
-              showToast(t("gatherings:rsvp.footer.cancelledToast"), "info");
+              // The toast waits for the mutation: "cancelled" is only true
+              // once the un-RSVP actually settles, and a failure says so.
+              unrsvp.mutate(undefined, {
+                onSuccess: () =>
+                  showToast(
+                    t("gatherings:rsvp.footer.cancelledToast"),
+                    "info",
+                  ),
+                onError: () =>
+                  showToast(
+                    t("gatherings:rsvp.footer.cancelErrorToast"),
+                    "info",
+                  ),
+              });
             }}
           >
             {t("gatherings:rsvp.footer.cancelCta")}

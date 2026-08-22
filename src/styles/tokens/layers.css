@@ -1,0 +1,48 @@
+/* ── Stacking order ─────────────────────────────────────────────────────────
+   One named scale for everything that overlaps, so a new overlay is placed by
+   NAME rather than by picking a number larger than whatever it happened to
+   collide with. Before this, 47 distinct literals were in use and several
+   feature overlays sat at 1000, above the shared Modal at 220, so a dialog
+   opened from one of those surfaces rendered UNDER it.
+
+   Rules:
+   - Never write a raw z-index above `--z-raised` in a feature stylesheet.
+     Reach for the token whose name matches the role.
+   - Small in-component layering (a badge over an avatar, a gradient over an
+     image) stays a bare 1/2/3: it is local to one stacking context and has no
+     relationship to app chrome.
+   - The gaps between tiers are deliberate, so a one-off can slot between two
+     roles without a renumber.
+
+   The values below DESCRIBE the order the app already had where that order was
+   correct; only the inversions were changed (feature overlays that sat at 1000,
+   above the shared Modal at 220, so a dialog opened from them rendered under
+   it). Toast keeps the top slot it already held: a failure message raised by an
+   action taken inside a modal has to be readable without closing the modal, and
+   it is transient and corner-anchored, so it does not trap the skip link. */
+:root {
+  /* Lifted within a normal flow: sticky table headers, a hovered card, a
+     FadeIn row whose dropdown must clear the row below it. */
+  --z-raised: 3;
+  /* Page furniture that scrolls with content but sits over it. */
+  --z-sticky: 20;
+  /* App chrome: the nav bar and the mobile bottom tab bar. */
+  --z-nav: 100;
+  /* Anchored popovers: dropdown menus, comboboxes, tooltips. Above nav so a
+     menu opened from the nav is not clipped by it. */
+  --z-popover: 200;
+  /* The shared Modal and ModalSheet scrim + dialog. */
+  --z-modal: 220;
+  /* A dialog opened FROM a modal (a confirm on top of an editor sheet). */
+  --z-modal-nested: 240;
+  /* Full-screen media and app-wide banners: the lightbox, the photo viewer,
+     the offline banner, tooltips. */
+  --z-lightbox: 300;
+  /* Keyboard escape hatch: above every overlay so it stays reachable. */
+  --z-skip-link: 1000;
+  /* A blocking full-screen loader, above the skip link because there is
+     nothing to skip to while it is up. */
+  --z-room-loader: 2000;
+  /* Toasts sit at the very top. See the note above. */
+  --z-toast: 9999;
+}

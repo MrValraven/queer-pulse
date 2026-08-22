@@ -379,7 +379,7 @@ export function CoverageSection() {
               key={item.id}
               href={item.url}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               {body}
             </a>

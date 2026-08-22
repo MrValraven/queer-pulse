@@ -58,13 +58,13 @@
   font-weight: 600;
   color: var(--text-strong);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 999px;
   padding: 8px 14px;
   cursor: pointer;
 }
 .reuseBtn:hover {
-  border-color: rgba(45, 27, 61, 0.24);
+  border-color: rgba(var(--line-rgb), 0.24);
 }
 
 /* Two-column layout */
@@ -128,7 +128,7 @@
 /* Form cards */
 .card {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 20px 22px;
   margin-bottom: 18px;
@@ -200,7 +200,7 @@
   font-size: 16px;
   color: var(--ink);
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 10px;
   padding: 10px 13px;
   transition:
@@ -217,7 +217,7 @@
 .textarea:focus {
   outline: none;
   border-color: var(--line-strong);
-  box-shadow: 0 0 0 3px rgba(45, 27, 61, 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--plum-rgb), 0.1);
 }
 .fieldErr .input,
 .fieldErr .textarea {
@@ -253,7 +253,7 @@
   width: 38px;
   height: 22px;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.16);
+  background: rgba(var(--plum-rgb), 0.16);
   position: relative;
   transition: background 0.2s var(--ease);
   margin-top: 1px;
@@ -266,7 +266,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--paper);
   transition: transform 0.2s var(--ease);
 }
 .switchOn {
@@ -343,7 +343,7 @@
   align-items: center;
   gap: 10px;
   background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: 10px;
   padding: 10px 12px;
   font: inherit;
@@ -356,17 +356,17 @@
     background 0.15s var(--ease);
 }
 .checkOpt:hover {
-  border-color: rgba(45, 27, 61, 0.26);
+  border-color: rgba(var(--line-rgb), 0.26);
 }
 .checkBox {
   flex: none;
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  border: 1.5px solid rgba(45, 27, 61, 0.24);
+  border: 1.5px solid rgba(var(--line-rgb), 0.24);
   display: grid;
   place-items: center;
-  color: #fff;
+  color: var(--cream);
 }
 .checkBox svg {
   width: 11px;
@@ -380,7 +380,7 @@
 }
 .checkOptSel {
   border-color: var(--line-strong);
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
 }
 .checkOptSel .checkBox {
   background: var(--plum);
@@ -405,9 +405,9 @@
   left: 0;
   right: 0;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   border-radius: 10px;
-  box-shadow: 0 12px 32px rgba(45, 27, 61, 0.14);
+  box-shadow: 0 12px 32px rgba(var(--plum-rgb), 0.14);
   z-index: 20;
   overflow: hidden;
 }
@@ -427,7 +427,7 @@
 }
 .suggestItem:hover,
 .suggestItemHl {
-  background: rgba(45, 27, 61, 0.05);
+  background: rgba(var(--plum-rgb), 0.05);
 }
 .tagsDisplay {
   display: flex;
@@ -439,7 +439,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   border-radius: 999px;
   padding: 5px 6px 5px 12px;
   font-size: 13px;
@@ -451,7 +451,7 @@
   height: 18px;
   border-radius: 50%;
   border: none;
-  background: rgba(45, 27, 61, 0.12);
+  background: rgba(var(--plum-rgb), 0.12);
   color: var(--text-strong);
   cursor: pointer;
   font-size: 13px;
@@ -461,7 +461,7 @@
 }
 .formTag button:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--cream);
 }
 .chipSuggest {
   display: flex;
@@ -477,7 +477,7 @@
 }
 .chipAdd {
   background: none;
-  border: 1px dashed rgba(45, 27, 61, 0.24);
+  border: 1px dashed rgba(var(--line-rgb), 0.24);
   border-radius: 999px;
   padding: 5px 12px;
   font-size: 12.5px;
@@ -506,7 +506,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(45, 27, 61, 0.07);
+  background: rgba(var(--plum-rgb), 0.07);
   color: var(--text-strong);
   font-size: 12px;
   font-weight: 700;
@@ -521,7 +521,7 @@
   width: 34px;
   height: 34px;
   border-radius: 9px;
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   background: var(--cream);
   color: var(--ink-60);
   cursor: pointer;
@@ -546,7 +546,7 @@
   align-items: center;
   gap: 7px;
   background: none;
-  border: 1px dashed rgba(45, 27, 61, 0.24);
+  border: 1px dashed rgba(var(--line-rgb), 0.24);
   border-radius: 10px;
   padding: 9px 14px;
   font: inherit;
@@ -599,7 +599,7 @@
   height: 16px;
   border-radius: 50%;
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
 }
 .identityBadge svg {
   width: 10px;
@@ -652,7 +652,7 @@
   gap: 12px;
   align-items: baseline;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.07);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .reviewRow:last-child {
   border-bottom: none;
@@ -691,7 +691,7 @@
   gap: 12px;
   width: 100%;
   text-align: left;
-  background: rgba(45, 27, 61, 0.03);
+  background: rgba(var(--plum-rgb), 0.03);
   border: 1px solid transparent;
   border-radius: 12px;
   padding: 14px 16px;
@@ -706,10 +706,10 @@
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  border: 1.5px solid rgba(45, 27, 61, 0.24);
+  border: 1.5px solid rgba(var(--line-rgb), 0.24);
   display: grid;
   place-items: center;
-  color: #fff;
+  color: var(--cream);
   margin-top: 1px;
 }
 .agreeCheck svg {
@@ -753,7 +753,7 @@
 /* ============ Sidebar ============ */
 .sideCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
   padding: 18px;
   margin-bottom: 16px;
@@ -785,7 +785,7 @@
 
 /* Preview card */
 .previewCard {
-  border: 1px solid rgba(45, 27, 61, 0.1);
+  border: 1px solid rgba(var(--line-rgb), 0.1);
   border-radius: 14px;
   padding: 15px;
   background: var(--cream);
@@ -857,7 +857,7 @@
   font-size: 11.5px;
   padding: 3px 9px;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--text-strong);
 }
 .previewChipIncl {
@@ -930,8 +930,8 @@
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 12px;
   padding: 14px 0;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   margin-bottom: 16px;
 }
 .mlMetaK {
@@ -970,7 +970,7 @@
   font-size: 12.5px;
   padding: 4px 11px;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--text-strong);
 }
 .mlChipIncl {
@@ -1062,7 +1062,7 @@
   width: 100%;
   text-align: left;
   background: var(--cream);
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 12px;
   padding: 12px 14px;
   font: inherit;
@@ -1070,11 +1070,11 @@
   transition: border-color 0.15s var(--ease);
 }
 .affItem:hover {
-  border-color: rgba(45, 27, 61, 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 .affItemSel {
   border-color: var(--line-strong);
-  background: rgba(45, 27, 61, 0.04);
+  background: rgba(var(--plum-rgb), 0.04);
 }
 .affLogo {
   flex: none;
@@ -1103,7 +1103,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 1.5px solid rgba(45, 27, 61, 0.24);
+  border: 1.5px solid rgba(var(--line-rgb), 0.24);
   margin-left: auto;
 }
 .affItemSel .affRadio {
@@ -1188,7 +1188,7 @@
 }
 .cpanel {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 18px;
 }
@@ -1235,22 +1235,9 @@
   gap: 8px;
   margin-top: 14px;
 }
-.shareBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--cream);
-  border: 1px solid rgba(45, 27, 61, 0.12);
-  border-radius: 999px;
-  padding: 7px 13px;
-  font: inherit;
-  font-size: 12.5px;
-  color: var(--text-strong);
-  cursor: pointer;
-}
-.shareBtn:hover {
-  border-color: var(--line-strong);
-}
+/* `.shareBtn` lived here for the two ad-hoc share pills; the share row now
+   uses the shared <Button> primitive, which brings its own hover/focus/disabled
+   contract. */
 
 @media (prefers-reduced-motion: reduce) {
   .confirmBadge {

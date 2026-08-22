@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -40,6 +41,11 @@ export function ActivismPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("marketing:activism.meta.title")}
+        description={t("marketing:activism.meta.description")}
+        canonical={routes.activism}
+      />
       <PageHero
         eyebrow={t("marketing:activism.hero.eyebrow")}
         title={

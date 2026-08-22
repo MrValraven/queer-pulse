@@ -79,6 +79,10 @@ export const forum: Catalog = {
   "compose.postPlaceholder": "Write your post…",
   "compose.cancel": "Cancel",
   "compose.publishCta": "Publish post",
+  "compose.publishing": "Publishing…",
+  "compose.publishRetryCta": "Try publishing again",
+  "compose.publishFailed":
+    "We couldn't publish that. Your draft is still here, so you can try again.",
   "compose.officialFieldLabel": "Post as QueerPulse Official",
   "compose.officialFieldHint":
     "Publishes under the QueerPulse account instead of your name.",
@@ -172,7 +176,7 @@ export const forum: Catalog = {
   // ── LockThreadModal (optional reason note when closing a thread) ────────
   "lockReason.title": "Close this thread",
   "lockReason.sub":
-    "Members will still be able to read everything here — this only pauses new replies. Let them know why, if it's useful.",
+    "Members will still be able to read everything here. This only pauses new replies. Let them know why, if it's useful.",
   "lockReason.label": "Reason (optional)",
   "lockReason.placeholder": "e.g. resolved, off-topic, moved to a community",
   "lockReason.cancel": "Cancel",
@@ -196,6 +200,12 @@ export const forum: Catalog = {
   "threadPage.error.description":
     "Something went wrong on our end. This isn't your fault. Try again in a moment.",
   "threadPage.error.retryCta": "Try again",
+  "threadPage.replyForbiddenToast":
+    "You can't reply here. The thread may have been closed, or it belongs to a community you haven't joined.",
+  "threadPage.private.title": "This thread is inside a private community",
+  "threadPage.private.description":
+    "Only members of that community can read it. If it's somewhere you'd like to be, you can ask to join.",
+  "threadPage.private.browseCta": "Browse communities",
 
   // ── ThreadReplies / ModeratorByline ─────────────────────────────────────
   "byline.withRole":
@@ -225,6 +235,9 @@ export const forum: Catalog = {
   "author.officialBadge": "Official",
   "author.aboutTeamAria": "About the QueerPulse team & governance",
   "author.viewProfileAria": "View {name}'s profile",
+  // The viewer's own byline on a post they just made, before the server's copy
+  // arrives. Ownership is carried by an `isMine` flag, never by this string.
+  "author.you": "You",
 
   // ── PostActionsMenu (⋯ overflow menu) ────────────────────────────────────
   "postMenu.edit": "Edit",

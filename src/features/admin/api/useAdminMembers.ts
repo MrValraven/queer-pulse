@@ -12,6 +12,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ACTIVE_MEMBER_COUNT,
+  cardForFlagged,
   detailFor,
   FLAGGED,
   MEMBERS,
@@ -23,6 +24,7 @@ import type { StaffRoleId } from "../staffRoles.registry";
 import {
   cardDtoToMember,
   detailDtoToMember,
+  detailDtoToMemberCard,
   flaggedDtoToMember,
 } from "./adminMembers.adapters";
 import {
@@ -162,6 +164,50 @@ export function useAdminMember(member: AdminMember | null) {
       }
       if (member === null) return undefined;
       return detailDtoToMember(await getAdminMember(member.id), t, fmt);
+    },
+  });
+}
+
+/**
+ * The demo `AdminMember` card behind one id. The roster fixture answers first;
+ * a flagged-only member (the queue lists people the roster fixture never
+ * carries) is synthesized from their own `FLAGGED` entry by
+ * {@link cardForFlagged}. Flagged fixtures use the handle without its "@" as
+ * both id and slug, so a row that passes either resolves.
+ */
+function demoMemberCard(memberId: string): AdminMember | undefined {
+  const rosterMember = MEMBERS.find((member) => member.id === memberId);
+  if (rosterMember) return rosterMember;
+  const flaggedMember = FLAGGED.find(
+    (member) => member.id === memberId || member.slug === memberId,
+  );
+  return flaggedMember ? cardForFlagged(flaggedMember) : undefined;
+}
+
+/**
+ * One member's `AdminMember` card, fetched by id rather than read off the
+ * loaded roster. This is what the flagged queue needs to open the drawer,
+ * since a flagged member is usually not on the roster page held in memory.
+ *
+ * Live mode maps `GET /admin/members/:id` through `detailDtoToMemberCard`
+ * (the detail response carries every card field). Demo mode resolves from the
+ * colocated fixtures instead and never hits the network, the same way
+ * `useAdminFlagged` does. `memberId` is nullable because nothing is selected
+ * until a row is opened; `enabled` keeps the query from firing until then.
+ */
+export function useAdminMemberCard(memberId: string | null) {
+  const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
+  const fmt = useFormat();
+  return useQuery<AdminMember | undefined>({
+    queryKey: ["admin-members", "card", memberId, demoMode, language],
+    enabled: memberId !== null,
+    initialData:
+      demoMode && memberId !== null ? demoMemberCard(memberId) : undefined,
+    queryFn: async () => {
+      if (memberId === null) return undefined;
+      if (demoMode) return demoMemberCard(memberId);
+      return detailDtoToMemberCard(await getAdminMember(memberId), t, fmt);
     },
   });
 }
@@ -346,15 +392,18 @@ type StaffRolesSnapshot = Array<[QueryKey, unknown]>;
  * `demoMode` sits at a different position depending on the query's own
  * shape — position 1 for the roster (`["admin-members", demoMode, filter,
  * language]`), position 3 for the drawer detail (`["admin-members",
- * "detail", memberId, demoMode, language]`), position 2 for the flagged
- * queue (`["admin-members", "flagged", demoMode, language]`) — so this reads
- * the right slot per shape rather than assuming one fixed position.
+ * "detail", memberId, demoMode, language]`) and for a single member card
+ * (`["admin-members", "card", memberId, demoMode, language]`), position 2 for
+ * the flagged queue (`["admin-members", "flagged", demoMode, language]`) — so
+ * this reads the right slot per shape rather than assuming one fixed position.
  */
 function staffRolesQueryMatchesMode(
   queryKey: QueryKey,
   demoMode: boolean,
 ): boolean {
-  if (queryKey[1] === "detail") return queryKey[3] === demoMode;
+  if (queryKey[1] === "detail" || queryKey[1] === "card") {
+    return queryKey[3] === demoMode;
+  }
   if (queryKey[1] === "flagged") return queryKey[2] === demoMode;
   return queryKey[1] === demoMode;
 }
@@ -363,8 +412,9 @@ function staffRolesQueryMatchesMode(
  * Optimistically add/remove one staff role on member `memberId`'s cached
  * `staffRoles`, across every currently-cached `["admin-members"]` query for
  * the CURRENT `demoMode` this session has touched: the roster's
- * `useInfiniteQuery` pages (`items[]`) AND the open drawer's detail query
- * (`["admin-members", "detail", memberId, …]`). Scoped to `demoMode` (via
+ * `useInfiniteQuery` pages (`items[]`), the open drawer's detail query
+ * (`["admin-members", "detail", memberId, …]`) AND a single fetched member
+ * card (`["admin-members", "card", memberId, …]`). Scoped to `demoMode` (via
  * {@link staffRolesQueryMatchesMode}) the same way `useAdminListings.ts`'s
  * `snapshotAdminListingsQueries`/`patchListingInCache` scope to
  * `[ADMIN_LISTINGS_KEY, demoMode]` — otherwise a demo-mode grant/revoke could
@@ -378,10 +428,10 @@ function staffRolesQueryMatchesMode(
  * {@link restoreStaffRolesSnapshot} to roll back to on `onError`.
  *
  * The flagged-members query (`["admin-members", "flagged", …]`) is skipped:
- * `FlaggedMember` carries no `staffRoles`. Distinguishing "detail" from
- * "roster" queries reads position 1 of the key (`"detail"` / `"flagged"` vs.
- * the roster's `demoMode` boolean) rather than inspecting the cached value's
- * shape, mirroring `patchListingInCache`'s reliance on its own query key.
+ * `FlaggedMember` carries no `staffRoles`. Telling the shapes apart reads
+ * position 1 of the key (`"detail"` / `"card"` / `"flagged"` vs. the roster's
+ * `demoMode` boolean) rather than inspecting the cached value's shape,
+ * mirroring `patchListingInCache`'s reliance on its own query key.
  */
 export async function patchStaffRolesInCache(
   queryClient: QueryClient,
@@ -408,6 +458,19 @@ export async function patchStaffRolesInCache(
       queryClient.setQueryData(queryKey, {
         ...detail,
         staffRoles: updater(detail.staffRoles),
+      });
+      continue;
+    }
+
+    // A single member card (`useAdminMemberCard`) — what the flagged queue
+    // opens its drawer on, so its head/footer follow the same toggle the
+    // roster row would.
+    if (queryKey[1] === "card") {
+      if (queryKey[2] !== memberId) continue;
+      const card = currentData as AdminMember;
+      queryClient.setQueryData(queryKey, {
+        ...card,
+        staffRoles: updater(card.staffRoles),
       });
       continue;
     }

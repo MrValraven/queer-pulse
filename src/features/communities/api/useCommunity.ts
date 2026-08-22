@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useCommunityEdits } from "../../../app/providers/useCommunityEdits";
 import {
@@ -120,6 +121,11 @@ function demoEditableFields(
  */
 export function useCommunity(slug: string | undefined): CommunityResult {
   const { demoMode } = useDemoMode();
+  // `language` is in the live query key because the DTO→view-model adapters
+  // resolve catalog keys (member counts, "Founded 2025", the organiser role,
+  // the TBA gathering card) — a language switch has to re-map the cached DTO,
+  // not just re-render strings that were composed in the old language.
+  const { t, language } = useTranslation();
   const all = useAllCommunities();
   const createdDetail = useCreatedDetail(slug);
   const { roleIn, hasRequested } = useCommunityMembership();
@@ -132,9 +138,16 @@ export function useCommunity(slug: string | undefined): CommunityResult {
     if (!community || !detail) return { ...EMPTY, notFound: true };
     const baseLiving = getLiving(slug);
     const override = slug ? overrideFor(slug) : undefined;
-    const editable = demoEditableFields(community, detail, baseLiving, override);
+    const editable = demoEditableFields(
+      community,
+      detail,
+      baseLiving,
+      override,
+    );
     return {
-      community: override ? applyCommunityOverride(community, override) : community,
+      community: override
+        ? applyCommunityOverride(community, override, t)
+        : community,
       detail: override ? applyDetailOverride(detail, override) : detail,
       living: override ? applyLivingOverride(baseLiving, override) : baseLiving,
       myRole: slug ? roleIn(slug) : null,
@@ -145,17 +158,17 @@ export function useCommunity(slug: string | undefined): CommunityResult {
       isError: false,
       refetch: NOOP,
     };
-  }, [all, createdDetail, slug, roleIn, hasRequested, overrideFor]);
+  }, [all, createdDetail, slug, roleIn, hasRequested, overrideFor, t]);
 
   const query = useQuery<CommunityResult>({
-    queryKey: ["community", slug],
+    queryKey: ["community", slug, language],
     enabled: !demoMode && Boolean(slug),
     queryFn: async () => {
       try {
         const dto = await getCommunity(slug!);
         return {
-          community: detailDtoToCommunity(dto),
-          detail: detailDtoToDetail(dto),
+          community: detailDtoToCommunity(dto, t),
+          detail: detailDtoToDetail(dto, t),
           living: detailDtoToLiving(dto),
           myRole: dto.myRole,
           myJoinRequestStatus: dto.myJoinRequestStatus,

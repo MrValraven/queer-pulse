@@ -6,6 +6,7 @@ import {
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 import {
+  deleteAdminInvite,
   getAdminInvites,
   getAdminInviteInviters,
   patchAdminInviteQuota,
@@ -177,6 +178,68 @@ export function useUpdateInviteQuota() {
     live: ({ slug, quota }) => patchAdminInviteQuota(slug, quota),
     onSuccess: (_data, { slug, quota }) => {
       patchInviteQuotaInCache(queryClient, demoMode, slug, quota);
+    },
+  });
+}
+
+/**
+ * Replace one invite everywhere the paginated `admin-invites` cache holds it.
+ *
+ * The cache is an infinite query keyed by `[key, demoMode, filter, inviterSlug]`,
+ * so the same invite can sit in several cached filter/sender combinations at
+ * once. `setQueriesData` with a partial key patches all of them in one pass, and
+ * a row that no longer matches its query's filter is left in place rather than
+ * spliced out: dropping it would make the row vanish mid-read for the admin who
+ * just acted on it. The status chip changing to "Revoked" is the honest signal;
+ * the next refetch reconciles membership.
+ */
+function patchInviteInCache(
+  queryClient: ReturnType<typeof useQueryClient>,
+  demoMode: boolean,
+  invite: AdminInviteDTO,
+) {
+  queryClient.setQueriesData<{ pages: AdminInvitesPageVM[] }>(
+    { queryKey: ["admin-invites", demoMode] },
+    (current) =>
+      current && {
+        ...current,
+        pages: current.pages.map((page) => ({
+          ...page,
+          items: page.items.map((row) =>
+            row.id === invite.id ? invite : row,
+          ),
+        })),
+      },
+  );
+}
+
+/**
+ * Revoke a still-valid invite from the admin oversight drawer, whoever sent it.
+ * Destructive: the shared link stops working immediately and there is no
+ * un-revoke, so the caller gates this behind the shared `ConfirmDialog`.
+ *
+ * Demo mode never touches the network (this is an admin-only endpoint that 403s
+ * otherwise) and resolves a synthetic revoked row; live mode calls
+ * `DELETE /admin/invites/:id`. Either way the cache is patched from the RESULT
+ * in `onSuccess` — never optimistically — so the row only reads "Revoked" once
+ * the revoke is real.
+ */
+export function useRevokeAdminInvite() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<AdminInviteDTO, unknown, AdminInviteDTO>({
+    demoMode,
+    mutationKey: ["admin-invites", "revoke"],
+    // This write owns its error UI: the caller tells a 409 ("the invite moved
+    // on") apart from a real failure, which the app-wide MutationCache handler
+    // would flatten into one generic toast (and double up on).
+    meta: { silentError: true },
+    demoResult: (invite) => ({ ...invite, status: "revoked" as const }),
+    live: (invite) => deleteAdminInvite(invite.id),
+    logLabel: "admin.invite.revoke",
+    logContext: (invite) => ({ id: invite.id }),
+    onSuccess: (revoked) => {
+      patchInviteInCache(queryClient, demoMode, revoked);
     },
   });
 }

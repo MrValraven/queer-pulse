@@ -58,6 +58,11 @@ export const routes = {
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",
   adminMembers: "/admin/members",
+  // The join-request queue as a route of its own. It also renders as the
+  // "pending" tab of /admin/members, but that page is admin-only while the
+  // backend authorizes moderators for the whole queue — so moderators reach it
+  // here (see MOD_ACCESSIBLE_ADMIN_PATTERNS in authGate.ts).
+  adminJoinRequests: "/admin/join-requests",
   adminStaff: "/admin/staff",
   adminBots: "/admin/bots",
   adminChangemakers: "/admin/changemakers",
@@ -107,6 +112,9 @@ export const routes = {
   barter: "/work/barter",
   businessDirectory: "/business-directory",
   calendar: "/calendar",
+  /** Public per-token page a scanned card resolves to (`/cards/verify/:token`,
+   *  declared in `cards/routes.tsx`); never gated, never in the sitemap. */
+  cardVerify: "/cards/verify",
   changelog: "/about/roadmap/changelog",
   roadmap: "/about/roadmap",
   changemakers: "/changemakers",
@@ -210,6 +218,9 @@ export const routes = {
   mentorship: "/work/mentorship",
   messages: "/messages",
   myEvents: "/account/events",
+  /** The member's own wallet of membership cards. Sits under the already
+   *  gated `/account/*` pattern in authGate.ts, so no new gate is needed. */
+  myCards: "/account/cards",
   microGrants: "/work/grants/micro",
   newsletterUnsubscribe: "/newsletter/unsubscribe",
   notifications: "/notifications",

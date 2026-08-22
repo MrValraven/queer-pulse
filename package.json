@@ -12,6 +12,7 @@
     "dev": "vite",
     "build": "node scripts/build-gates.mjs && vite build && pnpm prerender",
     "lint": "eslint .",
+    "check:tokens": "node scripts/check-design-tokens.mjs",
     "lint:fix": "eslint . --fix",
     "lint:a11y": "node scripts/report-a11y.mjs",
     "format": "prettier --write .",

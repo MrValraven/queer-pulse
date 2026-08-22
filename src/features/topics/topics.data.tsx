@@ -923,7 +923,7 @@ export function getTopic(rawTag: string, t: TFunction): Topic {
       />
     ),
     stats: [
-      { value: "—", em: true, labelKey: "topics:stats.posts" },
+      { value: "", em: true, labelKey: "topics:stats.posts" },
       {
         value: "New",
         valueKey: "topics:stats.newValue",

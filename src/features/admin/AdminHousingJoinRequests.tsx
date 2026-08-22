@@ -34,7 +34,14 @@ export function AdminHousingJoinRequests() {
         onSuccess: () =>
           setResolved((current) => new Set(current).add(request.id)),
         onError: (error) =>
-          showToast(describeError("Couldn't save that decision", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.saveDecision"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       },
     );
   }

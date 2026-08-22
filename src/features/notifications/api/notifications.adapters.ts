@@ -7,6 +7,7 @@ import {
   thread,
 } from "../../../app/routeMap";
 import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
+import { barterProposalsPath } from "../../economy/barterProposals.paths";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
@@ -23,9 +24,9 @@ const KIND_ICONS: Record<NotifType, IconType> = {
 
 /** Subtle tinted background behind each kind's icon, matching the mock palette. */
 const KIND_ICON_BACKGROUND: Record<NotifType, string> = {
-  events: "rgba(232,119,90,.1)",
-  community: "rgba(45,27,61,.07)",
-  platform: "rgba(45,27,61,.07)",
+  events: "rgba(var(--accent-rgb), .1)",
+  community: "rgba(var(--plum-rgb), .07)",
+  platform: "rgba(var(--plum-rgb), .07)",
 };
 
 /**
@@ -68,6 +69,9 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // A named safe-space vouch resolves the voucher as the actor; an anonymous one
   // carries no `voucherId`, so `dto.actor` is null and the generic `.text` shows.
   "safe_space_vouch",
+  // A swap proposal always carries the proposer as its actor, resolved
+  // server-side into the standard `actor` field.
+  "barter_proposal_received",
 ]);
 
 export function notificationDtoToView(
@@ -95,6 +99,7 @@ export function notificationDtoToView(
     text,
     meta,
     time: formatTime(dto.createdAt, fmt),
+    createdAtIso: dto.createdAt,
   };
 
   // When the backend resolved the acting member, upgrade the row from an
@@ -241,6 +246,14 @@ function sourceHrefFromPayload(
   // decision is contestable. No slug needed.
   if (payload.source === "moderation") {
     return routes.appealSubmit;
+  }
+  // A swap proposal carries no `source` field: its payload allowlist passes
+  // `barterListingId` and `listingOffer` only, so it is matched on that id
+  // directly. It deep-links to the owner's proposal inbox with the listing
+  // already selected, which is the one place the proposal can be answered.
+  const barterListingId = payload.barterListingId;
+  if (typeof barterListingId === "string" && barterListingId) {
+    return barterProposalsPath(barterListingId);
   }
   return undefined;
 }

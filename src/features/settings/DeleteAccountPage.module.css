@@ -78,7 +78,7 @@
 }
 
 .navItemActive {
-  background: rgba(200, 90, 64, 0.08);
+  background: rgba(var(--accent-rgb), 0.08);
   color: var(--accent-ink);
   font-weight: 600;
 }
@@ -180,7 +180,7 @@
 
 .optCardDanger.optCardSelected {
   border-color: var(--accent-ink);
-  box-shadow: 0 0 0 3px rgba(200, 90, 64, 0.1);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
 }
 
 .optRadio {
@@ -238,7 +238,7 @@
 }
 
 .optIconDanger {
-  background: rgba(200, 90, 64, 0.09);
+  background: rgba(var(--accent-rgb), 0.09);
 }
 
 .optIconSvg {
@@ -283,7 +283,7 @@
 }
 
 .optTagPerm {
-  background: rgba(200, 90, 64, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent-ink);
 }
 
@@ -442,7 +442,7 @@
   border-radius: 999px;
   padding: 13px 24px;
   cursor: pointer;
-  box-shadow: 0 8px 22px -10px rgba(200, 90, 64, 0.6);
+  box-shadow: 0 8px 22px -10px rgba(var(--accent-rgb), 0.6);
   transition:
     background 0.2s var(--ease),
     transform 0.2s var(--ease),

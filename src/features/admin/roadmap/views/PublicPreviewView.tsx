@@ -8,6 +8,7 @@ import type {
   RoadmapColumn,
 } from "../../api/roadmapAdmin.types";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
+import { AdminNotSet } from "../../ui/AdminInlineMarkers";
 import { useItemDrawer } from "../state/useItemDrawer";
 import { PublicPreviewCard } from "./PublicPreviewCard";
 import { PublicPreviewNotBuildingRow } from "./PublicPreviewNotBuildingRow";
@@ -43,17 +44,17 @@ const SECTIONS: SectionDef[] = [
 ];
 
 /**
- * Renders `/roadmap` exactly as members would see it, from live admin data
- * — hover (or focus) any card to edit it inline via the shared item
+ * Renders `/roadmap` exactly as members would see it, from live admin data.
+ * Hover (or focus) any card to edit it inline via the shared item
  * drawer. `items`/`ideas` both arrive via prop (this view's contract, per
  * plan Task C8); the hero-stat tiles it also needs to preview come from
- * calling `useAdminRoadmap()` directly for `heroStats` — that hook reads
+ * calling `useAdminRoadmap()` directly for `heroStats`; that hook reads
  * the same cached bundle the page already fetched, so this costs no extra
  * request.
  *
  * "Not building this, and why" mirrors `NotBuildingView.tsx`'s own read of
- * declined ideas (`status === 'dismissed' && declineReason`), but read-only
- * — this is a *preview* of what members see, not the admin tool itself, so
+ * declined ideas (`status === 'dismissed' && declineReason`), but read-only.
+ * This is a *preview* of what members see rather than the admin tool, so
  * there's no reopen action here.
  */
 export function PublicPreviewView({
@@ -100,7 +101,9 @@ export function PublicPreviewView({
                 .filter(Boolean)
                 .join(" ")}
             >
-              <p className={styles.heroValue}>{stat.value || "—"}</p>
+              <p className={styles.heroValue}>
+                {stat.value || <AdminNotSet />}
+              </p>
               <p className={styles.heroLabel}>{stat.label}</p>
             </div>
           ))}
@@ -163,7 +166,7 @@ export function PublicPreviewView({
             {t("admin:roadmap.publicPreview.subscribeBody")}
           </p>
         </div>
-        {/* Visual only, per plan Task C8 — a real subscribe form belongs to
+        {/* Visual only, per plan Task C8: a real subscribe form belongs to
             the public page (Phase D), not this admin preview, so the
             control stays disabled rather than pretending to submit. */}
         <form

@@ -15,7 +15,10 @@ export function useMarkNotificationRead() {
       if (demoMode) return;
       await markNotificationRead(id);
     },
-    onSuccess: () => {
+    // Settled, not success: a FAILED write must refetch too, so the feed and
+    // the bell badge come back from the server as the truth rather than
+    // leaving the page's optimistic local read state standing.
+    onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });

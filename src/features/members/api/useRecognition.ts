@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useAuth } from "../../../app/providers/authContext";
 import { getRecognition } from "./recognition.api";
 import {
   emptyRecognition,
@@ -50,11 +49,22 @@ export function useRecognition(
   options?: { force?: boolean },
 ): RecognitionState {
   const { demoMode } = useDemoMode();
-  const { user } = useAuth();
-  const target = slug ?? user?.profile.slug;
   const force = Boolean(options?.force);
+  // Key on the ROUTE this call actually fetches, never on the resolved person.
+  // `slug ?? user.profile.slug` used to collapse both routes onto one key, so
+  // "Preview as visitor" (which renders `<OtherMemberRecognition slug={own
+  // slug} />`) wrote the by-slug answer — no perks, empty `xpBreakdown`, no
+  // ledger — into the cache entry the hero, BadgesPage and PerksPage read for
+  // the self view. Leaving the preview then showed the owner "0 perks" until a
+  // refetch landed. The two endpoints are not interchangeable, so neither are
+  // their keys.
   const { data, isPending, isError } = useQuery<Recognition>({
-    queryKey: ["recognition", demoMode, target ?? "me", force],
+    queryKey: [
+      "recognition",
+      demoMode,
+      slug ? (["slug", slug] as const) : "me",
+      force,
+    ],
     queryFn: async () => {
       if (demoMode) return demoRecognition;
       return recognitionToModel(await getRecognition(slug, force));

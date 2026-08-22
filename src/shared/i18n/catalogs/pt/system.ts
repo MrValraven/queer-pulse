@@ -340,7 +340,7 @@ export const system: Catalog = {
     "A monitorização pública de disponibilidade está a caminho.",
   "status.live.title": "O relatório de estado em tempo real está quase aí",
   "status.live.description":
-    "Estamos a preparar a monitorização pública de disponibilidade, o estado dos serviços e o histórico de incidentes. Volta em breve.",
+    "Estamos a preparar a monitorização pública de disponibilidade, o estado dos serviços e o histórico de incidentes. Os avisos de incidentes por email fazem parte do mesmo trabalho. Volta em breve.",
   "status.services.sectionEye": "Serviços",
   "status.serviceStatus.operational": "Operacional",
   "status.serviceStatus.degraded": "Degradado",

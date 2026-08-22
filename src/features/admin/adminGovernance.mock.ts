@@ -3,7 +3,7 @@ import type { AuditEntry, LedgerRow, QuarterPoint } from "./adminGovernance.data
 // Heavy demo-only governance mock data (finance ledgers/quarters + audit log).
 // Imported *only* via the demo-gated dynamic import()s in
 // api/useAdminGovernanceFinances.ts and api/useAdminAudit.ts so it code-splits
-// out of the live bundle (live mode calls GET /governance/admin/finances and
+// out of the live bundle (live mode calls GET /admin/governance/finances and
 // GET /mod/audit instead).
 
 export const LEDGER: LedgerRow[] = [

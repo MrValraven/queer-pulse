@@ -97,7 +97,7 @@
 /* Roadmap card */
 .rmCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 16px 18px;
   margin-bottom: 8px;
@@ -107,7 +107,7 @@
 }
 @media (hover: hover) {
   .rmCard:hover {
-    box-shadow: 0 4px 16px rgba(45, 27, 61, 0.08);
+    box-shadow: 0 4px 16px rgba(var(--plum-rgb), 0.08);
   }
 }
 .rmCard.inProgress {
@@ -245,7 +245,7 @@
 }
 .progBar {
   height: 3px;
-  background: rgba(45, 27, 61, 0.08);
+  background: rgba(var(--plum-rgb), 0.08);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -263,14 +263,14 @@
   justify-content: space-between;
   margin-top: 12px;
   padding-top: 10px;
-  border-top: 1px solid rgba(45, 27, 61, 0.07);
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
 .voteBtn {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   background: none;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
   border-radius: 999px;
   padding: 5px 12px;
   font-family: var(--sans);
@@ -348,7 +348,7 @@
 }
 .shapeCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 18px;
   padding: 24px 26px;
 }
@@ -362,7 +362,7 @@
 }
 .ideaTa {
   width: 100%;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   border-radius: 11px;
   padding: 12px 14px;
   font-family: var(--sans);
@@ -395,7 +395,7 @@
 }
 @media (hover: hover) {
   .ideaRow:hover {
-    background: rgba(45, 27, 61, 0.03);
+    background: rgba(var(--plum-rgb), 0.03);
   }
 }
 .ideaText {
@@ -417,7 +417,7 @@
   font-weight: 700;
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1.5px solid rgba(45, 27, 61, 0.12);
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
   background: transparent;
   color: var(--text-strong);
   cursor: pointer;
@@ -455,7 +455,7 @@
 }
 .howCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 18px;
   display: flex;
@@ -500,8 +500,8 @@
 /* Dashed, slightly recessed — a deliberately quieter surface than the
    solid paper cards above; this is a "no," not a feature. */
 .notBuildingCard {
-  background: rgba(45, 27, 61, 0.02);
-  border: 1.5px dashed rgba(45, 27, 61, 0.16);
+  background: rgba(var(--plum-rgb), 0.02);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.16);
   border-radius: 14px;
   padding: 16px 18px;
 }

@@ -1,18 +1,27 @@
 import { FiChevronUp, FiMessageCircle } from "react-icons/fi";
+import { Button, IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { PostActionsMenu } from "../forum/PostActionsMenu";
 import type { Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
+import { useCommunityTime } from "./communityTime";
 import styles from "./CommunityDetailPage.module.css";
 
-// The OP header: vote button + title + meta row + the OP's own actions menu.
-// Presentational only — all state (open/voted/edit/delete/restore/history/
-// pin/report) lives in the CommunityThread orchestrator and is passed down as
-// props.
+// The OP header: vote control + title disclosure + meta row + the OP's own
+// actions menu. Presentational only — all state (open/voted/edit/delete/
+// restore/history/pin/report) lives in the CommunityThread orchestrator and is
+// passed down as props.
+//
+// The three controls are SIBLINGS, deliberately. This row used to be one
+// `role="button"` wrapper with the vote button and the actions menu nested
+// inside it, which a screen reader announced as a single giant button, made
+// keyboard users tab into controls "inside a button", and needed key events
+// swallowed on a `role="presentation"` span to work at all. Only the title
+// toggles the thread now.
 export function CommunityThreadHead({
   data,
-  open,
+  isOpen,
   onToggleOpen,
   voted,
   onToggleVote,
@@ -33,7 +42,7 @@ export function CommunityThreadHead({
   onReportOp,
 }: {
   data: ThreadData;
-  open: boolean;
+  isOpen: boolean;
   onToggleOpen: () => void;
   voted: boolean;
   onToggleVote: () => void;
@@ -54,38 +63,25 @@ export function CommunityThreadHead({
   onReportOp: () => void;
 }) {
   const { t } = useTranslation();
+  const communityTime = useCommunityTime();
   const voteCount =
-    data.votes + (voted && !data.voted ? 1 : 0) - (!voted && data.voted ? 1 : 0);
+    data.votes +
+    (voted && !data.voted ? 1 : 0) -
+    (!voted && data.voted ? 1 : 0);
 
   return (
-    <div
-      className={styles.thHead}
-      role="button"
-      tabIndex={0}
-      aria-expanded={open}
-      onClick={onToggleOpen}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onToggleOpen();
-        }
-      }}
-    >
+    <div className={styles.thHead}>
       <div className={styles.thVote}>
-        <button
-          type="button"
+        <IconButton
           className={[styles.vbtn, voted && styles.vbtnVoted]
             .filter(Boolean)
             .join(" ")}
           aria-label={t("communities:detail.thread.upvoteAria")}
           aria-pressed={voted}
-          onClick={(event) => {
-            event.stopPropagation();
-            onToggleVote();
-          }}
+          onClick={onToggleVote}
         >
           <FiChevronUp aria-hidden />
-        </button>
+        </IconButton>
         <span className={styles.vnum}>{voteCount}</span>
       </div>
       <div className={styles.thMain}>
@@ -95,16 +91,21 @@ export function CommunityThreadHead({
             {t("communities:detail.pulse.pinnedAnnouncement")}
           </div>
         )}
-        <div className={styles.thTitle}>
+        <Button
+          variant="ghost"
+          className={[styles.thTitle, styles.thTitleBtn].join(" ")}
+          aria-expanded={isOpen}
+          onClick={onToggleOpen}
+        >
           {opDeleted ? t("communities:detail.thread.tombstone") : data.title}
-        </div>
+        </Button>
         <div className={styles.thMeta}>
           <div className={[styles.thAv, AV_CLASS[data.author.tint]].join(" ")}>
             {data.author.initials}
           </div>
           <span className={styles.thName}>{data.author.name}</span>
           <MemberStaffBadge slug={data.author.slug} />
-          <span>{data.time}</span>
+          <span>{communityTime.plain(data)}</span>
           {opEditedAt && (
             <span className={styles.editedMark}>
               {t("communities:detail.thread.editedMark")}
@@ -114,12 +115,7 @@ export function CommunityThreadHead({
             <FiMessageCircle />{" "}
             {t("communities:detail.thread.replies", { count: data.replyCount })}
           </span>
-          <span
-            className={styles.opMenu}
-            onClick={(event) => event.stopPropagation()}
-            onKeyDown={(event) => event.stopPropagation()}
-            role="presentation"
-          >
+          <span className={styles.opMenu}>
             <PostActionsMenu
               canEdit={opCanEdit}
               canDelete={opCanDelete}

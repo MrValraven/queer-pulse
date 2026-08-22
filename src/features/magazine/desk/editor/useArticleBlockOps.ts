@@ -85,6 +85,11 @@ export interface ArticleBlockOps {
   changeBlock: (id: string, next: ArticleBlock) => void;
   moveBlock: (id: string, direction: "up" | "down") => void;
   removeBlock: (id: string) => void;
+  /** Re-inserts a previously removed block at `index` — the Undo half of a
+   * block delete (FE-CNT-11). Clamped, so a stale index from a list that has
+   * changed since the delete lands at the end rather than throwing away the
+   * block. */
+  restoreBlock: (index: number, block: ArticleBlock) => void;
   /** Inserts a fresh block of `kind` right after `index`, returning its new
    * id so the caller can select it. */
   insertBlockAfter: (index: number, kind: ArticleBlockKind) => string;
@@ -135,6 +140,17 @@ export function useArticleBlockOps(
     [setBlocks],
   );
 
+  const restoreBlock = useCallback(
+    (index: number, block: ArticleBlock) => {
+      setBlocks((previous) => {
+        const next = previous.slice();
+        next.splice(Math.min(Math.max(index, 0), previous.length), 0, block);
+        return next;
+      });
+    },
+    [setBlocks],
+  );
+
   const insertBlockAfter = useCallback(
     (index: number, kind: ArticleBlockKind) => {
       const block = createEmptyBlock(kind);
@@ -160,5 +176,12 @@ export function useArticleBlockOps(
     [setBlocks],
   );
 
-  return { changeBlock, moveBlock, removeBlock, insertBlockAfter, pasteParagraphsAfter };
+  return {
+    changeBlock,
+    moveBlock,
+    removeBlock,
+    restoreBlock,
+    insertBlockAfter,
+    pasteParagraphsAfter,
+  };
 }

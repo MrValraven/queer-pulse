@@ -47,6 +47,10 @@ export const connect: Catalog = {
   "moreMenu.toastUnmuted": "Deixaste de silenciar {name}",
   "moreMenu.toastBlocked": "Bloqueaste {name}",
   "moreMenu.toastUnblocked": "Desbloqueaste {name}",
+  "moreMenu.blockConfirm.title": "Bloquear {name}?",
+  "moreMenu.blockConfirm.body":
+    "Ao bloquear, a ligação é removida, {name} deixa de te poder enviar mensagens e as tuas atualizações deixam de aparecer. Podes reverter quando quiseres no separador Bloqueios.",
+  "moreMenu.blockConfirm.action": "Bloquear",
 
   // Texto dos cartões (ConnectionCards)
   "card.profileAria": "Perfil de {name}",
@@ -106,7 +110,13 @@ export const connect: Catalog = {
   "panels.blockedEmptyDescription":
     "Se alguém tornar o espaço inseguro, bloquear essa pessoa impede as mensagens dela e esconde as tuas atualizações. Aparece aqui se alguma vez precisares de desfazer isso.",
 
+  // Idade relativa de um pedido (connections.adapters): as duas expressões que
+  // o Intl.RelativeTimeFormat não deriva sozinho.
+  "ago.justNow": "agora mesmo",
+  "ago.unknown": "há pouco",
+
   // Modal de contacto (ConnectModal)
+  "modal.ariaLabel": "Dizer olá",
   "modal.close": "Fechar",
   "modal.loading": "A carregar…",
   "modal.error":

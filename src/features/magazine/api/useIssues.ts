@@ -17,13 +17,13 @@ import { getIssues } from "./magazine.api";
 export function useIssues() {
   const { demoMode } = useDemoMode();
   const fmt = useFormat();
-  const { language } = useTranslation();
+  const { t, language } = useTranslation();
   return useQuery<IssueTile[] | null>({
     queryKey: ["magazine-issues", demoMode, language],
     queryFn: async () => {
       if (demoMode) return null; // caller falls back to its own ISSUES mock
       const rows = await getIssues();
-      return rows.map((dto, i) => issueToTile(dto, i, rows.length, fmt));
+      return rows.map((dto, index) => issueToTile(dto, index, rows.length, fmt, t));
     },
   });
 }

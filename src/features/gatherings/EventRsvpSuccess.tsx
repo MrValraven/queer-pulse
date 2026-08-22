@@ -8,12 +8,14 @@ import { TIERS } from "./eventPage.data";
 import { EVENT_ICS, downloadIcs } from "./eventRsvp.data";
 import styles from "./EventPage.module.css";
 
+/** The waitlist confirmation. It deliberately states no queue position: this
+ *  surface never learns one (the real place in line comes from the event
+ *  detail's `myWaitlistPosition`, which the in-gathering RSVP control shows),
+ *  and inventing a plausible-looking number would be a lie. */
 export function WaitlistSuccess({
-  waitlistPos,
   email,
   onLeave,
 }: {
-  waitlistPos: number;
   email: string;
   onLeave: () => void;
 }) {
@@ -38,7 +40,6 @@ export function WaitlistSuccess({
         <h3 className={styles.successTitle}>
           <Translation
             i18nKey="gatherings:event.rsvp.waitlistTitle"
-            values={{ position: waitlistPos }}
             components={{ em: <em /> }}
           />
         </h3>

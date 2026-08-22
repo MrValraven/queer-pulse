@@ -1,9 +1,8 @@
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { ApiError } from "../../shared/api/client";
+import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useArticleDraft } from "./api/useArticleDraft";
 import { useArticleMutations } from "./api/useArticleMutations";
 import { usePieceMutations } from "./api/usePieceMutations";
@@ -19,11 +18,13 @@ import { SlashMenu, type SlashMenuPoint } from "./desk/editor/SlashMenu";
 import type { ArticleBlockKind } from "./desk/editor/blockKinds";
 import type { EditorMode } from "./desk/editor/editorMode";
 import { useArticleEditorDraftState } from "./desk/editor/useArticleEditorDraftState";
+import { useBlockRemovalUndo } from "./desk/editor/useBlockRemovalUndo";
+import { useArticlePublishHandler } from "./desk/editor/useArticlePublishHandler";
 import { countArticleWords, estimateReadMinutes } from "./desk/editor/articleWordCount";
 import { buildPublishChecklist, isPublishReady } from "./desk/editor/articlePublishChecklist";
+import { savedLabelKey } from "./desk/editor/articleSavedLabel";
 import { isFutureInstant } from "./desk/editor/scheduleValidity";
 import { deriveLiveStatus } from "./desk/editor/articleLiveStatus";
-import { buildPublishPayload, publishSuccessToastKey } from "./desk/editor/articlePublishAction";
 import type { PublishStatus } from "./desk/editor/PublishRail";
 import styles from "./ArticleEditorPage.module.css";
 
@@ -39,8 +40,9 @@ interface SlashState {
  * the floating selection toolbar, the header (`ArticleEditorHeader`) and the
  * rails (`ArticleEditorRails`) around `useArticleDraft`/`useArticleMutations`.
  * Kept thin on purpose — the autosaved field state and its debounce live in
- * `useArticleEditorDraftState`, and block-array operations live in
- * `useArticleBlockOps` (composed inside that hook).
+ * `useArticleEditorDraftState`, block-array operations live in
+ * `useArticleBlockOps` (composed inside that hook), and the publish action
+ * lives in `useArticlePublishHandler`.
  *
  * Publishing (CNT-1/CNT-2) is a SEPARATE, explicit action (`publish.mutate`,
  * never folded into the autosave debounce): `publishStatus` picks what
@@ -60,15 +62,31 @@ export function ArticleEditorPage() {
   const { record } = usePieceRecord(pieceId);
   const { save, publish } = useArticleMutations(pieceId);
   const { moveStage } = usePieceMutations();
-  const { showToast } = useToast();
   const docRef = useRef<HTMLDivElement | null>(null);
   const draft = useArticleEditorDraftState(pieceId, article, save);
+  const handlePublish = useArticlePublishHandler(publish, draft.saveNow);
 
   const [mode, setMode] = useState<EditorMode>("draft");
   const [publishStatus, setPublishStatus] = useState<PublishStatus>("now");
   const [scheduledAt, setScheduledAt] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [slashState, setSlashState] = useState<SlashState | null>(null);
+
+  // Removing a block is instant but reversible for a few seconds (FE-CNT-11).
+  const removeBlockWithUndo = useBlockRemovalUndo(
+    draft.blocks,
+    draft.blockOps,
+    setSelectedId,
+  );
+
+  // Autosave covers the pauses; this covers the window between the last
+  // keystroke and the debounce firing (plus a save still in flight), which
+  // used to be lost without warning to Back, a palette jump or a tab close.
+  useUnsavedChangesGuard({
+    active: draft.isDirty || save.isPending,
+    confirmMessage: t("magazine:write.header.leaveConfirm"),
+    guardBackButton: true,
+  });
 
   if (isLoading) return <ArticleEditorStatus variant="loading" />;
   if (isError || !article) return <ArticleEditorStatus variant="not-found" />;
@@ -83,37 +101,21 @@ export function ArticleEditorPage() {
   const checklistReady = isPublishReady(buildPublishChecklist(standfirst, blocks, t));
   const scheduleValid = isFutureInstant(scheduledAt);
   const publishDisabled =
-    !published &&
-    (publishStatus === "issue" ||
-      !checklistReady ||
-      (publishStatus === "schedule" && !scheduleValid));
-  const savedLabel = save.isPending
-    ? t("magazine:write.header.savedSaving")
-    : save.isError
-      ? t("magazine:write.header.savedError")
-      : t("magazine:write.header.savedOk");
+    // A save still in flight would race the publish — both PATCH the same
+    // draft, and either can land last.
+    save.isPending ||
+    (!published &&
+      (publishStatus === "issue" ||
+        !checklistReady ||
+        (publishStatus === "schedule" && !scheduleValid)));
+  const savedLabel = t(
+    savedLabelKey({ isSavePending: save.isPending, isSaveError: save.isError, isDirty: draft.isDirty }),
+  );
   const issueLabel = record?.issueId
     ? t("magazine:write.header.issueScheduled")
     : t("magazine:piece.header.notScheduled");
-
-  // CNT-1/CNT-2 fix: a real publish/schedule/unpublish action (mirrors the
-  // deck editor's `handleTogglePublish`, but richer) — this used to be
-  // `publishStub`, a bare toast with no mutation behind it. A 400 here means
-  // the server-side readiness re-check rejected it (see `publishArticle`).
-  async function handlePublish() {
-    try {
-      await publish.mutateAsync(buildPublishPayload(published, publishStatus, scheduledAt));
-      showToast(t(publishSuccessToastKey(published, publishStatus)), "success");
-      if (!published) setScheduledAt(null);
-    } catch (error) {
-      showToast(
-        error instanceof ApiError && error.status === 400
-          ? t("magazine:write.header.publishNotReadyError")
-          : t("magazine:write.header.publishError"),
-        "error",
-      );
-    }
-  }
+  const publishNow = () =>
+    void handlePublish(published, publishStatus, scheduledAt, () => setScheduledAt(null));
 
   const nextStage = record ? nextPieceStage(record.stage) : null;
   const sendOnLabel = nextStage
@@ -148,13 +150,15 @@ export function ArticleEditorPage() {
           section={section}
           issueLabel={issueLabel}
           savedLabel={savedLabel}
+          canRetrySave={save.isError}
+          onRetrySave={() => void draft.saveNow().catch(() => undefined)}
           mode={mode}
           onModeChange={setMode}
           liveStatus={liveStatus}
           publishStatus={publishStatus}
           publishPending={publish.isPending}
           publishDisabled={publishDisabled}
-          onPublish={() => void handlePublish()}
+          onPublish={publishNow}
           sendOnLabel={sendOnLabel}
           sendOnDisabled={!nextStage || moveStage.isPending}
           onSendOn={handleSendOn}
@@ -171,6 +175,10 @@ export function ArticleEditorPage() {
               />
             ) : (
               <ArticleDocument
+                // Remounts the document surface after a version restore:
+                // `RichText` seeds its contentEditable once on mount, so
+                // restored text reaches the screen no other way.
+                key={draft.restoreGeneration}
                 docRef={docRef}
                 kicker={article.kicker}
                 title={title}
@@ -184,7 +192,7 @@ export function ArticleEditorPage() {
                 onSelectBlock={setSelectedId}
                 onChangeBlock={draft.blockOps.changeBlock}
                 onMoveBlock={draft.blockOps.moveBlock}
-                onRemoveBlock={draft.blockOps.removeBlock}
+                onRemoveBlock={removeBlockWithUndo}
                 onSlashOpen={handleSlashOpen}
                 onAppendBlock={handleAppendBlock}
                 onPasteParagraphs={draft.blockOps.pasteParagraphsAfter}
@@ -204,7 +212,7 @@ export function ArticleEditorPage() {
               onScheduledAtChange={setScheduledAt}
               published={published}
               publishPending={publish.isPending}
-              onPublish={() => void handlePublish()}
+              onPublish={publishNow}
               section={section}
               onSectionChange={draft.setSection}
               tags={tags}

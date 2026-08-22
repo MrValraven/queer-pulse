@@ -327,19 +327,19 @@ export const COMMUNITY: Card[] = [
 export const LETTERS: Letter[] = [
   {
     body: "The trans healthcare piece from last month was the first time I've seen the SNS process explained without someone trying to protect me from the bad parts. Knowing the waiting times in advance helped.",
-    from: "— Member, 28, Intendente",
+    from: "Member, 28, Intendente",
   },
   {
     body: "I started a reading group after seeing the listing on the platform. We've met four times. Two people in it have become actual friends. Not acquaintances. Friends.",
-    from: "— Member, 34, Mouraria",
+    from: "Member, 34, Mouraria",
   },
   {
     body: "Thank you for publishing Rui's essay on burnout without making it a productivity piece. Someone finally understood what I was trying to say to people who love me and couldn't hear it.",
-    from: "— Member, 41, Cais do Sodré",
+    from: "Member, 41, Cais do Sodré",
   },
   {
     body: "The housing law piece should be required reading for every queer person renting in Lisbon. I've already forwarded it to four people.",
-    from: "— Member, 31, Arroios",
+    from: "Member, 31, Arroios",
   },
 ];
 

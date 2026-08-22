@@ -166,7 +166,7 @@ export const community: Catalog = {
   "changemakerStory.outro.title": "Want to support <em>{name}'s</em> work?",
   "changemakerStory.outro.sub":
     "Change makers do this alongside their day jobs. A message, an introduction, or an hour of your time goes further than you'd think.",
-  "changemakerStory.outro.connectCta": "Connect with {name}",
+  "changemakerStory.outro.connectCta": "Reach the team about them",
   "changemakerStory.outro.moreCta": "Meet more change makers",
   "changemakerStory.moreLabel": "More change makers",
 
@@ -259,11 +259,11 @@ export const community: Catalog = {
     "Try the words out loud here before you say them for real. The weekly circle holds space for exactly that.",
   "comingOut.stage.moveOn.title": "Move through, and out",
   "comingOut.stage.moveOn.body":
-    "People graduate out of this space when they no longer need it. That's the whole point, not a goodbye.",
+    "People graduate out of this space when they no longer need it. That's the whole point.",
   "comingOut.outro.title": "You don't owe a <em>perfect speech.</em>",
   "comingOut.outro.sub":
-    "Saying the true thing badly is still saying the true thing. Enter the space whenever you're ready, and leave the moment you are.",
-  "comingOut.outro.enterCta": "Enter the space",
+    "Saying the true thing badly is still saying the true thing. Peer support is open whenever you're ready, and you can step away the moment you want to.",
+  "comingOut.outro.enterCta": "Find peer support",
   "comingOut.outro.communitiesCta": "See all communities",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
@@ -446,6 +446,7 @@ export const community: Catalog = {
   "family.situation.lookingForCoparent.to": "See: Co-parenting",
   "family.browseFreely.cta": "I'm just exploring, show me everything",
 
+  "family.tabs.label": "Family and parenting paths",
   "family.tab.adoption.label": "Adoption",
   "family.tab.ivf.label": "IVF & Assisted Reproduction",
   "family.tab.coparenting.label": "Co-parenting",
@@ -661,7 +662,6 @@ export const community: Catalog = {
   "parentNetwork.tag.social": "Social",
   "parentNetwork.tag.workshop": "Workshop",
   "parentNetwork.resource.legalRights": "Legal rights as a queer family",
-  "parentNetwork.resource.chosenFamily": "Chosen-family & legal recognition",
   "parentNetwork.resource.healthcareGuides": "Healthcare & document guides",
 
   // ── Reading Groups page (ReadingGroupsPage.tsx + sub-components) ──────────
@@ -715,6 +715,7 @@ export const community: Catalog = {
   "readingGroups.card.requestToJoinCta": "Request to join",
   "readingGroups.card.onWaitlist": "On waitlist · #{position}",
   "readingGroups.card.waitlistUnavailable": "Waitlist opening soon",
+  "readingGroups.card.joinUnavailable": "Introductions opening soon",
 
   "readingGroups.waitlist.heading": "You're on the <em>waitlist.</em>",
   "readingGroups.waitlist.sub":
@@ -724,6 +725,8 @@ export const community: Catalog = {
   "readingGroups.listGroup.heading": "Start your <em>own group.</em>",
   "readingGroups.listGroup.lead":
     "Pick a book. Say how many people you want. Say where and when. We will list it here and match you with members who want to read the same thing.",
+  "readingGroups.listGroup.leadLive":
+    "Pick a book. Say how many people you want. Send it to us and we'll come back to you about starting the group and finding your readers.",
   "readingGroups.listGroup.bookLabel": "Book title & author",
   "readingGroups.listGroup.bookPlaceholder":
     "e.g. Giovanni's Room by James Baldwin",
@@ -737,8 +740,16 @@ export const community: Catalog = {
   "readingGroups.listGroup.maxLabel": "Max people",
   "readingGroups.listGroup.submitCta": "List my group",
   "readingGroups.listGroup.submitPending": "Listing…",
+  "readingGroups.listGroup.submitProposeCta": "Send my proposal",
+  "readingGroups.listGroup.submitProposePending": "Sending…",
   "readingGroups.listGroup.successToast":
     "Group listed. We'll find your readers",
+  "readingGroups.listGroup.proposalToast":
+    "Proposal received. We'll be in touch",
+  "readingGroups.listGroup.proposalHeading": "Proposal <em>received.</em>",
+  "readingGroups.listGroup.proposalBody":
+    "We have your proposal for <strong>{book}</strong>. Nothing is listed in the directory yet: someone will read it and come back to you about starting the group.",
+  "readingGroups.listGroup.proposeAnotherCta": "Propose another group",
   "readingGroups.listGroup.errorToast":
     "Couldn't list your group. Please try again.",
   "readingGroups.listGroup.successHeading": "Your group is <em>listed.</em>",

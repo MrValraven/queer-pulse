@@ -1,0 +1,84 @@
+/* CR80 proportions (85.6 x 53.98 mm) so the digital card and any later
+   printed one are the same object. */
+.card {
+  aspect-ratio: 85.6 / 53.98;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  padding: var(--card-pad-lg);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  container-type: inline-size;
+}
+
+.skinPlum { background: var(--plum); color: var(--cream); }
+.skinCream { background: var(--cream); color: var(--plum); }
+.skinJade { background: var(--jade); color: var(--cream); }
+.skinCoral { background: var(--accent); color: var(--cream); }
+.skinInk { background: var(--ink); color: var(--cream); }
+
+.head { display: flex; align-items: center; gap: var(--gap-xs); }
+/* No radius token sits between --radius-tag (7px) and --radius-badge (14px);
+   the crest is a small square accent, so the smaller of the two reads best. */
+.crest { border-radius: var(--radius-tag); object-fit: cover; }
+/* The programme's chosen accent (`--card-accent`, set inline in
+   MembershipCardFace.tsx) used to tint `.cardName` and `.meta dt` text via a
+   color-mix against currentColor. That let the accent gate legibility: on
+   several skin x accent pairs the mix pushed body text below AA (measured as
+   low as 1.24:1 on some pairs; see the card-contrast audit). An accent must
+   never carry text contrast, so it now paints only this decorative bar,
+   never the text itself. The bar sits beside the name block regardless of
+   which skin/accent pairing is chosen. */
+.accentBar {
+  align-self: stretch;
+  width: 3px;
+  min-height: 1.4em;
+  border-radius: var(--radius-tag);
+  background: var(--card-accent, transparent);
+  flex-shrink: 0;
+}
+.community { font-family: var(--serif); font-size: 1.05rem; margin: 0; }
+.cardName {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.qrSlot {
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+}
+
+/* CardQr paints its own light plate and dark modules explicitly (see
+   CardQr.tsx), so the symbol keeps the dark-on-light polarity a scanner
+   needs regardless of which skin sits behind it. This class only frames the
+   SVG within the card. */
+.qr { border-radius: var(--radius-tag); }
+
+.qrNotice {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  font-size: 0.8rem;
+  opacity: 0.85;
+  text-align: center;
+  margin: 0;
+}
+
+.foot { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--gap-sm); }
+.holder { font-family: var(--serif); font-size: 0.95rem; margin: 0; }
+.meta { display: flex; gap: var(--gap-sm); margin: 0; }
+.meta dt {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+.meta dd { font-size: 0.8rem; margin: 0; }
+
+@container (max-width: 280px) {
+  .qrSlot { min-height: 96px; }
+  .meta { gap: var(--gap-xs); }
+}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
+import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -26,6 +27,7 @@ export function StepWelcome({
   // so the standalone prototype still tells a story; in LIVE mode we must never
   // fabricate an inviter — an absent payload means we simply don't show one.
   const [welcome] = useState(readInviteWelcome);
+  const [hasPhotoFailed, setHasPhotoFailed] = useState(false);
   const firstName = user?.profile.firstName ?? (demoMode ? currentUser.first : "");
 
   const demoInviter = demoMode
@@ -84,16 +86,18 @@ export function StepWelcome({
       {showVouch && (
         <div className={styles.vouchCard}>
           <div className={styles.vcAv} aria-hidden>
-            {inviterPhoto ? (
+            {inviterPhoto && !hasPhotoFailed ? (
+              // Same treatment the invite landing page gives this exact photo:
+              // Google's avatar CDN answers 403/429 when the request carries a
+              // Referer, and `resolveAvatarSrc` raises the URL's size directive
+              // so a Google photo isn't upscaled into a blur. A genuinely broken
+              // URL falls back to initials rather than an empty circle.
               <img
-                src={inviterPhoto}
+                className={styles.vcAvPhoto}
+                src={resolveAvatarSrc(inviterPhoto, 84)}
                 alt=""
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
+                referrerPolicy="no-referrer"
+                onError={() => setHasPhotoFailed(true)}
               />
             ) : (
               inviterInitials

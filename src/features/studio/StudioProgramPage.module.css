@@ -6,7 +6,6 @@
   --surface: rgba(var(--cream-rgb), 0.05);
   --surface-hov: rgba(var(--cream-rgb), 0.08);
   --rail: var(--studio-rail);
-  --jade-light: #9be0bd;
 
   max-width: 1160px;
   margin: 0 auto;
@@ -321,6 +320,7 @@
   border-bottom-color: var(--accent);
 }
 .remove {
+  position: relative;
   width: 28px;
   height: 28px;
   border-radius: 8px;
@@ -333,6 +333,18 @@
   transition:
     background 0.15s var(--ease),
     color 0.15s var(--ease);
+}
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.remove::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
 }
 .remove:hover {
   background: rgba(var(--accent-rgb), 0.15);

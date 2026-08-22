@@ -1,4 +1,4 @@
-import { FiMessageSquare, FiAlertTriangle } from "react-icons/fi";
+import { FiMessageSquare, FiAlertTriangle, FiLock } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -28,6 +28,31 @@ export function ThreadNotFoundState({ loading }: { loading: boolean }) {
               }}
             />
           )}
+        </div>
+      </section>
+    </PageShell>
+  );
+}
+
+/** Distinct from both "not found" and a server error: the thread is real but
+ * lives in a private community the viewer hasn't joined, so the backend
+ * refuses to serve it (403). Retrying can only fail again, so this state
+ * points at the communities directory instead. */
+export function ThreadPrivateState() {
+  const { t } = useTranslation();
+  return (
+    <PageShell>
+      <section className="wrap">
+        <div className={styles.layout}>
+          <EmptyState
+            icon={<FiLock />}
+            title={t("forum:threadPage.private.title")}
+            description={t("forum:threadPage.private.description")}
+            action={{
+              label: t("forum:threadPage.private.browseCta"),
+              to: routes.communities,
+            }}
+          />
         </div>
       </section>
     </PageShell>

@@ -131,12 +131,16 @@ function buildItems(
       onClick: () => c.openReport(ev.id),
       danger: true,
     });
-    items.push({
-      icon: Icons.block,
-      label: translate("myevents:moreMenu.blockHost"),
-      onClick: () => c.openBlock(ev.id),
-      danger: true,
-    });
+    // Only offered when there's a real member behind the event to block. An
+    // org-hosted gathering carries no `hostSlug`, and the block primitive is
+    // member-keyed — showing the item there could only ever fake a result.
+    if (ev.hostSlug)
+      items.push({
+        icon: Icons.block,
+        label: translate("myevents:moreMenu.blockHost"),
+        onClick: () => c.openBlock(ev.id),
+        danger: true,
+      });
   }
   return items;
 }

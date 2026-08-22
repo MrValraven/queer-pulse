@@ -2,6 +2,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  type QueryClient,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
@@ -19,6 +20,20 @@ import {
 
 const ADMIN_KEY = ["admin", "changemakers"];
 const STATS_KEY = [...ADMIN_KEY, "stats"];
+/** Public read roots: the directory list (`useChangemakers`) and a single
+ *  story (`useChangemaker`). They sit under different query roots from the
+ *  admin console, so an admin write that only touches ADMIN_KEY leaves
+ *  `/changemakers` and `/changemaker/:slug` serving stale cache. */
+const PUBLIC_LIST_KEY = ["changemakers"];
+const PUBLIC_DETAIL_KEY = ["changemaker"];
+
+/** Invalidate the admin console AND every public surface a changemaker write
+ *  can change. Called from every admin mutation's `onSuccess`. */
+function invalidateChangemakers(queryClient: QueryClient) {
+  void queryClient.invalidateQueries({ queryKey: ADMIN_KEY });
+  void queryClient.invalidateQueries({ queryKey: PUBLIC_LIST_KEY });
+  void queryClient.invalidateQueries({ queryKey: PUBLIC_DETAIL_KEY });
+}
 
 export function useAdminChangemakers() {
   const { demoMode } = useDemoMode();
@@ -41,7 +56,7 @@ export function useCreateChangemaker() {
   const queryClient = useQueryClient();
   return useMutation<ChangemakerDTO | null, Error, CreateChangemakerBody>({
     mutationFn: async (body) => (demoMode ? null : createChangemaker(body)),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ADMIN_KEY }),
+    onSuccess: () => invalidateChangemakers(queryClient),
   });
 }
 
@@ -55,7 +70,7 @@ export function useUpdateChangemaker() {
   >({
     mutationFn: async ({ id, body }) =>
       demoMode ? null : updateChangemaker(id, body),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ADMIN_KEY }),
+    onSuccess: () => invalidateChangemakers(queryClient),
   });
 }
 
@@ -66,7 +81,7 @@ export function useDeleteChangemaker() {
     mutationFn: async (id) => {
       if (!demoMode) await deleteChangemaker(id);
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ADMIN_KEY }),
+    onSuccess: () => invalidateChangemakers(queryClient),
   });
 }
 
@@ -80,7 +95,7 @@ export function usePublishChangemaker() {
   >({
     mutationFn: async ({ id, published }) =>
       demoMode ? null : publishChangemaker(id, published),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ADMIN_KEY }),
+    onSuccess: () => invalidateChangemakers(queryClient),
   });
 }
 
@@ -115,7 +130,7 @@ export function useUpdateDirectoryStats() {
   >({
     mutationFn: async (body) => (demoMode ? null : updateDirectoryStats(body)),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ADMIN_KEY });
+      invalidateChangemakers(queryClient);
       void queryClient.invalidateQueries({ queryKey: STATS_KEY });
     },
   });

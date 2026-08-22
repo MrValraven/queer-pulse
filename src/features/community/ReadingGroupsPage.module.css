@@ -202,7 +202,10 @@
   top: 2px;
   bottom: 2px;
   width: 4px;
-  background: rgba(0, 0, 0, 0.15);
+  /* A shade on the (always saturated) spine colour. Plum channels rather than
+     ink: --ink-rgb flips light in dark theme, which would turn the shadow into
+     a highlight; the spine keeps its own colour in both themes. */
+  background: rgba(var(--plum-rgb), 0.28);
   border-radius: 2px 0 0 2px;
 }
 .gcBookInfo {
@@ -295,37 +298,8 @@
 .spotsAlmost {
   color: var(--accent-ink);
 }
-.gcJoin {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-strong);
-  background: rgba(var(--plum-rgb), 0.07);
-  border: none;
-  border-radius: 9px;
-  padding: 7px 15px;
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
-  font-family: var(--sans);
-  text-decoration: none;
-}
-@media (hover: hover) {
-  .gcJoin:hover {
-    background: var(--plum);
-    color: rgba(var(--cream-rgb), 1);
-  }
-}
-.gcJoinDisabled {
-  opacity: 0.4;
-  cursor: default;
-}
-@media (hover: hover) {
-  .gcJoinDisabled:hover {
-    background: rgba(var(--plum-rgb), 0.07);
-    color: var(--text-strong);
-  }
-}
+/* The join / waitlist affordance is the shared <Button variant="ghost"
+   size="sm">; the old hand-rolled .gcJoin / .gcJoinDisabled pills are gone. */
 
 .startStrip {
   background: var(--plum);
@@ -401,23 +375,9 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+/* The submit control is the shared <Button>; only the spacing is local. */
 .ssSubmit {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-strong);
-  background: var(--accent);
-  border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: opacity 0.2s var(--ease);
   margin-top: 4px;
-}
-@media (hover: hover) {
-  .ssSubmit:hover {
-    opacity: 0.88;
-  }
 }
 
 .ssSuccess {

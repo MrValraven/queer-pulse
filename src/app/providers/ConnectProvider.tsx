@@ -9,7 +9,7 @@ export function ConnectProvider({ children }: { children: ReactNode }) {
     reason?: string;
   }>({ open: false });
 
-  const openConnect = useCallback((slug?: string, reason?: string) => {
+  const openConnect = useCallback((slug: string, reason?: string) => {
     setState({ open: true, slug, reason });
   }, []);
   const close = useCallback(() => {

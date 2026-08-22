@@ -149,6 +149,7 @@ export function RestrictModal({
   onApply,
   onMissingReason,
   platformOnly = false,
+  initialDuration = "7d",
 }: {
   name: string;
   onClose: () => void;
@@ -162,10 +163,14 @@ export function RestrictModal({
    *  rather than offering a "This community" option that silently acts
    *  platform-wide. Demo keeps both scopes for the prototype. */
   platformOnly?: boolean;
+  /** Which duration the modal opens on. The drawer's permanent-ban action
+   *  opens straight on `permanent`, which sends no `duration` and so bans the
+   *  account for good; every other entry point starts at the 7-day default. */
+  initialDuration?: RestrictDurationId;
 }) {
   const { t } = useTranslation();
   const first = firstName(name);
-  const [dur, setDur] = useState<RestrictDurationId>("7d");
+  const [dur, setDur] = useState<RestrictDurationId>(initialDuration);
   const [scope, setScope] = useState<ScopeId>(
     platformOnly ? "platform" : "community",
   );
@@ -231,6 +236,13 @@ export function RestrictModal({
         value={dur}
         onChange={(v) => setDur(v as RestrictDurationId)}
       />
+      {/* "Permanent" sends no duration, i.e. a ban with no end date. Say so
+          plainly rather than letting it read as one more restriction length. */}
+      {dur === "permanent" && (
+        <p className={styles.transparency}>
+          {t("admin:members.restrict.permanentNote", { name: first })}
+        </p>
+      )}
 
       <label className={styles.fieldLabel}>
         {t("admin:members.restrict.scopeLabel")}

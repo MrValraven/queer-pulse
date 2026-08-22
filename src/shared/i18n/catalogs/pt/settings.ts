@@ -95,10 +95,10 @@ export const settings: Catalog = {
   "personalisation.accessibility.title":
     "Preferências de <em>acessibilidade.</em>",
   "personalisation.accessibility.sub":
-    "Ajusta a visualização, o movimento, a leitura e a interação ao teu gosto. Estas definições aplicam-se a toda a plataforma.",
+    "Ajusta o movimento e a navegação ao teu gosto. O que mudares aqui fica guardado assim que o alteras e aplica-se a toda a plataforma. As preferências marcadas como em breve ainda estão a ser construídas.",
   "personalisation.accessibility.resetAll": "Repor todas as preferências",
   "personalisation.accessibility.resetNote":
-    "Isto repõe todas as definições de visualização para os valores predefinidos. Os dados do teu perfil não são afetados.",
+    "Isto repõe as preferências que podes alterar para os valores predefinidos. Os dados do teu perfil não são afetados.",
   "personalisation.accessibility.deviceNote":
     "As tuas preferências são guardadas localmente neste dispositivo.",
   "personalisation.accessibility.resetToast":
@@ -116,7 +116,6 @@ export const settings: Catalog = {
     "Isto é privado (não aparece no teu perfil). Ajuda-nos a mostrar-te convívios, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
   "interests.identities.heading": "Que identidades sentes como tuas?",
   "interests.identities.skip": "Saltar",
-  "interests.identities.skipped": "Saltado",
   "interests.identities.helper":
     "Seleciona quantas fizerem sentido. Usamos isto para sugerir comunidades e conteúdo relevantes. Nunca serve para te categorizar.",
   // ── Descoberta por identidade (IdentitySections.tsx) ────────────────────
@@ -194,6 +193,10 @@ export const settings: Catalog = {
   "notifications.title": "Preferências de <em>notificações.</em>",
   "notifications.sub":
     "Controlo detalhado sobre o que chega até ti e como. Nunca te enviaremos algo que não tenhas pedido.",
+  "notifications.toast.saveError":
+    "Não foi possível guardar essa definição de notificações. Tenta novamente.",
+  "notifications.toast.saveErrorReason":
+    "Não foi possível guardar essa definição de notificações: {reason}.",
   "notifications.section.gatherings": "Convívios",
   "notifications.section.messagesConnections": "Mensagens e ligações",
   "notifications.section.communitiesBoard": "Comunidades e mural",
@@ -226,6 +229,11 @@ export const settings: Catalog = {
     "O teu navegador ainda não consegue mostrar notificações no telemóvel.",
   "notifications.phonePush.blocked":
     "As notificações estão bloqueadas. Volta a ativá-las nas definições do navegador e tenta de novo.",
+  "notifications.phonePush.previews.title": "Esconder pré-visualizações",
+  "notifications.phonePush.previews.desc":
+    "Mostra que chegou algo sem dizer de quem é nem o que diz. Útil se outras pessoas conseguem ver o teu ecrã bloqueado.",
+  "notifications.phonePush.previews.error":
+    "Não conseguimos guardar. As tuas pré-visualizações não mudaram.",
   "notifications.phonePush.test.title": "Envia um teste a ti",
   "notifications.phonePush.test.desc":
     "Envia uma notificação para os teus dispositivos para confirmar que está tudo a funcionar.",
@@ -360,6 +368,7 @@ export const settings: Catalog = {
   "account.emailAddress.title": "Endereço de email",
   "account.emailAddress.desc":
     "O endereço associado à tua conta e início de sessão.",
+  "account.emailAddress.notSet": "Ainda não definido",
   "account.section.security": "Segurança",
   "account.twoFactor.title": "Autenticação de dois fatores",
   "account.twoFactor.desc":
@@ -431,6 +440,8 @@ export const settings: Catalog = {
   "editProfile.saveBar.discard": "Descartar",
   "editProfile.saveBar.saving": "A guardar…",
   "editProfile.saveBar.save": "Guardar perfil",
+  "editProfile.leaveConfirm":
+    "Tens alterações ao perfil por guardar. Queres sair sem as guardar?",
 
   // ── EditProfilePane.tsx — toasts ──────────────────────────────────────────
   "editProfile.toast.photoRemoved": "Foto removida.",
@@ -496,6 +507,8 @@ export const settings: Catalog = {
   "editProfile.skills.interestsLabel": "Interesses",
   "editProfile.skills.interestsPlaceholder":
     "ex.: Política de habitação, Cinema, Culinária…",
+  "editProfile.skills.removeAria": "Remover competência {name}",
+  "editProfile.interests.removeAria": "Remover interesse {name}",
 
   // ── EditProfileSections.tsx — CommunitiesSection ─────────────────────────
   "editProfile.communities.title": "Comunidades <em>em destaque</em>",
@@ -791,6 +804,7 @@ export const settings: Catalog = {
   // ── AccessibilityPreferencesPage.tsx + Sections — a página completa de
   // acessibilidade. Só a Redução de movimento é funcional; o resto são
   // etiquetas em interruptores não funcionais — só as etiquetas são traduzidas.
+  "a11y.instantSaveHint": "Guardado neste dispositivo assim que o alteras.",
   "a11y.sidebar.preferences": "Preferências",
   "a11y.sidebar.display": "Visualização",
   "a11y.sidebar.motion": "Movimento",
@@ -880,6 +894,12 @@ export const settings: Catalog = {
   "deleteAccount.toast.cancelled": "Eliminação cancelada. Bem-vinde de volta.",
   "deleteAccount.toast.cancelError":
     "Não conseguimos cancelar isso agora. Tenta novamente.",
+
+  // ── Reautenticação (useReauthToken.ts) ────────────────────────────────────
+  "reauth.completion.success":
+    "Reautenticação confirmada. Carrega em confirmar outra vez para terminar.",
+  "reauth.completion.failed":
+    "Não conseguimos confirmar que eras tu. Tenta novamente.",
   "deleteAccount.options.deactivate.title": "Desativar",
   "deleteAccount.options.deactivate.desc":
     "O teu perfil torna-se invisível. Os teus dados são preservados. Podes reativá-la a qualquer momento voltando a iniciar sessão.",
@@ -1007,9 +1027,11 @@ export const settings: Catalog = {
   "integrationsModal.connectCta": "Ligar",
 
   // ── SecurityPage.tsx — divulgação de vulnerabilidades ────────────────────
-  // Os créditos do mural (SecurityPage HALL) são registos de atribuição — nomes
-  // dos investigadores e o tipo/data da vulnerabilidade — e ficam em inglês,
-  // como os restantes valores de registo indicados no topo deste ficheiro.
+  // Os créditos de agradecimento (security.data.ts SECURITY_HALL_OF_FAME) são
+  // registos de atribuição: nomes dos investigadores e o tipo/data da
+  // vulnerabilidade. Ficam em inglês, como os restantes valores de registo
+  // indicados no topo deste ficheiro, e a grelha fica escondida enquanto a
+  // lista estiver vazia.
   "security.hero.eyebrow": "Divulgação de vulnerabilidades",
   "security.hero.titleTop": "Encontraste algo?",
   "security.hero.titleEm": "Diz-nos.",
@@ -1070,6 +1092,8 @@ export const settings: Catalog = {
   "security.ack.title": "<em>Investigadores</em> de segurança que ajudaram.",
   "security.ack.body":
     "Estamos gratos aos seguintes investigadores que divulgaram vulnerabilidades de forma responsável. (Listados com autorização.)",
+  "security.ack.empty":
+    "Ainda não há ninguém creditado aqui. Reporta algo e, se quiseres o crédito, o teu nome fica registado.",
 
   "security.report.titleTop": "Comunicar uma",
   "security.report.titleEm": "vulnerabilidade",
@@ -1080,6 +1104,8 @@ export const settings: Catalog = {
   "security.pgp.copyCta": "Copiar chave",
   "security.pgp.copied": "Chave PGP copiada.",
   "security.pgp.copyFailed": "Falha ao copiar. Seleciona e copia manualmente.",
+  "security.pgp.unavailable":
+    "Ainda não publicámos uma chave. Escreve-nos em texto simples e combinamos um canal encriptado antes de enviares qualquer detalhe.",
 
   "security.outro.titleTop": "A segurança é",
   "security.outro.titleEm": "trabalho de comunidade.",

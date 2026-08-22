@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getModReport } from "./moderation.api";
-import { modReportDtoToView } from "./moderation.adapters";
+import { modReportDetailFrom } from "./moderation.adapters";
 import type { ReportDetail } from "../adminModeration.data";
 
 /**
@@ -25,8 +25,7 @@ export function useOriginalReport(reportId: string | undefined): {
   const query = useQuery<ReportDetail | null>({
     queryKey: ["mod-report-original", reportId],
     queryFn: async () =>
-      modReportDtoToView(await getModReport(reportId as string)).detail ??
-      null,
+      modReportDetailFrom(await getModReport(reportId as string)) ?? null,
     enabled,
   });
   return {

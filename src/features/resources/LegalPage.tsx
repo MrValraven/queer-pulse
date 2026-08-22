@@ -1,25 +1,15 @@
 import { useState, type ReactNode } from "react";
 import { FiArrowRight, FiBriefcase } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
-import {
-  Button,
-  EmptyState,
-  Outro,
-  Reveal,
-} from "../../shared/components/ui";
+import { Button, EmptyState, Outro, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useConnect } from "../../app/providers/useConnect";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { CrisisStrip } from "./CrisisStrip";
 import { SuggestEditTrigger } from "./SuggestEditTrigger";
@@ -212,8 +202,7 @@ function RightsSection({
               <div className={styles.rightTitle}>{t(right.titleKey)}</div>
               <div className={styles.rightBody}>{t(right.bodyKey)}</div>
               <Link to={right.to} className={styles.rightLink}>
-                {t(right.linkKey)}{" "}
-                <FiArrowRight aria-hidden />
+                {t(right.linkKey)} <FiArrowRight aria-hidden />
               </Link>
               <GuideRatingWidget contentKey={right.contentKey} />
             </Reveal>
@@ -227,11 +216,10 @@ function RightsSection({
 export function LegalPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { openConnect } = useConnect();
+  const navigate = useNavigate();
   const loading = useSimulatedLoad();
-  const { listings, isLoading: listingsLoading } = useResourceListings(
-    "legal_aid",
-  );
+  const { listings, isLoading: listingsLoading } =
+    useResourceListings("legal_aid");
   const [suggestOpen, setSuggestOpen] = useState(false);
   const pageTitle = t("resources:legal.meta.title");
   const pageDescription = t("resources:legal.meta.description");
@@ -376,26 +364,28 @@ export function LegalPage() {
               />
             )
           ) : (
-          <CardGrid busy={loading}>
-            {loading
-              ? Array.from({ length: LAWYERS.length }).map((_, index) => (
-                  <ResourceCardSkeleton key={index} />
-                ))
-              : LAWYERS.map((lawyer, index) => (
-                  <ResourceCard
-                    key={lawyer.name}
-                    name={lawyer.name}
-                    spec={lawyer.spec}
-                    tags={lawyer.tags}
-                    loc={lawyer.loc}
-                    nameSize={19}
-                    ctaLabel={t("resources:legal.lawyers.requestConsultationCta")}
-                    onCta={() => openConnect()}
-                    animation="fade"
-                    delay={Math.min(index, 8) * 60}
-                  />
-                ))}
-          </CardGrid>
+            <CardGrid busy={loading}>
+              {loading
+                ? Array.from({ length: LAWYERS.length }).map((_, index) => (
+                    <ResourceCardSkeleton key={index} />
+                  ))
+                : LAWYERS.map((lawyer, index) => (
+                    <ResourceCard
+                      key={lawyer.name}
+                      name={lawyer.name}
+                      spec={lawyer.spec}
+                      tags={lawyer.tags}
+                      loc={lawyer.loc}
+                      nameSize={19}
+                      ctaLabel={t(
+                        "resources:legal.lawyers.requestConsultationCta",
+                      )}
+                      onCta={() => navigate(routes.contact)}
+                      animation="fade"
+                      delay={Math.min(index, 8) * 60}
+                    />
+                  ))}
+            </CardGrid>
           )}
           {suggestOpen && (
             <SuggestResourceModal

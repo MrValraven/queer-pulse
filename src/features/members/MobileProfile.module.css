@@ -8,7 +8,7 @@
   gap: var(--gap-xs);
   padding: var(--gap-sm) 0;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-badge);
 }
 
@@ -25,7 +25,7 @@
 }
 
 .statColumn + .statColumn {
-  border-inline-start: 1px solid rgba(45, 27, 61, 0.09);
+  border-inline-start: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .statNumber {
@@ -527,7 +527,7 @@
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   color: var(--plum);
   font-size: 20px;

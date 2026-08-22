@@ -416,6 +416,38 @@ export const economy: Catalog = {
   "jobDetail.sidebar.category": "Category",
   "jobDetail.sidebar.deadline": "Deadline",
   "jobDetail.sidebar.applyCta": "Apply now",
+  "jobDetail.sidebar.shareToCommunityCta": "Share to a community",
+
+  // ── ShareToCommunityModal ───────────────────────────────────────────────
+  "shareToCommunity.eyebrow": "Pass it on",
+  "shareToCommunity.title": "Share to <em>a community.</em>",
+  "shareToCommunity.sub":
+    "Post this to one of your rooms. It shows up on the room's wall and in the feed, under that community's own rules.",
+  "shareToCommunity.communityLabel": "Which community",
+  "shareToCommunity.communityPlaceholder": "Choose a community",
+  "shareToCommunity.noteLabel": "Say something about it",
+  "shareToCommunity.notePlaceholder":
+    "Why this might be right for someone here…",
+  "shareToCommunity.defaultNote":
+    "Sharing this in case it's right for someone here: {title} at {organization}.",
+  "shareToCommunity.moderationNote":
+    "Posted as you, in that community. Its moderators can edit or remove it like any other post there.",
+  "shareToCommunity.noCommunities":
+    "You're not in any communities yet. Join one and you'll be able to share things to it.",
+  "shareToCommunity.cancel": "Cancel",
+  "shareToCommunity.shareCta": "Post it",
+  "shareToCommunity.sending": "Posting…",
+  "shareToCommunity.errorNotAllowed":
+    "You can't post to that community right now. It may be frozen, archived, or you may have left it.",
+  "shareToCommunity.errorGone":
+    "That community is no longer there. Pick another one.",
+  "shareToCommunity.errorFailed":
+    "Your post didn't go through. Give it another try in a moment.",
+  "shareToCommunity.success.title": "It's",
+  "shareToCommunity.success.em": "posted.",
+  "shareToCommunity.success.body":
+    "Your post is up in <strong>{community}</strong> and in the feed.",
+  "shareToCommunity.success.closeLabel": "Done",
   "jobDetail.report.cta": "Report this job",
   "jobDetail.report.ariaLabel": "Report {name}",
 
@@ -439,6 +471,8 @@ export const economy: Catalog = {
   "housing.filter.short": "Short-term",
   "housing.filter.studio": "Studio / whole flat",
   "housing.listSpaceCta": "+ List your space",
+  "housing.loadMore": "Show more homes",
+  "housing.loadingMore": "Loading more homes…",
   "housing.filterBar.area": "Neighbourhood",
   "housing.filterBar.areaAny": "Any neighbourhood",
   "housing.filterBar.areaSelected": "{count} selected",
@@ -473,7 +507,8 @@ export const economy: Catalog = {
   "housing.saveSearch.cancel": "Cancel",
   "housing.saveSearch.saved":
     "Search saved. We'll let you know when a home like this comes up.",
-  "housing.saveSearch.error": "Couldn't save that search. Try again in a moment.",
+  "housing.saveSearch.error":
+    "Couldn't save that search. Try again in a moment.",
   "housing.savedSearches.title": "Your saved searches",
   "housing.savedSearches.alertsOn": "Alerts on",
   "housing.savedSearches.remove": "Remove saved search {name}",
@@ -550,6 +585,10 @@ export const economy: Catalog = {
   "housingModal.message.successTitle": "Message <em>sent.</em>",
   "housingModal.message.successBody":
     "Your message is on its way to <strong>{toName}</strong>, who usually replies <strong>{responseTime}</strong>. You'll get a notification here when they do. Contact details are shared once you both agree to take it further.",
+  // Used when we have no measured reply time for this lister: same promise,
+  // minus the reply-speed claim we cannot back.
+  "housingModal.message.successBodyNoReplyTime":
+    "Your message is on its way to <strong>{toName}</strong>. You'll get a notification here when they reply. Contact details are shared once you both agree to take it further.",
   "housingModal.message.eyebrow": "Message the lister",
   "housingModal.message.title": "Message <em>{toName}</em>",
   "housingModal.message.body":
@@ -611,16 +650,20 @@ export const economy: Catalog = {
   "listSpace.accessPlaceholder":
     "e.g. Second floor, no lift, one flight of stairs. Step-free once inside.",
   "listSpace.photoGuide.title": "A few photos go a long way",
-  "listSpace.photoGuide.lit": "Shoot in daylight, well-lit rooms feel honest and welcoming.",
-  "listSpace.photoGuide.rooms": "Show more than one room, plus the kitchen and bathroom.",
+  "listSpace.photoGuide.lit":
+    "Shoot in daylight, well-lit rooms feel honest and welcoming.",
+  "listSpace.photoGuide.rooms":
+    "Show more than one room, plus the kitchen and bathroom.",
   "listSpace.photoGuide.consent":
     "Leave housemates' faces out unless they've said it's okay.",
   "listSpace.tourLabel": "Virtual tour link",
   "listSpace.tourPlaceholder": "Matterport, a YouTube walkthrough…",
-  "listSpace.tourHint": "Optional, an https link people can open to look around before they visit.",
+  "listSpace.tourHint":
+    "Optional, an https link people can open to look around before they visit.",
   "listSpace.tourError": "That link needs to start with https://",
   "listSpace.billsLabel": "Bills are included in the rent",
-  "listSpace.billsHint": "Water, power, internet, so people know what they're paying.",
+  "listSpace.billsHint":
+    "Water, power, internet, so people know what they're paying.",
   "listSpace.agentLabel": "I'm listing as an agent or agency",
   "listSpace.agentHint":
     "Agents are welcome here. We just show a small badge so it's clear who's offering the place.",
@@ -690,8 +733,7 @@ export const economy: Catalog = {
   "suggestLandlord.taglineLabel": "One-line tagline",
   "suggestLandlord.taglinePlaceholder": "e.g. Fair rents, fast repairs",
   "suggestLandlord.noteLabel": "Short note for the board card",
-  "suggestLandlord.notePlaceholder":
-    "What should members know at a glance?",
+  "suggestLandlord.notePlaceholder": "What should members know at a glance?",
   "suggestLandlord.aboutLabel": "More about them",
   "suggestLandlord.aboutPlaceholder":
     "What's it like renting from them? Specifics help other members.",
@@ -760,11 +802,10 @@ export const economy: Catalog = {
   "affirmingPledge.error": "Couldn't save the pledge just now. Try again.",
   "affirmingBaseline.badge": "LGBTQ+ affirming",
   "affirmingBaseline.badgeTooltip":
-    "Every home and housemate here is LGBTQ+ affirming. It's the baseline, not a listing extra.",
+    "Every home and housemate here is LGBTQ+ affirming. That is the baseline for the whole board.",
   "affirmingBaseline.note":
     "Every home and housemate here is LGBTQ+ affirming, that's the <em>standard.</em>",
-  "affirmingBaseline.detailNote":
-    "This is the baseline for every home here, not a listing extra.",
+  "affirmingBaseline.detailNote": "This is the baseline for every home here.",
   // ── Verification requests — submit, track, appeal (Phase 2) ────────────
   "verification.request.ariaLabel": "Request verification",
   "verification.request.title": "Request verification",
@@ -853,6 +894,10 @@ export const economy: Catalog = {
   "housingViewing.request.inPerson": "In person",
   "housingViewing.request.slotOne": "A time that works",
   "housingViewing.request.slotTwo": "Another option (optional)",
+  "housingViewing.request.slotPastError":
+    "Pick a time that's still ahead of you.",
+  "housingViewing.request.slotOrderError":
+    "Your second option needs to come after the first.",
   "housingViewing.request.noteLabel": "A note for the lister",
   "housingViewing.request.notePlaceholder":
     "Say hello and mention anything you'd like to see or ask about.",
@@ -983,8 +1028,7 @@ export const economy: Catalog = {
     "Looks good. Keep the conversation here until you both decide to take it further.",
   "contactRequest.cancel": "Cancel",
   "contactRequest.done": "Done",
-  "contactRequest.sendError":
-    "Couldn't send that. Mind giving it another try?",
+  "contactRequest.sendError": "Couldn't send that. Mind giving it another try?",
 
   // ── LandlordPage ─────────────────────────────────────────────────────────
   "landlordPage.eyebrow": "Community-endorsed landlord",
@@ -1055,6 +1099,8 @@ export const economy: Catalog = {
 
   "flatmates.count_one": "{count} profile active this week",
   "flatmates.count_other": "{count} profiles active this week",
+  "flatmates.loadMore": "Show more people",
+  "flatmates.loadingMore": "Loading more people…",
   "flatmates.postProfileCta": "Post your profile",
 
   "flatmates.empty.title": "The flatmate board is quiet right now",
@@ -1073,7 +1119,8 @@ export const economy: Catalog = {
   "flatmates.card.memberSince": "Member since {date}",
   "flatmates.card.sayHello": "Say hello",
   "flatmates.card.helloSent": "Hello sent",
-  "flatmates.card.sayHelloError": "Couldn't send your hello. Try again in a moment.",
+  "flatmates.card.sayHelloError":
+    "Couldn't send your hello. Try again in a moment.",
   "flatmates.card.matchScore": "{score}% match",
   "flatmates.card.save": "Save",
   "flatmates.card.saved": "Saved",
@@ -1307,8 +1354,7 @@ export const economy: Catalog = {
     "We verify you're a QueerPulse member, nothing more",
   "employerReviews.write.rule.noEdit":
     "Employers cannot edit, remove, or respond to reviews",
-  "employerReviews.write.rule.moderation":
-    "We moderate for factual accuracy, not for comfort",
+  "employerReviews.write.rule.moderation": "We moderate for factual accuracy",
   "employerReviews.write.rule.retract":
     "You can update or retract your review at any time",
   "employerReviews.write.rule.noBuying":
@@ -1523,7 +1569,7 @@ export const economy: Catalog = {
     "A structured barter board, skills for skills, expertise for expertise. No money, no platform fees. Post what you can offer and what you're hoping for in return.",
   "barter.principle.noMoney.title": "No money",
   "barter.principle.noMoney.body":
-    "Every exchange is peer-to-peer. Value is set by the people involved, not the platform.",
+    "Every exchange is peer-to-peer. The people involved set the value between them.",
   "barter.principle.reputation.title": "Reputation-backed",
   "barter.principle.reputation.body":
     "Offers come from verified members. Your community vouch is your credit history.",
@@ -1554,6 +1600,7 @@ export const economy: Catalog = {
   "barter.card.offeringLabel": "Offering",
   "barter.card.wantLabel": "Looking for",
   "barter.card.proposeCta": "Propose a swap",
+  "barter.card.yoursCta": "Your swap",
   "barter.toast.messageSent": "Message sent to {name}",
   "barter.postedToday": "Today",
   "barter.postedDaysAgo_one": "{count} day ago",
@@ -1566,6 +1613,10 @@ export const economy: Catalog = {
   "barter.emptyLive.title": "No swaps posted yet",
   "barter.emptyLive.description":
     "Be the first to offer a skill or item, put something on the table below and let the right trade find you.",
+  "barter.errorLive.title": "The exchange didn't load",
+  "barter.errorLive.description":
+    "Something went wrong on our side while fetching the board. Give it another try in a moment.",
+  "barter.errorLive.retry": "Try again",
 
   "barter.postStrip.success.title": "It's <em>on the table.</em>",
   "barter.postStrip.success.body":
@@ -1578,7 +1629,14 @@ export const economy: Catalog = {
     "I can offer, e.g. Portuguese lessons, logo design…",
   "barter.postStrip.wantPlaceholder":
     "I'm looking for, e.g. tax advice, moving help…",
+  "barter.postStrip.categoryLabel": "Category",
+  "barter.postStrip.categoryPlaceholder": "Pick a category",
   "barter.postStrip.submitCta": "Post to the exchange",
+  "barter.postStrip.submitting": "Posting…",
+  "barter.postStrip.errorInvalid":
+    "Check both lines and the category, then try again.",
+  "barter.postStrip.errorFailed":
+    "Your swap didn't post. Give it another try in a moment.",
   "barter.postStrip.namePlaceholder": "You",
   "barter.postStrip.hoodPlaceholder": "Your post",
   "barter.postStrip.detailPlaceholder":
@@ -1593,9 +1651,9 @@ export const economy: Catalog = {
 
   // ── BarterDetailPage (+ ProposeCard / QuestionModal) ────────────────────
   "barterDetail.back": "Skill exchange",
-  "barterDetail.emptyLive.title": "This swap isn't live yet",
-  "barterDetail.emptyLive.description":
-    "The skill exchange starts empty at launch and fills with swaps members actually post. There's nothing to show at this link yet.",
+  "barterDetail.goneLive.title": "This swap is gone",
+  "barterDetail.goneLive.description":
+    "The post was taken off the board, or it's no longer available to you. Have a look at what else is on the exchange.",
   "barterDetail.emptyLive.cta": "Back to skill exchange",
   "barterDetail.sub.offering":
     "On offer to the community, swap it for something they need.",
@@ -1604,7 +1662,6 @@ export const economy: Catalog = {
   "barterDetail.sub.both":
     "Offering one thing, looking for another. Propose a swap that works for you both.",
   "barterDetail.locationWithHood": "{hood} · Lisbon",
-  "barterDetail.locationLisbon": "Lisbon",
   "barterDetail.repliesFast": "Usually replies fast",
   "barterDetail.messageCta": "Message {firstName}",
   "barterDetail.section.offering": "What they're <em>offering</em>",
@@ -1639,8 +1696,24 @@ export const economy: Catalog = {
   "barterDetail.propose.askFirst": "Ask a question first",
   "barterDetail.propose.footNote":
     "Nothing is agreed until you both say yes. Swaps are between members, QueerPulse never takes a cut.",
+  "barterDetail.propose.footNoteLive":
+    "Your proposal goes straight to their inbox, so you can carry on the conversation there. Nothing is agreed until you both say yes.",
   "barterDetail.propose.errorEmpty": "Add a line about what you'd trade.",
   "barterDetail.propose.toastSent": "Swap proposed to {name}.",
+  "barterDetail.propose.sending": "Sending…",
+  "barterDetail.propose.alreadySent":
+    "You already have a proposal with {firstName}. Anything you send now lands as a follow-up.",
+  "barterDetail.propose.errorAlreadySent":
+    "You already have a proposal on this swap. Carry on in your messages.",
+  "barterDetail.propose.errorNotAllowed":
+    "You can't propose a swap here. It may be your own post, or you and this member can't reach each other.",
+  "barterDetail.propose.errorGone":
+    "This swap is gone. Have a look at what else is on the exchange.",
+  "barterDetail.propose.errorFailed":
+    "Your proposal didn't send. Give it another try in a moment.",
+  "barterDetail.propose.yoursTitle": "This is your swap",
+  "barterDetail.propose.yoursLead":
+    "Proposals from other members land in your inbox. Reply there to set up the trade.",
 
   "barterQuestion.eyebrow": "Before you propose",
   "barterQuestion.title": "Ask <em>{firstName}</em> a question.",
@@ -1677,11 +1750,10 @@ export const economy: Catalog = {
   "postJob.gate.affiliateCta": "Affiliate your company",
   "postJob.gate.backCta": "Back to the board",
   "postJob.gate.point1":
-    "We confirm employers are genuinely queer-inclusive, not rainbow-washing.",
+    "We confirm employers are genuinely queer-inclusive, in practice as well as on paper.",
   "postJob.gate.point2":
     "Roles post as your verified company, with its logo and badge.",
-  "postJob.gate.point3":
-    "No placement fees. This is a community board, not a marketplace.",
+  "postJob.gate.point3": "No placement fees. This is a community board.",
 
   "postJob.stepLabels.type": "Type & role",
   "postJob.stepLabels.details": "Details",
@@ -1859,7 +1931,7 @@ export const economy: Catalog = {
   "postJob.step5.linkLabel": "External link",
   "postJob.step5.linkPlaceholder": "https://…",
   "postJob.step5.summaryTitle": "Summary",
-  "postJob.step5.dash": "—",
+  "postJob.step5.dash": "Not set",
   "postJob.step5.notSpecified": "Not specified",
   "postJob.step5.questionCount_one": "{count} question",
   "postJob.step5.questionCount_other": "{count} questions",
@@ -1879,7 +1951,7 @@ export const economy: Catalog = {
   "postJob.sidebar.point2":
     "Listings <strong>expire after 60 days</strong>, reminder at 45.",
   "postJob.sidebar.point3":
-    "<strong>No placement fees.</strong> A community board, not a marketplace.",
+    "<strong>No placement fees.</strong> A community board, run by members.",
   "postJob.sidebar.point4":
     "<strong>Edit or close</strong> any time from your company profile.",
 
@@ -1909,10 +1981,9 @@ export const economy: Catalog = {
     "Replies land in one place, review, message, or mark as filled from your listing manager.",
   "postJob.confirm.responses.openManager": "Open listing manager",
   "postJob.confirm.share.title": "Share it",
-  "postJob.confirm.share.body": "Boost reach inside the community.",
-  "postJob.confirm.share.postToFeed": "Post to Feed",
+  "postJob.confirm.share.body":
+    "Copy the link and put it where your people already are.",
   "postJob.confirm.share.copyLink": "Copy link",
-  "postJob.confirm.share.toastFeed": "Shared to your feed",
   "postJob.confirm.share.toastLink": "Link copied",
   "postJob.confirm.whatsNext.title": "What's next",
   "postJob.confirm.whatsNext.body":
@@ -2852,9 +2923,9 @@ export const economy: Catalog = {
     "But: deductible expenses, autonomy, and you can charge more.",
 
   // ── RateBoardForm / RateBoardStats / RateBoardPage ─────────────────────
-  "rateBoard.title": "What we actually <em>charge.</em>",
+  "rateBoard.title": "What you actually <em>charge.</em>",
   "rateBoard.sub":
-    "Anonymous day rates shared by the community, so nobody has to guess. Add yours, see where you stand. Saved on this device.",
+    "A private rate board that lives on this device. Add your rates, watch the spread build up, and export the file when you want to compare with people you trust.",
   "rateBoard.form.title": "Add your rate",
   "rateBoard.form.hint":
     "No name, no email. Just the numbers. It stays on this device until you export it.",
@@ -2867,8 +2938,8 @@ export const economy: Catalog = {
   "rateBoard.form.compareLabel": "See where you stand",
   "rateBoard.form.comparePlaceholder": "Your day rate (€)",
   "rateBoard.form.compareHint":
-    "We'll show your percentile against everyone here. Nothing's added to the board.",
-  "rateBoard.form.addedToast": "Added anonymously",
+    "We'll show your percentile against the rates on this board. Nothing's added to it.",
+  "rateBoard.form.addedToast": "Added to your board",
   "rateBoard.experienceOption.junior": "Junior (0–2 yrs)",
   "rateBoard.experienceOption.mid": "Mid (3–5 yrs)",
   "rateBoard.experienceOption.senior": "Senior (6–9 yrs)",
@@ -2883,8 +2954,8 @@ export const economy: Catalog = {
   "rateBoard.roleOption.other": "Other",
   "rateBoard.stats.emptyTitle": "Nothing here <em>yet.</em>",
   "rateBoard.stats.emptyBody":
-    "Be the first to add a rate, or import a JSON file someone shared with you. The distribution shows up here as soon as there's data.",
-  "rateBoard.stats.communityMedian": "Community median day rate",
+    "Add your first rate, or import a JSON file someone shared with you. The spread shows up here as soon as this device has data.",
+  "rateBoard.stats.communityMedian": "Median day rate on this board",
   "rateBoard.stats.across": "across",
   "rateBoard.stats.rateCount_one": "{count} rate",
   "rateBoard.stats.rateCount_other": "{count} rates",
@@ -2892,11 +2963,11 @@ export const economy: Catalog = {
   "rateBoard.stats.roleCount_other": "{count} roles",
   "rateBoard.stats.yourRateSits": "Your rate of {rate} sits at the",
   "rateBoard.stats.percentileValue": "{percentile}th percentile",
-  "rateBoard.stats.aboveMost": "Above {percent}% of rates shared here.",
+  "rateBoard.stats.aboveMost": "Above {percent}% of the rates on this board.",
   "rateBoard.stats.belowMost":
-    "Below most rates here. You may be leaving money on the table.",
+    "Below most of the rates on this board. You may be leaving money on the table.",
   "rateBoard.disclaimer":
-    "Shared anonymously by community members and not verified. Figures are self-reported and individual situations differ. Treat this as a starting point for the conversation, not a guarantee. Saved on this device only.",
+    "Everything here is what you and the people who sent you a file typed in, self-reported and unverified. Every situation differs, so treat these figures as a starting point for the conversation. Saved on this device only, and never uploaded.",
   "rateBoard.export": "Export JSON",
   "rateBoard.import": "Import JSON",
   "rateBoard.importAriaLabel": "Import a rate-board JSON file",
@@ -2990,8 +3061,7 @@ export const economy: Catalog = {
   "dayRate.result.minLabel": "Minimum day rate (excl. IVA)",
   "dayRate.result.withIvaLabel": "Including IVA",
   "dayRate.result.hourlyLabel": "Hourly (excl. IVA)",
-  "dayRate.result.note":
-    "A starting point, adjust for your sector and market.",
+  "dayRate.result.note": "A starting point, adjust for your sector and market.",
 
   // ── SlidingScaleForm / SlidingScalePreview / SlidingScalePage ──────────
   "slidingScale.title": "Price with <em>solidarity.</em>",
@@ -3015,7 +3085,7 @@ export const economy: Catalog = {
   "slidingScale.preview.yourNameFallback": "Your name",
   "slidingScale.preview.offeringFallback": "Your offering",
   "slidingScale.preview.tierFallback": "Tier",
-  "slidingScale.preview.priceFallback": "—",
+  "slidingScale.preview.priceFallback": "Not set",
   "slidingScale.preview.outro":
     "Pay the tier that's honest for you. Choosing higher keeps this work open to everyone.",
   "slidingScale.disclaimer":
@@ -3097,10 +3167,11 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.s0.b1.0":
     "We are forming this co-op so that none of us has to choose between staying closeted and staying housed.",
   "coopTemplate.doc.founding-values.s0.b1.1":
-    "We want a home where ageing, disability, and care needs are planned for, not discovered too late.",
+    "We want a home where ageing, disability, and care needs are planned for in good time.",
   "coopTemplate.doc.founding-values.s0.b1.2":
     "We're pooling what we have so that people who'd be priced out alone can stay in the city they call home.",
-  "coopTemplate.doc.founding-values.s1.h": "Who we are, and who this home is for",
+  "coopTemplate.doc.founding-values.s1.h":
+    "Who we are, and who this home is for",
   "coopTemplate.doc.founding-values.s1.b0":
     "Name explicitly who belongs here and on what terms. Silence on this point tends to default to whoever already holds power in the room, so write it down.",
   "coopTemplate.doc.founding-values.s1.b1.0":
@@ -3133,14 +3204,14 @@ export const economy: Catalog = {
   "coopTemplate.doc.founding-values.s4.b0":
     "Say plainly what fairness means to your group before the finance model (see the Finance Model Explainer) turns it into numbers.",
   "coopTemplate.doc.founding-values.s4.b1.0":
-    "Contributions are scaled to what people can actually pay, not split identically by default.",
+    "Contributions are scaled to what people can actually pay.",
   "coopTemplate.doc.founding-values.s4.b1.1":
     "No one loses their home over money without the group first trying every alternative together (see the Financial Honesty Agreement and the Conflict Resolution Process).",
   "coopTemplate.doc.founding-values.s4.b1.2":
     "Financial information about the co-op is available to every member, always. There are no closed books here.",
   "coopTemplate.doc.founding-values.s5.h": "Revisiting these values",
   "coopTemplate.doc.founding-values.s5.b0":
-    "Values drift if nobody re-reads them. Set a date, not just a good intention.",
+    "Values drift if nobody re-reads them. Set a date in the calendar.",
   "coopTemplate.doc.founding-values.s5.b1.0":
     "We re-read this charter together at least once a year, and after any major event that tested it.",
   "coopTemplate.doc.founding-values.s5.b1.1":
@@ -3153,7 +3224,8 @@ export const economy: Catalog = {
   "coopTemplate.doc.financial-honesty.titleEm": "Agreement",
   "coopTemplate.doc.financial-honesty.intro":
     "Housing co-ops fail more often over unspoken money trouble than over any legal problem. This agreement exists so that a member who's struggling says so in week two, not month eight, and so nobody has to guess what anyone else earns, owes, or is worried about. Adapt the specifics to your group; keep the principle that everyone sees the same numbers.",
-  "coopTemplate.doc.financial-honesty.s0.h": "What full transparency means here",
+  "coopTemplate.doc.financial-honesty.s0.h":
+    "What full transparency means here",
   "coopTemplate.doc.financial-honesty.s0.b0":
     "Financial transparency doesn't mean everyone reveals their entire personal finances. It means everyone sees the same numbers about the co-op, and the group agrees in advance what individual information is shared, and why.",
   "coopTemplate.doc.financial-honesty.s0.b1.0":
@@ -3162,7 +3234,8 @@ export const economy: Catalog = {
     "Individual contribution amounts (if scaled to income) are visible to the group, though the underlying payslips or tax returns are not, unless a member chooses to share them.",
   "coopTemplate.doc.financial-honesty.s0.b1.2":
     "No side agreements about money exist outside this document and the shared ledger.",
-  "coopTemplate.doc.financial-honesty.s1.h": "What each member discloses, and when",
+  "coopTemplate.doc.financial-honesty.s1.h":
+    "What each member discloses, and when",
   "coopTemplate.doc.financial-honesty.s1.b0":
     "Be specific about what's asked for at joining versus what's ongoing.",
   "coopTemplate.doc.financial-honesty.s1.b1.0":
@@ -3191,7 +3264,7 @@ export const economy: Catalog = {
     "The solidarity fund (below) is offered before any conversation about a member leaving.",
   "coopTemplate.doc.financial-honesty.s4.h": "Solidarity & hardship fund",
   "coopTemplate.doc.financial-honesty.s4.b0":
-    "A concrete fund, not just a kind sentiment, is what makes 'we take care of each other' survive a real emergency.",
+    "A concrete fund is what makes 'we take care of each other' survive a real emergency.",
   "coopTemplate.doc.financial-honesty.s4.b1.0":
     "Every member contributes an illustrative example of €10–€20 a month into a shared hardship fund, separate from operating costs.",
   "coopTemplate.doc.financial-honesty.s4.b1.1":
@@ -3215,7 +3288,7 @@ export const economy: Catalog = {
   "coopTemplate.doc.crl-statutes.s0.b0":
     "Your statutes open by naming the cooperative and its registered address (sede social), usually the property itself or a member's address until the property closes.",
   "coopTemplate.doc.crl-statutes.s0.b1.0":
-    "Legal name, including the required \"Cooperativa de Responsabilidade Limitada\" or \"CRL\" designation.",
+    'Legal name, including the required "Cooperativa de Responsabilidade Limitada" or "CRL" designation.',
   "coopTemplate.doc.crl-statutes.s0.b1.1":
     "Registered seat: município and full address.",
   "coopTemplate.doc.crl-statutes.s0.b1.2":
@@ -3354,7 +3427,7 @@ export const economy: Catalog = {
     "Municipal support, a long lease on city-owned property, a renovation grant, or a housing fund co-investment, can reduce or replace the acquisition cost entirely in some cases. Ask QueerPulse's housing fund liaison what's currently available in your city.",
   "coopTemplate.doc.finance-model.s2.h": "Setting monthly contributions",
   "coopTemplate.doc.finance-model.s2.b0":
-    "Work backwards from what people can actually pay, then check the number covers real costs, not the other way round.",
+    "Work backwards from what people can actually pay, then check the number covers real costs. Start from the people.",
   "coopTemplate.doc.finance-model.s2.b1.0":
     "Add up total monthly running costs: loan repayment plus reserve plus insurance plus admin.",
   "coopTemplate.doc.finance-model.s2.b1.1":
@@ -3397,7 +3470,8 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.titleEm": "Process",
   "coopTemplate.doc.conflict-resolution.intro":
     "Every co-op has conflict, the difference between the ones that last and the ones that don't is usually whether they built a process before they needed it. This one is adapted from what Casa Sambizanga uses day to day; treat it as a starting structure to walk through and adjust with your own group, especially the steps that involve someone possibly leaving.",
-  "coopTemplate.doc.conflict-resolution.s0.h": "Principles: repair over punishment",
+  "coopTemplate.doc.conflict-resolution.s0.h":
+    "Principles: repair over punishment",
   "coopTemplate.doc.conflict-resolution.s0.b0":
     "Set the tone before the steps. A process that only exists to punish tends to make people hide problems instead of raising them.",
   "coopTemplate.doc.conflict-resolution.s0.b1.0":
@@ -3435,7 +3509,7 @@ export const economy: Catalog = {
     "The co-op does not investigate or adjudicate criminal matters itself; it supports the person affected in accessing outside help if they want it, and makes decisions about shared housing safety in parallel.",
   "coopTemplate.doc.conflict-resolution.s4.h": "Boundaries & accountability",
   "coopTemplate.doc.conflict-resolution.s4.b0.0":
-    "Accountability here means someone actually changing the behaviour that caused harm, with support, not just an apology with no follow-up.",
+    "Accountability here means someone actually changing the behaviour that caused harm, with support, and with follow-up.",
   "coopTemplate.doc.conflict-resolution.s4.b0.1":
     "Agreements made at any step, a changed behaviour, a boundary, a repair action, are written down and given a review date, so they're checked rather than assumed to have worked.",
   "coopTemplate.doc.conflict-resolution.s5.h": "When someone must leave",
@@ -3446,10 +3520,10 @@ export const economy: Catalog = {
   "coopTemplate.doc.conflict-resolution.s5.b1.1":
     "The decision requires [an agreed threshold, for example, a supermajority of the assembly, excluding those directly involved] and follows the exit terms in your CRL statutes and Member Share Agreement.",
   "coopTemplate.doc.conflict-resolution.s5.b1.2":
-    "Wherever possible, the co-op supports the departing member in finding alternative housing. This is a housing safety net, not an eviction machine.",
+    "Wherever possible, the co-op supports the departing member in finding alternative housing. This is a housing safety net.",
   "coopTemplate.doc.conflict-resolution.s6.h": "Reviewing the process",
   "coopTemplate.doc.conflict-resolution.s6.b0":
-    "Revisit this after it's actually used, not just on a calendar.",
+    "Revisit this after it's actually been used, as well as on a set date.",
   "coopTemplate.doc.conflict-resolution.s6.b1.0":
     "After any use of step 3 or beyond, the group reviews whether the process itself worked, separate from the outcome of that specific conflict.",
   "coopTemplate.doc.conflict-resolution.s6.b1.1":
@@ -3542,8 +3616,6 @@ export const economy: Catalog = {
   "housingCoop.toast.postHelp":
     "We'll help you find your people. Check your inbox.",
   "housingCoop.toast.story": "Casa Sambizanga's story is coming soon.",
-  "housingCoop.toast.liveComingSoon":
-    "That's still being built. This action isn't wired up yet.",
 
   // ── JoinCoopModal ────────────────────────────────────────────────────────
   "joinCoop.askToJoinAriaLabel": "Ask to join {name}",
@@ -3563,7 +3635,7 @@ export const economy: Catalog = {
   "joinCoop.notePlaceholder":
     "What draws you to this co-op? Your situation, timeline, hopes…",
   "joinCoop.disclaimer":
-    "Your request is shared only with this co-op's organisers. Joining a co-op is a long conversation, not a click. Take your time.",
+    "Your request is shared only with this co-op's organisers. Joining a co-op is a long conversation. Take your time.",
   "joinCoop.cancel": "Cancel",
   "joinCoop.sending": "Sending…",
   "joinCoop.sendCta": "Send request",
@@ -3729,7 +3801,7 @@ export const economy: Catalog = {
   "housingSafety.tips.videoCall":
     "Ask to video-call. See the person and the place live.",
   "housingSafety.tips.lowPrice":
-    "A price well below the going rate is usually a warning, not a deal.",
+    "A price well below the going rate is usually a warning sign.",
   "housingSafety.tips.noTransfers":
     "No transfers or deposits until you've verified who you're dealing with.",
   "housingSafety.tips.stayOnPlatform":
@@ -3812,8 +3884,7 @@ export const economy: Catalog = {
   "sayHello.sharePronouns": "Let {name} see my pronouns, {pronouns}",
   "sayHello.sharePronounsHint":
     "Only shared with this person, only when you say so.",
-  "sayHello.noPronounsHint":
-    "Add pronouns to your profile to share them here.",
+  "sayHello.noPronounsHint": "Add pronouns to your profile to share them here.",
   "sayHello.cancel": "Cancel",
   "sayHello.send": "Send hello",
   "sayHello.sending": "Sending…",
@@ -3897,4 +3968,250 @@ export const economy: Catalog = {
 
   // ── Housing co-op — verified operator marker (Wave A) ──
   "housingCoop.operatorVerified": "Verified operator",
+
+  // ── 2026-08-21 code-review 4.6 fixes ──
+  "placeholder.notSet": "Not set",
+  "member.fallbackName": "A member",
+  "housing.fact.rent": "Rent",
+  "housing.fact.rentPerMonth": "{amount} / month",
+  "housing.fact.area": "Area",
+  "housing.fact.available": "Available",
+  "housing.fact.availableNow": "Now",
+  "housing.fact.minimumStay": "Minimum stay",
+  "housing.fact.minimumStayMonths_one": "{count} month",
+  "housing.fact.minimumStayMonths_other": "{count} months",
+  "housing.fact.bills": "Bills",
+  "housing.fact.billsIncluded": "Included",
+  "housing.fact.billsNotIncluded": "Not included",
+  "housing.beds.count_one": "{count} bed",
+  "housing.beds.count_other": "{count} beds",
+  "housing.period.month": "month",
+  "company.badge.queerRun": "Queer-run",
+  "company.badge.queerRunVerified": "Queer-run · verified",
+  "company.badge.queerLed": "Queer-led",
+  "company.badge.queerLedVerified": "Queer-led · verified",
+  "company.badge.verified": "Verified",
+  "company.badge.employer": "Employer",
+  "company.reviews.starsBar_one": "{count} star",
+  "company.reviews.starsBar_other": "{count} stars",
+  "company.stats.founded": "Founded",
+  "company.stats.people_one": "Person",
+  "company.stats.people_other": "People",
+  "company.stats.avgReview_one": "Avg review · {count} review",
+  "company.stats.avgReview_other": "Avg review · {count} reviews",
+  "company.stats.noScore": "No score",
+  "company.membersLabel_one": "View all {count} member",
+  "company.membersLabel_other": "View all {count} members",
+  "company.hiringContact.fallbackName": "The team",
+  "company.hiringContact.fallbackRole":
+    "Applications are read by the team here.",
+  "landlord.recommendation.when": "Recommended {date}",
+  "housingCoop.card.phaseLabel": "Phase {number} · {phase}",
+  "housingCoop.card.phaseWord.forming": "forming",
+  "housingCoop.card.phaseWord.legal": "legal",
+  "housingCoop.card.phaseWord.finance": "finance",
+  "housingCoop.card.phaseWord.property": "property",
+  "housingCoop.card.phaseWord.daily": "daily",
+  "housingCoop.card.cta.join": "Ask to join",
+  "housingCoop.card.cta.updates": "Read updates",
+  "housingCoop.card.cta.mentor": "Request mentoring",
+  "housingCoop.card.location_one": "{area}, {city} · {count} household",
+  "housingCoop.card.location_other": "{area}, {city} · {count} households",
+  "housingCoop.card.meta.targetShares": "Target shares",
+  "housingCoop.card.meta.memberShares": "Member shares",
+  "housingCoop.card.meta.monthly": "Monthly",
+  "housingCoop.card.meta.operating": "Operating",
+  "housingCoop.card.meta.formingSince": "Forming since",
+  "housingCoop.card.operationalSince": "Operational since",
+  "housingCoop.card.duration.years_one": "{count} year",
+  "housingCoop.card.duration.years_other": "{count} years",
+  "housingCoop.card.duration.months_one": "{count} month",
+  "housingCoop.card.duration.months_other": "{count} months",
+  "housingCoop.card.duration.justOpened": "just opened",
+  "tax.disclaimer":
+    "General information only. Rules change and every situation differs, so " +
+    "confirm with a contabilista certificado before you rely on these figures.",
+  "tax.retentionRate.23": "23% (default since 2025)",
+  "tax.retentionRate.25": "25% (optional)",
+  "tax.retentionRate.16_5": "16.5% (intellectual/industrial property)",
+  "tax.retentionRate.11_5": "11.5% (activities not in the art. 151.º table)",
+  "tax.retentionRate.0": "No retention (dispensa / art. 101.º-B)",
+  "postJob.step3.maxPlaceholder": "Optional",
+  "postJob.confirm.share.linkCopied": "Copied",
+  "postJob.confirm.share.toastLinkFailed":
+    "We couldn't reach your clipboard. Open the listing and copy the link from your browser's address bar.",
+  "rateBoard.eyebrow": "On this device",
+  "housingCoop.empty.bodyComingSoon":
+    "This is where you'll find groups organizing housing together. Nobody has started one here yet, and posting that you're starting opens soon.",
+  "housingCoop.startCta.comingSoonNote":
+    "Posting that you're starting opens soon. Until then, you can ask to join any co-op already forming above.",
+  "myHousingListings.edit.backToReviewWarning":
+    "This listing is live right now. Saving a change sends it back for review, so it leaves the public board until a moderator clears it again. Usually that is quick.",
+  "myHousingListings.toast.backToReview":
+    "Saved. Your listing is back in review, so it is off the board until a moderator clears it.",
+  // ── Housing-group listings: the poster's own edit + withdraw (BE-HSG-20) ──
+  "groupListing.manage.startCta": "Manage a room you posted",
+  "groupListing.manage.doneCta": "Done managing",
+  "groupListing.manage.note":
+    "Only the person who posted a room can edit or withdraw it. Pick yours below and we will check with the group.",
+  "groupListing.manage.editCta": "Edit",
+  "groupListing.manage.editAriaLabel": "Edit the listing {title}",
+  "groupListing.manage.withdrawCta": "Withdraw",
+  "groupListing.manage.withdrawAriaLabel": "Withdraw the listing {title}",
+
+  "groupListing.edit.ariaLabel": "Edit the listing {title}",
+  "groupListing.edit.eyebrow": "Your room",
+  "groupListing.edit.title": "Correct <em>your listing</em>",
+  "groupListing.edit.sub":
+    "Fix a price, rewrite the description, or update what you said about access.",
+  "groupListing.edit.backToReviewWarning":
+    "Everything on this form shows on the group page, so saving a change sends the room back for review. It leaves the group page until a moderator clears it again. Usually that is quick.",
+  "groupListing.edit.submitCta": "Save and send for review",
+  "groupListing.edit.submitting": "Saving…",
+
+  "groupListing.field.titleLabel": "Room or flat",
+  "groupListing.field.titlePlaceholder": "Sunny room in a shared flat",
+  "groupListing.field.neighbourhoodLabel": "Neighbourhood",
+  "groupListing.field.neighbourhoodPlaceholder": "Arroios",
+  "groupListing.field.priceLabel": "Rent per month",
+  "groupListing.field.pricePlaceholder": "480",
+  "groupListing.field.priceHint":
+    "A real number in euros. Stating the rent up front is a house rule here.",
+  "groupListing.field.priceError": "Give a whole amount in euros, at least 1.",
+  "groupListing.field.descriptionLabel": "What the place is like",
+  "groupListing.field.descriptionPlaceholder":
+    "Who lives there, what the flat is like, what you are hoping for in a flatmate.",
+  "groupListing.field.accessLabel": "Access",
+  "groupListing.field.accessPlaceholder":
+    "Third floor, no lift. Bathroom door is 70cm. Step-free from the street to the building door.",
+  "groupListing.field.accessHint":
+    "Describe stairs, lifts, step-free routes and doorways honestly. Every listing here has to.",
+
+  "groupListing.withdraw.confirmTitle": "Take this room down?",
+  "groupListing.withdraw.confirmBody":
+    "{title} comes off the group page for everyone. This cannot be undone, so post it again if the room comes free later.",
+  "groupListing.withdraw.confirmCta": "Withdraw the listing",
+
+  "groupListing.toast.backToReview":
+    "Saved. Your room is back in review, so it is off the group page until a moderator clears it.",
+  "groupListing.toast.editFailed": "Couldn't save that change",
+  "groupListing.toast.withdrawn":
+    "That room is down. Thanks for keeping the group tidy.",
+  "groupListing.toast.withdrawFailed": "Couldn't withdraw that listing",
+
+  // ── Landlord recommendations: withdraw your own (BE-HSG-18) ──
+  "landlordPage.recommendation.yoursBadge": "Yours",
+  "landlordPage.recommendation.withdrawCta": "Withdraw",
+  "landlordPage.withdraw.confirmTitle": "Withdraw your recommendation?",
+  "landlordPage.withdraw.confirmBody":
+    "It comes off {name}'s page and stops counting towards their rating. You can write a new one any time.",
+  "landlordPage.withdraw.confirmCta": "Withdraw it",
+  "landlordPage.toast.recommendationWithdrawn": "Your recommendation is down.",
+  "landlordPage.toast.withdrawFailed": "Couldn't withdraw that recommendation",
+
+  // ── Employer-side job applications console (BE-HSG-16) ──
+  "jobDetail.sidebar.reviewApplicationsCta": "Review applications",
+  "jobApplications.eyebrow": "Applications",
+  "jobApplications.fallbackJobTitle": "Your listing",
+  "jobApplications.countTotal_one": "{count} person has applied.",
+  "jobApplications.countTotal_other": "{count} people have applied.",
+  "jobApplications.countWaiting_one": "{count} is waiting on a decision.",
+  "jobApplications.countWaiting_other": "{count} are waiting on a decision.",
+  "jobApplications.countWaitingNone": "Nothing is waiting on you right now.",
+  "jobApplications.notifyNote":
+    "Whoever you accept or decline hears from you by direct message, so keep an eye on your inbox for their reply.",
+  "jobApplications.viewListing": "View the listing",
+  "jobApplications.appliedOn": "Applied {date}",
+  "jobApplications.applicantRemoved": "A member who has since left",
+  "jobApplications.status.submitted": "New",
+  "jobApplications.status.reviewing": "Reviewing",
+  "jobApplications.status.accepted": "Accepted",
+  "jobApplications.status.declined": "Declined",
+  "jobApplications.action.startReview": "Start reviewing",
+  "jobApplications.action.decline": "Decline",
+  "jobApplications.action.accept": "Accept",
+  "jobApplications.decisionFinal":
+    "This decision is final and the applicant has been told.",
+  "jobApplications.decideFailed": "Couldn't update that application",
+  "jobApplications.confirmAccept.title": "Accept this application?",
+  "jobApplications.confirmAccept.body":
+    "They get a direct message from you saying so. Accepting is final, so take a moment first.",
+  "jobApplications.confirmAccept.cta": "Accept",
+  "jobApplications.confirmDecline.title": "Decline this application?",
+  "jobApplications.confirmDecline.body":
+    "They get a direct message from you saying so. Declining is final, and a kind word in your reply goes a long way.",
+  "jobApplications.confirmDecline.cta": "Decline",
+  "jobApplications.empty.title": "No applications yet",
+  "jobApplications.empty.description":
+    "When someone applies they will show up here, with whatever they wrote to you.",
+  "jobApplications.forbidden.title": "This listing belongs to someone else",
+  "jobApplications.forbidden.description":
+    "Only the person who posted a role can read its applications. If this is your listing, sign in with the account you posted it from.",
+  "jobApplications.forbidden.cta": "Back to the board",
+  "jobApplications.missing.title": "That listing is gone",
+  "jobApplications.missing.description":
+    "It may have been taken down. Have a look at what else is open.",
+  "jobApplications.error.title": "We couldn't load the applications",
+  "jobApplications.error.description":
+    "Something went wrong on our side. Give it another go in a moment.",
+  "jobApplications.error.retry": "Try again",
+
+  // ── Skill-exchange board paging + owner-side proposal inbox ──
+  "barter.loadMore": "Show more swaps",
+  "barter.loadingMore": "Loading more swaps…",
+
+  "barterProposals.entryLink": "Your swaps and proposals",
+  "barterProposals.eyebrow": "Skill exchange",
+  "barterProposals.title": "Proposals on your swaps",
+  "barterProposals.countListings_one": "{count} swap posted.",
+  "barterProposals.countListings_other": "{count} swaps posted.",
+  "barterProposals.countWaiting_one": "{count} proposal is waiting on you.",
+  "barterProposals.countWaiting_other": "{count} proposals are waiting on you.",
+  "barterProposals.countWaitingNone": "Nothing is waiting on you right now.",
+  "barterProposals.backToBoard": "Back to the skill exchange",
+  "barterProposals.pickerLegend": "Choose which of your swaps to read",
+  "barterProposals.pendingBadgeLabel_one": "{count} proposal waiting",
+  "barterProposals.pendingBadgeLabel_other": "{count} proposals waiting",
+  "barterProposals.proposedOn": "Proposed {date}",
+  "barterProposals.proposerRemoved": "A member who has since left",
+  "barterProposals.status.pending": "Waiting on you",
+  "barterProposals.status.accepted": "Accepted",
+  "barterProposals.status.declined": "Declined",
+  "barterProposals.action.accept": "Accept",
+  "barterProposals.action.decline": "Decline",
+  "barterProposals.decisionFinal":
+    "This answer is final and they have been told.",
+  "barterProposals.confirmAccept.title": "Accept this swap?",
+  "barterProposals.confirmAccept.body":
+    "They hear from you in your messages, where you can shape the swap together. Accepting is final, so take a moment first.",
+  "barterProposals.confirmAccept.cta": "Accept",
+  "barterProposals.confirmDecline.title": "Decline this swap?",
+  "barterProposals.confirmDecline.body":
+    "They hear from you in your messages. Declining is final, and a kind word in your reply goes a long way.",
+  "barterProposals.confirmDecline.cta": "Decline",
+  "barterProposals.decide.errorFailed":
+    "Your answer didn't save. Give it another try in a moment.",
+  "barterProposals.decide.errorNotOwner":
+    "This swap belongs to someone else, so only they can answer its proposals.",
+  "barterProposals.decide.errorGone":
+    "This swap or proposal is gone. Refresh to see what's still here.",
+  "barterProposals.decide.errorAlreadyDecided":
+    "This proposal already has an answer. Refresh to see where it stands.",
+  "barterProposals.empty.title": "No proposals on this swap yet",
+  "barterProposals.empty.description":
+    "When someone proposes an exchange it shows up here, with whatever they wrote to you.",
+  "barterProposals.noListings.title": "You haven't posted a swap yet",
+  "barterProposals.noListings.description":
+    "Put something on the table and proposals from other members land right here.",
+  "barterProposals.noListings.cta": "Go to the skill exchange",
+  "barterProposals.forbidden.title": "This swap belongs to someone else",
+  "barterProposals.forbidden.description":
+    "Only the person who posted a swap can read its proposals. If this one is yours, sign in with the account you posted it from.",
+  "barterProposals.missing.title": "That swap is gone",
+  "barterProposals.missing.description":
+    "It may have been taken off the board. Have a look at what else is on the exchange.",
+  "barterProposals.error.title": "We couldn't load the proposals",
+  "barterProposals.error.description":
+    "Something went wrong on our side. Give it another go in a moment.",
+  "barterProposals.error.retry": "Try again",
 };

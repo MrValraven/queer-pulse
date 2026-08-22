@@ -189,8 +189,8 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
         borrowed spaces a few times a year.
       </>,
       <>
-        You don't need a gallery, an agent, or a finished body of work. You
-        need something you're making and a willingness to look at other people's
+        You don't need a gallery, an agent, or a finished body of work. You need
+        something you're making and a willingness to look at other people's
         honestly. The collective is the room before the room.
       </>,
     ],
@@ -354,8 +354,8 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
     about: [
       <>
         For LGBTQ+ parents, co-parents, and people navigating parenthood, a
-        group that's often an afterthought in queer spaces, and here it comes first.
-        Playdates, honest talk, and the logistics no one warns you about.
+        group that's often an afterthought in queer spaces, and here it comes
+        first. Playdates, honest talk, and the logistics no one warns you about.
       </>,
       <>
         Some of us came to parenting through adoption, some through co-parenting
@@ -636,8 +636,7 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
     about: [
       <>
         An intersectional space for queer people of colour in Lisbon. Race and
-        queerness belong in the same conversation here, held in the same
-        room.
+        queerness belong in the same conversation here, held in the same room.
       </>,
       <>
         We hold space for the specific: the white queer scene that doesn't see

@@ -848,6 +848,7 @@ export const subprofiles: Catalog = {
   "hero.more.ariaLabel": "Mais ações para {name}",
   "hero.viewPhotoAria": "Ver foto de {name}",
   "hero.standalone": "Independente · {address}",
+  "hero.noAddressYet": "Ainda sem endereço: define um handle para lhe dar um",
 
   // Bloco de título do skin oficina (SubprofileTitleBlock) — dl decorativo
   // mostrado apenas no skin oficina (controlado por CSS); "state" mostra
@@ -907,6 +908,12 @@ export const subprofiles: Catalog = {
   "share.cta": "Partilhar",
   "share.ariaLabel": "Partilhar esta persona",
   "share.copied": "Link copiado",
+  "share.copyFailed":
+    "O teu navegador não nos deixou copiar. O link está aqui, seleciona-o e copia-o à mão.",
+  "share.copyFailedWithUrl":
+    "O teu navegador não nos deixou copiar. Aqui fica o link: {url}",
+  "share.resolvingAddress":
+    "Um momento, estamos a procurar o endereço desta persona.",
 
   // Modal de cartão de partilha (SubprofileShareCard) + código QR
   // (SubprofileQR) — pontos de entrada no SubprofileHero (público) e no
@@ -1086,6 +1093,14 @@ export const subprofiles: Catalog = {
   "owners.leaveModalLeaving": "A sair…",
   "owners.toastLeft": "Saíste desta persona",
   "owners.toastLeaveError": "Não conseguimos fazer isso agora. Tenta outra vez.",
+  "owners.removeAria": "Remover {name} da co-propriedade",
+  "owners.removeConfirmTitle": "Remover {name}?",
+  "owners.removeConfirmBody":
+    "{name} perde todo o acesso a esta persona: edição, publicação, convites. Não fica com nada. Podes voltar a convidar essa pessoa mais tarde, se quiseres.",
+  "owners.removeConfirmAction": "Remover",
+  "owners.toastRemoved": "{name} já não faz parte desta persona",
+  "owners.toastRemoveError":
+    "Não conseguimos remover essa pessoa agora. Tenta outra vez.",
 
   // Modal de convite a um responsável (InviteCoOwnerModal)
   "invite.title": "Convidar um responsável",
@@ -1509,6 +1524,11 @@ export const subprofiles: Catalog = {
   "itemDrawer.addTitle": "Acrescentar a {section}",
   "itemDrawer.editTitle": "Editar este item de {section}",
   "itemDrawer.cancel": "Cancelar",
+  "itemDrawer.discardTitle": "Deitar isto fora?",
+  "itemDrawer.discardBody":
+    "Escreveste aqui alguma coisa e ainda não foi guardada. Se fechares, desaparece.",
+  "itemDrawer.discardConfirm": "Deitar fora",
+  "itemDrawer.discardKeep": "Continuar a editar",
   "itemDrawer.saveItem": "Guardar item",
   "itemRow.edit": "Editar",
 
@@ -1524,6 +1544,18 @@ export const subprofiles: Catalog = {
   "protect.copied": "Copiado para a área de transferência",
   "protect.email": "Enviar para o meu email",
   "protect.failed": "Não foi possível gerar o registo. Tente novamente.",
+  "protect.emailSubject": "Registo de autoria: {title}",
+  // O texto do próprio registo (rights/authorshipRecord.ts). Só as etiquetas
+  // são traduzidas; os valores ao lado (título, autoria, data, hash) são dados,
+  // e o hash cobre a obra em si, por isso um registo traduzido verifica-se
+  // exatamente como um em inglês.
+  "protect.record.heading": "REGISTO DE AUTORIA: QueerPulse",
+  "protect.record.work": "Obra",
+  "protect.record.author": "Autoria",
+  "protect.record.firstPublished": "Primeira publicação",
+  "protect.record.contentHash": "SHA-256 do conteúdo",
+  "protect.record.canonicalForm":
+    "Forma canónica: título + corpo em texto simples, com quebras LF, sem espaços nas pontas",
 
   // Histórico de versões (ItemRevisionHistoryModal): lista de revisões
   // guardadas + ver + restaurar, aberto pelo botão "Histórico" na gaveta do

@@ -78,43 +78,64 @@ export function useConnectionActions() {
     [demoMode, invalidate],
   );
 
-  /** Accept an incoming request. */
+  /**
+   * Accept an incoming request. Resolves `true` only once the server has
+   * confirmed it (immediately in demo); `false` after a rollback, so the caller
+   * can withhold its success toast instead of contradicting the error one
+   * `rollback` already fired.
+   */
   const acceptRequest = useCallback(
-    async (ref: ConnectionRef) => {
+    async (ref: ConnectionRef): Promise<boolean> => {
       const prev = snapshot();
       accept(ref.slug); // demo + optimistic local move
       try {
         await patch(ref, "accept");
+        return true;
       } catch (error) {
         rollback(prev, error);
+        return false;
       }
     },
     [accept, patch, snapshot, rollback],
   );
 
-  /** Politely decline an incoming request. */
+  /** Politely decline an incoming request. Resolves `true` on success. */
   const declineRequest = useCallback(
-    async (ref: ConnectionRef) => {
+    async (ref: ConnectionRef): Promise<boolean> => {
       const prev = snapshot();
       decline(ref.slug);
       try {
         await patch(ref, "decline");
+        return true;
       } catch (error) {
         rollback(prev, error);
+        return false;
       }
     },
     [decline, patch, snapshot, rollback],
   );
 
-  /** Withdraw a request you sent (delete the pending outgoing connection). */
+  /**
+   * Withdraw a request you sent (delete the pending outgoing connection). Same
+   * snapshot/rollback contract as accept/decline: a failed DELETE puts the card
+   * back and toasts the reason instead of leaving the request live server-side
+   * while the UI claims it was withdrawn.
+   */
   const withdrawRequest = useCallback(
-    async (ref: ConnectionRef) => {
+    async (ref: ConnectionRef): Promise<boolean> => {
+      const prev = snapshot();
       withdraw(ref.slug);
-      if (demoMode || !ref.id) return;
-      await removeConnection(ref.id);
-      invalidate();
+      if (demoMode || !ref.id) return true;
+      try {
+        await removeConnection(ref.id);
+        invalidate();
+        return true;
+      } catch (error) {
+        rollback(prev, error);
+        return false;
+      }
     },
-    [withdraw, demoMode, invalidate],
+    [withdraw, demoMode, invalidate, snapshot, rollback],
   );
 
   // Blocks now route through the dedicated /blocks resource owned by
@@ -124,16 +145,16 @@ export function useConnectionActions() {
 
   /** Block a member. */
   const block = useCallback(
-    (ref: ConnectionRef) => {
-      toggleBlock(ref.slug);
+    (ref: ConnectionRef, onSettled?: (didSucceed: boolean) => void) => {
+      toggleBlock(ref.slug, undefined, onSettled);
     },
     [toggleBlock],
   );
 
   /** Unblock a member. */
   const unblock = useCallback(
-    (ref: ConnectionRef) => {
-      toggleBlock(ref.slug);
+    (ref: ConnectionRef, onSettled?: (didSucceed: boolean) => void) => {
+      toggleBlock(ref.slug, undefined, onSettled);
     },
     [toggleBlock],
   );
@@ -148,15 +169,27 @@ export function useConnectionActions() {
     [demoMode, invalidate],
   );
 
-  /** Send a new connection request to a member. */
+  /**
+   * Send a new connection request to a member. The optimistic local "sent" is
+   * rolled back when the POST fails, so a 403/429/network error never leaves
+   * every `isPending(slug)` surface claiming a request exists. The error is
+   * re-thrown: ConnectModal owns the user-facing message for this one (it
+   * branches terminal vs. retryable), so no toast is fired here.
+   */
   const send = useCallback(
     async (toSlug: string, message?: string, reason?: string) => {
+      const prev = snapshot();
       sendRequest(toSlug); // demo + optimistic local "sent"
       if (demoMode) return;
-      await sendConnection({ toSlug, message, reason });
+      try {
+        await sendConnection({ toSlug, message, reason });
+      } catch (error) {
+        restore(prev);
+        throw error;
+      }
       invalidate();
     },
-    [sendRequest, demoMode, invalidate],
+    [sendRequest, demoMode, invalidate, snapshot, restore],
   );
 
   return {

@@ -180,7 +180,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(24px, 3.4vw, 34px);
-  color: var(--cream, #f7f3ee);
+  color: var(--cream);
 }
 .emptyTitle em {
   font-style: italic;
@@ -271,6 +271,22 @@
   color: var(--text-strong);
   letter-spacing: -0.02em;
 }
+.listingsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+/* Manage mode is progressive disclosure: the note explains, before anything is
+   clicked, that only the person who posted a room can change it. */
+.manageNote {
+  margin-block-start: 12px;
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
 .listingsEmpty {
   margin-block-start: 12px;
   color: var(--ink-60);
@@ -330,4 +346,17 @@
 .accessLabel {
   font-weight: 700;
   color: var(--jade);
+}
+
+.listingManage {
+  margin-block-start: 6px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.listingWithdraw {
+  margin-inline-start: auto;
 }

@@ -130,6 +130,13 @@ export const myevents: Catalog = {
   "card.joinLinkToast": "Opening the join link…",
   "card.directionsToast": "Opening directions to {venue}",
 
+  // ── Live-data labels (api/myEvents.adapters.ts) ───────────────────────────
+  // Platform chrome the live adapter fills in where the API sends a flag
+  // rather than authored text: an online gathering has no venue string, and a
+  // pending invite row can arrive without its event summary.
+  "card.online": "Online",
+  "invite.defaultTitle": "Event invitation",
+
   // ── Urgency / friends chips (EventCardParts) ──────────────────────────────
   "card.soldOut": "Sold out",
   "card.spotsOpen_one": "{count} spot open",
@@ -261,12 +268,12 @@ export const myevents: Catalog = {
   "conflict.body":
     "at the same time. You can only be in one place. You might want to let one go.",
   "edge.cancelledTitle": "The host cancelled this gathering.",
-  "edge.cancelledBody": "Your RSVP was released —",
+  "edge.cancelledBody": "Your RSVP was released.",
   "edge.findSomethingSimilar": "find something similar",
   "edge.findingSimilarToast": "Finding similar gatherings…",
   "edge.reviewTitle": "Under review.",
   "edge.reviewBody":
-    "A report came in, so this gathering is being checked by our team. It stays up while we look —",
+    "A report came in, so this gathering is being checked by our team. It stays up while we look.",
   "edge.seeStatus": "see status",
   "edge.seeStatusToast": "Opening the review status…",
   "edge.blockedBody":
@@ -284,7 +291,7 @@ export const myevents: Catalog = {
   "dayof.gettingIn": "Getting in",
   "dayof.meetingPoint": "Meeting point:",
   "dayof.doorCode": "Door code:",
-  "dayof.doorCodeNote": "— shown because it starts soon",
+  "dayof.doorCodeNote": "(shown because it starts soon)",
 
   // ── Calendar aside (CalendarCard, CalendarGrid) ───────────────────────────
   "calendar.today": "Today",
@@ -314,6 +321,11 @@ export const myevents: Catalog = {
   "calSubscribe.exportTitle": "Export this month",
   "calSubscribe.exportSub": "Download a one-time .ics file",
   "calSubscribe.exportToast": "{month} events downloaded as .ics",
+
+  // ── .ics export (myEvents.ics.ts) ─────────────────────────────────────────
+  // The DESCRIPTION line every exported VEVENT carries, so the calendar entry
+  // links back to the event page for details and changes.
+  "ics.description": "See the details and any updates on QueerPulse: {url}",
 
   // ── Recommendations strip (Discovery) ─────────────────────────────────────
   "discovery.title": "You might <em>like</em>",
@@ -513,6 +525,8 @@ export const myevents: Catalog = {
   "blockModal.cancelCta": "Cancel",
   "blockModal.confirmCta": "Block",
   "blockModal.blockedToast": "Blocked. You won't see their events again",
+  "blockModal.alreadyBlockedToast":
+    "You already have this host blocked. Nothing changed.",
 
   // ── Toasts from RSVP/notification lifecycle (useMyEventsState.ts) ────────
   "toast.reminderSet": "Reminder set: {lead} before",

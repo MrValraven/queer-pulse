@@ -1,3 +1,4 @@
+import { FiArrowDown, FiArrowUp } from "react-icons/fi";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useMyCommunityCards } from "../members/useMyCommunityCards";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -115,7 +116,7 @@ export function CommunitiesPickerSection({
                   disabled={position === 0}
                   onClick={() => moveFeatured(communityRef.slug, -1)}
                 >
-                  ↑
+                  <FiArrowUp aria-hidden />
                 </button>
                 <button
                   type="button"
@@ -124,7 +125,7 @@ export function CommunitiesPickerSection({
                   disabled={position === featuredCommunityRefs.length - 1}
                   onClick={() => moveFeatured(communityRef.slug, 1)}
                 >
-                  ↓
+                  <FiArrowDown aria-hidden />
                 </button>
                 <Button
                   variant="ghost"

@@ -1,0 +1,20 @@
+/* Inline text markers shared by the admin surfaces: a decorative "goes to"
+   arrow and the muted "no value yet" label. Both sit inside a line of running
+   text, so they size from the surrounding font rather than a fixed px value. */
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 5px;
+  color: var(--ink-40);
+  vertical-align: -0.12em;
+}
+
+.arrow svg {
+  width: 0.95em;
+  height: 0.95em;
+}
+
+.notSet {
+  color: var(--ink-40);
+}

@@ -27,6 +27,9 @@ export interface Reply {
    *  reply be told apart from someone else's (e.g. hiding "Report" on your
    *  own reply) without a separate DTO flag. */
   authorSlug?: string;
+  /** ISO creation timestamp (live rows) — the relative-time source, rendered
+   *  through `useCommunityTime()` at render so it localizes and stays fresh. */
+  createdAt?: string;
   /** ISO timestamp of the last edit, when the reply has been edited. */
   editedAt?: string | null;
   /** True when the reply is a soft-tombstone ("[deleted]"). */
@@ -40,7 +43,10 @@ export interface Thread {
   votes: number;
   title: string;
   author: Person;
-  time: string;
+  /** A ready-to-render time phrase, for rows with no timestamp (the synthetic
+   *  welcome thread, demo mock data). Live threads carry `createdAt` instead
+   *  and are formatted at render by `useCommunityTime`. */
+  time?: string;
   replyCount: number;
   post: string;
   replies: Reply[];

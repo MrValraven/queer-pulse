@@ -8,6 +8,7 @@ import { MobileProfileIdentityTop } from "./MobileProfileIdentityTop";
 import { MobileProfileStats } from "./MobileProfileStats";
 import { ProfileHeroActions } from "./ProfileHeroActions";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
+import { ProfileSettingsMenu } from "./ProfileSettingsMenu";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 import styles from "./MobileProfile.module.css";
@@ -50,6 +51,9 @@ export function MobileProfileHeader({
   onEdit,
   onEditLinks,
   onPreview,
+  onOpenWhoSeesWhat,
+  onOpenAccountData,
+  onToggleHidden,
 }: {
   profile: MemberProfile;
   self: boolean;
@@ -60,6 +64,12 @@ export function MobileProfileHeader({
   onEdit?: () => void;
   onEditLinks?: () => void;
   onPreview?: () => void;
+  /** Owner-only settings surfaces. Supplied together (the page hands over all
+   *  three) and only rendered on a genuine self view, never in the visitor
+   *  preview — the same gate `ProfileHeroMain` applies on desktop. */
+  onOpenWhoSeesWhat?: () => void;
+  onOpenAccountData?: () => void;
+  onToggleHidden?: () => void;
 }) {
   const { t } = useTranslation();
   // Mirrors ProfileHero exactly: `self` is resolved by the page against the
@@ -158,6 +168,19 @@ export function MobileProfileHeader({
           >
             <MdQrCode2 aria-hidden />
           </button>
+          {/* Visibility settings, per-person hiding, report receipts, data
+              export, step-away and DSAR all live behind this menu. It used to
+              render only in the desktop hero, which left every one of them
+              unreachable from a phone. */}
+          {onOpenWhoSeesWhat && onOpenAccountData && onToggleHidden && (
+            <ProfileSettingsMenu
+              profile={profile}
+              onOpenWhoSeesWhat={onOpenWhoSeesWhat}
+              onOpenAccountData={onOpenAccountData}
+              onToggleHidden={onToggleHidden}
+              hiddenUntil={profile.hiddenUntil ?? null}
+            />
+          )}
         </div>
       ) : (
         <MobileProfileActions

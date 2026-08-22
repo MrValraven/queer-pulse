@@ -17,10 +17,9 @@ export function useRelatedCommunities(
   type: CommunityType | undefined,
   limit = 3,
 ): Community[] {
-  const { items } = useCommunities(
-    type ? { type } : {},
-    { enabled: Boolean(type) },
-  );
+  const { items } = useCommunities(type ? { type } : {}, {
+    enabled: Boolean(type),
+  });
   if (!type) return [];
   return items
     .filter(

@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
 import { Avatar, FeatureHelp } from "../../shared/components/ui";
@@ -9,28 +9,12 @@ import { routes } from "../../app/routeMap";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { skinFor } from "./subprofile-skins";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
-import { personaPublicPath } from "./personaLinks.data";
+import { personaPublicPathOrNull } from "./personaLinks.data";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { SubprofileHeroActions } from "./SubprofileHeroActions";
 import { SubprofileTitleBlock } from "./SubprofileTitleBlock";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
-
-/** The design ground truth's `.pp-meta` count buttons carry a bare
- *  `class="metabtn"` that isn't in the ported `persona-skins.css` (only the
- *  prototype's separate, un-staged base/buttons stylesheet defined it — see
- *  `phase1-design/README.md`: map to the repo's own primitives, don't invent
- *  undefined classes). `.pp-meta`'s own quiet grey text styling already
- *  applies via inheritance; this only resets browser button chrome. */
-const METABTN_STYLE: CSSProperties = {
-  background: "none",
-  border: "none",
-  padding: 0,
-  margin: 0,
-  font: "inherit",
-  color: "inherit",
-  cursor: "pointer",
-};
 
 /**
  * The persona page's `.pp-hero` — avatar, name, tagline, social row, actions
@@ -62,6 +46,7 @@ export function SubprofileHero({
     view.linkVisibility === "linked" &&
     Boolean(view.ownerName) &&
     Boolean(view.ownerSlug);
+  const standaloneAddress = personaPublicPathOrNull(view);
   const interactive = mode !== "preview";
   // The studio and page skins `display:none` the avatar entirely (see
   // `persona-skins.css`) — wrapping a hidden avatar in a real `<button>` would
@@ -126,7 +111,7 @@ export function SubprofileHero({
             {view.endorsementCount > 0 ? (
               <button
                 type="button"
-                style={METABTN_STYLE}
+                className="pp-metabtn"
                 disabled={!interactive}
                 onClick={
                   interactive ? () => onAction("people:endorsers") : undefined
@@ -146,7 +131,7 @@ export function SubprofileHero({
             {view.followerCount > 0 ? (
               <button
                 type="button"
-                style={METABTN_STYLE}
+                className="pp-metabtn"
                 disabled={!interactive}
                 onClick={
                   interactive ? () => onAction("people:followers") : undefined
@@ -181,9 +166,14 @@ export function SubprofileHero({
               </span>
             ) : (
               <span className="pp-owner">
-                {t("subprofiles:hero.standalone", {
-                  address: personaPublicPath(view),
-                })}
+                {/* An unlinked draft with no handle has no address yet:
+                    `/p/:handle` only resolves handles, so showing a fabricated
+                    `/p/<slug>` gave the owner a dead link to copy. */}
+                {standaloneAddress
+                  ? t("subprofiles:hero.standalone", {
+                      address: standaloneAddress,
+                    })
+                  : t("subprofiles:hero.noAddressYet")}
               </span>
             )}
           </div>

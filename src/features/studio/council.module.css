@@ -16,7 +16,7 @@
   margin-bottom: 12px;
 }
 .ebJade {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .pageH h1 {
   font-family: var(--serif);
@@ -38,7 +38,7 @@
   margin-top: 16px;
 }
 .dek em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   font-style: italic;
 }
 
@@ -212,7 +212,7 @@
 }
 .sp em {
   font-style: normal;
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .curFoot {
   display: flex;
@@ -276,7 +276,7 @@
   margin-top: 10px;
 }
 .trH .sub em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   font-style: italic;
 }
 .kpiStrip {
@@ -301,7 +301,7 @@
   color: var(--accent);
 }
 .kpiMini .v.jade em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .kpiMini .l {
   font-size: 11px;
@@ -390,7 +390,7 @@
 }
 .subWho em {
   font-style: italic;
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .badges {
   display: flex;
@@ -407,7 +407,7 @@
 }
 .badges .first {
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .badges .claimed {
   background: rgba(var(--accent-rgb), 0.16);
@@ -540,7 +540,7 @@
   height: 32px;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.22);
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   font-family: var(--serif);
   display: flex;
   align-items: center;
@@ -556,7 +556,7 @@
   line-height: 1.45;
 }
 .claimRow .text em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .claimRow .text b {
   display: block;
@@ -600,7 +600,7 @@
 }
 .dGrid .v em {
   font-style: normal;
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .shortlistH {
   font-family: var(--serif);
@@ -748,14 +748,14 @@
 }
 .flagClaim em {
   font-style: italic;
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 .flagClaim .av {
   width: 28px;
   height: 28px;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -784,7 +784,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   background: rgba(var(--jade-rgb), 0.16);
   border-radius: 6px;
   padding: 4px 10px;

@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 
@@ -73,6 +73,15 @@ export const createLandlord = (body: CreateLandlordBody) =>
 
 export const recommendLandlord = (slug: string, body: RecommendBody) =>
   apiPost<RecommendationDTO>(`/landlords/${slug}/recommendations`, body);
+
+/**
+ * DELETE /landlords/:slug/recommendations/mine — the author takes their own
+ * public rating of a named real person down. Idempotent server-side (204 even
+ * when there was nothing to withdraw) and 404 only when the landlord entry
+ * itself is gone, so the caller treats a resolved promise as "it is down".
+ */
+export const withdrawMyRecommendation = (slug: string) =>
+  apiDelete<void>(`/landlords/${slug}/recommendations/mine`);
 
 export const requestIntro = (slug: string, body: IntroRequestBody) =>
   apiPost<{ id: string; status: string }>(

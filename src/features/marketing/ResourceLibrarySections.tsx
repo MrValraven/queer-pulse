@@ -149,7 +149,7 @@ export function OrganisationCard({
         href={organisation.url}
         className={s.card}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         style={{ height: "100%" }}
       >
         <div className={s.name}>{organisation.name}</div>

@@ -31,7 +31,10 @@ export function SubprofileShareCard({
       await navigator.clipboard.writeText(shareUrl);
       showToast(t("subprofiles:share.copied"), "success");
     } catch {
-      // Clipboard permission denied/unavailable — nothing actionable to do.
+      // Denied permission, a non-secure context or an embedded webview: the
+      // button did nothing and used to say nothing either, so it read as
+      // broken. Point at the link text on the card, which is selectable.
+      showToast(t("subprofiles:share.copyFailed"), "error");
     }
   }
 

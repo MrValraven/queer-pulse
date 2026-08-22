@@ -1,7 +1,12 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
-import { Button, Eyebrow, SuccessPanel } from "../../shared/components/ui";
+import {
+  Button,
+  Eyebrow,
+  SkeletonLine,
+  SuccessPanel,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -29,15 +34,26 @@ function ProgressMeter({
   const pct = Math.round((done / total) * 100);
   return (
     <div className={styles.meterRow}>
+      {/* While the signals are still out, `done` understates a member who has
+          already finished the later steps. Rather than announce "3 of 6" and
+          then correct itself to "6 of 6", the bar goes indeterminate: no
+          `aria-valuenow`, no fill, `aria-busy` on. */}
       <span
         className={styles.track}
         role="progressbar"
-        aria-valuenow={done}
+        aria-busy={loading || undefined}
+        aria-valuenow={loading ? undefined : done}
         aria-valuemin={0}
         aria-valuemax={total}
-        aria-label={t("auth:gettingStarted.meterAria", { done, total })}
+        aria-label={
+          loading
+            ? t("auth:gettingStarted.checking")
+            : t("auth:gettingStarted.meterAria", { done, total })
+        }
       >
-        <span className={styles.fill} style={{ width: `${pct}%` }} />
+        {!loading && (
+          <span className={styles.fill} style={{ width: `${pct}%` }} />
+        )}
       </span>
       <span className={styles.meterLabel}>
         {loading
@@ -54,6 +70,25 @@ function ProgressMeter({
 function StepRow({ step }: { step: GettingStartedStepState }) {
   const { t } = useTranslation();
   const Icon = step.icon;
+  // This row's signal hasn't landed yet, so it genuinely doesn't know whether
+  // it's done. Hold the shape with a skeleton instead of showing a "to do" CTA
+  // (and its XP prize) that flips to Done a heartbeat later.
+  if (step.isPending) {
+    return (
+      <li className={styles.step} aria-busy>
+        <span className={styles.mark} aria-hidden>
+          <Icon />
+        </span>
+        {/* A <div> here, where the settled row uses a <span>: SkeletonLine
+            renders a <div>, which is not valid inside phrasing content. */}
+        <div className={styles.body}>
+          <span className={styles.stepTitle}>{t(step.titleKey)}</span>
+          <SkeletonLine width="60%" />
+        </div>
+        <SkeletonLine width={92} height={30} />
+      </li>
+    );
+  }
   return (
     <li className={`${styles.step} ${step.done ? styles.stepDone : ""}`}>
       <span className={styles.mark} aria-hidden>

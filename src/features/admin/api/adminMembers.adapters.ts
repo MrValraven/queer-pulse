@@ -72,6 +72,77 @@ function joinedMetaSegment(
 
 /* ── Card → AdminMember (member directory grid) ──────────────────────────── */
 
+/**
+ * `VouchAvatar` plus the vouching member's stable slug. The shared view model
+ * in `adminMembers.data.ts` predates the DTO's `slug`, so the adapter widens
+ * the row here rather than dropping a field the backend already sends: the
+ * roster's avatar stack keys on it instead of on an array index.
+ */
+export interface VouchAvatarRow extends VouchAvatar {
+  slug: string;
+}
+
+function vouchAvatarDtoToRow(vouchAvatarDto: VouchAvatarDTO): VouchAvatarRow {
+  return {
+    initials: vouchAvatarDto.initials,
+    tone: vouchAvatarDto.tone,
+    avatarUrl: vouchAvatarDto.avatarUrl,
+    slug: vouchAvatarDto.slug,
+  };
+}
+
+/**
+ * The identity/standing fields the list DTO and the detail DTO both carry, so
+ * one member card can be built from either. `AdminMemberCardDTO` and
+ * `AdminMemberDetailDTO` satisfy this structurally; the pieces that differ
+ * (the meta line's own sources, and where the vouch avatars come from) stay
+ * with each caller.
+ */
+type MemberCardFieldsDTO = Pick<
+  AdminMemberCardDTO,
+  | "id"
+  | "slug"
+  | "name"
+  | "initials"
+  | "tone"
+  | "pronouns"
+  | "verified"
+  | "role"
+  | "avatarUrl"
+  | "openReportCount"
+  | "joinedAt"
+  | "vouchCount"
+  | "staffRoles"
+>;
+
+/** Everything an `AdminMember` row needs except its vouch avatars: the shared
+ *  half of {@link cardDtoToMember} and {@link detailDtoToMemberCard}, so the
+ *  status tone, the "new this week" window and the staff-role narrowing are
+ *  derived in exactly one place. */
+function memberCardFrom(
+  memberDto: MemberCardFieldsDTO,
+  meta: string,
+): Omit<AdminMember, "vouchedBy"> {
+  return {
+    id: memberDto.id,
+    slug: memberDto.slug,
+    name: memberDto.name,
+    initials: memberDto.initials,
+    tone: memberDto.tone,
+    pronoun: memberDto.pronouns ?? "",
+    verified: memberDto.verified,
+    role: memberDto.role,
+    avatarUrl: memberDto.avatarUrl,
+    openReportsCount: memberDto.openReportCount || undefined,
+    statusTone: memberDto.verified ? "jade" : "coral",
+    newThisWeek:
+      Date.now() - Date.parse(memberDto.joinedAt) < MILLISECONDS_PER_WEEK,
+    meta,
+    vouchCount: memberDto.vouchCount,
+    staffRoles: memberDto.staffRoles.filter(isStaffRoleId),
+  };
+}
+
 export function cardDtoToMember(
   cardDto: AdminMemberCardDTO,
   t: TFunction,
@@ -83,29 +154,8 @@ export function cardDtoToMember(
     ...cardDto.communities,
   ].filter((segment) => segment.length > 0);
   return {
-    id: cardDto.id,
-    slug: cardDto.slug,
-    name: cardDto.name,
-    initials: cardDto.initials,
-    tone: cardDto.tone,
-    pronoun: cardDto.pronouns ?? "",
-    verified: cardDto.verified,
-    role: cardDto.role,
-    avatarUrl: cardDto.avatarUrl,
-    openReportsCount: cardDto.openReportCount || undefined,
-    statusTone: cardDto.verified ? "jade" : "coral",
-    newThisWeek:
-      Date.now() - Date.parse(cardDto.joinedAt) < MILLISECONDS_PER_WEEK,
-    meta: metaSegments.join(" · "),
-    vouchCount: cardDto.vouchCount,
-    vouchedBy: cardDto.vouchedBy.map(
-      (vouchAvatarDto: VouchAvatarDTO): VouchAvatar => ({
-        initials: vouchAvatarDto.initials,
-        tone: vouchAvatarDto.tone,
-        avatarUrl: vouchAvatarDto.avatarUrl,
-      }),
-    ),
-    staffRoles: cardDto.staffRoles.filter(isStaffRoleId),
+    ...memberCardFrom(cardDto, metaSegments.join(" · ")),
+    vouchedBy: cardDto.vouchedBy.map(vouchAvatarDtoToRow),
   };
 }
 
@@ -146,6 +196,9 @@ function flaggedCategoryFor(flaggedDto: FlaggedMemberDTO): FlaggedCategory {
   return { kind: "reportsCount", count: flaggedDto.openReportCount };
 }
 
+/** The queue row needs the member's stable slug to deep-link into the
+ *  moderation queue (`?subjectId=`), so `FlaggedMember` carries one and the
+ *  DTO's is passed straight through. */
 export function flaggedDtoToMember(
   flaggedDto: FlaggedMemberDTO,
   t: TFunction,
@@ -159,6 +212,7 @@ export function flaggedDtoToMember(
   ].filter((segment) => segment.length > 0);
   return {
     id: flaggedDto.id,
+    slug: flaggedDto.slug,
     handle: flaggedDto.handle,
     initials: flaggedDto.initials,
     tone: flaggedDto.tone,
@@ -415,6 +469,35 @@ function graphNodeDtoToNode(graphNodeDto: VouchGraphNodeDTO): GraphNode {
     tone: graphNodeDto.tone,
     avatarUrl: graphNodeDto.avatarUrl,
     direction: graphNodeDto.direction,
+  };
+}
+
+/**
+ * GET /admin/members/:id → the same `AdminMember` card a roster row renders.
+ *
+ * The flagged queue can open the drawer on someone who is not on the loaded
+ * roster page, and the drawer's head/footer read the card view model, so the
+ * detail response doubles as the card's source. It carries every field
+ * {@link memberCardFrom} needs; only the meta line and the vouch avatars are
+ * composed differently. Communities arrive as objects rather than names (and
+ * there is no tagline), and the stacked avatars come off the vouch graph,
+ * where the people who vouched FOR the member are the inbound and mutual
+ * nodes.
+ */
+export function detailDtoToMemberCard(
+  detailDto: AdminMemberDetailDTO,
+  t: TFunction,
+  fmt: Formatters,
+): AdminMember {
+  const metaSegments = [
+    joinedMetaSegment(detailDto.joinedAt, t, fmt),
+    ...detailDto.communities.map((communityDto) => communityDto.name),
+  ].filter((segment) => segment.length > 0);
+  return {
+    ...memberCardFrom(detailDto, metaSegments.join(" · ")),
+    vouchedBy: detailDto.graph.nodes
+      .filter((graphNodeDto) => graphNodeDto.direction !== "outbound")
+      .map(vouchAvatarDtoToRow),
   };
 }
 

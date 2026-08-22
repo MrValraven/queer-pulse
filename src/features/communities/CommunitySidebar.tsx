@@ -41,6 +41,23 @@ export function CommunitySidebar({
   const { demoMode } = useDemoMode();
   const { openConnect } = useConnect();
   const org = detail.organiser;
+  // `detail.nextEvent` is a placeholder the detail adapter always fills with
+  // "to be announced", because GET /communities/:slug carries no events. The
+  // real upcoming gatherings arrive on the pulse query, so when one exists it
+  // is the card, RSVP button and all. Demo mode keeps the mock nextEvent
+  // (`communityPulse` is deliberately empty there).
+  const upcoming = communityPulse.events[0];
+  const nextEvent = upcoming
+    ? {
+        dd: upcoming.dd,
+        mm: upcoming.mm,
+        title: upcoming.title,
+        meta: upcoming.meta,
+        spots: upcoming.spots,
+        slug: upcoming.slug,
+        tba: false,
+      }
+    : detail.nextEvent;
   const orgAvatar = (
     <Avatar
       initials={org.initials}
@@ -79,13 +96,18 @@ export function CommunitySidebar({
         </div>
         <div className={styles.sbBadge}>{org.role}</div>
         <p className={styles.sbOrgBio}>{detail.organiser.bio}</p>
-        <Button
-          variant="ghost"
-          className={styles.sbFull}
-          onClick={() => openConnect(org.slug)}
-        >
-          {t("communities:detail.sidebar.messageCta")}
-        </Button>
+        {/* Only when the organiser resolves to a real member. The avatar and
+            name links above already guard on this; without the same guard here
+            the Message button opened a Connect modal with no recipient. */}
+        {org.slug && (
+          <Button
+            variant="ghost"
+            className={styles.sbFull}
+            onClick={() => openConnect(org.slug!)}
+          >
+            {t("communities:detail.sidebar.messageCta")}
+          </Button>
+        )}
       </div>
 
       <div className={styles.sbC}>
@@ -93,23 +115,21 @@ export function CommunitySidebar({
           {t("communities:detail.sidebar.nextGathering")}
         </div>
         <div className={styles.sbEvDate}>
-          <div className={styles.sbEDd}>{detail.nextEvent.dd}</div>
-          <div className={styles.sbEDm}>{detail.nextEvent.mm}</div>
+          <div className={styles.sbEDd}>{nextEvent.dd}</div>
+          <div className={styles.sbEDm}>{nextEvent.mm}</div>
         </div>
-        <div className={styles.sbETitle}>{detail.nextEvent.title}</div>
-        <div className={styles.sbEMeta}>{detail.nextEvent.meta}</div>
-        <div className={styles.sbESpots}>
-          <span className={styles.sbESdot} />
-          {detail.nextEvent.spots}
-        </div>
-        {!detail.nextEvent.tba && (
+        <div className={styles.sbETitle}>{nextEvent.title}</div>
+        <div className={styles.sbEMeta}>{nextEvent.meta}</div>
+        {nextEvent.spots && (
+          <div className={styles.sbESpots}>
+            <span className={styles.sbESdot} />
+            {nextEvent.spots}
+          </div>
+        )}
+        {!nextEvent.tba && (
           <Button
             variant="primary"
-            to={
-              detail.nextEvent.slug
-                ? gatheringPath(detail.nextEvent.slug)
-                : GATHERING
-            }
+            to={nextEvent.slug ? gatheringPath(nextEvent.slug) : GATHERING}
             className={styles.sbFull}
             style={{ marginTop: 14 }}
           >
@@ -122,28 +142,30 @@ export function CommunitySidebar({
       <CommunityPulseSidebarCards pulse={communityPulse} />
 
       {related.length > 0 && (
-      <div className={styles.sbC}>
-        <div className={styles.sbLbl}>
-          {t("communities:detail.sidebar.relatedCommunities")}
-        </div>
-        {related.map((c) => (
-          <Link
-            key={c.slug}
-            to={`/community/${c.slug}`}
-            className={styles.sbRelItem}
-          >
-            <div
-              className={[styles.sbRelIc, AV_CLASS[relTint(c.type)]].join(" ")}
+        <div className={styles.sbC}>
+          <div className={styles.sbLbl}>
+            {t("communities:detail.sidebar.relatedCommunities")}
+          </div>
+          {related.map((c) => (
+            <Link
+              key={c.slug}
+              to={`/community/${c.slug}`}
+              className={styles.sbRelItem}
             >
-              {leadingInitials(c.name)}
-            </div>
-            <div>
-              <div className={styles.sbRelName}>{c.name}</div>
-              <div className={styles.sbRelCt}>{c.count}</div>
-            </div>
-          </Link>
-        ))}
-      </div>
+              <div
+                className={[styles.sbRelIc, AV_CLASS[relTint(c.type)]].join(
+                  " ",
+                )}
+              >
+                {leadingInitials(c.name)}
+              </div>
+              <div>
+                <div className={styles.sbRelName}>{c.name}</div>
+                <div className={styles.sbRelCt}>{c.count}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
       )}
     </aside>
   );

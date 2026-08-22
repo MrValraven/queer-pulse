@@ -10,77 +10,14 @@
   flex-wrap: wrap;
 }
 
-/* ---- composer image attach (DiscussionTab "start a thread" box) ---- */
-.hiddenFileInput {
-  display: none;
-}
-.attachImageBtn {
-  flex: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  background: transparent;
-  color: var(--ink-60);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.attachImageBtn svg {
-  width: 16px;
-  height: 16px;
-}
-.attachImageBtn:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-@media (hover: hover) {
-  .attachImageBtn:hover:not(:disabled) {
-    border-color: var(--accent);
-    color: var(--accent-ink);
-  }
-}
-.stagedImage {
+/* Each discussion row is a <FadeIn>, whose `will-change: transform` makes it
+   its own stacking context — so a thread's actions menu (z-index 30) only wins
+   INSIDE its row and the next row paints over the open dropdown. Raise the
+   whole wrapper while a menu is open; `[role="menu"]` only exists in the DOM
+   then, so closed rows are untouched. */
+.rowFade:has([role="menu"]) {
   position: relative;
-  display: inline-block;
-  margin-top: 10px;
-  border-radius: 12px;
-  overflow: hidden;
-  max-width: 160px;
-}
-.stagedImage img {
-  display: block;
-  width: 100%;
-  max-height: 120px;
-  object-fit: cover;
-}
-.stagedImageRemove {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(20, 12, 26, 0.65);
-  color: var(--cream);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.stagedImageRemove svg {
-  width: 13px;
-  height: 13px;
-}
-.imageAttachError {
-  margin: 8px 0 0;
-  font-size: 12.5px;
-  color: var(--accent-ink);
+  z-index: 3;
 }
 
 .loadMoreRoster {
@@ -417,20 +354,17 @@
   flex: none;
   flex-wrap: wrap;
 }
+/* Applied to a shared <Button variant="ghost" size="sm">; these overrides only
+   restore the quieter, outlined mod-row scale. The primitive keeps the focus
+   ring, the disabled treatment and the tap-target floor. */
 .declineBtn {
-  display: inline-flex;
-  align-items: center;
   gap: 5px;
   font-size: 13px;
-  font-weight: 600;
   color: var(--ink-60);
-  cursor: pointer;
+  background: transparent;
   padding: 8px 14px;
-  border-radius: 999px;
+  min-height: 40px;
   border: 1px solid rgba(var(--line-rgb), 0.14);
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
 }
 .declineBtn svg {
   width: 13px;
@@ -438,6 +372,7 @@
 }
 @media (hover: hover) {
   .declineBtn:hover {
+    background: transparent;
     border-color: rgba(var(--line-rgb), 0.3);
     color: var(--ink);
   }

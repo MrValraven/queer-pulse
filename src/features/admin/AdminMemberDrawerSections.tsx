@@ -70,10 +70,10 @@ export function MemberOverviewSections({
           {t("admin:members.drawer.glanceTitle")}
         </h3>
         <div className={styles.glanceGrid}>
-          {detail.glance.map((s) => (
-            <div key={s.labelKey} className={styles.glanceStat}>
-              <div className={styles.glanceValue}>{s.value}</div>
-              <div className={styles.glanceLabel}>{t(s.labelKey)}</div>
+          {detail.glance.map((glanceStat) => (
+            <div key={glanceStat.labelKey} className={styles.glanceStat}>
+              <div className={styles.glanceValue}>{glanceStat.value}</div>
+              <div className={styles.glanceLabel}>{t(glanceStat.labelKey)}</div>
             </div>
           ))}
         </div>
@@ -90,9 +90,9 @@ export function MemberOverviewSections({
           aria-label={t("admin:members.drawer.graphAriaLabel")}
           title={t("admin:members.drawer.graphAriaLabel")}
           onClick={onOpenNetwork}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
               onOpenNetwork();
             }
           }}
@@ -114,9 +114,9 @@ export function MemberOverviewSections({
           {t("admin:members.drawer.communitiesTitle")}
         </h3>
         <div className={styles.commChips}>
-          {detail.communities.map((c) => (
-            <AdminChip key={c.label} tone={c.tone}>
-              {c.label}
+          {detail.communities.map((communityChip) => (
+            <AdminChip key={communityChip.label} tone={communityChip.tone}>
+              {communityChip.label}
             </AdminChip>
           ))}
         </div>
@@ -126,11 +126,17 @@ export function MemberOverviewSections({
         <h3 className={styles.dHeading}>
           {t("admin:members.drawer.contributionsTitle")}
         </h3>
+        {/* Keyed on the entry itself: the list gains rows as the member keeps
+            contributing, and a positional key would hand a fresh row the DOM
+            node of whichever entry used to sit at that index. */}
         <ul className={styles.contribList}>
-          {detail.contributions.map((c, i) => (
-            <li key={i} className={styles.contribItem}>
-              <span>{c.what}</span>
-              <span className={styles.contribWhen}>{c.when}</span>
+          {detail.contributions.map((contribution) => (
+            <li
+              key={`${contribution.when}-${contribution.what}`}
+              className={styles.contribItem}
+            >
+              <span>{contribution.what}</span>
+              <span className={styles.contribWhen}>{contribution.when}</span>
             </li>
           ))}
         </ul>
@@ -150,27 +156,32 @@ export function ModerationTimeline({
   return (
     <section className={styles.dSection}>
       <h3 className={styles.dHeading}>{t("admin:members.timeline.title")}</h3>
+      {/* Keyed on the entry itself: the timeline grows a row every time the
+          member is cited or their role changes, and a positional key would
+          hand the newest entry the DOM node of the one it displaced. */}
       <ul className={styles.timeline}>
-        {entries.map((e, i) => (
+        {entries.map((entry) => (
           <li
-            key={i}
-            className={`${styles.timelineItem} ${styles[`tl_${e.tone}`]}`}
+            key={`${entry.meta}-${entry.title}`}
+            className={`${styles.timelineItem} ${styles[`tl_${entry.tone}`]}`}
           >
             <span className={styles.timelineMarker} aria-hidden />
             <div className={styles.timelineTx}>
-              <span className={styles.timelineTitle}>{e.title}</span>
+              <span className={styles.timelineTitle}>{entry.title}</span>
               <span className={styles.timelineMeta}>
-                {e.meta}
-                {e.metaLink && (
+                {entry.meta}
+                {entry.metaLink && (
                   <Link
                     className={styles.timelineLink}
                     to={routes.adminGovernance}
                   >
-                    {e.metaLink}
+                    {entry.metaLink}
                   </Link>
                 )}
               </span>
-              {e.note && <span className={styles.timelineNote}>{e.note}</span>}
+              {entry.note && (
+                <span className={styles.timelineNote}>{entry.note}</span>
+              )}
             </div>
           </li>
         ))}

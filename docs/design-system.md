@@ -52,9 +52,11 @@ Decorative radial gradient orbs (coral + jade, low opacity 12–18%) float in he
 ### Cards
 
 - `border-radius: 22px` (--radius-card)
-- `background: var(--paper)`, `border: 1px solid rgba(45,27,61,.09)`
-- Resting shadow: `0 1px 2px rgba(45,27,61,.04)`
-- Hover: `translateY(-4px)` + `0 22px 44px -26px rgba(45,27,61,.4)`
+- `background: var(--paper)`, `border: 1px solid rgba(var(--line-rgb), .09)`
+- Resting shadow: `0 1px 2px rgba(var(--plum-rgb), .04)`
+- Hover: `translateY(-4px)` + `0 22px 44px -26px rgba(var(--plum-rgb), .4)`
+- Borders use `--line-rgb` (theme-switched, flips to cream in dark mode); backgrounds and
+  shadows use `--plum-rgb` (not theme-switched). Raw `rgba(45,27,61,…)` fails the build gate.
 
 ### Navigation
 

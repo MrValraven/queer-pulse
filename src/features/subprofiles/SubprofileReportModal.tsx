@@ -32,9 +32,16 @@ export function SubprofileReportModal({
   subjectName,
   onClose,
 }: {
-  /** The persona's identifier as the report keys on — its `slug`, so a
-   *  moderator triaging the report can navigate straight to the page
-   *  (`SubprofilePage` passes `data.slug`, not the opaque `id`). */
+  /**
+   * The persona's stable `id` (the UUID every persona endpoint keys on).
+   *
+   * NOT its `slug`: a persona slug is unique only PER OWNER, so two members
+   * can both run a `drag` persona and a report would name neither of them,
+   * while an unlinked persona is reachable by `handle` only and never by slug
+   * at all. The backend stores `subjectId` opaquely and de-dupes on
+   * `(reporter, subject)`, so a per-owner slug also collided across different
+   * owners' personas.
+   */
   subjectId: string;
   subjectName: string;
   onClose: () => void;

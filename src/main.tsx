@@ -5,6 +5,7 @@ import { App } from "./app/App.tsx";
 import { initObservability } from "./shared/observability/sentry";
 import { isSandbox } from "./shared/sandbox/sandbox";
 import { installSandboxStorage } from "./shared/sandbox/sandboxStorage";
+import { reloadForStaleChunk } from "./shared/lib/staleChunkReload";
 
 // A dev-only simulation sandbox instance gets isolated in-memory storage so
 // its writes (auth, onboarding, dismissals) never leak to the real app.
@@ -14,28 +15,14 @@ if (isSandbox()) installSandboxStorage();
 // when a DSN + prod build both hold, and must never block first paint.
 void initObservability();
 
-// Stale-deploy recovery. After a new build ships, the hashed filenames of the
-// old lazy-route chunks no longer exist, so a dynamic import 404s and the app
-// would otherwise show the crash panel. Vite fires `vite:preloadError` on such
-// a failed import — swallow it and do one full reload to pull the fresh build.
-// A timestamped sessionStorage guard blocks a tight reload loop (a genuinely
-// broken chunk would keep failing) while still allowing recovery from a later,
-// unrelated stale deploy in the same session.
-const PRELOAD_RELOAD_KEY = "qp.preloadReloadAt";
-const PRELOAD_RELOAD_COOLDOWN_MILLISECONDS = 10_000;
+// Stale-deploy recovery. Vite fires `vite:preloadError` when a lazy chunk's
+// dynamic import 404s because a new build replaced it — swallow it and do one
+// full reload to pull the fresh build. The reload policy (and its cooldown
+// guard) lives in `reloadForStaleChunk` so this listener and the per-chunk
+// retry in `app/routeHelpers.tsx` share ONE decision instead of two that could
+// disagree about whether a second failure should reload again.
 window.addEventListener("vite:preloadError", (event) => {
-  const lastReloadAt = Number(
-    window.sessionStorage.getItem(PRELOAD_RELOAD_KEY) ?? 0,
-  );
-  if (Date.now() - lastReloadAt < PRELOAD_RELOAD_COOLDOWN_MILLISECONDS) return;
-  event.preventDefault();
-  try {
-    window.sessionStorage.setItem(PRELOAD_RELOAD_KEY, String(Date.now()));
-  } catch {
-    // Private-mode / blocked storage: still reload once; without the guard we
-    // accept the small risk of a second attempt rather than showing the crash.
-  }
-  window.location.reload();
+  if (reloadForStaleChunk()) event.preventDefault();
 });
 
 createRoot(document.getElementById("root")!).render(

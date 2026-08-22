@@ -517,7 +517,10 @@
 .nomError {
   font-size: 14px;
   line-height: 1.55;
-  color: var(--coral);
+  /* `--coral` has never existed: the coral token is `--accent`, so this error
+     text was falling back to inherited ink and reading as ordinary body copy.
+     `--accent-ink` is the accessible-on-cream variant, which an error needs. */
+  color: var(--accent-ink);
 }
 .nomBtn {
   font-family: var(--sans);
@@ -539,7 +542,7 @@
 }
 @media (hover: hover) {
   .nomBtn:hover {
-    background: #3a7060;
+    background: var(--jade-fill);
     transform: translateY(-1px);
   }
 }

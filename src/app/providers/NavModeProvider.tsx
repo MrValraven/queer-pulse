@@ -5,6 +5,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { safeStorage } from "../../shared/storage/safeStorage";
 import { NavModeContext, type NavMode } from "./navModeContext";
 import { useAuth } from "./authContext";
 
@@ -13,14 +14,12 @@ const COLLAPSED_KEY = "qp-nav-collapsed";
 
 function getStoredMode(): NavMode {
   if (typeof window === "undefined") return "mega";
-  return window.localStorage.getItem(MODE_KEY) === "sidebar"
-    ? "sidebar"
-    : "mega";
+  return safeStorage.get(MODE_KEY) === "sidebar" ? "sidebar" : "mega";
 }
 
 function getInitialCollapsed(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(COLLAPSED_KEY) === "true";
+  return safeStorage.get(COLLAPSED_KEY) === "true";
 }
 
 /**
@@ -47,7 +46,7 @@ export function NavModeProvider({ children }: { children: ReactNode }) {
   // Persist the *preference* (not the effective mode) so signing out never
   // erases a member's choice to use the sidebar.
   useEffect(() => {
-    window.localStorage.setItem(MODE_KEY, preferredMode);
+    safeStorage.set(MODE_KEY, preferredMode);
   }, [preferredMode]);
 
   // Reflect the *effective* mode onto <html> so global CSS only offsets content
@@ -58,7 +57,7 @@ export function NavModeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.dataset.navCollapsed = String(railCollapsed);
-    window.localStorage.setItem(COLLAPSED_KEY, String(railCollapsed));
+    safeStorage.set(COLLAPSED_KEY, String(railCollapsed));
   }, [railCollapsed]);
 
   const setNavMode = useCallback((mode: NavMode) => setPreferredMode(mode), []);

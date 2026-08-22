@@ -1,3 +1,4 @@
+import { useTablistKeys } from "../../../shared/components/ui";
 import styles from "./adminUi.module.css";
 
 export interface AdminTab {
@@ -17,17 +18,25 @@ export function AdminTabs({
   onChange: (id: string) => void;
   className?: string;
 }) {
+  // APG tablist keys: Arrow/Home/End with a roving tabIndex. This is the shared
+  // admin tab strip, so every console that uses it inherits the fix.
+  const { tabProps } = useTablistKeys(tabs.length, (index) => {
+    const nextTab = tabs[index];
+    if (nextTab) onChange(nextTab.id);
+  });
+
   return (
     <div
       className={[styles.tabs, className].filter(Boolean).join(" ")}
       role="tablist"
     >
-      {tabs.map((t) => (
+      {tabs.map((t, index) => (
         <button
           key={t.id}
           type="button"
           role="tab"
           aria-selected={active === t.id}
+          {...tabProps(index, active === t.id)}
           className={[styles.tab, active === t.id && styles.tabOn]
             .filter(Boolean)
             .join(" ")}

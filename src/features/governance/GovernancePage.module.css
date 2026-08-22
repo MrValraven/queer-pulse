@@ -124,7 +124,7 @@
   padding: 22px 24px;
   margin-bottom: 28px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
 }
 .sectionError p {
@@ -471,9 +471,11 @@
   overflow: hidden;
   margin: 8px 0 4px;
 }
+/* Width is set inline from the real reserve.current / reserve.target ratio
+   (GovernanceSections). It used to be a hardcoded 35% that contradicted the
+   figures printed in the caption directly below the bar. */
 .reserveFill {
   height: 100%;
-  width: 35%;
   background: var(--jade);
   border-radius: 999px;
 }
@@ -657,40 +659,13 @@
   color: var(--ink-40);
   margin-bottom: 10px;
 }
+/* The two vote controls are shared <Button>s now (ghost until cast, then the
+   jade/plum filled variant), so the local .proposalVoteBtn* pill styles that
+   reimplemented the design system here are gone. */
 .proposalVoteRow {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-}
-.proposalVoteBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12.5px;
-  font-weight: 700;
-  padding: 9px 16px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(45, 27, 61, 0.14);
-  background: none;
-  color: var(--text-strong);
-  cursor: pointer;
-  transition: all 0.18s;
-  font-family: var(--sans);
-}
-.proposalVoteBtn:disabled {
-  cursor: default;
-  opacity: 0.55;
-}
-.proposalVoteBtnFor {
-  background: var(--jade);
-  color: var(--paper);
-  border-color: var(--jade);
-  opacity: 1;
-}
-.proposalVoteBtnAgainst {
-  background: var(--plum);
-  color: var(--paper);
-  border-color: var(--plum);
-  opacity: 1;
 }
 .proposalVotedNote {
   font-size: 12px;

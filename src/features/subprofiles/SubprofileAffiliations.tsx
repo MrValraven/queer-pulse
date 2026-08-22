@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { initialsFromName } from "../../shared/lib/initials";
 import { Avatar, Eyebrow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { getEndorsers, type AffiliationDTO } from "./api/subprofiles.api";
+import type { AffiliationDTO } from "./api/subprofiles.api";
+import { useEndorsers } from "./api/useEndorsers";
 import { AFFILIATION_ROLE_KEYS, affiliationHref } from "./affiliations.data";
 import { PracticeReferrals } from "./skins/PracticeBlocks";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
@@ -69,19 +68,13 @@ export function SubprofileAffiliations({
   onAction: (action: PersonaAction) => void;
 }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const interactive = mode !== "preview";
   const showEndo = skin !== "practice";
 
-  const { data: endorsersResult } = useQuery({
-    queryKey: ["subprofile", "endorsers", persona.id],
-    queryFn: async () => {
-      if (!demoMode) return getEndorsers(persona.id);
-      const { mockEndorsersById } = await import("./data/subprofiles.data");
-      return mockEndorsersById(persona.id) ?? { count: 0, endorsers: [] };
-    },
-    enabled: showEndo && persona.endorsementCount > 0 && Boolean(persona.id),
-  });
+  const { data: endorsersResult } = useEndorsers(
+    persona.id,
+    showEndo && persona.endorsementCount > 0,
+  );
   const endorsers = endorsersResult?.endorsers ?? [];
   const hasEndo = showEndo && endorsers.length > 0;
   const hasAffiliations = persona.affiliations.length > 0;

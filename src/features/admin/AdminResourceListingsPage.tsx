@@ -51,7 +51,11 @@ export function AdminResourceListingsPage() {
         ),
       onError: (error) =>
         showToast(
-          describeError("Couldn't remove that listing", error),
+          describeError(
+            t("admin:errors.removeListing"),
+            error,
+            t("shared:apiError.tryAgainTail"),
+          ),
           "error",
         ),
     });

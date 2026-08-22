@@ -34,7 +34,7 @@ import { useInvalidateAdminRoadmap } from "./useInvalidateAdminRoadmap";
 // `adminRoadmapDemo.ts` (which throws a plain `Error` on a guard failure —
 // slip reason missing, safety gate, not-found target — instead of writing)
 // against the current store and persists the result via `writeDemoRoadmap`;
-// live calls the matching `/roadmap/admin/items/*` endpoint. `meta:
+// live calls the matching `/admin/roadmap/items/*` endpoint. `meta:
 // { silentError: true }` on every one so a failed write doesn't
 // double-toast on top of the caller's own per-call `onError`.
 

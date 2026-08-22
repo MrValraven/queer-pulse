@@ -68,6 +68,10 @@ export type FlaggedStatusId = "underReview" | "frozen" | "limited";
 
 export interface FlaggedMember {
   id: string;
+  /** Stable slug the moderation queue matches a report's `subjectId` on, and
+   *  the trust-network graph keys on. Distinct from `id` in live mode; in the
+   *  fixtures below it is the handle without its leading "@". */
+  slug: string;
   handle: string;
   initials: string;
   tone: AvatarTone;
@@ -244,6 +248,7 @@ export const MEMBERS: AdminMember[] = [
 export const FLAGGED: FlaggedMember[] = [
   {
     id: "nightowl",
+    slug: "nightowl",
     handle: "@nightowl",
     initials: "N",
     tone: "plum",
@@ -255,6 +260,7 @@ export const FLAGGED: FlaggedMember[] = [
   },
   {
     id: "anon_4471",
+    slug: "anon_4471",
     handle: "@anon_4471",
     initials: "A",
     tone: "anon",
@@ -266,6 +272,7 @@ export const FLAGGED: FlaggedMember[] = [
   },
   {
     id: "coin_daily",
+    slug: "coin_daily",
     handle: "@coin_daily",
     initials: "CD",
     tone: "amber",
@@ -276,6 +283,45 @@ export const FLAGGED: FlaggedMember[] = [
     statusTone: "amber",
   },
 ];
+
+/** A flagged row's chip tone narrowed to the tones an `AdminMember` status
+ *  chip can carry. "danger" has no card equivalent, so it reads as coral, the
+ *  same tone an unverified member with open reports already gets. */
+const FLAGGED_TONE_TO_CARD_TONE: Record<
+  FlaggedMember["statusTone"],
+  AdminMember["statusTone"]
+> = { danger: "coral", amber: "amber", violet: "violet", coral: "coral" };
+
+/**
+ * A flagged-only member as an `AdminMember` card, so the drawer can open on
+ * someone the roster fixture never lists. Everything comes from the flagged
+ * fixture itself: the handle stands in for a name (a flagged row carries no
+ * real one), and the counts it has no data for stay at zero rather than being
+ * invented into numbers that would read as real.
+ */
+export function cardForFlagged(flaggedMember: FlaggedMember): AdminMember {
+  return {
+    id: flaggedMember.id,
+    slug: flaggedMember.slug,
+    name: flaggedMember.handle,
+    initials: flaggedMember.initials,
+    tone: flaggedMember.tone,
+    pronoun: "",
+    verified: false,
+    role: "member",
+    avatarUrl: flaggedMember.avatarUrl ?? null,
+    openReportsCount:
+      flaggedMember.category.kind === "reportsCount"
+        ? flaggedMember.category.count
+        : undefined,
+    statusTone: FLAGGED_TONE_TO_CARD_TONE[flaggedMember.statusTone],
+    newThisWeek: false,
+    meta: flaggedMember.meta,
+    vouchCount: 0,
+    vouchedBy: [],
+    staffRoles: [],
+  };
+}
 
 /* ── Drawer detail (keyed by member id) ──────────────────── */
 

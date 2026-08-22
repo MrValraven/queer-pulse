@@ -1,6 +1,6 @@
 import { useState, type KeyboardEvent } from "react";
 import { FiX } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./EditCommunityModal.module.css";
 
@@ -44,14 +44,14 @@ export function EditCommunityRules({
           {rules.map((rule) => (
             <li key={rule} className={styles.ruleRow}>
               <span className={styles.ruleText}>{rule}</span>
-              <button
-                type="button"
+              <IconButton
+                size="sm"
                 className={styles.ruleRemove}
                 onClick={() => onRemove(rule)}
                 aria-label={t("communities:edit.rules.remove")}
               >
                 <FiX aria-hidden />
-              </button>
+              </IconButton>
             </li>
           ))}
         </ul>

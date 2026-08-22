@@ -3,13 +3,15 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
-import { describeError } from "../../../shared/api/errorMessage";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { reasonFor } from "../../../shared/api/errorMessage";
 import { logError } from "../../../shared/observability/logger";
 import {
   DEFAULT_PREFERENCE_ENABLED,
   getNotificationPreferences,
   putNotificationPreference,
   type NotificationPreferenceCategory,
+  type NotificationPreferenceState,
   type NotificationPreferencesDTO,
 } from "./notificationPreferences.api";
 
@@ -42,6 +44,7 @@ export function useNotificationPreferences(): NotificationPreferencesResult {
   const { loggedIn } = useAuth();
   const queryClient = useQueryClient();
   const { showToast } = useToast();
+  const { t } = useTranslation();
 
   // Demo-only override map: absent category == default on.
   const [demoOverrides, setDemoOverrides] = useState<
@@ -61,25 +64,35 @@ export function useNotificationPreferences(): NotificationPreferencesResult {
         setDemoOverrides((previous) => ({ ...previous, [category]: next }));
         return;
       }
-      const previous =
-        queryClient.getQueryData<NotificationPreferencesDTO>(queryKey);
-      queryClient.setQueryData<NotificationPreferencesDTO>(
-        queryKey,
-        (current) => ({
-          preferences: {
-            ...(current?.preferences ?? {}),
-            [category]: { inApp: next, push: next },
+      // Patch ONE category rather than replacing the whole map. Replacing it
+      // meant a slow flip on category A landed after a fast flip on category B
+      // and reverted B to server state that predated it, and B's rollback then
+      // restored A's optimistic value instead of the last server truth.
+      const patchCategory = (state: NotificationPreferenceState | undefined) => {
+        queryClient.setQueryData<NotificationPreferencesDTO>(
+          queryKey,
+          (current) => {
+            const preferences = { ...(current?.preferences ?? {}) };
+            if (state) preferences[category] = state;
+            else delete preferences[category];
+            return { preferences };
           },
-        }),
-      );
+        );
+      };
+      const previousState =
+        queryClient.getQueryData<NotificationPreferencesDTO>(queryKey)
+          ?.preferences[category];
+      patchCategory({ inApp: next, push: next });
       void putNotificationPreference({ category, inApp: next, push: next })
-        .then((fresh) => queryClient.setQueryData(queryKey, fresh))
+        .then((fresh) => patchCategory(fresh.preferences[category]))
         .catch((error) => {
           logError(error, { scope: "notification-preferences", category });
-          if (previous) queryClient.setQueryData(queryKey, previous);
-          else void queryClient.invalidateQueries({ queryKey });
+          patchCategory(previousState);
+          const reason = reasonFor(error)?.replace(/\.$/, "");
           showToast(
-            describeError("We couldn't save your notification setting", error),
+            reason
+              ? t("settings:notifications.toast.saveErrorReason", { reason })
+              : t("settings:notifications.toast.saveError"),
             "error",
           );
         });
@@ -87,7 +100,7 @@ export function useNotificationPreferences(): NotificationPreferencesResult {
     // queryKey is a fresh array each render but its contents are stable; depend
     // on the primitive that actually varies.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [demoMode, queryClient, showToast],
+    [demoMode, queryClient, showToast, t],
   );
 
   const isEnabled = useCallback(

@@ -339,13 +339,11 @@ span.navIcon svg {
   min-height: 100px;
 }
 
-.fieldSelect {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
-}
+/* The native-select chevron that used to live here carried a hard-coded
+   `stroke='%23888'` inside a data URI, where no design token can reach. Nothing
+   renders a bare `<select>` in this editor any more (the shared `Select`
+   primitive draws its own themed chevron), so the rule is gone rather than
+   frozen at one grey that ignores the theme. */
 
 .fieldHint {
   font-size: 12.5px;
@@ -394,6 +392,9 @@ span.navIcon svg {
 }
 
 .skillTagRemove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   background: transparent;
   cursor: pointer;

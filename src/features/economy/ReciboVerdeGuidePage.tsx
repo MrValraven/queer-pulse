@@ -2,7 +2,7 @@ import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Eyebrow, Reveal } from "../../shared/components/ui";
 import { FiCheckCircle } from "react-icons/fi";
-import { TAX_DISCLAIMER } from "./tax.constants";
+import { TAX_DISCLAIMER_KEY } from "./tax.constants";
 import { GUIDE_SECTIONS, type GuideSection } from "./reciboVerdeGuide.data";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -75,7 +75,7 @@ export function ReciboVerdeGuidePage() {
                 components={{ em: <em /> }}
               />
             </h2>
-            <p className={styles.disclaimerText}>{TAX_DISCLAIMER}</p>
+            <p className={styles.disclaimerText}>{t(TAX_DISCLAIMER_KEY)}</p>
           </Reveal>
         </div>
       </div>

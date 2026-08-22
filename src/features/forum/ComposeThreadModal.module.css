@@ -161,3 +161,18 @@
   justify-content: center;
   margin-top: 22px;
 }
+
+/* Publish failed: an honest inline note above the actions, so the draft stays
+   visible and the member can retry without retyping anything. */
+.publishError {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(var(--danger-rgb), 0.08);
+  color: var(--danger);
+  font-size: 13.5px;
+  line-height: 1.5;
+}

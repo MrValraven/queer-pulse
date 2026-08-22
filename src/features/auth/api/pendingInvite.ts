@@ -1,37 +1,18 @@
 /**
- * Stashes what the join flow needs to survive the hop from the landing page
- * (`/auth/invite/:code`) through Google auth into `/onboarding`:
- *  - the invite **code**. NOTE: it is no longer redeemed from here — the code
- *    rides the OAuth `state` param and the backend consumes it during sign-up
- *    (`validateInviteForSignup` + `claimInvite`). It is still stashed so the
- *    prototype /auth/create-account page can clear it, and as the record of
- *    which invite brought someone in;
- *  - the **welcome** payload (inviter + their vouch) shown on the onboarding
- *    "you're in" step, since the in-memory invite is gone after a full-page auth
- *    redirect.
+ * Stashes the **welcome** payload (the inviter and their vouch) so the
+ * onboarding "you're in" step can greet the new member by name. The in-memory
+ * invite is gone after the full-page Google auth redirect, so it has to
+ * survive in sessionStorage.
+ *
+ * There used to be a second key here holding the invite CODE. It was never
+ * read: the code rides the OAuth `state` param and the backend consumes it
+ * during sign-up (`validateInviteForSignup` + `claimInvite`), and the one
+ * reader (`consumePendingInvite`, for a prototype /auth/create-account page)
+ * had already been deleted along with that page. A write with no reader is a
+ * trap: the next person to find `qp.pendingInvite` in storage would reasonably
+ * read it as an UNREDEEMED invite. Removed rather than left lying.
  */
-const CODE_KEY = "qp.pendingInvite";
 const WELCOME_KEY = "qp.inviteWelcome";
-
-/** Remember the code the recipient is signing up against. */
-export function rememberPendingInvite(code: string): void {
-  try {
-    sessionStorage.setItem(CODE_KEY, code);
-  } catch {
-    /* storage unavailable (private mode) — the Google path still has the code directly */
-  }
-}
-
-/** Read and clear the pending code; null when there's no invite in flight. */
-export function consumePendingInvite(): string | null {
-  try {
-    const code = sessionStorage.getItem(CODE_KEY);
-    if (code) sessionStorage.removeItem(CODE_KEY);
-    return code;
-  } catch {
-    return null;
-  }
-}
 
 /** The inviter + vouch the onboarding "you're in" step greets the new member with. */
 export interface InviteWelcome {

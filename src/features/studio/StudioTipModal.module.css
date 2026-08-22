@@ -1,6 +1,14 @@
 /* Mobile: a bottom-anchored sheet in the thumb's reach. Becomes a centered
    dialog from 720px up (desktop appearance unchanged). */
 .overlay {
+  /* This modal portals to document.body, so it renders OUTSIDE the studio
+     shell's `.root` and cannot inherit the dark text tokens defined there.
+     Without these, `var(--text40)` / `var(--text60)` below resolve to nothing
+     and the muted labels render in whatever colour they inherit. Values match
+     studio.module.css `.root`. */
+  --text: rgba(var(--cream-rgb), 0.92);
+  --text60: rgba(var(--cream-rgb), 0.62);
+  --text40: rgba(var(--cream-rgb), 0.4);
   position: fixed;
   inset: 0;
   z-index: 200;
@@ -91,6 +99,18 @@
   line-height: 1;
   cursor: pointer;
   border-radius: 50%;
+}
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
 }
 @media (hover: hover) {
   .close:hover {

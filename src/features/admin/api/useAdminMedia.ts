@@ -91,12 +91,18 @@ export function useAdminMediaUploaders(term: string) {
  * success every kind-filtered media page is invalidated so the deleted row
  * disappears from the console. Deletes the raw object only — the backend does
  * not clear DB references, so the caller must confirm the warning first.
+ *
+ * The route refuses a still-referenced object with `409` (the body lists every
+ * reference) and an unverifiable one with `503`. `isForced` is the deliberate
+ * override for a takedown that must go through anyway; the caller only sets it
+ * after showing the admin what breaks.
  */
 export function useDeleteAdminMedia() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (key: string) => deleteAdminMediaObject(key),
+    mutationFn: ({ key, isForced }: { key: string; isForced: boolean }) =>
+      deleteAdminMediaObject(key, isForced),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: [ADMIN_MEDIA_KEY] }),
   });

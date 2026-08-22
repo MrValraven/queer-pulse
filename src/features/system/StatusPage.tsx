@@ -20,6 +20,15 @@ export function StatusPage() {
   // The service-health grid, 90-day uptime chart and incident history are all
   // fabricated demo fixtures — there is no live status/health backend yet. In
   // live mode we show an honest "coming soon" state in their place.
+  //
+  // `SubscribeStrip` is demo-only for the same reason. It promises "one email
+  // when something breaks, one when it's fixed", and there is no incident
+  // notification list to add an address to: its submit handler only ever
+  // showed a success toast. The one real subscription endpoint the platform
+  // has (`POST /newsletter/subscribe`) is the community newsletter, a
+  // different thing from incident alerts, so wiring the form to it would trade
+  // one false promise for another. The live empty state says instead that
+  // incident alerts are still being built.
   return (
     <PageShell>
       <StatusHero />
@@ -28,6 +37,7 @@ export function StatusPage() {
           <ServicesGrid />
           <UptimeSection />
           <IncidentsSection />
+          <SubscribeStrip />
         </>
       ) : (
         <section className="wrap" style={{ padding: "60px 0" }}>
@@ -38,7 +48,6 @@ export function StatusPage() {
           />
         </section>
       )}
-      <SubscribeStrip />
 
       <Outro
         title={

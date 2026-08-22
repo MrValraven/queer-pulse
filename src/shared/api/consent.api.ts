@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { ApiError, apiGet, apiPost } from "./client";
 import { apiAvailable } from "./config";
 import { logError } from "../observability/logger";
 
@@ -8,6 +8,17 @@ import { logError } from "../observability/logger";
  * re-prompts anyone whose stored choice predates the change.
  */
 export const POLICY_VERSION = "3.4";
+
+/**
+ * A 401 here is not a fault to report. These endpoints are member-scoped and
+ * the providers that call them also run for anonymous visitors, so "not signed
+ * in" is an expected answer — logging it sent an error event to monitoring on
+ * every logged-out page load.
+ */
+function isExpectedSignedOut(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 401;
+}
+
 
 /** `necessary` is always on (session/CSRF cookies, theme/i18n prefs). */
 export interface ConsentCategories {
@@ -59,7 +70,9 @@ export async function recordConsent(
   try {
     return await apiPost<ConsentRecord>("/consent", input);
   } catch (error) {
-    logError(error, { scope: "consent.record", source: input.source });
+    if (!isExpectedSignedOut(error)) {
+      logError(error, { scope: "consent.record", source: input.source });
+    }
     return null;
   }
 }
@@ -72,7 +85,7 @@ export async function fetchMyConsent(
   try {
     return await apiGet<MyConsentResponse>("/consent/me");
   } catch (error) {
-    logError(error, { scope: "consent.fetch" });
+    if (!isExpectedSignedOut(error)) logError(error, { scope: "consent.fetch" });
     return null;
   }
 }

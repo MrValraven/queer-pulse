@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Badge, Button, EmptyState, FadeIn, type BadgeTone } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { formatDate } from "../../shared/lib/date";
 import { FILTERS } from "./housing.data";
 import type { MyHousingListingRow } from "./myHousingListings.data";
@@ -49,6 +50,7 @@ export function MyHousingListingCard({
   busy: boolean;
 }) {
   const { t, language } = useTranslation();
+  const fmt = useFormat();
   const hidden = listing.filledAt !== null || listing.expired;
   const typeLabel = t(
     FILTERS.find((filterOption) => filterOption.value === listing.type)
@@ -64,7 +66,12 @@ export function MyHousingListingCard({
       <h3 className={styles.cardTitle}>{listing.title}</h3>
       <div className={styles.cardMeta}>
         <span>
-          {listing.area || listing.city} · €{listing.rentEuros.toLocaleString()}/mo
+          {listing.area || listing.city} ·{" "}
+          {t("economy:housing.fact.rentPerMonth", {
+            amount: fmt.currency(listing.rentEuros, "EUR", {
+              maximumFractionDigits: 0,
+            }),
+          })}
         </span>
         <span>
           {t("economy:myHousingListings.postedOn", {

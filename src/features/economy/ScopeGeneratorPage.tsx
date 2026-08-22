@@ -9,7 +9,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
-import { TAX_DISCLAIMER } from "./tax.constants";
+import { TAX_DISCLAIMER_KEY } from "./tax.constants";
 import { ScopeForm } from "./ScopeForm";
 import { ScopePreview } from "./ScopePreview";
 import { DEFAULT_SCOPE, type ScopeState } from "./scope.data";
@@ -71,7 +71,7 @@ function toPlainText(
       t("economy:scopeTool.plainText.validUntil", { date: scope.validUntil }),
     );
   lines.push("");
-  lines.push(TAX_DISCLAIMER);
+  lines.push(t(TAX_DISCLAIMER_KEY));
 
   return lines.join("\n");
 }

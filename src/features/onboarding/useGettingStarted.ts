@@ -9,7 +9,18 @@ import { GETTING_STARTED_STEPS, type GettingStartedStep } from "./gettingStarted
 export interface GettingStartedStepState extends GettingStartedStep {
   /** Auto-detected from real account data — never ticked by hand. */
   done: boolean;
+  /**
+   * True while this row's own signal is still in flight. Those rows can't answer
+   * "done?" yet, so the page renders them as skeletons instead of showing a "to
+   * do" CTA that flips to Done a moment later.
+   */
+  isPending: boolean;
 }
+
+/** The steps whose `done` comes from `GET /me/public-eligibility` rather than
+ *  data the app already holds — the three that can read as not-done while the
+ *  fetch is still out. */
+const SIGNAL_BACKED_KEYS = new Set(["vouch", "connect", "post"]);
 
 export interface GettingStartedState {
   steps: GettingStartedStepState[];
@@ -69,9 +80,12 @@ export function useGettingStarted(): GettingStartedState {
     post: (signals?.communityPosts ?? 0) > 0,
   };
 
+  const isLoadingSignals = canFetchSignals && !signals && signalsQuery.isLoading;
+
   const steps: GettingStartedStepState[] = GETTING_STARTED_STEPS.map((step) => ({
     ...step,
     done: doneByKey[step.key] ?? false,
+    isPending: isLoadingSignals && SIGNAL_BACKED_KEYS.has(step.key),
   }));
   const completedCount = steps.filter((step) => step.done).length;
   const totalCount = steps.length;
@@ -80,7 +94,10 @@ export function useGettingStarted(): GettingStartedState {
     steps,
     completedCount,
     totalCount,
-    allDone: completedCount === totalCount,
-    loading: canFetchSignals && !signals && signalsQuery.isLoading,
+    // A member can't be "all done" off a half-loaded picture, and the three
+    // signal-backed rows read as not-done until they resolve — so hold the
+    // celebration panel until they have.
+    allDone: !isLoadingSignals && completedCount === totalCount,
+    loading: isLoadingSignals,
   };
 }

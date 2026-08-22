@@ -3,6 +3,7 @@ import { FiSliders } from "react-icons/fi";
 import { Button, FadeIn, Select, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader, AdminTabs, AdminChip } from "./ui";
+import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -80,7 +81,7 @@ function AdminInviteRow({
         </div>
         <div className={styles.rowMeta}>
           {t("admin:adminInvites.row.from", { name: invite.inviter.name })}
-          {" → "}
+          <AdminArrowSeparator />
           {recipientLine(invite, t)}
         </div>
         <div className={styles.rowDates}>
@@ -112,8 +113,8 @@ function InviteRowsSkeleton() {
 }
 
 /**
- * Admin invite oversight: every invite on the platform — inviter, recipient (or
- * target email), status, and dates — filterable by status. Demo mode reads the
+ * Admin invite oversight: every invite on the platform, with inviter, recipient
+ * (or target email), status, and dates, filterable by status. Demo mode reads the
  * colocated fixture; live mode calls `GET /admin/invites` with pagination.
  */
 export function AdminInvitesPage() {
@@ -257,6 +258,10 @@ export function AdminInvitesPage() {
         <AdminInviteDrawer
           invite={selectedInvite}
           onClose={() => setSelectedInvite(null)}
+          // The drawer holds its own copy of the row (the list hands it the
+          // whole DTO), so a confirmed revoke has to be reflected here too or
+          // the chip would keep reading "Pending" behind the toast.
+          onRevoked={setSelectedInvite}
         />
       )}
 

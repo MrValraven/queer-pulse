@@ -1,4 +1,11 @@
 import type { ReactNode } from "react";
+import {
+  FiFileText,
+  FiLink,
+  FiStar,
+  FiUser,
+  FiUsers,
+} from "react-icons/fi";
 
 export interface ProfileNavItem {
   /** DOM id of the section this item scrolls to. */
@@ -18,55 +25,31 @@ export const PROFILE_NAV: ProfileNavItem[] = [
     id: "identity",
     labelKey: "settings:editProfile.nav.identity.label",
     groupKey: "settings:editProfile.nav.group.profile",
-    icon: (
-      <svg viewBox="0 0 16 16">
-        <circle cx="8" cy="6" r="3" />
-        <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-      </svg>
-    ),
+    icon: <FiUser aria-hidden />,
   },
   {
     id: "bio",
     labelKey: "settings:editProfile.nav.bio.label",
     groupKey: "settings:editProfile.nav.group.profile",
-    icon: (
-      <svg viewBox="0 0 16 16">
-        <path d="M3 4h10M3 8h8M3 12h5" />
-      </svg>
-    ),
+    icon: <FiFileText aria-hidden />,
   },
   {
     id: "links",
     labelKey: "settings:editProfile.nav.links.label",
     groupKey: "settings:editProfile.nav.group.profile",
-    icon: (
-      <svg viewBox="0 0 16 16">
-        <path d="M6.5 9.5a2.5 2.5 0 0 0 3.6.1l2-2a2.5 2.5 0 0 0-3.5-3.6l-1 1" />
-        <path d="M9.5 6.5a2.5 2.5 0 0 0-3.6-.1l-2 2a2.5 2.5 0 0 0 3.5 3.6l1-1" />
-      </svg>
-    ),
+    icon: <FiLink aria-hidden />,
   },
   {
     id: "skills",
     labelKey: "settings:editProfile.nav.skills.label",
     groupKey: "settings:editProfile.nav.group.profile",
-    icon: (
-      <svg viewBox="0 0 16 16">
-        <polygon points="8,2 10.2,6 15,6.6 11.5,10 12.4,15 8,12.5 3.6,15 4.5,10 1,6.6 5.8,6" />
-      </svg>
-    ),
+    icon: <FiStar aria-hidden />,
   },
   {
     id: "communities",
     labelKey: "settings:editProfile.nav.communities.label",
     groupKey: "settings:editProfile.nav.group.profile",
-    icon: (
-      <svg viewBox="0 0 16 16">
-        <circle cx="5.5" cy="6" r="2" />
-        <circle cx="10.5" cy="6" r="2" />
-        <path d="M2 13c0-2 1.6-3.2 3.5-3.2S9 11 9 13M7 13c0-2 1.6-3.2 3.5-3.2S14 11 14 13" />
-      </svg>
-    ),
+    icon: <FiUsers aria-hidden />,
   },
 ];
 

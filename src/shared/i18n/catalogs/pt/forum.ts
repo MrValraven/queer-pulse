@@ -85,6 +85,10 @@ export const forum: Catalog = {
   "compose.postPlaceholder": "Escreve a tua publicação…",
   "compose.cancel": "Cancelar",
   "compose.publishCta": "Publicar",
+  "compose.publishing": "A publicar…",
+  "compose.publishRetryCta": "Tentar publicar outra vez",
+  "compose.publishFailed":
+    "Não conseguimos publicar. O teu rascunho continua aqui, podes tentar outra vez.",
   "compose.officialFieldLabel": "Publicar como QueerPulse Oficial",
   "compose.officialFieldHint":
     "Publica em nome da conta QueerPulse, em vez do teu nome.",
@@ -180,7 +184,7 @@ export const forum: Catalog = {
   // ── LockThreadModal (nota opcional ao fechar um tópico) ─────────────────
   "lockReason.title": "Fechar este tópico",
   "lockReason.sub":
-    "As pessoas continuam a poder ler tudo aqui — isto só pausa novas respostas. Diz-lhes porquê, se for útil.",
+    "As pessoas continuam a poder ler tudo aqui; isto só pausa novas respostas. Diz-lhes porquê, se for útil.",
   "lockReason.label": "Motivo (opcional)",
   "lockReason.placeholder": "ex.: resolvido, fora do tema, movido para uma comunidade",
   "lockReason.cancel": "Cancelar",
@@ -204,6 +208,12 @@ export const forum: Catalog = {
   "threadPage.error.description":
     "Algo correu mal do nosso lado. A culpa não é tua. Tenta novamente daqui a pouco.",
   "threadPage.error.retryCta": "Tentar novamente",
+  "threadPage.replyForbiddenToast":
+    "Não podes responder aqui. O tópico pode ter sido fechado ou pertence a uma comunidade a que ainda não te juntaste.",
+  "threadPage.private.title": "Este tópico está numa comunidade privada",
+  "threadPage.private.description":
+    "Só quem é membro dessa comunidade o pode ler. Se for um sítio onde gostavas de estar, podes pedir para entrar.",
+  "threadPage.private.browseCta": "Ver comunidades",
 
   // ── ThreadReplies / ModeratorByline ─────────────────────────────────────
   "byline.withRole":
@@ -233,6 +243,7 @@ export const forum: Catalog = {
   "author.officialBadge": "Oficial",
   "author.aboutTeamAria": "Sobre a equipa e a governação do QueerPulse",
   "author.viewProfileAria": "Ver o perfil de {name}",
+  "author.you": "Tu",
 
   // ── PostActionsMenu (⋯ overflow menu) ────────────────────────────────────
   "postMenu.edit": "Editar",

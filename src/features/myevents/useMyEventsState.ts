@@ -32,7 +32,8 @@ export function useMyEventsState(): MyEventsValue {
   const fmt = useFormat();
   const { showToast } = useToast();
   const toast = useCallback(
-    (msg: string, type: "success" | "info" = "info") => showToast(msg, type),
+    (msg: string, type: "success" | "info" | "error" = "info") =>
+      showToast(msg, type),
     [showToast],
   );
   const toastAction = useCallback(

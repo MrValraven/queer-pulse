@@ -47,9 +47,9 @@ export function CompareOffersModal({
             {COMPARE_ROWS.map((row) => (
               <tr key={row.labelKey}>
                 <th className={styles.rowHead}>{t(row.labelKey)}</th>
-                {offers.map((a) => (
-                  <td key={a.id} className={styles.cell}>
-                    {row.get(a)}
+                {offers.map((offer) => (
+                  <td key={offer.id} className={styles.cell}>
+                    {row.get(offer, t)}
                   </td>
                 ))}
               </tr>

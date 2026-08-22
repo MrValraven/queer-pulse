@@ -198,6 +198,9 @@ export function jobDetailToJob(
   const base = jobCardToJob(dto, t, fmt);
   return {
     ...base,
+    // Poster-only affordances (the applications console) hang off this, and the
+    // backend is the only honest source for it.
+    isPoster: dto.isPoster,
     detail: {
       category: dto.category,
       posted: parsePosted(dto.createdAt),

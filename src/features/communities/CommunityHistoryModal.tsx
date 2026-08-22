@@ -17,9 +17,18 @@ export function CommunityHistoryModal({
   onClose: () => void;
 }) {
   const postHistory = useCommunityPostHistory(slug, postId, !replyId);
-  const replyHistory = useCommunityReplyHistory(slug, postId, replyId, !!replyId);
+  const replyHistory = useCommunityReplyHistory(
+    slug,
+    postId,
+    replyId,
+    !!replyId,
+  );
   const { revisions, isLoading } = replyId ? replyHistory : postHistory;
   return (
-    <EditHistoryModal revisions={revisions} isLoading={isLoading} onClose={onClose} />
+    <EditHistoryModal
+      revisions={revisions}
+      isLoading={isLoading}
+      onClose={onClose}
+    />
   );
 }

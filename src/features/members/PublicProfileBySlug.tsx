@@ -1,27 +1,12 @@
 import { PageShell } from "../../shared/components/layout";
-import {
-  Avatar,
-  Button,
-  EmptyState,
-  FadeIn,
-  FeatureHelp,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { leadingInitials } from "../../shared/lib/initials";
 import { routes } from "../../app/routeMap";
-import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { usePublicProfileBySlug } from "./api/usePublicProfile";
-import {
-  PublicProfileActivity,
-  PublicProfileLinks,
-  PublicProfileWork,
-} from "./PublicProfileParts";
+import { PublicProfilePublicView } from "./PublicProfilePublicView";
 import styles from "./PublicProfilePage.module.css";
 
-/** Two initials from a display name, for the avatar fallback. */
 /**
  * A member's public profile, addressed by slug — the one member surface meant to
  * be readable, and indexable, without a session.
@@ -88,58 +73,7 @@ export function PublicProfileBySlug({ slug }: { slug: string }) {
       />
 
       <div className={styles.page}>
-        <header className={styles.publicHead}>
-          <Avatar
-            initials={leadingInitials(profile.displayName)}
-            src={profile.avatarUrl ?? undefined}
-            alt=""
-            size={92}
-          />
-          <div>
-            <div className={styles.eyebrow}>
-              {t("members:publicProfile.head.eyebrow", { slug: profile.slug })}
-            </div>
-            <h1 className={styles.name}>
-              {profile.displayName} <FeatureHelp id="members.profile" />
-            </h1>
-            {profile.pronouns && (
-              <div className={styles.pronouns}>
-                <span className={styles.pron}>{profile.pronouns}</span>
-              </div>
-            )}
-            <div className={styles.badgeRow}>
-              <MemberStaffBadge slug={profile.slug} size="lg" />
-            </div>
-            {profile.tagline && (
-              <p className={styles.publicTagline}>{profile.tagline}</p>
-            )}
-          </div>
-        </header>
-
-        {profile.bio && (
-          <FadeIn as="section" className={styles.sec} delay={80}>
-            <div className={styles.secH}>
-              <h2>{t("members:publicBySlug.aboutHeading")}</h2>
-            </div>
-            <p className={styles.bio}>{profile.bio}</p>
-          </FadeIn>
-        )}
-
-        <PublicProfileLinks links={profile.links} />
-        <PublicProfileWork work={profile.work} />
-        <PublicProfileActivity activity={profile.activity} />
-
-        <div className={styles.bottomCta}>
-          <div>
-            <h3>{t("members:publicBySlug.joinTitle")}</h3>
-            <p>{t("members:publicBySlug.joinBody")}</p>
-          </div>
-          <div className={styles.bottomCtaActions}>
-            <Button variant="primary" to={requestInvitePath("public_profile")}>
-              {t("common:cta.requestInvite")}
-            </Button>
-          </div>
-        </div>
+        <PublicProfilePublicView profile={profile} />
       </div>
     </PageShell>
   );

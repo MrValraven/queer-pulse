@@ -28,13 +28,13 @@ function blockDiffText(block: ArticleBlock): string {
     case "pullQuote":
       return stripHtml(block.html).trim();
     case "quote":
-      return `${stripHtml(block.html).trim()} — ${block.cite}`;
+      return `${stripHtml(block.html).trim()}, ${block.cite}`;
     case "qa":
       return `${stripHtml(block.q).trim()} ${stripHtml(block.html).trim()}`;
     case "image":
       return stripHtml(block.caption).trim();
     case "stats":
-      return block.items.map((item) => `${item.value} — ${item.label}`).join(" · ");
+      return block.items.map((item) => `${item.value}: ${item.label}`).join(" · ");
     default: {
       // Exhaustiveness guard: TypeScript rejects an unhandled kind here.
       const exhaustive: never = block;

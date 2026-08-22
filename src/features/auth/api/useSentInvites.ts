@@ -94,19 +94,34 @@ export function useSentInvites() {
  * The mutation takes both `code` (what the backend route resolves by) and `id`
  * (the uuid we patch the cache row against) — the two are distinct values, so
  * revoking by id would 404 against the `:code` route.
+ *
+ * `onMutate` snapshots the list before flipping the row and `onError` puts that
+ * snapshot back, so a 403/404/offline failure never leaves an invite reading
+ * "Revoked" while its link is still live and redeemable. The refetch in
+ * `onSettled` is a second line of defence that has to be able to fail: offline
+ * it never lands, so the rollback stands on its own. Errors reach the caller's
+ * `onError` for a tailored message; `meta.silentError` keeps the global
+ * mutation-error toast from doubling up with it.
  */
 export function useRevokeInvite() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const queryKey = ["sent-invites", demoMode];
 
-  return useMutation<void, unknown, { id: string; code: string }>({
+  return useMutation<
+    void,
+    unknown,
+    { id: string; code: string },
+    { previous: SentInviteView[] | undefined }
+  >({
     mutationKey: ["sent-invites", "revoke"],
+    meta: { silentError: true },
     mutationFn: async ({ code }) => {
       if (demoMode) return;
       await revokeInvite(code);
     },
     onMutate: ({ id }) => {
+      const previous = queryClient.getQueryData<SentInviteView[]>(queryKey);
       const revoked = STATUS_META.revoked;
       queryClient.setQueryData<SentInviteView[]>(queryKey, (current) =>
         current?.map((invite) =>
@@ -120,6 +135,11 @@ export function useRevokeInvite() {
             : invite,
         ),
       );
+      return { previous };
+    },
+    // Roll the optimistic flip back to exactly what was on screen before it.
+    onError: (_error, _variables, context) => {
+      if (context) queryClient.setQueryData(queryKey, context.previous);
     },
     onSettled: () => {
       // Demo holds its list off the fixture, not the cache — invalidating would

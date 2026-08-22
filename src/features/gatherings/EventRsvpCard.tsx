@@ -1,202 +1,86 @@
 import { useState } from "react";
-import { FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { Translation } from "../../shared/i18n/Translation";
-import { TIERS } from "./eventPage.data";
-import { EVENT_CAPACITY, EVENT_FILLED, EVENT_IS_FULL } from "./eventRsvp.data";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { EVENT_IS_FULL } from "./eventRsvp.data";
 import { WaitlistSuccess, ReservedSuccess } from "./EventRsvpSuccess";
-import { useRsvp, useUnrsvp } from "./api/useEventMutations";
+import { EventRsvpForm, type EventRsvpDraft } from "./EventRsvpForm";
+import {
+  useRsvp,
+  useUnrsvp,
+  useUpdateRsvpDetails,
+} from "./api/useEventMutations";
 import styles from "./EventPage.module.css";
 
-/** The static EventPage has no live id, so a stable placeholder slug keeps the
- *  demo no-op path working and gives live mode a slug to target. */
+/** A landed RSVP: which state the card confirms, and the draft behind it. */
+interface ConfirmedRsvp {
+  intent: "going" | "waitlisted";
+  draft: EventRsvpDraft;
+}
+
+/**
+ * The ticket card on the static event page: the RSVP form, then whichever
+ * confirmed state the RSVP actually resolved to.
+ *
+ * The confirmed state is driven by the mutation's own `onSuccess` — never
+ * flipped optimistically — so a failed RSVP keeps the form and says so rather
+ * than showing a success the server never granted.
+ */
 export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
+  const { showToast } = useToast();
   const rsvp = useRsvp(slug);
   const unrsvp = useUnrsvp(slug);
-  const [selectedTier, setSelectedTier] = useState(1);
-  const [reserved, setReserved] = useState(false);
-  const [waitlistPos, setWaitlistPos] = useState<number | null>(null);
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-
-  const emailValid = /^\S+@\S+\.\S+$/.test(email);
-  const canSubmit = fullName.trim().length > 0 && emailValid;
+  const updateRsvpDetails = useUpdateRsvpDetails(slug);
+  const [confirmed, setConfirmed] = useState<ConfirmedRsvp | null>(null);
   const isFull = EVENT_IS_FULL;
-  const spotsRemaining = EVENT_CAPACITY - EVENT_FILLED;
-  const fillPercent = Math.round((EVENT_FILLED / EVENT_CAPACITY) * 100);
 
-  function joinWaitlist() {
-    rsvp.mutate("maybe");
-    // Plausible position derived from the name length for this prototype.
-    setWaitlistPos(2 + (fullName.trim().length % 5));
-  }
+  const submitRsvp = (draft: EventRsvpDraft) => {
+    // A full gathering waitlists the member: the request body still says
+    // "going", but the mutation is told the intent so it doesn't bump the
+    // optimistic going head-count (see `RsvpIntent`).
+    const intent: ConfirmedRsvp["intent"] = isFull ? "waitlisted" : "going";
+    rsvp.mutate(intent, {
+      onSuccess: () => {
+        setConfirmed({ intent, draft });
+        // The one field of this form the RSVP API can carry, sent as a
+        // follow-up patch on the RSVP that just landed. Skipped when the
+        // member left it blank.
+        const dietaryNeeds = draft.dietaryNeeds.trim();
+        if (dietaryNeeds) updateRsvpDetails.mutate({ dietaryNeeds });
+      },
+      onError: () => showToast(t("gatherings:event.rsvp.errorToast"), "info"),
+    });
+  };
 
-  if (waitlistPos !== null) {
-    return (
-      <WaitlistSuccess
-        waitlistPos={waitlistPos}
-        email={email}
-        onLeave={() => {
-          unrsvp.mutate();
-          setWaitlistPos(null);
-        }}
-      />
-    );
+  const cancelRsvp = () => {
+    const previous = confirmed;
+    setConfirmed(null);
+    unrsvp.mutate(undefined, {
+      onError: () => {
+        setConfirmed(previous);
+        showToast(t("gatherings:event.rsvp.errorToast"), "info");
+      },
+    });
+  };
+
+  if (confirmed?.intent === "waitlisted") {
+    return <WaitlistSuccess email={confirmed.draft.email} onLeave={cancelRsvp} />;
   }
 
   return (
     <div className={styles.ticketCard}>
-      {reserved ? (
+      {confirmed ? (
         <ReservedSuccess
-          selectedTier={selectedTier}
-          email={email}
-          onCancel={() => {
-            unrsvp.mutate();
-            setReserved(false);
-          }}
+          selectedTier={confirmed.draft.selectedTier}
+          email={confirmed.draft.email}
+          onCancel={cancelRsvp}
         />
       ) : (
-        <>
-          <div className={styles.ticketHead}>
-            <div className={styles.ticketHeadTitle}>
-              {isFull
-                ? t("gatherings:event.rsvp.headTitleFull")
-                : t("gatherings:event.rsvp.headTitle")}
-            </div>
-            <div className={styles.ticketHeadSub}>
-              {isFull
-                ? t("gatherings:event.rsvp.headSubFull")
-                : t("gatherings:event.rsvp.headSub")}
-            </div>
-          </div>
-          <div className={styles.spotsText}>
-            <span>
-              <Translation
-                i18nKey="gatherings:event.rsvp.spotsRemaining"
-                values={{ count: isFull ? 0 : spotsRemaining }}
-                components={{ strong: <strong /> }}
-              />
-            </span>
-            <span>
-              {t("gatherings:event.rsvp.filledOfCapacity", {
-                filled: isFull ? EVENT_CAPACITY : EVENT_FILLED,
-                capacity: EVENT_CAPACITY,
-              })}
-            </span>
-          </div>
-          <div className={styles.spotsBar}>
-            <div
-              className={styles.spotsFill}
-              style={{ width: isFull ? "100%" : `${fillPercent}%` }}
-            />
-          </div>
-          {!isFull && (
-            <div className={styles.tiers}>
-              {TIERS.map((tier, index) => (
-                <button
-                  type="button"
-                  key={tier.nameKey}
-                  className={[
-                    styles.tier,
-                    selectedTier === index && styles.tierSelected,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => setSelectedTier(index)}
-                >
-                  <span className={styles.tierRadio} />
-                  <span style={{ flex: 1 }}>
-                    <span
-                      className={styles.tierName}
-                      style={{ display: "block" }}
-                    >
-                      {t(tier.nameKey)}
-                    </span>
-                    <span className={styles.tierDesc}>{t(tier.descriptionKey)}</span>
-                  </span>
-                  <span className={styles.tierPrice}>
-                    {fmt.currency(tier.price)}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-          <div className={styles.form}>
-            <input
-              className={styles.input}
-              type="text"
-              inputMode="text"
-              autoComplete="name"
-              autoCapitalize="words"
-              aria-label={t("gatherings:event.rsvp.namePlaceholder")}
-              placeholder={t("gatherings:event.rsvp.namePlaceholder")}
-              required
-              aria-required="true"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-            <input
-              className={styles.input}
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck={false}
-              aria-label={t("gatherings:event.rsvp.emailPlaceholder")}
-              placeholder={t("gatherings:event.rsvp.emailPlaceholder")}
-              required
-              aria-required="true"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {!isFull && (
-              <input
-                className={styles.input}
-                type="text"
-                inputMode="text"
-                autoComplete="off"
-                aria-label={t("gatherings:event.rsvp.dietaryPlaceholder")}
-                placeholder={t("gatherings:event.rsvp.dietaryPlaceholder")}
-              />
-            )}
-            <div className={styles.requiredHint}>
-              <span className={styles.req}>*</span>{" "}
-              {isFull
-                ? t("gatherings:event.rsvp.requiredHintFull")
-                : t("gatherings:event.rsvp.requiredHint")}
-            </div>
-            <button
-              type="button"
-              className={styles.rsvpBtn}
-              onClick={() => {
-                if (isFull) {
-                  joinWaitlist();
-                } else {
-                  rsvp.mutate("going");
-                  setReserved(true);
-                }
-              }}
-              disabled={!canSubmit}
-              title={
-                !canSubmit ? t("gatherings:event.rsvp.disabledHint") : undefined
-              }
-            >
-              {isFull
-                ? t("gatherings:event.rsvp.joinWaitlistCta")
-                : t("gatherings:event.rsvp.reserveCta")}{" "}
-              <FiArrowRight aria-hidden />
-            </button>
-          </div>
-          <div className={styles.note}>
-            {isFull
-              ? t("gatherings:event.rsvp.noteFull")
-              : `${t("gatherings:event.rsvp.confirmationEmailNote")} ${t("gatherings:event.rsvp.cancelPolicy")}`}
-          </div>
-        </>
+        <EventRsvpForm
+          isFull={isFull}
+          isSubmitting={rsvp.isPending}
+          onSubmit={submitRsvp}
+        />
       )}
     </div>
   );

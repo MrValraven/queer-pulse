@@ -354,7 +354,7 @@
 .freeCheckOn {
   background: var(--jade);
   border-color: var(--jade);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-size: 12px;
 }
 .freeLabel {
@@ -405,7 +405,7 @@
 .accessItemSelected .accessCheck {
   background: var(--jade);
   border-color: var(--jade);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-size: 11px;
 }
 .accessName {
@@ -499,7 +499,7 @@
 .checkOn {
   background: var(--jade);
   border-color: var(--jade);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-size: 11px;
 }
 .checkOn svg {
@@ -550,7 +550,7 @@
 }
 @media (hover: hover) {
   .next:hover {
-    background: var(--plum-deep, #1a0f25);
+    background: var(--plum-deep);
     transform: translateY(-1px);
   }
 }

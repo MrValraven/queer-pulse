@@ -1,4 +1,4 @@
-import { FiHash } from "react-icons/fi";
+import { FiAlertTriangle, FiHash } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -85,8 +85,21 @@ export function TopicPage() {
               <TopicSidebar topic={topic} />
             </div>
           </>
+        ) : topicQuery.isError ? (
+          // A 500 / network failure is NOT "this topic doesn't exist": it is
+          // retryable, so it gets its own panel with a real retry, mirroring
+          // ThreadPage's 404-vs-retryable split.
+          <EmptyState
+            icon={<FiAlertTriangle />}
+            title={t("topics:error.title")}
+            description={t("topics:error.description")}
+            action={{
+              label: t("topics:error.retryCta"),
+              onClick: topicQuery.refetch,
+            }}
+          />
         ) : (
-          // Live-only: the fetch resolved with no topic (or errored). Show a
+          // Live-only: the fetch resolved with no topic (a genuine 404). Show a
           // real not-found state instead of a scripted mock.
           <EmptyState
             icon={<FiHash />}

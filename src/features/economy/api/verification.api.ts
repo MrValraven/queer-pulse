@@ -106,12 +106,6 @@ export function verificationRequiredFrom(
 export const getVerificationStatus = () =>
   apiGet<VerificationStatusWithRequestDTO>("/verification/me");
 
-export const startPhoneVerification = (phoneNumber: string) =>
-  apiPost<{ started: true }>("/verification/phone/start", { phoneNumber });
-
-export const verifyPhoneCode = (code: string) =>
-  apiPost<VerificationStatusDTO>("/verification/phone/verify", { code });
-
 export const startIdentityVerification = () =>
   apiPost<{ redirectUrl: string; providerRef: string }>(
     "/verification/identity/start",

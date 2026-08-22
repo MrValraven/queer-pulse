@@ -1,16 +1,15 @@
 // src/features/messages/Composer.tsx
-import { useMemo, useRef, useLayoutEffect, useEffect, useState } from "react";
-import { FiX } from "react-icons/fi";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useEmitTyping } from "../../shared/api/realtime";
 import { useReplyPreviewTransition } from "./useReplyPreviewTransition";
-import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
-import { MentionText } from "../../shared/mentions/MentionText";
+import { ComposerInputRow } from "./ComposerInputRow";
 import { ComposerSafetyNotice } from "./ComposerSafetyNotice";
+import { ComposerReplyPreview } from "./ComposerReplyPreview";
+import { ComposerSeveredNotice } from "./ComposerSeveredNotice";
 import { detectContactSafetySignals } from "./contactSafetyDetector";
-import { GifComposerButton } from "./GifComposerButton";
-import { ImageComposerButton } from "./ImageComposerButton";
-import { MentionHintButton } from "./MentionHintButton";
+import { useComposerAutoGrow } from "./useComposerAutoGrow";
+import { useComposerPopovers } from "./useComposerPopovers";
+import { useComposerTyping } from "./useComposerTyping";
 import { clearDraft, loadDraft, saveDraft } from "./drafts";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { ChatMessage, Conversation } from "./data";
@@ -46,6 +45,11 @@ interface ComposerProps {
  * thread switch used to rely on the controller for; unrelated to the
  * message-edit inline editor, which owns its own local text entirely (see
  * `InlineEditField`) and is untouched by this component.
+ *
+ * The throttled typing frames (`useComposerTyping`), the mutually-exclusive
+ * GIF/shortcut popovers (`useComposerPopovers`), and the reply-quote banner
+ * (`ComposerReplyPreview`) are split into colocated files so this component
+ * stays under the line cap.
  */
 export function Composer({
   active,
@@ -60,7 +64,7 @@ export function Composer({
   const { t } = useTranslation();
   const firstName = active.name.split(" ")[0]!;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const emitTyping = useEmitTyping();
+  const { notifyTyping, stopTyping } = useComposerTyping(conversationId);
   // The new-message draft, local to this component instance. Seeded once from
   // the persisted per-conversation store; the caller remounts this component
   // (via `key={active.id}`) on thread switch, so this lazy initializer re-runs
@@ -70,67 +74,14 @@ export function Composer({
   const safetySignals = useMemo(() => detectContactSafetySignals(draft), [draft]);
   // Keeps the reply-preview banner's content mounted through its collapse/
   // fade-out so dismissing it (✕ or post-send clear) actually animates
-  // instead of snapping away — see the hook for why the wrapper below is
-  // always rendered rather than conditionally on `replyDraft`.
+  // instead of snapping away — see the hook for why `ComposerReplyPreview`
+  // is always rendered rather than conditionally on `replyDraft`.
   const { previewMessage, open: replyPreviewOpen } = useReplyPreviewTransition(replyDraft);
   // Exactly one composer popover (GIF picker or the shortcut hint) is open at a
-  // time — a single source of truth keeps them mutually exclusive so we never
-  // stack two floating panels over the thread. `null` = both closed.
-  const [openPopover, setOpenPopover] = useState<"gif" | "shortcuts" | null>(null);
-  // Wraps both popover controls (and their panels) so one outside-click/Esc
-  // handler can close whichever is open — see the effect below.
-  const popoverGroupRef = useRef<HTMLDivElement>(null);
-  /** Idle timer that emits `typing:false` ~3s after the last keystroke; also
-   *  cleared (and re-armed) on send/blur so we never emit a late false-then-true. */
-  const typingIdleTimerRef = useRef<number | undefined>(undefined);
-  /** Last `Date.now()` a `typing:true` frame was sent — throttles emits to at
-   *  most once per ~2s while the reader keeps typing. */
-  const lastTypingSentRef = useRef(0);
-
-  // Sync height to content up to the CSS max-height (120px), then let it scroll.
-  // With `box-sizing: border-box`, `scrollHeight` excludes the borders, so
-  // adding the top+bottom border back keeps the box from under-sizing by ~3px
-  // and showing a spurious scrollbar on a single line.
-  useLayoutEffect(() => {
-    const node = textareaRef.current;
-    if (!node) return;
-    node.style.height = "auto";
-    const borderY = node.offsetHeight - node.clientHeight;
-    node.style.height = `${node.scrollHeight + borderY}px`;
-    // Only let the box scroll internally once CSS `max-height` has actually
-    // clamped it (scrollHeight > clientHeight at that point) — otherwise
-    // overflow stays hidden, so a short/empty single-line draft never shows
-    // a stray scrollbar (or, on iOS Safari, a momentary touch-scroll
-    // indicator on a box that isn't really scrollable).
-    node.style.overflowY = node.scrollHeight > node.clientHeight ? "auto" : "hidden";
-  }, [draft]);
-
-  // Never leave a stale idle timer running past this component's lifetime
-  // (e.g. thread switch unmounts this Composer instance).
-  useEffect(() => {
-    return () => window.clearTimeout(typingIdleTimerRef.current);
-  }, []);
-
-  // Dismiss the open popover on a pointer down outside the controls group, or
-  // on Escape. Both controls share `popoverGroupRef`, so clicking one button
-  // toggles rather than double-firing, and clicking the input/thread closes.
-  useEffect(() => {
-    if (!openPopover) return;
-    function onPointerDown(event: PointerEvent) {
-      if (popoverGroupRef.current && !popoverGroupRef.current.contains(event.target as Node)) {
-        setOpenPopover(null);
-      }
-    }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpenPopover(null);
-    }
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [openPopover]);
+  // time — see `useComposerPopovers`.
+  const { openPopover, popoverGroupRef, togglePopover, closePopover } =
+    useComposerPopovers();
+  useComposerAutoGrow(textareaRef, draft);
 
   /** Drops a mention sigil into the draft (with a leading space when needed so
    *  the sigil sits at a word boundary — where `detectTrigger` fires), then
@@ -141,17 +92,13 @@ export function Composer({
     const next = `${draft}${needsSpace ? " " : ""}${sigil}`;
     setDraft(next);
     saveDraft(conversationId, next);
-    setOpenPopover(null);
+    closePopover();
     requestAnimationFrame(() => {
       const node = textareaRef.current;
       if (!node) return;
       node.focus();
       node.setSelectionRange(node.value.length, node.value.length);
     });
-  }
-
-  function togglePopover(which: "gif" | "shortcuts") {
-    setOpenPopover((current) => (current === which ? null : which));
   }
 
   /** Enter-to-send and the send button both funnel through here so a send
@@ -161,31 +108,20 @@ export function Composer({
   function handleSend() {
     const body = draft.trim();
     if (!body) return;
-    window.clearTimeout(typingIdleTimerRef.current);
-    emitTyping(conversationId, false);
-    lastTypingSentRef.current = 0;
+    stopTyping(true);
     onSend(body);
     setDraft("");
     clearDraft(conversationId);
   }
 
   function handleBlur() {
-    window.clearTimeout(typingIdleTimerRef.current);
-    emitTyping(conversationId, false);
+    stopTyping(false);
   }
 
   function handleChange(nextValue: string) {
     setDraft(nextValue);
     saveDraft(conversationId, nextValue);
-    const now = Date.now();
-    if (now - lastTypingSentRef.current > 2000) {
-      emitTyping(conversationId, true);
-      lastTypingSentRef.current = now;
-    }
-    window.clearTimeout(typingIdleTimerRef.current);
-    typingIdleTimerRef.current = window.setTimeout(() => {
-      emitTyping(conversationId, false);
-    }, 3000);
+    notifyTyping();
   }
 
   /** Enter-to-send (desktop, non-touch) — passed through to `MentionTextarea`,
@@ -203,23 +139,11 @@ export function Composer({
     }
   }
 
-  if (active.official) {
-    return <div className={styles.officialBar}>{t("messages:conversation.officialNotice")}</div>;
-  }
-  if (blocked) {
+  // Official thread, blocked counterpart, or a group the member has left —
+  // see `ComposerSeveredNotice`'s own doc for what each notice says.
+  if (active.official || blocked || (active.isGroup && active.hasLeft)) {
     return (
-      <div className={styles.officialBar}>
-        {t("messages:conversation.blockedNotice", { name: firstName })}
-      </div>
-    );
-  }
-  // A member who LEFT a group keeps read access but the composer is severed
-  // (the server also rejects a post from a left member).
-  if (active.isGroup && active.hasLeft) {
-    return (
-      <div className={styles.officialBar}>
-        {t("messages:conversation.leftGroupNotice")}
-      </div>
+      <ComposerSeveredNotice active={active} blocked={blocked} firstName={firstName} />
     );
   }
   const composerPlaceholder = active.isGroup
@@ -231,77 +155,30 @@ export function Composer({
       {/* Advisory, non-blocking safety hint (P0.7) — phone/email/banking/
           external-payment content in the draft. Never gates `handleSend`. */}
       <ComposerSafetyNotice signals={safetySignals} />
-      {/* Always mounted (even with nothing to reply to) so the grid-row/margin
-          transition below always has a real "closed" state to animate from —
-          `previewMessage` lags the exit animation, see the hook. */}
-      <div className={styles.replyPreviewWrap} data-open={replyPreviewOpen}>
-        {previewMessage && (
-          <div className={styles.replyPreview}>
-            <div className={styles.replyPreviewBody}>
-              <span className={styles.replyPreviewName}>
-                {previewMessage.from === "me"
-                  ? t("messages:conversation.you")
-                  : active.isGroup
-                    ? (previewMessage.senderName ?? active.name)
-                    : active.name}
-              </span>
-              <span className={styles.replyPreviewSnippet}>
-                <MentionText text={previewMessage.text} />
-              </span>
-            </div>
-            <button
-              type="button"
-              className={styles.replyPreviewClose}
-              aria-label={t("messages:actions.editCancel")}
-              onClick={onCancelReply}
-            >
-              <FiX aria-hidden />
-            </button>
-          </div>
-        )}
-      </div>
-      <div className={styles.composerRow}>
-        <div className={styles.composerControls} ref={popoverGroupRef}>
-          {onSendImage && <ImageComposerButton onSendImage={onSendImage} />}
-          {onSendGif && (
-            <GifComposerButton
-              onSendGif={onSendGif}
-              open={openPopover === "gif"}
-              onToggle={() => togglePopover("gif")}
-              onClose={() => setOpenPopover(null)}
-            />
-          )}
-          <MentionHintButton
-            open={openPopover === "shortcuts"}
-            onToggle={() => togglePopover("shortcuts")}
-            onInsert={insertShortcut}
-          />
-        </div>
-        <MentionTextarea
-          id="messages-composer"
-          wrapClassName={styles.composerTaWrap}
-          className={styles.composerTa}
-          placeholder={composerPlaceholder}
-          value={draft}
-          rows={1}
-          textareaRef={textareaRef}
-          placement="above"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onKeyDown={handleComposerKeyDown}
-        />
-        <button
-          type="button"
-          className={[styles.sendBtn, draft.trim() && styles.sendBtnActive].filter(Boolean).join(" ")}
-          onClick={handleSend}
-          aria-label={t("messages:conversation.send")}
-          disabled={!draft.trim()}
-        >
-          <svg width={16} height={16} viewBox="0 0 16 16" fill="none" aria-hidden>
-            <path d="M14 8l-12-6 4 6-4 6 12-6Z" fill="currentColor" />
-          </svg>
-        </button>
-      </div>
+      <ComposerReplyPreview
+        previewMessage={previewMessage}
+        open={replyPreviewOpen}
+        isGroup={active.isGroup}
+        activeName={active.name}
+        onCancelReply={onCancelReply}
+      />
+      <ComposerInputRow
+        textareaRef={textareaRef}
+        popoverGroupRef={popoverGroupRef}
+        openPopover={openPopover}
+        onTogglePopover={togglePopover}
+        onClosePopover={closePopover}
+        onSendGif={onSendGif}
+        onSendImage={onSendImage}
+        onInsertShortcut={insertShortcut}
+        placeholder={composerPlaceholder}
+        draft={draft}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onKeyDown={handleComposerKeyDown}
+        onSend={handleSend}
+        sendLabel={t("messages:conversation.send")}
+      />
     </div>
   );
 }

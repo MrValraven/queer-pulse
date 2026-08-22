@@ -40,27 +40,14 @@ import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
  * ──────────────────────────────────────────────────────────────────────── */
 
 /* ── Step-up re-authentication ─────────────────────────────────────────── */
-
-export interface ReauthResult {
-  /** Short-lived, single-purpose token (~5 min) required by destructive/export routes. */
-  reauthToken: string;
-  expiresAt: string;
-}
-
-/**
- * POST /account/reauth — mint the short-lived, single-purpose token that every
- * erasure/export route requires.
- *
- * Takes NO credential, deliberately. Auth is Google OAuth + invite redemption:
- * there is no password on a QueerPulse account, so the backend has nothing to
- * verify one against and doesn't try — `AccountService.reauth(userId)` reads
- * only the authenticated cookie session, and `ReauthDto` marks `password`
- * optional purely to tolerate (and discard) it from older frontend builds. The
- * UI used to collect a password here; it was never checked, which made it a
- * security theatre prompt on the two most destructive flows we have. The real
- * gate is the cookie session plus the typed confirmation in the UI.
- */
-export const reauth = () => apiPost<ReauthResult>("/account/reauth", {});
+//
+// There is no `POST /account/reauth` anymore, and no `reauth()` call here.
+// Auth is Google OAuth + invite redemption (no password), so a plain POST
+// with no credential attached had nothing to actually verify — it minted a
+// token from nothing but the caller's own claim. The `reauthToken` every
+// erasure/export route below still requires is now minted only by completing
+// a REAL Google OAuth round trip (`prompt=login`) as the same already-signed-in
+// member — see `beginReauth`/`getCachedReauthToken` in `useReauthToken.ts`.
 
 /* ── Right to erasure — account deletion ───────────────────────────────── */
 

@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId } from "react";
 import { ChipSelect, Toggle } from "../../shared/components/ui";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -17,24 +17,30 @@ export function PrivateIdentitiesSection({ onChange }: { onChange: () => void })
   const { t } = useTranslation();
   const { draft, updateDraft } = useProfileEdit();
   const uid = useId();
-  const [skipped, setSkipped] = useState(false);
+  const hasIdentities = draft.identities.length > 0;
 
   return (
-    <div className={`${styles.prefSection} ${skipped ? styles.skipped : ""}`}>
+    <div className={styles.prefSection}>
       <div className={styles.psHead}>
         {/* The heading text is span-wrapped so the chip group can point at it
             without also swallowing the "Skip" button's label. */}
         <span id={`${uid}-identities`}>
           {t("settings:interests.identities.heading")}
         </span>
+        {/* Skip clears the selection for real. It used to toggle a CSS class and
+            a label while every ticked identity stayed in the draft and was
+            saved anyway, so the opt-out was recorded nowhere. Disabled when
+            there is nothing to clear. */}
         <button
           type="button"
           className={styles.psSkip}
-          onClick={() => setSkipped((v) => !v)}
+          disabled={!hasIdentities}
+          onClick={() => {
+            updateDraft({ identities: [] });
+            onChange();
+          }}
         >
-          {skipped
-            ? t("settings:interests.identities.skipped")
-            : t("settings:interests.identities.skip")}
+          {t("settings:interests.identities.skip")}
         </button>
       </div>
       <div className={styles.psHelper}>

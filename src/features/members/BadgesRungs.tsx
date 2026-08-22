@@ -1,3 +1,4 @@
+import { FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LadderPill, PerkLadderRow } from "./badges.data";
 import styles from "./BadgesPage.module.css";
@@ -55,7 +56,7 @@ export function BadgesRungs({ levelLadder, perksLadder }: BadgesRungsProps) {
         );
       })}
       <a href="#how-xp" className={styles.rungAll}>
-        {t("members:badges.hero.seeAllLevels")} <span aria-hidden>→</span>
+        {t("members:badges.hero.seeAllLevels")} <FiArrowRight aria-hidden />
       </a>
     </div>
   );

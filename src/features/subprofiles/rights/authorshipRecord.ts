@@ -51,27 +51,46 @@ export async function sha256Hex(text: string): Promise<string> {
 }
 
 /**
+ * The record's own wording, resolved by the caller through `t` so a PT owner
+ * gets a Portuguese document. Passed in rather than resolved here: this module
+ * is a pure, testable string builder with no React or i18n dependency of its
+ * own, and the values it labels (title, author, timestamp, hash) are data that
+ * never translates.
+ */
+export interface AuthorshipRecordLabels {
+  /** The record's own title line. */
+  heading: string;
+  work: string;
+  author: string;
+  firstPublished: string;
+  contentHash: string;
+  /** One full sentence describing what exactly was hashed. */
+  canonicalForm: string;
+}
+
+/**
  * Builds the full downloadable/copyable authorship record: a dated, hashed
  * provenance statement an owner can keep as their own evidence of first
  * publication on QueerPulse. The content hash is computed over
  * `canonicalContent`, not the record text itself, so verifying a saved copy
  * of the work against a later re-generated record only requires re-hashing
- * the work's own text.
+ * the work's own text (and so a translated record verifies just the same).
  */
 export async function buildAuthorshipRecord(args: {
   item: SubprofileItemView;
   authorName: string;
+  labels: AuthorshipRecordLabels;
 }): Promise<string> {
-  const { item, authorName } = args;
+  const { item, authorName, labels } = args;
   const content = canonicalContent(item);
   const hash = await sha256Hex(content);
   return [
-    "AUTHORSHIP RECORD: QueerPulse",
-    `Work: "${item.title ?? ""}"`,
-    `Author: ${authorName}`,
-    `First published: ${item.createdAt}`,
-    `Content SHA-256: ${hash}`,
-    "Canonical form: title + plain-text body, LF-normalized, trimmed",
+    labels.heading,
+    `${labels.work}: "${item.title ?? ""}"`,
+    `${labels.author}: ${authorName}`,
+    `${labels.firstPublished}: ${item.createdAt}`,
+    `${labels.contentHash}: ${hash}`,
+    labels.canonicalForm,
     "",
     content,
   ].join("\n");

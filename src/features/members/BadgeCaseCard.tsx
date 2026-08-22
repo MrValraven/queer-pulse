@@ -17,8 +17,15 @@ interface BadgeCaseCardProps {
 
 const MAX_SHOWN = 10;
 
-/** A shareable "case card" summarizing a member's earned badges, level, and
- *  XP — the printable/shareable artifact from the hero's "Print your case". */
+/**
+ * A "case card" summarizing a member's earned badges, level and XP, opened from
+ * the hero's "View your case".
+ *
+ * Read-only for now: there is no print stylesheet, canvas export or share here,
+ * only Close. The hero's button used to say "Print your case", which sent
+ * members looking for a file that was never produced; the label now matches
+ * what the dialog actually does. Add the export first, then rename the CTA.
+ */
 export function BadgeCaseCard({
   memberName,
   level,

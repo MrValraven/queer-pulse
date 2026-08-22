@@ -151,7 +151,9 @@ export function HousingListingSidebar({
           />
           <div>
             <div className={s.listerName}>{listing.poster.fullName}</div>
-            <div className={s.listerSince}>{listing.poster.memberSince}</div>
+            {listing.poster.memberSince && (
+              <div className={s.listerSince}>{listing.poster.memberSince}</div>
+            )}
           </div>
         </div>
         <div className={s.badgeRow}>
@@ -171,13 +173,17 @@ export function HousingListingSidebar({
           )}
         </div>
         <p className={s.listerBio}>{listing.poster.bio}</p>
-        <div className={s.replyRow}>
-          <Translation
-            i18nKey="economy:housingListing.repliesUsually"
-            values={{ time: listing.poster.responseTime }}
-            components={{ b: <b /> }}
-          />
-        </div>
+        {/* Only shown when a MEASURED reply time is on file (demo fixtures
+            author one; the live DTO carries no response metric). */}
+        {listing.poster.responseTime && (
+          <div className={s.replyRow}>
+            <Translation
+              i18nKey="economy:housingListing.repliesUsually"
+              values={{ time: listing.poster.responseTime }}
+              components={{ b: <b /> }}
+            />
+          </div>
+        )}
         <Button variant="primary" className={s.sideFull} onClick={onMessage}>
           {t("economy:housingListing.messageCta", { name: first })}
         </Button>

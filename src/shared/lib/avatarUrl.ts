@@ -40,11 +40,19 @@
 export function resolveAvatarSrc(
   src: string | undefined,
   px = 256,
+  options?: {
+    /**
+     * Ask Unsplash for a square, face-aware crop at exactly `px` instead of the
+     * raise-only width bump. Used by `<Avatar>`, where an off-centre or blurry
+     * crop is very visible at 32-48px. Non-Unsplash hosts ignore it.
+     */
+    isFaceCrop?: boolean;
+  },
 ): string | undefined {
   if (!src) return src;
   const size = Math.max(1, Math.round(px));
   if (/(?:images|plus)\.unsplash\.com/.test(src)) {
-    return normalizeUnsplashSrc(src, size);
+    return normalizeUnsplashSrc(src, size, options?.isFaceCrop ?? false);
   }
   if (!/googleusercontent\.com|ggpht\.com/.test(src)) return src;
   // Older URLs use a `?sz=96` query param.
@@ -71,12 +79,28 @@ export function resolveAvatarSrc(
  * default never softens an already-generous URL. Also ensures `auto=format`
  * (modern codecs) is set. Returns the input unchanged if it can't be parsed.
  */
-function normalizeUnsplashSrc(src: string, size: number): string {
+function normalizeUnsplashSrc(
+  src: string,
+  size: number,
+  isFaceCrop = false,
+): string {
   let url: URL;
   try {
     url = new URL(src);
   } catch {
     return src;
+  }
+  if (isFaceCrop) {
+    // A square, face-aware crop at exactly `size` — what an avatar circle
+    // wants. `<Avatar>` used to build this inline with a bare `new URL(src)`,
+    // which THREW during render on a malformed src containing "unsplash.com".
+    url.searchParams.set("w", String(size));
+    url.searchParams.set("h", String(size));
+    url.searchParams.set("fit", "crop");
+    url.searchParams.set("crop", "faces");
+    url.searchParams.set("auto", "format");
+    url.searchParams.set("q", "80");
+    return url.toString();
   }
   const raise = (param: "w" | "h") => {
     const current = Number(url.searchParams.get(param));

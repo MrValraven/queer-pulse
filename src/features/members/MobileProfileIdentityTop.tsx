@@ -21,6 +21,15 @@ export function MobileProfileIdentityTop({
   isSelf: boolean;
 }) {
   const { t } = useTranslation();
+  // The catalog string is "{hood}, Lisbon", so an empty `hood` used to render a
+  // pin followed by a bare ", Lisbon" — which is exactly what a member sees
+  // after turning their neighbourhood off, and what every visitor sees on a
+  // hidden-hood profile (the backend nulls `location`, the adapter maps it to
+  // ""). Show the row only when there is a neighbourhood to show, and honour
+  // the owner's own toggle on any non-self view (including their preview).
+  const isLocationShown =
+    profile.hood.trim().length > 0 &&
+    (isSelf || profile.hoodVisible !== false);
   return (
     <div className={styles.identityTop}>
       <Eyebrow live className={styles.identityTopEyebrow}>
@@ -41,10 +50,12 @@ export function MobileProfileIdentityTop({
         </span>
         <MemberStaffBadge slug={profile.slug} size="lg" />
       </div>
-      <div className={styles.identityTopLoc}>
-        <span className={styles.identityPin} aria-hidden />
-        {t("members:profile.hero.location", { hood: profile.hood })}
-      </div>
+      {isLocationShown && (
+        <div className={styles.identityTopLoc}>
+          <span className={styles.identityPin} aria-hidden />
+          {t("members:profile.hero.location", { hood: profile.hood })}
+        </div>
+      )}
     </div>
   );
 }

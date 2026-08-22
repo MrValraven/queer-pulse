@@ -1,4 +1,5 @@
 export { Button, type ButtonVariant, type ButtonSize } from "./Button";
+export { IconButton } from "./IconButton";
 export { Card } from "./Card";
 export { Tag, TagRow, KindChip, type ChipKind } from "./Tag";
 export { Avatar, AvatarStack, type AvatarTint } from "./Avatar";
@@ -16,7 +17,13 @@ export { FeatureHelp } from "./FeatureHelp";
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";
-export { Modal, ModalSheet, SideSheet, useDismiss } from "./Modal";
+export {
+  Modal,
+  ModalSheet,
+  SideSheet,
+  useDismiss,
+  useScrimDismiss,
+} from "./Modal";
 export { SuccessPanel } from "./SuccessPanel";
 export { Spinner, Sending } from "./Spinner";
 export { FilterChips, ChipSelect, type ChipOption } from "./ChipSelect";
@@ -33,7 +40,7 @@ export {
 } from "./RadioCardGroup";
 export { useChipSet } from "./useChipSet";
 export { SearchInput } from "./SearchInput";
-export { Tabs, type Tab } from "./Tabs";
+export { Tabs, tabIds, tabPanelProps, type Tab } from "./Tabs";
 export {
   SegmentedControl,
   Toggle,
@@ -101,3 +108,4 @@ export { DatePicker, type DatePickerProps, type DateRange } from "./DatePicker";
 export { Calendar, type CalendarProps } from "./Calendar";
 export { RangeCalendar, type RangeCalendarProps } from "./RangeCalendar";
 export { default as PhotoReframeModal } from "./PhotoReframeModal";
+export { useTablistKeys } from "./useTablistKeys";

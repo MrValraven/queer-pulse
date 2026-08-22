@@ -188,7 +188,7 @@ const EMPTY: AdminGovernanceFinancesResult = {
  *
  * Demo mode reshapes `adminGovernance.data`'s `QUARTERS`/`INCOME_LEDGER`/
  * `LEDGER` mocks into the backend response shape — same demo experience, no
- * network. Live mode calls `GET /governance/admin/finances` once and returns
+ * network. Live mode calls `GET /admin/governance/finances` once and returns
  * the latest published quarterly figures plus quarter-over-quarter history.
  */
 export function useAdminGovernanceFinances(): AdminGovernanceFinancesResult {
@@ -214,7 +214,7 @@ export function useAdminGovernanceFinances(): AdminGovernanceFinancesResult {
 /**
  * Corrects the editable figures on the latest governance finance report.
  *
- * Live mode PATCHes `/governance/admin/finances` and reconciles from the
+ * Live mode PATCHes `/admin/governance/finances` and reconciles from the
  * server's response. Demo mode applies the edit to the cached payload via
  * {@link applyFinanceEdits} and keeps it there for the session — demo never
  * refetches, so the correction persists without a network round-trip.

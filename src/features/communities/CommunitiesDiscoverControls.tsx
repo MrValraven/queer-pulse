@@ -1,9 +1,19 @@
 import type { Dispatch, SetStateAction } from "react";
-import { Reveal, SearchInput, Select } from "../../shared/components/ui";
+import {
+  Button,
+  Reveal,
+  SearchInput,
+  Select,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { Community, CommunityType } from "../homepage/data/types";
+import type { CommunityType } from "../homepage/data/types";
 import { CommunitiesTagsFilter } from "./CommunitiesTagsFilter";
-import { FILTERS, SORT_OPTIONS, type DiscoverSort } from "./communitiesDiscover.data";
+import type { DiscoverCategoryCounts } from "./useDiscoverCategoryCounts";
+import {
+  FILTERS,
+  SORT_OPTIONS,
+  type DiscoverSort,
+} from "./communitiesDiscover.data";
 import styles from "./CommunitiesPage.module.css";
 
 /**
@@ -17,41 +27,42 @@ import styles from "./CommunitiesPage.module.css";
 export function CommunitiesDiscoverControls({
   searchInput,
   setSearchInput,
-  openOnly,
-  setOpenOnly,
-  busyOnly,
-  setBusyOnly,
+  isOpenOnly,
+  setIsOpenOnly,
+  isBusyOnly,
+  setIsBusyOnly,
   sort,
   setSort,
   filter,
   setFilter,
   tagIds,
   setTagIds,
-  allForCounts,
-  countsHasNext,
+  categoryCounts,
   resultCount,
   hasActiveRefinement,
-  showResline,
+  onReset,
+  isShowingResline,
 }: {
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
-  openOnly: boolean;
-  setOpenOnly: Dispatch<SetStateAction<boolean>>;
-  busyOnly: boolean;
-  setBusyOnly: Dispatch<SetStateAction<boolean>>;
+  isOpenOnly: boolean;
+  setIsOpenOnly: Dispatch<SetStateAction<boolean>>;
+  isBusyOnly: boolean;
+  setIsBusyOnly: Dispatch<SetStateAction<boolean>>;
   sort: DiscoverSort;
   setSort: Dispatch<SetStateAction<DiscoverSort>>;
   filter: "all" | CommunityType;
   setFilter: Dispatch<SetStateAction<"all" | CommunityType>>;
   tagIds: string[];
   setTagIds: Dispatch<SetStateAction<string[]>>;
-  allForCounts: Community[];
-  countsHasNext: boolean;
+  /** Per-type totals, `null` for a chip whose count hasn't landed yet. */
+  categoryCounts: DiscoverCategoryCounts;
   resultCount: number;
   hasActiveRefinement: boolean;
+  onReset: () => void;
   /** Hidden while the initial load or a "Most active"/"Busy this week" drain
    *  is in flight — the count would otherwise flash a wrong partial number. */
-  showResline: boolean;
+  isShowingResline: boolean;
 }) {
   const { t } = useTranslation();
 
@@ -67,28 +78,30 @@ export function CommunitiesDiscoverControls({
         />
 
         <div className={styles.toggles}>
-          <button
-            type="button"
-            aria-pressed={openOnly}
-            className={[styles.toggle, openOnly && styles.toggleOn]
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-pressed={isOpenOnly}
+            className={[styles.toggle, isOpenOnly && styles.toggleOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setOpenOnly((value) => !value)}
+            onClick={() => setIsOpenOnly((value) => !value)}
           >
             <span className={styles.toggleDot} aria-hidden />
             {t("communities:discover.toggle.openOnly")}
-          </button>
-          <button
-            type="button"
-            aria-pressed={busyOnly}
-            className={[styles.toggle, busyOnly && styles.toggleOn]
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-pressed={isBusyOnly}
+            className={[styles.toggle, isBusyOnly && styles.toggleOn]
               .filter(Boolean)
               .join(" ")}
-            onClick={() => setBusyOnly((value) => !value)}
+            onClick={() => setIsBusyOnly((value) => !value)}
           >
             <span className={styles.toggleDot} aria-hidden />
             {t("communities:discover.toggle.busyOnly")}
-          </button>
+          </Button>
         </div>
 
         <label className={styles.sort}>
@@ -109,16 +122,15 @@ export function CommunitiesDiscoverControls({
 
       <Reveal className={styles.filters}>
         {FILTERS.map((option) => {
-          const count = countsHasNext
-            ? null
-            : allForCounts.filter(
-                (community) =>
-                  option.value === "all" || community.type === option.value,
-              ).length;
+          const count = categoryCounts[option.value];
           return (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               key={option.value}
+              // The chips are a single-select filter, so each one announces
+              // whether it is the one currently applied.
+              aria-pressed={filter === option.value}
               className={[
                 styles.chip,
                 filter === option.value && styles.chipActive,
@@ -131,34 +143,32 @@ export function CommunitiesDiscoverControls({
               {count !== null && (
                 <span className={styles.chipCount}>{count}</span>
               )}
-            </button>
+            </Button>
           );
         })}
       </Reveal>
 
       <CommunitiesTagsFilter selectedTagIds={tagIds} onChange={setTagIds} />
 
-      {showResline && (
+      {isShowingResline && (
         <div className={styles.resline}>
-          <span>
-            {t("communities:discover.resline.count", { count: resultCount })}{" "}
-            · {t(`communities:discover.sort.${sort}`)}
+          {/* The middot between the two halves lives in CSS, so no catalog
+              value ever has to carry a punctuation glyph. */}
+          <span className={styles.reslineText}>
+            {t("communities:discover.resline.count", { count: resultCount })}
+            <span className={styles.reslineSort}>
+              {t(`communities:discover.sort.${sort}`)}
+            </span>
           </span>
           {hasActiveRefinement && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="sm"
               className={styles.reset}
-              onClick={() => {
-                setSearchInput("");
-                setFilter("all");
-                setOpenOnly(false);
-                setBusyOnly(false);
-                setTagIds([]);
-                setSort("newest");
-              }}
+              onClick={onReset}
             >
               {t("communities:discover.resline.reset")}
-            </button>
+            </Button>
           )}
         </div>
       )}

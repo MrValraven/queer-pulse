@@ -365,7 +365,22 @@ export interface ListPiecesFilters {
   issue?: string;
   q?: string;
   savedView?: SavedViewId;
+  /** 1-based. Omitted means page 1. */
+  page?: number;
+  /** Server default is 50, maximum 200. */
+  pageSize?: number;
 }
+
+/** Envelope returned by `GET /magazine/admin/pieces`. */
+export interface PieceListPageDto {
+  items: PieceListItemDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/** The server's own ceiling on `pageSize`. */
+export const PIECE_PAGE_SIZE_MAX = 200;
 
 /** Body of `POST /magazine/admin/pieces`. */
 export interface CreatePieceDto {
@@ -466,8 +481,10 @@ export function getPieces(filters: ListPiecesFilters = {}) {
   if (filters.issue) query.set("issue", filters.issue);
   if (filters.q) query.set("q", filters.q);
   if (filters.savedView) query.set("savedView", filters.savedView);
+  if (filters.page) query.set("page", String(filters.page));
+  if (filters.pageSize) query.set("pageSize", String(filters.pageSize));
   const queryString = query.toString();
-  return apiGet<PieceListItemDto[]>(
+  return apiGet<PieceListPageDto>(
     `/magazine/admin/pieces${queryString ? `?${queryString}` : ""}`,
   );
 }

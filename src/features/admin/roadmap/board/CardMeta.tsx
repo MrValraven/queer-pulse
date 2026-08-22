@@ -1,5 +1,6 @@
 import { FiHeart } from "react-icons/fi";
 import { AdminAvatar, AdminChip } from "../../ui";
+import { AdminNotSet } from "../../ui/AdminInlineMarkers";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { AdminRoadmapItemDTO } from "../../api/roadmapAdmin.types";
 import styles from "./Card.module.css";
@@ -24,7 +25,9 @@ export function CardMeta({ item }: { item: AdminRoadmapItemDTO }) {
 
   return (
     <div className={styles.meta}>
-      <span className={styles.metaQuarter}>{item.targetQuarter ?? "—"}</span>
+      <span className={styles.metaQuarter}>
+        {item.targetQuarter ?? <AdminNotSet />}
+      </span>
 
       <span className={styles.metaVotes} aria-label={votesLabel}>
         <FiHeart aria-hidden />

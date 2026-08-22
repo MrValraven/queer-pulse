@@ -64,7 +64,10 @@ export function InvitePage() {
             </div>
           )}
 
-          <InviteLinkPanel memberCount={quota?.memberCount} />
+          <InviteLinkPanel
+            memberCount={quota?.memberCount}
+            isQuotaExhausted={quota?.remaining === 0}
+          />
 
           <SentInvitesList />
         </div>

@@ -21,11 +21,21 @@ export interface SocialContextValue {
   toggleFollow: (slug: string) => boolean;
   isMuted: (slug: string) => boolean;
   /** Toggle mute; returns the new state (true = now muted). */
-  toggleMute: (slug: string) => boolean;
+  toggleMute: (
+    slug: string,
+    onSettled?: (didSucceed: boolean) => void,
+  ) => boolean;
   isBlocked: (slug: string) => boolean;
   /** Toggle block; returns the new state (true = now blocked). Opts feed the
    *  live `POST /blocks/:slug` body (reason / "also report"). */
-  toggleBlock: (slug: string, opts?: BlockOptions) => boolean;
+  /** Returns the OPTIMISTIC new state immediately. Pass `onSettled` to learn
+   *  what the server actually did: a caller that confirms the action to the
+   *  member must wait for that rather than toasting on the click. */
+  toggleBlock: (
+    slug: string,
+    opts?: BlockOptions,
+    onSettled?: (didSucceed: boolean) => void,
+  ) => boolean;
 }
 
 export const SocialContext = createContext<SocialContextValue | null>(null);

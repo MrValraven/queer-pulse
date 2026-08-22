@@ -5,6 +5,8 @@ import { useGroupIndicators } from "./useGroupIndicators";
 import { useMessageRowVirtualizer } from "./useMessageRowVirtualizer";
 import { useMessageScroll } from "./useMessageScroll";
 import { useMessageRowJump } from "./useMessageRowJump";
+import { useMarkReadOnInbound } from "./useMarkReadOnInbound";
+import { realConversationId } from "./useMessagesController.helpers";
 import { type RunParticipant } from "./MessageRun";
 import type { MessageRow } from "./messageRows";
 import type { SeenByEntry } from "./groupReceipts";
@@ -58,6 +60,10 @@ export function useMessageLogState(
   onLoadOlder: () => void,
   jumpToMessageId: string | null | undefined,
   onJumpHandled: (() => void) | undefined,
+  /** Acks the thread read against the server. Called on thread-open by the
+   *  parent already; also (re-)invoked here as new inbound messages arrive
+   *  while the thread stays open — see `useMarkReadOnInbound`. */
+  onMarkThreadRead: (conversationId: string) => void,
 ): MessageLogState {
   const flatMessages = useMemo(
     () => messageGroups.flatMap((group) => group.items),
@@ -128,6 +134,17 @@ export function useMessageLogState(
     areaRef,
     contentRef,
     rowVirtualizer,
+  );
+
+  // Re-ack read as new inbound messages land while this thread stays open
+  // (`openThread` only covers the moment it's FIRST opened) — see the hook's
+  // own file comment. `realConversationId` is null in demo mode and for a
+  // just-picked placeholder thread, so this is inert until a real UUID exists.
+  useMarkReadOnInbound(
+    realConversationId(active),
+    inboundCount,
+    showJumpPill,
+    onMarkThreadRead,
   );
 
   // Reply-quote / pinned-banner / cross-inbox-search jumps all resolve

@@ -1,6 +1,8 @@
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
-import { REASON_LABELS, type ReasonCode } from "../../safety/reportReasons";
+import { REASON_LABEL_KEYS, type ReasonCode } from "../../safety/reportReasons";
+import { relativeAgeLabel } from "../moderationAge";
+import { reasonCategoryKey } from "./moderationCategories";
 import type { AvatarTone } from "../ui";
 import type {
   Community,
@@ -22,12 +24,16 @@ import type {
 //
 // i18n scope rule (docs/i18n/extraction-brief.md §1): `activityLabel` and a
 // moderator's owner/mod role are chrome this code authors and classifies, so
-// they resolve through `translate()`. A community's own description and a
-// queue item's reason/detail/status text are real API content (the live-mode
-// equivalent of the mock's "community descriptions" / "report titles,
-// previews" — see the file banner in `catalogs/en/admin.ts`) and are
-// deliberately left untranslated, exactly like `AdminCommunityDetailTabs.tsx`'s
-// `ReportRow` already documents for `item.categoryLabel/title/meta`.
+// they resolve through `translate()`. A community's own description is real API
+// content and is deliberately left untranslated.
+//
+// FE-ADM-26 correction: a queue item's category badge, its reason label, and
+// its status/overdue/age meta line were grouped with "API content" and left in
+// English. They are not fetched text — this file builds them from stable codes
+// (`reasonCode`, `status`, `overdue`, an ISO timestamp), which is exactly what
+// makes them client chrome, so they now resolve through `translate()` and
+// `Intl` too. The one genuinely fetched string is `queueItemDto.detail`, the
+// reporter's own words, which still passes through untouched.
 //
 // Locale-threading fix (Task 7 review, applied in Task 8): `members`,
 // `founded`, and a moderator's "since" date are locale-sensitive numbers/dates,
@@ -149,24 +155,13 @@ function moderatorDtoToModerator(
   };
 }
 
-/** Short English category badge per reason code, mirroring
- *  `moderation.adapters.ts`'s (unexported) `CATEGORY` table — this is queue
- *  *content*, mirroring API-fetched report text, so it is deliberately left
- *  untranslated (see the module doc comment). */
-const QUEUE_CATEGORY_LABEL: Partial<Record<ReasonCode, string>> = {
-  outing: "Emergency",
-  doxxing: "Emergency",
-  harassment: "Harassment",
-  hate_speech: "Hate speech",
-  unwanted_contact: "Harassment",
-  impersonation: "Impersonation",
-  discrimination: "Discrimination",
-  spam: "Spam",
-  off_topic: "Off-topic",
-  venue_safety: "Venue",
-  venue_staff: "Venue",
-  venue_accessibility: "Venue",
-  other: "Other",
+/** Queue-item status codes the backend can send (`ReportStatus`), as catalog
+ *  keys. An unmapped status falls back to the raw code rather than a
+ *  hand-capitalized English word. */
+const QUEUE_STATUS_KEY: Record<string, string> = {
+  open: "admin:communities.queue.status.open",
+  resolved: "admin:communities.queue.status.resolved",
+  escalated: "admin:communities.queue.status.escalated",
 };
 
 const QUEUE_SEVERITY_TONE: Record<
@@ -179,47 +174,48 @@ const QUEUE_SEVERITY_TONE: Record<
   low: "jade",
 };
 
-function queueItemTitle(queueItemDto: AdminCommunityQueueItemDTO): string {
+/** The reporter's own words when they gave any; otherwise the localized reason
+ *  label, falling back to the raw code for a reason this client hasn't mapped. */
+function queueItemTitle(
+  queueItemDto: AdminCommunityQueueItemDTO,
+  translate: TFunction,
+): string {
   if (queueItemDto.detail) return queueItemDto.detail;
-  const reasonLabel = REASON_LABELS[queueItemDto.reasonCode as ReasonCode];
-  return reasonLabel ?? queueItemDto.reasonCode;
+  const reasonLabelKey = REASON_LABEL_KEYS[queueItemDto.reasonCode as ReasonCode];
+  return reasonLabelKey ? translate(reasonLabelKey) : queueItemDto.reasonCode;
 }
 
-/** Compact "26m ago" / "3h ago" / "2d ago" from an ISO timestamp. */
-function relativeAge(isoTimestamp: string): string {
-  const createdAtMs = new Date(isoTimestamp).getTime();
-  if (Number.isNaN(createdAtMs)) return "just now";
-  const elapsedMs = Math.max(0, Date.now() - createdAtMs);
-  const elapsedMinutes = Math.floor(elapsedMs / 60_000);
-  if (elapsedMinutes < 60) return `${Math.max(elapsedMinutes, 1)}m ago`;
-  const elapsedHours = Math.floor(elapsedMinutes / 60);
-  if (elapsedHours < 24) return `${elapsedHours}h ago`;
-  return `${Math.floor(elapsedHours / 24)}d ago`;
-}
+const META_SEPARATOR = " · ";
 
-/** Queue-item chrome (status/overdue/age) mirrors report content per the
- *  module doc comment, so this stays plain English rather than going
- *  through `translate()`. */
-function queueItemMeta(queueItemDto: AdminCommunityQueueItemDTO): string {
-  const statusLabel =
-    queueItemDto.status.charAt(0).toUpperCase() + queueItemDto.status.slice(1);
-  const age = relativeAge(queueItemDto.createdAt);
-  return queueItemDto.overdue
-    ? `${statusLabel} · overdue · ${age}`
-    : `${statusLabel} · ${age}`;
+/** "Open · overdue · 3 hours ago" / "Aberta · Atrasado · há 3 horas" — every
+ *  part is derived from a stable code or a timestamp, so each resolves through
+ *  `translate()` or `Intl`. A timestamp that doesn't parse simply drops the age
+ *  rather than printing an English placeholder. */
+function queueItemMeta(
+  queueItemDto: AdminCommunityQueueItemDTO,
+  translate: TFunction,
+  fmt: Formatters,
+): string {
+  const statusKey = QUEUE_STATUS_KEY[queueItemDto.status];
+  const parts = [statusKey ? translate(statusKey) : queueItemDto.status];
+  if (queueItemDto.overdue) parts.push(translate("admin:moderation.slaOverdue"));
+  const ageLabel = relativeAgeLabel(queueItemDto.createdAt, fmt);
+  if (ageLabel) parts.push(ageLabel);
+  return parts.join(META_SEPARATOR);
 }
 
 function queueItemDtoToQueueItem(
   queueItemDto: AdminCommunityQueueItemDTO,
+  translate: TFunction,
+  fmt: Formatters,
 ): QueueItem {
   const severityTone = QUEUE_SEVERITY_TONE[queueItemDto.severity];
   return {
     severity: severityTone,
     categoryTone: severityTone,
-    categoryLabel:
-      QUEUE_CATEGORY_LABEL[queueItemDto.reasonCode as ReasonCode] ?? "Report",
-    title: queueItemTitle(queueItemDto),
-    meta: queueItemMeta(queueItemDto),
+    categoryLabel: translate(reasonCategoryKey(queueItemDto.reasonCode)),
+    title: queueItemTitle(queueItemDto, translate),
+    meta: queueItemMeta(queueItemDto, translate, fmt),
   };
 }
 
@@ -296,7 +292,7 @@ export function detailDtoToCommunity(
       moderatorDtoToModerator(moderatorDto, translate, fmt),
     ),
     queue: detailDto.scopedQueue.map((queueItemDto) =>
-      queueItemDtoToQueueItem(queueItemDto),
+      queueItemDtoToQueueItem(queueItemDto, translate, fmt),
     ),
   };
 }

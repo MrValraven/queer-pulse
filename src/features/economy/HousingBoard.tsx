@@ -8,11 +8,8 @@ import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FILTERS, HOUSING_SUBPAGES, MY_HOUSING_LISTINGS_PATH } from "./housing.data";
-import {
-  anyFilterActive,
-  EMPTY_HOUSING_FILTERS,
-  type HousingFilters,
-} from "./housingFilters";
+import { anyFilterActive, EMPTY_HOUSING_FILTERS } from "./housingFilters";
+import { useHousingFilterParams } from "./useHousingFilterParams";
 import { useHousingListings } from "./api/useHousingListings";
 import { useLandlords } from "./api/useLandlords";
 import { HousingFilterBar } from "./HousingFilterBar";
@@ -35,7 +32,9 @@ const HousingMapView = lazy(() =>
 export function HousingBoard() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const [filters, setFilters] = useState<HousingFilters>(EMPTY_HOUSING_FILTERS);
+  // Filters live in the URL, so a narrowed board is shareable, survives a
+  // reload, and is what the Back button restores after opening a listing.
+  const [filters, setFilters] = useHousingFilterParams();
   const [listing, setListing] = useState(false);
   const subpages = useMemo(
     () =>
@@ -47,10 +46,21 @@ export function HousingBoard() {
     [t],
   );
   // The hook applies every filter (client-side in demo, server-side in live),
-  // so the board renders the result directly — no second client-side pass.
-  const { data: visible = [], isFetching } = useHousingListings(filters);
+  // so the board renders the result directly — no second client-side pass. It
+  // pages: `visible` accumulates every page loaded so far, which the map view
+  // clusters from as well, so pin counts match the grid.
+  const {
+    listings: visible,
+    isFetching,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useHousingListings(filters);
   const { data: landlords = [] } = useLandlords();
-  const loading = useSimulatedLoad() || (!demoMode && isFetching);
+  // A "Load more" fetch must not swap the whole grid for skeletons — only a
+  // first load (or a filter change) does.
+  const loading =
+    useSimulatedLoad() || (!demoMode && isFetching && !isFetchingNextPage);
   const filtered = anyFilterActive(filters);
 
   const setType = (type: string) => setFilters((prev) => ({ ...prev, type }));
@@ -156,6 +166,23 @@ export function HousingBoard() {
                 filtered={filtered}
               />
             </Suspense>
+          )}
+
+          {!loading && hasNextPage && (
+            <div className={styles.loadMoreRow}>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => void fetchNextPage()}
+                disabled={isFetchingNextPage}
+              >
+                {t(
+                  isFetchingNextPage
+                    ? "economy:housing.loadingMore"
+                    : "economy:housing.loadMore",
+                )}
+              </Button>
+            </div>
           )}
         </div>
       </div>

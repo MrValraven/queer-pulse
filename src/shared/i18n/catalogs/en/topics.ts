@@ -30,6 +30,11 @@ export const topics: Catalog = {
   "header.writePostCta": "Write a post",
   "header.followToast": "Now following #{tag}",
   "header.unfollowToast": "No longer following #{tag}",
+  "header.followFailedToast":
+    "Couldn't update that follow. Try again in a moment.",
+  "header.followCapToast":
+    "You're following as many topics as an account can hold. Unfollow one to make room for this.",
+  "header.followInvalidToast": "That tag isn't one we can follow.",
 
   // Feed filter chips
   "feed.filters.all": "All",
@@ -68,12 +73,19 @@ export const topics: Catalog = {
     "Topics grow when someone goes first. Post a question, a recommendation, or a resource with #{tag} and it will show up right here.",
   "fallback.postStats": "<b>0</b> posts · waiting for you",
 
-  // Live-mode not-found state (the slug resolved to no topic, or the fetch
-  // errored). Page chrome, not fetched content, so it translates.
+  // Live-mode not-found state: the slug genuinely resolved to no topic (404).
+  // Page chrome, not fetched content, so it translates.
   "notFound.title": "This topic isn't here",
   "notFound.description":
     "We couldn't find a topic for that tag. It may have been renamed or removed. Head back to the forum to find where the conversation moved.",
   "notFound.backCta": "Back to the forum",
+
+  // Retryable failure (500 / network), kept distinct from "not found" so an
+  // outage never reads as a deleted topic.
+  "error.title": "Couldn't load this topic",
+  "error.description":
+    "Something went wrong on our end. This isn't your fault. Try again in a moment.",
+  "error.retryCta": "Try again",
 
   // DISC-4 — the topics directory (`/topics`, `TopicsDirectoryPage`), listing
   // every topic with a follow toggle. Page chrome only; each topic's own

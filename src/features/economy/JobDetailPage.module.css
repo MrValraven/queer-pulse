@@ -34,8 +34,17 @@
     color: var(--text-strong);
   }
 }
+/* Breadcrumb separator: an icon rather than a "›" glyph, which renders
+   inconsistently across fonts and is announced as "single right-pointing
+   angle quotation mark". Hidden from the accessibility tree entirely. */
 .bcSep {
+  display: inline-flex;
+  align-items: center;
   opacity: 0.4;
+}
+.bcSep svg {
+  width: 0.95em;
+  height: 0.95em;
 }
 .bcCurrent {
   color: var(--ink);

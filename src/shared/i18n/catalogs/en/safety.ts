@@ -69,8 +69,12 @@ export const safety: Catalog = {
   "report.category.discrimination": "Discrimination",
   "report.category.venueSafety": "Unsafe behaviour at a gathering",
   "report.category.other": "Something else",
-  "report.form.involvedLabel": "Member or content involved (optional)",
-  "report.form.involvedPlaceholder": "Username or URL",
+  "report.form.involvedLabel": "Who or what was involved (optional)",
+  "report.form.involvedPlaceholder": "A name, a place, a link, whatever you have",
+  "report.form.involvedHelper":
+    "Written in your own words. This form can't attach a report to a profile or a post yet, so a moderator will read what you write here and find the record themselves.",
+  // Prefixes the "who or what" line inside the report body sent to moderators.
+  "report.detail.involvedLine": "Who or what was involved: {involved}",
   "report.form.detailLabel": "What happened?",
   "report.form.detailPlaceholder":
     "Tell us what happened, with as much detail as you're comfortable sharing. There are no wrong answers.",
@@ -176,10 +180,9 @@ export const safety: Catalog = {
   "blockMute.choose.muteTitle": "Mute {name}",
   "blockMute.choose.muteDesc":
     "You won't see their posts or activity. They won't know they've been muted. You can unmute at any time.",
-  "blockMute.choose.muteScopeLabel": "What to mute",
-  "blockMute.choose.postsUpdates": "Posts & updates",
-  "blockMute.choose.commentsReplies": "Comments & replies",
-  "blockMute.choose.gatheringInvites": "Gathering invites",
+  "blockMute.choose.muteScopeLabel": "What a mute covers",
+  "blockMute.choose.muteScopeNote":
+    "Muting covers everything at once: their posts, comments and replies stop appearing for you. There is no way to mute only part of what someone shares.",
   "blockMute.choose.durationLabel": "Duration",
   "blockMute.duration.untilUnmute": "Until I unmute",
   "blockMute.duration.sevenDays": "7 days",
@@ -204,7 +207,7 @@ export const safety: Catalog = {
   "blockMute.muted.sub":
     "Their posts and replies are now hidden from your feed. They don't know.",
   "blockMute.muted.summaryLabel": "What's muted",
-  "blockMute.muted.postsComments": "Posts & comments",
+  "blockMute.muted.everythingTheyPost": "Everything they post",
   "blockMute.muted.durationLabel": "Duration",
   "blockMute.muted.notifiedLabel": "{name} notified?",
   "blockMute.muted.manageLink": "Manage muted members",

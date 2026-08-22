@@ -31,7 +31,7 @@ const EMPTY_HISTORY: ListingHistoryDTO = { events: [], questions: [] };
  * that mounts this hook only renders while a row is open, so `ref` is always
  * set by the time this fires. Demo mode reads the colocated fixture
  * (`getDemoListingHistory`, keyed by ref — a fixture-less ref answers an
- * honest empty history); live mode calls `GET /listings/admin/:ref/history`.
+ * honest empty history); live mode calls `GET /admin/listings/:ref/history`.
  */
 export function useListingHistory(ref: string | undefined) {
   const { demoMode } = useDemoMode();

@@ -330,6 +330,14 @@
   margin-top: 10px;
   text-align: center;
 }
+/* Standing confirmation that a proposal is already with the poster, shown above
+   the box so a second message reads as a follow-up rather than a first try. */
+.proposeSent {
+  font-size: 13px;
+  color: var(--jade);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
 
 /* Facts */
 .infoRow {

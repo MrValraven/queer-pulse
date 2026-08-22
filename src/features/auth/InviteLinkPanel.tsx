@@ -2,8 +2,8 @@ import { useState } from "react";
 import { FiAlertCircle, FiLink } from "react-icons/fi";
 import { Button, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { ApiError } from "../../shared/api/client";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { isInviteQuotaError } from "./api/invite.api";
 import { useCreateInvite, type CreatedInvite } from "./api/useCreateInvite";
 import { SharePreviewCard } from "./SharePreviewCard";
 import { INVITE_URL, defaultVouch } from "./invite.data";
@@ -16,9 +16,15 @@ import styles from "./InvitePage.module.css";
 interface InviteLinkPanelProps {
   /** Live community size, from the page's quota fetch — undefined while loading. */
   memberCount?: number;
+  /** True when the page's quota fetch already says the month's allowance is
+   *  spent, so the refusal is shown up front instead of after a wasted POST. */
+  isQuotaExhausted?: boolean;
 }
 
-export function InviteLinkPanel({ memberCount }: InviteLinkPanelProps) {
+export function InviteLinkPanel({
+  memberCount,
+  isQuotaExhausted = false,
+}: InviteLinkPanelProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const sender = useInviteSender();
@@ -30,21 +36,21 @@ export function InviteLinkPanel({ memberCount }: InviteLinkPanelProps) {
   const [generating, setGenerating] = useState(false);
   // The invite is created only when the member generates it — null until then.
   const [invite, setInvite] = useState<CreatedInvite | null>(null);
-  // Set when the backend rejects with the monthly quota 403 — blocks generating
-  // and shows the message inline instead of a transient toast.
-  const [quotaError, setQuotaError] = useState<string | null>(null);
+  // True once the backend has refused on the monthly quota — blocks generating
+  // and shows a sticky inline alert instead of a transient toast.
+  const [hasHitQuota, setHasHitQuota] = useState(false);
+
+  // Either signal blocks generating: the pre-fetched allowance, or a refusal
+  // the POST came back with (the allowance can run out in another tab).
+  const isBlockedByQuota = hasHitQuota || isQuotaExhausted;
 
   const description = note.trim() || defaultVouch(t);
 
-  /** Surface a failed POST /invites: a quota 403 sticks, everything else toasts. */
+  /** Surface a failed POST /invites: the quota refusal sticks inline (no toast
+   *  on top of it — one message, one place), everything else toasts. */
   function handleInviteError(err: unknown) {
-    if (
-      err instanceof ApiError &&
-      err.status === 403 &&
-      /limit|month/i.test(err.message)
-    ) {
-      setQuotaError(err.message);
-      showToast(err.message, "error");
+    if (isInviteQuotaError(err)) {
+      setHasHitQuota(true);
     } else {
       showToast(t("auth:invite.link.error.generic"), "error");
     }
@@ -52,7 +58,7 @@ export function InviteLinkPanel({ memberCount }: InviteLinkPanelProps) {
 
   /** Persist the invite (POST /invites), then reveal the animated ready panel. */
   async function generate() {
-    if (generating || quotaError) return;
+    if (generating || isBlockedByQuota) return;
     setGenerating(true);
     try {
       // A short floor so the success lands as a deliberate beat, not an instant pop.
@@ -93,10 +99,10 @@ export function InviteLinkPanel({ memberCount }: InviteLinkPanelProps) {
         memberCount={memberCount}
       />
 
-      {quotaError && (
+      {isBlockedByQuota && (
         <div className={styles.quotaError} role="alert">
           <FiAlertCircle aria-hidden />
-          {quotaError}
+          {t("auth:invite.link.error.quota")}
         </div>
       )}
 
@@ -104,7 +110,7 @@ export function InviteLinkPanel({ memberCount }: InviteLinkPanelProps) {
         <Button
           type="button"
           onClick={() => void generate()}
-          disabled={generating || Boolean(quotaError)}
+          disabled={generating || isBlockedByQuota}
           aria-busy={generating}
         >
           {generating ? (

@@ -1,4 +1,9 @@
-import { EmptyState, SkeletonLine, StatGrid, StatTile } from "../../shared/components/ui";
+import {
+  EmptyState,
+  SkeletonLine,
+  StatGrid,
+  StatTile,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useCommunityInsights } from "./api/useCommunityInsights";
@@ -15,7 +20,9 @@ function StatValue({
 }) {
   const fmt = useFormat();
   if (loading) {
-    return <SkeletonLine height={28} width="55%" style={{ margin: "2px 0 4px" }} />;
+    return (
+      <SkeletonLine height={28} width="55%" style={{ margin: "2px 0 4px" }} />
+    );
   }
   return (
     <span style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -45,7 +52,9 @@ export function ModToolsInsights({ slug }: { slug: string }) {
         <EmptyState
           compact
           title={t("communities:detail.modtools.insights.error.title")}
-          description={t("communities:detail.modtools.insights.error.description")}
+          description={t(
+            "communities:detail.modtools.insights.error.description",
+          )}
           action={{
             label: t("communities:detail.modtools.insights.error.retryCta"),
             onClick: refetch,
@@ -59,11 +68,18 @@ export function ModToolsInsights({ slug }: { slug: string }) {
           />
           <StatTile
             label={t("communities:detail.modtools.insights.newThisWeek")}
-            value={<StatValue loading={isLoading} value={data?.newMembersThisWeek} />}
+            value={
+              <StatValue loading={isLoading} value={data?.newMembersThisWeek} />
+            }
           />
           <StatTile
             label={t("communities:detail.modtools.insights.newThisMonth")}
-            value={<StatValue loading={isLoading} value={data?.newMembersThisMonth} />}
+            value={
+              <StatValue
+                loading={isLoading}
+                value={data?.newMembersThisMonth}
+              />
+            }
           />
           <StatTile
             label={t("communities:detail.modtools.insights.postCount")}
@@ -71,11 +87,18 @@ export function ModToolsInsights({ slug }: { slug: string }) {
           />
           <StatTile
             label={t("communities:detail.modtools.insights.postsThisWeek")}
-            value={<StatValue loading={isLoading} value={data?.postsThisWeek} />}
+            value={
+              <StatValue loading={isLoading} value={data?.postsThisWeek} />
+            }
           />
           <StatTile
             label={t("communities:detail.modtools.insights.activeMembers")}
-            value={<StatValue loading={isLoading} value={data?.activeMemberCount7d} />}
+            value={
+              <StatValue
+                loading={isLoading}
+                value={data?.activeMemberCount7d}
+              />
+            }
           />
         </StatGrid>
       )}

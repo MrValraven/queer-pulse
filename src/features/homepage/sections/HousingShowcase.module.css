@@ -237,7 +237,9 @@ span.lt {
 }
 .chipAccent {
   background: var(--accent);
-  color: #fff;
+  /* Label on the coral fill: --cream-rgb stays light in both themes, the same
+     cream-on-brand pairing the plum panels use. */
+  color: rgba(var(--cream-rgb), 1);
 }
 .lpPad {
   padding: 22px var(--card-pad) 20px;

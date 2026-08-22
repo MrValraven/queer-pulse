@@ -5,7 +5,7 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { FiPause } from "react-icons/fi";
+import { FiClock, FiPause } from "react-icons/fi";
 import { Button, ComingSoon } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
@@ -36,7 +36,7 @@ export function DeleteAccountSection() {
   const { showToast } = useToast();
   const { signOut } = useAuth();
   const { demoMode } = useDemoMode();
-  const reauth = useReauth();
+  const { getReauthToken, beginReauth } = useReauth();
   const requestDeletion = useRequestDeletion();
   const deactivate = useDeactivate();
   const cancelDeletion = useCancelDeletion();
@@ -72,23 +72,27 @@ export function DeleteAccountSection() {
     setFlowOpen(true);
   }
 
-  // Mint the step-up token, then run the chosen destructive action.
+  // Require a fresh step-up token, then run the chosen destructive action.
   //
-  // No password is collected or sent. `POST /account/reauth` takes no
-  // credential to check — auth is OAuth-only, so the backend has nothing to
-  // verify a password against and its `ReauthDto` explicitly tolerates and
-  // ignores the field (`account.service.ts: reauth(userId)`). The confirmation
-  // that gates this form is the typed phrase below, which is a real, checked
-  // gate; a password box that the server discards only looked like one.
+  // No password is collected or sent — auth is OAuth-only, so there is
+  // nothing to verify one against. The real step-up is a Google OAuth round
+  // trip (`beginReauth`, see `useReauthToken.ts`): if no fresh token is
+  // cached yet, this redirects away instead of proceeding, and the member
+  // presses confirm again after landing back. The typed phrase below is a
+  // separate, real, checked gate on top of that.
   const runAction = useCallback(async () => {
-    const { reauthToken } = await reauth();
+    const reauthToken = getReauthToken();
+    if (!reauthToken) {
+      beginReauth();
+      return;
+    }
     if (option === "delete") {
       const req = await requestDeletion(reauthToken);
       setPending(req);
     } else {
       await deactivate(reauthToken);
     }
-  }, [reauth, option, requestDeletion, deactivate]);
+  }, [getReauthToken, beginReauth, option, requestDeletion, deactivate]);
 
   async function handleCancel() {
     setCancelling(true);
@@ -139,10 +143,7 @@ export function DeleteAccountSection() {
 
       {option === "deactivate" && (
         <div className={styles.pauseStrip}>
-          <svg className={styles.pauseStripIcon} viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="8" />
-            <polyline points="10,5 10,10 13,13" />
-          </svg>
+          <FiClock className={styles.pauseStripIcon} aria-hidden />
           <div>
             <p className={styles.pauseStripText}>
               <Translation

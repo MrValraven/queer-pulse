@@ -14,6 +14,7 @@ import {
   EmptyState,
   FeatureHelp,
   PullToRefresh,
+  Tabs,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -83,6 +84,11 @@ function FeedGreeting({
   );
 }
 
+/** The feed's tab row. Uses the shared `Tabs` primitive rather than a row of
+ *  bare `<button>`s: that gets `role="tablist"`/`role="tab"`, `aria-selected`,
+ *  a roving tabindex and Arrow/Home/End traversal, none of which the local
+ *  version had. Visually it is the same underline row; `.tabsScroll` keeps the
+ *  horizontal overflow behaviour on a phone. */
 function FeedTabs({
   activeTab,
   onSelect,
@@ -91,21 +97,19 @@ function FeedTabs({
   onSelect: (tab: FeedTab) => void;
 }) {
   const { t } = useTranslation();
+  const tabs = FEED_TABS.map((tab) => ({
+    id: tab,
+    label: t(FEED_TAB_LABEL_KEY[tab]),
+  }));
   return (
-    <div className={styles.tabs}>
-      {FEED_TABS.map((tab) => (
-        <button
-          type="button"
-          key={tab}
-          className={[styles.tab, activeTab === tab && styles.tabActive]
-            .filter(Boolean)
-            .join(" ")}
-          onClick={() => onSelect(tab)}
-        >
-          {t(FEED_TAB_LABEL_KEY[tab])}
-        </button>
-      ))}
-    </div>
+    <Tabs
+      className={styles.tabsScroll}
+      variant="underline"
+      label={t("feed:tab.listAria")}
+      tabs={tabs}
+      active={activeTab}
+      onChange={(id) => onSelect(id as FeedTab)}
+    />
   );
 }
 

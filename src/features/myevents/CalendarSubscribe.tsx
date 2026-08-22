@@ -37,13 +37,19 @@ export function CalendarSubscribe() {
     }
   };
   const exportMonth = () => {
-    const monthEvents = events.filter(
-      (e) => parseDate(e.date).getMonth() === viewM,
-    );
+    // Year AND month: matching the month alone swept in the same month from
+    // every other year the member has events in, under a filename and toast
+    // that named only the month currently in view.
+    const monthEvents = events.filter((e) => {
+      const eventDate = parseDate(e.date);
+      return (
+        eventDate.getFullYear() === viewY && eventDate.getMonth() === viewM
+      );
+    });
     const monthSlug = fmt
       .date(new Date(viewY, viewM, 1), { month: "long" })
       .toLowerCase();
-    downloadICS(`queerpulse-${monthSlug}.ics`, monthEvents);
+    downloadICS(`queerpulse-${monthSlug}-${viewY}.ics`, monthEvents, t);
     toast(
       t("myevents:calSubscribe.exportToast", { month: monthLong }),
       "success",

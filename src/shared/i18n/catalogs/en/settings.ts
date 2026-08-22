@@ -97,10 +97,10 @@ export const settings: Catalog = {
   // ── SettingsPersonalisation.tsx — AccessibilityPane ──────────────────────
   "personalisation.accessibility.title": "Accessibility <em>preferences.</em>",
   "personalisation.accessibility.sub":
-    "Tune display, motion, reading, and interaction to suit you. These settings apply across the whole platform.",
+    "Tune motion and navigation to suit you. What you change here saves the moment you flip it and applies across the whole platform. Preferences marked coming soon are still being built.",
   "personalisation.accessibility.resetAll": "Reset all preferences",
   "personalisation.accessibility.resetNote":
-    "This returns all display settings to their defaults. Your profile data is unaffected.",
+    "This returns the preferences you can change back to their defaults. Your profile data is unaffected.",
   "personalisation.accessibility.deviceNote":
     "Your preferences are saved locally to this device.",
   "personalisation.accessibility.resetToast": "All preferences reset",
@@ -117,7 +117,6 @@ export const settings: Catalog = {
     "These are private (not shown on your profile). They help us surface gatherings, members, and content that's relevant to you. Change them any time.",
   "interests.identities.heading": "Which identities feel like yours?",
   "interests.identities.skip": "Skip",
-  "interests.identities.skipped": "Skipped",
   "interests.identities.helper":
     "Select as many as feel right. We use these to suggest relevant communities and content. They are never used to categorise you.",
   // ── Per-identity discoverability (IdentitySections.tsx) ─────────────────
@@ -194,6 +193,11 @@ export const settings: Catalog = {
   "notifications.title": "Notification <em>preferences.</em>",
   "notifications.sub":
     "Granular control over what reaches you and how. We'll never send you something you haven't asked for.",
+  // Live save failures for one toggle (useNotificationPreferences).
+  "notifications.toast.saveError":
+    "We couldn't save that notification setting. Please try again.",
+  "notifications.toast.saveErrorReason":
+    "We couldn't save that notification setting: {reason}.",
   "notifications.section.gatherings": "Gatherings",
   "notifications.section.messagesConnections": "Messages & connections",
   "notifications.section.communitiesBoard": "Communities & board",
@@ -224,6 +228,11 @@ export const settings: Catalog = {
     "Your browser can’t show phone notifications yet.",
   "notifications.phonePush.blocked":
     "Notifications are blocked. Turn them back on in your browser settings, then try again.",
+  "notifications.phonePush.previews.title": "Hide message previews",
+  "notifications.phonePush.previews.desc":
+    "Show that something arrived without naming who it is from or what it says. Useful if other people can see your lock screen.",
+  "notifications.phonePush.previews.error":
+    "We could not save that. Your previews have not changed.",
   "notifications.phonePush.test.title": "Send yourself a test",
   "notifications.phonePush.test.desc":
     "Send a notification to your own devices to check everything's working.",
@@ -353,6 +362,8 @@ export const settings: Catalog = {
   "account.section.account": "Account",
   "account.emailAddress.title": "Email address",
   "account.emailAddress.desc": "The address tied to your account and sign-in.",
+  // Placeholder while /auth/me is still resolving. Was a bare em dash.
+  "account.emailAddress.notSet": "Not set yet",
   "account.section.security": "Security",
   "account.twoFactor.title": "Two-factor authentication",
   "account.twoFactor.desc":
@@ -421,6 +432,8 @@ export const settings: Catalog = {
   "editProfile.saveBar.discard": "Discard",
   "editProfile.saveBar.saving": "Saving…",
   "editProfile.saveBar.save": "Save profile",
+  "editProfile.leaveConfirm":
+    "You have unsaved profile changes. Leave without saving them?",
 
   // ── EditProfilePane.tsx — toasts ──────────────────────────────────────────
   "editProfile.toast.photoRemoved": "Photo removed.",
@@ -484,6 +497,8 @@ export const settings: Catalog = {
   "editProfile.skills.interestsLabel": "Interests",
   "editProfile.skills.interestsPlaceholder":
     "e.g. Housing policy, Film, Cooking…",
+  "editProfile.skills.removeAria": "Remove skill {name}",
+  "editProfile.interests.removeAria": "Remove interest {name}",
 
   // ── EditProfileSections.tsx — CommunitiesSection ─────────────────────────
   "editProfile.communities.title": "Communities <em>you feature</em>",
@@ -601,7 +616,7 @@ export const settings: Catalog = {
   // matching the mock-session-record convention above) ─────────────────────
   "blockedUsers.title": "Members you've <em>blocked</em>.",
   "blockedUsers.sub":
-    "Blocked members can't see your profile, message you, or find you in search. Unblocking restores none of that automatically — it just opens the door again.",
+    "Blocked members can't see your profile, message you, or find you in search. Unblocking restores none of that automatically. It just opens the door again.",
   "blockedUsers.section.blocked": "Blocked",
   "blockedUsers.row.blockedOn": "Blocked {date}",
   "blockedUsers.row.deletedMember": "Deleted member",
@@ -770,10 +785,13 @@ export const settings: Catalog = {
   "saveButton.savingLabel": "Saving…",
   "saveButton.savedLabel": "Saved",
 
-  // ── AccessibilityPreferencesPage.tsx + Sections — the full accessibility
-  // page (SettingsPersonalisation's AccessibilityPane is a summary card that
-  // links here). Only Reduce motion is functional; the rest are labelled but
-  // non-functional mocks — translate labels only, per the sweep brief. ─────
+  // ── AccessibilityPrefSections.tsx — the accessibility pane's rows.
+  // Only "Reduce motion" and "Skip to content link" are backed by a store and
+  // applied; every other row is badged coming soon and rendered inert, so it
+  // stays visible as a roadmap without pretending to save. ─────────────────
+  // Shown under the two preferences that are really backed by a store, so the
+  // absence of a save bar on this pane reads as intent rather than a bug.
+  "a11y.instantSaveHint": "Saved to this device the moment you flip it.",
   "a11y.sidebar.preferences": "Preferences",
   "a11y.sidebar.display": "Display",
   "a11y.sidebar.motion": "Motion",
@@ -865,6 +883,12 @@ export const settings: Catalog = {
   "deleteAccount.toast.cancelled": "Deletion cancelled. Welcome back.",
   "deleteAccount.toast.cancelError":
     "We couldn't cancel that just now. Try again.",
+
+  // ── Step-up re-authentication (useReauthToken.ts) ────────────────────────
+  "reauth.completion.success":
+    "You're re-authenticated. Press confirm again to finish.",
+  "reauth.completion.failed":
+    "We couldn't confirm that was you. Try again.",
   "deleteAccount.options.deactivate.title": "Deactivate",
   "deleteAccount.options.deactivate.desc":
     "Your profile becomes invisible. Your data is preserved. You can reactivate any time by signing back in.",
@@ -993,9 +1017,11 @@ export const settings: Catalog = {
   "integrationsModal.connectCta": "Connect",
 
   // ── SecurityPage.tsx — vulnerability disclosure ──────────────────────────
-  // The Hall-of-Fame credits (SecurityPage HALL) are attribution records —
-  // researcher names plus the vuln type/date they reported — and stay in
-  // English like the other stored/record values noted at the top of this file.
+  // The acknowledgement credits (security.data.ts SECURITY_HALL_OF_FAME) are
+  // attribution records: researcher names plus the vuln type/date they
+  // reported. They stay in English like the other stored/record values noted at
+  // the top of this file, and the grid is hidden entirely while the list is
+  // empty, so no credit is ever invented.
   "security.hero.eyebrow": "Vulnerability disclosure",
   "security.hero.titleTop": "Found something?",
   "security.hero.titleEm": "Tell us.",
@@ -1055,6 +1081,8 @@ export const settings: Catalog = {
   "security.ack.title": "Security <em>researchers</em> who've helped.",
   "security.ack.body":
     "We're grateful to the following researchers who disclosed vulnerabilities responsibly. (Listed with permission.)",
+  "security.ack.empty":
+    "Nobody is credited here yet. Report something and, if you'd like the credit, your name goes up.",
 
   "security.report.titleTop": "Report a",
   "security.report.titleEm": "vulnerability",
@@ -1065,6 +1093,8 @@ export const settings: Catalog = {
   "security.pgp.copyCta": "Copy key",
   "security.pgp.copied": "PGP key copied.",
   "security.pgp.copyFailed": "Copy failed. Select and copy manually.",
+  "security.pgp.unavailable":
+    "We haven't published a key yet. Email us in plain text and we'll agree on an encrypted channel before you send any detail.",
 
   "security.outro.titleTop": "Security is",
   "security.outro.titleEm": "community work.",

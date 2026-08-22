@@ -31,7 +31,7 @@ export function IncomingPanel({
   return (
     <div className={styles.grid}>
       {views.map((v, i) => (
-        <FadeIn key={v.slug} delay={stagger(i)}>
+        <FadeIn key={v.slug} delay={stagger(i)} className={styles.cardFade}>
           <IncomingCard
             view={v}
             onAccept={() => onAccept(v)}
@@ -69,7 +69,7 @@ export function SentPanel({
   return (
     <div className={styles.grid}>
       {views.map((v, i) => (
-        <FadeIn key={v.slug} delay={stagger(i)}>
+        <FadeIn key={v.slug} delay={stagger(i)} className={styles.cardFade}>
           <SentCard view={v} onWithdraw={() => onWithdraw(v)} />
         </FadeIn>
       ))}
@@ -103,7 +103,7 @@ export function BlockedPanel({
   return (
     <div className={styles.grid}>
       {views.map((v, i) => (
-        <FadeIn key={v.slug} delay={stagger(i)}>
+        <FadeIn key={v.slug} delay={stagger(i)} className={styles.cardFade}>
           <BlockedCard view={v} onUnblock={() => onUnblock(v)} />
         </FadeIn>
       ))}
@@ -141,7 +141,7 @@ export function VouchedPanel({
       ) : (
         <div className={styles.grid}>
           {views.map((v, i) => (
-            <FadeIn key={v.slug} delay={stagger(i)}>
+            <FadeIn key={v.slug} delay={stagger(i)} className={styles.cardFade}>
               <VouchedCard view={v} note={noteFor(v)} />
             </FadeIn>
           ))}

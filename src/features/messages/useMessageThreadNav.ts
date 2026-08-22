@@ -96,6 +96,13 @@ export function useMessageThreadNav({
     // whose id is still the slug) so we never POST /read against a slug.
     if (demoMode) return;
     const opened = allThreads.find((thread) => thread.id === id) ?? null;
+    // Skip the round-trip when there's nothing to mark — every thread open
+    // used to POST /read unconditionally, even re-opening an already-read
+    // thread. `useMarkReadOnInbound` (ConversationPanel) independently
+    // re-marks read as NEW messages arrive while a thread stays open (and on
+    // `visibilitychange`), so that path still fires the moment this thread's
+    // unread state actually changes after this point.
+    if (!opened?.unread && !opened?.unreadCount) return;
     const realId = realConversationId(opened);
     if (realId) markRead.mutate(realId);
   }

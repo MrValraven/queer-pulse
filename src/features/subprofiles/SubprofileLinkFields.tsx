@@ -1,13 +1,13 @@
 import { useState, type FocusEvent } from "react";
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfileData } from "../../app/providers/useProfile";
 import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { LINK_HELP_KEY, LINK_TO_LABEL_KEY, VISIBILITY_OPTIONS } from "./subprofileEditor.data";
 import { UsernameField } from "../settings/UsernameField";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { AddressChangeWarningModal } from "./AddressChangeWarningModal";
+import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import {
   handleStateLine,
   pathFor,
@@ -38,8 +38,15 @@ export function SubprofileLinkFields({
   subprofile: SubprofileView;
 }) {
   const { t } = useTranslation();
-  const { profile } = useProfileData();
-  const ownerSlug = profile.slug;
+  // The `/members/:ownerSlug/:slug` preview must name the persona's CREATOR,
+  // not whoever is editing: a co-owner was shown (and could copy) a path under
+  // their OWN profile, which resolves to nothing. Until it resolves, the
+  // placeholder stands in rather than a confidently wrong slug.
+  const creatorSlug = usePersonaCreatorSlug(
+    subprofile.id,
+    subprofile.memberCount,
+  );
+  const ownerSlug = creatorSlug ?? "…";
   const isPublished = subprofile.status === "published";
 
   const [pending, setPending] = useState<PendingAddressChange | null>(null);

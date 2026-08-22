@@ -1,6 +1,6 @@
 import { FiHeart } from "react-icons/fi";
 import { DocPreview } from "./tools/DocPreview";
-import { TAX_DISCLAIMER } from "./tax.constants";
+import { TAX_DISCLAIMER_KEY } from "./tax.constants";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SlidingScale } from "./slidingScale.data";
 import styles from "./SlidingScalePage.module.css";
@@ -16,7 +16,7 @@ export function SlidingScalePreview({
   makerName,
 }: SlidingScalePreviewProps) {
   const { t } = useTranslation();
-  const scaleDisclaimer = `${t("economy:slidingScale.disclaimer")} ${TAX_DISCLAIMER}`;
+  const scaleDisclaimer = `${t("economy:slidingScale.disclaimer")} ${t(TAX_DISCLAIMER_KEY)}`;
 
   return (
     <DocPreview>

@@ -213,7 +213,10 @@
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background: #fff;
+  /* The knob must stay light in BOTH themes, so this is --cream-rgb (which is
+     documented as not theme-switched) rather than --paper, which flips to a
+     dark surface and would hide the knob on the dark track. */
+  background: rgba(var(--cream-rgb), 1);
   transition: transform 0.2s var(--ease);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }

@@ -66,7 +66,14 @@ export function AdminOrgTierForm({
             onClose();
           },
           onError: (error) =>
-            showToast(describeError("Couldn't save those changes", error), "error"),
+            showToast(
+              describeError(
+                t("admin:errors.saveChanges"),
+                error,
+                t("shared:apiError.tryAgainTail"),
+              ),
+              "error",
+            ),
         },
       );
     } else {
@@ -79,7 +86,14 @@ export function AdminOrgTierForm({
           onClose();
         },
         onError: (error) =>
-          showToast(describeError("Couldn't create that tier", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.createTier"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       });
     }
   }

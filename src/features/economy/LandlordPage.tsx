@@ -12,6 +12,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useLandlord } from "./api/useLandlord";
 import { useRequestIntro } from "./api/useRequestIntro";
+import { WithdrawRecommendationDialog } from "./WithdrawRecommendationDialog";
 import { RecommendModal } from "./HousingModals";
 import { ContactRequestModal } from "./ContactRequestModal";
 import { LandlordSkeleton } from "./LandlordSkeleton";
@@ -34,6 +35,7 @@ export function LandlordPage() {
   const [recommending, setRecommending] = useState(false);
   const [introducing, setIntroducing] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const [isConfirmingWithdraw, setIsConfirmingWithdraw] = useState(false);
   const simulatedLoad = useSimulatedLoad();
   const { data: landlord, isLoading, isError } = useLandlord(slug);
   const requestIntro = useRequestIntro(slug ?? "");
@@ -105,7 +107,10 @@ export function LandlordPage() {
             <div>
               <LandlordAbout landlord={landlord} />
               <LandlordAreas landlord={landlord} />
-              <LandlordRecommendations landlord={landlord} />
+              <LandlordRecommendations
+                landlord={landlord}
+                onWithdrawMine={() => setIsConfirmingWithdraw(true)}
+              />
             </div>
 
             <LandlordSidebar
@@ -155,6 +160,13 @@ export function LandlordPage() {
           onClose={() => setIntroducing(false)}
         />
       )}
+
+      <WithdrawRecommendationDialog
+        slug={landlord.slug}
+        landlordName={landlord.name}
+        isOpen={isConfirmingWithdraw}
+        onClose={() => setIsConfirmingWithdraw(false)}
+      />
 
       {reporting && (
         <ReportListingModal

@@ -36,7 +36,9 @@
  */
 
 const ALLOWED_TAGS = new Set(["EM", "STRONG", "A", "BR"]);
-const ALLOWED_HREF_PROTOCOLS = new Set(["http:", "https:", "mailto:"]);
+/** Exported so the editor can validate a link at the moment it is created
+ * (`linkHref.ts`) against the exact allowlist the reader enforces here. */
+export const ALLOWED_HREF_PROTOCOLS = new Set(["http:", "https:", "mailto:"]);
 
 /** True when `href` resolves to an allowlisted protocol (blocks `javascript:`,
  * `data:`, `vbscript:`, and anything else not explicitly permitted). */

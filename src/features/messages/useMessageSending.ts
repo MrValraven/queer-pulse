@@ -3,7 +3,7 @@ import type { TFunction } from "../../shared/i18n/types";
 import { useRealtime } from "../../shared/api/realtime";
 import type { ChatMessage, Conversation } from "./data";
 import { saveOutbox } from "./outbox";
-import { nextLocalId } from "./useMessagesController.helpers";
+import { isServerConversationId, nextLocalId } from "./useMessagesController.helpers";
 import type { useSendMessage } from "./api/useMessageMutations";
 import type { GifAttachment } from "../../shared/api/gifs";
 
@@ -36,6 +36,17 @@ function mediaKindOf(message: ChatMessage): MediaKind | undefined {
     : undefined;
 }
 
+/** Release a still-optimistic image send's local `blob:` preview (see
+ *  `ImageComposerButton`) once nothing will ever render it again — the
+ *  server's own copy takes over the bubble with a resolved URL, so the object
+ *  URL this tab created is now pure leak. A no-op for GIFs/text (no local
+ *  blob was ever minted) and for an already-revoked/foreign URL. */
+function revokeBlobPreview(message: ChatMessage | undefined): void {
+  if (message?.attachment?.url.startsWith("blob:")) {
+    URL.revokeObjectURL(message.attachment.url);
+  }
+}
+
 export interface MessageSending {
   /** Sends `body` as a new message in the open thread. The composer OWNS the
    *  draft text and passes its current value here on submit — the controller
@@ -66,6 +77,15 @@ export interface MessageSending {
    *  paintable, since the storage key alone isn't a fetchable URL until the
    *  server round-trip resolves it. */
   sendImage: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
+  /** Re-key every optimistic send queued under a just-picked recipient's
+   *  placeholder id (see `recipient.ts`) to the real server conversation id,
+   *  and re-drive `deliver` for anything still `sending`/`failed` — `deliver`
+   *  never actually reached the server for those while the id was a
+   *  placeholder (see its own UUID guard), so without this call they'd stay
+   *  orphaned once `activeId` flips to the real id. Called from
+   *  `useMessageCreation`'s `startConversation.onSuccess`. A no-op if nothing
+   *  was queued under `oldConvId`. */
+  migrateOutboxConversation: (oldConvId: string, newConvId: string) => void;
 }
 
 /**
@@ -144,6 +164,18 @@ export function useMessageSending({
         window.setTimeout(() => setStatus(convId, localId, "seen"), 1900);
         return;
       }
+      if (!isServerConversationId(convId)) {
+        // The conversation doesn't exist server-side yet — `convId` is still a
+        // just-picked recipient's placeholder id (its handle, not a UUID; see
+        // `recipient.ts`). POSTing here would 400 against
+        // `/conversations/<handle>/messages` (`ParseUUIDPipe`). Leave the
+        // bubble exactly as `sending` (never `failed` — nothing was actually
+        // attempted) rather than firing the doomed request: once
+        // `startConversation` resolves, `migrateOutboxConversation` re-keys
+        // this outbox entry to the real UUID and re-drives it through THIS
+        // same function.
+        return;
+      }
       // `localId` IS the client idempotency id (`clientMessageId`) — a resend from
       // the offline outbox or the dual HTTP+WS path can't duplicate server-side.
       // `forwarded` rides the same idempotent send path (never a bypass).
@@ -164,9 +196,12 @@ export function useMessageSending({
           // client id), so it takes over the bubble's slot as this one clears.
           onSuccess: () =>
             setSent((prev) => {
-              const remaining = (prev[convId] ?? []).filter(
-                (item) => item.localId !== localId,
-              );
+              const current = prev[convId] ?? [];
+              // The server row has landed — its own resolved URL now renders
+              // the bubble, so this tab's local blob preview (if any) is safe
+              // to release.
+              revokeBlobPreview(current.find((item) => item.localId === localId));
+              const remaining = current.filter((item) => item.localId !== localId);
               const next = { ...prev };
               if (remaining.length > 0) next[convId] = remaining;
               else delete next[convId];
@@ -334,6 +369,61 @@ export function useMessageSending({
     deliverRef.current = deliver;
   }, [deliver]);
 
+  // Safety net: release every remaining local blob preview when the Messages
+  // page itself unmounts (the member navigates away entirely — a thread
+  // switch does NOT unmount this hook, `sent` persists across those). Most
+  // image sends resolve well before that, and `deliver`'s `onSuccess` above
+  // already revokes theirs; this only catches whatever is still `sending`/
+  // `failed` (or a demo send, which never resolves to a server copy) at the
+  // moment the page closes, so the tab never accumulates leaked object URLs
+  // across repeated visits to Messages.
+  useEffect(() => {
+    return () => {
+      for (const messages of Object.values(sentRef.current)) {
+        for (const message of messages) revokeBlobPreview(message);
+      }
+    };
+  }, []);
+
+  const migrateOutboxConversation = useCallback(
+    (oldConvId: string, newConvId: string) => {
+      if (oldConvId === newConvId) return;
+      const pending = sentRef.current[oldConvId];
+      if (!pending || pending.length === 0) return;
+      setSent((previous) => {
+        const stillPending = previous[oldConvId];
+        if (!stillPending || stillPending.length === 0) return previous;
+        const next = { ...previous };
+        delete next[oldConvId];
+        next[newConvId] = [...(next[newConvId] ?? []), ...stillPending];
+        return next;
+      });
+      // Re-drive anything that never actually reached the server — `deliver`'s
+      // UUID guard skipped the request while `oldConvId` was still a
+      // placeholder, so a `sending` entry here was never attempted, and a
+      // `failed` one (a genuine send error before the id even resolved,
+      // effectively unreachable today but kept for safety) deserves the same
+      // automatic retry `replayOutbox` gives every other failed send.
+      for (const message of pending) {
+        if (
+          message.localId &&
+          (message.status === "sending" || message.status === "failed")
+        ) {
+          deliver(
+            newConvId,
+            message.text,
+            message.localId,
+            message.replyTo?.id,
+            message.forwarded,
+            message.sendAttachment ?? message.attachment,
+            mediaKindOf(message),
+          );
+        }
+      }
+    },
+    [deliver, setSent],
+  );
+
   // Resend everything still `sending`/`failed` in the outbox (live mode only).
   // Idempotent: each entry keeps its original `clientMessageId` (== `localId`),
   // so a message the server already stored is deduped rather than duplicated —
@@ -392,5 +482,13 @@ export function useMessageSending({
     wasConnectedRef.current = connected;
   }, [connected, demoMode, replayOutbox]);
 
-  return { send, retrySend, appendOptimistic, deliver, sendGif, sendImage };
+  return {
+    send,
+    retrySend,
+    appendOptimistic,
+    deliver,
+    sendGif,
+    sendImage,
+    migrateOutboxConversation,
+  };
 }

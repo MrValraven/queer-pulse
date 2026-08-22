@@ -130,7 +130,7 @@
   padding: 0 5px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-size: 11px;
   font-weight: 700;
   display: grid;
@@ -166,7 +166,7 @@
 @media (hover: hover) {
   .backToPlatform:hover {
     background: rgba(var(--cream-rgb), 0.08);
-    color: #f7f3ee;
+    color: var(--cream);
   }
 }
 .kbdHint {

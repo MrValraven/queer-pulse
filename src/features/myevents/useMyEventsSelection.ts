@@ -64,7 +64,7 @@ export function useMyEventsSelection({
   }, [selectedCount, t, toast]);
   const bulkExport = useCallback(() => {
     const chosen = events.filter((e) => selected[e.id]);
-    downloadICS("queerpulse-events.ics", chosen);
+    downloadICS("queerpulse-events.ics", chosen, t);
     toast(
       t("myevents:bulk.exportedToast", { count: chosen.length }),
       "success",

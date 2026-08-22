@@ -1,6 +1,7 @@
 import { FiAlertTriangle } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
 import { Badge, EmptyState, Spinner } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
@@ -10,7 +11,9 @@ import { SubprofileEditorShell } from "./SubprofileEditorShell";
 import { SubprofileNotFoundArt } from "./SubprofileNotFoundArt";
 import styles from "./SubprofileEditor.module.css";
 
-const DASHBOARD = "/account/subprofiles";
+// Never a hardcoded path: pages route through `routeMap` so a rename can't
+// silently break the back-link and the not-found escape hatch.
+const DASHBOARD = routes.subprofilesDashboard;
 
 /**
  * The owner editor for one subprofile — "Editor A": a left section rail, a

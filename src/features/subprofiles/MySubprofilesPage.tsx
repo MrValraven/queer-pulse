@@ -5,8 +5,7 @@ import { AppShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useProfileData } from "../../app/providers/useProfile";
-import { routes, subprofileEditPath } from "../../app/routeMap";
+import { routes } from "../../app/routeMap";
 import { useSubprofiles } from "./api/useSubprofiles";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import type {
@@ -14,8 +13,7 @@ import type {
   SubprofileView,
 } from "./api/subprofiles.adapters";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
-import { personaPublicPathForOwner } from "./personaLinks.data";
-import { SideCard } from "./SideCard";
+import { OwnerSideCard, type PersonaShareTarget } from "./OwnerSideCard";
 import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
 import { NewSideModal } from "./NewSideModal";
 import { PersonaInvitesBanner } from "./PersonaInvitesBanner";
@@ -42,19 +40,21 @@ function isValidSubprofileKind(value: string | null): value is SubprofileKind {
 }
 
 /** Adapt an owner-dashboard row (`SubprofileView`, no owner-tie/social-proof
- *  fields — every row is implicitly owned by the signed-in member) into the
- *  `PublicSubprofileView` shape `SubprofileShareCard` reads, so the share
- *  card is a single implementation shared by the public hero and this page.
- *  Mirrors `personaPublicPathForOwner`'s linked-vs-standalone `ownerSlug`
- *  rule; the owner-viewing-their-own-card social-proof fields don't apply
- *  here, so they default to `false`. */
+ *  fields) into the `PublicSubprofileView` shape `SubprofileShareCard` reads,
+ *  so the share card is a single implementation shared by the public hero and
+ *  this page. Mirrors `personaPublicPathForOwner`'s linked-vs-standalone
+ *  rule, with `creatorSlug` (resolved by `OwnerSideCard`) as the owner tie:
+ *  the QR and the vCard `URL:` line must encode the CREATOR's address, since
+ *  that is the only one the nested public route resolves. The
+ *  owner-viewing-their-own-card social-proof fields don't apply here, so they
+ *  default to `false`. */
 function toPublicView(
   subprofile: SubprofileView,
-  ownerSlug: string,
+  creatorSlug: string,
 ): PublicSubprofileView {
   return {
     ...subprofile,
-    ownerSlug: subprofile.linkVisibility === "linked" ? ownerSlug : undefined,
+    ownerSlug: subprofile.linkVisibility === "linked" ? creatorSlug : undefined,
     ownerName: undefined,
     viewerEndorsed: false,
     viewerFollowing: false,
@@ -73,11 +73,12 @@ function toPublicView(
 export function MySubprofilesPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { profile } = useProfileData();
   const { data: subprofiles, isLoading, isError, refetch } = useSubprofiles();
   const [creating, setCreating] = useState(false);
   const [createKind, setCreateKind] = useState<SubprofileKind | null>(null);
-  const [shareTarget, setShareTarget] = useState<SubprofileView | null>(null);
+  const [shareTarget, setShareTarget] = useState<PersonaShareTarget | null>(
+    null,
+  );
   const [deleteTarget, setDeleteTarget] = useState<SubprofileView | null>(null);
 
   // Persona-creation deep-link (Moment 4's onboarding "set one up" + a picked
@@ -146,14 +147,10 @@ export function MySubprofilesPage() {
         ) : (
           <div className="sides">
             {list.map((subprofile) => (
-              <SideCard
+              <OwnerSideCard
                 key={subprofile.id}
                 view={subprofile}
-                onOpen={() =>
-                  void navigate(personaPublicPathForOwner(subprofile, profile.slug))
-                }
-                onEdit={() => void navigate(subprofileEditPath(subprofile.id))}
-                onShare={() => setShareTarget(subprofile)}
+                onShare={setShareTarget}
                 onDelete={() => setDeleteTarget(subprofile)}
               />
             ))}
@@ -183,7 +180,7 @@ export function MySubprofilesPage() {
         // click, so a brief nothing beats flashing a spinner over the page.
         <Suspense fallback={null}>
           <SubprofileShareCard
-            view={toPublicView(shareTarget, profile.slug)}
+            view={toPublicView(shareTarget.view, shareTarget.creatorSlug)}
             onClose={() => setShareTarget(null)}
           />
         </Suspense>

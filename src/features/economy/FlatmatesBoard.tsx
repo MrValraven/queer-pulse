@@ -1,23 +1,20 @@
-import { useState } from "react";
-import { FiArrowRight, FiHome } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  FeatureHelp,
-  Outro,
-} from "../../shared/components/ui";
+import { useMemo, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
+import { Button, FeatureHelp, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { matchesBudget, type ListingType } from "./flatmates.data";
+import {
+  budgetCeilingFor,
+  matchesBudget,
+  type ListingType,
+} from "./flatmates.data";
 import { useFlatmateProfiles } from "./api/useFlatmateProfiles";
-import { FlatmateCard } from "./FlatmateCard";
 import { FlatmateDiscovery } from "./FlatmateDiscovery";
-import { FlatmateSkeleton } from "./FlatmateSkeleton";
 import { FlatmatesFilterBar } from "./FlatmatesFilterBar";
+import { FlatmatesGrid } from "./FlatmatesGrid";
 import { FlatmateViewToggle, type FlatmateView } from "./FlatmateViewToggle";
 import { PostProfileModal } from "./PostProfileModal";
 import styles from "./FlatmatesPage.module.css";
@@ -34,13 +31,45 @@ export function FlatmatesBoard() {
   const [modalOpen, setModalOpen] = useState(false);
   const [view, setView] = useState<FlatmateView>("list");
 
-  const { data: source = [], isFetching } = useFlatmateProfiles();
+  // Send every filter the directory understands to the server, so live results
+  // are filtered and match-ranked across the whole board rather than within
+  // whatever happened to land on page one. `budgetMax` is a ceiling, so the
+  // server answers with a superset that `matchesBudget` below narrows to the
+  // chosen band; move-in stays client-side (its options are month keys the API
+  // has no equivalent for).
+  const serverFilters = useMemo(
+    () => ({
+      type: type === "all" ? undefined : type,
+      neighbourhood: neighbourhood === "all" ? undefined : neighbourhood,
+      budgetMax: budgetCeilingFor(budget),
+      tags: tags.length > 0 ? tags : undefined,
+    }),
+    [type, neighbourhood, budget, tags],
+  );
+  const {
+    profiles: source,
+    isFetching,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useFlatmateProfiles(serverFilters);
   // Skeleton while the simulated demo beat runs OR (live) the query is in
-  // flight — otherwise a slow live fetch flashes the empty-board CTA.
-  const loading = useSimulatedLoad() || (!demoMode && isFetching);
+  // flight — otherwise a slow live fetch flashes the empty-board CTA. A
+  // "Load more" fetch keeps the loaded cards on screen instead.
+  const loading =
+    useSimulatedLoad() || (!demoMode && isFetching && !isFetchingNextPage);
+  const isAnyFilterActive =
+    type !== "all" ||
+    neighbourhood !== "all" ||
+    budget !== "all" ||
+    movein !== "all" ||
+    tags.length > 0;
   // With nothing on the board, the filters have nothing to act on — hide them
-  // and let the empty state carry the single call to action.
-  const boardEmpty = source.length === 0;
+  // and let the empty state carry the single call to action. A filtered search
+  // that comes back empty is a different state (the server now does the
+  // filtering, so an empty result no longer means an empty board) and keeps the
+  // filter bar plus its own "clear filters" empty state.
+  const boardEmpty = source.length === 0 && !isAnyFilterActive;
 
   const filtered = source.filter((p) => {
     if (type !== "all" && p.type !== type) return false;
@@ -124,55 +153,34 @@ export function FlatmatesBoard() {
               }
             />
           ) : (
-          <div className={styles.grid}>
-            {loading ? (
-              Array.from({ length: 6 }).map((_, skeletonIndex) => (
-                <FlatmateSkeleton key={skeletonIndex} />
-              ))
-            ) : boardEmpty ? (
-              <EmptyState
-                className={styles.empty}
-                icon={<FiHome />}
-                title={t("economy:flatmates.empty.title")}
-                description={t("economy:flatmates.empty.description")}
-                action={{
-                  label: t("economy:flatmates.postProfileCta"),
-                  onClick: () => setModalOpen(true),
-                }}
-              />
-            ) : (
-              <>
-                {filtered.length === 0 && (
-                  <EmptyState
-                    className={styles.empty}
-                    icon={<FiHome />}
-                    title={t("economy:flatmates.empty.filteredTitle")}
-                    description={t(
-                      "economy:flatmates.empty.filteredDescription",
-                    )}
-                    action={{
-                      label: t("economy:flatmates.empty.clearFilters"),
-                      onClick: clearFilters,
-                    }}
-                  />
+            <FlatmatesGrid
+              loading={loading}
+              boardEmpty={boardEmpty}
+              profiles={filtered}
+              sentIds={sent}
+              onSayHello={(profileId) =>
+                setSent((prev) => new Set(prev).add(profileId))
+              }
+              onPostProfile={() => setModalOpen(true)}
+              onClearFilters={clearFilters}
+            />
+          )}
+
+          {!loading && !boardEmpty && hasNextPage && (
+            <div className={styles.loadMoreRow}>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => void fetchNextPage()}
+                disabled={isFetchingNextPage}
+              >
+                {t(
+                  isFetchingNextPage
+                    ? "economy:flatmates.loadingMore"
+                    : "economy:flatmates.loadMore",
                 )}
-                {filtered.map((profile, profileIndex) => (
-                  <FadeIn
-                    key={profile.id}
-                    delay={Math.min(profileIndex, 8) * 60}
-                  >
-                    <FlatmateCard
-                      p={profile}
-                      sent={sent.has(profile.id)}
-                      onSayHello={() =>
-                        setSent((prev) => new Set(prev).add(profile.id))
-                      }
-                    />
-                  </FadeIn>
-                ))}
-              </>
-            )}
-          </div>
+              </Button>
+            </div>
           )}
         </div>
       </div>

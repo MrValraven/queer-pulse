@@ -43,6 +43,11 @@ const en: Record<string, string> = {
   "push:housing.match.bodyNoArea": "{title} matches a search you saved.",
   "push:topic.newPost.title": "New post in a topic you follow",
   "push:topic.newPost.body": "{name} posted in #{topic}.",
+  // Shown INSTEAD of the real title/body when the member has turned on
+  // "hide previews" (see pushPrivacy.ts). Says something arrived without
+  // naming who it is from or what it said.
+  "push:preview.hidden.title": "QueerPulse",
+  "push:preview.hidden.body": "You have a new notification.",
 };
 
 const pt: Record<string, string> = {
@@ -71,6 +76,8 @@ const pt: Record<string, string> = {
   "push:housing.match.bodyNoArea": "{title} corresponde a uma procura que guardaste.",
   "push:topic.newPost.title": "Nova publicação num tópico que segues",
   "push:topic.newPost.body": "{name} publicou em #{topic}.",
+  "push:preview.hidden.title": "QueerPulse",
+  "push:preview.hidden.body": "Tens uma notificação nova.",
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };

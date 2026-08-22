@@ -79,6 +79,7 @@ export function ForumPage() {
         <ComposeThreadModal
           initialTitle={page.composeSeed}
           initialTags={page.composeTags}
+          status={page.publishStatus}
           onClose={page.closeCompose}
           onPublish={page.publishThread}
         />

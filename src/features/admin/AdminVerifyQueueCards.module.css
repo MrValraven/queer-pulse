@@ -1,0 +1,15 @@
+/* One join-request card while its decision is still in flight. Pointer input
+   stops at the card, so a second click cannot land on a contradicting decision
+   before the server has answered the first one. `AdminVerifyQueue` guards the
+   handler itself as well, which covers the keyboard path. */
+.deciding {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deciding {
+    transition: none;
+  }
+}

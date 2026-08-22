@@ -22,6 +22,7 @@ import {
   upsertMessage,
 } from "./messageCache";
 import { API_BASE_URL, apiAvailable } from "./config";
+import { refreshSession } from "./client";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logInfo, logWarn } from "../observability/logger";
@@ -65,6 +66,14 @@ function realtimeUrl(): string | null {
 }
 
 /**
+ * Floor between two session refreshes asked for by the socket layer. The access
+ * cookie lives 15 minutes, so one attempt a minute is far more headroom than a
+ * legitimate expiry needs, while a gateway rejecting for some other reason can
+ * never turn into a refresh loop.
+ */
+const AUTH_REFRESH_COOLDOWN_MS = 60_000;
+
+/**
  * Opens one socket to `/chat` and funnels every frame through cache
  * invalidation, so the socket never has to know a page's component tree — only
  * its query keys. `dispose()` closes it for good.
@@ -99,21 +108,35 @@ class RealtimeClient {
    *  a genuine RECONNECT — the socket buffered nothing while it was down, so we
    *  reconcile the open thread's history since its last known message. */
   private hasConnectedBefore = false;
+  /** Epoch ms of the last refresh this socket asked for, for the cooldown. */
+  private lastAuthRefreshAt = 0;
   /** The signed-in member's user id, used to skip the echo of our OWN reaction
    *  (already patched optimistically by the mutation) so the frame's absolute
    *  counts never double-apply on top of that local delta. */
   private myUserId: string | null;
+  /** The signed-in member's handle (profile slug). A `message:new` frame's
+   *  `sender` is an `AuthorSummary`, which carries a handle and no id, so the
+   *  own-echo skip on that handler has to compare handles: the rest of the app
+   *  decides "is this mine" the same way (see `messageToChat`). */
+  private myHandle: string | null;
 
-  constructor(url: string, qc: QueryClient, myUserId: string | null) {
+  constructor(
+    url: string,
+    qc: QueryClient,
+    myUserId: string | null,
+    myHandle: string | null,
+  ) {
     this.url = url;
     this.qc = qc;
     this.myUserId = myUserId;
+    this.myHandle = myHandle;
   }
 
-  /** Update the known user id after (re)auth — the client outlives an auth
-   *  refresh, and the reaction-echo skip must key off the current member. */
-  setMyUserId(myUserId: string | null): void {
+  /** Update the known identity after (re)auth — the client outlives an auth
+   *  refresh, and the echo skips must key off the current member. */
+  setMyUserId(myUserId: string | null, myHandle: string | null): void {
     this.myUserId = myUserId;
+    this.myHandle = myHandle;
   }
 
   onStatus(cb: (connected: boolean) => void): () => void {
@@ -229,6 +252,23 @@ class RealtimeClient {
           void reconcileConversationHistory(this.qc, this.activeConversationId);
         }
       }
+      // A reconnect gap can also carry new messages in OTHER conversations, not
+      // just the one open above — those never streamed a `message:new` frame
+      // either (the socket buffered nothing while down), and
+      // `reconcileConversationHistory` only ever refreshes the ACTIVE thread's
+      // inbox row, and only when it actually merged something. Without this,
+      // a laptop sleep or a phone losing signal leaves the inbox list (previews
+      // + unread dots) and the nav DM badge stale until the member navigates
+      // away and back or reloads. `GET /conversations` already returns each
+      // row's own preview/unread straight from the DB, so a plain invalidate
+      // here is sufficient — no per-thread message reconciliation needed for
+      // threads that aren't open.
+      if (this.hasConnectedBefore) {
+        void this.qc.invalidateQueries({ queryKey: ["conversations"] });
+        void this.qc.invalidateQueries({
+          queryKey: ["conversations-unread-count"],
+        });
+      }
       this.hasConnectedBefore = true;
     });
     socket.on("disconnect", (reason) => {
@@ -240,8 +280,7 @@ class RealtimeClient {
       logWarn("realtime: connect error", { err: err.message });
     });
 
-    // Gateway auth/validation failures (incl. access-token expiry, which drops
-    // the socket so it reconnects with a freshly-refreshed cookie).
+    // Gateway auth/validation failures, including access-token expiry.
     socket.on("exception", (data) => {
       logWarn("realtime: gateway exception", { message: String(data.message) });
       // Platform lockdown: the server will refuse every handshake until an admin
@@ -260,7 +299,18 @@ class RealtimeClient {
       // than the maintenance screen until they navigate or otherwise act.
       if (data.code === "PLATFORM_LOCKED") {
         socket.io.reconnection(false);
+        return;
       }
+      // Access-token expiry. The gateway emits `Token expired` when the 15
+      // minute access cookie lapses under an open socket, and `Unauthorized`
+      // when a handshake is refused, then drops the connection. Nothing else
+      // refreshes that cookie: `request()` in client.ts only refreshes on an
+      // HTTP 401, and a member sitting on /messages makes no HTTP requests
+      // (frames are patched through this socket and `refetchOnWindowFocus` is
+      // off). So socket.io reconnected forever with the same dead cookie and
+      // presence, typing, receipts and new messages silently stopped after
+      // roughly 15 idle minutes. Refresh here instead, then reconnect.
+      void this.recoverFromAuthFailure(socket);
     });
 
     // Cache patching. An inbound message carries the full MessageResponse, so we
@@ -293,8 +343,16 @@ class RealtimeClient {
       // We received it → ack delivery so the SENDER's tick advances to a double
       // check. Only the joined (open) thread streams `message:new`, so this only
       // fires for a conversation the member is present in — exactly when
-      // "delivered" is true. Throttled; acking the echo of our own send is a
-      // harmless self-watermark advance (never rendered against our own bubbles).
+      // "delivered" is true. Throttled.
+      //
+      // Skip the echo of our OWN send: the backend broadcasts `message:new` to
+      // the whole room including the sender (see useMessageMutations.ts), so
+      // without this check every send emitted a pointless `delivered` frame
+      // back about our own message. Beyond the wasted traffic, a gateway that
+      // stores deliveredAt per participant would stamp the sender's own
+      // watermark from it and skew group "delivered to" counts. Mirrors the
+      // same own-echo skip on the `reaction` and `typing` handlers below.
+      if (this.myHandle && message.sender.handle === this.myHandle) return;
       this.scheduleDeliveredAck(conversationId);
     });
     // A `read` frame is a watermark update, not new content. Our OWN read is
@@ -334,6 +392,13 @@ class RealtimeClient {
       // never also match (and re-fetch) the unread-count key above, whose
       // second element is the string `"unread-count"`, not `false`.
       void this.qc.invalidateQueries({ queryKey: ["notifications", false] });
+      // The Mentions tab is a separate feed keyed `["mentions", demoMode,
+      // language]`, so the invalidation above never reaches it. Without this a
+      // new @-mention bumps the bell badge but the open Mentions tab keeps
+      // showing stale rows until a reload.
+      if (notification.type === "mention") {
+        void this.qc.invalidateQueries({ queryKey: ["mentions", false] });
+      }
     });
     // A new conversation (a group) the member was just added to — their inbox
     // doesn't know about it yet, so refetch the list. The member isn't in the
@@ -453,6 +518,40 @@ class RealtimeClient {
     }
   }
 
+  /**
+   * Refresh the session cookie after a gateway auth rejection, then reconnect.
+   *
+   * `refreshSession()` is already single-flighted in this tab and serialised
+   * across tabs by a Web Lock, so several sockets (or several tabs) hitting
+   * expiry at the same moment still spend the rotating refresh token once. The
+   * cooldown on top of that stops a gateway that rejects for some OTHER reason
+   * from turning into a refresh loop.
+   */
+  private async recoverFromAuthFailure(
+    socket: Socket<ServerListeners, ClientEmitters>,
+  ): Promise<void> {
+    const now = Date.now();
+    if (now - this.lastAuthRefreshAt < AUTH_REFRESH_COOLDOWN_MS) return;
+    this.lastAuthRefreshAt = now;
+    // Hold the reconnect loop while the refresh is in flight so the next
+    // attempt carries the new cookie instead of racing the dead one.
+    socket.io.reconnection(false);
+    const ok = await refreshSession();
+    // `dispose()` (sign-out, last consumer unmounted) may have run meanwhile.
+    if (this.socket !== socket) return;
+    if (!ok) {
+      // The session is genuinely gone, or the backend is unreachable. Stay
+      // disconnected rather than burning a JWT verify per second per idle tab:
+      // the next HTTP request's own 401 drives `onAuthLost` and the auth
+      // reconcile, and signing back in disposes this client and builds a fresh
+      // one with reconnection back at its default.
+      logWarn("realtime: auth refresh failed, staying disconnected");
+      return;
+    }
+    socket.io.reconnection(true);
+    socket.connect();
+  }
+
   dispose(): void {
     // Cancel a `connect()` whose dynamic import hasn't resolved yet — see the
     // guard at the top of `connectAsync`.
@@ -531,7 +630,11 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   // dependency (which would needlessly rebuild the socket on any auth refresh);
   // a separate effect below pushes later changes onto the live client.
   const myUserId = user?.id ?? null;
+  // The handle the `message:new` own-echo skip compares against: an
+  // `AuthorSummary` has no id. Mirrors `useMessageSearch`'s `myHandle`.
+  const myHandle = user?.profile.slug ?? null;
   const myUserIdRef = useRef(myUserId);
+  const myHandleRef = useRef(myHandle);
   // Keep the ref pointing at the latest committed user id so the connect effect
   // below can seed a freshly-built client without taking `user` as a socket
   // dependency. Written in an effect (not during render — react-hooks/refs) and
@@ -639,7 +742,12 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     if (!active) return;
     const url = realtimeUrl();
     if (!url) return;
-    const client = new RealtimeClient(url, queryClient, myUserIdRef.current);
+    const client = new RealtimeClient(
+      url,
+      queryClient,
+      myUserIdRef.current,
+      myHandleRef.current,
+    );
     clientRef.current = client;
     // Re-apply the desired thread onto the new client: a consumer may have asked
     // to join before this client existed (demand bump and connect race across
@@ -667,8 +775,9 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   // Keep the live client's known user id in sync with auth (it outlives a token
   // refresh), so the reaction-echo skip always keys off the current member.
   useEffect(() => {
-    clientRef.current?.setMyUserId(myUserId);
-  }, [myUserId]);
+    myHandleRef.current = myHandle;
+    clientRef.current?.setMyUserId(myUserId, myHandle);
+  }, [myUserId, myHandle]);
 
   const value = useMemo<RealtimeContextValue>(
     () => ({

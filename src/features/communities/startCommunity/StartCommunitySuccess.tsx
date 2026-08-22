@@ -25,7 +25,8 @@ export function StartCommunitySuccess({
       em={t("communities:start.success.em")}
       closeLabel={
         <>
-          {t("communities:start.success.closeLabel")} <FiArrowRight aria-hidden />
+          {t("communities:start.success.closeLabel")}{" "}
+          <FiArrowRight aria-hidden />
         </>
       }
       onClose={() => void navigate(`/community/${community.slug}`)}

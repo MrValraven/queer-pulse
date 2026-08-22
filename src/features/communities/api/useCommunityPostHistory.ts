@@ -11,12 +11,16 @@ import type {
   CommunityReplyHistoryEntry,
 } from "./communities.api";
 
-function authorName(entry: { author: CommunityPostHistoryEntry["author"] }): string {
+function authorName(entry: {
+  author: CommunityPostHistoryEntry["author"];
+}): string {
   return memberRefToPerson(entry.author)?.name ?? "";
 }
 
 // Community posts/replies have no title, so `previousTitle` is always null.
-function postEntryToRevision(entry: CommunityPostHistoryEntry): PostRevisionEntry {
+function postEntryToRevision(
+  entry: CommunityPostHistoryEntry,
+): PostRevisionEntry {
   return {
     id: entry.id,
     authorName: authorName(entry),
@@ -26,7 +30,9 @@ function postEntryToRevision(entry: CommunityPostHistoryEntry): PostRevisionEntr
   };
 }
 
-function replyEntryToRevision(entry: CommunityReplyHistoryEntry): PostRevisionEntry {
+function replyEntryToRevision(
+  entry: CommunityReplyHistoryEntry,
+): PostRevisionEntry {
   return {
     id: entry.id,
     authorName: authorName(entry),

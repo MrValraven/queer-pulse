@@ -150,7 +150,7 @@ export function StudioHelpPage() {
               <a
                 href="https://status.queerpulse.org"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 status.queerpulse.org
               </a>

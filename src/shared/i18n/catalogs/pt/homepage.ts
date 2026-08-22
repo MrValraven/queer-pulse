@@ -203,6 +203,10 @@ export const homepage: Catalog = {
   "stories.subtitle":
     "Ensaios, perfis e reportagens de dentro da comunidade: sem olhar de fora, sem termos de nos explicar.",
   "stories.imagePlaceholder": "imagem da história",
+  // LiveStories.tsx — a mesma secção a partir das peças publicadas na revista.
+  "liveStories.byline": "{author} · leitura de {minutes} min",
+  "liveStories.issueKicker": "Edição {number}",
+  "liveStories.magazineKicker": "Da revista",
 
   // ── ChangeMakers ───────────────────────────────────────────────────────────
   "changeMakers.eyebrow": "Agentes de mudança",

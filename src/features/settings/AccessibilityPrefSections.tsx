@@ -1,37 +1,57 @@
 import { type RefCallback } from "react";
+import { ComingSoon, Toggle } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type A11yPrefs } from "./accessibilityPreferences.data";
 import styles from "./AccessibilityPrefSections.module.css";
 
 type ToggleKey = keyof A11yPrefs;
 
+/**
+ * One preference row.
+ *
+ * `isComingSoon` marks a preference nothing is wired to yet: the row renders the
+ * badge and goes inert, so it can never report a change the app will not make.
+ * Only the two rows backed by a real store (reduce motion, skip link) stay live,
+ * and those persist the instant they are flipped.
+ */
 export function TglRow({
   title,
   description,
   checked,
   onChange,
+  isComingSoon,
+  hint,
 }: {
   title: string;
   description: string;
   checked: boolean;
   onChange: () => void;
+  isComingSoon?: boolean;
+  hint?: string;
 }) {
   return (
     <div className={styles.tglRow}>
       <div>
-        <div className={styles.tglTitle}>{title}</div>
+        <div className={styles.tglTitle}>
+          {title} {isComingSoon && <ComingSoon />}
+        </div>
         <div className={styles.tglDesc}>{description}</div>
+        {hint && <div className={styles.tglHint}>{hint}</div>}
       </div>
-      <label className={styles.tglSw}>
-        <input
-          type="checkbox"
-          aria-label={title}
+      <div
+        className={isComingSoon ? styles.inertControl : undefined}
+        inert={isComingSoon}
+      >
+        <Toggle
+          tone="coral"
           checked={checked}
-          onChange={onChange}
+          label={title}
+          onChange={() => {
+            if (isComingSoon) return;
+            onChange();
+          }}
         />
-        <div className={styles.tglTrack} />
-        <div className={styles.tglThumb} />
-      </label>
+      </div>
     </div>
   );
 }
@@ -45,9 +65,8 @@ interface SectionProps {
 export function A11yDisplaySection({
   prefs,
   onToggle,
-  onSizeChange,
   sectionRef,
-}: SectionProps & { onSizeChange: (v: number) => void }) {
+}: SectionProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.section} id="display" ref={sectionRef}>
@@ -59,18 +78,21 @@ export function A11yDisplaySection({
       </div>
       <div className={styles.toggleList}>
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.highContrast.title")}
           description={t("settings:a11y.toggle.highContrast.desc")}
           checked={prefs.highContrast}
           onChange={() => onToggle("highContrast")}
         />
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.largerText.title")}
           description={t("settings:a11y.toggle.largerText.desc")}
           checked={prefs.largerText}
           onChange={() => onToggle("largerText")}
         />
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.dyslexia.title")}
           description={t("settings:a11y.toggle.dyslexia.desc")}
           checked={prefs.dyslexia}
@@ -80,20 +102,22 @@ export function A11yDisplaySection({
       <div className={styles.sliderCard}>
         <div className={styles.sliderLabelRow}>
           <div className={styles.sliderLabel}>
-            {t("settings:a11y.textSize.label")}
+            {t("settings:a11y.textSize.label")} <ComingSoon />
           </div>
           <div className={styles.sliderVal}>{prefs.textSize}%</div>
         </div>
-        <input
-          type="range"
-          className={styles.sliderInput}
-          aria-label={t("settings:a11y.textSize.label")}
-          min={80}
-          max={160}
-          step={10}
-          value={prefs.textSize}
-          onChange={(e) => onSizeChange(Number(e.target.value))}
-        />
+        <div className={styles.inertControl} inert>
+          <input
+            type="range"
+            className={styles.sliderInput}
+            aria-label={t("settings:a11y.textSize.label")}
+            min={80}
+            max={160}
+            step={10}
+            value={prefs.textSize}
+            readOnly
+          />
+        </div>
         <div
           className={styles.previewText}
           style={{ fontSize: `${(prefs.textSize / 100) * 16}px` }}
@@ -123,10 +147,12 @@ export function A11yMotionSection({
         <TglRow
           title={t("settings:a11y.toggle.reduceMotion.title")}
           description={t("settings:a11y.toggle.reduceMotion.desc")}
+          hint={t("settings:a11y.instantSaveHint")}
           checked={prefs.reduceMotion}
           onChange={() => onToggle("reduceMotion")}
         />
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.pauseDecorative.title")}
           description={t("settings:a11y.toggle.pauseDecorative.desc")}
           checked={prefs.pauseDecorative}
@@ -176,9 +202,8 @@ const SWATCH_OPTIONS = [
 export function A11yReadingSection({
   prefs,
   onToggle,
-  onColorTheme,
   sectionRef,
-}: SectionProps & { onColorTheme: (t: string) => void }) {
+}: SectionProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.section} id="reading" ref={sectionRef}>
@@ -190,12 +215,14 @@ export function A11yReadingSection({
       </div>
       <div className={styles.toggleList}>
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.wideSpacing.title")}
           description={t("settings:a11y.toggle.wideSpacing.desc")}
           checked={prefs.wideSpacing}
           onChange={() => onToggle("wideSpacing")}
         />
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.focusRings.title")}
           description={t("settings:a11y.toggle.focusRings.desc")}
           checked={prefs.focusRings}
@@ -205,20 +232,19 @@ export function A11yReadingSection({
       <div className={styles.sliderCard}>
         <div className={styles.sliderLabelRow}>
           <div className={styles.sliderLabel}>
-            {t("settings:a11y.colorTheme.label")}
+            {t("settings:a11y.colorTheme.label")} <ComingSoon />
           </div>
         </div>
         <div className={styles.colorThemeLabel}>
           {t("settings:a11y.colorTheme.headingLabel")}
         </div>
-        <div className={styles.colorSwatches}>
+        <div className={`${styles.colorSwatches} ${styles.inertControl}`} inert>
           {SWATCH_OPTIONS.map(({ theme, swatchClassName, titleKey }) => (
-            <button
-              type="button"
+            <span
               key={theme}
+              role="img"
               title={t(titleKey)}
               aria-label={t(titleKey)}
-              aria-pressed={prefs.colorTheme === theme}
               className={[
                 styles.colorSwatch,
                 swatchClassName,
@@ -226,7 +252,6 @@ export function A11yReadingSection({
               ]
                 .filter(Boolean)
                 .join(" ")}
-              onClick={() => onColorTheme(theme)}
             />
           ))}
         </div>
@@ -251,12 +276,14 @@ export function A11yInteractionSection({
       </div>
       <div className={styles.toggleList}>
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.largeTargets.title")}
           description={t("settings:a11y.toggle.largeTargets.desc")}
           checked={prefs.largeTargets}
           onChange={() => onToggle("largeTargets")}
         />
         <TglRow
+          isComingSoon
           title={t("settings:a11y.toggle.stickyNav.title")}
           description={t("settings:a11y.toggle.stickyNav.desc")}
           checked={prefs.stickyNav}
@@ -265,6 +292,7 @@ export function A11yInteractionSection({
         <TglRow
           title={t("settings:a11y.toggle.skipLink.title")}
           description={t("settings:a11y.toggle.skipLink.desc")}
+          hint={t("settings:a11y.instantSaveHint")}
           checked={prefs.skipLink}
           onChange={() => onToggle("skipLink")}
         />

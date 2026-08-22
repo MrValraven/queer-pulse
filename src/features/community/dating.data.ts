@@ -12,7 +12,7 @@ export interface App {
 export const APPS: App[] = [
   {
     icon: "Gr",
-    iconBackground: "rgba(232,119,90,.15)",
+    iconBackground: "rgba(var(--accent-rgb), .15)",
     iconColor: "var(--accent-ink)",
     name: "Grindr",
     audienceKey: "community:dating.app.grindr.audience",
@@ -26,7 +26,7 @@ export const APPS: App[] = [
   },
   {
     icon: "Sc",
-    iconBackground: "rgba(45,27,61,.1)",
+    iconBackground: "rgba(var(--plum-rgb), .1)",
     iconColor: "var(--plum)",
     name: "Scruff",
     audienceKey: "community:dating.app.scruff.audience",
@@ -40,7 +40,7 @@ export const APPS: App[] = [
   },
   {
     icon: "HER",
-    iconBackground: "rgba(74,140,111,.14)",
+    iconBackground: "rgba(var(--jade-rgb), .14)",
     iconColor: "var(--jade)",
     name: "HER",
     audienceKey: "community:dating.app.her.audience",
@@ -54,7 +54,7 @@ export const APPS: App[] = [
   },
   {
     icon: "Fe",
-    iconBackground: "rgba(122,82,184,.14)",
+    iconBackground: "rgba(var(--violet-rgb), .14)",
     iconColor: "var(--violet)",
     name: "Feeld",
     audienceKey: "community:dating.app.feeld.audience",
@@ -69,7 +69,7 @@ export const APPS: App[] = [
   },
   {
     icon: "Ho",
-    iconBackground: "rgba(232,119,90,.15)",
+    iconBackground: "rgba(var(--accent-rgb), .15)",
     iconColor: "var(--accent-ink)",
     name: "Hornet",
     audienceKey: "community:dating.app.hornet.audience",
@@ -83,7 +83,7 @@ export const APPS: App[] = [
   },
   {
     icon: "OK",
-    iconBackground: "rgba(45,27,61,.08)",
+    iconBackground: "rgba(var(--plum-rgb), .08)",
     iconColor: "var(--plum)",
     name: "OkCupid",
     audienceKey: "community:dating.app.okcupid.audience",

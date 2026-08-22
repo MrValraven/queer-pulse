@@ -1281,6 +1281,10 @@ export const magazine: Catalog = {
   "write.header.savedSaving": "Saving…",
   "write.header.savedError": "Couldn't save, will retry",
   "write.header.savedOk": "All changes saved",
+  "write.header.savedUnsaved": "Unsaved changes",
+  "write.header.retrySave": "Retry save",
+  "write.header.leaveConfirm":
+    "Some edits haven't reached the server yet. Leave the editor?",
   "write.header.issueScheduled": "Scheduled in an issue",
 
   // ── Draft/Shape/Read mode seg (editorMode.ts) ────────────────────────────
@@ -1364,6 +1368,12 @@ export const magazine: Catalog = {
   "write.selection.emphasis": "Emphasis",
   "write.selection.strong": "Strong",
   "write.selection.link": "Link",
+  "write.selection.linkFieldLabel": "Link address",
+  "write.selection.linkPlaceholder": "https://example.com",
+  "write.selection.linkApply": "Add link",
+  "write.selection.linkCancel": "Cancel link",
+  "write.selection.linkInvalid":
+    "Use a full web address like https://example.com, or an email address like mailto:hello@example.com.",
 
   // ── PublishRail ────────────────────────────────────────────────────────────
   "write.publish.title": "Publish",
@@ -1594,7 +1604,7 @@ export const magazine: Catalog = {
   "writer.work.setActive": "Use for byline & terms",
 
   // ── BriefDetailModal ─────────────────────────────────────────────────────
-  "writer.brief.title": "Brief — {title}",
+  "writer.brief.title": "Brief: {title}",
   "writer.brief.angleLabel": "Angle",
   "writer.brief.wantsLabel": "What we want",
   "writer.brief.emptyWants": "No specific asks noted.",
@@ -1738,4 +1748,52 @@ export const magazine: Catalog = {
   "comments.report.errorTitle": "Something went wrong",
   "comments.report.errorBody": "We couldn't send your report. Please try again.",
   "comments.report.retryCta": "Try again",
+
+  // ── Shared load-failure panel (MagazineLoadError, FE-CNT-08) ─────────────
+  // Distinct from the not-found walls above: a 404 means the piece does not
+  // exist, this means the request failed and is worth retrying.
+  "load.errorMetaTitle": "Couldn't load: QueerPulse Magazine",
+  "load.errorTitle": "We couldn't load this.",
+  "load.errorBody":
+    "Something interrupted us on the way here. The piece is still there, so give it another try.",
+  "load.retryCta": "Try again",
+  "load.backCta": "Back to the magazine",
+
+  // ── Page metadata for the ungated reading surfaces (FE-CNT-12) ───────────
+  "author.notFoundMetaTitle": "Writer not found: QueerPulse Magazine",
+  "author.metaTitle": "{name}: QueerPulse Magazine",
+  "author.metaDescription":
+    "Everything {name} has written for QueerPulse Magazine.",
+  "issue.metaTitle": "Issue {number}, {title}: QueerPulse Magazine",
+  "issue.metaTitleNumberOnly": "Issue {number}: QueerPulse Magazine",
+  "issue.metaTitleFallback": "The issue: QueerPulse Magazine",
+  "issue.metaDescription": "One issue of QueerPulse Magazine, cover to cover.",
+  "sectionArticles.metaTitle": "{section}: QueerPulse Magazine",
+  "sectionArticles.metaDescription": "Every piece we've run in {section}.",
+
+  // ── Live adapters (magazine.adapters.tsx, FE-CNT-16) ─────────────────────
+  // Labels the live API rows are rendered with. They used to be built by
+  // string concatenation in the adapter, so Portuguese readers saw English
+  // issue chrome on live author pages and issue covers.
+  "live.issueBadge": "Issue {number}",
+  "live.issueBadgeCurrent": "Issue {number} · Current",
+  "live.issueBadgeInaugural": "Issue {number} · Inaugural",
+  "live.issueCover": "Issue {number} · {title}",
+  "live.publishedOn": "Published {date}",
+  "live.fromTheMagazine": "From the magazine",
+  "live.sectionFallback": "Feature",
+  "live.featureIssue": "Feature · Issue {number}",
+  "live.readMinutes": "{minutes} min",
+  "live.web": "Web",
+
+  // ── Article editor: slash menu + block removal undo ──────────────────────
+  "write.slash.menuAria": "Insert a block",
+  "write.block.removedToast": "Block removed.",
+  "write.block.undoRemove": "Undo",
+
+  // ── Reader comments: delete confirmation (FE-CNT-11) ─────────────────────
+  "comments.deleteConfirm.title": "Delete this comment?",
+  "comments.deleteConfirm.body":
+    "It will be replaced with a note saying the comment was deleted. This can't be undone.",
+  "comments.deleteConfirm.cta": "Delete comment",
 };

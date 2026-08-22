@@ -17,7 +17,7 @@ export interface ResolveEditSuggestionVars {
  * resolves after a short simulated delay and never touches the network — the
  * fixture must not appear to mutate platform truth (mirrors
  * `useSetListingStatus`). Live mode PATCHes
- * `/listings/admin/edit-suggestions/:id` and invalidates the list query.
+ * `/admin/listings/edit-suggestions/:id` and invalidates the list query.
  */
 export function useResolveEditSuggestion() {
   const { demoMode } = useDemoMode();

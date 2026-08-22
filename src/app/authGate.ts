@@ -2,6 +2,7 @@ import { matchPath, useLocation } from "react-router-dom";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
 import { linkToPath, routes } from "./routeMap";
+import { safeInternalPath } from "../shared/lib/safeInternalPath";
 import type { StaffRoleId } from "../features/admin/staffRoles.registry";
 
 /**
@@ -81,6 +82,25 @@ const GATED_PATTERNS: string[] = [
   "/vouch",
   "/magazine/submit-story",
   "/magazine/apply-to-write",
+  // Posting, editing and triaging volunteer opportunities. The volunteer
+  // LISTING (`/about/volunteer`) and each opportunity's detail page stay public
+  // so anyone can see what the platform needs help with; these three are the
+  // organiser-side surfaces, whose forms 401 for a logged-out visitor and whose
+  // URLs have no business being indexed.
+  routes.postVolunteer,
+  routes.editVolunteer,
+  routes.manageVolunteerApplicants,
+  // The writer pitch tracker — a staff surface that happens to sit outside the
+  // `/magazine/writer` prefix. Gated here and capability-gated below.
+  routes.pitchTracker,
+  // Block & mute is an account-settings surface that lives under /safety, where
+  // the crisis pages around it are deliberately public.
+  routes.blockMute,
+  // The one-time onboarding wizard (and its legacy `/auth/welcome` alias). The
+  // one-time gate further down only fires for members who are already logged
+  // in, so without this a logged-out visitor rendered the whole wizard.
+  routes.onboarding,
+  routes.welcome,
   // Local discovery — directory & map (safe-spaces / visas / arriving stay public)
   "/local/directory",
   "/local/directory/*",
@@ -202,6 +222,17 @@ const MOD_PATTERNS: string[] = ["/mod/*"];
 const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   routes.adminModeration,
   `${routes.adminModeration}/*`,
+  // `admin-verification.controller.ts` is `@Roles(Moderator, Admin)` on the
+  // whole controller (the level console, the review queue, bulk decisions and
+  // per-member history alike), so moderators are meant to work this queue.
+  routes.adminVerifications,
+  `${routes.adminVerifications}/*`,
+  // Same for the platform join-request queue: every route on
+  // `join-requests.controller.ts` that a reviewer touches (list, bulk, sample,
+  // PATCH :id) carries `@Roles(Moderator, Admin)`. The queue also renders as a
+  // tab of the admin-only `/admin/members`; this dedicated path is how a
+  // moderator gets to it.
+  routes.adminJoinRequests,
 ];
 
 /**
@@ -214,7 +245,12 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
  */
 const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
   { patterns: ["/magazine/editor", "/magazine/editor/*"], capability: "magazine_editor" },
-  { patterns: ["/magazine/writer", "/magazine/writer/*"], capability: "magazine_writer" },
+  {
+    // The pitch tracker is the writer workspace's third tab; it just happens to
+    // be registered outside the `/magazine/writer` prefix.
+    patterns: ["/magazine/writer", "/magazine/writer/*", routes.pitchTracker],
+    capability: "magazine_writer",
+  },
 ];
 
 /**
@@ -234,12 +270,6 @@ const GUEST_ONLY_PATTERNS: string[] = [
 /** True when a path is only meaningful to logged-out visitors. */
 export function isGuestOnlyPath(pathname: string): boolean {
   return matchesAny(pathname, GUEST_ONLY_PATTERNS);
-}
-
-/** Only honour same-origin internal paths from `?next=` (avoids open redirects). */
-function safeNext(next: string | null): string {
-  if (next && next.startsWith("/") && !next.startsWith("//")) return next;
-  return "/feed";
 }
 
 /** The role a path demands, or null when logged-in access is sufficient. */
@@ -370,7 +400,7 @@ export function useAuthGateRedirect(): string | null {
     // Nothing to sign into when you're already in — send members on to their
     // feed (or the `?next=` they were headed for) instead of the auth screens.
     if (isGuestOnlyPath(pathname)) {
-      return safeNext(new URLSearchParams(search).get("next"));
+      return safeInternalPath(new URLSearchParams(search).get("next"));
     }
     // The post-signup onboarding wizard is one-time. A member who already
     // finished it (onboardedAt set — backfilled for pre-existing members) has no

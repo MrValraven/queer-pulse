@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiGet } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type { FeedItem, Paginated } from "../../../shared/contracts/contracts";
 import type { FeedTab } from "../feed.data";
@@ -42,13 +42,8 @@ export async function getFeed(tab: FeedTab, cursor?: string) {
   return toPage(res);
 }
 
-/** POST /community-posts/:id/like — like/unlike toggle. */
-export const likePost = (id: string, liked: boolean) =>
-  apiPost<{ liked: boolean; likeCount: number }>(
-    `/community-posts/${id}/like`,
-    { liked },
-  );
-
-/** POST /community-posts/:id/replies — reply to a feed post. */
-export const replyToPost = (id: string, body: string) =>
-  apiPost<{ id: string }>(`/community-posts/${id}/replies`, { body });
+// `likePost` / `replyToPost` used to live here, behind `useFeedMutations`'s
+// `useLikePost` / `useReplyToPost`. Neither hook ever had a consumer: the feed
+// cards route their like and reply actions through the COMMUNITIES feature's
+// `useCommunityMutations` instead. Both the hooks and these two calls were
+// removed rather than left as a second, divergent path to the same endpoints.

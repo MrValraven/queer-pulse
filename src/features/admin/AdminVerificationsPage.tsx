@@ -1,29 +1,25 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
-import { FiAlertTriangle } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  SearchInput,
-  Select,
-  SegmentedControl,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { useRef, useState } from "react";
+import { Button, FadeIn, SegmentedControl } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDebouncedValue } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { routes } from "../../app/routeMap";
 import { AdminVerificationRows } from "./AdminVerificationRows";
 import { VerificationDetailDrawer } from "./VerificationDetailDrawer";
-import { VerificationRequestRows } from "./VerificationRequestRows";
 import { VerificationRequestDrawer } from "./VerificationRequestDrawer";
-import { VerificationBulkActionBar } from "./VerificationBulkActionBar";
 import { VerificationBulkRejectModal } from "./VerificationBulkRejectModal";
+import {
+  RequestQueueHeader,
+  ReviewQueueResults,
+  ReviewQueueStatusTabs,
+  RowsSkeleton,
+  VerificationsErrorState,
+} from "./AdminVerificationsSections";
 import { useReviewQueueKeyboardShortcuts } from "./useReviewQueueKeyboardShortcuts";
+import { useReviewQueueNextInQueue } from "./useReviewQueueNextInQueue";
 import { useReviewQueueSelection } from "./useReviewQueueSelection";
 import {
   AdminVerificationsHeader,
@@ -42,7 +38,6 @@ import type {
   VerificationRequestSort,
   VerificationRequestStatusFilter,
 } from "./api/adminVerifications.api";
-import headerStyles from "./AdminVerificationsHeader.module.css";
 import submissionStyles from "./AdminSubmissionList.module.css";
 import styles from "./AdminVerificationsPage.module.css";
 
@@ -50,20 +45,6 @@ const LEVEL_TABS: VerificationLevelFilter[] = ["all", ...VERIFICATION_LEVELS];
 
 type PageView = "reviewQueue" | "directOverride";
 const VIEWS: PageView[] = ["reviewQueue", "directOverride"];
-
-/** The Review-queue segment's status tabs, in the order Task 9 specifies —
- *  "All" trailing rather than leading, unlike the level console's tabs
- *  (that console has no equivalent "everything is fine" default status). */
-const REQUEST_STATUS_TABS: VerificationRequestStatusFilter[] = [
-  "pending",
-  "in_review",
-  "approved",
-  "rejected",
-  "appealing",
-  "all",
-];
-
-const REQUEST_SORT_OPTIONS: VerificationRequestSort[] = ["recent", "oldest"];
 
 /**
  * Admin verification console (`/admin/verifications`). Two independent
@@ -143,9 +124,8 @@ export function AdminVerificationsPage() {
  *   `useReviewQueueKeyboardShortcuts`;
  * - next-in-queue: `handleRequestDecided` (passed to the drawer as
  *   `onDecided`) opens the row that followed the just-decided one in the
- *   list AS IT STOOD when the drawer was opened (`openOrderRef`, frozen on
- *   open rather than re-read live, so a background refetch mid-review can't
- *   reshuffle what "next" means underneath the reviewer).
+ *   queue order frozen when the drawer was opened. See
+ *   `useReviewQueueNextInQueue`.
  */
 function ReviewQueueSegment() {
   const { t } = useTranslation();
@@ -208,26 +188,11 @@ function ReviewQueueSegment() {
     resetSelectionAndFocus();
   }
 
-  // The list order as it stood the moment the drawer opened for the request
-  // currently inside it — deliberately NOT re-synced on every `rows` change,
-  // only when `selectedRequestId` itself changes (a fresh open). This is
-  // what `handleRequestDecided` below reads "next" from.
-  const openOrderRef = useRef<string[]>([]);
-  useEffect(() => {
-    if (selectedRequestId) {
-      openOrderRef.current = rows.map((row) => row.id);
-    }
-    // Intentionally omits `rows`: this snapshots the queue order once, when
-    // a request is opened, not on every background refetch while it's open.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRequestId]);
-
-  function handleRequestDecided(decidedRequestId: string) {
-    const order = openOrderRef.current;
-    const index = order.indexOf(decidedRequestId);
-    const nextId = index >= 0 ? (order[index + 1] ?? null) : null;
-    setSelectedRequestId(nextId);
-  }
+  const handleRequestDecided = useReviewQueueNextInQueue({
+    rows,
+    selectedRequestId,
+    onSelectRequest: setSelectedRequestId,
+  });
 
   useReviewQueueKeyboardShortcuts({
     rows,
@@ -269,19 +234,11 @@ function ReviewQueueSegment() {
   return (
     <>
       <FadeIn delay={60}>
-        <AdminTabs
-          tabs={REQUEST_STATUS_TABS.map((tabStatus) => ({
-            id: tabStatus,
-            label:
-              tabStatus === "all"
-                ? t("admin:verifications.requests.tabs.all")
-                : t(`admin:verifications.requests.tabs.${tabStatus}`),
-            count: tabStatus === "all" ? totalCount : counts[tabStatus],
-          }))}
-          active={status}
-          onChange={(nextStatus) =>
-            handleStatusChange(nextStatus as VerificationRequestStatusFilter)
-          }
+        <ReviewQueueStatusTabs
+          status={status}
+          counts={counts}
+          totalCount={totalCount}
+          onChange={handleStatusChange}
         />
       </FadeIn>
 
@@ -300,47 +257,22 @@ function ReviewQueueSegment() {
       </p>
 
       <FadeIn delay={80}>
-        {isLoading ? (
-          <RowsSkeleton />
-        ) : isError && rows.length === 0 ? (
-          <VerificationsErrorState onRetry={() => void refetch()} />
-        ) : rows.length === 0 ? (
-          <p className={submissionStyles.emptyLine}>
-            {t("admin:verifications.requests.empty")}
-          </p>
-        ) : (
-          <>
-            <VerificationRequestRows
-              rows={rows}
-              onOpen={setSelectedRequestId}
-              selectedIds={selectedIds}
-              onToggle={toggleSelected}
-              onToggleAll={toggleSelectAll}
-              atSelectionCap={atSelectionCap}
-              focusedRequestId={focusedRequestId}
-            />
-            {selectedIds.size > 0 && (
-              <VerificationBulkActionBar
-                selectedIds={selectedIds}
-                onClear={() => setSelectedIds(new Set())}
-              />
-            )}
-            {hasNextPage && (
-              <div className={submissionStyles.loadMore}>
-                <Button
-                  variant="ghost"
-                  size="md"
-                  disabled={isFetchingNextPage}
-                  onClick={() => void fetchNextPage()}
-                >
-                  {isFetchingNextPage
-                    ? t("admin:verifications.loadingMore")
-                    : t("admin:verifications.loadMore")}
-                </Button>
-              </div>
-            )}
-          </>
-        )}
+        <ReviewQueueResults
+          rows={rows}
+          isLoading={isLoading}
+          isError={isError}
+          onRetry={() => void refetch()}
+          onOpen={setSelectedRequestId}
+          selectedIds={selectedIds}
+          onToggle={toggleSelected}
+          onToggleAll={toggleSelectAll}
+          atSelectionCap={atSelectionCap}
+          focusedRequestId={focusedRequestId}
+          onClearSelection={() => setSelectedIds(new Set())}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          onLoadMore={() => void fetchNextPage()}
+        />
       </FadeIn>
 
       {selectedRequestId && (
@@ -360,84 +292,6 @@ function ReviewQueueSegment() {
         />
       )}
     </>
-  );
-}
-
-/**
- * A small search+sort variant for the request queue (Task 9's alternative to
- * reusing `AdminVerificationsHeader` — that component's sort options include
- * "Highest level", which doesn't make sense for a request queue sorted by
- * submission date, not a member's level). Visually mirrors it exactly by
- * reusing its own CSS module rather than forking the styles. Same debounced-
- * search idiom as `AdminVerificationsHeader`: the search field keeps its own
- * local state so typing feels instant, and only pushes `query` upward once
- * the moderator pauses for 300ms; `sort` is otherwise fully controlled.
- */
-function RequestQueueHeader({
-  query,
-  sort,
-  onQueryChange,
-  onSortChange,
-  searchInputWrapperRef,
-}: {
-  query: string;
-  sort: VerificationRequestSort;
-  onQueryChange: (query: string) => void;
-  onSortChange: (sort: VerificationRequestSort) => void;
-  /** Wraps just the search field (not the whole header) so the segment's `/`
-   *  keyboard shortcut can find and focus its `<input>` without also
-   *  matching the sort `<Select>`'s own internals. */
-  searchInputWrapperRef?: RefObject<HTMLDivElement | null>;
-}) {
-  const { t } = useTranslation();
-  const [queryInput, setQueryInput] = useState(query);
-  const debouncedQueryInput = useDebouncedValue(queryInput, 300);
-
-  // Reads the latest `query`/`onQueryChange` from a ref (rather than closing
-  // over them directly) so this effect only fires when the debounced text
-  // itself settles, never when `query` changes for another reason — same
-  // pattern as `AdminVerificationsHeader`.
-  const latestQueryRef = useRef(query);
-  const latestOnQueryChangeRef = useRef(onQueryChange);
-  useEffect(() => {
-    latestQueryRef.current = query;
-    latestOnQueryChangeRef.current = onQueryChange;
-  });
-
-  useEffect(() => {
-    if (debouncedQueryInput !== latestQueryRef.current) {
-      latestOnQueryChangeRef.current(debouncedQueryInput);
-    }
-  }, [debouncedQueryInput]);
-
-  return (
-    <div className={headerStyles.header}>
-      <div ref={searchInputWrapperRef} className={headerStyles.search}>
-        <SearchInput
-          value={queryInput}
-          onChange={setQueryInput}
-          placeholder={t("admin:verifications.requests.search.placeholder")}
-          ariaLabel={t("admin:verifications.requests.search.ariaLabel")}
-        />
-      </div>
-
-      <label className={headerStyles.sort}>
-        <span className={headerStyles.sortLabel}>
-          {t("admin:verifications.sort.label")}
-        </span>
-        <Select
-          size="sm"
-          value={sort}
-          options={REQUEST_SORT_OPTIONS.map((option) => ({
-            value: option,
-            label: t(`admin:verifications.requests.sort.${option}`),
-          }))}
-          onChange={(value) =>
-            onSortChange((value ?? sort) as VerificationRequestSort)
-          }
-        />
-      </label>
-    </div>
   );
 }
 
@@ -542,35 +396,5 @@ function DirectOverrideSegment() {
         />
       )}
     </>
-  );
-}
-
-/** Branded, retryable error state — mirrors `ListingQueueErrorState` in
- *  `AdminListingsPage`. A failed live fetch must read as an outage a
- *  moderator can recover from, never as a false "no records yet". Demo mode
- *  never errors, so this only ever fires against the real API. */
-function VerificationsErrorState({ onRetry }: { onRetry: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <EmptyState
-      icon={<FiAlertTriangle />}
-      title={t("common:error.title")}
-      description={t("common:error.description")}
-      action={{ label: t("common:error.retry"), onClick: onRetry }}
-    />
-  );
-}
-
-function RowsSkeleton() {
-  return (
-    <div className={submissionStyles.rows}>
-      {[0, 1, 2].map((skeletonIndex) => (
-        <SkeletonLine
-          key={skeletonIndex}
-          height={92}
-          style={{ borderRadius: 22 }}
-        />
-      ))}
-    </div>
   );
 }

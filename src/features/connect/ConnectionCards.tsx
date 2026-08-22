@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiFlag, FiMessageCircle, FiSlash, FiVolumeX } from "react-icons/fi";
 import { Button, MemberIdentity } from "../../shared/components/ui";
-import { useConnect } from "../../app/providers/useConnect";
-import { useSocial } from "../../app/providers/useSocial";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
-import { useConnectionActions } from "./api/useConnectionActions";
 import { reasonLabel } from "./connectModal.data";
-import { ConnectionReportModal } from "./ConnectionReportModal";
+import { ConnectionMoreMenu } from "./ConnectionMoreMenu";
 import {
   profilePath,
   vouchBadgeLabelKey,
@@ -18,151 +13,15 @@ import {
 } from "./connections.data";
 import styles from "./ConnectionsPage.module.css";
 
-const MoreIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-    <circle cx="12" cy="5" r="2" />
-    <circle cx="12" cy="12" r="2" />
-    <circle cx="12" cy="19" r="2" />
-  </svg>
-);
-
-/** Keyboard-accessible per-connection menu: Message / Mute / Block / Report. */
-function ConnectionMoreMenu({
-  slug,
-  id,
-  name,
-}: {
-  slug: string;
-  /** Backend connection id (live mode); absent in demo. */
-  id?: string;
-  name: string;
-}) {
-  const { openConnect } = useConnect();
-  const { isBlocked, isMuted, toggleMute } = useSocial();
-  const { block, unblock } = useConnectionActions();
-  const { showToast } = useToast();
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [reporting, setReporting] = useState(false);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const first = name.split(" ")[0]!;
-
-  useEffect(() => {
-    if (!open) return;
-    function onDocClick(e: MouseEvent) {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node))
-        setOpen(false);
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("mousedown", onDocClick);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDocClick);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  const items: {
-    label: string;
-    icon: React.ReactNode;
-    danger?: boolean;
-    run: () => void;
-  }[] = [
-    {
-      label: t("connect:moreMenu.message"),
-      icon: <FiMessageCircle />,
-      run: () => openConnect(slug),
-    },
-    {
-      label: isMuted(slug)
-        ? t("connect:moreMenu.unmute", { name: first })
-        : t("connect:moreMenu.mute", { name: first }),
-      icon: <FiVolumeX />,
-      run: () =>
-        showToast(
-          toggleMute(slug)
-            ? t("connect:moreMenu.toastMuted", { name: first })
-            : t("connect:moreMenu.toastUnmuted", { name: first }),
-          "success",
-        ),
-    },
-    {
-      label: isBlocked(slug)
-        ? t("connect:moreMenu.unblock", { name: first })
-        : t("connect:moreMenu.block", { name: first }),
-      icon: <FiSlash />,
-      danger: true,
-      run: () => {
-        const wasBlocked = isBlocked(slug);
-        void (wasBlocked ? unblock({ slug, id }) : block({ slug, id }));
-        showToast(
-          wasBlocked
-            ? t("connect:moreMenu.toastUnblocked", { name: first })
-            : t("connect:moreMenu.toastBlocked", { name: first }),
-          "success",
-        );
-      },
-    },
-    {
-      label: t("connect:moreMenu.report"),
-      icon: <FiFlag />,
-      danger: true,
-      run: () => setReporting(true),
-    },
-  ];
-
-  return (
-    <div className={styles.moreWrap} ref={wrapRef}>
-      <button
-        type="button"
-        className={styles.more}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label={t("connect:moreMenu.ariaMore", { name })}
-        onClick={() => setOpen((o) => !o)}
-      >
-        <MoreIcon />
-      </button>
-      {open && (
-        <div className={styles.menu} role="menu">
-          {items.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              role="menuitem"
-              className={[styles.menuItem, item.danger && styles.menuDanger]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => {
-                setOpen(false);
-                item.run();
-              }}
-            >
-              <span aria-hidden>{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
-        </div>
-      )}
-      {reporting && (
-        <ConnectionReportModal
-          subjectId={slug}
-          name={name}
-          onClose={() => setReporting(false)}
-        />
-      )}
-    </div>
-  );
-}
-
 export function CardHead({
   view,
   more,
+  onMessage,
 }: {
   view: ConnectionView;
   more?: boolean;
+  /** Opens the conversation from the kebab; omit where messaging isn't apt. */
+  onMessage?: () => void;
 }) {
   // Staff role is resolved from the shared roster map (same source the message
   // picker uses); MemberIdentity renders the StaffBadge from it.
@@ -186,6 +45,7 @@ export function CardHead({
           slug={view.slug}
           id={view.meta.id}
           name={view.name}
+          onMessage={onMessage}
         />
       )}
     </div>
@@ -303,7 +163,7 @@ export function AllConnectionCard({
         .filter(Boolean)
         .join(" ")}
     >
-      <CardHead view={view} more />
+      <CardHead view={view} more onMessage={onMessage} />
       {blocked && (
         <span className={styles.blockedBadge}>
           {t("connect:card.blockedBadge")}
@@ -346,7 +206,10 @@ export function IncomingCard({
   const reason = reasonLabel(requestReason, t);
   return (
     <div className={`${styles.card} ${styles.pending}`}>
-      <CardHead view={view} />
+      {/* The kebab carries Mute / Block / Report. Without it a member had to
+          accept an unwanted request just to reach those actions. No Message
+          item here: the conversation only opens once the request is accepted. */}
+      <CardHead view={view} more />
       {introducedBy && (
         <p className={styles.introBy}>
           <Translation
@@ -408,7 +271,7 @@ export function SentCard({
   const { t } = useTranslation();
   return (
     <div className={styles.card}>
-      <CardHead view={view} />
+      <CardHead view={view} more />
       <div className={styles.meta}>
         <span className={styles.metaMuted}>
           {view.meta.sentAgo ? (

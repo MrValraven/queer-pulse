@@ -58,7 +58,7 @@ const EMPTY: Omit<AdminRoadmapView, "loading"> = {
  * and idea (published or not), the team roster, the recent audit trail, and
  * the hero-stat chips shown atop the public page. Demo mode reads (and
  * seeds) the localStorage-backed `readDemoRoadmap()` store; live mode calls
- * `GET /roadmap/admin` (admin-only — a non-admin gets a 403).
+ * `GET /admin/roadmap` (admin-only — a non-admin gets a 403).
  */
 export function useAdminRoadmap(): AdminRoadmapView {
   const { demoMode } = useDemoMode();

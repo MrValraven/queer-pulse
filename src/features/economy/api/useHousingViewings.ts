@@ -34,6 +34,12 @@ export function useRequestHousingViewing() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<HousingViewingDTO | null, Error, RequestViewingBody>({
+    // RequestViewingModal owns this write's error UI: an
+    // AFFIRMING_PLEDGE_REQUIRED 403 opens the pledge prompt (never a toast),
+    // and anything else gets the modal's own message. Without this the global
+    // MutationCache handler would toast "You don't have access to that."
+    // alongside the pledge modal.
+    meta: { silentError: true },
     mutationFn: async (body) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, 650));

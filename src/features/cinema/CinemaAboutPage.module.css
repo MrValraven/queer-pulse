@@ -348,7 +348,7 @@
 @media (hover: hover) {
   .curatorCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 30px -22px rgba(45, 27, 61, 0.28);
+    box-shadow: 0 14px 30px -22px rgba(var(--plum-rgb), 0.28);
     border-color: rgba(var(--cream-rgb), 0.24);
     background: rgba(var(--cream-rgb), 0.06);
   }

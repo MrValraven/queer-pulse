@@ -1,0 +1,179 @@
+/* Poster-side applications console. Cream page, paper cards, one column: the
+   reading task is "who applied and what did they say", so the layout stays a
+   single measured column rather than a grid of cramped tiles. */
+
+.page {
+  max-width: 860px;
+  margin-inline: auto;
+  padding-inline: 20px;
+  padding-block: 32px 88px;
+}
+
+.head {
+  margin-block-end: 28px;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.title {
+  margin-block-start: 10px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+.sub {
+  margin-block-start: 10px;
+  max-width: 62ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+/* Says plainly how the applicant hears about a decision, so nobody assumes a
+   bell notification that the backend does not send. */
+.notifyNote {
+  margin-block-start: 8px;
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-40);
+}
+.backLink {
+  display: inline-block;
+  margin-block-start: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.backLink:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  padding: 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 1);
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cardWho {
+  min-width: 0;
+  flex: 1;
+}
+.cardName {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+.cardName a {
+  color: inherit;
+  text-decoration: none;
+}
+.cardName a:hover,
+.cardName a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cardWhen {
+  margin-block-start: 3px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.cardNote {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--cream);
+  border-radius: 14px;
+}
+.answer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.answerQuestion {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+.answerText {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.cardError {
+  padding: 10px 14px;
+  background: rgba(var(--accent-rgb), 0.09);
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+.cardFinal {
+  font-size: 13px;
+  color: var(--ink-40);
+}
+
+.cardActions {
+  margin-block-start: 4px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+/* Decline sits away from accept so the final, negative action is never the one
+   a thumb lands on by accident. */
+.declineBtn {
+  margin-inline-start: auto;
+}
+
+@media (--sm) {
+  .cardActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .declineBtn {
+    margin-inline-start: 0;
+  }
+}

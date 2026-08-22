@@ -17,6 +17,9 @@ interface CreationDeps {
   allThreads: Conversation[];
   myProfile: { firstName: string; lastName: string; slug?: string } | undefined;
   t: TFunction;
+  /** The currently open thread's id, so a failed `startThread`/`forwardMessage`
+   *  can restore whatever was open before the optimistic placeholder took over. */
+  activeId: string;
   setComposing: Dispatch<SetStateAction<boolean>>;
   setQuery: Dispatch<SetStateAction<string>>;
   setExtraThreads: Dispatch<SetStateAction<Conversation[]>>;
@@ -40,6 +43,18 @@ interface CreationDeps {
     attachment?: GifAttachment,
     mediaKind?: "gif" | "image",
   ) => void;
+  /** From the sending sub-hook — re-keys and re-drives any outbox entries
+   *  queued under a placeholder id once its real conversation exists. */
+  migrateOutboxConversation: (oldConvId: string, newConvId: string) => void;
+}
+
+/** Fired by a creation action so the caller (the modal that triggered it) knows
+ *  whether to close itself or stay open with its state intact for a retry. The
+ *  global mutation-error toast already tells the member something went wrong —
+ *  these exist purely to keep the UI's own local state honest. */
+export interface CreationOutcome {
+  onSuccess?: () => void;
+  onError?: () => void;
 }
 
 export interface MessageCreation {
@@ -48,12 +63,14 @@ export interface MessageCreation {
     title: string,
     members: GroupMemberPick[],
     avatarUrl?: string,
+    outcome?: CreationOutcome,
   ) => void;
   forwardMessage: (
     recipient: Conversation,
     text: string,
     attachment?: GifAttachment,
     mediaKind?: "gif" | "image",
+    outcome?: CreationOutcome,
   ) => void;
 }
 
@@ -68,6 +85,7 @@ export function useMessageCreation({
   allThreads,
   myProfile,
   t,
+  activeId,
   setComposing,
   setQuery,
   setExtraThreads,
@@ -80,6 +98,7 @@ export function useMessageCreation({
   openThread,
   appendOptimistic,
   deliver,
+  migrateOutboxConversation,
 }: CreationDeps): MessageCreation {
   function startThread(recipient: Conversation) {
     setComposing(false);
@@ -105,6 +124,9 @@ export function useMessageCreation({
     // server returns the real conversation — otherwise history fetch, sending,
     // and the realtime room-join all target an id no conversation has, and the
     // thread only works after a reload.
+    // Captured BEFORE the optimistic switch below, so a failed
+    // `startConversation` can restore whatever was open beforehand.
+    const previousActiveId = activeId;
     setExtraThreads((prev) =>
       prev.some((existing) => existing.id === recipient.id)
         ? prev
@@ -115,6 +137,28 @@ export function useMessageCreation({
     setView("thread");
     if (demoMode || !recipient.slug) return;
     startConversation.mutate(recipient.slug, {
+      onError: () => {
+        // The conversation never materialized server-side: drop the dead
+        // placeholder (its live composer would fail every send), restore
+        // whatever thread was open before, and reopen the picker so the
+        // member can retry or pick someone else. The global mutation-error
+        // toast already told them it failed. The draft they typed is left in
+        // place under `recipient.id` (== the member's slug — see
+        // `recipient.ts`) — picking the SAME member again mints the identical
+        // placeholder id and the composer restores it on mount.
+        setExtraThreads((prev) => prev.filter((thread) => thread.id !== recipient.id));
+        setReadIds((current) => {
+          if (!current.has(recipient.id)) return current;
+          const next = new Set(current);
+          next.delete(recipient.id);
+          return next;
+        });
+        setActiveId((current) =>
+          current === recipient.id ? previousActiveId : current,
+        );
+        setView(previousActiveId ? "thread" : "list");
+        setComposing(true);
+      },
       onSuccess: (conversation) => {
         if (!conversation) return;
         // The Composer remounts on `activeId` change (it's keyed by conversation
@@ -154,6 +198,15 @@ export function useMessageCreation({
           current === recipient.id ? conversation.id : current,
         );
         setReadIds((current) => new Set(current).add(conversation.id));
+        // Anything typed and sent while the thread was still this placeholder
+        // (the composer is live the instant it opens, well before this
+        // resolves) was queued, not actually delivered — `deliver`'s UUID
+        // guard skips a placeholder id. Re-key that outbox entry to the real
+        // conversation and re-drive it now that a server row exists for it —
+        // otherwise it would vanish from the view the moment `activeId` above
+        // flips (mergeOptimisticGroups reads `sent[active.id]`) and never
+        // actually reach the server.
+        migrateOutboxConversation(recipient.id, conversation.id);
       },
     });
   }
@@ -168,6 +221,7 @@ export function useMessageCreation({
     title: string,
     members: GroupMemberPick[],
     avatarUrl?: string,
+    outcome?: CreationOutcome,
   ) {
     if (!title.trim() || members.length === 0) return;
     if (demoMode) {
@@ -182,6 +236,7 @@ export function useMessageCreation({
       setActiveId(conversation.id);
       setReadIds((current) => new Set(current).add(conversation.id));
       setView("thread");
+      outcome?.onSuccess?.();
       return;
     }
     createGroupMutation.mutate(
@@ -200,7 +255,16 @@ export function useMessageCreation({
           setActiveId(conversation.id);
           setReadIds((current) => new Set(current).add(conversation.id));
           setView("thread");
+          outcome?.onSuccess?.();
         },
+        // Nothing was created, so there's no placeholder thread to clean up —
+        // unlike `startThread`/`forwardMessage`, the picker never opens a
+        // thread optimistically before the server confirms the group exists.
+        // The caller (MessagesPage) uses this to keep the NewGroup modal open
+        // with its title/members/avatar intact so the member can retry rather
+        // than losing the whole picked list to a closed modal; the global
+        // mutation-error toast already surfaces the failure.
+        onError: () => outcome?.onError?.(),
       },
     );
   }
@@ -218,6 +282,7 @@ export function useMessageCreation({
     text: string,
     attachment?: GifAttachment,
     mediaKind?: "gif" | "image",
+    outcome?: CreationOutcome,
   ) {
     const localId = nextLocalId();
     const optimistic: ChatMessage = {
@@ -243,6 +308,7 @@ export function useMessageCreation({
       appendOptimistic(recipient.id, optimistic);
       openThread(recipient.id);
       deliver(recipient.id, text, localId, undefined, true, attachment, mediaKind);
+      outcome?.onSuccess?.();
       return;
     }
     const existing = allThreads.find(
@@ -252,9 +318,13 @@ export function useMessageCreation({
       appendOptimistic(existing.id, optimistic);
       openThread(existing.id);
       deliver(existing.id, text, localId, undefined, true, attachment, mediaKind);
+      outcome?.onSuccess?.();
       return;
     }
-    // New thread. Open the placeholder immediately; in demo (or an official/
+    // New thread. Captured BEFORE the optimistic switch below, so a failed
+    // `startConversation` can restore whatever thread was open beforehand.
+    const previousActiveId = activeId;
+    // Open the placeholder immediately; in demo (or an official/
     // no-slug target) that's the whole story — no network.
     setExtraThreads((prev) =>
       prev.some((thread) => thread.id === recipient.id) ? prev : [recipient, ...prev],
@@ -264,11 +334,37 @@ export function useMessageCreation({
     setView("thread");
     if (demoMode || !recipient.slug) {
       appendOptimistic(recipient.id, optimistic);
+      // Demo mode simulates the honest ladder locally (sent -> delivered ->
+      // seen) exactly like the existing-thread/group branches above — without
+      // this call the bubble is stuck at "sending" forever, and since the
+      // outbox persists demo sends, it survives reloads too.
+      deliver(recipient.id, text, localId, undefined, true, attachment, mediaKind);
+      outcome?.onSuccess?.();
       return;
     }
     // Live: materialize the conversation, then append + deliver on the real id
     // (optimistic is keyed by conversation id, so it must wait for the UUID).
     startConversation.mutate(recipient.slug, {
+      onError: () => {
+        // The conversation never materialized — drop the dead placeholder
+        // (never sent, so there's no orphaned optimistic bubble to clean up)
+        // and restore whatever thread was open before. The caller
+        // (MessagesPage) uses this to keep the forward picker open on the
+        // same message so the member can retry or pick another recipient;
+        // the global mutation-error toast already surfaced the failure.
+        setExtraThreads((prev) => prev.filter((thread) => thread.id !== recipient.id));
+        setReadIds((current) => {
+          if (!current.has(recipient.id)) return current;
+          const next = new Set(current);
+          next.delete(recipient.id);
+          return next;
+        });
+        setActiveId((current) =>
+          current === recipient.id ? previousActiveId : current,
+        );
+        setView(previousActiveId ? "thread" : "list");
+        outcome?.onError?.();
+      },
       onSuccess: (conversation) => {
         if (!conversation) return;
         setExtraThreads((prev) => [
@@ -289,8 +385,14 @@ export function useMessageCreation({
           current === recipient.id ? conversation.id : current,
         );
         setReadIds((current) => new Set(current).add(conversation.id));
+        // A concurrent ordinary send (the composer stayed live on this
+        // placeholder while the forward's own startConversation was in
+        // flight) may have queued outbox entries under `recipient.id` too —
+        // migrate those before adding this forward's own optimistic bubble.
+        migrateOutboxConversation(recipient.id, conversation.id);
         appendOptimistic(conversation.id, optimistic);
         deliver(conversation.id, text, localId, undefined, true, attachment, mediaKind);
+        outcome?.onSuccess?.();
       },
     });
   }

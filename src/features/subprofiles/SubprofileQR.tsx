@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useMemo, type ReactNode } from "react";
 import QRCode from "qrcode";
-import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./SubprofileQR.module.css";
 
@@ -12,51 +11,39 @@ interface SubprofileQRProps {
   size?: number;
 }
 
-type QRState =
-  | { status: "loading" }
-  | { status: "ready"; svg: string }
-  | { status: "error" };
+// Matches the `margin: 1` quiet zone from the previous `QRCode.toString`
+// call: one blank module on every side of the symbol.
+const QUIET_ZONE_MODULES = 1;
+
+// Plum ink for the modules; the card surface behind the SVG shows through for
+// the light squares (we simply don't paint them), matching the previous
+// transparent `color.light` option. Inline SVG resolves CSS custom properties
+// in `fill`, so this stays on the design token instead of a frozen hex, and a
+// theme/token change carries through. Scanners need a dark-on-light contrast,
+// which `--plum` on the card's paper surface keeps in both themes.
+const DARK_MODULE_FILL = "var(--plum)";
 
 /**
- * Scannable QR code for a persona's public share URL, rendered as inline SVG
- * (CSP-safe — no external image request, no canvas). Generation is async
- * (`qrcode`'s `toString` returns a promise), so this owns a small loading /
- * error state machine; on error it falls back to the raw URL as a plain link
- * so the share flow degrades gracefully rather than showing a blank card.
+ * Scannable QR code for a persona's public share URL, rendered as real SVG
+ * elements (CSP-safe — no external image request, no canvas, no
+ * `dangerouslySetInnerHTML`). `QRCode.create` computes the module matrix
+ * synchronously, so this draws one `<rect>` per dark module directly instead
+ * of injecting a serialized SVG string; on an encoding error it falls back
+ * to the raw URL as a plain link so the share flow degrades gracefully
+ * rather than showing a blank card.
  */
 export function SubprofileQR({ url, ariaLabel, size = 220 }: SubprofileQRProps) {
   const { t } = useTranslation();
-  const [state, setState] = useState<QRState>({ status: "loading" });
 
-  useEffect(() => {
-    let cancelled = false;
-    // Async QR generation (qrcode.toString promise); cancelled via cleanup below.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setState({ status: "loading" });
+  const qrCode = useMemo(() => {
+    try {
+      return QRCode.create(url, { errorCorrectionLevel: "M" });
+    } catch {
+      return null;
+    }
+  }, [url]);
 
-    QRCode.toString(url, {
-      type: "svg",
-      margin: 1,
-      width: size,
-      // Plum ink for the modules; transparent light so the surrounding card
-      // surface shows through instead of a boxed-in white square. This is
-      // rendered image data (the QR's own fill), not UI chrome — see
-      // docs/superpowers/plans/2026-07-25-subprofiles-4c-qr-vcard.md.
-      color: { dark: "#2D1B3D", light: "#00000000" },
-    })
-      .then((svg) => {
-        if (!cancelled) setState({ status: "ready", svg });
-      })
-      .catch(() => {
-        if (!cancelled) setState({ status: "error" });
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [url, size]);
-
-  if (state.status === "error") {
+  if (!qrCode) {
     return (
       <div className={styles.card} style={{ width: size, height: size }}>
         <p className={styles.fallbackHint}>{t("subprofiles:qr.error")}</p>
@@ -67,32 +54,44 @@ export function SubprofileQR({ url, ariaLabel, size = 220 }: SubprofileQRProps) 
     );
   }
 
-  if (state.status === "loading") {
-    // A single skeleton filling the square keeps the share card at its final
-    // size while the QR renders, so the surrounding layout doesn't jump. The
-    // card's fixed width/height already reserves the space; the shimmer just
-    // reads as a placeholder QR rather than a lone line of text.
-    return (
-      <div
-        className={styles.card}
-        style={{ width: size, height: size }}
-        aria-busy="true"
-        aria-label={t("subprofiles:qr.loading")}
-      >
-        <SkeletonLine
-          style={{ flex: 1, alignSelf: "stretch", borderRadius: 12 }}
-        />
-      </div>
-    );
+  const { modules } = qrCode;
+  const symbolSize = modules.size;
+  const viewBoxSize = symbolSize + QUIET_ZONE_MODULES * 2;
+
+  const darkModuleRects: ReactNode[] = [];
+  for (let row = 0; row < symbolSize; row++) {
+    for (let column = 0; column < symbolSize; column++) {
+      if (modules.get(row, column)) {
+        darkModuleRects.push(
+          <rect
+            key={`${row}-${column}`}
+            x={column + QUIET_ZONE_MODULES}
+            y={row + QUIET_ZONE_MODULES}
+            width={1}
+            height={1}
+            fill={DARK_MODULE_FILL}
+          />,
+        );
+      }
+    }
   }
 
   return (
     <div
-      className={styles.card}
+      className={`${styles.card} ${styles.symbol}`}
       style={{ width: size, height: size }}
       role="img"
       aria-label={ariaLabel}
-      dangerouslySetInnerHTML={{ __html: state.svg }}
-    />
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+        shapeRendering="crispEdges"
+      >
+        {darkModuleRects}
+      </svg>
+    </div>
   );
 }

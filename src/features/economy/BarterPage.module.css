@@ -369,6 +369,26 @@
   border-color: rgba(var(--cream-rgb), 0.4);
 }
 
+/* The shared Select renders a cream trigger for light surfaces; on this plum
+   panel it has to read like the translucent inputs beside it. */
+.psSelect button {
+  background: rgba(var(--cream-rgb), 0.08);
+  border-color: rgba(var(--cream-rgb), 0.18);
+  color: rgba(var(--cream-rgb), 1);
+}
+.psSelect button:hover,
+.psSelect button[aria-expanded="true"] {
+  background: rgba(var(--cream-rgb), 0.14);
+  border-color: rgba(var(--cream-rgb), 0.4);
+}
+/* Scoped through .postStrip so it outranks `.postStrip > div > p`, which owns
+   the muted body colour of the paragraph beside it. */
+.postStrip .psError {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--accent);
+}
+
 .psSuccess {
   grid-column: 1 / -1;
   text-align: center;
@@ -431,4 +451,28 @@
 
 :global([data-theme="dark"]) .bc {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* Way in to the owner's proposal inbox, sitting with the board's own controls.
+   Pushed to the end of the row so the search + tabs keep the reading order. */
+.myProposalsLink {
+  margin-inline-start: auto;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.myProposalsLink:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* "Show more" for the server-paginated board, matching the housing + flatmate
+   boards. */
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiDollarSign } from "react-icons/fi";
-import { EmptyState } from "../../shared/components/ui";
+import { Button, EmptyState } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
@@ -36,13 +36,9 @@ export function SalaryTab() {
           </h2>
           <p className={styles.econSub}>{t("economy:salary.sub")}</p>
         </div>
-        <button
-          type="button"
-          className={styles.primaryBtn}
-          onClick={() => setModal(true)}
-        >
+        <Button variant="primary" size="md" onClick={() => setModal(true)}>
           {t("economy:salary.submitCta")}
-        </button>
+        </Button>
       </div>
       {demoMode && (
         <div className={styles.salFilters}>
@@ -131,13 +127,9 @@ export function SalaryTab() {
       <div className={styles.salAnon}>{t("economy:salary.disclaimer")}</div>
       <div className={styles.salSubmitBox}>
         <p>{t("economy:salary.helpBody")}</p>
-        <button
-          type="button"
-          className={styles.primaryBtn}
-          onClick={() => setModal(true)}
-        >
+        <Button variant="primary" size="md" onClick={() => setModal(true)}>
           {t("economy:salary.submitLong")}
-        </button>
+        </Button>
       </div>
 
       {modal && (

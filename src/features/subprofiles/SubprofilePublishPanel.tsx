@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button, SuccessPanel } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useAuth } from "../../app/providers/authContext";
 import { nestedPersonaPath, personaPath } from "../../app/routeMap";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import {
@@ -14,6 +13,7 @@ import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import { SideReadinessRing } from "./SideReadinessRing";
 import { PublishChecklist, SubprofilePolishList } from "./PublishChecklist";
 import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
+import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import sharedStyles from "./SubprofileEditor.module.css";
 import styles from "./SubprofilePublishPanel.module.css";
 
@@ -43,7 +43,6 @@ export function SubprofilePublishPanel({
   const { publish, unpublish } = useSubprofileMutations();
   const { showToast } = useToast();
   const { t } = useTranslation();
-  const { user } = useAuth();
   const editor = useSubprofileEditorContext();
   const [checklist, setChecklist] = useState<ChecklistState | null>(null);
   const [justPublished, setJustPublished] = useState(false);
@@ -60,11 +59,13 @@ export function SubprofilePublishPanel({
   const { dirty } = editor;
 
   // Where the now-live persona can be viewed: a linked persona nests under the
-  // owner's main profile; an unlinked one stands on its own handle.
-  const ownerSlug = user?.profile.slug;
+  // CREATOR's main profile (the only slug that route resolves by), an unlinked
+  // one stands on its own handle. Reading the signed-in member's slug here sent
+  // every co-owner of a shared persona to a not-found wall.
+  const creatorSlug = usePersonaCreatorSlug(subprofile.id, subprofile.memberCount);
   const livePath = isLinked
-    ? ownerSlug
-      ? nestedPersonaPath(ownerSlug, subprofile.slug)
+    ? creatorSlug
+      ? nestedPersonaPath(creatorSlug, subprofile.slug)
       : null
     : subprofile.handle
       ? personaPath(subprofile.handle)

@@ -126,21 +126,18 @@ export function BlockMuteChoose({
         <div className={s.ocDesc}>{t("safety:blockMute.choose.muteDesc")}</div>
         {chosen === "mute" && (
           <div className={s.subOpts}>
+            {/* A mute is one all-or-nothing record in both modes (demo's
+                social store and the live POST /mutes/:slug alike), so there is
+                no scope to pick. This used to be three tick-boxes that changed
+                nothing and a summary that reported "Posts & comments" whatever
+                was ticked; it now states the real effect, the same way the
+                duration block below hides timed mutes where they aren't real. */}
             <div className={s.subLabel}>
               {t("safety:blockMute.choose.muteScopeLabel")}
             </div>
-            <label className={s.checkRow}>
-              <input type="checkbox" defaultChecked />{" "}
-              {t("safety:blockMute.choose.postsUpdates")}
-            </label>
-            <label className={s.checkRow}>
-              <input type="checkbox" defaultChecked />{" "}
-              {t("safety:blockMute.choose.commentsReplies")}
-            </label>
-            <label className={s.checkRow}>
-              <input type="checkbox" />{" "}
-              {t("safety:blockMute.choose.gatheringInvites")}
-            </label>
+            <div className={s.warnBox}>
+              {t("safety:blockMute.choose.muteScopeNote")}
+            </div>
             <div className={s.subLabel} style={{ marginTop: 14 }}>
               {t("safety:blockMute.choose.durationLabel")}
             </div>
@@ -256,7 +253,9 @@ export function BlockMuteMuted({
           rows={[
             {
               label: t("safety:blockMute.muted.summaryLabel"),
-              value: t("safety:blockMute.muted.postsComments"),
+              // The real, only scope a mute has — no longer a fixed line
+              // under a set of tick-boxes that never fed into it.
+              value: t("safety:blockMute.muted.everythingTheyPost"),
             },
             {
               label: t("safety:blockMute.muted.durationLabel"),

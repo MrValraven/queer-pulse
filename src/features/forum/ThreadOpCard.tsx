@@ -1,3 +1,4 @@
+import { FiHeart } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { CATS, CAT_STYLE, type Thread } from "./forum.data";
@@ -100,13 +101,19 @@ export function ThreadOpCard({
             <span>
               {t("forum:threadOp.postedPrefix", { time: thread.posted })}
             </span>
-            <span>·</span>
-            <span>
-              {t("forum:threadOp.viewsCount", {
-                count: thread.views,
-                formatted: fmt.number(thread.views),
-              })}
-            </span>
+            {/* Live threads carry no view count (the DTO has none), so the
+                stat is omitted entirely rather than printing "0 views". */}
+            {thread.views != null && (
+              <>
+                <span>·</span>
+                <span>
+                  {t("forum:threadOp.viewsCount", {
+                    count: thread.views,
+                    formatted: fmt.number(thread.views),
+                  })}
+                </span>
+              </>
+            )}
             {editedAt && (
               <>
                 <span>·</span>
@@ -123,6 +130,12 @@ export function ThreadOpCard({
             canDelete={canDelete}
             canRestore={canRestore}
             canViewHistory={canViewHistory}
+            // Adds Mute / Block for the thread's author (self-aware no-op).
+            author={{
+              slug: thread.author.slug,
+              name: thread.author.name,
+              official: thread.author.official,
+            }}
             onEdit={onEdit}
             onDelete={onDelete}
             onRestore={onRestore}
@@ -172,14 +185,9 @@ export function ThreadOpCard({
               .join(" ")}
             onClick={onVote}
           >
-            <svg viewBox="0 0 14 14" aria-hidden="true">
-              <path
-                d="M7 12s-7-4.5-7-8a4 4 0 0 1 7-2.7A4 4 0 0 1 14 4c0 3.5-7 8-7 8z"
-                fill="currentColor"
-                stroke="none"
-              />
-            </svg>
-            {thread.upvotes}
+            {/* Same icon as the reply like button (ThreadReplyItem), so the OP
+                and its replies no longer carry two different heart glyphs. */}
+            <FiHeart aria-hidden="true" /> {thread.upvotes}
           </button>
           <button
             type="button"

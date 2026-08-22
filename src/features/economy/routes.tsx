@@ -3,12 +3,14 @@ import { routes } from "../../app/routeMap";
 import { ParamRedirect } from "../../app/routes.redirects";
 import { lazyNamed } from "../../app/routeHelpers";
 import { MY_HOUSING_LISTINGS_PATH } from "./housing.data";
+import { MY_BARTER_PROPOSALS_PATH } from "./barterProposals.paths";
 
 const JobsPage = lazyNamed(() => import("./JobsPage"), "JobsPage");
 const JobDetailPage = lazyNamed(() => import("./JobDetailPage"), "JobDetailPage");
 const CompanyPage = lazyNamed(() => import("./CompanyPage"), "CompanyPage");
 const PostJobPage = lazyNamed(() => import("./PostJobPage"), "PostJobPage");
 const JobApplyPage = lazyNamed(() => import("./JobApplyPage"), "JobApplyPage");
+const JobApplicationsPage = lazyNamed(() => import("./JobApplicationsPage"), "JobApplicationsPage");
 const HousingPage = lazyNamed(() => import("./HousingPage"), "HousingPage");
 const HousingCoopPage = lazyNamed(() => import("./HousingCoopPage"), "HousingCoopPage");
 const CoopTemplatePage = lazyNamed(() => import("./CoopTemplatePage"), "CoopTemplatePage");
@@ -24,6 +26,7 @@ const WorkshopPage = lazyNamed(() => import("./WorkshopPage"), "WorkshopPage");
 const GrantsPage = lazyNamed(() => import("./GrantsPage"), "GrantsPage");
 const BarterPage = lazyNamed(() => import("./BarterPage"), "BarterPage");
 const BarterDetailPage = lazyNamed(() => import("./BarterDetailPage"), "BarterDetailPage");
+const BarterProposalsPage = lazyNamed(() => import("./BarterProposalsPage"), "BarterProposalsPage");
 const OfferPage = lazyNamed(() => import("./OfferPage"), "OfferPage");
 const EmployerReviewsPage = lazyNamed(() => import("./EmployerReviewsPage"), "EmployerReviewsPage");
 const ApplicationStatusPage = lazyNamed(() => import("./ApplicationStatusPage"), "ApplicationStatusPage");
@@ -54,6 +57,12 @@ export function economyRoutes() {
       <Route path={routes.postJob} element={<PostJobPage />} />
       <Route path={`${routes.jobs}/:slug`} element={<JobDetailPage />} />
       <Route path={`${routes.jobs}/:slug/apply`} element={<JobApplyPage />} />
+      {/* Poster-side applications console (BE-HSG-16). Static `applications`
+          segment under the job slug, matching the backend's own route shape. */}
+      <Route
+        path={`${routes.jobs}/:slug/applications`}
+        element={<JobApplicationsPage />}
+      />
       <Route path={`${routes.company}/:slug`} element={<CompanyPage />} />
       <Route path={routes.housing} element={<HousingPage />} />
       {/* Static segments registered before the `:slug` catch so they always win. */}
@@ -88,6 +97,12 @@ export function economyRoutes() {
       <Route path={`${routes.skills}/:id`} element={<WorkshopPage />} />
       <Route path={routes.grants} element={<GrantsPage />} />
       <Route path={routes.barter} element={<BarterPage />} />
+      {/* Owner-side proposal inbox. Static segment declared before the `:id`
+          catch so a listing id can never swallow it. */}
+      <Route
+        path={MY_BARTER_PROPOSALS_PATH}
+        element={<BarterProposalsPage />}
+      />
       <Route path={`${routes.barter}/:id`} element={<BarterDetailPage />} />
       <Route path={routes.offer} element={<OfferPage />} />
       <Route path={routes.employerReviews} element={<EmployerReviewsPage />} />

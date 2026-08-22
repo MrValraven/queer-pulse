@@ -2,7 +2,7 @@ import { useCallback, useRef, type PointerEvent as ReactPointerEvent } from "rea
 import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import { m, useDragControls, type PanInfo } from "motion/react";
-import { Button } from "../ui";
+import { Button, useScrimDismiss } from "../ui";
 import { useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
@@ -76,16 +76,14 @@ export function MobileNavDrawer() {
     onClose: closeSheet,
   });
 
+  // Backdrop dismiss that ignores a click whose press started inside the panel
+  // (a text-selection drag released past the edge) — see `useScrimDismiss`.
+  const scrimProps = useScrimDismiss(closeSheet);
+
   if (activeSheet !== "browse") return null;
 
   return (
-    <div
-      className={styles.overlay}
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) closeSheet();
-      }}
-    >
+    <div className={styles.overlay} role="presentation" {...scrimProps}>
       <m.div
         ref={panelRef}
         className={styles.panel}

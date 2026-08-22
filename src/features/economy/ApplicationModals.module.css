@@ -100,6 +100,18 @@
   justify-content: center;
   transition: background 0.2s var(--ease);
 }
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
+}
 /* Touch: extend the 36px close chip's hit area to ≥44px without growing the ink. */
 @media (pointer: coarse) {
   .close::before {
@@ -305,6 +317,27 @@
   color: var(--ink-40);
   line-height: 1.5;
   margin-bottom: 24px;
+}
+/* Owner-facing caution before a save that will pull a live listing back into
+   moderation review (BE-HSG-02). Warmer than `.note` because it changes what
+   the button is about to do, so it must not read as fine print. */
+.reviewWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 0 0 18px;
+}
+.reviewWarning svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
 }
 .foot {
   display: flex;

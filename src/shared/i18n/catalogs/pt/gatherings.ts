@@ -192,8 +192,8 @@ export const gatherings: Catalog = {
     "Enviamos-te um email assim que surgir uma vaga. Sair da lista de espera é só um clique.",
   "event.rsvp.confirmationEmailNote": "O teu lugar está guardado. Encontra-lo nos teus convívios.",
   "event.rsvp.cancelPolicy": "Podes cancelar até 48 horas antes do evento.",
-  "event.rsvp.waitlistTitle":
-    "Estás em <em>#{position}</em> na lista de espera.",
+  "event.rsvp.waitlistTitle": "Estás na <em>lista de espera.</em>",
+  "event.rsvp.errorToast": "Não foi possível concluir. Tenta daqui a pouco.",
   "event.rsvp.waitlistBody":
     "Este convívio está esgotado, mas <strong>enviamos um email para {email}</strong> assim que surgir uma vaga, normalmente um ou dois dias depois de alguém cancelar.",
   "event.rsvp.waitlistMeta":
@@ -258,6 +258,8 @@ export const gatherings: Catalog = {
   "rsvp.inviteCta": "Conta a alguém: copiar link de convite",
   "rsvp.inviteCopiedToast":
     "Link de convite copiado. Partilha-o com alguém que devia vir.",
+  "rsvp.inviteCopyFailedToast":
+    "Não conseguimos aceder à área de transferência. Copia o link a partir da barra de endereço.",
   "rsvp.coc.title": "O que <em>esperar</em>",
   "rsvp.coc.affirming.strong": "Este é um espaço de afirmação.",
   "rsvp.coc.affirming.rest":
@@ -274,6 +276,8 @@ export const gatherings: Catalog = {
   "rsvp.footer.membership": "Confirmaste presença como pessoa da QueerPulse.",
   "rsvp.footer.cancelCta": "Cancelar presença",
   "rsvp.footer.cancelledToast": "A tua presença foi cancelada.",
+  "rsvp.footer.cancelErrorToast":
+    "Não conseguimos cancelar agora. Tenta daqui a pouco.",
   "rsvp.footer.privacyCta": "Política de privacidade",
 
   // CoHostInvitePage

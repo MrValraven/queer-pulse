@@ -71,7 +71,7 @@
 }
 .optionOn .icon {
   background: var(--jade);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 
 .text {

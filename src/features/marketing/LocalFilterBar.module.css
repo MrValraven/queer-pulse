@@ -106,7 +106,7 @@
   inline-size: 19px;
   block-size: 19px;
   border-radius: 50%;
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   flex: none;
   margin-inline-start: -3px; /* pull toward the chip edge; gap handles the label */
 }

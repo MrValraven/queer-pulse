@@ -163,17 +163,13 @@ export function useFeedPage() {
   // (community_post/forum_thread/gathering/new_member interleaved) — `useFeed`
   // already applies the block/mute filter, so no re-filtering needed here.
   const liveItems: FeedItem[] = demoMode ? [] : feed.items;
-  // Feed hero banner counts: the scripted demo copy, or a modest live
-  // derivation from this tab's new-member items (no dedicated live endpoint
-  // for "sharing" activity yet, so that side stays 0 rather than guessed at).
-  const liveNewMemberCount = liveItems.filter(
-    (item) => item.type === "new_member",
-  ).length;
-  const banner = demoMode
-    ? DEMO_BANNER
-    : liveNewMemberCount > 0
-      ? { joined: liveNewMemberCount, sharing: 0 }
-      : null;
+  // Feed hero banner: the scripted DEMO copy only. It used to be derived in
+  // live from the `new_member` items in whatever feed pages happened to be
+  // loaded, so "N people joined near you this week" grew every time you hit
+  // "Load more" and had no geographic or weekly basis whatsoever. There is no
+  // `/feed/summary` endpoint to source a true number from, so live shows no
+  // banner rather than a fabricated one.
+  const banner = demoMode ? DEMO_BANNER : null;
   const empty = demoMode
     ? pulse.length === 0 && staticItems.length === 0
     : liveItems.length === 0;

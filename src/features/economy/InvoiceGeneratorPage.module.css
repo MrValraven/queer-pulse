@@ -345,3 +345,10 @@
     width: 100%;
   }
 }
+
+/* "Not set" filler for an invoice field the user has not filled in yet. Reads
+   as a real word for a screen reader, where the old em-dash placeholder was
+   simply skipped. */
+.notSet {
+  color: var(--ink-40);
+}

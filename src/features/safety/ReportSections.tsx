@@ -90,14 +90,25 @@ const LOG = [
   { number: "1", labelKey: "safety:report.modLog.stat.reversed" },
 ];
 
-/** Infer the subject from the reason + the free-text "who/what" field. */
-function inferSubject(
-  reason: ReasonCode | "",
-  involved: string,
-): ReportSubjectType {
-  if (reason === "venue_safety") return "venue";
-  if (/https?:\/\/|\//.test(involved)) return "post";
-  return "member";
+/**
+ * This public form has no subject picker, so nothing a reporter types here
+ * identifies a record. `subjectId` therefore carries a fixed sentinel rather
+ * than the reporter's own words: sending free text as an id produced reports
+ * addressed to things like "the guy from Friday", which no moderator can open
+ * and no moderation action can attach to. The words themselves are far more
+ * useful inside `detail`, where they read as the account they are.
+ */
+const UNLINKED_SUBJECT_ID = "unspecified";
+
+/**
+ * The reported category is the only real signal about what KIND of thing a
+ * report concerns: venue-safety reports are about a place, everything else
+ * about a person. This is a straight read of the reporter's own choice, not
+ * the old heuristic that turned "contains a slash" into `subjectType: "post"`.
+ * Neither branch carries an id — see {@link UNLINKED_SUBJECT_ID}.
+ */
+function subjectTypeForCategory(reason: ReasonCode): ReportSubjectType {
+  return reason === "venue_safety" ? "venue" : "member";
 }
 
 /** The "how reporting works" preamble — flow steps 01–04. Lives on the
@@ -150,14 +161,24 @@ export function ReportFormSection() {
       setDetail("");
       setEmail("");
     };
+    // The "who or what was involved" line is a description, so it travels with
+    // the account of what happened rather than posing as a subject id.
+    const involvedText = involved.trim();
+    const detailText = detail.trim();
+    const describedSubject = involvedText
+      ? t("safety:report.detail.involvedLine", { involved: involvedText })
+      : "";
+    const composedDetail = [describedSubject, detailText]
+      .filter(Boolean)
+      .join("\n\n");
     // Live POSTs /reports (anonymous unless an email is given); demo resolves
     // locally. The backend derives severity + SLA and sends the acknowledgement.
     createReport.mutate(
       {
-        subjectType: inferSubject(category, involved),
-        subjectId: involved.trim() || "unspecified",
+        subjectType: subjectTypeForCategory(category),
+        subjectId: UNLINKED_SUBJECT_ID,
         reasonCode: category,
-        detail: detail.trim() || undefined,
+        detail: composedDetail || undefined,
         anonymous: email.trim().length === 0,
         contactEmail: email.trim() || undefined,
       },
@@ -192,7 +213,10 @@ export function ReportFormSection() {
                   }))}
                 />
               </FormField>
-              <FormField label={t("safety:report.form.involvedLabel")}>
+              <FormField
+                label={t("safety:report.form.involvedLabel")}
+                helper={t("safety:report.form.involvedHelper")}
+              >
                 <input
                   type="text"
                   placeholder={t("safety:report.form.involvedPlaceholder")}

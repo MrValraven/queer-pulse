@@ -14,6 +14,7 @@ import {
   FiHelpCircle,
   FiCompass,
   FiDownload,
+  FiCreditCard,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 
@@ -97,6 +98,11 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       labelKey: "shared:accountMenu.items.events",
       to: routes.events,
       icon: FiCalendar,
+    },
+    {
+      labelKey: "shared:accountMenu.items.cards",
+      to: routes.myCards,
+      icon: FiCreditCard,
     },
   ],
   // Career & content. Applications now lives inside the Work hub, not as its

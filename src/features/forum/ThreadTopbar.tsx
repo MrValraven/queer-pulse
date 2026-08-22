@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiLock, FiShield, FiUnlock } from "react-icons/fi";
+import { FiChevronLeft, FiLock, FiShield, FiUnlock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -83,22 +83,13 @@ export function ThreadTopbar({
       <div className="wrap">
         <div className={styles.topbarInner}>
           <Link to={routes.forum} className={styles.back}>
-            <svg
-              width={14}
-              height={14}
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <polyline points="10,4 6,8 10,12" />
-            </svg>
+            <FiChevronLeft aria-hidden="true" />
             {t("forum:threadPage.breadcrumbForum")}
           </Link>
           <span className={styles.sep} />
           <span className={styles.topCat}>{categoryName}</span>
           {(canLock || canSetOfficial) && (
-            <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
+            <div className={styles.topbarActions}>
               {canSetOfficial && (
                 <Button
                   type="button"

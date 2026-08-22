@@ -1,6 +1,20 @@
-import { useEffect, useState, type MouseEvent, type RefObject } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type RefObject,
+} from "react";
 import { FiBold, FiItalic, FiLink } from "react-icons/fi";
+import { Button } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { LinkPrompt } from "./LinkPrompt";
+import {
+  applyEmphasisTo,
+  applyLinkTo,
+  applyStrongTo,
+  findRichAncestor,
+} from "./selectionCommands";
 import styles from "./SelectionToolbar.module.css";
 
 export interface SelectionToolbarProps {
@@ -16,34 +30,20 @@ interface ToolbarPosition {
   y: number;
 }
 
-// A real "edit this link" UI is future work (Phase 3 ships plain formatting
-// only) — createLink needs *some* href to act on, so this is a deliberate
-// placeholder the writer can select and retype inside the rendered block.
-const PLACEHOLDER_LINK_HREF = "https://";
+// What the Link button used to insert on its own. Kept only so a link created
+// before there was an address field reads as "no address yet" rather than
+// prefilling the field with a scheme the reader always drops.
+const LEGACY_PLACEHOLDER_HREF = "https://";
 
-function findRichAncestor(node: Node | null): HTMLElement | null {
-  let current: HTMLElement | null =
-    node instanceof HTMLElement ? node : node?.parentElement ?? null;
-  while (current && current.getAttribute("data-rich") !== "true") {
-    current = current.parentElement;
-  }
-  return current;
-}
+const TOOL_COUNT = 3;
 
-/** Renames every `<oldTagName>` inside `root` to `<newTagName>`, preserving
- * children and attributes. `document.execCommand('italic'/'bold')` inserts
- * `<i>`/`<b>`, but the article's typed HTML is meant to carry semantic
- * `<em>`/`<strong>` (readers, exports, and any future rich-text migration
- * all assume that), so every command normalizes its output immediately. */
-function replaceTag(root: HTMLElement, oldTagName: string, newTagName: string) {
-  root.querySelectorAll(oldTagName).forEach((element) => {
-    const replacement = document.createElement(newTagName);
-    replacement.innerHTML = element.innerHTML;
-    Array.from(element.attributes).forEach((attribute) => {
-      replacement.setAttribute(attribute.name, attribute.value);
-    });
-    element.replaceWith(replacement);
-  });
+/** The href already on the selection, when it sits inside a link — so
+ * reopening the field edits that link instead of starting from blank. */
+function hrefAtRange(range: Range): string {
+  const node = range.commonAncestorContainer;
+  const element = node instanceof HTMLElement ? node : node.parentElement;
+  const href = element?.closest("a")?.getAttribute("href") ?? "";
+  return href === LEGACY_PLACEHOLDER_HREF ? "" : href;
 }
 
 /**
@@ -52,21 +52,44 @@ function replaceTag(root: HTMLElement, oldTagName: string, newTagName: string) {
  * and positions itself above the selection's bounding rect whenever the
  * selection is non-collapsed and lives inside `scopeRef`.
  *
- * NOTE: `document.execCommand` is a deprecated web-platform API, but for an
- * arbitrary contentEditable selection it's still the only way to toggle
- * inline formatting without shipping a full rich-text engine. This is a
- * deliberate, scoped port of the prototype's approach for Phase 3 — swapping
- * it for something like ProseMirror/Lexical is a future upgrade, not a gap
- * in this task. Every command is followed by re-dispatching a native
- * `input` event on the affected block so `RichText`'s `onChange` (which only
- * listens for `input`) re-reads the mutated innerHTML.
+ * FE-CNT-09: every tool runs on `click`, which Enter/Space fire on a focused
+ * button, and the three buttons form a roving-tabindex toolbar (Arrow
+ * Left/Right, Home/End) per the ARIA toolbar pattern. Mousedown is still
+ * `preventDefault`ed so a pointer click never collapses the selection, and the
+ * selection itself is kept as a cloned Range so a command still has something
+ * to act on once Tab has moved focus off the contentEditable.
+ *
+ * Link asks for a real address (`LinkPrompt`) before calling `createLink`.
+ * It used to insert a bare `https://` placeholder, which `sanitizeArticleHtml`
+ * unwraps on read — so every link a writer added vanished on publish.
  */
 export function SelectionToolbar({ scopeRef }: SelectionToolbarProps) {
   const { t } = useTranslation();
   const [position, setPosition] = useState<ToolbarPosition | null>(null);
+  const [linkRange, setLinkRange] = useState<Range | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const toolbarRef = useRef<HTMLDivElement | null>(null);
+  const toolRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  // The selection the toolbar is currently offering tools for. Cloned because
+  // the live Range is invalidated the moment focus moves (Tab to a button, or
+  // the link address field taking focus).
+  const selectionRangeRef = useRef<Range | null>(null);
+
+  // Latest-value ref so the once-registered selection listener can see whether
+  // the address field is open without re-registering: focusing that field
+  // changes the document selection, which would otherwise close the toolbar
+  // out from under it.
+  const isLinkPromptOpenRef = useRef(false);
+  useEffect(() => {
+    isLinkPromptOpenRef.current = linkRange !== null;
+  });
 
   useEffect(() => {
     function handleSelectionChange() {
+      if (isLinkPromptOpenRef.current) return;
+      // Tabbing into the toolbar drops the editable's selection in some
+      // browsers; the toolbar must survive its own focus (FE-CNT-09).
+      if (toolbarRef.current?.contains(document.activeElement)) return;
       const scope = scopeRef.current;
       const selection = document.getSelection();
       if (
@@ -83,11 +106,20 @@ export function SelectionToolbar({ scopeRef }: SelectionToolbarProps) {
         setPosition(null);
         return;
       }
+      // The headline and standfirst are plain text by contract (see
+      // `plainText.ts`): they report `textContent`, so formatting applied
+      // there would vanish on the next keystroke. Offer no tools on them.
+      const richElement = findRichAncestor(range.commonAncestorContainer);
+      if (richElement?.dataset.plainText === "true") {
+        setPosition(null);
+        return;
+      }
       const rect = range.getBoundingClientRect();
       if (rect.width === 0 && rect.height === 0) {
         setPosition(null);
         return;
       }
+      selectionRangeRef.current = range.cloneRange();
       setPosition({ x: rect.left + rect.width / 2, y: rect.top });
     }
     document.addEventListener("selectionchange", handleSelectionChange);
@@ -95,59 +127,111 @@ export function SelectionToolbar({ scopeRef }: SelectionToolbarProps) {
       document.removeEventListener("selectionchange", handleSelectionChange);
   }, [scopeRef]);
 
+  // Roving focus, and ONLY once the user is already inside the toolbar: the
+  // toolbar appearing must never pull focus out of the text they are editing.
+  useEffect(() => {
+    if (linkRange) return;
+    if (!toolbarRef.current?.contains(document.activeElement)) return;
+    toolRefs.current[activeIndex]?.focus({ preventScroll: true });
+  }, [activeIndex, linkRange]);
+
   if (!position) return null;
 
-  function afterCommand() {
-    const selection = document.getSelection();
-    const richElement = findRichAncestor(selection?.anchorNode ?? null);
-    richElement?.dispatchEvent(new Event("input", { bubbles: true }));
+  function moveActive(delta: number) {
+    setActiveIndex((current) => (current + delta + TOOL_COUNT) % TOOL_COUNT);
   }
 
-  function applyEmphasis(event: MouseEvent) {
-    event.preventDefault();
-    document.execCommand("italic");
-    const richElement = findRichAncestor(document.getSelection()?.anchorNode ?? null);
-    if (richElement) replaceTag(richElement, "i", "em");
-    afterCommand();
+  function handleToolbarKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (linkRange) return;
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      moveActive(1);
+    } else if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      moveActive(-1);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      setActiveIndex(0);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      setActiveIndex(TOOL_COUNT - 1);
+    }
   }
 
-  function applyStrong(event: MouseEvent) {
-    event.preventDefault();
-    document.execCommand("bold");
-    const richElement = findRichAncestor(document.getSelection()?.anchorNode ?? null);
-    if (richElement) replaceTag(richElement, "b", "strong");
-    afterCommand();
+  function openLinkPrompt() {
+    if (!selectionRangeRef.current) return;
+    // The live range is lost the moment the address field takes focus, so the
+    // stored clone is what `createLink` is restored against.
+    setLinkRange(selectionRangeRef.current.cloneRange());
   }
 
-  function applyLink(event: MouseEvent) {
-    event.preventDefault();
-    document.execCommand("createLink", false, PLACEHOLDER_LINK_HREF);
-    afterCommand();
+  function applyLink(href: string) {
+    applyLinkTo(linkRange, href);
+    setLinkRange(null);
   }
+
+  const tools = [
+    {
+      key: "emphasis",
+      icon: <FiItalic aria-hidden />,
+      label: t("magazine:write.selection.emphasis"),
+      run: () => applyEmphasisTo(selectionRangeRef.current),
+    },
+    {
+      key: "strong",
+      icon: <FiBold aria-hidden />,
+      label: t("magazine:write.selection.strong"),
+      run: () => applyStrongTo(selectionRangeRef.current),
+    },
+    {
+      key: "link",
+      icon: <FiLink aria-hidden />,
+      label: t("magazine:write.selection.link"),
+      run: openLinkPrompt,
+    },
+  ];
 
   return (
     <div
+      ref={toolbarRef}
       className={styles.seltool}
       style={{ left: position.x, top: position.y }}
-      role="toolbar"
+      // Only a toolbar while it holds the format buttons: with the address
+      // field open it is a labelled group around a form, which is not what a
+      // screen reader should announce as a toolbar.
+      role={linkRange ? "group" : "toolbar"}
       aria-label={t("magazine:write.selection.toolbarAria")}
+      onKeyDown={handleToolbarKeyDown}
       // Prevents the mousedown's default action (which would move focus and
-      // collapse the selection) so execCommand still has a selection to act
-      // on when the click handlers below run.
+      // collapse the selection) so the commands below still have a selection
+      // to act on when the click handlers run.
       onMouseDown={(event) => event.preventDefault()}
     >
-      <button type="button" onMouseDown={applyEmphasis}>
-        <FiItalic aria-hidden />
-        {t("magazine:write.selection.emphasis")}
-      </button>
-      <button type="button" onMouseDown={applyStrong}>
-        <FiBold aria-hidden />
-        {t("magazine:write.selection.strong")}
-      </button>
-      <button type="button" onMouseDown={applyLink}>
-        <FiLink aria-hidden />
-        {t("magazine:write.selection.link")}
-      </button>
+      {linkRange ? (
+        <LinkPrompt
+          initialHref={hrefAtRange(linkRange)}
+          onApply={applyLink}
+          onCancel={() => setLinkRange(null)}
+        />
+      ) : (
+        tools.map((tool, index) => (
+          <Button
+            key={tool.key}
+            variant="ghost-dark"
+            size="sm"
+            ref={(element) => {
+              toolRefs.current[index] = element;
+            }}
+            type="button"
+            tabIndex={index === activeIndex ? 0 : -1}
+            onClick={tool.run}
+            onFocus={() => setActiveIndex(index)}
+          >
+            {tool.icon}
+            {tool.label}
+          </Button>
+        ))
+      )}
     </div>
   );
 }

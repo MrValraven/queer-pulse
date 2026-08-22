@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { FiImage, FiX } from "react-icons/fi";
 import {
   Button,
   FadeIn,
@@ -19,6 +18,7 @@ import { useCreatePost } from "./api/useCommunityMutations";
 import { usePostImageAttach } from "./usePostImageAttach";
 import { CommunityThread } from "./CommunityThread";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
+import { CommunityPostComposer } from "./CommunityPostComposer";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
@@ -47,15 +47,8 @@ export function DiscussionTab({
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const createPost = useCreatePost(slug);
-  const {
-    image: attachedImage,
-    uploading: imageUploading,
-    error: imageError,
-    inputRef: imageInputRef,
-    handleFile: handleImageFile,
-    remove: removeAttachedImage,
-    openPicker: openImagePicker,
-  } = usePostImageAttach();
+  const imageAttach = usePostImageAttach();
+  const viewer = viewerPerson(user);
   const [searchTerm, setSearchTerm] = useState("");
   const [chip, setChip] = useState<Chip>("All");
   const [newPost, setNewPost] = useState("");
@@ -88,24 +81,29 @@ export function DiscussionTab({
       id: optimisticId,
       votes: 0,
       title: heading,
-      author: viewerPerson(user) ?? { initials: "Me", name: "You", tint: "plum" },
-      time: t("communities:common.justNow"),
+      author: viewer ?? { initials: "?", name: "", tint: "plum" },
+      createdAt: new Date().toISOString(),
       replyCount: 0,
       post: text,
       replies: [],
     };
     setExtra((prev) => [optimisticThread, ...prev]);
     setNewPost("");
-    const stagedImageKey = attachedImage?.key;
-    removeAttachedImage();
-    showToast(t("communities:detail.discussion.startedToast"), "success");
-    if (demoMode) return;
+    const stagedImageKey = imageAttach.image?.key;
+    imageAttach.remove();
+    if (demoMode) {
+      showToast(t("communities:detail.discussion.startedToast"), "success");
+      return;
+    }
     createPost.mutate(
       { body: text, image: stagedImageKey },
       {
         // On success the refetched page carries the real post, so drop all
-        // optimistic entries.
-        onSuccess: () => setExtra([]),
+        // optimistic entries — and only then confirm it.
+        onSuccess: () => {
+          setExtra([]);
+          showToast(t("communities:detail.discussion.startedToast"), "success");
+        },
         // On error, remove just this optimistic post so no phantom thread lingers.
         onError: () => {
           setExtra((prev) =>
@@ -158,7 +156,11 @@ export function DiscussionTab({
         />
       ) : (
         shown.map((thread, index) => (
-          <FadeIn key={thread.id ?? thread.title} delay={Math.min(index, 8) * 55}>
+          <FadeIn
+            key={thread.id ?? thread.title}
+            className={styles.rowFade}
+            delay={Math.min(index, 8) * 55}
+          >
             <CommunityThread
               data={thread}
               slug={slug}
@@ -198,68 +200,21 @@ export function DiscussionTab({
             <CommunityFrozenComposerNotice />
           </div>
         ) : (
-          <div className={detail.newPost} style={{ marginTop: 16 }}>
-            <div
-              className={[detail.rAv, detail.tPlum].join(" ")}
-              style={{ width: 30, height: 30 }}
-            >
-              Me
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <textarea
-                className={detail.npTa}
-                rows={1}
-                aria-label={t("communities:detail.forum.newPostPlaceholder")}
-                placeholder={t("communities:detail.forum.newPostPlaceholder")}
-                value={newPost}
-                onChange={(event) => setNewPost(event.target.value)}
-                style={{ width: "100%" }}
-              />
-              {attachedImage && (
-                <div className={styles.stagedImage}>
-                  <img src={attachedImage.previewUrl} alt="" />
-                  <button
-                    type="button"
-                    className={styles.stagedImageRemove}
-                    aria-label={t("communities:common.removeImageAria")}
-                    onClick={removeAttachedImage}
-                  >
-                    <FiX aria-hidden />
-                  </button>
-                </div>
-              )}
-              {imageError && (
-                <p className={styles.imageAttachError} role="alert">
-                  {imageError}
-                </p>
-              )}
-            </div>
-            <input
-              ref={imageInputRef}
-              type="file"
-              accept="image/*"
-              className={styles.hiddenFileInput}
-              onChange={(event) => {
-                void handleImageFile(event.target.files?.[0]);
-              }}
-            />
-            <button
-              type="button"
-              className={styles.attachImageBtn}
-              aria-label={t("communities:common.attachImageAria")}
-              disabled={imageUploading}
-              onClick={openImagePicker}
-            >
-              <FiImage aria-hidden />
-            </button>
-            <Button
-              variant="ghost"
-              onClick={post}
-              style={{ whiteSpace: "nowrap", fontSize: 13 }}
-            >
-              {t("communities:detail.forum.postCta")}
-            </Button>
-          </div>
+          <CommunityPostComposer
+            style={{ marginTop: 16 }}
+            viewer={viewer}
+            avatarSize={30}
+            className={detail.newPost}
+            textareaClassName={detail.npTa}
+            placeholder={t("communities:detail.forum.newPostPlaceholder")}
+            value={newPost}
+            onChange={setNewPost}
+            onSubmit={post}
+            submitLabel={t("communities:detail.forum.postCta")}
+            submitVariant="ghost"
+            submitStyle={{ fontSize: 13 }}
+            attach={imageAttach}
+          />
         ))}
     </div>
   );

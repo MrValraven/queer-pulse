@@ -4,6 +4,7 @@ import { ImageSlot, Tag, type ImageSlotTint } from "../../../shared/components/u
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import type { CalendarEvent } from "../data";
+import { eventZoneFormat } from "../eventTimezone";
 import { timeBucketOf, timeBucketLabelKey } from "./pickHighlights";
 import { sizedCover } from "./coverUrl";
 import styles from "./EventPosterCard.module.css";
@@ -35,13 +36,26 @@ function WhenRibbon({ date, now }: { date: Date; now: Date }) {
   );
 }
 
-/** Day + month pill, e.g. "6 Jun". */
-function DateChip({ date, fmt }: { date: Date; fmt: Formatters }) {
+/** Day + month pill, e.g. "6 Jun" — in the event's own zone, so a late-night
+ *  gathering abroad doesn't slide onto the reader's next day. */
+function DateChip({ event, fmt }: { event: CalendarEvent; fmt: Formatters }) {
+  const zone = eventZoneFormat(event.timezone, event.date);
   return (
     <span className={styles.dateChip}>
-      {fmt.date(date, { day: "numeric", month: "short" })}
+      {fmt.date(event.date, {
+        day: "numeric",
+        month: "short",
+        ...zone.dateOptions,
+      })}
     </span>
   );
+}
+
+/** The event's start time on ITS clock, carrying the short zone name whenever
+ *  that clock differs from the reader's own. */
+function EventTime({ event, fmt }: { event: CalendarEvent; fmt: Formatters }) {
+  const zone = eventZoneFormat(event.timezone, event.date);
+  return <>{fmt.time(event.date, zone.timeOptions)}</>;
 }
 
 /** Event-vs-gathering badge. `onScrim` swaps to the opaque, always-legible
@@ -106,7 +120,9 @@ function MetaRow({ event, fmt }: { event: CalendarEvent; fmt: Formatters }) {
     <span className={styles.meta}>
       <span className={styles.metaItem}>{event.hood}</span>
       <span className={styles.dot} aria-hidden />
-      <span className={styles.metaItem}>{fmt.time(event.date)}</span>
+      <span className={styles.metaItem}>
+        <EventTime event={event} fmt={fmt} />
+      </span>
     </span>
   );
 }
@@ -164,7 +180,9 @@ export function EventPosterCard({ event, variant, now, priority = false }: Event
         </span>
         <span className={styles.compactBody}>
           <span className={styles.compactTitle}>{event.title}</span>
-          <span className={styles.compactTime}>{fmt.time(event.date)}</span>
+          <span className={styles.compactTime}>
+            <EventTime event={event} fmt={fmt} />
+          </span>
         </span>
       </Link>
     );
@@ -182,7 +200,7 @@ export function EventPosterCard({ event, variant, now, priority = false }: Event
         {variant === "featured" && <CtaPill className={`${styles.cta}`} />}
         <span className={styles.overlay}>
           <span className={styles.badgeRow}>
-            <DateChip date={event.date} fmt={fmt} />
+            <DateChip event={event} fmt={fmt} />
             <KindTag kind={event.kind} onScrim />
           </span>
           <h3 className={styles.title}>{event.title}</h3>

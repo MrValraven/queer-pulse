@@ -150,6 +150,9 @@ export function changeLabelKey(key: string): string {
       return "settings:changes.interests.lookingFor";
     case "theme.appearance":
       return "settings:nav.item.profileTheme";
+    // Kept for any stale key still in flight. The accessibility pane no longer
+    // marks the page dirty: its two real preferences save on flip and the rest
+    // are inert, so nothing there is ever pending a save.
     case "accessibility.preferences":
       return "settings:nav.item.accessibility";
     default:

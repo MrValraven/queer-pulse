@@ -19,6 +19,7 @@ export type Namespace =
   | "marketing"
   | "members"
   | "magazine"
+  | "cards"
   | "communities"
   | "community"
   | "resources"

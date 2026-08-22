@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { ApiError, apiGet, apiPost } from "./client";
 import { apiAvailable } from "./config";
 import { logError } from "../observability/logger";
 
@@ -28,6 +28,17 @@ export interface NudgesResponse {
 const canCallBackend = (demoMode: boolean): boolean =>
   apiAvailable && !demoMode;
 
+/**
+ * A 401 here is not a fault to report. These endpoints are member-scoped and
+ * the providers that call them also run for anonymous visitors, so "not signed
+ * in" is an expected answer — logging it sent an error event to monitoring on
+ * every logged-out page load.
+ */
+function isExpectedSignedOut(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 401;
+}
+
+
 /** Current dismissal state for the caller, to reconcile the local mirror on load. */
 export async function fetchMyNudges(
   demoMode: boolean,
@@ -36,7 +47,7 @@ export async function fetchMyNudges(
   try {
     return await apiGet<NudgesResponse>("/nudges/me");
   } catch (error) {
-    logError(error, { scope: "nudges.fetch" });
+    if (!isExpectedSignedOut(error)) logError(error, { scope: "nudges.fetch" });
     return null;
   }
 }
@@ -55,6 +66,8 @@ export async function dismissNudge(
   try {
     await apiPost<void>(`/nudges/${key}/dismiss`);
   } catch (error) {
-    logError(error, { scope: "nudges.dismiss", key });
+    if (!isExpectedSignedOut(error)) {
+      logError(error, { scope: "nudges.dismiss", key });
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FiCheck } from "react-icons/fi";
-import { Button, ModalSheet, Select } from "../../shared/components/ui";
+import { FiAlertTriangle, FiCheck } from "react-icons/fi";
+import { Button, ModalSheet, Select, Sending } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { Translation } from "../../shared/i18n/Translation";
@@ -8,6 +8,14 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
 import { ComposeTagsField } from "./ComposeTagsField";
 import styles from "./ComposeThreadModal.module.css";
+
+/**
+ * Where the compose flow is in the publish lifecycle, owned by
+ * `useCreateThreadFlow`. `published` is the ONLY state that renders the plum
+ * confirmation sheet, and it is reached solely from the create mutation's
+ * `onSuccess` — never optimistically.
+ */
+export type PublishStatus = "idle" | "publishing" | "published" | "error";
 
 export interface NewThreadInput {
   title: string;
@@ -30,6 +38,11 @@ interface ComposeThreadModalProps {
   /** Seeds the tags field — used by a topic page's "Write a post" CTA
    *  (DISC-5, `writeHrefForTag`) to pre-attach that topic's tag. */
   initialTags?: string[];
+  /** Where the publish request stands, owned by `useCreateThreadFlow`. The
+   *  confirmation sheet renders on `"published"` ONLY, which that hook sets
+   *  from the mutation's `onSuccess`. `"error"` keeps this form (and the
+   *  member's draft) on screen with an inline explanation. */
+  status: PublishStatus;
 }
 
 // Selectable categories — exclude the synthetic "all" bucket.
@@ -41,6 +54,7 @@ export function ComposeThreadModal({
   onPublish,
   initialTitle = "",
   initialTags = [],
+  status,
 }: ComposeThreadModalProps) {
   const { t } = useTranslation();
   const { role } = useAuth();
@@ -51,12 +65,13 @@ export function ComposeThreadModal({
   const [tags, setTags] = useState<string[]>(initialTags);
   const [communitySlug, setCommunitySlug] = useState("");
   const [isOfficial, setIsOfficial] = useState(false);
-  const [published, setPublished] = useState(false);
   const myCommunityOptions = useMyCommunityOptions();
 
-  const canPublish = title.trim().length > 0 && body.trim().length > 0;
+  const isPublishing = status === "publishing";
+  const canPublish =
+    title.trim().length > 0 && body.trim().length > 0 && !isPublishing;
 
-  if (published) {
+  if (status === "published") {
     return (
       <ModalSheet onClose={onClose} success ariaLabel={t("forum:compose.title")}>
         <div className={styles.confirm}>
@@ -94,7 +109,6 @@ export function ComposeThreadModal({
             ...(communitySlug ? { communitySlug } : {}),
             ...(isAdmin && isOfficial ? { isOfficial: true } : {}),
           });
-          setPublished(true);
         }}
       >
         <h2 className={styles.dialogTitle}>{t("forum:compose.title")}</h2>
@@ -180,12 +194,30 @@ export function ComposeThreadModal({
           />
         </label>
 
+        {status === "error" && (
+          <p className={styles.publishError} role="alert">
+            <FiAlertTriangle aria-hidden />
+            {t("forum:compose.publishFailed")}
+          </p>
+        )}
+
         <div className={styles.dialogActions}>
-          <Button variant="ghost" type="button" onClick={onClose}>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={onClose}
+            disabled={isPublishing}
+          >
             {t("forum:compose.cancel")}
           </Button>
           <Button variant="primary" type="submit" disabled={!canPublish}>
-            {t("forum:compose.publishCta")}
+            {isPublishing ? (
+              <Sending label={t("forum:compose.publishing")} />
+            ) : status === "error" ? (
+              t("forum:compose.publishRetryCta")
+            ) : (
+              t("forum:compose.publishCta")
+            )}
           </Button>
         </div>
       </form>

@@ -1,4 +1,5 @@
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useTablistKeys } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./DeckPage.module.css";
 
@@ -12,6 +13,9 @@ interface DeckControlsProps {
 
 export function DeckControls({ current, total, onGo, onPrev, onNext }: DeckControlsProps) {
   const { t } = useTranslation();
+  // APG tablist keys across the slide dots.
+  const { tabProps } = useTablistKeys(total, onGo);
+
   return (
     <div className={styles.controls}>
       <button type="button" className={styles.arrow} onClick={onPrev}
@@ -20,6 +24,7 @@ export function DeckControls({ current, total, onGo, onPrev, onNext }: DeckContr
         {Array.from({ length: total }, (_, index) => (
           <button key={index} type="button" role="tab"
             aria-selected={index === current}
+            {...tabProps(index, index === current)}
             aria-label={t("magazine:deck.goToSlide", { n: index + 1 })}
             className={`${styles.dot} ${index === current ? styles.dotOn : ""}`}
             onClick={() => onGo(index)} />

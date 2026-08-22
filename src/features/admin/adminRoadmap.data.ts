@@ -28,7 +28,7 @@ export interface DemoRoadmapState {
 
 // ── Demo-override store ──────────────────────────────────────────────────────
 // The DEMO source of truth for the admin roadmap tools. In live mode the
-// server owns this content (`GET/POST/PATCH/DELETE /roadmap/admin/*`); in
+// server owns this content (`GET/POST/PATCH/DELETE /admin/roadmap/*`); in
 // demo mode there is no backend, so admin edits (create/update/delete an
 // item/idea/team member, reorder, edit hero stats) persist here instead,
 // keyed to localStorage so they survive a reload (mirrors `outbox.ts` /

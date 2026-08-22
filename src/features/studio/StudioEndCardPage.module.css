@@ -3,9 +3,8 @@
 
 .stage {
   --jade: #4a8c6f;
-  --jade-light: #9be0bd;
   --jade-rgb: 74, 140, 111;
-  --cream: #f7f3ee;
+  --cream: var(--cream);
   --cream-60: rgba(247, 243, 238, 0.62);
   --cream-40: rgba(247, 243, 238, 0.4);
   --serif: "Fraunces Variable", "Fraunces", Georgia, serif;
@@ -247,7 +246,10 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  font-family: var(--mono);
+  /* `--mono` was never defined, so this fell back to the inherited face
+     anyway. Monospace is banned by STYLE-RULES; what a payout figure actually
+     needs is digits that line up, which tabular numerals give on DM Sans. */
+  font-variant-numeric: tabular-nums;
   font-size: 22px;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -275,7 +277,7 @@
 }
 
 .per b {
-  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
   font-style: normal;
   font-weight: 600;
   color: var(--jade);

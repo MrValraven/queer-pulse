@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AuthUser } from "../auth/api/auth.api";
+import { useToast } from "../../shared/components/feedback/useToast";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { logError } from "../../shared/observability/logger";
 import {
   NEUTRAL_AUTHOR,
   SELF_AUTHOR,
@@ -12,7 +15,10 @@ import {
   type CreateThreadDto,
   type ForumThreadResponse,
 } from "./api/forum.api";
-import { type NewThreadInput } from "./ComposeThreadModal";
+import {
+  type NewThreadInput,
+  type PublishStatus,
+} from "./ComposeThreadModal";
 
 /**
  * Owns the create-thread concern lifted out of `useForumPageState`: the compose
@@ -21,13 +27,21 @@ import { type NewThreadInput } from "./ComposeThreadModal";
  *
  * Deliberately does NOT own `cat`/`sort`/the first-post prompt — those are other
  * concerns in `useForumPageState`. This hook calls `onAfterPublish` once the
- * optimistic thread is queued so the caller can run its post-publish side
- * effects (surface the new post, dismiss the prompt) in the same order as before.
+ * thread is genuinely published (immediately in demo, in the mutation's
+ * `onSuccess` in live) so the caller can run its post-publish side effects:
+ * surface the new post, dismiss the first-post prompt.
  *
  * Dead-link fix: the create mutation returns a `ForumThreadResponse`, whose real
  * `slug` (+ `opPostId`) we stamp onto the optimistic card in `onSuccess` — so its
  * list link resolves in live mode *before* the list refetch lands (the old
  * slug-less card linked to `/thread/<tempId>`, which 404'd).
+ *
+ * Fake-success fix: nothing about publishing is confirmed until the server says
+ * so. `publishStatus` drives the modal (`publishing` disables the submit,
+ * `published` shows the confirmation, `error` keeps the draft on screen with an
+ * inline message), the optimistic card is REMOVED again in `onError`, and
+ * `onAfterPublish` (which resets the filters and permanently dismisses the
+ * first-post prompt) only runs once the thread genuinely exists.
  */
 export function useCreateThreadFlow({
   demoMode,
@@ -41,6 +55,8 @@ export function useCreateThreadFlow({
   onAfterPublish: () => void;
 }) {
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
   const createMutation = useMutation<
     ForumThreadResponse,
     Error,
@@ -50,6 +66,7 @@ export function useCreateThreadFlow({
     onSuccess: () =>
       void queryClient.invalidateQueries({ queryKey: ["forum-threads"] }),
   });
+  const [publishStatus, setPublishStatus] = useState<PublishStatus>("idle");
   const [composing, setComposing] = useState(false);
   const [composeSeed, setComposeSeed] = useState("");
   // DISC-5 — seeds `ComposeThreadModal`'s tags field, so a topic page's
@@ -61,11 +78,18 @@ export function useCreateThreadFlow({
   function openCompose(seed = "", tags: string[] = []) {
     setComposeSeed(seed);
     setComposeTags(tags);
+    setPublishStatus("idle");
     setComposing(true);
   }
 
   function closeCompose() {
+    // A publish in flight can't be dismissed: until the server answers, the
+    // optimistic card carries no slug, so its row would link to a dead
+    // `/thread/<tempId>`. The request settles into `published` or `error`
+    // either way, and both are dismissible.
+    if (publishStatus === "publishing") return;
     setComposing(false);
+    setPublishStatus("idle");
   }
 
   function publishThread({
@@ -85,11 +109,14 @@ export function useCreateThreadFlow({
     // production. Demo keeps the scripted "You" persona; live with no session
     // (compose is auth-gated, so this is only a defensive fallback) uses a
     // neutral non-persona placeholder instead of the demo persona.
+    // Both placeholder blocks ship an empty `name` and `isMine: true`; the
+    // display string is filled here, where a translator is in scope, so the
+    // card never renders a hardcoded English "You".
     const author = demoMode
-      ? SELF_AUTHOR
+      ? { ...SELF_AUTHOR, name: t("forum:author.you") }
       : user
-        ? selfAuthorFromProfile(user.profile)
-        : NEUTRAL_AUTHOR;
+        ? { ...selfAuthorFromProfile(user.profile), isMine: true }
+        : { ...NEUTRAL_AUTHOR, name: t("forum:author.you") };
     setExtraThreads((prev) => [
       {
         id: tempId,
@@ -97,8 +124,9 @@ export function useCreateThreadFlow({
         title,
         excerpt,
         author,
-        posted: "just now",
-        views: 1,
+        posted: t("forum:time.justNow"),
+        // No `views`: a thread published a second ago has no view count worth
+        // showing, and the backend serves none. The OP card hides the stat.
         upvotes: 1,
         comments: 0,
         tags,
@@ -111,9 +139,14 @@ export function useCreateThreadFlow({
       },
       ...prev,
     ]);
-    onAfterPublish();
-    // Demo mode no-ops (the local thread above is the record).
-    if (demoMode) return;
+    // Demo mode no-ops (the local thread above is the record), so it is
+    // published the moment the card exists.
+    if (demoMode) {
+      onAfterPublish();
+      setPublishStatus("published");
+      return;
+    }
+    setPublishStatus("publishing");
     createMutation.mutate(
       {
         title,
@@ -152,6 +185,21 @@ export function useCreateThreadFlow({
                 : thread,
             ),
           );
+          // Filters reset + the first-post prompt is dismissed only now that
+          // the thread really exists.
+          onAfterPublish();
+          setPublishStatus("published");
+        },
+        onError: (error) => {
+          // Nothing was created: take the optimistic card back out so it can't
+          // link to a dead `/thread/<tempId>`, and tell the member plainly. The
+          // modal stays open on the form with their draft untouched.
+          logError(error, { scope: "forum.createThread" });
+          setExtraThreads((prev) =>
+            prev.filter((thread) => thread.id !== tempId),
+          );
+          setPublishStatus("error");
+          showToast(t("forum:toast.error"), "error");
         },
       },
     );
@@ -161,6 +209,7 @@ export function useCreateThreadFlow({
     composing,
     composeSeed,
     composeTags,
+    publishStatus,
     openCompose,
     closeCompose,
     publishThread,

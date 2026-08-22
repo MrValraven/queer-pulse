@@ -107,7 +107,7 @@ export function SimulationPlayer() {
         <a
           href={withSandboxFlag(flow.to)}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className={styles.openFull}
         >
           <FiExternalLink aria-hidden /> {t("simulations:player.openFullScreen")}

@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
 import { setMonitoringConsent } from "../../shared/observability/sentry";
 import { useLocalStorage } from "../../shared/hooks";
 import {
@@ -49,6 +50,7 @@ function isStoredConsent(v: unknown): v is StoredConsent {
  */
 export function ConsentProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
+  const { loggedIn, checking } = useAuth();
   const [stored, setStored] = useLocalStorage<StoredConsent | null>(
     STORAGE_KEY,
     null,
@@ -76,9 +78,14 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     setMonitoringConsent(consent.monitoring);
   }, [consent.monitoring]);
 
-  // Live mode: reconcile with the caller's current effective consent on mount.
   const reconciled = useRef(false);
+  // Live mode: reconcile with the caller's current effective consent once a
+  // session is confirmed. `/consent/me` is member-scoped, so firing it for an
+  // anonymous visitor only bought a guaranteed 401 — which then dragged the
+  // whole recovery path behind it (a POST /auth/refresh, an `onAuthLost`
+  // reconcile, an error captured to monitoring) on every logged-out page load.
   useEffect(() => {
+    if (checking || !loggedIn) return;
     if (reconciled.current) return;
     reconciled.current = true;
     let cancelled = false;
@@ -92,7 +99,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [demoMode, setStored]);
+  }, [checking, loggedIn, demoMode, setStored]);
 
   const setConsent = useCallback(
     (next: Record<OptInCategory, boolean>, source: ConsentSource) => {

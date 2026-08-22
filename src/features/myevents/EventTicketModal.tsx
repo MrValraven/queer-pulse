@@ -41,7 +41,7 @@ export function EventTicketModal() {
         <Button
           variant="jade"
           onClick={() => {
-            downloadICS(`queerpulse-${ev.id}.ics`, [ev]);
+            downloadICS(`queerpulse-${ev.id}.ics`, [ev], t);
             toast(t("myevents:ticketModal.addedToCalendarToast"), "success");
           }}
         >

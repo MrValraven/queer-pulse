@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   GENRE_BG,
@@ -13,17 +13,21 @@ export function ReadingGroupCard({
   messagesPath,
   onWaitlist,
   waitlistPosition,
-  waitlistEnabled = true,
+  isWaitlistEnabled = true,
 }: {
   g: Group;
-  messagesPath: string;
+  /** Where "Request to join" goes. Omitted when there is nobody to reach:
+   *  reading groups carry no lister account, so live mode has no recipient
+   *  for the request and the card shows an honest disabled state instead of
+   *  dropping the member into an empty inbox. */
+  messagesPath?: string;
   onWaitlist: () => void;
   /** The user's position on this group's waitlist, if they've joined. */
   waitlistPosition?: number;
   /** Whether the waitlist affordance is active. Waitlists have no backend yet,
    *  so live mode passes `false` and shows a disabled "not open" state instead
    *  of an active button that would fake a spot. */
-  waitlistEnabled?: boolean;
+  isWaitlistEnabled?: boolean;
 }) {
   const { t } = useTranslation();
   const spotsClass =
@@ -79,34 +83,28 @@ export function ReadingGroupCard({
         <span className={`${styles.gcSpots} ${spotsClass}`}>{spotsText}</span>
         {g.spots === 0 ? (
           waitlistPosition ? (
-            <span
-              className={`${styles.gcJoin} ${styles.gcJoinDisabled}`}
-              aria-disabled="true"
-            >
+            <Button variant="ghost" size="sm" disabled>
               {t("community:readingGroups.card.onWaitlist", {
                 position: waitlistPosition,
               })}
-            </span>
-          ) : waitlistEnabled ? (
-            <button
-              type="button"
-              className={styles.gcJoin}
-              onClick={onWaitlist}
-            >
+            </Button>
+          ) : isWaitlistEnabled ? (
+            <Button variant="ghost" size="sm" onClick={onWaitlist}>
               {t("community:readingGroups.card.joinWaitlistCta")}
-            </button>
+            </Button>
           ) : (
-            <span
-              className={`${styles.gcJoin} ${styles.gcJoinDisabled}`}
-              aria-disabled="true"
-            >
+            <Button variant="ghost" size="sm" disabled>
               {t("community:readingGroups.card.waitlistUnavailable")}
-            </span>
+            </Button>
           )
-        ) : (
-          <Link to={messagesPath} className={styles.gcJoin}>
+        ) : messagesPath ? (
+          <Button variant="ghost" size="sm" to={messagesPath}>
             {t("community:readingGroups.card.requestToJoinCta")}
-          </Link>
+          </Button>
+        ) : (
+          <Button variant="ghost" size="sm" disabled>
+            {t("community:readingGroups.card.joinUnavailable")}
+          </Button>
         )}
       </div>
     </article>

@@ -95,6 +95,9 @@ export const INTENTS: { value: string; labelKey: string }[] = [
 export const QUICK_STARTS: {
   to: string;
   icon: IconType;
+  /** Tile icon tint, written against the design tokens' rgb channels
+   *  (`rgba(var(--plum-rgb), …)`) so it follows a token change and the dark
+   *  theme instead of freezing a hand-copied literal. */
   iconBackground: string;
   titleKey: string;
   descriptionKey: string;
@@ -104,21 +107,21 @@ export const QUICK_STARTS: {
   {
     to: routes.members,
     icon: FiUsers,
-    iconBackground: "rgba(45,27,61,.07)",
+    iconBackground: "rgba(var(--plum-rgb), 0.07)",
     titleKey: "auth:onboarding.quickStart.browseDirectory.title",
     descriptionKey: "auth:onboarding.quickStart.browseDirectory.desc",
   },
   {
     to: routes.calendar,
     icon: FiCalendar,
-    iconBackground: "rgba(232,119,90,.08)",
+    iconBackground: "rgba(var(--accent-rgb), 0.08)",
     titleKey: "auth:onboarding.quickStart.gatherings.title",
     descriptionKey: "auth:onboarding.quickStart.gatherings.desc",
   },
   {
     to: routes.magazine,
     icon: FiBookOpen,
-    iconBackground: "rgba(74,140,111,.08)",
+    iconBackground: "rgba(var(--jade-rgb), 0.08)",
     titleKey: "auth:onboarding.quickStart.magazine.title",
     descriptionKey: "auth:onboarding.quickStart.magazine.desc",
   },

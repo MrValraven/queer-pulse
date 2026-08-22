@@ -238,7 +238,7 @@ export const studio: Catalog = {
 
   "signin.in.title": "Bem-vinde de <em>volta.</em>",
   "signin.in.lede":
-    "A Studio é um separador na tua conta QueerPulse, não um novo início de sessão. Entra com a conta que já tens.",
+    "A Studio é um separador na tua conta QueerPulse. Entra com a conta que já tens.",
   "signin.emailLabel": "Email",
   "signin.emailPlaceholder": "tu@exemplo.com",
   "signin.in.submitCta": "Entrar",

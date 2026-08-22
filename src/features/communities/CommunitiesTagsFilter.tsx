@@ -81,9 +81,7 @@ export function CommunitiesTagsFilter({
             />
           ) : (
             <p className={styles.tagsNoMatch}>
-              <em>
-                {t("communities:discover.filter.tagsNoMatch", { query })}
-              </em>
+              <em>{t("communities:discover.filter.tagsNoMatch", { query })}</em>
             </p>
           )}
         </div>

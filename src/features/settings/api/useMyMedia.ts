@@ -16,8 +16,10 @@ export const MY_MEDIA_KEY = "my-media";
 export function useMyMedia() {
   const { demoMode } = useDemoMode();
   const query = useQuery<MyMediaListResult>({
-    queryKey: [MY_MEDIA_KEY],
-    enabled: true,
+    // Keyed on the mode like every sibling hook: one shared key meant that
+    // after a demo/live switch the pane served the other mode's cached list
+    // until it happened to refetch.
+    queryKey: [MY_MEDIA_KEY, demoMode],
     queryFn: () =>
       demoMode
         ? // Demo data is fully known, so its reference checks never fail.
@@ -44,10 +46,15 @@ export function useDeleteMyMedia() {
       await deleteMyMedia(key);
     },
     onSuccess: (_result, key) => {
-      queryClient.setQueryData<MyMediaListResult>([MY_MEDIA_KEY], (current) =>
-        current
-          ? { ...current, items: current.items.filter((item) => item.key !== key) }
-          : current,
+      queryClient.setQueryData<MyMediaListResult>(
+        [MY_MEDIA_KEY, demoMode],
+        (current) =>
+          current
+            ? {
+                ...current,
+                items: current.items.filter((item) => item.key !== key),
+              }
+            : current,
       );
     },
   });

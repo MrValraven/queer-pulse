@@ -1,7 +1,13 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { FiArrowRight, FiCompass } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FadeIn, Outro } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  Outro,
+  Tabs,
+  tabPanelProps,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { INVITE, SITUATIONS, TABS, type TabId } from "./family.data";
@@ -17,8 +23,9 @@ export function FamilyPage() {
   // Low-pressure entry: this is a sensitive topic, so picking a situation is
   // always optional. "Just exploring" lets people read everything without
   // declaring anything about themselves.
-  const [exploring, setExploring] = useState(false);
+  const [isExploring, setIsExploring] = useState(false);
   const tabNavRef = useRef<HTMLDivElement>(null);
+  const tabsId = useId();
 
   const scrollToTabs = () => {
     const el = tabNavRef.current;
@@ -30,13 +37,13 @@ export function FamilyPage() {
 
   const selectSituation = (index: number, tab: TabId) => {
     setSelectedSit(index);
-    setExploring(false);
+    setIsExploring(false);
     setActive(tab);
     scrollToTabs();
   };
 
   const browseFreely = () => {
-    setExploring(true);
+    setIsExploring(true);
     setSelectedSit(null);
     scrollToTabs();
   };
@@ -81,6 +88,7 @@ export function FamilyPage() {
                 className={[styles.sitCard, selectedSit === i && styles.sitSel]
                   .filter(Boolean)
                   .join(" ")}
+                aria-pressed={selectedSit === i}
                 onClick={() => selectSituation(i, s.tab)}
               >
                 <div className={styles.sitName}>
@@ -98,9 +106,13 @@ export function FamilyPage() {
           <div className={styles.browseRow}>
             <button
               type="button"
-              className={[styles.browseBtn, exploring && styles.browseBtnActive]
+              className={[
+                styles.browseBtn,
+                isExploring && styles.browseBtnActive,
+              ]
                 .filter(Boolean)
                 .join(" ")}
+              aria-pressed={isExploring}
               onClick={browseFreely}
             >
               <FiCompass aria-hidden />
@@ -112,26 +124,25 @@ export function FamilyPage() {
 
       <div className={styles.tabNav} ref={tabNavRef}>
         <div className={styles.tabNavInner}>
-          {TABS.map((tabOption) => (
-            <button
-              key={tabOption.id}
-              type="button"
-              className={[
-                styles.tabBtn,
-                active === tabOption.id && styles.tabBtnActive,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setActive(tabOption.id)}
-            >
-              {t(`community:${tabOption.labelKey}`)}
-            </button>
-          ))}
+          <Tabs
+            className={styles.familyTabs}
+            idPrefix={tabsId}
+            label={t("community:family.tabs.label")}
+            variant="underline"
+            tabs={TABS.map((tabOption) => ({
+              id: tabOption.id,
+              label: t(`community:${tabOption.labelKey}`),
+            }))}
+            active={active}
+            onChange={(id) => setActive(id as TabId)}
+          />
         </div>
       </div>
 
       <FadeIn key={active}>
-        <FamilyTabContent tab={tab} />
+        <div {...tabPanelProps(tabsId, active)}>
+          <FamilyTabContent tab={tab} />
+        </div>
       </FadeIn>
 
       <FamilyTalkSection />

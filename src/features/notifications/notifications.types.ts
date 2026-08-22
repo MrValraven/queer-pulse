@@ -55,5 +55,13 @@ export interface Notification {
   text: ReactNode;
   meta: string;
   time: string;
+  /**
+   * Raw ISO creation time behind the display `time` label. The page's
+   * "Today & recent" / "Earlier" headers bucket on this; without it they were
+   * a positional slice (first seven rows = "recent") that filed today's eighth
+   * notification under "Earlier". Absent rows stay in the first bucket rather
+   * than being filed under a header nothing justifies.
+   */
+  createdAtIso?: string;
   actions?: NotifAction[];
 }

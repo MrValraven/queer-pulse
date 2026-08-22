@@ -12,14 +12,41 @@ import type { ModReport } from "../community.model";
  * (owner/mod-only) and adapts each row to a `ModReport` — mirrors
  * `useJoinRequests`.
  */
-export function useCommunityReports(slug: string | undefined): ModReport[] {
+export interface CommunityReportsResult {
+  items: ModReport[];
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
+}
+
+/**
+ * The failure signal is part of the result for the same reason it is on
+ * `useJoinRequests`: a 403 or a network error used to render as "Nothing
+ * reported", which reads to a moderator as an empty queue rather than as a
+ * queue that never loaded.
+ */
+export function useCommunityReports(
+  slug: string | undefined,
+): CommunityReportsResult {
   const { demoMode } = useDemoMode();
-  const query = useQuery<ModReport[]>({
+  const query = useQuery({
     queryKey: ["community-reports", slug],
     enabled: !demoMode && Boolean(slug),
-    queryFn: async () =>
-      (await getCommunityReports(slug!)).map(communityReportToModReport),
+    queryFn: () => getCommunityReports(slug!),
   });
-  if (demoMode) return getLiving(slug)?.reports ?? [];
-  return query.data ?? [];
+  const refetch = () => void query.refetch();
+  if (demoMode) {
+    return {
+      items: getLiving(slug)?.reports ?? [],
+      isLoading: false,
+      isError: false,
+      refetch: () => {},
+    };
+  }
+  return {
+    items: (query.data ?? []).map(communityReportToModReport),
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch,
+  };
 }

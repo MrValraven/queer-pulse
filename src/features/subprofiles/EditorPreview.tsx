@@ -5,6 +5,7 @@ import { useProfileData } from "../../app/providers/useProfile";
 import { SubprofilePageBody } from "./SubprofilePageBody";
 import { ownerViewToShowcaseView, type SubprofileView } from "./api/subprofiles.adapters";
 import { personaPublicPathForOwner } from "./personaLinks.data";
+import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import { skinFor, SKIN_META } from "./subprofile-skins";
 import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
@@ -69,13 +70,26 @@ export function EditorPreview({
     skinData: { ...(subprofile.skinData ?? {}), coverBleed: editor.coverBleed },
   };
 
+  // The owner half of a linked persona's address is the persona's CREATOR,
+  // never whoever is looking at the editor: a co-owner building it from their
+  // own slug got a link to a page that doesn't exist. Falling back to the
+  // viewer's slug is only ever used for the preview's own rendering, never for
+  // a link the member can follow.
+  const creatorSlug = usePersonaCreatorSlug(
+    subprofile.id,
+    subprofile.memberCount,
+  );
+
   const skin = skinFor(liveView.kind);
-  const data = ownerViewToShowcaseView(liveView, profile.slug);
+  const data = ownerViewToShowcaseView(liveView, creatorSlug ?? profile.slug);
   const skinStyle = skinVars(liveView.accent ?? DEFAULT_ACCENT);
-  // "Open live" always points at the SAVED persona's public URL — it opens
-  // what is actually live, which unsaved slug/handle edits haven't changed
-  // yet, so it must NOT follow the live-edited slug.
-  const liveHref = personaPublicPathForOwner(subprofile, profile.slug);
+  // "Open live" always points at the SAVED persona's public URL: it opens what
+  // is actually live, which unsaved slug/handle edits haven't changed yet, so
+  // it must NOT follow the live-edited slug. Rendered only once the creator
+  // slug is known.
+  const liveHref = creatorSlug
+    ? personaPublicPathForOwner(subprofile, creatorSlug)
+    : null;
 
   return (
     <>
@@ -83,15 +97,18 @@ export function EditorPreview({
         <span>
           {t("subprofiles:editorPreview.label")} · {SKIN_META[skin].name}
         </span>
-        <Button
-          variant="ghost"
-          size="sm"
-          href={liveHref}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {t("subprofiles:editorPreview.openLive")} <FiExternalLink aria-hidden />
-        </Button>
+        {liveHref && (
+          <Button
+            variant="ghost"
+            size="sm"
+            href={liveHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("subprofiles:editorPreview.openLive")}{" "}
+            <FiExternalLink aria-hidden />
+          </Button>
+        )}
       </div>
       <div className="ed-prev-scroll">
         <div className="ed-prev-frame zoom">

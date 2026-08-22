@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { safeHref } from "../../shared/lib/safeHref";
 import { Button } from "../../shared/components/ui";
 import { AdminChip, type AdminTone } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -22,6 +23,7 @@ export function AdminWriterApplicationsRow({
   const [reviewNote, setReviewNote] = useState("");
   const applicantName =
     application.applicant?.name ?? t("admin:adminWriterApplications.unknownMember");
+  const sampleHref = safeHref(application.sampleLink);
 
   return (
     <div className={styles.row}>
@@ -38,9 +40,13 @@ export function AdminWriterApplicationsRow({
         {application.sampleLink && (
           <div className={styles.rowNote}>
             {t("admin:adminWriterApplications.row.sampleLink")}:{" "}
-            <a href={application.sampleLink} target="_blank" rel="noreferrer">
-              {application.sampleLink}
-            </a>
+            {sampleHref ? (
+              <a href={sampleHref} target="_blank" rel="noopener noreferrer">
+                {application.sampleLink}
+              </a>
+            ) : (
+              <span>{application.sampleLink}</span>
+            )}
           </div>
         )}
       </div>

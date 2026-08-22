@@ -146,7 +146,7 @@
   font-family: var(--serif);
 }
 .lyrFoot a {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   font-weight: 600;
   font-style: normal;
   font-family: var(--sans);
@@ -299,7 +299,7 @@
   height: 40px;
   border-radius: 10px;
   background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -326,7 +326,7 @@
   margin-left: auto;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   white-space: nowrap;
 }
 

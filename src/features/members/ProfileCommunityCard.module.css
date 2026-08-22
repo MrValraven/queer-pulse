@@ -4,7 +4,7 @@
   gap: 8px;
   padding: 18px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   text-decoration: none;
   color: var(--ink);
@@ -12,7 +12,7 @@
 }
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(45, 27, 61, 0.08);
+  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.08);
 }
 .top {
   display: flex;
@@ -31,7 +31,7 @@
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   color: var(--plum);
 }
 .name {
@@ -40,7 +40,7 @@
 }
 .tagline {
   font-size: var(--text-body-sm);
-  color: rgba(45, 27, 61, 0.72);
+  color: rgba(var(--plum-rgb), 0.72);
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;

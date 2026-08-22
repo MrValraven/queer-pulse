@@ -414,3 +414,17 @@ export function matchesBudget(p: Profile, budget: string) {
   if (budget === "1100") return b > 1100;
   return true;
 }
+
+/**
+ * The upper bound of each budget bucket, for the directory's server-side
+ * `budgetMax` filter. The API takes a ceiling only, so the server returns a
+ * superset (everything at or below the bucket's top) and `matchesBudget`
+ * refines it to the bucket's own band. The open-ended top bucket has no
+ * ceiling, hence `undefined`.
+ */
+export function budgetCeilingFor(budget: string): number | undefined {
+  if (budget === "600") return 700;
+  if (budget === "700") return 900;
+  if (budget === "900") return 1100;
+  return undefined;
+}

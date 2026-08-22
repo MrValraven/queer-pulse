@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./ForumAuthor.module.css";
@@ -78,51 +78,5 @@ export function ProfileLink({
     <Link to={to} className={className} aria-label={label}>
       {children}
     </Link>
-  );
-}
-
-/** Like ProfileLink, but for use INSIDE another router link (e.g. a thread card):
- * a span with role="link" that navigates on click without nesting anchors. */
-export function ProfileSpanLink({
-  to,
-  className,
-  name,
-  official,
-  children,
-}: {
-  to?: string;
-  className?: string;
-  name: string;
-  official?: boolean;
-  children: ReactNode;
-}) {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  if (!to) return <>{children}</>;
-  const go = () => navigate(to);
-  const label = official
-    ? t("forum:author.aboutTeamAria")
-    : t("forum:author.viewProfileAria", { name });
-  return (
-    <span
-      role="link"
-      tabIndex={0}
-      aria-label={label}
-      className={className}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        void go();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          e.stopPropagation();
-          void go();
-        }
-      }}
-    >
-      {children}
-    </span>
   );
 }

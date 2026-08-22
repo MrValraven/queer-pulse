@@ -99,6 +99,11 @@
   color: var(--ink-60);
   font-size: 14px;
 }
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
 
 /* ── Emergency band ─────────────────────────────────────────────────────── */
 .emergBand {
@@ -122,7 +127,7 @@
   place-items: center;
   border-radius: 12px;
   background: var(--danger);
-  color: #fff;
+  color: var(--cream);
 }
 .emergIco svg {
   width: 20px;
@@ -1179,7 +1184,7 @@ button.reportMain:focus-visible {
 }
 .decOverturnOn .decIco {
   background: var(--jade);
-  color: #fff;
+  color: var(--cream);
 }
 .decOverturnOn .decTitle {
   color: var(--jade);

@@ -63,6 +63,7 @@ export const messages: Catalog = {
   "attachments.imageAlt": "Mensagem com foto",
   "attachments.fallbackText": "Foto",
   "attachments.uploading": "A enviar foto…",
+  "attachments.previewUnavailable": "Pré-visualização indisponível",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
@@ -106,6 +107,9 @@ export const messages: Catalog = {
   "conversation.activeNow": "Ativo/a agora",
   "conversation.officialMeta":
     "Oficial · Não é possível responder nesta conversa",
+  // Nome de apresentação para uma conversa oficial/de sistema sem perfil
+  // associado (messages.adapters.ts's conversationToView).
+  "conversation.officialName": "Equipa QueerPulse",
   "conversation.connectedSinceSuffix": " · Ligação desde {date}",
   "conversation.viewProfile": "Ver perfil",
   "conversation.you": "Tu",
@@ -249,6 +253,8 @@ export const messages: Catalog = {
 
   // Conversas em grupo (#17) — escolha de criação (NewGroupModal), cabeçalho +
   // info do grupo (ConversationHeader / GroupInfoModal), aviso de saída.
+  // Título de apresentação para um grupo sem título (messages.adapters.ts).
+  "group.untitled": "Grupo",
   "group.newTooltip": "Novo grupo",
   "group.newTitle": "Novo grupo",
   "group.newSub": "Dá um nome ao grupo e escolhe quem entra.",

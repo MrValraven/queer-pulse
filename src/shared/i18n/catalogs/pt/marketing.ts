@@ -19,7 +19,7 @@ export const marketing: Catalog = {
   "about.meta.title":
     "Sobre a QueerPulse: uma rede pequena e gerida por pessoas",
   "about.meta.description":
-    "A QueerPulse é uma plataforma comunitária queer pequena, por convite, em Lisboa — sem anúncios, sem algoritmo, sem crescimento pelo crescimento. Eis o que acreditamos, e quem a gere.",
+    "A QueerPulse é uma plataforma comunitária queer pequena, por convite, em Lisboa: sem anúncios, sem algoritmo, sem crescimento pelo crescimento. Eis o que acreditamos, e quem a gere.",
   "about.hero.eyebrow": "Sobre",
   "about.hero.title": "Uma plataforma construída <em>de propósito.</em>",
   "about.hero.sub":
@@ -27,11 +27,11 @@ export const marketing: Catalog = {
   "about.why.eyebrow": "Porque existimos",
   "about.why.title": "Construímos aquilo <em>de que precisávamos.</em>",
   "about.why.p1":
-    "A QueerPulse começou como uma frustração, não como um plano de negócio. Todas as plataformas onde tentámos construir comunidade estavam desenhadas para prender a nossa atenção, não para nos servir — otimizadas para tempo de ecrã, não para saber se nos encontrávamos mesmo.",
+    "A QueerPulse começou como uma frustração que tínhamos de resolver. Todas as plataformas onde tentámos construir comunidade estavam desenhadas para prender a nossa atenção e otimizadas para tempo de ecrã, indiferentes a se nos encontrávamos mesmo.",
   "about.why.p2":
-    "Por isso, um pequeno grupo — profissionais, organizadores, artistas — decidiu construir a alternativa: uma rede pensada para a confiança, não para a escala, onde o objetivo é a ligação, não o envolvimento.",
+    "Por isso, um pequeno grupo (profissionais, organizadores, artistas) decidiu construir a alternativa: uma rede pensada para a confiança, onde o objetivo é a ligação.",
   "about.why.p3":
-    "Cresce mais devagar assim. Isso é o desenho, não um defeito.",
+    "Cresce mais devagar assim. Isso é o desenho.",
   "about.difference.eyebrow": "A diferença",
   "about.difference.title": "O que <em>não estamos a construir.</em>",
   "about.contrast.them.label": "Em todo o lado",
@@ -55,21 +55,21 @@ export const marketing: Catalog = {
   "about.values.smallByDesign.title": "Pequeno por design",
   "about.values.smallByDesign.body":
     "Preferimos continuar a ser uma sala que funciona a tornarmo-nos uma plataforma que não funciona. O crescimento nunca é o objetivo por si só.",
-  "about.values.infrastructure.title": "Infraestrutura, não conteúdo",
+  "about.values.infrastructure.title": "Construímos infraestrutura",
   "about.values.infrastructure.body":
-    "Estamos a construir a canalização de que a comunidade queer precisa — apresentações, espaços seguros, entreajuda — não mais um feed para percorrer.",
+    "Estamos a construir a canalização de que a comunidade queer precisa: apresentações, espaços seguros, entreajuda.",
   "about.values.communityEconomy.title": "Uma economia comunitária",
   "about.values.communityEconomy.body":
-    "O dinheiro que passa pela QueerPulse — quotas, gorjetas, apoios — fica dentro da comunidade de onde veio.",
+    "O dinheiro que passa pela QueerPulse (quotas, gorjetas, apoios) fica dentro da comunidade de onde veio.",
   "about.values.communityOwns.title": "A comunidade é dona do seu espaço",
   "about.values.communityOwns.body":
-    "As decisões sobre esta plataforma são tomadas às claras, com quem a usa — não em gabinetes fechados.",
+    "As decisões sobre esta plataforma são tomadas às claras, com quem a usa.",
   "about.values.noDataEconomy.title": "Sem economia de dados",
   "about.values.noDataEconomy.body":
     "Não vendemos atenção nem dados pessoais a anunciantes. Não há terceiros para quem estejamos a construir isto.",
   "about.values.accessNotEarned.title": "O acesso não se ganha a atuar",
   "about.values.accessNotEarned.body":
-    "Entras pela confiança — um aval, um convite — não por publicares as coisas certas com frequência suficiente.",
+    "Entras pela confiança: um aval, um convite.",
   "about.who.eyebrow": "Quem está por trás disto",
   "about.who.title": "Construída pela <em>comunidade, para a comunidade.</em>",
   "about.who.p1":
@@ -88,10 +88,14 @@ export const marketing: Catalog = {
 
   // ── Ativismo ───────────────────────────────────────────────────────────
   "activism.backToVolunteer": "Voltar a Voluntariado",
+  "activism.meta.title":
+    "Ativismo com a QueerPulse: formas de te envolveres em Lisboa",
+  "activism.meta.description":
+    "Um guia prático de ativismo queer em Lisboa: por onde começar, o que uma competência pode fazer, como mobilizar, e as organizações parceiras que já estão no terreno.",
   "activism.hero.eyebrow": "Ativismo",
   "activism.hero.title": "Cuidar da comunidade é <em>político.</em>",
   "activism.hero.sub":
-    "Formas de te envolveres, perto e mais longe — de uma tarde de terça-feira a um compromisso permanente.",
+    "Formas de te envolveres, perto e mais longe: de uma tarde de terça-feira a um compromisso permanente.",
   "activism.nav.onThisPage": "Nesta página",
   "activism.nav.start": "Por onde começar",
   "activism.nav.local": "Localmente",
@@ -112,22 +116,22 @@ export const marketing: Catalog = {
   "activism.start.p1":
     "Não precisas de deixar o emprego nem de te filiares num partido. O ativismo cabe numa tarde.",
   "activism.start.p2":
-    "Aqui tens uma escada — escolhe o degrau que corresponde ao que tens para dar este mês.",
+    "Aqui tens uma escada. Escolhe o degrau que corresponde ao que tens para dar este mês.",
   "activism.start.step1.title": "Aparece uma vez",
   "activism.start.step1.body":
     "Vai a um convívio, uma vigília, uma reunião comunitária. A presença é o primeiro ato.",
   "activism.start.step2.title": "Dá algumas horas",
   "activism.start.step2.body":
-    "Escolhe um turno recorrente — uma linha de apoio, uma tarde de sensibilização, uma banca num evento.",
+    "Escolhe um turno recorrente: uma linha de apoio, uma tarde de sensibilização, uma banca num evento.",
   "activism.start.step3.title": "Traz uma competência",
   "activism.start.step3.body":
-    "Design, código, cozinha, trabalho de cuidado — as organizações precisam de tudo isso, não só de cartazes.",
+    "Design, código, cozinha, trabalho de cuidado: as organizações precisam de tudo isso, cada competência conta.",
   "activism.start.step4.title": "Compromete-te",
   "activism.start.step4.body":
     "Entra numa direção, lidera uma campanha, orienta alguém mais novo na organização.",
   "activism.local.title": "Localmente, <em>em Lisboa</em>",
   "activism.local.p1":
-    "As lutas mais próximas de casa raramente fazem manchete — habitação, acesso a cuidados de saúde, um espaço ameaçado.",
+    "As lutas mais próximas de casa raramente fazem manchete: habitação, acesso a cuidados de saúde, um espaço ameaçado.",
   "activism.local.p2":
     "Neste momento, <b>Mouraria e Intendente</b> são os bairros onde inquilinos queer mais precisam de apoio.",
   "activism.local.banner.title": "Pressão habitacional na Mouraria",
@@ -135,10 +139,10 @@ export const marketing: Catalog = {
     "Vários agregados queer enfrentam avisos de não renovação este trimestre. O papel de Defesa da Habitação abaixo é uma resposta direta.",
   "activism.skills.title": "Traz uma <em>competência</em>",
   "activism.skills.p1":
-    "Cada organização abaixo precisa de mais do que voluntários com cartazes — precisa do teu ofício.",
+    "Cada organização abaixo precisa de mais do que voluntários com cartazes. Precisa do teu ofício.",
   "activism.skills.design.title": "Design",
   "activism.skills.design.body":
-    "Materiais de campanha, zines, sinalética — trabalho visual que faz um argumento chegar.",
+    "Materiais de campanha, zines, sinalética: trabalho visual que faz um argumento chegar.",
   "activism.skills.tech.title": "Tecnologia",
   "activism.skills.tech.body":
     "Sites, bases de dados, segurança digital para quem organiza e precisa de estar seguro online.",
@@ -150,14 +154,14 @@ export const marketing: Catalog = {
     "Apoio entre pares, guarda de crianças durante reuniões, ver como estão as pessoas em dificuldade.",
   "activism.mobilise.title": "Como <em>mobilizar</em>",
   "activism.mobilise.p1":
-    "<b>Mobiliza, não apareças só.</b> Traz alguém contigo — os números mudam o que é politicamente possível.",
+    "<b>Mobiliza em conjunto.</b> Traz alguém contigo. Os números mudam o que é politicamente possível.",
   "activism.mobilise.p2":
     "<b>Documenta, não sejas só testemunha.</b> Fotografias e notas de uma ação importam mais tarde, para responsabilização e para a história.",
   "activism.mobilise.p3":
     "<b>Continua depois, não fiques só na marcha.</b> O trabalho depois da manifestação é onde acontece a maior parte da mudança real.",
   "activism.feel.title": "Como se <em>sente</em>",
   "activism.feel.p1":
-    "O esgotamento é real. Um ativismo que só exige e nunca repõe não é sustentável — nem para ti, nem para o movimento.",
+    "O esgotamento é real. Um ativismo que só exige e nunca repõe não é sustentável, nem para ti nem para o movimento.",
   "activism.feel.p2":
     "Está tudo bem em recuar. Está tudo bem em fazer menos do que achas que devias. Descansar faz parte do trabalho, não é uma traição a ele.",
   "activism.feel.banner.title": "Se estás perto do esgotamento",
@@ -165,7 +169,7 @@ export const marketing: Catalog = {
     "Fala com o apoio entre pares antes de desapareceres de vez. Recuar com um plano é melhor do que desaparecer sem nenhum.",
   "activism.orgs.title": "Organizações <em>parceiras</em>",
   "activism.orgs.p1":
-    "Quatro organizações portuguesas com quem trabalhamos diretamente — todas recebem voluntários de braços abertos.",
+    "Quatro organizações portuguesas com quem trabalhamos diretamente: todas recebem voluntários de braços abertos.",
   "activism.volunteer.title": "Vagas <em>abertas</em>",
   "activism.volunteer.p1":
     "Oportunidades de voluntariado atuais das nossas organizações parceiras, atualizadas regularmente.",
@@ -179,15 +183,15 @@ export const marketing: Catalog = {
   // ── Código de Conduta ──────────────────────────────────────────────────
   "coc.meta.title": "Código de Conduta da QueerPulse: o que é obrigatório",
   "coc.meta.description":
-    "O Código de Conduta vinculativo da QueerPulse — seis compromissos que assumes ao aderir, o que conta como dano, como as denúncias são tratadas, e como recorrer.",
+    "O Código de Conduta vinculativo da QueerPulse: seis compromissos que assumes ao aderir, o que conta como dano, como as denúncias são tratadas, e como recorrer.",
   "coc.hero.backLabel": "Governação",
   "coc.hero.eyebrow": "Código de Conduta · em vigor desde {date}",
   "coc.hero.title": "Como nos tratamos, <em>aqui dentro.</em>",
   "coc.hero.dek":
-    "Este é o documento vinculativo — <b>de cumprimento obrigatório</b>, não uma aspiração. Se uma denúncia for confirmada, é isto que usamos como referência.",
+    "Este é o documento vinculativo, <b>de cumprimento obrigatório</b> e aplicado. Se uma denúncia for confirmada, é isto que usamos como referência.",
   "coc.distinction.thisPage.title": "Esta página",
   "coc.distinction.thisPage.body":
-    "O <b>Código de Conduta</b> — o que é de cumprimento obrigatório, o que acontece quando é violado, como recorrer.",
+    "O <b>Código de Conduta</b>: o que é de cumprimento obrigatório, o que acontece quando é violado, como recorrer.",
   "coc.distinction.sister.title": "O seu documento irmão",
   "coc.distinction.sister.body":
     "As <b>Diretrizes da Comunidade</b> descrevem a cultura que estamos a construir. Esta página é aquilo sobre o qual agimos.",
@@ -200,9 +204,9 @@ export const marketing: Catalog = {
   "coc.toc.changes": "Alterações",
   "coc.scope.title": "§01 <em>Âmbito</em>",
   "coc.scope.p1":
-    "Este Código aplica-se a tudo na QueerPulse — <strong>publicações, mensagens, convívios, comentários, perfis</strong> — e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
+    "Este Código aplica-se a tudo na QueerPulse (<strong>publicações, mensagens, convívios, comentários, perfis</strong>) e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
   "coc.scope.p2":
-    "Aplica-se a todas as pessoas, <em>sem exceção</em> — incluindo fundadores, equipa e moderação.",
+    "Aplica-se a todas as pessoas, <em>sem exceção</em>, incluindo fundadores, equipa e moderação.",
   "coc.scope.p3":
     "Não se aplica ao próprio desacordo. Estar em erro, ou ser impopular, não é uma violação. <em>Causar dano, é.</em>",
   "coc.pact.title": "§02 O <em>pacto</em>",
@@ -212,7 +216,7 @@ export const marketing: Catalog = {
     "Traz a tua identidade inteira. Ninguém aqui tem de representar uma versão mais palatável de si próprio.",
   "coc.pact.item02.title": "Perguntamos antes de presumir",
   "coc.pact.item02.body":
-    "Pronomes, limites, níveis de conforto — confirma, não adivinhes.",
+    "Pronomes, limites, níveis de conforto: confirma, não adivinhes.",
   "coc.pact.item03.title": "Mantemos esta sala privada",
   "coc.pact.item03.body":
     "O que acontece aqui fica aqui, a menos que a pessoa envolvida diga o contrário.",
@@ -224,7 +228,7 @@ export const marketing: Catalog = {
     "Um pedido de desculpa a sério muda o comportamento. As palavras sozinhas não bastam.",
   "coc.pact.item06.title": "Denunciamos o dano, não só comentamos sobre ele",
   "coc.pact.item06.body":
-    "Se algo estiver errado, avisa alguém que possa agir — não fiques só a comentar no grupo de conversa.",
+    "Se algo estiver errado, avisa alguém que possa agir.",
   "coc.pact.closing":
     "Ninguém acerta nisto sempre. O pacto é o padrão a que nos responsabilizamos mutuamente quando falhamos.",
   "coc.harm.title": "§03 Sobre o que <em>agimos</em>",
@@ -250,7 +254,7 @@ export const marketing: Catalog = {
     "Incluindo desacordo <em>forte</em>, expresso com respeito.",
   "coc.harm.friction.hurtFeelings.lead": "Sentir-se magoade, por si só.",
   "coc.harm.friction.hurtFeelings.rest":
-    "O desconforto não é o mesmo que dano — olhamos para o que foi realmente dito ou feito.",
+    "O desconforto não é o mesmo que dano. Olhamos para o que foi realmente dito ou feito.",
   "coc.harm.friction.criticism.lead": "Críticas à plataforma.",
   "coc.harm.friction.criticism.rest":
     "Incluindo críticas a nós, que a gerimos.",
@@ -262,19 +266,19 @@ export const marketing: Catalog = {
     "A linha é o <em>impacto</em>, não a intenção. “Não foi essa a intenção” não anula o dano causado.",
   "coc.enforce.title": "§04 <em>Aplicação</em>",
   "coc.enforce.lead":
-    "Uma escada gradual — a maioria das denúncias resolve-se no primeiro ou segundo degrau.",
+    "Uma escada gradual: a maioria das denúncias resolve-se no primeiro ou segundo degrau.",
   "coc.ladder.step1.title": "Uma palavra em privado",
   "coc.ladder.step1.body":
     "Uma pessoa moderadora contacta diretamente, de forma informal, antes de qualquer registo formal.",
   "coc.ladder.step2.title": "Um aviso formal",
   "coc.ladder.step2.body":
-    "Documentado, associado à conta. <em>Um aviso mantém-se privado</em> — não é divulgado.",
+    "Documentado, associado à conta. <em>Um aviso mantém-se privado</em>. Não é divulgado.",
   "coc.ladder.step3.title": "Suspensão temporária",
   "coc.ladder.step3.body":
     "Um período de arrefecimento, de dias a semanas, consoante a gravidade.",
   "coc.ladder.step4.title": "Remoção de um espaço",
   "coc.ladder.step4.body":
-    "Perda de acesso a um convívio, comunidade ou canal específico — não à plataforma inteira.",
+    "Perda de acesso a um convívio, comunidade ou canal específico, enquanto o resto da plataforma continua aberto.",
   "coc.ladder.step5.title": "Remoção da QueerPulse",
   "coc.ladder.step5.body":
     "Reservado para violações graves ou repetidas. <em>Sempre revisível em recurso.</em>",
@@ -297,7 +301,7 @@ export const marketing: Catalog = {
   "coc.offplatform.case2.rest":
     "Declarações ou ações públicas que tornariam <em>insegura a presença de alguém razoável num evento contigo</em>.",
   "coc.offplatform.closing":
-    "Isto é usado <em>raramente e com cuidado</em> — nunca é uma licença geral para policiar a vida de alguém fora da plataforma.",
+    "Isto é usado <em>raramente e com cuidado</em>. Nunca é uma licença geral para policiar a vida de alguém fora da plataforma.",
   "coc.changes.title": "§07 <em>Alterações</em>",
   "coc.changes.p1": "Este Código foi publicado pela última vez em {date}.",
   "coc.changelog.v21.lead": "v2.1 · {date}",
@@ -330,22 +334,22 @@ export const marketing: Catalog = {
   "coc.download.section06": "Conduta fora da plataforma",
   "coc.download.section07": "Alterações",
   "coc.download.mockNote":
-    "(Este é um descarregável de protótipo — o ficheiro de produção corresponderá exatamente à página web.)",
+    "(Este é um descarregável de protótipo. O ficheiro de produção corresponderá exatamente à página web.)",
 
   // ── Cookies ────────────────────────────────────────────────────────────
   "cookies.meta.title": "Política de Cookies da QueerPulse e preferências",
   "cookies.meta.description":
-    "Que cookies a QueerPulse utiliza — todos estritamente necessários ou funcionais — o que cada um faz, e como gerir as tuas escolhas de privacidade. Sem cookies de publicidade nem de análise.",
+    "Que cookies a QueerPulse utiliza, todos estritamente necessários ou funcionais, o que cada um faz, e como gerir as tuas escolhas de privacidade. Sem cookies de publicidade nem de análise.",
   "cookies.eyebrow": "Cookies",
   "cookies.h1": "Os cookies que <em>usamos,</em> e porquê.",
   "cookies.sub":
-    "Uma lista curta, não um muro de juridiquês. Todos os cookies aqui são essenciais ou funcionais — não há nada para desligar.",
+    "Uma lista curta, em linguagem simples. Todos os cookies aqui são essenciais ou funcionais. Não há nada para desligar.",
   "cookies.essential.title": "Essenciais",
   "cookies.essential.body":
     "Necessários para te manteres com sessão iniciada e a tua conta segura. Não podem ser desligados.",
   "cookies.functional.title": "Funcionais",
   "cookies.functional.body":
-    "Guardam as tuas preferências — tema, idioma, definições de notificação.",
+    "Guardam as tuas preferências: tema, idioma, definições de notificação.",
   "cookies.expires.session": "Sessão",
   "cookies.expires.days30": "30 dias",
   "cookies.expires.year1": "1 ano",
@@ -356,7 +360,7 @@ export const marketing: Catalog = {
   "cookies.columns.provider": "Fornecedor",
   "cookies.noAds.title": "Não temos anúncios",
   "cookies.noAds.body":
-    "Por isso não há aqui categoria de cookies de publicidade — nada a quem vender a tua atenção.",
+    "Por isso não há aqui categoria de cookies de publicidade. Não há a quem vender a tua atenção.",
   "cookies.summary.title": "O teu <em>resumo</em>",
   "cookies.summary.essential": "Essenciais",
   "cookies.summary.functional": "Funcionais",
@@ -373,7 +377,7 @@ export const marketing: Catalog = {
   "dsar.eyebrow": "Direitos sobre os dados",
   "dsar.h1": "Exerce os teus <em>direitos sobre os dados.</em>",
   "dsar.lead":
-    "Ao abrigo do <b>RGPD</b>, podes pedir uma cópia dos teus dados, uma correção, ou a sua eliminação — <em>sem qualquer custo</em>.",
+    "Ao abrigo do <b>RGPD</b>, podes pedir uma cópia dos teus dados, uma correção, ou a sua eliminação, <em>sem qualquer custo</em>.",
   "dsar.gdprStrip":
     "Este pedido é tratado ao abrigo dos artigos 15.º a 21.º do <b>RGPD</b>.",
   "dsar.rightLabel": "Que direito queres exercer?",
@@ -394,7 +398,7 @@ export const marketing: Catalog = {
     "Pede-nos para eliminar os teus dados pessoais, dentro dos limites legais de retenção.",
   "dsar.rights.erasure.formTitle": "Pedir a eliminação dos teus dados",
   "dsar.rights.erasure.formSub":
-    "Isto é diferente de eliminar a conta — diz-nos exatamente o que queres removido.",
+    "Isto é diferente de eliminar a conta. Diz-nos exatamente o que queres removido.",
   "dsar.rights.objection.label": "Direito de <em>oposição</em>",
   "dsar.rights.objection.desc":
     "Opõe-te a uma forma específica de usarmos os teus dados, como a análise de utilização.",
@@ -407,7 +411,7 @@ export const marketing: Catalog = {
   "dsar.form.accountLabel": "A tua conta",
   "dsar.form.whatChanged.label": "O que precisa de mudar?",
   "dsar.form.whatChanged.helper":
-    "Dá o máximo de detalhe possível — isso acelera a análise.",
+    "Dá o máximo de detalhe possível. Isso acelera a análise.",
   "dsar.form.whatChanged.placeholder":
     "Descreve o que deve ser corrigido, eliminado, ou a que te opões",
   "dsar.form.scopeLabel": "Que dados abrange isto?",
@@ -425,13 +429,13 @@ export const marketing: Catalog = {
   "dsar.form.docs.label": "Documentos de suporte",
   "dsar.form.docs.optional": "(opcional)",
   "dsar.form.docs.helper":
-    "Anexa o que ajudar a verificar ou processar o pedido — <em>nunca obrigatório</em> para submeter.",
+    "Anexa o que ajudar a verificar ou processar o pedido, <em>nunca obrigatório</em> para submeter.",
   "dsar.form.contextLabel": "Mais alguma coisa que devamos saber?",
   "dsar.form.contextPlaceholder": "Contexto adicional para a nossa equipa",
   "dsar.legalStrip":
     "Respondemos no prazo de <b>30 dias</b>, como a lei exige. Vê <link>retenção de dados</link> para saber por quanto tempo guardamos as coisas por norma.",
   "dsar.actions.info":
-    "Os pedidos são revistos por uma pessoa da nossa equipa de privacidade — <b>nunca totalmente automatizado</b>.",
+    "Os pedidos são revistos por uma pessoa da nossa equipa de privacidade, <b>nunca totalmente automatizado</b>.",
   "dsar.actions.submit": "Submeter pedido",
   "dsar.actions.submitting": "A enviar…",
   "dsar.past.heading": "Os teus pedidos anteriores",
@@ -447,18 +451,18 @@ export const marketing: Catalog = {
     "Não foi possível carregar os teus pedidos anteriores. Tenta novamente daqui a pouco.",
   "dsar.past.empty": "Ainda não submeteste nenhum pedido.",
   "dsar.past.objectAnalytics": "Oposição · Análise",
-  "dsar.toast.submitted": "Pedido submetido — referência {ref}",
+  "dsar.toast.submitted": "Pedido submetido: referência {ref}",
   "dsar.toast.submitError":
-    "Não conseguimos registar esse pedido — nada foi enviado. Importas-te de tentar outra vez?",
+    "Não conseguimos registar esse pedido. Nada foi enviado. Importas-te de tentar outra vez?",
 
   // ── Diretrizes da Comunidade ───────────────────────────────────────────
   "guidelines.meta.title": "Diretrizes da Comunidade QueerPulse",
   "guidelines.meta.description":
-    "A cultura que estamos a construir juntes na QueerPulse — como te mostrares, discordares bem, e manteres o espaço seguro, distinto do Código de Conduta de cumprimento obrigatório.",
+    "A cultura que estamos a construir juntes na QueerPulse: como te mostrares, discordares bem, e manteres o espaço seguro, distinto do Código de Conduta de cumprimento obrigatório.",
   "guidelines.hero.eyebrow": "Diretrizes da Comunidade",
   "guidelines.hero.title": "A cultura que estamos a <em>construir juntes.</em>",
   "guidelines.hero.sub":
-    "Não são regras de cumprimento obrigatório — isso é o Código de Conduta. Isto é como é o bom aqui.",
+    "Estas não são regras de cumprimento obrigatório. Isso é o Código de Conduta. Isto é como é o bom aqui.",
   "guidelines.updatedMeta": "Última revisão em {date}",
   "guidelines.clause01.titlePre": "Mostra-te como ",
   "guidelines.clause01.titleEm": "és",
@@ -477,9 +481,9 @@ export const marketing: Catalog = {
   "guidelines.clause02.li3":
     "Dá espaço para alguém formular algo de forma desajeitada.",
   "guidelines.clause02.li4": "Presume que podes estar sem contexto.",
-  "guidelines.clause02.li5": "Discorda do argumento, não da pessoa.",
+  "guidelines.clause02.li5": "Discorda do argumento, e trata a pessoa com respeito.",
   "guidelines.clause02.p2":
-    "A boa-fé não é infinita — comportamento mau repetido deixa de merecer o benefício da dúvida.",
+    "A boa-fé não é infinita. Comportamento mau repetido deixa de merecer o benefício da dúvida.",
   "guidelines.clause03.titlePre": "Ocupa o ",
   "guidelines.clause03.titleEm": "espaço certo",
   "guidelines.clause03.p1":
@@ -523,11 +527,11 @@ export const marketing: Catalog = {
     "Partilhar conversas ou fotografias privadas sem consentimento",
   "guidelines.clause07.li6":
     "Discriminação com base em qualquer característica protegida",
-  "guidelines.clause07.reportLead": "Denuncia — vais ter apoio.",
+  "guidelines.clause07.reportLead": "Denuncia. Vais ter apoio.",
   "guidelines.clause07.reportBody":
     "Se alguém ultrapassar uma destas linhas, denuncia essa pessoa ou a publicação a partir do menu. A moderação lê todas as denúncias, e nunca ficas com isto sozinhe. Infrações confirmadas levam a um aviso, suspensão ou remoção, e cooperamos com as autoridades quando a segurança de alguém está em risco. Nunca estás a exagerar por denunciar.",
   "guidelines.final.p2": "Obrigade por construíres isto connosco.",
-  "guidelines.modalDone": "Li tudo — concluir",
+  "guidelines.modalDone": "Li tudo, concluir",
   "guidelines.modalScrollHint": "Desliza até ao fim para continuar.",
   "guidelines.outro.title": "Agora já conheces <em>a cultura.</em>",
   "guidelines.outro.sub":
@@ -537,7 +541,7 @@ export const marketing: Catalog = {
   // ── Ajuda ──────────────────────────────────────────────────────────────
   "help.meta.title": "Central de ajuda da QueerPulse: convites, segurança",
   "help.meta.description":
-    "Respostas às perguntas mais comuns sobre a QueerPulse — como funcionam os convites, gerir a tua conta, confirmações e convívios, denúncias e recursos, e escalões de adesão.",
+    "Respostas às perguntas mais comuns sobre a QueerPulse: como funcionam os convites, gerir a tua conta, confirmações e convívios, denúncias e recursos, e escalões de adesão.",
   "help.hero.eyebrow": "Ajuda",
   "help.hero.title": "Perguntas, <em>respondidas.</em>",
   "help.hero.sub": "Pesquisa abaixo, ou navega por tema.",
@@ -558,33 +562,33 @@ export const marketing: Catalog = {
     "Alguém que já está na QueerPulse <strong>avaliza-te</strong> e envia um convite, ou podes <strong>pedir um convite</strong> e associamos-te a alguém da comunidade.",
   "help.qa.afterAccept.q": "O que acontece depois de aceitar um convite?",
   "help.qa.afterAccept.a":
-    "Configuras o teu perfil e a tua conta fica ativa de imediato — sem período de espera.",
+    "Configuras o teu perfil e a tua conta fica ativa de imediato: sem período de espera.",
   "help.qa.lisbonOnly.q": "A QueerPulse é só para quem vive em Lisboa?",
   "help.qa.lisbonOnly.a":
-    "Os convívios são em Lisboa, mas a adesão em si não está limitada por localização — muitas pessoas participam à distância pela rede e pela revista.",
+    "Os convívios são em Lisboa, mas a adesão em si não está limitada por localização. Muitas pessoas participam à distância pela rede e pela revista.",
   "help.qa.free.q": "A QueerPulse é gratuita?",
-  "help.qa.free.a": "Sim — a QueerPulse é gratuita para aderir e usar.",
+  "help.qa.free.a": "Sim, a QueerPulse é gratuita para aderir e usar.",
   "help.qa.changeName.q": "Como mudo o meu nome ou pronomes?",
   "help.qa.changeName.a":
     "Vai a <settingsLink>Definições</settingsLink> → Perfil. As alterações aplicam-se em todo o lado de imediato.",
   "help.qa.privateProfile.q": "Posso tornar o meu perfil privado?",
   "help.qa.privateProfile.a":
-    "Sim, em <settingsLink>Definições</settingsLink> → Privacidade. Um perfil privado continua visível para as tuas ligações — só <strong>não aparece na pesquisa nem no diretório público</strong>.",
+    "Sim, em <settingsLink>Definições</settingsLink> → Privacidade. Um perfil privado continua visível para as tuas ligações. Só <strong>não aparece na pesquisa nem no diretório público</strong>.",
   "help.qa.deleteAccount.q": "Como elimino a minha conta?",
   "help.qa.deleteAccount.a":
-    "Em <settingsLink>Definições</settingsLink> → Conta, mais abaixo. Isto é permanente — vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
+    "Em <settingsLink>Definições</settingsLink> → Conta, mais abaixo. Isto é permanente. Vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
   "help.qa.levels.q":
     "O que significam os diferentes níveis de pessoa da comunidade?",
   "help.qa.levels.a":
-    "Os níveis refletem há quanto tempo foste avalizade na comunidade e a tua atividade — não são uma barreira de pagamento, só um sinal de confiança.",
+    "Os níveis refletem há quanto tempo foste avalizade na comunidade e a tua atividade. São um sinal de confiança, sem qualquer barreira de pagamento.",
   "help.qa.rsvp.q": "Como funcionam as confirmações de presença?",
   "help.qa.rsvp.a":
     "Confirma na página do evento através do <calendarLink>calendário</calendarLink> ou do quadro de eventos. <strong>As vagas são limitadas</strong> na maioria dos convívios, por isso confirma cedo.",
   "help.qa.hostGathering.q": "Posso organizar o meu próprio convívio?",
   "help.qa.hostGathering.a":
-    "Sim — vê o <hostLink>guia de organização</hostLink> para um passo a passo completo.",
+    "Sim, vê o <hostLink>guia de organização</hostLink> para um passo a passo completo.",
   "help.qa.cantMakeIt.q":
-    "Confirmei presença mas afinal não posso ir — o que faço?",
+    "Confirmei presença mas afinal não posso ir. O que faço?",
   "help.qa.cantMakeIt.a":
     "Cancela a tua confirmação na página do evento assim que souberes, para que alguém na lista de espera possa ficar com o teu lugar.",
   "help.qa.waitlist.q": "Como funciona a lista de espera?",
@@ -592,22 +596,22 @@ export const marketing: Catalog = {
     "És avisade automaticamente assim que surge uma vaga, com uma janela curta para a garantires antes de passar para a pessoa seguinte.",
   "help.qa.reportMember.q": "Como denuncio outra pessoa da comunidade?",
   "help.qa.reportMember.a":
-    "No perfil dela, numa publicação ou numa mensagem, usa a opção de denúncia — toda a denúncia vai para uma pessoa moderadora.",
+    "No perfil da pessoa, numa publicação ou numa mensagem, usa a opção de denúncia. Toda a denúncia vai para uma pessoa moderadora.",
   "help.qa.afterReport.q": "O que acontece depois de eu fazer uma denúncia?",
   "help.qa.afterReport.a":
     "Procuramos responder em 48 horas. <strong>Tens sempre resposta</strong>, mesmo que decidamos que não é necessária qualquer ação.",
   "help.qa.appeal.q": "Posso recorrer de uma decisão de moderação?",
   "help.qa.appeal.a":
-    "Sim — toda a decisão pode ser contestada uma vez, revista por uma pessoa moderadora diferente. Vê <governanceLink>Governação</governanceLink> para o processo completo.",
+    "Sim, toda a decisão pode ser contestada uma vez, revista por uma pessoa moderadora diferente. Vê <governanceLink>Governação</governanceLink> para o processo completo.",
   "help.qa.blockMute.q": "Qual a diferença entre bloquear e silenciar?",
   "help.qa.blockMute.a":
-    "<strong>Bloquear</strong> remove todo o contacto nos dois sentidos. <strong>Silenciar</strong> só esconde alguém do teu feed — a outra pessoa não sabe que aconteceu nenhum dos dois.",
+    "<strong>Bloquear</strong> remove todo o contacto nos dois sentidos. <strong>Silenciar</strong> só esconde alguém do teu feed. A outra pessoa não sabe que aconteceu nenhum dos dois.",
   "help.qa.invitesWork.q": "Quantos convites tenho?",
   "help.qa.invitesWork.a":
     "Cada pessoa começa com uma pequena reserva de convites que se renova com o tempo, consoante o crescimento da comunidade.",
   "help.qa.vouching.q": "O que significa avalizar alguém, na prática?",
   "help.qa.vouching.a":
-    "Quando avalizas alguém, estás a dizer à comunidade que confias que essa pessoa deve estar aqui — é um sinal real, não uma formalidade.",
+    "Quando avalizas alguém, estás a dizer à comunidade que confias que essa pessoa deve estar aqui. É um sinal real, com peso.",
   "help.qa.perks.q": "O que ganho como Apoiante?",
   "help.qa.perks.a":
     "Acesso antecipado a eventos, um distintivo de apoiante, e a certeza de que a tua adesão mantém a plataforma sem anúncios.",
@@ -617,7 +621,7 @@ export const marketing: Catalog = {
   "help.qa.browserSupport.q": "Que navegadores é que a QueerPulse suporta?",
   "help.qa.browserSupport.a":
     "Versões atuais do Chrome, Firefox, Safari e Edge. Navegadores mais antigos podem ter problemas de visualização.",
-  "help.qa.somethingBroken.q": "Alguma coisa está avariada — o que faço?",
+  "help.qa.somethingBroken.q": "Alguma coisa está avariada. O que faço?",
   "help.qa.somethingBroken.a":
     "Tenta atualizar a página primeiro. Se continuar, <contactLink>avisa-nos</contactLink> com o máximo de detalhe possível.",
   "help.stillStuck.title": "Continuas com dúvidas?",
@@ -643,7 +647,7 @@ export const marketing: Catalog = {
   // ── Parceiros ──────────────────────────────────────────────────────────
   "partners.meta.title": "As organizações parceiras da QueerPulse",
   "partners.meta.description":
-    "As organizações com quem a QueerPulse faz parceria em Portugal e mais além — cada uma avaliada quanto ao alinhamento antes de ser listada, nunca por pagamento.",
+    "As organizações com quem a QueerPulse faz parceria em Portugal e mais além, cada uma avaliada quanto ao alinhamento antes de ser listada. Ninguém paga para aparecer aqui.",
   "partners.hero.eyebrow": "Parceiros",
   "partners.hero.title": "Organizações com quem <em>estamos.</em>",
   "partners.hero.sub":
@@ -654,13 +658,13 @@ export const marketing: Catalog = {
     "Cada organização abaixo foi avaliada quanto ao alinhamento com os nossos valores antes de aqui aparecer.",
   "partners.section.title": "Os nossos <em>parceiros</em>",
   "partners.section.sub":
-    "Ainda não há filtro disponível — aqui está a lista completa.",
+    "Ainda não há filtro disponível. Aqui está a lista completa.",
   "partners.card.viewCta": "Ver perfil",
   "partners.loadingMore": "A carregar mais parceiros…",
   "partners.loadMoreCta": "Carregar mais parceiros",
   "partners.why.title": "Porque fazemos <em>parcerias</em>",
   "partners.why.p1":
-    "A QueerPulse não consegue fazer tudo — apoio jurídico, saúde, trabalho com jovens exigem competência dedicada que não temos internamente.",
+    "A QueerPulse não consegue fazer tudo: apoio jurídico, saúde, trabalho com jovens exigem competência dedicada que não temos internamente.",
   "partners.why.p2":
     "Fazer parcerias significa podermos encaminhar pessoas para organizações que avaliámos de facto, em vez de um resultado de pesquisa genérico.",
   "partners.why.p3":
@@ -674,17 +678,17 @@ export const marketing: Catalog = {
   "partners.outro.title":
     "Conheces uma organização que <em>devia estar aqui?</em>",
   "partners.outro.sub":
-    "Diz-nos — estamos sempre à procura de parceiros alinhados.",
+    "Diz-nos. Estamos sempre à procura de parceiros alinhados.",
 
   // ── Kit de Imprensa ────────────────────────────────────────────────────
   "pressKit.meta.title": "Kit de imprensa da QueerPulse: logótipos, factos",
   "pressKit.meta.description":
-    "Tudo o que uma pessoa jornalista precisa para escrever sobre a QueerPulse — texto institucional já autorizado, marcas, fotografia, factos-chave e um contacto direto.",
+    "Tudo o que uma pessoa jornalista precisa para escrever sobre a QueerPulse: texto institucional já autorizado, marcas, fotografia, factos-chave e um contacto direto.",
   "pressKit.hero.eyebrow": "Imprensa",
   "pressKit.hero.title":
     "Tudo o que precisas para <em>escrever sobre nós.</em>",
   "pressKit.hero.dek":
-    "Texto institucional, marcas, fotografia e factos — <b>já autorizados</b> para uso direto, sem necessidade de aprovação.",
+    "Texto institucional, marcas, fotografia e factos, <b>já autorizados</b> para uso direto, sem necessidade de aprovação.",
   "pressKit.hero.downloadKitCta": "Descarregar o kit completo",
   "pressKit.hero.askPersonCta": "Falar com uma pessoa",
   "pressKit.contact.deskLabel": "<b>Contacto de imprensa:</b>",
@@ -697,12 +701,12 @@ export const marketing: Catalog = {
     "Para uso comercial, <a>contacta-nos</a> primeiro.",
   "pressKit.outro.title": "Precisas de <em>algo específico?</em>",
   "pressKit.outro.sub":
-    "Contacta diretamente o gabinete de imprensa — a maioria dos pedidos tem resposta no mesmo dia.",
+    "Contacta diretamente o gabinete de imprensa: a maioria dos pedidos tem resposta no mesmo dia.",
   "pressKit.outro.contactCta": "Enviar email ao gabinete de imprensa",
   "pressKit.downloadModal.eyebrow": "Kit completo · ZIP",
   "pressKit.downloadModal.title": "Descarrega o <em>kit completo.</em>",
   "pressKit.downloadModal.lead":
-    "Tudo nesta página num único ficheiro — <b>38 MB</b>, pronto para o teu CMS.",
+    "Tudo nesta página num único ficheiro, <b>38 MB</b>, pronto para o teu CMS.",
   "pressKit.downloadModal.buttonLabel": "Descarregar · ZIP",
   "pressKit.subpageIndex.title": "Relacionado",
   "pressKit.subpageIndex.archive.label": "Arquivo de imprensa",
@@ -710,14 +714,15 @@ export const marketing: Catalog = {
     "Todas as menções e reportagens anteriores, num só lugar.",
   "pressKit.modal.dialogAriaLabel": "Descarregar material",
   "pressKit.modal.closeAriaLabel": "Fechar",
-  "pressKit.modal.success.title": "Descarregado — <em>está tudo pronto.</em>",
+  "pressKit.modal.success.title":
+    "Descarregado. <em>Está tudo pronto.</em>",
   "pressKit.modal.success.body":
     "O ficheiro <b>{filename}</b> já deve estar na tua pasta de transferências.",
   "pressKit.modal.closeCta": "Fechar",
   "pressKit.modal.cancelCta": "Cancelar",
   "pressKit.readme.heading": "KIT DE IMPRENSA QUEERPULSE",
   "pressKit.readme.updated":
-    "Atualizado regularmente — vê queerpulse.app/press para a versão mais recente.",
+    "Atualizado regularmente. Vê queerpulse.app/press para a versão mais recente.",
   "pressKit.readme.licenceHeading": "LICENÇA",
   "pressKit.readme.licenceBody":
     "Todos os materiais são disponibilizados sob licença CC BY 4.0 para uso editorial. Contacta hello@queerpulse.com para licenciamento comercial.",
@@ -734,8 +739,9 @@ export const marketing: Catalog = {
   "pressKit.readme.hours": "9h–18h WET",
   "pressKit.readme.responseTime": "Respondemos em 48 horas.",
   "pressKit.readme.prototypeNote":
-    "Este é um descarregável de protótipo — o ficheiro de produção corresponderá exatamente à página web.",
-  "pressKit.readme.boilerHeading": "QUEERPULSE — TEXTO INSTITUCIONAL APROVADO",
+    "Este é um descarregável de protótipo. O ficheiro de produção corresponderá exatamente à página web.",
+  "pressKit.readme.boilerHeading":
+    "QUEERPULSE: TEXTO INSTITUCIONAL APROVADO",
   "pressKit.readme.boilerCleared":
     "Ambos os tamanhos estão autorizados para citação direta, sem necessidade de aprovação adicional.",
   "pressKit.preview.readme.title": "Leia-me + licença",
@@ -752,7 +758,7 @@ export const marketing: Catalog = {
   "pressKit.preview.factSheet.desc": "PDF de uma página, pronto a imprimir",
   "pressKit.boiler.short.wc": "25 palavras · 210 carateres",
   "pressKit.boiler.short.text":
-    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa — a ligar profissionais, criativos, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
+    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, a ligar profissionais, criativos, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
   "pressKit.boiler.med.wc": "60 palavras · 424 carateres",
   "pressKit.boiler.med.text":
     "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa é avalizada por alguém que já está cá. Sem capital de risco por trás, a plataforma vive de mensalidades, doações e apoios, e publica uma revista para a sua comunidade.",
@@ -776,7 +782,7 @@ export const marketing: Catalog = {
   "communitiesAbout.outro.sub":
     "Pede um convite e ajudamos-te a encontrar as salas que parecem casa.",
   "communitiesAbout.what.title": "O que é aqui uma comunidade",
-  "communitiesAbout.what.rooms.title": "Salas, não feeds",
+  "communitiesAbout.what.rooms.title": "Salas com propósito",
   "communitiesAbout.what.rooms.body":
     "Uma comunidade é uma sala com um propósito e alguém que a cuida, não um feed sem fim ordenado por um algoritmo. Sabes sempre em que espaço estás.",
   "communitiesAbout.what.kept.title": "Cuidadas por pessoas reais",
@@ -803,7 +809,7 @@ export const marketing: Catalog = {
   "privacy.meta.title":
     "Política de Privacidade da QueerPulse: o que recolhemos e porquê",
   "privacy.meta.description":
-    "Que dados a QueerPulse recolhe, como são usados, quem os pode ver, por quanto tempo são guardados, e como exercer os teus direitos sobre dados — com um resumo em linguagem simples.",
+    "Que dados a QueerPulse recolhe, como são usados, quem os pode ver, por quanto tempo são guardados, e como exercer os teus direitos sobre dados, com um resumo em linguagem simples.",
   "privacy.title": "Política de <em>Privacidade</em>",
   "privacy.meta.effective": "Em vigor desde {date}",
   "privacy.meta.lastUpdated": "Última atualização em {date}",
@@ -811,7 +817,7 @@ export const marketing: Catalog = {
   "privacy.plain.text":
     "Recolhemos o que precisamos para gerir a plataforma, nunca vendemos os teus dados, e damos-te controlo real sobre o que é partilhado e com quem. Os detalhes estão abaixo.",
   "privacy.contactCta":
-    "Perguntas sobre esta política? <strong>Contacta-nos quando quiseres</strong> — respondemos em linguagem simples, não em juridiquês.",
+    "Perguntas sobre esta política? <strong>Contacta-nos quando quiseres</strong>. Respondemos em linguagem simples.",
   "privacy.related.title": "Relacionado",
   "privacy.related.dataRequestLabel": "Pedir os teus dados",
   "privacy.related.dataRequestBlurb":
@@ -824,40 +830,40 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.title": "O que recolhemos",
   "privacy.whatWeCollect.accountHeading": "Informação da conta",
   "privacy.whatWeCollect.account.item1":
-    "<strong>Detalhes do perfil</strong> que adicionas — nome, pronomes, descrição, biografia, fotos.",
+    "<strong>Detalhes do perfil</strong> que adicionas: nome, pronomes, descrição, biografia, fotos.",
   "privacy.whatWeCollect.account.item2":
-    "<strong>Informação de contacto</strong> — o teu email, usado para iniciar sessão e enviar as notificações que ativaste.",
+    "<strong>Informação de contacto</strong>: o teu email, usado para iniciar sessão e enviar as notificações que ativaste.",
   "privacy.whatWeCollect.account.item3":
-    "<strong>Dados de adesão</strong> — o teu escalão, data de entrada, quem te convidou e quem te avalizou.",
+    "<strong>Dados de adesão</strong>: o teu escalão, data de entrada, quem te convidou e quem te avalizou.",
   "privacy.whatWeCollect.signInHeading": "Como inicias sessão",
   "privacy.whatWeCollect.signInBody":
-    "Inicias sessão com o <strong>Google</strong> — não há uma palavra-passe QueerPulse separada para gerir. Quando o fazes, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
+    "Inicias sessão com o <strong>Google</strong>. Não há uma palavra-passe QueerPulse separada para gerir. Quando o fazes, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
   "privacy.whatWeCollect.deviceHeading": "Dados de dispositivo e técnicos",
   "privacy.whatWeCollect.device.item1":
     "<strong>O navegador e o dispositivo</strong> a partir dos quais inicias sessão, guardados com as tuas sessões ativas para as poderes ver e terminar à distância.",
   "privacy.whatWeCollect.device.item2":
-    "<strong>Detalhes das notificações push</strong> — se ativares as notificações, o endereço que o teu navegador nos dá e as suas chaves, para as podermos entregar. Podes desativar quando quiseres.",
+    "<strong>Detalhes das notificações push</strong>: se ativares as notificações, o endereço que o teu navegador nos dá e as suas chaves, para as podermos entregar. Podes desativar quando quiseres.",
   "privacy.whatWeCollect.device.item3":
-    "<strong>O teu endereço IP</strong>, usado apenas no momento para manter a plataforma segura e prevenir abusos — não é guardado associado à tua conta.",
+    "<strong>O teu endereço IP</strong>, usado apenas no momento para manter a plataforma segura e prevenir abusos. Não é guardado associado à tua conta.",
   "privacy.whatWeCollect.activityHeading": "Dados de atividade",
   "privacy.whatWeCollect.activity.item1":
     "<strong>Publicações, comentários e mensagens</strong> que envias na plataforma.",
   "privacy.whatWeCollect.activity.item2":
-    "<strong>O que faz o chat funcionar</strong> — quem está numa conversa, confirmações de entrega e de leitura, reações, e quem bloqueaste. Quem está a escrever e quem está online não é guardado — é apenas em tempo real.",
+    "<strong>O que faz o chat funcionar</strong>: quem está numa conversa, confirmações de entrega e de leitura, reações, e quem bloqueaste. Quem está a escrever e quem está online não é guardado, existe apenas em tempo real.",
   "privacy.whatWeCollect.activity.item3":
     "<strong>Confirmações e presenças em eventos</strong>, para os convívios poderem planear-se conforme o número de pessoas.",
   "privacy.whatWeCollect.activity.item4":
-    "<strong>Uma localização geral</strong> que escolheres adicionar — uma cidade ou zona — e a área do mapa que exploras no diretório. Nunca lemos a localização precisa do teu dispositivo.",
+    "<strong>Uma localização geral</strong> que escolheres adicionar, uma cidade ou zona, e a área do mapa que exploras no diretório. Nunca lemos a localização precisa do teu dispositivo.",
   "privacy.whatWeCollect.notCollectedHeading": "O que não recolhemos",
   "privacy.whatWeCollect.notCollectedBody":
     "Não fazemos análise de produto nem rastreio de comportamento, não te seguimos noutros sites, não vendemos dados a anunciantes, nem construímos um perfil publicitário sobre ti. Não há aqui rede publicitária para alimentar.",
   "privacy.sensitive.title": "A tua identidade, nos teus termos",
   "privacy.sensitive.p1":
-    "Parte do que partilhas aqui é sensível por natureza — os teus pronomes, identidade de género, orientação sexual, se és uma pessoa assumida no trabalho, o apoio que procuras. Tratamo-lo com o cuidado que merece.",
+    "Parte do que partilhas aqui é sensível por natureza: os teus pronomes, identidade de género, orientação sexual, se és uma pessoa assumida no trabalho, o apoio que procuras. Tratamo-lo com o cuidado que merece.",
   "privacy.sensitive.p2":
-    "<strong>És tu que decides o que é visível.</strong> Grande parte disto fica privada para ti por predefinição — escolhes o que aparece no teu perfil público e o que fica visível apenas para ti. Quando a lei chama a isto dados de categoria especial, só os tratamos porque escolheste partilhá-los com a tua comunidade.",
+    "<strong>És tu que decides o que é visível.</strong> Grande parte disto fica privada para ti por predefinição. Escolhes o que aparece no teu perfil público e o que fica visível apenas para ti. Quando a lei chama a isto dados de categoria especial, só os tratamos porque escolheste partilhá-los com a tua comunidade.",
   "privacy.sensitive.p3":
-    "Os perfis criativos podem conter mais — os dados de nascimento de um perfil de astrologia, o contacto de um serviço de apoio entre pares ou de terapia. Aplica-se a mesma regra: está lá porque o adicionaste, visível exatamente como o definiste, e teu para alterar ou remover quando quiseres.",
+    "Os perfis criativos podem conter mais: os dados de nascimento de um perfil de astrologia, o contacto de um serviço de apoio entre pares ou de terapia. Aplica-se a mesma regra: está lá porque o adicionaste, visível exatamente como o definiste, e teu para alterar ou remover quando quiseres.",
   "privacy.sensitive.p4":
     "<strong>As fotos são limpas antes de serem enviadas.</strong> Os metadados de localização e de câmara são removidos das imagens no teu dispositivo, para que uma foto não revele em silêncio onde estiveste.",
   "privacy.howWeUse.title": "Como usamos os dados",
@@ -868,19 +874,19 @@ export const marketing: Catalog = {
   "privacy.howWeUse.item3":
     "Entregar as tuas mensagens, notificações e as ligações que crias",
   "privacy.howWeUse.item4":
-    "Manter a plataforma segura — investigar denúncias, aplicar o Código de Conduta",
+    "Manter a plataforma segura: investigar denúncias, aplicar o Código de Conduta",
   "privacy.howWeUse.item5": "Enviar-te notificações que ativaste",
   "privacy.howWeUse.item6":
-    "Resolver problemas e manter a plataforma fiável — com o teu consentimento, através de monitorização de erros que respeita a privacidade",
+    "Resolver problemas e manter a plataforma fiável, com o teu consentimento, através de monitorização de erros que respeita a privacidade",
   "privacy.howWeUse.p1":
     "Nunca vendemos os teus dados, nem os usamos para treinar modelos de IA ou para os entregar a anunciantes.",
   "privacy.whoSees.title": "Quem vê os teus dados",
   "privacy.whoSees.p1":
-    "<strong>Outras pessoas da comunidade</strong> veem o que as tuas definições de privacidade permitirem — o teu perfil público, publicações, e o que escolheres partilhar.",
+    "<strong>Outras pessoas da comunidade</strong> veem o que as tuas definições de privacidade permitirem: o teu perfil público, publicações, e o que escolheres partilhar.",
   "privacy.whoSees.p2":
     "<strong>A nossa pequena equipa</strong> pode aceder a dados da conta para dar apoio, investigar denúncias e manter a plataforma a funcionar.",
   "privacy.whoSees.p3":
-    "<strong>Fornecedores de serviços</strong> — as empresas que alojam a plataforma, guardam os teus envios, entregam o nosso email e (com o teu consentimento) monitorizam erros — veem só o necessário para a sua função específica, ao abrigo de contrato.",
+    "<strong>Fornecedores de serviços</strong>, as empresas que alojam a plataforma, guardam os teus envios, entregam o nosso email e (com o teu consentimento) monitorizam erros, veem só o necessário para a sua função específica, ao abrigo de contrato.",
   "privacy.whoSees.p4":
     "<strong>Mais ninguém.</strong> Nunca vendemos nem alugamos os teus dados a terceiros.",
   "privacy.retention.title": "Por quanto tempo guardamos",
@@ -889,58 +895,58 @@ export const marketing: Catalog = {
   "privacy.retention.p2":
     "Se eliminares a tua conta, a maioria dos dados pessoais é removida em 30 dias, exceto quando somos legalmente obrigados a retê-los (por exemplo, registos de faturação).",
   "privacy.retention.p3":
-    "Algumas coisas desaparecem sozinhas — a presença em convívios 30 dias após o evento, as notificações lidas ao fim de 90 dias, e os registos de notificações push não usados ao fim de 90 dias.",
+    "Algumas coisas desaparecem sozinhas: a presença em convívios 30 dias após o evento, as notificações lidas ao fim de 90 dias, e os registos de notificações push não usados ao fim de 90 dias.",
   "privacy.retention.p4":
-    "Quando uma conta é eliminada, guardamos uma <strong>impressão unidirecional</strong> do email — nunca o endereço em si — apenas para impedir que uma conta removida seja recriada em silêncio.",
+    "Quando uma conta é eliminada, guardamos uma <strong>impressão unidirecional</strong> do email, que nunca pode voltar a ser o endereço em si, apenas para impedir que uma conta removida seja recriada em silêncio.",
   "privacy.yourRights.title": "Os teus direitos",
   "privacy.yourRights.intro": "Ao abrigo do RGPD, tens direito a:",
   "privacy.yourRights.item1":
-    "<strong>Acesso</strong> — obter uma cópia de tudo o que guardamos sobre ti",
+    "<strong>Acesso</strong>: obter uma cópia de tudo o que guardamos sobre ti",
   "privacy.yourRights.item2":
-    "<strong>Retificação</strong> — corrigir o que estiver errado",
+    "<strong>Retificação</strong>: corrigir o que estiver errado",
   "privacy.yourRights.item3":
-    "<strong>Apagamento</strong> — pedir-nos para eliminar os teus dados",
+    "<strong>Apagamento</strong>: pedir-nos para eliminar os teus dados",
   "privacy.yourRights.item4":
-    "<strong>Oposição</strong> — opor-te a um uso específico dos teus dados",
+    "<strong>Oposição</strong>: opor-te a um uso específico dos teus dados",
   "privacy.yourRights.item5":
-    "<strong>Portabilidade</strong> — receber os teus dados num formato portátil",
+    "<strong>Portabilidade</strong>: receber os teus dados num formato portátil",
   "privacy.yourRights.item6":
-    "<strong>Limitação</strong> — limitar como processamos os teus dados enquanto um litígio é resolvido",
+    "<strong>Limitação</strong>: limitar como processamos os teus dados enquanto um litígio é resolvido",
   "privacy.yourRights.p1":
-    "Para exerceres qualquer um destes direitos, usa o nosso formulário de pedido de dados — é gratuito e respondemos no prazo de 30 dias.",
+    "Para exerceres qualquer um destes direitos, usa o nosso formulário de pedido de dados. É gratuito e respondemos no prazo de 30 dias.",
   "privacy.yourRights.p2":
     "Também podes apresentar uma reclamação junto da Comissão Nacional de Proteção de Dados (CNPD), a autoridade portuguesa de proteção de dados.",
   "privacy.cookiesSection.title": "Cookies",
   "privacy.cookiesSection.p1":
-    "Usamos um pequeno número de cookies para te manter com sessão iniciada e lembrar as tuas preferências — tema, idioma e escolhas de notificações.",
+    "Usamos um pequeno número de cookies para te manter com sessão iniciada e lembrar as tuas preferências: tema, idioma e escolhas de notificações.",
   "privacy.cookiesSection.p2":
-    "Não usamos cookies de publicidade nem de rastreio entre sites, e não fazemos análise de produto — não há aqui rede publicitária para alimentar.",
+    "Não usamos cookies de publicidade nem de rastreio entre sites, e não fazemos análise de produto. Não há aqui rede publicitária para alimentar.",
   "privacy.cookiesSection.p3":
     "Consulta a <strong>Política de Cookies</strong> completa para a lista integral, e <em>gere as tuas preferências</em> quando quiseres.",
   "privacy.thirdParties.title": "Terceiros",
   "privacy.thirdParties.intro":
     "Trabalhamos com um pequeno número de fornecedores de serviços, cada um vinculado por contrato a usar os teus dados apenas para o serviço que presta:",
   "privacy.thirdParties.item1":
-    "<strong>Google</strong> — dá suporte ao Iniciar sessão com o Google, o nosso único método de acesso. O Google confirma quem és e partilha o teu nome, email e foto de perfil.",
+    "<strong>Google</strong>: dá suporte ao Iniciar sessão com o Google, o nosso único método de acesso. O Google confirma quem és e partilha o teu nome, email e foto de perfil.",
   "privacy.thirdParties.item2":
-    "<strong>Alojamento e armazenamento na cloud</strong> — onde a plataforma funciona e onde os teus envios são guardados, num espaço privado.",
+    "<strong>Alojamento e armazenamento na cloud</strong>: onde a plataforma funciona e onde os teus envios são guardados, num espaço privado.",
   "privacy.thirdParties.item3":
-    "<strong>Envio de email</strong> — para emails de conta e as notificações que ativaste.",
+    "<strong>Envio de email</strong>: para emails de conta e as notificações que ativaste.",
   "privacy.thirdParties.item4":
-    "<strong>Mapas</strong> — mosaicos de mapa do OpenFreeMap e pesquisas de morada via OpenStreetMap, para mostrar espaços num mapa. Veem a área do mapa em visualização, não quem és.",
+    "<strong>Mapas</strong>: mosaicos de mapa do OpenFreeMap e pesquisas de morada via OpenStreetMap, para mostrar espaços num mapa. Veem a área do mapa em visualização. Quem és fica privado.",
   "privacy.thirdParties.item5":
-    "<strong>Klipy</strong> — dá suporte à pesquisa de GIFs nas mensagens. Quando pesquisas um GIF, o teu termo de pesquisa chega ao Klipy; as tuas mensagens nunca.",
+    "<strong>Klipy</strong>: dá suporte à pesquisa de GIFs nas mensagens. Quando pesquisas um GIF, o teu termo de pesquisa chega ao Klipy; as tuas mensagens nunca.",
   "privacy.thirdParties.optInIntro":
     "Com o teu <strong>consentimento explícito</strong>, também usamos:",
   "privacy.thirdParties.optItem1":
-    "<strong>Monitorização de erros</strong> — um serviço que respeita a privacidade e nos alerta para falhas, sem publicidade e sem qualquer perfil sobre ti.",
+    "<strong>Monitorização de erros</strong>: um serviço que respeita a privacidade e nos alerta para falhas, sem publicidade e sem qualquer perfil sobre ti.",
   "privacy.thirdParties.outro":
     "Nunca partilhamos os teus dados com corretores de dados nem redes publicitárias.",
   "privacy.changes.title": "Alterações a esta política",
   "privacy.changes.p1":
     "Avisamos as pessoas da comunidade sobre alterações relevantes através de um aviso na aplicação, antes de entrarem em vigor.",
   "privacy.changes.p2":
-    "Clarificações menores podem ser publicadas sem aviso prévio — o número de versão e a data no topo desta página refletem sempre o texto atual.",
+    "Clarificações menores podem ser publicadas sem aviso prévio. O número de versão e a data no topo desta página refletem sempre o texto atual.",
   "privacy.contactSection.title": "Contacto",
   "privacy.contactSection.body":
     "Perguntas sobre esta política ou sobre os teus dados? Envia um email para <a>hello@queerpulse.com</a> e uma pessoa a sério responde.",
@@ -948,7 +954,7 @@ export const marketing: Catalog = {
   // ── Termos de Serviço ──────────────────────────────────────────────────
   "terms.meta.title": "Termos de Serviço da QueerPulse",
   "terms.meta.description":
-    "As regras para usar a QueerPulse — elegibilidade, conduta na conta, propriedade de conteúdo, participação em eventos, e o que acontece se os termos forem violados.",
+    "As regras para usar a QueerPulse: elegibilidade, conduta na conta, propriedade de conteúdo, participação em eventos, e o que acontece se os termos forem violados.",
   "terms.title": "Termos de <em>Serviço</em>",
   "terms.meta.effective": "Em vigor desde {date}",
   "terms.meta.lastUpdated": "Última atualização em {date}",
@@ -961,7 +967,7 @@ export const marketing: Catalog = {
   "terms.eligibility.p1":
     "A QueerPulse está aberta a qualquer pessoa com 18 anos ou mais que seja convidada ou avalizada pela comunidade.",
   "terms.eligibility.why":
-    "É só para adultos por uma razão: muito do que acontece aqui — conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos — não é adequado a menores, e misturar as duas coisas poria em risco a segurança de todos. Quem tem menos de 18 anos também merece comunidade queer; só que esta ainda não é a sala certa para isso.",
+    "É só para adultos por uma razão: muito do que acontece aqui (conversas francas sobre sexo e saúde sexual, encontros e vida noturna, e o tipo de conversa sem filtros que só é seguro entre adultos) não é adequado a menores, e misturar as duas coisas poria em risco a segurança de todos. Quem tem menos de 18 anos também merece comunidade queer; só que esta ainda não é a sala certa para isso.",
   "terms.eligibility.p2":
     "Ao entrares, confirmas que <strong>a informação no teu perfil é exata</strong>, tanto quanto sabes.",
   "terms.eligibility.p3":
@@ -996,12 +1002,12 @@ export const marketing: Catalog = {
     "Podemos remover conteúdo que viole o Código de Conduta ou estes termos.",
   "terms.content.magazineHeading": "Revista e submissões criativas",
   "terms.content.magazineBody":
-    "Aplicam-se termos adicionais a propostas para a revista e submissões criativas — vê as diretrizes de submissão quando propuseres algo.",
+    "Aplicam-se termos adicionais a propostas para a revista e submissões criativas. Vê as diretrizes de submissão quando propuseres algo.",
   "terms.events.title": "Convívios e eventos",
   "terms.events.p1":
     "Os convívios são organizados por pessoas da comunidade e pela QueerPulse; cada um tem os seus próprios termos de presença e cancelamento, indicados na página do evento.",
   "terms.events.p2":
-    "Os preços dos bilhetes em eventos de escala progressiva são definidos por quem organiza, dentro dos escalões exigidos pela plataforma — a QueerPulse não fica com nenhuma percentagem da receita dos bilhetes.",
+    "Os preços dos bilhetes em eventos de escala progressiva são definidos por quem organiza, dentro dos escalões exigidos pela plataforma. A QueerPulse não fica com nenhuma percentagem da receita dos bilhetes.",
   "terms.events.p3":
     "Espera-se que sigas o Código de Conduta e quaisquer regras específicas do espaço em cada convívio.",
   "terms.events.p4":
@@ -1070,7 +1076,7 @@ export const marketing: Catalog = {
     "Qualquer litígio que não consigamos resolver diretamente será decidido nos tribunais de Lisboa, Portugal, salvo se a lei de defesa do consumidor te der outro direito.",
   "imprint.disputes.title": "Resolução de litígios em linha",
   "imprint.disputes.p1":
-    "A Comissão Europeia disponibiliza uma plataforma de resolução de litígios em linha em ec.europa.eu/consumers/odr. Preferimos resolver as coisas por email primeiro — vê “Como nos contactar” acima.",
+    "A Comissão Europeia disponibiliza uma plataforma de resolução de litígios em linha em ec.europa.eu/consumers/odr. Preferimos resolver as coisas por email primeiro. Vê “Como nos contactar” acima.",
   "imprint.contactCta":
     "Algo aqui desatualizado? <strong>Diz-nos e corrigimos.</strong>",
 
@@ -1090,10 +1096,10 @@ export const marketing: Catalog = {
     "130 palavras · para reportagens longas, secções “sobre”",
   "pressKit.boiler.long.wc": "130 palavras",
   "pressKit.boiler.long.text":
-    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam — uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa é avalizada por alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno; vive de mensalidades, doações e apoios que a mantêm independente. O dinheiro que passa pela QueerPulse fica dentro da comunidade de onde veio, e a plataforma já publica uma revista para os seus membros.",
+    "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por um grupo de profissionais, organizadores e artistas que queriam uma alternativa às redes desenhadas para prender a atenção: sem publicidade, sem algoritmo, sem crescimento pelo crescimento. É gerida pelas pessoas que a usam: uma pequena equipa fundadora e um círculo crescente de membros que ajudam a moldar o que vem a seguir. Cada pessoa é avalizada por alguém que já está cá. A QueerPulse não tem capital de risco à procura de retorno; vive de mensalidades, doações e apoios que a mantêm independente. O dinheiro que passa pela QueerPulse fica dentro da comunidade de onde veio, e a plataforma já publica uma revista para os seus membros.",
   "pressKit.mark.section.title": "A <em>marca</em> e como usá-la",
   "pressKit.mark.section.lead":
-    "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral — exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
+    "Três variantes aprovadas. O logótipo leva sempre o ponto de pulso coral, exceto na variante inversa “coral”, onde o ponto passa a ameixa. Não recolores o ponto para mais nada.",
   "pressKit.mark.logo.light.meta":
     "<b>Principal · clara</b> · para fundos creme/brancos",
   "pressKit.mark.logo.plum.meta":
@@ -1104,13 +1110,13 @@ export const marketing: Catalog = {
   "pressKit.mark.modal.eyebrow": "Marca · SVG",
   "pressKit.mark.modal.title": "A <em>marca</em>, pronta a usar.",
   "pressKit.mark.modal.lead":
-    "Pré-visualiza a variante {variant} abaixo. Descarregar gera um ficheiro <b>.svg</b> real e limpo — vetorial, seguro para recolorir, com o ponto de pulso intacto.",
+    "Pré-visualiza a variante {variant} abaixo. Descarregar gera um ficheiro <b>.svg</b> real e limpo: vetorial, seguro para recolorir, com o ponto de pulso intacto.",
   "pressKit.mark.modal.buttonLabel": "Descarregar · SVG",
   "pressKit.mark.usageNote":
     "<b>Espaçamento:</b> deixa sempre a altura de um <em>P</em> inteiro de espaço livre à volta da marca. <b>Tamanho mínimo:</b> 88px de largura no ecrã, 18 mm em impressão. <b>Não:</b> estiques, recolores, coloques sobre fotografias carregadas, nem juntes a gradientes arco-íris que não fizemos.",
   "pressKit.colour.section.title": "Cor, <em>sistema completo</em>",
   "pressKit.colour.section.lead":
-    "Toda a marca assenta em quatro tons. Não introduzimos cores de destaque adicionais — incluindo as específicas de campanhas.",
+    "Toda a marca assenta em quatro tons. Não introduzimos cores de destaque adicionais, incluindo as específicas de campanhas.",
   "pressKit.colour.plum.meta": "Âncora da marca · títulos, superfícies escuras",
   "pressKit.colour.coral.meta":
     "Destaque · CTAs, ênfase em itálico, o ponto de pulso",
@@ -1127,7 +1133,7 @@ export const marketing: Catalog = {
   "pressKit.photography.image6": "06 · Detalhe do mapa · espaços seguros",
   "pressKit.team.section.title": "<em>Porta-vozes</em> identificades",
   "pressKit.team.section.lead":
-    "Três pessoas fundadoras estão disponíveis para comentário à imprensa. Cita-as sobre os temas indicados; não parafraseies. <em>As restantes pessoas da comunidade não estão disponíveis sem consentimento explícito</em> — por favor não as contactes diretamente através da plataforma.",
+    "Três pessoas fundadoras estão disponíveis para comentário à imprensa. Cita-as sobre os temas indicados; não parafraseies. <em>As restantes pessoas da comunidade não estão disponíveis sem consentimento explícito</em>. Por favor não as contactes diretamente através da plataforma.",
   "pressKit.team.marta.role": "Cofundadora · Editora-chefe",
   "pressKit.team.marta.desc":
     "Para: decisões editoriais, a revista, governação, o manifesto. <em>Não para: histórias individuais de pessoas da comunidade, decisões de moderação.</em>",
@@ -1154,7 +1160,7 @@ export const marketing: Catalog = {
   "pressKit.facts.magazineIssues": "Edições da revista até hoje",
   "pressKit.coverage.section.title": "<em>Cobertura</em> recente",
   "pressKit.coverage.section.lead":
-    "Peças selecionadas em inglês e português, de 2024 a 2026. <em>Contagens de visitas são bem-vindas mas não necessárias</em> — liga antes à página de Imprensa.",
+    "Peças selecionadas em inglês e português, de 2024 a 2026. <em>Contagens de visitas são bem-vindas mas não necessárias</em>. Liga antes à página de Imprensa.",
   "pressKit.coverage.openingToast": "A abrir a peça em {source}…",
   "pressKit.coverage.emptyLive.title": "A cobertura vai aparecer aqui",
   "pressKit.coverage.emptyLive.description":
@@ -1182,7 +1188,7 @@ export const marketing: Catalog = {
   "pressKit.downloads.boilerplate.desc": "Versões curta e média",
   "pressKit.downloads.modal.eyebrow": "Descarregar · {format}",
   "pressKit.downloads.modal.lead":
-    "{desc}. Descarregar gera agora um <b>{filename}</b> real no teu navegador — um substituto funcional do material de produção.",
+    "{desc}. Descarregar gera agora um <b>{filename}</b> real no teu navegador, um substituto funcional do material de produção.",
   "pressKit.downloads.modal.buttonLabel": "Descarregar · {format}",
 
   // ── Anunciar o teu negócio — assistente ───────────────────────────────
@@ -1194,12 +1200,12 @@ export const marketing: Catalog = {
   "listBusiness.hero.title":
     "Adiciona o teu lugar ao <em>diretório das pessoas.</em>",
   "listBusiness.hero.lead":
-    "Queer-owned ou queer-friendly, grande ou pequenino — se o teu lugar é bom para a nossa gente, pertence aqui. Conta-nos e a equipa da comunidade trata do resto. <b>Cada anúncio é lido por uma pessoa antes de ficar no ar.</b>",
+    "Queer-owned ou queer-friendly, grande ou pequenino: se o teu lugar é bom para a nossa gente, pertence aqui. Conta-nos e a equipa da comunidade trata do resto. <b>Cada anúncio é lido por uma pessoa antes de ficar no ar.</b>",
   "listBusiness.wizard.stepAria": "Passo {number}: {label}",
   "listBusiness.wizard.stepAriaDone": "Passo {number}: {label} (concluído)",
   "listBusiness.wizard.stepAriaCurrent": "Passo {number}: {label} (atual)",
   "listBusiness.wizard.stepJumpAria": "Voltar ao passo {number}: {label}",
-  "listBusiness.wizard.stepOf": "Passo {number} de {total} — {label}",
+  "listBusiness.wizard.stepOf": "Passo {number} de {total}: {label}",
   "listBusiness.wizard.draftSaved": "Rascunho guardado",
   "listBusiness.draftBanner.text":
     "<b>Tens um rascunho guardado.</b> Continuar de onde ficaste?",
@@ -1222,7 +1228,7 @@ export const marketing: Catalog = {
   "listBusiness.toast.submitted":
     "O teu anúncio está com a equipa da comunidade",
   "listBusiness.toast.submitError":
-    "Não conseguimos enviar o teu espaço agora. Os teus dados ficaram guardados — tenta de novo.",
+    "Não conseguimos enviar o teu espaço agora. Os teus dados ficaram guardados. Tenta de novo.",
   "listBusiness.toast.withdrawn": "Anúncio retirado",
   // Validação do servidor (item #4)
   "listBusiness.serverError.title":
@@ -1232,7 +1238,7 @@ export const marketing: Catalog = {
   "listBusiness.saveLater.cta": "Guardar e terminar mais tarde",
   "listBusiness.saveLater.saving": "A guardar…",
   "listBusiness.saveLater.toast":
-    "Guardado. Retoma quando quiseres — fica à espera nos teus rascunhos.",
+    "Guardado. Retoma quando quiseres. Fica à espera nos teus rascunhos.",
   "listBusiness.saveLater.error":
     "Não conseguimos guardar o teu rascunho agora. Verifica a ligação e tenta de novo.",
   "listBusiness.drafts.title": "Retoma onde ficaste",
@@ -1265,7 +1271,7 @@ export const marketing: Catalog = {
   "listBusiness.step0.verifyHelp":
     "É isto que mantém o diretório de confiança. Escolhe o que for mais fácil para ti.",
   "listBusiness.step0.signedInAs":
-    "Tens sessão iniciada como <b>{name}</b> — vamos associar esta submissão ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
+    "Tens sessão iniciada como <b>{name}</b>. Vamos associar esta submissão ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
   // Opções de verificação
   "listBusiness.verify.email.label": "Email do negócio",
   "listBusiness.verify.email.desc":
@@ -1293,13 +1299,15 @@ export const marketing: Catalog = {
   "listBusiness.step1.namePlaceholder": "ex.: o nome que os habituais usam",
   "listBusiness.step1.dupHead":
     "Talvez já exista um lugar com este nome no diretório:",
-  "listBusiness.step1.catsLabel": "Que tipo de lugar é? — escolhe até 2",
+  "listBusiness.step1.catsLabel": "Que tipo de lugar é? Escolhe até 2",
   "listBusiness.step1.catsAria": "Categoria",
   "listBusiness.step1.hoodLabel": "Que bairro?",
   "listBusiness.step1.hoodPlaceholder": "Escolhe um bairro de Lisboa…",
+  "listBusiness.step1.hoodOnlineHelper":
+    "Opcional para espaços online. Escolhe um se tens raízes num bairro.",
   "listBusiness.step1.badgeLabel": "Quem o gere?",
   "listBusiness.step1.badgeHelper":
-    "Queer-owned, ou um lugar que nos acolhe genuinamente? Ambos pertencem aqui — isto é um acolhimento, não um portão.",
+    "Queer-owned, ou um lugar que nos acolhe genuinamente? Ambos pertencem aqui. Isto é um acolhimento, aberto a toda a gente.",
   "listBusiness.step1.badgeAria": "Propriedade",
   "listBusiness.step1.owned.tag": "Queer-owned",
   "listBusiness.step1.owned.title": "Gerido ou liderado pela nossa comunidade",
@@ -1310,7 +1318,7 @@ export const marketing: Catalog = {
   "listBusiness.step1.friendly.desc":
     "Não é queer-owned, mas é ativamente seguro e afirmativo.",
   "listBusiness.step1.evidenceLabel":
-    "Só um toque leve — em que sentido é queer-owned?",
+    "Só um toque leve: em que sentido é queer-owned?",
   "listBusiness.step1.evidenceHelp":
     "Sem documentos. Só uma frase que quem revê possa confirmar. É isto que mantém o distintivo com significado.",
   "listBusiness.step1.evidencePlaceholder":
@@ -1356,15 +1364,15 @@ export const marketing: Catalog = {
   "listBusiness.step2.witRemoveAria": "Remover linha",
   "listBusiness.step2.witAdd": "Adicionar outra linha",
   "listBusiness.step2.tagsLabel":
-    "Etiquetas — palavras por que as pessoas possam filtrar",
+    "Etiquetas: palavras por que as pessoas possam filtrar",
   "listBusiness.step2.tagsPlaceholder": "ex.: Acessível a cadeiras de rodas",
   "listBusiness.step2.tagsAddCta": "Adicionar",
   "listBusiness.step2.tagRemoveAria": "Remover {tag}",
-  "listBusiness.step2.goodForLabel": "Bom para… — marca o que for verdade",
+  "listBusiness.step2.goodForLabel": "Bom para… (marca o que for verdade)",
   "listBusiness.step2.goodForHelper":
     "As pequenas coisas que dizem à nossa gente que está segura e é bem-vinda.",
   "listBusiness.step2.goodForAria": "Bom para",
-  "listBusiness.step2.langsLabel": "Idiomas falados — opcional",
+  "listBusiness.step2.langsLabel": "Idiomas falados (opcional)",
   "listBusiness.step2.langsAria": "Idiomas",
   // Opções "bom para"
   "listBusiness.goodFor.wheelchairAccessible": "Acessível a cadeiras de rodas",
@@ -1397,29 +1405,29 @@ export const marketing: Catalog = {
     "Não precisas de morada. Adiciona o teu site ou redes sociais abaixo para que saibam como te contactar.",
   "listBusiness.step3.addressLabel": "Morada",
   "listBusiness.step3.addressHelper":
-    "Rua e número chega — colocamos o pino a partir daí.",
+    "Rua e número chega. Colocamos o pino a partir daí.",
   "listBusiness.step3.addressPlaceholder":
     "R. Antero de Quental 26, 1170-024 Lisboa",
   "listBusiness.step3.locateAddress": "Localizar esta morada",
   "listBusiness.step3.locateError":
-    "Não conseguimos encontrar essa morada. Tenta acrescentar a cidade ou o código postal — ou coloca um pino no teu bairro abaixo.",
+    "Não conseguimos encontrar essa morada. Tenta acrescentar a cidade ou o código postal, ou coloca um pino no teu bairro abaixo.",
   "listBusiness.step3.locateDemoHint":
-    "No modo demo não é possível procurar uma morada online — colocámos um pino perto do teu bairro. Arrasta-o para o local exato.",
+    "No modo demo não é possível procurar uma morada online. Colocámos um pino perto do teu bairro. Arrasta-o para o local exato.",
   "listBusiness.step3.dropNeighbourhoodPin": "Colocar um pino em {hood}",
   "listBusiness.step3.mapLinkLabel": "Link do Google Maps",
   "listBusiness.step3.mapLinkHelper":
-    "Abre o teu espaço no Google Maps, toca em Partilhar e cola o link — colocamos o pino por ti.",
+    "Abre o teu espaço no Google Maps, toca em Partilhar e cola o link. Colocamos o pino por ti.",
   "listBusiness.step3.mapLinkPlaceholder": "https://maps.app.goo.gl/…",
   "listBusiness.step3.findOnMap": "Encontrar no mapa",
   "listBusiness.step3.resolving": "A localizar…",
   "listBusiness.step3.resolveError":
     "Não conseguimos ler esse link. Cola um link de um local do Google Maps e tenta de novo.",
   "listBusiness.step3.unsupportedLinkDemo":
-    "No modo demo, cola o link completo google.com/maps/… — os links curtos precisam do site em produção.",
+    "No modo demo, cola o link completo google.com/maps/… Os links curtos precisam do site em produção.",
   "listBusiness.step3.pinPlaced": "Pino colocado perto de {place}",
   "listBusiness.step3.usePlaceName": "Usar “{place}” como morada",
   "listBusiness.step3.mapAria":
-    "Mapa — arrasta o pino para definir o local exato.",
+    "Mapa: arrasta o pino para definir o local exato.",
   "listBusiness.step3.hoursHeading": "Horário de funcionamento *",
   "listBusiness.step3.hasOpenHours": "Tem horas de abertura",
   "listBusiness.step3.allClosed": "Tudo fechado",
@@ -1427,15 +1435,15 @@ export const marketing: Catalog = {
   "listBusiness.step3.markAllClosed": "Marcar tudo como fechado",
   "listBusiness.step3.open": "Aberto",
   "listBusiness.step3.closed": "Fechado",
-  "listBusiness.step3.opensAria": "{day} — abertura",
-  "listBusiness.step3.closesAria": "{day} — fecho",
+  "listBusiness.step3.opensAria": "{day}: abertura",
+  "listBusiness.step3.closesAria": "{day}: fecho",
   "listBusiness.step3.addHours": "+ Dividir (pausa de almoço)",
   "listBusiness.step3.removeHoursAria": "Remover segundo período de {day}",
   "listBusiness.step3.nextDay": "dia seguinte",
   "listBusiness.step3.hoursWarning":
-    "Verifica estes horários — um período está em branco, tem duração zero ou sobrepõe-se.",
+    "Verifica estes horários: um período está em branco, tem duração zero ou sobrepõe-se.",
   "listBusiness.step3.hoursNoteLabel":
-    "Uma nota curta sobre o horário — opcional",
+    "Uma nota curta sobre o horário (opcional)",
   "listBusiness.step3.hoursNotePlaceholder":
     "Fechado à segunda. A sala das traseiras reserva-se à parte.",
   "listBusiness.step3.onlineHeading": "Encontrar-te online",
@@ -1461,7 +1469,7 @@ export const marketing: Catalog = {
   "listBusiness.step4.em": "um pouco sobre ti.",
   "listBusiness.step4.sub":
     "As imagens ajudam as pessoas a sentir a sala antes de chegarem. E gostamos de saber quem está por trás da porta.",
-  "listBusiness.step4.photosLabel": "Algumas fotos — opcional",
+  "listBusiness.step4.photosLabel": "Algumas fotos (opcional)",
   "listBusiness.step4.photosHelper":
     "Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
   "listBusiness.step4.gallery.wide": "Plano geral do espaço",
@@ -1474,7 +1482,7 @@ export const marketing: Catalog = {
   "listBusiness.step4.altPlaceholder":
     "Descreve para quem é cega ou tem baixa visão",
   "listBusiness.step4.altPlaceholderRequired":
-    "Obrigatório — descreve para quem é cega ou tem baixa visão",
+    "Obrigatório: descreve para quem é cega ou tem baixa visão",
   "listBusiness.step4.photo.upload": "Carregar",
   "listBusiness.step4.photo.change": "Trocar",
   "listBusiness.step4.photo.uploading": "A carregar…",
@@ -1482,7 +1490,7 @@ export const marketing: Catalog = {
   "listBusiness.step4.photo.urlPlaceholder": "ou cola o link de uma imagem",
   "listBusiness.step4.photo.urlInvalid": "Isto não parece o link de uma imagem",
   "listBusiness.step4.photo.uploadError":
-    "Não foi possível carregar essa imagem — tenta novamente",
+    "Não foi possível carregar essa imagem. Tenta novamente",
   "listBusiness.step4.aboutYouHeading": "Um pouco sobre ti",
   "listBusiness.step4.relLabel": "A tua ligação ao lugar",
   "listBusiness.step4.relAria": "A tua ligação",
@@ -1490,12 +1498,12 @@ export const marketing: Catalog = {
   "listBusiness.step4.ownerNamePlaceholder": "ex.: Sandra Lopes",
   "listBusiness.step4.ownerRoleLabel": "O teu papel",
   "listBusiness.step4.ownerRolePlaceholder": "ex.: Dona e padeira",
-  "listBusiness.step4.ownerBioLabel": "Uma linha ou duas sobre ti — opcional",
+  "listBusiness.step4.ownerBioLabel": "Uma linha ou duas sobre ti (opcional)",
   "listBusiness.step4.ownerBioPlaceholder":
     "Pegámos numa pastelaria com 60 anos em 2019 e reconstruímo-la à volta de uma regra: toda a gente é bem-vinda, exatamente como é.",
   "listBusiness.step4.visLabel": "Quem pode ver o teu nome?",
   "listBusiness.step4.visAria": "Visibilidade do nome",
-  "listBusiness.step4.linkProfileLabel": "Ligar ao teu perfil? — opcional",
+  "listBusiness.step4.linkProfileLabel": "Ligar ao teu perfil? (opcional)",
   "listBusiness.step4.linkProfileTitle": "Mostrar que sou da QueerPulse",
   "listBusiness.step4.linkProfileDesc":
     "Põe um rosto familiar e verificado no anúncio. Tens sessão iniciada como {name}.",
@@ -1503,12 +1511,12 @@ export const marketing: Catalog = {
   "listBusiness.step4.loopHeading": "Manteres-te a par",
   "listBusiness.step4.contactEmailLabel": "O teu email de contacto",
   "listBusiness.step4.contactEmailHelper":
-    "Para ti, que submetes — fica privado, nunca aparece no anúncio.",
+    "Para ti, que submetes: fica privado, nunca aparece no anúncio.",
   "listBusiness.step4.contactEmailPlaceholder":
     "Para te podermos contactar sobre este anúncio",
-  "listBusiness.step4.notifyLabel": "Envia-me email quando… — opcional",
+  "listBusiness.step4.notifyLabel": "Envia-me email quando… (opcional)",
   "listBusiness.step4.consent":
-    "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anónime” acima — não há problema nenhum.",
+    "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anónime” acima. Não há problema nenhum.",
   // Opções de ligação
   "listBusiness.rel.own.label": "Sou dono ou codono",
   "listBusiness.rel.own.desc": "És quem tem a propriedade.",
@@ -1535,10 +1543,11 @@ export const marketing: Catalog = {
   "listBusiness.step5.title": "Uma última vista de olhos",
   "listBusiness.step5.em": "antes de ir para a equipa.",
   "listBusiness.step5.sub":
-    "Aqui está tudo o que nos contaste. Edita qualquer parte voltando atrás — nada fica fechado até enviares.",
+    "Aqui está tudo o que nos contaste. Edita qualquer parte voltando atrás. Nada fica fechado até enviares.",
   "listBusiness.step5.slugLabel": "O teu anúncio vai viver em",
   "listBusiness.step5.editCta": "Editar",
   "listBusiness.step5.notAdded": "Por preencher",
+  "listBusiness.step5.onlineBusiness": "Só online",
   "listBusiness.step5.group.pathPlace": "Tu e o lugar",
   "listBusiness.step5.group.basics": "Básico",
   "listBusiness.step5.group.story": "História",
@@ -1583,7 +1592,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.consentGuide.sub":
     "Li as diretrizes da comunidade e como os meus dados são usados.",
   "listBusiness.step5.submitNote":
-    "<b>Uma pessoa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade — nada é publicado automaticamente. Lemo-lo em poucos dias e enviamos-te um email quando ficar no ar (ou se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
+    "<b>Uma pessoa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias e enviamos-te um email quando ficar no ar (ou se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
   // Painel de sucesso
   "listBusiness.success.stage.review": "Em revisão",
   "listBusiness.success.stage.question": "Pergunta rápida",
@@ -1595,14 +1604,14 @@ export const marketing: Catalog = {
   "listBusiness.success.title.live.text": "Estás",
   "listBusiness.success.title.live.em": "no mapa.",
   "listBusiness.success.note.review":
-    "Agradecemos o contributo para o diretório. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar — é essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e enviamos-te um email assim que estiver no ar.",
+    "Agradecemos o contributo para o diretório. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e enviamos-te um email assim que estiver no ar.",
   "listBusiness.success.note.question":
-    "<b>A equipa tem uma pequena pergunta</b> antes de ficar no ar — vê o teu email. Não se passa nada de errado; basta uma resposta rápida e segue tudo em frente.",
+    "<b>A equipa tem uma pequena pergunta</b> antes de ficar no ar. Vê o teu email. Não se passa nada de errado; basta uma resposta rápida e segue tudo em frente.",
   "listBusiness.success.note.live":
     "<b>Já está no ar no diretório.</b> O teu lugar já pode ser encontrado pela comunidade. Agradecemos por tornares o mapa um bocadinho mais completo.",
   "listBusiness.success.fallbackName": "O teu lugar",
   "listBusiness.success.withdrawConfirm":
-    "Retirar <b>{name}</b>? Isto tira-o da revisão — podes sempre anunciá-lo outra vez mais tarde.",
+    "Retirar <b>{name}</b>? Isto tira-o da revisão. Podes sempre anunciá-lo outra vez mais tarde.",
   "listBusiness.success.withdrawFallbackName": "este anúncio",
   "listBusiness.success.keepIt": "Manter",
   "listBusiness.success.yesWithdraw": "Sim, retirar",
@@ -1644,7 +1653,7 @@ export const marketing: Catalog = {
   "listBusiness.preview.placeholderName": "O teu lugar",
   "listBusiness.preview.placeholderMeta": "Categoria · bairro",
   "listBusiness.preview.placeholderBlurb":
-    "O teu lugar vai aparecer aqui à medida que preencheres o formulário — exatamente como ficará na grelha do diretório.",
+    "O teu lugar vai aparecer aqui à medida que preencheres o formulário, exatamente como ficará na grelha do diretório.",
   "listBusiness.preview.placeholderTagline":
     "O teu lema torna-se a citação em destaque no topo da tua página.",
   "listBusiness.preview.whatItIs": "O que é",
@@ -1689,6 +1698,10 @@ export const marketing: Catalog = {
   //    inglês por causa do volume; sinalizado no relatório em vez de feito
   //    à pressa.
   "changelog.hero.backLabel": "Roteiro",
+  "changelog.meta.title":
+    "Registo de alterações da QueerPulse: o que mudou, e quando",
+  "changelog.meta.description":
+    "Todas as atualizações da QueerPulse, da mais recente para a mais antiga, das novidades às pequenas correções, para saberes sempre o que é diferente e porquê.",
   "changelog.hero.eyebrow": "Registo de alterações da plataforma",
   "changelog.hero.title": "O que <em>mudou,</em>",
   "changelog.hero.titleLine2": "e quando.",
@@ -1760,6 +1773,47 @@ export const marketing: Catalog = {
   "changelog.tag.changemakers": "Ver os nossos Changemakers",
   "changelog.tag.vouch": "Apadrinhar alguém",
   "changelog.tag.culture": "Visitar a Cultura",
+  "changelog.tag.myCards": "Ver os teus cartões",
+
+  "changelog.entries.membership-cards.title":
+    "As comunidades já podem dar-te um cartão de sócio",
+  "changelog.entries.membership-cards.body":
+    "Qualquer comunidade a que pertences pode emitir-te um cartão de sócio, guardado na tua conta junto dos teus outros cartões. Fica tapado até quereres mostrá-lo, volta a tapar-se assim que sais do ecrã, e qualquer pessoa o consegue verificar ao ler o código.",
+
+  "changelog.entries.push-preview-privacy.title":
+    "Esconde o que as tuas notificações dizem no ecrã bloqueado",
+  "changelog.entries.push-preview-privacy.body":
+    "As pré-visualizações mostram quem enviou e o texto da mensagem no ecrã bloqueado, onde qualquer pessoa com o teu telemóvel na mão consegue ler. Há agora um interruptor nas Definições, nas notificações do telemóvel, que mostra apenas que chegou algo. A app continua a mostrar tudo depois de aberta.",
+
+  "changelog.entries.honest-success-states.title":
+    "Os botões deixaram de dizer que resultou quando não resultou",
+  "changelog.entries.honest-success-states.body":
+    "Nas comunidades, no fórum, nas mensagens, nas ligações, nas definições e nas ferramentas de moderação, muitas ações confirmavam sucesso no momento em que tocavas, antes de o servidor responder. Se o pedido falhasse, recebias uma mensagem de sucesso e um erro ao mesmo tempo, e a alteração não existia. Agora esperam pela resposta real e repõem o conteúdo se falhar.",
+
+  "changelog.entries.reports-really-filed.title":
+    "Denúncias que falham passam a dizê-lo",
+  "changelog.entries.reports-really-filed.body":
+    "Denunciar uma publicação, um convívio ou um membro podia mostrar o painel de confirmação mesmo quando a denúncia nunca chegou até nós. Agora só confirma depois de ficar registada, e mantém o que escreveste no ecrã para poderes tentar de novo.",
+
+  "changelog.entries.message-previews-and-drafts.title":
+    "As mensagens enviadas antes de a conversa existir já não desaparecem",
+  "changelog.entries.message-previews-and-drafts.body":
+    "Começar uma conversa nova e escrever logo podia perder essa primeira mensagem, e continuar a tentar enviá-la de forma invisível a cada reconexão. As mensagens por enviar passam também a ficar guardadas por conta, por isso num dispositivo partilhado o rascunho de uma pessoa já não pode ser enviado a partir da sessão de outra. Abrir uma conversa marca-a como lida à medida que chegam mensagens, para que a marca de visto acompanhe.",
+
+  "changelog.entries.moderation-holds.title":
+    "As decisões de moderação já não podem ser desfeitas por quem publicou",
+  "changelog.entries.moderation-holds.body":
+    "Uma publicação ou resposta removida por moderação podia ser reposta por quem a escreveu. As remoções passam a registar quem as fez, e só a moderação pode desfazer as suas. Ganhar um recurso volta também a repor o conteúdo, o que antes não acontecia.",
+
+  "changelog.entries.housing-listings-stay-reviewed.title":
+    "As edições a um anúncio publicado voltam a passar por revisão",
+  "changelog.entries.housing-listings-stay-reviewed.body":
+    "Um anúncio aprovado podia ser editado depois sem que ninguém voltasse a vê-lo, por isso o texto que as pessoas liam nem sempre era o texto verificado. Editar as partes que a moderação cobre devolve agora o anúncio a revisão, e o formulário avisa antes de submeteres. Pedir uma visita passa também a exigir o compromisso afirmativo, como todas as outras formas de contacto.",
+
+  "changelog.entries.article-titles-render-plain.title":
+    "Os títulos da revista com um E comercial voltam a ler-se bem",
+  "changelog.entries.article-titles-render-plain.body":
+    "Um título com caracteres como & podia mostrar a marcação em bruto no artigo publicado, nos cartões que lhe ligam e na pré-visualização de partilha. Os títulos passam a ser guardados como texto simples, e os existentes ficam corrigidos.",
 
   "changelog.entries.communities-hub-hero-restore.title":
     "As Comunidades voltaram a ter as boas-vindas",
@@ -1883,7 +1937,7 @@ export const marketing: Catalog = {
   "changelog.entries.onboarding-identity-and-notifications.title":
     "A configuração inicial já pergunta pronomes e preferências de notificação",
   "changelog.entries.onboarding-identity-and-notifications.body":
-    "O assistente de configuração passa a ter um espaço para os teus pronomes e uma bio curta, e um momento para ativares notificações se quiseres — ambos opcionais. O último passo também aponta para os Primeiros passos, para o resto da tua configuração ser fácil de encontrar.",
+    "O assistente de configuração passa a ter um espaço para os teus pronomes e uma bio curta, e um momento para ativares notificações se quiseres, ambos opcionais. O último passo também aponta para os Primeiros passos, para o resto da tua configuração ser fácil de encontrar.",
 
   "changelog.entries.getting-started-vouch-fix.title":
     "Corrigido o passo “recomenda alguém” do Início Rápido",
@@ -2021,7 +2075,7 @@ export const marketing: Catalog = {
     "A opção de bloquear no menu de um cartão de convívio passa a usar o mesmo bloqueio de qualquer outro sítio na QueerPulse, em vez de só mostrar uma notificação de confirmação.",
 
   "changelog.entries.myevents-reminder-indicator-honest.title":
-    "O sino de lembrete nos cartões de convívio passa a ser um estado, não um interruptor",
+    "O sino de lembrete nos cartões de convívio passa a ser um estado",
   "changelog.entries.myevents-reminder-indicator-honest.body":
     "Os lembretes são enviados a todas as pessoas que vão ou talvez vão, de acordo com a tua definição de antecedência em Preferências, não por convívio individual. O sino num cartão passa a mostrar isso claramente, em vez de parecer um interruptor por convívio que nunca foi.",
 
@@ -2276,9 +2330,9 @@ export const marketing: Catalog = {
     "Corrigir um erro na frase de apresentação ou atualizar o teu telefone costumava obrigar a percorrer todo o assistente de anúncio outra vez. A secção Os Meus Espaços da tua conta tem agora uma Edição Rápida para o essencial (frase de apresentação, nota sobre o horário, telefone, site), com o editor completo ainda a um clique de distância para alterações maiores.",
 
   "changelog.entries.topics-follow-notifications-and-directory.title":
-    "Seguir um tópico já te avisa — e há um novo diretório de Tópicos",
+    "Seguir um tópico já te avisa, e há um novo diretório de Tópicos",
   "changelog.entries.topics-follow-notifications-and-directory.body":
-    'Seguir um tópico (o botão Seguir em qualquer página de #etiqueta) não tinha efeito nenhum. Agora, quando alguém publica uma conversa no fórum com a etiqueta desse tópico, todas as pessoas a segui-lo são avisadas. Há também uma nova página de Tópicos que lista todos os tópicos com um botão de seguir, ligada a partir do menu Comunidade junto ao Fórum — e o botão "Escrever uma publicação" de um tópico abre o compositor do fórum já com essa etiqueta associada.',
+    'Seguir um tópico (o botão Seguir em qualquer página de #etiqueta) não tinha efeito nenhum. Agora, quando alguém publica uma conversa no fórum com a etiqueta desse tópico, todas as pessoas a segui-lo são avisadas. Há também uma nova página de Tópicos que lista todos os tópicos com um botão de seguir, ligada a partir do menu Comunidade junto ao Fórum, e o botão "Escrever uma publicação" de um tópico abre o compositor do fórum já com essa etiqueta associada.',
 
   "changelog.entries.search-topics-real-results.title":
     "Os tópicos já aparecem na pesquisa global",
@@ -2317,7 +2371,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.xp-breakdown.title": "Vê o que rendeu o teu XP",
   "changelog.entries.xp-breakdown.body":
-    "A página de Primeiros passos mostra agora as principais fontes por trás do teu XP atual, e a página de Crachás detalha cada fonte — perfil, comunidades, avais, encontros e mais — com quanto cada uma já te deu e o que ainda está por ganhar.",
+    "A página de Primeiros passos mostra agora as principais fontes por trás do teu XP atual, e a página de Crachás detalha cada fonte (perfil, comunidades, avais, encontros e mais) com quanto cada uma já te deu e o que ainda está por ganhar.",
 
   "changelog.entries.profile-hero-rail-redesign.title":
     "Hero e barra lateral do perfil redesenhados",
@@ -2326,7 +2380,7 @@ export const marketing: Catalog = {
   "changelog.entries.profile-rail-stats-redesign.title":
     "As tuas estatísticas de perfil, num relance",
   "changelog.entries.profile-rail-stats-redesign.body":
-    "As tuas ligações, votos de confiança dados e recebidos aparecem agora como números claramente identificados em vez de pastilhas só com ícones, por isso são legíveis sem precisar de passar o rato por cima — e os teus controlos de privacidade (quem vê o quê, esconder-me, os teus dados) passaram para um menu de definições no topo do teu perfil, junto ao botão Editar.",
+    "As tuas ligações, votos de confiança dados e recebidos aparecem agora como números claramente identificados em vez de pastilhas só com ícones, por isso são legíveis sem precisar de passar o rato por cima. E os teus controlos de privacidade (quem vê o quê, esconder-me, os teus dados) passaram para um menu de definições no topo do teu perfil, junto ao botão Editar.",
   "changelog.entries.profile-who-sees-what-controls.title":
     "Escolhe exatamente quem vê o quê no teu perfil",
   "changelog.entries.profile-who-sees-what-controls.body":
@@ -2386,12 +2440,12 @@ export const marketing: Catalog = {
   "changelog.entries.personas-in-directory.title":
     "As personas do teu perfil aparecem no diretório",
   "changelog.entries.personas-in-directory.body":
-    "As personas ligadas ao teu perfil de membro passam a aparecer no diretório de personas, ao lado das autónomas — por isso um terapeuta ou profissional cuja persona vive na sua página principal é igualmente descoberto. As personas autónomas continuam pseudónimas.",
+    "As personas ligadas ao teu perfil de membro passam a aparecer no diretório de personas, ao lado das autónomas, por isso um terapeuta ou profissional cuja persona vive na sua página principal é igualmente descoberto. As personas autónomas continuam pseudónimas.",
 
   "changelog.entries.therapist-personas-directory.title":
     "Diretórios de terapeutas, com perfis reais",
   "changelog.entries.therapist-personas-directory.body":
-    "Os diretórios de terapeutas afirmativos passam a mostrar perfis reais, verificados pela comunidade — cada um com a forma como trabalham, valores, disponibilidade, onde atendem e recomendações da comunidade. Os terapeutas criam e gerem o seu próprio perfil.",
+    "Os diretórios de terapeutas afirmativos passam a mostrar perfis reais, verificados pela comunidade: cada um com a forma como trabalham, valores, disponibilidade, onde atendem e recomendações da comunidade. Os terapeutas criam e gerem o seu próprio perfil.",
 
   "changelog.entries.concern-intake-live.title":
     "Levanta uma preocupação, e nós vamos mesmo vê-la",
@@ -2416,83 +2470,83 @@ export const marketing: Catalog = {
   "changelog.entries.unified-pronoun-picker.title":
     "Um seletor de pronomes consistente em todos os perfis",
   "changelog.entries.unified-pronoun-picker.body":
-    "As tuas opções de pronomes passam a ser iguais em todo o lado onde as defines — o teu perfil, o teu perfil de trabalho e a habitação — a partir de uma lista partilhada, para que um conjunto que escolhes num sítio esteja disponível em todos. Também podes escolher mais do que um conjunto e adicionar os teus.",
+    "As tuas opções de pronomes passam a ser iguais em todo o lado onde as defines (o teu perfil, o teu perfil de trabalho e a habitação), a partir de uma lista partilhada, para que um conjunto que escolhes num sítio esteja disponível em todos. Também podes escolher mais do que um conjunto e adicionar os teus.",
   "changelog.entries.work-profile-skills-focus.title":
     "Escolhe as tuas competências e áreas de foco no perfil de trabalho",
   "changelog.entries.work-profile-skills-focus.body":
-    "A secção “Competências e foco” do teu perfil de trabalho era antes um mostruário fixo que não podias alterar. Agora as etiquetas são tuas para escolher: toca nas competências que podes oferecer e nas áreas de foco em que gostarias de apoio, e ficam guardadas com o resto do teu perfil de trabalho. É o que vamos usar para te ligar na troca de competências e com mentores — escolhe quantas fizerem sentido.",
+    "A secção “Competências e foco” do teu perfil de trabalho era antes um mostruário fixo que não podias alterar. Agora as etiquetas são tuas para escolher: toca nas competências que podes oferecer e nas áreas de foco em que gostarias de apoio, e ficam guardadas com o resto do teu perfil de trabalho. É o que vamos usar para te ligar na troca de competências e com mentores, escolhe quantas fizerem sentido.",
   "changelog.entries.profile-personal-fields.title":
     "O teu nome, pronomes e localização agora ficam juntos",
   "changelog.entries.profile-personal-fields.body":
-    "Arrumámos o topo dos dois editores de perfil para que o essencial se leia como um só bloco. Nas definições do teu perfil, os pronomes subiram para ficar mesmo ao lado do nome e da localização, em vez de uma secção separada, e o teu perfil de Trabalho passa a começar pelos mesmos três — nome, pronomes, localização — antes de tudo o resto. Nada foi removido; é só mais fácil ver e preencher quem és num relance.",
+    "Arrumámos o topo dos dois editores de perfil para que o essencial se leia como um só bloco. Nas definições do teu perfil, os pronomes subiram para ficar mesmo ao lado do nome e da localização, em vez de uma secção separada, e o teu perfil de Trabalho passa a começar pelos mesmos três (nome, pronomes, localização) antes de tudo o resto. Nada foi removido; é só mais fácil ver e preencher quem és num relance.",
   "changelog.entries.feed-avatar-to-profile.title":
     "Toca na foto de alguém no feed para abrir o perfil",
   "changelog.entries.feed-avatar-to-profile.body":
-    "Alguém te chamou a atenção no feed? A foto passou a ser uma porta. Toca ou clica no avatar de qualquer publicação, nota de nova pessoa, tópico do fórum ou cartão de convívio e vais direto ao perfil dessa pessoa — sem procurar um link à parte.",
+    "Alguém te chamou a atenção no feed? A foto passou a ser uma porta. Toca ou clica no avatar de qualquer publicação, nota de nova pessoa, tópico do fórum ou cartão de convívio e vais direto ao perfil dessa pessoa, sem procurar um link à parte.",
   "changelog.entries.affirming-housing-baseline.title":
-    "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+ — agora é o padrão",
+    "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+, agora é o padrão",
   "changelog.entries.affirming-housing-baseline.body":
-    'Ser afirmativo LGBTQ+ deixou de ser uma opção que um anúncio pode ou não marcar — é a base de todas as casas, quartos e pessoas no quadro de habitação. Antes de publicares um espaço, criares um perfil de colega de casa ou contactares sobre uma casa, assumes uma vez um compromisso afirmativo, e ele aplica-se em todo o lado. Cada anúncio passa a ter um selo "Afirmativo LGBTQ+" como norma, não como variável, e se uma casa ou pessoa quebrar esse compromisso podes denunciar. Isto é um compromisso da comunidade, não um filtro sobre quem é bem-vindo — ninguém é separado pela sua identidade.',
+    'Ser afirmativo LGBTQ+ deixou de ser uma opção que um anúncio pode ou não marcar. É a base de todas as casas, quartos e pessoas no quadro de habitação. Antes de publicares um espaço, criares um perfil de colega de casa ou contactares sobre uma casa, assumes uma vez um compromisso afirmativo, e ele aplica-se em todo o lado. Cada anúncio passa a ter um selo "Afirmativo LGBTQ+" como norma, e se uma casa ou pessoa quebrar esse compromisso podes denunciar. Isto é um compromisso da comunidade: ninguém é separado pela sua identidade.',
   // ── Wave B2: anúncios verificados, marcação de visitas, avaliações cegas ─
   "changelog.entries.housing-listing-discovery.title":
-    "Encontra a casa certa — fotos a sério, filtros que encaixam e um aviso quando aparece",
+    "Encontra a casa certa: fotos a sério, filtros que encaixam e um aviso quando aparece",
   "changelog.entries.housing-listing-discovery.body":
-    "Cada anúncio abre agora num visualizador de fotos como deve ser — desliza ou navega pelos quartos em ecrã inteiro, com legendas e uma visita virtual quando quem anuncia a acrescentou. O quadro passa a ter filtros a sério: intervalo de preço, bairro, quartos, despesas incluídas, acesso sem degraus, data de entrada e só verificados. Gostaste de uma procura? Guarda-a e avisamos-te discretamente quando surgir uma casa nova que encaixe — sem estares sempre a atualizar. Anunciar a tua própria casa também ficou mais claro, com umas dicas simples sobre fotos que ajudam quem procura a imaginar-se a viver lá.",
+    "Cada anúncio abre agora num visualizador de fotos como deve ser: desliza ou navega pelos quartos em ecrã inteiro, com legendas e uma visita virtual quando quem anuncia a acrescentou. O quadro passa a ter filtros a sério: intervalo de preço, bairro, quartos, despesas incluídas, acesso sem degraus, data de entrada e só verificados. Gostaste de uma procura? Guarda-a e avisamos-te discretamente quando surgir uma casa nova que encaixe, sem estares sempre a atualizar. Anunciar a tua própria casa também ficou mais claro, com umas dicas simples sobre fotos que ajudam quem procura a imaginar-se a viver lá.",
 
   "changelog.entries.housing-viewings-reviews.title":
-    "Vê a casa antes de pagar — e avaliações que não se manipulam",
+    "Vê a casa antes de pagar, e avaliações que não se manipulam",
   "changelog.entries.housing-viewings-reviews.body":
-    "Passas a poder pedir uma visita diretamente a partir de um anúncio — por vídeo ou presencial — e propor algumas horas; quem oferece a casa aceita uma, sugere outra ou recusa, tudo registado em As tuas visitas. Assim que uma visita é aceite, a morada exata abre-se para ti. É a forma comprovada de evitar uma burla de arrendamento: ver a casa ao vivo antes de se falar em dinheiro. Alguns anúncios passam a ter um selo de Anúncio verificado, conquistado só quando quem anuncia tem identidade verificada, o anúncio passou na nossa revisão e não levantou alertas — nunca algo que alguém possa ligar por si. E depois de uma visita, ambos os lados podem deixar uma avaliação cega: nenhum vê as palavras do outro até ambos escreverem (ou passarem duas semanas), para que nenhuma avaliação seja escrita com medo da resposta. A classificação que vês numa casa é calculada a partir dessas avaliações reveladas.",
+    "Passas a poder pedir uma visita diretamente a partir de um anúncio (por vídeo ou presencial) e propor algumas horas; quem oferece a casa aceita uma, sugere outra ou recusa, tudo registado em As tuas visitas. Assim que uma visita é aceite, a morada exata abre-se para ti. É a forma comprovada de evitar uma burla de arrendamento: ver a casa ao vivo antes de se falar em dinheiro. Alguns anúncios passam a ter um selo de Anúncio verificado, conquistado só quando quem anuncia tem identidade verificada, o anúncio passou na nossa revisão e não levantou alertas, e nunca é algo que alguém possa ligar por si. E depois de uma visita, ambos os lados podem deixar uma avaliação cega: nenhum vê as palavras do outro até ambos escreverem (ou passarem duas semanas), para que nenhuma avaliação seja escrita com medo da resposta. A classificação que vês numa casa é calculada a partir dessas avaliações reveladas.",
 
   // ── Wave B1: integridade dos anúncios de habitação — risco, provas, transparência ─
   "changelog.entries.housing-listing-integrity.title":
     "Anúncios de habitação em que podes confiar um pouco mais",
   "changelog.entries.housing-listing-integrity.body":
-    "Cada novo anúncio passa a incluir uma linha honesta sobre acessos — sem degraus ou dois lances de escadas, com ou sem elevador — e diz claramente se é uma pessoa membro ou um agente a oferecer o espaço. Os agentes são bem-vindos aqui; só mostramos um pequeno selo para saberes. Nos bastidores, um anúncio é verificado antes de chegar ao quadro — uma renda pouco plausível, contactos ou linguagem de pagar antes de visitar, ou frases que condicionariam uma casa a quem tu és levantam um alerta para uma pessoa moderadora ver primeiro. E se denunciares um anúncio, a denúncia passa a organizar a tua preocupação numa razão clara (burla, discriminação, fora da plataforma e mais), guarda uma cópia do que viste e — no caso de discriminação — lembra com cuidado que também a podes levar a um organismo de igualdade.",
+    "Cada novo anúncio passa a incluir uma linha honesta sobre acessos (sem degraus ou dois lances de escadas, com ou sem elevador) e diz claramente se é uma pessoa membro ou um agente a oferecer o espaço. Os agentes são bem-vindos aqui; só mostramos um pequeno selo para saberes. Nos bastidores, um anúncio é verificado antes de chegar ao quadro: uma renda pouco plausível, contactos ou linguagem de pagar antes de visitar, ou frases que condicionariam uma casa a quem tu és levantam um alerta para uma pessoa moderadora ver primeiro. E se denunciares um anúncio, a denúncia passa a organizar a tua preocupação numa razão clara (burla, discriminação, fora da plataforma e mais), guarda uma cópia do que viste e, no caso de discriminação, lembra com cuidado que também a podes levar a um organismo de igualdade.",
 
   // ── Wave A: segurança na habitação, privacidade no mapa, mensagens, grupos ─
   "changelog.entries.housing-scam-safety-tenant-rights.title":
-    "Arrenda sem cair em burlas — e conhece os teus direitos",
+    "Arrenda sem cair em burlas, e conhece os teus direitos",
   "changelog.entries.housing-scam-safety-tenant-rights.body":
-    "Procurar casa não devia ser desconfiar de toda a gente. Quando contactas por causa de um espaço ou anuncias um, passa a aparecer uma nota curta de segurança com as poucas coisas que te protegem — nunca pagar antes de assinar, fazer videochamada primeiro, manter a conversa aqui, nunca arrendar um sítio que não viste. Há também uma nova página de Segurança na habitação, com um guia claro sobre os teus direitos enquanto inquilino em Portugal (contratos escritos e registados, o limite da caução, quanto a renda pode subir e o que um senhorio nunca pode fazer) e uma ideia aproximada de quanto custam mesmo as rendas em Lisboa. É orientação geral, não aconselhamento jurídico — mas é o contexto que te ajuda a recusar um mau negócio.",
+    "Procurar casa não devia ser desconfiar de toda a gente. Quando contactas por causa de um espaço ou anuncias um, passa a aparecer uma nota curta de segurança com as poucas coisas que te protegem: nunca pagar antes de assinar, fazer videochamada primeiro, manter a conversa aqui, nunca arrendar um sítio que não viste. Há também uma nova página de Segurança na habitação, com um guia claro sobre os teus direitos enquanto inquilino em Portugal (contratos escritos e registados, o limite da caução, quanto a renda pode subir e o que um senhorio nunca pode fazer) e uma ideia aproximada de quanto custam mesmo as rendas em Lisboa. É orientação geral, e dá-te o contexto para recusares um mau negócio.",
 
   "changelog.entries.housing-map-area-privacy.title":
     "Vê primeiro a zona, a morada exata só quando estiverem ligados",
   "changelog.entries.housing-map-area-privacy.body":
-    "Os anúncios de habitação passam a mostrar num mapa onde fica o espaço — mas só a zona aproximada até tu e a pessoa estarem realmente ligados. A morada exata fica privada até lá, por isso anunciar não põe a tua porta na internet. Assim que ficarem ligados, o mapa passa ao ponto exato e à morada completa.",
+    "Os anúncios de habitação passam a mostrar num mapa onde fica o espaço, mas só a zona aproximada até tu e a pessoa estarem realmente ligados. A morada exata fica privada até lá, por isso anunciar não põe a tua porta na internet. Assim que ficarem ligados, o mapa passa ao ponto exato e à morada completa.",
 
   "changelog.entries.messaging-safety-block-report-pii.title":
     "Bloquear, denunciar e um lembrete antes de partilhares demais",
   "changelog.entries.messaging-safety-block-report-pii.body":
-    "Passas a poder bloquear ou denunciar alguém diretamente numa conversa, e o bloqueio tem efeito de imediato — quem bloqueias sai da tua caixa de entrada e não te consegue contactar. Se uma mensagem tiver um número de telefone, um email ou dados bancários, um aviso discreto lembra-te de manter tudo aqui e de nunca enviar dinheiro antes de confiares. Nunca te impede de enviar — é uma sugestão, não uma barreira.",
+    "Passas a poder bloquear ou denunciar alguém diretamente numa conversa, e o bloqueio tem efeito de imediato: quem bloqueias sai da tua caixa de entrada e não te consegue contactar. Se uma mensagem tiver um número de telefone, um email ou dados bancários, um aviso discreto lembra-te de manter tudo aqui e de nunca enviar dinheiro antes de confiares. Nunca te impede de enviar; é apenas uma sugestão.",
 
   "changelog.entries.flatmate-pronoun-pre-share.title":
     "Partilha os teus pronomes com um olá, só quando quiseres",
   "changelog.entries.flatmate-pronoun-pre-share.body":
-    "Quando dizes olá a um possível colega de casa, passas a poder partilhar os teus pronomes junto com a mensagem — desativado por omissão, e só com essa pessoa. É um pormenor que faz a primeira mensagem chegar mais calorosa, nos teus termos.",
+    "Quando dizes olá a um possível colega de casa, passas a poder partilhar os teus pronomes junto com a mensagem, desativado por omissão, e só com essa pessoa. É um pormenor que faz a primeira mensagem chegar mais calorosa, nos teus termos.",
 
   "changelog.entries.flatmate-discovery-mode.title":
     "Uma forma mais calma de explorar colegas de casa",
   "changelog.entries.flatmate-discovery-mode.body":
-    "O quadro de colegas de casa passa a ter uma vista de Descoberta, ao lado da lista — um perfil de cada vez, com uma razão clara para ter encaixado contigo. Passa ou gosta ao teu ritmo; quando ambos gostam, podes dizer olá e começar a conversa. Preferes a grelha de antes? A vista de Lista está a um toque.",
+    "O quadro de colegas de casa passa a ter uma vista de Descoberta, ao lado da lista: um perfil de cada vez, com uma razão clara para ter encaixado contigo. Passa ou gosta ao teu ritmo; quando ambos gostam, podes dizer olá e começar a conversa. Preferes a grelha de antes? A vista de Lista está a um toque.",
 
   "changelog.entries.vetted-housing-groups.title":
     "Grupos de habitação verificados em que quem arrenda queer confia",
   "changelog.entries.vetted-housing-groups.body":
-    "Parte da habitação mais segura acontece em grupos pequenos e triados, e não em sites de anúncios abertos. Agora há uma casa para eles: grupos de habitação verificados onde cada anúncio indica a renda à partida, descreve a acessibilidade com honestidade e deixa os intermediários de fora. Pede para entrar e alguém da equipa lê o teu pedido — as regras do grupo estão ali à vista, para saberes com o que estás a concordar.",
+    "Parte da habitação mais segura acontece em grupos pequenos e triados. Agora há uma casa para eles: grupos de habitação verificados onde cada anúncio indica a renda à partida, descreve a acessibilidade com honestidade e deixa os intermediários de fora. Pede para entrar e alguém da equipa lê o teu pedido, e as regras do grupo estão ali à vista, para saberes com o que estás a concordar.",
 
   "changelog.entries.vouch-multiple-relationships.title":
     "Diz todas as formas como conheces alguém",
   "changelog.entries.vouch-multiple-relationships.body":
-    "Ao avalizar alguém, podes agora escolher mais do que uma forma como conheces essa pessoa — amigues e pessoas com quem colaboraste, vizinhes que também conheceste na QueerPulse. Um aval raramente vem de um só fio, por isso já não te pede para escolheres apenas um.",
+    "Ao avalizar alguém, podes agora escolher mais do que uma forma como conheces essa pessoa: amigues e pessoas com quem colaboraste, vizinhes que também conheceste na QueerPulse. Um aval raramente vem de um só fio, por isso já não te pede para escolheres apenas um.",
 
   "changelog.entries.getting-started-checklist.title":
     "Uma lista suave para os teus primeiros passos",
   "changelog.entries.getting-started-checklist.body":
-    "Uma nova página de Primeiros passos guia-te pelas primeiras ações — preencher o perfil, entrar numa comunidade, criar uma persona, avalizar e ligar-te a alguém, publicar. Cada passo assinala-se sozinho à medida que avanças, por isso reflete sempre o que já fizeste. Encontra-la no menu da tua conta.",
+    "Uma nova página de Primeiros passos guia-te pelas primeiras ações: preencher o perfil, entrar numa comunidade, criar uma persona, avalizar e ligar-te a alguém, publicar. Cada passo assinala-se sozinho à medida que avanças, por isso reflete sempre o que já fizeste. Encontra-la no menu da tua conta.",
 
   "changelog.entries.onboarding-set-up-personas-after.title":
-    "Um acolhimento mais calmo — cria personas depois de entrares",
+    "Um acolhimento mais calmo: cria personas depois de entrares",
   "changelog.entries.onboarding-set-up-personas-after.body":
     "O onboarding já não te pede para criar uma persona enquanto ainda te estás a ambientar. Primeiro instalas-te; quando quiseres, podes criar uma persona para o teu ofício a qualquer momento a partir da tua página de personas.",
 
@@ -2504,47 +2558,47 @@ export const marketing: Catalog = {
   "changelog.entries.identity-verification-honest-badges.title":
     "Verificação de identidade real com selos honestos",
   "changelog.entries.identity-verification-honest-badges.body":
-    "Na habitação a confiança é o que mais importa, por isso um selo passa a significar algo real. Confirma um número de telefone num passo rápido para anunciar um espaço ou perfil de colega de casa, ou para contactar sobre uma casa — e uma verificação de identidade externa opcional dá direito a um selo de identidade verificada. Um selo só aparece para uma verificação que realmente aconteceu, e a sua dica diz exatamente o que prova e o que não prova. Nunca vemos nem guardamos o teu documento de identidade nem dados biométricos — um parceiro externo faz a verificação e só nos diz que passou.",
+    "Na habitação a confiança é o que mais importa, por isso um selo passa a significar algo real. Confirma um número de telefone num passo rápido para anunciar um espaço ou perfil de colega de casa, ou para contactar sobre uma casa, e uma verificação de identidade externa opcional dá direito a um selo de identidade verificada. Um selo só aparece para uma verificação que realmente aconteceu, e a sua dica diz exatamente o que prova e o que não prova. Nunca vemos nem guardamos o teu documento de identidade nem dados biométricos: um parceiro externo faz a verificação e só nos diz que passou.",
 
   "changelog.entries.flatmate-explainable-matching.title":
     "Correspondências de colega de casa mais inteligentes e explicáveis",
   "changelog.entries.flatmate-explainable-matching.body":
-    "As correspondências mostram agora porque combinam — orçamento, bairro, estilo de vida em comum, datas, valores de espaço seguro e bases da casa, cada um um fator que consegues ver. Preenche um pequeno questionário de convivência (ruído, espaço partilhado vs. privado) e as tuas bases de casa entram na pontuação, para que uma correspondência seja mais do que um número. As especificidades de espaço seguro ficam privadas: uma razão só nomeia o que alguém partilha quando te deu permissão para ver. Tudo opcional, e nunca usado para excluir ninguém.",
+    "As correspondências mostram agora porque combinam: orçamento, bairro, estilo de vida em comum, datas, valores de espaço seguro e bases da casa, cada um um fator que consegues ver. Preenche um pequeno questionário de convivência (ruído, espaço partilhado vs. privado) e as tuas bases de casa entram na pontuação, para que uma correspondência seja mais do que um número. As especificidades de espaço seguro ficam privadas: uma razão só nomeia o que alguém partilha quando te deu permissão para ver. Tudo opcional, e nunca usado para excluir ninguém.",
 
   "changelog.entries.flatmate-safe-space-identity.title":
-    "Diz quem és no quadro de colegas de casa — nos teus termos",
+    "Diz quem és no quadro de colegas de casa, nos teus termos",
   "changelog.entries.flatmate-safe-space-identity.body":
-    "O teu perfil de colega de casa pode agora incluir os teus pronomes, o teu género e aquilo que torna uma casa segura — inclusiva para pessoas trans, sem revelar a tua identidade a terceiros, colegas de casa afirmativos. É tudo opcional: nada é guardado ou mostrado até dizeres que sim, escolhes quem vê, e podes limpá-lo quando quiseres. Estes dados ajudam-te a encontrar um lar afirmativo; nunca servem para excluir ninguém.",
+    "O teu perfil de colega de casa pode agora incluir os teus pronomes, o teu género e aquilo que torna uma casa segura: inclusiva para pessoas trans, sem revelar a tua identidade a terceiros, colegas de casa afirmativos. É tudo opcional: nada é guardado ou mostrado até dizeres que sim, escolhes quem vê, e podes limpá-lo quando quiseres. Estes dados ajudam-te a encontrar um lar afirmativo; nunca servem para excluir ninguém.",
 
   "changelog.entries.privacy-policy-refresh.title":
     "A Política de Privacidade agora corresponde ao que a plataforma faz de facto",
   "changelog.entries.privacy-policy-refresh.body":
-    "Revimos a Política de Privacidade de ponta a ponta. Agora explica o Iniciar sessão com o Google, as notificações push e os dados de dispositivo, como os teus dados de identidade ficam sob o teu controlo, os dados de localização e de mensagens que guardamos, e os serviços exatos em que nos apoiamos — e removemos aquilo que não oferecemos. A Política de Cookies e as tuas definições de privacidade passam a corresponder, com a opção de análise não utilizada removida. Sem análise de comportamento, sem publicidade, sem venda de dados — continua verdade.",
+    "Revimos a Política de Privacidade de ponta a ponta. Agora explica o Iniciar sessão com o Google, as notificações push e os dados de dispositivo, como os teus dados de identidade ficam sob o teu controlo, os dados de localização e de mensagens que guardamos, e os serviços exatos em que nos apoiamos, e removemos aquilo que não oferecemos. A Política de Cookies e as tuas definições de privacidade passam a corresponder, com a opção de análise não utilizada removida. Sem análise de comportamento, sem publicidade, sem venda de dados: continua verdade.",
 
   "changelog.entries.gatherings-manage-rsvp-recap-live.title":
     "Organizar um encontro já funciona a sério",
   "changelog.entries.gatherings-manage-rsvp-recap-live.body":
-    "Gerir o teu encontro, marcar presença e partilhar o resumo depois já estão a funcionar — deixaram de ser pré-visualizações. Marcar presença é agora um botão no próprio encontro — diz que vais, ou entra na lista de espera quando está cheio, e o teu lugar continua lá quando voltas. Quem organiza pode editar detalhes, cancelar, ver quem vem e adicionar co-anfitriãs/os no evento real, e o álbum de fotos também fica agarrado a ele. (Convidar alguém para co-anfitrião com aceitação ainda está a caminho.)",
+    "Gerir o teu encontro, marcar presença e partilhar o resumo depois já estão a funcionar, deixando de ser pré-visualizações. Marcar presença é agora um botão no próprio encontro: diz que vais, ou entra na lista de espera quando está cheio, e o teu lugar continua lá quando voltas. Quem organiza pode editar detalhes, cancelar, ver quem vem e adicionar co-anfitriãs/os no evento real, e o álbum de fotos também fica agarrado a ele. (Convidar alguém para co-anfitrião com aceitação ainda está a caminho.)",
 
   "changelog.entries.coop-template-portuguese.title":
     "Os modelos para formar uma cooperativa já falam português",
   "changelog.entries.coop-template-portuguese.body":
-    "Os nossos documentos-base para cooperativas — a carta de valores, os estatutos-modelo, o acordo de título de capital e os restantes — já se leem em português europeu além de inglês. É um primeiro rascunho para te pôr a andar; pede a um/a advogado/a que reveja os detalhes antes de entregares seja o que for.",
+    "Os nossos documentos-base para cooperativas (a carta de valores, os estatutos-modelo, o acordo de título de capital e os restantes) já se leem em português europeu além de inglês. É um primeiro rascunho para te pôr a andar; pede a um/a advogado/a que reveja os detalhes antes de entregares seja o que for.",
 
   "changelog.entries.members-explainer-modal.title":
     "O botão “Explorar pessoas” da página inicial agora explica-se",
   "changelog.entries.members-explainer-modal.body":
-    "Quem não tinha sessão iniciada batia na página de entrada ao clicar em “Explorar pessoas” na página inicial. Agora recebe uma explicação curta e simpática sobre como funciona fazer parte da comunidade — com uma forma clara de pedir convite ou iniciar sessão.",
+    "Quem não tinha sessão iniciada batia na página de entrada ao clicar em “Explorar pessoas” na página inicial. Agora recebe uma explicação curta e simpática sobre como funciona fazer parte da comunidade, com uma forma clara de pedir convite ou iniciar sessão.",
 
   "changelog.entries.invite-request-mutual-email.title":
     "Pedir para entrar passa a pedir o email de um membro",
   "changelog.entries.invite-request-mutual-email.body":
-    "Quando pedes um convite e conheces alguém aqui, o formulário passa a pedir o email dessa pessoa em vez do nome — é assim que a encontramos e te avalizamos mais depressa. O campo continua opcional, mas se o preencheres verificamos que é um email válido.",
+    "Quando pedes um convite e conheces alguém aqui, o formulário passa a pedir o email dessa pessoa em vez do nome: é assim que a encontramos e te avalizamos mais depressa. O campo continua opcional, mas se o preencheres verificamos que é um email válido.",
 
   "changelog.entries.report-form-guide-split.title":
     "O formulário de denúncia e o guia de denúncias são agora páginas separadas",
   "changelog.entries.report-form-guide-split.body":
-    "Fazer uma denúncia passa a ter a sua própria página, focada — sem um texto longo para percorrer. Como funciona a denúncia, os princípios por trás de cada decisão e o registo público de moderação vivem agora numa página dedicada “Como funciona a denúncia”, ligada nos dois sentidos.",
+    "Fazer uma denúncia passa a ter a sua própria página, focada, sem um texto longo para percorrer. Como funciona a denúncia, os princípios por trás de cada decisão e o registo público de moderação vivem agora numa página dedicada “Como funciona a denúncia”, ligada nos dois sentidos.",
 
   "changelog.entries.safety-page-report-form.title":
     "Denunciar uma preocupação vai direto ao formulário",
@@ -2554,37 +2608,37 @@ export const marketing: Catalog = {
   "changelog.entries.public-profile-eligibility-live.title":
     "Perfis públicos que podes mesmo conquistar.",
   "changelog.entries.public-profile-eligibility-live.body":
-    "O teu progresso para um perfil público reflete agora a tua atividade real — os textos que publicaste, os eventos que organizaste, apadrinhamentos e recomendações, e o tempo que apareceste. Abre o teu perfil para veres exatamente onde estás.",
+    "O teu progresso para um perfil público reflete agora a tua atividade real: os textos que publicaste, os eventos que organizaste, apadrinhamentos e recomendações, e o tempo que apareceste. Abre o teu perfil para veres exatamente onde estás.",
 
   "changelog.entries.public-profile-eligibility-tracker.title":
     "Um caminho mais claro para o perfil público.",
   "changelog.entries.public-profile-eligibility-tracker.body":
-    "Os perfis públicos mostram agora exatamente onde estás — o essencial que precisas, como a tua contribuição, a confiança da comunidade e a participação somam, e o próximo passo para avançares.",
+    "Os perfis públicos mostram agora exatamente onde estás: o essencial que precisas, como a tua contribuição, a confiança da comunidade e a participação somam, e o próximo passo para avançares.",
 
   "changelog.entries.how-communities-work-page.title":
     "Uma entrada mais clara para as comunidades",
   "changelog.entries.how-communities-work-page.body":
-    "A página inicial mostrava um botão “Junta-te” antes de sequer teres conta. Agora os cartões de comunidade levam a uma nova página que explica como funcionam as comunidades e porque importam — para saberes ao que te juntas antes de pedires convite.",
+    "A página inicial mostrava um botão “Junta-te” antes de sequer teres conta. Agora os cartões de comunidade levam a uma nova página que explica como funcionam as comunidades e porque importam, para saberes ao que te juntas antes de pedires convite.",
 
   "changelog.entries.guidelines-read-gate.title":
     "Lê as diretrizes até ao fim antes de concordares",
   "changelog.entries.guidelines-read-gate.body":
-    "As Diretrizes da Comunidade passam a começar pelas linhas vermelhas, explicam como denunciar e o que acontece a quem as ultrapassa — de um aviso à remoção — e pedem que as leias até ao fim antes de a caixa de concordância desbloquear.",
+    "As Diretrizes da Comunidade passam a começar pelas linhas vermelhas, explicam como denunciar e o que acontece a quem as ultrapassa, de um aviso à remoção, e pedem que as leias até ao fim antes de a caixa de concordância desbloquear.",
 
   "changelog.entries.guidelines-in-sheet.title":
     "Leia as diretrizes da comunidade sem perder o que escreveu",
   "changelog.entries.guidelines-in-sheet.body":
-    "No pedido de convite e no acolhimento, tocar em “diretrizes da comunidade” levava-te para uma página separada — e para longe de tudo o que já tinhas escrito. Agora as diretrizes sobem numa folha que podes ler e fechar ali mesmo, sem perder nada do que escreveste.",
+    "No pedido de convite e no acolhimento, tocar em “diretrizes da comunidade” levava-te para uma página separada, e para longe de tudo o que já tinhas escrito. Agora as diretrizes sobem numa folha que podes ler e fechar ali mesmo, sem perder nada do que escreveste.",
 
   "changelog.entries.meganav-highlight-illustrations.title":
     "Menus ilustrados na navegação de topo",
   "changelog.entries.meganav-highlight-illustrations.body":
-    "Cada menu na navegação de topo passa a abrir com uma ilustração desenhada à mão do seu destaque — pessoas a reunir-se, a cidade, apoio, cultura, trabalho — em vez de um marcador simples.",
+    "Cada menu na navegação de topo passa a abrir com uma ilustração desenhada à mão do seu destaque (pessoas a reunir-se, a cidade, apoio, cultura, trabalho) em vez de um marcador simples.",
 
   "changelog.entries.coming-out-guide-public.title":
     "O guia de sair do armário volta a estar aberto a todos",
   "changelog.entries.coming-out-guide-public.body":
-    "O guia de sair do armário ficou por engano trancado atrás do início de sessão. É uma página de apoio — tal como os nossos recursos e páginas de segurança, deve chegar a quem se está a questionar, tenha conta ou não. Voltou a ser público.",
+    "O guia de sair do armário ficou por engano trancado atrás do início de sessão. É uma página de apoio: tal como os nossos recursos e páginas de segurança, deve chegar a quem se está a questionar, tenha conta ou não. Voltou a ser público.",
 
   "changelog.entries.poem-editor-v2.title":
     "Escrever um poema já parece mesmo escrever um poema",
@@ -2594,7 +2648,7 @@ export const marketing: Catalog = {
   "changelog.entries.under18-open-invite.title":
     "A mensagem para menores de 18 passa a abrir uma porta, não a fechá-la",
   "changelog.entries.under18-open-invite.body":
-    "Se nos disseres que ainda não tens 18, a nota costumava insistir na conta que não podes ter. Agora começa pelo que está aberto a toda a gente — a biblioteca, a revista e os nossos recursos são teus para ler, sem precisares de iniciar sessão.",
+    "Se nos disseres que ainda não tens 18, a nota costumava insistir na conta que não podes ter. Agora começa pelo que está aberto a toda a gente: a biblioteca, a revista e os nossos recursos são teus para ler, sem precisares de iniciar sessão.",
 
   "changelog.entries.communities-explained.title":
     "Uma visão mais clara de como funcionam as comunidades",
@@ -2608,7 +2662,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.poem-translations.title": "Adiciona traduções de um poema",
   "changelog.entries.poem-translations.body":
-    "Um poema pode agora ter mais do que uma versão — o original ao lado das suas traduções. Adiciona cada uma, dá-lhe um nome como Português ou English, e quem lê troca entre elas com um toque. A primeira versão é a predefinida que todos veem primeiro.",
+    "Um poema pode agora ter mais do que uma versão: o original ao lado das suas traduções. Adiciona cada uma, dá-lhe um nome como Português ou English, e quem lê troca entre elas com um toque. A primeira versão é a predefinida que todos veem primeiro.",
 
   "changelog.entries.reframe-your-photos.title": "Reenquadra as tuas fotos",
   "changelog.entries.reframe-your-photos.body":
@@ -2622,85 +2676,85 @@ export const marketing: Catalog = {
   "changelog.entries.adults-only-explainer-modal.title":
     "“Eis porquê somos 18+” abre onde estás",
   "changelog.entries.adults-only-explainer-modal.body":
-    "A ligação “eis porquê” na verificação de idade levava-te aos Termos, e perdias o teu lugar no formulário. Agora abre a explicação num painel discreto por cima da página — lês porque é que a QueerPulse é só para adultos, fechas, e continuas sem perder uma palavra que tinhas escrito.",
+    "A ligação “eis porquê” na verificação de idade levava-te aos Termos, e perdias o teu lugar no formulário. Agora abre a explicação num painel discreto por cima da página: lês porque é que a QueerPulse é só para adultos, fechas, e continuas sem perder uma palavra que tinhas escrito.",
 
   "changelog.entries.adults-only-explainer.title":
     "“Eis porquê somos 18+” passa mesmo a dizer porquê",
   "changelog.entries.adults-only-explainer.body":
-    "A ligação “eis porquê” na verificação de idade levava aos Termos sem explicar nada. A secção Elegibilidade passa a dizer claramente porque é que a QueerPulse é só para adultos — e porque quem tem menos de 18 anos também pertence à comunidade queer.",
+    "A ligação “eis porquê” na verificação de idade levava aos Termos sem explicar nada. A secção Elegibilidade passa a dizer claramente porque é que a QueerPulse é só para adultos, e porque quem tem menos de 18 anos também pertence à comunidade queer.",
 
   "changelog.entries.persona-excerpt-crash-fix.title":
     "Adicionar um excerto já não estraga o perfil",
   "changelog.entries.persona-excerpt-crash-fix.body":
-    "Começar um excerto ou um detalhe de menu numa página de persona — preencher um campo antes dos restantes — já não deixa a página em branco. Passa a mostrar o que adicionaste e completa o resto à medida que avanças.",
+    "Começar um excerto ou um detalhe de menu numa página de persona, preenchendo um campo antes dos restantes, já não deixa a página em branco. Passa a mostrar o que adicionaste e completa o resto à medida que avanças.",
 
   "changelog.entries.poem-line-break-fix.title":
     "As quebras de linha dos poemas ficam guardadas",
   "changelog.entries.poem-line-break-fix.body":
-    "Colar um poema no editor deixa de juntar as linhas todas quando o lês — cada verso mantém a sua própria linha, tal como o escreveste ou colaste.",
+    "Colar um poema no editor deixa de juntar as linhas todas quando o lês: cada verso mantém a sua própria linha, tal como o escreveste ou colaste.",
 
   "changelog.entries.poet-rich-poems.title": "Escreve e lê poemas na íntegra",
   "changelog.entries.poet-rich-poems.body":
-    "Os perfis de poeta passam a ter um editor de poemas — estrofes, separadores e notas, com itálico e negrito — e quem lê pode tocar num poema para o abrir numa vista de leitura ampla.",
+    "Os perfis de poeta passam a ter um editor de poemas (estrofes, separadores e notas, com itálico e negrito) e quem lê pode tocar num poema para o abrir numa vista de leitura ampla.",
 
   "changelog.entries.persona-editor-drag-reorder.title":
     "Arrasta para reordenar itens numa persona",
   "changelog.entries.persona-editor-drag-reorder.body":
-    "A pega de cada item numa secção da persona (projetos, papéis, ligações…) agora arrasta mesmo. Agarra-a e larga o item onde quiseres — no telemóvel com o dedo ou com o rato — e a lista reorganiza-se ao vivo. As setas para cima e para baixo continuam lá para uso com teclado, por isso nada mudou nesse aspeto.",
+    "A pega de cada item numa secção da persona (projetos, papéis, ligações…) agora arrasta mesmo. Agarra-a e larga o item onde quiseres, no telemóvel com o dedo ou com o rato, e a lista reorganiza-se ao vivo. As setas para cima e para baixo continuam lá para uso com teclado, por isso nada mudou nesse aspeto.",
 
   "changelog.entries.persona-item-link-picker-size.title":
     "Corrigidos campos em linha sobredimensionados em alguns editores",
   "changelog.entries.persona-item-link-picker-size.body":
-    "Alguns campos compactos lado a lado tinham inchado até ao tamanho total — o seletor de tipo de ligação ao adicionar uma ligação a um projeto de persona (que estava a espremer o campo do endereço ao lado), as linhas de notas de conteúdo no formulário de submissão de filmes e as caixas de ligação de fotografias ao listar um negócio. Agora ficam no tamanho pretendido, por isso cada linha alinha como foi desenhada.",
+    "Alguns campos compactos lado a lado tinham inchado até ao tamanho total: o seletor de tipo de ligação ao adicionar uma ligação a um projeto de persona (que estava a espremer o campo do endereço ao lado), as linhas de notas de conteúdo no formulário de submissão de filmes e as caixas de ligação de fotografias ao listar um negócio. Agora ficam no tamanho pretendido, por isso cada linha alinha como foi desenhada.",
 
   "changelog.entries.persona-editor-wide-sheet.title":
     "Editar uma secção da tua persona abre agora um painel amplo a partir de baixo",
   "changelog.entries.persona-editor-wide-sheet.body":
-    "Quando editas um item numa das secções da tua persona — um projeto, um papel, uma fotografia — o editor sobe agora a partir do fundo do ecrã como um painel largo, em vez de ficar preso numa faixa estreita ao lado. Os campos ficam dois lado a lado, por isso títulos, descrições e ligações têm espaço para respirar em vez de parecerem apertados. No telemóvel mantém-se o painel de largura total de sempre.",
+    "Quando editas um item numa das secções da tua persona (um projeto, um papel, uma fotografia), o editor sobe agora a partir do fundo do ecrã como um painel largo, em vez de ficar preso numa faixa estreita ao lado. Os campos ficam dois lado a lado, por isso títulos, descrições e ligações têm espaço para respirar em vez de parecerem apertados. No telemóvel mantém-se o painel de largura total de sempre.",
 
   "changelog.entries.community-featured-cards.title":
-    "As comunidades em destaque ganham o cartão completo — com fotografias de capa",
+    "As comunidades em destaque ganham o cartão completo, com fotografias de capa",
   "changelog.entries.community-featured-cards.body":
-    "As comunidades em destaque na página inicial passam a mostrar o mesmo cartão rico da montra — imagem de capa, categoria, quem mantém o espaço, como entrar, o ano em que começou, o que ganhas lá dentro e rostos reais de membros — em vez de apenas um nome e a contagem de pessoas. Quem cria comunidades pode agora adicionar uma fotografia de capa ao começar uma comunidade ou no painel de edição, e ela recebe as pessoas no cartão.",
+    "As comunidades em destaque na página inicial passam a mostrar o mesmo cartão rico da montra (imagem de capa, categoria, quem mantém o espaço, como entrar, o ano em que começou, o que ganhas lá dentro e rostos reais de membros) em vez de apenas um nome e a contagem de pessoas. Quem cria comunidades pode agora adicionar uma fotografia de capa ao começar uma comunidade ou no painel de edição, e ela recebe as pessoas no cartão.",
 
   "changelog.entries.media-in-use-references.title":
-    "Vê onde cada imagem enviada está a ser usada — e o que podes eliminar em segurança",
+    "Vê onde cada imagem enviada está a ser usada, e o que podes eliminar em segurança",
   "changelog.entries.media-in-use-references.body":
-    "Os teus envios — e a consola de imagens da administração — mostram agora todos os sítios onde cada imagem ainda está a ser usada, com uma ligação direta para cada um. Tudo o que já não tem referências fica assinalado como seguro para remover, para limpares duplicados antigos sem receio de partires uma página ativa.",
+    "Os teus envios, e a consola de imagens da administração, mostram agora todos os sítios onde cada imagem ainda está a ser usada, com uma ligação direta para cada um. Tudo o que já não tem referências fica assinalado como seguro para remover, para limpares duplicados antigos sem receio de partires uma página ativa.",
 
   "changelog.entries.homepage-featured-photo-fix.title":
     "As fotografias dos membros em destaque voltam a aparecer na página inicial",
   "changelog.entries.homepage-featured-photo-fix.body":
-    "O destaque curado “Pessoas reais, não um diretório” estava a servir a fotografia enviada de cada membro em destaque como uma ligação por resolver, pelo que aparecia como imagem partida. A página inicial passa a resolver essas fotografias tal como todos os outros avatares, e os retratos carregam corretamente.",
+    "O destaque curado “Pessoas reais” estava a servir a fotografia enviada de cada membro em destaque como",
 
   "changelog.entries.admin-media-filter-by-uploader.title":
     "As administrações podem filtrar as imagens enviadas por quem as enviou",
   "changelog.entries.admin-media-filter-by-uploader.body":
-    "A consola de imagens enviadas passa a deixar uma administração restringir toda a grelha a um único membro — procurar por nome ou identificador, ou tocar no nome de quem enviou em qualquer ficheiro — para rever num só lugar tudo o que uma pessoa colocou no armazenamento.",
+    "A consola de imagens enviadas passa a deixar uma administração restringir toda a grelha a um único membro (procurar por nome ou identificador, ou tocar no nome de quem enviou em qualquer ficheiro) para rever num só lugar tudo o que uma pessoa colocou no armazenamento.",
 
   "changelog.entries.persona-preview-banner-bleed.title":
     "As capas das personas vão agora de ponta a ponta no teu perfil",
   "changelog.entries.persona-preview-banner-bleed.body":
-    "A capa no cartão “Também a trabalhar como” passa a preencher o cartão de ponta a ponta, o mesmo visual sem margens que as tuas personas já têm nas páginas próprias — para que o teu perfil e cada página de persona pareçam uma só peça.",
+    "A capa no cartão “Também a trabalhar como” passa a preencher o cartão de ponta a ponta, o mesmo visual sem margens que as tuas personas já têm nas páginas próprias, para que o teu perfil e cada página de persona pareçam uma só peça.",
 
   "changelog.entries.magazine-archive-truthful-hero.title":
     "O arquivo da revista mostra agora só edições reais",
   "changelog.entries.magazine-archive-truthful-hero.body":
-    "A página de todas as edições abria com um título e uma contagem fixos — “nove edições desde 2024” e números de artigos, colaboradores e línguas — que eram valores de exemplo, não o teu arquivo. Esses passam a existir só na pré-visualização; a página real leva-te direto às edições anteriores verdadeiras.",
+    "A página de todas as edições abria com um título e uma contagem fixos: “nove edições desde 2024” e números de artigos, colaboradores e línguas, que eram valores de exemplo em vez do teu arquivo. Esses passam a existir só na pré-visualização; a página real leva-te direto às edições anteriores verdadeiras.",
 
   "changelog.entries.persona-families-expansion.title":
     "As personas já servem muito mais ofícios",
   "changelog.entries.persona-families-expansion.body":
-    "As personas vão agora muito para lá do palco. Há seis novos estilos de página — uma cadeira de salão, uma passerelle, uma galeria, um registo de história oral, um cartaz de movimento e uma sala de aula — e dezenas de novas profissões, cada uma com um aspeto pensado para o trabalho que fazes mesmo.",
+    "As personas vão agora muito para lá do palco. Há seis novos estilos de página (uma cadeira de salão, uma passerelle, uma galeria, um registo de história oral, um cartaz de movimento e uma sala de aula) e dezenas de novas profissões, cada uma com um aspeto pensado para o trabalho que fazes mesmo.",
 
   "changelog.entries.pole-dancer-persona.title": "Personas de pole dance",
   "changelog.entries.pole-dancer-persona.body":
-    "Quem faz pole dance pode agora criar uma persona que mostra os dois lados da arte — os espetáculos que apresenta e as aulas que dá.",
+    "Quem faz pole dance pode agora criar uma persona que mostra os dois lados da arte: os espetáculos que apresenta e as aulas que dá.",
 
   "changelog.entries.astrologer-persona.title":
     "Novas personas de astrologia, com a sua própria página celeste",
   "changelog.entries.astrologer-persona.body":
-    "Já podes criar uma persona de astrologia. Ganha a sua própria página “mapa” — uma efeméride índigo, salpicada de estrelas, com as tuas leituras numeradas como casas, o céu de hoje, o que precisas de quem te procura antes de uma leitura, e uma declaração clara do que uma leitura não é.",
+    "Já podes criar uma persona de astrologia. Ganha a sua própria página “mapa”: uma efeméride índigo, salpicada de estrelas, com as tuas leituras numeradas como casas, o céu de hoje, o que precisas de quem te procura antes de uma leitura, e uma declaração clara do que uma leitura não é.",
 
   "changelog.entries.crisp-profile-photos.title":
     "As fotos de perfil estão mais nítidas nas páginas de membros",
@@ -2710,37 +2764,37 @@ export const marketing: Catalog = {
   "changelog.entries.developer-persona-banner.title":
     "Os perfis de programador voltam a mostrar banner",
   "changelog.entries.developer-persona-banner.body":
-    "Os perfis de programador, criador e outros perfis de quem constrói escondiam sem querer a imagem de banner que carregavas. Se adicionaste uma capa, ela passa a aparecer no topo do perfil — e, se não adicionaste, a página fica limpa, sem faixa vazia.",
+    "Os perfis de programador, criador e outros perfis de quem constrói escondiam sem querer a imagem de banner que carregavas. Se adicionaste uma capa, ela passa a aparecer no topo do perfil. Se não adicionaste, a página fica limpa, sem faixa vazia.",
 
   "changelog.entries.persona-preview-edit-hidden.title":
     "Pré-visualizar o teu perfil como visitante já esconde os controlos de edição",
   "changelog.entries.persona-preview-edit-hidden.body":
-    "Ao pré-visualizares o teu próprio perfil como visitante, o botão Editar ainda aparecia nos teus perfis profissionais — por isso a pré-visualização não correspondia bem ao que os outros veem. Agora fica escondido, e a pré-visualização reflete mesmo a experiência de quem te visita.",
+    "Ao pré-visualizares o teu próprio perfil como visitante, o botão Editar ainda aparecia nos teus perfis profissionais, por isso a pré-visualização não correspondia bem ao que os outros veem. Agora fica escondido, e a pré-visualização reflete mesmo a experiência de quem te visita.",
 
   "changelog.entries.persona-solo-card-wide.title":
     "Um único perfil profissional com capa passa a ocupar o espaço",
   "changelog.entries.persona-solo-card-wide.body":
-    "Se o teu perfil tem apenas um perfil profissional e este tem foto de capa, o cartão passa a apresentar-se na horizontal — capa ao lado dos detalhes — em vez de ficar numa coluna estreita com um espaço vazio ao lado. Perfis com menos conteúdo mantêm o cartão compacto.",
+    "Se o teu perfil tem apenas um perfil profissional e este tem foto de capa, o cartão passa a apresentar-se na horizontal, com a capa ao lado dos detalhes, em vez de ficar numa coluna estreita com um espaço vazio ao lado. Perfis com menos conteúdo mantêm o cartão compacto.",
 
   "changelog.entries.persona-performance-row-mobile.title":
     "As listas de atuações dos perfis leem-se bem no telemóvel",
   "changelog.entries.persona-performance-row-mobile.body":
-    "Num ecrã estreito, o ano, o título e o local de uma atuação disputavam a mesma linha, apertando o título até ele partir uma letra por linha. Agora cada parte ocupa a sua própria linha, para que as atuações de um bailarino — ou de qualquer perfil — continuem legíveis no telemóvel.",
+    "Num ecrã estreito, o ano, o título e o local de uma atuação disputavam a mesma linha, apertando o título até ele partir uma letra por linha. Agora cada parte ocupa a sua própria linha, para que as atuações de um bailarino, ou de qualquer perfil, continuem legíveis no telemóvel.",
 
   "changelog.entries.endorse-persona-by-owner-name.title":
     "Apoiar um perfil sem nome passa a usar o teu nome",
   "changelog.entries.endorse-persona-by-owner-name.body":
-    "Quando alguém deixa um perfil com o nome apenas da sua área — “Bailarino”, “Programador” —, a janela de apoio passa a tratar a pessoa pelo primeiro nome (“Apoiar Philippine”) em vez da profissão isolada, para que o texto soe a algo sobre uma pessoa, e não sobre um cargo.",
+    "Quando alguém deixa um perfil com o nome apenas da sua área (“Bailarino”, “Programador”), a janela de apoio passa a tratar a pessoa pelo primeiro nome (“Apoiar Philippine”) em vez da profissão isolada, para que o texto soe a algo sobre uma pessoa.",
 
   "changelog.entries.landing-featured-member-card.title":
     "Um cartão de membro em destaque mais rico na página inicial",
   "changelog.entries.landing-featured-member-card.body":
-    "Os membros que a nossa equipa destaca na página inicial aparecem agora no mesmo cartão de destaque completo da demonstração — um retrato grande, as palavras da própria pessoa e uma ligação direta ao perfil — alternando entre todos os que destacámos. Substitui o cartão mais simples que mostrava apenas um nome e uma frase.",
+    "Os membros que a nossa equipa destaca na página inicial aparecem agora no mesmo cartão de destaque completo da demonstração (um retrato grande, as palavras da própria pessoa e uma ligação direta ao perfil), alternando entre todos os que destacámos. Substitui o cartão mais simples que mostrava apenas um nome e uma frase.",
 
   "changelog.entries.session-expiry-csrf-fix.title":
     "Menos expulsões inesperadas por “sessão expirada”",
   "changelog.entries.session-expiry-csrf-fix.body":
-    "Corrigimos um erro que te podia desligar com a mensagem “sessão expirada” mesmo estando a tua sessão perfeitamente válida — o sinal era que bastava recarregar a página para voltares a entrar. Acontecia sobretudo com a aplicação aberta em mais do que um separador. Agora a tua sessão recupera sozinha, em silêncio, em vez de te mandar para o ecrã de início de sessão.",
+    "Corrigimos um erro que te podia desligar com a mensagem “sessão expirada” mesmo estando a tua sessão perfeitamente válida: o sinal era que bastava recarregar a página para voltares a entrar. Acontecia sobretudo com a aplicação aberta em mais do que um separador. Agora a tua sessão recupera sozinha, em silêncio, em vez de te mandar para o ecrã de início de sessão.",
 
   "changelog.entries.persona-image-remove-confirm.title":
     "Uma confirmação rápida antes de remover uma foto da persona",
@@ -2750,22 +2804,22 @@ export const marketing: Catalog = {
   "changelog.entries.persona-craft-pass.title":
     "As personas ficam melhores em todo o lado",
   "changelog.entries.persona-craft-pass.body":
-    "Uma passagem de acabamento por toda a funcionalidade. O modo escuro está corrigido — detalhes das skins, menus e ícones de estado que antes desapareciam ficam agora nítidos. O diretório de personas já não para nas 40 pessoas, carrega com um esqueleto em vez de um spinner e abre mais depressa porque os estilos das personas já não pesam em todas as outras páginas. No telemóvel, as janelas de apoiantes, denúncia e eliminação são agora painéis que podes deslizar para fechar, as áreas de toque são maiores, os campos de endereço e link abrem o teclado certo, e podes pré-visualizar a tua persona enquanto editas. Partilhar também está mais cuidado: as pré-visualizações de link já não cortam a tua foto, e o editor mostra ilustração a sério quando algo corre mal.",
+    "Uma passagem de acabamento por toda a funcionalidade. O modo escuro está corrigido: detalhes das skins, menus e ícones de estado que antes desapareciam ficam agora nítidos. O diretório de personas já não para nas 40 pessoas, carrega com um esqueleto em vez de um spinner e abre mais depressa porque os estilos das personas já não pesam em todas as outras páginas. No telemóvel, as janelas de apoiantes, denúncia e eliminação são agora painéis que podes deslizar para fechar, as áreas de toque são maiores, os campos de endereço e link abrem o teclado certo, e podes pré-visualizar a tua persona enquanto editas. Partilhar também está mais cuidado: as pré-visualizações de link já não cortam a tua foto, e o editor mostra ilustração a sério quando algo corre mal.",
 
   "changelog.entries.persona-audit-hardening.title":
     "Personas: uma passagem de polimento e segurança",
   "changelog.entries.persona-audit-hardening.body":
-    "Uma revisão ampla das personas. O editor passa a proteger o teu trabalho — avisa antes de o botão de retroceder perder alterações por guardar, mantém o que escreves em segurança durante uma gravação e pede-te para guardar antes de publicar, para que o que vês seja o que fica no ar. As páginas públicas de persona carregam o banner mais depressa, leem-se bem em leitores de ecrã e nunca mostram um placeholder perdido. Quem segue fica privado, os links são verificados por segurança e o diretório de personas carrega mais rápido. As pessoas co-donas podem editar à vontade, mas só quem criou pode renomear, despublicar, eliminar ou remover um co-dono — e todos são avisados se uma persona partilhada for eliminada.",
+    "Uma revisão ampla das personas. O editor passa a proteger o teu trabalho: avisa antes de o botão de retroceder perder alterações por guardar, mantém o que escreves em segurança durante uma gravação e pede-te para guardar antes de publicar, para que o que vês seja o que fica no ar. As páginas públicas de persona carregam o banner mais depressa, leem-se bem em leitores de ecrã e nunca mostram um placeholder perdido. Quem segue fica privado, os links são verificados por segurança e o diretório de personas carrega mais rápido. As pessoas co-donas podem editar à vontade, mas só quem criou pode renomear, despublicar, eliminar ou remover um co-dono, e todos são avisados se uma persona partilhada for eliminada.",
 
   "changelog.entries.persona-followers-owner-view.title":
     "Vê quem segue a tua persona",
   "changelog.entries.persona-followers-owner-view.body":
-    "Quem é responsável por uma persona pode agora abrir os seus seguidores e ver exatamente quem lá está — as pessoas que acompanham o teu trabalho em silêncio. Para toda a gente, seguir mantém-se privado: mais ninguém consegue ver quem segue uma persona, e aquilo que tu segues nunca aparece a ninguém.",
+    "Quem é responsável por uma persona pode agora abrir os seus seguidores e ver exatamente quem lá está: as pessoas que acompanham o teu trabalho em silêncio. Para toda a gente, seguir mantém-se privado: mais ninguém consegue ver quem segue uma persona, e aquilo que tu segues nunca aparece a ninguém.",
 
   "changelog.entries.persona-image-reuse-uploads.title":
     "Reutiliza uma foto que já carregaste",
   "changelog.entries.persona-image-reuse-uploads.body":
-    "Todos os espaços de imagem no editor da tua persona — o avatar ou logótipo, o banner de capa e a imagem de cada item — podem agora usar fotos que já carregaste antes, e não apenas um ficheiro novo do teu dispositivo. Ao escolher uma imagem abre-se um seletor com as tuas fotos anteriores, para reutilizares a mesma imagem em várias personas com uns toques, ou apagares as que já não precisas.",
+    "Todos os espaços de imagem no editor da tua persona (o avatar ou logótipo, o banner de capa e a imagem de cada item) podem agora usar fotos que já carregaste antes, para lá de um ficheiro novo do teu dispositivo. Ao escolher uma imagem abre-se um seletor com as tuas fotos anteriores, para reutilizares a mesma imagem em várias personas com uns toques, ou apagares as que já não precisas.",
 
   "changelog.entries.persona-banner-quality.title":
     "Banners de persona mais nítidos",
@@ -2775,7 +2829,7 @@ export const marketing: Catalog = {
   "changelog.entries.modal-close-scroll-jump.title":
     "Adeus ao salto da página ao fechar um diálogo",
   "changelog.entries.modal-close-scroll-jump.body":
-    "Fechar uma janela — como o cartão de informação de uma persona — já não faz a página saltar para o topo e voltar a descer. A tua posição é restaurada de imediato, exatamente onde a deixaste.",
+    "Fechar uma janela, como o cartão de informação de uma persona, já não faz a página saltar para o topo e voltar a descer. A tua posição é restaurada de imediato, exatamente onde a deixaste.",
 
   "changelog.entries.persona-gallery-multi-add.title":
     "Adiciona várias fotos à galeria de uma vez",
@@ -2785,7 +2839,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-gallery-lightbox.title":
     "Toca numa foto da persona para a veres em ecrã inteiro",
   "changelog.entries.persona-gallery-lightbox.body":
-    "As fotos da galeria de uma persona abrem agora em ecrã inteiro quando lhes tocas — a foto completa, sem cortes, com as setas do teclado e no ecrã para passar de uma para outra.",
+    "As fotos da galeria de uma persona abrem agora em ecrã inteiro quando lhes tocas: a foto completa, sem cortes, com as setas do teclado e no ecrã para passar de uma para outra.",
 
   "changelog.entries.persona-gig-images.title":
     "Adiciona uma foto aos teus concertos",
@@ -2800,7 +2854,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-page-motion.title":
     "Páginas de persona que se movem contigo",
   "changelog.entries.persona-page-motion.body":
-    "As páginas de persona agora ganham vida à medida que chegas e percorres — o cabeçalho assenta suavemente e cada secção surge quando lá chegas. Cada visual de persona mantém o seu próprio ritmo: umas são rápidas, outras deslizam devagar e as mais sóbrias ficam calmas. Tudo respeita a definição de movimento reduzido do teu dispositivo — se preferes tudo parado, fica parado.",
+    "As páginas de persona agora ganham vida à medida que chegas e percorres: o cabeçalho assenta suavemente e cada secção surge quando lá chegas. Cada visual de persona mantém o seu próprio ritmo: umas são rápidas, outras deslizam devagar e as mais sóbrias ficam calmas. Tudo respeita a definição de movimento reduzido do teu dispositivo: se preferes tudo parado, fica parado.",
 
   "changelog.entries.endorse-with-note.title":
     "Endossa uma persona com uma nota",
@@ -2810,22 +2864,22 @@ export const marketing: Catalog = {
   "changelog.entries.persona-banner-bleed.title":
     "Deixe o banner do seu perfil sangrar na página",
   "changelog.entries.persona-banner-bleed.body":
-    "Os perfis agora podem suavizar a emenda onde a foto de capa encontra a página. Nas configurações do seu perfil, em Presença, a nova opção “Borda do banner” permite manter o banner contido (como antes) ou deixá-lo sangrar — a imagem de capa desvanece suavemente na página abaixo. Funciona com qualquer visual de perfil, dissolvendo-se na cor que estiver sob o banner.",
+    "Os perfis agora podem suavizar a emenda onde a foto de capa encontra a página. Nas configurações do seu perfil, em Presença, a nova opção “Borda do banner” permite manter o banner contido (como antes) ou deixá-lo sangrar, com a imagem de capa a desvanecer suavemente na página abaixo. Funciona com qualquer visual de perfil, dissolvendo-se na cor que estiver sob o banner.",
 
   "changelog.entries.persona-hero-actions-tidy.title":
     "Uma linha de ações mais arrumada nas páginas de persona",
   "changelog.entries.persona-hero-actions-tidy.body":
-    "Os botões no topo de uma persona passam a ler-se como um menu claro. Mensagem e Seguir ficam à frente, e as ações menos usadas — Partilhar e Denunciar — recolhem-se num menu “⋯” para a linha não ficar apinhada. As contagens de seguidores e apoios passaram para uma única linha discreta por baixo, em vez de se repetirem nos próprios botões.",
+    "Os botões no topo de uma persona passam a ler-se como um menu claro. Mensagem e Seguir ficam à frente, e as ações menos usadas (Partilhar e Denunciar) recolhem-se num menu “⋯” para a linha não ficar apinhada. As contagens de seguidores e apoios passaram para uma única linha discreta por baixo, em vez de se repetirem nos próprios botões.",
 
   "changelog.entries.fix-member-filter-collapse.title":
     "Filtros mais arrumados no diretório de membros",
   "changelog.entries.fix-member-filter-collapse.body":
-    "Quando um grupo de filtros do diretório de membros estava recolhido, ainda espreitava uma fresta do seu conteúdo (uma caixa de seleção ou uma etiqueta) por baixo do título. Os grupos recolhidos passam a mostrar apenas o título, para o painel de filtros ler como um menu limpo — e tudo desliza como antes quando abres um grupo.",
+    "Quando um grupo de filtros do diretório de membros estava recolhido, ainda espreitava uma fresta do seu conteúdo (uma caixa de seleção ou uma etiqueta) por baixo do título. Os grupos recolhidos passam a mostrar apenas o título, para o painel de filtros ler como um menu limpo, e tudo desliza como antes quando abres um grupo.",
 
   "changelog.entries.fix-persona-hero-theme-colors.title":
     "O estado e as redes sociais da persona agora acompanham o tema",
   "changelog.entries.fix-persona-hero-theme-colors.body":
-    "Nas personas com tema escuro (como o visual de palco), o estado de disponibilidade e os ícones das redes sociais ficavam apagados — texto esbatido e um ícone num círculo branco gritante. Agora seguem as cores da tua persona, mantendo o estado legível e transformando cada ícone social num botão subtil, tingido com o acento, que combina com o tema.",
+    "Nas personas com tema escuro (como o visual de palco), o estado de disponibilidade e os ícones das redes sociais ficavam apagados: texto esbatido e um ícone num círculo branco gritante. Agora seguem as cores da tua persona, mantendo o estado legível e transformando cada ícone social num botão subtil, tingido com o acento, que combina com o tema.",
 
   "changelog.entries.persona-photo-gallery.title":
     "Adiciona uma galeria de fotos à tua persona",
@@ -2855,41 +2909,41 @@ export const marketing: Catalog = {
   "changelog.entries.fix-page-top-nav-overlap.title":
     "O conteúdo das páginas já não fica escondido por baixo do menu do topo",
   "changelog.entries.fix-page-top-nav-overlap.body":
-    "O menu flutuante do topo sobrepunha-se ao início de algumas páginas, cortando um título ou botão por baixo. Agora todas as páginas reservam esse espaço num único sítio partilhado, por isso nada fica por baixo do menu — e cada página mantém o seu próprio espaçamento.",
+    "O menu flutuante do topo sobrepunha-se ao início de algumas páginas, cortando um título ou botão por baixo. Agora todas as páginas reservam esse espaço num único sítio partilhado, por isso nada fica por baixo do menu, e cada página mantém o seu próprio espaçamento.",
 
   "changelog.entries.nav-rail-redesign.title": "Um menu principal mais claro",
   "changelog.entries.nav-rail-redesign.body":
-    "O menu no computador mantém agora todas as secções à vista — escolhes uma na coluna e as suas ligações, com uma pré-visualização ao lado, aparecem logo. Os mesmos destinos, com menos procura.",
+    "O menu no computador mantém agora todas as secções à vista: escolhes uma na coluna e as suas ligações, com uma pré-visualização ao lado, aparecem logo. Os mesmos destinos, com menos procura.",
 
   "changelog.entries.persona-photo-enlarge.title":
     "Toca na foto de uma persona para a ver em tamanho grande",
   "changelog.entries.persona-photo-enlarge.body":
-    "Tal como num perfil normal, podes agora tocar no avatar de uma persona para abrir a foto em ecrã inteiro — um olhar em condições sobre quem está por trás da persona. Toca fora, usa o botão de fechar ou carrega em Esc para sair.",
+    "Tal como num perfil normal, podes agora tocar no avatar de uma persona para abrir a foto em ecrã inteiro: um olhar em condições sobre quem está por trás da persona. Toca fora, usa o botão de fechar ou carrega em Esc para sair.",
 
   "changelog.entries.persona-mobile-hero.title":
     "As personas ficam bem no teu telemóvel",
   "changelog.entries.persona-mobile-hero.body":
-    "O cabeçalho de uma persona passa a assentar na mesma coluna limpa e centrada que o teu próprio perfil usa no telemóvel — o avatar, o nome, a frase e as ligações empilhados ao centro, com os botões de ação a ocupar toda a largura e fáceis de alcançar com um só polegar. Fim do amontoado apertado no canto superior esquerdo num ecrã estreito.",
+    "O cabeçalho de uma persona passa a assentar na mesma coluna limpa e centrada que o teu próprio perfil usa no telemóvel: o avatar, o nome, a frase e as ligações empilhados ao centro, com os botões de ação a ocupar toda a largura e fáceis de alcançar com um só polegar. Fim do amontoado apertado no canto superior esquerdo num ecrã estreito.",
 
   "changelog.entries.fix-persona-save-conflict.title":
     "Guardar uma segunda persona já não dá erro",
   "changelog.entries.fix-persona-save-conflict.body":
-    "Editar e guardar uma persona podia falhar com um erro de “endereço já em uso” assim que tinhas mais do que uma — mesmo quando nunca tinhas definido um identificador público em nenhuma delas. Um identificador em branco passa agora a ser tratado como “nenhum”, em vez de um valor vazio que colidia em silêncio com as tuas outras personas, por isso as alterações guardam sem problemas. E se duas personas partilharem mesmo o mesmo endereço, passamos a dizer-te exatamente que campo mudar.",
+    "Editar e guardar uma persona podia falhar com um erro de “endereço já em uso” assim que tinhas mais do que uma, mesmo quando nunca tinhas definido um identificador público em nenhuma delas. Um identificador em branco passa agora a ser tratado como “nenhum”, em vez de um valor vazio que colidia em silêncio com as tuas outras personas, por isso as alterações guardam sem problemas. E se duas personas partilharem mesmo o mesmo endereço, passamos a dizer-te exatamente que campo mudar.",
 
   "changelog.entries.magazine-desk-two-tracks.title":
     "Duas vias na redação da revista: Destaques e Edição",
   "changelog.entries.magazine-desk-two-tracks.body":
-    "Quem edita pode agora manter os destaques autónomos da plataforma separados das peças que estão a ser reunidas numa edição completa. Alterna entre as duas vias com um toque e move qualquer peça de uma para a outra — envia um destaque para a edição atual, ou tira uma peça da edição para ela seguir por conta própria. A pesquisa, os filtros e as vistas guardadas funcionam dentro da via em que estás, e as novas encomendas entram na via que escolheres.",
+    "Quem edita pode agora manter os destaques autónomos da plataforma separados das peças que estão a ser reunidas numa edição completa. Alterna entre as duas vias com um toque e move qualquer peça de uma para a outra: envia um destaque para a edição atual, ou tira uma peça da edição para ela seguir por conta própria. A pesquisa, os filtros e as vistas guardadas funcionam dentro da via em que estás, e as novas encomendas entram na via que escolheres.",
 
   "changelog.entries.photo-metadata-strip-hardening.title":
     "Remoção mais forte dos dados de localização escondidos nas tuas fotos",
   "changelog.entries.photo-metadata-strip-hardening.body":
-    "Todas as fotos que carregas têm os metadados escondidos — incluindo a localização GPS que muitos telemóveis gravam na imagem — removidos no teu navegador antes de saírem do teu dispositivo. Fechámos as falhas: se essa remoção não conseguir completar-se por algum motivo, o carregamento passa a ser bloqueado em vez de enviado como está, e os GIFs animados são limpos sem perderem a animação. A tua localização continua a ser tua.",
+    "Todas as fotos que carregas têm os metadados escondidos (incluindo a localização GPS que muitos telemóveis gravam na imagem) removidos no teu navegador antes de saírem do teu dispositivo. Fechámos as falhas: se essa remoção não conseguir completar-se por algum motivo, o carregamento passa a ser bloqueado em vez de enviado como está, e os GIFs animados são limpos sem perderem a animação. A tua localização continua a ser tua.",
 
   "changelog.entries.fix-persona-cover-overlay-leak.title":
     "As capas dos perfis aparecem limpas depois de as carregares",
   "changelog.entries.fix-persona-cover-overlay-leak.body":
-    "Nos perfis de músico e DJ, a textura decorativa pensada para o estado vazio, sem capa, continuava a pintar por cima da tua imagem depois de a carregares — escurecendo e granulando a foto. Passa a desaparecer assim que defines uma imagem de capa, para que a tua capa apareça exatamente como a escolheste.",
+    "Nos perfis de músico e DJ, a textura decorativa pensada para o estado vazio, sem capa, continuava a pintar por cima da tua imagem depois de a carregares, escurecendo e granulando a foto. Passa a desaparecer assim que defines uma imagem de capa, para que a tua capa apareça exatamente como a escolheste.",
 
   "changelog.entries.members-filter-panel-polish.title":
     "Um painel de filtros mais calmo no diretório de membros",
@@ -2899,27 +2953,27 @@ export const marketing: Catalog = {
   "changelog.entries.fix-persona-stage-dark-legibility.title":
     "As páginas de persona continuam legíveis no modo escuro",
   "changelog.entries.fix-persona-stage-dark-legibility.body":
-    "Dois estilos de persona ficavam ilegíveis no modo escuro — sobretudo na pré-visualização do editor. No estilo palco (músicos e DJ), o nome, os títulos das secções e a etiqueta de tipo ficavam escuros sobre escuro e quase desapareciam; o estilo de escritor ficava quase totalmente ilegível, com o texto de tinta quente perdido sobre uma página quase preta. Ambos passam a manter-se claros e legíveis em qualquer tema, e o pequeno ícone de ajuda ⓘ ao lado do nome da persona deixa de parecer um círculo vazio em superfícies escuras.",
+    "Dois estilos de persona ficavam ilegíveis no modo escuro, sobretudo na pré-visualização do editor. No estilo palco (músicos e DJ), o nome, os títulos das secções e a etiqueta de tipo ficavam escuros sobre escuro e quase desapareciam; o estilo de escritor ficava quase totalmente ilegível, com o texto de tinta quente perdido sobre uma página quase preta. Ambos passam a manter-se claros e legíveis em qualquer tema, e o pequeno ícone de ajuda ⓘ ao lado do nome da persona deixa de parecer um círculo vazio em superfícies escuras.",
 
   "changelog.entries.fix-persona-preview-avatar.title":
-    "As fotos da persona aparecem agora na pré-visualização — e o avatar voltou a ser redondo",
+    "As fotos da persona aparecem agora na pré-visualização, e o avatar voltou a ser redondo",
   "changelog.entries.fix-persona-preview-avatar.body":
     "No editor de personas, um avatar ou capa acabados de escolher mostravam só um marcador de posição na pré-visualização até guardares. Passam a aparecer no momento em que os escolhes. Corrigimos também um quadrado indevido que emoldurava o avatar circular na pré-visualização e na página pública da persona.",
 
   "changelog.entries.fix-vouch-success-self-face.title":
-    "A confirmação do teu voto mostra agora a tua cara, não um marcador de posição",
+    "A confirmação do teu voto mostra agora a tua cara",
   "changelog.entries.fix-vouch-success-self-face.body":
     'Ao votar por alguém, o painel de confirmação podia juntar a foto do membro a um perfil de demonstração em vez da tua. Passa a mostrar sempre o teu avatar e as tuas iniciais reais ao lado das dessa pessoa, para que o momento "confirmado" reflita quem está mesmo a votar.',
 
   "changelog.entries.persona-readiness-estimate.title":
     "A estimativa de prontidão da persona reflete agora o que falta mesmo",
   "changelog.entries.persona-readiness-estimate.body":
-    'A "Estimativa rápida" na página Publicar de uma persona passa a contar tudo o que ainda vale a pena acrescentar — uma imagem de capa, a tua disponibilidade, um link social e conteúdo suficiente — em vez de saltar para 100 assim que já dava para publicar. O número só enche quando não falta mesmo nada por afinar.',
+    'A "Estimativa rápida" na página Publicar de uma persona passa a contar tudo o que ainda vale a pena acrescentar (uma imagem de capa, a tua disponibilidade, um link social e conteúdo suficiente) em vez de saltar para 100 assim que já dava para publicar. O número só enche quando não falta mesmo nada por afinar.',
 
   "changelog.entries.fix-persona-item-drawer-scroll.title":
     "Percorre todos os campos ao editar um item da montra",
   "changelog.entries.fix-persona-item-drawer-scroll.body":
-    "O painel de edição de um item da montra (como um concerto ou um projeto) já não fica cortado no fundo do ecrã no telemóvel — agora consegues percorrer todos os campos e chegar ao Guardar.",
+    "O painel de edição de um item da montra (como um concerto ou um projeto) já não fica cortado no fundo do ecrã no telemóvel: agora consegues percorrer todos os campos e chegar ao Guardar.",
 
   "changelog.entries.my-uploads.title":
     "Vê e faz a gestão de tudo o que enviaste",
@@ -2929,27 +2983,27 @@ export const marketing: Catalog = {
   "changelog.entries.profile-photo-picker.title":
     "Reutiliza uma foto que já carregaste",
   "changelog.entries.profile-photo-picker.body":
-    "O novo seletor de fotos permite definir a tua foto de perfil a partir de carregamentos anteriores, do teu dispositivo ou da tua foto da Google — e arrumar carregamentos antigos de que já não precisas.",
+    "O novo seletor de fotos permite definir a tua foto de perfil a partir de carregamentos anteriores, do teu dispositivo ou da tua foto da Google, e arrumar carregamentos antigos de que já não precisas.",
 
   "changelog.entries.fix-persona-image-persistence.title":
     "As fotos carregadas mantêm-se depois de editar",
   "changelog.entries.fix-persona-image-persistence.body":
-    "Corrigimos um erro em que uma foto carregada podia desaparecer depois de editares algo e recarregar — aparecia ao início e depois voltava ao marcador de posição. Afetava as capas e os avatares das personas, a tua foto de perfil e as imagens de trabalho, e as fotos dos negócios no diretório. Guardar já não substitui uma imagem que não mexeste, por isso as tuas fotos ficam.",
+    "Corrigimos um erro em que uma foto carregada podia desaparecer depois de editares algo e recarregar: aparecia ao início e depois voltava ao marcador de posição. Afetava as capas e os avatares das personas, a tua foto de perfil e as imagens de trabalho, e as fotos dos negócios no diretório. Guardar já não substitui uma imagem que não mexeste, por isso as tuas fotos ficam.",
 
   "changelog.entries.dark-ghost-button-contrast.title":
     "Os botões delineados ficam legíveis no modo escuro",
   "changelog.entries.dark-ghost-button-contrast.body":
-    "Os botões secundários delineados — como o Partilhar numa persona — ficavam quase invisíveis sobre fundos escuros. O contorno e o texto passam a cumprir as diretrizes de contraste, por isso ficam claramente legíveis mantendo-se secundários face à ação principal.",
+    "Os botões secundários delineados, como o Partilhar numa persona, ficavam quase invisíveis sobre fundos escuros. O contorno e o texto passam a cumprir as diretrizes de contraste, por isso ficam claramente legíveis mantendo-se secundários face à ação principal.",
 
   "changelog.entries.admin-media-delete-and-preview-fix.title":
     "As administradoras podem eliminar ficheiros guardados, e as pré-visualizações grandes já não escondem os controlos",
   "changelog.entries.admin-media-delete-and-preview-fix.body":
-    "Na consola de media de administração, as pré-visualizações de imagens altas empurravam as ações do ficheiro para fora do ecrã — agora as pré-visualizações têm um limite de altura para que todos os controlos fiquem acessíveis. As administradoras podem também eliminar definitivamente um ficheiro guardado a partir do painel de detalhes, com um passo de confirmação que avisa quando algo ainda o referencia.",
+    "Na consola de media de administração, as pré-visualizações de imagens altas empurravam as ações do ficheiro para fora do ecrã. Agora as pré-visualizações têm um limite de altura para que todos os controlos fiquem acessíveis. As administradoras podem também eliminar definitivamente um ficheiro guardado a partir do painel de detalhes, com um passo de confirmação que avisa quando algo ainda o referencia.",
 
   "changelog.entries.persona-editor-live-preview.title":
     "A pré-visualização do editor de persona atualiza-se enquanto escreves",
   "changelog.entries.persona-editor-live-preview.body":
-    "A pré-visualização ao vivo ao lado do editor de persona passa a refletir de imediato as tuas alterações ao nome, à frase de destaque, à bio, ao avatar, à capa, ao acento e à chamada para ação — antes de guardares — para veres exatamente como a tua persona vai ficar enquanto editas.",
+    "A pré-visualização ao vivo ao lado do editor de persona passa a refletir de imediato as tuas alterações ao nome, à frase de destaque, à bio, ao avatar, à capa, ao acento e à chamada para ação, antes de guardares, para veres exatamente como a tua persona vai ficar enquanto editas.",
 
   "changelog.entries.fix-uploaded-avatar-not-showing.title":
     "As fotografias de perfil carregadas passam a aparecer depois de guardar",
@@ -2959,52 +3013,52 @@ export const marketing: Catalog = {
   "changelog.entries.fix-image-preview-csp.title":
     "A pré-visualização da imagem volta a aparecer ao carregar",
   "changelog.entries.fix-image-preview-csp.body":
-    "Corrigimos um erro em que a pré-visualização de uma fotografia acabada de escolher não aparecia durante o carregamento — uma política de segurança estava a bloquear a imagem de pré-visualização local. A fotografia escolhida passa a aparecer de imediato enquanto carrega.",
+    "Corrigimos um erro em que a pré-visualização de uma fotografia acabada de escolher não aparecia durante o carregamento: uma política de segurança estava a bloquear a imagem de pré-visualização local. A fotografia escolhida passa a aparecer de imediato enquanto carrega.",
 
   "changelog.entries.use-google-profile-photo.title":
     "Usa a tua fotografia da Google no teu perfil",
   "changelog.entries.use-google-profile-photo.body":
-    "Se entraste com a Google e ainda não escolheste uma fotografia de perfil, o editor de perfil passa a mostrar um botão “Usar fotografia da Google” — para preencheres o teu retrato a partir da conta Google com um só toque, sem teres de procurar um ficheiro para carregar.",
+    "Se entraste com a Google e ainda não escolheste uma fotografia de perfil, o editor de perfil passa a mostrar um botão “Usar fotografia da Google”, para preencheres o teu retrato a partir da conta Google com um só toque, sem teres de procurar um ficheiro para carregar.",
 
   "changelog.entries.skip-link-keyboard-only.title":
     "O atalho “Saltar para o conteúdo” deixou de aparecer sem razão",
   "changelog.entries.skip-link-keyboard-only.body":
-    "O atalho “Saltar para o conteúdo” — que ajuda quem navega pelo teclado a passar à frente da navegação — aparecia por vezes durante a navegação normal. Agora só surge quando chegas mesmo a ele com o teclado (tecla Tab) e mantém-se escondido o resto do tempo.",
+    "O atalho “Saltar para o conteúdo”, que ajuda quem navega pelo teclado a passar à frente da navegação, aparecia por vezes durante a navegação normal. Agora só surge quando chegas mesmo a ele com o teclado (tecla Tab) e mantém-se escondido o resto do tempo.",
 
   "changelog.entries.enlarge-profile-photo.title":
     "Toca na foto de perfil para a ver de perto",
   "changelog.entries.enlarge-profile-photo.body":
-    "No perfil de qualquer pessoa, toca na foto para a abrir em grande, na versão completa — para veres exatamente quem é antes de a contactares. Toca em qualquer sítio ou carrega em Escape para fechar.",
+    "No perfil de qualquer pessoa, toca na foto para a abrir em grande, na versão completa, para veres exatamente quem é antes de a contactares. Toca em qualquer sítio ou carrega em Escape para fechar.",
 
   "changelog.entries.tap-notification-to-profile.title":
     "Toca numa notificação para abrir o perfil",
   "changelog.entries.tap-notification-to-profile.body":
-    "Quando alguém aceita o teu convite ou a tua ligação, toda a notificação passa a ser tocável e leva-te diretamente ao perfil dessa pessoa — não só a pequena ligação do nome. As notificações que apontam para algo mais específico, como uma conversa ou um convívio, continuam a abrir isso.",
+    "Quando alguém aceita o teu convite ou a tua ligação, toda a notificação passa a ser tocável e leva-te diretamente ao perfil dessa pessoa, para lá da pequena ligação do nome. As notificações que apontam para algo mais específico, como uma conversa ou um convívio, continuam a abrir isso.",
 
   "changelog.entries.more-push-notifications.title":
     "Mais do que te importa chega agora como notificação push",
   "changelog.entries.more-push-notifications.body":
-    "As notificações push eram só mensagens diretas e lembretes de eventos. Agora chegam mais momentos que contam ao teu ecrã de bloqueio — pedidos e aceitações de ligação, menções, respostas em conversas em que estás, e avais que recebes, além de um aviso sempre que um evento a que vais muda ou é cancelado. Há também uma novidade para quem acolhe: um toque quando alguém avaliza um espaço seguro que cuidas. Novos botões em definições deixam-te manter as Menções e os Avais tão presentes ou discretos quanto quiseres, e um botão “Enviar um teste a ti” confirma que tudo chega ao teu dispositivo.",
+    "As notificações push eram só mensagens diretas e lembretes de eventos. Agora chegam mais momentos que contam ao teu ecrã de bloqueio: pedidos e aceitações de ligação, menções, respostas em conversas em que estás, e avais que recebes, além de um aviso sempre que um evento a que vais muda ou é cancelado. Há também uma novidade para quem acolhe: um toque quando alguém avaliza um espaço seguro que cuidas. Novos botões em definições deixam-te manter as Menções e os Avais tão presentes ou discretos quanto quiseres, e um botão “Enviar um teste a ti” confirma que tudo chega ao teu dispositivo.",
 
   "changelog.entries.localized-push-notifications.title":
     "Notificações push no teu idioma",
   "changelog.entries.localized-push-notifications.body":
-    "As notificações push do sistema — como o lembrete de um convívio — passam a aparecer em português para quem tem a app definida em português, em vez de virem sempre em inglês. As pré-visualizações de mensagens diretas já apareciam nas tuas próprias palavras; isto alinha o texto da própria app com elas.",
+    "As notificações push do sistema, como o lembrete de um convívio, passam a aparecer em português para quem tem a app definida em português, em vez de virem sempre em inglês. As pré-visualizações de mensagens diretas já apareciam nas tuas próprias palavras; isto alinha o texto da própria app com elas.",
 
   "changelog.entries.magazine-desk-workspace-nav.title":
     "Um espaço próprio para a redação da revista",
   "changelog.entries.magazine-desk-workspace-nav.body":
-    "Quem edita a revista passa a ter uma navegação própria à esquerda — Redação, Propostas e Edição, com salto rápido (⌘K) e o painel “Desde sexta” — em vez do menu geral do site, em todos os ecrãs de edição.",
+    "Quem edita a revista passa a ter uma navegação própria à esquerda: Redação, Propostas e Edição, com salto rápido (⌘K) e o painel “Desde sexta”, em vez do menu geral do site, em todos os ecrãs de edição.",
   "changelog.entries.richer-push-notifications.title":
     "Notificações push que mostram quem e o quê",
   "changelog.entries.richer-push-notifications.body":
-    "As notificações push ficaram mais ricas — uma mensagem direta passa a mostrar de quem é, com a foto de quem escreveu, e um lembrete de evento mostra a capa do evento. Ambas trazem um toque rápido para entrares logo, e as mensagens agrupam-se por conversa para o teu ecrã de bloqueio ficar tranquilo.",
+    "As notificações push ficaram mais ricas: uma mensagem direta passa a mostrar de quem é, com a foto de quem escreveu, e um lembrete de evento mostra a capa do evento. Ambas trazem um toque rápido para entrares logo, e as mensagens agrupam-se por conversa para o teu ecrã de bloqueio ficar tranquilo.",
 
   "changelog.entries.admin-uploaded-images.tag": "Abrir admin",
   "changelog.entries.admin-uploaded-images.title":
     "As administradoras podem ver todas as imagens enviadas",
   "changelog.entries.admin-uploaded-images.body":
-    "As administradoras podem agora ver todas as imagens enviadas guardadas na plataforma, com detalhes por ficheiro — dono, metadados de armazenamento e uma verificação do tipo real de conteúdo — para revisão de segurança.",
+    "As administradoras podem agora ver todas as imagens enviadas guardadas na plataforma, com detalhes por ficheiro (dono, metadados de armazenamento e uma verificação do tipo real de conteúdo) para revisão de segurança.",
 
   "changelog.entries.events-and-my-events-merged.title":
     "Os eventos e Os meus eventos são agora uma só página",
@@ -3014,22 +3068,22 @@ export const marketing: Catalog = {
   "changelog.entries.trust-network-legend-withdrawn.title":
     "A legenda da rede de confiança já explica as linhas tracejadas",
   "changelog.entries.trust-network-legend-withdrawn.body":
-    "No mapa da Rede de Confiança, um aval que foi retirado é desenhado como uma linha tracejada vermelha. A legenda passa a nomeá-lo — «Aval retirado» — para que as linhas tracejadas deixem de ser um mistério.",
+    "No mapa da Rede de Confiança, um aval que foi retirado é desenhado como uma linha tracejada vermelha. A legenda passa a nomeá-lo, «Aval retirado», para que as linhas tracejadas deixem de ser um mistério.",
 
   "changelog.entries.trust-network-replay-timeline.title":
     "A repetição da Rede de Confiança conta a história pessoa a pessoa",
   "changelog.entries.trust-network-replay-timeline.body":
-    "Antes, a repetição da Rede de Confiança avançava mês a mês, juntando num só borrão toda a gente que entrou no mesmo mês. Agora percorre a rede uma ligação de cada vez, pela ordem real em que as pessoas chegaram — cada passo nomeia quem se ligou e quando, e a linha correspondente na lista lateral acende-se enquanto reproduz.",
+    "Antes, a repetição da Rede de Confiança avançava mês a mês, juntando num só borrão toda a gente que entrou no mesmo mês. Agora percorre a rede uma ligação de cada vez, pela ordem real em que as pessoas chegaram: cada passo nomeia quem se ligou e quando, e a linha correspondente na lista lateral acende-se enquanto reproduz.",
 
   "changelog.entries.pronouns-on-member-cards.title":
     "Cartões de novos membros mais completos no feed",
   "changelog.entries.pronouns-on-member-cards.body":
-    "Os cartões de novos membros no teu feed passam a mostrar os pronomes da pessoa mesmo ao lado do nome, além de onde vive e dos seus interesses — para ficares com uma ideia de alguém ainda antes de abrires o perfil. A localização fica oculta para quem não tem o perfil público.",
+    "Os cartões de novos membros no teu feed passam a mostrar os pronomes da pessoa mesmo ao lado do nome, além de onde vive e dos seus interesses, para ficares com uma ideia de alguém ainda antes de abrires o perfil. A localização fica oculta para quem não tem o perfil público.",
 
   "changelog.entries.onboarding-join-and-leave.title":
-    "Junta-te — e sai — de comunidades durante o registo",
+    "Junta-te (e sai) de comunidades durante o registo",
   "changelog.entries.onboarding-join-and-leave.body":
-    "No passo de registo que sugere comunidades, agora podes tocar novamente numa comunidade a que já te juntaste para sair, caso mudes de ideias. As sugestões passam também a mostrar apenas comunidades totalmente abertas às quais te podes juntar com um toque — as privadas e as só por convite deixam de aparecer aqui, já que não podem ser aderidas de imediato.",
+    "No passo de registo que sugere comunidades, agora podes tocar novamente numa comunidade a que já te juntaste para sair, caso mudes de ideias. As sugestões passam também a mostrar apenas comunidades totalmente abertas às quais te podes juntar com um toque. As privadas e as só por convite deixam de aparecer aqui, já que não podem ser aderidas de imediato.",
 
   "changelog.entries.saved-and-searched-lists-load.title":
     "Os eventos guardados e as listas pesquisadas voltam a carregar em vez de dar erro",
@@ -3039,17 +3093,17 @@ export const marketing: Catalog = {
   "changelog.entries.admin-overview-stat-grid-responsive.title":
     "Os cartões de estatísticas do painel de administração ajustam-se ao ecrã no telemóvel",
   "changelog.entries.admin-overview-stat-grid-responsive.body":
-    "Os quatro cartões de destaque no topo do painel de administração mantinham-se numa linha fixa de quatro em ecrãs estreitos, espremendo cada cartão até a etiqueta se partir e a linha transbordar para fora. Agora limitam-se a quatro por linha em ecrãs largos e reduzem-se com suavidade para dois e depois um à medida que o ecrã estreita — para que cada cartão continue legível no telemóvel.",
+    "Os quatro cartões de destaque no topo do painel de administração mantinham-se numa linha fixa de quatro em ecrãs estreitos, espremendo cada cartão até a etiqueta se partir e a linha transbordar para fora. Agora limitam-se a quatro por linha em ecrãs largos e reduzem-se com suavidade para dois e depois um à medida que o ecrã estreita, para que cada cartão continue legível no telemóvel.",
 
   "changelog.entries.trust-network-mobile-graph-first.title":
     "A Rede de Confiança abre no grafo no telemóvel",
   "changelog.entries.trust-network-mobile-graph-first.body":
-    "Abrir a Rede de Confiança de um membro no telemóvel passa a mostrar logo o grafo de ligações, em vez de fazer surgir uma folha de detalhes por cima. Toca em qualquer pessoa no grafo para deslizar os detalhes das suas vouches e as respetivas ações — e desliza ou toca fora para voltares à vista completa.",
+    "Abrir a Rede de Confiança de um membro no telemóvel passa a mostrar logo o grafo de ligações, em vez de fazer surgir uma folha de detalhes por cima. Toca em qualquer pessoa no grafo para deslizar os detalhes das suas vouches e as respetivas ações, e desliza ou toca fora para voltares à vista completa.",
 
   "changelog.entries.magazine-article-versions.title":
     "Os rascunhos de artigos passam a guardar um histórico completo de versões",
   "changelog.entries.magazine-article-versions.body":
-    "Cada rascunho enviado e cada gravação manual passam a guardar uma versão — a equipa editorial pode comparar com o rascunho atual e restaurar qualquer versão anterior sem perder trabalho.",
+    "Cada rascunho enviado e cada gravação manual passam a guardar uma versão: a equipa editorial pode comparar com o rascunho atual e restaurar qualquer versão anterior sem perder trabalho.",
 
   "changelog.entries.magazine-article-comments.title":
     "Notas encadeadas nos rascunhos de artigos",
@@ -3059,21 +3113,21 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-desk-live-notifications.title":
     "O painel de atividade da mesa editorial passa a mostrar eventos reais",
   "changelog.entries.magazine-desk-live-notifications.body":
-    "O painel de atividade da mesa editorial passa a mostrar eventos editoriais reais — quem fez o quê, e quando — com ligação direta à peça, em vez da mesma lista fixa de demonstração de sempre.",
+    "O painel de atividade da mesa editorial passa a mostrar eventos editoriais reais (quem fez o quê, e quando) com ligação direta à peça, em vez da mesma lista fixa de demonstração de sempre.",
 
   "changelog.entries.magazine-desk-wave-b-fixes.title":
-    "Pesquisa no arquivo, resumos do índice e valores de cancelamento — agora reais",
+    "Pesquisa no arquivo, resumos do índice e valores de cancelamento, agora reais",
   "changelog.entries.magazine-desk-wave-b-fixes.body":
-    "A pesquisa no arquivo passa a encontrar peças publicadas em tempo real, em vez de uma lista de demonstração estática. Os resumos do índice da edição e a seleção “publicar nas cartas” das cartas das pessoas leitoras passam a guardar-se corretamente — essa opção criava por engano uma carta duplicada em vez de atualizar a que clicaste. Quem colabora também passa a ver o valor de cancelamento real de cada encomenda, em vez de um valor genérico.",
+    "A pesquisa no arquivo passa a encontrar peças publicadas em tempo real, em vez de uma lista de demonstração estática. Os resumos do índice da edição e a seleção “publicar nas cartas” das cartas das pessoas leitoras passam a guardar-se corretamente: essa opção criava por engano uma carta duplicada em vez de atualizar a que clicaste. Quem colabora também passa a ver o valor de cancelamento real de cada encomenda, em vez de um valor genérico.",
 
   "changelog.entries.magazine-commission-editor-fix.title":
     "Encomendar um artigo funciona numa revista nova",
   "changelog.entries.magazine-commission-editor-fix.body":
-    "Encomendar um artigo a partir da mesa editorial podia falhar com um erro “editorId must be a UUID” — acontecia numa revista nova, ainda sem artigos atribuídos a ninguém. As encomendas passam a ficar associadas à tua própria identidade de editor com sessão iniciada, por isso são criadas de imediato.",
+    "Encomendar um artigo a partir da mesa editorial podia falhar com um erro “editorId must be a UUID”, que acontecia numa revista nova, ainda sem artigos atribuídos a ninguém. As encomendas passam a ficar associadas à tua própria identidade de editor com sessão iniciada, por isso são criadas de imediato.",
 
   "changelog.entries.magazine-issue-production.title": "Produção da edição",
   "changelog.entries.magazine-issue-production.body":
-    "Adicionámos a produção da edição — organiza o alinhamento, define a capa e as chamadas, escolhe o resumo para membros e os cartões sociais, e publica a edição inteira de uma vez com uma lista de verificação.",
+    "Adicionámos a produção da edição: organiza o alinhamento, define a capa e as chamadas, escolhe o resumo para membros e os cartões sociais, e publica a edição inteira de uma vez com uma lista de verificação.",
 
   "changelog.entries.events-page-utility-redesign.title":
     "Uma página de eventos mais limpa e rápida",
@@ -3083,7 +3137,7 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-writer-workspace.title":
     "O espaço de quem escreve",
   "changelog.entries.magazine-writer-workspace.body":
-    "Abrimos o espaço de quem escreve — quem escreve vê agora as suas próprias atribuições, propostas e pagamentos, escolhe a sua assinatura e entrega textos, tudo num só lugar.",
+    "Abrimos o espaço de quem escreve: quem escreve vê agora as suas próprias atribuições, propostas e pagamentos, escolhe a sua assinatura e entrega textos, tudo num só lugar.",
 
   "changelog.entries.persona-discovery-nudges.title":
     "Personas, mais fáceis de descobrir",
@@ -3093,17 +3147,17 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-deck-editor-redesign.title":
     "O editor de decks de slides, redesenhado",
   "changelog.entries.magazine-deck-editor-redesign.body":
-    "Redesenhámos o editor de decks de slides para combinar com a redação da revista — uma pré-visualização ao vivo que espelha exatamente o que os leitores veem, limites de caracteres por slide e uma lista de verificação antes de publicar.",
+    "Redesenhámos o editor de decks de slides para combinar com a redação da revista: uma pré-visualização ao vivo que espelha exatamente o que os leitores veem, limites de caracteres por slide e uma lista de verificação antes de publicar.",
 
   "changelog.entries.magazine-desk-redesign.title":
     "A redação da revista, redesenhada",
   "changelog.entries.magazine-desk-redesign.body":
-    "Redesenhámos a redação da revista — um painel editorial ao vivo com vistas de fluxo, quadro e plano da edição, caixa de propostas, vistas guardadas, paleta de comandos (⌘K) e atalhos de teclado.",
+    "Redesenhámos a redação da revista: um painel editorial ao vivo com vistas de fluxo, quadro e plano da edição, caixa de propostas, vistas guardadas, paleta de comandos (⌘K) e atalhos de teclado.",
 
   "changelog.entries.persona-directory-redesign.title":
     "O diretório de personas, redesenhado",
   "changelog.entries.persona-directory-redesign.body":
-    "Explorar personas passa a estar organizado em seis famílias de ofício — Palco, Estúdio, Página, Oficina, Consultório e Mesa — para chegares mais depressa ao tipo de trabalho que procuras, mesmo antes de pesquisares. Os cartões mostram agora tags e o número de seguidores num relance, e o bloco «Também a trabalhar como» no perfil dos membros ganhou um visual mais leve e completo para cada persona ligada.",
+    "Explorar personas passa a estar organizado em seis famílias de ofício (Palco, Estúdio, Página, Oficina, Consultório e Mesa) para chegares mais depressa ao tipo de trabalho que procuras, mesmo antes de pesquisares. Os cartões mostram agora tags e o número de seguidores num relance, e o bloco «Também a trabalhar como» no perfil dos membros ganhou um visual mais leve e completo para cada persona ligada.",
 
   "changelog.entries.persona-editor-redesign.title":
     "Um editor redesenhado para as tuas personas",
@@ -3113,17 +3167,17 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-article-editor.title":
     "O editor de artigos por blocos, no ar",
   "changelog.entries.magazine-article-editor.body":
-    "Adicionámos o editor de artigos por blocos — escreve em parágrafos, títulos, citações em destaque, imagens, perguntas e respostas e linhas de estatística, com ênfase em linha, um menu de barra, contagem de palavras e tempo de leitura ao vivo, e uma lista de verificação antes de publicar.",
+    "Adicionámos o editor de artigos por blocos: escreve em parágrafos, títulos, citações em destaque, imagens, perguntas e respostas e linhas de estatística, com ênfase em linha, um menu de barra, contagem de palavras e tempo de leitura ao vivo, e uma lista de verificação antes de publicar.",
 
   "changelog.entries.magazine-piece-record.title":
     "O registo completo da peça, aberto",
   "changelog.entries.magazine-piece-record.body":
-    "Abrimos o registo completo da peça — encomenda, cuidado e consentimento, dinheiro, histórico e cartas de leitores — com um bloqueio de publicação que retém a peça até o consentimento e a leitura sensível estarem resolvidos.",
+    "Abrimos o registo completo da peça (encomenda, cuidado e consentimento, dinheiro, histórico e cartas de leitores) com um bloqueio de publicação que retém a peça até o consentimento e a leitura sensível estarem resolvidos.",
 
   "changelog.entries.persona-dashboard-redesign.title":
     "As tuas personas, num painel redesenhado",
   "changelog.entries.persona-dashboard-redesign.body":
-    "O teu painel de personas foi redesenhado: cada cartão mostra agora um anel de progresso de rascunho ou um selo de estado ao vivo, a ligação e a disponibilidade num relance, e quantas pessoas coproprietárias tem. Criar uma nova persona passa a ser um fluxo guiado em dois passos — escolhe primeiro para que serve, depois dá-lhe um nome e escolhe se fica ligada ao teu perfil ou por si só.",
+    "O teu painel de personas foi redesenhado: cada cartão mostra agora um anel de progresso de rascunho ou um selo de estado ao vivo, a ligação e a disponibilidade num relance, e quantas pessoas coproprietárias tem. Criar uma nova persona passa a ser um fluxo guiado em dois passos: escolhe primeiro para que serve, depois dá-lhe um nome e escolhe se fica ligada ao teu perfil ou por si só.",
 
   "changelog.entries.persona-pages-redesigned.title":
     "Páginas de persona, redesenhadas para cada ofício",
@@ -3133,11 +3187,11 @@ export const marketing: Catalog = {
   "changelog.entries.persona-page-unavailable-reasons.title":
     'As páginas de persona já dizem porquê, não só "não encontrada"',
   "changelog.entries.persona-page-unavailable-reasons.body":
-    'Se uma persona é privada, só para membros, ou foi retirada, a página passa a dizer-te qual das três, em vez de um simples "não encontrada". E se és dona ou co-dona de uma persona que ainda não publicaste, o respetivo endereço mostra-te agora uma pré-visualização do teu rascunho, com uma barra a indicar o que falta para publicar — em vez de nada.',
+    'Se uma persona é privada, só para membros, ou foi retirada, a página passa a dizer-te qual das três, em vez de um simples "não encontrada". E se és dona ou co-dona de uma persona que ainda não publicaste, o respetivo endereço mostra-te agora uma pré-visualização do teu rascunho, com uma barra a indicar o que falta para publicar, em vez de nada.',
 
   "changelog.entries.meet-the-table.title": "Vê quem está à mesa",
   "changelog.entries.meet-the-table.body":
-    "As páginas dos jantares de grupo passam a mostrar uma vista acolhedora da mesa vista de cima — quem recebe, quem já vem e que lugares ainda estão livres. Toca em alguém para saber um pouco sobre essa pessoa antes de chegares. Também retirámos um antigo ecrã de pagamento de bilhetes que nunca foi um pagamento real.",
+    "As páginas dos jantares de grupo passam a mostrar uma vista acolhedora da mesa vista de cima: quem recebe, quem já vem e que lugares ainda estão livres. Toca em alguém para saber um pouco sobre essa pessoa antes de chegares. Também retirámos um antigo ecrã de pagamento de bilhetes que nunca foi um pagamento real.",
 
   "changelog.entries.settings-mobile-nav-strips.title":
     "Definições e edição de perfil mais fáceis no telemóvel",
@@ -3147,27 +3201,27 @@ export const marketing: Catalog = {
   "changelog.entries.places-card-mobile-foot.title":
     "Cartões “Espaços que geres” mais arrumados no telemóvel",
   "changelog.entries.places-card-mobile-foot.body":
-    "No telemóvel, o número de referência e as ações Editar / Eliminar / Ver anúncio dos cartões dos teus anúncios do diretório deixam de se apertar numa única linha — a referência fica agora na sua própria linha, por cima de uma linha de ações mais folgada.",
+    "No telemóvel, o número de referência e as ações Editar / Eliminar / Ver anúncio dos cartões dos teus anúncios do diretório deixam de se apertar numa única linha. A referência fica agora na sua própria linha, por cima de uma linha de ações mais folgada.",
 
   "changelog.entries.vouch-for-a-safe-space.title":
     "Deixa o teu testemunho por um espaço seguro",
   "changelog.entries.vouch-for-a-safe-space.body":
-    "Se um espaço te tratou bem, podes agora juntar o teu próprio testemunho à sua página de espaço seguro — com uma nota opcional e como conheces o lugar, ou de forma anónima. O teu testemunho junta-se aos que outros membros e moderadores deixaram, para que quem chega veja quem confia num espaço.",
+    "Se um espaço te tratou bem, podes agora juntar o teu próprio testemunho à sua página de espaço seguro, com uma nota opcional e como conheces o lugar, ou de forma anónima. O teu testemunho junta-se aos que outros membros e moderadores deixaram, para que quem chega veja quem confia num espaço.",
 
   "changelog.entries.my-events-change-list-live.title":
     "Vê o que mudou nos Meus Eventos",
   "changelog.entries.my-events-change-list-live.body":
-    "O sino na tua página de Meus Eventos já funciona fora da demonstração. Abre-o para veres uma lista das atualizações aos eventos a que respondeste ou para que foste convidado — uma hora alterada, um novo local, um cancelamento — cada uma marcada como não lida até a veres.",
+    "O sino na tua página de Meus Eventos já funciona fora da demonstração. Abre-o para veres uma lista das atualizações aos eventos a que respondeste ou para que foste convidade (uma hora alterada, um novo local, um cancelamento), cada uma marcada como não lida até a veres.",
 
   "changelog.entries.applications-inside-work-hub.title":
     "As Candidaturas passaram para o teu Trabalho",
   "changelog.entries.applications-inside-work-hub.body":
-    "As Candidaturas deixam de ter uma linha própria no menu de perfil — passam a estar no topo do teu Trabalho, ao lado da mentoria, das competências e de tudo o resto ligado à carreira. Abre o Trabalho a partir do menu de perfil e encontras lá as tuas candidaturas, tanto em modo demonstração como em modo real.",
+    "As Candidaturas deixam de ter uma linha própria no menu de perfil. Passam a estar no topo do teu Trabalho, ao lado da mentoria, das competências e de tudo o resto ligado à carreira. Abre o Trabalho a partir do menu de perfil e encontras lá as tuas candidaturas, tanto em modo demonstração como em modo real.",
 
   "changelog.entries.invite-only-community-tier.title":
     "Comunidades só por convite voltam a ser restritas",
   "changelog.entries.invite-only-community-tier.body":
-    "As comunidades definidas como só por convite ou com pedido de adesão apareciam com a etiqueta “Aberta a todes” e um botão de aderir com um toque — igual a uma comunidade totalmente aberta. Passam agora a mostrar a sua política de adesão real em todo o lado (nos cartões do diretório, na página da comunidade e na folha de adesão), por isso um espaço só por convite pede um convite em vez de deixar entrar qualquer pessoa.",
+    "As comunidades definidas como só por convite ou com pedido de adesão apareciam com a etiqueta “Aberta a todes” e um botão de aderir com um toque, igual a uma comunidade totalmente aberta. Passam agora a mostrar a sua política de adesão real em todo o lado (nos cartões do diretório, na página da comunidade e na folha de adesão), por isso um espaço só por convite pede um convite em vez de deixar entrar qualquer pessoa.",
 
   "changelog.entries.navbar-wordmark-no-wrap.title":
     "O logótipo da QueerPulse deixa de se empilhar",
@@ -3177,12 +3231,12 @@ export const marketing: Catalog = {
   "changelog.entries.mobile-edit-profile-refresh.title":
     "Editar o perfil combina com o novo visual",
   "changelog.entries.mobile-edit-profile-refresh.body":
-    "No telemóvel, editar o teu perfil passa a usar o mesmo layout ao centro do próprio perfil — foto redonda em cima e campos mais arrumados — e as opções de Estado e Visibilidade deixam de passar para uma segunda linha.",
+    "No telemóvel, editar o teu perfil passa a usar o mesmo layout ao centro do próprio perfil (foto redonda em cima e campos mais arrumados) e as opções de Estado e Visibilidade deixam de passar para uma segunda linha.",
 
   "changelog.entries.mobile-profile-header-refresh.title":
     "Um perfil mais limpo no telemóvel",
   "changelog.entries.mobile-profile-header-refresh.body":
-    "Os perfis passam a começar pela foto e pelo nome ao centro, com uma linha de estatísticas mais folgada e botões mais arrumados — dizer olá e avalizar ficam mais calmos e claros no telemóvel.",
+    "Os perfis passam a começar pela foto e pelo nome ao centro, com uma linha de estatísticas mais folgada e botões mais arrumados: dizer olá e avalizar ficam mais calmos e claros no telemóvel.",
 
   "changelog.entries.profile-edit-save-bar-mobile.title":
     "Guardar o teu perfil no telemóvel passa a funcionar",
@@ -3197,7 +3251,7 @@ export const marketing: Catalog = {
   "changelog.entries.event-change-alerts.title":
     "Fica a saber quando um evento muda",
   "changelog.entries.event-change-alerts.body":
-    "Se um evento a que confirmaste presença ou para o qual foste convidade mudar de hora ou de local, recebes uma notificação — para que uma alteração de última hora nunca te apanhe desprevenide.",
+    "Se um evento a que confirmaste presença ou para o qual foste convidade mudar de hora ou de local, recebes uma notificação, para que uma alteração de última hora nunca te apanhe desprevenide.",
 
   "changelog.entries.forms-that-really-submit.title":
     "Os formulários da aplicação passam a enviar mesmo",
@@ -3212,7 +3266,7 @@ export const marketing: Catalog = {
   "changelog.entries.collections-are-here.title":
     "Agrupa o que guardas em coleções",
   "changelog.entries.collections-are-here.body":
-    "Podes agora reunir as pessoas, lugares e publicações que guardaste nas tuas próprias coleções com nome — uma lista de leitura, uma viagem, uma seleção de espaços. Cria as que quiseres e acrescenta ou remove itens quando te apetecer.",
+    "Podes agora reunir as pessoas, lugares e publicações que guardaste nas tuas próprias coleções com nome: uma lista de leitura, uma viagem, uma seleção de espaços. Cria as que quiseres e acrescenta ou remove itens quando te apetecer.",
 
   "changelog.entries.your-mentions-in-one-place.title":
     "Todas as menções, num só sítio",
@@ -3222,17 +3276,17 @@ export const marketing: Catalog = {
   "changelog.entries.new-moderation-tools.title":
     "Mais ferramentas para a equipa de moderação",
   "changelog.entries.new-moderation-tools.body":
-    "Nos bastidores, a equipa ganhou controlos reais: verificar ou restringir um membro, adicionar e remover moderadores de comunidade, decidir sobre propostas de grupos de leitura e publicar ou exportar registos de governação — tudo ligado à plataforma, em vez de servir apenas de pré-visualização.",
+    "Nos bastidores, a equipa ganhou controlos reais: verificar ou restringir um membro, adicionar e remover moderadores de comunidade, decidir sobre propostas de grupos de leitura e publicar ou exportar registos de governação, tudo ligado à plataforma, em vez de servir apenas de pré-visualização.",
 
   "changelog.entries.reports-reach-the-team.title":
     "As denúncias chegam agora à equipa de moderação",
   "changelog.entries.reports-reach-the-team.body":
-    'Quando denuncias uma publicação do fórum, ela chega agora à moderação de forma fiável — e, se o envio falhar, vês um erro claro e uma forma de tentar de novo, em vez de um falso "concluído". Também podes denunciar uma resposta em particular, não só a publicação inicial.',
+    'Quando denuncias uma publicação do fórum, ela chega agora à moderação de forma fiável. E, se o envio falhar, vês um erro claro e uma forma de tentar de novo, em vez de um falso "concluído". Também podes denunciar uma resposta em particular, para lá da publicação inicial.',
 
   "changelog.entries.chat-recovers-after-reconnect.title":
     "O chat recupera quando voltas a ter ligação",
   "changelog.entries.chat-recovers-after-reconnect.body":
-    "Se uma mensagem não puder ser enviada por teres perdido a ligação, passa a enviar-se sozinha assim que voltas a estar online — sem precisares de recarregar ou reenviar à mão. Uma pequena faixa indica quando estás offline ou a reconectar, para saberes sempre o estado de uma mensagem.",
+    "Se uma mensagem não puder ser enviada por teres perdido a ligação, passa a enviar-se sozinha assim que voltas a estar online, sem precisares de recarregar ou reenviar à mão. Uma pequena faixa indica quando estás offline ou a reconectar, para saberes sempre o estado de uma mensagem.",
 
   "changelog.entries.honest-live-states.title": "O que vês é real",
   "changelog.entries.honest-live-states.body":
@@ -3241,12 +3295,12 @@ export const marketing: Catalog = {
   "changelog.entries.community-activity-in-your-feed.title":
     "O teu feed mostra agora o que se passa nas tuas comunidades",
   "changelog.entries.community-activity-in-your-feed.body":
-    "O feed principal passa a trazer atividade real das comunidades de que fazes parte — publicações, anúncios, novos convívios, tópicos do fórum e quem se juntou agora mesmo. Quando crias um convívio ou começas um tópico no fórum, podes partilhá-lo diretamente numa das tuas comunidades.",
+    "O feed principal passa a trazer atividade real das comunidades de que fazes parte: publicações, anúncios, novos convívios, tópicos do fórum e quem se juntou agora mesmo. Quando crias um convívio ou começas um tópico no fórum, podes partilhá-lo diretamente numa das tuas comunidades.",
 
   "changelog.entries.assignable-staff-roles.title":
     "A administração já pode atribuir funções da equipa da revista",
   "changelog.entries.assignable-staff-roles.body":
-    "A partir do diretório de membros, a administração pode atribuir duas funções específicas, além do nível de conta de cada pessoa: Editor da revista e Redator da revista. O acesso ao desk editorial da revista passa a seguir a função de Editor da revista, em vez de qualquer pessoa moderadora — a administração mantém o acesso, como antes.",
+    "A partir do diretório de membros, a administração pode atribuir duas funções específicas, além do nível de conta de cada pessoa: Editor da revista e Redator da revista. O acesso ao desk editorial da revista passa a seguir a função de Editor da revista, em vez de qualquer pessoa moderadora. A administração mantém o acesso, como antes.",
   "changelog.entries.assignable-staff-roles.tag":
     "Abrir o diretório de membros",
 
@@ -3258,7 +3312,7 @@ export const marketing: Catalog = {
   "changelog.entries.fresh-feed-card-layout.title":
     "Um visual renovado para o teu feed",
   "changelog.entries.fresh-feed-card-layout.body":
-    "Todos os cartões do teu feed inicial — novos membros, encontros, comunidades e publicações de comunidades — passam agora a partilhar um layout mais limpo, e ficam dois por linha em ecrãs mais largos, para veres mais coisas de relance.",
+    "Todos os cartões do teu feed inicial (novos membros, encontros, comunidades e publicações de comunidades) passam agora a partilhar um layout mais limpo, e ficam dois por linha em ecrãs mais largos, para veres mais coisas de relance.",
 
   "changelog.entries.feature-communities-cta-jump.title":
     "“Escolher comunidades” leva-te agora diretamente ao seletor",
@@ -3269,49 +3323,49 @@ export const marketing: Catalog = {
   "changelog.entries.live-homepage-curated-sections.title":
     "A página inicial mostra agora pessoas e comunidades reais, com curadoria da equipa",
   "changelog.entries.live-homepage-curated-sections.body":
-    "As secções de pessoas, comunidades e agentes de mudança da página inicial pública passam agora a vir da lista com curadoria da administração — pessoas e comunidades reais que a equipa escolheu apresentar, não conteúdo de exemplo. Uma secção fica escondida até haver algo escolhido para ela.",
+    "As secções de pessoas, comunidades e agentes de mudança da página inicial pública passam agora a vir da lista com curadoria da administração: pessoas e comunidades reais que a equipa escolheu apresentar. Uma secção fica escondida até haver algo escolhido para ela.",
 
   "changelog.entries.featured-homepage-consent-toggle.title":
     "Consente ser destacade na página inicial",
   "changelog.entries.featured-homepage-consent-toggle.body":
-    "As definições de privacidade têm agora um interruptor que deixa a administração destacar-te na página inicial com curadoria — uma citação ou destaque de membro, escolhido apenas entre perfis públicos com consentimento dado. Vem desligado por predefinição, só fica disponível depois de definires o perfil como “Aberto a ligações”, e podes voltar a desligá-lo quando quiseres.",
+    "As definições de privacidade têm agora um interruptor que deixa a administração destacar-te na página inicial com curadoria: uma citação ou destaque de membro, escolhido apenas entre perfis públicos com consentimento dado. Vem desligado por predefinição, só fica disponível depois de definires o perfil como “Aberto a ligações”, e podes voltar a desligá-lo quando quiseres.",
   "changelog.entries.featured-homepage-consent-toggle.tag":
     "Abrir as tuas definições de privacidade",
 
   "changelog.entries.mobile-profile-top-breathing-room.title":
     "Um topo mais calmo nos perfis no telemóvel",
   "changelog.entries.mobile-profile-top-breathing-room.body":
-    "As páginas de perfil no telemóvel passam a ter mais espaço no topo, para que o avatar e os detalhes deixem de ficar espremidos por baixo do cabeçalho. Também retirámos o nome “Queer Pulse” da faixa superior nas páginas internas — a seta de voltar e o botão de início na barra inferior já te levam para onde precisas, por isso era só ruído.",
+    "As páginas de perfil no telemóvel passam a ter mais espaço no topo, para que o avatar e os detalhes deixem de ficar espremidos por baixo do cabeçalho. Também retirámos o nome “Queer Pulse” da faixa superior nas páginas internas: a seta de voltar e o botão de início na barra inferior já te levam para onde precisas, por isso era só ruído.",
 
   "changelog.entries.accessible-names-screen-readers.title":
     "Os leitores de ecrã passam a nomear todos os controlos",
   "changelog.entries.accessible-names-screen-readers.body":
-    "Os botões e interruptores que mostravam apenas um ícone — o botão de enviar no chat de uma transmissão, os botões de pagamento na finalização da compra, os interruptores nas tuas definições de estúdio, os cartões de moderação e de notificações — passam a anunciar um nome claro aos leitores de ecrã, para que nada seja lido como um “botão” sem nome. Acrescentámos também uma verificação automática que mantém toda a aplicação sem rótulos em falta daqui para a frente. Nada muda no aspeto ou no funcionamento; é apenas uma melhoria de acessibilidade.",
+    "Os botões e interruptores que mostravam apenas um ícone (o botão de enviar no chat de uma transmissão, os botões de pagamento na finalização da compra, os interruptores nas tuas definições de estúdio, os cartões de moderação e de notificações) passam a anunciar um nome claro aos leitores de ecrã, para que nada seja lido como um “botão” sem nome. Acrescentámos também uma verificação automática que mantém toda a aplicação sem rótulos em falta daqui para a frente. Nada muda no aspeto ou no funcionamento; é apenas uma melhoria de acessibilidade.",
 
   "changelog.entries.icons-not-text-symbols.title":
     "Ícones mais nítidos em vez de símbolos de texto",
   "changelog.entries.icons-not-text-symbols.body":
-    "Em toda a plataforma, as pequenas marcas de direção e de estado — as setas de “seguinte” e “voltar” nos botões e nas ligações, os cursores dos menus, as pegas de arrastar, as marcas de relógio e de reprodução — passam a ser desenhadas com ícones próprios em vez de caracteres de texto. Aparecem nítidas e iguais em qualquer dispositivo e tipo de letra, alinham-se bem com o texto e são lidas corretamente pelos leitores de ecrã. É apenas um retoque visual e de acessibilidade; nada muda no que os botões fazem.",
+    "Em toda a plataforma, as pequenas marcas de direção e de estado (as setas de “seguinte” e “voltar” nos botões e nas ligações, os cursores dos menus, as pegas de arrastar, as marcas de relógio e de reprodução) passam a ser desenhadas com ícones próprios em vez de caracteres de texto. Aparecem nítidas e iguais em qualquer dispositivo e tipo de letra, alinham-se bem com o texto e são lidas corretamente pelos leitores de ecrã. É apenas um retoque visual e de acessibilidade; nada muda no que os botões fazem.",
 
   "changelog.entries.message-alerts-out-of-notifications.title":
     "Os avisos de novas mensagens saíram do centro de notificações",
   "changelog.entries.message-alerts-out-of-notifications.body":
-    "O teu separador de Notificações deixa de encher-se com linhas de “Tens uma nova mensagem”. As novas mensagens diretas passam a aparecer só onde faz sentido — na contagem de não lidas do ícone de mensagens e, se tiveres ativado, numa notificação push. Nada muda nas mensagens em si; o centro de notificações fica apenas mais tranquilo e focado no que ainda não vês na tua caixa de entrada.",
+    "O teu separador de Notificações deixa de encher-se com linhas de “Tens uma nova mensagem”. As novas mensagens diretas passam a aparecer só onde faz sentido: na contagem de não lidas do ícone de mensagens e, se tiveres ativado, numa notificação push. Nada muda nas mensagens em si; o centro de notificações fica apenas mais tranquilo e focado no que ainda não vês na tua caixa de entrada.",
 
   "changelog.entries.shared-ui-consistency.title":
     "Janelas e formulários mais suaves e consistentes",
   "changelog.entries.shared-ui-consistency.body":
-    "Reconstruímos dezenas de janelas, confirmações, seletores e formulários sobre um único conjunto de blocos partilhados. Na prática, isto significa que cada janela passa a manter o foco do teclado, fecha com a tecla Escape pela ordem certa quando há várias abertas e devolve-te exatamente ao ponto onde estavas — por isso toda a plataforma fica mais organizada e funciona melhor com teclado ou leitor de ecrã. Nenhuma funcionalidade mudou de sítio; simplesmente passam a comportar-se da mesma forma em todo o lado.",
+    "Reconstruímos dezenas de janelas, confirmações, seletores e formulários sobre um único conjunto de blocos partilhados. Na prática, isto significa que cada janela passa a manter o foco do teclado, fecha com a tecla Escape pela ordem certa quando há várias abertas e devolve-te exatamente ao ponto onde estavas, por isso toda a plataforma fica mais organizada e funciona melhor com teclado ou leitor de ecrã. Nenhuma funcionalidade mudou de sítio; simplesmente passam a comportar-se da mesma forma em todo o lado.",
 
   "changelog.entries.balanced-feed-grid.title":
     "Um feed inicial mais equilibrado",
   "changelog.entries.balanced-feed-grid.body":
-    "O teu feed inicial passa a dispor os cartões numa grelha organizada em vez de uma única pilha alta. Os cartões mais leves — novos membros, leituras guardadas, resumos de encontros — ficam dois ou mais por linha num ecrã largo, por isso vês mais pessoas de relance e o separador Pessoas lê-se como um verdadeiro diretório. Cartões mais ricos, como publicações, o pulso das comunidades e encontros, continuam a ocupar toda a largura onde o espaço extra ajuda. No telemóvel, tudo volta a uma única coluna.",
+    "O teu feed inicial passa a dispor os cartões numa grelha organizada em vez de uma única pilha alta. Os cartões mais leves (novos membros, leituras guardadas, resumos de encontros) ficam dois ou mais por linha num ecrã largo, por isso vês mais pessoas de relance e o separador Pessoas lê-se como um verdadeiro diretório. Cartões mais ricos, como publicações, o pulso das comunidades e encontros, continuam a ocupar toda a largura onde o espaço extra ajuda. No telemóvel, tudo volta a uma única coluna.",
 
   "changelog.entries.moderation-outcome-notifications.title":
     "Passas a saber o resultado de uma decisão de moderação",
   "changelog.entries.moderation-outcome-notifications.body":
-    "Quando a equipa de moderação avisa, suspende ou encerra uma conta, o membro passa a receber uma notificação que explica o que aconteceu e porquê — no seu próprio idioma, com a razão escrita pela moderação e uma ligação para recorrer da decisão. Um membro suspenso ou banido é também levado diretamente para uma página que mostra a mesma razão e, no caso de uma suspensão, quando termina — em vez de um ecrã em branco que não carrega. Até agora só quem fazia uma denúncia era informado do resultado; o membro afetado ficava sem saber. As notificações de moderação são sempre entregues e não podem ser silenciadas.",
+    "Quando a equipa de moderação avisa, suspende ou encerra uma conta, o membro passa a receber uma notificação que explica o que aconteceu e porquê, no seu próprio idioma, com a razão escrita pela moderação e uma ligação para recorrer da decisão. Um membro suspenso ou banido é também levado diretamente para uma página que mostra a mesma razão e, no caso de uma suspensão, quando termina, em vez de um ecrã em branco que não carrega. Até agora só quem fazia uma denúncia era informado do resultado; o membro afetado ficava sem saber. As notificações de moderação são sempre entregues e não podem ser silenciadas.",
 
   "changelog.entries.community-page-polish.title":
     "Uma página de comunidade mais acolhedora",
@@ -3321,12 +3375,12 @@ export const marketing: Catalog = {
   "changelog.entries.job-application-status.title":
     "Vê em que ponto estão as tuas candidaturas",
   "changelog.entries.job-application-status.body":
-    "O acompanhamento de candidaturas mostra agora as tuas candidaturas reais — a que te candidataste, quando, e em que fase está cada uma — em vez de um exemplo. Abre qualquer cartão para rever as respostas que enviaste.",
+    "O acompanhamento de candidaturas mostra agora as tuas candidaturas reais (a que te candidataste, quando, e em que fase está cada uma) em vez de um exemplo. Abre qualquer cartão para rever as respostas que enviaste.",
 
   "changelog.entries.data-request-history.title":
     "O teu histórico de pedidos de dados, num só sítio",
   "changelog.entries.data-request-history.body":
-    "A página de privacidade lista agora os teus pedidos de dados anteriores reais — acesso, correção, oposição e os restantes — com a respetiva referência e o estado atual, para poderes acompanhar um sem adivinhar.",
+    "A página de privacidade lista agora os teus pedidos de dados anteriores reais (acesso, correção, oposição e os restantes) com a respetiva referência e o estado atual, para poderes acompanhar um sem adivinhar.",
 
   "changelog.entries.community-settings-controls.title":
     "Guarda, arquiva ou transfere a tua comunidade",
@@ -3336,7 +3390,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-keeps-loading.title":
     "O feed continua a carregar à medida que percorres",
   "changelog.entries.feed-keeps-loading.body":
-    "O feed da comunidade parava após a primeira página. Agora carrega mais sozinho à medida que chegas ao fim — e há um “Carregar mais” acessível por teclado para quando preferires tocar.",
+    "O feed da comunidade parava após a primeira página. Agora carrega mais sozinho à medida que chegas ao fim, e há um “Carregar mais” acessível por teclado para quando preferires tocar.",
 
   "changelog.entries.faster-first-load.title":
     "Um primeiro carregamento mais rápido",
@@ -3346,7 +3400,7 @@ export const marketing: Catalog = {
   "changelog.entries.readable-text-contrast.title":
     "Texto mais fácil de ler em toda a aplicação",
   "changelog.entries.readable-text-contrast.body":
-    "Um conjunto de legendas, dicas e etiquetas ténues — nas coleções, no seletor de GIFs, nos cartões de perfil e nalguns outros pontos — estava demasiado claro sobre o fundo. Passam a cumprir o contraste acessível, tanto no modo claro como no escuro.",
+    "Um conjunto de legendas, dicas e etiquetas ténues (nas coleções, no seletor de GIFs, nos cartões de perfil e nalguns outros pontos) estava demasiado claro sobre o fundo. Passam a cumprir o contraste acessível, tanto no modo claro como no escuro.",
 
   "changelog.entries.ios-splash-screens.title":
     "Um ecrã de arranque cuidado no iPhone",
@@ -3356,7 +3410,7 @@ export const marketing: Catalog = {
   "changelog.entries.removed-content-stays-hidden.title":
     "O conteúdo removido fica escondido em todo o lado",
   "changelog.entries.removed-content-stays-hidden.body":
-    "Quando um moderador remove algo, isso desaparece agora de forma consistente em todos os sítios onde poderia aparecer — incluindo mensagens diretas, anúncios de negócios e de habitação, e personas — e as mensagens removidas deixam de contar para os teus emblemas de não lidas.",
+    "Quando um moderador remove algo, isso desaparece agora de forma consistente em todos os sítios onde poderia aparecer (incluindo mensagens diretas, anúncios de negócios e de habitação, e personas), e as mensagens removidas deixam de contar para os teus emblemas de não lidas.",
 
   "changelog.entries.help-demo-example-live-hidden.title":
     "Os painéis de ajuda deixam de mostrar exemplos da demo no modo real",
@@ -3376,32 +3430,32 @@ export const marketing: Catalog = {
   "changelog.entries.co-owned-subprofiles.title":
     "Partilha a responsabilidade por uma persona",
   "changelog.entries.co-owned-subprofiles.body":
-    "Há trabalho que não é feito sozinho — um dueto de DJs, uma banda, um estúdio a dois. Agora podes convidar outra pessoa membro para ser responsável conjunta de um subperfil: assim que aceitar, as duas passam a geri-lo por completo, ele aparece nos perfis de ambas, e qualquer uma pode convidar mais alguém, sair, ou editar o que é partilhado. Eliminar uma persona partilhada agora avisa logo quantas pessoas isso afeta.",
+    "Há trabalho que não é feito sozinho: um dueto de DJs, uma banda, um estúdio a dois. Agora podes convidar outra pessoa membro para ser responsável conjunta de um subperfil: assim que aceitar, as duas passam a geri-lo por completo, ele aparece nos perfis de ambas, e qualquer uma pode convidar mais alguém, sair, ou editar o que é partilhado. Eliminar uma persona partilhada agora avisa logo quantas pessoas isso afeta.",
 
   "changelog.entries.smoother-mobile-navigation.title":
     "Uma forma mais suave de navegar no telemóvel",
   "changelog.entries.smoother-mobile-navigation.body":
-    "Navegar na QueerPulse no telemóvel devia parecer fluido, não lento. A barra de separadores no fundo do ecrã fica agora sempre visível também no navegador, não só depois de instalares a aplicação, e as páginas surgem com uma transição suave em vez de um salto brusco. Cada separador lembra-se exatamente de onde ficaste e, se tocares no separador em que já estás, és levado de volta ao topo. Desliza o dedo a partir da margem esquerda do ecrã para voltar atrás, e puxa para baixo no teu feed, nos eventos, em membros, nas mensagens ou nas notificações para atualizar com um gesto rápido em vez de recarregares a página.",
+    "Navegar na QueerPulse no telemóvel devia parecer fluido. A barra de separadores no fundo do ecrã fica agora s",
 
   "changelog.entries.no-sideways-scroll-on-mobile.title":
     "As páginas voltam a deslizar de cima para baixo no telemóvel",
   "changelog.entries.no-sideways-scroll-on-mobile.body":
-    "Nalguns telemóveis, uma página podia fugir para o lado e parecer presa — tudo parecia demasiado largo e apertado, e o ecrã inteiro deslizava para a esquerda e para a direita em vez de subir e descer. Isto está corrigido em toda a aplicação. Links, nomes de utilizador e palavras compridas passam agora para a linha seguinte em vez de esticar um cartão para além da borda do ecrã, e a página é mantida à largura do teu telemóvel, para que só deslize como deve ser: para baixo.",
+    "Nalguns telemóveis, uma página podia fugir para o lado e parecer presa: tudo parecia demasiado largo e apertado, e o ecrã inteiro deslizava para a esquerda e para a direita em vez de subir e descer. Isto está corrigido em toda a aplicação. Links, nomes de utilizador e palavras compridas passam agora para a linha seguinte em vez de esticar um cartão para além da borda do ecrã, e a página é mantida à largura do teu telemóvel, para que só deslize como deve ser: para baixo.",
 
   "changelog.entries.no-placeholder-people-in-live.title":
     "O modo ao vivo agora mostra apenas pessoas reais",
   "changelog.entries.no-placeholder-people-in-live.body":
-    "Alguns cantos da QueerPulse mostravam discretamente pessoas de exemplo da demonstração a membros reais — um diretório de bem-estar com terapeutas inventados, uma candidatura a emprego que chegava pré-preenchida com o nome e o email de outra pessoa, e histórias da revista assinadas por autores fictícios. Isto está corrigido. Vais passar a ver conteúdo real onde ele existe, os teus próprios dados onde um formulário os pede, e uma nota honesta de “ainda em construção” onde algo ainda não está pronto — nunca um substituto a fingir ser uma pessoa.",
+    "Alguns cantos da QueerPulse mostravam discretamente pessoas de exemplo da demonstração a membros reais: um diretório de bem-estar com terapeutas inventados, uma candidatura a emprego que chegava pré-preenchida com o nome e o email de outra pessoa, e histórias da revista assinadas por autores fictícios. Isto está corrigido. Vais passar a ver conteúdo real onde ele existe, os teus próprios dados onde um formulário os pede, e uma nota honesta de “ainda em construção” onde algo ainda não está pronto, nunca um substituto a fingir ser uma pessoa.",
 
   "changelog.entries.honest-roadmap-promises.title":
-    "O roteiro agora cumpre promessas — e diz que não, com sinceridade",
+    "O roteiro agora cumpre promessas, e diz que não, com sinceridade",
   "changelog.entries.honest-roadmap-promises.body":
-    "Quando algo no roteiro tem o selo Assumido, isso é uma promessa a sério, não um palpite — e se a data alguma vez mudar, vais ver o motivo real, publicado ali mesmo, em vez de desaparecer em silêncio. Há também uma nova lista “Não vamos construir isto, e porquê”, para que um pedido que não vai avançar receba uma resposta honesta em vez de silêncio. Por trás disto, as ferramentas de roteiro da equipa foram completamente reconstruídas — um quadro a sério para mover o trabalho da ideia até ao lançamento, uma linha do tempo, e uma fila real para ler e responder ao que os membros pedem — para que o que vês aqui se mantenha atual, não desatualizado.",
+    "Quando algo no roteiro tem o selo Assumido, isso é uma promessa a sério. Se a data alguma vez mudar, vais ver o motivo real, publicado ali mesmo, em vez de desaparecer em silêncio. Há também uma nova lista “Não vamos construir isto, e porquê”, para que um pedido que não vai avançar receba uma resposta honesta em vez de silêncio. Por trás disto, as ferramentas de roteiro da equipa foram completamente reconstruídas: um quadro a sério para mover o trabalho da ideia até ao lançamento, uma linha do tempo, e uma fila real para ler e responder ao que os membros pedem, para que o que vês aqui se mantenha atual.",
 
   "changelog.entries.invite-resend-and-qr.title":
-    "Reenvia um convite que expirou — e partilha-o com um código QR",
+    "Reenvia um convite que expirou, e partilha-o com um código QR",
   "changelog.entries.invite-resend-and-qr.body":
-    "Um convite que expirou antes de a tua amiga lá chegar já não obriga a começar do zero. Abre os teus convites enviados, toca em “Enviar de novo” no que expirou, e o mesmo link volta a funcionar por mais uma semana. Cada convite que geras passa também a incluir um código QR, para que alguém possa entrar bastando lê-lo diretamente do teu telemóvel — à mesa ou num evento, sem link para copiar. E se um convite foi endereçado a outro email, ou se quem te convidou já não está na QueerPulse, passas a receber uma explicação clara e gentil em vez de um erro confuso.",
+    "Um convite que expirou antes de a tua amiga lá chegar já não obriga a começar do zero. Abre os teus convites enviados, toca em “Enviar de novo” no que expirou, e o mesmo link volta a funcionar por mais uma semana. Cada convite que geras passa também a incluir um código QR, para que alguém possa entrar bastando lê-lo diretamente do teu telemóvel, à mesa ou num evento, sem link para copiar. E se um convite foi endereçado a outro email, ou se quem te convidou já não está na QueerPulse, passas a receber uma explicação clara e gentil em vez de um erro confuso.",
   "changelog.entries.invite-resend-and-qr.tag": "Convidar alguém",
 
   "changelog.entries.smoother-onboarding-first-minutes.title":
@@ -3417,43 +3471,43 @@ export const marketing: Catalog = {
   "changelog.entries.chat-header-tap-to-profile.title":
     "Um cabeçalho de conversa mais tranquilo",
   "changelog.entries.chat-header-tap-to-profile.body":
-    "O topo de uma conversa funciona agora como esperarias: toca no nome ou na foto da pessoa para abrir o perfil dela — sem precisares de um botão à parte. O arranjo também ficou mais limpo, com os controlos de informação e de mensagens marcadas reunidos num par arrumado no canto, em vez de ficarem soltos fora do sítio.",
+    "O topo de uma conversa funciona agora como esperarias: toca no nome ou na foto da pessoa para abrir o perfil dela, sem precisares de um botão à parte. O arranjo também ficou mais limpo, com os controlos de informação e de mensagens marcadas reunidos num par arrumado no canto, em vez de ficarem soltos fora do sítio.",
   "changelog.entries.chat-header-tap-to-profile.tag": "Abrir mensagens",
 
   "changelog.entries.sheet-close-scroll-jump-fix.title":
     "Sem mais saltos de volta ao topo",
   "changelog.entries.sheet-close-scroll-jump-fix.body":
-    "Se abrisses a folha da tua conta a meio de uma página e a fechasses, a página às vezes saltava de volta para o topo — perdendo o teu lugar. Agora fica exatamente onde a deixaste.",
+    "Se abrisses a folha da tua conta a meio de uma página e a fechasses, a página às vezes saltava de volta para o topo, perdendo o teu lugar. Agora fica exatamente onde a deixaste.",
 
   "changelog.entries.mobile-account-you-tab.title":
     "A tua conta, a um toque no telemóvel",
   "changelog.entries.mobile-account-you-tab.body":
-    "No telemóvel, tocar na tua foto na barra inferior abre agora um espaço só teu — o teu perfil, as tuas ligações, os lugares que guardaste, as tuas candidaturas e as definições, reunidos numa folha organizada em vez de espalhados por um menu comprido. As mensagens subiram para o topo, ao lado das notificações, para que as pessoas com quem falas estejam sempre à mão, e o menu «Mais» passa a servir apenas para explorar o resto da QueerPulse.",
+    "No telemóvel, tocar na tua foto na barra inferior abre agora um espaço só teu: o teu perfil, as tuas ligações, os lugares que guardaste, as tuas candidaturas e as definições, reunidos numa folha organizada em vez de espalhados por um menu comprido. As mensagens subiram para o topo, ao lado das notificações, para que as pessoas com quem falas estejam sempre à mão, e o menu «Mais» passa a servir apenas para explorar o resto da QueerPulse.",
 
   "changelog.entries.instagram-style-mobile-profile.title":
     "O teu perfil, redesenhado para o telemóvel",
   "changelog.entries.instagram-style-mobile-profile.body":
-    "No telemóvel, o teu perfil abre agora como as aplicações que já conheces: um avatar compacto envolto num anel suave em gradiente do orgulho, uma linha de estatísticas que se lê num relance — avais, comunidades, personas — uma faixa com as tuas personas em destaque logo no topo, e o resto do perfil organizado em secções por separadores que deslizas, em vez de uma única lista comprida.",
+    "No telemóvel, o teu perfil abre agora como as aplicações que já conheces: um avatar compacto envolto num anel suave em gradiente do orgulho, uma linha de estatísticas que se lê num relance (avais, comunidades, personas), uma faixa com as tuas personas em destaque logo no topo, e o resto do perfil organizado em secções por separadores que deslizas, em vez de uma única lista comprida.",
 
   "changelog.entries.forum-upvotes-tags-search.title":
-    "O fórum cresceu — votos, etiquetas, pesquisa e tópicos que se podem fechar",
+    "O fórum cresceu: votos, etiquetas, pesquisa e tópicos que se podem fechar",
   "changelog.entries.forum-upvotes-tags-search.body":
-    "Os comuns ganharam um conjunto de ferramentas a sério. Podes agora votar a favor de um tópico ou de uma resposta de verdade, para que as respostas que as pessoas acharam mais úteis subam para onde as vês. Ordena o quadro por Ativos ou Sem resposta — e não só por Melhores e Recentes — para encontrares as conversas que precisam de uma voz ou as que ainda esperam a primeira resposta. Ao começares uma publicação podes juntar algumas etiquetas como #habitação ou #saúde, e ao tocar numa etiqueta filtras todo o quadro para esse tema. Há agora uma caixa de pesquisa, para procurares um tópico em vez de o teres de rolar até o encontrar. E a moderação pode fechar um tópico a novas respostas quando uma conversa já deu o que tinha a dar — continua legível, apenas em pausa.",
+    "Os comuns ganharam um conjunto de ferramentas a sério. Podes agora votar a favor de um tópico ou de uma resposta de verdade, para que as respostas que as pessoas acharam mais úteis subam para onde as vês. Ordena o quadro por Ativos ou Sem resposta, além de Melhores e Recentes, para encontrares as conversas que precisam de uma voz ou as que ainda esperam a primeira resposta. Ao começares uma publicação podes juntar algumas etiquetas como #habitação ou #saúde, e ao tocar numa etiqueta filtras todo o quadro para esse tema. Há agora uma caixa de pesquisa, para procurares um tópico em vez de o teres de rolar até o encontrar. E a moderação pode fechar um tópico a novas respostas quando uma conversa já deu o que tinha a dar. Continua legível, apenas em pausa.",
   "changelog.entries.forum-upvotes-tags-search.tag": "Abrir o fórum",
   "changelog.entries.list-business-wizard-overhaul.title":
     "Adicionar o teu espaço ao diretório ficou bem mais fácil",
   "changelog.entries.list-business-wizard-overhaul.body":
-    "Reconstruímos todo o fluxo de “listar um negócio”. Se só estás a recomendar um sítio de que gostas, passamos a pedir apenas o que realmente podes saber — um nome, onde fica e uma frase sobre o porquê — em vez de exigir dados de quem gere o espaço e horários que não tens. Não tens um link do Google Maps para colar? Escreve a morada e toca em “Localizar esta morada”, ou coloca um pino no bairro e ajusta-o — nunca ficas preso. Os horários passam a lidar com pausas de almoço e noites que vão para lá da meia-noite, e à medida que escreves o nome verificamos o diretório real para não adicionares um espaço que já lá está. O teu progresso vai sendo guardado e agora acompanha-te entre dispositivos, para começares no telemóvel e terminares no portátil. Cada negócio ganha também uma forma clara de reivindicar a sua própria listagem ou de contestar uma adicionada sem o seu consentimento, e qualquer pessoa continua a poder sinalizar uma listagem que não devia estar ali.",
+    "Reconstruímos todo o fluxo de “listar um negócio”. Se só estás a recomendar um sítio de que gostas, passamos a pedir apenas o que realmente podes saber (um nome, onde fica e uma frase sobre o porquê) em vez de exigir dados de quem gere o espaço e horários que não tens. Não tens um link do Google Maps para colar? Escreve a morada e toca em “Localizar esta morada”, ou coloca um pino no bairro e ajusta-o. Nunca ficas preso. Os horários passam a lidar com pausas de almoço e noites que vão para lá da meia-noite, e à medida que escreves o nome verificamos o diretório real para não adicionares um espaço que já lá está. O teu progresso vai sendo guardado e agora acompanha-te entre dispositivos, para começares no telemóvel e terminares no portátil. Cada negócio ganha também uma forma clara de reivindicar a sua própria listagem ou de contestar uma adicionada sem o seu consentimento, e qualquer pessoa continua a poder sinalizar uma listagem que não devia estar ali.",
   "changelog.entries.list-business-wizard-overhaul.tag": "Listar o teu espaço",
   "changelog.entries.mobile-experience-pass.title":
     "Toda a app, à medida do teu polegar",
   "changelog.entries.mobile-experience-pass.body":
-    "Passámos ecrã a ecrã para que o QueerPulse funcione bem com uma só mão. Os botões, etiquetas e interruptores estão maiores e mais fáceis de tocar, e os menus, filtros e caixas de diálogo sobem agora a partir do fundo do ecrã como painéis que podes afastar com um gesto — mesmo onde o teu polegar já está. Há uma seta de voltar clara no topo de cada página, mesmo sem instalar a app, e quando abres uma conversa ela ocupa o ecrã inteiro para nada te atrapalhar, com a caixa de mensagem sempre logo acima do teclado. As histórias em slides, o calendário de eventos, os filtros do diretório e as ferramentas de administração leem-se agora com conforto no telemóvel, na vertical, sem ampliar nem arrastar para os lados.",
+    "Passámos ecrã a ecrã para que o QueerPulse funcione bem com uma só mão. Os botões, etiquetas e interruptores estão maiores e mais fáceis de tocar, e os menus, filtros e caixas de diálogo sobem agora a partir do fundo do ecrã como painéis que podes afastar com um gesto, mesmo onde o teu polegar já está. Há uma seta de voltar clara no topo de cada página, mesmo sem instalar a app, e quando abres uma conversa ela ocupa o ecrã inteiro para nada te atrapalhar, com a caixa de mensagem sempre logo acima do teclado. As histórias em slides, o calendário de eventos, os filtros do diretório e as ferramentas de administração leem-se agora com conforto no telemóvel, na vertical, sem ampliar nem arrastar para os lados.",
 
   "changelog.entries.magazine-deck-authoring.title":
     "As pessoas editoras já podem criar os seus próprios decks interativos",
   "changelog.entries.magazine-deck-authoring.body":
-    "O formato de slide-deck interativo da primeira página da revista costumava ser montado à mão — agora as pessoas editoras têm uma ferramenta de criação completa, direto no painel. Adiciona slides em cinco modelos (texto, imagem a toda a largura, uma estatística grande e animada, um comparador antes-e-depois, ou um momento para tocar e revelar), preenche a assinatura e os metadados, e pré-visualiza exatamente como quem lê vai ver. Guarda um rascunho enquanto ainda estás a moldá-lo, e publica quando estiver pronto — aparece com a etiqueta “Interativo” na primeira página da revista.",
+    "O formato de slide-deck interativo da primeira página da revista costumava ser montado à mão. Agora as pessoas editoras têm uma ferramenta de criação completa, direto no painel. Adiciona slides em cinco modelos (texto, imagem a toda a largura, uma estatística grande e animada, um comparador antes-e-depois, ou um momento para tocar e revelar), preenche a assinatura e os metadados, e pré-visualiza exatamente como quem lê vai ver. Guarda um rascunho enquanto ainda estás a moldá-lo, e publica quando estiver pronto: aparece com a etiqueta “Interativo” na primeira página da revista.",
 
   "changelog.entries.listings-moderation-console.title":
     "A fila de listagens ganhou uma consola de moderação a sério",
@@ -3463,20 +3517,20 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-slide-decks.title":
     "Histórias em slide-deck interativo, já na revista",
   "changelog.entries.magazine-slide-decks.body":
-    "Algumas histórias da revista já podem ser lidas em formato de slide-deck: slides em ecrã inteiro que percorres como numa apresentação, com texto, fotografias em página inteira, números grandes e animados, comparações de antes-e-depois e momentos que revelas ao tocar. Abre “Apresentar” para uma leitura em ecrã inteiro, sem distrações. Procura a etiqueta “Interativo” na primeira página da revista — a primeira, “Ten years in Mouraria”, já está disponível.",
+    "Algumas histórias da revista já podem ser lidas em formato de slide-deck: slides em ecrã inteiro que percorres como numa apresentação, com texto, fotografias em página inteira, números grandes e animados, comparações de antes-e-depois e momentos que revelas ao tocar. Abre “Apresentar” para uma leitura em ecrã inteiro, sem distrações. Procura a etiqueta “Interativo” na primeira página da revista. A primeira, “Ten years in Mouraria”, já está disponível.",
 
   "changelog.entries.real-notification-settings.title":
     "Definições de notificações que finalmente fazem alguma coisa",
   "changelog.entries.real-notification-settings.body":
-    "Os botões em Definições → Notificações eram só para inglês ver — mudá-los não fazia nada. Agora são reais: liga ou desliga, por tipo, os convites para encontros, os lembretes de presença, os avisos de novas mensagens, os pedidos de ligação e as respostas em tópicos, e a tua escolha é guardada e respeitada em todo o lado, incluindo as notificações push no telemóvel. As mensagens de segurança e de conta (moderação, recursos, alterações à conta) chegam sempre e não ficam escondidas atrás de um botão. Algumas linhas ainda sem funcionalidade por trás continuam honestamente marcadas como “em breve”, em vez de fingirem funcionar.",
+    "Os botões em Definições → Notificações eram só para inglês ver, e mudá-los não fazia nada. Agora são reais: liga ou desliga, por tipo, os convites para encontros, os lembretes de presença, os avisos de novas mensagens, os pedidos de ligação e as respostas em tópicos, e a tua escolha é guardada e respeitada em todo o lado, incluindo as notificações push no telemóvel. As mensagens de segurança e de conta (moderação, recursos, alterações à conta) chegam sempre e não ficam escondidas atrás de um botão. Algumas linhas ainda sem funcionalidade por trás continuam honestamente marcadas como “em breve”, em vez de fingirem funcionar.",
   "changelog.entries.platform-wide-search.title":
     "A pesquisa passa a abranger toda a plataforma",
   "changelog.entries.platform-wide-search.body":
-    "A pesquisa global chegava apenas a membros, comunidades, eventos, tópicos do fórum e negócios. Agora inclui também artigos da revista, empregos, anúncios de habitação, recursos, workshops e subperfis — por isso uma só pesquisa encontra o que procuras onde quer que esteja, tanto em inglês como em português.",
+    "A pesquisa global chegava apenas a membros, comunidades, eventos, tópicos do fórum e negócios. Agora inclui também artigos da revista, empregos, anúncios de habitação, recursos, workshops e subperfis, por isso uma só pesquisa encontra o que procuras onde quer que esteja, tanto em inglês como em português.",
   "changelog.entries.save-events-communities.title":
-    "Guarda eventos e comunidades — e guardados que ficam mesmo guardados",
+    "Guarda eventos e comunidades, e guardados que ficam mesmo guardados",
   "changelog.entries.save-events-communities.body":
-    "Agora podes guardar um encontro ou uma comunidade na tua coleção com o mesmo marcador que já usas noutros sítios. Corrigimos também dois botões de Guardar — na página de detalhe de um emprego e nas curtas-metragens — que pareciam funcionar mas esqueciam tudo assim que saías. Todos os guardados passam a persistir na tua coleção.",
+    "Agora podes guardar um encontro ou uma comunidade na tua coleção com o mesmo marcador que já usas noutros sítios. Corrigimos também dois botões de Guardar (na página de detalhe de um emprego e nas curtas-metragens) que pareciam funcionar mas esqueciam tudo assim que saías. Todos os guardados passam a persistir na tua coleção.",
   "changelog.entries.invite-revoke-oversight.title":
     "Recupera um convite que enviaste",
   "changelog.entries.invite-revoke-oversight.body":
@@ -3484,23 +3538,23 @@ export const marketing: Catalog = {
   "changelog.entries.moderation-completeness.title":
     "Um conjunto de ferramentas de moderação mais completo",
   "changelog.entries.moderation-completeness.body":
-    "Os moderadores passam a poder remover o perfil de um membro e avaliações de negócios individuais, e não apenas publicações e anúncios — um perfil ou avaliação removido deixa de aparecer aos restantes (e uma avaliação removida deixa de contar para a classificação de um local). Os moderadores podem também levantar uma suspensão e reintegrar um membro diretamente, em vez de ser só através do processo de recurso.",
+    "Os moderadores passam a poder remover o perfil de um membro e avaliações de negócios individuais, para lá de publicações e anúncios. Um perfil ou avaliação removido deixa de aparecer aos restantes (e uma avaliação removida deixa de contar para a classificação de um local). Os moderadores podem também levantar uma suspensão e reintegrar um membro diretamente, em vez de ser só através do processo de recurso.",
   "changelog.entries.account-media-safety.title":
     "Nomes de utilizador mais seguros, armazenamento mais limpo",
   "changelog.entries.account-media-safety.body":
-    "Algumas melhorias discretas de segurança. Quando mudas de nome de utilizador, o antigo fica reservado para ti durante 30 dias antes de outra pessoa o poder usar, para que um nome libertado não seja agarrado de imediato e as antigas menções @ não sejam silenciosamente redirecionadas para um estranho. As fotografias que substituis — avatares, imagens de anúncios, imagens de publicações — passam a ser apagadas do armazenamento em vez de ficarem para trás, as imagens de um membro suspenso deixam de ser mostradas aos outros, e concluir a introdução regista a tua concordância com as diretrizes da comunidade.",
+    "Algumas melhorias discretas de segurança. Quando mudas de nome de utilizador, o antigo fica reservado para ti durante 30 dias antes de outra pessoa o poder usar, para que um nome libertado não seja agarrado de imediato e as antigas menções @ não sejam silenciosamente redirecionadas para um estranho. As fotografias que substituis (avatares, imagens de anúncios, imagens de publicações) passam a ser apagadas do armazenamento em vez de ficarem para trás, as imagens de um membro suspenso deixam de ser mostradas aos outros, e concluir a introdução regista a tua concordância com as diretrizes da comunidade.",
   "changelog.entries.legal-notice-imprint.title":
     "Uma página de aviso legal (imprint)",
   "changelog.entries.legal-notice-imprint.body":
-    "Adicionámos uma página de Aviso Legal na secção de Políticas, ligada a partir do rodapé, que indica quem opera a QueerPulse e como nos contactar — o tipo de imprint esperado de um serviço a operar na Europa.",
+    "Adicionámos uma página de Aviso Legal na secção de Políticas, ligada a partir do rodapé, que indica quem opera a QueerPulse e como nos contactar: o tipo de imprint esperado de um serviço a operar na Europa.",
   "changelog.entries.messages-list-virtualization.title":
     "As conversas longas agora deslizam de forma suave, por maiores que fiquem",
   "changelog.entries.messages-list-virtualization.body":
-    "Uma conversa muito longa ou muito ativa mantinha na página, ao mesmo tempo, todas as mensagens já carregadas, o que podia tornar o deslizar mais pesado quanto mais a conversa crescia. As mensagens agora só são desenhadas na página perto do que estás mesmo a ver, por isso uma conversa com milhares de mensagens fica tão leve como uma acabada de começar — carregar histórico mais antigo, saltar para uma resposta e deslizar até à mensagem mais recente continuam a levar-te exatamente onde esperarias.",
+    "Uma conversa muito longa ou muito ativa mantinha na página, ao mesmo tempo, todas as mensagens já carregadas, o que podia tornar o deslizar mais pesado quanto mais a conversa crescia. As mensagens agora só são desenhadas na página perto do que estás mesmo a ver, por isso uma conversa com milhares de mensagens fica tão leve como uma acabada de começar. Carregar histórico mais antigo, saltar para uma resposta e deslizar até à mensagem mais recente continuam a levar-te exatamente onde esperarias.",
   "changelog.entries.live-mode-honesty-sweep.title":
     "Sem pessoas de exemplo, confirmações falsas ou botões sem saída",
   "changelog.entries.live-mode-honesty-sweep.body":
-    "Uma ronda de honestidade em toda a plataforma para que nada do que vês seja inventado e nada em que toques finja funcionar. Páginas ainda em protótipo — partes da página inicial, a revista, os diretórios de terapeutas e clínicas, as trocas de competências, a incubadora e as ferramentas de eventos — mostram agora um “em breve” claro em vez de membros, eventos, prestadores “verificados” ou estatísticas inventados. Formulários que ainda não tinham destino (contacto, newsletter, preferências de cookies, candidaturas a micro-bolsas e painéis, apoios a espaços seguros, resgate de benefícios e ações de administração como publicar/exportar) já não mostram um falso “concluído”: ou guardam a sério ou dizem-te honestamente que ainda não estão abertos, e as escolhas de cookies ficam mesmo guardadas. Os diretórios de saúde e apoio jurídico, em particular, nunca mostrarão um prestador não verificado como se o tivéssemos avaliado.",
+    "Uma ronda de honestidade em toda a plataforma para que nada do que vês seja inventado e nada em que toques finja funcionar. Páginas ainda em protótipo (partes da página inicial, a revista, os diretórios de terapeutas e clínicas, as trocas de competências, a incubadora e as ferramentas de eventos) mostram agora um “em breve” claro em vez de membros, eventos, prestadores “verificados” ou estatísticas inventados. Formulários que ainda não tinham destino (contacto, newsletter, preferências de cookies, candidaturas a micro-bolsas e painéis, apoios a espaços seguros, resgate de benefícios e ações de administração como publicar/exportar) já não mostram um falso “concluído”: ou guardam a sério ou dizem-te honestamente que ainda não estão abertos, e as escolhas de cookies ficam mesmo guardadas. Os diretórios de saúde e apoio jurídico, em particular, nunca mostrarão um prestador não verificado como se o tivéssemos avaliado.",
   "changelog.entries.frontend-reliability-hardening.title":
     "Menos rascunhos perdidos, estados de erro honestos e dispositivos partilhados mais seguros",
   "changelog.entries.frontend-reliability-hardening.body":
@@ -3508,19 +3562,19 @@ export const marketing: Catalog = {
   "changelog.entries.screen-help-signs.title":
     "Ajuda “Sobre este ecrã” em cada funcionalidade",
   "changelog.entries.screen-help-signs.body":
-    "Novo numa parte da QueerPulse? Procura o pequeno botão de informação ⓘ ao lado do título do ecrã. Toca nele e um cartão curto e amigável explica para que serve o ecrã, como o usar e dá um exemplo concreto — para teres sempre a noção de como cada funcionalidade encaixa na plataforma. Está presente nos ecrãs principais (Membros, Comunidades, Fórum, Eventos, Mensagens, o diretório local, alojamento, trabalho, cultura, definições e mais), em português e inglês, e nunca atrapalha — abre-o quando quiseres, ignora-o quando não precisares.",
+    "Novo numa parte da QueerPulse? Procura o pequeno botão de informação ⓘ ao lado do título do ecrã. Toca nele e um cartão curto e amigável explica para que serve o ecrã, como o usar e dá um exemplo concreto, para teres sempre a noção de como cada funcionalidade encaixa na plataforma. Está presente nos ecrãs principais (Membros, Comunidades, Fórum, Eventos, Mensagens, o diretório local, alojamento, trabalho, cultura, definições e mais), em português e inglês, e nunca atrapalha: abre-o quando quiseres, ignora-o quando não precisares.",
   "changelog.entries.performance-cost-hardening.title":
     "Pesquisa mais rápida, uploads mais leves e páginas movimentadas mais estáveis",
   "changelog.entries.performance-cost-hardening.body":
-    'Uma passagem nos bastidores para manter o QueerPulse rápido e sustentável à medida que enche. A pesquisa global passa a usar índices de texto adequados, por isso encontrar pessoas, comunidades, eventos, anúncios e tópicos continua rápido por muitos membros que entrem, em vez de abrandar à medida que a plataforma cresce. As fotos que carregas são redimensionadas com cuidado antes de saírem do teu dispositivo, por isso publicar é mais rápido nos dados móveis e as páginas carregam mais leves para toda a gente. Tópicos movimentados de comunidades, listas de membros e listas de convidados de eventos passam a carregar por páginas, com um botão "carregar mais", em vez de trazerem tudo de uma vez, e as páginas populares que toda a comunidade partilha podem agora ser servidas a partir da cache em vez de reconstruídas sempre. Os lembretes de eventos e as notificações push saem num único lote eficiente, as imagens no topo de uma página carregam primeiro para uma primeira renderização mais ágil, e mudar de página a meio de um carregamento já não desperdiça um pedido. As listas longas — o diretório local e os tópicos movimentados do fórum — passam a revelar mais à medida que fazes scroll, em vez de renderizarem tudo de uma vez, por isso mantêm-se fluidas no telemóvel. Nada do que vês muda — só aguenta melhor com muita gente.',
+    'Uma passagem nos bastidores para manter o QueerPulse rápido e sustentável à medida que enche. A pesquisa global passa a usar índices de texto adequados, por isso encontrar pessoas, comunidades, eventos, anúncios e tópicos continua rápido por muitos membros que entrem, em vez de abrandar à medida que a plataforma cresce. As fotos que carregas são redimensionadas com cuidado antes de saírem do teu dispositivo, por isso publicar é mais rápido nos dados móveis e as páginas carregam mais leves para toda a gente. Tópicos movimentados de comunidades, listas de membros e listas de convidados de eventos passam a carregar por páginas, com um botão "carregar mais", em vez de trazerem tudo de uma vez, e as páginas populares que toda a comunidade partilha podem agora ser servidas a partir da cache em vez de reconstruídas sempre. Os lembretes de eventos e as notificações push saem num único lote eficiente, as imagens no topo de uma página carregam primeiro para uma primeira renderização mais ágil, e mudar de página a meio de um carregamento já não desperdiça um pedido. As listas longas (o diretório local e os tópicos movimentados do fórum) passam a revelar mais à medida que fazes scroll, em vez de renderizarem tudo de uma vez, por isso mantêm-se fluidas no telemóvel. Nada do que vês muda; só aguenta melhor com muita gente.',
   "changelog.entries.accessibility-i18n-pwa-hardening.title":
     "Acessibilidade, tradução e melhorias offline",
   "changelog.entries.accessibility-i18n-pwa-hardening.body":
-    "Uma revisão para que o QueerPulse funcione para mais gente, em mais sítios. Todos os campos de formulário passam a anunciar a sua etiqueta aos leitores de ecrã, por isso registares-te, publicares uma vaga, pagares ou editares o teu perfil ficam limpos com tecnologia de apoio. Partilhar um link mostra finalmente uma imagem de pré-visualização em vez de uma miniatura partida. Se perderes a ligação, tens uma página offline a sério — não o erro do navegador — e a app instala mais leve e atualiza com uma etiqueta que espera por ti em vez de um aviso que desaparece. Os avisos passam a poder ser dispensados e pausam enquanto os lês; remover alguém de um grupo pergunta primeiro; os botões são um pouco maiores para tocar; e as horas das mensagens, mais algumas etiquetas soltas, seguem agora o idioma que escolheste, em inglês e português.",
+    "Uma revisão para que o QueerPulse funcione para mais gente, em mais sítios. Todos os campos de formulário passam a anunciar a sua etiqueta aos leitores de ecrã, por isso registares-te, publicares uma vaga, pagares ou editares o teu perfil ficam limpos com tecnologia de apoio. Partilhar um link mostra finalmente uma imagem de pré-visualização em vez de uma miniatura partida. Se perderes a ligação, tens uma página offline a sério, em vez do erro do navegador, e a app instala mais leve e atualiza com uma etiqueta que espera por ti em vez de um aviso que desaparece. Os avisos passam a poder ser dispensados e pausam enquanto os lês; remover alguém de um grupo pergunta primeiro; os botões são um pouco maiores para tocar; e as horas das mensagens, mais algumas etiquetas soltas, seguem agora o idioma que escolheste, em inglês e português.",
   "changelog.entries.launch-hardening-p1.title":
     "Reforço de segurança, honestidade e fiabilidade",
   "changelog.entries.launch-hardening-p1.body":
-    "Uma revisão ampla antes do lançamento. Bloquear alguém passa a travá-lo mesmo em todo o lado — deixam de passar mensagens, presença, «está a escrever» ou notificações push, e o teu perfil fica escondido de quem bloqueaste. O modo live diz a verdade: páginas que mostravam pessoas fictícias ou finjiam uma submissão passam a usar dados reais ou a dizer claramente quando algo ainda não está pronto, e pedir os teus dados (RGPD) é agora um pedido real. Editar, cancelar ou confirmar presença num convívio, e sair de uma comunidade, atualizam já o ecrã; uma falha mostra a opção de tentar de novo em vez de uma página vazia. E quando ainda não te conseguimos enviar email, deixámos de fingir que o faremos.",
+    "Uma revisão ampla antes do lançamento. Bloquear alguém passa a travá-lo mesmo em todo o lado: deixam de passar mensagens, presença, «está a escrever» ou notificações push, e o teu perfil fica escondido de quem bloqueaste. O modo live diz a verdade: páginas que mostravam pessoas fictícias ou fingiam uma submissão passam a usar dados reais ou a dizer claramente quando algo ainda não está pronto, e pedir os teus dados (RGPD) é agora um pedido real. Editar, cancelar ou confirmar presença num convívio, e sair de uma comunidade, atualizam já o ecrã; uma falha mostra a opção de tentar de novo em vez de uma página vazia. E quando ainda não te conseguimos enviar email, deixámos de fingir que o faremos.",
   "changelog.entries.remove-listings-from-moderation.title":
     "Moderadores podem remover listagens do diretório",
   "changelog.entries.remove-listings-from-moderation.body":
@@ -3529,49 +3583,49 @@ export const marketing: Catalog = {
   "changelog.entries.sent-invites-status-filter.title":
     "Filtra por estado os convites que enviaste",
   "changelog.entries.sent-invites-status-filter.body":
-    "A lista de convites que já enviaste passa a ter separadores — Todos, Pendente, Aceite, Expirado — cada um com uma contagem, para saltares logo para os que ainda esperam resposta ou os que já foram aceites. Cada convite mostra também o dia e a hora exatos em que foi enviado e quando expira, em vez de apenas a data.",
+    "A lista de convites que já enviaste passa a ter separadores (Todos, Pendente, Aceite, Expirado), cada um com uma contagem, para saltares logo para os que ainda esperam resposta ou os que já foram aceites. Cada convite mostra também o dia e a hora exatos em que foi enviado e quando expira, em vez de apenas a data.",
 
   "changelog.entries.onboarding-one-time-guard.title":
     "Concluir a introdução agora fica guardado",
   "changelog.entries.onboarding-one-time-guard.body":
-    "O percurso de boas-vindas que fazes logo após entrar é para acontecer uma só vez. Mas, se mais tarde o teu navegador preenchesse automaticamente o endereço da introdução, ele largava-te de novo no assistente como se nunca o tivesses feito — e avançar pelos passos podia repor em silêncio escolhas como os teus interesses em “Aqui por”. Agora registamos quando concluis a introdução e encaminhamos-te para o teu feed se voltares a cair nela, para que não se repita nem substitua o que já definiste.",
+    "O percurso de boas-vindas que fazes logo após entrar é para acontecer uma só vez. Mas, se mais tarde o teu navegador preenchesse automaticamente o endereço da introdução, ele largava-te de novo no assistente como se nunca o tivesses feito, e avançar pelos passos podia repor em silêncio escolhas como os teus interesses em “Aqui por”. Agora registamos quando concluis a introdução e encaminhamos-te para o teu feed se voltares a cair nela, para que não se repita nem substitua o que já definiste.",
 
   "changelog.entries.trust-network-replay-by-joins.title":
-    "A repetição da rede de confiança segue as pessoas, não o calendário",
+    "A repetição da rede de confiança segue as pessoas",
   "changelog.entries.trust-network-replay-by-joins.body":
-    "Na rede de confiança do painel de administração, a “Repetição” de como os avais se formaram ao longo do tempo avançava um mês de calendário de cada vez — arrastava-se por meses parados onde nada acontecia e passava a correr pelos mais movimentados. Agora percorre os momentos em que as pessoas foram efetivamente avalizadas, dando a cada evento real o mesmo tempo. O resultado acompanha o crescimento da comunidade em vez da passagem do calendário. Arrastar a barra da linha do tempo à mão funciona exatamente como antes.",
+    "Na rede de confiança do painel de administração, a “Repetição” de como os avais se formaram ao longo do tempo avançava um mês de calendário de cada vez, arrastando-se por meses parados onde nada acontecia e passava a correr pelos mais movimentados. Agora percorre os momentos em que as pessoas foram efetivamente avalizadas, dando a cada evento real o mesmo tempo. O resultado acompanha o crescimento da comunidade em vez da passagem do calendário. Arrastar a barra da linha do tempo à mão funciona exatamente como antes.",
   "changelog.entries.trust-network-invite-vs-vouch.title":
     "Vê quem foi convidado e quem foi avalizado depois",
   "changelog.entries.trust-network-invite-vs-vouch.body":
-    "A rede de confiança do painel de administração passa a mostrar as ligações de convite — pessoas que trouxeste tu próprio para a QueerPulse — numa cor distinta dos avais adicionados mais tarde, com uma legenda e etiquetas ao passar o rato para distinguires as duas facilmente.",
+    "A rede de confiança do painel de administração passa a mostrar as ligações de convite (pessoas que trouxeste tu próprio para a QueerPulse) numa cor distinta dos avais adicionados mais tarde, com uma legenda e etiquetas ao passar o rato para distinguires as duas facilmente.",
   "changelog.entries.chef-mixologist-therapist-personas.title":
     "Três novos tipos de persona: cozinha, coquetelaria e terapia",
   "changelog.entries.chef-mixologist-therapist-personas.body":
-    "Já podes criar um subperfil de cozinha (menus + residências), de coquetelaria (cocktails + residências) ou de terapia (especialidades + credenciais) — cada um com as suas secções, modelo inicial e filtro no diretório, a par dos ofícios que já existiam.",
+    "Já podes criar um subperfil de cozinha (menus + residências), de coquetelaria (cocktails + residências) ou de terapia (especialidades + credenciais), cada um com as suas secções, modelo inicial e filtro no diretório, a par dos ofícios que já existiam.",
   "changelog.entries.connections-card-polish.title":
     "Cartões de ligação mais arrumados",
   "changelog.entries.connections-card-polish.body":
-    "Na tua página de ligações, a linha de “pessoas em comum” passa a aparecer corretamente em vez de mostrar formatação em bruto, e a data de “Ligação” mostra o dia e a hora em que se ligaram — não apenas o mês e o ano.",
+    "Na tua página de ligações, a linha de “pessoas em comum” passa a aparecer corretamente em vez de mostrar formatação em bruto, e a data de “Ligação” mostra o dia e a hora em que se ligaram, para lá do mês e do ano.",
   "changelog.entries.lightbox-focus-a11y.title":
     "Gestão de foco mais limpa no visualizador de fotos",
   "changelog.entries.lightbox-focus-a11y.body":
-    "Abrir uma foto em ecrã inteiro — nas galerias do diretório e nas páginas de encontros — deixa de deixar o foco do teclado preso na camada invisível de tocar-para-fechar por trás da imagem. O foco fica agora onde consegues vê-lo, o que mantém os leitores de ecrã e a navegação por teclado a funcionar sem falhas enquanto percorres as fotos.",
+    "Abrir uma foto em ecrã inteiro (nas galerias do diretório e nas páginas de encontros) deixa de deixar o foco do teclado preso na camada invisível de tocar-para-fechar por trás da imagem. O foco fica agora onde consegues vê-lo, o que mantém os leitores de ecrã e a navegação por teclado a funcionar sem falhas enquanto percorres as fotos.",
   "changelog.entries.directory-detail-polish.title":
     "Uma página de espaço redesenhada e mais rigorosa",
   "changelog.entries.directory-detail-polish.body":
-    "As páginas de negócios do diretório foram reconstruídas com um layout mais claro: o espaço apresenta-se primeiro — nome, categoria e os detalhes principais numa só linha — e só depois surge uma galeria compacta (uma foto principal com as restantes numa coluna clicável) em vez de um único banner enorme, com as ações principais mesmo ao lado do nome. Espaços novos passam a ler-se como “Novo” em vez de uma classificação vazia de zero estrelas. A par do redesenho: o “Aberto agora” é calculado pelo relógio do próprio espaço (e não pelo fuso horário do teu dispositivo), a linha de localização e os dados de pesquisa deixam de assumir que tudo fica em Lisboa, os links dos sites abrem sempre corretamente e mostram um domínio limpo, e as classificações por estrelas são lidas corretamente por leitores de ecrã. Quem não tem sessão iniciada pode agora guardar um espaço, quem gere um negócio pode reivindicar o seu registo, e um link errado ou removido mostra uma verdadeira página de “não encontrado” em vez de te devolver silenciosamente ao diretório.",
+    "As páginas de negócios do diretório foram reconstruídas com um layout mais claro: o espaço apresenta-se primeiro, com nome, categoria e os detalhes principais numa só linha, e só depois surge uma galeria compacta (uma foto principal com as restantes numa coluna clicável) em vez de um único banner enorme, com as ações principais mesmo ao lado do nome. Espaços novos passam a ler-se como “Novo” em vez de uma classificação vazia de zero estrelas. A par do redesenho: o “Aberto agora” é calculado pelo relógio do próprio espaço (e não pelo fuso horário do teu dispositivo), a linha de localização e os dados de pesquisa deixam de assumir que tudo fica em Lisboa, os links dos sites abrem sempre corretamente e mostram um domínio limpo, e as classificações por estrelas são lidas corretamente por leitores de ecrã. Quem não tem sessão iniciada pode agora guardar um espaço, quem gere um negócio pode reivindicar o seu registo, e um link errado ou removido mostra uma verdadeira página de “não encontrado” em vez de te devolver silenciosamente ao diretório.",
   "changelog.entries.review-author-avatars.title":
     "Vê quem deixou uma avaliação",
   "changelog.entries.review-author-avatars.body":
-    "As avaliações na página de um espaço no diretório mostram agora a foto de quem escreveu, e o nome liga diretamente ao perfil da pessoa — por isso uma nota calorosa de alguém da comunidade fica a um toque de saberes mais sobre ela. As avaliações de quem não é membro continuam iguais, apenas sem a ligação.",
+    "As avaliações na página de um espaço no diretório mostram agora a foto de quem escreveu, e o nome liga diretamente ao perfil da pessoa, por isso uma nota calorosa de alguém da comunidade fica a um toque de saberes mais sobre ela. As avaliações de quem não é membro continuam iguais, apenas sem a ligação.",
   "changelog.entries.verification-in-context.title":
     "A verificação passa a estar onde estás a explorar",
   "changelog.entries.verification-in-context.body":
-    "“Como funciona a verificação” já não é um link escondido na navegação de topo. Passa a haver uma explicação curta no próprio diretório local — proposto, avaliado, reavaliado todos os anos — e uma linha discreta dentro de cada espaço verificado que remete para a história completa. O centro dos espaços seguros continua lá para os critérios completos e o registo de remoções; agora chega-se a ele em contexto, quando o emblema está mesmo à tua frente.",
+    "“Como funciona a verificação” já não é um link escondido na navegação de topo. Passa a haver uma explicação curta no próprio diretório local (proposto, avaliado, reavaliado todos os anos) e uma linha discreta dentro de cada espaço verificado que remete para a história completa. O centro dos espaços seguros continua lá para os critérios completos e o registo de remoções; agora chega-se a ele em contexto, quando o emblema está mesmo à tua frente.",
   "changelog.entries.safe-spaces-in-directory.title":
     "Espaços seguros verificados, agora dentro do diretório",
   "changelog.entries.safe-spaces-in-directory.body":
-    "O emblema de verificação aparece agora diretamente no cartão, dentro do diretório local, um filtro de “Espaços seguros verificados” mostra só os que o conquistaram, e os espaços verificados aparecem sempre primeiro na lista. Abre qualquer ficha para veres o bloco de confiança completo — o que a verificação significa para aquele espaço e quando foi avaliado pela última vez. E o /local/safe-spaces é agora o centro da verificação: o que o emblema significa, como funciona mesmo o processo de avaliação, e um registo honesto e público de todos os espaços que o perderam.",
+    "O emblema de verificação aparece agora diretamente no cartão, dentro do diretório local, um filtro de “Espaços seguros verificados” mostra só os que o conquistaram, e os espaços verificados aparecem sempre primeiro na lista. Abre qualquer ficha para veres o bloco de confiança completo: o que a verificação significa para aquele espaço e quando foi avaliado pela última vez. E o /local/safe-spaces é agora o centro da verificação: o que o emblema significa, como funciona mesmo o processo de avaliação, e um registo honesto e público de todos os espaços que o perderam.",
 
   "changelog.entries.magazine-desk-polish-sweep.title":
     "Afinações na redação da revista",
@@ -3581,12 +3635,12 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-piece-messaging.title":
     "Pessoas editoras e quem escreve já podem trocar mensagens diretamente na peça",
   "changelog.entries.magazine-piece-messaging.body":
-    "Pessoas editoras e quem escreve trocam agora mensagens diretamente na peça — insistências e perguntas vivem ao lado do trabalho, não no email, e os dois lados veem sempre a conversa toda.",
+    "Pessoas editoras e quem escreve trocam agora mensagens diretamente na peça: insistências e perguntas vivem ao lado do trabalho, e os dois lados veem sempre a conversa toda.",
 
   "changelog.entries.live-press-kit-real-data.title":
     "O kit de imprensa passa a mostrar cobertura, contactos e números reais",
   "changelog.entries.live-press-kit-real-data.body":
-    "A cobertura e os contactos de imprensa do kit passam a vir do que a equipa realmente publica e mantém atualizado, e os números em destaque são retirados da própria plataforma — sem números inventados. Cada secção fica simplesmente escondida até haver algo real para mostrar.",
+    "A cobertura e os contactos de imprensa do kit passam a vir do que a equipa realmente publica e mantém atualizado, e os números em destaque são retirados da própria plataforma, sem números inventados. Cada secção fica simplesmente escondida até haver algo real para mostrar.",
   "changelog.entries.communities-and-home-merged.title":
     "Comunidades, tudo num só lugar",
   "changelog.entries.communities-and-home-merged.body":
@@ -3595,17 +3649,17 @@ export const marketing: Catalog = {
   "changelog.entries.silent-session-recovery.title":
     "Sem o aviso de “sessão expirada” quando voltas",
   "changelog.entries.silent-session-recovery.body":
-    "Ao voltares depois de algum tempo, podias ver aparecer por um momento um erro de “sessão expirada” — e mesmo assim ficares logo de novo autenticado. Essa mensagem estava a disparar sobre uma sessão que a app já estava a renovar em silêncio. Agora, quando conseguimos restaurar a tua sessão sozinhos, fazemo-lo em silêncio: sem erro, sem nada para ler, retomas simplesmente onde estavas. Só te diremos que a sessão terminou quando isso acontecer mesmo e tiveres de entrar de novo.",
+    "Ao voltares depois de algum tempo, podias ver aparecer por um momento um erro de “sessão expirada”, e mesmo assim ficares logo de novo autenticado. Essa mensagem estava a disparar sobre uma sessão que a app já estava a renovar em silêncio. Agora, quando conseguimos restaurar a tua sessão sozinhos, fazemo-lo em silêncio: sem erro, sem nada para ler, retomas simplesmente onde estavas. Só te diremos que a sessão terminou quando isso acontecer mesmo e tiveres de entrar de novo.",
 
   "changelog.entries.session-refresh-csrf-race.title":
     "Renovação de sessão mais suave quando o acesso expira",
   "changelog.entries.session-refresh-csrf-race.body":
-    "Quando a tua sessão tinha expirado em silêncio, recarregar a página podia mostrar por um instante um estado de “sessão expirada” antes de te voltar a autenticar. Corrigimos uma condição de corrida na forma como a app renova a tua sessão, para que renove de forma limpa à primeira — sem oscilação e sem pedidos desperdiçados.",
+    "Quando a tua sessão tinha expirado em silêncio, recarregar a página podia mostrar por um instante um estado de “sessão expirada” antes de te voltar a autenticar. Corrigimos uma condição de corrida na forma como a app renova a tua sessão, para que renove de forma limpa à primeira, sem oscilação e sem pedidos desperdiçados.",
 
   "changelog.entries.directory-category-unify.title":
     "Categorias do diretório coerentes em todo o lado",
   "changelog.entries.directory-category-unify.body":
-    "Um espaço que adicionas mostra agora o pin da cor certa no mapa e a categoria certa no cartão e no filtro — o assistente de “listar um negócio” e o diretório passam finalmente a falar a mesma língua de categorias. A vida noturna também passa a ser uma categoria que podes escolher ao listar.",
+    "Um espaço que adicionas mostra agora o pin da cor certa no mapa e a categoria certa no cartão e no filtro: o assistente de “listar um negócio” e o diretório passam finalmente a falar a mesma língua de categorias. A vida noturna também passa a ser uma categoria que podes escolher ao listar.",
 
   "changelog.entries.messages-badge-count.title":
     "Um contador de mensagens por ler mais rápido e certo",
@@ -3618,51 +3672,51 @@ export const marketing: Catalog = {
     "O teu sino avisa-te agora quando alguém confirma presença no teu convívio, responde à tua publicação ou tópico, pede para entrar na tua comunidade (e quando um pedido é decidido), se candidata à tua oferta de trabalho, avalia o teu negócio, quando um registo de negócio é aprovado, quando alguém que convidaste entra, quando uma denúncia ou recurso que apresentaste é resolvido, e quando uma ideia que partilhaste no roteiro muda de estado. Cada uma leva-te diretamente ao que lhe diz respeito.",
 
   "changelog.entries.gathering-create-fix.title":
-    "Criar um convívio volta a funcionar — e leva-te ao teu evento",
+    "Criar um convívio volta a funcionar, e leva-te ao teu evento",
   "changelog.entries.gathering-create-fix.body":
-    "Publicar um novo convívio estava a falhar silenciosamente no servidor, mas o assistente mostrava na mesma o ecrã de celebração como se tivesse resultado — e o botão «Ver a página do teu evento» abria uma página de exemplo perdida. Ambos estão corrigidos: um convívio passa mesmo a ser publicado, o ecrã de sucesso só aparece depois de o ser, e «Ver a página do teu evento» leva-te diretamente ao teu convívio real. Se alguma publicação falhar, verás uma mensagem clara e ficas no passo de revisão para tentar de novo. O assistente passa também a pedir uma data e hora de início no futuro antes de avançares, para que nenhum convívio seja criado sem elas.",
+    "Publicar um novo convívio estava a falhar silenciosamente no servidor, mas o assistente mostrava na mesma o ecrã de celebração como se tivesse resultado, e o botão «Ver a página do teu evento» abria uma página de exemplo perdida. Ambos estão corrigidos: um convívio passa mesmo a ser publicado, o ecrã de sucesso só aparece depois de o ser, e «Ver a página do teu evento» leva-te diretamente ao teu convívio real. Se alguma publicação falhar, verás uma mensagem clara e ficas no passo de revisão para tentar de novo. O assistente passa também a pedir uma data e hora de início no futuro antes de avançares, para que nenhum convívio seja criado sem elas.",
   "changelog.entries.directory-collapsible-filters.title":
     "Filtros mais arrumados no diretório de espaços",
   "changelog.entries.directory-collapsible-filters.body":
-    "A pesquisa e os botões de categoria continuam em destaque, enquanto os refinamentos de espaços seguros e de ambiente passam a ficar recolhidos atrás de um único botão “Refinar”, para que a barra deixe de sobrecarregar a página. Um contador no botão continua a indicar quando há filtros ocultos ativos, as tuas escolhas permanecem aplicadas, e a gaveta desliza suavemente ao abrir e fechar em vez de saltar — com a tua preferência de aberto/fechado guardada para a próxima visita.",
+    "A pesquisa e os botões de categoria continuam em destaque, enquanto os refinamentos de espaços seguros e de ambiente passam a ficar recolhidos atrás de um único botão “Refinar”, para que a barra deixe de sobrecarregar a página. Um contador no botão continua a indicar quando há filtros ocultos ativos, as tuas escolhas permanecem aplicadas, e a gaveta desliza suavemente ao abrir e fechar em vez de saltar, com a tua preferência de aberto/fechado guardada para a próxima visita.",
   "changelog.entries.members-collapsible-filters.title":
     "Filtros recolhíveis no diretório de membros",
   "changelog.entries.members-collapsible-filters.body":
-    "Os filtros do diretório de membros agora são secções recolhíveis com um botão para mostrar/ocultar, libertando espaço para os resultados — as tuas seleções continuam aplicadas enquanto os filtros estão ocultos, e a tua vista fica guardada para a próxima visita. Abrir uma secção e ocultar a barra lateral inteira agora deslizam suavemente em vez de saltar.",
+    "Os filtros do diretório de membros agora são secções recolhíveis com um botão para mostrar/ocultar, libertando espaço para os resultados: as tuas seleções continuam aplicadas enquanto os filtros estão ocultos, e a tua vista fica guardada para a próxima visita. Abrir uma secção e ocultar a barra lateral inteira agora deslizam suavemente em vez de saltar.",
   "changelog.entries.activism-volunteer-merge.title":
     "Ativismo e Voluntariado são agora um só lugar",
   "changelog.entries.activism-volunteer-merge.body":
-    "Juntámos as páginas de Ativismo e Voluntariado num único sítio. O Voluntariado é agora a porta de entrada — vê oportunidades reais em Lisboa, filtra por causa ou compromisso e começa com um par de horas livres. Se quiseres ir mais fundo, o nosso guia para organizar melhor fica a um toque de distância. A navegação, o rodapé e a barra lateral passam a ter uma única ligação «Ativismo e Voluntariado» em vez de duas, e o antigo endereço /activism continua a funcionar.",
+    "Juntámos as páginas de Ativismo e Voluntariado num único sítio. O Voluntariado é agora a porta de entrada: vê oportunidades reais em Lisboa, filtra por causa ou compromisso e começa com um par de horas livres. Se quiseres ir mais fundo, o nosso guia para organizar melhor fica a um toque de distância. A navegação, o rodapé e a barra lateral passam a ter uma única ligação «Ativismo e Voluntariado» em vez de duas, e o antigo endereço /activism continua a funcionar.",
   "changelog.entries.spaces-map-pins.title":
     "Os pinos do mapa mostram agora que tipo de espaço é cada lugar",
   "changelog.entries.spaces-map-pins.body":
-    "No mapa do diretório Local, cada pino é agora uma gota colorida com um ícone da sua categoria — um copo de martini para a vida noturna, um garfo e faca para comida, um coração para saúde, e por aí fora —, para leres o mapa num relance em vez de tocares em cada ponto. Os filtros de categoria têm a mesma cor e ícone, por isso a barra de filtros funciona também como legenda.",
+    "No mapa do diretório Local, cada pino é agora uma gota colorida com um ícone da sua categoria (um copo de martini para a vida noturna, um garfo e faca para comida, um coração para saúde, e por aí fora), para leres o mapa num relance em vez de tocares em cada ponto. Os filtros de categoria têm a mesma cor e ícone, por isso a barra de filtros funciona também como legenda.",
   "changelog.entries.creatives-subprofile.title":
     "A montra Criativa é agora um subperfil criativo",
   "changelog.entries.creatives-subprofile.body":
-    "O diretório Criativo autónomo foi descontinuado. Mostrar a tua arte, música ou outro trabalho criativo passa a viver nos subperfis — o mesmo sítio onde constróis qualquer persona ligada —, por isso um perfil criativo faz parte de quem és na QueerPulse, em vez de ser uma lista à parte. O antigo link /magazine/creatives leva-te agora diretamente aos teus subperfis, onde podes adicionar um criativo.",
+    "O diretório Criativo autónomo foi descontinuado. Mostrar a tua arte, música ou outro trabalho criativo passa a viver nos subperfis, o mesmo sítio onde constróis qualquer persona ligada, por isso um perfil criativo faz parte de quem és na QueerPulse, em vez de ser uma lista à parte. O antigo link /magazine/creatives leva-te agora diretamente aos teus subperfis, onde podes adicionar um criativo.",
   "changelog.entries.moderation-takedowns.title":
     "Ocultar e remover da moderação passam mesmo a retirar o conteúdo",
   "changelog.entries.moderation-takedowns.body":
-    'Quando um moderador oculta ou remove conteúdo denunciado, este desaparece agora realmente da vista pública. O conteúdo oculto fica retido para os membros, mas a equipa continua a vê-lo; o conteúdo removido mostra uma marca clara de "removido por um moderador", onde uma publicação eliminada já apareceria. Aplicado a publicações e respostas do fórum, publicações e respostas de comunidades, comunidades, eventos e fichas de negócios — registado no mesmo passo da decisão do moderador, para que nunca possa ficar registado sem produzir efeito.',
+    'Quando um moderador oculta ou remove conteúdo denunciado, este desaparece agora realmente da vista pública. O conteúdo oculto fica retido para os membros, mas a equipa continua a vê-lo; o conteúdo removido mostra uma marca clara de "removido por um moderador", onde uma publicação eliminada já apareceria. Aplicado a publicações e respostas do fórum, publicações e respostas de comunidades, comunidades, eventos e fichas de negócios, registado no mesmo passo da decisão do moderador, para que nunca possa ficar registado sem produzir efeito.',
   "changelog.entries.directory-photos-crisp.body":
-    "As fotos de capa das fichas de negócios — e a pré-visualização enquanto adicionas uma — carregavam em baixa resolução e ficavam desfocadas quando mostradas em tamanho grande. Passam agora a carregar nítidas em tamanho real. Também descemos o cabeçalho da ficha para que o caminho de navegação e o botão Editar do proprietário deixem de ficar por baixo da navegação flutuante.",
+    "As fotos de capa das fichas de negócios, e a pré-visualização enquanto adicionas uma, carregavam em baixa resolução e ficavam desfocadas quando mostradas em tamanho grande. Passam agora a carregar nítidas em tamanho real. Também descemos o cabeçalho da ficha para que o caminho de navegação e o botão Editar do proprietário deixem de ficar por baixo da navegação flutuante.",
   "changelog.entries.admin-role-management.title":
     "Os admins podem promover moderadores e admins a partir do painel",
   "changelog.entries.admin-role-management.body":
-    "Tornar alguém moderador ou admin implicava editar a base de dados à mão. Agora um admin pode conceder ou remover esses papéis diretamente no detalhe de um membro no painel de administração — com as proteções que importam já incluídas: não podes mudar o teu próprio papel, a conta oficial está fora de alcance e a plataforma nunca te deixa remover o último admin. Cada alteração fica registada no histórico de auditoria.",
+    "Tornar alguém moderador ou admin implicava editar a base de dados à mão. Agora um admin pode conceder ou remover esses papéis diretamente no detalhe de um membro no painel de administração, com as proteções que importam já incluídas: não podes mudar o teu próprio papel, a conta oficial está fora de alcance e a plataforma nunca te deixa remover o último admin. Cada alteração fica registada no histórico de auditoria.",
   "changelog.entries.appeal-submission.title":
     "Já podes contestar uma decisão de moderação",
   "changelog.entries.appeal-submission.body":
-    "Uma conta suspensa ou banida conseguia ler sobre recursos mas não tinha forma de apresentar um. Agora, qualquer membro sob uma decisão de moderação — um aviso, uma remoção, uma suspensão, um banimento — pode enviar um recurso diretamente do ecrã da sua conta, e este vai para um moderador que não esteve envolvido na decisão original. Um recurso em aberto de cada vez; a decisão original mantém-se enquanto é analisado.",
+    "Uma conta suspensa ou banida conseguia ler sobre recursos mas não tinha forma de apresentar um. Agora, qualquer membro sob uma decisão de moderação (um aviso, uma remoção, uma suspensão, um banimento) pode enviar um recurso diretamente do ecrã da sua conta, e este vai para um moderador que não esteve envolvido na decisão original. Um recurso em aberto de cada vez; a decisão original mantém-se enquanto é analisado.",
   "changelog.entries.honest-report-failures.title":
     "As denúncias de segurança dizem-te a verdade quando não são enviadas",
   "changelog.entries.honest-report-failures.body":
-    "Quando uma denúncia, sinalização ou preocupação sobre um espaço seguro não chega até nós — uma ligação em falha, um problema no servidor — passas a ver um erro honesto e as tuas palavras ficam no formulário para tentares de novo, em vez de um falso «recebida». Se dizemos que uma denúncia chegou, chegou mesmo. Isto abrange também enviar mensagem a quem anuncia alojamento e anunciar um espaço.",
+    "Quando uma denúncia, sinalização ou preocupação sobre um espaço seguro não chega até nós (uma ligação em falha, um problema no servidor), passas a ver um erro honesto e as tuas palavras ficam no formulário para tentares de novo, em vez de um falso «recebida». Se dizemos que uma denúncia chegou, chegou mesmo. Isto abrange também enviar mensagem a quem anuncia alojamento e anunciar um espaço.",
   "changelog.entries.directory-filters-and-accurate-recognition.title":
     "Filtros de membros que filtram mesmo, e emblemas e vantagens honestos",
   "changelog.entries.directory-filters-and-accurate-recognition.body":
-    "Escolher um filtro no diretório de membros passa a mostrar quem corresponde, em vez de esvaziar a página. As páginas de Emblemas e Vantagens também apresentam um estado próprio de carregamento, vazio ou de tentar novamente enquanto o teu reconhecimento carrega — sem contagens fictícias a fazer de conta que são reais.",
+    "Escolher um filtro no diretório de membros passa a mostrar quem corresponde, em vez de esvaziar a página. As páginas de Emblemas e Vantagens também apresentam um estado próprio de carregamento, vazio ou de tentar novamente enquanto o teu reconhecimento carrega, sem contagens fictícias a fazer de conta que são reais.",
   "changelog.entries.navigation-resilience.title":
     "O voltar atrás guarda o teu lugar, e a app aguenta as atualizações",
   "changelog.entries.navigation-resilience.body":
@@ -3670,7 +3724,7 @@ export const marketing: Catalog = {
   "changelog.entries.search-page-launcher.title":
     "Salta para qualquer lado a partir da pesquisa",
   "changelog.entries.search-page-launcher.body":
-    "A pesquisa (⌘K e a página de pesquisa) passa a funcionar também como atalho: começa a escrever — ou simplesmente abre-a — para saltar direto para Membros, Comunidades, Eventos, Mensagens, o teu perfil, Definições, a Revista e muito mais, cada um com o seu ícone. Um novo separador Páginas reúne todos os destinos num só lugar.",
+    "A pesquisa (⌘K e a página de pesquisa) passa a funcionar também como atalho: começa a escrever, ou simplesmente abre-a, para saltar direto para Membros, Comunidades, Eventos, Mensagens, o teu perfil, Definições, a Revista e muito mais, cada um com o seu ícone. Um novo separador Páginas reúne todos os destinos num só lugar.",
   "changelog.entries.donate-honest-live.title":
     "As doações são honestas sobre o pré-lançamento",
   "changelog.entries.donate-honest-live.body":
@@ -3681,14 +3735,14 @@ export const marketing: Catalog = {
     "O painel de anfitrião de encontros era um protótipo de demonstração, por isso em modo ao vivo mostra agora um claro “em breve” em vez de agir sobre dados de exemplo. Explorar e confirmar presença estão totalmente ativos; explora as ferramentas de anfitrião em modo de demonstração.",
   "changelog.entries.search-member-avatars.title": "Veja quem está a procurar",
   "changelog.entries.search-member-avatars.body":
-    "Os resultados de membros na pesquisa (⌘K e a página de pesquisa) mostram agora a foto de perfil de cada pessoa em vez de um ícone genérico — assim reconhece de relance o rosto que procura.",
+    "Os resultados de membros na pesquisa (⌘K e a página de pesquisa) mostram agora a foto de perfil de cada pessoa em vez de um ícone genérico, para reconheceres de relance o rosto que procuras.",
   "changelog.entries.search-real-topics.title":
     "A pesquisa mostra agora resultados reais",
   "changelog.entries.search-real-topics.body":
     "A pesquisa (⌘K e a página de pesquisa) já não recorre a tópicos de exemplo com contagens de publicações inventadas. Passa a mostrar os tópicos reais em destaque e as contagens de publicações reais, a par de pessoas, comunidades, eventos, tópicos do fórum e negócios reais.",
   "changelog.entries.global-search.title": "Pesquisa em toda a QueerPulse",
   "changelog.entries.global-search.body":
-    "Pesquisa pessoas, comunidades, eventos, o fórum e negócios locais — de qualquer lugar, com ⌘K ou a página de pesquisa.",
+    "Pesquisa pessoas, comunidades, eventos, o fórum e negócios locais, de qualquer lugar, com ⌘K ou a página de pesquisa.",
   "changelog.entries.studio-coming-soon.title":
     "O Studio é agora uma pré-visualização honesta",
   "changelog.entries.studio-coming-soon.body":
@@ -3696,63 +3750,63 @@ export const marketing: Catalog = {
   "changelog.entries.cinema-honest-live.title":
     "O Cinema é honesto sobre o que está ativo",
   "changelog.entries.cinema-honest-live.body":
-    "O catálogo de filmes e a reprodução são reais, por isso as partes ainda em produção — coleções, perfis de realizadores, convites abertos — passam a dizer “em breve” em modo live em vez de mostrar conteúdo de exemplo. Explora tudo no modo demo.",
+    "O catálogo de filmes e a reprodução são reais, por isso as partes ainda em produção (coleções, perfis de realizadores, convites abertos) passam a dizer “em breve” em modo live em vez de mostrar conteúdo de exemplo. Explora tudo no modo demo.",
   "changelog.entries.cinema-live-streaming.title":
     "O Cinema agora transmite filmes reais",
   "changelog.entries.cinema-live-streaming.body":
-    "O Cinema está ativo: explora o programa real e carrega em play para ver o filme — e da próxima vez retoma exatamente de onde paraste.",
+    "O Cinema está ativo: explora o programa real e carrega em play para ver o filme, e da próxima vez retoma exatamente de onde paraste.",
   "changelog.entries.employer-reviews-live.title":
     "Avaliações de empregadores, a sério",
   "changelog.entries.employer-reviews-live.body":
-    "A página de avaliações de empregadores mostra agora empregadores inclusivos reais — abre qualquer empresa para ver o perfil completo e as avaliações, e escreve a tua própria avaliação anónima de um sítio onde trabalhaste.",
+    "A página de avaliações de empregadores mostra agora empregadores inclusivos reais: abre qualquer empresa para ver o perfil completo e as avaliações, e escreve a tua própria avaliação anónima de um sítio onde trabalhaste.",
   "changelog.entries.block-mute-from-profile.title":
     "Bloqueia ou silencia diretamente a partir do perfil",
   "changelog.entries.block-mute-from-profile.body":
-    "Um novo menu de segurança no cabeçalho do perfil permite silenciar alguém (escondendo discretamente as publicações) de imediato, ou bloquear após uma confirmação rápida — com a opção de também denunciar ao mesmo tempo.",
+    "Um novo menu de segurança no cabeçalho do perfil permite silenciar alguém (escondendo discretamente as publicações) de imediato, ou bloquear após uma confirmação rápida, com a opção de também denunciar ao mesmo tempo.",
   "changelog.entries.event-push-reminders.title":
     "Escolhe quando chegam os teus lembretes de eventos",
   "changelog.entries.event-push-reminders.body":
-    "As preferências de eventos passam a deixar-te escolher com que antecedência és lembrado — uma hora, um dia ou uma semana antes — e ativar um push no telemóvel para o lembrete te chegar onde estiveres.",
+    "As preferências de eventos passam a deixar-te escolher com que antecedência és lembrade (uma hora, um dia ou uma semana antes) e ativar um push no telemóvel para o lembrete te chegar onde estiveres.",
   "changelog.entries.report-more-surfaces.title":
     "Denuncia tudo o que não te parecer certo",
   "changelog.entries.report-more-surfaces.body":
-    "Passas a poder denunciar um evento, um negócio, uma empresa, uma vaga ou a persona pública de um membro — um link discreto “Denunciar” abre o mesmo fluxo confidencial usado no resto da plataforma, e as denúncias de eventos passam a ser realmente enviadas à equipa de segurança, em vez de apenas confirmadas.",
+    "Passas a poder denunciar um evento, um negócio, uma empresa, uma vaga ou a persona pública de um membro: um link discreto “Denunciar” abre o mesmo fluxo confidencial usado no resto da plataforma, e as denúncias de eventos passam a ser realmente enviadas à equipa de segurança, em vez de apenas confirmadas.",
   "changelog.entries.profile-photo-pronouns.title":
     "A tua cara, as tuas palavras",
   "changelog.entries.profile-photo-pronouns.body":
-    "Editar Perfil passa a deixar-te carregar uma foto personalizada — com pré-visualização instantânea — em vez de usares só a imagem do Google, e podes escrever os teus próprios pronomes ao lado das opções predefinidas. Também retirámos os marcadores “brevemente” que ainda não faziam nada.",
+    "Editar Perfil passa a deixar-te carregar uma foto personalizada, com pré-visualização instantânea, em vez de usares só a imagem do Google, e podes escrever os teus próprios pronomes ao lado das opções predefinidas. Também retirámos os marcadores “brevemente” que ainda não faziam nada.",
   "changelog.entries.mobile-form-keyboard.title":
     "Os formulários ficam acima do teclado no telemóvel",
   "changelog.entries.mobile-form-keyboard.body":
-    "No iOS, abrir o teclado dentro de um formulário de contacto ou de inscrição já não esconde o botão de submeter por trás dele — a janela sobe para continuar visível. Adicionámos também atalhos de toque prolongado no ícone da app instalada e melhorámos as dicas de ajuda para toque.",
+    "No iOS, abrir o teclado dentro de um formulário de contacto ou de inscrição já não esconde o botão de submeter por trás dele: a janela sobe para continuar visível. Adicionámos também atalhos de toque prolongado no ícone da app instalada e melhorámos as dicas de ajuda para toque.",
 
   "changelog.entries.magazine-real-content.title":
     "A revista mostra sempre edições reais",
   "changelog.entries.magazine-real-content.body":
-    "O arquivo da revista e as páginas de autoria passam a carregar edições reais com um estado de carregamento e de erro próprios — por isso nunca verás conteúdo de protótipo se algo estiver lento ou correr mal.",
+    "O arquivo da revista e as páginas de autoria passam a carregar edições reais com um estado de carregamento e de erro próprios, por isso nunca verás conteúdo de protótipo se algo estiver lento ou correr mal.",
 
   "changelog.entries.community-roadmap.title":
     "O roteiro é agora feito contigo",
   "changelog.entries.community-roadmap.body":
-    "Vê o que já foi lançado, o que está em construção e o que está planeado — depois vota no que mais importa para ti, ou submete a tua própria ideia. Lemos todas as sugestões; a equipa cura o que avança no roteiro.",
+    "Vê o que já foi lançado, o que está em construção e o que está planeado. Depois vota no que mais importa para ti, ou submete a tua própria ideia. Lemos todas as sugestões; a equipa cura o que avança no roteiro.",
 
   "changelog.entries.listing-photos.title": "Fotos na tua ficha de negócio",
   "changelog.entries.listing-photos.body":
-    "O formulário de registo de negócio já aceita fotos — carrega um ficheiro ou cola o link de uma imagem e vê em tempo real como a tua ficha vai ficar antes de publicar.",
+    "O formulário de registo de negócio já aceita fotos: carrega um ficheiro ou cola o link de uma imagem e vê em tempo real como a tua ficha vai ficar antes de publicar.",
 
   "changelog.entries.business-page-live.title":
     "As páginas de negócios ganham vida",
   "changelog.entries.business-page-live.body":
-    "Cada página de negócio mostra agora as fotografias reais do espaço numa galeria que podes abrir em ecrã inteiro, além do horário de funcionamento real com um estado “Aberto agora / Encerrado” em tempo real — para saberes o aspeto de um lugar e se está aberto antes de ir.",
+    "Cada página de negócio mostra agora as fotografias reais do espaço numa galeria que podes abrir em ecrã inteiro, além do horário de funcionamento real com um estado “Aberto agora / Encerrado” em tempo real, para saberes o aspeto de um lugar e se está aberto antes de ir.",
 
   "changelog.entries.business-actions.title": "Guarda, partilha e chega lá",
   "changelog.entries.business-actions.body":
-    "Cada página de negócio tem agora uma barra de ações — pede direções, liga, partilha ou guarda o lugar na tua lista com um toque. Os lugares guardados mostram quantos membros também os guardaram, um sinal de confiança discreto, não uma tabela de classificação.",
+    "Cada página de negócio tem agora uma barra de ações: pede direções, liga, partilha ou guarda o lugar na tua lista com um toque. Os lugares guardados mostram quantos membros também os guardaram, um sinal de confiança discreto.",
 
   "changelog.entries.business-reviews-trust.title":
     "Avaliações que funcionam nos dois sentidos",
   "changelog.entries.business-reviews-trust.body":
-    "Quem tem um negócio já pode responder às avaliações, e cada página mostra a distribuição de estrelas para veres o panorama completo, não só a média. Se algo estiver errado, podes denunciar uma ficha ou sugerir uma correção — ambas seguem diretamente para a nossa moderação.",
+    "Quem tem um negócio já pode responder às avaliações, e cada página mostra a distribuição de estrelas para veres o panorama completo para lá da média. Se algo estiver errado, podes denunciar uma ficha ou sugerir uma correção, e ambas seguem diretamente para a nossa moderação.",
 
   "changelog.entries.business-discovery.title": "Orienta-te no diretório",
   "changelog.entries.business-discovery.body":
@@ -3765,41 +3819,41 @@ export const marketing: Catalog = {
   "changelog.entries.public-profile-badge.title":
     'O "Ficar público" agora vive no teu perfil',
   "changelog.entries.public-profile-badge.body":
-    "O controlo de perfil público passou para um selo discreto ao lado do teu nome — toca nele para veres como os perfis públicos se desbloqueiam, ou para ativares o teu quando fores elegível. Só aparece no teu próprio perfil.",
+    "O controlo de perfil público passou para um selo discreto ao lado do teu nome: toca nele para veres como os perfis públicos se desbloqueiam, ou para ativares o teu quando fores elegível. Só aparece no teu próprio perfil.",
 
   "changelog.entries.here-for-hero.title":
     '"Aqui para" agora abre o teu perfil',
   "changelog.entries.here-for-hero.body":
-    'O teu "Aqui para" — o que procuras na QueerPulse — está agora logo no topo do perfil, ao lado do nome e da bio, em vez de mais abaixo na página. Mais fácil de ver à primeira vista, e continua tão fácil manter privado, se for essa a tua escolha.',
+    'O teu "Aqui para", o que procuras na QueerPulse, está agora logo no topo do perfil, ao lado do nome e da bio, em vez de mais abaixo na página. Mais fácil de ver à primeira vista, e continua tão fácil manter privado, se for essa a tua escolha.',
 
   "changelog.entries.directory-view-switcher.title":
     "Uma troca Lista / Mapa mais clara",
   "changelog.entries.directory-view-switcher.body":
-    'Alternar entre a lista e o mapa no diretório de negócios ficou mais fácil de encontrar. Os dois botões passaram a ser um único seletor com etiquetas e ícones, ao lado da contagem de resultados — para se ler claramente como "escolher uma vista" e não como mais um filtro, mantendo-se compacto e fácil de tocar no telemóvel.',
+    'Alternar entre a lista e o mapa no diretório de negócios ficou mais fácil de encontrar. Os dois botões passaram a ser um único seletor com etiquetas e ícones, ao lado da contagem de resultados, para se ler claramente como "escolher uma vista", mantendo-se compacto e fácil de tocar no telemóvel.',
 
   "changelog.entries.profile-links-fix.title":
     "Links de perfil que se comportam",
   "changelog.entries.profile-links-fix.body":
-    'Adicionar links sociais ao teu perfil ficou mais suave. Um nome de utilizador simples, como o teu handle do Instagram, é aceite tal como está — acabou o aviso "isto não parece um link válido" quando claramente é — e as linhas já não se desmontam quando aparece uma dica; o campo mantém-se no sítio e a dica fica bem alinhada por baixo.',
+    'Adicionar links sociais ao teu perfil ficou mais suave. Um nome de utilizador simples, como o teu handle do Instagram, é aceite tal como está, e acabou o aviso "isto não parece um link válido" quando claramente é. As linhas já não se desmontam quando aparece uma dica; o campo mantém-se no sítio e a dica fica bem alinhada por baixo.',
 
   "changelog.entries.subprofiles-showcase.title":
     'Um "Também a trabalhar como" mais rico',
   "changelog.entries.subprofiles-showcase.body":
-    "Os outros lados do teu trabalho mostram agora mais de quem és — trabalho em destaque, links, disponibilidade e o número de seguidores e endossos, tudo no cartão. No telemóvel é uma vista de um só toque, pensada para um ecrã mais pequeno, e se és dono das personas tens badges de visibilidade e uma forma rápida de editar direto da vitrine.",
+    "Os outros lados do teu trabalho mostram agora mais de quem és: trabalho em destaque, links, disponibilidade e o número de seguidores e endossos, tudo no cartão. No telemóvel é uma vista de um só toque, pensada para um ecrã mais pequeno, e se és dono das personas tens badges de visibilidade e uma forma rápida de editar direto da vitrine.",
 
   "changelog.entries.real-directory-map.title":
     "Um mapa a sério em cada página do diretório",
   "changelog.entries.real-directory-map.body":
-    "Abre um negócio ou espaço no diretório e a localização passa a aparecer num mapa real e interativo — o mesmo mapa quente de Lisboa que já conheces da vista de mapa e de quando registas um negócio — marcado no ponto exato onde o dono o colocou. O antigo mapa decorativo desapareceu.",
+    "Abre um negócio ou espaço no diretório e a localização passa a aparecer num mapa real e interativo, o mesmo mapa quente de Lisboa que já conheces da vista de mapa e de quando registas um negócio, marcado no ponto exato onde o dono o colocou. O antigo mapa decorativo desapareceu.",
 
   "changelog.entries.reply-threads.title":
     "Responde a qualquer comentário no fórum",
   "changelog.entries.reply-threads.body":
-    "As respostas passam agora a poder ter as suas próprias respostas. Responde diretamente a qualquer comentário e a tua entra logo ali por baixo, para as conversas longas se ramificarem em vez de se amontoarem numa lista só. As conversas mais profundas recolhem-se numa única linha — toca para expandir quando quiseres ver o resto.",
+    "As respostas passam agora a poder ter as suas próprias respostas. Responde diretamente a qualquer comentário e a tua entra logo ali por baixo, para as conversas longas se ramificarem em vez de se amontoarem numa lista só. As conversas mais profundas recolhem-se numa única linha: toca para expandir quando quiseres ver o resto.",
 
   "changelog.entries.copy-subprofile.title": "Duplica um perfil já existente",
   "changelog.entries.copy-subprofile.body":
-    "A criar um subperfil novo? Duplica um que já tenhas — leva tudo contigo, ou só o conteúdo — e ajusta a partir daí.",
+    "A criar um subperfil novo? Duplica um que já tenhas (leva tudo contigo, ou só o conteúdo) e ajusta a partir daí.",
 
   "changelog.entries.smoother-chat.title": "Chat mais suave e reativo",
   "changelog.entries.smoother-chat.body":
@@ -3807,24 +3861,24 @@ export const marketing: Catalog = {
 
   "changelog.entries.invite-state-page.title": "Página de convite mais clara",
   "changelog.entries.invite-state-page.body":
-    "Quando uma ligação de convite não pode ser usada, a página passa a mostrar o convite real — quem te avalizou e quando expirou — em vez de uma mensagem genérica. Também distingue um convite que expirou, um que já foi usado e um que foi retirado, e encaminha-te para o passo certo em cada caso.",
+    "Quando uma ligação de convite não pode ser usada, a página passa a mostrar o convite real, com quem te avalizou e quando expirou, em vez de uma mensagem genérica. Também distingue um convite que expirou, um que já foi usado e um que foi retirado, e encaminha-te para o passo certo em cada caso.",
 
   "changelog.entries.chat-shortcuts.title": "Atalhos de menção no chat",
   "changelog.entries.chat-shortcuts.body":
-    "Um novo botão “?” no compositor de mensagens mostra todos os atalhos de menção de relance — @ para um membro, c/ para uma comunidade, # para um tópico, b/ para um negócio, e/ para um evento, t/ para um tópico do fórum. Toca num deles e o símbolo é inserido logo na tua mensagem, abrindo as sugestões enquanto escreves. E, para não sobrecarregar o ecrã, só há um popover aberto de cada vez no compositor.",
+    "Um novo botão “?” no compositor de mensagens mostra todos os atalhos de menção de relance: @ para um membro, c/ para uma comunidade, # para um tópico, b/ para um negócio, e/ para um evento, t/ para um tópico do fórum. Toca num deles e o símbolo é inserido logo na tua mensagem, abrindo as sugestões enquanto escreves. E, para não sobrecarregar o ecrã, só há um popover aberto de cada vez no compositor.",
 
   "changelog.entries.events-hub.title": "Uma casa só para os eventos",
   "changelog.entries.events-hub.body":
-    "Eventos, Encontros e Calendário são agora um único Events Hub — Destaques, Explorar e um calendário completo juntos, com fotos reais do que aí vem. Os mesmos eventos, mais fáceis de encontrar.",
+    "Eventos, Encontros e Calendário são agora um único Events Hub: Destaques, Explorar e um calendário completo juntos, com fotos reais do que aí vem. Os mesmos eventos, mais fáceis de encontrar.",
 
   "changelog.entries.gifs-in-chat.title": "Envia GIFs no chat",
   "changelog.entries.gifs-in-chat.body":
-    "Diz-lo com um GIF. Há um novo botão de GIF no compositor de mensagens — procura ou vê o que está em tendência, toca num e ele segue direto para a conversa (tanto em DMs como em grupos). Com tecnologia KLIPY e filtro de conteúdo seguro ativado por predefinição.",
+    "Diz-lo com um GIF. Há um novo botão de GIF no compositor de mensagens: procura ou vê o que está em tendência, toca num e ele segue direto para a conversa (tanto em DMs como em grupos). Com tecnologia KLIPY e filtro de conteúdo seguro ativado por predefinição.",
 
   "changelog.entries.privacy-and-speed.title":
     "Mais privacidade e uma app mais ágil",
   "changelog.entries.privacy-and-speed.body":
-    "Uma ronda de privacidade, velocidade e mensagens. As personas e subperfis que definiu como privados passam a manter-se totalmente privados, e as pessoas que bloqueou deixam de aparecer no diretório de colegas de casa. Editar ou apagar uma mensagem passa a atualizar de imediato, sem aquele piscar de recarregamento. E a própria aplicação está mais leve, por isso as páginas — e as imagens que o recebem no topo — carregam um pouco mais depressa.",
+    "Uma ronda de privacidade, velocidade e mensagens. As personas e subperfis que definiste como privados passam a manter-se totalmente privados, e as pessoas que bloqueaste deixam de aparecer no diretório de colegas de casa. Editar ou apagar uma mensagem passa a atualizar de imediato, sem aquele piscar de recarregamento. E a própria aplicação está mais leve, por isso as páginas, e as imagens que te recebem no topo, carregam um pouco mais depressa.",
 
   "changelog.entries.leaner-prerendering.title":
     "Compilações do site mais leves e rápidas",
@@ -3834,25 +3888,25 @@ export const marketing: Catalog = {
   "changelog.entries.admin-governance-real-data.title":
     "Painéis de governança agora com dados reais",
   "changelog.entries.admin-governance-real-data.body":
-    "A área de governança de administração — os valores financeiros e o gráfico trimestral, o registo de decisões e o histórico de moderação — passa a ler dados reais da plataforma em vez de valores fixos, para que a equipa veja as finanças e o histórico de moderação reais da comunidade.",
+    "A área de governança de administração (os valores financeiros e o gráfico trimestral, o registo de decisões e o histórico de moderação) passa a ler dados reais da plataforma em vez de valores fixos, para que a equipa veja as finanças e o histórico de moderação reais da comunidade.",
 
   "changelog.entries.sign-in-fix.title": "Iniciar sessão volta a funcionar",
   "changelog.entries.sign-in-fix.body":
-    "Uma incompatibilidade entre a aplicação e o servidor impedia o início de sessão de concluir. Já está corrigido — iniciar sessão, terminar sessão e manter-se ligado voltam a funcionar sem problemas.",
+    "Uma incompatibilidade entre a aplicação e o servidor impedia o início de sessão de concluir. Já está corrigido: iniciar sessão, terminar sessão e manter-se ligado voltam a funcionar sem problemas.",
   "changelog.entries.accessibility-mobile-polish.title":
     "Mais fácil de tocar, mais fácil de navegar",
   "changelog.entries.accessibility-mobile-polish.body":
     "Os botões pequenos passam a ter áreas de toque maiores no telemóvel, as ações que só apareciam ao passar o rato podem ser alcançadas com o teclado, e os formulários de compra e de candidatura suportam preenchimento automático do nome e do email.",
   "changelog.entries.platform-hardening.title": "Reforços nos bastidores",
   "changelog.entries.platform-hardening.body":
-    "Nos bastidores: a API passa a ser versionada com documentação publicada, as listas longas ficam limitadas com segurança para as páginas se manterem rápidas, e as denúncias ganham proteção contra spam. Não é preciso fazer nada — fica tudo simplesmente rápido e estável.",
+    "Nos bastidores: a API passa a ser versionada com documentação publicada, as listas longas ficam limitadas com segurança para as páginas se manterem rápidas, e as denúncias ganham proteção contra spam. Não é preciso fazer nada; fica tudo simplesmente rápido e estável.",
   "changelog.entries.composer-reaction-polish.title":
     "Caixa de mensagem mais ampla e reações mais arrumadas",
   "changelog.entries.composer-reaction-polish.body":
-    "A caixa de mensagem passa agora a ocupar toda a largura do compositor e, no telemóvel, fica encostada sem uma barra de deslocação a mais quando a mensagem é curta — crescendo apenas à medida que escreve. As reações também passam a comportar-se como deve ser: tocar num emoji com que já reagiu remove-o, em vez de empilhar o mesmo vezes sem conta.",
+    "A caixa de mensagem passa agora a ocupar toda a largura do compositor e, no telemóvel, fica encostada sem uma barra de deslocação a mais quando a mensagem é curta, crescendo apenas à medida que escreve. As reações também passam a comportar-se como deve ser: tocar num emoji com que já reagiu remove-o, em vez de empilhar o mesmo vezes sem conta.",
   "changelog.entries.chat-mentions.title": "Mencione pessoas e lugares no chat",
   "changelog.entries.chat-mentions.body":
-    "Escreva @ para um membro, ou c/ b/ e/ t/ # para uma comunidade, negócio, encontro, tópico de fórum ou tema — escolha das sugestões e vira uma ligação tocável, numa mensagem direta ou num grupo. Funciona enquanto escreve e enquanto edita uma mensagem. As suas conversas continuam privadas: as menções apenas ligam, nunca notificam ninguém.",
+    "Escreva @ para um membro, ou c/ b/ e/ t/ # para uma comunidade, negócio, encontro, tópico de fórum ou tema: escolha das sugestões e vira uma ligação tocável, numa mensagem direta ou num grupo. Funciona enquanto escreve e enquanto edita uma mensagem. As suas conversas continuam privadas: as menções apenas ligam, nunca notificam ninguém.",
   "changelog.entries.group-chats.title": "Conversas de grupo",
   "changelog.entries.group-chats.body":
     "Crie um grupo com as pessoas que quer lá dentro, dê-lhe um nome e mostre quem é quem. Os administradores podem adicionar ou remover membros e arrumar a informação do grupo, vê quem já leu uma mensagem, e uma bolha de escrita aparece quando alguém está a escrever.",
@@ -3861,10 +3915,10 @@ export const marketing: Catalog = {
     "À procura daquela morada, daquela data, daquilo que alguém disse? Pesquise em todas as suas conversas e salte diretamente para lá.",
   "changelog.entries.link-previews.title": "As ligações abrem-se",
   "changelog.entries.link-previews.body":
-    "Partilhe uma ligação e ela desdobra-se num cartão de pré-visualização — título, imagem e tudo — para que as pessoas vejam para onde vai antes de tocar.",
+    "Partilhe uma ligação e ela desdobra-se num cartão de pré-visualização (título, imagem e tudo) para que as pessoas vejam para onde vai antes de tocar.",
   "changelog.entries.forward-pin-star.title": "Reencaminhe, fixe e marque",
   "changelog.entries.forward-pin-star.body":
-    "Passe uma mensagem para outra conversa, fixe as que um grupo está sempre a revisitar, e marque com estrela as que quer voltar a encontrar — as mensagens marcadas ficam só para si.",
+    "Passe uma mensagem para outra conversa, fixe as que um grupo está sempre a revisitar, e marque com estrela as que quer voltar a encontrar. As mensagens marcadas ficam só para si.",
   "changelog.entries.safe-space-view-page.title":
     "Pré-visualize espaços seguros antes de verificar",
   "changelog.entries.safe-space-view-page.body":
@@ -3872,27 +3926,27 @@ export const marketing: Catalog = {
   "changelog.entries.swipe-members-highlight.title":
     "Deslize pelos membros em destaque",
   "changelog.entries.swipe-members-highlight.body":
-    "Na página inicial, o cartão de membro em destaque agora acompanha o seu dedo — deslize para a esquerda ou direita no telemóvel para passar entre membros, e ele encaixa no seguinte.",
+    "Na página inicial, o cartão de membro em destaque agora acompanha o seu dedo: deslize para a esquerda ou direita no telemóvel para passar entre membros, e ele encaixa no seguinte.",
   "changelog.entries.mention-names.title": "As menções mostram nomes reais",
   "changelog.entries.mention-names.body":
-    "Menciona uma pessoa, comunidade ou lugar numa conversa, tópico do fórum ou discussão de comunidade e agora aparece o nome — Tiago Costa, não @tiago-costa. Toca e continuas a ir para o sítio certo; passa o cursor para ver o identificador.",
+    "Menciona uma pessoa, comunidade ou lugar numa conversa, tópico do fórum ou discussão de comunidade e agora aparece o nome por extenso, Tiago Costa em vez de @tiago-costa. Toca e continuas a ir para o sítio certo; passa o cursor para ver o identificador.",
   "changelog.entries.forward-to-groups.title":
     "Reencaminha mensagens para os teus grupos",
   "changelog.entries.forward-to-groups.body":
     "O reencaminhamento agora chega às tuas conversas de grupo, não só às mensagens individuais. Mantém premida qualquer mensagem, escolhe Reencaminhar e seleciona qualquer grupo de que fazes parte.",
   "changelog.entries.read-receipts.title": "Recibos de entrega e de leitura",
   "changelog.entries.read-receipts.body":
-    "Os visto contam agora a história toda: enviada, entregue no telemóvel, e lida — para saber onde a sua mensagem chegou.",
+    "Os visto contam agora a história toda: enviada, entregue no telemóvel, e lida, para saber onde a sua mensagem chegou.",
   "changelog.entries.message-gestures.title":
     "Deslize para responder, toque para reagir",
   "changelog.entries.message-gestures.body":
-    "Deslize uma mensagem para o lado para lhe responder, e toque duas vezes para reagir — os gestos rápidos que os seus polegares já conhecem.",
+    "Deslize uma mensagem para o lado para lhe responder, e toque duas vezes para reagir: os gestos rápidos que os seus polegares já conhecem.",
   "changelog.entries.message-drafts.title": "Os seus rascunhos esperam por si",
   "changelog.entries.message-drafts.body":
     "Meia mensagem que ainda não enviou? Guardamo-la para aquela conversa, por isso continua lá quando voltar.",
   "changelog.entries.offline-outbox.title": "Envios que não se perdem",
   "changelog.entries.offline-outbox.body":
-    "Tocou em enviar sem rede? A sua mensagem fica em fila e parte assim que voltar a ter ligação — nada desaparece pelo caminho.",
+    "Tocou em enviar sem rede? A sua mensagem fica em fila e parte assim que voltar a ter ligação. Nada desaparece pelo caminho.",
   "changelog.entries.typing-indicator.title":
     "Bolha de escrita e cuidado com o leitor de ecrã",
   "changelog.entries.typing-indicator.body":
@@ -3900,7 +3954,7 @@ export const marketing: Catalog = {
   "changelog.entries.moderation-actions.title":
     "Cada denúncia recebe uma decisão real",
   "changelog.entries.moderation-actions.body":
-    "Abrir uma denúncia na fila de moderação passa a mostrar sempre o conjunto completo de ações — ocultar, avisar, restringir, remover e mais, cada uma com um motivo que a pessoa vai ler — em vez de a fechar em silêncio. O título da fila também reflete o número real de denúncias em espera.",
+    "Abrir uma denúncia na fila de moderação passa a mostrar sempre o conjunto completo de ações (ocultar, avisar, restringir, remover e mais, cada uma com um motivo que a pessoa vai ler) em vez de a fechar em silêncio. O título da fila também reflete o número real de denúncias em espera.",
   "changelog.entries.listing-preview-and-ask.title":
     "Pré-visualize um anúncio, faça uma pergunta",
   "changelog.entries.listing-preview-and-ask.body":
@@ -3914,10 +3968,10 @@ export const marketing: Catalog = {
   "changelog.entries.profile-communities-save.title":
     "Comunidades em destaque que ficam",
   "changelog.entries.profile-communities-save.body":
-    "As comunidades que fixa no seu perfil passam a ficar guardadas — entre sessões e dispositivos — e aparecem para quem visita, cada uma com a sua função.",
+    "As comunidades que fixa no seu perfil passam a ficar guardadas, entre sessões e dispositivos, e aparecem para quem visita, cada uma com a sua função.",
   "changelog.entries.mention-types.title": "Mais formas de mencionar",
   "changelog.entries.mention-types.body":
-    "As menções vão agora além de pessoas e comunidades — tópicos, negócios, eventos e discussões — e os donos e responsáveis são notificados quando são referidos.",
+    "As menções vão agora além de pessoas e comunidades (tópicos, negócios, eventos e discussões), e os donos e responsáveis são notificados quando são referidos.",
   "changelog.entries.clear-errors.title": "Mensagens de erro mais claras",
   "changelog.entries.clear-errors.body":
     "Quando algo não pode ser guardado, passamos a dizer exatamente o que correu mal em vez de um genérico «algo correu mal».",
@@ -3930,11 +3984,11 @@ export const marketing: Catalog = {
     "Organizadores e participantes podem partilhar fotos num encontro, visíveis apenas para quem esteve presente.",
   "changelog.entries.mentions.title": "Mencione pessoas e comunidades",
   "changelog.entries.mentions.body":
-    "Escreva @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas do fórum e das comunidades — quem for mencionado recebe uma notificação.",
+    "Escreva @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas do fórum e das comunidades: quem for mencionado recebe uma notificação.",
   "changelog.entries.push-notifications.title":
     "Notificações push para mensagens",
   "changelog.entries.push-notifications.body":
-    "Ative para receber uma notificação no telemóvel quando chega uma nova mensagem direta enquanto está ausente — privado, apenas para mensagens diretas e desativado por predefinição.",
+    "Ative para receber uma notificação no telemóvel quando chega uma nova mensagem direta enquanto está ausente: privado, apenas para mensagens diretas e desativado por predefinição.",
   "changelog.entries.delete-conversation.title": "Apagar uma conversa",
   "changelog.entries.delete-conversation.body":
     "Limpe uma conversa da sua caixa de entrada sem afetar a cópia da outra pessoa, ao estilo do WhatsApp.",
@@ -3979,7 +4033,7 @@ export const marketing: Catalog = {
     "Toda a interface passou a estar disponível em inglês e português, alternável a partir da navegação.",
   "changelog.entries.subprofiles.title": "Subperfis",
   "changelog.entries.subprofiles.body":
-    "Crie várias presenças públicas numa só conta — para a sua arte, o seu negócio ou um projeto.",
+    "Crie várias presenças públicas numa só conta: para a sua arte, o seu negócio ou um projeto.",
   "changelog.entries.live-backend.title": "Backend em produção",
   "changelog.entries.live-backend.body":
     "A aplicação ligou-se ao seu backend real, mantendo o modo de demonstração autónomo a par dos dados em produção, com perfis editáveis.",
@@ -4009,7 +4063,7 @@ export const marketing: Catalog = {
     "Um fluxo de integração guiado para novos membros, com uma experiência de início de sessão mais suave.",
   "changelog.entries.launch.title": "Lançamento da QueerPulse",
   "changelog.entries.launch.body":
-    "O primeiro lançamento — a meganavegação da comunidade e o conjunto principal de páginas entraram em funcionamento.",
+    "O primeiro lançamento: a meganavegação da comunidade e o conjunto principal de páginas entraram em funcionamento.",
   "changelog.empty.title": "Ainda nada registado com este filtro",
   "changelog.empty.description":
     "Ainda não houve alterações deste tipo. Limpa o filtro para ver o histórico completo.",
@@ -4020,7 +4074,7 @@ export const marketing: Catalog = {
   //    backlog em direto — ficam em inglês; ver o relatório da varredura.
   "roadmap.meta.title": "O roteiro da QueerPulse: lançado, em curso, planeado",
   "roadmap.meta.description":
-    "Vê o que a QueerPulse já lançou, o que uma pequena equipa em Lisboa está a construir agora, e o que está planeado a seguir — e como submeter e votar ideias.",
+    "Vê o que a QueerPulse já lançou, o que uma pequena equipa em Lisboa está a construir agora, e o que está planeado a seguir, além de como submeter e votar ideias.",
   "roadmap.hero.eyebrow": "O que estamos a construir",
   "roadmap.hero.title": "O <em>roteiro</em>",
   "roadmap.hero.sub":
@@ -4033,7 +4087,8 @@ export const marketing: Catalog = {
   "roadmap.card.mostWanted": "Mais pedido",
   "roadmap.card.votesSuffix": "votos",
   "roadmap.card.committed": "Compromisso",
-  "roadmap.card.slipNote": "Adiado de {from} para {to} — {reason}",
+  "roadmap.card.slipNote": "Adiado de {from} para {to}: {reason}",
+  "roadmap.card.plannedFeatures": "Funcionalidades planeadas",
   "roadmap.shape.title": "Tens uma <em>ideia?</em>",
   "roadmap.shape.sub":
     "Lemos todas as sugestões. As ideias mais votadas sobem no roteiro.",
@@ -4044,9 +4099,9 @@ export const marketing: Catalog = {
   "roadmap.submitIdea.cta": "Submeter ideia",
   "roadmap.submitIdea.toast.empty": "Escreve primeiro algumas palavras",
   "roadmap.submitIdea.toast.submitted":
-    "Obrigade — enviámos à equipa para revisão",
+    "Obrigade, enviámos à equipa para revisão",
   "roadmap.submitIdea.toast.error":
-    "Não foi possível submeter a tua ideia — tenta de novo",
+    "Não foi possível submeter a tua ideia. Tenta de novo",
   "roadmap.topIdeas.title": "Ideias mais pedidas",
   "roadmap.topIdeas.voted": "Votado",
   "roadmap.topIdeas.vote": "Votar",
@@ -4063,7 +4118,7 @@ export const marketing: Catalog = {
     "Somos duas pessoas de engenharia e uma de design. Preferimos construir devagar e acertar.",
   "roadmap.someday.title": "Um dia, <em>com honestidade</em>",
   "roadmap.someday.sub":
-    "Sem data aqui, porque uma data seria uma promessa que ainda não podemos cumprir. Continua no nosso radar — vota para ajudar uma ideia a subir.",
+    "Sem data aqui, porque uma data seria uma promessa que ainda não podemos cumprir. Continua no nosso radar: vota para ajudar uma ideia a subir.",
   "roadmap.notBuilding.title": "O que não vamos construir, e <em>porquê</em>",
   "roadmap.notBuilding.sub":
     "A lista que a maioria das plataformas esconde. Se dizemos que não, recebes uma razão.",
@@ -4079,13 +4134,17 @@ export const marketing: Catalog = {
   "roadmap.subpageIndex.title": "Já lançado",
   "roadmap.subpageIndex.changelog.label": "Registo de alterações",
   "roadmap.subpageIndex.changelog.blurb":
-    "Todos os lançamentos, datados — o que já lançámos até agora.",
+    "Todos os lançamentos, datados: o que já lançámos até agora.",
 
   // ── Arquivo de Imprensa — chrome da página. Títulos/fontes/autores da
   //    cobertura são peças de imprensa de terceiros reais (palavras de
   //    outras pessoas) e ficam em inglês, o mesmo precedente da secção de
   //    cobertura do Press Kit.
   "pressArchive.hero.backLabel": "Press Kit",
+  "pressArchive.meta.title":
+    "Arquivo de imprensa da QueerPulse: tudo o que já escreveram sobre nós",
+  "pressArchive.meta.description":
+    "Cobertura da QueerPulse em publicações de terceiros, indexada por ano, incluindo as críticas com as quais discordámos.",
   "pressArchive.hero.eyebrow": "Arquivo de cobertura · desde 2024",
   "pressArchive.hero.title": "Tudo o que já escreveram <em>sobre nós.</em>",
   "pressArchive.hero.sub":
@@ -4103,7 +4162,7 @@ export const marketing: Catalog = {
   "pressArchive.toast.opening": "A abrir em {source}…",
   "pressArchive.loadingMore": "A carregar peças mais antigas…",
   "pressArchive.loadMoreCta": "Carregar cobertura mais antiga",
-  "pressArchive.endOfArchive": "É este o arquivo completo — de 2022 até hoje.",
+  "pressArchive.endOfArchive": "É este o arquivo completo, de 2022 até hoje.",
   "pressArchive.noResults":
     "Nenhuma cobertura corresponde a esses filtros ainda.",
   "pressArchive.live.title": "O arquivo de imprensa está a ser reunido",
@@ -4118,7 +4177,7 @@ export const marketing: Catalog = {
   //    para o modo em direto traduzir tal como a demonstração.
   "volunteer.meta.title": "Voluntariado na QueerPulse: escolhe causa e tempo",
   "volunteer.meta.description":
-    "Explora oportunidades de voluntariado na QueerPulse por causa — direitos, saúde, juventude, habitação, artes — e por tempo disponível, ou publica uma para a tua organização.",
+    "Explora oportunidades de voluntariado na QueerPulse por causa (direitos, saúde, juventude, habitação, artes) e por tempo disponível, ou publica uma para a tua organização.",
   "volunteer.filter.all": "Todas as oportunidades",
   "volunteer.filter.low": "Compromisso baixo",
   "volunteer.filter.medium": "Compromisso médio",
@@ -4137,7 +4196,7 @@ export const marketing: Catalog = {
   "volunteer.guide.eyebrow": "Novo no ativismo?",
   "volunteer.guide.title": "Queres fazer <em>mais</em> do que um turno?",
   "volunteer.guide.body":
-    "O nosso guia para organizar melhor leva-te de aparecer uma vez a trazer uma competência — sem experiência necessária.",
+    "O nosso guia para organizar melhor leva-te de aparecer uma vez a trazer uma competência, sem experiência necessária.",
   "volunteer.guide.cta": "Ler o guia de ativismo",
   "volunteer.empty.noneTitle": "Ainda não há oportunidades publicadas",
   "volunteer.empty.noneDescription":
@@ -4146,7 +4205,7 @@ export const marketing: Catalog = {
   "volunteer.empty.filteredTitle":
     "Ainda não há oportunidades com estes filtros",
   "volunteer.empty.filteredDescription":
-    "Tenta alargar a pesquisa — há muitas formas de dar o teu tempo, e há sempre vagas novas a surgir.",
+    "Tenta alargar a pesquisa. Há muitas formas de dar o teu tempo, e há sempre vagas novas a surgir.",
   "volunteer.empty.clearCta": "Limpar filtros",
   "volunteer.card.commitLow": "Compromisso baixo",
   "volunteer.card.commitMedium": "Compromisso médio",
@@ -4160,7 +4219,7 @@ export const marketing: Catalog = {
   "volunteer.signups.title": "Quem já se inscreveu",
   "volunteer.signups.loading": "A carregar inscrições…",
   "volunteer.signups.empty":
-    "Ainda ninguém se inscreveu — a primeira pessoa aparece aqui.",
+    "Ainda ninguém se inscreveu. A primeira pessoa aparece aqui.",
   "volunteer.signups.signedUp": "Inscreveu-se {when}",
   "volunteer.signups.closedTag": "Esta oportunidade está encerrada",
   "volunteer.signups.closing": "A encerrar…",
@@ -4199,9 +4258,9 @@ export const marketing: Catalog = {
   "postOpportunity.hero.eyebrow": "Voluntariado · Publicar uma vaga",
   "postOpportunity.hero.title": "Publica uma <em>oportunidade.</em>",
   "postOpportunity.hero.sub":
-    "Precisas de pessoas para dar o tempo delas? Descreve a vaga com honestidade — as horas, o compromisso, para quem é indicada — e fica logo visível no quadro de voluntariado.",
+    "Precisas de pessoas para dar o tempo delas? Descreve a vaga com honestidade (as horas, o compromisso, para quem é indicada) e fica logo visível no quadro de voluntariado.",
   "postOpportunity.toast.error":
-    "Não foi possível publicar a tua oportunidade — tenta outra vez.",
+    "Não foi possível publicar a tua oportunidade. Tenta outra vez.",
   "postOpportunity.success.title": "A tua oportunidade está",
   "postOpportunity.success.em": "publicada.",
   "postOpportunity.success.closeLabel": "Ver o quadro de voluntariado",
@@ -4220,7 +4279,7 @@ export const marketing: Catalog = {
     "As pessoas voluntárias ficam quando o compromisso corresponde ao que prometeste. Explica as horas, a duração, e qualquer formação, logo à partida.",
   "postOpportunity.tip2.title": "Diz para quem é indicada",
   "postOpportunity.tip2.body":
-    "As melhores vagas descrevem a pessoa de que precisam — o temperamento, não só o currículo. Ajuda as pessoas certas a identificarem-se.",
+    "As melhores vagas descrevem a pessoa de que precisam: o temperamento tanto como o currículo. Ajuda as pessoas certas a identificarem-se.",
   "postOpportunity.tip3.title": "O que acontece depois de publicares",
   "postOpportunity.tip3.body":
     "A tua vaga aparece imediatamente no quadro de voluntariado. As pessoas interessadas inscrevem-se a partir da ficha, e vês a lista ali.",
@@ -4234,7 +4293,7 @@ export const marketing: Catalog = {
     "Umas horas flexíveis por semana, sem prazo fixo.",
   "postOpportunity.commit.medium.label": "Compromisso médio",
   "postOpportunity.commit.medium.hint":
-    "Um turno regular e um prazo mínimo — a consistência importa.",
+    "Um turno regular e um prazo mínimo: a consistência importa.",
   "postOpportunity.core.basicsHeading": "O essencial",
   "postOpportunity.core.orgLabel": "Organização",
   "postOpportunity.core.orgHelper":
@@ -4270,7 +4329,7 @@ export const marketing: Catalog = {
     "Com o que é que a pessoa voluntária vai ajudar, em linguagem simples.",
   "postOpportunity.core.skillsLabel": "Competências",
   "postOpportunity.core.skillsHelper":
-    "Separadas por vírgulas — mostradas como hashtags no cartão. Até {maxCount}, {maxLength} carateres cada.",
+    "Separadas por vírgulas, mostradas como hashtags no cartão. Até {maxCount}, {maxLength} carateres cada.",
   "postOpportunity.core.skillsPlaceholder":
     "Comunicação, Idiomas, Apoio a eventos",
   "postOpportunity.edit.eyebrow": "Voluntariado · Editar",
@@ -4296,7 +4355,7 @@ export const marketing: Catalog = {
   "postOpportunity.rich.goodForHelper":
     "Um parágrafo por linha. Até {maxCount} parágrafos, {maxLength} carateres cada.",
   "postOpportunity.rich.goodForPlaceholder":
-    "O temperamento e as competências que encaixam — não só o currículo.",
+    "O temperamento e as competências que encaixam, tanto como o currículo.",
   "postOpportunity.rich.tasksHeading": "O que vão fazer, na prática",
   "postOpportunity.rich.taskTitleAria": "Título da tarefa {index}",
   "postOpportunity.rich.taskTitlePlaceholder": "Título da tarefa",
@@ -4349,13 +4408,17 @@ export const marketing: Catalog = {
   //    futuro. Todo o resto nesta página (títulos, botões, etiquetas fixas)
   //    é chrome e está traduzido abaixo.
   "volunteerDetail.backCta": "Todas as oportunidades de voluntariado",
+  "volunteerDetail.meta.title":
+    "{role} com {org}: voluntariado pela QueerPulse",
+  "volunteerDetail.meta.loadingTitle":
+    "A carregar uma função de voluntariado · QueerPulse",
   "volunteerDetail.error.alreadySignedUp": "Já te inscreveste nesta função.",
   "volunteerDetail.error.full":
-    "Esta oportunidade acabou de ficar completa — todas as vagas estão ocupadas.",
+    "Esta oportunidade acabou de ficar completa: todas as vagas estão ocupadas.",
   "volunteerDetail.error.alreadyOrFull":
     "Já te inscreveste, ou esta oportunidade já está completa.",
   "volunteerDetail.error.generic":
-    "Algo correu mal ao enviar o teu interesse — tenta outra vez.",
+    "Algo correu mal ao enviar o teu interesse. Tenta outra vez.",
   "volunteerDetail.main.whyTitle": "Porque é que esta função <em>importa</em>",
   "volunteerDetail.main.tasksTitle": "O que vais <em>fazer, na prática</em>",
   "volunteerDetail.main.commitmentTitle":
@@ -4404,6 +4467,9 @@ export const marketing: Catalog = {
   "partnerDetail.loadError":
     "Não conseguimos carregar este parceiro agora. Tenta outra vez.",
   "partnerDetail.backCta": "Todos os parceiros",
+  "partnerDetail.meta.title": "{name}: uma organização parceira da QueerPulse",
+  "partnerDetail.meta.loadingTitle": "A carregar um parceiro · QueerPulse",
+  "partnerDetail.meta.errorTitle": "Parceiro indisponível · QueerPulse",
   "partnerDetail.tab.about": "Sobre",
   "partnerDetail.tab.work": "Trabalho conjunto",
   "partnerDetail.tab.timeline": "Linha do tempo",
@@ -4412,21 +4478,22 @@ export const marketing: Catalog = {
   "partnerDetail.sidebar.contactDirectly": "Contacta {name} diretamente",
   "partnerDetail.sidebar.becomeTitle": "Torna-te parceiro",
   "partnerDetail.sidebar.becomeBody":
-    "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos pequenos e lentos nisto — escreve-nos.",
+    "És uma organização que devia estar operacionalmente ligada à QueerPulse? Somos pequenos e lentos nisto, escreve-nos.",
   "partnerDetail.sidebar.becomeCta": "Entra em contacto",
 
   // ── Contacto — chrome da página. Todo o conteúdo é escrito pela plataforma
   //    (formulário/vias de contacto).
   "contact.meta.title": "Contacta a QueerPulse: geral, segurança, imprensa",
   "contact.meta.description":
-    "Fala com a QueerPulse — uma equipa pequena que lê e responde a cada mensagem pessoalmente. Vias para perguntas gerais, preocupações de segurança, imprensa e parcerias.",
+    "Fala com a QueerPulse, uma equipa pequena que lê e responde a cada mensagem pessoalmente. Vias para perguntas gerais, preocupações de segurança, imprensa e parcerias.",
   "contact.eyebrow": "Lemos tudo",
   "contact.hero.title": "Fala <em>connosco.</em>",
   "contact.hero.body":
     "Somos uma equipa pequena e respondemos às mensagens nós próprios. Não é um sistema automático, nem uma fila de suporte. Escolhe a via que faz mais sentido para o que precisas de dizer.",
+  "contact.routes.cta": "Escreve-nos",
   "contact.routes.general.title": "Contacto geral",
   "contact.routes.general.desc":
-    "Tudo o que não encaixa noutro lado — perguntas, feedback, apresentações, ideias que achas que devíamos ouvir.",
+    "Tudo o que não encaixa noutro lado: perguntas, feedback, apresentações, ideias que achas que devíamos ouvir.",
   "contact.routes.safety.title": "Preocupação de segurança",
   "contact.routes.safety.desc":
     "Se alguma coisa na rede te fez sentir insegurança ou desconforto. Tratamos com total discrição. Respondemos dentro de 24 horas.",
@@ -4442,7 +4509,7 @@ export const marketing: Catalog = {
   "contact.sent.backCta": "Voltar à QueerPulse",
   "contact.comingSoon.title": "Este formulário ainda não está <em>ligado.</em>",
   "contact.comingSoon.body":
-    "Ainda não ligámos este formulário à nossa caixa de entrada, por isso não consegue enviar a tua mensagem — nada foi submetido. Escreve-nos diretamente; todos os endereços à esquerda são reais e lidos por uma pessoa.",
+    "Ainda não ligámos este formulário à nossa caixa de entrada, por isso não consegue enviar a tua mensagem. Nada foi submetido. Escreve-nos diretamente; todos os endereços à esquerda são reais e lidos por uma pessoa.",
   "contact.comingSoon.emailCta": "Escrever para hello@queerpulse.com",
   "contact.form.title": "Escreve-<em>nos.</em>",
   "contact.form.sub":
@@ -4474,16 +4541,16 @@ export const marketing: Catalog = {
   //    de PARTNERS (nome/tempo de parceria/descrição) e o testemunho de
   //    Filipa Mendes são conteúdo próprio de cada organização — ficam em
   //    inglês, o mesmo precedente da página de listagem de Parceiros.
-  "forOrgs.meta.title": "Parcerias com a QueerPulse: operacionais, não promo",
+  "forOrgs.meta.title": "Parcerias com a QueerPulse: parcerias operacionais",
   "forOrgs.meta.description":
-    "Como as organizações podem fazer parceria com a QueerPulse — colaborações operacionais, não conteúdo patrocinado nem campanhas do mês do Orgulho, e como começar.",
+    "Como as organizações podem fazer parceria com a QueerPulse através de colaborações operacionais assentes em trabalho partilhado, e como o processo começa.",
   "forOrgs.hero.eyebrow": "Para organizações · parcerias",
   "forOrgs.hero.title": "Trabalha <em>connosco,</em> não <em>sobre nós.</em>",
   "forOrgs.hero.dek":
     "As parcerias da QueerPulse são <b>operacionais, não promocionais</b>. Não vendemos acesso, não fazemos conteúdo patrocinado, nem co-branding pelo simples efeito. <em>Construímos ligações entre organizações que já fazem este trabalho.</em> Abaixo: como são essas ligações na prática, com quem já trabalhamos, e como começar uma conversa.",
   "forOrgs.hero.notDoTitle": "O que não fazemos",
   "forOrgs.notDo.prideCampaigns":
-    "<b>Campanhas no mês do Orgulho.</b> Nem em junho, nem nunca. As pessoas da comunidade sairiam — e com razão.",
+    "<b>Campanhas no mês do Orgulho.</b> Nunca as fazemos, em junho ou em qualquer mês. As pessoas da comunidade sairiam, e com razão.",
   "forOrgs.notDo.sellList":
     "<b>Vender a nossa lista de pessoas.</b> Sem segmentação, sem apresentações pagas.",
   "forOrgs.notDo.sponsoredPosts":
@@ -4500,7 +4567,7 @@ export const marketing: Catalog = {
     "Diz-nos o que fazes, o que gostarias, o que não é negociável do teu lado. <em>30 minutos, sem compromisso.</em>",
   "forOrgs.process.step2.title": "Uma reunião presencial",
   "forOrgs.process.step2.body":
-    "Café em Lisboa se estiveres cá, ou vídeo. Falamos sobre como a ligação funcionaria — operacionalmente, não em teoria.",
+    "Café em Lisboa se estiveres cá, ou vídeo. Falamos sobre como a ligação funcionaria na prática.",
   "forOrgs.process.step3.title": "Proposta de duas páginas",
   "forOrgs.process.step3.body":
     "Um de nós faz o rascunho; ambos os lados editam. Inclui <b>condições de saída</b>, cláusulas de discordância pública, e o fluxo de dinheiro.",
@@ -4535,7 +4602,7 @@ export const marketing: Catalog = {
   "forOrgs.tiers.partner.price": "Por <em>acordo</em>",
   "forOrgs.tiers.partner.pricePeriod": "recíproco · normalmente não pago",
   "forOrgs.tiers.partner.dek":
-    "Para organizações que deviam estar operacionalmente ligadas à QueerPulse — organizações de apoio jurídico, serviços de saúde, serviços cívicos, associações aliadas. Construímos infraestrutura em conjunto, não co-marketing.",
+    "Para organizações que deviam estar operacionalmente ligadas à QueerPulse: organizações de apoio jurídico, serviços de saúde, serviços cívicos, associações aliadas. Construímos infraestrutura em conjunto.",
   "forOrgs.tiers.partner.list1":
     "<b>Ligação operacional:</b> ponte de casos, encaminhamento da linha de apoio, protocolo conjunto",
   "forOrgs.tiers.partner.list2":
@@ -4552,7 +4619,7 @@ export const marketing: Catalog = {
   "forOrgs.tiers.funder.name": "Financiador de programa",
   "forOrgs.tiers.funder.pricePeriod": "/ ano · programa específico",
   "forOrgs.tiers.funder.dek":
-    "Para fundações, entidades públicas, e organizações financiadoras a apoiar um programa específico — o fundo de microapoios, a revista, os espaços seguros, o acesso a cuidados de saúde trans.",
+    "Para fundações, entidades públicas, e organizações financiadoras a apoiar um programa específico: o fundo de microapoios, a revista, os espaços seguros, o acesso a cuidados de saúde trans.",
   "forOrgs.tiers.funder.list1":
     "Relatórios específicos do programa · trimestrais",
   "forOrgs.tiers.funder.list2":
@@ -4569,7 +4636,7 @@ export const marketing: Catalog = {
     "A abrir a conversa sobre financiamento…",
   "forOrgs.cta.title": "Começa uma <em>conversa.</em>",
   "forOrgs.cta.body":
-    'Conta-nos sobre a tua organização num parágrafo. Lemos todas as mensagens no prazo de 5 dias úteis e respondemos pessoalmente — mesmo que a resposta seja "isto não é para nós, para já".',
+    'Conta-nos sobre a tua organização num parágrafo. Lemos todas as mensagens no prazo de 5 dias úteis e respondemos pessoalmente, mesmo que a resposta seja "isto não é para nós, para já".',
   "forOrgs.cta.list1": "Para parcerias, normalmente ligamos antes de escrever",
   "forOrgs.cta.list2":
     "Candidaturas a financiamento: inclui uma página de resumo",
@@ -4593,17 +4660,17 @@ export const marketing: Catalog = {
   "forOrgs.form.sendingCta": "A enviar…",
   "forOrgs.form.sent.title": "Enviado à nossa <em>equipa de parcerias.</em>",
   "forOrgs.form.sent.body":
-    "Obrigade — recebemos a tua mensagem. A nossa equipa de parcerias lê cada uma e responde pessoalmente dentro de 5 dias úteis.",
+    "Obrigade, recebemos a tua mensagem. A nossa equipa de parcerias lê cada uma e responde pessoalmente dentro de 5 dias úteis.",
   "forOrgs.form.error":
     "Algo correu mal ao enviar. Tenta novamente ou escreve diretamente à equipa de parcerias.",
   "forOrgs.form.small":
     "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
   "forOrgs.form.toast":
-    "Enviado à nossa equipa de parcerias — vão responder no prazo de 5 dias úteis",
+    "Enviado à nossa equipa de parcerias. Vão responder no prazo de 5 dias úteis",
   "forOrgs.form.comingSoon.title":
     "Este formulário ainda não está <em>ligado.</em>",
   "forOrgs.form.comingSoon.body":
-    "Ainda não ligámos o formulário de parcerias, por isso não consegue enviar os teus dados — nada foi submetido. Escreve diretamente à equipa de parcerias e tratamos do resto.",
+    "Ainda não ligámos o formulário de parcerias, por isso não consegue enviar os teus dados. Nada foi submetido. Escreve diretamente à equipa de parcerias e tratamos do resto.",
   "forOrgs.form.comingSoon.emailCta": "Escrever para hello@queerpulse.com",
 
   // ── Diretório — chrome do diretório de negócios + página de detalhe. Os
@@ -4635,7 +4702,7 @@ export const marketing: Catalog = {
   "directory.count": "A mostrar <b>{shown}</b> de {total} lugares",
   "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
   "directory.empty.body":
-    "Tenta uma categoria mais ampla, menos ambientes ou outra pesquisa — ou limpa os filtros para ver tudo.",
+    "Tenta uma categoria mais ampla, menos ambientes ou outra pesquisa, ou limpa os filtros para ver tudo.",
   "directory.noListings.title": "Ainda não há lugares",
   "directory.noListings.body":
     "Este diretório cresce a partir da comunidade. Se tens ou conheces um lugar queer-owned ou queer-friendly em Lisboa, sê o primeiro a adicioná-lo.",
@@ -4669,14 +4736,14 @@ export const marketing: Catalog = {
   "directory.verify.eyebrow": "Verificado pela comunidade",
   "directory.verify.title": "Como funciona a <em>verificação.</em>",
   "directory.verify.lead":
-    "O selo de verificação não é auto-declarado. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada espaço é reavaliado todos os anos — por isso também o pode perder.",
+    "O selo de verificação não é auto-declarado. Um membro propõe um espaço, outros visitam-no e avaliam-no segundo um conjunto fixo de critérios, e cada espaço é reavaliado todos os anos, por isso também o pode perder.",
   "directory.verify.cta": "Ver a história de confiança completa",
   "directory.verify.pillar.nominate.title": "Proposto por membros",
   "directory.verify.pillar.nominate.body":
     "Qualquer membro pode propor um espaço para avaliação.",
   "directory.verify.pillar.review.title": "Avaliado de forma independente",
   "directory.verify.pillar.review.body":
-    "Membros verificados visitam-no e avaliam-no segundo os mesmos critérios — casas de banho, pessoal, acessibilidade e avaliações reais.",
+    "Membros verificados visitam-no e avaliam-no segundo os mesmos critérios: casas de banho, pessoal, acessibilidade e avaliações reais.",
   "directory.verify.pillar.recheck.title": "Reavaliado todos os anos",
   "directory.verify.pillar.recheck.body":
     "Nenhum selo é permanente. Qualquer membro pode sinalizar um espaço, e o selo pode ser retirado.",
@@ -4708,18 +4775,18 @@ export const marketing: Catalog = {
     "Avaliações da comunidade · <em>{count}</em>",
   "directory.detail.reviewsSub": "Ordenado por mais úteis.",
   "directory.detail.reviews.emptySub":
-    "Ainda sem avaliações — sê a primeira pessoa a deixar uma.",
+    "Ainda sem avaliações. Sê a primeira pessoa a deixar uma.",
   "directory.detail.ratingBreakdown": "Distribuição das avaliações",
   "directory.detail.starsCount": "{stars} estrelas, {count} avaliações",
   "directory.detail.review.formTitle": "Já cá estiveste? Deixa uma avaliação",
   "directory.detail.review.starsAria": "A tua avaliação",
   "directory.detail.review.starAria": "{count} de 5 estrelas",
   "directory.detail.review.placeholder":
-    "Conta como foi a tua visita — o que resultou e para quem é.",
+    "Conta como foi a tua visita: o que resultou e para quem é.",
   "directory.detail.review.submit": "Publicar avaliação",
   "directory.detail.review.submitting": "A publicar…",
   "directory.detail.review.successToast":
-    "Obrigada — a tua avaliação está publicada.",
+    "Obrigade. A tua avaliação está publicada.",
   "directory.detail.review.errorToast":
     "Não foi possível publicar a tua avaliação. Tenta novamente.",
   "directory.detail.review.signInPrompt":
@@ -4786,7 +4853,7 @@ export const marketing: Catalog = {
   "directory.detail.suggestEdit.ariaLabel": "Sugerir uma correção para {name}",
   "directory.detail.suggestEdit.title": "Sugerir uma correção",
   "directory.detail.suggestEdit.sub":
-    "Reparaste em algo que não bate certo? Diz à pessoa responsável o que corrigir — só ela vê, não o diretório todo.",
+    "Reparaste em algo que não bate certo? Diz à pessoa responsável o que corrigir. Só ela vê.",
   "directory.detail.suggestEdit.fieldLabel": "O que precisa de atenção?",
   "directory.detail.suggestEdit.field.hours": "Horário",
   "directory.detail.suggestEdit.field.address": "Morada",
@@ -4801,7 +4868,7 @@ export const marketing: Catalog = {
   "directory.detail.suggestEdit.submitting": "A enviar…",
   "directory.detail.suggestEdit.cancel": "Cancelar",
   "directory.detail.suggestEdit.successToast":
-    "Obrigada — vamos passar isto a quem gere este espaço.",
+    "Obrigade. Vamos passar isto a quem gere este espaço.",
   "directory.detail.suggestEdit.errorToast":
     "Não foi possível enviar a tua sugestão. Tenta novamente.",
   "directory.detail.contest.cta":
@@ -4814,7 +4881,7 @@ export const marketing: Catalog = {
     "Como queres ajudar a manter a página de {name} correta?",
   "directory.detail.contest.suggest.title": "Sugerir uma correção",
   "directory.detail.contest.suggest.desc":
-    "Algo está desatualizado ou errado — envia uma correção a quem gere o espaço.",
+    "Algo está desatualizado ou errado: envia uma correção a quem gere o espaço.",
   "directory.detail.contest.dispute.title": "Contestar este negócio",
   "directory.detail.contest.dispute.desc":
     "Este espaço foi listado sem o seu consentimento, ou não devia estar aqui.",
@@ -4825,24 +4892,24 @@ export const marketing: Catalog = {
   "directory.detail.dispute.eyebrow": "Denunciar / contestar",
   "directory.detail.dispute.title": "Contestar <em>{name}</em>",
   "directory.detail.dispute.sub":
-    "Um espaço pode ser identificado como nosso sem o saber. Diz-nos o que está errado — uma moderadora analisa cada contestação, e nada do que escreveres é partilhado publicamente.",
+    "Um espaço pode ser identificado como nosso sem o saber. Diz-nos o que está errado. Uma pessoa moderadora analisa cada contestação, e nada do que escreveres é partilhado publicamente.",
   "directory.detail.dispute.reasonLabel": "Qual é o problema?",
   "directory.detail.dispute.reasonPlaceholder":
     "ex.: Somos nós que gerimos este espaço e nunca fomos consultados sobre esta listagem, ou esta informação está errada.",
   "directory.detail.dispute.emailLabel": "Email de contacto",
   "directory.detail.dispute.emailHelper":
-    "Opcional — adiciona um se uma moderadora te dever contactar fora do QueerPulse.",
+    "Opcional. Adiciona um se uma pessoa moderadora te dever contactar fora da QueerPulse.",
   "directory.detail.dispute.emailPlaceholder": "tu@exemplo.com",
   "directory.detail.dispute.emailError": "Introduz um email válido.",
   "directory.detail.dispute.note":
-    "Contestar não remove a listagem por si só — uma moderadora analisa primeiro.",
+    "Contestar não remove a listagem por si só. Uma pessoa moderadora analisa primeiro.",
   "directory.detail.dispute.cancel": "Cancelar",
   "directory.detail.dispute.submit": "Enviar à moderação",
   "directory.detail.dispute.submitting": "A enviar…",
   "directory.detail.dispute.errorToast":
     "Não foi possível registar a tua contestação. Tenta novamente.",
   "directory.detail.dispute.successAriaLabel": "Contestação recebida",
-  "directory.detail.dispute.successTitle": "Obrigada — estamos",
+  "directory.detail.dispute.successTitle": "Obrigade. Estamos",
   "directory.detail.dispute.successEm": "a tratar disto.",
   "directory.detail.dispute.successBody":
     "Uma moderadora vai analisar a tua denúncia sobre {name}. Se deixaste um email, só o usamos se precisarmos de dar seguimento.",
@@ -4857,14 +4924,14 @@ export const marketing: Catalog = {
   "directory.detail.claim.notePlaceholder":
     "ex.: Sou a pessoa responsável, aqui está como me podes contactar para confirmar.",
   "directory.detail.claim.note":
-    "Reclamar não transfere a listagem por si só — uma moderadora analisa cada pedido primeiro.",
+    "Reclamar não transfere a listagem por si só. Uma pessoa moderadora analisa cada pedido primeiro.",
   "directory.detail.claim.cancel": "Cancelar",
   "directory.detail.claim.submit": "Enviar à moderação",
   "directory.detail.claim.submitting": "A enviar…",
   "directory.detail.claim.errorToast":
     "Não foi possível enviar o teu pedido. Tenta novamente.",
   "directory.detail.claim.successAriaLabel": "Pedido recebido",
-  "directory.detail.claim.successTitle": "Recebido — estamos",
+  "directory.detail.claim.successTitle": "Recebido. Estamos",
   "directory.detail.claim.successEm": "a tratar disto.",
   "directory.detail.claim.successBody":
     "Uma moderadora vai analisar o teu pedido sobre {name} e avisa-te do que se segue.",
@@ -4900,7 +4967,7 @@ export const marketing: Catalog = {
   "directory.detail.action.saved": "Guardado",
   "directory.detail.action.linkCopied": "Link copiado",
   "directory.detail.action.shareError":
-    "Não foi possível partilhar — tenta copiar o link",
+    "Não foi possível partilhar. Tenta copiar o link",
   "directory.detail.action.saveSignIn":
     "Inicia sessão para guardar este espaço",
   "directory.relative.yesterday": "Ontem",
@@ -4924,30 +4991,30 @@ export const marketing: Catalog = {
   //    por cidade da página Cities.
   "arriving.meta.title": "Acabaste de chegar a Lisboa? Um guia queer",
   "arriving.meta.description":
-    "Um guia prático para pessoas LGBTQ+ recém-chegadas a Lisboa — bairros acolhedores, recursos de saúde, noções básicas de habitação, organizações-chave, e primeiros passos.",
+    "Um guia prático para pessoas LGBTQ+ recém-chegadas a Lisboa: bairros acolhedores, recursos de saúde, noções básicas de habitação, organizações-chave, e primeiros passos.",
   "arriving.hero.eyebrow": "Acabaste de chegar a Lisboa",
   "arriving.hero.title":
     "Queer e acabaste de chegar a Lisboa? <em>Bem-vinde.</em>",
   "arriving.hero.body":
-    "Esta cidade tem muito para nós — uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer um trabalho sério, e pessoas que vão genuinamente ajudar-te a instalares-te. Aqui está o que precisas de saber primeiro.",
+    "Esta cidade tem muito para nós: uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer um trabalho sério, e pessoas que vão genuinamente ajudar-te a instalares-te. Aqui está o que precisas de saber primeiro.",
   "arriving.neighbourhoods.eyebrow": "Os bairros de Lisboa",
   "arriving.neighbourhoods.title": "Onde é que a vida queer <em>acontece.</em>",
   "arriving.neighbourhoods.intro":
-    "Lisboa não tem um único bairro queer — tem vários bolsões, cada um com o seu próprio caráter. Aqui vai um guia honesto sobre onde está a comunidade.",
+    "Lisboa não tem um único bairro queer. Tem vários bolsões, cada um com o seu próprio caráter. Aqui vai um guia honesto sobre onde está a comunidade.",
   "arriving.health.eyebrow": "Saúde",
   "arriving.health.title":
-    "Cuidados de saúde em Lisboa — <em>o que precisas de saber.</em>",
+    "Cuidados de saúde em Lisboa, <em>o que precisas de saber.</em>",
   "arriving.health.intro":
-    "Portugal tem um serviço nacional de saúde (SNS) no qual te podes inscrever. Os cuidados afirmativos para pessoas trans melhoraram muito — mas é preciso saber onde procurar.",
+    "Portugal tem um serviço nacional de saúde (SNS) no qual te podes inscrever. Os cuidados afirmativos para pessoas trans melhoraram muito, mas é preciso saber onde procurar.",
   "arriving.housing.eyebrow": "Habitação",
   "arriving.housing.title":
-    "Encontrar um lugar para viver — <em>com honestidade.</em>",
+    "Encontrar um lugar para viver, <em>com honestidade.</em>",
   "arriving.housing.intro":
     "O mercado de habitação em Lisboa é caro e competitivo. Aqui vai um retrato honesto do que esperar, e onde procurar ajuda.",
   "arriving.orgs.eyebrow": "Organizações",
   "arriving.orgs.title": "Conhece estas <em>três primeiro.</em>",
   "arriving.orgs.intro":
-    "Estas são as organizações mais úteis nas tuas primeiras semanas em Lisboa — para apoio jurídico, saúde mental, ou simplesmente para te ligares à comunidade.",
+    "Estas são as organizações mais úteis nas tuas primeiras semanas em Lisboa: para apoio jurídico, saúde mental, ou simplesmente para te ligares à comunidade.",
   "arriving.firstStep.eyebrow": "O teu primeiro passo",
   "arriving.firstStep.title": "Vem a algo <em>presencialmente.</em>",
   "arriving.firstStep.intro":
@@ -4961,7 +5028,7 @@ export const marketing: Catalog = {
   "arriving.commQuick.browseCta": "Ver todas as comunidades",
   "arriving.outro.title": "Vamos conhecer <em>a comunidade?</em>",
   "arriving.outro.sub":
-    "Pede um convite para a QueerPulse e ganha acesso à rede completa — pessoas, encontros, o quadro, e tudo o resto nesta página.",
+    "Pede um convite para a QueerPulse e ganha acesso à rede completa: pessoas, encontros, o quadro, e tudo o resto nesta página.",
   "arriving.outro.cta": "Pedir um convite",
 
   // ── Vistos & Residência — conteúdo jurídico/imigração. Traduzido com o
@@ -4978,14 +5045,14 @@ export const marketing: Catalog = {
   //    conteúdo/testemunho, mesmo precedente de `directoryPlaces.ts`.
   "visas.meta.title": "Vistos e residência em Portugal para pessoas LGBTQ+",
   "visas.meta.description":
-    "Informação da comunidade sobre vias de visto na UE e fora da UE, autorizações de residência, e imigração para casais do mesmo sexo em Portugal, com advogados de imigração avaliados — não é aconselhamento jurídico.",
+    "Informação da comunidade sobre vias de visto na UE e fora da UE, autorizações de residência, e imigração para casais do mesmo sexo em Portugal, com advogados de imigração avaliados. Isto não é aconselhamento jurídico.",
   "visas.hero.eyebrow": "Vistos & Residência · Portugal",
   "visas.hero.title":
     "Portugal, legalmente. <em>O teu caminho para a residência.</em>",
   "visas.hero.sub":
-    "Informação prática sobre vistos, residência e cidadania em Portugal — e aquilo que os casais e famílias queer precisam de saber que a informação oficial nem sempre esclarece.",
+    "Informação prática sobre vistos, residência e cidadania em Portugal, e aquilo que os casais e famílias queer precisam de saber que a informação oficial nem sempre esclarece.",
   "visas.hero.note":
-    "Informação da comunidade, não aconselhamento jurídico. A lei da imigração muda — confirma sempre com uma pessoa especialista.",
+    "Informação da comunidade. Isto não é aconselhamento jurídico. A lei da imigração muda, confirma sempre com uma pessoa especialista.",
   "visas.routePicker.label": "De onde estás a <em>partir?</em>",
   "visas.routePicker.euCitizen.name": "Cidadania da UE / EEE",
   "visas.routePicker.euCitizen.desc":
@@ -5011,7 +5078,7 @@ export const marketing: Catalog = {
   "visas.tabs.eu.label": "Cidadania da UE",
   "visas.tabs.eu.headTitle": "Pessoas cidadãs da <em>UE e do EEE</em>",
   "visas.tabs.eu.headText":
-    "Pessoas cidadãs da UE e do EEE têm o direito de viver e trabalhar em Portugal sem visto. Ainda assim precisas de te registar — e, para casais queer, há questões específicas a conhecer sobre trazer uma pessoa parceira de fora da UE.",
+    "Pessoas cidadãs da UE e do EEE têm o direito de viver e trabalhar em Portugal sem visto. Ainda assim precisas de te registar, e, para casais queer, há questões específicas a conhecer sobre trazer uma pessoa parceira de fora da UE.",
   "visas.tabs.eu.card1.eyebrow": "Registo",
   "visas.tabs.eu.card1.title": "Certificado de Registo",
   "visas.tabs.eu.card1.body":
@@ -5025,12 +5092,12 @@ export const marketing: Catalog = {
   "visas.tabs.eu.card3.title":
     "Reunificação familiar para casais do mesmo sexo",
   "visas.tabs.eu.card3.body":
-    "Se és cidadã ou cidadão da UE e a tua pessoa parceira não é, ela pode juntar-se a ti em Portugal ao abrigo das regras de livre circulação da UE — incluindo cônjuges do mesmo sexo e uniões de facto registadas. O Tribunal de Justiça da União Europeia (acórdão Coman, 2018) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo para efeitos de livre circulação, mesmo que não tenham casamento entre pessoas do mesmo sexo a nível interno.",
+    "Se és cidadã ou cidadão da UE e a tua pessoa parceira não é, ela pode juntar-se a ti em Portugal ao abrigo das regras de livre circulação da UE, incluindo cônjuges do mesmo sexo e uniões de facto registadas. O Tribunal de Justiça da União Europeia (acórdão Coman, 2018) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo para efeitos de livre circulação, mesmo que não tenham casamento entre pessoas do mesmo sexo a nível interno.",
   "visas.tabs.eu.card3.tag": "Direitos plenos de parceria",
   "visas.tabs.eu.card3.link": "Detalhes do visto para pessoa parceira",
 
-  "visas.tabs.d7.label": "D7 — Rendimento Passivo",
-  "visas.tabs.d7.headTitle": "D7 — <em>Visto de Rendimento Passivo</em>",
+  "visas.tabs.d7.label": "D7, Rendimento Passivo",
+  "visas.tabs.d7.headTitle": "D7, <em>Visto de Rendimento Passivo</em>",
   "visas.tabs.d7.headText":
     'O D7 é o visto de "rendimento passivo" ou de "reforma" de Portugal. Apesar do nome, é usado por qualquer pessoa com rendimento estável de trabalho remoto, trabalho independente, pensões, rendas ou investimentos. Uma das vias mais populares para pessoas queer que se mudam para Portugal.',
   "visas.tabs.d7.card1.eyebrow": "Para quem é",
@@ -5056,11 +5123,11 @@ export const marketing: Catalog = {
     "Tens 4 meses para marcar a tua marcação na AIMA e trocar o visto por uma autorização de residência.",
   "visas.tabs.d7.step3.title": "Marcação na AIMA",
   "visas.tabs.d7.step3.text":
-    "A AIMA (que substituiu o SEF em 2023) trata das autorizações de residência. Marca com antecedência — as esperas podem ser longas. Leva todos os documentos originais.",
+    "A AIMA (que substituiu o SEF em 2023) trata das autorizações de residência. Marca com antecedência: as esperas podem ser longas. Leva todos os documentos originais.",
   "visas.tabs.d7.step3.note": "Marca online em aima.gov.pt",
   "visas.tabs.d7.step4.title": "Recebe o teu cartão AR",
   "visas.tabs.d7.step4.text":
-    "O teu cartão de Autorização de Residência é o comprovativo da tua residência legal. Guarda-o bem — é usado para tudo.",
+    "O teu cartão de Autorização de Residência é o comprovativo da tua residência legal. Guarda-o bem: é usado para tudo.",
 
   "visas.tabs.d8.label": "Nómada Digital (D8)",
   "visas.tabs.d8.headTitle": "Visto de <em>Nómada Digital (D8)</em>",
@@ -5078,7 +5145,7 @@ export const marketing: Catalog = {
   "visas.tabs.d8.card3.eyebrow": "IFICI / Impostos",
   "visas.tabs.d8.card3.title": "Tratamento fiscal",
   "visas.tabs.d8.card3.body":
-    "Quem tem D8 e trabalha em funções elegíveis de tecnologia ou investigação pode qualificar-se para o regime IFICI (taxa fixa de 20% de IRS durante até 10 anos). Não é automático — tens de te candidatar e a tua profissão tem de ser elegível. Confirma com uma pessoa especialista fiscal antes de assumir que vais beneficiar.",
+    "Quem tem D8 e trabalha em funções elegíveis de tecnologia ou investigação pode qualificar-se para o regime IFICI (taxa fixa de 20% de IRS durante até 10 anos). Não é automático: tens de te candidatar e a tua profissão tem de ser elegível. Confirma com uma pessoa especialista fiscal antes de assumir que vais beneficiar.",
   "visas.tabs.d8.card3.link": "Aconselhamento fiscal",
 
   "visas.tabs.work.label": "Vistos de Trabalho",
@@ -5102,22 +5169,22 @@ export const marketing: Catalog = {
   "visas.tabs.partner.label": "Trazer uma Pessoa Parceira",
   "visas.tabs.partner.headTitle": "Trazer uma <em>pessoa parceira</em>",
   "visas.tabs.partner.headText":
-    "Portugal reconhece o casamento entre pessoas do mesmo sexo, a união de facto e a coabitação de longo prazo. O que isto significa para a residência depende das vossas nacionalidades e da via de visto que estás a usar — mas as notícias da comunidade são, de um modo geral, boas.",
+    "Portugal reconhece o casamento entre pessoas do mesmo sexo, a união de facto e a coabitação de longo prazo. O que isto significa para a residência depende das vossas nacionalidades e da via de visto que estás a usar, mas as notícias da comunidade são, de um modo geral, boas.",
   "visas.tabs.partner.card1.eyebrow": "Casamento entre pessoas do mesmo sexo",
   "visas.tabs.partner.card1.title":
     "Portugal reconhece plenamente o teu casamento",
   "visas.tabs.partner.card1.body":
-    "Portugal reconhece o casamento entre pessoas do mesmo sexo desde 2010. Um casamento legal celebrado em qualquer parte do mundo é reconhecido para efeitos de residência em Portugal. O teu cônjuge tem direito a juntar-se a ti através de reunificação familiar — independentemente da sua nacionalidade ou do país onde casaram.",
+    "Portugal reconhece o casamento entre pessoas do mesmo sexo desde 2010. Um casamento legal celebrado em qualquer parte do mundo é reconhecido para efeitos de residência em Portugal. O teu cônjuge tem direito a juntar-se a ti através de reunificação familiar, independentemente da sua nacionalidade ou do país onde casaram.",
   "visas.tabs.partner.card1.tag": "Reconhecimento legal pleno",
   "visas.tabs.partner.card2.eyebrow": "Sem casamento",
   "visas.tabs.partner.card2.title": "Pessoas parceiras sem estatuto formal",
   "visas.tabs.partner.card2.body":
-    "Sem casamento, a coabitação de longo prazo (união de facto, normalmente 2 ou mais anos) é reconhecida para efeitos de reunificação familiar. Vais precisar de documentar a relação — contas partilhadas, contas conjuntas, correspondência. Casar ou constituir união de facto primeiro é muitas vezes administrativamente mais simples.",
+    "Sem casamento, a coabitação de longo prazo (união de facto, normalmente 2 ou mais anos) é reconhecida para efeitos de reunificação familiar. Vais precisar de documentar a relação: contas partilhadas, contas conjuntas, correspondência. Casar ou constituir união de facto primeiro é muitas vezes administrativamente mais simples.",
   "visas.tabs.partner.card3.eyebrow":
     "Pessoa cidadã da UE + pessoa parceira de fora da UE",
   "visas.tabs.partner.card3.title": "O acórdão Coman",
   "visas.tabs.partner.card3.body":
-    "O acórdão do Tribunal de Justiça da União Europeia de 2018 (Coman v. Roménia) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo de pessoas cidadãs da UE para efeitos de livre circulação — mesmo em países que não têm casamento entre pessoas do mesmo sexo. Isto significa que uma pessoa cidadã da UE pode trazer o seu cônjuge do mesmo sexo para Portugal, independentemente da posição do seu país de origem.",
+    "O acórdão do Tribunal de Justiça da União Europeia de 2018 (Coman v. Roménia) estabeleceu que os Estados-membros da UE têm de reconhecer cônjuges do mesmo sexo de pessoas cidadãs da UE para efeitos de livre circulação, mesmo em países que não têm casamento entre pessoas do mesmo sexo. Isto significa que uma pessoa cidadã da UE pode trazer o seu cônjuge do mesmo sexo para Portugal, independentemente da posição do seu país de origem.",
   "visas.tabs.partner.card3.tag": "Proteção do tribunal da UE",
   "visas.tabs.partner.card3.link":
     "Fala com um advogado ou advogada de imigração",
@@ -5143,33 +5210,33 @@ export const marketing: Catalog = {
   "visas.tabs.citizenship.card3.eyebrow": "Língua portuguesa",
   "visas.tabs.citizenship.card3.title": "Requisito de A2",
   "visas.tabs.citizenship.card3.body":
-    "O requisito de língua portuguesa para a cidadania é o nível A2 (básico) — conversacional, não fluente. Podes comprová-lo através de um teste CAPLE ou CIPLE aprovado, ou mostrando escolaridade em português. O fórum da comunidade tem recomendações de professoras e professores de português queer-friendly.",
+    "O requisito de língua portuguesa para a cidadania é o nível A2 (básico), conversacional em vez de fluente. Podes comprová-lo através de um teste CAPLE ou CIPLE aprovado, ou mostrando escolaridade em português. O fórum da comunidade tem recomendações de professoras e professores de português queer-friendly.",
   "visas.tabs.citizenship.card3.link": "Recursos de aprendizagem da língua",
 
   "visas.ground.title": "No <em>terreno</em>",
   "visas.ground.sub":
     "Primeiros passos práticos, seja qual for a tua via de visto.",
   "visas.ground.nif.label": "Primeiro",
-  "visas.ground.nif.title": "NIF — Número de contribuinte",
+  "visas.ground.nif.title": "NIF, número de contribuinte",
   "visas.ground.nif.body":
     "Precisas de um Número de Identificação Fiscal para quase tudo: abrir uma conta bancária, assinar um contrato de arrendamento, comprar um plano de telemóvel. Consegue-o nas Finanças com o teu passaporte. Pessoas cidadãs da UE: leva o passaporte. Fora da UE: leva o passaporte + comprovativo de morada. Também podes usar um serviço de representante fiscal se ainda não estiveres em Portugal.",
   "visas.ground.niss.label": "Segundo",
-  "visas.ground.niss.title": "NISS — Segurança social",
+  "visas.ground.niss.title": "NISS, segurança social",
   "visas.ground.niss.body":
     "O teu Número de Identificação de Segurança Social dá-te acesso aos cuidados de saúde do SNS e regista as tuas contribuições. Regista-te no Centro de Emprego e Formação Profissional ou na Segurança Social da tua área. Necessário antes de poderes aceder a consultas do SNS.",
   "visas.ground.aima.label": "Local-chave",
   "visas.ground.aima.title": "AIMA",
   "visas.ground.aima.body":
-    "A AIMA (Agência para a Integração, Migrações e Asilo) substituiu o SEF em outubro de 2023. Trata de todas as autorizações de residência, renovações e reunificação familiar. Marca consultas online em aima.gov.pt — as esperas são longas, marca assim que chegares.",
+    "A AIMA (Agência para a Integração, Migrações e Asilo) substituiu o SEF em outubro de 2023. Trata de todas as autorizações de residência, renovações e reunificação familiar. Marca consultas online em aima.gov.pt. As esperas são longas, marca assim que chegares.",
   "visas.ground.sns.label": "Saúde",
   "visas.ground.sns.title": "Acesso ao SNS",
   "visas.ground.sns.body":
-    "Regista-te num médico de família (Centro de Saúde) da tua área, usando o teu cartão AR ou o certificado de registo da UE, mais o NISS. Os tempos de espera são longos — muitas pessoas da comunidade usam seguro de saúde privado a par do acesso ao SNS. Consulta a página de Bem-estar para prestadores de cuidados de saúde queer-friendly.",
+    "Regista-te num médico de família (Centro de Saúde) da tua área, usando o teu cartão AR ou o certificado de registo da UE, mais o NISS. Os tempos de espera são longos. Muitas pessoas da comunidade usam seguro de saúde privado a par do acesso ao SNS. Consulta a página de Bem-estar para prestadores de cuidados de saúde queer-friendly.",
 
   "visas.lawyers.title":
     "Advocacia de imigração <em>avaliada pela comunidade</em>",
   "visas.lawyers.emptyBody":
-    "Estamos a construir um diretório de advogados de imigração LGBTQ+-friendly avaliado pela comunidade. Ainda não está pronto — até estar, as melhores recomendações vêm de membros que já passaram pelo processo. Pergunta no tópico do fórum sobre vistos.",
+    "Estamos a construir um diretório de advogados de imigração LGBTQ+-friendly avaliado pela comunidade. Ainda não está pronto. Até estar, as melhores recomendações vêm de membros que já passaram pelo processo. Pergunta no tópico do fórum sobre vistos.",
   "visas.lawyers.forumCta": "Pergunta no tópico do fórum sobre vistos",
 
   "visas.outro.title": "Estás a construir uma vida <em>aqui.</em>",
@@ -5215,9 +5282,9 @@ export const marketing: Catalog = {
   "map.mapError":
     "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
   "map.mapLoading": "A dar <em>vida</em> ao mapa…",
-  "map.pinAria": "{name} — {type}",
-  "map.clusterAria_one": "{count} espaço aqui — ampliar",
-  "map.clusterAria_other": "{count} espaços aqui — ampliar",
+  "map.pinAria": "{name}, {type}",
+  "map.clusterAria_one": "{count} espaço aqui, ampliar",
+  "map.clusterAria_other": "{count} espaços aqui, ampliar",
 
   // ── Local — explorador combinado de locais em lista/mapa.
   "local.cat.nightlife": "Noite",
@@ -5283,7 +5350,7 @@ export const marketing: Catalog = {
   "constitution.art2.clause2":
     "As pessoas-membro podem estar num de três escalões: <em>Solidariedade</em> (gratuito), <em>Membro</em> (36 €/ano), ou <em>Sustentador/a</em> (96 €/ano). Todos os escalões têm direitos de voto iguais.",
   "constitution.art2.clause3":
-    "Nenhum estatuto de uma pessoa-membro — incluindo idade, nacionalidade, língua, identidade, ocupação ou visibilidade — afeta os seus direitos de voto ou o tratamento em moderação.",
+    "Nenhum estatuto de uma pessoa-membro (incluindo idade, nacionalidade, língua, identidade, ocupação ou visibilidade) afeta os seus direitos de voto ou o tratamento em moderação.",
 
   "constitution.art3.toc": "III · Aval",
   "constitution.art3.title": "Aval",
@@ -5319,7 +5386,7 @@ export const marketing: Catalog = {
   "constitution.art6.toc": "VI · Dinheiro",
   "constitution.art6.title": "Dinheiro",
   "constitution.art6.clause1":
-    "<strong>Pelo menos 90% de cada euro recebido</strong> tem de ser gasto em programas comunitários, equipa e infraestrutura — não em custos indiretos. A meta é 96% e tem sido cumprida todos os anos desde 2024.",
+    "<strong>Pelo menos 90% de cada euro recebido</strong> tem de ser gasto em programas comunitários, equipa e infraestrutura, e não em custos indiretos. A meta é 96% e tem sido cumprida todos os anos desde 2024.",
   "constitution.art6.clause2":
     "O orçamento anual é aprovado pela Assembleia. O círculo de finanças pode reequilibrar entre categorias ao longo do ano sem nova aprovação, até 10% por categoria.",
   "constitution.art6.clause3":
@@ -5400,7 +5467,7 @@ export const marketing: Catalog = {
   "resourceLibrary.hero.eyebrow": "Biblioteca de Recursos",
   "resourceLibrary.hero.title": "Coisas que <em>realmente ajudam.</em>",
   "resourceLibrary.hero.sub":
-    "Guias mantidos pela comunidade, organizações, contactos e ferramentas da QueerPulse — tudo num só lugar pesquisável.",
+    "Guias mantidos pela comunidade, organizações, contactos e ferramentas da QueerPulse, tudo num só lugar pesquisável.",
   "resourceLibrary.stats.resources": "recursos",
   "resourceLibrary.stats.categories": "categorias",
   "resourceLibrary.stats.communityLabel": "Comunidade",
@@ -5409,7 +5476,7 @@ export const marketing: Catalog = {
   "resourceLibrary.results_one": "{count} resultado",
   "resourceLibrary.results_other": "{count} resultados",
   "resourceLibrary.empty":
-    "Nenhum recurso corresponde — tenta um filtro mais amplo.",
+    "Nenhum recurso corresponde. Tenta um filtro mais amplo.",
   "resourceLibrary.card.visitSite": "Visitar site",
   "resourceLibrary.orgs.title":
     "Organizações que fazem isto <em>todos os dias.</em>",
@@ -5423,13 +5490,13 @@ export const marketing: Catalog = {
   "resourceLibrary.subpages.title": "Começa pelo básico",
   "resourceLibrary.subpages.queer101.label": "Queer 101",
   "resourceLibrary.subpages.queer101.blurb":
-    "Acabaste de chegar? Começa pelo básico — identidades, linguagem e comunidade.",
+    "Acabaste de chegar? Começa pelo básico: identidades, linguagem e comunidade.",
   "resourceLibrary.subpages.glossary.label": "Glossário",
   "resourceLibrary.subpages.glossary.blurb":
     "Definições em linguagem simples para as palavras que a comunidade usa.",
   "resourceLibrary.subpages.intersectionality.label": "Interseccionalidade",
   "resourceLibrary.subpages.intersectionality.blurb":
-    "Como as identidades sobrepostas moldam as nossas experiências — e a nossa organização coletiva.",
+    "Como as identidades sobrepostas moldam as nossas experiências, e a nossa organização coletiva.",
 
   // ── Plataformas (a rede queer mais alargada) — chrome de página/filtros.
   //    Os registos de `PLATFORMS` (nome/descrição — apps/organizações
@@ -5437,11 +5504,11 @@ export const marketing: Catalog = {
   //    Biblioteca de Recursos acima — ficam em inglês.
   "platforms.meta.title": "Plataformas e organizações queer a conhecer",
   "platforms.meta.description":
-    "Um diretório de aplicações de namoro, media, redes profissionais e organizações de defesa de direitos úteis a pessoas queer — incluindo grupos portugueses como a ILGA Portugal.",
+    "Um diretório de aplicações de namoro, media, redes profissionais e organizações de defesa de direitos úteis a pessoas queer, incluindo grupos portugueses como a ILGA Portugal.",
   "platforms.hero.eyebrow": "Plataformas queer",
   "platforms.hero.title": "A rede <em>queer</em> mais alargada.",
   "platforms.hero.sub":
-    "Aplicações, media, redes profissionais e organizações de defesa de direitos genuinamente úteis para pessoas queer — para além da própria QueerPulse.",
+    "Aplicações, media, redes profissionais e organizações de defesa de direitos genuinamente úteis para pessoas queer, para além da própria QueerPulse.",
   "platforms.filter.all": "Todas",
   "platforms.filter.dating": "Namoro & Social",
   "platforms.filter.media": "Notícias & Media",
@@ -5450,7 +5517,7 @@ export const marketing: Catalog = {
   "platforms.filter.health": "Saúde & Bem-estar",
   "platforms.filter.portugal": "Portugal & Lisboa",
   "platforms.note.body":
-    "<b>Uma nota sobre esta lista:</b> Incluímos plataformas que consideramos genuinamente úteis para pessoas queer. Isto não é um aval às práticas de nenhuma empresa. Faz sempre as tuas próprias escolhas informadas sobre dados, segurança e privacidade — especialmente em aplicações de namoro e sociais.",
+    "<b>Uma nota sobre esta lista:</b> Incluímos plataformas que consideramos genuinamente úteis para pessoas queer. Isto não é um aval às práticas de nenhuma empresa. Faz sempre as tuas próprias escolhas informadas sobre dados, segurança e privacidade, especialmente em aplicações de namoro e sociais.",
   "platforms.outro.title": "Falta alguma coisa? <em>Diz-nos.</em>",
   "platforms.outro.sub":
     "Conheces uma plataforma, recurso ou comunidade que devia estar aqui? Sugere-a e nós adicionamo-la ao diretório.",
@@ -5464,7 +5531,7 @@ export const marketing: Catalog = {
   "submitPartner.hero.eyebrow": "Parceiros · Candidatura",
   "submitPartner.hero.title": "Candidata-te a <em>parceria.</em>",
   "submitPartner.hero.sub":
-    "As parcerias da QueerPulse são operacionais, não promocionais. Conta-nos quem és e o que fazes — com honestidade — e vamos ler cada palavra.",
+    "As parcerias da QueerPulse são operacionais e de mãos na massa. Conta-nos quem és e o que fazes, com honestidade, e vamos ler cada palavra.",
   "submitPartner.success.title": "Candidatura",
   "submitPartner.success.em": "recebida.",
   "submitPartner.success.closeLabel": "Voltar a parceiros",
@@ -5473,21 +5540,21 @@ export const marketing: Catalog = {
   "submitPartner.success.step2":
     "Lemos todas as candidaturas, não só as mais arrumadas",
   "submitPartner.success.step3":
-    "Entraremos em contacto — um sim, um ainda não, ou uma pergunta",
+    "Entraremos em contacto: um sim, um ainda não, ou uma pergunta",
   "submitPartner.success.body":
-    "Obrigade por nos contactares. A tua candidatura está feita — nada fica público até termos falado contigo sobre ela.",
+    "Obrigade por nos contactares. A tua candidatura está feita. Nada fica público até termos falado contigo sobre ela.",
   "submitPartner.actions.sending": "A enviar…",
   "submitPartner.actions.submit": "Submeter candidatura",
   "submitPartner.actions.cancel": "Cancelar",
   "submitPartner.error.toast":
-    "Não foi possível enviar a tua candidatura — tenta novamente.",
+    "Não foi possível enviar a tua candidatura. Tenta novamente.",
 
   "submitPartner.fields.sectionOrg": "A tua organização",
   "submitPartner.fields.name.label": "Nome da organização",
   "submitPartner.fields.name.placeholder": "ex.: Casa T",
   "submitPartner.fields.orgType.label": "Tipo de organização",
   "submitPartner.fields.orgType.helper":
-    "Só o tipo de organização que são — o rótulo “Parceiro ·” é adicionado por nós.",
+    "Só o tipo de organização que são. O rótulo “Parceiro ·” é adicionado por nós.",
   "submitPartner.fields.orgType.placeholder":
     "ex.: Clínica de saúde comunitária",
   "submitPartner.fields.city.label": "Cidade / base",
@@ -5495,7 +5562,7 @@ export const marketing: Catalog = {
   "submitPartner.fields.region.label": "Região",
   "submitPartner.fields.logo.label": "Marca do logótipo",
   "submitPartner.fields.logo.derivedHelper":
-    "Preenchido a partir do nome — edita se preferires definir a insígnia.",
+    "Preenchido a partir do nome. Edita se preferires definir a insígnia.",
   "submitPartner.fields.logo.placeholder": "ex.: CT",
   "submitPartner.fields.sectionPitch": "A apresentação",
   "submitPartner.fields.tagline.label": "Frase-síntese",
@@ -5526,26 +5593,26 @@ export const marketing: Catalog = {
 
   "submitPartner.tips.readEvery.title": "Lemos todas as candidaturas",
   "submitPartner.tips.readEvery.body":
-    "As parcerias aqui são operacionais, não promocionais. Conta-nos o que a tua organização realmente faz e a quem serve — não uma declaração de missão.",
+    "As parcerias aqui são operacionais e de mãos na massa. Conta-nos o que a tua organização realmente faz e a quem serve, em termos concretos.",
   "submitPartner.tips.sharedValues.title":
-    "Valores partilhados, não alinhamento de marca",
+    "Construído sobre valores partilhados",
   "submitPartner.tips.sharedValues.body":
     "Damos prioridade a organizações que colocam no centro as identidades marginalizadas dentro dos espaços queer, e também fora deles. Diz-nos onde se situa o teu trabalho.",
   "submitPartner.tips.whatNext.title": "O que acontece a seguir",
   "submitPartner.tips.whatNext.body":
-    "A tua candidatura chega como pendente. Uma pessoa da equipa revê-a, e entraremos em contacto — seja um sim, um ainda não, ou uma pergunta.",
+    "A tua candidatura chega como pendente. Uma pessoa da equipa revê-a, e entraremos em contacto, seja um sim, um ainda não, ou uma pergunta.",
 
   "changelog.entries.resource-listings-and-suggestions.title":
     "Recursos reais para Apoio Jurídico e Testagem de Saúde Sexual",
   "changelog.entries.resource-listings-and-suggestions.body":
-    'Apoio Jurídico e Testagem de Saúde Sexual mostram agora um diretório real, verificado por administradores, quando existe — e um formulário "Sugerir um recurso" que alimenta uma fila de revisão administrativa quando não existe. Nunca com recursos fabricados.',
+    'Apoio Jurídico e Testagem de Saúde Sexual mostram agora um diretório real, verificado por administradores, quando existe, e um formulário "Sugerir um recurso" que alimenta uma fila de revisão administrativa quando não existe. Nunca com recursos fabricados.',
   "changelog.tag.legal": "Ver Apoio Jurídico →",
 
   "changelog.tag.guideRating": "Ver os guias de Legal",
   "changelog.entries.resources-guide-rating.title":
     "Avalia se um guia de recursos ajudou",
   "changelog.entries.resources-guide-rating.body":
-    'Os guias de Legal, Saúde Sexual e Saúde Mental terminam agora com um rápido "Isto foi útil?" — polegar para cima ou para baixo, sem contagens visíveis, só um agradecimento depois de responderes. A equipa editorial já vê quais guias estão e não estão a resultar na nova página de administração Feedback dos guias.',
+    'Os guias de Legal, Saúde Sexual e Saúde Mental terminam agora com um rápido "Isto foi útil?": polegar para cima ou para baixo, sem contagens visíveis, só um agradecimento depois de responderes. A equipa editorial já vê quais guias estão e não estão a resultar na nova página de administração Feedback dos guias.',
 
   "changelog.entries.homepage-housing-personas-showcase.title":
     "Alojamento e perfis alternativos, mais próximos do real na homepage",

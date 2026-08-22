@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ModalSheet } from "../../shared/components/ui";
+import { reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AccessTier } from "./membership.types";
 import { INVOLVEMENT } from "./joinModal.data";
@@ -42,13 +43,18 @@ export function JoinModal({
   community: JoinModalCommunity;
   tier?: AccessTier;
   onClose: () => void;
-  onJoined?: (note?: string) => void;
-  onRequested?: (note?: string) => void;
+  /** Instant (public-tier) join. May return a promise: the modal waits for it
+   *  and only shows the welcome step once it resolves. */
+  onJoined?: (note?: string) => void | Promise<unknown>;
+  /** Request-to-join for the gated tiers, same promise contract as `onJoined`. */
+  onRequested?: (note?: string) => void | Promise<unknown>;
 }) {
   const { t } = useTranslation();
   const [step, setStep] = useState(1);
   const [involvement, setInvolvement] = useState("active");
   const [aboutText, setAboutText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // `invite` gets the same pending-request treatment as `request`/`private`:
   // the backend has no invite-code concept, so an invite-tier join is just a
@@ -63,15 +69,29 @@ export function JoinModal({
   const done = step > total;
   const fill = done ? 100 : (step / total) * 100;
 
-  const submit = () => {
+  // The welcome/request-received step belongs on the far side of the network
+  // call: a frozen space, an already-pending request or a lost connection all
+  // fail here, and the applicant needs to see that rather than a "You're in"
+  // for a membership they never got. The form stays put with the reason on it.
+  const submit = async () => {
+    if (isSubmitting) return;
     const involvementLabel = t(
       INVOLVEMENT.find((option) => option.value === involvement)?.labelKey ??
         "",
     );
     const note = composeJoinNote(aboutText, involvementLabel);
-    setStep(total + 1);
-    if (isRequest) onRequested?.(note);
-    else onJoined?.(note);
+    setErrorMessage(null);
+    setIsSubmitting(true);
+    try {
+      await (isRequest ? onRequested?.(note) : onJoined?.(note));
+      setStep(total + 1);
+    } catch (error) {
+      setErrorMessage(
+        reasonFor(error) ?? t("communities:join.about.errorFallback"),
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -109,7 +129,9 @@ export function JoinModal({
           setInvolvement={setInvolvement}
           aboutText={aboutText}
           setAboutText={setAboutText}
-          onSubmit={submit}
+          isSubmitting={isSubmitting}
+          errorMessage={errorMessage}
+          onSubmit={() => void submit()}
         />
       )}
 

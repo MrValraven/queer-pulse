@@ -70,6 +70,9 @@ export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
   const org = dto.org ?? (dto.host ? "Community" : "QueerPulse");
   return {
     date: new Date(dto.startAt),
+    // Only carried when the API actually knows the host's zone — absent leaves
+    // every card formatting in the reader's own zone, exactly as before.
+    ...(dto.timezone ? { timezone: dto.timezone } : {}),
     org,
     orgColor: orgColorFor(org),
     title: dto.title,
@@ -97,6 +100,9 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     slug: dto.slug,
     type: dto.type ?? "Gathering",
     date: new Date(dto.startAt),
+    // The zone the host scheduled in, when the API carries one. See
+    // `eventZoneFormat` — absent falls back to the reader's own zone.
+    ...(dto.timezone ? { timezone: dto.timezone } : {}),
     title: dto.title,
     hood: dto.neighbourhood ?? dto.venue ?? (dto.isOnline ? "Online" : ""),
     host: hostName(dto.host, dto.org),

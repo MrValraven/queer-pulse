@@ -1,4 +1,5 @@
 // src/features/messages/ConversationComposerDock.tsx
+import { FiArrowDown } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Composer } from "./Composer";
 import type { ChatMessage, Conversation } from "./data";
@@ -13,7 +14,7 @@ interface ConversationComposerDockProps {
   blocked: boolean;
   replyDraft?: ChatMessage | null;
   onCancelReply?: () => void;
-  /** Shows the "N new messages ↓" pill above the composer. */
+  /** Shows the "N new messages" jump-to-latest pill above the composer. */
   showJumpPill: boolean;
   newMessagesCount: number;
   onJumpToLatest: () => void;
@@ -44,7 +45,10 @@ export function ConversationComposerDock({
     <div className={styles.composerDock}>
       {showJumpPill && (
         <button type="button" className={styles.jumpPill} onClick={onJumpToLatest}>
-          {`${t("messages:conversation.newMessagesCount", { count: newMessagesCount })} ↓`}
+          <span>
+            {t("messages:conversation.newMessagesCount", { count: newMessagesCount })}
+          </span>
+          <FiArrowDown aria-hidden />
         </button>
       )}
 

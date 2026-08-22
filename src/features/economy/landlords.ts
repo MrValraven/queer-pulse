@@ -9,6 +9,14 @@ export interface Recommendation {
   stars: number;
   text: string;
   when: string;
+  /**
+   * True when the signed-in member wrote this recommendation, which is what
+   * unlocks the withdraw control (`DELETE /landlords/:slug/recommendations/
+   * mine`). Live mode derives it by comparing the DTO's member ref to the
+   * session; the demo fixtures below set it on the demo persona's own entry so
+   * the prototype exercises the same flow.
+   */
+  isMine?: boolean;
 }
 
 export interface Landlord {
@@ -60,6 +68,15 @@ export const LANDLORDS: Landlord[] = [
       { value: "5.0", label: "Community rating" },
     ],
     recommendations: [
+      {
+        initials: MEMBERS.tiago!.initials,
+        name: memberName("tiago"),
+        tint: "jade",
+        stars: 5,
+        text: "Two winters in one of his Arroios rooms. He fixed the boiler the same week I mentioned it and never once asked who was staying over.",
+        when: "Recommended Feb 2026",
+        isMine: true,
+      },
       {
         initials: MEMBERS.carla!.initials,
         name: memberName("carla"),

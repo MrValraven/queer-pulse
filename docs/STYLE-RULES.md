@@ -10,7 +10,9 @@ non-negotiable checklist. When in doubt, match an existing page.
 - **Page backgrounds are `--cream` (warm off-white). Never a pure-white page/section
   background.**
 - `--paper` (#FFFFFF) is _only_ for **small/medium card surfaces** sitting on cream,
-  with `border: 1px solid rgba(45,27,61,.09)`. Don't let a large, sparse area read as a
+  with `border: 1px solid rgba(var(--line-rgb), .09)`. The raw channels `rgba(45,27,61,…)`
+  fail the `check-design-tokens` build gate: borders use `--line-rgb` (flips in dark mode),
+  backgrounds and shadows use `--plum-rgb` (does not). Don't let a large, sparse area read as a
   white void — give it a plum or cream-tinted treatment instead (see Emphasis/success).
 - Decorative colour = low-opacity radial orbs (coral/jade 12–18%) in `::before/::after`.
   Never solid blocks of colour as decoration.

@@ -61,11 +61,8 @@ export const economyKeys = {
   // Workshops catalogue (list) — read by `useWorkshops`; invalidated on
   // RSVP/edit/delete.
   workshopsRoot: ["workshops"] as const,
-  workshops: (
-    demoMode: boolean,
-    language: string,
-    params: { cat?: string },
-  ) => ["workshops", demoMode, language, params] as const,
+  workshops: (demoMode: boolean, language: string, params: { cat?: string }) =>
+    ["workshops", demoMode, language, params] as const,
 
   // A single workshop (detail) — read by `useWorkshop`; invalidated by id (the
   // FE's slug) on RSVP/edit/delete.
@@ -97,10 +94,48 @@ export const economyKeys = {
   viewingReviewPair: (demoMode: boolean, viewingId: string | undefined) =>
     ["housing-viewing-review-pair", demoMode, viewingId] as const,
 
+  // One vetted housing group plus its visible listings — read by
+  // `useHousingGroup`; patched in place by the poster's edit/withdraw
+  // mutations (`useGroupListingOwnerActions`) and invalidated after them so the
+  // moderated `review` bounce comes back from the server, never from a guess.
+  housingGroupRoot: ["housing-group"] as const,
+  housingGroup: (slug: string | undefined, demoMode: boolean) =>
+    ["housing-group", slug, demoMode] as const,
+
+  // A job's applications, poster-side (BE-HSG-16) — read by
+  // `useJobApplications`; patched in place by the decide mutation.
+  jobApplications: (slug: string | undefined, demoMode: boolean) =>
+    ["job-applications", slug, demoMode] as const,
+
   // The caller's own housing listings (HSG-1) — read by `useMyHousingListings`;
   // patched in place by the mark-filled/mark-available/extend/edit mutations,
   // refetched after delete.
   myHousingListingsRoot: ["my-housing-listings"] as const,
   myHousingListings: (demoMode: boolean) =>
     ["my-housing-listings", demoMode] as const,
+
+  // Skill-exchange board (list) — read by `useBarterListings`; invalidated when
+  // a member posts a swap.
+  barterRoot: ["barter"] as const,
+  barter: (
+    demoMode: boolean,
+    params: { category?: string; mode?: string; q?: string },
+  ) => ["barter", demoMode, params] as const,
+
+  // A single swap listing (detail) — read by `useBarterListing`; invalidated by
+  // id after a proposal so `hasProposed` comes back from the server.
+  barterListing: (id: string | undefined, demoMode: boolean) =>
+    ["barter-listing", id, demoMode] as const,
+  barterListingById: (id: string) => ["barter-listing", id] as const,
+
+  // The caller's own swap listings with their pending-proposal counts — read by
+  // `useMyBarterListings`; invalidated after a decision so the count on the
+  // decided listing comes back from the server rather than being guessed.
+  myBarterRoot: ["my-barter"] as const,
+  myBarter: (demoMode: boolean) => ["my-barter", demoMode] as const,
+
+  // One listing's proposals, owner-side — read by `useBarterProposals`; the
+  // decided row is patched in place by `useDecideBarterProposal`.
+  barterProposals: (listingId: string | undefined, demoMode: boolean) =>
+    ["barter-proposals", listingId, demoMode] as const,
 };

@@ -14,6 +14,23 @@ import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Notification } from "./notifications.types";
 
+/** Milliseconds in each unit the demo rows express their age in. */
+const UNIT_MS = {
+  minute: 60_000,
+  hour: 3_600_000,
+  day: 86_400_000,
+  week: 604_800_000,
+} as const;
+
+/**
+ * The ISO timestamp behind a demo row's relative `time` label, so the mock feed
+ * carries the same `createdAtIso` the live adapter does and the page's day
+ * headers bucket demo rows by real age too.
+ */
+function agoIso(amount: number, unit: keyof typeof UNIT_MS): string {
+  return new Date(Date.now() - amount * UNIT_MS[unit]).toISOString();
+}
+
 /**
  * Demo notification feed. Mirrors, per row, what the live `formatNotification`
  * adapter renders for the analogous backend `type` — but with richer flavour
@@ -38,7 +55,7 @@ function buildUnreadNotifications(
       id: 2,
       type: "events",
       unread: true,
-      icon: { Glyph: FiTag, background: "rgba(232,119,90,.1)" },
+      icon: { Glyph: FiTag, background: "rgba(var(--accent-rgb), .1)" },
       text: (
         <Translation
           i18nKey="notifications:list.2.text"
@@ -56,6 +73,7 @@ function buildUnreadNotifications(
       ),
       meta: t("notifications:list.2.meta"),
       time: fmt.relativeTime(-18, "minute"),
+      createdAtIso: agoIso(18, "minute"),
       actions: [
         {
           label: t("notifications:actions.viewEvent"),
@@ -79,6 +97,7 @@ function buildUnreadNotifications(
       ),
       meta: t("notifications:list.3.meta"),
       time: fmt.relativeTime(-1, "hour"),
+      createdAtIso: agoIso(1, "hour"),
       actions: [
         {
           label: t("notifications:actions.accept"),
@@ -111,7 +130,7 @@ function buildUnreadNotifications(
       id: 13,
       type: "community",
       unread: true,
-      icon: { Glyph: FiAward, background: "rgba(45,27,61,.07)" },
+      icon: { Glyph: FiAward, background: "rgba(var(--plum-rgb), .07)" },
       text: (
         <Translation
           i18nKey="notifications:list.13.text"
@@ -124,6 +143,7 @@ function buildUnreadNotifications(
       ),
       meta: t("notifications:list.13.meta"),
       time: fmt.relativeTime(-2, "hour"),
+      createdAtIso: agoIso(2, "hour"),
       actions: [
         {
           label: t("notifications:actions.makePersona"),
@@ -157,6 +177,7 @@ function buildUnreadNotifications(
       ),
       meta: t("notifications:list.4.meta"),
       time: fmt.relativeTime(-3, "hour"),
+      createdAtIso: agoIso(3, "hour"),
       actions: [
         {
           label: t("notifications:actions.viewThread"),
@@ -169,7 +190,7 @@ function buildUnreadNotifications(
       id: 5,
       type: "platform",
       unread: true,
-      icon: { Glyph: FiBookOpen, background: "rgba(45,27,61,.07)" },
+      icon: { Glyph: FiBookOpen, background: "rgba(var(--plum-rgb), .07)" },
       text: (
         <Translation
           i18nKey="notifications:list.5.text"
@@ -182,6 +203,7 @@ function buildUnreadNotifications(
       ),
       meta: t("notifications:list.5.meta"),
       time: fmt.relativeTime(-1, "day"),
+      createdAtIso: agoIso(1, "day"),
       actions: [
         {
           label: t("notifications:actions.readNow"),
@@ -194,7 +216,7 @@ function buildUnreadNotifications(
       id: 6,
       type: "events",
       unread: true,
-      icon: { Glyph: FiClock, background: "rgba(74,140,111,.1)" },
+      icon: { Glyph: FiClock, background: "rgba(var(--jade-rgb), .1)" },
       text: (
         <Translation
           i18nKey="notifications:list.6.text"
@@ -209,6 +231,7 @@ function buildUnreadNotifications(
       ),
       meta: t("notifications:list.6.meta"),
       time: fmt.relativeTime(-1, "day"),
+      createdAtIso: agoIso(1, "day"),
       actions: [
         {
           label: t("notifications:actions.seeDetails"),
@@ -232,6 +255,7 @@ function buildUnreadNotifications(
       ),
       meta: t("notifications:list.7.meta"),
       time: fmt.relativeTime(-2, "day"),
+      createdAtIso: agoIso(2, "day"),
     },
   ];
 }
@@ -247,7 +271,7 @@ function buildReadNotifications(
       id: 8,
       type: "platform",
       unread: false,
-      icon: { Glyph: FiStar, background: "rgba(232,119,90,.09)" },
+      icon: { Glyph: FiStar, background: "rgba(var(--accent-rgb), .09)" },
       text: (
         <Translation
           i18nKey="notifications:list.8.text"
@@ -257,6 +281,7 @@ function buildReadNotifications(
       ),
       meta: t("notifications:list.8.meta"),
       time: fmt.relativeTime(-3, "day"),
+      createdAtIso: agoIso(3, "day"),
       actions: [
         {
           label: t("notifications:actions.seeBarterBoard"),
@@ -269,7 +294,7 @@ function buildReadNotifications(
       id: 9,
       type: "events",
       unread: false,
-      icon: { Glyph: FiTag, background: "rgba(232,119,90,.1)" },
+      icon: { Glyph: FiTag, background: "rgba(var(--accent-rgb), .1)" },
       text: (
         <Translation
           i18nKey="notifications:list.9.text"
@@ -282,6 +307,7 @@ function buildReadNotifications(
       ),
       meta: t("notifications:list.9.meta"),
       time: fmt.relativeTime(-4, "day"),
+      createdAtIso: agoIso(4, "day"),
       actions: [
         {
           label: t("notifications:actions.viewEvent"),
@@ -294,13 +320,14 @@ function buildReadNotifications(
       id: 11,
       type: "community",
       unread: false,
-      icon: { Glyph: FiClipboard, background: "rgba(45,27,61,.07)" },
+      icon: { Glyph: FiClipboard, background: "rgba(var(--plum-rgb), .07)" },
       text: t("notifications:list.11.text", {
         count: 12,
         postTitle: "Housing law update: what I found out",
       }),
       meta: t("notifications:list.11.meta"),
       time: fmt.relativeTime(-6, "day"),
+      createdAtIso: agoIso(6, "day"),
       actions: [
         {
           label: t("notifications:actions.viewReplies"),
@@ -313,7 +340,7 @@ function buildReadNotifications(
       id: 12,
       type: "platform",
       unread: false,
-      icon: { Glyph: FiHome, background: "rgba(45,27,61,.07)" },
+      icon: { Glyph: FiHome, background: "rgba(var(--plum-rgb), .07)" },
       text: (
         <Translation
           i18nKey="notifications:list.12.text"
@@ -323,6 +350,7 @@ function buildReadNotifications(
       ),
       meta: t("notifications:list.12.meta"),
       time: fmt.relativeTime(-1, "week"),
+      createdAtIso: agoIso(1, "week"),
       actions: [
         {
           label: t("notifications:actions.readReport"),

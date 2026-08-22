@@ -30,6 +30,13 @@ export interface MyEvent {
   date: string; // YYYY-MM-DD
   start: string;
   end?: string;
+  /** The raw ISO 8601 instants the API sent, kept alongside the display-ready
+   *  `date`/`start`/`end` strings (which are the browser's local rendering of
+   *  them). The .ics exporter needs a real instant rather than a floating
+   *  wall-clock time — see `myEvents.ics.ts`. Absent in demo mode, where the
+   *  mock authors local wall-clock times directly. */
+  startAtIso?: string;
+  endAtIso?: string;
   venue: string;
   community?: string;
   /** The event's real host — a member slug, so "Block host"

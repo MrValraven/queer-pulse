@@ -199,64 +199,9 @@
   line-height: 1.5;
 }
 
-/* ── Skill endorsement chips ── */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 22px;
-}
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.12);
-  border-radius: 999px;
-  background: var(--paper);
-  cursor: pointer;
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--ink);
-  transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .chip:hover {
-    border-color: rgba(var(--line-rgb), 0.28);
-  }
-}
-.chipOn {
-  border-color: var(--jade);
-  background: rgba(var(--jade-rgb), 0.1);
-  color: var(--text-strong);
-}
-/* The check fades in gently when you mark a skill */
-.chipCheck {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--jade);
-  animation: vmCheckPop var(--dur-base) var(--ease-out) both;
-}
-@keyframes vmCheckPop {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-.chipCheckPath {
-  stroke-dasharray: 24;
-  stroke-dashoffset: 24;
-  animation: vmDraw var(--dur-base) var(--ease-out) 0.08s forwards;
-}
+/* The skill-endorsement chip styles that lived here were removed with the chip
+   row itself: nothing recorded the selections, so the control was dropped
+   rather than kept as decoration. See `VouchMemberModal`'s docblock. */
 
 .textarea {
   width: 100%;
@@ -485,14 +430,10 @@
   .ring,
   .successTitle,
   .successSub,
-  .doneBtn,
-  .chipOn,
-  .chipCheck,
-  .chipCheckPath {
+  .doneBtn {
     animation: none;
   }
-  .checkPath,
-  .chipCheckPath {
+  .checkPath {
     stroke-dashoffset: 0;
   }
   .ring {

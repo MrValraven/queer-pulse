@@ -1124,6 +1124,10 @@ export const cinema: Catalog = {
   "live.playCta": "Play film",
   "live.resumeCta": "Resume watching",
   "live.playbackError": "This film couldn't start. Please try again.",
+  "live.unsupported.title": "This browser can't play our films yet",
+  "live.unsupported.description":
+    "Our streaming format needs Safari on a Mac, iPhone or iPad today. Open this page there and the film will play. Support for Chrome and Firefox is being built.",
+  "live.unsupported.cta": "Browse the programme",
 
   // ── Live-mode placeholder (CinemaComingSoon) ──────────────────────────────
   // Shown for the Cinema sections not wired to the backend yet (collections,

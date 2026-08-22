@@ -37,7 +37,7 @@ interface RemoveListingContext {
  * back on `onError`) so the row disappears immediately with no local
  * removed-refs set — in demo mode that patch is the new truth (the fixture
  * never mutates); in live mode it's reconciled by the `invalidateQueries` in
- * `onLiveSuccess`. Live mode DELETEs `/listings/admin/:ref`.
+ * `onLiveSuccess`. Live mode DELETEs `/admin/listings/:ref`.
  */
 export function useRemoveListing() {
   const { demoMode } = useDemoMode();

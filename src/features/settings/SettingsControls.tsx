@@ -1,6 +1,6 @@
 import { type ReactNode, useId, useState } from "react";
-import { Link } from "react-router-dom";
 import {
+  Button,
   ComingSoon,
   ConfirmDialog,
   Select,
@@ -167,14 +167,17 @@ export function DataCard({
         <div className={styles.dcTitle}>{title}</div>
         <div className={styles.dcDesc}>{description}</div>
       </div>
+      {/* Shared <Button> in both shapes (polymorphic via `to`), keeping the
+          data-card pill via className, the same way the Data pane's danger
+          cards already do. */}
       {to ? (
-        <Link to={to} className={styles.dcBtn}>
+        <Button variant="ghost" className={styles.dcBtn} to={to}>
           {button}
-        </Link>
+        </Button>
       ) : (
-        <button type="button" className={styles.dcBtn} onClick={onClick}>
+        <Button variant="ghost" className={styles.dcBtn} onClick={onClick}>
           {button}
-        </button>
+        </Button>
       )}
     </div>
   );

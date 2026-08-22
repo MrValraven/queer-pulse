@@ -1,8 +1,12 @@
 import { Link, Navigate, useParams } from "react-router-dom";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, Outro } from "../../shared/components/ui";
-import { useConnect } from "../../app/providers/useConnect";
+import {
+  Button,
+  Outro,
+  SkeletonAvatar,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -13,9 +17,9 @@ import styles from "./ChangemakerStoryPage.module.css";
 
 const HERO_GRADIENT: Record<Tint, string> = {
   coral:
-    "linear-gradient(135deg, rgba(var(--accent-rgb),.42), rgba(45,27,61,.5))",
-  jade: "linear-gradient(135deg, rgba(var(--jade-rgb),.42), rgba(45,27,61,.5))",
-  plum: "linear-gradient(135deg, rgba(45,27,61,.55), rgba(45,27,61,.35))",
+    "linear-gradient(135deg, rgba(var(--accent-rgb),.42), rgba(var(--plum-rgb), .5))",
+  jade: "linear-gradient(135deg, rgba(var(--jade-rgb),.42), rgba(var(--plum-rgb), .5))",
+  plum: "linear-gradient(135deg, rgba(var(--plum-rgb), .55), rgba(var(--plum-rgb), .35))",
 };
 const AV_CLASS: Record<Tint, string> = {
   coral: "avCoral",
@@ -23,15 +27,30 @@ const AV_CLASS: Record<Tint, string> = {
   plum: "avPlum",
 };
 
-const Tick = () => (
-  <svg viewBox="0 0 24 24">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
+/** Placeholder for the byline + article while the story request is in flight.
+ *  Replaces an empty 80px spacer, which read as a blank page. */
+function ChangemakerStorySkeleton() {
+  return (
+    <div
+      className={`${styles.articleWrap} ${styles.skeletonStory}`}
+      aria-hidden
+    >
+      <div className={styles.skeletonByline}>
+        <SkeletonAvatar size={34} />
+        <SkeletonLine width={180} height={13} />
+      </div>
+      <SkeletonLine width="70%" height={34} />
+      <SkeletonLine width="100%" height={16} />
+      <SkeletonLine width="95%" height={16} />
+      <SkeletonLine width="88%" height={16} />
+      <SkeletonLine width="92%" height={16} />
+      <SkeletonLine width="60%" height={16} />
+    </div>
+  );
+}
 
 export function ChangemakerStoryPage() {
   const { slug } = useParams();
-  const { openConnect } = useConnect();
   const { t } = useTranslation();
   const { changemaker, isLoading } = useChangemaker(slug);
   const { profiles } = useChangemakers();
@@ -39,7 +58,7 @@ export function ChangemakerStoryPage() {
   if (isLoading) {
     return (
       <PageShell>
-        <div className="wrap" style={{ padding: "80px 0" }} />
+        <ChangemakerStorySkeleton />
       </PageShell>
     );
   }
@@ -118,8 +137,8 @@ export function ChangemakerStoryPage() {
             </div>
             {changemaker.impact.map((row) => (
               <div className={styles.impactRow} key={row}>
-                <span className={styles.impactIc}>
-                  <Tick />
+                <span className={styles.impactIc} aria-hidden>
+                  <FiCheck />
                 </span>
                 <span>{row}</span>
               </div>
@@ -142,10 +161,14 @@ export function ChangemakerStoryPage() {
         }
         sub={t("community:changemakerStory.outro.sub")}
       >
-        <Button variant="primary" onClick={() => openConnect()}>
-          {t("community:changemakerStory.outro.connectCta", {
-            name: firstName,
-          })}{" "}
+        {/* Changemaker profiles are curated editorial content with no linked
+            member account (no `userId` on the entity), so there is nobody for
+            a direct message to reach: opening the Connect modal with no slug
+            either shows "member not found" (live) or silently addresses a
+            random demo persona. Routes to Contact, the same call the
+            changemakers list page makes. */}
+        <Button variant="primary" to={routes.contact}>
+          {t("community:changemakerStory.outro.connectCta")}{" "}
           <FiArrowRight aria-hidden />
         </Button>
         <Button variant="ghost-dark" to={routes.changemakers}>

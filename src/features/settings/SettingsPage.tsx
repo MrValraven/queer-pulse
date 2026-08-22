@@ -180,11 +180,9 @@ export function SettingsPage() {
                 onChange={() => markChanged("theme.appearance")}
               />
             )}
-            {pane === "accessibility" && (
-              <AccessibilityPane
-                onChange={() => markChanged("accessibility.preferences")}
-              />
-            )}
+            {/* Accessibility preferences save the moment they are flipped, so
+                the pane deliberately never marks the page dirty. */}
+            {pane === "accessibility" && <AccessibilityPane />}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "blockedUsers" && <BlockedUsersPane />}
             {pane === "account" && <AccountPane onChange={markChanged} />}

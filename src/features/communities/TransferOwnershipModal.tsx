@@ -78,11 +78,17 @@ export function TransferOwnershipModal({
 
   return (
     <Modal
-      title={t("communities:detail.dangerZone.transfer.confirm.title", { name })}
+      title={t("communities:detail.dangerZone.transfer.confirm.title", {
+        name,
+      })}
       onClose={onClose}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={transfer.isPending}>
+          <Button
+            variant="ghost"
+            onClick={onClose}
+            disabled={transfer.isPending}
+          >
             {t("communities:detail.dangerZone.transfer.confirm.cancel")}
           </Button>
           <Button
@@ -95,7 +101,9 @@ export function TransferOwnershipModal({
         </>
       }
     >
-      <p>{t("communities:detail.dangerZone.transfer.confirm.body", { name })}</p>
+      <p>
+        {t("communities:detail.dangerZone.transfer.confirm.body", { name })}
+      </p>
       {candidates.length === 0 ? (
         <p>{t("communities:detail.dangerZone.transfer.confirm.empty")}</p>
       ) : (

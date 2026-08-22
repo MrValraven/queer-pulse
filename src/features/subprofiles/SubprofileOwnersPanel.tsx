@@ -1,16 +1,18 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiUserPlus, FiX } from "react-icons/fi";
-import { Avatar, Badge, Button, Modal } from "../../shared/components/ui";
+import { Avatar, Button, Modal } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
+import { routes } from "../../app/routeMap";
 import { reasonFor } from "../../shared/api/errorMessage";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { useSubprofileMembers } from "./api/useSubprofileMembers";
 import { useSubprofileInvites } from "./api/useSubprofileInvites";
 import { InviteCoOwnerModal } from "./InviteCoOwnerModal";
+import { SubprofileOwnersList } from "./SubprofileOwnersList";
 import styles from "./SubprofileOwnersPanel.module.css";
 
 /**
@@ -84,7 +86,7 @@ export function SubprofileOwnersPanel({
       await leave.mutateAsync();
       setLeaveOpen(false);
       showToast(t("subprofiles:owners.toastLeft"), "info");
-      void navigate("/account/subprofiles");
+      void navigate(routes.subprofilesDashboard);
     } catch (error) {
       showToast(
         reasonFor(error) ?? t("subprofiles:owners.toastLeaveError"),
@@ -95,25 +97,11 @@ export function SubprofileOwnersPanel({
 
   return (
     <div className="ed-grid">
-      <ul className={styles.list}>
-        {memberList.map((member) => (
-          <li key={member.userId} className={styles.row}>
-            <Avatar
-              initials={initialsFromName(member.name, "?")}
-              src={member.avatarUrl ?? undefined}
-              tint="plum"
-              size={40}
-            />
-            <span className={styles.rowName}>{member.name}</span>
-            {member.isCreator && (
-              <Badge tone="plum">{t("subprofiles:owners.creatorTag")}</Badge>
-            )}
-            {member.slug === mySlug && (
-              <Badge tone="ghost">{t("subprofiles:owners.youTag")}</Badge>
-            )}
-          </li>
-        ))}
-      </ul>
+      <SubprofileOwnersList
+        subprofileId={subprofileId}
+        members={memberList}
+        mySlug={mySlug}
+      />
 
       {pendingInvites.length > 0 && (
         <>

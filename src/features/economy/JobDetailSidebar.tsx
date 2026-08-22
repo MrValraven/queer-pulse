@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { FaRainbow } from "react-icons/fa6";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiShare2, FiUsers } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,17 +10,29 @@ import type { Job } from "./jobs.data";
 import { postedText } from "./api/jobs.adapters";
 import { COMPANY_SLUG_BY_NAME } from "./companies.data";
 import { ReportSubjectControl } from "../safety/ReportSubjectControl";
+import { ShareToCommunityModal } from "./ShareToCommunityModal";
 import styles from "./JobDetailPage.module.css";
+
+/** Absolute link back to a job, for the body of a shared community post. */
+function jobUrl(slug: string): string {
+  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  return `${origin}${routes.jobs}/${slug}`;
+}
 
 export function JobDetailSidebar({
   job,
   deadlineFull,
+  isPoster,
 }: {
   job: Job;
   deadlineFull: string;
+  /** True when the reader posted this listing. Unlocks the applications
+   *  console, which the backend gates to the poster anyway. */
+  isPoster: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const [isSharing, setIsSharing] = useState(false);
   const d = job.detail;
   const companySlug = COMPANY_SLUG_BY_NAME[job.organization];
   return (
@@ -33,7 +46,9 @@ export function JobDetailSidebar({
         </div>
         <div className={styles.coName}>
           {companySlug ? (
-            <Link to={`${routes.company}/${companySlug}`}>{job.organization}</Link>
+            <Link to={`${routes.company}/${companySlug}`}>
+              {job.organization}
+            </Link>
           ) : (
             job.organization
           )}
@@ -77,16 +92,51 @@ export function JobDetailSidebar({
         <div className={styles.posted}>{postedText(d.posted, t, fmt)}</div>
 
         <div className={styles.applyWrap}>
+          {isPoster ? (
+            <Button
+              variant="primary"
+              to={`${routes.jobs}/${job.slug}/applications`}
+              style={{ width: "100%", justifyContent: "center" }}
+            >
+              <FiUsers aria-hidden />{" "}
+              {t("economy:jobDetail.sidebar.reviewApplicationsCta")}
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              to={`${routes.jobs}/${job.slug}/apply`}
+              style={{ width: "100%", justifyContent: "center" }}
+            >
+              {t("economy:jobDetail.sidebar.applyCta")}{" "}
+              <FiArrowRight aria-hidden />
+            </Button>
+          )}
+          {/* Shares as a COMMUNITY POST, so the item lands in a room with a
+              moderation owner and reaches the feed through the existing
+              read-time aggregation. There is no standalone feed post. */}
           <Button
-            variant="primary"
-            to={`${routes.jobs}/${job.slug}/apply`}
-            style={{ width: "100%", justifyContent: "center" }}
+            variant="ghost"
+            onClick={() => setIsSharing(true)}
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              marginTop: "10px",
+            }}
           >
-            {t("economy:jobDetail.sidebar.applyCta")}{" "}
-            <FiArrowRight aria-hidden />
+            <FiShare2 aria-hidden />{" "}
+            {t("economy:jobDetail.sidebar.shareToCommunityCta")}
           </Button>
         </div>
       </div>
+
+      {isSharing && (
+        <ShareToCommunityModal
+          title={job.title}
+          organization={job.organization}
+          url={jobUrl(job.slug)}
+          onClose={() => setIsSharing(false)}
+        />
+      )}
 
       <div className={styles.noteCard}>
         <p>{d.reviewerNote}</p>

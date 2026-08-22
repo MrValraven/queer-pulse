@@ -45,7 +45,7 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
                 key={`sys-${mAny.system}`}
                 className={`${s.msg} ${s.msgSystem}`}
               >
-                <div className={s.text}>— {mAny.system} —</div>
+                <div className={s.text}>{mAny.system}</div>
               </div>
             );
           }

@@ -22,7 +22,7 @@
 
 .sub {
   font-size: 0.82rem;
-  color: var(--ink-soft, rgba(45, 27, 61, 0.6));
+  color: var(--ink-soft, rgba(var(--plum-rgb), 0.6));
   margin-top: 2px;
 }
 
@@ -38,7 +38,7 @@
   gap: 12px;
   margin-top: 10px;
   font-size: 0.78rem;
-  color: var(--ink-soft, rgba(45, 27, 61, 0.6));
+  color: var(--ink-soft, rgba(var(--plum-rgb), 0.6));
 }
 
 .legendItem {
@@ -68,7 +68,7 @@
 
 .notMeasured {
   font-size: 0.85rem;
-  color: var(--ink-soft, rgba(45, 27, 61, 0.6));
+  color: var(--ink-soft, rgba(var(--plum-rgb), 0.6));
   font-style: italic;
   padding: 40px 0;
   text-align: center;

@@ -6,7 +6,8 @@ import {
   FiPlay,
   FiPause,
 } from "react-icons/fi";
-import { useScrollLock, usePrefersReducedMotion } from "../../shared/hooks";
+import { usePrefersReducedMotion } from "../../shared/hooks";
+import { useDismiss } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Pic } from "./gatheringPhotos.data";
 import styles from "./PhotoViewer.module.css";
@@ -24,7 +25,11 @@ export function PhotoViewer({
   slideshow?: boolean;
   onClose: () => void;
 }) {
-  useScrollLock();
+  // The shared dialog behaviour: focus trap, initial focus, focus restore on
+  // close, scroll lock, and Escape that only fires while this is the topmost
+  // dialog. The lightbox previously had none of it, so a keyboard user could
+  // Tab straight out into the page behind the image and never get focus back.
+  const dialogRef = useDismiss(onClose);
   const { t } = useTranslation();
   const reduced = usePrefersReducedMotion();
   const [index, setIndex] = useState(startIndex);
@@ -37,15 +42,16 @@ export function PhotoViewer({
     [pics.length],
   );
 
+  // Escape is owned by `useDismiss` (which also respects the modal stack), so
+  // this handler is arrow keys only.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowRight") go(1);
+      if (e.key === "ArrowRight") go(1);
       else if (e.key === "ArrowLeft") go(-1);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [go, onClose]);
+  }, [go]);
 
   useEffect(() => {
     if (!playing || reduced) return;
@@ -59,6 +65,7 @@ export function PhotoViewer({
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={t("gatherings:photos.viewerAriaLabel")}

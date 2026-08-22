@@ -8,20 +8,16 @@ import {
   FeatureHelp,
   PullToRefresh,
 } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NotificationsListSkeleton } from "./NotificationsSkeleton";
 import { MentionsPanel } from "./MentionsPanel";
 import { NotificationItem } from "./NotificationItem";
 import { useNotifications } from "./api/useNotifications";
 import { useMentions } from "./api/useMentions";
-import { useMarkNotificationRead } from "./api/useMarkNotificationRead";
-import { useMarkAllRead } from "./api/useMarkAllRead";
+import { useNotificationsReadState } from "./useNotificationsReadState";
+import { bucketNotificationsByDay } from "./notificationDayBuckets";
 import { notificationTabs, type NotifType, type Notification } from "./data";
 import styles from "./NotificationsPage.module.css";
-
-/** Opaque row id: a uuid in live mode, a number in the demo mock. */
-type NotificationId = Notification["id"];
 
 export function NotificationsPage() {
   const { t } = useTranslation();
@@ -36,14 +32,9 @@ export function NotificationsPage() {
     refetch,
   } = useNotifications();
   const { data: mentionDays = [] } = useMentions();
-  const markReadMutation = useMarkNotificationRead();
-  const markAllReadMutation = useMarkAllRead();
-  const { showToast } = useToast();
+  const { readIds, resolvedIds, markRead, markAllRead, resolve } =
+    useNotificationsReadState(notifications);
   const [filter, setFilter] = useState<"all" | NotifType | "mentions">("all");
-  const [readIds, setReadIds] = useState<Set<NotificationId>>(new Set());
-  const [resolvedIds, setResolvedIds] = useState<Set<NotificationId>>(
-    new Set(),
-  );
   const onMentions = filter === "mentions";
 
   // "mentions" is a pseudo-filter that swaps the whole list for <MentionsPanel>,
@@ -72,24 +63,11 @@ export function NotificationsPage() {
     [mentionDays],
   );
 
-  const recent = visible.slice(0, 7);
-  const earlier = visible.slice(7);
-
-  function markRead(id: NotificationId) {
-    // Skip no-op clicks on rows that are already read (avoids a stray live POST).
-    const item = notifications.find((n) => n.id === id);
-    if (!item?.unread || readIds.has(id)) return;
-    setReadIds((current) => new Set(current).add(id));
-    markReadMutation.mutate(id);
-  }
-  function markAllRead() {
-    setReadIds(new Set(notifications.map((n) => n.id)));
-    markAllReadMutation.mutate();
-  }
-  function resolve(id: NotificationId, toast: string) {
-    setResolvedIds((current) => new Set(current).add(id));
-    showToast(toast, "success");
-  }
+  // Day headers come from each row's real `createdAtIso`; see the helper.
+  const { recent, earlier } = useMemo(
+    () => bucketNotificationsByDay(visible),
+    [visible],
+  );
 
   const renderItem = (notification: Notification, index: number) => (
     <NotificationItem
@@ -116,13 +94,14 @@ export function NotificationsPage() {
             </div>
             {!onMentions && (
               <div className={styles.actions}>
-                <button
+                <Button
                   type="button"
-                  className={styles.markRead}
+                  variant="ghost"
+                  size="sm"
                   onClick={markAllRead}
                 >
                   {t("notifications:page.markAllRead")}
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -164,14 +143,15 @@ export function NotificationsPage() {
                 {t("notifications:page.error.title")}
               </div>
               <div>{t("notifications:page.error.description")}</div>
-              <button
-                type="button"
-                className={[styles.btn, styles.btnPrimary].join(" ")}
-                style={{ marginTop: 14 }}
-                onClick={() => void refetch()}
-              >
-                {t("notifications:page.error.retry")}
-              </button>
+              <div className={styles.errorAction}>
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => void refetch()}
+                >
+                  {t("notifications:page.error.retry")}
+                </Button>
+              </div>
             </div>
           ) : visible.length === 0 ? (
             <div className={styles.empty}>

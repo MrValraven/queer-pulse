@@ -73,6 +73,44 @@
   gap: 6px;
 }
 
+/* ── "Hide from someone" picker (server-searched, paged) ─────────────────── */
+.pickerList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+  background: var(--paper);
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.pickerRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  padding: 10px 14px;
+  border: none;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-base, 0.2s) var(--ease);
+}
+.pickerRow:last-child {
+  border-bottom: none;
+}
+@media (hover: hover) {
+  .pickerRow:hover {
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+}
+.pickerMore {
+  align-self: flex-start;
+  margin-top: 12px;
+}
+
 /* ── Presets ───────────────────────────────────────────────────────────── */
 .presetGrid {
   display: grid;

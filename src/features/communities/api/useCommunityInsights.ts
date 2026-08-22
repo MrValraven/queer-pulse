@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getLiving } from "../livingCommunities.data";
-import { getCommunityInsights, type CommunityInsightsDTO } from "./communities.api";
+import {
+  getCommunityInsights,
+  type CommunityInsightsDTO,
+} from "./communities.api";
 
 export interface CommunityInsightsResult {
   data: CommunityInsightsDTO | null;

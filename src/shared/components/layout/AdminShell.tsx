@@ -124,7 +124,6 @@ export function AdminShell({
                 ) : (
                   <span>{c.label}</span>
                 )}
-                <span aria-hidden> · </span>
               </span>
             ))}
             <span className={styles.crumbTitle}>{title}</span>

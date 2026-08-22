@@ -12,6 +12,7 @@ import { adminCommunityMod } from "../../app/routeMap";
 import { AdminTabs, AdminAvatar, type AdminTab } from "./ui";
 import { ScopedQueuePane, MembersPane } from "./AdminCommunityDetailTabs";
 import { SettingsPane } from "./AdminCommunitySettings";
+import { GovernanceLogPane } from "./AdminCommunityGovernanceLog";
 import { AdminHealthModal } from "./AdminHealthModal";
 import { AdminSupportModal } from "./AdminSupportModal";
 import { useAdminCommunity } from "./api/useAdminCommunities";
@@ -86,6 +87,10 @@ export function AdminCommunityDetail({
     },
     { id: "members", label: t("admin:communities.detail.tabs.members") },
     { id: "settings", label: t("admin:communities.detail.tabs.settings") },
+    {
+      id: "governance",
+      label: t("admin:communities.detail.tabs.governanceLog"),
+    },
   ];
 
   const words = community.name.split(/\s+/);
@@ -198,6 +203,9 @@ export function AdminCommunityDetail({
       {active === "queue" && <ScopedQueuePane community={community} />}
       {active === "members" && <MembersPane community={community} />}
       {active === "settings" && <SettingsPane community={community} />}
+      {active === "governance" && (
+        <GovernanceLogPane slug={community.slug} />
+      )}
 
       {health && (
         <AdminHealthModal

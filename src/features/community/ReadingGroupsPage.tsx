@@ -64,7 +64,11 @@ function ReadingGroupCardSkeleton() {
 export function ReadingGroupsPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const loading = useSimulatedLoad();
+  // The skeleton delay is the prototype's fake fetch. Live mode has nothing to
+  // wait for here (the only groups are the ones this member proposed, held in
+  // local state), so a live visit would pay 600ms of placeholder for nothing.
+  const isSimulatedLoading = useSimulatedLoad();
+  const isLoading = demoMode && isSimulatedLoading;
   const { showToast } = useToast();
   const [genre, setGenre] = useState<Genre | "all">("all");
   const [format, setFormat] = useState<Format | "all">("all");
@@ -72,7 +76,11 @@ export function ReadingGroupsPage() {
   const [waitlist, setWaitlist] = useState<Record<string, number>>({});
   /** Groups the user has listed this session, prepended to the directory. */
   const [myGroups, setMyGroups] = useState<Group[]>([]);
-  const messages = routes.messages;
+  // "Request to join" needs somebody to reach. A Group carries no lister
+  // account, so live has no recipient and linking to the inbox would land the
+  // member on an empty conversation list; the card falls back to an honest
+  // disabled state. The prototype keeps its inbox link.
+  const messagesPath = demoMode ? routes.messages : undefined;
 
   // The curated GROUPS directory is prototype-only editorial content with no
   // server listing. In live mode only the groups the member proposes this
@@ -173,11 +181,11 @@ export function ReadingGroupsPage() {
       <div className={styles.body}>
         <div className="wrap">
           <div className={styles.grid}>
-            {loading &&
+            {isLoading &&
               Array.from({ length: 4 }).map((_, i) => (
                 <ReadingGroupCardSkeleton key={i} />
               ))}
-            {!loading &&
+            {!isLoading &&
               items.length === 0 &&
               (!demoMode && allGroups.length === 0 ? (
                 <EmptyState
@@ -201,15 +209,15 @@ export function ReadingGroupsPage() {
                   }}
                 />
               ))}
-            {!loading &&
+            {!isLoading &&
               items.map((g, i) => (
                 <FadeIn key={g.id} delay={Math.min(i, 8) * 60}>
                   <ReadingGroupCard
                     g={g}
-                    messagesPath={messages}
+                    messagesPath={messagesPath}
                     onWaitlist={() => joinWaitlist(g.id, g.name)}
                     waitlistPosition={waitlist[g.id]}
-                    waitlistEnabled={demoMode}
+                    isWaitlistEnabled={demoMode}
                   />
                 </FadeIn>
               ))}

@@ -24,7 +24,7 @@ import type {
 } from "./roadmapAdmin.types";
 
 // Fetch functions for the NestJS `roadmap` domain's admin surface
-// (`/roadmap/admin/*`). Every DTO/write-body type these use lives in the
+// (`/admin/roadmap/*`). Every DTO/write-body type these use lives in the
 // colocated `roadmapAdmin.types.ts` (split out purely for file size) — this
 // file re-exports all of them so existing `from "./roadmapAdmin.api"` imports
 // keep working unchanged. `export type *`, not `export *`, because
@@ -35,63 +35,63 @@ export type * from "./roadmapAdmin.types";
 /** Every roadmap item/idea, published or not, plus the team roster, the
  *  recent audit trail, and the hero-stat chips. */
 export const getAdminRoadmap = () =>
-  apiGet<RoadmapAdminResponseDTO>("/roadmap/admin");
+  apiGet<RoadmapAdminResponseDTO>("/admin/roadmap");
 
 // ── Items ───────────────────────────────────────────────────────────────────
 
 export const createRoadmapItem = (body: RoadmapItemWriteBody) =>
-  apiPost<AdminRoadmapItemDTO>("/roadmap/admin/items", body);
+  apiPost<AdminRoadmapItemDTO>("/admin/roadmap/items", body);
 
 export const updateRoadmapItem = (id: string, body: RoadmapItemUpdateBody) =>
-  apiPatch<AdminRoadmapItemDTO>(`/roadmap/admin/items/${id}`, body);
+  apiPatch<AdminRoadmapItemDTO>(`/admin/roadmap/items/${id}`, body);
 
 export const deleteRoadmapItem = (id: string) =>
-  apiDelete<void>(`/roadmap/admin/items/${id}`);
+  apiDelete<void>(`/admin/roadmap/items/${id}`);
 
 export const updateItemDeps = (id: string, body: RoadmapUpdateDepsBody) =>
-  apiPatch<AdminRoadmapItemDTO>(`/roadmap/admin/items/${id}/deps`, body);
+  apiPatch<AdminRoadmapItemDTO>(`/admin/roadmap/items/${id}/deps`, body);
 
 export const duplicateRoadmapItem = (id: string) =>
-  apiPost<AdminRoadmapItemDTO>(`/roadmap/admin/items/${id}/duplicate`);
+  apiPost<AdminRoadmapItemDTO>(`/admin/roadmap/items/${id}/duplicate`);
 
 /** The item's `column` is left untouched; only the `archived` flag flips.
  *  `false` restores it from the Archive view. */
 export const archiveRoadmapItem = (id: string, archived: boolean) =>
-  apiPatch<AdminRoadmapItemDTO>(`/roadmap/admin/items/${id}/archive`, {
+  apiPatch<AdminRoadmapItemDTO>(`/admin/roadmap/items/${id}/archive`, {
     archived,
   });
 
 /** A best-effort notification blast to everyone who voted for the item;
  *  sets `notified: true` on it. */
 export const notifyVoters = (id: string, message: string) =>
-  apiPost<{ notified: number }>(`/roadmap/admin/items/${id}/notify`, {
+  apiPost<{ notified: number }>(`/admin/roadmap/items/${id}/notify`, {
     message,
   });
 
 export const bulkItems = (body: RoadmapBulkItemsBody) =>
-  apiPatch<{ count: number }>("/roadmap/admin/items/bulk", body);
+  apiPatch<{ count: number }>("/admin/roadmap/items/bulk", body);
 
 // ── Ideas ───────────────────────────────────────────────────────────────────
 
 /** Admin-authored ideas post straight to "published" (no triage needed). */
 export const createRoadmapIdea = (text: string) =>
-  apiPost<AdminRoadmapIdeaDTO>("/roadmap/admin/ideas", { text });
+  apiPost<AdminRoadmapIdeaDTO>("/admin/roadmap/ideas", { text });
 
 export const updateRoadmapIdea = (id: string, body: RoadmapIdeaUpdateBody) =>
-  apiPatch<AdminRoadmapIdeaDTO>(`/roadmap/admin/ideas/${id}`, body);
+  apiPatch<AdminRoadmapIdeaDTO>(`/admin/roadmap/ideas/${id}`, body);
 
 export const deleteRoadmapIdea = (id: string) =>
-  apiDelete<void>(`/roadmap/admin/ideas/${id}`);
+  apiDelete<void>(`/admin/roadmap/ideas/${id}`);
 
 /** Creates an item from the idea, carries its votes over, and removes the
  *  idea from the queue. */
 export const promoteIdea = (id: string) =>
-  apiPost<AdminRoadmapItemDTO>(`/roadmap/admin/ideas/${id}/promote`);
+  apiPost<AdminRoadmapItemDTO>(`/admin/roadmap/ideas/${id}/promote`);
 
 /** Folds a pending idea into an existing item: moves its live votes onto
  *  `intoItemId`, sets that item's `requested: true`, and deletes the idea. */
 export const mergeIdea = (id: string, intoItemId: string) =>
-  apiPost<AdminRoadmapItemDTO>(`/roadmap/admin/ideas/${id}/merge`, {
+  apiPost<AdminRoadmapItemDTO>(`/admin/roadmap/ideas/${id}/merge`, {
     intoItemId,
   });
 
@@ -103,7 +103,7 @@ export const declineIdea = (
   reason: RoadmapDeclineReason,
   note: string,
 ) =>
-  apiPost<AdminRoadmapIdeaDTO>(`/roadmap/admin/ideas/${id}/decline`, {
+  apiPost<AdminRoadmapIdeaDTO>(`/admin/roadmap/ideas/${id}/decline`, {
     reason,
     note,
   });
@@ -114,18 +114,18 @@ export const declineIdea = (
  *  GET exists for callers that only need a fresh roster (e.g. after a team
  *  mutation) without refetching the whole admin bundle. */
 export const listRoadmapTeam = () =>
-  apiGet<RoadmapTeamMemberDTO[]>("/roadmap/admin/team");
+  apiGet<RoadmapTeamMemberDTO[]>("/admin/roadmap/team");
 
 export const createTeamMember = (body: RoadmapTeamMemberWriteBody) =>
-  apiPost<RoadmapTeamMemberDTO>("/roadmap/admin/team", body);
+  apiPost<RoadmapTeamMemberDTO>("/admin/roadmap/team", body);
 
 export const updateTeamMember = (
   id: string,
   body: RoadmapTeamMemberUpdateBody,
-) => apiPatch<RoadmapTeamMemberDTO>(`/roadmap/admin/team/${id}`, body);
+) => apiPatch<RoadmapTeamMemberDTO>(`/admin/roadmap/team/${id}`, body);
 
 export const deleteTeamMember = (id: string) =>
-  apiDelete<void>(`/roadmap/admin/team/${id}`);
+  apiDelete<void>(`/admin/roadmap/team/${id}`);
 
 // ── Audit ───────────────────────────────────────────────────────────────────
 
@@ -135,7 +135,7 @@ export const getRoadmapAudit = (params: RoadmapAuditQueryParams = {}) => {
   if (params.before) search.set("before", params.before);
   const queryString = search.toString();
   return apiGet<RoadmapAuditEntryDTO[]>(
-    `/roadmap/admin/audit${queryString ? `?${queryString}` : ""}`,
+    `/admin/roadmap/audit${queryString ? `?${queryString}` : ""}`,
   );
 };
 
@@ -151,7 +151,7 @@ export const getRoadmapAudit = (params: RoadmapAuditQueryParams = {}) => {
 // download button the admin only reaches from an already-authenticated
 // session (Task C4's Audit Log modal "Export CSV").
 export async function getRoadmapAuditCsv(): Promise<string> {
-  const res = await fetch(`${API_BASE_URL}/v1/roadmap/admin/audit.csv`, {
+  const res = await fetch(`${API_BASE_URL}/v1/admin/roadmap/audit.csv`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -164,6 +164,6 @@ export async function getRoadmapAuditCsv(): Promise<string> {
 
 export const updateRoadmapSettings = (heroStats: RoadmapAdminHeroStatDTO[]) =>
   apiPatch<{ heroStats: RoadmapAdminHeroStatDTO[] }>(
-    "/roadmap/admin/settings",
+    "/admin/roadmap/settings",
     { heroStats },
   );

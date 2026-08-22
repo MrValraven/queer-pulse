@@ -7,9 +7,23 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./Under18Notice.module.css";
 
 interface Under18NoticeProps {
-  /** Return to the form/step — the block is a pause, never a dead end. */
-  onBack: () => void;
+  /**
+   * Return to the form/step — the block is a pause, never a dead end. Omit it
+   * where going back would mean silently re-attesting an age the member has
+   * just told us is under 18 (the signed-in onboarding wizard); pass `onSignOut`
+   * there instead.
+   */
+  onBack?: () => void;
   backLabel?: string;
+  /**
+   * Ends the session instead of returning to the attestation. Used once an
+   * account already exists, where "back" would let a self-declared minor tick
+   * "I'm 18+" and carry on.
+   */
+  onSignOut?: () => void;
+  /** Adds a "talk to us" line to the link list, for anyone who tapped by
+   *  mistake or wants to reach a human. */
+  shouldShowContactLink?: boolean;
 }
 
 /**
@@ -18,7 +32,12 @@ interface Under18NoticeProps {
  * QueerPulse is 18+ *today*, that this isn't a judgement, points to queer
  * resources that are for them right now, and leaves the door open to come back.
  */
-export function Under18Notice({ onBack, backLabel }: Under18NoticeProps) {
+export function Under18Notice({
+  onBack,
+  backLabel,
+  onSignOut,
+  shouldShowContactLink = false,
+}: Under18NoticeProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.panel}>
@@ -48,11 +67,26 @@ export function Under18Notice({ onBack, backLabel }: Under18NoticeProps) {
             {t("auth:under18.link.eligibility")}
           </Link>
         </li>
+        {shouldShowContactLink && (
+          <li>
+            <Link to={routes.contact}>{t("auth:under18.link.contact")}</Link>
+          </li>
+        )}
       </ul>
+      {onSignOut && (
+        <p className={styles.body}>{t("auth:under18.signedIn.body")}</p>
+      )}
       <div className={styles.actions}>
-        <Button variant="ghost-dark" onClick={onBack}>
-          {backLabel ?? t("auth:under18.backDefault")}
-        </Button>
+        {onBack && (
+          <Button variant="ghost-dark" onClick={onBack}>
+            {backLabel ?? t("auth:under18.backDefault")}
+          </Button>
+        )}
+        {onSignOut && (
+          <Button variant="ghost-dark" onClick={onSignOut}>
+            {t("auth:under18.signOut")}
+          </Button>
+        )}
       </div>
     </div>
   );

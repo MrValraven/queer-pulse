@@ -49,10 +49,7 @@ export function CommunityFrozenBanner({
               {
                 onSuccess: () => setLifted(true),
                 onError: () =>
-                  showToast(
-                    t("communities:detail.frozen.errorToast"),
-                    "error",
-                  ),
+                  showToast(t("communities:detail.frozen.errorToast"), "error"),
               },
             )
           }

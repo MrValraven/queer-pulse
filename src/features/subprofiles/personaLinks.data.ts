@@ -18,6 +18,20 @@ export function personaPublicPath(view: PublicSubprofileView): string {
   return personaPath(view.handle ?? view.slug);
 }
 
+/**
+ * `personaPublicPath`, but `null` when the persona has no resolvable address
+ * yet. An unlinked draft with no handle has nowhere to live: `/p/:handle` only
+ * ever resolves handles, so the `/p/<slug>` the function above falls back to is
+ * a dead address the owner could read off their own preview and copy. Display
+ * surfaces use this and say "no address yet" instead of inventing one.
+ */
+export function personaPublicPathOrNull(
+  view: PublicSubprofileView,
+): string | null {
+  if (view.ownerSlug) return nestedPersonaPath(view.ownerSlug, view.slug);
+  return view.handle ? personaPath(view.handle) : null;
+}
+
 /** Absolute, shareable URL for a persona (Share control + OG canonical/url). */
 export function personaShareUrl(view: PublicSubprofileView): string {
   return toAbsoluteUrl(personaPublicPath(view));
@@ -34,9 +48,13 @@ export function personaCardPath(card: SubprofileCardDTO): string {
 
 /**
  * Owner-dashboard variant: `SubprofileView` (the "my subprofiles" list) never
- * carries `ownerSlug` — every row is implicitly owned by the signed-in
- * member, so the caller (`SideCard`) passes that member's slug in from
- * `useProfile()` rather than reading it off the row.
+ * carries `ownerSlug`, so the caller passes it in.
+ *
+ * `ownerSlug` MUST be the persona's CREATOR (resolve it with
+ * `usePersonaCreatorSlug`), never the signed-in member: `/subprofiles/mine`
+ * returns co-owned personas too, and the nested public route resolves a linked
+ * persona by its creator's profile only. Passing the viewer's slug builds a
+ * 404 for every co-owner.
  */
 export function personaPublicPathForOwner(
   row: Pick<SubprofileView, "handle" | "slug" | "linkVisibility">,

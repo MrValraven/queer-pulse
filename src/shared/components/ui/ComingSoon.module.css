@@ -9,7 +9,7 @@
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--plum);
-  background: var(--jade-10, rgba(45, 27, 61, 0.06));
-  border: 1px solid rgba(45, 27, 61, 0.12);
+  background: var(--jade-10, rgba(var(--plum-rgb), 0.06));
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   white-space: nowrap;
 }

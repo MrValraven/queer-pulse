@@ -304,7 +304,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #fff;
+  background: rgba(var(--cream-rgb), 1);
 }
 .tierName {
   font-size: 14px;
@@ -348,7 +348,7 @@
   font-size: 15px;
   font-weight: 700;
   background: var(--accent);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   border-radius: 12px;
   padding: 14px;

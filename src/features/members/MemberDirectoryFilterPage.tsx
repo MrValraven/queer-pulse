@@ -13,9 +13,7 @@ import { mediaMax } from "../../shared/theme/breakpoints";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
-  ALL_OF_LISBON,
   EMPTY_FILTERS,
-  SORT_PARAM,
   appliedChips,
   matchesFilters,
   reconcileProfessions,
@@ -23,7 +21,7 @@ import {
   type FilterState,
   type SortKey,
 } from "./memberDirectoryFilter.data";
-import { useMembers } from "./api/useMembers";
+import { useMemberDirectoryQuery } from "./useMemberDirectoryQuery";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   ALL_SECTIONS_COLLAPSED,
@@ -67,22 +65,8 @@ export function MemberDirectoryFilterPage() {
   const toggleSection = (key: SectionKey) =>
     setSectionsOpen((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  // Identity selections go to `identities=`, NOT `tags=`. They used to be sent
-  // as tags, which the backend matched against `profiles.tags` — a skills
-  // vocabulary ('Illustration', 'NestJS') that shares no value with any identity
-  // id, so live mode returned nothing for every selection. `identities=` matches
-  // each member's opt-in published set; members who have not published an
-  // identity are simply not findable by it.
-  //
-  // Every facet is forwarded now — this used to stop at `identities`/`sort`,
-  // silently leaving the rest of the sidebar decorative in live mode (an
-  // audited P0). `ALL_OF_LISBON` is FE-only chrome meaning "no hood filter"
-  // and is stripped before the request; `yearsFrom`/`yearsTo` are only sent
-  // once the range has actually been narrowed from its full [0, 9] default —
-  // sending the untouched default would be a harmless no-op filter, but
-  // omitting it keeps the query key (and the request) identical to before a
-  // member ever touches the slider.
-  const hoods = filters.hoods.filter((h) => h !== ALL_OF_LISBON);
+  // Sidebar state → `GET /members`. See `useMemberDirectoryQuery` for how each
+  // facet is translated (and why identities are not tags).
   const {
     items: sourceMembers,
     total: totalMembers,
@@ -92,27 +76,13 @@ export function MemberDirectoryFilterPage() {
     isLoading,
     isError,
     refetch,
-  } = useMembers({
-    identities: filters.identities,
-    openTo: filters.openTo,
-    hoods,
-    disciplines: filters.disciplines,
-    professions: filters.professions,
-    languages: filters.languages,
-    yearsFrom:
-      filters.yearsFrom !== EMPTY_FILTERS.yearsFrom
-        ? filters.yearsFrom
-        : undefined,
-    yearsTo:
-      filters.yearsTo !== EMPTY_FILTERS.yearsTo ? filters.yearsTo : undefined,
-    // Live mode sorts server-side (sort is part of the query key, so changing it
-    // refetches). Demo mode sorts in the browser and must NOT put sort in the key
-    // — otherwise every sort change would refetch and flash the skeleton.
-    sort: demoMode ? undefined : SORT_PARAM[sort],
-  });
+  } = useMemberDirectoryQuery(filters, sort, demoMode);
 
-  // Combine hook loading with simulated skeleton load for the initial render.
-  const loading = isLoading || simLoading;
+  // The prototype's fake fetch delay is DEMO-ONLY. OR-ing it in unconditionally
+  // meant every live visit sat on a skeleton for 600ms even when react-query
+  // already had the page cached, replaying the count-up and the FadeIn stagger
+  // and making a cached navigation feel slower than the network.
+  const loading = isLoading || (demoMode && simLoading);
 
   // Count the headline figure up from 1 once the skeleton clears — a quick
   // settle that says "this is a real, countable population". Gating on `!loading`

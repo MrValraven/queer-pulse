@@ -18,7 +18,11 @@ import styles from "./CommunitiesHomePage.module.css";
 export function CommunitiesHome() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const loading = useSimulatedLoad(500);
+  // The placeholder skeleton is a demo-prototype device: the pulse feed it
+  // covers is mock-derived and always empty in live mode, so live members were
+  // waiting half a second for nothing.
+  const isSimulatedLoading = useSimulatedLoad(500);
+  const isLoading = demoMode && isSimulatedLoading;
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfileData();
   const firstName = profile.first;
@@ -67,7 +71,7 @@ export function CommunitiesHome() {
               <div className={styles.layout}>
                 <div>
                   <CommunitiesHomeTodos todos={todos} />
-                  <CommunitiesHomePulse loading={loading} pulse={pulse} />
+                  <CommunitiesHomePulse loading={isLoading} pulse={pulse} />
                 </div>
 
                 <CommunitiesHomeSidebar

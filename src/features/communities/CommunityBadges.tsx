@@ -13,6 +13,7 @@ import {
 import type { IconType } from "react-icons";
 import type { Reaction, ReactionKey } from "./community.model";
 import type { AccessTier, CommunityRole } from "./membership.types";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunityBadges.module.css";
 
@@ -104,26 +105,20 @@ export function ReactionBar({
           );
         }
         return (
-          <span
+          <Button
             key={r.key}
-            role="button"
-            tabIndex={0}
+            variant="ghost"
+            size="sm"
             aria-pressed={r.reacted}
             aria-label={label}
             className={[styles.pill, r.reacted && styles.pillOn]
               .filter(Boolean)
               .join(" ")}
             onClick={() => onReact?.(r.key)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onReact?.(r.key);
-              }
-            }}
           >
             <Icon aria-hidden />
             {r.count}
-          </span>
+          </Button>
         );
       })}
     </div>

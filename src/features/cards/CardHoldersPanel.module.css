@@ -1,0 +1,103 @@
+/* CardHoldersPanel: the issuer's list of every card the community has issued.
+   Tokens only: gap-*, card-pad-lg, radius-*, and the real colour set. */
+
+.panel {
+  display: grid;
+  gap: var(--gap-lg);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-panel);
+  padding: var(--card-pad-lg);
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  margin: 0;
+}
+
+.search {
+  max-width: 340px;
+}
+
+.loading {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--gap-lg) 0;
+  text-align: center;
+  color: var(--ink-60);
+  font-size: var(--text-body-sm);
+}
+
+.list {
+  display: grid;
+  gap: var(--gap-sm);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm) var(--gap-sm);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--cream);
+}
+
+.identity {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.serial {
+  margin: 0;
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+.reason {
+  margin: 4px 0 0;
+  font-size: var(--text-label);
+  color: var(--ink-60);
+  font-style: italic;
+}
+
+.statusTag {
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--gap-xs);
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

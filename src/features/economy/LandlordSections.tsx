@@ -1,7 +1,7 @@
-import { FiArrowRight, FiStar } from "react-icons/fi";
-import { Button, ImageSlot, Stars } from "../../shared/components/ui";
+import { FiArrowRight, FiStar, FiTrash2 } from "react-icons/fi";
+import { Badge, Button, ImageSlot, Stars } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { Landlord, Tint } from "./landlords";
+import type { Landlord, Recommendation, Tint } from "./landlords";
 import { LandlordActions } from "./LandlordActions";
 import s from "./LandlordPage.module.css";
 
@@ -101,28 +101,75 @@ export function LandlordAreas({ landlord }: { landlord: Landlord }) {
   );
 }
 
-export function LandlordRecommendations({ landlord }: { landlord: Landlord }) {
+/** One published recommendation. The author's own entry carries a quiet
+ *  "Yours" marker plus the withdraw control, since these are public ratings of
+ *  named real people and the writer should be able to take theirs back down
+ *  without asking a moderator. */
+function RecommendationCard({
+  recommendation,
+  onWithdraw,
+}: {
+  recommendation: Recommendation;
+  onWithdraw: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={[s.rec, recommendation.isMine && s.recMine]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <div className={s.recHead}>
+        <div className={[s.recAv, TINT[recommendation.tint]].join(" ")}>
+          {recommendation.initials}
+        </div>
+        <div>
+          <div className={s.recName}>{recommendation.name}</div>
+          <div className={s.recWhen}>{recommendation.when}</div>
+        </div>
+        <span className={s.recStars}>
+          <Stars value={recommendation.stars} />
+        </span>
+      </div>
+      <div className={s.recText}>{recommendation.text}</div>
+      {recommendation.isMine && (
+        <div className={s.recMineFoot}>
+          <Badge tone="jade">
+            {t("economy:landlordPage.recommendation.yoursBadge")}
+          </Badge>
+          <Button
+            variant="ghost"
+            size="md"
+            className={s.recWithdraw}
+            onClick={onWithdraw}
+          >
+            <FiTrash2 aria-hidden />
+            {t("economy:landlordPage.recommendation.withdrawCta")}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function LandlordRecommendations({
+  landlord,
+  onWithdrawMine,
+}: {
+  landlord: Landlord;
+  onWithdrawMine: () => void;
+}) {
   const { t } = useTranslation();
   return (
     <section className={s.sec}>
       <h2>{t("economy:landlordPage.section.recommendations")}</h2>
       <div className={s.recs}>
         {landlord.recommendations.map((recommendation, index) => (
-          <div key={`${recommendation.name}-${index}`} className={s.rec}>
-            <div className={s.recHead}>
-              <div className={[s.recAv, TINT[recommendation.tint]].join(" ")}>
-                {recommendation.initials}
-              </div>
-              <div>
-                <div className={s.recName}>{recommendation.name}</div>
-                <div className={s.recWhen}>{recommendation.when}</div>
-              </div>
-              <span className={s.recStars}>
-                <Stars value={recommendation.stars} />
-              </span>
-            </div>
-            <div className={s.recText}>{recommendation.text}</div>
-          </div>
+          <RecommendationCard
+            key={`${recommendation.name}-${index}`}
+            recommendation={recommendation}
+            onWithdraw={onWithdrawMine}
+          />
         ))}
       </div>
     </section>

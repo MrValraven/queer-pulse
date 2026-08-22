@@ -225,6 +225,13 @@ export function IncidentsSection() {
   );
 }
 
+/**
+ * Incident-alert signup. DEMO ONLY — `StatusPage` mounts this inside its
+ * `demoMode` branch. There is no incident notification list on the backend, so
+ * the submit below stores nothing; showing it in live mode told members they
+ * were subscribed when no address had been recorded anywhere. Mount it in live
+ * mode again only once a real incident-subscription endpoint exists.
+ */
 export function SubscribeStrip() {
   const { t } = useTranslation();
   const { showToast } = useToast();

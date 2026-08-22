@@ -89,7 +89,7 @@
   font-weight: 600;
   color: var(--ink-60);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 999px;
   padding: 6px 12px;
 }
@@ -150,7 +150,7 @@
 }
 
 .biolang button {
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--paper);
   border-radius: 999px;
   padding: 0.125rem 0.625rem;

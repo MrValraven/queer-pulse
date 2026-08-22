@@ -141,7 +141,18 @@ export interface Conversation {
   name: string;
   pronouns: string;
   connectedSince: string;
+  /** Pre-formatted relative/short time label ("14:02", "Mon", "1 Jun") baked
+   *  at fetch/patch time — kept for backwards compatibility (`messageCache.ts`'s
+   *  `patchConversationPreview` only ever has this shorthand to write, no ISO
+   *  timestamp) and as the DEMO row's only source (mock data has no ISO
+   *  `updatedAt`). LIVE rows additionally carry `updatedAt` below, which
+   *  `MessagesThreadRow` prefers so the label re-derives at render time
+   *  instead of going stale (e.g. "Today" past midnight) until the next fetch. */
   time: string;
+  /** ISO timestamp of the conversation's last activity (LIVE mode only — see
+   *  `time`'s doc). Absent for DEMO rows and any row a shared cache patch built
+   *  before this field existed. */
+  updatedAt?: string;
   preview: string;
   unread: boolean;
   /** Optional presence — renders a ring on the avatar when true. Absent = unknown, renders nothing. */
@@ -186,7 +197,15 @@ export interface Conversation {
   canRemoveMembers?: boolean;
   canRename?: boolean;
   canManageRoles?: boolean;
-  messages: { day: string; items: ChatMessage[] }[];
+  /** `dayKey` (a stable, ISO calendar-date machine id) is set on LIVE-mode
+   *  buckets (`messages.adapters.ts`'s `groupMessages`) so the optimistic
+   *  merge in `useMessagesController.helpers.ts` matches "today's bucket" by
+   *  an absolute date rather than the `day` display label, which can go stale
+   *  ("Today" said yesterday) in a long-lived tab — see FE-MSG-30. DEMO's
+   *  hand-authored buckets below never set it: their `day` label is fiction
+   *  that never rolls over on a real clock, so matching on it directly stays
+   *  correct there. */
+  messages: { day: string; dayKey?: string; items: ChatMessage[] }[];
 }
 
 /**

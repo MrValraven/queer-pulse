@@ -8,7 +8,6 @@
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.04);
   --rail: var(--studio-rail);
-  --jade-light: #9be0bd;
 
   background: var(--studio-bg);
   color: var(--text);
@@ -372,7 +371,7 @@
   height: 48px;
   border-radius: 50%;
   background: var(--accent);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   border: none;
   display: flex;
   align-items: center;
@@ -803,7 +802,7 @@
 
 /* Footer */
 .foot {
-  background: #0a0414;
+  background: var(--studio-deep);
   color: var(--text);
   padding: 60px 36px 36px;
   border-top: 1px solid var(--line);

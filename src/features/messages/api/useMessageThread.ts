@@ -47,6 +47,6 @@ export function useMessageThread(conversationId: string | null) {
 
   return {
     ...query,
-    groups: groups as { day: string; items: ChatMessage[] }[],
+    groups: groups as { day: string; dayKey: string; items: ChatMessage[] }[],
   };
 }

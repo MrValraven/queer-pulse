@@ -6,7 +6,7 @@ import {
   IVA_EXEMPTION_OVERRUN,
   IVA_EXEMPTION_THRESHOLD,
   IVA_EXEMPT_NOTE,
-  TAX_DISCLAIMER,
+  TAX_DISCLAIMER_KEY,
 } from "./tax.constants";
 import type { IvaEntry } from "./ivaTracker.data";
 import styles from "./IvaTrackerPage.module.css";
@@ -147,7 +147,7 @@ export function IvaTrackerStatus({ entries }: IvaTrackerStatusProps) {
         </div>
       )}
 
-      <p className={styles.disclaimer}>{TAX_DISCLAIMER}</p>
+      <p className={styles.disclaimer}>{t(TAX_DISCLAIMER_KEY)}</p>
     </div>
   );
 }

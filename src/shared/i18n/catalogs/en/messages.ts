@@ -75,6 +75,7 @@ export const messages: Catalog = {
   "attachments.imageAlt": "Photo message",
   "attachments.fallbackText": "Photo",
   "attachments.uploading": "Sending photo…",
+  "attachments.previewUnavailable": "Photo preview unavailable",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
@@ -115,6 +116,9 @@ export const messages: Catalog = {
   // Conversation panel (ConversationPanel)
   "conversation.activeNow": "Active now",
   "conversation.officialMeta": "Official · Cannot reply to this thread",
+  // Fallback display name for an official/system DM whose DTO carries no
+  // counterpart profile (messages.adapters.ts's conversationToView).
+  "conversation.officialName": "QueerPulse Team",
   "conversation.connectedSinceSuffix": " · Connected since {date}",
   "conversation.viewProfile": "View profile",
   "conversation.you": "You",
@@ -256,6 +260,8 @@ export const messages: Catalog = {
 
   // Group chat (#17) — create-group picker (NewGroupModal), group header +
   // info (ConversationHeader / GroupInfoModal), and the composer's left-notice.
+  // Fallback display title for a group DTO with no title (messages.adapters.ts).
+  "group.untitled": "Group",
   "group.newTooltip": "New group",
   "group.newTitle": "New group",
   "group.newSub": "Name your group and choose who's in it.",

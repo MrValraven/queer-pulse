@@ -5,7 +5,7 @@
   block-size: clamp(200px, 34vw, 300px);
   border-radius: var(--radius-card, 22px);
   overflow: hidden;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   background: var(--cream);
 }
 
@@ -48,7 +48,7 @@
   padding: 12px 14px;
   border-radius: var(--radius-md, 14px);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
 }
 .addressLabel {
   display: block;

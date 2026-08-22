@@ -41,15 +41,24 @@
   opacity: 1;
 }
 
+/* These are shared <IconButton>s now (FE-CNT-20), so the focus ring, hover
+   and disabled treatment come from the primitive. Only the gutter geometry is
+   overridden here: the tools live in a 84px-wide margin gutter that fades in
+   on hover, which cannot hold three 44px controls. Documented deviation from
+   the primitive's WCAG 2.5.5 tap-target floor; the real fix is a redesign of
+   the block chrome for touch, which is out of scope for this pass. */
 .blkTools button {
   width: 26px;
+  min-width: 26px;
   height: 26px;
+  min-height: 26px;
   border-radius: 8px;
   display: grid;
   place-items: center;
   color: var(--ink-40);
   background: var(--paper);
   border: 1px solid var(--line);
+  font-size: 14px;
 }
 
 .blkTools button:hover:not(:disabled) {

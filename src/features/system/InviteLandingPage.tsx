@@ -6,10 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useInvite } from "../auth/api/useInvite";
-import {
-  rememberInviteWelcome,
-  rememberPendingInvite,
-} from "../auth/api/pendingInvite";
+import { rememberInviteWelcome } from "../auth/api/pendingInvite";
 import { OnboardingPage } from "../auth/OnboardingPage";
 import { Under18Notice } from "../auth/Under18Notice";
 import { TermsModal } from "../marketing/TermsModal";
@@ -55,7 +52,6 @@ export function InviteLandingPage() {
       : undefined;
   useEffect(() => {
     if (!validInvite) return;
-    rememberPendingInvite(validInvite.code);
     rememberInviteWelcome({
       vouch: validInvite.vouch,
       inviter: {

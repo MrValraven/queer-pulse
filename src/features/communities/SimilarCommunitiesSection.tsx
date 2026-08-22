@@ -4,11 +4,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useCommunityMembership } from "../../app/providers/useCommunityMembership";
 import type { Community } from "../homepage/data/types";
-import { getLiving } from "./livingCommunities.data";
-import { JoinModal } from "./JoinModal";
+import { CommunityJoinFlowModal } from "./CommunityJoinFlowModal";
 import { CommunityCard } from "./CommunityCard";
 import { useSimilarCommunities } from "./api/useSimilarCommunities";
-import { useJoinCommunity } from "./api/useCommunityMutations";
 import styles from "./SimilarCommunitiesSection.module.css";
 
 /**
@@ -31,18 +29,11 @@ export function SimilarCommunitiesSection({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const { isMember, join, requestToJoin } = useCommunityMembership();
+  const { isMember } = useCommunityMembership();
   const { communities, isLoading } = useSimilarCommunities(currentSlug);
   const [joining, setJoining] = useState<Community | null>(null);
-  const joinMutation = useJoinCommunity(joining?.slug ?? "");
 
   if (isLoading || communities.length === 0) return null;
-
-  const joiningTier = joining
-    ? (getLiving(joining.slug)?.accessTier ??
-      joining.accessTier ??
-      (joining.privateBadge ? "private" : "public"))
-    : "public";
 
   return (
     <>
@@ -68,23 +59,9 @@ export function SimilarCommunitiesSection({
       </FadeIn>
 
       {joining && (
-        <JoinModal
-          community={{
-            name: joining.name,
-            typeLabel: joining.typeLabel,
-            count: joining.count,
-            description: joining.description,
-          }}
-          tier={joiningTier}
+        <CommunityJoinFlowModal
+          community={joining}
           onClose={() => setJoining(null)}
-          onJoined={(note) => {
-            if (joining.slug) join(joining.slug);
-            joinMutation.mutate({ note });
-          }}
-          onRequested={(note) => {
-            if (joining.slug) requestToJoin(joining.slug);
-            joinMutation.mutate({ note });
-          }}
         />
       )}
     </>

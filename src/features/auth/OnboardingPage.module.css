@@ -227,6 +227,13 @@
   font-size: 14px;
   flex: none;
 }
+/* The inviter's photo filling the initials circle above. */
+.vcAvPhoto {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
 .vcName {
   font-size: 14px;
   font-weight: 600;
@@ -394,8 +401,10 @@
   display: block;
 }
 
-/* A compact opt-in card on the final step (StepDone) — same footprint as a
-   .qsCard so it sits naturally beside the quick-start tiles. */
+/* A compact icon + copy + control card, shared by the wizard's inline notices:
+   the push opt-in and stamp-retry on StepDone, the "you're in control" note on
+   StepNorms, and the intents visibility toggle on StepIntents. Same footprint as
+   a .qsCard so it sits naturally beside the quick-start tiles. */
 .notifyCard {
   display: flex;
   align-items: center;

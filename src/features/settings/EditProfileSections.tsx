@@ -1,5 +1,6 @@
 import { useId, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
+import { FiX } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -270,9 +271,12 @@ export function SkillsSection({
               <button
                 type="button"
                 className={styles.skillTagRemove}
+                aria-label={t("settings:editProfile.skills.removeAria", {
+                  name: s,
+                })}
                 onClick={() => onRemove("skills", s)}
               >
-                ×
+                <FiX aria-hidden />
               </button>
             </span>
           ))}
@@ -307,9 +311,12 @@ export function SkillsSection({
               <button
                 type="button"
                 className={styles.skillTagRemove}
+                aria-label={t("settings:editProfile.interests.removeAria", {
+                  name: s,
+                })}
                 onClick={() => onRemove("interests", s)}
               >
-                ×
+                <FiX aria-hidden />
               </button>
             </span>
           ))}

@@ -4,12 +4,12 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { DEMO_PAST_DSAR } from "../../marketing/dsar.data";
 import {
   listDsar,
-  reauth,
   simulateOr,
   submitDsar,
   type DsarArticle,
   type DsarRequest,
 } from "./account.api";
+import { useReauth } from "./useAccountMutations";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const DSAR_DUE_DAYS = 30;
@@ -33,7 +33,9 @@ export interface SubmitDsarInput {
  * simulated `received` request without touching the network, so the standalone
  * prototype still confirms end to end — and never invents a persona or a
  * fixed reference on a real session. No `reauthToken` is passed by callers; it
- * is minted here so the page needn't know the route is gated (see `reauth`).
+ * is resolved here so the page needn't know the route is gated (see
+ * `useReauthToken.ts`) — live mode requires a fresh OAuth step-up round trip,
+ * not a mintable-on-demand token.
  *
  * On success, the new request is prepended directly into the `useListDsar`
  * cache (see `dsarListQueryKey`) instead of invalidating and refetching.
@@ -44,6 +46,7 @@ export interface SubmitDsarInput {
 export function useSubmitDsar() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
+  const { getReauthToken, beginReauth } = useReauth();
   return useCallback(
     async (input: SubmitDsarInput): Promise<DsarRequest> => {
       const demoResult: DsarRequest = {
@@ -54,7 +57,15 @@ export function useSubmitDsar() {
         dueBy: daysFromNow(DSAR_DUE_DAYS),
       };
       const created = await simulateOr(demoMode, demoResult, async () => {
-        const { reauthToken } = await reauth();
+        // No fresh step-up token cached yet: redirect instead of proceeding,
+        // and never resolve — the page is about to unload, and the caller
+        // must not see this as either a success or an error. The member
+        // submits again after landing back with a fresh token.
+        const reauthToken = getReauthToken();
+        if (!reauthToken) {
+          beginReauth();
+          return new Promise<DsarRequest>(() => {});
+        }
         return submitDsar({ ...input, reauthToken });
       });
       queryClient.setQueryData<DsarRequest[]>(dsarListQueryKey(), (current) => [
@@ -63,7 +74,7 @@ export function useSubmitDsar() {
       ]);
       return created;
     },
-    [demoMode, queryClient],
+    [demoMode, queryClient, getReauthToken, beginReauth],
   );
 }
 

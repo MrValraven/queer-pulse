@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getCommunityPosts, type CommunityPostDTO } from "./communities.api";
 import { postsToPulse } from "./communities.adapters";
 import { getLiving } from "../livingCommunities.data";
@@ -15,6 +16,10 @@ export interface PulsePaging {
   fetchNextPage: () => void;
   /** True while a subsequent page is loading. */
   isFetchingNextPage: boolean;
+  /** True while the FIRST page is in flight, where the source knows it.
+   *  Optional because the roster/discussion sources fold their first-page
+   *  wait into the page's own skeleton. */
+  isLoading?: boolean;
 }
 
 export interface CommunityPostsResult extends PulsePaging {
@@ -22,6 +27,10 @@ export interface CommunityPostsResult extends PulsePaging {
   pinned: Post[];
   /** The running Pulse feed (non-pinned posts) across every loaded page. */
   pulse: Post[];
+  /** True while the FIRST page is in flight. The Pulse tab used to paint a
+   *  fixed 500ms fake skeleton instead, which made cached data wait and hid
+   *  the real fetch state entirely. Always false in demo mode (no network). */
+  isLoading: boolean;
 }
 
 interface PostsPageVM {
@@ -46,6 +55,7 @@ export function useCommunityPosts(
   slug: string | undefined,
 ): CommunityPostsResult {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const query = useInfiniteQuery<PostsPageVM>({
     // `demoMode` is part of the key so demo and live caches never cross.
     queryKey: ["community-posts", slug, demoMode],
@@ -65,7 +75,9 @@ export function useCommunityPosts(
     () => (query.data?.pages ?? []).flatMap((p) => p.items),
     [query.data],
   );
-  const split = useMemo(() => postsToPulse(raw, slug ?? ""), [raw, slug]);
+  // Mapped outside `queryFn` (pages stay raw DTOs), so the adapter's
+  // translated fallbacks follow a language switch with no refetch.
+  const split = useMemo(() => postsToPulse(raw, slug ?? "", t), [raw, slug, t]);
 
   if (demoMode) {
     const living = getLiving(slug);
@@ -75,6 +87,7 @@ export function useCommunityPosts(
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,
+      isLoading: false,
     };
   }
   return {
@@ -83,5 +96,6 @@ export function useCommunityPosts(
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),
     isFetchingNextPage: query.isFetchingNextPage,
+    isLoading: query.isLoading,
   };
 }

@@ -73,10 +73,12 @@ describe("DeleteAccountSection", () => {
     );
 
     // The mutation resolves and the section flips to the pending state: a
-    // scheduled, still-cancellable erasure (GDPR Art. 17 grace period). The
-    // demo re-auth + deletion-request each carry a ~900ms simulated delay
-    // (account.api simulateOr), so the flip lands ~1.8s out — past findBy's
-    // default 1s budget. Widen the window rather than shorten the assertion.
+    // scheduled, still-cancellable erasure (GDPR Art. 17 grace period).
+    // Demo's step-up token resolves synchronously (getReauthToken(), no
+    // network round trip to simulate); deletion-request itself still carries
+    // a ~900ms simulated delay (account.api simulateOr) — past findBy's
+    // default 1s budget under CI jitter. Widen the window rather than
+    // shorten the assertion.
     expect(
       await screen.findByRole(
         "button",

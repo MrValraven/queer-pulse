@@ -31,6 +31,9 @@ export async function shareSubprofile(
     await navigator.clipboard.writeText(url);
     showToast(t("subprofiles:share.copied"), "success");
   } catch {
-    // Clipboard permission denied/unavailable — nothing actionable to do.
+    // Denied permission, a non-secure context or an embedded webview. Say so
+    // and hand over the URL itself, rather than leaving a control that looks
+    // like it simply doesn't work.
+    showToast(t("subprofiles:share.copyFailedWithUrl", { url }), "error");
   }
 }

@@ -6,7 +6,6 @@
   --text: rgba(var(--cream-rgb), 0.92);
   --text-60: rgba(var(--cream-rgb), 0.62);
   --text-40: rgba(var(--cream-rgb), 0.4);
-  --jade-light: #9be0bd;
 
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;

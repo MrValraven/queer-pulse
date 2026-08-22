@@ -31,6 +31,9 @@ export function MobileProfileView({
   onEdit,
   onEditLinks,
   onPreview,
+  onOpenWhoSeesWhat,
+  onOpenAccountData,
+  onToggleHidden,
 }: {
   profile: MemberProfile;
   isSelf: boolean;
@@ -41,6 +44,11 @@ export function MobileProfileView({
   onEdit: () => void;
   onEditLinks: () => void;
   onPreview: () => void;
+  /** Owner-only settings, passed straight through to the header's kebab menu.
+   *  Absent means no menu, which is what a visitor's view gets. */
+  onOpenWhoSeesWhat?: () => void;
+  onOpenAccountData?: () => void;
+  onToggleHidden?: () => void;
 }) {
   // `selfView` (isSelf && !previewing) isn't needed here — every child below
   // derives the same thing itself from `isSelf` + `previewing`. Accepted for
@@ -59,6 +67,9 @@ export function MobileProfileView({
         onEdit={onEdit}
         onEditLinks={onEditLinks}
         onPreview={onPreview}
+        onOpenWhoSeesWhat={onOpenWhoSeesWhat}
+        onOpenAccountData={onOpenAccountData}
+        onToggleHidden={onToggleHidden}
       />
       <MobilePersonaHighlights
         ownerSlug={ownerSlug}

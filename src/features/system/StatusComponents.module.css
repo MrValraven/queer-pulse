@@ -130,8 +130,8 @@
 }
 
 .pillDeg {
-  background: rgba(232, 175, 60, 0.12);
-  color: #9a7020;
+  background: rgba(var(--amber-rgb), 0.12);
+  color: var(--amber-ink);
 }
 
 .pillOut {
@@ -313,8 +313,8 @@
 }
 
 .incTagMonitoring {
-  background: rgba(210, 168, 50, 0.12);
-  color: #9a7020;
+  background: rgba(var(--amber-rgb), 0.12);
+  color: var(--amber-ink);
 }
 
 /* ── Subscribe strip ── */

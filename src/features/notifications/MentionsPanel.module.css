@@ -2,54 +2,11 @@
   margin-top: 4px;
 }
 
+/* Shared <Tabs variant="underline"> owns the tab styling (role="tablist",
+   aria-selected, roving tabindex); this class only adds the bottom spacing. */
 .tabs {
-  display: flex;
-  gap: 4px;
   margin-bottom: 22px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
   flex-wrap: wrap;
-}
-.tab {
-  background: none;
-  border: none;
-  font-family: var(--sans);
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--ink-60);
-  padding: 11px 16px;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.2s;
-}
-@media (hover: hover) {
-  .tab:hover {
-    color: var(--text-strong);
-  }
-}
-.tab.active {
-  color: var(--text-strong);
-}
-.tab.active::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 16px;
-  right: 16px;
-  height: 2px;
-  background: var(--accent);
-}
-.tabCount {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink-40);
-  background: rgba(var(--plum-rgb), 0.06);
-  border-radius: 5px;
-  padding: 1px 7px;
-  margin-left: 5px;
-}
-.tab.active .tabCount {
-  color: var(--accent-ink);
-  background: rgba(var(--accent-rgb), 0.1);
 }
 
 .markRow {

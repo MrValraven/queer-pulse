@@ -128,6 +128,10 @@ export const myevents: Catalog = {
   "card.joinLinkToast": "A abrir o link para entrar…",
   "card.directionsToast": "A abrir indicações para {venue}",
 
+  // ── Live-data labels (api/myEvents.adapters.ts) ───────────────────────────
+  "card.online": "Online",
+  "invite.defaultTitle": "Convite para um evento",
+
   // ── Urgency / friends chips (EventCardParts) ──────────────────────────────
   "card.soldOut": "Esgotado",
   "card.spotsOpen_one": "{count} vaga aberta",
@@ -260,12 +264,12 @@ export const myevents: Catalog = {
   "conflict.body":
     "à mesma hora. Só podes estar num sítio. Talvez valha a pena deixar um deles.",
   "edge.cancelledTitle": "Quem organiza cancelou este convívio.",
-  "edge.cancelledBody": "A tua confirmação foi libertada —",
+  "edge.cancelledBody": "A tua confirmação foi libertada.",
   "edge.findSomethingSimilar": "encontrar algo semelhante",
   "edge.findingSimilarToast": "A encontrar convívios semelhantes…",
   "edge.reviewTitle": "Em análise.",
   "edge.reviewBody":
-    "Chegou uma denúncia, por isso a nossa equipa está a analisar este convívio. Continua visível enquanto verificamos —",
+    "Chegou uma denúncia, por isso a nossa equipa está a analisar este convívio. Continua visível enquanto verificamos.",
   "edge.seeStatus": "ver estado",
   "edge.seeStatusToast": "A abrir o estado da análise…",
   "edge.blockedBody":
@@ -283,7 +287,7 @@ export const myevents: Catalog = {
   "dayof.gettingIn": "Como entrar",
   "dayof.meetingPoint": "Ponto de convívio:",
   "dayof.doorCode": "Código da porta:",
-  "dayof.doorCodeNote": "— mostrado porque está prestes a começar",
+  "dayof.doorCodeNote": "(mostrado porque está prestes a começar)",
 
   // ── Calendar aside (CalendarCard, CalendarGrid) ───────────────────────────
   "calendar.today": "Hoje",
@@ -315,6 +319,9 @@ export const myevents: Catalog = {
   "calSubscribe.exportTitle": "Exportar este mês",
   "calSubscribe.exportSub": "Transfere um ficheiro .ics único",
   "calSubscribe.exportToast": "Eventos de {month} transferidos como .ics",
+
+  // ── .ics export (myEvents.ics.ts) ─────────────────────────────────────────
+  "ics.description": "Vê os detalhes e as novidades no QueerPulse: {url}",
 
   // ── Recommendations strip (Discovery) ─────────────────────────────────────
   "discovery.title": "Talvez <em>gostes</em>",
@@ -523,6 +530,8 @@ export const myevents: Catalog = {
   "blockModal.confirmCta": "Bloquear",
   "blockModal.blockedToast":
     "Bloqueade. Não vais mais ver os eventos desta pessoa",
+  "blockModal.alreadyBlockedToast":
+    "Já tens esta pessoa bloqueada. Nada mudou.",
 
   // ── Toasts from RSVP/notification lifecycle (useMyEventsState.ts) ────────
   "toast.reminderSet": "Lembrete definido: {lead} antes",

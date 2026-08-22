@@ -11,7 +11,7 @@
   padding: 18px;
   border-radius: 18px;
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -37,7 +37,7 @@
   flex-direction: column;
   gap: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(45, 27, 61, 0.09);
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .kv {
@@ -80,7 +80,7 @@
   align-items: flex-start;
   padding: 12px 14px;
   border-radius: 14px;
-  background: rgba(45, 27, 61, 0.035);
+  background: rgba(var(--plum-rgb), 0.035);
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--ink-60);
@@ -143,7 +143,7 @@
   gap: 12px;
   align-items: center;
   padding: 11px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .simrow:last-child {
@@ -163,8 +163,8 @@
   gap: 8px;
   padding: 14px;
   border-radius: 16px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
-  background: rgba(45, 27, 61, 0.035);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: rgba(var(--plum-rgb), 0.035);
 }
 
 .subjHead {
@@ -190,7 +190,7 @@
   padding: 5px 11px;
   font-size: 12.5px;
   border-radius: 999px;
-  border: 1.5px solid rgba(45, 27, 61, 0.2);
+  border: 1.5px solid rgba(var(--line-rgb), 0.2);
   background: var(--paper);
   color: var(--ink-60);
 }
@@ -199,7 +199,7 @@
 .chip[data-active="true"] {
   border-color: var(--plum);
   color: var(--plum);
-  background: rgba(45, 27, 61, 0.035);
+  background: rgba(var(--plum-rgb), 0.035);
 }
 
 .readHead {
@@ -218,7 +218,7 @@
   gap: 10px;
   align-items: flex-start;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(45, 27, 61, 0.09);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
 
 .flagrow:last-child {
@@ -243,14 +243,14 @@
 }
 
 .dotMuted {
-  background: rgba(45, 27, 61, 0.2);
+  background: rgba(var(--plum-rgb), 0.2);
 }
 
 .prog {
   width: 100%;
   height: 6px;
   border-radius: 999px;
-  background: rgba(45, 27, 61, 0.06);
+  background: rgba(var(--plum-rgb), 0.06);
   overflow: hidden;
 }
 
@@ -272,7 +272,7 @@
   gap: 11px;
   align-items: flex-start;
   padding: 11px 0;
-  border-left: 1.5px solid rgba(45, 27, 61, 0.09);
+  border-left: 1.5px solid rgba(var(--line-rgb), 0.09);
   margin-left: 4px;
   padding-left: 16px;
   position: relative;
@@ -296,7 +296,7 @@
   gap: 8px;
   padding: 12px;
   border-radius: 14px;
-  background: rgba(45, 27, 61, 0.035);
+  background: rgba(var(--plum-rgb), 0.035);
   font-size: 13.5px;
 }
 
@@ -330,7 +330,7 @@
   gap: 8px;
   margin-left: 20px;
   padding-left: 12px;
-  border-left: 1.5px solid rgba(45, 27, 61, 0.09);
+  border-left: 1.5px solid rgba(var(--line-rgb), 0.09);
 }
 
 .letterResolved {
@@ -356,7 +356,7 @@
 }
 
 .field textarea {
-  border: 1.5px solid rgba(45, 27, 61, 0.09);
+  border: 1.5px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
   padding: 10px 12px;
   background: var(--paper);
@@ -418,7 +418,7 @@
 }
 
 .step .dot {
-  background: rgba(45, 27, 61, 0.2);
+  background: rgba(var(--plum-rgb), 0.2);
 }
 
 .stepOn {

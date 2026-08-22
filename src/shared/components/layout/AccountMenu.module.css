@@ -141,7 +141,7 @@
   border-radius: 16px;
   box-shadow: 0 18px 50px -12px rgba(var(--plum-rgb), 0.28);
   overflow: hidden; /* clip pinned header/footer to the rounded corners */
-  z-index: 200;
+  z-index: var(--z-popover);
   transform-origin: top right;
   animation: qpMenuIn var(--dur-fast) var(--ease-out);
 }

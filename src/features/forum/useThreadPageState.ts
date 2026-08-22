@@ -5,6 +5,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../app/providers/useProfile";
+import { useSocial } from "../../app/providers/useSocial";
 import { useSaved } from "../../app/providers/useSaved";
 import { thread as threadPath } from "../../app/routeMap";
 import { CATS, type Reply, type ReplySortId } from "./forum.data";
@@ -14,6 +15,22 @@ import { ApiError } from "../../shared/api/client";
 import { buildReplyTree } from "./buildReplyTree";
 import { useThreadModeration } from "./useThreadModeration";
 import { useNestedReplyComposer } from "./useNestedReplyComposer";
+
+/**
+ * Catalog key for a failed reply. The endpoint answers 403 for TWO different
+ * situations now: a thread a moderator closed to replies, and a thread scoped
+ * to a community the member does not belong to. Only the first is knowable
+ * from the loaded thread, so the second gets copy that names both honestly
+ * instead of asserting the thread is locked.
+ */
+function replyErrorKey(error: unknown, isKnownLocked: boolean): string {
+  if (error instanceof ApiError && error.status === 403) {
+    return isKnownLocked
+      ? "forum:locked.replyBlockedToast"
+      : "forum:threadPage.replyForbiddenToast";
+  }
+  return "forum:threadPage.replyFailedToast";
+}
 
 /**
  * All state, derived values, effects, and mutation handlers for the thread
@@ -55,6 +72,9 @@ export function useThreadPageState() {
   // thread's stable slug (or its numeric id for demo mock threads, which have
   // none), so the pressed state survives reloads and syncs with Collections.
   const { isSaved, toggleSave } = useSaved();
+  // Members the viewer has muted or blocked — their replies are filtered out of
+  // the tree below.
+  const { blocked, muted } = useSocial();
   const savedId = threadData
     ? `post:${threadData.slug ?? threadData.id}`
     : "";
@@ -95,6 +115,7 @@ export function useThreadPageState() {
   const moderation = useThreadModeration({
     thread: threadData,
     demoMode,
+    localReplies,
     setLocalReplies,
     replyKey,
   });
@@ -142,9 +163,27 @@ export function useThreadPageState() {
 
   const catMeta = CATS.find((c) => c.id === threadData?.category);
 
+  // Safety filter, mirroring `useFeed`: a member I have muted or blocked does
+  // not appear in a thread I am reading. The server is authoritative in live
+  // mode; this also covers the window before a fresh mute/block propagates, and
+  // is the whole mechanism in demo mode. A hidden reply's own children fall
+  // back to the root of the tree (see `buildReplyTree`) rather than vanishing.
+  const hiddenAuthorHandles = useMemo(
+    () => new Set([...blocked, ...muted]),
+    [blocked, muted],
+  );
+  const visibleReplies = useMemo(
+    () =>
+      localReplies.filter(
+        (replyItem) =>
+          !replyItem.slug || !hiddenAuthorHandles.has(replyItem.slug),
+      ),
+    [localReplies, hiddenAuthorHandles],
+  );
+
   const replyTree = useMemo(
-    () => buildReplyTree(localReplies, sort),
-    [localReplies, sort],
+    () => buildReplyTree(visibleReplies, sort),
+    [visibleReplies, sort],
   );
 
   // Pressed-state map for the reply like controls, derived from the server's
@@ -181,10 +220,13 @@ export function useThreadPageState() {
         avatar: profile.initials,
         background: "var(--plum)",
         color: "var(--cream)",
-        name: "You",
+        // Translated, and flagged `isMine` so ownership never depends on the
+        // rendered string (a "You" comparison broke in every other language).
+        name: t("forum:author.you"),
+        isMine: true,
         slug: profile.slug,
         photo: profile.photo,
-        time: "Just now",
+        time: t("forum:time.justNow"),
         body: [body],
         reactions: 0,
       },
@@ -198,19 +240,25 @@ export function useThreadPageState() {
     postReply.mutate(
       { body, parentPostId },
       {
+        onSuccess: (created) => {
+          // Stamp the SERVER's post id onto the optimistic reply (demo returns
+          // nothing and keeps the client id). Until this landed, the inline
+          // "Reply" button on a just-posted reply nested under a client uuid,
+          // which the backend rejects.
+          if (!created) return;
+          setLocalReplies((prev) =>
+            prev.map((replyItem) =>
+              replyItem.id === optimisticId
+                ? { ...replyItem, id: created.id, postId: created.id }
+                : replyItem,
+            ),
+          );
+        },
         onError: (error) => {
           setLocalReplies((prev) =>
             prev.filter((replyItem) => replyItem.id !== optimisticId),
           );
-          const locked = error instanceof ApiError && error.status === 403;
-          showToast(
-            t(
-              locked
-                ? "forum:locked.replyBlockedToast"
-                : "forum:threadPage.replyFailedToast",
-            ),
-            "error",
-          );
+          showToast(t(replyErrorKey(error, !!threadData?.isLocked)), "error");
         },
       },
     );

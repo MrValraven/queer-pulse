@@ -20,7 +20,7 @@ import styles from "./ItemDrawer.module.css";
  * The drawer's editable identity block: the title input, then a select grid
  * for category/status/target-quarter/owner/priority. `targetQuarter` is
  * special-cased by the caller (`onTargetQuarterChange`, not
- * `onFieldChange`) — moving an existing item's date always routes through
+ * `onFieldChange`). Moving an existing item's date always routes through
  * the Slip-reason modal (a sibling task), never a silent write.
  */
 export function DrawerHeaderFields({
@@ -107,7 +107,7 @@ export function DrawerHeaderFields({
             id="drawer-field-target"
             value={targetQuarter ?? ""}
             options={[
-              { value: "", label: "—" },
+              { value: "", label: t("admin:common.notSet") },
               ...quarterOptions.map((quarter) => ({
                 value: quarter,
                 label: quarter,

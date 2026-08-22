@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { ModReport, ReportDetail } from "../adminModeration.data";
 import { getModReport } from "./moderation.api";
-import { modReportDtoToView } from "./moderation.adapters";
+import { modReportDetailFrom } from "./moderation.adapters";
 
 /**
  * Resolves the rich drawer context (reported content, thread, people) for one
@@ -22,7 +22,7 @@ export function useModReportDetail(report: ModReport): {
   const query = useQuery<ReportDetail | null>({
     queryKey: ["mod-report", report.id],
     queryFn: async () =>
-      modReportDtoToView(await getModReport(report.id)).detail ?? null,
+      modReportDetailFrom(await getModReport(report.id)) ?? null,
     // Only reach for the network when the list item lacks detail and we're live.
     enabled: !demoMode && !hasDetail,
   });

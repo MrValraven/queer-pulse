@@ -5,7 +5,6 @@
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
-  --jade-light: #9be0bd;
   padding: 8px 0 60px;
   max-width: 920px;
   margin: 0 auto;
@@ -182,8 +181,8 @@
 
 /* Removing status */
 .removing {
-  background: rgba(245, 158, 11, 0.06);
-  border-bottom-color: rgba(245, 158, 11, 0.2);
+  background: rgba(var(--amber-rgb), 0.06);
+  border-bottom-color: rgba(var(--amber-rgb), 0.2);
   border-radius: 12px;
   padding-left: 14px;
   padding-right: 14px;
@@ -194,15 +193,15 @@
   gap: 8px;
   font-size: 12.5px;
   font-weight: 600;
-  color: #f5b544;
+  color: var(--amber);
   white-space: nowrap;
 }
 .rtStatus .d {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(var(--amber-rgb), 0.2);
   flex: none;
   animation: rtPulse 2s var(--ease) infinite;
 }
@@ -300,7 +299,8 @@
 .modalBg {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  /* a dialog-class overlay, so it sits at the same tier as the shared Modal */
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,7 +313,7 @@
 .modal {
   width: 100%;
   max-width: 460px;
-  background: #1a1028;
+  background: var(--studio-bg);
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: 30px 32px 28px;

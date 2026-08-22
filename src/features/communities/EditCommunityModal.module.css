@@ -132,21 +132,15 @@
   color: var(--ink);
 }
 
+/* A shared <IconButton>; this only pins it to the compact row scale. The
+   primitive supplies the focus ring, hover and disabled treatment. */
 .ruleRemove {
   flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: none;
-  border-radius: var(--radius-pill);
-  background: transparent;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  min-height: 34px;
   color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -192,24 +186,24 @@
 
 /* "Suggest a tag" trigger — a quiet secondary affordance below the tag
    picker, not a button competing with the form's primary actions. */
+/* A shared <Button variant="ghost" size="sm"> wearing the quiet, underlined
+   look this secondary affordance wants, so it never competes with the form's
+   primary actions. */
 .suggestTagTrigger {
-  display: inline-flex;
-  align-items: center;
   margin: -8px 0 16px;
   padding: 0;
+  min-height: 0;
   border: none;
   background: none;
-  font-family: var(--sans);
   font-size: 13px;
-  font-weight: 600;
   color: var(--ink-60);
   text-decoration: underline;
   text-underline-offset: 2px;
-  cursor: pointer;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .suggestTagTrigger:hover {
+    background: none;
     color: var(--plum);
   }
 }
@@ -237,4 +231,12 @@
   .ruleAdd input {
     transition: none;
   }
+}
+
+/* Marks a control a MOD can see but not change (access tier, roster
+   visibility): the backend refuses those two from anyone but the owner, so
+   they read as owner-only here rather than failing on save. */
+.ownerOnlyHint {
+  font-size: 12px;
+  color: var(--ink-40);
 }

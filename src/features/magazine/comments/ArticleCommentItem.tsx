@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar } from "../../../shared/components/ui";
+import { Avatar, Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import type { ReaderCommentDTO } from "./readerComments.api";
@@ -14,9 +14,13 @@ export function ArticleCommentItem({
   onReport,
 }: {
   comment: ReaderCommentDTO;
-  onReply: (parentId: string, body: string) => void;
-  onEdit: (id: string, body: string) => void;
-  onDelete: (id: string) => void;
+  /** Returns the mutation promise so the composer only clears on success. */
+  onReply: (parentId: string, body: string) => void | Promise<unknown>;
+  /** Returns the mutation promise so the composer only clears on success. */
+  onEdit: (id: string, body: string) => void | Promise<unknown>;
+  /** Hands the whole comment up so the list can confirm before deleting
+   *  (FE-CNT-11) — deleting straight from this click had no undo. */
+  onDelete: (comment: ReaderCommentDTO) => void;
   onReport: (comment: ReaderCommentDTO) => void;
 }) {
   const { t } = useTranslation();
@@ -48,8 +52,8 @@ export function ArticleCommentItem({
               placeholderKey="magazine:comments.composer.editPlaceholder"
               submitLabelKey="magazine:comments.composer.saveEdit"
               onCancel={() => setEditingId(null)}
-              onSubmit={(body) => {
-                onEdit(item.id, body);
+              onSubmit={async (body) => {
+                await onEdit(item.id, body);
                 setEditingId(null);
               }}
               focusOnMount
@@ -64,40 +68,44 @@ export function ArticleCommentItem({
               )}
               <div className={styles.commentActions}>
                 {!isReply && (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     type="button"
-                    className={styles.actionLink}
-                    onClick={() => setReplying((v) => !v)}
+                    onClick={() => setReplying((isOpen) => !isOpen)}
                   >
                     {t("magazine:comments.reply")}
-                  </button>
+                  </Button>
                 )}
                 {item.canEdit && (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     type="button"
-                    className={styles.actionLink}
                     onClick={() => setEditingId(item.id)}
                   >
                     {t("magazine:comments.edit")}
-                  </button>
+                  </Button>
                 )}
                 {item.canDelete && (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     type="button"
-                    className={styles.actionLink}
-                    onClick={() => onDelete(item.id)}
+                    onClick={() => onDelete(item)}
                   >
                     {t("magazine:comments.delete")}
-                  </button>
+                  </Button>
                 )}
                 {!item.canDelete && (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     type="button"
-                    className={styles.actionLink}
                     onClick={() => onReport(item)}
                   >
                     {t("magazine:comments.report.cta")}
-                  </button>
+                  </Button>
                 )}
               </div>
             </>
@@ -107,8 +115,8 @@ export function ArticleCommentItem({
               placeholderKey="magazine:comments.composer.replyPlaceholder"
               submitLabelKey="magazine:comments.composer.postReply"
               onCancel={() => setReplying(false)}
-              onSubmit={(body) => {
-                onReply(item.id, body);
+              onSubmit={async (body) => {
+                await onReply(item.id, body);
                 setReplying(false);
               }}
               focusOnMount

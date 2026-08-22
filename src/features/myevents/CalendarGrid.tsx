@@ -74,7 +74,7 @@ function CalendarYearView({
               {evs.length ? (
                 <Dots events={evs} />
               ) : (
-                <span className={sx("cy-empty")}>—</span>
+                <span className={sx("cy-empty")} aria-hidden />
               )}
             </div>
           </button>

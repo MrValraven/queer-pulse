@@ -11,21 +11,17 @@ import type { ForumPostResponse, ForumThreadResponse } from "./forum.api";
 // via the shared `tintForSlug`, matching the mock palette.
 
 // The Thread view-model keys on a numeric id (routing + vote sets). Backend
-// threads are keyed by slug, so we map each backend slug to a stable numeric id
-// and remember the reverse so ThreadPage (which only sees the numeric route
-// param) can resolve the slug to fetch detail/posts. Populated as threads list.
-const slugById = new Map<number, string>();
+// threads are keyed by slug, so we map each backend slug to a stable numeric
+// id. The REVERSE lookup used to live here as a module-level registry populated
+// as a render side effect; every write path now carries `thread.slug` on the
+// view-model instead (see `useEditThreadTitle`), so nothing renders-to-write
+// any more.
 
 /** Stable non-negative 31-bit hash of a string → the view-model's numeric id. */
 function numericId(slug: string): number {
   let h = 0;
   for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
   return h % 2_000_000_000;
-}
-
-/** Resolve a numeric thread id back to its backend slug (list must run first). */
-export function slugForThreadId(id: number): string | undefined {
-  return slugById.get(id);
 }
 
 const SOLID: Record<SlugTint, { background: string; color: string }> = {
@@ -67,7 +63,6 @@ export function threadToCard(
   fmt: Formatters,
 ): Thread {
   const id = numericId(dto.slug);
-  slugById.set(id, dto.slug);
   const slug = dto.author.handle;
   const tint = tintForSlug(slug);
   const s = SOLID[tint];
@@ -88,7 +83,10 @@ export function threadToCard(
       official: dto.author.official,
     },
     posted: relative(dto.lastActivityAt, t, fmt),
-    views: 0,
+    // `views` is deliberately ABSENT: `ForumThreadResponse` carries no view
+    // count, and hardcoding 0 printed "0 views" under every live thread as if
+    // nobody had ever opened it. Undefined hides the stat instead.
+    views: undefined,
     // The card's upvote count is the OP post's vote count (denormalized onto the
     // thread DTO), NOT a hardcoded 0 — this is what the list-row upvote button
     // reads and mutates via `opPostId`.

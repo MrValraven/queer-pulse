@@ -7,7 +7,7 @@ import {
   SIMPLIFIED_COEFFICIENTS,
   SS_RATE_ENI,
   SS_RATE_FREELANCER,
-  TAX_DISCLAIMER,
+  TAX_DISCLAIMER_KEY,
 } from "./tax.constants";
 import type { ActivityKey, StartupYear, WorkerStatus } from "./takeHome.data";
 import styles from "./TakeHomeCalculatorPage.module.css";
@@ -113,7 +113,7 @@ export function TakeHomeResult({
         </div>
       </dl>
 
-      <p className={styles.disclaimer}>{TAX_DISCLAIMER}</p>
+      <p className={styles.disclaimer}>{t(TAX_DISCLAIMER_KEY)}</p>
     </div>
   );
 }

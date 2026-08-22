@@ -21,6 +21,7 @@ import { NudgesProvider } from "./providers/NudgesProvider";
 import { RealtimeProvider } from "../shared/api/realtime";
 import { I18nProvider } from "./providers/I18nProvider";
 import { ToastProvider } from "../shared/components/feedback/ToastProvider";
+import { ReauthCompletionProvider } from "./providers/ReauthCompletionProvider";
 import { PlatformLockProvider } from "./providers/PlatformLockProvider";
 import { ConnectProvider } from "./providers/ConnectProvider";
 import { ConnectionsProvider } from "./providers/ConnectionsProvider";
@@ -127,6 +128,10 @@ const RootProviders = composeProviders([
   NavDrawerProvider,
   I18nProvider,
   ToastProvider,
+  // Picks up a completed step-up reauth OAuth round trip (see
+  // useReauthToken.ts) and toasts the outcome. Needs I18nProvider (t()) and
+  // ToastProvider (useToast()) above it, both satisfied here.
+  ReauthCompletionProvider,
   // Platform-lockdown render gate: needs AuthProvider above it (reads `role`,
   // to never trap the one admin who could lift the lockdown) and I18nProvider
   // above it (the maintenance screen calls `t()`). Placed last so it only

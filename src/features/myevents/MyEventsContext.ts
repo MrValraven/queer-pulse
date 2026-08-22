@@ -138,7 +138,7 @@ export interface MyEventsValue {
 
   // misc
   offline: boolean;
-  toast: (msg: string, type?: "success" | "info") => void;
+  toast: (msg: string, type?: "success" | "info" | "error") => void;
 }
 
 export const MyEventsContext = createContext<MyEventsValue | null>(null);

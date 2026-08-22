@@ -5,6 +5,8 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from "react";
+import { sanitizeArticleHtml } from "./sanitizeArticleHtml";
+import { htmlToPlainText } from "./plainText";
 import styles from "./RichText.module.css";
 
 export interface RichTextProps {
@@ -26,6 +28,17 @@ export interface RichTextProps {
    * and from there into the `html` this component reports via `onChange`. */
   onPaste?: (event: ClipboardEvent<HTMLDivElement>) => void;
   spellCheck?: boolean;
+  /**
+   * PLAIN-TEXT mode, for fields stored and rendered as text rather than
+   * markup (the headline and standfirst — see `plainText.ts`). The seed is
+   * decoded to the characters a reader would see, `onChange` reports
+   * `textContent` instead of `innerHTML`, and Enter is swallowed so the
+   * browser can never split the field into block children whose text would
+   * be concatenated without a boundary. `SelectionToolbar` skips these
+   * blocks, so no formatting can be applied that the saved value would
+   * silently drop.
+   */
+  plainText?: boolean;
 }
 
 /**
@@ -57,13 +70,22 @@ export function RichText({
   onFocus,
   onPaste,
   spellCheck = true,
+  plainText = false,
 }: RichTextProps) {
   const elementRef = useRef<HTMLDivElement | null>(null);
 
   useLayoutEffect(() => {
     const element = elementRef.current;
     if (!element) return;
-    element.innerHTML = html;
+    // Seed HTML is stored, potentially attacker-influenced content. Sanitize
+    // it to the same allowed-tag set the reader enforces before writing it
+    // into this live contentEditable, so a malicious block cannot execute
+    // script the moment an editor opens it.
+    // Plain-text fields (headline/standfirst) are decoded rather than parsed
+    // as markup: the stored value is text by contract, and any markup left in
+    // it from before that contract must show as the characters a reader sees.
+    if (plainText) element.textContent = htmlToPlainText(html);
+    else element.innerHTML = sanitizeArticleHtml(html);
     element.setAttribute("data-empty", String(element.textContent === ""));
     // Intentionally mount-only — see the component-level comment: this
     // effect must NOT re-run when `html` changes after mount.
@@ -73,7 +95,7 @@ export function RichText({
   function handleInput(event: FormEvent<HTMLDivElement>) {
     const element = event.currentTarget;
     element.setAttribute("data-empty", String(element.textContent === ""));
-    onChange(element.innerHTML);
+    onChange(plainText ? (element.textContent ?? "") : element.innerHTML);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -81,7 +103,11 @@ export function RichText({
     if (event.key === "/" && onSlash && element.textContent === "") {
       event.preventDefault();
       onSlash(element);
+      return;
     }
+    // A headline is one line: without this the browser inserts a <div>/<br>
+    // whose text `textContent` would glue onto the previous line's last word.
+    if (event.key === "Enter" && plainText) event.preventDefault();
   }
 
   const richClassName = className ? `${styles.rich} ${className}` : styles.rich;
@@ -96,6 +122,9 @@ export function RichText({
       // find "the nearest rich-text block" via a plain attribute selector
       // instead of depending on this module's CSS-Modules class name.
       data-rich="true"
+      // Read by `SelectionToolbar`: a plain-text field takes no inline
+      // formatting, since `textContent` would drop it on the next keystroke.
+      data-plain-text={plainText ? "true" : undefined}
       data-ph={placeholder}
       // contentEditable has no implicit ARIA role a screen reader can rely
       // on, so it's made explicit — this is the WAI-ARIA authoring-practice

@@ -14,16 +14,24 @@ import { useEffect, useRef, type RefObject } from "react";
  * @param active   Whether the surface is open. No listener is attached when false.
  * @param ref      The surface's outermost element; a press inside it is ignored.
  * @param onDismiss Called on an outside press. May be a fresh closure each render.
+ * @param options  `onEscape` also closes on the Escape key and hands the caller
+ *                 the chance to restore focus to the trigger. Menus that were
+ *                 hand-rolling both listeners together can now use one hook.
  */
 export function useOutsideDismiss(
   active: boolean,
   ref: RefObject<HTMLElement | null>,
   onDismiss: () => void,
+  options?: { onEscape?: () => void },
 ): void {
   const savedOnDismiss = useRef(onDismiss);
+  const savedOnEscape = useRef(options?.onEscape);
   useEffect(() => {
     savedOnDismiss.current = onDismiss;
+    savedOnEscape.current = options?.onEscape;
   });
+
+  const hasEscapeHandler = Boolean(options?.onEscape);
 
   useEffect(() => {
     if (!active) return;
@@ -35,4 +43,13 @@ export function useOutsideDismiss(
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [active, ref]);
+
+  useEffect(() => {
+    if (!active || !hasEscapeHandler) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") savedOnEscape.current?.();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [active, hasEscapeHandler]);
 }

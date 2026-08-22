@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { TABS, type ResultType } from "./search.data";
@@ -14,13 +15,17 @@ export function SearchPage() {
   const { t } = useTranslation();
   // The query lives in the URL (?q=…) so it's shareable, bookmarkable, and can be
   // pre-filled by the global ⌘K command palette.
+  const { demoMode } = useDemoMode();
   const simulatedLoad = useSimulatedLoad();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
   const [tab, setTab] = useState<ResultType | "all">("all");
   const { data: searchData, recents, signInRequired, loading } =
     useSearchData(query, tab);
-  const showLoading = loading || simulatedLoad;
+  // The prototype's fake fetch delay is DEMO-ONLY. In live mode `useSearchData`
+  // reports real loading, so OR-ing this in only added 600ms of skeleton to
+  // every visit, including ones react-query could answer from cache.
+  const showLoading = loading || (demoMode && simulatedLoad);
   const setQuery = (value: string) =>
     setSearchParams(value ? { q: value } : {}, { replace: true });
 

@@ -4,7 +4,6 @@
    (repo --amber-ink/--amber-rgb are reused directly; repo --violet is a
    different, more saturated hue than this design). Centralized here once. */
 .pill {
-  --desk-violet: #5c3e92;
   --desk-violet-soft: rgba(92, 62, 146, 0.14);
 
   display: inline-flex;

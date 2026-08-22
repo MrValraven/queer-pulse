@@ -339,7 +339,9 @@ export function DataPane({
             title={t("settings:data.downloadMessages.title")}
             description={t("settings:data.downloadMessages.desc")}
             button={t("settings:data.downloadMessages.cta")}
-            to={routes.dataExport}
+            // Same page as the full export, preselected to messages only, so
+            // the card delivers the scoped archive it advertises.
+            to={`${routes.dataExport}?categories=messages`}
           />
           <DataCard
             title={t("settings:data.correct.title")}
@@ -462,7 +464,15 @@ export function VisibilityPane({
                 value={o.v}
                 checked={draft.visibility === o.v}
                 onChange={() => {
-                  updateDraft({ visibility: o.v });
+                  // Leaving "open" withdraws homepage-feature consent with it.
+                  // Keeping a stored yes on a profile that is no longer public
+                  // means a later switch back re-arms it without a fresh
+                  // decision, and consent does not survive its own condition.
+                  updateDraft(
+                    o.v === "open"
+                      ? { visibility: o.v }
+                      : { visibility: o.v, featuredConsent: false },
+                  );
                   onChange("visibility.audience");
                 }}
               />
@@ -547,7 +557,9 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
                 {t("settings:account.emailAddress.desc")}
               </div>
             </div>
-            <div className={styles.accountEmail}>{user?.email ?? "—"}</div>
+            <div className={styles.accountEmail}>
+              {user?.email ?? t("settings:account.emailAddress.notSet")}
+            </div>
           </div>
         </div>
       </Section>

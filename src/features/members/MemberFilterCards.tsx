@@ -1,5 +1,6 @@
 import { useId, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
@@ -56,13 +57,24 @@ export function FiltersSidebar({
   inSheet?: boolean;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const uid = useId();
-  // Counts are read off the loaded directory, never authored. On a directory
-  // nobody has declared into yet, an option simply carries no number.
-  const openToCounts = useMemo(() => facetCounts(members, "openTo"), [members]);
-  const identityCounts = useMemo(
-    () => facetCounts(members, "identities"),
-    [members],
+  // Counts are read off the loaded directory, never authored.
+  //
+  // DEMO-ONLY, because only there does "the loaded directory" mean the whole
+  // of it: the mock list arrives as one synthetic page. In live mode
+  // `useMembers` has fetched page 1 (20 cards) of the CURRENT filter, so a
+  // badge reading "Lesbian 3" beside a 400-member directory is not a population
+  // figure at all — and it shrank as filters narrowed, which read as the
+  // community shrinking. Better no number than a wrong one. Bring the badges
+  // back when `GET /members` returns facet totals alongside `total`.
+  const openToCounts = useMemo<Record<string, number>>(
+    () => (demoMode ? facetCounts(members, "openTo") : {}),
+    [members, demoMode],
+  );
+  const identityCounts = useMemo<Record<string, number>>(
+    () => (demoMode ? facetCounts(members, "identities") : {}),
+    [members, demoMode],
   );
   return (
     <aside className={inSheet ? styles.filtersSheet : styles.filters}>
@@ -173,7 +185,9 @@ export function FiltersSidebar({
               })
             }
           />
-          <span>→</span>
+          <span className={styles.rangeArrow}>
+            <FiArrowRight aria-hidden />
+          </span>
           <input
             type="number"
             placeholder={t("members:directory.filter.yearsPlaceholder")}

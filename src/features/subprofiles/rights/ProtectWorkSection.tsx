@@ -43,7 +43,18 @@ export function ProtectWorkSection({ item, authorName }: ProtectWorkSectionProps
   ) {
     setIsBuildingRecord(true);
     try {
-      const record = await buildAuthorshipRecord({ item, authorName });
+      const record = await buildAuthorshipRecord({
+        item,
+        authorName,
+        labels: {
+          heading: t("subprofiles:protect.record.heading"),
+          work: t("subprofiles:protect.record.work"),
+          author: t("subprofiles:protect.record.author"),
+          firstPublished: t("subprofiles:protect.record.firstPublished"),
+          contentHash: t("subprofiles:protect.record.contentHash"),
+          canonicalForm: t("subprofiles:protect.record.canonicalForm"),
+        },
+      });
       await action(record);
     } catch {
       // Web Crypto unavailable (non-secure context) or the clipboard write
@@ -80,7 +91,9 @@ export function ProtectWorkSection({ item, authorName }: ProtectWorkSectionProps
   }
 
   function emailRecord(record: string) {
-    const subject = encodeURIComponent(`Authorship record: ${item.title}`);
+    const subject = encodeURIComponent(
+      t("subprofiles:protect.emailSubject", { title: item.title ?? "" }),
+    );
     const body = encodeURIComponent(record.slice(0, EMAIL_BODY_CHARACTER_LIMIT));
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }

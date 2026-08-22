@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiEye } from "react-icons/fi";
 import { useQuery } from "@tanstack/react-query";
 import {
   Button,
   ChipSelect,
   SkeletonLine,
+  Toggle,
   useChipSet,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -22,25 +23,38 @@ export function StepIntents(props: StepProps) {
   const { demoMode } = useDemoMode();
   const ownSlug = user?.profile.slug;
 
-  // Load the member's EXISTING `lookingFor` so a re-run of onboarding pre-selects
-  // it rather than starting blank — defense-in-depth alongside the one-time
-  // gate. Live only: demo mode has no backend and the save no-ops, so a demo
-  // run simply starts blank. The interactive form is gated until this settles
-  // so `useChipSet` is seeded with the right initial set on its first mount
-  // (its initial arg is read once and can't be re-seeded later).
-  const existingLookingFor = useQuery({
+  // Load the member's EXISTING `lookingFor` (and whether they've already chosen
+  // to show it) so a re-run of onboarding pre-selects both rather than starting
+  // blank — defense-in-depth alongside the one-time gate. Live only: demo mode
+  // has no backend and the save no-ops, so a demo run simply starts blank. The
+  // interactive form is gated until this settles so `useChipSet` and the
+  // visibility toggle are seeded correctly on their first mount (the initial
+  // args are read once and can't be re-seeded later).
+  const existingIntents = useQuery({
     queryKey: ["profile", demoMode, ownSlug, "looking-for"],
     enabled: !demoMode && Boolean(ownSlug),
-    queryFn: async () => (await getProfile(ownSlug!)).lookingFor ?? [],
+    queryFn: async () => {
+      const profile = await getProfile(ownSlug!);
+      return {
+        lookingFor: profile.lookingFor ?? [],
+        lookingForPublic: profile.lookingForPublic,
+      };
+    },
   });
 
-  if (!demoMode && Boolean(ownSlug) && existingLookingFor.isPending) {
+  if (!demoMode && Boolean(ownSlug) && existingIntents.isPending) {
     return <StepIntentsLoading stepLabel={props.stepLabel} />;
   }
 
-  const initialSelection = existingLookingFor.data ?? [];
-
-  return <StepIntentsForm {...props} initialSelection={initialSelection} />;
+  return (
+    <StepIntentsForm
+      {...props}
+      initialSelection={existingIntents.data?.lookingFor ?? []}
+      // A member who already turned this off in Settings keeps it off; everyone
+      // else starts on, which is the signed-off onboarding default.
+      initialIsPublic={existingIntents.data?.lookingForPublic ?? true}
+    />
+  );
 }
 
 function StepIntentsForm({
@@ -48,12 +62,17 @@ function StepIntentsForm({
   onBack,
   stepLabel,
   initialSelection,
-}: StepProps & { initialSelection: readonly string[] }) {
+  initialIsPublic,
+}: StepProps & {
+  initialSelection: readonly string[];
+  initialIsPublic: boolean;
+}) {
   const { t } = useTranslation();
   const updateProfile = useUpdateProfile();
   const [error, setError] = useState<string | null>(null);
   const { selected: selectedIntents, toggle: toggleIntent } =
     useChipSet(initialSelection);
+  const [isPublic, setIsPublic] = useState(initialIsPublic);
   // At least one intent is required so we can actually personalize the experience.
   const hasSelection = selectedIntents.size > 0;
 
@@ -62,12 +81,13 @@ function StepIntentsForm({
     try {
       // Intents have no dedicated backend field; they persist as the profile's
       // free-text `lookingFor` list (PATCH /profiles/me). Demo mode no-ops.
-      // `lookingForPublic: true` makes the intents visible on the profile by
-      // default when set during onboarding (an intentional, signed-off privacy
-      // default — the column otherwise defaults to hidden).
+      // Visibility is the member's own call and is stated on the step: the list
+      // can name Dating, Housing or Finding flatmates, so it must never be
+      // published on their behalf, and a member who already set it to private
+      // must never have it flipped back by a replay of onboarding.
       await updateProfile.mutateAsync({
         lookingFor: [...selectedIntents],
-        lookingForPublic: true,
+        lookingForPublic: isPublic,
       });
       onNext();
     } catch {
@@ -97,6 +117,27 @@ function StepIntentsForm({
         selected={selectedIntents}
         onToggle={toggleIntent}
       />
+      <div className={styles.notifyCard}>
+        <span className={styles.notifyIcon} aria-hidden>
+          <FiEye />
+        </span>
+        <div className={styles.notifyBody}>
+          <div className={styles.notifyTitle}>
+            {t("auth:onboarding.stepIntents.visibility.title")}
+          </div>
+          <div className={styles.notifyDesc}>
+            {isPublic
+              ? t("auth:onboarding.stepIntents.visibility.descPublic")
+              : t("auth:onboarding.stepIntents.visibility.descPrivate")}
+          </div>
+        </div>
+        <Toggle
+          tone="coral"
+          checked={isPublic}
+          onChange={setIsPublic}
+          label={t("auth:onboarding.stepIntents.visibility.title")}
+        />
+      </div>
       {error && (
         <p className={styles.chipHint} role="alert">
           {error}

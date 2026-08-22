@@ -41,6 +41,7 @@ export function JoinRequestCard({
   onDecline,
   onWaitlist,
   onToggleSelect,
+  isBusy = false,
 }: {
   item: JoinRequestView;
   leaving: boolean;
@@ -53,6 +54,10 @@ export function JoinRequestCard({
   onDecline: () => void;
   onWaitlist?: () => void;
   onToggleSelect: (id: string) => void;
+  /** True while this card's own decision is in flight, so the three buttons
+   *  render a real disabled state and a second click cannot fire a second
+   *  review of the same request. */
+  isBusy?: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -169,15 +174,20 @@ export function JoinRequestCard({
       </p>
 
       <div className={styles.queueActions}>
-        <Button variant="ghost" size="md" onClick={onDecline}>
+        <Button variant="ghost" size="md" disabled={isBusy} onClick={onDecline}>
           {t("admin:members.verify.declineCta")}
         </Button>
         {stage === "pending" && onWaitlist && (
-          <Button variant="ghost" size="md" onClick={onWaitlist}>
+          <Button
+            variant="ghost"
+            size="md"
+            disabled={isBusy}
+            onClick={onWaitlist}
+          >
             {t("admin:members.verify.waitlistCta")}
           </Button>
         )}
-        <Button variant="jade" size="md" onClick={onApprove}>
+        <Button variant="jade" size="md" disabled={isBusy} onClick={onApprove}>
           {t("admin:members.verify.approveCta")}
         </Button>
       </div>

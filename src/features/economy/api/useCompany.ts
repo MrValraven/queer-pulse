@@ -45,7 +45,7 @@ export function useCompany(slug: string | undefined) {
       }
       const dto = await getCompany(slug, signal);
       return {
-        profile: companyDetailToProfile(dto),
+        profile: companyDetailToProfile(dto, t),
         openRoles: dto.openRoles.map((jobCard) =>
           jobCardToJob(jobCard, t, fmt),
         ),

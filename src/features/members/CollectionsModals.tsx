@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import {
@@ -9,20 +9,38 @@ import {
   FiPlus,
   FiX,
 } from "react-icons/fi";
-import { Button, Select } from "../../shared/components/ui";
-import { useFocusOnMount, useScrollLock } from "../../shared/hooks";
+import {
+  Button,
+  Select,
+  Spinner,
+  useDismiss,
+} from "../../shared/components/ui";
+import { useFocusOnMount } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { linkToPath } from "../../app/routeMap";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { SavedItem } from "../../app/providers/useSaved";
 import {
   privacyLabel,
   type Collection,
   type Privacy,
 } from "./collections.data";
+import {
+  CollectionTitleRow,
+  DeleteCollectionAction,
+} from "./CollectionEditControls";
 import styles from "./CollectionsModals.module.css";
 
-/** Shared frame: backdrop click-to-close, close button, scroll lock. */
+/**
+ * Shared frame: backdrop click-to-close, close button, and the full modal a11y
+ * contract borrowed from the design system's `useDismiss` — scroll lock, an
+ * initial focus inside the dialog, a Tab focus-trap, Escape-to-dismiss while
+ * topmost, and focus restored to whatever opened it. The bespoke markup stays
+ * (these dialogs carry their own eyebrow/title/success chrome) but the
+ * behaviour is the shared one, so keyboard and screen-reader users can't tab
+ * out into the page behind the overlay.
+ */
 function Modal({
   onClose,
   label,
@@ -39,14 +57,7 @@ function Modal({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
-  useScrollLock();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  const dialogRef = useDismiss(onClose);
   return createPortal(
     <div
       className={styles.overlay}
@@ -57,6 +68,8 @@ function Modal({
     >
       <div
         key={contentKey}
+        ref={dialogRef}
+        tabIndex={-1}
         className={styles.modal}
         role="dialog"
         aria-modal="true"
@@ -92,7 +105,16 @@ const PRIVACY_OPTION_KEYS: { value: Privacy; labelKey: string }[] = [
   },
 ];
 
-/** Name a new collection and pick its privacy. */
+/**
+ * Name a new collection.
+ *
+ * The Private / Shared / Public select only renders in demo mode, where the
+ * seeded grid genuinely stores whatever is picked. Live collections are
+ * owner-private and `CreateCollectionBody` carries no visibility field, so
+ * offering the choice there would hand a member a "Public" collection that
+ * comes back labelled private. Bring the select back when the backend grows a
+ * visibility field (see `useCollectionsController.createCollection`).
+ */
 export function NewCollectionModal({
   onClose,
   onCreate,
@@ -101,6 +123,7 @@ export function NewCollectionModal({
   onCreate: (name: string, privacy: Privacy) => void;
 }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   const [name, setName] = useState("");
   const [privacy, setPrivacy] = useState<Privacy>("private");
   const nameRef = useFocusOnMount<HTMLInputElement>();
@@ -142,20 +165,26 @@ export function NewCollectionModal({
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className={styles.field}>
-          <label htmlFor="nc-priv">
-            {t("members:collections.modal.newCollection.visibilityLabel")}
-          </label>
-          <Select
-            id="nc-priv"
-            options={PRIVACY_OPTION_KEYS.map((option) => ({
-              value: option.value,
-              label: t(option.labelKey),
-            }))}
-            value={privacy}
-            onChange={(value) => setPrivacy(value as Privacy)}
-          />
-        </div>
+        {demoMode ? (
+          <div className={styles.field}>
+            <label htmlFor="nc-priv">
+              {t("members:collections.modal.newCollection.visibilityLabel")}
+            </label>
+            <Select
+              id="nc-priv"
+              options={PRIVACY_OPTION_KEYS.map((option) => ({
+                value: option.value,
+                label: t(option.labelKey),
+              }))}
+              value={privacy}
+              onChange={(value) => setPrivacy(value as Privacy)}
+            />
+          </div>
+        ) : (
+          <p className={styles.fieldNote}>
+            {t("members:collections.modal.newCollection.privateOnlyNote")}
+          </p>
+        )}
         <div className={styles.foot}>
           <button type="button" className={styles.back} onClick={onClose}>
             <FiArrowLeft aria-hidden />{" "}
@@ -172,17 +201,27 @@ export function NewCollectionModal({
 }
 
 /** Read a collection: list its saved items (live), each linking out. When
- *  `onRemoveItem` is supplied (live mode), each row gets an unfile control. */
+ *  `onRemoveItem` is supplied (live mode), each row gets an unfile control.
+ *  `onRename`/`onDelete` add the two lifecycle actions the modal used to be
+ *  missing, so a mistyped or unwanted collection is no longer permanent. */
 export function ViewCollectionModal({
   collection,
   items,
   onClose,
   onRemoveItem,
+  onRename,
+  onDelete,
+  isRenaming = false,
+  isDeleting = false,
 }: {
   collection: Collection;
   items: SavedItem[];
   onClose: () => void;
   onRemoveItem?: (id: string) => void;
+  onRename?: (nextName: string) => Promise<void>;
+  onDelete?: (collectionId: string) => Promise<void>;
+  isRenaming?: boolean;
+  isDeleting?: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -194,7 +233,11 @@ export function ViewCollectionModal({
         {privacyLabel(collection.privacy, collection.sharedWithCount, t)} ·{" "}
         {collection.updated}
       </div>
-      <h2 className={styles.title}>{collection.name}</h2>
+      <CollectionTitleRow
+        collection={collection}
+        onRename={onRename}
+        isRenaming={isRenaming}
+      />
       <p className={styles.sub}>{collection.meta}</p>
 
       {items.length === 0 ? (
@@ -239,6 +282,13 @@ export function ViewCollectionModal({
       )}
 
       <div className={styles.foot}>
+        {onDelete && (
+          <DeleteCollectionAction
+            collection={collection}
+            onDelete={onDelete}
+            isDeleting={isDeleting}
+          />
+        )}
         <Button variant="ghost" onClick={onClose}>
           {t("members:collections.modal.view.close")}
         </Button>
@@ -247,7 +297,16 @@ export function ViewCollectionModal({
   );
 }
 
-/** Pick which collection to add a recent save into. */
+/**
+ * Pick which collection to add a recent save into.
+ *
+ * The success panel is gated on the write, not on the click: `onPick` returns
+ * the mutation's promise, the pressed row shows a spinner while it's in flight,
+ * and only a resolved promise swaps this to "Added to X". A rejected one leaves
+ * the picker open (the controller toasts the failure) so the member can retry
+ * or choose somewhere else, instead of reading a success screen for a filing
+ * that never happened.
+ */
 export function AddToCollectionModal({
   itemTitle,
   collections,
@@ -257,10 +316,26 @@ export function AddToCollectionModal({
   itemTitle: string;
   collections: Collection[];
   onClose: () => void;
-  onPick: (collectionId: string) => void;
+  onPick: (collectionId: string) => Promise<void>;
 }) {
   const { t } = useTranslation();
   const [added, setAdded] = useState<string | null>(null);
+  const [pendingCollectionId, setPendingCollectionId] = useState<string | null>(
+    null,
+  );
+
+  const handlePick = async (collectionId: string) => {
+    if (pendingCollectionId) return;
+    setPendingCollectionId(collectionId);
+    try {
+      await onPick(collectionId);
+      setAdded(collectionId);
+    } catch {
+      // Already toasted upstream — stay on the picker.
+    } finally {
+      setPendingCollectionId(null);
+    }
+  };
 
   if (added) {
     const c = collections.find((x) => x.id === added);
@@ -309,26 +384,34 @@ export function AddToCollectionModal({
       </h2>
       <p className={styles.sub}>{itemTitle}</p>
       <div className={styles.pickList}>
-        {collections.map((c) => (
-          <button
-            key={c.id}
-            type="button"
-            className={styles.pick}
-            onClick={() => {
-              onPick(c.id);
-              setAdded(c.id);
-            }}
-          >
-            <span className={styles.pickIc}>{c.count}</span>
-            <span className={styles.pickInfo}>
-              <span className={styles.pickName}>{c.name}</span>
-              <span className={styles.pickMeta}>
-                {privacyLabel(c.privacy, c.sharedWithCount, t)}
+        {collections.map((c) => {
+          const isPending = pendingCollectionId === c.id;
+          return (
+            <button
+              key={c.id}
+              type="button"
+              className={styles.pick}
+              disabled={pendingCollectionId !== null}
+              aria-busy={isPending || undefined}
+              onClick={() => void handlePick(c.id)}
+            >
+              <span className={styles.pickIc}>{c.count}</span>
+              <span className={styles.pickInfo}>
+                <span className={styles.pickName}>{c.name}</span>
+                <span className={styles.pickMeta}>
+                  {isPending
+                    ? t("members:collections.modal.add.filing")
+                    : privacyLabel(c.privacy, c.sharedWithCount, t)}
+                </span>
               </span>
-            </span>
-            <FiPlus aria-hidden className={styles.pickAdd} />
-          </button>
-        ))}
+              {isPending ? (
+                <Spinner className={styles.pickAdd} />
+              ) : (
+                <FiPlus aria-hidden className={styles.pickAdd} />
+              )}
+            </button>
+          );
+        })}
       </div>
       <div className={styles.foot}>
         <button type="button" className={styles.back} onClick={onClose}>

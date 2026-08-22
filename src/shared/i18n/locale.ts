@@ -1,3 +1,4 @@
+import { safeStorage } from "../storage/safeStorage";
 import type { Language } from "./types";
 
 /**
@@ -18,9 +19,13 @@ function isLanguage(value: string | null): value is Language {
  */
 export function detectLanguage(): Language {
   if (typeof window === "undefined") return "en";
+  // Guarded reads: this runs inside a render-phase state initializer in
+  // `I18nProvider`, which sits ABOVE the app ErrorBoundary. A raw
+  // `localStorage.getItem` throws `SecurityError` where site data is blocked
+  // (Safari "block all cookies", enterprise policy, some sandboxes), and that
+  // throw white-screens the whole app before anything can catch it.
   const stored =
-    window.localStorage.getItem(STORAGE_KEY) ??
-    window.localStorage.getItem(LEGACY_STORAGE_KEY);
+    safeStorage.get(STORAGE_KEY) ?? safeStorage.get(LEGACY_STORAGE_KEY);
   if (isLanguage(stored)) return stored;
   const navLang = window.navigator?.language?.toLowerCase() ?? "";
   if (navLang.startsWith("pt")) return "pt";

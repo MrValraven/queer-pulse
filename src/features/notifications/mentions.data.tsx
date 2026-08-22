@@ -42,6 +42,9 @@ export interface Mention {
   /** Translated "in a reply" / "in an article comment" / … descriptor. */
   context: ReactNode;
   when: string;
+  /** Raw ISO creation time behind `when`. The panel's "oldest unread from …"
+   *  line is derived from this; it used to be a hardcoded "14 hours ago". */
+  createdAtIso?: string;
   fresh?: boolean;
   unread?: boolean;
   content: ReactNode;

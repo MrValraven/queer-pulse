@@ -4,6 +4,7 @@ import { Button, EmptyState } from "../../shared/components/ui";
 import { useIncrementalList } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useFormat } from "../../shared/i18n/format";
 import {
   MOD_ROLE_KEY,
@@ -19,10 +20,17 @@ import { type ReplyNode } from "./buildReplyTree";
 import styles from "./ThreadPage.module.css";
 
 /** Names the moderator who published an official QueerPulse post, linking to
- * their member profile — so the platform voice stays accountable to a person. */
+ * their member profile — so the platform voice stays accountable to a person.
+ *
+ * DEMO ONLY. `mod` is a slug resolved through the mock member registry
+ * (`memberName`), and the live adapters never set it (`ForumThreadResponse`
+ * carries no moderator field), so rendering this in live mode could only ever
+ * print a mock persona's name. The demo gate is explicit rather than implicit
+ * in "live never populates `mod`", which a future backend field would break. */
 export function ModeratorByline({ mod }: { mod?: string }) {
   const { t } = useTranslation();
-  if (!mod) return null;
+  const { demoMode } = useDemoMode();
+  if (!mod || !demoMode) return null;
   const roleKey = MOD_ROLE_KEY[mod];
   const name = memberName(mod);
   return (

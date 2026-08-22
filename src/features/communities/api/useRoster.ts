@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getRoster } from "./communities.api";
 import { rosterEntryToRosterMember } from "./communities.adapters";
 import { getLiving } from "../livingCommunities.data";
@@ -28,14 +29,17 @@ interface RosterPageVM {
  */
 export function useRoster(slug: string | undefined): RosterResult {
   const { demoMode } = useDemoMode();
+  // `language` is in the key because a nulled-out member ref maps to the
+  // translated "A member" placeholder inside the adapter.
+  const { t, language } = useTranslation();
   const query = useInfiniteQuery<RosterPageVM>({
-    queryKey: ["roster", slug, demoMode],
+    queryKey: ["roster", slug, demoMode, language],
     enabled: !demoMode && Boolean(slug),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const res = await getRoster(slug!, pageParam as number);
       return {
-        items: res.items.map(rosterEntryToRosterMember),
+        items: res.items.map((entry) => rosterEntryToRosterMember(entry, t)),
         total: res.total,
         page: res.page,
       };

@@ -15,6 +15,7 @@ import type {
   CompanyReviewDTO,
 } from "./companies.api";
 import { logoFromName } from "./jobs.adapters";
+import type { TFunction } from "../../../shared/i18n/types";
 
 // Prototype-only dark-cover logo colours used for live/API-sourced companies.
 const LOGO_BG = "rgba(247,243,238,.10)";
@@ -35,23 +36,39 @@ export interface EmployerCard {
   badgeText: string;
 }
 
-/** Map the `{queerRun,queerLed,verified}` flags to the profile's badge chips. */
-function badgesFromFlags(flags: CompanyBadges): CompanyBadge[] {
+/**
+ * Map the `{queerRun,queerLed,verified}` flags to the profile's badge chips.
+ *
+ * i18n: these chips are chrome composed from booleans, never anything the
+ * company typed, so they resolve through the catalog. Live mode reaches this
+ * code, so English literals here would be English for every reader.
+ */
+function badgesFromFlags(flags: CompanyBadges, t: TFunction): CompanyBadge[] {
   const out: CompanyBadge[] = [];
   if (flags.queerRun) {
     out.push({
-      label: flags.verified ? "Queer-run · verified" : "Queer-run",
+      label: t(
+        flags.verified
+          ? "economy:company.badge.queerRunVerified"
+          : "economy:company.badge.queerRun",
+      ),
       kind: flags.verified ? "verified" : "plain",
     });
   } else if (flags.queerLed) {
     out.push({
-      label: flags.verified ? "Queer-led · verified" : "Queer-led",
+      label: t(
+        flags.verified
+          ? "economy:company.badge.queerLedVerified"
+          : "economy:company.badge.queerLed",
+      ),
       kind: flags.verified ? "verified" : "plain",
     });
   } else if (flags.verified) {
-    out.push({ label: "Verified", kind: "verified" });
+    out.push({ label: t("economy:company.badge.verified"), kind: "verified" });
   }
-  return out.length ? out : [{ label: "Employer", kind: "plain" }];
+  return out.length
+    ? out
+    : [{ label: t("economy:company.badge.employer"), kind: "plain" }];
 }
 
 /** ISO timestamp → "2022" (the founded/opening year); "" if unparseable. */
@@ -63,32 +80,40 @@ function year(iso: string): string {
 /** The API supplies a star-rating histogram; the prototype's dimension bars
  *  (Inclusion & safety, Pay & benefits, …) have no API home, so live mode
  *  shows the star distribution instead. */
-function barsFromHistogram(h: CompanyReviewBars): CompanyReviewBar[] {
-  const rows: { label: string; n: number }[] = [
-    { label: "5 stars", n: h.five },
-    { label: "4 stars", n: h.four },
-    { label: "3 stars", n: h.three },
-    { label: "2 stars", n: h.two },
-    { label: "1 star", n: h.one },
+function barsFromHistogram(
+  h: CompanyReviewBars,
+  t: TFunction,
+): CompanyReviewBar[] {
+  const rows: { stars: number; n: number }[] = [
+    { stars: 5, n: h.five },
+    { stars: 4, n: h.four },
+    { stars: 3, n: h.three },
+    { stars: 2, n: h.two },
+    { stars: 1, n: h.one },
   ];
   const total = rows.reduce((sum, r) => sum + r.n, 0);
   return rows.map((r) => ({
-    label: r.label,
+    label: t("economy:company.reviews.starsBar", { count: r.stars }),
     percent: total ? Math.round((r.n / total) * 100) : 0,
     score: String(r.n),
   }));
 }
 
 /** Map the GET /companies list card to an employers-grid row. */
-export function companyCardToEmployer(dto: CompanyCardDTO): EmployerCard {
+export function companyCardToEmployer(
+  dto: CompanyCardDTO,
+  t: TFunction,
+): EmployerCard {
   const qr = dto.badges.queerRun || dto.badges.queerLed;
-  const badge = dto.badges.queerRun
-    ? "Queer-run"
-    : dto.badges.queerLed
-      ? "Queer-led"
-      : dto.badges.verified
-        ? "Verified"
-        : "Employer";
+  const badge = t(
+    dto.badges.queerRun
+      ? "economy:company.badge.queerRun"
+      : dto.badges.queerLed
+        ? "economy:company.badge.queerLed"
+        : dto.badges.verified
+          ? "economy:company.badge.verified"
+          : "economy:company.badge.employer",
+  );
   return {
     slug: dto.slug,
     logo: logoFromName(dto.nameText),
@@ -108,23 +133,32 @@ export function companyCardToEmployer(dto: CompanyCardDTO): EmployerCard {
  * Rich prototype-only fields (the coral-`<em>` `name`, the multi-paragraph
  * `about` with headings) render as plain text in live mode. The `openRoles`
  * jobs are adapted separately (via jobCardToJob) by the calling hook.
+ *
+ * i18n: every stat label, badge and fallback below is chrome composed here,
+ * so it resolves through `t`. The "no value yet" slots read as a real word
+ * rather than an em dash, which a screen reader announces as nothing at all.
  */
-export function companyDetailToProfile(dto: CompanyDetailDTO): CompanyProfile {
+export function companyDetailToProfile(
+  dto: CompanyDetailDTO,
+  t: TFunction,
+): CompanyProfile {
   const team: CompanyTeamAv[] = dto.team.map((ref) => ({
     initials: initialsOf(ref.firstName, ref.lastName),
     tone: tintForSlug(ref.slug),
   }));
+  const noScore = t("economy:company.stats.noScore");
   const stats: CompanyStat[] = [
-    { value: year(dto.createdAt) || "—", label: "Founded" },
     {
-      value: String(dto.teamCount),
-      label: dto.teamCount === 1 ? "Person" : "People",
+      value: year(dto.createdAt) || t("economy:placeholder.notSet"),
+      label: t("economy:company.stats.founded"),
     },
     {
-      value: dto.reviewScore != null ? dto.reviewScore.toFixed(1) : "—",
-      label: `Avg review · ${dto.reviewCount} review${
-        dto.reviewCount === 1 ? "" : "s"
-      }`,
+      value: String(dto.teamCount),
+      label: t("economy:company.stats.people", { count: dto.teamCount }),
+    },
+    {
+      value: dto.reviewScore != null ? dto.reviewScore.toFixed(1) : noScore,
+      label: t("economy:company.stats.avgReview", { count: dto.reviewCount }),
     },
   ];
   return {
@@ -135,13 +169,13 @@ export function companyDetailToProfile(dto: CompanyDetailDTO): CompanyProfile {
     name: dto.nameText,
     nameText: dto.nameText,
     tagline: dto.tagline,
-    badges: badgesFromFlags(dto.badges),
+    badges: badgesFromFlags(dto.badges, t),
     stats,
     about: dto.about,
     values: dto.values.map((v) => ({ title: v.title, description: v.desc })),
-    reviewScore: dto.reviewScore != null ? dto.reviewScore.toFixed(1) : "—",
+    reviewScore: dto.reviewScore != null ? dto.reviewScore.toFixed(1) : noScore,
     reviewCount: dto.reviewCount,
-    reviewBars: barsFromHistogram(dto.reviewBars),
+    reviewBars: barsFromHistogram(dto.reviewBars, t),
     // The reviews list is fetched separately (GET /companies/:slug/reviews).
     reviews: [],
     work: dto.work.length
@@ -150,12 +184,10 @@ export function companyDetailToProfile(dto: CompanyDetailDTO): CompanyProfile {
     info: dto.info.map((i) => ({ label: i.label, value: i.value })),
     team,
     teamCount: dto.teamCount,
-    membersLabel: `View all ${dto.teamCount} ${
-      dto.teamCount === 1 ? "member" : "members"
-    }`,
+    membersLabel: t("economy:company.membersLabel", { count: dto.teamCount }),
     hiringContact: dto.hiringContact ?? {
-      name: "The team",
-      role: "Applications are read by the team here.",
+      name: t("economy:company.hiringContact.fallbackName"),
+      role: t("economy:company.hiringContact.fallbackRole"),
     },
   };
 }

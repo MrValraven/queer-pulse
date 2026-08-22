@@ -33,6 +33,11 @@ export interface HousingListingDTO {
   /** Bedroom count (0 = studio), or null when the lister didn't set it. */
   bedrooms: number | null;
   billsIncluded: boolean;
+  /** Always `true`: the backend forces it on every housing listing, because
+   *  being LGBTQ+ affirming is the mandatory baseline for every home here.
+   *  Deliberately NOT rendered as a per-listing chip or offered as a filter,
+   *  which would read as something a listing could lack. See
+   *  `AffirmingBaselineBadge` for the norm statement that replaced it. */
   lgbtqFriendly: boolean;
   /** Transparency (P2.6): step-free/lift/access line every listing carries. */
   accessibilityInfo: string;
@@ -90,6 +95,8 @@ export interface CreateHousingListingBody {
   blurb?: string;
   description?: string;
   billsIncluded?: boolean;
+  /** Vestigial: the create form no longer asks, and the backend forces `true`
+   *  regardless. Kept only so an older client's body still type-checks. */
   lgbtqFriendly?: boolean;
   /** Required on create (P2.6): step-free access, lift, etc. */
   accessibilityInfo: string;

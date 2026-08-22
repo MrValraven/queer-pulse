@@ -112,7 +112,27 @@ export function getAdminMediaHead(key: string): Promise<AdminMediaHead> {
 
 /** `DELETE /admin/media` — permanently remove one stored object from the
  *  bucket. Deletes the raw object only; any DB row still referencing the key is
- *  left as-is (that image simply stops loading), so the caller warns first. */
-export function deleteAdminMediaObject(key: string): Promise<void> {
-  return apiDelete<void>(`/admin/media?key=${encodeURIComponent(key)}`);
+ *  left as-is (that image simply stops loading), so the caller warns first.
+ *
+ *  The backend refuses by default: `409` (body carries `references`) while the
+ *  object is still used anywhere, and `503` when the reference check could not
+ *  be completed. `isForced` sends `force=true`, the deliberate override an
+ *  abuse takedown needs; every forced delete is logged server-side with the
+ *  references it overrode. Only pass it once the admin has SEEN what breaks. */
+export function deleteAdminMediaObject(
+  key: string,
+  isForced = false,
+): Promise<void> {
+  const forceSuffix = isForced ? "&force=true" : "";
+  return apiDelete<void>(
+    `/admin/media?key=${encodeURIComponent(key)}${forceSuffix}`,
+  );
+}
+
+/** The `409` body the delete route returns while the object is still used:
+ *  every place that still points at the key, so the console can show the admin
+ *  exactly what a forced delete would break. */
+export interface AdminMediaDeleteConflict {
+  message?: string;
+  references?: MediaReference[];
 }

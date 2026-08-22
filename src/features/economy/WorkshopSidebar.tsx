@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiMail } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useWorkshopsActions } from "../../app/providers/useWorkshops";
@@ -13,8 +14,18 @@ import styles from "./WorkshopPage.module.css";
 
 export function WorkshopSidebar({ workshop }: { workshop: WorkshopWithRsvp }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const { getRsvp } = useWorkshopsActions();
+
+  // `workshop.price` is a display string ("€45"). Recover the amount and
+  // re-render it through `fmt` so it follows the app language — pt-PT suffixes
+  // the symbol with a space ("45 €"), which a hand-rolled `€` prefix can never
+  // produce. Anything without digits (a worded price) is shown as written.
+  const priceDigits = workshop.price.replace(/[^0-9]/g, "");
+  const priceLabel = priceDigits
+    ? fmt.currency(Number(priceDigits), "EUR", { maximumFractionDigits: 0 })
+    : workshop.price;
 
   // Read the counts through the RSVP overlay, not off the row: taking or
   // giving back a spot has to move the "3 / 8" and the bar immediately, in demo
@@ -37,7 +48,7 @@ export function WorkshopSidebar({ workshop }: { workshop: WorkshopWithRsvp }) {
         <div className={styles.bookHead}>
           <h4>{t("economy:workshopSidebar.reserveTitle")}</h4>
           <div className={styles.price}>
-            €<em>{workshop.price.replace(/[^0-9]/g, "")}</em>
+            <em>{priceLabel}</em>
           </div>
           <div className={styles.priceSub}>{workshop.priceSub}</div>
         </div>

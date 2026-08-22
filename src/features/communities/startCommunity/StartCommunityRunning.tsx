@@ -107,19 +107,19 @@ export function StepRunning({ form }: { form: CommunityForm }) {
       <div className={styles.featGrid}>
         {FEATURE_OPTIONS.map((f) => {
           const Icon = FEATURE_ICON[f.id] ?? FiGrid;
-          const on = draft.features.includes(f.id);
+          const isOn = draft.features.includes(f.id);
           return (
             <button
               key={f.id}
               type="button"
               className={[
                 styles.feat,
-                on && styles.featOn,
+                isOn && styles.featOn,
                 f.locked && styles.featLocked,
               ]
                 .filter(Boolean)
                 .join(" ")}
-              aria-pressed={on}
+              aria-pressed={isOn}
               disabled={f.locked}
               onClick={() => toggleFeature(f.id, f.locked)}
             >
@@ -133,7 +133,7 @@ export function StepRunning({ form }: { form: CommunityForm }) {
               <span className={styles.ftState}>
                 {f.locked
                   ? t("communities:start.running.alwaysOn")
-                  : on
+                  : isOn
                     ? t("communities:start.running.on")
                     : t("communities:start.running.off")}
               </span>

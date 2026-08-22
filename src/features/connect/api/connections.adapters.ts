@@ -1,5 +1,12 @@
 import { formatDate } from "../../../shared/lib/date";
+import {
+  relativeAgo as localizedRelativeAgo,
+  type RelativeAgoKeys,
+} from "../../../shared/lib/relativeAgo";
+import type { TFunction } from "../../../shared/i18n/types";
+import type { Formatters } from "../../../shared/i18n/format";
 import { initialsOf, tintForSlug } from "../../members/api/members.adapters";
+import type { BlockDTO } from "../../social/api/social.api";
 import type { ConnectionMeta, ConnectionView } from "../connections.data";
 import type { TabId } from "../connections.data";
 import type { ConnectionApiTab, ConnectionDTO } from "./connections.api";
@@ -16,29 +23,26 @@ export const API_TAB: Partial<Record<TabId, ConnectionApiTab>> = {
   vouched: "vouched",
 };
 
-const MINUTE = 60_000;
-const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
+/** The two non-numeric idioms the request-age label needs, as catalog keys. */
+export const CONNECT_AGO_KEYS: RelativeAgoKeys = {
+  justNow: "connect:ago.justNow",
+  unknown: "connect:ago.unknown",
+};
 
 /**
- * Compact "how long ago" label for a request, matching the mock convention
- * ("just now" / "2h ago" / "yesterday" / "3 days ago"). The backend sends a raw
- * ISO `createdAt`; the age is derived here. Pure (with an injectable `now`) so
- * the list adapter stays side-effect-free and testable.
+ * Compact "how long ago" label for a request. The backend sends a raw ISO
+ * `createdAt`; the age is derived here through the shared localized helper, so
+ * the numeric distance goes through the member's own `Intl.RelativeTimeFormat`
+ * ("há 3 dias" in pt) instead of a hand-rolled English `3 days ago`.
  */
 export function relativeAgo(
   iso: string | null,
+  t: TFunction,
+  fmt: Formatters,
   now: number = Date.now(),
 ): string | undefined {
   if (!iso) return undefined;
-  const then = new Date(iso).getTime();
-  if (Number.isNaN(then)) return undefined;
-  const delta = Math.max(0, now - then);
-  if (delta < MINUTE) return "just now";
-  if (delta < HOUR) return `${Math.floor(delta / MINUTE)}m ago`;
-  if (delta < DAY) return `${Math.floor(delta / HOUR)}h ago`;
-  const days = Math.floor(delta / DAY);
-  return days === 1 ? "yesterday" : `${days} days ago`;
+  return localizedRelativeAgo(iso, t, fmt, CONNECT_AGO_KEYS, now);
 }
 
 /**
@@ -63,7 +67,11 @@ export function connectedAt(iso: string | null): string | undefined {
  * Extract just the relationship metadata a card renders — mutuals, vouch badge,
  * request note, and the introducer, all sourced from the connections response.
  */
-export function dtoToMeta(dto: ConnectionDTO): ConnectionMeta {
+export function dtoToMeta(
+  dto: ConnectionDTO,
+  t: TFunction,
+  fmt: Formatters,
+): ConnectionMeta {
   const introducer = dto.introducedBy;
   return {
     id: dto.id,
@@ -78,7 +86,7 @@ export function dtoToMeta(dto: ConnectionDTO): ConnectionMeta {
     connectedAtIso: dto.respondedAt ?? dto.createdAt,
     requestMessage: dto.requestMessage ?? undefined,
     requestReason: dto.requestReason ?? undefined,
-    sentAgo: relativeAgo(dto.createdAt),
+    sentAgo: relativeAgo(dto.createdAt, t, fmt),
     introducedBy: introducer
       ? {
           slug: introducer.slug,
@@ -94,7 +102,11 @@ export function dtoToMeta(dto: ConnectionDTO): ConnectionMeta {
  * avatar initials/tint are derived the same deterministic way as the members
  * adapter, so live cards look identical to mock ones.
  */
-export function connectionDtoToView(dto: ConnectionDTO): ConnectionView {
+export function connectionDtoToView(
+  dto: ConnectionDTO,
+  t: TFunction,
+  fmt: Formatters,
+): ConnectionView {
   const { member } = dto;
   return {
     slug: member.slug,
@@ -105,6 +117,30 @@ export function connectionDtoToView(dto: ConnectionDTO): ConnectionView {
     role: member.tagline ?? "",
     pron: member.pronouns ?? undefined,
     tags: [],
-    meta: dtoToMeta(dto),
+    meta: dtoToMeta(dto, t, fmt),
+  };
+}
+
+/**
+ * Map a `GET /blocks` row to the same `ConnectionView` the cards render, so the
+ * live Blocked tab has a real server-backed source. Never route a live slug
+ * through `connectionViews()` — that resolves against the demo member registry,
+ * which holds none of the real members a live block can name.
+ *
+ * `BlockDTO.member` is the shared `MemberRefDTO`: name + avatar only, no
+ * tagline/pronouns, so the card renders an honest identity row with no
+ * relationship meta rather than inventing any.
+ */
+export function blockDtoToView(dto: BlockDTO): ConnectionView {
+  const { member } = dto;
+  return {
+    slug: member.slug,
+    name: `${member.firstName} ${member.lastName}`.trim(),
+    initials: initialsOf(member.firstName, member.lastName),
+    tint: tintForSlug(member.slug),
+    photo: member.avatarUrl ?? undefined,
+    role: "",
+    tags: [],
+    meta: {},
   };
 }

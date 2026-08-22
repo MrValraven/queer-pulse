@@ -243,8 +243,8 @@ export const members: Catalog = {
   "profile.board.postedAgo": "Posted {time}",
   "profile.board.expiresWarning_one": "Expires in {count} day",
   "profile.board.expiresWarning_other": "Expires in {count} days",
-  "profile.board.foundIt": "Found — closed",
-  "profile.board.foundItWithNote": "Found — {note}",
+  "profile.board.foundIt": "Found, closed",
+  "profile.board.foundItWithNote": "Found. {note}",
   "profile.board.markFoundCta": "Mark as found",
   "profile.board.markFoundCancel": "Cancel",
   "profile.board.markFoundConfirm": "Confirm",
@@ -330,7 +330,9 @@ export const members: Catalog = {
   "profileEdit.shortBio.placeholder":
     "A line or two on who you are and what you're around for.",
   "profileEdit.shortBio.counter": "{length} / {max}",
-  "profileEdit.shortBio.overLimit": "— your card shows the first two lines",
+  // Appended after the "{length} / {max}" counter, so it opens with its own
+  // separator rather than an em dash.
+  "profileEdit.shortBio.overLimit": "· your card shows the first two lines",
 
   // ── Now status + Open to (ProfileNowField, OpenToEditor) ───────────────────
   "profileEdit.now.label": "Now",
@@ -573,11 +575,13 @@ export const members: Catalog = {
   "publicProfile.stat.yearsOnPlatform": "Year on QueerPulse",
   "publicProfile.stat.membersReached": "Members reached",
 
-  // ── Public-profile live empty state (no contributions yet) ──────────────────
-  "publicProfile.emptyLive.title": "Your public story starts here",
-  "publicProfile.emptyLive.description":
-    "As you publish writing, host events and gather vouches, they'll show up here for the wider world to see. Nothing public yet. Start contributing to the community.",
-  "publicProfile.emptyLive.cta": "Explore gatherings",
+  // ── Public-profile preview, live mode: nothing is published yet ─────────────
+  //    (`GET /public/profiles/:slug` answers 404 until the member turns the
+  //    public profile on, so this is the ordinary state, never an error).
+  "publicProfile.previewOff.title": "Your public profile isn't on yet",
+  "publicProfile.previewOff.description":
+    "Turn it on and the open web sees your name, pronouns, tagline, bio, the links and work you chose to show, and your recent public activity. Nothing else leaves the members' side.",
+  "publicProfile.previewOff.cta": "Open profile settings",
 
   // ── Global search (SearchPage) ──────────────────────────────────────────────
   "search.type.member": "Members",
@@ -879,8 +883,8 @@ export const members: Catalog = {
     "A vouch is you, publicly, saying you know {first} and trust them in community spaces. It carries weight here. QueerPulse is invite-and-vouch, and your name goes on their profile beside the others who've backed them.",
   "vouch.modal.form.relationshipLabel": "How do you know {first}?",
   "vouch.modal.form.relationshipHint": "select all that apply",
-  "vouch.modal.form.endorseLabel": "What can you vouch they're great at?",
-  "vouch.modal.form.optional": "optional",
+  // The skill-endorsement chip row was removed (nothing recorded the picks),
+  // so its `endorseLabel` / `optional` keys went with it.
   "vouch.modal.form.noteLabel": "Your note",
   "vouch.modal.form.notePlaceholder":
     "How do you know {first}, and what should other members know?",
@@ -1010,6 +1014,12 @@ export const members: Catalog = {
     "Couldn't add that to your collection. Try again.",
   "collections.toast.removed": "Removed from collection",
   "collections.toast.removeError": "Couldn't remove that item. Try again.",
+  "collections.toast.renamed": "Collection renamed",
+  "collections.toast.renameError":
+    "Couldn't rename that collection. Try again.",
+  "collections.toast.deleted": "Collection deleted",
+  "collections.toast.deleteError":
+    "Couldn't delete that collection. Try again.",
   "collections.newCollection.defaultMeta": "Just created. Start adding saves",
   "collections.updatedJustNow": "Updated just now",
   // Live-mode collection card chrome (values come from the server).
@@ -1030,6 +1040,8 @@ export const members: Catalog = {
   "collections.modal.newCollection.namePlaceholder":
     "e.g. Lisbon recs, Bring to therapy…",
   "collections.modal.newCollection.visibilityLabel": "Who can see it",
+  "collections.modal.newCollection.privateOnlyNote":
+    "Collections are private to you. Nobody else can see what you file here.",
   "collections.modal.newCollection.cancel": "Cancel",
   "collections.modal.newCollection.submit": "Create collection",
   "collections.modal.privacyOption.private": "Private",
@@ -1040,9 +1052,19 @@ export const members: Catalog = {
     "Nothing in here yet. Add saves from the list below the grid.",
   "collections.modal.view.close": "Close",
   "collections.modal.view.removeItem": "Remove from collection",
+  "collections.modal.view.rename": "Rename",
+  "collections.modal.view.renameLabel": "Collection name",
+  "collections.modal.view.renameSave": "Save",
+  "collections.modal.view.renameCancel": "Cancel",
+  "collections.modal.view.delete": "Delete collection",
+  "collections.modal.view.deleteConfirm.title": "Delete {name}?",
+  "collections.modal.view.deleteConfirm.body":
+    "The collection goes, the saves stay. Everything filed here remains in your saved items.",
+  "collections.modal.view.deleteConfirm.cta": "Delete collection",
   "collections.modal.add.dialogLabel": "Add to collection",
   "collections.modal.add.eyebrow": "Add to collection",
   "collections.modal.add.title": "Where should this live?",
+  "collections.modal.add.filing": "Filing…",
   "collections.modal.add.cancel": "Cancel",
   "collections.modal.add.success.dialogLabel": "Added to collection",
   "collections.modal.add.success.title": "Added to <em>your collection.</em>",
@@ -1195,7 +1217,10 @@ export const members: Catalog = {
   "badges.hero.statNearLabel": "Closest badge",
   "badges.hero.statNearAllEarned": "All of them",
   "badges.hero.statRareNone": "None yet",
-  "badges.hero.printCase": "Print your case",
+  // Was "Print your case", but the dialog it opens has no print, export or
+  // share action — only a Close button — so the label promised an artifact that
+  // does not exist. Rename it back the day one does.
+  "badges.hero.viewCase": "View your case",
   "badges.hero.xpProgress": "{xp} / {xpMax} XP",
   "badges.hero.xpToNextName": "{xp} XP to <b>{nextName}</b>",
   "badges.hero.maxLevel": "You've reached the top of the ladder.",
@@ -1449,6 +1474,10 @@ export const members: Catalog = {
   "profile.whoSeesWhat.hiddenFrom.removeAria": "Remove {name}",
   "profile.whoSeesWhat.hiddenFrom.pickerTitle": "Hide your profile from",
   "profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder": "Search by name",
+  "profile.whoSeesWhat.hiddenFrom.pickerNoResults":
+    "Nobody by that name. Try a different spelling.",
+  "profile.whoSeesWhat.hiddenFrom.pickerLoadMore": "Show more people",
+  "profile.whoSeesWhat.hiddenFrom.pickerLoadingMore": "Loading…",
   "profile.whoSeesWhat.hiddenFrom.toast.hidden":
     "Hidden. They won't see your profile.",
   "profile.whoSeesWhat.hiddenFrom.toast.unhidden":

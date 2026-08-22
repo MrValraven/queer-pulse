@@ -164,6 +164,11 @@
   color: var(--text-strong);
   font-weight: 600;
 }
+/* Separator as a styled element rather than a glyph typed into the JSX. */
+.nextMeta::before {
+  content: "\00b7";
+  margin: 0 6px;
+}
 
 .foot {
   display: flex;

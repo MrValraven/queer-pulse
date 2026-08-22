@@ -47,7 +47,14 @@ export function AdminOrgTiersPage() {
       { id: tier.id, body: { published: !tier.published } },
       {
         onError: (error) =>
-          showToast(describeError("Couldn't update that tier", error), "error"),
+          showToast(
+            describeError(
+              t("admin:errors.updateTier"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
+            "error",
+          ),
       },
     );
   }
@@ -59,7 +66,14 @@ export function AdminOrgTiersPage() {
       onSuccess: () =>
         showToast(t("admin:orgTier.toast.removed", { name }), "info"),
       onError: (error) =>
-        showToast(describeError("Couldn't remove that tier", error), "error"),
+        showToast(
+          describeError(
+            t("admin:errors.removeTier"),
+            error,
+            t("shared:apiError.tryAgainTail"),
+          ),
+          "error",
+        ),
     });
     setDeleteTarget(null);
   }

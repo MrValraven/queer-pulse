@@ -391,10 +391,15 @@
   line-height: 1.7;
   font-style: italic;
 }
+/* The attribution dash is decoration, so it lives in CSS rather than in the
+   data string a screen reader would read out as "em dash" (FE-CNT-19). */
 .letterFrom {
   font-size: 12px;
   color: var(--ink-40);
   margin-top: 7px;
+}
+.letterFrom::before {
+  content: "\2014\00a0";
 }
 
 .archiveRow {

@@ -6,7 +6,6 @@
   --text: rgba(var(--cream-rgb), 0.92);
   --text60: rgba(var(--cream-rgb), 0.62);
   --text40: rgba(var(--cream-rgb), 0.4);
-  --jade-light: #9be0bd;
   background: var(--bg);
   color: var(--text);
   min-height: 100svh;

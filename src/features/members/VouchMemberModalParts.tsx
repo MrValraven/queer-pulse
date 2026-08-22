@@ -108,17 +108,16 @@ export function VouchSuccess({
 
 /**
  * The vouch form: the "how you know them" relationship checkboxes (at least one
- * required), optional skill-endorsement chips, the note textarea + counter, and
- * the cancel / submit actions. Owns no state — the modal lifts form state so it
- * survives the loading transition.
+ * required), the anonymity toggle, the note textarea + counter, and the cancel /
+ * submit actions. Owns no state — the modal lifts form state so it survives the
+ * loading transition. Every field here reaches the backend; see
+ * `VouchMemberModal`'s note on why there is no skill-endorsement chip row.
  */
 export function VouchForm({
   profile,
   first,
   relationships,
   toggleRelationship,
-  endorsed,
-  toggleTag,
   note,
   setNote,
   anonymous,
@@ -132,8 +131,6 @@ export function VouchForm({
   first: string;
   relationships: VouchRelationship[];
   toggleRelationship: (r: VouchRelationship) => void;
-  endorsed: string[];
-  toggleTag: (tag: string) => void;
   note: string;
   setNote: (n: string) => void;
   anonymous: boolean;
@@ -217,54 +214,6 @@ export function VouchForm({
           label={t("members:vouch.modal.form.anonymousLabel")}
         />
       </div>
-
-      {profile.tags.length > 0 && (
-        <>
-          <div className={styles.label}>
-            {t("members:vouch.modal.form.endorseLabel")}{" "}
-            <span className={styles.optional}>
-              {t("members:vouch.modal.form.optional")}
-            </span>
-          </div>
-          <div className={styles.chips}>
-            {profile.tags.map((tag) => {
-              const on = endorsed.includes(tag);
-              return (
-                <button
-                  type="button"
-                  key={tag}
-                  className={[styles.chip, on && styles.chipOn]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => toggleTag(tag)}
-                  aria-pressed={on}
-                >
-                  {on && (
-                    <span className={styles.chipCheck} aria-hidden>
-                      <svg
-                        width={13}
-                        height={13}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          className={styles.chipCheckPath}
-                          d="M5 12.5l4 4L19 7"
-                          stroke="var(--jade)"
-                          strokeWidth={3}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  )}
-                  {tag}
-                </button>
-              );
-            })}
-          </div>
-        </>
-      )}
 
       <label className={styles.label} htmlFor={noteFieldId}>
         {t("members:vouch.modal.form.noteLabel")}

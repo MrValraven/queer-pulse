@@ -1,15 +1,11 @@
 import { useCallback, useState } from "react";
 import { useAuth } from "../../app/providers/authContext";
 import { useIsOnline } from "../../shared/api/realtime";
-import { ConnectionStatusBanner } from "./ConnectionStatusBanner";
 import { ConversationComposerDock } from "./ConversationComposerDock";
-import { ConversationGroupModals } from "./ConversationGroupModals";
-import { ConversationHeader } from "./ConversationHeader";
-import { ConversationOverlays } from "./ConversationOverlays";
-import { ConversationPinnedBanner } from "./ConversationPinnedBanner";
+import { ConversationPanelOverlays } from "./ConversationPanelOverlays";
+import { ConversationTopSection } from "./ConversationTopSection";
 import type { GroupMemberPick } from "./NewGroupModal";
 import { MessageArea } from "./MessageArea";
-import { ThreadSearchModal } from "./ThreadSearchModal";
 import { useMessageActionMenu } from "./useMessageActionMenu";
 import { useMessageLogState } from "./useMessageLogState";
 import { useMessageReceipts } from "./useMessageReceipts";
@@ -79,6 +75,11 @@ interface ConversationPanelProps {
   ) => void;
   /** True while any group-management mutation is in flight. */
   groupManaging?: boolean;
+  /** Acks the thread read against the server (`POST /conversations/:id/read`).
+   *  Called on thread-open by the parent already; also invoked here as new
+   *  inbound messages arrive while the thread stays open (see
+   *  `useMarkReadOnInbound`). */
+  onMarkThreadRead: (conversationId: string) => void;
 }
 
 /** Right-hand conversation pane: header, scrolling message area, composer. Thin
@@ -111,23 +112,20 @@ export function ConversationPanel({
   onChangeGroupMemberRole,
   onUpdateGroupInfo,
   groupManaging = false,
+  onMarkThreadRead,
 }: ConversationPanelProps) {
   const { user } = useAuth();
   /** Whether the group-info / management view is open (groups only). */
   const [groupInfoOpen, setGroupInfoOpen] = useState(false);
   /** Whether the "Seen by" sheet is open (groups only). */
   const [seenBySheetOpen, setSeenBySheetOpen] = useState(false);
-  /** Whether the "search in this chat" modal is open. */
-  const [threadSearchOpen, setThreadSearchOpen] = useState(false);
 
-  // Pin (shared) + star (private) wiring lives in its own hook to keep this
-  // component under the size cap.
+  // Pin (shared) + star (private) wiring — its own hook, see useConversationPinStar.
   const { pinnedMessages, onTogglePin, onToggleStar } =
     useConversationPinStar(active);
 
-  // The long-press/right-click action menu — action overlay + delete-confirm +
-  // report-modal + inline-edit state and the reaction toggle — lives in its own
-  // hook to keep this component under the size cap.
+  // Long-press/right-click action menu state (overlay, delete/report/edit) —
+  // its own hook, see useMessageActionMenu.
   const {
     actionTarget,
     setActionTarget,
@@ -146,25 +144,22 @@ export function ConversationPanel({
     deletePending,
   } = useMessageActionMenu(active.id);
 
-  // Presence for JUST this counterpart — a selector hook that only re-renders
-  // this panel when THEIR own online status flips, not on every presence frame
-  // for every other member (see `useIsOnline`).
+  // Presence for JUST this counterpart — re-renders only on THEIR status flip,
+  // not every presence frame for every other member (see `useIsOnline`).
   const counterpartOnline = useIsOnline(active.otherParticipantId);
   const isCounterpartOnline =
     (!!active.otherParticipantId && counterpartOnline) ||
     (!active.otherParticipantId && !!active.online);
 
-  // Live read-receipt ("Seen") + delivered watermarks for the open thread —
-  // computed HERE rather than in the controller, so a receipt frame re-renders
-  // only this panel (and its children), never the page's thread list beside it.
+  // Live "Seen"/delivered watermarks — computed HERE (not the controller) so a
+  // receipt frame re-renders only this panel, never the thread list beside it.
   const { counterpartLastReadAt, counterpartDeliveredAt } = useMessageReceipts(
     myUserId ?? null,
     active,
   );
 
-  // Every value the scrolling message log is derived from (flattened
-  // messages, receipts, virtualized rows, scroll/jump state) lives in one
-  // cohesive hook — see its own file comment for why.
+  // Every value the scrolling message log is derived from — one cohesive
+  // hook, see useMessageLogState's own file comment for why.
   const {
     areaRef,
     contentRef,
@@ -192,6 +187,7 @@ export function ConversationPanel({
     onLoadOlder,
     jumpToMessageId,
     onJumpHandled,
+    onMarkThreadRead,
   );
 
   // Stable identity — passed to `MessageArea`, which isn't itself memoized.
@@ -199,25 +195,15 @@ export function ConversationPanel({
 
   return (
     <div className={styles.convoPanel}>
-      <ConversationHeader
+      <ConversationTopSection
         active={active}
         isCounterpartOnline={isCounterpartOnline}
         onBack={onBack}
         onOpenStarred={onOpenStarred}
-        onOpenSearch={() => setThreadSearchOpen(true)}
         onOpenGroupInfo={() => setGroupInfoOpen(true)}
+        pinnedMessages={pinnedMessages}
+        onJumpToMessage={jumpToMessageVirtualized}
       />
-      {threadSearchOpen && (
-        <ThreadSearchModal
-          conversation={active}
-          onClose={() => setThreadSearchOpen(false)}
-          onJumpToMessage={jumpToMessageVirtualized}
-        />
-      )}
-
-      <ConnectionStatusBanner />
-
-      <ConversationPinnedBanner pinned={pinnedMessages} onJump={jumpToMessageVirtualized} />
 
       <MessageArea
         areaRef={areaRef}
@@ -260,38 +246,40 @@ export function ConversationPanel({
         newMessagesCount={newMessagesCount}
         onJumpToLatest={jumpToLatest}
       />
-      <ConversationOverlays
-        actionTarget={actionTarget}
-        deleteTarget={deleteTarget}
-        reportTarget={reportTarget}
-        onReactionToggle={handleReactionToggle}
-        onSetReply={onSetReply}
-        onBeginEdit={beginEdit}
-        onCopyMessage={copyMessage}
-        onForward={onForwardMessage}
-        onTogglePin={onTogglePin}
-        onToggleStar={onToggleStar}
-        setActionTarget={setActionTarget}
-        setDeleteTarget={setDeleteTarget}
-        setReportTarget={setReportTarget}
-        onConfirmDelete={confirmDelete}
-        deletePending={deletePending}
-      />
-      <ConversationGroupModals
-        active={active}
-        groupInfoOpen={groupInfoOpen}
-        seenBySheetOpen={seenBySheetOpen}
-        onCloseGroupInfo={() => setGroupInfoOpen(false)}
-        onCloseSeenBy={() => setSeenBySheetOpen(false)}
-        myUserId={myUserId}
-        groupSeenBy={groupSeenBy}
-        onLeaveGroup={onLeaveGroup}
-        leavePending={leavePending}
-        groupManaging={groupManaging}
-        onAddGroupMembers={onAddGroupMembers}
-        onRemoveGroupMember={onRemoveGroupMember}
-        onChangeGroupMemberRole={onChangeGroupMemberRole}
-        onUpdateGroupInfo={onUpdateGroupInfo}
+      <ConversationPanelOverlays
+        overlays={{
+          actionTarget,
+          deleteTarget,
+          reportTarget,
+          onReactionToggle: handleReactionToggle,
+          onSetReply,
+          onBeginEdit: beginEdit,
+          onCopyMessage: copyMessage,
+          onForward: onForwardMessage,
+          onTogglePin,
+          onToggleStar,
+          setActionTarget,
+          setDeleteTarget,
+          setReportTarget,
+          onConfirmDelete: confirmDelete,
+          deletePending,
+        }}
+        groupModals={{
+          active,
+          groupInfoOpen,
+          seenBySheetOpen,
+          onCloseGroupInfo: () => setGroupInfoOpen(false),
+          onCloseSeenBy: () => setSeenBySheetOpen(false),
+          myUserId,
+          groupSeenBy,
+          onLeaveGroup,
+          leavePending,
+          groupManaging,
+          onAddGroupMembers,
+          onRemoveGroupMember,
+          onChangeGroupMemberRole,
+          onUpdateGroupInfo,
+        }}
       />
     </div>
   );

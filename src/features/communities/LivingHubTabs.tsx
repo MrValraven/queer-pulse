@@ -256,7 +256,12 @@ function LivingHubTabContent({
       )}
       {active === "about" && <AboutResourcesTab info={info} living={living} />}
       {active === "modtools" && (
-        <ModToolsTab living={living} role={role} communityName={community.name} />
+        <ModToolsTab
+          living={living}
+          role={role}
+          communityName={community.name}
+          rosterPaging={rosterPaging}
+        />
       )}
     </FadeIn>
   );

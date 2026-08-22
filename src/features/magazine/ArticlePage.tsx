@@ -1,9 +1,4 @@
-import {
-  isValidElement,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import { useState, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
@@ -28,30 +23,13 @@ import { ArticleReaderBody } from "./ArticleReaderBody";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
 import { useArticle } from "./api/useArticle";
+import { ArticleLoadFailed, ArticleNotFound } from "./ArticleStates";
+import { clampDescription, nodeToText } from "./nodeText";
 import { ArticleComments } from "./comments/ArticleComments";
 
 import styles from "./ArticlePage.module.css";
 
 const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 };
-
-/** Flatten a ReactNode headline into plain text for <title>/OG metadata. */
-function nodeToText(node: ReactNode): string {
-  if (node === null || node === undefined || typeof node === "boolean")
-    return "";
-  if (typeof node === "string" || typeof node === "number") return String(node);
-  if (Array.isArray(node)) return node.map(nodeToText).join("");
-  if (isValidElement(node)) {
-    const { children } = node.props as { children?: ReactNode };
-    return nodeToText(children);
-  }
-  return "";
-}
-
-/** Truncate a blurb to a sensible social-description length. */
-function clampDescription(text: string): string {
-  const clean = text.replace(/\s+/g, " ").trim();
-  return clean.length > 200 ? `${clean.slice(0, 197).trimEnd()}…` : clean;
-}
 
 function RelatedCardSkeleton({ className }: { className: string }) {
   return (
@@ -75,7 +53,7 @@ export function ArticlePage() {
   const [textSize, setTextSize] = useState<TextSize>("md");
   const simLoading = useSimulatedLoad();
   const id = params.get("id") ?? defaultArticleId;
-  const { data, isLoading } = useArticle(id);
+  const { data, isLoading, isError, refetch } = useArticle(id);
   // The hook resolves the article in both modes — demo from the code-split mock
   // registry (dynamically imported, never statically bundled into live), live
   // from GET /magazine/articles/:slug. It never leaks demo articles into live.
@@ -84,32 +62,10 @@ export function ArticlePage() {
   // the query too — otherwise the simulated beat can clear before it resolves.
   const loading = demoMode ? simLoading || isLoading : isLoading;
 
-  if (!article) {
-    // Live mode has no article until the fetch resolves — show a skeleton while
-    // it loads, then a real "not found" state if the slug resolves to nothing.
-    return (
-      <PageShell>
-        <PageMeta title={t("magazine:article.notFoundMetaTitle")} noIndex />
-        <div className={`${styles.notFound} wrap`}>
-          {loading ? (
-            <>
-              <SkeletonLine width="40%" height={20} />
-              <SkeletonLine width="70%" height={32} style={{ marginTop: 12 }} />
-              <SkeletonLine width="90%" height={16} style={{ marginTop: 12 }} />
-            </>
-          ) : (
-            <>
-              <h2>{t("magazine:article.notFoundTitle")}</h2>
-              <p>{t("magazine:article.notFoundBody")}</p>
-              <Button to={routes.magazine}>
-                {t("magazine:article.notFoundCta")}
-              </Button>
-            </>
-          )}
-        </div>
-      </PageShell>
-    );
-  }
+  // A failed request is NOT a missing article (FE-CNT-08): offer a retry
+  // rather than telling the reader the piece does not exist.
+  if (isError) return <ArticleLoadFailed onRetry={() => void refetch()} />;
+  if (!article) return <ArticleNotFound isLoading={loading} />;
 
   const related = data?.related ?? [];
 

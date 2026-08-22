@@ -118,7 +118,7 @@ export function GatheringPhotosLive({
               className={styles.pic}
               href={safeHref(photo.url) ?? undefined}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               <img
                 src={photo.url}

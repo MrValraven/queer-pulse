@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getPieces } from "./pieces.api";
+import { getPieces,
+  PIECE_PAGE_SIZE_MAX,
+} from "./pieces.api";
 import type { PieceFormat, PieceStage, SavedViewId } from "./pieces.api";
 import { pieceDtoToView, STAGE_DTO_TO_VIEW } from "./pieces.adapters";
 import { DEMO_PIECES, type Piece } from "../data/desk.data";
@@ -54,8 +56,14 @@ export function usePieces(filters: PieceFilters = {}) {
         return DEMO_PIECES.filter((piece) => matchesFilters(piece, filters));
       }
 
-      const pieceDtos = await getPieces(filters);
-      return pieceDtos.map(pieceDtoToView);
+      // The desk board has no pager yet, so ask for the server's maximum page
+      // rather than silently rendering the first 50 as if it were the whole
+      // board. Add a pager here when a real desk outgrows 200 open pieces.
+      const page = await getPieces({
+        ...filters,
+        pageSize: PIECE_PAGE_SIZE_MAX,
+      });
+      return page.items.map(pieceDtoToView);
     },
   });
 

@@ -89,7 +89,7 @@ export function BadgesHero({ memberName, since, recognition }: BadgesHeroProps) 
             </div>
             <div className={styles.heroActs}>
               <Button variant="ghost-dark" onClick={() => setCaseCardOpen(true)}>
-                {t("members:badges.hero.printCase")}
+                {t("members:badges.hero.viewCase")}
               </Button>
               <Button variant="ghost-dark" href="#how-xp">
                 {t("members:badges.howToEarnXp")}

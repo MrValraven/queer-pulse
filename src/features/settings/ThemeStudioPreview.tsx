@@ -23,6 +23,12 @@ export function ThemeStudioPreview({
   // Live mode previews the signed-in member's own profile (from ProfileProvider);
   // the mock "Tiago Costa" seed is only ever shown in demo mode.
   const previewMember = demoMode ? currentUser : profile;
+  // Read from the previewed member, never a hard-coded string: this card used to
+  // print "he/they · Lisbon" for everyone, which misgenders a live member in
+  // their own settings. Each line is dropped when the member has not set it.
+  const pronouns = previewMember.pronouns?.trim();
+  const hood = previewMember.hood?.trim();
+  const directoryMeta = [pronouns, hood].filter(Boolean).join(" · ");
   return (
     <div>
       <div className={styles.previewLabel} style={{ marginBottom: 6 }}>
@@ -59,7 +65,9 @@ export function ThemeStudioPreview({
             </div>
             <div className={styles.pclBody}>
               <div className={styles.pclName}>{fullName(previewMember)}</div>
-              <div className={styles.pclPronouns}>he/they</div>
+              {pronouns && (
+                <div className={styles.pclPronouns}>{pronouns}</div>
+              )}
               <div className={styles.pclLoc}>
                 {t("settings:themeStudio.memberSince", {
                   year: previewMember.since,
@@ -89,7 +97,9 @@ export function ThemeStudioPreview({
             </div>
             <div className={styles.dcBody}>
               <div className={styles.dcName}>{fullName(previewMember)}</div>
-              <div className={styles.dcMeta}>he/they · Lisbon</div>
+              {directoryMeta && (
+                <div className={styles.dcMeta}>{directoryMeta}</div>
+              )}
               <div className={styles.dcBio}>{previewMember.bio}</div>
             </div>
           </div>

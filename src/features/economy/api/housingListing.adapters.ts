@@ -2,6 +2,8 @@ import type { HousingListing, Poster, Tint } from "../housingListings";
 import type { MyHousingListingRow } from "../myHousingListings.data";
 import type { HousingListingDTO } from "./housingListing.api";
 import { initialsFromParts } from "../../../shared/lib/initials";
+import type { Formatters } from "../../../shared/i18n/format";
+import type { TFunction } from "../../../shared/i18n/types";
 
 // Values copied verbatim from the housingListings.ts fixture (per type).
 const TYPE_STYLE: Record<
@@ -14,14 +16,22 @@ const TYPE_STYLE: Record<
   studio: { tint: "plum", typeColor: "rgba(var(--violet-rgb),.1)", typeText: "var(--violet)" },
 };
 
+/**
+ * `HousingListingDTO.lister` carries no join date and no response metric, so
+ * `memberSince` stays empty and `responseTime` is left undefined. The detail
+ * page and the message-sent confirmation both omit their line rather than
+ * promise a reply speed for a lister who may never have answered anyone.
+ */
 function posterFrom(
   lister: HousingListingDTO["lister"],
   verificationLevel: HousingListingDTO["listerVerificationLevel"],
+  t: TFunction,
 ): Poster {
   if (!lister) {
+    const fallbackName = t("economy:member.fallbackName");
     return {
-      initials: "", name: "A member", fullName: "A member",
-      tint: "coral", memberSince: "", responseTime: "within a day", bio: "",
+      initials: "", name: fallbackName, fullName: fallbackName,
+      tint: "coral", memberSince: "", bio: "",
       verificationLevel,
     };
   }
@@ -32,32 +42,67 @@ function posterFrom(
     fullName: full,
     tint: "coral",
     memberSince: "",
-    responseTime: "within a day",
     bio: "",
     verificationLevel,
   };
 }
 
 /** "Studio" for 0 beds, else "N bed"/"N beds" — the compact `beds` chip text. */
-function bedroomsLabel(bedrooms: number): string {
-  if (bedrooms === 0) return "Studio";
-  return `${bedrooms} ${bedrooms === 1 ? "bed" : "beds"}`;
+function bedroomsLabel(bedrooms: number, t: TFunction): string {
+  if (bedrooms === 0) return t("economy:housing.filterBar.bedsStudio");
+  return t("economy:housing.beds.count", { count: bedrooms });
 }
 
-export function listingDtoToHousingListing(dto: HousingListingDTO): HousingListing {
+/**
+ * Map a live listing DTO to the board's `HousingListing` view-model.
+ *
+ * i18n: the fact labels, the beds chip and the "available now" fallback are
+ * chrome composed here in source, so they resolve through `t` rather than
+ * shipping English into live mode; `fmt` renders the rent per the reader's
+ * locale (pt-PT suffixes the symbol with a space, "1 100 €", so a hand-rolled
+ * `€` prefix is always wrong there). Everything the lister typed
+ * (`title`, `blurb`, `availableFrom`, `features`) passes through untouched.
+ */
+export function listingDtoToHousingListing(
+  dto: HousingListingDTO,
+  t: TFunction,
+  fmt: Formatters,
+): HousingListing {
   const style = TYPE_STYLE[dto.type] ?? TYPE_STYLE.sublet;
+  const rent = fmt.currency(dto.rentEuros, "EUR", { maximumFractionDigits: 0 });
   const facts: { label: string; value: string }[] = [
-    { label: "Rent", value: `€${dto.rentEuros.toLocaleString()} / month` },
-    { label: "Area", value: dto.area || dto.city },
-    { label: "Available", value: dto.availableFrom ?? "Now" },
+    {
+      label: t("economy:housing.fact.rent"),
+      value: t("economy:housing.fact.rentPerMonth", { amount: rent }),
+    },
+    { label: t("economy:housing.fact.area"), value: dto.area || dto.city },
+    {
+      label: t("economy:housing.fact.available"),
+      value: dto.availableFrom ?? t("economy:housing.fact.availableNow"),
+    },
   ];
   if (dto.bedrooms !== null) {
-    facts.push({ label: "Bedrooms", value: bedroomsLabel(dto.bedrooms) });
+    facts.push({
+      label: t("economy:housing.filterBar.beds"),
+      value: bedroomsLabel(dto.bedrooms, t),
+    });
   }
   if (dto.minStayMonths) {
-    facts.push({ label: "Minimum stay", value: `${dto.minStayMonths} months` });
+    facts.push({
+      label: t("economy:housing.fact.minimumStay"),
+      value: t("economy:housing.fact.minimumStayMonths", {
+        count: dto.minStayMonths,
+      }),
+    });
   }
-  facts.push({ label: "Bills", value: dto.billsIncluded ? "Included" : "Not included" });
+  facts.push({
+    label: t("economy:housing.fact.bills"),
+    value: t(
+      dto.billsIncluded
+        ? "economy:housing.fact.billsIncluded"
+        : "economy:housing.fact.billsNotIncluded",
+    ),
+  });
   // `lgbtqFriendly` is intentionally NOT surfaced as a per-listing fact anymore:
   // being LGBTQ+ affirming is the mandatory universal baseline for every home
   // here, not a variable attribute. It shows as a norm badge instead (see
@@ -71,13 +116,15 @@ export function listingDtoToHousingListing(dto: HousingListingDTO): HousingListi
     tint: style.tint,
     title: dto.title,
     hood: dto.area || dto.city,
-    beds: dto.bedrooms !== null ? bedroomsLabel(dto.bedrooms) : "",
-    avail: dto.availableFrom ?? "Available now",
+    beds: dto.bedrooms !== null ? bedroomsLabel(dto.bedrooms, t) : "",
+    // Matches the demo fixture's own short "Now": `avail` is interpolated into
+    // "Available from {date}", so it has to stay a short date-shaped phrase.
+    avail: dto.availableFrom ?? t("economy:housing.fact.availableNow"),
     description: dto.blurb,
-    price: `€${dto.rentEuros.toLocaleString()}`,
-    period: "month",
+    price: rent,
+    period: t("economy:housing.period.month"),
     image: dto.gallery[0],
-    poster: posterFrom(dto.lister, dto.listerVerificationLevel),
+    poster: posterFrom(dto.lister, dto.listerVerificationLevel, t),
     gallery: dto.gallery,
     longDesc: dto.description ? [dto.description] : [],
     features: dto.features,

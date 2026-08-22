@@ -84,10 +84,13 @@ export function DataExportForm({
             className={[styles.dtItem, checked[i] && styles.dtItemChecked]
               .filter(Boolean)
               .join(" ")}
-            role="button"
+            // A multi-select list of categories: each row is a checkbox, so
+            // screen readers announce "checked/not checked" rather than the
+            // toggle-button semantics `aria-pressed` implies.
+            role="checkbox"
             tabIndex={0}
             aria-label={t(dt.labelKey)}
-            aria-pressed={checked[i]}
+            aria-checked={checked[i]}
             onClick={() => toggleType(i)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -97,7 +100,7 @@ export function DataExportForm({
             }}
           >
             <div className={styles.dtCheck}>
-              <svg className={styles.dtCheckIcon} viewBox="0 0 10 8">
+              <svg className={styles.dtCheckIcon} viewBox="0 0 10 8" aria-hidden>
                 <polyline points="1,4 3.5,7 9,1" />
               </svg>
             </div>
@@ -135,6 +138,7 @@ export function DataExportForm({
           stroke="currentColor"
           strokeWidth="1.7"
           strokeLinecap="round"
+          aria-hidden
         >
           <circle cx="9" cy="9" r="7.5" />
           <line x1="9" y1="7" x2="9" y2="9.5" />

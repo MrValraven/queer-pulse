@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiLock, FiTrash2, FiUser } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,33 +16,30 @@ export function DeleteAccountPage() {
             <div className={styles.sidebarHead}>
               {t("settings:deleteAccount.sidebar.account")}
             </div>
+            {/* Every row here is either a real destination or the current page.
+                Two of them used to be <button>s with no onClick, so the most
+                sensitive page in Settings had dead ends in its own nav. */}
             <Link to={routes.editProfile} className={styles.navItem}>
-              <svg className={styles.navIcon} viewBox="0 0 16 16">
-                <circle cx="8" cy="6" r="3" />
-                <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-              </svg>
+              <FiUser className={styles.navIcon} aria-hidden />
               {t("settings:deleteAccount.sidebar.editProfile")}
             </Link>
-            <button type="button" className={styles.navItem}>
-              <svg className={styles.navIcon} viewBox="0 0 16 16">
-                <rect x="2" y="11" width="12" height="3" rx="1" />
-                <path d="M5 8h6M5 5h4" />
-              </svg>
+            <Link
+              to={`${routes.settings}?pane=data`}
+              className={styles.navItem}
+            >
+              <FiLock className={styles.navIcon} aria-hidden />
               {t("settings:deleteAccount.sidebar.privacy")}
-            </button>
+            </Link>
             <div className={styles.sidebarHead}>
               {t("settings:deleteAccount.sidebar.dangerZone")}
             </div>
-            <button
-              type="button"
+            <span
               className={`${styles.navItem} ${styles.navItemActive}`}
+              aria-current="page"
             >
-              <svg className={styles.navIcon} viewBox="0 0 16 16">
-                <polyline points="3,4 13,4" />
-                <path d="M6 4V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1M5 4l.5 9h5l.5-9" />
-              </svg>
+              <FiTrash2 className={styles.navIcon} aria-hidden />
               {t("settings:deleteAccount.sidebar.deactivateAccount")}
-            </button>
+            </span>
           </div>
         </aside>
 

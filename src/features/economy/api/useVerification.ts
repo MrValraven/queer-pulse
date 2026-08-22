@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
-  DEMO_PHONE_VERIFIED,
   DEMO_VERIFICATION_STATUS,
   simulateVerificationRequestSubmission,
   simulateVerificationRequestTransition,
@@ -10,13 +9,10 @@ import {
   appealVerificationRequest,
   getVerificationStatus,
   startIdentityVerification,
-  startPhoneVerification,
   submitVerificationRequest,
-  verifyPhoneCode,
   withdrawVerificationRequest,
   type SubmitVerificationRequestInput,
   type VerificationRequestDTO,
-  type VerificationStatusDTO,
   type VerificationStatusWithRequestDTO,
 } from "./verification.api";
 
@@ -35,42 +31,6 @@ export function useVerificationStatus() {
       demoMode
         ? Promise.resolve(DEMO_VERIFICATION_STATUS)
         : getVerificationStatus(),
-  });
-}
-
-/** Start a phone challenge (sends an OTP). Demo is a no-op success. */
-export function useStartPhoneVerification() {
-  const { demoMode } = useDemoMode();
-  return useMutation<{ started: true }, Error, string>({
-    meta: { silentError: true },
-    mutationFn: (phoneNumber) =>
-      demoMode
-        ? Promise.resolve({ started: true as const })
-        : startPhoneVerification(phoneNumber),
-  });
-}
-
-/** Confirm the OTP and raise to phone level. Demo accepts any code. Writes the
- * new status into the cache so badges/gates update immediately, preserving
- * whatever `latestRequest` was already cached (the phone endpoint's response
- * never carries one — only `/verification/me` does). */
-export function useVerifyPhone() {
-  const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
-  return useMutation<VerificationStatusDTO, Error, string>({
-    meta: { silentError: true },
-    mutationFn: (code) =>
-      demoMode ? Promise.resolve(DEMO_PHONE_VERIFIED) : verifyPhoneCode(code),
-    onSuccess: (status) => {
-      queryClient.setQueryData<VerificationStatusWithRequestDTO | undefined>(
-        [VERIFICATION_STATUS_KEY, demoMode],
-        (previous) => ({
-          ...previous,
-          ...status,
-          latestRequest: previous?.latestRequest ?? null,
-        }),
-      );
-    },
   });
 }
 

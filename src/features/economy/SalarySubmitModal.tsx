@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { Select } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
 import styles from "./EconomyPage.module.css";
@@ -29,13 +29,14 @@ export function SalarySubmitModal({
             <div className={styles.modalSub}>
               {t("economy:comingSoon.body")}
             </div>
-            <button
-              type="button"
-              className={`${styles.primaryBtn} ${styles.modalSubmit}`}
+            <Button
+              variant="primary"
+              size="md"
+              className={styles.modalSubmit}
               onClick={onClose}
             >
               {t("economy:comingSoon.close")}
-            </button>
+            </Button>
           </>
         ) : (
           <>
@@ -101,13 +102,14 @@ export function SalarySubmitModal({
             ]}
           />
         </div>
-        <button
-          type="button"
-          className={`${styles.primaryBtn} ${styles.modalSubmit}`}
+        <Button
+          variant="primary"
+          size="md"
+          className={styles.modalSubmit}
           onClick={onSubmit}
         >
           {t("economy:salarySubmitModal.submitCta")}
-        </button>
+        </Button>
           </>
         )}
     </ModalShell>

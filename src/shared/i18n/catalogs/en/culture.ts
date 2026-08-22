@@ -27,6 +27,13 @@ export const culture: Catalog = {
   "tabs.showcase": "Art Showcase",
   "tabs.radio": "Radio",
 
+  // ── Page metadata (FE-CNT-12) ──────────────────────────────────────────
+  // Without these the tab title, canonical URL and share card all fell back
+  // to the site homepage defaults hard-coded in index.html.
+  "meta.title": "Culture: QueerPulse Magazine",
+  "meta.description":
+    "The clubs, commissions, showcases and radio that make up queer cultural life in Lisbon.",
+
   // ── Page hero + outro ──────────────────────────────────────────────────
   "hero.eyebrow": "Lisbon scene & radio",
   "hero.title": "Lisbon's queer <em>scene</em>.",

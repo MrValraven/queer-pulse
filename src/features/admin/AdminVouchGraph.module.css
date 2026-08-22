@@ -1,5 +1,5 @@
 /* ============================================================
-   Admin — Vouch graph (full trust-network experience).
+   Admin: Vouch graph (full trust-network experience).
    Token-backed port of the design's qp-vouch styles.
    ============================================================ */
 
@@ -104,7 +104,14 @@
   cursor: default;
 }
 .crumbSep {
+  display: inline-flex;
+  align-items: center;
   color: var(--ink-40);
+}
+
+.crumbSep svg {
+  width: 0.95em;
+  height: 0.95em;
 }
 
 .search {
@@ -165,6 +172,7 @@
 }
 
 .close {
+  position: relative;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -175,6 +183,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
 }
 @media (hover: hover) {
   .close:hover {
@@ -317,7 +337,7 @@
     stroke-opacity: 1;
   }
 }
-/* Invite edge (voucher brought this member in) — warm amber vs the plum base. */
+/* Invite edge (voucher brought this member in): warm amber vs the plum base. */
 .invite {
   stroke: rgba(var(--amber-rgb), 0.55);
 }
@@ -665,7 +685,7 @@
   }
 }
 
-/* Bottom-sheet affordances — only visible on the phone layout where the
+/* Bottom-sheet affordances: only visible on the phone layout where the
    inspector becomes a sheet; on desktop it is a persistent rail. */
 .insGrab,
 .insSheetClose {
@@ -880,7 +900,7 @@
 .insRowWd {
   opacity: 0.55;
 }
-/* The connection the replay is currently on — kept in sync with the footer label. */
+/* The connection the replay is currently on, kept in sync with the footer label. */
 .insRowActive {
   background: rgba(var(--accent-rgb), 0.12);
   box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.4);

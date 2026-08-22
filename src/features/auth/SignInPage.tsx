@@ -13,6 +13,7 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { probeBackend, type BackendProbe } from "../../shared/api/client";
+import { safeInternalPath } from "../../shared/lib/safeInternalPath";
 import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
 import { requestInvitePath } from "./api/joinRequestSource";
 import { Translation } from "../../shared/i18n/Translation";
@@ -85,6 +86,18 @@ function noticeForAuthError(code: string, t: TFunction): Notice {
         title: t("auth:signIn.notice.ageAttestationRequired.title"),
         body: t("auth:signIn.notice.ageAttestationRequired.body"),
       };
+    // A NEW account was refused because this email address already belongs to
+    // one. Identity here is keyed on `googleId`, so this is someone whose
+    // address is on an account created through a different Google identity (a
+    // work vs personal account with the same address, or a re-created Google
+    // account). Retrying the same way can't work, so the copy says so and the
+    // support link below carries them to a human.
+    case "email_in_use":
+      return {
+        Icon: FiMail,
+        title: t("auth:signIn.notice.emailInUse.title"),
+        body: t("auth:signIn.notice.emailInUse.body"),
+      };
     case "access_denied":
       return {
         Icon: FiAlertTriangle,
@@ -150,19 +163,13 @@ function noticeFor(err: FailedProbe, t: TFunction): Notice {
   }
 }
 
-/** Only honour same-origin internal paths from `?next=` (avoids open redirects). */
-function safeNext(next: string | null): string {
-  if (next && next.startsWith("/") && !next.startsWith("//")) return next;
-  return "/feed";
-}
-
 export function SignInPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { signIn } = useAuth();
   const { demoMode } = useDemoMode();
   const [searchParams] = useSearchParams();
-  const dest = safeNext(searchParams.get("next"));
+  const dest = safeInternalPath(searchParams.get("next"));
   const [busy, setBusy] = useState(false);
   const [probeError, setProbeError] = useState<FailedProbe | null>(null);
   // Set when the backend's Google callback bounced us back here after a failed
@@ -274,11 +281,17 @@ export function SignInPage() {
         />
       )}
 
+      {/* Google requires its sign-in button to keep its own mandated shape and
+          brand mark, so this stays a bare <button> with the `.google` treatment
+          rather than the shared pill <Button>. `.google:disabled` mirrors
+          Button's dimmed + not-allowed disabled styling so the busy state reads
+          the same as every other CTA; focus comes from the global ring. */}
       <button
         type="button"
         className={styles.google}
         onClick={() => void attemptSignIn()}
         disabled={busy}
+        aria-busy={busy}
       >
         {/* Official Google "G" logo — the four fills are Google's fixed brand
             colours, mandated by its branding guidelines, not design tokens. */}

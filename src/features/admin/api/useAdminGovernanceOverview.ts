@@ -166,7 +166,7 @@ export interface AdminGovernanceOverviewResult {
 /**
  * Data source for the admin Policy tab. Demo mode reshapes the public page's
  * mocks into the admin response shape; live mode calls
- * `GET /governance/admin/overview` once (mirrors `useAdminGovernanceFinances`).
+ * `GET /admin/governance/overview` once (mirrors `useAdminGovernanceFinances`).
  */
 export function useAdminGovernanceOverview(): AdminGovernanceOverviewResult {
   const { demoMode } = useDemoMode();
@@ -185,7 +185,7 @@ export function useAdminGovernanceOverview(): AdminGovernanceOverviewResult {
 
 /**
  * Replaces any subset of the overview sections. Live mode PATCHes
- * `/governance/admin/overview` and reconciles from the server's response.
+ * `/admin/governance/overview` and reconciles from the server's response.
  * Demo mode applies the edit to the cached payload via
  * {@link applyOverviewEdits} and keeps it there for the session.
  */

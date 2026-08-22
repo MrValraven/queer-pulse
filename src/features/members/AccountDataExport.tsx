@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useMutation, useQuery, type Query } from "@tanstack/react-query";
 import { FiDownload } from "react-icons/fi";
 import { Badge, Button, type BadgeTone } from "../../shared/components/ui";
+import { useLocalStorage } from "../../shared/hooks";
+import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -11,11 +13,11 @@ import { currentUser, currentUserEmail } from "./data/members";
 import { DATA_TYPES } from "../settings/dataExport.data";
 import {
   getExportJob,
-  reauth,
   requestExport,
   type ExportJob,
   type ExportStatus,
 } from "../settings/api/account.api";
+import { useReauth } from "../settings/api/useAccountMutations";
 import styles from "./AccountData.module.css";
 
 const POLL_MS = 3000;
@@ -82,7 +84,22 @@ export function AccountDataExport() {
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const [jobId, setJobId] = useState<string | null>(null);
+  const { user } = useAuth();
+  const { getReauthToken, beginReauth } = useReauth();
+  // The job id outlives this component. `AccountDataSheet` unmounts the whole
+  // section when it closes, so keeping the id in plain state meant a member who
+  // closed the sheet came back to the "Download your data" button with no
+  // memory of the archive already building — and pressing it fired a second
+  // `POST /account/export`, behind another reauth round-trip, while the first
+  // archive was never found. Scoped per user so a shared device never shows one
+  // member another's job, and skipped in demo mode, whose "demo-export" id is a
+  // fiction the staged poll re-creates from zero anyway.
+  const [jobId, setJobId] = useLocalStorage<string | null>(
+    `qp.accountExport.jobId.${demoMode ? "demo" : (user?.profile.slug ?? "anon")}`,
+    null,
+    (value): value is string | null =>
+      value === null || typeof value === "string",
+  );
   // Counts poll attempts in demo mode to stage queued → processing → ready;
   // resets whenever a fresh job starts.
   const demoStageRef = useRef(0);
@@ -106,9 +123,15 @@ export function AccountDataExport() {
         };
       }
       // Step-up token: an export is a full dump of everything held on a
-      // person, so it sits behind the same short-lived token as deletion —
-      // see the note on `reauth` in `account.api.ts`.
-      const { reauthToken } = await reauth();
+      // person, so it sits behind the same real OAuth step-up as deletion —
+      // see `useReauthToken.ts`. No fresh token cached yet: redirect instead
+      // of proceeding, and never resolve (the page is about to unload; the
+      // member presses Download again after landing back).
+      const reauthToken = getReauthToken();
+      if (!reauthToken) {
+        beginReauth();
+        return new Promise<ExportJob>(() => {});
+      }
       const categories = DATA_TYPES.map((type) => type.id);
       return requestExport({ categories, format: "json", reauthToken });
     },
@@ -149,9 +172,17 @@ export function AccountDataExport() {
       }
       return getExportJob(jobId!);
     },
+    // A stored id can outlive its job (the archive is purged after a week), so
+    // don't sit retrying a 404 — clear it below and offer a fresh request.
+    retry: false,
     refetchInterval: (query: Query<ExportJob>) =>
       isPolling(query.state.data?.status) ? POLL_MS : false,
   });
+
+  const isJobGone = !demoMode && jobQuery.isError;
+  useEffect(() => {
+    if (isJobGone) setJobId(null);
+  }, [isJobGone, setJobId]);
 
   const job = jobQuery.data;
   const expiry =

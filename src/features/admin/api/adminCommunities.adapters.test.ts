@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { cardDtoToCommunity, detailDtoToCommunity } from "./adminCommunities.adapters";
 import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
 import { createFormatters } from "../../../shared/i18n/format";
-import type { TFunction } from "../../../shared/i18n/types";
+import type { Catalog, TFunction } from "../../../shared/i18n/types";
 import type {
   AdminCommunityCardDTO,
   AdminCommunityDetailDTO,
@@ -16,16 +16,24 @@ import type {
  * too. Mirrors `src/features/economy/api/jobs.adapters.test.ts`'s `t`, just
  * renamed (this task's binding constraint bans single-letter identifiers).
  */
-// The `admin` namespace is now lazily loaded; `beforeAll` swaps in the real
-// catalog (an empty placeholder is present until its chunk resolves).
-let adminCatalog = catalogs.en.admin;
+// `admin` and `safety` are both lazily loaded; `beforeAll` swaps in the real
+// catalogs (empty placeholders are present until their chunks resolve).
+// `safety` is needed because the queue adapter resolves a report's reason
+// through `REASON_LABEL_KEYS` (`safety:reason.*`), not a baked English table.
+const loadedCatalogs: Partial<Record<"admin" | "safety", Catalog>> = {
+  admin: catalogs.en.admin,
+  safety: catalogs.en.safety,
+};
 beforeAll(async () => {
-  adminCatalog = await loadNamespace("en", "admin");
+  loadedCatalogs.admin = await loadNamespace("en", "admin");
+  loadedCatalogs.safety = await loadNamespace("en", "safety");
 });
 
 const translate: TFunction = (key, options) => {
-  const [, path] = key.split(":");
-  const value = adminCatalog?.[path ?? ""] ?? key;
+  const [namespace, path] = key.split(":");
+  const catalog =
+    namespace === "safety" ? loadedCatalogs.safety : loadedCatalogs.admin;
+  const value = catalog?.[path ?? ""] ?? key;
   return Object.entries(options ?? {}).reduce(
     (accumulated, [token, tokenValue]) =>
       accumulated.replace(`{${token}}`, String(tokenValue)),
@@ -233,17 +241,17 @@ describe("detailDtoToCommunity", () => {
     // No `detail` text on this fixture, so the title falls back to the
     // reason's human label.
     expect(queueItem.title).toBe("Spam or self-promotion");
-    expect(queueItem.meta).toBe("Open · 5h ago");
+    expect(queueItem.meta).toBe("Open · 5 hours ago");
   });
 
-  it("carries an overdue queue item's status into meta, still untranslated", () => {
+  it("resolves an overdue queue item's status, SLA flag and age through the catalog", () => {
     const community = detailDtoToCommunity(baseDetailDto, translate, fmt);
     const queueItem = community.queue[0]!;
     expect(queueItem.severity).toBe("coral");
     expect(queueItem.title).toBe(
       "Repeated unwanted DMs after being asked to stop",
     );
-    expect(queueItem.meta).toBe("Open · overdue · 3h ago");
+    expect(queueItem.meta).toBe("Open · Overdue · 3 hours ago");
   });
 
   it("carries the detail endpoint's truncated flag through", () => {

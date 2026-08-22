@@ -312,7 +312,7 @@
 }
 .navCountAlert {
   background: var(--danger);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 .navCountWarn {
   background: var(--amber);
@@ -437,8 +437,10 @@
 }
 .crumb {
   display: flex;
-  align-items: baseline;
-  gap: 2px;
+  /* `center`, not `baseline`: the separator is now a CSS dot on .crumbCrumb
+     rather than a typed glyph, and a dot has no baseline to align to. */
+  align-items: center;
+  gap: 8px;
   flex: none;
   font-size: 14px;
   color: var(--ink-60);
@@ -446,8 +448,21 @@
 }
 .crumbCrumb {
   display: inline-flex;
-  align-items: baseline;
-  gap: 2px;
+  align-items: center;
+  gap: 8px;
+}
+/* Breadcrumb separator, drawn rather than typed: the markup used to carry a
+   literal "·" glyph, which the repo bans as a text affordance and which
+   renders differently across fonts. A dot after every crumb, none after the
+   last one before the page title. */
+.crumbCrumb::after {
+  content: "";
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.5;
+  flex: none;
 }
 .crumbLink {
   color: var(--ink-60);

@@ -27,7 +27,7 @@ export interface UseListingModerationOptions {
  *
  * `reason` on `sendBack`/`remove` is optional moderator free text, forwarded
  * to `useSetListingStatus`/`useRemoveListing` and on to the live-mode PATCH
- * `/listings/:ref/status` and DELETE `/listings/admin/:ref` bodies, which the
+ * `/admin/listings/:ref/status` and DELETE `/admin/listings/:ref` bodies, which the
  * backend records on the listing's moderation event (and DMs to the
  * submitter on send-back/remove — see `listings.service.ts`). Demo mode logs
  * it (`logInfo`) rather than sending it anywhere; the demo history panel

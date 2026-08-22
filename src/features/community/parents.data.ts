@@ -57,9 +57,12 @@ export const MEETUPS = [
   },
 ];
 
+/** Every entry must point at a page that is NOT this one: the Parent Network
+ *  renders inside /family, so the old "Chosen-family & legal recognition" row
+ *  linked to itself. It is dropped until a chosen-family guide exists; legal
+ *  recognition is already covered by the row above. */
 export const RESOURCES = [
   { titleKey: "parentNetwork.resource.legalRights", to: "/safety/legal" },
-  { titleKey: "parentNetwork.resource.chosenFamily", to: "/family" },
   {
     titleKey: "parentNetwork.resource.healthcareGuides",
     to: "/resources/library",

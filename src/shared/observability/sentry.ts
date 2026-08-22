@@ -48,11 +48,53 @@ let enabled = false;
 /** Guards against a double `Sentry.init` (StrictMode / hot reload). */
 let initialised = false;
 
+/**
+ * Errors raised while the SDK chunk is still downloading.
+ *
+ * `initObservability()` is fire-and-forget and `sentryModule` only lands after
+ * `await import("@sentry/react")` resolves, so without this every boot-time
+ * crash — provider initializers, a first-render throw routed through
+ * `ErrorBoundary` — was dropped on the floor. Those are exactly the failures
+ * most worth seeing. Buffer them instead and flush once `Sentry.init` returns.
+ *
+ * Bounded, so a boot loop that throws on every frame cannot grow this without
+ * limit before the chunk arrives.
+ */
+const MAX_BUFFERED_EVENTS = 20;
+let bufferedEvents: { error: unknown; extra?: Extra }[] = [];
+
+/** True once `ConsentProvider` has told us the member's monitoring choice. */
+let isConsentKnown = false;
+
+/**
+ * Send (or discard) the boot buffer. Called from both sides of the race, since
+ * either the SDK chunk or the consent decision can land first:
+ *  - neither settled yet → hold the buffer, this runs again;
+ *  - settled and granted → send;
+ *  - settled and refused → discard, exactly as `beforeSend` would have.
+ * The consent gate is load-bearing: nothing here may transmit before the member
+ * has said yes.
+ */
+function flushBufferedEvents(): void {
+  if (!sentryModule || !isConsentKnown) return;
+  const pending = bufferedEvents;
+  bufferedEvents = [];
+  if (!enabled) return;
+  for (const event of pending) {
+    sentryModule.captureException(
+      event.error,
+      event.extra ? { extra: event.extra } : undefined,
+    );
+  }
+}
+
 /** Called by the ConsentProvider (spec 07) once analytics consent is known. */
 export function setMonitoringConsent(granted: boolean): void {
   enabled = granted && Boolean(DSN) && import.meta.env.PROD;
+  isConsentKnown = true;
   // No re-init: `beforeSend` reads `enabled` on every event, so flipping this
   // is enough to start/stop transmission live.
+  flushBufferedEvents();
 }
 
 /**
@@ -82,11 +124,23 @@ export async function initObservability(): Promise<void> {
     // (setMonitoringConsent flips `enabled`). Returning null discards the event.
     beforeSend: (event) => (enabled ? event : null),
   });
+
+  // Anything thrown while the chunk was in flight goes out now.
+  flushBufferedEvents();
 }
 
 /** Report an error to the monitor. No-op until wired / until consent. */
 export function captureException(error: unknown, extra?: Extra): void {
-  if (!enabled || !sentryModule) return;
+  if (!sentryModule) {
+    // The SDK chunk is still loading (or was never going to load). Buffer only
+    // while an init is actually in flight; with no DSN, or outside a production
+    // build, `initialised` stays false and this correctly stays a no-op.
+    if (!initialised) return;
+    if (bufferedEvents.length >= MAX_BUFFERED_EVENTS) return;
+    bufferedEvents.push({ error, extra });
+    return;
+  }
+  if (!enabled) return;
   sentryModule.captureException(error, extra ? { extra } : undefined);
 }
 

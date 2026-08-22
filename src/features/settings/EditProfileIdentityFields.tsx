@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, PhotoReframeModal } from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -49,6 +49,21 @@ export function IdentityPhotoField({
       setPreviewUrl(null);
     }
   }
+
+  // Revoking on replace/remove covered every path except leaving: switching
+  // pane or navigating away unmounted this field with the last blob: URL still
+  // live, holding a decoded image for the rest of the session. A ref carries
+  // the current URL into a cleanup that runs only on unmount.
+  const previewUrlRef = useRef<string | null>(null);
+  useEffect(() => {
+    previewUrlRef.current = previewUrl;
+  });
+  useEffect(
+    () => () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    },
+    [],
+  );
 
   /** Shared tail of both upload paths (direct GIF path + post-reframe path). */
   async function uploadAndApply(file: File, crop?: CropRect) {

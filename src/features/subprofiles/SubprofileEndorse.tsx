@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { initialsFromName } from "../../shared/lib/initials";
-import { useQuery } from "@tanstack/react-query";
 import { FiCheck } from "react-icons/fi";
 import { Avatar, Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
-import { getEndorsers } from "./api/subprofiles.api";
+import { useEndorsers } from "./api/useEndorsers";
 import { EndorseSubprofileModal } from "./EndorseSubprofileModal";
 import styles from "./SubprofileEndorse.module.css";
 
@@ -44,15 +43,11 @@ export function SubprofileEndorse({
   const { loggedIn } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { data: endorsersResult } = useQuery({
-    queryKey: ["subprofile", "endorsers", subprofileId],
-    queryFn: async () => {
-      if (!demoMode) return getEndorsers(subprofileId);
-      const { mockEndorsersById } = await import("./data/subprofiles.data");
-      return mockEndorsersById(subprofileId) ?? { count: 0, endorsers: [] };
-    },
-    enabled: Boolean(subprofileId),
-  });
+  // One shared hook for this query everywhere (it was declared inline in four
+  // places with drifting queryFns — two of them dropping the abort `signal`,
+  // so whichever observer mounted first decided whether the fetch was
+  // cancellable).
+  const { data: endorsersResult } = useEndorsers(subprofileId, true);
   const endorsers = endorsersResult?.endorsers ?? [];
 
   const canEndorse = !isOwnerViewing && (demoMode || loggedIn);

@@ -54,6 +54,7 @@ export function MessagesPage() {
     sendImage,
     retrySend,
     forwardMessage,
+    markThreadRead,
   } = useMessagesController();
 
   // The message being forwarded (its recipient is picked in NewMessageModal's
@@ -128,6 +129,7 @@ export function MessagesPage() {
               onChangeGroupMemberRole={changeGroupMemberRole}
               onUpdateGroupInfo={updateGroupInfo}
               groupManaging={groupManaging}
+              onMarkThreadRead={markThreadRead}
             />
           ) : (
             <MessagesEmptyPanel />
@@ -144,8 +146,13 @@ export function MessagesPage() {
         <NewGroupModal
           onClose={() => setGroupComposing(false)}
           onCreate={(title, members, avatarUrl) => {
-            startGroup(title, members, avatarUrl);
-            setGroupComposing(false);
+            // Only close on success — on failure the modal (and its title/
+            // member picks/avatar, all local to it) stays open so the member
+            // can retry without re-entering everything. The global mutation-
+            // error toast already told them it failed.
+            startGroup(title, members, avatarUrl, {
+              onSuccess: () => setGroupComposing(false),
+            });
           }}
         />
       )}
@@ -155,6 +162,8 @@ export function MessagesPage() {
           groups={forwardableGroups}
           onClose={() => setForwardSource(null)}
           onPick={(recipient: Conversation) => {
+            // Only close on success — on failure the picker stays open on the
+            // same message so the member can retry or pick another recipient.
             forwardMessage(
               recipient,
               forwardSource.text,
@@ -162,8 +171,8 @@ export function MessagesPage() {
               forwardSource.kind === "gif" || forwardSource.kind === "image"
                 ? forwardSource.kind
                 : undefined,
+              { onSuccess: () => setForwardSource(null) },
             );
-            setForwardSource(null);
           }}
         />
       )}

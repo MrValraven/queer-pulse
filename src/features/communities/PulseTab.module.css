@@ -74,77 +74,6 @@
   margin-left: auto;
   flex: none;
 }
-.hiddenFileInput {
-  display: none;
-}
-.attachImageBtn {
-  flex: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  background: transparent;
-  color: var(--ink-60);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.attachImageBtn svg {
-  width: 16px;
-  height: 16px;
-}
-.attachImageBtn:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-@media (hover: hover) {
-  .attachImageBtn:hover:not(:disabled) {
-    border-color: var(--accent);
-    color: var(--accent-ink);
-  }
-}
-.stagedImage {
-  position: relative;
-  display: inline-block;
-  margin-top: 10px;
-  border-radius: 12px;
-  overflow: hidden;
-  max-width: 160px;
-}
-.stagedImage img {
-  display: block;
-  width: 100%;
-  max-height: 120px;
-  object-fit: cover;
-}
-.stagedImageRemove {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(20, 12, 26, 0.65);
-  color: var(--cream);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.stagedImageRemove svg {
-  width: 13px;
-  height: 13px;
-}
-.imageAttachError {
-  margin: 8px 0 0;
-  font-size: 12.5px;
-  color: var(--accent-ink);
-}
 .pName {
   font-size: 14px;
   font-weight: 700;
@@ -186,20 +115,18 @@
   gap: 12px;
   margin-top: 14px;
 }
+/* The reply toggle is a shared <Button variant="ghost" size="sm">; these
+   overrides only shrink it back to the quiet, inline meta-row scale the feed
+   wants. Everything else (focus ring, tap-target floor, disabled treatment)
+   comes from the primitive. */
 .replyBtn {
-  display: inline-flex;
-  align-items: center;
   gap: 6px;
-  min-height: 44px;
   font-size: 12.5px;
-  font-weight: 600;
   color: var(--ink-60);
-  cursor: pointer;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 8px;
-  transition:
-    background 0.18s var(--ease),
-    color 0.18s var(--ease);
+  border-color: transparent;
+  background: transparent;
 }
 .replyBtn svg {
   width: 13px;
@@ -210,6 +137,31 @@
     background: rgba(var(--line-rgb), 0.08);
     color: var(--ink);
   }
+}
+/* The read-only twin a visitor sees: same shape, no affordance. */
+.replyCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-40);
+  padding: 4px 10px;
+}
+.replyCount svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* Each feed row is a <FadeIn>, and its `will-change: transform` makes it a
+   stacking context for the life of the element — so a post's actions menu
+   (z-index 30) only wins INSIDE its own row and the next row paints over the
+   open dropdown. Raise the whole wrapper while a menu is open; `[role="menu"]`
+   only exists in the DOM then, so closed rows are untouched. Mirrors the forum
+   fix (`.rowFade:has(.threadMenu [aria-expanded="true"])`). */
+.rowFade:has([role="menu"]) {
+  position: relative;
+  z-index: 3;
 }
 
 .reply {
@@ -309,6 +261,12 @@
   background: var(--accent);
   flex: none;
 }
+/* The middot separator is drawn here rather than baked into the JSX (or worse,
+   into a translated string), so it can never end up inside a catalog value. */
 .momentTime {
   color: var(--ink-40);
+}
+.momentTime::before {
+  content: "\00b7";
+  margin-right: 9px;
 }

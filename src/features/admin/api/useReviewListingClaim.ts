@@ -13,7 +13,7 @@ export interface ReviewListingClaimVars {
  * A moderator approves or declines a listing-claim request. Demo mode
  * resolves after a short simulated delay and never touches the network — the
  * fixture must not appear to mutate platform truth (mirrors
- * `useResolveEditSuggestion`). Live mode PATCHes `/listings/admin/claims/:id`
+ * `useResolveEditSuggestion`). Live mode PATCHes `/admin/listings/claims/:id`
  * (which, on approval, reassigns the listing's owner server-side) and
  * invalidates the queue query.
  */

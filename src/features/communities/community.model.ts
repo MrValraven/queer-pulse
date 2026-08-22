@@ -15,7 +15,13 @@ export interface Reaction {
 export interface PostReply {
   author: Person;
   text: string;
-  time: string;
+  /** ISO creation timestamp — the ONLY relative-time source for live rows.
+   *  Rendered through `useCommunityTime()` so the "3 hours ago" phrase is
+   *  built in the viewer's locale at render, never baked in by an adapter. */
+  createdAt?: string;
+  /** Legacy pre-rendered relative token ("2h") that only the demo mock data
+   *  authors. Live rows carry `createdAt` instead. */
+  time?: string;
   /** Backend reply id — the edit/delete target (sub-project #3). */
   id?: string;
   // ── Live edit/delete/restore metadata (backend-provided; absent in demo) ──
@@ -42,8 +48,10 @@ export interface Post {
    *  exceed `replies.length`); demo mock posts omit it, so callers fall back
    *  to `replies.length`. */
   replyCount?: number;
-  time: string;
-  /** ISO creation timestamp (for Newest sorting in the discussion view). */
+  /** Legacy pre-rendered relative token ("2h"), demo mock data only — live
+   *  posts carry `createdAt` and are formatted at render (`useCommunityTime`). */
+  time?: string;
+  /** ISO creation timestamp (relative-time source + Newest sorting). */
   createdAt?: string;
   communitySlug: string;
   // ── Live edit/delete/restore metadata (backend-provided; absent in demo) ──
@@ -107,7 +115,10 @@ export interface ModRequest {
   id: string;
   person: Person;
   note?: string;
-  time: string;
+  /** ISO request timestamp (live). Formatted at render by `useCommunityTime`. */
+  createdAt?: string;
+  /** Legacy pre-rendered relative token, demo mock data only. */
+  time?: string;
 }
 
 /** A flagged post or reply awaiting a mod decision. Demo mocks populate the
@@ -118,7 +129,10 @@ export interface ModRequest {
  *  whichever half is present. */
 export interface ModReport {
   id: string;
-  time: string;
+  /** ISO report timestamp (live). Formatted at render by `useCommunityTime`. */
+  createdAt?: string;
+  /** Legacy pre-rendered relative token, demo mock data only. */
+  time?: string;
   /** Demo-only excerpt of the flagged content. */
   postExcerpt?: string;
   /** Demo-only: who posted the flagged content. */

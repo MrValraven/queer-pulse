@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useScrollLock } from "../../shared/hooks";
+import { Button, useDismiss } from "../../shared/components/ui";
 import { logError } from "../../shared/observability/logger";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -47,16 +46,27 @@ export function DestructiveActionFlow({
 }) {
   const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>("confirm");
-  useScrollLock();
+  const canDismiss = phase === "confirm" || phase === "error";
 
+  // Confirming account deletion deserves the same a11y guarantees as every
+  // other dialog in the app, so this leans on the shared hook behind `Modal`:
+  // scroll lock, initial focus into the dialog, a Tab trap, Escape, and focus
+  // restore to the trigger. Escape stays guarded so it can't dismiss mid-request
+  // or on the result panel (the hook reads the latest callback each time).
+  const dialogRef = useDismiss(() => {
+    if (canDismiss) onClose();
+  });
+
+  // Each phase swaps the dialog's contents out from under the focused control,
+  // so move focus back inside whenever the phase changes.
   useEffect(() => {
-    if (phase !== "confirm" && phase !== "error") return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [phase, onClose]);
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const firstFocusable = dialog.querySelector<HTMLElement>(
+      "a[href], button:not([disabled])",
+    );
+    (firstFocusable ?? dialog).focus();
+  }, [phase, dialogRef]);
 
   const run = useCallback(async () => {
     setPhase("loading");
@@ -73,8 +83,6 @@ export function DestructiveActionFlow({
     }
   }, [action, content.eyebrow]);
 
-  const canDismiss = phase === "confirm" || phase === "error";
-
   // Portal to <body>: the settings panes sit inside <FadeIn>
   // (`will-change: transform`), which makes a containing block for fixed
   // descendants and would otherwise mis-position this fixed overlay.
@@ -86,87 +94,89 @@ export function DestructiveActionFlow({
         if (e.target === e.currentTarget && canDismiss) onClose();
       }}
     >
-      {phase === "done" ? (
-        <div
-          className={styles.result}
-          role="dialog"
-          aria-modal="true"
-          aria-label={content.eyebrow}
-        >
-          <div className={styles.resultIcon}>
-            <FiCheck />
-          </div>
-          <h3 className={styles.resultTitle}>{content.resultTitle}</h3>
-          <p className={styles.resultBody}>{content.resultBody}</p>
-          <div className={styles.resultBtns}>
-            <Button
-              variant="ghost-dark"
-              to={routes.homepage}
-              onClick={() => onDone?.()}
-            >
-              {t("settings:destructiveFlow.backToHome")}
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div
-          className={styles.modal}
-          role="dialog"
-          aria-modal="true"
-          aria-label={content.eyebrow}
-          aria-busy={phase === "loading"}
-        >
-          {phase === "loading" ? (
-            <>
-              <div className={styles.spinner} aria-hidden="true" />
-              <p className={styles.loadingText}>{content.loadingText}</p>
-            </>
-          ) : phase === "error" ? (
-            <>
-              <div className={`${styles.icon} ${styles.iconAccent}`}>
-                <FiAlertTriangle />
-              </div>
-              <div className={styles.eyebrow}>{content.eyebrow}</div>
-              <h3 className={styles.title}>
-                <Translation
-                  i18nKey="settings:destructiveFlow.error.title"
-                  components={{ em: <em /> }}
-                />
-              </h3>
-              <p className={styles.body}>
-                {t("settings:destructiveFlow.error.body")}
-              </p>
-              <div className={styles.btns}>
-                <Button variant="ghost" onClick={onClose}>
-                  {t("settings:destructiveFlow.error.close")}
-                </Button>
-                <Button variant="primary" onClick={() => void run()}>
-                  {t("settings:destructiveFlow.error.tryAgain")}
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div
-                className={`${styles.icon} ${content.tone === "accent" ? styles.iconAccent : styles.iconPlum}`}
+      {/* One dialog node across every phase: the focus trap holds a reference
+          to it, so swapping the element per phase would leave the trap pointing
+          at a node that is no longer in the document. */}
+      <div
+        ref={dialogRef}
+        tabIndex={-1}
+        className={phase === "done" ? styles.result : styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-label={content.eyebrow}
+        aria-busy={phase === "loading"}
+      >
+        {phase === "done" ? (
+          <>
+            <div className={styles.resultIcon}>
+              <FiCheck />
+            </div>
+            <h3 className={styles.resultTitle}>{content.resultTitle}</h3>
+            <p className={styles.resultBody}>{content.resultBody}</p>
+            <div className={styles.resultBtns}>
+              <Button
+                variant="ghost-dark"
+                to={routes.homepage}
+                onClick={() => onDone?.()}
               >
-                {content.icon}
-              </div>
-              <div className={styles.eyebrow}>{content.eyebrow}</div>
-              <h3 className={styles.title}>{content.title}</h3>
-              <p className={styles.body}>{content.body}</p>
-              <div className={styles.btns}>
-                <Button variant="ghost" onClick={onClose}>
-                  {t("settings:destructiveFlow.confirm.notNow")}
-                </Button>
-                <Button variant="primary" onClick={() => void run()}>
-                  {content.confirmLabel}
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
+                {t("settings:destructiveFlow.backToHome")}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            {phase === "loading" ? (
+              <>
+                <div className={styles.spinner} aria-hidden="true" />
+                <p className={styles.loadingText}>{content.loadingText}</p>
+              </>
+            ) : phase === "error" ? (
+              <>
+                <div className={`${styles.icon} ${styles.iconAccent}`}>
+                  <FiAlertTriangle />
+                </div>
+                <div className={styles.eyebrow}>{content.eyebrow}</div>
+                <h3 className={styles.title}>
+                  <Translation
+                    i18nKey="settings:destructiveFlow.error.title"
+                    components={{ em: <em /> }}
+                  />
+                </h3>
+                <p className={styles.body}>
+                  {t("settings:destructiveFlow.error.body")}
+                </p>
+                <div className={styles.btns}>
+                  <Button variant="ghost" onClick={onClose}>
+                    {t("settings:destructiveFlow.error.close")}
+                  </Button>
+                  <Button variant="primary" onClick={() => void run()}>
+                    {t("settings:destructiveFlow.error.tryAgain")}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  className={`${styles.icon} ${content.tone === "accent" ? styles.iconAccent : styles.iconPlum}`}
+                >
+                  {content.icon}
+                </div>
+                <div className={styles.eyebrow}>{content.eyebrow}</div>
+                <h3 className={styles.title}>{content.title}</h3>
+                <p className={styles.body}>{content.body}</p>
+                <div className={styles.btns}>
+                  <Button variant="ghost" onClick={onClose}>
+                    {t("settings:destructiveFlow.confirm.notNow")}
+                  </Button>
+                  <Button variant="primary" onClick={() => void run()}>
+                    {content.confirmLabel}
+                  </Button>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>,
     document.body,
   );

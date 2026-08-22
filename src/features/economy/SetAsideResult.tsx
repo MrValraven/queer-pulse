@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { FiShield } from "react-icons/fi";
-import { TAX_DISCLAIMER } from "./tax.constants";
+import { TAX_DISCLAIMER_KEY } from "./tax.constants";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -87,7 +87,7 @@ export function SetAsideResult({
         </p>
       </div>
 
-      <p className={styles.disclaimer}>{TAX_DISCLAIMER}</p>
+      <p className={styles.disclaimer}>{t(TAX_DISCLAIMER_KEY)}</p>
     </div>
   );
 }

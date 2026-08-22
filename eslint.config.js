@@ -89,6 +89,220 @@ const localPlugin = {
         };
       },
     },
+    // Local rule: any anchor/Button/link that opens in a new tab
+    // (`target="_blank"`) MUST carry `rel="noopener noreferrer"`. Without
+    // `noopener`, the newly opened page can reach back through
+    // `window.opener` and navigate the origin tab to a phishing page
+    // (reverse tabnabbing). This app has no eslint-plugin-react, so
+    // `react/jsx-no-target-blank` is unavailable without a new dependency —
+    // this local rule fills that gap. It only fires when `target` is the
+    // static string "_blank" (a dynamic `target={cond ? "_blank" : undefined}`
+    // can't be resolved statically, so it is left alone) and when the `rel`
+    // attribute is missing or is a static string that does not contain
+    // "noopener". A dynamic `rel={...}` expression is left alone too, since
+    // its contents can't be checked at lint time.
+    "require-noopener-on-blank": {
+      meta: {
+        type: "problem",
+        docs: {
+          description:
+            "Require rel=\"noopener noreferrer\" on any element with target=\"_blank\" (reverse-tabnabbing hardening).",
+        },
+        messages: {
+          missing:
+            'Add rel="noopener noreferrer" to target="_blank" links to prevent reverse tabnabbing.',
+        },
+      },
+      create(context) {
+        // The static string value of a JSX attribute, or null when the value
+        // is dynamic (an expression the linter can't resolve) or absent.
+        const staticAttributeValue = (attribute) => {
+          const value = attribute.value;
+          if (value == null) return null;
+          if (value.type === "Literal" && typeof value.value === "string") {
+            return value.value;
+          }
+          if (
+            value.type === "JSXExpressionContainer" &&
+            value.expression.type === "Literal" &&
+            typeof value.expression.value === "string"
+          ) {
+            return value.expression.value;
+          }
+          return null;
+        };
+
+        const findAttribute = (openingElement, attributeName) =>
+          openingElement.attributes.find(
+            (attribute) =>
+              attribute.type === "JSXAttribute" &&
+              attribute.name?.name === attributeName,
+          );
+
+        return {
+          JSXOpeningElement(node) {
+            const targetAttribute = findAttribute(node, "target");
+            if (!targetAttribute) return;
+            if (staticAttributeValue(targetAttribute) !== "_blank") return;
+
+            const relAttribute = findAttribute(node, "rel");
+            if (!relAttribute) {
+              context.report({ node: targetAttribute, messageId: "missing" });
+              return;
+            }
+
+            const relValue = staticAttributeValue(relAttribute);
+            // A dynamic rel expression can't be checked statically; leave it.
+            if (relValue == null) return;
+            if (!relValue.split(/\s+/).includes("noopener")) {
+              context.report({ node: relAttribute, messageId: "missing" });
+            }
+          },
+        };
+      },
+    },
+    // Local rule: magazine article HTML (`html`/`caption`/`q` block fields) is
+    // persisted UNSANITIZED on write — sanitization only happens on read, at
+    // each individual `dangerouslySetInnerHTML` render call site, via
+    // `sanitizeArticleHtml` (src/features/magazine/desk/editor/
+    // sanitizeArticleHtml.ts). Nothing at the type level stops a future call
+    // site from rendering that stored HTML raw and reopening a stored-XSS
+    // hole, so this rule catches it at lint time instead. Scoped to
+    // src/features/magazine/** only via the file-pattern override below (see
+    // the bottom of this config) — this is deliberately NOT a blanket
+    // "always sanitize dangerouslySetInnerHTML" rule, since other features
+    // (e.g. SubprofileQR.tsx rendering trusted QR-library SVG output) have
+    // legitimate unsanitized uses unrelated to user-authored content.
+    "require-sanitized-article-html": {
+      meta: {
+        type: "problem",
+        docs: {
+          description:
+            "In magazine article rendering, dangerouslySetInnerHTML's __html must be sanitized via sanitizeArticleHtml().",
+        },
+        messages: {
+          unsanitized:
+            "dangerouslySetInnerHTML here must render a value that has been passed through sanitizeArticleHtml() (src/features/magazine/desk/editor/sanitizeArticleHtml.ts) — article HTML is stored unsanitized on write, so every read-time render site is the only thing standing between it and stored XSS. If this is a different sanitizer or a pattern the rule doesn't recognize, don't just disable this lint locally — update local/require-sanitized-article-html in eslint.config.js with an explicit, reviewed exception.",
+        },
+        schema: [],
+      },
+      create(context) {
+        const filename = context.filename;
+        // Belt-and-suspenders: the config-level file-pattern override is what
+        // actually scopes this rule to src/features/magazine/**, but check
+        // here too in case the rule is ever enabled from elsewhere.
+        if (!/[/\\]src[/\\]features[/\\]magazine[/\\]/.test(filename)) {
+          return {};
+        }
+
+        const SANITIZE_FN = "sanitizeArticleHtml";
+        const MAX_DEPTH = 6;
+
+        const isSanitizeCall = (node) =>
+          node?.type === "CallExpression" &&
+          node.callee.type === "Identifier" &&
+          node.callee.name === SANITIZE_FN;
+
+        // A literal (e.g. the `""` fallback branch of `cond ? sanitizeArticleHtml(x) : ""`)
+        // needs no sanitizing — it isn't derived from stored article content.
+        const isSafeLiteral = (node) =>
+          node?.type === "Literal" ||
+          (node?.type === "TemplateLiteral" && node.expressions.length === 0);
+
+        const resolveVariable = (identifierNode) => {
+          let scope = context.sourceCode.getScope(identifierNode);
+          while (scope) {
+            const variable = scope.variables.find((v) => v.name === identifierNode.name);
+            if (variable) return variable;
+            scope = scope.upper;
+          }
+          return null;
+        };
+
+        // Top-level `return` statements directly inside a block body (not
+        // descending into nested functions/blocks — a heuristic, not a full
+        // prover, sufficient for the small useMemo-wrapper bodies this
+        // codebase actually uses).
+        const topLevelReturnArguments = (blockStatement) =>
+          blockStatement.body
+            .filter((statement) => statement.type === "ReturnStatement")
+            .map((statement) => statement.argument);
+
+        const expressionSanitizes = (node, depth) => {
+          if (!node || depth > MAX_DEPTH) return false;
+          if (isSanitizeCall(node)) return true;
+          if (isSafeLiteral(node)) return true;
+
+          if (node.type === "ConditionalExpression") {
+            return (
+              expressionSanitizes(node.consequent, depth + 1) &&
+              expressionSanitizes(node.alternate, depth + 1)
+            );
+          }
+
+          if (node.type === "LogicalExpression") {
+            return (
+              expressionSanitizes(node.left, depth + 1) &&
+              expressionSanitizes(node.right, depth + 1)
+            );
+          }
+
+          if (node.type === "CallExpression") {
+            const calleeName = node.callee.type === "Identifier" ? node.callee.name : null;
+            // Unwrap the common `useMemo(() => ..., deps)` / `useCallback(...)`
+            // wrapper to check the function it wraps.
+            if (calleeName === "useMemo" || calleeName === "useCallback") {
+              return expressionSanitizes(node.arguments[0], depth + 1);
+            }
+            return false;
+          }
+
+          if (node.type === "ArrowFunctionExpression" || node.type === "FunctionExpression") {
+            if (node.body.type === "BlockStatement") {
+              const returnArguments = topLevelReturnArguments(node.body);
+              if (returnArguments.length === 0) return false;
+              return returnArguments.every((argument) =>
+                expressionSanitizes(argument, depth + 1),
+              );
+            }
+            return expressionSanitizes(node.body, depth + 1);
+          }
+
+          if (node.type === "Identifier") {
+            const variable = resolveVariable(node);
+            const definition = variable?.defs?.[0];
+            if (definition?.node?.type === "VariableDeclarator" && definition.node.init) {
+              return expressionSanitizes(definition.node.init, depth + 1);
+            }
+            return false;
+          }
+
+          return false;
+        };
+
+        return {
+          JSXAttribute(node) {
+            if (node.name?.name !== "dangerouslySetInnerHTML") return;
+            const value = node.value;
+            if (value?.type !== "JSXExpressionContainer") return;
+            const expression = value.expression;
+            if (expression?.type !== "ObjectExpression") return;
+
+            const htmlProperty = expression.properties.find(
+              (property) =>
+                property.type === "Property" &&
+                ((property.key.type === "Identifier" && property.key.name === "__html") ||
+                  (property.key.type === "Literal" && property.key.value === "__html")),
+            );
+            if (!htmlProperty) return;
+
+            if (!expressionSanitizes(htmlProperty.value, 0)) {
+              context.report({ node: htmlProperty, messageId: "unsanitized" });
+            }
+          },
+        };
+      },
+    },
     "no-literal-string": {
       meta: {
         type: "problem",
@@ -281,6 +495,13 @@ export default defineConfig([
       // Conventions from CLAUDE.md, enforced in CI:
       // 1. Icons over emoji (hard error — protects the icon sweep).
       "local/no-emoji": "error",
+      // 1b. Reverse-tabnabbing hardening: target="_blank" links must carry
+      //     rel="noopener noreferrer". Hard error — the codebase is at zero
+      //     violations (every occurrence was audited), so a new blank-target
+      //     link without noopener blocks CI. Dynamic target/rel expressions
+      //     the rule can't resolve statically are left alone, so no per-file
+      //     overrides are needed.
+      "local/require-noopener-on-blank": "error",
       // 2. Components stay small. Warn (non-breaking) — promote to error once the
       //    remaining oversized components are decomposed.
       "max-lines-per-function": [
@@ -335,10 +556,58 @@ export default defineConfig([
     files: ["src/features/messages/reactionKeys.ts"],
     rules: { "local/no-emoji": "off" },
   },
+  // Magazine article HTML is stored unsanitized and only sanitized at each
+  // render call site (see the rule's own doc comment above, next to
+  // "no-literal-string" in localPlugin). Scoped here, NOT added to the
+  // repo-wide rules block above — this must not become a blanket
+  // "always sanitize dangerouslySetInnerHTML" rule, since legitimate
+  // unsanitized uses exist elsewhere (e.g. SubprofileQR.tsx's trusted
+  // QR-library SVG output).
+  {
+    files: ["src/features/magazine/**/*.{ts,tsx}"],
+    rules: { "local/require-sanitized-article-html": "error" },
+  },
   // routes.tsx is a flat route registry, not a component — the line limit doesn't apply.
   {
     files: ["src/app/routes.tsx"],
     rules: { "max-lines-per-function": "off" },
+  },
+  // Boot-path storage safety. `AuthProvider`, `DemoModeProvider`,
+  // `DisplayModeProvider`, `I18nProvider`, `NavModeProvider` and `ThemeProvider`
+  // all compose into `RootProviders`, which WRAPS the app `<ErrorBoundary>`, and
+  // `detectLanguage()` runs inside a render-phase state initializer. A raw
+  // `localStorage` access throws `SecurityError` in a browser configured to
+  // block site data (Safari "Block all cookies", enterprise policy, some
+  // private-mode sandboxes) — and a throw up there white-screens the entire app
+  // before anything can catch it. `safeStorage` degrades to "no persisted
+  // value" instead. Scoped to the boot path: providers below the boundary and
+  // feature code are free to use their own guarded access.
+  {
+    files: [
+      "src/app/providers/AuthProvider.tsx",
+      "src/app/providers/DisplayModeProvider.tsx",
+      "src/app/providers/I18nProvider.tsx",
+      "src/app/providers/NavModeProvider.tsx",
+      "src/app/providers/ThemeProvider.tsx",
+      "src/app/providers/useDemoSession.ts",
+      "src/shared/i18n/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-properties": [
+        "error",
+        {
+          object: "localStorage",
+          message:
+            "Use `safeStorage` from src/shared/storage/safeStorage — this file runs above the app ErrorBoundary, where a blocked-storage throw white-screens the app.",
+        },
+        {
+          object: "window",
+          property: "localStorage",
+          message:
+            "Use `safeStorage` from src/shared/storage/safeStorage — this file runs above the app ErrorBoundary, where a blocked-storage throw white-screens the app.",
+        },
+      ],
+    },
   },
   // Files outside every tsconfig project — root config files, Playwright e2e,
   // and the webworker sw.ts (excluded from tsconfig.app for its own lib). The

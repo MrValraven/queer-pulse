@@ -11,6 +11,7 @@ import {
   SEED_SENT,
 } from "../../features/connect/connections.data";
 import { useDemoMode } from "./DemoModeProvider";
+import { useAuth } from "./authContext";
 import {
   ConnectionsContext,
   type ConnectionsState,
@@ -74,6 +75,7 @@ function readInitial(): ConnectionsState {
  */
 export function ConnectionsProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
+  const { loggedIn } = useAuth();
   const [state, setState] = useState<ConnectionsState>(() =>
     demoMode ? readInitial() : emptyState(),
   );
@@ -97,6 +99,17 @@ export function ConnectionsProvider({ children }: { children: ReactNode }) {
   if (prevDemo !== demoMode) {
     setPrevDemo(demoMode);
     setState(demoMode ? readInitial() : emptyState());
+  }
+
+  // Sign-out clears the live in-memory list the same way. `queryClient.clear()`
+  // in `signOut` drops the cached ["connections"] pages, but this provider
+  // holds its own optimistic copy of who the member accepted, declined or sent
+  // to; on a shared device the next person's session would inherit it. Demo's
+  // localStorage store is its own source of truth, so it is left alone.
+  const [wasLoggedIn, setWasLoggedIn] = useState(loggedIn);
+  if (wasLoggedIn !== loggedIn) {
+    setWasLoggedIn(loggedIn);
+    if (!demoMode && !loggedIn) setState(emptyState());
   }
 
   const accept = useCallback((slug: string) => {

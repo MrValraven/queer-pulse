@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -35,6 +36,11 @@ export function MagazineSectionArticlesPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("magazine:sectionArticles.metaTitle", { section })}
+        description={t("magazine:sectionArticles.metaDescription", { section })}
+        canonical={`${routes.magazineSections}/${sectionParam}`}
+      />
       <MagazineMasthead active="sections" />
       <section className={styles.body}>
         <div className="wrap">

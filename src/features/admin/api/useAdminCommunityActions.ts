@@ -14,6 +14,7 @@ import {
   ADMIN_COMMUNITIES_KEY,
   adminCommunityDetailQueryKey,
 } from "./useAdminCommunities";
+import { adminCommunityGovernanceLogPrefix } from "./useAdminCommunityGovernanceLog";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 
 /**
@@ -99,6 +100,11 @@ function useFreezeToggle(
       void queryClient.invalidateQueries({
         queryKey: adminCommunityDetailQueryKey(slug, demoMode, language),
       });
+      // The override also wrote a governance-log entry (`adminOverride: true`),
+      // so the audit trail on the Governance tab is stale until refetched.
+      void queryClient.invalidateQueries({
+        queryKey: adminCommunityGovernanceLogPrefix(slug),
+      });
     },
   });
 }
@@ -142,6 +148,11 @@ export function useArchiveAdminCommunity() {
       void queryClient.invalidateQueries({
         queryKey: adminCommunityDetailQueryKey(slug, demoMode, language),
       });
+      // The override also wrote a governance-log entry (`adminOverride: true`),
+      // so the audit trail on the Governance tab is stale until refetched.
+      void queryClient.invalidateQueries({
+        queryKey: adminCommunityGovernanceLogPrefix(slug),
+      });
     },
   });
 }
@@ -167,6 +178,11 @@ export function useUnarchiveAdminCommunity() {
     onLiveSuccess: (_data, { slug }) => {
       void queryClient.invalidateQueries({
         queryKey: adminCommunityDetailQueryKey(slug, demoMode, language),
+      });
+      // The override also wrote a governance-log entry (`adminOverride: true`),
+      // so the audit trail on the Governance tab is stale until refetched.
+      void queryClient.invalidateQueries({
+        queryKey: adminCommunityGovernanceLogPrefix(slug),
       });
     },
   });

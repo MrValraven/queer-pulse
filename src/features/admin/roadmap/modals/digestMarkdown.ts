@@ -2,6 +2,7 @@ import type {
   AdminRoadmapIdea,
   AdminRoadmapItem,
 } from "../../adminRoadmap.data";
+import type { Formatters } from "../../../../shared/i18n/format";
 import type { TFunction } from "../../../../shared/i18n/types";
 
 /**
@@ -18,18 +19,20 @@ export function buildDigestMarkdown(
   items: AdminRoadmapItem[],
   ideas: AdminRoadmapIdea[],
   t: TFunction,
+  fmt: Formatters,
 ): string {
-  const month = new Date().toLocaleDateString(undefined, {
-    month: "long",
-    year: "numeric",
-  });
+  const month = fmt.date(new Date(), { month: "long", year: "numeric" });
 
   const shipped = items.filter(
     (item) => item.column === "shipped" && item.isPublic,
   );
   const movedLines = items.flatMap((item) =>
     item.slips.map(
-      (slip) => `- "${item.name}" moved ${slip.from} → ${slip.to}: ${slip.reason}`,
+      (slip) =>
+        `- "${item.name}" ${t("admin:roadmap.modals.digest.movedLine", {
+          from: slip.from,
+          to: slip.to,
+        })}: ${slip.reason}`,
     ),
   );
   const declined = ideas.filter((idea) => idea.status === "dismissed");

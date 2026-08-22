@@ -23,6 +23,7 @@ import {
   resolveGathering,
   type GatheringDetail,
 } from "./data";
+import { eventZoneFormat } from "./eventTimezone";
 import { useEvent } from "./api/useEvent";
 import { useRsvp, useUnrsvp } from "./api/useEventMutations";
 
@@ -106,6 +107,9 @@ export function GatheringPage() {
 
   const kind = gatheringKind(gathering);
   const rsvpConfirmed = rsvpStatus === "going" || rsvpStatus === "waitlisted";
+  // Date + start time read in the gathering's own zone, with the short zone
+  // name appended when that zone differs from the reader's.
+  const zone = eventZoneFormat(gathering.timezone, gathering.date);
 
   // The "more gatherings" rail is mock-only; live has no list endpoint here, so
   // it stays empty rather than leaking demo gatherings into production.
@@ -151,7 +155,12 @@ export function GatheringPage() {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
+                    ...zone.dateOptions,
                   })}
+                </span>
+                <span className={styles.metaItem}>
+                  <span className={styles.metaDot} />
+                  {fmt.time(gathering.date, zone.timeOptions)}
                 </span>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
@@ -181,9 +190,15 @@ export function GatheringPage() {
                       });
                       return;
                     }
-                    const next = gathering.isFull ? "waitlisted" : "going";
+                    // A full gathering waitlists the member: the request body
+                    // is still "going", but the mutation is told the intent so
+                    // the optimistic going head-count doesn't bump (see
+                    // `RsvpIntent`).
+                    const next: "going" | "waitlisted" = gathering.isFull
+                      ? "waitlisted"
+                      : "going";
                     setRsvpStatus(next);
-                    rsvp.mutate("going", {
+                    rsvp.mutate(next, {
                       onSuccess: () =>
                         showToast(
                           t(

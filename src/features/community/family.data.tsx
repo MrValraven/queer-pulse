@@ -106,7 +106,7 @@ export const TALK_CARDS: {
 }[] = [
   {
     initials: "MR",
-    background: "rgba(232,119,90,.25)",
+    background: "rgba(var(--accent-rgb), .25)",
     color: "var(--accent)",
     name: "Marta & Raquel",
     detail: "IVF via SNS · Two children · Arroios",
@@ -114,7 +114,7 @@ export const TALK_CARDS: {
   },
   {
     initials: "JP",
-    background: "rgba(74,140,111,.25)",
+    background: "rgba(var(--jade-rgb), .25)",
     color: "var(--jade)",
     name: "João & Pedro",
     detail: "Adoption · Domestic · Mouraria",
@@ -122,7 +122,7 @@ export const TALK_CARDS: {
   },
   {
     initials: "TS",
-    background: "rgba(122,82,184,.2)",
+    background: "rgba(var(--violet-rgb), .2)",
     color: "var(--violet)",
     name: "Tomás",
     detail: "Trans dad · IVF · Solo parent · Graça",
@@ -173,7 +173,7 @@ export const TABS: Tab[] = [
     reviews: [
       {
         initials: "CM",
-        background: "rgba(74,140,111,.15)",
+        background: "rgba(var(--jade-rgb), .15)",
         color: "var(--jade)",
         name: "Carla Matos",
         context: "Social worker · SCML Lisboa",
@@ -183,7 +183,7 @@ export const TABS: Tab[] = [
       },
       {
         initials: "FA",
-        background: "rgba(232,119,90,.15)",
+        background: "rgba(var(--accent-rgb), .15)",
         color: "var(--accent-ink)",
         name: "Fundação Ajuda",
         context: "Adoption agency · Lisbon",
@@ -193,7 +193,7 @@ export const TABS: Tab[] = [
       },
       {
         initials: "RN",
-        background: "rgba(45,27,61,.1)",
+        background: "rgba(var(--plum-rgb), .1)",
         color: "var(--plum)",
         name: "Rita Nunes",
         context: "Independent social worker",
@@ -250,7 +250,7 @@ export const TABS: Tab[] = [
     reviews: [
       {
         initials: "CF",
-        background: "rgba(74,140,111,.15)",
+        background: "rgba(var(--jade-rgb), .15)",
         color: "var(--jade)",
         name: "Clínica Ferticare",
         context: "Private · Marquês de Pombal",
@@ -260,7 +260,7 @@ export const TABS: Tab[] = [
       },
       {
         initials: "IM",
-        background: "rgba(232,119,90,.15)",
+        background: "rgba(var(--accent-rgb), .15)",
         color: "var(--accent-ink)",
         name: "Instituto Marquesa",
         context: "Private · Cascais",

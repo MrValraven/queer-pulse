@@ -16,8 +16,22 @@ export const NEXT_UP_STILL_BY_ID: Record<string, string> = {
 export const PLAYER_STILL =
   "https://images.unsplash.com/photo-1637059880830-59a90102de77?q=80&w=1000&auto=format&fit=crop";
 
-export const CONTENT_NOTES = [
-  { k: "Grief", detail: "Throughout", tc: "—" },
+/** Named for the file: `useSubmitForm.ts` owns a different `ContentNote`. */
+export interface WatchContentNote {
+  /** Advisory label, e.g. "Grief". */
+  k: string;
+  /** Where in the film it sits, e.g. "Act two · care". */
+  detail: string;
+  /**
+   * Timecode. Omitted when the note has no single moment to point at, and the
+   * column then stays empty. A placeholder em dash here would break the copy
+   * rule and make screen readers announce "em dash".
+   */
+  tc?: string;
+}
+
+export const CONTENT_NOTES: WatchContentNote[] = [
+  { k: "Grief", detail: "Throughout" },
   { k: "Dementia", detail: "Act two · care", tc: "42:18 – 51:04" },
   { k: "A slur, once", detail: "Reclaimed · in context", tc: "28:11" },
 ];

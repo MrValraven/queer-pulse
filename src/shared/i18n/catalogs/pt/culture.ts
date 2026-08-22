@@ -10,6 +10,11 @@ export const culture: Catalog = {
   "tabs.showcase": "Mostra de Arte",
   "tabs.radio": "Rádio",
 
+  // ── Metadados da página (FE-CNT-12) ────────────────────────────────────
+  "meta.title": "Cultura: Revista QueerPulse",
+  "meta.description":
+    "Os clubes, encomendas, mostras e rádio que compõem a vida cultural queer em Lisboa.",
+
   "hero.eyebrow": "Cena e rádio de Lisboa",
   "hero.title": "A <em>cena</em> queer de Lisboa.",
   "hero.lead":

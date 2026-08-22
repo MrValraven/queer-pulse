@@ -1,7 +1,7 @@
 .preview {
   min-width: 0;
   padding: 1.1rem 1.2rem;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 12px;
   background: var(--paper);
 }

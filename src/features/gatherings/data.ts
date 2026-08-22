@@ -44,6 +44,11 @@ export interface GatheringDetail {
   /** Organizer-authored category, e.g. "Supper Club" — fetched in live mode. */
   type: string;
   date: Date;
+  /** IANA zone the host scheduled this in, when the API carries one. The
+   *  detail surfaces format `date` through it (see `eventZoneFormat`) and
+   *  label the clock when it differs from the reader's own. Absent in the demo
+   *  registry, which falls back to the reader's zone as it always did. */
+  timezone?: string;
   title: string;
   hood: string;
   host: string;
@@ -584,6 +589,11 @@ export function gatheringHasEnded(g: GatheringDetail, now: Date = new Date()): b
 export interface CalendarEvent {
   /** Start instant, including the clock time — rendered via `useFormat()`. */
   date: Date;
+  /** IANA zone the host scheduled this in, when the API carries one. Cards
+   *  format `date` through it (see `eventZoneFormat`) so a gathering abroad
+   *  reads in its own clock. Absent in the demo registry, where every mock
+   *  gathering is already in the reader's own zone. */
+  timezone?: string;
   org: string;
   orgColor: string;
   title: string;

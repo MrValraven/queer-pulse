@@ -38,7 +38,10 @@ export function MessageModal({
 }: {
   toName: string;
   listingTitle: string;
-  responseTime: string;
+  /** Only set when a MEASURED reply time is on file (demo fixtures author one;
+   *  the live listing DTO carries no response metric). When absent the
+   *  confirmation drops the "usually replies" clause instead of inventing it. */
+  responseTime?: string;
   listingRef: string | null;
   onClose: () => void;
 }) {
@@ -94,8 +97,12 @@ export function MessageModal({
           </div>
           <p className={styles.sub}>
             <Translation
-              i18nKey="economy:housingModal.message.successBody"
-              values={{ toName, responseTime }}
+              i18nKey={
+                responseTime
+                  ? "economy:housingModal.message.successBody"
+                  : "economy:housingModal.message.successBodyNoReplyTime"
+              }
+              values={{ toName, responseTime: responseTime ?? "" }}
               components={{ strong: <strong /> }}
             />
           </p>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { FiCopy } from "react-icons/fi";
 import { AdminDrawer, AdminAvatar, AdminChip } from "./ui";
+import { AdminInviteRevokeAction } from "./AdminInviteRevokeAction";
 import { ADMIN_INVITE_STATUS_TONE } from "./adminInviteStatusTone";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -89,18 +90,25 @@ function DetailRow({
 }
 
 /**
- * Read-only detail view for a single invite, opened by clicking a row on
+ * Detail view for a single invite, opened by clicking a row on
  * {@link AdminInvitesPage}. The list hook already returns the full
- * {@link AdminInviteDTO}, so this renders the selected invite richly — inviter,
- * recipient (or target email / open link), status, and full timestamps with a
- * relative expiry read-out — with no extra fetch and no demo/live branch.
+ * {@link AdminInviteDTO}, so this renders the selected invite richly (inviter,
+ * recipient or target email or open link, status, and full timestamps with a
+ * relative expiry read-out) with no extra fetch and no demo/live branch.
+ *
+ * The body stays a read-out. The one action lives in the footer:
+ * {@link AdminInviteRevokeAction}, which renders itself only for a still-valid
+ * invite and owns its own confirm dialog and mutation.
  */
 export function AdminInviteDrawer({
   invite,
   onClose,
+  onRevoked,
 }: {
   invite: AdminInviteDTO;
   onClose: () => void;
+  /** The confirmed revoked row, so the open drawer reflects the new status. */
+  onRevoked: (revoked: AdminInviteDTO) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -142,6 +150,11 @@ export function AdminInviteDrawer({
             </AdminChip>
           </div>
         </div>
+      }
+      foot={
+        invite.status === "valid" ? (
+          <AdminInviteRevokeAction invite={invite} onRevoked={onRevoked} />
+        ) : undefined
       }
     >
       <div className={styles.detailList}>

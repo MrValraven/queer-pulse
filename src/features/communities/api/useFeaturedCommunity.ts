@@ -1,11 +1,15 @@
 import { useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getFeaturedCommunity } from "./communities.api";
 import { cardDtoToCommunity } from "./communities.adapters";
 import { communities } from "../../homepage/data/communities";
 import type { Community } from "../../homepage/data/types";
-import { getDemoFeaturedSlug, subscribeDemoFeatured } from "../featuredCommunity.demo";
+import {
+  getDemoFeaturedSlug,
+  subscribeDemoFeatured,
+} from "../featuredCommunity.demo";
 
 /**
  * The platform-wide featured community (the Discover page's hero card), or
@@ -22,6 +26,7 @@ import { getDemoFeaturedSlug, subscribeDemoFeatured } from "../featuredCommunity
  */
 export function useFeaturedCommunity(): Community | null {
   const { demoMode } = useDemoMode();
+  const { t, language } = useTranslation();
 
   const demoSlug = useSyncExternalStore(
     subscribeDemoFeatured,
@@ -30,11 +35,11 @@ export function useFeaturedCommunity(): Community | null {
   );
 
   const query = useQuery<Community | null>({
-    queryKey: ["communities", "featured", demoMode],
+    queryKey: ["communities", "featured", demoMode, language],
     enabled: !demoMode,
     queryFn: async () => {
       const dto = await getFeaturedCommunity();
-      return dto ? cardDtoToCommunity(dto) : null;
+      return dto ? cardDtoToCommunity(dto, t) : null;
     },
   });
 

@@ -1,0 +1,62 @@
+/* The shared community composer's image-attach affordances. Lifted verbatim
+   from the byte-identical rules that used to be duplicated in
+   PulseTab.module.css and CommunityHubTabs.module.css, now that both tabs
+   render one `CommunityPostComposer`. */
+
+.hiddenFileInput {
+  display: none;
+}
+
+.attachImageBtn {
+  flex: none;
+  border-radius: 10px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  color: var(--ink-60);
+}
+@media (hover: hover) {
+  .attachImageBtn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+.stagedImage {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 160px;
+}
+.stagedImage img {
+  display: block;
+  width: 100%;
+  max-height: 120px;
+  object-fit: cover;
+}
+
+.stagedImageRemove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(var(--plum-rgb), 0.72);
+  color: var(--cream);
+  border-radius: 50%;
+}
+@media (hover: hover) {
+  .stagedImageRemove:hover:not(:disabled) {
+    background: rgba(var(--plum-rgb), 0.88);
+    color: var(--cream);
+  }
+}
+
+.imageAttachError {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: var(--accent-ink);
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+}

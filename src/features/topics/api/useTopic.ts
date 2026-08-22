@@ -1,6 +1,8 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { ApiError } from "../../../shared/api/client";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useSocial } from "../../../app/providers/useSocial";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getTopic as getMockTopic, type Topic } from "../topics.data";
@@ -38,6 +40,7 @@ interface TopicPostsPage {
  */
 export function useTopic(tag: string) {
   const { demoMode } = useDemoMode();
+  const { blocked, muted } = useSocial();
   const { t, language } = useTranslation();
   const fmt = useFormat();
 
@@ -63,18 +66,47 @@ export function useTopic(tag: string) {
     [postsQuery.data],
   );
 
+  // Safety filter, mirroring `useFeed`: posts by a member the viewer has muted
+  // or blocked never render in a topic feed. Applies in both modes — a mute is
+  // a promise the demo has to keep too.
+  const hiddenAuthorHandles = useMemo(
+    () => new Set([...blocked, ...muted]),
+    [blocked, muted],
+  );
+
   const topic = useMemo<Topic | undefined>(() => {
-    if (demoMode) return getMockTopic(tag, t);
-    if (!detailQuery.data) return undefined;
-    return topicDetailToTopic(detailQuery.data, posts, fmt);
-  }, [demoMode, tag, t, detailQuery.data, posts, fmt]);
+    const source = demoMode
+      ? getMockTopic(tag, t)
+      : detailQuery.data
+        ? topicDetailToTopic(detailQuery.data, posts, fmt)
+        : undefined;
+    if (!source) return undefined;
+    const visiblePosts = source.posts.filter(
+      (post) => !post.authorSlug || !hiddenAuthorHandles.has(post.authorSlug),
+    );
+    if (visiblePosts.length === source.posts.length) return source;
+    return { ...source, posts: visiblePosts };
+  }, [demoMode, tag, t, detailQuery.data, posts, fmt, hiddenAuthorHandles]);
+
+  // Split a failed meta fetch the way `useThread` does: a genuine 404 is an
+  // honest "no such topic", anything else (500, network, timeout) is
+  // retryable. Conflating them showed an outage as if the topic had never
+  // existed, with a "back to the forum" button and no way to try again.
+  const detailError = detailQuery.error;
+  const isHttp404 =
+    detailError instanceof ApiError && detailError.status === 404;
 
   return {
     topic,
     isLoading: detailQuery.isLoading || postsQuery.isLoading,
-    // Live-only: the meta fetch failing (404 for an unknown slug, network
-    // error) means there is no topic to show. Demo never errors here.
-    isError: !demoMode && detailQuery.isError,
+    /** The slug resolves to nothing — a real "topic not found". */
+    isNotFound: !demoMode && detailQuery.isError && isHttp404,
+    /** A retryable failure (anything that isn't a 404). Demo never errors. */
+    isError: !demoMode && detailQuery.isError && !isHttp404,
+    refetch: () => {
+      void detailQuery.refetch();
+      void postsQuery.refetch();
+    },
     hasNextPage: !demoMode && postsQuery.hasNextPage,
     fetchNextPage: () => void postsQuery.fetchNextPage(),
     isFetchingNextPage: postsQuery.isFetchingNextPage,

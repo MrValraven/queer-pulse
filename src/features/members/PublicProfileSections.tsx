@@ -111,7 +111,16 @@ export function PublicPreviewBar({
   );
 }
 
-/** The profile header — avatar, name, pronouns, bio, meta, and a members-only CTA. */
+/**
+ * The profile header: avatar, name, pronouns, bio, meta, and a members-only CTA.
+ *
+ * DEMO-ONLY. It takes the full in-app `Member` and renders the neighbourhood,
+ * join year, vouch count and social links, none of which `GET
+ * /public/profiles/:slug` serves. Its only caller is
+ * `PublicProfileOwnPreviewDemo`; the live preview and the real public page both
+ * go through `PublicProfilePublicView`, which is bound to the DTO instead. Do
+ * not reach for this on a live path.
+ */
 export function PublicProfileHead({
   profile,
   contributions,
@@ -282,6 +291,17 @@ export function LockedSection({
   );
 }
 
+/**
+ * The "join us / vouch for {firstName}" footer.
+ *
+ * DEMO-ONLY, because of the second button: `routes.vouch` (`VouchPage`) only
+ * has a candidate to vouch for in demo mode and renders an `EmptyState`
+ * otherwise, so in live mode this invited a visitor to vouch for a named person
+ * and then told them there was nothing to vouch for. Its only caller is
+ * `PublicProfileOwnPreviewDemo`; the live surfaces use
+ * `PublicProfilePublicView`'s request-invite footer instead. Bring the vouch CTA
+ * back here once it can route into a real member's vouch flow.
+ */
 export function BottomCta({ firstName }: { firstName: string }) {
   const { t } = useTranslation();
   return (

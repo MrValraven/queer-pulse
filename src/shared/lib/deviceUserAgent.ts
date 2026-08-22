@@ -46,17 +46,64 @@ export function deviceKindFromUserAgent(userAgent: string): DeviceKind {
 }
 
 /**
+ * The parts a device label is built from. Both are product names (Chrome,
+ * macOS) and are never translated; the SEPARATOR and the unknown-device
+ * fallback are the only pieces that need a language, which is why they belong
+ * to the caller and not to this module.
+ *
+ * `label` is the server-provided override, which always wins when present.
+ */
+export interface DeviceLabelParts {
+  label?: string;
+  platform?: string;
+  browser?: string;
+}
+
+/** The structured form of {@link deviceLabelFromUserAgent}. */
+export function deviceLabelPartsFromUserAgent(
+  userAgent: string,
+  deviceLabel?: string | null,
+): DeviceLabelParts {
+  if (deviceLabel) return { label: deviceLabel };
+  return {
+    platform: matchFirst(userAgent, PLATFORMS),
+    browser: matchFirst(userAgent, BROWSERS),
+  };
+}
+
+/**
+ * Copy the caller owns, so a Portuguese member does not read an English device
+ * name on their sessions list. Defaults keep every existing call site working
+ * byte-for-byte; pass `t(…)` values to translate.
+ *
+ * The separator is a middot with hair spaces rather than a plain "·" typed into
+ * the markup: it is punctuation between two names, not an icon affordance.
+ */
+export interface DeviceLabelCopy {
+  separator?: string;
+  unknown?: string;
+}
+
+const DEFAULT_COPY: Required<DeviceLabelCopy> = {
+  separator: " \u00b7 ",
+  unknown: "Unknown device",
+};
+
+/**
  * A human label for a device, from a raw UA string plus an optional
  * server-provided label that always wins when present. Falls back through
- * platform-only → browser-only → "Unknown device" rather than guessing.
+ * platform-only → browser-only → the unknown-device copy rather than guessing.
  */
 export function deviceLabelFromUserAgent(
   userAgent: string,
   deviceLabel?: string | null,
+  copy: DeviceLabelCopy = {},
 ): string {
-  if (deviceLabel) return deviceLabel;
-  const platform = matchFirst(userAgent, PLATFORMS);
-  const browser = matchFirst(userAgent, BROWSERS);
-  if (platform && browser) return `${platform} · ${browser}`;
-  return platform ?? browser ?? "Unknown device";
+  const { separator, unknown } = { ...DEFAULT_COPY, ...copy };
+  const parts = deviceLabelPartsFromUserAgent(userAgent, deviceLabel);
+  if (parts.label) return parts.label;
+  if (parts.platform && parts.browser) {
+    return `${parts.platform}${separator}${parts.browser}`;
+  }
+  return parts.platform ?? parts.browser ?? unknown;
 }

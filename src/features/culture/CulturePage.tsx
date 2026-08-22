@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
+import { PageMeta } from "../../shared/seo";
 import { Button, FadeIn, FeatureHelp, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
+import { useTablistKeys } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
@@ -20,10 +22,20 @@ export function CulturePage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const [tab, setTab] = useState<TabKey>("club");
+  // APG tablist keys: Arrow/Home/End with a roving tabIndex.
+  const { tabProps } = useTablistKeys(TABS.length, (index) => {
+    const nextTab = TABS[index];
+    if (nextTab) setTab(nextTab.key);
+  });
   const [submitOpen, setSubmitOpen] = useState(false);
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("culture:meta.title")}
+        description={t("culture:meta.description")}
+        canonical={routes.culture}
+      />
       <header className={styles.hero}>
         <div className="wrap">
           <div className={styles.cat}>{t("culture:hero.eyebrow")}</div>
@@ -36,12 +48,13 @@ export function CulturePage() {
           </h1>
           <p className={styles.lead}>{t("culture:hero.lead")}</p>
           <div className={styles.tabs} role="tablist">
-            {TABS.map((tabItem) => (
+            {TABS.map((tabItem, index) => (
               <button
                 type="button"
                 key={tabItem.key}
                 role="tab"
                 aria-selected={tab === tabItem.key}
+                {...tabProps(index, tab === tabItem.key)}
                 className={`${styles.tab} ${tab === tabItem.key ? styles.tabActive : ""}`}
                 onClick={() => setTab(tabItem.key)}
               >

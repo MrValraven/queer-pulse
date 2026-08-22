@@ -189,7 +189,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
   // defaults (locked owner steward, default features/rules/tint) don't count — an
   // untouched wizard never prompts on exit; a name, purpose, invite, or any added
   // steward does.
-  const dirty =
+  const isDirty =
     draft.name.trim().length > 0 ||
     draft.purpose.trim().length > 0 ||
     Boolean(draft.type) ||
@@ -202,7 +202,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
 
   return {
     draft,
-    dirty,
+    isDirty,
     set,
     reset,
     addSteward,

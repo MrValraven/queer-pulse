@@ -133,7 +133,7 @@
 .stepNumDone {
   background: var(--jade);
   border-color: var(--jade);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
 }
 .stepContent {
   padding-top: 10px;

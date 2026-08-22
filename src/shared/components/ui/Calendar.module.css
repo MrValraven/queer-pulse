@@ -130,11 +130,11 @@
    the AA-safe pairing with white text, same rule Button.primary follows. */
 .selected {
   background: var(--accent-fill);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .selected.today {
-  box-shadow: inset 0 0 0 1.5px #fff;
+  box-shadow: inset 0 0 0 1.5px rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .selected:hover:not(:disabled) {
@@ -325,7 +325,7 @@
 }
 .monthGridButtonSelected {
   background: var(--accent-fill);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .monthGridButton:disabled {
@@ -358,12 +358,12 @@
 .rangeStart,
 .rangeEnd {
   background: var(--accent-fill);
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   font-weight: 600;
 }
 .rangeStart.today,
 .rangeEnd.today {
-  box-shadow: inset 0 0 0 1.5px #fff;
+  box-shadow: inset 0 0 0 1.5px rgba(var(--cream-rgb), 1);
 }
 @media (hover: hover) {
   .rangeStart:hover:not(:disabled),

@@ -75,7 +75,7 @@
   border-radius: 2px;
   /* rgba(var(--line-rgb), …) is the repo's dark-mode-aware equivalent of the
      hairline plum used for borders elsewhere (ResourceModal, Consent) — it
-     flips with the theme instead of a hardcoded rgba(45,27,61,…). */
+     flips with the theme instead of a hardcoded rgba(var(--plum-rgb), …). */
   background: rgba(var(--line-rgb), 0.2);
 }
 

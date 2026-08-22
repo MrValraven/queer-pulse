@@ -17,10 +17,11 @@ import type {
 } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import { deriveCalendar } from "./skins/practiceAvailability";
+import { useWeekdayLetters } from "./useWeekdayLetters";
+import { usePositionalRowKeys } from "./usePositionalRowKeys";
 import type { PracticeAvailState } from "./api/subprofiles.api";
 import styles from "./SubprofileEditor.module.css";
 
-const WEEKDAY_LETTERS = ["M", "T", "W", "T", "F", "S", "S"];
 const AVAIL_CYCLE: PracticeAvailState[] = ["off", "open", "full"];
 
 /** A single-line / multi-line text sub-field of an object block. */
@@ -67,12 +68,23 @@ function SkinStringListControl({
   const lines = (editor.getValue(control.path) as string[] | undefined) ?? [];
   const label = t(control.labelKey);
 
+  // Rows have no id of their own (this list persists as a bare `string[]`),
+  // so their React keys live beside the data and are permuted with it. Keying
+  // by index while supporting drag-reorder swapped a focused input's value
+  // underneath the caret instead of moving the row.
+  const rowKeys = usePositionalRowKeys(lines.length);
+
   const commit = (next: string[]) => editor.setValue(control.path, next);
   const reorder = (from: number, to: number) => {
     if (to < 0 || to >= lines.length) return;
     const next = [...lines];
     [next[from], next[to]] = [next[to]!, next[from]!];
+    rowKeys.swap(from, to);
     commit(next);
+  };
+  const removeLine = (index: number) => {
+    rowKeys.removeAt(index);
+    commit(lines.filter((_, entryIndex) => entryIndex !== index));
   };
   const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(reorder);
 
@@ -82,7 +94,7 @@ function SkinStringListControl({
       <div className={styles.lineList} ref={containerRef}>
         {lines.map((line, index) => (
           <div
-            key={index}
+            key={rowKeys.keys[index]}
             className={
               draggingIndex === index
                 ? `${styles.lineRow} ${styles.lineRowDragging}`
@@ -130,9 +142,7 @@ function SkinStringListControl({
               <button
                 type="button"
                 aria-label={t("subprofiles:skinBlock.removeItem")}
-                onClick={() =>
-                  commit(lines.filter((_, entryIndex) => entryIndex !== index))
-                }
+                onClick={() => removeLine(index)}
               >
                 <FiTrash2 size={15} aria-hidden />
               </button>
@@ -168,6 +178,10 @@ function SkinObjectListControl({
     (editor.getValue(control.path) as Record<string, string>[] | undefined) ?? [];
   const label = t(control.labelKey);
 
+  // Same reason as the string list above: these entries persist as bare
+  // objects, so their keys are held alongside the data rather than on it.
+  const rowKeys = usePositionalRowKeys(entries.length);
+
   const commit = (next: Record<string, string>[]) =>
     editor.setValue(control.path, next);
   const emptyEntry = (): Record<string, string> =>
@@ -177,7 +191,12 @@ function SkinObjectListControl({
     if (target < 0 || target >= entries.length) return;
     const next = [...entries];
     [next[index], next[target]] = [next[target]!, next[index]!];
+    rowKeys.swap(index, target);
     commit(next);
+  };
+  const removeEntry = (index: number) => {
+    rowKeys.removeAt(index);
+    commit(entries.filter((_, entryIndex) => entryIndex !== index));
   };
   const patchField = (index: number, key: string, value: string) =>
     commit(
@@ -190,7 +209,7 @@ function SkinObjectListControl({
     <div className={styles.itemsWrap}>
       <span className={styles.itemNum}>{label}</span>
       {entries.map((entry, index) => (
-        <div key={index} className={styles.itemCard}>
+        <div key={rowKeys.keys[index]} className={styles.itemCard}>
           <div className={styles.itemHead}>
             <span className={styles.itemNum}>
               {t("subprofiles:skinBlock.entryLabel", { index: index + 1 })}
@@ -218,9 +237,7 @@ function SkinObjectListControl({
                 type="button"
                 className={styles.toolBtn}
                 aria-label={t("subprofiles:skinBlock.removeItem")}
-                onClick={() =>
-                  commit(entries.filter((_, entryIndex) => entryIndex !== index))
-                }
+                onClick={() => removeEntry(index)}
               >
                 <FiX size={15} />
               </button>
@@ -269,6 +286,7 @@ function SkinGridControl({
   editor: SubprofileSkinBlocksEditor;
 }) {
   const { t } = useTranslation();
+  const weekdayLetters = useWeekdayLetters();
   const raw = editor.getValue(control.path);
   const availability = (raw && typeof raw === "object" ? raw : {}) as {
     startDate?: string;
@@ -309,7 +327,7 @@ function SkinGridControl({
       </FormField>
       <p className={styles.availHelp}>{t("subprofiles:skinBlock.practice.availability.help")}</p>
       <div className={styles.availHead} aria-hidden="true">
-        {WEEKDAY_LETTERS.map((letter, index) => (
+        {weekdayLetters.map((letter, index) => (
           <span key={index}>{letter}</span>
         ))}
       </div>

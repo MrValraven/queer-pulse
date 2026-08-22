@@ -44,6 +44,18 @@
   /* Jade as a FILLED BUTTON background with a white label: 4.52:1 against #fff
      (--jade itself is 3.98:1 — large text only). */
   --jade-fill: #458267;
+  /* Pale jade for marks and labels sitting ON a dark (plum/deep) surface.
+     Promoted here from 17 studio stylesheets that each redeclared the same
+     literal locally, so a jade change had to be made in 18 places. Decorative
+     and on-dark only: it is far too light to carry text on cream or paper. */
+  --jade-light: #9be0bd;
+
+  /* ── Desk violet (magazine desk stage/format chrome) ── */
+  /* Promoted from 3 magazine-desk stylesheets that each redeclared it. Scoped
+     to the desk's own chrome (stage pills, format badges, tint picker); it is
+     not part of the public palette. */
+  --desk-violet: #5c3e92;
+  --desk-violet-rgb: 92, 62, 146;
 
   /* ── Amber (warning / medium states) ── */
   --amber: #e8b44a;
@@ -134,6 +146,15 @@
   /* ── Studio (dark workspace palette) ── */
   --studio-bg: #1a1028;
   --studio-rail: #120920;
+  /* Deepest studio surfaces: the landing footer and the receipt card. Named
+     here rather than written inline so the dark sub-brand has one home. */
+  --studio-deep: #0a0414;
+  --studio-receipt: #0c0518;
+
+  /* ── Cinema (dark viewing surface) ── */
+  /* Cinema is dark by design, like Studio: this surface is intentionally the
+     same in both themes and must NOT follow --paper, which flips. */
+  --cinema-surface: #1a1030;
 }
 
 /* ── Dark mode overrides ── */

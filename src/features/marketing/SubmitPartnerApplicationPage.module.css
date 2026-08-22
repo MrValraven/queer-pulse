@@ -55,7 +55,7 @@
 
 .form {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 20px;
   padding: 34px 32px 30px;
 }
@@ -135,7 +135,7 @@
 }
 .tipCard {
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 18px 18px 16px;
 }

@@ -16,20 +16,69 @@
   transform: translate(-50%, -100%);
 }
 
-.seltool button {
-  display: flex;
-  align-items: center;
+/* The three tools are shared <Button variant="ghost-dark" size="sm">s
+   (FE-CNT-20), which already supply the cream-on-plum colour, the hover and
+   the focus ring. Only the compact chip geometry is overridden here, at a
+   specificity (0,1,1) the primitive's own class cannot beat. */
+.seltool > button {
   gap: 6px;
   padding: 6px 10px;
   border-radius: 8px;
-  color: rgba(var(--cream-rgb), 0.8);
   font-size: 13.5px;
-  font-weight: 600;
-  white-space: nowrap;
 }
 
-.seltool button:hover,
-.seltool button:focus-visible {
-  background: rgba(var(--cream-rgb), 0.14);
+/* The link address field, shown in place of the format buttons. Scoped as a
+   child so the `.seltool > button` rules above keep styling only the three
+   format buttons, leaving the prompt's own <Button>s to the primitive. */
+/* Purely a mousedown guard around the link form (see LinkPrompt.tsx): it must
+   not participate in layout, so the form keeps its own flex box. */
+.linkPromptGuard {
+  display: contents;
+}
+
+.linkPrompt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 2px;
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.linkInput {
+  width: 240px;
+  max-width: 52vw;
+  padding: 7px 10px;
+  border: 1px solid rgba(var(--cream-rgb), 0.24);
+  border-radius: 8px;
+  background: rgba(var(--cream-rgb), 0.08);
   color: rgba(var(--cream-rgb), 1);
+  font-family: inherit;
+  font-size: 13.5px;
+}
+
+.linkInput::placeholder {
+  color: rgba(var(--cream-rgb), 0.45);
+}
+
+.linkInput:focus-visible {
+  outline: 2px solid rgba(var(--cream-rgb), 0.6);
+  outline-offset: 1px;
+}
+
+.linkInput[aria-invalid="true"] {
+  border-color: var(--accent);
+}
+
+.linkHint {
+  max-width: 300px;
+  margin: 0;
+  padding: 0 4px 2px;
+  color: rgba(var(--cream-rgb), 0.8);
+  font-size: 12px;
+  line-height: 1.4;
 }

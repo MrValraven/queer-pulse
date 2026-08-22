@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiArrowRight, FiCheck, FiMail, FiRefreshCw } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -35,21 +35,43 @@ export function MagicLinkMethod({
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  // Both timers are held in refs so unmounting clears them. Without this the
+  // cooldown interval kept ticking after a member navigated away, calling
+  // setCooldown on a component that no longer exists until it hit zero.
+  // Mirrors VerificationNeededPage's own timer cleanup.
+  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
+  const sendTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (cooldownIntervalRef.current)
+        clearInterval(cooldownIntervalRef.current);
+      if (sendTimeoutRef.current) clearTimeout(sendTimeoutRef.current);
+    },
+    [],
+  );
 
   function startCooldown() {
     let secondsRemaining = RESEND_COOLDOWN;
     setCooldown(secondsRemaining);
-    const iv = setInterval(() => {
+    if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
+    cooldownIntervalRef.current = setInterval(() => {
       secondsRemaining--;
       setCooldown(secondsRemaining);
-      if (secondsRemaining <= 0) clearInterval(iv);
+      if (secondsRemaining <= 0 && cooldownIntervalRef.current) {
+        clearInterval(cooldownIntervalRef.current);
+        cooldownIntervalRef.current = null;
+      }
     }, 1000);
   }
 
   function send() {
     if (sending) return;
     setSending(true);
-    setTimeout(() => {
+    sendTimeoutRef.current = setTimeout(() => {
+      sendTimeoutRef.current = null;
       setSending(false);
       setSent(true);
       startCooldown();

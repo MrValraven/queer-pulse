@@ -95,7 +95,11 @@ export function ComingOutPage() {
         }
         sub={t("community:comingOut.outro.sub")}
       >
-        <Button to={routes.comingOut} variant="primary" size="lg">
+        {/* The CTA used to point at `routes.comingOut`, i.e. back to the top of
+            this same guide. Peer support is the real surface behind "enter the
+            space": a moderated room where people talk this through with
+            others. */}
+        <Button to={routes.peerSupport} variant="primary" size="lg">
           {t("community:comingOut.outro.enterCta")}{" "}
           <FiArrowRight aria-hidden />
         </Button>

@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   leaveSubprofile,
   listSubprofileMembers,
+  removeSubprofileMember,
   type MemberDTO,
 } from "./subprofiles.api";
 
@@ -28,6 +29,24 @@ export function useSubprofileMembers(id: string | undefined) {
     },
   });
 
+  // Both mutations touch the same surfaces, so they share one invalidation.
+  const invalidateAfterMembershipChange = () => {
+    // Narrow, id-scoped invalidation — NOT the broad `["subprofile"]` prefix
+    // (which matches every persona query app-wide). A membership change
+    // affects: the owner dashboard/list (`["subprofiles"]` plural), this
+    // persona's owner editor query (`["subprofile", demoMode, id]`), its
+    // public view (viewerIsMember flips — `["subprofile","public"]`, keyed by
+    // handle/slug not id so it can't be id-scoped), and the members list.
+    void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
+    if (id) {
+      void queryClient.invalidateQueries({
+        queryKey: ["subprofile", demoMode, id],
+      });
+    }
+    void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
+    void queryClient.invalidateQueries({ queryKey: ["subprofile-members"] });
+  };
+
   const leave = useMutation<{ ok: true }, Error, void>({
     // SubprofileOwnersPanel toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
@@ -36,25 +55,20 @@ export function useSubprofileMembers(id: string | undefined) {
       if (!demoMode) return leaveSubprofile(id);
       return { ok: true };
     },
-    onSuccess: () => {
-      // Narrow, id-scoped invalidation — NOT the broad `["subprofile"]` prefix
-      // (which matches every persona query app-wide). Leaving affects: the
-      // owner dashboard/list (`["subprofiles"]` plural), this persona's owner
-      // editor query (`["subprofile", demoMode, id]`), its public view
-      // (viewerIsMember flips — `["subprofile","public"]`, keyed by handle/slug
-      // not id so it can't be id-scoped), and the members list.
-      void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
-      if (id) {
-        void queryClient.invalidateQueries({
-          queryKey: ["subprofile", demoMode, id],
-        });
-      }
-      void queryClient.invalidateQueries({
-        queryKey: ["subprofile", "public"],
-      });
-      void queryClient.invalidateQueries({ queryKey: ["subprofile-members"] });
-    },
+    onSuccess: invalidateAfterMembershipChange,
   });
 
-  return { ...query, leave };
+  /** Remove another co-owner, by their profile slug. Creator-only server-side. */
+  const removeMember = useMutation<{ ok: true }, Error, string>({
+    // SubprofileOwnersList toasts its own error, so silence the global duplicate.
+    meta: { silentError: true },
+    mutationFn: async (slug: string) => {
+      if (!id) throw new Error("Subprofile id required");
+      if (!demoMode) return removeSubprofileMember(id, slug);
+      return { ok: true };
+    },
+    onSuccess: invalidateAfterMembershipChange,
+  });
+
+  return { ...query, leave, removeMember };
 }

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiAlertTriangle, FiTrash2 } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { API_BASE_URL } from "../../shared/api/config";
 import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import {
@@ -11,7 +10,7 @@ import {
   type MediaReference,
 } from "../../shared/media/mediaReferences";
 import { useMyMedia, useDeleteMyMedia } from "./api/useMyMedia";
-import type { MyMediaItem } from "./api/myMedia.api";
+import { resolveMyMediaUrl, type MyMediaItem } from "./api/myMedia.api";
 import styles from "./MyUploadsPane.module.css";
 
 export function MyUploadsPane() {
@@ -135,7 +134,7 @@ function MyUploadCard({
     <li className={styles.card}>
       <img
         className={styles.thumb}
-        src={`${API_BASE_URL}${item.fileUrl}`}
+        src={resolveMyMediaUrl(item.fileUrl)}
         alt=""
         loading="lazy"
       />

@@ -210,6 +210,26 @@
   text-wrap: pretty;
 }
 
+/* The reader's own recommendation: a jade hairline marks it as theirs before
+   the badge is read, and the withdraw control lives under the text so it never
+   competes with the rating itself. */
+.recMine {
+  border-color: rgba(var(--jade-rgb), 0.35);
+  background: rgba(var(--jade-rgb), 0.04);
+}
+.recMineFoot {
+  margin-block-start: 14px;
+  padding-block-start: 12px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.recWithdraw {
+  margin-inline-start: auto;
+}
+
 .side {
   position: sticky;
   top: 90px;

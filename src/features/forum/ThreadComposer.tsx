@@ -27,12 +27,14 @@ export function ThreadComposer({
   return (
     <div className={styles.compose}>
       <div className={styles.crHead}>
+        {/* `name` becomes the avatar's alt text, so it has to be translated
+            (it was a hardcoded English "You" in every locale). */}
         <ForumAvatar
           className={styles.crAv}
           person={{
             photo: profile.photo,
             initials: profile.initials,
-            name: "You",
+            name: t("forum:author.you"),
           }}
         />
         <span>

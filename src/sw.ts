@@ -15,6 +15,7 @@ import { urlBase64ToUint8Array } from "./features/push/urlBase64ToUint8Array";
 import { decideCoalesce } from "./pushCoalesce";
 import { isViewingTarget } from "./pushFocus";
 import { readPushLang } from "./pushLang";
+import { readHidePushPreviews } from "./pushPrivacy";
 import { formatPushCopy } from "./pushMessages";
 import { type DirectMessagePush, toDirectMessagePush } from "./pushPayload";
 import { writePendingSubscription } from "./pushSubStore";
@@ -161,6 +162,9 @@ self.addEventListener("push", (event) => {
       // there's no l10n block or the key/lang can't be resolved (also what
       // iOS renders — it never runs this handler's JS).
       const lang = await readPushLang();
+      // Lock-screen privacy: when the member has asked for hidden
+      // previews, nothing identifying may reach showNotification.
+      const shouldHidePreviews = await readHidePushPreviews();
 
       // Message coalescing: a DM push (identified by data.conversationId)
       // checks for an already-showing notification on the SAME tag (every DM
@@ -193,8 +197,24 @@ self.addEventListener("push", (event) => {
             lang,
           )
         : formatPushCopy(payload, lang);
+      // Substitute AFTER coalescing so the burst logic still runs (the tag and
+      // count are not identifying), but before the options are built so the
+      // sender's name in `title` and the message text in `body` never render.
+      const { title: shownTitle, body: shownBody } = shouldHidePreviews
+        ? formatPushCopy(
+            {
+              title: "QueerPulse",
+              body: "You have a new notification.",
+              l10n: {
+                titleKey: "push:preview.hidden.title",
+                bodyKey: "push:preview.hidden.body",
+              },
+            },
+            lang,
+          )
+        : { title, body };
       const options: RichNotificationOptions = {
-        body,
+        body: shownBody,
         tag: payload.tag,
         data: isDirectMessagePush ? { ...payload.data, count } : payload.data,
         icon: payload.icon ?? "/icons/icon-192-v2.png",
@@ -205,7 +225,9 @@ self.addEventListener("push", (event) => {
         // public/icons/badge-monochrome-96.png (see generate-icons.mjs). Falls
         // back gracefully to the app icon on engines that ignore `badge`.
         badge: "/icons/badge-monochrome-96.png",
-        image: payload.image,
+        // A preview image can be as identifying as the text (an avatar, a
+        // photo attachment), so it goes when previews are hidden.
+        image: shouldHidePreviews ? undefined : payload.image,
         actions: payload.actions,
         renotify: payload.renotify,
         // Per the Notifications spec, `silent` and a vibration pattern conflict;
@@ -217,7 +239,7 @@ self.addEventListener("push", (event) => {
         // createdAt), not delivery time — every sender now sets this.
         timestamp: payload.timestamp,
       };
-      await self.registration.showNotification(title, options);
+      await self.registration.showNotification(shownTitle, options);
     })(),
   );
 });
@@ -262,14 +284,26 @@ self.addEventListener("pushsubscriptionchange", (event) => {
 });
 
 // Only navigate to a same-origin relative path. The push payload's `url` is
-// attacker-influenceable, so a value like `https://evil.example` or a
-// protocol-relative `//evil.example` must never reach navigate()/openWindow().
-// Mirrors the app's `safeNext` guard: accept only a single leading "/".
+// attacker-influenceable, so a value like `https://evil.example`, a
+// protocol-relative `//evil.example`, or a backslash/control-char smuggle like
+// `/\evil.example` must never reach navigate()/openWindow().
+//
+// This is a ServiceWorker-local copy of `src/shared/lib/safeInternalPath.ts`:
+// the shared helper reads `window.location.origin`, which does not exist in a
+// worker, so we apply the SAME backslash/control-char rejection and URL-parse
+// origin check against `self.location.origin` here. Keep the two in sync.
 function safeNotificationPath(raw: unknown): string {
   const fallback = "/messages";
   if (typeof raw !== "string") return fallback;
-  if (!raw.startsWith("/") || raw.startsWith("//")) return fallback;
-  return raw;
+  // eslint-disable-next-line no-control-regex
+  if (/[\\\u0000-\u001f\u007f]/.test(raw)) return fallback;
+  try {
+    const parsed = new URL(raw, self.location.origin);
+    if (parsed.origin !== self.location.origin) return fallback;
+    return parsed.pathname + parsed.search + parsed.hash;
+  } catch {
+    return fallback;
+  }
 }
 
 self.addEventListener("notificationclick", (event) => {

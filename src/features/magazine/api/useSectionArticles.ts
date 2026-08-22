@@ -1,6 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Article } from "../data/articles";
 import { articleListItemToArticle } from "./magazine.adapters";
 import { getArticles } from "./magazine.api";
@@ -23,8 +24,11 @@ import { getArticles } from "./magazine.api";
 export function useSectionArticles(section: string) {
   const { demoMode } = useDemoMode();
   const fmt = useFormat();
+  // `language` joins the key because the adapter now locale-formats AND
+  // translates each card's kicker/meta — a language switch must re-derive it.
+  const { t, language } = useTranslation();
   const query = useQuery<Article[]>({
-    queryKey: ["magazine-section-articles", demoMode, section],
+    queryKey: ["magazine-section-articles", demoMode, language, section],
     queryFn: async () => {
       if (demoMode) {
         const { articles } = await import("../data/articles.mock");
@@ -33,7 +37,7 @@ export function useSectionArticles(section: string) {
         );
       }
       const page = await getArticles({ section });
-      return page.items.map((item) => articleListItemToArticle(item, fmt));
+      return page.items.map((item) => articleListItemToArticle(item, fmt, t));
     },
     enabled: section.length > 0,
     placeholderData: keepPreviousData,

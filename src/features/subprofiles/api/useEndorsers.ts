@@ -9,10 +9,14 @@ import { getEndorsers, type EndorserDTO } from "./subprofiles.api";
  * never pulled into the live bundle path.
  *
  * `queryKey` intentionally matches the `["subprofile", "endorsers", id]`
- * shape already used by `useEndorsement`'s post-mutation invalidation (and
- * the inline endorsers queries in `SubprofileEndorse`/`SubprofilePeopleModal`/
- * `SubprofileAffiliations`) — NOT `[..., demoMode]` — so an endorse/withdraw
- * elsewhere correctly busts this hook's cache too.
+ * shape already used by `useEndorsement`'s post-mutation invalidation — NOT
+ * `[..., demoMode]` — so an endorse/withdraw elsewhere busts this cache too.
+ *
+ * This is the ONE declaration of that query. `SubprofileEndorse`,
+ * `SubprofileAffiliations` and `SubprofilePeopleModal` each used to declare it
+ * inline with a drifting queryFn (two of them dropping the abort `signal`), so
+ * whichever observer mounted first decided whether the fetch was cancellable.
+ * Read it through this hook everywhere.
  */
 export function useEndorsers(id: string, enabled: boolean) {
   const { demoMode } = useDemoMode();

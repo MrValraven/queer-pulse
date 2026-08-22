@@ -134,11 +134,11 @@ export const updateListing = (ref: string, dto: Partial<CreateListingDto>) =>
 export const deleteListing = (ref: string) =>
   apiDelete<void>(`/listings/${ref}`);
 
-/** DELETE /listings/admin/:ref — moderator hard-delete of any listing
+/** DELETE /admin/listings/:ref — moderator hard-delete of any listing
  *  (204 No Content). Separate from `deleteListing`, which is owner-scoped.
  *  `reason` is optional free text recorded on the listing's moderation event. */
 export const deleteListingAsModerator = (ref: string, reason?: string) =>
-  apiDelete<void>(`/listings/admin/${ref}`, { reason });
+  apiDelete<void>(`/admin/listings/${ref}`, { reason });
 
 /**
  * PATCH /listings/:ref/status — move a listing along its review status.
@@ -152,7 +152,7 @@ export const setListingStatus = (
   ref: string,
   status: ListingStatus,
   reason?: string,
-) => apiPatch<ListingDTO>(`/listings/${ref}/status`, { status, reason });
+) => apiPatch<ListingDTO>(`/admin/listings/${ref}/status`, { status, reason });
 
 /**
  * POST /listings/:ref/question — a moderator asks the submitter a question.
@@ -160,4 +160,4 @@ export const setListingStatus = (
  * status. Moderator-only: NOT called from the member client.
  */
 export const askListingQuestion = (ref: string, body: string) =>
-  apiPost<ListingDTO>(`/listings/${ref}/question`, { body });
+  apiPost<ListingDTO>(`/admin/listings/${ref}/question`, { body });

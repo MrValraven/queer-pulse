@@ -221,7 +221,9 @@ export function useMyEventsRsvp({
       patch(id, (e) => ({
         ...e,
         category: "going",
-        whoText: `${e.going} going`,
+        // Same key the card badges already use, so the attendee line renders
+        // in the member's language and pluralizes properly.
+        whoText: t("myevents:badges.goingCount", { count: e.going }),
         who: [["YOU", "coral"]],
       }));
       rsvpMutation.mutate(
@@ -265,14 +267,14 @@ export function useMyEventsRsvp({
             patch(id, (e) => ({
               ...e,
               category: "going",
-              whoText: `${e.going} going`,
+              whoText: t("myevents:badges.goingCount", { count: e.going }),
               who: [["YOU", "coral"]],
             }));
           },
         },
       );
     },
-    [byId, fmt, patch, respondInviteMutation],
+    [byId, fmt, patch, respondInviteMutation, t],
   );
   const closeConfirm = useCallback(
     () => setConfirm((c) => ({ ...c, open: false })),

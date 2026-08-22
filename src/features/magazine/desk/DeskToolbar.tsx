@@ -1,5 +1,9 @@
-import { SearchInput, SegmentedControl, Select } from "../../../shared/components/ui";
-import { cx } from "../../../shared/lib/cx";
+import {
+  Button,
+  SearchInput,
+  SegmentedControl,
+  Select,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./DeskToolbar.module.css";
 
@@ -56,14 +60,15 @@ export function DeskToolbar({
         onChange={(value) => onFmt(value as DeskFormatFilter)}
         options={formatOptions}
       />
-      <button
+      <Button
+        variant={mine ? "plum" : "ghost"}
+        size="sm"
         type="button"
-        className={cx(styles.chip, mine && styles.chipOn)}
         aria-pressed={mine}
         onClick={() => onMine(!mine)}
       >
         {t("magazine:desk.toolbar.myQueue")}
-      </button>
+      </Button>
       <Select
         size="sm"
         value={sort}
@@ -75,9 +80,12 @@ export function DeskToolbar({
           { value: "sec", label: t("magazine:desk.toolbar.sort.section") },
         ]}
       />
-      <button type="button" className={styles.chip} onClick={onShortcuts}>
-        {t("magazine:desk.toolbar.shortcuts")} <span className={styles.kbd}>?</span>
-      </button>
+      <Button variant="ghost" size="sm" type="button" onClick={onShortcuts}>
+        {t("magazine:desk.toolbar.shortcuts")}{" "}
+        <span className={styles.kbd} aria-hidden>
+          ?
+        </span>
+      </Button>
     </div>
   );
 }

@@ -98,11 +98,24 @@ describe("sha256Hex", () => {
   });
 });
 
+/** The English labels `ProtectWorkSection` resolves through `t`, inlined here
+ *  so this pure builder can be tested without an i18n provider. */
+const EN_LABELS = {
+  heading: "AUTHORSHIP RECORD: QueerPulse",
+  work: "Work",
+  author: "Author",
+  firstPublished: "First published",
+  contentHash: "Content SHA-256",
+  canonicalForm:
+    "Canonical form: title + plain-text body, LF-normalized, trimmed",
+};
+
 describe("buildAuthorshipRecord", () => {
   it("includes author, first-published date, a 64-hex content hash, and the body", async () => {
     const record = await buildAuthorshipRecord({
       item: poemItem,
       authorName: "Tiago",
+      labels: EN_LABELS,
     });
     expect(record).toContain("AUTHORSHIP RECORD");
     expect(record).not.toContain("—"); // no em dash
@@ -118,6 +131,7 @@ describe("buildAuthorshipRecord", () => {
     const record = await buildAuthorshipRecord({
       item: poemItem,
       authorName: "Tiago",
+      labels: EN_LABELS,
     });
     expect(record).toContain(`Content SHA-256: ${expectedHash}`);
   });

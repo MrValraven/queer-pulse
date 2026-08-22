@@ -3,7 +3,6 @@ import {
   Button,
   Modal,
   SegmentedControl,
-  Select,
   Toggle,
 } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -13,6 +12,7 @@ import { useRsvpDetails } from "../gatherings/api/useRsvpDetails";
 import { useUpdateRsvpDetails } from "../gatherings/api/useEventMutations";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
+import { RsvpContributionField, RsvpGuestField } from "./RsvpDetailsFields";
 
 /** Stable canonical ids — never the translated label itself (i18n sweep
  * §5.1). `SegmentedControl` only knows display strings, so `vis` state stores
@@ -45,7 +45,6 @@ export function RsvpDetailsModal() {
   const [guest, setGuest] = useState(false);
   const [vis, setVis] = useState<Visibility>(VIS_DEFAULT);
   const [quiet, setQuiet] = useState(false);
-  const [contribution, setContribution] = useState("10");
   const [accessNeeds, setAccessNeeds] = useState("");
   const [dietaryNeeds, setDietaryNeeds] = useState("");
 
@@ -121,69 +120,12 @@ export function RsvpDetailsModal() {
         </>
       }
     >
-      <div className={sx("field")}>
-        <label className={sx("field-label")}>
-          {t("myevents:rsvpModal.whosComing")}
-        </label>
-        <button
-          type="button"
-          className={sx("guest-row")}
-          onClick={() => setGuest((g) => !g)}
-        >
-          <span
-            className={sx(`guest-cb${guest ? " on" : ""}`)}
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 14 14" aria-hidden>
-              <path d="M2.5 7.5 6 11l5.5-7" />
-            </svg>
-          </span>
-          <span className={sx("guest-txt")}>
-            {t("myevents:rsvpModal.bringingGuest")}
-            <span>{t("myevents:rsvpModal.guestHint")}</span>
-          </span>
-        </button>
-        <div className={`${sx("collapse")} ${guest ? sx("show") : ""}`}>
-          <div className={sx("guest-name-field")}>
-            <input
-              type="text"
-              placeholder={t("myevents:rsvpModal.guestNamePlaceholder")}
-              aria-label={t("myevents:rsvpModal.guestNamePlaceholder")}
-            />
-          </div>
-        </div>
-      </div>
+      <RsvpGuestField
+        isBringingGuest={guest}
+        onToggleGuest={() => setGuest((g) => !g)}
+      />
 
-      {ev?.sliding && (
-        <div className={sx("field")}>
-          <label className={sx("field-label")} htmlFor="rsvp-contribution">
-            {t("myevents:rsvpModal.contributionLabel")}
-          </label>
-          <div className={sx("field-hint")}>
-            {t("myevents:rsvpModal.slidingHint")}
-          </div>
-          <Select
-            id="rsvp-contribution"
-            value={contribution}
-            onChange={(value) => setContribution(value ?? "10")}
-            options={[
-              { value: "0", label: t("myevents:rsvpModal.contribution.free") },
-              {
-                value: "5",
-                label: t("myevents:rsvpModal.contribution.supported"),
-              },
-              {
-                value: "10",
-                label: t("myevents:rsvpModal.contribution.standard"),
-              },
-              {
-                value: "15",
-                label: t("myevents:rsvpModal.contribution.payItForward"),
-              },
-            ]}
-          />
-        </div>
-      )}
+      {ev?.sliding && <RsvpContributionField />}
 
       <div className={sx("field")}>
         <label className={sx("field-label")} htmlFor="rsvp-access">

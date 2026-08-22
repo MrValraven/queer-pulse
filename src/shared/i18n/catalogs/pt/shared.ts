@@ -81,6 +81,7 @@ export const shared: Catalog = {
   // acima, uma entrada pré-existente com outro texto.
   "accountMenu.items.personas": "As tuas personas",
   "accountMenu.items.events": "Eventos",
+  "accountMenu.items.cards": "Cartões",
   "accountMenu.items.feed": "Feed",
   "accountMenu.items.drafts": "Rascunhos",
   "accountMenu.items.pitches": "Propostas",
@@ -166,6 +167,21 @@ export const shared: Catalog = {
   "adminNav.items.roadmap": "Roteiro",
   "adminNav.items.reports": "Relatórios",
   "adminNav.items.systemAccounts": "Contas de sistema",
+
+  "adminNav.items.joinRequests": "Pedidos de adesão",
+
+  // errorHandling.ts / errorMessage.ts
+  "apiError.server": "Algo correu mal do nosso lado. Tenta outra vez.",
+  "apiError.forbidden": "Não tens acesso a isso.",
+  "apiError.generic": "Algo correu mal.",
+  "apiError.genericRetry": "Algo correu mal. Tenta outra vez.",
+  "apiError.tryAgainTail": " Tenta outra vez.",
+
+  // PullToRefresh live region
+  "pullToRefresh.refreshing": "A atualizar…",
+
+  // deviceUserAgent.ts
+  "device.unknown": "Dispositivo desconhecido",
 
   // BackToSettingsLink
   "backToSettingsLink.label": "Voltar às definições",

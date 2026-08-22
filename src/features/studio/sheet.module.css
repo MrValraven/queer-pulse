@@ -6,7 +6,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   margin-bottom: 12px;
 }
 .pageH h1 {
@@ -29,7 +29,7 @@
   margin-top: 16px;
 }
 .dek em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   font-style: italic;
 }
 
@@ -203,7 +203,7 @@
   height: 40px;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -225,7 +225,7 @@
   margin-top: 2px;
 }
 .transcriber p em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   font-style: italic;
 }
 
@@ -308,7 +308,7 @@
   margin-bottom: 12px;
 }
 .splitBar .a {
-  background: var(--jade-light, #9be0bd);
+  background: var(--jade-light, var(--jade-light));
 }
 .splitBar .b {
   background: var(--accent);
@@ -349,7 +349,7 @@
   font-family: var(--serif);
 }
 .splitFoot em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
   font-style: normal;
 }
 
@@ -369,7 +369,7 @@
   cursor: pointer;
 }
 .pmOn {
-  border-color: var(--jade-light, #9be0bd);
+  border-color: var(--jade-light, var(--jade-light));
   background: rgba(var(--jade-rgb), 0.06);
 }
 .pmDot {
@@ -380,8 +380,8 @@
   flex: none;
 }
 .pmOn .pmDot {
-  border-color: var(--jade-light, #9be0bd);
-  background: var(--jade-light, #9be0bd);
+  border-color: var(--jade-light, var(--jade-light));
+  background: var(--jade-light, var(--jade-light));
   box-shadow: inset 0 0 0 3px var(--studio-bg);
 }
 .pn {
@@ -402,7 +402,7 @@
   font-size: 14.5px;
   font-weight: 600;
   color: var(--studio-bg);
-  background: var(--jade-light, #9be0bd);
+  background: var(--jade-light, var(--jade-light));
   border: none;
   border-radius: 999px;
   padding: 13px;
@@ -422,7 +422,7 @@
   line-height: 1.5;
 }
 .chNote em {
-  color: var(--jade-light, #9be0bd);
+  color: var(--jade-light, var(--jade-light));
 }
 
 @media (--compact) {

@@ -22,6 +22,18 @@
     color: var(--text-strong);
   }
 }
+/* Sizes the react-icons chevron, which inherits `1em`. */
+.back svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+/* Moderator/admin controls at the end of the breadcrumb bar. */
+.topbarActions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
 .sep {
   width: 1px;
   height: 14px;
@@ -173,6 +185,11 @@
   color: var(--accent-ink);
   border-color: rgba(var(--accent-rgb), 0.3);
 }
+/* The pressed OP heart fills, matching the reply like button (.replyReactOn). */
+.reactionOn svg {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
 .reaction svg {
   width: 14px;
   height: 14px;
@@ -277,6 +294,15 @@
 }
 .replyMenu {
   margin-left: auto;
+}
+/* Each reply row IS a <FadeIn>, whose `will-change: transform` makes it a
+   stacking context for the life of the element, clamping the open menu's
+   z-index inside its own row so the NEXT reply paints over the dropdown.
+   Raise the row itself while its menu is open. Scoped to `.replyMenu` so the
+   nested-replies collapse toggle (also `aria-expanded`) never matches. */
+.reply:has(.replyMenu [aria-expanded="true"]) {
+  position: relative;
+  z-index: 3;
 }
 
 /* ── Nested replies (collapse toggle + hidden-branch count) ── */

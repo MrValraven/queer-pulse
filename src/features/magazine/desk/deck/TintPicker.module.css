@@ -3,7 +3,6 @@
    pattern as `desk/StagePill.module.css` — because the repo `--violet` hue
    doesn't match the design's swatch and this is the only place it's used. */
 .field {
-  --desk-violet: #5c3e92;
 
   display: flex;
   flex-direction: column;

@@ -58,6 +58,11 @@ export function JoinStepIntro({
  * to go. `JoinModal.submit()` folds the involvement chip into `note` as a
  * short leading tag, so this step's own job is just: a couple of optional
  * words about you, plus a quick tap for how involved you'd like to be.
+ *
+ * Name and pronouns are deliberately absent for the same reason the email
+ * field was dropped: the account already carries them, a join has no column
+ * to store them in, and the mods reviewing the request read them off the
+ * applicant's profile.
  */
 export function JoinStepAbout({
   isRequest,
@@ -65,6 +70,8 @@ export function JoinStepAbout({
   setInvolvement,
   aboutText,
   setAboutText,
+  isSubmitting,
+  errorMessage,
   onSubmit,
 }: {
   isRequest: boolean;
@@ -72,6 +79,10 @@ export function JoinStepAbout({
   setInvolvement: (v: string) => void;
   aboutText: string;
   setAboutText: (v: string) => void;
+  /** True while the join/request is in flight. */
+  isSubmitting: boolean;
+  /** Why the last attempt failed, shown under the submit button. */
+  errorMessage: string | null;
   onSubmit: () => void;
 }) {
   const { t } = useTranslation();
@@ -81,23 +92,6 @@ export function JoinStepAbout({
       <div className={styles.title}>{t("communities:join.about.title")}</div>
       <p className={styles.hint}>{t("communities:join.about.hint")}</p>
       <div className={styles.fields}>
-        {/* KNOWN GAP (pre-existing, out of scope for the involvement-step
-            fix): these two are uncontrolled and never sent anywhere — the
-            backend has no name/pronouns column on a join. Same "asking for
-            something that goes nowhere" issue the email field below used to
-            have; left alone here since it wasn't part of this task. */}
-        <input
-          className={styles.input}
-          type="text"
-          aria-label={t("communities:join.about.namePlaceholder")}
-          placeholder={t("communities:join.about.namePlaceholder")}
-        />
-        <input
-          className={styles.input}
-          type="text"
-          aria-label={t("communities:join.about.pronounsPlaceholder")}
-          placeholder={t("communities:join.about.pronounsPlaceholder")}
-        />
         <textarea
           className={styles.textarea}
           rows={4}
@@ -138,11 +132,18 @@ export function JoinStepAbout({
           </div>
         </div>
       </div>
-      <Button variant="primary" onClick={onSubmit}>
-        {isRequest
-          ? t("communities:join.involvement.sendRequestCta")
-          : t("communities:join.involvement.joinCta")}
+      <Button variant="primary" onClick={onSubmit} disabled={isSubmitting}>
+        {isSubmitting
+          ? t("communities:join.about.submitting")
+          : isRequest
+            ? t("communities:join.involvement.sendRequestCta")
+            : t("communities:join.involvement.joinCta")}
       </Button>
+      {errorMessage && (
+        <p className={styles.error} role="alert">
+          {errorMessage}
+        </p>
+      )}
     </div>
   );
 }

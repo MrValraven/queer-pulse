@@ -46,7 +46,7 @@ export function ParentNetwork() {
               ))}
             </Reveal>
           )}
-          <div className={styles.grid} style={{ marginTop: 40 }}>
+          <div className={`${styles.grid} ${styles.offerGrid}`}>
             {OFFERS.map((offer, index) => (
               <Reveal
                 key={offer.titleKey}

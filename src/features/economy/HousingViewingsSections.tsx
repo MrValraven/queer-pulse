@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, DatePicker } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { ModalShell } from "./ModalKit";
 import { useViewingAction } from "./api/useHousingViewings";
 import type {
@@ -19,8 +20,15 @@ const STATUS_STYLE: Record<HousingViewingStatus, string | undefined> = {
   cancelled: v.stClosed,
 };
 
-function formatSlot(iso: string): string {
-  return new Date(iso).toLocaleString(undefined, {
+/**
+ * A viewing slot as "Sat, 12 Jul, 14:30". Formatted through `fmt` so it
+ * follows the app language: the old `toLocaleString(undefined, …)` followed
+ * the browser's locale instead, so a member reading QueerPulse in Portuguese
+ * could still be shown an English weekday and a 12-hour clock. Letting `Intl`
+ * build the whole phrase also keeps the date/time join locale-correct.
+ */
+function formatSlot(iso: string, fmt: Formatters): string {
+  return fmt.date(new Date(iso), {
     weekday: "short",
     day: "numeric",
     month: "short",
@@ -37,6 +45,7 @@ export function ViewingCard({
   onReview: (viewing: HousingViewingDTO) => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const action = useViewingAction();
   const [proposing, setProposing] = useState(false);
   const counterpartyName = viewing.counterparty
@@ -79,14 +88,16 @@ export function ViewingCard({
 
       {viewing.status === "accepted" && viewing.acceptedSlot ? (
         <div className={v.slotList}>
-          <span className={v.slotChip}>{formatSlot(viewing.acceptedSlot)}</span>
+          <span className={v.slotChip}>
+            {formatSlot(viewing.acceptedSlot, fmt)}
+          </span>
         </div>
       ) : (
         viewing.status === "requested" && (
           <div className={v.slotList}>
             {viewing.proposedSlots.map((slot) => (
               <span key={slot} className={v.slotChip}>
-                {formatSlot(slot)}
+                {formatSlot(slot, fmt)}
               </span>
             ))}
           </div>
@@ -109,7 +120,7 @@ export function ViewingCard({
               disabled={action.isPending}
             >
               {t("economy:housingViewing.list.acceptAt", {
-                time: formatSlot(slot),
+                time: formatSlot(slot, fmt),
               })}
             </Button>
           ))}

@@ -6,6 +6,7 @@ import { ApiError } from "../../shared/api/client";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
+import { PageMeta } from "../../shared/seo";
 import { useOpportunity } from "./api/useOpportunity";
 import { useOpportunities } from "./api/useOpportunities";
 import { useSignups } from "./api/useSignups";
@@ -83,6 +84,12 @@ export function VolunteerOpportunityPage() {
   if (isLoading) {
     return (
       <PageShell>
+        {/* Transient skeleton: name the tab honestly and keep the placeholder
+            out of the index until the real opportunity resolves. */}
+        <PageMeta
+          title={t("marketing:volunteerDetail.meta.loadingTitle")}
+          noIndex
+        />
         <div className={styles.page} aria-busy />
       </PageShell>
     );
@@ -97,6 +104,14 @@ export function VolunteerOpportunityPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("marketing:volunteerDetail.meta.title", {
+          role: opp.role,
+          org: opp.org,
+        })}
+        description={opp.description}
+        canonical={`${routes.volunteer}/opportunity/${opp.slug}`}
+      />
       <div className={styles.page}>
         <Link to={routes.volunteer} className={styles.back}>
           <FiArrowLeft aria-hidden /> {t("marketing:volunteerDetail.backCta")}

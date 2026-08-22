@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { FiCheck, FiCopy } from "react-icons/fi";
 import { useToast } from "../feedback/useToast";
+import { useClipboard } from "../../hooks";
 import styles from "./CopyLinkRow.module.css";
 
 export interface CopyLinkRowProps {
@@ -47,17 +47,15 @@ export function CopyLinkRow({
   className,
 }: CopyLinkRowProps) {
   const { showToast } = useToast();
-  const [copied, setCopied] = useState(false);
+  // The shared hook rather than a second copy of the same logic: its reset
+  // timer is cleared on unmount, where the inline `window.setTimeout` this
+  // replaced left a pending callback writing state into an unmounted row.
+  const { copy, copied } = useClipboard();
 
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(true);
-      showToast(copiedToast, "success");
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      showToast(errorToast, "error");
-    }
+  async function copyValue() {
+    const didCopy = await copy(value);
+    if (didCopy) showToast(copiedToast, "success");
+    else showToast(errorToast, "error");
   }
 
   return (
@@ -72,7 +70,7 @@ export function CopyLinkRow({
       <button
         type="button"
         className={`${styles.copyBtn} ${copied ? styles.copyBtnDone : ""}`}
-        onClick={() => void copy()}
+        onClick={() => void copyValue()}
         aria-label={copied ? copiedToast : copyLabel}
       >
         {copied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}

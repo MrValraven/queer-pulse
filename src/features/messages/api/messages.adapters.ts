@@ -1,6 +1,7 @@
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
 import { activeLocale } from "../../../shared/i18n/locale";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import type { TFunction } from "../../../shared/i18n/types";
 import type { ChatMessage, Conversation, GroupMemberView } from "../data";
 import type { ConversationResponse, MessageResponse } from "./messages.api";
 
@@ -33,7 +34,9 @@ export function timeLabel(iso: string): string {
   return d.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }
 
-/** Day heading ("Today" / "Yesterday" / "1 Jun") the panel groups by. */
+/** Day heading ("Today" / "Yesterday" / "1 Jun") the panel groups by. "Today"/
+ *  "Yesterday" are machine tokens further resolved through the catalog by
+ *  `MessageAreaRow`'s `dayHeading` — never shown to a member as raw English. */
 function dayLabel(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
@@ -50,6 +53,23 @@ function dayLabel(iso: string): string {
     month: "long",
     year: d.getFullYear() === now.getFullYear() ? undefined : "numeric",
   });
+}
+
+/** Stable local-calendar-date machine id ("2026-08-21") for a timestamp — the
+ *  key a day bucket is grouped/matched on. Exported for the optimistic-merge
+ *  logic in `useMessagesController.helpers.ts`, which needs the SAME
+ *  computation to find "today's bucket" by an absolute date rather than the
+ *  `day` display label above. That label recomputes relative to "now" and
+ *  rolls "Today" → "Yesterday" at midnight, but nothing forces a refetch just
+ *  because the clock ticked — a long-lived tab's cached bucket can keep
+ *  saying "Today" well past real midnight, and matching a fresh optimistic
+ *  send on that stale label would silently misfile it into yesterday's
+ *  bucket (FE-MSG-30). */
+export function localDayKey(d: Date): string {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 /** Group avatar initials from a title ("Pride Brunch Crew" → "PB"). */
@@ -81,8 +101,8 @@ export function previewForMessage(
 }
 
 /** ConversationResponse (group) → the inbox `Conversation` row. */
-function groupConversationToView(dto: ConversationResponse): Conversation {
-  const title = dto.title ?? "Group";
+function groupConversationToView(dto: ConversationResponse, t: TFunction): Conversation {
+  const title = dto.title ?? t("messages:group.untitled");
   const members: GroupMemberView[] = dto.members.map((member) => {
     const { first, last } = splitName(member.name);
     return {
@@ -108,6 +128,7 @@ function groupConversationToView(dto: ConversationResponse): Conversation {
     pronouns: "",
     connectedSince: "",
     time: timeLabel(dto.updatedAt),
+    updatedAt: dto.updatedAt,
     preview: groupPreview(dto.lastMessage),
     unread: dto.unreadCount > 0,
     unreadCount: dto.unreadCount,
@@ -127,11 +148,14 @@ function groupConversationToView(dto: ConversationResponse): Conversation {
   };
 }
 
-/** ConversationResponse → the inbox `Conversation` row (messages filled later). */
-export function conversationToView(dto: ConversationResponse): Conversation {
-  if (dto.kind === "group") return groupConversationToView(dto);
+/** ConversationResponse → the inbox `Conversation` row (messages filled later).
+ *  `t` resolves the "official account with no counterpart profile" / "group
+ *  with no title" fallbacks bilingually — see `messages:conversation.officialName`
+ *  / `messages:group.untitled`. */
+export function conversationToView(dto: ConversationResponse, t: TFunction): Conversation {
+  if (dto.kind === "group") return groupConversationToView(dto, t);
   const p = dto.otherParticipant;
-  const name = p?.displayName ?? "QueerPulse Team";
+  const name = p?.displayName ?? t("messages:conversation.officialName");
   const { first, last } = splitName(name);
   const slug = p?.handle;
   const tint: AvatarTint = slug ? tintForSlug(slug) : "plum";
@@ -142,9 +166,13 @@ export function conversationToView(dto: ConversationResponse): Conversation {
     tint,
     avatarUrl: p?.avatarUrl ?? undefined,
     name,
-    pronouns: p ? "" : "Official",
+    // Only ever rendered when `official` is false — `ConversationHeader`
+    // shows a dedicated translated "Official" meta line instead of this field
+    // whenever `official` is true, so there's no English literal to leak here.
+    pronouns: p ? "" : "",
     connectedSince: "",
     time: timeLabel(dto.updatedAt),
+    updatedAt: dto.updatedAt,
     preview: dto.lastMessage?.body ?? "",
     unread: dto.unreadCount > 0,
     pinnedAt: dto.pinnedAt ?? undefined,
@@ -215,18 +243,24 @@ export function messageToChat(
   };
 }
 
-/** Group an oldest-first message list into the `{ day, items }[]` the panel renders. */
+/** Group an oldest-first message list into the `{ day, dayKey, items }[]` the
+ *  panel renders. Bucketed by `dayKey` (the stable machine id), not the `day`
+ *  display label — see `localDayKey`'s doc. */
 export function groupMessages(
   messages: MessageResponse[],
   myHandle: string | null,
-): { day: string; items: ChatMessage[] }[] {
-  const groups: { day: string; items: ChatMessage[] }[] = [];
+): { day: string; dayKey: string; items: ChatMessage[] }[] {
+  const groups: { day: string; dayKey: string; items: ChatMessage[] }[] = [];
   for (const m of messages) {
+    const parsed = new Date(m.createdAt);
+    const dayKey = Number.isNaN(parsed.getTime())
+      ? m.createdAt
+      : localDayKey(parsed);
     const day = dayLabel(m.createdAt);
     const bucket = groups.at(-1);
-    if (bucket && bucket.day === day)
+    if (bucket && bucket.dayKey === dayKey)
       bucket.items.push(messageToChat(m, myHandle));
-    else groups.push({ day, items: [messageToChat(m, myHandle)] });
+    else groups.push({ day, dayKey, items: [messageToChat(m, myHandle)] });
   }
   return groups;
 }

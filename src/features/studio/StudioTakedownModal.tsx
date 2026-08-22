@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { useScrollLock } from "../../shared/hooks";
+import { useDismiss, useScrimDismiss } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import s from "./StudioRightsPage.module.css";
@@ -25,25 +24,18 @@ export function StudioTakedownModal({
   onClose,
 }: StudioTakedownModalProps) {
   const { t } = useTranslation();
-  useScrollLock();
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  // Shared dialog behaviour: focus trap, initial focus, focus restore, scroll
+  // lock, and modal-stack-aware Escape. This confirms a takedown, so a
+  // keyboard user must not be able to Tab out to the page behind it.
+  const dialogRef = useDismiss(onClose);
+  // Requires the pointer to have gone DOWN on the scrim, so a text-selection
+  // drag that ends outside the dialog no longer dismisses it.
+  const scrimProps = useScrimDismiss(onClose);
 
   return (
-    <div
-      className={s.modalBg}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <div className={s.modalBg} role="presentation" {...scrimProps}>
       <div
+        ref={dialogRef}
         className={s.modal}
         role="dialog"
         aria-modal="true"

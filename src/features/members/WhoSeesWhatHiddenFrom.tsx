@@ -2,11 +2,13 @@ import { useMemo, useState } from "react";
 import { FiPlus, FiX } from "react-icons/fi";
 import {
   Button,
-  MemberSelectList,
+  MemberIdentity,
   Modal,
+  SearchInput,
   SkeletonLine,
   type MemberSelectPerson,
 } from "../../shared/components/ui";
+import { useDebouncedValue } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
@@ -56,12 +58,20 @@ function HiddenFromRow({
   );
 }
 
-/** Modal member-picker for "hide my profile from someone else". A live-only
- *  candidate source: `useMembers` (the same directory-search hook the member
- *  directory page uses), narrowed to `MemberSelectPerson` shape and excluding
- *  the caller and everyone already hidden. Demo cards carry no `firstName`/
- *  `lastName` (see `MemberCard`'s own doc comment); the mock registry fills
- *  that gap so the picker still shows real names in the prototype. */
+/**
+ * Modal member-picker for "hide my profile from someone else".
+ *
+ * The search box drives `GET /members?query=`, debounced, rather than filtering
+ * an already-fetched array. It used to call `useMembers({})` and let a
+ * client-side filter search page 1 — twenty people, on a directory the backend
+ * pages at twenty. On any community larger than that the person you needed to
+ * hide from usually could not be found at all, which defeats the point of a
+ * safety control. "Load more" walks the remaining pages for the same reason.
+ *
+ * Demo cards carry no `firstName`/`lastName` (see `MemberCard`'s own doc
+ * comment); the mock registry fills that gap so the picker still shows real
+ * names in the prototype.
+ */
 function HiddenFromPicker({
   excludeSlugs,
   onClose,
@@ -72,45 +82,83 @@ function HiddenFromPicker({
   onHide: (slug: string) => void;
 }) {
   const { t } = useTranslation();
-  const { items } = useMembers({});
+  const [searchText, setSearchText] = useState("");
+  const debouncedSearch = useDebouncedValue(searchText.trim(), 300);
+  const { items, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useMembers(debouncedSearch ? { query: debouncedSearch } : {});
+  const excluded = useMemo(() => new Set(excludeSlugs), [excludeSlugs]);
+
   const candidates = useMemo<MemberSelectPerson[]>(
     () =>
-      items.map((card) => {
-        const registryMember = MEMBER_REGISTRY[card.slug];
-        const name =
-          card.firstName || card.lastName
-            ? `${card.firstName ?? ""} ${card.lastName ?? ""}`.trim()
-            : registryMember
-              ? `${registryMember.first} ${registryMember.last}`
-              : card.slug;
-        return {
-          slug: card.slug,
-          name,
-          avatarUrl: card.avatarUrl ?? undefined,
-        };
-      }),
-    [items],
+      items
+        .filter((card) => !excluded.has(card.slug))
+        .map((card) => {
+          const registryMember = MEMBER_REGISTRY[card.slug];
+          const name =
+            card.firstName || card.lastName
+              ? `${card.firstName ?? ""} ${card.lastName ?? ""}`.trim()
+              : registryMember
+                ? `${registryMember.first} ${registryMember.last}`
+                : card.slug;
+          return {
+            slug: card.slug,
+            name,
+            avatarUrl: card.avatarUrl ?? undefined,
+          };
+        }),
+    [items, excluded],
   );
-  const [selected] = useState<Set<string>>(new Set());
 
   return (
     <Modal
       title={t("members:profile.whoSeesWhat.hiddenFrom.pickerTitle")}
       onClose={onClose}
     >
-      <MemberSelectList
-        people={candidates}
-        selected={selected}
-        onToggle={(slug) => {
-          onHide(slug);
-          onClose();
-        }}
-        multiSelect={false}
-        excludeSlugs={excludeSlugs}
-        searchPlaceholder={t(
+      <SearchInput
+        value={searchText}
+        onChange={setSearchText}
+        placeholder={t(
           "members:profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder",
         )}
       />
+      {isLoading ? (
+        <SkeletonLine width="70%" style={{ marginTop: 12 }} />
+      ) : candidates.length === 0 ? (
+        <p className={styles.emptyLine}>
+          {t("members:profile.whoSeesWhat.hiddenFrom.pickerNoResults")}
+        </p>
+      ) : (
+        <div className={styles.pickerList} role="listbox">
+          {candidates.map((person) => (
+            <button
+              key={person.slug}
+              type="button"
+              role="option"
+              aria-selected={false}
+              className={styles.pickerRow}
+              onClick={() => {
+                onHide(person.slug);
+                onClose();
+              }}
+            >
+              <MemberIdentity person={person} size={38} />
+            </button>
+          ))}
+        </div>
+      )}
+      {hasNextPage && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className={styles.pickerMore}
+          onClick={fetchNextPage}
+          disabled={isFetchingNextPage}
+        >
+          {isFetchingNextPage
+            ? t("members:profile.whoSeesWhat.hiddenFrom.pickerLoadingMore")
+            : t("members:profile.whoSeesWhat.hiddenFrom.pickerLoadMore")}
+        </Button>
+      )}
     </Modal>
   );
 }

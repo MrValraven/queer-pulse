@@ -61,3 +61,35 @@ export function SaveLaterButton({
     </div>
   );
 }
+
+/**
+ * The two banners that sit above the wizard's step pane: a server-side
+ * validation failure (when the last submit produced one) and the create-mode
+ * "save & finish later" escape hatch.
+ */
+export function WizardFormChrome({
+  serverError,
+  onDismissError,
+  isSaveLaterVisible,
+  onSaveLater,
+  isSavingLater,
+}: {
+  /** Backend 422 message, or null when the last submit was clean. */
+  serverError: string | null;
+  onDismissError: () => void;
+  /** Create mode only, and only once a listing path has been picked. */
+  isSaveLaterVisible: boolean;
+  onSaveLater: () => void;
+  isSavingLater: boolean;
+}) {
+  return (
+    <>
+      {serverError && (
+        <WizardServerError message={serverError} onDismiss={onDismissError} />
+      )}
+      {isSaveLaterVisible && (
+        <SaveLaterButton onSave={onSaveLater} saving={isSavingLater} />
+      )}
+    </>
+  );
+}

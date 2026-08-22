@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiLogOut, FiChevronDown } from "react-icons/fi";
 import { Avatar, Tooltip } from "../ui";
@@ -12,6 +12,7 @@ import { isComingSoonLink } from "../../../app/authGate";
 import { useTeamRole, type TeamRole } from "../../../features/admin/adminRole";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../i18n/useTranslation";
+import { useOutsideDismiss } from "../../hooks";
 import {
   ACCOUNT_GROUPS,
   HEADER_ACTIONS,
@@ -54,26 +55,14 @@ export function AccountMenu({
   const ref = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    function onPointerDown(e: PointerEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node))
-        setOpen(false);
-    }
-    function onKeyDown(e: KeyboardEvent) {
-      // Escape closes and restores focus to the trigger.
-      if (e.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
-    }
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
+  // The shared hook this menu is named after in its own doc comment. Escape
+  // closes and restores focus to the trigger.
+  useOutsideDismiss(open, ref, () => setOpen(false), {
+    onEscape: () => {
+      setOpen(false);
+      triggerRef.current?.focus();
+    },
+  });
 
   return (
     <div className={styles.wrap} ref={ref}>

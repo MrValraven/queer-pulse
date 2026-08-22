@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ModalShell } from "./ModalKit";
 import { useRequestHousingViewing } from "./api/useHousingViewings";
+import { useAffirmingPledgeGate } from "./useAffirmingPledgeGate";
 import type { HousingViewingMode } from "./api/housingViewings.api";
 import styles from "./housingModals.module.css";
 import v from "./housingViewings.module.css";
@@ -47,8 +48,34 @@ export function RequestViewingModal({
   const [note, setNote] = useState("");
   const [done, setDone] = useState(false);
   const requestViewing = useRequestHousingViewing();
+  // A viewing is the most direct route to meeting a lister, so it sits behind
+  // the same mandatory affirming pledge as every other housing contact path
+  // (MessageModal, SayHelloModal, ContactRequestModal, JoinGroupModal…): the
+  // server answers AFFIRMING_PLEDGE_REQUIRED, this opens the pledge, and the
+  // send is retried once the member has taken it.
+  const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
 
-  const canSend = slotOne.trim().length > 0 && !requestViewing.isPending;
+  // Proposing a time that has already passed, or a second slot that lands
+  // before the first, can only waste the lister's reply.
+  const slotOneTime = slotOne ? new Date(slotOne).getTime() : Number.NaN;
+  const slotTwoTime = slotTwo ? new Date(slotTwo).getTime() : Number.NaN;
+  const isSlotOneFuture =
+    Number.isFinite(slotOneTime) && slotOneTime > Date.now();
+  const isSlotTwoOrdered =
+    slotTwo.trim().length === 0 ||
+    (Number.isFinite(slotTwoTime) && slotTwoTime > slotOneTime);
+  const slotErrorKey = !slotOne.trim()
+    ? null
+    : !isSlotOneFuture
+      ? "economy:housingViewing.request.slotPastError"
+      : !isSlotTwoOrdered
+        ? "economy:housingViewing.request.slotOrderError"
+        : null;
+  const canSend =
+    slotOne.trim().length > 0 &&
+    isSlotOneFuture &&
+    isSlotTwoOrdered &&
+    !requestViewing.isPending;
 
   const handleSend = () => {
     const proposedSlots = [slotOne, slotTwo]
@@ -58,11 +85,15 @@ export function RequestViewingModal({
       { listingRef: listingRef ?? "", mode, proposedSlots, note: note.trim() },
       {
         onSuccess: () => setDone(true),
-        onError: () =>
-          showToast(t("economy:housingViewing.request.error"), "error"),
+        onError: (error) => {
+          if (handlePledgeError(error, handleSend)) return;
+          showToast(t("economy:housingViewing.request.error"), "error");
+        },
       },
     );
   };
+
+  if (pledgeGate) return pledgeGate;
 
   return (
     <ModalShell
@@ -157,6 +188,11 @@ export function RequestViewingModal({
                 onChange={(value) => setSlotTwo(value ?? "")}
               />
             </div>
+            {slotErrorKey && (
+              <p className={v.slotError} role="alert">
+                {t(slotErrorKey)}
+              </p>
+            )}
           </div>
 
           <textarea

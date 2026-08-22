@@ -115,7 +115,7 @@ export interface CreatePartnerApplicationDto {
   handle?: string;
 }
 
-/** PATCH /partner-applications/:id — an admin approves or rejects an application. */
+/** PATCH /admin/partners/applications/:id — an admin approves or rejects an application. */
 export interface TriagePartnerApplicationDto {
   action: "approve" | "reject";
   note?: string;
@@ -158,15 +158,15 @@ export const getPartner = (slug: string) =>
 export const createPartnerApplication = (dto: CreatePartnerApplicationDto) =>
   apiPost<PartnerApplicationDTO>("/partner-applications", dto);
 
-/** GET /partner-applications — admin only; 403 for a non-admin viewer. */
+/** GET /admin/partners/applications — admin only; 403 for a non-admin viewer. */
 export const getPartnerApplications = () =>
-  apiGet<PartnerApplicationDTO[]>("/partner-applications");
+  apiGet<PartnerApplicationDTO[]>("/admin/partners/applications");
 
-/** PATCH /partner-applications/:id — admin only approve/reject. */
+/** PATCH /admin/partners/applications/:id — admin only approve/reject. */
 export const triagePartnerApplication = (
   id: string,
   dto: TriagePartnerApplicationDto,
-) => apiPatch<PartnerApplicationDTO>(`/partner-applications/${id}`, dto);
+) => apiPatch<PartnerApplicationDTO>(`/admin/partners/applications/${id}`, dto);
 
 /** GET /admin/partners — admin-only list of APPROVED partners (id + featured + testimonial). */
 export const getAdminPartners = () =>

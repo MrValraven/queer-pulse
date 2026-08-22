@@ -33,7 +33,7 @@
   block-size: 30px;
   border-radius: 50% 50% 50% 0;
   background: var(--ink); /* fallback; real fill comes from [data-category] */
-  box-shadow: inset 0 0 0 2px #fff;
+  box-shadow: inset 0 0 0 2px rgba(var(--cream-rgb), 1);
   transform: rotate(-45deg);
   filter: drop-shadow(0 2px 5px rgba(var(--plum-rgb), 0.4));
   transition: box-shadow var(--dur-fast) var(--ease);
@@ -60,7 +60,7 @@
 .pinIcon {
   display: grid;
   place-items: center;
-  color: #fff;
+  color: rgba(var(--cream-rgb), 1);
   transform: rotate(45deg);
   pointer-events: none;
 }
@@ -126,7 +126,7 @@
     visibility var(--dur-fast) var(--ease);
 }
 .pinName {
-  color: #f7f3ee;
+  color: var(--cream);
   font-size: 0.74rem;
   font-weight: 600;
   white-space: nowrap;
@@ -162,7 +162,7 @@
 }
 .pinSelected .pinHead {
   box-shadow:
-    inset 0 0 0 2px #fff,
+    inset 0 0 0 2px rgba(var(--cream-rgb), 1),
     0 0 0 4px rgba(var(--accent-rgb), 0.4);
   filter: drop-shadow(0 8px 16px rgba(var(--plum-rgb), 0.5));
 }
@@ -183,7 +183,7 @@
   border: 2px solid var(--cream);
   border-radius: var(--radius-avatar);
   background: var(--accent);
-  color: #f7f3ee;
+  color: var(--cream);
   font-family: var(--sans);
   font-size: 0.8rem;
   font-weight: 700;

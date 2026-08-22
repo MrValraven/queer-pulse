@@ -8,6 +8,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberProfiles } from "../members/data/memberProfiles";
 import { GatheringRsvpControl } from "./GatheringRsvpControl";
+import { eventZoneFormat } from "./eventTimezone";
 import { spotsText, type GatheringDetail } from "./data";
 import styles from "./GatheringPage.module.css";
 
@@ -84,15 +85,22 @@ export function GatheringSidebar({
   const { demoMode } = useDemoMode();
   const host = resolveHost(gathering, demoMode);
   const spotsCount = gathering.spots.values?.count;
+  // The calendar day the gathering falls on in ITS zone — a late-evening
+  // gathering abroad can otherwise show tomorrow's date to the reader.
+  const zone = eventZoneFormat(gathering.timezone, gathering.date);
 
   return (
     <aside className={styles.sidebar}>
       <div className={styles.dateDisplay}>
         <div className={styles.dd}>
-          {fmt.date(gathering.date, { day: "2-digit" })}
+          {fmt.date(gathering.date, { day: "2-digit", ...zone.dateOptions })}
         </div>
         <div className={styles.dm}>
-          {fmt.date(gathering.date, { month: "short", year: "numeric" })}
+          {fmt.date(gathering.date, {
+            month: "short",
+            year: "numeric",
+            ...zone.dateOptions,
+          })}
         </div>
       </div>
 

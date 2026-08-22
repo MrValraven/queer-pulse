@@ -99,7 +99,7 @@ export interface GovernanceOverviewResponseDTO {
   principles: PrincipleDTO[];
   decisions: DecisionDTO[];
   /** ISO-8601 timestamp of the last publish (P3-7), or `null` if never
-   *  published. Advanced by the admin `POST /governance/admin/publish`. */
+   *  published. Advanced by the admin `POST /admin/governance/publish`. */
   publishedAt: string | null;
 }
 
@@ -107,7 +107,7 @@ export const getGovernanceOverview = () =>
   apiGet<GovernanceOverviewResponseDTO>("/governance/overview");
 
 // ── Admin publish (P3-7) ─────────────────────────────────────────────────────
-// `POST /governance/admin/publish` — mark the current governance snapshot as
+// `POST /admin/governance/publish` — mark the current governance snapshot as
 // published *now* so the public overview can surface a "last published" line.
 // Moderator/admin only (server-guarded); the FE gates the button behind the
 // admin route.
@@ -117,7 +117,7 @@ export interface GovernancePublishResponseDTO {
 }
 
 export const publishGovernanceOverview = () =>
-  apiPost<GovernancePublishResponseDTO>("/governance/admin/publish");
+  apiPost<GovernancePublishResponseDTO>("/admin/governance/publish");
 
 // ── Raise a concern ──────────────────────────────────────────────────────────
 // The public "Submit a concern" form (governance/GovernanceSections · RaiseSection)

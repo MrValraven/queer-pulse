@@ -36,7 +36,9 @@ export function HousingListingPage() {
   const { showToast } = useToast();
 
   const { data, isLoading, isError, error, refetch } = useHousingListing(slug);
-  const { data: allListings = [] } = useHousingListings();
+  // Only the first page of the board — enough to pick a few "similar"
+  // listings from, and never worth paging the whole directory for.
+  const { listings: allListings } = useHousingListings();
 
   if (isLoading || loading) {
     return (

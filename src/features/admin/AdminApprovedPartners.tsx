@@ -39,7 +39,11 @@ export function AdminApprovedPartners() {
       {
         onError: (error) =>
           showToast(
-            describeError("Couldn't update that partner", error),
+            describeError(
+              t("admin:errors.updatePartner"),
+              error,
+              t("shared:apiError.tryAgainTail"),
+            ),
             "error",
           ),
       },

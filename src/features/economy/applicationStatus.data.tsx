@@ -431,8 +431,8 @@ export const APPS: Application[] = [
     stages: [
       { label: "Submitted", state: "done" },
       { label: "Withdrew · 8 May", state: "rejected" },
-      { label: "—", state: "" },
-      { label: "—", state: "" },
+      { label: "", state: "" },
+      { label: "", state: "" },
     ],
     status: (
       <>You withdrew this one, accepting the Pixel Mode interview instead.</>

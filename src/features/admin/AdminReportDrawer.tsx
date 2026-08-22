@@ -29,6 +29,11 @@ import {
   type ModReport,
   type ReportDetail,
 } from "./adminModeration.data";
+import { auditActionLabel } from "./moderationActionLabels";
+import {
+  isAnonymousReporter,
+  reporterDisplayName,
+} from "./moderationReporter";
 import { useReportAudit } from "./api/useReportAudit";
 import { useModReportDetail } from "./api/useModReportDetail";
 import type { ReasonCode } from "../safety/reportReasons";
@@ -181,7 +186,10 @@ function ReportAudit({ reportId }: { reportId: string }) {
             <li key={e.id} className={styles.dAuditRow}>
               <FiClock aria-hidden />
               <span>
-                <strong>{e.actorName}</strong> · {e.action.replace(/_/g, " ")}
+                {/* Raw server codes ("hide_content") used to be rendered with
+                    the underscores swapped for spaces, which read as lowercase
+                    English in every locale. */}
+                <strong>{e.actorName}</strong> · {auditActionLabel(e.action, t)}
                 {e.note ? `: ${e.note}` : ""}
               </span>
               <time>{fmt.date(new Date(e.at))}</time>
@@ -218,7 +226,7 @@ function ReportContextLoading() {
  *  rather than the report auto-resolving out from under them. */
 function ReportContextFallback({ report }: { report: ModReport }) {
   const { t } = useTranslation();
-  const anonReporter = report.reporterName === "anonymous";
+  const anonReporter = isAnonymousReporter(report.reporterName);
   const reportedInitials =
     (report.reportedName.replace(/^@/, "")[0] ?? "?").toUpperCase();
   return (
@@ -249,7 +257,9 @@ function ReportContextFallback({ report }: { report: ModReport }) {
               size="md"
             />
             <div className={styles.dPersonTx}>
-              <span className={styles.dPersonName}>{report.reporterName}</span>
+              <span className={styles.dPersonName}>
+                {reporterDisplayName(report.reporterName, t)}
+              </span>
               <span className={styles.dPersonMeta}>
                 {t("admin:moderation.reportDrawer.reporterRole")}
               </span>

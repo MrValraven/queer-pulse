@@ -1,4 +1,5 @@
 import { FiChevronDown, FiChevronUp, FiMoreVertical, FiTrash2 } from "react-icons/fi";
+import { IconButton } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleBlock } from "../../api/pieces.api";
 import { RichText } from "./RichText";
@@ -60,25 +61,29 @@ export function ArticleBlockEditor({
         <span className={styles.grip} aria-hidden="true">
           <FiMoreVertical />
         </span>
-        <button
-          type="button"
+        <IconButton
+          size="sm"
           onClick={() => onMove("up")}
           disabled={index === 0}
           aria-label={t("magazine:write.block.moveUpAria")}
         >
           <FiChevronUp aria-hidden />
-        </button>
-        <button
-          type="button"
+        </IconButton>
+        <IconButton
+          size="sm"
           onClick={() => onMove("down")}
           disabled={index === total - 1}
           aria-label={t("magazine:write.block.moveDownAria")}
         >
           <FiChevronDown aria-hidden />
-        </button>
-        <button type="button" onClick={onRemove} aria-label={t("magazine:write.block.removeAria")}>
+        </IconButton>
+        <IconButton
+          size="sm"
+          onClick={onRemove}
+          aria-label={t("magazine:write.block.removeAria")}
+        >
           <FiTrash2 aria-hidden />
-        </button>
+        </IconButton>
       </div>
 
       <div className={styles.blkIn}>

@@ -1,3 +1,4 @@
+import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -13,9 +14,16 @@ import styles from "./ApplicationModals.module.css";
 /**
  * Edits one of the caller's own listings, reusing the create flow's exact
  * field set (`ListSpaceFields`/`useListSpaceForm`) seeded from the current
- * row — HSG-9 explicitly doesn't ask for a richer single-field editor. No
- * step-up/pledge gate here (those only apply to first posting/enquiring), and
- * no success panel — a save is a quiet PATCH, not a new submission.
+ * row. HSG-9 explicitly doesn't ask for a richer single-field editor, and
+ * there is no step-up/pledge gate here (those only apply to first posting or
+ * enquiring).
+ *
+ * A save is NOT always quiet any more. Every field this form exposes is a
+ * moderated field (BE-HSG-02), so editing a listing that is currently `live`
+ * sends it back to `review` server-side and it leaves public browse until a
+ * moderator clears it again. The owner is warned before they submit and the
+ * confirmation says what actually happened, taken from the status the PATCH
+ * returns rather than assumed.
  */
 export function EditHousingListingModal({
   listing,
@@ -38,6 +46,7 @@ export function EditHousingListingModal({
     isAgent: listing.listerKind === "agent",
   });
   const action = useMyHousingListingAction();
+  const isCurrentlyLive = listing.status === "live";
 
   const handleSubmit = () => {
     if (!form.valid) return;
@@ -45,8 +54,18 @@ export function EditHousingListingModal({
     action.mutate(
       { ref: listing.ref, action: "update", body },
       {
-        onSuccess: () => {
-          showToast(t("economy:myHousingListings.toast.updated"), "success");
+        onSuccess: (updated) => {
+          // The server decides: an edit that changed a moderated field on a
+          // live listing comes back as `review`, so read the outcome instead
+          // of claiming a quiet save.
+          const hasReturnedToReview =
+            isCurrentlyLive && updated?.status === "review";
+          showToast(
+            hasReturnedToReview
+              ? t("economy:myHousingListings.toast.backToReview")
+              : t("economy:myHousingListings.toast.updated"),
+            hasReturnedToReview ? "info" : "success",
+          );
           onClose();
         },
         onError: () =>
@@ -67,6 +86,13 @@ export function EditHousingListingModal({
         />
       </h2>
       <p className={styles.sub}>{t("economy:myHousingListings.edit.sub")}</p>
+
+      {isCurrentlyLive && (
+        <p className={styles.reviewWarning}>
+          <FiAlertTriangle aria-hidden />
+          {t("economy:myHousingListings.edit.backToReviewWarning")}
+        </p>
+      )}
 
       <ListSpaceFields form={form} />
 

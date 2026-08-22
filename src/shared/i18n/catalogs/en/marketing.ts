@@ -62,7 +62,7 @@ export const marketing: Catalog = {
     "We don't sell attention or personal data to advertisers. There's no third party we're building this for.",
   "about.values.accessNotEarned.title": "Access isn't earned by performing",
   "about.values.accessNotEarned.body":
-    "You get in through trust (a vouch, an invitation) not by posting the right things often enough.",
+    "You get in through trust: a vouch, or an invitation from someone already here.",
   "about.who.eyebrow": "Who's behind this",
   "about.who.title": "Built by <em>community, for community.</em>",
   "about.who.p1":
@@ -81,6 +81,10 @@ export const marketing: Catalog = {
 
   // ── Activism ───────────────────────────────────────────────────────────
   "activism.backToVolunteer": "Back to Volunteering",
+  "activism.meta.title":
+    "Activism with QueerPulse: ways to get involved in Lisbon",
+  "activism.meta.description":
+    "A practical guide to queer activism in Lisbon: where to start, what a skill can do, how to mobilise, and the partner organisations already doing the work.",
   "activism.hero.eyebrow": "Activism",
   "activism.hero.title": "Community care is <em>political.</em>",
   "activism.hero.sub":
@@ -144,9 +148,9 @@ export const marketing: Catalog = {
     "Peer support, childcare during meetings, checking in on people who are struggling.",
   "activism.mobilise.title": "How to <em>mobilise</em>",
   "activism.mobilise.p1":
-    "<b>Turn out, don't just show up.</b> Bring someone with you. Numbers change what's politically possible.",
+    "<b>Turn out in numbers.</b> Bring someone with you. Numbers change what's politically possible.",
   "activism.mobilise.p2":
-    "<b>Document, don't just witness.</b> Photos and notes from an action matter later, for accountability and for history.",
+    "<b>Document what you see.</b> Photos and notes from an action matter later, for accountability and for history.",
   "activism.mobilise.p3":
     "<b>Follow up, don't just attend.</b> The work after the march is where most of the actual change happens.",
   "activism.feel.title": "How it <em>feels</em>",
@@ -562,7 +566,7 @@ export const marketing: Catalog = {
     "In <settingsLink>Settings</settingsLink> → Account, at the bottom. This is permanent. See the Privacy Policy for what's retained and for how long.",
   "help.qa.levels.q": "What do the different member levels mean?",
   "help.qa.levels.a":
-    "Levels reflect how long you've been vouched into the community and your activity. They're not a paywall, just a trust signal.",
+    "Levels reflect how long you've been vouched into the community and your activity. They are a trust signal, and everything stays free.",
   "help.qa.rsvp.q": "How do RSVPs work?",
   "help.qa.rsvp.a":
     "Confirm on the event page via the <calendarLink>calendar</calendarLink> or events board. <strong>Spots are limited</strong> at most gatherings, so RSVP early.",
@@ -1258,10 +1262,12 @@ export const marketing: Catalog = {
   "listBusiness.step1.namePlaceholder": "e.g. the name your regulars use",
   "listBusiness.step1.dupHead":
     "A place by this name may already be in the directory:",
-  "listBusiness.step1.catsLabel": "What kind of place is it?. Pick up to 2",
+  "listBusiness.step1.catsLabel": "What kind of place is it? Pick up to 2",
   "listBusiness.step1.catsAria": "Category",
   "listBusiness.step1.hoodLabel": "Which neighbourhood?",
   "listBusiness.step1.hoodPlaceholder": "Pick a Lisbon neighbourhood…",
+  "listBusiness.step1.hoodOnlineHelper":
+    "Optional for online-only spaces. Pick one if you have roots in a neighbourhood.",
   "listBusiness.step1.badgeLabel": "Who runs it?",
   "listBusiness.step1.badgeHelper":
     "Queer-owned, or a place that genuinely welcomes us? Both belong here. This is a welcome, open to everyone.",
@@ -1498,6 +1504,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.slugLabel": "Your listing will live at",
   "listBusiness.step5.editCta": "Edit",
   "listBusiness.step5.notAdded": "Not added",
+  "listBusiness.step5.onlineBusiness": "Online only",
   "listBusiness.step5.group.pathPlace": "You & the place",
   "listBusiness.step5.group.basics": "Basics",
   "listBusiness.step5.group.story": "Story",
@@ -1643,6 +1650,9 @@ export const marketing: Catalog = {
   //    are historical release notes — left English due to volume; flagged in
   //    the sweep report rather than rushed.
   "changelog.hero.backLabel": "Roadmap",
+  "changelog.meta.title": "QueerPulse changelog: what changed, and when",
+  "changelog.meta.description":
+    "Every update to QueerPulse in reverse order, from new features to small fixes, so you always know what is different and why.",
   "changelog.hero.eyebrow": "Platform changelog",
   "changelog.hero.title": "What's <em>changed,</em>",
   "changelog.hero.titleLine2": "and when.",
@@ -1714,6 +1724,47 @@ export const marketing: Catalog = {
   "changelog.tag.changemakers": "See our Changemakers",
   "changelog.tag.vouch": "Vouch for someone",
   "changelog.tag.culture": "Visit Culture",
+  "changelog.tag.myCards": "See your cards",
+
+  "changelog.entries.membership-cards.title":
+    "Communities can now give you a membership card",
+  "changelog.entries.membership-cards.body":
+    "Any community you belong to can issue you a membership card, kept under your account alongside your other cards. It stays covered until you choose to show it, hides itself again the moment you leave the screen, and anyone can verify it by scanning the code.",
+
+  "changelog.entries.push-preview-privacy.title":
+    "Hide what your notifications say on a locked screen",
+  "changelog.entries.push-preview-privacy.body":
+    "Notification previews show the sender and the message text on your lock screen, where anyone holding your phone can read them. There is now a switch in Settings, under phone notifications, that shows only that something arrived. The app still shows everything once it is open.",
+
+  "changelog.entries.honest-success-states.title":
+    "Buttons stopped saying things worked when they had not",
+  "changelog.entries.honest-success-states.body":
+    "Across communities, the forum, messages, connections, settings and the moderator tools, a lot of actions confirmed success the moment you tapped, before the server had answered. If the request then failed you got a success message and an error message together, and the change you thought you had made was not there. Those now wait for the real answer, and put the content back if it fails.",
+
+  "changelog.entries.reports-really-filed.title":
+    "Reports that fail now say so",
+  "changelog.entries.reports-really-filed.body":
+    "Reporting a post, an event or a member could show the confirmation panel even when the report never reached us. Every report path now confirms only once it has been filed, and keeps what you wrote on screen so you can try again.",
+
+  "changelog.entries.message-previews-and-drafts.title":
+    "Messages you send before a chat exists no longer disappear",
+  "changelog.entries.message-previews-and-drafts.body":
+    "Starting a new conversation and typing straight away could lose that first message, and keep retrying it invisibly on every reconnect. Unsent messages are also kept per account now, so on a shared device one person's draft can no longer be sent from someone else's session. Opening a thread marks it read as new messages arrive, so the other person's seen mark keeps up.",
+
+  "changelog.entries.moderation-holds.title":
+    "Moderator decisions can no longer be undone by the author",
+  "changelog.entries.moderation-holds.body":
+    "A post or reply that a moderator had taken down could be restored by the person who wrote it. Deletions now record who made them, and only a moderator can undo a moderator's. Overturning an appeal also puts the content back, which it previously did not.",
+
+  "changelog.entries.housing-listings-stay-reviewed.title":
+    "Edits to a live listing go back through review",
+  "changelog.entries.housing-listings-stay-reviewed.body":
+    "A listing that had been approved could be edited afterwards without anyone looking again, so the text people read was not always the text that was checked. Editing the parts that moderation covers now returns the listing to review, and the form says so before you submit. Asking for a viewing also requires the affirming pledge, like every other way of making contact.",
+
+  "changelog.entries.article-titles-render-plain.title":
+    "Magazine headlines with an ampersand read properly again",
+  "changelog.entries.article-titles-render-plain.body":
+    "A headline containing characters like & could show its raw markup on the published article, the cards linking to it and the share preview. Headlines are stored as plain text now, and existing ones are cleaned up.",
 
   "changelog.entries.communities-hub-hero-restore.title":
     "Communities got its welcome back",
@@ -1836,7 +1887,7 @@ export const marketing: Catalog = {
   "changelog.entries.onboarding-identity-and-notifications.title":
     "Onboarding now asks for pronouns and notification preferences",
   "changelog.entries.onboarding-identity-and-notifications.body":
-    "The setup wizard now has a spot for your pronouns and a short bio, and a moment to turn on notifications if you want them — both optional. The final step also points you to Getting Started, so the rest of your setup is easy to find.",
+    "The setup wizard now has a spot for your pronouns and a short bio, and a moment to turn on notifications if you want them. Both are optional. The final step also points you to Getting Started, so the rest of your setup is easy to find.",
 
   "changelog.entries.getting-started-vouch-fix.title":
     "Fixed the “vouch for someone” checklist step",
@@ -2228,9 +2279,9 @@ export const marketing: Catalog = {
     "Fixing a typo in your blurb or updating your phone number used to mean re-entering the whole multi-step listing wizard. Your account's Places section now offers a Quick Edit for the basics (blurb, hours note, phone, website), with the full editor still one click away for anything bigger.",
 
   "changelog.entries.topics-follow-notifications-and-directory.title":
-    "Following a topic now actually notifies you — and a new Topics directory",
+    "Following a topic now actually notifies you, plus a new Topics directory",
   "changelog.entries.topics-follow-notifications-and-directory.body":
-    "Following a topic (the Follow button on any #tag page) used to have no effect. Now, when a forum thread is posted with that topic's tag, everyone following it gets notified. There's also a new Topics page listing every topic with a follow toggle, linked from the Community menu next to Forum — and a topic's \"Write a post\" button opens the forum composer with that topic's tag already attached.",
+    "Following a topic (the Follow button on any #tag page) used to have no effect. Now, when a forum thread is posted with that topic's tag, everyone following it gets notified. There's also a new Topics page listing every topic with a follow toggle, linked from the Community menu next to Forum. A topic's \"Write a post\" button now opens the forum composer with that topic's tag already attached.",
 
   "changelog.entries.search-topics-real-results.title":
     "Topics now show up in global search",
@@ -2269,7 +2320,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.xp-breakdown.title": "See what earned your XP",
   "changelog.entries.xp-breakdown.body":
-    "Getting Started now shows the top sources behind your current XP, and the Badges page breaks down every source — profile, communities, vouches, gatherings, and more — with how much each has earned you and what's still open.",
+    "Getting Started now shows the top sources behind your current XP, and the Badges page breaks down every source (profile, communities, vouches, gatherings, and more) with how much each has earned you and what's still open.",
 
   "changelog.entries.profile-hero-rail-redesign.title":
     "Profile hero and rail redesigned",
@@ -2278,7 +2329,7 @@ export const marketing: Catalog = {
   "changelog.entries.profile-rail-stats-redesign.title":
     "Your profile stats, at a glance",
   "changelog.entries.profile-rail-stats-redesign.body":
-    "Your connections, vouches given and vouches received now show as clearly labeled numbers instead of icon-only pills, so they're readable without a hover — and your privacy controls (who sees what, hide me, your data) moved into a settings menu at the top of your profile, right next to Edit.",
+    "Your connections, vouches given and vouches received now show as clearly labeled numbers instead of icon-only pills, so they're readable without a hover. Your privacy controls (who sees what, hide me, your data) moved into a settings menu at the top of your profile, right next to Edit.",
   "changelog.entries.profile-who-sees-what-controls.title":
     "Choose exactly who sees what on your profile",
   "changelog.entries.profile-who-sees-what-controls.body":
@@ -3956,6 +4007,7 @@ export const marketing: Catalog = {
   "roadmap.card.votesSuffix": "votes",
   "roadmap.card.committed": "Committed",
   "roadmap.card.slipNote": "Moved {from} → {to}, {reason}",
+  "roadmap.card.plannedFeatures": "Planned features",
   "roadmap.shape.title": "Have an <em>idea?</em>",
   "roadmap.shape.sub":
     "We read every suggestion. The most-voted ideas move up the roadmap.",
@@ -4003,6 +4055,10 @@ export const marketing: Catalog = {
   //    real third-party press pieces (someone else's words) and stay
   //    English, same precedent as the Press Kit coverage section.
   "pressArchive.hero.backLabel": "Press Kit",
+  "pressArchive.meta.title":
+    "QueerPulse press archive: everything written about us",
+  "pressArchive.meta.description":
+    "Coverage of QueerPulse in third-party publications, indexed by year, including the critiques we disagreed with.",
   "pressArchive.hero.eyebrow": "Coverage archive · since 2024",
   "pressArchive.hero.title": "Everything written <em>about us.</em>",
   "pressArchive.hero.sub":
@@ -4259,6 +4315,10 @@ export const marketing: Catalog = {
   //    else on this page (headings, buttons, static labels) is chrome and is
   //    translated below.
   "volunteerDetail.backCta": "All volunteer opportunities",
+  "volunteerDetail.meta.title":
+    "{role} with {org}: volunteer through QueerPulse",
+  "volunteerDetail.meta.loadingTitle":
+    "Loading a volunteer role · QueerPulse",
   "volunteerDetail.error.alreadySignedUp":
     "You've already signed up for this role.",
   "volunteerDetail.error.full":
@@ -4312,6 +4372,9 @@ export const marketing: Catalog = {
   "partnerDetail.loadError":
     "We couldn't load this partner just now. Please try again.",
   "partnerDetail.backCta": "All partners",
+  "partnerDetail.meta.title": "{name}: a QueerPulse partner organisation",
+  "partnerDetail.meta.loadingTitle": "Loading a partner · QueerPulse",
+  "partnerDetail.meta.errorTitle": "Partner unavailable · QueerPulse",
   "partnerDetail.tab.about": "About",
   "partnerDetail.tab.work": "Joint work",
   "partnerDetail.tab.timeline": "Timeline",
@@ -4330,7 +4393,8 @@ export const marketing: Catalog = {
   "contact.eyebrow": "We read everything",
   "contact.hero.title": "Get in <em>touch.</em>",
   "contact.hero.body":
-    "We're a small team and we respond to messages ourselves. Not an automated system, not a support ticket queue. Pick the route that makes the most sense for what you need to say.",
+    "We're a small team and we respond to messages ourselves, person to person. Pick the route that makes the most sense for what you need to say.",
+  "contact.routes.cta": "Write to us",
   "contact.routes.general.title": "General hello",
   "contact.routes.general.desc":
     "Anything that doesn't fit elsewhere, questions, feedback, introductions, ideas you think we should hear about.",
@@ -4854,13 +4918,13 @@ export const marketing: Catalog = {
   //    as `directoryPlaces.ts` reviews.
   "visas.meta.title": "Visas and residency in Portugal for LGBTQ+ people",
   "visas.meta.description":
-    "Community guidance on EU and non-EU visa routes, residency permits, and same-sex partner immigration in Portugal, plus reviewed immigration lawyers, not legal advice.",
+    "Community guidance on EU and non-EU visa routes, residency permits, and same-sex partner immigration in Portugal, plus reviewed immigration lawyers. This is not legal advice.",
   "visas.hero.eyebrow": "Visas & Residency · Portugal",
   "visas.hero.title": "Portugal, legally. <em>Your path to residency.</em>",
   "visas.hero.sub":
     "Practical information about visas, residency, and citizenship in Portugal, and what queer couples and families need to know that the official guidance doesn't always say clearly.",
   "visas.hero.note":
-    "Community information, not legal advice. Immigration law changes, always verify with a specialist.",
+    "Community information. This is not legal advice: immigration law changes, so always verify with a specialist.",
   "visas.routePicker.label": "Where are you <em>starting from?</em>",
   "visas.routePicker.euCitizen.name": "EU / EEA citizen",
   "visas.routePicker.euCitizen.desc":
@@ -5415,7 +5479,7 @@ export const marketing: Catalog = {
   "changelog.entries.resources-guide-rating.title":
     "Rate whether a resource guide helped",
   "changelog.entries.resources-guide-rating.body":
-    "Legal, Sexual Health, and Mental Health guides now end with a quick \"Was this helpful?\" — thumbs up or down, no visible counts, just a thanks once you've answered. Editors can see which guides are and aren't landing from the new Guide Feedback admin page.",
+    "Legal, Sexual Health, and Mental Health guides now end with a quick \"Was this helpful?\": thumbs up or down, no visible counts, just a thanks once you've answered. Editors can see which guides are and aren't landing from the new Guide Feedback admin page.",
 
   "changelog.entries.homepage-housing-personas-showcase.title":
     "A closer look at housing and personas on the homepage",

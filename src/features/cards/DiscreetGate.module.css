@@ -1,0 +1,36 @@
+.cover {
+  display: grid;
+  place-items: center;
+  gap: var(--gap-sm);
+  padding: var(--card-pad-lg);
+  min-height: 220px;
+  text-align: center;
+  border-radius: var(--radius-panel);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+}
+
+.coverIcon {
+  font-size: 1.5rem;
+  color: var(--plum);
+  opacity: 0.6;
+}
+
+.coverTitle {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.coverBody {
+  font-size: var(--text-caption);
+  opacity: 0.75;
+  max-width: 34ch;
+  margin: 0;
+}
+
+.revealed {
+  display: grid;
+  gap: var(--gap-sm);
+  justify-items: center;
+}

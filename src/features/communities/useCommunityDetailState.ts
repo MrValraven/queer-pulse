@@ -164,13 +164,23 @@ export function useCommunityDetailState() {
     );
   };
 
-  const onJoined = (note?: string) => {
-    if (slug) join(slug);
-    joinMutation.mutate({ note });
+  // Join / request-to-join. Both resolve only once the write has actually
+  // landed, so `JoinModal` can hold its welcome step until then; the demo
+  // membership store is a demo-mode fixture and is never written from a live
+  // path (live membership comes back off the refetched detail DTO).
+  const onJoined = async (note?: string) => {
+    if (demoMode) {
+      if (slug) join(slug);
+      return;
+    }
+    await joinMutation.mutateAsync({ note });
   };
-  const onRequested = (note?: string) => {
-    if (slug) requestToJoin(slug);
-    joinMutation.mutate({ note });
+  const onRequested = async (note?: string) => {
+    if (demoMode) {
+      if (slug) requestToJoin(slug);
+      return;
+    }
+    await joinMutation.mutateAsync({ note });
   };
   // Leave: demo drives the session provider (unchanged); live fires the real
   // DELETE with the viewer's own slug, then invalidates so the CTA flips back to
@@ -179,18 +189,24 @@ export function useCommunityDetailState() {
   // Only ever reached after the member confirms in LeaveCommunityModal — leaving
   // is destructive, so it never fires straight off the "Joined" button.
   const performLeave = () => {
-    setConfirmingLeave(false);
     if (!slug) return;
     if (demoMode) {
+      setConfirmingLeave(false);
       leave(slug);
       return;
     }
     const mySlug = user?.profile.slug;
     if (!mySlug) {
+      setConfirmingLeave(false);
       showToast(t("communities:common.error"), "error");
       return;
     }
-    leaveMutation.mutate(mySlug);
+    // The modal stays mounted until the DELETE settles, so its `pending` state
+    // can actually render and a second tap can't fire a second request. It used
+    // to close first, which made `pending={leaveMutation.isPending}` dead.
+    leaveMutation.mutate(mySlug, {
+      onSettled: () => setConfirmingLeave(false),
+    });
   };
 
   // Share this community: the native share sheet on devices that support it

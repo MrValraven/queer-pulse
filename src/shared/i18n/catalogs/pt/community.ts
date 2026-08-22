@@ -172,7 +172,7 @@ export const community: Catalog = {
     "Queres apoiar o trabalho <em>de {name}?</em>",
   "changemakerStory.outro.sub":
     "As pessoas agentes de mudança fazem isto para além do trabalho do dia a dia. Uma mensagem, uma apresentação ou uma hora do teu tempo valem mais do que imaginas.",
-  "changemakerStory.outro.connectCta": "Contactar {name}",
+  "changemakerStory.outro.connectCta": "Fala com a equipa sobre esta pessoa",
   "changemakerStory.outro.moreCta": "Conhecer mais agentes de mudança",
   "changemakerStory.moreLabel": "Mais agentes de mudança",
 
@@ -272,11 +272,11 @@ export const community: Catalog = {
     "Experimenta dizer as palavras em voz alta aqui antes de as dizeres a sério. O círculo semanal existe exatamente para isso.",
   "comingOut.stage.moveOn.title": "Passa por aqui, e segue",
   "comingOut.stage.moveOn.body":
-    "As pessoas deixam este espaço quando já não precisam dele. É esse o objetivo, não é uma despedida.",
+    "As pessoas deixam este espaço quando já não precisam dele. É esse o objetivo.",
   "comingOut.outro.title": "Não deves <em>um discurso perfeito.</em>",
   "comingOut.outro.sub":
-    "Dizer a verdade de forma imperfeita continua a ser dizer a verdade. Entra no espaço quando estiveres pronte, e sai no momento em que quiseres.",
-  "comingOut.outro.enterCta": "Entrar no espaço",
+    "Dizer a verdade de forma imperfeita continua a ser dizer a verdade. O apoio entre pares está aberto quando estiveres pronte, e podes sair no momento em que quiseres.",
+  "comingOut.outro.enterCta": "Encontrar apoio entre pares",
   "comingOut.outro.communitiesCta": "Ver todas as comunidades",
 
   // ── Dating & Relationships page (DatingPage.tsx + data) ───────────────────
@@ -464,6 +464,7 @@ export const community: Catalog = {
   "family.situation.lookingForCoparent.to": "Ver: Coparentalidade",
   "family.browseFreely.cta": "Só estou a explorar, mostra-me tudo",
 
+  "family.tabs.label": "Caminhos de família e parentalidade",
   "family.tab.adoption.label": "Adoção",
   "family.tab.ivf.label": "FIV e Reprodução Assistida",
   "family.tab.coparenting.label": "Coparentalidade",
@@ -691,8 +692,6 @@ export const community: Catalog = {
   "parentNetwork.tag.social": "Convívio",
   "parentNetwork.tag.workshop": "Workshop",
   "parentNetwork.resource.legalRights": "Direitos legais como família queer",
-  "parentNetwork.resource.chosenFamily":
-    "Família escolhida e reconhecimento legal",
   "parentNetwork.resource.healthcareGuides": "Guias de saúde e documentação",
 
   // ── Reading Groups page (ReadingGroupsPage.tsx + sub-components) ──────────
@@ -746,6 +745,7 @@ export const community: Catalog = {
   "readingGroups.card.requestToJoinCta": "Pedir para entrar",
   "readingGroups.card.onWaitlist": "Em lista de espera · #{position}",
   "readingGroups.card.waitlistUnavailable": "Lista de espera em breve",
+  "readingGroups.card.joinUnavailable": "Apresentações em breve",
 
   "readingGroups.waitlist.heading": "Estás na <em>lista de espera.</em>",
   "readingGroups.waitlist.sub":
@@ -755,6 +755,8 @@ export const community: Catalog = {
   "readingGroups.listGroup.heading": "Cria o <em>teu próprio grupo.</em>",
   "readingGroups.listGroup.lead":
     "Escolhe um livro. Diz quantas pessoas queres. Diz onde e quando. Nós publicamos aqui e ligamos-te a pessoas da comunidade que querem ler a mesma coisa.",
+  "readingGroups.listGroup.leadLive":
+    "Escolhe um livro. Diz quantas pessoas queres. Envia-nos e voltamos a falar contigo sobre começar o grupo e encontrar os teus leitores.",
   "readingGroups.listGroup.bookLabel": "Título do livro e autor/a",
   "readingGroups.listGroup.bookPlaceholder":
     "ex.: O Quarto de Giovanni, de James Baldwin",
@@ -768,8 +770,16 @@ export const community: Catalog = {
   "readingGroups.listGroup.maxLabel": "Máximo de pessoas",
   "readingGroups.listGroup.submitCta": "Publicar o meu grupo",
   "readingGroups.listGroup.submitPending": "A publicar…",
+  "readingGroups.listGroup.submitProposeCta": "Enviar a minha proposta",
+  "readingGroups.listGroup.submitProposePending": "A enviar…",
   "readingGroups.listGroup.successToast":
     "Grupo publicado. Vamos encontrar os teus leitores",
+  "readingGroups.listGroup.proposalToast":
+    "Proposta recebida. Entramos em contacto",
+  "readingGroups.listGroup.proposalHeading": "Proposta <em>recebida.</em>",
+  "readingGroups.listGroup.proposalBody":
+    "Temos a tua proposta para <strong>{book}</strong>. Ainda não há nada publicado no diretório: alguém vai lê-la e falar contigo sobre começar o grupo.",
+  "readingGroups.listGroup.proposeAnotherCta": "Propor outro grupo",
   "readingGroups.listGroup.errorToast":
     "Não foi possível publicar o teu grupo. Tenta novamente.",
   "readingGroups.listGroup.successHeading":

@@ -20,7 +20,7 @@
 .textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid rgba(45, 27, 61, 0.18);
+  border: 1px solid rgba(var(--line-rgb), 0.18);
   border-radius: 10px;
   background: var(--cream);
   color: var(--ink);
@@ -39,7 +39,7 @@
 }
 .historyItem {
   padding: 12px;
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 10px;
   background: var(--cream);
 }

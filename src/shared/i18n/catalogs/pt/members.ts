@@ -245,8 +245,8 @@ export const members: Catalog = {
   "profile.board.postedAgo": "Publicado {time}",
   "profile.board.expiresWarning_one": "Expira em {count} dia",
   "profile.board.expiresWarning_other": "Expira em {count} dias",
-  "profile.board.foundIt": "Encontrado — fechado",
-  "profile.board.foundItWithNote": "Encontrado — {note}",
+  "profile.board.foundIt": "Encontrado, fechado",
+  "profile.board.foundItWithNote": "Encontrado. {note}",
   "profile.board.markFoundCta": "Marcar como encontrado",
   "profile.board.markFoundCancel": "Cancelar",
   "profile.board.markFoundConfirm": "Confirmar",
@@ -332,8 +332,10 @@ export const members: Catalog = {
   "profileEdit.shortBio.placeholder":
     "Uma ou duas linhas sobre quem és e o que procuras.",
   "profileEdit.shortBio.counter": "{length} / {max}",
+  // Vem a seguir ao contador "{length} / {max}", por isso abre com o seu
+  // próprio separador em vez de um travessão.
   "profileEdit.shortBio.overLimit":
-    "— o teu cartão mostra só as primeiras duas linhas",
+    "· o teu cartão mostra só as primeiras duas linhas",
 
   // ── Estado "Agora" + Disponível para (ProfileNowField, OpenToEditor) ───────
   "profileEdit.now.label": "Agora",
@@ -578,11 +580,13 @@ export const members: Catalog = {
   "publicProfile.stat.yearsOnPlatform": "Ano na QueerPulse",
   "publicProfile.stat.membersReached": "Pessoas alcançadas",
 
-  // ── Estado vazio do perfil público em modo real (sem contribuições) ─────────
-  "publicProfile.emptyLive.title": "A tua história pública começa aqui",
-  "publicProfile.emptyLive.description":
-    "À medida que publicas textos, organizas convívios e recebes votos de confiança, tudo isso aparece aqui para o mundo ver. Ainda não há nada público. Começa a contribuir para a comunidade.",
-  "publicProfile.emptyLive.cta": "Explorar convívios",
+  // ── Pré-visualização do perfil público em modo real: ainda nada publicado ───
+  //    (`GET /public/profiles/:slug` responde 404 até a pessoa ligar o perfil
+  //    público, por isso este é o estado normal e nunca um erro).
+  "publicProfile.previewOff.title": "O teu perfil público ainda não está ligado",
+  "publicProfile.previewOff.description":
+    "Se o ligares, quem está fora da QueerPulse vê o teu nome, pronomes, frase de apresentação, biografia, os links e trabalhos que escolheste mostrar e a tua atividade pública recente. Mais nada sai da área de pessoas.",
+  "publicProfile.previewOff.cta": "Abrir definições de perfil",
 
   // ── Pesquisa global (SearchPage) ────────────────────────────────────────────
   "search.type.member": "Pessoas",
@@ -891,9 +895,8 @@ export const members: Catalog = {
     "Um voto de confiança é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui. A QueerPulse funciona por convite e voto de confiança, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
   "vouch.modal.form.relationshipLabel": "Como conheces {first}?",
   "vouch.modal.form.relationshipHint": "seleciona todas as que se aplicam",
-  "vouch.modal.form.endorseLabel":
-    "Em que podes dar um voto de confiança de que esta pessoa é boa?",
-  "vouch.modal.form.optional": "opcional",
+  // A linha de chips de competências foi removida (nada guardava as escolhas),
+  // e com ela as chaves `endorseLabel` / `optional`.
   "vouch.modal.form.noteLabel": "A tua nota",
   "vouch.modal.form.notePlaceholder":
     "Como conheces {first}, e o que deve saber o resto da comunidade?",
@@ -1023,6 +1026,12 @@ export const members: Catalog = {
   "collections.toast.removed": "Removido da coleção",
   "collections.toast.removeError":
     "Não foi possível remover esse item. Tenta de novo.",
+  "collections.toast.renamed": "Coleção renomeada",
+  "collections.toast.renameError":
+    "Não foi possível renomear essa coleção. Tenta de novo.",
+  "collections.toast.deleted": "Coleção eliminada",
+  "collections.toast.deleteError":
+    "Não foi possível eliminar essa coleção. Tenta de novo.",
   "collections.newCollection.defaultMeta":
     "Acabada de criar. Começa a adicionar guardados",
   "collections.updatedJustNow": "Atualizado agora mesmo",
@@ -1044,6 +1053,8 @@ export const members: Catalog = {
   "collections.modal.newCollection.namePlaceholder":
     "ex.: Recomendações de Lisboa, Levar à terapia…",
   "collections.modal.newCollection.visibilityLabel": "Quem pode ver",
+  "collections.modal.newCollection.privateOnlyNote":
+    "As coleções são privadas. Mais ninguém vê o que arquivas aqui.",
   "collections.modal.newCollection.cancel": "Cancelar",
   "collections.modal.newCollection.submit": "Criar coleção",
   "collections.modal.privacyOption.private": "Privada",
@@ -1055,9 +1066,19 @@ export const members: Catalog = {
     "Ainda não há nada aqui. Adiciona guardados a partir da lista abaixo da grelha.",
   "collections.modal.view.close": "Fechar",
   "collections.modal.view.removeItem": "Remover da coleção",
+  "collections.modal.view.rename": "Mudar o nome",
+  "collections.modal.view.renameLabel": "Nome da coleção",
+  "collections.modal.view.renameSave": "Guardar",
+  "collections.modal.view.renameCancel": "Cancelar",
+  "collections.modal.view.delete": "Eliminar coleção",
+  "collections.modal.view.deleteConfirm.title": "Eliminar {name}?",
+  "collections.modal.view.deleteConfirm.body":
+    "A coleção desaparece, os guardados ficam. Tudo o que arquivaste aqui continua nos teus guardados.",
+  "collections.modal.view.deleteConfirm.cta": "Eliminar coleção",
   "collections.modal.add.dialogLabel": "Adicionar a uma coleção",
   "collections.modal.add.eyebrow": "Adicionar a uma coleção",
   "collections.modal.add.title": "Onde deve ficar isto?",
+  "collections.modal.add.filing": "A arquivar…",
   "collections.modal.add.cancel": "Cancelar",
   "collections.modal.add.success.dialogLabel": "Adicionado à coleção",
   "collections.modal.add.success.title": "Adicionado à <em>tua coleção.</em>",
@@ -1208,7 +1229,10 @@ export const members: Catalog = {
   "badges.hero.statNearLabel": "Emblema mais próximo",
   "badges.hero.statNearAllEarned": "Todos eles",
   "badges.hero.statRareNone": "Ainda nenhum",
-  "badges.hero.printCase": "Imprimir o teu espólio",
+  // Era "Imprimir o teu espólio", mas o diálogo que abre não tem impressão,
+  // exportação nem partilha: só um botão Fechar. Voltar ao nome antigo no dia
+  // em que existir mesmo um ficheiro para levar.
+  "badges.hero.viewCase": "Ver o teu espólio",
   "badges.hero.xpProgress": "{xp} / {xpMax} XP",
   "badges.hero.xpToNextName": "{xp} XP para <b>{nextName}</b>",
   "badges.hero.maxLevel": "Chegaste ao topo da escada.",
@@ -1469,6 +1493,10 @@ export const members: Catalog = {
   "profile.whoSeesWhat.hiddenFrom.pickerTitle": "Esconder o teu perfil de",
   "profile.whoSeesWhat.hiddenFrom.pickerSearchPlaceholder":
     "Procurar por nome",
+  "profile.whoSeesWhat.hiddenFrom.pickerNoResults":
+    "Ninguém com esse nome. Experimenta escrever de outra forma.",
+  "profile.whoSeesWhat.hiddenFrom.pickerLoadMore": "Mostrar mais pessoas",
+  "profile.whoSeesWhat.hiddenFrom.pickerLoadingMore": "A carregar…",
   "profile.whoSeesWhat.hiddenFrom.toast.hidden":
     "Escondido. Essa pessoa deixa de ver o teu perfil.",
   "profile.whoSeesWhat.hiddenFrom.toast.unhidden":

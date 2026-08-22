@@ -14,14 +14,61 @@ type ToastEmitter = (
 let emit: ToastEmitter | null = null;
 const demo = { current: false };
 
+/**
+ * Resolves an i18n key to the member's language. Wired in by
+ * `QueryErrorToastBridge`, which has the `t()` these module-scope handlers
+ * cannot reach. Until it is wired (and in tests) the English fallback below is
+ * used, so behaviour never depends on the bridge having mounted.
+ */
+type Translator = (key: string, fallback: string) => string;
+let translate: Translator | null = null;
+
 /** Wire the live toast emitter (from inside React) into the cache handlers. */
 export function setQueryErrorToastEmitter(fn: ToastEmitter | null): void {
   emit = fn;
 }
 
+/** Wire the i18n resolver (from inside React) into the cache handlers. */
+export function setQueryErrorTranslator(fn: Translator | null): void {
+  translate = fn;
+}
+
 /** Keep the handlers silent in demo mode (mock queryFns shouldn't surface). */
 export function setQueryErrorDemoMode(isDemo: boolean): void {
   demo.current = isDemo;
+}
+
+/**
+ * An error message as a catalog key plus its English text. These toasts fire at
+ * the most stressful moments in the UI, so they must speak the member's
+ * language; keeping the English alongside the key means a catalog that has not
+ * shipped the key yet degrades to today's copy instead of a raw key string.
+ */
+interface ErrorCopy {
+  key: string;
+  fallback: string;
+}
+
+const COPY = {
+  server: {
+    key: "shared:apiError.server",
+    fallback: "Something went wrong on our end. Please try again.",
+  },
+  forbidden: {
+    key: "shared:apiError.forbidden",
+    fallback: "You don't have access to that.",
+  },
+  generic: { key: "shared:apiError.generic", fallback: "Something went wrong." },
+  genericRetry: {
+    key: "shared:apiError.genericRetry",
+    fallback: "Something went wrong. Please try again.",
+  },
+} satisfies Record<string, ErrorCopy>;
+
+/** A `reasonFor` string is already the backend's own text — never translated. */
+function resolve(copy: ErrorCopy | string): string {
+  if (typeof copy === "string") return copy;
+  return translate ? translate(copy.key, copy.fallback) : copy.fallback;
 }
 
 /** Human message for an error, or null when it should be handled elsewhere. */
@@ -34,13 +81,11 @@ function messageFor(error: unknown): string | null {
     )
       return null; // PlatformLockProvider owns this (maintenance screen)
     if (error.status === 404) return null; // pages own their empty state
-    if (error.status >= 500)
-      return "Something went wrong on our end. Please try again.";
-    if (error.status === 403)
-      return reasonFor(error) ?? "You don't have access to that.";
-    return reasonFor(error) ?? "Something went wrong.";
+    if (error.status >= 500) return resolve(COPY.server);
+    if (error.status === 403) return resolve(reasonFor(error) ?? COPY.forbidden);
+    return resolve(reasonFor(error) ?? COPY.generic);
   }
-  return reasonFor(error) ?? "Something went wrong. Please try again.";
+  return resolve(reasonFor(error) ?? COPY.genericRetry);
 }
 
 /** QueryCache onError: log always; toast only unexpected 5xx (pages own the rest).

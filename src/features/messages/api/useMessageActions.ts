@@ -14,6 +14,7 @@ import {
   deleteMessage,
   editMessage,
   removeMessageReaction,
+  type MessageResponse,
 } from "./messages.api";
 
 /**
@@ -86,21 +87,24 @@ export interface EditMessageInput {
 export function useEditMessage(conversationId: string | null) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, EditMessageInput>({
+  return useMutation<MessageResponse | void, Error, EditMessageInput>({
     mutationFn: async ({ messageId, body }) => {
       if (demoMode || !conversationId) return;
-      await editMessage(conversationId, messageId, body);
+      return editMessage(conversationId, messageId, body);
     },
     // Patch the new body + edited stamp in place; still invalidate the inbox,
-    // whose last-message preview may now show the edited text.
-    onSuccess: (_result, { messageId, body }) => {
+    // whose last-message preview may now show the edited text. Prefer the
+    // server's own `editedAt` (the response already carries it) over the
+    // client clock, which can be skewed — fall back to it only if the
+    // response is ever missing the field.
+    onSuccess: (updated, { messageId, body }) => {
       if (demoMode || !conversationId) return;
       patchMessageEdit(
         queryClient,
         conversationId,
         messageId,
         body,
-        new Date().toISOString(),
+        updated?.editedAt ?? new Date().toISOString(),
       );
       void queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },

@@ -48,12 +48,33 @@ export function TopicFeed({
     return map;
   }, [topic.posts]);
 
-  const visible = topic.posts.filter(
-    (post) => filter === "all" || post.category === filter,
+  // A STABLE key per post, so a filter change or an appended page reuses the
+  // right DOM node. `FadeIn key={index}` re-keyed every card whenever the
+  // filtered slice shifted, replaying stagger delays on the wrong ones. Posts
+  // carry no id, so identity is composed from href + author, with a counter
+  // disambiguating the demo mock's repeated `routes.forum` hrefs.
+  const keyedPosts = useMemo(() => {
+    const seen = new Map<string, number>();
+    return topic.posts.map((post) => {
+      const base = `${post.href}|${post.author}`;
+      const repeat = seen.get(base) ?? 0;
+      seen.set(base, repeat + 1);
+      return { post, key: repeat === 0 ? base : `${base}#${repeat}` };
+    });
+  }, [topic.posts]);
+
+  const visible = keyedPosts.filter(
+    ({ post }) => filter === "all" || post.category === filter,
   );
 
-  // Chips only show buckets the topic actually has (besides "All").
-  const chips = FILTERS.filter((f) => f.id === "all" || counts[f.id]);
+  // DEMO holds the whole topic in one array, so per-bucket counts are true and
+  // a bucket with no posts genuinely has none. LIVE only ever holds the pages
+  // fetched so far: a count would undercount and grow as you page, and a
+  // category whose posts start on page 3 would have no chip at all. So live
+  // shows every bucket, unlabelled by a number, rather than a wrong one.
+  const chips = demoMode
+    ? FILTERS.filter((f) => f.id === "all" || counts[f.id])
+    : FILTERS;
 
   const older = topic.totalPosts - topic.posts.length;
 
@@ -69,14 +90,14 @@ export function TopicFeed({
               .join(" ")}
             onClick={() => setFilter(f.id)}
           >
-            {t(f.labelKey)} · {counts[f.id] ?? 0}
+            {demoMode ? `${t(f.labelKey)} · ${counts[f.id] ?? 0}` : t(f.labelKey)}
           </button>
         ))}
       </div>
 
       <div className={styles.posts}>
-        {visible.map((post, i) => (
-          <FadeIn key={i} delay={Math.min(i, 8) * 60}>
+        {visible.map(({ post, key }, index) => (
+          <FadeIn key={key} delay={Math.min(index, 8) * 60}>
             <TopicPostCard post={post} topicTag={topic.tag} />
           </FadeIn>
         ))}

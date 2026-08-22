@@ -1,6 +1,6 @@
 // ── Backend DTOs ────────────────────────────────────────────────────────────
 // Shapes the NestJS `roadmap` domain's admin surface returns/accepts
-// (`/roadmap/admin/*`). This is the admin-only read+write counterpart to the
+// (`/admin/roadmap/*`). This is the admin-only read+write counterpart to the
 // public `marketing/api/roadmap.api.ts` (`GET /roadmap`) — the admin tools
 // edit backlog/planned/building/shipped items, ideas, the team roster, the
 // audit trail, and the hero-stat chips that page reads. Field names/shapes

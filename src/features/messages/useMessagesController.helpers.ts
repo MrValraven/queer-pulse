@@ -6,9 +6,27 @@ import type {
   GroupMemberView,
 } from "./data";
 import type { GroupMemberPick } from "./NewGroupModal";
+import { localDayKey } from "./api/messages.adapters";
 
-/** A day-bucketed run of messages (demo `Conversation.messages` / live `thread.groups`). */
-export type MessageGroup = { day: string; items: ChatMessage[] };
+/** A day-bucketed run of messages (demo `Conversation.messages` / live
+ *  `thread.groups`). `dayKey` (a stable, ISO calendar-date machine id) is set
+ *  on LIVE buckets (`messages.adapters.ts`'s `groupMessages`) — DEMO's
+ *  hand-authored buckets never set it (their `day` label is fiction that
+ *  never rolls over on a real clock, so matching on it directly stays
+ *  correct there; see the merge functions below). */
+export type MessageGroup = { day: string; dayKey?: string; items: ChatMessage[] };
+
+/** Find "today's" bucket to append a fresh optimistic message to: match the
+ *  stable machine `dayKey` when a group carries one (LIVE — never the `day`
+ *  display label, which can go stale, e.g. "Today" said yesterday, in a
+ *  long-lived tab whose cache wasn't refetched exactly at midnight); fall
+ *  back to the `day === "Today"` label for DEMO groups, which never carry a
+ *  real `dayKey` and never roll over on a real clock. See FE-MSG-30. */
+function findTodayBucketIndex(groups: MessageGroup[], todayKey: string): number {
+  return groups.findIndex((group) =>
+    group.dayKey ? group.dayKey === todayKey : group.day === "Today",
+  );
+}
 
 /** Group avatar initials from a title ("Pride Brunch Crew" → "PB"). */
 export function groupInitialsFromTitle(title: string): string {
@@ -56,6 +74,23 @@ export function realConversationId(conversation: Conversation | null): string | 
   return conversation.id === conversation.slug ? null : conversation.id;
 }
 
+/** Matches a server-assigned conversation id (a DM's real UUID, or a live
+ *  group's — both are server primary keys). The backend validates every
+ *  `/conversations/:id` route with `ParseUUIDPipe`, so this is the
+ *  authoritative shape check for "has this conversation actually been created
+ *  server-side yet" when only a bare id STRING is on hand — e.g. an outbox
+ *  entry being replayed, which may target a conversation other than the one
+ *  currently open, so `realConversationId` (which needs the whole
+ *  `Conversation` object) isn't available there. A just-picked placeholder's
+ *  id is the recipient's handle (see `recipient.ts`'s `buildRecipientConversation`),
+ *  which can never collide with this shape. */
+const SERVER_CONVERSATION_ID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function isServerConversationId(id: string): boolean {
+  return SERVER_CONVERSATION_ID_RE.test(id);
+}
+
 /** A demo group with `event` appended as a centred system pill in Today. */
 export function withDemoSystemPill(
   conversation: Conversation,
@@ -63,9 +98,10 @@ export function withDemoSystemPill(
 ): Conversation {
   const pill: ChatMessage = { from: "me", text: "", kind: "system", systemEvent: event };
   const messages = conversation.messages.map((group) => ({ ...group, items: [...group.items] }));
-  const today = messages.find((group) => group.day === "Today");
-  if (today) today.items.push(pill);
-  else messages.push({ day: "Today", items: [pill] });
+  const todayKey = localDayKey(new Date());
+  const todayIndex = findTodayBucketIndex(messages, todayKey);
+  if (todayIndex !== -1) messages[todayIndex]!.items.push(pill);
+  else messages.push({ day: "Today", dayKey: todayKey, items: [pill] });
   return { ...conversation, messages };
 }
 
@@ -165,10 +201,14 @@ export function mergeOptimisticGroups(
   );
   if (extra.length === 0) return base;
   const groups = base.map((g) => ({ ...g, items: [...g.items] }));
-  const today = groups.find((g) => g.day === "Today");
-  if (today) {
-    today.items = [...today.items, ...extra];
+  const todayKey = localDayKey(new Date());
+  const todayIndex = findTodayBucketIndex(groups, todayKey);
+  if (todayIndex !== -1) {
+    groups[todayIndex] = {
+      ...groups[todayIndex]!,
+      items: [...groups[todayIndex]!.items, ...extra],
+    };
     return groups;
   }
-  return [...groups, { day: "Today", items: extra }];
+  return [...groups, { day: "Today", dayKey: todayKey, items: extra }];
 }

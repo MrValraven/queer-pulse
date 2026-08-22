@@ -124,9 +124,17 @@ export const communities: Catalog = {
   // ── Small shared bits (relative time, generic "just now") ────────────────
   "common.timeAgo": "{time} ago",
   "common.justNow": "just now",
+  // Shown when a timestamp can't be parsed, rather than guessing at an age.
+  "common.unknownTime": "some time ago",
+  // Stands in for a member the backend nulled out (a deleted account).
+  "common.someMember": "A member",
   "common.error": "Something went wrong. Try again in a moment.",
   "common.loading": "Loading…",
   "common.attachImageAria": "Attach an image",
+  "common.removeImageAria": "Remove this image",
+  "common.imageUploadError": "That image wouldn't upload. Try another one.",
+  "common.pinnedToast": "Pinned to the top.",
+  "common.unpinnedToast": "Unpinned.",
 
   // ── Community detail page (hero + sidebar) ────────────────────────────────
   "detail.breadcrumb": "Communities & Collectives",
@@ -177,7 +185,8 @@ export const communities: Catalog = {
   "detail.tabs.modtools": "Mod tools",
   // Shown to an owner/mod on a tab they've hidden from members (the
   // "events"/"roster" feature toggles, or "show roster to members").
-  "detail.hiddenFromMembers": "Hidden from members — only owners and mods can see this tab.",
+  "detail.hiddenFromMembers":
+    "Hidden from members. Only owners and mods can see this tab.",
 
   // ── About / About+Resources shared section labels ─────────────────────────
   "detail.about.whoFor": "Who this is for",
@@ -271,6 +280,12 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.declineCta": "Decline",
   "detail.modtools.reports.label": "Reported posts",
   "detail.modtools.reports.empty.title": "All clear",
+  // Shown when a mod queue could not be loaded at all (a 403 on the reports
+  // endpoint, a dropped request) — never confuse that with an empty queue.
+  "detail.modtools.queueError.title": "We couldn't load this queue",
+  "detail.modtools.queueError.description":
+    "The queue didn't load, so treat it as unknown rather than clear. Try again, and tell us if it keeps happening.",
+  "detail.modtools.queueError.retry": "Try again",
   "detail.modtools.reports.empty.description":
     "Nothing has been flagged. The community looks after each other.",
   "detail.modtools.reports.meta":
@@ -279,7 +294,7 @@ export const communities: Catalog = {
   "detail.modtools.reports.removeCta": "Remove post",
   "detail.modtools.reports.dismissCta": "Dismiss",
   "detail.modtools.reports.replyNote":
-    "This report is on a reply, not the post itself — it can be dismissed but not removed directly.",
+    "This report is on a reply. It can be dismissed here; removing it means opening the post it sits under.",
   "detail.modtools.members.label": "Members",
   "detail.modtools.members.makeModCta": "Make mod",
   "detail.modtools.members.demoteCta": "Remove mod",
@@ -292,7 +307,17 @@ export const communities: Catalog = {
     "Post removed. The author has been reached.",
   "detail.modtools.toast.reportDismissed": "Report dismissed.",
   "detail.modtools.toast.promoted": "{name} is now a mod.",
+  "detail.modtools.toast.demoted": "{name} is a member again.",
   "detail.modtools.toast.removed": "{name} has been removed.",
+  "detail.modtools.confirm.removeMember.title":
+    "Remove {name} from the community?",
+  "detail.modtools.confirm.removeMember.body":
+    "They lose access to the posts, events and members here. They can ask to join again later.",
+  "detail.modtools.confirm.removeMember.confirmCta": "Remove member",
+  "detail.modtools.confirm.removePost.title": "Take this post down?",
+  "detail.modtools.confirm.removePost.body":
+    "The post comes down for everyone and the report leaves your queue. This can't be undone from here.",
+  "detail.modtools.confirm.removePost.confirmCta": "Remove post",
 
   // ── Danger zone (Mod tools tab, living hub) ────────────────────────────────
   "detail.dangerZone.heading": "Danger zone",
@@ -323,8 +348,7 @@ export const communities: Catalog = {
   "detail.dangerZone.transfer.cta": "Transfer",
   "detail.dangerZone.transfer.successToast":
     "Ownership was transferred to {owner}.",
-  "detail.dangerZone.transfer.confirm.title":
-    "Transfer ownership of {name}?",
+  "detail.dangerZone.transfer.confirm.title": "Transfer ownership of {name}?",
   "detail.dangerZone.transfer.confirm.body":
     "Pick who takes over as owner. They'll get full control of {name}.",
   "detail.dangerZone.transfer.confirm.cancel": "Cancel",
@@ -346,6 +370,15 @@ export const communities: Catalog = {
   "detail.pulse.sharedToast": "Shared with the community.",
   "detail.pulse.loadingMore": "Loading…",
   "detail.pulse.loadMoreCta": "Load more posts",
+  "detail.events.error.title": "We couldn't load the gatherings",
+  "detail.events.error.description":
+    "Something went wrong reaching this community's calendar. Try again in a moment.",
+  "detail.events.error.retryCta": "Try again",
+  "detail.pulse.empty.title": "Nothing here yet",
+  "detail.pulse.empty.description":
+    "Post the first hello. A line about your week is plenty to get a room talking.",
+  "detail.pulse.empty.visitorDescription":
+    "This community has not posted yet. Join to be part of what comes next.",
 
   // ── About + Resources tab (living hub) ────────────────────────────────────
   "detail.aboutResources.houseRules": "House rules",
@@ -383,6 +416,8 @@ export const communities: Catalog = {
     "Optional: a little context helps people know who you are.",
   "join.about.aboutPlaceholder":
     "A sentence about yourself: what brings you here?",
+  "join.about.submitting": "Sending…",
+  "join.about.errorFallback": "That didn't go through. Try again in a moment.",
   "join.involvement.eyebrow": "Almost done",
   "join.involvement.title": "How would you like to be involved?",
   "join.involvement.emailPlaceholder": "Your email address",
@@ -557,8 +592,11 @@ export const communities: Catalog = {
 
   // ── Chapter 4 — Running ────────────────────────────────────────────────────
   "start.running.stewardsHeading": "Stewards",
+  // Stewards are INVITED, never assigned: the backend sends each an invitation
+  // and they only join the roster once they accept. Say so plainly here, or a
+  // founder opens their community expecting a team that isn't there yet.
   "start.running.stewardsSub":
-    "Co-stewards can welcome new members, keep threads warm, and step in when you can't. You can add or change them any time.",
+    "Co-stewards can welcome new members, keep threads warm, and step in when you can't. Everyone you pick gets an invitation to steward with you, and joins once they accept. You can add or change them any time.",
   "start.running.ownerTag": "You · owner",
   "start.running.coStewardTag": "Co-steward",
   "start.running.removeAria": "Remove {name}",
@@ -568,8 +606,8 @@ export const communities: Catalog = {
   "start.running.addStewardModal.sub":
     "Co-stewards can only be members you're already connected with. Search your connections below.",
   "start.running.addStewardModal.searchLabel": "Search your connections",
-  "start.running.addStewardModal.searchPlaceholder":
-    "Search by name or @slug…",
+  "start.running.addStewardModal.loadMore": "Show more connections",
+  "start.running.addStewardModal.searchPlaceholder": "Search by name or @slug…",
   "start.running.addStewardModal.closeAria": "Close",
   "start.running.addStewardModal.empty":
     "You can add co-stewards once you're connected with other members. Head to Connections to grow your circle first.",
@@ -634,6 +672,7 @@ export const communities: Catalog = {
     "They'll get a warm invite when you open: no pressure, no spam.",
   "start.people.empty":
     "You're not connected to anyone yet. Once you connect with people, you'll be able to invite them here.",
+  "start.people.loadMore": "Show more connections",
   "start.people.seedNote":
     "You can also share your community's link once it's open. That's often how the first ten people really arrive.",
 
@@ -657,7 +696,9 @@ export const communities: Catalog = {
   "start.confirm.rosterHidden": "Hidden",
   "start.confirm.recap.running": "Running",
   "start.confirm.recap.stewards": "Stewards",
-  "start.confirm.stewardsValue": "{count} (you + {co} co)",
+  "start.confirm.stewardsValue": "{count} invited (you + {co} co)",
+  "start.confirm.handleTaken":
+    "That address is already taken. Try another one.",
   "start.confirm.recap.inside": "Inside",
   "start.confirm.recap.toneFeeling": "Tone & feeling",
   "start.confirm.recap.sharedValues": "Shared values",
@@ -728,6 +769,7 @@ export const communities: Catalog = {
   "detail.foundedRecently": "Founded recently",
   "detail.foundedJustNow": "Founded just now",
   "detail.cadenceDefault": "Finding its rhythm",
+  "detail.nextEvent.soonChip": "soon",
   "detail.nextEvent.tbaTitle": "Next gathering to be announced",
   "detail.nextEvent.checkEventsTab": "Check the events tab",
   "detail.nextEvent.openToMembers": "Open to members",
@@ -741,6 +783,8 @@ export const communities: Catalog = {
   "detail.topicThread.beginningPost":
     "This is the very beginning of {name}. Introduce yourself and tell us what brought you here.",
   "detail.organiser.founder": "Founder",
+  "detail.organiser.justOpened": "Just opened {name}. {blurb}",
+  "detail.about.whoForLine": "Who it's for: {whoFor}",
 
   // ── Edit community (EditCommunityModal) ───────────────────────────────────
   "edit.cta": "Edit community",
@@ -752,17 +796,21 @@ export const communities: Catalog = {
   "edit.field.name": "Name",
   "edit.field.tagline": "Tagline",
   "edit.field.cover": "Cover image",
-  "edit.field.coverHint": "A wide photo shown on your community's card. At least 1200 × 600px.",
+  "edit.field.coverHint":
+    "A wide photo shown on your community's card. At least 1200 × 600px.",
   "edit.field.type": "Kind of space",
   "edit.field.whoFor": "Who it's for",
   "edit.field.purpose": "What it's for",
   "edit.field.access": "Who can find it",
   "edit.field.rosterVisible": "Show the member list to members",
+  "edit.ownerOnlyHint": "Only the owner can change this.",
   "edit.field.features": "What's inside",
   "edit.field.rules": "Shared values",
   "edit.field.tags": "Tags",
-  "edit.field.tagsHint": "Choose up to {count}, shown on your community's card and searchable on Discover.",
-  "tagPicker.overlapHint": "These often go together, pick the one that fits best.",
+  "edit.field.tagsHint":
+    "Choose up to {count}, shown on your community's card and searchable on Discover.",
+  "tagPicker.overlapHint":
+    "These often go together, pick the one that fits best.",
   "edit.suggestTag.trigger": "Don't see the tag you need? Suggest one",
   "edit.suggestTag.title": "Suggest a tag",
   "edit.suggestTag.sub": "We'll review it and may add it to the curated list.",

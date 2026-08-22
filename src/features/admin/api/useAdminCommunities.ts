@@ -2,9 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { loadNamespace } from "../../../shared/i18n/catalogs";
-import { intlLocale } from "../../../shared/i18n/locale";
-import { parseKey, resolveEntry } from "../../../shared/i18n/translate";
 import type { Language, TFunction } from "../../../shared/i18n/types";
 import { COMMUNITIES, type Community } from "../adminCommunities.data";
 import {
@@ -15,6 +12,7 @@ import {
   getAdminCommunities,
   getAdminCommunity,
 } from "./adminCommunities.api";
+import { loadModerationTranslate } from "./moderationTranslate";
 
 export const ADMIN_COMMUNITIES_KEY = "admin-communities";
 
@@ -32,38 +30,26 @@ export function adminCommunityDetailQueryKey(
 }
 
 /**
- * A `translate` bound to the *resolved* `admin` catalog for `language` (with EN
- * as the universal fallback), built from `loadNamespace` — which resolves the
- * lazy `admin` chunk and caches it — rather than the provider's `t`.
+ * A `translate` bound to the *resolved* catalogs for `language` (with EN as the
+ * universal fallback), rather than the provider's `t`.
  *
- * The adapters classify chrome (activity labels, moderator role lines) through
- * `translate()`, and this mapping happens inside the react-query `queryFn` the
- * moment a fetch resolves. The provider's `t`, however, resolves lazy
- * namespaces out of React state that only fills in AFTER a post-commit effect
- * loads the chunk — so a `queryFn` mapping DTOs can win that race and bake raw
- * `admin:…` keys into the cached, adapted result, which then never re-maps
- * because the query key hasn't changed. Awaiting the catalog here makes the
- * adaptation deterministic regardless of provider timing. `language` still sits
- * in the query key, so a language switch refetches and rebuilds this translator
- * for the new locale.
+ * The adapters classify chrome (activity labels, moderator role lines, a queue
+ * item's category/status/reason) through `translate()`, and this mapping
+ * happens inside the react-query `queryFn` the moment a fetch resolves. The
+ * provider's `t`, however, resolves lazy namespaces out of React state that
+ * only fills in AFTER a post-commit effect loads the chunk — so a `queryFn`
+ * mapping DTOs can win that race and bake raw `admin:…` keys into the cached,
+ * adapted result, which then never re-maps because the query key hasn't
+ * changed. Awaiting the catalogs makes the adaptation deterministic regardless
+ * of provider timing. `language` still sits in the query key, so a language
+ * switch refetches and rebuilds this translator for the new locale.
+ *
+ * FE-ADM-26: this used to bind `admin` alone. The scoped queue's report reason
+ * now comes from the shared `safety` taxonomy (`REASON_LABEL_KEYS`), so it
+ * delegates to the two-namespace loader the moderation queue also uses.
  */
-async function loadAdminTranslate(language: Language): Promise<TFunction> {
-  const ADMIN_NAMESPACE = "admin" as const;
-  const [activeCatalog, englishCatalog] = await Promise.all([
-    loadNamespace(language, ADMIN_NAMESPACE),
-    language === "en"
-      ? Promise.resolve(undefined)
-      : loadNamespace("en", ADMIN_NAMESPACE),
-  ]);
-  return (key, options) => {
-    const { path } = parseKey(key);
-    const active = resolveEntry(activeCatalog, path, intlLocale(language), options);
-    if (active !== undefined) return active;
-    const fallback = englishCatalog
-      ? resolveEntry(englishCatalog, path, "en", options)
-      : undefined;
-    return fallback ?? key;
-  };
+function loadAdminTranslate(language: Language): Promise<TFunction> {
+  return loadModerationTranslate(language);
 }
 
 /** `useAdminCommunities`'s query data — the adapted cards plus whether the

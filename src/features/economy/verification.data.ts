@@ -2,18 +2,17 @@ import type {
   SubmitVerificationRequestInput,
   VerificationRequestDTO,
   VerificationRequestStatus,
-  VerificationStatusDTO,
   VerificationStatusWithRequestDTO,
 } from "./api/verification.api";
 
 /**
  * Demo-mode verification standing. The prototype has no real verification, so
  * the demo persona is treated as fully ID-verified — every gated housing action
- * flows without a network call, and the step-up modal's demo path simulates the
- * OTP locally. `latestRequest` is `null`: the demo persona reached their level
- * before Phase 2's request flow existed, so there is no request to show — a
- * request appears in the cache only once `useSubmitVerificationRequest`
- * simulates one. Never used in live mode (which reads `GET /verification/me`).
+ * flows without a network call. `latestRequest` is `null`: the demo persona
+ * reached their level before Phase 2's request flow existed, so there is no
+ * request to show — a request appears in the cache only once
+ * `useSubmitVerificationRequest` simulates one. Never used in live mode
+ * (which reads `GET /verification/me`).
  */
 export const DEMO_VERIFICATION_STATUS: VerificationStatusWithRequestDTO = {
   level: "id_verified",
@@ -23,16 +22,6 @@ export const DEMO_VERIFICATION_STATUS: VerificationStatusWithRequestDTO = {
   provider: "stub_identity",
   verifiedAt: "2026-01-01T00:00:00.000Z",
   latestRequest: null,
-};
-
-/** What the demo phone step "returns" after a simulated OTP — phone level. */
-export const DEMO_PHONE_VERIFIED: VerificationStatusDTO = {
-  level: "phone",
-  phoneVerified: true,
-  idVerified: false,
-  method: "phone_otp",
-  provider: "dev_phone",
-  verifiedAt: "2026-01-01T00:00:00.000Z",
 };
 
 /**

@@ -5,12 +5,16 @@ import { useFormat } from "../../shared/i18n/format";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { memberName } from "../members/data/members";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useShareLink } from "../../shared/hooks";
+import { appOrigin } from "../../shared/lib/inviteUrl";
 import { routes } from "../../app/routeMap";
+import { gatheringPath } from "./data";
 import {
   GATHERING_TITLE,
   RSVP_ATTENDEE_NAMES,
   RSVP_COC,
   RSVP_DETAILS,
+  RSVP_GATHERING_SLUG,
   RSVP_HOST_QUOTE,
   downloadIcs,
   googleCalendarUrl,
@@ -31,6 +35,13 @@ export function RsvpConfirmationCard() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
+  // Really writes the gathering's link to the clipboard (and says so only when
+  // the write succeeds) instead of toasting "copied" over nothing.
+  const { share: shareInviteLink } = useShareLink({
+    copied: t("gatherings:rsvp.inviteCopiedToast"),
+    failed: t("gatherings:rsvp.inviteCopyFailedToast"),
+  });
+  const inviteUrl = `${appOrigin()}${gatheringPath(RSVP_GATHERING_SLUG)}`;
 
   return (
     <div className={styles.card}>
@@ -149,9 +160,7 @@ export function RsvpConfirmationCard() {
           </Button>
           <Button
             variant="ghost"
-            onClick={() =>
-              showToast(t("gatherings:rsvp.inviteCopiedToast"), "success")
-            }
+            onClick={() => void shareInviteLink(inviteUrl)}
           >
             {t("gatherings:rsvp.inviteCta")}
           </Button>

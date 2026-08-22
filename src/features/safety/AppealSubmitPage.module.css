@@ -1,7 +1,7 @@
 .card {
   width: min(560px, 92vw);
   background: var(--paper);
-  border: 1px solid rgba(45, 27, 61, 0.09);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 20px;
   padding: 34px 34px 30px;
   box-shadow: 0 6px 40px -8px rgba(var(--plum-rgb), 0.12);
@@ -57,7 +57,7 @@
   line-height: 1.6;
   color: var(--text-soft);
   background: rgba(var(--plum-rgb), 0.04);
-  border: 1px solid rgba(45, 27, 61, 0.08);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
   border-radius: 12px;
   padding: 12px 14px;
 }

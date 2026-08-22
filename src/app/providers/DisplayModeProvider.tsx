@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { DisplayModeContext } from "./displayModeContext";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
+import { safeStorage } from "../../shared/storage/safeStorage";
 
 const INSTALLED_KEY = "qp-installed";
 
@@ -32,10 +33,14 @@ function readStickyInstalled(): boolean {
   const launchedFromManifest =
     new URLSearchParams(window.location.search).get("mode") === "standalone";
   if (launchedFromManifest) {
-    window.localStorage.setItem(INSTALLED_KEY, "true");
+    safeStorage.set(INSTALLED_KEY, "true");
     return true;
   }
-  return window.localStorage.getItem(INSTALLED_KEY) === "true";
+  // Guarded: this runs in a render-phase state initializer inside
+  // `RootProviders`, which wraps the app ErrorBoundary, so a raw
+  // `localStorage` access throwing `SecurityError` (site data blocked) would
+  // white-screen the whole app before anything could catch it.
+  return safeStorage.get(INSTALLED_KEY) === "true";
 }
 
 /**
@@ -62,7 +67,7 @@ export function DisplayModeProvider({ children }: { children: ReactNode }) {
   // engines it exists for, they always report false.
   useEffect(() => {
     if (!matchesBrowserQuery) return;
-    window.localStorage.removeItem(INSTALLED_KEY);
+    safeStorage.remove(INSTALLED_KEY);
     // Reacts to the external browser media-query signal, clearing the fallback.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStickyInstalled(false);

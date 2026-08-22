@@ -1,7 +1,7 @@
 import type { Issuer } from "./tools/useIssuer";
 import { DocPreview } from "./tools/DocPreview";
 import {
-  TAX_DISCLAIMER,
+  TAX_DISCLAIMER_KEY,
   IVA_EXEMPT_NOTE,
   RETENTION_DISPENSA_NOTE,
 } from "./tax.constants";
@@ -24,6 +24,18 @@ export interface InvoicePreviewProps {
   subtotal: number;
   ivaAmount: number;
   total: number;
+}
+
+/**
+ * Muted filler for an invoice field the issuer has not filled in yet. A real
+ * translated label rather than an em dash: a dash carries no meaning for a
+ * screen reader, and the em dash is out of the product's copy anyway.
+ */
+function NotSet() {
+  const { t } = useTranslation();
+  return (
+    <span className={styles.notSet}>{t("economy:placeholder.notSet")}</span>
+  );
 }
 
 /** A branded, printable fatura-recibo rendered inside the DocPreview sheet. */
@@ -49,7 +61,7 @@ export function InvoicePreview(props: InvoicePreviewProps) {
   const effectiveIva = exempt53 ? 0 : ivaRate;
 
   const fmtDate = (iso: string) => {
-    if (!iso) return "—";
+    if (!iso) return t("economy:placeholder.notSet");
     const d = new Date(iso);
     return Number.isNaN(d.getTime())
       ? iso
@@ -73,7 +85,7 @@ export function InvoicePreview(props: InvoicePreviewProps) {
           <div className={styles.docLabel}>
             {t("economy:invoiceTool.preview.docLabel")}
           </div>
-          <div className={styles.docNo}>{invoiceNumber || "—"}</div>
+          <div className={styles.docNo}>{invoiceNumber || <NotSet />}</div>
           <div className={styles.docMeta}>
             {t("economy:invoiceTool.preview.issued", {
               date: fmtDate(issueDate),
@@ -90,7 +102,9 @@ export function InvoicePreview(props: InvoicePreviewProps) {
           <div className={styles.docPartyLabel}>
             {t("economy:invoiceTool.preview.billedTo")}
           </div>
-          <div className={styles.docPartyName}>{client.name || "—"}</div>
+          <div className={styles.docPartyName}>
+            {client.name || <NotSet />}
+          </div>
           {client.nif && <div className={styles.docMeta}>NIF {client.nif}</div>}
           {client.address && (
             <div className={styles.docMeta}>{client.address}</div>
@@ -119,7 +133,9 @@ export function InvoicePreview(props: InvoicePreviewProps) {
         <tbody>
           {lineItems.map((l) => (
             <tr key={l.id}>
-              <td className={styles.docTd}>{l.description || "—"}</td>
+              <td className={styles.docTd}>
+                {l.description || <NotSet />}
+              </td>
               <td className={`${styles.docTd} ${styles.docNumCol}`}>
                 {Number.isFinite(l.quantity) ? l.quantity : 0}
               </td>
@@ -168,7 +184,7 @@ export function InvoicePreview(props: InvoicePreviewProps) {
         </div>
       )}
 
-      <footer className={styles.docFootnote}>{TAX_DISCLAIMER}</footer>
+      <footer className={styles.docFootnote}>{t(TAX_DISCLAIMER_KEY)}</footer>
     </DocPreview>
   );
 }

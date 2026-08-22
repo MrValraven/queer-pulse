@@ -4,7 +4,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Community, CommunityType } from "../../shared/types/domain";
 import { useCommunityPulse } from "./api/useCommunityPulse";
 import { AccessTierBadge } from "./CommunityBadges";
-import { CARD_TAG_DISPLAY_CAP, COMMUNITY_TAG_LABEL_KEY } from "./communityTags.data";
+import {
+  CARD_TAG_DISPLAY_CAP,
+  COMMUNITY_TAG_LABEL_KEY,
+} from "./communityTags.data";
 import styles from "./FeaturedCommunityCard.module.css";
 
 /** Category pill colour per `CommunityType` — mirrors CommunitiesPage.module.css's
@@ -26,17 +29,17 @@ interface FeaturedCommunityCardProps {
    *  isMember(slug), live → community.myRole != null) — this component has
    *  no membership state of its own, so the "You're in" pill stays hidden
    *  unless this is explicitly passed. */
-  joined?: boolean;
+  isJoined?: boolean;
 }
 
 /**
  * Hero card for the Communities Discover page, spotlighting one community
  * above the grid. Presentational only — the caller fetches/picks the
- * `Community` and computes `joined`.
+ * `Community` and computes `isJoined`.
  */
 export function FeaturedCommunityCard({
   community,
-  joined = false,
+  isJoined = false,
 }: FeaturedCommunityCardProps) {
   const { t } = useTranslation();
   // The caller guarantees `community.slug` is set — only communities with a
@@ -76,7 +79,7 @@ export function FeaturedCommunityCard({
             {community.typeLabel}
           </span>
           <AccessTierBadge tier={tier} />
-          {joined && (
+          {isJoined && (
             <span className={styles.joined}>
               <FiCheck aria-hidden />{" "}
               {t("communities:discover.featured.youreIn")}
@@ -105,7 +108,8 @@ export function FeaturedCommunityCard({
             <span>
               {t("communities:discover.featured.next")}{" "}
               <b>
-                {nextEvent.title} · {nextEvent.meta}
+                {nextEvent.title}
+                <span className={styles.nextMeta}>{nextEvent.meta}</span>
               </b>
             </span>
           </div>

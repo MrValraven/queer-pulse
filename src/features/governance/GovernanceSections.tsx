@@ -244,6 +244,12 @@ export function FinancesSection() {
     expenseTotal == null
       ? ""
       : fmt.currency(expenseTotal, "EUR", { maximumFractionDigits: 0 });
+  // How full the operational reserve actually is, clamped to 0–100 so a
+  // target of 0 or an over-funded reserve can't produce a broken bar.
+  const reservePercent =
+    reserve && reserve.target > 0
+      ? Math.min(100, Math.max(0, (reserve.current / reserve.target) * 100))
+      : 0;
 
   return (
     <Reveal as="section" className={styles.section} id="finances">
@@ -350,8 +356,21 @@ export function FinancesSection() {
         </p>
         {reserve && (
           <>
-            <div className={styles.reserveBar}>
-              <div className={styles.reserveFill} />
+            {/* The fill was a CSS constant (35%) while the caption below
+                printed the real current/target figures, so the picture and
+                the numbers disagreed on the finance-transparency page. */}
+            <div
+              className={styles.reserveBar}
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={reserve.target}
+              aria-valuenow={Math.min(reserve.current, reserve.target)}
+              aria-label={t("governance:sections.finances.reserveBarAria")}
+            >
+              <div
+                className={styles.reserveFill}
+                style={{ width: `${reservePercent}%` }}
+              />
             </div>
             <p className={styles.reserveCap}>
               {t("governance:sections.finances.reserveProgress", {

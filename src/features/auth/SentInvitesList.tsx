@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import {
   Button,
+  ConfirmDialog,
   FadeIn,
   SkeletonLine,
   Tabs,
@@ -151,13 +152,26 @@ export function SentInvitesList() {
   const resend = useResendInvite();
   const [open, setOpen] = useState(true);
   const [filter, setFilter] = useState<StatusFilter>("all");
+  // Revoking kills the link immediately and can never be undone (only an
+  // *expired* invite can be re-minted), so the row's button opens this confirm
+  // rather than firing the mutation on a single tap.
+  const [inviteToRevoke, setInviteToRevoke] = useState<SentInviteView | null>(
+    null,
+  );
 
-  const handleRevoke = (invite: SentInviteView) => {
+  const handleRevokeConfirmed = () => {
+    if (!inviteToRevoke) return;
+    const invite = inviteToRevoke;
+    setInviteToRevoke(null);
     revoke.mutate(
       { id: invite.id, code: invite.code },
       {
         onSuccess: () =>
           showToast(t("auth:invite.sentList.revokedToast"), "success"),
+        // The cache flip is rolled back in `useRevokeInvite`; this tells the
+        // member the link is still live so they don't assume it's dead.
+        onError: () =>
+          showToast(t("auth:invite.sentList.revokeError"), "error"),
       },
     );
   };
@@ -251,23 +265,38 @@ export function SentInvitesList() {
               className={styles.filter}
             />
           )}
-          <div id="sent-invites-list" className={styles.list}>
-            {shown.map((invite, index) => (
-              <FadeIn key={invite.code} delay={index * 60}>
-                <SentInviteRow
-                  invite={invite}
-                  t={t}
-                  fmt={fmt}
-                  onRevoke={handleRevoke}
-                  isRevoking={revokingId === invite.id}
-                  onResend={handleResend}
-                  isResending={resendingId === invite.id}
-                />
-              </FadeIn>
+          {/* A single FadeIn on the list container. Rows are re-derived on every
+              filter tab change, so a per-row `delay={index * 60}` stagger
+              replayed the whole cascade on each switch, and each wrapper also
+              created its own `will-change: transform` stacking context. */}
+          <FadeIn id="sent-invites-list" className={styles.list}>
+            {shown.map((invite) => (
+              <SentInviteRow
+                key={invite.code}
+                invite={invite}
+                t={t}
+                fmt={fmt}
+                onRevoke={setInviteToRevoke}
+                isRevoking={revokingId === invite.id}
+                onResend={handleResend}
+                isResending={resendingId === invite.id}
+              />
             ))}
-          </div>
+          </FadeIn>
         </>
       )}
+      <ConfirmDialog
+        open={inviteToRevoke !== null}
+        tone="destructive"
+        onClose={() => setInviteToRevoke(null)}
+        onConfirm={handleRevokeConfirmed}
+        title={t("auth:invite.sentList.revokeConfirm.title")}
+        description={t("auth:invite.sentList.revokeConfirm.body", {
+          code: inviteToRevoke?.code ?? "",
+        })}
+        confirmLabel={t("auth:invite.sentList.revokeConfirm.confirm")}
+        cancelLabel={t("auth:invite.sentList.revokeConfirm.cancel")}
+      />
     </section>
   );
 }

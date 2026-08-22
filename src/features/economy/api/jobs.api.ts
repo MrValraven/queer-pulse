@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO, Paginated } from "../../../shared/api/refs";
 import type { CreateCompanyDto } from "./companies.api";
@@ -165,3 +165,41 @@ export const applyToJob = (slug: string, dto: CreateJobApplicationDto) =>
  */
 export const getMyApplications = () =>
   apiGet<JobApplicationDTO[]>("/me/applications");
+
+/**
+ * The three states a poster can move an application INTO. `submitted` is where
+ * an application starts and is deliberately absent: the backend refuses a move
+ * back to it, and `reviewing` can only be reached from `submitted`.
+ */
+export type JobApplicationDecision = "reviewing" | "accepted" | "declined";
+
+/**
+ * GET /jobs/:slug/applications — the poster's view of who applied to their own
+ * listing. Poster only: 403 for anyone else, 404 for an unknown slug. Bounded
+ * server-side to the standard list limit.
+ */
+export const getJobApplications = (slug: string, signal?: AbortSignal) =>
+  apiGet<JobApplicationDTO[]>(
+    `/jobs/${slug}/applications`,
+    undefined,
+    undefined,
+    signal,
+  );
+
+/**
+ * PATCH /jobs/:slug/applications/:id — the poster's decision (BE-HSG-16).
+ * Before this route existed every application was permanently `submitted` for
+ * both sides. A decision is one-way: 409 when the application was already
+ * decided (including a concurrent second decision), 403 when the caller is not
+ * the poster. The applicant hears about it by direct message, which the backend
+ * sends.
+ */
+export const decideJobApplication = (
+  slug: string,
+  applicationId: string,
+  status: JobApplicationDecision,
+) =>
+  apiPatch<JobApplicationDTO>(
+    `/jobs/${slug}/applications/${applicationId}`,
+    { status },
+  );

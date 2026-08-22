@@ -249,9 +249,19 @@ export function vouchBadgeLabelKey(meta: ConnectionMeta): string | undefined {
   return meta.vouchBadge ? VOUCH_LABEL_KEY[meta.vouchBadge] : undefined;
 }
 
-/** Catalog key for the note shown on a card in the Vouched-for tab. */
-export function vouchNoteKey(slug: string, youVouched: boolean): string {
-  const badge = CONNECTION_META[slug]?.vouchBadge;
+/**
+ * Catalog key for the note shown on a card in the Vouched-for tab.
+ *
+ * Takes the badge off the card's own view (`view.meta.vouchBadge`), which the
+ * live adapter fills from the server and the demo path fills from
+ * `CONNECTION_META`. It must NOT look the slug up in `CONNECTION_META` itself:
+ * a live slug misses that mock table, so every live card fell through to
+ * "You vouched" even when the server said otherwise.
+ */
+export function vouchNoteKey(
+  badge: ConnectionMeta["vouchBadge"],
+  youVouched: boolean,
+): string {
   const theyVouched = badge === "vouched-for-you" || badge === "mutual";
   if (youVouched && theyVouched) return "connect:vouch.bothWays";
   if (youVouched) return "connect:vouch.byYou";

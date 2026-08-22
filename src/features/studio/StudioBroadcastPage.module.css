@@ -5,7 +5,6 @@
   --line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.05);
   --rail: var(--studio-rail);
-  --jade-light: #9be0bd;
   padding: 8px 0 60px;
 }
 
@@ -271,7 +270,7 @@
   background: linear-gradient(
     90deg,
     var(--jade) 0%,
-    #e0b64d 62%,
+    var(--amber) 62%,
     var(--accent) 100%
   );
   transition: width 0.12s linear;
@@ -463,9 +462,9 @@
   border: 1px solid rgba(var(--jade-rgb), 0.3);
 }
 .badgeHold {
-  color: #e0b64d;
-  background: rgba(224, 182, 77, 0.14);
-  border: 1px solid rgba(224, 182, 77, 0.32);
+  color: var(--amber);
+  background: rgba(var(--amber-rgb), 0.14);
+  border: 1px solid rgba(var(--amber-rgb), 0.32);
 }
 .cueFoot {
   font-size: 12.5px;

@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiShield } from "react-icons/fi";
-import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
+import {
+  Button,
+  ComingSoon,
+  HubBackLink,
+  Reveal,
+} from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Translation } from "../../shared/i18n/Translation";
@@ -114,11 +119,17 @@ export function CoopPhases() {
 function CoopCard({
   coop,
   onCta,
+  isSecondaryCtaAvailable,
 }: {
   coop: FormingCoop;
   onCta: (coop: FormingCoop) => void;
+  /** False while "read updates" / "request mentoring" have no backend. */
+  isSecondaryCtaAvailable: boolean;
 }) {
   const { t } = useTranslation();
+  // "Ask to join" always works; the other two kinds show as disabled with a
+  // coming-soon badge so the state is readable before anyone clicks.
+  const isCtaWired = coop.cta.kind === "join" || isSecondaryCtaAvailable;
   return (
     <div className={styles.coopCard}>
       <div className={styles.ccHead}>
@@ -182,12 +193,21 @@ function CoopCard({
             {coop.location.split("·")[1]?.trim() ?? coop.location}
           </span>
         )}
-        <Button
-          variant={coop.cta.kind === "join" ? "primary" : "ghost"}
-          onClick={() => onCta(coop)}
-        >
-          {coop.cta.label}
-        </Button>
+        {isCtaWired ? (
+          <Button
+            variant={coop.cta.kind === "join" ? "primary" : "ghost"}
+            onClick={() => onCta(coop)}
+          >
+            {coop.cta.label}
+          </Button>
+        ) : (
+          <div className={styles.ccCtaSoon}>
+            <Button variant="ghost" disabled>
+              {coop.cta.label}
+            </Button>
+            <ComingSoon />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -199,10 +219,14 @@ export function CoopGrid({
   onCta,
   onSeeAll,
   onStart,
+  isSecondaryCtaAvailable,
 }: {
   onCta: (coop: FormingCoop) => void;
-  onSeeAll: () => void;
-  onStart: () => void;
+  /** Omitted while there is no full co-op directory to open. */
+  onSeeAll?: () => void;
+  /** Omitted while there is no "post that you're starting" endpoint. */
+  onStart?: () => void;
+  isSecondaryCtaAvailable: boolean;
 }) {
   const { t } = useTranslation();
   const { data: coops = [], isLoading } = useHousingCoops();
@@ -216,7 +240,7 @@ export function CoopGrid({
               components={{ em: <em /> }}
             />
           </h2>
-          {coops.length > 0 && (
+          {coops.length > 0 && onSeeAll && (
             <button type="button" className={styles.all} onClick={onSeeAll}>
               {t("economy:housingCoop.grid.seeAll")}{" "}
               <FiArrowRight aria-hidden />
@@ -234,7 +258,12 @@ export function CoopGrid({
         ) : (
           <div className={styles.coopGrid}>
             {coops.map((coop) => (
-              <CoopCard key={coop.id} coop={coop} onCta={onCta} />
+              <CoopCard
+                key={coop.id}
+                coop={coop}
+                onCta={onCta}
+                isSecondaryCtaAvailable={isSecondaryCtaAvailable}
+              />
             ))}
           </div>
         )}
@@ -287,10 +316,15 @@ export function CoopStartCta({
   onPost,
   onStory,
 }: {
-  onPost: () => void;
-  onStory: () => void;
+  /** Omitted while there is no "post that you're starting" endpoint. */
+  onPost?: () => void;
+  /** Omitted while the Casa Sambizanga story has nowhere to open. */
+  onStory?: () => void;
 }) {
   const { t } = useTranslation();
+  // With neither action wired, two dead buttons read worse than one line
+  // saying the posting flow has not opened yet.
+  const hasAnyAction = Boolean(onPost ?? onStory);
   return (
     <section className={styles.startCta}>
       <div className="wrap">
@@ -311,14 +345,24 @@ export function CoopStartCta({
                 components={{ em: <em /> }}
               />
             </p>
-            <div className={styles.scActs}>
-              <Button variant="primary" onClick={onPost}>
-                {t("economy:housingCoop.startCta.postCta")}
-              </Button>
-              <Button variant="ghost-dark" onClick={onStory}>
-                {t("economy:housingCoop.startCta.storyCta")}
-              </Button>
-            </div>
+            {hasAnyAction ? (
+              <div className={styles.scActs}>
+                {onPost && (
+                  <Button variant="primary" onClick={onPost}>
+                    {t("economy:housingCoop.startCta.postCta")}
+                  </Button>
+                )}
+                {onStory && (
+                  <Button variant="ghost-dark" onClick={onStory}>
+                    {t("economy:housingCoop.startCta.storyCta")}
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <p className={styles.scSoonNote}>
+                {t("economy:housingCoop.startCta.comingSoonNote")}
+              </p>
+            )}
           </div>
           <div className={styles.scResources}>
             <div className={styles.srHead}>

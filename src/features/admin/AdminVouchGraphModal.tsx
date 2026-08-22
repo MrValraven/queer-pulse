@@ -1,8 +1,21 @@
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useId, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { FiLock, FiPlay, FiSearch, FiUser, FiX } from "react-icons/fi";
+import {
+  FiChevronRight,
+  FiLock,
+  FiPlay,
+  FiSearch,
+  FiUser,
+  FiX,
+} from "react-icons/fi";
 import { useScrollLock } from "../../shared/hooks";
 import { SkeletonLine } from "../../shared/components/ui";
+import {
+  pushModal,
+  popModal,
+  isTopmostModal,
+} from "../../shared/components/ui/modalStack";
+import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { VouchGraphCanvas } from "./VouchGraphCanvas";
@@ -42,7 +55,12 @@ function PathBar({
     content = path ? (
       <span>
         <b>{t("admin:vouchGraph.pathbar.stepPath", { count: path.length })}</b>{" "}
-        {path.map((id) => graph.peopleById[id]!.initials).join(" → ")}
+        {path.map((id, step) => (
+          <Fragment key={`${id}-${step}`}>
+            {step > 0 && <AdminArrowSeparator />}
+            {graph.peopleById[id]!.initials}
+          </Fragment>
+        ))}
       </span>
     ) : (
       <span>
@@ -194,7 +212,7 @@ function GraphModalShell({
 }
 
 /**
- * The inspector plus its "Cite" confirm dialog (ADM-9) — owns
+ * The inspector plus its "Cite" confirm dialog (ADM-9). Owns
  * `useVouchGraphInspectorActions` itself so `GraphModalInner` stays under the
  * repo's 200-line component limit. Extracted rather than inlined because the
  * dialog needs the same action-state (`citingId`/`citeFromGraph`) the
@@ -299,7 +317,9 @@ function GraphModalInner({
                 >
                   {graph.peopleById[id]!.initials}
                 </button>
-                <span className={styles.crumbSep}>›</span>
+                <span className={styles.crumbSep} aria-hidden>
+                  <FiChevronRight />
+                </span>
               </Fragment>
             ))}
             <span className={`${styles.crumb} ${styles.crumbCur}`}>
@@ -426,7 +446,7 @@ export function AdminVouchGraphModal({
 }) {
   const { t } = useTranslation();
   useScrollLock();
-  // The member the graph is currently centered on — starts as the member the
+  // The member the graph is currently centered on. It starts as the member the
   // drawer opened for, but the member-finder (ADM-10) can jump it to anyone.
   const [activeFocus, setActiveFocus] = useState(focusSlug);
   const [memberSearch, setMemberSearch] = useState("");
@@ -435,11 +455,28 @@ export function AdminVouchGraphModal({
   // member-finder pick always resolve (ADM-10).
   const { data, isLoading } = useTrustNetwork(activeFocus);
 
+  // Stable per-instance id so the graph registers itself on the shared modal
+  // stack (`shared/components/ui/modalStack`), same as `AdminDrawer` and
+  // `AdminModal`. Two things depend on it (FE-ADM-28): the graph only reacts
+  // to Escape while it is the topmost dialog, so backing out of the "Cite"
+  // `ConfirmDialog` on top no longer tears the whole graph down and loses the
+  // focus node, the crumbs and the replay position; and the member drawer
+  // underneath stops closing on the same press, because the graph now sits
+  // above it on the stack.
+  const graphModalId = useId();
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    pushModal(graphModalId);
+    return () => popModal(graphModalId);
+  }, [graphModalId]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isTopmostModal(graphModalId)) onClose();
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, graphModalId]);
 
   if (isLoading || !data) {
     return (
@@ -473,8 +510,8 @@ export function AdminVouchGraphModal({
     <TrustGraphProvider data={data}>
       <GraphModalInner
         // Remounts the whole inner view (crumbs/expanded/selection reset)
-        // when the member-finder jumps to a different member — appropriate
-        // for a jump across the platform, not a within-network recenter.
+        // when the member-finder jumps to a different member, which suits a
+        // jump across the platform rather than a within-network recenter.
         key={activeFocus}
         focusSlug={activeFocus}
         onClose={onClose}

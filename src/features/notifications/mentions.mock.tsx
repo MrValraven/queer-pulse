@@ -4,6 +4,14 @@ import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Mention, MentionAction, MentionCategory } from "./mentions.data";
 
+/** Milliseconds per unit the seeds express their age in. */
+const UNIT_MS = { minute: 60_000, hour: 3_600_000, day: 86_400_000 } as const;
+
+/** A seed's creation moment, `amount` units before now. */
+function ago(amount: number, unit: keyof typeof UNIT_MS): Date {
+  return new Date(Date.now() - amount * UNIT_MS[unit]);
+}
+
 // Heavy demo-only mention seed registry + builder. Imported *only* via the
 // demo-gated dynamic import() in api/useMentions.ts so it code-splits out of
 // the live bundle (live mode has no mentions endpoint yet and returns []).
@@ -17,6 +25,9 @@ interface MentionSeed {
   category: MentionCategory;
   context: (t: TFunction) => ReactNode;
   when: (fmt: Formatters) => string;
+  /** The moment behind `when`, so the panel can name the oldest unread mention
+   *  from the data instead of a hardcoded phrase. */
+  createdAt: () => Date;
   fresh?: boolean;
   unread?: boolean;
   content: ReactNode;
@@ -36,6 +47,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     category: "post",
     context: (t) => t("notifications:mentions.context.reply"),
     when: (fmt) => fmt.relativeTime(-14, "minute"),
+    createdAt: () => ago(14, "minute"),
     fresh: true,
     unread: true,
     content: (
@@ -62,6 +74,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     category: "article",
     context: (t) => t("notifications:mentions.context.articleComment"),
     when: (fmt) => fmt.relativeTime(-3, "hour"),
+    createdAt: () => ago(3, "hour"),
     fresh: true,
     unread: true,
     content: (
@@ -89,6 +102,7 @@ const MENTION_SEEDS: MentionSeed[] = [
       />
     ),
     when: (fmt) => fmt.relativeTime(-6, "hour"),
+    createdAt: () => ago(6, "hour"),
     fresh: true,
     unread: true,
     content: (
@@ -115,6 +129,7 @@ const MENTION_SEEDS: MentionSeed[] = [
       />
     ),
     when: (fmt) => fmt.relativeTime(-1, "day"),
+    createdAt: () => ago(1, "day"),
     content: (
       <>
         "For anyone going to <mark>@tomás</mark>'s portfolio night on Wed.
@@ -133,6 +148,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     category: "post",
     context: (t) => t("notifications:mentions.context.thread"),
     when: (fmt) => fmt.relativeTime(-1, "day"),
+    createdAt: () => ago(1, "day"),
     content: (
       <>
         "<mark>@tomás</mark> ran a great session at the riso night. Recommend
@@ -152,6 +168,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     category: "event",
     context: (t) => t("notifications:mentions.context.eventInvite"),
     when: (fmt) => fmt.date(new Date(2026, 5, 15), { weekday: "short" }),
+    createdAt: () => new Date(2026, 5, 15),
     content: (
       <>
         "Inviting <mark>@tomás</mark>, <mark>@luísa</mark>, and{" "}
@@ -171,6 +188,7 @@ const MENTION_SEEDS: MentionSeed[] = [
     category: "post",
     context: (t) => t("notifications:mentions.context.reply"),
     when: (fmt) => fmt.date(new Date(2026, 5, 13), { weekday: "short" }),
+    createdAt: () => new Date(2026, 5, 13),
     content: (
       <>
         "<mark>@tomás</mark>, your Issue 5 long-read is the piece that got me
@@ -194,6 +212,7 @@ const MENTION_SEEDS: MentionSeed[] = [
       />
     ),
     when: (fmt) => fmt.date(new Date(2026, 5, 12), { weekday: "short" }),
+    createdAt: () => new Date(2026, 5, 12),
     content: (
       <>
         "<mark>@tomás</mark>, could you message me about the post-march
@@ -233,6 +252,7 @@ export function buildMentionDays(
       category: seed.category,
       context: seed.context(t),
       when: seed.when(fmt),
+      createdAtIso: seed.createdAt().toISOString(),
       fresh: seed.fresh,
       unread: seed.unread,
       content: seed.content,

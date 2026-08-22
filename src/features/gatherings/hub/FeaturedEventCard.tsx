@@ -2,6 +2,7 @@ import { Button, Eyebrow, ImageSlot } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import type { CalendarEvent } from "../data";
+import { eventZoneFormat } from "../eventTimezone";
 import styles from "./FeaturedEventCard.module.css";
 
 /**
@@ -14,6 +15,9 @@ export function FeaturedEventCard({ lead }: { lead: CalendarEvent | null }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   if (!lead) return null;
+  // The lead reads on the event's own clock, labelled when it isn't the
+  // reader's own (see `eventZoneFormat`).
+  const zone = eventZoneFormat(lead.timezone, lead.date);
 
   return (
     <div className="wrap">
@@ -33,9 +37,14 @@ export function FeaturedEventCard({ lead }: { lead: CalendarEvent | null }) {
           <Eyebrow>{t("gatherings:hub.featured.eyebrow")}</Eyebrow>
           <h2 className={styles.title}>{lead.title}</h2>
           <p className={styles.meta}>
-            {fmt.date(lead.date, { weekday: "long", day: "numeric", month: "long" })}
+            {fmt.date(lead.date, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              ...zone.dateOptions,
+            })}
             {" · "}
-            {fmt.time(lead.date)}
+            {fmt.time(lead.date, zone.timeOptions)}
             {" · "}
             {lead.hood}
           </p>

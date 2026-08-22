@@ -85,7 +85,7 @@
   min-width: 180px;
   padding: 8px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(45, 27, 61, 0.14);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
   background: var(--paper);
   font-size: 13px;
   color: var(--text-strong);
@@ -155,7 +155,7 @@
   top: 2px;
   width: 5px;
   height: 10px;
-  border: solid #fff;
+  border: solid var(--paper);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
@@ -166,7 +166,7 @@
   right: 4px;
   top: 8.5px;
   height: 2px;
-  background: #fff;
+  background: var(--paper);
   border-radius: 1px;
 }
 .rowCheckbox:focus-visible {

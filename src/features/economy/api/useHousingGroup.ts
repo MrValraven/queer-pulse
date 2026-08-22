@@ -6,8 +6,7 @@ import {
   groupDtoToVettedGroup,
   listingDtoToGroupListing,
 } from "./housingGroups.adapters";
-
-const HOUSING_GROUP_KEY = "housing-group";
+import { economyKeys } from "./economyKeys";
 
 /**
  * One group plus its visible listings, for the detail view. Demo mode reads the
@@ -18,7 +17,7 @@ const HOUSING_GROUP_KEY = "housing-group";
 export function useHousingGroup(slug: string | undefined) {
   const { demoMode } = useDemoMode();
   return useQuery<VettedGroup | null>({
-    queryKey: [HOUSING_GROUP_KEY, slug, demoMode],
+    queryKey: economyKeys.housingGroup(slug, demoMode),
     enabled: Boolean(slug),
     queryFn: async () => {
       if (demoMode) {

@@ -8,7 +8,7 @@ import {
   type TintKey,
 } from "./startCommunity.data";
 import { ownerStewardFrom } from "./useCommunityForm";
-import { connectionViews } from "../../connect/connections.data";
+import { useConnectionsList } from "../../connect/api/useConnectionsList";
 import { useAuth } from "../../../app/providers/authContext";
 import { AvatarStack } from "../../../shared/components/ui";
 import styles from "./StartCommunityPage.module.css";
@@ -35,15 +35,23 @@ export function StartCommunityPreview({ draft }: { draft: CommunityDraft }) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const owner = ownerStewardFrom(user);
-  // Invited members are your real connections, resolved from their slugs to
-  // face-pile rows (name/initials/tint) — no hardcoded personas.
-  const invited = connectionViews(draft.invites).map((view) => ({
-    key: view.slug,
-    name: view.name,
-    initials: view.initials,
-    src: view.photo,
-    tint: view.tint,
-  }));
+  // Invitees are resolved from the SAME connections list the picker on chapter
+  // 7 offers (`useConnectionsList` — the mock relationships in demo, the
+  // server's own list in live), sharing its react-query cache. Resolving them
+  // through the static `connections.data` registry instead meant a live
+  // founder's real picks silently vanished from this preview, and a live slug
+  // that happened to collide with a mock one put a stranger's face here.
+  const { views: connections } = useConnectionsList("all");
+  const invited = draft.invites
+    .map((slug) => connections.find((view) => view.slug === slug))
+    .filter((view): view is (typeof connections)[number] => Boolean(view))
+    .map((view) => ({
+      key: view.slug,
+      name: view.name,
+      initials: view.initials,
+      src: view.photo,
+      tint: view.tint,
+    }));
   const roster = [owner, ...invited];
   const handle = (draft.handle || "").trim();
   const access = ACCESS_OPTIONS.find((a) => a.tier === draft.accessTier);

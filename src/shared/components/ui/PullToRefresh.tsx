@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { m, useTransform } from "motion/react";
 import { useMotionPrefs } from "../../../app/providers/MotionProvider";
+import { useTranslation } from "../../i18n/useTranslation";
 import { usePullToRefresh, DEFAULT_THRESHOLD_PX } from "./usePullToRefresh";
 import { Spinner } from "./Spinner";
 import styles from "./PullToRefresh.module.css";
@@ -37,6 +38,7 @@ export function PullToRefresh({
   children: ReactNode;
 }) {
   const { reducedMotion } = useMotionPrefs();
+  const { t } = useTranslation();
   const { pull, refreshing, bind } = usePullToRefresh({ onRefresh, disabled });
 
   const contentY = useTransform(pull, (value) => (reducedMotion ? 0 : value));
@@ -63,7 +65,9 @@ export function PullToRefresh({
         {children}
       </m.div>
       <span className="visuallyHidden" role="status" aria-live="polite">
-        {refreshing ? "Refreshing…" : ""}
+        {/* Translated: this is announced aloud, and a Portuguese member was
+            hearing an English word mid-gesture. */}
+        {refreshing ? t("shared:loading.label") : ""}
       </span>
     </div>
   );

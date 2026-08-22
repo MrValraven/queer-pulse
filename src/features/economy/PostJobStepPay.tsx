@@ -74,7 +74,7 @@ export function PostJobStepPay({ form }: { form: PostJobForm }) {
               type="number"
               value={state.rateMax}
               onChange={(e) => patch({ rateMax: e.target.value })}
-              placeholder="—"
+              placeholder={t("economy:postJob.step3.maxPlaceholder")}
             />
           </div>
           <div className={styles.field} style={{ marginBottom: 0 }}>

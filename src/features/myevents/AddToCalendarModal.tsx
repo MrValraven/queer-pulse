@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { FiCalendar, FiDownload } from "react-icons/fi";
 import { SiApple, SiGoogle } from "react-icons/si";
 import { Button, ModalSheet } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   downloadIcsFile,
@@ -66,8 +67,12 @@ export function AddToCalendarModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { toast } = useMyEvents();
-  const dateLabel = parseDate(ev.date).toLocaleDateString(undefined, {
+  // Through the app's own locale (`useFormat`), like every sibling surface —
+  // `toLocaleDateString(undefined, …)` followed the BROWSER's locale, so a
+  // member reading the app in PT on an EN device saw this one date in English.
+  const dateLabel = fmt.date(parseDate(ev.date), {
     weekday: "short",
     month: "short",
     day: "numeric",

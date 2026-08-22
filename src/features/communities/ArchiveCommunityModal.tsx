@@ -50,10 +50,18 @@ export function ArchiveCommunityModal({
       onClose={onClose}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={archive.isPending}>
+          <Button
+            variant="ghost"
+            onClick={onClose}
+            disabled={archive.isPending}
+          >
             {t("communities:detail.dangerZone.archive.confirm.cancel")}
           </Button>
-          <Button variant="danger" onClick={onConfirm} disabled={archive.isPending}>
+          <Button
+            variant="danger"
+            onClick={onConfirm}
+            disabled={archive.isPending}
+          >
             {t("communities:detail.dangerZone.archive.confirm.confirmCta")}
           </Button>
         </>

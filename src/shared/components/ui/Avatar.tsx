@@ -50,21 +50,13 @@ export function Avatar({
   } as CSSProperties;
 
   const px = Math.round(size * 2);
-  // For Unsplash images, request a face-aware crop at 2× the render size
-  // so small avatars don't get an off-center or blurry crop. Google/OAuth
-  // avatars get their size directive bumped the same way (see resolveAvatarSrc).
-  const resolvedSrc = src?.includes("unsplash.com")
-    ? (() => {
-        const url = new URL(src);
-        url.searchParams.set("w", String(px));
-        url.searchParams.set("h", String(px));
-        url.searchParams.set("fit", "crop");
-        url.searchParams.set("crop", "faces");
-        url.searchParams.set("auto", "format");
-        url.searchParams.set("q", "80");
-        return url.toString();
-      })()
-    : resolveAvatarSrc(src, px);
+  // One resolver for every host. Unsplash gets a face-aware square crop at 2x
+  // the render size so small avatars aren't off-centre or blurry; Google/OAuth
+  // avatars get their size directive bumped. This used to build the Unsplash URL
+  // inline with an unguarded `new URL(src)`, which THREW during render on a
+  // malformed src that happened to contain "unsplash.com" — `resolveAvatarSrc`
+  // guards the parse and returns the input untouched instead.
+  const resolvedSrc = resolveAvatarSrc(src, px, { isFaceCrop: true });
 
   return (
     <div

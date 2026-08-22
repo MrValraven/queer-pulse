@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./OnboardingPage.module.css";
 import { TOTAL_STEPS } from "./onboardingPage.data";
@@ -69,13 +69,12 @@ export function OnboardingPage() {
   // Reaching the final step (StepDone) is what "finished onboarding" means:
   // stamp it on the member so the auth gate keeps them out of this one-time
   // wizard on a later visit (e.g. browser-autofilled /auth/onboarding). Fired
-  // once, best-effort — a failure just risks seeing the wizard again, never
-  // blocks finishing — and never in demo mode (no backend). The server call is
-  // idempotent, so a stray double-fire is harmless.
+  // once per successful attempt, never in demo mode (no backend). The server
+  // call is idempotent, so a stray double-fire is harmless.
   const stampedRef = useRef(false);
-  useEffect(() => {
+  const [hasStampFailed, setHasStampFailed] = useState(false);
+  const stampCompletion = useCallback(() => {
     if (demoMode || stampedRef.current) return;
-    if (step !== TOTAL_STEPS - 1) return;
     stampedRef.current = true;
     void postCompleteOnboarding(guidelinesVersion)
       .then(({ onboardedAt }) => {
@@ -83,21 +82,32 @@ export function OnboardingPage() {
         // won't replay the wizard later in this session (e.g. browser autofill of
         // the saved /auth/onboarding URL) off a stale `onboardedAt: null`.
         markOnboarded(onboardedAt);
-      })
-      .catch(() => {
-        // Best-effort: leave the flag set so we don't hammer the endpoint; the
-        // gate's backfill and a future finish cover the miss.
-      })
-      .finally(() => {
-        // Onboarding is finished — drop the resume marker so a later visit never
-        // reopens the wizard mid-flow. The hook offers no remove, so we clear its
-        // per-user bucket key directly (this path is always live with a real
-        // scope; the key mirrors `useScopedLocalStorage`'s `${base}.u.<id>`).
+        setHasStampFailed(false);
+        // Only NOW is onboarding genuinely finished — drop the resume marker so
+        // a later visit never reopens the wizard mid-flow. Clearing it on
+        // failure too (the old `.finally`) was the worst of both: the gate still
+        // bounced the member back in on `onboardedAt: null`, and with the marker
+        // gone they restarted at step 0 and re-ran every save. The hook offers no
+        // remove, so we clear its per-user bucket key directly (this path is
+        // always live with a real scope; the key mirrors
+        // `useScopedLocalStorage`'s `${base}.u.<id>`).
         if (persistScope) {
           safeStorage.remove(`${ONBOARDING_STEP_KEY}.u.${persistScope}`);
         }
+      })
+      .catch(() => {
+        // Offline on the last step is common on mobile. Release the guard so the
+        // member can retry from StepDone, keep the resume marker, and say so
+        // rather than swallowing it.
+        stampedRef.current = false;
+        setHasStampFailed(true);
       });
-  }, [step, demoMode, markOnboarded, persistScope, guidelinesVersion]);
+  }, [demoMode, markOnboarded, persistScope, guidelinesVersion]);
+
+  useEffect(() => {
+    if (step !== TOTAL_STEPS - 1) return;
+    stampCompletion();
+  }, [step, stampCompletion]);
 
   // Focus management: on each step transition the `key={step}` remount drops
   // focus to <body>, so keyboard and screen-reader users lose their place. Move
@@ -184,7 +194,13 @@ export function OnboardingPage() {
               onBack={() => go(4)}
             />
           )}
-          {step === 6 && <StepDone stepLabel={stepLabel} />}
+          {step === 6 && (
+            <StepDone
+              stepLabel={stepLabel}
+              hasStampFailed={hasStampFailed}
+              onRetryStamp={stampCompletion}
+            />
+          )}
         </div>
       </div>
     </div>

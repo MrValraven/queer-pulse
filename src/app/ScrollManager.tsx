@@ -53,6 +53,32 @@ function isInternallyScrolledPath(pathname: string): boolean {
 const scrollPositions = new Map<string, number>();
 
 /**
+ * How many entries the map keeps. Each navigation adds one `location.key`, and
+ * keys already popped past can never be restored to, so without a cap a long
+ * PWA session grows this forever and holds stale offsets for entries that are
+ * unreachable. A hundred is far more history than any Back gesture walks.
+ */
+const MAX_REMEMBERED_POSITIONS = 100;
+
+/**
+ * Record an offset, evicting the oldest entries once the map is full. `Map`
+ * iterates in insertion order and `set` on an existing key keeps its original
+ * position, so re-recording the CURRENT route (which happens on every scroll
+ * event) never refreshes its place in the queue — delete first so the entry
+ * being actively written is always the youngest and can never be evicted while
+ * the member is still on it.
+ */
+function rememberPosition(key: string, offset: number): void {
+  scrollPositions.delete(key);
+  scrollPositions.set(key, offset);
+  while (scrollPositions.size > MAX_REMEMBERED_POSITIONS) {
+    const oldest = scrollPositions.keys().next();
+    if (oldest.done) break;
+    scrollPositions.delete(oldest.value);
+  }
+}
+
+/**
  * The scroll-map key for a pathname: the tab-root key ONLY when `pathname` IS
  * a tab root itself (so a Back navigation onto the tab restores its remembered
  * offset), else the per-history-entry key. A detail page one level under a tab
@@ -93,7 +119,7 @@ export function ScrollManager() {
       // `history.back()` (a POP) would then restore the page to the top. Skip
       // until the lock releases (which restores the true offset first).
       if (isScrollLocked()) return;
-      scrollPositions.set(scrollMapKey, window.scrollY);
+      rememberPosition(scrollMapKey, window.scrollY);
     };
     window.addEventListener("scroll", recordPosition, { passive: true });
     return () => {
