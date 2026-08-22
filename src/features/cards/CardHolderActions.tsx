@@ -9,8 +9,14 @@ export type PendingCardStatus = {
 };
 
 /**
- * The status controls an issuer has over one card: pause and revoke while it
- * works, reinstate once it does not.
+ * The controls an issuer has over one card: pause and revoke while it works,
+ * reinstate once it does not, and replace when the physical card is gone.
+ *
+ * Replace is deliberately separate from reinstate. Reinstating revives the
+ * same card and therefore the same permanent code, which is right when a
+ * revocation was a mistake. Replacing moves the code to a new generation, so
+ * the paper in someone else's pocket stops scanning while the member's own
+ * card carries on.
  *
  * Its own file because both the roster row and the modal that shows the card
  * in full offer the same three actions, and a mod who opens a card should not
@@ -21,10 +27,12 @@ export type PendingCardStatus = {
 export function CardHolderActions({
   holder,
   onRequestStatus,
+  onRequestReplace,
   className,
 }: {
   holder: IssuerCardDTO;
   onRequestStatus: (pending: PendingCardStatus) => void;
+  onRequestReplace: (holder: IssuerCardDTO) => void;
   className?: string;
 }) {
   const { t } = useTranslation();
@@ -75,6 +83,21 @@ export function CardHolderActions({
           })}
         >
           {t("cards:holders.reinstate")}
+        </Button>
+      )}
+      {/* Not offered on a revoked card: its code already resolves to a
+          refusal, so moving it to a new generation would change nothing a
+          door can see. */}
+      {holder.status !== "revoked" && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onRequestReplace(holder)}
+          aria-label={t("cards:holders.replaceAria", {
+            name: holder.holderName,
+          })}
+        >
+          {t("cards:holders.replace")}
         </Button>
       )}
     </div>

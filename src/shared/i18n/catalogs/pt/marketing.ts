@@ -1773,6 +1773,10 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.printed-membership-cards.title":
+    "Cartões de membro para imprimir",
+  "changelog.entries.printed-membership-cards.body":
+    "As comunidades podem agora imprimir cartões de membro físicos, numa folha que se corta e dobra. Um cartão impresso mostra o mesmo código do cartão no telemóvel, por isso qualquer pessoa o pode verificar à porta. Se um cartão se perder, os moderadores podem substituí-lo: todas as cópias impressas deixam de funcionar de imediato e o cartão no telemóvel continua a funcionar.",
   "changelog.entries.profile-back-to-origin.title":
     "A saída de um perfil leva-te de volta a onde estavas",
   "changelog.entries.profile-back-to-origin.body":

@@ -37,6 +37,7 @@ const valid = {
   role: "member",
   serial: "LQC-7K4M2",
   memberSince: "2026-02-14T10:00:00Z",
+  hasPhoto: true,
 };
 
 describe("CardVerifyPage", () => {
@@ -91,5 +92,42 @@ describe("CardVerifyPage", () => {
     const { container } = renderAt();
     await findStatus(/no longer valid/i);
     expect(container.textContent ?? "").not.toContain("safety report");
+  });
+
+  it("tells the door to check the photo when the card carries one", async () => {
+    vi.spyOn(hook, "useCardVerification").mockReturnValue({
+      verification: { ...valid, hasPhoto: true },
+      isLoading: false,
+      isInvalid: false,
+    });
+    renderAt();
+    expect(
+      await screen.findByText(/check the photo on the card/i),
+    ).toBeInTheDocument();
+  });
+
+  it("says there is no face to check when the card carries none", async () => {
+    vi.spyOn(hook, "useCardVerification").mockReturnValue({
+      verification: { ...valid, hasPhoto: false },
+      isLoading: false,
+      isInvalid: false,
+    });
+    renderAt();
+    expect(await screen.findByText(/carries no photo/i)).toBeInTheDocument();
+  });
+
+  // A door cannot act on an instruction about a card that is already refused.
+  it("gives no check instruction for a card that is not active", async () => {
+    vi.spyOn(hook, "useCardVerification").mockReturnValue({
+      verification: { ...valid, status: "revoked", hasPhoto: true },
+      isLoading: false,
+      isInvalid: false,
+    });
+    renderAt();
+    // Waits for the page's translated content to land BEFORE asserting the
+    // absence. A bare synchronous query would pass while the lazy catalog was
+    // still loading, so it would hold even if the instruction were coming.
+    await findStatus(/no longer valid/i);
+    expect(screen.queryByText(/check the photo/i)).not.toBeInTheDocument();
   });
 });

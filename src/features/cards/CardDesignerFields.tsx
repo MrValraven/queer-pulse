@@ -44,6 +44,9 @@ export interface CardDesignerFieldsProps {
   /** How those photos are printed. */
   photoStyle: CardPhotoStyle;
   onPhotoStyleChange: (style: CardPhotoStyle) => void;
+  /** Whether staff may print physical copies of these cards. */
+  allowsPrint: boolean;
+  onAllowsPrintChange: (allows: boolean) => void;
 }
 
 /** The form controls, split out of `CardDesignerModal` to keep each
@@ -69,6 +72,8 @@ export function CardDesignerFields({
   onAllowsMemberPhotoChange,
   photoStyle,
   onPhotoStyleChange,
+  allowsPrint,
+  onAllowsPrintChange,
 }: CardDesignerFieldsProps) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -165,6 +170,19 @@ export function CardDesignerFields({
             />
           </FormField>
         ) : null}
+      </div>
+
+      <div className={styles.group}>
+        <div className={styles.groupLabel}>{t("cards:designer.printLabel")}</div>
+        {/* Says what a printed card means for the holder, because a physical
+            card behaves differently from the one on their phone: it can be
+            handed to someone else, and it keeps working until it is replaced. */}
+        <CheckLine
+          checked={allowsPrint}
+          onChange={onAllowsPrintChange}
+          title={t("cards:designer.printCheck")}
+          sub={t("cards:designer.printHelper")}
+        />
       </div>
 
       <div className={styles.group}>

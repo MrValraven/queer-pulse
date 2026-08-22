@@ -1,0 +1,46 @@
+/* Print isolation for the membership-card sheet.
+   On print, hide everything except the sheets ([data-print-root]), so the
+   paper carries only cards — no app chrome, no toolbar. Mirrors the idiom in
+   features/economy/tools/tools.print.css rather than inventing a second one. */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  [data-print-root],
+  [data-print-root] * {
+    visibility: visible;
+  }
+
+  [data-print-root] {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    gap: 0;
+    /* The ground and the skin ARE the card. A printer dropping them would
+       produce a different object from the one the community designed. */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* On screen each sheet is a card-like surface so an owner can see the page
+     boundaries. On paper the sheet IS the page, so it sheds its frame. */
+  [data-print-root] > * {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    break-after: page;
+  }
+
+  [data-print-root] > *:last-child {
+    break-after: auto;
+  }
+
+  @page {
+    /* A4 only for now. Letter is 17.6mm shorter and would overflow a
+       four-row grid, so it needs its own row count rather than this size. */
+    size: A4;
+    margin: 10mm;
+  }
+}

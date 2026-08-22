@@ -3,6 +3,7 @@ import type {
   CardPhotoStyle,
   CardProgramDTO,
   CardSkin,
+  UpsertCardProgramBody,
 } from "./api/cards.api";
 
 export interface CardDesignerDraft {
@@ -28,6 +29,8 @@ export interface CardDesignerDraft {
   backgroundKey: string;
   savedBackgroundKey: string;
   backgroundPreviewUrl: string | null;
+  /** Whether staff may print physical copies of these cards. */
+  allowsPrint: boolean;
   /** Whether these cards carry the holder's photo. */
   allowsMemberPhoto: boolean;
   /** How those photos are printed. Kept in the draft even while photos are
@@ -51,6 +54,7 @@ function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
     backgroundKey: savedBackgroundKey,
     savedBackgroundKey,
     backgroundPreviewUrl: null,
+    allowsPrint: program?.allowsPrint ?? false,
     allowsMemberPhoto: program?.allowsMemberPhoto ?? false,
     photoStyle: program?.photoStyle ?? "color",
   };
@@ -65,6 +69,7 @@ function isSameDraft(a: CardDesignerDraft, b: CardDesignerDraft): boolean {
     a.crestKey === b.crestKey &&
     a.backgroundPreset === b.backgroundPreset &&
     a.backgroundKey === b.backgroundKey &&
+    a.allowsPrint === b.allowsPrint &&
     a.allowsMemberPhoto === b.allowsMemberPhoto &&
     a.photoStyle === b.photoStyle
   );
@@ -116,4 +121,49 @@ export function useCardDesignerDraft(program: CardProgramDTO | null): {
   }, []);
 
   return { draft, set, isDirty: !isSameDraft(draft, baseline) };
+}
+
+/**
+ * The draft, shaped into the body the upsert endpoint takes.
+ *
+ * Pure, and out of `CardDesignerModal` so that component stays under the
+ * repo's 200-line limit. It is also the one place the backend's
+ * absent-versus-null contract is expressed: an ABSENT field leaves the stored
+ * value alone and an explicit null clears it, so a field sent unconditionally
+ * would wipe a crest or a ground set from somewhere else.
+ */
+export function cardProgramUpsertBody(
+  draft: CardDesignerDraft,
+  program: CardProgramDTO | null,
+  cardName: string,
+): UpsertCardProgramBody {
+  return {
+    // Editing must not silently flip a paused programme back on. A programme
+    // that does not exist yet defaults to enabled (there is nothing to
+    // pause); an existing one keeps whatever state it had, and only
+    // ModToolsCardSection's dedicated pause/resume toggle changes that.
+    isEnabled: program?.isEnabled ?? true,
+    skin: draft.skin,
+    accentToken: draft.accentToken,
+    cardName,
+    validityMonths: draft.validityMonths,
+    ...(draft.crestKey !== draft.savedCrestKey
+      ? { crestMediaKey: draft.crestKey || null }
+      : {}),
+    // The ground, on the same contract. The backend clears whichever of the
+    // two is not written, so a card always has exactly one ground.
+    ...(draft.backgroundPreset !== (program?.backgroundPreset ?? null)
+      ? { backgroundPreset: draft.backgroundPreset }
+      : {}),
+    ...(draft.backgroundKey !== draft.savedBackgroundKey
+      ? { backgroundMediaKey: draft.backgroundKey || null }
+      : {}),
+    // Phase 1 has no profile badge to gate (spec §J is Phase 3); the DTO still
+    // requires the field, so this keeps sending the value the backend already
+    // stores rather than exposing a control for a feature that does not exist.
+    allowsPublicBadge: program?.allowsPublicBadge ?? true,
+    allowsPrint: draft.allowsPrint,
+    allowsMemberPhoto: draft.allowsMemberPhoto,
+    photoStyle: draft.photoStyle,
+  };
 }

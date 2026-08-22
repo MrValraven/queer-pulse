@@ -359,6 +359,8 @@ export const adminCommunityMod = (slug: string) =>
   `/admin/communities/${slug}/mod`;
 /** Direct mod-panel access for a community moderator. */
 export const modPanel = (slug: string) => `/mod/${slug}`;
+/** A community's printable sheet of membership cards. Owner and mod only. */
+export const modCardPrint = (slug: string) => `/mod/${slug}/cards/print`;
 /** A recipient's personal invite landing — resolves the inviter from the code. */
 export const inviteLink = (code: string) => `/auth/invite/${code}`;
 /** A forum thread's detail page. */

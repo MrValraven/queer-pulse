@@ -66,3 +66,15 @@
   font-size: 0.85rem;
   margin: 0;
 }
+
+/* The door's instruction. Set apart from the card's facts above it by a
+   hairline, because it is guidance to the reader rather than another field
+   off the card. */
+.check {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  color: rgba(var(--line-rgb), 0.72);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}

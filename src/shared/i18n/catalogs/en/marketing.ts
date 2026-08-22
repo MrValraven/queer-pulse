@@ -1726,6 +1726,10 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.printed-membership-cards.title":
+    "Membership cards you can print",
+  "changelog.entries.printed-membership-cards.body":
+    "Communities can now print physical membership cards for their members, on a sheet you cut and fold. A printed card shows the same code as the one on a member's phone, so anyone can check it at a door. If a card is lost, moderators can replace it: every printed copy stops working straight away, and the member's card on their phone keeps going.",
   "changelog.entries.profile-back-to-origin.title":
     "The way out of a profile goes back where you were",
   "changelog.entries.profile-back-to-origin.body":

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { FiEye, FiEyeOff, FiLock } from "react-icons/fi";
+import { FiEye, FiLock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./DiscreetGate.module.css";
@@ -13,7 +13,23 @@ import styles from "./DiscreetGate.module.css";
  * matters most, since a phone handed over or set down is the realistic case.
  *
  * The children are UNMOUNTED while covered, so the card's QR is not merely
- * hidden by CSS: nothing renders, and `useCardToken` stops minting.
+ * hidden by CSS: nothing renders at all.
+ *
+ * What this gate protects is the SCREEN. It no longer keeps the code out of
+ * memory, because the code is a permanent property of the card and arrives
+ * with it from `/me/cards` rather than being minted while the card is on
+ * show. That is inherent to a code that also has to survive being printed on
+ * a physical card, and it is why the card's real defence against being
+ * copied is the name and face on it being checked at the door.
+ *
+ * `children` is a FUNCTION, handed the quick-hide. The gate used to draw that
+ * control itself, as a button stacked under the card, which left the control
+ * a holder reaches for most sitting a full row away from the object it acts
+ * on. Handing it down instead lets the card mount it in its own corner
+ * cluster beside the flip (see `MembershipCardFace`), where a thumb already
+ * is. The gate still OWNS the covering and only delegates where the control
+ * is drawn, so whatever renders the children owes its holder a way to invoke
+ * this: Escape and a backgrounded tab are not reachable on a phone.
  *
  * `isRevealed` is optionally CONTROLLED: pass it when several gates on the
  * same screen must be mutually exclusive (see `MyCardsPage`, which lifts one
@@ -27,7 +43,7 @@ export function DiscreetGate({
   isRevealed: controlledIsRevealed,
   onVisibilityChange,
 }: {
-  children: ReactNode;
+  children: (hide: () => void) => ReactNode;
   isRevealed?: boolean;
   onVisibilityChange?: (isRevealed: boolean) => void;
 }) {
@@ -43,10 +59,11 @@ export function DiscreetGate({
     [onVisibilityChange],
   );
 
+  const cover = useCallback(() => setRevealed(false), [setRevealed]);
+
   useEffect(() => {
     if (!isRevealed) return;
 
-    const cover = () => setRevealed(false);
     const onVisibility = () => {
       if (document.visibilityState === "hidden") cover();
     };
@@ -60,7 +77,7 @@ export function DiscreetGate({
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isRevealed, setRevealed]);
+  }, [isRevealed, cover]);
 
   if (!isRevealed) {
     return (
@@ -79,16 +96,5 @@ export function DiscreetGate({
     );
   }
 
-  return (
-    <div className={styles.revealed}>
-      {children}
-      <Button
-        variant="ghost"
-        onClick={() => setRevealed(false)}
-        aria-label={t("cards:discreet.hideAria")}
-      >
-        <FiEyeOff aria-hidden="true" /> {t("cards:discreet.hide")}
-      </Button>
-    </div>
-  );
+  return <div className={styles.revealed}>{children(cover)}</div>;
 }

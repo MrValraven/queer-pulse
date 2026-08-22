@@ -6,10 +6,22 @@ import { DiscreetGate } from "./DiscreetGate";
 // DiscreetGate calls useTranslation(), which throws without an I18nProvider
 // in the tree (see StaffBadge.test.tsx / ComingSoon.test.tsx for the same
 // pattern elsewhere in the repo).
+//
+// The child stands in for MembershipCardFace, which mounts the gate's
+// quick-hide in its own corner cluster. The gate hands the callback down
+// rather than drawing the control, so the hand-off is the part worth
+// covering here.
 function renderGate(onVisibilityChange = vi.fn()) {
   render(
     <DiscreetGate onVisibilityChange={onVisibilityChange}>
-      <p>card contents</p>
+      {(hide) => (
+        <>
+          <p>card contents</p>
+          <button type="button" onClick={hide}>
+            Hide
+          </button>
+        </>
+      )}
     </DiscreetGate>,
     { wrapper: I18nProvider },
   );
@@ -34,7 +46,7 @@ describe("DiscreetGate", () => {
     expect(onVisibilityChange).toHaveBeenCalledWith(true);
   });
 
-  it("hides again on the quick-hide control", async () => {
+  it("re-covers itself when the card invokes the quick-hide it was handed", async () => {
     renderGate();
     fireEvent.click(await screen.findByRole("button", { name: /show/i }));
     fireEvent.click(await screen.findByRole("button", { name: /hide/i }));

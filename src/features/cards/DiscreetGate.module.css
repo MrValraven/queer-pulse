@@ -29,11 +29,52 @@
   margin: 0;
 }
 
+/* Just the card. The quick-hide used to sit under it as a second row; it now
+   rides in the card's own corner cluster (see `MembershipCardFace`), so this
+   is a plain holder that lets the card keep its CR80 height and nothing
+   else.
+
+   It animates on MOUNT, which is the whole reveal: the gate unmounts its
+   children while covered, so this element is genuinely new every time a
+   holder shows the card and the entrance needs no state of its own. Only the
+   showing is animated. Re-covering stays instant, and deliberately so: the
+   control exists to get an LGBTQ+ affiliation off the screen, and a card that
+   spent even 200ms easing away would be a card still readable over a
+   shoulder. The global reduced-motion rules in base.css neutralise this for
+   both the OS setting and the in-app toggle.
+
+   The keyframe is declared BELOW rather than added to the shared library in
+   styles/tokens/effects.css, which is where every other `qp*` keyframe
+   lives. Vite localises `animation-name` inside a CSS Module even when the
+   file declares no matching `@keyframes`, so naming a keyframe that lives in
+   a global sheet compiles to a hashed name nothing in the bundle defines:
+   the animation silently never runs and the element simply appears at its
+   finished state. `:global()` does not rescue it either, in the shorthand or
+   the longhand, since this toolchain's postcss rejects a colon in a
+   declaration value. Declaring it here is what actually works, and it is why
+   several other modules in the repo carry their own copy of a keyframe that
+   also exists in effects.css. */
 .revealed {
   display: grid;
-  gap: var(--gap-sm);
   justify-items: center;
-  /* The card holds its own CR80 height, so any slack in the row would
-     otherwise be absorbed by the Hide button below it. */
   align-content: start;
+  animation: qpCardIn var(--dur-slow) var(--ease-out) both;
+}
+
+/* The card is a physical object, so revealing it should read as one being
+   angled up toward the reader rather than as a panel appearing. It comes in
+   tilted back on the X axis and settles flat, through the SAME 1400px
+   perspective the card's own flip uses (see MembershipCardFace.module.css),
+   so both motions read as the same object under the same lens. It lands on
+   `transform: none`, so nothing is left holding a containing block over the
+   card once it has settled. */
+@keyframes qpCardIn {
+  from {
+    opacity: 0;
+    transform: perspective(1400px) translateY(14px) scale(0.94) rotateX(-12deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

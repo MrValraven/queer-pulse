@@ -90,6 +90,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "printed-membership-cards",
+        category: "feature",
+        date: "22 Aug 2026",
+        ...entryKeys("printed-membership-cards"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
         id: "profile-back-to-origin",
         category: "improvement",
         date: "22 Aug 2026",

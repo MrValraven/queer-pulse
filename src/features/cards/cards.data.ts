@@ -41,6 +41,8 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
     // fixture matches that contract rather than the raw profile avatar.
     holderAvatarUrl: currentUser.photo ?? null,
     isPhotoHidden: false,
+    // Demo mode shows a real, scannable symbol that resolves to a demo code.
+    token: "demo-card-token",
     program: DEMO_CARD_PROGRAM,
   },
   {
@@ -55,6 +57,8 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
     holderName: "Tiago Costa",
     holderAvatarUrl: null,
     isPhotoHidden: false,
+    // Demo mode shows a real, scannable symbol that resolves to a demo code.
+    token: "demo-card-token",
     program: {
       ...DEMO_CARD_PROGRAM,
       skin: "jade",
@@ -77,6 +81,7 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     holderName: "Tiago Costa",
     avatarUrl: currentUser.photo ?? null,
     role: "member",
+    token: "demo-card-token",
     // Already gated, matching the live contract: this programme allows
     // photos and this holder has not vetoed theirs, so the card prints one.
     cardPhotoUrl: currentUser.photo ?? null,
@@ -93,6 +98,7 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     holderName: "Rita Valente",
     avatarUrl: null,
     role: "mod",
+    token: "demo-card-token",
     // Null on purpose: the second demo holder's card carries no photo, so
     // the issuer's view of it shows the empty slot a real card would.
     cardPhotoUrl: null,

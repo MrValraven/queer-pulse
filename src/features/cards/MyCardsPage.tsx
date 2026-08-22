@@ -79,7 +79,15 @@ export function MyCardsPage() {
                     setRevealedCardId(isRevealed ? card.id : null)
                   }
                 >
-                  <MembershipCardFace card={card} isActive={revealedCardId === card.id} />
+                  {/* The gate hands down its quick-hide rather than drawing
+                      it; the card mounts it beside the flip control. */}
+                  {(hide) => (
+                    <MembershipCardFace
+                      card={card}
+                      isActive={revealedCardId === card.id}
+                      onHide={hide}
+                    />
+                  )}
                 </DiscreetGate>
                 <CardStatusNotice status={card.status} />
                 {/* Only where the issuing community actually runs photo

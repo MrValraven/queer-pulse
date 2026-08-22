@@ -31,6 +31,19 @@
   --gloss-x: 26%;
   --gloss-y: 4%;
   --gloss-lit: 0;
+
+  /* How much of each face's bottom-right corner the control cluster occupies,
+     so a long holder name or the back's scan line runs out of room before it
+     runs underneath a disc. Every disc keeps the 44px tap-target floor (see
+     Button.module.css), so this is a count of them plus the gap, not a
+     guess — and it has to be a shell-level custom property because the two
+     faces sit on opposite sides of the flipper and the cluster sits outside
+     both. `data-controls` is written by MembershipCardFace. */
+  --card-controls-reserve: 48px;
+}
+
+.shell[data-controls="2"] {
+  --card-controls-reserve: 96px;
 }
 
 .flipper {
@@ -142,8 +155,14 @@
   opacity: 0.72;
 }
 
-.faceBack {
+/* The rotation belongs to sitting inside the flipper rather than to the back
+   face itself, so a back face rendered on its own (the print sheet) is
+   naturally flat instead of needing an override to undo this. */
+.flipper .faceBack {
   transform: rotateY(180deg);
+}
+
+.faceBack {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: clamp(10px, 4cqw, 22px);
@@ -274,17 +293,30 @@
   }
 }
 
-/* ── The flip control ─────────────────────────────────────────────────────── */
-/* Doubled class so these beat Button's own `.icon`/`.iconDark` on specificity
-   rather than on stylesheet order, which CSS Modules does not guarantee.
-   It sits outside the flipper, so it cannot inherit either face's ink and
-   carries its own plate: a frosted plum disc reads on the four dark skins,
-   on Cream, and on any flag or photo underneath it. */
-.flipButton.flipButton {
+/* ── The corner controls ──────────────────────────────────────────────────── */
+/* The card's own controls: turn it over, and (behind a discreet gate) put it
+   away. They ride in one cluster in the bottom-right so they read as a pair
+   of switches on the object rather than as page furniture, and so hiding is a
+   thumb's width from the flip a holder is already using.
+
+   The cluster sits OUTSIDE the flipper, which is what lets it serve both
+   faces from one place, and is why each disc carries its own plate rather
+   than inheriting a face's ink. */
+.controls {
   position: absolute;
   z-index: 3;
   right: clamp(6px, 2.5cqw, 14px);
   bottom: clamp(6px, 2.5cqw, 14px);
+  display: flex;
+  align-items: center;
+  gap: clamp(2px, 1cqw, 6px);
+}
+
+/* Doubled class so these beat Button's own `.icon`/`.iconDark` on specificity
+   rather than on stylesheet order, which CSS Modules does not guarantee.
+   A frosted plum disc reads on the four dark skins, on Cream, and on any flag
+   or photo underneath it. */
+.cardControl.cardControl {
   background: rgba(var(--plum-rgb), 0.5);
   color: rgb(var(--cream-rgb));
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -293,7 +325,7 @@
 }
 
 @media (hover: hover) {
-  .flipButton.flipButton:hover:not(:disabled) {
+  .cardControl.cardControl:hover:not(:disabled) {
     background: rgba(var(--plum-rgb), 0.72);
     color: rgb(var(--cream-rgb));
   }
@@ -351,13 +383,13 @@
   justify-content: space-between;
   gap: var(--gap-sm);
 }
-/* Room for the flip control in the bottom-right corner, so a long holder
-   name runs out of space before it runs underneath the button. */
+/* Room for the control cluster in the bottom-right corner, so a long holder
+   name runs out of space before it runs underneath it. */
 .holder {
   font-family: var(--serif);
   font-size: 0.95rem;
   margin: 0;
-  padding-right: 44px;
+  padding-right: var(--card-controls-reserve);
 }
 
 /* ── Back face contents ───────────────────────────────────────────────────── */
@@ -492,8 +524,9 @@
 
 .backScan {
   margin: auto 0 0;
-  /* Clear of the flip control, which overlaps this column's bottom corner. */
-  padding-right: 46px;
+  /* Clear of the control cluster, which overlaps this column's bottom
+     corner. */
+  padding-right: var(--card-controls-reserve);
   font-size: clamp(0.5rem, 1.9cqw, 0.62rem);
   line-height: 1.35;
   opacity: 0.6;

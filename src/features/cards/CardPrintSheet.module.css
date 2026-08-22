@@ -1,0 +1,141 @@
+/* CR80: 85.6 x 54mm, the size a wallet, a lanyard and a card sleeve all
+   expect. It is also the card's on-screen aspect, so nothing is recomposed
+   for paper. Real millimetres throughout, so the preview and the print agree. */
+.sheets {
+  --card-width: 85.6mm;
+  --card-height: 54mm;
+  --gutter: 5mm;
+  display: grid;
+  gap: 10mm;
+  justify-items: center;
+}
+
+.sheet {
+  display: grid;
+  gap: var(--gutter);
+  justify-items: center;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 10mm;
+}
+
+.slot {
+  position: relative;
+}
+
+/* The blank: two faces side by side, sharing the fold line down the middle.
+   Folding backwards on a VERTICAL line flips horizontally, so the back reads
+   correctly with no rotation. */
+.blank {
+  display: grid;
+  grid-template-columns: var(--card-width) var(--card-width);
+  width: calc(var(--card-width) * 2);
+}
+
+.side {
+  /* `.shell` sizes itself at width:100% with an aspect ratio, and its
+     container queries need a real width to resolve against. */
+  width: var(--card-width);
+  height: var(--card-height);
+}
+
+/* The fold. Dashed so it reads as an instruction rather than as a trim line,
+   and drawn over the seam rather than as a border on either face, so neither
+   card edge gains a stroke the finished object would not have. */
+.slot::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  border-left: 1px dashed rgba(var(--line-rgb), 0.45);
+  pointer-events: none;
+}
+
+/* Hairline trim marks, set outside the card so a cut never crosses artwork. */
+.cropTopLeft,
+.cropTopRight,
+.cropBottomLeft,
+.cropBottomRight {
+  position: absolute;
+  width: 3mm;
+  height: 3mm;
+  border: 0 solid rgba(var(--line-rgb), 0.55);
+}
+
+.cropTopLeft {
+  top: -4mm;
+  left: -4mm;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+.cropTopRight {
+  top: -4mm;
+  right: -4mm;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.cropBottomLeft {
+  bottom: -4mm;
+  left: -4mm;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.cropBottomRight {
+  bottom: -4mm;
+  right: -4mm;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+/* The printed symbol. At error correction Q, which is what pays for the brand
+   mark punched into the middle, the payload lands at 53 modules (QR version 9)
+   once a real deployment origin is encoded with it. The mandatory 4-module
+   quiet zone on each side makes 61 across, so 28mm gives 0.46mm per module,
+   clearing the roughly 0.4mm a phone camera needs with room for the origin to
+   grow. `cardPrintQr.test.ts` asserts this stays true; change that constant
+   with this one. `QrCode` emits real SVG rects, so it prints at the printer's
+   own resolution rather than at a bitmap's. */
+.side svg {
+  width: 28mm;
+  height: 28mm;
+}
+
+/* ── The page around the sheets ───────────────────────────────────────────── */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.toolbar {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.inkNotice,
+.foldHint {
+  margin: 0;
+  color: rgba(var(--line-rgb), 0.72);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.toolbarActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}

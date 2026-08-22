@@ -74,6 +74,22 @@ export function CardVerifyPage() {
                   <dd>{new Date(verification.memberSince).getFullYear()}</dd>
                 </div>
               </dl>
+
+              {/* One permanent code serves both a phone screen and a printed
+                  card, so this page cannot tell which it just resolved. That
+                  makes the face on the card the only thing binding it to a
+                  person, and this says whether there is one to check.
+
+                  Only for a card that is currently good: telling a door how
+                  to check the face on a revoked card is an instruction with
+                  no purpose. */}
+              {verification.status === "active" && (
+                <p className={styles.check}>
+                  {verification.hasPhoto
+                    ? t("cards:verify.checkPhoto")
+                    : t("cards:verify.checkNoPhoto")}
+                </p>
+              )}
             </>
           )}
         </div>

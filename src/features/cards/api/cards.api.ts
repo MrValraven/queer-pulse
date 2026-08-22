@@ -61,6 +61,12 @@ export interface MyCardDTO {
   holderAvatarUrl: string | null;
   /** The member's own veto, for the control that toggles it. */
   isPhotoHidden: boolean;
+  /**
+   * The card's permanent scannable code, or null when the platform has no
+   * signing key. It arrives with the card, so nothing mints on demand and an
+   * issuer reading a member's card sees the same code that member shows.
+   */
+  token: string | null;
   program: CardProgramDTO;
 }
 
@@ -86,6 +92,12 @@ export interface IssuerCardDTO {
    * Never substitute `avatarUrl` for it: they answer different questions.
    */
   cardPhotoUrl: string | null;
+  /**
+   * The card's permanent scannable code, or null when the platform has no
+   * signing key. It arrives with the card, so nothing mints on demand and an
+   * issuer reading a member's card sees the same code that member shows.
+   */
+  token: string | null;
 }
 
 export interface CardVerificationDTO {
@@ -95,11 +107,9 @@ export interface CardVerificationDTO {
   role: string;
   serial: string;
   memberSince: string;
-}
-
-export interface CardTokenDTO {
-  token: string;
-  expiresAt: string;
+  /** Whether the card carries the holder's face, so a door knows whether it
+   *  has anything to check the person in front of it against. */
+  hasPhoto: boolean;
 }
 
 export interface UpsertCardProgramBody {
@@ -115,17 +125,14 @@ export interface UpsertCardProgramBody {
   validityMonths: number | null;
   allowsPublicBadge: boolean;
   /** Absent leaves the stored setting alone, like the crest and the ground. */
+  allowsPrint?: boolean;
+  /** Same absent-leaves-it-alone contract as the switch above. */
   allowsMemberPhoto?: boolean;
   /** Same absent-leaves-it-alone contract as the switch above. */
   photoStyle?: CardPhotoStyle;
 }
 
 export const getMyCards = () => apiGet<MyCardDTO[]>("/me/cards");
-
-/** POST rather than GET on purpose: this mints a credential, so it must
- *  never be cached by a browser, a proxy, or the service worker. */
-export const mintCardToken = (cardId: string) =>
-  apiPost<CardTokenDTO>(`/me/cards/${cardId}/token`, {});
 
 /** Destroys a card the member holds (spec §K.4: the member's right to have a
  *  card destroyed, not merely revoked). 404s, never 403s, for a card the
@@ -173,6 +180,18 @@ export const setCardHolderStatus = (
   cardId: string,
   body: { status: "active" | "suspended" | "revoked"; reason?: string },
 ) => apiPatch<{ ok: true }>(`/communities/${slug}/card/holders/${cardId}`, body);
+
+/**
+ * Voids every printed copy of one card by moving its code to a new generation.
+ * The holder's digital card is unaffected: it simply starts showing the new
+ * code. This is the remedy for a lost or stolen physical card, as against
+ * revoking, which takes the member's membership proof away entirely.
+ */
+export const replaceCardCode = (slug: string, cardId: string) =>
+  apiPost<{ ok: true }>(
+    `/communities/${slug}/card/holders/${cardId}/replace`,
+    {},
+  );
 
 /** Public and unauthenticated: the point of a card is that a stranger can
  *  check it without a QueerPulse account. */

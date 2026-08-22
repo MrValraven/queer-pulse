@@ -1,11 +1,14 @@
 import { useMemo, useState } from "react";
 import { Avatar, SearchInput, SkeletonCard, Tag } from "../../shared/components/ui";
 import { initialsFromName } from "../../shared/lib/initials";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useCardHolders } from "./api/useCardHolders";
+import { useCardHolders, useReplaceCardCode } from "./api/useCardHolders";
 import { CardHolderActions, type PendingCardStatus } from "./CardHolderActions";
 import { CardHolderCardModal } from "./CardHolderCardModal";
 import { CardHolderStatusModal } from "./CardHolderStatusModal";
+import { CardPrintToolbar } from "./CardPrintToolbar";
+import { ReplaceCardModal } from "./ReplaceCardModal";
 import type { CardProgramDTO, IssuerCardDTO } from "./api/cards.api";
 import styles from "./CardHoldersPanel.module.css";
 
@@ -13,10 +16,19 @@ function CardHolderRow({
   holder,
   onOpen,
   onRequestStatus,
+  onRequestReplace,
+  isSelectable,
+  isSelected,
+  onToggleSelected,
 }: {
   holder: IssuerCardDTO;
   onOpen: (cardId: string) => void;
   onRequestStatus: (pending: PendingCardStatus) => void;
+  onRequestReplace: (holder: IssuerCardDTO) => void;
+  /** Only an active card can be printed, so only those offer the control. */
+  isSelectable: boolean;
+  isSelected: boolean;
+  onToggleSelected: (cardId: string) => void;
 }) {
   const { t } = useTranslation();
 
@@ -34,6 +46,20 @@ function CardHolderRow({
           name: holder.holderName,
         })}
       />
+      {/* Outside the stretched overlay button and above it in the stacking
+          order (see `.selectBox` in the CSS), so ticking a card for printing
+          never also opens it. */}
+      {isSelectable ? (
+        <input
+          type="checkbox"
+          className={styles.selectBox}
+          checked={isSelected}
+          onChange={() => onToggleSelected(holder.id)}
+          aria-label={t("cards:holders.selectAria", {
+            name: holder.holderName,
+          })}
+        />
+      ) : null}
       <Avatar
         src={holder.avatarUrl ?? undefined}
         initials={initialsFromName(holder.holderName, "?")}
@@ -53,6 +79,7 @@ function CardHolderRow({
       <CardHolderActions
         holder={holder}
         onRequestStatus={onRequestStatus}
+        onRequestReplace={onRequestReplace}
         className={styles.actions}
       />
     </li>
@@ -79,6 +106,14 @@ export function CardHoldersPanel({
   const [query, setQuery] = useState("");
   const [pending, setPending] = useState<PendingCardStatus | null>(null);
   const [openCardId, setOpenCardId] = useState<string | null>(null);
+  const [replacingCard, setReplacingCard] = useState<IssuerCardDTO | null>(
+    null,
+  );
+  const replaceCode = useReplaceCardCode(slug);
+  const [selectedIds, setSelectedIds] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
+  const { showToast } = useToast();
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -89,6 +124,20 @@ export function CardHoldersPanel({
         holder.serial.toLowerCase().includes(needle),
     );
   }, [holders, query]);
+
+  const activeHolders = useMemo(
+    () => holders.filter((holder) => holder.status === "active"),
+    [holders],
+  );
+
+  const toggleSelected = (cardId: string) => {
+    setSelectedIds((previous) => {
+      const next = new Set(previous);
+      if (next.has(cardId)) next.delete(cardId);
+      else next.add(cardId);
+      return next;
+    });
+  };
 
   // Held by id, not by value: pausing a card from inside the open card
   // refetches the roster, and looking the row up again each render means the
@@ -121,6 +170,20 @@ export function CardHoldersPanel({
         className={styles.search}
       />
 
+      {/* Only offered while the programme allows printing: a select-all that
+          leads nowhere is a control that lies about what it does. */}
+      {program.allowsPrint ? (
+        <CardPrintToolbar
+          slug={slug}
+          selectedIds={[...selectedIds]}
+          activeCount={activeHolders.length}
+          onSelectAll={() =>
+            setSelectedIds(new Set(activeHolders.map((holder) => holder.id)))
+          }
+          onClearSelection={() => setSelectedIds(new Set())}
+        />
+      ) : null}
+
       {filtered.length === 0 ? (
         <p className={styles.empty}>{t("shared:select.noResults")}</p>
       ) : (
@@ -131,6 +194,10 @@ export function CardHoldersPanel({
               holder={holder}
               onOpen={setOpenCardId}
               onRequestStatus={setPending}
+              onRequestReplace={setReplacingCard}
+              isSelectable={program.allowsPrint && holder.status === "active"}
+              isSelected={selectedIds.has(holder.id)}
+              onToggleSelected={toggleSelected}
             />
           ))}
         </ul>
@@ -143,6 +210,7 @@ export function CardHoldersPanel({
           communityName={communityName}
           communitySlug={slug}
           onRequestStatus={setPending}
+          onRequestReplace={setReplacingCard}
           onClose={() => setOpenCardId(null)}
         />
       ) : null}
@@ -156,6 +224,33 @@ export function CardHoldersPanel({
           slug={slug}
           nextStatus={pending.nextStatus}
           onClose={() => setPending(null)}
+        />
+      ) : null}
+
+      {/* Same reasoning as the status confirmation above: one modal serves
+          both the roster row and an open card. */}
+      {replacingCard ? (
+        <ReplaceCardModal
+          holder={replacingCard}
+          isPending={replaceCode.isPending}
+          onClose={() => setReplacingCard(null)}
+          onConfirm={() => {
+            const holder = replacingCard;
+            replaceCode.mutate(
+              { cardId: holder.id },
+              {
+                onSuccess: () => {
+                  showToast(
+                    t("cards:holders.replaceToast", {
+                      name: holder.holderName,
+                    }),
+                    "success",
+                  );
+                  setReplacingCard(null);
+                },
+              },
+            );
+          }}
         />
       ) : null}
     </section>

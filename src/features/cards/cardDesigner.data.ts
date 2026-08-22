@@ -158,6 +158,9 @@ export function previewCard(
       ? (extras.holderAvatarUrl ?? null)
       : null,
     isPhotoHidden: false,
+    // The designer draws the decoy symbol via `isPreview`, never a real code:
+    // the card being designed does not exist yet.
+    token: null,
     program: {
       isEnabled: true,
       skin,

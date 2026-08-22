@@ -26,7 +26,6 @@ export const cards: Catalog = {
     "O teu cartão mostra o nome da comunidade que o emitiu. Fica tapado até o mostrares e volta a esconder-se quando sais deste ecrã.",
   "discreet.show": "Mostrar cartão",
   "discreet.showAria": "Mostrar o teu cartão de sócio",
-  "discreet.hide": "Esconder",
   "discreet.hideAria": "Esconder o teu cartão de sócio",
 
   "face.ariaLabel": "Cartão de sócio de {community}",
@@ -42,13 +41,11 @@ export const cards: Catalog = {
   "face.flipToFront": "Virar o cartão para a frente",
   "face.scanToVerify": "Lê o código para verificar em {host}",
 
-  "qrNotice.minting": "A preparar o teu código",
-  "qrNotice.offline":
-    "Sem ligação à QueerPulse. O teu cartão não consegue provar-se agora.",
+  "qrNotice.unavailable":
+    "O código deste cartão está indisponível neste momento.",
   "qrNotice.expired": "Este cartão expirou",
   "qrNotice.suspended": "Este cartão está suspenso",
   "qrNotice.revoked": "Este cartão já não é válido",
-  "qrNotice.holderOnly": "Só quem tem o cartão consegue mostrar o código",
 
   "status.expired": "Este cartão expirou. Pede um novo à comunidade.",
   "status.suspended": "Este cartão está suspenso. A comunidade pode explicar-te.",
@@ -71,6 +68,10 @@ export const cards: Catalog = {
   "verify.role": "Papel",
   "verify.serial": "N.º do cartão",
   "verify.memberSince": "Sócie desde",
+  "verify.checkPhoto":
+    "Confirme a fotografia do cartão com a pessoa que o mostra.",
+  "verify.checkNoPhoto":
+    "Este cartão não tem fotografia, por isso não confirma quem o tem na mão. Peça o nome ou outra coisa em que confie.",
 
   "designer.ariaLabel": "Desenhar o cartão de sócio da tua comunidade",
   "designer.defaultCardName": "Sócie",
@@ -112,6 +113,11 @@ export const cards: Catalog = {
     "Isto aplica-se à fotografia de todas as pessoas neste cartão, por isso é uma escolha sua sobre as imagens delas.",
   "photoStyle.color": "A cores",
   "photoStyle.mono": "A preto e branco",
+  "designer.printLabel": "Cartões impressos",
+  "designer.printCheck":
+    "Permitir que dones e moderadores imprimam estes cartões",
+  "designer.printHelper":
+    "Imprima uma folha de cartões físicos para os membros levarem consigo. Um cartão impresso mostra o mesmo código que está no telemóvel, por isso continua a funcionar até o substituir.",
   "designer.crestLabel": "Emblema",
   "designer.crestHelper":
     "Um logótipo quadrado pequeno, mostrado no canto superior do cartão. Opcional.",
@@ -161,6 +167,19 @@ export const cards: Catalog = {
   "holders.revokeAria": "Revogar o cartão de {name}",
   "holders.reinstate": "Reativar",
   "holders.reinstateAria": "Reativar o cartão de {name}",
+  "holders.selectAria": "Selecionar o cartão de {name} para imprimir",
+  "holders.selectAllActive": "Selecionar todos os cartões ativos",
+  "holders.clearSelection": "Limpar seleção",
+  "holders.printSelected_one": "Imprimir 1 cartão",
+  "holders.printSelected_other": "Imprimir {count} cartões",
+  "holders.replace": "Substituir",
+  "holders.replaceAria": "Substituir o cartão de {name}",
+  "holders.replaceModal.title": "Substituir o cartão de {name}?",
+  "holders.replaceModal.body":
+    "Use isto quando um cartão impresso se perde ou é roubado. Todas as cópias impressas deixam de funcionar de imediato. O cartão no telemóvel continua a funcionar e passa a mostrar um código novo, por isso a pessoa continua a ser membro.",
+  "holders.replaceModal.confirm": "Substituir cartão",
+  "holders.replaceModal.cancel": "Manter este cartão",
+  "holders.replaceToast": "O cartão de {name} tem um código novo.",
   "holders.reasonLabel": "Motivo",
   "holders.reasonPlaceholder": "Porque é que este cartão está a mudar?",
   "holders.reasonHint":
@@ -181,6 +200,21 @@ export const cards: Catalog = {
   "holders.card.changedOn": "Estado alterado",
   "holders.card.viewProfile": "Ver perfil",
   "holders.card.close": "Fechar",
+
+  "print.metaTitle": "Imprimir cartões de membro · QueerPulse",
+  "print.title_one": "Um cartão para imprimir",
+  "print.title_other": "{count} cartões para imprimir",
+  "print.print": "Imprimir",
+  "print.back": "Voltar aos titulares",
+  "print.inkNotice":
+    "Estes cartões imprimem a cores de ponta a ponta, por isso um lote grande gasta bastante tinta.",
+  "print.foldHint":
+    "Cada cartão imprime numa tira. Corte pelas marcas dos cantos e dobre para trás na linha tracejada, para a frente e o verso se juntarem.",
+  "print.unavailableTitle": "Nada para imprimir",
+  "print.emptyBody":
+    "Nenhum dos membros selecionados tem um cartão ativo. Emita os cartões primeiro e volte aqui.",
+  "print.disabledBody":
+    "Os cartões impressos estão desligados neste programa. Um done ou moderador pode ligá-los no editor do cartão.",
 
   "modTools.title": "Cartão de sócio",
   "modTools.empty":

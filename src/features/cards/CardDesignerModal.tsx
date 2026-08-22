@@ -11,7 +11,10 @@ import {
 import type { CardSkin } from "./api/cards.api";
 import { CardDesignerFields } from "./CardDesignerFields";
 import { CardDesignerPreview } from "./CardDesignerPreview";
-import { useCardDesignerDraft } from "./useCardDesignerDraft";
+import {
+  cardProgramUpsertBody,
+  useCardDesignerDraft,
+} from "./useCardDesignerDraft";
 import styles from "./CardDesignerModal.module.css";
 
 export function CardDesignerModal({
@@ -50,42 +53,14 @@ export function CardDesignerModal({
 
   const save = async () => {
     try {
-      // Editing must not silently flip a paused programme back on. A
-      // programme that doesn't exist yet defaults to enabled (there is
-      // nothing to pause); an existing one keeps whatever enabled state it
-      // already had, and only ModToolsCardSection's dedicated pause/resume
-      // toggle changes that.
       const isEnabled = program?.isEnabled ?? true;
-      await upsert.mutateAsync({
-        isEnabled,
-        skin: draft.skin,
-        accentToken: draft.accentToken,
-        cardName: draft.cardName.trim() || t("cards:designer.defaultCardName"),
-        validityMonths: draft.validityMonths,
-        // Only sent when the owner actually touched the crest: the backend
-        // treats an absent field as "leave it alone" and an explicit null as
-        // "clear it", so sending it unconditionally would wipe a crest set
-        // from anywhere else.
-        ...(draft.crestKey !== draft.savedCrestKey
-          ? { crestMediaKey: draft.crestKey || null }
-          : {}),
-        // The ground, on the same absent-vs-null contract. The backend clears
-        // whichever of the two is not written, so a card always has exactly
-        // one ground.
-        ...(draft.backgroundPreset !== (program?.backgroundPreset ?? null)
-          ? { backgroundPreset: draft.backgroundPreset }
-          : {}),
-        ...(draft.backgroundKey !== draft.savedBackgroundKey
-          ? { backgroundMediaKey: draft.backgroundKey || null }
-          : {}),
-        // Phase 1 has no profile badge to gate (spec §J is Phase 3); the DTO
-        // still requires the field, so this keeps sending the value the
-        // backend already stores rather than exposing a control for a
-        // feature that does not exist yet.
-        allowsPublicBadge: program?.allowsPublicBadge ?? true,
-        allowsMemberPhoto: draft.allowsMemberPhoto,
-        photoStyle: draft.photoStyle,
-      });
+      await upsert.mutateAsync(
+        cardProgramUpsertBody(
+          draft,
+          program,
+          draft.cardName.trim() || t("cards:designer.defaultCardName"),
+        ),
+      );
 
       // First save on a live programme: hand the roster its cards, since
       // that is what starting a card programme means.
@@ -192,6 +167,8 @@ export function CardDesignerModal({
             onAllowsMemberPhotoChange={(allows) =>
               set({ allowsMemberPhoto: allows })
             }
+            allowsPrint={draft.allowsPrint}
+            onAllowsPrintChange={(allows) => set({ allowsPrint: allows })}
             photoStyle={draft.photoStyle}
             onPhotoStyleChange={(style) => set({ photoStyle: style })}
           />

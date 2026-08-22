@@ -55,7 +55,14 @@ div.backBar {
 .phero {
   padding: 24px 0 64px;
   position: relative;
-  overflow: hidden;
+  /* Clip sideways only. The `::before` glow below hangs past the right edge,
+     but a plain `overflow: hidden` also clipped anything hanging past the
+     BOTTOM edge, slicing the ctaRow overflow menus (ProfileSettingsMenu on
+     your own profile, ProfileSafetyMenu on someone else's) in half at the
+     hero boundary. `overflow-x: clip` is the one form that leaves the other
+     axis genuinely `visible`; `overflow-x: hidden` would force it to `auto`. */
+  overflow-x: clip;
+  overflow-y: visible;
 }
 .phero::before {
   content: "";

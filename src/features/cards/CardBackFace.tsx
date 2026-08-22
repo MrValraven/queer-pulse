@@ -1,4 +1,3 @@
-import { FiLoader, FiWifiOff } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { MyCardDTO } from "./api/cards.api";
@@ -31,24 +30,16 @@ const KNOWN_ROLES: readonly string[] = ["owner", "mod", "member"];
  * phone widths is too small to scan; beside it, it gets the card's full
  * height.
  *
- * The token is minted by the shell rather than here, so one card mints one
- * token no matter how many times it is turned over.
+ * The code is the card's own permanent value and arrives on the card object,
+ * so turning the card over costs nothing and an issuer reading a member's
+ * card draws the same symbol that member shows.
  */
 export function CardBackFace({
   card,
-  token,
-  isMinting,
-  hasError,
   isPreview,
-  isIssuerView = false,
 }: {
   card: MyCardDTO;
-  token: string | null;
-  isMinting: boolean;
-  hasError: boolean;
   isPreview: boolean;
-  /** An owner or mod reading a member's real card. See `MembershipCardFace`. */
-  isIssuerView?: boolean;
 }) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -64,28 +55,19 @@ export function CardBackFace({
           </span>
         ) : !canProve ? (
           <p className={styles.qrNotice}>{t(`cards:qrNotice.${card.status}`)}</p>
-        ) : isIssuerView ? (
-          /* Deliberately a sentence rather than the preview's decoy symbol:
-             this IS a live card, and drawing a code on it that no scanner
-             would accept would teach a mod the card is broken. Why the code
-             is absent is a fact about who is holding the phone. */
-          <p className={styles.qrNotice}>{t("cards:qrNotice.holderOnly")}</p>
-        ) : hasError ? (
-          <p className={styles.qrNotice}>
-            <FiWifiOff aria-hidden="true" /> {t("cards:qrNotice.offline")}
-          </p>
-        ) : token ? (
+        ) : card.token ? (
           <CardQr
-            url={verifyUrl(token)}
+            url={verifyUrl(card.token)}
             ariaLabel={t("cards:face.qrAriaLabel", {
               community: card.communityName,
             })}
           />
-        ) : isMinting ? (
-          <p className={styles.qrNotice}>
-            <FiLoader aria-hidden="true" /> {t("cards:qrNotice.minting")}
-          </p>
-        ) : null}
+        ) : (
+          /* Only reachable when the platform has no card signing key at all,
+             so no card anywhere has a code. Says so plainly rather than
+             leaving an empty slot. */
+          <p className={styles.qrNotice}>{t("cards:qrNotice.unavailable")}</p>
+        )}
       </div>
 
       <div className={styles.backDetail}>
@@ -129,7 +111,7 @@ export function CardBackFace({
         {/* Only shown when there is a code to scan: telling someone where to
             verify a card that currently has no symbol on it is an instruction
             they cannot follow. */}
-        {canProve && !isIssuerView && (
+        {canProve && card.token && (
           <p className={styles.backScan}>
             {t("cards:face.scanToVerify", {
               host: `${window.location.host}/cards`,

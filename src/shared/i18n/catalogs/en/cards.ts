@@ -26,7 +26,6 @@ export const cards: Catalog = {
     "Your card names the community that issued it. It stays covered until you show it, and hides again when you leave this screen.",
   "discreet.show": "Show card",
   "discreet.showAria": "Show your membership card",
-  "discreet.hide": "Hide",
   "discreet.hideAria": "Hide your membership card",
 
   "face.ariaLabel": "Membership card for {community}",
@@ -42,12 +41,10 @@ export const cards: Catalog = {
   "face.flipToFront": "Turn the card back to the front",
   "face.scanToVerify": "Scan to verify at {host}",
 
-  "qrNotice.minting": "Preparing your code",
-  "qrNotice.offline": "Cannot reach QueerPulse. Your card cannot prove itself right now.",
+  "qrNotice.unavailable": "This card's code is unavailable right now.",
   "qrNotice.expired": "This card has expired",
   "qrNotice.suspended": "This card is paused",
   "qrNotice.revoked": "This card is no longer valid",
-  "qrNotice.holderOnly": "Only the holder can show this card's code",
 
   "status.expired":
     "This card expired. Ask the community to issue you a new one.",
@@ -73,6 +70,10 @@ export const cards: Catalog = {
   "verify.role": "Role",
   "verify.serial": "Card no.",
   "verify.memberSince": "Member since",
+  "verify.checkPhoto":
+    "Check the photo on the card against the person showing it.",
+  "verify.checkNoPhoto":
+    "This card carries no photo, so it cannot confirm who is holding it. Ask for a name or something else you trust.",
 
   "designer.ariaLabel": "Design your community's membership card",
   "designer.defaultCardName": "Member",
@@ -114,6 +115,10 @@ export const cards: Catalog = {
     "This applies to every member's photo on this card, so it is your choice about their pictures rather than theirs.",
   "photoStyle.color": "In colour",
   "photoStyle.mono": "Black and white",
+  "designer.printLabel": "Printed cards",
+  "designer.printCheck": "Let owners and moderators print these cards",
+  "designer.printHelper":
+    "Print a sheet of physical cards for your members to carry. A printed card shows the same code as the one on their phone, so it keeps working until you replace it.",
   "designer.crestLabel": "Crest",
   "designer.crestHelper":
     "A small square logo, shown in the top corner of the card. Optional.",
@@ -161,6 +166,19 @@ export const cards: Catalog = {
   "holders.revokeAria": "Revoke {name}'s card",
   "holders.reinstate": "Reinstate",
   "holders.reinstateAria": "Reinstate {name}'s card",
+  "holders.selectAria": "Select {name}'s card for printing",
+  "holders.selectAllActive": "Select every active card",
+  "holders.clearSelection": "Clear selection",
+  "holders.printSelected_one": "Print 1 card",
+  "holders.printSelected_other": "Print {count} cards",
+  "holders.replace": "Replace",
+  "holders.replaceAria": "Replace {name}'s card",
+  "holders.replaceModal.title": "Replace {name}'s card?",
+  "holders.replaceModal.body":
+    "Use this when a printed card is lost or stolen. Every printed copy stops working straight away. The card on their phone keeps working and starts showing a new code, so they stay a member throughout.",
+  "holders.replaceModal.confirm": "Replace card",
+  "holders.replaceModal.cancel": "Keep this card",
+  "holders.replaceToast": "{name}'s card has a new code.",
   "holders.reasonLabel": "Reason",
   "holders.reasonPlaceholder": "Why is this card changing?",
   "holders.reasonHint":
@@ -181,6 +199,21 @@ export const cards: Catalog = {
   "holders.card.changedOn": "Status changed",
   "holders.card.viewProfile": "View profile",
   "holders.card.close": "Close",
+
+  "print.metaTitle": "Print membership cards · QueerPulse",
+  "print.title_one": "One card to print",
+  "print.title_other": "{count} cards to print",
+  "print.print": "Print",
+  "print.back": "Back to card holders",
+  "print.inkNotice":
+    "These cards print edge to edge in full colour, so a large batch uses a lot of ink.",
+  "print.foldHint":
+    "Each card prints as one strip. Cut along the corner marks, then fold backwards on the dashed line so the front and back meet.",
+  "print.unavailableTitle": "Nothing to print",
+  "print.emptyBody":
+    "None of the selected members hold an active card. Issue cards first, then come back.",
+  "print.disabledBody":
+    "Printed cards are turned off for this programme. An owner or moderator can turn them on in the card designer.",
 
   "modTools.title": "Members card",
   "modTools.empty":

@@ -13,6 +13,7 @@ export { Reveal } from "./Reveal";
 export { FadeIn } from "./FadeIn";
 export { Outro } from "./Outro";
 export { Tooltip } from "./Tooltip";
+export { QrCode, type QrCodeProps } from "./QrCode";
 export { FeatureHelp } from "./FeatureHelp";
 
 // Composition-level primitives (extracted from per-feature duplicates)

@@ -41,6 +41,9 @@ export function holderCardFace(
     // by `CardPhotoConsent` on their own wallet page, never by either face.
     // An issuer is not told which of the two switches emptied the photo slot.
     isPhotoHidden: false,
+    // The issuer sees the member's real code. It is the card's own permanent
+    // value, so there is nothing holder-specific to withhold.
+    token: holder.token,
     program,
   };
 }

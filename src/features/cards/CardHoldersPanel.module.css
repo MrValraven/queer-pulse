@@ -52,6 +52,11 @@
   /* Anchors the stretched overlay button below. The row itself stays plain,
      non-interactive markup so its action buttons remain valid content. */
   position: relative;
+  /* Eases into the hover state instead of snapping. Reduced motion is
+     neutralized globally in base.css, so no local override is needed. */
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
 }
 
 /* Opens the card. Transparent and stretched over the whole row, so the row
@@ -71,7 +76,15 @@
   cursor: pointer;
 }
 
-.row:has(.rowOpen:hover),
+/* Hover gated to real pointers so a tap on touch does not leave the row
+   stuck in its hovered state. Focus-visible keeps the same treatment. */
+@media (hover: hover) {
+  .row:has(.rowOpen:hover) {
+    border-color: rgba(var(--line-rgb), 0.22);
+    background: var(--paper);
+  }
+}
+
 .row:has(.rowOpen:focus-visible) {
   border-color: rgba(var(--line-rgb), 0.22);
   background: var(--paper);
@@ -126,6 +139,28 @@
      opening the card. */
   position: relative;
   z-index: 1;
+}
+
+/* The print selection tick. Above the row's stretched overlay button for the
+   same reason the actions are: choosing a card to print must not also open
+   it. */
+.selectBox {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Sits between the search field and the roster: it acts on the list below it,
+   so it reads as a header for that list rather than as a page action. */
+.printToolbar {
+  display: flex;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--gap-sm);
 }
 
 @media (max-width: 560px) {

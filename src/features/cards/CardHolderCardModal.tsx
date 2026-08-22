@@ -20,14 +20,16 @@ const KNOWN_ROLES: readonly string[] = ["owner", "mod", "member"];
  * rendering of the same facts, which would drift from what the member holds
  * the moment either changed.
  *
- * `isIssuerView` is what keeps that honest. The code on the back is minted
- * from `/me/cards`, so only the holder can produce one; the back says so in
- * words instead of leaving an empty slot. Everything else on the card is the
- * card's own.
+ * That includes the scannable code. It is a permanent property of the card
+ * rather than a live assertion about who is holding a phone, so an issuer
+ * checking a member's card scans the very symbol that member shows. What
+ * `isIssuerView` still carries is the naming: "your card" is wrong when a mod
+ * is reading someone else's.
  *
- * The three status actions come along, so a mod who opened a card to check it
- * can act on it without closing it first. They raise a `PendingCardStatus`
- * rather than mutating: the panel above owns the confirmation.
+ * The status actions come along, so a mod who opened a card to check it can
+ * act on it without closing it first. They raise a `PendingCardStatus` or a
+ * replace request rather than mutating: the panel above owns both
+ * confirmations.
  */
 export function CardHolderCardModal({
   holder,
@@ -35,6 +37,7 @@ export function CardHolderCardModal({
   communityName,
   communitySlug,
   onRequestStatus,
+  onRequestReplace,
   onClose,
 }: {
   holder: IssuerCardDTO;
@@ -42,6 +45,7 @@ export function CardHolderCardModal({
   communityName: string;
   communitySlug: string;
   onRequestStatus: (pending: PendingCardStatus) => void;
+  onRequestReplace: (holder: IssuerCardDTO) => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -69,6 +73,7 @@ export function CardHolderCardModal({
           <CardHolderActions
             holder={holder}
             onRequestStatus={onRequestStatus}
+            onRequestReplace={onRequestReplace}
             className={styles.footerActions}
           />
         </>

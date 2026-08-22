@@ -1,15 +1,8 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type PointerEvent as ReactPointerEvent,
-} from "react";
-import { FiRefreshCw } from "react-icons/fi";
+import { useId, useState } from "react";
+import { FiEyeOff, FiRefreshCw } from "react-icons/fi";
 import { IconButton } from "../../shared/components/ui";
 import { useMotionPrefs } from "../../app/providers/MotionProvider";
-import { useCardToken } from "./api/useCardToken";
+import { useCardGloss } from "./useCardGloss";
 import type { CardSkin, MyCardDTO } from "./api/cards.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CardBackFace } from "./CardBackFace";
@@ -32,20 +25,22 @@ const SKIN_CLASS: Record<CardSkin, string | undefined> = {
  *
  * The front is the object: the community's flag or photo, its crest, and the
  * holder's name, under a gloss laminate that catches the pointer. The back is
- * the credential: the scannable code and the card's details. A corner control
- * turns it over.
+ * the credential: the scannable code and the card's details. A cluster of
+ * corner controls turns it over and, where the card sits behind a discreet
+ * gate, puts it away again.
  *
- * Two gates sit on the code. `isActive` says the card is genuinely on screen
- * and unlocked, and `isFlipped` says its holder has actually turned it over
- * to be scanned — so a revealed card that nobody has flipped mints no token
- * at all. A card that is expired, suspended, or revoked shows no code on
- * either side, because there is nothing valid to prove.
+ * The code is the card's own permanent value and arrives with the card, so
+ * nothing is minted while the card is on screen and an issuer reading a
+ * member's card sees exactly the code that member shows. A card that is
+ * expired, suspended, or revoked shows no code on either side, because there
+ * is nothing valid to prove.
  */
 export function MembershipCardFace({
   card,
   isActive,
   isPreview = false,
   isIssuerView = false,
+  onHide,
 }: {
   card: MyCardDTO;
   isActive: boolean;
@@ -58,14 +53,25 @@ export function MembershipCardFace({
    */
   isPreview?: boolean;
   /**
-   * Someone other than the holder — an owner or mod reading the roster — is
-   * looking at a REAL card. Every printed detail is the card's own, but the
-   * code is not: it is minted from `/me/cards`, which by definition only the
-   * holder can call. So this suppresses the mint entirely and the back says
-   * plainly that only the holder can show the code, rather than leaving an
-   * empty slot or, worse, drawing the preview's decoy symbol on a live card.
+   * Someone other than the holder, an owner or mod reading the roster, is
+   * looking at a REAL card. Every detail is the card's own, the code
+   * included: it is a permanent property of the card rather than a live
+   * assertion about who is holding the phone. This survives only to name the
+   * back face correctly, since "your card" is wrong when a mod is reading
+   * someone else's.
    */
   isIssuerView?: boolean;
+  /**
+   * Puts the card away again, where one is gated (see `DiscreetGate`, which
+   * hands its child exactly this). It rides in the card's own corner cluster
+   * rather than sitting under the card as a separate button: hiding is an act
+   * on the object, the same as turning it over, and the gate's quick-hide is
+   * the control a holder reaches for fastest — so it belongs where the thumb
+   * already is rather than a row further down the page. Omitted by the
+   * designer preview and the issuer's read-only view, which have no gate to
+   * close.
+   */
+  onHide?: () => void;
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -86,53 +92,8 @@ export function MembershipCardFace({
     if (!isActive) setIsFlipped(false);
   }
 
-  const canProve = card.status === "active";
-  const { token, isMinting, error } = useCardToken(card.id, {
-    isActive: isActive && canProve && !isPreview && !isIssuerView && isFlipped,
-  });
-
-  const shellRef = useRef<HTMLDivElement | null>(null);
-  const frameRef = useRef<number | null>(null);
-  const pointRef = useRef<{ x: number; y: number } | null>(null);
-
-  // The sheen is written straight onto the node as custom properties inside a
-  // single coalesced frame, never through state: a pointer emits moves far
-  // faster than React can usefully re-render, and re-rendering a card to move
-  // a highlight would re-run the whole QR module grid with it.
-  const paintGloss = useCallback(() => {
-    if (frameRef.current !== null) return;
-    frameRef.current = requestAnimationFrame(() => {
-      frameRef.current = null;
-      const node = shellRef.current;
-      const point = pointRef.current;
-      if (!node || !point) return;
-      node.style.setProperty("--gloss-x", `${point.x}%`);
-      node.style.setProperty("--gloss-y", `${point.y}%`);
-    });
-  }, []);
-
-  useEffect(
-    () => () => {
-      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
-    },
-    [],
-  );
-
-  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (reducedMotion) return;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    if (!bounds.width || !bounds.height) return;
-    pointRef.current = {
-      x: ((event.clientX - bounds.left) / bounds.width) * 100,
-      y: ((event.clientY - bounds.top) / bounds.height) * 100,
-    };
-    event.currentTarget.style.setProperty("--gloss-lit", "1");
-    paintGloss();
-  };
-
-  const onPointerLeave = (event: ReactPointerEvent<HTMLDivElement>) => {
-    event.currentTarget.style.setProperty("--gloss-lit", "0");
-  };
+  const { shellRef, onPointerMove, onPointerLeave } =
+    useCardGloss(reducedMotion);
 
   // The card's ground: an uploaded photo, else a curated flag, else the flat
   // skin colour. At most one of the two is ever set (the backend clears the
@@ -148,6 +109,10 @@ export function MembershipCardFace({
     <div
       ref={shellRef}
       className={styles.shell}
+      // How many discs sit in the corner cluster. Both faces reserve room for
+      // them in their bottom-right (see `--card-controls-reserve`), and that
+      // reservation has to grow when the hide control is there.
+      data-controls={onHide ? "2" : "1"}
       style={{
         // Threads the community's chosen accent token through as a CSS custom
         // property so the card face can actually render it (see
@@ -195,32 +160,43 @@ export function MembershipCardFace({
           aria-hidden={!isFlipped}
           inert={!isFlipped}
         >
-          <CardBackFace
-            card={card}
-            token={token}
-            isMinting={isMinting}
-            hasError={error}
-            isPreview={isPreview}
-            isIssuerView={isIssuerView}
-          />
+          <CardBackFace card={card} isPreview={isPreview} />
         </article>
       </div>
 
-      {/* Outside the flipper on purpose: inside, it would rotate with the
-          card and land mirrored on the back. Its own fixed plate reads on
-          every skin, since it cannot inherit either face's ink. */}
-      <IconButton
-        className={styles.flipButton}
-        tone="dark"
-        size="sm"
-        aria-controls={flipperId}
-        // The name carries the state, rather than `aria-pressed`: this is a
-        // toggle between two equal sides, not a control that is on or off.
-        aria-label={t(isFlipped ? "cards:face.flipToFront" : "cards:face.flipToBack")}
-        onClick={() => setIsFlipped((flipped) => !flipped)}
-      >
-        <FiRefreshCw aria-hidden="true" />
-      </IconButton>
+      {/* Outside the flipper on purpose: inside, the controls would rotate
+          with the card and land mirrored on the back. They carry their own
+          fixed plate, which reads on every skin, since they cannot inherit
+          either face's ink. */}
+      <div className={styles.controls}>
+        {/* Hide first, flip last: the flip stays in the corner a holder
+            already knows it by, and the control that puts an LGBTQ+
+            affiliation away is the one nearer the middle of the card, where a
+            thumb reaching in a hurry is least likely to miss it. */}
+        {onHide && (
+          <IconButton
+            className={styles.cardControl}
+            tone="dark"
+            size="sm"
+            aria-label={t("cards:discreet.hideAria")}
+            onClick={onHide}
+          >
+            <FiEyeOff aria-hidden="true" />
+          </IconButton>
+        )}
+        <IconButton
+          className={styles.cardControl}
+          tone="dark"
+          size="sm"
+          aria-controls={flipperId}
+          // The name carries the state, rather than `aria-pressed`: this is a
+          // toggle between two equal sides, not a control that is on or off.
+          aria-label={t(isFlipped ? "cards:face.flipToFront" : "cards:face.flipToBack")}
+          onClick={() => setIsFlipped((flipped) => !flipped)}
+        >
+          <FiRefreshCw aria-hidden="true" />
+        </IconButton>
+      </div>
     </div>
   );
 }
