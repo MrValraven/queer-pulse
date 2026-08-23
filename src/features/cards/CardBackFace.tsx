@@ -107,18 +107,22 @@ export function CardBackFace({
             <dd>{t(`cards:role.${roleKey}`)}</dd>
           </div>
         </dl>
-
-        {/* Only shown when there is a code to scan: telling someone where to
-            verify a card that currently has no symbol on it is an instruction
-            they cannot follow. */}
-        {canProve && card.token && (
-          <p className={styles.backScan}>
-            {t("cards:face.scanToVerify", {
-              host: `${window.location.host}/cards`,
-            })}
-          </p>
-        )}
       </div>
+
+      {/* A row of its own under both columns rather than the last item in the
+          detail column: it is an instruction about the card, and the detail
+          column is too narrow to hold a host name on one line.
+
+          Only shown when there is a code to scan: telling someone where to
+          verify a card that currently has no symbol on it is an instruction
+          they cannot follow. */}
+      {canProve && card.token && (
+        <p className={styles.backScan}>
+          {t("cards:face.scanToVerify", {
+            host: `${window.location.host}/cards`,
+          })}
+        </p>
+      )}
     </>
   );
 }

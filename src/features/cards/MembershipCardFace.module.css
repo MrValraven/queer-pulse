@@ -35,10 +35,21 @@
   /* How much of each face's bottom-right corner the control cluster occupies,
      so a long holder name or the back's scan line runs out of room before it
      runs underneath a disc. Every disc keeps the 44px tap-target floor (see
-     Button.module.css), so this is a count of them plus the gap, not a
-     guess — and it has to be a shell-level custom property because the two
+     Button.module.css), so this is a count of them plus the gap, rather than
+     a guess, and it has to be a shell-level custom property because the two
      faces sit on opposite sides of the flipper and the cluster sits outside
-     both. `data-controls` is written by MembershipCardFace. */
+     both.
+
+     Zero by default, and keyed off `data-controls`, which MembershipCardFace
+     always writes. A shell WITHOUT that attribute has no cluster at all: that
+     is `PrintableCard`, where a flip button and a hide button mean nothing on
+     paper. It used to inherit the one-disc reservation anyway, which cost the
+     printed card 48px of its bottom-right corner to nothing and was what
+     squeezed the scan line into three lines that ran off the card. */
+  --card-controls-reserve: 0px;
+}
+
+.shell[data-controls="1"] {
   --card-controls-reserve: 48px;
 }
 
@@ -162,10 +173,25 @@
   transform: rotateY(180deg);
 }
 
+/* Two columns for the code and the details, and a full-width row under both
+   for the scan line. That line is an instruction about the whole card, not a
+   fifth field in the detail column: confined to that column it had roughly a
+   third of the card's width to say "Scan to verify at <host>/cards" in, broke
+   into three lines, and the last of them ran off the bottom edge. Spanning
+   the trim width it fits on one.
+
+   The two custom properties are the scan row's own height, which `.backQrSlot`
+   subtracts from the card to size the code (it cannot ask its grid track how
+   tall it is without going circular). Kept here, on the element that owns the
+   row, so the row and the subtraction can never drift apart. */
 .faceBack {
+  --back-row-gap: clamp(5px, 1.6cqh, 10px);
+  --back-scan-line: calc(1.35 * clamp(0.5rem, 1.9cqw, 0.62rem));
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: clamp(10px, 4cqw, 22px);
+  grid-template-rows: minmax(0, 1fr) auto;
+  column-gap: clamp(10px, 4cqw, 22px);
+  row-gap: var(--back-row-gap);
   align-items: stretch;
 }
 
@@ -412,12 +438,21 @@
    allows". The second caps it on wide cards and, more importantly, keeps it
    from eating the detail column on the narrow ones the /cards grid produces. */
 .backQrSlot {
-  --qr-size: min(calc(100cqh - 2 * var(--face-pad)), 42cqw);
+  --qr-size: min(
+    calc(
+      100cqh - 2 * var(--face-pad) - var(--back-row-gap) - var(--back-scan-line)
+    ),
+    42cqw
+  );
   display: grid;
   place-items: center;
   width: var(--qr-size);
   height: var(--qr-size);
-  align-self: center;
+  /* Top of the code level with the top of the community name beside it. When
+     the 42cqw cap is what sizes the symbol there is slack in the row, and
+     centring it in that slack dropped the code below the header it belongs
+     with and left a band of empty ground above it. */
+  align-self: start;
   min-width: 0;
 }
 
@@ -535,9 +570,11 @@
 }
 
 .backScan {
-  margin: auto 0 0;
-  /* Clear of the control cluster, which overlaps this column's bottom
-     corner. */
+  /* The full trim width, under both columns. */
+  grid-column: 1 / -1;
+  margin: 0;
+  /* Clear of the control cluster, which overlaps the face's bottom-right
+     corner. Zero on a printed card, which has no cluster. */
   padding-right: var(--card-controls-reserve);
   font-size: clamp(0.5rem, 1.9cqw, 0.62rem);
   line-height: 1.35;
@@ -551,6 +588,12 @@
 @container (max-width: 300px) {
   .backScan {
     display: none;
+  }
+  /* With no scan line there is no scan row: hand its height and its gap back
+     to the code, which is what this size is protecting. */
+  .faceBack {
+    --back-row-gap: 0px;
+    --back-scan-line: 0px;
   }
   .backDetail {
     gap: 4px;
