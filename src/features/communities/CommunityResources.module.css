@@ -1,0 +1,190 @@
+/* The About tab's resource shelf: its section head, the staff editor's rows,
+   and the add/cap affordances. The read-only shelf itself keeps its original
+   rules in CommunityHubTabs.module.css, untouched. */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.manageCta {
+  gap: 6px;
+  flex: none;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  padding: 5px 11px;
+  border-radius: 9px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  background: transparent;
+}
+.manageCta svg {
+  width: 13px;
+  height: 13px;
+}
+@media (hover: hover) {
+  .manageCta:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+.emptyHint {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* ── Staff editor ─────────────────────────────────────────────────────────── */
+.editor {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+/* `position: relative` is load-bearing: the dragged row lifts above its
+   neighbours through z-index, which needs a positioned box. */
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  padding: 11px 13px;
+}
+
+.rowDragging {
+  z-index: 2;
+  border-color: rgba(var(--accent-rgb), 0.4);
+  box-shadow: 0 8px 24px rgba(var(--plum-rgb), 0.12);
+}
+
+.grip {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 30px;
+  color: var(--ink-40);
+  cursor: grab;
+  touch-action: none;
+}
+.grip:active {
+  cursor: grabbing;
+}
+
+.rowIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+}
+.rowIcon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.rowMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.rowUrl {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowActions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+}
+
+.rowAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.rowAction:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+@media (hover: hover) {
+  .rowAction:hover:not(:disabled) {
+    background: rgba(var(--line-rgb), 0.08);
+    color: var(--ink);
+  }
+}
+.rowAction:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.25);
+}
+
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.capNote {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+/* ── Add/edit form ────────────────────────────────────────────────────────── */
+.kindField {
+  margin-bottom: 16px;
+}
+
+.kindLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-60);
+  margin-bottom: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowAction {
+    transition: none;
+  }
+}

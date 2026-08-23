@@ -10,8 +10,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { getJoinRequests } from "./communities.api";
-import { joinRequestToModRequest } from "./communities.adapters";
+import type { TFunction } from "../../../shared/i18n/types";
+import { refToPerson } from "./communities.adapters";
+import {
+  getJoinRequestsForReview,
+  type CommunityJoinRequestReviewDTO,
+} from "./communityJoin.api";
 import { getLiving } from "../livingCommunities.data";
 import type { ModRequest } from "../community.model";
 
@@ -20,6 +24,30 @@ export interface JoinRequestsResult {
   isLoading: boolean;
   isError: boolean;
   refetch: () => void;
+}
+
+/**
+ * One queue row → the mod-tools `ModRequest`, carrying the reviewer-side
+ * context the applicant card renders (pronouns, account age, shared
+ * connections, shared communities) and the involvement answer as its own
+ * field. All of it is optional: any of these can be null on a row the backend
+ * computed no context for, and the card simply shows fewer lines.
+ */
+function reviewDtoToModRequest(
+  dto: CommunityJoinRequestReviewDTO,
+  translate: TFunction,
+): ModRequest {
+  return {
+    id: dto.id,
+    person: refToPerson(dto.member, translate),
+    note: dto.note ?? undefined,
+    createdAt: dto.createdAt,
+    pronouns: dto.member.pronouns ?? undefined,
+    involvement: dto.involvement ?? undefined,
+    accountCreatedAt: dto.accountCreatedAt ?? undefined,
+    sharedConnectionCount: dto.sharedConnectionCount ?? undefined,
+    sharedCommunityCount: dto.sharedCommunityCount ?? undefined,
+  };
 }
 
 /**
@@ -41,7 +69,7 @@ export function useJoinRequests(slug: string | undefined): JoinRequestsResult {
   const query = useQuery({
     queryKey: ["join-requests", slug],
     enabled: !demoMode && Boolean(slug),
-    queryFn: () => getJoinRequests(slug!),
+    queryFn: () => getJoinRequestsForReview(slug!),
   });
   const refetch = () => void query.refetch();
   if (demoMode) {
@@ -53,7 +81,7 @@ export function useJoinRequests(slug: string | undefined): JoinRequestsResult {
     };
   }
   return {
-    items: (query.data ?? []).map((dto) => joinRequestToModRequest(dto, t)),
+    items: (query.data ?? []).map((dto) => reviewDtoToModRequest(dto, t)),
     isLoading: query.isLoading,
     isError: query.isError,
     refetch,

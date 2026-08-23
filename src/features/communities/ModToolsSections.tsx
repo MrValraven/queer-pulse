@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import {
   FiAlertTriangle,
-  FiCheck,
   FiX,
   FiFlag,
   FiUserPlus,
@@ -19,6 +18,8 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { REASON_LABEL_KEYS } from "../safety/reportReasons";
 import type { LivingCommunity } from "./community.model";
+import { ModJoinRequestRow } from "./ModJoinRequestRow";
+import type { JoinRequestDecision } from "./joinRequestReview.data";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { photoOf } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
@@ -88,15 +89,17 @@ function ModQueueStatus({
 export function ModJoinRequests({
   requests,
   state,
+  isPending = false,
   onResolve,
 }: {
   requests: JoinRequest[];
   state: ModQueueState;
-  onResolve: (id: string, name: string, approved: boolean) => void;
+  /** True while a decision for this queue is in flight (keeps the decline
+   *  step's confirm button from firing twice). */
+  isPending?: boolean;
+  onResolve: (id: string, name: string, decision: JoinRequestDecision) => void;
 }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const communityTime = useCommunityTime();
   return (
     <>
       <div className={detail.secLbl}>
@@ -115,46 +118,13 @@ export function ModJoinRequests({
             )}
           />
         ) : (
-          requests.map((r) => (
-            <div className={styles.modRow} key={r.id}>
-              <Avatar
-                initials={r.person.initials}
-                tint={r.person.tint}
-                src={photoOf(r.person, demoMode)}
-                size={42}
-                alt={r.person.name}
-              />
-              <div className={styles.modMain}>
-                <div className={styles.modName}>
-                  {r.person.name}
-                  <MemberStaffBadge slug={r.person.slug} />
-                </div>
-                {r.note && <div className={styles.modNote}>“{r.note}”</div>}
-                <div className={styles.modMeta}>
-                  {t("communities:detail.modtools.joinRequests.requestedAgo", {
-                    time: communityTime.ago(r),
-                  })}
-                </div>
-              </div>
-              <div className={styles.modActions}>
-                <Button
-                  variant="jade"
-                  onClick={() => onResolve(r.id, r.person.name, true)}
-                >
-                  <FiCheck aria-hidden />{" "}
-                  {t("communities:detail.modtools.joinRequests.approveCta")}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={styles.declineBtn}
-                  onClick={() => onResolve(r.id, r.person.name, false)}
-                >
-                  <FiX aria-hidden />{" "}
-                  {t("communities:detail.modtools.joinRequests.declineCta")}
-                </Button>
-              </div>
-            </div>
+          requests.map((request) => (
+            <ModJoinRequestRow
+              key={request.id}
+              request={request}
+              isPending={isPending}
+              onResolve={onResolve}
+            />
           ))
         )}
       </ModQueueStatus>

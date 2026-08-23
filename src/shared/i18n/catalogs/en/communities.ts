@@ -12,6 +12,16 @@ import type { Catalog } from "../../types";
  * See `docs/i18n/extraction-brief.md` §1.
  */
 export const communities: Catalog = {
+  // ── Per-route metadata (PageMeta: browser tab + social unfurl) ────────────
+  "seo.hub.title": "Communities · QueerPulse",
+  "seo.hub.description":
+    "Find the collectives, crews and support circles gathering across Lisbon's queer community, and the one that will feel like yours.",
+  "seo.start.title": "Start a community · QueerPulse",
+  "seo.start.description":
+    "Found a community on QueerPulse: name what it is for, decide who it is for, set its shared values, and open the door.",
+  "seo.detail.title": "{name} · QueerPulse",
+  "seo.detail.imageAlt": "Cover image for the {name} community",
+
   // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
   "hubShell.title": "Communities &",
   "hubShell.titleEm": "collectives",
@@ -145,12 +155,71 @@ export const communities: Catalog = {
   "detail.joined": "Joined",
   "detail.requested": "Requested",
   "detail.frozen.title": "This community is paused",
-  "detail.frozen.body":
-    "Moderators are reviewing recent reports. New posts and joins are on hold until they lift the pause.",
+  // One line per reason. A manual pause has no report behind it, so it must
+  // never be narrated as a report review.
+  "detail.frozen.body.manual":
+    "A moderator paused this community. New posts and joins are on hold until the pause is lifted.",
+  "detail.frozen.body.emergencyReport":
+    "A serious report came in and moderators paused the community while they look at it. New posts and joins are on hold until they lift the pause.",
+  "detail.frozen.body.reportPileup":
+    "Several reports arrived close together, so the community paused automatically. Moderators are reading them now. New posts and joins are on hold until they lift the pause.",
+  "detail.frozen.body.unknown":
+    "This community is paused. New posts and joins are on hold until moderators lift it.",
+  "detail.frozen.since": "Paused since {date} at {time}.",
+  "detail.frozen.noteSource": "From the moderators",
+  "detail.frozen.composerNotice":
+    "This community is paused, so new posts are on hold. The banner at the top of the page has the details.",
   "detail.frozen.unfreezeCta": "Lift the pause",
   "detail.frozen.errorToast": "That didn't work. Try again.",
+
+  // ── The one-time welcome a newly approved member gets on Pulse ────────────
+  "detail.welcome.greeting": "Welcome to {name}",
+  "detail.welcome.dismissAria": "Hide this welcome",
+
+  // ── Per-community notification level (member's own, in the tab row) ───────
+  "detail.notifications.title": "Notifications",
+  "detail.notifications.subtitle":
+    "How much you hear from {name}. This only changes what reaches you, and nobody else can see it.",
+  "detail.notifications.groupLabel": "Notify me about",
+  "detail.notifications.groupHint":
+    "Your platform notification settings still apply on top of this.",
+  "detail.notifications.doneCta": "Done",
+  "detail.notifications.triggerAria": "Notifications from {name}: {level}",
+  "detail.notifications.errorToast":
+    "We couldn't save that. Try again in a moment.",
+  "detail.notifications.level.all.title": "Everything",
+  "detail.notifications.level.all.description":
+    "Every post, reply and announcement in this community.",
+  "detail.notifications.level.announcements.title": "Announcements only",
+  "detail.notifications.level.announcements.description":
+    "Only what an owner or moderator marks as an announcement. Ordinary posts stay quiet.",
+  "detail.notifications.level.mentions.title": "Mentions only",
+  "detail.notifications.level.mentions.description":
+    "Only when somebody names you in a post or a reply here.",
+  "detail.notifications.level.muted.title": "Muted",
+  "detail.notifications.level.muted.description":
+    "Nothing from this community. You stay a member and the feed is still here whenever you open it.",
+  "detail.notifications.savedToast.all":
+    "You'll hear about everything in {name}.",
+  "detail.notifications.savedToast.announcements":
+    "You'll hear about announcements in {name}.",
+  "detail.notifications.savedToast.mentions":
+    "You'll hear from {name} when somebody names you.",
+  "detail.notifications.savedToast.muted": "{name} is muted.",
   "detail.save.cta": "Save",
   "detail.save.saved": "Saved",
+  // "The house rules changed" prompt for a member whose agreed version trails
+  // the community's. In-page and dismissible: it never blocks reading.
+  "detail.rulesUpdate.title": "The house rules changed",
+  "detail.rulesUpdate.body":
+    "{name} has updated its house rules since you agreed to them. Take a moment to read them.",
+  "detail.rulesUpdate.readCta": "Read the rules",
+  "detail.rulesUpdate.hideCta": "Hide the rules",
+  "detail.rulesUpdate.acceptCta": "I have read them",
+  "detail.rulesUpdate.laterCta": "Later",
+  "detail.rulesUpdate.confirmedToast": "Thanks for reading the updated rules.",
+  "detail.rulesUpdate.errorToast":
+    "That did not save. Try again in a moment.",
   "detail.save.savedToast": "Community saved to your profile.",
   "detail.save.removedToast": "Community removed from saved.",
   "detail.save.saveAriaLabel": "Save {name}",
@@ -160,7 +229,7 @@ export const communities: Catalog = {
   "detail.share.copiedToast": "Link copied to your clipboard.",
   "detail.leave.confirm.title": "Leave {name}?",
   "detail.leave.confirm.body":
-    "You'll stop seeing this community's pulse and gatherings. You can always come back. You'll just need to join again.",
+    "You'll stop seeing this community's pulse and gatherings. Your posts and replies stay in the community exactly where they are, under your name. You can always come back. You'll just need to join again.",
   "detail.leave.confirm.cancel": "Stay",
   "detail.leave.confirm.confirmCta": "Leave community",
   "detail.hero.andMore": "and {count} more",
@@ -245,6 +314,9 @@ export const communities: Catalog = {
   "detail.events.past": "Past gatherings",
   "detail.events.recapCta": "Read recap",
   "detail.events.rsvpCta": "RSVP",
+  "detail.events.host.lead":
+    "Anyone here can put something on the calendar. Pick a date, a place and a size, and this community will see it.",
+  "detail.events.host.cta": "Host a gathering here",
 
   // ── Roster / members tab (living hub) ─────────────────────────────────────
   "detail.roster.searchAria": "Search members",
@@ -279,6 +351,36 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.requestedAgo": "Requested {time} ago",
   "detail.modtools.joinRequests.approveCta": "Approve",
   "detail.modtools.joinRequests.declineCta": "Decline",
+  // The applicant card. Context for a human decision: no totals, no ranking,
+  // no recommendation.
+  "detail.modtools.joinRequests.applicant.since": "On QueerPulse since {date}",
+  "detail.modtools.joinRequests.applicant.sharedConnections_one":
+    "{count} connection in common",
+  "detail.modtools.joinRequests.applicant.sharedConnections_other":
+    "{count} connections in common",
+  "detail.modtools.joinRequests.applicant.sharedCommunities_one":
+    "{count} community in common",
+  "detail.modtools.joinRequests.applicant.sharedCommunities_other":
+    "{count} communities in common",
+  "detail.modtools.joinRequests.applicant.involvementLabel":
+    "Wants to take part by",
+  "detail.modtools.joinRequests.applicant.noteLabel": "In their words",
+  // Declining. The two waits come from the backend's own constants (see
+  // `joinRequestReview.data.ts`), interpolated rather than written into copy.
+  "detail.modtools.joinRequests.decline.title": "Declining {name}",
+  "detail.modtools.joinRequests.decline.kindLabel": "Which kind of no is this?",
+  "detail.modtools.joinRequests.decline.notNow.label": "Not right now",
+  "detail.modtools.joinRequests.decline.notAFit.label": "Not a fit",
+  "detail.modtools.joinRequests.decline.reapplyAfterDays":
+    "They can ask again in {days} days.",
+  "detail.modtools.joinRequests.decline.reasonLabel":
+    "A note for the applicant (optional)",
+  "detail.modtools.joinRequests.decline.reasonHint":
+    "The applicant reads this word for word. Keep anything meant only for your fellow moderators out of it.",
+  "detail.modtools.joinRequests.decline.reasonPlaceholder":
+    "What you would like them to know.",
+  "detail.modtools.joinRequests.decline.confirmCta": "Send the decline",
+  "detail.modtools.joinRequests.decline.cancelCta": "Cancel",
   "detail.modtools.reports.label": "Reported posts",
   "detail.modtools.reports.empty.title": "All clear",
   // Shown when a mod queue could not be loaded at all (a 403 on the reports
@@ -358,6 +460,117 @@ export const communities: Catalog = {
     "There's nobody else on the roster to hand this to yet.",
   "detail.dangerZone.transfer.confirm.searchPlaceholder": "Search members…",
 
+  // ── Mod tools · insight trends (12-week sparklines) ───────────────────────
+  "detail.modtools.insights.trend.membersLabel": "New members a week",
+  "detail.modtools.insights.trend.postsLabel": "Posts a week",
+  "detail.modtools.insights.trend.rising":
+    "Rising. {recent} in the last {weeks} weeks, against {previous} in the {weeks} before.",
+  "detail.modtools.insights.trend.steady":
+    "Holding steady. {recent} in the last {weeks} weeks, against {previous} in the {weeks} before.",
+  "detail.modtools.insights.trend.falling":
+    "Falling. {recent} in the last {weeks} weeks, against {previous} in the {weeks} before.",
+  "detail.modtools.insights.trend.quiet":
+    "Quiet. Nothing recorded in the last {total} weeks.",
+  "detail.modtools.insights.trend.note":
+    "Weekly totals for the whole community. Each member's own activity stays private.",
+
+  // ── Mod tools · ban list ──────────────────────────────────────────────────
+  "detail.modtools.bans.label": "Barred from this community",
+  "detail.modtools.bans.intro":
+    "Everyone currently barred, newest first. Lifting a ban reopens the door to this community.",
+  "detail.modtools.bans.empty.title": "Nobody is barred",
+  "detail.modtools.bans.empty.description":
+    "Bans applied when you remove someone from the community show up here.",
+  "detail.modtools.bans.formerMember": "A former member",
+  "detail.modtools.bans.byOn": "Barred by {name} on {date}.",
+  "detail.modtools.bans.byGoneOn":
+    "Barred on {date}. The moderator who applied it has since left.",
+  "detail.modtools.bans.reason": "Reason recorded: {reason}",
+  "detail.modtools.bans.noReason": "No reason was recorded.",
+  "detail.modtools.bans.liftCta": "Lift ban",
+  "detail.modtools.bans.erasedNote":
+    "This account has been erased, so there is nobody left to let back in.",
+  "detail.modtools.bans.confirm.title": "Lift the ban on {name}?",
+  "detail.modtools.bans.confirm.body":
+    "This reopens the door: {name} can ask to join again. It leaves the roster alone, so they rejoin the same way anyone else does.",
+  "detail.modtools.bans.confirm.confirmCta": "Lift ban",
+  "detail.modtools.bans.liftedToast": "The ban on {name} has been lifted.",
+  "detail.modtools.bans.errorToast": "We could not lift that ban. Try again.",
+
+  // ── Mod tools · invite members ────────────────────────────────────────────
+  "detail.modtools.invites.label": "Invite members",
+  "detail.modtools.invites.intro":
+    "Pick people you are connected to and send them an invitation to this community, up to {max} at a time. An invitation is a message they can accept or leave. Joining stays their decision.",
+  "detail.modtools.invites.searchPlaceholder": "Search your connections…",
+  "detail.modtools.invites.selectedCount": "{selected} of {max} selected",
+  "detail.modtools.invites.sendCta": "Send invitations",
+  "detail.modtools.invites.errorToast":
+    "We could not send those invitations. Try again.",
+  "detail.modtools.invites.empty.title": "Nobody left to invite",
+  "detail.modtools.invites.empty.description":
+    "Everyone you are connected to is already on this roster.",
+  "detail.modtools.invites.result.invited": "Invitations sent ({total})",
+  "detail.modtools.invites.result.skipped": "Skipped ({total})",
+  "detail.modtools.invites.result.skipRow": "{name}: {reason}",
+  "detail.modtools.invites.result.note":
+    "Everyone under Skipped was passed over and received nothing. Everyone invited decides for themselves whether to join.",
+  "detail.modtools.invites.skip.unknownMember":
+    "We could not find this member.",
+  "detail.modtools.invites.skip.self": "This is your own account.",
+  "detail.modtools.invites.skip.systemAccount": "This is a platform account.",
+  "detail.modtools.invites.skip.alreadyMember": "Already a member here.",
+  "detail.modtools.invites.skip.pendingRequest":
+    "Already asked to join. Answer them in the requests queue above.",
+  "detail.modtools.invites.skip.banned": "Barred from this community.",
+
+  // ── Danger zone · your standing + owner-absence escalation ────────────────
+  "detail.dangerZone.yourRole.owner": "You own this community.",
+  "detail.dangerZone.yourRole.coOwner":
+    "You are a co-owner here. Transferring ownership and archiving stay with the owner.",
+  "detail.dangerZone.yourRole.mod":
+    "You are a moderator here. Transferring ownership and archiving stay with the owner.",
+  "detail.dangerZone.ownerReview.label": "Report an unreachable owner",
+  "detail.dangerZone.ownerReview.text":
+    "If the owner has stopped answering and this community is waiting on decisions only they can make, ask platform staff to look into it.",
+  "detail.dangerZone.ownerReview.cta": "Ask staff to look",
+  "detail.dangerZone.ownerReview.confirm.title":
+    "Ask platform staff to check on this community's ownership?",
+  "detail.dangerZone.ownerReview.confirm.body":
+    "Platform staff will read this and try to reach the owner themselves. Describe when you tried to contact them and what the community is waiting on.",
+  "detail.dangerZone.ownerReview.confirm.reasonLabel": "What happened",
+  "detail.dangerZone.ownerReview.confirm.reasonPlaceholder":
+    "We messaged the owner on 3 and 17 March about the join queue and have had no reply. Fourteen requests are waiting.",
+  "detail.dangerZone.ownerReview.confirm.minHint":
+    "Write at least {min} characters, so staff have something to act on.",
+  "detail.dangerZone.ownerReview.confirm.tooShort":
+    "Add a little more detail. At least {min} characters.",
+  "detail.dangerZone.ownerReview.confirm.confirmCta": "Send to platform staff",
+  "detail.dangerZone.ownerReview.filedToast":
+    "Sent. Platform staff will take it from here.",
+  "detail.dangerZone.ownerReview.errorToast": "Something went wrong. Try again.",
+  "detail.dangerZone.ownerReview.open.staffHeading":
+    "An ownership review is open",
+  "detail.dangerZone.ownerReview.open.ownerHeading":
+    "Moderators have asked platform staff to check on this community's ownership",
+  "detail.dangerZone.ownerReview.open.ownerBody":
+    "They reported that they were unable to reach you. You are reading this, so you can withdraw the request yourself.",
+  "detail.dangerZone.ownerReview.open.filedBy": "Filed by {name} on {date}.",
+  "detail.dangerZone.ownerReview.open.filedOn": "Filed on {date}.",
+  "detail.dangerZone.ownerReview.open.reason": "What they wrote: {reason}",
+  "detail.dangerZone.ownerReview.open.noReason": "No detail was recorded.",
+  "detail.dangerZone.ownerReview.withdrawCta": "Withdraw the request",
+  "detail.dangerZone.ownerReview.withdraw.title":
+    "Withdraw this ownership review?",
+  "detail.dangerZone.ownerReview.withdraw.body":
+    "Platform staff will stop looking into it. Anyone who can file a review can file another one later.",
+  "detail.dangerZone.ownerReview.withdraw.confirmCta": "Withdraw",
+  "detail.dangerZone.ownerReview.withdrawnToast":
+    "The ownership review has been withdrawn.",
+  "detail.dangerZone.ownerReview.flagged.heading":
+    "Flagged for an ownership check",
+  "detail.dangerZone.ownerReview.flagged.body":
+    "Platform staff have this community marked for an ownership check. There is no moderator request behind it.",
+
   // ── Pulse tab (living hub) ─────────────────────────────────────────────────
   "detail.pulse.joinHint": "You're welcome to read. Join {name} to take part.",
   "detail.pulse.composerPlaceholder": "Share something with {name}…",
@@ -371,6 +584,29 @@ export const communities: Catalog = {
   "detail.pulse.sharedToast": "Shared with the community.",
   "detail.pulse.loadingMore": "Loading…",
   "detail.pulse.loadMoreCta": "Load more posts",
+
+  // ── Announcements (owner / co-owner / moderator) ──────────────────────────
+  "detail.pulse.announcement.toggleLabel": "Post as an announcement",
+  "detail.pulse.announcement.toggleHint":
+    "Pins it to the top of Pulse and notifies everyone in the community.",
+  "detail.pulse.announcement.toggleAria": "Post this as an announcement",
+  "detail.pulse.announcement.shareCta": "Announce",
+  "detail.pulse.announcement.sharedToast":
+    "Announced. It's pinned to the top and the community has been notified.",
+  "detail.pulse.announcement.flag": "Announcement",
+
+  // ── Feed search (server-side, across the whole history) ───────────────────
+  "detail.pulse.search.placeholder": "Search posts in {name}…",
+  "detail.pulse.search.ariaLabel": "Search posts in {name}",
+  "detail.pulse.search.resultCount_one": "{count} matching post",
+  "detail.pulse.search.resultCount_other": "{count} matching posts",
+  "detail.pulse.search.loadMoreCta": "Load more results",
+  "detail.pulse.search.emptyTitle": "No posts match that",
+  "detail.pulse.search.emptyDescription":
+    "Nothing in this community mentions “{term}”. Try a shorter word or a different spelling.",
+  "detail.pulse.search.errorTitle": "We couldn't run that search",
+  "detail.pulse.search.errorDescription":
+    "Something went wrong reaching this community's posts. Try again in a moment.",
   "detail.events.error.title": "We couldn't load the gatherings",
   "detail.events.error.description":
     "Something went wrong reaching this community's calendar. Try again in a moment.",
@@ -384,12 +620,58 @@ export const communities: Catalog = {
   // ── About + Resources tab (living hub) ────────────────────────────────────
   "detail.aboutResources.houseRules": "House rules",
   "detail.aboutResources.resources": "Resources",
-  "detail.aboutResources.sisterCommunities": "Sister communities",
-  "detail.aboutResources.sharedPeople_one": "{count} person in both",
-  "detail.aboutResources.sharedPeople_other": "{count} people in both",
+
+  // ── The resource shelf: read for members, editable by staff ───────────────
+  "detail.resources.manageCta": "Manage",
+  "detail.resources.doneCta": "Done",
+  "detail.resources.emptyStaffHint":
+    "Nothing on the shelf yet. Pin the things people keep asking for: the house rules doc, the group chat, the meeting notes.",
+  "detail.resources.kind.link": "Link",
+  "detail.resources.kind.doc": "Document",
+  "detail.resources.kind.guide": "Guide",
+  "detail.resources.editor.addCta": "Add a resource",
+  "detail.resources.editor.capReached":
+    "This shelf holds {max} resources, and it's full. Remove one to add another.",
+  "detail.resources.editor.dragToReorder": "Drag to reorder",
+  "detail.resources.editor.moveUpAria": "Move {title} up",
+  "detail.resources.editor.moveDownAria": "Move {title} down",
+  "detail.resources.editor.editAria": "Edit {title}",
+  "detail.resources.editor.removeAria": "Remove {title}",
+  "detail.resources.editor.errorToast":
+    "That didn't save. Try again in a moment.",
+  "detail.resources.editor.addedToast": "Added to the shelf.",
+  "detail.resources.editor.savedToast": "Resource updated.",
+  "detail.resources.editor.removedToast": "Taken off the shelf.",
+  "detail.resources.editor.removeConfirmTitle": "Remove {title}?",
+  "detail.resources.editor.removeConfirmBody":
+    "It comes off the shelf for everyone in this community. The page it points at is untouched, and you can pin it again later.",
+  "detail.resources.editor.removeConfirmCta": "Remove",
+  "detail.resources.form.addTitle": "Add a resource",
+  "detail.resources.form.editTitle": "Edit resource",
+  "detail.resources.form.subtitle":
+    "Everyone in this community sees the shelf, so keep it to things they'll actually reach for.",
+  "detail.resources.form.titleLabel": "Title",
+  "detail.resources.form.titlePlaceholder": "House rules",
+  "detail.resources.form.titleRequired": "Give it a title.",
+  "detail.resources.form.urlLabel": "Link",
+  "detail.resources.form.urlPlaceholder": "https://",
+  "detail.resources.form.urlHelper":
+    "A full web address, starting with http:// or https://",
+  "detail.resources.form.urlRequired": "Add the link it should point at.",
+  "detail.resources.form.urlInvalid":
+    "That isn't a web address we can link to. It needs to start with http:// or https://",
+  "detail.resources.form.kindLabel": "Kind",
+  "detail.resources.form.noteLabel": "Note",
+  "detail.resources.form.notePlaceholder": "What people will find there",
+  "detail.resources.form.noteHelper":
+    "Optional. One line under the title, so nobody has to open it to know what it is.",
+  "detail.resources.form.cancelCta": "Cancel",
+  "detail.resources.form.saveCta": "Save",
+  "detail.resources.form.savingCta": "Saving…",
 
   // ── Badges: role pills, access-tier pills, reaction bar ───────────────────
   "badges.role.owner": "Owner",
+  "badges.role.coOwner": "Co-owner",
   "badges.role.mod": "Mod",
   "badges.tier.public": "Open to all",
   "badges.tier.request": "Request to join",
@@ -431,6 +713,31 @@ export const communities: Catalog = {
   "join.involvement.active.desc": "Come to events and join the group",
   "join.involvement.organise.label": "Help organise",
   "join.involvement.organise.desc": "Volunteer to help run things",
+  // House rules, shown on the way in and agreed to per version
+  "join.rules.eyebrow": "House rules",
+  "join.rules.title": "The house rules of {name}",
+  "join.rules.hint":
+    "Read these before you join. Everyone in this space agrees to them.",
+  "join.rules.updatedNotice":
+    "These rules were updated while you had this open. Please read them again.",
+  "join.rules.acknowledge.title":
+    "I have read these house rules and I agree to follow them",
+  "join.rules.acknowledge.sub":
+    "You can read them again any time on the community's About tab.",
+  "join.rules.continueCta": "Continue",
+  "join.rules.acknowledgeRequired":
+    "Please confirm you have read the house rules to carry on.",
+  // The two refusals a join can come back with. Neither names a moderator and
+  // neither gives a reason, because the backend deliberately sends none.
+  "join.refusal.banned.title": "This community is closed to you",
+  "join.refusal.banned.body":
+    "You are not able to join this community. We cannot say more than that here. If you think there has been a mistake, the QueerPulse team can look into it with you.",
+  "join.refusal.reapply.title": "You can ask again later",
+  "join.refusal.reapply.body":
+    "This community asked you to wait before applying again. You can send a new request from {date}.",
+  "join.refusal.reapply.bodyNoDate":
+    "This community asked you to wait before applying again. You can send a new request once that wait is over.",
+  "join.refusal.closeCta": "Close",
   "join.done.requestTitle": "Your request is with the mods",
   "join.done.welcomeTitle": "Welcome to {name}",
   "join.done.requestBody":
@@ -766,7 +1073,7 @@ export const communities: Catalog = {
   "common.count.members_one": "{count} member",
   "common.count.members_other": "{count} members",
   "common.count.membersOnly": "Members only",
-  "detail.founded": "Founded {year}",
+  "detail.founded": "Founded {date}",
   "detail.foundedRecently": "Founded recently",
   "detail.foundedJustNow": "Founded just now",
   "detail.cadenceDefault": "Finding its rhythm",

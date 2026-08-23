@@ -14,7 +14,10 @@ import { RosterTab } from "./RosterTab";
 import { EventsTab } from "./EventsTab";
 import { AboutResourcesTab } from "./AboutResourcesTab";
 import { ModToolsTab } from "./ModToolsTab";
+import { CommunityNotificationControl } from "./CommunityNotificationControl";
+import { isCommunityStaff } from "./communityStaff";
 import styles from "./CommunityDetailPage.module.css";
+import notificationStyles from "./CommunityNotificationControl.module.css";
 
 type Tab = "pulse" | "discussion" | "members" | "events" | "about" | "modtools";
 
@@ -83,7 +86,13 @@ export function LivingHubTabs({
       { replace: true },
     );
 
-  const isMod = role === "owner" || role === "mod";
+  // Owner, co-owner and moderator all speak for the community: they get the
+  // Mod tools tab, they see a tab the founder hid, and they may post an
+  // announcement (the server refuses anybody else with a 403, so the
+  // composer's switch is gated on the same set). Comparing against "owner"
+  // and "mod" by hand here is what used to hide every moderation surface
+  // from a co-owner.
+  const isStaff = isCommunityStaff(role);
   // The founder's "events"/"roster" feature toggles (plus "show roster to
   // members" for roster specifically) decide whether each tab is really on.
   // An owner/mod who turned one off still sees it themselves — with a
@@ -94,8 +103,8 @@ export function LivingHubTabs({
   const eventsOn = featureOn(living.features, "events");
   const rosterOn =
     featureOn(living.features, "roster") && (living.rosterVisible ?? true);
-  const showEvents = eventsOn || isMod;
-  const showMembers = rosterOn || isMod;
+  const showEvents = eventsOn || isStaff;
+  const showMembers = rosterOn || isStaff;
 
   const baseTabs: { id: Tab; label: string }[] = [
     { id: "pulse", label: t("communities:detail.tabs.pulse") },
@@ -108,7 +117,7 @@ export function LivingHubTabs({
       : []),
     { id: "about", label: t("communities:detail.tabs.about") },
   ];
-  const tabs = isMod
+  const tabs = isStaff
     ? [
         ...baseTabs,
         { id: "modtools" as Tab, label: t("communities:detail.tabs.modtools") },
@@ -117,7 +126,7 @@ export function LivingHubTabs({
   // If the active tab is no longer offered (mod tools after a role drop, or a
   // tab the founder just hid), fall back to Pulse.
   const active: Tab =
-    (tab === "modtools" && !isMod) ||
+    (tab === "modtools" && !isStaff) ||
     (tab === "events" && !showEvents) ||
     (tab === "members" && !showMembers)
       ? "pulse"
@@ -134,21 +143,37 @@ export function LivingHubTabs({
 
   return (
     <div>
-      <Tabs
-        className={styles.tabs}
-        variant="underline"
-        tabs={tabs.map((t) => ({
-          id: t.id,
-          label: t.label,
-          count: count[t.id],
-        }))}
-        active={active}
-        onChange={(id) => setTab(id as Tab)}
-      />
+      {/* The member's own notification level rides in the tab row: it belongs
+          to every member (so never in mod tools) and this strip is the one
+          part of the hub that stays put whichever tab is open. */}
+      <div className={notificationStyles.tabRow}>
+        <div className={notificationStyles.tabRowTabs}>
+          <Tabs
+            className={styles.tabs}
+            variant="underline"
+            tabs={tabs.map((t) => ({
+              id: t.id,
+              label: t.label,
+              count: count[t.id],
+            }))}
+            active={active}
+            onChange={(id) => setTab(id as Tab)}
+          />
+        </div>
+        {isMember && (
+          <div className={notificationStyles.tabRowControl}>
+            <CommunityNotificationControl
+              key={slug}
+              slug={slug}
+              communityName={community.name}
+            />
+          </div>
+        )}
+      </div>
 
       <LivingHubTabContent
         active={active}
-        isMod={isMod}
+        isStaff={isStaff}
         eventsOn={eventsOn}
         rosterOn={rosterOn}
         community={community}
@@ -172,7 +197,7 @@ export function LivingHubTabs({
  *  under the repo's 200-line limit. */
 function LivingHubTabContent({
   active,
-  isMod,
+  isStaff,
   eventsOn,
   rosterOn,
   community,
@@ -188,7 +213,7 @@ function LivingHubTabContent({
   communityPulse,
 }: {
   active: Tab;
-  isMod: boolean;
+  isStaff: boolean;
   eventsOn: boolean;
   rosterOn: boolean;
   community: Community;
@@ -206,13 +231,13 @@ function LivingHubTabContent({
   const { t } = useTranslation();
   return (
     <FadeIn key={active}>
-      {isMod && active === "events" && !eventsOn && (
+      {isStaff && active === "events" && !eventsOn && (
         <p className={styles.hiddenNote}>
           <FiEyeOff aria-hidden />
           {t("communities:detail.hiddenFromMembers")}
         </p>
       )}
-      {isMod && active === "members" && !rosterOn && (
+      {isStaff && active === "members" && !rosterOn && (
         <p className={styles.hiddenNote}>
           <FiEyeOff aria-hidden />
           {t("communities:detail.hiddenFromMembers")}
@@ -223,7 +248,8 @@ function LivingHubTabContent({
           community={living}
           name={community.name}
           isMember={isMember}
-          canModerate={isMod}
+          canModerate={isStaff}
+          canAnnounce={isStaff}
           frozen={!!living.frozen}
           paging={pulsePaging}
         />
@@ -233,7 +259,7 @@ function LivingHubTabContent({
           threads={threads}
           slug={slug}
           isMember={isMember}
-          canModerate={isMod}
+          canModerate={isStaff}
           frozen={!!living.frozen}
           paging={discussionPaging}
         />
@@ -249,12 +275,21 @@ function LivingHubTabContent({
       {active === "events" && (
         <EventsTab
           events={living.events}
+          communitySlug={living.slug}
+          isMember={isMember}
           isLoading={communityPulse.isLoading}
           isError={communityPulse.isError}
           onRetry={communityPulse.refetch}
         />
       )}
-      {active === "about" && <AboutResourcesTab info={info} living={living} />}
+      {active === "about" && (
+        <AboutResourcesTab
+          info={info}
+          living={living}
+          role={role}
+          isMember={isMember}
+        />
+      )}
       {active === "modtools" && (
         <ModToolsTab
           living={living}

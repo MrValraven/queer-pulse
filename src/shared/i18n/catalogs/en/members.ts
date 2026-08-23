@@ -236,6 +236,7 @@ export const members: Catalog = {
     "Communities you're featuring on your profile.",
   "profile.communities.subtitlePublic": "Communities {first} is part of.",
   "profile.communities.role.owner": "Owner",
+  "profile.communities.role.coOwner": "Co-owner",
   "profile.communities.role.mod": "Moderator",
   "profile.communities.role.member": "Member",
   "profile.communities.empty.title": "Feature your communities",

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiAlertTriangle, FiArrowRight } from "react-icons/fi";
+import { FiAlertTriangle, FiArrowRight, FiPlus } from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -8,7 +8,7 @@ import {
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { gatheringPath } from "../gatherings/data";
+import { createGatheringPath, gatheringPath } from "../gatherings/data";
 import type { CommunityEvent } from "./community.model";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
@@ -68,13 +68,55 @@ function EventRowSkeleton() {
   );
 }
 
+/**
+ * "Host a gathering here" — the Events tab's way out of a read-only calendar.
+ * Deep-links the create-gathering wizard with this community preselected
+ * (`createGatheringPath`), so the new gathering is filed here by default.
+ * Members only: the wizard's community picker and the backend both require a
+ * membership, so offering it to anyone else would fail on publish.
+ */
+function HostGatheringCta({
+  communitySlug,
+  isProminent,
+}: {
+  communitySlug: string;
+  /** The empty state gets the loud version with a line of encouragement; a
+   *  tab that already has gatherings gets the quiet one under the list. */
+  isProminent: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={isProminent ? styles.hostCtaLoud : styles.hostCtaQuiet}>
+      {isProminent && (
+        <p className={styles.hostCtaLead}>
+          {t("communities:detail.events.host.lead")}
+        </p>
+      )}
+      <Button
+        variant={isProminent ? "primary" : "ghost"}
+        to={createGatheringPath(communitySlug)}
+      >
+        <FiPlus aria-hidden /> {t("communities:detail.events.host.cta")}
+      </Button>
+    </div>
+  );
+}
+
 export function EventsTab({
   events,
+  communitySlug,
+  isMember,
   isLoading = false,
   isError = false,
   onRetry,
 }: {
   events: CommunityEvent[];
+  /** This community's slug, used to preselect it in the create-gathering
+   *  wizard behind the "host a gathering here" call to action. */
+  communitySlug: string;
+  /** Whether the viewer belongs to this community. Only members are offered
+   *  the host call to action. */
+  isMember: boolean;
   /** True while the live-mode fetch is in flight (always `false` in demo). */
   isLoading?: boolean;
   /** True when the live-mode fetch failed (always `false` in demo). */
@@ -82,6 +124,7 @@ export function EventsTab({
   onRetry?: () => void;
 }) {
   const { t } = useTranslation();
+  const canHost = isMember && communitySlug.length > 0;
 
   if (isLoading) {
     return (
@@ -124,11 +167,26 @@ export function EventsTab({
         <FeatureHelp id="community.events" />
       </div>
       {upcoming.length > 0 ? (
-        upcoming.map((ev) => <EventRow key={ev.id} ev={ev} />)
+        <>
+          {upcoming.map((ev) => (
+            <EventRow key={ev.id} ev={ev} />
+          ))}
+          {canHost && (
+            <HostGatheringCta
+              communitySlug={communitySlug}
+              isProminent={false}
+            />
+          )}
+        </>
       ) : (
-        <p className={styles.eventsEmpty}>
-          {t("communities:detail.events.noUpcoming")}
-        </p>
+        <>
+          <p className={styles.eventsEmpty}>
+            {t("communities:detail.events.noUpcoming")}
+          </p>
+          {canHost && (
+            <HostGatheringCta communitySlug={communitySlug} isProminent />
+          )}
+        </>
       )}
 
       {past.length > 0 && (

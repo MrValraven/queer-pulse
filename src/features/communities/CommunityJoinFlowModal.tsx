@@ -3,7 +3,8 @@ import { useCommunityMembership } from "../../app/providers/useCommunityMembersh
 import type { Community } from "../homepage/data/types";
 import { getLiving } from "./livingCommunities.data";
 import { JoinModal } from "./JoinModal";
-import { useJoinCommunity } from "./api/useCommunityMutations";
+import type { JoinCommunityPayload } from "./api/communityJoin.api";
+import { useJoinCommunityWithRules } from "./api/useCommunityJoin";
 
 /**
  * The join wizard as mounted from a community CARD (the discover grid and the
@@ -25,7 +26,7 @@ export function CommunityJoinFlowModal({
 }) {
   const { demoMode } = useDemoMode();
   const { join, requestToJoin } = useCommunityMembership();
-  const joinMutation = useJoinCommunity(community.slug ?? "");
+  const joinMutation = useJoinCommunityWithRules(community.slug ?? "");
 
   // Live trusts the card's own DTO tier. The mock living registry is a demo
   // fixture and would otherwise describe a real community whose slug happens
@@ -36,7 +37,10 @@ export function CommunityJoinFlowModal({
     community.accessTier ??
     (community.privateBadge ? "private" : "public");
 
-  const submit = async (isRequest: boolean, note?: string) => {
+  // The payload now carries the applicant's own words, their involvement
+  // answer as a real field, and the house-rules version they agreed to in the
+  // wizard's rules step.
+  const submit = async (isRequest: boolean, payload: JoinCommunityPayload) => {
     if (demoMode) {
       if (community.slug) {
         if (isRequest) requestToJoin(community.slug);
@@ -44,7 +48,7 @@ export function CommunityJoinFlowModal({
       }
       return;
     }
-    await joinMutation.mutateAsync({ note });
+    await joinMutation.mutateAsync(payload);
   };
 
   return (
@@ -54,11 +58,12 @@ export function CommunityJoinFlowModal({
         typeLabel: community.typeLabel,
         count: community.count,
         description: community.description,
+        slug: community.slug,
       }}
       tier={tier}
       onClose={onClose}
-      onJoined={(note) => submit(false, note)}
-      onRequested={(note) => submit(true, note)}
+      onJoined={(payload) => submit(false, payload)}
+      onRequested={(payload) => submit(true, payload)}
     />
   );
 }

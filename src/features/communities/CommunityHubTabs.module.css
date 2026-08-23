@@ -89,60 +89,6 @@
   line-height: 1.4;
 }
 
-/* ---- sister communities ---- */
-.sisters {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.sister {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
-  padding: 13px 16px;
-  text-decoration: none;
-  transition:
-    border-color 0.2s var(--ease),
-    transform 0.2s var(--ease);
-}
-@media (hover: hover) {
-  .sister:hover {
-    border-color: rgba(var(--line-rgb), 0.2);
-    transform: translateY(-1px);
-  }
-}
-.sisterIc {
-  flex: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent-ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 13px;
-}
-.sisterMain {
-  flex: 1;
-  min-width: 0;
-}
-.sisterName {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-strong);
-}
-.sisterShared {
-  font-size: 12.5px;
-  color: var(--jade);
-  font-weight: 600;
-  margin-top: 2px;
-}
 .msgBtn {
   display: inline-flex;
   align-items: center;
@@ -444,4 +390,27 @@
   .declineBtn {
     transition: none;
   }
+}
+
+/* ---- "host a gathering here" call to action (Events tab) ---- */
+.hostCtaLoud {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 18px 20px;
+  background: var(--paper);
+  border: 1px dashed rgba(var(--line-rgb), 0.22);
+  border-radius: 16px;
+}
+.hostCtaLead {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  margin: 0;
+}
+.hostCtaQuiet {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 14px;
 }

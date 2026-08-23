@@ -16,8 +16,9 @@ import styles from "./CommunityHubTabs.module.css";
 
 const ROLE_ORDER: Record<RosterMember["role"], number> = {
   owner: 0,
-  mod: 1,
-  member: 2,
+  co_owner: 1,
+  mod: 2,
+  member: 3,
 };
 
 /**

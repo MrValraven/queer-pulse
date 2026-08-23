@@ -34,6 +34,42 @@
   opacity: 0.72;
 }
 
+/* The pause's start, then the moderator's own public note about it. */
+.since {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  color: var(--ink);
+  opacity: 0.55;
+}
+
+.note {
+  margin: 10px 0 0;
+  padding: 8px 0 8px 12px;
+  border-left: 2px solid rgba(var(--line-rgb), 0.18);
+}
+.noteText {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.noteSource {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0.45;
+}
+
+/* The banner is a column of sentences now, so its action sits at the top of
+   that column rather than centred against a growing block of text. */
+.banner {
+  align-items: flex-start;
+}
+
 @media (--mobile) {
   .banner {
     align-items: flex-start;

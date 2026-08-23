@@ -1,4 +1,5 @@
 import type { Person } from "./communityDetails";
+import type { JoinInvolvement } from "./api/communityJoin.api";
 import type { AccessTier, CommunityRole } from "./membership.types";
 import type { ReasonCode } from "../safety/reportReasons";
 
@@ -119,6 +120,22 @@ export interface ModRequest {
   createdAt?: string;
   /** Legacy pre-rendered relative token, demo mock data only. */
   time?: string;
+  /** The applicant's pronouns, when their profile carries them (live rows;
+   *  the backend's `MemberRef` includes them). */
+  pronouns?: string;
+  /** How they said they want to take part, as its own answer. Absent when they
+   *  skipped the question or the request predates the field. */
+  involvement?: JoinInvolvement;
+  /** Reviewer-side context, all live-only and all optional. Present as CONTEXT
+   *  for a human decision: nothing here is a score, a rank or a
+   *  recommendation, and no surface may turn it into one.
+   *  When the applicant's ACCOUNT was created (not when they applied). */
+  accountCreatedAt?: string;
+  /** Accepted connections this applicant and the reviewer's community share. */
+  sharedConnectionCount?: number;
+  /** Other communities the applicant is on the roster of alongside this one's
+   *  members. */
+  sharedCommunityCount?: number;
 }
 
 /** A flagged post or reply awaiting a mod decision. Demo mocks populate the

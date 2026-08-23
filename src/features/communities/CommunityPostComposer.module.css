@@ -60,3 +60,32 @@
   flex: 1;
   min-width: 0;
 }
+
+/* ── Announcement switch (owner / co-owner / moderator only) ──────────────── */
+.announcementRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+
+.announcementText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.announcementTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.announcementHint {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}

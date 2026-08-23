@@ -51,6 +51,10 @@ export function usePulseTabActions(community: LivingCommunity) {
   );
 
   const [draft, setDraft] = useState("");
+  // Whether the next post goes out as an announcement. Only ever true when the
+  // Pulse tab actually rendered the switch, which it does for owner, co-owner
+  // and moderator alone — the server refuses the rest with a 403.
+  const [isAnnouncementDraft, setIsAnnouncementDraft] = useState(false);
   const [mine, setMine] = useState<Post[]>([]);
   // Demo-only pin overrides, keyed by post id — live mode relies on the refetch
   // a successful `useUpdatePost` triggers to move the post between the
@@ -149,14 +153,24 @@ export function usePulseTabActions(community: LivingCommunity) {
     const text = draft.trim();
     if (!text) return;
     const stagedImage = imageAttach.image;
+    const isAnnouncement = isAnnouncementDraft;
     const optimisticId = `me-${mine.length}-${Date.now()}`;
+    const sharedToast = () =>
+      showToast(
+        t(
+          isAnnouncement
+            ? "communities:detail.pulse.announcement.sharedToast"
+            : "communities:detail.pulse.sharedToast",
+        ),
+        "success",
+      );
     setMine((prev) => [
       {
         id: optimisticId,
         author: viewer ?? { initials: "?", name: "", tint: "plum" },
         body: text,
         image: stagedImage?.previewUrl,
-        kind: "post",
+        kind: isAnnouncement ? "announcement" : "post",
         reactions: [{ key: "heart", count: 0 }],
         replies: [],
         createdAt: new Date().toISOString(),
@@ -165,20 +179,28 @@ export function usePulseTabActions(community: LivingCommunity) {
       ...prev,
     ]);
     setDraft("");
+    setIsAnnouncementDraft(false);
     imageAttach.remove();
     if (demoMode) {
-      showToast(t("communities:detail.pulse.sharedToast"), "success");
+      sharedToast();
       return;
     }
     createPost.mutate(
-      { body: text, image: stagedImage?.key },
+      {
+        body: text,
+        image: stagedImage?.key,
+        kind: isAnnouncement ? "announcement" : "post",
+      },
       {
         onSuccess: () => {
           setMine([]);
-          showToast(t("communities:detail.pulse.sharedToast"), "success");
+          sharedToast();
         },
         onError: () => {
           setMine((prev) => prev.filter((post) => post.id !== optimisticId));
+          // Put the switch back where it was, so a retry does not silently
+          // downgrade an announcement to an ordinary post.
+          setIsAnnouncementDraft(isAnnouncement);
           onError();
         },
       },
@@ -191,6 +213,8 @@ export function usePulseTabActions(community: LivingCommunity) {
     imageAttach,
     draft,
     setDraft,
+    isAnnouncementDraft,
+    setIsAnnouncementDraft,
     mine,
     isPinnedEffective,
     reportTarget,

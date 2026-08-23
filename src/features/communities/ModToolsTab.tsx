@@ -15,6 +15,8 @@ import {
   ModToolsCardSection,
 } from "./ModToolsSections";
 import { ModToolsInsights } from "./ModToolsInsights";
+import { ModToolsInvites } from "./ModToolsInvites";
+import { ModToolsBans } from "./ModToolsBans";
 import { CommunityDangerZone } from "./CommunityDangerZone";
 import { useModToolsActions } from "./useModToolsActions";
 
@@ -50,6 +52,7 @@ export function ModToolsTab({
     confirmRemoveMember,
     confirmRemoveReport,
     isConfirmPending,
+    isRequestPending,
   } = useModToolsActions(living);
 
   const confirmCopy =
@@ -78,7 +81,9 @@ export function ModToolsTab({
         requests={requests}
         state={requestsState}
         onResolve={resolveRequest}
+        isPending={isRequestPending}
       />
+      <ModToolsInvites slug={living.slug} />
       <ModReportedPosts
         reports={reports}
         state={reportsState}
@@ -97,6 +102,7 @@ export function ModToolsTab({
           setConfirming({ kind: "removeMember", memberSlug, name })
         }
       />
+      <ModToolsBans slug={living.slug} />
       <ModToolsCardSection
         slug={living.slug}
         communityName={communityName}

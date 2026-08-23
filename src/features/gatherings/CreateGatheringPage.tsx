@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { FadeIn, Stepper } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -12,6 +12,7 @@ import { PILL_LABEL_KEYS, TIP_KEYS, TOTAL_STEPS } from "./createGathering.data";
 import { useGatheringForm } from "./useGatheringForm";
 import { useCreateEvent } from "./api/useEventMutations";
 import { formToCreateEventDto } from "./api/events.adapters";
+import { CREATE_GATHERING_COMMUNITY_PARAM } from "./data";
 import { CreateGatheringSuccess } from "./CreateGatheringSuccess";
 import {
   CapacityStep,
@@ -34,7 +35,14 @@ export function CreateGatheringPage() {
   // the real createEvent mutation, so we only flip to success from its onSuccess
   // (never from the simulated submit lifecycle).
   const [published, setPublished] = useState(false);
-  const form = useGatheringForm();
+  // A community's Events tab links here as `?community=<slug>` so the host
+  // lands with that community already picked (see `createGatheringPath`). Read
+  // once, on mount, by the form hook: changing the URL afterwards does not
+  // overwrite a pick the host has since made.
+  const [searchParams] = useSearchParams();
+  const form = useGatheringForm({
+    communitySlug: searchParams.get(CREATE_GATHERING_COMMUNITY_PARAM) ?? "",
+  });
   const createEvent = useCreateEvent();
 
   // Per-step required-field gate (0-based indices): step 0 needs a format and a

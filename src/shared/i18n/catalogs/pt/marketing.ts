@@ -1773,6 +1773,70 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.community-house-rules.title":
+    "As regras da casa chegam com o convite",
+  "changelog.entries.community-house-rules.body":
+    "Entrar numa comunidade com regras da casa passa por lê-las e aceitá-las primeiro. Se mais tarde a pessoa responsável mudar as regras, quem já está dentro é convidado uma vez a ler a nova versão, e fica registado aquilo que aceitaste.",
+  "changelog.entries.community-removal-bars-return.title":
+    "Sair por decisão da moderação passa a significar isso mesmo",
+  "changelog.entries.community-removal-bars-return.body":
+    "Quando alguém da moderação remove uma pessoa, essa pessoa deixa de poder voltar a entrar de imediato. A moderação pode na mesma remover e deixar a porta aberta quando é só arrumação, e qualquer impedimento pode ser levantado depois nas Ferramentas de moderação.",
+  "changelog.entries.community-announcements.title":
+    "Quem é responsável pode dizer algo que se destaca",
+  "changelog.entries.community-announcements.body":
+    "Quem é responsável, cotitular ou modera pode publicar um anúncio: fica fixado no topo e chega a quem é membro da comunidade. As publicações normais continuam normais.",
+  "changelog.entries.community-notification-levels.title":
+    "Escolhe quanto é que cada comunidade te chega",
+  "changelog.entries.community-notification-levels.body":
+    "Cada comunidade passa a ter a sua definição: tudo, só anúncios, só menções, ou silenciada. Define-a comunidade a comunidade a partir da linha de separadores. Quem chega começa em só anúncios.",
+  "changelog.entries.community-invites-any-time.title":
+    "Convida pessoas para a tua comunidade a qualquer momento",
+  "changelog.entries.community-invites-any-time.body":
+    "Convidar pessoas só era possível no dia em que fundavas a comunidade. Quem é responsável, cotitular ou modera pode agora convidar a partir das Ferramentas de moderação. Um convite é uma mensagem, e entrar continua a ser decisão da outra pessoa.",
+  "changelog.entries.community-join-review-context.title":
+    "Ver um pedido de entrada mostra-te a pessoa",
+  "changelog.entries.community-join-review-context.body":
+    "Um pedido chega agora com pronomes, há quanto tempo a pessoa está na QueerPulse, ligações em comum e comunidades em comum, com o nome ligado ao perfil. Ao recusar, escolhes entre 'agora não' e 'não é o espaço certo', para a pessoa saber se vale a pena voltar a tentar.",
+  "changelog.entries.community-resources-shelf.title":
+    "Uma prateleira a sério para os links da comunidade",
+  "changelog.entries.community-resources-shelf.body":
+    "Quem é responsável, cotitular ou modera pode construir a prateleira de recursos: linhas de apoio, guias legais, uma lista de leituras, aquilo a que a comunidade volta sempre. Reordenável, e aparece no separador Sobre.",
+  "changelog.entries.community-co-ownership.title":
+    "Cotitulares, e uma forma de sinalizar ausências",
+  "changelog.entries.community-co-ownership.body":
+    "Uma comunidade pode agora ter uma pessoa cotitular que partilha os poderes do dia a dia, enquanto transferir a titularidade e arquivar continuam a caber a quem é responsável. Se quem é responsável ficar impossível de contactar, a moderação pode pedir à equipa da plataforma que veja, e basta aparecer para retirar esse pedido.",
+  "changelog.entries.community-governance-history.title":
+    "Cada comunidade vê o seu próprio histórico",
+  "changelog.entries.community-governance-history.body":
+    "Quem é responsável, cotitular ou modera pode ler o registo do que aconteceu na comunidade: mudanças de papel, remoções, impedimentos levantados, pausas e transferências. Antes só a equipa da plataforma via isto.",
+  "changelog.entries.community-public-teaser.title":
+    "Partilha uma comunidade com quem está de fora",
+  "changelog.entries.community-public-teaser.body":
+    "Quem é responsável pode deixar a comunidade mostrar uma página pública curta a quem não tem sessão iniciada: o que é, para quem é, e como pedir convite. Desligado por omissão, disponível só para comunidades abertas ou de pedido de entrada, e nunca mostra a lista de membros nem uma única publicação.",
+  "changelog.entries.community-place-and-language.title":
+    "Encontra comunidades perto de ti, na tua língua",
+  "changelog.entries.community-place-and-language.body":
+    "As comunidades podem dizer onde se encontram e em que línguas funcionam, e o Descobrir filtra por ambos. Ordenar por mais ativas passa também a ser feito no servidor, por isso os resultados ficam certos para lá da primeira página.",
+  "changelog.entries.community-welcome-and-search.title":
+    "Boas-vindas à chegada, e pesquisa dentro da comunidade",
+  "changelog.entries.community-welcome-and-search.body":
+    "Quem é responsável pode escrever uma saudação que quem chega vê uma vez. As publicações de cada comunidade passam a ser pesquisáveis, em todo o histórico e não só na parte a que já chegaste.",
+  "changelog.entries.community-insight-trends.title":
+    "As estatísticas da comunidade mostram direção",
+  "changelog.entries.community-insight-trends.body":
+    "O painel de estatísticas junta doze semanas de entradas e publicações, para veres se a comunidade está a crescer ou a ficar em silêncio. Apenas totais da comunidade inteira: a atividade individual de cada pessoa não é mostrada.",
+  "changelog.entries.community-pause-reason.title":
+    "Uma comunidade em pausa explica-se com honestidade",
+  "changelog.entries.community-pause-reason.body":
+    "O aviso de pausa dizia que a moderação estava a rever denúncias mesmo quando alguém tinha simplesmente posto a comunidade em pausa. Passa a dizer qual dos três casos é, quando começou, e mostra a nota da moderação quando existe.",
+  "changelog.entries.community-card-covers.title":
+    "As comunidades mostram a sua fotografia",
+  "changelog.entries.community-card-covers.body":
+    "O cart\u00e3o de uma comunidade abria com uma faixa de cor lisa, por isso uma comunidade que tinha escolhido uma fotografia de capa nunca a mostrava fora da sua pr\u00f3pria p\u00e1gina. Agora o cart\u00e3o usa essa fotografia como cabe\u00e7alho, com a categoria e a etiqueta de acesso assentes num v\u00e9u escuro suave, para continuarem leg\u00edveis sobre qualquer imagem. Uma comunidade sem fotografia mant\u00e9m a faixa de cor. Todos os cart\u00f5es da grelha passam tamb\u00e9m a ter a mesma altura, seja qual for o comprimento da descri\u00e7\u00e3o, por isso o n\u00famero de membros e os bot\u00f5es ficam alinhados na mesma linha em vez de andarem \u00e0 deriva.",
+  "changelog.entries.community-founded-month.title":
+    "Fundada, at\u00e9 ao m\u00eas",
+  "changelog.entries.community-founded-month.body":
+    "A p\u00e1gina de uma comunidade dizia apenas o ano de funda\u00e7\u00e3o, por isso tudo o que come\u00e7ou este ano aparecia como \u201cFundada em 2026\u201d e dizia muito pouco. Agora indica tamb\u00e9m o m\u00eas, escrito como a tua l\u00edngua o escreve: \u201cFundada em agosto de 2026\u201d.",
   "changelog.entries.card-text-legibility.title":
     "Cart\u00f5es que se leem \u00e0 dist\u00e2ncia",
   "changelog.entries.card-text-legibility.body":
@@ -3756,6 +3820,8 @@ export const marketing: Catalog = {
     "Ocultar e remover da moderação passam mesmo a retirar o conteúdo",
   "changelog.entries.moderation-takedowns.body":
     'Quando um moderador oculta ou remove conteúdo denunciado, este desaparece agora realmente da vista pública. O conteúdo oculto fica retido para os membros, mas a equipa continua a vê-lo; o conteúdo removido mostra uma marca clara de "removido por um moderador", onde uma publicação eliminada já apareceria. Aplicado a publicações e respostas do fórum, publicações e respostas de comunidades, comunidades, eventos e fichas de negócios, registado no mesmo passo da decisão do moderador, para que nunca possa ficar registado sem produzir efeito.',
+  "changelog.entries.directory-photos-crisp.title":
+    "As fotos de capa das fichas voltam a carregar nítidas",
   "changelog.entries.directory-photos-crisp.body":
     "As fotos de capa das fichas de negócios, e a pré-visualização enquanto adicionas uma, carregavam em baixa resolução e ficavam desfocadas quando mostradas em tamanho grande. Passam agora a carregar nítidas em tamanho real. Também descemos o cabeçalho da ficha para que o caminho de navegação e o botão Editar do proprietário deixem de ficar por baixo da navegação flutuante.",
   "changelog.entries.admin-role-management.title":

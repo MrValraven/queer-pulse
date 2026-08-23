@@ -1,0 +1,74 @@
+.pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  background: var(--paper);
+}
+
+/* The one place the series colour is chosen. Both values are theme tokens that
+   already flip with the theme, so the lines stay legible on cream and on the
+   dark page without a second palette. */
+.toneMembers {
+  --spark-line: var(--accent);
+}
+
+.tonePosts {
+  --spark-line: var(--jade-ink);
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: 52px;
+}
+
+.baseline {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  opacity: 0.3;
+}
+
+.area {
+  fill: var(--spark-line);
+  opacity: 0.16;
+  stroke: none;
+}
+
+.line {
+  fill: none;
+  stroke: var(--spark-line);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tick {
+  stroke: var(--spark-line);
+  stroke-width: 2;
+  opacity: 0.6;
+}
+
+.caption {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}

@@ -1,0 +1,239 @@
+/* The join queue's applicant card + its decline step. A decision surface, so
+   it is roomier than the other mod rows: the person comes first, the answers
+   sit under them. Tokens only. */
+
+.row {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+
+/* ---- who is asking ---- */
+.applicant {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.name,
+.nameLink {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.nameLink {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+@media (hover: hover) {
+  .nameLink:hover {
+    border-bottom-color: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+.pronouns {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  font-weight: 500;
+}
+
+/* Context for the decision. Read as three plain facts, deliberately given the
+   same quiet weight as each other: nothing here ranks anybody. */
+.signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.05);
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+.signal svg {
+  width: 13px;
+  height: 13px;
+  color: var(--ink-40);
+  flex: none;
+}
+
+.line {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  margin-top: 10px;
+  line-height: 1.55;
+}
+.lineLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  display: block;
+  margin-bottom: 2px;
+}
+.note {
+  margin: 0;
+  font-style: italic;
+  overflow-wrap: anywhere;
+  max-width: 70ch;
+}
+.requested {
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 10px;
+}
+
+/* ---- the two answers ---- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+/* Applied to a shared <Button variant="ghost" size="sm">; these overrides only
+   restore the quieter, outlined mod-row scale. The primitive keeps the focus
+   ring, the disabled treatment and the tap-target floor. */
+.declineBtn {
+  gap: 5px;
+  font-size: 13px;
+  color: var(--ink-60);
+  background: transparent;
+  padding: 8px 14px;
+  min-height: 40px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+}
+.declineBtn svg {
+  width: 13px;
+  height: 13px;
+}
+@media (hover: hover) {
+  .declineBtn:hover {
+    background: transparent;
+    border-color: rgba(var(--line-rgb), 0.3);
+    color: var(--ink);
+  }
+}
+
+/* ---- decline confirm step ---- */
+.decline {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.declineTitle {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-strong);
+  margin-bottom: 12px;
+}
+.declineLabel {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.declineHint {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  margin: 0 0 8px;
+  max-width: 62ch;
+}
+.declineHint svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.kinds {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+@media (min-width: 640px) {
+  .kinds {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.kind {
+  display: block;
+  text-align: left;
+  background: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition:
+    border-color 0.2s var(--ease),
+    background 0.2s var(--ease);
+}
+.kindChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.05);
+}
+.kindLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.kindDesc {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.reason {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--paper);
+  outline: none;
+  resize: vertical;
+  line-height: 1.55;
+  transition: border-color 0.25s var(--ease);
+}
+.reason:focus {
+  border-color: var(--accent);
+}
+
+.declineActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}

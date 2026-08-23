@@ -17,13 +17,22 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunityBadges.module.css";
 
-/** Owner/mod role pill. Members render nothing (no badge clutter). */
+/** Owner, co-owner and mod role pill. Members render nothing (no badge
+ *  clutter). A co-owner shares the owner treatment because they hold
+ *  owner-level powers; the label is what tells the two apart. */
 export function RoleBadge({ role }: { role: CommunityRole | undefined }) {
   const { t } = useTranslation();
   if (role === "owner") {
     return (
       <span className={[styles.role, styles.owner].join(" ")}>
         <FiStar aria-hidden /> {t("communities:badges.role.owner")}
+      </span>
+    );
+  }
+  if (role === "co_owner") {
+    return (
+      <span className={[styles.role, styles.owner].join(" ")}>
+        <FiStar aria-hidden /> {t("communities:badges.role.coOwner")}
       </span>
     );
   }
@@ -52,12 +61,27 @@ const TIER_LABEL_KEY: Record<AccessTier, string> = {
   private: "communities:badges.tier.private",
 };
 
-/** Access-tier pill for community cards/headers. */
-export function AccessTierBadge({ tier }: { tier: AccessTier }) {
+/**
+ * Access-tier pill for community cards/headers.
+ *
+ * `onPhoto` swaps the pale tinted pill for a dark glass one: the tier tints
+ * are mixed against `--paper` and go illegible the moment the pill sits on a
+ * community's own cover photo. The variant lives here rather than in the
+ * caller's stylesheet so the pill keeps owning its own appearance.
+ */
+export function AccessTierBadge({
+  tier,
+  onPhoto = false,
+}: {
+  tier: AccessTier;
+  onPhoto?: boolean;
+}) {
   const { t } = useTranslation();
   const { icon: Icon, cls } = TIER_META[tier];
   return (
-    <span className={[styles.tier, cls].join(" ")}>
+    <span
+      className={[styles.tier, onPhoto ? styles.tierOnPhoto : cls].join(" ")}
+    >
       <Icon aria-hidden /> {t(TIER_LABEL_KEY[tier])}
     </span>
   );

@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { FiImage, FiX } from "react-icons/fi";
-import { Avatar, Button, IconButton } from "../../shared/components/ui";
+import { Avatar, Button, IconButton, Toggle } from "../../shared/components/ui";
 import type { ButtonVariant } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -10,6 +10,14 @@ import type { usePostImageAttach } from "./usePostImageAttach";
 import styles from "./CommunityPostComposer.module.css";
 
 export type PostImageAttach = ReturnType<typeof usePostImageAttach>;
+
+/** The composer's announcement switch, passed ONLY by callers whose viewer may
+ *  actually post one (owner, co-owner, moderator). Absent for everybody else,
+ *  so an ordinary member never sees a control the server would refuse. */
+export interface ComposerAnnouncementToggle {
+  isOn: boolean;
+  onToggle: (isOn: boolean) => void;
+}
 
 /**
  * The one "write something here" box the community hub uses, shared by the
@@ -37,6 +45,7 @@ export function CommunityPostComposer({
   submitIcon,
   submitStyle,
   attach,
+  announcement,
 }: {
   /** The signed-in member, so the composer shows their real name and face
    *  rather than a generic chip. `null` while the session is still resolving. */
@@ -56,6 +65,8 @@ export function CommunityPostComposer({
   submitIcon?: ReactNode;
   submitStyle?: CSSProperties;
   attach: PostImageAttach;
+  /** Lets the viewer send this as an announcement. Omit to hide the switch. */
+  announcement?: ComposerAnnouncementToggle;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -105,6 +116,27 @@ export function CommunityPostComposer({
           <p className={styles.imageAttachError} role="alert">
             {error}
           </p>
+        )}
+        {announcement && (
+          <div className={styles.announcementRow}>
+            <Toggle
+              checked={announcement.isOn}
+              onChange={announcement.onToggle}
+              label={t("communities:detail.pulse.announcement.toggleAria")}
+              tone="coral"
+            />
+            <span className={styles.announcementText}>
+              <span className={styles.announcementTitle}>
+                {t("communities:detail.pulse.announcement.toggleLabel")}
+              </span>
+              {/* Says what the switch does BEFORE it is used: an announcement
+                  is pinned and it pages the roster, which nobody should learn
+                  about after the fact. */}
+              <span className={styles.announcementHint}>
+                {t("communities:detail.pulse.announcement.toggleHint")}
+              </span>
+            </span>
+          </div>
         )}
       </div>
       <input

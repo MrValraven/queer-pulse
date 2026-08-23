@@ -228,11 +228,17 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+  /* Every row as tall as the tallest card in the grid, not just the tallest in
+     its own row — a one-line tagline and a three-line one produce identically
+     sized cards. `1fr` here is a *maximum-content* share of the row, so it
+     grows with the content rather than clipping it. */
+  grid-auto-rows: 1fr;
 }
 /* Grid items default to min-width: auto, which would let a wide child outgrow
    its third; pin them to the track. */
 .grid > * {
   min-width: 0;
+  height: 100%;
 }
 .loadMore {
   display: flex;
@@ -247,6 +253,10 @@
 }
 .card {
   position: relative;
+  /* Fills the (equal-height) grid track rather than shrink-wrapping its own
+     content — without this the `1fr` row stretches but the card inside the
+     FadeIn wrapper does not, and the cards stay ragged. */
+  height: 100%;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
@@ -282,10 +292,52 @@
   position: relative;
   margin: -24px -24px 8px;
   padding: 16px 20px 0;
-  min-height: 84px;
+  /* One height for every card, photo or not, so a community with a cover and
+     one without still read as the same object. Deliberately NOT `overflow:
+     hidden` — the roster avatars hang past its bottom edge; the photo does its
+     own clipping in `.shoulderPhoto`. */
+  min-height: 104px;
   border-radius: var(--radius-card) var(--radius-card) 0 0;
   display: flex;
   flex-direction: column;
+}
+/* The cover photo, when the community has one, standing in for the flat
+   category colour as the letterhead's ground. */
+.shoulderPhoto {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  line-height: 0;
+}
+/* Chrome legibility over an unknown photo: dark at the top where the type
+   label and tier badge sit, dark again at the bottom edge the avatars and the
+   card body meet. Never a filter on the photo itself. */
+.shoulderScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--plum-rgb), 0.62) 0%,
+    rgba(var(--plum-rgb), 0.16) 58%,
+    rgba(var(--plum-rgb), 0.42) 100%
+  );
+}
+/* The label row has to clear the photo it sits on. */
+.hasPhoto .cardTop {
+  position: relative;
+  z-index: 1;
+}
+.hasPhoto .type {
+  color: rgb(var(--cream-rgb));
+  text-shadow: 0 1px 6px rgba(var(--plum-rgb), 0.5);
+}
+.hasPhoto .inBadge {
+  color: rgb(var(--cream-rgb));
+  background: rgba(var(--plum-rgb), 0.58);
+  backdrop-filter: blur(8px) saturate(1.1);
+  -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  box-shadow: inset 0 0 0 1px rgba(var(--cream-rgb), 0.24);
 }
 .social {
   color: var(--jade);
@@ -332,11 +384,22 @@
   letter-spacing: -0.01em;
   line-height: 1.15;
 }
+/* Exactly three lines tall whatever the tagline's length: shorter ones reserve
+   the space, longer ones ellipsize. That is what keeps the tag rows on the same
+   baseline from card to card. The slack in a taller row falls between the tags
+   and the footer instead (`.foot` is `margin-top: auto`), so the footer always
+   sits on the card's bottom edge. */
 .desc {
   font-size: 14px;
   color: var(--ink-60);
   line-height: 1.65;
-  flex: 1;
+  flex: none;
+  min-height: calc(1.65em * 3);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 /* "You're in" — the shoulder badge that stands in for the access tier on a
    community you already belong to. Same jade pill as the featured card's. */

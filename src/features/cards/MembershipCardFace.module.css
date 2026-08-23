@@ -516,7 +516,7 @@
    legible to someone reading the card at arm's length. `nowrap` keeps the
    parenthesised pair whole, and lets the NAME be the part that wraps. */
 .holderPronouns {
-  font-size: 0.8em;
+  font-size: 0.7em;
   opacity: 0.82;
   white-space: nowrap;
 }

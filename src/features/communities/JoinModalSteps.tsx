@@ -1,6 +1,7 @@
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { JoinInvolvement } from "./api/communityJoin.api";
 import { INVOLVEMENT } from "./joinModal.data";
 import type { JoinModalCommunity } from "./JoinModal";
 import styles from "./JoinModal.module.css";
@@ -51,18 +52,20 @@ export function JoinStepIntro({
 }
 
 /**
- * "About you" + "level of involvement" in one step: the backend only stores
- * one free-text `note` on the join/request (`JoinCommunityDto`), and asking
- * for the applicant's email here would be re-collecting something the app
- * already has (they're signed in to reach this wizard) with nowhere for it
- * to go. `JoinModal.submit()` folds the involvement chip into `note` as a
- * short leading tag, so this step's own job is just: a couple of optional
- * words about you, plus a quick tap for how involved you'd like to be.
+ * "About you" + "level of involvement" in one step. Asking for the applicant's
+ * email here would re-collect something the app already has (they are signed in
+ * to reach this wizard) with nowhere for it to go, so this step's own job is
+ * just: a couple of optional words about you, plus a quick tap for how involved
+ * you would like to be.
+ *
+ * The involvement answer is sent as its own `involvement` field on the join and
+ * the free-text `note` carries only what the applicant typed. It used to be
+ * folded into the note as a leading "[Help organise]" tag, which meant a
+ * moderator read the answer back out of prose and no query could group by it.
  *
  * Name and pronouns are deliberately absent for the same reason the email
- * field was dropped: the account already carries them, a join has no column
- * to store them in, and the mods reviewing the request read them off the
- * applicant's profile.
+ * field was dropped: the account already carries them, and the mods reviewing
+ * the request read them off the applicant's profile.
  */
 export function JoinStepAbout({
   isRequest,
@@ -75,8 +78,8 @@ export function JoinStepAbout({
   onSubmit,
 }: {
   isRequest: boolean;
-  involvement: string;
-  setInvolvement: (v: string) => void;
+  involvement: JoinInvolvement;
+  setInvolvement: (involvement: JoinInvolvement) => void;
   aboutText: string;
   setAboutText: (v: string) => void;
   /** True while the join/request is in flight. */

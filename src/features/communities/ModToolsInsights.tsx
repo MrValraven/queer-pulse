@@ -7,6 +7,7 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useCommunityInsights } from "./api/useCommunityInsights";
+import { ModToolsInsightsTrends } from "./ModToolsInsightsTrends";
 import detail from "./CommunityDetailPage.module.css";
 
 /** A single stat's value: a formatted, tabular-figures number, or a skeleton
@@ -36,8 +37,13 @@ function StatValue({
  * (this week/this month) and post activity (total, this week, active
  * authors) from `GET /communities/:slug/insights`. Legitimate aggregate-count
  * reporting for a community's own leadership, not individual behavior
- * tracking (see `useCommunityInsights`'s doc comment). Deliberately plain
- * labeled numbers, not a chart — six counts don't need one.
+ * tracking (see `useCommunityInsights`'s doc comment).
+ *
+ * Six labeled numbers answer "how many". They carry no direction, though, and
+ * "is this community growing or fading" is the question an owner opens this
+ * panel with, so the tiles are followed by two twelve-week trend lines
+ * (`ModToolsInsightsTrends`). The tiles stay exactly as they were; the
+ * sparklines supplement them.
  */
 export function ModToolsInsights({ slug }: { slug: string }) {
   const { t } = useTranslation();
@@ -102,6 +108,7 @@ export function ModToolsInsights({ slug }: { slug: string }) {
           />
         </StatGrid>
       )}
+      {!isError && <ModToolsInsightsTrends data={data} isLoading={isLoading} />}
     </div>
   );
 }

@@ -1,0 +1,79 @@
+/* The one-time greeting at the top of Pulse. Warmer than the platform's
+   notice treatments on purpose: a soft accent wash and a rounded card, so it
+   reads as somebody saying hello rather than as a banner about the community. */
+
+.card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-rgb), 0.1),
+    rgba(var(--accent-rgb), 0.03)
+  );
+  animation: welcomeIn var(--dur-base, 0.32s) var(--ease, ease) both;
+}
+
+/* Declared in THIS module: Vite hashes animation-name per CSS module, so a
+   keyframe defined anywhere else would silently never run. */
+@keyframes welcomeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  margin-top: 2px;
+  font-size: 20px;
+  color: var(--accent-ink);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.greeting {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.message {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-80, var(--ink));
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dismiss {
+  flex: none;
+  color: var(--ink-40);
+  border-radius: 50%;
+}
+@media (hover: hover) {
+  .dismiss:hover:not(:disabled) {
+    color: var(--ink);
+    background: rgba(var(--line-rgb), 0.08);
+  }
+}

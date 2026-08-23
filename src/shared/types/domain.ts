@@ -33,7 +33,7 @@ export interface Community {
    *  live-mode card DTO). `null`/absent means not a member — but absence is not
    *  proof of non-membership: demo mode leaves this unset and reads the session
    *  membership store instead. */
-  myRole?: "owner" | "mod" | "member" | null;
+  myRole?: "owner" | "co_owner" | "mod" | "member" | null;
   /** How many members were active in this community this week, when the
    *  source knows it (the live card DTO's `activeThisWeek`). Drives the
    *  discover grid's "Busy this week" toggle and "Most active" sort — both

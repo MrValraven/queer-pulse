@@ -17,7 +17,8 @@ import type { ReasonCode } from "../../safety/reportReasons";
 export type CommunityType =
   "social" | "arts" | "activism" | "support" | "sports" | "professional";
 export type AccessTier = "public" | "request" | "invite" | "private";
-export type RosterRole = "owner" | "mod" | "member";
+/** Mirrors the backend `RosterRole` enum, `co_owner` included. */
+export type RosterRole = "owner" | "co_owner" | "mod" | "member";
 export type ReactionKey = "heart" | "celebrate" | "support" | "fire";
 export type JoinRequestStatus = "pending" | "approved" | "declined";
 

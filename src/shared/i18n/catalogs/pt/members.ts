@@ -242,6 +242,7 @@ export const members: Catalog = {
     "Comunidades que estás a destacar no teu perfil.",
   "profile.communities.subtitlePublic": "Comunidades de que {first} faz parte.",
   "profile.communities.role.owner": "Fundador",
+  "profile.communities.role.coOwner": "Cotitular",
   "profile.communities.role.mod": "Moderador",
   "profile.communities.role.member": "Membro",
   "profile.communities.empty.title": "Destaca as tuas comunidades",

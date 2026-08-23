@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiCheck, FiArrowRight } from "react-icons/fi";
-import { Avatar, Tag, TagRow } from "../../shared/components/ui";
+import { Avatar, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community } from "../homepage/data/types";
@@ -38,6 +38,10 @@ export function CommunityCard({
   // live card DTO carries its own `activeThisWeek`. Neither is guaranteed.
   const activeThisWeek =
     living?.stats.activeThisWeek ?? community.activeThisWeek;
+  // The community's own cover photo, when it has one. Only the live card DTO
+  // carries it (the demo registry has no covers), so a photoless card keeps
+  // the flat category-coloured letterhead it has always had.
+  const coverImageUrl = community.coverImageUrl ?? undefined;
   const joinLabel =
     tier === "public"
       ? t("communities:card.join.public")
@@ -56,7 +60,34 @@ export function CommunityCard({
         .filter(Boolean)
         .join(" ")}
     >
-      <div className={[styles.shoulder, styles[community.type]].join(" ")}>
+      <div
+        className={[
+          styles.shoulder,
+          styles[community.type],
+          coverImageUrl && styles.hasPhoto,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {coverImageUrl && (
+          // The photo replaces the flat colour as the letterhead's ground, so
+          // its chrome (type label, badge, roster) rides a scrim rather than
+          // the raw image. Rendered as an <img> via ImageSlot, never a CSS
+          // background, so a broken/missing cover falls back cleanly.
+          <span className={styles.shoulderPhoto} aria-hidden>
+            <ImageSlot
+              src={coverImageUrl}
+              radius={0}
+              width="100%"
+              height="100%"
+              srcSize={720}
+              // The slot's own hairline would draw a line across the
+              // letterhead; the card already has its border.
+              style={{ border: "none" }}
+            />
+            <span className={styles.shoulderScrim} />
+          </span>
+        )}
         <div className={styles.cardTop}>
           <span className={styles.type}>{community.typeLabel}</span>
           {/* Once you're in, the access tier has stopped being news — the badge
@@ -67,7 +98,7 @@ export function CommunityCard({
               <FiCheck aria-hidden /> {t("communities:card.youreIn")}
             </span>
           ) : (
-            <AccessTierBadge tier={tier} />
+            <AccessTierBadge tier={tier} onPhoto={!!coverImageUrl} />
           )}
         </div>
         {roster.length > 0 && (

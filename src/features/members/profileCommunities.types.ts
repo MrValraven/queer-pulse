@@ -26,6 +26,7 @@ export interface FeaturedCommunityRef {
 /** members-namespace i18n key for each role's badge label. */
 export const ROLE_LABEL_KEY: Record<CommunityRole, string> = {
   owner: "members:profile.communities.role.owner",
+  co_owner: "members:profile.communities.role.coOwner",
   mod: "members:profile.communities.role.mod",
   member: "members:profile.communities.role.member",
 };

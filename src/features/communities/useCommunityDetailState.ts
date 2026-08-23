@@ -13,7 +13,9 @@ import { useRoster } from "./api/useRoster";
 import { useCommunityPosts } from "./api/useCommunityPosts";
 import { useCommunityDiscussions } from "./api/useCommunityDiscussions";
 import { useCommunityPulse } from "./api/useCommunityPulse";
-import { useJoinCommunity, useRemoveMember } from "./api/useCommunityMutations";
+import { useRemoveMember } from "./api/useCommunityMutations";
+import type { JoinCommunityPayload } from "./api/communityJoin.api";
+import { useJoinCommunityWithRules } from "./api/useCommunityJoin";
 
 /**
  * All queries, membership state, derived values, and action handlers for the
@@ -54,7 +56,10 @@ export function useCommunityDetailState() {
   const roster = rosterResult.roster;
   const posts = useCommunityPosts(slug);
   const { threads, paging: discussionPaging } = useCommunityDiscussions(slug);
-  const joinMutation = useJoinCommunity(slug ?? "");
+  // The rules-aware join: the payload carries the applicant's note, their
+  // involvement answer and the house-rules version they agreed to in the
+  // wizard, and the wizard reads the refusal codes off the failure.
+  const joinMutation = useJoinCommunityWithRules(slug ?? "");
   // Self-leave reuses the member-removal mutation with the viewer's own slug —
   // it hits the same DELETE /communities/:slug/members/:memberSlug the backend
   // treats as "leave the community yourself" (P1-11).
@@ -168,19 +173,19 @@ export function useCommunityDetailState() {
   // landed, so `JoinModal` can hold its welcome step until then; the demo
   // membership store is a demo-mode fixture and is never written from a live
   // path (live membership comes back off the refetched detail DTO).
-  const onJoined = async (note?: string) => {
+  const onJoined = async (payload: JoinCommunityPayload) => {
     if (demoMode) {
       if (slug) join(slug);
       return;
     }
-    await joinMutation.mutateAsync({ note });
+    await joinMutation.mutateAsync(payload);
   };
-  const onRequested = async (note?: string) => {
+  const onRequested = async (payload: JoinCommunityPayload) => {
     if (demoMode) {
       if (slug) requestToJoin(slug);
       return;
     }
-    await joinMutation.mutateAsync({ note });
+    await joinMutation.mutateAsync(payload);
   };
   // Leave: demo drives the session provider (unchanged); live fires the real
   // DELETE with the viewer's own slug, then invalidates so the CTA flips back to

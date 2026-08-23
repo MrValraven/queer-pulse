@@ -1726,6 +1726,70 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.community-house-rules.title":
+    "House rules now come with the invitation",
+  "changelog.entries.community-house-rules.body":
+    "Joining a community with house rules means reading them and agreeing first. If an owner later changes the rules, everyone already inside is asked once to read the new version, and what you agreed to is recorded.",
+  "changelog.entries.community-removal-bars-return.title":
+    "Being removed from a community now means it",
+  "changelog.entries.community-removal-bars-return.body":
+    "When a moderator removes someone, that person can no longer walk straight back in. Moderators can still remove someone and leave the door open when it is a simple tidy-up, and every bar can be lifted later from Mod tools.",
+  "changelog.entries.community-announcements.title":
+    "Owners can say something that carries",
+  "changelog.entries.community-announcements.body":
+    "Owners, co-owners and moderators can post an announcement: it pins to the top and reaches the community's members. Ordinary posts stay ordinary.",
+  "changelog.entries.community-notification-levels.title":
+    "Choose how much each community reaches you",
+  "changelog.entries.community-notification-levels.body":
+    "Every community now has its own setting: everything, announcements only, mentions only, or muted. Set it per community from the tab row. New members start on announcements only.",
+  "changelog.entries.community-invites-any-time.title":
+    "Invite people to your community any time",
+  "changelog.entries.community-invites-any-time.body":
+    "Inviting members used to be possible only on the day you founded a community. Owners, co-owners and moderators can now invite from Mod tools. An invitation is a message, and joining stays the other person's decision.",
+  "changelog.entries.community-join-review-context.title":
+    "Reviewing a join request shows you the person",
+  "changelog.entries.community-join-review-context.body":
+    "A request now arrives with pronouns, how long they have been on QueerPulse, connections you share, and communities you share, with their name linked to their profile. Declining asks whether it is 'not right now' or 'not a fit', so the person knows whether to try again.",
+  "changelog.entries.community-resources-shelf.title":
+    "A real shelf for a community's links",
+  "changelog.entries.community-resources-shelf.body":
+    "Owners, co-owners and moderators can build a community's resource shelf: crisis lines, legal guides, a reading list, whatever the community keeps coming back to. Reorderable, and it shows on the About tab.",
+  "changelog.entries.community-co-ownership.title":
+    "Co-owners, and a way to flag an absent owner",
+  "changelog.entries.community-co-ownership.body":
+    "A community can now have a co-owner who shares the day-to-day powers, while transferring ownership and archiving stay with the owner. If an owner becomes unreachable, moderators can ask platform staff to look, and the owner can withdraw that request by simply showing up.",
+  "changelog.entries.community-governance-history.title":
+    "Every community can see its own history",
+  "changelog.entries.community-governance-history.body":
+    "Owners, co-owners and moderators can read the record of what happened in their community: role changes, removals, bans lifted, pauses and transfers. It used to be visible only to platform staff.",
+  "changelog.entries.community-public-teaser.title":
+    "Share a community with someone outside",
+  "changelog.entries.community-public-teaser.body":
+    "Owners can let a community show a short public page to people who are not signed in: what it is, who it is for, and how to ask for an invite. Off by default, available only to open and request-to-join communities, and it never shows the member list or a single post.",
+  "changelog.entries.community-place-and-language.title":
+    "Find communities near you, in your language",
+  "changelog.entries.community-place-and-language.body":
+    "Communities can say where they meet and which languages they run in, and Discover can filter on both. Sorting by most active is also now done properly on the server, so the results are right past the first page.",
+  "changelog.entries.community-welcome-and-search.title":
+    "A welcome on arrival, and search inside a community",
+  "changelog.entries.community-welcome-and-search.body":
+    "Owners can write a greeting that a new member sees once when they arrive. Every community's posts are now searchable, across the whole history rather than the part you have scrolled.",
+  "changelog.entries.community-insight-trends.title":
+    "Community stats now show direction",
+  "changelog.entries.community-insight-trends.body":
+    "The owner's stats panel adds twelve weeks of members and posts, so you can see whether a community is growing or going quiet. Whole-community totals only: nobody's individual activity is shown.",
+  "changelog.entries.community-pause-reason.title":
+    "A paused community explains itself honestly",
+  "changelog.entries.community-pause-reason.body":
+    "The pause banner used to say moderators were reviewing reports even when an owner had simply paused things themselves. It now says which of the three it is, when it started, and carries the moderator's note when there is one.",
+  "changelog.entries.community-card-covers.title":
+    "Communities show their photo",
+  "changelog.entries.community-card-covers.body":
+    "A community card led with a flat band of colour, so a community that had picked a cover photo never showed it anywhere except its own page. The card now uses that photo as its header, with the category and the access label set on a soft dark wash so they stay readable over any image. A community without a photo keeps the coloured band. Every card in the grid is also the same height now, whatever the length of its tagline, so the member counts and the buttons line up along one row instead of drifting.",
+  "changelog.entries.community-founded-month.title":
+    "Founded, down to the month",
+  "changelog.entries.community-founded-month.body":
+    "A community page said only the year it was founded, so anything started this year read as \u201cFounded 2026\u201d and told you very little. It now names the month too, written the way your language writes it: \u201cFounded August 2026\u201d.",
   "changelog.entries.card-text-legibility.title":
     "Cards you can read across a room",
   "changelog.entries.card-text-legibility.body":
@@ -3691,6 +3755,8 @@ export const marketing: Catalog = {
     "Creating a gathering works again, and lands on your event",
   "changelog.entries.gathering-create-fix.body":
     'Publishing a new gathering was quietly failing on the server, yet the wizard still showed the celebration screen as if it had worked, and its "See your event" button opened a stray sample page. Both are fixed: a gathering now actually publishes, the success screen only appears once it has, and "See your event" takes you straight to your real gathering. If a publish ever fails, you\'ll see a clear message and stay on the review step to try again. The wizard now also asks for a date and start time in the future before you can move on, so a gathering can\'t be created without one.',
+  "changelog.entries.directory-photos-crisp.title":
+    "Listing cover photos load crisp again",
   "changelog.entries.directory-photos-crisp.body":
     "Cover photos on business listings, and the preview while you're adding one, were loading at a low resolution and looking blurry when shown large. They now load crisp at full size. We also nudged the listing header down so the breadcrumb and the owner's Edit button no longer tuck under the floating navigation.",
   "changelog.entries.admin-role-management.title":

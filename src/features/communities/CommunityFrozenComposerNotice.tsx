@@ -3,11 +3,15 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunityFrozenBanner.module.css";
 
 /**
- * Compact stand-in for a composer or reply bar while the community is
- * auto-frozen (see `CommunityFrozenBanner`) — swapped in for the input rather
- * than leaving an active-looking textarea that would just 403 on submit.
- * Reuses the banner's own copy so the platform never narrates the same
- * "paused, under review" state in two different voices.
+ * Compact stand-in for a composer or reply bar while the community is paused
+ * (see `CommunityFrozenBanner`) — swapped in for the input rather than leaving
+ * an active-looking textarea that would just 403 on submit.
+ *
+ * States the consequence and points at the banner for the cause. It used to
+ * repeat the banner's whole sentence, which stopped working once that sentence
+ * became specific to WHY the pause happened: this notice is rendered from four
+ * different surfaces, none of which knows the reason, so repeating one reason
+ * here would have meant guessing.
  */
 export function CommunityFrozenComposerNotice() {
   const { t } = useTranslation();
@@ -17,7 +21,7 @@ export function CommunityFrozenComposerNotice() {
         <FiAlertTriangle />
       </span>
       <p className={styles.composerNoticeText}>
-        {t("communities:detail.frozen.body")}
+        {t("communities:detail.frozen.composerNotice")}
       </p>
     </div>
   );

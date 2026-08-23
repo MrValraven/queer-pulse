@@ -11,8 +11,17 @@ import {
   MIN_RECURRENCE_OCCURRENCES,
 } from "./createGathering.data";
 
+/** What the wizard may start out with, rather than empty. Today that is only
+ *  the community a gathering is filed to, seeded from the
+ *  `/create-gathering?community=<slug>` deep link (see `createGatheringPath`
+ *  in data.ts) so a community's Events tab can offer "host a gathering here".
+ *  Read once, on mount: the host can still change or clear it in the wizard. */
+export interface GatheringFormInitial {
+  communitySlug?: string;
+}
+
 /** All wizard form state + helpers, shared by the page and its step components. */
-export function useGatheringForm() {
+export function useGatheringForm(initial: GatheringFormInitial = {}) {
   const [type, setType] = useState("");
   const [typeIcon, setTypeIcon] = useState<IconType | null>(null);
   const [title, setTitle] = useState("");
@@ -56,7 +65,12 @@ export function useGatheringForm() {
   } | null>(null);
   // The community this gathering is posted to, or "" for a public gathering
   // visible to everyone (the wizard's default — matches prior behaviour).
-  const [communitySlug, setCommunitySlugValue] = useState("");
+  // Seeded from `initial.communitySlug` when the host arrived through a
+  // community's "host a gathering here" link; "" (a public gathering) is the
+  // default everywhere else.
+  const [communitySlug, setCommunitySlugValue] = useState(
+    initial.communitySlug ?? "",
+  );
   // Who can find and RSVP to this gathering. Defaults to "members" — the
   // wizard's "Public" tier (any signed-in member; see events.api.ts for why
   // the backend's anonymous "public" value is never used here). "community"

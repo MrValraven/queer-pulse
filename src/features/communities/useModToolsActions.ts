@@ -9,9 +9,13 @@ import {
   useDeleteCommunityPost,
   useDismissCommunityReport,
   useRemoveMember,
-  useReviewJoinRequest,
   useSetMemberRole,
 } from "./api/useCommunityMutations";
+import { useTriageJoinRequest } from "./api/useCommunityJoin";
+import {
+  triagePayloadFor,
+  type JoinRequestDecision,
+} from "./joinRequestReview.data";
 
 /** What the mod is being asked to confirm, or null when nothing is pending.
  *  Only the two irreversible actions go through here: taking someone off the
@@ -37,7 +41,9 @@ export function useModToolsActions(living: LivingCommunity) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
-  const reviewRequest = useReviewJoinRequest(living.slug);
+  // Triage carries the kind of decline and the applicant-facing note now, so
+  // a "no" says which no it is and can say why.
+  const reviewRequest = useTriageJoinRequest(living.slug);
   const removeMember = useRemoveMember(living.slug);
   const setMemberRole = useSetMemberRole(living.slug);
   const deletePost = useDeleteCommunityPost(living.slug);
@@ -89,13 +95,18 @@ export function useModToolsActions(living: LivingCommunity) {
       return next;
     });
 
-  const resolveRequest = (id: string, name: string, approved: boolean) => {
+  const resolveRequest = (
+    id: string,
+    name: string,
+    decision: JoinRequestDecision,
+  ) => {
+    const isApproved = decision.isApproved;
     const done = () =>
       showToast(
-        approved
+        isApproved
           ? t("communities:detail.modtools.toast.approved", { name })
           : t("communities:detail.modtools.toast.declined", { name }),
-        approved ? "success" : "info",
+        isApproved ? "success" : "info",
       );
     hideRequest(id);
     if (demoMode) {
@@ -103,7 +114,7 @@ export function useModToolsActions(living: LivingCommunity) {
       return;
     }
     reviewRequest.mutate(
-      { id, action: approved ? "approve" : "decline" },
+      { id, ...triagePayloadFor(decision) },
       {
         onSuccess: done,
         onError: () => {
@@ -277,6 +288,9 @@ export function useModToolsActions(living: LivingCommunity) {
     promoted,
     demoted,
     resolveRequest,
+    /** True while a triage write is in flight, so the decline step's confirm
+     *  button cannot fire twice. */
+    isRequestPending: reviewRequest.isPending,
     promote,
     demote,
     dismissReportRow,

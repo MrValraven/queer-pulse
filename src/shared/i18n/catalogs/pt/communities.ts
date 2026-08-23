@@ -17,6 +17,16 @@ import type { Catalog } from "../../types";
  *   traduzidos — em modo live vêm da API como texto de quem os escreveu.
  */
 export const communities: Catalog = {
+  // ── Metadados por rota (PageMeta: separador do browser + partilha) ────────
+  "seo.hub.title": "Comunidades · QueerPulse",
+  "seo.hub.description":
+    "Descobre os coletivos, grupos e círculos de apoio que se juntam pela comunidade queer de Lisboa, e aquele que vai parecer teu.",
+  "seo.start.title": "Criar uma comunidade · QueerPulse",
+  "seo.start.description":
+    "Funda uma comunidade no QueerPulse: diz para que serve, decide para quem é, define os valores partilhados e abre a porta.",
+  "seo.detail.title": "{name} · QueerPulse",
+  "seo.detail.imageAlt": "Imagem de capa da comunidade {name}",
+
   // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
   "hubShell.title": "Comunidades e",
   "hubShell.titleEm": "coletivos",
@@ -147,12 +157,71 @@ export const communities: Catalog = {
   "detail.joined": "Já és membro",
   "detail.requested": "Pedido enviado",
   "detail.frozen.title": "Esta comunidade está em pausa",
-  "detail.frozen.body":
-    "A moderação está a rever denúncias recentes. Novas publicações e entradas ficam suspensas até a pausa ser levantada.",
+  // Uma frase por motivo. Uma pausa manual não tem denúncia nenhuma por trás,
+  // por isso nunca pode ser contada como uma revisão de denúncias.
+  "detail.frozen.body.manual":
+    "A moderação colocou esta comunidade em pausa. Novas publicações e entradas ficam suspensas até a pausa ser levantada.",
+  "detail.frozen.body.emergencyReport":
+    "Chegou uma denúncia grave e a moderação colocou a comunidade em pausa enquanto a analisa. Novas publicações e entradas ficam suspensas até a pausa ser levantada.",
+  "detail.frozen.body.reportPileup":
+    "Chegaram várias denúncias em pouco tempo, por isso a comunidade entrou em pausa automaticamente. A moderação está a lê-las agora. Novas publicações e entradas ficam suspensas até a pausa ser levantada.",
+  "detail.frozen.body.unknown":
+    "Esta comunidade está em pausa. Novas publicações e entradas ficam suspensas até a moderação levantar a pausa.",
+  "detail.frozen.since": "Em pausa desde {date} às {time}.",
+  "detail.frozen.noteSource": "Da moderação",
+  "detail.frozen.composerNotice":
+    "Esta comunidade está em pausa, por isso novas publicações estão suspensas. O aviso no topo da página tem os detalhes.",
   "detail.frozen.unfreezeCta": "Levantar a pausa",
   "detail.frozen.errorToast": "Não resultou. Tenta novamente.",
+
+  // ── As boas-vindas únicas a quem acabou de entrar (no Pulso) ──────────────
+  "detail.welcome.greeting": "Bem-vinde a {name}",
+  "detail.welcome.dismissAria": "Esconder estas boas-vindas",
+
+  // ── Nível de notificações por comunidade (de cada membro) ─────────────────
+  "detail.notifications.title": "Notificações",
+  "detail.notifications.subtitle":
+    "Quanto queres ouvir de {name}. Isto muda só o que te chega e mais ninguém consegue ver.",
+  "detail.notifications.groupLabel": "Notificar-me sobre",
+  "detail.notifications.groupHint":
+    "As tuas definições de notificações da plataforma continuam a aplicar-se por cima disto.",
+  "detail.notifications.doneCta": "Concluído",
+  "detail.notifications.triggerAria": "Notificações de {name}: {level}",
+  "detail.notifications.errorToast":
+    "Não conseguimos guardar. Tenta daqui a pouco.",
+  "detail.notifications.level.all.title": "Tudo",
+  "detail.notifications.level.all.description":
+    "Todas as publicações, respostas e anúncios desta comunidade.",
+  "detail.notifications.level.announcements.title": "Só anúncios",
+  "detail.notifications.level.announcements.description":
+    "Só o que a organização ou a moderação marca como anúncio. As publicações normais ficam em silêncio.",
+  "detail.notifications.level.mentions.title": "Só menções",
+  "detail.notifications.level.mentions.description":
+    "Só quando alguém te menciona numa publicação ou resposta aqui.",
+  "detail.notifications.level.muted.title": "Silenciada",
+  "detail.notifications.level.muted.description":
+    "Nada desta comunidade. Continuas a ser membro e o mural continua aqui sempre que o abrires.",
+  "detail.notifications.savedToast.all": "Vais ouvir tudo de {name}.",
+  "detail.notifications.savedToast.announcements":
+    "Vais ouvir os anúncios de {name}.",
+  "detail.notifications.savedToast.mentions":
+    "Vais ouvir de {name} quando alguém te mencionar.",
+  "detail.notifications.savedToast.muted": "{name} ficou silenciada.",
   "detail.save.cta": "Guardar",
   "detail.save.saved": "Guardado",
+  // Aviso "as regras da casa mudaram" para quem é membro e concordou com uma
+  // versão anterior. Fica na página e pode ser adiado: nunca bloqueia a leitura.
+  "detail.rulesUpdate.title": "As regras da casa mudaram",
+  "detail.rulesUpdate.body":
+    "{name} atualizou as regras da casa depois de teres concordado com elas. Reserva um momento para as leres.",
+  "detail.rulesUpdate.readCta": "Ler as regras",
+  "detail.rulesUpdate.hideCta": "Esconder as regras",
+  "detail.rulesUpdate.acceptCta": "Já as li",
+  "detail.rulesUpdate.laterCta": "Mais tarde",
+  "detail.rulesUpdate.confirmedToast":
+    "Obrigade por leres as regras atualizadas.",
+  "detail.rulesUpdate.errorToast":
+    "Não foi possível guardar. Tenta de novo daqui a pouco.",
   "detail.save.savedToast": "Comunidade guardada no teu perfil.",
   "detail.save.removedToast": "Comunidade removida dos guardados.",
   "detail.save.saveAriaLabel": "Guardar {name}",
@@ -162,7 +231,7 @@ export const communities: Catalog = {
   "detail.share.copiedToast": "Link copiado para a área de transferência.",
   "detail.leave.confirm.title": "Sair de {name}?",
   "detail.leave.confirm.body":
-    "Deixas de ver o pulso e os convívios desta comunidade. Podes voltar sempre que quiseres. Só precisas de entrar de novo.",
+    "Deixas de ver o pulso e os convívios desta comunidade. As tuas publicações e respostas ficam na comunidade exatamente onde estão, com o teu nome. Podes voltar sempre que quiseres. Só precisas de entrar de novo.",
   "detail.leave.confirm.cancel": "Ficar",
   "detail.leave.confirm.confirmCta": "Sair da comunidade",
   "detail.hero.andMore": "e mais {count}",
@@ -247,6 +316,9 @@ export const communities: Catalog = {
   "detail.events.past": "Convívios passados",
   "detail.events.recapCta": "Ler retrospetiva",
   "detail.events.rsvpCta": "Confirmar presença",
+  "detail.events.host.lead":
+    "Qualquer pessoa daqui pode pôr algo no calendário. Escolhe uma data, um sítio e um tamanho, e esta comunidade vai ver.",
+  "detail.events.host.cta": "Organizar um convívio aqui",
 
   // ── Separador de pessoas / lista (hub completo) ───────────────────────────
   "detail.roster.searchAria": "Pesquisar pessoas",
@@ -282,6 +354,36 @@ export const communities: Catalog = {
   "detail.modtools.joinRequests.requestedAgo": "Pedido enviado há {time}",
   "detail.modtools.joinRequests.approveCta": "Aprovar",
   "detail.modtools.joinRequests.declineCta": "Recusar",
+  // O cartão de quem se candidata. Contexto para uma decisão humana: sem
+  // totais, sem ordenação, sem recomendação.
+  "detail.modtools.joinRequests.applicant.since": "No QueerPulse desde {date}",
+  "detail.modtools.joinRequests.applicant.sharedConnections_one":
+    "{count} ligação em comum",
+  "detail.modtools.joinRequests.applicant.sharedConnections_other":
+    "{count} ligações em comum",
+  "detail.modtools.joinRequests.applicant.sharedCommunities_one":
+    "{count} comunidade em comum",
+  "detail.modtools.joinRequests.applicant.sharedCommunities_other":
+    "{count} comunidades em comum",
+  "detail.modtools.joinRequests.applicant.involvementLabel":
+    "Quer participar assim",
+  "detail.modtools.joinRequests.applicant.noteLabel": "Nas palavras da pessoa",
+  // Recusar. As duas esperas vêm das constantes do backend (ver
+  // `joinRequestReview.data.ts`), interpoladas em vez de escritas no texto.
+  "detail.modtools.joinRequests.decline.title": "A recusar {name}",
+  "detail.modtools.joinRequests.decline.kindLabel": "Que tipo de não é este?",
+  "detail.modtools.joinRequests.decline.notNow.label": "Agora não",
+  "detail.modtools.joinRequests.decline.notAFit.label": "Não encaixa",
+  "detail.modtools.joinRequests.decline.reapplyAfterDays":
+    "Pode pedir outra vez daqui a {days} dias.",
+  "detail.modtools.joinRequests.decline.reasonLabel":
+    "Uma nota para quem se candidatou (opcional)",
+  "detail.modtools.joinRequests.decline.reasonHint":
+    "Quem se candidatou lê isto tal e qual. Guarda para outro sítio o que for só para a restante equipa de moderação.",
+  "detail.modtools.joinRequests.decline.reasonPlaceholder":
+    "O que gostarias que essa pessoa soubesse.",
+  "detail.modtools.joinRequests.decline.confirmCta": "Enviar a recusa",
+  "detail.modtools.joinRequests.decline.cancelCta": "Cancelar",
   "detail.modtools.reports.label": "Publicações denunciadas",
   "detail.modtools.reports.empty.title": "Tudo em ordem",
   "detail.modtools.queueError.title": "Não foi possível carregar esta fila",
@@ -359,6 +461,124 @@ export const communities: Catalog = {
     "Ainda não há mais ninguém na lista de pessoas para passar isto.",
   "detail.dangerZone.transfer.confirm.searchPlaceholder": "Procurar pessoas…",
 
+  // ── Ferramentas de moderação · tendências (12 semanas) ────────────────────
+  "detail.modtools.insights.trend.membersLabel": "Novas pessoas por semana",
+  "detail.modtools.insights.trend.postsLabel": "Publicações por semana",
+  "detail.modtools.insights.trend.rising":
+    "A subir. {recent} nas últimas {weeks} semanas, face a {previous} nas {weeks} anteriores.",
+  "detail.modtools.insights.trend.steady":
+    "Estável. {recent} nas últimas {weeks} semanas, face a {previous} nas {weeks} anteriores.",
+  "detail.modtools.insights.trend.falling":
+    "A descer. {recent} nas últimas {weeks} semanas, face a {previous} nas {weeks} anteriores.",
+  "detail.modtools.insights.trend.quiet":
+    "Sem movimento. Nada registado nas últimas {total} semanas.",
+  "detail.modtools.insights.trend.note":
+    "Totais semanais de toda a comunidade. A atividade de cada pessoa continua privada.",
+
+  // ── Ferramentas de moderação · lista de bloqueios ─────────────────────────
+  "detail.modtools.bans.label": "Pessoas barradas desta comunidade",
+  "detail.modtools.bans.intro":
+    "Quem está barrado neste momento, do mais recente para o mais antigo. Levantar um bloqueio reabre a porta desta comunidade.",
+  "detail.modtools.bans.empty.title": "Não há ninguém barrado",
+  "detail.modtools.bans.empty.description":
+    "Os bloqueios aplicados quando removes alguém da comunidade aparecem aqui.",
+  "detail.modtools.bans.formerMember": "Alguém que já cá esteve",
+  "detail.modtools.bans.byOn": "Barrade por {name} a {date}.",
+  "detail.modtools.bans.byGoneOn":
+    "Barrade a {date}. Quem aplicou o bloqueio já saiu.",
+  "detail.modtools.bans.reason": "Motivo registado: {reason}",
+  "detail.modtools.bans.noReason": "Não ficou registado nenhum motivo.",
+  "detail.modtools.bans.liftCta": "Levantar bloqueio",
+  "detail.modtools.bans.erasedNote":
+    "Esta conta foi eliminada, por isso já não há ninguém para readmitir.",
+  "detail.modtools.bans.confirm.title": "Levantar o bloqueio de {name}?",
+  "detail.modtools.bans.confirm.body":
+    "Isto reabre a porta: {name} pode voltar a pedir para entrar. A lista de pessoas fica como está, por isso volta a entrar como qualquer outra pessoa.",
+  "detail.modtools.bans.confirm.confirmCta": "Levantar bloqueio",
+  "detail.modtools.bans.liftedToast": "O bloqueio de {name} foi levantado.",
+  "detail.modtools.bans.errorToast":
+    "Não foi possível levantar esse bloqueio. Tenta novamente.",
+
+  // ── Ferramentas de moderação · convidar pessoas ───────────────────────────
+  "detail.modtools.invites.label": "Convidar pessoas",
+  "detail.modtools.invites.intro":
+    "Escolhe pessoas com quem tens ligação e envia-lhes um convite para esta comunidade, até {max} de cada vez. Um convite é uma mensagem que podem aceitar ou deixar ficar. Entrar continua a ser decisão delas.",
+  "detail.modtools.invites.searchPlaceholder": "Procurar nas tuas ligações…",
+  "detail.modtools.invites.selectedCount": "{selected} de {max} selecionadas",
+  "detail.modtools.invites.sendCta": "Enviar convites",
+  "detail.modtools.invites.errorToast":
+    "Não foi possível enviar esses convites. Tenta novamente.",
+  "detail.modtools.invites.empty.title": "Não há mais ninguém para convidar",
+  "detail.modtools.invites.empty.description":
+    "Todas as pessoas com quem tens ligação já estão nesta comunidade.",
+  "detail.modtools.invites.result.invited": "Convites enviados ({total})",
+  "detail.modtools.invites.result.skipped": "Ignoradas ({total})",
+  "detail.modtools.invites.result.skipRow": "{name}: {reason}",
+  "detail.modtools.invites.result.note":
+    "Quem aparece em Ignoradas ficou de fora e não recebeu nada. Quem foi convidade decide por si se quer entrar.",
+  "detail.modtools.invites.skip.unknownMember":
+    "Não encontrámos esta pessoa.",
+  "detail.modtools.invites.skip.self": "Esta é a tua própria conta.",
+  "detail.modtools.invites.skip.systemAccount":
+    "Esta é uma conta da plataforma.",
+  "detail.modtools.invites.skip.alreadyMember": "Já está nesta comunidade.",
+  "detail.modtools.invites.skip.pendingRequest":
+    "Já pediu para entrar. Responde-lhe na fila de pedidos acima.",
+  "detail.modtools.invites.skip.banned": "Está barrade desta comunidade.",
+
+  // ── Zona de perigo · o teu papel + ausência de quem é responsável ─────────
+  "detail.dangerZone.yourRole.owner": "Esta comunidade é tua.",
+  "detail.dangerZone.yourRole.coOwner":
+    "És cotitular desta comunidade. Transferir a titularidade e arquivar continuam a caber a quem é responsável.",
+  "detail.dangerZone.yourRole.mod":
+    "Moderas esta comunidade. Transferir a titularidade e arquivar continuam a caber a quem é responsável.",
+  "detail.dangerZone.ownerReview.label":
+    "Comunicar que não se consegue chegar a quem é responsável",
+  "detail.dangerZone.ownerReview.text":
+    "Se quem é responsável deixou de responder e a comunidade está à espera de decisões que só essa pessoa pode tomar, pede à equipa da plataforma para verificar.",
+  "detail.dangerZone.ownerReview.cta": "Pedir verificação à equipa",
+  "detail.dangerZone.ownerReview.confirm.title":
+    "Pedir à equipa da plataforma para verificar quem é responsável por esta comunidade?",
+  "detail.dangerZone.ownerReview.confirm.body":
+    "A equipa da plataforma vai ler isto e tentar chegar a essa pessoa. Descreve quando tentaste o contacto e o que está pendente na comunidade.",
+  "detail.dangerZone.ownerReview.confirm.reasonLabel": "O que aconteceu",
+  "detail.dangerZone.ownerReview.confirm.reasonPlaceholder":
+    "Enviámos mensagem a 3 e a 17 de março sobre a fila de pedidos e não tivemos resposta. Há catorze pedidos à espera.",
+  "detail.dangerZone.ownerReview.confirm.minHint":
+    "Escreve pelo menos {min} caracteres, para a equipa ter algo concreto.",
+  "detail.dangerZone.ownerReview.confirm.tooShort":
+    "Acrescenta um pouco mais de detalhe. Pelo menos {min} caracteres.",
+  "detail.dangerZone.ownerReview.confirm.confirmCta":
+    "Enviar à equipa da plataforma",
+  "detail.dangerZone.ownerReview.filedToast":
+    "Enviado. A equipa da plataforma trata do resto.",
+  "detail.dangerZone.ownerReview.errorToast":
+    "Algo correu mal. Tenta novamente.",
+  "detail.dangerZone.ownerReview.open.staffHeading":
+    "Há uma verificação de titularidade em curso",
+  "detail.dangerZone.ownerReview.open.ownerHeading":
+    "A moderação pediu à equipa da plataforma para verificar quem é responsável por esta comunidade",
+  "detail.dangerZone.ownerReview.open.ownerBody":
+    "Comunicaram que não conseguiram chegar a ti. Estás a ler isto, por isso podes retirar o pedido.",
+  "detail.dangerZone.ownerReview.open.filedBy":
+    "Registado por {name} a {date}.",
+  "detail.dangerZone.ownerReview.open.filedOn": "Registado a {date}.",
+  "detail.dangerZone.ownerReview.open.reason": "O que escreveram: {reason}",
+  "detail.dangerZone.ownerReview.open.noReason":
+    "Não ficou registado nenhum detalhe.",
+  "detail.dangerZone.ownerReview.withdrawCta": "Retirar o pedido",
+  "detail.dangerZone.ownerReview.withdraw.title":
+    "Retirar esta verificação de titularidade?",
+  "detail.dangerZone.ownerReview.withdraw.body":
+    "A equipa da plataforma deixa de a analisar. Quem pode registar uma verificação pode voltar a registar outra mais tarde.",
+  "detail.dangerZone.ownerReview.withdraw.confirmCta": "Retirar",
+  "detail.dangerZone.ownerReview.withdrawnToast":
+    "A verificação de titularidade foi retirada.",
+  "detail.dangerZone.ownerReview.flagged.heading":
+    "Sinalizada para verificação de titularidade",
+  "detail.dangerZone.ownerReview.flagged.body":
+    "A equipa da plataforma tem esta comunidade sinalizada para verificação de titularidade. Não há nenhum pedido da moderação por trás disto.",
+
   // ── Separador Pulso (hub completo) ────────────────────────────────────────
   "detail.pulse.joinHint":
     "Podes ler à vontade. Junta-te a {name} para participar.",
@@ -373,6 +593,29 @@ export const communities: Catalog = {
   "detail.pulse.sharedToast": "Partilhado com a comunidade.",
   "detail.pulse.loadingMore": "A carregar…",
   "detail.pulse.loadMoreCta": "Carregar mais publicações",
+
+  // ── Anúncios (organização / co-organização / moderação) ───────────────────
+  "detail.pulse.announcement.toggleLabel": "Publicar como anúncio",
+  "detail.pulse.announcement.toggleHint":
+    "Fixa no topo do Pulso e notifica toda a comunidade.",
+  "detail.pulse.announcement.toggleAria": "Publicar isto como anúncio",
+  "detail.pulse.announcement.shareCta": "Anunciar",
+  "detail.pulse.announcement.sharedToast":
+    "Anunciado. Ficou fixado no topo e a comunidade foi notificada.",
+  "detail.pulse.announcement.flag": "Anúncio",
+
+  // ── Pesquisa no mural (no servidor, em todo o histórico) ──────────────────
+  "detail.pulse.search.placeholder": "Pesquisar publicações em {name}…",
+  "detail.pulse.search.ariaLabel": "Pesquisar publicações em {name}",
+  "detail.pulse.search.resultCount_one": "{count} publicação encontrada",
+  "detail.pulse.search.resultCount_other": "{count} publicações encontradas",
+  "detail.pulse.search.loadMoreCta": "Carregar mais resultados",
+  "detail.pulse.search.emptyTitle": "Nenhuma publicação corresponde",
+  "detail.pulse.search.emptyDescription":
+    "Nada nesta comunidade menciona “{term}”. Tenta uma palavra mais curta ou outra grafia.",
+  "detail.pulse.search.errorTitle": "Não foi possível fazer a pesquisa",
+  "detail.pulse.search.errorDescription":
+    "Algo correu mal ao chegar às publicações desta comunidade. Tenta de novo daqui a pouco.",
   "detail.events.error.title": "Não foi possível carregar os convívios",
   "detail.events.error.description":
     "Algo correu mal ao chegar ao calendário desta comunidade. Tenta de novo daqui a pouco.",
@@ -386,12 +629,58 @@ export const communities: Catalog = {
   // ── Separador Sobre + Recursos (hub completo) ─────────────────────────────
   "detail.aboutResources.houseRules": "Regras da casa",
   "detail.aboutResources.resources": "Recursos",
-  "detail.aboutResources.sisterCommunities": "Comunidades irmãs",
-  "detail.aboutResources.sharedPeople_one": "{count} pessoa em comum",
-  "detail.aboutResources.sharedPeople_other": "{count} pessoas em comum",
+
+  // ── A prateleira de recursos: leitura para membros, edição para a equipa ──
+  "detail.resources.manageCta": "Gerir",
+  "detail.resources.doneCta": "Concluído",
+  "detail.resources.emptyStaffHint":
+    "Ainda não há nada na prateleira. Fixa aquilo que as pessoas pedem sempre: o documento com as regras da casa, o grupo de conversa, as atas das reuniões.",
+  "detail.resources.kind.link": "Ligação",
+  "detail.resources.kind.doc": "Documento",
+  "detail.resources.kind.guide": "Guia",
+  "detail.resources.editor.addCta": "Adicionar um recurso",
+  "detail.resources.editor.capReached":
+    "Esta prateleira leva {max} recursos e está cheia. Remove um para adicionar outro.",
+  "detail.resources.editor.dragToReorder": "Arrasta para reordenar",
+  "detail.resources.editor.moveUpAria": "Mover {title} para cima",
+  "detail.resources.editor.moveDownAria": "Mover {title} para baixo",
+  "detail.resources.editor.editAria": "Editar {title}",
+  "detail.resources.editor.removeAria": "Remover {title}",
+  "detail.resources.editor.errorToast":
+    "Não foi guardado. Tenta de novo daqui a pouco.",
+  "detail.resources.editor.addedToast": "Adicionado à prateleira.",
+  "detail.resources.editor.savedToast": "Recurso atualizado.",
+  "detail.resources.editor.removedToast": "Retirado da prateleira.",
+  "detail.resources.editor.removeConfirmTitle": "Remover {title}?",
+  "detail.resources.editor.removeConfirmBody":
+    "Sai da prateleira para toda a gente nesta comunidade. A página para onde aponta fica intacta e podes voltar a fixá-la mais tarde.",
+  "detail.resources.editor.removeConfirmCta": "Remover",
+  "detail.resources.form.addTitle": "Adicionar um recurso",
+  "detail.resources.form.editTitle": "Editar recurso",
+  "detail.resources.form.subtitle":
+    "Toda a gente nesta comunidade vê a prateleira, por isso guarda-a para aquilo a que as pessoas vão mesmo pegar.",
+  "detail.resources.form.titleLabel": "Título",
+  "detail.resources.form.titlePlaceholder": "Regras da casa",
+  "detail.resources.form.titleRequired": "Dá-lhe um título.",
+  "detail.resources.form.urlLabel": "Ligação",
+  "detail.resources.form.urlPlaceholder": "https://",
+  "detail.resources.form.urlHelper":
+    "Um endereço web completo, a começar por http:// ou https://",
+  "detail.resources.form.urlRequired": "Indica a ligação para onde deve apontar.",
+  "detail.resources.form.urlInvalid":
+    "Isso não é um endereço web para o qual possamos ligar. Tem de começar por http:// ou https://",
+  "detail.resources.form.kindLabel": "Tipo",
+  "detail.resources.form.noteLabel": "Nota",
+  "detail.resources.form.notePlaceholder": "O que as pessoas vão encontrar lá",
+  "detail.resources.form.noteHelper":
+    "Opcional. Uma linha por baixo do título, para ninguém ter de abrir para saber o que é.",
+  "detail.resources.form.cancelCta": "Cancelar",
+  "detail.resources.form.saveCta": "Guardar",
+  "detail.resources.form.savingCta": "A guardar…",
 
   // ── Distintivos: papéis, níveis de acesso, barra de reações ───────────────
   "badges.role.owner": "Responsável",
+  "badges.role.coOwner": "Cotitular",
   "badges.role.mod": "Mod",
   "badges.tier.public": "Aberta a todas as pessoas",
   "badges.tier.request": "Pedido para entrar",
@@ -434,6 +723,31 @@ export const communities: Catalog = {
   "join.involvement.active.desc": "Vou aos eventos e junto-me ao grupo",
   "join.involvement.organise.label": "Ajudar a organizar",
   "join.involvement.organise.desc": "Ser voluntárie para ajudar a gerir",
+  // Regras da casa, mostradas à entrada e aceites por versão
+  "join.rules.eyebrow": "Regras da casa",
+  "join.rules.title": "As regras da casa de {name}",
+  "join.rules.hint":
+    "Lê estas regras antes de entrares. Toda a gente neste espaço concorda com elas.",
+  "join.rules.updatedNotice":
+    "Estas regras foram atualizadas enquanto tinhas isto aberto. Lê-as outra vez, por favor.",
+  "join.rules.acknowledge.title":
+    "Li estas regras da casa e concordo em segui-las",
+  "join.rules.acknowledge.sub":
+    "Podes voltar a lê-las quando quiseres, no separador Sobre da comunidade.",
+  "join.rules.continueCta": "Continuar",
+  "join.rules.acknowledgeRequired":
+    "Confirma que leste as regras da casa para continuares.",
+  // As duas recusas que a entrada pode devolver. Nenhuma nomeia quem modera e
+  // nenhuma dá um motivo, porque o backend não envia nenhum de propósito.
+  "join.refusal.banned.title": "Esta comunidade está fechada para ti",
+  "join.refusal.banned.body":
+    "Não podes entrar nesta comunidade. Aqui não conseguimos dizer mais do que isto. Se achas que houve um engano, a equipa QueerPulse pode ver isso contigo.",
+  "join.refusal.reapply.title": "Podes pedir outra vez mais tarde",
+  "join.refusal.reapply.body":
+    "Esta comunidade pediu-te para esperares antes de te candidatares de novo. Podes enviar um novo pedido a partir de {date}.",
+  "join.refusal.reapply.bodyNoDate":
+    "Esta comunidade pediu-te para esperares antes de te candidatares de novo. Podes enviar um novo pedido quando essa espera terminar.",
+  "join.refusal.closeCta": "Fechar",
   "join.done.requestTitle": "O teu pedido está com a moderação",
   "join.done.welcomeTitle": "Bem-vinde a {name}",
   "join.done.requestBody":
@@ -769,7 +1083,7 @@ export const communities: Catalog = {
   "common.count.members_one": "{count} pessoa",
   "common.count.members_other": "{count} pessoas",
   "common.count.membersOnly": "Só para pessoas da comunidade",
-  "detail.founded": "Fundada em {year}",
+  "detail.founded": "Fundada em {date}",
   "detail.foundedRecently": "Fundada recentemente",
   "detail.foundedJustNow": "Fundada agora mesmo",
   "detail.cadenceDefault": "A encontrar o seu ritmo",

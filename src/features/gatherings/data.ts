@@ -1,3 +1,4 @@
+import { routes } from "../../app/routeMap";
 import { memberName } from "../members/data/members";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
@@ -529,6 +530,28 @@ export function gatheringShortId(slug: string): string {
 /** Canonical path for a gathering detail page. */
 export function gatheringPath(slug: string): string {
   return `/gatherings/${slug}-${gatheringShortId(slug)}`;
+}
+
+/**
+ * Query parameter the create-gathering wizard reads to preselect the community
+ * a new gathering is filed to (`useGatheringForm`'s `communitySlug`). Kept next
+ * to the path helper below so callers never hardcode the name.
+ */
+export const CREATE_GATHERING_COMMUNITY_PARAM = "community";
+
+/**
+ * Deep link into the create-gathering wizard. Pass a `communitySlug` to land
+ * with that community already picked in the wizard's community field, which is
+ * how a community's Events tab offers "host a gathering here". The wizard still
+ * lets the host change or clear it, and the backend re-checks membership on
+ * publish.
+ */
+export function createGatheringPath(communitySlug?: string): string {
+  if (!communitySlug) return routes.createGathering;
+  const query = new URLSearchParams({
+    [CREATE_GATHERING_COMMUNITY_PARAM]: communitySlug,
+  });
+  return `${routes.createGathering}?${query.toString()}`;
 }
 
 /** Lifecycle sub-pages of one gathering (all under `/gatherings/:slug/...`). */

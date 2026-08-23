@@ -1,5 +1,6 @@
 import { memberRefToPerson, type MemberRefDTO } from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
+import { activeLocale } from "../../../shared/i18n/locale";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Community } from "../../homepage/data/types";
 import type {
@@ -71,12 +72,20 @@ function joinLabelFor(tier: AccessTier, translate: TFunction): string {
  * shared `relativeAgo` + `Intl.RelativeTimeFormat`). See `communityTime.ts`.
  */
 
-/** Format an ISO date to the "Founded 2025" line the detail hero shows. */
+/** Format an ISO date to the "Founded March 2025" line the detail hero shows.
+ *  Month + year, written the way the active language writes it (EN "March
+ *  2025", PT "março de 2025"). It reads `activeLocale()` because an adapter
+ *  runs outside React and cannot reach the provider's language via a hook. */
 function foundedLabel(iso: string, translate: TFunction): string {
-  const year = iso?.slice(0, 4) ?? "";
-  return /^\d{4}$/.test(year)
-    ? translate("communities:detail.founded", { year })
-    : translate("communities:detail.foundedRecently");
+  const timestamp = iso ? Date.parse(iso) : Number.NaN;
+  if (Number.isNaN(timestamp)) {
+    return translate("communities:detail.foundedRecently");
+  }
+  const date = new Intl.DateTimeFormat(activeLocale(), {
+    month: "long",
+    year: "numeric",
+  }).format(timestamp);
+  return translate("communities:detail.founded", { date });
 }
 
 /** Map a (possibly null) member ref to the community's local `Person` shape.

@@ -90,6 +90,166 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "community-house-rules",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-house-rules"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-removal-bars-return",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("community-removal-bars-return"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-announcements",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-announcements"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-notification-levels",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-notification-levels"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-invites-any-time",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-invites-any-time"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-join-review-context",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("community-join-review-context"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-resources-shelf",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-resources-shelf"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-co-ownership",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-co-ownership"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-governance-history",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-governance-history"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-public-teaser",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-public-teaser"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-place-and-language",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("community-place-and-language"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-welcome-and-search",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("community-welcome-and-search"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-insight-trends",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("community-insight-trends"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-pause-reason",
+        category: "fix",
+        date: "23 Aug 2026",
+        ...entryKeys("community-pause-reason"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-card-covers",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("community-card-covers"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "community-founded-month",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("community-founded-month"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
         id: "card-text-legibility",
         category: "improvement",
         date: "23 Aug 2026",

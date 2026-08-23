@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../../shared/components/layout";
+import { PageMeta } from "../../../shared/seo";
 import { FadeIn } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
@@ -351,6 +352,10 @@ export function StartCommunityPage() {
 
   return (
     <PageShell>
+      <PageMeta
+        title={t("communities:seo.start.title")}
+        description={t("communities:seo.start.description")}
+      />
       <StartCommunityHero />
 
       <div className="wrap">
