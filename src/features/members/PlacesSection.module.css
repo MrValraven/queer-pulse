@@ -22,64 +22,44 @@
   margin-top: 6px;
   max-width: 56ch;
 }
+/* Directory-shaped cards need room for the 168px cover photo, so the track
+   floor is wider than the old text-only card's. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 18px;
 }
-.card {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 16px;
-  padding: 18px 20px;
-  transition:
-    border-color 0.2s var(--ease),
-    box-shadow 0.2s var(--ease);
+
+/* The body of a live listing is one big link to its directory page, mirroring
+   the directory card. `display: contents` keeps the card's own flex column and
+   the photo's negative-margin bleed intact — the anchor draws no box of its
+   own, it only carries the click target. */
+.bodyLink {
+  display: contents;
+  color: inherit;
+  text-decoration: none;
+}
+/* A listing still in review has no public page to open, so its card isn't
+   clickable — drop the directory card's pointer cursor and hover lift rather
+   than promise a click that goes nowhere. The class is doubled to outrank
+   `.card:hover` from `DirectoryPage.module.css` regardless of the order the
+   two CSS modules land in the bundle. */
+.staticCard.staticCard {
+  cursor: default;
 }
 @media (hover: hover) {
-  .card:hover {
-    border-color: rgba(var(--line-rgb), 0.16);
-    box-shadow: 0 6px 20px -12px rgba(var(--plum-rgb), 0.25);
+  .staticCard.staticCard:hover {
+    transform: none;
+    box-shadow: none;
   }
 }
-.cardTop {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.av {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 16px;
-  background: rgba(var(--accent-rgb), 0.15);
-  color: var(--accent-ink);
-}
-.name {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 18px;
-  color: var(--text-strong);
-  line-height: 1.15;
-}
-.meta {
-  font-size: 12px;
-  color: var(--ink-60);
-  margin-top: 3px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+
+/* LIVE / IN REVIEW, taking the bookmark's corner over the cover photo. Opaque
+   paper ground + shadow so it stays legible on any photo. */
 .status {
-  margin-left: auto;
-  align-self: flex-start;
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -87,29 +67,33 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: 999px;
   white-space: nowrap;
+  background: var(--paper);
+  box-shadow: 0 2px 8px rgba(var(--plum-rgb), 0.18);
 }
 .statusReview {
-  background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent-ink);
 }
 .statusLive {
-  background: rgba(var(--jade-rgb), 0.14);
   color: var(--jade);
 }
-.blurb {
-  font-size: 13.5px;
-  color: var(--ink);
-  line-height: 1.6;
-  margin-bottom: 14px;
+/* Sits where the card footer's "Visit →" would, for a listing with no public
+   page yet. */
+.pending {
+  margin-inline-start: auto;
+  font-size: 12px;
+  color: var(--ink-40);
+  font-style: italic;
 }
-.foot {
+
+/* Owner management row, below the card's own footer. */
+.ownerBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
   padding-top: 12px;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
 }
@@ -119,28 +103,30 @@
   font-weight: 600;
   letter-spacing: 0.02em;
 }
-.footActions {
+.ownerActions {
   display: flex;
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
+  margin-inline-start: auto;
 }
 
-/* On a phone the card is full-width but narrow: Ref + Edit/Delete/View no longer
-   fit one space-between row (each label wraps character-by-character). Stack the
-   ref above its own action row so both breathe. */
+/* On a phone the card is full-width but narrow: Ref + Quick edit/Full editor/
+   Delete no longer fit one row (each label wraps character-by-character).
+   Stack the ref above its own action row so both breathe. */
 @media (--xs) {
-  .foot {
+  .ownerBar {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  .footActions {
+  .ownerActions {
+    margin-inline-start: 0;
     /* Give the tap targets a little more vertical room now they own a line. */
     row-gap: 10px;
   }
 }
-.viewLink,
+
 .editLink,
 .quickEditBtn {
   font-size: 13px;
@@ -156,16 +142,10 @@
   font-family: inherit;
 }
 @media (hover: hover) {
-  .viewLink:hover,
   .editLink:hover,
   .quickEditBtn:hover {
     color: var(--accent-ink);
   }
-}
-.pending {
-  font-size: 12px;
-  color: var(--ink-40);
-  font-style: italic;
 }
 .deleteBtn {
   font-size: 13px;
@@ -182,7 +162,7 @@
     color: var(--danger-ink);
   }
 }
-/* Inline "delete this listing?" confirm — replaces the card foot while armed. */
+/* Inline "delete this listing?" confirm — replaces the owner bar while armed. */
 .confirm {
   display: flex;
   align-items: center;

@@ -1773,6 +1773,16 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.profile-community-cards.title":
+    "As tuas comunidades ficam iguais no perfil e na página de comunidades",
+  "changelog.entries.profile-community-cards.body":
+    "As comunidades que destacas no perfil eram um cartão simples e compacto. Passam a ser o mesmo cartão que a página de comunidades mostra: o cabeçalho da categoria com a foto de capa, as caras de quem já lá está, a descrição completa, as etiquetas e a atividade desta semana. O selo diz a quem te visita como estás em cada uma, se és responsável, se moderas ou se és membro.",
+
+  "changelog.entries.profile-places-directory-cards.title":
+    "Os teus espaços ficam iguais no perfil e no diretório",
+  "changelog.entries.profile-places-directory-cards.body":
+    "Os cartões “Espaços que geres” no teu perfil eram um resumo em texto simples. Passam a ser o mesmo cartão que o diretório local mostra: foto de capa, selo de negócio queer ou de espaço seguro, categoria, etiquetas e o horário de hoje. O estado do teu anúncio e as ações de editar, edição rápida e apagar ficam por baixo, para continuares a ver de relance se já está publicado ou ainda em leitura.",
+
   "changelog.entries.community-co-owners.title":
     "Quem é responsável pode partilhar a comunidade com alguém cotitular",
   "changelog.entries.community-co-owners.body":

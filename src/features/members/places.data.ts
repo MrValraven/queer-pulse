@@ -1,18 +1,20 @@
-import { DIRECTORY_PLACES } from "../marketing/directoryPlaces";
+import { DIRECTORY_PLACES, type DirectoryPlace } from "../marketing/directoryPlaces";
 import type { ListingStatus } from "../marketing/listBusiness/listBusiness.data";
 
-/** One place on a profile, from either source, flattened for rendering. */
+/**
+ * One place on a profile. The card visuals come from the same
+ * `DirectoryPlace` view model the `/local/directory` grid renders, so the
+ * profile grid and the directory grid can never drift apart; the fields
+ * around it are the profile's own owner-facing chrome.
+ */
 export interface MemberPlace {
   /** Stable react key — the registry slug or the submission ref. */
   key: string;
-  name: string;
-  slug: string;
   status: ListingStatus;
-  /** "Café · Arroios" — category and neighbourhood. */
-  meta: string;
-  blurb?: string;
   /** Submission reference, shown only to the owner. */
   ref?: string;
+  /** What the card renders — see `LocalBusinessCardBody`. */
+  place: DirectoryPlace;
 }
 
 /** The live places a member runs, from the static registry. `DirectoryPlace`
@@ -21,11 +23,8 @@ export function registryPlacesForMember(memberSlug: string): MemberPlace[] {
   return DIRECTORY_PLACES.filter((place) => place.member === memberSlug).map(
     (place) => ({
       key: place.slug,
-      name: place.name,
-      slug: place.slug,
       status: "live" as const,
-      meta: [place.cat, place.hood].filter(Boolean).join(" · "),
-      blurb: place.desc,
+      place,
     }),
   );
 }
@@ -40,10 +39,10 @@ export function mergePlaces(
   submitted: MemberPlace[],
   isSelf: boolean,
 ): MemberPlace[] {
-  const seenSlugs = new Set(registry.map((place) => place.slug));
-  const extraPlaces = submitted.filter((place) => {
-    if (seenSlugs.has(place.slug)) return false;
-    return isSelf || place.status === "live";
+  const seenSlugs = new Set(registry.map((entry) => entry.place.slug));
+  const extraPlaces = submitted.filter((entry) => {
+    if (seenSlugs.has(entry.place.slug)) return false;
+    return isSelf || entry.status === "live";
   });
   return [...registry, ...extraPlaces];
 }

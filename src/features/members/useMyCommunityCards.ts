@@ -60,6 +60,8 @@ export function useMyCommunityCards(
         countLabel: community.count,
         role: membership.role,
         tags: community.tags,
+        coverImageUrl: community.coverImageUrl,
+        activeThisWeek: community.activeThisWeek,
       });
     }
     communityCards.sort((left, right) => left.name.localeCompare(right.name));

@@ -1,5 +1,20 @@
+/* Auto-fill rather than the discover page's fixed three-across: this grid sits
+   in the profile column and has to flow to whatever width it is given. The
+   280px floor is what the card needs now that it carries a shoulder letterhead
+   and 24px of padding. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 20px;
+  /* Every row as tall as the tallest card in it, so a one-line tagline and a
+     three-line one produce identically sized cards — the discover grid's
+     behaviour. Paired with `height: 100%` below, since the card would
+     otherwise shrink-wrap inside a stretched track. */
+  grid-auto-rows: 1fr;
+}
+/* Grid items default to min-width: auto, which would let a wide child outgrow
+   its track; pin them to it. */
+.grid > * {
+  min-width: 0;
+  height: 100%;
 }

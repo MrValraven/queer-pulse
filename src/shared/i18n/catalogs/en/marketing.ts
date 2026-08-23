@@ -1726,6 +1726,16 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.profile-community-cards.title":
+    "Your communities look the same on your profile as on the communities page",
+  "changelog.entries.profile-community-cards.body":
+    "The communities you feature on your profile were a plain compact card. They are now the same card the communities page shows: the category letterhead with its cover photo, the faces already in the room, the full description, the tags and this week's activity. The badge tells visitors how you stand in each one, whether you run it, moderate it or are simply a member.",
+
+  "changelog.entries.profile-places-directory-cards.title":
+    "Your places look the same on your profile as in the directory",
+  "changelog.entries.profile-places-directory-cards.body":
+    "The “Places you run” cards on your profile were a plain text summary. They are now the same card the local directory shows: cover photo, queer-owned or safe-space badge, category, tags and today's opening hours. Your listing's status and the edit, quick edit and delete actions sit underneath, so you can still see at a glance whether something is live or still being read.",
+
   "changelog.entries.community-co-owners.title":
     "Owners can share a community with a co-owner",
   "changelog.entries.community-co-owners.body":

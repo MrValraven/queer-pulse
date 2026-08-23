@@ -137,6 +137,11 @@ export interface FeaturedCommunityRefDTO {
   /** Curated tag ids (⊆ `COMMUNITY_TAGS`, `communities/communityTags.data.ts`)
    *  — the profile's community card renders these as pills. */
   tags?: string[];
+  /** Resolved cover-image URL, or null when the community has no cover — the
+   *  card's letterhead ground. Same field the discover card DTO carries. */
+  coverImageUrl?: string | null;
+  /** The community's live roster activity this week. */
+  activeThisWeek?: number;
 }
 
 export type ShapingKind = "film" | "book" | "song" | "moment";

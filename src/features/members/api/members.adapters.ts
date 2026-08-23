@@ -274,6 +274,8 @@ export function profileToMember(dto: ProfileDTO): Member {
       countLabel: ref.countLabel,
       role: ref.role,
       tags: ref.tags,
+      coverImageUrl: ref.coverImageUrl,
+      activeThisWeek: ref.activeThisWeek,
     })),
   };
 }

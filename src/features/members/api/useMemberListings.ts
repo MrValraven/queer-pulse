@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { cardDtoToPlace } from "../../marketing/api/directory.adapters";
 import { getListingsByMember } from "../../marketing/api/directory.api";
 import { registryPlacesForMember, type MemberPlace } from "../places.data";
 
@@ -26,12 +27,9 @@ export function useMemberListings(memberSlug: string): MemberPlace[] {
       const cards = await getListingsByMember(memberSlug);
       return cards.map((listing) => ({
         key: listing.slug,
-        name: listing.name,
-        slug: listing.slug,
         status: "live" as const,
-        meta: [listing.cat, listing.hood].filter(Boolean).join(" · "),
-        blurb: listing.blurb,
         ref: undefined,
+        place: cardDtoToPlace(listing),
       }));
     },
   });

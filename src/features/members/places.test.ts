@@ -1,11 +1,22 @@
 import { describe, expect, it } from "vitest";
+import type { DirectoryPlace } from "../marketing/directoryPlaces";
 import { mergePlaces, registryPlacesForMember } from "./places.data";
+
+/** The card fields `mergePlaces` actually reads, as a minimal `DirectoryPlace`. */
+function place(slug: string, name: string): DirectoryPlace {
+  return { slug, name } as DirectoryPlace;
+}
 
 describe("registryPlacesForMember", () => {
   it("finds the places a member runs", () => {
     const places = registryPlacesForMember("ines");
     expect(places.length).toBeGreaterThan(0);
-    expect(places.every((place) => place.status === "live")).toBe(true);
+    expect(places.every((entry) => entry.status === "live")).toBe(true);
+  });
+
+  it("carries the registry entry through as the card's render source", () => {
+    const places = registryPlacesForMember("ines");
+    expect(places[0]?.place.slug).toBe(places[0]?.key);
   });
 
   it("returns nothing for a member who runs none", () => {
@@ -17,19 +28,15 @@ describe("mergePlaces", () => {
   const live = [
     {
       key: "r1",
-      name: "Café Janela",
-      slug: "janela",
       status: "live" as const,
-      meta: "Café · Arroios",
+      place: place("janela", "Café Janela"),
     },
   ];
   const pending = [
     {
       key: "s1",
-      name: "New Bar",
-      slug: "new-bar",
       status: "review" as const,
-      meta: "Bar · Anjos",
+      place: place("new-bar", "New Bar"),
     },
   ];
 
@@ -45,10 +52,8 @@ describe("mergePlaces", () => {
     const alsoLive = [
       {
         key: "s2",
-        name: "Café Janela",
-        slug: "janela",
         status: "live" as const,
-        meta: "Café · Arroios",
+        place: place("janela", "Café Janela"),
       },
     ];
     expect(mergePlaces(live, alsoLive, true)).toHaveLength(1);

@@ -34,6 +34,10 @@ export function LocalBusinessCardBody({
   place,
   saveControl,
   photoOverlay,
+  topRight,
+  showRating = true,
+  showHost = true,
+  visitSlot,
 }: {
   place: DirectoryPlace;
   /** Present on the live card (wraps a real save toggle); absent on the
@@ -43,6 +47,20 @@ export function LocalBusinessCardBody({
    *  "add a cover photo" call to action when there's no photo yet. Suppresses
    *  the empty-slot caption (both are centered and would otherwise overlap). */
   photoOverlay?: ReactNode;
+  /** Replaces the bookmark in the photo's top-right corner. The profile's
+   *  "Places you run" grid puts its LIVE / IN REVIEW chip there — an owner
+   *  can't meaningfully save their own listing. Overrides `saveControl`. */
+  topRight?: ReactNode;
+  /** Drop the star rating (default: shown). The profile's owner grid passes
+   *  false for a submitted listing, which carries no reviews and would
+   *  otherwise always read as five empty stars. */
+  showRating?: boolean;
+  /** Drop the "run by <first>" avatar in the footer (default: shown). Both
+   *  profile views already sit under that member's own name. */
+  showHost?: boolean;
+  /** Replaces the footer's "Visit →" call to action, so the owner grid can
+   *  say "View listing →" (or "Awaiting review" while it's still pending). */
+  visitSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
   const now = zonedNow();
@@ -74,7 +92,7 @@ export function LocalBusinessCardBody({
             )}
           </span>
         )}
-        {saveControl ? (
+        {topRight ?? (saveControl ? (
           <span
             role="button"
             tabIndex={0}
@@ -95,16 +113,18 @@ export function LocalBusinessCardBody({
           <span className={s.saveBtn} aria-hidden>
             <FiBookmark aria-hidden fill="none" />
           </span>
-        )}
+        ))}
         {photoOverlay}
       </div>
 
       <div className={s.nameRow}>
         <div className={s.name}>{place.name}</div>
-        <div className={s.rating}>
-          <Stars value={Number(place.rating.score)} size={12} />
-          <span>({place.rating.count})</span>
-        </div>
+        {showRating && (
+          <div className={s.rating}>
+            <Stars value={Number(place.rating.score)} size={12} />
+            <span>({place.rating.count})</span>
+          </div>
+        )}
       </div>
       <div className={s.metaRow}>
         <span className={s.catPill}>{categoryLabel(t, place.cat)}</span>
@@ -136,13 +156,17 @@ export function LocalBusinessCardBody({
               : t("marketing:directory.card.closedNow")}
           </span>
         )}
-        <span className={s.host}>
-          <Avatar initials={place.owner.initials} tint={place.owner.tint} size={20} />
-          {place.owner.first}
-        </span>
-        <span className={s.visit}>
-          {t("marketing:directory.card.visit")} <FiArrowRight aria-hidden />
-        </span>
+        {showHost && (
+          <span className={s.host}>
+            <Avatar initials={place.owner.initials} tint={place.owner.tint} size={20} />
+            {place.owner.first}
+          </span>
+        )}
+        {visitSlot ?? (
+          <span className={s.visit}>
+            {t("marketing:directory.card.visit")} <FiArrowRight aria-hidden />
+          </span>
+        )}
       </div>
     </>
   );

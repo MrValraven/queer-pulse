@@ -1,16 +1,9 @@
-import { Link } from "react-router-dom";
 import { FiCheck, FiArrowRight } from "react-icons/fi";
-import { Avatar, ImageSlot, Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { Community } from "../homepage/data/types";
 import { getLiving } from "./livingCommunities.data";
-import { photoOf } from "./communityPeople";
 import { AccessTierBadge } from "./CommunityBadges";
-import {
-  CARD_TAG_DISPLAY_CAP,
-  COMMUNITY_TAG_LABEL_KEY,
-} from "./communityTags.data";
+import { CommunityCardShell } from "./CommunityCardShell";
 import styles from "./CommunitiesPage.module.css";
 
 export function CommunityCard({
@@ -23,7 +16,6 @@ export function CommunityCard({
   onJoin: (c: Community) => void;
 }) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   const living = getLiving(community.slug);
   // living data (flagship demo) → the card DTO's join policy (live + created) →
   // legacy `privateBadge` fallback. Consulting `community.accessTier` is what
@@ -50,104 +42,34 @@ export function CommunityCard({
         : t("communities:card.join.request");
 
   return (
-    <Link
-      to={`/community/${community.slug}`}
-      className={[
-        styles.card,
-        joined && styles.joinedCard,
-        isPrivate && styles.privateCard,
-      ]
+    <CommunityCardShell
+      slug={community.slug}
+      name={community.name}
+      type={community.type}
+      typeLabel={community.typeLabel}
+      description={community.description}
+      countLabel={community.count}
+      activeThisWeek={activeThisWeek}
+      coverImageUrl={coverImageUrl}
+      tags={community.tags}
+      roster={roster}
+      className={[joined && styles.joinedCard, isPrivate && styles.privateCard]
         .filter(Boolean)
         .join(" ")}
-    >
-      <div
-        className={[
-          styles.shoulder,
-          styles[community.type],
-          coverImageUrl && styles.hasPhoto,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {coverImageUrl && (
-          // The photo replaces the flat colour as the letterhead's ground, so
-          // its chrome (type label, badge, roster) rides a scrim rather than
-          // the raw image. Rendered as an <img> via ImageSlot, never a CSS
-          // background, so a broken/missing cover falls back cleanly.
-          <span className={styles.shoulderPhoto} aria-hidden>
-            <ImageSlot
-              src={coverImageUrl}
-              radius={0}
-              width="100%"
-              height="100%"
-              srcSize={720}
-              // The slot's own hairline would draw a line across the
-              // letterhead; the card already has its border.
-              style={{ border: "none" }}
-            />
-            <span className={styles.shoulderScrim} />
+      badge={
+        /* Once you're in, the access tier has stopped being news — the badge
+           slot says so instead, which is the only thing that distinguishes
+           your own communities' cards on the "My communities" tab. */
+        joined ? (
+          <span className={styles.inBadge}>
+            <FiCheck aria-hidden /> {t("communities:card.youreIn")}
           </span>
-        )}
-        <div className={styles.cardTop}>
-          <span className={styles.type}>{community.typeLabel}</span>
-          {/* Once you're in, the access tier has stopped being news — the badge
-              slot says so instead, which is the only thing that distinguishes
-              your own communities' cards on the "My communities" tab. */}
-          {joined ? (
-            <span className={styles.inBadge}>
-              <FiCheck aria-hidden /> {t("communities:card.youreIn")}
-            </span>
-          ) : (
-            <AccessTierBadge tier={tier} onPhoto={!!coverImageUrl} />
-          )}
-        </div>
-        {roster.length > 0 && (
-          <div className={styles.cardAvStack}>
-            {roster.map((m) => (
-              <span className={styles.cardAv} key={m.slug ?? m.name}>
-                <Avatar
-                  initials={m.initials}
-                  tint={m.tint}
-                  src={photoOf(m, demoMode)}
-                  size={26}
-                  alt={m.name}
-                />
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className={styles.name}>{community.name}</div>
-      <p className={styles.desc}>{community.description}</p>
-
-      {community.tags && community.tags.length > 0 && (
-        <TagRow>
-          {community.tags.slice(0, CARD_TAG_DISPLAY_CAP).map((tagId) => (
-            <Tag key={tagId}>
-              {COMMUNITY_TAG_LABEL_KEY[tagId]
-                ? t(COMMUNITY_TAG_LABEL_KEY[tagId])
-                : tagId}
-            </Tag>
-          ))}
-        </TagRow>
-      )}
-
-      <div className={styles.foot}>
-        <span className={styles.metaStack}>
-          <span className={styles.meta}>{community.count}</span>
-          {/* The demo registry carries no activity, the live card DTO does —
-              so this line appears wherever a real number exists and is simply
-              absent where none does, in either mode. */}
-          {activeThisWeek !== undefined && (
-            <span className={styles.activeLine}>
-              <span className={styles.activeDot} aria-hidden />
-              {t("communities:card.stats.active", { count: activeThisWeek })}
-            </span>
-          )}
-        </span>
-
-        {joined ? (
+        ) : (
+          <AccessTierBadge tier={tier} onPhoto={!!coverImageUrl} />
+        )
+      }
+      footAction={
+        joined ? (
           <span className={[styles.joinBtn, styles.joined].join(" ")}>
             <FiCheck aria-hidden /> {t("communities:card.joined")}
           </span>
@@ -175,8 +97,8 @@ export function CommunityCard({
           >
             {joinLabel}
           </span>
-        )}
-      </div>
-    </Link>
+        )
+      }
+    />
   );
 }
