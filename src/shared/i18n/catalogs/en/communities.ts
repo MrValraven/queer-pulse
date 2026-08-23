@@ -218,8 +218,7 @@ export const communities: Catalog = {
   "detail.rulesUpdate.acceptCta": "I have read them",
   "detail.rulesUpdate.laterCta": "Later",
   "detail.rulesUpdate.confirmedToast": "Thanks for reading the updated rules.",
-  "detail.rulesUpdate.errorToast":
-    "That did not save. Try again in a moment.",
+  "detail.rulesUpdate.errorToast": "That did not save. Try again in a moment.",
   "detail.save.savedToast": "Community saved to your profile.",
   "detail.save.removedToast": "Community removed from saved.",
   "detail.save.saveAriaLabel": "Save {name}",
@@ -401,6 +400,10 @@ export const communities: Catalog = {
   "detail.modtools.members.label": "Members",
   "detail.modtools.members.makeModCta": "Make mod",
   "detail.modtools.members.demoteCta": "Remove mod",
+  "detail.modtools.members.makeCoOwnerCta": "Make co-owner",
+  "detail.modtools.members.removeCoOwnerCta": "Remove co-owner",
+  "detail.modtools.members.coOwnerNote":
+    "Co-owners share your powers here: reviewing join requests, moderating posts, editing the community and managing the roster. Transferring ownership, archiving the community and changing a co-owner's role stay with you alone.",
   "detail.modtools.members.removeCta": "Remove from community",
   "detail.modtools.members.ownerTag": "Owner",
   "detail.modtools.toast.approved": "{name} approved. Welcome them in.",
@@ -411,12 +414,23 @@ export const communities: Catalog = {
   "detail.modtools.toast.reportDismissed": "Report dismissed.",
   "detail.modtools.toast.promoted": "{name} is now a mod.",
   "detail.modtools.toast.demoted": "{name} is a member again.",
+  "detail.modtools.toast.coOwnerGranted": "{name} is now a co-owner.",
+  "detail.modtools.toast.coOwnerRevoked":
+    "{name} is no longer a co-owner and stays on as a member.",
   "detail.modtools.toast.removed": "{name} has been removed.",
   "detail.modtools.confirm.removeMember.title":
     "Remove {name} from the community?",
   "detail.modtools.confirm.removeMember.body":
     "They lose access to the posts, events and members here. They can ask to join again later.",
   "detail.modtools.confirm.removeMember.confirmCta": "Remove member",
+  "detail.modtools.confirm.grantCoOwner.title": "Make {name} a co-owner?",
+  "detail.modtools.confirm.grantCoOwner.body":
+    "They get everything you can do in this community, apart from transferring ownership, archiving it and changing another co-owner's role. You can take it back at any time.",
+  "detail.modtools.confirm.grantCoOwner.confirmCta": "Make co-owner",
+  "detail.modtools.confirm.revokeCoOwner.title": "Remove {name} as co-owner?",
+  "detail.modtools.confirm.revokeCoOwner.body":
+    "They keep their place here as a member and lose the co-owner powers. You can make them a co-owner again later.",
+  "detail.modtools.confirm.revokeCoOwner.confirmCta": "Remove co-owner",
   "detail.modtools.confirm.removePost.title": "Take this post down?",
   "detail.modtools.confirm.removePost.body":
     "The post comes down for everyone and the report leaves your queue. This can't be undone from here.",
@@ -547,7 +561,8 @@ export const communities: Catalog = {
   "detail.dangerZone.ownerReview.confirm.confirmCta": "Send to platform staff",
   "detail.dangerZone.ownerReview.filedToast":
     "Sent. Platform staff will take it from here.",
-  "detail.dangerZone.ownerReview.errorToast": "Something went wrong. Try again.",
+  "detail.dangerZone.ownerReview.errorToast":
+    "Something went wrong. Try again.",
   "detail.dangerZone.ownerReview.open.staffHeading":
     "An ownership review is open",
   "detail.dangerZone.ownerReview.open.ownerHeading":

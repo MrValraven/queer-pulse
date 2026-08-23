@@ -19,6 +19,7 @@ import { ModToolsInvites } from "./ModToolsInvites";
 import { ModToolsBans } from "./ModToolsBans";
 import { CommunityDangerZone } from "./CommunityDangerZone";
 import { useModToolsActions } from "./useModToolsActions";
+import { modConfirmCopy } from "./modToolsConfirm";
 
 export function ModToolsTab({
   living,
@@ -41,11 +42,12 @@ export function ModToolsTab({
     reportsState,
     manageable,
     memberKey,
-    promoted,
-    demoted,
+    roleOverrides,
     resolveRequest,
     promote,
     demote,
+    confirmGrantCoOwner,
+    confirmRevokeCoOwner,
     dismissReportRow,
     confirming,
     setConfirming,
@@ -55,24 +57,7 @@ export function ModToolsTab({
     isRequestPending,
   } = useModToolsActions(living);
 
-  const confirmCopy =
-    confirming == null
-      ? null
-      : confirming.kind === "removeMember"
-        ? {
-            title: t("communities:detail.modtools.confirm.removeMember.title", {
-              name: confirming.name,
-            }),
-            body: t("communities:detail.modtools.confirm.removeMember.body"),
-            cta: t(
-              "communities:detail.modtools.confirm.removeMember.confirmCta",
-            ),
-          }
-        : {
-            title: t("communities:detail.modtools.confirm.removePost.title"),
-            body: t("communities:detail.modtools.confirm.removePost.body"),
-            cta: t("communities:detail.modtools.confirm.removePost.confirmCta"),
-          };
+  const confirmCopy = confirming ? modConfirmCopy(confirming, t) : null;
 
   return (
     <div>
@@ -93,11 +78,17 @@ export function ModToolsTab({
       <ModMemberManagement
         members={manageable}
         memberKey={memberKey}
-        promoted={promoted}
-        demoted={demoted}
+        roleOverrides={roleOverrides}
+        viewerRole={role}
         paging={rosterPaging}
         onPromote={promote}
         onDemote={demote}
+        onGrantCoOwner={(memberSlug, name) =>
+          setConfirming({ kind: "grantCoOwner", memberSlug, name })
+        }
+        onRevokeCoOwner={(memberSlug, name) =>
+          setConfirming({ kind: "revokeCoOwner", memberSlug, name })
+        }
         onRemove={(memberSlug, name) =>
           setConfirming({ kind: "removeMember", memberSlug, name })
         }
@@ -116,13 +107,13 @@ export function ModToolsTab({
         roster={manageable}
       />
 
-      {/* Removing a member and taking a post down are both irreversible from
-          here, so each is confirmed first — the same rule the danger zone
+      {/* Removing a member, taking a post down and moving someone in or out of
+          co-ownership are each confirmed first — the same rule the danger zone
           below already follows. */}
       {confirming && confirmCopy && (
         <ConfirmDialog
           open
-          tone="destructive"
+          tone={confirmCopy.tone}
           loading={isConfirmPending}
           title={confirmCopy.title}
           description={confirmCopy.body}
@@ -133,6 +124,10 @@ export function ModToolsTab({
           onConfirm={() => {
             if (confirming.kind === "removeMember") {
               confirmRemoveMember(confirming.memberSlug, confirming.name);
+            } else if (confirming.kind === "grantCoOwner") {
+              confirmGrantCoOwner(confirming.memberSlug, confirming.name);
+            } else if (confirming.kind === "revokeCoOwner") {
+              confirmRevokeCoOwner(confirming.memberSlug, confirming.name);
             } else {
               confirmRemoveReport(confirming.report);
             }

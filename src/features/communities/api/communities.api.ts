@@ -416,13 +416,24 @@ export const reviewJoinRequest = (
 export const removeMember = (slug: string, memberSlug: string) =>
   apiDelete<void>(`/communities/${slug}/members/${memberSlug}`);
 
-/** PATCH /communities/:slug/members/:memberSlug — promote to mod / demote to member. */
+/**
+ * The roles the roster route may assign, mirroring the backend's
+ * `UpdateMemberRoleDto`. `owner` is deliberately absent: ownership belongs to
+ * the community (`Community.ownerId`) and moves through the transfer route,
+ * never through a roster write. `co_owner` carries owner-level powers, so the
+ * server accepts it only from the owner.
+ */
+export type AssignableRole = "member" | "mod" | "co_owner";
+
+/** PATCH /communities/:slug/members/:memberSlug — set a member's roster role
+ *  (member, mod, or co-owner). The server is the authority on who may assign
+ *  which: granting or revoking `co_owner` is the owner's alone. */
 export const setMemberRole = (
   slug: string,
   memberSlug: string,
-  role: "member" | "mod",
+  role: AssignableRole,
 ) =>
-  apiPatch<{ slug: string; memberSlug: string; role: "member" | "mod" }>(
+  apiPatch<{ slug: string; memberSlug: string; role: AssignableRole }>(
     `/communities/${slug}/members/${memberSlug}`,
     { role },
   );

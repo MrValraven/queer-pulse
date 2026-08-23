@@ -258,6 +258,15 @@
 }
 
 /* ---- mod tools ---- */
+/* Standing note under a mod-tools section label — used for the co-owner
+   explainer, which only the owner sees. */
+.modSectionNote {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  max-width: 62ch;
+  margin: 0 0 12px;
+}
 .modRow {
   display: flex;
   align-items: center;

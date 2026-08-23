@@ -432,6 +432,9 @@ export const shared: Catalog = {
   "mediaRef.persona-item": "Persona",
   "mediaRef.community-post": "Publicação da comunidade",
   "mediaRef.community-cover": "Comunidade",
+  "mediaRef.community-avatar": "Comunidade",
+  "mediaRef.card-crest": "Cartão de sócio",
+  "mediaRef.card-background": "Cartão de sócio",
   "mediaRef.cinema-cover": "Título de cinema",
   "mediaRef.landlord": "Senhorio",
   "mediaRef.company-work": "Empresa",
@@ -439,6 +442,9 @@ export const shared: Catalog = {
   "mediaRef.magazine-author": "Pessoa autora",
   "mediaRef.changemaker": "Agente de mudança",
   "mediaRef.collection": "Coleção",
+  "mediaRef.magazine-article": "Matéria da revista",
+  "mediaRef.magazine-deck": "Deck da revista",
+  "mediaRef.message-photo": "Conversa",
 
   // calendar.* keys, for the shared APG-compliant Calendar/DatePicker
   // primitive (Calendar.tsx, CalendarCell.tsx, CalendarHeader.tsx,

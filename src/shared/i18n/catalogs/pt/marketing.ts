@@ -1773,6 +1773,16 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.community-co-owners.title":
+    "Quem é responsável pode partilhar a comunidade com alguém cotitular",
+  "changelog.entries.community-co-owners.body":
+    "Nas Ferramentas de moderação, quem é responsável por uma comunidade pode tornar qualquer pessoa membro cotitular. Quem é cotitular conduz a comunidade contigo: pedidos de entrada, moderação, definições e gestão de pessoas. Transferir a titularidade, arquivar a comunidade e mudar o papel de quem é cotitular continuam a caber só a quem é responsável, e a cotitularidade pode ser retirada quando quiseres.",
+
+  "changelog.entries.card-art-counted-as-in-use.title":
+    "A arte do cartão de sócio passa a contar como imagem em uso",
+  "changelog.entries.card-art-counted-as-in-use.body":
+    "O brasão e o fundo que uma comunidade escolhe para o cartão de sócio apareciam sem referências nos teus carregamentos, o que fazia parecer seguro apagar arte de cartões em circulação. Agora ambos contam como em uso e ligam de volta à comunidade que os imprime. Os avatares de comunidade, as imagens de matérias e decks da revista e as fotos enviadas numa conversa também passam a contar.",
+
   "changelog.entries.community-house-rules.title":
     "As regras da casa chegam com o convite",
   "changelog.entries.community-house-rules.body":

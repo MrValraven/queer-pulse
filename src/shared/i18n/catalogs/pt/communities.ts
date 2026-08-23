@@ -402,6 +402,10 @@ export const communities: Catalog = {
   "detail.modtools.members.label": "Pessoas",
   "detail.modtools.members.makeModCta": "Tornar mod",
   "detail.modtools.members.demoteCta": "Remover como mod",
+  "detail.modtools.members.makeCoOwnerCta": "Tornar cotitular",
+  "detail.modtools.members.removeCoOwnerCta": "Remover cotitular",
+  "detail.modtools.members.coOwnerNote":
+    "Quem é cotitular partilha os teus poderes aqui: rever pedidos de entrada, moderar publicações, editar a comunidade e gerir as pessoas. Transferir a titularidade, arquivar a comunidade e mudar o papel de quem é cotitular continuam a ser só teus.",
   "detail.modtools.members.removeCta": "Remover da comunidade",
   "detail.modtools.members.ownerTag": "Responsável",
   "detail.modtools.toast.approved": "{name} aprovade. Dá-lhe as boas-vindas.",
@@ -412,11 +416,23 @@ export const communities: Catalog = {
   "detail.modtools.toast.reportDismissed": "Denúncia ignorada.",
   "detail.modtools.toast.promoted": "{name} é agora mod.",
   "detail.modtools.toast.demoted": "{name} volta a ser membro.",
+  "detail.modtools.toast.coOwnerGranted": "{name} é agora cotitular.",
+  "detail.modtools.toast.coOwnerRevoked":
+    "{name} deixou de ser cotitular e continua na comunidade como membro.",
   "detail.modtools.toast.removed": "{name} foi removide.",
   "detail.modtools.confirm.removeMember.title": "Remover {name} da comunidade?",
   "detail.modtools.confirm.removeMember.body":
     "Perde o acesso às publicações, encontros e pessoas daqui. Pode voltar a pedir para entrar mais tarde.",
   "detail.modtools.confirm.removeMember.confirmCta": "Remover pessoa",
+  "detail.modtools.confirm.grantCoOwner.title": "Tornar {name} cotitular?",
+  "detail.modtools.confirm.grantCoOwner.body":
+    "Passa a poder fazer tudo o que tu fazes nesta comunidade, à exceção de transferir a titularidade, arquivá-la e mudar o papel de outra pessoa cotitular. Podes reverter quando quiseres.",
+  "detail.modtools.confirm.grantCoOwner.confirmCta": "Tornar cotitular",
+  "detail.modtools.confirm.revokeCoOwner.title":
+    "Remover {name} como cotitular?",
+  "detail.modtools.confirm.revokeCoOwner.body":
+    "Mantém o lugar aqui como membro e perde os poderes de cotitular. Podes voltar a torná-la cotitular mais tarde.",
+  "detail.modtools.confirm.revokeCoOwner.confirmCta": "Remover cotitular",
   "detail.modtools.confirm.removePost.title": "Remover esta publicação?",
   "detail.modtools.confirm.removePost.body":
     "A publicação deixa de estar visível para toda a gente e a denúncia sai da tua fila. Não é possível anular aqui.",
@@ -516,8 +532,7 @@ export const communities: Catalog = {
   "detail.modtools.invites.result.skipRow": "{name}: {reason}",
   "detail.modtools.invites.result.note":
     "Quem aparece em Ignoradas ficou de fora e não recebeu nada. Quem foi convidade decide por si se quer entrar.",
-  "detail.modtools.invites.skip.unknownMember":
-    "Não encontrámos esta pessoa.",
+  "detail.modtools.invites.skip.unknownMember": "Não encontrámos esta pessoa.",
   "detail.modtools.invites.skip.self": "Esta é a tua própria conta.",
   "detail.modtools.invites.skip.systemAccount":
     "Esta é uma conta da plataforma.",
@@ -666,7 +681,8 @@ export const communities: Catalog = {
   "detail.resources.form.urlPlaceholder": "https://",
   "detail.resources.form.urlHelper":
     "Um endereço web completo, a começar por http:// ou https://",
-  "detail.resources.form.urlRequired": "Indica a ligação para onde deve apontar.",
+  "detail.resources.form.urlRequired":
+    "Indica a ligação para onde deve apontar.",
   "detail.resources.form.urlInvalid":
     "Isso não é um endereço web para o qual possamos ligar. Tem de começar por http:// ou https://",
   "detail.resources.form.kindLabel": "Tipo",

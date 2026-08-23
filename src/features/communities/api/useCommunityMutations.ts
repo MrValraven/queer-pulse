@@ -24,6 +24,7 @@ import {
   unreactToPost,
   updateCommunity,
   updatePost,
+  type AssignableRole,
   type CommunityDetailDTO,
   type CommunityReplyDTO,
   type CreateCommunityDto,
@@ -246,18 +247,21 @@ export function useRemoveMember(slug: string) {
   });
 }
 
-/** PATCH /communities/:slug/members/:memberSlug — promote a roster member to mod
- *  (or demote back to member). Mod-only; the server is the authority on whether
- *  the caller may do it. Demo mode keeps the calling component's local
- *  optimistic list, exactly as the prototype already does. */
+/** Who is being moved, and to which role. */
+interface SetMemberRoleVariables {
+  memberSlug: string;
+  role: AssignableRole;
+}
+
+/** PATCH /communities/:slug/members/:memberSlug — set a roster member's role:
+ *  mod, plain member, or co-owner. Staff-only, and the server is the authority
+ *  on whether this caller may make this particular change (co-owner in either
+ *  direction is the owner's alone). Demo mode keeps the calling component's
+ *  local optimistic state, exactly as the prototype already does. */
 export function useSetMemberRole(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<
-    void,
-    Error,
-    { memberSlug: string; role: "member" | "mod" }
-  >({
+  return useMutation<void, Error, SetMemberRoleVariables>({
     // The mod-tools callers own the error UI (they roll their optimistic row
     // back and toast the specific reason), so the app-wide MutationCache
     // handler must not stack a second generic toast on top: during a bulk

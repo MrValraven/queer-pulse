@@ -24,13 +24,19 @@ export type MediaReferenceType =
   | "persona-item" // SubprofileItem.imageUrl
   | "community-post" // CommunityPost.image
   | "community-cover" // Community.coverImageUrl
+  | "community-avatar" // Community.avatarImageUrl
+  | "card-crest" // CommunityCard.crestMediaKey
+  | "card-background" // CommunityCard.backgroundMediaKey
   | "cinema-cover" // CinemaTitle.coverImageUrl
   | "landlord" // Landlord.photo
   | "company-work" // Company.work[].imageUrl
   | "housing" // HousingListing.gallery[]
   | "magazine-author" // MagazineAuthor.avatarUrl
   | "changemaker" // Changemaker.imageUrl
-  | "collection"; // Collection.cover
+  | "collection" // Collection.cover
+  | "magazine-article" // MagazineArticle.blocks[].src / .socialImage
+  | "magazine-deck" // MagazineDeck.cover / .slides[] image refs
+  | "message-photo"; // Message.attachment (a photo sent in a conversation)
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -76,12 +82,21 @@ export function mediaReferenceLabelKey(type: MediaReferenceType): string {
  *   fetch a live author by slug) — also a real route the plan's draft
  *   assumed didn't exist.
  * - `changemaker` → `/changemaker/:slug` (`ChangemakerStoryPage`).
+ * - `community-cover` / `community-avatar` → `communityPath(slug)`.
+ * - `card-crest` / `card-background` → the ISSUING community's page: a
+ *   membership-card programme is designed in a modal on that page and has no
+ *   route of its own, and the backend already resolves the reference to the
+ *   community rather than to the `community_cards` row.
+ * - `magazine-article` / `magazine-deck` → `?id=<slug>` query links, since
+ *   both routes read the slug from a search param rather than a path segment.
  * - `group-avatar` (private conversation), `community-post` (no
  *   single-post route — posts render inline in a community's tabs),
  *   `story-cover` (the issue route has no `:number` param yet — it always
- *   shows the current issue), and `collection` (`/account/collections` is
- *   the owner-only list, not a per-collection page) have no
- *   viewer-appropriate route today → label only.
+ *   shows the current issue), `collection` (`/account/collections` is
+ *   the owner-only list rather than a per-collection page), and
+ *   `message-photo` (a private conversation the cross-user admin console
+ *   must never deep-link into) have no viewer-appropriate route today →
+ *   label only.
  */
 export function mediaReferenceHref(reference: MediaReference): string | null {
   const { type, entityId, slug } = reference;
@@ -100,6 +115,13 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     case "persona-item":
       return slug ? personaPath(slug) : null;
     case "community-cover":
+    case "community-avatar":
+      return slug ? communityPath(slug) : null;
+    // A card programme has no page of its own: the backend already resolves
+    // these to the ISSUING community, and a collective-issued programme comes
+    // back slugless, which falls through to a plain label.
+    case "card-crest":
+    case "card-background":
       return slug ? communityPath(slug) : null;
     case "cinema-cover":
       return entityId ? `${routes.cinemaWatch}?title=${entityId}` : null;
@@ -113,14 +135,23 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
       return slug ? `${routes.author}/${slug}` : null;
     case "changemaker":
       return slug ? `/changemaker/${slug}` : null;
+    // `ArticlePage`/`DeckPage` are registered WITHOUT a `:slug` param and read
+    // the slug from `?id=` (`useSearchParams().get("id")`), so a path segment
+    // here would 404.
+    case "magazine-article":
+      return slug ? `${routes.article}?id=${slug}` : null;
+    case "magazine-deck":
+      return slug ? `${routes.deck}?id=${slug}` : null;
     // group-avatar (private conversation), community-post (no single-post
-    // route), story-cover (issue route has no per-issue param yet), and
-    // collection (the owner-only /account/collections list has no
-    // per-collection page) → no stable viewer-appropriate route today.
+    // route), story-cover (issue route has no per-issue param yet), collection
+    // (the owner-only /account/collections list has no per-collection page),
+    // and message-photo (a private conversation, which the cross-user admin
+    // console must never deep-link into) → no viewer-appropriate route.
     case "group-avatar":
     case "community-post":
     case "story-cover":
     case "collection":
+    case "message-photo":
       return null;
     default: {
       const exhaustiveCheck: never = type;

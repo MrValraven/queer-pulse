@@ -4,12 +4,12 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LivingCommunity, ModReport } from "./community.model";
 import { useJoinRequests } from "./api/useJoinRequests";
+import { memberKey, useModMemberRoles } from "./useModMemberRoles";
 import { useCommunityReports } from "./api/useCommunityReports";
 import {
   useDeleteCommunityPost,
   useDismissCommunityReport,
   useRemoveMember,
-  useSetMemberRole,
 } from "./api/useCommunityMutations";
 import { useTriageJoinRequest } from "./api/useCommunityJoin";
 import {
@@ -22,6 +22,10 @@ import {
  *  roster and taking someone's post down. */
 export type ModConfirmTarget =
   | { kind: "removeMember"; memberSlug?: string; name: string }
+  /** Handing someone owner-level powers, and taking them back: not
+   *  irreversible, but too consequential to sit one tap away. */
+  | { kind: "grantCoOwner"; memberSlug?: string; name: string }
+  | { kind: "revokeCoOwner"; memberSlug?: string; name: string }
   | { kind: "removeReport"; report: ModReport };
 
 /**
@@ -45,7 +49,6 @@ export function useModToolsActions(living: LivingCommunity) {
   // a "no" says which no it is and can say why.
   const reviewRequest = useTriageJoinRequest(living.slug);
   const removeMember = useRemoveMember(living.slug);
-  const setMemberRole = useSetMemberRole(living.slug);
   const deletePost = useDeleteCommunityPost(living.slug);
   const dismissReport = useDismissCommunityReport(living.slug);
 
@@ -72,8 +75,6 @@ export function useModToolsActions(living: LivingCommunity) {
     (report) => !resolvedReports.has(report.id),
   );
 
-  const [promoted, setPromoted] = useState<string[]>([]);
-  const [demoted, setDemoted] = useState<string[]>([]);
   const [removed, setRemoved] = useState<string[]>([]);
   const [confirming, setConfirming] = useState<ModConfirmTarget | null>(null);
 
@@ -125,59 +126,16 @@ export function useModToolsActions(living: LivingCommunity) {
     );
   };
 
-  const memberKey = (slug?: string, name?: string) => slug ?? name ?? "";
-
-  const promote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name);
-    // Local list drives the row's badge immediately (same shape as `removed`);
-    // the PATCH is the real change, and its invalidation refetches the roster.
-    setPromoted((p) => [...p, key]);
-    setDemoted((d) => d.filter((k) => k !== key));
-    const done = () =>
-      showToast(
-        t("communities:detail.modtools.toast.promoted", { name }),
-        "success",
-      );
-    if (demoMode || !slug) {
-      done();
-      return;
-    }
-    setMemberRole.mutate(
-      { memberSlug: slug, role: "mod" },
-      {
-        onSuccess: done,
-        onError: () => {
-          setPromoted((p) => p.filter((k) => k !== key));
-          failed();
-        },
-      },
-    );
-  };
-
-  const demote = (slug: string | undefined, name: string) => {
-    const key = memberKey(slug, name);
-    setDemoted((d) => [...d, key]);
-    setPromoted((p) => p.filter((k) => k !== key));
-    const done = () =>
-      showToast(
-        t("communities:detail.modtools.toast.demoted", { name }),
-        "info",
-      );
-    if (demoMode || !slug) {
-      done();
-      return;
-    }
-    setMemberRole.mutate(
-      { memberSlug: slug, role: "member" },
-      {
-        onSuccess: done,
-        onError: () => {
-          setDemoted((d) => d.filter((k) => k !== key));
-          failed();
-        },
-      },
-    );
-  };
+  // Every roster role change (mod, member, co-owner) lives in its own hook —
+  // it owns the optimistic role map and the one PATCH behind all four buttons.
+  const {
+    roleOverrides,
+    isRoleChangePending,
+    promote,
+    demote,
+    confirmGrantCoOwner,
+    confirmRevokeCoOwner,
+  } = useModMemberRoles(living.slug, () => setConfirming(null));
 
   /** Taking a member off the roster: confirmed first, never straight off a tap. */
   const confirmRemoveMember = (
@@ -285,19 +243,21 @@ export function useModToolsActions(living: LivingCommunity) {
     },
     manageable,
     memberKey,
-    promoted,
-    demoted,
+    roleOverrides,
     resolveRequest,
     /** True while a triage write is in flight, so the decline step's confirm
      *  button cannot fire twice. */
     isRequestPending: reviewRequest.isPending,
     promote,
     demote,
+    confirmGrantCoOwner,
+    confirmRevokeCoOwner,
     dismissReportRow,
     confirming,
     setConfirming,
     confirmRemoveMember,
     confirmRemoveReport,
-    isConfirmPending: removeMember.isPending || deletePost.isPending,
+    isConfirmPending:
+      removeMember.isPending || deletePost.isPending || isRoleChangePending,
   };
 }

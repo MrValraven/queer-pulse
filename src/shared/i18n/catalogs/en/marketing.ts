@@ -1726,6 +1726,16 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.community-co-owners.title":
+    "Owners can share a community with a co-owner",
+  "changelog.entries.community-co-owners.body":
+    "From Mod tools, a community owner can make any member a co-owner. Co-owners run the place alongside you: join requests, moderation, settings and the roster. Transferring ownership, archiving the community and changing a co-owner's role stay with the owner alone, and co-ownership can be taken back at any time.",
+
+  "changelog.entries.card-art-counted-as-in-use.title":
+    "Members card artwork now counts as an image in use",
+  "changelog.entries.card-art-counted-as-in-use.body":
+    "The crest and the background a community picks for its members card were showing as having no references in your uploads, which made live card artwork look safe to delete. Both now count as in use and link back to the community that prints them. Community avatars, magazine article and deck pictures, and photos sent in a conversation are counted too.",
+
   "changelog.entries.community-house-rules.title":
     "House rules now come with the invitation",
   "changelog.entries.community-house-rules.body":

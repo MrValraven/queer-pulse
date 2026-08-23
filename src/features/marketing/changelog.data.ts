@@ -90,6 +90,22 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "community-co-owners",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("community-co-owners"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "card-art-counted-as-in-use",
+        category: "fix",
+        date: "23 Aug 2026",
+        ...entryKeys("card-art-counted-as-in-use"),
+      },
+      {
         id: "community-house-rules",
         category: "feature",
         date: "23 Aug 2026",

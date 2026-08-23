@@ -1,28 +1,15 @@
 import type { ReactNode } from "react";
-import {
-  FiAlertTriangle,
-  FiX,
-  FiFlag,
-  FiUserPlus,
-  FiUserMinus,
-  FiShield,
-} from "react-icons/fi";
-import {
-  Avatar,
-  Button,
-  EmptyState,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { FiAlertTriangle, FiFlag } from "react-icons/fi";
+import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { REASON_LABEL_KEYS } from "../safety/reportReasons";
 import type { LivingCommunity } from "./community.model";
 import { ModJoinRequestRow } from "./ModJoinRequestRow";
 import type { JoinRequestDecision } from "./joinRequestReview.data";
 import type { PulsePaging } from "./api/useCommunityPosts";
-import { photoOf } from "./communityPeople";
-import { RoleBadge } from "./CommunityBadges";
+import { ModMemberRow, type ModMemberRowActions } from "./ModMemberRow";
+import type { AssignableRole } from "./api/communities.api";
+import type { CommunityRole } from "./membership.types";
 import { useCommunityTime } from "./communityTime";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
@@ -225,102 +212,48 @@ export function ModReportedPosts({
 export function ModMemberManagement({
   members,
   memberKey,
-  promoted,
-  demoted,
+  roleOverrides,
+  viewerRole,
   paging,
-  onPromote,
-  onDemote,
-  onRemove,
+  ...actions
 }: {
   members: RosterMember[];
   memberKey: (slug?: string, name?: string) => string;
-  promoted: string[];
-  demoted: string[];
+  /** Optimistic roles for changes made this session, keyed by `memberKey`.
+   *  The roster refetch behind each write is the eventual truth; this is what
+   *  the row shows until it lands. */
+  roleOverrides: Record<string, AssignableRole>;
+  /** The signed-in moderator's own role — the row only offers what this
+   *  viewer may actually do (co-owner in either direction is owner-only). */
+  viewerRole: CommunityRole | null;
   /** The roster's own pagination. Mod tools read the SAME loaded pages the
    *  Members tab does, so without a load-more here a mod simply could not
    *  reach anyone past page one to promote, demote or remove them (and the
    *  owner could not transfer to them either). */
   paging: RosterPaging;
-  onPromote: (slug: string | undefined, name: string) => void;
-  onDemote: (slug: string | undefined, name: string) => void;
-  onRemove: (slug: string | undefined, name: string) => void;
-}) {
+} & ModMemberRowActions) {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   return (
     <>
       <div className={detail.secLbl} style={{ marginTop: 32 }}>
         {t("communities:detail.modtools.members.label")}{" "}
         <span className={detail.tabCount}>{members.length}</span>
       </div>
+      {viewerRole === "owner" && (
+        <p className={styles.modSectionNote}>
+          {t("communities:detail.modtools.members.coOwnerNote")}
+        </p>
+      )}
       {members.map((m) => {
         const key = memberKey(m.slug, m.name);
-        const isOwner = m.role === "owner";
-        const isMod =
-          !isOwner &&
-          !demoted.includes(key) &&
-          (m.role === "mod" || promoted.includes(key));
         return (
-          <div className={styles.modRow} key={key}>
-            <Avatar
-              initials={m.initials}
-              tint={m.tint}
-              src={photoOf(m, demoMode)}
-              size={38}
-              alt={m.name}
-            />
-            <div className={styles.modMain}>
-              <div className={styles.modName}>
-                {m.name}{" "}
-                <RoleBadge
-                  role={isOwner ? "owner" : isMod ? "mod" : "member"}
-                />
-                <MemberStaffBadge slug={m.slug} />
-              </div>
-              {m.title && <div className={styles.modMeta}>{m.title}</div>}
-            </div>
-            <div className={styles.modActions}>
-              {!isOwner && !isMod && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={styles.declineBtn}
-                  onClick={() => onPromote(m.slug, m.name)}
-                >
-                  <FiUserPlus aria-hidden />{" "}
-                  {t("communities:detail.modtools.members.makeModCta")}
-                </Button>
-              )}
-              {!isOwner && isMod && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={styles.declineBtn}
-                  onClick={() => onDemote(m.slug, m.name)}
-                >
-                  <FiUserMinus aria-hidden />{" "}
-                  {t("communities:detail.modtools.members.demoteCta")}
-                </Button>
-              )}
-              {!isOwner && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={[styles.declineBtn, styles.removeBtn].join(" ")}
-                  onClick={() => onRemove(m.slug, m.name)}
-                >
-                  <FiX aria-hidden />{" "}
-                  {t("communities:detail.modtools.members.removeCta")}
-                </Button>
-              )}
-              {isOwner && (
-                <span className={styles.ownerTag}>
-                  <FiShield aria-hidden />{" "}
-                  {t("communities:detail.modtools.members.ownerTag")}
-                </span>
-              )}
-            </div>
-          </div>
+          <ModMemberRow
+            key={key}
+            member={m}
+            role={roleOverrides[key] ?? m.role}
+            viewerRole={viewerRole}
+            actions={actions}
+          />
         );
       })}
       {paging.hasNextPage && (
