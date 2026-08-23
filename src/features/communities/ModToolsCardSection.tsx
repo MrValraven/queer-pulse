@@ -108,6 +108,9 @@ export function ModToolsCardSection({
                     allowsMemberPhoto: program.allowsMemberPhoto,
                     photoStyle: program.photoStyle,
                     holderAvatarUrl: viewerPhoto ?? null,
+                    // The saved treatment, so this preview is the card the
+                    // community actually issues rather than the default one.
+                    textBackdrop: program.textBackdrop,
                   },
                 )}
                 isActive={false}

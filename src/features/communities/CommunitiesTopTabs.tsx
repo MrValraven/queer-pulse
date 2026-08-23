@@ -1,6 +1,7 @@
 import { useRef, type KeyboardEvent } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TopTab } from "./useCommunitiesTopTab";
+import { useCommunitiesTabCounts } from "./useCommunitiesTabCounts";
 import styles from "./CommunitiesTopTabs.module.css";
 
 const TOP_TABS: { key: TopTab; labelKey: string }[] = [
@@ -9,7 +10,8 @@ const TOP_TABS: { key: TopTab; labelKey: string }[] = [
 ];
 
 /**
- * APG tablist for the merged `/communities` page: "My communities" · "Discover".
+ * APG tablist for the merged `/communities` page: "My communities" · "Discover",
+ * each with its own live count.
  * Roving tabindex + Left/Right/Home/End move focus and selection; Enter/Space
  * fire natively because these are real `<button>`s. The parent sets
  * `id="communities-top-panel-<tab>"` on whichever body it renders so
@@ -23,6 +25,7 @@ export function CommunitiesTopTabs({
   onChange: (next: TopTab) => void;
 }) {
   const { t } = useTranslation();
+  const counts = useCommunitiesTabCounts();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const moveTo = (index: number) => {
@@ -84,6 +87,13 @@ export function CommunitiesTopTabs({
             onKeyDown={(event) => handleKeyDown(event, index)}
           >
             {t(tab.labelKey)}
+            {counts[tab.key] !== null && (
+              // aria-hidden: the count is decoration on an already-labelled
+              // tab, and screen readers announce the panel's own result line.
+              <span className={styles.tabCount} aria-hidden>
+                {counts[tab.key]}
+              </span>
+            )}
           </button>
         );
       })}

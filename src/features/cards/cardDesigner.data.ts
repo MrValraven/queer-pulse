@@ -1,4 +1,9 @@
-import type { CardPhotoStyle, CardSkin, MyCardDTO } from "./api/cards.api";
+import type {
+  CardPhotoStyle,
+  CardSkin,
+  CardTextBackdrop,
+  MyCardDTO,
+} from "./api/cards.api";
 
 export interface CardSkinOption {
   value: CardSkin;
@@ -42,6 +47,36 @@ export interface CardPhotoStyleOption {
 export const PHOTO_STYLE_OPTIONS: CardPhotoStyleOption[] = [
   { value: "color", labelKey: "cards:photoStyle.color" },
   { value: "mono", labelKey: "cards:photoStyle.mono" },
+];
+
+export interface CardTextBackdropOption {
+  value: CardTextBackdrop;
+  /** Catalog key: `cards:backdrop.<value>`. */
+  labelKey: string;
+  /** Catalog key for the one line saying which artwork it suits. */
+  helperKey: string;
+}
+
+/** How a flag or photo ground keeps the card's own text readable. There is no
+ *  "none": the ground is arbitrary artwork and the card has to be readable at
+ *  a door, so this chooses between treatments rather than switching one off.
+ *  Ordered least to most of the artwork covered. */
+export const TEXT_BACKDROP_OPTIONS: CardTextBackdropOption[] = [
+  {
+    value: "panel",
+    labelKey: "cards:backdrop.panel",
+    helperKey: "cards:backdrop.panelHelper",
+  },
+  {
+    value: "shade",
+    labelKey: "cards:backdrop.shade",
+    helperKey: "cards:backdrop.shadeHelper",
+  },
+  {
+    value: "veil",
+    labelKey: "cards:backdrop.veil",
+    helperKey: "cards:backdrop.veilHelper",
+  },
 ];
 
 export interface CardValidityOption {
@@ -142,6 +177,9 @@ export function previewCard(
     /** The pronouns to draw when it does. The designer passes the viewing
      *  owner's own, and a stand-in only when they have none set. */
     holderPronouns?: string | null;
+    /** Which legibility treatment the ground carries, so the preview shows
+     *  the choice the owner is making rather than always the default. */
+    textBackdrop?: CardTextBackdrop;
   } = {},
 ): MyCardDTO {
   const issuedAt = new Date();
@@ -185,6 +223,7 @@ export function previewCard(
       allowsMemberPhoto: extras.allowsMemberPhoto ?? false,
       photoStyle: extras.photoStyle ?? "color",
       allowsPronouns: extras.allowsPronouns ?? false,
+      textBackdrop: extras.textBackdrop ?? "shade",
       serialPrefix: extras.serialPrefix ?? "ABC",
     },
   };

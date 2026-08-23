@@ -159,6 +159,10 @@ export function MembershipCardFace({
                 .filter(Boolean)
                 .join(" ")}
               data-reduced={reducedMotion ? "true" : "false"}
+              /* Which legibility treatment the ground carries. Written
+                 unconditionally: the CSS only reads it alongside
+                 `.hasGround`, since a flat skin needs no treatment. */
+              data-backdrop={card.program.textBackdrop}
               aria-label={t("cards:face.ariaLabel", {
                 community: card.communityName,
               })}

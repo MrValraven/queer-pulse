@@ -220,10 +220,19 @@
   margin-bottom: 20px;
 }
 
+/* Always three across: every non-featured card sits in a track that is exactly
+   a third of the row, so the grid keeps its rhythm instead of reflowing to 4+
+   columns on wide screens. minmax(0, 1fr) makes that third both the min and the
+   max, so a long name can never push a track past its share. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
+}
+/* Grid items default to min-width: auto, which would let a wide child outgrow
+   its third; pin them to the track. */
+.grid > * {
+  min-width: 0;
 }
 .loadMore {
   display: flex;
@@ -329,24 +338,48 @@
   line-height: 1.65;
   flex: 1;
 }
-.statsRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin: 14px 0 4px;
+/* "You're in" — the shoulder badge that stands in for the access tier on a
+   community you already belong to. Same jade pill as the featured card's. */
+.inBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
 }
-.stat {
+.inBadge svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Member count with this week's activity stacked underneath it. */
+.metaStack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.activeLine {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--ink-60);
-}
-.stat svg {
-  width: 13px;
-  height: 13px;
   color: var(--jade);
+}
+.activeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--jade);
+  flex: none;
 }
 
 /* The avatar roster overlaps the shoulder band's own bottom edge (anchored
@@ -374,6 +407,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding-top: 14px;
   border-top: 1px solid rgba(var(--line-rgb), 0.07);
   margin-top: auto;
@@ -382,6 +416,13 @@
   font-size: 13px;
   color: var(--jade);
   font-weight: 600;
+}
+/* Inside the stack the count is the headline and the activity line carries
+   the jade, so the two don't compete. */
+.metaStack .meta {
+  font-size: 14px;
+  color: var(--text-strong);
+  font-weight: 700;
 }
 .joinBtn {
   font-family: var(--sans);

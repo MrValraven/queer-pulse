@@ -26,6 +26,9 @@ export const DEMO_CARD_PROGRAM: CardProgramDTO = {
   // second demo card below leaves it off, so both are reachable without
   // touching a setting.
   allowsPronouns: true,
+  // The default treatment. The demo programme runs on a flat skin, where no
+  // treatment applies at all, so this is only here to keep the shape whole.
+  textBackdrop: "shade",
   serialPrefix: "LQC",
 };
 

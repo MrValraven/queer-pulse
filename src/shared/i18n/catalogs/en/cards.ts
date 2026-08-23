@@ -92,9 +92,19 @@ export const cards: Catalog = {
   "designer.background.flag": "Flag",
   "designer.background.photo": "Photo",
   "designer.flagHelper":
-    "The flag fills the whole card. Text on top of it stays readable automatically.",
+    "The flag fills the whole card. Text on top of it always stays readable; choose how below.",
   "designer.photoHelper":
-    "A wide image, cropped to the card. Text on top of it stays readable automatically.",
+    "A wide image, cropped to the card. Text on top of it always stays readable; choose how below.",
+  "designer.backdropLabel": "Behind the text",
+  "backdrop.panel": "Panel",
+  "backdrop.panelHelper":
+    "A small dark panel sits behind your community's name and behind the member's name. Best when the artwork is busy, because everything else stays uncovered.",
+  "backdrop.shade": "Shade",
+  "backdrop.shadeHelper":
+    "The top and bottom of the card are darkened and the middle is left clear. Best for flags, and for photos that are quiet at the edges.",
+  "backdrop.veil": "Veil",
+  "backdrop.veilHelper":
+    "The whole card is darkened evenly. Best when the artwork has detail everywhere and every line has to be readable.",
   "flag.rainbow": "Rainbow",
   "flag.progress": "Progress Pride",
   "flag.transgender": "Transgender",

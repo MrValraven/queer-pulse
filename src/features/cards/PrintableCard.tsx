@@ -54,6 +54,9 @@ export function PrintableCard({ card }: { card: MyCardDTO }) {
           ]
             .filter(Boolean)
             .join(" ")}
+          /* The same treatment the member's own card carries, so the printed
+             card is that card rather than a second drawing of it. */
+          data-backdrop={card.program.textBackdrop}
         >
           <CardFrontFace card={card} isPreview={false} />
         </article>

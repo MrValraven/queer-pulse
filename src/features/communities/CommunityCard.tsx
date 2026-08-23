@@ -1,10 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  FiCheck,
-  FiActivity,
-  FiMessageCircle,
-  FiArrowRight,
-} from "react-icons/fi";
+import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { Avatar, Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -39,6 +34,10 @@ export function CommunityCard({
     (community.privateBadge ? "private" : "public");
   const isPrivate = tier === "private";
   const roster = living?.roster.slice(0, 4) ?? [];
+  // Demo's flagship communities carry their week on the `living` mock; every
+  // live card DTO carries its own `activeThisWeek`. Neither is guaranteed.
+  const activeThisWeek =
+    living?.stats.activeThisWeek ?? community.activeThisWeek;
   const joinLabel =
     tier === "public"
       ? t("communities:card.join.public")
@@ -60,7 +59,16 @@ export function CommunityCard({
       <div className={[styles.shoulder, styles[community.type]].join(" ")}>
         <div className={styles.cardTop}>
           <span className={styles.type}>{community.typeLabel}</span>
-          <AccessTierBadge tier={tier} />
+          {/* Once you're in, the access tier has stopped being news — the badge
+              slot says so instead, which is the only thing that distinguishes
+              your own communities' cards on the "My communities" tab. */}
+          {joined ? (
+            <span className={styles.inBadge}>
+              <FiCheck aria-hidden /> {t("communities:card.youreIn")}
+            </span>
+          ) : (
+            <AccessTierBadge tier={tier} />
+          )}
         </div>
         {roster.length > 0 && (
           <div className={styles.cardAvStack}>
@@ -94,25 +102,19 @@ export function CommunityCard({
         </TagRow>
       )}
 
-      {living && (
-        <div className={styles.statsRow}>
-          <span className={styles.stat}>
-            <FiActivity aria-hidden />{" "}
-            {t("communities:card.stats.active", {
-              count: living.stats.activeThisWeek,
-            })}
-          </span>
-          <span className={styles.stat}>
-            <FiMessageCircle aria-hidden />{" "}
-            {t("communities:card.stats.posts", {
-              count: living.stats.postsThisWeek,
-            })}
-          </span>
-        </div>
-      )}
-
       <div className={styles.foot}>
-        <span className={styles.meta}>{community.count}</span>
+        <span className={styles.metaStack}>
+          <span className={styles.meta}>{community.count}</span>
+          {/* The demo registry carries no activity, the live card DTO does —
+              so this line appears wherever a real number exists and is simply
+              absent where none does, in either mode. */}
+          {activeThisWeek !== undefined && (
+            <span className={styles.activeLine}>
+              <span className={styles.activeDot} aria-hidden />
+              {t("communities:card.stats.active", { count: activeThisWeek })}
+            </span>
+          )}
+        </span>
 
         {joined ? (
           <span className={[styles.joinBtn, styles.joined].join(" ")}>

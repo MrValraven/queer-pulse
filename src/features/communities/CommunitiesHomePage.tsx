@@ -6,6 +6,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useProfileData } from "../../app/providers/useProfile";
+import { CommunitiesGrid } from "./CommunitiesGrid";
 import { CommunitiesHomeDigest } from "./CommunitiesHomeDigest";
 import { CommunitiesHomeSidebar } from "./CommunitiesHomeSidebar";
 import {
@@ -15,6 +16,15 @@ import {
 import { useCommunitiesHomeData } from "./useCommunitiesHomeData";
 import styles from "./CommunitiesHomePage.module.css";
 
+/**
+ * The `/communities?tab=mine` body.
+ *
+ * The communities you belong to lead the page as real cards, through the same
+ * `CommunitiesGrid` (and the same filters, chips and sort) that Discover uses
+ * — scoped to your own memberships. Everything the hub carried before sits
+ * underneath: the mod to-do list, the cross-community pulse, and the events /
+ * suggestions rail.
+ */
 export function CommunitiesHome() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -28,62 +38,76 @@ export function CommunitiesHome() {
   const firstName = profile.first;
   const { pulse, todos, myCommunities, upcoming, suggestions, digest } =
     useCommunitiesHomeData();
+  const hasSidebar = upcoming.length > 0 || suggestions.length > 0;
 
   return (
-    <>
-      <div className={styles.page}>
-        <div className="wrap">
-          <div className={styles.head}>
-            <div>
-              <div className={styles.eyebrow}>
-                {t("communities:hub.eyebrow")}
-              </div>
-              <h2 className={styles.h1}>
-                <Translation
-                  i18nKey="communities:hub.welcome"
-                  values={{ name: firstName }}
-                  components={{ em: <em /> }}
-                />
-              </h2>
-              <p className={styles.sub}>
-                {t("communities:hub.sub", { count: myCommunities.length })}
-              </p>
-            </div>
+    <div className={styles.page}>
+      <div className="wrap">
+        <div className={styles.head}>
+          <div>
+            <div className={styles.eyebrow}>{t("communities:hub.eyebrow")}</div>
+            <h2 className={styles.h1}>
+              <Translation
+                i18nKey="communities:hub.welcome"
+                values={{ name: firstName }}
+                components={{ em: <em /> }}
+              />
+            </h2>
+            <p className={styles.sub}>
+              {t("communities:hub.sub", { count: myCommunities.length })}
+            </p>
           </div>
+        </div>
 
-          {myCommunities.length === 0 ? (
-            <EmptyState
-              icon={<FiUsers />}
-              title={t("communities:hub.empty.title")}
-              description={t("communities:hub.empty.description")}
-              action={{
-                label: t("communities:hub.discoverCta"),
-                to: routes.communities,
-              }}
+        {myCommunities.length === 0 ? (
+          <EmptyState
+            icon={<FiUsers />}
+            title={t("communities:hub.empty.title")}
+            description={t("communities:hub.empty.description")}
+            action={{
+              label: t("communities:hub.discoverCta"),
+              to: routes.communities,
+            }}
+          />
+        ) : (
+          <>
+            <CommunitiesGrid
+              scope="mine"
+              afterFilters={
+                /* The weekly digest is derived entirely from the `getLiving`
+                   mock — there's no live feed backend — so it only renders in
+                   demo mode rather than showing a misleading all-zero week. */
+                demoMode ? <CommunitiesHomeDigest digest={digest} /> : null
+              }
             />
-          ) : (
-            <>
-              {/* The weekly digest is derived entirely from the `getLiving`
-                  mock — there's no live feed backend — so it only renders in
-                  demo mode rather than showing a misleading all-zero week. */}
-              {demoMode && <CommunitiesHomeDigest digest={digest} />}
 
-              <div className={styles.layout}>
-                <div>
-                  <CommunitiesHomeTodos todos={todos} />
-                  <CommunitiesHomePulse loading={isLoading} pulse={pulse} />
-                </div>
+            {/* The rail only exists when it has something in it — both of its
+                cards are demo-derived — so the column drops rather than
+                leaving a 300px gutter of nothing beside the feed. */}
+            <div
+              className={[
+                styles.layout,
+                styles.belowGrid,
+                !hasSidebar && styles.layoutFull,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <div>
+                <CommunitiesHomeTodos todos={todos} />
+                <CommunitiesHomePulse loading={isLoading} pulse={pulse} />
+              </div>
 
+              {hasSidebar && (
                 <CommunitiesHomeSidebar
-                  communities={myCommunities}
                   upcoming={upcoming}
                   suggestions={suggestions}
                 />
-              </div>
-            </>
-          )}
-        </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 }

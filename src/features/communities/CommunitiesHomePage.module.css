@@ -35,55 +35,87 @@
   max-width: 50ch;
 }
 
+/* A plum band, not a white card: the week's numbers are the one place on this
+   tab that isn't a card of its own, and the dark ground keeps them from
+   reading as a seventh community. Fixed cream/plum here rather than the
+   themed --paper/--ink pair, so the band stays plum in dark mode too. */
 .digest {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 28px;
+  justify-content: flex-start;
+  gap: 40px;
   flex-wrap: wrap;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--plum);
   border-radius: 18px;
-  padding: 22px 26px;
-  margin-bottom: 30px;
+  padding: 26px 32px;
+  margin-bottom: 26px;
 }
-.digestSide {
-  min-width: 180px;
+/* Soft coral bloom in the far corner — decorative, behind the content. */
+.digest::after {
+  content: "";
+  position: absolute;
+  inset-block: -60%;
+  inset-inline-end: -10%;
+  inline-size: 42%;
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--accent-rgb), 0.28),
+    transparent
+  );
+  z-index: -1;
+  pointer-events: none;
 }
 .digestLbl {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 20px;
-  color: var(--text-strong);
+  font-size: 24px;
+  color: rgb(var(--cream-rgb));
   letter-spacing: -0.01em;
+  min-inline-size: 180px;
 }
 .digestNote {
   font-size: 13px;
-  color: var(--ink-40);
-  margin: 4px 0 0;
-  max-width: 30ch;
+  line-height: 1.5;
+  color: rgba(var(--cream-rgb), 0.62);
+  margin: 0 0 0 auto;
+  max-inline-size: 26ch;
 }
 .digestTiles {
   display: flex;
-  gap: 30px;
+  gap: 40px;
   flex-wrap: wrap;
 }
 .tile {
-  text-align: center;
+  text-align: start;
 }
 .tileNum {
   font-family: var(--serif);
   font-weight: 300;
   font-size: 34px;
   line-height: 1;
-  color: var(--accent);
+  color: rgb(var(--cream-rgb));
   letter-spacing: -0.02em;
 }
 .tileLbl {
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--ink-40);
+  color: rgba(var(--cream-rgb), 0.55);
   margin-top: 5px;
+}
+@media (--mobile) {
+  .digest {
+    gap: 22px;
+    padding: 22px;
+  }
+  .digestTiles {
+    gap: 26px;
+  }
+  .digestNote {
+    margin-inline-start: 0;
+  }
 }
 
 .layout {
@@ -91,6 +123,15 @@
   grid-template-columns: 1fr 300px;
   gap: 44px;
   align-items: flex-start;
+}
+/* No rail to show — both of its cards are demo-derived — so the feed takes
+   the full measure instead of leaving an empty 300px gutter. */
+.layoutFull {
+  grid-template-columns: 1fr;
+}
+/* Separates the cross-community feed from the card grid above it. */
+.belowGrid {
+  margin-top: 54px;
 }
 @media (--mobile) {
   .layout {

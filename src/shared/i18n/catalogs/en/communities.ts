@@ -80,6 +80,9 @@ export const communities: Catalog = {
   "card.join.invite": "Join with invite",
   "card.join.request": "Request",
   "card.joined": "Joined",
+  // Shoulder badge on a card for a community you already belong to, where a
+  // stranger's card shows its access tier instead.
+  "card.youreIn": "You're in",
   "card.view": "View",
   "card.enterQuietly": "Enter quietly",
   "card.stats.active_one": "{count} active this week",
@@ -114,8 +117,6 @@ export const communities: Catalog = {
   "hub.pulse.empty.title": "Quiet for now",
   "hub.pulse.empty.description":
     "When your communities post, it shows up here.",
-  "hub.sidebar.yourCommunities": "Your communities & collectives",
-  "hub.sidebar.discoverMore": "Discover more",
   "hub.sidebar.upcoming": "Upcoming in your communities",
   "hub.sidebar.suggestions": "Communities you might like",
   "hub.pulseCard.announcement": "Announcement",

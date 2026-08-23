@@ -90,6 +90,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "card-text-legibility",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("card-text-legibility"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
+        id: "my-communities-cards",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("my-communities-cards"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
         id: "cards-load-whole",
         category: "improvement",
         date: "23 Aug 2026",

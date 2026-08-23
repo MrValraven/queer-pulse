@@ -2,7 +2,11 @@ import { useState } from "react";
 import { SegmentedControl } from "../../shared/components/ui";
 import { useTheme, type Theme } from "../../app/providers/themeContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { CardPhotoStyle, CardSkin } from "./api/cards.api";
+import type {
+  CardPhotoStyle,
+  CardSkin,
+  CardTextBackdrop,
+} from "./api/cards.api";
 import { MembershipCardFace } from "./MembershipCardFace";
 import { previewCard } from "./cardDesigner.data";
 import styles from "./CardDesignerModal.module.css";
@@ -33,6 +37,7 @@ export function CardDesignerPreview({
   holderAvatarUrl,
   allowsPronouns,
   holderPronouns,
+  textBackdrop,
 }: {
   communityName: string;
   cardName: string;
@@ -49,6 +54,7 @@ export function CardDesignerPreview({
   holderAvatarUrl: string | null;
   allowsPronouns: boolean;
   holderPronouns: string | null;
+  textBackdrop: CardTextBackdrop;
 }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -80,6 +86,7 @@ export function CardDesignerPreview({
             holderAvatarUrl,
             allowsPronouns,
             holderPronouns,
+            textBackdrop,
           })}
           isActive={false}
           isPreview

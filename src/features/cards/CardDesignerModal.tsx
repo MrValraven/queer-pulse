@@ -154,6 +154,7 @@ export function CardDesignerModal({
             holderPronouns={
               viewerPronouns?.trim() || t("cards:designer.pronounsStandIn")
             }
+            textBackdrop={draft.textBackdrop}
           />
 
           <CardDesignerFields
@@ -188,6 +189,10 @@ export function CardDesignerModal({
             allowsPronouns={draft.allowsPronouns}
             onAllowsPronounsChange={(allows) =>
               set({ allowsPronouns: allows })
+            }
+            textBackdrop={draft.textBackdrop}
+            onTextBackdropChange={(backdrop) =>
+              set({ textBackdrop: backdrop })
             }
           />
         </div>

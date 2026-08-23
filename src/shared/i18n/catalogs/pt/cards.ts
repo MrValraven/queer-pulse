@@ -90,9 +90,19 @@ export const cards: Catalog = {
   "designer.background.flag": "Bandeira",
   "designer.background.photo": "Fotografia",
   "designer.flagHelper":
-    "A bandeira preenche o cartão inteiro. O texto por cima continua legível automaticamente.",
+    "A bandeira preenche o cartão inteiro. O texto por cima fica sempre legível; escolha como em baixo.",
   "designer.photoHelper":
-    "Uma imagem larga, recortada para o cartão. O texto por cima continua legível automaticamente.",
+    "Uma imagem larga, recortada para o cartão. O texto por cima fica sempre legível; escolha como em baixo.",
+  "designer.backdropLabel": "Por trás do texto",
+  "backdrop.panel": "Painel",
+  "backdrop.panelHelper":
+    "Um pequeno painel escuro fica por trás do nome da comunidade e do nome da pessoa. Melhor quando a imagem é carregada, porque todo o resto fica destapado.",
+  "backdrop.shade": "Sombra",
+  "backdrop.shadeHelper":
+    "O topo e a base do cartão ficam escurecidos e o meio fica livre. Melhor para bandeiras e para fotografias calmas nas margens.",
+  "backdrop.veil": "Véu",
+  "backdrop.veilHelper":
+    "O cartão inteiro fica escurecido por igual. Melhor quando a imagem tem detalhe em todo o lado e todas as linhas têm de ser legíveis.",
   "flag.rainbow": "Arco-íris",
   "flag.progress": "Progress Pride",
   "flag.transgender": "Transgénero",

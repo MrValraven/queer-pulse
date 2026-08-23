@@ -6,15 +6,26 @@ import { useCommunities } from "./api/useCommunities";
 import { useFeaturedCommunity } from "./api/useFeaturedCommunity";
 import { useCommunitiesTagsFilter } from "./useCommunitiesTagsFilter";
 import { useDiscoverCategoryCounts } from "./useDiscoverCategoryCounts";
-import { BUSY_THRESHOLD, type DiscoverSort } from "./communitiesDiscover.data";
+import {
+  BUSY_THRESHOLD,
+  type CommunitiesScope,
+  type DiscoverSort,
+} from "./communitiesDiscover.data";
 
 /**
- * All Discover state, queries and derived lists, so `CommunitiesDiscover` is
- * layout only and stays under the repo's 200-line-per-component limit. A plain
- * hook (no JSX), so the limit doesn't apply here.
+ * All communities-grid state, queries and derived lists, so `CommunitiesGrid`
+ * is layout only and stays under the repo's 200-line-per-component limit. A
+ * plain hook (no JSX), so the limit doesn't apply here.
+ *
+ * `scope` picks the pool the grid draws from. "discover" is the whole
+ * directory; "mine" is the same grid, the same facets and the same cards over
+ * only the communities the viewer belongs to — the `/communities?tab=mine`
+ * body. Everything scope-specific funnels through the list endpoint's
+ * `filter` param, so the two tabs cannot drift in behaviour.
  */
-export function useDiscoverCommunities() {
+export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
   const { demoMode } = useDemoMode();
+  const isMineScope = scope === "mine";
   const [searchInput, setSearchInput] = useState("");
   // Search only fans out to the network once the member pauses typing for
   // 300ms (same debounce timing as the other list-with-search controls, e.g.
@@ -43,6 +54,7 @@ export function useDiscoverCommunities() {
     isFetchingNextPage,
     isLoading: isFetchingFirstPage,
   } = useCommunities({
+    filter: isMineScope ? "mine" : undefined,
     q: q || undefined,
     // "active" isn't a server-side sort (see the drain note below) — leave the
     // server on its default order and re-sort client-side once fully drained.
@@ -59,8 +71,13 @@ export function useDiscoverCommunities() {
   // The featured card only makes sense against the platform's whole discover
   // pool — once a member is actively narrowing the list (search, category,
   // either toggle) it drops out so it doesn't compete with what they asked for.
-  const featured = useFeaturedCommunity();
+  // It belongs to that scope alone: on "My communities" it would promote
+  // either a community the viewer already belongs to (a duplicate card) or one
+  // they don't (a stranger in a list of your own), so the fetch is skipped
+  // outright there rather than just hidden.
+  const featured = useFeaturedCommunity({ enabled: !isMineScope });
   const isShowingFeatured =
+    !isMineScope &&
     Boolean(featured) &&
     !q &&
     filter === "all" &&
@@ -100,9 +117,9 @@ export function useDiscoverCommunities() {
     : visible;
 
   // Category-chip counts are deliberately stable across search/sort/toggles —
-  // they read against the whole discover pool, not whatever's currently
+  // they read against the whole pool for this scope, not whatever's currently
   // filtered, so switching a chip doesn't make the other chips' numbers jump.
-  const categoryCounts = useDiscoverCategoryCounts();
+  const categoryCounts = useDiscoverCategoryCounts(scope);
 
   const hasActiveRefinement =
     Boolean(q) ||
@@ -122,6 +139,7 @@ export function useDiscoverCommunities() {
 
   return {
     demoMode,
+    scope,
     q,
     searchInput,
     setSearchInput,

@@ -3,7 +3,11 @@ import { CheckLine, FormField, Select } from "../../shared/components/ui";
 import { ImageUploadField } from "../subprofiles/ImageUploadField";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import type { CardPhotoStyle, CardSkin } from "./api/cards.api";
+import type {
+  CardPhotoStyle,
+  CardSkin,
+  CardTextBackdrop,
+} from "./api/cards.api";
 import { CardBackgroundPicker } from "./CardBackgroundPicker";
 import {
   ACCENT_OPTIONS,
@@ -50,6 +54,9 @@ export interface CardDesignerFieldsProps {
   /** Whether these cards print each holder's pronouns beside their name. */
   allowsPronouns: boolean;
   onAllowsPronounsChange: (allows: boolean) => void;
+  /** How a flag or photo ground keeps the card's own text readable. */
+  textBackdrop: CardTextBackdrop;
+  onTextBackdropChange: (backdrop: CardTextBackdrop) => void;
 }
 
 /** The form controls, split out of `CardDesignerModal` to keep each
@@ -79,6 +86,8 @@ export function CardDesignerFields({
   onAllowsPrintChange,
   allowsPronouns,
   onAllowsPronounsChange,
+  textBackdrop,
+  onTextBackdropChange,
 }: CardDesignerFieldsProps) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -119,6 +128,8 @@ export function CardDesignerFields({
         photoKey={backgroundKey}
         onPhotoChange={onBackgroundChange}
         onPhotoPreviewChange={onBackgroundPreviewChange}
+        textBackdrop={textBackdrop}
+        onTextBackdropChange={onTextBackdropChange}
       />
 
       <FormField

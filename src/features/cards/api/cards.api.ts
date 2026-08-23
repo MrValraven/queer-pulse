@@ -13,6 +13,12 @@ export type CardSkin = "plum" | "cream" | "jade" | "coral" | "ink";
  *  closed list (`CARD_PHOTO_STYLES` in `community-card.entity.ts`). */
 export type CardPhotoStyle = "color" | "mono";
 
+/** How a card with a flag or photo ground keeps its own text readable.
+ *  Mirrors the backend's closed list (`CARD_TEXT_BACKDROPS`). Never a switch
+ *  for turning protection OFF: each value is a different treatment, because a
+ *  card that cannot be read at a door is not a card. */
+export type CardTextBackdrop = "shade" | "panel" | "veil";
+
 /** The status a verifier sees: the card's own state combined with the
  *  issuing community's freeze/archive state and the expiry clock. */
 export type EffectiveCardStatus =
@@ -41,6 +47,9 @@ export interface CardProgramDTO {
   photoStyle: CardPhotoStyle;
   /** Whether this programme's cards print the holder's pronouns. */
   allowsPronouns: boolean;
+  /** Which legibility treatment a flag or photo ground carries. Ignored by
+   *  the five flat skins, which carry their own curated contrast. */
+  textBackdrop: CardTextBackdrop;
   serialPrefix: string;
 }
 
@@ -153,6 +162,9 @@ export interface UpsertCardProgramBody {
   /** Whether these cards print each holder's pronouns. Same
    *  absent-leaves-it-alone contract as the switches above. */
   allowsPronouns?: boolean;
+  /** Which legibility treatment the ground carries. Same
+   *  absent-leaves-it-alone contract as the switches above. */
+  textBackdrop?: CardTextBackdrop;
 }
 
 export const getMyCards = () => apiGet<MyCardDTO[]>("/me/cards");

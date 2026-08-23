@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import {
   Button,
   Reveal,
@@ -17,7 +17,7 @@ import {
 import styles from "./CommunitiesPage.module.css";
 
 /**
- * The Discover page's whole filter/sort bar: search, the two pill toggles
+ * The communities grid's whole filter/sort bar: search, the two pill toggles
  * ("Open to all" / "Busy this week"), the sort select, the category chips
  * (with their stable, whole-pool counts), and the results line underneath.
  * Split out of `CommunitiesDiscover` purely to keep that component under the
@@ -42,6 +42,7 @@ export function CommunitiesDiscoverControls({
   hasActiveRefinement,
   onReset,
   isShowingResline,
+  afterFilters,
 }: {
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
@@ -63,6 +64,9 @@ export function CommunitiesDiscoverControls({
   /** Hidden while the initial load or a "Most active"/"Busy this week" drain
    *  is in flight — the count would otherwise flash a wrong partial number. */
   isShowingResline: boolean;
+  /** Slot between the category chips and the results line — the "My
+   *  communities" tab puts its weekly digest here. */
+  afterFilters?: ReactNode;
 }) {
   const { t } = useTranslation();
 
@@ -149,6 +153,8 @@ export function CommunitiesDiscoverControls({
       </Reveal>
 
       <CommunitiesTagsFilter selectedTagIds={tagIds} onChange={setTagIds} />
+
+      {afterFilters}
 
       {isShowingResline && (
         <div className={styles.resline}>

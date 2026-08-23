@@ -1726,8 +1726,15 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
-  "changelog.entries.cards-load-whole.title":
-    "Your card arrives in one piece",
+  "changelog.entries.card-text-legibility.title":
+    "Cards you can read across a room",
+  "changelog.entries.card-text-legibility.body":
+    "A membership card set on a flag or a photo has always darkened whatever sits under its print, but one treatment cannot suit every image: the gradient that works over a striped flag gets lost in a busy illustration. Owners now choose between three. A panel puts a small dark plate behind your community\u2019s name and behind the member\u2019s name and leaves the rest of the artwork uncovered. A shade darkens the top and bottom of the card. A veil dims the whole card evenly. The preview in the designer follows the choice as you make it, and a printed card carries the same treatment as the one on the phone. Every card also prints larger: the type is now sized against the card itself, so a card shown big on screen has big type on it rather than phone-sized print on a blown-up object.",
+  "changelog.entries.my-communities-cards.title":
+    "Your communities, as communities",
+  "changelog.entries.my-communities-cards.body":
+    "My communities used to name the communities you belong to in a small list down the side of the page, while everyone else\u2019s got a proper card. Now yours lead the page: the same cards, the same search, categories and sort you already use to find a community, pointed at the ones you are already in. Each card is marked as one of yours and shows how many people were around this week, and the tabs carry a count so you can see at a glance how many you are in. What was there before \u2014 anything waiting on you as a moderator, and the week across your communities \u2014 now sits underneath.",
+  "changelog.entries.cards-load-whole.title": "Your card arrives in one piece",
   "changelog.entries.cards-load-whole.body":
     "A membership card used to assemble itself in front of you: the community\u2019s flag, its crest and your photo each appeared whenever they happened to finish loading. Now the card waits until all three are ready and arrives complete, with a placeholder holding its exact shape while it comes. Showing the same card again is instant. On a slow connection the card still appears rather than leaving you waiting at a door.",
   "changelog.entries.pronouns-on-membership-cards.title":

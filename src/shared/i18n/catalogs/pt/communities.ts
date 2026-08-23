@@ -83,6 +83,7 @@ export const communities: Catalog = {
   "card.join.invite": "Junta-te com convite",
   "card.join.request": "Pedir para entrar",
   "card.joined": "Já és membro",
+  "card.youreIn": "Já entraste",
   "card.enterQuietly": "Entra em silêncio",
   "card.view": "Ver",
   "card.stats.active_one": "{count} pessoa ativa esta semana",
@@ -119,8 +120,6 @@ export const communities: Catalog = {
   "hub.pulse.empty.title": "Tudo calmo por agora",
   "hub.pulse.empty.description":
     "Quando as tuas comunidades publicarem algo, aparece aqui.",
-  "hub.sidebar.yourCommunities": "As tuas comunidades e coletivos",
-  "hub.sidebar.discoverMore": "Descobrir mais",
   "hub.sidebar.upcoming": "A caminho nas tuas comunidades",
   "hub.sidebar.suggestions": "Comunidades que podes gostar",
   "hub.pulseCard.announcement": "Anúncio",

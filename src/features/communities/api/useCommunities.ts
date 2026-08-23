@@ -1,8 +1,11 @@
+import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useCommunityMembership } from "../../../app/providers/useCommunityMembership";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getCommunities, type CommunitiesQuery } from "./communities.api";
 import { cardDtoToCommunity } from "./communities.adapters";
+import { useAllCommunities } from "../useAllCommunities";
 import { communities } from "../../homepage/data/communities";
 import type { Community } from "../../homepage/data/types";
 
@@ -53,8 +56,40 @@ export function useCommunities(
   // keys ("48 members" / "Members only") — a language switch has to re-map the
   // already-fetched DTOs, not just re-render stale English strings.
   const { t, language } = useTranslation();
+  const { memberships } = useCommunityMembership();
+  // The whole demo directory: the static registry plus anything founded this
+  // session, with session edits applied. `[]` in live mode by construction.
+  const demoDirectory = useAllCommunities();
+  const isMineScope = params.filter === "mine";
+  // `filter=mine` is a server-side inner join on the viewer's own membership
+  // (communities.service.ts). Demo mode has no server, so the session
+  // membership store narrows the list here instead — sourced from
+  // `useAllCommunities` rather than the static registry so a community you
+  // founded this session appears in your own list too, the way it already
+  // does in the hub sidebar. Every other scope keeps reading the registry
+  // exactly as before.
+  const demoSource = useMemo(
+    () =>
+      demoMode && isMineScope
+        ? demoDirectory.filter(
+            (community) =>
+              community.slug != null && memberships[community.slug],
+          )
+        : communities,
+    [demoMode, isMineScope, demoDirectory, memberships],
+  );
+  // The narrowed list's identity, for the query key: joining, leaving,
+  // founding or renaming a community in demo mode all have to re-derive the
+  // cached page, and none of them touches `params`. `null` for every other
+  // scope, so no existing caller's key changes shape.
+  const demoSourceKey =
+    demoMode && isMineScope
+      ? demoSource
+          .map((community) => `${community.slug}:${community.name}`)
+          .join(",")
+      : null;
   const query = useInfiniteQuery<CommunitiesPageVM>({
-    queryKey: ["communities", demoMode, params, language],
+    queryKey: ["communities", demoMode, params, language, demoSourceKey],
     // Callers may gate this fetch off when its result isn't consumed (e.g. a
     // profile viewing another member). Demo mode's queryFn is a local no-network
     // read, but gating it too keeps the discarded-path behaviour consistent.
@@ -68,12 +103,12 @@ export function useCommunities(
         // there's nothing to reset.
         const needle = params.q?.trim().toLowerCase();
         const searched = needle
-          ? communities.filter((community) =>
+          ? demoSource.filter((community) =>
               `${community.name} ${community.description}`
                 .toLowerCase()
                 .includes(needle),
             )
-          : communities;
+          : demoSource;
         // Mirror the live endpoint's `type=` filter (COM-3) — applied
         // server-side there, applied here over the same static registry so
         // demo behaviour stays byte-for-byte identical to live.

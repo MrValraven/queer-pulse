@@ -129,7 +129,16 @@
   grid-column: 2;
   grid-row: 1 / span 2;
   align-self: start;
-  height: 62cqh;
+  /* Sized by the SPACE the two rows leave it, capped at 62% of the card.
+     A flat `height: 62cqh` is a definite size, so it fed straight into the
+     row-sizing algorithm and grew rows 1 and 2 to fit it whatever else the
+     card was carrying. On a narrow card with a long name that pushed the
+     holder's line off the bottom edge and `overflow: hidden` cut it in half.
+     Row 2 is `1fr`, so with the height taken from the grid area instead, the
+     portrait gets everything the header and the name do not need and the
+     name can never be the thing that gives way. */
+  height: 100%;
+  max-height: 62cqh;
   width: auto;
   aspect-ratio: 3 / 4;
   object-fit: cover;
@@ -161,7 +170,7 @@
   background: rgba(255, 255, 255, 0.14);
   border-style: dashed;
   font-family: var(--serif);
-  font-size: clamp(0.9rem, 5cqh, 1.8rem);
+  font-size: clamp(0.9rem, 5cqh, 3.2rem);
   letter-spacing: 0.04em;
   opacity: 0.72;
 }
@@ -186,7 +195,7 @@
    row, so the row and the subtraction can never drift apart. */
 .faceBack {
   --back-row-gap: clamp(5px, 1.6cqh, 10px);
-  --back-scan-line: calc(1.35 * clamp(0.5rem, 1.9cqw, 0.62rem));
+  --back-scan-line: calc(1.35 * clamp(0.5rem, 1.9cqw, 1.3rem));
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto;
@@ -218,10 +227,15 @@
    between a scanner and the code and under six lines of small type (see
    CardBackFace). A card carrying an arbitrary image can no longer inherit the
    contrast guarantee the five flat skins were built around (see cardSkins.ts),
-   so the ground comes with a scrim that is NOT optional. The scrim is heavy
-   where the card's text sits (top and bottom) and light through the middle,
-   so the flag or photo still reads as itself while every line on top of it
-   stays legible. The text switches to fixed light ink for the same reason. */
+   so a ground ALWAYS comes with a treatment that protects the text, and the
+   text always switches to fixed light ink.
+
+   Which treatment is the issuing community's choice (`textBackdrop`, written
+   here as `data-backdrop`), because the right answer depends on the artwork.
+   What is NOT their choice is whether the text is protected at all: a card
+   that cannot be read at a door is not a card, so every value below darkens
+   what sits under the print. The three are exclusive, and `shade` is the
+   default, so a card designed before this setting existed is untouched. */
 .faceFront.hasGround::before {
   content: "";
   position: absolute;
@@ -233,6 +247,10 @@
   background: var(--card-ground);
 }
 
+/* `shade`, the default: heavy where the card's text sits, light through the
+   middle, so a striped flag still reads as itself. It is the wrong answer for
+   a busy illustration, whose detail competes with the name everywhere rather
+   than only at the edges — that is what the other two below are for. */
 .faceFront.hasGround::after {
   content: "";
   position: absolute;
@@ -245,6 +263,61 @@
     rgba(0, 0, 0, 0.14) 64%,
     rgba(0, 0, 0, 0.68) 100%
   );
+}
+
+/* `veil`: one even dim over the whole card, for a ground with detail
+   everywhere. The flag or photo becomes a colour wash and every line on top
+   of it clears AA regardless of what it lands on. 0.55 is the floor that does
+   that against the worst case, a WHITE pixel: it leaves rgb(115) under the
+   fixed cream ink, which measures 4.7:1. */
+.faceFront.hasGround[data-backdrop="veil"]::after {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* `panel`: nothing at all over the artwork. The two text blocks carry their
+   own plates instead (below), which is the treatment that leaves an
+   illustration whole while still separating the name from it. */
+.faceFront.hasGround[data-backdrop="panel"]::after {
+  background: none;
+}
+
+/* The plate. One value and one pad, declared on the face so the header and
+   the name can never drift apart, and scoped to a ground because a flat skin
+   already carries its own curated contrast and would only be spoiled by a
+   dark rectangle sitting on it.
+
+   0.62 is not a taste decision: against the worst case, a WHITE pixel of
+   artwork, it leaves rgb(97) under the fixed cream ink, which measures
+   5.3:1. The blur is a nicety on top of that — where a renderer drops it
+   (print, most notably) the plate is still doing all the work. */
+.faceFront.hasGround[data-backdrop="panel"] {
+  --card-plate: rgba(0, 0, 0, 0.62);
+  --card-plate-pad: clamp(4px, 1.5cqw, 10px);
+}
+
+/* `justify-self` so the plate stops at the end of the header rather than
+   running the full width of its grid column, which would read as a bar
+   across the card instead of a label on it. */
+.faceFront.hasGround[data-backdrop="panel"] .head {
+  justify-self: start;
+  padding: var(--card-plate-pad) calc(var(--card-plate-pad) * 1.5);
+  border-radius: var(--radius-badge);
+  background: var(--card-plate);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* The name's plate. The control cluster's reservation has to become a MARGIN
+   here: left as the padding `.holder` normally carries, the plate would
+   stretch out under the discs and the card would end up with a dark bar in
+   its corner behind two buttons. */
+.faceFront.hasGround[data-backdrop="panel"] .holder {
+  padding: var(--card-plate-pad) calc(var(--card-plate-pad) * 1.5);
+  margin-right: var(--card-controls-reserve);
+  border-radius: var(--radius-badge);
+  background: var(--card-plate);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 /* Overrides whichever skin class is also on the element: with a ground, the
@@ -394,9 +467,26 @@
   background: var(--card-accent, transparent);
   flex-shrink: 0;
 }
-.community { font-family: var(--serif); font-size: 1.05rem; margin: 0; }
+/* ── Front-face type ──────────────────────────────────────────────────────── */
+/* Sized against the CARD, not against the root, the way everything else on
+   this face already is (the padding, the portrait, and the whole back).
+   Fixed `rem` was the reason a card blown up to fill a designer canvas kept
+   phone-sized print on it: the object grew and the type did not, so a card
+   three times life size read like a card at arm's length.
+
+   `cqw` is the shell's width, so these are percentages of the card itself and
+   the composition is identical at every size. The floors are the values the
+   face carried before, so the small cards in the /cards grid are unchanged;
+   the ceilings exist only to stop absurdity on a canvas nobody has yet. */
+.community {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 5.6cqw, 4rem);
+  line-height: 1.16;
+  margin: 0;
+}
 .cardName {
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 3.2cqw, 2.2rem);
+  line-height: 1.25;
   opacity: 0.8;
   margin: 0;
 }
@@ -413,7 +503,8 @@
    name runs out of space before it runs underneath it. */
 .holder {
   font-family: var(--serif);
-  font-size: 0.95rem;
+  font-size: clamp(0.95rem, 5.2cqw, 3.6rem);
+  line-height: 1.18;
   margin: 0;
   padding-right: var(--card-controls-reserve);
 }
@@ -482,7 +573,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--gap-xs);
-  font-size: 0.78rem;
+  font-size: clamp(0.7rem, 2.4cqw, 1.7rem);
   line-height: 1.35;
   opacity: 0.85;
   text-align: center;
@@ -509,7 +600,7 @@
    less than the same name over two lines. The card has the vertical room. */
 .backCommunity {
   font-family: var(--serif);
-  font-size: clamp(0.82rem, 3.4cqw, 1.05rem);
+  font-size: clamp(0.82rem, 3.6cqw, 2.6rem);
   line-height: 1.22;
   margin: 0;
   min-width: 0;
@@ -525,7 +616,7 @@
    returns — never the word printed on the object. */
 .backStatus {
   flex-shrink: 0;
-  font-size: 0.58rem;
+  font-size: clamp(0.58rem, 1.9cqw, 1.3rem);
   text-transform: uppercase;
   letter-spacing: 0.09em;
   opacity: 0.72;
@@ -549,7 +640,7 @@
 }
 
 .backMeta dt {
-  font-size: clamp(0.5rem, 1.9cqw, 0.62rem);
+  font-size: clamp(0.5rem, 2cqw, 1.35rem);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   opacity: 0.62;
@@ -561,7 +652,7 @@
    onto a second line rather than ellipsing. "Valid until" is the field this
    was losing: a truncated expiry is worse than no expiry printed at all. */
 .backMeta dd {
-  font-size: clamp(0.62rem, 2.4cqw, 0.78rem);
+  font-size: clamp(0.62rem, 2.6cqw, 1.75rem);
   margin: 0;
   min-width: 0;
   line-height: 1.25;
@@ -576,7 +667,9 @@
   /* Clear of the control cluster, which overlaps the face's bottom-right
      corner. Zero on a printed card, which has no cluster. */
   padding-right: var(--card-controls-reserve);
-  font-size: clamp(0.5rem, 1.9cqw, 0.62rem);
+  /* Kept in lockstep with `--back-scan-line` above, which reserves this row's
+     height so the code can be sized against what is left of the card. */
+  font-size: clamp(0.5rem, 1.9cqw, 1.3rem);
   line-height: 1.35;
   opacity: 0.6;
   overflow-wrap: anywhere;

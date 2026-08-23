@@ -3,6 +3,7 @@ import type {
   CardPhotoStyle,
   CardProgramDTO,
   CardSkin,
+  CardTextBackdrop,
   UpsertCardProgramBody,
 } from "./api/cards.api";
 
@@ -39,6 +40,10 @@ export interface CardDesignerDraft {
   photoStyle: CardPhotoStyle;
   /** Whether these cards print each holder's pronouns beside their name. */
   allowsPronouns: boolean;
+  /** Which legibility treatment the ground carries. Kept in the draft even
+   *  while the card is on a flat skin, so an owner who tries a flag, switches
+   *  back to a colour and returns to the flag finds their choice intact. */
+  textBackdrop: CardTextBackdrop;
 }
 
 function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
@@ -60,6 +65,7 @@ function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
     allowsMemberPhoto: program?.allowsMemberPhoto ?? false,
     photoStyle: program?.photoStyle ?? "color",
     allowsPronouns: program?.allowsPronouns ?? false,
+    textBackdrop: program?.textBackdrop ?? "shade",
   };
 }
 
@@ -75,7 +81,8 @@ function isSameDraft(a: CardDesignerDraft, b: CardDesignerDraft): boolean {
     a.allowsPrint === b.allowsPrint &&
     a.allowsMemberPhoto === b.allowsMemberPhoto &&
     a.photoStyle === b.photoStyle &&
-    a.allowsPronouns === b.allowsPronouns
+    a.allowsPronouns === b.allowsPronouns &&
+    a.textBackdrop === b.textBackdrop
   );
 }
 
@@ -170,5 +177,6 @@ export function cardProgramUpsertBody(
     allowsMemberPhoto: draft.allowsMemberPhoto,
     photoStyle: draft.photoStyle,
     allowsPronouns: draft.allowsPronouns,
+    textBackdrop: draft.textBackdrop,
   };
 }

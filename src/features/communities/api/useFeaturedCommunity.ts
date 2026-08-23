@@ -24,7 +24,10 @@ import {
  * invalidate. Live mode calls `GET /communities/featured` and adapts the
  * result through the existing `cardDtoToCommunity`, same as `useCommunities`.
  */
-export function useFeaturedCommunity(): Community | null {
+export function useFeaturedCommunity(
+  options: { enabled?: boolean } = {},
+): Community | null {
+  const { enabled = true } = options;
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
 
@@ -36,13 +39,17 @@ export function useFeaturedCommunity(): Community | null {
 
   const query = useQuery<Community | null>({
     queryKey: ["communities", "featured", demoMode, language],
-    enabled: !demoMode,
+    // Callers may gate this off where a featured hero has no place (the
+    // "My communities" grid), so the request is never made rather than made
+    // and discarded.
+    enabled: !demoMode && enabled,
     queryFn: async () => {
       const dto = await getFeaturedCommunity();
       return dto ? cardDtoToCommunity(dto, t) : null;
     },
   });
 
+  if (!enabled) return null;
   if (demoMode) {
     return communities.find((community) => community.slug === demoSlug) ?? null;
   }

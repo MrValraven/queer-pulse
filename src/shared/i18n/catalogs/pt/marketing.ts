@@ -1773,8 +1773,15 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
-  "changelog.entries.cards-load-whole.title":
-    "O teu cartão chega inteiro",
+  "changelog.entries.card-text-legibility.title":
+    "Cart\u00f5es que se leem \u00e0 dist\u00e2ncia",
+  "changelog.entries.card-text-legibility.body":
+    "Um cart\u00e3o de s\u00f3cie assente numa bandeira ou numa fotografia sempre escureceu o que fica por baixo do texto, mas um s\u00f3 tratamento n\u00e3o serve todas as imagens: o gradiente que funciona sobre uma bandeira \u00e0s riscas perde-se numa ilustra\u00e7\u00e3o carregada. Agora as dones escolhem entre tr\u00eas. O painel p\u00f5e uma pequena placa escura por tr\u00e1s do nome da comunidade e do nome da pessoa e deixa o resto da imagem destapado. A sombra escurece o topo e a base do cart\u00e3o. O v\u00e9u escurece o cart\u00e3o inteiro por igual. A pr\u00e9-visualiza\u00e7\u00e3o no editor acompanha a escolha \u00e0 medida que a faz, e um cart\u00e3o impresso leva o mesmo tratamento do que est\u00e1 no telem\u00f3vel. Todos os cart\u00f5es passam tamb\u00e9m a imprimir maior: o texto \u00e9 agora dimensionado em rela\u00e7\u00e3o ao pr\u00f3prio cart\u00e3o, por isso um cart\u00e3o mostrado em grande no ecr\u00e3 tem texto em grande, em vez de letra do tamanho do telem\u00f3vel num objeto ampliado.",
+  "changelog.entries.my-communities-cards.title":
+    "As tuas comunidades, como comunidades",
+  "changelog.entries.my-communities-cards.body":
+    "As tuas comunidades apareciam numa lista pequena ao lado da p\u00e1gina, enquanto as dos outros tinham cart\u00e3o. Agora as tuas abrem a p\u00e1gina: os mesmos cart\u00f5es, a mesma pesquisa, categorias e ordena\u00e7\u00e3o que j\u00e1 usas para encontrar uma comunidade, apontados \u00e0quelas em que j\u00e1 est\u00e1s. Cada cart\u00e3o est\u00e1 marcado como teu e mostra quantas pessoas estiveram por l\u00e1 esta semana, e os separadores trazem uma contagem para veres num relance em quantas est\u00e1s. O que estava antes \u2014 o que espera por ti como moderadore, e a semana das tuas comunidades \u2014 fica agora por baixo.",
+  "changelog.entries.cards-load-whole.title": "O teu cartão chega inteiro",
   "changelog.entries.cards-load-whole.body":
     "Um cartão de sócie montava-se à tua frente: a bandeira da comunidade, o emblema e a tua fotografia apareciam à medida que iam carregando. Agora o cartão espera pelos três e chega completo, com um espaço reservado a segurar a forma exacta enquanto vem. Mostrar o mesmo cartão outra vez é imediato. Com ligação lenta, o cartão aparece à mesma, para não te deixar à espera à porta.",
   "changelog.entries.pronouns-on-membership-cards.title":

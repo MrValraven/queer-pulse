@@ -8,7 +8,9 @@ export interface HubDigest {
   joined: number;
 }
 
-/** The quiet "this week" tile row at the top of the communities hub. */
+/** The quiet "this week" band on the "My communities" tab, sitting between
+ *  the category chips and the grid: label, four counts, and a note saying the
+ *  band is the whole notification — nothing here pings you. */
 export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
   const { t } = useTranslation();
   const tiles = [
@@ -19,11 +21,8 @@ export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
   ];
   return (
     <div className={styles.digest}>
-      <div className={styles.digestSide}>
-        <div className={styles.digestLbl}>
-          {t("communities:hub.digest.label")}
-        </div>
-        <p className={styles.digestNote}>{t("communities:hub.digest.note")}</p>
+      <div className={styles.digestLbl}>
+        {t("communities:hub.digest.label")}
       </div>
       <div className={styles.digestTiles}>
         {tiles.map((tile) => (
@@ -33,6 +32,7 @@ export function CommunitiesHomeDigest({ digest }: { digest: HubDigest }) {
           </div>
         ))}
       </div>
+      <p className={styles.digestNote}>{t("communities:hub.digest.note")}</p>
     </div>
   );
 }
