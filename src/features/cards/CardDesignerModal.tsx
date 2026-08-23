@@ -28,7 +28,11 @@ export function CardDesignerModal({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { name: viewerName, photo: viewerPhoto } = useAccountIdentity();
+  const {
+    name: viewerName,
+    photo: viewerPhoto,
+    pronouns: viewerPronouns,
+  } = useAccountIdentity();
   const { program } = useCardProgram(slug);
   const upsert = useUpsertCardProgram(slug);
   const issueAll = useIssueAllCards(slug);
@@ -140,6 +144,16 @@ export function CardDesignerModal({
             // The owner's own avatar, so turning photos on previews a real
             // face rather than a placeholder the members will never see.
             holderAvatarUrl={viewerPhoto ?? null}
+            allowsPronouns={draft.allowsPronouns}
+            // The owner's own pronouns, for the same reason the avatar is
+            // theirs. An owner who has set none would otherwise see nothing
+            // change when they switch this on, so the PREVIEW alone names the
+            // field instead. A real card never does this: an empty slot there
+            // means that member has no pronouns on their profile, and putting
+            // words in their mouth would be inventing an identity.
+            holderPronouns={
+              viewerPronouns?.trim() || t("cards:designer.pronounsStandIn")
+            }
           />
 
           <CardDesignerFields
@@ -171,6 +185,10 @@ export function CardDesignerModal({
             onAllowsPrintChange={(allows) => set({ allowsPrint: allows })}
             photoStyle={draft.photoStyle}
             onPhotoStyleChange={(style) => set({ photoStyle: style })}
+            allowsPronouns={draft.allowsPronouns}
+            onAllowsPronounsChange={(allows) =>
+              set({ allowsPronouns: allows })
+            }
           />
         </div>
       </Modal>

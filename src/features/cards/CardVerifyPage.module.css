@@ -41,6 +41,14 @@
   margin: 0;
 }
 
+/* Sized against the name it qualifies, the same relationship the card face
+   sets up, so a verifier reads one line rather than two competing ones. */
+.holderPronouns {
+  font-size: 0.7em;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
 .issuer {
   font-size: 0.95rem;
   opacity: 0.8;

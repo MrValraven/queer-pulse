@@ -36,11 +36,13 @@ export function useDeleteMyCard() {
 }
 
 /**
- * The member's veto over their own photo on one card they hold.
+ * The vetoes a member holds over their own card: their photo and their
+ * pronouns. Either may be sent on its own, and an omitted one is left alone.
  *
- * Invalidates rather than patching the cache: the avatar itself is resolved
- * server-side behind both switches (see `MyCardDTO.holderAvatarUrl`), so the
- * client cannot compute the next state of the card on its own.
+ * Invalidates rather than patching the cache: both values are resolved
+ * server-side behind two switches each (see `MyCardDTO.holderAvatarUrl` and
+ * `holderPronouns`), so the client cannot compute the next state of the card
+ * on its own.
  */
 export function useUpdateMyCard() {
   const client = useQueryClient();
@@ -48,14 +50,15 @@ export function useUpdateMyCard() {
   return useMutation({
     mutationFn: ({
       cardId,
-      isPhotoHidden,
+      ...settings
     }: {
       cardId: string;
-      isPhotoHidden: boolean;
+      isPhotoHidden?: boolean;
+      isPronounsHidden?: boolean;
     }) =>
       demoMode
         ? Promise.resolve({ ok: true as const })
-        : updateMyCard(cardId, { isPhotoHidden }),
+        : updateMyCard(cardId, settings),
     onSuccess: () => {
       void client.invalidateQueries({ queryKey: ["my-cards"] });
     },

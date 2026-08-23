@@ -38,6 +38,7 @@ const valid = {
   serial: "LQC-7K4M2",
   memberSince: "2026-02-14T10:00:00Z",
   hasPhoto: true,
+  holderPronouns: null,
 };
 
 describe("CardVerifyPage", () => {
@@ -52,6 +53,31 @@ describe("CardVerifyPage", () => {
     expect(
       await screen.findByText("Lisboa Queer Collective"),
     ).toBeInTheDocument();
+  });
+
+  it("prints the holder's pronouns beside their name when the card carries them", async () => {
+    vi.spyOn(hook, "useCardVerification").mockReturnValue({
+      verification: { ...valid, holderPronouns: "she/her" },
+      isLoading: false,
+      isInvalid: false,
+    });
+    const { container } = renderAt();
+    await screen.findByText(/Rita Valente/);
+    expect(container.textContent ?? "").toContain("Rita Valente (she/her)");
+  });
+
+  // A card that does not print pronouns tells a verifier nothing about them.
+  it("says nothing about pronouns when the card carries none", async () => {
+    vi.spyOn(hook, "useCardVerification").mockReturnValue({
+      verification: valid,
+      isLoading: false,
+      isInvalid: false,
+    });
+    renderAt();
+    // The holder line is exactly the name: no empty brackets, no stand-in.
+    expect((await screen.findByText("Rita Valente")).textContent).toBe(
+      "Rita Valente",
+    );
   });
 
   it("shows a single unverified result for any failure", async () => {

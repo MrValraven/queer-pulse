@@ -22,6 +22,10 @@ export const DEMO_CARD_PROGRAM: CardProgramDTO = {
   // without touching a setting.
   allowsMemberPhoto: true,
   photoStyle: "color",
+  // On, so the demo shows the composition a pronoun card actually has. The
+  // second demo card below leaves it off, so both are reachable without
+  // touching a setting.
+  allowsPronouns: true,
   serialPrefix: "LQC",
 };
 
@@ -41,6 +45,11 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
     // fixture matches that contract rather than the raw profile avatar.
     holderAvatarUrl: currentUser.photo ?? null,
     isPhotoHidden: false,
+    // Already resolved, like the avatar above: in live mode the backend sends
+    // this only when the programme prints pronouns and the member has not
+    // hidden theirs.
+    holderPronouns: currentUser.pronouns ?? null,
+    isPronounsHidden: false,
     // Demo mode shows a real, scannable symbol that resolves to a demo code.
     token: "demo-card-token",
     program: DEMO_CARD_PROGRAM,
@@ -57,6 +66,8 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
     holderName: "Tiago Costa",
     holderAvatarUrl: null,
     isPhotoHidden: false,
+    holderPronouns: null,
+    isPronounsHidden: false,
     // Demo mode shows a real, scannable symbol that resolves to a demo code.
     token: "demo-card-token",
     program: {
@@ -64,6 +75,7 @@ export const DEMO_MY_CARDS: MyCardDTO[] = [
       skin: "jade",
       serialPrefix: "AZO",
       allowsMemberPhoto: false,
+      allowsPronouns: false,
     },
   },
 ];
@@ -85,6 +97,7 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     // Already gated, matching the live contract: this programme allows
     // photos and this holder has not vetoed theirs, so the card prints one.
     cardPhotoUrl: currentUser.photo ?? null,
+    cardPronouns: currentUser.pronouns ?? null,
   },
   {
     id: "demo-card-3",
@@ -102,5 +115,6 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     // Null on purpose: the second demo holder's card carries no photo, so
     // the issuer's view of it shows the empty slot a real card would.
     cardPhotoUrl: null,
+    cardPronouns: "she/her",
   },
 ];

@@ -58,7 +58,20 @@ export function CardVerifyPage() {
                 {STATUS_ICON[verification.status]}{" "}
                 {t(`cards:verify.status.${verification.status}`)}
               </p>
-              <p className={styles.holder}>{verification.holderName}</p>
+              {/* Pronouns beside the name, exactly as the card prints them,
+                  so whoever just scanned it can address the person in front of
+                  them correctly. Present only when the card itself carries
+                  them: this page never says more about a holder than the
+                  object in the verifier's hand does. */}
+              <p className={styles.holder}>
+                {verification.holderName}
+                {verification.holderPronouns ? (
+                  <span className={styles.holderPronouns}>
+                    {" "}
+                    ({verification.holderPronouns})
+                  </span>
+                ) : null}
+              </p>
               <p className={styles.issuer}>{verification.issuerName}</p>
               <dl className={styles.meta}>
                 <div>

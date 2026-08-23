@@ -37,6 +37,8 @@ export interface CardDesignerDraft {
    *  off, so switching them back on restores the style the owner chose
    *  rather than silently resetting it to colour. */
   photoStyle: CardPhotoStyle;
+  /** Whether these cards print each holder's pronouns beside their name. */
+  allowsPronouns: boolean;
 }
 
 function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
@@ -57,6 +59,7 @@ function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
     allowsPrint: program?.allowsPrint ?? false,
     allowsMemberPhoto: program?.allowsMemberPhoto ?? false,
     photoStyle: program?.photoStyle ?? "color",
+    allowsPronouns: program?.allowsPronouns ?? false,
   };
 }
 
@@ -71,7 +74,8 @@ function isSameDraft(a: CardDesignerDraft, b: CardDesignerDraft): boolean {
     a.backgroundKey === b.backgroundKey &&
     a.allowsPrint === b.allowsPrint &&
     a.allowsMemberPhoto === b.allowsMemberPhoto &&
-    a.photoStyle === b.photoStyle
+    a.photoStyle === b.photoStyle &&
+    a.allowsPronouns === b.allowsPronouns
   );
 }
 
@@ -165,5 +169,6 @@ export function cardProgramUpsertBody(
     allowsPrint: draft.allowsPrint,
     allowsMemberPhoto: draft.allowsMemberPhoto,
     photoStyle: draft.photoStyle,
+    allowsPronouns: draft.allowsPronouns,
   };
 }

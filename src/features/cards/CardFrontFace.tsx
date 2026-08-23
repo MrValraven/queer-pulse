@@ -1,6 +1,7 @@
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { initialsFromName } from "../../shared/lib/initials";
 import type { MyCardDTO } from "./api/cards.api";
+import { CARD_PORTRAIT_PX } from "./useCardImagesReady";
 import styles from "./MembershipCardFace.module.css";
 
 /**
@@ -22,7 +23,7 @@ import styles from "./MembershipCardFace.module.css";
  * `holderAvatarUrl` arrives from the backend already gated by BOTH switches
  * (programme allows photos, member has not hidden theirs), so a non-null
  * value is permission to draw. There is no second check here on purpose:
- * one boundary, not two.
+ * one boundary, not two. `holderPronouns` arrives on exactly the same terms.
  */
 export function CardFrontFace({
   card,
@@ -39,7 +40,14 @@ export function CardFrontFace({
    */
   isPreview: boolean;
 }) {
-  const portraitSrc = resolveAvatarSrc(card.holderAvatarUrl ?? undefined, 512);
+  // The size is a shared constant because `resolveAvatarSrc` bakes it into
+  // the URL: the preload that holds the card back until every image has
+  // decoded has to ask for the very same one, or it would wait on a
+  // different file than the one drawn here.
+  const portraitSrc = resolveAvatarSrc(
+    card.holderAvatarUrl ?? undefined,
+    CARD_PORTRAIT_PX,
+  );
   const hasPreviewStandIn =
     isPreview && !portraitSrc && card.program.allowsMemberPhoto;
 
@@ -91,7 +99,21 @@ export function CardFrontFace({
       ) : null}
 
       <footer className={styles.foot}>
-        <p className={styles.holder}>{card.holderName}</p>
+        {/* Pronouns sit inside the name's own line rather than under it: they
+            qualify the name, and a card this size has no room for a second
+            baseline that would push the name off the ground it is set on. The
+            parentheses are written here rather than in the catalogue so no
+            translation can lose half a pair, and the pronouns carry their own
+            `nowrap` so the closing bracket never lands on the next line. */}
+        <p className={styles.holder}>
+          {card.holderName}
+          {card.holderPronouns ? (
+            <span className={styles.holderPronouns}>
+              {" "}
+              ({card.holderPronouns})
+            </span>
+          ) : null}
+        </p>
       </footer>
 
       {/* Last in the stacking order so the laminate sits over the print and

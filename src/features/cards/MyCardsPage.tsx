@@ -8,6 +8,7 @@ import {
   SkeletonCard,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   useDeleteMyCard,
@@ -16,6 +17,7 @@ import {
 } from "./api/useMyCards";
 import type { MyCardDTO } from "./api/cards.api";
 import { CardPhotoConsent } from "./CardPhotoConsent";
+import { CardPronounConsent } from "./CardPronounConsent";
 import { CardStatusNotice } from "./CardStatusNotice";
 import { DiscreetGate } from "./DiscreetGate";
 import { MembershipCardFace } from "./MembershipCardFace";
@@ -40,6 +42,11 @@ export function MyCardsPage() {
     useState<MyCardDTO | null>(null);
   const deleteCard = useDeleteMyCard();
   const updateCard = useUpdateMyCard();
+  // A card prints the pronouns on the member's PROFILE rather than a copy of
+  // its own, so whether they have set any decides between a working toggle and
+  // a pointer to where to set them.
+  const { pronouns } = useAccountIdentity();
+  const hasProfilePronouns = Boolean(pronouns?.trim());
 
   const confirmRemoval = () => {
     if (!cardPendingRemoval || deleteCard.isPending) return;
@@ -100,6 +107,24 @@ export function MyCardsPage() {
                     onChange={(isPhotoHidden) =>
                       updateCard.mutate(
                         { cardId: card.id, isPhotoHidden },
+                        {
+                          onError: () =>
+                            showToast(t("common:toast.saveFailed"), "error"),
+                        },
+                      )
+                    }
+                  />
+                )}
+                {/* Only where the issuing community actually prints
+                    pronouns, on the same rule as the photo consent above. */}
+                {card.program.allowsPronouns && (
+                  <CardPronounConsent
+                    card={card}
+                    hasProfilePronouns={hasProfilePronouns}
+                    isPending={updateCard.isPending}
+                    onChange={(isPronounsHidden) =>
+                      updateCard.mutate(
+                        { cardId: card.id, isPronounsHidden },
                         {
                           onError: () =>
                             showToast(t("common:toast.saveFailed"), "error"),

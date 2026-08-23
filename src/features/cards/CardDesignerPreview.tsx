@@ -31,6 +31,8 @@ export function CardDesignerPreview({
   allowsMemberPhoto,
   photoStyle,
   holderAvatarUrl,
+  allowsPronouns,
+  holderPronouns,
 }: {
   communityName: string;
   cardName: string;
@@ -45,6 +47,8 @@ export function CardDesignerPreview({
   allowsMemberPhoto: boolean;
   photoStyle: CardPhotoStyle;
   holderAvatarUrl: string | null;
+  allowsPronouns: boolean;
+  holderPronouns: string | null;
 }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -61,7 +65,9 @@ export function CardDesignerPreview({
             photos on watches nothing happen. Nothing is lost by remounting:
             a preview card mints no token and holds no other state. */}
         <MembershipCardFace
-          key={allowsMemberPhoto ? "with-photo" : "no-photo"}
+          key={`${allowsMemberPhoto ? "with-photo" : "no-photo"}-${
+            allowsPronouns ? "with-pronouns" : "no-pronouns"
+          }`}
           card={previewCard(communityName, cardName, skin, accentToken, {
             holderName,
             crestUrl,
@@ -72,6 +78,8 @@ export function CardDesignerPreview({
             allowsMemberPhoto,
             photoStyle,
             holderAvatarUrl,
+            allowsPronouns,
+            holderPronouns,
           })}
           isActive={false}
           isPreview

@@ -392,6 +392,18 @@
   padding-right: var(--card-controls-reserve);
 }
 
+/* Set against the name rather than against the card, so it stays in
+   proportion at every card size (the face scales with its container). Lighter
+   than the name it qualifies without dropping out of the ground's scrim: the
+   pronouns are part of how the holder is addressed, so they have to stay
+   legible to someone reading the card at arm's length. `nowrap` keeps the
+   parenthesised pair whole, and lets the NAME be the part that wraps. */
+.holderPronouns {
+  font-size: 0.8em;
+  opacity: 0.82;
+  white-space: nowrap;
+}
+
 /* ── Back face contents ───────────────────────────────────────────────────── */
 /* The code is square and sized against the card itself, never against its
    own grid track: `auto` + `aspect-ratio` would ask the column how wide it is
@@ -548,5 +560,118 @@
      room, since the code keeps its full height. */
   .backMeta {
     gap: 3px;
+  }
+}
+
+/* ── The ghost: a card that has not finished arriving ─────────────────────── */
+/* Drawn by `CardFaceSkeleton` while the front's three images are preloading
+   (see `useCardImagesReady`). It reuses `.face`/`.faceFront` wholesale, so the
+   footprint, padding and grid are already the finished card's and nothing
+   shifts when the real one replaces it. The community's ground is withheld
+   until then; the flat skin under it needs no network, so the ghost is already
+   the right colour. */
+/* currentColor rather than the shared `--line-rgb` shimmer from
+   Skeleton.module.css. A card's skin is FIXED across light and dark (see the
+   `.skinPlum`… block above) while `--line-rgb` flips with the theme, so the
+   shared shimmer would go invisible on the Plum skin in light mode and again
+   on Cream in dark. Each face already sets the one ink guaranteed to read on
+   its own skin, so the ghost simply borrows it. */
+.ghost {
+  border-radius: var(--radius-tag);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, currentColor 10%, transparent) 25%,
+    color-mix(in srgb, currentColor 22%, transparent) 50%,
+    color-mix(in srgb, currentColor 10%, transparent) 75%
+  );
+  background-size: 200% 100%;
+  animation: qpCardGhostShimmer 1.5s ease infinite;
+}
+
+.ghostCrest {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.ghostNames {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Each block stands at the height of the line it is standing in for, so the
+   two of them occupy the same band the community name and card name will. */
+.ghostCommunity {
+  height: 1.05rem;
+  width: 62%;
+}
+
+.ghostCardName {
+  height: 0.8rem;
+  width: 42%;
+}
+
+/* The same placement and proportions as `.portrait`, so the real photograph
+   lands exactly where its ghost stood. */
+.ghostPortrait {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  height: 62cqh;
+  width: auto;
+  aspect-ratio: 3 / 4;
+}
+
+.ghostHolder {
+  height: 0.95rem;
+  width: 46%;
+}
+
+/* ── The card arriving ────────────────────────────────────────────────────── */
+/* The finished front cross-fades in over its own ghost rather than replacing
+   it on one frame. `backwards` fill so the first painted frame is already the
+   transparent one, and nothing of the animation lingers on the element once it
+   is over — a fill-mode that stayed applied would keep the front on its own
+   compositing layer, which is the layer the flip has to rotate in 3D. */
+.faceArriving {
+  animation: qpCardArrive 220ms ease-out backwards;
+}
+
+/* The turn itself is content and still happens under reduced motion (see
+   `.flipper`), but a card fading up is decoration, so this simply does not. */
+.faceArriving[data-reduced="true"] {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faceArriving {
+    animation: none;
+  }
+
+  .ghost {
+    animation: none;
+  }
+}
+
+/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+   Global keyframes can't be referenced from a CSS module (the animation-name
+   gets scoped to a dangling hash), so each module needs its own copy. */
+@keyframes qpCardGhostShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes qpCardArrive {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

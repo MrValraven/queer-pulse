@@ -1726,6 +1726,14 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.cards-load-whole.title":
+    "Your card arrives in one piece",
+  "changelog.entries.cards-load-whole.body":
+    "A membership card used to assemble itself in front of you: the community\u2019s flag, its crest and your photo each appeared whenever they happened to finish loading. Now the card waits until all three are ready and arrives complete, with a placeholder holding its exact shape while it comes. Showing the same card again is instant. On a slow connection the card still appears rather than leaving you waiting at a door.",
+  "changelog.entries.pronouns-on-membership-cards.title":
+    "Pronouns on a membership card",
+  "changelog.entries.pronouns-on-membership-cards.body":
+    "A community can now print each member's pronouns beside their name on their card, so the person reading it knows how to address the member holding it. The pronouns come from the member's own profile, so a card only ever shows what they have already set there, and updating them updates every card at once. It is off until a community turns it on, and any member can switch their own off from their cards page. Where a card carries them, they also appear on the page someone lands on after scanning the code.",
   "changelog.entries.printed-membership-cards.title":
     "Membership cards you can print",
   "changelog.entries.printed-membership-cards.body":

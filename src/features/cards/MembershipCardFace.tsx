@@ -1,11 +1,12 @@
 import { useId, useState } from "react";
-import { FiEyeOff, FiRefreshCw } from "react-icons/fi";
-import { IconButton } from "../../shared/components/ui";
 import { useMotionPrefs } from "../../app/providers/MotionProvider";
 import { useCardGloss } from "./useCardGloss";
+import { useCardImagesReady } from "./useCardImagesReady";
 import type { CardSkin, MyCardDTO } from "./api/cards.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CardBackFace } from "./CardBackFace";
+import { CardFaceControls } from "./CardFaceControls";
+import { CardFaceSkeleton } from "./CardFaceSkeleton";
 import { CardFrontFace } from "./CardFrontFace";
 import { backgroundPresetValue } from "./cardBackgrounds.data";
 import styles from "./MembershipCardFace.module.css";
@@ -28,6 +29,12 @@ const SKIN_CLASS: Record<CardSkin, string | undefined> = {
  * the credential: the scannable code and the card's details. A cluster of
  * corner controls turns it over and, where the card sits behind a discreet
  * gate, puts it away again.
+ *
+ * The card does not assemble itself in front of its holder. Its three images
+ * arrive on three independent timelines, and one of them — the ground — is a
+ * CSS background that fires no load event at all, so they are preloaded
+ * together and a ghost of the card holds its exact footprint until every one
+ * of them has decoded (see `useCardImagesReady`).
  *
  * The code is the card's own permanent value and arrives with the card, so
  * nothing is minted while the card is on screen and an issuer reading a
@@ -67,9 +74,7 @@ export function MembershipCardFace({
    * rather than sitting under the card as a separate button: hiding is an act
    * on the object, the same as turning it over, and the gate's quick-hide is
    * the control a holder reaches for fastest — so it belongs where the thumb
-   * already is rather than a row further down the page. Omitted by the
-   * designer preview and the issuer's read-only view, which have no gate to
-   * close.
+   * already is rather than a row further down the page.
    */
   onHide?: () => void;
 }) {
@@ -77,6 +82,7 @@ export function MembershipCardFace({
   const { reducedMotion } = useMotionPrefs();
   const flipperId = useId();
   const [isFlipped, setIsFlipped] = useState(false);
+  const areImagesReady = useCardImagesReady(card);
 
   // A card that gets re-covered comes back showing its front. Without this, a
   // holder who hid the card while it was turned over would re-reveal it with
@@ -113,6 +119,7 @@ export function MembershipCardFace({
       // them in their bottom-right (see `--card-controls-reserve`), and that
       // reservation has to grow when the hide control is there.
       data-controls={onHide ? "2" : "1"}
+      aria-busy={!areImagesReady}
       style={{
         // Threads the community's chosen accent token through as a CSS custom
         // property so the card face can actually render it (see
@@ -125,78 +132,71 @@ export function MembershipCardFace({
       onPointerLeave={onPointerLeave}
       onPointerCancel={onPointerLeave}
     >
-      <div
-        id={flipperId}
-        className={styles.flipper}
-        data-flipped={isFlipped ? "true" : "false"}
-        data-reduced={reducedMotion ? "true" : "false"}
-      >
-        {/* Both sides stay mounted so the turn has something to reveal, so
-            the hidden one is taken out of the accessibility tree AND out of
-            tab order — otherwise every card would announce its details twice
-            and park focus on a face nobody can see. */}
-        <article
-          className={[styles.face, styles.faceFront, skinClass, ground && styles.hasGround]
-            .filter(Boolean)
-            .join(" ")}
-          aria-label={t("cards:face.ariaLabel", { community: card.communityName })}
-          aria-hidden={isFlipped}
-          inert={isFlipped}
-        >
-          <CardFrontFace card={card} isPreview={isPreview} />
-        </article>
-
-        <article
-          className={[styles.face, styles.faceBack, skinClass]
-            .filter(Boolean)
-            .join(" ")}
-          // "your card" is wrong when a mod is reading someone else's.
-          aria-label={t(
-            isIssuerView
-              ? "cards:face.backAriaLabelIssuer"
-              : "cards:face.backAriaLabel",
-            { community: card.communityName },
-          )}
-          aria-hidden={!isFlipped}
-          inert={!isFlipped}
-        >
-          <CardBackFace card={card} isPreview={isPreview} />
-        </article>
-      </div>
-
-      {/* Outside the flipper on purpose: inside, the controls would rotate
-          with the card and land mirrored on the back. They carry their own
-          fixed plate, which reads on every skin, since they cannot inherit
-          either face's ink. */}
-      <div className={styles.controls}>
-        {/* Hide first, flip last: the flip stays in the corner a holder
-            already knows it by, and the control that puts an LGBTQ+
-            affiliation away is the one nearer the middle of the card, where a
-            thumb reaching in a hurry is least likely to miss it. */}
-        {onHide && (
-          <IconButton
-            className={styles.cardControl}
-            tone="dark"
-            size="sm"
-            aria-label={t("cards:discreet.hideAria")}
-            onClick={onHide}
+      {!areImagesReady ? (
+        <CardFaceSkeleton skinClass={skinClass} />
+      ) : (
+        <>
+          <div
+            id={flipperId}
+            className={styles.flipper}
+            data-flipped={isFlipped ? "true" : "false"}
+            data-reduced={reducedMotion ? "true" : "false"}
           >
-            <FiEyeOff aria-hidden="true" />
-          </IconButton>
-        )}
-        <IconButton
-          className={styles.cardControl}
-          tone="dark"
-          size="sm"
-          aria-controls={flipperId}
-          // The name carries the state, rather than `aria-pressed`: this is a
-          // toggle between two equal sides, not a control that is on or off.
-          aria-label={t(isFlipped ? "cards:face.flipToFront" : "cards:face.flipToBack")}
-          onClick={() => setIsFlipped((flipped) => !flipped)}
-        >
-          <FiRefreshCw aria-hidden="true" />
-        </IconButton>
-      </div>
+            {/* Both sides stay mounted so the turn has something to reveal, so
+                the hidden one is taken out of the accessibility tree AND out of
+                tab order — otherwise every card would announce its details twice
+                and park focus on a face nobody can see. */}
+            <article
+              className={[
+                styles.face,
+                styles.faceFront,
+                styles.faceArriving,
+                skinClass,
+                // Withheld until the images are ready, so a half-loaded flag
+                // never paints under the ghost.
+                ground && styles.hasGround,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              data-reduced={reducedMotion ? "true" : "false"}
+              aria-label={t("cards:face.ariaLabel", {
+                community: card.communityName,
+              })}
+              aria-hidden={isFlipped}
+              inert={isFlipped}
+            >
+              <CardFrontFace card={card} isPreview={isPreview} />
+            </article>
+
+            <article
+              className={[styles.face, styles.faceBack, skinClass]
+                .filter(Boolean)
+                .join(" ")}
+              // "your card" is wrong when a mod is reading someone else's.
+              aria-label={t(
+                isIssuerView
+                  ? "cards:face.backAriaLabelIssuer"
+                  : "cards:face.backAriaLabel",
+                { community: card.communityName },
+              )}
+              aria-hidden={!isFlipped}
+              inert={!isFlipped}
+            >
+              <CardBackFace card={card} isPreview={isPreview} />
+            </article>
+          </div>
+
+          {/* Mounted only once the card is real: there is nothing to turn over
+              while the ghost is up, and a flip control on a placeholder is an
+              affordance that does not work. */}
+          <CardFaceControls
+            flipperId={flipperId}
+            isFlipped={isFlipped}
+            onFlip={() => setIsFlipped((flipped) => !flipped)}
+            onHide={onHide}
+          />
+        </>
+      )}
     </div>
   );
 }

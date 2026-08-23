@@ -1773,6 +1773,14 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.cards-load-whole.title":
+    "O teu cartão chega inteiro",
+  "changelog.entries.cards-load-whole.body":
+    "Um cartão de sócie montava-se à tua frente: a bandeira da comunidade, o emblema e a tua fotografia apareciam à medida que iam carregando. Agora o cartão espera pelos três e chega completo, com um espaço reservado a segurar a forma exacta enquanto vem. Mostrar o mesmo cartão outra vez é imediato. Com ligação lenta, o cartão aparece à mesma, para não te deixar à espera à porta.",
+  "changelog.entries.pronouns-on-membership-cards.title":
+    "Pronomes no cartão de sócie",
+  "changelog.entries.pronouns-on-membership-cards.body":
+    "Uma comunidade pode agora mostrar os pronomes de cada sócie ao lado do nome no cartão, para que quem o lê saiba como tratar a pessoa que o mostra. Os pronomes vêm do perfil de cada sócie, por isso o cartão só mostra o que já está definido lá, e alterá-los atualiza todos os cartões de uma só vez. Vem desligado até a comunidade o ligar, e qualquer pessoa pode desligar os seus na sua página de cartões. Quando o cartão os mostra, aparecem também na página a que se chega depois de ler o código.",
   "changelog.entries.printed-membership-cards.title":
     "Cartões de membro para imprimir",
   "changelog.entries.printed-membership-cards.body":

@@ -90,6 +90,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "cards-load-whole",
+        category: "improvement",
+        date: "23 Aug 2026",
+        ...entryKeys("cards-load-whole"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
+        id: "pronouns-on-membership-cards",
+        category: "feature",
+        date: "23 Aug 2026",
+        ...entryKeys("pronouns-on-membership-cards"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
         id: "printed-membership-cards",
         category: "feature",
         date: "22 Aug 2026",

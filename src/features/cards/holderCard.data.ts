@@ -41,6 +41,12 @@ export function holderCardFace(
     // by `CardPhotoConsent` on their own wallet page, never by either face.
     // An issuer is not told which of the two switches emptied the photo slot.
     isPhotoHidden: false,
+    // Same contract as the photo above: the backend has already applied the
+    // programme's switch and the holder's veto, so this is what the card
+    // prints. The holder's profile pronouns are never substituted for it.
+    holderPronouns: holder.cardPronouns,
+    // Read only by the holder's own wallet page, never by either face.
+    isPronounsHidden: false,
     // The issuer sees the member's real code. It is the card's own permanent
     // value, so there is nothing holder-specific to withhold.
     token: holder.token,

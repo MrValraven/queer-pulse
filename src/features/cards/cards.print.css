@@ -1,21 +1,51 @@
 /* Print isolation for the membership-card sheet.
-   On print, hide everything except the sheets ([data-print-root]), so the
-   paper carries only cards — no app chrome, no toolbar. Mirrors the idiom in
-   features/economy/tools/tools.print.css rather than inventing a second one. */
+   On print the paper carries only cards: no app chrome, no toolbar. */
 
 @media print {
-  body * {
-    visibility: hidden;
+  /* Everything that is neither the sheet, nor inside it, nor one of the
+     wrappers between <body> and it, leaves the document entirely.
+
+     `visibility: hidden`, the idiom this file used to share with
+     features/economy/tools/tools.print.css, only stops the pixels. The nav
+     band, the toolbar and the footer keep their boxes, and it is that flow
+     height that the printer counts pages against, so a single card came out
+     on page one and was followed by a second, blank sheet of paper.
+     `display: none` takes the boxes away with the pixels. */
+  body
+    *:not(
+      :has([data-print-root]),
+      [data-print-root],
+      [data-print-root] *
+    ) {
+    display: none !important;
   }
 
-  [data-print-root],
-  [data-print-root] * {
-    visibility: visible;
+  /* The wrappers that survive (#root, <main>, the page container) exist to
+     carry app-chrome spacing: the reserved nav band, the page gutters, the
+     hero tint. On paper they are pass-throughs, so flatten them to nothing.
+     Without this the sheet starts a nav band's worth of white below the top
+     margin, which is the other half of the wasted page. */
+  body :has([data-print-root]) {
+    display: block !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    transform: none !important;
   }
 
+  /* The sheets sit in normal flow at the top of page one. They used to be
+     `position: absolute; inset: 0`, which was only ever a way to escape the
+     chrome that is now gone, and which stretched the block to a full page
+     height whatever it held. */
   [data-print-root] {
-    position: absolute;
-    inset: 0;
     margin: 0;
     gap: 0;
     /* The ground and the skin ARE the card. A printer dropping them would
@@ -33,6 +63,8 @@
     break-after: page;
   }
 
+  /* No break after the last sheet: `break-after: page` there would open a page
+     that nothing is ever printed on. */
   [data-print-root] > *:last-child {
     break-after: auto;
   }

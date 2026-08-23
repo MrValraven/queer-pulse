@@ -21,6 +21,11 @@ export const cards: Catalog = {
   "photo.consent": "Show my photo on this card",
   "photo.consentAria": "Show my photo on my {community} card",
 
+  "pronouns.consent": "Show my pronouns on this card",
+  "pronouns.consentAria": "Show my pronouns on my {community} card",
+  "pronouns.noneSet":
+    "Your {community} card prints your pronouns beside your name. Add them to your profile and they will appear here.",
+
   "discreet.title": "Card hidden",
   "discreet.body":
     "Your card names the community that issued it. It stays covered until you show it, and hides again when you leave this screen.",
@@ -29,6 +34,7 @@ export const cards: Catalog = {
   "discreet.hideAria": "Hide your membership card",
 
   "face.ariaLabel": "Membership card for {community}",
+  "face.loading": "Loading your membership card",
   "face.qrAriaLabel": "Scannable proof of membership for {community}",
   "face.serial": "No.",
   "face.memberSince": "Since",
@@ -115,6 +121,11 @@ export const cards: Catalog = {
     "This applies to every member's photo on this card, so it is your choice about their pictures rather than theirs.",
   "photoStyle.color": "In colour",
   "photoStyle.mono": "Black and white",
+  "designer.pronounsLabel": "Pronouns",
+  "designer.pronounsCheck": "Print each member's pronouns beside their name",
+  "designer.pronounsHelper":
+    "The pronouns come from the member's own profile, so a card only shows what they have already set there. Anyone can turn theirs off on their own card.",
+  "designer.pronounsStandIn": "your pronouns",
   "designer.printLabel": "Printed cards",
   "designer.printCheck": "Let owners and moderators print these cards",
   "designer.printHelper":

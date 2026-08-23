@@ -21,6 +21,11 @@ export const cards: Catalog = {
   "photo.consent": "Mostrar a minha fotografia neste cartão",
   "photo.consentAria": "Mostrar a minha fotografia no meu cartão de {community}",
 
+  "pronouns.consent": "Mostrar os meus pronomes neste cartão",
+  "pronouns.consentAria": "Mostrar os meus pronomes no meu cartão de {community}",
+  "pronouns.noneSet":
+    "O teu cartão de {community} mostra os teus pronomes ao lado do nome. Acrescenta-os ao teu perfil e aparecem aqui.",
+
   "discreet.title": "Cartão escondido",
   "discreet.body":
     "O teu cartão mostra o nome da comunidade que o emitiu. Fica tapado até o mostrares e volta a esconder-se quando sais deste ecrã.",
@@ -29,6 +34,7 @@ export const cards: Catalog = {
   "discreet.hideAria": "Esconder o teu cartão de sócio",
 
   "face.ariaLabel": "Cartão de sócio de {community}",
+  "face.loading": "A carregar o teu cartão de sócio",
   "face.qrAriaLabel": "Prova de filiação legível por leitor, de {community}",
   "face.serial": "N.º",
   "face.memberSince": "Desde",
@@ -113,6 +119,11 @@ export const cards: Catalog = {
     "Isto aplica-se à fotografia de todas as pessoas neste cartão, por isso é uma escolha sua sobre as imagens delas.",
   "photoStyle.color": "A cores",
   "photoStyle.mono": "A preto e branco",
+  "designer.pronounsLabel": "Pronomes",
+  "designer.pronounsCheck": "Mostrar os pronomes de cada sócie ao lado do nome",
+  "designer.pronounsHelper":
+    "Os pronomes vêm do perfil de cada sócie, por isso o cartão só mostra o que já está definido lá. Qualquer pessoa pode desligar os seus no próprio cartão.",
+  "designer.pronounsStandIn": "os teus pronomes",
   "designer.printLabel": "Cartões impressos",
   "designer.printCheck":
     "Permitir que dones e moderadores imprimam estes cartões",

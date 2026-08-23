@@ -47,6 +47,9 @@ export interface CardDesignerFieldsProps {
   /** Whether staff may print physical copies of these cards. */
   allowsPrint: boolean;
   onAllowsPrintChange: (allows: boolean) => void;
+  /** Whether these cards print each holder's pronouns beside their name. */
+  allowsPronouns: boolean;
+  onAllowsPronounsChange: (allows: boolean) => void;
 }
 
 /** The form controls, split out of `CardDesignerModal` to keep each
@@ -74,6 +77,8 @@ export function CardDesignerFields({
   onPhotoStyleChange,
   allowsPrint,
   onAllowsPrintChange,
+  allowsPronouns,
+  onAllowsPronounsChange,
 }: CardDesignerFieldsProps) {
   const { t } = useTranslation();
   const format = useFormat();
@@ -155,6 +160,7 @@ export function CardDesignerFields({
             switching photos off and on again does not reset it. */}
         {allowsMemberPhoto ? (
           <FormField
+            className={styles.groupField}
             label={t("cards:designer.photoStyleLabel")}
             helper={t("cards:designer.photoStyleHelper")}
           >
@@ -170,6 +176,21 @@ export function CardDesignerFields({
             />
           </FormField>
         ) : null}
+      </div>
+
+      <div className={styles.group}>
+        <div className={styles.groupLabel}>
+          {t("cards:designer.pronounsLabel")}
+        </div>
+        {/* Says both things an owner needs before deciding for other people:
+            each member keeps a veto, and the card can only print what that
+            member has already put on their own profile. */}
+        <CheckLine
+          checked={allowsPronouns}
+          onChange={onAllowsPronounsChange}
+          title={t("cards:designer.pronounsCheck")}
+          sub={t("cards:designer.pronounsHelper")}
+        />
       </div>
 
       <div className={styles.group}>

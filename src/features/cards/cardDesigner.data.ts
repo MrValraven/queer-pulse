@@ -137,6 +137,11 @@ export function previewCard(
      *  owner's own avatar, so the preview is a real card rather than a
      *  grey box. */
     holderAvatarUrl?: string | null;
+    /** Whether the programme being designed prints pronouns. */
+    allowsPronouns?: boolean;
+    /** The pronouns to draw when it does. The designer passes the viewing
+     *  owner's own, and a stand-in only when they have none set. */
+    holderPronouns?: string | null;
   } = {},
 ): MyCardDTO {
   const issuedAt = new Date();
@@ -158,6 +163,10 @@ export function previewCard(
       ? (extras.holderAvatarUrl ?? null)
       : null,
     isPhotoHidden: false,
+    holderPronouns: extras.allowsPronouns
+      ? (extras.holderPronouns ?? null)
+      : null,
+    isPronounsHidden: false,
     // The designer draws the decoy symbol via `isPreview`, never a real code:
     // the card being designed does not exist yet.
     token: null,
@@ -175,6 +184,7 @@ export function previewCard(
       allowsPublicBadge: true,
       allowsMemberPhoto: extras.allowsMemberPhoto ?? false,
       photoStyle: extras.photoStyle ?? "color",
+      allowsPronouns: extras.allowsPronouns ?? false,
       serialPrefix: extras.serialPrefix ?? "ABC",
     },
   };

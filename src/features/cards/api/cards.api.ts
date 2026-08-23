@@ -39,6 +39,8 @@ export interface CardProgramDTO {
   allowsMemberPhoto: boolean;
   /** How those photos are printed: in colour, or desaturated. */
   photoStyle: CardPhotoStyle;
+  /** Whether this programme's cards print the holder's pronouns. */
+  allowsPronouns: boolean;
   serialPrefix: string;
 }
 
@@ -61,6 +63,15 @@ export interface MyCardDTO {
   holderAvatarUrl: string | null;
   /** The member's own veto, for the control that toggles it. */
   isPhotoHidden: boolean;
+  /**
+   * The pronouns printed on the card, or null. Resolved server-side from the
+   * holder's profile and sent ONLY when the programme prints pronouns, the
+   * member has not hidden theirs, and they have any set. A non-null value is
+   * already permission to draw it — never re-derive that here.
+   */
+  holderPronouns: string | null;
+  /** The member's own veto, for the control that toggles it. */
+  isPronounsHidden: boolean;
   /**
    * The card's permanent scannable code, or null when the platform has no
    * signing key. It arrives with the card, so nothing mints on demand and an
@@ -93,6 +104,12 @@ export interface IssuerCardDTO {
    */
   cardPhotoUrl: string | null;
   /**
+   * The pronouns the card actually prints, or null. Gated by the same pair of
+   * switches as `cardPhotoUrl`, so an issuer reading a member's card sees what
+   * that card says rather than what the holder's profile says.
+   */
+  cardPronouns: string | null;
+  /**
    * The card's permanent scannable code, or null when the platform has no
    * signing key. It arrives with the card, so nothing mints on demand and an
    * issuer reading a member's card sees the same code that member shows.
@@ -110,6 +127,9 @@ export interface CardVerificationDTO {
   /** Whether the card carries the holder's face, so a door knows whether it
    *  has anything to check the person in front of it against. */
   hasPhoto: boolean;
+  /** The pronouns the card prints, or null, so whoever scanned it can address
+   *  the holder correctly. Present only when the card itself carries them. */
+  holderPronouns: string | null;
 }
 
 export interface UpsertCardProgramBody {
@@ -130,6 +150,9 @@ export interface UpsertCardProgramBody {
   allowsMemberPhoto?: boolean;
   /** Same absent-leaves-it-alone contract as the switch above. */
   photoStyle?: CardPhotoStyle;
+  /** Whether these cards print each holder's pronouns. Same
+   *  absent-leaves-it-alone contract as the switches above. */
+  allowsPronouns?: boolean;
 }
 
 export const getMyCards = () => apiGet<MyCardDTO[]>("/me/cards");
@@ -137,10 +160,14 @@ export const getMyCards = () => apiGet<MyCardDTO[]>("/me/cards");
 /** Destroys a card the member holds (spec §K.4: the member's right to have a
  *  card destroyed, not merely revoked). 404s, never 403s, for a card the
  *  caller does not hold. */
-/** The settings the HOLDER controls on their own card. */
+/**
+ * The settings the HOLDER controls on their own card. Every field is optional
+ * and absent leaves the stored value alone, so toggling one veto never
+ * rewrites the other.
+ */
 export const updateMyCard = (
   cardId: string,
-  body: { isPhotoHidden: boolean },
+  body: { isPhotoHidden?: boolean; isPronounsHidden?: boolean },
 ) => apiPatch<{ ok: true }>(`/me/cards/${cardId}`, body);
 
 export const deleteMyCard = (cardId: string) =>

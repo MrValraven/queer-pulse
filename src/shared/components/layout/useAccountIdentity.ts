@@ -8,6 +8,8 @@ export interface AccountIdentity {
   firstName: string;
   photo?: string;
   initials: string;
+  /** The signed-in member's own pronouns, when they have set any. */
+  pronouns?: string;
 }
 
 /** Resolves the signed-in user's identity for account UI (menu, sheet).
@@ -31,10 +33,15 @@ export function useAccountIdentity(): AccountIdentity {
     : demoMode
       ? currentUser.initials
       : initialsFromName(name);
+  // Same demo-safe rule as the photo above: the mock persona's pronouns are a
+  // demo fixture and must never stand in for a real signed-in member's.
+  const pronouns =
+    profile?.pronouns ?? (demoMode ? currentUser.pronouns : undefined);
   return {
     name,
     firstName: name.split(" ")[0] ?? "",
     photo,
     initials,
+    pronouns,
   };
 }
