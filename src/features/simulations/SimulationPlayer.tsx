@@ -110,7 +110,8 @@ export function SimulationPlayer() {
           rel="noopener noreferrer"
           className={styles.openFull}
         >
-          <FiExternalLink aria-hidden /> {t("simulations:player.openFullScreen")}
+          <FiExternalLink aria-hidden />{" "}
+          {t("simulations:player.openFullScreen")}
         </a>
       </header>
       <DeviceFrame

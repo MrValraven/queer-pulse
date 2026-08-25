@@ -19,10 +19,7 @@ export interface NotificationPreferencesResult {
   /** Whether the given category is on (both channels share one toggle). */
   isEnabled: (category: NotificationPreferenceCategory) => boolean;
   /** Flip a category — local-only in demo, PUT + optimistic cache in live. */
-  setEnabled: (
-    category: NotificationPreferenceCategory,
-    next: boolean,
-  ) => void;
+  setEnabled: (category: NotificationPreferenceCategory, next: boolean) => void;
   /** True while the live preferences are first loading. */
   isLoading: boolean;
 }
@@ -68,7 +65,9 @@ export function useNotificationPreferences(): NotificationPreferencesResult {
       // meant a slow flip on category A landed after a fast flip on category B
       // and reverted B to server state that predated it, and B's rollback then
       // restored A's optimistic value instead of the last server truth.
-      const patchCategory = (state: NotificationPreferenceState | undefined) => {
+      const patchCategory = (
+        state: NotificationPreferenceState | undefined,
+      ) => {
         queryClient.setQueryData<NotificationPreferencesDTO>(
           queryKey,
           (current) => {

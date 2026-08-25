@@ -44,7 +44,10 @@ export function AdminHousingGroupsPage() {
     (request) => request.status === "pending" && !resolved.has(request.id),
   );
 
-  function decide(request: AdminGroupJoinRequestDTO, action: GroupTriageAction) {
+  function decide(
+    request: AdminGroupJoinRequestDTO,
+    action: GroupTriageAction,
+  ) {
     triage.mutate(
       { id: request.id, action },
       {
@@ -52,7 +55,10 @@ export function AdminHousingGroupsPage() {
           setResolved((current) => new Set(current).add(request.id)),
         onError: (mutationError) =>
           showToast(
-            describeError(t("admin:housingGroups.requests.error"), mutationError),
+            describeError(
+              t("admin:housingGroups.requests.error"),
+              mutationError,
+            ),
             "error",
           ),
       },

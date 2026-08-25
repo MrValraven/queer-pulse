@@ -24,6 +24,7 @@ export function useComposerAutoGrow(
     // overflow stays hidden, so a short/empty single-line draft never shows a
     // stray scrollbar (or, on iOS Safari, a momentary touch-scroll indicator
     // on a box that isn't really scrollable).
-    node.style.overflowY = node.scrollHeight > node.clientHeight ? "auto" : "hidden";
+    node.style.overflowY =
+      node.scrollHeight > node.clientHeight ? "auto" : "hidden";
   }, [textareaRef, draft]);
 }

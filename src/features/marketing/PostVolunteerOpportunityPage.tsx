@@ -47,7 +47,11 @@ export function PostVolunteerOpportunityPage() {
             </p>
           </div>
 
-          {slug ? <EditOpportunityFlow slug={slug} /> : <CreateOpportunityFlow />}
+          {slug ? (
+            <EditOpportunityFlow slug={slug} />
+          ) : (
+            <CreateOpportunityFlow />
+          )}
         </div>
       </section>
     </PageShell>

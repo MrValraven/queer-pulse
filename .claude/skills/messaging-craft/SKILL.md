@@ -11,70 +11,79 @@ The standard for building QueerPulse's messaging feature at the level of WhatsAp
 **QueerPulse already has a strong messaging base.** Real-time socket.io delivery, typing indicators, "Seen" read receipts, presence, reactions, reply/quote, edit (15-min window), soft-delete tombstones, mute, delete-for-me, web push, cursor-paginated history, and a WhatsApp-style long-press overlay all exist today. Your job is almost never a greenfield build — it is **elevating an already-good feature to best-in-class** and closing specific gaps. Read [references/queerpulse-messaging-map.md](references/queerpulse-messaging-map.md) FIRST to know exactly what exists and where, so you extend rather than reinvent.
 
 **Companions — read them, don't duplicate them.** This skill is messaging-specific; the general craft lives elsewhere and if they diverge on a general point, the companion wins:
+
 - **react-best-practices** — component structure, hooks/effects/keys correctness, the `<Button>`/token contract, accessibility. All of it applies to chat components.
 - **web-animation-best-practices** — animate only transform/opacity, ease-out entrances, 150–400ms, `prefers-reduced-motion`, the `Reveal`/`FadeIn` primitives. Chat motion obeys this.
 - **design-best-practices** — spacing scale, hierarchy through contrast, the token system, `--cream`/`--paper`/plum-panel rules.
-- **nestjs-expert** (backend repo) — the authority on the socket.io gateway, guards, DTO mapping, TypeORM entities and migrations. This skill tells you *what messaging needs*; nestjs-expert tells you *how to build it the Nest way*.
+- **nestjs-expert** (backend repo) — the authority on the socket.io gateway, guards, DTO mapping, TypeORM entities and migrations. This skill tells you _what messaging needs_; nestjs-expert tells you _how to build it the Nest way_.
 - **queer-community-copywriting** — every empty state, system message, and error string.
 
-**Encryption is out of scope for now.** QueerPulse DMs are server-readable plaintext by design (moderation, safety, message-request gating all depend on it). Do not add E2E encryption without an explicit product decision — it would break moderation, search, and cross-device sync. [references/realtime-delivery-and-reliability.md](references/realtime-delivery-and-reliability.md) documents the E2EE frontier as a *future* option, not a mandate.
+**Encryption is out of scope for now.** QueerPulse DMs are server-readable plaintext by design (moderation, safety, message-request gating all depend on it). Do not add E2E encryption without an explicit product decision — it would break moderation, search, and cross-device sync. [references/realtime-delivery-and-reliability.md](references/realtime-delivery-and-reliability.md) documents the E2EE frontier as a _future_ option, not a mandate.
 
 ## Reference map — route the task to a file
 
-| Your task touches… | Read |
-|---|---|
-| Message list, bubbles, grouping, date separators, virtualization, scroll anchoring, jump-to-bottom, history-load-without-jump, unread divider | [references/message-list-and-scroll.md](references/message-list-and-scroll.md) |
-| Composer, send/Enter behavior, reply/quote, reactions, edit/delete, long-press overlay, swipe-to-reply, micro-animations, haptics, screen-reader/keyboard a11y, empty states | [references/composer-interactions-a11y.md](references/composer-interactions-a11y.md) |
+| Your task touches…                                                                                                                                                                                                 | Read                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Message list, bubbles, grouping, date separators, virtualization, scroll anchoring, jump-to-bottom, history-load-without-jump, unread divider                                                                      | [references/message-list-and-scroll.md](references/message-list-and-scroll.md)                     |
+| Composer, send/Enter behavior, reply/quote, reactions, edit/delete, long-press overlay, swipe-to-reply, micro-animations, haptics, screen-reader/keyboard a11y, empty states                                       | [references/composer-interactions-a11y.md](references/composer-interactions-a11y.md)               |
 | Socket transport, message ordering, client-generated IDs, idempotency/dedup, delivery vs read receipts, presence/typing signal design, offline outbox, reconnect + history sync, push notifications, rate limiting | [references/realtime-delivery-and-reliability.md](references/realtime-delivery-and-reliability.md) |
-| Where the actual code lives, what exists vs. what's missing, the prioritized upgrade roadmap, migration/dual-mode rules | [references/queerpulse-messaging-map.md](references/queerpulse-messaging-map.md) |
+| Where the actual code lives, what exists vs. what's missing, the prioritized upgrade roadmap, migration/dual-mode rules                                                                                            | [references/queerpulse-messaging-map.md](references/queerpulse-messaging-map.md)                   |
 
 ## The checklist — the eight dimensions of great chat
 
 Every messaging change is judged on these. Not all apply to every task; the ones that touch your change are non-negotiable.
 
 ### 1. Correct delivery state, always visible
+
 A message has exactly one truthful status at any moment: **pending** (client-only, not yet acked) → **sent** (server has it) → **read** (counterpart's watermark passed it) → or **failed** (retryable). Render it only on the current user's own outgoing bubbles, as the last thing in the bubble's meta row. Never show "sent" for a message the server hasn't acknowledged, and never let a failed message look sent. QueerPulse today conflates "sent" and "delivered" — if you touch send status, keep the states distinct and honest. See message-list ref (status ticks) and realtime ref (receipts).
 
 ### 2. The scroll never betrays the reader
-Loading older history must not move the message the user is looking at — anchor to a stable message ID and compensate for prepended height. New incoming messages auto-scroll to bottom **only when the user is already near the bottom** (gate behind a ~150px buffer); otherwise show a "jump to latest" pill with an unread count. Stick-to-bottom must survive a bubble *resizing* (image load, reaction added), not just new messages. QueerPulse has `useMessageScroll`/`useStickToBottom` — extend them, and verify against a real long thread.
+
+Loading older history must not move the message the user is looking at — anchor to a stable message ID and compensate for prepended height. New incoming messages auto-scroll to bottom **only when the user is already near the bottom** (gate behind a ~150px buffer); otherwise show a "jump to latest" pill with an unread count. Stick-to-bottom must survive a bubble _resizing_ (image load, reaction added), not just new messages. QueerPulse has `useMessageScroll`/`useStickToBottom` — extend them, and verify against a real long thread.
 
 ### 3. Consecutive messages breathe
+
 Group runs from the same author within a short window (~5 min): one avatar and name at the top of the run, tight spacing inside, generous spacing between runs and between authors. Insert sticky **date separators** ("Today", "Yesterday", then the date) at day boundaries. This is already `messageRuns.ts` / `MessageRun.tsx` — match its grouping semantics; don't hand-roll a second grouping path.
 
 ### 4. The composer disappears (in the good way)
+
 Auto-grow the textarea from one line to a capped max (then scroll internally). Enter sends on desktop, Shift+Enter is a newline; on touch, Enter is a newline and send is the button. Preserve the draft while the reply-preview banner is open. Keep the composer's send affordance reachable and never let a long draft push the send button off-screen. Optimistic-send must clear the input instantly and show the pending bubble in the same frame.
 
 ### 5. Every action is reversible and gated by real permissions
+
 Reply, react, edit, delete, copy, report — surfaced via the long-press/right-click overlay (touch + desktop parity). Edit and delete are permission-gated **server-side** (author-only edit inside the 15-min window; delete = author or staff) and the client must reflect the same `canEdit`/`canDelete`/`canReport` flags the DTO sends — never compute permissions client-only. Deletes are soft tombstones that keep their slot ("This message was deleted"), not holes in the timeline.
 
 ### 6. Realtime is a fast path over a correct one
-The socket makes things *feel* instant; HTTP + the database are the source of truth. Never trust a socket frame as the only record of a message. Client-generated message IDs make sends idempotent so a retry or a double-path (HTTP + WS) can't duplicate. On reconnect you **cannot** assume the transport redelivered everything you missed (this is a verified pitfall) — reconcile by fetching history since your last known message. See realtime ref.
+
+The socket makes things _feel_ instant; HTTP + the database are the source of truth. Never trust a socket frame as the only record of a message. Client-generated message IDs make sends idempotent so a retry or a double-path (HTTP + WS) can't duplicate. On reconnect you **cannot** assume the transport redelivered everything you missed (this is a verified pitfall) — reconcile by fetching history since your last known message. See realtime ref.
 
 ### 7. Signals are cheap, ephemeral, and rate-limited
+
 Typing and presence are hints, not records: debounce/throttle them (typing "start" at most every ~2s, auto-clear after ~3–4s of silence; presence via heartbeat), never persist them, and rate-limit them at the gateway (QueerPulse already token-buckets typing + send — respect it). A typing indicator that lies (stuck "typing…") is worse than none.
 
 ### 8. It works for everyone, in both languages, in both modes
+
 Screen-reader users hear new messages via a polite `aria-live` region, can reach every action by keyboard, and land focus sensibly when the overlay opens/closes. Every string is bilingual EN/PT via `useTranslation()`. Every data path honors **demo/live dual-mode** — a live socket/query path keeps its colocated `*.data.ts` mock as the demo fallback (see queerpulse map ref). `prefers-reduced-motion` collapses bubble/overlay motion to a fade.
 
 ## QueerPulse messaging toolkit
 
-| Need | Use | Where |
-|---|---|---|
-| Message thread data (paged history) | `useMessageThread` (`useInfiniteQuery`, cursor `(created_at, id)`) | `features/messages/api/useMessageThread.ts` |
-| Inbox list + unread badge | `useConversations` / `useUnreadMessages` | `features/messages/api/useConversations.ts` |
-| Send / mark-read / start | `useMessageMutations` | `features/messages/api/useMessageMutations.ts` |
-| React / edit / delete | `useMessageActions` | `features/messages/api/useMessageActions.ts` |
-| Live socket frames | `useRealtimeConnection`, `useJoinConversation`, `useTypingFrames`, `useReadFrames`, `usePresenceOnline`, `useEmitTyping` | `shared/api/realtime.ts` |
-| Stick-to-bottom / jump pill / load-older | `useMessageScroll`, `useStickToBottom` | `features/messages/` |
-| Counterpart typing state | `useTypingIndicator` | `features/messages/useTypingIndicator.ts` |
-| Unread "new messages" divider | `useUnreadDivider` | `features/messages/` |
-| Long-press gesture | `useLongPress` | `features/messages/useLongPress.ts` |
-| Grouped bubble rendering | `MessageRun` + `messageRuns.ts` | `features/messages/` |
-| Composer | `Composer.tsx` (autogrow, Enter-to-send, typing frames) | `features/messages/Composer.tsx` |
-| Action overlay | `MessageActionOverlay.tsx` (portal, scroll-lock, Escape, focus) | `features/messages/` |
-| Web push | `usePushSubscription`, `src/sw.ts` | `features/push/`, `src/sw.ts` |
-| Backend socket gateway | `chat.gateway.ts` (`/chat` ns, rooms, rate limits) | backend `src/chat/` |
-| Backend messaging domain | `messaging.service.ts` (batched queries, keyset paging, gating) | backend `src/messaging/` |
+| Need                                     | Use                                                                                                                      | Where                                          |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| Message thread data (paged history)      | `useMessageThread` (`useInfiniteQuery`, cursor `(created_at, id)`)                                                       | `features/messages/api/useMessageThread.ts`    |
+| Inbox list + unread badge                | `useConversations` / `useUnreadMessages`                                                                                 | `features/messages/api/useConversations.ts`    |
+| Send / mark-read / start                 | `useMessageMutations`                                                                                                    | `features/messages/api/useMessageMutations.ts` |
+| React / edit / delete                    | `useMessageActions`                                                                                                      | `features/messages/api/useMessageActions.ts`   |
+| Live socket frames                       | `useRealtimeConnection`, `useJoinConversation`, `useTypingFrames`, `useReadFrames`, `usePresenceOnline`, `useEmitTyping` | `shared/api/realtime.ts`                       |
+| Stick-to-bottom / jump pill / load-older | `useMessageScroll`, `useStickToBottom`                                                                                   | `features/messages/`                           |
+| Counterpart typing state                 | `useTypingIndicator`                                                                                                     | `features/messages/useTypingIndicator.ts`      |
+| Unread "new messages" divider            | `useUnreadDivider`                                                                                                       | `features/messages/`                           |
+| Long-press gesture                       | `useLongPress`                                                                                                           | `features/messages/useLongPress.ts`            |
+| Grouped bubble rendering                 | `MessageRun` + `messageRuns.ts`                                                                                          | `features/messages/`                           |
+| Composer                                 | `Composer.tsx` (autogrow, Enter-to-send, typing frames)                                                                  | `features/messages/Composer.tsx`               |
+| Action overlay                           | `MessageActionOverlay.tsx` (portal, scroll-lock, Escape, focus)                                                          | `features/messages/`                           |
+| Web push                                 | `usePushSubscription`, `src/sw.ts`                                                                                       | `features/push/`, `src/sw.ts`                  |
+| Backend socket gateway                   | `chat.gateway.ts` (`/chat` ns, rooms, rate limits)                                                                       | backend `src/chat/`                            |
+| Backend messaging domain                 | `messaging.service.ts` (batched queries, keyset paging, gating)                                                          | backend `src/messaging/`                       |
 
 ## Quick self-review — before you say it's done
 
@@ -106,6 +115,7 @@ Screen-reader users hear new messages via a polite `aria-live` region, can reach
 ## Sources
 
 Grounded in a verified research pass (WhatsApp/Telegram/Signal/Slack + platform docs). Key primary sources:
+
 - TanStack Virtual — chat virtualization & end-anchored scroll: https://tanstack.com/virtual/latest/docs/chat
 - MUI X Chat — grouping window, auto-scroll buffer: https://mui.com/x/react-chat/material/message-list/
 - Socket.IO — delivery guarantees (ordering, at-most-once default, retries): https://socket.io/docs/v4/delivery-guarantees

@@ -98,7 +98,11 @@ export function liveInitialState(
     location: gathering.hood,
     description: gathering.body,
     details: [
-      { id: "date", labelKey: "gatherings:manage.details.date", value: dateValue },
+      {
+        id: "date",
+        labelKey: "gatherings:manage.details.date",
+        value: dateValue,
+      },
       {
         id: "venue",
         labelKey: "gatherings:manage.details.venue",

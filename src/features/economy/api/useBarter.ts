@@ -210,9 +210,8 @@ export function useMyBarterListings() {
     queryKey: economyKeys.myBarter(demoMode),
     queryFn: async ({ signal }) => {
       if (demoMode) {
-        const { DEMO_MY_BARTER_LISTINGS } = await import(
-          "../barterProposals.data"
-        );
+        const { DEMO_MY_BARTER_LISTINGS } =
+          await import("../barterProposals.data");
         return DEMO_MY_BARTER_LISTINGS;
       }
       const dtos = await getMyBarterListings(signal);
@@ -236,9 +235,8 @@ export function useBarterProposals(listingId: string | undefined) {
     queryFn: async ({ signal }) => {
       if (!listingId) return [];
       if (demoMode) {
-        const { DEMO_BARTER_PROPOSALS } = await import(
-          "../barterProposals.data"
-        );
+        const { DEMO_BARTER_PROPOSALS } =
+          await import("../barterProposals.data");
         return DEMO_BARTER_PROPOSALS[listingId] ?? [];
       }
       const dtos = await getBarterProposals(listingId, signal);
@@ -274,39 +272,39 @@ export function useDecideBarterProposal(listingId: string | undefined) {
   const queryClient = useQueryClient();
   const key = economyKeys.barterProposals(listingId, demoMode);
 
-  return useMutation<BarterProposalRow | null, Error, DecideBarterProposalInput>(
-    {
-      meta: { silentError: true },
-      mutationFn: async ({ proposalId, status }) => {
-        if (demoMode) {
-          await new Promise((resolve) => setTimeout(resolve, 450));
-          const current = queryClient
-            .getQueryData<BarterProposalRow[]>(key)
-            ?.find((row) => row.id === proposalId);
-          return current
-            ? { ...current, status, decidedAt: new Date().toISOString() }
-            : null;
-        }
-        // Live with no listing selected has nothing to write against. Failing
-        // is the honest answer; faking a resolved decision would move the row
-        // on screen while the server never heard about it.
-        if (!listingId) throw new Error("No swap listing selected");
-        return barterProposalToRow(
-          await decideBarterProposal(listingId, proposalId, status),
-        );
-      },
-      onSuccess: (decided) => {
-        if (!decided) return;
-        queryClient.setQueryData<BarterProposalRow[]>(key, (previous) =>
-          (previous ?? []).map((row) =>
-            row.id === decided.id ? decided : row,
-          ),
-        );
-        if (demoMode) return;
-        void queryClient.invalidateQueries({
-          queryKey: economyKeys.myBarterRoot,
-        });
-      },
+  return useMutation<
+    BarterProposalRow | null,
+    Error,
+    DecideBarterProposalInput
+  >({
+    meta: { silentError: true },
+    mutationFn: async ({ proposalId, status }) => {
+      if (demoMode) {
+        await new Promise((resolve) => setTimeout(resolve, 450));
+        const current = queryClient
+          .getQueryData<BarterProposalRow[]>(key)
+          ?.find((row) => row.id === proposalId);
+        return current
+          ? { ...current, status, decidedAt: new Date().toISOString() }
+          : null;
+      }
+      // Live with no listing selected has nothing to write against. Failing
+      // is the honest answer; faking a resolved decision would move the row
+      // on screen while the server never heard about it.
+      if (!listingId) throw new Error("No swap listing selected");
+      return barterProposalToRow(
+        await decideBarterProposal(listingId, proposalId, status),
+      );
     },
-  );
+    onSuccess: (decided) => {
+      if (!decided) return;
+      queryClient.setQueryData<BarterProposalRow[]>(key, (previous) =>
+        (previous ?? []).map((row) => (row.id === decided.id ? decided : row)),
+      );
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: economyKeys.myBarterRoot,
+      });
+    },
+  });
 }

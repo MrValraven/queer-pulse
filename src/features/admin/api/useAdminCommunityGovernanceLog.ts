@@ -43,9 +43,8 @@ async function buildDemoPage(
   page: number,
   action: GovernanceLogAction | undefined,
 ): Promise<AdminGovernanceLogPageDTO> {
-  const { GOVERNANCE_LOG_BY_SLUG } = await import(
-    "../adminCommunityGovernanceLog.mock"
-  );
+  const { GOVERNANCE_LOG_BY_SLUG } =
+    await import("../adminCommunityGovernanceLog.mock");
   const trail = GOVERNANCE_LOG_BY_SLUG[slug] ?? [];
   const filtered = action
     ? trail.filter((entry) => entry.action === action)

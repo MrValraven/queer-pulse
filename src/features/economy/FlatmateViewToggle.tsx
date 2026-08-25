@@ -16,7 +16,11 @@ export function FlatmateViewToggle({
 }) {
   const { t } = useTranslation();
   const options: { id: FlatmateView; label: string; icon: ReactNode }[] = [
-    { id: "list", label: t("economy:flatmates.view.list"), icon: <FiColumns aria-hidden /> },
+    {
+      id: "list",
+      label: t("economy:flatmates.view.list"),
+      icon: <FiColumns aria-hidden />,
+    },
     {
       id: "discovery",
       label: t("economy:flatmates.view.discovery"),
@@ -24,7 +28,11 @@ export function FlatmateViewToggle({
     },
   ];
   return (
-    <div className={styles.viewToggle} role="group" aria-label={t("economy:flatmates.view.label")}>
+    <div
+      className={styles.viewToggle}
+      role="group"
+      aria-label={t("economy:flatmates.view.label")}
+    >
       {options.map((option) => (
         <button
           key={option.id}

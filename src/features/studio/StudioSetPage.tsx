@@ -64,12 +64,14 @@ export function StudioSetPage() {
             width="100%"
             height="100%"
             radius={14}
-            placeholder="set"
+            placeholder={t("studio:media.setArtLabel")}
             style={{ position: "absolute", inset: 0 }}
           />
         </div>
         <div className={s.collInfo}>
-          <div className={s.eb}>Set · programmed by {SET.by}</div>
+          <div className={s.eb}>
+            {t("studio:set.page.programmedByEyebrow", { curator: SET.by })}
+          </div>
           <h1>
             {SET.title}
             <em>{SET.em}</em>

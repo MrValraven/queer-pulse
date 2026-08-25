@@ -14,11 +14,10 @@ import {
 import { RoadmapToolbar } from "./roadmap/RoadmapToolbar";
 import { SavedViewChips } from "./roadmap/SavedViewChips";
 import { BulkBar } from "./roadmap/BulkBar";
-import { ItemDrawerProvider, useItemDrawer } from "./roadmap/state/useItemDrawer";
-import {
-  RoadmapModalsProvider,
-  useRoadmapModals,
-} from "./roadmap/state/useRoadmapModals";
+import { ItemDrawerProvider } from "./roadmap/state/useItemDrawer";
+import { useItemDrawer } from "./roadmap/state/itemDrawerHook";
+import { RoadmapModalsProvider } from "./roadmap/state/useRoadmapModals";
+import { useRoadmapModals } from "./roadmap/state/roadmapModalsHook";
 import { SelectionProvider } from "./roadmap/state/useRoadmapSelection";
 import { RoadmapFiltersProvider } from "./roadmap/state/useRoadmapFilters";
 import { useRoadmapShortcuts } from "./roadmap/state/useRoadmapShortcuts";
@@ -109,7 +108,10 @@ function AdminRoadmapPageContent() {
   return (
     <AdminShell
       title={
-        <Translation i18nKey="admin:roadmap.title" components={{ em: <em /> }} />
+        <Translation
+          i18nKey="admin:roadmap.title"
+          components={{ em: <em /> }}
+        />
       }
       breadcrumb={[
         { label: t("admin:common.adminBreadcrumb"), to: routes.admin },
@@ -168,7 +170,14 @@ function AdminRoadmapPageContent() {
           )}
 
           <div className={styles.viewContainer}>
-            {renderView(activeTab, { items, ideas, team, audit, heroStats, loading })}
+            {renderView(activeTab, {
+              items,
+              ideas,
+              team,
+              audit,
+              heroStats,
+              loading,
+            })}
           </div>
         </>
       )}

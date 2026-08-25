@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
-import { Button, EmptyState, FadeIn, FeatureHelp, SegmentedControl, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  FeatureHelp,
+  SegmentedControl,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -11,7 +18,10 @@ import { BulkActionBar } from "./BulkActionBar";
 import { ListingPreviewDrawer } from "./ListingPreviewDrawer";
 import { EditSuggestionsSection } from "./EditSuggestionsSection";
 import { ListingClaimsSection } from "./ListingClaimsSection";
-import { AdminListingsHeader, type AdminListingsHeaderValue } from "./AdminListingsHeader";
+import {
+  AdminListingsHeader,
+  type AdminListingsHeaderValue,
+} from "./AdminListingsHeader";
 import { useAdminListings } from "./api/useAdminListings";
 import {
   LISTING_BULK_ACTION_CAP,

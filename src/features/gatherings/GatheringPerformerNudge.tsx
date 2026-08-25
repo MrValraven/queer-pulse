@@ -41,7 +41,9 @@ export function GatheringPerformerNudge({
   const { isDismissed, isCapped, dismiss } = useNudges();
   const activeSession = !checking && loggedIn && status === "active";
   const { data: lineup } = useEventLineup(gathering.slug);
-  const { data: personas } = useSubprofiles({ enabled: demoMode || activeSession });
+  const { data: personas } = useSubprofiles({
+    enabled: demoMode || activeSession,
+  });
 
   if (!lineup?.viewerEntry) return null;
   if (!gatheringHasEnded(gathering)) return null;

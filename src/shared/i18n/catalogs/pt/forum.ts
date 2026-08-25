@@ -186,7 +186,8 @@ export const forum: Catalog = {
   "lockReason.sub":
     "As pessoas continuam a poder ler tudo aqui; isto só pausa novas respostas. Diz-lhes porquê, se for útil.",
   "lockReason.label": "Motivo (opcional)",
-  "lockReason.placeholder": "ex.: resolvido, fora do tema, movido para uma comunidade",
+  "lockReason.placeholder":
+    "ex.: resolvido, fora do tema, movido para uma comunidade",
   "lockReason.cancel": "Cancelar",
   "lockReason.confirm": "Fechar tópico",
   "lockReason.locking": "A fechar…",
@@ -259,7 +260,8 @@ export const forum: Catalog = {
   "edited.mark": "(editado)",
   "tombstone.body": "Esta publicação foi eliminada.",
   "tombstone.author": "[eliminado]",
-  "tombstone.removedByModerator": "Esta publicação foi removida por um moderador.",
+  "tombstone.removedByModerator":
+    "Esta publicação foi removida por um moderador.",
 
   // ── Inline reply edit ────────────────────────────────────────────────────
   "replyEdit.save": "Guardar",
@@ -299,6 +301,7 @@ export const forum: Catalog = {
   "toast.threadUnpinned": "Tópico desafixado.",
   "toast.threadMarkedOfficial": "Publicado como QueerPulse Oficial.",
   "toast.threadUnmarkedOfficial": "Revertido para o autor original.",
-  "toast.pinCapReached": "Só podes fixar 3 tópicos ao mesmo tempo. Desafixa um primeiro.",
+  "toast.pinCapReached":
+    "Só podes fixar 3 tópicos ao mesmo tempo. Desafixa um primeiro.",
   "toast.error": "Algo correu mal. Tenta novamente daqui a pouco.",
 };

@@ -69,7 +69,9 @@ export function JobDetailBody({ job }: { job: Job }) {
 
       <div className={styles.section}>
         <h2 className={styles.secTitle}>
-          {t("economy:jobDetail.section.aboutCompany", { company: job.organization })}
+          {t("economy:jobDetail.section.aboutCompany", {
+            company: job.organization,
+          })}
         </h2>
         <p className={styles.text}>{d.aboutCompany}</p>
         {companySlug && (
@@ -90,7 +92,9 @@ export function JobDetailBody({ job }: { job: Job }) {
             {t("economy:jobDetail.section.safety")}
           </h2>
           <p className={styles.text}>
-            {t("economy:jobDetail.section.safetyBody", { company: job.organization })}
+            {t("economy:jobDetail.section.safetyBody", {
+              company: job.organization,
+            })}
           </p>
           <div className={styles.safetyBlock}>
             <SafetyBadges signals={safetyFor(job.organization)} />

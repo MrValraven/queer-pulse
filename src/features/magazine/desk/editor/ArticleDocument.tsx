@@ -79,7 +79,10 @@ export function ArticleDocument({
     // the saved title/standfirst verbatim. Collapse to plain text instead,
     // same as blocks discard rich clipboard markup below.
     event.preventDefault();
-    const text = event.clipboardData.getData("text/plain").replace(/\s+/g, " ").trim();
+    const text = event.clipboardData
+      .getData("text/plain")
+      .replace(/\s+/g, " ")
+      .trim();
     if (text) document.execCommand("insertText", false, text);
   }
 
@@ -160,7 +163,9 @@ export function ArticleDocument({
             {t(`magazine:write.blockKind.${option.kind}.label`)}
           </Button>
         ))}
-        <span className={styles.hint}>{t("magazine:write.document.addBlockHint")}</span>
+        <span className={styles.hint}>
+          {t("magazine:write.document.addBlockHint")}
+        </span>
       </div>
     </div>
   );

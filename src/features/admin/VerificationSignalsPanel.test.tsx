@@ -28,9 +28,7 @@ describe("VerificationSignalsPanel", () => {
     );
 
     expect(await screen.findByText("260 days old")).toBeInTheDocument();
-    expect(
-      await screen.findByText("No prior rejections"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("No prior rejections")).toBeInTheDocument();
     expect(screen.queryByText(/Shared fingerprint/)).not.toBeInTheDocument();
   });
 
@@ -43,12 +41,8 @@ describe("VerificationSignalsPanel", () => {
       </TestProviders>,
     );
 
-    expect(
-      await screen.findByText("2 prior rejection(s)"),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByText("No prior rejections"),
-    ).not.toBeInTheDocument();
+    expect(await screen.findByText("2 prior rejection(s)")).toBeInTheDocument();
+    expect(screen.queryByText("No prior rejections")).not.toBeInTheDocument();
   });
 
   it("shows a titled duplicate chip with the count when duplicateProviderRef is set", async () => {

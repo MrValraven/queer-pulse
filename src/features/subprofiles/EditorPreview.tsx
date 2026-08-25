@@ -3,7 +3,10 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileData } from "../../app/providers/useProfile";
 import { SubprofilePageBody } from "./SubprofilePageBody";
-import { ownerViewToShowcaseView, type SubprofileView } from "./api/subprofiles.adapters";
+import {
+  ownerViewToShowcaseView,
+  type SubprofileView,
+} from "./api/subprofiles.adapters";
 import { personaPublicPathForOwner } from "./personaLinks.data";
 import { usePersonaCreatorSlug } from "./usePersonaCreatorSlug";
 import { skinFor, SKIN_META } from "./subprofile-skins";
@@ -33,11 +36,7 @@ const PREVIEW_MODE: PersonaViewMode = "preview";
  * local state) still comes straight from the saved `subprofile` and only
  * refreshes after those panels save.
  */
-export function EditorPreview({
-  subprofile,
-}: {
-  subprofile: SubprofileView;
-}) {
+export function EditorPreview({ subprofile }: { subprofile: SubprofileView }) {
   const { t } = useTranslation();
   const { profile } = useProfileData();
   // The meta-editor state lives in the shared editor context now, so the docked
@@ -59,9 +58,7 @@ export function EditorPreview({
     coverUrl: editor.coverPreview || editor.coverUrl || null,
     // Pair the crop with whichever cover is actually showing: a fresh pick's
     // own framing while it's up, else the crop saved for the committed one.
-    coverCrop: editor.coverPreview
-      ? editor.coverPreviewCrop
-      : editor.coverCrop,
+    coverCrop: editor.coverPreview ? editor.coverPreviewCrop : editor.coverCrop,
     accent: editor.accent || null,
     availability: editor.availability || null,
     ctaLabel: editor.ctaLabel,

@@ -25,7 +25,9 @@ export type MessageRow =
  *  client-generated `localId` while still optimistic, then its timestamp as a
  *  last resort) — mirrors `MessageArea`'s own `messageIdentities` so a row's
  *  virtualizer key never changes as an optimistic send gets acked. */
-function stableMessageKey(message: ChatMessage | undefined): string | undefined {
+function stableMessageKey(
+  message: ChatMessage | undefined,
+): string | undefined {
   return message?.id ?? message?.localId ?? message?.at;
 }
 
@@ -46,11 +48,18 @@ export function buildMessageRows(
 ): MessageRow[] {
   const rows: MessageRow[] = [];
   for (const group of messageGroups) {
-    rows.push({ kind: "daySeparator", key: `day-sep-${group.day}`, day: group.day });
+    rows.push({
+      kind: "daySeparator",
+      key: `day-sep-${group.day}`,
+      day: group.day,
+    });
     const blocks = buildTimeline(group.items, undefined, dividerAnchorMessage);
     for (const block of blocks) {
       const anchor = block.kind === "run" ? block.run.items[0] : block.message;
-      if (dividerAnchorMessage !== undefined && anchor === dividerAnchorMessage) {
+      if (
+        dividerAnchorMessage !== undefined &&
+        anchor === dividerAnchorMessage
+      ) {
         rows.push({ kind: "unreadDivider", key: "unread-divider" });
       }
       if (block.kind === "system") {
@@ -69,8 +78,16 @@ export function buildMessageRows(
         day: group.day,
         run: block.run,
       });
-      if (isGroup && hasGroupSeenBy && lastItem !== undefined && lastItem === lastOutbound) {
-        rows.push({ kind: "groupSeenBy", key: `group-seen-by-${stableMessageKey(lastItem) ?? "x"}` });
+      if (
+        isGroup &&
+        hasGroupSeenBy &&
+        lastItem !== undefined &&
+        lastItem === lastOutbound
+      ) {
+        rows.push({
+          kind: "groupSeenBy",
+          key: `group-seen-by-${stableMessageKey(lastItem) ?? "x"}`,
+        });
       }
     }
   }
@@ -81,9 +98,13 @@ export function buildMessageRows(
  *  currently-loaded row (either genuinely not loaded — an older, unpaged
  *  message — or a bug). Used to scroll a message that's virtualized off-screen
  *  into view BEFORE the DOM-based highlight (`useJumpToMessage`) looks for it. */
-export function findRowIndexForMessage(rows: MessageRow[], messageId: string): number {
+export function findRowIndexForMessage(
+  rows: MessageRow[],
+  messageId: string,
+): number {
   return rows.findIndex((row) => {
-    if (row.kind === "run") return row.run.items.some((item) => item.id === messageId);
+    if (row.kind === "run")
+      return row.run.items.some((item) => item.id === messageId);
     if (row.kind === "system") return row.message.id === messageId;
     return false;
   });
@@ -123,7 +144,10 @@ export function estimateRowHeight(row: MessageRow | undefined): number {
  *  here would double it. Applied as `paddingBottom` (not `margin`) on the
  *  row's own measured element, so it's counted in `measureElement`'s
  *  `getBoundingClientRect()` and the virtualizer's offsets stay correct. */
-export function gapAfterRow(row: MessageRow, nextRow: MessageRow | undefined): number {
+export function gapAfterRow(
+  row: MessageRow,
+  nextRow: MessageRow | undefined,
+): number {
   if (!nextRow) return 0;
   if (row.kind === "daySeparator" || nextRow.kind === "daySeparator") return 10;
   return 12;

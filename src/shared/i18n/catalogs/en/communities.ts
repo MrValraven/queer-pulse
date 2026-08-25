@@ -347,7 +347,8 @@ export const communities: Catalog = {
     "One person is waiting to join",
   "detail.modtools.overview.attention.requests_other":
     "{count} people are waiting to join",
-  "detail.modtools.overview.attention.reports_one": "One post has been reported",
+  "detail.modtools.overview.attention.reports_one":
+    "One post has been reported",
   "detail.modtools.overview.attention.reports_other":
     "{count} posts have been reported",
   "detail.modtools.overview.attention.clear.title": "Nothing waiting on you",

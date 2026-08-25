@@ -1,23 +1,7 @@
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
+import { mentionNameKey } from "./mentionNameKey";
+import { MentionNamesContext } from "./MentionNamesContext";
 import { useMentionSuggestions } from "./useMentionSuggestions";
-
-/** Stable lookup key so a resolved-name map is shared across all mention kinds. */
-export function mentionNameKey(kind: string, slug: string): string {
-  return `${kind}:${slug}`;
-}
-
-/** Empty map is the default: without a provider, MentionText resolves nothing
- *  and renders exactly as it did before this feature (sigil + slug). Module-level
- *  constant so its identity is stable and never triggers re-renders. */
-const EMPTY_NAME_MAP: ReadonlyMap<string, string> = new Map();
-
-export const MentionNamesContext =
-  createContext<ReadonlyMap<string, string>>(EMPTY_NAME_MAP);
-
-/** Read the current slug -> display-name map. */
-export function useMentionNameMap(): ReadonlyMap<string, string> {
-  return useContext(MentionNamesContext);
-}
 
 /** Build the "kind:slug" -> name map from the dual-mode suggestion lists.
  *  Topics are intentionally excluded: `#tag` mentions keep their tag as the

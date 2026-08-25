@@ -115,7 +115,9 @@ export function commitDraftRow(
     ? rows.map((r) => (r._uid === editingUid ? r : { ...r, isFeatured: false }))
     : rows;
   return editingUid
-    ? cleared.map((r) => (r._uid === editingUid ? { ...draft, _uid: r._uid } : r))
+    ? cleared.map((r) =>
+        r._uid === editingUid ? { ...draft, _uid: r._uid } : r,
+      )
     : [...cleared, withUid(draft)];
 }
 
@@ -127,6 +129,8 @@ export function appendGalleryRows(
 ): SubprofileEditorRow[] {
   return [
     ...rows,
-    ...imageKeys.map((imageUrl) => withUid({ ...emptyItem("gallery"), imageUrl })),
+    ...imageKeys.map((imageUrl) =>
+      withUid({ ...emptyItem("gallery"), imageUrl }),
+    ),
   ];
 }

@@ -175,7 +175,10 @@ export function VolunteerOpportunitySidebar({
           </p>
           <div className={styles.altList}>
             {alternatives.map((a) => (
-              <Link key={a.slug} to={`${routes.volunteer}/opportunity/${a.slug}`}>
+              <Link
+                key={a.slug}
+                to={`${routes.volunteer}/opportunity/${a.slug}`}
+              >
                 <FiArrowRight aria-hidden /> {a.role} · {a.org}
               </Link>
             ))}

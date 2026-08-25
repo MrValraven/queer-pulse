@@ -83,57 +83,57 @@ export function MessagesPage() {
     <AppShell fullHeight>
       <MentionNamesProvider>
         <div className={styles.app}>
-        {showList && (
-          <MessagesThreadList
-            loading={loading}
-            threads={visibleThreads}
-            activeId={activeId}
-            readIds={readIds}
-            query={query}
-            onQueryChange={setQuery}
-            onOpen={openThread}
-            onCompose={() => setComposing(true)}
-            onComposeGroup={() => setGroupComposing(true)}
-            onDelete={deleteThread}
-            onSelectResult={openThreadAtMessage}
-            deletePending={deletePending}
-          />
-        )}
-
-        {showThread &&
-          (active ? (
-            <ConversationPanel
-              active={active}
-              messageGroups={messageGroups}
-              onSend={send}
-              onSendGif={sendGif}
-              onSendImage={sendImage}
-              blocked={activeBlocked}
-              onBack={isMobile ? () => setView("list") : undefined}
-              onRetry={retrySend}
-              hasMoreOlder={hasMoreOlder}
-              loadingOlder={loadingOlder}
-              onLoadOlder={loadOlder}
-              replyDraft={replyDraft}
-              onSetReply={setReplyDraft}
-              onCancelReply={() => setReplyDraft(null)}
-              jumpToMessageId={jumpMessageId}
-              onJumpHandled={clearJumpMessage}
-              onForwardMessage={setForwardSource}
-              onOpenStarred={() => setStarredOpen(true)}
-              onLeaveGroup={leaveGroupThread}
-              leavePending={leavePending}
-              myUserId={myUserId}
-              onAddGroupMembers={addGroupMembers}
-              onRemoveGroupMember={removeGroupMember}
-              onChangeGroupMemberRole={changeGroupMemberRole}
-              onUpdateGroupInfo={updateGroupInfo}
-              groupManaging={groupManaging}
-              onMarkThreadRead={markThreadRead}
+          {showList && (
+            <MessagesThreadList
+              loading={loading}
+              threads={visibleThreads}
+              activeId={activeId}
+              readIds={readIds}
+              query={query}
+              onQueryChange={setQuery}
+              onOpen={openThread}
+              onCompose={() => setComposing(true)}
+              onComposeGroup={() => setGroupComposing(true)}
+              onDelete={deleteThread}
+              onSelectResult={openThreadAtMessage}
+              deletePending={deletePending}
             />
-          ) : (
-            <MessagesEmptyPanel />
-          ))}
+          )}
+
+          {showThread &&
+            (active ? (
+              <ConversationPanel
+                active={active}
+                messageGroups={messageGroups}
+                onSend={send}
+                onSendGif={sendGif}
+                onSendImage={sendImage}
+                blocked={activeBlocked}
+                onBack={isMobile ? () => setView("list") : undefined}
+                onRetry={retrySend}
+                hasMoreOlder={hasMoreOlder}
+                loadingOlder={loadingOlder}
+                onLoadOlder={loadOlder}
+                replyDraft={replyDraft}
+                onSetReply={setReplyDraft}
+                onCancelReply={() => setReplyDraft(null)}
+                jumpToMessageId={jumpMessageId}
+                onJumpHandled={clearJumpMessage}
+                onForwardMessage={setForwardSource}
+                onOpenStarred={() => setStarredOpen(true)}
+                onLeaveGroup={leaveGroupThread}
+                leavePending={leavePending}
+                myUserId={myUserId}
+                onAddGroupMembers={addGroupMembers}
+                onRemoveGroupMember={removeGroupMember}
+                onChangeGroupMemberRole={changeGroupMemberRole}
+                onUpdateGroupInfo={updateGroupInfo}
+                groupManaging={groupManaging}
+                onMarkThreadRead={markThreadRead}
+              />
+            ) : (
+              <MessagesEmptyPanel />
+            ))}
         </div>
       </MentionNamesProvider>
       {composing && (

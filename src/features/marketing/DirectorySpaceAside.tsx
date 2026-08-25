@@ -28,7 +28,11 @@ interface Props {
  * change a plan, so it leads; the owner's card sits under it; the report and
  * suggest-an-edit paths close it out.
  */
-export function DirectorySpaceAside({ place, preview = false, ownerRef }: Props) {
+export function DirectorySpaceAside({
+  place,
+  preview = false,
+  ownerRef,
+}: Props) {
   return (
     <aside className={s.side}>
       <DirectoryAsideExtras place={place} preview={preview} />

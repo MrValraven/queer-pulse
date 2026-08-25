@@ -56,7 +56,9 @@ export function GalleryPastUploadsGrid({
   }
 
   if (items.length === 0) {
-    return <p className={styles.emptyState}>{t("subprofiles:gallery.empty")}</p>;
+    return (
+      <p className={styles.emptyState}>{t("subprofiles:gallery.empty")}</p>
+    );
   }
 
   return (

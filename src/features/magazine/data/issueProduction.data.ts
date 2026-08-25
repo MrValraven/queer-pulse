@@ -52,12 +52,17 @@ function toPieceListItemDto(piece: Piece): PieceListItemDto {
 /** Looks up a `desk.data.ts` demo piece by id — every `RUN_ORDER_ENTRIES` id is a known-good `DEMO_PIECES` id. */
 function findDemoPiece(pieceId: string): Piece {
   const piece = DEMO_PIECES.find((candidate) => candidate.id === pieceId);
-  if (!piece) throw new Error(`issueProduction.data: unknown demo piece id "${pieceId}"`);
+  if (!piece)
+    throw new Error(`issueProduction.data: unknown demo piece id "${pieceId}"`);
   return piece;
 }
 
 /** Running order, per the design's `RUNORDER` array: pieceId, planned page range (or "deck" for a slide deck), and whether it's laid out yet. */
-const RUN_ORDER_ENTRIES: { pieceId: string; pages: string; laidOut: boolean }[] = [
+const RUN_ORDER_ENTRIES: {
+  pieceId: string;
+  pages: string;
+  laidOut: boolean;
+}[] = [
   { pieceId: "p1", pages: "4–11", laidOut: false },
   { pieceId: "p2", pages: "12–16", laidOut: false },
   { pieceId: "p9", pages: "deck", laidOut: true },
@@ -85,7 +90,8 @@ const DEMO_DIGEST: IssueDigestItemDto[] = [
   },
   {
     pieceId: "p9",
-    blurb: "We asked 412 of you what care costs. The answer is 19 hours a week.",
+    blurb:
+      "We asked 412 of you what care costs. The answer is 19 hours a week.",
     on: true,
   },
   {

@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 /**
  * A local text/date draft that starts out mirroring a server value, stays
@@ -32,7 +38,11 @@ import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 
  */
 export function useSeededDraft(
   serverValue: string,
-): [string, Dispatch<SetStateAction<string>>, React.MutableRefObject<string | null>] {
+): [
+  string,
+  Dispatch<SetStateAction<string>>,
+  React.MutableRefObject<string | null>,
+] {
   const [draft, setDraft] = useState("");
   const lastSeeded = useRef<string | null>(null);
 

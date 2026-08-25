@@ -5,11 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { ResourceHero } from "./ResourceHero";
 import { GROUPS } from "./accessibleLisbon.data";
 import styles from "./resources.module.css";
@@ -64,40 +60,44 @@ export function AccessibleLisbonPage() {
 
       {demoMode &&
         GROUPS.map((group, gi) => (
-        <section
-          key={group.id}
-          className={`${styles.section} ${gi % 2 === 0 ? styles.sectionPaper : styles.sectionCream}`}
-          id={group.id}
-        >
-          <div className="wrap">
-            <Reveal as="h2">{t(group.labelKey)}</Reveal>
-            <Reveal as="p" className={styles.leadP}>
-              {t(group.introKey)}
-            </Reveal>
-            <div className={styles.grid}>
-              {group.places.map((place, i) => (
-                <Reveal key={place.name} className={styles.card} delay={i * 55}>
-                  <span className={styles.verifiedTag}>
-                    <FiCheckCircle aria-hidden />{" "}
-                    {t("resources:accessibleLisbon.verifiedTag")}
-                  </span>
-                  <div className={styles.cardName} style={{ fontSize: 19 }}>
-                    {place.name}
-                  </div>
-                  <div className={styles.cardSpec}>{t(place.detailKey)}</div>
-                  <div className={styles.tags}>
-                    {place.flagKeys.map((flagKey) => (
-                      <span key={flagKey} className={styles.tag}>
-                        {t(flagKey)}
-                      </span>
-                    ))}
-                  </div>
-                </Reveal>
-              ))}
+          <section
+            key={group.id}
+            className={`${styles.section} ${gi % 2 === 0 ? styles.sectionPaper : styles.sectionCream}`}
+            id={group.id}
+          >
+            <div className="wrap">
+              <Reveal as="h2">{t(group.labelKey)}</Reveal>
+              <Reveal as="p" className={styles.leadP}>
+                {t(group.introKey)}
+              </Reveal>
+              <div className={styles.grid}>
+                {group.places.map((place, i) => (
+                  <Reveal
+                    key={place.name}
+                    className={styles.card}
+                    delay={i * 55}
+                  >
+                    <span className={styles.verifiedTag}>
+                      <FiCheckCircle aria-hidden />{" "}
+                      {t("resources:accessibleLisbon.verifiedTag")}
+                    </span>
+                    <div className={styles.cardName} style={{ fontSize: 19 }}>
+                      {place.name}
+                    </div>
+                    <div className={styles.cardSpec}>{t(place.detailKey)}</div>
+                    <div className={styles.tags}>
+                      {place.flagKeys.map((flagKey) => (
+                        <span key={flagKey} className={styles.tag}>
+                          {t(flagKey)}
+                        </span>
+                      ))}
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      ))}
+          </section>
+        ))}
 
       <Outro
         title={

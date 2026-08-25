@@ -10,16 +10,50 @@ import type { Language } from "./types";
 const MAXIMUM_SPELLED_NUMBER = 30;
 
 const ENGLISH_ONES = [
-  "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
-  "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen",
-  "Sixteen", "Seventeen", "Eighteen", "Nineteen",
+  "Zero",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+  "Eleven",
+  "Twelve",
+  "Thirteen",
+  "Fourteen",
+  "Fifteen",
+  "Sixteen",
+  "Seventeen",
+  "Eighteen",
+  "Nineteen",
 ];
 const ENGLISH_TENS: Record<number, string> = { 20: "Twenty", 30: "Thirty" };
 
 const PORTUGUESE_ONES = [
-  "Zero", "Um", "Dois", "Três", "Quatro", "Cinco", "Seis", "Sete", "Oito",
-  "Nove", "Dez", "Onze", "Doze", "Treze", "Catorze", "Quinze", "Dezasseis",
-  "Dezassete", "Dezoito", "Dezanove",
+  "Zero",
+  "Um",
+  "Dois",
+  "Três",
+  "Quatro",
+  "Cinco",
+  "Seis",
+  "Sete",
+  "Oito",
+  "Nove",
+  "Dez",
+  "Onze",
+  "Doze",
+  "Treze",
+  "Catorze",
+  "Quinze",
+  "Dezasseis",
+  "Dezassete",
+  "Dezoito",
+  "Dezanove",
 ];
 const PORTUGUESE_TENS: Record<number, string> = { 20: "Vinte", 30: "Trinta" };
 

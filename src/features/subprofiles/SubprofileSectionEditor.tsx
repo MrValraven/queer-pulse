@@ -66,7 +66,10 @@ export function SubprofileSectionEditor({
     TEMPLATE_ITEMS[section.section] !== undefined;
 
   function remove(uid: string) {
-    setSectionRows(section.section, rows.filter((r) => r._uid !== uid));
+    setSectionRows(
+      section.section,
+      rows.filter((r) => r._uid !== uid),
+    );
   }
   function move(uid: string, dir: -1 | 1) {
     setSectionRows(section.section, moveRow(rows, uid, dir));
@@ -80,7 +83,10 @@ export function SubprofileSectionEditor({
     (from, to) => setSectionRows(section.section, reorderRow(rows, from, to)),
   );
   function insertExamples() {
-    setSectionRows(section.section, buildTemplateItems(section.section, t).map(withUid));
+    setSectionRows(
+      section.section,
+      buildTemplateItems(section.section, t).map(withUid),
+    );
   }
   function toggleFeatured(uid: string) {
     setSectionRows(section.section, toggleRowFeature(rows, uid));
@@ -101,7 +107,8 @@ export function SubprofileSectionEditor({
     drawerState?.mode === "edit"
       ? rows.find((r) => r._uid === drawerState.uid)
       : undefined;
-  const drawerItem = drawerState?.mode === "add" ? emptyItem(section.section) : editingRow;
+  const drawerItem =
+    drawerState?.mode === "add" ? emptyItem(section.section) : editingRow;
 
   return (
     <>

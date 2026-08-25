@@ -130,22 +130,14 @@ export function AdminOverridesZone({ community }: { community: Community }) {
           disabled={freezePending}
           onClick={toggleFreeze}
         >
-          {community.frozen ? (
-            <FiUnlock aria-hidden />
-          ) : (
-            <FiLock aria-hidden />
-          )}{" "}
+          {community.frozen ? <FiUnlock aria-hidden /> : <FiLock aria-hidden />}{" "}
           {t(
             community.frozen
               ? "admin:communities.settings.overrides.unfreezeCta"
               : "admin:communities.settings.overrides.freezeCta",
           )}
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setReassignOpen(true)}
-        >
+        <Button variant="ghost" size="sm" onClick={() => setReassignOpen(true)}>
           <FiUserCheck aria-hidden />{" "}
           {t("admin:communities.settings.overrides.reassignCta")}
         </Button>
@@ -237,9 +229,7 @@ function ArchiveCommunityConfirmModal({
       })}
       tone="destructive"
       loading={archiveCommunity.isPending}
-      confirmLabel={t(
-        "admin:communities.settings.overrides.archiveConfirmCta",
-      )}
+      confirmLabel={t("admin:communities.settings.overrides.archiveConfirmCta")}
       cancelLabel={t("admin:modPanel.settings.cancel")}
     >
       <Eyebrow>{t("admin:modPanel.settings.irreversible")}</Eyebrow>

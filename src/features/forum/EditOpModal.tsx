@@ -22,7 +22,8 @@ export function EditOpModal({
 
   const trimmedTitle = title.trim();
   const trimmedBody = body.trim();
-  const unchanged = trimmedTitle === initialTitle && trimmedBody === initialBody;
+  const unchanged =
+    trimmedTitle === initialTitle && trimmedBody === initialBody;
   const invalid = !trimmedTitle || !trimmedBody;
 
   return (
@@ -31,7 +32,12 @@ export function EditOpModal({
       onClose={onClose}
       footer={
         <>
-          <Button variant="ghost" type="button" onClick={onClose} disabled={busy}>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+          >
             {t("forum:opEdit.cancel")}
           </Button>
           <Button
@@ -46,7 +52,9 @@ export function EditOpModal({
       }
     >
       <label className={styles.field}>
-        <span className={styles.fieldLabel}>{t("forum:opEdit.titleLabel")}</span>
+        <span className={styles.fieldLabel}>
+          {t("forum:opEdit.titleLabel")}
+        </span>
         <input
           className={styles.input}
           value={title}

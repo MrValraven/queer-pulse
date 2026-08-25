@@ -16,7 +16,11 @@ import type {
 import type { AdminCommunityTagRequestFilter } from "./api/useAdminCommunityTagRequests";
 import styles from "./AdminSubmissionList.module.css";
 
-const FILTERS: AdminCommunityTagRequestFilter[] = ["pending", "resolved", "all"];
+const FILTERS: AdminCommunityTagRequestFilter[] = [
+  "pending",
+  "resolved",
+  "all",
+];
 
 const STATUS_TONE: Record<CommunityTagRequestStatus, AdminTone> = {
   pending: "amber",
@@ -42,10 +46,9 @@ function TagRequestRow({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const requesterName =
-    request.requestedBy
-      ? `${request.requestedBy.firstName} ${request.requestedBy.lastName}`.trim()
-      : t("admin:adminCommunityTagRequests.unknownRequester");
+  const requesterName = request.requestedBy
+    ? `${request.requestedBy.firstName} ${request.requestedBy.lastName}`.trim()
+    : t("admin:adminCommunityTagRequests.unknownRequester");
 
   return (
     <div className={styles.row}>
@@ -113,7 +116,8 @@ function RowsSkeleton() {
 export function AdminCommunityTagRequestsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [filter, setFilter] = useState<AdminCommunityTagRequestFilter>("pending");
+  const [filter, setFilter] =
+    useState<AdminCommunityTagRequestFilter>("pending");
   const {
     requests,
     isLoading,
@@ -129,7 +133,10 @@ export function AdminCommunityTagRequestsPage() {
       { id },
       {
         onSuccess: () =>
-          showToast(t("admin:adminCommunityTagRequests.toast.resolved"), "success"),
+          showToast(
+            t("admin:adminCommunityTagRequests.toast.resolved"),
+            "success",
+          ),
         onError: () =>
           showToast(t("admin:adminCommunityTagRequests.toast.error"), "error"),
       },

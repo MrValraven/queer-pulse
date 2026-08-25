@@ -34,9 +34,8 @@ export function useAdminCommunityTagRequests(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const { ADMIN_COMMUNITY_TAG_REQUESTS } = await import(
-          "../adminCommunityTagRequests.data"
-        );
+        const { ADMIN_COMMUNITY_TAG_REQUESTS } =
+          await import("../adminCommunityTagRequests.data");
         const filtered = statusArg
           ? ADMIN_COMMUNITY_TAG_REQUESTS.filter(
               (request) => request.status === statusArg,

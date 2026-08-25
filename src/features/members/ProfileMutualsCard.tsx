@@ -34,7 +34,10 @@ export function ProfileMutualsCard({ slug }: { slug: string }) {
         : "members:profile.mutuals.one";
 
   return (
-    <aside className={styles.card} aria-label={t("members:profile.mutuals.title")}>
+    <aside
+      className={styles.card}
+      aria-label={t("members:profile.mutuals.title")}
+    >
       <span className={styles.title}>{t("members:profile.mutuals.title")}</span>
       <div className={styles.faces}>
         {first && (

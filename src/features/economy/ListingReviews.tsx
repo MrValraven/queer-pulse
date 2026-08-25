@@ -24,7 +24,9 @@ export function ListingReviews({ slug }: { slug: string }) {
     <div className={v.reviews}>
       <div className={v.reviewsHead}>
         <span className={v.avg}>{data.averageRating?.toFixed(1)}</span>
-        <span className={v.avgOutOf}>{t("economy:housingViewing.reviews.outOf")}</span>
+        <span className={v.avgOutOf}>
+          {t("economy:housingViewing.reviews.outOf")}
+        </span>
         <span className={v.avgCount}>
           {t("economy:housingViewing.reviews.count", { count: data.count })}
         </span>

@@ -157,7 +157,10 @@ export function MessageActionMenu({
       {canDelete && (
         <button
           type="button"
-          className={[styles.overlayMenuItem, styles.overlayMenuItemDanger].join(" ")}
+          className={[
+            styles.overlayMenuItem,
+            styles.overlayMenuItemDanger,
+          ].join(" ")}
           role="menuitem"
           onClick={runThenClose(onDelete)}
         >

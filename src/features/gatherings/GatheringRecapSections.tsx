@@ -96,8 +96,7 @@ export function GatheringRecapMain({
               cursor: "pointer",
             }}
           >
-            {t("gatherings:recap.submitYoursCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("gatherings:recap.submitYoursCta")} <FiArrowRight aria-hidden />
           </button>
         </div>
       </div>

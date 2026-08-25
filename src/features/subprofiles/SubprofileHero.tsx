@@ -149,7 +149,10 @@ export function SubprofileHero({
               </span>
             )}
             {linkedToOwner && interactive ? (
-              <Link className="pp-owner" to={`${routes.members}/${view.ownerSlug}`}>
+              <Link
+                className="pp-owner"
+                to={`${routes.members}/${view.ownerSlug}`}
+              >
                 <Translation
                   i18nKey="subprofiles:page.ownerTie"
                   components={{ em: <em /> }}

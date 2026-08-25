@@ -101,7 +101,10 @@ export function previewForMessage(
 }
 
 /** ConversationResponse (group) → the inbox `Conversation` row. */
-function groupConversationToView(dto: ConversationResponse, t: TFunction): Conversation {
+function groupConversationToView(
+  dto: ConversationResponse,
+  t: TFunction,
+): Conversation {
   const title = dto.title ?? t("messages:group.untitled");
   const members: GroupMemberView[] = dto.members.map((member) => {
     const { first, last } = splitName(member.name);
@@ -152,7 +155,10 @@ function groupConversationToView(dto: ConversationResponse, t: TFunction): Conve
  *  `t` resolves the "official account with no counterpart profile" / "group
  *  with no title" fallbacks bilingually — see `messages:conversation.officialName`
  *  / `messages:group.untitled`. */
-export function conversationToView(dto: ConversationResponse, t: TFunction): Conversation {
+export function conversationToView(
+  dto: ConversationResponse,
+  t: TFunction,
+): Conversation {
   if (dto.kind === "group") return groupConversationToView(dto, t);
   const p = dto.otherParticipant;
   const name = p?.displayName ?? t("messages:conversation.officialName");

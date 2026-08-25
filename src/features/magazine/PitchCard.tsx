@@ -54,7 +54,12 @@ export function PitchCard({
 
       {pitch.note && (
         <p className={styles.note}>
-          <b>{pitch.note.author} wrote:</b> {pitch.note.body}
+          <b>
+            {t("magazine:pitchTracker.card.noteWrote", {
+              author: pitch.note.author,
+            })}
+          </b>{" "}
+          {pitch.note.body}
         </p>
       )}
       {pitch.outline && <p className={styles.outline}>{pitch.outline}</p>}

@@ -81,7 +81,10 @@ export const deleteCommunityResource = (slug: string, id: string) =>
 /** The whole shelf's order in one call: every resource id, exactly once, in
  *  the order it should appear. The server assigns `position` from each id's
  *  index, so a partial list is refused with a 400. */
-export const reorderCommunityResources = (slug: string, resourceIds: string[]) =>
+export const reorderCommunityResources = (
+  slug: string,
+  resourceIds: string[],
+) =>
   apiPatch<CommunityResourceShelfDTO>(`/communities/${slug}/resources/order`, {
     resourceIds,
   });

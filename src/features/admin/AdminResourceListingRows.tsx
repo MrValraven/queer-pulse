@@ -29,9 +29,7 @@ export function AdminResourceListingRows({
             <div className={styles.rowTop}>
               <span className={styles.rowName}>{listing.title}</span>
               <AdminChip
-                tone={
-                  listing.category === "legal_aid" ? "violet" : "plum"
-                }
+                tone={listing.category === "legal_aid" ? "violet" : "plum"}
                 dot
               >
                 {t(`admin:adminResourceListings.category.${listing.category}`)}
@@ -48,11 +46,7 @@ export function AdminResourceListingRows({
             <Button variant="ghost" size="md" onClick={() => onEdit(listing)}>
               {t("admin:common.edit")}
             </Button>
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={() => onDelete(listing)}
-            >
+            <Button variant="ghost" size="md" onClick={() => onDelete(listing)}>
               {t("admin:common.delete")}
             </Button>
           </div>

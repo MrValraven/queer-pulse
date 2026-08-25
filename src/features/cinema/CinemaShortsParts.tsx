@@ -38,10 +38,12 @@ export function ShortCard({
       <div className={styles.scPoster}>
         <PosterSlot tint={film.tint} radius={12} />
         <span className={styles.scFree}>{t("cinema:access.free")}</span>
-        <span className={styles.scRuntime}>{film.runtime} min</span>
+        <span className={styles.scRuntime}>
+          {t("cinema:shorts.card.runtime", { minutes: film.runtime })}
+        </span>
         <span className={styles.scCc}>
-          <span>CC</span>
-          {film.ad && <span>AD</span>}
+          <span>{t("cinema:shorts.card.ccBadge")}</span>
+          {film.ad && <span>{t("cinema:shorts.card.adBadge")}</span>}
         </span>
         <span
           role="button"
@@ -65,7 +67,11 @@ export function ShortCard({
         {film.kind} · {film.lang} · {film.year}
       </div>
       <div className={styles.scTitle}>
-        <SplitTitle pre={film.titlePre} em={film.titleEm} post={film.titlePost} />
+        <SplitTitle
+          pre={film.titlePre}
+          em={film.titleEm}
+          post={film.titlePost}
+        />
       </div>
       <div className={styles.scMaker}>
         {film.makerShort}

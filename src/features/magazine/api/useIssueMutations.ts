@@ -33,7 +33,9 @@ export function useIssueMutations(number: string) {
   const { showToast } = useToast();
 
   function invalidateIssue(): void {
-    void queryClient.invalidateQueries({ queryKey: ["magazine-issue-production", number] });
+    void queryClient.invalidateQueries({
+      queryKey: ["magazine-issue-production", number],
+    });
   }
 
   /** PATCH /magazine/admin/issues/:number/run-order — reorder the running order. */
@@ -128,7 +130,11 @@ export function useIssueMutations(number: string) {
    *  existing piece-update endpoint; there's no dedicated blurb endpoint).
    *  Demo mode is local-only (a toast) since there's no piece cache to write
    *  the blurb back onto here. */
-  const saveContentsBlurb = useMutation<void, Error, { pieceId: string; blurb: string }>({
+  const saveContentsBlurb = useMutation<
+    void,
+    Error,
+    { pieceId: string; blurb: string }
+  >({
     mutationFn: async ({ pieceId, blurb }) => {
       if (demoMode) {
         showToast("Contents blurb saved", "success");

@@ -25,6 +25,9 @@ export const magazine: Catalog = {
 
   // ── MagazineMasthead ─────────────────────────────────────────────────────
   "masthead.sectionsAriaLabel": "Magazine sections",
+  // Brand wordmark's second line ("QueerPulse" itself is a proper noun, kept
+  // untranslated per the pt-PT glossary and rendered as a literal, not a key).
+  "masthead.brandMagazine": "Magazine",
   "masthead.tagline": "Published the first of every month",
   "masthead.nav.current": "Current issue",
   "masthead.nav.issues": "Issues",
@@ -196,11 +199,11 @@ export const magazine: Catalog = {
   "deck.editor.publish": "Publish",
   "deck.editor.unpublish": "Unpublish",
   "deck.editor.delete": "Delete",
-  "deck.editor.leaveConfirm":
-    "You have unsaved changes. Leave without saving?",
+  "deck.editor.leaveConfirm": "You have unsaved changes. Leave without saving?",
   "deck.editor.previewEmpty": "Add a slide to preview",
   "deck.editor.preview.title": "Preview",
-  "deck.editor.preview.emptySlide": "Start filling in this slide to see it here.",
+  "deck.editor.preview.emptySlide":
+    "Start filling in this slide to see it here.",
   "deck.editor.budget.headingOver": "Too long. It will clip on a phone",
   "deck.editor.budget.headingOk": "Fits on the narrowest phone",
   "deck.editor.budget.bodyOver": "A slide is not a paragraph",
@@ -237,11 +240,13 @@ export const magazine: Catalog = {
   "deck.editor.convertModal.body":
     "Text and image slides carry straight over into article blocks, and each stat becomes a stats block. Interactive slides (before/after, reveal) have no article equivalent and will be dropped. This can't be undone.",
   "deck.editor.convertModal.cta": "Convert to article",
-  "deck.editor.convertModal.toast": "Deck-to-article conversion isn't wired up yet.",
+  "deck.editor.convertModal.toast":
+    "Deck-to-article conversion isn't wired up yet.",
   "deck.editor.convertModal.successToast": "Converted to an article draft.",
   "deck.editor.convertModal.partialToast":
     "Converted, but {dropped} couldn't carry over and were dropped.",
-  "deck.editor.convertModal.errorToast": "We couldn't convert this deck. Please try again.",
+  "deck.editor.convertModal.errorToast":
+    "We couldn't convert this deck. Please try again.",
 
   // ── Issue chrome — shared by IssueCover, IssueContents, IssuesPage ────────
   "issue.backToAllIssues": "All issues",
@@ -333,7 +338,8 @@ export const magazine: Catalog = {
   "author.work.allArticlesCta_other": "All {count} articles",
   "author.work.seeAllPicksCta": "See all picks",
   "author.work.findElsewhereHeading": "Find {name} <em>elsewhere</em>",
-  "author.work.noArticlesYet": "{name} hasn't published anything yet. Check back soon.",
+  "author.work.noArticlesYet":
+    "{name} hasn't published anything yet. Check back soon.",
 
   // ── AuthorsDirectoryPage ─────────────────────────────────────────────────
   "authorsDirectory.eyebrow": "Magazine · writers",
@@ -685,7 +691,8 @@ export const magazine: Catalog = {
   "desk.newIssue.sub":
     "Everything else — the cover, the running order, the digest — is set up on the issue's own page once it exists.",
   "desk.newIssue.numberLabel": "Number",
-  "desk.newIssue.numberHelper": "Digits only. \u201c1\u201d becomes \u201c01\u201d.",
+  "desk.newIssue.numberHelper":
+    "Digits only. \u201c1\u201d becomes \u201c01\u201d.",
   "desk.newIssue.publishesLabel": "Publishes",
   "desk.newIssue.publishesHelper":
     "Optional. Leave it open and set the date when you know it.",
@@ -792,9 +799,12 @@ export const magazine: Catalog = {
   "desk.bulkAssign.clearSelection": "Clear selection",
   "desk.bulkAssign.assignToIssue": "Assign to issue\u2026",
   "desk.bulkAssign.assignedToast_one": "{count} piece moved to issue {number}.",
-  "desk.bulkAssign.assignedToast_other": "{count} pieces moved to issue {number}.",
-  "desk.bulkAssign.unassignedToast_one": "{count} piece back in the unassigned pool.",
-  "desk.bulkAssign.unassignedToast_other": "{count} pieces back in the unassigned pool.",
+  "desk.bulkAssign.assignedToast_other":
+    "{count} pieces moved to issue {number}.",
+  "desk.bulkAssign.unassignedToast_one":
+    "{count} piece back in the unassigned pool.",
+  "desk.bulkAssign.unassignedToast_other":
+    "{count} pieces back in the unassigned pool.",
 
   // ── DeskSidebar ──────────────────────────────────────────────────────────
   "desk.sidebar.issueStanding": "Where the issue stands",
@@ -871,7 +881,8 @@ export const magazine: Catalog = {
 
   // ── ChaseModal (Phase 7 Wave F: embeds PieceThread, no separate compose step) ─
   "desk.modals.chase.title": "Chase {name}",
-  "desk.modals.chase.body": "A quick, human nudge to keep things moving gently.",
+  "desk.modals.chase.body":
+    "A quick, human nudge to keep things moving gently.",
 
   // ── HandoffModal ─────────────────────────────────────────────────────────
   "desk.modals.handoff.title": "Hand off",
@@ -1146,7 +1157,8 @@ export const magazine: Catalog = {
   "submitStory.writer.wordCount_other": "{count} words",
 
   // ── SubmitStoryEditor ──────────────────────────────────────────────────
-  "submitStory.editor.draftSaved": "Draft saved. It'll be here when you come back.",
+  "submitStory.editor.draftSaved":
+    "Draft saved. It'll be here when you come back.",
   "submitStory.editor.draftSaveError":
     "We couldn't save your draft. Your browser may be blocking storage.",
   "submitStory.resume.text":
@@ -1218,6 +1230,11 @@ export const magazine: Catalog = {
   "pitchTracker.page.withdrawnToast": "Pitch withdrawn",
   "pitchTracker.page.undoCta": "Undo",
   "pitchTracker.page.stubToast": "{label}: coming soon in this prototype",
+
+  // ── PitchCard ─────────────────────────────────────────────────────────
+  // The note author/body are an editor's own words (content); only the
+  // "{author} wrote:" chrome phrase around them is translated.
+  "pitchTracker.card.noteWrote": "{author} wrote:",
 
   // ── Shared stage-rail vocabulary (PitchStages.tsx) ──────────────────────
   "pitchTracker.stage.pitched": "Pitched",
@@ -1431,7 +1448,8 @@ export const magazine: Catalog = {
   "write.publish.schedule": "Schedule",
   "write.publish.withIssue": "With issue",
   "write.publish.scheduleLabel": "Publish at",
-  "write.publish.scheduleNote": "Publishes automatically at the date and time you pick.",
+  "write.publish.scheduleNote":
+    "Publishes automatically at the date and time you pick.",
   "write.publish.scheduleInvalid": "Pick a date and time in the future.",
   "write.publish.issueNote": "Ships automatically when its issue goes out.",
   "write.publish.checklistHeading": "Before it ships · {done}/{total}",
@@ -1451,7 +1469,8 @@ export const magazine: Catalog = {
   "write.meta.bylineLabel": "Byline",
   "write.meta.bylineHelper": "Set on the piece record's Brief tab.",
   "write.meta.roleLabel": "Role",
-  "write.meta.roleHelper": "A credit-line qualifier, e.g. “Contributing editor”.",
+  "write.meta.roleHelper":
+    "A credit-line qualifier, e.g. “Contributing editor”.",
   "write.meta.tagsLabel": "Tags",
   "write.meta.tagsHelper": "Comma-separated.",
   "write.meta.slugLabel": "Slug",
@@ -1460,7 +1479,8 @@ export const magazine: Catalog = {
   "write.meta.metaDescriptionHelper":
     "Shown in search results and link previews. Optional.",
   "write.meta.socialImageLabel": "Social image",
-  "write.meta.socialImageHelper": "Image URL used when this article is shared. Optional.",
+  "write.meta.socialImageHelper":
+    "Image URL used when this article is shared. Optional.",
   "write.meta.canonicalUrlLabel": "Canonical URL",
   "write.meta.canonicalUrlHelper":
     "Only set this if the article is republished from elsewhere. Optional.",
@@ -1497,19 +1517,20 @@ export const magazine: Catalog = {
   "write.versions.manualSaveLabel": "Saved manually",
   "write.versions.compare": "Compare",
   "write.versions.restore": "Restore",
-  "write.versions.restoreToast": "Restored \"{label}\".",
+  "write.versions.restoreToast": 'Restored "{label}".',
   "write.versions.restoredFromLabel": "Restored from {label}",
-  "write.versions.restoreModal.title": "Restore \"{label}\"?",
+  "write.versions.restoreModal.title": 'Restore "{label}"?',
   "write.versions.restoreModal.body":
     "Restore this version? Your current draft is saved first, so nothing is lost.",
   "write.versions.restoreModal.cancel": "Cancel",
   "write.versions.restoreModal.confirm": "Restore this version",
   "write.versions.restoreModal.restoring": "Restoring…",
   "write.versions.diff.title": "Compare versions",
-  "write.versions.diff.sub": "\"{label}\" by {author} · {when}",
+  "write.versions.diff.sub": '"{label}" by {author} · {when}',
   "write.versions.diff.loading": "Loading version…",
   "write.versions.diff.error": "Couldn't load this version.",
-  "write.versions.diff.empty": "Nothing to compare. This version has no blocks.",
+  "write.versions.diff.empty":
+    "Nothing to compare. This version has no blocks.",
   "write.versions.diff.before": "This version",
   "write.versions.diff.now": "Current draft",
   "write.versions.diff.status.unchanged": "Unchanged",
@@ -1562,7 +1583,8 @@ export const magazine: Catalog = {
   "issue.publishDate.clear": "Clear date",
   "issue.publishDate.saving": "Saving\u2026",
   "issue.publishDate.savedToast": "Issue set to run on {date}.",
-  "issue.publishDate.clearedToast": "Publish date cleared. The issue is unscheduled again.",
+  "issue.publishDate.clearedToast":
+    "Publish date cleared. The issue is unscheduled again.",
   "issue.pages.heading": "Pages",
   "issue.pages.editorial": "Editorial",
   "issue.pages.total": "Total",
@@ -1602,7 +1624,8 @@ export const magazine: Catalog = {
   "issue.cover.imageUrlLabel": "Cover image URL",
   "issue.cover.imageUrlPlaceholder": "https://…",
   "issue.cover.coverlineLabel": "Coverline {n}",
-  "issue.cover.hint": "Coverlines are not headlines. Shorter, flatter, no puns.",
+  "issue.cover.hint":
+    "Coverlines are not headlines. Shorter, flatter, no puns.",
   "issue.contents.heading": "Contents",
   "issue.contents.blurbLabel": "Contents blurb",
   "issue.contents.blurbPlaceholder": "One sentence, written by the desk.",
@@ -1618,11 +1641,13 @@ export const magazine: Catalog = {
   "issue.digest.edit": "Edit",
   "issue.digest.sendTest": "Send me a test",
   "issue.digest.sendTestToast": "A test digest is on its way to your inbox.",
-  "issue.digest.sendTestError": "We couldn't send the test digest. Please try again.",
+  "issue.digest.sendTestError":
+    "We couldn't send the test digest. Please try again.",
   "issue.digest.scheduleWithIssue": "Schedule with the issue",
   "issue.digest.scheduledWithIssue": "Scheduled with the issue",
   "issue.digest.scheduleToast": "The digest will go out with the issue.",
-  "issue.digest.scheduleOffToast": "The digest will no longer go out automatically with this issue.",
+  "issue.digest.scheduleOffToast":
+    "The digest will no longer go out automatically with this issue.",
   "issue.digest.alreadySent": "Sent to subscribers on {date}",
   "issue.digest.socialHeading": "Social out",
   "issue.digest.socialAltHint":
@@ -1640,7 +1665,8 @@ export const magazine: Catalog = {
   "issue.archive.entryMeta": "issue {issue} · {by} · {tags}",
   "issue.archive.read": "Read",
   "issue.archive.readToast": "Opening “{title}” isn't wired up yet.",
-  "issue.archive.checkedAutomatically": "Checked automatically at commission time.",
+  "issue.archive.checkedAutomatically":
+    "Checked automatically at commission time.",
 
   // ══════════════════ Writer workspace (Phase 6) ═══════════════════════════
   // `/magazine/writer` — a contributor's own scoped view of their
@@ -1725,7 +1751,8 @@ export const magazine: Catalog = {
   "writer.terms.killFeeLabel": "Kill fee",
   "writer.terms.rightsLabel": "Rights",
   "writer.terms.editsLabel": "Edits",
-  "writer.terms.emptyState": "No active commission yet. Terms show up once you have one.",
+  "writer.terms.emptyState":
+    "No active commission yet. Terms show up once you have one.",
 
   // ── BylineSafetyCard ─────────────────────────────────────────────────────
   "writer.byline.heading": "Your safety",
@@ -1763,7 +1790,8 @@ export const magazine: Catalog = {
   // ── PieceThread (shared editor↔writer message thread, Phase 7 Wave F) ──
   "pieceThread.you": "You",
   "pieceThread.emptyTitle": "No messages yet",
-  "pieceThread.emptyDescription": "Say hello. Chases and questions live here now, instead of email.",
+  "pieceThread.emptyDescription":
+    "Say hello. Chases and questions live here now, instead of email.",
   "pieceThread.errorState": "Couldn't load this thread. Try again in a moment.",
   "pieceThread.composerAria": "Message",
   "pieceThread.composerPlaceholder": "Write a message…",
@@ -1778,7 +1806,8 @@ export const magazine: Catalog = {
   "applyToWrite.form.pitchNoteLabel": "Why do you want to write for us?",
   "applyToWrite.form.pitchNotePlaceholder": "A sentence or two is plenty.",
   "applyToWrite.form.sampleTextLabel": "Paste a writing sample",
-  "applyToWrite.form.sampleTextPlaceholder": "Paste a piece of your writing here.",
+  "applyToWrite.form.sampleTextPlaceholder":
+    "Paste a piece of your writing here.",
   "applyToWrite.form.sampleLinkLabel": "…or link to something you've published",
   "applyToWrite.form.sampleLinkPlaceholder": "https://",
   "applyToWrite.form.sampleRequiredError":
@@ -1823,10 +1852,12 @@ export const magazine: Catalog = {
   "comments.report.sendCta": "Send report",
   "comments.report.sending": "Sending…",
   "comments.report.confirmTitle": "Report <em>sent</em>",
-  "comments.report.confirmBody": "Thanks. A moderator will review {name}'s comment.",
+  "comments.report.confirmBody":
+    "Thanks. A moderator will review {name}'s comment.",
   "comments.report.done": "Done",
   "comments.report.errorTitle": "Something went wrong",
-  "comments.report.errorBody": "We couldn't send your report. Please try again.",
+  "comments.report.errorBody":
+    "We couldn't send your report. Please try again.",
   "comments.report.retryCta": "Try again",
 
   // ── Shared load-failure panel (MagazineLoadError, FE-CNT-08) ─────────────

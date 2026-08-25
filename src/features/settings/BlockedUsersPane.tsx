@@ -62,7 +62,11 @@ function BlockedUserRow({
     <div className={styles.row}>
       <div className={styles.identity}>
         <MemberIdentity
-          person={{ slug: person?.slug, name, avatarUrl: person?.avatarUrl ?? undefined }}
+          person={{
+            slug: person?.slug,
+            name,
+            avatarUrl: person?.avatarUrl ?? undefined,
+          }}
           secondary={handleLabel ? `${handleLabel} · ${blockedOn}` : blockedOn}
           to={person?.slug ? profilePath(person.slug) : undefined}
         />

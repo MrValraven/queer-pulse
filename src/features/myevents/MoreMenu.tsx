@@ -64,7 +64,11 @@ function buildItems(
       onClick: share,
     },
   ];
-  if (ev.category === "going" || ev.category === "saved" || ev.category === "hosting")
+  if (
+    ev.category === "going" ||
+    ev.category === "saved" ||
+    ev.category === "hosting"
+  )
     items.push({
       icon: Icons.invite,
       label: translate("myevents:moreMenu.inviteFriend"),
@@ -73,7 +77,11 @@ function buildItems(
         openInvitePicker();
       },
     });
-  if (ev.category !== "past" && ev.category !== "hosting" && ev.category !== "sent")
+  if (
+    ev.category !== "past" &&
+    ev.category !== "hosting" &&
+    ev.category !== "sent"
+  )
     items.push({
       icon: Icons.message,
       label: translate("myevents:moreMenu.messageHost"),
@@ -290,7 +298,9 @@ export function MoreMenu() {
               link,
             });
             void navigate(routes.messages, {
-              state: { to: { slug: recipient.slug, name: recipient.name, text } },
+              state: {
+                to: { slug: recipient.slug, name: recipient.name, text },
+              },
             });
           }}
         />

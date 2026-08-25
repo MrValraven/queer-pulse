@@ -32,7 +32,8 @@ export function ForumHero({
             <p>
               {t("forum:hero.lead")}{" "}
               <Link to={routes.communities} className={styles.heroLink}>
-                {t("forum:hero.findCommunitiesCta")} <FiArrowRight aria-hidden />
+                {t("forum:hero.findCommunitiesCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             </p>
           </div>

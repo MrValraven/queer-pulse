@@ -45,7 +45,8 @@ export function useDeskPieceSelection(
   }
 
   const areAllSelected =
-    visiblePieces.length > 0 && selectedPieceIds.length === visiblePieces.length;
+    visiblePieces.length > 0 &&
+    selectedPieceIds.length === visiblePieces.length;
 
   function toggleSelectAll(): void {
     setRawSelectedPieceIds(

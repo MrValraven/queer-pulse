@@ -51,8 +51,7 @@ export function groupIntoRuns(
  * messages never join a sender run — they break the flow on both sides.
  */
 export type TimelineItem =
-  | { kind: "run"; run: MessageRun }
-  | { kind: "system"; message: ChatMessage };
+  { kind: "run"; run: MessageRun } | { kind: "system"; message: ChatMessage };
 
 /**
  * Splits a day-group's flat list into ordered timeline blocks: contiguous

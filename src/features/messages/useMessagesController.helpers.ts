@@ -14,7 +14,11 @@ import { localDayKey } from "./api/messages.adapters";
  *  hand-authored buckets never set it (their `day` label is fiction that
  *  never rolls over on a real clock, so matching on it directly stays
  *  correct there; see the merge functions below). */
-export type MessageGroup = { day: string; dayKey?: string; items: ChatMessage[] };
+export type MessageGroup = {
+  day: string;
+  dayKey?: string;
+  items: ChatMessage[];
+};
 
 /** Find "today's" bucket to append a fresh optimistic message to: match the
  *  stable machine `dayKey` when a group carries one (LIVE — never the `day`
@@ -22,7 +26,10 @@ export type MessageGroup = { day: string; dayKey?: string; items: ChatMessage[] 
  *  long-lived tab whose cache wasn't refetched exactly at midnight); fall
  *  back to the `day === "Today"` label for DEMO groups, which never carry a
  *  real `dayKey` and never roll over on a real clock. See FE-MSG-30. */
-function findTodayBucketIndex(groups: MessageGroup[], todayKey: string): number {
+function findTodayBucketIndex(
+  groups: MessageGroup[],
+  todayKey: string,
+): number {
   return groups.findIndex((group) =>
     group.dayKey ? group.dayKey === todayKey : group.day === "Today",
   );
@@ -51,11 +58,14 @@ export function nextLocalId(): string {
   // Fallback for older embedded webviews without `crypto.randomUUID`. Must still
   // be a valid v4 UUID — the server validates `clientMessageId` as one (a plain
   // token would 400) — so synthesize the canonical v4 shape.
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (character) => {
-    const random = (Math.random() * 16) | 0;
-    const value = character === "x" ? random : (random & 0x3) | 0x8;
-    return value.toString(16);
-  });
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    (character) => {
+      const random = (Math.random() * 16) | 0;
+      const value = character === "x" ? random : (random & 0x3) | 0x8;
+      return value.toString(16);
+    },
+  );
 }
 
 /**
@@ -69,7 +79,9 @@ export function nextLocalId(): string {
  * so a slug returns `400 "Validation failed (uuid is expected)"`. Returning null
  * keeps those hooks inert until `startConversation` reconciles the real UUID.
  */
-export function realConversationId(conversation: Conversation | null): string | null {
+export function realConversationId(
+  conversation: Conversation | null,
+): string | null {
   if (!conversation) return null;
   return conversation.id === conversation.slug ? null : conversation.id;
 }
@@ -96,8 +108,16 @@ export function withDemoSystemPill(
   conversation: Conversation,
   event: ChatSystemEvent,
 ): Conversation {
-  const pill: ChatMessage = { from: "me", text: "", kind: "system", systemEvent: event };
-  const messages = conversation.messages.map((group) => ({ ...group, items: [...group.items] }));
+  const pill: ChatMessage = {
+    from: "me",
+    text: "",
+    kind: "system",
+    systemEvent: event,
+  };
+  const messages = conversation.messages.map((group) => ({
+    ...group,
+    items: [...group.items],
+  }));
   const todayKey = localDayKey(new Date());
   const todayIndex = findTodayBucketIndex(messages, todayKey);
   if (todayIndex !== -1) messages[todayIndex]!.items.push(pill);

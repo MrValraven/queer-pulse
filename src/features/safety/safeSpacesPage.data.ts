@@ -40,7 +40,11 @@ export const CRITERIA: { icon: IconType; leadKey: string; restKey: string }[] =
     },
   ];
 
-export const HOW: { number: string; titleKey: string; descriptionKey: string }[] = [
+export const HOW: {
+  number: string;
+  titleKey: string;
+  descriptionKey: string;
+}[] = [
   {
     number: "01",
     titleKey: "safety:spaces.how.step1.title",

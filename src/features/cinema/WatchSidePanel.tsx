@@ -70,6 +70,7 @@ export function WatchSidePanel() {
 
       {tab === "film-info" && (
         <div className={styles.spBody}>
+          {/* eslint-disable local/no-literal-string -- this film's own title, credits, and curator pull-quote; content per the scope rule, arrives over the wire in live mode */}
           <div className={styles.spTitle}>
             The light <em>between</em> rooms
           </div>
@@ -81,10 +82,13 @@ export function WatchSidePanel() {
             <em>Stay for the second hour.</em>"
             <span className="who">João Ribeiro, programmer</span>
           </div>
+          {/* eslint-enable local/no-literal-string */}
           <div className={styles.spFacts}>
             {FACTS.map(([factKey, factValue]) => (
               <div key={factKey} className={styles.spFact}>
-                <span className="k">{t(FACTS_LABEL_KEYS[factKey] ?? factKey)}</span>
+                <span className="k">
+                  {t(FACTS_LABEL_KEYS[factKey] ?? factKey)}
+                </span>
                 <span className="v">{factValue}</span>
               </div>
             ))}
@@ -99,7 +103,9 @@ export function WatchSidePanel() {
               <div key={message.id} className={styles.lobbyMsg}>
                 <div className={styles.lobbyHead}>
                   <span className="name">{message.name}</span>
-                  {message.badge && <span className="badge">{message.badge}</span>}
+                  {message.badge && (
+                    <span className="badge">{message.badge}</span>
+                  )}
                   <span className="when">{message.when}</span>
                 </div>
                 <div className={styles.lobbyBody}>{message.body}</div>
@@ -118,12 +124,16 @@ export function WatchSidePanel() {
               }}
               aria-label={
                 tab === "live-qna"
-                  ? t("cinema:watch.sidePanel.qnaPlaceholder", { name: "Maria" })
+                  ? t("cinema:watch.sidePanel.qnaPlaceholder", {
+                      name: "Maria",
+                    })
                   : t("cinema:watch.sidePanel.lobbyPlaceholder")
               }
               placeholder={
                 tab === "live-qna"
-                  ? t("cinema:watch.sidePanel.qnaPlaceholder", { name: "Maria" })
+                  ? t("cinema:watch.sidePanel.qnaPlaceholder", {
+                      name: "Maria",
+                    })
                   : t("cinema:watch.sidePanel.lobbyPlaceholder")
               }
             />

@@ -69,6 +69,11 @@ export function useStoryDraft(form: DraftForm, coverName: string | null) {
 
   useEffect(() => {
     if (!started) return;
+    // Genuine external-system sync: this effect arms a debounce timer (the
+    // external system) and "saving" reflects that a write is now pending
+    // until `writeNow` lands and settles it to "saved"/"unsaved" — the timer
+    // in the cleanup is what makes this safe, not an accident.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- marks the debounce timer armed by this effect as pending; settled by writeNow(), not a derivable render value
     setSaveState("saving");
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => writeNow(), 600);

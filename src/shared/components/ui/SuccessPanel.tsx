@@ -23,7 +23,10 @@ interface SuccessPanelProps {
   iconTone?: "jade" | "coral" | "plum";
 }
 
-const ICON_TONE_COLOR: Record<NonNullable<SuccessPanelProps["iconTone"]>, string> = {
+const ICON_TONE_COLOR: Record<
+  NonNullable<SuccessPanelProps["iconTone"]>,
+  string
+> = {
   jade: "var(--jade)",
   coral: "var(--accent)",
   plum: "var(--plum)",

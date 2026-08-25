@@ -82,7 +82,10 @@ export function useDeskAssignment({
       return;
     }
     pieceMutations.assignIssue.mutate(
-      { pieceIds: targets.map((piece) => piece.id), issueId: target?.id ?? null },
+      {
+        pieceIds: targets.map((piece) => piece.id),
+        issueId: target?.id ?? null,
+      },
       {
         onSuccess: (result) => {
           pieceSelection.clearPieceSelection();

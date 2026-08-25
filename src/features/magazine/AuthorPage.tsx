@@ -21,7 +21,11 @@ function AuthorLoadingState() {
       <div className={styles.page}>
         <div className={styles.hero} aria-hidden>
           <div>
-            <SkeletonLine width={140} height={12} style={{ marginBottom: 16 }} />
+            <SkeletonLine
+              width={140}
+              height={12}
+              style={{ marginBottom: 16 }}
+            />
             <SkeletonLine
               width="70%"
               height={64}

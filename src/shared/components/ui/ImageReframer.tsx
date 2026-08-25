@@ -7,7 +7,10 @@ import { FiRefreshCw } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import { FilterChips } from "./ChipSelect";
 import { type CropRect } from "./cropGeometry";
-import { useImageReframerState, type FreeformChoiceKey } from "./useImageReframerState";
+import {
+  useImageReframerState,
+  type FreeformChoiceKey,
+} from "./useImageReframerState";
 import styles from "./ImageReframer.module.css";
 
 export interface ImageReframerProps {
@@ -71,12 +74,16 @@ export default function ImageReframer({
     handleImageLoad(event.currentTarget);
   }
 
-  function handleFramePointerDownEvent(event: ReactPointerEvent<HTMLDivElement>) {
+  function handleFramePointerDownEvent(
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) {
     event.currentTarget.setPointerCapture(event.pointerId);
     handleFramePointerDown(event.pointerId, event.clientX, event.clientY);
   }
 
-  function handleFramePointerMoveEvent(event: ReactPointerEvent<HTMLDivElement>) {
+  function handleFramePointerMoveEvent(
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) {
     handleFramePointerMove(event.pointerId, event.clientX, event.clientY);
   }
 
@@ -115,7 +122,9 @@ export default function ImageReframer({
             standards-compliant primary keyboard control. */}
         <div
           ref={frameRef}
-          className={[styles.frame, isDragging && styles.dragging].filter(Boolean).join(" ")}
+          className={[styles.frame, isDragging && styles.dragging]
+            .filter(Boolean)
+            .join(" ")}
           style={{ aspectRatio: String(activeAspectNumber || 1) }}
           role="group"
           aria-label={t("shared:reframe.frame")}

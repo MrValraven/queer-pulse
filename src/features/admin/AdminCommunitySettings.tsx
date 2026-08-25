@@ -123,7 +123,9 @@ export function SettingsPane({ community }: { community: Community }) {
           <div className={styles.setLabel}>
             {t("admin:communities.settings.visibility")}
           </div>
-          <AdminChip tone={community.visibility === "public" ? "jade" : "violet"}>
+          <AdminChip
+            tone={community.visibility === "public" ? "jade" : "violet"}
+          >
             {t(`admin:${visLabelKey(community.visibility)}`)}
           </AdminChip>
         </div>

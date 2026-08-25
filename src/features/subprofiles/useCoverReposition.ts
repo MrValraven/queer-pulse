@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 
 /** Vertical overflow (CSS px) below which there is nothing worth dragging. */
 const MIN_SLACK_PX = 2;
@@ -36,7 +42,10 @@ function measureSlack(cover: HTMLElement): number {
   const box = cover.getBoundingClientRect();
   const { naturalWidth, naturalHeight } = image;
   if (!naturalWidth || !naturalHeight || box.width === 0) return 0;
-  const rendered = Math.max(box.height, (box.width * naturalHeight) / naturalWidth);
+  const rendered = Math.max(
+    box.height,
+    (box.width * naturalHeight) / naturalWidth,
+  );
   return Math.max(0, rendered - box.height);
 }
 
@@ -82,9 +91,11 @@ export function useCoverReposition(
   const [slack, setSlack] = useState(0);
   const [offsetY, setOffsetY] = useState(baseOffsetY);
   const [isDragging, setIsDragging] = useState(false);
-  const dragRef = useRef<{ pointerId: number; startY: number; startOffset: number } | null>(
-    null,
-  );
+  const dragRef = useRef<{
+    pointerId: number;
+    startY: number;
+    startOffset: number;
+  } | null>(null);
 
   // A saved value arriving from the server (or the owner editing the cover in
   // the editor pane) re-seeds the control — but never mid-move, which would

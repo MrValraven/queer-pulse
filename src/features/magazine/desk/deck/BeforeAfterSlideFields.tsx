@@ -6,7 +6,10 @@ import { ImageUrlField } from "../../ImageUrlField";
 import type { FieldsProps } from "./slideFieldShared";
 import styles from "./SlideFields.module.css";
 
-type BeforeAfterSlide = Extract<Slide, { layout: "interactive"; kind: "before-after" }>;
+type BeforeAfterSlide = Extract<
+  Slide,
+  { layout: "interactive"; kind: "before-after" }
+>;
 type Side = "before" | "after";
 
 function SideFields({
@@ -25,7 +28,9 @@ function SideFields({
     onChange({ ...slide, [side]: { ...value, ...patch } });
   return (
     <div className={styles.slideGroup}>
-      <p className={styles.slideGroupTitle}>{t(`magazine:deck.editor.field.${side}`)}</p>
+      <p className={styles.slideGroupTitle}>
+        {t(`magazine:deck.editor.field.${side}`)}
+      </p>
       <ImageUrlField
         id={`${id}-src`}
         label={t("magazine:deck.editor.field.imageSrc")}
@@ -58,7 +63,10 @@ function SideFields({
  * has no `tint` field on the `"interactive"`/`"before-after"` member
  * (preserved as-is — see `TextSlideFields` for the matching text-layout
  * note). */
-export function BeforeAfterSlideFields({ slide, onChange }: FieldsProps<BeforeAfterSlide>) {
+export function BeforeAfterSlideFields({
+  slide,
+  onChange,
+}: FieldsProps<BeforeAfterSlide>) {
   return (
     <div className={styles.row}>
       <SideFields slide={slide} side="before" onChange={onChange} />

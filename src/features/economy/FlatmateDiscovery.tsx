@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiClock, FiHeart, FiHome, FiMapPin, FiX } from "react-icons/fi";
+import {
+  FiCheck,
+  FiClock,
+  FiHeart,
+  FiHome,
+  FiMapPin,
+  FiX,
+} from "react-icons/fi";
 import { Avatar, Button, EmptyState } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -85,9 +92,15 @@ export function FlatmateDiscovery({
             components={{ em: <em /> }}
           />
         </h3>
-        <p>{t("economy:flatmates.discovery.matchBody", { name: matched.name })}</p>
+        <p>
+          {t("economy:flatmates.discovery.matchBody", { name: matched.name })}
+        </p>
         <div className={styles.discoveryMatchActions}>
-          <Button type="button" variant="jade" onClick={() => setHelloFor(matched)}>
+          <Button
+            type="button"
+            variant="jade"
+            onClick={() => setHelloFor(matched)}
+          >
             {t("economy:flatmates.discovery.sayHello")}
           </Button>
           <Button
@@ -178,7 +191,9 @@ function DiscoveryCard({ profile }: { profile: Profile }) {
             )}
           </span>
           <div className={styles.pronouns}>
-            {[profile.pronouns, profile.genderIdentity].filter(Boolean).join(" · ")}
+            {[profile.pronouns, profile.genderIdentity]
+              .filter(Boolean)
+              .join(" · ")}
           </div>
         </div>
       </div>

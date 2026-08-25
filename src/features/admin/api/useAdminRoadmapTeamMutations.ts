@@ -53,7 +53,11 @@ export function useAdminRoadmapTeamMutations() {
   const createTeamMutation = useMutation({
     mutationFn: async ({ name, ...body }: CreateRoadmapTeamVars) => {
       if (demoMode) {
-        const { state, result } = demoCreateTeamMember(readDemoRoadmap(), body, name);
+        const { state, result } = demoCreateTeamMember(
+          readDemoRoadmap(),
+          body,
+          name,
+        );
         writeDemoRoadmap(state);
         return result;
       }
@@ -97,7 +101,10 @@ export function useAdminRoadmapTeamMutations() {
   const updateSettingsMutation = useMutation({
     mutationFn: async (heroStats: AdminRoadmapHeroStat[]) => {
       if (demoMode) {
-        const { state, result } = demoUpdateSettings(readDemoRoadmap(), heroStats);
+        const { state, result } = demoUpdateSettings(
+          readDemoRoadmap(),
+          heroStats,
+        );
         writeDemoRoadmap(state);
         return result;
       }

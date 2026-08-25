@@ -25,7 +25,9 @@ export function CopySourcePicker({
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   if (sources.length === 0) {
-    return <p className={styles.sourceEmpty}>{t("subprofiles:copy.noSources")}</p>;
+    return (
+      <p className={styles.sourceEmpty}>{t("subprofiles:copy.noSources")}</p>
+    );
   }
 
   const selectedIndex = sources.findIndex((source) => source.id === selectedId);
@@ -65,7 +67,11 @@ export function CopySourcePicker({
   }
 
   return (
-    <div className={styles.sourceList} role="listbox" aria-label={t("subprofiles:copy.sourceLabel")}>
+    <div
+      className={styles.sourceList}
+      role="listbox"
+      aria-label={t("subprofiles:copy.sourceLabel")}
+    >
       {sources.map((source, index) => {
         const selected = source.id === selectedId;
         return (
@@ -91,7 +97,9 @@ export function CopySourcePicker({
               size={40}
             />
             <span className={styles.sourceMeta}>
-              <span>{source.displayName || t("subprofiles:mine.untitled")}</span>
+              <span>
+                {source.displayName || t("subprofiles:mine.untitled")}
+              </span>
               <Badge tone="ghost">{t(KIND_LABEL_KEYS[source.kind])}</Badge>
             </span>
           </button>

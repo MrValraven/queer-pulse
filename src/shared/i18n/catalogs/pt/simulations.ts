@@ -14,8 +14,7 @@ export const simulations: Catalog = {
   "home.searchPlaceholder": "Filtrar simulações",
   "home.noResults": "Nenhuma simulação corresponde ao filtro.",
   "player.back": "Simulações",
-  "player.notFound":
-    "Não encontrámos essa simulação. Pode ter sido renomeada.",
+  "player.notFound": "Não encontrámos essa simulação. Pode ter sido renomeada.",
   "player.backToGallery": "Voltar às simulações",
   "player.deviceGroupAriaLabel": "Dispositivo de pré-visualização",
   "player.mobile": "Telemóvel",
@@ -23,5 +22,6 @@ export const simulations: Catalog = {
   "player.openFullScreen": "Abrir em novo separador",
   "player.loading": "A carregar simulação…",
   "player.loadError": "Não foi possível carregar esta simulação.",
-  "insideSandbox": "As simulações não estão disponíveis dentro de uma simulação em curso.",
+  insideSandbox:
+    "As simulações não estão disponíveis dentro de uma simulação em curso.",
 };

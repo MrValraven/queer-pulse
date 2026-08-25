@@ -179,12 +179,14 @@ const MODERATION_STATE_TO_STATUS_ID: Record<ModerationState, FlaggedStatusId> =
     limited: "limited",
   };
 
-const FLAGGED_STATUS_TONE: Record<FlaggedStatusId, FlaggedMember["statusTone"]> =
-  {
-    underReview: "coral",
-    frozen: "danger",
-    limited: "amber",
-  };
+const FLAGGED_STATUS_TONE: Record<
+  FlaggedStatusId,
+  FlaggedMember["statusTone"]
+> = {
+  underReview: "coral",
+  frozen: "danger",
+  limited: "amber",
+};
 
 /** `topReasonCode` is a free-form server string; only "doxxing"/"spam" get a
  *  fixed reason chip, everything else (including `null`) falls back to the
@@ -521,9 +523,8 @@ export function detailDtoToMember(
       what: contributionTitle(contributionDto, t),
       when: contributionWhen(contributionDto.at, fmt),
     })),
-    moderationTimeline: detailDto.moderationTimeline.map(
-      (moderationEntryDto) =>
-        moderationEntryDtoToEntry(moderationEntryDto, t, fmt),
+    moderationTimeline: detailDto.moderationTimeline.map((moderationEntryDto) =>
+      moderationEntryDtoToEntry(moderationEntryDto, t, fmt),
     ),
     removeBody: removeBodyFor(detailDto, t),
     graph: {

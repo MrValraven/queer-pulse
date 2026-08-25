@@ -17,7 +17,9 @@ export function freguesiaBounds(
     if (!wanted.has(feature.properties.name)) continue;
     const geometry: Polygon | MultiPolygon = feature.geometry;
     const polygons =
-      geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+      geometry.type === "Polygon"
+        ? [geometry.coordinates]
+        : geometry.coordinates;
     for (const polygon of polygons) {
       for (const ring of polygon) {
         for (const position of ring) {

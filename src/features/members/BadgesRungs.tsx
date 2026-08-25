@@ -8,7 +8,10 @@ interface BadgesRungsProps {
   perksLadder: PerkLadderRow[];
 }
 
-function headlineFor(perksLadder: PerkLadderRow[], levelNumber: number): string {
+function headlineFor(
+  perksLadder: PerkLadderRow[],
+  levelNumber: number,
+): string {
   const row = perksLadder.find((entry) => entry.number === levelNumber);
   const firstPerk = row?.perks[0];
   return typeof firstPerk === "string" ? firstPerk : "";
@@ -19,7 +22,9 @@ function headlineFor(perksLadder: PerkLadderRow[], levelNumber: number): string 
  *  levels" jumps to the full ladder section further down the page. */
 export function BadgesRungs({ levelLadder, perksLadder }: BadgesRungsProps) {
   const { t } = useTranslation();
-  const currentIndex = levelLadder.findIndex((pill) => pill.state === "current");
+  const currentIndex = levelLadder.findIndex(
+    (pill) => pill.state === "current",
+  );
   if (currentIndex < 0) return null;
 
   const start = Math.max(0, Math.min(currentIndex - 1, levelLadder.length - 3));
@@ -50,7 +55,9 @@ export function BadgesRungs({ levelLadder, perksLadder }: BadgesRungsProps) {
             <span>
               <span className={styles.rungName}>{pill.name}</span>
               <span className={styles.rungXp}>{stateLabel}</span>
-              <span className={styles.rungCap}>{headlineFor(perksLadder, pill.number)}</span>
+              <span className={styles.rungCap}>
+                {headlineFor(perksLadder, pill.number)}
+              </span>
             </span>
           </a>
         );

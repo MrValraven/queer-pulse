@@ -56,10 +56,7 @@ export function useInstantVisibilitySave() {
 
   return function setField(patch: Partial<ProfileDraft>) {
     previousValues.current = Object.fromEntries(
-      Object.keys(patch).map((key) => [
-        key,
-        draft[key as keyof ProfileDraft],
-      ]),
+      Object.keys(patch).map((key) => [key, draft[key as keyof ProfileDraft]]),
     );
     pendingPatch.current = patch;
     updateDraft(patch);

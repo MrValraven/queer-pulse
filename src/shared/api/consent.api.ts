@@ -19,7 +19,6 @@ function isExpectedSignedOut(error: unknown): boolean {
   return error instanceof ApiError && error.status === 401;
 }
 
-
 /** `necessary` is always on (session/CSRF cookies, theme/i18n prefs). */
 export interface ConsentCategories {
   necessary: true;
@@ -85,7 +84,8 @@ export async function fetchMyConsent(
   try {
     return await apiGet<MyConsentResponse>("/consent/me");
   } catch (error) {
-    if (!isExpectedSignedOut(error)) logError(error, { scope: "consent.fetch" });
+    if (!isExpectedSignedOut(error))
+      logError(error, { scope: "consent.fetch" });
     return null;
   }
 }

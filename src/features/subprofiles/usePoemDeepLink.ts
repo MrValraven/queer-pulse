@@ -54,6 +54,7 @@ export function usePoemDeepLink(
     const matchedPoem = poemsSection.items.find(
       (item) => slugify(item.title) === targetSlug,
     );
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- URL deep-link listener: resolves an externally-changed `?poem=` param (mount, back/forward, pasted link) against loaded sections, not a value derivable from props/state alone
     if (matchedPoem) setPoemItem(matchedPoem);
   }, [poemSlugParam, sections]);
 

@@ -114,8 +114,7 @@ export const notifications: Catalog = {
     "A gathering you're going to has been cancelled.",
   "type.event_cancelled.meta": "Gathering update",
 
-  "type.event_updated.text":
-    "Details changed for a gathering you're going to.",
+  "type.event_updated.text": "Details changed for a gathering you're going to.",
   "type.event_updated.meta": "Gathering update",
   "type.event_updated.time.text":
     "The start time changed for a gathering you're going to.",
@@ -238,7 +237,8 @@ export const notifications: Catalog = {
   // Moderation outcome — headline per action; the moderator's member-facing note
   // ("the reason the member reads") rides in as {note}. Tapping opens the appeal
   // page. The flat keys are the fallback for an unrecognised action.
-  "type.moderation_outcome.text": "There's a decision from the moderation team.",
+  "type.moderation_outcome.text":
+    "There's a decision from the moderation team.",
   "type.moderation_outcome.meta": "{note}",
   "type.moderation_outcome.warn.text":
     "You've received a warning from the moderation team.",
@@ -252,7 +252,8 @@ export const notifications: Catalog = {
   // A fellow member credited a persona of yours as a collaborator on one of
   // their items (personas discovery Phase 5, Moment 6). The first live kind
   // whose `.actions` the adapter populates — see `notificationDtoToView`.
-  "type.subprofile_credit.text": "{subprofileName} credited you on {itemTitle}.",
+  "type.subprofile_credit.text":
+    "{subprofileName} credited you on {itemTitle}.",
   "type.subprofile_credit.meta": "Persona credit",
 
   // Sent when the XP/badge awarding engine credits a member across a level

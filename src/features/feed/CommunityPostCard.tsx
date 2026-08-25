@@ -68,7 +68,10 @@ export function CommunityPostCard({
   return (
     <FeedCardShell accent="ink">
       <div className={styles.postHeadRow}>
-        <FeedCardHead label={t("feed:card.eyebrow.communityPost")} timestamp={time} />
+        <FeedCardHead
+          label={t("feed:card.eyebrow.communityPost")}
+          timestamp={time}
+        />
         <MoreMenu
           authorName={authorName}
           slug={authorSlug ?? ""}

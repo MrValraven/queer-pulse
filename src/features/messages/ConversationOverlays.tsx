@@ -8,18 +8,16 @@ import { MessageReportModal } from "./MessageReportModal";
 import { findReactionMine } from "./reactionKeys";
 import type { ChatMessage } from "./data";
 
-type ActionTarget =
-  | {
-      message: ChatMessage;
-      rect: DOMRect;
-      isSent: boolean;
-      /** Snapshotted at open time (see ConversationPanel). */
-      canEdit: boolean;
-      /** touch long-press → full-screen overlay; pointer → cursor context menu. */
-      source: "touch" | "pointer";
-      point?: { x: number; y: number };
-    }
-  | null;
+type ActionTarget = {
+  message: ChatMessage;
+  rect: DOMRect;
+  isSent: boolean;
+  /** Snapshotted at open time (see ConversationPanel). */
+  canEdit: boolean;
+  /** touch long-press → full-screen overlay; pointer → cursor context menu. */
+  source: "touch" | "pointer";
+  point?: { x: number; y: number };
+} | null;
 
 export interface ConversationOverlaysProps {
   /** Message the long-press/right-click action overlay is open for. */
@@ -28,7 +26,11 @@ export interface ConversationOverlaysProps {
   deleteTarget: ChatMessage | null;
   /** Message the report modal is open for (its server id is the report subject). */
   reportTarget: ChatMessage | null;
-  onReactionToggle: (message: ChatMessage, key: MessageReactionKey, mine: boolean) => void;
+  onReactionToggle: (
+    message: ChatMessage,
+    key: MessageReactionKey,
+    mine: boolean,
+  ) => void;
   /** Starts (or replaces) the reply draft with `message`. */
   onSetReply?: (message: ChatMessage) => void;
   onBeginEdit: (message: ChatMessage) => void;
@@ -89,7 +91,8 @@ export function ConversationOverlays({
       )}
       {actionTarget &&
         (() => {
-          const { message, isSent, rect, canEdit, source, point } = actionTarget;
+          const { message, isSent, rect, canEdit, source, point } =
+            actionTarget;
           // Same permission gating and handlers feed both surfaces — only the
           // presentation differs (touch overlay vs. desktop context menu).
           const shared = {
@@ -109,7 +112,11 @@ export function ConversationOverlays({
             // have would "add" it again instead of toggling it off (see
             // findReactionMine).
             onReact: (key: MessageReactionKey) =>
-              onReactionToggle(message, key, findReactionMine(message.reactions, key)),
+              onReactionToggle(
+                message,
+                key,
+                findReactionMine(message.reactions, key),
+              ),
             onReply: () => onSetReply?.(message),
             onForward: () => onForward(message),
             onTogglePin: () => onTogglePin(message),
@@ -121,10 +128,17 @@ export function ConversationOverlays({
             onClose: () => setActionTarget(null),
           };
           return source === "touch" ? (
-            <MessageActionOverlay text={message.text} isSent={isSent} anchorRect={rect} {...shared} />
+            <MessageActionOverlay
+              text={message.text}
+              isSent={isSent}
+              anchorRect={rect}
+              {...shared}
+            />
           ) : (
             <MessageContextMenu
-              anchor={point ?? { x: isSent ? rect.right : rect.left, y: rect.top }}
+              anchor={
+                point ?? { x: isSent ? rect.right : rect.left, y: rect.top }
+              }
               {...shared}
             />
           );

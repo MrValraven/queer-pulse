@@ -76,7 +76,9 @@ export function BottomTabBar() {
         className={[styles.tab, activeSheet === "browse" && styles.tabActive]
           .filter(Boolean)
           .join(" ")}
-        onClick={activeSheet === "browse" ? closeSheet : () => openSheet("browse")}
+        onClick={
+          activeSheet === "browse" ? closeSheet : () => openSheet("browse")
+        }
         aria-haspopup="dialog"
         aria-expanded={activeSheet === "browse"}
         {...{ [NAV_DRAWER_TRIGGER_ATTRIBUTE]: "" }}

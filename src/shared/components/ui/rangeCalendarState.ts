@@ -53,7 +53,12 @@ export function classifyRangeCell(
   }
   if (start && isSameDate(date, start)) return { ...NONE, isRangeStart: true };
   if (end && isSameDate(date, end)) return { ...NONE, isRangeEnd: true };
-  if (start && end && compareDate(date, start) > 0 && compareDate(date, end) < 0) {
+  if (
+    start &&
+    end &&
+    compareDate(date, start) > 0 &&
+    compareDate(date, end) < 0
+  ) {
     return { ...NONE, isInRange: true };
   }
   return NONE;

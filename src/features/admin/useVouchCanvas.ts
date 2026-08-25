@@ -3,24 +3,19 @@ import {
   useEffect,
   useRef,
   useState,
-  type Dispatch,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type MouseEvent as ReactMouseEvent,
-  type PointerEvent as ReactPointerEvent,
   type RefObject,
-  type SetStateAction,
 } from "react";
 import { usePrefersReducedMotion } from "../../shared/hooks";
-import { useFormat, type Formatters } from "../../shared/i18n/format";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useVouchSimulation, type NodePos } from "./useVouchSimulation";
-import type { TipData } from "./VouchGraphTooltip";
+import type { TrustGraph, VouchEdge } from "./trustGraph/trustGraphModel";
 import {
-  monthDate,
-  relationshipLabel,
-  type TrustGraph,
-  type VouchEdge,
-} from "./trustGraph/trustGraphModel";
+  useCanvasInteractionHandlers,
+  type HandlerContext,
+  type TipState,
+  type Transform,
+} from "./vouchCanvas.helpers";
 
 /** Endpoints trimmed to each circle's edge so a line never crosses the discs. */
 function trimEdge(
@@ -39,52 +34,6 @@ function trimEdge(
     uy = dy / len;
   return [ax + ux * rA, ay + uy * rA, bx - ux * rB, by - uy * rB];
 }
-
-const MONTH_YEAR: Intl.DateTimeFormatOptions = {
-  month: "short",
-  year: "numeric",
-};
-
-function nodeTip(id: string, fmt: Formatters, graph: TrustGraph): TipData {
-  const p = graph.peopleById[id]!;
-  const vin = graph.edges.filter((e) => e.to === id && !e.withdrawn).length;
-  const vout = graph.edges.filter((e) => e.from === id && !e.withdrawn).length;
-  return {
-    kind: "node",
-    name: p.name,
-    pronoun: p.pronoun,
-    role: p.role ?? "",
-    vouchesIn: vin,
-    vouchesOut: vout,
-    joined: fmt.date(monthDate(p.joined), MONTH_YEAR),
-  };
-}
-
-function edgeTip(
-  e: VouchEdge,
-  fmt: Formatters,
-  mutualLabel: string,
-  graph: TrustGraph,
-  t: (key: string) => string,
-): TipData {
-  // Reads as words rather than an arrow glyph: this label is a plain string
-  // painted into the canvas tooltip, so there is no element to hang an icon on
-  // and a literal U+2192 would be announced as "rightwards arrow" (FE-ADM-23).
-  const connector = t("admin:vouchGraph.pathSeparator");
-  const label = `${graph.peopleById[e.from]!.initials} ${connector} ${graph.peopleById[e.to]!.initials}${e.mutual ? ` · ${mutualLabel}` : ""}`;
-  return {
-    kind: "edge",
-    label,
-    edgeKind: e.kind,
-    relationship: relationshipLabel(t, e.relationship) ?? undefined,
-    reason: e.reason ?? undefined,
-    date: fmt.date(monthDate(e.date), MONTH_YEAR),
-    withdrawn: e.withdrawn,
-  };
-}
-
-type TipState = { data: TipData; x: number; y: number } | null;
-type Transform = { x: number; y: number; k: number };
 
 /** Imperative painters/handlers extracted from the hook keep it under the line
  * budget; each closes over the same refs/state the hook owns, passed as deps. */
@@ -204,172 +153,6 @@ function applyZoomAt(
   v.y = y - (y - v.y) * (nk / v.k);
   v.k = nk;
   paint();
-}
-
-/** Everything the pointer handlers close over: the hook's own refs and state. */
-interface HandlerContext {
-  focus: string;
-  graph: TrustGraph;
-  fmt: Formatters;
-  mutualLabel: string;
-  t: (key: string) => string;
-  dragRef: RefObject<{
-    id: string;
-    moved: boolean;
-    sx: number;
-    sy: number;
-  } | null>;
-  panRef: RefObject<{ px: number; py: number; moved: boolean } | null>;
-  pinnedRef: RefObject<Set<string>>;
-  svgRef: RefObject<SVGSVGElement | null>;
-  tfRef: RefObject<Transform>;
-  setPinCount: Dispatch<SetStateAction<number>>;
-  setHoverId: Dispatch<SetStateAction<string | null>>;
-  setTip: Dispatch<SetStateAction<TipState>>;
-  toLocal: (clientX: number, clientY: number) => { x: number; y: number };
-  tipXY: (clientX: number, clientY: number) => { x: number; y: number };
-  setPos: (id: string, x: number, y: number) => void;
-  paint: () => void;
-  onNodeLeave: () => void;
-  onSelect: (id: string | null) => void;
-  onPickPath: (id: string) => void;
-  onRecenter: (id: string) => void;
-}
-
-/*
- * The pointer-handler logic lives in these module-scope functions rather than
- * inline in the hook (which would push it over the line budget). They are plain
- * functions, not components/hooks, so they may read `ctx.<ref>.current` freely;
- * the hook only ever calls them from *inside* its event callbacks, never during
- * render, so no ref is read while React is rendering.
- */
-
-/** Begin a node drag: record the start point and capture the pointer. */
-function onNodePointerDown(
-  e: ReactPointerEvent<SVGGElement>,
-  id: string,
-  ctx: HandlerContext,
-) {
-  e.stopPropagation();
-  ctx.dragRef.current = { id, moved: false, sx: e.clientX, sy: e.clientY };
-  e.currentTarget.setPointerCapture(e.pointerId);
-  ctx.setTip(null);
-}
-
-/** Drag a node (pinning it once it moves) or reposition the hover tip. */
-function onNodePointerMove(
-  e: ReactPointerEvent<SVGGElement>,
-  id: string,
-  ctx: HandlerContext,
-) {
-  const { dragRef, focus, pinnedRef, setPinCount, toLocal, setPos, paint } = ctx;
-  const d = dragRef.current;
-  if (d && d.id === id) {
-    if (
-      !d.moved &&
-      Math.abs(e.clientX - d.sx) + Math.abs(e.clientY - d.sy) > 3
-    ) {
-      d.moved = true;
-      if (id !== focus && !pinnedRef.current.has(id)) {
-        pinnedRef.current.add(id); // dropped where the user leaves it
-        setPinCount(pinnedRef.current.size);
-      }
-    }
-    const loc = toLocal(e.clientX, e.clientY);
-    setPos(id, loc.x, loc.y);
-    paint();
-  } else if (!dragRef.current) {
-    const xy = ctx.tipXY(e.clientX, e.clientY);
-    ctx.setTip((t) => (t ? { ...t, ...xy } : t));
-  }
-}
-
-/** End a node drag: a clean (unmoved) release counts as select / pick-path. */
-function onNodePointerUp(
-  e: ReactPointerEvent<SVGGElement>,
-  id: string,
-  ctx: HandlerContext,
-) {
-  const { dragRef, onPickPath, onSelect } = ctx;
-  const d = dragRef.current;
-  dragRef.current = null;
-  try {
-    e.currentTarget.releasePointerCapture(e.pointerId);
-  } catch {
-    /* ignore */
-  }
-  if (d && !d.moved) {
-    if (e.shiftKey) onPickPath(id);
-    else onSelect(id);
-  }
-}
-
-/** Show a node's tooltip on hover (unless a drag is in progress). */
-function onNodePointerEnter(
-  e: ReactPointerEvent<SVGGElement>,
-  id: string,
-  ctx: HandlerContext,
-) {
-  const { dragRef, setHoverId, setTip, fmt, graph, tipXY } = ctx;
-  if (dragRef.current) return;
-  setHoverId(id);
-  setTip({ data: nodeTip(id, fmt, graph), ...tipXY(e.clientX, e.clientY) });
-}
-
-/** Show an edge's tooltip on hover when it carries a reason/relationship. */
-function onEdgePointerEnter(
-  e: ReactPointerEvent<SVGPathElement>,
-  edge: VouchEdge,
-  ctx: HandlerContext,
-) {
-  const { dragRef, setTip, fmt, mutualLabel, graph, t, tipXY } = ctx;
-  if (dragRef.current || (!edge.reason && !edge.relationship)) return;
-  setTip({
-    data: edgeTip(edge, fmt, mutualLabel, graph, t),
-    ...tipXY(e.clientX, e.clientY),
-  });
-}
-
-/** Begin panning the stage. */
-function onStagePointerDown(
-  e: ReactPointerEvent<SVGSVGElement>,
-  ctx: HandlerContext,
-) {
-  ctx.panRef.current = { px: e.clientX, py: e.clientY, moved: false };
-  ctx.svgRef.current?.setPointerCapture(e.pointerId);
-}
-
-/** Pan the viewport as the pointer drags across the stage. */
-function onStagePointerMove(
-  e: ReactPointerEvent<SVGSVGElement>,
-  ctx: HandlerContext,
-) {
-  const { panRef, tfRef, paint } = ctx;
-  const pan = panRef.current;
-  if (!pan) return;
-  if (Math.abs(e.clientX - pan.px) + Math.abs(e.clientY - pan.py) > 2)
-    pan.moved = true;
-  tfRef.current.x += e.clientX - pan.px;
-  tfRef.current.y += e.clientY - pan.py;
-  pan.px = e.clientX;
-  pan.py = e.clientY;
-  paint();
-}
-
-/** End panning; a click on empty space (no pan) clears the selection. */
-function onStagePointerUp(
-  e: ReactPointerEvent<SVGSVGElement>,
-  ctx: HandlerContext,
-) {
-  const { panRef, svgRef, onSelect } = ctx;
-  const pan = panRef.current;
-  panRef.current = null;
-  try {
-    svgRef.current?.releasePointerCapture(e.pointerId);
-  } catch {
-    /* ignore */
-  }
-  if (pan && !pan.moved) onSelect(null); // click on empty space clears the pin
 }
 
 interface Args {
@@ -560,46 +343,12 @@ export function useVouchCanvas({
     onPickPath,
     onRecenter,
   };
-  // Thin handler objects that delegate to the module-scope functions above;
-  // `handlerContext` is only ever passed from inside these event callbacks, so
-  // no ref is touched during render. Recreated each render, as before.
-  const nodeHandlers = (id: string) => ({
-    onPointerDown: (e: ReactPointerEvent<SVGGElement>) =>
-      onNodePointerDown(e, id, handlerContext),
-    onPointerMove: (e: ReactPointerEvent<SVGGElement>) =>
-      onNodePointerMove(e, id, handlerContext),
-    onPointerUp: (e: ReactPointerEvent<SVGGElement>) =>
-      onNodePointerUp(e, id, handlerContext),
-    onPointerEnter: (e: ReactPointerEvent<SVGGElement>) =>
-      onNodePointerEnter(e, id, handlerContext),
-    onPointerLeave: onNodeLeave,
-    onDoubleClick: (e: ReactMouseEvent<SVGGElement>) => {
-      e.preventDefault();
-      onRecenter(id);
-    },
-    // Keyboard parity for the focusable node: Enter/Space activate the node the
-    // same way a pointer double-click does (recenter, which also selects it and
-    // guards private members with a toast).
-    onKeyDown: (e: ReactKeyboardEvent<SVGGElement>) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        onRecenter(id);
-      }
-    },
-  });
-  const edgeHandlers = (edge: VouchEdge) => ({
-    onPointerEnter: (e: ReactPointerEvent<SVGPathElement>) =>
-      onEdgePointerEnter(e, edge, handlerContext),
-    onPointerLeave: onNodeLeave,
-  });
-  const svgHandlers = {
-    onPointerDown: (e: ReactPointerEvent<SVGSVGElement>) =>
-      onStagePointerDown(e, handlerContext),
-    onPointerMove: (e: ReactPointerEvent<SVGSVGElement>) =>
-      onStagePointerMove(e, handlerContext),
-    onPointerUp: (e: ReactPointerEvent<SVGSVGElement>) =>
-      onStagePointerUp(e, handlerContext),
-  };
+  // Thin handler objects that delegate to the module-scope functions in
+  // vouchCanvas.helpers.ts; `handlerContext` is only ever passed from inside
+  // these event callbacks, so no ref is touched during render. Recreated each
+  // render, as before.
+  const { nodeHandlers, edgeHandlers, svgHandlers } =
+    useCanvasInteractionHandlers(handlerContext);
 
   return {
     registerNode,

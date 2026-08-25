@@ -23,5 +23,9 @@ export function usePitches() {
     },
   });
 
-  return { pitches: query.data ?? [], isLoading: query.isLoading, isError: query.isError };
+  return {
+    pitches: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

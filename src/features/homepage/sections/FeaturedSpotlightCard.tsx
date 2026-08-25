@@ -53,9 +53,7 @@ export const FeaturedSpotlightCard = forwardRef<
   // we teleport back to the real slide once the scroll settles — a seamless
   // infinite loop that native scroll-snap can't do on its own.
   const slides =
-    looping && firstItem && lastItem
-      ? [lastItem, ...items, firstItem]
-      : items;
+    looping && firstItem && lastItem ? [lastItem, ...items, firstItem] : items;
   const firstRealOffset = looping ? 1 : 0;
 
   // Preload every featured portrait so a slide never loads (and flickers) as it
@@ -180,8 +178,7 @@ export const FeaturedSpotlightCard = forwardRef<
       <div className={styles.spot} ref={scrollRef} onScroll={handleScroll}>
         {slides.map((slide, slideIndex) => {
           const isClone =
-            looping &&
-            (slideIndex === 0 || slideIndex === slides.length - 1);
+            looping && (slideIndex === 0 || slideIndex === slides.length - 1);
           const isActive = !isClone && slideIndex - firstRealOffset === active;
           return (
             <div

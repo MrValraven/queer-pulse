@@ -274,8 +274,7 @@ export function socialHref(
 ): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
-  if (platform === "email")
-    return `mailto:${trimmed.replace(/^mailto:/, "")}`;
+  if (platform === "email") return `mailto:${trimmed.replace(/^mailto:/, "")}`;
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
   const meta = socialPlatform(platform);
   if (meta.hrefPrefix) {

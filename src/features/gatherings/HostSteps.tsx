@@ -135,8 +135,7 @@ export function HostSteps() {
           <p>{t("gatherings:host.step5.body1")}</p>
           <p>{t("gatherings:host.step5.body2")}</p>
           <Button to={routes.contact}>
-            {t("gatherings:host.step5.cta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("gatherings:host.step5.cta")} <FiArrowRight aria-hidden />
           </Button>
         </div>
       </Reveal>

@@ -114,7 +114,8 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
         // members who never open the editor in demo mode.
         let current = edited[id] ?? added.find((w) => w.id === id);
         if (!current) {
-          const { WORKSHOPS } = await import("../../features/economy/workshops.data");
+          const { WORKSHOPS } =
+            await import("../../features/economy/workshops.data");
           current = WORKSHOPS.find((w) => w.id === id);
         }
         if (!current) return null;
@@ -181,7 +182,15 @@ export function WorkshopsProvider({ children }: { children: ReactNode }) {
       deleteWorkshop,
       ...rsvpStore,
     }),
-    [added, edited, removed, addWorkshop, updateWorkshop, deleteWorkshop, rsvpStore],
+    [
+      added,
+      edited,
+      removed,
+      addWorkshop,
+      updateWorkshop,
+      deleteWorkshop,
+      rsvpStore,
+    ],
   );
 
   return (

@@ -76,7 +76,8 @@ export const DEMO_COMMUNITY = {
   memberCount: 147,
   visibility: "Request to join",
   city: "Lisbon",
-  quote: "Healthcare navigation, mutual aid, and a monthly dinner nobody leaves early.",
+  quote:
+    "Healthcare navigation, mutual aid, and a monthly dinner nobody leaves early.",
   newThisWeek: 9,
   tags: ["Mutual aid", "Healthcare"],
   posts7d: 21,

@@ -152,7 +152,12 @@ function GovernanceChartPlot({ data }: { data: ChartQuarterPoint[] }) {
         {(width, height) => {
           const plotBottom = height - PAD_B;
           const valueScale = linearScale(axisMax, PAD_T, plotBottom);
-          const columnScale = bandScale(data.length, PAD_L, width - PAD_R, 0.34);
+          const columnScale = bandScale(
+            data.length,
+            PAD_L,
+            width - PAD_R,
+            0.34,
+          );
           const bandW = columnScale.bandwidth();
           const innerGap = Math.min(6, bandW * 0.08);
           const barW = Math.max(4, (bandW - innerGap) / 2);

@@ -179,7 +179,10 @@ export const leaveGroup = (conversationId: string) =>
 
 /** POST /conversations/:id/members — owner/admin adds members by handle. Each
  *  must be a connection + not blocked (server-enforced). Returns the group DTO. */
-export const addGroupMembers = (conversationId: string, memberHandles: string[]) =>
+export const addGroupMembers = (
+  conversationId: string,
+  memberHandles: string[],
+) =>
   apiPost<ConversationResponse>(`/conversations/${conversationId}/members`, {
     memberHandles,
   });
@@ -208,7 +211,8 @@ export const changeGroupMemberRole = (
 export const updateGroup = (
   conversationId: string,
   changes: { title?: string; avatarUrl?: string },
-) => apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
+) =>
+  apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
 
 /** GET /messages/search?q= — cross-conversation body search, scoped server-side
  *  to the caller's conversations and floored by their `clearedAt`. Accepts an

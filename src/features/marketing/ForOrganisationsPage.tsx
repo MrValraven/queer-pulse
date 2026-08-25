@@ -123,9 +123,7 @@ export function ForOrganisationsPage() {
                 <div className={styles.quoteBy}>
                   <div className={styles.quoteAv}>{testimonial.initials}</div>
                   <div>
-                    <div className={styles.quoteName}>
-                      {testimonial.author}
-                    </div>
+                    <div className={styles.quoteName}>{testimonial.author}</div>
                     <div className={styles.quoteRole}>{testimonial.role}</div>
                   </div>
                 </div>

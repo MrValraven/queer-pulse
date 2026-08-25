@@ -106,7 +106,10 @@ export function AttendeesTab({ slug }: { slug: string }) {
                     "info",
                   ),
                 onError: () =>
-                  showToast(t("gatherings:manage.attendees.actionErrorToast"), "error"),
+                  showToast(
+                    t("gatherings:manage.attendees.actionErrorToast"),
+                    "error",
+                  ),
               });
             }}
           >
@@ -141,7 +144,10 @@ export function AttendeesTab({ slug }: { slug: string }) {
                     "success",
                   ),
                 onError: () =>
-                  showToast(t("gatherings:manage.attendees.actionErrorToast"), "error"),
+                  showToast(
+                    t("gatherings:manage.attendees.actionErrorToast"),
+                    "error",
+                  ),
               });
             }}
           >

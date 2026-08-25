@@ -3,7 +3,10 @@ import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ImageProcessingError } from "../members/api/uploadProcessing";
 import { useUploadImage } from "../members/api/useUploadImage";
-import { resolveMyMediaUrl, type MyMediaItem } from "../settings/api/myMedia.api";
+import {
+  resolveMyMediaUrl,
+  type MyMediaItem,
+} from "../settings/api/myMedia.api";
 
 /** One picked-but-not-yet-committed photo. Identity is `key`. */
 export interface StagedPhoto {

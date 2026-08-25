@@ -3,7 +3,11 @@ import { FiCheck } from "react-icons/fi";
 import { DatePicker, Select } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { CADENCE_OPTIONS, MAX_RECURRENCE_OCCURRENCES, MIN_RECURRENCE_OCCURRENCES } from "../createGathering.data";
+import {
+  CADENCE_OPTIONS,
+  MAX_RECURRENCE_OCCURRENCES,
+  MIN_RECURRENCE_OCCURRENCES,
+} from "../createGathering.data";
 import type { GatheringForm } from "../useGatheringForm";
 import styles from "../CreateGatheringPage.module.css";
 

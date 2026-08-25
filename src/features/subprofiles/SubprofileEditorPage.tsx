@@ -105,7 +105,9 @@ export function SubprofileEditorPage() {
                 {subprofile.displayName || t("subprofiles:mine.untitled")}
               </h1>
               <div className={styles.headMeta}>
-                <Badge tone="ghost">{t(KIND_LABEL_KEYS[subprofile.kind])}</Badge>
+                <Badge tone="ghost">
+                  {t(KIND_LABEL_KEYS[subprofile.kind])}
+                </Badge>
                 <Badge tone={status.tone} dot>
                   {t(status.labelKey)}
                 </Badge>
@@ -119,7 +121,11 @@ export function SubprofileEditorPage() {
                   instance (shared between the form panes and the preview) and
                   its `activePane`/`previewOpen` state re-initialize when the
                   route lands on a DIFFERENT persona without a full page remount. */}
-              <SubprofileEditorShell key={subprofile.id} subprofile={subprofile} backTo={DASHBOARD} />
+              <SubprofileEditorShell
+                key={subprofile.id}
+                subprofile={subprofile}
+                backTo={DASHBOARD}
+              />
             </div>
           </div>
         </div>

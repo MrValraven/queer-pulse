@@ -58,7 +58,11 @@ export function DirectoryReviewText({ text }: Props) {
           {isExpanded
             ? t("marketing:directory.detail.reviews.showLess")
             : t("marketing:directory.detail.reviews.readMore")}
-          {isExpanded ? <FiChevronUp aria-hidden /> : <FiChevronDown aria-hidden />}
+          {isExpanded ? (
+            <FiChevronUp aria-hidden />
+          ) : (
+            <FiChevronDown aria-hidden />
+          )}
         </button>
       )}
     </>

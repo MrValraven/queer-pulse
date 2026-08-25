@@ -134,9 +134,9 @@ export function useReviewQueueKeyboardShortcuts({
         if (!currentRows.some((row) => row.id === focusedId)) return;
         event.preventDefault();
         if (lowerKey === "a") {
-          void bulkDecideRef.current([focusedId], "approve").catch(
-            (caught: unknown) => onApproveErrorRef.current(caught),
-          );
+          void bulkDecideRef
+            .current([focusedId], "approve")
+            .catch((caught: unknown) => onApproveErrorRef.current(caught));
         } else {
           setRejectModalIds([focusedId]);
         }

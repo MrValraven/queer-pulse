@@ -50,7 +50,11 @@ export function DeskTrackTabs({
 
   return (
     <div className={styles.wrap}>
-      <Tabs tabs={tabs} active={track} onChange={(id) => onTrack(id as DeskTrack)} />
+      <Tabs
+        tabs={tabs}
+        active={track}
+        onChange={(id) => onTrack(id as DeskTrack)}
+      />
     </div>
   );
 }

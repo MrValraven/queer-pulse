@@ -7,7 +7,12 @@
 
 import { useEffect, useMemo, useRef, useId } from "react";
 import { useTranslation } from "../../i18n/useTranslation";
-import { firstDayOfWeek, formatIsoDate, parseDate, type PlainDate } from "./plainDate";
+import {
+  firstDayOfWeek,
+  formatIsoDate,
+  parseDate,
+  type PlainDate,
+} from "./plainDate";
 import { useCalendarState } from "./useCalendarState";
 import { buildWeekdayLabels } from "./calendarWeekday";
 import { CalendarHeader } from "./CalendarHeader";
@@ -44,7 +49,8 @@ export function Calendar({
   const activeLocale = locale ?? language;
   const baseId = useId();
   const captionId = `${baseId}-caption`;
-  const gridLabelledBy = [labelledBy, captionId].filter(Boolean).join(" ") || undefined;
+  const gridLabelledBy =
+    [labelledBy, captionId].filter(Boolean).join(" ") || undefined;
   const hasMountedRef = useRef(false);
   const cellElements = useRef(new Map<string, HTMLButtonElement>());
   // Set by the header's month/year dropdown handlers right before calling
@@ -123,7 +129,9 @@ export function Calendar({
 
   return (
     <div
-      className={[styles.wrapper, size === "sm" && styles.sm, className].filter(Boolean).join(" ")}
+      className={[styles.wrapper, size === "sm" && styles.sm, className]
+        .filter(Boolean)
+        .join(" ")}
     >
       <CalendarHeader
         visibleMonth={state.visibleMonth}
@@ -147,7 +155,11 @@ export function Calendar({
         <thead>
           <tr>
             {weekdayLabels.map((weekday) => (
-              <th key={weekday.dayOfWeek} scope="col" className={styles.weekdayHeader}>
+              <th
+                key={weekday.dayOfWeek}
+                scope="col"
+                className={styles.weekdayHeader}
+              >
                 <abbr title={weekday.full}>{weekday.short}</abbr>
               </th>
             ))}
@@ -165,7 +177,9 @@ export function Calendar({
                   isDisabled={state.isDisabled(date)}
                   isToday={state.isToday(date)}
                   isOutsideMonth={state.isOutsideMonth(date)}
-                  isFocused={formatIsoDate(date) === formatIsoDate(state.focusedDate)}
+                  isFocused={
+                    formatIsoDate(date) === formatIsoDate(state.focusedDate)
+                  }
                   onActivate={handleActivate}
                   cellRef={registerCellRef}
                 />

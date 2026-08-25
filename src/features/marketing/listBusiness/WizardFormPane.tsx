@@ -56,7 +56,11 @@ export function WizardFormPane({
             {step === 2 && <StepStory form={form} />}
             {step === 3 && <StepPractical form={form} />}
             {step === 4 && (
-              <StepPhotosYou form={form} userName={userName} uploadPhoto={uploadPhoto} />
+              <StepPhotosYou
+                form={form}
+                userName={userName}
+                uploadPhoto={uploadPhoto}
+              />
             )}
             {step === 5 && (
               <StepReview

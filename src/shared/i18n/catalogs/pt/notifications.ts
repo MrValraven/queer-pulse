@@ -22,13 +22,15 @@ export const notifications: Catalog = {
   "type.connection_accepted.meta": "Ligação",
 
   "type.vouch_received.text": "Alguém te deu um voto de confiança.",
-  "type.vouch_received.textNamed": "<profile>{name}</profile> deu-te um voto de confiança.",
+  "type.vouch_received.textNamed":
+    "<profile>{name}</profile> deu-te um voto de confiança.",
   "type.vouch_received.meta": "Voto de confiança",
 
   // Enviada a quem gere o espaço quando alguém lhe dá um voto de confiança. Um
   // voto de confiança anónimo não resolve autor e mantém o `.text` genérico
   // (nunca o nomeia).
-  "type.safe_space_vouch.text": "Alguém deu um voto de confiança ao teu espaço seguro.",
+  "type.safe_space_vouch.text":
+    "Alguém deu um voto de confiança ao teu espaço seguro.",
   "type.safe_space_vouch.textNamed":
     "<profile>{name}</profile> deu um voto de confiança ao teu espaço seguro.",
   "type.safe_space_vouch.meta": "Espaço seguro",
@@ -192,7 +194,8 @@ export const notifications: Catalog = {
 
   // Desfecho de uma preocupação — título por estado terminal
   // (resolvida/descartada); as chaves simples são o recurso alternativo.
-  "type.concern_update.text": "Há novidades sobre uma preocupação que levantaste.",
+  "type.concern_update.text":
+    "Há novidades sobre uma preocupação que levantaste.",
   "type.concern_update.meta": "Atualização de preocupação",
   "type.concern_update.resolved.text":
     "A preocupação que levantaste foi analisada e resolvida.",
@@ -275,10 +278,12 @@ export const notifications: Catalog = {
   "type.volunteer_application_received.meta": "Candidatura de voluntariado",
   "type.volunteer_application_decided.accepted.text":
     "A tua candidatura de voluntariado foi aceite.",
-  "type.volunteer_application_decided.accepted.meta": "Candidatura de voluntariado",
+  "type.volunteer_application_decided.accepted.meta":
+    "Candidatura de voluntariado",
   "type.volunteer_application_decided.declined.text":
     "A tua candidatura de voluntariado não foi aceite desta vez.",
-  "type.volunteer_application_decided.declined.meta": "Candidatura de voluntariado",
+  "type.volunteer_application_decided.declined.meta":
+    "Candidatura de voluntariado",
   "type.volunteer_application_decided.text":
     "Há uma novidade sobre a tua candidatura de voluntariado.",
   "type.volunteer_application_decided.meta": "Candidatura de voluntariado",

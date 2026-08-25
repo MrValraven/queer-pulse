@@ -4,9 +4,12 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { describeError } from "../../../shared/api/errorMessage";
 import { useAdminRoadmapMutations } from "../api/useAdminRoadmapMutations";
-import type { RoadmapBulkAction, RoadmapColumn } from "../api/roadmapAdmin.types";
+import type {
+  RoadmapBulkAction,
+  RoadmapColumn,
+} from "../api/roadmapAdmin.types";
 import { AdminModal } from "../ui";
-import { useRoadmapSelection } from "./state/useRoadmapSelection";
+import { useRoadmapSelection } from "./state/roadmapSelectionHook";
 
 const MOVE_TARGETS: RoadmapColumn[] = [
   "backlog",
@@ -101,7 +104,11 @@ export function BulkBar() {
           }}
         />
 
-        <Button variant="jade" onClick={() => runBulk("show")} disabled={pending}>
+        <Button
+          variant="jade"
+          onClick={() => runBulk("show")}
+          disabled={pending}
+        >
           {t("admin:roadmap.bulkBar.showPublicly")}
         </Button>
         <Button

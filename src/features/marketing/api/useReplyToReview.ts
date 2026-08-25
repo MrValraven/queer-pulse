@@ -42,7 +42,9 @@ export function useReplyToReview(ref: string, slug: string) {
             return {
               ...place,
               reviews: place.reviews.map((review) =>
-                review.id === reviewId ? { ...review, ownerReply: { text, at } } : review,
+                review.id === reviewId
+                  ? { ...review, ownerReply: { text, at } }
+                  : review,
               ),
             };
           },

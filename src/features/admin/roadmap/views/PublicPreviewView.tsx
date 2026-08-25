@@ -9,7 +9,7 @@ import type {
 } from "../../api/roadmapAdmin.types";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { AdminNotSet } from "../../ui/AdminInlineMarkers";
-import { useItemDrawer } from "../state/useItemDrawer";
+import { useItemDrawer } from "../state/itemDrawerHook";
 import { PublicPreviewCard } from "./PublicPreviewCard";
 import { PublicPreviewNotBuildingRow } from "./PublicPreviewNotBuildingRow";
 import styles from "./PublicPreviewView.module.css";
@@ -176,7 +176,9 @@ export function PublicPreviewView({
           <input
             type="email"
             disabled
-            aria-label={t("admin:roadmap.publicPreview.subscribeEmailPlaceholder")}
+            aria-label={t(
+              "admin:roadmap.publicPreview.subscribeEmailPlaceholder",
+            )}
             placeholder={t(
               "admin:roadmap.publicPreview.subscribeEmailPlaceholder",
             )}

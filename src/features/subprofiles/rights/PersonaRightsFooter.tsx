@@ -11,7 +11,11 @@ import type { PublicSubprofileView } from "../api/subprofiles.adapters";
  * belongs once at the end; the date shown is the persona's earliest item
  * (`firstPublishedISO`). Renders nothing when there is no dated work to claim.
  */
-export function PersonaRightsFooter({ persona }: { persona: PublicSubprofileView }) {
+export function PersonaRightsFooter({
+  persona,
+}: {
+  persona: PublicSubprofileView;
+}) {
   const createdAtISO = firstPublishedISO(persona);
   if (!createdAtISO) return null;
   return (

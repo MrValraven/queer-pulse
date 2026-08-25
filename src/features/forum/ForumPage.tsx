@@ -58,7 +58,9 @@ export function ForumPage() {
                 onShowAll={page.resetFilters}
                 onCompose={() => page.openCompose()}
                 canEditThread={page.canEditThread}
-                onEditTitle={(thread) => page.setEditingTitleThreadId(thread.id)}
+                onEditTitle={(thread) =>
+                  page.setEditingTitleThreadId(thread.id)
+                }
                 onDelete={moderation.requestDelete}
                 onRestore={moderation.requestRestore}
                 onHistory={moderation.requestHistory}

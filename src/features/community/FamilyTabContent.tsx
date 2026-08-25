@@ -84,38 +84,38 @@ export function FamilyTabContent({ tab }: { tab: Tab }) {
         )}
         {tab.reviews &&
           (demoMode ? (
-          <div className={styles.reviewGrid}>
-            {tab.reviews.map((r) => (
-              <div className={styles.reviewCard} key={r.name}>
-                <div className={styles.rvTop}>
+            <div className={styles.reviewGrid}>
+              {tab.reviews.map((r) => (
+                <div className={styles.reviewCard} key={r.name}>
+                  <div className={styles.rvTop}>
+                    <div
+                      className={styles.rvAv}
+                      style={{ background: r.background, color: r.color }}
+                    >
+                      {r.initials}
+                    </div>
+                    <div>
+                      <div className={styles.rvName}>{r.name}</div>
+                      <div className={styles.rvContext}>{r.context}</div>
+                    </div>
+                  </div>
                   <div
-                    className={styles.rvAv}
-                    style={{ background: r.background, color: r.color }}
+                    className={styles.rvStars}
+                    aria-label={t("community:family.review.starsAriaLabel", {
+                      stars: r.stars,
+                    })}
                   >
-                    {r.initials}
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <FiStar
+                        key={i}
+                        fill={i < r.stars ? "currentColor" : "none"}
+                      />
+                    ))}
                   </div>
-                  <div>
-                    <div className={styles.rvName}>{r.name}</div>
-                    <div className={styles.rvContext}>{r.context}</div>
-                  </div>
+                  <div className={styles.rvQuote}>{r.quote}</div>
                 </div>
-                <div
-                  className={styles.rvStars}
-                  aria-label={t("community:family.review.starsAriaLabel", {
-                    stars: r.stars,
-                  })}
-                >
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <FiStar
-                      key={i}
-                      fill={i < r.stars ? "currentColor" : "none"}
-                    />
-                  ))}
-                </div>
-                <div className={styles.rvQuote}>{r.quote}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           ) : (
             <EmptyState
               icon={<FiStar />}

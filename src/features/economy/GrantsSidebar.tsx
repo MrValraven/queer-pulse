@@ -45,8 +45,7 @@ export function GrantsSidebar() {
         </h4>
         <p>{t("economy:grants.sidebar.appHelp.body")}</p>
         <Link to={routes.skills}>
-          {t("economy:grants.sidebar.appHelp.cta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("economy:grants.sidebar.appHelp.cta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </aside>

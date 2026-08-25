@@ -8,9 +8,7 @@ vi.mock("../../shared/sandbox/sandbox", () => ({
 
 function Probe() {
   const { demoMode, available } = useDemoMode();
-  return (
-    <span data-testid="probe">{`${demoMode}:${available}`}</span>
-  );
+  return <span data-testid="probe">{`${demoMode}:${available}`}</span>;
 }
 
 afterEach(() => vi.clearAllMocks());

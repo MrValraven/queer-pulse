@@ -49,8 +49,7 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
           </h2>
           <div style={rowNote}>{t("studio:offAir.carryOn.sub")}</div>
           <Link to={routes.studioLibrary} style={rowLink}>
-            {t("studio:offAir.libraryCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("studio:offAir.libraryCta")} <FiArrowRight aria-hidden />
           </Link>
         </div>
         {loading ? (
@@ -72,7 +71,7 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
                     width="100%"
                     height="100%"
                     radius={10}
-                    placeholder="cover"
+                    placeholder={t("studio:media.coverLabel")}
                   />
                   {item.tag && item.tagLabelKey && (
                     <span
@@ -110,8 +109,7 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
           </h2>
           <div style={rowNote}>{t("studio:offAir.quietHours.sub")}</div>
           <Link to={routes.studioSearch} style={rowLink}>
-            {t("studio:offAir.allCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("studio:offAir.allCta")} <FiArrowRight aria-hidden />
           </Link>
         </div>
         {loading ? (
@@ -133,7 +131,7 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
                     width="100%"
                     height="100%"
                     radius={10}
-                    placeholder="cover"
+                    placeholder={t("studio:media.coverLabel")}
                   />
                 </div>
                 <div style={curator}>{item.curator}</div>

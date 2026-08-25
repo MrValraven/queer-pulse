@@ -35,7 +35,10 @@ export function parseMentions(text: string): MentionSegment[] {
     if (tokenStart > cursor) {
       segments.push({ kind: "text", value: text.slice(cursor, tokenStart) });
     }
-    segments.push({ kind: KIND_BY_SIGIL[sigil!], slug: slug! } as MentionSegment);
+    segments.push({
+      kind: KIND_BY_SIGIL[sigil!],
+      slug: slug!,
+    } as MentionSegment);
     cursor = tokenStart + sigil!.length + slug!.length;
   }
   if (cursor < text.length) {

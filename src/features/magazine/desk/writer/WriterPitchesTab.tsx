@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Badge, Button, EmptyState, FormField } from "../../../../shared/components/ui";
+import {
+  Badge,
+  Button,
+  EmptyState,
+  FormField,
+} from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { WriterPitchDto } from "../../api/writerWorkspace.api";
 import pieceStyles from "../pieceTabs.module.css";
@@ -19,7 +24,11 @@ const TONE_TO_BADGE = {
 
 /** Your pitches: what's been sent and how it landed, plus a form to pitch
  *  something new (`POST /magazine/writer/pitches`, `submitterId` = you). */
-export function WriterPitchesTab({ pitches, onSubmitPitch, isSubmitting }: WriterPitchesTabProps) {
+export function WriterPitchesTab({
+  pitches,
+  onSubmitPitch,
+  isSubmitting,
+}: WriterPitchesTabProps) {
   const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
@@ -73,7 +82,12 @@ export function WriterPitchesTab({ pitches, onSubmitPitch, isSubmitting }: Write
           />
         </FormField>
         <div className={pieceStyles.row}>
-          <Button size="sm" variant="primary" disabled={!canSend || isSubmitting} onClick={handleSend}>
+          <Button
+            size="sm"
+            variant="primary"
+            disabled={!canSend || isSubmitting}
+            onClick={handleSend}
+          >
             {t("magazine:writer.pitches.send")}
           </Button>
         </div>

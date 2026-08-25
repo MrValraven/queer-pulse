@@ -86,8 +86,13 @@ export function NewSideStepIdentity({
               id: "linked",
               render: (
                 <>
-                  <b className={styles.choiceTitle}>{t("subprofiles:link.linked")}</b>
-                  <p className={styles.choiceDesc}>{t("subprofiles:link.help.linked")}</p>
+                  <b className={styles.choiceTitle}>
+                    {t("subprofiles:link.linked")}
+                  </b>
+                  <p className={styles.choiceDesc}>
+                    {t("subprofiles:link.help.linked")}
+                  </p>
+                  {/* eslint-disable-next-line local/no-literal-string -- literal route path shown as an address preview; app routes aren't localized. */}
                   <code className={styles.choiceCode}>
                     /members/{ownerSlug}/{slug || "…"}
                   </code>
@@ -101,8 +106,12 @@ export function NewSideStepIdentity({
               id: "unlinked",
               render: (
                 <>
-                  <b className={styles.choiceTitle}>{t("subprofiles:link.standalone")}</b>
-                  <p className={styles.choiceDesc}>{t("subprofiles:link.help.unlinked")}</p>
+                  <b className={styles.choiceTitle}>
+                    {t("subprofiles:link.standalone")}
+                  </b>
+                  <p className={styles.choiceDesc}>
+                    {t("subprofiles:link.help.unlinked")}
+                  </p>
                   <code className={styles.choiceCode}>/p/{handle || "…"}</code>
                   <p className={styles.choiceDesc}>
                     {t("subprofiles:newModal.standaloneNote")}

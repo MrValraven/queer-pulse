@@ -21,8 +21,14 @@ export interface ConversationGroupModalsProps {
   /** True while a leave is in flight. */
   leavePending?: boolean;
   /** GROUP management — add/remove/promote/demote members + edit title/avatar. */
-  onAddGroupMembers?: (conversationId: string, picks: GroupMemberPick[]) => void;
-  onRemoveGroupMember?: (conversationId: string, member: GroupMemberView) => void;
+  onAddGroupMembers?: (
+    conversationId: string,
+    picks: GroupMemberPick[],
+  ) => void;
+  onRemoveGroupMember?: (
+    conversationId: string,
+    member: GroupMemberView,
+  ) => void;
   onChangeGroupMemberRole?: (
     conversationId: string,
     member: GroupMemberView,

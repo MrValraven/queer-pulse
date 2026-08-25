@@ -46,15 +46,14 @@ async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
   const { useSubprofile: useSubprofileLive } = await import("./useSubprofile");
-  const { useSubprofiles: useSubprofilesLive } = await import("./useSubprofiles");
-  const { useSubprofileDirectory: useSubprofileDirectoryLive } = await import(
-    "./useSubprofileDirectory"
-  );
+  const { useSubprofiles: useSubprofilesLive } =
+    await import("./useSubprofiles");
+  const { useSubprofileDirectory: useSubprofileDirectoryLive } =
+    await import("./useSubprofileDirectory");
   // Imported after the reset so its DemoModeContext instance matches the freshly
   // re-imported hooks (a static provider would hold a different context object).
-  const { DemoModeProvider } = await import(
-    "../../../app/providers/DemoModeProvider"
-  );
+  const { DemoModeProvider } =
+    await import("../../../app/providers/DemoModeProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });

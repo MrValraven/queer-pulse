@@ -3,11 +3,11 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUpdateLandingFeature } from "./api/useLandingFeatures";
+import { AdminLandingCopyFields } from "./AdminLandingCopyFields";
 import {
-  AdminLandingCopyFields,
   buildLandingCopy,
   landingCopyValueFromCopy,
-} from "./AdminLandingCopyFields";
+} from "./adminLandingCopyFields.utils";
 import type { LandingFeatureVM } from "./api/landingFeatures.adapters";
 import type { LandingSection } from "./api/landingFeatures.api";
 import styles from "./AdminLandingPage.module.css";
@@ -55,9 +55,7 @@ export function AdminLandingFeatureEditor({
       <AdminLandingCopyFields
         section={section}
         value={value}
-        onChange={(patch) =>
-          setValue((current) => ({ ...current, ...patch }))
-        }
+        onChange={(patch) => setValue((current) => ({ ...current, ...patch }))}
       />
 
       <div className={styles.editorActions}>

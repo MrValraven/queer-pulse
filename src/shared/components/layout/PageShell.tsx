@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useRegisterShellFrame } from "../../../app/providers/ShellFrameProvider";
+import { useRegisterShellFrame } from "../../../app/providers/shellFrame";
 import { AnnouncementBanner } from "../system/AnnouncementBanner";
 import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 

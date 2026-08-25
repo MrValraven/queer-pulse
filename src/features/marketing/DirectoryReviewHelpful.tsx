@@ -60,9 +60,7 @@ export function DirectoryReviewHelpful({
   );
 
   if (isReadOnly || isOwnReview) {
-    return (
-      <span className={s.helpfulStatic}>{face}</span>
-    );
+    return <span className={s.helpfulStatic}>{face}</span>;
   }
 
   // Logged-out visitors read the page, and the count, exactly as members do.

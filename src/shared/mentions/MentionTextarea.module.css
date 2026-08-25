@@ -1,4 +1,6 @@
-.wrap { position: relative; }
+.wrap {
+  position: relative;
+}
 .menu {
   position: absolute;
   left: 0;
@@ -42,7 +44,9 @@
   font: inherit;
   color: var(--ink);
 }
-.optionOn { background: rgba(var(--plum-rgb), 0.06); }
+.optionOn {
+  background: rgba(var(--plum-rgb), 0.06);
+}
 .avatar {
   display: inline-flex;
   align-items: center;
@@ -57,8 +61,16 @@
   font-weight: 600;
   flex: 0 0 auto;
 }
-.name { font-weight: 600; font-size: 14px; }
-.handle { margin-left: auto; color: var(--muted-ink, var(--plum)); font-size: 12px; opacity: 0.7; }
+.name {
+  font-weight: 600;
+  font-size: 14px;
+}
+.handle {
+  margin-left: auto;
+  color: var(--muted-ink, var(--plum));
+  font-size: 12px;
+  opacity: 0.7;
+}
 .menuAbove {
   top: auto;
   bottom: calc(100% + 4px);

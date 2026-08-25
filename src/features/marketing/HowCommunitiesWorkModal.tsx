@@ -4,7 +4,11 @@ import { ModalSheet } from "../../shared/components/ui/Modal";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
-import { WhatSection, HowSection, WhySection } from "./CommunitiesAboutSections";
+import {
+  WhatSection,
+  HowSection,
+  WhySection,
+} from "./CommunitiesAboutSections";
 import styles from "./HowCommunitiesWorkModal.module.css";
 
 /**
@@ -32,7 +36,9 @@ export function HowCommunitiesWorkModal({ onClose }: { onClose: () => void }) {
             components={{ em: <em /> }}
           />
         </h2>
-        <p className={styles.lede}>{t("marketing:communitiesAbout.hero.sub")}</p>
+        <p className={styles.lede}>
+          {t("marketing:communitiesAbout.hero.sub")}
+        </p>
       </div>
 
       <div className={styles.sections}>

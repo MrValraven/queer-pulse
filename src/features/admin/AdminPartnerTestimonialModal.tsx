@@ -91,11 +91,7 @@ export function AdminPartnerTestimonialModal({
         </>
       }
     >
-      <form
-        id={FORM_ID}
-        className={styles.fieldGroup}
-        onSubmit={handleSubmit}
-      >
+      <form id={FORM_ID} className={styles.fieldGroup} onSubmit={handleSubmit}>
         <label className={styles.fieldLabel} htmlFor="testimonial-quote">
           {t("admin:partnerTestimonial.quote")}
         </label>

@@ -106,7 +106,10 @@ export function SubprofileAffiliations({
                   “{endorser.note || t("subprofiles:peopleModal.noNote")}”
                 </p>
                 {interactive ? (
-                  <Link className="endo-who" to={`${routes.members}/${endorser.slug}`}>
+                  <Link
+                    className="endo-who"
+                    to={`${routes.members}/${endorser.slug}`}
+                  >
                     {who}
                   </Link>
                 ) : (

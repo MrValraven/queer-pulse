@@ -7,17 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { m, useDragControls, type PanInfo } from "motion/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
-import { useMotionPrefs } from "../../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { canGoBack } from "./canGoBack";
 import styles from "./SwipeBackShell.module.css";
-
-/**
- * Pure guard behind the gesture (and the Task-14 test): only the very first
- * history entry — idx 0, a tab's landing page — has nothing behind it to pop
- * back to. Everything past it is fair game.
- */
-export function canGoBack(historyIdx: number): boolean {
-  return historyIdx > 0;
-}
 
 /** How close to the left edge a touch must start to arm the gesture. Narrow,
  * like iOS's own edge-swipe-back strip — wider would swallow ordinary taps

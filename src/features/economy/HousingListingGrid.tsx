@@ -71,7 +71,10 @@ function ListingSaveToggle({ listing }: { listing: Listing }) {
       onClick={handleSave}
       onKeyDown={(event) => activateOnKey(event, () => handleSave(event))}
     >
-      <FiBookmark aria-hidden style={{ fill: saved ? "currentColor" : "none" }} />
+      <FiBookmark
+        aria-hidden
+        style={{ fill: saved ? "currentColor" : "none" }}
+      />
     </span>
   );
 }

@@ -18,7 +18,10 @@ export interface BriefDetailModalProps {
  * the editor's `PieceCare`/internal notes — see `magazine-writer-response.ts`'s
  * own scoping comment).
  */
-export function BriefDetailModal({ assignment, onClose }: BriefDetailModalProps) {
+export function BriefDetailModal({
+  assignment,
+  onClose,
+}: BriefDetailModalProps) {
   const { t } = useTranslation();
   const hasBrief =
     assignment.note.length > 0 ||
@@ -60,7 +63,10 @@ export function BriefDetailModal({ assignment, onClose }: BriefDetailModalProps)
                   : t("magazine:writer.work.noDateSet")
               }
             />
-            <KV label={t("magazine:writer.brief.rateLabel")} value={assignment.rate} />
+            <KV
+              label={t("magazine:writer.brief.rateLabel")}
+              value={assignment.rate}
+            />
             <KV
               label={t("magazine:writer.brief.killFeeLabel")}
               value={assignment.terms.killFee}

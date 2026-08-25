@@ -52,8 +52,7 @@ export function HostPage() {
         sub={t("gatherings:host.outro.sub")}
       >
         <Button to={routes.createGathering} size="lg">
-          {t("gatherings:host.createGatheringCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("gatherings:host.createGatheringCta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

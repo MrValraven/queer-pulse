@@ -109,9 +109,10 @@ type DraftReadinessInput =
  * persona nests under the owner's profile and doesn't, so `handle` only counts
  * for unlinked personas.
  */
-export function estimateDraftReadiness(
-  data: DraftReadinessInput,
-): { readyCount: number; totalCount: number } {
+export function estimateDraftReadiness(data: DraftReadinessInput): {
+  readyCount: number;
+  totalCount: number;
+} {
   const contentItemCount = data.sections
     .filter((section) => isContentSection(section.section))
     .reduce((total, section) => total + section.items.length, 0);

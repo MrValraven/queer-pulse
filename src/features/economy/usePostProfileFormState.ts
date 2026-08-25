@@ -110,10 +110,7 @@ export function usePostProfileFormState(
       return nextNeeds;
     });
 
-  const setHouseholdNorm = (
-    key: keyof FlatmateHouseholdNorms,
-    value: string,
-  ) =>
+  const setHouseholdNorm = (key: keyof FlatmateHouseholdNorms, value: string) =>
     setHouseholdNorms((previous) => ({
       ...previous,
       [key]: value || undefined,
@@ -142,9 +139,7 @@ export function usePostProfileFormState(
 
   /** Only the norm keys the member actually chose, so we never store empties. */
   const cleanHouseholdNorms = (): FlatmateHouseholdNorms | undefined => {
-    const entries = Object.entries(householdNorms).filter(
-      ([, value]) => value,
-    );
+    const entries = Object.entries(householdNorms).filter(([, value]) => value);
     return entries.length > 0 ? Object.fromEntries(entries) : undefined;
   };
 

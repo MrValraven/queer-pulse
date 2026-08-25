@@ -2,7 +2,7 @@ import { Button } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { Translation } from "../../../../shared/i18n/Translation";
 import { AdminModal } from "../../ui";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 import { ROADMAP_SHORTCUTS } from "./shortcuts.data";
 import styles from "./roadmapModals.module.css";
 

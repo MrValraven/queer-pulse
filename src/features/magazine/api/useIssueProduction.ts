@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getIssueProduction, type IssueProductionDto } from "./issueProduction.api";
+import {
+  getIssueProduction,
+  type IssueProductionDto,
+} from "./issueProduction.api";
 import { DEMO_ISSUE_PRODUCTION } from "../data/issueProduction.data";
 
 /**
@@ -26,5 +29,9 @@ export function useIssueProduction(number: string) {
     },
   });
 
-  return { issue: query.data, isLoading: query.isLoading, isError: query.isError };
+  return {
+    issue: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

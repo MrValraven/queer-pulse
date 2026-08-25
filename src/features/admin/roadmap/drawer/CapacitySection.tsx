@@ -74,7 +74,9 @@ export function CapacitySection({
       <AdminSeg
         options={paidOptions}
         value={paidKind}
-        onChange={(value) => onFieldChange({ paidKind: value as RoadmapPaidKind })}
+        onChange={(value) =>
+          onFieldChange({ paidKind: value as RoadmapPaidKind })
+        }
       />
 
       <div className={`${styles.fieldGrid} ${styles.fieldGridSpaced}`}>

@@ -38,17 +38,15 @@ export function useVerificationStatus() {
  * an empty redirect (the modal simulates completion locally instead). */
 export function useStartIdentityVerification() {
   const { demoMode } = useDemoMode();
-  return useMutation<
-    { redirectUrl: string; providerRef: string },
-    Error,
-    void
-  >({
-    meta: { silentError: true },
-    mutationFn: () =>
-      demoMode
-        ? Promise.resolve({ redirectUrl: "", providerRef: "demo" })
-        : startIdentityVerification(),
-  });
+  return useMutation<{ redirectUrl: string; providerRef: string }, Error, void>(
+    {
+      meta: { silentError: true },
+      mutationFn: () =>
+        demoMode
+          ? Promise.resolve({ redirectUrl: "", providerRef: "demo" })
+          : startIdentityVerification(),
+    },
+  );
 }
 
 /** Writes a decided request into the `latestRequest` slot of the cached
@@ -60,7 +58,8 @@ function useApplyLatestRequest() {
   return (request: VerificationRequestDTO) => {
     queryClient.setQueryData<VerificationStatusWithRequestDTO | undefined>(
       [VERIFICATION_STATUS_KEY, demoMode],
-      (previous) => (previous ? { ...previous, latestRequest: request } : previous),
+      (previous) =>
+        previous ? { ...previous, latestRequest: request } : previous,
     );
     if (!demoMode) {
       void queryClient.invalidateQueries({
@@ -80,7 +79,11 @@ function useApplyLatestRequest() {
 export function useSubmitVerificationRequest() {
   const { demoMode } = useDemoMode();
   const applyLatestRequest = useApplyLatestRequest();
-  return useMutation<VerificationRequestDTO, Error, SubmitVerificationRequestInput>({
+  return useMutation<
+    VerificationRequestDTO,
+    Error,
+    SubmitVerificationRequestInput
+  >({
     meta: { silentError: true },
     mutationFn: (input) =>
       demoMode
@@ -101,10 +104,11 @@ export function useWithdrawVerificationRequest() {
     meta: { silentError: true },
     mutationFn: (requestId) => {
       if (demoMode) {
-        const current = queryClient.getQueryData<VerificationStatusWithRequestDTO>([
-          VERIFICATION_STATUS_KEY,
-          true,
-        ]);
+        const current =
+          queryClient.getQueryData<VerificationStatusWithRequestDTO>([
+            VERIFICATION_STATUS_KEY,
+            true,
+          ]);
         return Promise.resolve(
           simulateVerificationRequestTransition(
             current?.latestRequest,
@@ -129,10 +133,11 @@ export function useAppealVerificationRequest() {
     meta: { silentError: true },
     mutationFn: (requestId) => {
       if (demoMode) {
-        const current = queryClient.getQueryData<VerificationStatusWithRequestDTO>([
-          VERIFICATION_STATUS_KEY,
-          true,
-        ]);
+        const current =
+          queryClient.getQueryData<VerificationStatusWithRequestDTO>([
+            VERIFICATION_STATUS_KEY,
+            true,
+          ]);
         return Promise.resolve(
           simulateVerificationRequestTransition(
             current?.latestRequest,

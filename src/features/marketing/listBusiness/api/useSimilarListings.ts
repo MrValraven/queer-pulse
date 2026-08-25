@@ -41,7 +41,12 @@ export function useSimilarListings(
     // retype (new `debouncedName` → new queryKey) cancels the previous
     // keystroke's request at the network layer, not just in the query cache.
     queryFn: ({ signal }) =>
-      getSimilarListings(debouncedName, coords ?? undefined, excludeRef, signal),
+      getSimilarListings(
+        debouncedName,
+        coords ?? undefined,
+        excludeRef,
+        signal,
+      ),
   });
 
   if (!enabled) return [];

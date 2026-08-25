@@ -77,8 +77,7 @@ export function useAdminReadingGroupProposalMutations() {
                     ? {
                         ...item,
                         status,
-                        decidedAt:
-                          item.decidedAt ?? new Date().toISOString(),
+                        decidedAt: item.decidedAt ?? new Date().toISOString(),
                       }
                     : item,
                 ),

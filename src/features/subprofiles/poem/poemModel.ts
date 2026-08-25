@@ -53,7 +53,8 @@ export interface PoemVersion {
 // Ids are PERSISTED (round-trip through `structured`), so a per-load counter
 // would collide with previously-saved ids after reload — crypto.randomUUID().
 function randomPoemBlockId(): string {
-  return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+  return typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
     ? crypto.randomUUID()
     : `poem-${Date.now().toString(36)}-${Math.round(Math.random() * 1e9).toString(36)}`;
 }
@@ -63,7 +64,9 @@ function normalizeSpan(rawSpan: unknown): PoemSpan | null {
   const record = rawSpan as Record<string, unknown>;
   if (typeof record.text !== "string") return null;
   const marks = Array.isArray(record.marks)
-    ? record.marks.filter((mark): mark is PoemMark => mark === "em" || mark === "strong")
+    ? record.marks.filter(
+        (mark): mark is PoemMark => mark === "em" || mark === "strong",
+      )
     : [];
   return { text: record.text, marks };
 }
@@ -86,9 +89,10 @@ function normalizeOneBlock(entry: unknown): PoemBlock | null {
   if (typeof entry !== "object" || entry === null) return null;
   const record = entry as Record<string, unknown>;
   const kind = record.kind;
-  const id = typeof record.id === "string" && record.id.length > 0
-    ? record.id
-    : randomPoemBlockId();
+  const id =
+    typeof record.id === "string" && record.id.length > 0
+      ? record.id
+      : randomPoemBlockId();
 
   if (kind === "break") {
     return { kind: "break", id };
@@ -147,7 +151,11 @@ export function normalizePoemVersions(
     if (versions.length > 0) return versions;
   }
   return [
-    { id: randomPoemBlockId(), label: "", blocks: normalizePoemBlocks(legacyPoem ?? null) },
+    {
+      id: randomPoemBlockId(),
+      label: "",
+      blocks: normalizePoemBlocks(legacyPoem ?? null),
+    },
   ];
 }
 

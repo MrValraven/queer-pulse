@@ -36,7 +36,8 @@ export const SAVED_VIEWS: { id: SavedViewId; label: string; hint: string }[] = [
 export const VIEW_TEST: Record<SavedViewId, (piece: Piece) => boolean> = {
   "v-late": (piece) => !!piece.late || piece.wait === "writer",
   "v-art": (piece) => piece.art === "none" || piece.art === "brief",
-  "v-sens": (piece) => piece.stage === "Sensitivity read" || piece.stage === "Edit",
+  "v-sens": (piece) =>
+    piece.stage === "Sensitivity read" || piece.stage === "Edit",
   "v-pay": (piece) => piece.stage === "Layout" || piece.stage === "Ready",
 };
 

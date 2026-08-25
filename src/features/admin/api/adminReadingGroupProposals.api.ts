@@ -13,10 +13,7 @@ export type ReadingGroupFormat = "In-person" | "Online" | "Either";
 /** Admin decision lifecycle of a proposal (mirrors the backend enum). A fresh
  *  proposal is `pending` until an admin/moderator acts on it. */
 export type ReadingGroupProposalStatus =
-  | "pending"
-  | "approved"
-  | "declined"
-  | "archived";
+  "pending" | "approved" | "declined" | "archived";
 
 export interface AdminPersonDTO {
   slug: string;

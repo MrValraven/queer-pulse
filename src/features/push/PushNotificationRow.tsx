@@ -8,10 +8,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "../settings/SettingsPage.module.css";
 import { testPush } from "./push.api";
 import { usePushSubscription } from "./usePushSubscription";
-import {
-  readHidePushPreviews,
-  writeHidePushPreviews,
-} from "../../pushPrivacy";
+import { readHidePushPreviews, writeHidePushPreviews } from "../../pushPrivacy";
 
 export function PushNotificationRow() {
   const { t } = useTranslation();

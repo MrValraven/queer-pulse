@@ -23,7 +23,9 @@ export function useIssues() {
     queryFn: async () => {
       if (demoMode) return null; // caller falls back to its own ISSUES mock
       const rows = await getIssues();
-      return rows.map((dto, index) => issueToTile(dto, index, rows.length, fmt, t));
+      return rows.map((dto, index) =>
+        issueToTile(dto, index, rows.length, fmt, t),
+      );
     },
   });
 }

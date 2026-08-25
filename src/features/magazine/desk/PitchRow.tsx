@@ -41,7 +41,9 @@ export function PitchRow({
         type="button"
         className={styles.checkbox}
         aria-pressed={selected}
-        aria-label={t("magazine:desk.pitchRow.selectAria", { title: pitch.title })}
+        aria-label={t("magazine:desk.pitchRow.selectAria", {
+          title: pitch.title,
+        })}
         onClick={() => onToggleSelect(pitch.id)}
       >
         {selected ? <FiCheck size={12} /> : null}

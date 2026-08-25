@@ -40,7 +40,8 @@ export const ADMIN_EDIT_SUGGESTIONS: EditSuggestionDTO[] = [
     listingRef: "QPL-2026-0006",
     listingName: "Casa Viva",
     field: "website",
-    message: "casaviva.pt redirects to a squatted domain page now. Might be worth pulling the link until they sort it.",
+    message:
+      "casaviva.pt redirects to a squatted domain page now. Might be worth pulling the link until they sort it.",
     status: "accepted",
     submittedBy: {
       slug: "tiago",
@@ -55,7 +56,8 @@ export const ADMIN_EDIT_SUGGESTIONS: EditSuggestionDTO[] = [
     listingRef: "QPL-2026-0007",
     listingName: "Maison Du Tiago",
     field: "description",
-    message: "Small nit: the blurb still says \"natural-wine room\" twice in one sentence, reads odd.",
+    message:
+      'Small nit: the blurb still says "natural-wine room" twice in one sentence, reads odd.',
     status: "dismissed",
     submittedBy: null,
     createdAt: "2026-07-26T08:00:00.000Z",

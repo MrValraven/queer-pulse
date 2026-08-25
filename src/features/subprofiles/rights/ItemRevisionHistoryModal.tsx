@@ -58,7 +58,9 @@ function readSnapshotStructured(
  *  either the legacy single `poem` body or the newer `poemVersions` array. */
 function hasPoemStructure(snapshot: Record<string, unknown>): boolean {
   const structured = readSnapshotStructured(snapshot);
-  return Array.isArray(structured?.poem) || Array.isArray(structured?.poemVersions);
+  return (
+    Array.isArray(structured?.poem) || Array.isArray(structured?.poemVersions)
+  );
 }
 
 /**
@@ -235,7 +237,9 @@ function RevisionSnapshotPreview({
   return (
     <div className={styles.preview}>
       {title && <p className={styles.previewTitle}>{title}</p>}
-      {description && <p className={styles.previewDescription}>{description}</p>}
+      {description && (
+        <p className={styles.previewDescription}>{description}</p>
+      )}
     </div>
   );
 }

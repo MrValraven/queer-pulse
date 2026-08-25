@@ -109,7 +109,8 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     hood: "Misericórdia",
     beds: "1 bed",
     avail: "1 Jul",
-    description: "Beautiful first-floor flat with a view of the garden square. Fully furnished, excellent light. Available while I travel for two months.",
+    description:
+      "Beautiful first-floor flat with a view of the garden square. Fully furnished, excellent light. Available while I travel for two months.",
     price: "€1,100",
     period: "month",
     image:
@@ -186,7 +187,8 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     hood: "Arroios",
     beds: "1 room",
     avail: "Now",
-    description: "Quiet three-bed flat shared with two queer women. Big room, own bathroom, good wifi. Looking for someone who keeps to themselves but is up for the occasional dinner.",
+    description:
+      "Quiet three-bed flat shared with two queer women. Big room, own bathroom, good wifi. Looking for someone who keeps to themselves but is up for the occasional dinner.",
     price: "€750",
     period: "month",
     image:
@@ -249,7 +251,8 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     hood: "São Vicente",
     beds: "Studio",
     avail: "15 Jun",
-    description: "Small but well-designed studio in a converted building in Graça. Perfect for someone newly arrived or between places. The building has a rooftop with views.",
+    description:
+      "Small but well-designed studio in a converted building in Graça. Perfect for someone newly arrived or between places. The building has a rooftop with views.",
     price: "€85",
     period: "night",
     image:
@@ -313,7 +316,8 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     hood: "Marvila",
     beds: "1 room",
     avail: "1 Jul",
-    description: "Large warehouse converted to four bedrooms. Three of us currently live here: a musician, an engineer, and a photographer. Looking for a fourth.",
+    description:
+      "Large warehouse converted to four bedrooms. Three of us currently live here: a musician, an engineer, and a photographer. Looking for a fourth.",
     price: "€800",
     period: "month",
     image:
@@ -376,7 +380,8 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     hood: "Misericórdia",
     beds: "1 bed",
     avail: "Aug",
-    description: "My own flat while I go on residency. One bed, good light, close to everything. Priority to LGBTQ+ tenants. References exchanged.",
+    description:
+      "My own flat while I go on residency. One bed, good light, close to everything. Priority to LGBTQ+ tenants. References exchanged.",
     price: "€1,350",
     period: "month",
     image:
@@ -434,7 +439,8 @@ export const HOUSING_LISTINGS: HousingListing[] = [
     hood: "Santa Maria Maior",
     beds: "2 beds",
     avail: "1 Jun",
-    description: "Traditional building, recently renovated. Two bedrooms, could work for a couple or two friends. Very central, heart of Mouraria.",
+    description:
+      "Traditional building, recently renovated. Two bedrooms, could work for a couple or two friends. Very central, heart of Mouraria.",
     price: "€950",
     period: "month",
     image:

@@ -47,16 +47,18 @@ export function StudioSolidarityFundPage() {
                 components={{ em: <em /> }}
               />
             </h2>
-            {/* Not swept — eligibility/commitment copy (§6 of the i18n sweep
-                brief): the no-means-test promise below needs a native pt-PT
-                reviewer's precision, not a guess. Renders in English via the
-                fallback chain. Flagged in the sweep report. */}
+            {/* eslint-disable local/no-literal-string -- not swept:
+                eligibility/commitment copy (extraction-brief §6); the
+                no-means-test promise below needs a native pt-PT reviewer's
+                precision, not a guess; renders in English via the fallback
+                chain until that review lands. */}
             <p>
               If you're a member having a hard month, the emergency strand is a
               short form and a fast yes:{" "}
               <em>no portfolio, no means test, no shame</em>. Transcribers and
               translators are paid per accepted piece; grants open each quarter.
             </p>
+            {/* eslint-enable local/no-literal-string */}
           </div>
           <div className={s.acts}>
             <button

@@ -6,10 +6,7 @@ import {
   type DuplicateMutations,
 } from "./subprofileDuplicate";
 import { subprofileToView } from "./api/subprofiles.adapters";
-import type {
-  SubprofileDTO,
-  SubprofileItemDTO,
-} from "./api/subprofiles.api";
+import type { SubprofileDTO, SubprofileItemDTO } from "./api/subprofiles.api";
 
 /**
  * The persona-duplication planner is pure business logic — no providers. It
@@ -21,7 +18,8 @@ import type {
  */
 
 function makeItem(
-  overrides: Partial<SubprofileItemDTO> & Pick<SubprofileItemDTO, "section" | "title">,
+  overrides: Partial<SubprofileItemDTO> &
+    Pick<SubprofileItemDTO, "section" | "title">,
 ): SubprofileItemDTO {
   return {
     id: "item-test",
@@ -66,7 +64,11 @@ function makeSourceView() {
     status: "published",
     position: 0,
     items: [
-      makeItem({ section: "discography", title: "Threshold EP", isFeatured: true }),
+      makeItem({
+        section: "discography",
+        title: "Threshold EP",
+        isFeatured: true,
+      }),
       makeItem({ section: "discography", title: "Static Bloom" }),
       makeItem({ section: "links", title: "Bandcamp", url: "https://x.test" }),
     ],

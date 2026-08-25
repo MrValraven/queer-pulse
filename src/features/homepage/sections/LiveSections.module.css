@@ -226,8 +226,18 @@
 }
 
 @media (--md) {
+  /* Stacking flips the main axis, so `.headText`'s 420px flex-basis stops
+     being a width and becomes a 420px HEIGHT: a block of dead space under
+     the lead paragraph. Size to content here, and tighten the gap and the
+     bottom margin (both tuned for a side-by-side row) so the action sits
+     right under the text instead of doubling up as one oversized void. */
   .head {
     align-items: flex-start;
     flex-direction: column;
+    gap: var(--gap-sm);
+    margin-bottom: var(--gap-grid);
+  }
+  .headText {
+    flex: 0 0 auto;
   }
 }

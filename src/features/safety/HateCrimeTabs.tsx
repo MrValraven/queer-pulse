@@ -177,6 +177,7 @@ function HateCrimeSidebar() {
           <div className={styles.sbcRole}>
             {t("safety:hateCrime.sidebar.provedor.role")}
           </div>
+          {/* eslint-disable-next-line local/no-literal-string -- real-world organisation URL, not translatable text */}
           <div className={styles.sbcNum}>provedor-jus.pt</div>
         </div>
         <div className={styles.sbcItem}>
@@ -186,6 +187,7 @@ function HateCrimeSidebar() {
           <div className={styles.sbcRole}>
             {t("safety:hateCrime.sidebar.ilgaEurope.role")}
           </div>
+          {/* eslint-disable-next-line local/no-literal-string -- real-world organisation URL, not translatable text */}
           <div className={styles.sbcNum}>ilga-europe.org</div>
         </div>
       </div>

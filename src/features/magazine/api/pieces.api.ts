@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS magazine editor-desk domain returns/accepts (mirrors
@@ -243,7 +248,8 @@ export interface PieceRecordDto extends PieceListItemDto {
 // the `ArticleDraftResponse` shape
 // (`queerpulse-backend/src/magazine/magazine-piece-response.ts`).
 
-export type ArticleImageRights = "commissioned" | "licensed" | "courtesy" | "cc";
+export type ArticleImageRights =
+  "commissioned" | "licensed" | "courtesy" | "cc";
 export type ArticleImageTint = "coral" | "jade" | "plum" | "violet";
 export type ArticleImageCrop = "16:9" | "4:5" | "1:1";
 
@@ -549,8 +555,14 @@ export const addLetter = (id: string, body: CreateLetterDto) =>
 /** PATCH /magazine/admin/pieces/:id/letters/:letterId — toggle an existing
  *  letter's `runInLetters` flag. Idempotent: it updates the same row, it
  *  never creates a duplicate letter. */
-export const updateLetter = (id: string, letterId: string, runInLetters: boolean) =>
-  apiPatch<LetterDto>(`/magazine/admin/pieces/${id}/letters/${letterId}`, { runInLetters });
+export const updateLetter = (
+  id: string,
+  letterId: string,
+  runInLetters: boolean,
+) =>
+  apiPatch<LetterDto>(`/magazine/admin/pieces/${id}/letters/${letterId}`, {
+    runInLetters,
+  });
 
 export const getArchive = (q: string) =>
   apiGet<ArchiveEntryDto[]>(
@@ -563,7 +575,10 @@ export const addCorrection = (id: string, body: CreateCorrectionDto) =>
 export const getArticleDraft = (pieceId: string) =>
   apiGet<ArticleDraftDto>(`/magazine/admin/pieces/${pieceId}/article`);
 
-export const updateArticleDraft = (pieceId: string, body: UpdateArticleDraftDto) =>
+export const updateArticleDraft = (
+  pieceId: string,
+  body: UpdateArticleDraftDto,
+) =>
   apiPatch<ArticleDraftDto>(`/magazine/admin/pieces/${pieceId}/article`, body);
 
 /**
@@ -582,7 +597,10 @@ export interface PublishArticleDto {
  *  `issueId`, which `shipIssue` never reaches) goes through this dedicated
  *  route instead. */
 export const publishArticle = (pieceId: string, body: PublishArticleDto) =>
-  apiPatch<ArticleDraftDto>(`/magazine/admin/pieces/${pieceId}/article/publish`, body);
+  apiPatch<ArticleDraftDto>(
+    `/magazine/admin/pieces/${pieceId}/article/publish`,
+    body,
+  );
 
 // ── Article comments (Phase 7 Wave D — threaded, resolvable NotesRail) ─────
 // Mirrors backend `ArticleCommentResponse` (`magazine-article-comment-response.ts`).
@@ -622,14 +640,28 @@ export interface ReplyArticleCommentDto {
 export const getArticleComments = (pieceId: string) =>
   apiGet<ArticleCommentDto[]>(`/magazine/admin/pieces/${pieceId}/comments`);
 
-export const addArticleComment = (pieceId: string, body: CreateArticleCommentDto) =>
-  apiPost<ArticleCommentDto>(`/magazine/admin/pieces/${pieceId}/comments`, body);
+export const addArticleComment = (
+  pieceId: string,
+  body: CreateArticleCommentDto,
+) =>
+  apiPost<ArticleCommentDto>(
+    `/magazine/admin/pieces/${pieceId}/comments`,
+    body,
+  );
 
-export const replyToArticleComment = (commentId: string, body: ReplyArticleCommentDto) =>
-  apiPost<ArticleCommentDto>(`/magazine/admin/comments/${commentId}/reply`, body);
+export const replyToArticleComment = (
+  commentId: string,
+  body: ReplyArticleCommentDto,
+) =>
+  apiPost<ArticleCommentDto>(
+    `/magazine/admin/comments/${commentId}/reply`,
+    body,
+  );
 
 export const resolveArticleComment = (commentId: string, resolved: boolean) =>
-  apiPatch<ArticleCommentDto>(`/magazine/admin/comments/${commentId}/resolve`, { resolved });
+  apiPatch<ArticleCommentDto>(`/magazine/admin/comments/${commentId}/resolve`, {
+    resolved,
+  });
 
 // ── Article versions (Phase 7 Wave E — snapshot + restore + diff VersionsRail) ─
 // Mirrors backend `ArticleVersionSummaryResponse`/`ArticleVersionDetailResponse`
@@ -658,7 +690,9 @@ export interface CreateArticleVersionDto {
 }
 
 export const getArticleVersions = (pieceId: string) =>
-  apiGet<ArticleVersionSummaryDto[]>(`/magazine/admin/pieces/${pieceId}/versions`);
+  apiGet<ArticleVersionSummaryDto[]>(
+    `/magazine/admin/pieces/${pieceId}/versions`,
+  );
 
 export const getArticleVersion = (versionId: string) =>
   apiGet<ArticleVersionDetailDto>(`/magazine/admin/versions/${versionId}`);
@@ -675,7 +709,9 @@ export const createArticleVersion = (pieceId: string, label?: string) =>
  *  restore (same shape as `getArticleDraft`/`updateArticleDraft`), so the
  *  caller can seed the editor straight from this response. */
 export const restoreArticleVersion = (pieceId: string, versionId: string) =>
-  apiPost<ArticleDraftDto>(`/magazine/admin/pieces/${pieceId}/versions/${versionId}/restore`);
+  apiPost<ArticleDraftDto>(
+    `/magazine/admin/pieces/${pieceId}/versions/${versionId}/restore`,
+  );
 
 // ── Piece messages (Phase 7 Wave F — editor↔writer per-piece thread) ──────
 // Mirrors backend `PieceMessageResponse` (`magazine-piece-message-response.ts`).
@@ -706,5 +742,8 @@ export interface CreatePieceMessageDto {
 export const getEditorPieceMessages = (pieceId: string) =>
   apiGet<PieceMessageDto[]>(`/magazine/admin/pieces/${pieceId}/messages`);
 
-export const postEditorPieceMessage = (pieceId: string, body: CreatePieceMessageDto) =>
+export const postEditorPieceMessage = (
+  pieceId: string,
+  body: CreatePieceMessageDto,
+) =>
   apiPost<PieceMessageDto>(`/magazine/admin/pieces/${pieceId}/messages`, body);

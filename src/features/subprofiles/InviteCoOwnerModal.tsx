@@ -105,7 +105,10 @@ export function InviteCoOwnerModal({
       showToast(t("subprofiles:invite.toastSent"), "success");
       onClose();
     } catch (error) {
-      showToast(reasonFor(error) ?? t("subprofiles:invite.toastError"), "error");
+      showToast(
+        reasonFor(error) ?? t("subprofiles:invite.toastError"),
+        "error",
+      );
       setInvitingSlug(null);
     }
   }

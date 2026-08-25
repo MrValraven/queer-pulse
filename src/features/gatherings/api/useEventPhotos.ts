@@ -34,7 +34,6 @@ export function useAttachEventPhoto(slug: string) {
     meta: { silentError: true },
     mutationFn: (body: { key: string; caption?: string }) =>
       attachEventPhoto(slug, body),
-    onSuccess: () =>
-      client.invalidateQueries({ queryKey: ["event-photos"] }),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["event-photos"] }),
   });
 }

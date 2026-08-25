@@ -32,9 +32,7 @@ export type CoopTemplateSlug =
 /** One block in document order: a paragraph, or a bulleted list of `items`
  *  entries. The prose for each block is resolved from the `economy` catalog by
  *  `CoopTemplatePage` (see the module comment for the key scheme). */
-export type CoopTemplateBlock =
-  | { kind: "p" }
-  | { kind: "list"; items: number };
+export type CoopTemplateBlock = { kind: "p" } | { kind: "list"; items: number };
 
 export interface CoopTemplateSection {
   blocks: CoopTemplateBlock[];
@@ -50,73 +48,74 @@ export interface CoopTemplateDoc {
 const paragraph: CoopTemplateBlock = { kind: "p" };
 const list = (items: number): CoopTemplateBlock => ({ kind: "list", items });
 
-export const COOP_TEMPLATE_CONTENT: Record<CoopTemplateSlug, CoopTemplateDoc> = {
-  "founding-values": {
-    slug: "founding-values",
-    sections: [
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(4)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(2), paragraph] },
-    ],
-  },
-  "financial-honesty": {
-    slug: "financial-honesty",
-    sections: [
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(1), paragraph] },
-    ],
-  },
-  "crl-statutes": {
-    slug: "crl-statutes",
-    sections: [
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [list(4)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [list(3), paragraph] },
-    ],
-  },
-  "share-agreement": {
-    slug: "share-agreement",
-    sections: [
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(2)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [list(2)] },
-      { blocks: [paragraph, list(2)] },
-      { blocks: [paragraph, list(3), paragraph] },
-    ],
-  },
-  "finance-model": {
-    slug: "finance-model",
-    sections: [
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [list(3)] },
-      { blocks: [list(3)] },
-      { blocks: [paragraph, list(5), paragraph] },
-    ],
-  },
-  "conflict-resolution": {
-    slug: "conflict-resolution",
-    sections: [
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(2)] },
-      { blocks: [paragraph, list(4)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [list(2)] },
-      { blocks: [paragraph, list(3)] },
-      { blocks: [paragraph, list(2), paragraph] },
-    ],
-  },
-};
+export const COOP_TEMPLATE_CONTENT: Record<CoopTemplateSlug, CoopTemplateDoc> =
+  {
+    "founding-values": {
+      slug: "founding-values",
+      sections: [
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(4)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(2), paragraph] },
+      ],
+    },
+    "financial-honesty": {
+      slug: "financial-honesty",
+      sections: [
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(1), paragraph] },
+      ],
+    },
+    "crl-statutes": {
+      slug: "crl-statutes",
+      sections: [
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [list(4)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [list(3), paragraph] },
+      ],
+    },
+    "share-agreement": {
+      slug: "share-agreement",
+      sections: [
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(2)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [list(2)] },
+        { blocks: [paragraph, list(2)] },
+        { blocks: [paragraph, list(3), paragraph] },
+      ],
+    },
+    "finance-model": {
+      slug: "finance-model",
+      sections: [
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [list(3)] },
+        { blocks: [list(3)] },
+        { blocks: [paragraph, list(5), paragraph] },
+      ],
+    },
+    "conflict-resolution": {
+      slug: "conflict-resolution",
+      sections: [
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(2)] },
+        { blocks: [paragraph, list(4)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [list(2)] },
+        { blocks: [paragraph, list(3)] },
+        { blocks: [paragraph, list(2), paragraph] },
+      ],
+    },
+  };

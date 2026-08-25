@@ -11,18 +11,22 @@ import {
 export function useSubmitHousingListing() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<HousingListingDTO | null, Error, CreateHousingListingBody>({
-    mutationFn: async (body) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        return null;
-      }
-      return createHousingListing(body);
+  return useMutation<HousingListingDTO | null, Error, CreateHousingListingBody>(
+    {
+      mutationFn: async (body) => {
+        if (demoMode) {
+          await new Promise((resolve) => setTimeout(resolve, 800));
+          return null;
+        }
+        return createHousingListing(body);
+      },
+      onSuccess: () => {
+        if (!demoMode) {
+          void queryClient.invalidateQueries({
+            queryKey: ["housing-listings"],
+          });
+        }
+      },
     },
-    onSuccess: () => {
-      if (!demoMode) {
-        void queryClient.invalidateQueries({ queryKey: ["housing-listings"] });
-      }
-    },
-  });
+  );
 }

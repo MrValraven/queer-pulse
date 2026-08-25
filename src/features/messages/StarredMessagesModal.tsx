@@ -16,9 +16,13 @@ interface StarredMessagesModalProps {
 /** Counterpart identity for a starred hit's conversation (official → org). */
 function groupIdentity(group: MessageSearchConversationGroup | undefined) {
   const participant = group?.otherParticipant;
-  if (!participant) return { name: "QueerPulse Team", initials: "QP", tint: "plum" as const };
+  if (!participant)
+    return { name: "QueerPulse Team", initials: "QP", tint: "plum" as const };
   const parts = participant.displayName.trim().split(/\s+/);
-  const initials = initialsOf(parts[0] ?? "", parts.length > 1 ? parts.at(-1)! : "");
+  const initials = initialsOf(
+    parts[0] ?? "",
+    parts.length > 1 ? parts.at(-1)! : "",
+  );
   return {
     name: participant.displayName,
     initials,
@@ -33,7 +37,10 @@ function groupIdentity(group: MessageSearchConversationGroup | undefined) {
  * jump (`onPick` → `openThreadAtMessage`) so tapping opens the thread and
  * highlights the original. Empty in demo mode (stars need a server message id).
  */
-export function StarredMessagesModal({ onClose, onPick }: StarredMessagesModalProps) {
+export function StarredMessagesModal({
+  onClose,
+  onPick,
+}: StarredMessagesModalProps) {
   const { t } = useTranslation();
   const { data, isLoading } = useStarredMessages(true);
   const items = data?.items ?? [];

@@ -58,7 +58,7 @@ export function SkillCard({ skill }: { skill: Skill }) {
             t("connect:contact.message")
           ) : (
             <>
-              Reach out <FiArrowRight aria-hidden />
+              {t("economy:skills.card.reachOut")} <FiArrowRight aria-hidden />
             </>
           )}
         </span>

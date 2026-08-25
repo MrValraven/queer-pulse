@@ -31,7 +31,7 @@ export function StudioTrackPage() {
         <span>›</span>
         <Link to={routes.studioAlbum}>{ALBUM_TITLE}</Link>
         <span>›</span>
-        <em>track {TRACK_NUMBER}</em>
+        <em>{t("studio:track.page.crumbLabel", { number: TRACK_NUMBER })}</em>
       </div>
 
       <StudioTrackHero onTip={() => setTipOpen(true)} />
@@ -70,8 +70,7 @@ export function StudioTrackPage() {
             />
           </h2>
           <Link to={routes.studioAlbum} className={ss.all}>
-            {t("studio:track.more.fullAlbumCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("studio:track.more.fullAlbumCta")} <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={ss.rowGrid}>
@@ -84,7 +83,7 @@ export function StudioTrackPage() {
                   width="100%"
                   height="100%"
                   radius={10}
-                  placeholder="cv"
+                  placeholder={t("studio:media.coverLabel")}
                   style={{ position: "absolute", inset: 0 }}
                 />
               </div>

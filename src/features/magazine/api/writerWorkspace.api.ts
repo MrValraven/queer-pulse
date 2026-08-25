@@ -1,5 +1,10 @@
 import { apiGet, apiPatch, apiPost } from "../../../shared/api/client";
-import type { ArticleBlock, CreatePieceMessageDto, PieceMessageDto, PieceStage } from "./pieces.api";
+import type {
+  ArticleBlock,
+  CreatePieceMessageDto,
+  PieceMessageDto,
+  PieceStage,
+} from "./pieces.api";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Mirrors `queerpulse-backend/src/magazine/magazine-writer-response.ts`
@@ -95,7 +100,10 @@ export const getMyPayments = () =>
   apiGet<WriterPaymentDto[]>("/magazine/writer/payments");
 
 export const updateMyByline = (pieceId: string, body: UpdateWriterBylineDto) =>
-  apiPatch<WriterAssignmentDto>(`/magazine/writer/pieces/${pieceId}/byline`, body);
+  apiPatch<WriterAssignmentDto>(
+    `/magazine/writer/pieces/${pieceId}/byline`,
+    body,
+  );
 
 export const fileDraft = (pieceId: string, body?: FileDraftBody) =>
   apiPost<WriterAssignmentDto>(`/magazine/writer/pieces/${pieceId}/file`, body);
@@ -108,5 +116,8 @@ export const fileDraft = (pieceId: string, body?: FileDraftBody) =>
 export const getWriterPieceMessages = (pieceId: string) =>
   apiGet<PieceMessageDto[]>(`/magazine/writer/pieces/${pieceId}/messages`);
 
-export const postWriterPieceMessage = (pieceId: string, body: CreatePieceMessageDto) =>
+export const postWriterPieceMessage = (
+  pieceId: string,
+  body: CreatePieceMessageDto,
+) =>
   apiPost<PieceMessageDto>(`/magazine/writer/pieces/${pieceId}/messages`, body);

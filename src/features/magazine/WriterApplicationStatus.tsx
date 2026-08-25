@@ -27,7 +27,9 @@ export function WriterApplicationStatus({
             components={{ em: <em /> }}
           />
         </h1>
-        <p className={styles.panelSub}>{t("magazine:applyToWrite.pending.body")}</p>
+        <p className={styles.panelSub}>
+          {t("magazine:applyToWrite.pending.body")}
+        </p>
       </Reveal>
     );
   }
@@ -61,7 +63,9 @@ export function WriterApplicationStatus({
       <h1 className={styles.panelTitle}>
         {t("magazine:applyToWrite.declined.title")}
       </h1>
-      <p className={styles.panelSub}>{t("magazine:applyToWrite.declined.body")}</p>
+      <p className={styles.panelSub}>
+        {t("magazine:applyToWrite.declined.body")}
+      </p>
       {application.reviewNote && (
         <p className={styles.panelSub}>
           <strong>{t("magazine:applyToWrite.declined.reviewNoteLabel")}</strong>{" "}

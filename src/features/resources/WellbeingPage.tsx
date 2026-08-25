@@ -1,6 +1,11 @@
 import { useMemo } from "react";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FeatureHelp, Outro, SubpageIndex } from "../../shared/components/ui";
+import {
+  Button,
+  FeatureHelp,
+  Outro,
+  SubpageIndex,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { requestInvitePath } from "../auth/api/joinRequestSource";

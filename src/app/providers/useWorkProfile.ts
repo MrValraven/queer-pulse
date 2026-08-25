@@ -42,12 +42,15 @@ export interface WorkProfileContextValue {
   hydrate: (data: WorkPreferencesDTO) => void;
 }
 
-export const WorkProfileContext =
-  createContext<WorkProfileContextValue | null>(null);
+export const WorkProfileContext = createContext<WorkProfileContextValue | null>(
+  null,
+);
 
 /** The public shape — unchanged from before this provider was scoped. */
-export interface WorkProfileValue
-  extends Omit<WorkProfileContextValue, "hydrate"> {
+export interface WorkProfileValue extends Omit<
+  WorkProfileContextValue,
+  "hydrate"
+> {
   /** True while the stored preferences are still being read (live mode only). */
   loading: boolean;
 }

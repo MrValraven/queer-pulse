@@ -56,7 +56,7 @@ export const articles: Record<string, Article> = {
       {
         id: "cc-2",
         kind: "paragraph",
-        html: "The decade between 2016 and 2026 remade the city in ways that feel personal even when they are structural. Rents tripled. Whole neighbourhoods changed texture. See the <a href=\"https://queerpulse.example/magazine\">magazine's ongoing housing coverage</a> for the numbers behind it.",
+        html: 'The decade between 2016 and 2026 remade the city in ways that feel personal even when they are structural. Rents tripled. Whole neighbourhoods changed texture. See the <a href="https://queerpulse.example/magazine">magazine\'s ongoing housing coverage</a> for the numbers behind it.',
       },
       {
         id: "cc-3",
@@ -77,7 +77,8 @@ export const articles: Record<string, Article> = {
         id: "cc-6",
         kind: "image",
         alt: "Friends around a kitchen table in Mouraria, late evening, candles and plates",
-        caption: "The kitchen that outlasted the bar, <em>still meeting every Sunday</em>.",
+        caption:
+          "The kitchen that outlasted the bar, <em>still meeting every Sunday</em>.",
         credit: `Photo: ${memberName("andre")}`,
         rights: "commissioned",
         tint: "jade",
@@ -429,8 +430,8 @@ export const articles: Record<string, Article> = {
         tint: "jade",
         caption: (
           <>
-            The studio at Rua de São Marçal, photographed by {memberName("andre")}
-            . The plants are mostly alive.
+            The studio at Rua de São Marçal, photographed by{" "}
+            {memberName("andre")}. The plants are mostly alive.
           </>
         ),
       },
@@ -458,7 +459,7 @@ export const articles: Record<string, Article> = {
         ),
       },
       "I think about this a lot: what makes a creative space feel safe for queer people? It's not rainbow flags. It's not a policy on the wall. It's something harder to name: a quality of attention, maybe. The sense that you don't have to explain yourself before you're allowed to work. That you won't have to perform normalcy to earn the right to use the printer.",
-      "The studio never had a policy. What it had was: everyone who came was brought by someone who already knew the room. That's it. Not a vetting process: just the slow accumulation of people who vouched for each other, who said \"this person is good, you should meet them,\" and meant it.",
+      'The studio never had a policy. What it had was: everyone who came was brought by someone who already knew the room. That\'s it. Not a vetting process: just the slow accumulation of people who vouched for each other, who said "this person is good, you should meet them," and meant it.',
       "Which is, I think, also what QueerPulse is trying to do. Not a platform, not a network in the LinkedIn sense, but a room, one that keeps its shape because people take care of it.",
       {
         kind: "heading",
@@ -559,7 +560,7 @@ export const articles: Record<string, Article> = {
         kind: "qa",
         answererInitials: "TB",
         question:
-          'You\'ve described what you do as "queer hospitality" in a few conversations I\'ve heard about. What do you mean by that?',
+          "You've described what you do as \"queer hospitality\" in a few conversations I've heard about. What do you mean by that?",
         answer:
           "I mean hospitality that isn't interested in performing abundance. A lot of high-end food culture is about showing you how much: how many courses, how rare the ingredients, how impressive the technique. I'm more interested in the feeling of the room. Are people comfortable? Is there space for a difficult conversation if someone needs one? Is the food good enough that it doesn't get in the way of why we're all here? Queer spaces, at their best, do this. They prioritise the feeling of being together over the feeling of being seen.",
       },

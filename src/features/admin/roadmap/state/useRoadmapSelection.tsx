@@ -1,33 +1,11 @@
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+  RoadmapSelectionContext,
+  type RoadmapSelectionContextValue,
+} from "./roadmapSelectionContext";
 
-/**
- * Multi-select state for the Board/Timeline card checkboxes and the
- * `BulkBar` that acts on them. A context (not a bare hook instance per
- * caller) because the Board's cards and the page's `BulkBar` are siblings
- * that must share exactly one selection — two independent `useState<Set>`
- * instances would let a card claim "selected" while the bar it drives never
- * sees it. Note the file extension is `.tsx` (not the `.ts` the plan
- * sketch used) because a context provider returns JSX.
- */
-interface RoadmapSelectionContextValue {
-  selected: Set<string>;
-  toggle: (id: string) => void;
-  clear: () => void;
-  has: (id: string) => boolean;
-  count: number;
-  selectMany: (ids: string[]) => void;
-}
-
-const RoadmapSelectionContext =
-  createContext<RoadmapSelectionContextValue | null>(null);
-
+/** Note the file extension is `.tsx` (not `.ts`) because this provider
+ *  returns JSX. */
 export function SelectionProvider({ children }: { children: ReactNode }) {
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
 
@@ -62,14 +40,4 @@ export function SelectionProvider({ children }: { children: ReactNode }) {
       {children}
     </RoadmapSelectionContext.Provider>
   );
-}
-
-export function useRoadmapSelection(): RoadmapSelectionContextValue {
-  const context = useContext(RoadmapSelectionContext);
-  if (!context) {
-    throw new Error(
-      "useRoadmapSelection must be used within a SelectionProvider",
-    );
-  }
-  return context;
 }

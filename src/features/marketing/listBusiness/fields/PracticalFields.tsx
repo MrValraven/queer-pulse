@@ -58,9 +58,7 @@ export function PracticalFields({
             <FormField
               key={social.key}
               className={styles.lbField}
-              error={
-                !isValid && social.errKey ? t(social.errKey) : undefined
-              }
+              error={!isValid && social.errKey ? t(social.errKey) : undefined}
             >
               <input
                 type={social.type}

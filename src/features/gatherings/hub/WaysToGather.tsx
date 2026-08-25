@@ -26,8 +26,7 @@ export function WaysToGather() {
               <p className={styles.wayTitle}>{t(way.titleKey)}</p>
               <p className={styles.wayBody}>{t(way.bodyKey)}</p>
               <Link to={way.to} className={styles.wayLink}>
-                {t(way.ctaKey)}{" "}
-                <FiArrowRight aria-hidden />
+                {t(way.ctaKey)} <FiArrowRight aria-hidden />
               </Link>
             </div>
           </div>

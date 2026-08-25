@@ -4,7 +4,7 @@ import { AdminPressKitList, type PressRowVM } from "./AdminPressKitList";
 import {
   buildCoverageInput,
   pressValueFromCoverage,
-} from "./AdminPressKitFields";
+} from "./adminPressKitFields.utils";
 import {
   useAdminPressCoverage,
   useCreatePressCoverage,

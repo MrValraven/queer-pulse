@@ -76,7 +76,9 @@ describe("formatPushCopy", () => {
       "en",
     );
     expect(result.title).toBe("Ana"); // plain fallback — no titleKey given
-    expect(result.body).toBe("This is a test — your notifications are working.");
+    expect(result.body).toBe(
+      "This is a test — your notifications are working.",
+    );
   });
 
   it("resolves the messages.coalesced count/name summary", () => {

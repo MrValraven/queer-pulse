@@ -373,7 +373,12 @@ export interface SkinData {
    *  belongs to the media asset and is shared by every placement of the same
    *  file — and because a crop covering the whole image has no `y` to move. */
   coverOffsetY?: number;
-  booker?: { fee: string; rider: string; press: string; contact: string } | null;
+  booker?: {
+    fee: string;
+    rider: string;
+    press: string;
+    contact: string;
+  } | null;
   excerpt?: { from: string; lines: string[] } | null;
   colophon?: string | null;
   menuMeta?: { no: string; when: string; practical: string[] } | null;
@@ -409,21 +414,51 @@ export interface SkinData {
   /** Chart skin (astrologer): the live sky band shown in the hero. */
   sky?: { moon: string; phase: string; note: string } | null;
   /** Chart skin: what the astrologer needs from a querent before a reading. */
-  birthData?: { date: string; time: string; place: string; note: string } | null;
+  birthData?: {
+    date: string;
+    time: string;
+    place: string;
+    note: string;
+  } | null;
   /** Chart skin: the "what a reading is not" boundary list. */
   ethics?: string[] | null;
   /** Chair skin: the price/booking band shown after the bio. */
-  chair?: { rate: string; walkins: string; where: string; quiet: string } | null;
+  chair?: {
+    rate: string;
+    walkins: string;
+    where: string;
+    quiet: string;
+  } | null;
   /** Chair skin: the "before you sit down" list at the foot. */
   beforeYouSit?: string[] | null;
   /** Runway skin: the credits dl at the foot (press / stockists / made / direct). */
-  credits?: { press: string; stockists: string; made: string; contact: string } | null;
+  credits?: {
+    press: string;
+    stockists: string;
+    made: string;
+    contact: string;
+  } | null;
   /** Gallery skin: the "now on view" band in the hero. */
-  onView?: { title: string; artist: string; dates: string; room: string } | null;
+  onView?: {
+    title: string;
+    artist: string;
+    dates: string;
+    room: string;
+  } | null;
   /** Gallery skin: the "visiting" dl at the foot (hours / address / access / admission). */
-  visit?: { hours: string; address: string; access: string; admission: string } | null;
+  visit?: {
+    hours: string;
+    address: string;
+    access: string;
+    admission: string;
+  } | null;
   /** Record (history) skin: "the record itself" dl + a gaps note at the foot. */
-  record?: { held: string; access: string; consent: string; gaps: string } | null;
+  record?: {
+    held: string;
+    access: string;
+    consent: string;
+    gaps: string;
+  } | null;
   /** Poster (collective) skin: the "next" action band in the hero. */
   nextAction?: { what: string; when: string; where: string } | null;
   /** Poster (collective) skin: the "how we work" ordered principles list at the foot. */
@@ -873,7 +908,12 @@ export const getFollowers = (id: string, signal?: AbortSignal) =>
 
 /** List a persona's co-owners (creator + accepted invitees). */
 export const listSubprofileMembers = (id: string, signal?: AbortSignal) =>
-  apiGet<MemberDTO[]>(`/subprofiles/${id}/members`, undefined, undefined, signal);
+  apiGet<MemberDTO[]>(
+    `/subprofiles/${id}/members`,
+    undefined,
+    undefined,
+    signal,
+  );
 
 /** Invite another member to co-own this persona. Addressed by the invitee's
  *  profile SLUG (the repo convention — mirrors `recipientHandle` /

@@ -107,7 +107,7 @@ function DemoCard() {
               width="100%"
               height="100%"
               radius={12}
-              placeholder="cover · set art"
+              placeholder={`${t("studio:media.coverLabel")} · ${t("studio:media.setArtLabel")}`}
               style={{ position: "absolute", inset: 0 }}
             />
           </div>

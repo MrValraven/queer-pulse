@@ -27,7 +27,10 @@ export function CommunityCard() {
   const curatedTagIds =
     communities.find((community) => community.slug === c.slug)?.tags ?? [];
   const tags = [
-    { label: t("feed:community.newThisWeek", { count: c.newThisWeek }), accent: true },
+    {
+      label: t("feed:community.newThisWeek", { count: c.newThisWeek }),
+      accent: true,
+    },
     ...curatedTagIds.slice(0, CARD_TAG_DISPLAY_CAP).map((tagId) => ({
       label: COMMUNITY_TAG_LABEL_KEY[tagId]
         ? t(COMMUNITY_TAG_LABEL_KEY[tagId])
@@ -41,7 +44,9 @@ export function CommunityCard() {
         timestamp={c.activity}
       />
       <FeedIdentity
-        lead={<Avatar initials={c.initials} tint={c.tint} size={46} alt={c.name} />}
+        lead={
+          <Avatar initials={c.initials} tint={c.tint} size={46} alt={c.name} />
+        }
         name={c.name}
         meta={t("feed:community.meta", {
           count: c.memberCount,

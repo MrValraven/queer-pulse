@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AdminRoadmapItemDTO } from "../api/roadmapAdmin.types";
 import { SAVED_VIEWS } from "./roadmapChrome.data";
-import { SAVED_VIEW_PREDICATES, useRoadmapFilters } from "./state/useRoadmapFilters";
+import { SAVED_VIEW_PREDICATES } from "./state/roadmapFiltersTypes";
+import { useRoadmapFilters } from "./state/roadmapFiltersHook";
 import styles from "./RoadmapChrome.module.css";
 
 /**

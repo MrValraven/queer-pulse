@@ -34,7 +34,9 @@ function blockDiffText(block: ArticleBlock): string {
     case "image":
       return stripHtml(block.caption).trim();
     case "stats":
-      return block.items.map((item) => `${item.value}: ${item.label}`).join(" · ");
+      return block.items
+        .map((item) => `${item.value}: ${item.label}`)
+        .join(" · ");
     default: {
       // Exhaustiveness guard: TypeScript rejects an unhandled kind here.
       const exhaustive: never = block;
@@ -65,7 +67,9 @@ export function computeVersionDiff(
   versionBlocks: ArticleBlock[],
 ): VersionDiffRow[] {
   const versionByKey = new Map(
-    versionBlocks.map((block, index) => [blockKey(block, index), block] as const),
+    versionBlocks.map(
+      (block, index) => [blockKey(block, index), block] as const,
+    ),
   );
   const matchedVersionKeys = new Set<string>();
 
@@ -89,7 +93,12 @@ export function computeVersionDiff(
   versionBlocks.forEach((block, index) => {
     const key = blockKey(block, index);
     if (matchedVersionKeys.has(key)) return;
-    rows.push({ key, status: "removed", currentText: null, versionText: blockDiffText(block) });
+    rows.push({
+      key,
+      status: "removed",
+      currentText: null,
+      versionText: blockDiffText(block),
+    });
   });
 
   return rows;

@@ -99,12 +99,16 @@ where no browser chrome absorbs it — exactly where `BottomTabBar` renders.
 - **After focus, scroll the field into view once the keyboard settles.** _Under `resizes-visual` the browser won't do it for you._
 
 ```html
-<meta name="viewport"
-  content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+/>
 ```
 
 ```css
-.form-field input { font-size: 16px; } /* >=16px: no iOS zoom-on-focus */
+.form-field input {
+  font-size: 16px;
+} /* >=16px: no iOS zoom-on-focus */
 ```
 
 ## Accessibility, orientation & overscroll

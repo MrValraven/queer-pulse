@@ -34,7 +34,11 @@ export function GatheringLineupRow({
   return (
     <div className={styles.row}>
       <MemberIdentity
-        person={{ slug: row.slug, name: row.name, avatarUrl: row.avatarUrl ?? undefined }}
+        person={{
+          slug: row.slug,
+          name: row.name,
+          avatarUrl: row.avatarUrl ?? undefined,
+        }}
         size={38}
       />
       <Select

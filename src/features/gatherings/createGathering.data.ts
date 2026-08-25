@@ -51,7 +51,10 @@ export const TIP_KEYS = [
 // `value` matches the backend's `RecurrenceCadence`/`RecurrenceEndType`
 // literal unions exactly (see events.api.ts) — never translated, only the
 // label is.
-export const CADENCE_OPTIONS: { value: "weekly" | "biweekly" | "monthly"; labelKey: string }[] = [
+export const CADENCE_OPTIONS: {
+  value: "weekly" | "biweekly" | "monthly";
+  labelKey: string;
+}[] = [
   { value: "weekly", labelKey: "gatherings:create.repeats.cadence.weekly" },
   { value: "biweekly", labelKey: "gatherings:create.repeats.cadence.biweekly" },
   { value: "monthly", labelKey: "gatherings:create.repeats.cadence.monthly" },

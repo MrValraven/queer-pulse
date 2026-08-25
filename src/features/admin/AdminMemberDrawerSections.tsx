@@ -103,8 +103,7 @@ export function MemberOverviewSections({
         <div className={styles.graphNoteRow}>
           <p className={styles.dHint}>{detail.graphNote}</p>
           <Button variant="ghost" size="md" onClick={onOpenNetwork}>
-            {t("admin:members.drawer.exploreCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("admin:members.drawer.exploreCta")} <FiArrowRight aria-hidden />
           </Button>
         </div>
       </section>
@@ -187,8 +186,7 @@ export function ModerationTimeline({
         ))}
       </ul>
       <Link className={styles.auditLink} to={routes.adminGovernance}>
-        {t("admin:members.timeline.auditLinkCta")}{" "}
-        <FiArrowRight aria-hidden />
+        {t("admin:members.timeline.auditLinkCta")} <FiArrowRight aria-hidden />
       </Link>
     </section>
   );

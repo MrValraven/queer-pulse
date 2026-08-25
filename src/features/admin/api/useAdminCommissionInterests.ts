@@ -34,9 +34,8 @@ export function useAdminCommissionInterests(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const { ADMIN_COMMISSION_INTERESTS } = await import(
-          "../adminCommissionInterests.data"
-        );
+        const { ADMIN_COMMISSION_INTERESTS } =
+          await import("../adminCommissionInterests.data");
         const filtered = categoryArg
           ? ADMIN_COMMISSION_INTERESTS.filter(
               (interest) => interest.commissionCategory === categoryArg,

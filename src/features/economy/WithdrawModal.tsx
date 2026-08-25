@@ -86,8 +86,7 @@ export function WithdrawModal({
               onClick={onClose}
               disabled={sending}
             >
-              <FiArrowLeft aria-hidden />{" "}
-              {t("economy:withdraw.keepIt")}
+              <FiArrowLeft aria-hidden /> {t("economy:withdraw.keepIt")}
             </button>
             <Button size="lg" type="submit" disabled={sending}>
               {sending ? (

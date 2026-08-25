@@ -37,7 +37,8 @@ export const DEMO_GIFS: GifResult[] = [
     description: "Excellent! Approving clap emoji",
     attachment: {
       url: "https://media.tenor.com/fJp9FfbUQjoAAAAC/excellent-clap-emoji.gif",
-      previewUrl: "https://media.tenor.com/fJp9FfbUQjoAAAAc/excellent-clap-emoji.gif",
+      previewUrl:
+        "https://media.tenor.com/fJp9FfbUQjoAAAAc/excellent-clap-emoji.gif",
       width: 369,
       height: 498,
       provider: "klipy",
@@ -70,7 +71,8 @@ export const DEMO_GIFS: GifResult[] = [
     description: "Cute cat giving a thumbs up",
     attachment: {
       url: "https://media.tenor.com/TsVXIAMBZXoAAAAC/cat-thumbs-up-thumbs-up.gif",
-      previewUrl: "https://media.tenor.com/TsVXIAMBZXoAAAAc/cat-thumbs-up-thumbs-up.gif",
+      previewUrl:
+        "https://media.tenor.com/TsVXIAMBZXoAAAAc/cat-thumbs-up-thumbs-up.gif",
       width: 256,
       height: 240,
       provider: "klipy",
@@ -103,7 +105,8 @@ export const DEMO_GIFS: GifResult[] = [
     description: "Friendly welcome greeting",
     attachment: {
       url: "https://media.tenor.com/CevVS229lNoAAAAC/welcome-youre-welcome.gif",
-      previewUrl: "https://media.tenor.com/CevVS229lNoAAAAc/welcome-youre-welcome.gif",
+      previewUrl:
+        "https://media.tenor.com/CevVS229lNoAAAAc/welcome-youre-welcome.gif",
       width: 480,
       height: 340,
       provider: "klipy",
@@ -136,7 +139,8 @@ export const DEMO_GIFS: GifResult[] = [
     description: "Congratulations celebration",
     attachment: {
       url: "https://media.tenor.com/Ry5ZE__yV-4AAAAC/congratulations.gif",
-      previewUrl: "https://media.tenor.com/Ry5ZE__yV-4AAAAc/congratulations.gif",
+      previewUrl:
+        "https://media.tenor.com/Ry5ZE__yV-4AAAAc/congratulations.gif",
       width: 498,
       height: 371,
       provider: "klipy",

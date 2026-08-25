@@ -1,6 +1,6 @@
 import { AnimatePresence, m } from "motion/react";
 import { ImageSlot } from "../../../shared/components/ui";
-import { useMotionPrefs } from "../../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import type { PersonaProfile } from "./personasShowcase.data";
 import styles from "./PersonasShowcase.module.css";
 
@@ -27,11 +27,18 @@ export function PersonaGlimpse({ persona }: { persona: PersonaProfile }) {
           initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
-          transition={{ duration: reducedMotion ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.22,
+            ease: [0.16, 1, 0.3, 1],
+          }}
         >
           <div className={styles.pvwCover}>
             <span
-              className={persona.nameCaps ? `${styles.pvwMark} ${styles.pvwMarkCaps}` : styles.pvwMark}
+              className={
+                persona.nameCaps
+                  ? `${styles.pvwMark} ${styles.pvwMarkCaps}`
+                  : styles.pvwMark
+              }
             >
               {persona.name}
             </span>

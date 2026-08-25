@@ -195,7 +195,10 @@ describe("flaggedDtoToMember", () => {
 
   it("composes meta from the joined date and the latest report detail", () => {
     const flagged = flaggedDtoToMember(
-      { ...baseFlaggedDto, latestReportDetail: "Crypto links across 6 threads" },
+      {
+        ...baseFlaggedDto,
+        latestReportDetail: "Crypto links across 6 threads",
+      },
       translate,
       fmt,
     );
@@ -225,7 +228,11 @@ const baseDetailDto: AdminMemberDetailDTO = {
     { name: "Queer Creatives", role: "member" },
   ],
   contributions: [
-    { kind: "vouch", detail: "Vouched for Marco Vieira", at: "2026-05-30T00:00:00Z" },
+    {
+      kind: "vouch",
+      detail: "Vouched for Marco Vieira",
+      at: "2026-05-30T00:00:00Z",
+    },
   ],
   moderationTimeline: [
     {

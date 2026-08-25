@@ -83,17 +83,18 @@ export function FilmmakerAside({ filmmaker, tipRef }: FilmmakerAsideProps) {
           />
         </div>
         <Link to={routes.governance} className={styles.acLink}>
-          {t("cinema:film.split.readDeedCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("cinema:film.split.readDeedCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
 
       <div className={styles.asideCard}>
         <div className={styles.acHead}>{t("cinema:nav.openCalls")}</div>
+        {/* eslint-disable local/no-literal-string -- this open call's own instance content (this filmmaker's mentor role and its close date); content per the scope rule */}
         <div className={styles.acBody} style={{ marginBottom: 14 }}>
           {name} is a mentor for the “First feature, any stage” open call.
           Applications close 15 July.
         </div>
+        {/* eslint-enable local/no-literal-string */}
         <Button
           variant="ghost"
           to={routes.studioCalls}

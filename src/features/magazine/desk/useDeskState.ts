@@ -61,17 +61,22 @@ export function useDeskState(pieces: Piece[], me: string): UseDeskStateResult {
       const matchesView = !view || VIEW_TEST[view](piece);
       const matchesQuery =
         !q ||
-        (piece.title + piece.byline + piece.section).toLowerCase().includes(lowerCaseQuery);
+        (piece.title + piece.byline + piece.section)
+          .toLowerCase()
+          .includes(lowerCaseQuery);
       return matchesFormat && matchesMine && matchesView && matchesQuery;
     });
 
     const sortedPieces = [...filteredPieces];
     if (sort === "stage") {
       sortedPieces.sort(
-        (pieceA, pieceB) => DEMO_STAGES.indexOf(pieceA.stage) - DEMO_STAGES.indexOf(pieceB.stage),
+        (pieceA, pieceB) =>
+          DEMO_STAGES.indexOf(pieceA.stage) - DEMO_STAGES.indexOf(pieceB.stage),
       );
     } else if (sort === "sec") {
-      sortedPieces.sort((pieceA, pieceB) => pieceA.section.localeCompare(pieceB.section));
+      sortedPieces.sort((pieceA, pieceB) =>
+        pieceA.section.localeCompare(pieceB.section),
+      );
     } else {
       sortedPieces.sort((pieceA, pieceB) => {
         const sortKeyA = (pieceA.late ? "0" : "1") + pieceA.due;

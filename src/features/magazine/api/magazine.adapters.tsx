@@ -301,19 +301,17 @@ export function authorFromDto(
           articleId: "",
           image: "",
         },
-    articles: liveArticles.map(
-      (article): AuthorArticle => ({
-        id: article.slug,
-        kicker: article.issueNumber
-          ? t("magazine:live.issueBadge", { number: article.issueNumber })
-          : t("magazine:live.web"),
-        title: article.title,
-        dek: article.dek,
-        meta: article.issueNumber
-          ? t("magazine:live.issueBadge", { number: article.issueNumber })
-          : formatMonthYear(article.publishedAt, fmt),
-      }),
-    ),
+    articles: liveArticles.map((article): AuthorArticle => ({
+      id: article.slug,
+      kicker: article.issueNumber
+        ? t("magazine:live.issueBadge", { number: article.issueNumber })
+        : t("magazine:live.web"),
+      title: article.title,
+      dek: article.dek,
+      meta: article.issueNumber
+        ? t("magazine:live.issueBadge", { number: article.issueNumber })
+        : formatMonthYear(article.publishedAt, fmt),
+    })),
     readingTitle: "",
     readingBlurb: "",
     reading: [],
@@ -360,19 +358,17 @@ export function mergeAuthor(
         }
       : base.featured,
     articles: liveArticles.length
-      ? liveArticles.map(
-          (article): AuthorArticle => ({
-            id: article.slug,
-            kicker: article.issueNumber
-              ? t("magazine:live.issueBadge", { number: article.issueNumber })
-              : t("magazine:live.web"),
-            title: article.title,
-            dek: article.dek,
-            meta: article.issueNumber
-              ? t("magazine:live.issueBadge", { number: article.issueNumber })
-              : formatMonthYear(article.publishedAt, fmt),
-          }),
-        )
+      ? liveArticles.map((article): AuthorArticle => ({
+          id: article.slug,
+          kicker: article.issueNumber
+            ? t("magazine:live.issueBadge", { number: article.issueNumber })
+            : t("magazine:live.web"),
+          title: article.title,
+          dek: article.dek,
+          meta: article.issueNumber
+            ? t("magazine:live.issueBadge", { number: article.issueNumber })
+            : formatMonthYear(article.publishedAt, fmt),
+        }))
       : base.articles,
   };
 }

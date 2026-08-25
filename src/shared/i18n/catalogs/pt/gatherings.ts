@@ -131,6 +131,7 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Convívios",
   "common.hostedBy": "Organização de",
+  "common.timeRangeTo": "às",
   "common.connectCta": "Ligar",
 
   // EventPage — About / Details / Guidelines / hero / members-only / pills

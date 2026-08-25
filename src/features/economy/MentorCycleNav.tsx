@@ -28,8 +28,7 @@ export function MentorCycleNav({
     >
       <Link to={`${base}/${previous.slug}`} className={styles.cycleBtn}>
         <span className={styles.cycleDir}>
-          <FiArrowLeft aria-hidden />{" "}
-          {t("economy:mentorDetail.cyclePrevious")}
+          <FiArrowLeft aria-hidden /> {t("economy:mentorDetail.cyclePrevious")}
         </span>
         <span className={styles.cycleName}>{previous.name}</span>
       </Link>
@@ -41,8 +40,7 @@ export function MentorCycleNav({
         className={`${styles.cycleBtn} ${styles.next}`}
       >
         <span className={styles.cycleDir}>
-          {t("economy:mentorDetail.cycleNext")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("economy:mentorDetail.cycleNext")} <FiArrowRight aria-hidden />
         </span>
         <span className={styles.cycleName}>{next.name}</span>
       </Link>

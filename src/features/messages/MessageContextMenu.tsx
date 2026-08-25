@@ -85,8 +85,14 @@ export function MessageContextMenu({
     const openUp = anchor.y + height + EDGE_GAP > viewportHeight;
     let left = openLeft ? anchor.x - width : anchor.x;
     let top = openUp ? anchor.y - height : anchor.y;
-    left = Math.min(Math.max(EDGE_GAP, left), Math.max(EDGE_GAP, viewportWidth - width - EDGE_GAP));
-    top = Math.min(Math.max(EDGE_GAP, top), Math.max(EDGE_GAP, viewportHeight - height - EDGE_GAP));
+    left = Math.min(
+      Math.max(EDGE_GAP, left),
+      Math.max(EDGE_GAP, viewportWidth - width - EDGE_GAP),
+    );
+    top = Math.min(
+      Math.max(EDGE_GAP, top),
+      Math.max(EDGE_GAP, viewportHeight - height - EDGE_GAP),
+    );
     setPlacement({
       left,
       top,
@@ -110,7 +116,10 @@ export function MessageContextMenu({
     const previouslyFocused = document.activeElement as HTMLElement | null;
     menuRef.current?.focus();
     function handleMouseDown(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         close();
       }
     }

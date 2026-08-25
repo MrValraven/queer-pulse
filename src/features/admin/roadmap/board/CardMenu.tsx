@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import type { AdminRoadmapItemDTO, RoadmapColumn } from "../../api/roadmapAdmin.types";
+import type {
+  AdminRoadmapItemDTO,
+  RoadmapColumn,
+} from "../../api/roadmapAdmin.types";
 import styles from "./CardMenu.module.css";
 
-const COLUMN_ORDER: RoadmapColumn[] = ["backlog", "planned", "building", "shipped"];
+const COLUMN_ORDER: RoadmapColumn[] = [
+  "backlog",
+  "planned",
+  "building",
+  "shipped",
+];
 
 interface CardMenuProps {
   item: AdminRoadmapItemDTO;
@@ -140,7 +148,9 @@ export function CardMenu({
               className={styles.item}
               onClick={() => runAndClose(onNotifyVoters)}
             >
-              {t("admin:roadmap.board.menu.notifyVoters", { count: item.votes })}
+              {t("admin:roadmap.board.menu.notifyVoters", {
+                count: item.votes,
+              })}
             </button>
           )}
           <button

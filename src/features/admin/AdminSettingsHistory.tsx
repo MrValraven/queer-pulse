@@ -86,7 +86,9 @@ export function AdminSettingsHistory() {
     return <p className={styles.error}>{t("admin:settings.history.error")}</p>;
 
   if (changes.length === 0) {
-    return <p className={styles.historyEmpty}>{t("admin:settings.history.empty")}</p>;
+    return (
+      <p className={styles.historyEmpty}>{t("admin:settings.history.empty")}</p>
+    );
   }
 
   return (

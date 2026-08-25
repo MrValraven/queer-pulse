@@ -53,7 +53,8 @@ function readTrackParam(
   rawTrack: string | null,
   hasCurrentIssue: boolean,
 ): DeskTrack {
-  if (rawTrack === "unassigned" || rawTrack === "highlights") return "unassigned";
+  if (rawTrack === "unassigned" || rawTrack === "highlights")
+    return "unassigned";
   if (rawTrack === "issue") return "issue";
   return hasCurrentIssue ? "issue" : "unassigned";
 }
@@ -113,7 +114,8 @@ export function useDeskTracks({
               : translate("magazine:desk.reassign.madeUnassignedToast"),
             "success",
           ),
-        onError: () => showToast(translate("magazine:desk.reassign.failedToast"), "error"),
+        onError: () =>
+          showToast(translate("magazine:desk.reassign.failedToast"), "error"),
       },
     );
   };

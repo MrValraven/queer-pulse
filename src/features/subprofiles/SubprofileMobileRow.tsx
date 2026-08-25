@@ -43,7 +43,9 @@ export function SubprofileMobileRow({
   // "kind · tagline" — the aka-card secondary line. Falls back to the kind
   // alone when the persona has no tagline set.
   const kindLabel = t(KIND_LABEL_KEYS[persona.kind]);
-  const secondary = persona.tagline ? `${kindLabel} · ${persona.tagline}` : kindLabel;
+  const secondary = persona.tagline
+    ? `${kindLabel} · ${persona.tagline}`
+    : kindLabel;
 
   return (
     <div className={styles.mobileRow} data-expanded={isExpanded}>
@@ -62,7 +64,10 @@ export function SubprofileMobileRow({
             the owner badges, and the trailing expand chevron stay row-local
             siblings around it. */}
         <MemberIdentity
-          person={{ name: persona.displayName, avatarUrl: persona.avatarUrl ?? undefined }}
+          person={{
+            name: persona.displayName,
+            avatarUrl: persona.avatarUrl ?? undefined,
+          }}
           tint="plum"
           size={40}
           secondary={secondary}
@@ -83,9 +88,7 @@ export function SubprofileMobileRow({
           with its own follow/endorse network calls) — only mounts while
           expanded, so collapsed rows cost nothing beyond the summary. */}
       <div id={detailId}>
-        {isExpanded && (
-          <div className={styles.mobileDetail}>{children}</div>
-        )}
+        {isExpanded && <div className={styles.mobileDetail}>{children}</div>}
       </div>
     </div>
   );

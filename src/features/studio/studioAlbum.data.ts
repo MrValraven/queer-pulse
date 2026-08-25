@@ -7,6 +7,10 @@ export const ALBUM = {
   id: "post:studio-album-cidade-dos-santos",
   kind: "post" as const,
   title: "Cidade dos santos",
+  // Split for the hero's <em> emphasis on the title's second word — content,
+  // mirrors ALBUM.title.
+  titlePre: "Cidade dos ",
+  titleEm: "santos",
   href: routes.studioAlbum,
   meta: "Mariana Sol · Album",
   description:

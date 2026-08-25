@@ -5,12 +5,7 @@ import { apiPost } from "../../../shared/api/client";
 /** The 6 fields a member can flag as needing a correction — mirrors the
  *  backend's accepted `field` enum on `POST /directory/:slug/edit-suggestions`. */
 export type SuggestEditField =
-  | "hours"
-  | "address"
-  | "phone"
-  | "website"
-  | "description"
-  | "other";
+  "hours" | "address" | "phone" | "website" | "description" | "other";
 
 export interface SuggestEditInput {
   field: SuggestEditField;

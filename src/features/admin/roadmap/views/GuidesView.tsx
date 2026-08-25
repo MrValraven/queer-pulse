@@ -12,7 +12,7 @@ import { intlLocale } from "../../../../shared/i18n/locale";
 import type { Language, TFunction } from "../../../../shared/i18n/types";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { AdminRoadmapItemDTO } from "../../api/roadmapAdmin.types";
-import { useItemDrawer } from "../state/useItemDrawer";
+import { useItemDrawer } from "../state/itemDrawerHook";
 import {
   GUIDE_STEPS,
   guidePct,
@@ -158,10 +158,7 @@ function GuideRow({
               {done}/{GUIDE_STEPS.length}
             </p>
             <div className={styles.meterTrack}>
-              <div
-                className={styles.meterFill}
-                style={{ width: `${pct}%` }}
-              />
+              <div className={styles.meterFill} style={{ width: `${pct}%` }} />
             </div>
           </div>
 

@@ -31,7 +31,10 @@ export function useMyEventsSafety({
   closeMore,
   t,
 }: SafetyDeps): MyEventsSafety {
-  const [report, setReport] = useState<{ open: boolean; eventId: string | null }>({
+  const [report, setReport] = useState<{
+    open: boolean;
+    eventId: string | null;
+  }>({
     open: false,
     eventId: null,
   });

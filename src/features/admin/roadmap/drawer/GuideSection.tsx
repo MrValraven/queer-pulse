@@ -83,7 +83,9 @@ export function GuideSection({
         ))}
       </div>
 
-      {reVerifyBanner && <p className={styles.warningBanner}>{reVerifyBanner}</p>}
+      {reVerifyBanner && (
+        <p className={styles.warningBanner}>{reVerifyBanner}</p>
+      )}
 
       <label className={styles.fieldLabel} htmlFor="guide-reviewer">
         {t("admin:roadmap.drawer.guide.reviewerLabel")}
@@ -141,7 +143,11 @@ export function GuideSection({
         ))}
       </div>
 
-      <Button variant="ghost" size="md" onClick={() => onFieldChange({ guide: null })}>
+      <Button
+        variant="ghost"
+        size="md"
+        onClick={() => onFieldChange({ guide: null })}
+      >
         {t("admin:roadmap.drawer.guide.notAGuideCta")}
       </Button>
     </div>

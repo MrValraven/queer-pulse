@@ -267,7 +267,8 @@ export const COMMUNITIES: Community[] = [
     initials: "TR",
     tone: "jade",
     tag: "Peer support · private",
-    description: "A peer-support and friendship space for trans, non-binary and questioning members.",
+    description:
+      "A peer-support and friendship space for trans, non-binary and questioning members.",
     members: "1,204",
     activity: "High",
     activePercent: 68,
@@ -323,7 +324,8 @@ export const COMMUNITIES: Community[] = [
     initials: "QC",
     tone: "violet",
     tag: "Artists & makers",
-    description: "A network for queer artists, designers and makers to share work and collaborate.",
+    description:
+      "A network for queer artists, designers and makers to share work and collaborate.",
     members: "842",
     activity: "Active",
     activePercent: 54,
@@ -379,7 +381,8 @@ export const COMMUNITIES: Community[] = [
     initials: "LQ",
     tone: "coral",
     tag: "City-wide · public",
-    description: "The big public square: anyone in Lisbon can join. High traffic, and the hardest to keep warm.",
+    description:
+      "The big public square: anyone in Lisbon can join. High traffic, and the hardest to keep warm.",
     members: "3,180",
     activity: "Busy",
     activePercent: 72,
@@ -435,7 +438,8 @@ export const COMMUNITIES: Community[] = [
     initials: "NA",
     tone: "jade",
     tag: "Migrants & arrivals",
-    description: "A soft landing for queer people new to Lisbon: housing, paperwork, friendship.",
+    description:
+      "A soft landing for queer people new to Lisbon: housing, paperwork, friendship.",
     members: "410",
     activity: "Growing",
     activePercent: 61,
@@ -470,7 +474,8 @@ export const COMMUNITIES: Community[] = [
     initials: "TH",
     tone: "jade",
     tag: "Navigators · support",
-    description: "Members sharing trusted clinics, hormone resources and healthcare navigation.",
+    description:
+      "Members sharing trusted clinics, hormone resources and healthcare navigation.",
     members: "560",
     activity: "Steady",
     activePercent: 49,
@@ -504,7 +509,8 @@ export const COMMUNITIES: Community[] = [
     initials: "NF",
     tone: "violet",
     tag: "Events · high traffic",
-    description: "Where the parties, afters and DJ line-ups get shared. Fast, loud, occasionally messy.",
+    description:
+      "Where the parties, afters and DJ line-ups get shared. Fast, loud, occasionally messy.",
     members: "1,640",
     activity: "Spiky",
     activePercent: 80,
@@ -560,7 +566,8 @@ export const COMMUNITIES: Community[] = [
     initials: "EM",
     tone: "amber",
     tag: "Intergenerational",
-    description: "Older members and memory-keepers holding queer history and mentorship.",
+    description:
+      "Older members and memory-keepers holding queer history and mentorship.",
     members: "220",
     activity: "Calm",
     activePercent: 43,
@@ -594,7 +601,8 @@ export const COMMUNITIES: Community[] = [
     initials: "MA",
     tone: "coral",
     tag: "Solidarity & care",
-    description: "Practical solidarity: fund drives, surplus sharing, crisis support.",
+    description:
+      "Practical solidarity: fund drives, surplus sharing, crisis support.",
     members: "980",
     activity: "Active",
     activePercent: 58,

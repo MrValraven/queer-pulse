@@ -120,8 +120,7 @@ export function OfferPage() {
         <div className="wrap">
           <div className={styles.backLink}>
             <a href="/#board">
-              <FiArrowLeft aria-hidden />{" "}
-              {t("economy:offerBoard.backLink")}
+              <FiArrowLeft aria-hidden /> {t("economy:offerBoard.backLink")}
             </a>
           </div>
           <div className={styles.grid}>
@@ -148,7 +147,9 @@ export function OfferPage() {
                     t("connect:contact.message")
                   ) : (
                     <>
-                      {t("economy:offerBoard.respondCta", { name: owner.first })}{" "}
+                      {t("economy:offerBoard.respondCta", {
+                        name: owner.first,
+                      })}{" "}
                       <FiArrowRight aria-hidden />
                     </>
                   )}

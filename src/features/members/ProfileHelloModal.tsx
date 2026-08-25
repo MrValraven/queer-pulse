@@ -37,7 +37,11 @@ export function ProfileHelloModal({
       <p className={styles.intro}>{t("members:profile.hello.intro")}</p>
 
       {hasReasons && (
-        <div className={styles.reasons} role="group" aria-label={t("members:profile.hello.reasonsLabel")}>
+        <div
+          className={styles.reasons}
+          role="group"
+          aria-label={t("members:profile.hello.reasonsLabel")}
+        >
           {profile.openTo.map((entry) => {
             const value = reasonValue(entry);
             const label = openToLabel(entry, t);
@@ -68,7 +72,9 @@ export function ProfileHelloModal({
         />
       </FormField>
 
-      {profile.notHereFor && <p className={styles.note}>{profile.notHereFor}</p>}
+      {profile.notHereFor && (
+        <p className={styles.note}>{profile.notHereFor}</p>
+      )}
 
       <div className={styles.footer}>
         <Button variant="ghost" onClick={onClose}>

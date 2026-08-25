@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { FiCheckCircle, FiThumbsDown, FiThumbsUp, FiXCircle } from "react-icons/fi";
+import {
+  FiCheckCircle,
+  FiThumbsDown,
+  FiThumbsUp,
+  FiXCircle,
+} from "react-icons/fi";
 import { Button, Reveal, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";

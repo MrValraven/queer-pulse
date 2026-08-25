@@ -212,7 +212,9 @@ export const PRERENDER_PATHS = ["/"];
  */
 export function assertPrerenderSubset() {
   const surface = new Set(QUIET_PUBLIC_PATHS);
-  const strays = PRERENDER_PATHS.filter((candidatePath) => !surface.has(candidatePath));
+  const strays = PRERENDER_PATHS.filter(
+    (candidatePath) => !surface.has(candidatePath),
+  );
   if (strays.length > 0) {
     throw new Error(
       `PRERENDER_PATHS contains paths not in QUIET_PUBLIC_PATHS:\n  ${strays.join("\n  ")}`,
@@ -245,12 +247,20 @@ export function assertNoGatedPaths(paths) {
 export async function fetchSubprofilePublicPaths(apiUrl) {
   if (!apiUrl) return [];
   try {
-    const response = await fetch(`${apiUrl.replace(/\/$/, "")}/subprofiles/public-handles`);
+    const response = await fetch(
+      `${apiUrl.replace(/\/$/, "")}/subprofiles/public-handles`,
+    );
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const body = await response.json();
     const entries = (body.items ?? [])
-      .filter((item) => item && typeof item.handle === "string" && item.handle.length > 0)
-      .map((item) => ({ path: `/p/${item.handle}`, lastmod: item.updatedAt ?? null }));
+      .filter(
+        (item) =>
+          item && typeof item.handle === "string" && item.handle.length > 0,
+      )
+      .map((item) => ({
+        path: `/p/${item.handle}`,
+        lastmod: item.updatedAt ?? null,
+      }));
     assertNoGatedPaths(entries.map((entry) => entry.path));
     return entries;
   } catch (error) {

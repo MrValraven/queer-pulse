@@ -24,9 +24,7 @@ export function useReviewQueueSelection(rows: AdminVerificationRequestDTO[]) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [focusedRequestId, setFocusedRequestId] = useState<string | null>(
-    null,
-  );
+  const [focusedRequestId, setFocusedRequestId] = useState<string | null>(null);
   const [rejectModalIds, setRejectModalIds] = useState<string[] | null>(null);
 
   const atSelectionCap = selectedIds.size >= VERIFICATION_BULK_ACTION_CAP;

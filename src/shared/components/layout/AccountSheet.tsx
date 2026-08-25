@@ -11,7 +11,7 @@ import { Avatar, useScrimDismiss } from "../ui";
 import { useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
-import { useMotionPrefs } from "../../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import {
   useNavMode,
   type NavMode,

@@ -165,8 +165,14 @@ function processPolygons(polygons) {
 
 function ringArea(ring) {
   let area = 0;
-  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index++) {
-    area += (ring[previous][0] + ring[index][0]) * (ring[previous][1] - ring[index][1]);
+  for (
+    let index = 0, previous = ring.length - 1;
+    index < ring.length;
+    previous = index++
+  ) {
+    area +=
+      (ring[previous][0] + ring[index][0]) *
+      (ring[previous][1] - ring[index][1]);
   }
   return Math.abs(area / 2);
 }
@@ -175,8 +181,13 @@ function ringCentroid(ring) {
   let centroidX = 0;
   let centroidY = 0;
   let signedArea = 0;
-  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index++) {
-    const cross = ring[previous][0] * ring[index][1] - ring[index][0] * ring[previous][1];
+  for (
+    let index = 0, previous = ring.length - 1;
+    index < ring.length;
+    previous = index++
+  ) {
+    const cross =
+      ring[previous][0] * ring[index][1] - ring[index][0] * ring[previous][1];
     centroidX += (ring[previous][0] + ring[index][0]) * cross;
     centroidY += (ring[previous][1] + ring[index][1]) * cross;
     signedArea += cross;
@@ -203,13 +214,18 @@ function largestPolygon(polygons) {
 function pointInRing(point, ring) {
   const [pointX, pointY] = point;
   let inside = false;
-  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index++) {
+  for (
+    let index = 0, previous = ring.length - 1;
+    index < ring.length;
+    previous = index++
+  ) {
     const [currentX, currentY] = ring[index];
     const [previousX, previousY] = ring[previous];
     const crossesRay =
       currentY > pointY !== previousY > pointY &&
       pointX <
-        ((previousX - currentX) * (pointY - currentY)) / (previousY - currentY) +
+        ((previousX - currentX) * (pointY - currentY)) /
+          (previousY - currentY) +
           currentX;
     if (crossesRay) inside = !inside;
   }

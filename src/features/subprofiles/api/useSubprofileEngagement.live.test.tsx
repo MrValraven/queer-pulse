@@ -47,11 +47,11 @@ beforeEach(() => {
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
-  const { useEndorsement: useEndorsementLive } = await import("./useEndorsement");
+  const { useEndorsement: useEndorsementLive } =
+    await import("./useEndorsement");
   const { useFollow: useFollowLive } = await import("./useFollow");
-  const { DemoModeProvider } = await import(
-    "../../../app/providers/DemoModeProvider"
-  );
+  const { DemoModeProvider } =
+    await import("../../../app/providers/DemoModeProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -60,7 +60,11 @@ async function loadLive() {
       <DemoModeProvider>{children}</DemoModeProvider>
     </QueryClientProvider>
   );
-  return { useEndorsement: useEndorsementLive, useFollow: useFollowLive, wrapper };
+  return {
+    useEndorsement: useEndorsementLive,
+    useFollow: useFollowLive,
+    wrapper,
+  };
 }
 
 describe("useEndorsement (demo mode)", () => {

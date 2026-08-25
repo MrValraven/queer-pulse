@@ -201,8 +201,7 @@ export function NegotiationPlanner({
             <Sending label={t("economy:negotiate.sendingLabel")} />
           ) : (
             <>
-              {t("economy:negotiate.sendCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("economy:negotiate.sendCta")} <FiArrowRight aria-hidden />
             </>
           )}
         </Button>

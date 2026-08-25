@@ -183,10 +183,7 @@ export function previewCard(
   } = {},
 ): MyCardDTO {
   const issuedAt = new Date();
-  const expiresAt = expiryPreviewDate(
-    extras.validityMonths ?? null,
-    issuedAt,
-  );
+  const expiresAt = expiryPreviewDate(extras.validityMonths ?? null, issuedAt);
   return {
     id: "preview",
     serial: previewSerial(extras.serialPrefix),

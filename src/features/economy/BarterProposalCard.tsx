@@ -9,7 +9,10 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
-import type { BarterProposalStatus, BarterProposalDecision } from "./api/barter.api";
+import type {
+  BarterProposalStatus,
+  BarterProposalDecision,
+} from "./api/barter.api";
 import type { BarterProposalRow } from "./barterProposals.data";
 import styles from "./BarterProposalsPage.module.css";
 

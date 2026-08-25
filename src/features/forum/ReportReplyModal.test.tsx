@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { ReportReplyModal } from "./ReportReplyModal";
+import type { CreateReportInput } from "../safety/api/reports.api";
 
 /**
  * Forum report flow (audit P1-1 / P1-2). Two guarantees the modal must keep:
@@ -21,7 +22,19 @@ import { ReportReplyModal } from "./ReportReplyModal";
  * the component relies on.
  */
 
-const { mutate } = vi.hoisted(() => ({ mutate: vi.fn() }));
+/** Mirrors the real `useCreateReport().mutate` call sites in this modal, which
+ *  never read the `onSuccess` data argument (see `ReportReplyModal.tsx`). */
+type CreateReportMutate = (
+  input: CreateReportInput,
+  opts?: {
+    onSuccess?: () => void;
+    onError?: (error: Error) => void;
+  },
+) => void;
+
+const { mutate } = vi.hoisted(() => ({
+  mutate: vi.fn<CreateReportMutate>(),
+}));
 
 vi.mock("../safety/api/useCreateReport", () => ({
   useCreateReport: () => ({ mutate }),
@@ -31,7 +44,9 @@ afterEach(() => {
   mutate.mockReset();
 });
 
-function renderModal(overrides: Partial<Parameters<typeof ReportReplyModal>[0]> = {}) {
+function renderModal(
+  overrides: Partial<Parameters<typeof ReportReplyModal>[0]> = {},
+) {
   const onClose = vi.fn();
   render(
     <TestProviders>
@@ -58,7 +73,7 @@ async function pickReasonAndSubmit() {
 
 describe("ReportReplyModal", () => {
   it("submits the report with the exact subjectId/subjectType it was handed", async () => {
-    mutate.mockImplementation((_input, opts) => opts.onSuccess?.({}));
+    mutate.mockImplementation((_input, opts) => opts?.onSuccess?.());
     renderModal();
 
     await pickReasonAndSubmit();
@@ -72,7 +87,7 @@ describe("ReportReplyModal", () => {
   });
 
   it("shows the plum success confirmation after a report succeeds", async () => {
-    mutate.mockImplementation((_input, opts) => opts.onSuccess?.({}));
+    mutate.mockImplementation((_input, opts) => opts?.onSuccess?.());
     renderModal();
 
     await pickReasonAndSubmit();
@@ -82,7 +97,7 @@ describe("ReportReplyModal", () => {
 
   it("shows the retry panel — NOT the success sheet — when the report fails", async () => {
     mutate.mockImplementation((_input, opts) =>
-      opts.onError?.(new Error("network down")),
+      opts?.onError?.(new Error("network down")),
     );
     renderModal();
 
@@ -101,9 +116,9 @@ describe("ReportReplyModal", () => {
     // First attempt fails, second succeeds.
     mutate
       .mockImplementationOnce((_input, opts) =>
-        opts.onError?.(new Error("boom")),
+        opts?.onError?.(new Error("boom")),
       )
-      .mockImplementationOnce((_input, opts) => opts.onSuccess?.({}));
+      .mockImplementationOnce((_input, opts) => opts?.onSuccess?.());
     renderModal();
 
     await pickReasonAndSubmit();

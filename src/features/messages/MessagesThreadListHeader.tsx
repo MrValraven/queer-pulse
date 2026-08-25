@@ -54,14 +54,26 @@ export function MessagesThreadListHeader({
               fill="none"
               aria-hidden
             >
-              <circle cx="7" cy="7.5" r="2.6" stroke="currentColor" strokeWidth={1.5} />
+              <circle
+                cx="7"
+                cy="7.5"
+                r="2.6"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              />
               <path
                 d="M2.5 15.5c0-2.2 2-3.6 4.5-3.6s4.5 1.4 4.5 3.6"
                 stroke="currentColor"
                 strokeWidth={1.5}
                 strokeLinecap="round"
               />
-              <circle cx="14" cy="6.5" r="2" stroke="currentColor" strokeWidth={1.5} />
+              <circle
+                cx="14"
+                cy="6.5"
+                r="2"
+                stroke="currentColor"
+                strokeWidth={1.5}
+              />
               <path
                 d="M13 11.2c2.2 0 4 1.2 4 3.3"
                 stroke="currentColor"
@@ -77,7 +89,13 @@ export function MessagesThreadListHeader({
             aria-label={t("messages:thread.composeTooltip")}
             onClick={onCompose}
           >
-            <svg width={15} height={15} viewBox="0 0 15 15" fill="none" aria-hidden>
+            <svg
+              width={15}
+              height={15}
+              viewBox="0 0 15 15"
+              fill="none"
+              aria-hidden
+            >
               <path
                 d="M10.5 2L13 4.5l-7 7H3.5V9l7-7Z"
                 stroke="currentColor"

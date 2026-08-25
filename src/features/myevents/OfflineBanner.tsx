@@ -7,6 +7,9 @@ export function OfflineBanner() {
   const { t } = useTranslation();
   const { offline } = useMyEvents();
   return (
-    <SharedOfflineBanner offline={offline} message={t("myevents:offline.banner")} />
+    <SharedOfflineBanner
+      offline={offline}
+      message={t("myevents:offline.banner")}
+    />
   );
 }

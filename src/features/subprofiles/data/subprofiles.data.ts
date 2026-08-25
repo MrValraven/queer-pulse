@@ -130,7 +130,8 @@ const NIGHTFORM: DemoSubprofile = {
   skinData: {
     booker: {
       fee: "€400–600, depending on set length",
-      rider: "Two CDJs, a 4-channel mixer, and a green room that isn't a hallway.",
+      rider:
+        "Two CDJs, a 4-channel mixer, and a green room that isn't a hallway.",
       press: "https://example.com/nightform/press-kit",
       contact: "booking@nightform.example",
     },
@@ -350,7 +351,7 @@ const RUI_DEV: DemoSubprofile = {
       structured: {
         snippet: [
           "queue.enqueue(job, { backpressure: true })",
-          "queue.on(\"drain\", () => log.info(\"caught up\"))",
+          'queue.on("drain", () => log.info("caught up"))',
         ],
       },
     },
@@ -901,10 +902,34 @@ const SOFIA_NEVES: DemoSubprofile = {
       startDate: "2026-03-02",
       slotTime: "18:00",
       cells: [
-        "off","off","open","off","open","off","off",
-        "off","full","off","open","off","off","off",
-        "off","open","off","off","open","off","off",
-        "off","off","open","off","off","off","off",
+        "off",
+        "off",
+        "open",
+        "off",
+        "open",
+        "off",
+        "off",
+        "off",
+        "full",
+        "off",
+        "open",
+        "off",
+        "off",
+        "off",
+        "off",
+        "open",
+        "off",
+        "off",
+        "open",
+        "off",
+        "off",
+        "off",
+        "off",
+        "open",
+        "off",
+        "off",
+        "off",
+        "off",
       ],
     },
   },
@@ -2815,7 +2840,7 @@ export const mockSetEndorsed = (
     );
     sp.viewerEndorsed = viewerEndorsed;
   }
-  sp.viewerEndorsementNote = viewerEndorsed ? (note?.trim() || null) : null;
+  sp.viewerEndorsementNote = viewerEndorsed ? note?.trim() || null : null;
   return {
     endorsementCount: sp.endorsementCount,
     viewerEndorsed: sp.viewerEndorsed,

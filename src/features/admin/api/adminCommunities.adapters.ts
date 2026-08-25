@@ -181,7 +181,8 @@ function queueItemTitle(
   translate: TFunction,
 ): string {
   if (queueItemDto.detail) return queueItemDto.detail;
-  const reasonLabelKey = REASON_LABEL_KEYS[queueItemDto.reasonCode as ReasonCode];
+  const reasonLabelKey =
+    REASON_LABEL_KEYS[queueItemDto.reasonCode as ReasonCode];
   return reasonLabelKey ? translate(reasonLabelKey) : queueItemDto.reasonCode;
 }
 
@@ -198,7 +199,8 @@ function queueItemMeta(
 ): string {
   const statusKey = QUEUE_STATUS_KEY[queueItemDto.status];
   const parts = [statusKey ? translate(statusKey) : queueItemDto.status];
-  if (queueItemDto.overdue) parts.push(translate("admin:moderation.slaOverdue"));
+  if (queueItemDto.overdue)
+    parts.push(translate("admin:moderation.slaOverdue"));
   const ageLabel = relativeAgeLabel(queueItemDto.createdAt, fmt);
   if (ageLabel) parts.push(ageLabel);
   return parts.join(META_SEPARATOR);

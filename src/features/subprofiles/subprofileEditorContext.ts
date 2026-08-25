@@ -29,7 +29,9 @@ export const withSocialUid = (link: SocialLinkDTO): SocialRow => ({
   ...link,
   _uid: `social-${uidSequence++}`,
 });
-export const withAffiliationUid = (item: AffiliationInputDTO): AffiliationRow => ({
+export const withAffiliationUid = (
+  item: AffiliationInputDTO,
+): AffiliationRow => ({
   ...item,
   _uid: `affiliation-${uidSequence++}`,
 });

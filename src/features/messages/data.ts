@@ -100,7 +100,12 @@ export interface ChatMessage {
   /** ISO timestamp of the last edit (live mode). Absent if never edited. */
   editedAt?: string;
   /** The quoted message this one replies to (live mode). Absent if not a reply. */
-  replyTo?: { id: string; snippet: string; senderName: string; deleted: boolean };
+  replyTo?: {
+    id: string;
+    snippet: string;
+    senderName: string;
+    deleted: boolean;
+  };
   /** True when this message was created by forwarding — renders a "Forwarded"
    *  label on the bubble. Absent/false otherwise. */
   forwarded?: boolean;
@@ -243,10 +248,36 @@ export const conversations: Conversation[] = [
     canRename: true,
     canManageRoles: true,
     members: [
-      { name: "Tiago Costa", initials: "TC", tint: "plum", role: "owner", slug: "tiago" },
-      { name: "Anika Kovač", initials: "AK", tint: "coral", role: "member", slug: "anika", lastReadAt: "2026-07-29T10:00:00.000Z" },
-      { name: "Jordan Park", initials: "JP", tint: "jade", role: "admin", slug: "jordan", lastReadAt: "2026-07-29T10:00:00.000Z" },
-      { name: "Kai Larsson", initials: "KL", tint: "plum", role: "member", slug: "kai" },
+      {
+        name: "Tiago Costa",
+        initials: "TC",
+        tint: "plum",
+        role: "owner",
+        slug: "tiago",
+      },
+      {
+        name: "Anika Kovač",
+        initials: "AK",
+        tint: "coral",
+        role: "member",
+        slug: "anika",
+        lastReadAt: "2026-07-29T10:00:00.000Z",
+      },
+      {
+        name: "Jordan Park",
+        initials: "JP",
+        tint: "jade",
+        role: "admin",
+        slug: "jordan",
+        lastReadAt: "2026-07-29T10:00:00.000Z",
+      },
+      {
+        name: "Kai Larsson",
+        initials: "KL",
+        tint: "plum",
+        role: "member",
+        slug: "kai",
+      },
     ],
     messages: [
       {

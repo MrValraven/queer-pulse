@@ -20,7 +20,9 @@ export function AdminSupportModal({
   const [note, setNote] = useState("");
 
   const firstWord = community.name.split(/\s+/)[0];
-  const modFirsts = community.moderators.map((m) => firstName(m.name)).join(" & ");
+  const modFirsts = community.moderators
+    .map((m) => firstName(m.name))
+    .join(" & ");
 
   const options: { titleKey: string; sub: string }[] = [
     {

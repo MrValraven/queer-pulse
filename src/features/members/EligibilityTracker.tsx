@@ -58,7 +58,9 @@ function FamilyBar({ family }: { family: FamilyScore }) {
         </span>
         <span className={styles.familyText}>
           <span className={styles.familyLabel}>{t(family.labelKey)}</span>
-          <span className={styles.familyHint}>{t(FAMILY_HINT[family.key])}</span>
+          <span className={styles.familyHint}>
+            {t(FAMILY_HINT[family.key])}
+          </span>
         </span>
         <span className={styles.familyAmount}>
           {t("members:publicProfile.eligibility.family.amount", {
@@ -181,7 +183,9 @@ export function EligibilityTracker({
       {scoringActions.length > 0 && (
         <section className={styles.group}>
           <header className={styles.groupHead}>
-            <span>{t("members:publicProfile.eligibility.actions.heading")}</span>
+            <span>
+              {t("members:publicProfile.eligibility.actions.heading")}
+            </span>
           </header>
           <ul className={styles.actions}>
             {scoringActions.map((action) => (

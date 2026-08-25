@@ -5,7 +5,10 @@ import { routes } from "../../../app/routeMap";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { useCurrentIssue } from "../../../features/magazine/api/useCurrentIssue";
-import { MAGAZINE_NAV, MAGAZINE_ISSUE_FALLBACK_ROUTE } from "./magazineNav.data";
+import {
+  MAGAZINE_NAV,
+  MAGAZINE_ISSUE_FALLBACK_ROUTE,
+} from "./magazineNav.data";
 import { MagazineSidebarRecents } from "./MagazineSidebarRecents";
 import styles from "./MagazineSidebar.module.css";
 
@@ -25,47 +28,65 @@ export function MagazineSidebar({
 
   return (
     <aside className={styles.rail}>
-      <Link to={routes.magazineEditor} className={styles.brand} onClick={onNavigate}>
+      <Link
+        to={routes.magazineEditor}
+        className={styles.brand}
+        onClick={onNavigate}
+      >
         <span className={styles.brandName}>
-          <Translation i18nKey="shared:brand.wordmark" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
         </span>
         <span className={styles.brandDot} aria-hidden />
       </Link>
 
       {issue && (
         <span className={styles.eyebrow}>
-          {t("magazine:deskShell.issueEyebrow", { number: issue.number, theme: issue.theme })}
+          {t("magazine:deskShell.issueEyebrow", {
+            number: issue.number,
+            theme: issue.theme,
+          })}
         </span>
       )}
 
       <nav className={styles.nav} aria-label={t("magazine:deskShell.menuAria")}>
-        {MAGAZINE_NAV.map(({ labelKey, to, icon: Icon, end, needsCurrentIssueNumber }) => {
-          const resolvedTo = needsCurrentIssueNumber
-            ? issue
-              ? to.replace(":number", issue.number)
-              : MAGAZINE_ISSUE_FALLBACK_ROUTE
-            : to;
-          return (
-            <NavLink
-              key={labelKey}
-              to={resolvedTo}
-              end={end}
-              onClick={onNavigate}
-              className={({ isActive }) =>
-                [styles.navItem, isActive && styles.navItemActive].filter(Boolean).join(" ")
-              }
-            >
-              <Icon aria-hidden />
-              <span className={styles.navLabel}>{t(labelKey)}</span>
-            </NavLink>
-          );
-        })}
+        {MAGAZINE_NAV.map(
+          ({ labelKey, to, icon: Icon, end, needsCurrentIssueNumber }) => {
+            const resolvedTo = needsCurrentIssueNumber
+              ? issue
+                ? to.replace(":number", issue.number)
+                : MAGAZINE_ISSUE_FALLBACK_ROUTE
+              : to;
+            return (
+              <NavLink
+                key={labelKey}
+                to={resolvedTo}
+                end={end}
+                onClick={onNavigate}
+                className={({ isActive }) =>
+                  [styles.navItem, isActive && styles.navItemActive]
+                    .filter(Boolean)
+                    .join(" ")
+                }
+              >
+                <Icon aria-hidden />
+                <span className={styles.navLabel}>{t(labelKey)}</span>
+              </NavLink>
+            );
+          },
+        )}
       </nav>
 
       <MagazineSidebarRecents onNavigate={onNavigate} />
 
       <div className={styles.railFoot}>
-        <Link to={routes.feed} className={styles.backToPlatform} onClick={onNavigate}>
+        <Link
+          to={routes.feed}
+          className={styles.backToPlatform}
+          onClick={onNavigate}
+        >
           <FiArrowLeft aria-hidden />
           <span>{t("magazine:deskShell.backToPlatform")}</span>
         </Link>
@@ -78,7 +99,8 @@ export function MagazineSidebar({
           <FiEdit3 aria-hidden /> {t("magazine:deskShell.writePiece")}
         </Button>
         <span className={styles.kbdHint}>
-          <span className={styles.kbd}>⌘K</span> {t("magazine:deskShell.kbdHintSuffix")}
+          <span className={styles.kbd}>⌘K</span>{" "}
+          {t("magazine:deskShell.kbdHintSuffix")}
         </span>
       </div>
     </aside>

@@ -6,34 +6,85 @@ import { lazyNamed } from "../../app/routeHelpers";
 const PrivacyPage = lazyNamed(() => import("./PrivacyPage"), "PrivacyPage");
 const TermsPage = lazyNamed(() => import("./TermsPage"), "TermsPage");
 const DsarPage = lazyNamed(() => import("./DsarPage"), "DsarPage");
-const ConstitutionPage = lazyNamed(() => import("./ConstitutionPage"), "ConstitutionPage");
-const CodeOfConductPage = lazyNamed(() => import("./CodeOfConductPage"), "CodeOfConductPage");
-const ChangelogPage = lazyNamed(() => import("./ChangelogPage"), "ChangelogPage");
+const ConstitutionPage = lazyNamed(
+  () => import("./ConstitutionPage"),
+  "ConstitutionPage",
+);
+const CodeOfConductPage = lazyNamed(
+  () => import("./CodeOfConductPage"),
+  "CodeOfConductPage",
+);
+const ChangelogPage = lazyNamed(
+  () => import("./ChangelogPage"),
+  "ChangelogPage",
+);
 const RoadmapPage = lazyNamed(() => import("./RoadmapPage"), "RoadmapPage");
-const PressArchivePage = lazyNamed(() => import("./PressArchivePage"), "PressArchivePage");
-const ForOrganisationsPage = lazyNamed(() => import("./ForOrganisationsPage"), "ForOrganisationsPage");
+const PressArchivePage = lazyNamed(
+  () => import("./PressArchivePage"),
+  "PressArchivePage",
+);
+const ForOrganisationsPage = lazyNamed(
+  () => import("./ForOrganisationsPage"),
+  "ForOrganisationsPage",
+);
 const PressKitPage = lazyNamed(() => import("./PressKitPage"), "PressKitPage");
-const GuidelinesPage = lazyNamed(() => import("./GuidelinesPage"), "GuidelinesPage");
+const GuidelinesPage = lazyNamed(
+  () => import("./GuidelinesPage"),
+  "GuidelinesPage",
+);
 const AboutPage = lazyNamed(() => import("./AboutPage"), "AboutPage");
 const ContactPage = lazyNamed(() => import("./ContactPage"), "ContactPage");
 const HelpPage = lazyNamed(() => import("./HelpPage"), "HelpPage");
-const VolunteerPage = lazyNamed(() => import("./VolunteerPage"), "VolunteerPage");
-const VolunteerOpportunityPage = lazyNamed(() => import("./VolunteerOpportunityPage"), "VolunteerOpportunityPage");
-const PostVolunteerOpportunityPage = lazyNamed(() => import("./PostVolunteerOpportunityPage"), "PostVolunteerOpportunityPage");
+const VolunteerPage = lazyNamed(
+  () => import("./VolunteerPage"),
+  "VolunteerPage",
+);
+const VolunteerOpportunityPage = lazyNamed(
+  () => import("./VolunteerOpportunityPage"),
+  "VolunteerOpportunityPage",
+);
+const PostVolunteerOpportunityPage = lazyNamed(
+  () => import("./PostVolunteerOpportunityPage"),
+  "PostVolunteerOpportunityPage",
+);
 const VolunteerApplicantsDashboardPage = lazyNamed(
   () => import("./VolunteerApplicantsDashboardPage"),
   "VolunteerApplicantsDashboardPage",
 );
-const DirectoryPage = lazyNamed(() => import("./DirectoryPage"), "DirectoryPage");
-const DirectorySpacePage = lazyNamed(() => import("./DirectorySpacePage"), "DirectorySpacePage");
-const VenueDetailPage = lazyNamed(() => import("./VenueDetailPage"), "VenueDetailPage");
-const ListBusinessPage = lazyNamed(() => import("./listBusiness/ListBusinessPage"), "ListBusinessPage");
-const ResourceLibraryPage = lazyNamed(() => import("./ResourceLibraryPage"), "ResourceLibraryPage");
+const DirectoryPage = lazyNamed(
+  () => import("./DirectoryPage"),
+  "DirectoryPage",
+);
+const DirectorySpacePage = lazyNamed(
+  () => import("./DirectorySpacePage"),
+  "DirectorySpacePage",
+);
+const VenueDetailPage = lazyNamed(
+  () => import("./VenueDetailPage"),
+  "VenueDetailPage",
+);
+const ListBusinessPage = lazyNamed(
+  () => import("./listBusiness/ListBusinessPage"),
+  "ListBusinessPage",
+);
+const ResourceLibraryPage = lazyNamed(
+  () => import("./ResourceLibraryPage"),
+  "ResourceLibraryPage",
+);
 const PartnersPage = lazyNamed(() => import("./PartnersPage"), "PartnersPage");
-const SubmitPartnerApplicationPage = lazyNamed(() => import("./SubmitPartnerApplicationPage"), "SubmitPartnerApplicationPage");
-const PartnerDetailPage = lazyNamed(() => import("./PartnerDetailPage"), "PartnerDetailPage");
+const SubmitPartnerApplicationPage = lazyNamed(
+  () => import("./SubmitPartnerApplicationPage"),
+  "SubmitPartnerApplicationPage",
+);
+const PartnerDetailPage = lazyNamed(
+  () => import("./PartnerDetailPage"),
+  "PartnerDetailPage",
+);
 const ActivismPage = lazyNamed(() => import("./ActivismPage"), "ActivismPage");
-const PlatformsPage = lazyNamed(() => import("./PlatformsPage"), "PlatformsPage");
+const PlatformsPage = lazyNamed(
+  () => import("./PlatformsPage"),
+  "PlatformsPage",
+);
 const VisasPage = lazyNamed(() => import("./VisasPage"), "VisasPage");
 const ArrivingPage = lazyNamed(() => import("./ArrivingPage"), "ArrivingPage");
 const CookiesPage = lazyNamed(() => import("./CookiesPage"), "CookiesPage");
@@ -89,7 +140,10 @@ export function marketingRoutes() {
         path={routes.partnerApply}
         element={<SubmitPartnerApplicationPage />}
       />
-      <Route path={`${routes.partners}/:slug`} element={<PartnerDetailPage />} />
+      <Route
+        path={`${routes.partners}/:slug`}
+        element={<PartnerDetailPage />}
+      />
       <Route path={routes.resources} element={<ResourceLibraryPage />} />
       <Route path={routes.activism} element={<ActivismPage />} />
       <Route

@@ -205,9 +205,7 @@ function patchInviteInCache(
         ...current,
         pages: current.pages.map((page) => ({
           ...page,
-          items: page.items.map((row) =>
-            row.id === invite.id ? invite : row,
-          ),
+          items: page.items.map((row) => (row.id === invite.id ? invite : row)),
         })),
       },
   );

@@ -56,9 +56,7 @@ describe("ShowcaseSection dual-mode gating", () => {
     expect(
       await screen.findByText("Featured work coming soon"),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByText("Corpo Estranho, 2024"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Corpo Estranho, 2024")).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /submit your work/i }),
     ).not.toBeInTheDocument();

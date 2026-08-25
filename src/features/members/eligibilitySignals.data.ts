@@ -12,8 +12,12 @@ export function demoEligibilitySignals(nowIso: string): EligibilitySignals {
     nowIso,
     verified: true,
     tenureDays: 400,
-    publishedPieces: CURRENT_USER_PUBLIC.writing.map(() => ({ at: "2026-03-01T00:00:00.000Z" })),
-    hostedOpenEvents: CURRENT_USER_PUBLIC.hosting.map(() => ({ at: "2026-06-01T00:00:00.000Z" })),
+    publishedPieces: CURRENT_USER_PUBLIC.writing.map(() => ({
+      at: "2026-03-01T00:00:00.000Z",
+    })),
+    hostedOpenEvents: CURRENT_USER_PUBLIC.hosting.map(() => ({
+      at: "2026-06-01T00:00:00.000Z",
+    })),
     workshopsTaught: 1,
     publishedSubprofiles: 1,
     vouchCount: 3,

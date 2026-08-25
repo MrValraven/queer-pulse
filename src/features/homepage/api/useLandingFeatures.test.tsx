@@ -96,9 +96,7 @@ describe("useLandingFeaturesPublic (demo mode)", () => {
 
     expect(result.current.changemakers).toHaveLength(changemakers.length);
     expect(result.current.changemakers[0]!.name).toBe(changemakers[0]!.name);
-    expect(result.current.changemakers[0]!.tags).toEqual(
-      changemakers[0]!.tags,
-    );
+    expect(result.current.changemakers[0]!.tags).toEqual(changemakers[0]!.tags);
   });
 });
 

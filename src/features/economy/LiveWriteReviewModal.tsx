@@ -46,7 +46,13 @@ export function LiveWriteReviewModal({
   const companyName =
     reviewable.find((company) => company.slug === slug)?.name ?? "";
 
-  async function handleSubmit({ title, rating, role, pros, cons }: ReviewFormValues) {
+  async function handleSubmit({
+    title,
+    rating,
+    role,
+    pros,
+    cons,
+  }: ReviewFormValues) {
     const body: string[] = [];
     if (pros.trim()) body.push(`The good: ${pros.trim()}`);
     if (cons.trim()) body.push(`The hard parts: ${cons.trim()}`);
@@ -54,7 +60,12 @@ export function LiveWriteReviewModal({
 
     setSending(true);
     try {
-      await create.mutateAsync({ title: title.trim(), stars: rating, byline, body });
+      await create.mutateAsync({
+        title: title.trim(),
+        stars: rating,
+        byline,
+        body,
+      });
       setSending(false);
       setDone(true);
     } catch (error) {

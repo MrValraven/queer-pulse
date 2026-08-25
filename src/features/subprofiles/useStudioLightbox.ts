@@ -15,7 +15,9 @@ import type {
  * `works.indexOf(item)` — both land on the same picture. The open/move state
  * itself is the generic `useImageLightbox`, shared with the gallery lightbox.
  */
-export function useStudioLightbox(sections: SubprofileSectionView[] | undefined) {
+export function useStudioLightbox(
+  sections: SubprofileSectionView[] | undefined,
+) {
   const works = useMemo<SubprofileItemView[]>(
     () => (sections ? getStudioWorks(sections) : []),
     [sections],

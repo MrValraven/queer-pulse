@@ -33,10 +33,7 @@ export interface CardBackgroundPreset {
 function stripes(...colors: string[]): string {
   const band = 100 / colors.length;
   const stops = colors
-    .map(
-      (color, index) =>
-        `${color} ${index * band}% ${(index + 1) * band}%`,
-    )
+    .map((color, index) => `${color} ${index * band}% ${(index + 1) * band}%`)
     .join(", ");
   return `linear-gradient(to bottom, ${stops})`;
 }
@@ -87,14 +84,7 @@ export const CARD_BACKGROUND_PRESETS: CardBackgroundPreset[] = [
     background: [
       `linear-gradient(45deg, ${CHEVRON_BANDS}) 0 0 / 100% 50% no-repeat`,
       `linear-gradient(135deg, ${CHEVRON_BANDS}) 0 100% / 100% 50% no-repeat`,
-      stripes(
-        "#e40303",
-        "#ff8c00",
-        "#ffed00",
-        "#008026",
-        "#24408e",
-        "#732982",
-      ),
+      stripes("#e40303", "#ff8c00", "#ffed00", "#008026", "#24408e", "#732982"),
     ].join(", "),
   },
   {
@@ -105,7 +95,11 @@ export const CARD_BACKGROUND_PRESETS: CardBackgroundPreset[] = [
   {
     id: "bisexual",
     labelKey: "cards:flag.bisexual",
-    background: weightedStripes(["#d60270", 40], ["#9b4f96", 20], ["#0038a8", 40]),
+    background: weightedStripes(
+      ["#d60270", 40],
+      ["#9b4f96", 20],
+      ["#0038a8", 40],
+    ),
   },
   {
     id: "lesbian",

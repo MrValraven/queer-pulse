@@ -13,6 +13,9 @@ const GAP_END = 15;
 const INCIDENT_REF = "QP-STUDIO-500";
 const INCIDENT_TIMESTAMP = "2026-06-10T03:14Z";
 
+// Status page domain — never translated, not routed through the catalog.
+const STATUS_DOMAIN = "status.queerpulse.org";
+
 function buildWaveBars(): { height: number; opacity: number }[] {
   return Array.from({ length: WAVE_COUNT }, (_, i) => {
     const inGap = i > GAP_START && i < GAP_END;
@@ -86,7 +89,7 @@ export function Studio500Page() {
           <div className={styles.statusPill}>
             <span className={styles.statusDot} aria-hidden />
             {t("studio:error500.statusPrefix")}{" "}
-            <a href="https://status.queerpulse.org">status.queerpulse.org</a>
+            <a href="https://status.queerpulse.org">{STATUS_DOMAIN}</a>
           </div>
           <div className={styles.errRef}>
             {t("studio:error500.refLine", {

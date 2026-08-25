@@ -10,7 +10,11 @@ import { useSessionBootstrap } from "../../shared/api/useSessionBootstrap";
  * Must sit at the TOP of DataProviders: react-query dedupes by key, so any
  * provider below that also calls `useSessionBootstrap` shares this one request.
  */
-export function SessionBootstrapProvider({ children }: { children: ReactNode }) {
+export function SessionBootstrapProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   useSessionBootstrap();
   return <>{children}</>;
 }

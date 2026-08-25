@@ -90,5 +90,11 @@ export function useResourceShelfOrder(
     commit(next);
   };
 
-  return { orderedResources, containerRef, draggingIndex, gripHandlers, moveBy };
+  return {
+    orderedResources,
+    containerRef,
+    draggingIndex,
+    gripHandlers,
+    moveBy,
+  };
 }

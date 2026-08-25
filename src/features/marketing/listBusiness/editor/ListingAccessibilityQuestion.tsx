@@ -28,7 +28,10 @@ export function ListingAccessibilityQuestion({
 }: {
   question: AccessibilityQuestionDefinition;
   answer: AccessibilityAnswer;
-  onChange: (slug: AccessibilityQuestionDefinition["slug"], next: AccessibilityAnswer) => void;
+  onChange: (
+    slug: AccessibilityQuestionDefinition["slug"],
+    next: AccessibilityAnswer,
+  ) => void;
 }) {
   const { t } = useTranslation();
   const fieldId = useId();

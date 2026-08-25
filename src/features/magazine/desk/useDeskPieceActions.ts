@@ -46,11 +46,18 @@ export function useDeskPieceActions({
       void navigate(routes.magazineWrite.replace(":id", piece.id));
       return;
     }
-    void navigate(piece.deckId ? `${routes.deckEditor}?id=${piece.deckId}` : routes.deckEditor);
+    void navigate(
+      piece.deckId
+        ? `${routes.deckEditor}?id=${piece.deckId}`
+        : routes.deckEditor,
+    );
   };
 
   const movePiece = (piece: Piece, stage: Stage) =>
-    pieceMutations.moveStage.mutate({ id: piece.id, stage: STAGE_VIEW_TO_DTO[stage] });
+    pieceMutations.moveStage.mutate({
+      id: piece.id,
+      stage: STAGE_VIEW_TO_DTO[stage],
+    });
 
   const produceIssue = () =>
     void navigate(routes.magazineIssueProd.replace(":number", issue.number));

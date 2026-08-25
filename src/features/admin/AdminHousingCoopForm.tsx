@@ -36,9 +36,7 @@ export function AdminHousingCoopForm({
   const { showToast } = useToast();
   const createCoop = useCreateCoop();
   const updateCoop = useUpdateCoop();
-  const [draft, setDraft] = useState<CoopFormDraft>(() =>
-    draftFromCoop(coop),
-  );
+  const [draft, setDraft] = useState<CoopFormDraft>(() => draftFromCoop(coop));
   const isEditing = coop !== null;
   const saving = createCoop.isPending || updateCoop.isPending;
 
@@ -126,11 +124,7 @@ export function AdminHousingCoopForm({
         </>
       }
     >
-      <form
-        id={FORM_ID}
-        className={styles.editorGrid}
-        onSubmit={handleSubmit}
-      >
+      <form id={FORM_ID} className={styles.editorGrid} onSubmit={handleSubmit}>
         <AdminHousingCoopIdentityFields draft={draft} onChange={patch} />
         <AdminHousingCoopEconomicsFields draft={draft} onChange={patch} />
       </form>

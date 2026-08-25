@@ -56,7 +56,8 @@ export function MapVenueCard({
     ...(v.accessible
       ? [
           <span key="accessible" className={p.pill}>
-            <FaWheelchair aria-hidden /> {t("marketing:map.venueCard.accessible")}
+            <FaWheelchair aria-hidden />{" "}
+            {t("marketing:map.venueCard.accessible")}
           </span>,
         ]
       : []),

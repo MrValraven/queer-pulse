@@ -84,7 +84,10 @@ function DependencyList({
       {communities.length > 0 && (
         <ul className={styles.dependencyList}>
           {communities.map((community) => (
-            <CommunityDependencyRow key={community.slug} community={community} />
+            <CommunityDependencyRow
+              key={community.slug}
+              community={community}
+            />
           ))}
         </ul>
       )}

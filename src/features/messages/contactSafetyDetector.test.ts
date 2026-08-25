@@ -3,19 +3,23 @@ import { detectContactSafetySignals } from "./contactSafetyDetector";
 
 describe("detectContactSafetySignals", () => {
   it("flags nothing for ordinary chat", () => {
-    expect(detectContactSafetySignals("See you at 6pm outside the café!")).toEqual([]);
+    expect(
+      detectContactSafetySignals("See you at 6pm outside the café!"),
+    ).toEqual([]);
     expect(detectContactSafetySignals("")).toEqual([]);
     expect(detectContactSafetySignals("   ")).toEqual([]);
   });
 
   it("flags a phone number", () => {
-    expect(detectContactSafetySignals("call me on +351 912 345 678")).toContain("phone");
+    expect(detectContactSafetySignals("call me on +351 912 345 678")).toContain(
+      "phone",
+    );
   });
 
   it("flags an email address", () => {
-    expect(detectContactSafetySignals("reach me at alex.doe@example.com")).toContain(
-      "email",
-    );
+    expect(
+      detectContactSafetySignals("reach me at alex.doe@example.com"),
+    ).toContain("email");
   });
 
   it("flags an IBAN", () => {
@@ -25,12 +29,12 @@ describe("detectContactSafetySignals", () => {
   });
 
   it("flags a banking keyword without a pasted IBAN", () => {
-    expect(detectContactSafetySignals("send me your bank account details")).toContain(
-      "banking",
-    );
-    expect(detectContactSafetySignals("manda-me os teus dados bancários")).toContain(
-      "banking",
-    );
+    expect(
+      detectContactSafetySignals("send me your bank account details"),
+    ).toContain("banking");
+    expect(
+      detectContactSafetySignals("manda-me os teus dados bancários"),
+    ).toContain("banking");
   });
 
   it("flags an external-payment prompt (EN + PT)", () => {
@@ -53,6 +57,8 @@ describe("detectContactSafetySignals", () => {
 
   it("does not flag a short, ordinary number", () => {
     // A price or a small count shouldn't read as a phone number.
-    expect(detectContactSafetySignals("it costs 350€ a month")).not.toContain("phone");
+    expect(detectContactSafetySignals("it costs 350€ a month")).not.toContain(
+      "phone",
+    );
   });
 });

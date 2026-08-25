@@ -25,7 +25,9 @@ export function MoneyTab({
     return (
       <div className={styles.stack}>
         <div className={styles.card}>
-          <p className={styles.tiny}>{t("magazine:piece.money.noPaymentYet")}</p>
+          <p className={styles.tiny}>
+            {t("magazine:piece.money.noPaymentYet")}
+          </p>
         </div>
       </div>
     );

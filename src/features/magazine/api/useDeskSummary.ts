@@ -5,7 +5,12 @@ import { formatRelative } from "../../../shared/lib/date";
 import { getDeskSummary } from "./pieces.api";
 import type { DeskSummaryDto, PieceEventEntryDto } from "./pieces.api";
 import { STAGE_VIEW_TO_DTO } from "./pieces.adapters";
-import { DEMO_ACTIVITY, DEMO_EDITORS, DEMO_PIECES, DEMO_STAGES } from "../data/desk.data";
+import {
+  DEMO_ACTIVITY,
+  DEMO_EDITORS,
+  DEMO_PIECES,
+  DEMO_STAGES,
+} from "../data/desk.data";
 
 /**
  * Canonical activity row the sidebar renders, shared by demo and live so the
@@ -67,7 +72,9 @@ function toActivityView(
     actorId: entry.actorId,
     who: entry.who,
     what: entry.what,
-    when: isDemo ? entry.when : formatRelative(entry.when, formatters) || entry.when,
+    when: isDemo
+      ? entry.when
+      : formatRelative(entry.when, formatters) || entry.when,
   };
 }
 
@@ -83,7 +90,8 @@ export function useDeskSummary() {
   const formatters = useFormat();
   const query = useQuery<DeskSummaryDto>({
     queryKey: ["magazine-desk-summary", demoMode],
-    queryFn: () => (demoMode ? Promise.resolve(buildDemoSummary()) : getDeskSummary()),
+    queryFn: () =>
+      demoMode ? Promise.resolve(buildDemoSummary()) : getDeskSummary(),
   });
 
   const summary: DeskSummaryView | undefined = query.data && {

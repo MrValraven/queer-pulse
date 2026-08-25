@@ -17,7 +17,10 @@ function sortReplies(replies: Reply[], sort: ReplySortId): Reply[] {
   return replies; // "oldest" = as-fetched (chronological)
 }
 
-export function buildReplyTree(replies: Reply[], sort: ReplySortId): ReplyNode[] {
+export function buildReplyTree(
+  replies: Reply[],
+  sort: ReplySortId,
+): ReplyNode[] {
   const childrenByParent = new Map<string, Reply[]>();
   const ids = new Set(replies.map((reply) => reply.id));
   for (const reply of replies) {

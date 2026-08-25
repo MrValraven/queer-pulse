@@ -26,7 +26,8 @@ import { skinFor, type SkinFamily } from "./subprofile-skins";
  * strings live in the build's `b2-i18n-keys.json` (catalogs updated separately).
  */
 
-export type SkinControlKind = "text" | "textarea" | "stringList" | "objectList" | "grid";
+export type SkinControlKind =
+  "text" | "textarea" | "stringList" | "objectList" | "grid";
 
 /** One field within an `objectList` entry (e.g. a first-session step's
  *  title/body, a referral's name/note). */
@@ -98,7 +99,9 @@ function objectListBlock(
   return {
     blockKey,
     titleKey,
-    controls: [{ path: blockKey, kind: "objectList", labelKey: titleKey, itemFields }],
+    controls: [
+      { path: blockKey, kind: "objectList", labelKey: titleKey, itemFields },
+    ],
   };
 }
 
@@ -123,15 +126,27 @@ const PAGE_BLOCKS: SkinBlockDescriptor[] = [
     blockKey: "excerpt",
     titleKey: title("page", "excerpt"),
     controls: [
-      { path: "excerpt.from", kind: "text", labelKey: label("page", "excerpt", "from") },
-      { path: "excerpt.lines", kind: "stringList", labelKey: label("page", "excerpt", "lines") },
+      {
+        path: "excerpt.from",
+        kind: "text",
+        labelKey: label("page", "excerpt", "from"),
+      },
+      {
+        path: "excerpt.lines",
+        kind: "stringList",
+        labelKey: label("page", "excerpt", "lines"),
+      },
     ],
   },
   {
     blockKey: "colophon",
     titleKey: title("page", "colophon"),
     controls: [
-      { path: "colophon", kind: "textarea", labelKey: title("page", "colophon") },
+      {
+        path: "colophon",
+        kind: "textarea",
+        labelKey: title("page", "colophon"),
+      },
     ],
   },
 ];
@@ -141,8 +156,16 @@ const TABLE_BLOCKS: SkinBlockDescriptor[] = [
     blockKey: "menuMeta",
     titleKey: title("table", "menuMeta"),
     controls: [
-      { path: "menuMeta.no", kind: "text", labelKey: label("table", "menuMeta", "no") },
-      { path: "menuMeta.when", kind: "text", labelKey: label("table", "menuMeta", "when") },
+      {
+        path: "menuMeta.no",
+        kind: "text",
+        labelKey: label("table", "menuMeta", "no"),
+      },
+      {
+        path: "menuMeta.when",
+        kind: "text",
+        labelKey: label("table", "menuMeta", "when"),
+      },
       {
         path: "menuMeta.practical",
         kind: "stringList",
@@ -163,12 +186,20 @@ const PRACTICE_BLOCKS: SkinBlockDescriptor[] = [
   ]),
   objectListBlock("firstSession", title("practice", "firstSession"), [
     { key: "title", labelKey: label("practice", "firstSession", "stepTitle") },
-    { key: "body", labelKey: label("practice", "firstSession", "body"), multiline: true },
+    {
+      key: "body",
+      labelKey: label("practice", "firstSession", "body"),
+      multiline: true,
+    },
   ]),
   stringListBlock("access", title("practice", "access")),
   objectListBlock("referrals", title("practice", "referrals"), [
     { key: "name", labelKey: label("practice", "referrals", "name") },
-    { key: "note", labelKey: label("practice", "referrals", "note"), multiline: true },
+    {
+      key: "note",
+      labelKey: label("practice", "referrals", "note"),
+      multiline: true,
+    },
   ]),
   stringListBlock("approach", title("practice", "approach")),
   stringListBlock("training", title("practice", "training")),
@@ -180,15 +211,27 @@ const PRACTICE_BLOCKS: SkinBlockDescriptor[] = [
     blockKey: "venue",
     titleKey: title("practice", "venue"),
     controls: [
-      { path: "venue.name", kind: "text", labelKey: label("practice", "venue", "name") },
-      { path: "venue.lines", kind: "stringList", labelKey: label("practice", "venue", "lines") },
+      {
+        path: "venue.name",
+        kind: "text",
+        labelKey: label("practice", "venue", "name"),
+      },
+      {
+        path: "venue.lines",
+        kind: "stringList",
+        labelKey: label("practice", "venue", "lines"),
+      },
     ],
   },
   {
     blockKey: "availability",
     titleKey: title("practice", "availability"),
     controls: [
-      { path: "availability", kind: "grid", labelKey: title("practice", "availability") },
+      {
+        path: "availability",
+        kind: "grid",
+        labelKey: title("practice", "availability"),
+      },
     ],
   },
 ];
@@ -203,7 +246,11 @@ const CHART_BLOCKS: SkinBlockDescriptor[] = [
     { key: "date", labelKey: label("chart", "birthData", "date") },
     { key: "time", labelKey: label("chart", "birthData", "time") },
     { key: "place", labelKey: label("chart", "birthData", "place") },
-    { key: "note", labelKey: label("chart", "birthData", "note"), multiline: true },
+    {
+      key: "note",
+      labelKey: label("chart", "birthData", "note"),
+      multiline: true,
+    },
   ]),
   stringListBlock("ethics", title("chart", "ethics")),
 ];
@@ -249,7 +296,11 @@ const HISTORY_BLOCKS: SkinBlockDescriptor[] = [
     { key: "held", labelKey: label("history", "record", "held") },
     { key: "access", labelKey: label("history", "record", "access") },
     { key: "consent", labelKey: label("history", "record", "consent") },
-    { key: "gaps", labelKey: label("history", "record", "gaps"), multiline: true },
+    {
+      key: "gaps",
+      labelKey: label("history", "record", "gaps"),
+      multiline: true,
+    },
   ]),
 ];
 
@@ -268,7 +319,11 @@ const CLASSROOM_BLOCKS: SkinBlockDescriptor[] = [
     { key: "materials", labelKey: label("classroom", "fees", "materials") },
     { key: "where", labelKey: label("classroom", "fees", "where") },
     { key: "extras", labelKey: label("classroom", "fees", "extras") },
-    { key: "note", labelKey: label("classroom", "fees", "note"), multiline: true },
+    {
+      key: "note",
+      labelKey: label("classroom", "fees", "note"),
+      multiline: true,
+    },
   ]),
   stringListBlock("promises", title("classroom", "promises")),
 ];
@@ -280,7 +335,9 @@ const CLASSROOM_BLOCKS: SkinBlockDescriptor[] = [
  * blocks" rail entry. The per-dish menu COURSES (`ItemStructured.courses`) are
  * item-structured, not `SkinData`, and are edited elsewhere — out of scope here.
  */
-export const SKIN_BLOCKS_BY_FAMILY: Partial<Record<SkinFamily, SkinBlockDescriptor[]>> = {
+export const SKIN_BLOCKS_BY_FAMILY: Partial<
+  Record<SkinFamily, SkinBlockDescriptor[]>
+> = {
   stage: STAGE_BLOCKS,
   page: PAGE_BLOCKS,
   table: TABLE_BLOCKS,

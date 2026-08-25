@@ -237,10 +237,9 @@ export const bulkActOnReports = (body: ModBulkInput) =>
 /** Self-assign (`assign: true`) or unassign (`assign: false`) a report —
  *  backs the queue's "Assigned to me" filter and the drawer's claim action. */
 export const setReportAssignment = (id: string, assign: boolean) =>
-  apiPatch<ModReportDTO>(
-    `/mod/reports/${encodeURIComponent(id)}/assignment`,
-    { assign },
-  );
+  apiPatch<ModReportDTO>(`/mod/reports/${encodeURIComponent(id)}/assignment`, {
+    assign,
+  });
 
 /** Immutable audit log for a report. */
 export const getReportAudit = (reportId: string) =>

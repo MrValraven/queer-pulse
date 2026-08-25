@@ -38,7 +38,11 @@ export function HousingTenantRightsPage() {
 
       <div className={styles.body}>
         <div className={styles.column}>
-          <Reveal as="section" className={styles.scamSection} aria-labelledby="anti-scam-heading">
+          <Reveal
+            as="section"
+            className={styles.scamSection}
+            aria-labelledby="anti-scam-heading"
+          >
             <h2 id="anti-scam-heading" className={styles.sectionTitle}>
               <Translation
                 i18nKey="economy:housingSafety.page.antiScamTitle"

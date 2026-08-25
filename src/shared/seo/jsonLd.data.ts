@@ -288,7 +288,9 @@ export function buildPersonProfileSchema(
   };
 }
 
-export function buildBreadcrumbSchema(trail: BreadcrumbStep[]): BreadcrumbSchema {
+export function buildBreadcrumbSchema(
+  trail: BreadcrumbStep[],
+): BreadcrumbSchema {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

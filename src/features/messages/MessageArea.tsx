@@ -42,7 +42,10 @@ function messageIdentities(message: ChatMessage): string[] {
 /** Composite identity for one reaction chip on a message — only meaningful
  *  once the message has a server id (reactions don't exist on demo/optimistic
  *  messages, see `ChatMessage.reactions`). */
-function reactionIdentity(message: ChatMessage, key: string): string | undefined {
+function reactionIdentity(
+  message: ChatMessage,
+  key: string,
+): string | undefined {
   return message.id ? `${message.id}::reaction::${key}` : undefined;
 }
 
@@ -101,8 +104,11 @@ function useMessageNewness(
   conversationId: string,
   messageGroups: { day: string; items: ChatMessage[] }[],
 ) {
-  const [settledConversationId, setSettledConversationId] = useState(conversationId);
-  const [baseSeenSet, setBaseSeenSet] = useState(() => collectAllIdentities(messageGroups));
+  const [settledConversationId, setSettledConversationId] =
+    useState(conversationId);
+  const [baseSeenSet, setBaseSeenSet] = useState(() =>
+    collectAllIdentities(messageGroups),
+  );
   if (conversationId !== settledConversationId) {
     setSettledConversationId(conversationId);
     setBaseSeenSet(collectAllIdentities(messageGroups));
@@ -129,7 +135,8 @@ function useMessageNewness(
       const identities = messageIdentities(message);
       if (identities.length === 0) return false;
       return identities.every(
-        (identity) => !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity),
+        (identity) =>
+          !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity),
       );
     },
     [baseSeenSet],
@@ -139,7 +146,9 @@ function useMessageNewness(
     (message: ChatMessage, key: MessageReactionKey): boolean => {
       const identity = reactionIdentity(message, key);
       if (!identity) return false;
-      return !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity);
+      return (
+        !baseSeenSet.has(identity) && !accumulatedRef.current.has(identity)
+      );
     },
     [baseSeenSet],
   );

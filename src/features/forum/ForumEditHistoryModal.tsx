@@ -19,6 +19,10 @@ export function ForumEditHistoryModal({
     previousTitle: revision.previousTitle,
   }));
   return (
-    <EditHistoryModal revisions={entries} isLoading={isLoading} onClose={onClose} />
+    <EditHistoryModal
+      revisions={entries}
+      isLoading={isLoading}
+      onClose={onClose}
+    />
   );
 }

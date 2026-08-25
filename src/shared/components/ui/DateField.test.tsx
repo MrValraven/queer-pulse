@@ -7,22 +7,51 @@ function renderWithProviders(ui: React.ReactElement) {
   return render(ui, { wrapper: TestProviders });
 }
 
-describe("DateField", () => {
+describe("DateField segments and typing", () => {
   it("en-US date field orders month/day/year", () => {
-    renderWithProviders(<DateField mode="date" value="2026-03-05" onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <DateField
+        mode="date"
+        value="2026-03-05"
+        onChange={() => {}}
+        locale="en-US"
+      />,
+    );
     const segments = screen.getAllByRole("spinbutton");
-    expect(segments.map((seg) => seg.getAttribute("aria-label"))).toEqual(["Month", "Day", "Year"]);
+    expect(segments.map((seg) => seg.getAttribute("aria-label"))).toEqual([
+      "Month",
+      "Day",
+      "Year",
+    ]);
   });
 
   it("pt date field orders day/month/year", () => {
-    renderWithProviders(<DateField mode="date" value="2026-03-05" onChange={() => {}} locale="pt" />);
+    renderWithProviders(
+      <DateField
+        mode="date"
+        value="2026-03-05"
+        onChange={() => {}}
+        locale="pt"
+      />,
+    );
     const segments = screen.getAllByRole("spinbutton");
-    expect(segments.map((seg) => seg.getAttribute("aria-label"))).toEqual(["Dia", "Mês", "Ano"]);
+    expect(segments.map((seg) => seg.getAttribute("aria-label"))).toEqual([
+      "Dia",
+      "Mês",
+      "Ano",
+    ]);
   });
 
   it("ArrowUp on the day segment increments and emits ISO", () => {
     const onChange = vi.fn();
-    renderWithProviders(<DateField mode="date" value="2026-03-05" onChange={onChange} locale="en-US" />);
+    renderWithProviders(
+      <DateField
+        mode="date"
+        value="2026-03-05"
+        onChange={onChange}
+        locale="en-US"
+      />,
+    );
     const day = screen.getByRole("spinbutton", { name: "Day" });
     fireEvent.keyDown(day, { key: "ArrowUp" });
     expect(onChange).toHaveBeenCalledWith("2026-03-06");
@@ -30,7 +59,9 @@ describe("DateField", () => {
 
   it("typing digits fills and auto-advances", () => {
     const onChange = vi.fn();
-    renderWithProviders(<DateField mode="date" value={null} onChange={onChange} locale="en-US" />);
+    renderWithProviders(
+      <DateField mode="date" value={null} onChange={onChange} locale="en-US" />,
+    );
     const month = screen.getByRole("spinbutton", { name: "Month" });
     fireEvent.keyDown(month, { key: "1" });
     fireEvent.keyDown(month, { key: "2" }); // -> December, advance to Day
@@ -38,7 +69,9 @@ describe("DateField", () => {
   });
 
   it("shows the localized placeholder token until a segment has a value", () => {
-    renderWithProviders(<DateField mode="date" value={null} onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <DateField mode="date" value={null} onChange={() => {}} locale="en-US" />,
+    );
     const month = screen.getByRole("spinbutton", { name: "Month" });
     expect(month).toHaveTextContent("mm");
     expect(month).not.toHaveAttribute("aria-valuenow");
@@ -46,7 +79,12 @@ describe("DateField", () => {
 
   it("datetime mode appends hour/minute/meridiem for a 12h locale", () => {
     renderWithProviders(
-      <DateField mode="datetime" value="2026-03-05T13:30" onChange={() => {}} locale="en-US" />,
+      <DateField
+        mode="datetime"
+        value="2026-03-05T13:30"
+        onChange={() => {}}
+        locale="en-US"
+      />,
     );
     const segments = screen.getAllByRole("spinbutton");
     expect(segments.map((seg) => seg.getAttribute("aria-label"))).toEqual([
@@ -64,23 +102,43 @@ describe("DateField", () => {
   });
 
   it("time mode omits the meridiem segment for a 24h locale", () => {
-    renderWithProviders(<DateField mode="time" value="13:30" onChange={() => {}} locale="pt" />);
+    renderWithProviders(
+      <DateField mode="time" value="13:30" onChange={() => {}} locale="pt" />,
+    );
     const segments = screen.getAllByRole("spinbutton");
-    expect(segments.map((seg) => seg.getAttribute("aria-label"))).toEqual(["Hora", "Minuto"]);
+    expect(segments.map((seg) => seg.getAttribute("aria-label"))).toEqual([
+      "Hora",
+      "Minuto",
+    ]);
   });
 
   it("Backspace clears the focused segment and reports incomplete", () => {
     const onChange = vi.fn();
-    renderWithProviders(<DateField mode="date" value="2026-03-05" onChange={onChange} locale="en-US" />);
+    renderWithProviders(
+      <DateField
+        mode="date"
+        value="2026-03-05"
+        onChange={onChange}
+        locale="en-US"
+      />,
+    );
     const day = screen.getByRole("spinbutton", { name: "Day" });
     fireEvent.keyDown(day, { key: "Backspace" });
     expect(onChange).toHaveBeenCalledWith(null);
     expect(day).not.toHaveAttribute("aria-valuenow");
   });
+});
 
+describe("DateField accessibility attributes", () => {
   it("disabled segments are not tabbable", () => {
     renderWithProviders(
-      <DateField mode="date" value="2026-03-05" onChange={() => {}} locale="en-US" disabled />,
+      <DateField
+        mode="date"
+        value="2026-03-05"
+        onChange={() => {}}
+        locale="en-US"
+        disabled
+      />,
     );
     for (const segment of screen.getAllByRole("spinbutton")) {
       expect(segment).toHaveAttribute("tabindex", "-1");
@@ -106,7 +164,13 @@ describe("DateField", () => {
 
   it("unifies invalid + aria-invalid onto every segment's aria-invalid", () => {
     renderWithProviders(
-      <DateField mode="date" value="2026-03-05" onChange={() => {}} locale="en-US" invalid />,
+      <DateField
+        mode="date"
+        value="2026-03-05"
+        onChange={() => {}}
+        locale="en-US"
+        invalid
+      />,
     );
     for (const segment of screen.getAllByRole("spinbutton")) {
       expect(segment).toHaveAttribute("aria-invalid", "true");
@@ -115,13 +179,21 @@ describe("DateField", () => {
 
   it("aria-invalid alone (without the invalid prop) also marks every segment invalid", () => {
     renderWithProviders(
-      <DateField mode="date" value="2026-03-05" onChange={() => {}} locale="en-US" aria-invalid />,
+      <DateField
+        mode="date"
+        value="2026-03-05"
+        onChange={() => {}}
+        locale="en-US"
+        aria-invalid
+      />,
     );
     for (const segment of screen.getAllByRole("spinbutton")) {
       expect(segment).toHaveAttribute("aria-invalid", "true");
     }
   });
+});
 
+describe("DateField clamping and availability", () => {
   it("datetime min/max clamps the date portion even when the bound is a full datetime ISO", () => {
     const onChange = vi.fn();
     renderWithProviders(
@@ -141,7 +213,13 @@ describe("DateField", () => {
   it("time mode min clamps ArrowDown stepping below the bound", () => {
     const onChange = vi.fn();
     renderWithProviders(
-      <DateField mode="time" value="09:00" onChange={onChange} locale="pt" min="09:00" />,
+      <DateField
+        mode="time"
+        value="09:00"
+        onChange={onChange}
+        locale="pt"
+        min="09:00"
+      />,
     );
     const hour = screen.getByRole("spinbutton", { name: "Hora" });
     fireEvent.keyDown(hour, { key: "ArrowDown" }); // 09 -> would be 08 (08:00 < 09:00), clamped back to 09:00
@@ -151,7 +229,13 @@ describe("DateField", () => {
   it("time mode min clamps a typed value below the bound", () => {
     const onChange = vi.fn();
     renderWithProviders(
-      <DateField mode="time" value={null} onChange={onChange} locale="pt" min="09:00" />,
+      <DateField
+        mode="time"
+        value={null}
+        onChange={onChange}
+        locale="pt"
+        min="09:00"
+      />,
     );
     const hour = screen.getByRole("spinbutton", { name: "Hora" });
     fireEvent.keyDown(hour, { key: "0" });

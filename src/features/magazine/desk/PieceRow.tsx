@@ -76,7 +76,9 @@ export function PieceRow({
         aria-checked={selected}
         className={styles.selectBox}
         data-on={selected}
-        aria-label={t("magazine:desk.pieceRow.selectAria", { title: piece.title })}
+        aria-label={t("magazine:desk.pieceRow.selectAria", {
+          title: piece.title,
+        })}
         onClick={(event) => {
           event.stopPropagation();
           onToggleSelect(piece);
@@ -134,7 +136,11 @@ export function PieceRow({
           {t("magazine:desk.pieceRow.handOff")}
         </Button>
         {hasAnyIssue && (
-          <Button variant="ghost" size="sm" onClick={() => onAssignIssue(piece)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onAssignIssue(piece)}
+          >
             {track === "issue"
               ? t("magazine:desk.reassign.moveIssue")
               : t("magazine:desk.reassign.addToIssue")}

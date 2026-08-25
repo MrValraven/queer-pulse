@@ -27,8 +27,10 @@ export const common: Catalog = {
 
   // Falhas de escrita otimista — mostradas quando um guardar/remover é revertido
   // porque a chamada à API falhou (SavedProvider, DraftsProvider).
-  "toast.saveFailed": "Não foi possível guardar. Verifica a ligação e tenta de novo.",
-  "toast.removeFailed": "Não foi possível atualizar. Verifica a ligação e tenta de novo.",
+  "toast.saveFailed":
+    "Não foi possível guardar. Verifica a ligação e tenta de novo.",
+  "toast.removeFailed":
+    "Não foi possível atualizar. Verifica a ligação e tenta de novo.",
 
   // Estado de erro de carregamento (falha de fetch em modo live) — reutilizável
   // por páginas que trocam todo o conteúdo por um erro com repetição, em vez de
@@ -47,5 +49,6 @@ export const common: Catalog = {
   // (substitui dois botões de falso sucesso que só mostravam uma notificação).
   // Fica aqui, não em admin.ts, que outra alteração desta ronda já ocupa.
   "cta.openModerationQueue": "Abrir na fila de moderação",
-  "toast.openedModerationQueue": "Abrimos as denúncias de {name} na fila de moderação.",
+  "toast.openedModerationQueue":
+    "Abrimos as denúncias de {name} na fila de moderação.",
 };

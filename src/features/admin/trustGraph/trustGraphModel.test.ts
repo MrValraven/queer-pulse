@@ -4,16 +4,53 @@ import type { TrustGraphData } from "./trustGraphModel";
 
 const data: TrustGraphData = {
   people: [
-    { id: "a", userId: "u-a", name: "A", pronoun: "", initials: "A", tone: "jade", joined: "2024-01", standing: "trusted", sceneId: null, role: null },
-    { id: "b", userId: "u-b", name: "B", pronoun: "", initials: "B", tone: "plum", joined: "2024-02", standing: "new", sceneId: null, role: null },
-    { id: "c", userId: "u-c", name: "C", pronoun: "", initials: "C", tone: "coral", joined: "2024-03", standing: "new", sceneId: null, role: null },
+    {
+      id: "a",
+      userId: "u-a",
+      name: "A",
+      pronoun: "",
+      initials: "A",
+      tone: "jade",
+      joined: "2024-01",
+      standing: "trusted",
+      sceneId: null,
+      role: null,
+    },
+    {
+      id: "b",
+      userId: "u-b",
+      name: "B",
+      pronoun: "",
+      initials: "B",
+      tone: "plum",
+      joined: "2024-02",
+      standing: "new",
+      sceneId: null,
+      role: null,
+    },
+    {
+      id: "c",
+      userId: "u-c",
+      name: "C",
+      pronoun: "",
+      initials: "C",
+      tone: "coral",
+      joined: "2024-03",
+      standing: "new",
+      sceneId: null,
+      role: null,
+    },
   ],
   peopleById: {},
   edges: [
     { id: "a>b", from: "a", to: "b", date: "2024-02" },
     { id: "b>c", from: "b", to: "c", date: "2024-03" },
   ],
-  scenes: [], sceneAnchor: {}, tMin: ymValue("2024-01"), tMax: ymValue("2024-03"), truncated: false,
+  scenes: [],
+  sceneAnchor: {},
+  tMin: ymValue("2024-01"),
+  tMax: ymValue("2024-03"),
+  truncated: false,
 };
 data.peopleById = Object.fromEntries(data.people.map((p) => [p.id, p]));
 

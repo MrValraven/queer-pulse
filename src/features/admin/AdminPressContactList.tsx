@@ -4,7 +4,7 @@ import { AdminPressKitList, type PressRowVM } from "./AdminPressKitList";
 import {
   buildContactInput,
   pressValueFromContact,
-} from "./AdminPressKitFields";
+} from "./adminPressKitFields.utils";
 import {
   useAdminPressContacts,
   useCreatePressContact,

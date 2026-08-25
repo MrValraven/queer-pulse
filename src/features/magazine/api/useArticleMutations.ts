@@ -35,7 +35,11 @@ export function useArticleMutations(pieceId: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  const save = useMutation<ArticleDraftDto | null, Error, UpdateArticleDraftDto>({
+  const save = useMutation<
+    ArticleDraftDto | null,
+    Error,
+    UpdateArticleDraftDto
+  >({
     mutationFn: async (body) => {
       if (demoMode) {
         return null;
@@ -43,33 +47,44 @@ export function useArticleMutations(pieceId: string) {
       return updateArticleDraft(pieceId, body);
     },
     onSuccess: (_data, variables) => {
-      void queryClient.invalidateQueries({ queryKey: ["magazine-article-draft", pieceId] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-article-draft", pieceId],
+      });
       // A title edit also syncs server-side onto `MagazinePiece.title` (and
       // can regenerate the draft's slug) — invalidate the piece list/record
       // caches too, or the command palette/piece board/piece record keep
       // showing the stale commission-time title.
       if (variables.title !== undefined) {
         void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] });
-        void queryClient.invalidateQueries({ queryKey: ["magazine-piece", pieceId] });
+        void queryClient.invalidateQueries({
+          queryKey: ["magazine-piece", pieceId],
+        });
       }
     },
   });
 
-  const publish = useMutation<ArticleDraftDto | null, Error, PublishArticleDto>({
-    meta: { silentError: true },
-    mutationFn: async (body) => {
-      if (demoMode) {
-        return null;
-      }
-      return publishArticle(pieceId, body);
+  const publish = useMutation<ArticleDraftDto | null, Error, PublishArticleDto>(
+    {
+      meta: { silentError: true },
+      mutationFn: async (body) => {
+        if (demoMode) {
+          return null;
+        }
+        return publishArticle(pieceId, body);
+      },
+      onSuccess: (data) => {
+        if (data) {
+          queryClient.setQueryData(
+            ["magazine-article-draft", pieceId, demoMode],
+            data,
+          );
+        }
+        void queryClient.invalidateQueries({
+          queryKey: ["magazine-article-draft", pieceId],
+        });
+      },
     },
-    onSuccess: (data) => {
-      if (data) {
-        queryClient.setQueryData(["magazine-article-draft", pieceId, demoMode], data);
-      }
-      void queryClient.invalidateQueries({ queryKey: ["magazine-article-draft", pieceId] });
-    },
-  });
+  );
 
   return { save, publish };
 }

@@ -58,11 +58,7 @@ export interface AuthContextValue {
    * ticked the 18+ box — the backend rejects a NEW account without it. Demo mode
    * just flips local state and ignores all three arguments.
    */
-  signIn: (
-    redirectTo?: string,
-    invite?: string,
-    ageAttested?: boolean,
-  ) => void;
+  signIn: (redirectTo?: string, invite?: string, ageAttested?: boolean) => void;
   signOut: () => void;
   /** Called by the loader once its sequence completes, to dismiss it. */
   endPreparing: () => void;

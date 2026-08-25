@@ -27,7 +27,8 @@ export const GROUPS: Group[] = [
     spine: "G",
     spineColor: "var(--plum)",
     name: "Bairro Alto Fiction",
-    description: "Monthly fiction group that started two years ago with Mrs Dalloway and has not looked back. Argumentative, warm, and always overruns by an hour.",
+    description:
+      "Monthly fiction group that started two years ago with Mrs Dalloway and has not looked back. Argumentative, warm, and always overruns by an hour.",
     where: "Príncipe Real café (rotates)",
     frequency: "Monthly · last Sunday",
     spots: 2,
@@ -42,7 +43,8 @@ export const GROUPS: Group[] = [
     spine: "G",
     spineColor: "var(--jade)",
     name: "Theory Thursdays",
-    description: "We read slowly. We argue in footnotes. Everyone is welcome regardless of academic background: this is the opposite of a seminar.",
+    description:
+      "We read slowly. We argue in footnotes. Everyone is welcome regardless of academic background: this is the opposite of a seminar.",
     where: "Someone's kitchen in Mouraria",
     frequency: "Every 3 weeks · Thursday evening",
     spots: 1,
@@ -57,7 +59,8 @@ export const GROUPS: Group[] = [
     spine: "A",
     spineColor: "var(--accent-ink)",
     name: "Memoir & Essay Online",
-    description: "Online group, no time zone requirement. We read memoirs and essays about queer life. Written discussion on Fridays, optional voice call on Sundays.",
+    description:
+      "Online group, no time zone requirement. We read memoirs and essays about queer life. Written discussion on Fridays, optional voice call on Sundays.",
     where: "Online (Discord)",
     frequency: "Monthly",
     spots: 4,
@@ -72,7 +75,8 @@ export const GROUPS: Group[] = [
     spine: "L",
     spineColor: "var(--violet)",
     name: "Long Reads Lisbon",
-    description: "For people who want to read the big, difficult books together. Emotional support provided. Content warnings posted in advance.",
+    description:
+      "For people who want to read the big, difficult books together. Emotional support provided. Content warnings posted in advance.",
     where: "Intendente, rotating hosts",
     frequency: "6-weekly",
     spots: 0,
@@ -87,7 +91,8 @@ export const GROUPS: Group[] = [
     spine: "P",
     spineColor: "var(--amber)",
     name: "Politics & Practice",
-    description: "Queer politics, activism, and community organising: read together and discussed in the context of Lisbon. Bilingual by default.",
+    description:
+      "Queer politics, activism, and community organising: read together and discussed in the context of Lisbon. Bilingual by default.",
     where: "Casa Qui, Mouraria",
     frequency: "Monthly · first Saturday",
     spots: 3,
@@ -102,7 +107,8 @@ export const GROUPS: Group[] = [
     spine: "C",
     spineColor: "var(--jade)",
     name: "Poetry Reading (Online)",
-    description: "We read one collection per month and meet online to discuss. Sometimes we read aloud. Sometimes we just send each other the lines that wrecked us.",
+    description:
+      "We read one collection per month and meet online to discuss. Sometimes we read aloud. Sometimes we just send each other the lines that wrecked us.",
     where: "Online (Zoom)",
     frequency: "Monthly",
     spots: 5,
@@ -117,7 +123,8 @@ export const GROUPS: Group[] = [
     spine: "O",
     spineColor: "var(--accent-ink)",
     name: "Queer Classics",
-    description: "We reread the canon with queer eyes. Slow paced, generously hosted, always food. Portuguese-language members welcome. Some meetings run bilingual.",
+    description:
+      "We reread the canon with queer eyes. Slow paced, generously hosted, always food. Portuguese-language members welcome. Some meetings run bilingual.",
     where: "Alfama (host's home)",
     frequency: "6-weekly · Saturday afternoon",
     spots: 2,
@@ -132,7 +139,8 @@ export const GROUPS: Group[] = [
     spine: "M",
     spineColor: "var(--plum)",
     name: "Solidarity Reads",
-    description: "Books about care, mutual aid, and community organising. Practical bias: we end every session with one thing we are going to do differently.",
+    description:
+      "Books about care, mutual aid, and community organising. Practical bias: we end every session with one thing we are going to do differently.",
     where: "LX Factory area",
     frequency: "Monthly · Wednesday evening",
     spots: 3,

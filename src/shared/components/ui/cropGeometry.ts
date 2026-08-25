@@ -12,7 +12,13 @@ export interface SourceSize {
 }
 
 /** Identity crop: the whole image, unaspected. Used as the default/reset state. */
-export const IDENTITY_CROP: CropRect = { x: 0, y: 0, width: 1, height: 1, aspect: "free" };
+export const IDENTITY_CROP: CropRect = {
+  x: 0,
+  y: 0,
+  width: 1,
+  height: 1,
+  aspect: "free",
+};
 
 /** True when the crop rect covers the entire source image (no reframing applied). */
 export function isIdentityCrop(crop: CropRect): boolean {
@@ -20,7 +26,10 @@ export function isIdentityCrop(crop: CropRect): boolean {
 }
 
 /** Largest crop of the given numeric aspect that fits the source, as fractions. */
-export function baseCropForAspect(source: SourceSize, aspect: number): { width: number; height: number } {
+export function baseCropForAspect(
+  source: SourceSize,
+  aspect: number,
+): { width: number; height: number } {
   const sourceAspect = source.width / source.height;
   if (sourceAspect > aspect) {
     // source is wider than the frame -> height limits

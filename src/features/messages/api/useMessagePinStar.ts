@@ -37,7 +37,9 @@ export function usePinnedMessages(conversationId: string | null) {
     queryKey: ["conversation-pins", conversationId, demoMode],
     enabled: !demoMode && !!conversationId,
     queryFn: () =>
-      conversationId ? getPinnedMessages(conversationId) : Promise.resolve(EMPTY_PINS),
+      conversationId
+        ? getPinnedMessages(conversationId)
+        : Promise.resolve(EMPTY_PINS),
     initialData: demoMode ? EMPTY_PINS : undefined,
   });
 }

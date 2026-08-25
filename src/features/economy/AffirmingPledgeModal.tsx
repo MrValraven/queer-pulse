@@ -41,7 +41,10 @@ export function AffirmingPledgeModal({
   };
 
   return (
-    <ModalShell onClose={onClose} ariaLabel={t("economy:affirmingPledge.ariaLabel")}>
+    <ModalShell
+      onClose={onClose}
+      ariaLabel={t("economy:affirmingPledge.ariaLabel")}
+    >
       <div className={styles.head}>
         <span className={styles.icon}>
           <FiHeart aria-hidden />
@@ -68,7 +71,11 @@ export function AffirmingPledgeModal({
         <button type="button" className={styles.back} onClick={onClose}>
           {t("economy:affirmingPledge.cancel")}
         </button>
-        <Button variant="primary" disabled={accept.isPending} onClick={handleAccept}>
+        <Button
+          variant="primary"
+          disabled={accept.isPending}
+          onClick={handleAccept}
+        >
           {accept.isPending ? (
             <Sending label={t("economy:affirmingPledge.accepting")} />
           ) : (

@@ -62,7 +62,12 @@ export function OrganizationPickerField({
   const selectOptions = [
     ...(required
       ? []
-      : [{ value: NONE, label: t("marketing:postOpportunity.core.orgLinkNone") }]),
+      : [
+          {
+            value: NONE,
+            label: t("marketing:postOpportunity.core.orgLinkNone"),
+          },
+        ]),
     ...options.map((option) => ({
       value: encode(option.kind, option.slug),
       label: option.name,
@@ -108,7 +113,11 @@ export function OrganizationPickerField({
       )}
       error={error}
     >
-      <Select options={selectOptions} value={selected} onChange={handleChange} />
+      <Select
+        options={selectOptions}
+        value={selected}
+        onChange={handleChange}
+      />
     </FormField>
   );
 }

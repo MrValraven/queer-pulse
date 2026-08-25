@@ -54,6 +54,7 @@ export const cinema: Catalog = {
 
   // CinemaHero.tsx — CinemaMast / AskStrip / CinemaCover
   "mast.issueLabel": "Programação: Semana {week} · {year}",
+  "mast.dateRange": "{start} a {end}",
   "mast.tagline":
     "Um teatro, um arquivo, uma cooperativa. <em>Oitenta por cento de cada aluguer</em> vai para quem fez o filme.",
   "mast.sectionNav.thisWeek": "Esta semana",
@@ -406,6 +407,7 @@ export const cinema: Catalog = {
   "shorts.spotlight.communityPickKicker":
     "Escolha da comunidade · semana {week}",
   "shorts.spotlight.watchNowCta": "Ver agora · grátis",
+  "shorts.spotlight.tipCollectiveCta": "Dar uma gorjeta ao coletivo",
   "shorts.spotlight.becomeSustainerCta": "Torna-te um",
   "shorts.shelf.newThisWeek.title": "Novo <em>esta semana</em>",
   "shorts.shelf.newThisWeek.sub":
@@ -458,6 +460,9 @@ export const cinema: Catalog = {
   "shorts.catalog.count_one": "<em>{count}</em> filme · todos grátis para ver",
   "shorts.catalog.count_other":
     "<em>{count}</em> filmes · todos grátis para ver",
+  "shorts.card.runtime": "{minutes} min",
+  "shorts.card.ccBadge": "CC",
+  "shorts.card.adBadge": "AD",
   "shorts.card.saveAriaLabel": "Guardar na lista para ver",
   "shorts.card.watches_one": "{count} visualização",
   "shorts.card.watches_other": "{count} visualizações",
@@ -475,6 +480,8 @@ export const cinema: Catalog = {
   "shorts.watchParties.rsvpFreeCta": "Confirmar presença · grátis",
   "shorts.watchParties.rsvpToast": "Vais participar · {title}",
   "shorts.vote.title": "Programa o <em>próximo conjunto</em>",
+  "shorts.vote.window":
+    "As pessoas escolhem o tema de agosto · a votação fecha a 20 de julho",
   "shorts.vote.yourPickLabel": "A tua escolha",
   "shorts.vote.voteCta": "Votar",
   "shorts.vote.countedToast": "Voto contabilizado. Obrigade",
@@ -1125,6 +1132,9 @@ export const cinema: Catalog = {
   "watch.controls.subtitleLang.none": "Sem legendas",
   "watch.controls.ccAria": "Legendas em inglês",
   "watch.controls.adAria": "Audiodescrição",
+  "watch.controls.ccToggleLabel": "CC EN",
+  "watch.controls.adToggleLabel": "AD",
+  "watch.controls.pausedStatus": "Em pausa aos {time} · faltam {remaining} min",
   "watch.sidePanel.lobbyPlaceholder": "Diz algo à lobby…",
   "watch.sidePanel.qnaPlaceholder": "Faz uma pergunta a {name}…",
   "watch.sidePanel.sendCta": "Enviar",
@@ -1153,8 +1163,7 @@ export const cinema: Catalog = {
     "Algo correu mal ao carregar o catálogo. Tenta novamente daqui a pouco.",
   "live.error.retry": "Tentar novamente",
   "live.pick.title": "Escolhe um filme para ver",
-  "live.pick.description":
-    "Escolhe um título do programa para começar a ver.",
+  "live.pick.description": "Escolhe um título do programa para começar a ver.",
   "live.pick.cta": "Explorar o programa",
   "live.notFound.title": "Este filme não está disponível",
   "live.notFound.description":
@@ -1163,7 +1172,8 @@ export const cinema: Catalog = {
   "live.playCta": "Reproduzir filme",
   "live.resumeCta": "Continuar a ver",
   "live.playbackError": "Não foi possível iniciar este filme. Tenta novamente.",
-  "live.unsupported.title": "Este navegador ainda não consegue reproduzir os nossos filmes",
+  "live.unsupported.title":
+    "Este navegador ainda não consegue reproduzir os nossos filmes",
   "live.unsupported.description":
     "Por agora, o nosso formato de streaming precisa do Safari num Mac, iPhone ou iPad. Abre esta página aí e o filme começa. O suporte para Chrome e Firefox está a ser construído.",
   "live.unsupported.cta": "Explorar o programa",

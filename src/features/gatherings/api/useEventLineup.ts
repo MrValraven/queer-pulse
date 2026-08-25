@@ -54,7 +54,8 @@ export function useReplaceLineup(slug: string) {
       return replaceEventLineup(slug, entries);
     },
     onSuccess: (data) => {
-      if (data) queryClient.setQueryData(eventKeys.lineup(slug, demoMode), data);
+      if (data)
+        queryClient.setQueryData(eventKeys.lineup(slug, demoMode), data);
       void queryClient.invalidateQueries({ queryKey: eventKeys.lineupRoot });
     },
   });

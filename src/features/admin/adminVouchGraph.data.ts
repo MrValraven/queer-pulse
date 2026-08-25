@@ -505,11 +505,13 @@ import {
 } from "./trustGraph/trustGraphModel";
 import type { TrustNetworkMemberSearchResultDTO } from "./api/adminTrustNetwork.api";
 
-const DEMO_SCENES: TrustScene[] = Object.entries(SCENES).map(([key, scene]) => ({
-  id: key,
-  label: scene.label ?? key,
-  color: scene.color,
-}));
+const DEMO_SCENES: TrustScene[] = Object.entries(SCENES).map(
+  ([key, scene]) => ({
+    id: key,
+    label: scene.label ?? key,
+    color: scene.color,
+  }),
+);
 
 const DEMO_PEOPLE: ModelPerson[] = PEOPLE.map((person) => ({
   id: person.id,
@@ -519,7 +521,8 @@ const DEMO_PEOPLE: ModelPerson[] = PEOPLE.map((person) => ({
   name: person.name,
   pronoun: person.pronoun,
   initials: person.initials,
-  tone: person.tone === "danger" ? "coral" : (person.tone as ModelPerson["tone"]),
+  tone:
+    person.tone === "danger" ? "coral" : (person.tone as ModelPerson["tone"]),
   joined: person.joined,
   standing: person.standing,
   // ADM-23: the fixture's "ring" scene IS the seed's 5-account self-vouching

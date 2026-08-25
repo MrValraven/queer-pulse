@@ -34,7 +34,7 @@ let pendingBehavior: PaneBehavior | null = null;
 function applyPending(container: HTMLElement): void {
   if (!currentKey || !pendingBehavior) return;
   container.scrollTop =
-    pendingBehavior === "restore" ? positions.get(currentKey) ?? 0 : 0;
+    pendingBehavior === "restore" ? (positions.get(currentKey) ?? 0) : 0;
   pendingBehavior = null;
 }
 

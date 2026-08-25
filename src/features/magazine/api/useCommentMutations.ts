@@ -58,7 +58,10 @@ function patchResolved(
   return tree.map((comment) => {
     if (comment.id === commentId) return { ...comment, resolved };
     if (comment.replies.length === 0) return comment;
-    return { ...comment, replies: patchResolved(comment.replies, commentId, resolved) };
+    return {
+      ...comment,
+      replies: patchResolved(comment.replies, commentId, resolved),
+    };
   });
 }
 
@@ -86,10 +89,19 @@ export function useCommentMutations(pieceId: string) {
     void queryClient.invalidateQueries({ queryKey });
   }
 
-  const addComment = useMutation<void, Error, { body: string; blockId?: string }>({
+  const addComment = useMutation<
+    void,
+    Error,
+    { body: string; blockId?: string }
+  >({
     mutationFn: async ({ body, blockId }) => {
       if (demoMode) {
-        const newComment = buildDemoNode(demoAuthor, body, blockId ?? null, null);
+        const newComment = buildDemoNode(
+          demoAuthor,
+          body,
+          blockId ?? null,
+          null,
+        );
         queryClient.setQueryData<ArticleCommentDto[]>(queryKey, (tree = []) => [
           newComment,
           ...tree,
@@ -121,7 +133,11 @@ export function useCommentMutations(pieceId: string) {
     },
   });
 
-  const toggleResolve = useMutation<void, Error, { commentId: string; resolved: boolean }>({
+  const toggleResolve = useMutation<
+    void,
+    Error,
+    { commentId: string; resolved: boolean }
+  >({
     mutationFn: async ({ commentId, resolved }) => {
       if (demoMode) {
         queryClient.setQueryData<ArticleCommentDto[]>(queryKey, (tree = []) =>

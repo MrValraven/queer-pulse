@@ -218,8 +218,12 @@ export function useSocialStore(): SocialContextValue {
             if (key === "blocked") {
               void queryClient.invalidateQueries({ queryKey: ["connections"] });
               void queryClient.invalidateQueries({ queryKey: ["members"] });
-              void queryClient.invalidateQueries({ queryKey: ["conversations"] });
-              void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
+              void queryClient.invalidateQueries({
+                queryKey: ["conversations"],
+              });
+              void queryClient.invalidateQueries({
+                queryKey: [UNREAD_COUNT_KEY],
+              });
             }
             onSettled?.(true);
           })

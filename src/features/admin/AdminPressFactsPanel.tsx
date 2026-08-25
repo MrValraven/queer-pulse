@@ -18,7 +18,10 @@ export function AdminPressFactsPanel() {
   const { facts, isLoading } = usePressKitFacts();
 
   return (
-    <aside className={styles.factsPanel} aria-label={t("admin:pressKit.facts.title")}>
+    <aside
+      className={styles.factsPanel}
+      aria-label={t("admin:pressKit.facts.title")}
+    >
       <h2 className={styles.factsTitle}>{t("admin:pressKit.facts.title")}</h2>
       <p className={styles.factsSub}>{t("admin:pressKit.facts.sub")}</p>
 

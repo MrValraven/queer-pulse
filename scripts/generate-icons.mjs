@@ -121,7 +121,8 @@ async function renderSplash({ width, height, outputName }) {
   const blockHeight = markSize + gap + wordmarkFontSize;
   const blockTop = Math.round((height - blockHeight) / 2);
   const markLeft = Math.round((width - markSize) / 2);
-  const wordmarkBaseline = blockTop + markSize + gap + Math.round(wordmarkFontSize * 0.78);
+  const wordmarkBaseline =
+    blockTop + markSize + gap + Math.round(wordmarkFontSize * 0.78);
 
   const splashSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
   <rect width="${width}" height="${height}" fill="${PLUM}"/>
@@ -139,7 +140,9 @@ for (const splash of SPLASH_SIZES) {
   await renderSplash(splash);
 }
 
-console.log(`Wrote ${SPLASH_SIZES.length} splash images to ${SPLASH_DIRECTORY}/`);
+console.log(
+  `Wrote ${SPLASH_SIZES.length} splash images to ${SPLASH_DIRECTORY}/`,
+);
 
 /* -------------------------------------------------------------------------- */
 /* Monochrome push badge                                                      */

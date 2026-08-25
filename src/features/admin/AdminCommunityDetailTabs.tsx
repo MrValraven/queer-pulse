@@ -84,8 +84,7 @@ function ReportRow({ item }: { item: QueueItem }) {
         <div className={styles.reportMeta}>{item.meta}</div>
       </div>
       <Button variant="primary" to={routes.adminModeration}>
-        {t("admin:communities.queue.reviewCta")}{" "}
-        <FiArrowRight aria-hidden />
+        {t("admin:communities.queue.reviewCta")} <FiArrowRight aria-hidden />
       </Button>
     </div>
   );

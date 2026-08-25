@@ -1,5 +1,9 @@
 import { FiAlertCircle, FiFileText } from "react-icons/fi";
-import { EmptyState, SkeletonLine, type DetailRow } from "../../shared/components/ui";
+import {
+  EmptyState,
+  SkeletonLine,
+  type DetailRow,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -26,11 +30,7 @@ function AppealLoadingSkeleton() {
         height={52}
         style={{ borderRadius: "50%", margin: "0 auto" }}
       />
-      <SkeletonLine
-        width="60%"
-        height={22}
-        style={{ margin: "18px auto 0" }}
-      />
+      <SkeletonLine width="60%" height={22} style={{ margin: "18px auto 0" }} />
       <SkeletonLine width="80%" height={14} style={{ margin: "10px auto 0" }} />
     </div>
   );

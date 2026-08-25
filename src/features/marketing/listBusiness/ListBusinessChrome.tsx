@@ -93,10 +93,10 @@ export function WizardChrome({
                   type="button"
                   className={[pillClass, chrome.jumpable].join(" ")}
                   onClick={() => onJump?.(index)}
-                  aria-label={t(
-                    "marketing:listBusiness.wizard.stepJumpAria",
-                    { number: index + 1, label },
-                  )}
+                  aria-label={t("marketing:listBusiness.wizard.stepJumpAria", {
+                    number: index + 1,
+                    label,
+                  })}
                 >
                   {inner}
                 </button>

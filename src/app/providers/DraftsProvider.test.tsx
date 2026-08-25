@@ -27,9 +27,8 @@ async function loadLiveDrafts(getDrafts: ReturnType<typeof vi.fn>) {
 
   const { DemoModeProvider } = await import("./DemoModeProvider");
   const { I18nProvider } = await import("./I18nProvider");
-  const { ToastProvider } = await import(
-    "../../shared/components/feedback/ToastProvider"
-  );
+  const { ToastProvider } =
+    await import("../../shared/components/feedback/ToastProvider");
   const mod = await import("./DraftsProvider");
   const hooks = await import("./useDrafts");
   const client = new QueryClient({

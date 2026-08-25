@@ -138,7 +138,10 @@ function LiveModerators({ community }: { community: Community }) {
   return (
     <div className={styles.modChips}>
       {community.moderators.map((moderator) => (
-        <span key={moderator.memberId ?? moderator.name} className={styles.modChip}>
+        <span
+          key={moderator.memberId ?? moderator.name}
+          className={styles.modChip}
+        >
           {shortName(moderator.name)}
           {/* The founder is immovable here either way — no demote or remove
               control for the owner (mirrors the backend's own 400 on both). */}
@@ -246,10 +249,9 @@ function RemoveMemberConfirmModal({
         },
         onError: () =>
           showToast(
-            t(
-              "admin:communities.settings.mod.removeFromCommunityFailedToast",
-              { name: moderator.name },
-            ),
+            t("admin:communities.settings.mod.removeFromCommunityFailedToast", {
+              name: moderator.name,
+            }),
             "error",
           ),
       },

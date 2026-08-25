@@ -1,4 +1,10 @@
-import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import type { Virtualizer } from "@tanstack/react-virtual";
 import { isNearBottom } from "./useStickToBottom";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
@@ -117,7 +123,8 @@ export function useMessageScroll(
   const scrollToBottom = useCallback(
     (animate: boolean) => {
       const rowCount = rowVirtualizer.options.count;
-      const behavior = animate && !prefersReducedMotionNow() ? "smooth" : "auto";
+      const behavior =
+        animate && !prefersReducedMotionNow() ? "smooth" : "auto";
       if (rowCount > 0) {
         // `scrollToIndex` (not a raw offset) — it resolves iteratively across
         // frames if the target row's real height isn't known yet, which a
@@ -223,7 +230,13 @@ export function useMessageScroll(
         setNewMessagesCount((current) => current + inboundArrived);
       }
     }
-  }, [messageCount, inboundCount, scrollToBottom, restoreAnchor, armInitialSettleGuard]);
+  }, [
+    messageCount,
+    inboundCount,
+    scrollToBottom,
+    restoreAnchor,
+    armInitialSettleGuard,
+  ]);
 
   // Stick-to-bottom must survive a *resize* of already-rendered content — a
   // late-loading image, an added reaction chip, an expanding inline edit —

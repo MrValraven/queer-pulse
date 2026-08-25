@@ -56,7 +56,8 @@ export function nextPieceStage(stage: PieceStage): PieceStage | null {
 /** Maps a backend piece row to the desk UI's `Piece` view shape. */
 export function pieceDtoToView(pieceDto: PieceListItemDto): Piece {
   const stage = STAGE_DTO_TO_VIEW[pieceDto.stage];
-  const due = stage === "Ready" ? (pieceDto.due ?? "ready") : (pieceDto.due ?? "");
+  const due =
+    stage === "Ready" ? (pieceDto.due ?? "ready") : (pieceDto.due ?? "");
 
   return {
     id: pieceDto.id,

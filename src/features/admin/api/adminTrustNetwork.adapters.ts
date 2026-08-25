@@ -42,22 +42,23 @@ export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
       a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : 0,
     )
     .map((edge) => ({
-    id: edge.id,
-    from: edge.from,
-    to: edge.to,
-    mutual: edge.mutual,
-    withdrawn: edge.withdrawn,
-    date: toMonth(edge.createdAt),
-    relationship: edge.relationship,
-    reason: edge.note,
-    anonymous: edge.anonymous,
-    kind: edge.kind,
-  }));
+      id: edge.id,
+      from: edge.from,
+      to: edge.to,
+      mutual: edge.mutual,
+      withdrawn: edge.withdrawn,
+      date: toMonth(edge.createdAt),
+      relationship: edge.relationship,
+      reason: edge.note,
+      anonymous: edge.anonymous,
+      kind: edge.kind,
+    }));
 
   // Even angular spread of the distinct scenes around the focus.
   const sceneAnchor: Record<string, { x: number; y: number }> = {};
   dto.scenes.forEach((scene, index) => {
-    const angle = (index / Math.max(1, dto.scenes.length)) * Math.PI * 2 - Math.PI / 2;
+    const angle =
+      (index / Math.max(1, dto.scenes.length)) * Math.PI * 2 - Math.PI / 2;
     sceneAnchor[scene.id] = {
       x: Math.cos(angle) * ANCHOR_R,
       y: Math.sin(angle) * ANCHOR_R,

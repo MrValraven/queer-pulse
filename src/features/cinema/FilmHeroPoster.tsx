@@ -45,9 +45,11 @@ export function FilmHeroPoster() {
 
       <div className={styles.tipjar}>
         <div className={styles.tipjarH}>{t("cinema:film.tipjar.heading")}</div>
+        {/* eslint-disable local/no-literal-string -- this film's filmmaker's own name; content per the scope rule */}
         <div className={styles.tipjarName}>
           Maria <em>Vasconcelos</em>
         </div>
+        {/* eslint-enable local/no-literal-string */}
         <div className={styles.tipjarSub}>
           {t("cinema:film.tipjar.note", { name: FILMMAKER_NAME })}
         </div>

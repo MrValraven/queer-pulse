@@ -1,7 +1,11 @@
 // src/features/messages/useMessageRowVirtualizer.ts
 import { useMemo, type RefObject } from "react";
 import { useVirtualizer, type Virtualizer } from "@tanstack/react-virtual";
-import { buildMessageRows, estimateRowHeight, type MessageRow } from "./messageRows";
+import {
+  buildMessageRows,
+  estimateRowHeight,
+  type MessageRow,
+} from "./messageRows";
 import type { ChatMessage } from "./data";
 
 export interface UseMessageRowVirtualizerResult {
@@ -34,6 +38,15 @@ export function useMessageRowVirtualizer(
   hasGroupSeenBy: boolean,
   scrollElementRef: RefObject<HTMLDivElement | null>,
 ): UseMessageRowVirtualizerResult {
+  // @tanstack/react-virtual's `useVirtualizer()` returns functions (e.g.
+  // `measureElement`) that close over internal mutable state and are not
+  // safe for React Compiler to memoize — memoizing them risks the stale-UI
+  // failure mode the compiler itself warns about. `"use no memo"` is React's
+  // documented directive that opts this hook out of compiler memoization
+  // entirely, matching what the compiler already does automatically once it
+  // detects this pattern.
+  "use no memo";
+
   const rows = useMemo(
     () =>
       buildMessageRows(
@@ -43,9 +56,21 @@ export function useMessageRowVirtualizer(
         isGroup,
         hasGroupSeenBy,
       ),
-    [messageGroups, dividerAnchorMessage, lastOutbound, isGroup, hasGroupSeenBy],
+    [
+      messageGroups,
+      dividerAnchorMessage,
+      lastOutbound,
+      isGroup,
+      hasGroupSeenBy,
+    ],
   );
 
+  // The lint rule still flags this call even with the "use no memo" directive
+  // above (it reports every known-incompatible-library call site regardless
+  // of opt-out directives) — the directive is what actually controls
+  // compiler behavior, so the warning below is purely informational once it
+  // is in place. Suppressed here rather than left failing lint.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollElementRef.current,

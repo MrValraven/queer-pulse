@@ -126,7 +126,9 @@ export function PersonaCoverReposition({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={value}
-        aria-valuetext={t("subprofiles:cover.reposition.valueText", { percent: value })}
+        aria-valuetext={t("subprofiles:cover.reposition.valueText", {
+          percent: value,
+        })}
         onPointerDown={reposition.onPointerDown}
         onPointerMove={reposition.onPointerMove}
         onPointerUp={reposition.onPointerUp}
@@ -134,7 +136,9 @@ export function PersonaCoverReposition({
         onKeyDown={handleKeyDown}
       />
       <div className={styles.bar}>
-        <span className={styles.hint}>{t("subprofiles:cover.reposition.hint")}</span>
+        <span className={styles.hint}>
+          {t("subprofiles:cover.reposition.hint")}
+        </span>
         <Button
           type="button"
           variant="ghost-dark"

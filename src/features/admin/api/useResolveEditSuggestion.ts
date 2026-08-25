@@ -22,7 +22,11 @@ export interface ResolveEditSuggestionVars {
 export function useResolveEditSuggestion() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<EditSuggestionDTO, Error, ResolveEditSuggestionVars>({
+  return useDemoAwareMutation<
+    EditSuggestionDTO,
+    Error,
+    ResolveEditSuggestionVars
+  >({
     demoMode,
     logLabel: "admin.editSuggestion.resolve",
     logContext: ({ suggestion, status }) => ({ id: suggestion.id, status }),

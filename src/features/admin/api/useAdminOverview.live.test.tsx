@@ -95,8 +95,18 @@ const MINIMAL_OVERVIEW_DTO: AdminOverviewDTO = {
   },
   memberGrowth: {
     points: [
-      { at: "2026-06-01T00:00:00.000Z", joined: 120, churned: null, spike: false },
-      { at: "2026-07-01T00:00:00.000Z", joined: 150, churned: null, spike: false },
+      {
+        at: "2026-06-01T00:00:00.000Z",
+        joined: 120,
+        churned: null,
+        spike: false,
+      },
+      {
+        at: "2026-07-01T00:00:00.000Z",
+        joined: 150,
+        churned: null,
+        spike: false,
+      },
     ],
   },
   responseTime: null,
@@ -127,9 +137,8 @@ const MINIMAL_OVERVIEW_DTO: AdminOverviewDTO = {
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
-  const { useAdminOverview: useAdminOverviewLive } = await import(
-    "./useAdminOverview"
-  );
+  const { useAdminOverview: useAdminOverviewLive } =
+    await import("./useAdminOverview");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
   // Imported after resetModules like the others: a statically-imported provider

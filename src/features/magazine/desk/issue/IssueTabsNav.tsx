@@ -2,14 +2,20 @@ import { cx } from "../../../../shared/lib/cx";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import styles from "../../IssueProductionPage.module.css";
 
-export type IssueTabId = "runningOrder" | "coverContents" | "digestSocial" | "archive";
+export type IssueTabId =
+  "runningOrder" | "coverContents" | "digestSocial" | "archive";
 
 export interface IssueTabsNavProps {
   tab: IssueTabId;
   onChange: (tab: IssueTabId) => void;
 }
 
-const ISSUE_TAB_IDS: IssueTabId[] = ["runningOrder", "coverContents", "digestSocial", "archive"];
+const ISSUE_TAB_IDS: IssueTabId[] = [
+  "runningOrder",
+  "coverContents",
+  "digestSocial",
+  "archive",
+];
 
 const ISSUE_TAB_LABEL_KEYS: Record<IssueTabId, string> = {
   runningOrder: "magazine:issue.tabs.runningOrder",
@@ -24,12 +30,18 @@ export function IssueTabsNav({ tab, onChange }: IssueTabsNavProps) {
   const { t } = useTranslation();
 
   return (
-    <nav className={styles.tabs} aria-label={t("magazine:issue.tabs.ariaLabel")}>
+    <nav
+      className={styles.tabs}
+      aria-label={t("magazine:issue.tabs.ariaLabel")}
+    >
       {ISSUE_TAB_IDS.map((tabId) => (
         <button
           key={tabId}
           type="button"
-          className={cx(styles.tabButton, tab === tabId && styles.tabButtonActive)}
+          className={cx(
+            styles.tabButton,
+            tab === tabId && styles.tabButtonActive,
+          )}
           aria-current={tab === tabId}
           onClick={() => onChange(tabId)}
         >

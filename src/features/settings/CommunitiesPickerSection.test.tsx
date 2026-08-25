@@ -30,11 +30,9 @@ vi.mock("../members/useMyCommunityCards", () => ({
 }));
 
 let draftFeaturedSlugs: string[] = [];
-const updateDraft = vi.fn(
-  (patch: { featuredCommunities?: string[] }) => {
-    if (patch.featuredCommunities) draftFeaturedSlugs = patch.featuredCommunities;
-  },
-);
+const updateDraft = vi.fn((patch: { featuredCommunities?: string[] }) => {
+  if (patch.featuredCommunities) draftFeaturedSlugs = patch.featuredCommunities;
+});
 vi.mock("../../app/providers/useProfile", async (importOriginal) => {
   // Fresh fixtures built PER CALL (not hoisted to module scope) so each
   // re-render re-reads the live `draftFeaturedSlugs` — tests reassign it

@@ -1,3 +1,4 @@
+import { Translation } from "../../shared/i18n/Translation";
 import type { Application, NegotiationAngle } from "./applicationStatus.types";
 
 /* ── Negotiation planner ─────────────────────────────────────────────────── */
@@ -74,12 +75,7 @@ export function withdrawnPatch(): Partial<Application> {
       { label: "—", state: "" },
       { label: "—", state: "" },
     ],
-    status: (
-      <>
-        You withdrew this application just now. The company has been notified
-        politely.
-      </>
-    ),
+    status: <Translation i18nKey="economy:applicationStatus.patch.withdrawn" />,
     actions: [],
   };
 }
@@ -89,10 +85,10 @@ export function followedUpPatch(): Partial<Application> {
     accent: undefined,
     badge: { kind: "in-review", label: "Followed up", pulse: true },
     status: (
-      <>
-        <b>Follow-up sent just now.</b> They've been nudged gently. You'll
-        usually hear back within a couple of days.
-      </>
+      <Translation
+        i18nKey="economy:applicationStatus.patch.followedUp"
+        components={{ b: <b /> }}
+      />
     ),
     actions: [
       { label: "Message recruiter", kind: "message", arrow: true },
@@ -112,12 +108,7 @@ export function submittedDraftPatch(): Partial<Application> {
       { label: "Interview", state: "" },
       { label: "Decision", state: "" },
     ],
-    status: (
-      <>
-        Submitted just now. Their stated turnaround is 7 days. We'll watch the
-        clock for you.
-      </>
-    ),
+    status: <Translation i18nKey="economy:applicationStatus.patch.submitted" />,
     actions: [
       { label: "Message recruiter", kind: "message", arrow: true },
       { label: "View submission", kind: "submission", muted: true },
@@ -137,10 +128,10 @@ export function acceptedOfferPatch(): Partial<Application> {
       { label: "Accepted", state: "done" },
     ],
     status: (
-      <>
-        <b>Offer accepted.</b> They'll send the contract to your email within
-        two working days.
-      </>
+      <Translation
+        i18nKey="economy:applicationStatus.patch.accepted"
+        components={{ b: <b /> }}
+      />
     ),
     actions: [{ label: "Open conversation", kind: "conversation" }],
   };
@@ -171,9 +162,7 @@ export function declinedOfferPatch(): Partial<Application> {
       { label: "Interview", state: "done" },
       { label: "Declined", state: "rejected" },
     ],
-    status: (
-      <>You declined this offer. They've been thanked warmly on your behalf.</>
-    ),
+    status: <Translation i18nKey="economy:applicationStatus.patch.declined" />,
     actions: [],
   };
 }

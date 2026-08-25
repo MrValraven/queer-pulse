@@ -3,7 +3,10 @@ import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { describeError } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
-import type { AdminRoadmapItemDTO, RoadmapColumn } from "../../api/roadmapAdmin.types";
+import type {
+  AdminRoadmapItemDTO,
+  RoadmapColumn,
+} from "../../api/roadmapAdmin.types";
 
 /**
  * Every mutation a Board card's kebab menu can fire, plus the local
@@ -26,7 +29,10 @@ export function useRoadmapCardActions(
 
   function moveTo(column: RoadmapColumn) {
     updateItem(
-      { id: item.id, body: { column, sortOrder: maxSortOrderByColumn[column] + 10 } },
+      {
+        id: item.id,
+        body: { column, sortOrder: maxSortOrderByColumn[column] + 10 },
+      },
       {
         onSuccess: () =>
           showToast(
@@ -57,7 +63,11 @@ export function useRoadmapCardActions(
       {
         onSuccess: () =>
           showToast(
-            t(nextPublic ? "admin:roadmap.toasts.published" : "admin:roadmap.toasts.hidden"),
+            t(
+              nextPublic
+                ? "admin:roadmap.toasts.published"
+                : "admin:roadmap.toasts.hidden",
+            ),
             "info",
           ),
         onError: (error) =>
@@ -80,7 +90,10 @@ export function useRoadmapCardActions(
     duplicateItem(item.id, {
       onSuccess: () => showToast(t("admin:roadmap.toasts.duplicated"), "info"),
       onError: (error) =>
-        showToast(describeError(t("admin:roadmap.board.menu.duplicate"), error), "error"),
+        showToast(
+          describeError(t("admin:roadmap.board.menu.duplicate"), error),
+          "error",
+        ),
     });
   }
 
@@ -89,9 +102,15 @@ export function useRoadmapCardActions(
       { id: item.id, archived: true },
       {
         onSuccess: () =>
-          showToast(t("admin:roadmap.toasts.archived", { name: item.name }), "info"),
+          showToast(
+            t("admin:roadmap.toasts.archived", { name: item.name }),
+            "info",
+          ),
         onError: (error) =>
-          showToast(describeError(t("admin:roadmap.board.menu.archive"), error), "error"),
+          showToast(
+            describeError(t("admin:roadmap.board.menu.archive"), error),
+            "error",
+          ),
       },
     );
   }
@@ -100,7 +119,10 @@ export function useRoadmapCardActions(
     setConfirmingDelete(false);
     deleteItem(item.id, {
       onSuccess: () =>
-        showToast(t("admin:roadmap.toasts.deleted", { name: item.name }), "info"),
+        showToast(
+          t("admin:roadmap.toasts.deleted", { name: item.name }),
+          "info",
+        ),
       onError: (error) =>
         showToast(describeError(t("admin:common.delete"), error), "error"),
     });

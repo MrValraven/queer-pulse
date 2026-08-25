@@ -39,7 +39,11 @@ export function HousingSaveSearch({
     const trimmed = name.trim();
     if (!trimmed) return;
     createSavedSearch.mutate(
-      { name: trimmed, criteria: filtersToCriteria(filters), alertsEnabled: true },
+      {
+        name: trimmed,
+        criteria: filtersToCriteria(filters),
+        alertsEnabled: true,
+      },
       {
         onSuccess: () => {
           showToast(t("economy:housing.saveSearch.saved"), "success");

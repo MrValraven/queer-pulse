@@ -541,7 +541,7 @@ export const resources: Catalog = {
   "mentalHealth.therapists.title":
     "Terapeutas afirmativos queer <em>em Lisboa</em>",
   "mentalHealth.therapists.lead":
-    'Avaliados e recomendados por pessoas da comunidade. Cada terapeuta aqui foi verificado como genuinamente afirmativo queer, com experiência em vidas e identidades queer, e nas pressões específicas de seres queer e expatriade em Lisboa.',
+    "Avaliados e recomendados por pessoas da comunidade. Cada terapeuta aqui foi verificado como genuinamente afirmativo queer, com experiência em vidas e identidades queer, e nas pressões específicas de seres queer e expatriade em Lisboa.",
   "mentalHealth.therapists.filterLabel": "Filtrar",
   "mentalHealth.therapists.allLanguages": "Todos os idiomas",
   "mentalHealth.therapists.accepting": "A aceitar",
@@ -1067,8 +1067,7 @@ export const resources: Catalog = {
   "library.category.legal": "Direito",
   "library.category.finance": "Finanças",
   "library.category.trans": "Vida trans",
-  "library.empty":
-    "Ainda não há guias que correspondam. Tenta outra pesquisa.",
+  "library.empty": "Ainda não há guias que correspondam. Tenta outra pesquisa.",
   "library.readGuideCta": "Ler o guia",
   "library.loadingMore": "A carregar mais guias…",
   "library.loadMoreCta": "Carregar mais guias",
@@ -1168,8 +1167,7 @@ export const resources: Catalog = {
   "sexualHealth.guides.ask.doneBody":
     "Uma pessoa com experiência relevante vai responder, sem nome, sem conta, nada associado a ti. Volta aqui dentro de um dia ou dois.",
   "sexualHealth.guides.ask.anotherCta": "Perguntar outra vez",
-  "sexualHealth.guides.ask.title":
-    "Pergunta o que quiseres, de forma anónima.",
+  "sexualHealth.guides.ask.title": "Pergunta o que quiseres, de forma anónima.",
   "sexualHealth.guides.ask.body":
     "Envia uma pergunta à comunidade. Respondida por pessoas com conhecimento relevante. Nada é partilhado ou associado à tua conta.",
   "sexualHealth.guides.ask.placeholder":

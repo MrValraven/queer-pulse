@@ -21,7 +21,9 @@
   color: var(--ink-60);
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 
 /* Touch devices need a >=44px hit area (WCAG 2.5.8). The icon stays visually the
@@ -170,7 +172,9 @@
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 16px;
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  transition:
+    transform 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
 }
 
 @media (hover: hover) {

@@ -63,12 +63,10 @@ export function ReportsByTypeChart({
 
   const legend = (
     <ChartLegend
-      items={series.map(
-        (seriesItem): LegendItem => ({
-          color: seriesItem.color,
-          label: t(seriesItem.labelKey),
-        }),
-      )}
+      items={series.map((seriesItem): LegendItem => ({
+        color: seriesItem.color,
+        label: t(seriesItem.labelKey),
+      }))}
     />
   );
 
@@ -449,7 +447,9 @@ export function ResponseTimeChart({
                     overSla: bucket.overSla,
                   };
                   const slaLabel = bucket.overSla
-                    ? t("admin:dashboard.charts.legend.overSla", { hours: "6h" })
+                    ? t("admin:dashboard.charts.legend.overSla", {
+                        hours: "6h",
+                      })
                     : t("admin:dashboard.charts.legend.withinSla");
                   return {
                     key: bucket.label,

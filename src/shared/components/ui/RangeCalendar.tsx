@@ -65,8 +65,14 @@ export function RangeCalendar({
     return (date: PlainDate) => isDateUnavailable(formatIsoDate(date));
   }, [isDateUnavailable]);
 
-  const start = useMemo(() => (value?.start ? parseDate(value.start) : null), [value]);
-  const end = useMemo(() => (value?.end ? parseDate(value.end) : null), [value]);
+  const start = useMemo(
+    () => (value?.start ? parseDate(value.start) : null),
+    [value],
+  );
+  const end = useMemo(
+    () => (value?.end ? parseDate(value.end) : null),
+    [value],
+  );
 
   // The first click of a new pair (uncommitted until the second click, which
   // reads this via closure and clears it). Kept separate from the controlled
@@ -83,10 +89,15 @@ export function RangeCalendar({
       return;
     }
     const [rangeStart, rangeEnd] =
-      compareDate(anchorDate, date) <= 0 ? [anchorDate, date] : [date, anchorDate];
+      compareDate(anchorDate, date) <= 0
+        ? [anchorDate, date]
+        : [date, anchorDate];
     setAnchorDate(null);
     setHoveredDate(null);
-    onChange({ start: formatIsoDate(rangeStart), end: formatIsoDate(rangeEnd) });
+    onChange({
+      start: formatIsoDate(rangeStart),
+      end: formatIsoDate(rangeEnd),
+    });
   };
 
   const anchorSeed = start ?? todayPlain();

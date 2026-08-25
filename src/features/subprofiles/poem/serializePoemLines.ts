@@ -1,7 +1,10 @@
 import type { PoemLine, PoemMark, PoemSpan } from "./poemModel";
 
 function escapeHtml(text: string): string {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 // Stable nesting order regardless of a span's `marks` array order — strong

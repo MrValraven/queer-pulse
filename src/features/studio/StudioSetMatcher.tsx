@@ -9,6 +9,12 @@ import s from "./funding.module.css";
 
 const PER_PLAY_RATE = 0.05;
 
+// Content: the uploaded mock master file's name and technical metadata —
+// comes from the uploaded file in live mode.
+const UPLOADED_FILENAME = "house-for-the-tired_master.wav";
+const UPLOADED_FILE_META =
+  "2h 08m · 24-bit / 48kHz · 1.4 GB · loudness −9.2 LUFS ";
+
 interface StudioSetMatcherProps {
   ran: boolean;
   running: boolean;
@@ -39,9 +45,10 @@ export function StudioSetMatcher({
           </svg>
         </span>
         <div>
-          <h5>house-for-the-tired_master.wav</h5>
+          <h5>{UPLOADED_FILENAME}</h5>
           <p>
-            2h 08m · 24-bit / 48kHz · 1.4 GB · loudness −9.2 LUFS <FiCheck />
+            {UPLOADED_FILE_META}
+            <FiCheck />
           </p>
         </div>
         <span className={s.ok}>

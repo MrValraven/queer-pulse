@@ -44,13 +44,15 @@ export function StudioCollectionPage() {
             width="100%"
             height="100%"
             radius={14}
-            placeholder="collection"
+            placeholder={t("studio:media.collectionLabel")}
             style={{ position: "absolute", inset: 0 }}
           />
         </div>
         <div className={s.collInfo}>
           <div className={s.eb}>
-            Collection · curated by {COLLECTION.curator}
+            {t("studio:collection.page.curatedByEyebrow", {
+              curator: COLLECTION.curator,
+            })}
           </div>
           <h1>
             {COLLECTION.title}
@@ -137,7 +139,7 @@ export function StudioCollectionPage() {
                     width="100%"
                     height="100%"
                     radius={10}
-                    placeholder="cv"
+                    placeholder={t("studio:media.coverLabel")}
                     style={{ position: "absolute", inset: 0 }}
                   />
                 </div>
@@ -181,7 +183,7 @@ export function StudioCollectionPage() {
                     width="100%"
                     height="100%"
                     radius={10}
-                    placeholder="cv"
+                    placeholder={t("studio:media.coverLabel")}
                     style={{ position: "absolute", inset: 0 }}
                   />
                 </div>

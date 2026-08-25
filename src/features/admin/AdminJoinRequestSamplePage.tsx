@@ -44,9 +44,7 @@ export function AdminJoinRequestSamplePage() {
           ))}
         </div>
       ) : (data ?? []).length === 0 ? (
-        <p className={styles.queueIntro}>
-          {t("admin:members.sample.empty")}
-        </p>
+        <p className={styles.queueIntro}>{t("admin:members.sample.empty")}</p>
       ) : (
         <div className={styles.queueGrid}>
           {(data ?? []).map((item, index) => (

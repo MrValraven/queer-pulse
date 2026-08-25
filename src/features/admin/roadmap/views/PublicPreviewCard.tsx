@@ -56,7 +56,9 @@ export function PublicPreviewCard({
   return (
     <article className={styles.card}>
       <div className={styles.cardTop}>
-        <span className={styles.category}>{categoryLabel(t, item.category)}</span>
+        <span className={styles.category}>
+          {categoryLabel(t, item.category)}
+        </span>
         <Button
           variant="ghost"
           className={styles.editButton}
@@ -79,7 +81,9 @@ export function PublicPreviewCard({
           </Tag>
         ) : (
           <Tag>
-            {t(`admin:roadmap.drawer.commitment.confidence.${item.confidence}.label`)}
+            {t(
+              `admin:roadmap.drawer.commitment.confidence.${item.confidence}.label`,
+            )}
           </Tag>
         )}
       </div>
@@ -124,7 +128,8 @@ export function PublicPreviewCard({
         <span className={styles.dateChip}>
           {item.column === "shipped"
             ? t("admin:roadmap.publicPreview.liveLabel")
-            : (item.targetQuarter ?? t("admin:roadmap.publicPreview.noDateHonest"))}
+            : (item.targetQuarter ??
+              t("admin:roadmap.publicPreview.noDateHonest"))}
         </span>
         <span className={styles.voteChip}>{item.votes + item.liveVotes}</span>
       </footer>

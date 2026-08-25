@@ -13,7 +13,11 @@ export interface PieceTabsNavProps {
 
 /** Brief/Care/Money/History/After tab nav for the piece record — the Care
  *  tab carries a pip count of open publish-gate items when any are open. */
-export function PieceTabsNav({ tab, onChange, openGateCount }: PieceTabsNavProps) {
+export function PieceTabsNav({
+  tab,
+  onChange,
+  openGateCount,
+}: PieceTabsNavProps) {
   const { t } = useTranslation();
   const TABS: { id: PieceRecordTabId; label: string }[] = [
     { id: "brief", label: t("magazine:piece.tabs.brief") },
@@ -23,12 +27,18 @@ export function PieceTabsNav({ tab, onChange, openGateCount }: PieceTabsNavProps
     { id: "after", label: t("magazine:piece.tabs.after") },
   ];
   return (
-    <nav className={styles.tabs} aria-label={t("magazine:piece.tabs.ariaLabel")}>
+    <nav
+      className={styles.tabs}
+      aria-label={t("magazine:piece.tabs.ariaLabel")}
+    >
       {TABS.map((tabItem) => (
         <button
           key={tabItem.id}
           type="button"
-          className={cx(styles.tabButton, tab === tabItem.id && styles.tabButtonActive)}
+          className={cx(
+            styles.tabButton,
+            tab === tabItem.id && styles.tabButtonActive,
+          )}
           aria-current={tab === tabItem.id}
           onClick={() => onChange(tabItem.id)}
         >

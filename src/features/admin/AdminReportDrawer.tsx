@@ -30,10 +30,7 @@ import {
   type ReportDetail,
 } from "./adminModeration.data";
 import { auditActionLabel } from "./moderationActionLabels";
-import {
-  isAnonymousReporter,
-  reporterDisplayName,
-} from "./moderationReporter";
+import { isAnonymousReporter, reporterDisplayName } from "./moderationReporter";
 import { useReportAudit } from "./api/useReportAudit";
 import { useModReportDetail } from "./api/useModReportDetail";
 import type { ReasonCode } from "../safety/reportReasons";
@@ -68,7 +65,9 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
           <h3 className={styles.dSecLabel}>
             {t("admin:moderation.reportDrawer.disputeReasonTitle")}
           </h3>
-          <blockquote className={styles.dClaim}>{detail.disputeReason}</blockquote>
+          <blockquote className={styles.dClaim}>
+            {detail.disputeReason}
+          </blockquote>
         </section>
       )}
 
@@ -227,8 +226,9 @@ function ReportContextLoading() {
 function ReportContextFallback({ report }: { report: ModReport }) {
   const { t } = useTranslation();
   const anonReporter = isAnonymousReporter(report.reporterName);
-  const reportedInitials =
-    (report.reportedName.replace(/^@/, "")[0] ?? "?").toUpperCase();
+  const reportedInitials = (
+    report.reportedName.replace(/^@/, "")[0] ?? "?"
+  ).toUpperCase();
   return (
     <>
       <section className={styles.dSec}>
@@ -251,7 +251,9 @@ function ReportContextFallback({ report }: { report: ModReport }) {
           <div className={styles.dPerson}>
             <AdminAvatar
               initials={
-                anonReporter ? "?" : (report.reporterName[0] ?? "?").toUpperCase()
+                anonReporter
+                  ? "?"
+                  : (report.reporterName[0] ?? "?").toUpperCase()
               }
               tone={anonReporter ? "anon" : "plum"}
               size="md"
@@ -352,7 +354,9 @@ function ReportDrawerActionGrid({
             options={
               RESTRICT_DURATIONS.map((id) => ({
                 value: id,
-                label: t(`admin:moderation.reportDrawer.restrictDuration.${id}`),
+                label: t(
+                  `admin:moderation.reportDrawer.restrictDuration.${id}`,
+                ),
               })) satisfies AdminSegOption[]
             }
             value={restrictDuration}
@@ -414,7 +418,9 @@ function ReportDrawerReasonNote({
       />
       <p className={styles.dTransparency}>
         <FiInfo aria-hidden />{" "}
-        {t("admin:moderation.reportDrawer.transparency", { name: reportedName })}
+        {t("admin:moderation.reportDrawer.transparency", {
+          name: reportedName,
+        })}
       </p>
     </section>
   );

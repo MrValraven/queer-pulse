@@ -15,11 +15,12 @@ function shortDate(fmt: Formatters, iso: string): string {
   });
 }
 
-const STATUS_TONE: Record<AdminChangemakerNominationDTO["status"], AdminTone> = {
-  pending: "amber",
-  approved: "jade",
-  dismissed: "coral",
-};
+const STATUS_TONE: Record<AdminChangemakerNominationDTO["status"], AdminTone> =
+  {
+    pending: "amber",
+    approved: "jade",
+    dismissed: "coral",
+  };
 
 /**
  * One nomination row on the admin oversight page — the nominee, who

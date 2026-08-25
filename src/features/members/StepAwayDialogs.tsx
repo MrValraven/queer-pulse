@@ -40,8 +40,12 @@ export function StepAwayDialogs({
         onClose={onCancel}
         onConfirm={onConfirm}
         title={t("members:profile.accountData.stepAway.hide.confirm.title")}
-        description={t("members:profile.accountData.stepAway.hide.confirm.body")}
-        confirmLabel={t("members:profile.accountData.stepAway.hide.confirm.cta")}
+        description={t(
+          "members:profile.accountData.stepAway.hide.confirm.body",
+        )}
+        confirmLabel={t(
+          "members:profile.accountData.stepAway.hide.confirm.cta",
+        )}
         loading={isSubmitting}
       />
 

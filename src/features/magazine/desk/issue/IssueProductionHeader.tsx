@@ -42,7 +42,10 @@ export function IssueProductionHeader({
       <div className={styles.title}>
         <b>{t("magazine:issue.header.title", { number, theme })}</b>
         <span className={styles.titleSub}>
-          {t("magazine:issue.header.laidOut", { ready: readyCount, total: totalCount })}
+          {t("magazine:issue.header.laidOut", {
+            ready: readyCount,
+            total: totalCount,
+          })}
         </span>
       </div>
       <div className={styles.right}>

@@ -37,7 +37,9 @@ export function PublishDateCard({
       <h3>{t("magazine:issue.publishDate.heading")}</h3>
       <p className={styles.tiny}>
         {publishedOn
-          ? t("magazine:issue.publishDate.set", { date: formatDate(publishedOn) })
+          ? t("magazine:issue.publishDate.set", {
+              date: formatDate(publishedOn),
+            })
           : t("magazine:issue.publishDate.unset")}
       </p>
       <DatePicker

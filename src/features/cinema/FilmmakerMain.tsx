@@ -95,8 +95,7 @@ export function FilmmakerMain({ filmmaker }: { filmmaker: Filmmaker }) {
             />
           </h2>
           <Link to={routes.calendar} className={styles.sbAll}>
-            {t("cinema:live.fullCalendarCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("cinema:live.fullCalendarCta")} <FiArrowRight aria-hidden />
           </Link>
         </div>
         <div className={styles.eventList}>

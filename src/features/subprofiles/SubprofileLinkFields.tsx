@@ -3,7 +3,11 @@ import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LinkVisibility, Visibility } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
-import { LINK_HELP_KEY, LINK_TO_LABEL_KEY, VISIBILITY_OPTIONS } from "./subprofileEditor.data";
+import {
+  LINK_HELP_KEY,
+  LINK_TO_LABEL_KEY,
+  VISIBILITY_OPTIONS,
+} from "./subprofileEditor.data";
 import { UsernameField } from "../settings/UsernameField";
 import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { AddressChangeWarningModal } from "./AddressChangeWarningModal";
@@ -77,7 +81,12 @@ export function SubprofileLinkFields({
     if (!isPublished || acknowledged) return;
     if (editor.link !== subprofile.linkVisibility) return; // a mode switch is already gated above
     if (editor.slug === subprofile.slug) return;
-    setPending({ kind: "editField", field: "slug", value: editor.slug, previous: subprofile.slug });
+    setPending({
+      kind: "editField",
+      field: "slug",
+      value: editor.slug,
+      previous: subprofile.slug,
+    });
   }
 
   function handleHandleBlur(event: FocusEvent<HTMLDivElement>) {
@@ -86,7 +95,12 @@ export function SubprofileLinkFields({
     if (editor.link !== subprofile.linkVisibility) return;
     const previousHandle = subprofile.handle ?? "";
     if (editor.handle === previousHandle) return;
-    setPending({ kind: "editField", field: "handle", value: editor.handle, previous: previousHandle });
+    setPending({
+      kind: "editField",
+      field: "handle",
+      value: editor.handle,
+      previous: previousHandle,
+    });
   }
 
   function cancelPending() {
@@ -124,8 +138,12 @@ export function SubprofileLinkFields({
         >
           <b>{t(LINK_TO_LABEL_KEY.linked)}</b>
           <p>{t(LINK_HELP_KEY.linked)}</p>
-          <code>{pathFor("linked", ownerSlug, editor.slug, editor.handle)}</code>
-          <p className="handlestate idle">{t("subprofiles:newModal.linkedAddressNote")}</p>
+          <code>
+            {pathFor("linked", ownerSlug, editor.slug, editor.handle)}
+          </code>
+          <p className="handlestate idle">
+            {t("subprofiles:newModal.linkedAddressNote")}
+          </p>
         </button>
         <button
           type="button"
@@ -135,9 +153,17 @@ export function SubprofileLinkFields({
         >
           <b>{t(LINK_TO_LABEL_KEY.unlinked)}</b>
           <p>{t(LINK_HELP_KEY.unlinked)}</p>
-          <code>{pathFor("unlinked", ownerSlug, editor.slug, editor.handle)}</code>
-          <p className="handlestate idle">{t("subprofiles:newModal.standaloneNote")}</p>
-          {handleNote && <p className={`handlestate ${handleNote.tone}`}>{handleNote.message}</p>}
+          <code>
+            {pathFor("unlinked", ownerSlug, editor.slug, editor.handle)}
+          </code>
+          <p className="handlestate idle">
+            {t("subprofiles:newModal.standaloneNote")}
+          </p>
+          {handleNote && (
+            <p className={`handlestate ${handleNote.tone}`}>
+              {handleNote.message}
+            </p>
+          )}
         </button>
       </div>
 
@@ -173,8 +199,9 @@ export function SubprofileLinkFields({
       <FormField
         label={t("subprofiles:metaForm.visibilityLabel")}
         helper={t(
-          VISIBILITY_OPTIONS.find((option) => option.value === editor.visibility)?.helpKey ??
-            VISIBILITY_OPTIONS[0]!.helpKey,
+          VISIBILITY_OPTIONS.find(
+            (option) => option.value === editor.visibility,
+          )?.helpKey ?? VISIBILITY_OPTIONS[0]!.helpKey,
         )}
       >
         <Select

@@ -1,7 +1,13 @@
 import { FiAlertCircle, FiHome } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { Badge, Button, EmptyState, FadeIn, type BadgeTone } from "../../shared/components/ui";
+import {
+  Badge,
+  Button,
+  EmptyState,
+  FadeIn,
+  type BadgeTone,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { formatDate } from "../../shared/lib/date";
@@ -103,11 +109,21 @@ export function MyHousingListingCard({
           {t("economy:myHousingListings.actions.extend")}
         </Button>
         {hidden ? (
-          <Button size="md" variant="ghost" onClick={onMarkAvailable} disabled={busy}>
+          <Button
+            size="md"
+            variant="ghost"
+            onClick={onMarkAvailable}
+            disabled={busy}
+          >
             {t("economy:myHousingListings.actions.markAvailable")}
           </Button>
         ) : (
-          <Button size="md" variant="ghost" onClick={onMarkFilled} disabled={busy}>
+          <Button
+            size="md"
+            variant="ghost"
+            onClick={onMarkFilled}
+            disabled={busy}
+          >
             {t("economy:myHousingListings.actions.markFilled")}
           </Button>
         )}
@@ -131,7 +147,11 @@ export function MyHousingListingCard({
   );
 }
 
-export function MyHousingListingsEmpty({ onListSpace }: { onListSpace: () => void }) {
+export function MyHousingListingsEmpty({
+  onListSpace,
+}: {
+  onListSpace: () => void;
+}) {
   const { t } = useTranslation();
   return (
     <EmptyState

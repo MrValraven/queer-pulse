@@ -2,7 +2,11 @@ import { FiPlus, FiX } from "react-icons/fi";
 import { FadeIn, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
-import { SOCIAL_PLATFORMS, socialHref, socialPlatform } from "./socialLinks.data";
+import {
+  SOCIAL_PLATFORMS,
+  socialHref,
+  socialPlatform,
+} from "./socialLinks.data";
 import { useRowKeys } from "./useRowKeys";
 import styles from "./ProfileEdit.module.css";
 
@@ -73,7 +77,10 @@ export function SocialLinksEditor({
         const meta = socialPlatform(link.platform);
         const Icon = meta.icon;
         const rowKey = keys[index];
-        const isInvalid = !looksLikeLinkOrHandle(link.platform, link.urlOrHandle);
+        const isInvalid = !looksLikeLinkOrHandle(
+          link.platform,
+          link.urlOrHandle,
+        );
         const errorId = `${rowKey}-error`;
         return (
           <FadeIn

@@ -41,9 +41,8 @@ export function useAdminChangemakers() {
     queryKey: [...ADMIN_KEY, demoMode],
     queryFn: async () => {
       if (demoMode) {
-        const { ADMIN_CHANGEMAKERS_DEMO } = await import(
-          "../../admin/adminChangemakers.data"
-        );
+        const { ADMIN_CHANGEMAKERS_DEMO } =
+          await import("../../admin/adminChangemakers.data");
         return ADMIN_CHANGEMAKERS_DEMO;
       }
       return fetchAdminChangemakers();

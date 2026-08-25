@@ -20,8 +20,13 @@ function kindIcon(kind: SubprofileKind) {
 
 /** "Shows, Looks" / "Shows & Looks" — a plain locale-neutral join (no i18n
  *  list-formatting helper exists in this repo's `t()`; see translate.ts). */
-function joinedSectionLabels(kind: SubprofileKind, t: TranslationApi["t"]): string {
-  const labels = KIND_SECTIONS[kind].map((section) => t(SECTION_META[section].labelKey));
+function joinedSectionLabels(
+  kind: SubprofileKind,
+  t: TranslationApi["t"],
+): string {
+  const labels = KIND_SECTIONS[kind].map((section) =>
+    t(SECTION_META[section].labelKey),
+  );
   if (labels.length <= 1) return labels.join("");
   return `${labels.slice(0, -1).join(", ")} & ${labels[labels.length - 1]}`;
 }

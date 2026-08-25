@@ -140,11 +140,14 @@ function MessageAreaRowImpl({
           role="separator"
           aria-label={t("messages:conversation.unreadDividerAria")}
         >
-          <span aria-hidden="true">{t("messages:conversation.unreadDivider")}</span>
+          <span aria-hidden="true">
+            {t("messages:conversation.unreadDivider")}
+          </span>
         </div>
       )}
-      {row.kind === "system" &&
-        row.message.systemEvent && <SystemMessagePill event={row.message.systemEvent} />}
+      {row.kind === "system" && row.message.systemEvent && (
+        <SystemMessagePill event={row.message.systemEvent} />
+      )}
       {row.kind === "run" && (
         <MessageRunView
           run={row.run}
@@ -154,7 +157,8 @@ function MessageAreaRowImpl({
           isGroup={isGroup}
           onRetry={onRetry}
           showSeen={
-            seenActive && row.run.items[row.run.items.length - 1] === lastOutbound
+            seenActive &&
+            row.run.items[row.run.items.length - 1] === lastOutbound
           }
           showDelivered={
             deliveredActive &&
@@ -173,7 +177,11 @@ function MessageAreaRowImpl({
         />
       )}
       {row.kind === "groupSeenBy" && (
-        <button type="button" className={styles.groupSeenByLine} onClick={onOpenSeenBy}>
+        <button
+          type="button"
+          className={styles.groupSeenByLine}
+          onClick={onOpenSeenBy}
+        >
           {t("messages:group.seenByCount", { count: groupSeenByCount })}
         </button>
       )}

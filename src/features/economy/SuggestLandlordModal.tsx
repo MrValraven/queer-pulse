@@ -41,8 +41,7 @@ export function SuggestLandlordModal({ onClose }: { onClose: () => void }) {
     };
     suggestLandlord.mutate(body, {
       onSuccess: () => setDone(true),
-      onError: () =>
-        showToast(t("economy:suggestLandlord.error"), "error"),
+      onError: () => showToast(t("economy:suggestLandlord.error"), "error"),
     });
   };
 

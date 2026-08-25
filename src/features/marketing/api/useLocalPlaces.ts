@@ -58,7 +58,14 @@ export function useLocalPlaces(
     return mergeLocalPlaces(businessLocals, venueLocals);
   }, [businesses, demoMode]);
 
-  return { places, total, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage };
+  return {
+    places,
+    total,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  };
 }
 
 /**
@@ -71,6 +78,8 @@ export function useLocalVenue(id: string | undefined): {
 } {
   const { demoMode } = useDemoMode();
   const venue =
-    demoMode && id ? VENUES.find((candidate) => candidate.id === id) : undefined;
+    demoMode && id
+      ? VENUES.find((candidate) => candidate.id === id)
+      : undefined;
   return { venue, isLoading: false };
 }

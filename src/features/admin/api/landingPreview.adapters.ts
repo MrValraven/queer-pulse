@@ -33,7 +33,9 @@ const asStringArray = (value: unknown): string[] =>
 
 /** The exact subset the public page renders: active slots, in `position` order.
  *  (`sort` copies first so the source array from react-query is never mutated.) */
-export function activeInOrder(features: LandingFeatureVM[]): LandingFeatureVM[] {
+export function activeInOrder(
+  features: LandingFeatureVM[],
+): LandingFeatureVM[] {
   return features
     .filter((feature) => feature.active)
     .slice()

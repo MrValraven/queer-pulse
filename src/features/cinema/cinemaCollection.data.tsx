@@ -903,8 +903,8 @@ const slowEastAsian: CollectionDetail = {
     <>
       I don't mean slow as a compliment you give a difficult film. I mean it as
       the actual subject. <em>Waiting is the plot.</em> The held glance, the
-      meal eaten in silence, the season that changes while nothing is said:
-      that is where these films live.
+      meal eaten in silence, the season that changes while nothing is said: that
+      is where these films live.
     </>,
     "You can watch them in any order, but watch them alone, or with one person you trust to stay quiet. They don't survive a second screen.",
   ],

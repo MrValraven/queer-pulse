@@ -16,11 +16,7 @@ import styles from "./AdminInvitesPage.module.css";
  * this row's own Save/Clear, so there is no server-value-changed-elsewhere
  * case to reconcile and no seed-then-draft effect is needed.
  */
-function AdminInviteQuotaRow({
-  inviter,
-}: {
-  inviter: AdminInviteInviterDTO;
-}) {
+function AdminInviteQuotaRow({ inviter }: { inviter: AdminInviteInviterDTO }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const updateInviteQuota = useUpdateInviteQuota();

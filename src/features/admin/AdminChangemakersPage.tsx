@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FiHeart } from "react-icons/fi";
-import { Button, EmptyState, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FadeIn,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -26,9 +31,7 @@ export function AdminChangemakersPage() {
   const [editorTarget, setEditorTarget] = useState<
     ChangemakerDTO | "new" | null
   >(null);
-  const [deleteTarget, setDeleteTarget] = useState<ChangemakerDTO | null>(
-    null,
-  );
+  const [deleteTarget, setDeleteTarget] = useState<ChangemakerDTO | null>(null);
 
   function handleTogglePublish(profile: ChangemakerDTO) {
     const nextPublished = profile.status !== "published";

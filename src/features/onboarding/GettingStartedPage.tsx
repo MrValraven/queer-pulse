@@ -11,7 +11,10 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { useGettingStarted, type GettingStartedStepState } from "./useGettingStarted";
+import {
+  useGettingStarted,
+  type GettingStartedStepState,
+} from "./useGettingStarted";
 import { GETTING_STARTED_STEP_XP } from "./gettingStarted.data";
 import { LevelXpStrip } from "./LevelXpStrip";
 import { XpSourcesTeaser } from "./XpSourcesTeaser";
@@ -206,7 +209,9 @@ export function GettingStartedPage() {
           </div>
           <aside className={styles.sideCol}>
             {allDone ? (
-              <LevelXpStrip hint={t("auth:gettingStarted.levelStrip.hintDone")} />
+              <LevelXpStrip
+                hint={t("auth:gettingStarted.levelStrip.hintDone")}
+              />
             ) : (
               <>
                 {/* `force` while steps remain: a member can finish several in

@@ -1,9 +1,5 @@
 import { currentUser } from "../members/data/members";
-import type {
-  CardProgramDTO,
-  IssuerCardDTO,
-  MyCardDTO,
-} from "./api/cards.api";
+import type { CardProgramDTO, IssuerCardDTO, MyCardDTO } from "./api/cards.api";
 
 export const DEMO_CARD_PROGRAM: CardProgramDTO = {
   isEnabled: true,

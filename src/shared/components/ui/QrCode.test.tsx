@@ -24,7 +24,10 @@ describe("QrCode", () => {
     expect(glyph).toHaveTextContent("Q");
     // The wordmark's Q is the ROMAN half of `Queer<em>Pulse</em>`, so this
     // must not pick up the italic the "Pulse" half carries.
-    expect(glyph).toHaveStyle({ fontFamily: "var(--serif)", fontWeight: "600" });
+    expect(glyph).toHaveStyle({
+      fontFamily: "var(--serif)",
+      fontWeight: "600",
+    });
   });
 
   it("hides the mark from assistive tech", () => {
@@ -51,7 +54,8 @@ describe("QrCode", () => {
     // whole viewBox distinguishes the two without asserting on draw order.
     const fullBleed = (root: HTMLElement) =>
       [...root.querySelectorAll("rect")].filter(
-        (rect) => rect.getAttribute("x") === "0" && rect.getAttribute("y") === "0",
+        (rect) =>
+          rect.getAttribute("x") === "0" && rect.getAttribute("y") === "0",
       ).length;
     expect(fullBleed(with_)).toBe(fullBleed(without) + 1);
   });

@@ -40,8 +40,7 @@ function SectionCard({ section }: { section: HrSection }) {
             variant="ghost"
             className={styles.sectionBtn}
           >
-            {t(section.link.labelKey)}{" "}
-            <FiArrowRight aria-hidden />
+            {t(section.link.labelKey)} <FiArrowRight aria-hidden />
           </Button>
         )}
       </div>

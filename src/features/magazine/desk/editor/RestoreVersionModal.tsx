@@ -25,7 +25,9 @@ export function RestoreVersionModal({
 
   return (
     <Modal
-      title={t("magazine:write.versions.restoreModal.title", { label: versionLabel })}
+      title={t("magazine:write.versions.restoreModal.title", {
+        label: versionLabel,
+      })}
       onClose={onClose}
       footer={
         <>
@@ -40,7 +42,9 @@ export function RestoreVersionModal({
         </>
       }
     >
-      <p className={tabStyles.tiny}>{t("magazine:write.versions.restoreModal.body")}</p>
+      <p className={tabStyles.tiny}>
+        {t("magazine:write.versions.restoreModal.body")}
+      </p>
     </Modal>
   );
 }

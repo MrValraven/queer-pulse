@@ -3,11 +3,7 @@ import { PageShell } from "../../shared/components/layout";
 import { Button, FeatureHelp, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
 import { useSafeSpaces } from "./api/useSafeSpaces";
 import { QuickExit } from "./QuickExit";

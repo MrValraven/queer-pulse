@@ -82,8 +82,7 @@ export function IntersectionalityFooter() {
                   <div className={styles.orgName}>{org.name}</div>
                   <div className={styles.orgText}>{t(org.textKey)}</div>
                   <Link to={org.link.href} className={styles.orgLink}>
-                    {t(org.link.labelKey)}{" "}
-                    <FiArrowRight aria-hidden />
+                    {t(org.link.labelKey)} <FiArrowRight aria-hidden />
                   </Link>
                 </div>
               </Reveal>

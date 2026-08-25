@@ -21,7 +21,10 @@ export interface DatePickerPresetsProps {
   onSelect: (value: string) => void;
 }
 
-export function DatePickerPresets({ presets, onSelect }: DatePickerPresetsProps) {
+export function DatePickerPresets({
+  presets,
+  onSelect,
+}: DatePickerPresetsProps) {
   const { t } = useTranslation();
   if (presets.length === 0) return null;
   return (

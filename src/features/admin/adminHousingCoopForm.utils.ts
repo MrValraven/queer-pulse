@@ -1,4 +1,7 @@
-import type { CoopFaceDTO, HousingCoopDTO } from "../economy/api/housingCoop.api";
+import type {
+  CoopFaceDTO,
+  HousingCoopDTO,
+} from "../economy/api/housingCoop.api";
 import type { CoopWriteBody } from "./api/adminHousing.api";
 
 /**

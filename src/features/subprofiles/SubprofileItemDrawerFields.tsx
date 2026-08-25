@@ -6,7 +6,10 @@ import { FIELD_META, ITEM_LINKS_SECTIONS } from "./subprofileEditor.data";
 import { ImageUploadField } from "./ImageUploadField";
 import { CollaboratorSelect } from "./CollaboratorSelect";
 import { SubprofileItemLinksField } from "./SubprofileItemLinksField";
-import { RICH_FIELDS_FOR_SECTION, type RichFieldDescriptor } from "./richFields.data";
+import {
+  RICH_FIELDS_FOR_SECTION,
+  type RichFieldDescriptor,
+} from "./richFields.data";
 import { PoemVersionsEditor } from "./poem/PoemVersionsEditor";
 import { poemHasContent } from "./poem/poemBlocks";
 
@@ -70,7 +73,8 @@ function RichFieldControl({
   }
 
   const richKey = descriptor.key;
-  const rawValue = (draft[richKey as keyof SubprofileItemView] as string | null) ?? "";
+  const rawValue =
+    (draft[richKey as keyof SubprofileItemView] as string | null) ?? "";
 
   if (descriptor.kind === "select") {
     return (
@@ -94,9 +98,7 @@ function RichFieldControl({
         placeholder={
           descriptor.placeholderKey ? t(descriptor.placeholderKey) : undefined
         }
-        onChange={(e) =>
-          onPatch({ [richKey]: e.target.value || null })
-        }
+        onChange={(e) => onPatch({ [richKey]: e.target.value || null })}
       />
     </FormField>
   );
@@ -165,7 +167,9 @@ export function SubprofileItemDrawerFields({
                 mode="month"
                 label={t(meta.labelKey)}
                 value={toMonthValue(value) || null}
-                onChange={(monthValue) => onPatch({ [field]: monthValue ?? "" })}
+                onChange={(monthValue) =>
+                  onPatch({ [field]: monthValue ?? "" })
+                }
               />
             ) : (
               <input
@@ -189,7 +193,9 @@ export function SubprofileItemDrawerFields({
               onPatch({
                 // Poem body becomes the single source of truth: clear the legacy
                 // `description` once real blocks exist so we don't persist two.
-                description: poemHasContent(primaryBlocks) ? "" : draft.description,
+                description: poemHasContent(primaryBlocks)
+                  ? ""
+                  : draft.description,
                 structured: {
                   ...(draft.structured ?? {}),
                   poemVersions: versions,

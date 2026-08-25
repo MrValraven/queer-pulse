@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FiUserMinus } from "react-icons/fi";
-import { Avatar, Badge, Button, ConfirmDialog } from "../../shared/components/ui";
+import {
+  Avatar,
+  Badge,
+  Button,
+  ConfirmDialog,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { reasonFor } from "../../shared/api/errorMessage";

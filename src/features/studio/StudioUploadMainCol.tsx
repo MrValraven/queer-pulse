@@ -67,7 +67,8 @@ export function UploadMainCol() {
       <SplitsTable collaborators={collaborators} onAdd={addCollaborator} />
       <div style={{ display: "flex", gap: 10 }}>
         <Button onClick={() => setStep("metadata")}>
-          {t("studio:upload.continueToMetadataCta")} <FiArrowRight aria-hidden />
+          {t("studio:upload.continueToMetadataCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>

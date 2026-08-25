@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { DEMO_MY_HOUSING_LISTINGS, type MyHousingListingRow } from "../myHousingListings.data";
+import {
+  DEMO_MY_HOUSING_LISTINGS,
+  type MyHousingListingRow,
+} from "../myHousingListings.data";
 import { economyKeys } from "./economyKeys";
 import { dtoToMyHousingListingRow } from "./housingListing.adapters";
 import { getMyHousingListings } from "./housingListing.api";

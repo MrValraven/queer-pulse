@@ -20,7 +20,11 @@
   width: 640px;
   height: 640px;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(var(--jade-rgb), 0.16), transparent 62%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(var(--jade-rgb), 0.16),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .section::after {
@@ -31,7 +35,11 @@
   width: 560px;
   height: 560px;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(var(--accent-rgb), 0.14), transparent 64%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(var(--accent-rgb), 0.14),
+    transparent 64%
+  );
   pointer-events: none;
 }
 
@@ -411,7 +419,11 @@
 .pvwCover {
   position: relative;
   height: 74px;
-  background: linear-gradient(120deg, rgba(var(--accent-rgb), 0.22), rgba(var(--cream-rgb), 0.03) 70%);
+  background: linear-gradient(
+    120deg,
+    rgba(var(--accent-rgb), 0.22),
+    rgba(var(--cream-rgb), 0.03) 70%
+  );
   border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
   display: flex;
   align-items: center;
@@ -608,7 +620,9 @@
   font-size: var(--text-caption);
   color: rgba(var(--cream-rgb), 0.78);
   text-align: left;
-  transition: background var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
+  transition:
+    background var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 .lane:hover,
 .lane:focus-visible {

@@ -21,7 +21,9 @@ import styles from "./AdminMembersPage.module.css";
  * 3-business-day SLA the guideline audit settled on: under 2 days is
  * neutral, 2-3 is approaching, past 3 is overdue.
  */
-function waitingTone(daysWaiting: number): "neutral" | "approaching" | "overdue" {
+function waitingTone(
+  daysWaiting: number,
+): "neutral" | "approaching" | "overdue" {
   if (daysWaiting >= 3) return "overdue";
   if (daysWaiting >= 2) return "approaching";
   return "neutral";

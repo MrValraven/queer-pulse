@@ -11,7 +11,8 @@ export function parseKey(key: string): { namespace: string; path: string } {
   // dynamic label key for a category the backend introduced that the client
   // hasn't mapped). Coerce so a single unmapped key degrades to the normal
   // missing-key path (logged + shown raw) instead of white-screening the page.
-  if (typeof key !== "string") return { namespace: "common", path: String(key) };
+  if (typeof key !== "string")
+    return { namespace: "common", path: String(key) };
   const colon = key.indexOf(":");
   if (colon === -1) return { namespace: "common", path: key };
   return { namespace: key.slice(0, colon), path: key.slice(colon + 1) };

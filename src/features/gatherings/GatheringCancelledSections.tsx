@@ -60,8 +60,12 @@ export function LiveCancelledEventCard({
     <div className={styles.eventCard}>
       <div className={styles.eventH}>
         <div className={styles.eventDate}>
-          <div className="d">{fmt.date(gathering.date, { day: "2-digit" })}</div>
-          <div className="m">{fmt.date(gathering.date, { month: "short" })}</div>
+          <div className="d">
+            {fmt.date(gathering.date, { day: "2-digit" })}
+          </div>
+          <div className="m">
+            {fmt.date(gathering.date, { month: "short" })}
+          </div>
         </div>
         <div className={styles.eventInfo}>
           <h2>{gathering.title}</h2>
@@ -111,7 +115,8 @@ export function CancelledEventCard() {
           <div className={styles.eventMeta}>
             <span>
               {fmt.date(EVENT_START, { weekday: "short" })}{" "}
-              {fmt.time(EVENT_START)} to {fmt.time(EVENT_END)}
+              {fmt.time(EVENT_START)} {t("gatherings:common.timeRangeTo")}{" "}
+              {fmt.time(EVENT_END)}
             </span>
             <span className={styles.dot} />
             <span>{EVENT_VENUE_LINE}</span>

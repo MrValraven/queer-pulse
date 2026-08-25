@@ -1,6 +1,6 @@
 # Composer, Interactions, Motion & Accessibility
 
-This is the front-end designer's craft layer — the parts users *feel*. The bar is: it should feel as considered as WhatsApp/Telegram/iMessage, and it should be fully usable by keyboard and screen reader. All motion obeys **web-animation-best-practices** (transform/opacity only, ease-out, 150–400ms, `prefers-reduced-motion`); all styling obeys **design-best-practices** (tokens, never hardcoded hex).
+This is the front-end designer's craft layer — the parts users _feel_. The bar is: it should feel as considered as WhatsApp/Telegram/iMessage, and it should be fully usable by keyboard and screen reader. All motion obeys **web-animation-best-practices** (transform/opacity only, ease-out, 150–400ms, `prefers-reduced-motion`); all styling obeys **design-best-practices** (tokens, never hardcoded hex).
 
 ## The composer
 
@@ -9,6 +9,7 @@ The composer is the single most-used control in the feature. It should get out o
 **Auto-grow, capped.** Start at one line. Grow with content up to a max height (a handful of lines), then scroll internally — never let it eat the whole screen or push content around unpredictably. Implement by resetting `height:auto` then setting to `scrollHeight` on input, or a hidden mirror element. QueerPulse's `Composer.tsx` already auto-grows — match it.
 
 **Send semantics (platform-correct):**
+
 - **Desktop:** `Enter` sends; `Shift+Enter` inserts a newline. This is the expected convention and QueerPulse already does it.
 - **Touch:** `Enter` is a newline; sending is the explicit send button. Never send on Enter on touch — thumb-typers expect a newline key.
 - Disable/soften the send affordance when the input is empty or only whitespace; never send an empty message.
@@ -17,17 +18,18 @@ The composer is the single most-used control in the feature. It should get out o
 
 **Draft preservation.** Keep the draft while the reply-preview banner is open or the user switches focus within the thread. Consider persisting per-conversation drafts across reloads (a known gap — WhatsApp/Telegram keep drafts; QueerPulse currently loses them on reload). If you add draft persistence, key by conversation ID and honor dual-mode.
 
-**Severed states.** For official/announcement threads or blocked counterparts, the composer is replaced by a clear notice bar (already handled) — the user should understand *why* they can't type, in EN/PT.
+**Severed states.** For official/announcement threads or blocked counterparts, the composer is replaced by a clear notice bar (already handled) — the user should understand _why_ they can't type, in EN/PT.
 
-**Attachments (a current gap).** QueerPulse messaging is text-only today. When media is added, the composer grows an attach affordance; picked media shows as removable previews *above* the input before send; each attachment sends as its own message part with its own delivery state; uploads show progress and are cancelable and retryable. Reuse the repo's existing storage/upload paths (S3/Mux exist elsewhere) rather than inventing a messaging-only uploader — coordinate with **nestjs-expert** for the backend slice.
+**Attachments (a current gap).** QueerPulse messaging is text-only today. When media is added, the composer grows an attach affordance; picked media shows as removable previews _above_ the input before send; each attachment sends as its own message part with its own delivery state; uploads show progress and are cancelable and retryable. Reuse the repo's existing storage/upload paths (S3/Mux exist elsewhere) rather than inventing a messaging-only uploader — coordinate with **nestjs-expert** for the backend slice.
 
 ## Reactions
 
 QueerPulse has six fixed reaction keys (love/laugh/like/wow/sad/thanks), idempotent, live. Craft rules:
+
 - The picker opens from the long-press/right-click overlay and on a dedicated affordance; it's keyboard-navigable (arrow keys between reactions, Enter to toggle) and each reaction has an accessible name.
 - Reactions render as **chips** below the bubble, aggregated by key with a count; your own reaction is visually distinct; tapping a chip toggles your reaction.
 - Toggling is **optimistic** and idempotent — the server enforces one-per-(message,user,key). A double-tap or a re-sent frame must not double-count.
-- Reaction changes are their own realtime events (WhatsApp/Signal even ack reactions and treat *removing* a reaction as a silent event). Keep them cheap; don't refetch the whole thread to reflect one reaction if you can patch the cache.
+- Reaction changes are their own realtime events (WhatsApp/Signal even ack reactions and treat _removing_ a reaction as a silent event). Keep them cheap; don't refetch the whole thread to reflect one reaction if you can patch the cache.
 
 ## Reply / quote
 
@@ -46,6 +48,7 @@ QueerPulse has six fixed reaction keys (love/laugh/like/wow/sad/thanks), idempot
 ## The long-press / context overlay
 
 QueerPulse's `MessageActionOverlay` is a WhatsApp-style full-screen overlay: a lifted clone of the pressed bubble, a reaction row, and a permission-gated action menu (Reply/Edit/Copy/Delete/Report). Craft standard for it:
+
 - **Touch + desktop parity:** long-press (via `useLongPress`) on touch, right-click/context-menu and a hover affordance on desktop — same actions either way.
 - **Portal + scroll-lock + Escape:** it portals to `body`, locks background scroll, and closes on Escape and on backdrop tap. Already implemented — preserve these.
 - **Focus management:** on open, move focus into the overlay; on close, return focus to the triggering bubble. Trap focus while open. This is what makes it usable by keyboard and screen-reader users.
@@ -55,7 +58,7 @@ QueerPulse's `MessageActionOverlay` is a WhatsApp-style full-screen overlay: a l
 
 - **Swipe-to-reply** (touch): a short drag reveals a reply icon and arms the reply on release past a threshold; spring back if under threshold.
 - **Long-press** to open the overlay; a subtle scale on the pressed bubble signals the press is registering.
-- **Haptics** (where the platform supports `navigator.vibrate` / the Vibration API, i.e. Android/Chrome; iOS Safari does not): a light tick on long-press-armed, swipe-threshold-crossed, and send. Keep haptics *subtle and optional* — always feature-detect, never assume, and never make them load-bearing for understanding state.
+- **Haptics** (where the platform supports `navigator.vibrate` / the Vibration API, i.e. Android/Chrome; iOS Safari does not): a light tick on long-press-armed, swipe-threshold-crossed, and send. Keep haptics _subtle and optional_ — always feature-detect, never assume, and never make them load-bearing for understanding state.
 
 ## Micro-animations (timing)
 
@@ -76,4 +79,5 @@ QueerPulse's `MessageActionOverlay` is a WhatsApp-style full-screen overlay: a l
 - **Copy:** every string EN/PT via `useTranslation()`; empty/error/system strings via **queer-community-copywriting**.
 
 ## Verification for interaction work
-Drive the real app; jsdom can't exercise gestures, focus, or motion faithfully. Manually confirm: Enter vs Shift+Enter behavior; overlay opens on long-press *and* right-click; focus returns on close; screen-reader announces a new message once (polite); reduced-motion collapses the animations. If you could only check statically, say so and name what you couldn't drive.
+
+Drive the real app; jsdom can't exercise gestures, focus, or motion faithfully. Manually confirm: Enter vs Shift+Enter behavior; overlay opens on long-press _and_ right-click; focus returns on close; screen-reader announces a new message once (polite); reduced-motion collapses the animations. If you could only check statically, say so and name what you couldn't drive.

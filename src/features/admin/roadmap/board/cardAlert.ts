@@ -1,6 +1,6 @@
 import type { AdminRoadmapItemDTO } from "../../api/roadmapAdmin.types";
 import type { TFunction } from "../../../../shared/i18n/types";
-import { SAVED_VIEW_PREDICATES } from "../state/useRoadmapFilters";
+import { SAVED_VIEW_PREDICATES } from "../state/roadmapFiltersTypes";
 
 const MS_PER_DAY = 86_400_000;
 

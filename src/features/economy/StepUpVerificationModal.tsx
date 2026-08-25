@@ -60,7 +60,9 @@ function RequestForm({
 }) {
   const { t } = useTranslation();
   const levelOptions: VerificationLevel[] =
-    requiredLevel === "id_verified" ? ["id_verified"] : ["phone", "id_verified"];
+    requiredLevel === "id_verified"
+      ? ["id_verified"]
+      : ["phone", "id_verified"];
 
   return (
     <div className={styles.body}>
@@ -150,7 +152,8 @@ function RequestStatus({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const canWithdraw = request.status === "pending" || request.status === "in_review";
+  const canWithdraw =
+    request.status === "pending" || request.status === "in_review";
   const canAppeal = request.status === "rejected" && !request.isAppeal;
   const canStartOver = request.status === "rejected" && request.isAppeal;
 
@@ -166,7 +169,9 @@ function RequestStatus({
         </Badge>
         <Badge tone="ghost">{t(levelLabelKey(request.requestedLevel))}</Badge>
         {request.isAppeal && (
-          <Badge tone="plum">{t("economy:verification.request.appealChip")}</Badge>
+          <Badge tone="plum">
+            {t("economy:verification.request.appealChip")}
+          </Badge>
         )}
       </div>
 
@@ -204,7 +209,9 @@ function RequestStatus({
         {canAppeal && (
           <Button variant="primary" disabled={appealing} onClick={onAppeal}>
             {appealing ? (
-              <Sending label={t("economy:verification.request.appealSending")} />
+              <Sending
+                label={t("economy:verification.request.appealSending")}
+              />
             ) : (
               t("economy:verification.request.appealCta")
             )}
@@ -292,7 +299,11 @@ export function StepUpVerificationModal({
 
   if (approved) {
     return (
-      <ModalShell onClose={onClose} success ariaLabel={t("economy:verification.request.ariaLabel")}>
+      <ModalShell
+        onClose={onClose}
+        success
+        ariaLabel={t("economy:verification.request.ariaLabel")}
+      >
         <SuccessPanel
           title={t("economy:verification.request.approved.title")}
           em={t("economy:verification.request.approved.em")}
@@ -306,12 +317,17 @@ export function StepUpVerificationModal({
   }
 
   return (
-    <ModalShell onClose={onClose} ariaLabel={t("economy:verification.request.ariaLabel")}>
+    <ModalShell
+      onClose={onClose}
+      ariaLabel={t("economy:verification.request.ariaLabel")}
+    >
       <div className={styles.head}>
         <span className={styles.icon}>
           <FiShield aria-hidden />
         </span>
-        <h2 className={styles.title}>{t("economy:verification.request.title")}</h2>
+        <h2 className={styles.title}>
+          {t("economy:verification.request.title")}
+        </h2>
         <p className={styles.sub}>
           {showForm
             ? t("economy:verification.request.subForm")

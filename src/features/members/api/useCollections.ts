@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
 import {
@@ -27,7 +23,8 @@ import {
  */
 export const collectionsKeys = {
   all: (demoMode: boolean) => ["collections", demoMode] as const,
-  list: (demoMode: boolean) => [...collectionsKeys.all(demoMode), "list"] as const,
+  list: (demoMode: boolean) =>
+    [...collectionsKeys.all(demoMode), "list"] as const,
   detail: (demoMode: boolean, id: string) =>
     [...collectionsKeys.all(demoMode), "detail", id] as const,
   filedRefs: (demoMode: boolean) =>
@@ -78,9 +75,7 @@ export function useCollectionDetail(id: string | null) {
     queryKey: collectionsKeys.detail(demoMode, id ?? ""),
     enabled: !demoMode && loggedIn && !!id,
     queryFn: () =>
-      demoMode || !id
-        ? Promise.reject(new Error("no id"))
-        : getCollection(id),
+      demoMode || !id ? Promise.reject(new Error("no id")) : getCollection(id),
   });
 }
 

@@ -175,95 +175,95 @@ export function PartnerContactForm() {
             <p>{t("marketing:forOrgs.form.sent.body")}</p>
           </div>
         ) : (
-        <form
-          className={styles.partnerForm}
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
-          <div className={styles.field}>
-            <label htmlFor={`${fieldId}-name`}>
-              {t("marketing:forOrgs.form.nameLabel")}
-            </label>
-            <input
-              id={`${fieldId}-name`}
-              type="text"
-              placeholder={t("marketing:forOrgs.form.namePlaceholder")}
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor={`${fieldId}-org`}>
-              {t("marketing:forOrgs.form.orgLabel")}
-            </label>
-            <input
-              id={`${fieldId}-org`}
-              type="text"
-              placeholder={t("marketing:forOrgs.form.orgPlaceholder")}
-              value={form.org}
-              onChange={(e) => setForm({ ...form, org: e.target.value })}
-              required
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor={`${fieldId}-email`}>
-              {t("marketing:forOrgs.form.emailLabel")}
-            </label>
-            <input
-              id={`${fieldId}-email`}
-              type="email"
-              placeholder={t("marketing:forOrgs.form.emailPlaceholder")}
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor={`${fieldId}-interest`}>
-              {t("marketing:forOrgs.form.interestLabel")}
-            </label>
-            <Select
-              id={`${fieldId}-interest`}
-              options={INTEREST_KEYS.map((interestKey) => ({
-                value: interestKey,
-                label: t(`marketing:forOrgs.form.interest.${interestKey}`),
-              }))}
-              value={form.interest}
-              onChange={(value) =>
-                setForm({ ...form, interest: value as InterestKey })
-              }
-            />
-          </div>
-          <div className={styles.field}>
-            <label htmlFor={`${fieldId}-message`}>
-              {t("marketing:forOrgs.form.messageLabel")}
-            </label>
-            <textarea
-              id={`${fieldId}-message`}
-              placeholder={t("marketing:forOrgs.form.messagePlaceholder")}
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              rows={4}
-              required
-            />
-          </div>
-          <Button
-            variant="primary"
-            className={styles.formBtn}
-            type="submit"
-            disabled={submitInquiry.isPending}
+          <form
+            className={styles.partnerForm}
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
           >
-            {submitInquiry.isPending
-              ? t("marketing:forOrgs.form.sendingCta")
-              : t("marketing:forOrgs.form.submitCta")}
-          </Button>
-          <p className={styles.formSmall}>
-            {t("marketing:forOrgs.form.small")}
-          </p>
-        </form>
+            <div className={styles.field}>
+              <label htmlFor={`${fieldId}-name`}>
+                {t("marketing:forOrgs.form.nameLabel")}
+              </label>
+              <input
+                id={`${fieldId}-name`}
+                type="text"
+                placeholder={t("marketing:forOrgs.form.namePlaceholder")}
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor={`${fieldId}-org`}>
+                {t("marketing:forOrgs.form.orgLabel")}
+              </label>
+              <input
+                id={`${fieldId}-org`}
+                type="text"
+                placeholder={t("marketing:forOrgs.form.orgPlaceholder")}
+                value={form.org}
+                onChange={(e) => setForm({ ...form, org: e.target.value })}
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor={`${fieldId}-email`}>
+                {t("marketing:forOrgs.form.emailLabel")}
+              </label>
+              <input
+                id={`${fieldId}-email`}
+                type="email"
+                placeholder={t("marketing:forOrgs.form.emailPlaceholder")}
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor={`${fieldId}-interest`}>
+                {t("marketing:forOrgs.form.interestLabel")}
+              </label>
+              <Select
+                id={`${fieldId}-interest`}
+                options={INTEREST_KEYS.map((interestKey) => ({
+                  value: interestKey,
+                  label: t(`marketing:forOrgs.form.interest.${interestKey}`),
+                }))}
+                value={form.interest}
+                onChange={(value) =>
+                  setForm({ ...form, interest: value as InterestKey })
+                }
+              />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor={`${fieldId}-message`}>
+                {t("marketing:forOrgs.form.messageLabel")}
+              </label>
+              <textarea
+                id={`${fieldId}-message`}
+                placeholder={t("marketing:forOrgs.form.messagePlaceholder")}
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                rows={4}
+                required
+              />
+            </div>
+            <Button
+              variant="primary"
+              className={styles.formBtn}
+              type="submit"
+              disabled={submitInquiry.isPending}
+            >
+              {submitInquiry.isPending
+                ? t("marketing:forOrgs.form.sendingCta")
+                : t("marketing:forOrgs.form.submitCta")}
+            </Button>
+            <p className={styles.formSmall}>
+              {t("marketing:forOrgs.form.small")}
+            </p>
+          </form>
         )}
       </div>
     </section>

@@ -35,7 +35,11 @@ export function DirectoryMapView({
 
         {/* Mobile-only: the map stacks above a long list — offer a jump down so
             the map isn't a dead-end scroll. Hidden on desktop (side-by-side). */}
-        <button type="button" className={s.jumpToList} onClick={state.jumpToList}>
+        <button
+          type="button"
+          className={s.jumpToList}
+          onClick={state.jumpToList}
+        >
           <FiArrowDown aria-hidden />
           <Translation
             i18nKey="marketing:map.jumpToList"

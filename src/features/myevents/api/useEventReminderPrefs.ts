@@ -53,7 +53,8 @@ export function useEventReminderPrefs(): EventReminderPrefsResult {
         setDemoLeadMinutes(minutes);
         return;
       }
-      const previous = queryClient.getQueryData<EventReminderPrefsDTO>(queryKey);
+      const previous =
+        queryClient.getQueryData<EventReminderPrefsDTO>(queryKey);
       queryClient.setQueryData<EventReminderPrefsDTO>(queryKey, {
         leadMinutes: minutes,
       });

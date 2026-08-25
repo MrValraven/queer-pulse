@@ -11,19 +11,30 @@ interface BadgesSeasonalProps {
 
 /** Time-limited badges, shown in their own plum band rather than mixed into
  *  the main case grid. Not yet earned by anyone browsing this page. */
-export function BadgesSeasonal({ seasonalBadges, onOpenBadge }: BadgesSeasonalProps) {
+export function BadgesSeasonal({
+  seasonalBadges,
+  onOpenBadge,
+}: BadgesSeasonalProps) {
   const { t } = useTranslation();
   if (seasonalBadges.length === 0) return null;
-  const entries: BadgeDrawerEntry[] = seasonalBadges.map((badge) => ({ badge, earned: false }));
+  const entries: BadgeDrawerEntry[] = seasonalBadges.map((badge) => ({
+    badge,
+    earned: false,
+  }));
 
   return (
     <section className={styles.sec}>
       <div className={styles.seasonBand}>
         <div className={styles.hd}>
           <div>
-            <span className={styles.hdEyebrow}>{t("members:badges.seasonal.eyebrow")}</span>
+            <span className={styles.hdEyebrow}>
+              {t("members:badges.seasonal.eyebrow")}
+            </span>
             <h2 className={`${styles.hdTitle} ${styles.hdLvl2}`}>
-              <Translation i18nKey="members:badges.seasonal.heading" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="members:badges.seasonal.heading"
+                components={{ em: <em /> }}
+              />
             </h2>
             <p className={styles.hdSub}>{t("members:badges.seasonal.sub")}</p>
           </div>
@@ -40,7 +51,11 @@ export function BadgesSeasonal({ seasonalBadges, onOpenBadge }: BadgesSeasonalPr
               <span className={styles.ticketBody}>
                 <h4>{badge.name}</h4>
                 <p>{badge.criteria ?? badge.when}</p>
-                {badge.seasonal && <span className={styles.ticketWhen}>{badge.seasonal.when}</span>}
+                {badge.seasonal && (
+                  <span className={styles.ticketWhen}>
+                    {badge.seasonal.when}
+                  </span>
+                )}
               </span>
             </button>
           ))}

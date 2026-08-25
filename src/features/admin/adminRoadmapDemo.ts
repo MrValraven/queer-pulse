@@ -100,7 +100,10 @@ function assertNotSafetyGated(next: {
   }
 }
 
-function maxSortOrder(items: AdminRoadmapItem[], column: RoadmapColumn): number {
+function maxSortOrder(
+  items: AdminRoadmapItem[],
+  column: RoadmapColumn,
+): number {
   return items
     .filter((item) => item.column === column)
     .reduce((max, item) => Math.max(max, item.sortOrder), -1);
@@ -114,7 +117,8 @@ export function demoCreateItem(
 ): { state: DemoRoadmapState; result: AdminRoadmapItem } {
   assertNotSafetyGated(body);
   const ownerName = body.ownerId
-    ? (state.team.find((member) => member.userId === body.ownerId)?.name ?? null)
+    ? (state.team.find((member) => member.userId === body.ownerId)?.name ??
+      null)
     : null;
   const item: AdminRoadmapItem = {
     ...body,
@@ -181,10 +185,7 @@ export function demoUpdateItem(
   const items = state.items.map((candidate) =>
     candidate.id === id ? next : candidate,
   );
-  const nextState = appendAudit(
-    { ...state, items },
-    `Updated "${next.name}"`,
-  );
+  const nextState = appendAudit({ ...state, items }, `Updated "${next.name}"`);
   return { state: nextState, result: next };
 }
 
@@ -282,7 +283,11 @@ export function demoNotifyVoters(
   id: string,
 ): { state: DemoRoadmapState; result: { notified: number } } {
   const item = requireItem(state, id);
-  const next: AdminRoadmapItem = { ...item, notified: true, updatedAt: nowIso() };
+  const next: AdminRoadmapItem = {
+    ...item,
+    notified: true,
+    updatedAt: nowIso(),
+  };
   const items = state.items.map((candidate) =>
     candidate.id === id ? next : candidate,
   );
@@ -348,12 +353,16 @@ export function demoBulkItems(
     }
     case "hide":
       items = state.items.map((item) =>
-        idSet.has(item.id) ? { ...item, isPublic: false, updatedAt: nowIso() } : item,
+        idSet.has(item.id)
+          ? { ...item, isPublic: false, updatedAt: nowIso() }
+          : item,
       );
       break;
     case "archive":
       items = state.items.map((item) =>
-        idSet.has(item.id) ? { ...item, archived: true, updatedAt: nowIso() } : item,
+        idSet.has(item.id)
+          ? { ...item, archived: true, updatedAt: nowIso() }
+          : item,
       );
       break;
     case "delete":
@@ -619,7 +628,10 @@ export function demoDeleteTeamMember(
 export function demoUpdateSettings(
   state: DemoRoadmapState,
   heroStats: RoadmapAdminHeroStatDTO[],
-): { state: DemoRoadmapState; result: { heroStats: RoadmapAdminHeroStatDTO[] } } {
+): {
+  state: DemoRoadmapState;
+  result: { heroStats: RoadmapAdminHeroStatDTO[] };
+} {
   const nextState = appendAudit(
     { ...state, heroStats },
     "Updated roadmap hero stats",

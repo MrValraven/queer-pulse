@@ -81,8 +81,8 @@ export const sections: RightsSection[] = [
             choose. We hold no exclusivity over any territory, format, or
             distribution channel. The contract uses the term “non-exclusive
             licence” precisely. You are granting us the right to show your film
-            on our platform. You are not transferring or limiting your
-            ownership or right to show it elsewhere.
+            on our platform. You are not transferring or limiting your ownership
+            or right to show it elsewhere.
             <span className="highlight">
               <strong>In the contract:</strong> “The Filmmaker grants QueerPulse
               Cinema Co-op CRL a non-exclusive, revocable, worldwide (subject to
@@ -393,9 +393,9 @@ export const contact = {
   ),
   body: (
     <>
-      Write to <strong>hello@queerpulse.com</strong>. A human will reply
-      within 48 hours, in English or Portuguese. We don't use template responses
-      for legal questions.
+      Write to <strong>hello@queerpulse.com</strong>. A human will reply within
+      48 hours, in English or Portuguese. We don't use template responses for
+      legal questions.
     </>
   ),
 };

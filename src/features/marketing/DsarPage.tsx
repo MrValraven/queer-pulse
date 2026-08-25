@@ -12,10 +12,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useSubmitDsar, useListDsar } from "../settings/api/useDsar";
-import type {
-  DsarArticle,
-  DsarStatus,
-} from "../settings/api/account.api";
+import type { DsarArticle, DsarStatus } from "../settings/api/account.api";
 
 const PRIVACY = routes.privacy;
 
@@ -364,7 +361,9 @@ function PastRequests() {
       <div className={styles.pastH}>{t("marketing:dsar.past.heading")}</div>
 
       {loading && (
-        <div className={styles.pastNote}>{t("marketing:dsar.past.loading")}</div>
+        <div className={styles.pastNote}>
+          {t("marketing:dsar.past.loading")}
+        </div>
       )}
       {failed && (
         <div className={styles.pastNote}>{t("marketing:dsar.past.error")}</div>

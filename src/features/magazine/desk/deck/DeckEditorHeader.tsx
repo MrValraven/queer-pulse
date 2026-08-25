@@ -68,7 +68,9 @@ export function DeckEditorHeader({
       <div className={styles.title}>
         <b>{title.trim() || t("magazine:deck.editor.untitled")}</b>
         <span className={styles.titleSub}>
-          {t("magazine:deck.editor.header.subtitle", { count: deck.slides.length })}
+          {t("magazine:deck.editor.header.subtitle", {
+            count: deck.slides.length,
+          })}
         </span>
       </div>
       <Tag>
@@ -78,7 +80,13 @@ export function DeckEditorHeader({
       </Tag>
       <span className={styles.titleSub}>{savedLabel}</span>
       <div className={styles.right}>
-        <Button variant="ghost" size="sm" onClick={onSave} disabled={savePending} aria-busy={savePending}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onSave}
+          disabled={savePending}
+          aria-busy={savePending}
+        >
           {t("magazine:deck.editor.saveDraft")}
         </Button>
         <Button variant="ghost" size="sm" onClick={onConvert}>
@@ -96,7 +104,9 @@ export function DeckEditorHeader({
           aria-busy={publishPending}
           onClick={onPublish}
         >
-          {published ? t("magazine:deck.editor.unpublish") : t("magazine:deck.editor.publish")}
+          {published
+            ? t("magazine:deck.editor.unpublish")
+            : t("magazine:deck.editor.publish")}
         </Button>
       </div>
     </div>

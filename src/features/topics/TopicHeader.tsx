@@ -38,7 +38,11 @@ export function TopicHeader({ topic }: { topic: Topic }) {
           disabled={isPending}
           aria-pressed={isFollowing}
         >
-          {t(isFollowing ? "topics:header.followingCta" : "topics:header.followCta")}
+          {t(
+            isFollowing
+              ? "topics:header.followingCta"
+              : "topics:header.followCta",
+          )}
         </Button>
         <Button variant="ghost" to={linkToPath(topic.writeHref)}>
           {t("topics:header.writePostCta")}

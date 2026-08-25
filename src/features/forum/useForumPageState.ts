@@ -1,31 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { useSimulatedLoad } from "../../shared/hooks";
-import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useSocial } from "../../app/providers/useSocial";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { type Thread } from "./forum.data";
 import { useForumCounts, usePinnedThreads, useThreads } from "./api/useForum";
-import { useEditThreadTitle, useVotePost } from "./api/useForumMutations";
-import { type ForumSort, type ForumThreadCounts } from "./api/forum.api";
+import { useVotePost } from "./api/useForumMutations";
+import { type ForumThreadCounts } from "./api/forum.api";
 import { useCreateThreadFlow } from "./useCreateThreadFlow";
 import { useForumRowModeration } from "./useForumRowModeration";
-// DEMO-ONLY persona — read ONLY inside the `demoMode` branch of `canEditThread`
-// below; the live branch must use solely the DTO's `thread.canEdit` flag.
-import { currentUser } from "../members/data/members";
-
-const PROMPT_DISMISSED_KEY = "qp_forum_prompt_dismissed";
-
-const FORUM_SORTS: readonly ForumSort[] = ["new", "top", "active", "unanswered"];
-
-/** Narrows a raw `?sort=` URL param to a known `ForumSort`, so a malformed or
- *  stale link (or hand-edited URL) falls back to the default rather than
- *  passing garbage through to `useThreads`/the server. */
-function isForumSort(value: string | null): value is ForumSort {
-  return !!value && (FORUM_SORTS as readonly string[]).includes(value);
-}
+import { useForumUrlParams } from "./useForumUrlParams";
+import { useForumFirstPostPrompt } from "./useForumFirstPostPrompt";
+import { useForumThreadTitleEdit } from "./useForumThreadTitleEdit";
+import {
+  canEditThread as checkCanEditThread,
+  filterAndSortThreads,
+  mergeOptimisticThreads,
+} from "./forumPageState.helpers";
 
 /**
  * Owns every ForumPage concern that isn't markup — thread source (with server
@@ -35,57 +26,29 @@ function isForumSort(value: string | null): value is ForumSort {
  *
  * `sort` is a plain state; `tag` + `q` live in the URL so they're shareable and
  * survive reloads. All three flow to `useThreads`/`useForumCounts`, which apply
- * them server-side in live mode; demo re-derives filter/sort locally.
+ * them server-side in live mode; demo re-derives filter/sort locally. URL param
+ * plumbing, the first-post prompt, and the title-edit flow are each their own
+ * sub-hook (see `useForumUrlParams`, `useForumFirstPostPrompt`,
+ * `useForumThreadTitleEdit`); pure filter/sort/merge logic lives in
+ * `forumPageState.helpers`.
  */
 export function useForumPageState() {
-  const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const simLoading = useSimulatedLoad();
-  const { showToast } = useToast();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const tag = searchParams.get("tag") ?? undefined;
-  const q = searchParams.get("q") ?? "";
-  const setParam = useCallback(
-    (key: string, value: string | null) =>
-      setSearchParams(
-        (prev) => {
-          const next = new URLSearchParams(prev);
-          if (value) next.set(key, value);
-          else next.delete(key);
-          return next;
-        },
-        { replace: true },
-      ),
-    [setSearchParams],
-  );
-  const setQ = useCallback(
-    (next: string) => setParam("q", next.trim() || null),
-    [setParam],
-  );
-  const setTag = useCallback(
-    (next: string | null) => setParam("tag", next),
-    [setParam],
-  );
-
-  // Category + sort are URL-backed too (same `setParam` mechanism as tag/q
-  // above), so refreshing or sharing a link preserves them instead of silently
-  // resetting to "All"/"Top". "all"/"top" are each param's default, so they're
-  // omitted from the URL entirely (never `?category=all`) — `setCat`/`setTag`
-  // still `null` the param out below their default, exactly like `setTag`.
-  const catParam = searchParams.get("category");
-  const cat = catParam ?? "all";
-  const setCat = useCallback(
-    (next: string) => setParam("category", next === "all" ? null : next),
-    [setParam],
-  );
-  const sortParam = searchParams.get("sort");
-  const sort: ForumSort = isForumSort(sortParam) ? sortParam : "top";
-  const setSort = useCallback(
-    (next: ForumSort) => setParam("sort", next === "top" ? null : next),
-    [setParam],
-  );
+  const {
+    searchParams,
+    setSearchParams,
+    tag,
+    setTag,
+    q,
+    setQ,
+    cat,
+    setCat,
+    sort,
+    setSort,
+  } = useForumUrlParams();
 
   // Thread source: demo returns the full mock as one terminal page, live pages
   // through GET /forum/threads (already sorted/filtered) via "Load more".
@@ -124,38 +87,12 @@ export function useForumPageState() {
   const moderation = useForumRowModeration();
 
   const [extraThreads, setExtraThreads] = useState<Thread[]>([]);
-  const [editingTitleThreadId, setEditingTitleThreadId] = useState<
-    number | null
-  >(null);
-  const [promptDismissed, setPromptDismissed] = useState(
-    () =>
-      typeof localStorage !== "undefined" &&
-      localStorage.getItem(PROMPT_DISMISSED_KEY) === "1",
-  );
 
-  // Show the first-post invitation only to members who genuinely haven't
-  // posted and haven't waved it away before (dismissal persists across
-  // reloads). LIVE reads `hasPosted` from the counts response — a real EXISTS
-  // check against the member's own threads/posts (see `ForumController.
-  // threadCounts`/`ForumPostsService.hasEverPosted`), not just this browsing
-  // session, so a repeat poster on a fresh session never sees a false "you
-  // haven't posted yet." `extraThreads.length` still covers the moment
-  // immediately after publishing, before that count has refetched. DEMO has no
-  // persistent posting history for the mock persona, so it's session-only,
-  // exactly as before.
-  const hasEverPosted = demoMode
-    ? extraThreads.length > 0
-    : countsResult.hasPosted || extraThreads.length > 0;
-  const showFirstPostPrompt = !promptDismissed && !hasEverPosted;
-
-  function dismissPrompt() {
-    setPromptDismissed(true);
-    try {
-      localStorage.setItem(PROMPT_DISMISSED_KEY, "1");
-    } catch {
-      // Private mode / storage disabled — session-only dismissal is fine.
-    }
-  }
+  const { showFirstPostPrompt, dismissPrompt } = useForumFirstPostPrompt({
+    demoMode,
+    hasPostedFromServer: countsResult.hasPosted,
+    extraThreadsCount: extraThreads.length,
+  });
 
   // Surface the new post regardless of current filter/sort, and treat it like
   // any other first post — the invitation has done its job once they publish.
@@ -200,80 +137,18 @@ export function useForumPageState() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const allThreads = useMemo(() => {
-    // Dedupe the local optimistic copy against the refetched server list by
-    // SERVER SLUG (stamped once the create mutation resolves) — never
-    // `category::title`, which collided as soon as two drafts shared a title and
-    // is what left the just-posted card linking to a dead route. Demo never
-    // refetches, so its optimistic posts (no slug) are always kept as the record.
-    const serverSlugs = new Set(
-      threadsQuery.threads
-        .map((thread) => thread.slug)
-        .filter((slug): slug is string => Boolean(slug)),
-    );
-    const optimistic = extraThreads.filter(
-      (thread) => !(thread.slug && serverSlugs.has(thread.slug)),
-    );
-    return [...optimistic, ...threadsQuery.threads];
-  }, [extraThreads, threadsQuery.threads]);
+  const allThreads = useMemo(
+    () => mergeOptimisticThreads(extraThreads, threadsQuery.threads),
+    [extraThreads, threadsQuery.threads],
+  );
 
-  // Gate for the row's ⋯ moderation menu (kept named `canEditThread` so the list
-  // prop contract — ForumThreadList → ForumThreadRow — is unchanged).
-  // Live: show the menu when the viewer can do ANY row action — edit (author),
-  // OR delete / restore / view-history (moderator who isn't the author).
-  // Narrowing this to `canEdit` alone hid the menu for moderators, so
-  // delete/restore/history never rendered.
-  // Demo: the persona owns threads it authored (the optimistic card's `isMine`
-  // flag, or its slug); currentUser is only touched inside this demoMode
-  // branch. `isMine` replaced a `name === "You"` comparison, which stopped
-  // matching the moment the card's byline was translated.
-  const canEditThread = (thread: Thread): boolean =>
-    demoMode
-      ? thread.author.slug === currentUser.slug || !!thread.author.isMine
-      : !!thread.canEdit ||
-        !!thread.canDelete ||
-        !!thread.canRestore ||
-        !!thread.canViewHistory ||
-        !!thread.canPin;
-
-  const editingThread =
-    editingTitleThreadId != null
-      ? allThreads.find((thread) => thread.id === editingTitleThreadId)
-      : undefined;
-  // The mutation takes the thread's REAL backend slug, read off the card being
-  // edited. It used to take the numeric view-model id and look the slug up in a
-  // render-populated registry, which silently no-opped (while still toasting
-  // "Saved") whenever the lookup missed.
-  const editThreadTitle = useEditThreadTitle(editingThread?.slug);
-
-  function closeEditTitle() {
-    setEditingTitleThreadId(null);
-  }
-
-  function saveThreadTitle(title: string) {
-    const editedThreadId = editingTitleThreadId;
-    if (demoMode) {
-      setExtraThreads((prev) =>
-        prev.map((thread) =>
-          thread.id === editedThreadId ? { ...thread, title } : thread,
-        ),
-      );
-      setEditingTitleThreadId(null);
-      showToast(t("forum:toast.editSaved"), "success");
-      return;
-    }
-    // Live: the title is only "saved" once the server says so. The modal closes
-    // straight away (the request is short and the list refetches on success),
-    // but no success toast fires until then.
-    setEditingTitleThreadId(null);
-    editThreadTitle.mutate(
-      { title },
-      {
-        onSuccess: () => showToast(t("forum:toast.editSaved"), "success"),
-        onError: () => showToast(t("forum:toast.error"), "error"),
-      },
-    );
-  }
+  const {
+    editingThread,
+    editingTitleThreadIsBusy,
+    saveThreadTitle,
+    setEditingTitleThreadId,
+    closeEditTitle,
+  } = useForumThreadTitleEdit({ demoMode, allThreads, setExtraThreads });
 
   const filtered = cat !== "all" || !!tag || !!q;
 
@@ -288,28 +163,7 @@ export function useForumPageState() {
       (thread) =>
         !thread.author.slug || !hiddenAuthorHandles.has(thread.author.slug),
     );
-    // Live: the server already applied category + tag + q + sort; render as-is
-    // (optimistic posts first). Demo: no server, so filter + sort the mock here.
-    if (!demoMode) return visible;
-    let list = visible.filter(
-      (thread) => cat === "all" || thread.category === cat,
-    );
-    if (tag) list = list.filter((thread) => thread.tags.includes(tag));
-    if (q) {
-      const needle = q.toLowerCase();
-      list = list.filter((thread) => thread.title.toLowerCase().includes(needle));
-    }
-    if (sort === "new") return [...list].sort((a, b) => b.id - a.id);
-    if (sort === "unanswered")
-      return list.filter((thread) => thread.comments === 0).sort((a, b) => b.id - a.id);
-    // Demo mock carries no `lastActivityAt`; approximate recent activity by
-    // reply volume so "Active" reads distinctly from "New"/"Top".
-    if (sort === "active")
-      return [...list].sort((a, b) => b.comments - a.comments || b.id - a.id);
-    return [...list].sort(
-      (a, b) =>
-        (b.pinned ? 1000 : 0) + b.upvotes - ((a.pinned ? 1000 : 0) + a.upvotes),
-    );
+    return filterAndSortThreads(visible, { demoMode, cat, tag, q, sort });
   }, [demoMode, allThreads, cat, tag, q, sort, hiddenAuthorHandles]);
 
   // Vote on the list row: acts on the thread's OPENING post. Live threads carry
@@ -319,13 +173,13 @@ export function useForumPageState() {
   // toggles in place; demo makes no API call, live also POSTs the vote.
   const onVote = useCallback(
     (thread: Thread) => {
-      if (thread.opPostId) votePost.vote(thread.opPostId, thread.myVote ? 0 : 1);
+      if (thread.opPostId)
+        votePost.vote(thread.opPostId, thread.myVote ? 0 : 1);
     },
     [votePost],
   );
 
-  const headerCount =
-    cat === "all" ? (counts.all ?? 0) : (counts[cat] ?? 0);
+  const headerCount = cat === "all" ? (counts.all ?? 0) : (counts[cat] ?? 0);
 
   return {
     cat,
@@ -349,9 +203,9 @@ export function useForumPageState() {
     showFirstPostPrompt,
     dismissPrompt,
     allThreads,
-    canEditThread,
+    canEditThread: (thread: Thread) => checkCanEditThread(thread, demoMode),
     editingThread,
-    editingTitleThreadIsBusy: editThreadTitle.isPending,
+    editingTitleThreadIsBusy,
     saveThreadTitle,
     setEditingTitleThreadId,
     closeEditTitle,

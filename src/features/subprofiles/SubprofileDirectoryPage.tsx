@@ -92,7 +92,9 @@ export function SubprofileDirectoryPage() {
             // for a coral alert and its action repurposed as a retry.
             <SuccessPanel
               title={t("subprofiles:directory.error.title")}
-              icon={<FiAlertTriangle size={26} color="var(--accent)" aria-hidden />}
+              icon={
+                <FiAlertTriangle size={26} color="var(--accent)" aria-hidden />
+              }
               iconTone="coral"
               onClose={() => void refetch()}
               closeLabel={t("subprofiles:directory.error.retry")}
@@ -173,9 +175,21 @@ function DirectoryLoadingGrid() {
             <SkeletonLine width="70%" height={20} />
             <SkeletonLine width="90%" height={14} />
             <div className={styles.skTags}>
-              <SkeletonLine width={54} height={22} style={{ borderRadius: 999 }} />
-              <SkeletonLine width={68} height={22} style={{ borderRadius: 999 }} />
-              <SkeletonLine width={46} height={22} style={{ borderRadius: 999 }} />
+              <SkeletonLine
+                width={54}
+                height={22}
+                style={{ borderRadius: 999 }}
+              />
+              <SkeletonLine
+                width={68}
+                height={22}
+                style={{ borderRadius: 999 }}
+              />
+              <SkeletonLine
+                width={46}
+                height={22}
+                style={{ borderRadius: 999 }}
+              />
             </div>
           </div>
         </div>

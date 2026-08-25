@@ -46,7 +46,11 @@ function PressArchiveRow({ piece, delay, onOpen }: PressArchiveRowProps) {
 
   return (
     <FadeIn delay={delay}>
-      <button type="button" className={styles.row} onClick={() => onOpen(piece)}>
+      <button
+        type="button"
+        className={styles.row}
+        onClick={() => onOpen(piece)}
+      >
         <div className={styles.date}>
           {piece.day} <em>{piece.month}</em>
           <span>{piece.kind}</span>

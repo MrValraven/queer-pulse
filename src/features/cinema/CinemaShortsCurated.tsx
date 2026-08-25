@@ -50,7 +50,9 @@ export function CuratedShelves({ shelf }: { shelf: ShortsShelf }) {
             components={{ em: <em /> }}
           />
         }
-        subtitle={t("cinema:shorts.shelf.becauseYouTipped.sub", { maker: "Rui" })}
+        subtitle={t("cinema:shorts.shelf.becauseYouTipped.sub", {
+          maker: "Rui",
+        })}
         linkTo={`${routes.cinemaFilmmaker}/rui-almeida`}
         linkLabel={t("cinema:shorts.shelf.becauseYouTipped.cta", {
           maker: "Rui",

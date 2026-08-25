@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getPieces,
-  PIECE_PAGE_SIZE_MAX,
-} from "./pieces.api";
+import { getPieces, PIECE_PAGE_SIZE_MAX } from "./pieces.api";
 import type { PieceFormat, PieceStage, SavedViewId } from "./pieces.api";
 import { pieceDtoToView, STAGE_DTO_TO_VIEW } from "./pieces.adapters";
 import { DEMO_PIECES, type Piece } from "../data/desk.data";
@@ -26,7 +24,8 @@ export interface PieceFilters {
 function matchesFilters(piece: Piece, filters: PieceFilters): boolean {
   if (filters.format && piece.format !== filters.format) return false;
   if (filters.editor && piece.editorId !== filters.editor) return false;
-  if (filters.stage && piece.stage !== STAGE_DTO_TO_VIEW[filters.stage]) return false;
+  if (filters.stage && piece.stage !== STAGE_DTO_TO_VIEW[filters.stage])
+    return false;
   if (filters.section && piece.section !== filters.section) return false;
   if (filters.savedView) {
     const viewTest = VIEW_TEST[filters.savedView];
@@ -34,7 +33,8 @@ function matchesFilters(piece: Piece, filters: PieceFilters): boolean {
   }
   if (filters.q) {
     const query = filters.q.toLowerCase();
-    const haystack = `${piece.title} ${piece.byline} ${piece.section}`.toLowerCase();
+    const haystack =
+      `${piece.title} ${piece.byline} ${piece.section}`.toLowerCase();
     if (!haystack.includes(query)) return false;
   }
   // `issue` is not modeled on the demo `Piece` view yet, so it's a no-op in demo mode.
@@ -67,5 +67,9 @@ export function usePieces(filters: PieceFilters = {}) {
     },
   });
 
-  return { pieces: query.data ?? [], isLoading: query.isLoading, isError: query.isError };
+  return {
+    pieces: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

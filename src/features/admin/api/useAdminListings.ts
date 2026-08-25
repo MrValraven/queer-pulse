@@ -141,7 +141,10 @@ export function patchListingInCache(
     });
 
     if (rowWasFound) {
-      queryClient.setQueryData(queryKey, { ...currentData, pages: patchedPages });
+      queryClient.setQueryData(queryKey, {
+        ...currentData,
+        pages: patchedPages,
+      });
     }
   }
 }

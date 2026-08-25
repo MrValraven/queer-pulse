@@ -66,7 +66,11 @@ export function CardHolderStatusModal({
       onClose={onClose}
       footer={
         <>
-          <Button variant="ghost" onClick={onClose} disabled={setStatus.isPending}>
+          <Button
+            variant="ghost"
+            onClick={onClose}
+            disabled={setStatus.isPending}
+          >
             {t("shared:confirmDialog.cancel")}
           </Button>
           <Button

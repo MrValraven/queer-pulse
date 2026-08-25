@@ -35,7 +35,9 @@ function SkinTextControl({
   const { t } = useTranslation();
   const raw = editor.getValue(control.path);
   const value = typeof raw === "string" ? raw : "";
-  const placeholder = control.placeholderKey ? t(control.placeholderKey) : undefined;
+  const placeholder = control.placeholderKey
+    ? t(control.placeholderKey)
+    : undefined;
 
   return (
     <FormField label={t(control.labelKey)}>
@@ -43,13 +45,17 @@ function SkinTextControl({
         <textarea
           value={value}
           placeholder={placeholder}
-          onChange={(event) => editor.setValue(control.path, event.target.value)}
+          onChange={(event) =>
+            editor.setValue(control.path, event.target.value)
+          }
         />
       ) : (
         <input
           value={value}
           placeholder={placeholder}
-          onChange={(event) => editor.setValue(control.path, event.target.value)}
+          onChange={(event) =>
+            editor.setValue(control.path, event.target.value)
+          }
         />
       )}
     </FormField>
@@ -86,7 +92,8 @@ function SkinStringListControl({
     rowKeys.removeAt(index);
     commit(lines.filter((_, entryIndex) => entryIndex !== index));
   };
-  const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(reorder);
+  const { containerRef, draggingIndex, gripHandlers } =
+    useRowDragReorder(reorder);
 
   return (
     <div className={styles.itemsWrap}>
@@ -117,9 +124,11 @@ function SkinStringListControl({
                 index: index + 1,
               })}
               onChange={(event) =>
-                commit(lines.map((entry, entryIndex) =>
-                  entryIndex === index ? event.target.value : entry,
-                ))
+                commit(
+                  lines.map((entry, entryIndex) =>
+                    entryIndex === index ? event.target.value : entry,
+                  ),
+                )
               }
             />
             <div className={styles.lineOps}>
@@ -151,10 +160,7 @@ function SkinStringListControl({
         ))}
       </div>
       <div className={styles.lineAddBar}>
-        <button
-          type="button"
-          onClick={() => commit([...lines, ""])}
-        >
+        <button type="button" onClick={() => commit([...lines, ""])}>
           <FiPlus size={15} aria-hidden />
           {t("subprofiles:skinBlock.addItem")}
         </button>
@@ -175,7 +181,8 @@ function SkinObjectListControl({
   const { t } = useTranslation();
   const itemFields = control.itemFields ?? [];
   const entries =
-    (editor.getValue(control.path) as Record<string, string>[] | undefined) ?? [];
+    (editor.getValue(control.path) as Record<string, string>[] | undefined) ??
+    [];
   const label = t(control.labelKey);
 
   // Same reason as the string list above: these entries persist as bare
@@ -248,14 +255,22 @@ function SkinObjectListControl({
               {field.multiline ? (
                 <textarea
                   value={entry[field.key] ?? ""}
-                  placeholder={field.placeholderKey ? t(field.placeholderKey) : undefined}
-                  onChange={(event) => patchField(index, field.key, event.target.value)}
+                  placeholder={
+                    field.placeholderKey ? t(field.placeholderKey) : undefined
+                  }
+                  onChange={(event) =>
+                    patchField(index, field.key, event.target.value)
+                  }
                 />
               ) : (
                 <input
                   value={entry[field.key] ?? ""}
-                  placeholder={field.placeholderKey ? t(field.placeholderKey) : undefined}
-                  onChange={(event) => patchField(index, field.key, event.target.value)}
+                  placeholder={
+                    field.placeholderKey ? t(field.placeholderKey) : undefined
+                  }
+                  onChange={(event) =>
+                    patchField(index, field.key, event.target.value)
+                  }
                 />
               )}
             </FormField>
@@ -298,10 +313,13 @@ function SkinGridControl({
   const cells: PracticeAvailState[] =
     Array.isArray(availability.cells) && availability.cells.length === 28
       ? availability.cells
-      : Array.from({ length: 28 }, () => "off" as PracticeAvailState);
+      : Array.from({ length: 28 }, () => "off");
 
-  const commit = (next: { startDate: string; slotTime: string; cells: PracticeAvailState[] }) =>
-    editor.setValue(control.path, next);
+  const commit = (next: {
+    startDate: string;
+    slotTime: string;
+    cells: PracticeAvailState[];
+  }) => editor.setValue(control.path, next);
 
   const cal = deriveCalendar({ startDate, slotTime, cells }); // null when startDate blank/invalid
   const stateLabel = (state: PracticeAvailState) =>
@@ -310,22 +328,32 @@ function SkinGridControl({
   return (
     <div className={styles.availEditor}>
       <h3 className={styles.cardTitle}>{t(control.labelKey)}</h3>
-      <FormField label={t("subprofiles:skinBlock.practice.availability.startDate")}>
+      <FormField
+        label={t("subprofiles:skinBlock.practice.availability.startDate")}
+      >
         <DatePicker
           mode="date"
           label={t("subprofiles:skinBlock.practice.availability.startDate")}
           value={startDate || null}
-          onChange={(value) => commit({ startDate: value ?? "", slotTime, cells })}
+          onChange={(value) =>
+            commit({ startDate: value ?? "", slotTime, cells })
+          }
         />
       </FormField>
-      <FormField label={t("subprofiles:skinBlock.practice.availability.slotTime")}>
+      <FormField
+        label={t("subprofiles:skinBlock.practice.availability.slotTime")}
+      >
         <input
           value={slotTime}
           placeholder="18:00"
-          onChange={(event) => commit({ startDate, slotTime: event.target.value, cells })}
+          onChange={(event) =>
+            commit({ startDate, slotTime: event.target.value, cells })
+          }
         />
       </FormField>
-      <p className={styles.availHelp}>{t("subprofiles:skinBlock.practice.availability.help")}</p>
+      <p className={styles.availHelp}>
+        {t("subprofiles:skinBlock.practice.availability.help")}
+      </p>
       <div className={styles.availHead} aria-hidden="true">
         {weekdayLetters.map((letter, index) => (
           <span key={index}>{letter}</span>
@@ -334,16 +362,20 @@ function SkinGridControl({
       <div className={styles.availGrid}>
         {cells.map((state, index) => {
           const dayNumber = cal?.weeks[Math.floor(index / 7)]?.[index % 7]?.day;
-          const next = AVAIL_CYCLE[(AVAIL_CYCLE.indexOf(state) + 1) % AVAIL_CYCLE.length]!;
+          const next =
+            AVAIL_CYCLE[(AVAIL_CYCLE.indexOf(state) + 1) % AVAIL_CYCLE.length]!;
           return (
             <button
               type="button"
               key={index}
               className={`${styles.availCell} ${styles[`avail_${state}`] ?? ""}`}
-              aria-label={t("subprofiles:skinBlock.practice.availability.cellLabel", {
-                slot: index + 1,
-                state: stateLabel(state),
-              })}
+              aria-label={t(
+                "subprofiles:skinBlock.practice.availability.cellLabel",
+                {
+                  slot: index + 1,
+                  state: stateLabel(state),
+                },
+              )}
               onClick={() =>
                 commit({
                   startDate,
@@ -397,9 +429,15 @@ function SkinBlockCard({
   return (
     <section className={styles.card}>
       {showHeading && <h3 className={styles.cardTitle}>{t(block.titleKey)}</h3>}
-      {block.helperKey && <p className={styles.cardNote}>{t(block.helperKey)}</p>}
+      {block.helperKey && (
+        <p className={styles.cardNote}>{t(block.helperKey)}</p>
+      )}
       {block.controls.map((control) => (
-        <SkinBlockControlField key={control.path} control={control} editor={editor} />
+        <SkinBlockControlField
+          key={control.path}
+          control={control}
+          editor={editor}
+        />
       ))}
     </section>
   );

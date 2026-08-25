@@ -73,7 +73,9 @@ export function PublicProfileProvider({ children }: { children: ReactNode }) {
     return () => setEligibilityDemand((count) => count - 1);
   }, []);
 
-  const signalsQuery = usePublicEligibilitySignals(live && eligibilityDemand > 0);
+  const signalsQuery = usePublicEligibilitySignals(
+    live && eligibilityDemand > 0,
+  );
 
   const eligibility = useMemo<PublicEligibility>(() => {
     // A single reference "now" the pure evaluator scores against — resolved here

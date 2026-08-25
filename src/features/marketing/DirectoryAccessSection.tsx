@@ -1,6 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace } from "./directoryPlaces";
-import { DirectoryAccess, accessibilityLabelIds } from "./DirectoryAccess";
+import { DirectoryAccess } from "./DirectoryAccess";
+import { accessibilityLabelIds } from "./directoryAccessibilityLabels";
 import { DirectoryAccessibilityAnswers } from "./DirectoryAccessibilityAnswers";
 import { DirectoryLanguages } from "./DirectoryLanguages";
 import s from "./DirectorySpacePage.module.css";

@@ -33,7 +33,9 @@ function NotBuildingRow({ idea, pending, onReopen }: NotBuildingRowProps) {
           </span>
         </div>
         <p className={styles.title}>{idea.text}</p>
-        {idea.declineNote && <p className={styles.wording}>{idea.declineNote}</p>}
+        {idea.declineNote && (
+          <p className={styles.wording}>{idea.declineNote}</p>
+        )}
         <p className={styles.hadAsked}>
           {idea.votes} {t("admin:roadmap.notBuildingView.hadAskedLabel")}
         </p>
@@ -41,7 +43,8 @@ function NotBuildingRow({ idea, pending, onReopen }: NotBuildingRowProps) {
 
       <div className={styles.rowSide}>
         <Button variant="ghost" onClick={onReopen} disabled={pending}>
-          <FiRotateCcw aria-hidden /> {t("admin:roadmap.notBuildingView.reopenCta")}
+          <FiRotateCcw aria-hidden />{" "}
+          {t("admin:roadmap.notBuildingView.reopenCta")}
         </Button>
       </div>
     </li>

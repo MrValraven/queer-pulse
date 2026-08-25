@@ -116,7 +116,9 @@ export function ViewingCard({
               key={slot}
               variant="jade"
               size="sm"
-              onClick={() => action.mutate({ id: viewing.id, action: "accept", slot })}
+              onClick={() =>
+                action.mutate({ id: viewing.id, action: "accept", slot })
+              }
               disabled={action.isPending}
             >
               {t("economy:housingViewing.list.acceptAt", {
@@ -137,7 +139,9 @@ export function ViewingCard({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => action.mutate({ id: viewing.id, action: "decline" })}
+              onClick={() =>
+                action.mutate({ id: viewing.id, action: "decline" })
+              }
               disabled={action.isPending}
             >
               {t("economy:housingViewing.list.decline")}
@@ -154,7 +158,9 @@ export function ViewingCard({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => action.mutate({ id: viewing.id, action: "cancel" })}
+              onClick={() =>
+                action.mutate({ id: viewing.id, action: "cancel" })
+              }
               disabled={action.isPending}
             >
               {t("economy:housingViewing.list.cancel")}
@@ -165,7 +171,9 @@ export function ViewingCard({
           <Button
             variant="primary"
             size="sm"
-            onClick={() => action.mutate({ id: viewing.id, action: "complete" })}
+            onClick={() =>
+              action.mutate({ id: viewing.id, action: "complete" })
+            }
             disabled={action.isPending}
           >
             {t("economy:housingViewing.list.markCompleted")}

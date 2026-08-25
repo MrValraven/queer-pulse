@@ -5,11 +5,7 @@ import { requestInvitePath } from "../auth/api/joinRequestSource";
 import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import {
   NeighbourhoodsSection,
   HealthSection,

@@ -1,6 +1,12 @@
 import { FiBriefcase, FiEdit3, FiPlus, FiStar } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { Button, EmptyState, Stars, Tabs, type Tab } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  Stars,
+  Tabs,
+  type Tab,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
@@ -238,11 +244,7 @@ export function CompanyTabs({
 
   return (
     <div>
-      <Tabs
-        tabs={tabs}
-        active={tab}
-        onChange={(id) => setTab(id as TabId)}
-      />
+      <Tabs tabs={tabs} active={tab} onChange={(id) => setTab(id as TabId)} />
 
       {tab === "about" && <AboutPane profile={profile} />}
       {tab === "jobs" && (

@@ -63,7 +63,10 @@ export function DrawerSections({
       {currentItem.guide ? (
         <GuideSection guide={currentItem.guide} onFieldChange={onFieldChange} />
       ) : (
-        <ProgressSection progress={currentItem.progress} onFieldChange={onFieldChange} />
+        <ProgressSection
+          progress={currentItem.progress}
+          onFieldChange={onFieldChange}
+        />
       )}
 
       <BlockedSection
@@ -119,7 +122,9 @@ export function DrawerSections({
       />
 
       <div className={styles.section}>
-        <p className={styles.emptyNote}>{t("admin:roadmap.drawer.auditNote")}</p>
+        <p className={styles.emptyNote}>
+          {t("admin:roadmap.drawer.auditNote")}
+        </p>
         {editItem && (
           <Button variant="ghost" size="md" onClick={onOpenAudit}>
             {t("admin:roadmap.drawer.openAuditCta")}

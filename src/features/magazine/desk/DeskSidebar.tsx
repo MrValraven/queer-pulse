@@ -54,9 +54,13 @@ export function DeskSidebar({ summary, editors }: DeskSidebarProps) {
           <div className={styles.load}>
             {stageLoad.map((entry) => (
               <div className={styles.row} key={entry.stage}>
-                <span className={styles.rowLabel}>{STAGE_DTO_TO_VIEW[entry.stage]}</span>
+                <span className={styles.rowLabel}>
+                  {STAGE_DTO_TO_VIEW[entry.stage]}
+                </span>
                 <div className={styles.bar}>
-                  <i style={{ width: `${(entry.count / maxStageCount) * 100}%` }} />
+                  <i
+                    style={{ width: `${(entry.count / maxStageCount) * 100}%` }}
+                  />
                 </div>
                 <b>{entry.count}</b>
               </div>
@@ -74,15 +78,26 @@ export function DeskSidebar({ summary, editors }: DeskSidebarProps) {
         ) : (
           <div className={styles.load}>
             {editorLoad.map((entry) => {
-              const editor = editors.find((candidate) => candidate.id === entry.editorId);
+              const editor = editors.find(
+                (candidate) => candidate.id === entry.editorId,
+              );
               const label = editor ? editor.name.split(" ")[0] : entry.editorId;
               const overCap = entry.count > entry.cap;
-              const widthPercent = entry.cap > 0 ? Math.min(100, (entry.count / entry.cap) * 100) : 100;
+              const widthPercent =
+                entry.cap > 0
+                  ? Math.min(100, (entry.count / entry.cap) * 100)
+                  : 100;
               return (
                 <div className={styles.row} key={entry.editorId}>
                   <Avatar
-                    initials={editor?.initials ?? initialsFromLabel(entry.editorId)}
-                    tint={editor ? EDITOR_TINT_TO_AVATAR_TINT[editor.tint] : "default"}
+                    initials={
+                      editor?.initials ?? initialsFromLabel(entry.editorId)
+                    }
+                    tint={
+                      editor
+                        ? EDITOR_TINT_TO_AVATAR_TINT[editor.tint]
+                        : "default"
+                    }
                     size={26}
                   />
                   <span className={styles.rowLabel}>{label}</span>
@@ -109,13 +124,19 @@ export function DeskSidebar({ summary, editors }: DeskSidebarProps) {
         ) : (
           <div className={styles.feed}>
             {activity.map((entry) => {
-              const editor = editors.find((candidate) => candidate.id === entry.actorId);
+              const editor = editors.find(
+                (candidate) => candidate.id === entry.actorId,
+              );
               const who = entry.who || t("magazine:desk.sidebar.someone");
               return (
                 <div className={styles.feedRow} key={entry.id}>
                   <Avatar
                     initials={editor?.initials ?? initialsFromLabel(who)}
-                    tint={editor ? EDITOR_TINT_TO_AVATAR_TINT[editor.tint] : "default"}
+                    tint={
+                      editor
+                        ? EDITOR_TINT_TO_AVATAR_TINT[editor.tint]
+                        : "default"
+                    }
                     size={26}
                   />
                   <span>

@@ -32,7 +32,11 @@ interface SubprofileQRProps {
  * whole card, so painting a second one inside the SVG would change nothing
  * except to hide the container's rounded corners.
  */
-export function SubprofileQR({ url, ariaLabel, size = 220 }: SubprofileQRProps) {
+export function SubprofileQR({
+  url,
+  ariaLabel,
+  size = 220,
+}: SubprofileQRProps) {
   const { t } = useTranslation();
 
   return (

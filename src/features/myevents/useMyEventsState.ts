@@ -1,21 +1,13 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { ToastAction } from "../../shared/components/feedback/toastContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import type { MyEvent, Notif, Pill } from "./myEvents.types";
+import type { Pill } from "./myEvents.types";
 import type { MyEventsValue } from "./MyEventsContext";
 import { PILLS } from "./myEvents.data";
-import { inPill, parseDate } from "./myEvents.helpers";
+import { inPill } from "./myEvents.helpers";
 import { useMyEventsCalendar } from "./useMyEventsCalendar";
 import { useMyEventsToolbar } from "./useMyEventsToolbar";
 import { useMyEventsSelection } from "./useMyEventsSelection";
@@ -23,7 +15,9 @@ import { useMyEventsSafety } from "./useMyEventsSafety";
 import { useMyEventsModals } from "./useMyEventsModals";
 import { useMyEventsRsvp } from "./useMyEventsRsvp";
 import { useMyEventsData } from "./api/useMyEventsData";
-import { reconcileById, trackDirty } from "./myEvents.reconcile";
+import { useMyEventsSync } from "./useMyEventsSync";
+import { useMyEventsFocus } from "./useMyEventsFocus";
+import { useMyEventsNotifications } from "./useMyEventsNotifications";
 
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
@@ -42,9 +36,10 @@ export function useMyEventsState(): MyEventsValue {
   );
 
   // Demo mode returns the page's own mock registry; live mode fetches from
-  // GET /events (per category-bearing filter) + GET /event-invites. Either way the
-  // result lands here as a flat list, then every RSVP/bulk/notification
-  // action below keeps mutating it locally exactly as before.
+  // GET /events (per category-bearing filter) + GET /event-invites. The
+  // dirty-tracked local mirror (so RSVP/bulk/notification actions can keep
+  // mutating it optimistically without a background refetch clobbering
+  // in-flight edits) lives in `useMyEventsSync`.
   const {
     events: sourceEvents,
     notifs: sourceNotifs,
@@ -52,74 +47,16 @@ export function useMyEventsState(): MyEventsValue {
     hasError,
     retry,
   } = useMyEventsData();
-  const [events, setEventsRaw] = useState<MyEvent[]>(sourceEvents);
-  const [notifs, setNotifsRaw] = useState<Notif[]>(sourceNotifs);
-  // Ids the user has optimistically edited since the last server sync. A
-  // background refetch must not clobber these rows — see `myEvents.reconcile`.
-  const dirtyEventIds = useRef<Set<string>>(new Set());
-  const dirtyNotifIds = useRef<Set<string>>(new Set());
-
-  // Every optimistic edit flows through these wrapped setters (handed to the
-  // rsvp/selection sub-hooks and the local notif actions), which record the
-  // touched ids as dirty. The raw setters above are reserved for the server
-  // resync below, so a resync never marks a row dirty.
-  const setEvents = useCallback<Dispatch<SetStateAction<MyEvent[]>>>(
-    (update) =>
-      setEventsRaw((prev) => {
-        const next =
-          typeof update === "function"
-            ? (update)(prev)
-            : update;
-        trackDirty(prev, next, dirtyEventIds.current);
-        return next;
-      }),
-    [],
-  );
-  const setNotifs = useCallback<Dispatch<SetStateAction<Notif[]>>>(
-    (update) =>
-      setNotifsRaw((prev) => {
-        const next =
-          typeof update === "function"
-            ? (update)(prev)
-            : update;
-        trackDirty(prev, next, dirtyNotifIds.current);
-        return next;
-      }),
-    [],
-  );
-
-  // Resync to the data hook's source when a live GET /events (or /event-invites)
-  // refetch resolves — but reconcile by id so a background refetch adopts fresh
-  // server truth for untouched rows while preserving any row with a pending
-  // optimistic edit (RSVP, bulk-remove, mark-read). Blindly replacing here was
-  // the query-mirror antipattern that clobbered in-flight edits.
-   
-  useEffect(
-    () =>
-      setEventsRaw((prev) =>
-        reconcileById(prev, sourceEvents, dirtyEventIds.current),
-      ),
-    [sourceEvents],
-  );
-   
-  useEffect(
-    () =>
-      setNotifsRaw((prev) =>
-        reconcileById(prev, sourceNotifs, dirtyNotifIds.current),
-      ),
-    [sourceNotifs],
-  );
-  const byId = useCallback(
-    (id: string) => events.find((e) => e.id === id),
-    [events],
-  );
+  const { events, notifs, setEvents, setNotifs, byId } = useMyEventsSync({
+    sourceEvents,
+    sourceNotifs,
+  });
 
   const [pill, setPillState] = useState<Pill>("upcoming");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [pastShown, setPastShown] = useState(5);
   const [loading, setLoading] = useState(true);
   const loadTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const focusTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const startLoad = useCallback((delay: number) => {
     setLoading(true);
@@ -138,13 +75,6 @@ export function useMyEventsState(): MyEventsValue {
     const t = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(t);
   }, [demoMode, dataLoading]);
-  // Clear the pending focus timer on unmount so it can't fire late.
-  useEffect(
-    () => () => {
-      clearTimeout(focusTimer.current);
-    },
-    [],
-  );
 
   // calendar + toolbar (state + actions live in focused sub-hooks)
   const cal = useMyEventsCalendar();
@@ -161,13 +91,6 @@ export function useMyEventsState(): MyEventsValue {
     t,
   });
 
-  // notifications
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [offline, setOffline] = useState(false);
-
-  // deep-link focus
-  const [focusId, setFocusId] = useState<string | null>(null);
-
   // derived
   const counts = useMemo(() => {
     const c = {} as Record<Pill, number>;
@@ -176,22 +99,6 @@ export function useMyEventsState(): MyEventsValue {
     });
     return c;
   }, [events]);
-  const unreadCount = useMemo(
-    () => notifs.filter((n) => n.unread).length,
-    [notifs],
-  );
-
-  // offline awareness
-  useEffect(() => {
-    const upd = () => setOffline(!navigator.onLine);
-    window.addEventListener("online", upd);
-    window.addEventListener("offline", upd);
-    upd();
-    return () => {
-      window.removeEventListener("online", upd);
-      window.removeEventListener("offline", upd);
-    };
-  }, []);
 
   // ── primary view ──────────────────────────────────
   const setPill = useCallback(
@@ -231,51 +138,27 @@ export function useMyEventsState(): MyEventsValue {
     closeMore,
   });
 
-  // ── notifications ─────────────────────────────────
-  const markAllRead = useCallback(
-    () => setNotifs((ns) => ns.map((n) => ({ ...n, unread: false }))),
-    [],
-  );
-  const goToEvent = useCallback(
-    (eventId: string) => {
-      const ev = byId(eventId);
-      if (!ev) return;
-      const dt = parseDate(ev.date);
-      setViewY(dt.getFullYear());
-      setViewM(dt.getMonth());
-      setCalViewRaw("month");
-      setPillState(
-        ev.category === "past"
-          ? "past"
-          : ev.category === "saved" || ev.category === "invite" || ev.category === "sent"
-            ? "saved"
-            : ev.category === "waitlisted"
-              ? "waitlisted"
-              : "upcoming",
-      );
-      clearSecondary();
-      setSelectedDate(ev.date);
-      if (typeof window !== "undefined" && window.innerWidth <= 700)
-        setMobileView("list");
-      // Flag the target card so it can scroll into view + flash, then clear.
-      setFocusId(eventId);
-      clearTimeout(focusTimer.current);
-      focusTimer.current = setTimeout(() => setFocusId(null), 1800);
-    },
-    [byId, clearSecondary, setViewY, setViewM, setCalViewRaw, setMobileView],
-  );
-  const notifGo = useCallback(
-    (i: number) => {
-      const n = notifs[i];
-      if (!n) return;
-      setNotifs((ns) =>
-        ns.map((x, j) => (j === i ? { ...x, unread: false } : x)),
-      );
-      setNotifOpen(false);
-      goToEvent(n.eventId);
-    },
-    [notifs, goToEvent],
-  );
+  // deep-link focus (notification → jump the view + flash the target card)
+  const { focusId, goToEvent } = useMyEventsFocus({
+    byId,
+    setViewY,
+    setViewM,
+    setCalViewRaw,
+    clearSecondary,
+    setMobileView,
+    setPillState,
+    setSelectedDate,
+  });
+
+  // notifications (bell + "What's changed" panel, focused sub-hook)
+  const {
+    notifOpen,
+    setNotifOpen,
+    offline,
+    unreadCount,
+    markAllRead,
+    notifGo,
+  } = useMyEventsNotifications({ notifs, setNotifs, goToEvent });
 
   // ── safety flows (report + block live in a focused sub-hook) ──
   const safety = useMyEventsSafety({ byId, toast, closeMore, t });

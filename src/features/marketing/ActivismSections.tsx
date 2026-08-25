@@ -100,7 +100,11 @@ export function SkillsSection() {
       </Reveal>
       <div className={s.actionGrid}>
         {SKILLS_CARDS.map((card, index) => (
-          <Reveal key={card.titleKey} className={s.actionCard} delay={index * 60}>
+          <Reveal
+            key={card.titleKey}
+            className={s.actionCard}
+            delay={index * 60}
+          >
             <div className={s.acNum}>
               <FiStar />
             </div>

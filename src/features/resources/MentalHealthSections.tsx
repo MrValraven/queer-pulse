@@ -24,7 +24,9 @@ export function TherapistSection() {
   const langOptions = ["all", ...new Set(cards.flatMap((card) => card.langs))];
 
   const therapists: TherapistCardVM[] =
-    filter === "all" ? cards : cards.filter((card) => card.langs.includes(filter));
+    filter === "all"
+      ? cards
+      : cards.filter((card) => card.langs.includes(filter));
 
   return (
     <section className={styles.sec}>
@@ -59,96 +61,101 @@ export function TherapistSection() {
           />
         ) : (
           <>
-        {langOptions.length > 1 && (
-          <div className={styles.thFilter}>
-            <span className={styles.thFilterLabel} id="mh-therapist-lang-label">
-              {t("resources:mentalHealth.therapists.filterLabel")}
-            </span>
-            <FilterChips
-              labelledBy="mh-therapist-lang-label"
-              tone="jade"
-              value={filter}
-              onChange={setFilter}
-              options={langOptions.map((l) => ({
-                value: l,
-                label:
-                  l === "all"
-                    ? t("resources:mentalHealth.therapists.allLanguages")
-                    : l,
-              }))}
-            />
-          </div>
-        )}
-        <div className={styles.therapistGrid}>
-          {therapists.map((therapist, index) => (
-            <Reveal
-              key={therapist.handle}
-              as={Link}
-              to={therapist.href}
-              className={styles.therapistCard}
-              delay={Math.min(index, 8) * 60}
-              aria-label={t(
-                "resources:mentalHealth.therapists.viewProfileAriaLabel",
-                { name: therapist.name },
-              )}
-            >
-              <div className={styles.tcTop}>
-                <Avatar
-                  initials={therapist.initials}
-                  size={56}
-                  src={therapist.avatarUrl ?? undefined}
-                  alt={therapist.name}
-                  className={styles.tcAv}
-                />
-                <div className={styles.tcHeadText}>
-                  <div className={styles.tcName}>{therapist.name}</div>
-                  <div className={styles.tcCreds}>{therapist.creds}</div>
-                </div>
+            {langOptions.length > 1 && (
+              <div className={styles.thFilter}>
                 <span
-                  className={[
-                    styles.tcStatus,
-                    therapist.acceptingNew
-                      ? styles.tcStatusOpen
-                      : styles.tcStatusFull,
-                  ].join(" ")}
+                  className={styles.thFilterLabel}
+                  id="mh-therapist-lang-label"
                 >
-                  <span className={styles.tcStatusDot} />
-                  {therapist.acceptingNew
-                    ? t("resources:mentalHealth.therapists.accepting")
-                    : t("resources:mentalHealth.therapists.waitlist")}
+                  {t("resources:mentalHealth.therapists.filterLabel")}
                 </span>
+                <FilterChips
+                  labelledBy="mh-therapist-lang-label"
+                  tone="jade"
+                  value={filter}
+                  onChange={setFilter}
+                  options={langOptions.map((l) => ({
+                    value: l,
+                    label:
+                      l === "all"
+                        ? t("resources:mentalHealth.therapists.allLanguages")
+                        : l,
+                  }))}
+                />
               </div>
-              <div className={styles.tcTags}>
-                {therapist.langs.length > 0 &&
-                  therapist.langs.map((l) => (
+            )}
+            <div className={styles.therapistGrid}>
+              {therapists.map((therapist, index) => (
+                <Reveal
+                  key={therapist.handle}
+                  as={Link}
+                  to={therapist.href}
+                  className={styles.therapistCard}
+                  delay={Math.min(index, 8) * 60}
+                  aria-label={t(
+                    "resources:mentalHealth.therapists.viewProfileAriaLabel",
+                    { name: therapist.name },
+                  )}
+                >
+                  <div className={styles.tcTop}>
+                    <Avatar
+                      initials={therapist.initials}
+                      size={56}
+                      src={therapist.avatarUrl ?? undefined}
+                      alt={therapist.name}
+                      className={styles.tcAv}
+                    />
+                    <div className={styles.tcHeadText}>
+                      <div className={styles.tcName}>{therapist.name}</div>
+                      <div className={styles.tcCreds}>{therapist.creds}</div>
+                    </div>
                     <span
-                      key={l}
-                      className={`${styles.tcTag} ${styles.tcTagLang}`}
+                      className={[
+                        styles.tcStatus,
+                        therapist.acceptingNew
+                          ? styles.tcStatusOpen
+                          : styles.tcStatusFull,
+                      ].join(" ")}
                     >
-                      {l}
+                      <span className={styles.tcStatusDot} />
+                      {therapist.acceptingNew
+                        ? t("resources:mentalHealth.therapists.accepting")
+                        : t("resources:mentalHealth.therapists.waitlist")}
                     </span>
-                  ))}
-                {therapist.specs.map((s) => (
-                  <span key={s} className={styles.tcTag}>
-                    {s}
-                  </span>
-                ))}
-              </div>
-              {therapist.note && (
-                <p className={styles.tcNote}>{therapist.note}</p>
-              )}
-              <div className={styles.tcFoot}>
-                {therapist.format && (
-                  <span className={styles.tcFormat}>{therapist.format}</span>
-                )}
-                <span className={styles.tcContact}>
-                  {t("resources:mentalHealth.therapists.viewProfileCta")}{" "}
-                  <FiArrowRight aria-hidden />
-                </span>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+                  </div>
+                  <div className={styles.tcTags}>
+                    {therapist.langs.length > 0 &&
+                      therapist.langs.map((l) => (
+                        <span
+                          key={l}
+                          className={`${styles.tcTag} ${styles.tcTagLang}`}
+                        >
+                          {l}
+                        </span>
+                      ))}
+                    {therapist.specs.map((s) => (
+                      <span key={s} className={styles.tcTag}>
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                  {therapist.note && (
+                    <p className={styles.tcNote}>{therapist.note}</p>
+                  )}
+                  <div className={styles.tcFoot}>
+                    {therapist.format && (
+                      <span className={styles.tcFormat}>
+                        {therapist.format}
+                      </span>
+                    )}
+                    <span className={styles.tcContact}>
+                      {t("resources:mentalHealth.therapists.viewProfileCta")}{" "}
+                      <FiArrowRight aria-hidden />
+                    </span>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </>
         )}
       </div>

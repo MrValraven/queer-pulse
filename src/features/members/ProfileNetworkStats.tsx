@@ -3,10 +3,7 @@ import { FiInfo } from "react-icons/fi";
 import { Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfileNetwork } from "./api/useProfileNetwork";
-import type {
-  NetworkGroup,
-  NetworkGroupKey,
-} from "./api/profileNetwork.types";
+import type { NetworkGroup, NetworkGroupKey } from "./api/profileNetwork.types";
 import { NETWORK_GROUP_META } from "./profileNetwork.data";
 import { NetworkListModal } from "./NetworkListModal";
 import { ProfileTrustModal } from "./ProfileTrustModal";

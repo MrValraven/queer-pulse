@@ -26,7 +26,12 @@ export function useSubmitGroupJoinRequest() {
         await new Promise((resolve) => setTimeout(resolve, 650));
         return null;
       }
-      return submitGroupJoinRequest(slug, { name, relationship, answers, note });
+      return submitGroupJoinRequest(slug, {
+        name,
+        relationship,
+        answers,
+        note,
+      });
     },
   });
 }

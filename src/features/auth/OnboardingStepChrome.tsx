@@ -19,7 +19,8 @@ export function SkipLink({
   const { t } = useTranslation();
   return (
     <button type="button" className={styles.skip} onClick={onSkip}>
-      {label ?? t("auth:onboarding.stepPhoto.skip")} <FiArrowRight aria-hidden />
+      {label ?? t("auth:onboarding.stepPhoto.skip")}{" "}
+      <FiArrowRight aria-hidden />
     </button>
   );
 }

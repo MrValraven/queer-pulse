@@ -57,8 +57,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
               </Button>
             )}
             <Link className={sx("ev-link")} to={detailPath(ev)}>
-              {t("myevents:side.eventDetailsCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("myevents:side.eventDetailsCta")} <FiArrowRight aria-hidden />
             </Link>
           </>
         ))}
@@ -69,16 +68,14 @@ export function EventSide({ ev }: { ev: MyEvent }) {
             {t("myevents:side.manageCta")}
           </Button>
           <Link className={sx("ev-link")} to={detailPath(ev)}>
-            {t("myevents:side.viewListingCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("myevents:side.viewListingCta")} <FiArrowRight aria-hidden />
           </Link>
         </>
       )}
 
       {ev.category === "waitlisted" && (
         <Link className={sx("ev-link")} to={detailPath(ev)}>
-          {t("myevents:side.eventDetailsCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("myevents:side.eventDetailsCta")} <FiArrowRight aria-hidden />
         </Link>
       )}
 
@@ -86,8 +83,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
         <>
           {ev.photos ? (
             <Link className={sx("ev-link")} to={photosPath(ev)}>
-              {t("myevents:side.seePhotosCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("myevents:side.seePhotosCta")} <FiArrowRight aria-hidden />
             </Link>
           ) : (
             <button
@@ -95,14 +91,12 @@ export function EventSide({ ev }: { ev: MyEvent }) {
               className={sx("ev-link quiet")}
               onClick={() => toast(t("myevents:side.leaveNoteToast"))}
             >
-              {t("myevents:side.leaveNoteCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("myevents:side.leaveNoteCta")} <FiArrowRight aria-hidden />
             </button>
           )}
           {ev.receipt && (
             <Link className={sx("ev-link quiet")} to={RECEIPT}>
-              {t("myevents:side.receiptCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("myevents:side.receiptCta")} <FiArrowRight aria-hidden />
             </Link>
           )}
         </>
@@ -131,8 +125,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
               softRemove(ev.id, t("myevents:side.removedFromSavedToast"))
             }
           >
-            {t("myevents:side.removeCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("myevents:side.removeCta")} <FiArrowRight aria-hidden />
           </button>
         </>
       )}
@@ -150,8 +143,7 @@ export function EventSide({ ev }: { ev: MyEvent }) {
 
       {ev.category === "sent" && (
         <Link className={sx("ev-link")} to={managePath(ev)}>
-          {t("myevents:side.manageInviteCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("myevents:side.manageInviteCta")} <FiArrowRight aria-hidden />
         </Link>
       )}
     </div>
@@ -329,11 +321,7 @@ export function EventTools({
     );
   }
   if (ev.category === "saved") {
-    return (
-      <div className={sx("card-tools")}>
-        {MoreBtn}
-      </div>
-    );
+    return <div className={sx("card-tools")}>{MoreBtn}</div>;
   }
   if (ev.category === "invite") {
     return (

@@ -34,7 +34,13 @@ export function CompanyReviewModal({
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
 
-  async function handleSubmit({ title, rating, role, pros, cons }: ReviewFormValues) {
+  async function handleSubmit({
+    title,
+    rating,
+    role,
+    pros,
+    cons,
+  }: ReviewFormValues) {
     const body: string[] = [];
     if (pros.trim()) body.push(`The good: ${pros.trim()}`);
     if (cons.trim()) body.push(`The hard parts: ${cons.trim()}`);

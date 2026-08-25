@@ -36,7 +36,10 @@ export function useConversationPinStar(active: Conversation): {
   const onToggleStar = useCallback(
     (message: ChatMessage) => {
       if (message.id) {
-        toggleStar.mutate({ messageId: message.id, starred: !!message.starred });
+        toggleStar.mutate({
+          messageId: message.id,
+          starred: !!message.starred,
+        });
       }
     },
     [toggleStar],

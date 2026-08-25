@@ -45,9 +45,8 @@ async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", "http://api.test");
   const { useThread } = await import("./api/useForum");
-  const { DemoModeProvider } = await import(
-    "../../app/providers/DemoModeProvider"
-  );
+  const { DemoModeProvider } =
+    await import("../../app/providers/DemoModeProvider");
   const { I18nProvider } = await import("../../app/providers/I18nProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },

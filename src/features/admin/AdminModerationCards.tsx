@@ -148,11 +148,13 @@ export function ReportCard({
                   }
                 }}
               >
-                <FiFlag aria-hidden /> {priorReportsText(report.priorReports, t)}
+                <FiFlag aria-hidden />{" "}
+                {priorReportsText(report.priorReports, t)}
               </span>
             ) : (
               <span className={styles.priorFlag}>
-                <FiFlag aria-hidden /> {priorReportsText(report.priorReports, t)}
+                <FiFlag aria-hidden />{" "}
+                {priorReportsText(report.priorReports, t)}
               </span>
             ))}
           {report.reporterCredibility && (

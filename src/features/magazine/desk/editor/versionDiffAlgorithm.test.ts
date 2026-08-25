@@ -11,7 +11,12 @@ describe("computeVersionDiff", () => {
     const current = [paragraph("b1", "Same text.")];
     const version = [paragraph("b1", "Same text.")];
     expect(computeVersionDiff(current, version)).toEqual([
-      { key: "b1", status: "unchanged", currentText: "Same text.", versionText: "Same text." },
+      {
+        key: "b1",
+        status: "unchanged",
+        currentText: "Same text.",
+        versionText: "Same text.",
+      },
     ]);
   });
 
@@ -20,7 +25,12 @@ describe("computeVersionDiff", () => {
     const version = [paragraph("b1", "Old wording.")];
     const rows = computeVersionDiff(current, version);
     expect(rows).toEqual([
-      { key: "b1", status: "changed", currentText: "New wording.", versionText: "Old wording." },
+      {
+        key: "b1",
+        status: "changed",
+        currentText: "New wording.",
+        versionText: "Old wording.",
+      },
     ]);
   });
 
@@ -29,8 +39,18 @@ describe("computeVersionDiff", () => {
     const version = [paragraph("b1", "Kept.")];
     const rows = computeVersionDiff(current, version);
     expect(rows).toEqual([
-      { key: "b1", status: "unchanged", currentText: "Kept.", versionText: "Kept." },
-      { key: "b2", status: "added", currentText: "New block.", versionText: null },
+      {
+        key: "b1",
+        status: "unchanged",
+        currentText: "Kept.",
+        versionText: "Kept.",
+      },
+      {
+        key: "b2",
+        status: "added",
+        currentText: "New block.",
+        versionText: null,
+      },
     ]);
   });
 
@@ -39,17 +59,36 @@ describe("computeVersionDiff", () => {
     const version = [paragraph("b1", "Kept."), paragraph("b2", "Cut later.")];
     const rows = computeVersionDiff(current, version);
     expect(rows).toEqual([
-      { key: "b1", status: "unchanged", currentText: "Kept.", versionText: "Kept." },
-      { key: "b2", status: "removed", currentText: null, versionText: "Cut later." },
+      {
+        key: "b1",
+        status: "unchanged",
+        currentText: "Kept.",
+        versionText: "Kept.",
+      },
+      {
+        key: "b2",
+        status: "removed",
+        currentText: null,
+        versionText: "Cut later.",
+      },
     ]);
   });
 
   it("falls back to positional matching when both sides lack an id", () => {
-    const current: ArticleBlock[] = [{ id: "", kind: "paragraph", html: "Now." }];
-    const version: ArticleBlock[] = [{ id: "", kind: "paragraph", html: "Then." }];
+    const current: ArticleBlock[] = [
+      { id: "", kind: "paragraph", html: "Now." },
+    ];
+    const version: ArticleBlock[] = [
+      { id: "", kind: "paragraph", html: "Then." },
+    ];
     const rows = computeVersionDiff(current, version);
     expect(rows).toEqual([
-      { key: "__index_0", status: "changed", currentText: "Now.", versionText: "Then." },
+      {
+        key: "__index_0",
+        status: "changed",
+        currentText: "Now.",
+        versionText: "Then.",
+      },
     ]);
   });
 

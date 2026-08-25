@@ -6,11 +6,7 @@ import { LegalDoc } from "./LegalDoc";
 import { PRIVACY_TOC, buildPrivacySections } from "./privacy.data";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 
 export function PrivacyPage() {
   const { t } = useTranslation();

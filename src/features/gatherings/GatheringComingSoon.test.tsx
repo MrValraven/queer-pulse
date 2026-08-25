@@ -32,9 +32,10 @@ describe("GatheringComingSoon", () => {
       name: "Browse gatherings",
     });
     expect(browse).toHaveAttribute("href", routes.events);
-    expect(
-      screen.getByRole("link", { name: "Back to home" }),
-    ).toHaveAttribute("href", routes.homepage);
+    expect(screen.getByRole("link", { name: "Back to home" })).toHaveAttribute(
+      "href",
+      routes.homepage,
+    );
   });
 
   it("shows variant-specific copy (event vs. rsvp)", async () => {

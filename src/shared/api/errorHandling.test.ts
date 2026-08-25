@@ -76,7 +76,10 @@ describe("handleQueryError", () => {
   });
 
   it("still toasts a plain 503 that is not a platform lockdown", () => {
-    handleQueryError(new ApiError(503, "down", { code: "SOMETHING_ELSE" }), query);
+    handleQueryError(
+      new ApiError(503, "down", { code: "SOMETHING_ELSE" }),
+      query,
+    );
     expect(emit).toHaveBeenCalledWith(
       "Something went wrong on our end. Please try again.",
       "error",
@@ -183,11 +186,7 @@ describe("handleMutationError", () => {
       undefined,
       { options: {} },
     );
-    expect(emit).toHaveBeenCalledWith(
-      "That name is taken",
-      "error",
-      6000,
-    );
+    expect(emit).toHaveBeenCalledWith("That name is taken", "error", 6000);
   });
 
   it("falls back to the generic 4xx string for a bare status word", () => {
@@ -197,11 +196,7 @@ describe("handleMutationError", () => {
       undefined,
       { options: {} },
     );
-    expect(emit).toHaveBeenCalledWith(
-      "Something went wrong.",
-      "error",
-      6000,
-    );
+    expect(emit).toHaveBeenCalledWith("Something went wrong.", "error", 6000);
   });
 
   it("surfaces a specific 403 reason instead of the access generic", () => {

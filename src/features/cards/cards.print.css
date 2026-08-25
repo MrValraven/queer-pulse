@@ -11,12 +11,7 @@
      height that the printer counts pages against, so a single card came out
      on page one and was followed by a second, blank sheet of paper.
      `display: none` takes the boxes away with the pixels. */
-  body
-    *:not(
-      :has([data-print-root]),
-      [data-print-root],
-      [data-print-root] *
-    ) {
+  body *:not(:has([data-print-root]), [data-print-root], [data-print-root] *) {
     display: none !important;
   }
 

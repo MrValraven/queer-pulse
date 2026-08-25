@@ -251,9 +251,15 @@ export function resolvedDtoToView(
 ): ResolvedItemView {
   const severity = dto.severity;
   const chips: ReportChip[] = [
-    { tone: CHIP_TONE[dto.severity], labelKey: "admin:moderation.chip.resolved" },
+    {
+      tone: CHIP_TONE[dto.severity],
+      labelKey: "admin:moderation.chip.resolved",
+    },
   ];
-  const status = { tone: "jade" as AdminTone, key: "admin:moderation.status.logged" };
+  const status = {
+    tone: "jade" as AdminTone,
+    key: "admin:moderation.status.logged",
+  };
   const reasonLabel = t(REASON_LABEL_KEYS[dto.reasonCode]);
   const res = dto.resolution;
   if (!res) {

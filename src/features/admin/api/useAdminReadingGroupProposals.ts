@@ -34,9 +34,8 @@ export function useAdminReadingGroupProposals(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const { ADMIN_READING_GROUP_PROPOSALS } = await import(
-          "../adminReadingGroupProposals.data"
-        );
+        const { ADMIN_READING_GROUP_PROPOSALS } =
+          await import("../adminReadingGroupProposals.data");
         const filtered = formatArg
           ? ADMIN_READING_GROUP_PROPOSALS.filter(
               (proposal) => proposal.format === formatArg,

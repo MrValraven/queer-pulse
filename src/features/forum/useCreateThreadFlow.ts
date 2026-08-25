@@ -15,10 +15,7 @@ import {
   type CreateThreadDto,
   type ForumThreadResponse,
 } from "./api/forum.api";
-import {
-  type NewThreadInput,
-  type PublishStatus,
-} from "./ComposeThreadModal";
+import { type NewThreadInput, type PublishStatus } from "./ComposeThreadModal";
 
 /**
  * Owns the create-thread concern lifted out of `useForumPageState`: the compose

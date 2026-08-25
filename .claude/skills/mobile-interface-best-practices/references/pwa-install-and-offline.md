@@ -22,13 +22,23 @@ detection — don't re-implement these.
 
 ```json
 {
-  "name": "QueerPulse", "short_name": "QueerPulse",
-  "id": "/", "start_url": "/?mode=standalone", "scope": "/",
-  "display": "standalone", "theme_color": "#2d1b3d", "background_color": "#2d1b3d",
+  "name": "QueerPulse",
+  "short_name": "QueerPulse",
+  "id": "/",
+  "start_url": "/?mode=standalone",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#2d1b3d",
+  "background_color": "#2d1b3d",
   "icons": [
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
 ```
@@ -66,12 +76,19 @@ const isStandaloneDisplay =
 serviceWorkerRegistration.addEventListener("updatefound", () => {
   const installingWorker = serviceWorkerRegistration.installing;
   installingWorker?.addEventListener("statechange", () => {
-    if (installingWorker.state === "installed" && navigator.serviceWorker.controller) {
-      showReloadPrompt(() => installingWorker.postMessage({ type: "SKIP_WAITING" }));
+    if (
+      installingWorker.state === "installed" &&
+      navigator.serviceWorker.controller
+    ) {
+      showReloadPrompt(() =>
+        installingWorker.postMessage({ type: "SKIP_WAITING" }),
+      );
     }
   });
 });
-navigator.serviceWorker.addEventListener("controllerchange", () => window.location.reload());
+navigator.serviceWorker.addEventListener("controllerchange", () =>
+  window.location.reload(),
+);
 
 // in sw.ts
 self.addEventListener("message", (messageEvent) => {
@@ -91,8 +108,16 @@ self.addEventListener("message", (messageEvent) => {
 - **Give `theme-color` a light and dark variant via `media`.** _The status bar should track the user's scheme, not stay one fixed tint._
 
 ```html
-<meta name="theme-color" content="#f5f0f7" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#2d1b3d" media="(prefers-color-scheme: dark)" />
+<meta
+  name="theme-color"
+  content="#f5f0f7"
+  media="(prefers-color-scheme: light)"
+/>
+<meta
+  name="theme-color"
+  content="#2d1b3d"
+  media="(prefers-color-scheme: dark)"
+/>
 ```
 
 - **Audit installability with Lighthouse (DevTools → Lighthouse).** _Verifies manifest fields, icons, HTTPS, and SW before you ship a regression._

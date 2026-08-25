@@ -52,7 +52,9 @@ export function useTypingIndicator(activeId: string): TypingState {
       if (existing) window.clearTimeout(existing);
       if (frame.isTyping) {
         setTypingUserIds((previous) =>
-          previous.includes(frame.userId) ? previous : [...previous, frame.userId],
+          previous.includes(frame.userId)
+            ? previous
+            : [...previous, frame.userId],
         );
         timers.set(
           frame.userId,

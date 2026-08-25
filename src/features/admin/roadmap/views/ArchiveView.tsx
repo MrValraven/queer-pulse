@@ -77,7 +77,10 @@ function ArchiveRow({ item }: { item: AdminRoadmapItemDTO }) {
     deleteItem(item.id, {
       onSuccess: () => {
         setConfirmingDelete(false);
-        showToast(t("admin:roadmap.toasts.deleted", { name: item.name }), "info");
+        showToast(
+          t("admin:roadmap.toasts.deleted", { name: item.name }),
+          "info",
+        );
       },
       onError: (error) => {
         setConfirmingDelete(false);
@@ -102,7 +105,9 @@ function ArchiveRow({ item }: { item: AdminRoadmapItemDTO }) {
             {categoryKey ? t(categoryKey) : item.category}
           </AdminCat>
         </div>
-        {item.description && <p className={styles.rowDesc}>{item.description}</p>}
+        {item.description && (
+          <p className={styles.rowDesc}>{item.description}</p>
+        )}
         <div className={styles.rowMeta}>
           <span>
             {item.votes} {t("admin:roadmap.archiveView.votesLabel")}
@@ -143,7 +148,11 @@ function ArchiveRow({ item }: { item: AdminRoadmapItemDTO }) {
               >
                 {t("admin:common.cancel")}
               </Button>
-              <Button variant="danger" disabled={pending} onClick={handleDelete}>
+              <Button
+                variant="danger"
+                disabled={pending}
+                onClick={handleDelete}
+              >
                 {t("admin:roadmap.archiveView.deleteForGoodCta")}
               </Button>
             </>

@@ -35,7 +35,10 @@ export interface WorkshopsContextValue {
    * Edit a workshop you host. Resolves the updated workshop, or `null` when the
    * write failed — callers must not show a success state on `null`.
    */
-  updateWorkshop: (id: string, draft: WorkshopDraft) => Promise<Workshop | null>;
+  updateWorkshop: (
+    id: string,
+    draft: WorkshopDraft,
+  ) => Promise<Workshop | null>;
   /** Delete a workshop you host. Resolves false when the write failed. */
   deleteWorkshop: (id: string) => Promise<boolean>;
 }

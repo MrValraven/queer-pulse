@@ -19,7 +19,8 @@ export function zonedWallTimeToUtc(
       minute: "2-digit",
       second: "2-digit",
     }).formatToParts(new Date(guess));
-    const get = (type: string) => Number(parts.find((p) => p.type === type)?.value);
+    const get = (type: string) =>
+      Number(parts.find((p) => p.type === type)?.value);
     // Reconstruct the UTC millis those formatted wall-clock parts would represent,
     // then correct the guess by the delta. One pass only — doesn't resolve
     // DST-ambiguous/skipped hours (e.g. the repeated or missing hour at a DST changeover).

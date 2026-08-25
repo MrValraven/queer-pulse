@@ -67,7 +67,9 @@ export function AdminCommunityGrid({
     return (
       <>
         {header}
-        <p className={styles.loadError}>{t("admin:communities.grid.loadError")}</p>
+        <p className={styles.loadError}>
+          {t("admin:communities.grid.loadError")}
+        </p>
       </>
     );
   }
@@ -119,7 +121,11 @@ function HealthCard({
   return (
     <button type="button" className={styles.card} onClick={onOpen}>
       <div className={styles.cardHead}>
-        <AdminAvatar initials={community.initials} tone={community.tone} size="md" />
+        <AdminAvatar
+          initials={community.initials}
+          tone={community.tone}
+          size="md"
+        />
         <div className={styles.cardMeta}>
           <div className={styles.cardName}>{community.name}</div>
           <div className={styles.cardTag}>
@@ -221,7 +227,8 @@ function Sparkline({ points, color }: { points: number[]; color: string }) {
     (pointIndex * (SPARK_WIDTH - SPARK_PADDING * 2)) / (pointCount - 1);
   const pointY = (value: number) =>
     SPARK_PADDING +
-    (SPARK_HEIGHT - SPARK_PADDING * 2) * (1 - (value - minimumValue) / valueSpan);
+    (SPARK_HEIGHT - SPARK_PADDING * 2) *
+      (1 - (value - minimumValue) / valueSpan);
 
   const coordinates = points.map((value, pointIndex): [number, number] => [
     pointX(pointIndex),

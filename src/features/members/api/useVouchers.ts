@@ -92,7 +92,8 @@ export function useVouchers(slug: string | undefined) {
       }
       const res = await getVouchers(slug);
       return res.vouchers.map((v) => {
-        const relationships = (v as VoucherDTOWithRelationships).relationships ?? [];
+        const relationships =
+          (v as VoucherDTOWithRelationships).relationships ?? [];
         // Anonymous vouchers come back shielded (empty slug/name). Render a
         // generic, un-linked face instead of a broken link to `/members/`.
         if (v.anonymous) {

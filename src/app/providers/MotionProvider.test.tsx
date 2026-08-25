@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { MotionProvider, useMotionPrefs } from "./MotionProvider";
+import { MotionProvider } from "./MotionProvider";
+import { useMotionPrefs } from "./motionPrefs";
 
 /** Stub matchMedia so only the listed queries match. */
 function stubMatchMedia(matchingQueries: string[]) {

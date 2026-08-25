@@ -55,7 +55,9 @@ export function SubprofileSwitchRow({
   // "kind · tagline" — the aka-card secondary line. Falls back to the kind
   // alone when the persona has no tagline set.
   const kindLabel = t(KIND_LABEL_KEYS[persona.kind]);
-  const secondary = persona.tagline ? `${kindLabel} · ${persona.tagline}` : kindLabel;
+  const secondary = persona.tagline
+    ? `${kindLabel} · ${persona.tagline}`
+    : kindLabel;
 
   const rowContent = (
     <>
@@ -65,7 +67,10 @@ export function SubprofileSwitchRow({
           owner badges and the trailing active-state/chevron indicators stay
           row-local siblings around it. */}
       <MemberIdentity
-        person={{ name: persona.displayName, avatarUrl: persona.avatarUrl ?? undefined }}
+        person={{
+          name: persona.displayName,
+          avatarUrl: persona.avatarUrl ?? undefined,
+        }}
         tint="plum"
         size={38}
         secondary={secondary}
@@ -77,7 +82,11 @@ export function SubprofileSwitchRow({
         className={styles.rowBadges}
       />
       <span className={styles.rowTrailing}>
-        <span className={styles.rowActive} data-active={isSelected} aria-hidden />
+        <span
+          className={styles.rowActive}
+          data-active={isSelected}
+          aria-hidden
+        />
         <FiChevronRight className={styles.rowChevron} aria-hidden />
       </span>
     </>
@@ -90,13 +99,17 @@ export function SubprofileSwitchRow({
       type="button"
       role="tab"
       id={tabId(persona.slug)}
-      className={isEntering ? `${styles.row} ${styles.rowEntering}` : styles.row}
+      className={
+        isEntering ? `${styles.row} ${styles.rowEntering}` : styles.row
+      }
       aria-selected={isSelected}
       aria-controls={heroId}
       tabIndex={isSelected ? 0 : -1}
       style={{
         ...accentStyle(accent),
-        ...(isEntering ? { ["--row-fade-delay" as string]: `${staggerDelay}ms` } : {}),
+        ...(isEntering
+          ? { ["--row-fade-delay" as string]: `${staggerDelay}ms` }
+          : {}),
       }}
       onClick={() => onSelect(persona.slug)}
     >

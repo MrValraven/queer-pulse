@@ -3,11 +3,12 @@ import { Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { CoHostInvitePage } from "./CoHostInvitePage";
+import type { CohostInviteDetailDTO } from "./api/events.api";
 
 const { mutate, queryState } = vi.hoisted(() => ({
   mutate: vi.fn(),
   queryState: {
-    data: undefined as unknown,
+    data: undefined as CohostInviteDetailDTO | undefined,
     isPending: false,
     isError: false,
   },
@@ -58,7 +59,9 @@ afterEach(() => {
 
 function renderPage() {
   render(
-    <TestProviders initialEntries={["/gatherings/pride-picnic/co-host-invite/inv-1"]}>
+    <TestProviders
+      initialEntries={["/gatherings/pride-picnic/co-host-invite/inv-1"]}
+    >
       <Routes>
         <Route
           path="/gatherings/:slug/co-host-invite/:inviteId"

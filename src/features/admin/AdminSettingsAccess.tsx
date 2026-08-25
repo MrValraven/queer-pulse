@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  useUpdatePlatformSettings,
-} from "./api/usePlatformSettings";
+import { useUpdatePlatformSettings } from "./api/usePlatformSettings";
 import type {
   PlatformSettingsDTO,
   UpdatePlatformSettingsInput,
@@ -59,7 +57,9 @@ export function AdminSettingsAccess({
     announcementExpiresAt,
     setAnnouncementExpiresAt,
     lastSeededAnnouncementExpiresAt,
-  ] = useSeededDraft(isoToDatetimeLocalValue(settings?.announcementExpiresAt ?? null));
+  ] = useSeededDraft(
+    isoToDatetimeLocalValue(settings?.announcementExpiresAt ?? null),
+  );
   // A single optional note, attached to whichever change is saved next, then
   // cleared — it explains that one change, not a running log for the tab.
   const [note, setNote] = useState("");

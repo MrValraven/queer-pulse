@@ -24,9 +24,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
  *  - `emergency_report` — a single severe report tripped an immediate pause.
  *  - `report_pileup` — enough reports arrived at once to trip a pause. */
 export type CommunityFrozenReason =
-  | "manual"
-  | "emergency_report"
-  | "report_pileup";
+  "manual" | "emergency_report" | "report_pileup";
 
 interface FrozenDetailResponse {
   frozenAt?: string | null;

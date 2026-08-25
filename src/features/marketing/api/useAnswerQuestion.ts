@@ -25,39 +25,41 @@ export function useAnswerQuestion(ref: string, slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  return useMutation<ListingPublicQuestion | null, Error, AnswerQuestionVariables>(
-    {
-      // The answer composer toasts its own error, so silence the duplicate.
-      meta: { silentError: true },
-      mutationFn: async ({ questionId, answer }) => {
-        if (demoMode) return null;
-        return answerListingQuestion(ref, questionId, answer);
-      },
-      onSuccess: (updated, variables) => {
-        queryClient.setQueriesData<DirectoryPlace | undefined>(
-          { queryKey: [DIRECTORY_KEY, "detail", slug] },
-          (place) => {
-            if (!place?.questions) return place;
-            return {
-              ...place,
-              questions: place.questions.map((question) => {
-                if (question.id !== variables.questionId) return question;
-                if (updated) return updated;
-                return {
-                  ...question,
-                  answer: variables.answer,
-                  answeredAt: new Date().toISOString(),
-                  answeredByRole: "owner" as const,
-                };
-              }),
-            };
-          },
-        );
-        if (demoMode) return;
-        void queryClient.invalidateQueries({
-          queryKey: [DIRECTORY_KEY, DIRECTORY_QUESTIONS_KEY, slug],
-        });
-      },
+  return useMutation<
+    ListingPublicQuestion | null,
+    Error,
+    AnswerQuestionVariables
+  >({
+    // The answer composer toasts its own error, so silence the duplicate.
+    meta: { silentError: true },
+    mutationFn: async ({ questionId, answer }) => {
+      if (demoMode) return null;
+      return answerListingQuestion(ref, questionId, answer);
     },
-  );
+    onSuccess: (updated, variables) => {
+      queryClient.setQueriesData<DirectoryPlace | undefined>(
+        { queryKey: [DIRECTORY_KEY, "detail", slug] },
+        (place) => {
+          if (!place?.questions) return place;
+          return {
+            ...place,
+            questions: place.questions.map((question) => {
+              if (question.id !== variables.questionId) return question;
+              if (updated) return updated;
+              return {
+                ...question,
+                answer: variables.answer,
+                answeredAt: new Date().toISOString(),
+                answeredByRole: "owner" as const,
+              };
+            }),
+          };
+        },
+      );
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: [DIRECTORY_KEY, DIRECTORY_QUESTIONS_KEY, slug],
+      });
+    },
+  });
 }

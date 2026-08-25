@@ -59,7 +59,9 @@ export function ApplyToWritePage() {
                 <p>{t("magazine:applyToWrite.intro.lead")}</p>
               </div>
               <div className={styles.editorGrid}>
-                <WriterApplicationForm onSubmitted={() => setReapplying(false)} />
+                <WriterApplicationForm
+                  onSubmitted={() => setReapplying(false)}
+                />
               </div>
             </>
           )}

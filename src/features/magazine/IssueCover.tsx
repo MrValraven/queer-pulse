@@ -117,7 +117,9 @@ export function IssueCover({
               radius={18}
               src={ISSUE_COVER_IMG}
               alt={t("magazine:issue.coverAlt", { number: number ?? "" })}
-              placeholder={t("magazine:issue.coverAlt", { number: number ?? "" })}
+              placeholder={t("magazine:issue.coverAlt", {
+                number: number ?? "",
+              })}
               style={{ aspectRatio: "3/4", height: "auto" }}
               loading="eager"
               fetchPriority="high"
@@ -134,6 +136,7 @@ export function IssueCover({
             <div className={styles.letterEyebrow}>
               {t("magazine:issue.letterEyebrow")}
             </div>
+            {/* eslint-disable local/no-literal-string -- editor's letter: an authored demo-only essay and its byline, no backend analogue (see comment above) */}
             <h2>
               The body is <em>a political object.</em> So is the appointment.
             </h2>
@@ -160,6 +163,7 @@ export function IssueCover({
                 </div>
               </div>
             </div>
+            {/* eslint-enable local/no-literal-string */}
           </div>
         </section>
       )}

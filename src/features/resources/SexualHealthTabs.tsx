@@ -195,13 +195,11 @@ export function HivTab() {
             {c.link &&
               (c.link.external ? (
                 <a href={c.link.href} className={styles.infoLink}>
-                  {c.link.label}{" "}
-                  <FiArrowRight aria-hidden />
+                  {c.link.label} <FiArrowRight aria-hidden />
                 </a>
               ) : (
                 <Link to={c.link.href} className={styles.infoLink}>
-                  {c.link.label}{" "}
-                  <FiArrowRight aria-hidden />
+                  {c.link.label} <FiArrowRight aria-hidden />
                 </Link>
               ))}
           </div>
@@ -248,54 +246,54 @@ export function GuidesTab() {
           <p>{t("resources:sexualHealth.guides.ask.liveBody")}</p>
         </div>
       ) : (
-      <div className={styles.anonBox}>
-        {asked ? (
-          <div className={styles.anonDone}>
-            <span className={styles.anonDoneIcon} aria-hidden>
-              <FiCheck />
-            </span>
-            <div className={styles.anonDoneTitle}>
-              <Translation
-                i18nKey="resources:sexualHealth.guides.ask.doneTitle"
-                components={{ em: <em /> }}
-              />
-            </div>
-            <p className={styles.anonDoneBody}>
-              {t("resources:sexualHealth.guides.ask.doneBody")}
-            </p>
-            <Button variant="ghost-dark" onClick={() => setAsked(false)}>
-              {t("resources:sexualHealth.guides.ask.anotherCta")}
-            </Button>
-          </div>
-        ) : (
-          <>
-            <h3>{t("resources:sexualHealth.guides.ask.title")}</h3>
-            <p>{t("resources:sexualHealth.guides.ask.body")}</p>
-            <textarea
-              className={styles.anonInput}
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder={t("resources:sexualHealth.guides.ask.placeholder")}
-              aria-label={t("resources:sexualHealth.guides.ask.placeholder")}
-            />
-            <div className={styles.anonFoot}>
-              <span className={styles.anonNote}>
-                {t("resources:sexualHealth.guides.ask.anonymousNote")}
+        <div className={styles.anonBox}>
+          {asked ? (
+            <div className={styles.anonDone}>
+              <span className={styles.anonDoneIcon} aria-hidden>
+                <FiCheck />
               </span>
-              <Button
-                variant="primary"
-                disabled={question.trim().length < 5}
-                onClick={() => {
-                  setQuestion("");
-                  setAsked(true);
-                }}
-              >
-                {t("resources:sexualHealth.guides.ask.submitCta")}
+              <div className={styles.anonDoneTitle}>
+                <Translation
+                  i18nKey="resources:sexualHealth.guides.ask.doneTitle"
+                  components={{ em: <em /> }}
+                />
+              </div>
+              <p className={styles.anonDoneBody}>
+                {t("resources:sexualHealth.guides.ask.doneBody")}
+              </p>
+              <Button variant="ghost-dark" onClick={() => setAsked(false)}>
+                {t("resources:sexualHealth.guides.ask.anotherCta")}
               </Button>
             </div>
-          </>
-        )}
-      </div>
+          ) : (
+            <>
+              <h3>{t("resources:sexualHealth.guides.ask.title")}</h3>
+              <p>{t("resources:sexualHealth.guides.ask.body")}</p>
+              <textarea
+                className={styles.anonInput}
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder={t("resources:sexualHealth.guides.ask.placeholder")}
+                aria-label={t("resources:sexualHealth.guides.ask.placeholder")}
+              />
+              <div className={styles.anonFoot}>
+                <span className={styles.anonNote}>
+                  {t("resources:sexualHealth.guides.ask.anonymousNote")}
+                </span>
+                <Button
+                  variant="primary"
+                  disabled={question.trim().length < 5}
+                  onClick={() => {
+                    setQuestion("");
+                    setAsked(true);
+                  }}
+                >
+                  {t("resources:sexualHealth.guides.ask.submitCta")}
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       )}
     </>
   );

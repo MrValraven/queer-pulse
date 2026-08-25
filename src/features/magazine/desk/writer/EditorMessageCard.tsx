@@ -19,31 +19,45 @@ export interface EditorMessageCardProps {
  * used to be static copy. Same active-assignment source
  * `AgreedTermsCard`/`BylineSafetyCard` already use in this rail.
  */
-export function EditorMessageCard({ assignment, onOpenThread }: EditorMessageCardProps) {
+export function EditorMessageCard({
+  assignment,
+  onOpenThread,
+}: EditorMessageCardProps) {
   const { t } = useTranslation();
   const formatters = useFormat();
   const current = assignment;
   const { messages, isLoading } = usePieceMessages(current?.id ?? "", "writer");
-  const latestFromEditor = [...messages].reverse().find((message) => !message.fromMe);
+  const latestFromEditor = [...messages]
+    .reverse()
+    .find((message) => !message.fromMe);
 
   return (
     <div className={pieceStyles.card}>
       <h3>{t("magazine:writer.editorMessage.heading")}</h3>
       {!current ? (
-        <p className={pieceStyles.tiny}>{t("magazine:writer.editorMessage.emptyState")}</p>
+        <p className={pieceStyles.tiny}>
+          {t("magazine:writer.editorMessage.emptyState")}
+        </p>
       ) : isLoading ? (
-        <p className={pieceStyles.tiny}>{t("magazine:writer.editorMessage.loading")}</p>
+        <p className={pieceStyles.tiny}>
+          {t("magazine:writer.editorMessage.loading")}
+        </p>
       ) : latestFromEditor ? (
         <>
           <p className={pieceStyles.tiny}>
-            {t("magazine:writer.editorMessage.fromLabel", { name: latestFromEditor.author })}
+            {t("magazine:writer.editorMessage.fromLabel", {
+              name: latestFromEditor.author,
+            })}
             {" · "}
-            {formatRelative(latestFromEditor.createdAt, formatters) || latestFromEditor.createdAt}
+            {formatRelative(latestFromEditor.createdAt, formatters) ||
+              latestFromEditor.createdAt}
           </p>
           <div className={pieceStyles.note}>{latestFromEditor.body}</div>
         </>
       ) : (
-        <p className={pieceStyles.tiny}>{t("magazine:writer.editorMessage.noMessagesYet")}</p>
+        <p className={pieceStyles.tiny}>
+          {t("magazine:writer.editorMessage.noMessagesYet")}
+        </p>
       )}
       {current && (
         <Button size="sm" variant="ghost" onClick={() => onOpenThread(current)}>

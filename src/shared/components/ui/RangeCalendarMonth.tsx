@@ -49,7 +49,8 @@ export function RangeCalendarMonth({
   className,
 }: RangeCalendarMonthProps) {
   const { t } = useTranslation();
-  const gridLabelledBy = [labelledBy, captionId].filter(Boolean).join(" ") || undefined;
+  const gridLabelledBy =
+    [labelledBy, captionId].filter(Boolean).join(" ") || undefined;
   const cellElements = useRef(new Map<string, HTMLButtonElement>());
   const hasMountedRef = useRef(false);
   // Set by the header's month/year dropdown handlers right before calling
@@ -113,7 +114,11 @@ export function RangeCalendarMonth({
         <thead>
           <tr>
             {weekdayLabels.map((weekday) => (
-              <th key={weekday.dayOfWeek} scope="col" className={styles.weekdayHeader}>
+              <th
+                key={weekday.dayOfWeek}
+                scope="col"
+                className={styles.weekdayHeader}
+              >
                 <abbr title={weekday.full}>{weekday.short}</abbr>
               </th>
             ))}
@@ -126,7 +131,13 @@ export function RangeCalendarMonth({
                 const iso = formatIsoDate(date);
                 const isDisabled = state.isDisabled(date);
                 const isToday = state.isToday(date);
-                const cellState = classifyRangeCell(date, start, end, anchor, hovered);
+                const cellState = classifyRangeCell(
+                  date,
+                  start,
+                  end,
+                  anchor,
+                  hovered,
+                );
                 const fullDate = new Intl.DateTimeFormat(locale, {
                   weekday: "long",
                   day: "numeric",
@@ -145,14 +156,18 @@ export function RangeCalendarMonth({
                   <td
                     key={iso}
                     role="gridcell"
-                    aria-selected={cellState.isRangeStart || cellState.isRangeEnd}
+                    aria-selected={
+                      cellState.isRangeStart || cellState.isRangeEnd
+                    }
                     aria-disabled={isDisabled}
                     className={styles.cell}
                   >
                     <button
                       ref={(element) => registerCellRef(iso, element)}
                       type="button"
-                      tabIndex={iso === formatIsoDate(state.focusedDate) ? 0 : -1}
+                      tabIndex={
+                        iso === formatIsoDate(state.focusedDate) ? 0 : -1
+                      }
                       aria-current={isToday ? "date" : undefined}
                       aria-label={richLabel}
                       disabled={isDisabled}

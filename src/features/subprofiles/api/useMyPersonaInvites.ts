@@ -48,7 +48,8 @@ export function useMyPersonaInvites() {
     retry: false,
     queryFn: async ({ signal }) => {
       if (demoMode) {
-        const { mockMyPersonaInvites } = await import("../data/subprofiles.data");
+        const { mockMyPersonaInvites } =
+          await import("../data/subprofiles.data");
         return mockMyPersonaInvites();
       }
       return listMyPersonaInvites(signal);

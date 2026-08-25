@@ -16,7 +16,10 @@ export interface PublishGateCardProps {
  * sidebar. The Publish action stays disabled while anything below is open —
  * this is a hard gate, not a reminder.
  */
-export function PublishGateCard({ publishGate, onPublish }: PublishGateCardProps) {
+export function PublishGateCard({
+  publishGate,
+  onPublish,
+}: PublishGateCardProps) {
   const { t } = useTranslation();
   const hasOpenItems = publishGate.some((item) => !item.done);
 
@@ -25,7 +28,10 @@ export function PublishGateCard({ publishGate, onPublish }: PublishGateCardProps
       <h3>{t("magazine:piece.gate.heading")}</h3>
       <div className={styles.stack}>
         {publishGate.map((item) => (
-          <div key={item.label} className={cx(styles.gaterow, !item.done && styles.open)}>
+          <div
+            key={item.label}
+            className={cx(styles.gaterow, !item.done && styles.open)}
+          >
             {item.done ? (
               <FiCheck className={styles.doneIcon} aria-hidden />
             ) : (

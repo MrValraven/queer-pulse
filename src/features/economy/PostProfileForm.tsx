@@ -51,8 +51,7 @@ export function PostProfileForm({
           disabled={!form.canSubmit || submitting}
           onClick={handleSubmit}
         >
-          {t("economy:postProfileForm.submitCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("economy:postProfileForm.submitCta")} <FiArrowRight aria-hidden />
         </Button>
         <Button type="button" variant="ghost" onClick={onClose}>
           {t("economy:housingModal.cancel")}

@@ -65,8 +65,7 @@ export function CuratorAside({ curator }: { curator: CuratorProfile }) {
           {t("cinema:curator.aside.proposeBody")}
         </div>
         <Button variant="ghost" to={routes.contact} style={{ width: "100%" }}>
-          {t("cinema:curator.aside.proposeCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("cinema:curator.aside.proposeCta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </aside>

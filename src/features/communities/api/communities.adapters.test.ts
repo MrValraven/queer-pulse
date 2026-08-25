@@ -5,9 +5,7 @@ import type { CommunityPostDTO } from "./communities.api";
 
 // The adapters localize their own copy now, so they take a `t`. The stub
 // echoes the key: these assertions are about the post/reply FLAGS, not copy.
-const translate = ((key: string) => key) as unknown as Parameters<
-  typeof postDtoToPost
->[2];
+const translate = ((key: string) => key) as Parameters<typeof postDtoToPost>[2];
 
 function makePost(overrides: Partial<Post> = {}): Post {
   return {

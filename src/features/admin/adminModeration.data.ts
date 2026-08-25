@@ -125,8 +125,7 @@ export type PriorReports =
  * `undefined` for an anonymous or already-erased reporter — there is no
  * identity to attach any track record, "new" or otherwise, to. */
 export type ReporterCredibility =
-  | { kind: "new" }
-  | { kind: "history"; filed: number; dismissed: number };
+  { kind: "new" } | { kind: "history"; filed: number; dismissed: number };
 
 /** Resolves a reporter-credibility line at render, so the plural/wording
  *  follows the language — mirrors `priorReportsText`. */

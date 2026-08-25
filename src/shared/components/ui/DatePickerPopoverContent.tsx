@@ -68,11 +68,15 @@ export function DatePickerPopoverContent({
 }: DatePickerPopoverContentProps) {
   const { t } = useTranslation();
   const hasPresets = !!presets && presets.length > 0;
-  const showToday = !presetHasToday && (mode === "date" || mode === "datetime" || mode === "month");
+  const showToday =
+    !presetHasToday &&
+    (mode === "date" || mode === "datetime" || mode === "month");
 
   return (
     <div className={styles.pickerBody}>
-      {hasPresets && <DatePickerPresets presets={presets} onSelect={onPresetSelect} />}
+      {hasPresets && (
+        <DatePickerPresets presets={presets} onSelect={onPresetSelect} />
+      )}
       {(mode === "date" || mode === "datetime") && (
         <Calendar
           value={datePartOf(mode, value)}
@@ -86,14 +90,30 @@ export function DatePickerPopoverContent({
         />
       )}
       {mode === "month" && (
-        <MonthGridPopover value={value} onSelect={onSelectMonth} min={min} max={max} locale={locale} />
+        <MonthGridPopover
+          value={value}
+          onSelect={onSelectMonth}
+          min={min}
+          max={max}
+          locale={locale}
+        />
       )}
       {mode === "time" && (
-        <DateField mode="time" value={value} onChange={onTimeChange} locale={locale} size={size} />
+        <DateField
+          mode="time"
+          value={value}
+          onChange={onTimeChange}
+          locale={locale}
+          size={size}
+        />
       )}
       {showToday && (
         <div className={styles.pickerFooter}>
-          <button type="button" className={styles.todayButton} onClick={onToday}>
+          <button
+            type="button"
+            className={styles.todayButton}
+            onClick={onToday}
+          >
             {t("shared:calendar.today")}
           </button>
         </div>

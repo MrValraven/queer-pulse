@@ -43,7 +43,9 @@ export function GuidelinesLink({
       >
         {children}
       </span>
-      {open && <GuidelinesModal onClose={() => setOpen(false)} onRead={onRead} />}
+      {open && (
+        <GuidelinesModal onClose={() => setOpen(false)} onRead={onRead} />
+      )}
     </>
   );
 }

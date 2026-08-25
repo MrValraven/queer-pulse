@@ -28,7 +28,10 @@ export function StageStepper({ stage }: StageStepperProps) {
         {DEMO_STAGES.map((stageName, index) => {
           const isActive = currentIndex >= 0 && index <= currentIndex;
           return (
-            <div key={stageName} className={cx(styles.step, isActive && styles.stepOn)}>
+            <div
+              key={stageName}
+              className={cx(styles.step, isActive && styles.stepOn)}
+            >
               <span className={styles.dot} />
               {stageName}
             </div>

@@ -113,7 +113,11 @@ function MessageBubbleImpl({
     const rect = node.getBoundingClientRect();
     onOpenActions?.(
       message,
-      { rect, source: "pointer", point: { x: isSent ? rect.right : rect.left, y: rect.top } },
+      {
+        rect,
+        source: "pointer",
+        point: { x: isSent ? rect.right : rect.left, y: rect.top },
+      },
       isSent,
     );
   }
@@ -180,7 +184,10 @@ function MessageBubbleImpl({
     <div
       id={bubbleDomId}
       ref={wrapRef}
-      className={[styles.bubbleWrap, gestures.swiping && styles.bubbleWrapSwiping]
+      className={[
+        styles.bubbleWrap,
+        gestures.swiping && styles.bubbleWrapSwiping,
+      ]
         .filter(Boolean)
         .join(" ")}
       {...gestures.handlers}
@@ -205,7 +212,10 @@ function MessageBubbleImpl({
         playEntrance={playEntrance}
       />
       {message.editedAt && !message.deletedAt && (
-        <span className={styles.editedMarker}> · {t("messages:actions.edited")}</span>
+        <span className={styles.editedMarker}>
+          {" "}
+          · {t("messages:actions.edited")}
+        </span>
       )}
       {!message.deletedAt && (
         <MessageMarks pinned={!!message.pinnedAt} starred={!!message.starred} />
@@ -224,7 +234,11 @@ function MessageBubbleImpl({
             // Actual prior state, not a hardcoded `false` — otherwise
             // re-picking a reaction you already have "adds" it again instead
             // of toggling it off.
-            onReactionToggle?.(message, reactionKey, findReactionMine(reactions, reactionKey))
+            onReactionToggle?.(
+              message,
+              reactionKey,
+              findReactionMine(reactions, reactionKey),
+            )
           }
           // Same gate as swipe-to-reply: only a server-acked, non-deleted
           // message can be quoted, so the button hides until then.

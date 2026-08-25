@@ -6,7 +6,10 @@ import {
   type ArticleVersionDetailDto,
   type ArticleVersionSummaryDto,
 } from "./pieces.api";
-import { DEMO_ARTICLE_VERSION_DETAILS, DEMO_ARTICLE_VERSIONS } from "../data/articleDraft.data";
+import {
+  DEMO_ARTICLE_VERSION_DETAILS,
+  DEMO_ARTICLE_VERSIONS,
+} from "../data/articleDraft.data";
 
 /** Shared by `useArticleVersions` and `useVersionMutations` so the list query
  *  and its cache invalidation always agree on the exact key. */

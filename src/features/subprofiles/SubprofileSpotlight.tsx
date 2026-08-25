@@ -89,7 +89,10 @@ export function SubprofileSpotlight({
                 );
               }
               return (
-                <Link key={collaborator.handle} to={collaboratorHref(collaborator)}>
+                <Link
+                  key={collaborator.handle}
+                  to={collaboratorHref(collaborator)}
+                >
                   {collaboratorContent}
                 </Link>
               );
@@ -97,8 +100,8 @@ export function SubprofileSpotlight({
           </div>
         )}
 
-        {spotlightHref && (
-          interactive ? (
+        {spotlightHref &&
+          (interactive ? (
             <Button
               variant="primary"
               size="md"
@@ -112,8 +115,7 @@ export function SubprofileSpotlight({
             <Button type="button" variant="primary" size="md" disabled>
               {t("subprofiles:spotlight.open")} <FiExternalLink aria-hidden />
             </Button>
-          )
-        )}
+          ))}
 
         <SubprofileSocialRow
           links={item.structured?.links ?? []}

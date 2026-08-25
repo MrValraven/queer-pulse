@@ -22,9 +22,10 @@ export function SubmitStoryCover({
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadCover = useUploadImage("story-cover");
-  const [cover, setCover] = useState<{ previewUrl: string; name: string } | null>(
-    null,
-  );
+  const [cover, setCover] = useState<{
+    previewUrl: string;
+    name: string;
+  } | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);

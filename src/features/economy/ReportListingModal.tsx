@@ -117,7 +117,9 @@ export function ReportListingModal({
           </p>
 
           <div className={shell.field}>
-            <label>{t("economy:housingListing.reportModal.concernLabel")}</label>
+            <label>
+              {t("economy:housingListing.reportModal.concernLabel")}
+            </label>
             <div className={styles.reasons}>
               {reasons.map((option) => (
                 <label

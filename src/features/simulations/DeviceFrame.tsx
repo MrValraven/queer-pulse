@@ -29,7 +29,12 @@ interface LoadState {
  *  iframe is always tagged data-sandbox="1" so the booted app instance forces
  *  offline demo mode (see shared/sandbox/sandbox.ts). Shows a loading overlay
  *  until the iframe fires onLoad, or an error message if it fires onError. */
-export function DeviceFrame({ src, title, device, onEscape }: DeviceFrameProps) {
+export function DeviceFrame({
+  src,
+  title,
+  device,
+  onEscape,
+}: DeviceFrameProps) {
   const { t } = useTranslation();
   const [loadState, setLoadState] = useState<LoadState | null>(null);
   const frameKey = `${device}:${src}`;
@@ -93,7 +98,9 @@ export function DeviceFrame({ src, title, device, onEscape }: DeviceFrameProps) 
           .join(" ")}
       >
         {status === "loading" && (
-          <div className={styles.overlay}>{t("simulations:player.loading")}</div>
+          <div className={styles.overlay}>
+            {t("simulations:player.loading")}
+          </div>
         )}
         {status === "error" && (
           <div className={styles.overlay}>

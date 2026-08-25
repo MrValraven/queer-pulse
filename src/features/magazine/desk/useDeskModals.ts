@@ -35,7 +35,9 @@ export function useDeskModals({
   const [contextId, setContextId] = useState<string | null>(null);
   // The commissioning pitch's `suggest` hint (e.g. "deck"), so submitCommission
   // can default the new piece's format to match instead of always "article".
-  const [sourcePitchFormat, setSourcePitchFormat] = useState<"deck" | undefined>(undefined);
+  const [sourcePitchFormat, setSourcePitchFormat] = useState<
+    "deck" | undefined
+  >(undefined);
 
   function close(): void {
     setModal(null);
@@ -53,7 +55,10 @@ export function useDeskModals({
     setSourcePitchFormat(undefined);
   }
   function openCommissionFromPitch(pitch: Pitch): void {
-    setModal({ kind: "commission", pitch: { title: pitch.title, byline: pitch.byline, note: pitch.note } });
+    setModal({
+      kind: "commission",
+      pitch: { title: pitch.title, byline: pitch.byline, note: pitch.note },
+    });
     setContextId(pitch.id);
     setSourcePitchFormat(pitch.suggest === "deck" ? "deck" : undefined);
   }
@@ -64,7 +69,10 @@ export function useDeskModals({
   function openChase(piece: Piece): void {
     // `id` rides on `modal.piece` itself here (see `DeskModal`'s doc comment)
     // so `ChaseModal` can open the real `PieceThread` for it directly.
-    setModal({ kind: "chase", piece: { id: piece.id, title: piece.title, byline: piece.byline } });
+    setModal({
+      kind: "chase",
+      piece: { id: piece.id, title: piece.title, byline: piece.byline },
+    });
     setContextId(piece.id);
   }
   function openHandoff(piece: Piece): void {
@@ -81,7 +89,10 @@ export function useDeskModals({
     // (and thus `activeMe`) hasn't resolved yet rather than firing a request the
     // backend rejects with "editorId must be a UUID".
     if (!activeMe) {
-      showToast("Still loading your editor profile. Try again in a moment.", "error");
+      showToast(
+        "Still loading your editor profile. Try again in a moment.",
+        "error",
+      );
       return;
     }
     if (modal?.kind === "commission" && modal.pitch && contextId) {
@@ -97,12 +108,14 @@ export function useDeskModals({
       });
       return;
     }
-    const pitchTitle = modal?.kind === "commission" ? modal.pitch?.title : undefined;
+    const pitchTitle =
+      modal?.kind === "commission" ? modal.pitch?.title : undefined;
     // The commission form has no title field (Task 22) — fall back to the
     // sourcing pitch's title, then the angle text, then a generic label.
     pieceMutations.commission.mutate({
       format: sourcePitchFormat ?? "article",
-      title: pitchTitle ?? (payload.angle.trim().slice(0, 120) || "Untitled piece"),
+      title:
+        pitchTitle ?? (payload.angle.trim().slice(0, 120) || "Untitled piece"),
       section: payload.section,
       editorId: activeMe,
       dueOn: payload.dueDate || undefined,
@@ -110,13 +123,19 @@ export function useDeskModals({
       // Issue-track commissions bind to the current issue; highlights stay
       // standalone (`issueId` omitted → null). Guard the id so an "issue"
       // choice can never send an empty string the backend would reject.
-      issueId: payload.track === "issue" && currentIssueId ? currentIssueId : undefined,
+      issueId:
+        payload.track === "issue" && currentIssueId
+          ? currentIssueId
+          : undefined,
     });
   }
 
   function submitPass(payload: PassPayload): void {
     if (contextId) {
-      pitchMutations.triage.mutate({ id: contextId, body: { verdict: "pass", passNote: payload.body } });
+      pitchMutations.triage.mutate({
+        id: contextId,
+        body: { verdict: "pass", passNote: payload.body },
+      });
     }
   }
 

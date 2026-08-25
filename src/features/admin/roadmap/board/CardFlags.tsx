@@ -16,10 +16,16 @@ interface FlagDef {
 function activeFlags(item: AdminRoadmapItemDTO): FlagDef[] {
   const flags: FlagDef[] = [];
   if (item.requested) {
-    flags.push({ kind: "requested", labelKey: "admin:roadmap.board.flag.requested" });
+    flags.push({
+      kind: "requested",
+      labelKey: "admin:roadmap.board.flag.requested",
+    });
   }
   if (item.committed) {
-    flags.push({ kind: "committed", labelKey: "admin:roadmap.board.flag.committed" });
+    flags.push({
+      kind: "committed",
+      labelKey: "admin:roadmap.board.flag.committed",
+    });
   }
   if (!item.isPublic) {
     flags.push({ kind: "hidden", labelKey: "admin:roadmap.board.flag.hidden" });
@@ -32,7 +38,11 @@ function activeFlags(item: AdminRoadmapItemDTO): FlagDef[] {
     });
   }
   if (item.spikeFlag) {
-    flags.push({ kind: "spike", labelKey: "admin:roadmap.board.flag.spike", warn: true });
+    flags.push({
+      kind: "spike",
+      labelKey: "admin:roadmap.board.flag.spike",
+      warn: true,
+    });
   }
   if (item.slips.length > 0) {
     flags.push({

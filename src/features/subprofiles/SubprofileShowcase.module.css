@@ -523,7 +523,8 @@ a.featuredStripLink:focus-visible {
 .row[aria-selected="true"] {
   border-color: color-mix(in srgb, var(--accent-tint) 60%, transparent);
   background: color-mix(in srgb, var(--accent-tint) 9%, var(--paper));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-tint) 45%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--accent-tint) 45%, transparent);
 }
 .row:focus-visible {
   outline: 2px solid var(--accent);
@@ -735,7 +736,8 @@ a.featuredStripLink:focus-visible {
 .mobileRow[data-expanded="true"] .mobileSummary {
   border-color: color-mix(in srgb, var(--accent-tint) 60%, transparent);
   background: color-mix(in srgb, var(--accent-tint) 9%, var(--paper));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-tint) 45%, transparent);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--accent-tint) 45%, transparent);
 }
 .mobileSummary:focus-visible {
   outline: 2px solid var(--accent);

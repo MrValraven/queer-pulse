@@ -157,7 +157,11 @@ function SingleDatePicker({
   useOutsideDismiss(open && !isMobile, containerRef, close);
 
   const chooseKey =
-    mode === "time" ? "chooseTime" : mode === "month" ? "chooseMonth" : "chooseDate";
+    mode === "time"
+      ? "chooseTime"
+      : mode === "month"
+        ? "chooseMonth"
+        : "chooseDate";
   const triggerLabel = t(`shared:calendar.${chooseKey}`);
   const TriggerIcon = mode === "time" ? FiClock : FiCalendar;
 
@@ -202,8 +206,12 @@ function SingleDatePicker({
   // passed" — a `[tomorrow, nextWeek]` preset list must not remove Today).
   // `mode="time"` has no today ISO shape; `DatePickerPopoverContent` never
   // shows Today for it regardless, so the comparison there is moot.
-  const todayIsoValue = mode === "month" ? formatIsoMonth(todayPlain()) : formatIsoDate(todayPlain());
-  const presetHasToday = presets?.some((preset) => preset.value === todayIsoValue) ?? false;
+  const todayIsoValue =
+    mode === "month"
+      ? formatIsoMonth(todayPlain())
+      : formatIsoDate(todayPlain());
+  const presetHasToday =
+    presets?.some((preset) => preset.value === todayIsoValue) ?? false;
 
   const canClear = clearable && value != null && !disabled;
 

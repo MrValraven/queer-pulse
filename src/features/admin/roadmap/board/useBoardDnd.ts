@@ -3,8 +3,11 @@ import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { describeError } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
-import type { AdminRoadmapItemDTO, RoadmapColumn } from "../../api/roadmapAdmin.types";
-import { useItemDrawer } from "../state/useItemDrawer";
+import type {
+  AdminRoadmapItemDTO,
+  RoadmapColumn,
+} from "../../api/roadmapAdmin.types";
+import { useItemDrawer } from "../state/itemDrawerHook";
 import { useRoadmapShortcuts } from "../state/useRoadmapShortcuts";
 
 export interface BoardDropTarget {
@@ -39,7 +42,9 @@ export interface ColumnDropProps {
  * that to "end of column" when the pointer isn't over any card — it never
  * overwrites an index a card handler just set for the same column.
  */
-export function useBoardDnd(columns: Record<RoadmapColumn, AdminRoadmapItemDTO[]>) {
+export function useBoardDnd(
+  columns: Record<RoadmapColumn, AdminRoadmapItemDTO[]>,
+) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const itemDrawer = useItemDrawer();
@@ -51,7 +56,9 @@ export function useBoardDnd(columns: Record<RoadmapColumn, AdminRoadmapItemDTO[]
 
   const flatOrder = useMemo(
     () =>
-      (Object.keys(columns) as RoadmapColumn[]).flatMap((column) => columns[column]),
+      (Object.keys(columns) as RoadmapColumn[]).flatMap(
+        (column) => columns[column],
+      ),
     [columns],
   );
 
@@ -90,7 +97,9 @@ export function useBoardDnd(columns: Record<RoadmapColumn, AdminRoadmapItemDTO[]
       // so the target index needs the same correction or the item lands one
       // slot early (e.g. "drag to end" landing at the front, sortOrder 0).
       // Cross-column moves have `sourceIndex === -1`, so they're untouched.
-      const sourceIndex = columns[column].findIndex((item) => item.id === itemId);
+      const sourceIndex = columns[column].findIndex(
+        (item) => item.id === itemId,
+      );
       const adjustedIndex =
         sourceIndex !== -1 && sourceIndex < index ? index - 1 : index;
       const before = targetItems[adjustedIndex - 1];
@@ -124,7 +133,11 @@ export function useBoardDnd(columns: Record<RoadmapColumn, AdminRoadmapItemDTO[]
   );
 
   const getCardDragProps = useCallback(
-    (item: AdminRoadmapItemDTO, column: RoadmapColumn, index: number): CardDragProps => ({
+    (
+      item: AdminRoadmapItemDTO,
+      column: RoadmapColumn,
+      index: number,
+    ): CardDragProps => ({
       draggable: true,
       onDragStart: (event) => {
         event.dataTransfer.effectAllowed = "move";
@@ -158,7 +171,8 @@ export function useBoardDnd(columns: Record<RoadmapColumn, AdminRoadmapItemDTO[]
       onDrop: (event) => {
         event.preventDefault();
         const itemId = event.dataTransfer.getData("text/plain") || draggingId;
-        if (itemId && dropTarget) commitMove(itemId, dropTarget.column, dropTarget.index);
+        if (itemId && dropTarget)
+          commitMove(itemId, dropTarget.column, dropTarget.index);
         setDraggingId(null);
         setDropTarget(null);
       },

@@ -129,7 +129,11 @@ export function useOwnedListing(ref: string | undefined) {
     enabled: !demoMode && loggedIn && Boolean(ref),
     queryFn: () => getListing(ref as string),
   });
-  return { listing: query.data, isLoading: query.isLoading, error: query.error };
+  return {
+    listing: query.data,
+    isLoading: query.isLoading,
+    error: query.error,
+  };
 }
 
 /** PATCH an owned listing. Sends the full clean draft; backend leaves status untouched. */
@@ -178,7 +182,9 @@ export function useUpdateListing() {
         );
       }
       void queryClient.invalidateQueries({ queryKey: ["listings"] });
-      void queryClient.invalidateQueries({ queryKey: ["listings", "detail", variables.ref] });
+      void queryClient.invalidateQueries({
+        queryKey: ["listings", "detail", variables.ref],
+      });
       // Refresh the public directory + map so a moved/cleared pin updates.
       void queryClient.invalidateQueries({ queryKey: [DIRECTORY_KEY] });
     },

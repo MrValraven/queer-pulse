@@ -961,5 +961,5 @@ export function getTopic(rawTag: string, t: TFunction): Topic {
     ],
     relatedTopics: related,
     topVoices: [],
-    };
+  };
 }

@@ -1,5 +1,9 @@
 import { useRef, type KeyboardEvent } from "react";
-import { getPersonas, getDeckCards, type PersonaKey } from "./personasShowcase.data";
+import {
+  getPersonas,
+  getDeckCards,
+  type PersonaKey,
+} from "./personasShowcase.data";
 import { usePrefersReducedMotion } from "../../../shared/hooks/usePrefersReducedMotion";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./PersonasShowcase.module.css";
@@ -32,7 +36,10 @@ export function PersonaDeck({
   const personas = getPersonas(t);
   const deckCards = getDeckCards(t);
 
-  const onCardKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+  const onCardKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
     const delta = event.key === "ArrowRight" ? 1 : -1;
@@ -43,7 +50,11 @@ export function PersonaDeck({
   };
 
   return (
-    <div className={reduceMotion ? `${styles.deck} ${styles.deckStill}` : styles.deck}>
+    <div
+      className={
+        reduceMotion ? `${styles.deck} ${styles.deckStill}` : styles.deck
+      }
+    >
       {deckCards.map((card, index) => {
         const persona = personas[card.key];
         const isSelected = card.key === selectedKey;
@@ -54,7 +65,9 @@ export function PersonaDeck({
               cardRefs.current[index] = node;
             }}
             type="button"
-            className={isSelected ? `${styles.pcard} ${styles.pcardOn}` : styles.pcard}
+            className={
+              isSelected ? `${styles.pcard} ${styles.pcardOn}` : styles.pcard
+            }
             aria-pressed={isSelected}
             onClick={() => onSelect(card.key)}
             onKeyDown={(event) => onCardKeyDown(event, index)}
@@ -63,7 +76,13 @@ export function PersonaDeck({
             <span className={`${styles.pcAv} ${avTintClass[persona.tint]}`}>
               {persona.initials}
             </span>
-            <span className={persona.nameCaps ? `${styles.pcName} ${styles.pcNameCaps}` : styles.pcName}>
+            <span
+              className={
+                persona.nameCaps
+                  ? `${styles.pcName} ${styles.pcNameCaps}`
+                  : styles.pcName
+              }
+            >
               {persona.name}
             </span>
             <span className={styles.pcTag}>{card.tag}</span>

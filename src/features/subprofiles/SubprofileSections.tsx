@@ -50,7 +50,9 @@ function SectionBody({
     // Drop image-less items BEFORE the cap so no cell renders a dead
     // placeholder and the remaining indices line up 1:1 with the lightbox's
     // flat array (`getGalleryWorks` filters identically, then caps at 6).
-    const photos = items.filter((galleryItem) => galleryItem.imageUrl).slice(0, 6);
+    const photos = items
+      .filter((galleryItem) => galleryItem.imageUrl)
+      .slice(0, 6);
     return (
       <div className="pp-gallery" data-skin={skin}>
         {photos.map((galleryItem, photoIndex) => {
@@ -100,7 +102,9 @@ function SectionBody({
             key={`${item.title}::${item.date}::${index}`}
             item={item}
             index={index}
-            onOpenWork={interactive && skin === "studio" ? onOpenWork : undefined}
+            onOpenWork={
+              interactive && skin === "studio" ? onOpenWork : undefined
+            }
           />
         ))}
       </div>
@@ -134,7 +138,7 @@ function SectionBody({
                   skin={skin}
                   interactive={interactive}
                   accent={accent}
-                    />
+                />
               ))}
             </div>
           </div>

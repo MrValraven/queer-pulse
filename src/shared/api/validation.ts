@@ -31,7 +31,9 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 /** Assert `value` is a string, or throw naming the offending field. */
 function assertString(value: unknown, field: string): asserts value is string {
   if (typeof value !== "string") {
-    throw new Error(`expected "${field}" to be a string, got ${describe(value)}`);
+    throw new Error(
+      `expected "${field}" to be a string, got ${describe(value)}`,
+    );
   }
 }
 
@@ -50,7 +52,9 @@ function assertStringOrNull(
 /** Assert `value` is a finite number, or throw naming the offending field. */
 function assertNumber(value: unknown, field: string): asserts value is number {
   if (typeof value !== "number" || Number.isNaN(value)) {
-    throw new Error(`expected "${field}" to be a number, got ${describe(value)}`);
+    throw new Error(
+      `expected "${field}" to be a number, got ${describe(value)}`,
+    );
   }
 }
 
@@ -67,9 +71,14 @@ function assertNumberOrNull(
 }
 
 /** Assert `value` is a boolean, or throw naming the offending field. */
-function assertBoolean(value: unknown, field: string): asserts value is boolean {
+function assertBoolean(
+  value: unknown,
+  field: string,
+): asserts value is boolean {
   if (typeof value !== "boolean") {
-    throw new Error(`expected "${field}" to be a boolean, got ${describe(value)}`);
+    throw new Error(
+      `expected "${field}" to be a boolean, got ${describe(value)}`,
+    );
   }
 }
 
@@ -79,7 +88,9 @@ function assertArray(
   field: string,
 ): asserts value is unknown[] {
   if (!Array.isArray(value)) {
-    throw new Error(`expected "${field}" to be an array, got ${describe(value)}`);
+    throw new Error(
+      `expected "${field}" to be an array, got ${describe(value)}`,
+    );
   }
 }
 
@@ -127,7 +138,9 @@ export const validateAuthUser: ResponseValidator<AuthUser> = (data) => {
 
   const { profile } = data;
   if (!isRecord(profile)) {
-    throw new Error(`expected "profile" to be an object, got ${describe(profile)}`);
+    throw new Error(
+      `expected "profile" to be an object, got ${describe(profile)}`,
+    );
   }
   assertString(profile.slug, "profile.slug");
   assertString(profile.firstName, "profile.firstName");
@@ -141,7 +154,9 @@ export const validateAuthUser: ResponseValidator<AuthUser> = (data) => {
   // omit it entirely) — default to `[]` rather than assert, so a missing or
   // malformed value never turns into a loud 422 for an unrelated field.
   data.staffRoles = Array.isArray(data.staffRoles)
-    ? data.staffRoles.filter((value): value is string => typeof value === "string")
+    ? data.staffRoles.filter(
+        (value): value is string => typeof value === "string",
+      )
     : [];
 
   return data as unknown as AuthUser;
@@ -187,7 +202,9 @@ const SAFE_SPACE_STATUSES = ["none", "verified", "removed"] as const;
  */
 function assertDirectoryCard(value: unknown, path: string): void {
   if (!isRecord(value)) {
-    throw new Error(`expected "${path}" to be an object, got ${describe(value)}`);
+    throw new Error(
+      `expected "${path}" to be an object, got ${describe(value)}`,
+    );
   }
   assertString(value.slug, `${path}.slug`);
   assertString(value.name, `${path}.name`);
@@ -200,7 +217,11 @@ function assertDirectoryCard(value: unknown, path: string): void {
   assertStringOrNull(value.memberFirst, `${path}.memberFirst`);
   assertNumberOrNull(value.latitude, `${path}.latitude`);
   assertNumberOrNull(value.longitude, `${path}.longitude`);
-  assertOneOf(value.safeSpaceStatus, `${path}.safeSpaceStatus`, SAFE_SPACE_STATUSES);
+  assertOneOf(
+    value.safeSpaceStatus,
+    `${path}.safeSpaceStatus`,
+    SAFE_SPACE_STATUSES,
+  );
   assertNumberOrNull(value.safeSpaceTier, `${path}.safeSpaceTier`);
 }
 
@@ -272,7 +293,9 @@ export const validateSearchResponse: ResponseValidator<SearchResponseDTO> = (
   data.results.forEach((result, index) => {
     const path = `results[${index}]`;
     if (!isRecord(result)) {
-      throw new Error(`expected "${path}" to be an object, got ${describe(result)}`);
+      throw new Error(
+        `expected "${path}" to be an object, got ${describe(result)}`,
+      );
     }
     assertOneOf(result.type, `${path}.type`, SEARCH_RESULT_TYPES);
     assertString(result.slug, `${path}.slug`);

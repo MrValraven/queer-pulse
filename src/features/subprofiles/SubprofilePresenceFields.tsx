@@ -1,5 +1,9 @@
 import { FiCheck } from "react-icons/fi";
-import { FormField, SegmentedControl, Select } from "../../shared/components/ui";
+import {
+  FormField,
+  SegmentedControl,
+  Select,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
@@ -105,8 +109,14 @@ export function SubprofilePresenceFields({
         <SegmentedControl
           label={t("subprofiles:metaForm.bannerEdgeLabel")}
           options={[
-            { value: "contained", label: t("subprofiles:metaForm.bannerEdgeContained") },
-            { value: "bleed", label: t("subprofiles:metaForm.bannerEdgeBleed") },
+            {
+              value: "contained",
+              label: t("subprofiles:metaForm.bannerEdgeContained"),
+            },
+            {
+              value: "bleed",
+              label: t("subprofiles:metaForm.bannerEdgeBleed"),
+            },
           ]}
           value={coverBleed ? "bleed" : "contained"}
           onChange={(value) => onCoverBleedChange(value === "bleed")}
@@ -169,7 +179,10 @@ export function SubprofilePresenceFields({
         />
       </FormField>
 
-      <FormField label={t("subprofiles:metaForm.ctaUrlLabel")} error={ctaUrlError}>
+      <FormField
+        label={t("subprofiles:metaForm.ctaUrlLabel")}
+        error={ctaUrlError}
+      >
         <input
           type="url"
           inputMode="url"

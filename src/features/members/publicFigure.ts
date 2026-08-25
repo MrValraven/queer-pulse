@@ -100,13 +100,19 @@ const MS_PER_MONTH = 1000 * 60 * 60 * 24 * 30.44;
 
 /** Months between two ISO timestamps. Pure — parses given strings only. */
 function monthsBetween(fromIso: string, toIso: string): number {
-  return (new Date(toIso).getTime() - new Date(fromIso).getTime()) / MS_PER_MONTH;
+  return (
+    (new Date(toIso).getTime() - new Date(fromIso).getTime()) / MS_PER_MONTH
+  );
 }
 
 function contributionScore(signals: EligibilitySignals): number {
-  const datedWeights = [...signals.publishedPieces, ...signals.hostedOpenEvents].map(
-    (piece) =>
-      monthsBetween(piece.at, signals.nowIso) > RECENCY_MONTHS ? RECENCY_DECAY : 1,
+  const datedWeights = [
+    ...signals.publishedPieces,
+    ...signals.hostedOpenEvents,
+  ].map((piece) =>
+    monthsBetween(piece.at, signals.nowIso) > RECENCY_MONTHS
+      ? RECENCY_DECAY
+      : 1,
   );
   const undatedRecent = signals.workshopsTaught + signals.publishedSubprofiles;
   for (let index = 0; index < undatedRecent; index += 1) datedWeights.push(1);
@@ -173,15 +179,28 @@ function buildNextActions(
 ): NextAction[] {
   const gateActions: NextAction[] = [];
   if (!gates[0].met)
-    gateActions.push({ family: "gate", labelKey: "members:publicProfile.eligibility.action.verify", points: 0 });
+    gateActions.push({
+      family: "gate",
+      labelKey: "members:publicProfile.eligibility.action.verify",
+      points: 0,
+    });
   if (!gates[1].met)
-    gateActions.push({ family: "gate", labelKey: "members:publicProfile.eligibility.action.tenure", points: 0 });
+    gateActions.push({
+      family: "gate",
+      labelKey: "members:publicProfile.eligibility.action.tenure",
+      points: 0,
+    });
 
   const scoreActions: NextAction[] = [];
   if (total < TARGET_SCORE) {
-    const byKey = (key: FamilyScore["key"]) => families.find((family) => family.key === key)!;
+    const byKey = (key: FamilyScore["key"]) =>
+      families.find((family) => family.key === key)!;
     if (byKey("contribution").points < CAP.contribution)
-      scoreActions.push({ family: "contribution", labelKey: "members:publicProfile.eligibility.action.host", points: 15 });
+      scoreActions.push({
+        family: "contribution",
+        labelKey: "members:publicProfile.eligibility.action.host",
+        points: 15,
+      });
     if (byKey("trust").points < CAP.trust && signals.vouchCount < 3)
       scoreActions.push({
         family: "trust",
@@ -189,7 +208,11 @@ function buildNextActions(
         points: signals.vouchCount < 2 ? 12 : 8,
       });
     if (byKey("participation").points < CAP.participation)
-      scoreActions.push({ family: "participation", labelKey: "members:publicProfile.eligibility.action.attend", points: 4 });
+      scoreActions.push({
+        family: "participation",
+        labelKey: "members:publicProfile.eligibility.action.attend",
+        points: 4,
+      });
     scoreActions.sort((left, right) => right.points - left.points);
   }
 
@@ -201,7 +224,9 @@ function buildNextActions(
  * three-family score, and a silent standing veto. Pure — no React, no I/O, no
  * wall-clock (time comes from `signals.nowIso`).
  */
-export function evaluatePublicEligibility(signals: EligibilitySignals): PublicEligibility {
+export function evaluatePublicEligibility(
+  signals: EligibilitySignals,
+): PublicEligibility {
   const gates = buildGates(signals);
   const families: FamilyScore[] = [
     {
@@ -228,7 +253,8 @@ export function evaluatePublicEligibility(signals: EligibilitySignals): PublicEl
     families.reduce((sum, family) => sum + family.points, 0),
   );
   const standingOk = signals.standingOk === true;
-  const eligible = gates.every((gate) => gate.met) && total >= TARGET_SCORE && standingOk;
+  const eligible =
+    gates.every((gate) => gate.met) && total >= TARGET_SCORE && standingOk;
 
   return {
     gates,

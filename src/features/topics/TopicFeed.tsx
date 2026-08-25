@@ -90,7 +90,9 @@ export function TopicFeed({
               .join(" ")}
             onClick={() => setFilter(f.id)}
           >
-            {demoMode ? `${t(f.labelKey)} · ${counts[f.id] ?? 0}` : t(f.labelKey)}
+            {demoMode
+              ? `${t(f.labelKey)} · ${counts[f.id] ?? 0}`
+              : t(f.labelKey)}
           </button>
         ))}
       </div>

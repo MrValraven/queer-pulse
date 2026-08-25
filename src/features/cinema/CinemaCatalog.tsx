@@ -70,6 +70,7 @@ export function ProgrammeSection() {
           {t("cinema:programme.notebook.week", { week: PROGRAMME_WEEK })}
         </div>
         <div>
+          {/* eslint-disable local/no-literal-string -- curator's own programming note and byline; content per the scope rule, arrives over the wire in live mode */}
           <p className={styles.nq}>
             “We chose six films this week that share one thing: they refuse the
             cleanness of the coming-out arc. They are messy, slow, alive.{" "}
@@ -77,6 +78,7 @@ export function ProgrammeSection() {
           </p>
           <div className={styles.sig}>
             Sara Marques, programming lead.{" "}
+            {/* eslint-enable local/no-literal-string */}
             <Link to={routes.cinemaBrowse}>
               {t("cinema:programme.notebook.readMoreCta")}{" "}
               <FiArrowRight aria-hidden />

@@ -82,7 +82,11 @@ function applyDemoTransition(
         responseNote: input.note ?? null,
       };
     case "decline":
-      return { ...viewing, status: "declined", responseNote: input.note ?? null };
+      return {
+        ...viewing,
+        status: "declined",
+        responseNote: input.note ?? null,
+      };
     case "cancel":
       return { ...viewing, status: "cancelled" };
     case "complete":
@@ -90,9 +94,7 @@ function applyDemoTransition(
   }
 }
 
-async function runLiveAction(
-  input: ViewingAction,
-): Promise<HousingViewingDTO> {
+async function runLiveAction(input: ViewingAction): Promise<HousingViewingDTO> {
   switch (input.action) {
     case "accept":
       return acceptHousingViewing(input.id, input.slot);

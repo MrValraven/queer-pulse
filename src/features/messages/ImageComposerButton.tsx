@@ -11,7 +11,10 @@ interface ImageComposerButtonProps {
   /** Sends the uploaded image as its own message. `attachment` is the SEND
    *  payload (a private storage key); `localAttachment` is the upload's local
    *  blob preview, for the optimistic bubble to render instantly. */
-  onSendImage: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
+  onSendImage: (
+    attachment: GifAttachment,
+    localAttachment?: GifAttachment,
+  ) => void;
 }
 
 /** Reads a decoded image's intrinsic pixel size, so the bubble can reserve its

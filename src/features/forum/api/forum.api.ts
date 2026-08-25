@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type {
   AuthorSummary,
@@ -14,7 +19,11 @@ import type {
 // posts — both are infinite. A thread's opening post is the FIRST item of its
 // posts page; the remainder are replies.
 
-export type { ForumThreadResponse, ForumPostResponse, ForumPostHistoryResponse };
+export type {
+  ForumThreadResponse,
+  ForumPostResponse,
+  ForumPostHistoryResponse,
+};
 
 /** Server-supported orderings for the thread list. */
 export type ForumSort = "new" | "top" | "active" | "unanswered";

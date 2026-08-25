@@ -45,7 +45,11 @@ interface Props {
  * On a phone this order IS the page: one column, top to bottom, exactly as
  * listed. That is what the order was chosen for.
  */
-export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) {
+export function DirectorySpaceMain({
+  place,
+  preview = false,
+  ownerRef,
+}: Props) {
   return (
     <div>
       <DirectoryHoursSection place={place} />

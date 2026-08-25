@@ -27,7 +27,7 @@ import {
   ALL_SECTIONS_COLLAPSED,
   isSectionOpenMap,
   type SectionKey,
-} from "./FilterSection";
+} from "./filterSectionKeys";
 import {
   MemberDirectoryHeader,
   MemberFiltersSheet,
@@ -202,7 +202,9 @@ export function MemberDirectoryFilterPage() {
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           onFetchNextPage={fetchNextPage}
-          onRefresh={() => queryClient.invalidateQueries({ queryKey: ["members"] })}
+          onRefresh={() =>
+            queryClient.invalidateQueries({ queryKey: ["members"] })
+          }
         />
       </div>
 

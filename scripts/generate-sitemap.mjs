@@ -37,7 +37,9 @@ async function main() {
 
   // Dynamic persona pages — fetched from the backend; [] on any failure or
   // missing VITE_API_URL, so an offline/demo build still succeeds.
-  const dynamicPersonaPaths = await fetchSubprofilePublicPaths(process.env.VITE_API_URL);
+  const dynamicPersonaPaths = await fetchSubprofilePublicPaths(
+    process.env.VITE_API_URL,
+  );
 
   const lastmod = new Date().toISOString().slice(0, 10);
   const staticUrls = uniquePaths

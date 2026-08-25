@@ -23,7 +23,8 @@ const avTintClass: Record<string, string | undefined> = {
 
 export function PersonasShowcase() {
   const { t } = useTranslation();
-  const [selectedKey, setSelectedKey] = useState<PersonaKey>(DEFAULT_PERSONA_KEY);
+  const [selectedKey, setSelectedKey] =
+    useState<PersonaKey>(DEFAULT_PERSONA_KEY);
   const personas = getPersonas(t);
   const main = personas.main;
 
@@ -51,7 +52,11 @@ export function PersonasShowcase() {
               {t("homepage:subprofiles.subtitleControl")}
             </Reveal>
             <Reveal delay={120}>
-              <Button variant="ghost-dark" to={routes.subprofiles} className={styles.cta}>
+              <Button
+                variant="ghost-dark"
+                to={routes.subprofiles}
+                className={styles.cta}
+              >
                 {t("homepage:subprofiles.cta")}
               </Button>
             </Reveal>
@@ -61,7 +66,10 @@ export function PersonasShowcase() {
           </div>
 
           <Reveal className={styles.pv} delay={100}>
-            <PersonaSwitcher selectedKey={selectedKey} onSelect={setSelectedKey} />
+            <PersonaSwitcher
+              selectedKey={selectedKey}
+              onSelect={setSelectedKey}
+            />
 
             <div className={styles.mainNode}>
               <span className={`${styles.mnAv} ${avTintClass[main.tint]}`}>

@@ -29,5 +29,9 @@ export function usePieceRecord(id: string) {
     },
   });
 
-  return { record: query.data, isLoading: query.isLoading, isError: query.isError };
+  return {
+    record: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

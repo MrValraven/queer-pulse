@@ -17,7 +17,10 @@ export function buildMonthOptions(locale: string): SelectOption[] {
   const formatter = new Intl.DateTimeFormat(locale, { month: "long" });
   return Array.from({ length: MONTHS_IN_YEAR }, (_unused, index) => {
     const month = index + 1;
-    return { value: String(month), label: formatter.format(new Date(2000, index, 1)) };
+    return {
+      value: String(month),
+      label: formatter.format(new Date(2000, index, 1)),
+    };
   });
 }
 
@@ -30,8 +33,14 @@ export function buildYearOptions(
   minDate?: PlainDate | null,
   maxDate?: PlainDate | null,
 ): SelectOption[] {
-  const minYear = Math.min(minDate?.year ?? currentYear - DEFAULT_YEARS_BEFORE, currentYear);
-  const maxYear = Math.max(maxDate?.year ?? currentYear + DEFAULT_YEARS_AFTER, currentYear);
+  const minYear = Math.min(
+    minDate?.year ?? currentYear - DEFAULT_YEARS_BEFORE,
+    currentYear,
+  );
+  const maxYear = Math.max(
+    maxDate?.year ?? currentYear + DEFAULT_YEARS_AFTER,
+    currentYear,
+  );
   const count = maxYear - minYear + 1;
   return Array.from({ length: count }, (_unused, index) => {
     const year = maxYear - index;

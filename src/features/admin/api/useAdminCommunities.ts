@@ -8,10 +8,7 @@ import {
   cardDtoToCommunity,
   detailDtoToCommunity,
 } from "./adminCommunities.adapters";
-import {
-  getAdminCommunities,
-  getAdminCommunity,
-} from "./adminCommunities.api";
+import { getAdminCommunities, getAdminCommunity } from "./adminCommunities.api";
 import { loadModerationTranslate } from "./moderationTranslate";
 
 export const ADMIN_COMMUNITIES_KEY = "admin-communities";

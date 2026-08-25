@@ -8,7 +8,7 @@ import type {
   RoadmapItemWriteBody,
 } from "../../api/roadmapAdmin.types";
 import type { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 
 type Mutations = ReturnType<typeof useAdminRoadmapMutations>;
 

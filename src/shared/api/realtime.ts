@@ -92,8 +92,12 @@ class RealtimeClient {
   private activeConversationId: string | null = null;
   /** Per-event fan-out sets, additive alongside the cache-invalidation handlers
    *  registered directly in `connect()` below. */
-  private typingHandlers = new Set<(frame: ServerToClientEvents["typing"]) => void>();
-  private readHandlers = new Set<(frame: ServerToClientEvents["read"]) => void>();
+  private typingHandlers = new Set<
+    (frame: ServerToClientEvents["typing"]) => void
+  >();
+  private readHandlers = new Set<
+    (frame: ServerToClientEvents["read"]) => void
+  >();
   private deliveredHandlers = new Set<
     (frame: ServerToClientEvents["message:delivered"]) => void
   >();
@@ -148,7 +152,9 @@ class RealtimeClient {
     for (const cb of this.listeners) cb(connected);
   }
 
-  onTyping(handler: (frame: ServerToClientEvents["typing"]) => void): () => void {
+  onTyping(
+    handler: (frame: ServerToClientEvents["typing"]) => void,
+  ): () => void {
     this.typingHandlers.add(handler);
     return () => this.typingHandlers.delete(handler);
   }
@@ -417,10 +423,18 @@ class RealtimeClient {
     // thing messageCache.ts avoids elsewhere). Skip the echo of our OWN reaction:
     // its optimistic patch already applied, and re-applying absolute counts we
     // already reflect is redundant (and would fight a mid-flight local delta).
-    socket.on("reaction", ({ conversationId, messageId, userId, reactions }) => {
-      if (this.myUserId && userId === this.myUserId) return;
-      patchMessageReactionCounts(this.qc, conversationId, messageId, reactions);
-    });
+    socket.on(
+      "reaction",
+      ({ conversationId, messageId, userId, reactions }) => {
+        if (this.myUserId && userId === this.myUserId) return;
+        patchMessageReactionCounts(
+          this.qc,
+          conversationId,
+          messageId,
+          reactions,
+        );
+      },
+    );
     // A message was soft-deleted (author or staff). The frame only carries the
     // id, not a deletedAt timestamp, so patch the tombstone in place using "now"
     // — the same approximation `useDeleteMessage.onSuccess` already uses for the
@@ -584,10 +598,14 @@ interface RealtimeContextValue {
   joinConversation: (conversationId: string | null) => void;
   /** Subscribe to `typing` frames. Returns an unsubscribe. Survives socket
    *  re-creation (reconnects) — a no-op in demo/logged-out mode. */
-  onTyping: (handler: (frame: ServerToClientEvents["typing"]) => void) => () => void;
+  onTyping: (
+    handler: (frame: ServerToClientEvents["typing"]) => void,
+  ) => () => void;
   /** Subscribe to `read` frames (additive to the cache invalidation the
    *  provider already runs for `read`). Survives socket re-creation. */
-  onRead: (handler: (frame: ServerToClientEvents["read"]) => void) => () => void;
+  onRead: (
+    handler: (frame: ServerToClientEvents["read"]) => void,
+  ) => () => void;
   /** Subscribe to `message:delivered` frames (the "double check" watermark).
    *  Survives socket re-creation; no-op in demo/logged-out mode. */
   onDelivered: (
@@ -658,9 +676,7 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
   const handlersRef = useRef<{
     typing: Set<(frame: ServerToClientEvents["typing"]) => void>;
     read: Set<(frame: ServerToClientEvents["read"]) => void>;
-    delivered: Set<
-      (frame: ServerToClientEvents["message:delivered"]) => void
-    >;
+    delivered: Set<(frame: ServerToClientEvents["message:delivered"]) => void>;
     presence: Set<(online: ReadonlySet<string>) => void>;
   }>({
     typing: new Set(),
@@ -734,9 +750,12 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const emitTyping = useCallback((conversationId: string, isTyping: boolean) => {
-    clientRef.current?.emitTyping(conversationId, isTyping);
-  }, []);
+  const emitTyping = useCallback(
+    (conversationId: string, isTyping: boolean) => {
+      clientRef.current?.emitTyping(conversationId, isTyping);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!active) return;
@@ -763,7 +782,9 @@ export function RealtimeProvider({ children }: { children: ReactNode }) {
     handlersRef.current.delivered.forEach((handler) =>
       client.onDelivered(handler),
     );
-    handlersRef.current.presence.forEach((handler) => client.onPresence(handler));
+    handlersRef.current.presence.forEach((handler) =>
+      client.onPresence(handler),
+    );
     return () => {
       off();
       client.dispose();
@@ -940,7 +961,10 @@ export function useIsOnline(participantId: string | null | undefined): boolean {
  * a `typing` frame over the socket. Safe to call before connect / in demo mode
  * (no socket) — it's a no-op.
  */
-export function useEmitTyping(): (conversationId: string, isTyping: boolean) => void {
+export function useEmitTyping(): (
+  conversationId: string,
+  isTyping: boolean,
+) => void {
   const { emitTyping } = useRealtime();
   return emitTyping;
 }

@@ -96,8 +96,7 @@ function StepFollow({
           />
         </span>
         <Button variant="primary" onClick={onNext}>
-          {t("studio:welcome.nextCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:welcome.nextCta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>
@@ -151,8 +150,7 @@ function StepTip({
           {t("studio:welcome.skipCta")}
         </button>
         <Button variant="primary" onClick={onNext}>
-          {t("studio:welcome.nextCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:welcome.nextCta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>
@@ -211,8 +209,7 @@ function StepPrivacy({
           {t("studio:welcome.skipCta")}
         </button>
         <Button variant="jade" onClick={onFinish}>
-          {t("studio:welcome.enterRoomCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:welcome.enterRoomCta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>
@@ -257,9 +254,12 @@ export function StudioWelcomePage() {
       <div className={s.brand}>
         <span className={s.pulseDot} />
         <span className={s.wordmark}>
-          Queer<span className={s.q}>Pulse</span>
+          <Translation
+            i18nKey="studio:brand.lockup"
+            components={{ em: <span className={s.q} /> }}
+          />
         </span>
-        <span className={s.product}>Studio</span>
+        <span className={s.product}>{t("studio:brand.studioLabel")}</span>
       </div>
 
       <div className={s.inner}>

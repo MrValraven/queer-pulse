@@ -56,7 +56,11 @@ function ReactionChip({
 /** Chips rendered under a bubble: one per reaction key with count > 0, each
  *  showing its emoji + count. A chip the signed-in member reacted with
  *  (`mine`) gets a plum-tint active style; clicking any chip toggles it. */
-export function ReactionChips({ reactions, onToggle, isNewReaction }: ReactionChipsProps) {
+export function ReactionChips({
+  reactions,
+  onToggle,
+  isNewReaction,
+}: ReactionChipsProps) {
   const visibleReactions = reactions.filter((reaction) => reaction.count > 0);
   if (visibleReactions.length === 0) return null;
 

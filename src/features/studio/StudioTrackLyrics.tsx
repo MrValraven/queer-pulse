@@ -1,3 +1,8 @@
+/* eslint-disable local/no-literal-string -- this file is almost entirely the
+   track's own lyrics, verse annotations, and translation credit: content
+   authored by the artist/translator, fetched from the API in live mode and
+   never translated (extraction-brief §1). The heading and lead-sheet CTA
+   below already route through t()/<Translation>. */
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";

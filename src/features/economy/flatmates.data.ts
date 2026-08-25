@@ -121,16 +121,34 @@ const LISTINGS: Listing[] = [
     tags: ["Night owl", "Late nights fine", "Sociable"],
     genderIdentity: "Non-binary",
     safeSpaceNeeds: ["Trans-inclusive household", "Affirming flatmates"],
-    householdNorms: { sleepSchedule: "Night owl", noise: "Relaxed about noise" },
+    householdNorms: {
+      sleepSchedule: "Night owl",
+      noise: "Relaxed about noise",
+    },
     identityHousehold: {
       outAtHome: "Out at home",
       bathroomComfort: "Happy to share a bathroom",
     },
     matchScore: 88,
     matchReasons: [
-      { factor: "safeSpace", label: "Shared safe-space values", weight: 15, contribution: 15 },
-      { factor: "budget", label: "Budget and rent line up", weight: 25, contribution: 25 },
-      { factor: "lifestyle", label: "Several lifestyle tags in common", weight: 15, contribution: 10 },
+      {
+        factor: "safeSpace",
+        label: "Shared safe-space values",
+        weight: 15,
+        contribution: 15,
+      },
+      {
+        factor: "budget",
+        label: "Budget and rent line up",
+        weight: 25,
+        contribution: 25,
+      },
+      {
+        factor: "lifestyle",
+        label: "Several lifestyle tags in common",
+        weight: 15,
+        contribution: 10,
+      },
     ],
   },
   {
@@ -157,7 +175,11 @@ const LISTINGS: Listing[] = [
     note: "Translator and poet, working from home most days with headphones on and the kettle always going. I'm after a calm flat with people who are happy to share the occasional dinner and otherwise let the quiet be. Sober-friendly, plant-friendly, low drama.",
     tags: ["WFH", "Quiet household", "Sober household", "Plant parent"],
     genderIdentity: "Trans woman",
-    safeSpaceNeeds: ["Trans-inclusive household", "No outing", "Chosen-family friendly"],
+    safeSpaceNeeds: [
+      "Trans-inclusive household",
+      "No outing",
+      "Chosen-family friendly",
+    ],
     householdNorms: {
       cleanliness: "Tidy",
       guests: "Occasional guests",
@@ -169,10 +191,30 @@ const LISTINGS: Listing[] = [
     },
     matchScore: 91,
     matchReasons: [
-      { factor: "safeSpace", label: "Shared safe-space values", weight: 15, contribution: 15 },
-      { factor: "household", label: "Household basics agree", weight: 15, contribution: 15 },
-      { factor: "neighbourhood", label: "Same neighbourhood", weight: 20, contribution: 20 },
-      { factor: "budget", label: "Budget is roughly in range", weight: 25, contribution: 18 },
+      {
+        factor: "safeSpace",
+        label: "Shared safe-space values",
+        weight: 15,
+        contribution: 15,
+      },
+      {
+        factor: "household",
+        label: "Household basics agree",
+        weight: 15,
+        contribution: 15,
+      },
+      {
+        factor: "neighbourhood",
+        label: "Same neighbourhood",
+        weight: 20,
+        contribution: 20,
+      },
+      {
+        factor: "budget",
+        label: "Budget is roughly in range",
+        weight: 25,
+        contribution: 18,
+      },
     ],
   },
   {
@@ -332,7 +374,11 @@ export const HOUSEHOLD_NORM_FIELDS: {
   {
     key: "sharing",
     labelKey: "economy:postProfileForm.household.sharing",
-    options: ["Love shared spaces", "A balance of both", "Mostly keep to myself"],
+    options: [
+      "Love shared spaces",
+      "A balance of both",
+      "Mostly keep to myself",
+    ],
   },
 ];
 

@@ -31,8 +31,14 @@ function renderReframer(onChange = vi.fn<(rect: CropRect) => void>()) {
   );
   // simulate the image loading with known natural dimensions
   const image = screen.getByAltText<HTMLImageElement>(/reframe/i);
-  Object.defineProperty(image, "naturalWidth", { value: 2000, configurable: true });
-  Object.defineProperty(image, "naturalHeight", { value: 1000, configurable: true });
+  Object.defineProperty(image, "naturalWidth", {
+    value: 2000,
+    configurable: true,
+  });
+  Object.defineProperty(image, "naturalHeight", {
+    value: 1000,
+    configurable: true,
+  });
   fireEvent.load(image);
   return onChange;
 }

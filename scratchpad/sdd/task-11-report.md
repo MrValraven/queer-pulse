@@ -21,6 +21,7 @@ All three hooks mirror `useEditorDecks.ts`: `useQuery` keyed `[name, demoMode, .
 **Important:** none.
 
 **Minor:**
+
 - `pieces.adapters.ts:41` — `art: "na"` is a hardcoded stub with an honest `// TODO Phase 2` comment (backend doesn't model art tracking yet). Correctly flagged, not a bug, just noting it's a known view/data gap for whoever builds Task 17/18 (board move + art columns) against live data.
 - `usePieces.ts:38` — the `issue` filter is a documented no-op in demo mode (`Piece` has no `issueId` on the view model). Consistent with the honesty rule (no silent fake filtering), but worth flagging to whoever wires `IssuePlan` (Task 18) that the saved "issue" filter will look like it does nothing while `VITE_DEMO=1`.
 - Cross-cutting, not this task's fault: `pieceDtoToView`'s `due` field passes the backend's raw `due: string | null` straight through, whereas demo data uses hand-authored short strings ("4 Aug", "ready"). If the backend ever sends an ISO date, live-mode due-date display will look different from demo. No display-formatting logic lives in these files to check one way or the other — flagging as ⚠️ cannot-verify from this file set (depends on backend response shape / a formatter not yet built).

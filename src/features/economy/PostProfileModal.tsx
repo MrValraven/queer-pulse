@@ -21,9 +21,8 @@ export function PostProfileModal({ onClose }: { onClose: () => void }) {
   const { showToast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [stepUp, setStepUp] = useState<VerificationLevel | null>(null);
-  const [pendingBody, setPendingBody] = useState<UpsertFlatmateProfileBody | null>(
-    null,
-  );
+  const [pendingBody, setPendingBody] =
+    useState<UpsertFlatmateProfileBody | null>(null);
   const { data: myProfile } = useMyFlatmateProfile();
   const { handlePledgeError, pledgeGate } = useAffirmingPledgeGate();
   const upsertFlatmateProfile = useUpsertFlatmateProfile();

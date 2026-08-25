@@ -91,7 +91,11 @@
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: radial-gradient(circle at 42% 46%, rgba(var(--accent-rgb), 0.3), transparent 62%);
+  background: radial-gradient(
+    circle at 42% 46%,
+    rgba(var(--accent-rgb), 0.3),
+    transparent 62%
+  );
   pointer-events: none;
 }
 .levelCardEyebrow {
@@ -113,9 +117,23 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(from -90deg, var(--accent) calc(var(--p, 0) * 1%), rgba(var(--cream-rgb), 0.16) 0);
-  -webkit-mask: radial-gradient(circle, transparent 0 40px, #000 40px 50px, transparent 50px);
-  mask: radial-gradient(circle, transparent 0 40px, #000 40px 50px, transparent 50px);
+  background: conic-gradient(
+    from -90deg,
+    var(--accent) calc(var(--p, 0) * 1%),
+    rgba(var(--cream-rgb), 0.16) 0
+  );
+  -webkit-mask: radial-gradient(
+    circle,
+    transparent 0 40px,
+    #000 40px 50px,
+    transparent 50px
+  );
+  mask: radial-gradient(
+    circle,
+    transparent 0 40px,
+    #000 40px 50px,
+    transparent 50px
+  );
   transition: background 1.1s var(--ease);
 }
 .levelDialIn {

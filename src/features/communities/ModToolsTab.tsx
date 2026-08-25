@@ -61,7 +61,9 @@ export function ModToolsTab({
   // out of it. An unknown value falls back to Overview.
   const [searchParams, setSearchParams] = useSearchParams();
   const rawSection = searchParams.get("mod");
-  const section: ModSection = isModSection(rawSection) ? rawSection : "overview";
+  const section: ModSection = isModSection(rawSection)
+    ? rawSection
+    : "overview";
   const openSection = (next: ModSection) =>
     setSearchParams(
       (prev) => {

@@ -257,7 +257,8 @@ export function useFeedPage() {
     fetchNextPage: feed.fetchNextPage,
     isFetchingNextPage: feed.isFetchingNextPage,
     sidebarLoading:
-      loading || (!demoMode && (sidebarFeed.isLoading || upcomingFeed.isLoading)),
+      loading ||
+      (!demoMode && (sidebarFeed.isLoading || upcomingFeed.isLoading)),
     sidebarMembers,
     sidebarGatherings,
     tabCopy,

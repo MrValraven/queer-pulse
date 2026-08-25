@@ -7,7 +7,7 @@ import { describeError } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import { AdminModal } from "../../ui";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 import styles from "./roadmapModals.module.css";
 
 /**
@@ -52,7 +52,10 @@ export function MergeIdeaModal() {
         },
         onError: (error) =>
           showToast(
-            describeError(t("admin:roadmap.modals.mergeIdea.confirmCta"), error),
+            describeError(
+              t("admin:roadmap.modals.mergeIdea.confirmCta"),
+              error,
+            ),
             "error",
           ),
       },
@@ -115,7 +118,9 @@ export function MergeIdeaModal() {
                 <span className={styles.optionTitle}>{item.name}</span>
                 <span className={styles.optionCat}>
                   {idea?.duplicateOfItemId === item.id && (
-                    <Tag>{t("admin:roadmap.modals.mergeIdea.suggestedTag")}</Tag>
+                    <Tag>
+                      {t("admin:roadmap.modals.mergeIdea.suggestedTag")}
+                    </Tag>
                   )}{" "}
                   {t(`admin:roadmap.categories.${item.category}`)}
                 </span>

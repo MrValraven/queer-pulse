@@ -104,7 +104,15 @@ export function AdminMemberRoleControl({
         <span className={styles.roleCurrentLabel}>
           {t("admin:members.role.currentLabel")}
         </span>
-        <AdminChip tone={currentRole === "admin" ? "violet" : currentRole === "moderator" ? "plum" : "ghost"}>
+        <AdminChip
+          tone={
+            currentRole === "admin"
+              ? "violet"
+              : currentRole === "moderator"
+                ? "plum"
+                : "ghost"
+          }
+        >
           {t(`admin:members.role.value.${currentRole}`)}
         </AdminChip>
       </div>

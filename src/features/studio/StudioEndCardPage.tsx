@@ -9,6 +9,9 @@ import {
 } from "./StudioEndCardPage.data";
 import styles from "./StudioEndCardPage.module.css";
 
+// Brand domain — never translated, not routed through the catalog.
+const STUDIO_DOMAIN = "studio.queerpulse.com";
+
 export function StudioEndCardPage() {
   const { t } = useTranslation();
   const frameRef = useRef<HTMLDivElement>(null);
@@ -103,9 +106,12 @@ export function StudioEndCardPage() {
           <div className={styles.wordmark}>
             <span className={styles.pulse} aria-hidden />
             <span className={styles.wm}>
-              Queer<span className={styles.q}>Pulse</span>
+              <Translation
+                i18nKey="studio:brand.lockup"
+                components={{ em: <span className={styles.q} /> }}
+              />
             </span>
-            <span className={styles.tag}>Studio</span>
+            <span className={styles.tag}>{t("studio:brand.studioLabel")}</span>
           </div>
 
           <div className={styles.tagline}>
@@ -148,7 +154,7 @@ export function StudioEndCardPage() {
 
           <div className={styles.cta}>
             {t("studio:endCard.listenCta")}
-            <b>studio.queerpulse.com</b>
+            <b>{STUDIO_DOMAIN}</b>
           </div>
         </div>
       </div>

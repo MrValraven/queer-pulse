@@ -77,8 +77,7 @@ export function StudioShell({
             </div>
             <div className={styles.topRight}>
               <Link to={routes.studioDashboard} className={styles.creatorLink}>
-                {t("studio:shell.forArtistsCta")}{" "}
-                <FiArrowRight aria-hidden />
+                {t("studio:shell.forArtistsCta")} <FiArrowRight aria-hidden />
               </Link>
               <Link to={routes.cinemaMembership} className={styles.sustainPill}>
                 {t("studio:shell.sustainCta", {

@@ -15,7 +15,11 @@ function GroupPickRow({ group, onPick }: GroupPickRowProps) {
   const { t } = useTranslation();
   return (
     <li>
-      <button type="button" className={styles.row} onClick={() => onPick(group)}>
+      <button
+        type="button"
+        className={styles.row}
+        onClick={() => onPick(group)}
+      >
         <Avatar
           initials={group.initials}
           tint={group.tint}
@@ -77,7 +81,11 @@ export function NewMessagePickList({
       )}
       {people.map((person) => (
         <li key={person.id}>
-          <button type="button" className={styles.row} onClick={() => onPick(person)}>
+          <button
+            type="button"
+            className={styles.row}
+            onClick={() => onPick(person)}
+          >
             <MemberIdentity
               person={{
                 slug: person.slug,

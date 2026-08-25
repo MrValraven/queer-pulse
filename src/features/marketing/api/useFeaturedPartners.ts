@@ -28,9 +28,8 @@ export function useFeaturedPartners(): FeaturedPartnersResult {
     queryKey: ["featured-partners", demoMode],
     queryFn: async () => {
       if (demoMode) {
-        const { FEATURED_PARTNERS_DEMO } = await import(
-          "../forOrganisationsProof.data"
-        );
+        const { FEATURED_PARTNERS_DEMO } =
+          await import("../forOrganisationsProof.data");
         return FEATURED_PARTNERS_DEMO;
       }
       const page = await getPartners({ featured: true });

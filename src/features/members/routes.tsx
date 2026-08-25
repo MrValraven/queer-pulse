@@ -4,10 +4,19 @@ import { MemberProfileRedirect } from "../../app/routes.redirects";
 import { lazyNamed } from "../../app/routeHelpers";
 
 const ProfilePage = lazyNamed(() => import("./ProfilePage"), "ProfilePage");
-const MemberDirectoryFilterPage = lazyNamed(() => import("./MemberDirectoryFilterPage"), "MemberDirectoryFilterPage");
+const MemberDirectoryFilterPage = lazyNamed(
+  () => import("./MemberDirectoryFilterPage"),
+  "MemberDirectoryFilterPage",
+);
 const SearchPage = lazyNamed(() => import("./SearchPage"), "SearchPage");
-const PublicProfilePage = lazyNamed(() => import("./PublicProfilePage"), "PublicProfilePage");
-const CollectionsPage = lazyNamed(() => import("./CollectionsPage"), "CollectionsPage");
+const PublicProfilePage = lazyNamed(
+  () => import("./PublicProfilePage"),
+  "PublicProfilePage",
+);
+const CollectionsPage = lazyNamed(
+  () => import("./CollectionsPage"),
+  "CollectionsPage",
+);
 const BadgesPage = lazyNamed(() => import("./BadgesPage"), "BadgesPage");
 const PerksPage = lazyNamed(() => import("./PerksPage"), "PerksPage");
 const DraftsPage = lazyNamed(() => import("./DraftsPage"), "DraftsPage");

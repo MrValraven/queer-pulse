@@ -3,7 +3,10 @@ import { Button, FormField, Modal } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleBlock } from "../../api/pieces.api";
 import type { WriterAssignmentDto } from "../../api/writerWorkspace.api";
-import { createParagraphBlocks, splitIntoParagraphTexts } from "../editor/useArticleBlockOps";
+import {
+  createParagraphBlocks,
+  splitIntoParagraphTexts,
+} from "../editor/useArticleBlockOps";
 import modalStyles from "../DeskModals.module.css";
 
 export interface FileDraftModalProps {
@@ -24,13 +27,22 @@ export interface FileDraftModalProps {
  * and sent along with the file action, which appends them to the piece's
  * article draft server-side before it advances stage.
  */
-export function FileDraftModal({ assignment, onClose, onFile }: FileDraftModalProps) {
+export function FileDraftModal({
+  assignment,
+  onClose,
+  onFile,
+}: FileDraftModalProps) {
   const { t } = useTranslation();
   const [draftText, setDraftText] = useState("");
 
   function handleFile() {
     const paragraphTexts = splitIntoParagraphTexts(draftText);
-    onFile(assignment.id, paragraphTexts.length > 0 ? createParagraphBlocks(paragraphTexts) : undefined);
+    onFile(
+      assignment.id,
+      paragraphTexts.length > 0
+        ? createParagraphBlocks(paragraphTexts)
+        : undefined,
+    );
     onClose();
   }
 
@@ -63,7 +75,9 @@ export function FileDraftModal({ assignment, onClose, onFile }: FileDraftModalPr
       </FormField>
       <p className={modalStyles.body}>
         {assignment.target !== null
-          ? t("magazine:writer.fileDraft.wordCountWithTarget", { target: assignment.target })
+          ? t("magazine:writer.fileDraft.wordCountWithTarget", {
+              target: assignment.target,
+            })
           : t("magazine:writer.fileDraft.wordCountNoTarget")}
       </p>
     </Modal>

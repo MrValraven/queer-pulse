@@ -130,7 +130,11 @@ export function useAdminRoadmapItemMutations() {
   const archiveItemMutation = useMutation({
     mutationFn: async ({ id, archived }: ArchiveRoadmapItemVars) => {
       if (demoMode) {
-        const { state, result } = demoArchiveItem(readDemoRoadmap(), id, archived);
+        const { state, result } = demoArchiveItem(
+          readDemoRoadmap(),
+          id,
+          archived,
+        );
         writeDemoRoadmap(state);
         return result;
       }

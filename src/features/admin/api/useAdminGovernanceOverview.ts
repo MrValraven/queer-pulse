@@ -57,9 +57,8 @@ function lastSegment(fullKey: string): string {
  *  {@link applyOverviewEdits}). Imported on demand so the mock never ships
  *  in the live bundle. */
 async function buildDemoAdminOverview(): Promise<AdminOverviewResponseDTO> {
-  const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } = await import(
-    "../../governance/governance.data"
-  );
+  const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } =
+    await import("../../governance/governance.data");
 
   const emptyMeta = { editor: null, editedAt: null };
 
@@ -201,9 +200,9 @@ export function useUpdateAdminOverview() {
   >({
     demoMode,
     demoResult: async (body) => {
-      const current = queryClient.getQueryData<AdminOverviewResponseDTO>(
-        queryKey,
-      ) ?? (await buildDemoAdminOverview());
+      const current =
+        queryClient.getQueryData<AdminOverviewResponseDTO>(queryKey) ??
+        (await buildDemoAdminOverview());
       return applyOverviewEdits(
         current,
         body,

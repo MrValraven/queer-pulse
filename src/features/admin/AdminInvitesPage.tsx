@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
 import { FiSliders } from "react-icons/fi";
-import { Button, FadeIn, Select, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  Select,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { AdminPageHeader, AdminTabs, AdminChip } from "./ui";
 import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
@@ -129,13 +134,8 @@ export function AdminInvitesPage() {
   // it narrows the whole invite graph, not just the loaded pages, and its
   // options come from a dedicated inviters list covering every sender platform-
   // wide (not only those already fetched).
-  const {
-    invites,
-    isLoading,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  } = useAdminInvites(filter, inviterSlug);
+  const { invites, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useAdminInvites(filter, inviterSlug);
   const { inviters } = useAdminInviteInviters();
 
   const inviterOptions = useMemo(

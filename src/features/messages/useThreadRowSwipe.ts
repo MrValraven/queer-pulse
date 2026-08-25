@@ -85,7 +85,8 @@ function writeRowTransform(
   reducedMotion: boolean,
 ): void {
   if (!node) return;
-  node.style.transform = !reducedMotion && offsetPx !== 0 ? `translateX(${offsetPx}px)` : "";
+  node.style.transform =
+    !reducedMotion && offsetPx !== 0 ? `translateX(${offsetPx}px)` : "";
 }
 
 /** Writes each affordance icon's opacity + scale straight to the DOM. Only the
@@ -137,7 +138,11 @@ export function useThreadRowSwipe({
       // none today, but this stays the same defensive guard the bubble
       // gesture uses, and it's what makes "can't start on the ⋯ trigger"
       // true even if the row ever grows another inline control).
-      if (!enabled || event.pointerType === "mouse" || isInteractiveTarget(event)) {
+      if (
+        !enabled ||
+        event.pointerType === "mouse" ||
+        isInteractiveTarget(event)
+      ) {
         pressRef.current = null;
         return;
       }
@@ -162,7 +167,10 @@ export function useThreadRowSwipe({
         // Engage on whichever axis-dominant horizontal intent appears — a
         // vertical drag stays a scroll (the row's `touch-action: pan-y` keeps
         // that native), either horizontal direction can arm.
-        if (Math.abs(deltaX) > SWIPE_ENGAGE_PX && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (
+          Math.abs(deltaX) > SWIPE_ENGAGE_PX &&
+          Math.abs(deltaX) > Math.abs(deltaY)
+        ) {
           press.engaged = true;
           setSwiping(true);
         } else {
@@ -174,7 +182,11 @@ export function useThreadRowSwipe({
       // Direct DOM writes only — no `setState` here, so a swipe never
       // re-renders the row (avatar, badges, indicators) on every pointer frame.
       writeRowTransform(rowRef.current, offset, reducedMotion);
-      writeAffordanceProgress(leadingIconRef.current, trailingIconRef.current, offset);
+      writeAffordanceProgress(
+        leadingIconRef.current,
+        trailingIconRef.current,
+        offset,
+      );
     },
     [rowRef, leadingIconRef, trailingIconRef, reducedMotion],
   );
@@ -193,7 +205,14 @@ export function useThreadRowSwipe({
       if (press.offset > 0) onSwipePin();
       else onSwipeFavorite();
     }
-  }, [rowRef, leadingIconRef, trailingIconRef, reducedMotion, onSwipePin, onSwipeFavorite]);
+  }, [
+    rowRef,
+    leadingIconRef,
+    trailingIconRef,
+    reducedMotion,
+    onSwipePin,
+    onSwipeFavorite,
+  ]);
 
   const onPointerUp = useCallback(
     (event: React.PointerEvent) => {
@@ -226,7 +245,13 @@ export function useThreadRowSwipe({
   }, []);
 
   return {
-    handlers: { onPointerDown, onPointerMove, onPointerUp, onPointerLeave, onPointerCancel },
+    handlers: {
+      onPointerDown,
+      onPointerMove,
+      onPointerUp,
+      onPointerLeave,
+      onPointerCancel,
+    },
     swiping,
     consumeSwipeClick,
   };

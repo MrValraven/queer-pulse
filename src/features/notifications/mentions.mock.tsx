@@ -52,8 +52,8 @@ const MENTION_SEEDS: MentionSeed[] = [
     unread: true,
     content: (
       <>
-        "Thanks <mark>@tomás</mark>, Inês's mobile was the right answer. Got
-        the slot. <em>Calling tomorrow morning to confirm.</em>"
+        "Thanks <mark>@tomás</mark>, Inês's mobile was the right answer. Got the
+        slot. <em>Calling tomorrow morning to confirm.</em>"
       </>
     ),
     whereText:
@@ -107,8 +107,8 @@ const MENTION_SEEDS: MentionSeed[] = [
     unread: true,
     content: (
       <>
-        "<mark>@tomás</mark>, bringing the Issue 10 spreads for live edit on
-        Thu 26 Jun. Hope you can make it. <em>Bring a red pen.</em>"
+        "<mark>@tomás</mark>, bringing the Issue 10 spreads for live edit on Thu
+        26 Jun. Hope you can make it. <em>Bring a red pen.</em>"
       </>
     ),
     whereText: "Open Studio · 26 Jun · Atelier Pulso",
@@ -132,8 +132,8 @@ const MENTION_SEEDS: MentionSeed[] = [
     createdAt: () => ago(1, "day"),
     content: (
       <>
-        "For anyone going to <mark>@tomás</mark>'s portfolio night on Wed.
-        Bring three pieces, not five, and at least one that you think is bad."
+        "For anyone going to <mark>@tomás</mark>'s portfolio night on Wed. Bring
+        three pieces, not five, and at least one that you think is bad."
       </>
     ),
     whereText: "Creatives community",
@@ -151,8 +151,8 @@ const MENTION_SEEDS: MentionSeed[] = [
     createdAt: () => ago(1, "day"),
     content: (
       <>
-        "<mark>@tomás</mark> ran a great session at the riso night. Recommend
-        if you're new to the medium."
+        "<mark>@tomás</mark> ran a great session at the riso night. Recommend if
+        you're new to the medium."
       </>
     ),
     whereText: '"What\'s a Lisbon workshop worth the money?"',

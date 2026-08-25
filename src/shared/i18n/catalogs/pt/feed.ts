@@ -157,8 +157,7 @@ export const feed: Catalog = {
     "Denunciar também {name} à nossa equipa de segurança",
   "moderation.blockDialog.submitCta": "Bloquear {name}",
 
-  "moderation.reportConfirm.title":
-    "Obrigade, <em>estamos a tratar disso</em>",
+  "moderation.reportConfirm.title": "Obrigade, <em>estamos a tratar disso</em>",
   "moderation.reportConfirm.body":
     "A nossa equipa de moderação vai rever esta publicação sobre {name}. Para algo urgente, contacta-nos diretamente em {email}.",
   "moderation.reportDialog.title": "Denunciar esta publicação",

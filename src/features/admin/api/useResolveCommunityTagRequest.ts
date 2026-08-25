@@ -69,13 +69,18 @@ export function useResolveCommunityTagRequest() {
         return {
           ...page,
           items: stillMatchesThisPage
-            ? page.items.map((item) => (item === existingItem ? patchedItem : item))
+            ? page.items.map((item) =>
+                item === existingItem ? patchedItem : item,
+              )
             : page.items.filter((item) => item !== existingItem),
         };
       });
 
       if (itemWasFound) {
-        queryClient.setQueryData(queryKey, { ...currentData, pages: patchedPages });
+        queryClient.setQueryData(queryKey, {
+          ...currentData,
+          pages: patchedPages,
+        });
       }
     }
   };
@@ -84,7 +89,9 @@ export function useResolveCommunityTagRequest() {
     mutationFn: async ({ id }) => {
       if (demoMode) {
         await new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
-        logInfo("admin.communityTagRequest.resolve (demo — no network)", { id });
+        logInfo("admin.communityTagRequest.resolve (demo — no network)", {
+          id,
+        });
         return;
       }
       await resolveCommunityTagRequest(id);
@@ -104,7 +111,9 @@ export function useResolveCommunityTagRequest() {
     },
     onSettled: () => {
       if (!demoMode) {
-        void queryClient.invalidateQueries({ queryKey: TAG_REQUESTS_QUERY_KEY });
+        void queryClient.invalidateQueries({
+          queryKey: TAG_REQUESTS_QUERY_KEY,
+        });
       }
     },
     meta: { silentError: true },

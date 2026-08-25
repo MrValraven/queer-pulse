@@ -36,9 +36,7 @@ function renderWithGallery(path: string) {
 describe("SimulationPlayer", () => {
   it("renders a sandbox iframe for a known flow id", async () => {
     renderAt(`/simulations/${firstFlow.id}`);
-    const frame = (await screen.findByTitle(
-      firstFlow.title,
-    )) as HTMLIFrameElement;
+    const frame = await screen.findByTitle<HTMLIFrameElement>(firstFlow.title);
     expect(frame.getAttribute("src")).toBe(`${firstFlow.to}?sandbox=1`);
     expect(frame.getAttribute("data-sandbox")).toBe("1");
   });
@@ -54,9 +52,9 @@ describe("SimulationPlayer", () => {
 
   it("offers a full-screen pop-out to a top-level sandbox tab", async () => {
     renderAt(`/simulations/${firstFlow.id}`);
-    const popout = (await screen.findByRole("link", {
+    const popout = await screen.findByRole<HTMLAnchorElement>("link", {
       name: /open in new tab/i,
-    })) as HTMLAnchorElement;
+    });
     expect(popout.getAttribute("href")).toBe(`${firstFlow.to}?sandbox=1`);
     expect(popout.getAttribute("target")).toBe("_blank");
   });

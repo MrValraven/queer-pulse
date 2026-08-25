@@ -37,7 +37,9 @@ export function AuthorsDirectoryPage() {
             <div className={styles.eyebrow}>
               {t("magazine:authorsDirectory.eyebrow")}
             </div>
-            <h1 className={styles.h1}>{t("magazine:authorsDirectory.title")}</h1>
+            <h1 className={styles.h1}>
+              {t("magazine:authorsDirectory.title")}
+            </h1>
             <p className={styles.sub}>{t("magazine:authorsDirectory.sub")}</p>
           </div>
 

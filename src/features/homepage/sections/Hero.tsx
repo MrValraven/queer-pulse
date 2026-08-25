@@ -1,4 +1,9 @@
-import { Button, Eyebrow, FeatureHelp, Reveal } from "../../../shared/components/ui";
+import {
+  Button,
+  Eyebrow,
+  FeatureHelp,
+  Reveal,
+} from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { requestInvitePath } from "../../auth/api/joinRequestSource";

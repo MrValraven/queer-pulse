@@ -54,7 +54,10 @@ describe("ConnectionStatusBanner", () => {
     expect(
       await screen.findByText(/messages will send when you reconnect/i),
     ).toBeInTheDocument();
-    expect(screen.getByRole("status")).toHaveAttribute("data-status", "offline");
+    expect(screen.getByRole("status")).toHaveAttribute(
+      "data-status",
+      "offline",
+    );
   });
 
   it("renders nothing when connected and online", () => {

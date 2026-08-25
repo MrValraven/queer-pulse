@@ -36,7 +36,6 @@ const TINT_CSS: Record<
   plum: { bg: "rgba(45,27,61,.1)", color: "var(--plum)" },
 };
 
-
 /** Build the testimonial view-model, or null when the partner has no quote. */
 function toTestimonial(dto: PartnerCardDTO): PartnerTestimonial | null {
   if (!dto.testimonialQuote || !dto.testimonialAuthor) return null;

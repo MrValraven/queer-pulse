@@ -63,10 +63,10 @@ export function useClipboard(resetMs = 2000): {
  * dependency and takes the messages, rather than making adopters re-wire the
  * toast themselves.
  */
-export function useShareLink(messages: {
-  copied: string;
-  failed?: string;
-}): { share: (url: string) => Promise<void>; copied: boolean } {
+export function useShareLink(messages: { copied: string; failed?: string }): {
+  share: (url: string) => Promise<void>;
+  copied: boolean;
+} {
   const { copy, copied } = useClipboard();
   const { showToast } = useToast();
 

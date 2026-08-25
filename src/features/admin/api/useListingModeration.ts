@@ -101,6 +101,7 @@ export function useListingModeration(
     /** The raw ask-a-question mutation, for `AskQuestionModal` to drive
      *  directly — it owns the body-text UI and its own success/close flow. */
     ask: askQuestion,
-    isPending: setStatus.isPending || removeListing.isPending || askQuestion.isPending,
+    isPending:
+      setStatus.isPending || removeListing.isPending || askQuestion.isPending,
   };
 }

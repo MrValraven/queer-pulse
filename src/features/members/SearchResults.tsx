@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Avatar, Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Avatar,
+  Button,
+  FadeIn,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -63,7 +68,10 @@ function ResultCard({ item }: { item: SearchItem }) {
           size={42}
         />
       ) : (
-        <div className={styles.cardIcon} style={{ background: TYPE_BG[item.t] }}>
+        <div
+          className={styles.cardIcon}
+          style={{ background: TYPE_BG[item.t] }}
+        >
           <TypeIcon />
         </div>
       )}

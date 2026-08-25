@@ -2,38 +2,116 @@ import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
-const WellbeingPage = lazyNamed(() => import("./WellbeingPage"), "WellbeingPage");
-const MentalHealthPage = lazyNamed(() => import("./MentalHealthPage"), "MentalHealthPage");
-const TransHealthcarePage = lazyNamed(() => import("./TransHealthcarePage"), "TransHealthcarePage");
-const HarmReductionPage = lazyNamed(() => import("./HarmReductionPage"), "HarmReductionPage");
-const SexualHealthPage = lazyNamed(() => import("./SexualHealthPage"), "SexualHealthPage");
+const WellbeingPage = lazyNamed(
+  () => import("./WellbeingPage"),
+  "WellbeingPage",
+);
+const MentalHealthPage = lazyNamed(
+  () => import("./MentalHealthPage"),
+  "MentalHealthPage",
+);
+const TransHealthcarePage = lazyNamed(
+  () => import("./TransHealthcarePage"),
+  "TransHealthcarePage",
+);
+const HarmReductionPage = lazyNamed(
+  () => import("./HarmReductionPage"),
+  "HarmReductionPage",
+);
+const SexualHealthPage = lazyNamed(
+  () => import("./SexualHealthPage"),
+  "SexualHealthPage",
+);
 const SoberPage = lazyNamed(() => import("./SoberPage"), "SoberPage");
 const Queer101Page = lazyNamed(() => import("./Queer101Page"), "Queer101Page");
 const GlossaryPage = lazyNamed(() => import("./GlossaryPage"), "GlossaryPage");
-const MicroGrantsPage = lazyNamed(() => import("./MicroGrantsPage"), "MicroGrantsPage");
-const IntersectionalityPage = lazyNamed(() => import("./IntersectionalityPage"), "IntersectionalityPage");
+const MicroGrantsPage = lazyNamed(
+  () => import("./MicroGrantsPage"),
+  "MicroGrantsPage",
+);
+const IntersectionalityPage = lazyNamed(
+  () => import("./IntersectionalityPage"),
+  "IntersectionalityPage",
+);
 const TransHubPage = lazyNamed(() => import("./TransHubPage"), "TransHubPage");
 const LegalPage = lazyNamed(() => import("./LegalPage"), "LegalPage");
 const SafetyPage = lazyNamed(() => import("./SafetyPage"), "SafetyPage");
-const PronounsGuidePage = lazyNamed(() => import("./PronounsGuidePage"), "PronounsGuidePage");
-const RunningGuidePage = lazyNamed(() => import("./RunningGuidePage"), "RunningGuidePage");
-const AccessibleLisbonPage = lazyNamed(() => import("./AccessibleLisbonPage"), "AccessibleLisbonPage");
-const PeerSupportPage = lazyNamed(() => import("./PeerSupportPage"), "PeerSupportPage");
-const ArtCritGuidePage = lazyNamed(() => import("./ArtCritGuidePage"), "ArtCritGuidePage");
-const SharedEquipmentPage = lazyNamed(() => import("./SharedEquipmentPage"), "SharedEquipmentPage");
-const GroupShowArchivePage = lazyNamed(() => import("./GroupShowArchivePage"), "GroupShowArchivePage");
-const FirstMeetupGuidePage = lazyNamed(() => import("./FirstMeetupGuidePage"), "FirstMeetupGuidePage");
-const QueerPaediatriciansPage = lazyNamed(() => import("./QueerPaediatriciansPage"), "QueerPaediatriciansPage");
-const SchoolFormsGuidePage = lazyNamed(() => import("./SchoolFormsGuidePage"), "SchoolFormsGuidePage");
-const CommunityPrivacyPage = lazyNamed(() => import("./CommunityPrivacyPage"), "CommunityPrivacyPage");
-const ComingOutAtWorkPage = lazyNamed(() => import("./ComingOutAtWorkPage"), "ComingOutAtWorkPage");
-const LgbtqAgingGuidePage = lazyNamed(() => import("./LgbtqAgingGuidePage"), "LgbtqAgingGuidePage");
-const OralHistoryProjectPage = lazyNamed(() => import("./OralHistoryProjectPage"), "OralHistoryProjectPage");
-const IngredientsMapPage = lazyNamed(() => import("./IngredientsMapPage"), "IngredientsMapPage");
-const QtipocOrganisationsPage = lazyNamed(() => import("./QtipocOrganisationsPage"), "QtipocOrganisationsPage");
-const QtipocArchivePage = lazyNamed(() => import("./QtipocArchivePage"), "QtipocArchivePage");
-const DisabilityHealthcarePage = lazyNamed(() => import("./DisabilityHealthcarePage"), "DisabilityHealthcarePage");
-const SpoonTheoryPage = lazyNamed(() => import("./SpoonTheoryPage"), "SpoonTheoryPage");
+const PronounsGuidePage = lazyNamed(
+  () => import("./PronounsGuidePage"),
+  "PronounsGuidePage",
+);
+const RunningGuidePage = lazyNamed(
+  () => import("./RunningGuidePage"),
+  "RunningGuidePage",
+);
+const AccessibleLisbonPage = lazyNamed(
+  () => import("./AccessibleLisbonPage"),
+  "AccessibleLisbonPage",
+);
+const PeerSupportPage = lazyNamed(
+  () => import("./PeerSupportPage"),
+  "PeerSupportPage",
+);
+const ArtCritGuidePage = lazyNamed(
+  () => import("./ArtCritGuidePage"),
+  "ArtCritGuidePage",
+);
+const SharedEquipmentPage = lazyNamed(
+  () => import("./SharedEquipmentPage"),
+  "SharedEquipmentPage",
+);
+const GroupShowArchivePage = lazyNamed(
+  () => import("./GroupShowArchivePage"),
+  "GroupShowArchivePage",
+);
+const FirstMeetupGuidePage = lazyNamed(
+  () => import("./FirstMeetupGuidePage"),
+  "FirstMeetupGuidePage",
+);
+const QueerPaediatriciansPage = lazyNamed(
+  () => import("./QueerPaediatriciansPage"),
+  "QueerPaediatriciansPage",
+);
+const SchoolFormsGuidePage = lazyNamed(
+  () => import("./SchoolFormsGuidePage"),
+  "SchoolFormsGuidePage",
+);
+const CommunityPrivacyPage = lazyNamed(
+  () => import("./CommunityPrivacyPage"),
+  "CommunityPrivacyPage",
+);
+const ComingOutAtWorkPage = lazyNamed(
+  () => import("./ComingOutAtWorkPage"),
+  "ComingOutAtWorkPage",
+);
+const LgbtqAgingGuidePage = lazyNamed(
+  () => import("./LgbtqAgingGuidePage"),
+  "LgbtqAgingGuidePage",
+);
+const OralHistoryProjectPage = lazyNamed(
+  () => import("./OralHistoryProjectPage"),
+  "OralHistoryProjectPage",
+);
+const IngredientsMapPage = lazyNamed(
+  () => import("./IngredientsMapPage"),
+  "IngredientsMapPage",
+);
+const QtipocOrganisationsPage = lazyNamed(
+  () => import("./QtipocOrganisationsPage"),
+  "QtipocOrganisationsPage",
+);
+const QtipocArchivePage = lazyNamed(
+  () => import("./QtipocArchivePage"),
+  "QtipocArchivePage",
+);
+const DisabilityHealthcarePage = lazyNamed(
+  () => import("./DisabilityHealthcarePage"),
+  "DisabilityHealthcarePage",
+);
+const SpoonTheoryPage = lazyNamed(
+  () => import("./SpoonTheoryPage"),
+  "SpoonTheoryPage",
+);
 
 /** Resources & wellbeing: health guides, the therapist directory, glossary,
  *  identity/community guides, and the general safety overview. */
@@ -93,10 +171,7 @@ export function resourceRoutes() {
         element={<CommunityPrivacyPage />}
       />
       <Route path={routes.comingOutAtWork} element={<ComingOutAtWorkPage />} />
-      <Route
-        path={routes.lgbtqAgingGuide}
-        element={<LgbtqAgingGuidePage />}
-      />
+      <Route path={routes.lgbtqAgingGuide} element={<LgbtqAgingGuidePage />} />
       <Route
         path={routes.oralHistoryProject}
         element={<OralHistoryProjectPage />}

@@ -6,7 +6,11 @@ import type {
 } from "../../../shared/contracts/contracts";
 
 const t = ((k: string) => k) as never;
-const fmt = { number: (n: number) => String(n), relativeTime: () => "1m", date: () => "d" } as never;
+const fmt = {
+  number: (n: number) => String(n),
+  relativeTime: () => "1m",
+  date: () => "d",
+} as never;
 
 function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
   return {

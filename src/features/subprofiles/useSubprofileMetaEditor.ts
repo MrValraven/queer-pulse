@@ -10,6 +10,12 @@ import type { SubprofileView } from "./api/subprofiles.adapters";
 import type { HandleAvailability } from "../settings/api/useHandleAvailability";
 import type { MetaSnapshot } from "./subprofileEditorDiff";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
+import {
+  buildMetaPatchFrom,
+  metaSnapshotOf,
+  sameMetaSnapshot,
+} from "./subprofileMetaEditor.helpers";
+import { useServerMetaResync } from "./useServerMetaResync";
 
 export interface SubprofileMetaEditor {
   displayName: string;
@@ -96,33 +102,6 @@ export interface SubprofileMetaEditor {
   markSaved: (snapshot: MetaSnapshot) => void;
 }
 
-/** The persisted persona, mapped to the comparable flat meta shape. */
-function metaSnapshotOf(subprofile: SubprofileView): MetaSnapshot {
-  return {
-    displayName: subprofile.displayName,
-    tagline: subprofile.tagline,
-    bio: subprofile.bio,
-    avatarUrl: subprofile.avatarUrl ?? "",
-    coverUrl: subprofile.coverUrl ?? "",
-    slug: subprofile.slug,
-    handle: subprofile.handle ?? "",
-    link: subprofile.linkVisibility,
-    visibility: subprofile.visibility,
-    accent: subprofile.accent ?? "",
-    availability: subprofile.availability ?? "",
-    ctaLabel: subprofile.ctaLabel,
-    ctaUrl: subprofile.ctaUrl,
-    coverBleed: subprofile.skinData?.coverBleed ?? false,
-  };
-}
-
-/** Field-by-field equality for two meta snapshots (all values are primitives). */
-function sameMetaSnapshot(a: MetaSnapshot, b: MetaSnapshot): boolean {
-  return (Object.keys(a) as (keyof MetaSnapshot)[]).every(
-    (key) => a[key] === b[key],
-  );
-}
-
 /**
  * The subprofile's meta editor state: identity (avatar/name/tagline/bio),
  * presence (cover/accent/availability/CTA), and link/visibility (linked vs.
@@ -157,22 +136,23 @@ export function useSubprofileMetaEditor(
   });
   const [coverUrl, setCoverUrl] = useState(subprofile.coverUrl ?? "");
   const [coverPreview, setCoverPreviewUrl] = useState<string | null>(null);
-  const [coverPreviewCrop, setCoverPreviewCrop] = useState<CropRect | undefined>(
-    undefined,
-  );
+  const [coverPreviewCrop, setCoverPreviewCrop] = useState<
+    CropRect | undefined
+  >(undefined);
   // One setter for the (url, crop) pair so the two can never drift apart: a
   // pick without a crop (a GIF, which bypasses the reframer) must CLEAR any
   // crop left over from the previous pick, not inherit it.
-  const setCoverPreview = useCallback((value: string | null, crop?: CropRect) => {
-    setCoverPreviewUrl(value);
-    setCoverPreviewCrop(crop);
-  }, []);
+  const setCoverPreview = useCallback(
+    (value: string | null, crop?: CropRect) => {
+      setCoverPreviewUrl(value);
+      setCoverPreviewCrop(crop);
+    },
+    [],
+  );
   const [coverBleed, setCoverBleed] = useState<boolean>(
     subprofile.skinData?.coverBleed ?? false,
   );
-  const [accent, setAccent] = useState<AccentKey | "">(
-    subprofile.accent ?? "",
-  );
+  const [accent, setAccent] = useState<AccentKey | "">(subprofile.accent ?? "");
   const [availability, setAvailability] = useState<AvailabilityKey | "">(
     subprofile.availability ?? "",
   );
@@ -194,72 +174,45 @@ export function useSubprofileMetaEditor(
     metaSnapshotOf(subprofile),
   );
 
-  // ── Server resync ───────────────────────────────────────────────────────
-  // Every field above is seeded ONCE, and the shell only remounts on a
-  // different persona — so a refetch that changes a value server-side used to
-  // go unnoticed. Unpublish is the sharp case: it NULLs an unlinked persona's
-  // handle, while local `handle` and `baseline.handle` kept the old value, so
-  // `handleChanged` computed false, the handle was never re-sent, and `dirty`
-  // stayed false with Save disabled. The address silently stopped saving and
-  // Publish then failed a "handle" completeness check against a null row.
-  //
-  // So: when the server value for a field changes and the member has NOT
-  // edited that field locally (local === baseline), adopt the new value into
-  // both the field and the baseline. A locally-edited field keeps the edit and
-  // stays dirty, so their work is never overwritten by a background refetch.
-  // Snap-during-render (React's "adjust state while rendering"), not an effect,
-  // so the fresh values are already in place on this same paint.
-  const [appliedServerMeta, setAppliedServerMeta] =
-    useState<MetaSnapshot>(serverMeta);
-  if (!sameMetaSnapshot(appliedServerMeta, serverMeta)) {
-    const local: MetaSnapshot = {
-      displayName,
-      tagline,
-      bio,
-      avatarUrl,
-      coverUrl,
-      slug,
-      handle,
-      link,
-      visibility,
-      accent,
-      availability,
-      ctaLabel,
-      ctaUrl,
-      coverBleed,
-    };
-    const adopters: [keyof MetaSnapshot, (server: MetaSnapshot) => void][] = [
-      ["displayName", (server) => setDisplayName(server.displayName)],
-      ["tagline", (server) => setTagline(server.tagline)],
-      ["bio", (server) => setBio(server.bio)],
-      ["avatarUrl", (server) => setAvatarUrl(server.avatarUrl)],
-      ["coverUrl", (server) => setCoverUrl(server.coverUrl)],
-      ["slug", (server) => setSlug(server.slug)],
-      ["handle", (server) => setHandle(server.handle)],
-      ["link", (server) => setLink(server.link as LinkVisibility)],
-      ["visibility", (server) => setVisibility(server.visibility as Visibility)],
-      ["accent", (server) => setAccent(server.accent as AccentKey)],
-      [
-        "availability",
-        (server) => setAvailability(server.availability as AvailabilityKey | ""),
-      ],
-      ["ctaLabel", (server) => setCtaLabel(server.ctaLabel)],
-      ["ctaUrl", (server) => setCtaUrl(server.ctaUrl)],
-      ["coverBleed", (server) => setCoverBleed(server.coverBleed)],
-    ];
-    const nextBaseline: MetaSnapshot = { ...baseline };
-    for (const [key, adopt] of adopters) {
-      if (serverMeta[key] === appliedServerMeta[key]) continue;
-      if (local[key] !== baseline[key]) continue;
-      adopt(serverMeta);
-      // `MetaSnapshot` has no index signature, so the write goes through
-      // `unknown` rather than asserting a shape the type does not have.
-      (nextBaseline as unknown as Record<string, string | boolean>)[key] =
-        serverMeta[key];
-    }
-    setAppliedServerMeta(serverMeta);
-    setBaseline(nextBaseline);
-  }
+  // Current field state in the comparable flat shape — shared by the server
+  // resync below, `buildMetaPatch()`, and `metaSnapshot()`.
+  const currentSnapshot: MetaSnapshot = {
+    displayName,
+    tagline,
+    bio,
+    avatarUrl,
+    coverUrl,
+    slug,
+    handle,
+    link,
+    visibility,
+    accent,
+    availability,
+    ctaLabel,
+    ctaUrl,
+    coverBleed,
+  };
+
+  // Adopt server-side changes to fields the member hasn't locally edited (see
+  // `useServerMetaResync` for why this exists — the unpublish/handle-null
+  // case). Runs during render, not an effect: the fresh values must be in
+  // place on this same paint.
+  useServerMetaResync(serverMeta, currentSnapshot, baseline, setBaseline, {
+    setDisplayName,
+    setTagline,
+    setBio,
+    setAvatarUrl,
+    setCoverUrl,
+    setSlug,
+    setHandle,
+    setLink,
+    setVisibility,
+    setAccent,
+    setAvailability,
+    setCtaLabel,
+    setCtaUrl,
+    setCoverBleed,
+  });
 
   const nameMissing = displayName.trim().length === 0;
   // A standalone (unlinked) handle shares the global namespace — don't let a
@@ -272,22 +225,10 @@ export function useSubprofileMetaEditor(
 
   // Any local field diverged from the editor's baseline (last-saved state)?
   // Advancing `baseline` on save settles this back to false without depending
-  // on a refetch (see the `baseline` comment above).
-  const dirty =
-    displayName !== baseline.displayName ||
-    tagline !== baseline.tagline ||
-    bio !== baseline.bio ||
-    avatarUrl !== baseline.avatarUrl ||
-    link !== baseline.link ||
-    visibility !== baseline.visibility ||
-    slug !== baseline.slug ||
-    handle !== baseline.handle ||
-    coverUrl !== baseline.coverUrl ||
-    accent !== baseline.accent ||
-    availability !== baseline.availability ||
-    ctaLabel !== baseline.ctaLabel ||
-    ctaUrl !== baseline.ctaUrl ||
-    coverBleed !== baseline.coverBleed;
+  // on a refetch (see the `baseline` comment above). Equivalent to a
+  // field-by-field diff of `currentSnapshot` against `baseline` since
+  // `MetaSnapshot` holds exactly these fields.
+  const dirty = !sameMetaSnapshot(currentSnapshot, baseline);
 
   /**
    * Builds the same partial PATCH the old in-hook `save()` sent, from the
@@ -296,68 +237,11 @@ export function useSubprofileMetaEditor(
    * should happen. Returns `null` when nothing is dirty (nothing to send).
    */
   function buildMetaPatch(): UpdateSubprofileDTO | null {
-    if (!dirty) return null;
-    // At mount `baseline.avatarUrl`/`coverUrl` are the backend-RESOLVED display
-    // URLs (`toImageUrl` turned the stored storage key into `<api>/files/<key>`),
-    // not the raw key. Sending an untouched one back would persist that derived
-    // URL in place of the clean key — and since a dev API base is `http://…`,
-    // the next read fails `toImageUrl`'s `https://`-only check and resolves to
-    // `null`, blanking the image. So only send an image field when the user
-    // actually changed it: a fresh pick sets it to a new storage key, and a
-    // clear sets it to `""` (→ `null`); an untouched field is omitted, leaving
-    // the stored key intact under PATCH semantics. After a save, `markSaved`
-    // advances the baseline to the sent key so it isn't re-sent next time.
-    const avatarChanged = avatarUrl !== baseline.avatarUrl;
-    const coverChanged = coverUrl !== baseline.coverUrl;
-    // slug (the address) and handle live on the Address pane, not Identity. Only
-    // send them when the user actually changed them: an Identity-only edit must
-    // never touch the address/handle. Critically this stops a nested persona
-    // (whose handle is null → local state "") from PATCHing handle: "" on every
-    // save — the empty string is NOT null, so it lands in the partial-unique
-    // handle index and two of an owner's personas collide on the global handle
-    // namespace. A cleared handle is sent as null (never ""), so it stays exempt.
-    const slugChanged = slug !== baseline.slug;
-    const handleChanged = handle !== baseline.handle;
-    // Only PATCH skinData when the bleed flag actually changed, and merge onto
-    // the loaded skinData so we never clobber skin-extras panels' fields.
-    const coverBleedChanged = coverBleed !== baseline.coverBleed;
-    return {
-      displayName: displayName.trim(),
-      tagline: tagline.trim() || null,
-      bio: bio.trim() || null,
-      ...(avatarChanged ? { avatarUrl: avatarUrl || null } : {}),
-      ...(coverChanged ? { coverUrl: coverUrl || null } : {}),
-      accent: accent || null,
-      availability: availability || null,
-      ctaLabel: ctaLabel.trim() || null,
-      ctaUrl: ctaUrl.trim() || null,
-      linkVisibility: link,
-      visibility,
-      ...(slugChanged ? { slug: slug.trim() } : {}),
-      ...(handleChanged ? { handle: handle.trim() || null } : {}),
-      ...(coverBleedChanged
-        ? { skinData: { ...(subprofile.skinData ?? {}), coverBleed } }
-        : {}),
-    };
+    return buildMetaPatchFrom(currentSnapshot, baseline, subprofile.skinData);
   }
 
   function metaSnapshot(): MetaSnapshot {
-    return {
-      displayName,
-      tagline,
-      bio,
-      avatarUrl,
-      coverUrl,
-      slug,
-      handle,
-      link,
-      visibility,
-      accent,
-      availability,
-      ctaLabel,
-      ctaUrl,
-      coverBleed,
-    };
+    return currentSnapshot;
   }
 
   function baselineSnapshot(): MetaSnapshot {

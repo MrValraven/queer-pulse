@@ -5,12 +5,7 @@ import type { MemberRefDTO } from "../../../shared/api/refs";
  *  `SuggestEditField` in `marketing/api/useSuggestEdit.ts`, the member-facing
  *  submission side of this same feature. */
 export type EditSuggestionField =
-  | "hours"
-  | "address"
-  | "phone"
-  | "website"
-  | "description"
-  | "other";
+  "hours" | "address" | "phone" | "website" | "description" | "other";
 
 export type EditSuggestionStatus = "pending" | "accepted" | "dismissed";
 

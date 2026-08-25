@@ -6,9 +6,20 @@
  * sensible default when a segment is stepped from empty.
  */
 
-import { clampDate, getDaysInMonth, todayPlain, type PlainDate, type PlainTime } from "./plainDate";
+import {
+  clampDate,
+  getDaysInMonth,
+  todayPlain,
+  type PlainDate,
+  type PlainTime,
+} from "./plainDate";
 import type { SegmentType } from "./dateSegments";
-import { hourFromInternal, hourToInternal, type FieldBounds, type WorkingParts } from "./dateFieldParts";
+import {
+  hourFromInternal,
+  hourToInternal,
+  type FieldBounds,
+  type WorkingParts,
+} from "./dateFieldParts";
 import type { FieldMode } from "./DateField";
 
 const SEGMENT_MAX_DIGITS: Record<SegmentType, number> = {
@@ -22,7 +33,10 @@ const SEGMENT_MAX_DIGITS: Record<SegmentType, number> = {
 
 /** Resolve the year/month a lone day segment uses for its day-count ceiling,
  *  falling back to today's when either isn't typed yet. */
-function resolveYearMonth(parts: WorkingParts): { year: number; month: number } {
+function resolveYearMonth(parts: WorkingParts): {
+  year: number;
+  month: number;
+} {
   const today = todayPlain();
   return { year: parts.year ?? today.year, month: parts.month ?? today.month };
 }
@@ -66,7 +80,8 @@ export function stepSegment(
   is12Hour: boolean,
 ): WorkingParts {
   const { min, max } = segmentRange(type, parts, is12Hour);
-  if (type === "meridiem") return { ...parts, meridiem: parts.meridiem === "AM" ? "PM" : "AM" };
+  if (type === "meridiem")
+    return { ...parts, meridiem: parts.meridiem === "AM" ? "PM" : "AM" };
   if (type === "year") {
     const nextYear = (parts.year ?? todayPlain().year) + direction;
     const day =
@@ -76,13 +91,25 @@ export function stepSegment(
     return { ...parts, year: nextYear, day };
   }
   if (type === "month") {
-    const nextMonth = wrap((parts.month ?? todayPlain().month) + direction, min, max);
+    const nextMonth = wrap(
+      (parts.month ?? todayPlain().month) + direction,
+      min,
+      max,
+    );
     const { year } = resolveYearMonth(parts);
-    const day = parts.day !== null ? Math.min(parts.day, getDaysInMonth(year, nextMonth)) : parts.day;
+    const day =
+      parts.day !== null
+        ? Math.min(parts.day, getDaysInMonth(year, nextMonth))
+        : parts.day;
     return { ...parts, month: nextMonth, day };
   }
-  if (type === "day") return { ...parts, day: wrap((parts.day ?? todayPlain().day) + direction, min, max) };
-  if (type === "hour") return { ...parts, hour: wrap((parts.hour ?? min) + direction, min, max) };
+  if (type === "day")
+    return {
+      ...parts,
+      day: wrap((parts.day ?? todayPlain().day) + direction, min, max),
+    };
+  if (type === "hour")
+    return { ...parts, hour: wrap((parts.hour ?? min) + direction, min, max) };
   return { ...parts, minute: wrap((parts.minute ?? 0) + direction, min, max) };
 }
 
@@ -98,15 +125,26 @@ function clampTimeParts(
   is12Hour: boolean,
 ): WorkingParts {
   if (minTime === null && maxTime === null) return parts;
-  if (parts.hour === null || parts.minute === null || (is12Hour && parts.meridiem === null)) return parts;
-  const minutesOfDay = hourToInternal(parts.hour, parts.meridiem, is12Hour) * 60 + parts.minute;
+  if (
+    parts.hour === null ||
+    parts.minute === null ||
+    (is12Hour && parts.meridiem === null)
+  )
+    return parts;
+  const minutesOfDay =
+    hourToInternal(parts.hour, parts.meridiem, is12Hour) * 60 + parts.minute;
   const minMinutes = minTime ? minTime.hour * 60 + minTime.minute : null;
   const maxMinutes = maxTime ? maxTime.hour * 60 + maxTime.minute : null;
   let clampedMinutes = minutesOfDay;
-  if (minMinutes !== null && clampedMinutes < minMinutes) clampedMinutes = minMinutes;
-  if (maxMinutes !== null && clampedMinutes > maxMinutes) clampedMinutes = maxMinutes;
+  if (minMinutes !== null && clampedMinutes < minMinutes)
+    clampedMinutes = minMinutes;
+  if (maxMinutes !== null && clampedMinutes > maxMinutes)
+    clampedMinutes = maxMinutes;
   if (clampedMinutes === minutesOfDay) return parts;
-  const { hour, meridiem } = hourFromInternal(Math.floor(clampedMinutes / 60), is12Hour);
+  const { hour, meridiem } = hourFromInternal(
+    Math.floor(clampedMinutes / 60),
+    is12Hour,
+  );
   return { ...parts, hour, minute: clampedMinutes % 60, meridiem };
 }
 
@@ -121,7 +159,8 @@ export function clampPartsToRange(
   bounds: FieldBounds,
   is12Hour: boolean,
 ): WorkingParts {
-  if (mode === "time") return clampTimeParts(parts, bounds.minTime, bounds.maxTime, is12Hour);
+  if (mode === "time")
+    return clampTimeParts(parts, bounds.minTime, bounds.maxTime, is12Hour);
   const { minDate, maxDate } = bounds;
   if (minDate === null && maxDate === null) return parts;
   if (parts.year === null || parts.month === null) return parts;
@@ -129,16 +168,31 @@ export function clampPartsToRange(
   if (day === null) return parts;
   const current: PlainDate = { year: parts.year, month: parts.month, day };
   const clamped = clampDate(current, minDate, maxDate);
-  if (clamped.year === current.year && clamped.month === current.month && clamped.day === current.day) return parts;
-  return { ...parts, year: clamped.year, month: clamped.month, day: mode === "month" ? parts.day : clamped.day };
+  if (
+    clamped.year === current.year &&
+    clamped.month === current.month &&
+    clamped.day === current.day
+  )
+    return parts;
+  return {
+    ...parts,
+    year: clamped.year,
+    month: clamped.month,
+    day: mode === "month" ? parts.day : clamped.day,
+  };
 }
 
 function valueOf(type: SegmentType, parts: WorkingParts): number | null {
-  if (type === "meridiem") return parts.meridiem === null ? null : parts.meridiem === "PM" ? 1 : 0;
+  if (type === "meridiem")
+    return parts.meridiem === null ? null : parts.meridiem === "PM" ? 1 : 0;
   return parts[type];
 }
 
-function setValue(type: SegmentType, parts: WorkingParts, value: number): WorkingParts {
+function setValue(
+  type: SegmentType,
+  parts: WorkingParts,
+  value: number,
+): WorkingParts {
   if (type === "meridiem") return parts; // digits never drive the meridiem segment
   return { ...parts, [type]: value };
 }
@@ -179,14 +233,20 @@ export function enterDigit(
 }
 
 /** Clear the focused segment back to empty. */
-export function clearSegment(type: SegmentType, parts: WorkingParts): WorkingParts {
+export function clearSegment(
+  type: SegmentType,
+  parts: WorkingParts,
+): WorkingParts {
   if (type === "meridiem") return { ...parts, meridiem: null };
   return { ...parts, [type]: null };
 }
 
 /** Displayed text for a segment: zero-padded to its natural width, or the
  *  meridiem word itself. `null` while the segment is still empty. */
-export function formatSegmentText(type: SegmentType, parts: WorkingParts): string | null {
+export function formatSegmentText(
+  type: SegmentType,
+  parts: WorkingParts,
+): string | null {
   if (type === "meridiem") return parts.meridiem;
   const value = parts[type];
   if (value === null) return null;

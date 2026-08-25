@@ -1,7 +1,7 @@
 import { useState, type ReactElement } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { Link, useLocation } from "react-router-dom";
-import { useMotionPrefs } from "../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";

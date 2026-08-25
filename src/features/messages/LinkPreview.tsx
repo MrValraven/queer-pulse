@@ -40,8 +40,10 @@ export function LinkPreview({ url, isSent }: LinkPreviewProps) {
 
   return (
     <a
-      className={[styles.card, isSent ? styles.cardSent : styles.cardReceived]
-        .join(" ")}
+      className={[
+        styles.card,
+        isSent ? styles.cardSent : styles.cardReceived,
+      ].join(" ")}
       href={url}
       target="_blank"
       rel="noopener noreferrer"

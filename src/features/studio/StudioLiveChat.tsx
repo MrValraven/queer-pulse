@@ -16,7 +16,10 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
   function send() {
     const body = draft.trim();
     if (!body) return;
-    setMessages((prev) => [...prev, { av: "·", name: "You", text: body, time: "now" }]);
+    setMessages((prev) => [
+      ...prev,
+      { av: "·", name: "You", text: body, time: "now" },
+    ]);
     setDraft("");
   }
 

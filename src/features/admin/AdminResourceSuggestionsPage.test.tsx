@@ -69,7 +69,12 @@ describe("AdminResourceSuggestionsPage", () => {
     vi.spyOn(
       adminResourceSuggestionsApi,
       "getAdminResourceSuggestions",
-    ).mockResolvedValue({ items: [suggestion], total: 1, page: 1, pageSize: 20 });
+    ).mockResolvedValue({
+      items: [suggestion],
+      total: 1,
+      page: 1,
+      pageSize: 20,
+    });
     renderPage();
 
     expect(
@@ -84,7 +89,12 @@ describe("AdminResourceSuggestionsPage", () => {
     vi.spyOn(
       adminResourceSuggestionsApi,
       "getAdminResourceSuggestions",
-    ).mockResolvedValue({ items: [suggestion], total: 1, page: 1, pageSize: 20 });
+    ).mockResolvedValue({
+      items: [suggestion],
+      total: 1,
+      page: 1,
+      pageSize: 20,
+    });
     const approveSpy = vi
       .spyOn(adminResourceSuggestionsApi, "approveResourceSuggestion")
       .mockResolvedValue({ ...suggestion, status: "approved" });

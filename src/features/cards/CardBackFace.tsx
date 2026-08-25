@@ -52,7 +52,9 @@ export function CardBackFace({
             <CardQr url={PREVIEW_QR_URL} ariaLabel="" />
           </span>
         ) : !canProve ? (
-          <p className={styles.qrNotice}>{t(`cards:qrNotice.${card.status}`)}</p>
+          <p className={styles.qrNotice}>
+            {t(`cards:qrNotice.${card.status}`)}
+          </p>
         ) : card.token ? (
           <CardQr
             url={verifyUrl(card.token)}

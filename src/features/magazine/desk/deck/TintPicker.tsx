@@ -14,7 +14,12 @@ import styles from "./TintPicker.module.css";
  * pressed until a new one is picked (existing behaviour is unaffected —
  * `"default"` is still a valid, renderable `AvatarTint`).
  */
-const TINT_SWATCHES = ["plum", "coral", "jade", "auth"] as const satisfies readonly AvatarTint[];
+const TINT_SWATCHES = [
+  "plum",
+  "coral",
+  "jade",
+  "auth",
+] as const satisfies readonly AvatarTint[];
 
 const SWATCH_CLASS: Record<(typeof TINT_SWATCHES)[number], string> = {
   plum: styles.swPlum!,
@@ -35,7 +40,9 @@ export function TintPicker({ value, onChange }: TintPickerProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.field}>
-      <span className={styles.label}>{t("magazine:deck.editor.field.tint")}</span>
+      <span className={styles.label}>
+        {t("magazine:deck.editor.field.tint")}
+      </span>
       <div
         className={styles.tints}
         role="group"

@@ -70,7 +70,10 @@ export function ThreadOpCard({
         >
           <ForumAvatar
             className={styles.opAv}
-            style={{ background: thread.author.background, color: thread.author.color }}
+            style={{
+              background: thread.author.background,
+              color: thread.author.color,
+            }}
             person={{
               slug: thread.author.slug,
               photo: thread.author.photo,

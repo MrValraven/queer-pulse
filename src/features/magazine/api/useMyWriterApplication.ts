@@ -11,9 +11,8 @@ export function useMyWriterApplication() {
     queryKey: [MY_WRITER_APPLICATION_QUERY_KEY, demoMode],
     queryFn: async () => {
       if (demoMode) {
-        const { DEMO_MY_WRITER_APPLICATION } = await import(
-          "../applyToWrite.data"
-        );
+        const { DEMO_MY_WRITER_APPLICATION } =
+          await import("../applyToWrite.data");
         return DEMO_MY_WRITER_APPLICATION;
       }
       return getMyWriterApplication();

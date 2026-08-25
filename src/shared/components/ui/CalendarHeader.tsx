@@ -6,7 +6,12 @@
  */
 
 import { useMemo } from "react";
-import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiChevronsLeft,
+  FiChevronsRight,
+} from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
 import type { PlainDate } from "./plainDate";
 import { Select } from "./Select";
@@ -41,9 +46,10 @@ export function CalendarHeader({
   maxDate,
 }: CalendarHeaderProps) {
   const { t } = useTranslation();
-  const caption = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
-    new Date(visibleMonth.year, visibleMonth.month - 1, 1),
-  );
+  const caption = new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(visibleMonth.year, visibleMonth.month - 1, 1));
   const monthOptions = useMemo(() => buildMonthOptions(locale), [locale]);
   const yearOptions = useMemo(
     () => buildYearOptions(visibleMonth.year, minDate, maxDate),

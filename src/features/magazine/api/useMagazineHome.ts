@@ -1,6 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getArticles, getDecks, type ArticleListItemDTO, type DeckListItemDTO } from "./magazine.api";
+import {
+  getArticles,
+  getDecks,
+  type ArticleListItemDTO,
+  type DeckListItemDTO,
+} from "./magazine.api";
 
 export interface MagazineHomeData {
   articles: ArticleListItemDTO[];
@@ -35,5 +40,9 @@ export function useMagazineHome() {
     },
   });
 
-  return { data: query.data, isLoading: query.isLoading, isError: query.isError };
+  return {
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

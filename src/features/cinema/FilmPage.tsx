@@ -37,10 +37,10 @@ function DemoFilmPage() {
               {t("cinema:mast.sectionNav.thisWeek")}
             </Link>
             <span className={styles.sep}>›</span>
+            {/* eslint-disable-next-line local/no-literal-string -- this film's own title; content per the scope rule */}
             <span className={styles.cur}>The light between rooms</span>
             <Link to={routes.cinema} className={styles.crumbBack}>
-              <FiArrowLeft aria-hidden />{" "}
-              {t("cinema:film.crumb.backCta")}
+              <FiArrowLeft aria-hidden /> {t("cinema:film.crumb.backCta")}
             </Link>
           </div>
         </div>

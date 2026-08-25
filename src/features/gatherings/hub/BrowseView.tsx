@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-  Button,
-  Reveal,
-  useTablistKeys,
-} from "../../../shared/components/ui";
+import { Button, Reveal, useTablistKeys } from "../../../shared/components/ui";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { EVENT_CATEGORIES } from "../eventsPage.data";
@@ -53,7 +49,11 @@ function FilterChips({
           className={`${styles.chip} ${active === cat.key ? styles.chipActive : ""}`}
           onClick={() => onChange(cat.key)}
         >
-          <span className={styles.chipDot} style={{ background: cat.dot }} aria-hidden />
+          <span
+            className={styles.chipDot}
+            style={{ background: cat.dot }}
+            aria-hidden
+          />
           {t(cat.labelKey)}
         </button>
       ))}
@@ -62,7 +62,13 @@ function FilterChips({
 }
 
 /** One month's worth of events — a sticky subhead over a column of poster rows. */
-function MonthGroup({ label, events }: { label: string; events: CalendarEvent[] }) {
+function MonthGroup({
+  label,
+  events,
+}: {
+  label: string;
+  events: CalendarEvent[];
+}) {
   return (
     <section className={styles.monthGroup}>
       <h2 className={styles.monthHeading}>{label}</h2>
@@ -94,7 +100,10 @@ function SkeletonRows({ count }: { count: number }) {
   );
 }
 
-function groupByMonth(events: CalendarEvent[], fmt: Formatters): [string, CalendarEvent[]][] {
+function groupByMonth(
+  events: CalendarEvent[],
+  fmt: Formatters,
+): [string, CalendarEvent[]][] {
   const map = new Map<string, CalendarEvent[]>();
   for (const event of events) {
     const key = fmt.date(event.date, { month: "long", year: "numeric" });
@@ -139,13 +148,16 @@ export function BrowseView({
 
   const filtered = useMemo(() => {
     const cat = EVENT_CATEGORIES.find((c) => c.key === active);
-    const byOrg = !cat?.colors ? events : events.filter((e) => cat.colors!.includes(e.orgColor));
+    const byOrg = !cat?.colors
+      ? events
+      : events.filter((e) => cat.colors!.includes(e.orgColor));
     const q = query.trim().toLowerCase();
     if (!q) return byOrg;
     // Client-side filter over the ALREADY-LOADED events (the infinite-scroll
     // page set) — not a backend search. Honest for a small/loaded list.
     return byOrg.filter(
-      (e) => e.title.toLowerCase().includes(q) || e.hood.toLowerCase().includes(q),
+      (e) =>
+        e.title.toLowerCase().includes(q) || e.hood.toLowerCase().includes(q),
     );
   }, [active, events, query]);
 
@@ -215,7 +227,9 @@ export function BrowseView({
             {!isLoading && filtered.length === 0 && (
               <HubEmptyState
                 titleKey={
-                  query.trim() ? "gatherings:hub.browse.searchEmpty" : "gatherings:hub.browse.empty"
+                  query.trim()
+                    ? "gatherings:hub.browse.searchEmpty"
+                    : "gatherings:hub.browse.empty"
                 }
                 compact
               />

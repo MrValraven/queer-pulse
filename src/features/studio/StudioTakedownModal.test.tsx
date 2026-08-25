@@ -13,14 +13,18 @@ import { StudioTakedownModal } from "./StudioTakedownModal";
  * catalog so those queries use `findBy*`.
  */
 
+// Mock release title/meta for the modal under test — content, not chrome.
+const MOCK_RELEASE_TITLE = "Threshold EP";
+const MOCK_RELEASE_META = "Released 2025 · 3 tracks";
+
 function renderModal() {
   const onConfirm = vi.fn();
   const onClose = vi.fn();
   render(
     <TestProviders>
       <StudioTakedownModal
-        title="Threshold EP"
-        meta="Released 2025 · 3 tracks"
+        title={MOCK_RELEASE_TITLE}
+        meta={MOCK_RELEASE_META}
         onConfirm={onConfirm}
         onClose={onClose}
       />
@@ -32,7 +36,9 @@ function renderModal() {
 describe("StudioTakedownModal", () => {
   it("confirms the takedown via the primary action", async () => {
     const { onConfirm, onClose } = renderModal();
-    fireEvent.click(await screen.findByRole("button", { name: /take it down/i }));
+    fireEvent.click(
+      await screen.findByRole("button", { name: /take it down/i }),
+    );
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(onClose).not.toHaveBeenCalled();
   });

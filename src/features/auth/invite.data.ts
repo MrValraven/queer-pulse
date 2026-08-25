@@ -2,10 +2,7 @@ import type { IconType } from "react-icons";
 import { FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { FiMessageSquare } from "react-icons/fi";
 import type { TFunction } from "../../shared/i18n/types";
-import {
-  inviteFullUrlFor,
-  inviteUrlFor,
-} from "../../shared/lib/inviteUrl";
+import { inviteFullUrlFor, inviteUrlFor } from "../../shared/lib/inviteUrl";
 
 export const INVITE_CODE = "QP-7F3K-2026";
 

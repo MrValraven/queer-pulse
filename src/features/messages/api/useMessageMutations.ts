@@ -186,7 +186,10 @@ export function useAddGroupMembers() {
   >({
     mutationFn: async ({ conversationId, memberHandles }) => {
       if (demoMode) return null;
-      return conversationToView(await addGroupMembers(conversationId, memberHandles), t);
+      return conversationToView(
+        await addGroupMembers(conversationId, memberHandles),
+        t,
+      );
     },
     onSuccess: (updated) => {
       if (demoMode || !updated) return;
@@ -206,7 +209,10 @@ export function useRemoveGroupMember() {
   >({
     mutationFn: async ({ conversationId, userId }) => {
       if (demoMode) return null;
-      return conversationToView(await removeGroupMember(conversationId, userId), t);
+      return conversationToView(
+        await removeGroupMember(conversationId, userId),
+        t,
+      );
     },
     onSuccess: (updated) => {
       if (demoMode || !updated) return;

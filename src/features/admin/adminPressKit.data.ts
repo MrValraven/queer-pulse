@@ -125,7 +125,10 @@ interface PositionedRow {
 
 export interface DemoPressRegistry<Row extends PositionedRow> {
   list(): Row[];
-  create(fields: Omit<Row, "id" | "position" | "active">, idPrefix: string): Row;
+  create(
+    fields: Omit<Row, "id" | "position" | "active">,
+    idPrefix: string,
+  ): Row;
   update(id: string, patch: Partial<Row>): Row;
   remove(id: string): void;
   reorder(orderedIds: string[]): Row[];
@@ -206,12 +209,10 @@ function createDemoPressRegistry<Row extends PositionedRow>(
   };
 }
 
-const coverageRegistry = createDemoPressRegistry<AdminPressCoverageDTO>(
-  DEMO_PRESS_COVERAGE,
-);
-const contactsRegistry = createDemoPressRegistry<AdminPressContactDTO>(
-  DEMO_PRESS_CONTACTS,
-);
+const coverageRegistry =
+  createDemoPressRegistry<AdminPressCoverageDTO>(DEMO_PRESS_COVERAGE);
+const contactsRegistry =
+  createDemoPressRegistry<AdminPressContactDTO>(DEMO_PRESS_CONTACTS);
 
 // ── Coverage demo operations ────────────────────────────────────────────────
 export const getDemoPressCoverage = (): AdminPressCoverageDTO[] =>

@@ -1,5 +1,9 @@
 import { FiArrowLeft, FiRefreshCw } from "react-icons/fi";
-import { Button, SegmentedControl, Tag } from "../../../../shared/components/ui";
+import {
+  Button,
+  SegmentedControl,
+  Tag,
+} from "../../../../shared/components/ui";
 import { routes } from "../../../../app/routeMap";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { EditorMode } from "./editorMode";
@@ -118,7 +122,12 @@ export function ArticleEditorHeader({
         onChange={(value) => onModeChange(value as EditorMode)}
       />
       <div className={styles.right}>
-        <Button variant="ghost" size="sm" disabled={sendOnDisabled} onClick={onSendOn}>
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={sendOnDisabled}
+          onClick={onSendOn}
+        >
           {sendOnLabel}
         </Button>
         <Button

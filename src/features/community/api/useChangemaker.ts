@@ -28,7 +28,10 @@ export function useChangemaker(slug: string | undefined): ChangemakerResult {
   });
 
   if (demoMode) {
-    return { changemaker: slug ? getChangemaker(slug) : undefined, isLoading: false };
+    return {
+      changemaker: slug ? getChangemaker(slug) : undefined,
+      isLoading: false,
+    };
   }
 
   return {

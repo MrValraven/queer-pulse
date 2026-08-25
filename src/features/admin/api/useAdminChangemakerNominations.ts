@@ -27,9 +27,8 @@ export function useAdminChangemakerNominations() {
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const { ADMIN_CHANGEMAKER_NOMINATIONS } = await import(
-          "../adminChangemakerNominations.data"
-        );
+        const { ADMIN_CHANGEMAKER_NOMINATIONS } =
+          await import("../adminChangemakerNominations.data");
         return {
           items: ADMIN_CHANGEMAKER_NOMINATIONS,
           total: ADMIN_CHANGEMAKER_NOMINATIONS.length,

@@ -42,7 +42,9 @@ function nextDueValue(assignments: WriterAssignmentDto[]): string | null {
   const dueValues = assignments
     .map((assignment) => assignment.due)
     .filter((due): due is string => Boolean(due));
-  const isoValues = dueValues.filter((due) => ISO_DATE_PATTERN.test(due)).sort();
+  const isoValues = dueValues
+    .filter((due) => ISO_DATE_PATTERN.test(due))
+    .sort();
   return isoValues[0] ?? dueValues[0] ?? null;
 }
 
@@ -60,22 +62,27 @@ function nextDueValue(assignments: WriterAssignmentDto[]): string | null {
  */
 export function WriterWorkspacePage() {
   const { t, language } = useTranslation();
-  const { assignments, pitches, payments, isLoading, isError } = useWriterWorkspace();
+  const { assignments, pitches, payments, isLoading, isError } =
+    useWriterWorkspace();
   const { submitPitch, updateByline, fileDraft } = useWriterMutations();
   const [tab, setTab] = useState<WriterTab>("work");
-  const [filingAssignment, setFilingAssignment] = useState<WriterAssignmentDto | null>(null);
-  const [messagingAssignment, setMessagingAssignment] = useState<WriterAssignmentDto | null>(
-    null,
-  );
-  const [briefAssignment, setBriefAssignment] = useState<WriterAssignmentDto | null>(null);
+  const [filingAssignment, setFilingAssignment] =
+    useState<WriterAssignmentDto | null>(null);
+  const [messagingAssignment, setMessagingAssignment] =
+    useState<WriterAssignmentDto | null>(null);
+  const [briefAssignment, setBriefAssignment] =
+    useState<WriterAssignmentDto | null>(null);
   // The rail's active assignment — the "Your work" list marks one (defaulting
   // to the first), and the rail cards + byline picker read it, instead of
   // always acting on `assignments[0]`. Falls back to the first assignment if
   // nothing is selected yet, or the selected id no longer exists in the list
   // (e.g. it was filed and dropped off after a refetch).
-  const [activeAssignmentId, setActiveAssignmentId] = useState<string | null>(null);
+  const [activeAssignmentId, setActiveAssignmentId] = useState<string | null>(
+    null,
+  );
   const activeAssignment =
-    assignments.find((assignment) => assignment.id === activeAssignmentId) ?? assignments[0];
+    assignments.find((assignment) => assignment.id === activeAssignmentId) ??
+    assignments[0];
 
   if (isLoading) {
     return (
@@ -111,7 +118,9 @@ export function WriterWorkspacePage() {
           <WriterWorkTab
             assignments={assignments}
             activeAssignmentId={activeAssignment?.id}
-            onSelectAssignment={(selected) => setActiveAssignmentId(selected.id)}
+            onSelectAssignment={(selected) =>
+              setActiveAssignmentId(selected.id)
+            }
             onFileDraft={setFilingAssignment}
             onMessageEditor={setMessagingAssignment}
             onReadBrief={setBriefAssignment}
@@ -143,7 +152,10 @@ export function WriterWorkspacePage() {
           t("magazine:writer.page.openCount", { count: assignments.length }),
           nextDue
             ? t("magazine:writer.page.nextDue", {
-                date: formatDate(nextDue, language, { day: "numeric", month: "short" }),
+                date: formatDate(nextDue, language, {
+                  day: "numeric",
+                  month: "short",
+                }),
               })
             : null,
         ]
@@ -162,12 +174,18 @@ export function WriterWorkspacePage() {
 
         <div className={styles.ework}>
           <div>
-            <nav className={styles.tabs} aria-label={t("magazine:writer.tabs.ariaLabel")}>
+            <nav
+              className={styles.tabs}
+              aria-label={t("magazine:writer.tabs.ariaLabel")}
+            >
               {TAB_IDS.map((tabId) => (
                 <button
                   key={tabId}
                   type="button"
-                  className={cx(styles.tabButton, tab === tabId && styles.tabButtonActive)}
+                  className={cx(
+                    styles.tabButton,
+                    tab === tabId && styles.tabButtonActive,
+                  )}
                   aria-current={tab === tabId}
                   onClick={() => setTab(tabId)}
                 >
@@ -198,7 +216,9 @@ export function WriterWorkspacePage() {
         <FileDraftModal
           assignment={filingAssignment}
           onClose={() => setFilingAssignment(null)}
-          onFile={(pieceId, blocks) => fileDraft.mutate({ pieceId, body: blocks ? { blocks } : undefined })}
+          onFile={(pieceId, blocks) =>
+            fileDraft.mutate({ pieceId, body: blocks ? { blocks } : undefined })
+          }
         />
       )}
 

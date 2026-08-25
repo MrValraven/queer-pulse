@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { demoEligibilitySignals, liveEligibilitySignals } from "./eligibilitySignals.data";
+import {
+  demoEligibilitySignals,
+  liveEligibilitySignals,
+} from "./eligibilitySignals.data";
 import type { PublicEligibilitySignalsDto } from "./api/publicProfile.api";
 
 const NOW = "2026-08-11T00:00:00.000Z";
@@ -27,7 +30,9 @@ describe("eligibility signal builders", () => {
     expect(signals.nowIso).toBe(NOW);
     expect(signals.verified).toBe(true);
     expect(signals.tenureDays).toBeGreaterThanOrEqual(90);
-    expect(signals.publishedPieces.length + signals.hostedOpenEvents.length).toBeGreaterThan(0);
+    expect(
+      signals.publishedPieces.length + signals.hostedOpenEvents.length,
+    ).toBeGreaterThan(0);
   });
 
   it("live builder maps the DTO to EligibilitySignals, wrapping timestamps as { at }", () => {
@@ -39,7 +44,9 @@ describe("eligibility signal builders", () => {
       { at: "2026-07-01T00:00:00.000Z" },
       { at: "2026-05-01T00:00:00.000Z" },
     ]);
-    expect(signals.hostedOpenEvents).toEqual([{ at: "2026-06-01T00:00:00.000Z" }]);
+    expect(signals.hostedOpenEvents).toEqual([
+      { at: "2026-06-01T00:00:00.000Z" },
+    ]);
     expect(signals.workshopsTaught).toBe(1);
     expect(signals.endorsementCount).toBe(4);
     expect(signals.connectionCount).toBe(12);

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui";
-import { canGoBack } from "./SwipeBackShell";
+import { canGoBack } from "./canGoBack";
 import { tabOf } from "./tabRoots";
 import { useScrolled } from "../../hooks/useScrolled";
 import { useMediaQuery } from "../../hooks/useMediaQuery";

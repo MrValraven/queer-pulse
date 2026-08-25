@@ -23,6 +23,10 @@ import {
 } from "./studioReceipt.data";
 import s from "./StudioReceiptPage.module.css";
 
+// Content: the payment method's masked card summary — comes from the
+// payment record in live mode.
+const RECEIPT_CARD_SUMMARY = "Saved card · ending 4242 · ";
+
 /** Jade heart-hands "thank you" mark that pulses. */
 function ThankIcon() {
   return (
@@ -159,7 +163,7 @@ function ReceiptCard() {
         <div className={s.rcd}>
           <div className={s.eb}>{t("studio:receipt.detail.method")}</div>
           <div className={s.v}>
-            Saved card · ending 4242 ·{" "}
+            {RECEIPT_CARD_SUMMARY}
             <Translation
               i18nKey="studio:receipt.detail.chosenByDefault"
               components={{ em: <em /> }}

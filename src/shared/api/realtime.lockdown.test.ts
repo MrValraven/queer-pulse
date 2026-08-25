@@ -20,7 +20,7 @@ const socket = vi.hoisted(() => ({
   on: vi.fn(),
   disconnect: vi.fn(),
   connect: vi.fn(),
-  io: { reconnection: vi.fn() },
+  io: { reconnection: vi.fn<(enabled: boolean) => void>() },
 }));
 
 const ioMock = vi.hoisted(() =>
@@ -72,7 +72,10 @@ async function settle(): Promise<void> {
 
 /** Mount the provider with one consumer holding the connection open, then settle.
  * Written with `createElement` (no JSX) since this file is `.ts`, not `.tsx`. */
-async function mount({ RealtimeProvider, useRealtimeConnection }: RealtimeModule) {
+async function mount({
+  RealtimeProvider,
+  useRealtimeConnection,
+}: RealtimeModule) {
   function Consumer() {
     useRealtimeConnection();
     return null;
@@ -85,9 +88,17 @@ async function mount({ RealtimeProvider, useRealtimeConnection }: RealtimeModule
 }
 
 /** The handler registered via `socket.on("exception", …)`. */
-function exceptionHandler(): (data: { status: string; message: unknown; code?: string }) => void {
+function exceptionHandler(): (data: {
+  status: string;
+  message: unknown;
+  code?: string;
+}) => void {
   const call = socket.on.mock.calls.find((c) => c[0] === "exception");
-  return call?.[1] as (data: { status: string; message: unknown; code?: string }) => void;
+  return call?.[1] as (data: {
+    status: string;
+    message: unknown;
+    code?: string;
+  }) => void;
 }
 
 beforeEach(() => {
@@ -109,7 +120,11 @@ describe("platform-lockdown exception handling", () => {
     const mod = await loadRealtime();
     await mount(mod);
     const handler = exceptionHandler();
-    handler({ status: "error", message: "platform locked", code: "PLATFORM_LOCKED" });
+    handler({
+      status: "error",
+      message: "platform locked",
+      code: "PLATFORM_LOCKED",
+    });
     expect(socket.io.reconnection).toHaveBeenCalledWith(false);
   });
 
@@ -140,7 +155,9 @@ describe("platform-lockdown exception handling", () => {
 
     // No `reconnection(true)`: a dead session must not cost a JWT verify per
     // second per idle tab. The next HTTP 401 drives the auth reconcile.
-    expect(socket.io.reconnection.mock.calls.map(([on]) => on)).toEqual([false]);
+    expect(socket.io.reconnection.mock.calls.map(([on]) => on)).toEqual([
+      false,
+    ]);
     expect(socket.connect).not.toHaveBeenCalled();
   });
 });

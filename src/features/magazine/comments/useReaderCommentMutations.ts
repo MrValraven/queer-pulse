@@ -34,7 +34,10 @@ function patchBody(
   );
 }
 
-function patchDeleted(items: ReaderCommentDTO[], id: string): ReaderCommentDTO[] {
+function patchDeleted(
+  items: ReaderCommentDTO[],
+  id: string,
+): ReaderCommentDTO[] {
   return items.map((item) =>
     item.id === id
       ? { ...item, body: "", deleted: true }

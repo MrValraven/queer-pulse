@@ -35,9 +35,9 @@ export function ReportReplyModal({
 }: ReportReplyModalProps) {
   const { t } = useTranslation();
   const [reason, setReason] = useState<ReasonCode | null>(null);
-  const [status, setStatus] = useState<
-    "idle" | "sending" | "done" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
+    "idle",
+  );
   const createReport = useCreateReport();
 
   // Reasons are subject-specific (post vs reply); recompute if the target

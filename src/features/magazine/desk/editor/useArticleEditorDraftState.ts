@@ -57,7 +57,8 @@ export function useArticleEditorDraftState(
   // The last snapshot the SERVER has confirmed. State rather than a ref
   // because `isDirty` is read during render (see the rules-of-hooks note
   // above), and because a save resolving has to re-render the header.
-  const [lastSavedSnapshot, setLastSavedSnapshot] = useState<DraftSnapshot | null>(null);
+  const [lastSavedSnapshot, setLastSavedSnapshot] =
+    useState<DraftSnapshot | null>(null);
   // Bumped by a version restore. `RichText` seeds its contentEditable once on
   // mount by design, so React state alone cannot push restored content into
   // an already-mounted headline/standfirst/block — the editor surface is
@@ -82,10 +83,21 @@ export function useArticleEditorDraftState(
       socialImage,
       canonicalUrl,
     }),
-    [title, standfirst, blocks, section, tags, role, metaDescription, socialImage, canonicalUrl],
+    [
+      title,
+      standfirst,
+      blocks,
+      section,
+      tags,
+      role,
+      metaDescription,
+      socialImage,
+      canonicalUrl,
+    ],
   );
   const debouncedSnapshot = useDebouncedValue(snapshot, 1200);
-  const isDirty = lastSavedSnapshot !== null && !snapshotsEqual(snapshot, lastSavedSnapshot);
+  const isDirty =
+    lastSavedSnapshot !== null && !snapshotsEqual(snapshot, lastSavedSnapshot);
 
   // What a PATCH is currently carrying, so a save that resolves while a newer
   // one is already in flight can't make this effect fire that newer snapshot
@@ -93,7 +105,11 @@ export function useArticleEditorDraftState(
   const inFlightSnapshotRef = useRef<DraftSnapshot | null>(null);
 
   useEffect(() => {
-    if (!lastSavedSnapshot || snapshotsEqual(debouncedSnapshot, lastSavedSnapshot)) return;
+    if (
+      !lastSavedSnapshot ||
+      snapshotsEqual(debouncedSnapshot, lastSavedSnapshot)
+    )
+      return;
     const inFlight = inFlightSnapshotRef.current;
     if (inFlight && snapshotsEqual(debouncedSnapshot, inFlight)) return;
     inFlightSnapshotRef.current = debouncedSnapshot;
@@ -124,7 +140,8 @@ export function useArticleEditorDraftState(
   useEffect(() => {
     flushRef.current = () => {
       const pending = snapshot;
-      if (!lastSavedSnapshot || snapshotsEqual(pending, lastSavedSnapshot)) return;
+      if (!lastSavedSnapshot || snapshotsEqual(pending, lastSavedSnapshot))
+        return;
       const inFlight = inFlightSnapshotRef.current;
       if (inFlight && snapshotsEqual(pending, inFlight)) return;
       inFlightSnapshotRef.current = pending;
@@ -167,7 +184,8 @@ export function useArticleEditorDraftState(
   // sits in a callback the compiler knows never runs during render.
   const saveNow = useCallback(async (): Promise<void> => {
     const pending = snapshot;
-    if (!lastSavedSnapshot || snapshotsEqual(pending, lastSavedSnapshot)) return;
+    if (!lastSavedSnapshot || snapshotsEqual(pending, lastSavedSnapshot))
+      return;
     inFlightSnapshotRef.current = pending;
     try {
       await save.mutateAsync({ ...pending });

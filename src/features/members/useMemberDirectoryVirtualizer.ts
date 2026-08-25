@@ -1,5 +1,14 @@
-import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from "react";
-import { useWindowVirtualizer, type Virtualizer } from "@tanstack/react-virtual";
+import {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
+import {
+  useWindowVirtualizer,
+  type Virtualizer,
+} from "@tanstack/react-virtual";
 import type { MemberCard } from "./memberDirectoryFilter.data";
 
 /** Mirrors `.mGrid`'s `repeat(auto-fill, minmax(280px, 1fr))` / `gap: 14px`

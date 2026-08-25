@@ -68,33 +68,33 @@ export function HealthSection() {
       {error ? (
         <SectionError onRetry={retry} />
       ) : (
-      <div className={styles.statGrid}>
-        {loading
-          ? Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className={styles.statCard} aria-hidden>
-                <SkeletonLine width="50%" height={26} />
-                <SkeletonLine
-                  width="80%"
-                  height={13}
-                  style={{ marginTop: 8 }}
-                />
-              </div>
-            ))
-          : health.map((stat) => (
-              <div key={stat.labelKey} className={styles.statCard}>
-                <div className={styles.statN}>{stat.value}</div>
-                <div className={styles.statL}>{t(stat.labelKey)}</div>
-                <div
-                  className={[
-                    styles.statTrend,
-                    stat.up ? styles.trendUp : styles.trendOk,
-                  ].join(" ")}
-                >
-                  {t(stat.trendKey, stat.trendValues)}
+        <div className={styles.statGrid}>
+          {loading
+            ? Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className={styles.statCard} aria-hidden>
+                  <SkeletonLine width="50%" height={26} />
+                  <SkeletonLine
+                    width="80%"
+                    height={13}
+                    style={{ marginTop: 8 }}
+                  />
                 </div>
-              </div>
-            ))}
-      </div>
+              ))
+            : health.map((stat) => (
+                <div key={stat.labelKey} className={styles.statCard}>
+                  <div className={styles.statN}>{stat.value}</div>
+                  <div className={styles.statL}>{t(stat.labelKey)}</div>
+                  <div
+                    className={[
+                      styles.statTrend,
+                      stat.up ? styles.trendUp : styles.trendOk,
+                    ].join(" ")}
+                  >
+                    {t(stat.trendKey, stat.trendValues)}
+                  </div>
+                </div>
+              ))}
+        </div>
       )}
       <div className={styles.prose}>
         <p>{t("governance:sections.health.prose1")}</p>
@@ -268,135 +268,137 @@ export function FinancesSection() {
       {error ? (
         <SectionError onRetry={retry} />
       ) : (
-      <>
-      <div style={{ marginTop: 24 }}>
-        <StatGrid columns={2}>
-          {loading
-            ? Array.from({ length: 4 }).map((_, index) => (
-                <StatTile
-                  key={index}
-                  value={<SkeletonLine width="60%" height={26} />}
-                  label={<SkeletonLine width="80%" height={13} />}
+        <>
+          <div style={{ marginTop: 24 }}>
+            <StatGrid columns={2}>
+              {loading
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <StatTile
+                      key={index}
+                      value={<SkeletonLine width="60%" height={26} />}
+                      label={<SkeletonLine width="80%" height={13} />}
+                    />
+                  ))
+                : stats.map((stat) => (
+                    <StatTile
+                      key={stat.l}
+                      value={stat.n}
+                      label={stat.l}
+                      hint={
+                        <span
+                          className={stat.up ? styles.trendUp : styles.trendOk}
+                        >
+                          {stat.trend}
+                        </span>
+                      }
+                    />
+                  ))}
+            </StatGrid>
+          </div>
+          <div className={styles.finCols}>
+            <div>
+              <div className={styles.finColHead}>
+                {t("governance:sections.finances.incomeHeading")}
+              </div>
+              <p className={styles.finHint}>
+                {t("governance:sections.finances.clickHint")}
+              </p>
+              {!loading && (
+                <FinanceLines
+                  lines={income}
+                  color="var(--jade)"
+                  total={t("governance:sections.finances.totalIncome", {
+                    amount: totalIncome,
+                  })}
                 />
-              ))
-            : stats.map((stat) => (
-                <StatTile
-                  key={stat.l}
-                  value={stat.n}
-                  label={stat.l}
-                  hint={
-                    <span
-                      className={stat.up ? styles.trendUp : styles.trendOk}
-                    >
-                      {stat.trend}
-                    </span>
-                  }
+              )}
+            </div>
+            <div>
+              <div className={styles.finColHead}>
+                {t("governance:sections.finances.expenseHeading")}
+              </div>
+              <p className={styles.finHint}>
+                {t("governance:sections.finances.clickHint")}
+              </p>
+              {!loading && (
+                <FinanceLines
+                  lines={expense}
+                  color="var(--accent)"
+                  total={t("governance:sections.finances.totalExpense", {
+                    amount: totalExpense,
+                  })}
                 />
-              ))}
-        </StatGrid>
-      </div>
-      <div className={styles.finCols}>
-        <div>
-          <div className={styles.finColHead}>
-            {t("governance:sections.finances.incomeHeading")}
+              )}
+            </div>
           </div>
-          <p className={styles.finHint}>
-            {t("governance:sections.finances.clickHint")}
-          </p>
-          {!loading && (
-            <FinanceLines
-              lines={income}
-              color="var(--jade)"
-              total={t("governance:sections.finances.totalIncome", {
-                amount: totalIncome,
-              })}
-            />
-          )}
-        </div>
-        <div>
-          <div className={styles.finColHead}>
-            {t("governance:sections.finances.expenseHeading")}
-          </div>
-          <p className={styles.finHint}>
-            {t("governance:sections.finances.clickHint")}
-          </p>
-          {!loading && (
-            <FinanceLines
-              lines={expense}
-              color="var(--accent)"
-              total={t("governance:sections.finances.totalExpense", {
-                amount: totalExpense,
-              })}
-            />
-          )}
-        </div>
-      </div>
 
-      <div className={styles.eventsCard}>
-        <div className={styles.fecTitle}>
-          {t("governance:sections.finances.eventsHeading")}
-        </div>
-        {eventNotes.map((note) => (
-          <div key={note.title} className={styles.fecRow}>
-            <span className={styles.fecDot} />
-            <span>
-              <strong>{note.title}</strong> {note.body}
-            </span>
+          <div className={styles.eventsCard}>
+            <div className={styles.fecTitle}>
+              {t("governance:sections.finances.eventsHeading")}
+            </div>
+            {eventNotes.map((note) => (
+              <div key={note.title} className={styles.fecRow}>
+                <span className={styles.fecDot} />
+                <span>
+                  <strong>{note.title}</strong> {note.body}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className={styles.prose} style={{ marginTop: 28 }}>
-        <p>
-          <strong>{t("governance:sections.finances.surplusHeading")}</strong>{" "}
-          {reserve &&
-            t("governance:sections.finances.surplusBody", {
-              target: fmt.currency(reserve.target),
-            })}
-        </p>
-        {reserve && (
-          <>
-            {/* The fill was a CSS constant (35%) while the caption below
+          <div className={styles.prose} style={{ marginTop: 28 }}>
+            <p>
+              <strong>
+                {t("governance:sections.finances.surplusHeading")}
+              </strong>{" "}
+              {reserve &&
+                t("governance:sections.finances.surplusBody", {
+                  target: fmt.currency(reserve.target),
+                })}
+            </p>
+            {reserve && (
+              <>
+                {/* The fill was a CSS constant (35%) while the caption below
                 printed the real current/target figures, so the picture and
                 the numbers disagreed on the finance-transparency page. */}
-            <div
-              className={styles.reserveBar}
-              role="progressbar"
-              aria-valuemin={0}
-              aria-valuemax={reserve.target}
-              aria-valuenow={Math.min(reserve.current, reserve.target)}
-              aria-label={t("governance:sections.finances.reserveBarAria")}
-            >
-              <div
-                className={styles.reserveFill}
-                style={{ width: `${reservePercent}%` }}
-              />
-            </div>
-            <p className={styles.reserveCap}>
-              {t("governance:sections.finances.reserveProgress", {
-                current: fmt.currency(reserve.current),
-                target: fmt.currency(reserve.target),
-              })}
-            </p>
-          </>
-        )}
-        <p>{t("governance:sections.finances.surplusRedirect")}</p>
-      </div>
-      {partners.map((partner) => (
-        <div key={partner.name} className={styles.partnerRow}>
-          <div className={styles.partnerName}>{partner.name}</div>
-          <div className={styles.partnerBody}>
-            {t("governance:sections.finances.partnerRestriction", {
-              amount: fmt.currency(partner.amount),
-              scope: t(partner.scopeKey),
-            })}
+                <div
+                  className={styles.reserveBar}
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={reserve.target}
+                  aria-valuenow={Math.min(reserve.current, reserve.target)}
+                  aria-label={t("governance:sections.finances.reserveBarAria")}
+                >
+                  <div
+                    className={styles.reserveFill}
+                    style={{ width: `${reservePercent}%` }}
+                  />
+                </div>
+                <p className={styles.reserveCap}>
+                  {t("governance:sections.finances.reserveProgress", {
+                    current: fmt.currency(reserve.current),
+                    target: fmt.currency(reserve.target),
+                  })}
+                </p>
+              </>
+            )}
+            <p>{t("governance:sections.finances.surplusRedirect")}</p>
           </div>
-        </div>
-      ))}
-      <div className={styles.prose}>
-        <p>{t("governance:sections.finances.noCorporateFunding")}</p>
-      </div>
-      </>
+          {partners.map((partner) => (
+            <div key={partner.name} className={styles.partnerRow}>
+              <div className={styles.partnerName}>{partner.name}</div>
+              <div className={styles.partnerBody}>
+                {t("governance:sections.finances.partnerRestriction", {
+                  amount: fmt.currency(partner.amount),
+                  scope: t(partner.scopeKey),
+                })}
+              </div>
+            </div>
+          ))}
+          <div className={styles.prose}>
+            <p>{t("governance:sections.finances.noCorporateFunding")}</p>
+          </div>
+        </>
       )}
     </Reveal>
   );

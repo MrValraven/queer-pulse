@@ -22,7 +22,9 @@ export function WhoSeesWhatIdentities() {
   const { available, published, loading, error, setPublished } =
     useDiscoverableIdentities(draftPublishable, savedVersion);
 
-  const rows = draftPublishable.filter((identity) => available.includes(identity));
+  const rows = draftPublishable.filter((identity) =>
+    available.includes(identity),
+  );
 
   const handleToggle = async (identity: string, next: boolean) => {
     const ok = await setPublished(identity, next);
@@ -39,7 +41,11 @@ export function WhoSeesWhatIdentities() {
         </h3>
         <p className={styles.emptyLine}>
           {t("members:profile.whoSeesWhat.identities.empty")}{" "}
-          <Button variant="ghost" size="sm" to={`${routes.settings}?pane=interests`}>
+          <Button
+            variant="ghost"
+            size="sm"
+            to={`${routes.settings}?pane=interests`}
+          >
             {t("members:profile.whoSeesWhat.identities.emptyLink")}
           </Button>
         </p>
@@ -77,7 +83,9 @@ export function WhoSeesWhatIdentities() {
               <Toggle
                 checked={published.includes(identity)}
                 onChange={(next) => void handleToggle(identity, next)}
-                label={t("settings:discoverable.toggleLabel", { label: identity })}
+                label={t("settings:discoverable.toggleLabel", {
+                  label: identity,
+                })}
               />
             </div>
           ))}
@@ -87,7 +95,11 @@ export function WhoSeesWhatIdentities() {
       {!loading && rows.length === 0 && (
         <p className={styles.emptyLine}>
           {t("members:profile.whoSeesWhat.identities.empty")}{" "}
-          <Button variant="ghost" size="sm" to={`${routes.settings}?pane=interests`}>
+          <Button
+            variant="ghost"
+            size="sm"
+            to={`${routes.settings}?pane=interests`}
+          >
             {t("members:profile.whoSeesWhat.identities.emptyLink")}
           </Button>
         </p>

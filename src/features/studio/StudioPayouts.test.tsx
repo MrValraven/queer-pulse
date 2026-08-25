@@ -41,9 +41,7 @@ describe("PayoutsList", () => {
       </TestProviders>,
     );
 
-    fireEvent.click(
-      await screen.findByRole("button", { name: /export csv/i }),
-    );
+    fireEvent.click(await screen.findByRole("button", { name: /export csv/i }));
     expect(onExport).toHaveBeenCalledTimes(1);
   });
 });

@@ -53,4 +53,3 @@ export interface Mention {
   whereTo?: string;
   actions: MentionAction[];
 }
-

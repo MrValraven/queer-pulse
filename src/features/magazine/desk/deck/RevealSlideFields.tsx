@@ -10,7 +10,10 @@ type RevealSlide = Extract<Slide, { layout: "interactive"; kind: "reveal" }>;
 /** Reveal slide fields: the visible prompt, the text hidden until tapped,
  * and the shared tint picker (this member's `tint` is optional — defaults
  * to `"default"` for the picker, matching the old `<select>`'s fallback). */
-export function RevealSlideFields({ slide, onChange }: FieldsProps<RevealSlide>) {
+export function RevealSlideFields({
+  slide,
+  onChange,
+}: FieldsProps<RevealSlide>) {
   const { t } = useTranslation();
   return (
     <>
@@ -18,14 +21,18 @@ export function RevealSlideFields({ slide, onChange }: FieldsProps<RevealSlide>)
         <textarea
           className={styles.textarea}
           value={asText(slide.prompt)}
-          onChange={(event) => onChange({ ...slide, prompt: event.target.value })}
+          onChange={(event) =>
+            onChange({ ...slide, prompt: event.target.value })
+          }
         />
       </FormField>
       <FormField label={t("magazine:deck.editor.field.hidden")}>
         <textarea
           className={styles.textarea}
           value={asText(slide.hidden)}
-          onChange={(event) => onChange({ ...slide, hidden: event.target.value })}
+          onChange={(event) =>
+            onChange({ ...slide, hidden: event.target.value })
+          }
         />
       </FormField>
       <TintPicker

@@ -10,7 +10,11 @@ import { useMessageActionMenu } from "./useMessageActionMenu";
 import { useMessageLogState } from "./useMessageLogState";
 import { useMessageReceipts } from "./useMessageReceipts";
 import { useConversationPinStar } from "./useConversationPinStar";
-import { type ChatMessage, type Conversation, type GroupMemberView } from "./data";
+import {
+  type ChatMessage,
+  type Conversation,
+  type GroupMemberView,
+} from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import styles from "./MessagesPage.module.css";
 
@@ -25,7 +29,10 @@ interface ConversationPanelProps {
   /** Sends an uploaded image as its own message (from the composer's photo
    *  attach button). `localAttachment` is the upload's local blob preview,
    *  for the optimistic bubble to render instantly. */
-  onSendImage?: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
+  onSendImage?: (
+    attachment: GifAttachment,
+    localAttachment?: GifAttachment,
+  ) => void;
   /** True when the counterpart is blocked — the composer is severed. */
   blocked?: boolean;
   /** Mobile only — returns to the conversation list. Absent on desktop. */
@@ -62,8 +69,14 @@ interface ConversationPanelProps {
   myUserId?: string | null;
   /** GROUP management (server re-checks the role on each) — add/remove/promote/
    *  demote members + edit title/avatar. Gated in the UI on `active`'s can-flags. */
-  onAddGroupMembers?: (conversationId: string, picks: GroupMemberPick[]) => void;
-  onRemoveGroupMember?: (conversationId: string, member: GroupMemberView) => void;
+  onAddGroupMembers?: (
+    conversationId: string,
+    picks: GroupMemberPick[],
+  ) => void;
+  onRemoveGroupMember?: (
+    conversationId: string,
+    member: GroupMemberView,
+  ) => void;
   onChangeGroupMemberRole?: (
     conversationId: string,
     member: GroupMemberView,

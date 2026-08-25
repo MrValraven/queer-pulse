@@ -168,13 +168,16 @@ export const connect: Catalog = {
   "notice.youBlocked.title": "<em>Bloqueaste</em> {name}.",
   "notice.youBlocked.body":
     "Precisas de desbloquear esta pessoa antes de dizer olá. Podes fazê-lo no perfil dela.",
-  "notice.notAccepting.title": "{name} não está a aceitar novos <em>pedidos</em> agora.",
+  "notice.notAccepting.title":
+    "{name} não está a aceitar novos <em>pedidos</em> agora.",
   "notice.notAccepting.body":
     "Colocaram os pedidos de contacto em pausa. Podes tentar noutra altura.",
-  "notice.needsIntro.title": "{name} liga-se através de <em>apresentações.</em>",
+  "notice.needsIntro.title":
+    "{name} liga-se através de <em>apresentações.</em>",
   "notice.needsIntro.body":
     "Chegam a novas pessoas através de quem já conhecem. Pede a uma ligação em comum para te apresentar.",
-  "notice.cannotConnect.title": "Não consegues contactar {name} <em>agora.</em>",
+  "notice.cannotConnect.title":
+    "Não consegues contactar {name} <em>agora.</em>",
   "notice.cannotConnect.body": "Este contacto não está disponível de momento.",
   "contact.message": "Mensagem",
 };

@@ -1,6 +1,10 @@
 import { useState, type ChangeEvent } from "react";
 import { FiArrowLeft, FiCamera } from "react-icons/fi";
-import { Button, ImageSlot, PhotoReframeModal } from "../../shared/components/ui";
+import {
+  Button,
+  ImageSlot,
+  PhotoReframeModal,
+} from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useAuth } from "../../app/providers/authContext";
 import { Translation } from "../../shared/i18n/Translation";

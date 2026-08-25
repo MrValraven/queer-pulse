@@ -11,7 +11,11 @@ export interface SendHousingEnquiryInput {
  * (no ref exists in demo); live delivers the message to the lister's inbox. */
 export function useSendHousingEnquiry() {
   const { demoMode } = useDemoMode();
-  return useMutation<{ conversationId: string } | null, Error, SendHousingEnquiryInput>({
+  return useMutation<
+    { conversationId: string } | null,
+    Error,
+    SendHousingEnquiryInput
+  >({
     mutationFn: async ({ ref, body }) => {
       if (demoMode || !ref) {
         await new Promise((resolve) => setTimeout(resolve, 650));

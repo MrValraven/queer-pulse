@@ -11,7 +11,10 @@
    real min widths or every card renders at 0 width. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(240px, 30vw, 300px), 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(240px, 30vw, 300px), 1fr)
+  );
   gap: var(--gap-grid);
   margin-block-start: 32px;
 }

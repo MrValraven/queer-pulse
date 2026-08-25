@@ -109,7 +109,9 @@ for (const step of STEPS) {
 
   child.on("error", (error) => {
     if (settled) return;
-    console.error(`[build-gates] ✗ ${step.name} could not start: ${error.message}`);
+    console.error(
+      `[build-gates] ✗ ${step.name} could not start: ${error.message}`,
+    );
     killOthers(step.name);
     finish(1);
   });

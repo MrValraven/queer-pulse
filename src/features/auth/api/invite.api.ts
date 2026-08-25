@@ -1,4 +1,9 @@
-import { ApiError, apiDelete, apiGet, apiPost } from "../../../shared/api/client";
+import {
+  ApiError,
+  apiDelete,
+  apiGet,
+  apiPost,
+} from "../../../shared/api/client";
 
 /** The person who created the invite — resolved server-side from the code. */
 export interface InviteInviterDTO {

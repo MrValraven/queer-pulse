@@ -155,72 +155,73 @@ const STAFF_REVIEWER = {
  * tell apart: a member-earned event (`actor: null`, reached through the
  * ordinary step-up flow) and an admin override carrying a reviewer note.
  */
-export const ADMIN_VERIFICATION_HISTORY: Record<string, VerificationEventDTO[]> =
-  {
-    "demo-user-1": [
-      {
-        id: "event-1-2",
-        action: "approved",
-        fromLevel: "phone",
-        toLevel: "id_verified",
-        reason: null,
-        actor: null,
-        createdAt: "2026-08-01T10:00:00.000Z",
-      },
-      {
-        id: "event-1-1",
-        action: "submitted",
-        fromLevel: "phone",
-        toLevel: null,
-        reason: null,
-        actor: null,
-        createdAt: "2026-08-01T09:50:00.000Z",
-      },
-    ],
-    "demo-user-2": [
-      {
-        id: "event-2-1",
-        action: "approved",
-        fromLevel: "email",
-        toLevel: "phone",
-        reason: null,
-        actor: null,
-        createdAt: "2026-08-05T14:30:00.000Z",
-      },
-    ],
-    "demo-user-7": [
-      {
-        id: "event-7-1",
-        action: "approved",
-        fromLevel: "email",
-        toLevel: "phone",
-        reason: null,
-        actor: null,
-        createdAt: "2026-08-03T13:10:00.000Z",
-      },
-    ],
-    "demo-user-8": [
-      {
-        id: "event-8-2",
-        action: "overridden",
-        fromLevel: "phone",
-        toLevel: "id_verified",
-        reason:
-          "Verified passport in person during a community meetup check-in.",
-        actor: STAFF_REVIEWER,
-        createdAt: "2026-08-07T17:00:00.000Z",
-      },
-      {
-        id: "event-8-1",
-        action: "approved",
-        fromLevel: "email",
-        toLevel: "phone",
-        reason: null,
-        actor: null,
-        createdAt: "2026-07-30T12:00:00.000Z",
-      },
-    ],
-  };
+export const ADMIN_VERIFICATION_HISTORY: Record<
+  string,
+  VerificationEventDTO[]
+> = {
+  "demo-user-1": [
+    {
+      id: "event-1-2",
+      action: "approved",
+      fromLevel: "phone",
+      toLevel: "id_verified",
+      reason: null,
+      actor: null,
+      createdAt: "2026-08-01T10:00:00.000Z",
+    },
+    {
+      id: "event-1-1",
+      action: "submitted",
+      fromLevel: "phone",
+      toLevel: null,
+      reason: null,
+      actor: null,
+      createdAt: "2026-08-01T09:50:00.000Z",
+    },
+  ],
+  "demo-user-2": [
+    {
+      id: "event-2-1",
+      action: "approved",
+      fromLevel: "email",
+      toLevel: "phone",
+      reason: null,
+      actor: null,
+      createdAt: "2026-08-05T14:30:00.000Z",
+    },
+  ],
+  "demo-user-7": [
+    {
+      id: "event-7-1",
+      action: "approved",
+      fromLevel: "email",
+      toLevel: "phone",
+      reason: null,
+      actor: null,
+      createdAt: "2026-08-03T13:10:00.000Z",
+    },
+  ],
+  "demo-user-8": [
+    {
+      id: "event-8-2",
+      action: "overridden",
+      fromLevel: "phone",
+      toLevel: "id_verified",
+      reason: "Verified passport in person during a community meetup check-in.",
+      actor: STAFF_REVIEWER,
+      createdAt: "2026-08-07T17:00:00.000Z",
+    },
+    {
+      id: "event-8-1",
+      action: "approved",
+      fromLevel: "email",
+      toLevel: "phone",
+      reason: null,
+      actor: null,
+      createdAt: "2026-07-30T12:00:00.000Z",
+    },
+  ],
+};
 
 /** Group demo rows by level, for the fixture's precomputed counts and the
  *  client-side filter below. */

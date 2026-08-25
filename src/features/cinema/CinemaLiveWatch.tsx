@@ -125,7 +125,12 @@ export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
                 poster={session.posterUrl}
                 controls
                 playsInline
-                style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
                 onTimeUpdate={onTimeUpdate}
                 onPause={flushProgress}
                 onEnded={flushProgress}
@@ -166,7 +171,7 @@ export function CinemaLiveWatch({ titleId }: { titleId: string | null }) {
                 <div className={styles.psMeta}>
                   {playbackError
                     ? t("cinema:live.playbackError")
-                    : title.durationLabel ?? ""}
+                    : (title.durationLabel ?? "")}
                 </div>
               </div>
             )}

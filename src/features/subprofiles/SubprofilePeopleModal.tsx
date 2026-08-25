@@ -10,10 +10,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { routes } from "../../app/routeMap";
-import {
-  getFollowers,
-  type FollowerDTO,
-} from "./api/subprofiles.api";
+import { getFollowers, type FollowerDTO } from "./api/subprofiles.api";
 import { useEndorsement } from "./api/useEndorsement";
 import { useEndorsers } from "./api/useEndorsers";
 import { demoFollowersFor } from "./subprofilePeopleModal.data";
@@ -247,10 +244,13 @@ export function SubprofilePeopleModal({
               <EmptyState
                 icon={<FiUsers aria-hidden />}
                 title={t("subprofiles:peopleModal.followersCountOnlyTitle")}
-                description={t("subprofiles:peopleModal.followersCountOnlyBody", {
-                  count: persona.followerCount,
-                  name: persona.displayName,
-                })}
+                description={t(
+                  "subprofiles:peopleModal.followersCountOnlyBody",
+                  {
+                    count: persona.followerCount,
+                    name: persona.displayName,
+                  },
+                )}
               />
             ) : (
               <EmptyState title={t("subprofiles:peopleModal.noFollowers")} />

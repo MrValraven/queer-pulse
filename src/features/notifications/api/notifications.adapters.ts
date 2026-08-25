@@ -12,8 +12,14 @@ import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { Notification, NotifType } from "../notifications.types";
-import { formatNotification, type NotificationKind } from "./formatNotification";
-import type { NotificationActorDTO, NotificationDTO } from "./notifications.api";
+import {
+  formatNotification,
+  type NotificationKind,
+} from "./formatNotification";
+import type {
+  NotificationActorDTO,
+  NotificationDTO,
+} from "./notifications.api";
 
 /** Each notification kind → the icon its row renders with (no avatar from the API). */
 const KIND_ICONS: Record<NotifType, IconType> = {
@@ -147,8 +153,7 @@ export function notificationDtoToView(
   // server-side); a missing/malformed one just drops the second action
   // rather than risk a broken href.
   if (dto.type === "subprofile_credit") {
-    const deepLink = (dto.payload as { deepLink?: unknown } | null)
-      ?.deepLink;
+    const deepLink = (dto.payload as { deepLink?: unknown } | null)?.deepLink;
     view.actions = [
       {
         label: t("notifications:actions.makePersona"),

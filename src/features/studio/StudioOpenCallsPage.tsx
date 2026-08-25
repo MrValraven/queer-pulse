@@ -11,6 +11,23 @@ import { StudioOpenCallCard } from "./StudioOpenCallCard";
 import { StudioOpenCallSkeleton } from "./StudioOpenCallSkeleton";
 import s from "./funding.module.css";
 
+// Content: the mock "already applied" call — curator identity, call type/
+// status tags, title, brief, and status note. Mirrors CALLS in
+// studioOpenCalls.data.tsx, which already keeps these fields as plain
+// content strings, never translated.
+const APPLIED_CALL_CURATOR_INITIALS = "SM";
+const APPLIED_CALL_CURATOR_NAME = "Sara Marques";
+const APPLIED_CALL_CURATOR_ROLE = "Council · seat 1";
+const APPLIED_CALL_TYPE_TAG = "Commission";
+const APPLIED_CALL_STATUS_TAG = "Applied · 2 Jun";
+const APPLIED_CALL_TITLE_PRE = "Closing theme for the ";
+const APPLIED_CALL_TITLE_EM = "Pride assembly";
+const APPLIED_CALL_BRIEF_PRE = "You attached ";
+const APPLIED_CALL_BRIEF_TRACK = "A Beja";
+const APPLIED_CALL_BRIEF_POST =
+  " and a note. Sara claimed it on 4 June. Decision by 18 June. You'll hear back here and by email, with a sentence either way.";
+const APPLIED_CALL_STATUS_NOTE = "in review with Sara";
+
 export function StudioOpenCallsPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -79,28 +96,31 @@ export function StudioOpenCallsPage() {
                 <div className={s.call} style={{ opacity: 0.72 }}>
                   <div className={s.callTop}>
                     <div className={s.callCur}>
-                      <span className={`${s.av} ${s.jade}`}>SM</span>
+                      <span className={`${s.av} ${s.jade}`}>
+                        {APPLIED_CALL_CURATOR_INITIALS}
+                      </span>
                       <div>
-                        <div className={s.nm}>Sara Marques</div>
-                        <div className={s.ro}>Council · seat 1</div>
+                        <div className={s.nm}>{APPLIED_CALL_CURATOR_NAME}</div>
+                        <div className={s.ro}>{APPLIED_CALL_CURATOR_ROLE}</div>
                       </div>
                     </div>
                     <div className={s.callMain}>
                       <div className={s.callTags}>
                         <span className={`${s.callTag} ${s.tagCommission}`}>
-                          Commission
+                          {APPLIED_CALL_TYPE_TAG}
                         </span>
                         <span className={`${s.callTag} ${s.tagApplied}`}>
-                          Applied · 2 Jun
+                          {APPLIED_CALL_STATUS_TAG}
                         </span>
                       </div>
                       <h3>
-                        Closing theme for the <em>Pride assembly</em>
+                        {APPLIED_CALL_TITLE_PRE}
+                        <em>{APPLIED_CALL_TITLE_EM}</em>
                       </h3>
                       <p className={s.brief}>
-                        You attached <em>A Beja</em> and a note. Sara claimed it
-                        on 4 June. Decision by 18 June. You'll hear back here
-                        and by email, with a sentence either way.
+                        {APPLIED_CALL_BRIEF_PRE}
+                        <em>{APPLIED_CALL_BRIEF_TRACK}</em>
+                        {APPLIED_CALL_BRIEF_POST}
                       </p>
                     </div>
                     <div className={s.callAmt}>
@@ -134,7 +154,7 @@ export function StudioOpenCallsPage() {
                     <div className={s.callMeta}>
                       <span>
                         {t("studio:calls.applied.statusPrefix")}{" "}
-                        <em>in review with Sara</em>
+                        <em>{APPLIED_CALL_STATUS_NOTE}</em>
                       </span>
                       <span className={s.dot} />
                       <span>

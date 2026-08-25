@@ -15,7 +15,10 @@ interface ComposerInputRowProps {
   onTogglePopover: (which: NonNullable<ComposerPopover>) => void;
   onClosePopover: () => void;
   onSendGif?: (attachment: GifAttachment) => void;
-  onSendImage?: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
+  onSendImage?: (
+    attachment: GifAttachment,
+    localAttachment?: GifAttachment,
+  ) => void;
   onInsertShortcut: (sigil: string) => void;
   placeholder: string;
   draft: string;
@@ -82,7 +85,9 @@ export function ComposerInputRow({
       />
       <button
         type="button"
-        className={[styles.sendBtn, draft.trim() && styles.sendBtnActive].filter(Boolean).join(" ")}
+        className={[styles.sendBtn, draft.trim() && styles.sendBtnActive]
+          .filter(Boolean)
+          .join(" ")}
         onClick={onSend}
         aria-label={sendLabel}
         disabled={!draft.trim()}

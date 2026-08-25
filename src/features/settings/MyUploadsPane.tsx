@@ -139,10 +139,14 @@ function MyUploadCard({
         loading="lazy"
       />
       <div className={styles.meta}>
-        <span className={styles.kind}>{t(`settings:uploads.kind.${item.kind}`)}</span>
+        <span className={styles.kind}>
+          {t(`settings:uploads.kind.${item.kind}`)}
+        </span>
         {item.references.length > 0 ? (
           <span className={styles.inUse}>
-            {t("settings:uploads.inUseCount", { count: item.references.length })}
+            {t("settings:uploads.inUseCount", {
+              count: item.references.length,
+            })}
           </span>
         ) : degraded ? (
           // A reference check failed, so "no references" isn't authoritative —

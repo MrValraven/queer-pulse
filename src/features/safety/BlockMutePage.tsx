@@ -2,11 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Footer } from "../../shared/components/layout";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
 import { useSocial } from "../../app/providers/useSocial";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -95,7 +91,8 @@ export function BlockMutePage() {
       // With a real target, drive the live-capable primitive instead of dead
       // local state. Guard on current status so re-entering the flow for an
       // already-muted member doesn't accidentally toggle them back on.
-      if (hasTarget && targetSlug && !isMuted(targetSlug)) toggleMute(targetSlug);
+      if (hasTarget && targetSlug && !isMuted(targetSlug))
+        toggleMute(targetSlug);
       setState("muted");
     } else {
       if (hasTarget && targetSlug && !isBlocked(targetSlug))
@@ -110,7 +107,8 @@ export function BlockMutePage() {
   }
 
   function handleUndoBlock() {
-    if (hasTarget && targetSlug && isBlocked(targetSlug)) toggleBlock(targetSlug);
+    if (hasTarget && targetSlug && isBlocked(targetSlug))
+      toggleBlock(targetSlug);
     setState("choose");
   }
 

@@ -64,7 +64,8 @@ describe("useVotePost optimistic patch", () => {
     result.current.vote("post-42", 1);
 
     await waitFor(() => {
-      const patched = client.getQueryData<InfiniteData<ThreadPostsPage>>(POSTS_KEY);
+      const patched =
+        client.getQueryData<InfiniteData<ThreadPostsPage>>(POSTS_KEY);
       const patchedPost = patched?.pages[0]?.items[0];
       expect(patchedPost?.myVote).toBe(1);
       expect(patchedPost?.voteCount).toBe(4);

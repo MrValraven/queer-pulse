@@ -65,7 +65,10 @@ export function EndorseSubprofileModal({
   const submit = () => {
     if (pending) return;
     endorse.mutate(
-      { note: note.trim() || undefined, currentEndorsementCount: endorsementCount },
+      {
+        note: note.trim() || undefined,
+        currentEndorsementCount: endorsementCount,
+      },
       {
         onSuccess: () => {
           if (viewerEndorsed) {

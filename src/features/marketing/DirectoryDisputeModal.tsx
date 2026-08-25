@@ -44,7 +44,8 @@ export function DirectoryDisputeModal({
 
   const trimmedReason = reason.trim();
   const trimmedEmail = contactEmail.trim();
-  const emailInvalid = trimmedEmail.length > 0 && !EMAIL_PATTERN.test(trimmedEmail);
+  const emailInvalid =
+    trimmedEmail.length > 0 && !EMAIL_PATTERN.test(trimmedEmail);
   const canSubmit =
     trimmedReason.length > 0 && !emailInvalid && !dispute.isPending;
 
@@ -104,7 +105,9 @@ export function DirectoryDisputeModal({
           values={{ name: placeName }}
         />
       </h3>
-      <p className={styles.sub}>{t("marketing:directory.detail.dispute.sub")}</p>
+      <p className={styles.sub}>
+        {t("marketing:directory.detail.dispute.sub")}
+      </p>
 
       <FormField
         label={t("marketing:directory.detail.dispute.reasonLabel")}
@@ -153,7 +156,9 @@ export function DirectoryDisputeModal({
         </Button>
         <Button variant="primary" onClick={submit} disabled={!canSubmit}>
           {dispute.isPending ? (
-            <Sending label={t("marketing:directory.detail.dispute.submitting")} />
+            <Sending
+              label={t("marketing:directory.detail.dispute.submitting")}
+            />
           ) : (
             t("marketing:directory.detail.dispute.submit")
           )}

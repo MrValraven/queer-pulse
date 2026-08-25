@@ -51,7 +51,8 @@ export function NotesSection({
         aria-label={t("admin:roadmap.drawer.publicOneLiner.title")}
         onChange={(event) =>
           onFieldChange({
-            publicNote: event.target.value.length > 0 ? event.target.value : null,
+            publicNote:
+              event.target.value.length > 0 ? event.target.value : null,
           })
         }
       />

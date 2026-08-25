@@ -130,9 +130,7 @@ export function AdminVerificationsPage() {
 function ReviewQueueSegment() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [status, setStatus] = useState<VerificationRequestStatusFilter>(
-    "all",
-  );
+  const [status, setStatus] = useState<VerificationRequestStatusFilter>("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<VerificationRequestSort>("recent");
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(
@@ -306,10 +304,12 @@ function ReviewQueueSegment() {
 function DirectOverrideSegment() {
   const { t } = useTranslation();
   const [level, setLevel] = useState<VerificationLevelFilter>("all");
-  const [headerValue, setHeaderValue] = useState<AdminVerificationsHeaderValue>({
-    query: "",
-    sort: "recent",
-  });
+  const [headerValue, setHeaderValue] = useState<AdminVerificationsHeaderValue>(
+    {
+      query: "",
+      sort: "recent",
+    },
+  );
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const {
@@ -356,7 +356,10 @@ function DirectOverrideSegment() {
       </FadeIn>
 
       <FadeIn delay={70}>
-        <AdminVerificationsHeader value={headerValue} onChange={setHeaderValue} />
+        <AdminVerificationsHeader
+          value={headerValue}
+          onChange={setHeaderValue}
+        />
       </FadeIn>
 
       <FadeIn delay={80}>

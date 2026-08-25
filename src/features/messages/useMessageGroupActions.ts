@@ -91,7 +91,9 @@ export function useMessageGroupActions({
     const group = allThreads.find((thread) => thread.id === conversationId);
     if (!group || picks.length === 0) return;
     if (demoMode) {
-      const existingSlugs = new Set((group.members ?? []).map((member) => member.slug));
+      const existingSlugs = new Set(
+        (group.members ?? []).map((member) => member.slug),
+      );
       const additions: GroupMemberView[] = picks
         .filter((pick) => !existingSlugs.has(pick.slug))
         .map((pick) => ({

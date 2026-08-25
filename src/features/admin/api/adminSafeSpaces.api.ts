@@ -52,4 +52,7 @@ export const getSafeSpaceCandidates = () =>
 
 /** Toggle or edit one listing's Safe Space status. Returns the updated listing. Moderator/Admin only. */
 export const setSafeSpace = (ref: string, body: SetSafeSpaceInput) =>
-  apiPatch<ListingDTO>(`/admin/listings/${encodeURIComponent(ref)}/safe-space`, body);
+  apiPatch<ListingDTO>(
+    `/admin/listings/${encodeURIComponent(ref)}/safe-space`,
+    body,
+  );

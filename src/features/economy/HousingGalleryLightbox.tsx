@@ -126,61 +126,61 @@ export function HousingGalleryLightbox({
         tabIndex={-1}
       >
         <div className={styles.bar}>
-        <span className={styles.counter}>
-          {t("economy:housingGallery.counter", {
-            index: index + 1,
-            total,
-          })}
-        </span>
-        <button
-          type="button"
-          className={styles.iconBtn}
-          onClick={onClose}
-          aria-label={t("economy:housingGallery.close")}
+          <span className={styles.counter}>
+            {t("economy:housingGallery.counter", {
+              index: index + 1,
+              total,
+            })}
+          </span>
+          <button
+            type="button"
+            className={styles.iconBtn}
+            onClick={onClose}
+            aria-label={t("economy:housingGallery.close")}
+          >
+            <FiX aria-hidden />
+          </button>
+        </div>
+
+        <div
+          className={styles.stage}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerEnd}
+          onPointerCancel={handlePointerEnd}
         >
-          <FiX aria-hidden />
-        </button>
-      </div>
+          {photo?.src ? (
+            <img
+              className={styles.stageImg}
+              src={resolveAvatarSrc(photo.src, 1600)}
+              alt={imageAlt}
+              decoding="async"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <div className={styles.stagePlaceholder}>{photo?.caption}</div>
+          )}
 
-      <div
-        className={styles.stage}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerEnd}
-        onPointerCancel={handlePointerEnd}
-      >
-        {photo?.src ? (
-          <img
-            className={styles.stageImg}
-            src={resolveAvatarSrc(photo.src, 1600)}
-            alt={imageAlt}
-            decoding="async"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <div className={styles.stagePlaceholder}>{photo?.caption}</div>
-        )}
-
-        {total > 1 && (
-          <>
-            <button
-              type="button"
-              className={`${styles.iconBtn} ${styles.nav} ${styles.navPrev}`}
-              onClick={goPrev}
-              aria-label={t("economy:housingGallery.prev")}
-            >
-              <FiChevronLeft aria-hidden />
-            </button>
-            <button
-              type="button"
-              className={`${styles.iconBtn} ${styles.nav} ${styles.navNext}`}
-              onClick={goNext}
-              aria-label={t("economy:housingGallery.next")}
-            >
-              <FiChevronRight aria-hidden />
-            </button>
-          </>
-        )}
-      </div>
+          {total > 1 && (
+            <>
+              <button
+                type="button"
+                className={`${styles.iconBtn} ${styles.nav} ${styles.navPrev}`}
+                onClick={goPrev}
+                aria-label={t("economy:housingGallery.prev")}
+              >
+                <FiChevronLeft aria-hidden />
+              </button>
+              <button
+                type="button"
+                className={`${styles.iconBtn} ${styles.nav} ${styles.navNext}`}
+                onClick={goNext}
+                aria-label={t("economy:housingGallery.next")}
+              >
+                <FiChevronRight aria-hidden />
+              </button>
+            </>
+          )}
+        </div>
 
         <p className={styles.caption}>{photo?.caption ?? imageAlt}</p>
       </div>

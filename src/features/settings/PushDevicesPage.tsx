@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { FiArrowLeft, FiBellOff, FiMonitor, FiSmartphone } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiBellOff,
+  FiMonitor,
+  FiSmartphone,
+} from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -29,10 +34,7 @@ function DeviceCard({
   onRemove: (id: string) => void;
 }) {
   const { t } = useTranslation();
-  const icCls = [
-    styles.ic,
-    device.deviceType === "mobile" && styles.icMobile,
-  ]
+  const icCls = [styles.ic, device.deviceType === "mobile" && styles.icMobile]
     .filter(Boolean)
     .join(" ");
 
@@ -127,11 +129,17 @@ export function PushDevicesPage() {
   return (
     <AppShell>
       <div className={styles.page}>
-        <Link to={`${routes.settings}?pane=notifications`} className={styles.back}>
-          <FiArrowLeft aria-hidden /> {t("settings:pushDevices.backToNotifications")}
+        <Link
+          to={`${routes.settings}?pane=notifications`}
+          className={styles.back}
+        >
+          <FiArrowLeft aria-hidden />{" "}
+          {t("settings:pushDevices.backToNotifications")}
         </Link>
 
-        <div className={styles.eyebrow}>{t("settings:pushDevices.eyebrow")}</div>
+        <div className={styles.eyebrow}>
+          {t("settings:pushDevices.eyebrow")}
+        </div>
         <h1 className={styles.h1}>
           <Translation
             i18nKey="settings:pushDevices.h1"

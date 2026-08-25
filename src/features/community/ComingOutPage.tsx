@@ -100,8 +100,7 @@ export function ComingOutPage() {
             space": a moderated room where people talk this through with
             others. */}
         <Button to={routes.peerSupport} variant="primary" size="lg">
-          {t("community:comingOut.outro.enterCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("community:comingOut.outro.enterCta")} <FiArrowRight aria-hidden />
         </Button>
         <Button to={routes.communities} variant="ghost-dark" size="lg">
           {t("community:comingOut.outro.communitiesCta")}

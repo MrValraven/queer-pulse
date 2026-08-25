@@ -49,15 +49,13 @@ export function CreateGatheringSuccess({
       )}
       <div className={styles.successActions}>
         <Button to={routes.gatherings} variant="ghost-dark">
-          {t("gatherings:create.success.viewCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("gatherings:create.success.viewCta")} <FiArrowRight aria-hidden />
         </Button>
         <Button
           to={createdSlug ? gatheringPath(createdSlug) : routes.gatherings}
           variant="primary"
         >
-          {t("gatherings:create.success.eventCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("gatherings:create.success.eventCta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>

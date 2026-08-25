@@ -1,6 +1,9 @@
 import { Fragment, type ReactNode } from "react";
 import { Avatar } from "../../shared/components/ui";
-import type { MessageSearchGroupView, MessageSearchHitView } from "./api/useMessageSearch";
+import type {
+  MessageSearchGroupView,
+  MessageSearchHitView,
+} from "./api/useMessageSearch";
 import styles from "./MessagesPage.module.css";
 
 /** Wraps every case-insensitive occurrence of `query` in `text` with a <mark>,

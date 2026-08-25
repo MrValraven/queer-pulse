@@ -1,9 +1,17 @@
 import { FiCheck, FiInfo, FiX } from "react-icons/fi";
-import { Button, DatePicker, FormField, SegmentedControl } from "../../../../shared/components/ui";
+import {
+  Button,
+  DatePicker,
+  FormField,
+  SegmentedControl,
+} from "../../../../shared/components/ui";
 import { cx } from "../../../../shared/lib/cx";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleBlock } from "../../api/pieces.api";
-import { buildPublishChecklist, isPublishReady } from "./articlePublishChecklist";
+import {
+  buildPublishChecklist,
+  isPublishReady,
+} from "./articlePublishChecklist";
 import { isFutureInstant } from "./scheduleValidity";
 import styles from "../pieceTabs.module.css";
 
@@ -77,9 +85,18 @@ export function PublishRail({
         <FormField
           label={t("magazine:write.publish.scheduleLabel")}
           helper={t("magazine:write.publish.scheduleNote")}
-          error={scheduledAt && !scheduleValid ? t("magazine:write.publish.scheduleInvalid") : undefined}
+          error={
+            scheduledAt && !scheduleValid
+              ? t("magazine:write.publish.scheduleInvalid")
+              : undefined
+          }
         >
-          <DatePicker mode="datetime" value={scheduledAt} onChange={onScheduledAtChange} clearable />
+          <DatePicker
+            mode="datetime"
+            value={scheduledAt}
+            onChange={onScheduledAtChange}
+            clearable
+          />
         </FormField>
       )}
       {publishStatus === "issue" && (
@@ -95,7 +112,10 @@ export function PublishRail({
         </span>
         <ul className={styles.ticks}>
           {checklist.map((item) => (
-            <li key={item.id} className={cx(!item.done && item.required && styles.open)}>
+            <li
+              key={item.id}
+              className={cx(!item.done && item.required && styles.open)}
+            >
               {item.done ? (
                 <FiCheck aria-hidden />
               ) : item.required ? (
@@ -109,7 +129,12 @@ export function PublishRail({
         </ul>
       </div>
 
-      <Button variant="plum" disabled={disabled} aria-busy={publishPending} onClick={onPublish}>
+      <Button
+        variant="plum"
+        disabled={disabled}
+        aria-busy={publishPending}
+        onClick={onPublish}
+      >
         {published
           ? t("magazine:write.publish.unpublishCta")
           : publishStatus === "schedule"

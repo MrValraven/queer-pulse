@@ -50,7 +50,8 @@ export const CLINICS: Clinic[] = [
     type: "ngo",
     typeLabel: "NGO · Free",
     name: "CheckpointLx",
-    description: "Lisbon's leading queer-specific sexual health service. Free, anonymous testing for HIV, syphilis, hepatitis B & C, and gonorrhoea. PrEP counselling. Staff are experienced with queer and trans clients. No appointment needed on drop-in days.",
+    description:
+      "Lisbon's leading queer-specific sexual health service. Free, anonymous testing for HIV, syphilis, hepatitis B & C, and gonorrhoea. PrEP counselling. Staff are experienced with queer and trans clients. No appointment needed on drop-in days.",
     meta: [
       { icon: FiMapPin, text: "Rua de São Lázaro, Intendente" },
       { icon: FiClock, text: "Tue & Thu 18:00–21:00, Sat 14:00–18:00" },
@@ -72,7 +73,8 @@ export const CLINICS: Clinic[] = [
     type: "ngo",
     typeLabel: "NGO · Free",
     name: "GAT Lisboa",
-    description: "Community-based harm reduction and sexual health. Free HIV rapid tests, peer counselling, PrEP navigation support, and an anonymous STI referral service. Particularly strong on outreach to migrants and people in sex work.",
+    description:
+      "Community-based harm reduction and sexual health. Free HIV rapid tests, peer counselling, PrEP navigation support, and an anonymous STI referral service. Particularly strong on outreach to migrants and people in sex work.",
     meta: [
       { icon: FiMapPin, text: "Rua do Século, Bairro Alto" },
       { icon: FiClock, text: "Mon–Fri 10:00–18:00" },
@@ -94,7 +96,8 @@ export const CLINICS: Clinic[] = [
     type: "public",
     typeLabel: "SNS · Free",
     name: "CAD: Centro de Aconselhamento e Deteção",
-    description: "The public SNS HIV testing and counselling service. Free, confidential, with a counsellor present. Also provides hepatitis B vaccination and referrals to PrEP. You need to register with the SNS but no insurance required.",
+    description:
+      "The public SNS HIV testing and counselling service. Free, confidential, with a counsellor present. Also provides hepatitis B vaccination and referrals to PrEP. You need to register with the SNS but no insurance required.",
     meta: [
       { icon: FiMapPin, text: "Multiple locations across Lisbon" },
       { icon: FiClock, text: "By appointment" },
@@ -115,7 +118,8 @@ export const CLINICS: Clinic[] = [
     type: "pharmacy",
     typeLabel: "Pharmacy · €15–25",
     name: "Rapid HIV test: any pharmacy",
-    description: "Available over the counter at most pharmacies. Result in 15 minutes. Detects HIV from 3 months after potential exposure. Ask for a teste rápido de VIH. No prescription needed, no record kept.",
+    description:
+      "Available over the counter at most pharmacies. Result in 15 minutes. Detects HIV from 3 months after potential exposure. Ask for a teste rápido de VIH. No prescription needed, no record kept.",
     meta: [
       { icon: FiMapPin, text: "Any farmácia" },
       { icon: FiClock, text: "Walk-in, no appointment" },
@@ -133,7 +137,8 @@ export const CLINICS: Clinic[] = [
     type: "private",
     typeLabel: "Private · Paid",
     name: "Clínica da Travessa: Sexual Health",
-    description: "Private clinic with queer-affirming staff. Full STI panel (HIV, syphilis, gonorrhoea, chlamydia, HSV, hepatitis B & C, HPV). Results within 48 hours. Offers PrEP prescription outside the SNS pathway for those who prefer it.",
+    description:
+      "Private clinic with queer-affirming staff. Full STI panel (HIV, syphilis, gonorrhoea, chlamydia, HSV, hepatitis B & C, HPV). Results within 48 hours. Offers PrEP prescription outside the SNS pathway for those who prefer it.",
     meta: [
       { icon: FiMapPin, text: "Príncipe Real" },
       { icon: FiClock, text: "Mon–Sat, by appointment" },
@@ -207,22 +212,26 @@ export const TESTING_INFO: {
 export const PREP_STEPS = [
   {
     title: "Book an appointment at a CAD or sexual health clinic",
-    description: "Tell them you're interested in PrEP. CheckpointLx and GAT can help you navigate the referral if you're unsure where to start.",
+    description:
+      "Tell them you're interested in PrEP. CheckpointLx and GAT can help you navigate the referral if you're unsure where to start.",
     note: "CheckpointLx offers PrEP counselling every Tuesday evening. No appointment needed.",
   },
   {
     title: "Initial eligibility assessment & blood tests",
-    description: "A counsellor will discuss your situation and arrange blood tests: HIV, hepatitis B, creatinine (kidney function), and STI panel. Results in 5–10 days.",
+    description:
+      "A counsellor will discuss your situation and arrange blood tests: HIV, hepatitis B, creatinine (kidney function), and STI panel. Results in 5–10 days.",
     note: "You must be HIV-negative to start PrEP.",
   },
   {
     title: "Prescription issued: medication collected free from SNS pharmacy",
-    description: "If eligible, you'll receive a prescription for tenofovir/emtricitabine. Collect from any SNS-contracted pharmacy at no cost with your SNS number.",
+    description:
+      "If eligible, you'll receive a prescription for tenofovir/emtricitabine. Collect from any SNS-contracted pharmacy at no cost with your SNS number.",
     note: "No SNS number? GAT Lisboa can advise on alternative pathways.",
   },
   {
     title: "Quarterly check-ins",
-    description: "Every 3 months: HIV test, STI screen, and kidney function check. This is also where you get your next prescription. Appointments are 20–30 minutes.",
+    description:
+      "Every 3 months: HIV test, STI screen, and kidney function check. This is also where you get your next prescription. Appointments are 20–30 minutes.",
   },
 ];
 

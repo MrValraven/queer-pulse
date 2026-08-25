@@ -39,8 +39,7 @@ type Extra = Record<string, unknown>;
 let sentryModule: typeof Sentry | null = null;
 
 const DSN: string | undefined = import.meta.env.VITE_SENTRY_DSN as
-  | string
-  | undefined;
+  string | undefined;
 
 /** Flipped on only when DSN + PROD + analytics consent all hold. */
 let enabled = false;

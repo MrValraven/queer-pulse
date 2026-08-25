@@ -90,7 +90,9 @@ export function useLisbonMap({
       // staggered drop-in lands on a settled canvas, not a still-loading one.
       markerManagerRef.current?.render(venuesRef.current);
       overlayRef.current?.setSelected(
-        new Set(selectedFreguesiaRef.current ? [selectedFreguesiaRef.current] : []),
+        new Set(
+          selectedFreguesiaRef.current ? [selectedFreguesiaRef.current] : [],
+        ),
       );
     },
     onCleanup: () => {
@@ -123,7 +125,9 @@ export function useLisbonMap({
     overlayRef.current?.setSelected(
       new Set(selectedFreguesia ? [selectedFreguesia] : []),
     );
-    const bounds = selectedFreguesia ? freguesiaBounds([selectedFreguesia]) : null;
+    const bounds = selectedFreguesia
+      ? freguesiaBounds([selectedFreguesia])
+      : null;
     if (bounds) {
       map.fitBounds(bounds, { padding: 56, maxZoom: 15.5, duration: 700 });
     } else if (!focusedVenueIdRef.current) {

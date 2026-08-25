@@ -52,7 +52,9 @@ export function useForumRowModeration() {
       },
       onSuccess: () =>
         showToast(
-          t(pinning ? "forum:toast.threadPinned" : "forum:toast.threadUnpinned"),
+          t(
+            pinning ? "forum:toast.threadPinned" : "forum:toast.threadUnpinned",
+          ),
           "success",
         ),
     });

@@ -60,8 +60,14 @@ export function SlashMenu({ at, onPick, onClose }: SlashMenuProps) {
     // Clamp so the menu never renders partly off-screen when the caret sits
     // near a viewport edge.
     const { width, height } = menu.getBoundingClientRect();
-    const maxX = Math.max(VIEWPORT_MARGIN, window.innerWidth - width - VIEWPORT_MARGIN);
-    const maxY = Math.max(VIEWPORT_MARGIN, window.innerHeight - height - VIEWPORT_MARGIN);
+    const maxX = Math.max(
+      VIEWPORT_MARGIN,
+      window.innerWidth - width - VIEWPORT_MARGIN,
+    );
+    const maxY = Math.max(
+      VIEWPORT_MARGIN,
+      window.innerHeight - height - VIEWPORT_MARGIN,
+    );
     setPosition({
       x: Math.min(at.x, maxX),
       y: Math.min(at.y, maxY),
@@ -76,7 +82,10 @@ export function SlashMenu({ at, onPick, onClose }: SlashMenuProps) {
     const previouslyFocused = document.activeElement;
     itemRefs.current[0]?.focus();
     return () => {
-      if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) {
+      if (
+        previouslyFocused instanceof HTMLElement &&
+        previouslyFocused.isConnected
+      ) {
         previouslyFocused.focus();
       }
     };

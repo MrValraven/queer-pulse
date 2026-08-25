@@ -11,12 +11,7 @@ import {
 /** The 6 possible Board card flags (`admin:roadmap.board.flag.*`), in the
  *  prototype's order — see `CardFlags.tsx` for which items get which. */
 export type CardFlagKind =
-  | "requested"
-  | "committed"
-  | "hidden"
-  | "safetyGated"
-  | "spike"
-  | "slips";
+  "requested" | "committed" | "hidden" | "safetyGated" | "spike" | "slips";
 
 /**
  * One icon per flag, inline from `react-icons/fi` (the repo's house icon

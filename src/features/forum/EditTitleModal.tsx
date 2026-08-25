@@ -23,7 +23,12 @@ export function EditTitleModal({
       onClose={onClose}
       footer={
         <>
-          <Button variant="ghost" type="button" onClick={onClose} disabled={busy}>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+          >
             {t("forum:opEdit.cancel")}
           </Button>
           <Button
@@ -38,7 +43,9 @@ export function EditTitleModal({
       }
     >
       <label className={styles.field}>
-        <span className={styles.fieldLabel}>{t("forum:opEdit.titleLabel")}</span>
+        <span className={styles.fieldLabel}>
+          {t("forum:opEdit.titleLabel")}
+        </span>
         <input
           className={styles.input}
           value={title}

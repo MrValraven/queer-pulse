@@ -116,7 +116,9 @@ export function ListBusinessPreviewDetails({
         <section className={styles.fpSec}>
           <h4>{t("marketing:listBusiness.fullPreview.whoRunsIt")}</h4>
           <div className={styles.pdOwner}>
-            <span className={styles.pdOwnerAv}>{initials(draft.ownerName)}</span>
+            <span className={styles.pdOwnerAv}>
+              {initials(draft.ownerName)}
+            </span>
             <div>
               <div className={styles.pdOwnerName}>
                 {draft.visibility === "role"

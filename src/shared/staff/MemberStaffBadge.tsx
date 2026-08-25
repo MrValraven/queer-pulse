@@ -1,7 +1,4 @@
-import {
-  StaffBadge,
-  type StaffBadgeSize,
-} from "../components/ui/StaffBadge";
+import { StaffBadge, type StaffBadgeSize } from "../components/ui/StaffBadge";
 import { useStaffRole } from "./useStaffRole";
 
 /**

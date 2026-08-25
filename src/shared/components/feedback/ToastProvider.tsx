@@ -156,7 +156,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const schedule = useCallback(
     (id: number, ms: number) => {
       const timeoutId = window.setTimeout(() => dismiss(id), ms);
-      timers.current.set(id, { timeoutId, endAt: Date.now() + ms, remaining: ms });
+      timers.current.set(id, {
+        timeoutId,
+        endAt: Date.now() + ms,
+        remaining: ms,
+      });
     },
     [dismiss],
   );

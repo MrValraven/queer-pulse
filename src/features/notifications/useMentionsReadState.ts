@@ -81,7 +81,8 @@ export function useMentionsReadState(
       unread: allMentions.filter(
         (mention) => mention.unread && !readIds.has(mention.id),
       ).length,
-      posts: allMentions.filter((mention) => mention.category === "post").length,
+      posts: allMentions.filter((mention) => mention.category === "post")
+        .length,
       articles: allMentions.filter((mention) => mention.category === "article")
         .length,
       events: allMentions.filter((mention) => mention.category === "event")

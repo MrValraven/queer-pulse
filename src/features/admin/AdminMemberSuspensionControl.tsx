@@ -53,7 +53,9 @@ export function AdminMemberSuspensionControl({
       <h3 className={styles.dHeading}>
         {t("admin:members.suspension.sectionTitle")}
       </h3>
-      <p className={styles.dHint}>{t("admin:members.suspension.description")}</p>
+      <p className={styles.dHint}>
+        {t("admin:members.suspension.description")}
+      </p>
       <div className={styles.roleActions}>
         <Button
           variant="jade"

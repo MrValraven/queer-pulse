@@ -74,7 +74,7 @@ export function StudioTierPicker() {
         </div>
       </div>
 
-      { }
+      {}
       <div
         className={[styles.tier, selectedTier === "coop" ? styles.tierOn : ""]
           .filter(Boolean)

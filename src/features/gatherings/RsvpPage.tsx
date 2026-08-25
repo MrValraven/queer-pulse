@@ -58,10 +58,7 @@ export function RsvpPage() {
               // once the un-RSVP actually settles, and a failure says so.
               unrsvp.mutate(undefined, {
                 onSuccess: () =>
-                  showToast(
-                    t("gatherings:rsvp.footer.cancelledToast"),
-                    "info",
-                  ),
+                  showToast(t("gatherings:rsvp.footer.cancelledToast"), "info"),
                 onError: () =>
                   showToast(
                     t("gatherings:rsvp.footer.cancelErrorToast"),

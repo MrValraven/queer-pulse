@@ -25,15 +25,15 @@ const mutations = vi.hoisted(() => ({
   create: { mutate: vi.fn() },
   rename: {
     mutate: vi.fn(),
-    mutateAsync: vi.fn(async (_variables: unknown) => undefined),
+    mutateAsync: vi.fn((_variables: unknown) => Promise.resolve(undefined)),
   },
   remove: {
     mutate: vi.fn(),
-    mutateAsync: vi.fn(async (_variables: unknown) => undefined),
+    mutateAsync: vi.fn((_variables: unknown) => Promise.resolve(undefined)),
   },
   addItem: {
     mutate: vi.fn(),
-    mutateAsync: vi.fn(async (_variables: unknown) => undefined),
+    mutateAsync: vi.fn((_variables: unknown) => Promise.resolve(undefined)),
   },
   removeItem: { mutate: vi.fn() },
 }));
@@ -85,7 +85,9 @@ describe("useCollectionsController — live mode calls the API", () => {
   });
 
   it("creates a collection via the API (name only — privacy is presentational)", () => {
-    const { result } = renderHook(() => useCollectionsController(), { wrapper });
+    const { result } = renderHook(() => useCollectionsController(), {
+      wrapper,
+    });
 
     act(() => result.current.createCollection("Pride reads", "private"));
 
@@ -96,7 +98,9 @@ describe("useCollectionsController — live mode calls the API", () => {
   });
 
   it("adds a saved item to a collection via the API using its real ref", async () => {
-    const { result } = renderHook(() => useCollectionsController(), { wrapper });
+    const { result } = renderHook(() => useCollectionsController(), {
+      wrapper,
+    });
 
     await act(() =>
       result.current.addSaveToCollection("col-1", {
@@ -116,7 +120,9 @@ describe("useCollectionsController — live mode calls the API", () => {
   });
 
   it("removes an item from a collection via the API", () => {
-    const { result } = renderHook(() => useCollectionsController(), { wrapper });
+    const { result } = renderHook(() => useCollectionsController(), {
+      wrapper,
+    });
 
     act(() => result.current.removeSaveFromCollection("col-1", "post:abc-123"));
 
@@ -134,7 +140,9 @@ describe("useCollectionsController — demo mode keeps the mock", () => {
   });
 
   it("creates a collection in local state WITHOUT calling the API", async () => {
-    const { result } = renderHook(() => useCollectionsController(), { wrapper });
+    const { result } = renderHook(() => useCollectionsController(), {
+      wrapper,
+    });
 
     act(() => result.current.createCollection("Weekend plans", "private"));
 

@@ -1,4 +1,9 @@
-import { useCallback, useMemo, type Dispatch, type SetStateAction } from "react";
+import {
+  useCallback,
+  useMemo,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   housingFiltersFromSearchParams,

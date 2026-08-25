@@ -33,29 +33,32 @@ export const CONVICTION_ITEMS: { wordKey: string; restKey: string }[] = [
   },
 ];
 
-export const START_STEPS: { number: string; titleKey: string; bodyKey: string }[] =
-  [
-    {
-      number: "01",
-      titleKey: "marketing:activism.start.step1.title",
-      bodyKey: "marketing:activism.start.step1.body",
-    },
-    {
-      number: "02",
-      titleKey: "marketing:activism.start.step2.title",
-      bodyKey: "marketing:activism.start.step2.body",
-    },
-    {
-      number: "03",
-      titleKey: "marketing:activism.start.step3.title",
-      bodyKey: "marketing:activism.start.step3.body",
-    },
-    {
-      number: "04",
-      titleKey: "marketing:activism.start.step4.title",
-      bodyKey: "marketing:activism.start.step4.body",
-    },
-  ];
+export const START_STEPS: {
+  number: string;
+  titleKey: string;
+  bodyKey: string;
+}[] = [
+  {
+    number: "01",
+    titleKey: "marketing:activism.start.step1.title",
+    bodyKey: "marketing:activism.start.step1.body",
+  },
+  {
+    number: "02",
+    titleKey: "marketing:activism.start.step2.title",
+    bodyKey: "marketing:activism.start.step2.body",
+  },
+  {
+    number: "03",
+    titleKey: "marketing:activism.start.step3.title",
+    bodyKey: "marketing:activism.start.step3.body",
+  },
+  {
+    number: "04",
+    titleKey: "marketing:activism.start.step4.title",
+    bodyKey: "marketing:activism.start.step4.body",
+  },
+];
 
 export const SKILLS_CARDS: { titleKey: string; bodyKey: string }[] = [
   {

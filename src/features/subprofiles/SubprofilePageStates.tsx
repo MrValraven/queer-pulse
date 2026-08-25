@@ -1,7 +1,10 @@
 import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileNotFoundArt } from "./SubprofileNotFoundArt";
-import { PAGE_STATE_COPY, type PersonaPageState } from "./subprofilePageStates.data";
+import {
+  PAGE_STATE_COPY,
+  type PersonaPageState,
+} from "./subprofilePageStates.data";
 import styles from "./SubprofilePageStates.module.css";
 
 /**
@@ -40,7 +43,10 @@ export function SubprofilePageStates({ state }: { state: PersonaPageState }) {
         action={{ label: t(copy.actionLabelKey), to: copy.actionTo }}
         secondaryAction={
           copy.secondaryActionTo && copy.secondaryActionLabelKey
-            ? { label: t(copy.secondaryActionLabelKey), to: copy.secondaryActionTo }
+            ? {
+                label: t(copy.secondaryActionLabelKey),
+                to: copy.secondaryActionTo,
+              }
             : undefined
         }
       />

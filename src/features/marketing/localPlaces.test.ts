@@ -55,7 +55,9 @@ describe("venueToLocal", () => {
 
 describe("mergeLocalPlaces", () => {
   it("folds a name-matched venue's geo/vibe/been-here into the business and drops the venue", () => {
-    const businesses = DIRECTORY_PLACES.map((place) => businessToLocal(place, true));
+    const businesses = DIRECTORY_PLACES.map((place) =>
+      businessToLocal(place, true),
+    );
     const venues = VENUES.map(venueToLocal);
     const merged = mergeLocalPlaces(businesses, venues);
 
@@ -71,7 +73,9 @@ describe("mergeLocalPlaces", () => {
   });
 
   it("passes venues with no business twin through unchanged", () => {
-    const businesses = DIRECTORY_PLACES.map((place) => businessToLocal(place, true));
+    const businesses = DIRECTORY_PLACES.map((place) =>
+      businessToLocal(place, true),
+    );
     const venues = VENUES.map(venueToLocal);
     const merged = mergeLocalPlaces(businesses, venues);
 

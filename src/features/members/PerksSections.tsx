@@ -73,7 +73,13 @@ function LockMini() {
   );
 }
 
-export function ClaimButton({ label, toast }: { label: string; toast: string }) {
+export function ClaimButton({
+  label,
+  toast,
+}: {
+  label: string;
+  toast: string;
+}) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();

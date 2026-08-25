@@ -17,7 +17,13 @@ import {
   separatorAfter,
   type SegmentType,
 } from "./dateSegments";
-import { isoFromParts, isPartsUnavailable, parseFieldBounds, partsFromValue, type WorkingParts } from "./dateFieldParts";
+import {
+  isoFromParts,
+  isPartsUnavailable,
+  parseFieldBounds,
+  partsFromValue,
+  type WorkingParts,
+} from "./dateFieldParts";
 import {
   clampPartsToRange,
   clearSegment,
@@ -51,7 +57,8 @@ export interface DateFieldProps {
 
 /** Numeric value shown to `DateSegment`/exposed as `aria-valuenow`. */
 function segmentValue(type: SegmentType, parts: WorkingParts): number | null {
-  if (type === "meridiem") return parts.meridiem === null ? null : parts.meridiem === "PM" ? 1 : 0;
+  if (type === "meridiem")
+    return parts.meridiem === null ? null : parts.meridiem === "PM" ? 1 : 0;
   return parts[type];
 }
 
@@ -73,7 +80,10 @@ export function DateField({
 }: DateFieldProps) {
   const { language } = useTranslation();
   const activeLocale = locale ?? language;
-  const is12Hour = useMemo(() => isTwelveHourLocale(activeLocale), [activeLocale]);
+  const is12Hour = useMemo(
+    () => isTwelveHourLocale(activeLocale),
+    [activeLocale],
+  );
   const segmentTypes = useMemo(
     () => buildSegmentOrder(mode, activeLocale, is12Hour),
     [mode, activeLocale, is12Hour],
@@ -81,10 +91,16 @@ export function DateField({
 
   const seedKey = `${mode}|${value ?? ""}|${is12Hour}`;
   const [lastSeedKey, setLastSeedKey] = useState(seedKey);
-  const [parts, setParts] = useState<WorkingParts>(() => partsFromValue(mode, value, is12Hour));
+  const [parts, setParts] = useState<WorkingParts>(() =>
+    partsFromValue(mode, value, is12Hour),
+  );
   // Tags the digit buffer with the `seedKey` it was typed against, so a
   // reseed below reads a stale-tagged buffer as empty (not a ref write mid-render).
-  const bufferRef = useRef<{ seedKey: string; type: SegmentType | null; length: number }>({
+  const bufferRef = useRef<{
+    seedKey: string;
+    type: SegmentType | null;
+    length: number;
+  }>({
     seedKey,
     type: null,
     length: 0,
@@ -97,10 +113,18 @@ export function DateField({
     setParts(partsFromValue(mode, value, is12Hour));
   }
 
-  const bounds = useMemo(() => parseFieldBounds(mode, min, max), [mode, min, max]);
+  const bounds = useMemo(
+    () => parseFieldBounds(mode, min, max),
+    [mode, min, max],
+  );
   // Unify the visual + ARIA invalid state (mirrors Select.tsx): `invalid`,
   // `aria-invalid`, or an `isDateUnavailable`-rejected value all land here.
-  const unavailable = isPartsUnavailable(mode, parts, is12Hour, isDateUnavailable);
+  const unavailable = isPartsUnavailable(
+    mode,
+    parts,
+    is12Hour,
+    isDateUnavailable,
+  );
   const showInvalid = invalid || ariaInvalid === true || unavailable;
 
   const commit = (nextParts: WorkingParts) => {
@@ -108,21 +132,32 @@ export function DateField({
     onChange(isoFromParts(mode, nextParts, is12Hour));
   };
 
-  const focusSegment = (index: number) => elementsRef.current.get(index)?.focus();
+  const focusSegment = (index: number) =>
+    elementsRef.current.get(index)?.focus();
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>, type: SegmentType, index: number) => {
+  const handleKeyDown = (
+    event: KeyboardEvent<HTMLDivElement>,
+    type: SegmentType,
+    index: number,
+  ) => {
     if (disabled) return;
     if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       event.preventDefault();
       bufferRef.current = { seedKey, type: null, length: 0 };
-      const stepped = stepSegment(type, parts, event.key === "ArrowUp" ? 1 : -1, is12Hour);
+      const stepped = stepSegment(
+        type,
+        parts,
+        event.key === "ArrowUp" ? 1 : -1,
+        is12Hour,
+      );
       commit(clampPartsToRange(mode, stepped, bounds, is12Hour));
       return;
     }
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
       const nextIndex = event.key === "ArrowLeft" ? index - 1 : index + 1;
-      if (nextIndex >= 0 && nextIndex < segmentTypes.length) focusSegment(nextIndex);
+      if (nextIndex >= 0 && nextIndex < segmentTypes.length)
+        focusSegment(nextIndex);
       return;
     }
     if (event.key === "Backspace" || event.key === "Delete") {
@@ -133,7 +168,10 @@ export function DateField({
     }
     if (type === "meridiem" && /^[ap]$/i.test(event.key)) {
       event.preventDefault();
-      commit({ ...parts, meridiem: event.key.toLowerCase() === "a" ? "AM" : "PM" });
+      commit({
+        ...parts,
+        meridiem: event.key.toLowerCase() === "a" ? "AM" : "PM",
+      });
       return;
     }
     if (type !== "meridiem" && /^[0-9]$/.test(event.key)) {
@@ -142,10 +180,17 @@ export function DateField({
         bufferRef.current.seedKey === seedKey && bufferRef.current.type === type
           ? bufferRef.current.length
           : 0;
-      const entry = enterDigit(type, parts, bufferLength, Number(event.key), is12Hour);
+      const entry = enterDigit(
+        type,
+        parts,
+        bufferLength,
+        Number(event.key),
+        is12Hour,
+      );
       bufferRef.current = { seedKey, type, length: entry.bufferLength };
       commit(clampPartsToRange(mode, entry.parts, bounds, is12Hour));
-      if (entry.advance && index < segmentTypes.length - 1) focusSegment(index + 1);
+      if (entry.advance && index < segmentTypes.length - 1)
+        focusSegment(index + 1);
     }
   };
 
@@ -162,7 +207,11 @@ export function DateField({
         .join(" ")}
     >
       {segmentTypes.map((type, index) => {
-        const { min: segMin, max: segMax } = segmentRange(type, parts, is12Hour);
+        const { min: segMin, max: segMax } = segmentRange(
+          type,
+          parts,
+          is12Hour,
+        );
         const separator = separatorAfter(type, segmentTypes[index + 1]);
         return (
           <span key={type} className={styles.segmentGroup}>

@@ -33,7 +33,11 @@ export function SubprofileCoverBand({
   const isOwner = mode === "owner";
 
   return (
-    <div className="pp-cover" data-has-cover={data.coverUrl ? "" : undefined} ref={coverRef}>
+    <div
+      className="pp-cover"
+      data-has-cover={data.coverUrl ? "" : undefined}
+      ref={coverRef}
+    >
       <ImageSlot
         src={data.coverUrl || undefined}
         alt=""

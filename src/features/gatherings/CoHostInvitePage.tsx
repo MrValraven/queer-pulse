@@ -47,7 +47,10 @@ export function CoHostInvitePage() {
             icon={<FiUserPlus aria-hidden />}
             title={t("gatherings:cohostInvite.notFoundTitle")}
             description={t("gatherings:cohostInvite.notFoundDescription")}
-            action={{ label: t("gatherings:cohostInvite.back"), to: NOTIFICATIONS }}
+            action={{
+              label: t("gatherings:cohostInvite.back"),
+              to: NOTIFICATIONS,
+            }}
           />
         </div>
       </PageShell>
@@ -72,7 +75,10 @@ export function CoHostInvitePage() {
                     host: hostName,
                   })
             }
-            action={{ label: t("gatherings:cohostInvite.back"), to: NOTIFICATIONS }}
+            action={{
+              label: t("gatherings:cohostInvite.back"),
+              to: NOTIFICATIONS,
+            }}
           />
         </div>
       </PageShell>
@@ -100,7 +106,10 @@ export function CoHostInvitePage() {
       "info",
       3000,
     );
-    redirectTimerRef.current = setTimeout(() => void navigate(NOTIFICATIONS), 1300);
+    redirectTimerRef.current = setTimeout(
+      () => void navigate(NOTIFICATIONS),
+      1300,
+    );
   };
 
   return (

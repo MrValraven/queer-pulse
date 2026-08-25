@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getMyFlatmateProfile, type FlatmateProfileDTO } from "./flatmateProfile.api";
+import {
+  getMyFlatmateProfile,
+  type FlatmateProfileDTO,
+} from "./flatmateProfile.api";
 
 /** The caller's own flatmate profile (raw DTO — the post-profile form prefills
  * from it). Demo has no "my profile" concept → null. */

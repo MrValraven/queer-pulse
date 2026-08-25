@@ -75,7 +75,8 @@
   /* Static soft glow in the dot's own colour. It rides the breathe animation's
      `scale` (transform scales the shadow too), so the glow pulses for free —
      no painting an animated box-shadow. */
-  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--light-color) 26%, transparent);
+  box-shadow: 0 0 10px 1px
+    color-mix(in srgb, var(--light-color) 26%, transparent);
   opacity: 0.7;
   animation-name: cityLightBreathe;
   animation-timing-function: var(--ease);

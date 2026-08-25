@@ -30,19 +30,20 @@ export function CinemaSubmitAside() {
         <div className={styles.saHead}>
           {t("cinema:submit.aside.openCallHeading")}
         </div>
+        {/* eslint-disable local/no-literal-string -- this open call's own instance content (mirrors the mock commission on the open-calls page); content per the scope rule, stays English */}
         <div className={styles.saJadeTitle}>
           Lisbon, after the flood: <em>€2,500 commission</em>
         </div>
         <div className={styles.saJadeBody}>
           Short film commission, closes 21 June. 13 applications so far.
         </div>
+        {/* eslint-enable local/no-literal-string */}
         <Button
           variant="ghost"
           to={routes.cinemaBrowse}
           style={{ width: "100%" }}
         >
-          {t("cinema:submit.aside.applyCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("cinema:submit.aside.applyCta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </aside>

@@ -1,8 +1,15 @@
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useProfile } from "../../app/providers/useProfile";
-import { parsePronouns, serializePronouns } from "../../shared/identity/pronouns";
-import { InlineText, PronounPicker, VisibilityPicker } from "./profileEditControls";
+import {
+  parsePronouns,
+  serializePronouns,
+} from "../../shared/identity/pronouns";
+import {
+  InlineText,
+  PronounPicker,
+  VisibilityPicker,
+} from "./profileEditControls";
 import { ProfileShortBioField } from "./ProfileShortBioField";
 import styles from "./ProfileEdit.module.css";
 
@@ -65,7 +72,9 @@ export function ProfileEditIdentityFields({
         </label>
         <PronounPicker
           value={parsePronouns(draft.pronouns)}
-          onChange={(next) => updateDraft({ pronouns: serializePronouns(next) })}
+          onChange={(next) =>
+            updateDraft({ pronouns: serializePronouns(next) })
+          }
         />
       </div>
 

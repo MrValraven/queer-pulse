@@ -85,9 +85,13 @@ export function buildLogos(): {
 // the `hex:` label and rendered as the `background:` swatch) so press/partners
 // can reproduce them outside the app, where CSS variables don't exist. They
 // mirror the token palette (plum/coral/cream/jade) by design.
-export function buildSwatches(
-  t: TFunction,
-): { background: string; name: string; hex: string; meta: string; border?: boolean }[] {
+export function buildSwatches(t: TFunction): {
+  background: string;
+  name: string;
+  hex: string;
+  meta: string;
+  border?: boolean;
+}[] {
   return [
     {
       background: "#2D1B3D",

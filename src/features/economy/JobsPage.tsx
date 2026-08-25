@@ -140,8 +140,7 @@ function JobCard({ job }: { job: Job }) {
           onClick={apply}
           onKeyDown={(e) => activateOnKey(e, () => apply(e))}
         >
-          {t("economy:jobs.card.applyCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("economy:jobs.card.applyCta")} <FiArrowRight aria-hidden />
         </span>
       </div>
     </Link>

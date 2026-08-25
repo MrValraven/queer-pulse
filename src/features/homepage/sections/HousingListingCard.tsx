@@ -96,7 +96,10 @@ export function HousingListingCard({
           {activeTab === "room" ? (
             <HousingRoomPanel room={listing.room} />
           ) : (
-            <HousingLandlordPanel landlord={listing.landlord} interactive={isFront} />
+            <HousingLandlordPanel
+              landlord={listing.landlord}
+              interactive={isFront}
+            />
           )}
         </div>
       </div>

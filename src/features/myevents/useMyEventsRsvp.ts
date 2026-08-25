@@ -1,18 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { ToastAction } from "../../shared/components/feedback/toastContext";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Formatters } from "../../shared/i18n/format";
-import {
-  respondInvite,
-  rsvpEvent,
-  unrsvpEvent,
-  type SeriesScope,
-} from "../gatherings/api/events.api";
 import type { MyEvent } from "./myEvents.types";
 import { parseDate, timeStr } from "./myEvents.helpers";
+import { useMyEventsRsvpMutations } from "./useMyEventsRsvpMutations";
+import { useMyEventsSoftRemove } from "./useMyEventsSoftRemove";
 
 interface RsvpDeps {
   events: MyEvent[];
@@ -47,6 +41,10 @@ export interface MyEventsRsvp {
  * RSVP lifecycle: reminders, maybe/going toggles, invite accept/decline,
  * can't-go / leave-waitlist (with the series-scope prompt), and the shared
  * soft-remove-with-undo. Confirm + scope modal state live here too.
+ *
+ * The dual-mode mutations live in `useMyEventsRsvpMutations`, and the
+ * soft-remove-with-undo primitive lives in `useMyEventsSoftRemove` — both
+ * composed in below.
  */
 export function useMyEventsRsvp({
   events,
@@ -58,57 +56,14 @@ export function useMyEventsRsvp({
   fmt,
   closeMore,
 }: RsvpDeps): MyEventsRsvp {
-  const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
-  // Every mutation below mirrors `gatherings/api/useEventMutations.ts`'s
-  // dual-mode shape exactly (no-op in demo, real call + invalidate in live) —
-  // it just can't reuse those hooks directly, since they close over ONE fixed
-  // slug at hook-setup time and this hook drives RSVP actions across a whole
-  // list of different events by id. `MyEvent.id` IS the event slug for every
-  // category here except "invite" (id is the invite id — see
-  // `eventInviteToMyEvent`), which is exactly why `acceptInvite`/
-  // `declineInvite` go through `respondInviteMutation` instead of
-  // `rsvpMutation`/`unrsvpMutation`.
-  const invalidateMyEvents = useCallback(() => {
-    if (demoMode) return;
-    void queryClient.invalidateQueries({ queryKey: ["my-events"] });
-  }, [demoMode, queryClient]);
-  const rsvpMutation = useMutation<
-    void,
-    Error,
-    { slug: string; status: "going" | "maybe" }
-  >({
-    mutationFn: async ({ slug, status }) => {
-      if (demoMode) return;
-      await rsvpEvent(slug, status);
-    },
-    onSuccess: invalidateMyEvents,
-  });
-  // MSG-16 — `scope` (optional) lives on the mutation variables so the
-  // common single-occurrence cancel (`cantGo`/`leaveWaitlist` on a
-  // standalone event) keeps calling `.mutate({ slug })` unchanged; only the
-  // series "leave whole series" choice (`scopeChoice` below) sets it.
-  const unrsvpMutation = useMutation<
-    void,
-    Error,
-    { slug: string; scope?: SeriesScope }
-  >({
-    mutationFn: async ({ slug, scope }) => {
-      if (demoMode) return;
-      await unrsvpEvent(slug, scope);
-    },
-    onSuccess: invalidateMyEvents,
-  });
-  const respondInviteMutation = useMutation<
-    void,
-    Error,
-    { id: string; action: "accept" | "decline" }
-  >({
-    mutationFn: async ({ id, action }) => {
-      if (demoMode) return;
-      await respondInvite(id, action);
-    },
-    onSuccess: invalidateMyEvents,
+  const { rsvpMutation, unrsvpMutation, respondInviteMutation } =
+    useMyEventsRsvpMutations();
+  const { softRemove, removingId } = useMyEventsSoftRemove({
+    events,
+    setEvents,
+    toast,
+    toastAction,
+    t,
   });
 
   const [confirm, setConfirm] = useState({ open: false, title: "", meta: "" });
@@ -117,52 +72,6 @@ export function useMyEventsRsvp({
     eventId: string | null;
     title: string;
   }>({ open: false, eventId: null, title: "" });
-  const [removingId, setRemovingId] = useState<string | null>(null);
-  const removeTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  // Clear the pending soft-remove timer on unmount so it can't fire late.
-  useEffect(
-    () => () => {
-      clearTimeout(removeTimer.current);
-    },
-    [],
-  );
-
-  // ── soft remove with undo ─────────────────────────
-  // NOTE on "Undo": this purely restores the LOCAL card — cantGo/leaveWaitlist/
-  // declineInvite only call this from the real cancel/decline mutation's
-  // `onSuccess`, so the real call has ALREADY succeeded by the time this
-  // timer's toast (and its Undo button) appear, and re-inserting the row
-  // here does not re-issue a real RSVP/invite-response call to match. Declined
-  // invites specifically CAN'T be un-declined server-side (the backend 409s a
-  // second response to an already-answered invite), so a true undo isn't
-  // available for every caller of this helper uniformly. Scoped out of this
-  // pass; flagged here rather than left silently surprising.
-  const softRemove = useCallback(
-    (id: string, msg: string) => {
-      const ev = events.find((e) => e.id === id);
-      if (!ev) return;
-      const idx = events.indexOf(ev);
-      setRemovingId(id);
-      clearTimeout(removeTimer.current);
-      removeTimer.current = setTimeout(() => {
-        setRemovingId(null);
-        setEvents((prev) => prev.filter((e) => e.id !== id));
-        toastAction(msg, {
-          label: t("myevents:bulk.undoCta"),
-          onClick: () => {
-            setEvents((prev) => {
-              const copy = prev.slice();
-              copy.splice(Math.min(idx, copy.length), 0, ev);
-              return copy;
-            });
-            toast(t("myevents:bulk.broughtBackToast"), "info");
-          },
-        });
-      }, 200);
-    },
-    [events, setEvents, t, toast, toastAction],
-  );
 
   // ── rsvp lifecycle ────────────────────────────────
   const patch = useCallback(
@@ -191,7 +100,8 @@ export function useMyEventsRsvp({
         { slug: id, status: "maybe" },
         {
           onSuccess: () => toast(t("myevents:toast.markedMaybe"), "info"),
-          onError: () => patch(id, (e) => ({ ...e, maybe: prevMaybe ?? false })),
+          onError: () =>
+            patch(id, (e) => ({ ...e, maybe: prevMaybe ?? false })),
         },
       );
     },
@@ -206,7 +116,8 @@ export function useMyEventsRsvp({
         { slug: id, status: "going" },
         {
           onSuccess: () => toast(t("myevents:toast.fullyIn"), "success"),
-          onError: () => patch(id, (e) => ({ ...e, maybe: prevMaybe ?? false })),
+          onError: () =>
+            patch(id, (e) => ({ ...e, maybe: prevMaybe ?? false })),
         },
       );
     },
@@ -353,8 +264,7 @@ export function useMyEventsRsvp({
         unrsvpMutation.mutate(
           { slug: id },
           {
-            onSuccess: () =>
-              softRemove(id, t("myevents:toast.skippedThisOne")),
+            onSuccess: () => softRemove(id, t("myevents:toast.skippedThisOne")),
           },
         );
       } else {

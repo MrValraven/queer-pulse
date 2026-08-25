@@ -700,10 +700,7 @@ export const MEMBERS: MemberCard[] = buildMembers();
 // "sort does nothing" bug it caused). Sorting is server-side in live mode, so a
 // key with no real ordering must not exist. "Recently joined" is the default.
 export type SortKey =
-  | "Recently joined"
-  | "Closest mutuals"
-  | "A to Z"
-  | "Most vouched";
+  "Recently joined" | "Closest mutuals" | "A to Z" | "Most vouched";
 
 export const SORTS: SortKey[] = [
   "Recently joined",

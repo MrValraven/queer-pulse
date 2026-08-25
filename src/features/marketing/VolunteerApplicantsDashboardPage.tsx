@@ -41,9 +41,13 @@ export function VolunteerApplicantsDashboardPage() {
         <p className={styles.sub}>{t("marketing:volunteerManage.sub")}</p>
 
         {isLoading ? (
-          <p className={styles.altText}>{t("marketing:volunteerManage.loading")}</p>
+          <p className={styles.altText}>
+            {t("marketing:volunteerManage.loading")}
+          </p>
         ) : opportunities.length === 0 ? (
-          <p className={styles.altText}>{t("marketing:volunteerManage.empty")}</p>
+          <p className={styles.altText}>
+            {t("marketing:volunteerManage.empty")}
+          </p>
         ) : (
           <div className={styles.grid}>
             <VolunteerApplicantsOpportunityList

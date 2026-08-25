@@ -100,13 +100,13 @@ let fetchBeforeStrip: typeof globalThis.fetch | undefined;
 beforeEach(() => {
   fetchBeforeStrip = globalThis.fetch;
   const inner = fetchBeforeStrip;
-  globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) => {
+  globalThis.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
     if (init && "signal" in init) {
       const { signal: _signal, ...withoutSignal } = init;
       return inner(input, withoutSignal);
     }
     return inner(input, init);
-  });
+  };
 });
 
 afterEach(() => {

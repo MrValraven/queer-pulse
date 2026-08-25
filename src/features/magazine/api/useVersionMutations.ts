@@ -9,7 +9,10 @@ import {
   type ArticleVersionSummaryDto,
 } from "./pieces.api";
 import { articleVersionsQueryKey } from "./useArticleVersions";
-import { DEMO_ARTICLE, DEMO_ARTICLE_VERSION_DETAILS } from "../data/articleDraft.data";
+import {
+  DEMO_ARTICLE,
+  DEMO_ARTICLE_VERSION_DETAILS,
+} from "../data/articleDraft.data";
 
 /** A synthetic id for a demo-only version row — never sent to a server, only
  *  ever used as a React `key` within the same session. */
@@ -53,21 +56,26 @@ export function useVersionMutations(pieceId: string) {
           author: demoAuthor,
           createdAt: new Date().toISOString(),
         };
-        queryClient.setQueryData<ArticleVersionSummaryDto[]>(versionsQueryKey, (versions = []) => [
-          newVersion,
-          ...versions,
-        ]);
+        queryClient.setQueryData<ArticleVersionSummaryDto[]>(
+          versionsQueryKey,
+          (versions = []) => [newVersion, ...versions],
+        );
         showToast(t("magazine:write.versions.saveToast"), "success");
         return;
       }
       await createArticleVersion(pieceId, label);
     },
     onSuccess: () => {
-      if (!demoMode) void queryClient.invalidateQueries({ queryKey: versionsQueryKey });
+      if (!demoMode)
+        void queryClient.invalidateQueries({ queryKey: versionsQueryKey });
     },
   });
 
-  const restoreVersion = useMutation<ArticleDraftDto, Error, { versionId: string; label: string }>({
+  const restoreVersion = useMutation<
+    ArticleDraftDto,
+    Error,
+    { versionId: string; label: string }
+  >({
     mutationFn: async ({ versionId, label }) => {
       if (demoMode) {
         const versionDetail = DEMO_ARTICLE_VERSION_DETAILS[versionId];
@@ -77,20 +85,28 @@ export function useVersionMutations(pieceId: string) {
           author: demoAuthor,
           createdAt: new Date().toISOString(),
         };
-        queryClient.setQueryData<ArticleVersionSummaryDto[]>(versionsQueryKey, (versions = []) => [
-          restoredVersion,
-          ...versions,
-        ]);
-        return { ...DEMO_ARTICLE, blocks: versionDetail?.blocks ?? DEMO_ARTICLE.blocks };
+        queryClient.setQueryData<ArticleVersionSummaryDto[]>(
+          versionsQueryKey,
+          (versions = []) => [restoredVersion, ...versions],
+        );
+        return {
+          ...DEMO_ARTICLE,
+          blocks: versionDetail?.blocks ?? DEMO_ARTICLE.blocks,
+        };
       }
       return restoreArticleVersion(pieceId, versionId);
     },
     onSuccess: (_draft, { label }) => {
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: versionsQueryKey });
-        void queryClient.invalidateQueries({ queryKey: ["magazine-article-draft", pieceId] });
+        void queryClient.invalidateQueries({
+          queryKey: ["magazine-article-draft", pieceId],
+        });
       }
-      showToast(t("magazine:write.versions.restoreToast", { label }), "success");
+      showToast(
+        t("magazine:write.versions.restoreToast", { label }),
+        "success",
+      );
     },
   });
 

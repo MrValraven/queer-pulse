@@ -94,7 +94,11 @@ export function usePressKitFacts() {
 export function useCreatePressCoverage() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<AdminPressCoverageDTO, unknown, PressCoverageInput>({
+  return useDemoAwareMutation<
+    AdminPressCoverageDTO,
+    unknown,
+    PressCoverageInput
+  >({
     demoMode,
     demoLatencyMs: 0,
     mutationKey: [ADMIN_PRESS_KIT_KEY, "coverage", "create"],
@@ -163,16 +167,18 @@ export function useReorderPressCoverage() {
 export function useCreatePressContact() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<AdminPressContactDTO, unknown, PressContactInput>({
-    demoMode,
-    demoLatencyMs: 0,
-    mutationKey: [ADMIN_PRESS_KIT_KEY, "contacts", "create"],
-    demoResult: (input) => createDemoPressContact(input),
-    live: (input) => createPressContact(input),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: [ADMIN_PRESS_KIT_KEY] });
+  return useDemoAwareMutation<AdminPressContactDTO, unknown, PressContactInput>(
+    {
+      demoMode,
+      demoLatencyMs: 0,
+      mutationKey: [ADMIN_PRESS_KIT_KEY, "contacts", "create"],
+      demoResult: (input) => createDemoPressContact(input),
+      live: (input) => createPressContact(input),
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: [ADMIN_PRESS_KIT_KEY] });
+      },
     },
-  });
+  );
 }
 
 export function useUpdatePressContact() {

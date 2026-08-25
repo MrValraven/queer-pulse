@@ -20,11 +20,17 @@ function changeLine(change: PendingChange, t: Translate): string {
     const removed = Number(params.removed ?? 0);
     const edited = Number(params.edited ?? 0);
     const reordered = Number(params.reordered ?? 0);
-    if (added > 0) parts.push(t("subprofiles:pending.count.added", { count: added }));
-    if (removed > 0) parts.push(t("subprofiles:pending.count.removed", { count: removed }));
-    if (edited > 0) parts.push(t("subprofiles:pending.count.edited", { count: edited }));
+    if (added > 0)
+      parts.push(t("subprofiles:pending.count.added", { count: added }));
+    if (removed > 0)
+      parts.push(t("subprofiles:pending.count.removed", { count: removed }));
+    if (edited > 0)
+      parts.push(t("subprofiles:pending.count.edited", { count: edited }));
     if (reordered) parts.push(t("subprofiles:pending.count.reordered"));
-    return t("subprofiles:pending.rowSummary", { area, summary: parts.join(", ") });
+    return t("subprofiles:pending.rowSummary", {
+      area,
+      summary: parts.join(", "),
+    });
   }
   const field = params.field ? t(String(params.field)) : "";
   const value = params.value !== undefined ? String(params.value) : "";
@@ -43,7 +49,9 @@ export function PendingChangesList({ pending }: { pending: PendingChange[] }) {
       {visible.map((change, index) => (
         <li key={`${change.summaryKey}-${index}`}>{changeLine(change, t)}</li>
       ))}
-      {overflow > 0 && <li>{t("subprofiles:pending.more", { count: overflow })}</li>}
+      {overflow > 0 && (
+        <li>{t("subprofiles:pending.more", { count: overflow })}</li>
+      )}
     </ul>
   );
 }

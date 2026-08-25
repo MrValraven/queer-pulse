@@ -1,16 +1,12 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TestProviders } from "../../../test/TestProviders";
-import { IDENTITY_CROP, type CropRect } from "../../../shared/components/ui/cropGeometry";
+import {
+  IDENTITY_CROP,
+  type CropRect,
+} from "../../../shared/components/ui/cropGeometry";
 // Statically imported so demo-mode tests share the module graph (and thus
 // both the DemoModeContext instance from TestProviders, also a static
 // import, and the SAME mocked "./uploads.api" instance asserted on below) —
@@ -82,7 +78,13 @@ class SucceedingXMLHttpRequest {
   }
 }
 
-const NON_IDENTITY_CROP: CropRect = { x: 0.1, y: 0.05, width: 0.6, height: 0.6, aspect: "1:1" };
+const NON_IDENTITY_CROP: CropRect = {
+  x: 0.1,
+  y: 0.05,
+  width: 0.6,
+  height: 0.6,
+  aspect: "1:1",
+};
 
 function testFile(): File {
   return new File(["x"], "photo.jpg", { type: "image/jpeg" });
@@ -91,11 +93,15 @@ function testFile(): File {
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", "https://api.example.test");
-  const { useUploadImage: useUploadImageLive } = await import("./useUploadImage");
+  const { useUploadImage: useUploadImageLive } =
+    await import("./useUploadImage");
   const uploadsApi = await import("./uploads.api");
-  const { DemoModeProvider } = await import("../../../app/providers/DemoModeProvider");
+  const { DemoModeProvider } =
+    await import("../../../app/providers/DemoModeProvider");
   const { I18nProvider } = await import("../../../app/providers/I18nProvider");
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
       <I18nProvider>
@@ -117,8 +123,14 @@ afterEach(() => {
 
 describe("useUploadImage (live mode) — crop persistence", () => {
   it("saves a non-identity crop after the upload PUT succeeds, without blocking the resolved result", async () => {
-    const { useUploadImage: useUploadImageLive, wrapper, uploadsApi } = await loadLive();
-    const { result } = renderHook(() => useUploadImageLive("avatar"), { wrapper });
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+    } = await loadLive();
+    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+      wrapper,
+    });
 
     let resolved: UploadResult | undefined;
     await act(async () => {
@@ -137,8 +149,14 @@ describe("useUploadImage (live mode) — crop persistence", () => {
   });
 
   it("does not call saveCrop for the identity crop", async () => {
-    const { useUploadImage: useUploadImageLive, wrapper, uploadsApi } = await loadLive();
-    const { result } = renderHook(() => useUploadImageLive("avatar"), { wrapper });
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+    } = await loadLive();
+    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+      wrapper,
+    });
 
     let resolved: UploadResult | undefined;
     await act(async () => {
@@ -150,8 +168,14 @@ describe("useUploadImage (live mode) — crop persistence", () => {
   });
 
   it("does not call saveCrop when no crop option is passed at all", async () => {
-    const { useUploadImage: useUploadImageLive, wrapper, uploadsApi } = await loadLive();
-    const { result } = renderHook(() => useUploadImageLive("avatar"), { wrapper });
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+    } = await loadLive();
+    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+      wrapper,
+    });
 
     await act(async () => {
       await result.current(testFile());
@@ -161,9 +185,17 @@ describe("useUploadImage (live mode) — crop persistence", () => {
   });
 
   it("still resolves the upload even when saveCrop fails on both the first attempt and its one retry", async () => {
-    const { useUploadImage: useUploadImageLive, wrapper, uploadsApi } = await loadLive();
-    vi.mocked(uploadsApi.saveCrop).mockRejectedValue(new Error("crop-save-down"));
-    const { result } = renderHook(() => useUploadImageLive("avatar"), { wrapper });
+    const {
+      useUploadImage: useUploadImageLive,
+      wrapper,
+      uploadsApi,
+    } = await loadLive();
+    vi.mocked(uploadsApi.saveCrop).mockRejectedValue(
+      new Error("crop-save-down"),
+    );
+    const { result } = renderHook(() => useUploadImageLive("avatar"), {
+      wrapper,
+    });
 
     let resolved: UploadResult | undefined;
     await act(async () => {

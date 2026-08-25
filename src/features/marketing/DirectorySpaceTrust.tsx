@@ -42,9 +42,7 @@ export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
 
   if (place.safeSpaceStatus !== "verified") return null;
 
-  const vouches = directoryVouchesToSafetyVouches(
-    place.safeSpaceVouches ?? [],
-  );
+  const vouches = directoryVouchesToSafetyVouches(place.safeSpaceVouches ?? []);
   const asideData = directoryTrustToAsideData({
     name: place.name,
     address: place.address,

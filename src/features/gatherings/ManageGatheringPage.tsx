@@ -67,7 +67,8 @@ export function ManageGatheringPage() {
   if (!gathering) return <ManageUnavailable loading={isLoading} />;
   // Only organizers can manage; the mutations are server-gated too, but this
   // keeps a non-organizer from landing on a dashboard whose writes would 403.
-  if (!gathering.viewerIsOrganizer) return <ManageUnavailable loading={false} />;
+  if (!gathering.viewerIsOrganizer)
+    return <ManageUnavailable loading={false} />;
   return (
     <ManageGatheringMain
       demoMode={false}
@@ -138,12 +139,13 @@ function ManageGatheringMain({
   // picks a scope for it (see the `EditDetailsModal` wiring below).
   const [seriesScopeModal, setSeriesScopeModal] =
     useState<SeriesScopeModalMode>(null);
-  const [pendingEditPatch, setPendingEditPatch] = useState<UpdateEventDto | null>(
-    null,
-  );
+  const [pendingEditPatch, setPendingEditPatch] =
+    useState<UpdateEventDto | null>(null);
 
   const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
-    demoMode || !gathering ? demoInitialState() : liveInitialState(gathering, fmt),
+    demoMode || !gathering
+      ? demoInitialState()
+      : liveInitialState(gathering, fmt),
   );
 
   const { daysToGo, attendeeCount, overviewCounts } = manageGatheringCounts(

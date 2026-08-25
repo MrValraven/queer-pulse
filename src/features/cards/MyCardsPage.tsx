@@ -10,11 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  useDeleteMyCard,
-  useMyCards,
-  useUpdateMyCard,
-} from "./api/useMyCards";
+import { useDeleteMyCard, useMyCards, useUpdateMyCard } from "./api/useMyCards";
 import type { MyCardDTO } from "./api/cards.api";
 import { CardPhotoConsent } from "./CardPhotoConsent";
 import { CardPronounConsent } from "./CardPronounConsent";
@@ -63,7 +59,10 @@ export function MyCardsPage() {
     <AppShell>
       <div className={styles.page}>
         <Eyebrow>{t("cards:page.eyebrow")}</Eyebrow>
-        <SectionHead title={t("cards:page.title")} subtitle={t("cards:page.dek")} />
+        <SectionHead
+          title={t("cards:page.title")}
+          subtitle={t("cards:page.dek")}
+        />
 
         {isLoading ? (
           <div className={styles.grid}>

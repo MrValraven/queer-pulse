@@ -66,7 +66,9 @@ export function GuidelinesModal({
       ariaLabel={t("marketing:guidelines.meta.title")}
     >
       <div className={s.head}>
-        <div className={s.eyebrow}>{t("marketing:guidelines.hero.eyebrow")}</div>
+        <div className={s.eyebrow}>
+          {t("marketing:guidelines.hero.eyebrow")}
+        </div>
         <h2 className={s.title}>
           <Translation
             i18nKey="marketing:guidelines.hero.title"
@@ -83,11 +85,7 @@ export function GuidelinesModal({
             {t("marketing:guidelines.modalScrollHint")}
           </p>
         )}
-        <Button
-          variant="primary"
-          onClick={handleDone}
-          disabled={!reachedEnd}
-        >
+        <Button variant="primary" onClick={handleDone} disabled={!reachedEnd}>
           {t("marketing:guidelines.modalDone")}
         </Button>
       </div>

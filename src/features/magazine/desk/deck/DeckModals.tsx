@@ -59,7 +59,9 @@ export function DeckModals({
           </div>
         }
       >
-        <p className={styles.body}>{t("magazine:deck.editor.deleteModal.body")}</p>
+        <p className={styles.body}>
+          {t("magazine:deck.editor.deleteModal.body")}
+        </p>
       </Modal>
     );
   }
@@ -88,7 +90,9 @@ export function DeckModals({
         </div>
       }
     >
-      <p className={styles.body}>{t("magazine:deck.editor.convertModal.body")}</p>
+      <p className={styles.body}>
+        {t("magazine:deck.editor.convertModal.body")}
+      </p>
     </Modal>
   );
 }

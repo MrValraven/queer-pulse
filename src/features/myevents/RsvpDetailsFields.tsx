@@ -21,11 +21,7 @@ export function RsvpGuestField({
       <label className={sx("field-label")}>
         {t("myevents:rsvpModal.whosComing")}
       </label>
-      <button
-        type="button"
-        className={sx("guest-row")}
-        onClick={onToggleGuest}
-      >
+      <button type="button" className={sx("guest-row")} onClick={onToggleGuest}>
         <span
           className={sx(`guest-cb${isBringingGuest ? " on" : ""}`)}
           aria-hidden="true"

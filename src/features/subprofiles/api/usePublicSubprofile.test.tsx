@@ -37,7 +37,10 @@ describe("usePublicSubprofile (demo mode, by-handle)", () => {
       { wrapper: TestProviders },
     );
     await waitFor(() => expect(result.current.state).not.toBe("loading"));
-    expect(result.current).toEqual({ state: "restricted", restricted: "private" });
+    expect(result.current).toEqual({
+      state: "restricted",
+      restricted: "private",
+    });
   });
 
   it("resolves a visibility:network persona to state:restricted/members_only for a signed-out visitor", async () => {
@@ -70,7 +73,10 @@ describe("usePublicSubprofile (demo mode, by-handle)", () => {
       { wrapper: TestProviders },
     );
     await waitFor(() => expect(result.current.state).not.toBe("loading"));
-    expect(result.current).toEqual({ state: "restricted", restricted: "removed" });
+    expect(result.current).toEqual({
+      state: "restricted",
+      restricted: "removed",
+    });
   });
 
   it("resolves an unknown handle to state:not-found", async () => {
@@ -87,9 +93,12 @@ describe("usePublicSubprofile (demo mode, owner-draft preview)", () => {
   it("resolves the signed-in owner's own draft to state:ok with status:draft", async () => {
     // TIAGO_DRAFT is unlinked with handle:null (assigned on publish); its
     // owner-preview address falls back to the internal slug ("code").
-    const { result } = renderHook(() => usePublicSubprofile({ handle: "code" }), {
-      wrapper: TestProviders,
-    });
+    const { result } = renderHook(
+      () => usePublicSubprofile({ handle: "code" }),
+      {
+        wrapper: TestProviders,
+      },
+    );
     await waitFor(() => expect(result.current.state).not.toBe("loading"));
     expect(result.current.state).toBe("ok");
     if (result.current.state === "ok") {
@@ -100,9 +109,12 @@ describe("usePublicSubprofile (demo mode, owner-draft preview)", () => {
 
   it("resolves the same draft to state:not-found for a signed-out visitor", async () => {
     window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
-    const { result } = renderHook(() => usePublicSubprofile({ handle: "code" }), {
-      wrapper: TestProviders,
-    });
+    const { result } = renderHook(
+      () => usePublicSubprofile({ handle: "code" }),
+      {
+        wrapper: TestProviders,
+      },
+    );
     await waitFor(() => expect(result.current.state).not.toBe("loading"));
     expect(result.current).toEqual({ state: "not-found" });
   });

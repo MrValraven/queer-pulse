@@ -2,10 +2,7 @@
  *  `SafeSpaceVouchRelationship` union (queerpulse-backend
  *  src/safe-space-vouches/entities/safe-space-vouch.entity.ts). */
 export type SafeSpaceVouchRelationship =
-  | "regular"
-  | "once_or_twice"
-  | "work_or_volunteer"
-  | "with_friend";
+  "regular" | "once_or_twice" | "work_or_volunteer" | "with_friend";
 
 /** The vouch-modal relationship radio options. `key` is the i18n string key
  *  rendered to the member; `value` is the enum the live POST sends. Order here

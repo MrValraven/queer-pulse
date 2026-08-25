@@ -120,14 +120,18 @@ function writeBubbleTransform(
   reducedMotion: boolean,
 ): void {
   if (!node) return;
-  node.style.transform = !reducedMotion && offsetPx !== 0 ? `translateX(${offsetPx}px)` : "";
+  node.style.transform =
+    !reducedMotion && offsetPx !== 0 ? `translateX(${offsetPx}px)` : "";
 }
 
 /** Writes the reply-hint icon's opacity + scale straight to the DOM, tracking
  *  drag progress toward `SWIPE_TRIGGER_PX` — independent of reduced motion, so
  *  the icon still cues an in-progress swipe even when the bubble itself
  *  doesn't visibly follow the finger. */
-function writeHintProgress(node: HTMLSpanElement | null, offsetPx: number): void {
+function writeHintProgress(
+  node: HTMLSpanElement | null,
+  offsetPx: number,
+): void {
   if (!node) return;
   const progress = Math.min(1, Math.abs(offsetPx) / SWIPE_TRIGGER_PX);
   node.style.opacity = String(progress);
@@ -154,7 +158,9 @@ export function useMessageGestures({
     moveTolerancePx: SWIPE_ENGAGE_PX,
   });
   const pressRef = useRef<PressState | null>(null);
-  const lastTapRef = useRef<{ time: number; x: number; y: number } | null>(null);
+  const lastTapRef = useRef<{ time: number; x: number; y: number } | null>(
+    null,
+  );
   const [swiping, setSwiping] = useState(false);
 
   const resetSwipe = useCallback(() => {

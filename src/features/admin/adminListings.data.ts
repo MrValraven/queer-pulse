@@ -10,10 +10,10 @@ import type { ListingStatus } from "../marketing/listBusiness/listBusiness.data"
 import type { MemberRefDTO } from "../../shared/api/refs";
 
 /** Build a demo ListingDTO with sensible defaults, overridden per fixture. */
-function demoListing(overrides: Partial<ListingDTO> & Pick<
-  ListingDTO,
-  "ref" | "slug" | "name" | "hood" | "status"
->): ListingDTO {
+function demoListing(
+  overrides: Partial<ListingDTO> &
+    Pick<ListingDTO, "ref" | "slug" | "name" | "hood" | "status">,
+): ListingDTO {
   return {
     path: "claim",
     badge: "owned",
@@ -86,26 +86,45 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
         "A candle-lit natural-wine room in Príncipe Real, cooking a short seasonal menu for people who want to linger.",
       tagline: "The little wine room that wants you to stay one more glass.",
       whatItIs: [
-        { id: "wit-d1", text:
-          "Maison Du Tiago is a small natural-wine bar and kitchen: a handful of tables, an opinionated list, and a menu that changes with the market." },
-        { id: "wit-d2", text:
-          "It's built for the slow evening: a second date, a birthday for six, or a Tuesday that quietly becomes something. Tell the room what you like and let them pour." },
+        {
+          id: "wit-d1",
+          text: "Maison Du Tiago is a small natural-wine bar and kitchen: a handful of tables, an opinionated list, and a menu that changes with the market.",
+        },
+        {
+          id: "wit-d2",
+          text: "It's built for the slow evening: a second date, a birthday for six, or a Tuesday that quietly becomes something. Tell the room what you like and let them pour.",
+        },
       ],
       tags: ["Natural wine", "Small plates", "Step-free entrance"],
-      goodFor: ["A great second date", "Natural wine guidance", "Celebrating something"],
+      goodFor: [
+        "A great second date",
+        "Natural wine guidance",
+        "Celebrating something",
+      ],
       hoursNote: "Evenings, Tue–Sun. Closed Mondays.",
-      social: { instagram: "@maisondutiago", website: "maisondutiago.pt", email: "ola@maisondutiago.pt", phone: "" },
+      social: {
+        instagram: "@maisondutiago",
+        website: "maisondutiago.pt",
+        email: "ola@maisondutiago.pt",
+        phone: "",
+      },
       photos: {
         wide: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=1600&auto=format&fit=crop",
         d1: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
         d2: null,
         vibe: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop",
       },
-      alt: { wide: "The wine room", d1: "The bar", d2: "Small plates", vibe: "Príncipe Real window" },
+      alt: {
+        wide: "The wine room",
+        d1: "The bar",
+        d2: "Small plates",
+        vibe: "Príncipe Real window",
+      },
       address: "R. da Escola Politécnica 60 · Príncipe Real",
       ownerName: "Tiago Costa",
       ownerRole: "Owner · host",
-      ownerBio: "Left a restaurant kitchen to open the room he wanted to drink in.",
+      ownerBio:
+        "Left a restaurant kitchen to open the room he wanted to drink in.",
       visibility: "public",
       linkToProfile: true,
     }),
@@ -132,26 +151,45 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
         "A community culture house in Arroios: readings, workshops, and a free-entry programme that bets on queer artists early.",
       tagline: "A house that keeps the door, and the programme, open.",
       whatItIs: [
-        { id: "wit-c1", text:
-          "Casa Viva is an artist-run culture house: a reading room, a small hall for workshops and launches, and a programme that leans toward emerging queer and feminist work." },
-        { id: "wit-c2", text:
-          "Entry is free wherever it can be, and the space is often someone's first-ever public reading. It works hand in hand with the neighbourhood." },
+        {
+          id: "wit-c1",
+          text: "Casa Viva is an artist-run culture house: a reading room, a small hall for workshops and launches, and a programme that leans toward emerging queer and feminist work.",
+        },
+        {
+          id: "wit-c2",
+          text: "Entry is free wherever it can be, and the space is often someone's first-ever public reading. It works hand in hand with the neighbourhood.",
+        },
       ],
       tags: ["Events space", "Free entry", "Step-free"],
-      goodFor: ["Readings and launches", "A first public reading", "Meeting other makers"],
+      goodFor: [
+        "Readings and launches",
+        "A first public reading",
+        "Meeting other makers",
+      ],
       hoursNote: "Open Wed–Sun afternoons. Event nights run later.",
-      social: { instagram: "@casaviva.lisboa", website: "casaviva.pt", email: "ola@casaviva.pt", phone: "" },
+      social: {
+        instagram: "@casaviva.lisboa",
+        website: "casaviva.pt",
+        email: "ola@casaviva.pt",
+        phone: "",
+      },
       photos: {
         wide: "https://images.unsplash.com/photo-1521123845560-14093637aa7d?q=80&w=1600&auto=format&fit=crop",
         d1: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200&auto=format&fit=crop",
         d2: null,
         vibe: "https://images.unsplash.com/photo-1526243741027-444d633d7365?q=80&w=1200&auto=format&fit=crop",
       },
-      alt: { wide: "The hall", d1: "Reading room", d2: "Workshop night", vibe: "Arroios courtyard" },
+      alt: {
+        wide: "The hall",
+        d1: "Reading room",
+        d2: "Workshop night",
+        vibe: "Arroios courtyard",
+      },
       address: "R. de Arroios 120 · Arroios",
       ownerName: "Inês Marques",
       ownerRole: "Founder",
-      ownerBio: "Runs Casa Viva as a quietly social place rather than a sealed venue.",
+      ownerBio:
+        "Runs Casa Viva as a quietly social place rather than a sealed venue.",
       visibility: "public",
       linkToProfile: true,
     }),
@@ -178,22 +216,40 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
         "A sunlit corner café in Graça: good coffee, better pastéis, and a room that never makes anyone feel like a question mark.",
       tagline: "Your morning table in Graça, held for you.",
       whatItIs: [
-        { id: "wit-a1", text:
-          "Café Aurora is a small neighbourhood café that got adopted by the community for the simplest reason: it's reliably, unremarkably kind to everyone who walks in." },
-        { id: "wit-a2", text:
-          "A galão, a warm pastel de nata, and staff who remember your order. Sometimes the bar is exactly that." },
+        {
+          id: "wit-a1",
+          text: "Café Aurora is a small neighbourhood café that got adopted by the community for the simplest reason: it's reliably, unremarkably kind to everyone who walks in.",
+        },
+        {
+          id: "wit-a2",
+          text: "A galão, a warm pastel de nata, and staff who remember your order. Sometimes the bar is exactly that.",
+        },
       ],
       tags: ["Café · pastelaria", "Daily", "Ground floor"],
-      goodFor: ["A no-stress neighbourhood coffee", "Bringing visiting family", "Cheap, excellent pastéis"],
+      goodFor: [
+        "A no-stress neighbourhood coffee",
+        "Bringing visiting family",
+        "Cheap, excellent pastéis",
+      ],
       hoursNote: "Open daily, early. Closes by evening.",
-      social: { instagram: "@cafeaurora.graca", website: "", email: "", phone: "+351 21 887 4400" },
+      social: {
+        instagram: "@cafeaurora.graca",
+        website: "",
+        email: "",
+        phone: "+351 21 887 4400",
+      },
       photos: {
         wide: "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1600&auto=format&fit=crop",
         d1: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=1200&auto=format&fit=crop",
         d2: null,
         vibe: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
       },
-      alt: { wide: "The counter", d1: "Tiled interior", d2: "Pastéis tray", vibe: "Graça street tables" },
+      alt: {
+        wide: "The counter",
+        d1: "Tiled interior",
+        d2: "Pastéis tray",
+        vibe: "Graça street tables",
+      },
       address: "R. da Graça 42 · Graça",
       ownerName: "Rui Tavares",
       ownerRole: "Owner",
@@ -274,9 +330,7 @@ export function clearDemoListingMutations() {
  *  marked `removed`, and re-status rows with a recorded `status` override.
  *  Must run BEFORE search/status filtering and counting, so every derived
  *  view (the visible list, the tab counts) agrees with prior mutations. */
-function applyDemoListingMutations(
-  rows: ListingQueueRow[],
-): ListingQueueRow[] {
+function applyDemoListingMutations(rows: ListingQueueRow[]): ListingQueueRow[] {
   const overlaidRows: ListingQueueRow[] = [];
   for (const row of rows) {
     const mutation = demoListingMutations.get(row.ref);

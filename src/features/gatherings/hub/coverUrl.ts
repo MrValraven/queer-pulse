@@ -5,7 +5,10 @@
  * Non-Unsplash URLs, URLs without a `w=` param, and `undefined` all pass
  * through untouched — this never throws on odd input.
  */
-export function sizedCover(url: string | undefined, targetWidth: number): string | undefined {
+export function sizedCover(
+  url: string | undefined,
+  targetWidth: number,
+): string | undefined {
   if (!url) return url;
   try {
     const parsed = new URL(url);

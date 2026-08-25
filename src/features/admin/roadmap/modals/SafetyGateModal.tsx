@@ -6,7 +6,7 @@ import { describeError } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import { AdminModal } from "../../ui";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 import styles from "./roadmapModals.module.css";
 
 /**
@@ -37,7 +37,10 @@ export function SafetyGateModal() {
         },
         onError: (error) =>
           showToast(
-            describeError(t("admin:roadmap.modals.safetyGate.confirmCta"), error),
+            describeError(
+              t("admin:roadmap.modals.safetyGate.confirmCta"),
+              error,
+            ),
             "error",
           ),
       },

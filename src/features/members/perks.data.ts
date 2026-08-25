@@ -27,7 +27,8 @@ export const perkGroups: PerkGroup[] = [
       {
         category: "Early Access",
         title: "Early RSVP Access",
-        description: "Get 48-hour early access to all new gathering RSVPs before they open to the community. You'll receive an email the moment a new gathering is approved, before the public link goes live.",
+        description:
+          "Get 48-hour early access to all new gathering RSVPs before they open to the community. You'll receive an email the moment a new gathering is approved, before the public link goes live.",
         state: "available",
         footer: {
           type: "active-auto",
@@ -37,7 +38,8 @@ export const perkGroups: PerkGroup[] = [
       {
         category: "Community",
         title: "Trusted Lounge",
-        description: "Access to the Trusted members-only community: a smaller, quieter space for Level 4+ members to connect. Less noise, more depth. Not indexed or visible to the general directory.",
+        description:
+          "Access to the Trusted members-only community: a smaller, quieter space for Level 4+ members to connect. Less noise, more depth. Not indexed or visible to the general directory.",
         state: "available",
         footer: {
           type: "button",
@@ -48,7 +50,8 @@ export const perkGroups: PerkGroup[] = [
       {
         category: "Membership",
         title: "Increased Invite Quota",
-        description: "Your monthly invite allowance increases from 1 to 2. You know people who belong here. Now you can bring more of them in. Invites reset on the first of each month.",
+        description:
+          "Your monthly invite allowance increases from 1 to 2. You know people who belong here. Now you can bring more of them in. Invites reset on the first of each month.",
         state: "available",
         footer: {
           type: "link-auto",
@@ -65,14 +68,16 @@ export const perkGroups: PerkGroup[] = [
       {
         category: "Hosting",
         title: "Host without approval",
-        description: "Skip the host application review. Your gatherings go live immediately. You've earned the trust. We're just formalising it.",
+        description:
+          "Skip the host application review. Your gatherings go live immediately. You've earned the trust. We're just formalising it.",
         state: "locked",
         footer: { type: "lock", label: "Unlocks at Level 5 · Trusted" },
       },
       {
         category: "Membership",
         title: "Invite quota increases to 3",
-        description: "Bring even more people in. At Level 5, your monthly quota goes to 3 invites. The community grows because of people like you.",
+        description:
+          "Bring even more people in. At Level 5, your monthly quota goes to 3 invites. The community grows because of people like you.",
         state: "locked",
         footer: { type: "lock", label: "Unlocks at Level 5 · Trusted" },
       },
@@ -88,7 +93,8 @@ export const perkGroups: PerkGroup[] = [
         // active member already has this from day one (COM-15). Kept in the
         // "claimed" demo state purely to showcase that UI variant; the copy
         // itself no longer claims a Level 3 unlock that never existed.
-        description: "The ability to vouch for other members, a trust signal that helps them stand out. Available to every active member from day one, no level required.",
+        description:
+          "The ability to vouch for other members, a trust signal that helps them stand out. Available to every active member from day one, no level required.",
         state: "claimed",
         footer: { type: "claimed", date: "Claimed 14 Feb 2026" },
       },

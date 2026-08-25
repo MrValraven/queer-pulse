@@ -1,10 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { DEMO_SAVED_SEARCHES } from "../housingSavedSearches.data";
-import {
-  EMPTY_HOUSING_FILTERS,
-  type HousingFilters,
-} from "../housingFilters";
+import { EMPTY_HOUSING_FILTERS, type HousingFilters } from "../housingFilters";
 import {
   createHousingSavedSearch,
   deleteHousingSavedSearch,

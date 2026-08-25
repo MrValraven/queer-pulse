@@ -112,7 +112,10 @@ export function MegaNav() {
             ref={(el) => {
               buttonRefs.current[menu.key] = el;
             }}
-            className={[styles.button, openKey === menu.key && styles.buttonOpen]
+            className={[
+              styles.button,
+              openKey === menu.key && styles.buttonOpen,
+            ]
               .filter(Boolean)
               .join(" ")}
             aria-haspopup="true"

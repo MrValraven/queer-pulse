@@ -165,11 +165,13 @@ export function CinemaSubmitReview({
           <span className={styles.confirmBox} aria-hidden>
             {draft.agreed && <FiCheck size={13} />}
           </span>
+          {/* eslint-disable local/no-literal-string -- binding legal representation, deliberately left English per the comment above; not routed through t() */}
           <span className={styles.confirmText}>
             <strong>I agree to the co-op distribution terms</strong>: 80% of
             every rent and buy comes to me, 100% of tips, paid weekly,
             non-exclusive, cancellable anytime.
           </span>
+          {/* eslint-enable local/no-literal-string */}
         </button>
       </FormField>
     </div>

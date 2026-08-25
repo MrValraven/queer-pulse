@@ -41,7 +41,9 @@ export function useChangemakers(): ChangemakersResult {
       const profiles = response.profiles.map((profile) =>
         changemakerDtoToStory(profile, (value) => formatters.date(value)),
       );
-      const featuredDto = response.profiles.find((profile) => profile.isFeatured);
+      const featuredDto = response.profiles.find(
+        (profile) => profile.isFeatured,
+      );
       const featuredSlug = (featuredDto ?? response.profiles[0])?.slug;
       return {
         profiles,

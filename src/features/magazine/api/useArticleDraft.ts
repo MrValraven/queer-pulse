@@ -27,5 +27,9 @@ export function useArticleDraft(pieceId: string) {
     },
   });
 
-  return { article: query.data, isLoading: query.isLoading, isError: query.isError };
+  return {
+    article: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

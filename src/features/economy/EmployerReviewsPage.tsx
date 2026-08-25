@@ -12,10 +12,7 @@ import { COMPANIES, HOW, type Company } from "./employerReviews.data";
 import { EmployerReviewCard } from "./EmployerReviewCard";
 import { EmployerReviewSkeleton } from "./EmployerReviewSkeleton";
 import { EmployerGrid } from "./EmployerGrid";
-import {
-  EmployerVerifyBox,
-  EmployerWriteBox,
-} from "./EmployerReviewsSections";
+import { EmployerVerifyBox, EmployerWriteBox } from "./EmployerReviewsSections";
 import { WriteReviewModal, type SubmittedReview } from "./WriteReviewModal";
 import { LiveWriteReviewModal } from "./LiveWriteReviewModal";
 import { useCompanies } from "./api/useCompanies";

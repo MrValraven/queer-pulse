@@ -12,17 +12,50 @@ vi.mock("../communities/api/useMyCommunities", () => ({
 }));
 
 const REGISTRY: Community[] = [
-  { href: "#", slug: "queer-runners", name: "Queer Runners", description: "Weekly runs", type: "sports", typeLabel: "Sport", count: "128 members", joinLabel: "Join" },
-  { href: "#", slug: "coming-out", name: "Coming Out Circle", description: "A safe space", type: "support", typeLabel: "Support", count: "40 members", joinLabel: "Request", privateBadge: true },
+  {
+    href: "#",
+    slug: "queer-runners",
+    name: "Queer Runners",
+    description: "Weekly runs",
+    type: "sports",
+    typeLabel: "Sport",
+    count: "128 members",
+    joinLabel: "Join",
+  },
+  {
+    href: "#",
+    slug: "coming-out",
+    name: "Coming Out Circle",
+    description: "A safe space",
+    type: "support",
+    typeLabel: "Support",
+    count: "40 members",
+    joinLabel: "Request",
+    privateBadge: true,
+  },
 ];
 vi.mock("../communities/api/useCommunities", () => ({
-  useCommunities: () => ({ items: REGISTRY, total: REGISTRY.length, hasNextPage: false, fetchNextPage: () => {}, isFetchingNextPage: false, isLoading: false }),
+  useCommunities: () => ({
+    items: REGISTRY,
+    total: REGISTRY.length,
+    hasNextPage: false,
+    fetchNextPage: () => {},
+    isFetchingNextPage: false,
+    isLoading: false,
+  }),
 }));
 
 describe("useMyCommunityCards", () => {
   it("returns non-private communities I'm in, with my role, dropping private and orphan slugs", () => {
     const { result } = renderHook(() => useMyCommunityCards());
-    expect(result.current.map((communityRef) => communityRef.slug)).toEqual(["queer-runners"]);
-    expect(result.current[0]).toMatchObject({ name: "Queer Runners", tagline: "Weekly runs", countLabel: "128 members", role: "mod" });
+    expect(result.current.map((communityRef) => communityRef.slug)).toEqual([
+      "queer-runners",
+    ]);
+    expect(result.current[0]).toMatchObject({
+      name: "Queer Runners",
+      tagline: "Weekly runs",
+      countLabel: "128 members",
+      role: "mod",
+    });
   });
 });

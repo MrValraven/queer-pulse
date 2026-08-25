@@ -1,6 +1,9 @@
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { accentTintStyle, AVAILABILITY_OPTIONS } from "./subprofilePresence.data";
+import {
+  accentTintStyle,
+  AVAILABILITY_OPTIONS,
+} from "./subprofilePresence.data";
 import styles from "./SubprofileAvailability.module.css";
 
 /**
@@ -18,7 +21,9 @@ export function SubprofileAvailability({
   const { t } = useTranslation();
   if (!value) return null;
 
-  const option = AVAILABILITY_OPTIONS.find((candidate) => candidate.value === value);
+  const option = AVAILABILITY_OPTIONS.find(
+    (candidate) => candidate.value === value,
+  );
   if (!option) return null;
 
   const isOpen = value !== "not_available";

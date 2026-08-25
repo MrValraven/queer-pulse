@@ -140,7 +140,9 @@ function CommunityCard({
   return (
     <article className={[spot.spot, styles.card].join(" ")}>
       <div className={spot.spotMedia}>
-        <span className={styles.badge}>{t(CATEGORY_LABEL_KEY[view.category])}</span>
+        <span className={styles.badge}>
+          {t(CATEGORY_LABEL_KEY[view.category])}
+        </span>
         <ImageSlot
           className={spot.glimpse}
           tint={view.tint}
@@ -257,9 +259,17 @@ export function FeaturedCommunityCard({
   const { openModal, modalElement } = useHowCommunitiesWorkModal();
   if (items.length === 0) return null;
   return (
-    <div className={[styles.list, fill && styles.listFill].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.list, fill && styles.listFill]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {items.map((view) => (
-        <CommunityCard key={view.key} view={view} onHowItWorksClick={openModal} />
+        <CommunityCard
+          key={view.key}
+          view={view}
+          onHowItWorksClick={openModal}
+        />
       ))}
       {modalElement}
     </div>

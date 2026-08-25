@@ -107,7 +107,9 @@ export function ConversationSafetyMenu({
               type="button"
               role="menuitem"
               tabIndex={-1}
-              className={item.danger ? styles.rowMenuItemDanger : styles.rowMenuItem}
+              className={
+                item.danger ? styles.rowMenuItemDanger : styles.rowMenuItem
+              }
               onClick={() => {
                 setOpen(false);
                 item.onSelect();

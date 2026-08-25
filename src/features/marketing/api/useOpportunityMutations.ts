@@ -156,38 +156,35 @@ export function useDecideSignup(slug: string) {
   const queryClient = useQueryClient();
   const queryKey = opportunityKeys.signups(slug, demoMode);
 
-  return useMutation<
-    void,
-    Error,
-    DecideSignupVars,
-    { previous?: SignupRow[] }
-  >({
-    mutationFn: async ({ signupId, status }) => {
-      if (demoMode) return;
-      await decideSignup(slug, signupId, status);
+  return useMutation<void, Error, DecideSignupVars, { previous?: SignupRow[] }>(
+    {
+      mutationFn: async ({ signupId, status }) => {
+        if (demoMode) return;
+        await decideSignup(slug, signupId, status);
+      },
+      onMutate: ({ signupId, status }) => {
+        void queryClient.cancelQueries({ queryKey });
+        const previous = queryClient.getQueryData<SignupRow[]>(queryKey);
+        queryClient.setQueryData<SignupRow[]>(queryKey, (rows) =>
+          rows?.map((row) => (row.id === signupId ? { ...row, status } : row)),
+        );
+        return { previous };
+      },
+      onError: (_err, _vars, context) => {
+        if (context?.previous) {
+          queryClient.setQueryData(queryKey, context.previous);
+        }
+      },
+      onSettled: () => {
+        if (!demoMode) {
+          void queryClient.invalidateQueries({
+            queryKey: opportunityKeys.signupsRoot,
+          });
+          void queryClient.invalidateQueries({
+            queryKey: ["my-opportunities"],
+          });
+        }
+      },
     },
-    onMutate: ({ signupId, status }) => {
-      void queryClient.cancelQueries({ queryKey });
-      const previous = queryClient.getQueryData<SignupRow[]>(queryKey);
-      queryClient.setQueryData<SignupRow[]>(queryKey, (rows) =>
-        rows?.map((row) => (row.id === signupId ? { ...row, status } : row)),
-      );
-      return { previous };
-    },
-    onError: (_err, _vars, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(queryKey, context.previous);
-      }
-    },
-    onSettled: () => {
-      if (!demoMode) {
-        void queryClient.invalidateQueries({
-          queryKey: opportunityKeys.signupsRoot,
-        });
-        void queryClient.invalidateQueries({
-          queryKey: ["my-opportunities"],
-        });
-      }
-    },
-  });
+  );
 }

@@ -59,7 +59,9 @@ export function reVerifyDueDays(
   if (!reVerifyBy) return null;
   const dueDate = new Date(reVerifyBy);
   if (Number.isNaN(dueDate.getTime())) return null;
-  return Math.round((startOfUtcDay(dueDate) - startOfUtcDay(today)) / MS_PER_DAY);
+  return Math.round(
+    (startOfUtcDay(dueDate) - startOfUtcDay(today)) / MS_PER_DAY,
+  );
 }
 
 /** True once a guide's re-verify date is within 90 days out or already

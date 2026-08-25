@@ -5,7 +5,10 @@ import { formatDate } from "../../shared/lib/date";
 import { memberRefToPerson } from "../../shared/api/refs";
 import { AdminChip, AdminAvatar, type AdminTone, type AvatarTone } from "./ui";
 import { useReviewListingClaim } from "./api/useReviewListingClaim";
-import type { ListingClaimDTO, ListingClaimStatus } from "./api/listingClaims.api";
+import type {
+  ListingClaimDTO,
+  ListingClaimStatus,
+} from "./api/listingClaims.api";
 import styles from "./EditSuggestions.module.css";
 
 const STATUS_TONE: Record<ListingClaimStatus, AdminTone> = {

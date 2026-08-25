@@ -130,9 +130,7 @@ export function CommunitiesToolbar({
           size="sm"
           label={t("homepage:communities.toolbar.sortAriaLabel")}
           value={state.sort}
-          onChange={(value) =>
-            patch({ sort: (value ?? "active") as SortKey })
-          }
+          onChange={(value) => patch({ sort: (value ?? "active") as SortKey })}
           options={[
             {
               value: "active",

@@ -1,4 +1,11 @@
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { FiEdit3, FiFileText, FiLayers, FiSearch, FiZap } from "react-icons/fi";
 import { useScrollLock } from "../../../shared/hooks";

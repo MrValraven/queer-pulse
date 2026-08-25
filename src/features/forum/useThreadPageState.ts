@@ -75,9 +75,7 @@ export function useThreadPageState() {
   // Members the viewer has muted or blocked — their replies are filtered out of
   // the tree below.
   const { blocked, muted } = useSocial();
-  const savedId = threadData
-    ? `post:${threadData.slug ?? threadData.id}`
-    : "";
+  const savedId = threadData ? `post:${threadData.slug ?? threadData.id}` : "";
   const bookmarked = threadData ? isSaved(savedId) : false;
   const toggleBookmark = () => {
     if (!threadData) return;

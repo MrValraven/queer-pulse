@@ -78,8 +78,7 @@ export function GatheringRecapSidebar({
           · {RECAP_NEXT_EVENT_VENUE}
         </div>
         <Button to={routes.events} className={styles.nextCta}>
-          {t("gatherings:landing.ways.browse.cta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("gatherings:landing.ways.browse.cta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
 

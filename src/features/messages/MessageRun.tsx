@@ -7,7 +7,8 @@ import { initialsFromName } from "../../shared/lib/initials";
 import type { MessageReactionKey } from "../../shared/contracts/contracts";
 import type { MessageRun } from "./messageRuns";
 import { MessageBubble } from "./MessageBubble";
-import { resolveSendStatus, type MetaStatus } from "./MessageSendStatus";
+import type { MetaStatus } from "./MessageSendStatus";
+import { resolveSendStatus } from "./resolveSendStatus";
 import type { LongPressOrigin } from "./useLongPress";
 import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -129,7 +130,11 @@ function MessageRunViewImpl({
     // on `MessageAreaRow`'s own wrapper div (the virtualized row's direct
     // list-child) — see that file's comment. A `listitem` nested directly
     // inside another `listitem` (without an intervening `list`) is invalid.
-    <div className={[styles.run, isSent && styles.runSent].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.run, isSent && styles.runSent]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {/* 1:1 threads show only the counterpart's avatar (the header already
           identifies who you're talking to); your own outgoing runs carry no
           avatar — alignment + colour distinguish them, WhatsApp/iMessage-style. */}

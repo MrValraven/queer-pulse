@@ -1,4 +1,7 @@
-import type { SubprofileItemInputDTO, SubprofileSection } from "./api/subprofiles.api";
+import type {
+  SubprofileItemInputDTO,
+  SubprofileSection,
+} from "./api/subprofiles.api";
 
 /**
  * Per-section descriptors for the Phase-0 rich fields (`venue`/`doors`/
@@ -26,15 +29,27 @@ export interface RichFieldDescriptor {
 
 const GIG_STATE_OPTIONS: RichFieldDescriptor["options"] = [
   { value: "", labelKey: "subprofiles:richField.gigState.option.none" },
-  { value: "sold_out", labelKey: "subprofiles:richField.gigState.option.sold_out" },
-  { value: "cancelled", labelKey: "subprofiles:richField.gigState.option.cancelled" },
+  {
+    value: "sold_out",
+    labelKey: "subprofiles:richField.gigState.option.sold_out",
+  },
+  {
+    value: "cancelled",
+    labelKey: "subprofiles:richField.gigState.option.cancelled",
+  },
   { value: "guest", labelKey: "subprofiles:richField.gigState.option.guest" },
 ];
 
 const WORK_STATE_OPTIONS: RichFieldDescriptor["options"] = [
   { value: "", labelKey: "subprofiles:richField.workState.option.none" },
-  { value: "shipped", labelKey: "subprofiles:richField.workState.option.shipped" },
-  { value: "archived", labelKey: "subprofiles:richField.workState.option.archived" },
+  {
+    value: "shipped",
+    labelKey: "subprofiles:richField.workState.option.shipped",
+  },
+  {
+    value: "archived",
+    labelKey: "subprofiles:richField.workState.option.archived",
+  },
   {
     value: "in_progress",
     labelKey: "subprofiles:richField.workState.option.in_progress",

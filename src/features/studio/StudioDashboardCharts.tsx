@@ -4,6 +4,15 @@ import { StudioLine } from "./StudioSkeletons";
 import { BARS, CURATORS, CITIES } from "./studioDashboard.data";
 import s from "./creator.module.css";
 
+// Chart footer: bundles live analytics figures (peak day, play count,
+// curator attribution, top-track share) — content, computed from data in
+// live mode, not fixed platform chrome.
+const CHART_PEAK_SUMMARY_PRE = "Peak: ";
+const CHART_PEAK_DAY = "today";
+const CHART_PEAK_SUMMARY_POST = " · 4,212 plays · Sara picked you on Monday";
+const CHART_TOP_TRACK_TITLE = "Carta para a santa";
+const CHART_TOP_TRACK_SUMMARY_POST = " is 71% of this";
+
 /** Mirrors a creator .row: round avatar + two text lines + trailing meta. */
 function DashRowSkeleton() {
   return (
@@ -71,10 +80,13 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
         </div>
         <div className={s.chartFoot}>
           <span>
-            Peak: <em>today</em> · 4,212 plays · Sara picked you on Monday
+            {CHART_PEAK_SUMMARY_PRE}
+            <em>{CHART_PEAK_DAY}</em>
+            {CHART_PEAK_SUMMARY_POST}
           </span>
           <span>
-            <em>Carta para a santa</em> is 71% of this
+            <em>{CHART_TOP_TRACK_TITLE}</em>
+            {CHART_TOP_TRACK_SUMMARY_POST}
           </span>
         </div>
       </div>

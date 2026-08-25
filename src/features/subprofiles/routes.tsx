@@ -2,10 +2,22 @@ import { Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
-const SubprofilePage = lazyNamed(() => import("./SubprofilePage"), "SubprofilePage");
-const SubprofileDirectoryPage = lazyNamed(() => import("./SubprofileDirectoryPage"), "SubprofileDirectoryPage");
-const MySubprofilesPage = lazyNamed(() => import("./MySubprofilesPage"), "MySubprofilesPage");
-const SubprofileEditorPage = lazyNamed(() => import("./SubprofileEditorPage"), "SubprofileEditorPage");
+const SubprofilePage = lazyNamed(
+  () => import("./SubprofilePage"),
+  "SubprofilePage",
+);
+const SubprofileDirectoryPage = lazyNamed(
+  () => import("./SubprofileDirectoryPage"),
+  "SubprofileDirectoryPage",
+);
+const MySubprofilesPage = lazyNamed(
+  () => import("./MySubprofilesPage"),
+  "MySubprofilesPage",
+);
+const SubprofileEditorPage = lazyNamed(
+  () => import("./SubprofileEditorPage"),
+  "SubprofileEditorPage",
+);
 
 /** Linked personas, standalone personas, the public persona directory, and the
  *  owner's persona dashboard + editor. */

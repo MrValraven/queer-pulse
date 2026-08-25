@@ -35,7 +35,13 @@ function ProposalCreateForm({ onClose }: { onClose: () => void }) {
 
   const onSave = () => {
     const missingTarget = type === "council_removal" && !targetMemberId.trim();
-    if (!title.trim() || !description.trim() || !opensAt || !closesAt || missingTarget) {
+    if (
+      !title.trim() ||
+      !description.trim() ||
+      !opensAt ||
+      !closesAt ||
+      missingTarget
+    ) {
       showToast(t("admin:governance.proposals.form.validation"), "error");
       return;
     }
@@ -78,7 +84,11 @@ function ProposalCreateForm({ onClose }: { onClose: () => void }) {
           <Button variant="ghost" onClick={onClose} disabled={create.isPending}>
             {t("admin:governance.proposals.form.cancel")}
           </Button>
-          <Button variant="primary" onClick={onSave} disabled={create.isPending}>
+          <Button
+            variant="primary"
+            onClick={onSave}
+            disabled={create.isPending}
+          >
             {t("admin:governance.proposals.form.save")}
           </Button>
         </>
@@ -216,7 +226,9 @@ export function AdminGovernanceProposals() {
         {loading ? (
           <p className={styles.cardSub}>…</p>
         ) : proposals.length === 0 ? (
-          <p className={styles.cardSub}>{t("admin:governance.proposals.empty")}</p>
+          <p className={styles.cardSub}>
+            {t("admin:governance.proposals.empty")}
+          </p>
         ) : (
           proposals.map((proposal) => (
             <ProposalRow key={proposal.id} proposal={proposal} />

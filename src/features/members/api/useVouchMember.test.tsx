@@ -47,9 +47,8 @@ beforeEach(() => {
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
-  const { useVouchMember: useVouchMemberLive } = await import(
-    "./useVouchMember"
-  );
+  const { useVouchMember: useVouchMemberLive } =
+    await import("./useVouchMember");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
   const { I18nProvider } = await import("../../../app/providers/I18nProvider");

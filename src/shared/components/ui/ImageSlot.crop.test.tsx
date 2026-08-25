@@ -1,31 +1,36 @@
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
-import { ImageSlot } from './ImageSlot';
-import { TestProviders } from '../../../test/TestProviders';
+import { describe, it, expect } from "vitest";
+import { render } from "@testing-library/react";
+import { ImageSlot } from "./ImageSlot";
+import { TestProviders } from "../../../test/TestProviders";
 
-describe('ImageSlot crop', () => {
-  it('positions the image by the crop rect', () => {
+describe("ImageSlot crop", () => {
+  it("positions the image by the crop rect", () => {
     // TestProviders, not a bare render: ImageSlot reads `useTranslation`
     // (its loading/failed states are translated), which throws outside an
     // I18nProvider.
     const { container } = render(
       <TestProviders>
-        <ImageSlot src="https://x/y.jpg" alt="a" width={100} height={100}
-          crop={{ x: 0.25, y: 0, width: 0.5, height: 1, aspect: '1:1' }} />
+        <ImageSlot
+          src="https://x/y.jpg"
+          alt="a"
+          width={100}
+          height={100}
+          crop={{ x: 0.25, y: 0, width: 0.5, height: 1, aspect: "1:1" }}
+        />
       </TestProviders>,
     );
-    const image = container.querySelector('img')!;
-    expect(image.style.width).toBe('200%');
-    expect(image.style.left).toBe('-50%');
+    const image = container.querySelector("img")!;
+    expect(image.style.width).toBe("200%");
+    expect(image.style.left).toBe("-50%");
   });
 
-  it('leaves the image unpositioned without a crop', () => {
+  it("leaves the image unpositioned without a crop", () => {
     const { container } = render(
       <TestProviders>
         <ImageSlot src="https://x/y.jpg" alt="a" width={100} height={100} />
       </TestProviders>,
     );
-    const image = container.querySelector('img')!;
-    expect(image.style.width).toBe('');
+    const image = container.querySelector("img")!;
+    expect(image.style.width).toBe("");
   });
 });

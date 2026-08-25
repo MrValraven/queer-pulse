@@ -38,7 +38,11 @@ function detectMergedStanzaLine(
 ): { blockId: string; lineText: string } | null {
   if (blocks.length !== 1) return null;
   const [onlyBlock] = blocks;
-  if (!onlyBlock || onlyBlock.kind !== "stanza" || onlyBlock.lines.length !== 1) {
+  if (
+    !onlyBlock ||
+    onlyBlock.kind !== "stanza" ||
+    onlyBlock.lines.length !== 1
+  ) {
     return null;
   }
   const [onlyLine] = onlyBlock.lines;
@@ -105,6 +109,7 @@ export function PoemBodyEditor({
   useEffect(() => {
     if (!focusTargetId) return;
     richLineHandles.current[focusTargetId]?.focus();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- clears the one-shot focus request only after the imperative DOM focus() above has run; must stay sequenced after the ref exists post-commit, not derivable during render
     setFocusTargetId(null);
   }, [focusTargetId]);
 
@@ -116,9 +121,7 @@ export function PoemBodyEditor({
   function patchLines(id: string, lines: PoemLine[]) {
     commit(
       blocks.map((block) =>
-        block.kind !== "break" && block.id === id
-          ? { ...block, lines }
-          : block,
+        block.kind !== "break" && block.id === id ? { ...block, lines } : block,
       ),
     );
   }
@@ -127,7 +130,10 @@ export function PoemBodyEditor({
   // like several flattened verse lines. Recomputed off `blocks` so the hint
   // disappears the moment the poet accepts it (or edits their way out of the
   // detected shape).
-  const resplitCandidate = useMemo(() => detectMergedStanzaLine(blocks), [blocks]);
+  const resplitCandidate = useMemo(
+    () => detectMergedStanzaLine(blocks),
+    [blocks],
+  );
 
   function handleResplit() {
     if (!resplitCandidate) return;
@@ -193,7 +199,11 @@ export function PoemBodyEditor({
     if (index <= 0) return;
     delete richLineHandles.current[id];
     commit(blocks.filter((block) => block.id !== id));
-    for (let candidateIndex = index - 1; candidateIndex >= 0; candidateIndex--) {
+    for (
+      let candidateIndex = index - 1;
+      candidateIndex >= 0;
+      candidateIndex--
+    ) {
       if (blocks[candidateIndex]!.kind !== "break") {
         setFocusTargetId(blocks[candidateIndex]!.id);
         break;
@@ -201,9 +211,8 @@ export function PoemBodyEditor({
     }
   }
 
-  const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(
-    reorderBlocks,
-  );
+  const { containerRef, draggingIndex, gripHandlers } =
+    useRowDragReorder(reorderBlocks);
 
   // Kept as a single JSX value (not a component) so it is written once but
   // rendered from exactly one place per breakpoint — desktop always mounts
@@ -258,7 +267,9 @@ export function PoemBodyEditor({
           { value: "preview", label: t("subprofiles:poem.editor.tabPreview") },
         ]}
         value={mobilePane}
-        onChange={(next) => setMobilePane(next === "preview" ? "preview" : "edit")}
+        onChange={(next) =>
+          setMobilePane(next === "preview" ? "preview" : "edit")
+        }
       />
       {mobilePane === "edit" ? editorPane : <PoemPreviewPane blocks={blocks} />}
     </div>

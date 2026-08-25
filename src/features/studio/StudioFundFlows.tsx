@@ -18,12 +18,14 @@ export function StudioFundFlows() {
         />
       </h2>
       <div className={s.secDek}>
-        {/* Not swept — the "never the artist's 80%, never your tips" clause is
-            a trust commitment (§6 of the i18n sweep brief), left for a native
-            pt-PT reviewer. Renders in English via the fallback chain. */}
+        {/* eslint-disable local/no-literal-string -- not swept: the "never
+            the artist's 80%, never your tips" clause is a trust commitment
+            (extraction-brief §6), deliberately left for a native pt-PT
+            reviewer; renders in English via the fallback chain until that
+            review lands. */}
         No new fee funds this. It's the overflow of a system designed to
-        overflow toward people:{" "}
-        <em>never the artist's 80%, never your tips</em>.
+        overflow toward people: <em>never the artist's 80%, never your tips</em>
+        .{/* eslint-enable local/no-literal-string */}
       </div>
       <div className={s.flow2}>
         <div className={s.flowCol}>

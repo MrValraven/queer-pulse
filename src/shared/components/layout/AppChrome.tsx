@@ -1,4 +1,4 @@
-import { useShellFrame } from "../../../app/providers/ShellFrameProvider";
+import { useShellFrame } from "../../../app/providers/shellFrame";
 import { Navbar } from "./Navbar";
 import { BottomTabBar } from "./BottomTabBar";
 

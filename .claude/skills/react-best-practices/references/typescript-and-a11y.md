@@ -1,6 +1,7 @@
 # TypeScript & Accessibility for React
 
 > **QueerPulse anchors & enforcement:**
+>
 > - **Typed context with a throwing guard:** `authContext.ts` is the repo's real version of Part 1 section 1.8 — `createContext<AuthContextValue | null>(null)` + `useAuth()` that throws outside the provider, so consumers get a non-null value.
 > - **Discriminated-union props:** [Button.tsx](../../../../src/shared/components/ui/Button.tsx) (`ButtonAs*` union) is Part 1 section 1.5 in production.
 > - **Generic hooks:** `useRequiredFieldValidation<Values, FieldKey extends keyof Values>` and the `[value, setValue] as const` tuple idiom (section 1.6).
@@ -14,7 +15,7 @@
 
 # Typing React Components Well & Building Accessible React Components
 
-A dense, cited reference in two linked halves. Part 1 makes your components *correct at the type level*; Part 2 makes them *usable by everyone*. They are linked because the same design instincts — model the real states, don't paper over them — produce both sound types and sound accessibility. A discriminated union that makes an invalid prop combination un-representable (Part 1) is the same move as a component that makes an invalid interaction impossible (Part 2).
+A dense, cited reference in two linked halves. Part 1 makes your components _correct at the type level_; Part 2 makes them _usable by everyone_. They are linked because the same design instincts — model the real states, don't paper over them — produce both sound types and sound accessibility. A discriminated union that makes an invalid prop combination un-representable (Part 1) is the same move as a component that makes an invalid interaction impossible (Part 2).
 
 Every non-obvious claim carries an inline source URL. Snippets are idiomatic React 19 + TypeScript (strict mode assumed) and are meant to actually compile.
 
@@ -36,7 +37,7 @@ Source (React TypeScript Cheatsheet — Types or Interfaces): https://react-type
 interface CardProps {
   title: string;
   footer?: React.ReactNode; // optional
-  readonly id: string;      // consumer can't reassign on the props object
+  readonly id: string; // consumer can't reassign on the props object
 }
 
 // type — needed the moment you union or intersect
@@ -60,18 +61,22 @@ interface ButtonProps {
 
 function Button({ label, variant = "solid", disabled = false }: ButtonProps) {
   // `variant` is now `"solid" | "ghost"` (not `| undefined`) thanks to the default
-  return <button disabled={disabled} data-variant={variant}>{label}</button>;
+  return (
+    <button disabled={disabled} data-variant={variant}>
+      {label}
+    </button>
+  );
 }
 ```
 
-A subtlety: a default in destructuring narrows the *local binding* but not the declared prop type. That's usually what you want. If you want the prop to be **required** but still have a fallback, keep it required and don't default it — a missing required prop is a compile error, which is stronger than a silent default.
+A subtlety: a default in destructuring narrows the _local binding_ but not the declared prop type. That's usually what you want. If you want the prop to be **required** but still have a fallback, keep it required and don't default it — a missing required prop is a compile error, which is stronger than a silent default.
 
 ## 1.2 Children typing: `ReactNode` vs `ReactElement` vs specific
 
 `React.ReactNode` is the correct type for "anything React can render as children": strings, numbers, elements, arrays, fragments, `null`, `undefined`, booleans. Use it 95% of the time.
 
 - `ReactNode` — the general children type. `children?: React.ReactNode`.
-- `ReactElement` — specifically a JSX element (has `type`, `props`, `key`). Use when you need to `cloneElement`, inspect `.props`, or restrict children to *elements only* (no bare strings).
+- `ReactElement` — specifically a JSX element (has `type`, `props`, `key`). Use when you need to `cloneElement`, inspect `.props`, or restrict children to _elements only_ (no bare strings).
 - `ReactElement<SpecificProps>` or a component-specific type — when you require children to be a particular component (e.g. a `<Tabs>` that only accepts `<Tab>` children). Note this is a soft constraint; TypeScript can't fully guarantee element identity, so also validate at runtime if it matters.
 
 Source (React TypeScript Cheatsheet — useful types): https://react-typescript-cheatsheet.netlify.app/docs/basic/troubleshooting/types/ and react.dev typing children: https://react.dev/learn/typescript#typing-children
@@ -102,7 +107,7 @@ interface Props {
 
 `import type` guarantees the import is elided from output (TS handbook — Type-Only Imports): https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export . With the classic JSX transform you no longer need `import React from "react"` just to write JSX (react.dev — new JSX transform): https://react.dev/blog/2020/09/22/introducing-the-new-jsx-transform
 
-> Note: `JSX.Element` is roughly `ReactElement` and is what a component's *return* is inferred as; you rarely need to annotate return types by hand — let inference do it.
+> Note: `JSX.Element` is roughly `ReactElement` and is what a component's _return_ is inferred as; you rarely need to annotate return types by hand — let inference do it.
 
 ## 1.3 Typing events and refs from React's own types
 
@@ -120,7 +125,9 @@ function SearchForm() {
   }
   function onClick(event: React.MouseEvent<HTMLButtonElement>) {}
   function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Escape") { /* ... */ }
+    if (event.key === "Escape") {
+      /* ... */
+    }
   }
   return (
     <form onSubmit={onSubmit}>
@@ -131,7 +138,7 @@ function SearchForm() {
 }
 ```
 
-Key event types you'll actually use: `React.ChangeEvent<T>`, `React.FormEvent<T>`, `React.MouseEvent<T>`, `React.KeyboardEvent<T>`, `React.FocusEvent<T>`, `React.PointerEvent<T>`, `React.ClipboardEvent<T>`, `React.DragEvent<T>`. There is also `React.ChangeEventHandler<T>` etc. if you want to type the *handler slot* rather than the event.
+Key event types you'll actually use: `React.ChangeEvent<T>`, `React.FormEvent<T>`, `React.MouseEvent<T>`, `React.KeyboardEvent<T>`, `React.FocusEvent<T>`, `React.PointerEvent<T>`, `React.ClipboardEvent<T>`, `React.DragEvent<T>`. There is also `React.ChangeEventHandler<T>` etc. if you want to type the _handler slot_ rather than the event.
 
 Tip: **prefer inlining the handler in JSX** when possible; React infers the event type from the element and you don't annotate anything:
 
@@ -152,7 +159,7 @@ useEffect(() => {
 ```
 
 - DOM ref: `useRef<HTMLDivElement>(null)` → the ref object is `RefObject<HTMLDivElement>` and `.current` is possibly `null` (you don't own assignment; React does).
-- Mutable instance value you *do* write: `useRef<number>(0)` → `.current: number`, writable. (React 19 tightened these overloads; `useRef` now requires an argument.) See react.dev useRef: https://react.dev/reference/react/useRef
+- Mutable instance value you _do_ write: `useRef<number>(0)` → `.current: number`, writable. (React 19 tightened these overloads; `useRef` now requires an argument.) See react.dev useRef: https://react.dev/reference/react/useRef
 
 ### React 19 ref-as-prop typing (the big change)
 
@@ -184,7 +191,7 @@ function TextInput({ ref, ...rest }: TextInputProps) {
 }
 ```
 
-`React.Ref<T>` = `RefCallback<T> | RefObject<T> | null` — accepts both callback refs and object refs. Use it when *you* declare the `ref` prop. Pre-React-19 codebases still use `React.forwardRef<HTMLInputElement, Props>(...)` where the first generic is the element and the second is the props.
+`React.Ref<T>` = `RefCallback<T> | RefObject<T> | null` — accepts both callback refs and object refs. Use it when _you_ declare the `ref` prop. Pre-React-19 codebases still use `React.forwardRef<HTMLInputElement, Props>(...)` where the first generic is the element and the second is the props.
 
 ## 1.4 `ComponentProps` family — extending & forwarding native props
 
@@ -192,7 +199,7 @@ Three utilities, from `react`:
 
 - `React.ComponentProps<T>` — all props of `T`, where `T` is an element string (`"button"`) **or** a component. Includes `ref` for host elements.
 - `React.ComponentPropsWithoutRef<T>` — same, minus `ref`. **Default choice** for wrappers that don't forward a ref.
-- `React.ComponentPropsWithRef<T>` — same, including a correctly-typed `ref`. Use when you *do* forward the ref (React 19 makes this the natural pick).
+- `React.ComponentPropsWithRef<T>` — same, including a correctly-typed `ref`. Use when you _do_ forward the ref (React 19 makes this the natural pick).
 
 Source (React TypeScript Cheatsheet — wrapping/mirroring HTML elements): https://react-typescript-cheatsheet.netlify.app/docs/advanced/patterns_by_usecase/ and DHiWise on `ComponentPropsWithoutRef`: https://www.dhiwise.com/post/understanding-the-role-of-componentpropswithoutref-in-react
 
@@ -225,8 +232,10 @@ function Button({ variant = "solid", icon, children, ...rest }: ButtonProps) {
 For controlled inputs where you narrow `onChange` to give the consumer a `string` instead of an event:
 
 ```tsx
-interface MoneyInputProps
-  extends Omit<React.ComponentPropsWithoutRef<"input">, "onChange" | "value"> {
+interface MoneyInputProps extends Omit<
+  React.ComponentPropsWithoutRef<"input">,
+  "onChange" | "value"
+> {
   value: number;
   onChange: (cents: number) => void;
 }
@@ -234,13 +243,17 @@ interface MoneyInputProps
 
 ## 1.5 Discriminated unions — killing boolean soup
 
-Boolean props multiply into invalid states. `isLoading` + `isError` + `data` can be `true, true, present` — a nonsense combination the types happily allow. A **discriminated union** — a set of object types sharing a literal `kind`/`status` field (the *discriminant*) — makes invalid combinations un-representable and lets TypeScript narrow.
+Boolean props multiply into invalid states. `isLoading` + `isError` + `data` can be `true, true, present` — a nonsense combination the types happily allow. A **discriminated union** — a set of object types sharing a literal `kind`/`status` field (the _discriminant_) — makes invalid combinations un-representable and lets TypeScript narrow.
 
 Sources: Total TypeScript (discriminated unions): https://www.totaltypescript.com/discriminated-unions-are-a-devs-best-friend • Developer Way (advanced TS for React — discriminated unions): https://www.developerway.com/posts/advanced-typescript-for-react-developers-discriminated-unions
 
 ```tsx
 // BAD: boolean soup — 2^3 = 8 representable states, most invalid
-interface BadProps { isLoading: boolean; isError: boolean; data?: User[]; }
+interface BadProps {
+  isLoading: boolean;
+  isError: boolean;
+  data?: User[];
+}
 
 // GOOD: exactly the 3 real states, each carrying only its valid data
 type AsyncState<T> =
@@ -255,7 +268,13 @@ function UserList({ state }: { state: AsyncState<User[]> }) {
     case "error":
       return <ErrorBanner message={state.error.message} />; // `error` exists only here
     case "success":
-      return <ul>{state.data.map(u => <li key={u.id}>{u.name}</li>)}</ul>; // `data` only here
+      return (
+        <ul>
+          {state.data.map((u) => (
+            <li key={u.id}>{u.name}</li>
+          ))}
+        </ul>
+      ); // `data` only here
     default:
       return assertNever(state); // exhaustiveness — see below
   }
@@ -267,7 +286,12 @@ Variant props are the other classic use: a `Toast` whose `action` is required on
 ```tsx
 type ToastProps =
   | { variant: "info" | "success"; message: string }
-  | { variant: "actionable"; message: string; actionLabel: string; onAction: () => void };
+  | {
+      variant: "actionable";
+      message: string;
+      actionLabel: string;
+      onAction: () => void;
+    };
 // Passing actionLabel to an "info" toast is now a compile error.
 ```
 
@@ -289,8 +313,7 @@ Sometimes you want "either `href` (renders `<a>`) or `onClick` (renders `<button
 
 ```tsx
 type ClickableProps =
-  | { href: string; onClick?: never }
-  | { href?: never; onClick: () => void };
+  { href: string; onClick?: never } | { href?: never; onClick: () => void };
 ```
 
 The `onClick?: never` in the first arm makes passing `onClick` alongside `href` an error. This is the "XOR props" pattern.
@@ -309,7 +332,13 @@ interface ListProps<T> {
 }
 
 function List<T>({ items, renderItem, getKey }: ListProps<T>) {
-  return <ul>{items.map((item, i) => <li key={getKey(item)}>{renderItem(item, i)}</li>)}</ul>;
+  return (
+    <ul>
+      {items.map((item, i) => (
+        <li key={getKey(item)}>{renderItem(item, i)}</li>
+      ))}
+    </ul>
+  );
 }
 
 // Usage — T is inferred as User; `item` in renderItem is User, no annotation needed
@@ -331,7 +360,13 @@ interface SelectProps<T> {
   getValue: (option: T) => string;
 }
 
-function Select<T>({ options, value, onChange, getLabel, getValue }: SelectProps<T>) {
+function Select<T>({
+  options,
+  value,
+  onChange,
+  getLabel,
+  getValue,
+}: SelectProps<T>) {
   return (
     <select
       value={value ? getValue(value) : ""}
@@ -341,7 +376,9 @@ function Select<T>({ options, value, onChange, getLabel, getValue }: SelectProps
       }}
     >
       {options.map((o) => (
-        <option key={getValue(o)} value={getValue(o)}>{getLabel(o)}</option>
+        <option key={getValue(o)} value={getValue(o)}>
+          {getLabel(o)}
+        </option>
       ))}
     </select>
   );
@@ -369,7 +406,7 @@ function useLocalStorage<T>(key: string, initial: T) {
 
 ### Polymorphic `as` components (done correctly)
 
-A polymorphic component renders as different elements via an `as` prop while typing the *rest* of the props according to that element. The core type merges `{ as?: T }` with `ComponentPropsWithoutRef<T>`, `Omit`-ing your own keys to avoid collisions.
+A polymorphic component renders as different elements via an `as` prop while typing the _rest_ of the props according to that element. The core type merges `{ as?: T }` with `ComponentPropsWithoutRef<T>`, `Omit`-ing your own keys to avoid collisions.
 
 Sources: Ben Ilegbodu (polymorphic components in TS): https://www.benmvp.com/blog/polymorphic-react-components-typescript/ • LogRocket: https://blog.logrocket.com/build-strongly-typed-polymorphic-components-react-typescript/ • Steve Kinney: https://stevekinney.com/courses/react-typescript/polymorphic-components-and-as-prop
 
@@ -382,9 +419,11 @@ interface TextOwnProps {
   weight?: "normal" | "bold";
 }
 
-function Text<E extends React.ElementType = "span">(
-  { as, weight = "normal", ...rest }: PolymorphicProps<E, TextOwnProps>
-) {
+function Text<E extends React.ElementType = "span">({
+  as,
+  weight = "normal",
+  ...rest
+}: PolymorphicProps<E, TextOwnProps>) {
   const Component = as ?? "span";
   return <Component data-weight={weight} {...rest} />;
 }
@@ -442,7 +481,7 @@ const variantStyles = {
 // AND a missing/extra key is a compile error.
 ```
 
-Rule of thumb (Total TypeScript): use `satisfies` when you want the *narrow* type of the value but still want to verify it conforms, or when the type is complex enough that you want the check.
+Rule of thumb (Total TypeScript): use `satisfies` when you want the _narrow_ type of the value but still want to verify it conforms, or when the type is complex enough that you want the check.
 
 ### `const` assertions & template-literal types for tokens/variants
 
@@ -459,11 +498,11 @@ type State = "hover" | "active";
 type ClassToken = `${Variant}--${State}`; // "primary--hover" | ... (4 combos)
 ```
 
-`as const` gives you a runtime array *and* a derived literal union with zero duplication — iterate `SIZES` at runtime, use `Size` at the type level.
+`as const` gives you a runtime array _and_ a derived literal union with zero duplication — iterate `SIZES` at runtime, use `Size` at the type level.
 
-## 1.8 Typing context so "used outside provider" is a *type* error
+## 1.8 Typing context so "used outside provider" is a _type_ error
 
-The default `createContext` value forces a bad choice: give it a real default (masks the missing-provider bug) or give it `undefined` (every consumer must null-check). The idiomatic fix: initialize with `undefined`, then wrap `useContext` in a custom hook that **throws** if the value is `undefined`, and *narrows the return type to non-undefined*. Consumers get a guaranteed-present, fully-typed value; forgetting the provider throws a clear runtime error at the first read.
+The default `createContext` value forces a bad choice: give it a real default (masks the missing-provider bug) or give it `undefined` (every consumer must null-check). The idiomatic fix: initialize with `undefined`, then wrap `useContext` in a custom hook that **throws** if the value is `undefined`, and _narrows the return type to non-undefined_. Consumers get a guaranteed-present, fully-typed value; forgetting the provider throws a clear runtime error at the first read.
 
 Sources: Steve Kinney (safer createContext helpers): https://stevekinney.com/courses/react-typescript/safer-createcontext-helpers • Kent C. Dodds (how to use React Context effectively): https://kentcdodds.com/blog/how-to-use-react-context-effectively
 
@@ -483,7 +522,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const value: AuthContextValue = {
     user,
-    signIn: async (email) => { /* ... */ },
+    signIn: async (email) => {
+      /* ... */
+    },
     signOut: () => setUser(null),
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -510,7 +551,7 @@ Because `useAuth` returns `AuthContextValue` (never `undefined`), every consumer
 async function loadUser(id: string): Promise<User> {
   const res = await fetch(`/api/users/${id}`);
   const data: unknown = await res.json(); // NOT any
-  return parseUser(data);                 // validate → typed
+  return parseUser(data); // validate → typed
 }
 ```
 
@@ -521,7 +562,11 @@ async function loadUser(id: string): Promise<User> {
 ```tsx
 import { z } from "zod";
 
-const UserSchema = z.object({ id: z.string(), name: z.string(), email: z.string().email() });
+const UserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+});
 type User = z.infer<typeof UserSchema>; // type derived FROM the runtime schema
 
 function parseUser(data: unknown): User {
@@ -529,7 +574,7 @@ function parseUser(data: unknown): User {
 }
 ```
 
-`z.infer<typeof Schema>` gives one source of truth: the runtime validator *is* the type. Zod docs: https://zod.dev/
+`z.infer<typeof Schema>` gives one source of truth: the runtime validator _is_ the type. Zod docs: https://zod.dev/
 
 ### Safe narrowing
 
@@ -537,7 +582,12 @@ Use type guards, `in`, `typeof`, `Array.isArray`, and user-defined predicates ra
 
 ```tsx
 function isUser(value: unknown): value is User {
-  return typeof value === "object" && value !== null && "id" in value && "email" in value;
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "id" in value &&
+    "email" in value
+  );
 }
 ```
 
@@ -545,7 +595,7 @@ function isUser(value: unknown): value is User {
 
 Casts (`as`) are occasionally justified: (a) narrowing after a runtime check TS can't follow, (b) `as const`, (c) interop with untyped libs, (d) `event.target as HTMLInputElement` when you know the target. Rules:
 
-- Cast to a **more specific** type only when you've *proven* it (a runtime check nearby).
+- Cast to a **more specific** type only when you've _proven_ it (a runtime check nearby).
 - Never `as any`; if you must widen, `as unknown as T` at least flags it as deliberate and forces a two-step.
 - Prefer a validated `parse` over any cast for external data.
 
@@ -569,9 +619,9 @@ Accessibility (a11y) isn't a bolt-on; like sound types, it comes from modeling r
 
 The single highest-leverage a11y decision is using the right native element. Native elements come with roles, keyboard behavior, focus, and states **for free** and are the best-supported by assistive tech.
 
-The first rule of ARIA (from the W3C's *Using ARIA*): *"If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so."* Source: https://www.w3.org/TR/using-aria/#firstrule and MDN ARIA overview: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA
+The first rule of ARIA (from the W3C's _Using ARIA_): _"If you can use a native HTML element or attribute with the semantics and behavior you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so."_ Source: https://www.w3.org/TR/using-aria/#firstrule and MDN ARIA overview: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA
 
-"No ARIA is better than bad ARIA": WebAIM's analysis of a million home pages found pages *with* ARIA averaged significantly more detected errors than pages without — because ARIA is commonly applied incorrectly. Source: https://webaim.org/projects/million/ and CodeMag "First Rule of ARIA": https://www.codemag.com/Article/2411051
+"No ARIA is better than bad ARIA": WebAIM's analysis of a million home pages found pages _with_ ARIA averaged significantly more detected errors than pages without — because ARIA is commonly applied incorrectly. Source: https://webaim.org/projects/million/ and CodeMag "First Rule of ARIA": https://www.codemag.com/Article/2411051
 
 Concretely, in React:
 
@@ -607,8 +657,8 @@ Never rely on a placeholder as a label — it vanishes on input and often fails 
 
 ### Required, invalid, and descriptions
 
-- **Required**: use the native `required` attribute; add `aria-required="true"` only if you can't use native validation. 
-- **Invalid**: set `aria-invalid={hasError}` on the field. 
+- **Required**: use the native `required` attribute; add `aria-required="true"` only if you can't use native validation.
+- **Invalid**: set `aria-invalid={hasError}` on the field.
 - **Describe** hint/error text with `aria-describedby` pointing at the element(s) that hold it. Multiple ids are space-separated.
 
 ```tsx
@@ -626,7 +676,11 @@ function EmailField({ error }: { error?: string }) {
         aria-describedby={`${hintId}${error ? ` ${errorId}` : ""}`}
       />
       <p id={hintId}>We'll never share it.</p>
-      {error && <p id={errorId} role="alert">{error}</p>}
+      {error && (
+        <p id={errorId} role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -648,51 +702,70 @@ const errorId = `${id}-error`;
 Every interactive widget has an expected keyboard contract. The WAI-ARIA Authoring Practices Guide (APG) is the reference. Overarching rule (APG — Developing a Keyboard Interface): use **Tab / Shift+Tab to move between widgets**, and **arrow keys to move within a composite widget**; **Enter/Space activate**; **Escape dismisses**. Source: https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/ and patterns index: https://www.w3.org/WAI/ARIA/apg/patterns/
 
 ### Button (`<button>`)
+
 - **Enter** and **Space** activate. Native `<button>` does this for free; a `role="button"` element does **not** (see §2.5).
 - APG: https://www.w3.org/WAI/ARIA/apg/patterns/button/
 
 ### Link (`<a href>`)
-- **Enter** activates (links do *not* activate on Space — that's a button behavior). Another reason not to swap the two.
+
+- **Enter** activates (links do _not_ activate on Space — that's a button behavior). Another reason not to swap the two.
 - Use links for navigation (changes URL/location), buttons for actions.
 
 ### Disclosure (show/hide)
+
 - A `<button aria-expanded>` toggles a region. **Enter/Space** toggle. Focus stays on the trigger.
 - Requires `aria-expanded={open}` on the trigger and, commonly, `aria-controls` pointing at the region id.
 - APG: https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
 
 ```tsx
-function Disclosure({ title, children }: { title: string; children: React.ReactNode }) {
+function Disclosure({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const id = useId();
   return (
     <>
-      <button aria-expanded={open} aria-controls={id} onClick={() => setOpen(o => !o)}>
+      <button
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((o) => !o)}
+      >
         {title}
       </button>
-      <div id={id} hidden={!open}>{children}</div>
+      <div id={id} hidden={!open}>
+        {children}
+      </div>
     </>
   );
 }
 ```
 
 ### Tabs
+
 - Tab list uses **roving tabindex** (§2.4): only the active tab is in the tab order. **Arrow Left/Right** (horizontal) move between tabs; **Home/End** jump to first/last.
 - Activation is either **automatic** (focus a tab → its panel shows) or **manual** (arrow to focus, Enter/Space to activate). Manual is preferable when panels are expensive.
 - Roles: `role="tablist"` > `role="tab"` (with `aria-selected`, `aria-controls`) and `role="tabpanel"` (with `aria-labelledby`). **Tab** key moves from the tablist to the active panel.
 - APG: https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
 
 ### Dialog / Modal
+
 - On open: move focus **into** the dialog (first focusable element, or a `tabindex="-1"` heading if the content is long). Trap Tab/Shift+Tab **inside**. **Escape** closes. On close: **restore focus** to the element that opened it.
 - Roles/attrs: `role="dialog"` + `aria-modal="true"` + an accessible name via `aria-labelledby` (the title) or `aria-label`.
 - APG (Dialog Modal pattern): https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/ — note the APG guidance: modal dialogs do not let focus leave without closing, and if content is long, add `tabindex="-1"` to the title and focus it so the top isn't scrolled out of view.
 - Prefer the native `<dialog>` element with `.showModal()` — it gives focus trapping, Escape-to-close, backdrop, and top-layer stacking for free. MDN: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
 
 ### Menu (menu button → menu)
+
 - Trigger: `aria-haspopup="menu"` + `aria-expanded`. **Enter/Space/Down** open the menu and focus the first item.
 - Inside: **Up/Down** move between `role="menuitem"`s (roving tabindex), **Escape** closes and returns focus to the trigger, **Enter** activates an item. **Home/End** to first/last.
-- This is the *application* menu role — don't use `role="menu"` for a list of links (that's just a `<nav>` with a list). APG: https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
+- This is the _application_ menu role — don't use `role="menu"` for a list of links (that's just a `<nav>` with a list). APG: https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/
 
 ### Combobox (autocomplete/select)
+
 - Input has `role="combobox"`, `aria-expanded`, `aria-controls` → listbox, and `aria-activedescendant` pointing at the virtually-focused option (focus stays in the input). **Down/Up** move the active option, **Enter** selects, **Escape** closes, typing filters.
 - Listbox: `role="listbox"` of `role="option"` (with `aria-selected`).
 - This is one of the hardest widgets to get right — strongly consider a library (§2.11). APG: https://www.w3.org/WAI/ARIA/apg/patterns/combobox/ and listbox: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
@@ -706,21 +779,26 @@ Focus is the keyboard user's cursor. Managing it well is most of custom-widget a
 While a modal is open, Tab must cycle only through the modal's focusables. Native `<dialog>.showModal()` handles this. If you hand-roll, capture the first/last focusable and loop:
 
 ```tsx
-function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean) {
+function useFocusTrap(
+  ref: React.RefObject<HTMLElement | null>,
+  active: boolean,
+) {
   useEffect(() => {
     if (!active || !ref.current) return;
     const node = ref.current;
     const focusables = node.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
     );
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
     function onKeyDown(e: KeyboardEvent) {
       if (e.key !== "Tab") return;
       if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault(); last?.focus();
+        e.preventDefault();
+        last?.focus();
       } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault(); first?.focus();
+        e.preventDefault();
+        first?.focus();
       }
     }
     node.addEventListener("keydown", onKeyDown);
@@ -751,16 +829,24 @@ function useRestoreFocus(open: boolean) {
 For composite widgets (tabs, menus, toolbars, radio groups, grids), keep exactly **one** child at `tabIndex={0}` and the rest at `tabIndex={-1}`; arrow keys move the "0" (and programmatic focus) between children. Tab thus enters/leaves the whole widget in one stop, matching desktop behavior. Source (APG keyboard interface — roving tabindex): https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex and Stefan Judis: https://www.stefanjudis.com/today-i-learned/roving-tabindex/
 
 ```tsx
-function Toolbar({ actions }: { actions: { id: string; label: string; run: () => void }[] }) {
+function Toolbar({
+  actions,
+}: {
+  actions: { id: string; label: string; run: () => void }[];
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   function onKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowRight") {
       const next = (activeIndex + 1) % actions.length;
-      setActiveIndex(next); refs.current[next]?.focus(); e.preventDefault();
+      setActiveIndex(next);
+      refs.current[next]?.focus();
+      e.preventDefault();
     } else if (e.key === "ArrowLeft") {
       const prev = (activeIndex - 1 + actions.length) % actions.length;
-      setActiveIndex(prev); refs.current[prev]?.focus(); e.preventDefault();
+      setActiveIndex(prev);
+      refs.current[prev]?.focus();
+      e.preventDefault();
     }
   }
   return (
@@ -768,7 +854,9 @@ function Toolbar({ actions }: { actions: { id: string; label: string; run: () =>
       {actions.map((a, i) => (
         <button
           key={a.id}
-          ref={(el) => { refs.current[i] = el; }}
+          ref={(el) => {
+            refs.current[i] = el;
+          }}
           tabIndex={i === activeIndex ? 0 : -1} // roving
           onClick={a.run}
         >
@@ -782,7 +870,7 @@ function Toolbar({ actions }: { actions: { id: string; label: string; run: () =>
 
 ### `:focus-visible` — visible focus for keyboard, quiet for mouse
 
-Never remove focus outlines outright (WCAG 2.4.7 Focus Visible). Use `:focus-visible` so a strong ring shows for keyboard/programmatic focus but not on mouse click. Source: MDN https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible • WCAG 2.4.7: https://www.w3.org/WAI/WCAG21/Understanding/focus-visible.html . WCAG 2.2 added 2.4.11 *Focus Not Obscured* — the focused element must not be entirely hidden by sticky headers/footers: https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
+Never remove focus outlines outright (WCAG 2.4.7 Focus Visible). Use `:focus-visible` so a strong ring shows for keyboard/programmatic focus but not on mouse click. Source: MDN https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible • WCAG 2.4.7: https://www.w3.org/WAI/WCAG21/Understanding/focus-visible.html . WCAG 2.2 added 2.4.11 _Focus Not Obscured_ — the focused element must not be entirely hidden by sticky headers/footers: https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html
 
 ```css
 .button:focus-visible {
@@ -797,14 +885,26 @@ Never remove focus outlines outright (WCAG 2.4.7 Focus Visible). Use `:focus-vis
 A "Skip to main content" link as the first focusable element lets keyboard users bypass the nav. It's visually hidden until focused (use a class that moves it off-screen, **not** `display:none`, which removes it from the tab order). Source: WebAIM skip nav https://webaim.org/techniques/skipnav/
 
 ```tsx
-<a href="#main" className="skip-link">Skip to main content</a>
-{/* ... */}
-<main id="main" tabIndex={-1}>…</main>
+<a href="#main" className="skip-link">
+  Skip to main content
+</a>;
+{
+  /* ... */
+}
+<main id="main" tabIndex={-1}>
+  …
+</main>;
 ```
 
 ```css
-.skip-link { position: absolute; left: -9999px; }
-.skip-link:focus { left: 1rem; top: 1rem; /* becomes visible on focus */ }
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem; /* becomes visible on focus */
+}
 ```
 
 ### Managing focus on route change (SPA)
@@ -824,17 +924,23 @@ function usePageFocus(routeKey: string) {
 
 ## 2.5 Custom interactive elements
 
-If you *must* build an interactive control from a non-interactive element (rare — prefer native), you owe it the full contract:
+If you _must_ build an interactive control from a non-interactive element (rare — prefer native), you owe it the full contract:
 
 1. **`role`** — the widget role (`"button"`, `"tab"`, etc.).
 2. **`tabIndex={0}`** — make it focusable.
 3. **Key handlers** — replicate the native keyboard behavior.
 
-A `<span role="button">` is *not* a button until you add Enter **and** Space activation yourself — native buttons respond to both; a span responds to neither. Source (MDN — button role, "must add keyboard event handlers"): https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role
+A `<span role="button">` is _not_ a button until you add Enter **and** Space activation yourself — native buttons respond to both; a span responds to neither. Source (MDN — button role, "must add keyboard event handlers"): https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role
 
 ```tsx
 // If you truly can't use <button> (you almost always can):
-function FakeButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+function FakeButton({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <span
       role="button"
@@ -853,7 +959,7 @@ function FakeButton({ onClick, children }: { onClick: () => void; children: Reac
 }
 ```
 
-This is *more code, worse support, and easy to get wrong* than `<button onClick={onClick}>`. That's the whole point of §2.1.
+This is _more code, worse support, and easy to get wrong_ than `<button onClick={onClick}>`. That's the whole point of §2.1.
 
 ### Never nest interactive elements
 
@@ -878,15 +984,21 @@ function LiveAnnouncer({ message }: { message: string }) {
 }
 ```
 
-For toasts, render the toast region once (empty) high in the tree, then push messages into it. For validation, `role="alert"` on the error `<p>` (as in §2.2) announces it when it renders. Don't make *everything* assertive — constant interruptions make a UI unusable with a screen reader.
+For toasts, render the toast region once (empty) high in the tree, then push messages into it. For validation, `role="alert"` on the error `<p>` (as in §2.2) announces it when it renders. Don't make _everything_ assertive — constant interruptions make a UI unusable with a screen reader.
 
 `.visually-hidden` (screen-reader-only) CSS — visible to AT, not to sighted users:
 
 ```css
 .visually-hidden {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 ```
 
@@ -898,7 +1010,7 @@ Every `<img>` needs an `alt`. The value depends on the image's role:
 
 - **Informative** image: `alt` describes the content/meaning ("Bar chart: sales up 20%").
 - **Decorative** image (adds nothing semantic): `alt=""` (empty, but present) so screen readers skip it. Never omit `alt` entirely — that makes some readers announce the filename.
-- **Functional** image (inside a link/button): `alt` describes the *action/destination*, not the picture.
+- **Functional** image (inside a link/button): `alt` describes the _action/destination_, not the picture.
 
 Source: MDN img alt / W3C alt decision tree https://www.w3.org/WAI/tutorials/images/decision-tree/ and MDN: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#authoring_meaningful_alternate_descriptions
 
@@ -909,8 +1021,14 @@ Source: MDN img alt / W3C alt decision tree https://www.w3.org/WAI/tutorials/ima
 
 ```tsx
 // Icon-only button — the BUTTON gets the name; the icon is hidden
-function IconButton({ label, onClick, children }: {
-  label: string; onClick: () => void; children: React.ReactNode;
+function IconButton({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
 }) {
   return (
     <button aria-label={label} onClick={onClick}>
@@ -926,19 +1044,25 @@ Source (icon-only accessible names): https://www.sarasoueidan.com/blog/accessibl
 
 ## 2.8 `prefers-reduced-motion` at the code level
 
-Users who get motion sickness or vestibular disorders set "reduce motion" at the OS level. Respect it (WCAG 2.3.3 Animation from Interactions). The default should be *no* large motion unless the user has expressed no preference. Source: MDN https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion and WCAG 2.3.3: https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions.html
+Users who get motion sickness or vestibular disorders set "reduce motion" at the OS level. Respect it (WCAG 2.3.3 Animation from Interactions). The default should be _no_ large motion unless the user has expressed no preference. Source: MDN https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion and WCAG 2.3.3: https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions.html
 
-CSS approach (opt *in* to motion):
+CSS approach (opt _in_ to motion):
 
 ```css
 /* Motion only when the user hasn't asked to reduce it */
 @media (prefers-reduced-motion: no-preference) {
-  .card { transition: transform 200ms ease-out; }
-  .card:hover { transform: translateY(-4px); }
+  .card {
+    transition: transform 200ms ease-out;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+  }
 }
 /* Or globally neutralize animations for those who reduce */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -953,7 +1077,7 @@ JS/React approach (when animation is driven in code, e.g. a spring lib or `scrol
 function usePrefersReducedMotion() {
   const query = "(prefers-reduced-motion: reduce)";
   const [reduced, setReduced] = useState(
-    () => typeof window !== "undefined" && window.matchMedia(query).matches
+    () => typeof window !== "undefined" && window.matchMedia(query).matches,
   );
   useEffect(() => {
     const mql = window.matchMedia(query);
@@ -977,11 +1101,13 @@ Source (Josh Comeau — accessible animations / respecting reduced motion): http
 
 ```tsx
 // Error state conveyed by MORE than color: icon + text + aria-invalid, not just a red ring
-{error && (
-  <p role="alert" className="field-error">
-    <WarningIcon aria-hidden="true" /> {error}
-  </p>
-)}
+{
+  error && (
+    <p role="alert" className="field-error">
+      <WarningIcon aria-hidden="true" /> {error}
+    </p>
+  );
+}
 ```
 
 ## 2.10 Reach for a headless a11y library when hand-rolling is a trap
@@ -994,13 +1120,13 @@ Some widgets (combobox/autocomplete, date picker, menu, listbox, complex dialog 
 
 Guidance (LogRocket / GreatFrontend comparisons): use **Radix** for a mature design system you assemble quickly; use **React Aria** when you need advanced accessibility behavior, complex collections, or internationalized interactions. Sources: https://blog.logrocket.com/headless-ui-alternatives/ and https://www.greatfrontend.com/blog/top-headless-ui-libraries-for-react-in-2026
 
-These libraries are also a *typing* win: their props are fully typed, they use the polymorphic/`asChild` (Radix `Slot`) patterns from §1.6 correctly, and they save you from re-deriving the hard generics.
+These libraries are also a _typing_ win: their props are fully typed, they use the polymorphic/`asChild` (Radix `Slot`) patterns from §1.6 correctly, and they save you from re-deriving the hard generics.
 
 Don't reach for a library for a plain button, link, disclosure, or a native `<dialog>` — those are cheap to do right natively. Reach for one when the APG pattern is a combobox, menu, listbox, or a modal with intricate focus scopes.
 
 ## 2.11 A worked example tying both halves together
 
-A `<Modal>` that is *both* well-typed (discriminated-ish props, native props forwarded, ref-as-prop) and accessible (native `<dialog>`, labelled, Escape/focus handled by the platform, focus restored):
+A `<Modal>` that is _both_ well-typed (discriminated-ish props, native props forwarded, ref-as-prop) and accessible (native `<dialog>`, labelled, Escape/focus handled by the platform, focus restored):
 
 ```tsx
 import { useEffect, useId, useRef } from "react";
@@ -1008,7 +1134,7 @@ import { useEffect, useId, useRef } from "react";
 interface ModalProps {
   open: boolean;
   onClose: () => void;
-  title: string;                 // required → guarantees an accessible name
+  title: string; // required → guarantees an accessible name
   children: React.ReactNode;
 }
 
@@ -1022,7 +1148,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     if (!dialog) return;
     if (open && !dialog.open) {
       openerRef.current = document.activeElement as HTMLElement | null;
-      dialog.showModal();        // native: focus trap + top layer + Esc-to-close
+      dialog.showModal(); // native: focus trap + top layer + Esc-to-close
     } else if (!open && dialog.open) {
       dialog.close();
       openerRef.current?.focus(); // restore focus on close
@@ -1032,46 +1158,50 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
   return (
     <dialog
       ref={dialogRef}
-      aria-labelledby={titleId}     // accessible name from the title
-      onClose={onClose}             // fires on Escape / dialog.close()
-      onClick={(event) => {         // click-outside (backdrop) closes
+      aria-labelledby={titleId} // accessible name from the title
+      onClose={onClose} // fires on Escape / dialog.close()
+      onClick={(event) => {
+        // click-outside (backdrop) closes
         if (event.target === dialogRef.current) onClose();
       }}
     >
       <h2 id={titleId}>{title}</h2>
       {children}
-      <button type="button" onClick={onClose}>Close</button>
+      <button type="button" onClick={onClose}>
+        Close
+      </button>
     </dialog>
   );
 }
 ```
 
-Why it's good on both axes: the `title` prop is **required**, so an unlabelled dialog is a *compile* error; the native `<dialog>.showModal()` gives focus trapping, Escape handling, and top-layer stacking without hand-rolled traps; focus is restored on close; the heading provides the `aria-labelledby` name; and every prop is precisely typed. That's the whole thesis — model reality in the types, use the platform for behavior, and correctness and accessibility fall out together.
+Why it's good on both axes: the `title` prop is **required**, so an unlabelled dialog is a _compile_ error; the native `<dialog>.showModal()` gives focus trapping, Escape handling, and top-layer stacking without hand-rolled traps; focus is restored on close; the heading provides the `aria-labelledby` name; and every prop is precisely typed. That's the whole thesis — model reality in the types, use the platform for behavior, and correctness and accessibility fall out together.
 
 ---
 
 ## Quick reference — do / avoid
 
-| Concern | Do | Avoid |
-| --- | --- | --- |
-| Prop shape with unions | `type` | forcing it into `interface` |
-| Extend a native element | `Own & Omit<ComponentPropsWithoutRef<"el">, keyof Own>` | intersecting and colliding props |
-| Ref (React 19) | `ref?: React.Ref<T>` as a normal prop | `forwardRef` in new code |
-| Variant/mode props | discriminated union + `assertNever` | `isX`/`isY` boolean soup |
-| Tuple-returning hook | `return [...] as const` | letting it widen to a union array |
-| External/async data | validate (`unknown` → `schema.parse`) | `as SomeType` on `res.json()` |
-| Context misuse | `undefined` default + throwing hook | real default that hides the bug |
-| Any interactive control | native `<button>`/`<a>`/`<dialog>` | `<div role="button">` |
-| Custom widget | role + `tabIndex` + key handlers + APG contract | focusable div with only `onClick` |
-| Dynamic status/errors | `role="status"` / `role="alert"` live region | silently updating the DOM |
-| Icon-only button | `aria-label` on button, `aria-hidden` on icon | naked icon with no name |
-| Motion | gate on `prefers-reduced-motion` | unconditional large animation |
-| Focus outline | `:focus-visible` ring | `outline: none` with no replacement |
-| Hard widget (combobox/menu) | React Aria / Radix | hand-rolling the ARIA + keyboard |
+| Concern                     | Do                                                      | Avoid                               |
+| --------------------------- | ------------------------------------------------------- | ----------------------------------- |
+| Prop shape with unions      | `type`                                                  | forcing it into `interface`         |
+| Extend a native element     | `Own & Omit<ComponentPropsWithoutRef<"el">, keyof Own>` | intersecting and colliding props    |
+| Ref (React 19)              | `ref?: React.Ref<T>` as a normal prop                   | `forwardRef` in new code            |
+| Variant/mode props          | discriminated union + `assertNever`                     | `isX`/`isY` boolean soup            |
+| Tuple-returning hook        | `return [...] as const`                                 | letting it widen to a union array   |
+| External/async data         | validate (`unknown` → `schema.parse`)                   | `as SomeType` on `res.json()`       |
+| Context misuse              | `undefined` default + throwing hook                     | real default that hides the bug     |
+| Any interactive control     | native `<button>`/`<a>`/`<dialog>`                      | `<div role="button">`               |
+| Custom widget               | role + `tabIndex` + key handlers + APG contract         | focusable div with only `onClick`   |
+| Dynamic status/errors       | `role="status"` / `role="alert"` live region            | silently updating the DOM           |
+| Icon-only button            | `aria-label` on button, `aria-hidden` on icon           | naked icon with no name             |
+| Motion                      | gate on `prefers-reduced-motion`                        | unconditional large animation       |
+| Focus outline               | `:focus-visible` ring                                   | `outline: none` with no replacement |
+| Hard widget (combobox/menu) | React Aria / Radix                                      | hand-rolling the ARIA + keyboard    |
 
 ## Source index (primary references)
 
 TypeScript / React typing:
+
 - React TypeScript Cheatsheet — https://react-typescript-cheatsheet.netlify.app/
 - react.dev TypeScript — https://react.dev/learn/typescript ; useRef — https://react.dev/reference/react/useRef ; forwardRef (deprecation) — https://react.dev/reference/react/forwardRef ; React 19 (ref as prop) — https://react.dev/blog/2024/12/05/react-19 ; useId — https://react.dev/reference/react/useId
 - Total TypeScript (Matt Pocock) — discriminated unions https://www.totaltypescript.com/discriminated-unions-are-a-devs-best-friend ; satisfies https://www.totaltypescript.com/how-to-use-satisfies-operator
@@ -1080,6 +1210,7 @@ TypeScript / React typing:
 - Zod — https://zod.dev/
 
 Accessibility:
+
 - WAI-ARIA APG patterns — https://www.w3.org/WAI/ARIA/apg/patterns/ ; keyboard interface https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/ ; dialog https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/ ; tabs https://www.w3.org/WAI/ARIA/apg/patterns/tabs/ ; combobox https://www.w3.org/WAI/ARIA/apg/patterns/combobox/ ; menu button https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/ ; disclosure https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
 - First rule of ARIA — https://www.w3.org/TR/using-aria/#firstrule ; MDN ARIA https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA
 - MDN live regions — https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Guides/Live_regions

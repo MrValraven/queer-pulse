@@ -20,13 +20,7 @@ import type { PublicSubprofileView } from "./api/subprofiles.adapters";
  * shape as the real control, no handler wired (the Phase-3 editor preview
  * renders a truthful shape of the page without triggering real mutations).
  */
-function InertAction({
-  icon,
-  label,
-}: {
-  icon: ReactNode;
-  label: string;
-}) {
+function InertAction({ icon, label }: { icon: ReactNode; label: string }) {
   return (
     <Button type="button" variant="ghost" size="md" disabled>
       {icon} {label}
@@ -58,7 +52,8 @@ export function SubprofileHeroActions({
   const accent = view.accent ?? DEFAULT_ACCENT;
   const ctaHref = safeHref(view.ctaUrl);
   const hasCta = Boolean(ctaHref && view.ctaLabel);
-  const canMessage = view.linkVisibility === "linked" && Boolean(view.ownerSlug);
+  const canMessage =
+    view.linkVisibility === "linked" && Boolean(view.ownerSlug);
 
   if (mode === "owner") {
     return (
@@ -89,7 +84,13 @@ export function SubprofileHeroActions({
           <InertAction icon={null} label={t("subprofiles:hero.message")} />
         )}
         <InertAction
-          icon={view.viewerFollowing ? <FiUserCheck aria-hidden /> : <FiUserPlus aria-hidden />}
+          icon={
+            view.viewerFollowing ? (
+              <FiUserCheck aria-hidden />
+            ) : (
+              <FiUserPlus aria-hidden />
+            )
+          }
           label={t(
             view.viewerFollowing
               ? "subprofiles:hero.follow.following"

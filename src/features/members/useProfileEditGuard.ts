@@ -38,7 +38,8 @@ export function useProfileEditGuard({
     const originalPush = historyNavigator.push;
     const originalReplace = historyNavigator.replace;
     const confirmLeave = () => {
-      if (!window.confirm(t("members:profileEdit.discardConfirm"))) return false;
+      if (!window.confirm(t("members:profileEdit.discardConfirm")))
+        return false;
       cancelEditing();
       return true;
     };

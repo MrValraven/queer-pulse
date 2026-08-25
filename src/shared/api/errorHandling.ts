@@ -58,7 +58,10 @@ const COPY = {
     key: "shared:apiError.forbidden",
     fallback: "You don't have access to that.",
   },
-  generic: { key: "shared:apiError.generic", fallback: "Something went wrong." },
+  generic: {
+    key: "shared:apiError.generic",
+    fallback: "Something went wrong.",
+  },
   genericRetry: {
     key: "shared:apiError.genericRetry",
     fallback: "Something went wrong. Please try again.",
@@ -82,7 +85,8 @@ function messageFor(error: unknown): string | null {
       return null; // PlatformLockProvider owns this (maintenance screen)
     if (error.status === 404) return null; // pages own their empty state
     if (error.status >= 500) return resolve(COPY.server);
-    if (error.status === 403) return resolve(reasonFor(error) ?? COPY.forbidden);
+    if (error.status === 403)
+      return resolve(reasonFor(error) ?? COPY.forbidden);
     return resolve(reasonFor(error) ?? COPY.generic);
   }
   return resolve(reasonFor(error) ?? COPY.genericRetry);
@@ -123,7 +127,9 @@ export function handleMutationError(
   error: unknown,
   _variables: unknown,
   _onMutateResult: unknown,
-  mutation: { options: { mutationKey?: unknown; meta?: { silentError?: boolean } } },
+  mutation: {
+    options: { mutationKey?: unknown; meta?: { silentError?: boolean } };
+  },
 ): void {
   logError(error, { mutationKey: mutation.options.mutationKey });
   if (demo.current) return;

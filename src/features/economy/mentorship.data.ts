@@ -111,22 +111,26 @@ export const MENTORS: Mentor[] = [
       {
         number: "01",
         title: "Ask for me by name",
-        description: "Request a match through the form and mention you'd like to work with me specifically. I read every one.",
+        description:
+          "Request a match through the form and mention you'd like to work with me specifically. I read every one.",
       },
       {
         number: "02",
         title: "A short intro call",
-        description: "Fifteen minutes, both ways. You see if I'm useful, I see what you're making. No pressure either side.",
+        description:
+          "Fifteen minutes, both ways. You see if I'm useful, I see what you're making. No pressure either side.",
       },
       {
         number: "03",
         title: "We pick one thing",
-        description: "One project, one habit, one decision you're stuck on. We start there rather than trying to fix everything at once.",
+        description:
+          "One project, one habit, one decision you're stuck on. We start there rather than trying to fix everything at once.",
       },
       {
         number: "04",
         title: "Monthly, over coffee",
-        description: "We meet once a month, in person when we can, with a thread open in between for the small stuff.",
+        description:
+          "We meet once a month, in person when we can, with a thread open in between for the small stuff.",
       },
     ],
     price: {
@@ -181,22 +185,26 @@ export const MENTORS: Mentor[] = [
       {
         number: "01",
         title: "Tell me where you're stuck",
-        description: "Request a match and note your level and the thing blocking you right now. Specific beats broad.",
+        description:
+          "Request a match and note your level and the thing blocking you right now. Specific beats broad.",
       },
       {
         number: "02",
         title: "A first call within a week",
-        description: "Thirty minutes to map what you want and whether I'm the right person. If I'm not, I'll say so.",
+        description:
+          "Thirty minutes to map what you want and whether I'm the right person. If I'm not, I'll say so.",
       },
       {
         number: "03",
         title: "Work it in writing",
-        description: "Most of our back-and-forth is async: a PR, a plan, a hard message. You get a real, concrete answer.",
+        description:
+          "Most of our back-and-forth is async: a PR, a plan, a hard message. You get a real, concrete answer.",
       },
       {
         number: "04",
         title: "Talk when it matters",
-        description: "We jump on a call for the big decisions: a job move, a raise, a team you're struggling to read.",
+        description:
+          "We jump on a call for the big decisions: a job move, a raise, a team you're struggling to read.",
       },
     ],
     price: {
@@ -250,22 +258,26 @@ export const MENTORS: Mentor[] = [
       {
         number: "01",
         title: "Join the waitlist",
-        description: "Add your name through the form. I reach out personally when a spot opens, usually within a month or two.",
+        description:
+          "Add your name through the form. I reach out personally when a spot opens, usually within a month or two.",
       },
       {
         number: "02",
         title: "A gentle first conversation",
-        description: "We start slow. You tell me what's heavy right now; I tell you honestly whether I'm the right support.",
+        description:
+          "We start slow. You tell me what's heavy right now; I tell you honestly whether I'm the right support.",
       },
       {
         number: "03",
         title: "We name the real thing",
-        description: "Often the career question sits on top of something else. We take the time to find what it actually is.",
+        description:
+          "Often the career question sits on top of something else. We take the time to find what it actually is.",
       },
       {
         number: "04",
         title: "Regular, unhurried check-ins",
-        description: "We meet on a rhythm that suits you, with clear edges around what this is and what it isn't.",
+        description:
+          "We meet on a rhythm that suits you, with clear edges around what this is and what it isn't.",
       },
     ],
     price: {
@@ -320,22 +332,26 @@ export const MENTORS: Mentor[] = [
       {
         number: "01",
         title: "Tell me where you are and where you want to be",
-        description: "Request a match with the gap you're trying to cross. The clearer the gap, the faster we move.",
+        description:
+          "Request a match with the gap you're trying to cross. The clearer the gap, the faster we move.",
       },
       {
         number: "02",
         title: "A 30-minute fit call",
-        description: "We check the chemistry and whether I can actually help. If product isn't really your path, I'll tell you kindly.",
+        description:
+          "We check the chemistry and whether I can actually help. If product isn't really your path, I'll tell you kindly.",
       },
       {
         number: "03",
         title: "We build the plan",
-        description: "We turn the goal into steps with dates. You leave the first session knowing exactly what's next.",
+        description:
+          "We turn the goal into steps with dates. You leave the first session knowing exactly what's next.",
       },
       {
         number: "04",
         title: "Monthly, with homework",
-        description: "We meet monthly to review what you did and adjust. Between calls, you do the reps.",
+        description:
+          "We meet monthly to review what you did and adjust. Between calls, you do the reps.",
       },
     ],
     price: {
@@ -389,22 +405,26 @@ export const MENTORS: Mentor[] = [
       {
         number: "01",
         title: "Tell me what you're making",
-        description: "Request a match with the project and where it's stuck. I care more about what it is than how far along it is.",
+        description:
+          "Request a match with the project and where it's stuck. I care more about what it is than how far along it is.",
       },
       {
         number: "02",
         title: "We meet in person, at least once",
-        description: "I like to start face to face if we can: a coffee, a walk. Some things only come out that way.",
+        description:
+          "I like to start face to face if we can: a coffee, a walk. Some things only come out that way.",
       },
       {
         number: "03",
         title: "We set the trade",
-        description: "We agree what I'll help with and what you'll help me with. Fair, light, and written down so neither of us guesses.",
+        description:
+          "We agree what I'll help with and what you'll help me with. Fair, light, and written down so neither of us guesses.",
       },
       {
         number: "04",
         title: "Through the long middle",
-        description: "We check in on a rhythm through the hard part: funding, structure, the will to finish.",
+        description:
+          "We check in on a rhythm through the hard part: funding, structure, the will to finish.",
       },
     ],
     price: {
@@ -458,22 +478,26 @@ export const MENTORS: Mentor[] = [
       {
         number: "01",
         title: "Request a match",
-        description: "Tell me whether you're thinking about a legal career or trying to understand a right. Both are welcome.",
+        description:
+          "Tell me whether you're thinking about a legal career or trying to understand a right. Both are welcome.",
       },
       {
         number: "02",
         title: "A first call to place you",
-        description: "We work out what you actually need: mentorship, or a resource that will help you faster.",
+        description:
+          "We work out what you actually need: mentorship, or a resource that will help you faster.",
       },
       {
         number: "03",
         title: "Understanding that lasts",
-        description: "The goal is that you leave able to read the situation yourself, handling it without me.",
+        description:
+          "The goal is that you leave able to read the situation yourself, handling it without me.",
       },
       {
         number: "04",
         title: "Ongoing, as questions come",
-        description: "We keep a light rhythm and you reach out as the real questions arrive.",
+        description:
+          "We keep a light rhythm and you reach out as the real questions arrive.",
       },
     ],
     price: {

@@ -22,7 +22,8 @@ export const common: Catalog = {
   // Optimistic-write failures — shown when a save/remove is rolled back because
   // the API call failed (SavedProvider, DraftsProvider).
   "toast.saveFailed": "That didn't save. Check your connection and try again.",
-  "toast.removeFailed": "That didn't update. Check your connection and try again.",
+  "toast.removeFailed":
+    "That didn't update. Check your connection and try again.",
 
   // Reusable branded query-error state (a failed live fetch) — shown by pages
   // that swap their whole board for a retryable error instead of a false-empty
@@ -41,5 +42,6 @@ export const common: Catalog = {
   // (replaces two fake-success buttons that fired a toast and did nothing).
   // Lives here rather than admin.ts, which another change owns this wave.
   "cta.openModerationQueue": "Open in moderation queue",
-  "toast.openedModerationQueue": "Opened {name}'s reports in the moderation queue.",
+  "toast.openedModerationQueue":
+    "Opened {name}'s reports in the moderation queue.",
 };

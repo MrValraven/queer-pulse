@@ -1,4 +1,8 @@
-import type { AuditEntry, LedgerRow, QuarterPoint } from "./adminGovernance.data";
+import type {
+  AuditEntry,
+  LedgerRow,
+  QuarterPoint,
+} from "./adminGovernance.data";
 
 // Heavy demo-only governance mock data (finance ledgers/quarters + audit log).
 // Imported *only* via the demo-gated dynamic import()s in
@@ -302,4 +306,3 @@ export const AUDIT_MODERATORS = [
   "Kai Sousa",
   "System",
 ];
-

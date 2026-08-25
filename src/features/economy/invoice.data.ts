@@ -13,7 +13,8 @@ export interface LineItem {
 
 /** Per-line total (qty × unit). Guards NaN so a half-typed field reads as 0. */
 export const lineTotal = (l: LineItem) =>
-  (Number.isFinite(l.quantity) ? l.quantity : 0) * (Number.isFinite(l.unit) ? l.unit : 0);
+  (Number.isFinite(l.quantity) ? l.quantity : 0) *
+  (Number.isFinite(l.unit) ? l.unit : 0);
 
 let counter = 0;
 /** Stable unique id — crypto.randomUUID() when available, else a counter. */

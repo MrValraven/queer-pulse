@@ -88,6 +88,5 @@ export function useLightboxDialog(
     // Setup runs once per open (the lightbox is only mounted while open), so
     // focus is never stolen mid-interaction. `onClose`/`onMove` are read
     // through refs above, so they are deliberately not dependencies.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dialogRef]);
 }

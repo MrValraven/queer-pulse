@@ -26,14 +26,19 @@ interface HousingLocationCardProps {
  * once you connect; once you're the owner or a connected member the backend
  * sends precise coordinates + the address, and this upgrades to the exact pin.
  */
-export function HousingLocationCard({ location, title }: HousingLocationCardProps) {
+export function HousingLocationCard({
+  location,
+  title,
+}: HousingLocationCardProps) {
   const { t } = useTranslation();
   const exact = location.precision === "exact";
 
   // The exact view prefers the precise point; otherwise (and as a fallback if a
   // precise point is somehow missing) we show the approximate centroid.
   const latitude = exact ? location.preciseLatitude : location.approxLatitude;
-  const longitude = exact ? location.preciseLongitude : location.approxLongitude;
+  const longitude = exact
+    ? location.preciseLongitude
+    : location.approxLongitude;
 
   // No coordinates at all (unknown area, no geocode): skip the map rather than
   // render an empty frame, but still tell the reader where — or that the exact

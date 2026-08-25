@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Modal, Button, FormField, Select } from "../../../shared/components/ui";
+import {
+  Modal,
+  Button,
+  FormField,
+  Select,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./DeskModals.module.css";
 

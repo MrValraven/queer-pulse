@@ -39,9 +39,8 @@ export function useOpportunity(slug: string | undefined) {
     enabled: Boolean(slug),
     queryFn: async () => {
       if (demoMode) {
-        const { getOpportunity: getMockOpportunity } = await import(
-          "../volunteerLookup"
-        );
+        const { getOpportunity: getMockOpportunity } =
+          await import("../volunteerLookup");
         const opp = getMockOpportunity(slug);
         const { filled, total } = parseSpots(opp?.spotsFilled ?? "0 / 0");
         return {

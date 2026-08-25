@@ -1,4 +1,9 @@
-import { apiGet, apiPost, apiPatch, apiDelete } from "../../../shared/api/client";
+import {
+  apiGet,
+  apiPost,
+  apiPatch,
+  apiDelete,
+} from "../../../shared/api/client";
 import type { SavedItemDTO } from "./saved.api";
 
 // ── Backend DTO ─────────────────────────────────────────────────────────────
@@ -35,8 +40,7 @@ export type UpdateCollectionBody = Partial<CreateCollectionBody>;
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
 /** `GET /me/collections` — the member's collections, newest-updated first. */
-export const getCollections = () =>
-  apiGet<CollectionDTO[]>("/me/collections");
+export const getCollections = () => apiGet<CollectionDTO[]>("/me/collections");
 
 /**
  * `GET /me/collections/filed-refs` — every saved-item ref filed in any of the

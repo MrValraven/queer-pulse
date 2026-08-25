@@ -22,16 +22,29 @@ export interface MonthGridPopoverProps {
 
 const MONTHS_IN_YEAR = 12;
 
-function monthOutOfRange(year: number, month: number, min?: string, max?: string): boolean {
+function monthOutOfRange(
+  year: number,
+  month: number,
+  min?: string,
+  max?: string,
+): boolean {
   const minMonth = min ? parseMonth(min) : null;
   const maxMonth = max ? parseMonth(max) : null;
   const ordinal = year * MONTHS_IN_YEAR + month;
-  if (minMonth && ordinal < minMonth.year * MONTHS_IN_YEAR + minMonth.month) return true;
-  if (maxMonth && ordinal > maxMonth.year * MONTHS_IN_YEAR + maxMonth.month) return true;
+  if (minMonth && ordinal < minMonth.year * MONTHS_IN_YEAR + minMonth.month)
+    return true;
+  if (maxMonth && ordinal > maxMonth.year * MONTHS_IN_YEAR + maxMonth.month)
+    return true;
   return false;
 }
 
-export function MonthGridPopover({ value, onSelect, min, max, locale }: MonthGridPopoverProps) {
+export function MonthGridPopover({
+  value,
+  onSelect,
+  min,
+  max,
+  locale,
+}: MonthGridPopoverProps) {
   const { t } = useTranslation();
   const [displayYear, setDisplayYear] = useState(
     () => parseMonth(value ?? "")?.year ?? todayPlain().year,
@@ -71,7 +84,10 @@ export function MonthGridPopover({ value, onSelect, min, max, locale }: MonthGri
               type="button"
               disabled={isOutOfRange}
               aria-pressed={isSelected}
-              className={[styles.monthGridButton, isSelected && styles.monthGridButtonSelected]
+              className={[
+                styles.monthGridButton,
+                isSelected && styles.monthGridButtonSelected,
+              ]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => onSelect(iso)}

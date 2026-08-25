@@ -97,28 +97,29 @@ export const APPS: App[] = [
   },
 ];
 
-export const CULTURE: { number: string; titleKey: string; textKey: string }[] = [
-  {
-    number: "01",
-    titleKey: "community:dating.culture.smallCommunity.title",
-    textKey: "community:dating.culture.smallCommunity.text",
-  },
-  {
-    number: "02",
-    titleKey: "community:dating.culture.slowerPace.title",
-    textKey: "community:dating.culture.slowerPace.text",
-  },
-  {
-    number: "03",
-    titleKey: "community:dating.culture.languageGap.title",
-    textKey: "community:dating.culture.languageGap.text",
-  },
-  {
-    number: "04",
-    titleKey: "community:dating.culture.eventsMatter.title",
-    textKey: "community:dating.culture.eventsMatter.text",
-  },
-];
+export const CULTURE: { number: string; titleKey: string; textKey: string }[] =
+  [
+    {
+      number: "01",
+      titleKey: "community:dating.culture.smallCommunity.title",
+      textKey: "community:dating.culture.smallCommunity.text",
+    },
+    {
+      number: "02",
+      titleKey: "community:dating.culture.slowerPace.title",
+      textKey: "community:dating.culture.slowerPace.text",
+    },
+    {
+      number: "03",
+      titleKey: "community:dating.culture.languageGap.title",
+      textKey: "community:dating.culture.languageGap.text",
+    },
+    {
+      number: "04",
+      titleKey: "community:dating.culture.eventsMatter.title",
+      textKey: "community:dating.culture.eventsMatter.text",
+    },
+  ];
 
 export const STRUCTURES: {
   labelKey: string;

@@ -47,7 +47,11 @@ export const PublicProfileContext =
  */
 export type PublicProfileValue = Omit<
   PublicProfileContextValue,
-  "hydrate" | "eligibility" | "eligibilityStatus" | "retryEligibility" | "requestEligibility"
+  | "hydrate"
+  | "eligibility"
+  | "eligibilityStatus"
+  | "retryEligibility"
+  | "requestEligibility"
 >;
 
 function usePublicProfileContext(): PublicProfileContextValue {
@@ -99,8 +103,12 @@ export function usePublicProfileEligibility(): Pick<
   PublicProfileContextValue,
   "eligibility" | "eligibilityStatus" | "retryEligibility"
 > {
-  const { eligibility, eligibilityStatus, retryEligibility, requestEligibility } =
-    usePublicProfileContext();
+  const {
+    eligibility,
+    eligibilityStatus,
+    retryEligibility,
+    requestEligibility,
+  } = usePublicProfileContext();
 
   useEffect(() => requestEligibility(), [requestEligibility]);
 

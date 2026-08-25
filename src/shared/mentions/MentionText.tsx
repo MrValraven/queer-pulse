@@ -9,7 +9,8 @@ import {
 } from "../../app/routeMap";
 import { gatheringPath } from "../../features/gatherings/data";
 import { parseMentions, type MentionSegment } from "./parseMentions";
-import { mentionNameKey, useMentionNameMap } from "./MentionNames";
+import { mentionNameKey } from "./mentionNameKey";
+import { useMentionNameMap } from "./MentionNamesContext";
 import styles from "./MentionText.module.css";
 
 type MentionKind = Exclude<MentionSegment["kind"], "text">;

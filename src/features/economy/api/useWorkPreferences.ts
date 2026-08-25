@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
-import { getWorkPreferences, type WorkPreferencesDTO } from "./workPreferences.api";
+import {
+  getWorkPreferences,
+  type WorkPreferencesDTO,
+} from "./workPreferences.api";
 
 export interface WorkPreferencesResult {
   /** The stored preferences, once they arrive. `undefined` in demo mode and

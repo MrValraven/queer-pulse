@@ -46,7 +46,8 @@ export function useVisualViewportKeyboard(): void {
 
     const scheduleKeyboardInsetUpdate = () => {
       if (pendingAnimationFrameId !== null) return;
-      pendingAnimationFrameId = window.requestAnimationFrame(applyKeyboardInset);
+      pendingAnimationFrameId =
+        window.requestAnimationFrame(applyKeyboardInset);
     };
 
     applyKeyboardInset();

@@ -89,7 +89,8 @@ interface DragState {
  *  must hold, so neither scroll mode can arm the gesture mid-page. */
 function atScrollTop(el: HTMLElement): boolean {
   const containerTop = el.scrollTop <= 0;
-  const windowTop = (window.scrollY || document.documentElement.scrollTop || 0) <= 0;
+  const windowTop =
+    (window.scrollY || document.documentElement.scrollTop || 0) <= 0;
   return containerTop && windowTop;
 }
 
@@ -127,7 +128,8 @@ export function usePullToRefresh({
   const onPointerMove = useCallback(
     (event: PointerEvent<HTMLElement>) => {
       const drag = dragRef.current;
-      if (!drag || drag.pointerId !== event.pointerId || refreshingRef.current) return;
+      if (!drag || drag.pointerId !== event.pointerId || refreshingRef.current)
+        return;
       if (disabled || !atScrollTop(event.currentTarget)) {
         // Disabled mid-drag, or the effective scroller (container or window)
         // moved away from the top — hand back to native scroll and drop the
@@ -150,7 +152,10 @@ export function usePullToRefresh({
         pull.set(0);
         return;
       }
-      const { shouldRefresh } = resolvePull(event.clientY - drag.startY, threshold);
+      const { shouldRefresh } = resolvePull(
+        event.clientY - drag.startY,
+        threshold,
+      );
       if (!shouldRefresh) {
         pull.set(0);
         return;
@@ -176,6 +181,11 @@ export function usePullToRefresh({
   return {
     pull,
     refreshing,
-    bind: { onPointerDown, onPointerMove, onPointerUp: release, onPointerCancel },
+    bind: {
+      onPointerDown,
+      onPointerMove,
+      onPointerUp: release,
+      onPointerCancel,
+    },
   };
 }

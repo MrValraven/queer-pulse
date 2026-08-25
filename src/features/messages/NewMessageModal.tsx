@@ -76,9 +76,8 @@ export function NewMessageModal({
   // the request compose step (MSG-1). Cleared automatically by `mode`/`isForward`
   // never being true here: forwarding always targets an existing thread/group,
   // never a first-contact request.
-  const [requestTarget, setRequestTarget] = useState<StrangerMemberResult | null>(
-    null,
-  );
+  const [requestTarget, setRequestTarget] =
+    useState<StrangerMemberResult | null>(null);
 
   // The recipient pool is the member's accepted connections — demo resolves the
   // mock relationships locally, live fetches GET /connections. (Mirrors the
@@ -99,9 +98,7 @@ export function NewMessageModal({
   const candidates = useMemo(
     // Blocked members are unreachable — never offer them as a recipient.
     () =>
-      views
-        .filter((view) => !isBlocked(view.slug))
-        .map(connectionToRecipient),
+      views.filter((view) => !isBlocked(view.slug)).map(connectionToRecipient),
     [views, isBlocked],
   );
 
@@ -133,7 +130,9 @@ export function NewMessageModal({
   // value recomputes.
   const selfSlug = user?.profile.slug;
   const excludeSlugs = useMemo(() => {
-    const slugs = new Set(candidates.map((c) => c.slug).filter(Boolean) as string[]);
+    const slugs = new Set(
+      candidates.map((c) => c.slug).filter(Boolean) as string[],
+    );
     if (selfSlug) slugs.add(selfSlug);
     return slugs;
   }, [candidates, selfSlug]);
@@ -167,7 +166,9 @@ export function NewMessageModal({
     <Modal
       title={
         title ??
-        (isForward ? t("messages:forward.title") : t("messages:newMessage.title"))
+        (isForward
+          ? t("messages:forward.title")
+          : t("messages:newMessage.title"))
       }
       sub={
         sub ??

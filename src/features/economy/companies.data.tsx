@@ -1,22 +1,5 @@
 import type { ReactNode } from "react";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-
-/**
- * Structural sub-headings inside each company's `about` block. They are UI
- * chrome (the same two labels repeat across every profile), not editorial
- * prose, so they are translated. Rendered as components because `about` is a
- * `ReactNode` mounted inside the React tree (CompanyTabs' AboutPane), which
- * lets these read the active locale via `useTranslation`.
- */
-function HowWeWorkHeading() {
-  const { t } = useTranslation();
-  return <h3>{t("economy:company.about.howWeWorkHeading")}</h3>;
-}
-
-function WhatWeLookForHeading() {
-  const { t } = useTranslation();
-  return <h3>{t("economy:company.about.whatWeLookForHeading")}</h3>;
-}
+import { HowWeWorkHeading, WhatWeLookForHeading } from "./CompanyAboutHeadings";
 
 export interface CompanyBadge {
   label: string;
@@ -153,19 +136,23 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Four-day week",
-        description: 'Closed Fridays. Same salary. No exceptions, no "in-office Friday for emergencies".',
+        description:
+          'Closed Fridays. Same salary. No exceptions, no "in-office Friday for emergencies".',
       },
       {
         title: "Pay equity",
-        description: "Salary bands are public to the team. Same role pays the same. We don't negotiate.",
+        description:
+          "Salary bands are public to the team. Same role pays the same. We don't negotiate.",
       },
       {
         title: "Slow hiring",
-        description: 'Three rounds max. Paid trial week is paid (€500 flat). No "culture fit" rejections.',
+        description:
+          'Three rounds max. Paid trial week is paid (€500 flat). No "culture fit" rejections.',
       },
       {
         title: "Time for your work",
-        description: "One paid day per month for self-initiated work, magazine contributions, or volunteering.",
+        description:
+          "One paid day per month for self-initiated work, magazine contributions, or volunteering.",
       },
     ],
     reviewScore: "4.7",
@@ -262,11 +249,11 @@ const PROFILES: CompanyProfile[] = [
     about: (
       <>
         <p>
-          We have been doing this work for two decades: advocacy at the
-          level of law and policy, a legal support line, a documentation centre,
-          and community programmes that run out of our building in Lisbon
-          and out into the country. We are a <em>membership organisation</em>,
-          which means the people we serve are also the people we answer to.
+          We have been doing this work for two decades: advocacy at the level of
+          law and policy, a legal support line, a documentation centre, and
+          community programmes that run out of our building in Lisbon and out
+          into the country. We are a <em>membership organisation</em>, which
+          means the people we serve are also the people we answer to.
         </p>
         <p>
           Working here is public-facing and, at times, heavy. We take that
@@ -286,19 +273,23 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Institutional weight",
-        description: "Three decades of relationships with clinics, schools, and lawmakers. Your work lands where it counts.",
+        description:
+          "Three decades of relationships with clinics, schools, and lawmakers. Your work lands where it counts.",
       },
       {
         title: "Supervision, always",
-        description: "Front-line roles come with structured supervision. Care work is treated as work.",
+        description:
+          "Front-line roles come with structured supervision. Care work is treated as work.",
       },
       {
         title: "We reply to everyone",
-        description: "Applicants hear back whether or not we move forward. No black holes.",
+        description:
+          "Applicants hear back whether or not we move forward. No black holes.",
       },
       {
         title: "Members first",
-        description: "We answer to the community we serve, above funders or a board that's never met us.",
+        description:
+          "We answer to the community we serve, above funders or a board that's never met us.",
       },
     ],
     reviewScore: "4.4",
@@ -397,19 +388,23 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Lived experience counts",
-        description: "No formal qualification required for peer roles. We train you and never leave you unsupported.",
+        description:
+          "No formal qualification required for peer roles. We train you and never leave you unsupported.",
       },
       {
         title: "Supervision as standard",
-        description: "Clinical supervision for every front-line facilitator. Care work needs care.",
+        description:
+          "Clinical supervision for every front-line facilitator. Care work needs care.",
       },
       {
         title: "Steady and sustainable",
-        description: "Good boundaries beat burnout. We build rotas that let people last.",
+        description:
+          "Good boundaries beat burnout. We build rotas that let people last.",
       },
       {
         title: "We read everything",
-        description: "Every application is read by us and answered, usually within a week.",
+        description:
+          "Every application is read by us and answered, usually within a week.",
       },
     ],
     reviewScore: "4.6",
@@ -506,19 +501,23 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "A founding voice",
-        description: "Join before we open and help shape the sections, the events, and the shop's whole feel.",
+        description:
+          "Join before we open and help shape the sections, the events, and the shop's whole feel.",
       },
       {
         title: "Books first",
-        description: "A real love of queer literature matters more than a retail CV. We'll teach the till.",
+        description:
+          "A real love of queer literature matters more than a retail CV. We'll teach the till.",
       },
       {
         title: "Slow on purpose",
-        description: "We're called Devagar for a reason. No rush, no churn, no pressure to upsell.",
+        description:
+          "We're called Devagar for a reason. No rush, no churn, no pressure to upsell.",
       },
       {
         title: "Community over footfall",
-        description: "Readings, launches, and a space that belongs to the neighbourhood as much as to us.",
+        description:
+          "Readings, launches, and a space that belongs to the neighbourhood as much as to us.",
       },
     ],
     reviewScore: "5.0",
@@ -610,19 +609,23 @@ const PROFILES: CompanyProfile[] = [
     values: [
       {
         title: "Build in the open",
-        description: "Roadmaps, salary bands, and decisions are shared with the team. No mystery.",
+        description:
+          "Roadmaps, salary bands, and decisions are shared with the team. No mystery.",
       },
       {
         title: "Practise what we list",
-        description: "Every standard we hold employers to, we meet ourselves, starting with pay transparency.",
+        description:
+          "Every standard we hold employers to, we meet ourselves, starting with pay transparency.",
       },
       {
         title: "Remote and connected",
-        description: "Async by default, a Lisbon anchor for those who want it, real overlap hours for the rest.",
+        description:
+          "Async by default, a Lisbon anchor for those who want it, real overlap hours for the rest.",
       },
       {
         title: "People over résumés",
-        description: "We read written samples before CVs and hire for judgement over pedigree.",
+        description:
+          "We read written samples before CVs and hire for judgement over pedigree.",
       },
     ],
     reviewScore: "4.8",

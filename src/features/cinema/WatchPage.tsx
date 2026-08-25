@@ -39,8 +39,11 @@ function DemoWatchPage() {
       <nav className={styles.nav}>
         <Link to={routes.film} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          Queer<em style={{ fontStyle: "italic" }}>Pulse</em>
-          <span className={styles.cin}>Cinema</span>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em style={{ fontStyle: "italic" }} /> }}
+          />
+          <span className={styles.cin}>{t("cinema:brand.tag")}</span>
         </Link>
         <div className={styles.navLinks}>
           <Link to={routes.film}>

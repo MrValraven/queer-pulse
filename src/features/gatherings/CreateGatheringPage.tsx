@@ -51,7 +51,8 @@ export function CreateGatheringPage() {
   // Every other step is optional and always advanceable.
   const isStepComplete = useCallback(
     (stepIndex: number) => {
-      if (stepIndex === 0) return Boolean(form.type) && form.title.trim().length > 0;
+      if (stepIndex === 0)
+        return Boolean(form.type) && form.title.trim().length > 0;
       if (stepIndex === 1) return form.dateValid;
       if (stepIndex === 2) return form.recurrenceValid;
       if (stepIndex === TOTAL_STEPS - 1) return form.allChecked;
@@ -65,8 +66,12 @@ export function CreateGatheringPage() {
       form.allChecked,
     ],
   );
-  const { currentStepIndex, canAdvanceFromStep, goToNextStep, goToPreviousStep } =
-    useWizardForm({ stepCount: TOTAL_STEPS, isStepComplete });
+  const {
+    currentStepIndex,
+    canAdvanceFromStep,
+    goToNextStep,
+    goToPreviousStep,
+  } = useWizardForm({ stepCount: TOTAL_STEPS, isStepComplete });
   const isLastStep = currentStepIndex === TOTAL_STEPS - 1;
 
   // Warn before an in-progress gathering is abandoned. Inactive once the

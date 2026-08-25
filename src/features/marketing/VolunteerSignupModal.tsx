@@ -54,9 +54,7 @@ export function VolunteerSignupModal({
         id={noteFieldId}
         className={styles.textarea}
         maxLength={2000}
-        placeholder={t(
-          "marketing:volunteerDetail.signupModal.notePlaceholder",
-        )}
+        placeholder={t("marketing:volunteerDetail.signupModal.notePlaceholder")}
         value={note}
         onChange={(event) => setNote(event.target.value)}
         disabled={submitting}

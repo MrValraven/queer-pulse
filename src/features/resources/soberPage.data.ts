@@ -132,25 +132,29 @@ export const VENUES = [
   {
     neighbourhood: "Príncipe Real",
     name: "Linha d'Água",
-    description: "A calm, queer-owned café. Excellent coffee and non-alcoholic options. Community notice board, good for a long conversation or quiet work. Fully accessible.",
+    description:
+      "A calm, queer-owned café. Excellent coffee and non-alcoholic options. Community notice board, good for a long conversation or quiet work. Fully accessible.",
     tags: ["Queer-owned", "No alcohol", "Accessible"],
   },
   {
     neighbourhood: "Cais do Sodré",
     name: "Copenhagen Coffee Lab",
-    description: "Speciality coffee, relaxed atmosphere, queer-staffed. A go-to for a first meeting or first date that doesn't involve alcohol. Gender-neutral bathroom.",
+    description:
+      "Speciality coffee, relaxed atmosphere, queer-staffed. A go-to for a first meeting or first date that doesn't involve alcohol. Gender-neutral bathroom.",
     tags: ["No alcohol", "Gender-neutral bathroom"],
   },
   {
     neighbourhood: "Bairro Alto",
     name: "ZDB: Zé dos Bois",
-    description: "Arts venue with exhibitions, performances, and events. Alcohol is served but never the focus. Many events are entirely sober in practice. Consistently queer-safe.",
+    description:
+      "Arts venue with exhibitions, performances, and events. Alcohol is served but never the focus. Many events are entirely sober in practice. Consistently queer-safe.",
     tags: ["Alcohol present", "Never the focus", "Arts-led"],
   },
   {
     neighbourhood: "Mouraria",
     name: "Chapitô",
-    description: "Restaurant and cultural space with terrace views. Good non-alcoholic drinks menu, not just water and Coke. Staff don't push alcohol. Popular for community dinners.",
+    description:
+      "Restaurant and cultural space with terrace views. Good non-alcoholic drinks menu, not just water and Coke. Staff don't push alcohol. Popular for community dinners.",
     tags: ["Good NA menu", "Community dinners"],
   },
 ];

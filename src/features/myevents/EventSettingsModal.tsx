@@ -87,7 +87,9 @@ export function EventSettingsModal() {
       <div className={sx("field")}>
         <div className={sx("set-row")}>
           <div className={sx("set-info")}>
-            <div className={sx("set-t")}>{t("myevents:settingsModal.email")}</div>
+            <div className={sx("set-t")}>
+              {t("myevents:settingsModal.email")}
+            </div>
             <div className={sx("set-d")}>
               {t("myevents:settingsModal.emailDesc")}
             </div>

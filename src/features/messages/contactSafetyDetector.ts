@@ -5,10 +5,7 @@
  * trip more than one at once (e.g. a phone number AND "pay by MB WAY").
  */
 export type ContactSafetySignal =
-  | "phone"
-  | "email"
-  | "banking"
-  | "externalPayment";
+  "phone" | "email" | "banking" | "externalPayment";
 
 /**
  * A lightweight, client-side heuristic flag for the P0.7 messaging-safety
@@ -99,7 +96,9 @@ function includesAny(haystack: string, needles: string[]): boolean {
  * every keystroke (the composer debounces via its own render cadence, not
  * this function).
  */
-export function detectContactSafetySignals(text: string): ContactSafetySignal[] {
+export function detectContactSafetySignals(
+  text: string,
+): ContactSafetySignal[] {
   const trimmed = text.trim();
   if (!trimmed) return [];
   const lower = trimmed.toLowerCase();

@@ -45,7 +45,8 @@ export const enNamespaceLoaders: Partial<
   auth: () => import("./en/auth").then((module) => module.auth),
   subprofiles: () =>
     import("./en/subprofiles").then((module) => module.subprofiles),
-  gatherings: () => import("./en/gatherings").then((module) => module.gatherings),
+  gatherings: () =>
+    import("./en/gatherings").then((module) => module.gatherings),
   homepage: () => import("./en/homepage").then((module) => module.homepage),
   marketing: () => import("./en/marketing").then((module) => module.marketing),
   members: () => import("./en/members").then((module) => module.members),
@@ -66,7 +67,8 @@ export const enNamespaceLoaders: Partial<
   feed: () => import("./en/feed").then((module) => module.feed),
   forum: () => import("./en/forum").then((module) => module.forum),
   topics: () => import("./en/topics").then((module) => module.topics),
-  governance: () => import("./en/governance").then((module) => module.governance),
+  governance: () =>
+    import("./en/governance").then((module) => module.governance),
   myevents: () => import("./en/myevents").then((module) => module.myevents),
   connect: () => import("./en/connect").then((module) => module.connect),
   messages: () => import("./en/messages").then((module) => module.messages),
@@ -86,7 +88,8 @@ export const ptNamespaceLoaders: Partial<
   auth: () => import("./pt/auth").then((module) => module.auth),
   subprofiles: () =>
     import("./pt/subprofiles").then((module) => module.subprofiles),
-  gatherings: () => import("./pt/gatherings").then((module) => module.gatherings),
+  gatherings: () =>
+    import("./pt/gatherings").then((module) => module.gatherings),
   homepage: () => import("./pt/homepage").then((module) => module.homepage),
   marketing: () => import("./pt/marketing").then((module) => module.marketing),
   members: () => import("./pt/members").then((module) => module.members),
@@ -107,7 +110,8 @@ export const ptNamespaceLoaders: Partial<
   feed: () => import("./pt/feed").then((module) => module.feed),
   forum: () => import("./pt/forum").then((module) => module.forum),
   topics: () => import("./pt/topics").then((module) => module.topics),
-  governance: () => import("./pt/governance").then((module) => module.governance),
+  governance: () =>
+    import("./pt/governance").then((module) => module.governance),
   myevents: () => import("./pt/myevents").then((module) => module.myevents),
   connect: () => import("./pt/connect").then((module) => module.connect),
   messages: () => import("./pt/messages").then((module) => module.messages),
@@ -251,7 +255,9 @@ export function loadNamespace(
   if (cached) return cached;
 
   const loader = namespaceLoadersByLanguage[language][namespace];
-  const load = loader ? loader() : Promise.resolve(catalogs[language][namespace]);
+  const load = loader
+    ? loader()
+    : Promise.resolve(catalogs[language][namespace]);
   cache.set(namespace, load);
   return load;
 }

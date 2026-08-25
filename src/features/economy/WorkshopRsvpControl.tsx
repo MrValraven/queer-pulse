@@ -26,7 +26,8 @@ export function WorkshopRsvpControl({
   workshop: WorkshopWithRsvp;
 }) {
   const { t } = useTranslation();
-  const { getRsvp, rsvpWorkshop, cancelRsvp, isPending } = useWorkshopsActions();
+  const { getRsvp, rsvpWorkshop, cancelRsvp, isPending } =
+    useWorkshopsActions();
   const [failed, setFailed] = useState(false);
 
   const seed = {

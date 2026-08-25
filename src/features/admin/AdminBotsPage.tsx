@@ -16,9 +16,7 @@ import styles from "./AdminBotsPage.module.css";
 export function AdminBotsPage() {
   const { t } = useTranslation();
   const { data: bots, isLoading } = useAdminBots();
-  const [editingBot, setEditingBot] = useState<AdminBotSummaryDTO | null>(
-    null,
-  );
+  const [editingBot, setEditingBot] = useState<AdminBotSummaryDTO | null>(null);
 
   return (
     <AdminShell title={t("admin:bots.title")}>

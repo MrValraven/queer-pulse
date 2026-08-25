@@ -82,7 +82,8 @@ const BLOCKS: ArticleBlock[] = [
     items: [
       {
         value: "61%",
-        label: "of LGBTQ+ over-45s in Portugal name a friend, not a relative, as next of kin",
+        label:
+          "of LGBTQ+ over-45s in Portugal name a friend, not a relative, as next of kin",
       },
       {
         value: "1 in 4",
@@ -117,8 +118,18 @@ export const DEMO_ARTICLE: ArticleDraftDto = {
 };
 
 export const DEMO_ARTICLE_VERSIONS: ArticleVersionSummaryDto[] = [
-  { id: "ver-2", label: "Sent to sensitivity read", author: "Sara", createdAt: "2026-08-09T18:40:00.000Z" },
-  { id: "ver-1", label: "Author draft", author: "Sara Pinheiro", createdAt: "2026-08-07T22:03:00.000Z" },
+  {
+    id: "ver-2",
+    label: "Sent to sensitivity read",
+    author: "Sara",
+    createdAt: "2026-08-09T18:40:00.000Z",
+  },
+  {
+    id: "ver-1",
+    label: "Author draft",
+    author: "Sara Pinheiro",
+    createdAt: "2026-08-07T22:03:00.000Z",
+  },
 ];
 
 /** The block snapshot each `DEMO_ARTICLE_VERSIONS` row held at the time —
@@ -160,13 +171,15 @@ const DEMO_VERSION_BLOCKS: Record<string, ArticleBlock[]> = {
   ],
 };
 
-export const DEMO_ARTICLE_VERSION_DETAILS: Record<string, ArticleVersionDetailDto> =
-  Object.fromEntries(
-    DEMO_ARTICLE_VERSIONS.map((summary) => [
-      summary.id,
-      { ...summary, blocks: DEMO_VERSION_BLOCKS[summary.id] ?? [] },
-    ]),
-  );
+export const DEMO_ARTICLE_VERSION_DETAILS: Record<
+  string,
+  ArticleVersionDetailDto
+> = Object.fromEntries(
+  DEMO_ARTICLE_VERSIONS.map((summary) => [
+    summary.id,
+    { ...summary, blocks: DEMO_VERSION_BLOCKS[summary.id] ?? [] },
+  ]),
+);
 
 export const DEMO_ARTICLE_COMMENTS: ArticleCommentDto[] = [
   {

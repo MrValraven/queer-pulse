@@ -7,7 +7,10 @@ const arroios = HOUSING_LISTINGS.find((listing) => listing.hood === "Arroios")!;
 describe("matchesHousingFilters — areas", () => {
   it("matches when the listing's hood is one of the selected areas", () => {
     expect(
-      matchesHousingFilters(arroios, { type: "all", areas: ["Arroios", "Misericórdia"] }),
+      matchesHousingFilters(arroios, {
+        type: "all",
+        areas: ["Arroios", "Misericórdia"],
+      }),
     ).toBe(true);
   });
 

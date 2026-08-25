@@ -144,10 +144,8 @@ export const getOpportunity = (slug: string) =>
 export const createOpportunity = (dto: CreateOpportunityDto) =>
   apiPost<OpportunityDetailDTO>("/volunteering", dto);
 
-export const updateOpportunity = (
-  slug: string,
-  dto: UpdateOpportunityDto,
-) => apiPatch<OpportunityDetailDTO>(`/volunteering/${slug}`, dto);
+export const updateOpportunity = (slug: string, dto: UpdateOpportunityDto) =>
+  apiPatch<OpportunityDetailDTO>(`/volunteering/${slug}`, dto);
 
 export const closeOpportunity = (slug: string) =>
   apiPost<OpportunityDetailDTO>(`/volunteering/${slug}/close`);

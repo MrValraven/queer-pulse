@@ -96,15 +96,16 @@ export function ForumThreadRow({
                 className={styles.catBadge}
                 style={{ background: cs?.background, color: cs?.color }}
               >
-                {catMeta && <catMeta.icon />}{" "}
-                {catMeta && t(catMeta.nameKey)}
+                {catMeta && <catMeta.icon />} {catMeta && t(catMeta.nameKey)}
               </span>
               {thread.tags.map((tg) => (
                 <button
                   key={tg}
                   type="button"
                   className={styles.tag}
-                  aria-label={t("forum:threadList.filterByTagAria", { tag: tg })}
+                  aria-label={t("forum:threadList.filterByTagAria", {
+                    tag: tg,
+                  })}
                   onClick={() => onTagClick(tg)}
                 >
                   #{tg}

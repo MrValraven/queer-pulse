@@ -66,7 +66,9 @@ export function DigestSocialTab({
 
   function toggleOn(pieceId: string) {
     onSaveDigest(
-      digest.map((item) => (item.pieceId === pieceId ? { ...item, on: !item.on } : item)),
+      digest.map((item) =>
+        item.pieceId === pieceId ? { ...item, on: !item.on } : item,
+      ),
     );
   }
 
@@ -83,7 +85,9 @@ export function DigestSocialTab({
   function saveEdit(pieceId: string) {
     const trimmedBlurb = draftBlurb.trim();
     onSaveDigest(
-      digest.map((item) => (item.pieceId === pieceId ? { ...item, blurb: trimmedBlurb } : item)),
+      digest.map((item) =>
+        item.pieceId === pieceId ? { ...item, blurb: trimmedBlurb } : item,
+      ),
     );
     setEditingPieceId(null);
     setDraftBlurb("");
@@ -103,7 +107,9 @@ export function DigestSocialTab({
                 type="button"
                 role="checkbox"
                 aria-checked={item.on}
-                aria-label={t("magazine:issue.digest.includeAria", { title: pieceTitle })}
+                aria-label={t("magazine:issue.digest.includeAria", {
+                  title: pieceTitle,
+                })}
                 className={styles.ck}
                 onClick={() => toggleOn(item.pieceId)}
               >
@@ -115,7 +121,9 @@ export function DigestSocialTab({
                   <div className={styles.editField}>
                     <textarea
                       value={draftBlurb}
-                      aria-label={t("magazine:issue.digest.editBlurbAria", { title: pieceTitle })}
+                      aria-label={t("magazine:issue.digest.editBlurbAria", {
+                        title: pieceTitle,
+                      })}
                       onChange={(event) => setDraftBlurb(event.target.value)}
                     />
                     <div className={styles.row}>
@@ -133,7 +141,11 @@ export function DigestSocialTab({
               </div>
               {!isEditing && (
                 <div className={styles.digActions}>
-                  <Button size="sm" variant="ghost" onClick={() => startEdit(item)}>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => startEdit(item)}
+                  >
                     {t("magazine:issue.digest.edit")}
                   </Button>
                 </div>
@@ -175,7 +187,9 @@ export function DigestSocialTab({
         </div>
         {digestSentAt && (
           <p className={styles.hint}>
-            {t("magazine:issue.digest.alreadySent", { date: formatDate(digestSentAt) })}
+            {t("magazine:issue.digest.alreadySent", {
+              date: formatDate(digestSentAt),
+            })}
           </p>
         )}
       </div>
@@ -187,14 +201,21 @@ export function DigestSocialTab({
             const pieceTitle = findPieceTitle(item.pieceId);
             return (
               <div key={item.pieceId} className={styles.socialcard}>
-                <ImageSlot alt={pieceTitle} placeholder={pieceTitle} tint="plum" height={110} />
+                <ImageSlot
+                  alt={pieceTitle}
+                  placeholder={pieceTitle}
+                  tint="plum"
+                  height={110}
+                />
                 <b>{pieceTitle}</b>
                 <p>{item.blurb}</p>
               </div>
             );
           })}
         </div>
-        <p className={styles.hint}>{t("magazine:issue.digest.socialAltHint")}</p>
+        <p className={styles.hint}>
+          {t("magazine:issue.digest.socialAltHint")}
+        </p>
       </div>
     </div>
   );

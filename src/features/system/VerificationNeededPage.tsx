@@ -44,9 +44,7 @@ export function VerificationNeededPage() {
   function handleVerify() {
     setStage("verifying");
     timers.current.push(setTimeout(() => setStage("success"), 1100));
-    timers.current.push(
-      setTimeout(() => void navigate(routes.settings), 2700),
-    );
+    timers.current.push(setTimeout(() => void navigate(routes.settings), 2700));
   }
 
   function restart() {

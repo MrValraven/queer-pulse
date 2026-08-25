@@ -51,7 +51,9 @@ async function pickLevel(
 ) {
   await user.click(await screen.findByLabelText(/Set verification level/i));
   const listbox = await screen.findByRole("listbox");
-  await user.click(await within(listbox).findByRole("option", { name: optionName }));
+  await user.click(
+    await within(listbox).findByRole("option", { name: optionName }),
+  );
 }
 
 describe("VerificationDetailDrawer (demo mode)", () => {
@@ -64,7 +66,10 @@ describe("VerificationDetailDrawer (demo mode)", () => {
   it("shows Member-earned provenance and the audit history for a self-serve approval", async () => {
     render(
       <TestProviders>
-        <VerificationDetailDrawer row={demoRow("demo-user-1")} onClose={vi.fn()} />
+        <VerificationDetailDrawer
+          row={demoRow("demo-user-1")}
+          onClose={vi.fn()}
+        />
       </TestProviders>,
     );
 
@@ -76,11 +81,16 @@ describe("VerificationDetailDrawer (demo mode)", () => {
   it("shows Granted-by provenance and the reviewer's note for an admin override", async () => {
     render(
       <TestProviders>
-        <VerificationDetailDrawer row={demoRow("demo-user-8")} onClose={vi.fn()} />
+        <VerificationDetailDrawer
+          row={demoRow("demo-user-8")}
+          onClose={vi.fn()}
+        />
       </TestProviders>,
     );
 
-    expect(await screen.findByText("Granted by Ana Ribeiro")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Granted by Ana Ribeiro"),
+    ).toBeInTheDocument();
     expect(await screen.findByText("Overridden")).toBeInTheDocument();
     expect(
       await screen.findByText(
@@ -92,7 +102,10 @@ describe("VerificationDetailDrawer (demo mode)", () => {
   it("shows the empty state for a member with no recorded history", async () => {
     render(
       <TestProviders>
-        <VerificationDetailDrawer row={demoRow("demo-user-3")} onClose={vi.fn()} />
+        <VerificationDetailDrawer
+          row={demoRow("demo-user-3")}
+          onClose={vi.fn()}
+        />
       </TestProviders>,
     );
 
@@ -104,7 +117,10 @@ describe("VerificationDetailDrawer (demo mode)", () => {
     const user = userEvent.setup();
     render(
       <TestProviders>
-        <VerificationDetailDrawer row={demoRow("demo-user-1")} onClose={vi.fn()} />
+        <VerificationDetailDrawer
+          row={demoRow("demo-user-1")}
+          onClose={vi.fn()}
+        />
       </TestProviders>,
     );
 
@@ -209,7 +225,10 @@ describe("VerificationDetailDrawer (live mode via MSW)", () => {
     expect(applyButton).toBeDisabled();
 
     const reasonInput = screen.getByLabelText(/^Reason$/i);
-    await user.type(reasonInput, "Verified in person, revoking prior ID check.");
+    await user.type(
+      reasonInput,
+      "Verified in person, revoking prior ID check.",
+    );
     expect(applyButton).not.toBeDisabled();
 
     await user.click(applyButton);
@@ -240,10 +259,9 @@ describe("VerificationDetailDrawer (live mode via MSW)", () => {
     const { VerificationDetailDrawer: VerificationDetailDrawerLive, wrapper } =
       await loadLiveDrawer();
     const user = userEvent.setup();
-    render(
-      <VerificationDetailDrawerLive row={startRow} onClose={vi.fn()} />,
-      { wrapper },
-    );
+    render(<VerificationDetailDrawerLive row={startRow} onClose={vi.fn()} />, {
+      wrapper,
+    });
 
     await pickLevel(user, /^ID-verified$/); // higher than phone
 

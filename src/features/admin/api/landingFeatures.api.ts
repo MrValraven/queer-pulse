@@ -4,7 +4,10 @@ import {
   apiPatch,
   apiPost,
 } from "../../../shared/api/client";
-import type { AccessTier, CommunityType } from "../../communities/api/communities.api";
+import type {
+  AccessTier,
+  CommunityType,
+} from "../../communities/api/communities.api";
 
 export type LandingSection = "member" | "community" | "changemaker";
 
@@ -12,11 +15,7 @@ export type LandingSection = "member" | "community" | "changemaker";
  *  page — surfaced so admins can spot and clear stale slots instead of the
  *  slot silently going empty. `null` = still eligible. */
 export type LandingHiddenReason =
-  | "consent_revoked"
-  | "went_private"
-  | "unpublished"
-  | "not_public"
-  | "deleted";
+  "consent_revoked" | "went_private" | "unpublished" | "not_public" | "deleted";
 
 export interface AdminLandingFeatureDTO {
   id: string;
@@ -103,9 +102,14 @@ export const getLandingFeaturesPublic = () =>
 
 // ── Admin CRUD (GET/POST/PATCH/DELETE /admin/landing/features) ──────────────
 export const getAdminLandingFeatures = (section: LandingSection) =>
-  apiGet<AdminLandingFeatureDTO[]>(`/admin/landing/features?section=${section}`);
+  apiGet<AdminLandingFeatureDTO[]>(
+    `/admin/landing/features?section=${section}`,
+  );
 
-export const getAdminLandingEligible = (section: LandingSection, search: string) =>
+export const getAdminLandingEligible = (
+  section: LandingSection,
+  search: string,
+) =>
   apiGet<AdminEligibleEntityDTO[]>(
     `/admin/landing/eligible?section=${section}${
       search ? `&search=${encodeURIComponent(search)}` : ""
@@ -126,7 +130,8 @@ export const updateLandingFeature = (
 export const reorderLandingFeatures = (body: {
   section: LandingSection;
   orderedIds: string[];
-}) => apiPatch<AdminLandingFeatureDTO[]>("/admin/landing/features/reorder", body);
+}) =>
+  apiPatch<AdminLandingFeatureDTO[]>("/admin/landing/features/reorder", body);
 
 export const deleteLandingFeature = (id: string) =>
   apiDelete<void>(`/admin/landing/features/${id}`);

@@ -12,9 +12,10 @@ export interface RangeOption {
   weeks: ReportRangeWeeks;
 }
 
-export const RANGE_OPTIONS: RangeOption[] = REPORT_RANGE_WEEKS.map(
-  (weeks) => ({ value: String(weeks), weeks }),
-);
+export const RANGE_OPTIONS: RangeOption[] = REPORT_RANGE_WEEKS.map((weeks) => ({
+  value: String(weeks),
+  weeks,
+}));
 
 /** Thins the line chart's x-axis date labels for the longer ranges — mirrors
  *  `adminReports.adapters.ts`'s live-mode `shouldLabelPoint`, so demo and

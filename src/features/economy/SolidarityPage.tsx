@@ -55,7 +55,11 @@ export function SolidarityPage() {
         }
         sub={t("economy:solidarity.outro.sub")}
       >
-        <Button to={requestInvitePath("solidarity")} variant="primary" size="lg">
+        <Button
+          to={requestInvitePath("solidarity")}
+          variant="primary"
+          size="lg"
+        >
           {t("economy:solidarity.outro.cta")}
         </Button>
       </Outro>

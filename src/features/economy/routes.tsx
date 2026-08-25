@@ -6,47 +6,134 @@ import { MY_HOUSING_LISTINGS_PATH } from "./housing.data";
 import { MY_BARTER_PROPOSALS_PATH } from "./barterProposals.paths";
 
 const JobsPage = lazyNamed(() => import("./JobsPage"), "JobsPage");
-const JobDetailPage = lazyNamed(() => import("./JobDetailPage"), "JobDetailPage");
+const JobDetailPage = lazyNamed(
+  () => import("./JobDetailPage"),
+  "JobDetailPage",
+);
 const CompanyPage = lazyNamed(() => import("./CompanyPage"), "CompanyPage");
 const PostJobPage = lazyNamed(() => import("./PostJobPage"), "PostJobPage");
 const JobApplyPage = lazyNamed(() => import("./JobApplyPage"), "JobApplyPage");
-const JobApplicationsPage = lazyNamed(() => import("./JobApplicationsPage"), "JobApplicationsPage");
+const JobApplicationsPage = lazyNamed(
+  () => import("./JobApplicationsPage"),
+  "JobApplicationsPage",
+);
 const HousingPage = lazyNamed(() => import("./HousingPage"), "HousingPage");
-const HousingCoopPage = lazyNamed(() => import("./HousingCoopPage"), "HousingCoopPage");
-const CoopTemplatePage = lazyNamed(() => import("./CoopTemplatePage"), "CoopTemplatePage");
-const HousingTenantRightsPage = lazyNamed(() => import("./HousingTenantRightsPage"), "HousingTenantRightsPage");
-const HousingGroupsPage = lazyNamed(() => import("./HousingGroupsPage"), "HousingGroupsPage");
-const HousingGroupDetailPage = lazyNamed(() => import("./HousingGroupDetailPage"), "HousingGroupDetailPage");
-const HousingListingPage = lazyNamed(() => import("./HousingListingPage"), "HousingListingPage");
-const MyHousingListingsPage = lazyNamed(() => import("./MyHousingListingsPage"), "MyHousingListingsPage");
-const HousingViewingsPage = lazyNamed(() => import("./HousingViewingsPage"), "HousingViewingsPage");
+const HousingCoopPage = lazyNamed(
+  () => import("./HousingCoopPage"),
+  "HousingCoopPage",
+);
+const CoopTemplatePage = lazyNamed(
+  () => import("./CoopTemplatePage"),
+  "CoopTemplatePage",
+);
+const HousingTenantRightsPage = lazyNamed(
+  () => import("./HousingTenantRightsPage"),
+  "HousingTenantRightsPage",
+);
+const HousingGroupsPage = lazyNamed(
+  () => import("./HousingGroupsPage"),
+  "HousingGroupsPage",
+);
+const HousingGroupDetailPage = lazyNamed(
+  () => import("./HousingGroupDetailPage"),
+  "HousingGroupDetailPage",
+);
+const HousingListingPage = lazyNamed(
+  () => import("./HousingListingPage"),
+  "HousingListingPage",
+);
+const MyHousingListingsPage = lazyNamed(
+  () => import("./MyHousingListingsPage"),
+  "MyHousingListingsPage",
+);
+const HousingViewingsPage = lazyNamed(
+  () => import("./HousingViewingsPage"),
+  "HousingViewingsPage",
+);
 const LandlordPage = lazyNamed(() => import("./LandlordPage"), "LandlordPage");
 const SkillsPage = lazyNamed(() => import("./SkillsPage"), "SkillsPage");
 const WorkshopPage = lazyNamed(() => import("./WorkshopPage"), "WorkshopPage");
 const GrantsPage = lazyNamed(() => import("./GrantsPage"), "GrantsPage");
 const BarterPage = lazyNamed(() => import("./BarterPage"), "BarterPage");
-const BarterDetailPage = lazyNamed(() => import("./BarterDetailPage"), "BarterDetailPage");
-const BarterProposalsPage = lazyNamed(() => import("./BarterProposalsPage"), "BarterProposalsPage");
+const BarterDetailPage = lazyNamed(
+  () => import("./BarterDetailPage"),
+  "BarterDetailPage",
+);
+const BarterProposalsPage = lazyNamed(
+  () => import("./BarterProposalsPage"),
+  "BarterProposalsPage",
+);
 const OfferPage = lazyNamed(() => import("./OfferPage"), "OfferPage");
-const EmployerReviewsPage = lazyNamed(() => import("./EmployerReviewsPage"), "EmployerReviewsPage");
-const ApplicationStatusPage = lazyNamed(() => import("./ApplicationStatusPage"), "ApplicationStatusPage");
-const MentorshipPage = lazyNamed(() => import("./MentorshipPage"), "MentorshipPage");
-const MentorDetailPage = lazyNamed(() => import("./MentorDetailPage"), "MentorDetailPage");
+const EmployerReviewsPage = lazyNamed(
+  () => import("./EmployerReviewsPage"),
+  "EmployerReviewsPage",
+);
+const ApplicationStatusPage = lazyNamed(
+  () => import("./ApplicationStatusPage"),
+  "ApplicationStatusPage",
+);
+const MentorshipPage = lazyNamed(
+  () => import("./MentorshipPage"),
+  "MentorshipPage",
+);
+const MentorDetailPage = lazyNamed(
+  () => import("./MentorDetailPage"),
+  "MentorDetailPage",
+);
 const EconomyPage = lazyNamed(() => import("./EconomyPage"), "EconomyPage");
-const InvoiceGeneratorPage = lazyNamed(() => import("./InvoiceGeneratorPage"), "InvoiceGeneratorPage");
-const ContractGeneratorPage = lazyNamed(() => import("./ContractGeneratorPage"), "ContractGeneratorPage");
-const ScopeGeneratorPage = lazyNamed(() => import("./ScopeGeneratorPage"), "ScopeGeneratorPage");
-const ReciboVerdeGuidePage = lazyNamed(() => import("./ReciboVerdeGuidePage"), "ReciboVerdeGuidePage");
-const TakeHomeCalculatorPage = lazyNamed(() => import("./TakeHomeCalculatorPage"), "TakeHomeCalculatorPage");
-const IvaTrackerPage = lazyNamed(() => import("./IvaTrackerPage"), "IvaTrackerPage");
-const SetAsidePlannerPage = lazyNamed(() => import("./SetAsidePlannerPage"), "SetAsidePlannerPage");
-const DayRateCalculatorPage = lazyNamed(() => import("./DayRateCalculatorPage"), "DayRateCalculatorPage");
-const RateBoardPage = lazyNamed(() => import("./RateBoardPage"), "RateBoardPage");
-const SlidingScalePage = lazyNamed(() => import("./SlidingScalePage"), "SlidingScalePage");
-const ComparatorPage = lazyNamed(() => import("./ComparatorPage"), "ComparatorPage");
-const SolidarityPage = lazyNamed(() => import("./SolidarityPage"), "SolidarityPage");
+const InvoiceGeneratorPage = lazyNamed(
+  () => import("./InvoiceGeneratorPage"),
+  "InvoiceGeneratorPage",
+);
+const ContractGeneratorPage = lazyNamed(
+  () => import("./ContractGeneratorPage"),
+  "ContractGeneratorPage",
+);
+const ScopeGeneratorPage = lazyNamed(
+  () => import("./ScopeGeneratorPage"),
+  "ScopeGeneratorPage",
+);
+const ReciboVerdeGuidePage = lazyNamed(
+  () => import("./ReciboVerdeGuidePage"),
+  "ReciboVerdeGuidePage",
+);
+const TakeHomeCalculatorPage = lazyNamed(
+  () => import("./TakeHomeCalculatorPage"),
+  "TakeHomeCalculatorPage",
+);
+const IvaTrackerPage = lazyNamed(
+  () => import("./IvaTrackerPage"),
+  "IvaTrackerPage",
+);
+const SetAsidePlannerPage = lazyNamed(
+  () => import("./SetAsidePlannerPage"),
+  "SetAsidePlannerPage",
+);
+const DayRateCalculatorPage = lazyNamed(
+  () => import("./DayRateCalculatorPage"),
+  "DayRateCalculatorPage",
+);
+const RateBoardPage = lazyNamed(
+  () => import("./RateBoardPage"),
+  "RateBoardPage",
+);
+const SlidingScalePage = lazyNamed(
+  () => import("./SlidingScalePage"),
+  "SlidingScalePage",
+);
+const ComparatorPage = lazyNamed(
+  () => import("./ComparatorPage"),
+  "ComparatorPage",
+);
+const SolidarityPage = lazyNamed(
+  () => import("./SolidarityPage"),
+  "SolidarityPage",
+);
 const WorkHubPage = lazyNamed(() => import("./WorkHubPage"), "WorkHubPage");
-const WorkProfilePage = lazyNamed(() => import("./WorkProfilePage"), "WorkProfilePage");
+const WorkProfilePage = lazyNamed(
+  () => import("./WorkProfilePage"),
+  "WorkProfilePage",
+);
 
 /** Jobs, housing, mentorship, grants/barter, the freelance calculators, the
  *  solidarity fund, and the member's work hub + work profile. */
@@ -117,9 +204,7 @@ export function economyRoutes() {
       />
       <Route
         path="/jobs/:slug"
-        element={
-          <ParamRedirect build={(p) => `/work/jobs/${p.slug ?? ""}`} />
-        }
+        element={<ParamRedirect build={(p) => `/work/jobs/${p.slug ?? ""}`} />}
       />
       <Route
         path="/housing/:slug"
@@ -135,9 +220,7 @@ export function economyRoutes() {
       />
       <Route
         path="/barter/:id"
-        element={
-          <ParamRedirect build={(p) => `/work/barter/${p.id ?? ""}`} />
-        }
+        element={<ParamRedirect build={(p) => `/work/barter/${p.id ?? ""}`} />}
       />
       <Route
         path="/mentorship/:slug"

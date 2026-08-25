@@ -23,7 +23,9 @@ export function BadgesDial({ level }: BadgesDialProps) {
         <div className={styles.dialTick} aria-hidden />
         <div className={styles.dialRing} aria-hidden />
         <div className={styles.dialIn}>
-          <div className={styles.dialLv}>{t("members:badges.hero.levelWord")}</div>
+          <div className={styles.dialLv}>
+            {t("members:badges.hero.levelWord")}
+          </div>
           <div className={styles.dialNum}>{level.level}</div>
           <div className={styles.dialName}>{level.name}</div>
         </div>
@@ -32,7 +34,9 @@ export function BadgesDial({ level }: BadgesDialProps) {
         <div className={styles.xpBig}>
           {t("members:badges.hero.xpProgress", {
             xp: level.xp.toLocaleString(),
-            xpMax: atMaxLevel ? level.xp.toLocaleString() : level.xpMax.toLocaleString(),
+            xpMax: atMaxLevel
+              ? level.xp.toLocaleString()
+              : level.xpMax.toLocaleString(),
           })}
         </div>
         <div className={styles.xpSm}>
@@ -42,7 +46,10 @@ export function BadgesDial({ level }: BadgesDialProps) {
             <Translation
               i18nKey="members:badges.hero.xpToNextName"
               components={{ b: <b /> }}
-              values={{ xp: level.xpToNext.toLocaleString(), nextName: level.nextName }}
+              values={{
+                xp: level.xpToNext.toLocaleString(),
+                nextName: level.nextName,
+              }}
             />
           )}
         </div>

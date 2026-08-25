@@ -20,9 +20,7 @@
     minmax(
       max(
         var(--sg-min),
-        calc(
-          (100% - (var(--sg-cols) - 1) * var(--sg-gap)) / var(--sg-cols)
-        )
+        calc((100% - (var(--sg-cols) - 1) * var(--sg-gap)) / var(--sg-cols))
       ),
       1fr
     )

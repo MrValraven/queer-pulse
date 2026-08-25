@@ -99,7 +99,11 @@ export function UsernameSection() {
       />
 
       <div className={styles.usernameActions}>
-        <Button variant="primary" onClick={() => void save()} disabled={!canSave}>
+        <Button
+          variant="primary"
+          onClick={() => void save()}
+          disabled={!canSave}
+        >
           {saving
             ? t("settings:editProfile.username.saving")
             : t("settings:editProfile.username.save")}

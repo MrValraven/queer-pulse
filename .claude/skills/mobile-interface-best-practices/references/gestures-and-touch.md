@@ -38,8 +38,12 @@ Three numbers, three purposes — don't conflate them.
 - **Set it before the gesture starts.** _Changing `touch-action` after a gesture begins has no effect on that gesture._
 
 ```css
-.swipe-row { touch-action: pan-y; }  /* app owns horizontal, browser owns vertical */
-.drag-handle { touch-action: none; }
+.swipe-row {
+  touch-action: pan-y;
+} /* app owns horizontal, browser owns vertical */
+.drag-handle {
+  touch-action: none;
+}
 ```
 
 ## Pointer Events over Touch Events
@@ -61,7 +65,7 @@ function onPointerDown(pointerEvent) {
 ## Core gesture patterns & their contracts
 
 - **Tap** — primary action. _Give `:active`/pressed feedback within ~100ms; never require a hover state first._
-- **Long-press (~500ms)** — reveal secondary/context actions. _Poorly discoverable, so it must _accelerate_ something also reachable by a visible control; confirm engagement with a haptic tick or a visual grow. Releasing before threshold cancels._
+- **Long-press (~500ms)** — reveal secondary/context actions. _Poorly discoverable, so it must *accelerate* something also reachable by a visible control; confirm engagement with a haptic tick or a visual grow. Releasing before threshold cancels._
 - **Swipe** — reveal row actions, navigate, or dismiss. _Show an affordance (peek the action, a handle); pair `touch-action: pan-y` so vertical scroll survives; under-threshold springs back._
 - **Drag & reorder** — direct manipulation. _Needs a grab handle, a lifted/elevated visual, and `setPointerCapture`; a drop outside a valid zone returns the item home._
 - **Pull-to-refresh** — refresh a feed. _Only arm when the scroll container is at the top; apply rubber-band resistance and a distance threshold before committing; show a spinner past threshold; release-before-threshold snaps back with no fetch._
@@ -84,19 +88,23 @@ function onPointerDown(pointerEvent) {
 ## Hover, pointer precision & press feedback
 
 - **Gate hover-only affordances behind `@media (hover: hover) and (pointer: fine)`.** _`hover: none` means the primary input can't hover at all; touch users never see it, so anything hidden there is unreachable._
-- **Ship the tap-reachable version first, enhance for mouse.** _Base styles work everywhere; the media query only _adds_ mouse polish._
+- **Ship the tap-reachable version first, enhance for mouse.** _Base styles work everywhere; the media query only *adds* mouse polish._
 - **Deliver pressed feedback within ~100ms** via `:active` or a `pointerdown` class. _The user must know the tap landed._
 
 ```css
-.card-action { opacity: 1; }
+.card-action {
+  opacity: 1;
+}
 @media (hover: hover) and (pointer: fine) {
-  .card:not(:hover) .card-action { opacity: 0; }
+  .card:not(:hover) .card-action {
+    opacity: 0;
+  }
 }
 ```
 
 ## Avoiding accidental taps
 
-- **Space competing targets (~8dp+).** _Targets must be big enough _and_ spaced enough to prevent fat-finger errors._
+- **Space competing targets (~8dp+).** _Targets must be big enough *and* spaced enough to prevent fat-finger errors._
 - **No destructive action without confirm or undo.** _Touch mis-fires are common; an irreversible one-tap delete is a trap (Peak-End: a lost message defines the memory)._
 - **Debounce double-fire.** _Compatibility events plus fast repeat taps can run a handler twice; lock during the async action._
 - **On long-press targets, suppress text selection and the iOS callout.**

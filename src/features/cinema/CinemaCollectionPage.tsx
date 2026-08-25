@@ -83,8 +83,7 @@ function DemoCinemaCollectionPage() {
       <div className={styles.backRow}>
         <div className="wrap">
           <Link to={routes.cinema} className={styles.back}>
-            <FiArrowLeft aria-hidden />{" "}
-            {t("cinema:collection.backCta")}
+            <FiArrowLeft aria-hidden /> {t("cinema:collection.backCta")}
           </Link>
         </div>
       </div>

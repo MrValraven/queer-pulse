@@ -5,11 +5,7 @@ import { Button, Outro, Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import {
   ARRIVING,
   FORUM,
@@ -193,8 +189,7 @@ export function VisasPage() {
         sub={t("marketing:visas.outro.sub")}
       >
         <Button to={ARRIVING} variant="primary" size="lg">
-          {t("marketing:visas.outro.settlingCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("marketing:visas.outro.settlingCta")} <FiArrowRight aria-hidden />
         </Button>
         <Button to={FORUM} variant="ghost-dark" size="lg">
           {t("marketing:visas.outro.askCta")}

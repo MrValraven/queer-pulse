@@ -36,7 +36,10 @@ import styles from "./GatheringRecapPage.module.css";
  * submission endpoint would persist) plus the local preview URL it renders
  * with, since the key alone isn't fetchable in live mode.
  */
-type SubmittedPhoto = RecapPhoto & { imageKey?: string; imagePreviewUrl?: string };
+type SubmittedPhoto = RecapPhoto & {
+  imageKey?: string;
+  imagePreviewUrl?: string;
+};
 
 /**
  * The recap route. Demo renders the full static prototype below; live resolves

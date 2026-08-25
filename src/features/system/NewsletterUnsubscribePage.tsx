@@ -89,9 +89,7 @@ export function NewsletterUnsubscribePage() {
     );
   }
 
-  const stateKey = data.alreadyUnsubscribed
-    ? "alreadyUnsubscribed"
-    : "success";
+  const stateKey = data.alreadyUnsubscribed ? "alreadyUnsubscribed" : "success";
 
   return (
     <SystemStateShell orbTone="jade">

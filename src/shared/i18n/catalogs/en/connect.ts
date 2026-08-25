@@ -165,7 +165,8 @@ export const connect: Catalog = {
   "notice.youBlocked.title": "You <em>blocked</em> {name}.",
   "notice.youBlocked.body":
     "You'll need to unblock them before you can say hello. You can do that from their profile.",
-  "notice.notAccepting.title": "{name} isn't taking new <em>hellos</em> right now.",
+  "notice.notAccepting.title":
+    "{name} isn't taking new <em>hellos</em> right now.",
   "notice.notAccepting.body":
     "They've paused new connection requests. You're welcome to try again another time.",
   "notice.needsIntro.title": "{name} connects through <em>introductions.</em>",

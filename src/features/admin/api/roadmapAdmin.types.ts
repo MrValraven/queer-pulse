@@ -19,18 +19,9 @@ export type RoadmapCost = "none" | "small" | "funded" | "needs";
 /** 0 = none, 1 = required, 2 = cleared. Gates `isPublic` while `1`. */
 export type RoadmapSafetyStatus = 0 | 1 | 2;
 export type RoadmapDeclineReason =
-  | "scope"
-  | "unsafe"
-  | "capacity"
-  | "exists"
-  | "harm";
+  "scope" | "unsafe" | "capacity" | "exists" | "harm";
 export type RoadmapGuideStep =
-  | "research"
-  | "draft"
-  | "lived"
-  | "expert"
-  | "translate"
-  | "publish";
+  "research" | "draft" | "lived" | "expert" | "translate" | "publish";
 export type RoadmapIdeaStatus = "pending" | "published" | "dismissed";
 export type RoadmapBulkAction = "move" | "show" | "hide" | "archive" | "delete";
 

@@ -83,9 +83,8 @@ async function loadLive() {
   // Dynamically imported for the same reason: a statically-imported
   // ToastProvider would carry its own copy of the i18n module and throw
   // "useTranslation must be used within an I18nProvider" from inside itself.
-  const { ToastProvider } = await import(
-    "../../../shared/components/feedback/ToastProvider"
-  );
+  const { ToastProvider } =
+    await import("../../../shared/components/feedback/ToastProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -144,7 +143,11 @@ describe("useAdminVerifications (live mode via MSW)", () => {
       await loadLive();
     const { result } = renderHook(
       () =>
-        useAdminVerificationsLive({ level: "phone", query: "ana", sort: "oldest" }),
+        useAdminVerificationsLive({
+          level: "phone",
+          query: "ana",
+          sort: "oldest",
+        }),
       { wrapper },
     );
 
@@ -228,7 +231,8 @@ describe("useVerificationHistory (live mode via MSW)", () => {
 describe("useAdminVerifications (demo mode)", () => {
   it("filters the fixture client-side and issues no request", async () => {
     const { result } = renderHook(
-      () => useAdminVerifications({ level: "phone", query: "", sort: "recent" }),
+      () =>
+        useAdminVerifications({ level: "phone", query: "", sort: "recent" }),
       { wrapper: TestProviders },
     );
 
@@ -383,7 +387,11 @@ describe("useVerificationRequests (demo mode)", () => {
   it("filters the fixture client-side by status and issues no request", async () => {
     const { result } = renderHook(
       () =>
-        useVerificationRequests({ status: "pending", query: "", sort: "recent" }),
+        useVerificationRequests({
+          status: "pending",
+          query: "",
+          sort: "recent",
+        }),
       { wrapper: TestProviders },
     );
 
@@ -402,7 +410,8 @@ describe("useVerificationRequests (demo mode)", () => {
 
   it("has no next page (the fixture is one synthetic page)", async () => {
     const { result } = renderHook(
-      () => useVerificationRequests({ status: "all", query: "", sort: "recent" }),
+      () =>
+        useVerificationRequests({ status: "all", query: "", sort: "recent" }),
       { wrapper: TestProviders },
     );
 

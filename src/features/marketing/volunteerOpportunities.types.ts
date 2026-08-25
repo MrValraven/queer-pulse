@@ -74,7 +74,12 @@ export const TEAM_POOL: TeamMember[] = [
     color: J,
     name: "Jonas F.",
   },
-  { initials: "NA", background: "rgba(45,27,61,.10)", color: P, name: "Nuno A." },
+  {
+    initials: "NA",
+    background: "rgba(45,27,61,.10)",
+    color: P,
+    name: "Nuno A.",
+  },
   {
     initials: "RV",
     background: "rgba(var(--accent-rgb),.14)",
@@ -87,5 +92,10 @@ export const TEAM_POOL: TeamMember[] = [
     color: J,
     name: "Anika K.",
   },
-  { initials: "SC", background: "rgba(45,27,61,.10)", color: P, name: "Sofia C." },
+  {
+    initials: "SC",
+    background: "rgba(45,27,61,.10)",
+    color: P,
+    name: "Sofia C.",
+  },
 ];

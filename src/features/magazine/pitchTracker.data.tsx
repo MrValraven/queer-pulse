@@ -92,9 +92,8 @@ export const PITCHES: Pitch[] = [
       author: "Marta",
       body: (
         <>
-          Love the structure. The Rui quote in §3 needs more setup. Can you
-          give me 80 words of context before it? Otherwise we&rsquo;re nearly
-          there.
+          Love the structure. The Rui quote in §3 needs more setup. Can you give
+          me 80 words of context before it? Otherwise we&rsquo;re nearly there.
         </>
       ),
     },

@@ -23,7 +23,10 @@ export function AdminMemberDrawerSkeleton() {
       </div>
       <div className={styles.dSection}>
         <SkeletonLine width="55%" height={18} />
-        <SkeletonLine height={200} style={{ marginTop: 10, borderRadius: 16 }} />
+        <SkeletonLine
+          height={200}
+          style={{ marginTop: 10, borderRadius: 16 }}
+        />
       </div>
       <div className={styles.dSection}>
         <SkeletonLine width="70%" />

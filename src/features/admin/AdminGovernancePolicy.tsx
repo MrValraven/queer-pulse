@@ -24,8 +24,16 @@ export function AdminGovernancePolicy() {
       <FadeIn>
         <div className={styles.govGrid}>
           <div className={styles.card}>
-            <SkeletonLine height={16} width="70%" style={{ marginBottom: 10 }} />
-            <SkeletonLine height={16} width="85%" style={{ marginBottom: 10 }} />
+            <SkeletonLine
+              height={16}
+              width="70%"
+              style={{ marginBottom: 10 }}
+            />
+            <SkeletonLine
+              height={16}
+              width="85%"
+              style={{ marginBottom: 10 }}
+            />
             <SkeletonLine height={16} width="60%" />
           </div>
         </div>

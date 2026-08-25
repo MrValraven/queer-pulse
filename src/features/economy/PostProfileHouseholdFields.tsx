@@ -35,7 +35,9 @@ export function PostProfileHouseholdFields({
             <Select
               id={`${fieldId}-${field.key}`}
               value={form.householdNorms[field.key] ?? ""}
-              onChange={(value) => form.setHouseholdNorm(field.key, value ?? "")}
+              onChange={(value) =>
+                form.setHouseholdNorm(field.key, value ?? "")
+              }
               options={[
                 {
                   value: "",

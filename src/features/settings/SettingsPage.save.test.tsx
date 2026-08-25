@@ -25,7 +25,9 @@ describe("SettingsPage save bar", () => {
     // lazy `settings` i18n namespace chunk resolving — until it does the
     // placeholder renders as its raw key. Same convention as
     // AdminSettingsAccess.test.tsx.
-    const bio = await screen.findByPlaceholderText("A few sentences about you…");
+    const bio = await screen.findByPlaceholderText(
+      "A few sentences about you…",
+    );
     fireEvent.change(bio, { target: { value: "New bio from settings" } });
     // Save bar appears.
     const save = await screen.findByRole("button", { name: /save changes/i });

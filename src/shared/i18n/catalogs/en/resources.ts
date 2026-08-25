@@ -1326,7 +1326,8 @@ export const resources: Catalog = {
   "microGrants.apply.project.stage.idea": "Idea, not yet started",
   "microGrants.apply.project.stage.development": "In development",
   "microGrants.apply.project.stage.ready": "Ready to go, just needs funding",
-  "microGrants.apply.project.stage.ongoing": "Ongoing, and this would expand it",
+  "microGrants.apply.project.stage.ongoing":
+    "Ongoing, and this would expand it",
 
   "microGrants.apply.budget.stepTitle": "How will you <em>spend it?</em>",
   "microGrants.apply.budget.stepSub":

@@ -7,6 +7,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { NAV } from "./StudioCreatorShell.data";
 import s from "./creator.module.css";
 
+// Mock signed-in artist's avatar initials — content, not chrome.
+const AVATAR_INITIALS = "MS";
+
 /** Dark creator back-office frame: sticky topbar + sub-nav. */
 export function StudioCreatorShell({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
@@ -40,8 +43,7 @@ export function StudioCreatorShell({ children }: { children: ReactNode }) {
           <Link to={routes.studioArtist} className={s.back}>
             {t("studio:creator.viewPublicPageCta")} <FiArrowRight aria-hidden />
           </Link>
-          {/* Mock signed-in artist's avatar initials — content, not chrome. */}
-          <div className={s.avatar}>MS</div>
+          <div className={s.avatar}>{AVATAR_INITIALS}</div>
         </div>
       </div>
       {children}

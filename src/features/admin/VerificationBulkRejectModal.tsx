@@ -43,10 +43,9 @@ export function VerificationBulkRejectModal({
       title={t("admin:verifications.requests.bulk.confirmReject.title", {
         count,
       })}
-      description={t(
-        "admin:verifications.requests.bulk.confirmReject.body",
-        { count },
-      )}
+      description={t("admin:verifications.requests.bulk.confirmReject.body", {
+        count,
+      })}
       tone="destructive"
       loading={pending}
       confirmLabel={t(

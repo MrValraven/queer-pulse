@@ -27,7 +27,8 @@ export function useKebabMenuA11y(itemCount: number) {
       }
     }
     document.addEventListener("pointerdown", onDocumentPointerDown);
-    return () => document.removeEventListener("pointerdown", onDocumentPointerDown);
+    return () =>
+      document.removeEventListener("pointerdown", onDocumentPointerDown);
   }, [open]);
 
   // APG menu-button contract: move focus into the menu when it opens.

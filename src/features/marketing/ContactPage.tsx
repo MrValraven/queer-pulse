@@ -9,7 +9,13 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, FormField, Outro, Reveal, Select } from "../../shared/components/ui";
+import {
+  Button,
+  FormField,
+  Outro,
+  Reveal,
+  Select,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -140,7 +146,10 @@ export function ContactPage() {
                   href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(t(r.titleKey))}`}
                   aria-label={t(r.titleKey)}
                 >
-                  <span className={s.routeIcon} style={{ background: r.background }}>
+                  <span
+                    className={s.routeIcon}
+                    style={{ background: r.background }}
+                  >
                     <r.icon />
                   </span>
                   <div>
@@ -230,7 +239,9 @@ export function ContactPage() {
                   <textarea
                     placeholder={t("marketing:contact.form.messagePlaceholder")}
                     value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, message: e.target.value })
+                    }
                   />
                 </FormField>
                 <Button

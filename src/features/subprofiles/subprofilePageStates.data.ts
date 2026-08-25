@@ -4,7 +4,8 @@ import { routes } from "../../app/routeMap";
 
 /** The four ways a persona page can come up empty (`personas-states.jsx`'s
  *  `PAGE_STATE_COPY` in the Phase-1 design ground truth). */
-export type PersonaPageState = "not-found" | "private" | "members-only" | "removed";
+export type PersonaPageState =
+  "not-found" | "private" | "members-only" | "removed";
 
 export interface PageStateCopy {
   /** `undefined` for "not-found", which uses `SubprofileNotFoundArt` instead
@@ -60,7 +61,8 @@ export const PAGE_STATE_COPY: Record<PersonaPageState, PageStateCopy> = {
     descriptionKey: "subprofiles:pageState.membersOnly.description",
     actionLabelKey: "subprofiles:pageState.membersOnly.action",
     actionTo: routes.signIn,
-    secondaryActionLabelKey: "subprofiles:pageState.membersOnly.secondaryAction",
+    secondaryActionLabelKey:
+      "subprofiles:pageState.membersOnly.secondaryAction",
     secondaryActionTo: routes.requestInvite,
   },
   removed: {

@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 
 // Mirrors `queerpulse-backend/src/magazine/magazine-reader-comment-response.ts`
 // field-for-field.

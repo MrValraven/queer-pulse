@@ -11,6 +11,11 @@ import {
   SHEET_TRANSCRIBER,
 } from "./studioSheetStore.data";
 
+// Content: technical sheet-music facts and the transcriber's avatar
+// initials — comes from the sheet-music record in live mode.
+const SHEET_KEY_SIGNATURE_NOTE = " · voice & piano · D minor";
+const TRANSCRIBER_INITIALS = "TR";
+
 export function StudioSheetPreview() {
   const { t } = useTranslation();
 
@@ -24,7 +29,7 @@ export function StudioSheetPreview() {
             width="100%"
             height="100%"
             radius={10}
-            placeholder="score cover"
+            placeholder={`${t("studio:media.scoreLabel")} ${t("studio:media.coverLabel")}`}
             style={{ position: "absolute", inset: 0 }}
           />
         </div>
@@ -59,7 +64,8 @@ export function StudioSheetPreview() {
         <div className={s.watermark}>{t("studio:sheet.preview.watermark")}</div>
         <div className={s.pdfTitle}>{SHEET_TITLE}</div>
         <div className={s.pdfSub}>
-          {SHEET_COMPOSER} · voice &amp; piano · D minor
+          {SHEET_COMPOSER}
+          {SHEET_KEY_SIGNATURE_NOTE}
         </div>
         {[0, 1, 2].map((g) => (
           <div key={g}>
@@ -118,7 +124,7 @@ export function StudioSheetPreview() {
             flex: "none",
           }}
         >
-          TR
+          {TRANSCRIBER_INITIALS}
         </span>
         <div>
           <h5>

@@ -5,11 +5,20 @@ import { auth, lazyNamed } from "../../app/routeHelpers";
 
 const SignInPage = lazyNamed(() => import("./SignInPage"), "SignInPage");
 const InvitePage = lazyNamed(() => import("./InvitePage"), "InvitePage");
-const RequestInvitePage = lazyNamed(() => import("./RequestInvitePage"), "RequestInvitePage");
-const OnboardingPage = lazyNamed(() => import("./OnboardingPage"), "OnboardingPage");
+const RequestInvitePage = lazyNamed(
+  () => import("./RequestInvitePage"),
+  "RequestInvitePage",
+);
+const OnboardingPage = lazyNamed(
+  () => import("./OnboardingPage"),
+  "OnboardingPage",
+);
 // The recipient's personal invite landing lives in the system feature, but it
 // belongs to the auth flow and shares its branded AuthLoader fallback.
-const InviteLandingPage = lazyNamed(() => import("../system/InviteLandingPage"), "InviteLandingPage");
+const InviteLandingPage = lazyNamed(
+  () => import("../system/InviteLandingPage"),
+  "InviteLandingPage",
+);
 
 /** Auth & onboarding — each chunk loads behind the branded AuthLoader fallback. */
 export function authRoutes() {

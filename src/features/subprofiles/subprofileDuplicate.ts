@@ -1,4 +1,7 @@
-import { itemsToInputDto, type SubprofileView } from "./api/subprofiles.adapters";
+import {
+  itemsToInputDto,
+  type SubprofileView,
+} from "./api/subprofiles.adapters";
 import type {
   AffiliationInputDTO,
   SocialLinkDTO,
@@ -17,7 +20,10 @@ export interface DuplicatePlan {
   meta: UpdateSubprofileDTO | null;
   socialLinks: SocialLinkDTO[];
   /** Only non-empty sections; each maps to one replaceSection call. */
-  sections: Array<{ section: SubprofileSection; items: SubprofileItemInputDTO[] }>;
+  sections: Array<{
+    section: SubprofileSection;
+    items: SubprofileItemInputDTO[];
+  }>;
   /** Affiliations to copy (full mode only); null skips the step. */
   affiliations: AffiliationInputDTO[] | null;
 }
@@ -47,7 +53,13 @@ export function buildDuplicatePlan(
   const socialLinks = [...source.socialLinks];
 
   if (mode === "content") {
-    return { kind: source.kind, meta: null, socialLinks, sections, affiliations: null };
+    return {
+      kind: source.kind,
+      meta: null,
+      socialLinks,
+      sections,
+      affiliations: null,
+    };
   }
 
   const meta: UpdateSubprofileDTO = {
@@ -90,10 +102,31 @@ export function duplicatePreview(
 
 /** Mutations subset the runner needs (from `useSubprofileMutations()`). */
 export interface DuplicateMutations {
-  update: { mutateAsync: (vars: { id: string; dto: UpdateSubprofileDTO }) => Promise<unknown> };
-  replaceSocials: { mutateAsync: (vars: { id: string; items: SocialLinkDTO[] }) => Promise<unknown> };
-  replaceSection: { mutateAsync: (vars: { id: string; section: SubprofileSection; items: SubprofileItemInputDTO[] }) => Promise<unknown> };
-  replaceAffiliations: { mutateAsync: (vars: { id: string; items: AffiliationInputDTO[] }) => Promise<unknown> };
+  update: {
+    mutateAsync: (vars: {
+      id: string;
+      dto: UpdateSubprofileDTO;
+    }) => Promise<unknown>;
+  };
+  replaceSocials: {
+    mutateAsync: (vars: {
+      id: string;
+      items: SocialLinkDTO[];
+    }) => Promise<unknown>;
+  };
+  replaceSection: {
+    mutateAsync: (vars: {
+      id: string;
+      section: SubprofileSection;
+      items: SubprofileItemInputDTO[];
+    }) => Promise<unknown>;
+  };
+  replaceAffiliations: {
+    mutateAsync: (vars: {
+      id: string;
+      items: AffiliationInputDTO[];
+    }) => Promise<unknown>;
+  };
 }
 
 /** Apply a plan to a freshly-created draft. Each step is best-effort — one
@@ -113,21 +146,31 @@ export async function applyDuplicatePlan(
   }
   if (plan.socialLinks.length) {
     try {
-      await mutations.replaceSocials.mutateAsync({ id: createdId, items: plan.socialLinks });
+      await mutations.replaceSocials.mutateAsync({
+        id: createdId,
+        items: plan.socialLinks,
+      });
     } catch {
       /* links stay empty; editable in the editor */
     }
   }
   for (const { section, items } of plan.sections) {
     try {
-      await mutations.replaceSection.mutateAsync({ id: createdId, section, items });
+      await mutations.replaceSection.mutateAsync({
+        id: createdId,
+        section,
+        items,
+      });
     } catch {
       /* that section stays empty; editable in the editor */
     }
   }
   if (plan.affiliations && plan.affiliations.length) {
     try {
-      await mutations.replaceAffiliations.mutateAsync({ id: createdId, items: plan.affiliations });
+      await mutations.replaceAffiliations.mutateAsync({
+        id: createdId,
+        items: plan.affiliations,
+      });
     } catch {
       /* affiliations stay empty; editable in the editor */
     }

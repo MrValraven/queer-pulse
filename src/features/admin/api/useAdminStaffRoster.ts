@@ -15,7 +15,6 @@ export function useAdminStaffRoster() {
   return useQuery({
     queryKey: [ADMIN_STAFF_ROSTER_KEY, demoMode],
     initialData: demoMode ? ADMIN_STAFF_ROSTER_DEMO : undefined,
-    queryFn: () =>
-      demoMode ? ADMIN_STAFF_ROSTER_DEMO : getAdminStaffRoster(),
+    queryFn: () => (demoMode ? ADMIN_STAFF_ROSTER_DEMO : getAdminStaffRoster()),
   });
 }

@@ -65,11 +65,7 @@ export interface TopIdeaDTO {
 /** Closed set of member-facing reasons an idea isn't being built — mirrors
  *  the backend's `RoadmapDeclineReason`. */
 export type RoadmapDeclineReason =
-  | "scope"
-  | "unsafe"
-  | "capacity"
-  | "exists"
-  | "harm";
+  "scope" | "unsafe" | "capacity" | "exists" | "harm";
 
 /** A dismissed idea whose decline reason is member-facing — "Not building
  *  this, and why" on the public page. */
@@ -98,7 +94,10 @@ export const getRoadmap = () => apiGet<RoadmapResponseDTO>("/roadmap");
  *  page can render the vote button as already-pressed after a refresh. */
 export const getMyRoadmapVotes = () => apiGet<string[]>("/roadmap/my-votes");
 
-export const castRoadmapVote = (targetType: "item" | "idea", targetId: string) =>
+export const castRoadmapVote = (
+  targetType: "item" | "idea",
+  targetId: string,
+) =>
   apiPost<{ targetId: string; votes: number; voted: true }>("/roadmap/vote", {
     targetType,
     targetId,

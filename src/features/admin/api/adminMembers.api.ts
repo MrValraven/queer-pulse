@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 
 /**
  * Admin members panel (`/admin/members`, admin-only). Mirrors the backend's

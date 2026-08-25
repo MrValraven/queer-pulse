@@ -1,7 +1,11 @@
 import { FiEdit3, FiPlus } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SocialLink } from "./data/members";
-import { socialDisplayLabel, socialHref, socialPlatform } from "./socialLinks.data";
+import {
+  socialDisplayLabel,
+  socialHref,
+  socialPlatform,
+} from "./socialLinks.data";
 import styles from "./ProfilePage.module.css";
 
 /**

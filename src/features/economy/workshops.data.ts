@@ -138,42 +138,48 @@ export const WORKSHOPS: Workshop[] = [
       {
         n: "01",
         title: "What riso is, what it isn't · first prints",
-        description: "Tour, machine demo, your first single-colour print. You leave with five A4 sheets of your own.",
+        description:
+          "Tour, machine demo, your first single-colour print. You leave with five A4 sheets of your own.",
         date: "Tue 24 Jun",
         length: "3 hr",
       },
       {
         n: "02",
         title: "Colour separation · the riso way",
-        description: "The unique way riso treats colour. You separate a 2-colour image and pull a 30-print edition by hand.",
+        description:
+          "The unique way riso treats colour. You separate a 2-colour image and pull a 30-print edition by hand.",
         date: "Tue 1 Jul",
         length: "3 hr",
       },
       {
         n: "03",
         title: "Layout for risograph · what doesn't translate",
-        description: "InDesign / Figma to riso. Half-tones, line weight, white space. You'll throw out your first attempt.",
+        description:
+          "InDesign / Figma to riso. Half-tones, line weight, white space. You'll throw out your first attempt.",
         date: "Tue 8 Jul",
         length: "3 hr",
       },
       {
         n: "04",
         title: "Bringing your zine",
-        description: "You arrive with your draft. We critique, edit, and you re-export. Print your first cover.",
+        description:
+          "You arrive with your draft. We critique, edit, and you re-export. Print your first cover.",
         date: "Tue 15 Jul",
         length: "3 hr",
       },
       {
         n: "05",
         title: "Printing the run · 50 copies each",
-        description: "The longest night. We split into two stations and pull editions in parallel. Bring snacks.",
+        description:
+          "The longest night. We split into two stations and pull editions in parallel. Bring snacks.",
         date: "Tue 22 Jul",
         length: "3 hr",
       },
       {
         n: "06",
         title: "Binding, trimming, distribution",
-        description: "Saddle-stitch by hand, trim to size, the math of distribution. Closing party at the community café.",
+        description:
+          "Saddle-stitch by hand, trim to size, the math of distribution. Closing party at the community café.",
         date: "Tue 29 Jul",
         length: "3+ hr",
       },
@@ -272,35 +278,40 @@ export const WORKSHOPS: Workshop[] = [
       {
         n: "01",
         title: "Throwing tall · walls that don't collapse",
-        description: "Compression, water discipline, and how to add height without thinning the base to nothing.",
+        description:
+          "Compression, water discipline, and how to add height without thinning the base to nothing.",
         date: "Thu 26 Jun",
         length: "3 hr",
       },
       {
         n: "02",
         title: "Throwing thin · trimming a proper foot",
-        description: "Getting weight out of the wall and turning a clean foot ring on the leather-hard pot.",
+        description:
+          "Getting weight out of the wall and turning a clean foot ring on the leather-hard pot.",
         date: "Thu 3 Jul",
         length: "3 hr",
       },
       {
         n: "03",
         title: "Handles, spouts & lids that fit",
-        description: "The parts that separate a mug from a mistake. Pulling handles, cutting spouts, throwing lids to size.",
+        description:
+          "The parts that separate a mug from a mistake. Pulling handles, cutting spouts, throwing lids to size.",
         date: "Thu 10 Jul",
         length: "3 hr",
       },
       {
         n: "04",
         title: "Glaze chemistry, without the fear",
-        description: "How glazes actually behave. Layering, wax resist, and mixing two studio glazes into something yours.",
+        description:
+          "How glazes actually behave. Layering, wax resist, and mixing two studio glazes into something yours.",
         date: "Thu 17 Jul",
         length: "3 hr",
       },
       {
         n: "05",
         title: "Glazing your set · loading the kiln",
-        description: "We glaze the whole cohort's work, load together, and talk about what to expect from the firing.",
+        description:
+          "We glaze the whole cohort's work, load together, and talk about what to expect from the firing.",
         date: "Thu 24 Jul",
         length: "3 hr",
       },
@@ -308,8 +319,7 @@ export const WORKSHOPS: Workshop[] = [
     needs: [
       {
         label: "Clay",
-        detail:
-          "Stoneware for the whole course: throw as much as you can use.",
+        detail: "Stoneware for the whole course: throw as much as you can use.",
         included: true,
         tag: "included",
       },
@@ -396,28 +406,32 @@ export const WORKSHOPS: Workshop[] = [
       {
         n: "01",
         title: "From loop to arrangement",
-        description: "Pick the one idea. Build it into a full arrangement with an intro, a turn, and an ending.",
+        description:
+          "Pick the one idea. Build it into a full arrangement with an intro, a turn, and an ending.",
         date: "Mon 30 Jun",
         length: "3 hr",
       },
       {
         n: "02",
         title: "Sound design & the second half",
-        description: "Making the back half of the track earn its place. Variation, tension, and knowing when it's enough.",
+        description:
+          "Making the back half of the track earn its place. Variation, tension, and knowing when it's enough.",
         date: "Mon 7 Jul",
         length: "3 hr",
       },
       {
         n: "03",
         title: "Mixing to translate",
-        description: "A practical mix that sounds right on phone speakers and headphones. Gain-staging, EQ, the essentials.",
+        description:
+          "A practical mix that sounds right on phone speakers and headphones. Gain-staging, EQ, the essentials.",
         date: "Mon 14 Jul",
         length: "3 hr",
       },
       {
         n: "04",
         title: "Master, release, listen back",
-        description: "A gentle master, export, and we release together on the night. Then we play every track, start to finish.",
+        description:
+          "A gentle master, export, and we release together on the night. Then we play every track, start to finish.",
         date: "Mon 21 Jul",
         length: "3 hr",
       },

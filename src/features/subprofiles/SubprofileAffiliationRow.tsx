@@ -1,5 +1,9 @@
 import { FiTrash2 } from "react-icons/fi";
-import { FormField, SegmentedControl, Select } from "../../shared/components/ui";
+import {
+  FormField,
+  SegmentedControl,
+  Select,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { AffiliationInputDTO } from "./api/subprofiles.api";
 import {

@@ -29,23 +29,36 @@ export function WriterPaymentsTab({ payments }: WriterPaymentsTabProps) {
     <div className={pieceStyles.stack}>
       <div className={pieceStyles.card}>
         {payments.map((payment, index) => (
-          <div key={`${payment.title}-${payment.issue ?? index}`} className={pieceStyles.simrow}>
+          <div
+            key={`${payment.title}-${payment.issue ?? index}`}
+            className={pieceStyles.simrow}
+          >
             <div>
               <b>{payment.title}</b>
               <div className={pieceStyles.tiny}>
                 {payment.issue
-                  ? t("magazine:writer.payments.issueLabel", { issue: payment.issue })
+                  ? t("magazine:writer.payments.issueLabel", {
+                      issue: payment.issue,
+                    })
                   : t("magazine:writer.payments.unscheduled")}{" "}
                 · {payment.fee}
               </div>
             </div>
             <span className={pieceStyles.spacer} />
-            <Badge tone={payment.state.toLowerCase().startsWith("paid") ? "jade" : "amber"}>
+            <Badge
+              tone={
+                payment.state.toLowerCase().startsWith("paid")
+                  ? "jade"
+                  : "amber"
+              }
+            >
               {payment.state}
             </Badge>
           </div>
         ))}
-        <p className={pieceStyles.tiny}>{t("magazine:writer.payments.terms")}</p>
+        <p className={pieceStyles.tiny}>
+          {t("magazine:writer.payments.terms")}
+        </p>
       </div>
     </div>
   );

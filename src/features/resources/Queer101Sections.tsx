@@ -205,10 +205,11 @@ export function Queer101TalkOptions() {
             {TALK.map((item) => (
               <div className={styles.talkOpt} key={item.titleKey}>
                 <div className={styles.talkOptTitle}>{t(item.titleKey)}</div>
-                <div className={styles.talkOptDesc}>{t(item.descriptionKey)}</div>
+                <div className={styles.talkOptDesc}>
+                  {t(item.descriptionKey)}
+                </div>
                 <Link to={item.link.href} className={styles.talkOptLink}>
-                  {t(item.link.labelKey)}{" "}
-                  <FiArrowRight aria-hidden />
+                  {t(item.link.labelKey)} <FiArrowRight aria-hidden />
                 </Link>
               </div>
             ))}

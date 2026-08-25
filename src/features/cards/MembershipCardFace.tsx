@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { useMotionPrefs } from "../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { useCardGloss } from "./useCardGloss";
 import { useCardImagesReady } from "./useCardImagesReady";
 import type { CardSkin, MyCardDTO } from "./api/cards.api";

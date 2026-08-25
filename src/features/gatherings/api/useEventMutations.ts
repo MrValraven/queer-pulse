@@ -66,7 +66,11 @@ export function useCreateEvent() {
 export function useUpdateEvent(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, UpdateEventDto & { seriesScope?: SeriesScope }>({
+  return useMutation<
+    void,
+    Error,
+    UpdateEventDto & { seriesScope?: SeriesScope }
+  >({
     mutationFn: async ({ seriesScope, ...dto }) => {
       if (demoMode) return;
       await updateEvent(slug, dto, seriesScope);
@@ -281,24 +285,24 @@ export function useSendCohostInvite(slug: string) {
 export function useRespondCohostInvite() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<
-    void,
-    Error,
-    { id: string; action: "accept" | "decline" }
-  >({
-    mutationFn: async ({ id, action }) => {
-      if (demoMode) return;
-      await respondCohostInvite(id, action);
+  return useMutation<void, Error, { id: string; action: "accept" | "decline" }>(
+    {
+      mutationFn: async ({ id, action }) => {
+        if (demoMode) return;
+        await respondCohostInvite(id, action);
+      },
+      onSuccess: (_data, { action }) => {
+        void queryClient.invalidateQueries({
+          queryKey: eventKeys.cohostInviteRoot,
+        });
+        if (action === "accept") {
+          void queryClient.invalidateQueries({
+            queryKey: eventKeys.detailRoot,
+          });
+        }
+      },
     },
-    onSuccess: (_data, { action }) => {
-      void queryClient.invalidateQueries({
-        queryKey: eventKeys.cohostInviteRoot,
-      });
-      if (action === "accept") {
-        void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
-      }
-    },
-  });
+  );
 }
 
 /** POST /events/:slug/invites — invite members (≤100 slugs). */

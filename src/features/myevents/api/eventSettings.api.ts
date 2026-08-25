@@ -10,7 +10,8 @@ export const EVENT_VISIBILITY_OPTIONS = [
   { value: "private", labelKey: "myevents:rsvpModal.visibility.justMe" },
 ] as const;
 
-export type EventVisibility = (typeof EVENT_VISIBILITY_OPTIONS)[number]["value"];
+export type EventVisibility =
+  (typeof EVENT_VISIBILITY_OPTIONS)[number]["value"];
 
 /** The server defaults when a member has no settings row — mirrors DEFAULT_PREFS. */
 export const DEFAULT_EVENT_VISIBILITY: EventVisibility = "connections";

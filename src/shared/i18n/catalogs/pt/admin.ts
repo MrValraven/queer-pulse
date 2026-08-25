@@ -160,8 +160,7 @@ export const admin: Catalog = {
   "verifications.requests.bulk.rejectCta": "Rejeitar",
   "verifications.requests.bulk.clearCta": "Limpar",
   "verifications.requests.bulk.capNote": "Seleção limitada a {cap} pedidos",
-  "verifications.requests.bulk.toast.success_one":
-    "{count} pedido atualizado.",
+  "verifications.requests.bulk.toast.success_one": "{count} pedido atualizado.",
   "verifications.requests.bulk.toast.success_other":
     "{count} pedidos atualizados.",
   "verifications.requests.bulk.toast.partial":
@@ -238,12 +237,14 @@ export const admin: Catalog = {
   "dashboard.metrics.trendNoData": "ainda sem dados suficientes",
   "dashboard.metrics.trendHealthy": "saudável",
   "dashboard.metrics.trendNeedsHand": "precisa de ajuda",
-  "dashboard.metrics.footGrowth": "+{count} este mês · com base no estado da conta",
+  "dashboard.metrics.footGrowth":
+    "+{count} este mês · com base no estado da conta",
   "dashboard.metrics.footEmergencies_one": "{count} é uma emergência",
   "dashboard.metrics.footEmergencies_other": "{count} são emergências",
   "dashboard.metrics.footSlaTarget": "meta de SLA: {hours}",
   "dashboard.metrics.footNeedsHand_one": "{count} comunidade precisa de ajuda",
-  "dashboard.metrics.footNeedsHand_other": "{count} comunidades precisam de ajuda",
+  "dashboard.metrics.footNeedsHand_other":
+    "{count} comunidades precisam de ajuda",
 
   "dashboard.triage.title": "Precisa de <em>uma pessoa</em>",
   "dashboard.triage.sortedToast": "Ordenado por urgência",
@@ -251,7 +252,8 @@ export const admin: Catalog = {
   "dashboard.triage.safetyEmergencies.sub": "Outing e doxxing",
   "dashboard.triage.safetyEmergencies.subEm": "trata destas primeiro",
   "dashboard.triage.openReports.title": "Denúncias em aberto",
-  "dashboard.triage.openReports.sub": "Assédio, spam, abuso de votos de confiança",
+  "dashboard.triage.openReports.sub":
+    "Assédio, spam, abuso de votos de confiança",
   "dashboard.triage.identityVerifications.title": "Verificações de identidade",
   "dashboard.triage.identityVerifications.sub":
     "Pessoas à espera de serem acolhidas",
@@ -297,14 +299,14 @@ export const admin: Catalog = {
   "dashboard.feed.type.reportFiled.anonymousBody":
     "foi apresentada de forma anónima",
   "dashboard.feed.type.reportResolved.body": "resolveu uma denúncia",
-  "dashboard.feed.type.reportResolved.anonymousLead":
-    "Uma pessoa moderadora",
+  "dashboard.feed.type.reportResolved.anonymousLead": "Uma pessoa moderadora",
   "dashboard.feed.type.memberJoined.body": "entrou na plataforma",
   "dashboard.feed.type.memberJoined.leadCount_one": "{count} pessoa nova",
   "dashboard.feed.type.memberJoined.leadCount_other": "{count} pessoas novas",
   "dashboard.feed.type.memberJoined.genericLead": "Pessoas novas",
   "dashboard.feed.type.vouchReceived.body": "recebeu um voto de confiança de",
-  "dashboard.feed.type.vouchReceived.bodyNoActor": "recebeu um novo voto de confiança",
+  "dashboard.feed.type.vouchReceived.bodyNoActor":
+    "recebeu um novo voto de confiança",
   "dashboard.feed.type.vouchReceived.genericLead": "Uma pessoa",
   "dashboard.feed.type.communityJoined.body": "entrou em",
   "dashboard.feed.type.communityJoined.genericLead": "Uma pessoa",
@@ -316,7 +318,8 @@ export const admin: Catalog = {
   "members.title": "Pessoas · <em>a comunidade</em>",
   "members.header.eyebrow": "Diretório de pessoas",
   "members.header.titleLine1": "{total} pessoas,",
-  "members.header.titleLine2": "cada uma <em>com voto de confiança de alguém</em>.",
+  "members.header.titleLine2":
+    "cada uma <em>com voto de confiança de alguém</em>.",
   "members.header.sub":
     "Não são linhas numa tabela. São pessoas em quem alguém confiou o suficiente para as trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui. {count} pessoas estão à espera de serem acolhidas.",
   "members.header.exportCta": "Exportar",
@@ -407,13 +410,13 @@ export const admin: Catalog = {
   "members.verify.flags.disposableEmail": "Email descartável",
   "members.verify.flags.duplicateMessage":
     "Mesma mensagem de outro pedido pendente",
-  "members.verify.flags.sourceBurst":
-    "Parte de um pico incomum desta origem",
+  "members.verify.flags.sourceBurst": "Parte de um pico incomum desta origem",
   "members.verify.priorDeclineCount_one": "Já recusado uma vez",
   "members.verify.priorDeclineCount_other": "Já recusado {count} vezes",
   "members.verify.referenceLabel": "Referência",
   "members.verify.referenceResolved": "Corroborado por {name}",
-  "members.verify.referenceUnresolved": "Indicou {email}; sem correspondência entre membros",
+  "members.verify.referenceUnresolved":
+    "Indicou {email}; sem correspondência entre membros",
   "members.verify.waitingDays_one": "À espera há {count} dia",
   "members.verify.waitingDays_other": "À espera há {count} dias",
   "members.verify.declineReason.spam_pattern": "Parece spam",
@@ -446,8 +449,7 @@ export const admin: Catalog = {
   "members.verify.bulk.partialFailure_other":
     "{count} pedidos não puderam ser atualizados",
   "members.verify.bulk.action.approve": "Aprovar pedidos",
-  "members.verify.bulk.action.waitlist":
-    "Colocar pedidos em lista de espera",
+  "members.verify.bulk.action.waitlist": "Colocar pedidos em lista de espera",
   "members.verify.bulk.action.decline": "Recusar pedidos",
   "members.verify.bulk.confirmDecline.title": "Recusar {count} pedidos?",
   "members.verify.bulk.confirmDecline.body":
@@ -474,7 +476,8 @@ export const admin: Catalog = {
   "members.drawer.restrictCta": "Restringir…",
   "members.drawer.banCta": "Banir para sempre…",
   "members.drawer.glanceTitle": "Resumo rápido",
-  "members.drawer.graphTitle": "Rede de votos de confiança: confiança nos dois sentidos",
+  "members.drawer.graphTitle":
+    "Rede de votos de confiança: confiança nos dois sentidos",
   "members.drawer.graphAriaLabel": "Abrir a rede de confiança completa",
   "members.drawer.exploreCta": "Explorar rede",
   "members.drawer.communitiesTitle": "Comunidades",
@@ -547,7 +550,8 @@ export const admin: Catalog = {
     "Pode moderar anúncios e grupos de Habitação.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
-  "staffRoles.systemLocked": "Contas do sistema não podem ter papéis de equipa.",
+  "staffRoles.systemLocked":
+    "Contas do sistema não podem ter papéis de equipa.",
 
   "members.timeline.title": "Histórico de moderação: a favor e contra",
   "members.timeline.auditLinkCta": "Todas as entradas no registo de auditoria",
@@ -737,7 +741,8 @@ export const admin: Catalog = {
   "adminInvites.drawer.fromLabel": "Convidado por",
   "adminInvites.drawer.recipientLabel": "Destinatário",
   "adminInvites.drawer.acceptedByLabel": "Aceite por",
-  "adminInvites.drawer.recipientAnyone": "Link aberto, qualquer pessoa pode aceitar",
+  "adminInvites.drawer.recipientAnyone":
+    "Link aberto, qualquer pessoa pode aceitar",
   "adminInvites.drawer.createdLabel": "Criado",
   "adminInvites.drawer.expiresLabel": "Expira",
   "adminInvites.drawer.dateTime": "{date} às {time}",
@@ -755,10 +760,13 @@ export const admin: Catalog = {
   "adminInvites.quota.saveCta": "Guardar",
   "adminInvites.quota.saveAriaLabel": "Guardar quota de convites de {name}",
   "adminInvites.quota.clearCta": "Repor predefinição",
-  "adminInvites.quota.clearAriaLabel": "Repor a quota de convites de {name} para a predefinição",
-  "adminInvites.quota.invalid": "Introduz um número inteiro de 0 ou mais, ou limpa o campo.",
+  "adminInvites.quota.clearAriaLabel":
+    "Repor a quota de convites de {name} para a predefinição",
+  "adminInvites.quota.invalid":
+    "Introduz um número inteiro de 0 ou mais, ou limpa o campo.",
   "adminInvites.quota.saved": "Quota de convites de {name} guardada.",
-  "adminInvites.quota.cleared": "{name} voltou à quota de convites predefinida.",
+  "adminInvites.quota.cleared":
+    "{name} voltou à quota de convites predefinida.",
   "adminInvites.revoke.cta": "Revogar este convite",
   "adminInvites.revoke.confirmTitle": "Revogar o convite {code}?",
   "adminInvites.revoke.confirmBody":
@@ -767,11 +775,13 @@ export const admin: Catalog = {
   "adminInvites.revoke.doneToast": "O convite {code} está revogado.",
   "adminInvites.revoke.movedOnToast":
     "Esse convite já foi aceite, revogado ou expirou. Reabre a lista para veres o estado atual.",
-  "adminInvites.revoke.failedToast": "Não foi possível revogar esse convite. Tenta de novo.",
+  "adminInvites.revoke.failedToast":
+    "Não foi possível revogar esse convite. Tenta de novo.",
 
   "adminCommissionInterests.title": "Interesse em <em>encomendas</em>",
   "adminCommissionInterests.header.eyebrow": "Cultura",
-  "adminCommissionInterests.header.title": "Interesse no <em>quadro de encomendas</em>",
+  "adminCommissionInterests.header.title":
+    "Interesse no <em>quadro de encomendas</em>",
   "adminCommissionInterests.header.sub":
     "Todos os membros que manifestaram interesse num projeto do Quadro de Encomendas: que briefing, com quem querem trabalhar e a sua nota. Filtra por categoria.",
   "adminCommissionInterests.empty":
@@ -786,9 +796,11 @@ export const admin: Catalog = {
   "adminCommissionInterests.loadMore": "Carregar mais",
   "adminCommissionInterests.loadingMore": "A carregar…",
 
-  "adminChangemakerNominations.title": "Nomeações de <em>agentes de mudança</em>",
+  "adminChangemakerNominations.title":
+    "Nomeações de <em>agentes de mudança</em>",
   "adminChangemakerNominations.header.eyebrow": "Comunidade",
-  "adminChangemakerNominations.header.title": "Quem os membros <em>propõem</em>",
+  "adminChangemakerNominations.header.title":
+    "Quem os membros <em>propõem</em>",
   "adminChangemakerNominations.header.sub":
     "Todos os nomes que os membros nomearam para o diretório de Agentes de Mudança, dos mais recentes primeiro. Uma lista para rever.",
   "adminChangemakerNominations.empty": "Ainda não há nomeações.",
@@ -810,7 +822,8 @@ export const admin: Catalog = {
 
   "adminReadingGroupProposals.title": "Propostas de <em>grupos de leitura</em>",
   "adminReadingGroupProposals.header.eyebrow": "Comunidade",
-  "adminReadingGroupProposals.header.title": "Grupos que os membros <em>querem criar</em>",
+  "adminReadingGroupProposals.header.title":
+    "Grupos que os membros <em>querem criar</em>",
   "adminReadingGroupProposals.header.sub":
     "Todos os “Cria o teu grupo” que um membro submeteu: o livro, o porquê, o formato e o tamanho. Filtra por formato.",
   "adminReadingGroupProposals.empty":
@@ -835,7 +848,8 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.toast.approved": "Proposta aprovada.",
   "adminReadingGroupProposals.toast.declined": "Proposta recusada.",
   "adminReadingGroupProposals.toast.archived": "Proposta arquivada.",
-  "adminReadingGroupProposals.toast.error": "Não foi possível concluir. Tenta novamente.",
+  "adminReadingGroupProposals.toast.error":
+    "Não foi possível concluir. Tenta novamente.",
   "adminReadingGroupProposals.loadMore": "Carregar mais",
   "adminReadingGroupProposals.loadingMore": "A carregar…",
 
@@ -925,7 +939,8 @@ export const admin: Catalog = {
   "adminWriterApplications.row.sampleLink": "Amostra ligada",
   "adminWriterApplications.row.approveCta": "Aprovar",
   "adminWriterApplications.row.declineCta": "Recusar",
-  "adminWriterApplications.row.reviewNotePlaceholder": "Nota opcional para o candidato",
+  "adminWriterApplications.row.reviewNotePlaceholder":
+    "Nota opcional para o candidato",
   "adminWriterApplications.unknownMember": "Um membro",
   "adminWriterApplications.error": "Não foi possível carregar as candidaturas.",
   "adminWriterApplications.empty": "Ainda não há candidaturas.",
@@ -1006,7 +1021,8 @@ export const admin: Catalog = {
   "adminListings.bulk.toast.success_other": "{count} listagens atualizadas.",
   "adminListings.bulk.toast.partial":
     "{updated} atualizadas, {failed} não foram.",
-  "adminListings.bulk.action.publish": "Não foi possível publicar as listagens selecionadas",
+  "adminListings.bulk.action.publish":
+    "Não foi possível publicar as listagens selecionadas",
   "adminListings.bulk.action.sendBack":
     "Não foi possível devolver as listagens selecionadas a revisão",
   "adminListings.bulk.action.remove":
@@ -1135,7 +1151,6 @@ export const admin: Catalog = {
   "editSuggestions.unknownSubmitter": "um membro desconhecido",
   "editSuggestions.toast.accepted": "Correção de {name} aceite.",
   "editSuggestions.toast.dismissed": "Correção de {name} descartada.",
-
 
   // ── Moderação ──────────────────────────────────────────────────────────────
   "moderation.title": "Moderação · <em>triagem</em>",
@@ -1310,7 +1325,8 @@ export const admin: Catalog = {
   "moderation.severity.low": "Baixa",
 
   "moderation.actions.dismiss.label": "Dispensar",
-  "moderation.actions.dismiss.desc": "Nenhuma ação necessária, encerra a denúncia",
+  "moderation.actions.dismiss.desc":
+    "Nenhuma ação necessária, encerra a denúncia",
   "moderation.actions.dismiss.done": "dispensa",
   "moderation.actions.hide.label": "Ocultar conteúdo",
   "moderation.actions.hide.desc": "Remove da vista, mantém para registo",
@@ -1341,9 +1357,11 @@ export const admin: Catalog = {
 
   "moderation.priorReports.count_one": "{count} denúncia anterior",
   "moderation.priorReports.count_other": "{count} denúncias anteriores",
-  "moderation.priorReports.newAccount": "Conta nova · {vouches} votos de confiança",
+  "moderation.priorReports.newAccount":
+    "Conta nova · {vouches} votos de confiança",
   "moderation.reporterCredibility.new": "Nova pessoa denunciante",
-  "moderation.reporterCredibility.history": "{filed} denúncias apresentadas · {dismissed} arquivadas",
+  "moderation.reporterCredibility.history":
+    "{filed} denúncias apresentadas · {dismissed} arquivadas",
   "moderation.assignedToFlag": "Atribuído a {name}",
   "moderation.slaOverdue": "Atrasado",
   "moderation.risk.atRisk": "Em risco",
@@ -1537,13 +1555,15 @@ export const admin: Catalog = {
   "communities.settings.overrides.freezeToast": "{name} está agora congelada",
   "communities.settings.overrides.freezeFailedToast":
     "Não foi possível congelar essa comunidade. Tenta novamente.",
-  "communities.settings.overrides.unfreezeToast": "{name} já não está congelada",
+  "communities.settings.overrides.unfreezeToast":
+    "{name} já não está congelada",
   "communities.settings.overrides.unfreezeFailedToast":
     "Não foi possível descongelar essa comunidade. Tenta novamente.",
   "communities.settings.overrides.reassignCta": "Reatribuir dono",
   "communities.settings.overrides.archiveCta": "Arquivar",
   "communities.settings.overrides.unarchiveCta": "Desarquivar",
-  "communities.settings.overrides.unarchiveToast": "{name} já não está arquivada",
+  "communities.settings.overrides.unarchiveToast":
+    "{name} já não está arquivada",
   "communities.settings.overrides.unarchiveFailedToast":
     "Não foi possível desarquivar essa comunidade. Tenta novamente.",
   "communities.settings.overrides.archiveToast": "{name} foi arquivada",
@@ -1556,14 +1576,17 @@ export const admin: Catalog = {
   "communities.settings.overrides.reassignToast": "{name} é agora a dona",
   "communities.settings.overrides.reassignFailedToast":
     "Não foi possível reatribuir a propriedade. Tenta novamente.",
-  "communities.settings.overrides.reassignTitle": "Reatribuir a propriedade de {name}",
+  "communities.settings.overrides.reassignTitle":
+    "Reatribuir a propriedade de {name}",
   "communities.settings.overrides.reassignBody":
     "O membro escolhido torna-se dono de imediato. Se a comunidade já tiver uma pessoa dona, esta passa a moderadora.",
-  "communities.settings.overrides.reassignEmptyTitle": "Ninguém a quem reatribuir",
+  "communities.settings.overrides.reassignEmptyTitle":
+    "Ninguém a quem reatribuir",
   "communities.settings.overrides.reassignEmptyDesc":
     "Esta comunidade ainda não tem outros membros no quadro.",
   "communities.settings.overrides.reassignConfirmCta": "Reatribuir propriedade",
-  "communities.settings.overrides.reassignPickLabel": "Escolhe a nova pessoa dona",
+  "communities.settings.overrides.reassignPickLabel":
+    "Escolhe a nova pessoa dona",
 
   // ── Registo de governação (o histórico da própria comunidade) ─────────────
   "communities.detail.tabs.governanceLog": "Registo de governação",
@@ -1606,8 +1629,7 @@ export const admin: Catalog = {
   "communities.governanceLog.summary.owner_auto_promoted":
     "A propriedade passou automaticamente para {name}",
   "communities.governanceLog.summary.frozen": "A comunidade foi congelada",
-  "communities.governanceLog.summary.unfrozen":
-    "O congelamento foi levantado",
+  "communities.governanceLog.summary.unfrozen": "O congelamento foi levantado",
   "communities.governanceLog.summary.archived": "A comunidade foi arquivada",
   "communities.governanceLog.summary.unarchived":
     "A comunidade foi restaurada do arquivo",
@@ -1684,7 +1706,8 @@ export const admin: Catalog = {
   "communities.health.method.weightNotCounted": "Ainda não conta",
   "communities.health.method.exampleTitle": "Como esta pontuação se soma",
   "communities.health.method.exampleSubtotal": "Sinais combinados",
-  "communities.health.method.exampleSizeAdjust": "Ajuste ao tamanho da comunidade",
+  "communities.health.method.exampleSizeAdjust":
+    "Ajuste ao tamanho da comunidade",
   "communities.health.method.examplePublished": "Saúde publicada",
   "communities.health.method.exampleNote":
     "Os pesos apresentados são ilustrativos. A combinação exata e o ajuste ao tamanho são calculados todas as noites nos nossos servidores, por isso lê isto como a forma das contas, uma ideia aproximada de como funciona.",
@@ -1850,7 +1873,8 @@ export const admin: Catalog = {
   "governance.finances.edit.save": "Guardar correções",
   "governance.finances.edit.cancel": "Cancelar",
   "governance.finances.edit.saved": "Valores atualizados.",
-  "governance.finances.edit.error": "Não foi possível guardar. Tente novamente.",
+  "governance.finances.edit.error":
+    "Não foi possível guardar. Tente novamente.",
   "governance.finances.edit.noChanges": "Nada foi alterado.",
 
   "governance.ledger.moderatorHonoraria": "Honorários de moderação",
@@ -2018,8 +2042,7 @@ export const admin: Catalog = {
   "modPanel.requests.requestedAgo": "Pedido feito há {time}",
   "modPanel.requests.approveCta": "Aprovar",
   "modPanel.requests.declineCta": "Recusar",
-  "modPanel.requests.approvedToast":
-    "Aprovámos {name}. Dá-lhe as boas-vindas.",
+  "modPanel.requests.approvedToast": "Aprovámos {name}. Dá-lhe as boas-vindas.",
   "modPanel.requests.declinedToast":
     "O pedido de {name} não foi aprovado desta vez.",
   "modPanel.requests.approvedAllToast":
@@ -2039,9 +2062,9 @@ export const admin: Catalog = {
   "modPanel.reports.replyNote":
     "Esta denúncia é sobre uma resposta. Podes rejeitá-la aqui, e a remoção da resposta faz-se na conversa.",
   "modPanel.reports.openInQueueCta": "Abrir na fila de moderação",
-  "modPanel.reports.removedToast":
-    "Publicação removida e denúncia encerrada.",
-  "modPanel.reports.removeErrorToast": "Não foi possível remover essa publicação",
+  "modPanel.reports.removedToast": "Publicação removida e denúncia encerrada.",
+  "modPanel.reports.removeErrorToast":
+    "Não foi possível remover essa publicação",
   "modPanel.reports.dismissedToast":
     "Denúncia rejeitada. A publicação continua no lugar.",
 
@@ -2093,7 +2116,8 @@ export const admin: Catalog = {
   "modPanel.settings.transfer.modal.title": "Transferir propriedade",
   "modPanel.settings.transfer.modal.body":
     "Escolhe a pessoa que se vai tornar responsável. Ficas como moderadora.",
-  "modPanel.settings.transfer.modal.pickLabel": "Escolhe a nova pessoa responsável",
+  "modPanel.settings.transfer.modal.pickLabel":
+    "Escolhe a nova pessoa responsável",
   "modPanel.settings.transfer.modal.emptyTitle": "Ainda não há a quem entregar",
   "modPanel.settings.transfer.modal.emptyDesc":
     "Precisas de pelo menos mais uma pessoa antes de poder transferir a propriedade.",
@@ -2146,7 +2170,8 @@ export const admin: Catalog = {
   "vouchGraph.modal.privateToast": "Esta pessoa mantém a rede privada",
   "vouchGraph.modal.loadingTitle": "A carregar rede de confiança…",
   "vouchGraph.modal.emptyTitle": "Ainda sem rede de confiança",
-  "vouchGraph.modal.emptyBody": "Esta pessoa ainda não tem votos de confiança registados.",
+  "vouchGraph.modal.emptyBody":
+    "Esta pessoa ainda não tem votos de confiança registados.",
   "vouchGraph.modal.truncatedNotice":
     "A mostrar os 500 membros mais recentes. Procura acima para encontrar alguém mais antigo.",
   "vouchGraph.memberFinder.placeholder": "Procurar todos os membros…",
@@ -2158,7 +2183,8 @@ export const admin: Catalog = {
     "Clica num nó para ver quem confia nessa pessoa e em que se baseia essa confiança. Faz duplo clique para percorrer a rede a partir daí.",
   "vouchGraph.inspector.sealed":
     "Identidade anterior selada, só o nome escolhido",
-  "vouchGraph.inspector.ringBanner.title": "Parte de um anel de votos de confiança suspeito",
+  "vouchGraph.inspector.ringBanner.title":
+    "Parte de um anel de votos de confiança suspeito",
   "vouchGraph.inspector.ringBanner.body":
     "Cinco contas criadas numa hora, a darem votos de confiança apenas entre si: um ciclo fechado sem confiança externa.",
   "vouchGraph.inspector.isolationBanner.title": "Isolamento de confiança",
@@ -2262,7 +2288,8 @@ export const admin: Catalog = {
   "settings.joinRequests.title": "Pedidos de convite",
   "settings.joinRequests.sub":
     "Quando desligado, o formulário público de “pedir um convite” deixa de aceitar novos pedidos.",
-  "settings.closedMessage.label": "Mensagem mostrada quando os registos estão fechados",
+  "settings.closedMessage.label":
+    "Mensagem mostrada quando os registos estão fechados",
   "settings.closedMessage.placeholder":
     "Explica em poucas palavras porque é que os registos estão em pausa.",
 
@@ -2341,7 +2368,8 @@ export const admin: Catalog = {
   "settings.history.empty": "Ainda não há alterações.",
   "settings.history.error": "Não foi possível carregar as alterações recentes.",
   "settings.history.by": "por {actor}",
-  "settings.history.unknownActor": "uma pessoa administradora entretanto eliminada",
+  "settings.history.unknownActor":
+    "uma pessoa administradora entretanto eliminada",
   "settings.history.on": "ligado",
   "settings.history.off": "desligado",
   "settings.history.cleared": "vazio",
@@ -2366,7 +2394,8 @@ export const admin: Catalog = {
     "ex.: Manutenção agendada esta noite, das 22h à meia-noite (UTC).",
   "settings.announcement.message.hint":
     "Editar isto volta a mostrar a faixa a quem já a tinha dispensado.",
-  "settings.announcement.expiresAt.label": "Ocultar automaticamente após (opcional)",
+  "settings.announcement.expiresAt.label":
+    "Ocultar automaticamente após (opcional)",
   "settings.announcement.expiresAt.hint":
     "Depois desta hora, a faixa deixa de aparecer mesmo que o interruptor acima continue ligado.",
 
@@ -2395,7 +2424,8 @@ export const admin: Catalog = {
   "bots.save": "Guardar alterações",
   "bots.cancel": "Cancelar",
   "bots.saved": "Guardado. {name} está atualizada.",
-  "bots.saveFailed": "Não foi possível guardar. Verifica a ligação e tenta de novo.",
+  "bots.saveFailed":
+    "Não foi possível guardar. Verifica a ligação e tenta de novo.",
   "bots.usernameTaken": "Esse identificador já está a ser usado.",
 
   // ── Escalões de parceria (/admin/org-tiers) — página, formulário, linhas ───
@@ -2637,7 +2667,8 @@ export const admin: Catalog = {
   // AdminRoadmapIdeasQueue.tsx, AdminRoadmapIdeaRows.tsx — triagem de ideias
   // submetidas por membros + a lista publicada que a página pública lê.
   "roadmap.ideas.pending.title": "Por rever",
-  "roadmap.ideas.pending.empty": "Nada à espera. Todas as ideias foram triadas.",
+  "roadmap.ideas.pending.empty":
+    "Nada à espera. Todas as ideias foram triadas.",
   "roadmap.ideas.published.title": "Publicadas",
   "roadmap.ideas.published.empty": "Ainda não há nada publicado.",
   "roadmap.ideas.fromMemberTag": "De um membro",
@@ -2749,7 +2780,8 @@ export const admin: Catalog = {
   "roadmap.toolbar.sortPriority": "Prioridade",
   "roadmap.toolbar.sortStale": "Há mais tempo sem atualização",
   "roadmap.toolbar.denseToggle": "Compacto",
-  "roadmap.toolbar.dragHint": "Arrasta para mover ou reordenar · ? para atalhos",
+  "roadmap.toolbar.dragHint":
+    "Arrasta para mover ou reordenar · ? para atalhos",
 
   // ── Quadro — colunas (backlog é nova; lançado/em construção/planeado
   // reutilizam as chaves roadmap.board.column.* acima, mesmo texto),
@@ -2836,8 +2868,7 @@ export const admin: Catalog = {
   "roadmap.drawer.commitment.confidence.hoping.label": "Esperamos",
   "roadmap.drawer.commitment.confidence.hoping.desc":
     "Queremos isto, ainda sem caminho definido",
-  "roadmap.drawer.commitment.promiseToggle.title":
-    "É uma promessa firme",
+  "roadmap.drawer.commitment.promiseToggle.title": "É uma promessa firme",
   "roadmap.drawer.commitment.promiseToggle.sub":
     'Os itens assumidos são identificados como promessas publicamente. Todo o resto lê-se como "queremos fazer isto".',
   "roadmap.drawer.commitment.slipHistoryTitle":
@@ -2984,7 +3015,8 @@ export const admin: Catalog = {
 
   // Juntar ideia
   "roadmap.modals.mergeIdea.eyebrow": "Juntar ideia",
-  "roadmap.modals.mergeIdea.title": "Juntar isto a um <em>item já existente</em>",
+  "roadmap.modals.mergeIdea.title":
+    "Juntar isto a um <em>item já existente</em>",
   "roadmap.modals.mergeIdea.body":
     "Juntar move os votos e diz ao membro para onde foi a ideia dele.",
   "roadmap.modals.mergeIdea.ideaLabel": "Ideia de um membro",
@@ -3014,7 +3046,8 @@ export const admin: Catalog = {
     "Não conseguimos construir isto com segurança",
   "roadmap.modals.decline.reason.unsafe.wording":
     "Não conseguíamos lançar isto sem pôr membros em risco. Se isso mudar, voltamos a olhar para o assunto.",
-  "roadmap.modals.decline.reason.capacity.label": "Sem capacidade, sinceramente",
+  "roadmap.modals.decline.reason.capacity.label":
+    "Sem capacidade, sinceramente",
   "roadmap.modals.decline.reason.capacity.wording":
     "Somos cinco pessoas. É uma ideia real que não conseguimos assumir agora.",
   "roadmap.modals.decline.reason.exists.label": "Já existe noutro lugar",
@@ -3027,10 +3060,12 @@ export const admin: Catalog = {
   // Notificar quem votou
   "roadmap.modals.notifyVoters.eyebrow": "Avisar quem pediu",
   "roadmap.modals.notifyVoters.title_one": "Notificar <em>{count}</em> membro",
-  "roadmap.modals.notifyVoters.title_other": "Notificar <em>{count}</em> membros",
+  "roadmap.modals.notifyVoters.title_other":
+    "Notificar <em>{count}</em> membros",
   "roadmap.modals.notifyVoters.itemLabel": "Item",
   "roadmap.modals.notifyVoters.messageLabel": "Mensagem",
-  "roadmap.modals.notifyVoters.onceOnlyTitle": "Um único email, sem seguimentos",
+  "roadmap.modals.notifyVoters.onceOnlyTitle":
+    "Um único email, sem seguimentos",
   "roadmap.modals.notifyVoters.onceOnlySub":
     "Nunca voltamos a contactar quem já votou. Isto envia-se uma vez e para.",
   "roadmap.modals.notifyVoters.confirmCta": "Enviar uma vez",
@@ -3147,7 +3182,8 @@ export const admin: Catalog = {
   "roadmap.archiveView.votesLabel": "votos",
   "roadmap.archiveView.restoreCta": "Restaurar",
   "roadmap.archiveView.deleteForGoodCta": "Eliminar definitivamente",
-  "roadmap.archiveView.deleteConfirmTitle": 'Eliminar "{name}" definitivamente?',
+  "roadmap.archiveView.deleteConfirmTitle":
+    'Eliminar "{name}" definitivamente?',
   "roadmap.archiveView.deleteConfirmBody":
     "Eliminar é para sempre. Arquivar guarda o histórico. Isto não pode ser desfeito.",
   "roadmap.archiveView.emptyTitle": "O arquivo está vazio",
@@ -3176,11 +3212,13 @@ export const admin: Catalog = {
   "roadmap.publicPreview.nextUpSub":
     "Assumido. As datas são metas, e avisamos-te quando mudam.",
   "roadmap.publicPreview.somedayHeading": "Um dia, com sinceridade",
-  "roadmap.publicPreview.somedaySub": "Queremos isto. Dar uma data seria mentir.",
+  "roadmap.publicPreview.somedaySub":
+    "Queremos isto. Dar uma data seria mentir.",
   "roadmap.publicPreview.shippedHeading": "Lançado",
   "roadmap.publicPreview.shippedSub":
     "O registo de mudanças. Cada um destes foi pedido por alguém na sala.",
-  "roadmap.publicPreview.notBuildingHeading": "Não vamos construir isto, e porquê",
+  "roadmap.publicPreview.notBuildingHeading":
+    "Não vamos construir isto, e porquê",
   "roadmap.publicPreview.notBuildingSub":
     "A lista que a maioria das plataformas esconde. Se dissermos que não, tens um motivo.",
   "roadmap.publicPreview.requestedTag": "Pediste isto",
@@ -3209,7 +3247,8 @@ export const admin: Catalog = {
   "roadmap.toasts.published": "Agora visível no roteiro público",
   "roadmap.toasts.hidden": "Oculto do roteiro público",
   "roadmap.toasts.duplicated": "Duplicado.",
-  "roadmap.toasts.bulkPublished_one": "{count} item mostrado no roteiro público",
+  "roadmap.toasts.bulkPublished_one":
+    "{count} item mostrado no roteiro público",
   "roadmap.toasts.bulkPublished_other":
     "{count} itens mostrados no roteiro público",
   "roadmap.toasts.bulkHidden_one": "{count} item ocultado do roteiro público",
@@ -3229,7 +3268,8 @@ export const admin: Catalog = {
     "Juntado. {votes} voto movido, e {name} soube para onde foi",
   "roadmap.toasts.merged_other":
     "Juntado. {votes} votos movidos, e {name} soube para onde foi",
-  "roadmap.toasts.promoted_one": '"{name}" promovido. {votes} pessoa notificada',
+  "roadmap.toasts.promoted_one":
+    '"{name}" promovido. {votes} pessoa notificada',
   "roadmap.toasts.promoted_other":
     '"{name}" promovido. {votes} pessoas notificadas',
   "roadmap.toasts.promoteError": "Não foi possível promover esta ideia",
@@ -3244,7 +3284,8 @@ export const admin: Catalog = {
   "roadmap.toasts.digestCopied": "Resumo copiado. Cola-o no email mensal",
   "roadmap.toasts.permalinkCopied": "{url} copiado",
   "roadmap.toasts.rssInfo": "RSS: {url}",
-  "roadmap.toasts.auditExported": "Registo de auditoria exportado para a governança",
+  "roadmap.toasts.auditExported":
+    "Registo de auditoria exportado para a governança",
   "roadmap.toasts.boardReset": "Quadro reposto com o roteiro semeado",
   "roadmap.toasts.safetyReviewNeededInfo_one":
     "{count} item precisa de revisão de segurança primeiro",
@@ -3253,7 +3294,8 @@ export const admin: Catalog = {
 
   // ── Página inicial (/admin/landing) ─────────────────────────────────────
   "landing.header.eyebrow": "Site público",
-  "landing.header.sub": "Cura as secções que os visitantes não autenticados veem na página inicial.",
+  "landing.header.sub":
+    "Cura as secções que os visitantes não autenticados veem na página inicial.",
 
   "landing.tabs.member": "Pessoas",
   "landing.tabs.community": "Comunidades",
@@ -3402,7 +3444,8 @@ export const admin: Catalog = {
   "pressKit.list.moveDownAria": "Mover {name} para baixo",
   "pressKit.list.activeToggleAria": "Mostrar {name} no kit de imprensa público",
   "pressKit.list.activeToggleLabel": "Visível",
-  "pressKit.list.activeToggleError": "Não foi possível atualizar. Tenta de novo",
+  "pressKit.list.activeToggleError":
+    "Não foi possível atualizar. Tenta de novo",
   "pressKit.list.reorderError": "Não foi possível reordenar. Tenta de novo",
   "pressKit.list.empty.coverage.title": "Ainda sem cobertura em destaque",
   "pressKit.list.empty.coverage.body":
@@ -3460,7 +3503,8 @@ export const admin: Catalog = {
   "reports.header.sub":
     "Crescimento, denúncias por tipo, finanças da governação e saúde das comunidades, num só lugar.",
   "reports.trends.title": "Crescimento e denúncias por tipo",
-  "reports.trends.sub": "Ajusta o período para veres uma janela mais longa ou mais curta.",
+  "reports.trends.sub":
+    "Ajusta o período para veres uma janela mais longa ou mais curta.",
   "reports.trends.rangeWeeks": "{count}sem",
   "reports.trends.exportGrowth": "Exportar CSV de crescimento",
   "reports.trends.exportReportsByType": "Exportar CSV de denúncias",
@@ -3473,8 +3517,10 @@ export const admin: Catalog = {
   "reports.finance.expense": "Despesa: {amount}",
   "reports.finance.surplus": "Excedente: {amount}",
   "reports.communityHealth.title": "Saúde das comunidades",
-  "reports.communityHealth.sub": "Uma fotografia da pontuação de saúde de cada comunidade.",
-  "reports.communityHealth.asOfNow": "A partir das {time}. Uma fotografia num momento.",
+  "reports.communityHealth.sub":
+    "Uma fotografia da pontuação de saúde de cada comunidade.",
+  "reports.communityHealth.asOfNow":
+    "A partir das {time}. Uma fotografia num momento.",
   "reports.communityHealth.notMeasured": "Ainda não medido",
   "reports.communityHealth.averageScore": "Pontuação média: {score}",
   "reports.communityHealth.needingSupport": "{count} a precisar de apoio",
@@ -3497,7 +3543,8 @@ export const admin: Catalog = {
     "Ainda não há recursos. Crie o primeiro, ou consulte a fila de sugestões para ideias.",
   "adminResourceListings.loadError": "Não foi possível carregar os recursos.",
   "adminResourceListings.category.legal_aid": "Apoio Jurídico",
-  "adminResourceListings.category.sexual_health_testing": "Testagem de Saúde Sexual",
+  "adminResourceListings.category.sexual_health_testing":
+    "Testagem de Saúde Sexual",
   "adminResourceListings.status.active": "Ativo",
   "adminResourceListings.status.archived": "Arquivado",
   "adminResourceListings.row.noRegion": "Sem região definida",
@@ -3513,10 +3560,10 @@ export const admin: Catalog = {
   "adminResourceListings.form.editTitle": "Editar recurso",
   "adminResourceListings.form.createTitle": "Novo recurso",
   "adminResourceListings.form.createCta": "Criar recurso",
-  "adminResourceListings.toast.created": "\"{title}\" foi publicado.",
-  "adminResourceListings.toast.updated": "\"{title}\" foi atualizado.",
-  "adminResourceListings.toast.removed": "\"{title}\" foi removido.",
-  "adminResourceListings.delete.title": "Remover \"{title}\"?",
+  "adminResourceListings.toast.created": '"{title}" foi publicado.',
+  "adminResourceListings.toast.updated": '"{title}" foi atualizado.',
+  "adminResourceListings.toast.removed": '"{title}" foi removido.',
+  "adminResourceListings.delete.title": 'Remover "{title}"?',
   "adminResourceListings.delete.body":
     "Este recurso deixará de ser mostrado aos membros. Esta ação não pode ser desfeita aqui.",
   "adminResourceListings.delete.confirmCta": "Remover recurso",
@@ -3529,7 +3576,8 @@ export const admin: Catalog = {
     "Todos os recursos de Apoio Jurídico / Testagem de Saúde Sexual sugeridos por membros. Aprovar aqui apenas regista a decisão: publique o recurso real e verificado manualmente em Diretório de recursos.",
   "adminResourceSuggestions.filter.all": "Todas as categorias",
   "adminResourceSuggestions.category.legal_aid": "Apoio Jurídico",
-  "adminResourceSuggestions.category.sexual_health_testing": "Testagem de Saúde Sexual",
+  "adminResourceSuggestions.category.sexual_health_testing":
+    "Testagem de Saúde Sexual",
   "adminResourceSuggestions.status.pending": "Pendente",
   "adminResourceSuggestions.status.approved": "Aprovada",
   "adminResourceSuggestions.status.declined": "Recusada",
@@ -3547,7 +3595,8 @@ export const admin: Catalog = {
   "adminResourceSuggestions.toast.approved": "Sugestão aprovada.",
   "adminResourceSuggestions.toast.declined": "Sugestão recusada.",
   "adminResourceSuggestions.toast.archived": "Sugestão arquivada.",
-  "adminResourceSuggestions.toast.error": "Não foi possível atualizar a sugestão.",
+  "adminResourceSuggestions.toast.error":
+    "Não foi possível atualizar a sugestão.",
 
   // ── Pedidos de etiquetas de comunidades (AdminCommunityTagRequestsPage) ───
   "adminCommunityTagRequests.title": "Pedidos de <em>etiquetas</em>",
@@ -3565,11 +3614,13 @@ export const admin: Catalog = {
   "adminCommunityTagRequests.unknownRequester": "Um membro",
   "adminCommunityTagRequests.action.resolve": "Resolver",
   "adminCommunityTagRequests.empty": "Ainda não há pedidos de etiquetas.",
-  "adminCommunityTagRequests.error": "Não foi possível carregar os pedidos de etiquetas.",
+  "adminCommunityTagRequests.error":
+    "Não foi possível carregar os pedidos de etiquetas.",
   "adminCommunityTagRequests.loadMore": "Carregar mais",
   "adminCommunityTagRequests.loadingMore": "A carregar…",
   "adminCommunityTagRequests.toast.resolved": "Pedido de etiqueta resolvido.",
-  "adminCommunityTagRequests.toast.error": "Não foi possível resolver o pedido.",
+  "adminCommunityTagRequests.toast.error":
+    "Não foi possível resolver o pedido.",
 
   // ── 2026-08-21 code-review 4.6 fixes ──
   "members.flagged.openMemberAriaLabel": "Abrir os detalhes de {handle}",
@@ -3784,22 +3835,13 @@ export const admin: Catalog = {
     "Fevereiro de 2026: Alternador de idioma adicionado",
 
   // ── 2026-08-21 code-review 4.6 fixes ──
-  "moderation.resolved.closedAt":
-    "Fechada {age}",
-  "moderation.resolved.resolvedBy":
-    "Resolvida por {name}: {note}",
-  "moderation.notified.member":
-    "Membro notificado",
-  "moderation.notified.reporter":
-    "Quem denunciou foi notificado",
-  "moderation.notified.affected":
-    "Membro afetado apoiado",
-  "moderation.reporter.anonymous":
-    "anónimo",
-  "communities.queue.status.open":
-    "Aberta",
-  "communities.queue.status.resolved":
-    "Resolvida",
-  "communities.queue.status.escalated":
-    "Encaminhada",
+  "moderation.resolved.closedAt": "Fechada {age}",
+  "moderation.resolved.resolvedBy": "Resolvida por {name}: {note}",
+  "moderation.notified.member": "Membro notificado",
+  "moderation.notified.reporter": "Quem denunciou foi notificado",
+  "moderation.notified.affected": "Membro afetado apoiado",
+  "moderation.reporter.anonymous": "anónimo",
+  "communities.queue.status.open": "Aberta",
+  "communities.queue.status.resolved": "Resolvida",
+  "communities.queue.status.escalated": "Encaminhada",
 };

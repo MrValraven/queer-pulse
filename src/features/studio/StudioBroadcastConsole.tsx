@@ -22,6 +22,13 @@ const badgeClass = {
   hold: s.badgeHold,
 };
 
+// Content: the currently-playing mock track's title, split for the <em>
+// emphasis on its last word — same track as studioAlbum.data.ts's TRACKS[5]
+// ("Carta para a santa"). In live mode this comes from the broadcast's
+// now-playing track record.
+const NOW_PLAYING_TITLE_PRE = "Carta para a ";
+const NOW_PLAYING_TITLE_EM = "santa";
+
 /* ---------- LEFT: audio in ---------- */
 function LevelMeter({ reduced }: { reduced: boolean }) {
   const [levels, setLevels] = useState({ l: 62, r: 58 });
@@ -164,7 +171,8 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
           {t("studio:broadcast.nowPlaying.onAirNow")}
         </div>
         <div className={s.nowTitle}>
-          Carta para a <em>santa</em>
+          {NOW_PLAYING_TITLE_PRE}
+          <em>{NOW_PLAYING_TITLE_EM}</em>
         </div>
         <Equaliser reduced={reduced} />
       </div>

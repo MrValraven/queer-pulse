@@ -189,11 +189,7 @@ export const bulkRemoveListings = (refs: string[], reason?: string) =>
  *  `question_asked`, `answered`). `actor` is `null` for an action attributed
  *  to no longer resolvable account (deleted/anonymised moderator). */
 export type ListingModerationAction =
-  | "status_changed"
-  | "removed"
-  | "question_asked"
-  | "answered"
-  | "bulk_status";
+  "status_changed" | "removed" | "question_asked" | "answered" | "bulk_status";
 
 export interface ListingModerationEventDTO {
   id: string;

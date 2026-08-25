@@ -1,6 +1,9 @@
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { STAFF_ROLE_IDS, type StaffRoleId } from "../../admin/staffRoles.registry";
+import {
+  STAFF_ROLE_IDS,
+  type StaffRoleId,
+} from "../../admin/staffRoles.registry";
 
 /**
  * The current member's staff-role grants. Live mode reads the real grants off

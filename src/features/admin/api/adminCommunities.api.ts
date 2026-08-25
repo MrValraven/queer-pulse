@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 
 /**
  * Admin communities panel (`/admin/communities`, admin-only). Mirrors the
@@ -12,15 +17,11 @@ import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client
 export type BadgeTone = "plum" | "coral" | "jade" | "violet" | "amber";
 export type AdminCommunityVisibility = "private" | "public" | "network";
 export type ActivityLabel =
-  | "Quiet"
-  | "Growing"
-  | "Steady"
-  | "Active"
-  | "High"
-  | "Busy";
+  "Quiet" | "Growing" | "Steady" | "Active" | "High" | "Busy";
 
 /** The backend's `ReportSeverity` enum, over the wire as its string values. */
-export type AdminCommunityQueueSeverity = "emergency" | "high" | "medium" | "low";
+export type AdminCommunityQueueSeverity =
+  "emergency" | "high" | "medium" | "low";
 
 export interface AdminCommunityHealthBreakdownDTO {
   memberActivity: number;
@@ -200,9 +201,12 @@ export const unarchiveAdminCommunity = (slug: string) =>
  *  on this community's roster; 400s if the target is the house account.
  *  Returns the refreshed detail. */
 export const reassignAdminCommunityOwner = (slug: string, memberSlug: string) =>
-  apiPost<AdminCommunityDetailDTO>(`/admin/communities/${slug}/reassign-owner`, {
-    memberSlug,
-  });
+  apiPost<AdminCommunityDetailDTO>(
+    `/admin/communities/${slug}/reassign-owner`,
+    {
+      memberSlug,
+    },
+  );
 
 /** Admin override: remove any roster member outright (by profile slug), not
  *  just demote a moderator. 404s if `memberSlug` isn't on this community's

@@ -1,5 +1,11 @@
 import type { IconType } from "react-icons";
-import { FiGlobe, FiMail, FiShare2, FiUserCheck, FiUsers } from "react-icons/fi";
+import {
+  FiGlobe,
+  FiMail,
+  FiShare2,
+  FiUserCheck,
+  FiUsers,
+} from "react-icons/fi";
 import { RadioCardGroup } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EventVisibility } from "./api/events.api";

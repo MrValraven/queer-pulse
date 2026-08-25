@@ -18,9 +18,14 @@ export function BadgesLadder({ perksLadder }: BadgesLadderProps) {
     <section className={styles.sec} id="how-xp">
       <div className={styles.hd}>
         <div>
-          <span className={styles.hdEyebrow}>{t("members:badges.ladderV2.eyebrow")}</span>
+          <span className={styles.hdEyebrow}>
+            {t("members:badges.ladderV2.eyebrow")}
+          </span>
           <h2 className={`${styles.hdTitle} ${styles.hdLvl2}`}>
-            <Translation i18nKey="members:badges.ladderV2.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="members:badges.ladderV2.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.hdSub}>{t("members:badges.ladderV2.sub")}</p>
         </div>
@@ -40,7 +45,9 @@ export function BadgesLadder({ perksLadder }: BadgesLadderProps) {
               <div>
                 <div className={styles.lname}>{row.name}</div>
                 {headline && <div className={styles.lheadline}>{headline}</div>}
-                {rest.length > 0 && <div className={styles.lrest}>{rest.join(" · ")}</div>}
+                {rest.length > 0 && (
+                  <div className={styles.lrest}>{rest.join(" · ")}</div>
+                )}
               </div>
               <div className={styles.lright}>
                 <div className={styles.lstate}>{row.status}</div>
@@ -51,7 +58,9 @@ export function BadgesLadder({ perksLadder }: BadgesLadderProps) {
       </div>
       {topLevel && (
         <div className={styles.beyond}>
-          <b>{t("members:badges.ladderV2.beyondTitle", { name: topLevel.name })}</b>
+          <b>
+            {t("members:badges.ladderV2.beyondTitle", { name: topLevel.name })}
+          </b>
           <span>{t("members:badges.ladderV2.beyondBody")}</span>
         </div>
       )}

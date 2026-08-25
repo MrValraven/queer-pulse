@@ -15,16 +15,22 @@ describe("reasonFor", () => {
   });
 
   it("never leaks 5xx internals", () => {
-    expect(reasonFor(new ApiError(500, "Cannot read property x of undefined"))).toBeNull();
+    expect(
+      reasonFor(new ApiError(500, "Cannot read property x of undefined")),
+    ).toBeNull();
     expect(reasonFor(new ApiError(502, "Bad Gateway"))).toBeNull();
   });
 
   it("surfaces a real 4xx reason", () => {
-    expect(reasonFor(new ApiError(409, "That name is taken"))).toBe("That name is taken");
-    expect(reasonFor(new ApiError(422, "Bio is too long"))).toBe("Bio is too long");
-    expect(reasonFor(new ApiError(403, "You are blocked from this community"))).toBe(
-      "You are blocked from this community",
+    expect(reasonFor(new ApiError(409, "That name is taken"))).toBe(
+      "That name is taken",
     );
+    expect(reasonFor(new ApiError(422, "Bio is too long"))).toBe(
+      "Bio is too long",
+    );
+    expect(
+      reasonFor(new ApiError(403, "You are blocked from this community")),
+    ).toBe("You are blocked from this community");
   });
 
   it("suppresses a bare HTTP status word as no reason", () => {
@@ -48,7 +54,12 @@ describe("reasonFor", () => {
 
 describe("describeError", () => {
   it("frames the reason when there is one", () => {
-    expect(describeError("Couldn't save that co-op", new ApiError(409, "That name is taken"))).toBe(
+    expect(
+      describeError(
+        "Couldn't save that co-op",
+        new ApiError(409, "That name is taken"),
+      ),
+    ).toBe(
       // The reason's own casing is preserved verbatim (only a single trailing
       // period is trimmed): `describeError` never lower-cases the first letter.
       "Couldn't save that co-op: That name is taken.",
@@ -56,17 +67,20 @@ describe("describeError", () => {
   });
 
   it("trims a single trailing period on the reason", () => {
-    expect(describeError("Couldn't save", new ApiError(422, "Bio is too long."))).toBe(
-      "Couldn't save: Bio is too long.",
-    );
+    expect(
+      describeError("Couldn't save", new ApiError(422, "Bio is too long.")),
+    ).toBe("Couldn't save: Bio is too long.");
   });
 
   it("falls back to please-try-again with no reason", () => {
-    expect(describeError("Couldn't save that co-op", new TypeError("Failed to fetch"))).toBe(
-      "Couldn't save that co-op. Please try again.",
-    );
-    expect(describeError("Couldn't save that co-op", new ApiError(500, "boom"))).toBe(
-      "Couldn't save that co-op. Please try again.",
-    );
+    expect(
+      describeError(
+        "Couldn't save that co-op",
+        new TypeError("Failed to fetch"),
+      ),
+    ).toBe("Couldn't save that co-op. Please try again.");
+    expect(
+      describeError("Couldn't save that co-op", new ApiError(500, "boom")),
+    ).toBe("Couldn't save that co-op. Please try again.");
   });
 });

@@ -108,7 +108,8 @@ function AdminStatCard({
           <span
             className={[styles.trend, styles[`trend_${trend.dir}`]].join(" ")}
           >
-            {TrendIcon && <TrendIcon aria-hidden />} {t(trend.key, trend.values)}
+            {TrendIcon && <TrendIcon aria-hidden />}{" "}
+            {t(trend.key, trend.values)}
           </span>{" "}
           {t(footKey, footValues)}
         </span>

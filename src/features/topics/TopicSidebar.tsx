@@ -61,7 +61,6 @@ export function TopicSidebar({ topic }: { topic: Topic }) {
           </div>
         </div>
       )}
-
     </aside>
   );
 }

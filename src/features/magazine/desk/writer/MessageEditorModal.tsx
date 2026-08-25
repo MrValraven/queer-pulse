@@ -15,7 +15,10 @@ export interface MessageEditorModalProps {
  * component the desk's Chase modal uses (`side="writer"` here); posting
  * notifies the assigned editor server-side.
  */
-export function MessageEditorModal({ assignment, onClose }: MessageEditorModalProps) {
+export function MessageEditorModal({
+  assignment,
+  onClose,
+}: MessageEditorModalProps) {
   const { t } = useTranslation();
   return (
     <Modal

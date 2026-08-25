@@ -21,9 +21,7 @@ describe("StudioTipModal", () => {
       </TestProviders>,
     );
     // Default preset (€2) leaves the send button enabled.
-    expect(
-      await screen.findByRole("button", { name: /^tip /i }),
-    ).toBeEnabled();
+    expect(await screen.findByRole("button", { name: /^tip /i })).toBeEnabled();
 
     const customInput = screen.getByRole("spinbutton");
     fireEvent.change(customInput, { target: { value: "0" } });

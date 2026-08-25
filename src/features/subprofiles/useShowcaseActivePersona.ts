@@ -64,5 +64,13 @@ export function useShowcaseActivePersona(personas: PublicSubprofileView[]) {
     }
   }, [nextIndex]);
 
-  return { active, activeSlug, setActiveSlug, direction, heroId, tabId, hasList };
+  return {
+    active,
+    activeSlug,
+    setActiveSlug,
+    direction,
+    heroId,
+    tabId,
+    hasList,
+  };
 }

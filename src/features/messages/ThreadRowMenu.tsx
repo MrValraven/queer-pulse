@@ -6,7 +6,13 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { FiBell, FiBellOff, FiHeart, FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
+import {
+  FiBell,
+  FiBellOff,
+  FiHeart,
+  FiMoreHorizontal,
+  FiTrash2,
+} from "react-icons/fi";
 import { TbPin, TbPinnedFilled } from "react-icons/tb";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Conversation } from "./data";

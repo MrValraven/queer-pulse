@@ -230,7 +230,8 @@ export const DRAFTS: Draft[] = [
         Pitch · <em>"The pharmacist who fills every prescription"</em>
       </>
     ),
-    description: "For QueerPulse Magazine · Issue 10 · 1,200-word profile · talked with Rui yesterday",
+    description:
+      "For QueerPulse Magazine · Issue 10 · 1,200-word profile · talked with Rui yesterday",
     meta: [{ kind: "startedAgo" }, { kind: "savedAgo", variant: "pulse" }],
     progress: 85,
     actions: [
@@ -274,7 +275,8 @@ export const DRAFTS: Draft[] = [
         Post in <em>Creatives</em>
       </>
     ),
-    description: '"Hosting a portfolio night the first Wednesday of every month, at the community café. 12 spots, drop a link…"',
+    description:
+      '"Hosting a portfolio night the first Wednesday of every month, at the community café. 12 spots, drop a link…"',
     meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 78,
     actions: [
@@ -300,7 +302,8 @@ export const DRAFTS: Draft[] = [
         Reply to <em>Anika Kovač's post about queer-friendly GPs</em>
       </>
     ),
-    description: '"Dr. Inês Pereira at Clínica do Largo, third Rita\'s vouch. Go. Worth knowing that her phone is the one on the door, not the website…"',
+    description:
+      '"Dr. Inês Pereira at Clínica do Largo, third Rita\'s vouch. Go. Worth knowing that her phone is the one on the door, not the website…"',
     meta: [{ kind: "startedAgo" }, { kind: "savedAgo", variant: "pulse" }],
     progress: 92,
     actions: [{ label: "Send reply", variant: "primary" }, { label: "Edit" }],
@@ -323,7 +326,8 @@ export const DRAFTS: Draft[] = [
         Post in <em>Trans Hub</em>
       </>
     ),
-    description: '"Question for the group: anyone navigated SNS continuity-of-care when moving between Lisbon and Porto…"',
+    description:
+      '"Question for the group: anyone navigated SNS continuity-of-care when moving between Lisbon and Porto…"',
     meta: [{ kind: "startedAgo" }, { kind: "lastEditedAgo" }],
     progress: 42,
     actions: [
@@ -349,7 +353,8 @@ export const DRAFTS: Draft[] = [
         Pitch · <em>"Six months on a four-day week: the sequel"</em>
       </>
     ),
-    description: "Follow-up to my Issue 05 piece · sent to editorial in March, never finished revision",
+    description:
+      "Follow-up to my Issue 05 piece · sent to editorial in March, never finished revision",
     meta: [{ kind: "startedAgo" }, { kind: "deletesIn", variant: "warn" }],
     progress: 34,
     actions: [

@@ -21,7 +21,9 @@ export interface DetailRowsProps {
  */
 export function DetailRows({ rows, dense = false }: DetailRowsProps) {
   return (
-    <dl className={[styles.list, dense && styles.dense].filter(Boolean).join(" ")}>
+    <dl
+      className={[styles.list, dense && styles.dense].filter(Boolean).join(" ")}
+    >
       {rows.map((row, index) => (
         <div className={styles.row} key={index}>
           <dt className={styles.label}>{row.label}</dt>

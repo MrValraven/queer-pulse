@@ -4,7 +4,9 @@ import type { PublicSubprofileView } from "../api/subprofiles.adapters";
  *  section item, as an ISO string — the date the persona's body of work first
  *  appeared on QueerPulse, and the date the page's single `PersonaRightsFooter`
  *  prints. `null` when the persona has no dated item yet. */
-export function firstPublishedISO(persona: PublicSubprofileView): string | null {
+export function firstPublishedISO(
+  persona: PublicSubprofileView,
+): string | null {
   const candidates = [
     persona.featured,
     ...persona.sections.flatMap((section) => section.items),

@@ -13,7 +13,10 @@ import {
   type ReportRangeWeeks,
 } from "./adminReportsTrends.data";
 import { useAdminReportsTrends } from "./api/useAdminReportsTrends";
-import { downloadGrowthCsv, downloadReportsByTypeCsv } from "./api/adminReports.api";
+import {
+  downloadGrowthCsv,
+  downloadReportsByTypeCsv,
+} from "./api/adminReports.api";
 import styles from "./AdminReportsPage.module.css";
 
 /** Growth + reports-by-type share one weekly-range control (ADM-17) — a

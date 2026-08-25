@@ -108,7 +108,9 @@ function toGroups(
       senderName: hit.sender.displayName,
     });
   }
-  return order.map((conversationId) => groupByConversation.get(conversationId)!);
+  return order.map((conversationId) =>
+    groupByConversation.get(conversationId)!,
+  );
 }
 
 /** Compact "9:14 PM" / weekday / date label for a hit's timestamp. */
@@ -142,10 +144,7 @@ function searchDemo(
   const groups: MessageSearchGroupView[] = [];
   for (const conversation of mockConversations) {
     if (deletedIds.has(conversation.id)) continue;
-    if (
-      scopedToConversationId &&
-      conversation.id !== scopedToConversationId
-    ) {
+    if (scopedToConversationId && conversation.id !== scopedToConversationId) {
       continue;
     }
     const hits: MessageSearchHitView[] = [];
@@ -213,12 +212,7 @@ export function useMessageSearch(
     // retype (new `trimmed` → new queryKey) cancels the previous keystroke's
     // request at the network layer, not just in the query cache.
     queryFn: ({ signal }) =>
-      searchMessages(
-        trimmed,
-        SEARCH_LIMIT,
-        signal,
-        scopedToConversationId,
-      ),
+      searchMessages(trimmed, SEARCH_LIMIT, signal, scopedToConversationId),
     // A search term is short-lived; keep results briefly so re-typing the same
     // query doesn't refetch, but don't hoard stale corpora.
     staleTime: 30_000,
@@ -231,7 +225,14 @@ export function useMessageSearch(
         : [],
     // deletedToken stands in for the deletedIds set identity.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [demoMode, enabled, trimmed, deletedToken, youLabel, scopedToConversationId],
+    [
+      demoMode,
+      enabled,
+      trimmed,
+      deletedToken,
+      youLabel,
+      scopedToConversationId,
+    ],
   );
 
   const liveGroups = useMemo(

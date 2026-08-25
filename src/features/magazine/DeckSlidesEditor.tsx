@@ -101,7 +101,10 @@ export function DeckSlidesEditor({ slides, onChange }: DeckSlidesEditorProps) {
       <div className={styles.sectionHead}>
         <h3>{t("magazine:deck.editor.slidesHeading")}</h3>
         <span className={styles.sectionSub}>
-          {t("magazine:deck.editor.slidesCount", { count: slides.length, max: MAX_SLIDES })}
+          {t("magazine:deck.editor.slidesCount", {
+            count: slides.length,
+            max: MAX_SLIDES,
+          })}
         </span>
       </div>
       <ol className={styles.slides}>
@@ -141,7 +144,12 @@ export function DeckSlidesEditor({ slides, onChange }: DeckSlidesEditorProps) {
             }))}
           />
         </div>
-        <Button type="button" variant="ghost" onClick={addSlide} disabled={atCap}>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={addSlide}
+          disabled={atCap}
+        >
           {t("magazine:deck.editor.addSlide")}
         </Button>
         <p className={styles.hint}>

@@ -37,14 +37,21 @@ export const EMPTY_PARTS: WorkingParts = {
 };
 
 /** 24h internal hour -> the field's displayed hour + meridiem. */
-export function hourFromInternal(hour24: number, is12Hour: boolean): { hour: number; meridiem: "AM" | "PM" | null } {
+export function hourFromInternal(
+  hour24: number,
+  is12Hour: boolean,
+): { hour: number; meridiem: "AM" | "PM" | null } {
   if (!is12Hour) return { hour: hour24, meridiem: null };
   const meridiem: "AM" | "PM" = hour24 >= 12 ? "PM" : "AM";
   return { hour: hour24 % 12 === 0 ? 12 : hour24 % 12, meridiem };
 }
 
 /** The field's displayed hour + meridiem -> 24h internal hour. */
-export function hourToInternal(hour: number, meridiem: "AM" | "PM" | null, is12Hour: boolean): number {
+export function hourToInternal(
+  hour: number,
+  meridiem: "AM" | "PM" | null,
+  is12Hour: boolean,
+): number {
   if (!is12Hour) return hour;
   if (meridiem === "PM") return hour === 12 ? 12 : hour + 12;
   return hour === 12 ? 0 : hour;
@@ -53,15 +60,23 @@ export function hourToInternal(hour: number, meridiem: "AM" | "PM" | null, is12H
 const DATETIME_PATTERN = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})$/;
 
 /** Parse the incoming `value` ISO (shape depends on `mode`) into working parts. */
-export function partsFromValue(mode: FieldMode, value: string | null, is12Hour: boolean): WorkingParts {
+export function partsFromValue(
+  mode: FieldMode,
+  value: string | null,
+  is12Hour: boolean,
+): WorkingParts {
   if (!value) return EMPTY_PARTS;
   if (mode === "date") {
     const date = parseDate(value);
-    return date ? { ...EMPTY_PARTS, year: date.year, month: date.month, day: date.day } : EMPTY_PARTS;
+    return date
+      ? { ...EMPTY_PARTS, year: date.year, month: date.month, day: date.day }
+      : EMPTY_PARTS;
   }
   if (mode === "month") {
     const date = parseMonth(value);
-    return date ? { ...EMPTY_PARTS, year: date.year, month: date.month } : EMPTY_PARTS;
+    return date
+      ? { ...EMPTY_PARTS, year: date.year, month: date.month }
+      : EMPTY_PARTS;
   }
   if (mode === "time") {
     const time = parseTime(value);
@@ -74,28 +89,51 @@ export function partsFromValue(mode: FieldMode, value: string | null, is12Hour: 
   const time = match ? parseTime(match[2] as string) : null;
   if (!date || !time) return EMPTY_PARTS;
   const { hour, meridiem } = hourFromInternal(time.hour, is12Hour);
-  return { year: date.year, month: date.month, day: date.day, hour, minute: time.minute, meridiem };
+  return {
+    year: date.year,
+    month: date.month,
+    day: date.day,
+    hour,
+    minute: time.minute,
+    meridiem,
+  };
 }
 
 /** Reassemble working parts into the mode's ISO shape, or `null` while any
  *  required segment is still empty. The day is clamped to the typed
  *  year/month's length (e.g. a stale Jan-31 after switching to February). */
-export function isoFromParts(mode: FieldMode, parts: WorkingParts, is12Hour: boolean): string | null {
+export function isoFromParts(
+  mode: FieldMode,
+  parts: WorkingParts,
+  is12Hour: boolean,
+): string | null {
   if (mode === "month") {
     if (parts.year === null || parts.month === null) return null;
     return formatIsoMonth({ year: parts.year, month: parts.month, day: 1 });
   }
   const needsDate = mode === "date" || mode === "datetime";
   const needsTime = mode === "time" || mode === "datetime";
-  if (needsDate && (parts.year === null || parts.month === null || parts.day === null)) return null;
-  if (needsTime && (parts.hour === null || parts.minute === null || (is12Hour && parts.meridiem === null))) {
+  if (
+    needsDate &&
+    (parts.year === null || parts.month === null || parts.day === null)
+  )
+    return null;
+  if (
+    needsTime &&
+    (parts.hour === null ||
+      parts.minute === null ||
+      (is12Hour && parts.meridiem === null))
+  ) {
     return null;
   }
   const isoDate = needsDate
     ? formatIsoDate({
         year: parts.year as number,
         month: parts.month as number,
-        day: Math.min(parts.day as number, getDaysInMonth(parts.year as number, parts.month as number)),
+        day: Math.min(
+          parts.day as number,
+          getDaysInMonth(parts.year as number, parts.month as number),
+        ),
       })
     : null;
   const isoTime = needsTime
@@ -122,7 +160,10 @@ const DATE_PREFIX_PATTERN = /^\d{4}-\d{2}-\d{2}/;
  * for the `PlainTime` counterpart `clampPartsToRange` clamps time fields
  * against.
  */
-export function parseDateBound(mode: FieldMode, raw: string | undefined): PlainDate | null {
+export function parseDateBound(
+  mode: FieldMode,
+  raw: string | undefined,
+): PlainDate | null {
   if (!raw) return null;
   if (mode === "month") return parseMonth(raw);
   if (mode === "time") return null;
@@ -133,7 +174,10 @@ export function parseDateBound(mode: FieldMode, raw: string | undefined): PlainD
 /** Parse a `min`/`max` bound for a `mode="time"` field (an `"hh:mm"` string)
  *  into the `PlainTime` `clampPartsToRange` compares against. `null` for any
  *  other mode: those bounds are dates, handled by `parseDateBound`. */
-export function parseTimeBound(mode: FieldMode, raw: string | undefined): PlainTime | null {
+export function parseTimeBound(
+  mode: FieldMode,
+  raw: string | undefined,
+): PlainTime | null {
   if (!raw || mode !== "time") return null;
   return parseTime(raw);
 }
@@ -149,7 +193,11 @@ export interface FieldBounds {
   maxTime: PlainTime | null;
 }
 
-export function parseFieldBounds(mode: FieldMode, min: string | undefined, max: string | undefined): FieldBounds {
+export function parseFieldBounds(
+  mode: FieldMode,
+  min: string | undefined,
+  max: string | undefined,
+): FieldBounds {
   return {
     minDate: parseDateBound(mode, min),
     maxDate: parseDateBound(mode, max),
@@ -164,7 +212,11 @@ export function parseFieldBounds(mode: FieldMode, min: string | undefined, max: 
  *  incomplete, or for `month`/`time` modes, which have no single date to
  *  check (a bare month or time-of-day isn't "a date" `isDateUnavailable` can
  *  judge). */
-export function unavailableCheckIso(mode: FieldMode, parts: WorkingParts, is12Hour: boolean): string | null {
+export function unavailableCheckIso(
+  mode: FieldMode,
+  parts: WorkingParts,
+  is12Hour: boolean,
+): string | null {
   if (mode !== "date" && mode !== "datetime") return null;
   const iso = isoFromParts(mode, parts, is12Hour);
   if (!iso) return null;

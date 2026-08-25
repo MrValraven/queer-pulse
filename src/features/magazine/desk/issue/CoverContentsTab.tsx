@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ChangeEvent,
-} from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { FormField, ImageSlot } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useDebouncedValue } from "../../../../shared/hooks/useDebouncedValue";
@@ -88,7 +82,9 @@ export function CoverContentsTab({
   const [draftCoverlines, setDraftCoverlines] = useState<string[]>(
     normalizeCoverlines([]),
   );
-  const [contentsDraft, setContentsDraft] = useState<Record<string, string>>({});
+  const [contentsDraft, setContentsDraft] = useState<Record<string, string>>(
+    {},
+  );
   if (seededNumber !== number) {
     setSeededNumber(number);
     setDraftCoverUrl(coverUrl);
@@ -107,7 +103,10 @@ export function CoverContentsTab({
   const lastSavedRef = useRef<CoverContentsTabSaveCoverPatch | null>(null);
   useEffect(() => {
     if (seededNumber !== number) return;
-    lastSavedRef.current = { coverUrl, coverlines: normalizeCoverlines(coverlines) };
+    lastSavedRef.current = {
+      coverUrl,
+      coverlines: normalizeCoverlines(coverlines),
+    };
   }, [coverUrl, coverlines, number, seededNumber]);
 
   // Memoized so an unrelated re-render (e.g. a contents-blurb keystroke)
@@ -119,7 +118,10 @@ export function CoverContentsTab({
   const debouncedDraft = useDebouncedValue(draftSnapshot, 700);
 
   useEffect(() => {
-    if (!lastSavedRef.current || coverDraftsEqual(debouncedDraft, lastSavedRef.current)) {
+    if (
+      !lastSavedRef.current ||
+      coverDraftsEqual(debouncedDraft, lastSavedRef.current)
+    ) {
       return;
     }
     lastSavedRef.current = debouncedDraft;
@@ -165,7 +167,10 @@ export function CoverContentsTab({
     for (const [pieceId, blurb] of Object.entries(debouncedContentsDraft)) {
       const lastSavedBlurb = lastSavedContentsRef.current[pieceId];
       if (lastSavedBlurb === undefined || lastSavedBlurb === blurb) continue;
-      lastSavedContentsRef.current = { ...lastSavedContentsRef.current, [pieceId]: blurb };
+      lastSavedContentsRef.current = {
+        ...lastSavedContentsRef.current,
+        [pieceId]: blurb,
+      };
       onSaveContentsBlurb(pieceId, blurb);
     }
     // `onSaveContentsBlurb` is a fresh callback most renders — only the
@@ -210,7 +215,9 @@ export function CoverContentsTab({
               placeholder={t("magazine:issue.cover.artPlaceholder")}
             />
             <div className={styles.coverlines}>
-              <span className={styles.ct}>{t("magazine:format.issueLabel", { number })}</span>
+              <span className={styles.ct}>
+                {t("magazine:format.issueLabel", { number })}
+              </span>
               <b>{theme}</b>
               {draftCoverlines.map((coverline, index) => (
                 <span key={index} className={styles.cl}>
@@ -231,7 +238,9 @@ export function CoverContentsTab({
             {draftCoverlines.map((coverline, index) => (
               <FormField
                 key={index}
-                label={t("magazine:issue.cover.coverlineLabel", { n: index + 1 })}
+                label={t("magazine:issue.cover.coverlineLabel", {
+                  n: index + 1,
+                })}
               >
                 <input
                   type="text"

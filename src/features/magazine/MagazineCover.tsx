@@ -37,17 +37,20 @@ export function MagazineCover() {
           <div className={styles.csKicker}>{t("magazine:cover.kicker")}</div>
           {/* Content: this is the cover story's own headline — kept in
               English, it arrives from the API in live mode. */}
+          {/* eslint-disable local/no-literal-string -- cover story's own headline, editorial content */}
           <h1 className={styles.csTitle}>
             The city changed.
             <br />
             <em>Did we?</em> <FeatureHelp id="magazine.hub" />
           </h1>
+          {/* eslint-enable local/no-literal-string */}
           <div className={styles.csByline}>
             {t("magazine:cover.byline")}{" "}
             <AuthorLink name={memberName("sofia")} /> ·{" "}
             {t("magazine:cover.photographyBy")} {memberName("andre")}
           </div>
           {/* Content: the cover story's own standfirst. */}
+          {/* eslint-disable-next-line local/no-literal-string -- cover story's own standfirst, editorial content */}
           <p className={styles.csExcerpt}>
             Lisbon's queer community has spent a decade finding itself. The rent
             has tripled. The bars have closed and reopened and closed again.

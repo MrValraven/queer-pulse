@@ -86,9 +86,7 @@ describe("Navbar app-bar branch", () => {
     window.localStorage.setItem(AUTH_STORAGE_KEY, "false");
     renderNavbar("standalone");
 
-    expect(
-      screen.getByRole("link", { name: /sign in/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /sign in/i })).toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: /notifications/i }),
     ).not.toBeInTheDocument();

@@ -143,9 +143,7 @@ export function PersonaInvitesBanner() {
       {confirmingInvite && (
         <AcceptPersonaInviteModal
           invite={confirmingInvite}
-          busy={
-            busy?.id === confirmingInvite.id && busy.action === "accept"
-          }
+          busy={busy?.id === confirmingInvite.id && busy.action === "accept"}
           onConfirm={() => void handleAccept(confirmingInvite)}
           onClose={() => setConfirmingInvite(null)}
         />

@@ -152,9 +152,7 @@ export function normalizeCategory(value: string): string {
   if (!value) return value;
   if (CANONICAL_CATEGORIES.has(value)) return value;
   const key = value.trim().toLowerCase();
-  return (
-    CATEGORY_LABEL_TO_SLUG[key] ?? VENUE_TYPE_TO_CATEGORY[key] ?? value
-  );
+  return CATEGORY_LABEL_TO_SLUG[key] ?? VENUE_TYPE_TO_CATEGORY[key] ?? value;
 }
 
 /** Normalize a name for cross-dataset matching: fold diacritics + trim + lowercase. */
@@ -177,7 +175,9 @@ export function businessToLocal(
     place.latitude != null && place.longitude != null
       ? { latitude: place.latitude, longitude: place.longitude }
       : null;
-  const fallbackCoords = demoMode ? BUSINESS_COORDS[place.slug] ?? null : null;
+  const fallbackCoords = demoMode
+    ? (BUSINESS_COORDS[place.slug] ?? null)
+    : null;
   return {
     id: `business:${place.slug}`,
     kind: "business",

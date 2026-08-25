@@ -6,7 +6,10 @@ import type { ArticleBlockKind } from "./blockKinds";
  * evergreen browser this app targets has it); the timestamp+random fallback
  * only matters for an older/embedded WebView without it. */
 export function freshBlockId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
     return crypto.randomUUID();
   }
   return `b${Date.now()}${Math.random().toString(16).slice(2)}`;
@@ -16,7 +19,10 @@ export function freshBlockId(): string {
  * (paste-as-blocks) — the text never carries real markup, so this only needs
  * to stop it from being interpreted as any. */
 function escapeHtml(text: string): string {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 /** One paragraph block per (already split, already trimmed, non-empty) text
@@ -110,7 +116,9 @@ export function useArticleBlockOps(
 ): ArticleBlockOps {
   const changeBlock = useCallback(
     (id: string, next: ArticleBlock) => {
-      setBlocks((previous) => previous.map((block) => (block.id === id ? next : block)));
+      setBlocks((previous) =>
+        previous.map((block) => (block.id === id ? next : block)),
+      );
     },
     [setBlocks],
   );
@@ -120,7 +128,8 @@ export function useArticleBlockOps(
       setBlocks((previous) => {
         const index = previous.findIndex((block) => block.id === id);
         const targetIndex = direction === "up" ? index - 1 : index + 1;
-        if (index < 0 || targetIndex < 0 || targetIndex >= previous.length) return previous;
+        if (index < 0 || targetIndex < 0 || targetIndex >= previous.length)
+          return previous;
         const next = previous.slice();
         const moved = next[index];
         const displaced = next[targetIndex];

@@ -66,7 +66,9 @@ export function SubprofileReportModal({
         subjectType: "subprofile",
         subjectId,
         reasonCode: selectedReason.reasonCode,
-        detail: trimmedNote ? `${selectedLabel}: ${trimmedNote}` : selectedLabel,
+        detail: trimmedNote
+          ? `${selectedLabel}: ${trimmedNote}`
+          : selectedLabel,
       },
       {
         onSuccess: () => setDone(true),

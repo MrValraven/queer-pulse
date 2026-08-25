@@ -60,7 +60,9 @@ export function ProfileEditBar() {
               <span className={styles.unsavedDot} aria-hidden />
               {changedSectionKeys.length > 0
                 ? t("members:profileEdit.bar.unsavedIn", {
-                    sections: changedSectionKeys.map((key) => t(key)).join(", "),
+                    sections: changedSectionKeys
+                      .map((key) => t(key))
+                      .join(", "),
                   })
                 : t("members:profileEdit.bar.unsaved")}
             </>
@@ -70,7 +72,11 @@ export function ProfileEditBar() {
           <Button variant="ghost" onClick={requestCancel} disabled={isSaving}>
             {t("members:profileEdit.bar.discard")}
           </Button>
-          <Button variant="primary" onClick={() => void save()} disabled={isSaving}>
+          <Button
+            variant="primary"
+            onClick={() => void save()}
+            disabled={isSaving}
+          >
             {isSaving
               ? t("members:profileEdit.bar.saving")
               : saveError

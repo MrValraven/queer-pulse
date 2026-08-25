@@ -3,9 +3,14 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getArchive, type ArchiveEntryDto } from "./pieces.api";
 import { DEMO_ARCHIVE } from "../data/issueProduction.data";
 
-function matchesQuery(entry: ArchiveEntryDto, normalizedQuery: string): boolean {
+function matchesQuery(
+  entry: ArchiveEntryDto,
+  normalizedQuery: string,
+): boolean {
   if (!normalizedQuery) return true;
-  const haystack = [entry.title, entry.by, ...entry.tags].join(" ").toLowerCase();
+  const haystack = [entry.title, entry.by, ...entry.tags]
+    .join(" ")
+    .toLowerCase();
   return haystack.includes(normalizedQuery);
 }
 
@@ -28,12 +33,18 @@ export function useArchive(q: string) {
     queryFn: async () => {
       if (demoMode) {
         const normalizedQuery = q.trim().toLowerCase();
-        return DEMO_ARCHIVE.filter((entry) => matchesQuery(entry, normalizedQuery));
+        return DEMO_ARCHIVE.filter((entry) =>
+          matchesQuery(entry, normalizedQuery),
+        );
       }
       return getArchive(q);
     },
     placeholderData: keepPreviousData,
   });
 
-  return { entries: query.data ?? [], isLoading: query.isLoading, isError: query.isError };
+  return {
+    entries: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

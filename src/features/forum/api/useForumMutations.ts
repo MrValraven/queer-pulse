@@ -164,8 +164,7 @@ function patchThreadsCache(
         return {
           ...card,
           myVote: value,
-          upvotes:
-            serverCount ?? Math.max(0, card.upvotes + delta),
+          upvotes: serverCount ?? Math.max(0, card.upvotes + delta),
         };
       });
       return changed ? { ...page, items } : page;
@@ -285,7 +284,7 @@ export function useVotePost() {
       // of every loaded page of the list AND of the thread's posts on every
       // settled vote.
       if (!post) return;
-      const serverValue = (post.myVote ? 1 : 0) as 0 | 1;
+      const serverValue = post.myVote ? 1 : 0;
       queryClient.setQueriesData<InfiniteData<ThreadListPage>>(
         THREADS_KEY,
         (data) => patchThreadsCache(data, postId, serverValue, post.voteCount),
@@ -412,7 +411,9 @@ export function usePinThread() {
     },
     onSuccess: () => {
       if (demoMode) return;
-      void queryClient.invalidateQueries({ queryKey: ["forum-pinned-threads"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["forum-pinned-threads"],
+      });
       void queryClient.invalidateQueries(THREADS_KEY);
     },
   });

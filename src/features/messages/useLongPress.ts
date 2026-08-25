@@ -63,8 +63,11 @@ export function useLongPress(
   useEffect(() => clear, [clear]);
 
   const fire = useCallback(
-    (element: Element, source: "touch" | "pointer", point?: { x: number; y: number }) =>
-      onTrigger({ rect: element.getBoundingClientRect(), source, point }),
+    (
+      element: Element,
+      source: "touch" | "pointer",
+      point?: { x: number; y: number },
+    ) => onTrigger({ rect: element.getBoundingClientRect(), source, point }),
     [onTrigger],
   );
 

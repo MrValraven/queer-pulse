@@ -46,7 +46,9 @@ describe("AdminVerificationsPage — segment switching", () => {
     await user.click(
       await screen.findByRole("button", { name: "Review queue" }),
     );
-    expect(await screen.findByRole("tab", { name: /Pending/ })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("tab", { name: /Pending/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Sofia Almeida")).toBeInTheDocument();
   });
 });
@@ -425,8 +427,6 @@ describe("AdminVerificationsPage — Task 4: row selection + bulk actions + keyb
     // With the drawer open, "a" must not silently bulk-approve whatever row
     // was keyboard-focused before the drawer opened.
     await user.keyboard("a");
-    expect(
-      screen.queryByText("1 request updated."),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("1 request updated.")).not.toBeInTheDocument();
   });
 });

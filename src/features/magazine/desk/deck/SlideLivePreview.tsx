@@ -81,7 +81,12 @@ export interface SlideLivePreviewProps {
  * published `/magazine/deck/:slug` page uses, the preview cannot drift from
  * what a reader actually sees.
  */
-export function SlideLivePreview({ slide, index, total, onGo }: SlideLivePreviewProps) {
+export function SlideLivePreview({
+  slide,
+  index,
+  total,
+  onGo,
+}: SlideLivePreviewProps) {
   const { t } = useTranslation();
   // APG tablist keys across the slide dots.
   const { tabProps } = useTablistKeys(total, onGo);
@@ -91,9 +96,13 @@ export function SlideLivePreview({ slide, index, total, onGo }: SlideLivePreview
       <h3>{t("magazine:deck.editor.preview.title")}</h3>
       <div className={styles.frame}>
         {!slide ? (
-          <p className={styles.frameEmpty}>{t("magazine:deck.editor.previewEmpty")}</p>
+          <p className={styles.frameEmpty}>
+            {t("magazine:deck.editor.previewEmpty")}
+          </p>
         ) : isSlideBlank(slide) ? (
-          <p className={styles.frameEmpty}>{t("magazine:deck.editor.preview.emptySlide")}</p>
+          <p className={styles.frameEmpty}>
+            {t("magazine:deck.editor.preview.emptySlide")}
+          </p>
         ) : (
           renderReaderSlide(slide)
         )}

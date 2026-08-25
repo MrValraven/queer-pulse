@@ -12,11 +12,13 @@ export function CuratorNote() {
   const { t } = useTranslation();
   return (
     <div className={styles.curatorNote}>
+      {/* eslint-disable-next-line local/no-literal-string -- curator's initials, derived from their own name (content, not chrome) */}
       <div className={styles.cnAv}>JR</div>
       <div>
         <div className={styles.cnEb}>
           {t("cinema:shorts.curatorNote.eyebrow", { week: 27 })}
         </div>
+        {/* eslint-disable local/no-literal-string -- curator's own weekly note and byline; content per the scope rule, arrives over the wire in live mode */}
         <p className={styles.cnBody}>
           This week is about <em>staying</em>: films where nobody leaves the
           room, or wishes they hadn't. Start with <em>The first Sunday</em> if
@@ -25,6 +27,7 @@ export function CuratorNote() {
         </p>
         <p className={styles.cnSign}>
           João Reis, community programmer ·{" "}
+          {/* eslint-enable local/no-literal-string */}
           <Link to={routes.cinemaAbout}>
             {t("cinema:shorts.curatorNote.readPastNotesCta")}
           </Link>
@@ -71,6 +74,7 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
           <span className={styles.live} aria-hidden />
           {t("cinema:shorts.spotlight.communityPickKicker", { week: 23 })}
         </div>
+        {/* eslint-disable local/no-literal-string -- spotlighted film's own title, credits, synopsis, maker name, and funding tally; content per the scope rule, arrives over the wire in live mode */}
         <h2 className={styles.spTitle}>
           The first <em>Sunday</em>
         </h2>
@@ -104,12 +108,13 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
             <i style={{ width: "68%" }} />
           </div>
         </div>
+        {/* eslint-enable local/no-literal-string */}
         <div className={styles.spActions}>
           <Button to={routes.cinemaWatch}>
             {t("cinema:shorts.spotlight.watchNowCta")}
           </Button>
           <Button variant="ghost" to={`${routes.cinemaFilmmaker}/ines-tavares`}>
-            Tip the collective
+            {t("cinema:shorts.spotlight.tipCollectiveCta")}
           </Button>
           <button
             type="button"
@@ -120,6 +125,7 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
             {t("cinema:film.share.title")}
           </button>
         </div>
+        {/* eslint-disable local/no-literal-string -- spotlighted film's own watch/tip stats, a viewer's reaction quote, and its funding-source note; content per the scope rule, arrives over the wire in live mode */}
         <div className={styles.spTip}>
           <strong>819 watches</strong> this week · 94 tips sent · PT spoken / EN
           subs
@@ -135,7 +141,7 @@ export function Spotlight({ shelf }: { shelf: ShortsShelf }) {
           <span className={styles.nDot} aria-hidden />
           <span>
             Sustainers funded this film through the spring pool, and they fund
-            the €2.5k open grant.{" "}
+            the €2.5k open grant. {/* eslint-enable local/no-literal-string */}
             <Link to={routes.cinemaMembership}>
               {t("cinema:shorts.spotlight.becomeSustainerCta")}{" "}
               <FiArrowRight aria-hidden />

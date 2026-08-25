@@ -76,8 +76,7 @@ export function MeetTheTable({ title, neighbourhood }: MeetTheTableProps) {
     };
   });
 
-  const isTaken = (seat: Seat) =>
-    seat.role === "guest" || seat.role === "host";
+  const isTaken = (seat: Seat) => seat.role === "guest" || seat.role === "host";
   const confirmed = SEATS.filter(isTaken).length;
   const open = SEATS.length - confirmed;
 

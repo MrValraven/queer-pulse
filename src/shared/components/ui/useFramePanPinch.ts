@@ -41,13 +41,23 @@ export function useFramePanPinch({
 }: UseFramePanPinchOptions): {
   frameRef: RefObject<HTMLDivElement | null>;
   isDragging: boolean;
-  handleFramePointerDown: (pointerId: number, clientX: number, clientY: number) => void;
-  handleFramePointerMove: (pointerId: number, clientX: number, clientY: number) => void;
+  handleFramePointerDown: (
+    pointerId: number,
+    clientX: number,
+    clientY: number,
+  ) => void;
+  handleFramePointerMove: (
+    pointerId: number,
+    clientX: number,
+    clientY: number,
+  ) => void;
   endFramePointer: (pointerId: number) => void;
 } {
   const frameRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const activePointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
+  const activePointersRef = useRef<Map<number, { x: number; y: number }>>(
+    new Map(),
+  );
   const dragStateRef = useRef<{
     pointerId: number;
     startX: number;
@@ -55,9 +65,16 @@ export function useFramePanPinch({
     startPanX: number;
     startPanY: number;
   } | null>(null);
-  const pinchStateRef = useRef<{ startDistance: number; startZoom: number } | null>(null);
+  const pinchStateRef = useRef<{
+    startDistance: number;
+    startZoom: number;
+  } | null>(null);
 
-  function handleFramePointerDown(pointerId: number, clientX: number, clientY: number) {
+  function handleFramePointerDown(
+    pointerId: number,
+    clientX: number,
+    clientY: number,
+  ) {
     activePointersRef.current.set(pointerId, { x: clientX, y: clientY });
     if (activePointersRef.current.size >= 2) {
       dragStateRef.current = null;
@@ -72,19 +89,39 @@ export function useFramePanPinch({
       return;
     }
     setIsDragging(true);
-    dragStateRef.current = { pointerId, startX: clientX, startY: clientY, startPanX: panX, startPanY: panY };
+    dragStateRef.current = {
+      pointerId,
+      startX: clientX,
+      startY: clientY,
+      startPanX: panX,
+      startPanY: panY,
+    };
   }
 
-  function handleFramePointerMove(pointerId: number, clientX: number, clientY: number) {
+  function handleFramePointerMove(
+    pointerId: number,
+    clientX: number,
+    clientY: number,
+  ) {
     if (!activePointersRef.current.has(pointerId)) return;
     activePointersRef.current.set(pointerId, { x: clientX, y: clientY });
 
     if (pinchStateRef.current && activePointersRef.current.size >= 2) {
       const [firstPointer, secondPointer] = activePointersRef.current.values();
-      if (firstPointer && secondPointer && pinchStateRef.current.startDistance > 0) {
+      if (
+        firstPointer &&
+        secondPointer &&
+        pinchStateRef.current.startDistance > 0
+      ) {
         const currentDistance = pointerDistance(firstPointer, secondPointer);
         const scale = currentDistance / pinchStateRef.current.startDistance;
-        setZoom(() => clampValue(pinchStateRef.current!.startZoom * scale, minZoom, maxZoom));
+        setZoom(() =>
+          clampValue(
+            pinchStateRef.current!.startZoom * scale,
+            minZoom,
+            maxZoom,
+          ),
+        );
       }
       return;
     }
@@ -111,5 +148,11 @@ export function useFramePanPinch({
     }
   }
 
-  return { frameRef, isDragging, handleFramePointerDown, handleFramePointerMove, endFramePointer };
+  return {
+    frameRef,
+    isDragging,
+    handleFramePointerDown,
+    handleFramePointerMove,
+    endFramePointer,
+  };
 }

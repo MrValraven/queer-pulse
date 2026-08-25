@@ -21,19 +21,19 @@ cited; don't reinvent from memory).
 
 ## Reference library — read the one your task touches
 
-| File | Read it when you're… |
-| --- | --- |
-| **[references/queerpulse-react-map.md](references/queerpulse-react-map.md)** | **Always first.** What primitives/hooks/providers already exist, and exactly what the linters enforce. Reuse before building. |
-| **[references/rendering-and-hooks.md](references/rendering-and-hooks.md)** | Touching state, effects, refs, keys, context, or React 19 features (`use`, Actions, `useOptimistic`, transitions, the Compiler). The render model + "You Might Not Need an Effect." |
-| **[references/component-patterns.md](references/component-patterns.md)** | Designing or extracting a reusable component or custom hook — composition, compound components, control props, state reducer, headless, polymorphic `as`, prop getters, prop-API design, AHA. |
-| **[references/performance.md](references/performance.md)** | A re-render problem, a slow/long list, context churn, a heavy route. Measure-first; memo/Compiler; virtualization; React-Query narrowing. |
-| **[references/architecture.md](references/architecture.md)** | Decomposing, placing state, drawing module boundaries, or a multi-file refactor — colocation, feature-first, the reuse ladder, readability. |
-| **[references/typescript-and-a11y.md](references/typescript-and-a11y.md)** | Prop typing, generics, discriminated unions, `satisfies`; or any interactive/keyboard/focus/label/live-region work. |
+| File                                                                         | Read it when you're…                                                                                                                                                                          |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[references/queerpulse-react-map.md](references/queerpulse-react-map.md)** | **Always first.** What primitives/hooks/providers already exist, and exactly what the linters enforce. Reuse before building.                                                                 |
+| **[references/rendering-and-hooks.md](references/rendering-and-hooks.md)**   | Touching state, effects, refs, keys, context, or React 19 features (`use`, Actions, `useOptimistic`, transitions, the Compiler). The render model + "You Might Not Need an Effect."           |
+| **[references/component-patterns.md](references/component-patterns.md)**     | Designing or extracting a reusable component or custom hook — composition, compound components, control props, state reducer, headless, polymorphic `as`, prop getters, prop-API design, AHA. |
+| **[references/performance.md](references/performance.md)**                   | A re-render problem, a slow/long list, context churn, a heavy route. Measure-first; memo/Compiler; virtualization; React-Query narrowing.                                                     |
+| **[references/architecture.md](references/architecture.md)**                 | Decomposing, placing state, drawing module boundaries, or a multi-file refactor — colocation, feature-first, the reuse ladder, readability.                                                   |
+| **[references/typescript-and-a11y.md](references/typescript-and-a11y.md)**   | Prop typing, generics, discriminated unions, `satisfies`; or any interactive/keyboard/focus/label/live-region work.                                                                           |
 
 ## Companions — defer, don't duplicate
 
 - **`component-decomposition` skill** owns the 200-line rule + data-file extraction mechanics + the multi-agent sweep.
-- **`performance-and-production-best-practices` skill** owns the cross-stack, **measure-first** perf framework (bundle, NestJS/TypeORM/Postgres, hosting cost). This skill's `performance.md` covers React *rendering* specifically; anything beyond rendering defers there.
+- **`performance-and-production-best-practices` skill** owns the cross-stack, **measure-first** perf framework (bundle, NestJS/TypeORM/Postgres, hosting cost). This skill's `performance.md` covers React _rendering_ specifically; anything beyond rendering defers there.
 - **`docs/STYLE-RULES.md` / `docs/design-system.md`** + **`design-best-practices` skill** own the visual/token rules. This skill enforces the _code_ side.
 - **`web-animation-best-practices`** owns motion; **`queer-community-copywriting`** owns any copy you add.
 
@@ -113,24 +113,24 @@ Create a todo per section when applying this to real work.
 
 ## Quick reference
 
-| Smell | Fix |
-| --- | --- |
-| `export default function` | Named export |
-| `className="btn btn-primary"` / styled bare `<button>` for an action | `<Button variant=…>` |
-| Hardcoded `#fff` / hex | `var(--paper)` / token (brand-color exception → comment) |
-| `to="/cinema"` hardcoded path | `linkToPath("QueerPulse Cinema.html")` |
-| `key={i}` on a mutable list | stable id from data |
-| Effect missing/lying deps | complete them; break loops with `useMemo`/`useCallback`/functional updates |
-| Mirroring props into state via effect | derive during render |
-| Reset-in-effect on prop change | `key` prop |
-| `async` handler passed to `onClick` | wrap in `void`/`.catch`/a mutation (`no-misused-promises`) |
-| Server data copied into `useState`/context | read from the React Query cache |
-| Boolean-prop soup (`isX`+`isY`) | discriminated `variant` union |
-| Component sprouting a flag per variation | composition / compound components |
-| `useMemo`/`useCallback` with no `memo`/dep consumer | delete it (inert) |
-| `<div role="button" onClick>` with no keys | native `<button>`, or add `tabIndex`+Enter/Space |
-| `createContext<T>(null as any)` | `createContext<T \| null>(null)` + throwing `useX()` |
-| Component > 200 lines | run `component-decomposition` |
+| Smell                                                                | Fix                                                                        |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `export default function`                                            | Named export                                                               |
+| `className="btn btn-primary"` / styled bare `<button>` for an action | `<Button variant=…>`                                                       |
+| Hardcoded `#fff` / hex                                               | `var(--paper)` / token (brand-color exception → comment)                   |
+| `to="/cinema"` hardcoded path                                        | `linkToPath("QueerPulse Cinema.html")`                                     |
+| `key={i}` on a mutable list                                          | stable id from data                                                        |
+| Effect missing/lying deps                                            | complete them; break loops with `useMemo`/`useCallback`/functional updates |
+| Mirroring props into state via effect                                | derive during render                                                       |
+| Reset-in-effect on prop change                                       | `key` prop                                                                 |
+| `async` handler passed to `onClick`                                  | wrap in `void`/`.catch`/a mutation (`no-misused-promises`)                 |
+| Server data copied into `useState`/context                           | read from the React Query cache                                            |
+| Boolean-prop soup (`isX`+`isY`)                                      | discriminated `variant` union                                              |
+| Component sprouting a flag per variation                             | composition / compound components                                          |
+| `useMemo`/`useCallback` with no `memo`/dep consumer                  | delete it (inert)                                                          |
+| `<div role="button" onClick>` with no keys                           | native `<button>`, or add `tabIndex`+Enter/Space                           |
+| `createContext<T>(null as any)`                                      | `createContext<T \| null>(null)` + throwing `useX()`                       |
+| Component > 200 lines                                                | run `component-decomposition`                                              |
 
 ## Common mistakes
 

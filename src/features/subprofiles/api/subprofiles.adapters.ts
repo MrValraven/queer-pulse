@@ -21,7 +21,10 @@ import type {
   WorkState,
 } from "./subprofiles.api";
 import { SECTION_META, sectionsForKind } from "../subprofile-kinds";
-import { ACCENT_OPTIONS, AVAILABILITY_OPTIONS } from "../subprofilePresence.data";
+import {
+  ACCENT_OPTIONS,
+  AVAILABILITY_OPTIONS,
+} from "../subprofilePresence.data";
 
 // ── Wire-value guards ────────────────────────────────────────────────────────
 // `accent`/`availability` arrive as raw `string | null` on the DTO. Narrow them
@@ -377,7 +380,11 @@ export function itemsToInputDto(
     ...(i.tags.length ? { tags: i.tags } : {}),
     ...(i.isFeatured ? { isFeatured: true } : {}),
     ...(i.collaborators.length
-      ? { collaborators: i.collaborators.map((collaborator) => collaborator.handle) }
+      ? {
+          collaborators: i.collaborators.map(
+            (collaborator) => collaborator.handle,
+          ),
+        }
       : {}),
     ...(i.venue ? { venue: i.venue } : {}),
     ...(i.doors ? { doors: i.doors } : {}),

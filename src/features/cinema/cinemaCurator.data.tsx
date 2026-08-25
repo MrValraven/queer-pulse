@@ -232,8 +232,8 @@ export const CURATORS: Record<string, CuratorProfile> = {
         quote: (
           <>
             "What Tanaka does with domestic space, the way the kitchen is both{" "}
-            <em>staging ground and safe room</em>, is exactly what I'm trying
-            to find in everything we programme."
+            <em>staging ground and safe room</em>, is exactly what I'm trying to
+            find in everything we programme."
           </>
         ),
         foot: "On Mother, weather",
@@ -292,8 +292,8 @@ export const CURATORS: Record<string, CuratorProfile> = {
         meta: "Ada Nwosu · Nigeria / UK, 2025",
         note: (
           <>
-            "A ballroom film made from inside the houses, by the people who live there.{" "}
-            <em>Nobody here is being explained.</em>"
+            "A ballroom film made from inside the houses, by the people who live
+            there. <em>Nobody here is being explained.</em>"
           </>
         ),
         to: routes.film,

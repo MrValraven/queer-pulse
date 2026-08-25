@@ -1499,7 +1499,11 @@ export const economy: Catalog = {
   "jobApply.portfolioHelper":
     "Your QueerPulse profile is auto-attached. Untick in Privacy if you'd rather not.",
   "jobApply.sitePlaceholder": "Your site or Are.na",
+  // Icon-style identity-field initials (Website / Instagram / QueerPulse
+  // profile) — brand/proper-noun abbreviations, identical in both languages.
+  "jobApply.identityIg": "IG",
   "jobApply.instagramPlaceholder": "@yourhandle",
+  "jobApply.identityQp": "QP",
 
   "jobApply.whyTitle": "Why this role?",
   "jobApply.whySub":
@@ -2131,15 +2135,19 @@ export const economy: Catalog = {
   "mentorDetail.sidebar.browseAll": "Browse all mentors",
 
   // ── ApplicationStatusPage (+ header/list/card, listing-manager modals) ──
-  // Scope note: application content in applicationStatus.data.tsx /
-  // .patches.tsx (job titles, company names, stage hints, status blurbs,
-  // thread messages, offers, notes) is this member's own tracked-application
-  // history — in live mode fetched from the API — left in English. Only
-  // reusable page/modal chrome is translated below. Negotiation "angle" draft
-  // text is left English too (flagged in the sweep report — persuasive
-  // composed copy too nuanced to sweep safely); the lever/principle labels and
-  // angle names/blurbs around it, which are generic and reusable, are
-  // translated.
+  // Scope note: application content in applicationStatus.data.tsx (job
+  // titles, company names, stage hints, status blurbs, thread messages,
+  // offers, notes) is this member's own tracked-application history — in
+  // live mode fetched from the API — left in English. Only reusable
+  // page/modal chrome is translated below. Negotiation "angle" draft text in
+  // .patches.tsx is left English too (flagged in the sweep report —
+  // persuasive composed copy too nuanced to sweep safely); the
+  // lever/principle labels and angle names/blurbs around it are generic and
+  // reusable, so they're translated. The `*Patch()` functions' own status
+  // lines (below, `applicationStatus.patch.*`) are generated client-side the
+  // instant a member takes an action (withdraw/follow up/submit/accept/
+  // decline) — never fetched — so unlike the APPS fixture's per-application
+  // blurbs, they ARE chrome and are translated.
   "applicationStatus.header.eyebrow": "Your jobs",
   "applicationStatus.header.title": "Where everything <em>stands.</em>",
   "applicationStatus.header.sub":
@@ -2215,6 +2223,19 @@ export const economy: Catalog = {
   "applicationStatus.company.based": "Based",
   "applicationStatus.company.viewDirectory": "View in directory",
   "applicationStatus.note.from": "A note from {company}",
+
+  // State-transition status lines rendered by applicationStatus.patches.tsx
+  // right after the member takes an action — see the scope note above.
+  "applicationStatus.patch.withdrawn":
+    "You withdrew this application just now. The company has been notified politely.",
+  "applicationStatus.patch.followedUp":
+    "<b>Follow-up sent just now.</b> They've been nudged gently. You'll usually hear back within a couple of days.",
+  "applicationStatus.patch.submitted":
+    "Submitted just now. Their stated turnaround is 7 days. We'll watch the clock for you.",
+  "applicationStatus.patch.accepted":
+    "<b>Offer accepted.</b> They'll send the contract to your email within two working days.",
+  "applicationStatus.patch.declined":
+    "You declined this offer. They've been thanked warmly on your behalf.",
 
   "msg.message.title": "Message the",
   "msg.message.em": "recruiter.",
@@ -2761,6 +2782,9 @@ export const economy: Catalog = {
   "invoiceTool.issuer.addressLabel": "Address",
   "invoiceTool.issuer.addressPlaceholder": "Street, postcode, city",
   "invoiceTool.issuer.ibanLabel": "IBAN",
+  // Format-example placeholders, not prose — the sample IBAN/invoice-number
+  // shape is identical regardless of language, so EN and PT share the value.
+  "invoiceTool.issuer.ibanPlaceholder": "PT50 0000 0000 0000 0000 0000 0",
   "invoiceTool.client.legend": "Client",
   "invoiceTool.client.nameLabel": "Client name",
   "invoiceTool.client.namePlaceholder": "Who you're billing",
@@ -2769,6 +2793,7 @@ export const economy: Catalog = {
   "invoiceTool.optional": "Optional",
   "invoiceTool.meta.legend": "Invoice",
   "invoiceTool.meta.numberLabel": "Invoice number",
+  "invoiceTool.meta.numberPlaceholder": "FR 2026/001",
   "invoiceTool.meta.issueDateLabel": "Issue date",
   "invoiceTool.meta.dueDateLabel": "Due date",
   "invoiceTool.meta.ivaRateLabel": "IVA rate",
@@ -2791,6 +2816,7 @@ export const economy: Catalog = {
   "invoiceTool.preview.issued": "Issued {date}",
   "invoiceTool.preview.due": "Due {date}",
   "invoiceTool.preview.billedTo": "Billed to",
+  "invoiceTool.preview.nifLine": "NIF {nif}",
   "invoiceTool.preview.subtotal": "Subtotal",
   "invoiceTool.preview.ivaLabel": "IVA ({rate}%)",
   "invoiceTool.preview.total": "Total",
@@ -4029,6 +4055,7 @@ export const economy: Catalog = {
   "housingCoop.card.meta.operating": "Operating",
   "housingCoop.card.meta.formingSince": "Forming since",
   "housingCoop.card.operationalSince": "Operational since",
+  "housingCoop.card.progressThrough": "<em>{percent}</em> through",
   "housingCoop.card.duration.years_one": "{count} year",
   "housingCoop.card.duration.years_other": "{count} years",
   "housingCoop.card.duration.months_one": "{count} month",

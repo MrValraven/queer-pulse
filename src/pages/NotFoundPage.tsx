@@ -88,8 +88,7 @@ export function NotFoundPage() {
           <div className={styles.actions}>
             <Button to="/">{t("system:notFound.homeCta")}</Button>
             <Button variant="ghost" onClick={() => void navigate(-1)}>
-              <FiArrowLeft aria-hidden />{" "}
-              {t("system:notFound.backCta")}
+              <FiArrowLeft aria-hidden /> {t("system:notFound.backCta")}
             </Button>
           </div>
 
@@ -115,11 +114,7 @@ export function NotFoundPage() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
-            <Button
-              variant="plum"
-              type="submit"
-              className={styles.searchBtn}
-            >
+            <Button variant="plum" type="submit" className={styles.searchBtn}>
               {t("system:notFound.searchCta")}
             </Button>
           </form>

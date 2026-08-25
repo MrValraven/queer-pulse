@@ -47,7 +47,11 @@ export function HousingMapView({
           onSelect={onToggleNeighbourhood}
         />
 
-        <button type="button" className={mapStyles.jumpToList} onClick={jumpToList}>
+        <button
+          type="button"
+          className={mapStyles.jumpToList}
+          onClick={jumpToList}
+        >
           <FiArrowDown aria-hidden />
           {t("economy:housing.map.jumpToList", { count: listings.length })}
         </button>
@@ -73,7 +77,9 @@ export function HousingMapView({
                 <div className={mapStyles.groupHead}>
                   {cluster.name}
                   {" · "}
-                  {t("economy:housing.map.count", { count: cluster.listings.length })}
+                  {t("economy:housing.map.count", {
+                    count: cluster.listings.length,
+                  })}
                 </div>
                 {cluster.listings.map((listing) => (
                   <Link

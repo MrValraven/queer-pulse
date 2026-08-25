@@ -1,4 +1,4 @@
-import { useItemDrawer } from "../state/useItemDrawer";
+import { useItemDrawer } from "../state/itemDrawerHook";
 import { ItemDrawerBody } from "./ItemDrawerBody";
 
 /**

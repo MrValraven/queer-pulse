@@ -26,7 +26,10 @@ export function CardProgressMeter({ item }: { item: AdminRoadmapItemDTO }) {
       aria-valuemax={100}
     >
       <div
-        className={[styles.progressFill, isBlocked && styles.progressFillBlocked]
+        className={[
+          styles.progressFill,
+          isBlocked && styles.progressFillBlocked,
+        ]
           .filter(Boolean)
           .join(" ")}
         style={{ transform: `scaleX(${progress / 100})` }}

@@ -48,7 +48,8 @@ export function loadDrafts(): DraftMap {
     for (const [conversationId, text] of Object.entries(
       parsed as Record<string, unknown>,
     )) {
-      if (typeof text === "string" && text.length > 0) result[conversationId] = text;
+      if (typeof text === "string" && text.length > 0)
+        result[conversationId] = text;
     }
     return result;
   } catch {

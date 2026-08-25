@@ -1,18 +1,11 @@
-import {
-  FiAward,
-  FiBookOpen,
-  FiClipboard,
-  FiClock,
-  FiHome,
-  FiStar,
-  FiTag,
-} from "react-icons/fi";
+import { FiAward, FiClipboard, FiHome, FiStar, FiTag } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { memberName } from "../members/data/members";
 import { Translation } from "../../shared/i18n/Translation";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Notification } from "./notifications.types";
+import { buildUnreadActivityNotifications } from "./notificationsListActivity.data";
 
 /** Milliseconds in each unit the demo rows express their age in. */
 const UNIT_MS = {
@@ -41,14 +34,17 @@ function agoIso(amount: number, unit: keyof typeof UNIT_MS): string {
  * A function of `t` + `fmt` (Pattern B): several rows carry a `<strong>` run
  * around an interpolated name/title, and the relative "time ago" labels are
  * computed through `fmt.relativeTime`/`fmt.date` rather than hand-rolled.
+ *
+ * Ids 4, 5, 6, 7 live in `buildUnreadActivityNotifications`
+ * (`notificationsListActivity.data.tsx`), split out to keep this function
+ * under the per-function line limit. The two halves are spread together
+ * below in id order.
  */
 function buildUnreadNotifications(
   t: TFunction,
   fmt: Formatters,
 ): Notification[] {
   const dinnerDate = new Date(2026, 5, 14);
-  const meetingTime = new Date();
-  meetingTime.setHours(19, 0, 0, 0);
 
   return [
     {
@@ -157,113 +153,11 @@ function buildUnreadNotifications(
         },
       ],
     },
-    {
-      // A forum @-mention (see list.4 copy / "Forum · Mention" meta), not a DM —
-      // it was mislabeled `messages` before that category was retired.
-      id: 4,
-      type: "community",
-      unread: true,
-      avatar: { initials: "SA", tint: "jade" },
-      actorSlug: "sofia",
-      text: (
-        <Translation
-          i18nKey="notifications:list.4.text"
-          components={{ strong: <strong /> }}
-          values={{
-            name: memberName("sofia"),
-            quote: "What are we reading in July?",
-          }}
-        />
-      ),
-      meta: t("notifications:list.4.meta"),
-      time: fmt.relativeTime(-3, "hour"),
-      createdAtIso: agoIso(3, "hour"),
-      actions: [
-        {
-          label: t("notifications:actions.viewThread"),
-          variant: "primary",
-          href: routes.forum,
-        },
-      ],
-    },
-    {
-      id: 5,
-      type: "platform",
-      unread: true,
-      icon: { Glyph: FiBookOpen, background: "rgba(var(--plum-rgb), .07)" },
-      text: (
-        <Translation
-          i18nKey="notifications:list.5.text"
-          components={{ strong: <strong /> }}
-          values={{
-            title: "QueerPulse Magazine Issue 18",
-            cover: "The city changed. Did we?",
-          }}
-        />
-      ),
-      meta: t("notifications:list.5.meta"),
-      time: fmt.relativeTime(-1, "day"),
-      createdAtIso: agoIso(1, "day"),
-      actions: [
-        {
-          label: t("notifications:actions.readNow"),
-          variant: "primary",
-          href: routes.magazine,
-        },
-      ],
-    },
-    {
-      id: 6,
-      type: "events",
-      unread: true,
-      icon: { Glyph: FiClock, background: "rgba(var(--jade-rgb), .1)" },
-      text: (
-        <Translation
-          i18nKey="notifications:list.6.text"
-          components={{ strong: <strong /> }}
-          values={{
-            group: "Theory Thursdays",
-            when: fmt.relativeTime(1, "day"),
-            time: fmt.time(meetingTime),
-            spots: t("notifications:list.6.spots", { count: 1 }),
-          }}
-        />
-      ),
-      meta: t("notifications:list.6.meta"),
-      time: fmt.relativeTime(-1, "day"),
-      createdAtIso: agoIso(1, "day"),
-      actions: [
-        {
-          label: t("notifications:actions.seeDetails"),
-          variant: "ghost",
-          href: routes.readingGroups,
-        },
-      ],
-    },
-    {
-      id: 7,
-      type: "community",
-      unread: true,
-      avatar: { initials: "MC", tint: "coral" },
-      actorSlug: "mariana-costa",
-      text: (
-        <Translation
-          i18nKey="notifications:list.7.text"
-          components={{ strong: <strong /> }}
-          values={{ name: "Mariana Costa" }}
-        />
-      ),
-      meta: t("notifications:list.7.meta"),
-      time: fmt.relativeTime(-2, "day"),
-      createdAtIso: agoIso(2, "day"),
-    },
+    ...buildUnreadActivityNotifications(t, fmt),
   ];
 }
 
-function buildReadNotifications(
-  t: TFunction,
-  fmt: Formatters,
-): Notification[] {
+function buildReadNotifications(t: TFunction, fmt: Formatters): Notification[] {
   const reportDate = new Date(2026, 5, 20);
 
   return [

@@ -112,7 +112,12 @@ interface MapLinkSectionProps {
 
 /** The original paste-a-Google-Maps-link flow, kept as a second way to place
  *  the pin. No longer marked required — it's one option among three. */
-function MapLinkSection({ value, status, onChange, onFind }: MapLinkSectionProps) {
+function MapLinkSection({
+  value,
+  status,
+  onChange,
+  onFind,
+}: MapLinkSectionProps) {
   const { t } = useTranslation();
   return (
     <>
@@ -280,52 +285,52 @@ export function ListBusinessLocationField({
         </div>
       ) : (
         <>
-      <AddressLocateSection
-        address={draft.address}
-        hood={draft.hood}
-        status={addressStatus}
-        onAddressChange={(address) => set({ address })}
-        onLocate={() => void handleLocateAddress()}
-        onDropNeighbourhoodPin={handleDropNeighbourhoodPin}
-      />
-
-      <MapLinkSection
-        value={mapLink}
-        status={linkStatus}
-        onChange={setMapLink}
-        onFind={() => void handleFindOnMap()}
-      />
-
-      {draft.latitude !== null && draft.longitude !== null && (
-        <div className={styles.mapWrap}>
-          <LocationPickerMap
-            latitude={draft.latitude}
-            longitude={draft.longitude}
-            onChange={(latitude, longitude) => set({ latitude, longitude })}
+          <AddressLocateSection
+            address={draft.address}
+            hood={draft.hood}
+            status={addressStatus}
+            onAddressChange={(address) => set({ address })}
+            onLocate={() => void handleLocateAddress()}
+            onDropNeighbourhoodPin={handleDropNeighbourhoodPin}
           />
-          <div className={styles.mapStatus}>
-            <FiCheck size={13} />{" "}
-            {t("marketing:listBusiness.step3.pinPlaced", {
-              place:
-                resolvedPlaceName ||
-                draft.address.split(",")[0] ||
-                draft.hood ||
-                "",
-            })}
-          </div>
-          {resolvedPlaceName && resolvedPlaceName !== draft.address && (
-            <button
-              type="button"
-              className={styles.usePlaceNameChip}
-              onClick={() => set({ address: resolvedPlaceName })}
-            >
-              {t("marketing:listBusiness.step3.usePlaceName", {
-                place: resolvedPlaceName,
-              })}
-            </button>
+
+          <MapLinkSection
+            value={mapLink}
+            status={linkStatus}
+            onChange={setMapLink}
+            onFind={() => void handleFindOnMap()}
+          />
+
+          {draft.latitude !== null && draft.longitude !== null && (
+            <div className={styles.mapWrap}>
+              <LocationPickerMap
+                latitude={draft.latitude}
+                longitude={draft.longitude}
+                onChange={(latitude, longitude) => set({ latitude, longitude })}
+              />
+              <div className={styles.mapStatus}>
+                <FiCheck size={13} />{" "}
+                {t("marketing:listBusiness.step3.pinPlaced", {
+                  place:
+                    resolvedPlaceName ||
+                    draft.address.split(",")[0] ||
+                    draft.hood ||
+                    "",
+                })}
+              </div>
+              {resolvedPlaceName && resolvedPlaceName !== draft.address && (
+                <button
+                  type="button"
+                  className={styles.usePlaceNameChip}
+                  onClick={() => set({ address: resolvedPlaceName })}
+                >
+                  {t("marketing:listBusiness.step3.usePlaceName", {
+                    place: resolvedPlaceName,
+                  })}
+                </button>
+              )}
+            </div>
           )}
-        </div>
-      )}
         </>
       )}
     </>

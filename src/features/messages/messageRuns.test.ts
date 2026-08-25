@@ -6,13 +6,19 @@ const at = (iso: string): ChatMessage => ({ from: "them", text: "x", at: iso });
 
 describe("groupIntoRuns time-gap breaks", () => {
   it("keeps same-sender messages within the gap in one run", () => {
-    const runs = groupIntoRuns([at("2026-07-24T10:00:00Z"), at("2026-07-24T10:05:00Z")]);
+    const runs = groupIntoRuns([
+      at("2026-07-24T10:00:00Z"),
+      at("2026-07-24T10:05:00Z"),
+    ]);
     expect(runs).toHaveLength(1);
     expect(runs[0]!.items).toHaveLength(2);
   });
 
   it("breaks a run when same-sender messages exceed the gap", () => {
-    const runs = groupIntoRuns([at("2026-07-24T10:00:00Z"), at("2026-07-24T10:40:00Z")]);
+    const runs = groupIntoRuns([
+      at("2026-07-24T10:00:00Z"),
+      at("2026-07-24T10:40:00Z"),
+    ]);
     expect(runs).toHaveLength(2);
   });
 
@@ -40,7 +46,10 @@ describe("groupIntoRuns time-gap breaks", () => {
 
   it("ignores `breakBefore` when the message is not present", () => {
     const runs = groupIntoRuns(
-      [{ from: "them", text: "a" }, { from: "them", text: "b" }],
+      [
+        { from: "them", text: "a" },
+        { from: "them", text: "b" },
+      ],
       undefined,
       { from: "them", text: "z" },
     );

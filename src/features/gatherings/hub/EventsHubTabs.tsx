@@ -49,7 +49,10 @@ export function EventsHubTabs({
 
     const listRect = list.getBoundingClientRect();
     const nodeRect = node.getBoundingClientRect();
-    const nextRect = { start: nodeRect.left - listRect.left, size: nodeRect.width };
+    const nextRect = {
+      start: nodeRect.left - listRect.left,
+      size: nodeRect.width,
+    };
 
     indicator.style.transition = "none";
     indicator.style.insetInlineStart = `${nextRect.start}px`;
@@ -80,7 +83,10 @@ export function EventsHubTabs({
     tabRefs.current[nextIndex]?.focus();
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+  const handleKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
     switch (event.key) {
       case "ArrowRight":
         event.preventDefault();
@@ -104,7 +110,11 @@ export function EventsHubTabs({
   return (
     <div className={styles.sticky}>
       <div className={styles.list} role="tablist" ref={listRef}>
-        <span ref={indicatorRef} className={styles.indicator} aria-hidden="true" />
+        <span
+          ref={indicatorRef}
+          className={styles.indicator}
+          aria-hidden="true"
+        />
         {HUB_TABS.map((tab, index) => {
           const isActive = tab.key === active;
           return (
@@ -119,7 +129,9 @@ export function EventsHubTabs({
               aria-selected={isActive}
               aria-controls={hubPanelId(tab.key)}
               tabIndex={isActive ? 0 : -1}
-              className={[styles.tab, isActive && styles.tabOn].filter(Boolean).join(" ")}
+              className={[styles.tab, isActive && styles.tabOn]
+                .filter(Boolean)
+                .join(" ")}
               onClick={() => onChange(tab.key)}
               onKeyDown={(event) => handleKeyDown(event, index)}
             >

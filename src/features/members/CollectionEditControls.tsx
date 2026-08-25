@@ -61,8 +61,7 @@ function CollectionRenameForm({
           disabled={isSaving}
           onClick={onCancel}
         >
-          <FiX aria-hidden />{" "}
-          {t("members:collections.modal.view.renameCancel")}
+          <FiX aria-hidden /> {t("members:collections.modal.view.renameCancel")}
         </Button>
       </div>
     </form>

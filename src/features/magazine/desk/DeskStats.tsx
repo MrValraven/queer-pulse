@@ -15,7 +15,9 @@ export function DeskStats({
   pitchCount: number;
 }) {
   const { t } = useTranslation();
-  const inFlightCount = pieces.filter((piece) => piece.stage !== "Ready").length;
+  const inFlightCount = pieces.filter(
+    (piece) => piece.stage !== "Ready",
+  ).length;
   const readyCount = pieces.filter((piece) => piece.stage === "Ready").length;
   const lateCount = pieces.filter((piece) => piece.late).length;
 
@@ -35,7 +37,10 @@ export function DeskStats({
       {tiles.map((tile) => (
         <div
           key={tile.label}
-          className={cx(styles.stat, tile.warn && tile.count > 0 && styles.warn)}
+          className={cx(
+            styles.stat,
+            tile.warn && tile.count > 0 && styles.warn,
+          )}
         >
           <b>{tile.count}</b>
           <span>{tile.label}</span>

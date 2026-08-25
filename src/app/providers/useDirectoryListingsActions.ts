@@ -12,7 +12,10 @@ export interface DirectoryListingsActions {
   /** Persist a draft as a pending listing; returns the created record.
    *  Live: the server's real record (real ref/status/slug). Demo: an
    *  optimistic local record with a client-side ref. */
-  addListing: (draft: ListingDraft, submittedBy: string) => Promise<PendingListing>;
+  addListing: (
+    draft: ListingDraft,
+    submittedBy: string,
+  ) => Promise<PendingListing>;
   /** Remove a pending listing by reference. */
   withdrawListing: (ref: string) => void;
 }

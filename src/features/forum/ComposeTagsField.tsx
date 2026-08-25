@@ -57,7 +57,9 @@ export function ComposeTagsField({
             <button
               type="button"
               className={styles.tagChipRemove}
-              onClick={() => onChange(tags.filter((existing) => existing !== tag))}
+              onClick={() =>
+                onChange(tags.filter((existing) => existing !== tag))
+              }
               aria-label={t("forum:compose.removeTagAria", { tag })}
             >
               <FiX aria-hidden />

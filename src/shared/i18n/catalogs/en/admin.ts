@@ -100,7 +100,8 @@ export const admin: Catalog = {
 
   "verifications.requests.drawer.label": "Request review for {name}",
   "verifications.requests.drawer.contextHeading": "Their request",
-  "verifications.requests.drawer.contextEmpty": "They didn't share any context with this request.",
+  "verifications.requests.drawer.contextEmpty":
+    "They didn't share any context with this request.",
   "verifications.requests.drawer.evidenceLabel": "Reference",
   "verifications.requests.drawer.decisionHeading": "Previous decision",
   "verifications.requests.drawer.reviewedBy": "reviewed by {actor}",
@@ -131,8 +132,10 @@ export const admin: Catalog = {
   "verifications.requests.drawer.rejectCta": "Reject",
   "verifications.requests.drawer.deciding": "Saving…",
 
-  "verifications.requests.toast.approve": "Request approved. The member has been notified.",
-  "verifications.requests.toast.reject": "Request rejected. The member has been notified.",
+  "verifications.requests.toast.approve":
+    "Request approved. The member has been notified.",
+  "verifications.requests.toast.reject":
+    "Request rejected. The member has been notified.",
   "verifications.requests.toast.in_review": "Request marked in review.",
 
   // ── Row selection + bulk actions + keyboard flow (Task 4) ───────────────
@@ -149,7 +152,8 @@ export const admin: Catalog = {
   "verifications.requests.bulk.clearCta": "Clear",
   "verifications.requests.bulk.capNote": "Selection capped at {cap} requests",
   "verifications.requests.bulk.toast.success_one": "{count} request updated.",
-  "verifications.requests.bulk.toast.success_other": "{count} requests updated.",
+  "verifications.requests.bulk.toast.success_other":
+    "{count} requests updated.",
   "verifications.requests.bulk.toast.partial":
     "{succeeded} updated, {failed} skipped.",
   "verifications.requests.bulk.action.approve":
@@ -159,7 +163,8 @@ export const admin: Catalog = {
   "verifications.requests.bulk.action.reject":
     "Couldn't reject the selected requests",
 
-  "verifications.requests.bulk.confirmReject.title_one": "Reject {count} request?",
+  "verifications.requests.bulk.confirmReject.title_one":
+    "Reject {count} request?",
   "verifications.requests.bulk.confirmReject.title_other":
     "Reject {count} requests?",
   "verifications.requests.bulk.confirmReject.body_one":
@@ -233,7 +238,8 @@ export const admin: Catalog = {
   "dashboard.metrics.trendHealthy": "healthy",
   // Average community health score has dropped into the "needs a hand" band.
   "dashboard.metrics.trendNeedsHand": "needs a hand",
-  "dashboard.metrics.footGrowth": "+{count} this month · based on account status",
+  "dashboard.metrics.footGrowth":
+    "+{count} this month · based on account status",
   "dashboard.metrics.footEmergencies_one": "{count} is an emergency",
   "dashboard.metrics.footEmergencies_other": "{count} are emergencies",
   "dashboard.metrics.footSlaTarget": "{hours} SLA target",
@@ -342,8 +348,7 @@ export const admin: Catalog = {
   "members.verify.approveCta": "Welcome in",
   "members.verify.approvedToast": "{name} was welcomed in",
   "members.verify.declinedToast": "{name}'s request wasn't approved this time",
-  "members.verify.errorToast":
-    "Could not save that decision. Please try again",
+  "members.verify.errorToast": "Could not save that decision. Please try again",
   "members.verify.mutualLine": "Named {name} as a mutual",
   "members.verify.noMutual": "No mutual named yet",
   "members.verify.appliedToday": "Applied today",
@@ -408,7 +413,8 @@ export const admin: Catalog = {
   "members.verify.priorDeclineCount_other": "Declined {count} times before",
   "members.verify.referenceLabel": "Reference",
   "members.verify.referenceResolved": "Corroborated by {name}",
-  "members.verify.referenceUnresolved": "Named {email}; no matching member on record",
+  "members.verify.referenceUnresolved":
+    "Named {email}; no matching member on record",
   "members.verify.waitingDays_one": "Waiting {count} day",
   "members.verify.waitingDays_other": "Waiting {count} days",
   "members.verify.declineReason.spam_pattern": "Looks like spam",
@@ -751,7 +757,8 @@ export const admin: Catalog = {
   "adminInvites.quota.saveAriaLabel": "Save invite quota for {name}",
   "adminInvites.quota.clearCta": "Clear override",
   "adminInvites.quota.clearAriaLabel": "Clear invite quota override for {name}",
-  "adminInvites.quota.invalid": "Enter a whole number of 0 or more, or clear the field.",
+  "adminInvites.quota.invalid":
+    "Enter a whole number of 0 or more, or clear the field.",
   "adminInvites.quota.saved": "Saved {name}'s invite quota.",
   "adminInvites.quota.cleared": "{name} is back on the default invite quota.",
   "adminInvites.revoke.cta": "Revoke this invite",
@@ -783,7 +790,8 @@ export const admin: Catalog = {
 
   "adminChangemakerNominations.title": "Changemaker <em>nominations</em>",
   "adminChangemakerNominations.header.eyebrow": "Community",
-  "adminChangemakerNominations.header.title": "Who members <em>put forward</em>",
+  "adminChangemakerNominations.header.title":
+    "Who members <em>put forward</em>",
   "adminChangemakerNominations.header.sub":
     "Every name members have nominated for the Change Makers directory, newest first. A shortlist to review.",
   "adminChangemakerNominations.empty": "No nominations yet.",
@@ -805,7 +813,8 @@ export const admin: Catalog = {
 
   "adminReadingGroupProposals.title": "Reading group <em>proposals</em>",
   "adminReadingGroupProposals.header.eyebrow": "Community",
-  "adminReadingGroupProposals.header.title": "Groups members <em>want to start</em>",
+  "adminReadingGroupProposals.header.title":
+    "Groups members <em>want to start</em>",
   "adminReadingGroupProposals.header.sub":
     "Every “Start your own group” a member has submitted: the book, why, format, and size. Filter by format.",
   "adminReadingGroupProposals.empty":
@@ -830,7 +839,8 @@ export const admin: Catalog = {
   "adminReadingGroupProposals.toast.approved": "Proposal approved.",
   "adminReadingGroupProposals.toast.declined": "Proposal declined.",
   "adminReadingGroupProposals.toast.archived": "Proposal archived.",
-  "adminReadingGroupProposals.toast.error": "That didn't go through. Please try again.",
+  "adminReadingGroupProposals.toast.error":
+    "That didn't go through. Please try again.",
   "adminReadingGroupProposals.loadMore": "Load more",
   "adminReadingGroupProposals.loadingMore": "Loading…",
 
@@ -840,8 +850,7 @@ export const admin: Catalog = {
   "adminGuideFeedback.header.sub":
     "Every resource guide members have rated helpful or not, worst first.",
   "adminGuideFeedback.empty": "No guide ratings yet.",
-  "adminGuideFeedback.error":
-    "Couldn't load guide feedback. Please try again.",
+  "adminGuideFeedback.error": "Couldn't load guide feedback. Please try again.",
   "adminGuideFeedback.row.counts":
     "{helpful} helpful · {notHelpful} not helpful",
 
@@ -880,8 +889,7 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.header.title": "Reader <em>pitches</em>",
   "adminMagazineSubmissions.header.sub":
     "Every story pitch readers have sent the magazine: the working title, format, pitch, and where it sits. Filter by status.",
-  "adminMagazineSubmissions.empty":
-    "No submissions match this filter yet.",
+  "adminMagazineSubmissions.empty": "No submissions match this filter yet.",
   "adminMagazineSubmissions.error":
     "We couldn't load submissions. Please try again.",
   "adminMagazineSubmissions.unknownMember": "A former member",
@@ -920,7 +928,8 @@ export const admin: Catalog = {
   "adminWriterApplications.row.sampleLink": "Linked sample",
   "adminWriterApplications.row.approveCta": "Approve",
   "adminWriterApplications.row.declineCta": "Decline",
-  "adminWriterApplications.row.reviewNotePlaceholder": "Optional note to the applicant",
+  "adminWriterApplications.row.reviewNotePlaceholder":
+    "Optional note to the applicant",
   "adminWriterApplications.unknownMember": "A member",
   "adminWriterApplications.error": "Couldn't load applications.",
   "adminWriterApplications.empty": "No applications yet.",
@@ -1276,7 +1285,8 @@ export const admin: Catalog = {
   "moderation.appealDrawer.decidedByLine": "Decided by {name} · {when}",
   "moderation.appealDrawer.viewOriginalCta":
     "View the original report & thread",
-  "moderation.appealDrawer.originalContentTitle": "What was originally reported",
+  "moderation.appealDrawer.originalContentTitle":
+    "What was originally reported",
   "moderation.appealDrawer.originalContentUnavailable":
     "The original report's content isn't available. It may have been erased, or this appeal has no linked report.",
   "moderation.appealDrawer.argumentTitle": "Their argument",
@@ -1333,7 +1343,8 @@ export const admin: Catalog = {
   "moderation.priorReports.count_other": "{count} prior reports",
   "moderation.priorReports.newAccount": "New account · {vouches} vouches",
   "moderation.reporterCredibility.new": "New reporter",
-  "moderation.reporterCredibility.history": "{filed} filed · {dismissed} dismissed",
+  "moderation.reporterCredibility.history":
+    "{filed} filed · {dismissed} dismissed",
   "moderation.assignedToFlag": "Assigned to {name}",
   "moderation.slaOverdue": "Overdue",
   "moderation.risk.atRisk": "At risk",
@@ -1531,7 +1542,8 @@ export const admin: Catalog = {
   "communities.settings.overrides.reassignCta": "Reassign owner",
   "communities.settings.overrides.archiveCta": "Archive",
   "communities.settings.overrides.unarchiveCta": "Unarchive",
-  "communities.settings.overrides.unarchiveToast": "{name} is no longer archived",
+  "communities.settings.overrides.unarchiveToast":
+    "{name} is no longer archived",
   "communities.settings.overrides.unarchiveFailedToast":
     "Couldn't unarchive that community. Try again.",
   "communities.settings.overrides.archiveToast": "{name} has been archived",
@@ -1544,7 +1556,8 @@ export const admin: Catalog = {
   "communities.settings.overrides.reassignToast": "{name} is now the owner",
   "communities.settings.overrides.reassignFailedToast":
     "Couldn't reassign ownership. Try again.",
-  "communities.settings.overrides.reassignTitle": "Reassign ownership of {name}",
+  "communities.settings.overrides.reassignTitle":
+    "Reassign ownership of {name}",
   "communities.settings.overrides.reassignBody":
     "The member you pick becomes owner immediately. If the community already has an owner, they're demoted to moderator.",
   "communities.settings.overrides.reassignEmptyTitle": "No one to reassign to",
@@ -1578,8 +1591,7 @@ export const admin: Catalog = {
   "communities.governanceLog.action.member_removed": "Member removed",
   "communities.governanceLog.action.ownership_transferred":
     "Ownership transferred",
-  "communities.governanceLog.action.owner_auto_promoted":
-    "Owner auto-promoted",
+  "communities.governanceLog.action.owner_auto_promoted": "Owner auto-promoted",
   "communities.governanceLog.action.frozen": "Frozen",
   "communities.governanceLog.action.unfrozen": "Unfrozen",
   "communities.governanceLog.action.archived": "Archived",
@@ -2134,7 +2146,8 @@ export const admin: Catalog = {
   "vouchGraph.modal.privateToast": "This member keeps their network private",
   "vouchGraph.modal.loadingTitle": "Loading trust network…",
   "vouchGraph.modal.emptyTitle": "No trust network yet",
-  "vouchGraph.modal.emptyBody": "This member doesn't have any vouches on record.",
+  "vouchGraph.modal.emptyBody":
+    "This member doesn't have any vouches on record.",
   "vouchGraph.modal.truncatedNotice":
     "Showing the 500 most recent members. Search above to find someone older.",
   "vouchGraph.memberFinder.placeholder": "Search all members…",
@@ -2818,8 +2831,7 @@ export const admin: Catalog = {
   "roadmap.drawer.commitment.confidence.hoping.label": "Hoping",
   "roadmap.drawer.commitment.confidence.hoping.desc":
     "We want this, no path yet",
-  "roadmap.drawer.commitment.promiseToggle.title":
-    "This is a firm promise",
+  "roadmap.drawer.commitment.promiseToggle.title": "This is a firm promise",
   "roadmap.drawer.commitment.promiseToggle.sub":
     'Committed items are labelled as promises publicly. Everything else reads as "we want to".',
   "roadmap.drawer.commitment.slipHistoryTitle": "Date history: moved {count}×",
@@ -2856,7 +2868,8 @@ export const admin: Catalog = {
 
   // Drawer · Blocked section
   "roadmap.drawer.blocked.title": "Blocked",
-  "roadmap.drawer.blocked.note": "shown publicly. Blockers are not embarrassing",
+  "roadmap.drawer.blocked.note":
+    "shown publicly. Blockers are not embarrassing",
   "roadmap.drawer.blocked.byLabel": "Blocked by",
   "roadmap.drawer.blocked.byPlaceholder": "Person or team",
   "roadmap.drawer.blocked.unblockCta": "Unblock",
@@ -2914,7 +2927,8 @@ export const admin: Catalog = {
   "roadmap.drawer.votes.spikeFlagged": "Flagged",
   "roadmap.drawer.votes.spikeNormal": "Normal",
   "roadmap.drawer.votes.notifyCta_one": "Notify the {count} person who asked…",
-  "roadmap.drawer.votes.notifyCta_other": "Notify the {count} people who asked…",
+  "roadmap.drawer.votes.notifyCta_other":
+    "Notify the {count} people who asked…",
 
   // Drawer · Comments section
   "roadmap.drawer.comments.title": "Comments",
@@ -2930,8 +2944,7 @@ export const admin: Catalog = {
     "Scope, dependencies, what would make us drop it.",
   "roadmap.drawer.publicOneLiner.title": "Public one-liner",
   "roadmap.drawer.publicOneLiner.note": "shown on /roadmap",
-  "roadmap.drawer.publicOneLiner.placeholder":
-    "Plain, warm, no roadmap-speak.",
+  "roadmap.drawer.publicOneLiner.placeholder": "Plain, warm, no roadmap-speak.",
 
   // ── Modals ──────────────────────────────────────────────────────────────
   // Slip reason
@@ -2949,7 +2962,8 @@ export const admin: Catalog = {
 
   // Safety gate
   "roadmap.modals.safetyGate.eyebrow": "Safety gate",
-  "roadmap.modals.safetyGate.title": "This needs a <em>safety review</em> first",
+  "roadmap.modals.safetyGate.title":
+    "This needs a <em>safety review</em> first",
   "roadmap.modals.safetyGate.body":
     "Flagged as sensitive. Housing, asylum and employer content can expose members. Publishing it early is a genuine risk, so treat it as one.",
   "roadmap.modals.safetyGate.note":
@@ -3181,10 +3195,12 @@ export const admin: Catalog = {
   "roadmap.toasts.published": "Now visible on the public roadmap",
   "roadmap.toasts.hidden": "Hidden from the public roadmap",
   "roadmap.toasts.duplicated": "Duplicated.",
-  "roadmap.toasts.bulkPublished_one": "{count} item shown on the public roadmap",
+  "roadmap.toasts.bulkPublished_one":
+    "{count} item shown on the public roadmap",
   "roadmap.toasts.bulkPublished_other":
     "{count} items shown on the public roadmap",
-  "roadmap.toasts.bulkHidden_one": "{count} item hidden from the public roadmap",
+  "roadmap.toasts.bulkHidden_one":
+    "{count} item hidden from the public roadmap",
   "roadmap.toasts.bulkHidden_other":
     "{count} items hidden from the public roadmap",
   "roadmap.toasts.archived": '"{name}" archived',
@@ -3198,12 +3214,11 @@ export const admin: Catalog = {
   "roadmap.toasts.dateMoved": "Date moved. Members will see the reason",
   "roadmap.toasts.safetyCleared": "Safety cleared and published",
   "roadmap.toasts.merged_one":
-    'Merged. {votes} vote moved, and {name} was told where it went',
+    "Merged. {votes} vote moved, and {name} was told where it went",
   "roadmap.toasts.merged_other":
-    'Merged. {votes} votes moved, and {name} was told where it went',
+    "Merged. {votes} votes moved, and {name} was told where it went",
   "roadmap.toasts.promoted_one": '"{name}" promoted. {votes} voter notified',
-  "roadmap.toasts.promoted_other":
-    '"{name}" promoted. {votes} voters notified',
+  "roadmap.toasts.promoted_other": '"{name}" promoted. {votes} voters notified',
   "roadmap.toasts.promoteError": "Couldn't promote that idea",
   "roadmap.toasts.declined": "Declined publicly with a reason. {name} was told",
   "roadmap.toasts.reopened": '"{name}" is back in the ideas queue',
@@ -3225,7 +3240,8 @@ export const admin: Catalog = {
 
   // ── Landing page (/admin/landing) ───────────────────────────────────────
   "landing.header.eyebrow": "Live site",
-  "landing.header.sub": "Curate the sections signed-out visitors see on the homepage.",
+  "landing.header.sub":
+    "Curate the sections signed-out visitors see on the homepage.",
 
   "landing.tabs.member": "Members",
   "landing.tabs.community": "Communities",
@@ -3335,10 +3351,12 @@ export const admin: Catalog = {
   "pressKit.fields.title": "Headline",
   "pressKit.fields.titlePlaceholder": "The piece's headline, as published.",
   "pressKit.fields.meta": "Detail",
-  "pressKit.fields.metaHelper": "Byline, length or format: shown under the headline.",
+  "pressKit.fields.metaHelper":
+    "Byline, length or format: shown under the headline.",
   "pressKit.fields.metaPlaceholder": "e.g. Long-form feature · by Ana Sá Lopes",
   "pressKit.fields.url": "Link",
-  "pressKit.fields.urlHelper": "Optional: leave blank if there's no online version.",
+  "pressKit.fields.urlHelper":
+    "Optional: leave blank if there's no online version.",
   "pressKit.fields.urlPlaceholder": "https://…",
   "pressKit.fields.name": "Name",
   "pressKit.fields.namePlaceholder": "e.g. Marta Reis",
@@ -3413,7 +3431,8 @@ export const admin: Catalog = {
   "housing.risk.reason.contact_info_in_text": "Contact details in the text",
   "housing.risk.reason.off_platform_payment_language":
     "Off-platform or advance-payment language",
-  "housing.risk.reason.discriminatory_language": "Possible discriminatory wording",
+  "housing.risk.reason.discriminatory_language":
+    "Possible discriminatory wording",
   "housing.risk.reason.lister_unverified": "Lister not phone- or ID-verified",
   "housing.risk.reason.lister_phone_only": "Lister phone-verified only",
   "housing.risk.reason.incomplete_listing": "Sparse description",
@@ -3440,7 +3459,8 @@ export const admin: Catalog = {
   "reports.finance.expense": "Spending: {amount}",
   "reports.finance.surplus": "Surplus: {amount}",
   "reports.communityHealth.title": "Community health",
-  "reports.communityHealth.sub": "A snapshot of every community's health score.",
+  "reports.communityHealth.sub":
+    "A snapshot of every community's health score.",
   "reports.communityHealth.asOfNow": "As of {time}. A snapshot in time.",
   "reports.communityHealth.notMeasured": "Not measured yet",
   "reports.communityHealth.averageScore": "Average score: {score}",
@@ -3460,10 +3480,12 @@ export const admin: Catalog = {
   "adminResourceListings.header.sub":
     "The real, vetted Legal Aid and Sexual Health Testing organisations members can contact. Publishing here is always a deliberate step: approving a suggestion records the decision and leaves the listing to you.",
   "adminResourceListings.newCta": "New listing",
-  "adminResourceListings.empty": "No listings yet. Create the first one, or check the suggestions queue for ideas.",
+  "adminResourceListings.empty":
+    "No listings yet. Create the first one, or check the suggestions queue for ideas.",
   "adminResourceListings.loadError": "Couldn't load resource listings.",
   "adminResourceListings.category.legal_aid": "Legal Aid",
-  "adminResourceListings.category.sexual_health_testing": "Sexual Health Testing",
+  "adminResourceListings.category.sexual_health_testing":
+    "Sexual Health Testing",
   "adminResourceListings.status.active": "Active",
   "adminResourceListings.status.archived": "Archived",
   "adminResourceListings.row.noRegion": "No region set",
@@ -3479,10 +3501,10 @@ export const admin: Catalog = {
   "adminResourceListings.form.editTitle": "Edit listing",
   "adminResourceListings.form.createTitle": "New listing",
   "adminResourceListings.form.createCta": "Create listing",
-  "adminResourceListings.toast.created": "\"{title}\" was published.",
-  "adminResourceListings.toast.updated": "\"{title}\" was updated.",
-  "adminResourceListings.toast.removed": "\"{title}\" was removed.",
-  "adminResourceListings.delete.title": "Remove \"{title}\"?",
+  "adminResourceListings.toast.created": '"{title}" was published.',
+  "adminResourceListings.toast.updated": '"{title}" was updated.',
+  "adminResourceListings.toast.removed": '"{title}" was removed.',
+  "adminResourceListings.delete.title": 'Remove "{title}"?',
   "adminResourceListings.delete.body":
     "This listing will no longer be shown to members. This can't be undone from here.",
   "adminResourceListings.delete.confirmCta": "Remove listing",
@@ -3495,7 +3517,8 @@ export const admin: Catalog = {
     "Every Legal Aid / Sexual Health Testing resource a member has suggested. Approving here only records the decision. Publish the real, verified listing by hand on Resource listings.",
   "adminResourceSuggestions.filter.all": "All categories",
   "adminResourceSuggestions.category.legal_aid": "Legal Aid",
-  "adminResourceSuggestions.category.sexual_health_testing": "Sexual Health Testing",
+  "adminResourceSuggestions.category.sexual_health_testing":
+    "Sexual Health Testing",
   "adminResourceSuggestions.status.pending": "Pending",
   "adminResourceSuggestions.status.approved": "Approved",
   "adminResourceSuggestions.status.declined": "Declined",
@@ -3743,22 +3766,13 @@ export const admin: Catalog = {
     "February 2026: Language toggle added",
 
   // ── 2026-08-21 code-review 4.6 fixes ──
-  "moderation.resolved.closedAt":
-    "Closed {age}",
-  "moderation.resolved.resolvedBy":
-    "Resolved by {name}: {note}",
-  "moderation.notified.member":
-    "Member notified",
-  "moderation.notified.reporter":
-    "Reporter notified",
-  "moderation.notified.affected":
-    "Affected member supported",
-  "moderation.reporter.anonymous":
-    "anonymous",
-  "communities.queue.status.open":
-    "Open",
-  "communities.queue.status.resolved":
-    "Resolved",
-  "communities.queue.status.escalated":
-    "Escalated",
+  "moderation.resolved.closedAt": "Closed {age}",
+  "moderation.resolved.resolvedBy": "Resolved by {name}: {note}",
+  "moderation.notified.member": "Member notified",
+  "moderation.notified.reporter": "Reporter notified",
+  "moderation.notified.affected": "Affected member supported",
+  "moderation.reporter.anonymous": "anonymous",
+  "communities.queue.status.open": "Open",
+  "communities.queue.status.resolved": "Resolved",
+  "communities.queue.status.escalated": "Escalated",
 };

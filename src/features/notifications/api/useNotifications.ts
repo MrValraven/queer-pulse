@@ -46,7 +46,8 @@ export function useNotifications(unreadOnly = false): NotificationsResult {
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
         // Code-split: the demo mock is only pulled into the bundle in demo mode.
-        const { buildNotifications } = await import("../notificationsList.data");
+        const { buildNotifications } =
+          await import("../notificationsList.data");
         const list = buildNotifications(t, fmt);
         const items = unreadOnly ? list.filter((n) => n.unread) : list;
         return { items, total: items.length, page: 1 };

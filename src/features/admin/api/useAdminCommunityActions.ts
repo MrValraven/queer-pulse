@@ -83,7 +83,9 @@ function useFreezeToggle(
       // a later refetch (window focus / remount) doesn't revert the toggle
       // for the rest of the session.
       if (demoMode) {
-        const fixture = COMMUNITIES.find((community) => community.slug === slug);
+        const fixture = COMMUNITIES.find(
+          (community) => community.slug === slug,
+        );
         if (fixture) fixture.frozen = frozen;
       }
       return { previous };
@@ -204,11 +206,7 @@ export function useReassignAdminCommunityOwner() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  return useDemoAwareMutation<
-    void,
-    Error,
-    ReassignAdminCommunityOwnerVars
-  >({
+  return useDemoAwareMutation<void, Error, ReassignAdminCommunityOwnerVars>({
     demoMode,
     logLabel: "admin.community.reassignOwner",
     logContext: ({ slug, memberSlug }) => ({ slug, memberSlug }),

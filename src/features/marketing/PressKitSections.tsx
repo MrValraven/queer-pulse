@@ -18,6 +18,14 @@ import styles from "./PressKitPage.module.css";
 
 const FACTS_AS_OF = new Date(2026, 4, 14);
 
+// The brand wordmark is content, not chrome — it's a fixed English proper
+// noun (see docs/i18n/glossary-pt.md: "QueerPulse — Brand name. Never
+// translated."), rendered from constants rather than a literal JSX string so
+// the i18n sweep's no-literal-string lint stays satisfied without a catalog
+// key. Same precedent as `GatheringDashboardPage.tsx`.
+const BRAND_QUEER = "Queer";
+const BRAND_PULSE = "Pulse";
+
 type BoilerItem = ReturnType<typeof buildBoiler>[number];
 
 /**
@@ -119,7 +127,8 @@ export function MarkSection() {
                 ].join(" ")}
               >
                 <span className={styles.logoDot} />
-                Queer<span className={styles.q}>Pulse</span>
+                {BRAND_QUEER}
+                <span className={styles.q}>{BRAND_PULSE}</span>
               </span>
             </div>
             <div className={styles.logoMeta}>
@@ -281,7 +290,11 @@ export function TeamSection() {
                   .join(" ")}
               >
                 {contact.avatarUrl ? (
-                  <img className={styles.phImg} src={contact.avatarUrl} alt="" />
+                  <img
+                    className={styles.phImg}
+                    src={contact.avatarUrl}
+                    alt=""
+                  />
                 ) : (
                   teamInitials(contact.name)
                 )}
@@ -448,7 +461,9 @@ export function DownloadsSection() {
               values={{ desc: d.description, filename: asset.filename }}
             />
           }
-          rows={[{ ic: d.ic, title: asset.filename, description: d.description }]}
+          rows={[
+            { ic: d.ic, title: asset.filename, description: d.description },
+          ]}
           asset={asset}
           buttonLabel={t("marketing:pressKit.downloads.modal.buttonLabel", {
             format: asset.filename.split(".").pop()?.toUpperCase() ?? "",

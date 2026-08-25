@@ -16,17 +16,17 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "2–4 hrs/week",
     location: "In-person · Lisbon",
     skills: ["Communication", "Languages", "Event support"],
-    description: "Help a national LGBTQ+ rights organisation reach more people through community events, tabling, and direct outreach. No experience necessary: training provided on day one.",
+    description:
+      "Help a national LGBTQ+ rights organisation reach more people through community events, tabling, and direct outreach. No experience necessary: training provided on day one.",
     eyebrow: "Volunteer · LGBTQ+ Rights · rights-org partnership",
     urgent: "Recruiting now · rolling intake",
     titleLead: "Community outreach · ",
     titleEm: "a local rights association.",
     sub: (
       <>
-        The organisation does the slow, unglamorous work of being{" "}
-        <b>present</b>: at fairs, in schools, at the info table nobody notices
-        until they need it.{" "}
-        <em>You're the friendly face at that table.</em> You hand out
+        The organisation does the slow, unglamorous work of being <b>present</b>
+        : at fairs, in schools, at the info table nobody notices until they need
+        it. <em>You're the friendly face at that table.</em> You hand out
         information, answer the easy questions, and know exactly who to point
         people toward for the hard ones.
       </>
@@ -57,26 +57,29 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       <>
         Outreach is also how the organisation spots what's changing on the
         ground: which questions are getting more common, which neighbourhoods
-        are underserved.{" "}
-        <em>You're the eyes and ears as much as the hands.</em>
+        are underserved. <em>You're the eyes and ears as much as the hands.</em>
       </>,
     ],
     tasks: [
       {
         title: "Staff the info table at community events",
-        description: "Set up, greet people, hand out materials, keep the space warm.",
+        description:
+          "Set up, greet people, hand out materials, keep the space warm.",
       },
       {
         title: "Answer the common questions",
-        description: "Name changes, where to get tested, how to report: the FAQs, with a script.",
+        description:
+          "Name changes, where to get tested, how to report: the FAQs, with a script.",
       },
       {
         title: "Refer the harder ones",
-        description: "You don't advise. You connect people to the organisation's legal and health teams.",
+        description:
+          "You don't advise. You connect people to the organisation's legal and health teams.",
       },
       {
         title: "Log who you reached",
-        description: "A quick tally at the end: anonymised counts, never names.",
+        description:
+          "A quick tally at the end: anonymised counts, never names.",
       },
     ],
     commitments: [
@@ -148,7 +151,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "4 hrs/week",
     location: "In-person · Lisbon",
     skills: ["Active listening", "Empathy", "Confidentiality"],
-    description: "Support people through peer-led mental health conversations. Training provided. You don't need to be a professional. You need to care and to listen well.",
+    description:
+      "Support people through peer-led mental health conversations. Training provided. You don't need to be a professional. You need to care and to listen well.",
     eyebrow: "Volunteer · Health & Wellbeing · Opus Diversus",
     urgent: "Recruiting · next cohort starts 1 Jul",
     titleLead: "Peer support · ",
@@ -195,19 +199,23 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     tasks: [
       {
         title: "Hold one-to-one peer conversations",
-        description: "Listen, reflect, don't fix. The training gives you the frame.",
+        description:
+          "Listen, reflect, don't fix. The training gives you the frame.",
       },
       {
         title: "Keep confidentiality, always",
-        description: "What's said in the room stays there, with clear, taught exceptions.",
+        description:
+          "What's said in the room stays there, with clear, taught exceptions.",
       },
       {
         title: "Recognise when to escalate",
-        description: "You'll learn the signs. A clinician is on call every session.",
+        description:
+          "You'll learn the signs. A clinician is on call every session.",
       },
       {
         title: "Attend the monthly debrief",
-        description: "Supervised group reflection: for the people you saw, and for you.",
+        description:
+          "Supervised group reflection: for the people you saw, and for you.",
       },
     ],
     commitments: [
@@ -226,8 +234,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       <>
         You need to be <b>steady, warm, and able to sit with discomfort</b>{" "}
         without rushing to make it better. Lived experience of mental health
-        struggle is welcome and optional. If you're currently in an acute
-        crisis yourself, this isn't the right moment, and that's okay.
+        struggle is welcome and optional. If you're currently in an acute crisis
+        yourself, this isn't the right moment, and that's okay.
       </>,
       <>
         Vetting includes a longer conversation with the Opus Diversus team and a
@@ -290,7 +298,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "3–5 hrs/week",
     location: "Lisbon · Evenings",
     skills: ["Facilitation", "Youth work", "Care"],
-    description: "Co-facilitate weekly peer support groups for LGBTQ+ young people. Showing up consistently is the most important thing you can do.",
+    description:
+      "Co-facilitate weekly peer support groups for LGBTQ+ young people. Showing up consistently is the most important thing you can do.",
     eyebrow: "Volunteer · Youth · Rede ex aequo",
     urgent: "Recruiting · enhanced check required",
     titleLead: "Co-facilitator · ",
@@ -330,8 +339,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         which is why this role asks for a full school year.
       </>,
       <>
-        You always co-facilitate alongside someone who's done it for
-        years. You'll learn the craft of holding a group:{" "}
+        You always co-facilitate alongside someone who's done it for years.
+        You'll learn the craft of holding a group:{" "}
         <em>
           making space, keeping it safe, knowing when to step in and when to let
           silence sit.
@@ -341,19 +350,23 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     tasks: [
       {
         title: "Co-run the weekly session",
-        description: "Same evening each week. You and the lead facilitator share it.",
+        description:
+          "Same evening each week. You and the lead facilitator share it.",
       },
       {
         title: "Hold the group agreement",
-        description: "Confidentiality, respect, no outing. You model it before you enforce it.",
+        description:
+          "Confidentiality, respect, no outing. You model it before you enforce it.",
       },
       {
         title: "Notice the quiet ones",
-        description: "Half of youth work is catching who's drifting and gently including them.",
+        description:
+          "Half of youth work is catching who's drifting and gently including them.",
       },
       {
         title: "Debrief after each session",
-        description: "15 minutes with your co-facilitator: what happened, what's next.",
+        description:
+          "15 minutes with your co-facilitator: what happened, what's next.",
       },
       {
         title: "Flag safeguarding concerns",
@@ -432,7 +445,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "2–3 hrs/week",
     location: "In-person · Mouraria",
     skills: ["Listening", "Documentation", "Organising"],
-    description: "Support queer residents navigating housing challenges: documenting situations, connecting people with legal aid, attending community meetings.",
+    description:
+      "Support queer residents navigating housing challenges: documenting situations, connecting people with legal aid, attending community meetings.",
     eyebrow: "Volunteer · Housing · Housing Justice Network",
     urgent: "Recruiting · Mouraria-based",
     titleLead: "Housing advocate · ",
@@ -471,8 +485,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         <b>
           Patient documentation is what turns scattered injustice into a case a
           lawyer can run
-        </b>,{" "}
-        or a campaign that changes a building's behaviour.
+        </b>
+        , or a campaign that changes a building's behaviour.
       </>,
       <>
         You won't be doing this alone or cold.{" "}
@@ -484,7 +498,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     tasks: [
       {
         title: "Sit with residents and listen",
-        description: "Let people tell the whole story before you start writing.",
+        description:
+          "Let people tell the whole story before you start writing.",
       },
       {
         title: "Document situations precisely",
@@ -514,9 +529,9 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     goodFor: [
       <>
         You need to be a <b>good listener and a careful writer</b> who can hold
-        a boundary. You're there to document. Knowing the
-        Mouraria/Anjos area and speaking Portuguese both help a lot. Calm and
-        meticulous beats charismatic here.
+        a boundary. You're there to document. Knowing the Mouraria/Anjos area
+        and speaking Portuguese both help a lot. Calm and meticulous beats
+        charismatic here.
       </>,
     ],
     teamIntro:
@@ -568,7 +583,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "Project by project",
     location: "In-person · Lisbon",
     skills: ["Event logistics", "Hospitality", "Photography"],
-    description: "Help set up and run exhibitions, crits, and group shows. Event-by-event commitment: pick the ones that work for you.",
+    description:
+      "Help set up and run exhibitions, crits, and group shows. Event-by-event commitment: pick the ones that work for you.",
     eyebrow: "Volunteer · Arts & Culture · Rainbow Arts Collective",
     urgent: "Recruiting · pick your shows",
     titleLead: "Production crew · ",
@@ -605,8 +621,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         <b>
           A show with a good crew feels generous; a show without one feels like
           a struggle
-        </b>,{" "}
-        and the artists feel the difference. You're the reason a space becomes
+        </b>
+        , and the artists feel the difference. You're the reason a space becomes
         an event.
       </>,
       <>
@@ -618,7 +634,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     tasks: [
       {
         title: "Set up and strike the space",
-        description: "Hang work, build the bar, move the chairs, sweep at the end.",
+        description:
+          "Hang work, build the bar, move the chairs, sweep at the end.",
       },
       {
         title: "Run the door and the room",
@@ -688,7 +705,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     time: "Event by event",
     location: "In-person · Lisbon",
     skills: ["Organisation", "Hospitality", "People skills"],
-    description: "Help set up, run, and support QueerPulse member gatherings. Every event needs someone making it feel warm. Flexible commitment, instant community.",
+    description:
+      "Help set up, run, and support QueerPulse member gatherings. Every event needs someone making it feel warm. Flexible commitment, instant community.",
     eyebrow: "Volunteer · Community · QueerPulse",
     urgent: "Recruiting · members welcome",
     titleLead: "Gatherings crew · ",
@@ -744,7 +762,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Watch for whoever came alone",
-        description: "The single most useful thing: catch them, introduce them.",
+        description:
+          "The single most useful thing: catch them, introduce them.",
       },
       {
         title: "Keep the night running",
@@ -752,7 +771,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       {
         title: "Help set up and pack down",
-        description: "Arrive 30 min early, stay 15 after. Hosts love you for it.",
+        description:
+          "Arrive 30 min early, stay 15 after. Hosts love you for it.",
       },
     ],
     commitments: [

@@ -27,17 +27,21 @@ const HOUSING_COOPS_KEY = "housing-coops";
 export function useCreateCoop() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<HousingCoopDTO | undefined, Error, CoopWriteBody>({
-    demoMode,
-    demoLatencyMs: 0,
-    meta: { silentError: true }, // AdminHousingCoopForm toasts locally
-    demoResult: () => undefined,
-    live: (body) => createAdminCoop(body),
-    onLiveSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
-      void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
+  return useDemoAwareMutation<HousingCoopDTO | undefined, Error, CoopWriteBody>(
+    {
+      demoMode,
+      demoLatencyMs: 0,
+      meta: { silentError: true }, // AdminHousingCoopForm toasts locally
+      demoResult: () => undefined,
+      live: (body) => createAdminCoop(body),
+      onLiveSuccess: () => {
+        void queryClient.invalidateQueries({
+          queryKey: [ADMIN_HOUSING_COOPS_KEY],
+        });
+        void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
+      },
     },
-  });
+  );
 }
 
 export interface UpdateCoopVars {
@@ -49,14 +53,20 @@ export interface UpdateCoopVars {
 export function useUpdateCoop() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<HousingCoopDTO | undefined, Error, UpdateCoopVars>({
+  return useDemoAwareMutation<
+    HousingCoopDTO | undefined,
+    Error,
+    UpdateCoopVars
+  >({
     demoMode,
     demoLatencyMs: 0,
     meta: { silentError: true }, // AdminHousingCoopForm + AdminHousingCoopsPage toast locally
     demoResult: () => undefined,
     live: ({ id, body }) => updateAdminCoop(id, body),
     onLiveSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_HOUSING_COOPS_KEY],
+      });
       void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
   });
@@ -73,7 +83,9 @@ export function useDeleteCoop() {
     demoResult: () => undefined,
     live: (id) => deleteAdminCoop(id),
     onLiveSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_HOUSING_COOPS_KEY],
+      });
       void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
       void queryClient.invalidateQueries({
         queryKey: [ADMIN_HOUSING_JOIN_REQUESTS_KEY],
@@ -110,7 +122,9 @@ export function useTriageJoinRequest() {
       void queryClient.invalidateQueries({
         queryKey: [ADMIN_HOUSING_JOIN_REQUESTS_KEY],
       });
-      void queryClient.invalidateQueries({ queryKey: [ADMIN_HOUSING_COOPS_KEY] });
+      void queryClient.invalidateQueries({
+        queryKey: [ADMIN_HOUSING_COOPS_KEY],
+      });
       void queryClient.invalidateQueries({ queryKey: [HOUSING_COOPS_KEY] });
     },
   });

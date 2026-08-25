@@ -9,7 +9,10 @@ function readTime(iso: string | undefined): string {
   if (!iso) return "";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleTimeString(activeLocale(), { hour: "numeric", minute: "2-digit" });
+  return date.toLocaleTimeString(activeLocale(), {
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 interface GroupSeenBySheetProps {

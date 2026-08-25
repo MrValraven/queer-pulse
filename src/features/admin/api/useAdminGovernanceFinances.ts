@@ -21,9 +21,8 @@ import {
 // empty, and the fictional MRR/sustainer/solidarity headline figures are
 // hardcoded below.
 async function buildDemoAdminFinances(): Promise<AdminFinanceResponseDTO> {
-  const { QUARTERS, INCOME_LEDGER, LEDGER } = await import(
-    "../adminGovernance.mock"
-  );
+  const { QUARTERS, INCOME_LEDGER, LEDGER } =
+    await import("../adminGovernance.mock");
 
   const history: AdminFinanceHistoryPoint[] = QUARTERS.map((quarterPoint) => ({
     quarter: quarterPoint.label,

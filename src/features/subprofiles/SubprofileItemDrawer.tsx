@@ -109,7 +109,9 @@ export function SubprofileItemDrawer({
     setDraft((cur) => ({ ...cur, isFeatured: !cur.isFeatured }));
   }
 
-  const titleKey = isNew ? "subprofiles:itemDrawer.addTitle" : "subprofiles:itemDrawer.editTitle";
+  const titleKey = isNew
+    ? "subprofiles:itemDrawer.addTitle"
+    : "subprofiles:itemDrawer.editTitle";
 
   return createPortal(
     <div

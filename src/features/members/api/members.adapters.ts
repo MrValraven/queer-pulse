@@ -85,7 +85,9 @@ function toWorkLinks(dtoLinks?: WorkLinkDTO[]): WorkLink[] {
       link.slug &&
       KNOWN_WORK_REF_ENTITIES.has(link.entity as WorkRefEntity)
     ) {
-      return [{ kind: "ref", entity: link.entity as WorkRefEntity, slug: link.slug }];
+      return [
+        { kind: "ref", entity: link.entity as WorkRefEntity, slug: link.slug },
+      ];
     }
     if (link.kind === "external" && link.href) {
       return [{ kind: "external", href: link.href }];
@@ -290,11 +292,10 @@ export function workToDto(work: Member["work"]): WorkItemDTO[] {
     title: w.title,
     year: w.year,
     ...(w.image ? { imageUrl: w.image } : {}),
-    links: w.links.map(
-      (link): WorkLinkDTO =>
-        link.kind === "ref"
-          ? { kind: "ref", entity: link.entity, slug: link.slug }
-          : { kind: "external", href: link.href },
+    links: w.links.map((link): WorkLinkDTO =>
+      link.kind === "ref"
+        ? { kind: "ref", entity: link.entity, slug: link.slug }
+        : { kind: "external", href: link.href },
     ),
   }));
 }

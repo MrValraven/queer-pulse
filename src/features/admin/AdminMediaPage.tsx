@@ -78,8 +78,12 @@ export function AdminMediaPage() {
 
   return (
     <AdminShell
-      title={<Translation i18nKey="admin:media.title" components={{ em: <em /> }} />}
-      breadcrumb={[{ label: t("admin:common.adminBreadcrumb"), to: routes.admin }]}
+      title={
+        <Translation i18nKey="admin:media.title" components={{ em: <em /> }} />
+      }
+      breadcrumb={[
+        { label: t("admin:common.adminBreadcrumb"), to: routes.admin },
+      ]}
     >
       <FadeIn>
         <AdminPageHeader
@@ -161,7 +165,10 @@ export function AdminMediaPage() {
           icon={<FiX />}
           title={t("common:error.title")}
           description={t("common:error.description")}
-          action={{ label: t("common:error.retry"), onClick: () => void refetch() }}
+          action={{
+            label: t("common:error.retry"),
+            onClick: () => void refetch(),
+          }}
         />
       ) : objects.length === 0 ? (
         <EmptyState
@@ -302,118 +309,130 @@ function AdminMediaDrawer({
 
   return (
     <>
-    <AdminDrawer
-      label={t("admin:media.drawer.ariaLabel")}
-      onClose={onClose}
-      head={
-        <img
-          className={styles.drawerImage}
-          src={absoluteFileUrl(object.fileUrl)}
-          alt=""
-        />
-      }
-      foot={
-        <div className={styles.actions}>
-          <a
-            className={styles.actionLink}
-            href={absoluteFileUrl(object.fileUrl)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FiExternalLink aria-hidden /> {t("admin:media.openFile")}
-          </a>
-          <Button
-            variant="ghost"
-            onClick={() =>
-              void onCopy(object.presignedUrl, t("admin:media.copiedPresigned"))
-            }
-          >
-            <FiCopy aria-hidden /> {t("admin:media.copyPresigned")}
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() => void onCopy(object.key, t("admin:media.copiedKey"))}
-          >
-            <FiCopy aria-hidden /> {t("admin:media.copyKey")}
-          </Button>
-          {uploader && (
-            <Button variant="ghost" onClick={() => onFilterByUploader(uploader)}>
-              <FiUser aria-hidden />{" "}
-              {t("admin:media.filterByUploader.showAll")}
+      <AdminDrawer
+        label={t("admin:media.drawer.ariaLabel")}
+        onClose={onClose}
+        head={
+          <img
+            className={styles.drawerImage}
+            src={absoluteFileUrl(object.fileUrl)}
+            alt=""
+          />
+        }
+        foot={
+          <div className={styles.actions}>
+            <a
+              className={styles.actionLink}
+              href={absoluteFileUrl(object.fileUrl)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FiExternalLink aria-hidden /> {t("admin:media.openFile")}
+            </a>
+            <Button
+              variant="ghost"
+              onClick={() =>
+                void onCopy(
+                  object.presignedUrl,
+                  t("admin:media.copiedPresigned"),
+                )
+              }
+            >
+              <FiCopy aria-hidden /> {t("admin:media.copyPresigned")}
             </Button>
-          )}
-          <Button
-            variant="ghost"
-            disabled={isChecking}
-            onClick={() => void inspectRealContentType()}
-          >
-            {isChecking
-              ? t("shared:loading.label")
-              : t("admin:media.inspectRealType")}
-          </Button>
-          <Button
-            variant="danger"
-            disabled={deleteMedia.isPending}
-            onClick={() => setIsConfirmingDelete(true)}
-          >
-            <FiTrash2 aria-hidden /> {t("admin:media.deleteFile")}
-          </Button>
-        </div>
-      }
-    >
-      <DetailRows
-        rows={[
-          { label: t("admin:media.field.key"), value: object.key },
-          {
-            label: t("admin:media.field.uploader"),
-            value: object.uploader
-              ? `${object.uploader.displayName} · @${object.uploader.handle}`
-              : t("admin:media.unowned"),
-          },
-          {
-            label: t("admin:media.field.declaredType"),
-            value: declaredContentType,
-          },
-          ...(realContentType !== null
-            ? [
-                {
-                  label: t("admin:media.field.realType"),
-                  value: (
-                    <span className={contentTypeMismatch ? styles.mismatch : undefined}>
-                      {realContentType}
-                      {contentTypeMismatch
-                        ? ` · ${t("admin:media.spoofWarning")}`
-                        : ""}
-                    </span>
-                  ),
-                },
-              ]
-            : []),
-        ]}
-      />
-      <section className={styles.referencesSection}>
-        <h3 className={styles.referencesHeading}>
-          {t("admin:media.references.heading")}
-        </h3>
-        <AdminMediaReferenceList
+            <Button
+              variant="ghost"
+              onClick={() =>
+                void onCopy(object.key, t("admin:media.copiedKey"))
+              }
+            >
+              <FiCopy aria-hidden /> {t("admin:media.copyKey")}
+            </Button>
+            {uploader && (
+              <Button
+                variant="ghost"
+                onClick={() => onFilterByUploader(uploader)}
+              >
+                <FiUser aria-hidden />{" "}
+                {t("admin:media.filterByUploader.showAll")}
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              disabled={isChecking}
+              onClick={() => void inspectRealContentType()}
+            >
+              {isChecking
+                ? t("shared:loading.label")
+                : t("admin:media.inspectRealType")}
+            </Button>
+            <Button
+              variant="danger"
+              disabled={deleteMedia.isPending}
+              onClick={() => setIsConfirmingDelete(true)}
+            >
+              <FiTrash2 aria-hidden /> {t("admin:media.deleteFile")}
+            </Button>
+          </div>
+        }
+      >
+        <DetailRows
+          rows={[
+            { label: t("admin:media.field.key"), value: object.key },
+            {
+              label: t("admin:media.field.uploader"),
+              value: object.uploader
+                ? `${object.uploader.displayName} · @${object.uploader.handle}`
+                : t("admin:media.unowned"),
+            },
+            {
+              label: t("admin:media.field.declaredType"),
+              value: declaredContentType,
+            },
+            ...(realContentType !== null
+              ? [
+                  {
+                    label: t("admin:media.field.realType"),
+                    value: (
+                      <span
+                        className={
+                          contentTypeMismatch ? styles.mismatch : undefined
+                        }
+                      >
+                        {realContentType}
+                        {contentTypeMismatch
+                          ? ` · ${t("admin:media.spoofWarning")}`
+                          : ""}
+                      </span>
+                    ),
+                  },
+                ]
+              : []),
+          ]}
+        />
+        <section className={styles.referencesSection}>
+          <h3 className={styles.referencesHeading}>
+            {t("admin:media.references.heading")}
+          </h3>
+          <AdminMediaReferenceList
+            references={object.references}
+            degraded={degraded}
+          />
+        </section>
+      </AdminDrawer>
+      {isConfirmingDelete && (
+        <AdminMediaDeleteConfirm
           references={object.references}
           degraded={degraded}
+          isPending={deleteMedia.isPending}
+          refusal={deleteRefusal}
+          onCancel={() => {
+            setDeleteRefusal(null);
+            setIsConfirmingDelete(false);
+          }}
+          onConfirm={confirmDelete}
         />
-      </section>
-    </AdminDrawer>
-    {isConfirmingDelete && (
-      <AdminMediaDeleteConfirm
-        references={object.references}
-        degraded={degraded}
-        isPending={deleteMedia.isPending}
-        refusal={deleteRefusal}
-        onCancel={() => {
-          setDeleteRefusal(null);
-          setIsConfirmingDelete(false);
-        }}
-        onConfirm={confirmDelete}
-      />
-    )}
+      )}
     </>
   );
 }

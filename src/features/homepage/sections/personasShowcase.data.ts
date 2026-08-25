@@ -247,6 +247,11 @@ export function getDeckCards(t: TFunction): DeckCard[] {
 }
 
 /** Order shown in the "Posting as" switcher menu (main profile first, then personas). */
-export const SWITCHER_ORDER: PersonaKey[] = ["main", "mara", "atelier", "byline"];
+export const SWITCHER_ORDER: PersonaKey[] = [
+  "main",
+  "mara",
+  "atelier",
+  "byline",
+];
 
 export const DEFAULT_PERSONA_KEY: PersonaKey = "mara";

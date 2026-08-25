@@ -354,8 +354,7 @@ export function CocChangesSection({
         <button type="button" onClick={onDownload}>
           {t("marketing:coc.version.downloadCta")}
         </button>{" "}
-        ·{" "}
-        {t("marketing:coc.version.readManifesto")}
+        · {t("marketing:coc.version.readManifesto")}
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import {
   Button,
@@ -55,8 +55,10 @@ export function GatheringLineupEditor({ slug }: { slug: string }) {
 
   // Seed local editable rows once the current lineup loads; further server
   // refreshes (e.g. after save) don't clobber in-progress local edits.
-  useEffect(() => {
-    if (rows !== null || !lineup) return;
+  // Adjusted during render (not an effect) so the seed lands in the same
+  // commit instead of a follow-up render; the `rows === null` guard makes
+  // this a one-time seed, same as the effect it replaces.
+  if (rows === null && lineup) {
     setRows(
       lineup.entries.map((entry) =>
         withUid({
@@ -69,13 +71,15 @@ export function GatheringLineupEditor({ slug }: { slug: string }) {
         }),
       ),
     );
-  }, [lineup, rows]);
+  }
 
   const list = rows ?? [];
   const atCap = list.length >= MAX_LINEUP_ENTRIES;
 
   function addRow(memberSlug: string) {
-    const person = candidates.find((candidate) => candidate.slug === memberSlug);
+    const person = candidates.find(
+      (candidate) => candidate.slug === memberSlug,
+    );
     if (!person) return;
     setRows((current) => [
       ...(current ?? []),
@@ -123,10 +127,18 @@ export function GatheringLineupEditor({ slug }: { slug: string }) {
     <section className={styles.panel}>
       <div className={styles.panelHead}>
         <div>
-          <div className={styles.panelTitle}>{t("gatherings:lineup.title")}</div>
-          <p className={styles.panelDesc}>{t("gatherings:lineup.description")}</p>
+          <div className={styles.panelTitle}>
+            {t("gatherings:lineup.title")}
+          </div>
+          <p className={styles.panelDesc}>
+            {t("gatherings:lineup.description")}
+          </p>
         </div>
-        <Button variant="ghost" onClick={() => setPickerOpen(true)} disabled={atCap}>
+        <Button
+          variant="ghost"
+          onClick={() => setPickerOpen(true)}
+          disabled={atCap}
+        >
           <FiPlus size={16} aria-hidden /> {t("gatherings:lineup.addCta")}
         </Button>
       </div>

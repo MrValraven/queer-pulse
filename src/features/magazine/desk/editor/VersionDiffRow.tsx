@@ -23,15 +23,21 @@ export function VersionDiffRow({ row }: VersionDiffRowProps) {
 
   return (
     <div className={styles.row}>
-      <span className={cx(styles.statusChip, STATUS_CHIP_CLASS[row.status])}>{statusLabel}</span>
+      <span className={cx(styles.statusChip, STATUS_CHIP_CLASS[row.status])}>
+        {statusLabel}
+      </span>
       {row.status === "changed" ? (
         <div className={styles.changedPair}>
           <div>
-            <div className={styles.textLabel}>{t("magazine:write.versions.diff.before")}</div>
+            <div className={styles.textLabel}>
+              {t("magazine:write.versions.diff.before")}
+            </div>
             <p className={styles.text}>{row.versionText}</p>
           </div>
           <div>
-            <div className={styles.textLabel}>{t("magazine:write.versions.diff.now")}</div>
+            <div className={styles.textLabel}>
+              {t("magazine:write.versions.diff.now")}
+            </div>
             <p className={styles.text}>{row.currentText}</p>
           </div>
         </div>

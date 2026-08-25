@@ -10,13 +10,13 @@ import {
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName } from "../../shared/lib/initials";
 import { AdminChip, AdminToggle } from "./ui";
+import { AdminPressKitFields } from "./AdminPressKitFields";
 import {
-  AdminPressKitFields,
   emptyPressKitValue,
   isPressKitValid,
   type PressKitFieldsValue,
   type PressKitKind,
-} from "./AdminPressKitFields";
+} from "./adminPressKitFields.utils";
 import styles from "./AdminPressKitPage.module.css";
 
 /** One list row, flattened to what the presentational list needs — the raw
@@ -38,7 +38,11 @@ export interface AdminPressKitListProps {
   creating: boolean;
   deleting: boolean;
   onCreate: (value: PressKitFieldsValue, done: () => void) => void;
-  onSaveEdit: (id: string, value: PressKitFieldsValue, done: () => void) => void;
+  onSaveEdit: (
+    id: string,
+    value: PressKitFieldsValue,
+    done: () => void,
+  ) => void;
   onToggleActive: (row: PressRowVM) => void;
   onReorder: (orderedIds: string[]) => void;
   onDelete: (id: string) => void;
@@ -256,7 +260,9 @@ function PressKitRow({
             className={styles.orderBtn}
             onClick={onMoveUp}
             disabled={isFirst}
-            aria-label={t("admin:pressKit.list.moveUpAria", { name: row.title })}
+            aria-label={t("admin:pressKit.list.moveUpAria", {
+              name: row.title,
+            })}
           >
             <FiChevronUp aria-hidden />
           </button>
@@ -280,7 +286,11 @@ function PressKitRow({
             onClick={beginEdit}
             aria-expanded={expanded}
           >
-            {t(expanded ? "admin:pressKit.editor.close" : "admin:pressKit.editor.edit")}
+            {t(
+              expanded
+                ? "admin:pressKit.editor.close"
+                : "admin:pressKit.editor.edit",
+            )}
           </Button>
           <div className={styles.activeToggleGroup}>
             <AdminToggle

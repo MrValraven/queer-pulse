@@ -82,7 +82,8 @@ function sanitizeChildren(root: ParentNode): void {
       continue;
     }
 
-    const originalHref = element.tagName === "A" ? element.getAttribute("href") : null;
+    const originalHref =
+      element.tagName === "A" ? element.getAttribute("href") : null;
     for (const attribute of Array.from(element.attributes)) {
       element.removeAttribute(attribute.name);
     }

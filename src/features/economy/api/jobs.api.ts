@@ -199,7 +199,6 @@ export const decideJobApplication = (
   applicationId: string,
   status: JobApplicationDecision,
 ) =>
-  apiPatch<JobApplicationDTO>(
-    `/jobs/${slug}/applications/${applicationId}`,
-    { status },
-  );
+  apiPatch<JobApplicationDTO>(`/jobs/${slug}/applications/${applicationId}`, {
+    status,
+  });

@@ -103,7 +103,9 @@ describe("buildVCard", () => {
   });
 
   it("omits optional lines that have no value", () => {
-    const card = buildVCard(makeView({ tagline: "", avatarUrl: null, bio: "" }));
+    const card = buildVCard(
+      makeView({ tagline: "", avatarUrl: null, bio: "" }),
+    );
     const lines = card.split("\r\n");
     expect(lines.some((line) => line.startsWith("TITLE:"))).toBe(false);
     expect(lines.some((line) => line.startsWith("PHOTO"))).toBe(false);

@@ -15,7 +15,11 @@ import {
   detailDtoToPlace,
   submittedToPlace,
 } from "./directory.adapters";
-import { getDirectory, getDirectoryPage, getDirectorySpace } from "./directory.api";
+import {
+  getDirectory,
+  getDirectoryPage,
+  getDirectorySpace,
+} from "./directory.api";
 import { ApiError } from "../../../shared/api/client";
 
 export const DIRECTORY_KEY = "directory";
@@ -188,7 +192,9 @@ export function useDirectoryPlace(slug: string | undefined): {
   const demoPlace = (): DirectoryPlace | undefined => {
     const fixture = getPlace(slug);
     if (fixture) return fixture;
-    const submitted = submittedListings.find((listing) => listing.slug === slug);
+    const submitted = submittedListings.find(
+      (listing) => listing.slug === slug,
+    );
     return submitted
       ? submittedToPlace(submitted, user?.profile.avatarUrl)
       : undefined;

@@ -85,7 +85,11 @@ export function formatIsoTime(time: PlainTime): string {
  *  year/month/day (reading the current date, not doing arithmetic on it). */
 export function todayPlain(): PlainDate {
   const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+  return {
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate(),
+  };
 }
 
 /** Days elapsed from the epoch (1970-01-01 = 0) to `date`, using Howard
@@ -112,12 +116,16 @@ export function civilFromDays(days: number): PlainDate {
   const era = Math.floor(shiftedDays / 146097);
   const dayOfEra = shiftedDays - era * 146097;
   const yearOfEra = Math.floor(
-    (dayOfEra - Math.floor(dayOfEra / 1460) + Math.floor(dayOfEra / 36524) - Math.floor(dayOfEra / 146096)) /
+    (dayOfEra -
+      Math.floor(dayOfEra / 1460) +
+      Math.floor(dayOfEra / 36524) -
+      Math.floor(dayOfEra / 146096)) /
       365,
   );
   const shiftedYear = yearOfEra + era * 400;
   const dayOfYear =
-    dayOfEra - (365 * yearOfEra + Math.floor(yearOfEra / 4) - Math.floor(yearOfEra / 100));
+    dayOfEra -
+    (365 * yearOfEra + Math.floor(yearOfEra / 4) - Math.floor(yearOfEra / 100));
   const monthPosition = Math.floor((5 * dayOfYear + 2) / 153);
   const day = dayOfYear - Math.floor((153 * monthPosition + 2) / 5) + 1;
   const month = monthPosition + (monthPosition < 10 ? 3 : -9);
@@ -152,7 +160,9 @@ export function getDaysInMonth(year: number, month: number): number {
   if (month === 2) {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
   }
-  const daysInMonth: number[] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const daysInMonth: number[] = [
+    31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
+  ];
   return daysInMonth[month - 1] as number;
 }
 
@@ -222,7 +232,11 @@ export function startOfWeek(date: PlainDate, weekStart: number): PlainDate {
 
 /** Clamp `date` into `[min, max]` (either bound may be `null` to leave that
  *  side open). */
-export function clampDate(date: PlainDate, min: PlainDate | null, max: PlainDate | null): PlainDate {
+export function clampDate(
+  date: PlainDate,
+  min: PlainDate | null,
+  max: PlainDate | null,
+): PlainDate {
   if (min !== null && compareDate(date, min) < 0) return min;
   if (max !== null && compareDate(date, max) > 0) return max;
   return date;

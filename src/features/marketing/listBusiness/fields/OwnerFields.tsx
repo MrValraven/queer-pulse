@@ -131,7 +131,9 @@ export function OwnerFields({
       >
         <input
           type="email"
-          placeholder={t("marketing:listBusiness.step4.contactEmailPlaceholder")}
+          placeholder={t(
+            "marketing:listBusiness.step4.contactEmailPlaceholder",
+          )}
           value={draft.contactEmail}
           onChange={(e) => set({ contactEmail: e.target.value })}
         />

@@ -86,7 +86,10 @@ export function CalendarView({
             <AllUpcomingEvents loading={false} upcoming={upcoming} />
           </div>
 
-          <CalendarSidebar selected={selected} selectedEvents={selectedEvents} />
+          <CalendarSidebar
+            selected={selected}
+            selectedEvents={selectedEvents}
+          />
         </div>
       </div>
     </section>

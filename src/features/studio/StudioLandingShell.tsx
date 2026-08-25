@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { TOP_NAV, FOOTER_COLUMNS } from "./studioLanding.data";
 import styles from "./StudioLandingPage.module.css";
 
@@ -14,7 +15,10 @@ export function StudioLandingShell({ children }: { children: ReactNode }) {
       <header className={styles.top}>
         <Link to={routes.homepage} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          Queer<span className={styles.q}>Pulse</span>
+          <Translation
+            i18nKey="studio:brand.lockup"
+            components={{ em: <span className={styles.q} /> }}
+          />
         </Link>
         <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
         <nav className={styles.topNav}>
@@ -47,7 +51,10 @@ function StudioLandingFooter() {
         <div className={styles.footBrand}>
           <Link to={routes.homepage} className={styles.brand}>
             <span className={styles.pulseDot} aria-hidden />
-            Queer<span className={styles.q}>Pulse</span>
+            <Translation
+              i18nKey="studio:brand.lockup"
+              components={{ em: <span className={styles.q} /> }}
+            />
           </Link>
           <p>{t("studio:landing.footer.tagline")}</p>
         </div>

@@ -1,4 +1,8 @@
-import { useCallback, useRef, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useCallback,
+  useRef,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
 import { m, useDragControls, type PanInfo } from "motion/react";
@@ -6,7 +10,7 @@ import { Button, useScrimDismiss } from "../ui";
 import { useScrollLock } from "../../hooks";
 import { useAuth } from "../../../app/providers/authContext";
 import { useNavDrawer } from "../../../app/providers/navDrawerContext";
-import { useMotionPrefs } from "../../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { routes } from "../../../app/routeMap";
 import { useTranslation } from "../../i18n/useTranslation";
 import { MegaNavDrawer } from "./MegaNavDrawer";

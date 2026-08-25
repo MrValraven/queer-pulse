@@ -9,6 +9,20 @@ import s from "./council.module.css";
  * translated decision copy below. */
 const CURRENT_SUBMISSION_ARTIST_NAME = "Renato";
 
+// Content — this submission's title, artist line, claim status, and
+// reviewer comments, comes from the submission record in live mode.
+const SUBMISSION_TITLE_PRE = "The piano ";
+const SUBMISSION_TITLE_EM = "I waited for";
+const SUBMISSION_ARTIST_LINE = "Renato V. · Porto · single · 4:40";
+const CLAIMANT_INITIALS = "SM";
+const CLAIM_STATUS_HEADLINE = "Claimed by Sara M.";
+const CLAIM_STATUS_NOTE = "You're answering this one. ";
+const SECOND_READER_NOTE = "D. Okoye second-reading queued.";
+const FLAGGED_COMMENTS =
+  'D. Okoye: "the bridge at 2:14 is the thing." · João R.: "PT feels ' +
+  'regional: Porto, not Lisbon." · Yara R.: "i\'d put this on the ' +
+  'standards collection in a year, easily."';
+
 export function StudioTriageDetail() {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -26,9 +40,10 @@ export function StudioTriageDetail() {
   return (
     <aside className={s.aside}>
       <h2>
-        The piano <em>I waited for</em>
+        {SUBMISSION_TITLE_PRE}
+        <em>{SUBMISSION_TITLE_EM}</em>
       </h2>
-      <div className={s.asideWho}>Renato V. · Porto · single · 4:40</div>
+      <div className={s.asideWho}>{SUBMISSION_ARTIST_LINE}</div>
 
       <div className={s.playerMini}>
         <div className={s.pmWf}>
@@ -60,10 +75,11 @@ export function StudioTriageDetail() {
       </div>
 
       <div className={s.claimRow}>
-        <div className="av">SM</div>
+        <div className="av">{CLAIMANT_INITIALS}</div>
         <div className={s.text}>
-          <b>Claimed by Sara M.</b>
-          You're answering this one. <em>D. Okoye second-reading queued.</em>
+          <b>{CLAIM_STATUS_HEADLINE}</b>
+          {CLAIM_STATUS_NOTE}
+          <em>{SECOND_READER_NOTE}</em>
         </div>
       </div>
 
@@ -82,9 +98,7 @@ export function StudioTriageDetail() {
       <div className={s.detailBlock}>
         <h4>{t("studio:triage.detail.flaggedHeading", { count: 3 })}</h4>
         <p style={{ fontStyle: "italic", color: "rgba(247,243,238,.6)" }}>
-          D. Okoye: "the bridge at 2:14 is the thing." · João R.: "PT feels
-          regional: Porto, not Lisbon." · Yara R.: "i'd put this on the
-          standards collection in a year, easily."
+          {FLAGGED_COMMENTS}
         </p>
       </div>
 
@@ -133,9 +147,7 @@ export function StudioTriageDetail() {
           <button
             type="button"
             className={s.bt}
-            onClick={() =>
-              record(t("studio:triage.detail.toast.held"), "info")
-            }
+            onClick={() => record(t("studio:triage.detail.toast.held"), "info")}
           >
             {t("studio:triage.detail.holdCta")}
           </button>

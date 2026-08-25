@@ -149,8 +149,8 @@ export const GUIDE_SECTIONS: GuideSection[] = [
         <ul>
           <li>
             <strong>Only company / business clients withhold.</strong> When you
-            invoice a private individual, there&apos;s no retention: you
-            receive the full amount and account for the tax yourself later.
+            invoice a private individual, there&apos;s no retention: you receive
+            the full amount and account for the tax yourself later.
           </li>
           <li>
             If you expect to earn under{" "}
@@ -245,9 +245,9 @@ export const GUIDE_SECTIONS: GuideSection[] = [
             default you to a higher base.
           </li>
           <li>
-            <strong>IRS season</strong>: your annual income-tax return, filed
-            in <strong>spring</strong> (the window typically runs April to
-            June). This is where withholding and coefficients all settle up.
+            <strong>IRS season</strong>: your annual income-tax return, filed in{" "}
+            <strong>spring</strong> (the window typically runs April to June).
+            This is where withholding and coefficients all settle up.
           </li>
           <li>
             <strong>IVA periodic returns</strong>: only if you&apos;re{" "}
@@ -282,8 +282,8 @@ export const GUIDE_SECTIONS: GuideSection[] = [
             </strong>{" "}
             If this is your first time as an independent worker, you&apos;re
             exempt from contributions for your first{" "}
-            {SS_FIRST_YEAR_EXEMPTION_MONTHS} months. Your first payment falls
-            in month {SS_FIRST_YEAR_EXEMPTION_MONTHS + 1}.
+            {SS_FIRST_YEAR_EXEMPTION_MONTHS} months. Your first payment falls in
+            month {SS_FIRST_YEAR_EXEMPTION_MONTHS + 1}.
           </li>
           <li>
             <strong>Lower taxable income.</strong> The regime

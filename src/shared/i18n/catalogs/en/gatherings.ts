@@ -131,6 +131,7 @@ export const gatherings: Catalog = {
   "common.backToGatherings": "Gatherings",
   "common.hostedBy": "Hosted by",
   "common.connectCta": "Connect",
+  "common.timeRangeTo": "to",
 
   // EventPage — About / Details / Guidelines / hero / members-only / pills
   "event.about.title": "About this gathering",

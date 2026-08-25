@@ -8,27 +8,27 @@
 
 ## 1. Status
 
-| Area | State |
-|---|---|
-| `public/og-default.svg` (the original SVG) | ✅ done |
-| `index.html` + `public/` (SEO, llms.txt, robots.txt) | ✅ done |
-| All 13 feature-directory slices | ✅ done |
-| Catalogs: auth, cinema, common, communities, community, footer, forum, gatherings, help, magazine, members, messages, myevents, nav, notifications, safety, settings, shared, studio, subprofiles, system, topics, admin | ✅ done |
-| Catalog: marketing **PT** | ✅ done (~646 em-dash, ~57 antithesis) |
-| Catalogs: economy (EN+PT), culture, governance | ✅ done (~354 em-dash, 5 antithesis pairs) |
-| Catalogs: marketing **EN**, resources (EN+PT) | ⏳ still running |
-| Catalogs: culture, connect, feed, governance, homepage | ⚠️ tiny residual counts — confirm at verification |
+| Area                                                                                                                                                                                                                     | State                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- |
+| `public/og-default.svg` (the original SVG)                                                                                                                                                                               | ✅ done                                           |
+| `index.html` + `public/` (SEO, llms.txt, robots.txt)                                                                                                                                                                     | ✅ done                                           |
+| All 13 feature-directory slices                                                                                                                                                                                          | ✅ done                                           |
+| Catalogs: auth, cinema, common, communities, community, footer, forum, gatherings, help, magazine, members, messages, myevents, nav, notifications, safety, settings, shared, studio, subprofiles, system, topics, admin | ✅ done                                           |
+| Catalog: marketing **PT**                                                                                                                                                                                                | ✅ done (~646 em-dash, ~57 antithesis)            |
+| Catalogs: economy (EN+PT), culture, governance                                                                                                                                                                           | ✅ done (~354 em-dash, 5 antithesis pairs)        |
+| Catalogs: marketing **EN**, resources (EN+PT)                                                                                                                                                                            | ⏳ still running                                  |
+| Catalogs: culture, connect, feed, governance, homepage                                                                                                                                                                   | ⚠️ tiny residual counts — confirm at verification |
 
 ---
 
 ## 2. Numbers (live-measured on catalogs)
 
-| | Before | Now | Removed |
-|---|---|---|---|
-| EN catalog em dashes | 2,916 | 1,775 | 1,141 |
-| PT catalog em dashes | 2,825 | 1,710 | 1,115 |
+|                      | Before | Now   | Removed |
+| -------------------- | ------ | ----- | ------- |
+| EN catalog em dashes | 2,916  | 1,775 | 1,141   |
+| PT catalog em dashes | 2,825  | 1,710 | 1,115   |
 
-Of the 1,775 EN remaining, **1,222 are in the 3 still-running files** (marketing 582, economy 347, resources 293). The rest (~550) is expected *residue* in finished files: code comments, en-dash number ranges (`6–8`), attribution dashes, and `"—"` placeholders — all deliberately left.
+Of the 1,775 EN remaining, **1,222 are in the 3 still-running files** (marketing 582, economy 347, resources 293). The rest (~550) is expected _residue_ in finished files: code comments, en-dash number ranges (`6–8`), attribution dashes, and `"—"` placeholders — all deliberately left.
 
 **Feature-dir + inline mock copy:** ~1,300 em-dash fixes (admin, members 177, communities/gatherings 296, economy/culture 203, forum/resources/cinema/studio 291, messages 29, magazine 113, marketing pages ~250, homepage 20, subprofiles 21, others).
 
@@ -39,17 +39,21 @@ Of the 1,775 EN remaining, **1,222 are in the 3 still-running files** (marketing
 ## 3. Decisions needed from you
 
 ### D1 — Attribution dashes (inconsistent across agents; needs one ruling)
+
 - **Magazine catalog & components KEPT** `— {cite}` bylines and reader-letter signatures (`"— Member, 28, Intendente"`), treating the em dash as a typographic attribution convention.
 - **forum / cinema / community / admin agents REMOVED** leading attribution dashes (`"— Sara Marques · programming lead"` → `"Sara Marques · programming lead"`).
 - **Your call:** keep attribution dashes everywhere, or strip them everywhere? I'll normalize whichever you pick.
 
 ### D2 — `"—"` empty-value placeholder glyph
+
 Used as a UI "no value" marker (there's even `export const dash = "—"` in `contract.helpers.ts`). Left in ~40 spots; one spot (`useAllCommunities.ts:83`) was changed to `"-"`. **Convert all to `"-"` / en dash, or leave all as em dash?**
 
 ### D3 — Antithesis rewrites soften tone in places
+
 The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"organise like a garden rather than a machine"`), which is softer than a crisp positive. Review §5; mark any you want re-sharpened or reverted.
 
 ### D4 — One proper-name edit flagged for revert
+
 `resources/qtipocOrganisations.data.ts` org name `"Djass — Afrodescendentes"` → `"Djass: Afrodescendentes"`. Changing a brand/proper name's styling is borderline — revert if the original is preferred.
 
 ---
@@ -60,7 +64,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - [ ] **Gatherings render-parser coupled edit** — `indexOf("—")` → `indexOf(":")` in `ManageGatheringPage.tsx`, `GatheringDashboardPage.tsx`, `GatheringRecapPage.tsx` (needed because `GATHERING_TITLE = "Pride Brunch — June Edition"` is split on the dash). Confirm parser + constant stay in sync.
 - [ ] Gatherings catalog was edited via a `fix.py` script — spot-check for blanket-swap artifacts (agent self-verified to comment-only residue).
 - [ ] Boundary-fragment em dashes left in `members`/`myevents` catalogs (leading/trailing dashes that concatenate inline with JSX links) — resolve with the render component.
-- [ ] Full re-grep to prove no *new* em dashes/antitheses were introduced.
+- [ ] Full re-grep to prove no _new_ em dashes/antitheses were introduced.
 - [ ] Typecheck (`npx tsc -b --noEmit`) — maintainer runs; sweep touched only string values (plus the one coupled parser edit above).
 
 ---
@@ -68,9 +72,11 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 ## 5. Antithesis rewrites — full before → after (for approval)
 
 ### og-default.svg
+
 - `A world, not a feature list.` → **`A world to belong to.`**
 
 ### Homepage (landing copy — high visibility)
+
 - `Often overlooked in queer spaces — not here.` → `Often overlooked in queer spaces. Here, you're at the centre.`
 - `…and community — a dedicated space, not an afterthought in a broader network.` → `…a dedicated space of its own.`
 - `Race and queerness aren't separate conversations — not here.` → `…where race and queerness are held as one conversation.`
@@ -81,6 +87,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `safety as a feature, not a gate` → `safety as a built-in feature`
 
 ### Marketing — org tiers / roadmap / arriving
+
 - `…back the community materially, not with a logo.` → `…beyond a logo.`
 - `A year-long build, not a launch` → `A sustained, year-long build`
 - `Proposed, not purchased. We say no often.` → `Proposed and mutually agreed. We say no often.`
@@ -89,6 +96,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `General dating features are out of scope — …community and connection, not matchmaking.` → `…QueerPulse focuses on community and connection.`
 
 ### Marketing — partner details
+
 - `…was unusual: not money, not co-branding — a commitment to specific operational changes…` → `…Instead of money or co-branding, they wanted a commitment to specific operational changes…`
 - `The partnership shown here is operational, not ceremonial.` → `…is genuinely operational.`
 - `Referrals, not records` (heading) → `Referrals without records`
@@ -101,6 +109,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `This is a solidarity partnership, not a pipeline.` → `This is a solidarity partnership.`
 
 ### Marketing — volunteer opportunities
+
 - `This is held work, not heroics.` → `This is held, supported work.`
 - `your own wellbeing is part of the plan, not an afterthought.` → `your own wellbeing is built into the plan from the start.`
 - `struggle is welcome, not required.` → `struggle is welcome and optional.`
@@ -112,6 +121,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `a boundary — you're documenting, not rescuing.` → `a boundary. You're there to document.`
 
 ### Marketing — local directory (directoryPlaces)
+
 - `…keeps the section you came for at the front, not the back.` → `…right at the front.`
 - `…titles aren't a shamefaced shelf in the corner — they're the front table…` → `…titles hold the front table, curated by people who've read them.`
 - `…verified for how it treats the people who walk in, not just what's on the shelves.` → `…beyond what's on the shelves.`
@@ -123,6 +133,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `Movement for how it feels, not how it looks.` → `Movement for how it feels in your body.`
 
 ### Admin (seed/mock)
+
 - `a sign of deeply-held trust — not a metric to game.` → `a sign of deeply-held trust that no one should try to game.`
 - `a sign of trust — not a metric to optimise.` → `a sign of trust that no one should try to optimise.`
 - `Safety as infrastructure, not a policy page.` → `Safety built into the infrastructure.`
@@ -131,11 +142,13 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `A resource, not a script — options and considerations…` → `An open-ended resource: options and considerations…`
 
 ### Subprofiles (feature inline)
+
 - `…the life you are actually living — not a forecast, not a verdict.` → `…the life you are actually living, a way of reflecting on the present.`
 - `Astrology sits beside therapy and medicine, never in front of them.` → `…as a companion to them.`
 - `Decisions are made by the people in the room, not by the loudest account online.` → `…by the people who show up in the room.`
 
 ### Members / connect / topics (feature inline — all rewritten with "rather than"; see D3)
+
 - `food as hospitality, not spectacle.` → `food as hospitality rather than spectacle.`
 - `Not as therapy gospel — as a starting point…` → `A starting point for asking better questions rather than therapy gospel.`
 - `Not a film — a slideshow.` → `A slideshow rather than a film.`
@@ -151,11 +164,13 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `like a case study, not a patient.` → `like a case study rather than a patient.`
 
 ### Magazine (feature — metadata only; literary body/quotes left intact)
+
 - `…queer Lisbon history — the kind held in boxes under beds, not institutions.` → `…rather than institutions.`
 - `burnout is a policy failure, not a character flaw` → `…rather than a character flaw`
 - `an intentional gathering, not a crowd` (alt text) → `…rather than a crowd`
 
 ### Economy + housing/culture (feature inline)
+
 - `We don't have a separate "digital team" and "print team"…` → `We're one studio of people who care equally about print and digital.`
 - `show their reasoning, not just their output.` → `show their reasoning as well as their output.`
 - `We answer to the community we serve, not to funders or a board…` → `…above funders or a board…`
@@ -193,6 +208,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `a real say in the editorial direction, not just a commission.` → `…with genuine ownership.`
 
 ### Communities / gatherings / community (feature inline)
+
 - `People who want honest crits, not polite ones` → `…honest crits over polite ones`
 - `the ledger is trust, not money` → `the ledger runs on trust`
 - `who wants peers, not professionals` → `who wants peers rather than professionals`
@@ -219,6 +235,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `…a studio visit where I can't talk is a tour, not a visit.` → `…is just a tour.`
 
 ### Auth / settings / safety / governance (feature inline — safe-spaces directory)
+
 - `Genuinely inclusive — not a scene where one type of person dominates.` → `Genuinely inclusive, with no single type of person dominating the scene.`
 - `Welcoming to lesbians, bi, and non-binary people — not just gay men.` → `…as much as gay men.`
 - `Security will act…and bar a repeat offender, not shrug it off.` → `…and bar a repeat offender.`
@@ -233,6 +250,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `This is a soft removal, not a verdict on individuals — it can be reversed.` → `This is a soft removal that can be reversed, and it passes no verdict on individuals.`
 
 ### Forum / resources / cinema / studio (feature inline)
+
 - `made from inside the houses, not from the balcony.` → `…by the people who live there.`
 - `treat their subjects as collaborators, not subjects.` → `treat their subjects as collaborators.`
 - `a given condition of the frame, not a risk or a statement.` → `simply a given condition of the frame.`
@@ -246,6 +264,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 > PT counterpart was rewritten equivalently for every line below. Only EN shown for brevity; PT wording noted where distinctive.
 
 ### safety / community / communities / auth catalogs
+
 - `earned, not purchased` → `earned by meeting the standard`
 - `recorded openly, never quietly` → `recorded openly, in public view`
 - `welcome, not just tolerated` → `welcome and at home`
@@ -269,12 +288,14 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `earned, not self-declared` → `earned by meeting the standard`
 
 ### settings catalog
+
 - `…relevant communities and content — not to categorise you.` → `…They are never used to categorise you.`
 - `A product preference — this stays on your account, not tracking.` → `This is a product preference that stays on your account, kept separate from tracking.`
 - `Not a value judgement — simply a neutral descriptor.` → `It is a neutral descriptor, carrying no judgement.`
 - `…permanently removed — not anonymised, deleted.` → `…The content is deleted outright.`
 
 ### studio / subprofiles / topics / footer catalogs
+
 - `A <em>floor</em>, not a marketing number.` → `A <em>floor</em> we're actually held to.`
 - `…before it's a crisis, not after.` → `…before it's a crisis.`
 - `…as a product requirement, not a compliance afterthought.` → `…as a core product requirement, built in from the start.`
@@ -289,6 +310,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `Built by and for the community — not designed at it.` (footer, site-wide) → `Built by and for the community, from within.`
 
 ### members / help / shared / system catalogs
+
 - `A few things, not a portfolio dump` → `A few things, handpicked`
 - `This is to keep your drafts list honest — not to lose work.` → `This keeps your drafts list honest while protecting your work.`
 - `It's peer teaching, not a marketplace…` → `It's peer teaching, kept free and shared within the community.`
@@ -299,9 +321,11 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `This is our fault, not yours.` → `This is our fault.`
 
 ### gatherings catalog
+
 - 10 EN + 10 PT prescribed rewrites applied (waitlist/RSVP/recap copy). Detail in the working-tree diff of `en/gatherings.ts` / `pt/gatherings.ts`.
 
 ### admin / magazine / forum catalogs
+
 - `come from members, not admins` → `Spaces here are built by members.`
 - `a call for support, not a mark against the mods` → `a call for support for the moderators`
 - `a thermometer, not a grade` → `a thermometer, a reading of how the space feels`
@@ -327,9 +351,11 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - `live here now, not in email` → `live here now, instead of email`
 
 ### cinema catalog
+
 - 10 EN + 10 PT prescribed rewrites applied (curation/about/submit copy). Detail in the working-tree diff of `en/cinema.ts` / `pt/cinema.ts`.
 
 ### marketing catalog — PT (done; ~57 rewrites, EN pending)
+
 - `feito para acolher esta comunidade, não para a explorar.` → `feito para acolher e cuidar desta comunidade.`
 - `Isso é o desenho, não um defeito.` → `É de propósito.`
 - `...fazem parte do produto, não são acrescentados depois.` → `...fazem parte do produto desde o início.`
@@ -342,6 +368,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - _(Full ~57 in the working-tree diff of `pt/marketing.ts`. Kept: brand slogans where contrast is the message, e.g. `Trabalha connosco, não sobre nós.`, `O acesso é uma prática, não uma política.`, and load-bearing factual/privacy negatives.)_
 
 ### economy / culture / governance catalogs (done; EN+PT parallel)
+
 - `...is a non-event here, not a risk.` → `...is a non-event here.`
 - `...community embedded, not as beneficiaries but as participants and decision-makers.` → `...community embedded as participants and decision-makers.`
 - `Post what you're looking for, not just what you can give.` → `Post what you're looking for, as much as what you can give.`
@@ -350,6 +377,7 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 - _(Kept per house rules: housing affirming-baseline `not an extra` lines, `No algorithm. No ads.`, and load-bearing factual/policy negatives such as `verified during vetting, not self-reported`.)_
 
 ### marketing (EN) / resources catalogs
+
 - ⏳ **pending** — will be appended if/when those agents finish.
 
 ---
@@ -357,12 +385,14 @@ The members/economy/topics batches leaned on `"rather than" / "over"` (e.g. `"or
 ## 7. Em dashes — approach & deliberately-left categories
 
 Each em dash was replaced by context, not blanket-swapped:
+
 - Parenthetical aside → comma, or matched commas, or parentheses
 - Lead-in to explanation / list → colon
 - Two independent clauses → period + capitalize
 - Misused time range (`21:00 — 03:00`) → `to`
 
 **Left untouched everywhere:**
+
 - Code comments / JSDoc / JSX comments
 - En-dash number ranges (`6–8`, `€3,000–7,000`, `Tue–Sat`) — these are en dashes, correct usage
 - `"—"` empty-value placeholder glyphs (see D2)
@@ -377,6 +407,7 @@ Each em dash was replaced by context, not blanket-swapped:
 ---
 
 ## 8. Not done / follow-ups
+
 - **marketing / economy / resources catalogs** — finishing (largest files).
 - **`queerpulse-backend`** — untouched. Seed content, notification/email templates, and some client-facing error strings can be user-facing; optional same-method follow-up.
 - **Changelog** — not added yet; can record this as a copy-consistency pass on request.

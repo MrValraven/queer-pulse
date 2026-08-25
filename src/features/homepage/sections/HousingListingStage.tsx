@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { HousingListingCard } from "./HousingListingCard";
-import { getHousingListings, type HousingListingId } from "./housingShowcase.data";
+import {
+  getHousingListings,
+  type HousingListingId,
+} from "./housingShowcase.data";
 import styles from "./HousingShowcase.module.css";
 
 /**

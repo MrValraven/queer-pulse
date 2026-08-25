@@ -14,8 +14,14 @@ describe("decideCoalesce", () => {
   });
 
   it("treats an existing notification with no stored count as count 1 (increments to 2)", () => {
-    expect(decideCoalesce([{ data: {} }])).toEqual({ count: 2, coalesced: true });
-    expect(decideCoalesce([{ data: null }])).toEqual({ count: 2, coalesced: true });
+    expect(decideCoalesce([{ data: {} }])).toEqual({
+      count: 2,
+      coalesced: true,
+    });
+    expect(decideCoalesce([{ data: null }])).toEqual({
+      count: 2,
+      coalesced: true,
+    });
     expect(decideCoalesce([{}])).toEqual({ count: 2, coalesced: true });
   });
 

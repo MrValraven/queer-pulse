@@ -101,7 +101,11 @@ export function useAdminRoadmapIdeaMutations() {
   const mergeIdeaMutation = useMutation({
     mutationFn: async ({ id, intoItemId }: MergeIdeaVars) => {
       if (demoMode) {
-        const { state, result } = demoMergeIdea(readDemoRoadmap(), id, intoItemId);
+        const { state, result } = demoMergeIdea(
+          readDemoRoadmap(),
+          id,
+          intoItemId,
+        );
         writeDemoRoadmap(state);
         return result;
       }
@@ -114,7 +118,12 @@ export function useAdminRoadmapIdeaMutations() {
   const declineIdeaMutation = useMutation({
     mutationFn: async ({ id, reason, note }: DeclineIdeaVars) => {
       if (demoMode) {
-        const { state, result } = demoDeclineIdea(readDemoRoadmap(), id, reason, note);
+        const { state, result } = demoDeclineIdea(
+          readDemoRoadmap(),
+          id,
+          reason,
+          note,
+        );
         writeDemoRoadmap(state);
         return result;
       }

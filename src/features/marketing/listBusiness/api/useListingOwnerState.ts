@@ -46,7 +46,11 @@ export function useSetOperatingState(ref: string) {
   const { demoMode } = useDemoMode();
   const refreshCaches = useListingCacheRefresh();
 
-  return useMutation<ManagedListingDTO | null, Error, UpdateOperatingStateInput>({
+  return useMutation<
+    ManagedListingDTO | null,
+    Error,
+    UpdateOperatingStateInput
+  >({
     // The section renders its own inline failure, so silence the global toast.
     meta: { silentError: true },
     mutationFn: async (input) => {

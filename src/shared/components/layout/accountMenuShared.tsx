@@ -86,11 +86,7 @@ export function RoleLinks({
       <>
         {magazineEditorLink}
         {magazineWriterLink}
-        <Link
-          to={routes.admin}
-          className={styles.item}
-          onClick={onNavigate}
-        >
+        <Link to={routes.admin} className={styles.item} onClick={onNavigate}>
           <FiShield aria-hidden className={styles.itemIcon} />
           <span className={styles.itemLabel}>
             {t("shared:accountMenu.staff.admin")}
@@ -202,7 +198,11 @@ export function AccountMenuControls({
           instance running inside another simulation's iframe) cannot open
           this link and recurse into /simulations from within itself. */}
       {import.meta.env.DEV && !isSandbox() && (
-        <Link to={routes.simulations} className={styles.item} onClick={onNavigate}>
+        <Link
+          to={routes.simulations}
+          className={styles.item}
+          onClick={onNavigate}
+        >
           <FiPlayCircle aria-hidden className={styles.itemIcon} />
           <span className={styles.itemLabel}>
             {t("simulations:home.title")}

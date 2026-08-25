@@ -53,7 +53,10 @@ export function VolunteerApplicantsList({
                   // (`AvatarTint`, a superset). `photoOf` only reads
                   // `avatarUrl`/`slug`, never `tint`, so this narrowing is
                   // safe — same precedent as `VolunteerSignupsCard`.
-                  photoOf({ ...row.person, tint: row.person.tint as Tint }, demoMode)
+                  photoOf(
+                    { ...row.person, tint: row.person.tint as Tint },
+                    demoMode,
+                  )
                 : undefined
             }
           />

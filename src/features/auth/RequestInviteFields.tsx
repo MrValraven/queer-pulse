@@ -129,7 +129,9 @@ export function RequestInviteFields({
           />
         }
         helper={t("auth:requestInvite.field.mutual.helper")}
-        error={mutualError ? t("auth:requestInvite.field.mutual.error") : undefined}
+        error={
+          mutualError ? t("auth:requestInvite.field.mutual.error") : undefined
+        }
       >
         <input
           id="ri-mutual"

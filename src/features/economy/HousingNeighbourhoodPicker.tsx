@@ -59,7 +59,9 @@ export function HousingNeighbourhoodPicker({
       ? t("economy:housing.filterBar.areaAny")
       : selected.length === 1
         ? selected[0]
-        : t("economy:housing.filterBar.areaSelected", { count: selected.length });
+        : t("economy:housing.filterBar.areaSelected", {
+            count: selected.length,
+          });
 
   return (
     <div className={styles.wrap} ref={wrapRef}>
@@ -79,15 +81,23 @@ export function HousingNeighbourhoodPicker({
         >
           {triggerLabel}
         </span>
-        {selected.length > 1 && <span className={styles.count}>{selected.length}</span>}
+        {selected.length > 1 && (
+          <span className={styles.count}>{selected.length}</span>
+        )}
         <FiChevronDown
-          className={[styles.chev, open && styles.chevOpen].filter(Boolean).join(" ")}
+          className={[styles.chev, open && styles.chevOpen]
+            .filter(Boolean)
+            .join(" ")}
           aria-hidden
         />
       </button>
 
       {open && (
-        <div className={styles.panel} role="dialog" aria-label={t("economy:housing.filterBar.area")}>
+        <div
+          className={styles.panel}
+          role="dialog"
+          aria-label={t("economy:housing.filterBar.area")}
+        >
           <ChipSelect
             options={OPTIONS}
             selected={selectedSet}

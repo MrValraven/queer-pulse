@@ -82,19 +82,19 @@ Create a todo per section when applying this to real work.
 
 Reach for what exists before inventing.
 
-| Need | Use | Where |
-| --- | --- | --- |
-| Installed / standalone detection | `useDisplayMode()` → `isInstalled`; `data-display-mode` on `<html>` | `app/providers/`, `styles/standalone.css` |
-| Installed bottom navigation | `BottomTabBar` (installed + `≤860px`, `<nav>`/`aria-current`) | `shared/components/layout` |
-| Browser-tab mobile nav | `Navbar` hamburger + `MobileNavDrawer` (`useNavDrawer`) | `shared/components/layout` |
-| Swipe gesture | `useSwipe()` (Pointer Events, touch-only, axis-guarded) | `shared/hooks/useSwipe.ts` |
-| Install prompt / platform | `useInstallPrompt()` → `{ canInstall, promptInstall }`; `detectPlatform()` | `shared/hooks/useInstallPrompt.ts` |
-| Media query / reduced motion | `useMediaQuery()`, `usePrefersReducedMotion()` | `shared/hooks` |
-| Tab-bar clearance / safe area | `--tab-bar-h`, `--bottom-inset`, `env(safe-area-inset-*)` (horizontal insets already on the content wrapper) | `styles/tokens`, `styles/base.css`, `styles/standalone.css` |
-| Viewport / iOS meta | `viewport-fit=cover`, `theme-color`, `apple-mobile-web-app-*` | `index.html` |
-| Full-height sizing | `min-height: 100svh` then `100dvh` | any full-screen shell |
-| Skeletons / load-in / routes | `Skeleton*`, `FadeIn`, `Reveal`, `useSimulatedLoad`; `React.lazy`; `linkToPath()` | `shared/components/ui`, `hooks`, `app/routes` |
-| PWA build / service worker | vite-plugin-pwa `injectManifest`, `src/sw.ts`, web push | `vite.config.ts`, `src/sw.ts` |
+| Need                             | Use                                                                                                          | Where                                                       |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| Installed / standalone detection | `useDisplayMode()` → `isInstalled`; `data-display-mode` on `<html>`                                          | `app/providers/`, `styles/standalone.css`                   |
+| Installed bottom navigation      | `BottomTabBar` (installed + `≤860px`, `<nav>`/`aria-current`)                                                | `shared/components/layout`                                  |
+| Browser-tab mobile nav           | `Navbar` hamburger + `MobileNavDrawer` (`useNavDrawer`)                                                      | `shared/components/layout`                                  |
+| Swipe gesture                    | `useSwipe()` (Pointer Events, touch-only, axis-guarded)                                                      | `shared/hooks/useSwipe.ts`                                  |
+| Install prompt / platform        | `useInstallPrompt()` → `{ canInstall, promptInstall }`; `detectPlatform()`                                   | `shared/hooks/useInstallPrompt.ts`                          |
+| Media query / reduced motion     | `useMediaQuery()`, `usePrefersReducedMotion()`                                                               | `shared/hooks`                                              |
+| Tab-bar clearance / safe area    | `--tab-bar-h`, `--bottom-inset`, `env(safe-area-inset-*)` (horizontal insets already on the content wrapper) | `styles/tokens`, `styles/base.css`, `styles/standalone.css` |
+| Viewport / iOS meta              | `viewport-fit=cover`, `theme-color`, `apple-mobile-web-app-*`                                                | `index.html`                                                |
+| Full-height sizing               | `min-height: 100svh` then `100dvh`                                                                           | any full-screen shell                                       |
+| Skeletons / load-in / routes     | `Skeleton*`, `FadeIn`, `Reveal`, `useSimulatedLoad`; `React.lazy`; `linkToPath()`                            | `shared/components/ui`, `hooks`, `app/routes`               |
+| PWA build / service worker       | vite-plugin-pwa `injectManifest`, `src/sw.ts`, web push                                                      | `vite.config.ts`, `src/sw.ts`                               |
 
 ## Quick self-review
 

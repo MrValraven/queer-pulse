@@ -31,7 +31,11 @@ const baseSettings: PlatformSettingsDTO = {
 function renderAccess(settings: PlatformSettingsDTO = baseSettings) {
   return render(
     <TestProviders>
-      <AdminSettingsAccess settings={settings} isLoading={false} isError={false} />
+      <AdminSettingsAccess
+        settings={settings}
+        isLoading={false}
+        isError={false}
+      />
     </TestProviders>,
   );
 }
@@ -102,7 +106,9 @@ describe("AdminSettingsAccess", () => {
     );
     expect(textarea).toHaveValue("");
 
-    fireEvent.click(screen.getByRole("button", { name: "Scheduled maintenance" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Scheduled maintenance" }),
+    );
 
     expect(textarea).toHaveValue(
       "QueerPulse is down for planned maintenance. We’ll be back shortly. Thanks for your patience.",
@@ -117,8 +123,12 @@ describe("AdminSettingsAccess", () => {
     const textarea = await screen.findByPlaceholderText(
       "What members will see while the platform is locked.",
     );
-    fireEvent.click(screen.getByRole("button", { name: "Scheduled maintenance" }));
-    fireEvent.change(textarea, { target: { value: "Custom wording, edited by hand" } });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Scheduled maintenance" }),
+    );
+    fireEvent.change(textarea, {
+      target: { value: "Custom wording, edited by hand" },
+    });
 
     expect(textarea).toHaveValue("Custom wording, edited by hand");
   });
@@ -128,7 +138,9 @@ describe("AdminSettingsAccess", () => {
     const textarea = await screen.findByPlaceholderText(
       "What members will see while the platform is locked.",
     );
-    fireEvent.click(screen.getByRole("button", { name: "Scheduled maintenance" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Scheduled maintenance" }),
+    );
     const presetText =
       "QueerPulse is down for planned maintenance. We’ll be back shortly. Thanks for your patience.";
     expect(textarea).toHaveValue(presetText);

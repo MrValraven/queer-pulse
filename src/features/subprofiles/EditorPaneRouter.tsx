@@ -75,7 +75,11 @@ export function EditorPaneRouter({
   return (
     <>
       <h2 ref={headingRef} tabIndex={-1}>
-        {header ? t(header.titleKey) : activeSection ? t(activeSection.labelKey) : ""}
+        {header
+          ? t(header.titleKey)
+          : activeSection
+            ? t(activeSection.labelKey)
+            : ""}
       </h2>
       <p className="lede">
         {header ? t(header.ledeKey) : t(CONTENT_PANE_LEDE_KEY)}
@@ -132,8 +136,14 @@ export function EditorPaneRouter({
       </div>
 
       {subprofile.sections.map((section) => (
-        <div key={section.section} hidden={pane !== sectionPaneKey(section.section)}>
-          <SubprofileSectionEditor subprofileId={subprofile.id} section={section} />
+        <div
+          key={section.section}
+          hidden={pane !== sectionPaneKey(section.section)}
+        >
+          <SubprofileSectionEditor
+            subprofileId={subprofile.id}
+            section={section}
+          />
         </div>
       ))}
 

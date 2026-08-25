@@ -37,6 +37,7 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
     const requestId = ++requestIdRef.current;
     if (demoMode) {
       const lowerQuery = trimmedQuery.toLowerCase();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- this effect is a genuine external-system sync (a debounced provider fetch below); this early-return branch and the "not configured" one just resolve the same state synchronously instead of via a network round trip.
       setResults(
         lowerQuery
           ? DEMO_GIFS.filter((gif) =>
@@ -78,7 +79,8 @@ export function useGifSearch(query: string, demoMode: boolean): GifSearchState {
           setNextPage(null);
         })
         .finally(() => {
-          if (!cancelled && requestIdRef.current === requestId) setLoading(false);
+          if (!cancelled && requestIdRef.current === requestId)
+            setLoading(false);
         });
     }, 300);
     return () => {

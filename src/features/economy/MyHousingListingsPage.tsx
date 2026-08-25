@@ -26,8 +26,12 @@ import styles from "./MyHousingListingsPage.module.css";
 export function MyHousingListingsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const { data: listings = [], isLoading, isError, refetch } =
-    useMyHousingListings();
+  const {
+    data: listings = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useMyHousingListings();
   const action = useMyHousingListingAction();
   const deleteListing = useDeleteHousingListing();
 
@@ -44,7 +48,8 @@ export function MyHousingListingsPage() {
     setBusyRef(ref);
     action.mutate(input, {
       onSuccess: () => showToast(t(toastKey), "success"),
-      onError: () => showToast(t("economy:myHousingListings.toast.error"), "error"),
+      onError: () =>
+        showToast(t("economy:myHousingListings.toast.error"), "error"),
       onSettled: () => setBusyRef(null),
     });
   };
@@ -68,8 +73,12 @@ export function MyHousingListingsPage() {
     <PageShell>
       <div className={styles.page}>
         <div className={styles.head}>
-          <div className={styles.cat}>{t("economy:myHousingListings.eyebrow")}</div>
-          <h1 className={styles.title}>{t("economy:myHousingListings.title")}</h1>
+          <div className={styles.cat}>
+            {t("economy:myHousingListings.eyebrow")}
+          </div>
+          <h1 className={styles.title}>
+            {t("economy:myHousingListings.title")}
+          </h1>
           <p className={styles.sub}>{t("economy:myHousingListings.sub")}</p>
         </div>
 
@@ -78,8 +87,16 @@ export function MyHousingListingsPage() {
             {Array.from({ length: 3 }).map((_, skeletonIndex) => (
               <div key={skeletonIndex} className={styles.card} aria-hidden>
                 <SkeletonLine width={90} height={20} />
-                <SkeletonLine width="60%" height={22} style={{ marginTop: 10 }} />
-                <SkeletonLine width="40%" height={14} style={{ marginTop: 8 }} />
+                <SkeletonLine
+                  width="60%"
+                  height={22}
+                  style={{ marginTop: 10 }}
+                />
+                <SkeletonLine
+                  width="40%"
+                  height={14}
+                  style={{ marginTop: 8 }}
+                />
               </div>
             ))}
           </div>

@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
-import { Button, ModalSheet, Select, Sending } from "../../shared/components/ui";
+import {
+  Button,
+  ModalSheet,
+  Select,
+  Sending,
+} from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { Translation } from "../../shared/i18n/Translation";
@@ -73,7 +78,11 @@ export function ComposeThreadModal({
 
   if (status === "published") {
     return (
-      <ModalSheet onClose={onClose} success ariaLabel={t("forum:compose.title")}>
+      <ModalSheet
+        onClose={onClose}
+        success
+        ariaLabel={t("forum:compose.title")}
+      >
         <div className={styles.confirm}>
           <span className={styles.confirmIcon} aria-hidden>
             <FiCheck />

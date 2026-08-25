@@ -1,4 +1,11 @@
-import { FiHome, FiHeart, FiShield, FiSearch, FiUsers, FiStar } from "react-icons/fi";
+import {
+  FiHome,
+  FiHeart,
+  FiShield,
+  FiSearch,
+  FiUsers,
+  FiStar,
+} from "react-icons/fi";
 import type { IconType } from "react-icons";
 
 export interface CommunityBlock {

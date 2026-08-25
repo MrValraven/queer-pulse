@@ -28,7 +28,10 @@ export function ShapingsEditor({
 }) {
   const { t } = useTranslation();
 
-  function update(kind: ShapingKey, patch: Partial<{ title: string; note: string }>) {
+  function update(
+    kind: ShapingKey,
+    patch: Partial<{ title: string; note: string }>,
+  ) {
     const current = shapings[kind] ?? { title: "", note: "" };
     const next = { ...current, ...patch };
     const nextShapings = { ...shapings };
@@ -61,14 +64,18 @@ export function ShapingsEditor({
                 value={item?.title ?? ""}
                 onChange={(title) => update(kind, { title })}
                 placeholder={t("members:profileEdit.shapings.titlePlaceholder")}
-                ariaLabel={t("members:profileEdit.shapings.titleLabel", { label })}
+                ariaLabel={t("members:profileEdit.shapings.titleLabel", {
+                  label,
+                })}
                 className={editStyles.workTitleInput}
               />
               <InlineTextarea
                 value={item?.note ?? ""}
                 onChange={(note) => update(kind, { note })}
                 placeholder={t("members:profileEdit.shapings.notePlaceholder")}
-                ariaLabel={t("members:profileEdit.shapings.noteLabel", { label })}
+                ariaLabel={t("members:profileEdit.shapings.noteLabel", {
+                  label,
+                })}
                 rows={2}
                 className={styles.shapingNoteInput}
               />

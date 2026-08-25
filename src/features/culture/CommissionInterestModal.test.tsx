@@ -1,8 +1,13 @@
+import type { UseMutateFunction } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { CommissionInterestModal } from "./CommissionInterestModal";
 import { COMMISSIONS } from "./culture.data";
+import type {
+  CommissionInterestResponseDTO,
+  CreateCommissionInterestDto,
+} from "./api/culture.api";
 
 /**
  * `CommissionInterestModal` maps its one form field into the real
@@ -15,8 +20,26 @@ import { COMMISSIONS } from "./culture.data";
  * catalog, so those queries use `findBy*`.
  */
 
-const mutate = vi.fn();
-let mutationState: { mutate: typeof mutate; isPending: boolean; isSuccess: boolean };
+const mutate =
+  vi.fn<
+    UseMutateFunction<
+      CommissionInterestResponseDTO | null,
+      Error,
+      CreateCommissionInterestDto
+    >
+  >();
+let mutationState: {
+  mutate: typeof mutate;
+  isPending: boolean;
+  isSuccess: boolean;
+};
+
+/** The `onError` callback's real type, so `expect.any(Function)` (typed `any`
+ *  by vitest) can be asserted as a concrete function instead of flowing in as
+ *  an unsafe `any`. */
+type CommissionInterestOnError = NonNullable<
+  Parameters<typeof mutate>[1]
+>["onError"];
 
 vi.mock("./api/useCreateCommissionInterest", () => ({
   useCreateCommissionInterest: () => mutationState,
@@ -42,8 +65,12 @@ describe("CommissionInterestModal form → payload", () => {
     );
 
     const textarea = await screen.findByLabelText("Your message (optional)");
-    fireEvent.change(textarea, { target: { value: "  Would love to collaborate  " } });
-    fireEvent.click(await screen.findByRole("button", { name: "Send interest" }));
+    fireEvent.change(textarea, {
+      target: { value: "  Would love to collaborate  " },
+    });
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Send interest" }),
+    );
 
     expect(mutate).toHaveBeenCalledWith(
       {
@@ -52,7 +79,9 @@ describe("CommissionInterestModal form → payload", () => {
         recipientName: commission.who.name,
         message: "Would love to collaborate",
       },
-      expect.objectContaining({ onError: expect.any(Function) }),
+      expect.objectContaining({
+        onError: expect.any(Function) as CommissionInterestOnError,
+      }),
     );
   });
 
@@ -67,7 +96,9 @@ describe("CommissionInterestModal form → payload", () => {
       </TestProviders>,
     );
 
-    fireEvent.click(await screen.findByRole("button", { name: "Send interest" }));
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Send interest" }),
+    );
 
     expect(mutate).toHaveBeenCalledWith(
       expect.objectContaining({ message: undefined }),

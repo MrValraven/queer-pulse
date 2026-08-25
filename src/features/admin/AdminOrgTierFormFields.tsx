@@ -69,9 +69,7 @@ export function AdminOrgTierContentFields({ draft, onChange }: FieldsProps) {
         value={draft.bullets}
         onChange={(event) => onChange({ bullets: event.target.value })}
       />
-      <p className={styles.fieldHint}>
-        {t("admin:orgTier.field.bulletsHint")}
-      </p>
+      <p className={styles.fieldHint}>{t("admin:orgTier.field.bulletsHint")}</p>
 
       <label className={styles.fieldLabel} htmlFor="tier-footnote">
         {t("admin:orgTier.field.footnote")}

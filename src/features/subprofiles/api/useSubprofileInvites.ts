@@ -34,7 +34,9 @@ function demoInvitedDto(
     invitedByUserId: currentUserSlug,
     status: "pending",
     createdAt: new Date().toISOString(),
-    invitedName: invitedMember ? `${invitedMember.first} ${invitedMember.last}` : slug,
+    invitedName: invitedMember
+      ? `${invitedMember.first} ${invitedMember.last}`
+      : slug,
     invitedSlug: slug,
     invitedAvatarUrl: invitedMember?.photo ?? null,
   };
@@ -73,9 +75,8 @@ export function useSubprofileInvites(id: string | undefined) {
     mutationFn: async ({ slug }) => {
       if (!id) throw new Error("Subprofile id required");
       if (!demoMode) return inviteCoOwner(id, slug);
-      const { getMember, currentUserSlug } = await import(
-        "../../members/data/members"
-      );
+      const { getMember, currentUserSlug } =
+        await import("../../members/data/members");
       return demoInvitedDto(id, slug, getMember, currentUserSlug);
     },
     onSuccess: invalidateInvites,

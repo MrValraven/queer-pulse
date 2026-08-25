@@ -35,5 +35,4 @@ export const getListingClaims = () =>
 export const patchListingClaim = (
   id: string,
   decision: "approved" | "declined",
-) =>
-  apiPatch<ListingClaimDTO>(`/admin/listings/claims/${id}`, { decision });
+) => apiPatch<ListingClaimDTO>(`/admin/listings/claims/${id}`, { decision });

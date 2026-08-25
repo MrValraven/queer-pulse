@@ -25,7 +25,7 @@ function createMemoryStorage(seed: Record<string, string>): Storage {
     setItem(key: string, value: string) {
       store.set(key, String(value));
     },
-  } as Storage;
+  };
 }
 
 function snapshot(storage: Storage): Record<string, string> {
@@ -77,7 +77,8 @@ function installSandboxCookies(): void {
     const current = typeof document.cookie === "string" ? document.cookie : "";
     for (const pair of current ? current.split("; ") : []) {
       const equalsAt = pair.indexOf("=");
-      if (equalsAt > 0) jar.set(pair.slice(0, equalsAt), pair.slice(equalsAt + 1));
+      if (equalsAt > 0)
+        jar.set(pair.slice(0, equalsAt), pair.slice(equalsAt + 1));
     }
     Object.defineProperty(document, "cookie", {
       configurable: true,

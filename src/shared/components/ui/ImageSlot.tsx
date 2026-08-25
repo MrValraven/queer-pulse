@@ -1,7 +1,11 @@
 import { useState, type CSSProperties } from "react";
 import { imagePixelRatio, resolveAvatarSrc } from "../../lib/avatarUrl";
 import { useTranslation } from "../../i18n/useTranslation";
-import { cropFocalPosition, cropToImgStyle, type CropRect } from "./cropGeometry";
+import {
+  cropFocalPosition,
+  cropToImgStyle,
+  type CropRect,
+} from "./cropGeometry";
 import styles from "./ImageSlot.module.css";
 
 export type ImageSlotTint = "default" | "coral" | "jade" | "plum";

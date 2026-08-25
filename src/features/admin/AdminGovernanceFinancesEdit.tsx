@@ -130,7 +130,9 @@ export function AdminGovernanceFinancesEdit({
     incomeTotal: String(latest.incomeTotal),
     expenseTotal: String(latest.expenseTotal),
   });
-  const [income, setIncome] = useState<LineDraft[]>(toLineDrafts(latest.income));
+  const [income, setIncome] = useState<LineDraft[]>(
+    toLineDrafts(latest.income),
+  );
   const [expense, setExpense] = useState<LineDraft[]>(
     toLineDrafts(latest.expense),
   );

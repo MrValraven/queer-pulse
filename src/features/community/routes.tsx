@@ -3,12 +3,27 @@ import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
 const DatingPage = lazyNamed(() => import("./DatingPage"), "DatingPage");
-const ReadingGroupsPage = lazyNamed(() => import("./ReadingGroupsPage"), "ReadingGroupsPage");
+const ReadingGroupsPage = lazyNamed(
+  () => import("./ReadingGroupsPage"),
+  "ReadingGroupsPage",
+);
 const FamilyPage = lazyNamed(() => import("./FamilyPage"), "FamilyPage");
-const CaregiversPage = lazyNamed(() => import("./CaregiversPage"), "CaregiversPage");
-const ChangemakersPage = lazyNamed(() => import("./ChangemakersPage"), "ChangemakersPage");
-const ChangemakerStoryPage = lazyNamed(() => import("./ChangemakerStoryPage"), "ChangemakerStoryPage");
-const ComingOutPage = lazyNamed(() => import("./ComingOutPage"), "ComingOutPage");
+const CaregiversPage = lazyNamed(
+  () => import("./CaregiversPage"),
+  "CaregiversPage",
+);
+const ChangemakersPage = lazyNamed(
+  () => import("./ChangemakersPage"),
+  "ChangemakersPage",
+);
+const ChangemakerStoryPage = lazyNamed(
+  () => import("./ChangemakerStoryPage"),
+  "ChangemakerStoryPage",
+);
+const ComingOutPage = lazyNamed(
+  () => import("./ComingOutPage"),
+  "ComingOutPage",
+);
 
 /** Community pathways: dating, reading groups, family/caregivers,
  *  changemaker stories, and the coming-out guide. The creatives showcase was

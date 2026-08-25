@@ -77,9 +77,7 @@ export function AdminWriterApplicationsPage() {
             label: t(`admin:adminWriterApplications.filter.${value}`),
           }))}
           active={filter}
-          onChange={(value) =>
-            setFilter(value as AdminWriterApplicationFilter)
-          }
+          onChange={(value) => setFilter(value as AdminWriterApplicationFilter)}
         />
       </FadeIn>
 

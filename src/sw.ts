@@ -10,7 +10,11 @@ import {
   registerRoute,
   setCatchHandler,
 } from "workbox-routing";
-import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from "workbox-strategies";
+import {
+  CacheFirst,
+  NetworkFirst,
+  StaleWhileRevalidate,
+} from "workbox-strategies";
 import { urlBase64ToUint8Array } from "./features/push/urlBase64ToUint8Array";
 import { decideCoalesce } from "./pushCoalesce";
 import { isViewingTarget } from "./pushFocus";
@@ -149,7 +153,10 @@ self.addEventListener("push", (event) => {
         const windows = await self.clients.matchAll({ type: "window" });
         for (const win of windows) {
           const windowClient = win as WindowClient;
-          if (windowClient.focused && isViewingTarget(windowClient.url, targetUrl)) {
+          if (
+            windowClient.focused &&
+            isViewingTarget(windowClient.url, targetUrl)
+          ) {
             return;
           }
         }
@@ -178,7 +185,9 @@ self.addEventListener("push", (event) => {
       // Require a tag too (every real DM push sets one to its conversationId):
       // without it, `getNotifications({ tag: undefined })` would return EVERY
       // live notification across the whole origin, not just this conversation's.
-      const isDirectMessagePush = Boolean(payload.data?.conversationId && payload.tag);
+      const isDirectMessagePush = Boolean(
+        payload.data?.conversationId && payload.tag,
+      );
       const existingNotifications = isDirectMessagePush
         ? await self.registration.getNotifications({ tag: payload.tag })
         : [];

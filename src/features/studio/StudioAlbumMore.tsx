@@ -26,8 +26,7 @@ export function StudioAlbumMore() {
           />
         </h2>
         <Link to={routes.studioArtist} className={styles.all}>
-          {t("studio:album.more.artistPageCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:album.more.artistPageCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
       {loading ? (
@@ -49,7 +48,7 @@ export function StudioAlbumMore() {
                   width="100%"
                   height="100%"
                   radius={10}
-                  placeholder="cv"
+                  placeholder={t("studio:media.coverLabel")}
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <span className={`${styles.tag} ${tagClass[m.tag]}`}>

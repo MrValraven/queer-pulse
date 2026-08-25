@@ -83,10 +83,7 @@ export function CommitmentSection({
       ) : (
         <ul className={styles.slipList}>
           {slips.map((slip, index) => (
-            <li
-              key={`${slip.movedAt}-${index}`}
-              className={styles.slipRow}
-            >
+            <li key={`${slip.movedAt}-${index}`} className={styles.slipRow}>
               <span className={styles.slipMove}>
                 {slip.from || <AdminNotSet />}
                 <AdminArrowSeparator />

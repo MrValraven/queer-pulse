@@ -27,7 +27,10 @@ export function StudioPressBar() {
       <Link to={routes.studio} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
         <span className={styles.wm}>
-          Queer<span className={styles.q}>Pulse</span>
+          <Translation
+            i18nKey="studio:brand.lockup"
+            components={{ em: <span className={styles.q} /> }}
+          />
         </span>
       </Link>
       <span className={styles.crumb}>

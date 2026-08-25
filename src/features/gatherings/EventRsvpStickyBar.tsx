@@ -3,7 +3,11 @@ import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { spotsText } from "./data";
-import { EVENT_PRICE_MAX, EVENT_PRICE_MIN, EVENT_SPOTS } from "./eventPage.data";
+import {
+  EVENT_PRICE_MAX,
+  EVENT_PRICE_MIN,
+  EVENT_SPOTS,
+} from "./eventPage.data";
 import styles from "./EventPage.module.css";
 
 /** ≤860px reach bar: the RSVP aside drops far below a long description, so this

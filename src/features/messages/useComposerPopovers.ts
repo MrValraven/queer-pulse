@@ -19,7 +19,10 @@ export function useComposerPopovers() {
   useEffect(() => {
     if (!openPopover) return;
     function onPointerDown(event: PointerEvent) {
-      if (groupRef.current && !groupRef.current.contains(event.target as Node)) {
+      if (
+        groupRef.current &&
+        !groupRef.current.contains(event.target as Node)
+      ) {
         setOpenPopover(null);
       }
     }

@@ -105,7 +105,9 @@ export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
     const ids = [...set].filter(
       (id) =>
         id === focus ||
-        graph.edges.some((e) => (e.from === id || e.to === id) && isRevealed(e)),
+        graph.edges.some(
+          (e) => (e.from === id || e.to === id) && isRevealed(e),
+        ),
     );
     const idSet = new Set(ids);
     const edges: VouchEdge[] = graph.edges.filter(

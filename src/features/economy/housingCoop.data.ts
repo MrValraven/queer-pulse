@@ -120,7 +120,8 @@ export const FORMING_COOPS: FormingCoop[] = [
     phaseLabel: "Phase 4 · property",
     progress: 78,
     progressLabel: "78%",
-    description: "A 6-household co-op with a survey signed on a 19th-century triplex in Alfama. Closing target: September 2026. Trans-led. Looking for one more household before close.",
+    description:
+      "A 6-household co-op with a survey signed on a 19th-century triplex in Alfama. Closing target: September 2026. Trans-led. Looking for one more household before close.",
     meta: [
       { label: "Member shares", value: "€8k" },
       { label: "Monthly", value: "€420" },
@@ -143,7 +144,8 @@ export const FORMING_COOPS: FormingCoop[] = [
     phaseLabel: "Phase 3 · finance",
     progress: 52,
     progressLabel: "52%",
-    description: "8 households organising around a former industrial building in Marvila offered by the municipality on long lease. Negotiating financing through Caixa Crédito Agrícola Mútuo & the Lisbon city housing fund.",
+    description:
+      "8 households organising around a former industrial building in Marvila offered by the municipality on long lease. Negotiating financing through Caixa Crédito Agrícola Mútuo & the Lisbon city housing fund.",
     meta: [
       { label: "Member shares", value: "€5k" },
       { label: "Monthly", value: "€340" },
@@ -170,7 +172,8 @@ export const FORMING_COOPS: FormingCoop[] = [
     progressEm: "Jan 2024",
     operational: true,
     operatorVerified: true,
-    description: "QueerPulse's first formed co-op. 9 households, 14 adults, 3 children. Mostly Black queer households, formed through the Cova da Moura tenants' association. Open to mentor new co-ops.",
+    description:
+      "QueerPulse's first formed co-op. 9 households, 14 adults, 3 children. Mostly Black queer households, formed through the Cova da Moura tenants' association. Open to mentor new co-ops.",
     meta: [
       { label: "Member shares", value: "€4k" },
       { label: "Monthly", value: "€280" },
@@ -190,7 +193,8 @@ export const FORMING_COOPS: FormingCoop[] = [
     phaseLabel: "Phase 1 · forming",
     progress: 22,
     progressLabel: "22%",
-    description: "First QueerPulse co-op in Porto. 5 households so far, looking for 3 more before incorporating. Monthly meetings at Centro Galiza. Mostly under 35.",
+    description:
+      "First QueerPulse co-op in Porto. 5 households so far, looking for 3 more before incorporating. Monthly meetings at Centro Galiza. Mostly under 35.",
     meta: [
       { label: "Target shares", value: "€6k" },
       { label: "Forming since", value: "Apr 2026" },

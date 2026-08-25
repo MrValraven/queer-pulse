@@ -13,13 +13,18 @@ import styles from "./DeckPage.module.css";
 
 function renderSlide(slide: Slide, active: boolean): ReactNode {
   switch (slide.layout) {
-    case "text": return <TextSlide slide={slide} />;
-    case "image": return <ImageSlide slide={slide} />;
-    case "stat": return <StatSlide slide={slide} active={active} />;
+    case "text":
+      return <TextSlide slide={slide} />;
+    case "image":
+      return <ImageSlide slide={slide} />;
+    case "stat":
+      return <StatSlide slide={slide} active={active} />;
     case "interactive":
-      return slide.kind === "before-after"
-        ? <BeforeAfterSlide slide={slide} />
-        : <RevealSlide slide={slide} />;
+      return slide.kind === "before-after" ? (
+        <BeforeAfterSlide slide={slide} />
+      ) : (
+        <RevealSlide slide={slide} />
+      );
   }
 }
 
@@ -33,7 +38,8 @@ export function DeckViewer({ deck, index, onIndex }: DeckViewerProps) {
   const { t } = useTranslation();
   const total = deck.slides.length;
   const isLastSlide = index === total - 1;
-  const clamp = (next: number) => onIndex(Math.max(0, Math.min(total - 1, next)));
+  const clamp = (next: number) =>
+    onIndex(Math.max(0, Math.min(total - 1, next)));
   const touchX = useRef<number | null>(null);
 
   return (
@@ -47,14 +53,25 @@ export function DeckViewer({ deck, index, onIndex }: DeckViewerProps) {
       aria-label={typeof deck.title === "string" ? deck.title : deck.section}
       onKeyDown={(event) => {
         if (event.target !== event.currentTarget) return;
-        if (event.key === "ArrowRight" || event.key === " ") { event.preventDefault(); clamp(index + 1); }
-        if (event.key === "ArrowLeft") { event.preventDefault(); clamp(index - 1); }
+        if (event.key === "ArrowRight" || event.key === " ") {
+          event.preventDefault();
+          clamp(index + 1);
+        }
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          clamp(index - 1);
+        }
       }}
-      onTouchStart={(event) => { touchX.current = event.touches[0]?.clientX ?? null; }}
+      onTouchStart={(event) => {
+        touchX.current = event.touches[0]?.clientX ?? null;
+      }}
       onTouchEnd={(event) => {
         if (touchX.current === null) return;
         const endX = event.changedTouches[0]?.clientX;
-        if (endX === undefined) { touchX.current = null; return; }
+        if (endX === undefined) {
+          touchX.current = null;
+          return;
+        }
         const dx = endX - touchX.current;
         if (Math.abs(dx) > 40) clamp(index + (dx < 0 ? 1 : -1));
         touchX.current = null;
@@ -62,19 +79,37 @@ export function DeckViewer({ deck, index, onIndex }: DeckViewerProps) {
     >
       <div className={styles.stage}>
         {deck.slides.map((slide, slideIndex) => (
-          <div key={slideIndex} className={styles.slideWrap}
+          <div
+            key={slideIndex}
+            className={styles.slideWrap}
             aria-hidden={slideIndex !== index}
-            data-active={slideIndex === index}>
+            data-active={slideIndex === index}
+          >
             {renderSlide(slide, slideIndex === index)}
           </div>
         ))}
-        <button type="button" className={`${styles.zone} ${styles.zoneLeft}`}
-          aria-hidden tabIndex={-1} onClick={() => clamp(index - 1)} />
-        <button type="button" className={`${styles.zone} ${styles.zoneRight}`}
-          aria-hidden tabIndex={-1} onClick={() => clamp(index + 1)} />
+        <button
+          type="button"
+          className={`${styles.zone} ${styles.zoneLeft}`}
+          aria-hidden
+          tabIndex={-1}
+          onClick={() => clamp(index - 1)}
+        />
+        <button
+          type="button"
+          className={`${styles.zone} ${styles.zoneRight}`}
+          aria-hidden
+          tabIndex={-1}
+          onClick={() => clamp(index + 1)}
+        />
       </div>
-      <DeckControls current={index} total={total}
-        onGo={clamp} onPrev={() => clamp(index - 1)} onNext={() => clamp(index + 1)} />
+      <DeckControls
+        current={index}
+        total={total}
+        onGo={clamp}
+        onPrev={() => clamp(index - 1)}
+        onNext={() => clamp(index + 1)}
+      />
       {isLastSlide && (
         <div className={styles.endHint}>
           {t("magazine:deck.end")}{" "}

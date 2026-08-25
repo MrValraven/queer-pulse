@@ -24,9 +24,8 @@ export function usePartnerApplications() {
     queryKey: ["partner-applications", demoMode],
     queryFn: async () => {
       if (demoMode) {
-        const { MOCK_PARTNER_APPLICATIONS } = await import(
-          "./partnerApplications.mock.data"
-        );
+        const { MOCK_PARTNER_APPLICATIONS } =
+          await import("./partnerApplications.mock.data");
         return MOCK_PARTNER_APPLICATIONS;
       }
       return getPartnerApplications();
@@ -59,7 +58,9 @@ export function useTriagePartnerApplication() {
       });
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["partner-applications"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["partner-applications"],
+      });
       // An approval turns into a public partner → refresh the public listing too.
       void queryClient.invalidateQueries({ queryKey: ["partners"] });
     },

@@ -93,8 +93,7 @@ function EditSuggestionRow({
           </AdminChip>
         </div>
         <div className={styles.rowMeta}>
-          {suggestion.listingRef} ·{" "}
-          {formatDate(suggestion.createdAt, language)}
+          {suggestion.listingRef} · {formatDate(suggestion.createdAt, language)}
         </div>
         <p className={styles.rowMessage}>{suggestion.message}</p>
         <div className={styles.rowSubmitter}>
@@ -109,7 +108,8 @@ function EditSuggestionRow({
           />
           <span>
             {t("admin:editSuggestions.submittedBy", {
-              name: submitter?.name ?? t("admin:editSuggestions.unknownSubmitter"),
+              name:
+                submitter?.name ?? t("admin:editSuggestions.unknownSubmitter"),
             })}
           </span>
         </div>

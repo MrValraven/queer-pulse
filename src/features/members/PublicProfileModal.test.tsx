@@ -70,12 +70,16 @@ const unlocked: PublicEligibility = { ...lockedGatesUnmet, eligible: true };
 describe("PublicProfileModal", () => {
   it("shows the tracker with gate rows when locked", async () => {
     renderWithEligibility(lockedGatesUnmet);
-    expect(await screen.findByText(/first, the essentials/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/first, the essentials/i),
+    ).toBeInTheDocument();
   });
 
   it("shows the unlocked switch when eligible", async () => {
     renderWithEligibility(unlocked);
-    expect(await screen.findByText(/show a public profile/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/show a public profile/i),
+    ).toBeInTheDocument();
   });
 
   it("shows the checking state while live eligibility loads", async () => {
@@ -105,7 +109,9 @@ describe("PublicProfileModal", () => {
         <PublicProfileModal onClose={() => {}} />
       </TestProviders>,
     );
-    expect(await screen.findByText(/couldn't check just now/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/couldn't check just now/i),
+    ).toBeInTheDocument();
     expect(
       await screen.findByRole("button", { name: /try again/i }),
     ).toBeInTheDocument();

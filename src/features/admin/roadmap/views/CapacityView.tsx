@@ -8,7 +8,7 @@ import type {
   AdminRoadmapItemDTO,
   RoadmapTeamMemberDTO,
 } from "../../api/roadmapAdmin.types";
-import { useItemDrawer } from "../state/useItemDrawer";
+import { useItemDrawer } from "../state/itemDrawerHook";
 import styles from "./CapacityView.module.css";
 
 // Same free-text category fallback as `GuidesView` — only the 9 named
@@ -83,9 +83,7 @@ function MemberRow({
 
       <div className={styles.loadBlock}>
         <div className={styles.loadTop}>
-          <span
-            className={overCap ? styles.loadHoursOver : styles.loadHours}
-          >
+          <span className={overCap ? styles.loadHoursOver : styles.loadHours}>
             {overCap && <FiAlertTriangle aria-hidden />} {buildingHours}h /{" "}
             {member.weeklyCapHours}h
           </span>
@@ -116,7 +114,8 @@ function UnassignedActivePanel({
 }) {
   const unassignedActive = items.filter(
     (item) =>
-      !item.ownerId && (item.column === "building" || item.column === "planned"),
+      !item.ownerId &&
+      (item.column === "building" || item.column === "planned"),
   );
   const urgentCount = unassignedActive.filter(
     (item) => item.priority === "P0" || item.priority === "P1",
@@ -148,7 +147,8 @@ function PaidVsVolunteerPanel({
 }) {
   const paidCount = team.filter((member) => member.paid).length;
   const volunteerCount = team.length - paidCount;
-  const paidPct = team.length > 0 ? Math.round((paidCount / team.length) * 100) : 0;
+  const paidPct =
+    team.length > 0 ? Math.round((paidCount / team.length) * 100) : 0;
 
   return (
     <div className={styles.panel}>

@@ -36,7 +36,9 @@ export function buildDigestMarkdown(
     ),
   );
   const declined = ideas.filter((idea) => idea.status === "dismissed");
-  const buildingCount = items.filter((item) => item.column === "building").length;
+  const buildingCount = items.filter(
+    (item) => item.column === "building",
+  ).length;
 
   const lines: string[] = [
     `# ${t("admin:roadmap.modals.digest.heading", { month })}`,

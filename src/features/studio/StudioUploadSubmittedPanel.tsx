@@ -20,7 +20,8 @@ export function SubmittedPanel() {
       </h2>
       <p>{t("studio:upload.submitted.body")}</p>
       <Button variant="ghost-dark" to={routes.studioPayouts}>
-        {t("studio:upload.submitted.viewPayoutsCta")} <FiArrowRight aria-hidden />
+        {t("studio:upload.submitted.viewPayoutsCta")}{" "}
+        <FiArrowRight aria-hidden />
       </Button>
     </div>
   );

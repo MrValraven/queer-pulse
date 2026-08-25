@@ -12,7 +12,9 @@
   background: var(--paper);
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
-  transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease);
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
 }
 .field:focus-within {
   border-color: var(--plum);
@@ -41,7 +43,9 @@
   color: var(--ink);
   cursor: default;
   outline: none;
-  transition: background 0.16s var(--ease), color 0.16s var(--ease);
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
 }
 .segment:focus-visible {
   background: var(--wash);

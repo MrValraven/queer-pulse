@@ -1,8 +1,4 @@
-import {
-  apiGetNullable,
-  apiPost,
-  apiDelete,
-} from "../../../shared/api/client";
+import { apiGetNullable, apiPost, apiDelete } from "../../../shared/api/client";
 
 // ── Employer affiliation ─────────────────────────────────────────────────────
 // Which company the current member is authorised to post jobs for. A member has

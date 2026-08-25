@@ -243,7 +243,9 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .new-side {
-    transition: border-color var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+    transition:
+      border-color var(--dur-base) var(--ease),
+      color var(--dur-base) var(--ease);
   }
 }
 .new-side b {

@@ -10,5 +10,7 @@ export function TrustGraphProvider({
   children: ReactNode;
 }) {
   const graph = useMemo(() => createTrustGraph(data), [data]);
-  return <TrustGraphCtx.Provider value={graph}>{children}</TrustGraphCtx.Provider>;
+  return (
+    <TrustGraphCtx.Provider value={graph}>{children}</TrustGraphCtx.Provider>
+  );
 }

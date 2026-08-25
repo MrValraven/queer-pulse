@@ -86,7 +86,12 @@ export function DatePickerPopover({
   }, []);
 
   return (
-    <div id={id} role="dialog" aria-label={dialogLabel} className={styles.popover}>
+    <div
+      id={id}
+      role="dialog"
+      aria-label={dialogLabel}
+      className={styles.popover}
+    >
       <DatePickerPopoverContent
         mode={mode}
         value={value}

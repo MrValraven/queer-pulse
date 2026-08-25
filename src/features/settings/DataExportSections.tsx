@@ -100,7 +100,11 @@ export function DataExportForm({
             }}
           >
             <div className={styles.dtCheck}>
-              <svg className={styles.dtCheckIcon} viewBox="0 0 10 8" aria-hidden>
+              <svg
+                className={styles.dtCheckIcon}
+                viewBox="0 0 10 8"
+                aria-hidden
+              >
                 <polyline points="1,4 3.5,7 9,1" />
               </svg>
             </div>

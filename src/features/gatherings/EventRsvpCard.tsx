@@ -64,7 +64,9 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
   };
 
   if (confirmed?.intent === "waitlisted") {
-    return <WaitlistSuccess email={confirmed.draft.email} onLeave={cancelRsvp} />;
+    return (
+      <WaitlistSuccess email={confirmed.draft.email} onLeave={cancelRsvp} />
+    );
   }
 
   return (

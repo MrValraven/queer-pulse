@@ -1322,14 +1322,12 @@ export const economy: Catalog = {
     "Pronomes respeitados, inclusão real, liderança que percebe do assunto…",
   "companyReview.consLabel": "O que foi difícil, o resto",
   "companyReview.consPlaceholder": "Onde o acompanhamento ficou aquém…",
-  "companyReview.missingHint":
-    "Preenche {fields} para desbloquear o botão.",
+  "companyReview.missingHint": "Preenche {fields} para desbloquear o botão.",
   "companyReview.missing.company": "uma empresa",
   "companyReview.missing.headline": "um título",
   "companyReview.missing.rating": "uma classificação em estrelas",
   "companyReview.missing.role": "o teu cargo",
-  "companyReview.missing.prosOrCons":
-    "o que resultou ou o que foi difícil",
+  "companyReview.missing.prosOrCons": "o que resultou ou o que foi difícil",
   "companyReview.cancel": "Cancelar",
   "companyReview.posting": "A publicar…",
   "companyReview.submitCta": "Publicar avaliação",
@@ -1533,7 +1531,9 @@ export const economy: Catalog = {
   "jobApply.portfolioHelper":
     "O teu perfil QueerPulse é anexado automaticamente. Desmarca em Privacidade se preferires que não.",
   "jobApply.sitePlaceholder": "O teu site ou Are.na",
+  "jobApply.identityIg": "IG",
   "jobApply.instagramPlaceholder": "@teuhandle",
+  "jobApply.identityQp": "QP",
 
   "jobApply.whyTitle": "Porquê esta vaga?",
   "jobApply.whySub":
@@ -2234,6 +2234,19 @@ export const economy: Catalog = {
   "applicationStatus.company.viewDirectory": "Ver no diretório",
   "applicationStatus.note.from": "Uma nota de {company}",
 
+  // Linhas de estado geradas pelo applicationStatus.patches.tsx logo após a
+  // pessoa tomar uma ação (ver nota de âmbito no catálogo EN).
+  "applicationStatus.patch.withdrawn":
+    "Retiraste esta candidatura agora mesmo. A empresa foi notificada com delicadeza.",
+  "applicationStatus.patch.followedUp":
+    "<b>Seguimento enviado agora mesmo.</b> Foram gentilmente lembrados. Costumas ter resposta em poucos dias.",
+  "applicationStatus.patch.submitted":
+    "Enviada agora mesmo. O prazo indicado é de 7 dias. Vamos de olho no relógio por ti.",
+  "applicationStatus.patch.accepted":
+    "<b>Oferta aceite.</b> Vão enviar-te o contrato por email nos próximos dois dias úteis.",
+  "applicationStatus.patch.declined":
+    "Recusaste esta oferta. Foram agradecidos calorosamente em teu nome.",
+
   "msg.message.title": "Enviar mensagem",
   "msg.message.em": "à pessoa recrutadora.",
   "msg.message.sub":
@@ -2765,6 +2778,7 @@ export const economy: Catalog = {
   "invoiceTool.issuer.addressLabel": "Morada",
   "invoiceTool.issuer.addressPlaceholder": "Rua, código postal, cidade",
   "invoiceTool.issuer.ibanLabel": "IBAN",
+  "invoiceTool.issuer.ibanPlaceholder": "PT50 0000 0000 0000 0000 0000 0",
   "invoiceTool.client.legend": "Cliente",
   "invoiceTool.client.nameLabel": "Nome do cliente",
   "invoiceTool.client.namePlaceholder": "A quem estás a faturar",
@@ -2773,6 +2787,7 @@ export const economy: Catalog = {
   "invoiceTool.optional": "Opcional",
   "invoiceTool.meta.legend": "Fatura",
   "invoiceTool.meta.numberLabel": "Número da fatura",
+  "invoiceTool.meta.numberPlaceholder": "FR 2026/001",
   "invoiceTool.meta.issueDateLabel": "Data de emissão",
   "invoiceTool.meta.dueDateLabel": "Data de vencimento",
   "invoiceTool.meta.ivaRateLabel": "Taxa de IVA",
@@ -2795,6 +2810,7 @@ export const economy: Catalog = {
   "invoiceTool.preview.issued": "Emitida a {date}",
   "invoiceTool.preview.due": "Vencimento a {date}",
   "invoiceTool.preview.billedTo": "Faturado a",
+  "invoiceTool.preview.nifLine": "NIF {nif}",
   "invoiceTool.preview.subtotal": "Subtotal",
   "invoiceTool.preview.ivaLabel": "IVA ({rate}%)",
   "invoiceTool.preview.total": "Total",
@@ -4061,6 +4077,7 @@ export const economy: Catalog = {
   "housingCoop.card.meta.operating": "Em funcionamento",
   "housingCoop.card.meta.formingSince": "Em formação desde",
   "housingCoop.card.operationalSince": "A funcionar desde",
+  "housingCoop.card.progressThrough": "<em>{percent}</em> concluído",
   "housingCoop.card.duration.years_one": "{count} ano",
   "housingCoop.card.duration.years_other": "{count} anos",
   "housingCoop.card.duration.months_one": "{count} mês",

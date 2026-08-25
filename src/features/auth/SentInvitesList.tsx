@@ -204,7 +204,11 @@ export function SentInvitesList() {
     );
     if (present.length < 2) return [];
     return [
-      { id: "all", label: t("auth:invite.sentList.filter.all"), count: data.length },
+      {
+        id: "all",
+        label: t("auth:invite.sentList.filter.all"),
+        count: data.length,
+      },
       ...present.map((status) => ({
         id: status,
         label: t(`auth:invite.sentList.status.${status}`),
@@ -234,9 +238,7 @@ export function SentInvitesList() {
   if (!data || data.length === 0) return null;
 
   const shown =
-    filter === "all"
-      ? data
-      : data.filter((invite) => invite.status === filter);
+    filter === "all" ? data : data.filter((invite) => invite.status === filter);
 
   return (
     <section className={styles.wrap}>

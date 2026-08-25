@@ -5,12 +5,15 @@ import { useShareLink } from "../../shared/hooks";
 import { useSaved } from "../../app/providers/useSaved";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { StudioDetailHero } from "./StudioDetailHero";
 import styles from "./studio.module.css";
 import { ALBUM_COVER, ALBUM } from "./studioAlbum.data";
 
 const ARTIST_NAME = "Mariana Sol";
+const RELEASE_YEAR = "2026";
+const RELEASE_LOCATION = "Sintra";
 
 export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
   const { t } = useTranslation();
@@ -34,7 +37,7 @@ export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
           width="100%"
           height="100%"
           radius={16}
-          placeholder="cover · Cidade dos santos"
+          placeholder={`${t("studio:media.coverLabel")} · ${ALBUM.title}`}
           style={{ position: "absolute", inset: 0 }}
           loading="eager"
           fetchPriority="high"
@@ -43,13 +46,20 @@ export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
       kind="Album · 11 tracks · 42 min"
       title={
         <>
-          Cidade dos <em>santos</em>
+          {ALBUM.titlePre}
+          <em>{ALBUM.titleEm}</em>
         </>
       }
       by={
-        <>
-          by <strong>{ARTIST_NAME}</strong> · 2026 · Sintra
-        </>
+        <Translation
+          i18nKey="studio:albumHero.byLine"
+          components={{ strong: <strong /> }}
+          values={{
+            artist: ARTIST_NAME,
+            year: RELEASE_YEAR,
+            location: RELEASE_LOCATION,
+          }}
+        />
       }
       actions={
         <>

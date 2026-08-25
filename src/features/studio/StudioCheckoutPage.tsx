@@ -48,7 +48,8 @@ export function StudioCheckoutPage() {
           <p>{t("studio:checkout.doneBody", { amount: priceLabel })}</p>
           <div className={s.doneActions}>
             <Link to={routes.studio} className={ss.btP}>
-              {t("studio:checkout.startListeningCta")} <FiArrowRight aria-hidden />
+              {t("studio:checkout.startListeningCta")}{" "}
+              <FiArrowRight aria-hidden />
             </Link>
             <Link to={routes.studioLibrary} className={ss.bt}>
               {t("studio:checkout.goToLibraryCta")}

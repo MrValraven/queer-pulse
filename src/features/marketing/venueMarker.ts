@@ -386,7 +386,10 @@ export function createVenueMarkerManager(
       if (!key.startsWith("v:")) continue;
       const wrapper = marker.getElement();
       const isSelected = key === `v:${venueId}`;
-      wrapper.firstElementChild?.classList.toggle(CLASS.pinSelected, isSelected);
+      wrapper.firstElementChild?.classList.toggle(
+        CLASS.pinSelected,
+        isSelected,
+      );
       wrapper.style.zIndex = isSelected ? SELECTED_Z_INDEX : "";
     }
   }

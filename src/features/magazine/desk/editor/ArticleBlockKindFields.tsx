@@ -20,7 +20,9 @@ interface KindFieldsProps<T extends ArticleBlock> {
   onChange: (next: ArticleBlock) => void;
 }
 
-interface RichKindFieldsProps<T extends ArticleBlock> extends KindFieldsProps<T> {
+interface RichKindFieldsProps<
+  T extends ArticleBlock,
+> extends KindFieldsProps<T> {
   index: number;
   onSlash: (element: HTMLElement, index: number) => void;
 }
@@ -83,14 +85,20 @@ export function QaBlockFields({
         onFocus={onSelect}
       />
       <div className={styles.a}>
-        <Avatar initials={initialsFromName(block.who, "?")} size={32} name={block.who} />
+        <Avatar
+          initials={initialsFromName(block.who, "?")}
+          size={32}
+          name={block.who}
+        />
         <div className={styles.aBody}>
           <input
             type="text"
             className={styles.whoInput}
             value={block.who}
             placeholder={t("magazine:write.block.whoPlaceholder")}
-            onChange={(event) => onChange({ ...block, who: event.target.value })}
+            onChange={(event) =>
+              onChange({ ...block, who: event.target.value })
+            }
             onFocus={onSelect}
             aria-label={t("magazine:write.block.whoAria")}
           />
@@ -116,7 +124,10 @@ export function StatsBlockFields({
   onChange,
 }: KindFieldsProps<ArticleStatsBlock>) {
   const { t } = useTranslation();
-  function updateItem(itemIndex: number, patch: Partial<ArticleStatsBlock["items"][number]>) {
+  function updateItem(
+    itemIndex: number,
+    patch: Partial<ArticleStatsBlock["items"][number]>,
+  ) {
     const items = block.items.map((item, currentIndex) =>
       currentIndex === itemIndex ? { ...item, ...patch } : item,
     );
@@ -126,7 +137,9 @@ export function StatsBlockFields({
   function removeItem(itemIndex: number) {
     onChange({
       ...block,
-      items: block.items.filter((_item, currentIndex) => currentIndex !== itemIndex),
+      items: block.items.filter(
+        (_item, currentIndex) => currentIndex !== itemIndex,
+      ),
     });
   }
 
@@ -143,24 +156,34 @@ export function StatsBlockFields({
             className={styles.statValue}
             value={item.value}
             placeholder={t("magazine:write.block.statValuePlaceholder")}
-            onChange={(event) => updateItem(itemIndex, { value: event.target.value })}
+            onChange={(event) =>
+              updateItem(itemIndex, { value: event.target.value })
+            }
             onFocus={onSelect}
-            aria-label={t("magazine:write.block.statValueAria", { number: itemIndex + 1 })}
+            aria-label={t("magazine:write.block.statValueAria", {
+              number: itemIndex + 1,
+            })}
           />
           <input
             type="text"
             className={styles.statLabel}
             value={item.label}
             placeholder={t("magazine:write.block.statLabelPlaceholder")}
-            onChange={(event) => updateItem(itemIndex, { label: event.target.value })}
+            onChange={(event) =>
+              updateItem(itemIndex, { label: event.target.value })
+            }
             onFocus={onSelect}
-            aria-label={t("magazine:write.block.statLabelAria", { number: itemIndex + 1 })}
+            aria-label={t("magazine:write.block.statLabelAria", {
+              number: itemIndex + 1,
+            })}
           />
           <button
             type="button"
             className={styles.statRemove}
             onClick={() => removeItem(itemIndex)}
-            aria-label={t("magazine:write.block.statRemoveAria", { number: itemIndex + 1 })}
+            aria-label={t("magazine:write.block.statRemoveAria", {
+              number: itemIndex + 1,
+            })}
           >
             <FiTrash2 aria-hidden />
           </button>

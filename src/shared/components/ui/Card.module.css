@@ -6,6 +6,12 @@
 :global([data-theme="dark"]) .card {
   border-color: rgba(247, 243, 238, 0.12);
 }
-.pad-sm { padding: 12px 16px; }
-.pad-md { padding: 16px 18px; }
-.pad-lg { padding: 22px 24px; }
+.pad-sm {
+  padding: 12px 16px;
+}
+.pad-md {
+  padding: 16px 18px;
+}
+.pad-lg {
+  padding: 22px 24px;
+}

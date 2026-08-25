@@ -216,11 +216,26 @@
    counterpart. `CardQr` already paints its plate this way, for the same
    reason. Only the hairline stays theme-aware, since it separates the card
    from whatever page is behind it. */
-.skinPlum { background: var(--plum); color: rgb(var(--cream-rgb)); }
-.skinCream { background: rgb(var(--cream-rgb)); color: var(--plum); }
-.skinJade { background: var(--jade); color: rgb(var(--cream-rgb)); }
-.skinCoral { background: var(--accent); color: rgb(var(--cream-rgb)); }
-.skinInk { background: var(--ink-surface); color: rgb(var(--cream-rgb)); }
+.skinPlum {
+  background: var(--plum);
+  color: rgb(var(--cream-rgb));
+}
+.skinCream {
+  background: rgb(var(--cream-rgb));
+  color: var(--plum);
+}
+.skinJade {
+  background: var(--jade);
+  color: rgb(var(--cream-rgb));
+}
+.skinCoral {
+  background: var(--accent);
+  color: rgb(var(--cream-rgb));
+}
+.skinInk {
+  background: var(--ink-surface);
+  color: rgb(var(--cream-rgb));
+}
 
 /* ── The ground: a community's flag or uploaded photo ─────────────────────── */
 /* FRONT ONLY. The back is always the flat skin — a ground there would sit
@@ -363,7 +378,8 @@
     /* a hairline bevel all the way round */ inset 0 0 0 1px
       rgba(255, 255, 255, 0.08),
     /* and a soft settle at the bottom, so the Cream skin reads as glossy
-       rather than as flat paper */ inset 0 -20px 26px -24px rgba(0, 0, 0, 0.4);
+       rather than as flat paper */
+    inset 0 -20px 26px -24px rgba(0, 0, 0, 0.4);
 }
 
 .glossSheen {

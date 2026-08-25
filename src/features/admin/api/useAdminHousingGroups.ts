@@ -15,7 +15,8 @@ import {
 } from "./adminHousingGroups.api";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 
-export const ADMIN_GROUP_JOIN_REQUESTS_KEY = "admin-housing-group-join-requests";
+export const ADMIN_GROUP_JOIN_REQUESTS_KEY =
+  "admin-housing-group-join-requests";
 export const ADMIN_GROUP_LISTINGS_KEY = "admin-housing-group-listings";
 
 /**

@@ -192,8 +192,7 @@ export function ReviewForm({
           onClick={onClose}
           disabled={sending}
         >
-          <FiArrowLeft aria-hidden />{" "}
-          {t("economy:companyReview.cancel")}
+          <FiArrowLeft aria-hidden /> {t("economy:companyReview.cancel")}
         </button>
         <Button
           size="lg"

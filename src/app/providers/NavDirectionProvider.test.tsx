@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyNavDirection } from "./NavDirectionProvider";
+import { classifyNavDirection } from "./navDirection";
 
 describe("classifyNavDirection", () => {
   it("classifies a link deeper within the same tab as a push", () => {

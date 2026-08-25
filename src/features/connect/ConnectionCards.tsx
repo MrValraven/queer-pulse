@@ -132,7 +132,9 @@ function ConnectionMeta({ view }: { view: ConnectionView }) {
             values={{ count: mutuals }}
           />
         ) : (
-          <span className={styles.metaMuted}>{t("connect:card.noMutuals")}</span>
+          <span className={styles.metaMuted}>
+            {t("connect:card.noMutuals")}
+          </span>
         ))}
       {since && (
         <Translation

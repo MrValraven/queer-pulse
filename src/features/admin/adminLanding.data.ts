@@ -27,7 +27,9 @@ import { changemakers } from "../homepage/data/changemakers";
 /** `spotlightCommunities` mixes `FullCommunity` (real card content) and
  *  `QuietCommunity` (a rail-only placeholder with no `desc`/`photoSrc`) —
  *  only `FullCommunity` entries have enough content to feature. */
-function isFullCommunity(community: SpotlightCommunity): community is FullCommunity {
+function isFullCommunity(
+  community: SpotlightCommunity,
+): community is FullCommunity {
   return community.quiet !== true;
 }
 
@@ -175,8 +177,10 @@ export const DEMO_ELIGIBLE: Record<LandingSection, AdminEligibleEntityDTO[]> = {
  * reorder/update all write straight into this registry; `DEMO_LANDING_FEATURES`
  * itself is never touched, so a reload always starts from the same seed.
  */
-let demoLandingRegistry: Record<LandingSection, AdminLandingFeatureDTO[]> | null =
-  null;
+let demoLandingRegistry: Record<
+  LandingSection,
+  AdminLandingFeatureDTO[]
+> | null = null;
 
 function ensureDemoLandingRegistry(): Record<
   LandingSection,

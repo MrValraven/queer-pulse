@@ -12,18 +12,18 @@ describe("poemBlocks", () => {
     expect(poemHasContent(null)).toBe(false);
     expect(poemHasContent([newBreak()])).toBe(false);
     expect(poemHasContent([newStanza()])).toBe(false);
-    expect(
-      poemHasContent([newStanza([[{ text: "a", marks: [] }]])]),
-    ).toBe(true);
+    expect(poemHasContent([newStanza([[{ text: "a", marks: [] }]])])).toBe(
+      true,
+    );
   });
 
   it("poemHasContent normalizes raw/malformed jsonb without throwing", () => {
     expect(poemHasContent([null])).toBe(false);
     expect(poemHasContent([{ kind: "stanza" }])).toBe(false);
     expect(poemHasContent("nope")).toBe(false);
-    expect(
-      poemHasContent([{ kind: "stanza", id: "x", html: "a<br>b" }]),
-    ).toBe(true);
+    expect(poemHasContent([{ kind: "stanza", id: "x", html: "a<br>b" }])).toBe(
+      true,
+    );
   });
 
   it("poemFromDescription seeds one stanza with split lines", () => {

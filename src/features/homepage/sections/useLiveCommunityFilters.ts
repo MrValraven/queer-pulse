@@ -58,7 +58,9 @@ export function useLiveCommunityFilters(views: CommunitySpotlightView[]) {
 
   const visible = useMemo(
     () =>
-      views.filter((view) => matches(view, state)).sort((a, b) => compare(a, b, state.sort)),
+      views
+        .filter((view) => matches(view, state))
+        .sort((a, b) => compare(a, b, state.sort)),
     [views, state],
   );
 

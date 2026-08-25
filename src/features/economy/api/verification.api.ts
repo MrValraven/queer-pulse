@@ -29,12 +29,7 @@ export interface VerificationStatusDTO {
  * client never trusts a locally-computed next state.
  */
 export type VerificationRequestStatus =
-  | "pending"
-  | "in_review"
-  | "approved"
-  | "rejected"
-  | "appealing"
-  | "withdrawn";
+  "pending" | "in_review" | "approved" | "rejected" | "appealing" | "withdrawn";
 
 /**
  * A member's own view of one of their verification requests — the shape
@@ -94,8 +89,7 @@ export function verificationRequiredFrom(
 ): VerificationLevel | null {
   if (error instanceof ApiError && error.status === 403) {
     const data = error.data as
-      | { code?: string; requiredLevel?: VerificationLevel }
-      | undefined;
+      { code?: string; requiredLevel?: VerificationLevel } | undefined;
     if (data?.code === "VERIFICATION_REQUIRED" && data.requiredLevel) {
       return data.requiredLevel;
     }
@@ -126,8 +120,9 @@ export interface SubmitVerificationRequestInput {
 
 /** Submit a new manual verification request. 409s server-side when the member
  * already has an open request (pending/in_review/appealing) for the type. */
-export const submitVerificationRequest = (input: SubmitVerificationRequestInput) =>
-  apiPost<VerificationRequestDTO>("/verification/requests", input);
+export const submitVerificationRequest = (
+  input: SubmitVerificationRequestInput,
+) => apiPost<VerificationRequestDTO>("/verification/requests", input);
 
 /** Withdraw your own open request. Only legal from pending/in_review. */
 export const withdrawVerificationRequest = (requestId: string) =>

@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { FiPlay, FiShare2 } from "react-icons/fi";
-import { Avatar, FadeIn, ImageSlot, SectionHead } from "../../shared/components/ui";
+import {
+  Avatar,
+  FadeIn,
+  ImageSlot,
+  SectionHead,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";

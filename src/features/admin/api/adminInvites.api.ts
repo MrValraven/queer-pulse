@@ -127,7 +127,6 @@ export const patchAdminInviteQuota = (
   memberSlug: string,
   quota: number | null,
 ) =>
-  apiPatch<AdminInviteQuotaDTO>(
-    `/admin/members/${memberSlug}/invite-quota`,
-    { quota },
-  );
+  apiPatch<AdminInviteQuotaDTO>(`/admin/members/${memberSlug}/invite-quota`, {
+    quota,
+  });

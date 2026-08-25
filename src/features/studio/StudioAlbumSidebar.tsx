@@ -8,6 +8,9 @@ import { ALBUM_BUY, ALBUM_LEDGER } from "./studioAlbum.data";
 import styles from "./studio.module.css";
 
 const ARTIST_NAME = "Mariana Sol";
+const ARTIST_SHARE = 6.4;
+const SOLIDARITY_SHARE = 0.8;
+const PLATFORM_SHARE = 0.8;
 
 export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
   const { t } = useTranslation();
@@ -39,8 +42,17 @@ export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
           </Link>
         </div>
         <div className={styles.splitHint}>
-          If you buy at €8: <em>€6.40 to Mariana</em>, €0.80 to the solidarity
-          fund, €0.80 to the platform, processing absorbed.
+          <Translation
+            i18nKey="studio:album.sidebar.splitHint"
+            components={{ em: <em /> }}
+            values={{
+              price: fmt.currency(ALBUM_BUY.price),
+              artist: ARTIST_NAME,
+              artistShare: fmt.currency(ARTIST_SHARE),
+              solidarityShare: fmt.currency(SOLIDARITY_SHARE),
+              platformShare: fmt.currency(PLATFORM_SHARE),
+            }}
+          />
         </div>
       </div>
 
@@ -78,8 +90,7 @@ export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          {t("studio:detail.fullLedgerCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:detail.fullLedgerCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>

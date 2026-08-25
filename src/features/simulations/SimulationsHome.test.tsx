@@ -15,12 +15,10 @@ describe("SimulationsHome", () => {
     if (!firstGroup) throw new Error("expected at least one group");
     const firstFlow = firstGroup.flows[0];
     if (!firstFlow) throw new Error("expected at least one flow");
-    const link = (await screen.findByRole("link", {
+    const link = await screen.findByRole<HTMLAnchorElement>("link", {
       name: new RegExp(firstFlow.title, "i"),
-    })) as HTMLAnchorElement;
-    expect(link.getAttribute("href")).toBe(
-      `/simulations/${firstFlow.id}`,
-    );
+    });
+    expect(link.getAttribute("href")).toBe(`/simulations/${firstFlow.id}`);
   });
 
   it("filters flows by query and shows a no-results message", async () => {
@@ -41,6 +39,8 @@ describe("SimulationsHome", () => {
     ).toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: "zzz-no-such-flow-xyz" } });
-    expect(await screen.findByText(/no simulations match/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/no simulations match/i),
+    ).toBeInTheDocument();
   });
 });

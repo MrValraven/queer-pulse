@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 
 export type ResourceListingCategory = "legal_aid" | "sexual_health_testing";
 export type ResourceListingStatus = "active" | "archived";

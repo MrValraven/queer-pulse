@@ -79,7 +79,10 @@ export function HousingListingMain({ listing }: { listing: HousingListing }) {
 
       <section className={s.sec}>
         <h2>{t("economy:housingListing.section.location")}</h2>
-        <HousingLocationCard location={listing.location} title={listing.title} />
+        <HousingLocationCard
+          location={listing.location}
+          title={listing.title}
+        />
       </section>
 
       <section className={s.sec}>
@@ -133,8 +136,7 @@ export function HousingListingSidebar({
           className={s.priceBtn}
           onClick={onRequestViewing}
         >
-          <FiCalendar aria-hidden />{" "}
-          {t("economy:housingViewing.request.cta")}
+          <FiCalendar aria-hidden /> {t("economy:housingViewing.request.cta")}
         </Button>
         <Link to={routes.housingViewings} className={s.viewingsLink}>
           {t("economy:housingViewing.request.myViewingsLink")}
@@ -246,7 +248,9 @@ export function HousingListingError({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
   return (
     <div className={s.errorState} role="alert">
-      <h1 className={s.errorTitle}>{t("economy:housingListing.error.title")}</h1>
+      <h1 className={s.errorTitle}>
+        {t("economy:housingListing.error.title")}
+      </h1>
       <p className={s.errorBody}>{t("economy:housingListing.error.body")}</p>
       <Button variant="primary" onClick={onRetry}>
         {t("economy:housingListing.error.retry")}

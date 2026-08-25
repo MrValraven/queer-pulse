@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { getPlatformStatus, type PlatformStatusDTO } from "./platformStatus.api";
+import {
+  getPlatformStatus,
+  type PlatformStatusDTO,
+} from "./platformStatus.api";
 
 /**
  * Demo: everything open. The prototype is never "closed". `guidelinesVersion`

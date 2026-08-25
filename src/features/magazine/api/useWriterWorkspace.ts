@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getMyAssignments, getMyPayments, getMyPitches } from "./writerWorkspace.api";
+import {
+  getMyAssignments,
+  getMyPayments,
+  getMyPitches,
+} from "./writerWorkspace.api";
 import { DEMO_WRITER } from "../data/writerWorkspace.data";
 
 /**
@@ -39,8 +43,6 @@ export function useWriterWorkspace() {
       pitchesQuery.isLoading ||
       paymentsQuery.isLoading,
     isError:
-      assignmentsQuery.isError ||
-      pitchesQuery.isError ||
-      paymentsQuery.isError,
+      assignmentsQuery.isError || pitchesQuery.isError || paymentsQuery.isError,
   };
 }

@@ -14,7 +14,10 @@ function actorLabel(actor: MemberRefDTO | null, t: TFunction): string {
   return `${actor.firstName} ${actor.lastName}`.trim();
 }
 
-function levelLabel(level: VerificationLevel | null, t: TFunction): string | null {
+function levelLabel(
+  level: VerificationLevel | null,
+  t: TFunction,
+): string | null {
   return level ? t(`admin:verifications.level.${level}`) : null;
 }
 

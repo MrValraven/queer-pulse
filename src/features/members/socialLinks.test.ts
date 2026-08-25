@@ -3,10 +3,16 @@ import { socialDisplayLabel, socialHref } from "./socialLinks.data";
 
 describe("socialHref", () => {
   it("prefixes a bare handle", () => {
-    expect(socialHref("github", "ruimarcal")).toBe("https://github.com/ruimarcal");
+    expect(socialHref("github", "ruimarcal")).toBe(
+      "https://github.com/ruimarcal",
+    );
     expect(socialHref("instagram", "@joao")).toBe("https://instagram.com/joao");
-    expect(socialHref("letterboxd", "joao")).toBe("https://letterboxd.com/joao");
-    expect(socialHref("backloggd", "joao")).toBe("https://backloggd.com/u/joao");
+    expect(socialHref("letterboxd", "joao")).toBe(
+      "https://letterboxd.com/joao",
+    );
+    expect(socialHref("backloggd", "joao")).toBe(
+      "https://backloggd.com/u/joao",
+    );
   });
 
   it("does not double the host when the value already carries it", () => {

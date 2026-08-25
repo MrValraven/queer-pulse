@@ -104,7 +104,13 @@ export function ConversationHeader({
           onClick={onBack}
           aria-label={t("messages:conversation.backToList")}
         >
-          <svg width={18} height={18} viewBox="0 0 18 18" fill="none" aria-hidden>
+          <svg
+            width={18}
+            height={18}
+            viewBox="0 0 18 18"
+            fill="none"
+            aria-hidden
+          >
             <path
               d="M11 3.5 5.5 9l5.5 5.5"
               stroke="currentColor"

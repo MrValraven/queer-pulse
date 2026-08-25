@@ -34,7 +34,7 @@ export function readCommunityDraft(
     const parsed = JSON.parse(raw) as Partial<StoredCommunityDraft>;
     if (!parsed || typeof parsed !== "object" || !parsed.draft) return null;
     return {
-      draft: parsed.draft as CommunityDraft,
+      draft: parsed.draft,
       step: typeof parsed.step === "number" ? parsed.step : 0,
     };
   } catch {

@@ -4,10 +4,11 @@ import { portrait } from "./adminPeople.data";
 import type { PlatformStaffRowDTO } from "./api/adminStaffRoster.api";
 import styles from "./AdminStaffPage.module.css";
 
-const ROLE_LONG_LABEL_KEY: Record<PlatformStaffRowDTO["platformRole"], string> = {
-  admin: "shared:staffBadge.admin.long",
-  moderator: "shared:staffBadge.moderator.long",
-};
+const ROLE_LONG_LABEL_KEY: Record<PlatformStaffRowDTO["platformRole"], string> =
+  {
+    admin: "shared:staffBadge.admin.long",
+    moderator: "shared:staffBadge.moderator.long",
+  };
 
 function initialsFor(firstName: string, lastName: string): string {
   const first = firstName.charAt(0);

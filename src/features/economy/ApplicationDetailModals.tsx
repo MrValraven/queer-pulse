@@ -25,7 +25,9 @@ function downloadAttachment(
     `product this would be the real file you submitted with your application.`,
   ].join("\n");
   // Keep the original extension where there is one, else default to .txt.
-  const filename = /\.[a-z0-9]+$/i.test(fileName) ? fileName : `${fileName}.txt`;
+  const filename = /\.[a-z0-9]+$/i.test(fileName)
+    ? fileName
+    : `${fileName}.txt`;
   downloadBlob(filename, body, "text/plain");
 }
 
@@ -46,7 +48,8 @@ export function SubmissionModal({
         {t("economy:applicationStatus.submission.eyebrow")}
       </div>
       <h2 className={styles.title}>
-        {app.title}<em>, {app.companyName}</em>
+        {app.title}
+        <em>, {app.companyName}</em>
       </h2>
       <p className={styles.sub}>{s?.date}</p>
 
@@ -179,7 +182,11 @@ export function NoteModal({
     company: app.companyName,
   });
   return (
-    <ModalShell onClose={onClose} ariaLabel={fromLabel} className={styles.readModal}>
+    <ModalShell
+      onClose={onClose}
+      ariaLabel={fromLabel}
+      className={styles.readModal}
+    >
       <div className={styles.readEyebrow}>{fromLabel}</div>
       <p className={styles.readBody}>“{n?.body}”</p>
       <div className={styles.readFrom}>— {n?.from}</div>

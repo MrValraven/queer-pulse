@@ -42,7 +42,8 @@ export function SubprofileDeleteModal({
   const coOwnerCount = members?.length ?? 0;
   const isSharedDelete = coOwnerCount > 1;
   const requiredName =
-    subprofile.displayName.trim() || t("subprofiles:mine.deleteModalDefaultName");
+    subprofile.displayName.trim() ||
+    t("subprofiles:mine.deleteModalDefaultName");
   const nameMatches = typedName.trim() === requiredName;
 
   const itemCount = subprofile.sections
@@ -56,7 +57,10 @@ export function SubprofileDeleteModal({
   async function confirmDelete() {
     try {
       await remove.mutateAsync(subprofile.id);
-      showToast(t("subprofiles:mine.toastDeleted", { name: requiredName }), "info");
+      showToast(
+        t("subprofiles:mine.toastDeleted", { name: requiredName }),
+        "info",
+      );
       onClose();
       void navigate(routes.subprofilesDashboard);
     } catch {
@@ -116,7 +120,9 @@ export function SubprofileDeleteModal({
         </ul>
 
         <FormField
-          label={t("subprofiles:deleteConfirm.typeLabel", { name: requiredName })}
+          label={t("subprofiles:deleteConfirm.typeLabel", {
+            name: requiredName,
+          })}
           helper={t("subprofiles:deleteConfirm.typeHelper")}
         >
           <input

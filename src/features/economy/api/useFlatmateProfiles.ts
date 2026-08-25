@@ -3,7 +3,10 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { PROFILES, type Profile } from "../flatmates.data";
-import { getFlatmateProfiles, type FlatmateFilters } from "./flatmateProfile.api";
+import {
+  getFlatmateProfiles,
+  type FlatmateFilters,
+} from "./flatmateProfile.api";
 import { flatmateDtoToProfile } from "./flatmateProfile.adapters";
 
 const FLATMATE_PROFILES_KEY = "flatmate-profiles";

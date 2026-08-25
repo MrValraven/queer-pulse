@@ -33,7 +33,8 @@ export function useGovernanceProposals(): GovernanceProposalsResult {
     queryKey: proposalsQueryKey(demoMode),
     queryFn: async () =>
       demoMode
-        ? (await import("../governanceProposals.data")).DEMO_GOVERNANCE_PROPOSALS
+        ? (await import("../governanceProposals.data"))
+            .DEMO_GOVERNANCE_PROPOSALS
         : getGovernanceProposals(),
   });
 

@@ -175,8 +175,7 @@ export function DatingPage() {
         sub={t("community:dating.outro.sub")}
       >
         <Button to={calendar} variant="primary" size="lg">
-          {t("community:dating.outro.cta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("community:dating.outro.cta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

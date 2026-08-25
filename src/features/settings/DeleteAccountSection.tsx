@@ -169,11 +169,7 @@ export function DeleteAccountSection() {
                 {t("settings:deleteAccount.pauseStrip.cta")}
               </Button>
             ) : (
-              <Button
-                variant="ghost"
-                disabled
-                style={{ marginTop: 12 }}
-              >
+              <Button variant="ghost" disabled style={{ marginTop: 12 }}>
                 <FiPause aria-hidden="true" />{" "}
                 {t("settings:deleteAccount.pauseStrip.cta")} <ComingSoon />
               </Button>
@@ -189,7 +185,10 @@ export function DeleteAccountSection() {
         <div className={styles.whList}>
           {content.whatHappens.map((item, i) => (
             <div key={i} className={styles.whRow}>
-              <div className={styles.whDot} style={{ background: item.color }} />
+              <div
+                className={styles.whDot}
+                style={{ background: item.color }}
+              />
               <div className={styles.whText}>
                 <Translation
                   i18nKey={item.textKey}

@@ -29,7 +29,10 @@ import { DEFAULT_ACCENT, skinVars } from "./subprofilePresence.data";
 import { skinFor } from "./subprofile-skins";
 import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
-import { PAGE_STATE_COPY, type PersonaPageState } from "./subprofilePageStates.data";
+import {
+  PAGE_STATE_COPY,
+  type PersonaPageState,
+} from "./subprofilePageStates.data";
 
 type PeopleModalMode = "followers" | "endorsements";
 
@@ -81,9 +84,8 @@ export function SubprofilePage() {
   );
   const galleryLightbox = useImageLightbox(galleryPhotos);
   const [reportOpen, setReportOpen] = useState(false);
-  const [peopleModalMode, setPeopleModalMode] = useState<PeopleModalMode | null>(
-    null,
-  );
+  const [peopleModalMode, setPeopleModalMode] =
+    useState<PeopleModalMode | null>(null);
   const { poemItem, openPoem, closePoem } = usePoemDeepLink(sections);
 
   function handleAction(action: PersonaAction) {
@@ -136,7 +138,10 @@ export function SubprofilePage() {
   // small avatar/default, `summary` (square thumb) is the better fit.
   const twitterCard = data.coverUrl ? "summary_large_image" : "summary";
   const cardImageAlt = cardImage
-    ? t("subprofiles:page.ogImageAlt", { name: data.displayName, craft: craftLabel })
+    ? t("subprofiles:page.ogImageAlt", {
+        name: data.displayName,
+        craft: craftLabel,
+      })
     : undefined;
   // Resolved external profile URLs for the Person's `sameAs`.
   const sameAs = data.socialLinks
@@ -147,7 +152,9 @@ export function SubprofilePage() {
     <PageShell>
       <PageMeta
         title={`${data.displayName} · ${craftLabel} · QueerPulse`}
-        description={(data.tagline || data.bio || "").slice(0, 160) || undefined}
+        description={
+          (data.tagline || data.bio || "").slice(0, 160) || undefined
+        }
         image={cardImage}
         imageAlt={cardImageAlt}
         twitterCard={twitterCard}
@@ -168,7 +175,8 @@ export function SubprofilePage() {
             jobTitle: craftLabel,
             image: cardImage ?? null,
             sameAs,
-            description: (data.tagline || data.bio || "").slice(0, 300) || undefined,
+            description:
+              (data.tagline || data.bio || "").slice(0, 300) || undefined,
           })}
         />
       )}

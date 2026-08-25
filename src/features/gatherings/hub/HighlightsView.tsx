@@ -36,7 +36,11 @@ function eventKey(event: CalendarEvent): string {
  * events so a visitor always has somewhere to go next. The host CTA renders
  * outside `.wrap` because it's a full-bleed plum band (see `HostCtaBanner`).
  */
-export function HighlightsView({ events, now, isLoading }: HighlightsViewProps) {
+export function HighlightsView({
+  events,
+  now,
+  isLoading,
+}: HighlightsViewProps) {
   const { t } = useTranslation();
   const isEmpty = !isLoading && events.length === 0;
   const highlightEvents = useMemo(
@@ -59,18 +63,29 @@ export function HighlightsView({ events, now, isLoading }: HighlightsViewProps) 
           ) : (
             <>
               <SectionHead title={t("gatherings:hub.highlights.heading")} />
-              {isLoading && <HubLoadingLine labelKey="gatherings:hub.loading" />}
+              {isLoading && (
+                <HubLoadingLine labelKey="gatherings:hub.loading" />
+              )}
               <div className={styles.grid}>
                 {isLoading
-                  ? Array.from({ length: SKELETON_COUNT }).map((_, skeletonIndex) => (
-                      <EventPosterSkeleton key={skeletonIndex} variant="featured" />
-                    ))
+                  ? Array.from({ length: SKELETON_COUNT }).map(
+                      (_, skeletonIndex) => (
+                        <EventPosterSkeleton
+                          key={skeletonIndex}
+                          variant="featured"
+                        />
+                      ),
+                    )
                   : featuredEvents.map((event, eventIndex) => (
                       <Reveal
                         key={eventKey(event)}
                         delay={Math.min(eventIndex, 8) * 55}
                       >
-                        <EventPosterCard event={event} variant="featured" now={now} />
+                        <EventPosterCard
+                          event={event}
+                          variant="featured"
+                          now={now}
+                        />
                       </Reveal>
                     ))}
               </div>

@@ -62,10 +62,15 @@ export function CommunityResourcesEditor({
 
   // Destructured rather than kept as one object: the ref must not be reached
   // through a property access during render (`react-hooks/refs`).
-  const { orderedResources, containerRef, draggingIndex, gripHandlers, moveBy } =
-    useResourceShelfOrder(resources, (resourceIds) =>
-      reorderResources.mutate(resourceIds, { onError: onWriteError }),
-    );
+  const {
+    orderedResources,
+    containerRef,
+    draggingIndex,
+    gripHandlers,
+    moveBy,
+  } = useResourceShelfOrder(resources, (resourceIds) =>
+    reorderResources.mutate(resourceIds, { onError: onWriteError }),
+  );
 
   const isBusy =
     createResource.isPending ||
@@ -182,9 +187,7 @@ export function CommunityResourcesEditor({
         title={t("communities:detail.resources.editor.removeConfirmTitle", {
           title: pendingRemoval?.title ?? "",
         })}
-        description={t(
-          "communities:detail.resources.editor.removeConfirmBody",
-        )}
+        description={t("communities:detail.resources.editor.removeConfirmBody")}
         confirmLabel={t("communities:detail.resources.editor.removeConfirmCta")}
       />
     </div>

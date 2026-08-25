@@ -116,7 +116,9 @@ export function MessageActionOverlay({
       }
       if (
         event.shiftKey &&
-        (activeElement === firstItem || activeElement === column || activeElement === menuRef.current)
+        (activeElement === firstItem ||
+          activeElement === column ||
+          activeElement === menuRef.current)
       ) {
         event.preventDefault();
         lastItem.focus();
@@ -151,7 +153,12 @@ export function MessageActionOverlay({
   const edgeGap = 8;
   const maxInset = Math.max(edgeGap, visibleWidth - columnMaxWidth - edgeGap);
   const horizontalStyle = isSent
-    ? { right: Math.min(maxInset, Math.max(edgeGap, visibleWidth - anchorRect.right)) }
+    ? {
+        right: Math.min(
+          maxInset,
+          Math.max(edgeGap, visibleWidth - anchorRect.right),
+        ),
+      }
     : { left: Math.min(maxInset, Math.max(edgeGap, anchorRect.left)) };
   // The column anchors to the pressed bubble (`top` when it opens below,
   // `bottom` when it opens above), not to the viewport edge it grows toward —
@@ -186,9 +193,7 @@ export function MessageActionOverlay({
         ].join(" ")}
         style={{
           top: openBelow ? anchorRect.top : undefined,
-          bottom: openBelow
-            ? undefined
-            : visibleHeight - anchorRect.bottom,
+          bottom: openBelow ? undefined : visibleHeight - anchorRect.bottom,
           maxHeight: overlayMaxHeight,
           ...horizontalStyle,
         }}
@@ -198,11 +203,16 @@ export function MessageActionOverlay({
         aria-label={t("messages:actions.overlayLabel")}
       >
         <div className={styles.overlayReactions}>
-          <ReactionPicker onPick={(key) => runThenClose(() => onReact(key))()} />
+          <ReactionPicker
+            onPick={(key) => runThenClose(() => onReact(key))()}
+          />
         </div>
 
         <div
-          className={[styles.overlayBubble, isSent ? styles.sent : styles.received].join(" ")}
+          className={[
+            styles.overlayBubble,
+            isSent ? styles.sent : styles.received,
+          ].join(" ")}
         >
           <MentionText text={text} renderText={renderWithLinks} />
         </div>

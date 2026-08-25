@@ -70,7 +70,8 @@ export const safety: Catalog = {
   "report.category.venueSafety": "Unsafe behaviour at a gathering",
   "report.category.other": "Something else",
   "report.form.involvedLabel": "Who or what was involved (optional)",
-  "report.form.involvedPlaceholder": "A name, a place, a link, whatever you have",
+  "report.form.involvedPlaceholder":
+    "A name, a place, a link, whatever you have",
   "report.form.involvedHelper":
     "Written in your own words. This form can't attach a report to a profile or a post yet, so a moderator will read what you write here and find the record themselves.",
   // Prefixes the "who or what" line inside the report body sent to moderators.
@@ -230,7 +231,8 @@ export const safety: Catalog = {
   "profileMenu.unmute": "Unmute {name}",
   "profileMenu.block": "Block {name}",
   "profileMenu.unblock": "Unblock {name}",
-  "profileMenu.mutedToast": "You muted {name}. Their posts are hidden from you.",
+  "profileMenu.mutedToast":
+    "You muted {name}. Their posts are hidden from you.",
   "profileMenu.unmutedToast": "You unmuted {name}.",
   "profileMenu.unblockedToast": "You unblocked {name}.",
   "profileMenu.blockedToast": "You blocked {name}.",
@@ -500,8 +502,7 @@ export const safety: Catalog = {
   "spaces.criteria.noIncidents.lead": "No discriminatory incidents",
   "spaces.criteria.noIncidents.rest": " reported in the past 12 months",
   "spaces.criteria.transWelcome.lead": "Trans and non-binary people",
-  "spaces.criteria.transWelcome.rest":
-    " feel genuinely welcome and at home",
+  "spaces.criteria.transWelcome.rest": " feel genuinely welcome and at home",
   "spaces.criteria.accessible.lead": "Accessible",
   "spaces.criteria.accessible.rest":
     ", or access limitations clearly communicated",
@@ -528,7 +529,6 @@ export const safety: Catalog = {
   "spaces.how.step6.title": "Any member can flag",
   "spaces.how.step6.desc":
     "If something changes (an incident, a shift in atmosphere), any member can flag the listing. Three flags trigger an immediate review and temporary suspension of the badge.",
-
 
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Verified LGBTQ+ safe spaces in Lisbon",

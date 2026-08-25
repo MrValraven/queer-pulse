@@ -31,7 +31,9 @@ export function useSubmitPartnerApplication() {
       return createPartnerApplication(dto);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["partner-applications"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["partner-applications"],
+      });
     },
     meta: { silentError: true }, // SubmitPartnerApplicationPage toasts locally
   });

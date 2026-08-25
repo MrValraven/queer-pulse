@@ -8,7 +8,7 @@ import { describeError } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import { AdminModal } from "../../ui";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 import styles from "./roadmapModals.module.css";
 
 /**
@@ -30,7 +30,9 @@ export function NotifyVotersModal() {
   const [message, setMessage] = useState(() =>
     item
       ? item.column === "shipped"
-        ? t("admin:roadmap.modals.notifyVoters.shippedMessage", { name: item.name })
+        ? t("admin:roadmap.modals.notifyVoters.shippedMessage", {
+            name: item.name,
+          })
         : t("admin:roadmap.modals.notifyVoters.movedMessage", {
             name: item.name,
             column: t(`admin:roadmap.board.column.${item.column}`),
@@ -56,7 +58,10 @@ export function NotifyVotersModal() {
         },
         onError: (error) =>
           showToast(
-            describeError(t("admin:roadmap.modals.notifyVoters.confirmCta"), error),
+            describeError(
+              t("admin:roadmap.modals.notifyVoters.confirmCta"),
+              error,
+            ),
             "error",
           ),
       },
@@ -113,7 +118,10 @@ export function NotifyVotersModal() {
         label={t("admin:roadmap.modals.notifyVoters.messageLabel")}
         required
       >
-        <textarea value={message} onChange={(event) => setMessage(event.target.value)} />
+        <textarea
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
+        />
       </FormField>
     </AdminModal>
   );

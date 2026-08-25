@@ -260,7 +260,9 @@ describe("403 stale-CSRF retry", () => {
         if (requestUrl(url).includes("/csrf-token"))
           return Promise.resolve(res(200, { csrfToken: "tok" }));
         postCalls++;
-        return Promise.resolve(res(403, { message: "You have hit your quota" }));
+        return Promise.resolve(
+          res(403, { message: "You have hit your quota" }),
+        );
       }),
     );
 

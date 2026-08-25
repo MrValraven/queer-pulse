@@ -12,7 +12,9 @@ import styles from "./ArticlePage.module.css";
 function TypedBlock({ block }: { block: TypedArticleBlock }) {
   switch (block.kind) {
     case "paragraph":
-      return <p className={block.lead ? styles.lead : undefined}>{block.text}</p>;
+      return (
+        <p className={block.lead ? styles.lead : undefined}>{block.text}</p>
+      );
     case "heading":
       return <h2 className={styles.heading}>{block.text}</h2>;
     case "pullQuote":
@@ -21,7 +23,9 @@ function TypedBlock({ block }: { block: TypedArticleBlock }) {
       return (
         <blockquote className={styles.quote}>
           <p>{block.text}</p>
-          {block.cite && <cite className={styles.quoteCite}>— {block.cite}</cite>}
+          {block.cite && (
+            <cite className={styles.quoteCite}>— {block.cite}</cite>
+          )}
         </blockquote>
       );
     case "image":
@@ -36,7 +40,9 @@ function TypedBlock({ block }: { block: TypedArticleBlock }) {
             placeholder={block.alt}
           />
           {block.caption && (
-            <figcaption className={styles.figCaption}>{block.caption}</figcaption>
+            <figcaption className={styles.figCaption}>
+              {block.caption}
+            </figcaption>
           )}
         </figure>
       );

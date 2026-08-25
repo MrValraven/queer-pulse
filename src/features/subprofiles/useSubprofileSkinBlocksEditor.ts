@@ -46,7 +46,7 @@ export interface SubprofileSkinBlocksEditor {
   reset: () => void;
 }
 
-const clone = <T,>(value: T): T =>
+const clone = <T>(value: T): T =>
   value === undefined ? value : (JSON.parse(JSON.stringify(value)) as T);
 
 /** Drop blank rows from a list before it's persisted: empty strings from a
@@ -78,7 +78,8 @@ function normalizeList(value: unknown): unknown {
 function nestedListSubFields(descriptor: SkinBlockDescriptor): string[] {
   const subFields: string[] = [];
   for (const control of descriptor.controls) {
-    if (control.kind !== "stringList" && control.kind !== "objectList") continue;
+    if (control.kind !== "stringList" && control.kind !== "objectList")
+      continue;
     const subKey = control.path.split(".")[1];
     if (subKey) subFields.push(subKey);
   }
@@ -166,7 +167,12 @@ export function useSubprofileSkinBlocksEditor(
         // emptied so an untouched/cleared block leaves no stray entry.
         const emptyString = typeof value === "string" && value.trim() === "";
         const emptyArray = Array.isArray(value) && value.length === 0;
-        if (value === undefined || value === null || emptyString || emptyArray) {
+        if (
+          value === undefined ||
+          value === null ||
+          emptyString ||
+          emptyArray
+        ) {
           delete next[blockKey];
         } else {
           next[blockKey] = value;
@@ -191,7 +197,10 @@ export function useSubprofileSkinBlocksEditor(
     const currentJson = JSON.stringify(draft[descriptor.blockKey] ?? null);
     const baselineJson = JSON.stringify(baseline[descriptor.blockKey] ?? null);
     if (currentJson !== baselineJson) {
-      changes.push({ blockKey: descriptor.blockKey, titleKey: descriptor.titleKey });
+      changes.push({
+        blockKey: descriptor.blockKey,
+        titleKey: descriptor.titleKey,
+      });
     }
   }
   const dirty = changes.length > 0;
@@ -206,7 +215,12 @@ export function useSubprofileSkinBlocksEditor(
       // renderer can't derive day numbers) — don't persist it half-filled.
       if (descriptor.blockKey === "availability") {
         const av = normalized as { startDate?: unknown } | null;
-        if (!av || typeof av !== "object" || typeof av.startDate !== "string" || av.startDate.trim() === "") {
+        if (
+          !av ||
+          typeof av !== "object" ||
+          typeof av.startDate !== "string" ||
+          av.startDate.trim() === ""
+        ) {
           continue;
         }
       }
@@ -217,7 +231,11 @@ export function useSubprofileSkinBlocksEditor(
       // an array — a partially-filled block (an excerpt with `from` but no
       // `lines` yet) must never save a shape the skin renderers read `.length`
       // off. Preserves the scalar fields the owner has already typed.
-      if (normalized && typeof normalized === "object" && !Array.isArray(normalized)) {
+      if (
+        normalized &&
+        typeof normalized === "object" &&
+        !Array.isArray(normalized)
+      ) {
         const object = normalized as Record<string, unknown>;
         for (const subKey of nestedListSubFields(descriptor)) {
           if (!Array.isArray(object[subKey])) object[subKey] = [];

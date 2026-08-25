@@ -261,8 +261,7 @@ export function Governance() {
           ))}
           <div className={styles.govAction}>
             <Button variant="ghost-dark" to={routes.cinemaMembership}>
-              {t("cinema:about.gov.rightsCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("cinema:about.gov.rightsCta")} <FiArrowRight aria-hidden />
             </Button>
           </div>
         </div>

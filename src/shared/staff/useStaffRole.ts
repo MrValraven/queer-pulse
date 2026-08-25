@@ -37,9 +37,7 @@ export function useStaffMap(): Record<string, StaffRole> {
  * viewer is signed out, or the roster has not arrived yet. Returning null while
  * in flight means the badge fades in rather than reserving empty space.
  */
-export function useStaffRole(
-  memberSlug: string | undefined,
-): StaffRole | null {
+export function useStaffRole(memberSlug: string | undefined): StaffRole | null {
   const staffBySlug = useStaffMap();
   if (!memberSlug) return null;
   return staffBySlug[memberSlug] ?? null;

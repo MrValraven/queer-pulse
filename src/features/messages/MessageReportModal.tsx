@@ -23,7 +23,10 @@ export interface MessageReportModalProps {
  *  detail), but with `subjectType: "message"` and the message id as subject.
  *  Reason labels come from the shared safety taxonomy; the report POSTs to the
  *  same `/reports` endpoint. */
-export function MessageReportModal({ messageId, onClose }: MessageReportModalProps) {
+export function MessageReportModal({
+  messageId,
+  onClose,
+}: MessageReportModalProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const reasons = useMemo(
@@ -90,7 +93,11 @@ export function MessageReportModal({ messageId, onClose }: MessageReportModalPro
           <Button variant="ghost" onClick={onClose}>
             {t("safety:flag.form.cancelCta")}
           </Button>
-          <Button variant="primary" onClick={submit} disabled={!canSubmit || createReport.isPending}>
+          <Button
+            variant="primary"
+            onClick={submit}
+            disabled={!canSubmit || createReport.isPending}
+          >
             {createReport.isPending
               ? t("safety:flag.form.submitting")
               : t("safety:flag.form.submitCta")}
@@ -98,7 +105,9 @@ export function MessageReportModal({ messageId, onClose }: MessageReportModalPro
         </>
       }
     >
-      <div className={styles.reportLabel}>{t("safety:flag.form.concernLabel")}</div>
+      <div className={styles.reportLabel}>
+        {t("safety:flag.form.concernLabel")}
+      </div>
       <div className={styles.reportOpts}>
         {reasons.map((option) => (
           <label

@@ -18,10 +18,8 @@ export const opportunityKeys = {
     ["opportunity", slug, demoMode] as const,
 
   listRoot: ["opportunities"] as const,
-  list: (
-    params: { cause?: Cause; commit?: Commit },
-    demoMode: boolean,
-  ) => ["opportunities", params, demoMode] as const,
+  list: (params: { cause?: Cause; commit?: Commit }, demoMode: boolean) =>
+    ["opportunities", params, demoMode] as const,
 
   signupsRoot: ["opportunity-signups"] as const,
   signups: (slug: string | undefined, demoMode: boolean) =>

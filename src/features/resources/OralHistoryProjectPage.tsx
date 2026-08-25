@@ -140,7 +140,11 @@ export function OralHistoryProjectPage() {
               ))}
             </div>
           ) : (
-            <Reveal as="p" className={styles.leadP} style={{ maxWidth: "64ch" }}>
+            <Reveal
+              as="p"
+              className={styles.leadP}
+              style={{ maxWidth: "64ch" }}
+            >
               {t("resources:oralHistoryProject.voices.live.body")}
             </Reveal>
           )}

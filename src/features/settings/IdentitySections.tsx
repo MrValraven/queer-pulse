@@ -13,7 +13,11 @@ import styles from "./InterestsPane.module.css";
  * shown on the profile or searchable; publishing is a separate, explicit
  * decision made in `DiscoverableIdentitiesSection` directly below.
  */
-export function PrivateIdentitiesSection({ onChange }: { onChange: () => void }) {
+export function PrivateIdentitiesSection({
+  onChange,
+}: {
+  onChange: () => void;
+}) {
   const { t } = useTranslation();
   const { draft, updateDraft } = useProfileEdit();
   const uid = useId();
@@ -143,12 +147,8 @@ export function DiscoverableIdentitiesSection() {
 
   return (
     <div className={styles.prefSection}>
-      <div className={styles.psHead}>
-        {t("settings:discoverable.heading")}
-      </div>
-      <div className={styles.psHelper}>
-        {t("settings:discoverable.helper")}
-      </div>
+      <div className={styles.psHead}>{t("settings:discoverable.heading")}</div>
+      <div className={styles.psHelper}>{t("settings:discoverable.helper")}</div>
       <div className={styles.psHelper}>
         {t("settings:discoverable.retract")}
       </div>

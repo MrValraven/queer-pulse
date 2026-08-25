@@ -66,7 +66,7 @@ export function InvoiceIssuerFields({
           type="text"
           value={issuer.iban ?? ""}
           onChange={(e) => updateIssuer({ iban: e.target.value })}
-          placeholder="PT50 0000 0000 0000 0000 0000 0"
+          placeholder={t("economy:invoiceTool.issuer.ibanPlaceholder")}
         />
       </FormField>
     </fieldset>
@@ -160,7 +160,7 @@ export function InvoiceMetaFields({
           type="text"
           value={invoiceNumber}
           onChange={(e) => setInvoiceNumber(e.target.value)}
-          placeholder="FR 2026/001"
+          placeholder={t("economy:invoiceTool.meta.numberPlaceholder")}
         />
       </FormField>
 

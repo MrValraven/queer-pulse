@@ -77,7 +77,9 @@ export function CardHolderActions({
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onRequestStatus({ card: holder, nextStatus: "active" })}
+          onClick={() =>
+            onRequestStatus({ card: holder, nextStatus: "active" })
+          }
           aria-label={t("cards:holders.reinstateAria", {
             name: holder.holderName,
           })}

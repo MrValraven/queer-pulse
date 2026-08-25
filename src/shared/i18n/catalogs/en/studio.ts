@@ -545,8 +545,7 @@ export const studio: Catalog = {
   "press.copyFailToast": "Could not copy",
   "press.downloadingPhotosToast": "Downloading press photos · hi-res",
   "press.downloadingPhotoToast": "Downloading photo · hi-res",
-  "press.accessRequestedToast":
-    "Press access requested. We'll verify you once",
+  "press.accessRequestedToast": "Press access requested. We'll verify you once",
   "press.eyebrow": "Auto-generated press kit · always current",
   "press.fact.from": "From",
   "press.fact.pronouns": "Pronouns",
@@ -1780,4 +1779,40 @@ export const studio: Catalog = {
     "Our co-op music platform (artist pages, live sets, payouts and the solidarity fund) isn't open to the public yet. We're building it in the open and it'll land here soon.",
   "comingSoon.exploreCulture": "Explore Culture",
   "comingSoon.backHome": "Back to home",
+
+  // ── no-literal-string sweep: reusable ImageSlot placeholder captions ─────
+  // Short fixed descriptor words shown while a cover/score/set/portrait
+  // image loads. Chrome — decided by the component, not fetched per item.
+  "media.coverLabel": "cover",
+  "media.scoreLabel": "score",
+  "media.setArtLabel": "set art",
+  "media.collectionLabel": "collection",
+  "media.portraitLabel": "portrait",
+  "media.trackLabel": "track",
+
+  // ── no-literal-string sweep: "by <artist> · <facts>" byline chrome ───────
+  // The connector words ("by", "from", "·") are chrome; artist/album/year/
+  // location values are content, passed in via `values`.
+  "albumHero.byLine": "by <strong>{artist}</strong> · {year} · {location}",
+  "artistHero.statsLine":
+    "{releases} releases · {sheetMusicSets} sheet-music sets · <strong>{sustainers} sustainers</strong>",
+  "artist.sidebar.perMonthSuffix": "/month",
+  "liveNow.onAirTag": "on air",
+  "liveNow.byFromLine": "by <strong>{artist}</strong> · from <em>{album}</em>",
+  "liveNow.setBuilding.activityLine":
+    "{curator} typed the up-next track <em>{elapsed}</em>",
+  "live.ribbon.showLine": '"{title}" · programmed & hosted by {host}',
+  "room.hero.byFromLine":
+    "by <strong>{artist}</strong> · from <em>{album}</em> · {year} · {place}",
+  "track.hero.byFromLine":
+    "by <strong>{artist}</strong> · from <em>{album}</em> · {year}",
+  "track.page.crumbLabel": "track {number}",
+
+  // ── no-literal-string sweep: misc chrome eyebrows/labels ──────────────────
+  "album.sidebar.splitHint":
+    "If you buy at {price}: <em>{artistShare} to {artist}</em>, {solidarityShare} to the solidarity fund, {platformShare} to the platform, processing absorbed.",
+  "collection.page.curatedByEyebrow": "Collection · curated by {curator}",
+  "flagReview.reviewedByLine": "Reviewed by <em>{reviewer}</em>",
+  "set.page.programmedByEyebrow": "Set · programmed by {curator}",
+  "sheet.checkout.leadSheetLabel": "Lead sheet: {title}",
 };

@@ -27,7 +27,9 @@ import {
  * affordance is required to reorder. `containerRef` must wrap ONLY the rows,
  * in render order, since the swap math reads `container.children` directly.
  */
-export function useRowDragReorder(onReorder: (from: number, to: number) => void) {
+export function useRowDragReorder(
+  onReorder: (from: number, to: number) => void,
+) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const draggingIndexRef = useRef<number | null>(null);
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);

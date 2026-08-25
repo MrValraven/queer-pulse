@@ -90,6 +90,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-and-cinema-speak-portuguese-in-more-places",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("studio-and-cinema-speak-portuguese-in-more-places"),
+      },
+      {
         id: "your-devices-list-stops-collecting-old-sign-ins",
         category: "fix",
         date: "25 Aug 2026",

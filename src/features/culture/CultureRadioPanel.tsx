@@ -78,7 +78,9 @@ export function CultureRadioPanel() {
               <div style={{ flex: 1 }} />
               <span className={styles.radioTime}>{RADIO.now.time}</span>
             </div>
-            <p className={styles.radioNote}>{t("culture:radio.playbackNote")}</p>
+            <p className={styles.radioNote}>
+              {t("culture:radio.playbackNote")}
+            </p>
             <div className={styles.radioQueue}>
               <div className={styles.rqLabel}>{t("culture:radio.upNext")}</div>
               {RADIO.queue.map((item) => (

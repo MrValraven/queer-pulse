@@ -59,9 +59,7 @@ export function MessagesThreadList({
   deletePending: boolean;
 }) {
   const queryClient = useQueryClient();
-  const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(
-    null,
-  );
+  const [confirmDelete, setConfirmDelete] = useState<Conversation | null>(null);
   // All/Unread/Favorites/Groups/Requests — local UI state, doesn't need to
   // persist. Reset to "All" whenever a search starts so leaving the search
   // view never strands the list on a stale filter the user can't see the

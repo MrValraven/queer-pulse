@@ -230,8 +230,7 @@ export function CinemaSubmitPage() {
                         )}
                       </Button>
                       <Button onClick={next}>
-                        {t(NEXT_LABEL_KEYS[step]!)}{" "}
-                        <FiArrowRight aria-hidden />
+                        {t(NEXT_LABEL_KEYS[step]!)} <FiArrowRight aria-hidden />
                       </Button>
                     </div>
                   </div>

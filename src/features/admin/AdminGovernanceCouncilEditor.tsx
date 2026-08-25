@@ -5,7 +5,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useRowDragReorder } from "../subprofiles/useRowDragReorder";
 import { OverviewEditedBadge } from "./OverviewEditedBadge";
-import { OverviewEditorRow, reorder } from "./OverviewEditorRow";
+import { OverviewEditorRow } from "./OverviewEditorRow";
+import { reorder } from "./overviewEditorRow.utils";
 import { useUpdateAdminOverview } from "./api/useAdminGovernanceOverview";
 import type {
   AdminOverviewSectionMeta,
@@ -140,7 +141,10 @@ export function AdminGovernanceCouncilEditor({
               />
             </div>
             <div className={styles.ovField}>
-              <label className={styles.ovFieldLabel} id={`council-role-${index}`}>
+              <label
+                className={styles.ovFieldLabel}
+                id={`council-role-${index}`}
+              >
                 {t("admin:governance.overview.council.field.role")}
               </label>
               <Select
@@ -156,7 +160,10 @@ export function AdminGovernanceCouncilEditor({
               />
             </div>
             <div className={styles.ovField}>
-              <label className={styles.ovFieldLabel} id={`council-tint-${index}`}>
+              <label
+                className={styles.ovFieldLabel}
+                id={`council-tint-${index}`}
+              >
                 {t("admin:governance.overview.council.field.tint")}
               </label>
               <Select
@@ -177,7 +184,12 @@ export function AdminGovernanceCouncilEditor({
         ))}
       </div>
 
-      <Button variant="ghost" size="sm" onClick={onAdd} className={styles.ovAddBtn}>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onAdd}
+        className={styles.ovAddBtn}
+      >
         {t("admin:governance.overview.council.addSeat")}
       </Button>
 

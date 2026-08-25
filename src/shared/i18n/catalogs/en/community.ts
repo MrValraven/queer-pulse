@@ -209,7 +209,8 @@ export const community: Catalog = {
   "changemakers.admin.editor.tintJade": "Jade",
   "changemakers.admin.editor.tintPlum": "Plum",
   "changemakers.admin.editor.tagsLabel": "Tags",
-  "changemakers.admin.editor.tagsHint": "Comma-separated, e.g. Advocacy, Mutual aid",
+  "changemakers.admin.editor.tagsHint":
+    "Comma-separated, e.g. Advocacy, Mutual aid",
   "changemakers.admin.editor.summaryLabel": "Summary",
   "changemakers.admin.editor.imageUrlLabel": "Image URL",
   "changemakers.admin.editor.impactLabel": "Impact",
@@ -218,13 +219,15 @@ export const community: Catalog = {
   "changemakers.admin.editor.heroNoteLabel": "Hero note",
   "changemakers.admin.editor.leadLabel": "Lead",
   "changemakers.admin.editor.bodyLabel": "Body",
-  "changemakers.admin.editor.bodyHint": "Separate paragraphs with a blank line.",
+  "changemakers.admin.editor.bodyHint":
+    "Separate paragraphs with a blank line.",
   "changemakers.admin.editor.pullQuoteTextLabel": "Pull-quote text",
   "changemakers.admin.editor.pullQuoteCiteLabel": "Pull-quote citation",
   "changemakers.admin.editor.isFeaturedLabel": "Featured on the directory",
   "changemakers.admin.editor.sortOrderLabel": "Sort order",
   "changemakers.admin.editor.saveCta": "Save profile",
-  "changemakers.admin.editor.nameRequiredToast": "Give this profile a name first.",
+  "changemakers.admin.editor.nameRequiredToast":
+    "Give this profile a name first.",
   "changemakers.admin.editor.createdToast": "Profile created.",
   "changemakers.admin.editor.updatedToast": "Profile updated.",
 

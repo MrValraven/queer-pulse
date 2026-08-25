@@ -20,11 +20,26 @@ const MagazineSectionArticlesPage = lazyNamed(
 );
 const IssuePage = lazyNamed(() => import("./IssuePage"), "IssuePage");
 const IssuesPage = lazyNamed(() => import("./IssuesPage"), "IssuesPage");
-const SubmitStoryPage = lazyNamed(() => import("./SubmitStoryPage"), "SubmitStoryPage");
-const PitchTrackerPage = lazyNamed(() => import("./PitchTrackerPage"), "PitchTrackerPage");
-const EditorDashboardPage = lazyNamed(() => import("./EditorDashboardPage"), "EditorDashboardPage");
-const DeckEditorPage = lazyNamed(() => import("./DeckEditorPage"), "DeckEditorPage");
-const PieceRecordPage = lazyNamed(() => import("./PieceRecordPage"), "PieceRecordPage");
+const SubmitStoryPage = lazyNamed(
+  () => import("./SubmitStoryPage"),
+  "SubmitStoryPage",
+);
+const PitchTrackerPage = lazyNamed(
+  () => import("./PitchTrackerPage"),
+  "PitchTrackerPage",
+);
+const EditorDashboardPage = lazyNamed(
+  () => import("./EditorDashboardPage"),
+  "EditorDashboardPage",
+);
+const DeckEditorPage = lazyNamed(
+  () => import("./DeckEditorPage"),
+  "DeckEditorPage",
+);
+const PieceRecordPage = lazyNamed(
+  () => import("./PieceRecordPage"),
+  "PieceRecordPage",
+);
 const WriterWorkspacePage = lazyNamed(
   () => import("./WriterWorkspacePage"),
   "WriterWorkspacePage",
@@ -33,7 +48,10 @@ const IssueProductionPage = lazyNamed(
   () => import("./IssueProductionPage"),
   "IssueProductionPage",
 );
-const ArticleEditorPage = lazyNamed(() => import("./ArticleEditorPage"), "ArticleEditorPage");
+const ArticleEditorPage = lazyNamed(
+  () => import("./ArticleEditorPage"),
+  "ArticleEditorPage",
+);
 const ApplyToWritePage = lazyNamed(
   () => import("./ApplyToWritePage"),
   "ApplyToWritePage",
@@ -61,7 +79,10 @@ export function magazineRoutes() {
       {/* CNT-20 — section/topic taxonomy browse; the drill-down's `:section`
           segment is `encodeURIComponent`-ed by `MagazineSectionGrid`'s link
           (a name like "Last word" carries a space). */}
-      <Route path={routes.magazineSections} element={<MagazineSectionsPage />} />
+      <Route
+        path={routes.magazineSections}
+        element={<MagazineSectionsPage />}
+      />
       <Route
         path={`${routes.magazineSections}/:section`}
         element={<MagazineSectionArticlesPage />}
@@ -76,29 +97,44 @@ export function magazineRoutes() {
       <Route
         path={routes.story}
         element={
-          <Navigate to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.story]}`} replace />
+          <Navigate
+            to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.story]}`}
+            replace
+          />
         }
       />
       <Route
         path={routes.storyTomas}
         element={
-          <Navigate to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storyTomas]}`} replace />
+          <Navigate
+            to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storyTomas]}`}
+            replace
+          />
         }
       />
       <Route
         path={routes.storySafety}
         element={
-          <Navigate to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storySafety]}`} replace />
+          <Navigate
+            to={`${routes.article}?id=${STORY_ARTICLE_IDS[routes.storySafety]}`}
+            replace
+          />
         }
       />
       <Route path={routes.submitStory} element={<SubmitStoryPage />} />
-      <Route path={routes.magazineApplyToWrite} element={<ApplyToWritePage />} />
+      <Route
+        path={routes.magazineApplyToWrite}
+        element={<ApplyToWritePage />}
+      />
       <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
       <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />
       <Route path={routes.magazineWriter} element={<WriterWorkspacePage />} />
       <Route path={routes.deckEditor} element={<DeckEditorPage />} />
       <Route path={routes.magazinePiece} element={<PieceRecordPage />} />
-      <Route path={routes.magazineIssueProd} element={<IssueProductionPage />} />
+      <Route
+        path={routes.magazineIssueProd}
+        element={<IssueProductionPage />}
+      />
       <Route path={routes.magazineWrite} element={<ArticleEditorPage />} />
     </>
   );

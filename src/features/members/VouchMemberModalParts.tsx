@@ -233,7 +233,9 @@ export function VouchForm({
           : t("members:vouch.modal.form.noteOptional")}
       </div>
 
-      {isError && <p className={styles.error}>{t("members:vouch.modal.error")}</p>}
+      {isError && (
+        <p className={styles.error}>{t("members:vouch.modal.error")}</p>
+      )}
 
       <div className={styles.actions}>
         <Button variant="ghost" onClick={onClose}>

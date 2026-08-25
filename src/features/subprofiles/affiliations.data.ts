@@ -12,9 +12,7 @@ export const COMMUNITY_ROLES = ["member", "mod", "founder"] as const;
 export const MAX_AFFILIATIONS = 12;
 
 /** The valid preset roles for a given target type; `[]` for an unknown type. */
-export function rolesForTargetType(
-  targetType: string,
-): readonly string[] {
+export function rolesForTargetType(targetType: string): readonly string[] {
   if (targetType === "event") return EVENT_ROLES;
   if (targetType === "community") return COMMUNITY_ROLES;
   return [];

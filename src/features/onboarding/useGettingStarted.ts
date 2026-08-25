@@ -4,7 +4,10 @@ import { useProfileData } from "../../app/providers/useProfile";
 import { useMyCommunities } from "../communities/api/useMyCommunities";
 import { useSubprofiles } from "../subprofiles/api/useSubprofiles";
 import { usePublicEligibilitySignals } from "../members/api/usePublicEligibilitySignals";
-import { GETTING_STARTED_STEPS, type GettingStartedStep } from "./gettingStarted.data";
+import {
+  GETTING_STARTED_STEPS,
+  type GettingStartedStep,
+} from "./gettingStarted.data";
 
 export interface GettingStartedStepState extends GettingStartedStep {
   /** Auto-detected from real account data — never ticked by hand. */
@@ -80,13 +83,16 @@ export function useGettingStarted(): GettingStartedState {
     post: (signals?.communityPosts ?? 0) > 0,
   };
 
-  const isLoadingSignals = canFetchSignals && !signals && signalsQuery.isLoading;
+  const isLoadingSignals =
+    canFetchSignals && !signals && signalsQuery.isLoading;
 
-  const steps: GettingStartedStepState[] = GETTING_STARTED_STEPS.map((step) => ({
-    ...step,
-    done: doneByKey[step.key] ?? false,
-    isPending: isLoadingSignals && SIGNAL_BACKED_KEYS.has(step.key),
-  }));
+  const steps: GettingStartedStepState[] = GETTING_STARTED_STEPS.map(
+    (step) => ({
+      ...step,
+      done: doneByKey[step.key] ?? false,
+      isPending: isLoadingSignals && SIGNAL_BACKED_KEYS.has(step.key),
+    }),
+  );
   const completedCount = steps.filter((step) => step.done).length;
   const totalCount = steps.length;
 

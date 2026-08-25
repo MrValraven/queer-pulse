@@ -4,7 +4,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { REASON_LABEL_KEYS } from "../safety/reportReasons";
 import { useMyReports, type MyReportEntry } from "./api/useMyReports";
-import { REPORT_STATUS_LABEL_KEY, REPORT_STATUS_TONE } from "./whoSeesWhat.data";
+import {
+  REPORT_STATUS_LABEL_KEY,
+  REPORT_STATUS_TONE,
+} from "./whoSeesWhat.data";
 import styles from "./WhoSeesWhatSheet.module.css";
 
 /** One filed report: the reason (reusing the shared reporting taxonomy's own

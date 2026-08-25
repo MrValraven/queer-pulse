@@ -46,6 +46,7 @@ export function OfficialBadge() {
   const { t } = useTranslation();
   return (
     <span className={styles.official} title={t("forum:author.officialTitle")}>
+      {/* eslint-disable-next-line local/no-literal-string -- QueerPulse's monogram, a brand mark that is never translated (decorative, aria-hidden; the badge text beside it carries the accessible label). */}
       <span className={styles.officialMark} aria-hidden>
         QP
       </span>

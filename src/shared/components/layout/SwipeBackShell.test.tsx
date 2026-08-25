@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canGoBack } from "./SwipeBackShell";
+import { canGoBack } from "./canGoBack";
 
 /**
  * The pure guard behind the edge-swipe-back gesture: idx 0 is the tab's

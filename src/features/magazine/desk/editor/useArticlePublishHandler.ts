@@ -3,7 +3,10 @@ import { ApiError } from "../../../../shared/api/client";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleDraftDto, PublishArticleDto } from "../../api/pieces.api";
-import { buildPublishPayload, publishSuccessToastKey } from "./articlePublishAction";
+import {
+  buildPublishPayload,
+  publishSuccessToastKey,
+} from "./articlePublishAction";
 import type { PublishStatus } from "./PublishRail";
 
 /**
@@ -39,7 +42,9 @@ export function useArticlePublishHandler(
       return;
     }
     try {
-      await publish.mutateAsync(buildPublishPayload(published, publishStatus, scheduledAt));
+      await publish.mutateAsync(
+        buildPublishPayload(published, publishStatus, scheduledAt),
+      );
       showToast(t(publishSuccessToastKey(published, publishStatus)), "success");
       if (!published) onPublished();
     } catch (error) {

@@ -14,7 +14,10 @@ export function StatSlide({
   const target = statTarget(slide.value);
   const count = useCountUp(target, { active });
   // Preserve any non-numeric adornment in the authored value (e.g. "×3", "1.2k").
-  const rendered = slide.value.replace(String(target), String(Math.round(count)));
+  const rendered = slide.value.replace(
+    String(target),
+    String(Math.round(count)),
+  );
   const tintClass = styles[`tint-${slide.tint}`] ?? "";
   return (
     <div className={`${styles.slide} ${styles.statSlide} ${tintClass}`}>

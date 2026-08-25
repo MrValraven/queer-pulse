@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getSubprofileDirectory, type SubprofileCardDTO } from "./subprofiles.api";
+import {
+  getSubprofileDirectory,
+  type SubprofileCardDTO,
+} from "./subprofiles.api";
 
 /** Backend page size. The directory endpoint caps `limit` at 100, so this is
  *  the largest slice a single request can pull. */

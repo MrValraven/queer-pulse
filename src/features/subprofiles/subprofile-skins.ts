@@ -198,7 +198,13 @@ export const SKIN_META: Record<SkinFamily, SkinMeta> = {
     name: "Studio",
     face: "Instrument Serif",
     note: "Gallery paper, hairline frames, work first and captions second.",
-    kinds: ["Visual artist", "Photographer", "Filmmaker", "Videomaker", "Designer"],
+    kinds: [
+      "Visual artist",
+      "Photographer",
+      "Filmmaker",
+      "Videomaker",
+      "Designer",
+    ],
   },
   page: {
     name: "Page",

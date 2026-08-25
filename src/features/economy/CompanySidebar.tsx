@@ -53,8 +53,7 @@ export function CompanySidebar({ profile }: { profile: CompanyProfile }) {
         </div>
         <p className={styles.teamMore}>
           <Link to={`${routes.members}?co=${profile.slug}`}>
-            {profile.membersLabel}{" "}
-            <FiArrowRight aria-hidden />
+            {profile.membersLabel} <FiArrowRight aria-hidden />
           </Link>
         </p>
       </div>

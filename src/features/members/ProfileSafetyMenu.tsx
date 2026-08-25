@@ -112,8 +112,7 @@ export function ProfileSafetyMenu({
   const { isBlocked, isMuted, toggleBlock, toggleMute } = useSocial();
   const [open, setOpen] = useState(false);
   const [confirmingBlock, setConfirmingBlock] = useState(false);
-  const [confirmingWithdrawVouch, setConfirmingWithdrawVouch] =
-    useState(false);
+  const [confirmingWithdrawVouch, setConfirmingWithdrawVouch] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);

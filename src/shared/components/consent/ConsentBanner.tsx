@@ -35,7 +35,10 @@ export function ConsentBanner() {
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (!entry) return;
-      root.style.setProperty(CONSENT_INSET_PROPERTY, `${entry.contentRect.height}px`);
+      root.style.setProperty(
+        CONSENT_INSET_PROPERTY,
+        `${entry.contentRect.height}px`,
+      );
     });
     observer.observe(element);
     return () => {

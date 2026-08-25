@@ -10,6 +10,10 @@ import {
 } from "./StudioPayoutsSkeletons";
 import s from "./creator.module.css";
 
+// Content: the mock SEPA bank account's masked IBAN — comes from the
+// artist's payout method record in live mode.
+const SEPA_MASKED_IBAN = "LU 82 0019 … 1844 3700";
+
 export function PayoutsHero() {
   const { t } = useTranslation();
   return (
@@ -295,7 +299,7 @@ export function PayoutsSidebar() {
           <span className={s.methodIc}>€</span>
           <span className={s.methodNm}>
             {t("studio:payouts.sidebar.method.sepa.label")}
-            <small>LU 82 0019 … 1844 3700</small>
+            <small>{SEPA_MASKED_IBAN}</small>
           </span>
           <span className={s.methodBadge}>
             {t("studio:payouts.sidebar.method.sepa.badge")}

@@ -44,4 +44,8 @@ export const EMAIL_DELIVERY_OPTIONS = [
 
 // Quiet-hours time ranges are plain numeric data, not translatable chrome —
 // only the "none" option carries a label.
-export const QUIET_HOURS_RANGES = ["22:00 – 08:00", "21:00 – 09:00", "20:00 – 10:00"];
+export const QUIET_HOURS_RANGES = [
+  "22:00 – 08:00",
+  "21:00 – 09:00",
+  "20:00 – 10:00",
+];

@@ -90,7 +90,6 @@ export function PostActionsMenu({
       document.removeEventListener("pointerdown", onPointerDown);
     };
     // `close` is re-created every render but only ever calls setOpen + focus.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // APG menu-button contract: focus the first item when the menu opens.

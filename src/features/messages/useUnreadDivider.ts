@@ -33,7 +33,11 @@ export function useUnreadDivider(
   // one-shot `anchor === null` latch) so they are idempotent and cannot loop.
   /* eslint-disable react-hooks/refs -- intentional, guarded cross-render latch that must be computed synchronously during render; see note above. */
   if (dividerRef.current.threadId !== activeId) {
-    dividerRef.current = { threadId: activeId, count: unreadCount, anchor: null };
+    dividerRef.current = {
+      threadId: activeId,
+      count: unreadCount,
+      anchor: null,
+    };
   }
   if (
     dividerRef.current.anchor === null &&

@@ -112,7 +112,10 @@ export const getIssueProduction = (number: string) =>
   apiGet<IssueProductionDto>(`/magazine/admin/issues/${number}`);
 
 export const updateRunOrder = (number: string, body: UpdateRunOrderDto) =>
-  apiPatch<IssueProductionDto>(`/magazine/admin/issues/${number}/run-order`, body);
+  apiPatch<IssueProductionDto>(
+    `/magazine/admin/issues/${number}/run-order`,
+    body,
+  );
 
 export const updateDigest = (number: string, body: UpdateDigestDto) =>
   apiPatch<IssueProductionDto>(`/magazine/admin/issues/${number}/digest`, body);

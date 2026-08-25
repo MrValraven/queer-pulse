@@ -244,7 +244,10 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
  * `magazine_editor` (plus admins).
  */
 const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
-  { patterns: ["/magazine/editor", "/magazine/editor/*"], capability: "magazine_editor" },
+  {
+    patterns: ["/magazine/editor", "/magazine/editor/*"],
+    capability: "magazine_editor",
+  },
   {
     // The pitch tracker is the writer workspace's third tab; it just happens to
     // be registered outside the `/magazine/writer` prefix.

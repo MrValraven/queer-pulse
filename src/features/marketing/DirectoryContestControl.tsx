@@ -68,7 +68,9 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
       {active === "menu" && (
         <Modal
           title={t("marketing:directory.detail.contest.title")}
-          sub={t("marketing:directory.detail.contest.sub", { name: place.name })}
+          sub={t("marketing:directory.detail.contest.sub", {
+            name: place.name,
+          })}
           onClose={close}
         >
           <div className={styles.options}>
@@ -123,7 +125,11 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
                 <FiChevronRight className={styles.optionChevron} aria-hidden />
               </button>
             ) : (
-              <Link to={routes.listBusiness} className={styles.option} onClick={close}>
+              <Link
+                to={routes.listBusiness}
+                className={styles.option}
+                onClick={close}
+              >
                 <span className={styles.optionText}>
                   <span className={styles.optionTitle}>
                     {t("marketing:directory.detail.contest.claim.title")}

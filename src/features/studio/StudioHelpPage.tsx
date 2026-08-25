@@ -24,6 +24,9 @@ import {
 } from "./studioHelp.data";
 import s from "./StudioHelpPage.module.css";
 
+// Status page domain — never translated, not routed through the catalog.
+const STATUS_DOMAIN = "status.queerpulse.org";
+
 const CAT_ICON = {
   note: FiFileText,
   user: FiUser,
@@ -152,7 +155,7 @@ export function StudioHelpPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                status.queerpulse.org
+                {STATUS_DOMAIN}
               </a>
             </div>
           </section>

@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getSubprofileDirectory } from "../../subprofiles/api/subprofiles.api";
-import { vmFromCard, vmFromPublic, type TherapistCardVM } from "../therapistPersonaCard";
+import {
+  vmFromCard,
+  vmFromPublic,
+  type TherapistCardVM,
+} from "../therapistPersonaCard";
 
 const PAGE_LIMIT = 100;
 const MAX_PAGES = 20;
@@ -20,9 +24,8 @@ export function useTherapistPersonas() {
     staleTime: Infinity,
     queryFn: async ({ signal }) => {
       if (demoMode) {
-        const { therapistPersonaCardsDemo } = await import(
-          "../../subprofiles/data/subprofiles.data"
-        );
+        const { therapistPersonaCardsDemo } =
+          await import("../../subprofiles/data/subprofiles.data");
         return therapistPersonaCardsDemo().map(vmFromPublic);
       }
       const first = await getSubprofileDirectory(

@@ -98,8 +98,7 @@ export function activeTabKey(
 
   for (const tab of tabs) {
     for (const prefix of tab.matchPrefixes) {
-      const isMatch =
-        pathname === prefix || pathname.startsWith(`${prefix}/`);
+      const isMatch = pathname === prefix || pathname.startsWith(`${prefix}/`);
       if (isMatch && prefix.length > matchedLength) {
         matchedKey = tab.key;
         matchedLength = prefix.length;

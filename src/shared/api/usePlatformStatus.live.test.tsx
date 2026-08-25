@@ -48,9 +48,8 @@ async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
   const { usePlatformStatus } = await import("./usePlatformStatus");
-  const { DemoModeProvider } = await import(
-    "../../app/providers/DemoModeProvider"
-  );
+  const { DemoModeProvider } =
+    await import("../../app/providers/DemoModeProvider");
   // Retries are left ON at the client level on purpose: the assertion that the
   // endpoint is hit exactly once is only meaningful if the *hook's* own
   // `retry: false` is what stops it. A retry-free client (as TestProviders

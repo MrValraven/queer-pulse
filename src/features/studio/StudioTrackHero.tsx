@@ -13,9 +13,15 @@ import ss from "./studio.module.css";
 // are translated (§1).
 const TRACK_POSITION = { current: 6, total: 11 };
 const ARTIST_NAME = "Mariana Sol";
+const TRACK_TITLE_PRE = "Carta para a ";
+const TRACK_TITLE_EM = "santa";
+const ALBUM_TITLE = "Cidade dos santos";
+const RELEASE_YEAR = "2026";
 const MONTH_EARNINGS = 2140;
 const QUICK_TIP_AMOUNT = 2;
 const PER_LISTEN_AMOUNT = 0.05;
+const TRACK_DURATION = "4:18";
+const TRACK_AUDIO_FORMAT = "Flac · 24/48";
 
 export function StudioTrackHero({ onTip }: { onTip: () => void }) {
   const { t } = useTranslation();
@@ -34,7 +40,7 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
             width="100%"
             height="100%"
             radius={16}
-            placeholder="cover · track 6"
+            placeholder={`${t("studio:media.coverLabel")} · ${t("studio:media.trackLabel")} ${TRACK_POSITION.current}`}
             style={{ position: "absolute", inset: 0 }}
             loading="eager"
             fetchPriority="high"
@@ -49,11 +55,19 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
             })}
           </div>
           <h1>
-            Carta para a <em>santa</em>
+            {TRACK_TITLE_PRE}
+            <em>{TRACK_TITLE_EM}</em>
           </h1>
           <div className={ss.by}>
-            by <strong>{ARTIST_NAME}</strong> · from <em>Cidade dos santos</em>{" "}
-            · 2026
+            <Translation
+              i18nKey="studio:track.hero.byFromLine"
+              components={{ strong: <strong />, em: <em /> }}
+              values={{
+                artist: ARTIST_NAME,
+                album: ALBUM_TITLE,
+                year: RELEASE_YEAR,
+              }}
+            />
           </div>
           <div className={ss.stats}>
             <span>
@@ -64,9 +78,9 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
               />
             </span>
             <span className={ss.dot} />
-            <span>4:18</span>
+            <span>{TRACK_DURATION}</span>
             <span className={ss.dot} />
-            <span>Flac · 24/48</span>
+            <span>{TRACK_AUDIO_FORMAT}</span>
             <span className={ss.dot} />
             <span>
               <Translation

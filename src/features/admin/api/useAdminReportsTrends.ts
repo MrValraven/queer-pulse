@@ -6,8 +6,14 @@ import {
   buildDemoReportWeeks,
   type ReportRangeWeeks,
 } from "../adminReportsTrends.data";
-import { growthToPoints, reportsByTypeToWeekBars } from "./adminReports.adapters";
-import { getAdminReportsByType, getAdminReportsGrowth } from "./adminReports.api";
+import {
+  growthToPoints,
+  reportsByTypeToWeekBars,
+} from "./adminReports.adapters";
+import {
+  getAdminReportsByType,
+  getAdminReportsGrowth,
+} from "./adminReports.api";
 
 const ADMIN_REPORTS_TRENDS_KEY = "admin-reports-trends";
 

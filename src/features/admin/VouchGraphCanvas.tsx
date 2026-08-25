@@ -167,7 +167,11 @@ export function VouchGraphCanvas({
                 sel === id && styles.selected,
                 safety && inRing && styles.ring,
                 isolated && styles.isolated,
-                safety && !inRing && !isolated && !!p.reports && styles.reported,
+                safety &&
+                  !inRing &&
+                  !isolated &&
+                  !!p.reports &&
+                  styles.reported,
                 pathNodes.has(id) && styles.pathnode,
                 q && !matches && styles.searchDim,
                 q && matches && styles.searchHit,

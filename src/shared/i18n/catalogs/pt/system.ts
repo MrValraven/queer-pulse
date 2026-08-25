@@ -460,4 +460,22 @@ export const system: Catalog = {
     "Esta ligação para cancelar a subscrição não corresponde a nada do nosso lado. Pode estar desatualizada ou mal copiada. Se ainda estás a receber o resumo semanal, avisa a equipa e nós tratamos disso.",
   "newsletterUnsubscribe.goHomeCta": "Voltar à página inicial",
   "newsletterUnsubscribe.contactCta": "Falar com a equipa",
+
+  // ── GenesisPage.tsx (arranque único da plataforma; eliminada após o lançamento) ─
+  // "Genesis" é o nome interno deste fluxo de arranque, mantido igual em
+  // ambas as línguas, como os outros nomes de marca/produto neste catálogo.
+  "genesis.eyebrow": "Arranque da plataforma",
+  "genesis.heading": "Genesis",
+  "genesis.loggedIn.lead":
+    "Já entraste. Reivindica o acesso de administração para terminar o arranque da plataforma.",
+  "genesis.loggedIn.claimCta": "Reivindicar administração",
+  "genesis.loggedOut.lead":
+    "Gera o convite fundador. Vais entrar através do fluxo de convite normal, com um convite da QueerPulse.",
+  "genesis.loggedOut.generateCta": "Gerar convite",
+  "genesis.notice.closed": "O Genesis está fechado.",
+  "genesis.notice.rejected": "Esta conta não pode reivindicar o Genesis.",
+  "genesis.notice.failedFallback": "Algo correu mal. Tenta outra vez.",
+  "genesis.notice.claimed": "Agora fazes parte da administração.",
+  "genesis.notice.demo":
+    "O Genesis não está disponível no modo de demonstração.",
 };

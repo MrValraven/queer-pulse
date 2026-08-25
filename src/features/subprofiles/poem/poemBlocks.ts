@@ -83,7 +83,10 @@ export function poemPlainFirstLine(raw: unknown): string {
     if (block.kind === "break") continue;
     for (const line of block.lines) {
       if (poemLineIsEmpty(line)) continue;
-      const text = line.map((span) => span.text).join("").trim();
+      const text = line
+        .map((span) => span.text)
+        .join("")
+        .trim();
       if (text.length > 0) return text;
     }
   }

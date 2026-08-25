@@ -210,11 +210,21 @@
 
 /* Fixed colours, matching the real card face exactly — see the long note in
    MembershipCardFace.module.css on why these must not follow the theme. */
-.chipPlum { background: var(--plum); }
-.chipCream { background: rgb(var(--cream-rgb)); }
-.chipJade { background: var(--jade); }
-.chipCoral { background: var(--accent); }
-.chipInk { background: var(--ink-surface); }
+.chipPlum {
+  background: var(--plum);
+}
+.chipCream {
+  background: rgb(var(--cream-rgb));
+}
+.chipJade {
+  background: var(--jade);
+}
+.chipCoral {
+  background: var(--accent);
+}
+.chipInk {
+  background: var(--ink-surface);
+}
 
 /* Same role as the real card's accent bar, so an accent that vanishes into
    its skin visibly vanishes here too. */

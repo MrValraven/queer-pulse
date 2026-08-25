@@ -8,7 +8,11 @@ import {
   FiPlus,
   FiUser,
 } from "react-icons/fi";
-import { Button, SegmentedControl, Select } from "../../../shared/components/ui";
+import {
+  Button,
+  SegmentedControl,
+  Select,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Editor, Issue, IssueSummary } from "../data/desk.data";
 import type { DeskTrack } from "./DeskTrackTabs";
@@ -137,7 +141,11 @@ export function DeskHeader({
               <span className={styles.muted}>
                 {hasCloseDate && (
                   <>
-                    <b>{t("magazine:desk.header.daysLeft", { days: issue.daysLeft })}</b>{" "}
+                    <b>
+                      {t("magazine:desk.header.daysLeft", {
+                        days: issue.daysLeft,
+                      })}
+                    </b>{" "}
                     {t("magazine:desk.header.toClose")} ·{" "}
                   </>
                 )}

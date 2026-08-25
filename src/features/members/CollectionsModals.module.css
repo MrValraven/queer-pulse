@@ -12,7 +12,10 @@
   padding: 0;
   /* Lift the sheet above the on-screen keyboard (useVisualViewportKeyboard)
      and clear the iOS home indicator. */
-  padding-block-end: max(var(--keyboard-inset, 0px), env(safe-area-inset-bottom));
+  padding-block-end: max(
+    var(--keyboard-inset, 0px),
+    env(safe-area-inset-bottom)
+  );
   background: rgba(var(--plum-rgb), 0.5);
   backdrop-filter: blur(3px);
   animation: fade 0.2s var(--ease);
@@ -273,7 +276,9 @@
   background: transparent;
   color: var(--ink-40);
   cursor: pointer;
-  transition: color var(--ease), border-color var(--ease);
+  transition:
+    color var(--ease),
+    border-color var(--ease);
 }
 @media (hover: hover) {
   .rowRemove:hover {

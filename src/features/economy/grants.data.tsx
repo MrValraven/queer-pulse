@@ -21,7 +21,8 @@ export const GRANTS: Grant[] = [
     amount: "€200–€2,000",
     status: "open",
     cats: ["individual", "org", "community"],
-    description: "Community-funded micro grants for queer projects in Lisbon. Open to members and non-members. Decisions made by a rotating community panel of members.",
+    description:
+      "Community-funded micro grants for queer projects in Lisbon. Open to members and non-members. Decisions made by a rotating community panel of members.",
     tags: ["Lisbon", "community", "rolling"],
     to: "/work/grants",
   },
@@ -32,7 +33,8 @@ export const GRANTS: Grant[] = [
     amount: "€5,000–€50,000",
     status: "rolling",
     cats: ["org", "community", "arts"],
-    description: "Gulbenkian's social cohesion programme funds community organisations working with marginalised groups. An inclusion-framed application is needed.",
+    description:
+      "Gulbenkian's social cohesion programme funds community organisations working with marginalised groups. An inclusion-framed application is needed.",
     tags: ["Gulbenkian", "large grant", "social"],
     to: "/work/grants",
   },
@@ -43,7 +45,8 @@ export const GRANTS: Grant[] = [
     amount: "€5,000–€200,000",
     status: "rolling",
     cats: ["org", "community"],
-    description: "Civil society strengthening grants via the EEA mechanism. LGBTQ+ groups have been funded under previous rounds.",
+    description:
+      "Civil society strengthening grants via the EEA mechanism. LGBTQ+ groups have been funded under previous rounds.",
     tags: ["EEA", "civil society"],
     to: "/work/grants",
   },
@@ -54,7 +57,8 @@ export const GRANTS: Grant[] = [
     amount: "€2,000–€15,000",
     status: "closed",
     cats: ["individual", "arts"],
-    description: "Annual residency and creation support for individual artists. Frame your work in terms of its cultural value.",
+    description:
+      "Annual residency and creation support for individual artists. Frame your work in terms of its cultural value.",
     tags: ["arts", "residency"],
     to: "/work/grants",
   },
@@ -65,7 +69,8 @@ export const GRANTS: Grant[] = [
     amount: "€50,000–€1,000,000+",
     status: "rolling",
     cats: ["org", "eu"],
-    description: "The EU's main civil society and equality programme. The LGBTIQ Equality strand funds work across Europe. Requires EU-wide partnerships.",
+    description:
+      "The EU's main civil society and equality programme. The LGBTIQ Equality strand funds work across Europe. Requires EU-wide partnerships.",
     tags: ["EU", "large grant", "transnational"],
     to: "/work/grants",
   },
@@ -76,7 +81,8 @@ export const GRANTS: Grant[] = [
     amount: "$50,000–$300,000",
     status: "rolling",
     cats: ["org", "eu"],
-    description: "US-based foundation with a major LGBTQ programme in Europe. Focuses on movement-building, legal advocacy, and trans rights.",
+    description:
+      "US-based foundation with a major LGBTQ programme in Europe. Focuses on movement-building, legal advocacy, and trans rights.",
     tags: ["movement building", "international"],
     to: "/work/grants",
   },
@@ -87,7 +93,8 @@ export const GRANTS: Grant[] = [
     amount: "up to $2,000",
     status: "rolling",
     cats: ["individual", "eu"],
-    description: "Direct financial assistance for LGBTQI+ people in dangerous situations, including help leaving unsafe situations. For individuals only.",
+    description:
+      "Direct financial assistance for LGBTQI+ people in dangerous situations, including help leaving unsafe situations. For individuals only.",
     tags: ["emergency", "individual", "safety"],
     to: "/work/grants",
   },

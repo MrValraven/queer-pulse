@@ -192,9 +192,7 @@ export function useResendInvite() {
     },
     onSuccess: (updated) => {
       queryClient.setQueryData<SentInviteView[]>(queryKey, (current) =>
-        current?.map((invite) =>
-          invite.id === updated.id ? updated : invite,
-        ),
+        current?.map((invite) => (invite.id === updated.id ? updated : invite)),
       );
     },
   });

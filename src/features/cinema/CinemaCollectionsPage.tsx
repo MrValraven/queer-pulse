@@ -111,8 +111,7 @@ function DemoCinemaCollectionsPage() {
           size="lg"
           to={`${routes.cinemaCollections}/${collections[0]!.slug}`}
         >
-          {t("cinema:collectionsIndex.outro.cta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("cinema:collectionsIndex.outro.cta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </CinemaShell>

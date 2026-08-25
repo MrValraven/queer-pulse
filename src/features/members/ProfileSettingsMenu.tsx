@@ -1,4 +1,12 @@
-import { lazy, Suspense, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { FiDownload, FiEye, FiEyeOff, FiMoreHorizontal } from "react-icons/fi";
 import { MdQrCode2 } from "react-icons/md";
 import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";

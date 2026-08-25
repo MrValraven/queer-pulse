@@ -8,10 +8,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMediaQuery } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import { currentUserSlug } from "./data/memberProfiles";
-import {
-  isMemberMissingError,
-  useMemberProfile,
-} from "./api/useMemberProfile";
+import { isMemberMissingError, useMemberProfile } from "./api/useMemberProfile";
 import { ProfileBelowHeroSections } from "./ProfileBelowHeroSections";
 import { ProfileLayoutSwitch } from "./ProfileLayoutSwitch";
 import { ProfileBackBar, ProfilePreviewBanner } from "./ProfilePageChrome";
@@ -102,7 +99,11 @@ export function ProfilePage() {
   // used to fall through to the "no such member" wall, which reads as "this
   // person left" and offers no retry, so a transient failure sent people away
   // for good. Only a real 404/403 gets that wall now.
-  if (!isSelf && isOtherMemberError && !isMemberMissingError(otherMemberError)) {
+  if (
+    !isSelf &&
+    isOtherMemberError &&
+    !isMemberMissingError(otherMemberError)
+  ) {
     return <ProfileErrorState onRetry={() => void refetchOtherMember()} />;
   }
   if (!isSelf && !otherMember) return <ProfileNotFoundState />;

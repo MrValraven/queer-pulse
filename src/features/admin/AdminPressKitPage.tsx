@@ -7,7 +7,7 @@ import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminPressCoverageList } from "./AdminPressCoverageList";
 import { AdminPressContactList } from "./AdminPressContactList";
 import { AdminPressFactsPanel } from "./AdminPressFactsPanel";
-import type { PressKitKind } from "./AdminPressKitFields";
+import type { PressKitKind } from "./adminPressKitFields.utils";
 import styles from "./AdminPressKitPage.module.css";
 
 const TAB_IDS: PressKitKind[] = ["coverage", "team"];

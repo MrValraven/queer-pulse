@@ -51,7 +51,10 @@ export function ConversationTopSection({
         />
       )}
       <ConnectionStatusBanner />
-      <ConversationPinnedBanner pinned={pinnedMessages} onJump={onJumpToMessage} />
+      <ConversationPinnedBanner
+        pinned={pinnedMessages}
+        onJump={onJumpToMessage}
+      />
     </>
   );
 }

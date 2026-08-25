@@ -308,9 +308,7 @@ function SelectableChipRow({
               .join(" ")}
             onClick={() => onToggle(option.id)}
           >
-            {on && (
-              <FiCheck className={styles.chipToggleCheck} aria-hidden />
-            )}
+            {on && <FiCheck className={styles.chipToggleCheck} aria-hidden />}
             {t(option.labelKey)}
           </button>
         );

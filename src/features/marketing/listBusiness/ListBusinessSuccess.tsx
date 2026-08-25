@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { FiArrowRight, FiCheck, FiClock, FiMessageSquare } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiCheck,
+  FiClock,
+  FiMessageSquare,
+} from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";

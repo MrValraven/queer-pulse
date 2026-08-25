@@ -7,7 +7,26 @@ import { nightcapImage } from "./studioOffAir.data";
 import styles from "./StudioOffAirPage.module.css";
 
 const NIGHTCAP_TITLE = "Vespertina, vol. iv";
+const NIGHTCAP_TITLE_PRE = "Vespertina, ";
+const NIGHTCAP_TITLE_EM = "vol. iv";
 const NIGHTCAP_PAID_OUT = 8.2;
+
+// Content: the curator's own signoff quote and attribution — an authored
+// closing statement, comes from the broadcast record in live mode.
+const SIGNOFF_QUOTE =
+  '"We played fourteen songs and paid fourteen people. Go to sleep. The ' +
+  "catalogue stays open, and we'll be back when the kettle's on.\"";
+const SIGNOFF_ATTRIBUTION = "Sara Marques, closing the Wednesday set at 01:58";
+
+// Content: next broadcast's show title, host, and description — comes from
+// the programme schedule in live mode.
+const NEXT_SHOW_TITLE_PRE = "Morning pages with ";
+const NEXT_SHOW_HOST = "D. Okoye";
+const NEXT_SHOW_DESCRIPTION =
+  "Ambient & trans composers · 90 minutes · captioned live";
+
+// Content: the nightcap replay's curator/duration/track-count summary line.
+const NIGHTCAP_SUMMARY = "Sara Marques · 1h 42m · 12 tracks · ";
 
 export function StudioOffAirHero() {
   const { t } = useTranslation();
@@ -38,11 +57,8 @@ export function StudioOffAirHero() {
         </h1>
 
         <p className={styles.signoff}>
-          "We played fourteen songs and paid fourteen people. Go to sleep. The
-          catalogue stays open, and we'll be back when the kettle's on."
-          <span className={styles.signoffWho}>
-            Sara Marques, closing the Wednesday set at 01:58
-          </span>
+          {SIGNOFF_QUOTE}
+          <span className={styles.signoffWho}>{SIGNOFF_ATTRIBUTION}</span>
         </p>
 
         {/* Next broadcast */}
@@ -61,9 +77,10 @@ export function StudioOffAirHero() {
               {t("studio:offAir.hero.nextBroadcastLabel", { time: "08:00" })}
             </div>
             <h3>
-              Morning pages with <em>D. Okoye</em>
+              {NEXT_SHOW_TITLE_PRE}
+              <em>{NEXT_SHOW_HOST}</em>
             </h3>
-            <p>Ambient &amp; trans composers · 90 minutes · captioned live</p>
+            <p>{NEXT_SHOW_DESCRIPTION}</p>
           </div>
         </div>
 
@@ -76,7 +93,7 @@ export function StudioOffAirHero() {
               width={78}
               height={78}
               radius={10}
-              placeholder="set art"
+              placeholder={t("studio:media.setArtLabel")}
             />
           </div>
           <div className={styles.ncInfo}>
@@ -84,10 +101,11 @@ export function StudioOffAirHero() {
               {t("studio:offAir.hero.nightcapEyebrow")}
             </div>
             <h3>
-              Vespertina, <em>vol. iv</em>
+              {NIGHTCAP_TITLE_PRE}
+              <em>{NIGHTCAP_TITLE_EM}</em>
             </h3>
             <p>
-              Sara Marques · 1h 42m · 12 tracks ·{" "}
+              {NIGHTCAP_SUMMARY}
               {t("studio:offAir.hero.paidOutSuffix", {
                 amount: fmt.currency(NIGHTCAP_PAID_OUT),
               })}

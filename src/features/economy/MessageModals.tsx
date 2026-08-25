@@ -177,8 +177,7 @@ function ConversationModal({
             <Sending label={t("economy:msg.sendingLabel")} />
           ) : (
             <>
-              {t("economy:msg.sendCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("economy:msg.sendCta")} <FiArrowRight aria-hidden />
             </>
           )}
         </Button>
@@ -255,16 +254,14 @@ function ColdMessageModal({
               onClick={onClose}
               disabled={sending}
             >
-              <FiArrowLeft aria-hidden />{" "}
-              {t("economy:msg.cancel")}
+              <FiArrowLeft aria-hidden /> {t("economy:msg.cancel")}
             </button>
             <Button size="lg" type="submit" disabled={sending || !msg.trim()}>
               {sending ? (
                 <Sending label={t("economy:msg.sendingLabel")} />
               ) : (
                 <>
-                  {t("economy:msg.sendCta")}{" "}
-                  <FiArrowRight aria-hidden />
+                  {t("economy:msg.sendCta")} <FiArrowRight aria-hidden />
                 </>
               )}
             </Button>

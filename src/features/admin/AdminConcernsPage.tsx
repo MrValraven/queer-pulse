@@ -148,8 +148,7 @@ export function AdminConcernsPage() {
       {
         onSuccess: () =>
           showToast(t(`admin:adminConcerns.toast.${status}`), "success"),
-        onError: () =>
-          showToast(t("admin:adminConcerns.toast.error"), "error"),
+        onError: () => showToast(t("admin:adminConcerns.toast.error"), "error"),
       },
     );
   };
@@ -189,9 +188,7 @@ export function AdminConcernsPage() {
                 : t(`admin:adminConcerns.status.${value}`),
           }))}
           active={filter}
-          onChange={(value) =>
-            setFilter(value as AdminConcernStatusFilter)
-          }
+          onChange={(value) => setFilter(value as AdminConcernStatusFilter)}
         />
       </FadeIn>
 

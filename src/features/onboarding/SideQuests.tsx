@@ -114,7 +114,10 @@ export function SideQuests() {
           <div className={styles.questGrid}>
             {visibleBadges.map((badge, i) => (
               <FadeIn key={badge.key} delay={Math.min(i, 8) * 60}>
-                <BadgeQuestCard badge={badge} to={sideQuestRouteFor(badge.key)} />
+                <BadgeQuestCard
+                  badge={badge}
+                  to={sideQuestRouteFor(badge.key)}
+                />
               </FadeIn>
             ))}
           </div>
@@ -124,7 +127,9 @@ export function SideQuests() {
               className={styles.questsExpandLink}
               onClick={() => setOpen(true)}
             >
-              {t("auth:gettingStarted.sideQuests.showMore", { count: remaining })}
+              {t("auth:gettingStarted.sideQuests.showMore", {
+                count: remaining,
+              })}
             </button>
           )}
         </>

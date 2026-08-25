@@ -5,11 +5,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useRowDragReorder } from "../subprofiles/useRowDragReorder";
 import { OverviewEditedBadge } from "./OverviewEditedBadge";
-import { OverviewEditorRow, reorder } from "./OverviewEditorRow";
-import {
-  AdminGovernanceHealthStatFields,
-  HEALTH_TREND_KEYS,
-} from "./AdminGovernanceHealthFields";
+import { OverviewEditorRow } from "./OverviewEditorRow";
+import { reorder } from "./overviewEditorRow.utils";
+import { AdminGovernanceHealthStatFields } from "./AdminGovernanceHealthFields";
+import { HEALTH_TREND_KEYS } from "./adminGovernanceHealthFields.utils";
 import { useUpdateAdminOverview } from "./api/useAdminGovernanceOverview";
 import type {
   AdminOverviewSectionMeta,

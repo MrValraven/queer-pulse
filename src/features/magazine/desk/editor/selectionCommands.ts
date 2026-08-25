@@ -69,7 +69,9 @@ export function restoreSelection(range: Range | null): void {
 export function applyEmphasisTo(range: Range | null): void {
   restoreSelection(range);
   document.execCommand("italic");
-  const richElement = findRichAncestor(document.getSelection()?.anchorNode ?? null);
+  const richElement = findRichAncestor(
+    document.getSelection()?.anchorNode ?? null,
+  );
   if (richElement) replaceTag(richElement, "i", "em");
   notifyBlockChanged();
 }
@@ -78,7 +80,9 @@ export function applyEmphasisTo(range: Range | null): void {
 export function applyStrongTo(range: Range | null): void {
   restoreSelection(range);
   document.execCommand("bold");
-  const richElement = findRichAncestor(document.getSelection()?.anchorNode ?? null);
+  const richElement = findRichAncestor(
+    document.getSelection()?.anchorNode ?? null,
+  );
   if (richElement) replaceTag(richElement, "b", "strong");
   notifyBlockChanged();
 }

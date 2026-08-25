@@ -173,12 +173,20 @@ export function createFreguesiaOverlay(
     id: "freguesia-line",
     type: "line",
     source: "freguesias",
-    paint: { "line-color": BRAND.accentInk, "line-width": 1, "line-opacity": 0.55 },
+    paint: {
+      "line-color": BRAND.accentInk,
+      "line-width": 1,
+      "line-opacity": 0.55,
+    },
   });
 
   map.addSource("freguesia-labels", {
     type: "geojson",
-    data: buildLabelCollection(currentCounts, currentSelected, hideSelectedCount),
+    data: buildLabelCollection(
+      currentCounts,
+      currentSelected,
+      hideSelectedCount,
+    ),
   });
   map.addLayer({
     id: "freguesia-label",
@@ -243,7 +251,8 @@ export function createFreguesiaOverlay(
 
   const paintLabels = () => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    const source = map.getSource("freguesia-labels") as GeoJSONSource | undefined;
+    const source = map.getSource("freguesia-labels") as
+      GeoJSONSource | undefined;
     source?.setData(
       buildLabelCollection(currentCounts, currentSelected, hideSelectedCount),
     );

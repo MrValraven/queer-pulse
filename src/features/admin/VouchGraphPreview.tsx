@@ -208,13 +208,23 @@ function PreviewNode({
           clipPath={`url(#vgPreviewClip${r})`}
           preserveAspectRatio="xMidYMid slice"
         />
-        <circle r={r} fill="none" stroke={ink.stroke} strokeWidth={strokeWidth} />
+        <circle
+          r={r}
+          fill="none"
+          stroke={ink.stroke}
+          strokeWidth={strokeWidth}
+        />
       </g>
     );
   }
   return (
     <g transform={`translate(${x} ${y})`}>
-      <circle r={r} fill={ink.fill} stroke={ink.stroke} strokeWidth={strokeWidth} />
+      <circle
+        r={r}
+        fill={ink.fill}
+        stroke={ink.stroke}
+        strokeWidth={strokeWidth}
+      />
       <text
         className={styles.previewInit}
         dy={r / 3}

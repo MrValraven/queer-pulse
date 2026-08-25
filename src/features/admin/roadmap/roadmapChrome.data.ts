@@ -2,7 +2,7 @@ import type {
   AdminRoadmapIdeaDTO,
   AdminRoadmapItemDTO,
 } from "../api/roadmapAdmin.types";
-import type { RoadmapSort } from "./state/useRoadmapFilters";
+import type { RoadmapSort } from "./state/roadmapFiltersTypes";
 
 /** The 9 views, in tab order. */
 export type RoadmapTabId =
@@ -38,7 +38,11 @@ export const ROADMAP_TABS: RoadmapTabDef[] = [
     labelKey: "admin:roadmap.tabs.capacity",
     showsToolbar: false,
   },
-  { id: "ideas", labelKey: "admin:roadmap.tabs.memberIdeas", showsToolbar: false },
+  {
+    id: "ideas",
+    labelKey: "admin:roadmap.tabs.memberIdeas",
+    showsToolbar: false,
+  },
   {
     id: "notBuilding",
     labelKey: "admin:roadmap.tabs.notBuilding",
@@ -54,11 +58,15 @@ export const ROADMAP_TABS: RoadmapTabDef[] = [
     labelKey: "admin:roadmap.tabs.publicPreview",
     showsToolbar: false,
   },
-  { id: "archive", labelKey: "admin:roadmap.tabs.archive", showsToolbar: false },
+  {
+    id: "archive",
+    labelKey: "admin:roadmap.tabs.archive",
+    showsToolbar: false,
+  },
 ];
 
 export interface SavedViewDef {
-  /** Matches a `SAVED_VIEW_PREDICATES` key in `state/useRoadmapFilters.tsx`. */
+  /** Matches a `SAVED_VIEW_PREDICATES` key in `state/roadmapFiltersTypes.ts`. */
   id: string;
   labelKey: string;
 }
@@ -91,8 +99,8 @@ export const SORT_OPTIONS: SortOptionDef[] = [
  *  since `category` is admin free text (the seed already has one item
  *  outside the 9 named `roadmap.categories.*` translations). */
 export function getUniqueCategories(items: AdminRoadmapItemDTO[]): string[] {
-  return Array.from(new Set(items.map((item) => item.category))).sort(
-    (a, b) => a.localeCompare(b),
+  return Array.from(new Set(items.map((item) => item.category))).sort((a, b) =>
+    a.localeCompare(b),
   );
 }
 

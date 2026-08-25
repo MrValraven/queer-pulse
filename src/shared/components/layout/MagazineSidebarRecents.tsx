@@ -21,7 +21,11 @@ const FORMAT_ICON: Record<PieceFormat, IconType> = {
  * few rows are a real recency signal, not a guess. Renders nothing while
  * there are no pieces yet — no placeholder titles.
  */
-export function MagazineSidebarRecents({ onNavigate }: { onNavigate?: () => void }) {
+export function MagazineSidebarRecents({
+  onNavigate,
+}: {
+  onNavigate?: () => void;
+}) {
   const { t } = useTranslation();
   const { pieces } = usePieces();
   const recentPieces = pieces.slice(0, RECENT_COUNT);
@@ -40,7 +44,9 @@ export function MagazineSidebarRecents({ onNavigate }: { onNavigate?: () => void
               to={routes.magazinePiece.replace(":id", piece.id)}
               onClick={onNavigate}
               className={({ isActive }) =>
-                [styles.navItem, isActive && styles.navItemActive].filter(Boolean).join(" ")
+                [styles.navItem, isActive && styles.navItemActive]
+                  .filter(Boolean)
+                  .join(" ")
               }
             >
               <Icon aria-hidden />

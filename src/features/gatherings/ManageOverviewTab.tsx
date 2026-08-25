@@ -92,7 +92,10 @@ export function OverviewTab({
             <div className={styles.drLabel}>{t(detail.labelKey)}</div>
             <div className={styles.drVal}>
               {detail.id === "venue" && venueListing ? (
-                <Link to={businessPath(venueListing.slug)} className={styles.venueLink}>
+                <Link
+                  to={businessPath(venueListing.slug)}
+                  className={styles.venueLink}
+                >
                   {detail.value}
                 </Link>
               ) : (

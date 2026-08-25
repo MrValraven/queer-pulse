@@ -67,47 +67,53 @@ export function SharedEquipmentPage() {
               {t("resources:sharedEquipment.kit.live.body")}
             </Reveal>
           ) : (
-          <div className={styles.grid}>
-            {EQUIPMENT.map((item, i) => {
-              const name = t(item.nameKey);
-              return (
-                <Reveal
-                  key={item.nameKey}
-                  className={styles.card}
-                  delay={i * 55}
-                >
-                  <ImageSlot tint={item.tint} placeholder={name} height={160} />
-                  <div
-                    className={styles.cardName}
-                    style={{ fontSize: 19, marginTop: 4 }}
+            <div className={styles.grid}>
+              {EQUIPMENT.map((item, i) => {
+                const name = t(item.nameKey);
+                return (
+                  <Reveal
+                    key={item.nameKey}
+                    className={styles.card}
+                    delay={i * 55}
                   >
-                    {name}
-                  </div>
-                  <div className={styles.cardSpec}>{t(item.specsKey)}</div>
-                  <div className={styles.cardFoot}>
-                    <span className={styles.cardLoc}>{t(item.statusKey)}</span>
-                    <Button
-                      variant={item.available ? "jade" : "ghost"}
-                      disabled={!item.available}
-                      onClick={() =>
-                        showToast(
-                          demoMode
-                            ? t("resources:sharedEquipment.requestToast", {
-                                name,
-                              })
-                            : t("resources:sharedEquipment.requestLiveToast"),
-                        )
-                      }
+                    <ImageSlot
+                      tint={item.tint}
+                      placeholder={name}
+                      height={160}
+                    />
+                    <div
+                      className={styles.cardName}
+                      style={{ fontSize: 19, marginTop: 4 }}
                     >
-                      {item.available
-                        ? t("resources:sharedEquipment.requestSlotCta")
-                        : t("resources:sharedEquipment.onLoanCta")}
-                    </Button>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
+                      {name}
+                    </div>
+                    <div className={styles.cardSpec}>{t(item.specsKey)}</div>
+                    <div className={styles.cardFoot}>
+                      <span className={styles.cardLoc}>
+                        {t(item.statusKey)}
+                      </span>
+                      <Button
+                        variant={item.available ? "jade" : "ghost"}
+                        disabled={!item.available}
+                        onClick={() =>
+                          showToast(
+                            demoMode
+                              ? t("resources:sharedEquipment.requestToast", {
+                                  name,
+                                })
+                              : t("resources:sharedEquipment.requestLiveToast"),
+                          )
+                        }
+                      >
+                        {item.available
+                          ? t("resources:sharedEquipment.requestSlotCta")
+                          : t("resources:sharedEquipment.onLoanCta")}
+                      </Button>
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
           )}
         </div>
       </section>

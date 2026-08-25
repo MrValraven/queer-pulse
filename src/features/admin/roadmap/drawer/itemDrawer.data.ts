@@ -54,7 +54,10 @@ export function buildCategoryOptions(
   const extra = getUniqueCategories(items).filter(
     (category) => !(CATEGORY_KEYS as readonly string[]).includes(category),
   );
-  return [...named, ...extra.map((category) => ({ value: category, label: category }))];
+  return [
+    ...named,
+    ...extra.map((category) => ({ value: category, label: category })),
+  ];
 }
 
 /** `category` is admin free text — resolve to its translated label only
@@ -69,7 +72,10 @@ export function resolveCategoryLabel(
     : category;
 }
 
-export const COLUMN_CHIP_TONE: Record<RoadmapColumn, "ghost" | "plum" | "coral" | "jade"> = {
+export const COLUMN_CHIP_TONE: Record<
+  RoadmapColumn,
+  "ghost" | "plum" | "coral" | "jade"
+> = {
   backlog: "ghost",
   planned: "plum",
   building: "coral",
@@ -87,7 +93,10 @@ export function buildOwnerOptions(
 }
 
 function quarterOfDate(date: Date): { quarter: number; year: number } {
-  return { quarter: Math.floor(date.getMonth() / 3) + 1, year: date.getFullYear() };
+  return {
+    quarter: Math.floor(date.getMonth() / 3) + 1,
+    year: date.getFullYear(),
+  };
 }
 
 function quarterLabel(quarter: number, year: number): string {
@@ -151,7 +160,9 @@ export const DEFAULT_GUIDE: RoadmapGuideDTO = {
  *  mid confidence/priority, nothing public or committed yet. `sortOrder`
  *  goes to the end of the backlog column so it doesn't jump ahead of
  *  existing cards. */
-export function buildDraftDefaults(items: AdminRoadmapItemDTO[]): RoadmapItemWriteBody {
+export function buildDraftDefaults(
+  items: AdminRoadmapItemDTO[],
+): RoadmapItemWriteBody {
   const nextSortOrder =
     items
       .filter((item) => item.column === "backlog")
@@ -205,7 +216,10 @@ export function computeOwnerLoadHours(
 const MS_PER_DAY = 86_400_000;
 
 export function daysSince(iso: string): number {
-  return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / MS_PER_DAY));
+  return Math.max(
+    0,
+    Math.floor((Date.now() - new Date(iso).getTime()) / MS_PER_DAY),
+  );
 }
 
 export function daysUntil(iso: string): number {

@@ -94,7 +94,8 @@ export function RangeDatePicker({
   const triggerLabel = t("shared:calendar.chooseRange");
   const startLabel = t("shared:calendar.startDate");
   const endLabel = t("shared:calendar.endDate");
-  const canClear = clearable && (value?.start != null || value?.end != null) && !disabled;
+  const canClear =
+    clearable && (value?.start != null || value?.end != null) && !disabled;
 
   const handleRangeChange = (next: DateRange) => {
     onChange(next);
@@ -107,13 +108,17 @@ export function RangeDatePicker({
       role="group"
       aria-label={labelledBy ? undefined : label}
       aria-labelledby={labelledBy}
-      className={[styles.container, size === "sm" && styles.sm, className].filter(Boolean).join(" ")}
+      className={[styles.container, size === "sm" && styles.sm, className]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div className={styles.rangeField} role="group" aria-label={startLabel}>
         <DateField
           mode="date"
           value={value?.start ?? null}
-          onChange={(nextStart) => onChange({ start: nextStart, end: value?.end ?? null })}
+          onChange={(nextStart) =>
+            onChange({ start: nextStart, end: value?.end ?? null })
+          }
           locale={activeLocale}
           min={min}
           max={max}
@@ -129,7 +134,9 @@ export function RangeDatePicker({
         <DateField
           mode="date"
           value={value?.end ?? null}
-          onChange={(nextEnd) => onChange({ start: value?.start ?? null, end: nextEnd })}
+          onChange={(nextEnd) =>
+            onChange({ start: value?.start ?? null, end: nextEnd })
+          }
           locale={activeLocale}
           min={value?.start ?? min}
           max={max}
@@ -179,7 +186,12 @@ export function RangeDatePicker({
         </ModalSheet>
       )}
       {open && !isMobile && (
-        <div id={popoverId} role="dialog" aria-label={triggerLabel} className={styles.popover}>
+        <div
+          id={popoverId}
+          role="dialog"
+          aria-label={triggerLabel}
+          className={styles.popover}
+        >
           <RangeCalendar
             value={value}
             onChange={handleRangeChange}

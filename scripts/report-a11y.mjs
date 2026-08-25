@@ -154,5 +154,7 @@ if (total < BUDGET) {
       "scripts/report-a11y.mjs to lock in the gain (ratchet down).",
   );
 } else {
-  console.log(`\nAt budget (${BUDGET}). Drive rules to zero and promote them to "error".`);
+  console.log(
+    `\nAt budget (${BUDGET}). Drive rules to zero and promote them to "error".`,
+  );
 }

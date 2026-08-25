@@ -81,7 +81,10 @@ describe("JsonLd", () => {
 describe("schema builders", () => {
   it("builds an FAQPage with one entry per question", () => {
     const schema = buildFaqSchema([
-      { question: "What is a vouch?", answer: "An existing member invites you." },
+      {
+        question: "What is a vouch?",
+        answer: "An existing member invites you.",
+      },
     ]);
     expect(schema["@type"]).toBe("FAQPage");
     expect(schema.mainEntity).toHaveLength(1);
@@ -145,7 +148,12 @@ describe("schema builders", () => {
         ...basePlace,
         latitude: 38.7169,
         longitude: -9.1399,
-        photos: { wide: "https://cdn.example.com/wide.jpg", d1: null, d2: null, vibe: null },
+        photos: {
+          wide: "https://cdn.example.com/wide.jpg",
+          d1: null,
+          d2: null,
+          vibe: null,
+        },
         social: { phone: "+351 21 000 0000" },
         rating: { score: "4.8", count: 12 },
         pills: ["Wheelchair access", "€€"],

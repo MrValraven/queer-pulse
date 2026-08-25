@@ -49,11 +49,16 @@ export function useDeskKeyboard(params: UseDeskKeyboardParams): void {
     function handleKeyDown(event: KeyboardEvent): void {
       if (isEditableEventTarget(event.target)) return;
 
-      const focusedIndex = visiblePieces.findIndex((piece) => piece.id === focusId);
+      const focusedIndex = visiblePieces.findIndex(
+        (piece) => piece.id === focusId,
+      );
 
       switch (event.key) {
         case "j": {
-          const nextIndex = Math.min(focusedIndex + 1, visiblePieces.length - 1);
+          const nextIndex = Math.min(
+            focusedIndex + 1,
+            visiblePieces.length - 1,
+          );
           const nextPiece = visiblePieces[nextIndex < 0 ? 0 : nextIndex];
           if (nextPiece) setFocusId(nextPiece.id);
           break;
@@ -65,12 +70,16 @@ export function useDeskKeyboard(params: UseDeskKeyboardParams): void {
           break;
         }
         case "o": {
-          const focusedPiece = visiblePieces.find((piece) => piece.id === focusId);
+          const focusedPiece = visiblePieces.find(
+            (piece) => piece.id === focusId,
+          );
           if (focusedPiece) onOpen(focusedPiece);
           break;
         }
         case "c": {
-          const focusedPiece = visiblePieces.find((piece) => piece.id === focusId);
+          const focusedPiece = visiblePieces.find(
+            (piece) => piece.id === focusId,
+          );
           if (focusedPiece) onChase(focusedPiece);
           break;
         }
@@ -93,5 +102,16 @@ export function useDeskKeyboard(params: UseDeskKeyboardParams): void {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [visiblePieces, focusId, setFocusId, onOpen, onChase, onWrite, onShortcuts, topPitchId, onTriageTop, enabled]);
+  }, [
+    visiblePieces,
+    focusId,
+    setFocusId,
+    onOpen,
+    onChase,
+    onWrite,
+    onShortcuts,
+    topPitchId,
+    onTriageTop,
+    enabled,
+  ]);
 }

@@ -20,6 +20,7 @@ export function FilmBody() {
     <section className={styles.body}>
       <div className={`wrap ${styles.bodyGrid}`}>
         <div>
+          {/* eslint-disable local/no-literal-string -- curator's own programming note (name, role line, and commentary paragraphs); content per the scope rule, arrives over the wire in live mode */}
           <div className={`${styles.block} ${styles.noteFull}`}>
             <div className={styles.nfHead}>
               <div className={styles.nfAv}>JR</div>
@@ -55,6 +56,7 @@ export function FilmBody() {
               </p>
             </div>
           </div>
+          {/* eslint-enable local/no-literal-string */}
 
           <div className={styles.block}>
             <h2>
@@ -63,6 +65,7 @@ export function FilmBody() {
                 components={{ em: <em /> }}
               />
             </h2>
+            {/* eslint-disable local/no-literal-string -- director's own statement and its attribution; content per the scope rule, arrives over the wire in live mode */}
             <div className={styles.syn}>
               <p>
                 For three years, between 2022 and 2025, the filmmaker followed
@@ -77,6 +80,7 @@ export function FilmBody() {
                 2025.
               </p>
             </div>
+            {/* eslint-enable local/no-literal-string */}
           </div>
 
           <div className={styles.block}>
@@ -128,6 +132,7 @@ export function FilmBody() {
         </div>
 
         <aside className={styles.sidebar}>
+          {/* eslint-disable local/no-literal-string -- filmmaker's own initials, name, role, and bio; content per the scope rule, arrives over the wire in live mode */}
           <div className={styles.fmCard}>
             <div className={styles.fmHead}>
               <div className={styles.fmAv}>MV</div>
@@ -146,6 +151,7 @@ export function FilmBody() {
               film; a decade on the relationships that made it possible. Shoots
               slow, listens slower.
             </div>
+            {/* eslint-enable local/no-literal-string */}
             <div className={styles.fmStats}>
               <div className={styles.fmStat}>
                 <Translation

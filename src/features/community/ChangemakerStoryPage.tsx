@@ -75,7 +75,8 @@ export function ChangemakerStoryPage() {
       <div className={styles.back}>
         <div className="wrap">
           <Link to={routes.changemakers} className={styles.backLink}>
-            <FiArrowLeft aria-hidden /> {t("community:changemakerStory.backCta")}
+            <FiArrowLeft aria-hidden />{" "}
+            {t("community:changemakerStory.backCta")}
           </Link>
         </div>
       </div>

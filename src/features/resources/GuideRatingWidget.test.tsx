@@ -5,17 +5,28 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
 import { GuideRatingWidget } from "./GuideRatingWidget";
+import type {
+  GuideRatingResponseDTO,
+  GuideRatingValue,
+} from "./api/resources.api";
 
 let mockDemoMode = false;
 vi.mock("../../app/providers/DemoModeProvider", () => ({
   useDemoMode: () => ({ demoMode: mockDemoMode }),
 }));
 
-const fetchGuideRating = vi.fn();
-const rateGuide = vi.fn();
+const fetchGuideRating =
+  vi.fn<(contentKey: string) => Promise<GuideRatingResponseDTO>>();
+const rateGuide =
+  vi.fn<
+    (
+      contentKey: string,
+      value: GuideRatingValue,
+    ) => Promise<GuideRatingResponseDTO>
+  >();
 vi.mock("./api/resources.api", () => ({
   fetchGuideRating: (contentKey: string) => fetchGuideRating(contentKey),
-  rateGuide: (contentKey: string, value: string) =>
+  rateGuide: (contentKey: string, value: GuideRatingValue) =>
     rateGuide(contentKey, value),
 }));
 
@@ -51,9 +62,7 @@ describe("GuideRatingWidget live mode", () => {
       myVote: "helpful",
     });
     const user = userEvent.setup();
-    renderWidget(
-      <GuideRatingWidget contentKey="legal.workplace.dismissal" />,
-    );
+    renderWidget(<GuideRatingWidget contentKey="legal.workplace.dismissal" />);
 
     const helpfulBtn = await screen.findByText("Yes");
     await user.click(helpfulBtn);
@@ -81,9 +90,7 @@ describe("GuideRatingWidget live mode", () => {
       myVote: null,
     });
     const user = userEvent.setup();
-    renderWidget(
-      <GuideRatingWidget contentKey="legal.workplace.dismissal" />,
-    );
+    renderWidget(<GuideRatingWidget contentKey="legal.workplace.dismissal" />);
 
     await screen.findByText("Thanks for the feedback.");
     await user.click(screen.getByText("Change your answer"));
@@ -103,9 +110,7 @@ describe("GuideRatingWidget demo mode", () => {
   it("toggles locally without calling the API", async () => {
     mockDemoMode = true;
     const user = userEvent.setup();
-    renderWidget(
-      <GuideRatingWidget contentKey="legal.workplace.dismissal" />,
-    );
+    renderWidget(<GuideRatingWidget contentKey="legal.workplace.dismissal" />);
 
     await user.click(await screen.findByText("Yes"));
 

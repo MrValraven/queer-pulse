@@ -107,7 +107,9 @@ export function DirectoryClaimModal({
         />
       </FormField>
 
-      <p className={styles.note}>{t("marketing:directory.detail.claim.note")}</p>
+      <p className={styles.note}>
+        {t("marketing:directory.detail.claim.note")}
+      </p>
 
       <div className={styles.foot}>
         <Button variant="ghost" onClick={onClose}>

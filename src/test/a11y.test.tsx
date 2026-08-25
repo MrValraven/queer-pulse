@@ -39,7 +39,10 @@ const AXE_PATHS: ReadonlyArray<readonly [string, string]> = [
   // redirecting on a not-found.
   ["messages (conversation list + thread)", routes.messages],
   ["forum (Q&A board with voting + tags)", routes.forum],
-  ["admin listings moderation console (data grid + bulk bar)", routes.adminListings],
+  [
+    "admin listings moderation console (data grid + bulk bar)",
+    routes.adminListings,
+  ],
   ["feed (infinite activity stream)", routes.feed],
   ["community detail (roster + discussion tabs)", "/community/queer-runners"],
 ];

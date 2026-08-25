@@ -8,7 +8,7 @@ type RevealModel = Extract<Slide, { layout: "interactive"; kind: "reveal" }>;
 export function RevealSlide({ slide }: { slide: RevealModel }) {
   const { t } = useTranslation();
   const [revealed, setRevealed] = useState(false);
-  const tintClass = slide.tint ? styles[`tint-${slide.tint}`] ?? "" : "";
+  const tintClass = slide.tint ? (styles[`tint-${slide.tint}`] ?? "") : "";
   return (
     <div className={`${styles.slide} ${styles.revealSlide} ${tintClass}`}>
       <div className={styles.revealPrompt}>{slide.prompt}</div>

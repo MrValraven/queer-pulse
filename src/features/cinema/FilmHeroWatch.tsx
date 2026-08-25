@@ -162,8 +162,7 @@ export function FilmHeroWatch() {
             }}
           />{" "}
           <Link to={routes.governance}>
-            {t("cinema:film.split.readDeedCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("cinema:film.split.readDeedCta")} <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>

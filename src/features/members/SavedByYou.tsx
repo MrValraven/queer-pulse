@@ -80,8 +80,7 @@ function SaveCard({
         <div className={styles.footer}>
           {item.href ? (
             <Link to={linkToPath(item.href)} className={styles.readLink}>
-              {t(cfg.readKey)}{" "}
-              <FiArrowRight aria-hidden />
+              {t(cfg.readKey)} <FiArrowRight aria-hidden />
             </Link>
           ) : (
             <span />

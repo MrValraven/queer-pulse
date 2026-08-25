@@ -20,7 +20,9 @@ export function useMessageReceipts(
 ): MessageReceipts {
   /** Live "Seen" watermark per conversation, from the counterpart's `read`
    *  frames — the max lastReadAt observed so far, keyed by conversation id. */
-  const [readWatermarks, setReadWatermarks] = useState<Record<string, string>>({});
+  const [readWatermarks, setReadWatermarks] = useState<Record<string, string>>(
+    {},
+  );
   /** Live "delivered" (double-check) watermark per conversation, from the
    *  counterpart's `message:delivered` frames — the max deliveredAt observed so
    *  far, keyed by conversation id. One rung below `readWatermarks`. */
@@ -50,7 +52,11 @@ export function useMessageReceipts(
   // that's my own device acking receipt of the counterpart's messages, which
   // renders against THEIR bubbles for them, not mine.
   const onDelivered = useCallback(
-    (frame: { conversationId: string; userId: string; deliveredAt: string }) => {
+    (frame: {
+      conversationId: string;
+      userId: string;
+      deliveredAt: string;
+    }) => {
       if (myUserId && frame.userId === myUserId) return;
       setDeliveredWatermarks((prev) => {
         const existing = prev[frame.conversationId];

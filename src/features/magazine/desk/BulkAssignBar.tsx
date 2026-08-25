@@ -15,7 +15,11 @@ export interface BulkAssignBarProps {
  * wrapper around the shared `BulkActionBar`, exactly like `BulkTriageBar`
  * does for the pitch inbox — no bespoke styling, so no companion CSS module.
  */
-export function BulkAssignBar({ count, onAssign, onClear }: BulkAssignBarProps) {
+export function BulkAssignBar({
+  count,
+  onAssign,
+  onClear,
+}: BulkAssignBarProps) {
   const { t } = useTranslation();
   return (
     <BulkActionBar

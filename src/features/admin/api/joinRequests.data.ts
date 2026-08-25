@@ -39,7 +39,8 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
-    message: "New to Lisbon and looking for community that isn't just nightlife.",
+    message:
+      "New to Lisbon and looking for community that isn't just nightlife.",
     // Demo covers the structured-field branch: named a real member instead of
     // leaving it blank.
     mutualMemberEmail: "devon@example.com",

@@ -34,7 +34,10 @@ export function ArticleEditorStatus({ variant }: ArticleEditorStatusProps) {
           <EmptyState
             title={t("magazine:write.status.notFoundTitle")}
             description={t("magazine:piece.header.notFoundDescription")}
-            action={{ label: t("magazine:piece.header.backToDesk"), to: routes.magazineEditor }}
+            action={{
+              label: t("magazine:piece.header.backToDesk"),
+              to: routes.magazineEditor,
+            }}
           />
         )}
       </div>

@@ -1,11 +1,20 @@
 import { useMemo } from "react";
-import type { AdminRoadmapItemDTO, RoadmapColumn } from "../../api/roadmapAdmin.types";
-import { matchItem, sortItems, useRoadmapFilters } from "../state/useRoadmapFilters";
+import type {
+  AdminRoadmapItemDTO,
+  RoadmapColumn,
+} from "../../api/roadmapAdmin.types";
+import { matchItem, sortItems } from "../state/roadmapFiltersTypes";
+import { useRoadmapFilters } from "../state/roadmapFiltersHook";
 import { BoardColumn } from "../board/BoardColumn";
 import { useBoardDnd } from "../board/useBoardDnd";
 import styles from "./BoardView.module.css";
 
-const COLUMN_ORDER: RoadmapColumn[] = ["backlog", "planned", "building", "shipped"];
+const COLUMN_ORDER: RoadmapColumn[] = [
+  "backlog",
+  "planned",
+  "building",
+  "shipped",
+];
 
 function buildMaxSortOrderByColumn(
   items: AdminRoadmapItemDTO[],
@@ -17,7 +26,8 @@ function buildMaxSortOrderByColumn(
     shipped: 0,
   };
   for (const item of items) {
-    if (item.sortOrder > result[item.column]) result[item.column] = item.sortOrder;
+    if (item.sortOrder > result[item.column])
+      result[item.column] = item.sortOrder;
   }
   return result;
 }
@@ -43,7 +53,10 @@ export function BoardView({ items }: { items: AdminRoadmapItemDTO[] }) {
     () => new Map(items.map((item) => [item.id, item])),
     [items],
   );
-  const maxSortOrderByColumn = useMemo(() => buildMaxSortOrderByColumn(items), [items]);
+  const maxSortOrderByColumn = useMemo(
+    () => buildMaxSortOrderByColumn(items),
+    [items],
+  );
 
   const columns = useMemo(() => {
     const visible = items.filter((item) => matchItem(item, filters));
@@ -60,7 +73,11 @@ export function BoardView({ items }: { items: AdminRoadmapItemDTO[] }) {
   const dnd = useBoardDnd(columns);
 
   return (
-    <div className={[styles.board, filters.dense && styles.boardDense].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.board, filters.dense && styles.boardDense]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {COLUMN_ORDER.map((column) => (
         <BoardColumn
           key={column}

@@ -12,7 +12,7 @@
 
 # Modern React: Rendering, Reactivity & React 19 — A Cited Reference
 
-A dense, source-backed reference on how React renders and re-renders, how hooks behave and misbehave, and what React 19 (Dec 2024) plus the React Compiler add. Every non-obvious claim links to an authoritative source (mostly `react.dev`, plus TkDodo). Written for a **Vite client-only SPA** audience, so Server-Component-only features are explicitly flagged as *not applicable*.
+A dense, source-backed reference on how React renders and re-renders, how hooks behave and misbehave, and what React 19 (Dec 2024) plus the React Compiler add. Every non-obvious claim links to an authoritative source (mostly `react.dev`, plus TkDodo). Written for a **Vite client-only SPA** audience, so Server-Component-only features are explicitly flagged as _not applicable_.
 
 > Version context: **React 19.0** shipped **December 5, 2024** ([React 19 blog](https://react.dev/blog/2024/12/05/react-19)). The **React Compiler reached a stable 1.0** in 2025 ([React Compiler intro](https://react.dev/learn/react-compiler/introduction)). Where advice changed between versions, it is flagged inline.
 
@@ -27,7 +27,7 @@ React puts UI on screen in three ordered steps, then the browser paints ([Render
 1. **Trigger** a render. There are exactly two triggers:
    - **Initial render** — `createRoot(domNode).render(<App />)`.
    - **A state update** — calling a `set` function queues a re-render. "When a component's state (or an ancestor's state) changes, React automatically queues a re-render." ([Render and Commit](https://react.dev/learn/render-and-commit))
-2. **Render** — React *calls your components* to figure out what to display. On initial render it calls the root; on re-render it calls the component whose state changed. Rendering is **recursive**: if a component returns another component, React renders that next, all the way down ([Render and Commit](https://react.dev/learn/render-and-commit)).
+2. **Render** — React _calls your components_ to figure out what to display. On initial render it calls the root; on re-render it calls the component whose state changed. Rendering is **recursive**: if a component returns another component, React renders that next, all the way down ([Render and Commit](https://react.dev/learn/render-and-commit)).
 3. **Commit** — React mutates the DOM. On initial render it uses `appendChild()` for everything; on re-render it applies **only the minimal changes** needed to match the latest render output. "React only changes the DOM nodes if there's a difference between renders." ([Render and Commit](https://react.dev/learn/render-and-commit))
 4. **Paint** — after the commit, the browser repaints.
 
@@ -40,57 +40,58 @@ Key mental model consequence: **"Rendering" is React calling your function, not 
 Purity means two things:
 
 - **Same inputs -> same output.** Given the same props, state, and context, a component returns the same JSX.
-- **It minds its own business.** It must not mutate any object or variable that existed *before* rendering (props, state, module-level values). Compute new values; never mutate inputs.
+- **It minds its own business.** It must not mutate any object or variable that existed _before_ rendering (props, state, module-level values). Compute new values; never mutate inputs.
 
 React runs component functions (and `useState`/`useMemo`/`useReducer` initializers and updaters) **twice in development Strict Mode** specifically to surface impurity ([Keeping Components Pure](https://react.dev/learn/keeping-components-pure), [useState caveats](https://react.dev/reference/react/useState)). If double-invocation changes behavior, the function is impure.
 
-What *is* allowed: mutating objects you created **during this render** ("local mutation"), and side effects triggered by user interaction (in event handlers) or by the component being displayed (in Effects) — not during render itself.
+What _is_ allowed: mutating objects you created **during this render** ("local mutation"), and side effects triggered by user interaction (in event handlers) or by the component being displayed (in Effects) — not during render itself.
 
 ### 1.3 What actually triggers a re-render
 
 A component re-renders when any of the following happens:
 
-1. **Its own state changes** via a `set`/`dispatch` function — *unless* the new value is `Object.is`-equal to the current one, in which case "React will skip re-rendering the component and its children." ([useState](https://react.dev/reference/react/useState))
-2. **Its parent re-renders.** By default a parent re-render re-renders *all* descendants, regardless of whether their props changed. This is the default and is usually fine; `React.memo` is the opt-out (see section 5.3).
+1. **Its own state changes** via a `set`/`dispatch` function — _unless_ the new value is `Object.is`-equal to the current one, in which case "React will skip re-rendering the component and its children." ([useState](https://react.dev/reference/react/useState))
+2. **Its parent re-renders.** By default a parent re-render re-renders _all_ descendants, regardless of whether their props changed. This is the default and is usually fine; `React.memo` is the opt-out (see section 5.3).
 3. **A context it consumes changes.** Any component reading a context via `useContext`/`use(Context)` re-renders when the nearest matching provider's `value` changes by `Object.is` — even if `React.memo` sits in between (context "punches through" memo).
 4. **A subscribed external store changes** (via `useSyncExternalStore`, see section 7.3).
 
-> Common misconception correction: **props changing does not, by itself, trigger a render.** Props change *because the parent re-rendered*; it is the parent's render that cascades down. `React.memo` breaks that cascade by comparing props.
+> Common misconception correction: **props changing does not, by itself, trigger a render.** Props change _because the parent re-rendered_; it is the parent's render that cascades down. `React.memo` breaks that cascade by comparing props.
 
 ### 1.4 Reconciliation and how keys drive it
 
-When React re-renders, it **diffs the new element tree against the previous one** to decide what to keep, update, or throw away. The matching is by **position in the tree and element type** — *not* by JSX source location.
+When React re-renders, it **diffs the new element tree against the previous one** to decide what to keep, update, or throw away. The matching is by **position in the tree and element type** — _not_ by JSX source location.
 
 - **Same component type at the same tree position -> state is preserved.** "React keeps the state around for as long as you render the same component at the same position in the tree." ([Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state))
 - **Different type at the same position -> the subtree (and its state) is destroyed and rebuilt.**
-- "It's the position in the UI tree — not in the JSX markup — that matters to React." Two different `if`/`else` branches that both render `<Counter />` as the first child of the same `<div>` are the *same position*, so state persists across the toggle ([Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state)).
+- "It's the position in the UI tree — not in the JSX markup — that matters to React." Two different `if`/`else` branches that both render `<Counter />` as the first child of the same `<div>` are the _same position_, so state persists across the toggle ([Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state)).
 
-**Keys override position-based identity.** A `key` tells React "this is the same logical instance" (in lists) or "this is a *different* instance, reset it" (for a single element):
+**Keys override position-based identity.** A `key` tells React "this is the same logical instance" (in lists) or "this is a _different_ instance, reset it" (for a single element):
 
 ```tsx
 // Lists: stable identity across reorders/insertions
-{contacts.map((contact) => (
-  <Contact key={contact.id} contact={contact} />
-))}
+{
+  contacts.map((contact) => <Contact key={contact.id} contact={contact} />);
+}
 
 // Single element: force a full state reset when the identity changes
-<Chat key={selectedContact.id} contact={selectedContact} />
+<Chat key={selectedContact.id} contact={selectedContact} />;
 ```
 
 Same component + **different key** at the same position = **state reset** ([Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state)). This is the idiomatic way to "reset a form when the selected item changes" (see section 4.3).
 
 Key rules:
+
 - Keys must be **unique among siblings** and **stable across renders**.
 - **Do not use array index as key** for lists that can reorder/insert/delete — it ties state to position rather than to the item, causing state to attach to the wrong row.
 - Do not generate keys during render (`key={Math.random()}`) — it destroys and recreates every item every render.
 
-**Anti-pattern that silently resets state:** defining a component *inside* another component. "Every render creates a new function," so React sees a different type each time and resets state ([Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state)). Define components at module top level.
+**Anti-pattern that silently resets state:** defining a component _inside_ another component. "Every render creates a new function," so React sees a different type each time and resets state ([Preserving and Resetting State](https://react.dev/learn/preserving-and-resetting-state)). Define components at module top level.
 
 ---
 
 ## Part 2 — Hooks correctness
 
-### 2.1 The Rules of Hooks, and *why*
+### 2.1 The Rules of Hooks, and _why_
 
 Two rules ([Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks)):
 
@@ -112,7 +113,7 @@ Both accept **functional/updater forms** and both support **lazy initialization*
 
 ### 2.3 Functional updates — why they matter
 
-`set` functions **batch** within an event handler; React updates the screen only after all handlers run ([useState — batching](https://react.dev/reference/react/useState)). Passing a *value* captures the value at render time, so multiple updates in one handler clobber each other. Passing an *updater function* queues transformations that each receive the latest queued state:
+`set` functions **batch** within an event handler; React updates the screen only after all handlers run ([useState — batching](https://react.dev/reference/react/useState)). Passing a _value_ captures the value at render time, so multiple updates in one handler clobber each other. Passing an _updater function_ queues transformations that each receive the latest queued state:
 
 ```tsx
 // BAD: age ends at 43 - each call reads the same render-time `age`
@@ -126,11 +127,11 @@ setAge((prev) => prev + 1);
 setAge((prev) => prev + 1);
 ```
 
-([useState](https://react.dev/reference/react/useState)). Updaters must be **pure**; Strict Mode calls them twice in dev to catch impurity ([useState caveats](https://react.dev/reference/react/useState)). A practical bonus: an updater `(prev) => ...` reads current state *without* needing that state in a dependency array — useful for effects/callbacks (see section 2.7). (This is exactly how `useChipSet`'s `toggle` works in this repo.)
+([useState](https://react.dev/reference/react/useState)). Updaters must be **pure**; Strict Mode calls them twice in dev to catch impurity ([useState caveats](https://react.dev/reference/react/useState)). A practical bonus: an updater `(prev) => ...` reads current state _without_ needing that state in a dependency array — useful for effects/callbacks (see section 2.7). (This is exactly how `useChipSet`'s `toggle` works in this repo.)
 
 ### 2.4 Lazy initialization
 
-The initial argument to `useState` is only used on the **first** render, but any expression you write there still *executes every render*. Pass an **initializer function** to defer the work:
+The initial argument to `useState` is only used on the **first** render, but any expression you write there still _executes every render_. Pass an **initializer function** to defer the work:
 
 ```tsx
 // BAD: createInitialTodos() runs on every render (result ignored after first)
@@ -144,18 +145,19 @@ const [todos, setTodos] = useState(createInitialTodos);
 
 ### 2.5 `useRef` — mutable box that doesn't render
 
-`useRef(initial)` returns a stable object `{ current }` that **persists across renders and whose mutation does *not* trigger a re-render** ([useRef](https://react.dev/reference/react/useRef)).
+`useRef(initial)` returns a stable object `{ current }` that **persists across renders and whose mutation does _not_ trigger a re-render** ([useRef](https://react.dev/reference/react/useRef)).
 
 Two canonical uses:
+
 - **Values that shouldn't cause renders** — timer/interval IDs, previous values, "has this run" flags, latest-callback boxes.
 - **DOM access** — `<input ref={inputRef} />`, then `inputRef.current.focus()` in a handler.
 
-Caveat: **don't read or write `ref.current` during render** (except lazy init). "Do not write *or read* `ref.current` during rendering, except for initialization. This makes your component's behavior unpredictable." ([useRef](https://react.dev/reference/react/useRef)) Reads/writes belong in event handlers and effects. Rule of thumb: **state = data that should be on screen; ref = everything else you need to remember but that shouldn't drive the UI.**
+Caveat: **don't read or write `ref.current` during render** (except lazy init). "Do not write _or read_ `ref.current` during rendering, except for initialization. This makes your component's behavior unpredictable." ([useRef](https://react.dev/reference/react/useRef)) Reads/writes belong in event handlers and effects. Rule of thumb: **state = data that should be on screen; ref = everything else you need to remember but that shouldn't drive the UI.**
 
 ### 2.6 `useEffect` vs `useLayoutEffect`
 
 - **`useEffect`** runs **after** the browser paints. Default choice for synchronizing with external systems (subscriptions, network, non-React widgets, logging).
-- **`useLayoutEffect`** runs **synchronously after DOM mutations but *before* paint**. Use it only to **measure layout and re-render before the user sees anything** (e.g., tooltip that must flip above/below based on measured height). "The code inside `useLayoutEffect` and all state updates scheduled from it block the browser from repainting the screen. When used excessively, this makes your app slow. When possible, prefer `useEffect`." ([useLayoutEffect](https://react.dev/reference/react/useLayoutEffect))
+- **`useLayoutEffect`** runs **synchronously after DOM mutations but _before_ paint**. Use it only to **measure layout and re-render before the user sees anything** (e.g., tooltip that must flip above/below based on measured height). "The code inside `useLayoutEffect` and all state updates scheduled from it block the browser from repainting the screen. When used excessively, this makes your app slow. When possible, prefer `useEffect`." ([useLayoutEffect](https://react.dev/reference/react/useLayoutEffect))
 
 ```tsx
 useLayoutEffect(() => {
@@ -170,13 +172,13 @@ An Effect closes over the props/state from the render that created it. If depend
 
 The dependency array must contain **every reactive value the effect reads** — props, state, and anything derived from them ([Lifecycle of Reactive Effects](https://react.dev/learn/lifecycle-of-reactive-effects)). The `exhaustive-deps` lint computes this for you.
 
-**Think of an Effect as start/stop synchronization, not mount/unmount.** "An Effect describes how to synchronize an external system to the current props and state." Each dependency change = *stop the old sync (cleanup), start a new one*:
+**Think of an Effect as start/stop synchronization, not mount/unmount.** "An Effect describes how to synchronize an external system to the current props and state." Each dependency change = _stop the old sync (cleanup), start a new one_:
 
 ```tsx
 function ChatRoom({ roomId }: { roomId: string }) {
   useEffect(() => {
     const connection = createConnection(serverUrl, roomId);
-    connection.connect();               // start syncing
+    connection.connect(); // start syncing
     return () => connection.disconnect(); // stop syncing
   }, [roomId]); // re-sync whenever roomId changes
 }
@@ -186,32 +188,35 @@ function ChatRoom({ roomId }: { roomId: string }) {
 
 ### 2.8 Breaking dependency loops — correctly (never lie to the linter)
 
-Suppressing `exhaustive-deps` hides real bugs. Fix the *reason* a dependency changes instead ([Lifecycle of Reactive Effects](https://react.dev/learn/lifecycle-of-reactive-effects)):
+Suppressing `exhaustive-deps` hides real bugs. Fix the _reason_ a dependency changes instead ([Lifecycle of Reactive Effects](https://react.dev/learn/lifecycle-of-reactive-effects)):
 
-1. **Move non-reactive values *into* the Effect.** A `const serverUrl = '...'` created inside the effect body isn't a dependency.
-2. **Move constants *outside* the component.** Module-level values never change, so they're not reactive.
+1. **Move non-reactive values _into_ the Effect.** A `const serverUrl = '...'` created inside the effect body isn't a dependency.
+2. **Move constants _outside_ the component.** Module-level values never change, so they're not reactive.
 3. **Use functional state updates** to avoid depending on current state: `setCount(c => c + 1)` instead of `setCount(count + 1)` removes `count` from deps.
 4. **Split unrelated effects.** One effect per independent synchronization concern.
 5. **Memoize objects/functions** that you genuinely must depend on (or hoist them), so their identity is stable. (This is why `useWizardForm` wraps its navigation callbacks in `useCallback` — they're consumed as stable deps.)
-6. **Extract non-reactive logic into an Effect Event** (section 2.9) when the effect must *read* the latest value but must *not* re-run when it changes.
+6. **Extract non-reactive logic into an Effect Event** (section 2.9) when the effect must _read_ the latest value but must _not_ re-run when it changes.
 
 The one thing you must not do: add `// eslint-disable-next-line react-hooks/exhaustive-deps` to make an empty `[]` "work." That guarantees stale closures.
 
 ### 2.9 Effect Events (`useEffectEvent`) — experimental
 
-Sometimes an effect needs the *latest* value of a reactive prop without re-running when it changes. Example: on socket `connected`, show a toast using the current `theme` — but you don't want to reconnect when `theme` changes.
+Sometimes an effect needs the _latest_ value of a reactive prop without re-running when it changes. Example: on socket `connected`, show a toast using the current `theme` — but you don't want to reconnect when `theme` changes.
 
 ```tsx
-import { useEffect, experimental_useEffectEvent as useEffectEvent } from 'react';
+import {
+  useEffect,
+  experimental_useEffectEvent as useEffectEvent,
+} from "react";
 
 function ChatRoom({ roomId, theme }: { roomId: string; theme: string }) {
   const onConnected = useEffectEvent(() => {
-    showNotification('Connected!', theme); // reads latest theme, non-reactive
+    showNotification("Connected!", theme); // reads latest theme, non-reactive
   });
 
   useEffect(() => {
     const connection = createConnection(serverUrl, roomId);
-    connection.on('connected', () => onConnected());
+    connection.on("connected", () => onConnected());
     connection.connect();
     return () => connection.disconnect();
   }, [roomId]); // theme is NOT a dependency
@@ -231,7 +236,7 @@ The single highest-leverage correctness idea in modern React. **Effects are an e
 > **"You don't need Effects to transform data for rendering."**
 > **"You don't need Effects to handle user events."**
 
-Guiding question: *why does this code need to run?* If it runs **because the component was displayed**, an Effect is right. If it runs **because the user did something**, it belongs in an event handler ([You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)).
+Guiding question: _why does this code need to run?_ If it runs **because the component was displayed**, an Effect is right. If it runs **because the user did something**, it belongs in an event handler ([You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)).
 
 ### 3.1 Derive, don't sync
 
@@ -239,11 +244,13 @@ Anything computable from existing props/state should be **calculated during rend
 
 ```tsx
 // BAD: redundant state + effect (extra cascading render)
-const [fullName, setFullName] = useState('');
-useEffect(() => { setFullName(firstName + ' ' + lastName); }, [firstName, lastName]);
+const [fullName, setFullName] = useState("");
+useEffect(() => {
+  setFullName(firstName + " " + lastName);
+}, [firstName, lastName]);
 
 // GOOD: derive during render
-const fullName = firstName + ' ' + lastName;
+const fullName = firstName + " " + lastName;
 ```
 
 "When something can be calculated from the existing props or state, don't put it in state. Instead, calculate it during rendering." ([You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)) (In this repo, `useWizardForm`'s `isFirstStep`/`isLastStep` and `useRequiredFieldValidation`'s `missingFields`/`isValid` are derived every render, not stored.)
@@ -253,7 +260,7 @@ const fullName = firstName + ' ' + lastName;
 ```tsx
 const visibleTodos = useMemo(
   () => getFilteredTodos(todos, filter),
-  [todos, filter]
+  [todos, filter],
 );
 ```
 
@@ -263,15 +270,17 @@ Don't recompute-and-`setState` in an effect ([You Might Not Need an Effect](http
 
 ```tsx
 // BAD: clears comment in an effect after userId changes (stale render first)
-useEffect(() => { setComment(''); }, [userId]);
+useEffect(() => {
+  setComment("");
+}, [userId]);
 
 // GOOD: remount the subtree so ALL its state resets, before paint
-<Profile userId={userId} key={userId} />
+<Profile userId={userId} key={userId} />;
 ```
 
 Passing `userId` as `key` makes React treat different users as different components that "should not share any state." ([You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect))
 
-### 3.4 Adjust *some* state on prop change — during render, not an effect
+### 3.4 Adjust _some_ state on prop change — during render, not an effect
 
 When you can't reset everything, the escape hatch is **calling `setState` during render** (inside a guard), which React re-renders immediately without an intermediate paint:
 
@@ -279,7 +288,8 @@ When you can't reset everything, the escape hatch is **calling `setState` during
 function List({ items }: { items: Item[] }) {
   const [selection, setSelection] = useState<Item | null>(null);
   const [prevItems, setPrevItems] = useState(items);
-  if (items !== prevItems) {   // guard prevents infinite loop
+  if (items !== prevItems) {
+    // guard prevents infinite loop
     setPrevItems(items);
     setSelection(null);
   }
@@ -323,8 +333,12 @@ function handleCheckoutClick() { buyProduct(); navigateTo('/checkout'); }
 ```tsx
 useEffect(() => {
   let ignore = false;
-  fetchResults(query).then((json) => { if (!ignore) setResults(json); });
-  return () => { ignore = true; };
+  fetchResults(query).then((json) => {
+    if (!ignore) setResults(json);
+  });
+  return () => {
+    ignore = true;
+  };
 }, [query]);
 ```
 
@@ -341,11 +355,21 @@ React 19 shipped Dec 5, 2024. Everything below is **stable** unless flagged othe
 `use(resource)` reads a **Promise** (suspends until it resolves) or a **context** value ([use](https://react.dev/reference/react/use)). Its superpower: **it can be called conditionally and inside loops**, unlike every other hook.
 
 ```tsx
-import { use } from 'react';
+import { use } from "react";
 
-function Comments({ commentsPromise }: { commentsPromise: Promise<Comment[]> }) {
+function Comments({
+  commentsPromise,
+}: {
+  commentsPromise: Promise<Comment[]>;
+}) {
   const comments = use(commentsPromise); // suspends until resolved
-  return <>{comments.map((c) => <p key={c.id}>{c.text}</p>)}</>;
+  return (
+    <>
+      {comments.map((c) => (
+        <p key={c.id}>{c.text}</p>
+      ))}
+    </>
+  );
 }
 
 function ThemedButton({ show }: { show: boolean }) {
@@ -358,6 +382,7 @@ function ThemedButton({ show }: { show: boolean }) {
 ```
 
 Critical caveats ([use](https://react.dev/reference/react/use)):
+
 - **Do not create the promise in render.** A `use(fetch('/x'))` makes a new promise every render, re-triggering the Suspense fallback forever. Cache the promise (a module `Map`, or state, or a Suspense-enabled library).
 - **Error/loading handled by boundaries, not try/catch.** Wrap the component in an **Error Boundary** for rejection and **`<Suspense>`** for pending.
 - `use(context)` searches **upward** for the nearest provider — like `useContext`.
@@ -371,13 +396,13 @@ An **Action** is an async function passed to a transition or a form's `action` p
 `useActionState(action, initialState, permalink?)` returns `[state, formAction, isPending]` ([useActionState](https://react.dev/reference/react/useActionState)):
 
 ```tsx
-import { useActionState } from 'react';
+import { useActionState } from "react";
 
 const [error, submitAction, isPending] = useActionState(
   async (previousState: string | null, formData: FormData) => {
-    const error = await updateName(formData.get('name') as string);
-    if (error) return error;      // becomes the next `state`
-    redirect('/profile');
+    const error = await updateName(formData.get("name") as string);
+    if (error) return error; // becomes the next `state`
+    redirect("/profile");
     return null;
   },
   null,
@@ -392,29 +417,29 @@ return (
 );
 ```
 
-Caveats ([useActionState](https://react.dev/reference/react/useActionState)): top-level hook only; the action `(previousState, payload) => nextState` is called **sequentially**; dispatch must run inside an Action/transition (a form `action` does this automatically); if the action throws, React surfaces the nearest Error Boundary; the action is **not** double-invoked in Strict Mode. `permalink` is a Server-Component progressive-enhancement feature — *N/A to a client-only SPA*. Naming history: `useActionState` was `useFormState` pre-19 and moved from `react-dom` to `react`.
+Caveats ([useActionState](https://react.dev/reference/react/useActionState)): top-level hook only; the action `(previousState, payload) => nextState` is called **sequentially**; dispatch must run inside an Action/transition (a form `action` does this automatically); if the action throws, React surfaces the nearest Error Boundary; the action is **not** double-invoked in Strict Mode. `permalink` is a Server-Component progressive-enhancement feature — _N/A to a client-only SPA_. Naming history: `useActionState` was `useFormState` pre-19 and moved from `react-dom` to `react`.
 
 ### 4.3 `useFormStatus`
 
 Read the enclosing form's submission status **without prop-drilling** — for reusable submit buttons/spinners ([useFormStatus](https://react.dev/reference/react-dom/hooks/useFormStatus)). Returns `{ pending, data, method, action }`.
 
 ```tsx
-import { useFormStatus } from 'react-dom';
+import { useFormStatus } from "react-dom";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  return <button disabled={pending}>{pending ? 'Saving...' : 'Save'}</button>;
+  return <button disabled={pending}>{pending ? "Saving..." : "Save"}</button>;
 }
 ```
 
-**Placement caveat (the common mistake):** it only reads a **parent** `<form>`. "`useFormStatus` will not return status information for a `<form>` rendered in the same component." `SubmitButton` must be a child *inside* the `<form>`.
+**Placement caveat (the common mistake):** it only reads a **parent** `<form>`. "`useFormStatus` will not return status information for a `<form>` rendered in the same component." `SubmitButton` must be a child _inside_ the `<form>`.
 
 ### 4.4 `useOptimistic`
 
 Show a temporary value while an Action is in flight; it **auto-reverts/converges** when the action completes ([useOptimistic](https://react.dev/reference/react/useOptimistic)).
 
 ```tsx
-import { useOptimistic, startTransition } from 'react';
+import { useOptimistic, startTransition } from "react";
 
 function LikeButton({ liked, toggleLike, setLiked }: Props) {
   const [optimisticLiked, setOptimisticLiked] = useOptimistic(liked);
@@ -423,10 +448,14 @@ function LikeButton({ liked, toggleLike, setLiked }: Props) {
     startTransition(async () => {
       setOptimisticLiked(!optimisticLiked); // instant UI
       const next = await toggleLike(!optimisticLiked);
-      setLiked(next);                        // real state; optimistic converges
+      setLiked(next); // real state; optimistic converges
     });
   }
-  return <button onClick={handleClick} aria-pressed={optimisticLiked}>Like</button>;
+  return (
+    <button onClick={handleClick} aria-pressed={optimisticLiked}>
+      Like
+    </button>
+  );
 }
 ```
 
@@ -443,9 +472,9 @@ function selectTab(next: string) {
 }
 ```
 
-Caveats: updates must be triggered **synchronously inside** the callback; **async transitions** — state updates *after* an `await` are **not** automatically part of the transition, so wrap them in another `startTransition`; **transitions can't control text inputs** — keep the input's own state synchronous and defer the expensive downstream work.
+Caveats: updates must be triggered **synchronously inside** the callback; **async transitions** — state updates _after_ an `await` are **not** automatically part of the transition, so wrap them in another `startTransition`; **transitions can't control text inputs** — keep the input's own state synchronous and defer the expensive downstream work.
 
-**`useDeferredValue(value, initialValue?)`** defers re-rendering a part of the UI that depends on a value you *receive* ([useDeferredValue](https://react.dev/reference/react/useDeferredValue)):
+**`useDeferredValue(value, initialValue?)`** defers re-rendering a part of the UI that depends on a value you _receive_ ([useDeferredValue](https://react.dev/reference/react/useDeferredValue)):
 
 ```tsx
 const deferredQuery = useDeferredValue(query);
@@ -459,7 +488,13 @@ Unlike debounce/throttle there's **no fixed delay** and deferred renders are **i
 Function components now accept `ref` as a **normal prop** ([React 19 blog](https://react.dev/blog/2024/12/05/react-19)):
 
 ```tsx
-function MyInput({ placeholder, ref }: { placeholder?: string; ref?: React.Ref<HTMLInputElement> }) {
+function MyInput({
+  placeholder,
+  ref,
+}: {
+  placeholder?: string;
+  ref?: React.Ref<HTMLInputElement>;
+}) {
   return <input placeholder={placeholder} ref={ref} />;
 }
 // usage: <MyInput ref={inputRef} />
@@ -489,9 +524,9 @@ TypeScript note: **implicit returns in ref callbacks are now type-errors** (e.g.
 Render the context object directly instead of `<Context.Provider>` ([React 19 blog](https://react.dev/blog/2024/12/05/react-19)):
 
 ```tsx
-const ThemeContext = createContext('light');
+const ThemeContext = createContext("light");
 // React 19:
-<ThemeContext value="dark">{children}</ThemeContext>
+<ThemeContext value="dark">{children}</ThemeContext>;
 // (was: <ThemeContext.Provider value="dark">)
 ```
 
@@ -499,17 +534,17 @@ const ThemeContext = createContext('light');
 
 ### 4.9 Document metadata hoisting
 
-Render `<title>`, `<meta>`, and `<link>` anywhere in the tree; React **hoists them into `<head>`** automatically ([React 19 blog](https://react.dev/blog/2024/12/05/react-19)). **Works client-side** in a Vite app — removes the need for a `react-helmet`-style library for basic per-page metadata. (It does *not* give SSR'd metadata for JS-less crawlers; that still needs prerendering.)
+Render `<title>`, `<meta>`, and `<link>` anywhere in the tree; React **hoists them into `<head>`** automatically ([React 19 blog](https://react.dev/blog/2024/12/05/react-19)). **Works client-side** in a Vite app — removes the need for a `react-helmet`-style library for basic per-page metadata. (It does _not_ give SSR'd metadata for JS-less crawlers; that still needs prerendering.)
 
 ### 4.10 Preloading APIs (client-side)
 
 ```tsx
-import { prefetchDNS, preconnect, preload, preinit } from 'react-dom';
+import { prefetchDNS, preconnect, preload, preinit } from "react-dom";
 
-prefetchDNS('https://example.com');
-preconnect('https://example.com');
-preload('https://.../font.woff2', { as: 'font' });
-preinit('https://.../analytics.js', { as: 'script' });
+prefetchDNS("https://example.com");
+preconnect("https://example.com");
+preload("https://.../font.woff2", { as: "font" });
+preinit("https://.../analytics.js", { as: "script" });
 ```
 
 Stylesheets with a `precedence` prop are ordered by React; async scripts are de-duplicated across components.
@@ -536,7 +571,7 @@ Hydration mismatches log a **single message with a diff**; unexpected third-part
 
 **What it is:** a **build-time** Babel plugin (Vite supported) that **auto-memoizes** components and hooks — the equivalent of inserting optimal `useMemo`/`useCallback`/`React.memo`, with **no code changes** ([React Compiler intro](https://react.dev/learn/react-compiler/introduction)). It optimizes (1) cascading re-renders and (2) expensive in-render calculations. It does **not** memoize non-React functions, share memoization across components, or remove `useMemo` as an effect-dependency escape hatch. **Requires** your code follow the Rules of React (purity, Rules of Hooks); `eslint-plugin-react-compiler` flags unsafe code. **Stable (1.0)**, supports React 17/18/19.
 
-> **QueerPulse stance:** the Compiler is **not enabled here today**. Write correct, pure components and honest effects (Parts 1-3) so it *could* be turned on — and keep the manual-memoization discipline of Part 5 in force until it is. Don't rip out existing memo blindly if it ever lands (removal "can change compilation output").
+> **QueerPulse stance:** the Compiler is **not enabled here today**. Write correct, pure components and honest effects (Parts 1-3) so it _could_ be turned on — and keep the manual-memoization discipline of Part 5 in force until it is. Don't rip out existing memo blindly if it ever lands (removal "can change compilation output").
 
 ---
 
@@ -554,7 +589,9 @@ Critical limitation for SPAs: **Suspense does not detect data fetched in Effects
 
 ```tsx
 // NOT detected by Suspense
-useEffect(() => { fetchData().then(setData); }, []);
+useEffect(() => {
+  fetchData().then(setData);
+}, []);
 // detected
 const data = use(fetchData()); // fetchData returns a cached promise
 ```
@@ -563,26 +600,26 @@ Behavior: children under one boundary **reveal together** (nest for progressive 
 
 ### 7.3 Tearing & `useSyncExternalStore`
 
-**Tearing** is a concurrent-rendering hazard: if an external mutable store changes *while React is mid-render*, different components could read different versions in the same commit. `useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot?)` is the **correct, tear-free** way to subscribe to any store outside React ([useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore)):
+**Tearing** is a concurrent-rendering hazard: if an external mutable store changes _while React is mid-render_, different components could read different versions in the same commit. `useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot?)` is the **correct, tear-free** way to subscribe to any store outside React ([useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore)):
 
 ```tsx
 function useOnlineStatus() {
   return useSyncExternalStore(
     (callback) => {
-      window.addEventListener('online', callback);
-      window.addEventListener('offline', callback);
+      window.addEventListener("online", callback);
+      window.addEventListener("offline", callback);
       return () => {
-        window.removeEventListener('online', callback);
-        window.removeEventListener('offline', callback);
+        window.removeEventListener("online", callback);
+        window.removeEventListener("offline", callback);
       };
     },
-    () => navigator.onLine,   // client snapshot
-    () => true,               // server snapshot (SSR/hydration)
+    () => navigator.onLine, // client snapshot
+    () => true, // server snapshot (SSR/hydration)
   );
 }
 ```
 
-Caveats: **`getSnapshot` must return an immutable, cached snapshot** — returning a *new object each call* causes an **infinite render loop** (React compares with `Object.is`). Keep `subscribe` **stable** (module scope or `useCallback`). This is what Redux/Zustand/Jotai use internally, and why "just read a mutable global in render" is unsafe under concurrent rendering.
+Caveats: **`getSnapshot` must return an immutable, cached snapshot** — returning a _new object each call_ causes an **infinite render loop** (React compares with `Object.is`). Keep `subscribe` **stable** (module scope or `useCallback`). This is what Redux/Zustand/Jotai use internally, and why "just read a mutable global in render" is unsafe under concurrent rendering.
 
 ---
 
@@ -590,14 +627,14 @@ Caveats: **`getSnapshot` must return an immutable, cached snapshot** — returni
 
 These React 19 items are **Server-Component / SSR-framework only** and do **not** apply to QueerPulse. There's no server to run them.
 
-| Feature | Why it's N/A |
-|---|---|
-| **React Server Components** (`'use client'` boundaries) | Require an RSC-capable framework (Next.js App Router). Implementation APIs are not semver-stable in 19.x. |
-| **Server Actions / `'use server'`** | Server functions callable from the client — need a server runtime. |
-| **`useActionState`'s `permalink` argument** | Progressive-enhancement fallback URL (RSC/SSR). The rest of `useActionState` **is** usable client-side. |
-| **Form-action progressive enhancement (works before JS loads)** | A no-JS submission only works with server rendering. Client-side, form actions still work once JS runs. |
-| **`prerender` / `prerenderToNodeStream` static APIs** | Server-side HTML generation. |
-| **Streaming SSR / server-hoisted metadata for crawlers** | No server = no streamed HTML. |
+| Feature                                                         | Why it's N/A                                                                                              |
+| --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **React Server Components** (`'use client'` boundaries)         | Require an RSC-capable framework (Next.js App Router). Implementation APIs are not semver-stable in 19.x. |
+| **Server Actions / `'use server'`**                             | Server functions callable from the client — need a server runtime.                                        |
+| **`useActionState`'s `permalink` argument**                     | Progressive-enhancement fallback URL (RSC/SSR). The rest of `useActionState` **is** usable client-side.   |
+| **Form-action progressive enhancement (works before JS loads)** | A no-JS submission only works with server rendering. Client-side, form actions still work once JS runs.   |
+| **`prerender` / `prerenderToNodeStream` static APIs**           | Server-side HTML generation.                                                                              |
+| **Streaming SSR / server-hoisted metadata for crawlers**        | No server = no streamed HTML.                                                                             |
 
 **Fully usable in this SPA:** `use()` (cached promises + Suspense + Error Boundary), Actions via `useActionState`/`useOptimistic`/`useFormStatus`, `useTransition`/`useDeferredValue`, `ref` as prop, ref cleanup, `<Context>` provider, document-metadata hoisting, preloading APIs, `React.lazy` + Suspense, `useSyncExternalStore`, and (if enabled) the React Compiler.
 
@@ -610,7 +647,7 @@ These React 19 items are **Server-Component / SSR-framework only** and do **not*
 - **`<Context.Provider>` -> `<Context>`** (provider shorthand; `.Provider` on the deprecation path).
 - **Manual-memoization advice inverted by the Compiler** — with it enabled, manual memo is an escape hatch, not the norm. Don't rip out existing memo blindly.
 - **`useEffectEvent` still experimental in 19.0** — the shipped export is `experimental_useEffectEvent`; the durable lesson (extract non-reactive logic instead of suppressing `exhaustive-deps`) holds regardless.
-- **Suspense-for-data is still not "wrap any promise"** — React 19 added the *primitive* (`use()`), not a fetching library; arbitrary `fetch` in `useEffect` never triggers Suspense.
+- **Suspense-for-data is still not "wrap any promise"** — React 19 added the _primitive_ (`use()`), not a fetching library; arbitrary `fetch` in `useEffect` never triggers Suspense.
 
 ---
 
@@ -625,9 +662,10 @@ These React 19 items are **Server-Component / SSR-framework only** and do **not*
 - **Stable, unique keys** in lists; never array index for reorderable lists.
 - **`useSyncExternalStore`** for external stores; snapshot must be cached/immutable.
 - **Cache promises** passed to `use()`; wrap in `<Suspense>` + Error Boundary.
-- Keep components pure so the Compiler *could* optimize them.
+- Keep components pure so the Compiler _could_ optimize them.
 
 ### Primary sources
+
 - React 19 release: https://react.dev/blog/2024/12/05/react-19
 - Render and Commit: https://react.dev/learn/render-and-commit
 - Keeping Components Pure: https://react.dev/learn/keeping-components-pure

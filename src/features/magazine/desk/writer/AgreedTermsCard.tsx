@@ -39,12 +39,23 @@ export function AgreedTermsCard({ assignment }: AgreedTermsCardProps) {
       <p className={pieceStyles.tiny}>{t("magazine:writer.terms.body")}</p>
       {current ? (
         <div className={pieceStyles.kvs}>
-          <KV label={t("magazine:writer.terms.killFeeLabel")} value={current.terms.killFee} />
-          <KV label={t("magazine:writer.terms.rightsLabel")} value={current.terms.rights} />
-          <KV label={t("magazine:writer.terms.editsLabel")} value={current.terms.edits} />
+          <KV
+            label={t("magazine:writer.terms.killFeeLabel")}
+            value={current.terms.killFee}
+          />
+          <KV
+            label={t("magazine:writer.terms.rightsLabel")}
+            value={current.terms.rights}
+          />
+          <KV
+            label={t("magazine:writer.terms.editsLabel")}
+            value={current.terms.edits}
+          />
         </div>
       ) : (
-        <p className={pieceStyles.tiny}>{t("magazine:writer.terms.emptyState")}</p>
+        <p className={pieceStyles.tiny}>
+          {t("magazine:writer.terms.emptyState")}
+        </p>
       )}
     </div>
   );

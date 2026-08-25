@@ -33,7 +33,8 @@ const en: Record<string, string> = {
   "push:vouch.received.title": "You received a vouch",
   "push:vouch.received.body": "{name} vouched for you.",
   "push:event.updated.title": "Event updated",
-  "push:event.updated.body": "{event} has new details — tap to see what changed.",
+  "push:event.updated.body":
+    "{event} has new details — tap to see what changed.",
   "push:event.cancelled.title": "Event cancelled",
   "push:event.cancelled.body": "{event} has been cancelled.",
   "push:safeSpace.vouch.title": "New vouch for your safe space",
@@ -66,14 +67,17 @@ const pt: Record<string, string> = {
   "push:vouch.received.title": "Recebeste um aval",
   "push:vouch.received.body": "{name} avalizou-te.",
   "push:event.updated.title": "Convívio atualizado",
-  "push:event.updated.body": "{event} tem novos detalhes — toca para ver o que mudou.",
+  "push:event.updated.body":
+    "{event} tem novos detalhes — toca para ver o que mudou.",
   "push:event.cancelled.title": "Convívio cancelado",
   "push:event.cancelled.body": "{event} foi cancelado.",
   "push:safeSpace.vouch.title": "Novo aval para o teu espaço seguro",
   "push:safeSpace.vouch.body": "{name} avalizou {space}.",
   "push:housing.match.title": "Uma casa corresponde à tua procura",
-  "push:housing.match.body": "{title} em {area} corresponde a uma procura que guardaste.",
-  "push:housing.match.bodyNoArea": "{title} corresponde a uma procura que guardaste.",
+  "push:housing.match.body":
+    "{title} em {area} corresponde a uma procura que guardaste.",
+  "push:housing.match.bodyNoArea":
+    "{title} corresponde a uma procura que guardaste.",
   "push:topic.newPost.title": "Nova publicação num tópico que segues",
   "push:topic.newPost.body": "{name} publicou em #{topic}.",
   "push:preview.hidden.title": "QueerPulse",
@@ -83,7 +87,10 @@ const pt: Record<string, string> = {
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };
 
 /** Replace `{token}` placeholders; an unknown token is left intact. */
-function interpolate(template: string, params?: Record<string, string>): string {
+function interpolate(
+  template: string,
+  params?: Record<string, string>,
+): string {
   if (!params) return template;
   return template.replace(INTERPOLATION, (match, token: string) => {
     const value = params[token];
@@ -122,7 +129,12 @@ export function formatPushCopy(
 
   return {
     title:
-      titleTemplate !== undefined ? interpolate(titleTemplate, params) : payload.title,
-    body: bodyTemplate !== undefined ? interpolate(bodyTemplate, params) : payload.body,
+      titleTemplate !== undefined
+        ? interpolate(titleTemplate, params)
+        : payload.title,
+    body:
+      bodyTemplate !== undefined
+        ? interpolate(bodyTemplate, params)
+        : payload.body,
   };
 }

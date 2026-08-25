@@ -67,10 +67,9 @@ export function BulkActionModal({
 
   return (
     <AdminModal
-      title={t(
-        TITLE_KEY[action] ?? "admin:moderation.bulk.confirm.title.ban",
-        { count },
-      )}
+      title={t(TITLE_KEY[action] ?? "admin:moderation.bulk.confirm.title.ban", {
+        count,
+      })}
       onClose={onClose}
       footer={
         <>

@@ -78,14 +78,17 @@ function restrictedStateFromError(err: unknown): RestrictedState | undefined {
 function mapLiveError(err: unknown): PublicSubprofileOutcome {
   const restricted = restrictedStateFromError(err);
   if (restricted) return { state: "restricted", restricted };
-  if (err instanceof ApiError && err.status === 404) return { state: "not-found" };
+  if (err instanceof ApiError && err.status === 404)
+    return { state: "not-found" };
   throw err;
 }
 
 /** Same mapping as `mapLiveError`, over `resolvePublicAccessDemo`'s result
  *  shape instead of a thrown `ApiError` — the demo branch never throws for a
  *  business outcome, so this is a plain value map, not a catch. */
-function fromDemoResult(result: DemoPublicAccessResult): PublicSubprofileOutcome {
+function fromDemoResult(
+  result: DemoPublicAccessResult,
+): PublicSubprofileOutcome {
   if (result.kind === "ok") {
     return { state: "ok", data: publicSubprofileToView(result.dto) };
   }
@@ -130,7 +133,10 @@ export function usePublicSubprofile(
           const { findDemoSubprofileByHandle, resolvePublicAccessDemo } =
             await import("../data/subprofiles.data");
           return fromDemoResult(
-            resolvePublicAccessDemo(findDemoSubprofileByHandle(handle), viewerSlug),
+            resolvePublicAccessDemo(
+              findDemoSubprofileByHandle(handle),
+              viewerSlug,
+            ),
           );
         }
         try {
@@ -184,9 +190,8 @@ export function useProfileSubprofiles(slug: string | undefined) {
     queryFn: async ({ signal }) => {
       if (!slug) return [];
       if (demoMode) {
-        const { mockSubprofilesForProfile } = await import(
-          "../data/subprofiles.data"
-        );
+        const { mockSubprofilesForProfile } =
+          await import("../data/subprofiles.data");
         return mockSubprofilesForProfile(slug).map(publicSubprofileToView);
       }
       const dtos = await getProfileSubprofiles(slug, signal);

@@ -116,7 +116,11 @@ export function ConnectionsAllTab({
         <>
           <div className={styles.grid}>
             {visibleAll.map((v, i) => (
-              <FadeIn key={v.slug} delay={Math.min(i, 8) * 60} className={styles.cardFade}>
+              <FadeIn
+                key={v.slug}
+                delay={Math.min(i, 8) * 60}
+                className={styles.cardFade}
+              >
                 <AllConnectionCard
                   view={v}
                   blocked={isBlocked(v.slug)}

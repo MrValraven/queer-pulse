@@ -28,6 +28,9 @@ export const magazine: Catalog = {
 
   // ── MagazineMasthead ─────────────────────────────────────────────────────
   "masthead.sectionsAriaLabel": "Secções da revista",
+  // Segunda linha do logótipo ("QueerPulse" fica sempre em inglês, nome
+  // próprio, ver glossário pt-PT).
+  "masthead.brandMagazine": "Revista",
   "masthead.tagline": "Publicada no primeiro dia de cada mês",
   "masthead.nav.current": "Edição atual",
   "masthead.nav.issues": "Edições",
@@ -196,11 +199,11 @@ export const magazine: Catalog = {
   "deck.editor.publish": "Publicar",
   "deck.editor.unpublish": "Despublicar",
   "deck.editor.delete": "Eliminar",
-  "deck.editor.leaveConfirm":
-    "Tens alterações por guardar. Sair sem guardar?",
+  "deck.editor.leaveConfirm": "Tens alterações por guardar. Sair sem guardar?",
   "deck.editor.previewEmpty": "Adiciona um slide para pré-visualizar",
   "deck.editor.preview.title": "Pré-visualização",
-  "deck.editor.preview.emptySlide": "Começa a preencher este slide para o veres aqui.",
+  "deck.editor.preview.emptySlide":
+    "Começa a preencher este slide para o veres aqui.",
   "deck.editor.budget.headingOver": "Demasiado longo. Vai cortar num telemóvel",
   "deck.editor.budget.headingOk": "Cabe no telemóvel mais estreito",
   "deck.editor.budget.bodyOver": "Um slide não é um parágrafo",
@@ -575,12 +578,10 @@ export const magazine: Catalog = {
     "Ver perfis de pessoas colaboradoras",
   "editor.sideCards.recentActivity": "Atividade recente",
   "editor.sideCards.quickActions": "Ações rápidas",
-  "editor.sideCards.sendPitchDecisions":
-    "Enviar decisões de propostas em lote",
+  "editor.sideCards.sendPitchDecisions": "Enviar decisões de propostas em lote",
   "editor.sideCards.emailContributorsWaiting":
     "Enviar email às pessoas colaboradoras em espera",
-  "editor.sideCards.previewIssueLayout":
-    "Pré-visualizar a paginação da edição",
+  "editor.sideCards.previewIssueLayout": "Pré-visualizar a paginação da edição",
   "editor.sideCards.exportContributorList":
     "Exportar lista de pessoas colaboradoras (CSV)",
 
@@ -709,7 +710,8 @@ export const magazine: Catalog = {
   "desk.newIssue.titleLabel": "Título",
   "desk.newIssue.titlePlaceholder": "O caminho mais longo",
   "desk.newIssue.themeLabel": "Tema",
-  "desk.newIssue.themeHelper": "Uma ou duas palavras. Aparece ao lado do número.",
+  "desk.newIssue.themeHelper":
+    "Uma ou duas palavras. Aparece ao lado do número.",
   "desk.newIssue.themePlaceholder": "Cuidar depois",
   "desk.newIssue.create": "Criar edição",
   "desk.newIssue.creating": "A criar…",
@@ -808,10 +810,14 @@ export const magazine: Catalog = {
   "desk.bulkAssign.ariaLabel": "Atribuir peças a uma edição em lote",
   "desk.bulkAssign.clearSelection": "Limpar seleção",
   "desk.bulkAssign.assignToIssue": "Atribuir a uma edição…",
-  "desk.bulkAssign.assignedToast_one": "{count} peça passou para a edição {number}.",
-  "desk.bulkAssign.assignedToast_other": "{count} peças passaram para a edição {number}.",
-  "desk.bulkAssign.unassignedToast_one": "{count} peça voltou para as peças sem edição.",
-  "desk.bulkAssign.unassignedToast_other": "{count} peças voltaram para as peças sem edição.",
+  "desk.bulkAssign.assignedToast_one":
+    "{count} peça passou para a edição {number}.",
+  "desk.bulkAssign.assignedToast_other":
+    "{count} peças passaram para a edição {number}.",
+  "desk.bulkAssign.unassignedToast_one":
+    "{count} peça voltou para as peças sem edição.",
+  "desk.bulkAssign.unassignedToast_other":
+    "{count} peças voltaram para as peças sem edição.",
 
   // ── DeskSidebar ──────────────────────────────────────────────────────────
   "desk.sidebar.issueStanding": "Como está a edição",
@@ -839,7 +845,8 @@ export const magazine: Catalog = {
   "desk.palette.writePiece": "Escrever uma peça",
   "desk.palette.goToDesk": "Ir para a redação",
   "desk.palette.ariaLabel": "Paleta de comandos",
-  "desk.palette.searchPlaceholder": "Ir diretamente a uma peça, ou começar uma nova…",
+  "desk.palette.searchPlaceholder":
+    "Ir diretamente a uma peça, ou começar uma nova…",
   "desk.palette.searchAria": "Pesquisar na redação",
   "desk.palette.commandsAria": "Comandos",
   "desk.palette.noResults": "Nada corresponde a “{query}”.",
@@ -888,7 +895,8 @@ export const magazine: Catalog = {
 
   // ── ChaseModal (Phase 7 Wave F: incorpora o PieceThread, sem passo de composição à parte) ─
   "desk.modals.chase.title": "Insistir com {name}",
-  "desk.modals.chase.body": "Um lembrete rápido e humano para manter as coisas a andar com calma.",
+  "desk.modals.chase.body":
+    "Um lembrete rápido e humano para manter as coisas a andar com calma.",
 
   // ── HandoffModal ─────────────────────────────────────────────────────────
   "desk.modals.handoff.title": "Passar",
@@ -1041,7 +1049,8 @@ export const magazine: Catalog = {
   "piece.after.lettersHeading": "Cartas",
   "piece.after.noLettersYet": "Ainda sem cartas de leitores.",
   "piece.after.sendToAuthor": "Enviar à autoria",
-  "piece.after.sendToAuthorToast": "O envio de mensagens à autoria ainda não está disponível.",
+  "piece.after.sendToAuthorToast":
+    "O envio de mensagens à autoria ainda não está disponível.",
   "piece.after.runInLetters": "Publicar nas cartas",
   "piece.after.removeFromLetters": "Remover das cartas",
   "piece.after.correctionsHeading": "Correções",
@@ -1050,7 +1059,8 @@ export const magazine: Catalog = {
   "piece.after.correctionsFooter":
     "Uma correção é publicada como uma nota datada no rodapé da peça. Nunca corrigimos em silêncio.",
   "piece.after.correctionAriaLabel": "Texto da correção",
-  "piece.after.correctionPlaceholder": "O que estava errado, e o que está certo.",
+  "piece.after.correctionPlaceholder":
+    "O que estava errado, e o que está certo.",
   "piece.after.publishCorrection": "Publicar correção",
   "piece.after.notifyPeopleNamed": "Avisar as pessoas identificadas",
 
@@ -1230,6 +1240,11 @@ export const magazine: Catalog = {
   "pitchTracker.page.withdrawnToast": "Proposta retirada",
   "pitchTracker.page.undoCta": "Desfazer",
   "pitchTracker.page.stubToast": "{label}: brevemente neste protótipo",
+
+  // ── PitchCard ─────────────────────────────────────────────────────────
+  // Autoria e texto da nota são palavras próprias de quem edita (conteúdo);
+  // só a expressão de chrome "{author} escreveu:" à volta é traduzida.
+  "pitchTracker.card.noteWrote": "{author} escreveu:",
 
   // ── Shared stage-rail vocabulary (PitchStages.tsx) ──────────────────────
   "pitchTracker.stage.pitched": "Proposta enviada",
@@ -1443,7 +1458,8 @@ export const magazine: Catalog = {
   "write.publish.schedule": "Agendar",
   "write.publish.withIssue": "Com a edição",
   "write.publish.scheduleLabel": "Publicar às",
-  "write.publish.scheduleNote": "Publica-se automaticamente na data e hora escolhidas.",
+  "write.publish.scheduleNote":
+    "Publica-se automaticamente na data e hora escolhidas.",
   "write.publish.scheduleInvalid": "Escolhe uma data e hora no futuro.",
   "write.publish.issueNote": "Publica-se automaticamente quando a edição sai.",
   "write.publish.checklistHeading": "Antes de publicar · {done}/{total}",
@@ -1512,19 +1528,20 @@ export const magazine: Catalog = {
   "write.versions.manualSaveLabel": "Guardada manualmente",
   "write.versions.compare": "Comparar",
   "write.versions.restore": "Restaurar",
-  "write.versions.restoreToast": "Versão \"{label}\" restaurada.",
+  "write.versions.restoreToast": 'Versão "{label}" restaurada.',
   "write.versions.restoredFromLabel": "Restaurada a partir de {label}",
-  "write.versions.restoreModal.title": "Restaurar \"{label}\"?",
+  "write.versions.restoreModal.title": 'Restaurar "{label}"?',
   "write.versions.restoreModal.body":
     "Restaurar esta versão? O teu rascunho atual é guardado primeiro, por isso nada se perde.",
   "write.versions.restoreModal.cancel": "Cancelar",
   "write.versions.restoreModal.confirm": "Restaurar esta versão",
   "write.versions.restoreModal.restoring": "A restaurar…",
   "write.versions.diff.title": "Comparar versões",
-  "write.versions.diff.sub": "\"{label}\" por {author} · {when}",
+  "write.versions.diff.sub": '"{label}" por {author} · {when}',
   "write.versions.diff.loading": "A carregar versão…",
   "write.versions.diff.error": "Não foi possível carregar esta versão.",
-  "write.versions.diff.empty": "Nada para comparar. Esta versão não tem blocos.",
+  "write.versions.diff.empty":
+    "Nada para comparar. Esta versão não tem blocos.",
   "write.versions.diff.before": "Esta versão",
   "write.versions.diff.now": "Rascunho atual",
   "write.versions.diff.status.unchanged": "Sem alterações",
@@ -1577,7 +1594,8 @@ export const magazine: Catalog = {
   "issue.publishDate.clear": "Limpar data",
   "issue.publishDate.saving": "A guardar\u2026",
   "issue.publishDate.savedToast": "Edição marcada para {date}.",
-  "issue.publishDate.clearedToast": "Data removida. A edição ficou outra vez sem data.",
+  "issue.publishDate.clearedToast":
+    "Data removida. A edição ficou outra vez sem data.",
   "issue.pages.heading": "Páginas",
   "issue.pages.editorial": "Editorial",
   "issue.pages.total": "Total",
@@ -1603,7 +1621,8 @@ export const magazine: Catalog = {
   "issue.addPieces.emptyDescription":
     "Não há peças à espera de edição. Encomenda uma na redação para começar.",
   "issue.addPieces.addedToast_one": "{count} peça juntou-se à edição {number}.",
-  "issue.addPieces.addedToast_other": "{count} peças juntaram-se à edição {number}.",
+  "issue.addPieces.addedToast_other":
+    "{count} peças juntaram-se à edição {number}.",
   "issue.addPieces.failedToast": "Não deu para guardar. Tenta outra vez.",
 
   "issue.runOrder.inLayout": "Em paginação",
@@ -1748,7 +1767,8 @@ export const magazine: Catalog = {
   "writer.terms.killFeeLabel": "Valor de cancelamento",
   "writer.terms.rightsLabel": "Direitos",
   "writer.terms.editsLabel": "Edições",
-  "writer.terms.emptyState": "Ainda sem nenhuma encomenda ativa. Os termos aparecem assim que houver uma.",
+  "writer.terms.emptyState":
+    "Ainda sem nenhuma encomenda ativa. Os termos aparecem assim que houver uma.",
 
   // ── BylineSafetyCard ─────────────────────────────────────────────────────
   "writer.byline.heading": "A tua segurança",
@@ -1789,7 +1809,8 @@ export const magazine: Catalog = {
   "pieceThread.emptyTitle": "Ainda sem mensagens",
   "pieceThread.emptyDescription":
     "Diz olá. Insistências e perguntas vivem aqui agora, em vez do email.",
-  "pieceThread.errorState": "Não foi possível carregar esta conversa. Tenta de novo daqui a pouco.",
+  "pieceThread.errorState":
+    "Não foi possível carregar esta conversa. Tenta de novo daqui a pouco.",
   "pieceThread.composerAria": "Mensagem",
   "pieceThread.composerPlaceholder": "Escreve uma mensagem…",
   "pieceThread.send": "Enviar",
@@ -1815,7 +1836,8 @@ export const magazine: Catalog = {
   "applyToWrite.pending.body":
     "Um editor vai ler a tua amostra e responder-te. Isto demora normalmente umas duas semanas.",
   "applyToWrite.declined.title": "Desta vez não",
-  "applyToWrite.declined.body": "Obrigado por te candidatares. Desta vez não resultou.",
+  "applyToWrite.declined.body":
+    "Obrigado por te candidatares. Desta vez não resultou.",
   "applyToWrite.declined.reviewNoteLabel": "Da parte dos editores:",
   "applyToWrite.declined.reapplyCta": "Candidatar de novo",
   "applyToWrite.approved.title": "Já és uma pessoa escritora da QueerPulse",
@@ -1827,7 +1849,8 @@ export const magazine: Catalog = {
   // ── ArticleComments (comments/) — comentários de leitores (CNT-10) ──────
   "comments.heading_one": "{count} comentário",
   "comments.heading_other": "{count} comentários",
-  "comments.empty": "Ainda não há comentários: sê a primeira pessoa a dizer algo.",
+  "comments.empty":
+    "Ainda não há comentários: sê a primeira pessoa a dizer algo.",
   "comments.reply": "Responder",
   "comments.edit": "Editar",
   "comments.delete": "Eliminar",
@@ -1842,16 +1865,19 @@ export const magazine: Catalog = {
   "comments.composer.cancel": "Cancelar",
   "comments.report.cta": "Denunciar",
   "comments.report.title": "Denunciar este comentário",
-  "comments.report.sub": "Diz-nos o que está errado com o comentário de {name}.",
+  "comments.report.sub":
+    "Diz-nos o que está errado com o comentário de {name}.",
   "comments.report.reasonGroupAria": "Motivo da denúncia",
   "comments.report.cancel": "Cancelar",
   "comments.report.sendCta": "Enviar denúncia",
   "comments.report.sending": "A enviar…",
   "comments.report.confirmTitle": "Denúncia <em>enviada</em>",
-  "comments.report.confirmBody": "Obrigado. Um moderador vai rever o comentário de {name}.",
+  "comments.report.confirmBody":
+    "Obrigado. Um moderador vai rever o comentário de {name}.",
   "comments.report.done": "Concluído",
   "comments.report.errorTitle": "Algo correu mal",
-  "comments.report.errorBody": "Não foi possível enviar a tua denúncia. Tenta novamente.",
+  "comments.report.errorBody":
+    "Não foi possível enviar a tua denúncia. Tenta novamente.",
   "comments.report.retryCta": "Tentar novamente",
 
   // ── Painel partilhado de falha ao carregar (MagazineLoadError, FE-CNT-08) ─
@@ -1870,8 +1896,7 @@ export const magazine: Catalog = {
   "issue.metaTitle": "Edição {number}, {title}: Revista QueerPulse",
   "issue.metaTitleNumberOnly": "Edição {number}: Revista QueerPulse",
   "issue.metaTitleFallback": "A edição: Revista QueerPulse",
-  "issue.metaDescription":
-    "Uma edição da Revista QueerPulse, de capa a capa.",
+  "issue.metaDescription": "Uma edição da Revista QueerPulse, de capa a capa.",
   "sectionArticles.metaTitle": "{section}: Revista QueerPulse",
   "sectionArticles.metaDescription": "Tudo o que publicámos em {section}.",
 

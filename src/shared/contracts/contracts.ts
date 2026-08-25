@@ -129,12 +129,7 @@ export interface CommunityPostResponse {
 }
 
 export type MessageReactionKey =
-  | "love"
-  | "laugh"
-  | "like"
-  | "wow"
-  | "sad"
-  | "thanks";
+  "love" | "laugh" | "like" | "wow" | "sad" | "thanks";
 
 export interface ReactionSummary {
   key: MessageReactionKey;

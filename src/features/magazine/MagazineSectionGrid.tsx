@@ -53,7 +53,9 @@ export function MagazineSectionGrid({
           <span className={styles.cardName}>{section.name}</span>
           {section.articleCount !== null && (
             <span className={styles.cardCount}>
-              {t("magazine:sections.articleCount", { count: section.articleCount })}
+              {t("magazine:sections.articleCount", {
+                count: section.articleCount,
+              })}
             </span>
           )}
           <span className={styles.cardArrow} aria-hidden>

@@ -47,38 +47,38 @@ export function TherapistsSection() {
             }}
           />
         ) : (
-        <CardGrid>
-          {cards.map((vm, index) => (
-            <ResourceCard
-              key={vm.handle}
-              name={vm.name}
-              spec={vm.creds ?? ""}
-              tags={vm.specs}
-              loc={vm.format ?? ""}
-              ctaLabel={t("resources:mentalHealth.therapists.viewProfileCta")}
-              onCta={() => {
-                void navigate(vm.href);
-              }}
-              delay={index * 55}
-            />
-          ))}
-          <Reveal
-            className={`${styles.card} ${styles.cardDashed}`}
-            delay={cards.length * 55}
-          >
-            <div>
-              {t("resources:wellbeing.therapists.applyPrompt")}
-              <br />
-              <Link
-                to={routes.contact}
-                style={{ color: "var(--plum)", fontWeight: 600 }}
-              >
-                {t("resources:wellbeing.therapists.applyCta")}{" "}
-                <FiArrowRight aria-hidden />
-              </Link>
-            </div>
-          </Reveal>
-        </CardGrid>
+          <CardGrid>
+            {cards.map((vm, index) => (
+              <ResourceCard
+                key={vm.handle}
+                name={vm.name}
+                spec={vm.creds ?? ""}
+                tags={vm.specs}
+                loc={vm.format ?? ""}
+                ctaLabel={t("resources:mentalHealth.therapists.viewProfileCta")}
+                onCta={() => {
+                  void navigate(vm.href);
+                }}
+                delay={index * 55}
+              />
+            ))}
+            <Reveal
+              className={`${styles.card} ${styles.cardDashed}`}
+              delay={cards.length * 55}
+            >
+              <div>
+                {t("resources:wellbeing.therapists.applyPrompt")}
+                <br />
+                <Link
+                  to={routes.contact}
+                  style={{ color: "var(--plum)", fontWeight: 600 }}
+                >
+                  {t("resources:wellbeing.therapists.applyCta")}{" "}
+                  <FiArrowRight aria-hidden />
+                </Link>
+              </div>
+            </Reveal>
+          </CardGrid>
         )}
       </div>
     </section>

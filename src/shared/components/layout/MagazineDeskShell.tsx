@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { useTranslation } from "../../i18n/useTranslation";
@@ -42,12 +49,22 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
   const isDrawerActive = isMobile && isDrawerOpen;
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
-  useEffect(() => {
+  // Reset the drawer the moment the viewport leaves mobile, so a stale
+  // "open" doesn't resurface if it narrows back to mobile later. Adjusted
+  // during render (React's documented pattern for resetting state when a
+  // condition changes) instead of an effect, to avoid the extra commit.
+  const [previousIsMobile, setPreviousIsMobile] = useState(isMobile);
+  if (isMobile !== previousIsMobile) {
+    setPreviousIsMobile(isMobile);
     if (!isMobile) setIsDrawerOpen(false);
-  }, [isMobile]);
+  }
 
   useScrollLock(isDrawerActive);
-  useNavDrawerFocus({ isOpen: isDrawerActive, panelRef: drawerPanelRef, onClose: closeDrawer });
+  useNavDrawerFocus({
+    isOpen: isDrawerActive,
+    panelRef: drawerPanelRef,
+    onClose: closeDrawer,
+  });
 
   const drawerDialogProps = isMobile
     ? {
@@ -75,7 +92,12 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
   }, []);
 
   const paletteItems = useMemo(
-    () => pieces.map((piece) => ({ id: piece.id, title: piece.title, format: piece.format })),
+    () =>
+      pieces.map((piece) => ({
+        id: piece.id,
+        title: piece.title,
+        format: piece.format,
+      })),
     [pieces],
   );
 
@@ -85,13 +107,20 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
     <MagazineShellOverlayContext.Provider value={overlayState}>
       <div className={styles.app}>
         {isDrawerActive && (
-          <div className={styles.scrim} role="presentation" onClick={closeDrawer} />
+          <div
+            className={styles.scrim}
+            role="presentation"
+            onClick={closeDrawer}
+          />
         )}
 
         <div
           id={SIDEBAR_DRAWER_ID}
           ref={drawerPanelRef}
-          className={[styles.sidebarDock, isDrawerOpen && styles.sidebarDockOpen]
+          className={[
+            styles.sidebarDock,
+            isDrawerOpen && styles.sidebarDockOpen,
+          ]
             .filter(Boolean)
             .join(" ")}
           inert={isMobile && !isDrawerOpen}
@@ -106,7 +135,9 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 className={styles.menuBtn}
-                aria-label={isDrawerOpen ? t("nav:closeMenu") : t("nav:openMenu")}
+                aria-label={
+                  isDrawerOpen ? t("nav:closeMenu") : t("nav:openMenu")
+                }
                 aria-expanded={isDrawerOpen}
                 aria-controls={SIDEBAR_DRAWER_ID}
                 onClick={() => setIsDrawerOpen((open) => !open)}
@@ -140,7 +171,9 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
         open={isPaletteOpen}
         onClose={() => setIsPaletteOpen(false)}
         pieces={paletteItems}
-        onSelectPiece={(id) => void navigate(routes.magazinePiece.replace(":id", id))}
+        onSelectPiece={(id) =>
+          void navigate(routes.magazinePiece.replace(":id", id))
+        }
         onGoDesk={() => void navigate(routes.magazineEditor)}
         onNewPiece={() => void navigate(`${routes.magazineEditor}?write=new`)}
       />

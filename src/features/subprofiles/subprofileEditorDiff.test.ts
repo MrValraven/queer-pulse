@@ -6,7 +6,10 @@ import {
   type MetaSnapshot,
   type PendingArea,
 } from "./subprofileEditorDiff";
-import { withUid, type SubprofileEditorRow } from "./subprofileSectionEditorRows";
+import {
+  withUid,
+  type SubprofileEditorRow,
+} from "./subprofileSectionEditorRows";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 
 /**
@@ -187,7 +190,9 @@ describe("diffRows", () => {
   });
 
   it("counts added rows", () => {
-    const baseline = [makeRow({ section: "discography", title: "Threshold EP" })];
+    const baseline = [
+      makeRow({ section: "discography", title: "Threshold EP" }),
+    ];
     const current = [
       ...baseline,
       makeRow({ section: "discography", title: "New Track A" }),
@@ -215,7 +220,9 @@ describe("diffRows", () => {
   });
 
   it("counts an edited row's content change", () => {
-    const baseline = [makeRow({ section: "discography", title: "Threshold EP" })];
+    const baseline = [
+      makeRow({ section: "discography", title: "Threshold EP" }),
+    ];
     const current = [{ ...baseline[0]!, title: "Threshold EP (Remaster)" }];
     expect(diffRows(current, baseline)).toEqual({
       added: 0,

@@ -144,11 +144,7 @@ function initialsOf(name: string): string {
 
 /** Practice skin (therapist): community endorsers, replacing the generic
  *  endorsers slot with a "vouched for" framing. `null` when there are none. */
-export function PracticeVouches({
-  endorsers,
-}: {
-  endorsers: EndorserDTO[];
-}) {
+export function PracticeVouches({ endorsers }: { endorsers: EndorserDTO[] }) {
   const { t } = useTranslation();
   if (endorsers.length === 0) return null;
 

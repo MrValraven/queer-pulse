@@ -21,7 +21,7 @@ describe("DeviceFrame", () => {
         device="desktop"
       />,
     );
-    const frame = screen.getByTitle("Join QueerPulse") as HTMLIFrameElement;
+    const frame = screen.getByTitle<HTMLIFrameElement>("Join QueerPulse");
     expect(frame.tagName).toBe("IFRAME");
     expect(frame.getAttribute("src")).toBe("/invite?sandbox=1");
     expect(frame.getAttribute("data-sandbox")).toBe("1");
@@ -63,7 +63,7 @@ describe("DeviceFrame", () => {
         onEscape={onEscape}
       />,
     );
-    const frame = screen.getByTitle("X") as HTMLIFrameElement;
+    const frame = screen.getByTitle<HTMLIFrameElement>("X");
     fireEvent.load(frame);
     // same-origin contentWindow receives the keydown
     const frameWindow = frame.contentWindow;

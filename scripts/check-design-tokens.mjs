@@ -95,9 +95,7 @@ for (const file of walk(sourceDirectory)) {
 }
 
 if (violations.length > 0) {
-  console.error(
-    `Design-token violations in ${violations.length} place(s):\n`,
-  );
+  console.error(`Design-token violations in ${violations.length} place(s):\n`);
   for (const violation of violations) console.error(violation);
   console.error(
     "\nUse a token from src/styles/tokens/. If a literal is genuinely not a " +

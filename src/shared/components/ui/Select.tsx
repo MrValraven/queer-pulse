@@ -120,11 +120,7 @@ export function Select(props: SelectProps) {
   const showInvalid = invalid || ariaInvalid === true || ariaInvalid === "true";
 
   const selectedValues: ReadonlySet<string> = new Set(
-    props.multiple
-      ? props.value
-      : props.value != null
-        ? [props.value]
-        : [],
+    props.multiple ? props.value : props.value != null ? [props.value] : [],
   );
 
   const close = () => {
@@ -264,7 +260,9 @@ function SelectValue({
 
   if (!multiple) {
     const current = options.find((option) => selectedValues.has(option.value));
-    return <span className={styles.value}>{current?.label ?? placeholder}</span>;
+    return (
+      <span className={styles.value}>{current?.label ?? placeholder}</span>
+    );
   }
 
   const chosen = options.filter((option) => selectedValues.has(option.value));

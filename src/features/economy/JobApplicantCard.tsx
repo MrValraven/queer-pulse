@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { FiCheck, FiEye, FiX } from "react-icons/fi";
-import { Avatar, Badge, Button, type BadgeTone } from "../../shared/components/ui";
+import {
+  Avatar,
+  Badge,
+  Button,
+  type BadgeTone,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";

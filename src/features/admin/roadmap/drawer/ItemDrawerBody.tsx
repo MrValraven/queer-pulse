@@ -5,7 +5,7 @@ import { SkeletonLine } from "../../../../shared/components/ui";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import type { RoadmapItemWriteBody } from "../../api/roadmapAdmin.types";
-import { useItemDrawer } from "../state/useItemDrawer";
+import { useItemDrawer } from "../state/itemDrawerHook";
 import {
   buildDraftDefaults,
   COLUMN_CHIP_TONE,
@@ -30,8 +30,14 @@ import styles from "./ItemDrawer.module.css";
 export function ItemDrawerBody({ openId }: { openId: string }) {
   const { close } = useItemDrawer();
   const { items, team, loading } = useAdminRoadmap();
-  const { createItem, updateItem, deleteItem, updateDeps, archiveItem, pending } =
-    useAdminRoadmapMutations();
+  const {
+    createItem,
+    updateItem,
+    deleteItem,
+    updateDeps,
+    archiveItem,
+    pending,
+  } = useAdminRoadmapMutations();
   const { t } = useTranslation();
 
   const isCreate = openId === "new";
@@ -73,11 +79,18 @@ export function ItemDrawerBody({ openId }: { openId: string }) {
       <AdminDrawer
         label={t("admin:roadmap.drawer.eyebrow")}
         onClose={close}
-        head={<div className={styles.headTop}>{t("admin:roadmap.drawer.eyebrow")}</div>}
+        head={
+          <div className={styles.headTop}>
+            {t("admin:roadmap.drawer.eyebrow")}
+          </div>
+        }
       >
         <div aria-busy="true">
           <SkeletonLine width="50%" height={20} />
-          <SkeletonLine height={120} style={{ marginTop: 16, borderRadius: 16 }} />
+          <SkeletonLine
+            height={120}
+            style={{ marginTop: 16, borderRadius: 16 }}
+          />
         </div>
       </AdminDrawer>
     );
@@ -142,8 +155,12 @@ export function ItemDrawerBody({ openId }: { openId: string }) {
         onFieldChange={handleFieldChange}
         onPublicToggle={handlePublicToggle}
         onAddDep={(body) => editItem && updateDeps({ id: editItem.id, body })}
-        onRemoveDep={(body) => editItem && updateDeps({ id: editItem.id, body })}
-        onNotify={() => editItem && modals.open("notify", { itemId: editItem.id })}
+        onRemoveDep={(body) =>
+          editItem && updateDeps({ id: editItem.id, body })
+        }
+        onNotify={() =>
+          editItem && modals.open("notify", { itemId: editItem.id })
+        }
         onOpenAudit={() => modals.open("audit")}
       />
     </AdminDrawer>

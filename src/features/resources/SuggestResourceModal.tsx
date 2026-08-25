@@ -96,10 +96,7 @@ export function SuggestResourceModal({
               placeholder={t("resources:suggest.form.namePlaceholder")}
             />
 
-            <label
-              className={styles.label}
-              htmlFor={`${fieldId}-description`}
-            >
+            <label className={styles.label} htmlFor={`${fieldId}-description`}>
               {t("resources:suggest.form.descriptionLabel")}
             </label>
             <textarea

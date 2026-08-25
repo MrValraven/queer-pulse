@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiCornerUpLeft } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -143,12 +143,18 @@ export function PulsePost({
     demoMode,
   });
   const [reactions, setReactions] = useState(post.reactions);
+  const [syncedPostReactions, setSyncedPostReactions] = useState(
+    post.reactions,
+  );
   // Re-sync from the server whenever this post's reactions change (a refetch
   // after load-more or a socket invalidation), so the optimistic local copy
-  // doesn't drift from the true counts.
-  useEffect(() => {
+  // doesn't drift from the true counts. Adjusted during render (React's
+  // documented pattern for mirroring a prop) rather than an effect, since
+  // there's no external system here to synchronize with.
+  if (syncedPostReactions !== post.reactions) {
+    setSyncedPostReactions(post.reactions);
     setReactions(post.reactions);
-  }, [post.reactions]);
+  }
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [replyDraft, setReplyDraft] = useState("");
   const [added, setAdded] = useState<PostReply[]>([]);

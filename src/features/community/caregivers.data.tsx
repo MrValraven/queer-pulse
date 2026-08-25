@@ -127,7 +127,9 @@ const FAQ_SOURCES: FaqSource[] = [
 
 export function buildFaqs(): Faq[] {
   return FAQ_SOURCES.map((source) => ({
-    question: <Translation i18nKey={source.questionKey} components={{ em: <em /> }} />,
+    question: (
+      <Translation i18nKey={source.questionKey} components={{ em: <em /> }} />
+    ),
     answer: (
       <Translation
         i18nKey={source.answerKey}

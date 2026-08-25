@@ -86,8 +86,7 @@ export function useAdminResourceSuggestionMutations() {
                     ? {
                         ...item,
                         status,
-                        decidedAt:
-                          item.decidedAt ?? new Date().toISOString(),
+                        decidedAt: item.decidedAt ?? new Date().toISOString(),
                       }
                     : item,
                 ),

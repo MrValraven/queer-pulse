@@ -154,9 +154,7 @@ export function Stepper({
                   <span
                     className={nodeClass}
                     aria-current={isCurrent ? "step" : undefined}
-                    aria-label={
-                      step.label == null ? step.ariaLabel : undefined
-                    }
+                    aria-label={step.label == null ? step.ariaLabel : undefined}
                   >
                     {dot}
                     {textBlock}

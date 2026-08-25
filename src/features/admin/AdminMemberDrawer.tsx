@@ -14,12 +14,11 @@ import { AdminMemberDrawerHeader } from "./AdminMemberDrawerHeader";
 import { AdminMemberDrawerActions } from "./AdminMemberDrawerActions";
 import { AdminMemberDrawerSkeleton } from "./AdminMemberDrawerSkeleton";
 import { AdminMemberSuspensionControl } from "./AdminMemberSuspensionControl";
+import { MessageModal, RestrictModal } from "./AdminMemberModals";
 import {
-  MessageModal,
-  RestrictModal,
   RESTRICT_DURATION_TO_API,
   RESTRICT_REASON_TO_CODE,
-} from "./AdminMemberModals";
+} from "./adminMemberModals.utils";
 import { useAdminMember, useRestrictMember } from "./api/useAdminMembers";
 import { type AdminMember } from "./adminMembers.data";
 

@@ -55,7 +55,9 @@ describe("StudioLiveNow", () => {
       </TestProviders>,
     );
 
-    fireEvent.click(await screen.findByRole("button", { name: /tip mariana/i }));
+    fireEvent.click(
+      await screen.findByRole("button", { name: /tip mariana/i }),
+    );
     expect(onTip).toHaveBeenCalledTimes(1);
   });
 });

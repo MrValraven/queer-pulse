@@ -88,7 +88,8 @@ function GatheringPhotosHero() {
           </em>
         </h1>
         <p className={styles.dek}>
-          {PHOTOS_DEK} <em>{PHOTOS_DEK_EMPHASIS}</em>{PHOTOS_DEK_SUFFIX}
+          {PHOTOS_DEK} <em>{PHOTOS_DEK_EMPHASIS}</em>
+          {PHOTOS_DEK_SUFFIX}
         </p>
         <div className={styles.meta}>
           <span>
@@ -263,10 +264,7 @@ export function GatheringPhotosPage() {
         <section className={styles.hero}>
           <div className={styles.heroInner}>
             {gathering && (
-              <Link
-                to={gatheringPath(gathering.slug)}
-                className={styles.back}
-              >
+              <Link to={gatheringPath(gathering.slug)} className={styles.back}>
                 <FiArrowLeft aria-hidden /> {gathering.title}
               </Link>
             )}

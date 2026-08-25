@@ -1,7 +1,10 @@
 import { AssignIssueModal } from "./AssignIssueModal";
 import { NewIssueModal } from "./issue/NewIssueModal";
 import { suggestNextIssueNumber } from "../api/useDeskIssues";
-import type { CreateIssueDto, IssueSummaryDto } from "../api/issueProduction.api";
+import type {
+  CreateIssueDto,
+  IssueSummaryDto,
+} from "../api/issueProduction.api";
 import type { IssueSummary, Piece } from "../data/desk.data";
 import type { IssueAssignmentTarget } from "./useDeskAssignment";
 
@@ -44,7 +47,9 @@ export function DeskIssueModals({
           // A mixed selection has no single "current" issue to pre-select, so
           // only a single-piece assignment claims one.
           currentIssueId={
-            assignTargets.length === 1 ? (assignTargets[0]?.issueId ?? null) : null
+            assignTargets.length === 1
+              ? (assignTargets[0]?.issueId ?? null)
+              : null
           }
           onClose={onCloseAssign}
           onAssign={onAssign}

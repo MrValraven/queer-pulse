@@ -153,7 +153,10 @@ export function useRequiredFieldValidation<
   values,
   requiredFields,
   buildError,
-}: UseRequiredFieldValidationOptions<Values, FieldKey>): RequiredFieldValidation<FieldKey> {
+}: UseRequiredFieldValidationOptions<
+  Values,
+  FieldKey
+>): RequiredFieldValidation<FieldKey> {
   const [hasBeenSubmitted, setHasBeenSubmitted] = useState(false);
 
   const missingFields = requiredFields.filter(

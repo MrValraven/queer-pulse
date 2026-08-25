@@ -185,18 +185,30 @@ export function WhoSeesWhatHiddenFrom() {
   const handleHide = (slug: string) => {
     hideFrom.mutate(slug, {
       onSuccess: () =>
-        showToast(t("members:profile.whoSeesWhat.hiddenFrom.toast.hidden"), "success"),
+        showToast(
+          t("members:profile.whoSeesWhat.hiddenFrom.toast.hidden"),
+          "success",
+        ),
       onError: () =>
-        showToast(t("members:profile.whoSeesWhat.hiddenFrom.toast.error"), "error"),
+        showToast(
+          t("members:profile.whoSeesWhat.hiddenFrom.toast.error"),
+          "error",
+        ),
     });
   };
 
   const handleUnhide = (slug: string) => {
     unhideFrom.mutate(slug, {
       onSuccess: () =>
-        showToast(t("members:profile.whoSeesWhat.hiddenFrom.toast.unhidden"), "info"),
+        showToast(
+          t("members:profile.whoSeesWhat.hiddenFrom.toast.unhidden"),
+          "info",
+        ),
       onError: () =>
-        showToast(t("members:profile.whoSeesWhat.hiddenFrom.toast.error"), "error"),
+        showToast(
+          t("members:profile.whoSeesWhat.hiddenFrom.toast.error"),
+          "error",
+        ),
     });
   };
 
@@ -244,7 +256,10 @@ export function WhoSeesWhatHiddenFrom() {
           </Button>
           {pickerOpen && (
             <HiddenFromPicker
-              excludeSlugs={[profile.slug, ...list.map((person) => person.slug)]}
+              excludeSlugs={[
+                profile.slug,
+                ...list.map((person) => person.slug),
+              ]}
               onClose={() => setPickerOpen(false)}
               onHide={handleHide}
             />

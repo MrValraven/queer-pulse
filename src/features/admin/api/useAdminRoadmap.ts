@@ -35,7 +35,9 @@ export interface AdminRoadmapView {
   loading: boolean;
 }
 
-function fromDto(dto: RoadmapAdminResponseDTO): Omit<AdminRoadmapView, "loading"> {
+function fromDto(
+  dto: RoadmapAdminResponseDTO,
+): Omit<AdminRoadmapView, "loading"> {
   return {
     items: dto.items,
     ideas: dto.ideas,

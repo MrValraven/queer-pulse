@@ -65,9 +65,7 @@ export function ThemeStudioPreview({
             </div>
             <div className={styles.pclBody}>
               <div className={styles.pclName}>{fullName(previewMember)}</div>
-              {pronouns && (
-                <div className={styles.pclPronouns}>{pronouns}</div>
-              )}
+              {pronouns && <div className={styles.pclPronouns}>{pronouns}</div>}
               <div className={styles.pclLoc}>
                 {t("settings:themeStudio.memberSince", {
                   year: previewMember.since,

@@ -66,7 +66,9 @@ export function ThreadReplyItem({
 }) {
   const { t } = useTranslation();
   const replyIdentity = reply.postId ?? replyKey(reply);
-  const canEdit = demoMode ? demoOwns(reply) && !reply.deleted : !!reply.canEdit;
+  const canEdit = demoMode
+    ? demoOwns(reply) && !reply.deleted
+    : !!reply.canEdit;
   const canDelete = demoMode
     ? demoOwns(reply) && !reply.deleted
     : !!reply.canDelete;

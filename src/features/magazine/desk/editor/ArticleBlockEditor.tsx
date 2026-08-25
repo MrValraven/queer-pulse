@@ -1,4 +1,9 @@
-import { FiChevronDown, FiChevronUp, FiMoreVertical, FiTrash2 } from "react-icons/fi";
+import {
+  FiChevronDown,
+  FiChevronUp,
+  FiMoreVertical,
+  FiTrash2,
+} from "react-icons/fi";
 import { IconButton } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { ArticleBlock } from "../../api/pieces.api";
@@ -113,7 +118,13 @@ interface BlockContentProps {
 
 /** Dispatches to the right editing surface for `block.kind`, preserving the
  * discriminant on every patch by spreading `block`. */
-function BlockContent({ block, index, onSelect, onChange, onSlash }: BlockContentProps) {
+function BlockContent({
+  block,
+  index,
+  onSelect,
+  onChange,
+  onSlash,
+}: BlockContentProps) {
   const { t } = useTranslation();
   switch (block.kind) {
     case "paragraph": {
@@ -174,9 +185,21 @@ function BlockContent({ block, index, onSelect, onChange, onSlash }: BlockConten
         />
       );
     case "stats":
-      return <StatsBlockFields block={block} onSelect={onSelect} onChange={onChange} />;
+      return (
+        <StatsBlockFields
+          block={block}
+          onSelect={onSelect}
+          onChange={onChange}
+        />
+      );
     case "image":
-      return <ImageBlockFields block={block} onSelect={onSelect} onChange={onChange} />;
+      return (
+        <ImageBlockFields
+          block={block}
+          onSelect={onSelect}
+          onChange={onChange}
+        />
+      );
     default: {
       // Exhaustiveness guard: TypeScript rejects an unhandled ArticleBlock
       // member here at compile time.

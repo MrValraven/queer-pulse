@@ -96,7 +96,8 @@ export function SkillsEditor({
             onClick={add}
             disabled={!name.trim()}
           >
-            <FiPlus size={16} aria-hidden /> {t("members:profileEdit.skills.add")}
+            <FiPlus size={16} aria-hidden />{" "}
+            {t("members:profileEdit.skills.add")}
           </Button>
         </div>
       </div>

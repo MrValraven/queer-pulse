@@ -192,7 +192,9 @@ export function ReadingGroupsPage() {
                   className={styles.empty}
                   icon={<FiBookOpen />}
                   title={t("community:readingGroups.liveEmpty.title")}
-                  description={t("community:readingGroups.liveEmpty.description")}
+                  description={t(
+                    "community:readingGroups.liveEmpty.description",
+                  )}
                 />
               ) : (
                 <EmptyState
@@ -240,7 +242,11 @@ export function ReadingGroupsPage() {
         }
         sub={t("community:readingGroups.outro.sub")}
       >
-        <Button to={requestInvitePath("reading_groups")} variant="primary" size="lg">
+        <Button
+          to={requestInvitePath("reading_groups")}
+          variant="primary"
+          size="lg"
+        >
           {t("community:readingGroups.outro.cta")}
         </Button>
       </Outro>

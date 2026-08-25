@@ -25,7 +25,11 @@ export interface VersionDiffProps {
  * `useArticleVersion` (the list query never carries `blocks`, only this
  * single-version detail endpoint does).
  */
-export function VersionDiff({ versionId, currentBlocks, onClose }: VersionDiffProps) {
+export function VersionDiff({
+  versionId,
+  currentBlocks,
+  onClose,
+}: VersionDiffProps) {
   const { t } = useTranslation();
   const formatters = useFormat();
   const { version, isLoading, isError } = useArticleVersion(versionId);
@@ -34,18 +38,31 @@ export function VersionDiff({ versionId, currentBlocks, onClose }: VersionDiffPr
     ? t("magazine:write.versions.diff.sub", {
         label: version.label,
         author: version.author,
-        when: formatRelative(version.createdAt, formatters) || version.createdAt,
+        when:
+          formatRelative(version.createdAt, formatters) || version.createdAt,
       })
     : undefined;
 
   return (
-    <Modal title={t("magazine:write.versions.diff.title")} sub={subLabel} onClose={onClose} wide>
+    <Modal
+      title={t("magazine:write.versions.diff.title")}
+      sub={subLabel}
+      onClose={onClose}
+      wide
+    >
       {isLoading ? (
-        <span className={tabStyles.tiny}>{t("magazine:write.versions.diff.loading")}</span>
+        <span className={tabStyles.tiny}>
+          {t("magazine:write.versions.diff.loading")}
+        </span>
       ) : isError || !version ? (
-        <span className={tabStyles.tiny}>{t("magazine:write.versions.diff.error")}</span>
+        <span className={tabStyles.tiny}>
+          {t("magazine:write.versions.diff.error")}
+        </span>
       ) : (
-        <VersionDiffRows currentBlocks={currentBlocks} versionBlocks={version.blocks} />
+        <VersionDiffRows
+          currentBlocks={currentBlocks}
+          versionBlocks={version.blocks}
+        />
       )}
     </Modal>
   );
@@ -62,7 +79,11 @@ function VersionDiffRows({
   const rows = computeVersionDiff(currentBlocks, versionBlocks);
 
   if (rows.length === 0) {
-    return <span className={tabStyles.tiny}>{t("magazine:write.versions.diff.empty")}</span>;
+    return (
+      <span className={tabStyles.tiny}>
+        {t("magazine:write.versions.diff.empty")}
+      </span>
+    );
   }
 
   return (

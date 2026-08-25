@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Avatar, Button, ImageSlot, Reveal, SkeletonCard, Tag } from "../../shared/components/ui";
+import {
+  Avatar,
+  Button,
+  ImageSlot,
+  Reveal,
+  SkeletonCard,
+  Tag,
+} from "../../shared/components/ui";
 import { MagazineComingSoon } from "./MagazineComingSoon";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -64,7 +71,10 @@ export function MagazineLiveSections() {
           <section className={styles.section}>
             <div className={styles.asHead} id="latest">
               <div className={styles.asTitle}>
-                <Translation i18nKey="magazine:sections.live.title" components={{ em: <em /> }} />
+                <Translation
+                  i18nKey="magazine:sections.live.title"
+                  components={{ em: <em /> }}
+                />
               </div>
             </div>
             <div className={styles.grid}>
@@ -105,12 +115,18 @@ function LiveArticleCard({ article }: { article: ArticleListItemDTO }) {
         />
       </div>
       <div className={styles.acKicker}>
-        {article.issueNumber ? `Issue ${article.issueNumber}` : "From the magazine"}
+        {article.issueNumber
+          ? `Issue ${article.issueNumber}`
+          : "From the magazine"}
       </div>
       <div className={styles.acTitle}>{article.title}</div>
       <div className={styles.acExcerpt}>{article.dek}</div>
       <div className={styles.acMeta}>
-        <Avatar initials={initialsFor(article.author.displayName)} tint={tint} size={22} />
+        <Avatar
+          initials={initialsFor(article.author.displayName)}
+          tint={tint}
+          size={22}
+        />
         {article.author.displayName}
         {" · "}
         {t("magazine:format.minRead", { count: article.readMinutes })}
@@ -156,12 +172,19 @@ function LiveArchiveSection() {
     <section className={styles.section} id="archive">
       <div className={styles.asHead} id="archive-head">
         <div className={styles.asTitle}>
-          <Translation i18nKey="magazine:sections.archive.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="magazine:sections.archive.title"
+            components={{ em: <em /> }}
+          />
         </div>
       </div>
       <div className={styles.archiveRow}>
         {issues.slice(0, 4).map((issue) => (
-          <Link key={issue.number} to={`${routes.issue}/${issue.number}`} className={styles.archiveIssue}>
+          <Link
+            key={issue.number}
+            to={`${routes.issue}/${issue.number}`}
+            className={styles.archiveIssue}
+          >
             <div className={styles.aiCover}>
               <div className={styles.aiCoverTitle}>{issue.numberLabel}</div>
             </div>
@@ -179,7 +202,10 @@ function LiveSubmitBanner() {
     <div className={styles.submit}>
       <div className={styles.ssBody}>
         <h3>
-          <Translation i18nKey="magazine:sections.submit.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="magazine:sections.submit.title"
+            components={{ em: <em /> }}
+          />
         </h3>
         <p>{t("magazine:sections.submit.body")}</p>
       </div>

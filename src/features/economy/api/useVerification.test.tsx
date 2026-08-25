@@ -146,27 +146,27 @@ describe("useWithdrawVerificationRequest (live mode via MSW)", () => {
 
     await waitFor(() => expect(resolved).toBeDefined());
     expect(resolved?.status).toBe("withdrawn");
-    expect(capturedPath).toContain("/verification/requests/request-live-1/withdraw");
+    expect(capturedPath).toContain(
+      "/verification/requests/request-live-1/withdraw",
+    );
   });
 });
 
 describe("useAppealVerificationRequest (live mode via MSW)", () => {
   it("POSTs to /verification/requests/:id/appeal", async () => {
     server.use(
-      http.post(
-        `${API_V1}/verification/requests/request-live-1/appeal`,
-        () =>
-          HttpResponse.json({
-            id: "request-live-1",
-            type: "identity",
-            requestedLevel: "phone",
-            status: "appealing",
-            context: null,
-            decisionReason: "Reference link didn't resolve.",
-            isAppeal: true,
-            createdAt: "2026-08-13T10:00:00.000Z",
-            updatedAt: "2026-08-13T12:00:00.000Z",
-          }),
+      http.post(`${API_V1}/verification/requests/request-live-1/appeal`, () =>
+        HttpResponse.json({
+          id: "request-live-1",
+          type: "identity",
+          requestedLevel: "phone",
+          status: "appealing",
+          context: null,
+          decisionReason: "Reference link didn't resolve.",
+          isAppeal: true,
+          createdAt: "2026-08-13T10:00:00.000Z",
+          updatedAt: "2026-08-13T12:00:00.000Z",
+        }),
       ),
     );
 

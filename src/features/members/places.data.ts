@@ -1,4 +1,7 @@
-import { DIRECTORY_PLACES, type DirectoryPlace } from "../marketing/directoryPlaces";
+import {
+  DIRECTORY_PLACES,
+  type DirectoryPlace,
+} from "../marketing/directoryPlaces";
 import type {
   ListingStatus,
   ManagementRole,

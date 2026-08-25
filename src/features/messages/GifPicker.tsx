@@ -54,7 +54,9 @@ export function GifPicker({ onPick, onClose }: GifPickerProps) {
         aria-label={t("messages:gif.panelLabel")}
       >
         <div className={styles.body}>
-          <p className={styles.comingSoon}>{t("messages:gif.comingSoonTitle")}</p>
+          <p className={styles.comingSoon}>
+            {t("messages:gif.comingSoonTitle")}
+          </p>
           <p className={styles.comingSoonHint}>
             {t("messages:gif.comingSoonHint")}
           </p>

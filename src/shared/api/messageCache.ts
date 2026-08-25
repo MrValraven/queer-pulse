@@ -7,7 +7,10 @@ import type {
   Paginated,
   ReactionSummary,
 } from "../contracts/contracts";
-import { previewForMessage, timeLabel } from "../../features/messages/api/messages.adapters";
+import {
+  previewForMessage,
+  timeLabel,
+} from "../../features/messages/api/messages.adapters";
 import type { Conversation } from "../../features/messages/data";
 
 // ── Message-thread cache patches ─────────────────────────────────────────────

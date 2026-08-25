@@ -48,7 +48,10 @@ function DemoCinemaShortsPage() {
   // local state. Scope the derived list to shorts ids so other saved films
   // don't leak into the catalogue's "Saved" filter.
   const savedFilmIds = useMemo(
-    () => shortFilms.filter((film) => isSaved(`film:${film.id}`)).map((film) => film.id),
+    () =>
+      shortFilms
+        .filter((film) => isSaved(`film:${film.id}`))
+        .map((film) => film.id),
     [isSaved],
   );
 

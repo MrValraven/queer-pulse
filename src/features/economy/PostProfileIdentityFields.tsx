@@ -3,7 +3,10 @@ import { Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PronounField } from "../../shared/identity/PronounField";
-import { parsePronouns, serializePronouns } from "../../shared/identity/pronouns";
+import {
+  parsePronouns,
+  serializePronouns,
+} from "../../shared/identity/pronouns";
 import {
   IDENTITY_HOUSEHOLD_FIELDS,
   IDENTITY_VISIBILITY_OPTIONS,
@@ -134,9 +137,7 @@ export function PostProfileIdentityFields({
                   options={[
                     {
                       value: "",
-                      label: t(
-                        "economy:postProfileForm.householdNoPreference",
-                      ),
+                      label: t("economy:postProfileForm.householdNoPreference"),
                     },
                     ...field.options.map((option) => ({
                       value: option,

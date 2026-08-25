@@ -18,7 +18,10 @@ import { PracticeBody } from "./skins/PracticeBody";
 import "./persona-skins.css";
 import "./persona-motion.css";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
-import type { PublicSubprofileView, SubprofileItemView } from "./api/subprofiles.adapters";
+import type {
+  PublicSubprofileView,
+  SubprofileItemView,
+} from "./api/subprofiles.adapters";
 import type { SkinFamily } from "./subprofile-skins";
 
 /**
@@ -64,7 +67,9 @@ export function SubprofilePageBody({
     <article
       className="pp"
       data-skin={skin}
-      data-cover-bleed={data.coverUrl && data.skinData?.coverBleed ? "true" : undefined}
+      data-cover-bleed={
+        data.coverUrl && data.skinData?.coverBleed ? "true" : undefined
+      }
       data-cover-rise={coverRise ? "true" : undefined}
       style={skinVars}
       ref={rootRef}
@@ -97,7 +102,12 @@ export function SubprofilePageBody({
             </div>
 
             <SubprofileHero view={data} mode={mode} onAction={onAction} />
-            <SubprofileSkinExtras persona={data} skin={skin} slot="afterBio" mode={mode} />
+            <SubprofileSkinExtras
+              persona={data}
+              skin={skin}
+              slot="afterBio"
+              mode={mode}
+            />
 
             <div className="pp-body">
               {data.featured &&
@@ -143,7 +153,12 @@ export function SubprofilePageBody({
               />
             </div>
 
-            <SubprofileAffiliations persona={data} skin={skin} mode={mode} onAction={onAction} />
+            <SubprofileAffiliations
+              persona={data}
+              skin={skin}
+              mode={mode}
+              onAction={onAction}
+            />
           </>
         )}
 

@@ -103,7 +103,10 @@ export function StudioLightbox({
           {meta && <span>{meta}</span>}
           {item.description && <p>{item.description}</p>}
           {item.section !== "poems" && (
-            <WorkRightsFooter authorName={authorName} createdAtISO={item.createdAt} />
+            <WorkRightsFooter
+              authorName={authorName}
+              createdAtISO={item.createdAt}
+            />
           )}
         </figcaption>
       </figure>

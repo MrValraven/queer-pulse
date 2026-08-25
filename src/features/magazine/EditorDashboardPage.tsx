@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import { MagazineDeskShell, useMagazineShellOverlay } from "../../shared/components/layout";
+import { useMagazineShellOverlay } from "../../shared/components/layout";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { DEMO_SECTIONS, DEMO_STAGES } from "./data/desk.data";
+import { DEMO_SECTIONS } from "./data/desk.data";
 import { usePieces } from "./api/usePieces";
 import { usePitches } from "./api/usePitches";
 import { useDeskSummary } from "./api/useDeskSummary";
@@ -27,9 +26,7 @@ import { useDeskEntryParams } from "./desk/useDeskEntryParams";
 import { useDeskKeyboard } from "./desk/useDeskKeyboard";
 import { useDeskModals } from "./desk/useDeskModals";
 import { usePitchTriageActions } from "./desk/usePitchTriageActions";
-import { DeskView } from "./desk/DeskView";
-import { DeskModals } from "./desk/DeskModals";
-import { DeskIssueModals } from "./desk/DeskIssueModals";
+import { EditorDashboardView } from "./EditorDashboardView";
 
 /**
  * The magazine editor desk. Thin by design: owns the page shell, dual-mode
@@ -45,11 +42,14 @@ export function EditorDashboardPage() {
   const { demoMode } = useDemoMode();
   const { user } = useAuth();
   const { showToast } = useToast();
-  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isPaletteOpen } = useMagazineShellOverlay();
 
-  const { pieces, isLoading: piecesLoading, isError: piecesError } = usePieces({});
+  const {
+    pieces,
+    isLoading: piecesLoading,
+    isError: piecesError,
+  } = usePieces({});
   const { pitches, isLoading: pitchesLoading } = usePitches();
   const { summary } = useDeskSummary();
   const pieceMutations = usePieceMutations();
@@ -165,112 +165,39 @@ export function EditorDashboardPage() {
   });
 
   const isLoading = piecesLoading || pitchesLoading;
-  const isEmpty = !demoMode && !isLoading && !piecesError && pieces.length === 0 && pitches.length === 0;
+  const isEmpty =
+    !demoMode &&
+    !isLoading &&
+    !piecesError &&
+    pieces.length === 0 &&
+    pitches.length === 0;
 
   return (
-    <MagazineDeskShell>
-      <DeskView
-        loading={isLoading}
-        showError={piecesError}
-        onRetry={() => void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] })}
-        isEmpty={isEmpty}
-        issue={issue}
-        issues={issues}
-        onSelectIssue={selectIssue}
-        onNewIssue={() => setIsNewIssueOpen(true)}
-        track={tracks.track}
-        onTrack={tracks.setTrack}
-        hasCurrentIssue={tracks.hasCurrentIssue}
-        unassignedCount={tracks.unassignedPieces.length}
-        issueCount={tracks.issuePieces.length}
-        editors={editors}
-        me={activeMe}
-        onMe={setMeState}
-        layout={layout}
-        onLayout={setLayout}
-        onWrite={writeAction.startWriting}
-        isWriting={writeAction.isStarting}
-        onCommission={modals.openCommission}
-        onProduce={pieceActions.produceIssue}
-        pieces={tracks.activePieces}
-        visiblePieces={deskState.visiblePieces}
-        focusId={deskState.focusId}
-        pitches={pitches}
-        pitchCount={pitches.length}
-        stages={DEMO_STAGES}
-        sections={DEMO_SECTIONS}
-        q={deskState.q}
-        onQ={deskState.setQ}
-        fmt={deskState.fmt}
-        onFmt={deskState.setFmt}
-        mine={deskState.mine}
-        onMine={deskState.setMine}
-        sort={deskState.sort}
-        onSort={deskState.setSort}
-        onShortcuts={modals.openShortcuts}
-        activeView={deskState.view}
-        onToggleView={(id) => deskState.setView(deskState.view === id ? null : id)}
-        onSaveView={() =>
-          showToast(t("magazine:desk.page.savingViewsUnavailable"), "info")
-        }
-        onOpenPiece={pieceActions.openPiece}
-        onEditPiece={pieceActions.editPiece}
-        onChasePiece={modals.openChase}
-        onHandoffPiece={modals.openHandoff}
-        onAssignPieceIssue={assignment.openForPiece}
-        selectedPieceIds={pieceSelection.selectedPieceIds}
-        areAllPiecesSelected={pieceSelection.areAllSelected}
-        onTogglePieceSelect={assignment.togglePieceSelect}
-        onToggleAllPieceSelect={assignment.toggleAllPieceSelect}
-        onBulkAssignIssue={() => assignment.openForSelection(deskState.visiblePieces)}
-        onClearPieceSelection={pieceSelection.clearPieceSelection}
-        onMovePiece={pieceActions.movePiece}
-        onCommissionSection={modals.openCommissionForSection}
-        selectedPitchIds={deskState.selected}
-        onTogglePitchSelect={assignment.togglePitchSelect}
-        onCommissionPitch={modals.openCommissionFromPitch}
-        onMaybePitch={triage.maybe}
-        onPassPitch={modals.openPassFromPitch}
-        leavingPitchIds={[...triage.leavingIds]}
-        onBulkMaybe={triage.bulkMaybe}
-        onBulkPass={triage.bulkPass}
-        onClearBulkSelection={deskState.clearSelected}
-        summary={summary}
-      />
-
-      <DeskModals
-        modal={modals.modal}
-        editors={editors}
-        sections={DEMO_SECTIONS}
-        commissionTrack={tracks.track}
-        hasCurrentIssue={tracks.hasCurrentIssue}
-        issueNumber={issue.number}
-        onClose={modals.close}
-        onCommission={modals.submitCommission}
-        onPass={modals.submitPass}
-        onHandoff={modals.confirmHandoff}
-      />
-
-      <DeskIssueModals
-        assignTargets={assignment.assignTargets}
-        onCloseAssign={assignment.close}
-        onAssign={assignment.submit}
-        isNewIssueOpen={isNewIssueOpen}
-        onCloseNewIssue={() => setIsNewIssueOpen(false)}
-        isCreatingIssue={createIssue.isPending}
-        issues={issues}
-        onCreateIssue={async (body) => {
-          const created = await createIssue.mutateAsync(body);
-          // Land on the issue that was just made — creating one and then still
-          // looking at the previous issue is the wrong default.
-          selectIssue(created.number);
-          showToast(
-            t("magazine:desk.newIssue.createdToast", { number: created.number }),
-            "success",
-          );
-          return created;
-        }}
-      />
-    </MagazineDeskShell>
+    <EditorDashboardView
+      isLoading={isLoading}
+      piecesError={piecesError}
+      isEmpty={isEmpty}
+      issue={issue}
+      issues={issues}
+      onSelectIssue={selectIssue}
+      tracks={tracks}
+      deskState={deskState}
+      pieceSelection={pieceSelection}
+      assignment={assignment}
+      modals={modals}
+      triage={triage}
+      pieceActions={pieceActions}
+      writeAction={writeAction}
+      editors={editors}
+      activeMe={activeMe}
+      onMe={setMeState}
+      layout={layout}
+      onLayout={setLayout}
+      pitches={pitches}
+      summary={summary}
+      isNewIssueOpen={isNewIssueOpen}
+      setIsNewIssueOpen={setIsNewIssueOpen}
+      createIssue={createIssue}
+    />
   );
 }

@@ -1,11 +1,7 @@
 import { FiArrowRight, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  BADGE_CLASS,
-  STAGE_CLASS,
-  LOGO_CLASS,
-} from "./applicationStatus.data";
+import { BADGE_CLASS, STAGE_CLASS, LOGO_CLASS } from "./applicationStatus.data";
 import type { Application, ActionKind } from "./applicationStatus.types";
 import styles from "./ApplicationStatusPage.module.css";
 

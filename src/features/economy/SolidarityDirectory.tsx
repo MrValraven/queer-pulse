@@ -197,7 +197,9 @@ export function SolidarityDirectory() {
                           {practitioner.scaleNote}
                         </div>
                       </div>
-                      <div className={styles.pcDesc}>{practitioner.description}</div>
+                      <div className={styles.pcDesc}>
+                        {practitioner.description}
+                      </div>
                       <div className={styles.pcTags}>
                         {practitioner.tags.map((tag) => (
                           <span key={tag} className={styles.ptag}>
@@ -229,7 +231,11 @@ export function SolidarityDirectory() {
               <p>{t("economy:solidarityDirectory.register.body")}</p>
             </div>
             <div className={styles.rsCta}>
-              <Button to={requestInvitePath("solidarity_directory")} variant="primary" size="lg">
+              <Button
+                to={requestInvitePath("solidarity_directory")}
+                variant="primary"
+                size="lg"
+              >
                 {t("economy:solidarityDirectory.register.cta")}
               </Button>
               <Link to={routes.contact} className={styles.rsCtaLink}>

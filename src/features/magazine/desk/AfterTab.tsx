@@ -22,7 +22,11 @@ export interface AfterTabProps {
  * and published corrections ONLY — the design prototype's reads/finish-rate/
  * saves/shares metrics tile is deliberately dropped here (no-analytics rule).
  */
-export function AfterTab({ record, onToggleRunInLetters, onAddCorrection }: AfterTabProps) {
+export function AfterTab({
+  record,
+  onToggleRunInLetters,
+  onAddCorrection,
+}: AfterTabProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [correctionText, setCorrectionText] = useState("");
@@ -39,7 +43,9 @@ export function AfterTab({ record, onToggleRunInLetters, onAddCorrection }: Afte
       <div className={styles.card}>
         <h3>{t("magazine:piece.after.lettersHeading")}</h3>
         {record.letters.length === 0 ? (
-          <span className={styles.tiny}>{t("magazine:piece.after.noLettersYet")}</span>
+          <span className={styles.tiny}>
+            {t("magazine:piece.after.noLettersYet")}
+          </span>
         ) : (
           record.letters.map((letter) => (
             <div key={letter.id} className={styles.letter}>
@@ -60,14 +66,18 @@ export function AfterTab({ record, onToggleRunInLetters, onAddCorrection }: Afte
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => showToast(t("magazine:piece.after.sendToAuthorToast"))}
+                  onClick={() =>
+                    showToast(t("magazine:piece.after.sendToAuthorToast"))
+                  }
                 >
                   {t("magazine:piece.after.sendToAuthor")}
                 </Button>
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => onToggleRunInLetters(letter.id, !letter.runInLetters)}
+                  onClick={() =>
+                    onToggleRunInLetters(letter.id, !letter.runInLetters)
+                  }
                 >
                   {letter.runInLetters
                     ? t("magazine:piece.after.removeFromLetters")
@@ -99,7 +109,9 @@ export function AfterTab({ record, onToggleRunInLetters, onAddCorrection }: Afte
             ))}
           </div>
         )}
-        <span className={styles.tiny}>{t("magazine:piece.after.correctionsFooter")}</span>
+        <span className={styles.tiny}>
+          {t("magazine:piece.after.correctionsFooter")}
+        </span>
         <div className={styles.field}>
           <textarea
             aria-label={t("magazine:piece.after.correctionAriaLabel")}

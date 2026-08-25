@@ -33,8 +33,9 @@ export function HousingFilterBar({ filters, onChange }: FilterBarProps) {
     const value = raw.trim() === "" ? undefined : Number(raw);
     onChange({ ...filters, [key]: value });
   };
-  const toggle = (key: "billsIncluded" | "hasAccessibilityInfo" | "verifiedOnly") =>
-    onChange({ ...filters, [key]: filters[key] ? undefined : true });
+  const toggle = (
+    key: "billsIncluded" | "hasAccessibilityInfo" | "verifiedOnly",
+  ) => onChange({ ...filters, [key]: filters[key] ? undefined : true });
 
   const clearAll = () =>
     onChange({ ...EMPTY_HOUSING_FILTERS, type: filters.type });
@@ -153,7 +154,10 @@ export function HousingFilterBar({ filters, onChange }: FilterBarProps) {
         >
           {t("economy:housing.filterBar.clear")}
         </button>
-        <HousingSaveSearch filters={filters} disabled={!anyFilterActive(filters)} />
+        <HousingSaveSearch
+          filters={filters}
+          disabled={!anyFilterActive(filters)}
+        />
       </div>
     </div>
   );

@@ -19,7 +19,10 @@ export function simulationRoutes() {
   return (
     <>
       <Route path={routes.simulations} element={<SimulationsHome />} />
-      <Route path={`${routes.simulations}/:id`} element={<SimulationPlayer />} />
+      <Route
+        path={`${routes.simulations}/:id`}
+        element={<SimulationPlayer />}
+      />
     </>
   );
 }

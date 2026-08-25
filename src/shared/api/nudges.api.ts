@@ -38,7 +38,6 @@ function isExpectedSignedOut(error: unknown): boolean {
   return error instanceof ApiError && error.status === 401;
 }
 
-
 /** Current dismissal state for the caller, to reconcile the local mirror on load. */
 export async function fetchMyNudges(
   demoMode: boolean,

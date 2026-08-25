@@ -67,7 +67,11 @@ function readVariant(node: unknown): GifFileVariant | null {
     return record;
   }
   const gif = record.gif;
-  if (gif && typeof gif === "object" && typeof (gif as GifFileVariant).url === "string") {
+  if (
+    gif &&
+    typeof gif === "object" &&
+    typeof (gif as GifFileVariant).url === "string"
+  ) {
     return gif;
   }
   return null;
@@ -90,10 +94,21 @@ function pickVariant(
   return null;
 }
 
+/** The subset of a KLIPY item's fields this client reads. `id`/`slug` are
+ *  typed as `string | number` (not `unknown`) so they can be stringified
+ *  safely below — KLIPY's docs don't guarantee numeric vs string ids. */
+interface KlipyRawItem {
+  id?: string | number;
+  slug?: string | number;
+  title?: string;
+  file?: Record<string, unknown>;
+  files?: Record<string, unknown>;
+}
+
 function toGifResult(item: unknown): GifResult | null {
   if (!item || typeof item !== "object") return null;
-  const record = item as Record<string, unknown>;
-  const files = (record.file ?? record.files) as Record<string, unknown> | undefined;
+  const record = item as KlipyRawItem;
+  const files = record.file ?? record.files;
   if (!files || typeof files !== "object") return null;
   // Full GIF prefers a larger size; the grid preview prefers a smaller one.
   const full = pickVariant(files, ["hd", "md", "sm", "xs"]);

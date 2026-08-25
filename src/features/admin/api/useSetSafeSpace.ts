@@ -1,7 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ADMIN_SAFE_SPACE_CANDIDATES } from "../adminSafeSpaces.data";
-import { setSafeSpace, type SafeSpaceCandidate, type SetSafeSpaceInput } from "./adminSafeSpaces.api";
+import {
+  setSafeSpace,
+  type SafeSpaceCandidate,
+  type SetSafeSpaceInput,
+} from "./adminSafeSpaces.api";
 import { ADMIN_SAFE_SPACE_CANDIDATES_KEY } from "./useAdminSafeSpaces";
 import { useDemoAwareMutation } from "./demoAwareMutation";
 

@@ -169,8 +169,7 @@ export function PublicProfileHead({
             className={styles.curatorLink}
             to={`${routes.cinemaCurator}/${curatorSlug}`}
           >
-            {t("members:profile.hero.curatorLink")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("members:profile.hero.curatorLink")} <FiArrowRight aria-hidden />
           </Link>
         )}
         <p className={styles.bio}>{profile.bio}</p>

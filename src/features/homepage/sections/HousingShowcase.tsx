@@ -32,7 +32,8 @@ export function HousingShowcase() {
                 {t("homepage:housing.cta")}
               </Button>
               <Link to={routes.flatmates} className={styles.ctaAlt}>
-                {t("homepage:housing.secondaryCta")} <FiArrowRight aria-hidden />
+                {t("homepage:housing.secondaryCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             </Reveal>
             <Reveal as="p" className={styles.ctaNote} delay={160}>

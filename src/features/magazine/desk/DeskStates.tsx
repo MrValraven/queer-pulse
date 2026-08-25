@@ -1,5 +1,15 @@
-import { FiAlertTriangle, FiEdit3, FiFileText, FiPlus, FiRefreshCw } from "react-icons/fi";
-import { Button, EmptyState, SkeletonLine } from "../../../shared/components/ui";
+import {
+  FiAlertTriangle,
+  FiEdit3,
+  FiFileText,
+  FiPlus,
+  FiRefreshCw,
+} from "react-icons/fi";
+import {
+  Button,
+  EmptyState,
+  SkeletonLine,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./DeskStates.module.css";
 

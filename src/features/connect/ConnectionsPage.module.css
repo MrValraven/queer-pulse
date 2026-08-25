@@ -321,7 +321,9 @@
   font-size: 0.9375rem;
   color: var(--ink);
   cursor: pointer;
-  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 }
 .reportOptChecked {
   border-color: var(--plum);

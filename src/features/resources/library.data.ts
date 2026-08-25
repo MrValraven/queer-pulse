@@ -56,7 +56,8 @@ export const GUIDES: Guide[] = [
     category: "legal",
     categoryLabel: "Legal",
     title: "Workplace discrimination: the full guide",
-    description: "What Portugal's Labour Code protects, how to document incidents, and a template complaint letter for the ACT.",
+    description:
+      "What Portugal's Labour Code protects, how to document incidents, and a template complaint letter for the ACT.",
     meta: "Guide · 12 min · PT / EN",
     to: routes.legal,
     lastVerifiedAt: "2026-07-14",
@@ -65,7 +66,8 @@ export const GUIDES: Guide[] = [
     category: "legal",
     categoryLabel: "Legal",
     title: "Rental discrimination & your rights",
-    description: "A landlord refusing you on grounds of identity is acting illegally. How to gather evidence and where to report it.",
+    description:
+      "A landlord refusing you on grounds of identity is acting illegally. How to gather evidence and where to report it.",
     meta: "Guide · 9 min · PT / EN",
     to: routes.legal,
     lastVerifiedAt: "2026-05-02",
@@ -74,7 +76,8 @@ export const GUIDES: Guide[] = [
     category: "legal",
     categoryLabel: "Legal",
     title: "Legal name & gender marker change",
-    description: "Step-by-step through Portugal's self-determination process: documents, timelines, and what changed in 2018.",
+    description:
+      "Step-by-step through Portugal's self-determination process: documents, timelines, and what changed in 2018.",
     meta: "Guide · 15 min · PT / EN",
     to: routes.transHub,
     lastVerifiedAt: "2026-06-30",
@@ -83,7 +86,8 @@ export const GUIDES: Guide[] = [
     category: "housing",
     categoryLabel: "Housing",
     title: "Finding queer-friendly housing in Lisbon",
-    description: "Neighbourhoods, red flags in listings, and how the QueerPulse housing board vets landlords.",
+    description:
+      "Neighbourhoods, red flags in listings, and how the QueerPulse housing board vets landlords.",
     meta: "Guide · 11 min",
     to: routes.housing,
     lastVerifiedAt: "2026-08-01",
@@ -92,7 +96,8 @@ export const GUIDES: Guide[] = [
     category: "housing",
     categoryLabel: "Housing",
     title: "Flatmate agreements that protect you",
-    description: "A plain-language template for shared tenancies, chosen-family arrangements included.",
+    description:
+      "A plain-language template for shared tenancies, chosen-family arrangements included.",
     meta: "Template · 6 min",
     to: routes.flatmates,
     // Never reviewed by an editor yet — an honest "not yet verified" state,
@@ -103,7 +108,8 @@ export const GUIDES: Guide[] = [
     category: "health",
     categoryLabel: "Health",
     title: "Navigating the SNS as a queer patient",
-    description: "Registering, finding affirming GPs, and what to do if a provider refuses or mistreats you.",
+    description:
+      "Registering, finding affirming GPs, and what to do if a provider refuses or mistreats you.",
     meta: "Guide · 10 min",
     to: routes.wellbeing,
     lastVerifiedAt: "2026-07-21",
@@ -112,7 +118,8 @@ export const GUIDES: Guide[] = [
     category: "health",
     categoryLabel: "Health",
     title: "PrEP access in Portugal",
-    description: "Eligibility, the clinics most welcoming in Lisbon, and how to get it at no cost through the SNS.",
+    description:
+      "Eligibility, the clinics most welcoming in Lisbon, and how to get it at no cost through the SNS.",
     meta: "Guide · 8 min",
     to: routes.sexualHealth,
     lastVerifiedAt: "2026-08-05",
@@ -121,7 +128,8 @@ export const GUIDES: Guide[] = [
     category: "health",
     categoryLabel: "Health",
     title: "Harm reduction, without judgement",
-    description: "Practical safety for chemsex, substances, and recovery. Written by and for the community.",
+    description:
+      "Practical safety for chemsex, substances, and recovery. Written by and for the community.",
     meta: "Guide · 9 min",
     to: routes.harmReduction,
     lastVerifiedAt: "2026-04-18",
@@ -130,7 +138,8 @@ export const GUIDES: Guide[] = [
     category: "trans",
     categoryLabel: "Trans life",
     title: "Starting hormone therapy on the SNS",
-    description: "Referral pathways, waiting lists, and a guide to the consultations, plus what private costs to expect.",
+    description:
+      "Referral pathways, waiting lists, and a guide to the consultations, plus what private costs to expect.",
     meta: "Guide · 14 min",
     to: routes.transHealthcare,
     lastVerifiedAt: "2026-06-09",
@@ -139,7 +148,8 @@ export const GUIDES: Guide[] = [
     category: "trans",
     categoryLabel: "Trans life",
     title: "Updating documents after transition",
-    description: "Bank, employer, GP, landlord: the order to do things in, with letter templates for each.",
+    description:
+      "Bank, employer, GP, landlord: the order to do things in, with letter templates for each.",
     meta: "Checklist · 7 min",
     to: routes.transHub,
     lastVerifiedAt: "2026-06-09",
@@ -148,7 +158,8 @@ export const GUIDES: Guide[] = [
     category: "finance",
     categoryLabel: "Finance",
     title: "Micro-grants & solidarity funds",
-    description: "What QueerPulse funds, how to apply, and how the community sliding scale works.",
+    description:
+      "What QueerPulse funds, how to apply, and how the community sliding scale works.",
     meta: "Guide · 6 min",
     to: routes.microGrants,
     lastVerifiedAt: "2026-03-11",
@@ -157,7 +168,8 @@ export const GUIDES: Guide[] = [
     category: "finance",
     categoryLabel: "Finance",
     title: "Money for freelancers & artists",
-    description: "Invoicing basics in Portugal, recibos verdes, and the funds open to queer creatives.",
+    description:
+      "Invoicing basics in Portugal, recibos verdes, and the funds open to queer creatives.",
     meta: "Guide · 10 min",
     to: routes.grants,
     lastVerifiedAt: "2026-03-11",

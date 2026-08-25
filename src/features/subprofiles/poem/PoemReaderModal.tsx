@@ -65,7 +65,10 @@ export function PoemReaderModal({
   );
   const activeVersion = versions[activeIndex]!;
 
-  function versionLabel(version: (typeof versions)[number], index: number): string {
+  function versionLabel(
+    version: (typeof versions)[number],
+    index: number,
+  ): string {
     return (
       version.label.trim() ||
       t("subprofiles:poem.versions.untitled", { index: index + 1 })
@@ -125,7 +128,9 @@ export function PoemReaderModal({
             <button
               type="button"
               className={styles.actionButton}
-              onClick={() => void copyPoemText(poemPlainText || item.description || "")}
+              onClick={() =>
+                void copyPoemText(poemPlainText || item.description || "")
+              }
               aria-label={t("subprofiles:poem.reader.copy")}
             >
               <FiCopy aria-hidden /> {t("subprofiles:poem.reader.copy")}
@@ -150,7 +155,10 @@ export function PoemReaderModal({
             blocks={activeVersion.blocks}
             description={activeIndex === 0 ? item.description : undefined}
           />
-          <WorkRightsFooter authorName={authorName} createdAtISO={item.createdAt} />
+          <WorkRightsFooter
+            authorName={authorName}
+            createdAtISO={item.createdAt}
+          />
         </div>
       </div>
     </div>,

@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import {
-  type AvatarTint,
-  Tag,
-  TagRow,
-} from "../../../shared/components/ui";
+import { type AvatarTint, Tag, TagRow } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../../shared/staff/MemberStaffBadge";
 import type { SpotlightView } from "./spotlightView";
@@ -25,9 +21,7 @@ export function SpotlightFace({ view }: { view: SpotlightView }) {
 
   return (
     <div
-      className={[styles.face, tintClass[view.tint]]
-        .filter(Boolean)
-        .join(" ")}
+      className={[styles.face, tintClass[view.tint]].filter(Boolean).join(" ")}
     >
       <div className={styles.featPhoto}>
         {view.photoUrl ? (
@@ -100,8 +94,7 @@ export function SpotlightFace({ view }: { view: SpotlightView }) {
               story first. Reaching out happens from there, so the Connect modal
               has one entry point instead of two. */}
           <Link to={view.to} className={styles.sayHi}>
-            {t("homepage:discovery.viewProfile")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("homepage:discovery.viewProfile")} <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>

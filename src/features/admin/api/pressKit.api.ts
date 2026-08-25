@@ -87,10 +87,7 @@ export const deletePressCoverage = (id: string) =>
   apiDelete<void>(`/admin/press-kit/coverage/${id}`);
 
 export const reorderPressCoverage = (body: { orderedIds: string[] }) =>
-  apiPatch<AdminPressCoverageDTO[]>(
-    "/admin/press-kit/coverage/reorder",
-    body,
-  );
+  apiPatch<AdminPressCoverageDTO[]>("/admin/press-kit/coverage/reorder", body);
 
 // ── Admin contact CRUD (/admin/press-kit/contacts) ──────────────────────────
 export const getAdminPressContacts = () =>
@@ -106,7 +103,4 @@ export const deletePressContact = (id: string) =>
   apiDelete<void>(`/admin/press-kit/contacts/${id}`);
 
 export const reorderPressContacts = (body: { orderedIds: string[] }) =>
-  apiPatch<AdminPressContactDTO[]>(
-    "/admin/press-kit/contacts/reorder",
-    body,
-  );
+  apiPatch<AdminPressContactDTO[]>("/admin/press-kit/contacts/reorder", body);

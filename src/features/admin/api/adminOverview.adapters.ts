@@ -272,7 +272,10 @@ const FEED_TYPE_CONFIG: Partial<Record<string, FeedTypeConfig>> = {
   join_request_submitted: { tone: "amber", icon: FiArchive },
 };
 
-const FEED_GENERIC_CONFIG: FeedTypeConfig = { tone: "jade", icon: FiCheckCircle };
+const FEED_GENERIC_CONFIG: FeedTypeConfig = {
+  tone: "jade",
+  icon: FiCheckCircle,
+};
 
 function feedTypeConfigFor(type: string): FeedTypeConfig {
   return FEED_TYPE_CONFIG[type] ?? FEED_GENERIC_CONFIG;
@@ -304,7 +307,9 @@ function feedLineFor(entry: FeedEntryDTO, t: TFunction): FeedLine {
     case "report_filed": {
       const isAnonymous = entry.actor === null;
       return {
-        lead: entry.actor ?? t("admin:dashboard.feed.type.reportFiled.anonymousLead"),
+        lead:
+          entry.actor ??
+          t("admin:dashboard.feed.type.reportFiled.anonymousLead"),
         body: isAnonymous
           ? t("admin:dashboard.feed.type.reportFiled.anonymousBody")
           : t("admin:dashboard.feed.type.reportFiled.body"),
@@ -315,7 +320,9 @@ function feedLineFor(entry: FeedEntryDTO, t: TFunction): FeedLine {
     // The moderator who closed it out, or null for the erased-actor case.
     case "report_resolved":
       return {
-        lead: entry.actor ?? t("admin:dashboard.feed.type.reportResolved.anonymousLead"),
+        lead:
+          entry.actor ??
+          t("admin:dashboard.feed.type.reportResolved.anonymousLead"),
         body: t("admin:dashboard.feed.type.reportResolved.body"),
         em: entry.community ?? undefined,
         bodyAfter: entry.community ? "." : undefined,
@@ -341,7 +348,9 @@ function feedLineFor(entry: FeedEntryDTO, t: TFunction): FeedLine {
     // `target` is the vouchee, `actor` the voucher — the only feed type
     // where the backend populates `target`.
     case "vouch_received": {
-      const lead = entry.target ?? t("admin:dashboard.feed.type.vouchReceived.genericLead");
+      const lead =
+        entry.target ??
+        t("admin:dashboard.feed.type.vouchReceived.genericLead");
       if (entry.actor === null) {
         return {
           lead,
@@ -358,7 +367,9 @@ function feedLineFor(entry: FeedEntryDTO, t: TFunction): FeedLine {
     // `community` is the one field this source reliably populates.
     case "community_joined":
       return {
-        lead: entry.actor ?? t("admin:dashboard.feed.type.communityJoined.genericLead"),
+        lead:
+          entry.actor ??
+          t("admin:dashboard.feed.type.communityJoined.genericLead"),
         body: t("admin:dashboard.feed.type.communityJoined.body"),
         em: entry.community ?? undefined,
         bodyAfter: entry.community ? "." : undefined,

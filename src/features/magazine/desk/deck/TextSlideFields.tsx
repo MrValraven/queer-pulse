@@ -12,9 +12,16 @@ type TextSlide = Extract<Slide, { layout: "text" }>;
 function CharBudget({ budget }: { budget: FieldBudget }) {
   const { t } = useTranslation();
   return (
-    <span className={budget.over ? `${styles.warnfield} ${styles.over}` : styles.warnfield}>
+    <span
+      className={
+        budget.over ? `${styles.warnfield} ${styles.over}` : styles.warnfield
+      }
+    >
       <span>
-        {t("magazine:deck.editor.budget.count", { count: budget.count, max: budget.max })}
+        {t("magazine:deck.editor.budget.count", {
+          count: budget.count,
+          max: budget.max,
+        })}
       </span>
       <span>{budget.hint}</span>
     </span>
@@ -39,7 +46,9 @@ export function TextSlideFields({ slide, onChange }: FieldsProps<TextSlide>) {
           type="text"
           className={styles.input}
           value={asText(slide.eyebrow)}
-          onChange={(event) => onChange({ ...slide, eyebrow: event.target.value })}
+          onChange={(event) =>
+            onChange({ ...slide, eyebrow: event.target.value })
+          }
         />
       </FormField>
       <FormField
@@ -50,7 +59,9 @@ export function TextSlideFields({ slide, onChange }: FieldsProps<TextSlide>) {
           type="text"
           className={styles.input}
           value={heading}
-          onChange={(event) => onChange({ ...slide, heading: event.target.value })}
+          onChange={(event) =>
+            onChange({ ...slide, heading: event.target.value })
+          }
         />
       </FormField>
       <FormField
@@ -86,7 +97,10 @@ export function TextSlideFields({ slide, onChange }: FieldsProps<TextSlide>) {
           options={[
             { value: "", label: t("magazine:deck.editor.field.alignDefault") },
             { value: "left", label: t("magazine:deck.editor.field.alignLeft") },
-            { value: "center", label: t("magazine:deck.editor.field.alignCenter") },
+            {
+              value: "center",
+              label: t("magazine:deck.editor.field.alignCenter"),
+            },
           ]}
         />
       </FormField>

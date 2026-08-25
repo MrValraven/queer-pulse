@@ -34,9 +34,8 @@ export function useAdminMagazineSubmissions(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const { ADMIN_MAGAZINE_SUBMISSIONS } = await import(
-          "../adminMagazineSubmissions.data"
-        );
+        const { ADMIN_MAGAZINE_SUBMISSIONS } =
+          await import("../adminMagazineSubmissions.data");
         const filtered = statusArg
           ? ADMIN_MAGAZINE_SUBMISSIONS.filter(
               (submission) => submission.status === statusArg,

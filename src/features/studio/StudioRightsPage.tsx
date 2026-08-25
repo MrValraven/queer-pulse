@@ -165,7 +165,10 @@ export function StudioRightsPage() {
           <p>
             <Translation
               i18nKey="studio:rights.leavingCoop.body"
-              components={{ em: <em />, a: <Link to={routes.studioSettings} /> }}
+              components={{
+                em: <em />,
+                a: <Link to={routes.studioSettings} />,
+              }}
             />
           </p>
         </div>

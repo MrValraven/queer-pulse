@@ -58,7 +58,11 @@ export function EventsTopTabs({
   };
 
   return (
-    <div className={styles.list} role="tablist" aria-label={t("myevents:topTabs.ariaLabel")}>
+    <div
+      className={styles.list}
+      role="tablist"
+      aria-label={t("myevents:topTabs.ariaLabel")}
+    >
       {TOP_TABS.map((tab, index) => {
         const isActive = tab.key === active;
         return (

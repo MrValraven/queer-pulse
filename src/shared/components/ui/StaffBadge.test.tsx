@@ -15,7 +15,9 @@ describe("StaffBadge", () => {
   });
 
   it("shows the long label at lg size for a moderator", () => {
-    render(<StaffBadge role="moderator" size="lg" />, { wrapper: I18nProvider });
+    render(<StaffBadge role="moderator" size="lg" />, {
+      wrapper: I18nProvider,
+    });
     expect(screen.getByText("QueerPulse Mod")).toBeInTheDocument();
   });
 
@@ -31,7 +33,9 @@ describe("StaffBadge", () => {
   });
 
   it("keeps the long form available as a tooltip at sm size", () => {
-    const { container } = render(<StaffBadge role="admin" size="sm" />, { wrapper: I18nProvider });
+    const { container } = render(<StaffBadge role="admin" size="sm" />, {
+      wrapper: I18nProvider,
+    });
     expect(container.firstElementChild).toHaveAttribute(
       "title",
       "QueerPulse Staff",

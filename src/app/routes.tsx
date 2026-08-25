@@ -49,8 +49,14 @@ import { systemRoutes } from "../features/system/routes";
 import { adminRoutes } from "../features/admin/routes";
 import { simulationRoutes } from "../features/simulations/routes";
 
-const HomePage = lazyNamed(() => import("../features/homepage/HomePage"), "HomePage");
-const NotFoundPage = lazyNamed(() => import("../pages/NotFoundPage"), "NotFoundPage");
+const HomePage = lazyNamed(
+  () => import("../features/homepage/HomePage"),
+  "HomePage",
+);
+const NotFoundPage = lazyNamed(
+  () => import("../pages/NotFoundPage"),
+  "NotFoundPage",
+);
 
 /**
  * The Member Platform surface is now built. Remaining known links resolve to a

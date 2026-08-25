@@ -143,7 +143,8 @@ function RecentSaveRow({ r, onAdd }: { r: RecentSave; onAdd: () => void }) {
         <span>{r.saved}</span>
       </div>
       <span className={styles.recentAdd}>
-        {t("members:collections.recentSaves.addCta")} <FiArrowRight aria-hidden />
+        {t("members:collections.recentSaves.addCta")}{" "}
+        <FiArrowRight aria-hidden />
       </span>
     </button>
   );
@@ -201,36 +202,36 @@ export function CollectionsPage() {
             description={t("members:collections.emptyLive.description")}
           />
         ) : (
-        <div className={styles.grid}>
-          {loading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <CollectionCardSkeleton key={i} />
-            ))
-          ) : (
-            <>
-              {collections.map((c, i) => (
-                <FadeIn key={c.id} delay={Math.min(i, 8) * 60}>
-                  <CollectionCard
-                    c={c}
-                    onOpen={() => setModal({ type: "view", id: c.id })}
-                  />
-                </FadeIn>
-              ))}
+          <div className={styles.grid}>
+            {loading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <CollectionCardSkeleton key={i} />
+              ))
+            ) : (
+              <>
+                {collections.map((c, i) => (
+                  <FadeIn key={c.id} delay={Math.min(i, 8) * 60}>
+                    <CollectionCard
+                      c={c}
+                      onOpen={() => setModal({ type: "view", id: c.id })}
+                    />
+                  </FadeIn>
+                ))}
 
-              <button
-                type="button"
-                className={styles.newCard}
-                onClick={() => setModal({ type: "new" })}
-              >
-                <div className={styles.plus}>
-                  <FiPlus aria-hidden />
-                </div>
-                <b>{t("members:collections.newCard.title")}</b>
-                <span>{t("members:collections.newCard.subtitle")}</span>
-              </button>
-            </>
-          )}
-        </div>
+                <button
+                  type="button"
+                  className={styles.newCard}
+                  onClick={() => setModal({ type: "new" })}
+                >
+                  <div className={styles.plus}>
+                    <FiPlus aria-hidden />
+                  </div>
+                  <b>{t("members:collections.newCard.title")}</b>
+                  <span>{t("members:collections.newCard.subtitle")}</span>
+                </button>
+              </>
+            )}
+          </div>
         )}
 
         {(loading || recentSaves.length > 0) && (

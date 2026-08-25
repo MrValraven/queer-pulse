@@ -11,8 +11,19 @@ import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
  * — the real hook's optimistic cache patch + persistence is covered separately.
  */
 
+/** Mirrors the real `useToggleEventBookmark().mutate` call sites, which only
+ *  ever call `onSuccess`/`onError` with no data argument (see
+ *  `GatheringBookmarkButton.tsx`). */
+type ToggleBookmarkMutate = (
+  next: boolean,
+  opts?: {
+    onSuccess?: () => void;
+    onError?: (error: Error) => void;
+  },
+) => void;
+
 const { mutate, hookState } = vi.hoisted(() => ({
-  mutate: vi.fn(),
+  mutate: vi.fn<ToggleBookmarkMutate>(),
   hookState: { isPending: false },
 }));
 
@@ -28,7 +39,11 @@ afterEach(() => {
 function renderButton(bookmarked: boolean) {
   render(
     <TestProviders>
-      <GatheringBookmarkButton slug="pride-picnic" param="pride-picnic" bookmarked={bookmarked} />
+      <GatheringBookmarkButton
+        slug="pride-picnic"
+        param="pride-picnic"
+        bookmarked={bookmarked}
+      />
     </TestProviders>,
   );
 }
@@ -38,7 +53,9 @@ describe("GatheringBookmarkButton", () => {
     mutate.mockImplementation((_next, opts) => opts?.onSuccess?.());
     renderButton(false);
 
-    const button = await screen.findByRole("button", { name: "Save this event" });
+    const button = await screen.findByRole("button", {
+      name: "Save this event",
+    });
     expect(button).toHaveAttribute("aria-pressed", "false");
 
     fireEvent.click(button);
@@ -71,10 +88,14 @@ describe("GatheringBookmarkButton", () => {
   });
 
   it("rolls the pressed state back when the mutation fails", async () => {
-    mutate.mockImplementation((_next, opts) => opts?.onError?.(new Error("boom")));
+    mutate.mockImplementation((_next, opts) =>
+      opts?.onError?.(new Error("boom")),
+    );
     renderButton(false);
 
-    const button = await screen.findByRole("button", { name: "Save this event" });
+    const button = await screen.findByRole("button", {
+      name: "Save this event",
+    });
     fireEvent.click(button);
 
     // Flipped optimistically then reverted by onError → back to unsaved.

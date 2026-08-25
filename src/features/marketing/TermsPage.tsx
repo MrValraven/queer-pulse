@@ -3,11 +3,7 @@ import { LegalDoc } from "./LegalDoc";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import {
-  PageMeta,
-  JsonLd,
-  buildBreadcrumbSchema,
-} from "../../shared/seo";
+import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { TERMS_TOC, buildTermsSections } from "./TermsPage.data";
 
 export function TermsPage() {

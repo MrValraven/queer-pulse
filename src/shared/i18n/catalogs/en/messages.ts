@@ -68,7 +68,8 @@ export const messages: Catalog = {
   "gif.loadMore": "Load more",
   "gif.poweredBy": "Powered by KLIPY",
   "gif.comingSoonTitle": "GIFs are coming soon",
-  "gif.comingSoonHint": "We're wiring up GIF search. Check back soon to add a little motion to your messages.",
+  "gif.comingSoonHint":
+    "We're wiring up GIF search. Check back soon to add a little motion to your messages.",
 
   // Image attachments (Composer's ImageComposerButton, MessageBubbleBody)
   "attachments.open": "Send a photo",
@@ -79,7 +80,8 @@ export const messages: Catalog = {
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
-  "connection.offline": "You're offline. Messages will send when you reconnect.",
+  "connection.offline":
+    "You're offline. Messages will send when you reconnect.",
   "connection.reconnecting": "Reconnecting…",
 
   // Shortcut hint — the "?" affordance in the composer that lists the mention

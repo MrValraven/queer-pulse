@@ -56,7 +56,11 @@ function DesktopProfileGrid({
       <div className="wrap">
         <div className={styles.pageGrid}>
           <div className={styles.railCol}>
-            <ProfileRail profile={profile} self={isSelf} asVisitor={asVisitor} />
+            <ProfileRail
+              profile={profile}
+              self={isSelf}
+              asVisitor={asVisitor}
+            />
           </div>
           <div className={styles.pageCol}>
             <ProfileHero

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isSameRouteQueryChange, scrollKeyForPath } from "./ScrollManager";
+import { isSameRouteQueryChange, scrollKeyForPath } from "./scrollRouting";
 
 describe("scrollKeyForPath", () => {
   it("keys a tab root itself on its own path, shared across visits", () => {

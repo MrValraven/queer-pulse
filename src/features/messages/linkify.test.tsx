@@ -13,11 +13,16 @@ describe("renderWithLinks", () => {
 
   it("prefixes bare www links with https", () => {
     render(<div>{renderWithLinks("go to www.example.org now")}</div>);
-    expect(screen.getByRole("link")).toHaveAttribute("href", "https://www.example.org");
+    expect(screen.getByRole("link")).toHaveAttribute(
+      "href",
+      "https://www.example.org",
+    );
   });
 
   it("leaves plain text without links untouched", () => {
-    render(<div data-testid="t">{renderWithLinks("just a plain sentence")}</div>);
+    render(
+      <div data-testid="t">{renderWithLinks("just a plain sentence")}</div>,
+    );
     expect(screen.getByTestId("t").querySelector("a")).toBeNull();
   });
 });

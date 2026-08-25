@@ -59,7 +59,9 @@ export function AdminChangemakerBasicFields({ draft, onChange }: FieldsProps) {
         value={draft.tint}
         options={TINT_OPTIONS.map((tint) => ({
           value: tint,
-          label: t(`community:changemakers.admin.editor.tint${capitalize(tint)}`),
+          label: t(
+            `community:changemakers.admin.editor.tint${capitalize(tint)}`,
+          ),
         }))}
         onChange={(value) =>
           onChange({ tint: (value ?? draft.tint) as ChangemakerTint })
@@ -188,7 +190,10 @@ export function AdminChangemakerStoryFields({ draft, onChange }: FieldsProps) {
         {t("community:changemakers.admin.editor.bodyHint")}
       </p>
 
-      <label className={styles.fieldLabel} htmlFor="changemaker-pull-quote-text">
+      <label
+        className={styles.fieldLabel}
+        htmlFor="changemaker-pull-quote-text"
+      >
         {t("community:changemakers.admin.editor.pullQuoteTextLabel")}
       </label>
       <textarea
@@ -196,21 +201,20 @@ export function AdminChangemakerStoryFields({ draft, onChange }: FieldsProps) {
         className={styles.textarea}
         rows={2}
         value={draft.pullQuoteText}
-        onChange={(event) =>
-          onChange({ pullQuoteText: event.target.value })
-        }
+        onChange={(event) => onChange({ pullQuoteText: event.target.value })}
       />
 
-      <label className={styles.fieldLabel} htmlFor="changemaker-pull-quote-cite">
+      <label
+        className={styles.fieldLabel}
+        htmlFor="changemaker-pull-quote-cite"
+      >
         {t("community:changemakers.admin.editor.pullQuoteCiteLabel")}
       </label>
       <input
         id="changemaker-pull-quote-cite"
         className={styles.textInput}
         value={draft.pullQuoteCite}
-        onChange={(event) =>
-          onChange({ pullQuoteCite: event.target.value })
-        }
+        onChange={(event) => onChange({ pullQuoteCite: event.target.value })}
       />
     </div>
   );

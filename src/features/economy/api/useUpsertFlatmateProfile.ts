@@ -10,7 +10,11 @@ import {
 export function useUpsertFlatmateProfile() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<FlatmateProfileDTO | null, Error, UpsertFlatmateProfileBody>({
+  return useMutation<
+    FlatmateProfileDTO | null,
+    Error,
+    UpsertFlatmateProfileBody
+  >({
     // PostProfileModal toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async (body) => {
@@ -23,7 +27,9 @@ export function useUpsertFlatmateProfile() {
     onSuccess: () => {
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: ["flatmate-profiles"] });
-        void queryClient.invalidateQueries({ queryKey: ["my-flatmate-profile"] });
+        void queryClient.invalidateQueries({
+          queryKey: ["my-flatmate-profile"],
+        });
       }
     },
   });

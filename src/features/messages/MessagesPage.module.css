@@ -89,7 +89,9 @@
   align-items: center;
   justify-content: center;
   color: var(--text-strong);
-  transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  transition:
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .composeBtn:hover {
@@ -152,7 +154,8 @@
   position: relative;
   z-index: 1;
   background: var(--paper);
-  transition: background var(--dur-fast) var(--ease),
+  transition:
+    background var(--dur-fast) var(--ease),
     padding-inline-end var(--dur-fast) var(--ease),
     transform 220ms var(--ease-out);
   border-bottom: 1px solid rgba(var(--line-rgb), 0.05);
@@ -170,7 +173,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .threadRow {
-    transition: background var(--dur-fast) var(--ease),
+    transition:
+      background var(--dur-fast) var(--ease),
       padding-inline-end var(--dur-fast) var(--ease);
   }
 }
@@ -188,19 +192,15 @@
    (line 130) in every state, not just the untouched one. */
 @media (hover: hover) {
   .threadRow:hover {
-    background: linear-gradient(
-        rgba(var(--plum-rgb), 0.03),
-        rgba(var(--plum-rgb), 0.03)
-      ),
+    background:
+      linear-gradient(rgba(var(--plum-rgb), 0.03), rgba(var(--plum-rgb), 0.03)),
       var(--paper);
   }
 }
 /* Immediate tap feedback on touch (no hover state exists there). */
 .threadRow:active {
-  background: linear-gradient(
-      rgba(var(--plum-rgb), 0.08),
-      rgba(var(--plum-rgb), 0.08)
-    ),
+  background:
+    linear-gradient(rgba(var(--plum-rgb), 0.08), rgba(var(--plum-rgb), 0.08)),
     var(--paper);
 }
 /* Class-scoped override of the global two-tone ring (see base.css) — this row
@@ -217,10 +217,8 @@
 .threadActive {
   /* Opaque base — this is the persistently-selected inbox row, so a
      translucent wash here would leak the swipe layers on it at ALL times. */
-  background: linear-gradient(
-      rgba(var(--plum-rgb), 0.06),
-      rgba(var(--plum-rgb), 0.06)
-    ),
+  background:
+    linear-gradient(rgba(var(--plum-rgb), 0.06), rgba(var(--plum-rgb), 0.06)),
     var(--paper);
   box-shadow: inset 3px 0 0 var(--plum);
 }
@@ -1078,7 +1076,9 @@
   justify-content: center;
   cursor: pointer;
   font-size: 15px;
-  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .messageActionBtn:hover {
@@ -1120,7 +1120,9 @@
   justify-content: center;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  transition:
+    background var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .reactionPickerBtn:hover {
@@ -1261,7 +1263,9 @@
   font-family: var(--sans);
   margin-block-start: 2px;
 }
-.runSent .retryBtn { align-self: flex-end; }
+.runSent .retryBtn {
+  align-self: flex-end;
+}
 
 .editedMarker {
   font-size: 0.6875rem;
@@ -1419,7 +1423,8 @@
   letter-spacing: 0.02em;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background var(--dur-fast) var(--ease),
+  transition:
+    background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
@@ -1501,7 +1506,9 @@
   justify-content: center;
   flex: none;
   touch-action: manipulation;
-  transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
   opacity: 0.4;
 }
 .sendBtn:disabled {
@@ -1637,7 +1644,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .replyPreviewClose:hover {
@@ -1856,7 +1865,9 @@
   font-size: 0.9375rem;
   color: var(--ink);
   cursor: pointer;
-  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 }
 .reportOptChecked {
   border-color: var(--plum);
@@ -1981,7 +1992,8 @@
   opacity: 0;
   cursor: pointer;
   touch-action: manipulation;
-  transition: opacity var(--dur-fast) var(--ease),
+  transition:
+    opacity var(--dur-fast) var(--ease),
     background var(--dur-fast) var(--ease);
 }
 

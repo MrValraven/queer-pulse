@@ -1,5 +1,10 @@
 import { useMemo, useState } from "react";
-import { Avatar, SearchInput, SkeletonCard, Tag } from "../../shared/components/ui";
+import {
+  Avatar,
+  SearchInput,
+  SkeletonCard,
+  Tag,
+} from "../../shared/components/ui";
 import { initialsFromName } from "../../shared/lib/initials";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";

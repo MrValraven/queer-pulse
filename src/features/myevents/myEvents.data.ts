@@ -45,4 +45,3 @@ export const DEFAULT_PREFS: Prefs = {
   email: true,
   push: true,
 };
-

@@ -165,8 +165,7 @@ export function StudioLandingCta() {
           values={{ addOnPrice: fmt.currency(STUDIO_ADD_ON_PRICE) }}
         />{" "}
         <Link to={routes.signIn}>
-          {t("studio:landing.cta.secondaryLink")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:landing.cta.secondaryLink")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </section>

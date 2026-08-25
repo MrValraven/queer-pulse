@@ -69,7 +69,10 @@ export function BarterControls({
           </span>
           {/* The way in to your own swaps and the proposals waiting on them.
               Without it the inbox is only reachable from a notification. */}
-          <Link to={MY_BARTER_PROPOSALS_PATH} className={styles.myProposalsLink}>
+          <Link
+            to={MY_BARTER_PROPOSALS_PATH}
+            className={styles.myProposalsLink}
+          >
             {t("economy:barterProposals.entryLink")}
           </Link>
         </div>

@@ -1,7 +1,4 @@
-import type {
-  Recognition,
-  XpBreakdownItem,
-} from "./api/recognition.adapters";
+import type { Recognition, XpBreakdownItem } from "./api/recognition.adapters";
 import type { XpLedgerEntry } from "./badges.data";
 import {
   discoverCount,
@@ -44,21 +41,57 @@ const demoXpBreakdown: XpBreakdownItem[] = [
 // that doesn't need to sum exactly to levelInfo.xp. Newest first; the ledger
 // component computes each row's running total itself.
 const demoXpLedger: XpLedgerEntry[] = [
-  { createdAt: "2026-08-12T00:00:00.000Z", description: "Badge earned: Rooted", xp: 130 },
-  { createdAt: "2026-07-28T00:00:00.000Z", description: "Attended Queer Cinema Club", xp: 25 },
-  { createdAt: "2026-07-14T00:00:00.000Z", description: "Badge earned: Vouch", xp: 100 },
-  { createdAt: "2026-07-02T00:00:00.000Z", description: "Answered 3 board posts", xp: 45 },
+  {
+    createdAt: "2026-08-12T00:00:00.000Z",
+    description: "Badge earned: Rooted",
+    xp: 130,
+  },
+  {
+    createdAt: "2026-07-28T00:00:00.000Z",
+    description: "Attended Queer Cinema Club",
+    xp: 25,
+  },
+  {
+    createdAt: "2026-07-14T00:00:00.000Z",
+    description: "Badge earned: Vouch",
+    xp: 100,
+  },
+  {
+    createdAt: "2026-07-02T00:00:00.000Z",
+    description: "Answered 3 board posts",
+    xp: 45,
+  },
   {
     createdAt: "2026-06-19T00:00:00.000Z",
     description: "Adjustment after a listing correction",
     xp: -20,
     reason: "A duplicate connection entry was removed.",
   },
-  { createdAt: "2026-05-30T00:00:00.000Z", description: "Badge earned: Connector", xp: 50 },
-  { createdAt: "2026-04-18T00:00:00.000Z", description: "Badge earned: Regular", xp: 110 },
-  { createdAt: "2026-03-21T00:00:00.000Z", description: "Badge earned: Three's Company", xp: 70 },
-  { createdAt: "2026-02-09T00:00:00.000Z", description: "Attended Newcomers Mixer", xp: 25 },
-  { createdAt: "2025-01-18T00:00:00.000Z", description: "Badge earned: First Gathering", xp: 60 },
+  {
+    createdAt: "2026-05-30T00:00:00.000Z",
+    description: "Badge earned: Connector",
+    xp: 50,
+  },
+  {
+    createdAt: "2026-04-18T00:00:00.000Z",
+    description: "Badge earned: Regular",
+    xp: 110,
+  },
+  {
+    createdAt: "2026-03-21T00:00:00.000Z",
+    description: "Badge earned: Three's Company",
+    xp: 70,
+  },
+  {
+    createdAt: "2026-02-09T00:00:00.000Z",
+    description: "Attended Newcomers Mixer",
+    xp: 25,
+  },
+  {
+    createdAt: "2025-01-18T00:00:00.000Z",
+    description: "Badge earned: First Gathering",
+    xp: 60,
+  },
 ];
 
 /**

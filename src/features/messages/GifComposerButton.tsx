@@ -1,7 +1,10 @@
 import { useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { isGifProviderConfigured, type GifAttachment } from "../../shared/api/gifs";
+import {
+  isGifProviderConfigured,
+  type GifAttachment,
+} from "../../shared/api/gifs";
 import { GifPicker } from "./GifPicker";
 import styles from "./MessagesPage.module.css";
 
@@ -20,7 +23,12 @@ interface GifComposerButtonProps {
 /** The composer's GIF affordance: a button that toggles the KLIPY-powered
  *  GifPicker popover. Open state is lifted to the Composer so it can't co-exist
  *  with the shortcut popover — the Composer owns outside-click/Esc dismissal. */
-export function GifComposerButton({ onSendGif, open, onToggle, onClose }: GifComposerButtonProps) {
+export function GifComposerButton({
+  onSendGif,
+  open,
+  onToggle,
+  onClose,
+}: GifComposerButtonProps) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -41,6 +49,7 @@ export function GifComposerButton({ onSendGif, open, onToggle, onClose }: GifCom
         aria-expanded={open}
         onClick={onToggle}
       >
+        {/* eslint-disable-next-line local/no-literal-string -- "GIF" is a universal file-format acronym, never translated; the button's aria-label above carries the accessible name. */}
         <span aria-hidden>GIF</span>
       </button>
       {open && (

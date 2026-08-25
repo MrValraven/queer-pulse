@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiChevronUp, FiChevronDown, FiTrash2 } from "react-icons/fi";
-import { useMotionPrefs } from "../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import {
   Avatar,
   Button,

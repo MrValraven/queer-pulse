@@ -31,7 +31,9 @@ export interface TemplateItem {
 /** One (sometimes two) example item per content section. Every `SubprofileSection`
  *  except `links` (the universal, non-content section) is covered — derived from
  *  the full set that appears across `KIND_SECTIONS`. */
-export const TEMPLATE_ITEMS: Partial<Record<SubprofileSection, TemplateItem[]>> = {
+export const TEMPLATE_ITEMS: Partial<
+  Record<SubprofileSection, TemplateItem[]>
+> = {
   // developer
   projects: [
     {

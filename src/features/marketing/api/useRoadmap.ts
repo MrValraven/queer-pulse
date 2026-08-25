@@ -34,8 +34,15 @@ export interface RoadmapView {
 // demand inside the demo queryFn (see below) so it never ships in the live
 // bundle.
 async function buildDemo(): Promise<Omit<RoadmapView, "loading">> {
-  const { HERO_STATS, SHIPPED, BUILDING, PLANNED, BACKLOG, TOP_IDEAS, NOT_BUILDING } =
-    await import("../roadmap.data");
+  const {
+    HERO_STATS,
+    SHIPPED,
+    BUILDING,
+    PLANNED,
+    BACKLOG,
+    TOP_IDEAS,
+    NOT_BUILDING,
+  } = await import("../roadmap.data");
   return {
     heroStats: HERO_STATS,
     shipped: SHIPPED,

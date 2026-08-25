@@ -71,7 +71,7 @@ export function VouchProvider({ children }: { children: ReactNode }) {
       removeVouch,
       setVouched,
     }),
-    [vouched, openVouch, removeVouch],
+    [vouched, openVouch, removeVouch, setVouched],
   );
 
   return (

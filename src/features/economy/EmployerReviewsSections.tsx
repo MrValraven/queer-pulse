@@ -46,11 +46,7 @@ export function EmployerWriteBox({ onWrite }: { onWrite: () => void }) {
           />
         </h2>
         <p>{t("economy:employerReviews.write.body")}</p>
-        <Button
-          variant="primary"
-          className={styles.writeBtn}
-          onClick={onWrite}
-        >
+        <Button variant="primary" className={styles.writeBtn} onClick={onWrite}>
           {t("economy:employerReviews.recent.writeCta")}{" "}
           <FiArrowRight aria-hidden />
         </Button>

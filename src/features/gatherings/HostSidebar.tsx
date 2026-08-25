@@ -21,8 +21,7 @@ export function HostSidebar() {
         <h3>{t("gatherings:host.sidebar.readyTitle")}</h3>
         <p>{t("gatherings:host.sidebar.readyBody")}</p>
         <Button className={styles.fullBtn} to={routes.createGathering}>
-          {t("gatherings:host.createGatheringCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("gatherings:host.createGatheringCta")} <FiArrowRight aria-hidden />
         </Button>
       </div>
       {(isLoading || hasSpaces) && (

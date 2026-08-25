@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { FiArrowUp, FiClock, FiFlag, FiSlash, FiStar, FiZap } from "react-icons/fi";
+import {
+  FiArrowUp,
+  FiClock,
+  FiFlag,
+  FiSlash,
+  FiStar,
+  FiZap,
+} from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -9,10 +16,7 @@ import type {
   RoadmapSlip,
   ShippedItem,
 } from "./roadmap.data";
-import {
-  useMyRoadmapVotes,
-  useRoadmapVote,
-} from "./api/useRoadmapMutations";
+import { useMyRoadmapVotes, useRoadmapVote } from "./api/useRoadmapMutations";
 import styles from "./RoadmapPage.module.css";
 
 /** The "this is a promise" pill — shared across shipped/building/planned
@@ -86,7 +90,8 @@ export function BuildingCard({ item }: { item: BuildingItem }) {
         <div className={styles.rcFooter} style={{ marginBottom: 4 }}>
           {item.requested && (
             <span className={styles.rcRequested}>
-              <FiStar aria-hidden /> {t("marketing:roadmap.card.memberRequested")}
+              <FiStar aria-hidden />{" "}
+              {t("marketing:roadmap.card.memberRequested")}
             </span>
           )}
           {item.committed && <CommittedBadge />}

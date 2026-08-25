@@ -41,8 +41,16 @@ export interface ConnectionRef {
 export function useConnectionActions() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  const { connected, incoming, sent, accept, decline, withdraw, sendRequest, restore } =
-    useConnections();
+  const {
+    connected,
+    incoming,
+    sent,
+    accept,
+    decline,
+    withdraw,
+    sendRequest,
+    restore,
+  } = useConnections();
   const { toggleBlock } = useSocial();
   const { showToast } = useToast();
   const { t } = useTranslation();

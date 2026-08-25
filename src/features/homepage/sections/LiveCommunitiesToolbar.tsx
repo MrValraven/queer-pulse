@@ -86,7 +86,9 @@ export function LiveCommunitiesToolbar({ state, patch }: LiveToolbarProps) {
           size="sm"
           label={t("homepage:communities.toolbar.sortAriaLabel")}
           value={state.sort}
-          onChange={(value) => patch({ sort: (value ?? "size") as LiveSortKey })}
+          onChange={(value) =>
+            patch({ sort: (value ?? "size") as LiveSortKey })
+          }
           options={[
             {
               value: "size",

@@ -161,13 +161,8 @@ export function MentorMatchStep({
         {isFirstStep ? (
           <span />
         ) : (
-          <button
-            type="button"
-            className={styles.mmBack}
-            onClick={onBack}
-          >
-            <FiArrowLeft aria-hidden />{" "}
-            {t("economy:mentorship.nav.back")}
+          <button type="button" className={styles.mmBack} onClick={onBack}>
+            <FiArrowLeft aria-hidden /> {t("economy:mentorship.nav.back")}
           </button>
         )}
         <Button
@@ -181,8 +176,7 @@ export function MentorMatchStep({
             <Sending label={t("economy:resume.submittingLabel")} />
           ) : isLastStep ? (
             <>
-              {t("economy:mentorship.nav.submit")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("economy:mentorship.nav.submit")} <FiArrowRight aria-hidden />
             </>
           ) : (
             <>

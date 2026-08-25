@@ -130,7 +130,8 @@ export const homepage: Catalog = {
   "painPoints.exchange6.cta": "Read the guides",
 
   "painPoints.exchange7.question": '"Will I actually be safe at this job?"',
-  "painPoints.exchange7.heading": "So we're building <em>employer reviews.</em>",
+  "painPoints.exchange7.heading":
+    "So we're building <em>employer reviews.</em>",
   "painPoints.exchange7.body":
     "Honest experiences from queer employees, helping you make more informed decisions about where you work.",
   "painPoints.exchange7.cta": "See it on the roadmap",
@@ -441,8 +442,7 @@ export const homepage: Catalog = {
   "subprofiles.personas.atelier.deck.showsLine": "Work · pricing · studio days",
 
   "subprofiles.personas.byline.role": "Music criticism",
-  "subprofiles.personas.byline.sub":
-    "Bylines in three magazines since 2021",
+  "subprofiles.personas.byline.sub": "Bylines in three magazines since 2021",
   "subprofiles.personas.byline.cta": "Read the clips",
   "subprofiles.personas.byline.bio":
     "Music critic with bylines in three magazines, covering clubbing and diaspora.",

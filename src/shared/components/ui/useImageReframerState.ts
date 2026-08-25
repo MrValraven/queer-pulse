@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   clampCrop,
   cropRectFromPanZoom,
@@ -40,13 +46,18 @@ function clampValue(value: number, min: number, max: number): number {
 /** Preset ratio chips offered when `allowFreeform` is true: Original (source's
  *  own ratio), Square, and Native (the upload kind's designated aspect) when
  *  the caller passed a numeric `aspect` rather than `"free"`. */
-function buildAspectChoiceDefinitions(hasNativeAspect: boolean): AspectChoiceDefinition[] {
+function buildAspectChoiceDefinitions(
+  hasNativeAspect: boolean,
+): AspectChoiceDefinition[] {
   const definitions: AspectChoiceDefinition[] = [
     { key: "original", labelKey: "shared:reframe.ratio.original" },
     { key: "square", labelKey: "shared:reframe.ratio.square" },
   ];
   if (hasNativeAspect) {
-    definitions.push({ key: "native", labelKey: "shared:reframe.ratio.native" });
+    definitions.push({
+      key: "native",
+      labelKey: "shared:reframe.ratio.native",
+    });
   }
   return definitions;
 }
@@ -76,8 +87,22 @@ export function useImageReframerState({
     typeof aspect === "number" ? "native" : "original",
   );
 
-  const { frameRef, isDragging, handleFramePointerDown, handleFramePointerMove, endFramePointer } =
-    useFramePanPinch({ zoom, panX, panY, minZoom: MIN_ZOOM, maxZoom: MAX_ZOOM, setZoom, setPanX, setPanY });
+  const {
+    frameRef,
+    isDragging,
+    handleFramePointerDown,
+    handleFramePointerMove,
+    endFramePointer,
+  } = useFramePanPinch({
+    zoom,
+    panX,
+    panY,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
+    setZoom,
+    setPanX,
+    setPanY,
+  });
 
   const seededRef = useRef(false);
   const onChangeRef = useRef(onChange);
@@ -105,14 +130,16 @@ export function useImageReframerState({
       return source ? source.width / source.height : 1;
     }
     if (freeformChoice === "square") return 1;
-    if (freeformChoice === "native" && typeof aspect === "number") return aspect;
+    if (freeformChoice === "native" && typeof aspect === "number")
+      return aspect;
     return source ? source.width / source.height : 1;
   }, [allowFreeform, aspect, freeformChoice, source]);
 
   const activeAspectLabel = useMemo(() => {
     if (!allowFreeform) return aspectLabel;
     if (freeformChoice === "square") return "1:1";
-    if (freeformChoice === "native" && typeof aspect === "number") return aspectLabel;
+    if (freeformChoice === "native" && typeof aspect === "number")
+      return aspectLabel;
     return "original";
   }, [allowFreeform, aspect, aspectLabel, freeformChoice]);
 
@@ -120,11 +147,27 @@ export function useImageReframerState({
   const displayRect = useMemo(() => {
     if (!source) return null;
     return clampCrop(
-      cropRectFromPanZoom(source, activeAspectNumber, zoom, panX, panY, activeAspectLabel),
+      cropRectFromPanZoom(
+        source,
+        activeAspectNumber,
+        zoom,
+        panX,
+        panY,
+        activeAspectLabel,
+      ),
       source,
       { width: minOutputWidth, height: minOutputHeight },
     );
-  }, [source, activeAspectNumber, activeAspectLabel, zoom, panX, panY, minOutputWidth, minOutputHeight]);
+  }, [
+    source,
+    activeAspectNumber,
+    activeAspectLabel,
+    zoom,
+    panX,
+    panY,
+    minOutputWidth,
+    minOutputHeight,
+  ]);
 
   // Seed zoom/pan from a controlled `value` the first time the source loads,
   // then emit `onChange` on every geometry change thereafter. `seededRef`
@@ -138,7 +181,11 @@ export function useImageReframerState({
       seededRef.current = true;
       const initialValue = valueRef.current;
       if (initialValue) {
-        const seeded = panZoomFromCropRect(source, activeAspectNumber, initialValue);
+        const seeded = panZoomFromCropRect(
+          source,
+          activeAspectNumber,
+          initialValue,
+        );
         setZoom(clampValue(seeded.zoom, MIN_ZOOM, MAX_ZOOM));
         setPanX(clampValue(seeded.panX, 0, 1));
         setPanY(clampValue(seeded.panY, 0, 1));
@@ -156,7 +203,9 @@ export function useImageReframerState({
     const handleWheelNative = (event: WheelEvent) => {
       event.preventDefault();
       const direction = event.deltaY > 0 ? -1 : 1;
-      setZoom((current) => clampValue(current + direction * ZOOM_WHEEL_STEP, MIN_ZOOM, MAX_ZOOM));
+      setZoom((current) =>
+        clampValue(current + direction * ZOOM_WHEEL_STEP, MIN_ZOOM, MAX_ZOOM),
+      );
     };
     frame.addEventListener("wheel", handleWheelNative, { passive: false });
     return () => frame.removeEventListener("wheel", handleWheelNative);
@@ -173,7 +222,9 @@ export function useImageReframerState({
   }
 
   function nudgeZoom(direction: 1 | -1) {
-    setZoom((current) => clampValue(current + direction * ZOOM_KEY_STEP, MIN_ZOOM, MAX_ZOOM));
+    setZoom((current) =>
+      clampValue(current + direction * ZOOM_KEY_STEP, MIN_ZOOM, MAX_ZOOM),
+    );
   }
 
   function handleFrameKeyDown(key: string): boolean {

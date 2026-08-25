@@ -55,7 +55,8 @@ export function BoardRow({
   const isClosed = item.status === "closed" || closedOverride !== null;
   const closedNote = closedOverride?.closedNote ?? item.closedNote;
   const daysLeft = isClosed ? null : daysUntil(item.expiresAt);
-  const showExpiryWarning = daysLeft !== null && daysLeft <= EXPIRY_WARNING_DAYS;
+  const showExpiryWarning =
+    daysLeft !== null && daysLeft <= EXPIRY_WARNING_DAYS;
 
   async function handleConfirmClose() {
     const result = await closeBoardItem.mutateAsync({
@@ -71,10 +72,7 @@ export function BoardRow({
 
   return (
     <article className={`${styles.ask} ${isClosed ? styles.askDone : ""}`}>
-      <Link
-        to={`${routes.offer}#${item.slug}`}
-        className={styles.askTitleLink}
-      >
+      <Link to={`${routes.offer}#${item.slug}`} className={styles.askTitleLink}>
         <KindChip kind={item.kind}>
           {item.kind === "looking"
             ? t("members:content.board.looking")

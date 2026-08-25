@@ -4,7 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { usePreviousLocation } from "../../app/providers/NavHistoryProvider";
+import { usePreviousLocation } from "../../app/providers/previousLocation";
 import { profileBackTarget } from "./profileBackTarget";
 import styles from "./ProfilePage.module.css";
 import editStyles from "./ProfileEdit.module.css";

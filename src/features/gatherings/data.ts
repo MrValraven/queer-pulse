@@ -620,7 +620,10 @@ export function gatheringKind(g: GatheringDetail): "event" | "gathering" {
  *  provided one, falling back to the start `date` — every demo mock only has
  *  a `date`, so a past-dated demo gathering still counts as ended. Backs
  *  `GatheringPerformerNudge` (Personas Phase 5, Moment 5). */
-export function gatheringHasEnded(g: GatheringDetail, now: Date = new Date()): boolean {
+export function gatheringHasEnded(
+  g: GatheringDetail,
+  now: Date = new Date(),
+): boolean {
   return (g.endAt ?? g.date).getTime() < now.getTime();
 }
 

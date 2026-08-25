@@ -1,12 +1,10 @@
 /** An in-progress mention at the caret: which kind, the text typed after the
  *  sigil, and the index where the sigil begins (for replacement). */
-export type MentionTrigger =
-  | {
-      kind: "member" | "community" | "topic" | "business" | "event" | "thread";
-      query: string;
-      start: number;
-    }
-  | null;
+export type MentionTrigger = {
+  kind: "member" | "community" | "topic" | "business" | "event" | "thread";
+  query: string;
+  start: number;
+} | null;
 
 // Same boundary rule as the renderer: the sigil must sit at string start or
 // after whitespace, so `me@ho` (email) yields no trigger.

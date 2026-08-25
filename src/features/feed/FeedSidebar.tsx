@@ -111,9 +111,12 @@ export function FeedSidebar({
               to={gatheringPath("queer-night-swim")}
               className={`${styles.upcomingRow} ${styles.revealRow}`}
             >
+              {/* eslint-disable-next-line local/no-literal-string -- demo-only mock gathering date; live mode fetches this from the gathering record (see the gatherings.map branch below). */}
               <span className={styles.datePill}>22 Jun</span>
               <div>
+                {/* eslint-disable-next-line local/no-literal-string -- demo-only mock gathering name; live mode fetches this from the gathering record. */}
                 <div className={styles.upName}>Queer Night Swim</div>
+                {/* eslint-disable-next-line local/no-literal-string -- demo-only mock gathering venue; live mode fetches this from the gathering record. */}
                 <div className={styles.upVenue}>Piscina Municipal</div>
               </div>
             </Link>
@@ -122,9 +125,12 @@ export function FeedSidebar({
               className={`${styles.upcomingRow} ${styles.revealRow}`}
               style={{ animationDelay: "60ms" }}
             >
+              {/* eslint-disable-next-line local/no-literal-string -- demo-only mock gathering date; live mode fetches this from the gathering record (see the gatherings.map branch below). */}
               <span className={styles.datePill}>19 Jul</span>
               <div>
+                {/* eslint-disable-next-line local/no-literal-string -- demo-only mock gathering name; live mode fetches this from the gathering record. */}
                 <div className={styles.upName}>Queer Book Club</div>
+                {/* eslint-disable-next-line local/no-literal-string -- demo-only mock gathering venue; live mode fetches this from the gathering record. */}
                 <div className={styles.upVenue}>LX Factory</div>
               </div>
             </Link>

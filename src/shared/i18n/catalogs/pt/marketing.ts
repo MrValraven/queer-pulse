@@ -679,6 +679,7 @@ export const marketing: Catalog = {
   "partners.become.body":
     "Se a tua organização faz um trabalho alinhado em Lisboa ou arredores, gostaríamos de saber de ti.",
   "partners.become.applyCta": "Candidatar como parceiro",
+  "partners.become.emailCta": "hello@queerpulse.com",
   "partners.outro.title":
     "Conheces uma organização que <em>devia estar aqui?</em>",
   "partners.outro.sub":
@@ -699,6 +700,7 @@ export const marketing: Catalog = {
   "pressKit.contact.phoneLabel": "<b>Por telefone</b>, a pedido",
   "pressKit.contact.responseLabel": "Respondemos em <b>48 horas</b>",
   "pressKit.contact.languagesLabel": "<b>PT / EN</b>",
+  "pressKit.contact.email": "hello@queerpulse.com",
   "pressKit.footerNote.licence":
     "Todos os materiais aqui são disponibilizados sob licença <a>CC BY 4.0</a> para uso editorial.",
   "pressKit.footerNote.commercial":
@@ -1525,6 +1527,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.sub":
     "Aqui está tudo o que nos contaste. Edita qualquer parte voltando atrás. Nada fica fechado até enviares.",
   "listBusiness.step5.slugLabel": "O teu anúncio vai viver em",
+  "listBusiness.step5.slugDomain": "queerpulse.app/directory/",
   "listBusiness.step5.editCta": "Editar",
   "listBusiness.step5.notAdded": "Por preencher",
   "listBusiness.step5.onlineBusiness": "Só online",
@@ -2134,6 +2137,10 @@ export const marketing: Catalog = {
     "As tuas sessões ativas já conseguem chegar a uma pessoa",
   "changelog.entries.sessions-page-links-reach-a-person.body":
     "\u201cAlgo parece errado? Conta-nos o que aconteceu\u201d, nas tuas sessões ativas, abria uma página a anunciar que a tua conta estava bloqueada, o que era assustador e falso. Os dois links dessa página passam a levar-te ao que prometem: \u201co que fazer a seguir\u201d abre a secção Conta da Ajuda, que explica o que fazer com um dispositivo estranho, e \u201cconta-nos o que aconteceu\u201d abre o formulário de contacto com o tema já definido como acesso à conta, para a tua mensagem chegar à equipa. O link Voltar, no topo da página, regressa a Definições \u2192 Conta, de onde a abriste.",
+  "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.title":
+    "O Studio e o Cinema falam portugu\u00eas em mais s\u00edtios",
+  "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.body":
+    "Ao mudar o site para portugu\u00eas, havia partes do Studio e do Cinema que continuavam em ingl\u00eas. Os bot\u00f5es, t\u00edtulos, separadores, estados vazios e descri\u00e7\u00f5es de imagens das sec\u00e7\u00f5es de m\u00fasica e de cinema passam agora a seguir a l\u00edngua que escolheste, tal como o ecr\u00e3 de arranque de funda\u00e7\u00e3o, o gloss\u00e1rio, as ferramentas de fatura e contrato e v\u00e1rias p\u00e1ginas da revista e de parceiros. O que fica propositadamente em ingl\u00eas \u00e9 a obra em si: t\u00edtulos de faixas e \u00e1lbuns, letras, biografias de artistas, sinopses de filmes, fichas t\u00e9cnicas e notas de curadoria. S\u00e3o textos escritos por quem os criou, e traduzir as palavras de algu\u00e9m sem lhe perguntar seria a decis\u00e3o errada, por isso aparecem tal como o autor as escreveu em qualquer das l\u00ednguas.",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.title":
     "A tua lista de dispositivos deixa de acumular sess\u00f5es antigas",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.body":
@@ -5921,6 +5928,10 @@ export const marketing: Catalog = {
   "arriving.firstStep.intro":
     "Tudo nesta página é útil. Mas a melhor coisa que podes fazer é aparecer num encontro. O próximo já aí vem:",
   "arriving.firstStep.rsvpCta": "Vou estar lá",
+  "arriving.firstStep.example.title": "Noite de Portefólio",
+  "arriving.firstStep.example.subtitle": "Design e Fotografia",
+  "arriving.firstStep.example.details":
+    "Príncipe Real · A partir das 19h · Descontraído, caloroso, sem agenda marcada. Traz o teu trabalho, ou só a tua presença.",
   "arriving.commQuick.eyebrow": "Por onde começar",
   "arriving.commQuick.title":
     "Três comunidades para <em>quem chega agora.</em>",

@@ -29,6 +29,8 @@ describe("VolunteerSignupModal", () => {
     expect(submitButton).toBeEnabled();
 
     fireEvent.click(submitButton);
-    expect(onSubmit).toHaveBeenCalledWith("I love organizing community events.");
+    expect(onSubmit).toHaveBeenCalledWith(
+      "I love organizing community events.",
+    );
   });
 });

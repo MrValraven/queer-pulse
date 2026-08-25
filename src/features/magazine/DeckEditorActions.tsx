@@ -112,7 +112,10 @@ export function useDeckEditorActions({
           "info",
         );
       } else {
-        showToast(t("magazine:deck.editor.convertModal.successToast"), "success");
+        showToast(
+          t("magazine:deck.editor.convertModal.successToast"),
+          "success",
+        );
       }
       onConverted(result.pieceId);
     } catch {

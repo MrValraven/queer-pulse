@@ -19,7 +19,9 @@ export function StatSlideFields({ slide, onChange }: FieldsProps<StatSlide>) {
             type="text"
             className={styles.input}
             value={slide.value}
-            onChange={(event) => onChange({ ...slide, value: event.target.value })}
+            onChange={(event) =>
+              onChange({ ...slide, value: event.target.value })
+            }
           />
         </FormField>
         <FormField label={t("magazine:deck.editor.field.unit")}>
@@ -27,7 +29,9 @@ export function StatSlideFields({ slide, onChange }: FieldsProps<StatSlide>) {
             type="text"
             className={styles.input}
             value={slide.unit ?? ""}
-            onChange={(event) => onChange({ ...slide, unit: event.target.value })}
+            onChange={(event) =>
+              onChange({ ...slide, unit: event.target.value })
+            }
           />
         </FormField>
       </div>
@@ -36,7 +40,9 @@ export function StatSlideFields({ slide, onChange }: FieldsProps<StatSlide>) {
           type="text"
           className={styles.input}
           value={asText(slide.label)}
-          onChange={(event) => onChange({ ...slide, label: event.target.value })}
+          onChange={(event) =>
+            onChange({ ...slide, label: event.target.value })
+          }
         />
       </FormField>
       <FormField label={t("magazine:deck.editor.field.source")}>
@@ -44,10 +50,15 @@ export function StatSlideFields({ slide, onChange }: FieldsProps<StatSlide>) {
           type="text"
           className={styles.input}
           value={slide.source ?? ""}
-          onChange={(event) => onChange({ ...slide, source: event.target.value })}
+          onChange={(event) =>
+            onChange({ ...slide, source: event.target.value })
+          }
         />
       </FormField>
-      <TintPicker value={slide.tint} onChange={(tint) => onChange({ ...slide, tint })} />
+      <TintPicker
+        value={slide.tint}
+        onChange={(tint) => onChange({ ...slide, tint })}
+      />
     </>
   );
 }

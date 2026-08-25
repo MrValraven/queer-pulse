@@ -2,10 +2,7 @@ import { apiGet, apiPost } from "../../../shared/api/client";
 
 export type ResourceListingCategory = "legal_aid" | "sexual_health_testing";
 export type ResourceSuggestionStatus =
-  | "pending"
-  | "approved"
-  | "declined"
-  | "archived";
+  "pending" | "approved" | "declined" | "archived";
 
 export interface AdminPersonDTO {
   slug: string;

@@ -43,7 +43,14 @@ export function atTime(ev: MyEvent, which: "start" | "end"): Date {
   const dt = parseDate(ev.date);
   const [h = 0, m = 0] = (ev[which] || ev.start).split(":").map(Number);
   if (ev.timezone) {
-    return zonedWallTimeToUtc(dt.getFullYear(), dt.getMonth(), dt.getDate(), h, m, ev.timezone);
+    return zonedWallTimeToUtc(
+      dt.getFullYear(),
+      dt.getMonth(),
+      dt.getDate(),
+      h,
+      m,
+      ev.timezone,
+    );
   }
   dt.setHours(h, m, 0, 0);
   return dt;
@@ -114,7 +121,11 @@ export function inPill(ev: MyEvent, p: Pill): boolean {
     case "past":
       return ev.category === "past";
     case "saved":
-      return ev.category === "saved" || ev.category === "invite" || ev.category === "sent";
+      return (
+        ev.category === "saved" ||
+        ev.category === "invite" ||
+        ev.category === "sent"
+      );
     default:
       return false;
   }
@@ -148,7 +159,8 @@ export function yearInsights(events: MyEvent[]): YearInsights {
       parseDate(ev.date).getFullYear() === year,
   );
   const hosted = events.filter(
-    (ev) => ev.category === "hosting" && parseDate(ev.date).getFullYear() === year,
+    (ev) =>
+      ev.category === "hosting" && parseDate(ev.date).getFullYear() === year,
   ).length;
 
   // Top circle: the community you attended most often this year.

@@ -32,7 +32,9 @@ export function EmployerGrid({
         {employers.map((employer) => (
           <Link
             key={employer.slug ?? employer.name}
-            to={employer.slug ? `${routes.company}/${employer.slug}` : routes.jobs}
+            to={
+              employer.slug ? `${routes.company}/${employer.slug}` : routes.jobs
+            }
             className={styles.empCard}
           >
             <div
@@ -45,7 +47,10 @@ export function EmployerGrid({
             <div className={styles.empType}>{employer.type}</div>
             <span
               className={styles.empBadge}
-              style={{ background: employer.badgeBg, color: employer.badgeText }}
+              style={{
+                background: employer.badgeBg,
+                color: employer.badgeText,
+              }}
             >
               {employer.qr ? (
                 <>

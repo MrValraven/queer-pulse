@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Button, FormField, RadioCardGroup } from "../../../../shared/components/ui";
+import {
+  Button,
+  FormField,
+  RadioCardGroup,
+} from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { Translation } from "../../../../shared/i18n/Translation";
@@ -8,7 +12,7 @@ import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
 import type { RoadmapDeclineReason } from "../../api/roadmapAdmin.types";
 import { AdminModal } from "../../ui";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 import { DECLINE_REASONS } from "./declineReasons.data";
 import styles from "./roadmapModals.module.css";
 
@@ -106,7 +110,9 @@ export function DeclineModal() {
         onChange={pickReason}
         options={DECLINE_REASONS.map((reason) => ({
           id: reason.key,
-          render: <span className={styles.optionTitle}>{t(reason.labelKey)}</span>,
+          render: (
+            <span className={styles.optionTitle}>{t(reason.labelKey)}</span>
+          ),
         }))}
       />
 
@@ -116,7 +122,10 @@ export function DeclineModal() {
         helper={t("admin:roadmap.modals.decline.publishedWordingHint")}
         required
       >
-        <textarea value={note} onChange={(event) => setNote(event.target.value)} />
+        <textarea
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
+        />
       </FormField>
     </AdminModal>
   );

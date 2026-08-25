@@ -15,7 +15,12 @@ export interface BulkTriageBarProps {
  * already used by `myevents`/admin bulk bars) — no bespoke styling of its
  * own, so it has no companion CSS module.
  */
-export function BulkTriageBar({ count, onMaybe, onPass, onClear }: BulkTriageBarProps) {
+export function BulkTriageBar({
+  count,
+  onMaybe,
+  onPass,
+  onClear,
+}: BulkTriageBarProps) {
   const { t } = useTranslation();
   return (
     <BulkActionBar

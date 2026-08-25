@@ -20,7 +20,10 @@ interface InviteExpiredPageProps {
   preview?: boolean;
 }
 
-export function InviteExpiredPage({ invite, preview }: InviteExpiredPageProps = {}) {
+export function InviteExpiredPage({
+  invite,
+  preview,
+}: InviteExpiredPageProps = {}) {
   const { t } = useTranslation();
 
   const resolved = preview ? DEMO_EXPIRED_INVITE : invite;
@@ -53,7 +56,10 @@ export function InviteExpiredPage({ invite, preview }: InviteExpiredPageProps = 
 
         <div className={styles.eyebrow}>{t(config.eyebrowKey)}</div>
         <h1 className={styles.heading}>
-          <Translation i18nKey={config.headingKey} components={{ em: <em /> }} />
+          <Translation
+            i18nKey={config.headingKey}
+            components={{ em: <em /> }}
+          />
         </h1>
         <p className={styles.lead}>{t(config.leadKey)}</p>
 
@@ -64,7 +70,9 @@ export function InviteExpiredPage({ invite, preview }: InviteExpiredPageProps = 
                 <span className={styles.inviteRowLabel}>
                   {t("system:inviteState.details.expiredOn")}
                 </span>
-                <span className={styles.expiredDate}>{resolved.expiryLabel}</span>
+                <span className={styles.expiredDate}>
+                  {resolved.expiryLabel}
+                </span>
               </div>
             )}
             {inviter && (
@@ -73,7 +81,9 @@ export function InviteExpiredPage({ invite, preview }: InviteExpiredPageProps = 
                   {t("system:inviteState.details.vouchedBy")}
                 </span>
                 <span>
-                  <span className={styles.inviteAvatar}>{inviter.initials}</span>
+                  <span className={styles.inviteAvatar}>
+                    {inviter.initials}
+                  </span>
                   <b>{inviter.name}</b>
                 </span>
               </div>

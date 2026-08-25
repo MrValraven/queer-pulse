@@ -109,7 +109,9 @@ const REQUIRED: RequiredField[] = [
 export function usePostOpportunityForm(initial?: PostOpportunityState) {
   const [state, setState] = useState<PostOpportunityState>(initial ?? EMPTY);
   const { user } = useAuth();
-  const stewardedCommunities = useMyCommunityOptions({ roles: ["owner", "mod"] });
+  const stewardedCommunities = useMyCommunityOptions({
+    roles: ["owner", "mod"],
+  });
   const membershipsResolving = useMyCommunitiesResolving();
 
   // Seed the contact handle + organisation from the poster's own account,
@@ -157,7 +159,10 @@ export function usePostOpportunityForm(initial?: PostOpportunityState) {
       tasks: s.tasks.map((t, idx) => (idx === i ? { ...t, ...patch } : t)),
     }));
   const addTask = () =>
-    setState((s) => ({ ...s, tasks: [...s.tasks, { title: "", description: "" }] }));
+    setState((s) => ({
+      ...s,
+      tasks: [...s.tasks, { title: "", description: "" }],
+    }));
   const removeTask = (i: number) =>
     setState((s) => ({ ...s, tasks: s.tasks.filter((_, idx) => idx !== i) }));
 

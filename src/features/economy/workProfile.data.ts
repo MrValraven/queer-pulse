@@ -111,11 +111,23 @@ export const WORK_SKILLS: WorkTaxonomyOption[] = [
 
 /** Focus areas a member wants support with — what mentors are matched against. */
 export const FOCUS_AREAS: WorkTaxonomyOption[] = [
-  { id: "career-direction", labelKey: "economy:workProfile.focus.careerDirection" },
+  {
+    id: "career-direction",
+    labelKey: "economy:workProfile.focus.careerDirection",
+  },
   { id: "coming-out", labelKey: "economy:workProfile.focus.comingOut" },
-  { id: "creative-practice", labelKey: "economy:workProfile.focus.creativePractice" },
-  { id: "starting-business", labelKey: "economy:workProfile.focus.startingBusiness" },
-  { id: "difficult-workplace", labelKey: "economy:workProfile.focus.difficultWorkplace" },
+  {
+    id: "creative-practice",
+    labelKey: "economy:workProfile.focus.creativePractice",
+  },
+  {
+    id: "starting-business",
+    labelKey: "economy:workProfile.focus.startingBusiness",
+  },
+  {
+    id: "difficult-workplace",
+    labelKey: "economy:workProfile.focus.difficultWorkplace",
+  },
   { id: "mental-health", labelKey: "economy:workProfile.focus.mentalHealth" },
 ];
 

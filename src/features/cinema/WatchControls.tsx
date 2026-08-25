@@ -6,6 +6,7 @@ import styles from "./WatchPage.module.css";
 /** The resting play-affordance shown in the player screen once the advisory
  * gate is dismissed. */
 export function WatchPlayState() {
+  const { t } = useTranslation();
   return (
     <div className={styles.playState}>
       <div className={styles.playBtn}>
@@ -13,10 +14,17 @@ export function WatchPlayState() {
           <path d="M8 5v14l11-7L8 5z" />
         </svg>
       </div>
+      {/* eslint-disable local/no-literal-string -- this film's own title; content per the scope rule */}
       <div className={styles.psTitle}>
         The light <em>between</em> rooms
       </div>
-      <div className={styles.psMeta}>Paused at 31:44 · 60 min remaining</div>
+      {/* eslint-enable local/no-literal-string */}
+      <div className={styles.psMeta}>
+        {t("cinema:watch.controls.pausedStatus", {
+          time: "31:44",
+          remaining: 60,
+        })}
+      </div>
     </div>
   );
 }
@@ -93,7 +101,7 @@ export function WatchControls({
           aria-label={t("cinema:watch.controls.ccAria")}
           onClick={onCcToggle}
         >
-          CC EN
+          {t("cinema:watch.controls.ccToggleLabel")}
         </button>
         <button
           type="button"
@@ -104,7 +112,7 @@ export function WatchControls({
           aria-label={t("cinema:watch.controls.adAria")}
           onClick={onAdToggle}
         >
-          AD
+          {t("cinema:watch.controls.adToggleLabel")}
         </button>
         <Select
           size="sm"

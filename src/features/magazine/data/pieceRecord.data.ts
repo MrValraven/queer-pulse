@@ -85,10 +85,21 @@ const CARE: PieceCare = {
       note: "Quoted in a professional capacity. Needs sign-off from the clinic press office.",
     },
   ],
-  contentNotes: ["Illness and hospital settings", "Death of a friend (brief, section 3)"],
+  contentNotes: [
+    "Illness and hospital settings",
+    "Death of a friend (brief, section 3)",
+  ],
   flags: [
-    { key: "Names a venue", on: true, note: "Bar Sétimo: closed, safe to name." },
-    { key: "Legal risk", on: false, note: "No allegations against a named person." },
+    {
+      key: "Names a venue",
+      on: true,
+      note: "Bar Sétimo: closed, safe to name.",
+    },
+    {
+      key: "Legal risk",
+      on: false,
+      note: "No allegations against a named person.",
+    },
     {
       key: "Names a health provider",
       on: true,
@@ -102,10 +113,16 @@ const CARE: PieceCare = {
     askedOn: "3 Aug",
     dueOn: "9 Aug",
     checks: [
-      { label: "Nobody is outed by detail or jigsaw identification", done: true },
+      {
+        label: "Nobody is outed by detail or jigsaw identification",
+        done: true,
+      },
       { label: "Pseudonyms hold across the whole piece", done: true },
       { label: "Language matches the subjects' own words", done: false },
-      { label: "Trans and non-binary subjects described as they asked", done: true },
+      {
+        label: "Trans and non-binary subjects described as they asked",
+        done: true,
+      },
       { label: "Second reader for the health-provider mention", done: false },
     ],
   },
@@ -227,16 +244,27 @@ const PUBLISH_GATE: PublishGateItemDto[] = [
   { label: "Consent: Rui S.", done: true },
   { label: "Consent: Dra. Câmara", done: false },
   {
-    label: "Sensitivity read: Nobody is outed by detail or jigsaw identification",
+    label:
+      "Sensitivity read: Nobody is outed by detail or jigsaw identification",
     done: true,
   },
-  { label: "Sensitivity read: Pseudonyms hold across the whole piece", done: true },
-  { label: "Sensitivity read: Language matches the subjects' own words", done: false },
   {
-    label: "Sensitivity read: Trans and non-binary subjects described as they asked",
+    label: "Sensitivity read: Pseudonyms hold across the whole piece",
     done: true,
   },
-  { label: "Sensitivity read: Second reader for the health-provider mention", done: false },
+  {
+    label: "Sensitivity read: Language matches the subjects' own words",
+    done: false,
+  },
+  {
+    label:
+      "Sensitivity read: Trans and non-binary subjects described as they asked",
+    done: true,
+  },
+  {
+    label: "Sensitivity read: Second reader for the health-provider mention",
+    done: false,
+  },
   { label: "Content notes written", done: true },
 ];
 

@@ -97,8 +97,7 @@ export function CompareOffersModal({
 
       <div className={styles.foot}>
         <button type="button" className={styles.back} onClick={onClose}>
-          <FiArrowLeft aria-hidden />{" "}
-          {t("economy:compare.close")}
+          <FiArrowLeft aria-hidden /> {t("economy:compare.close")}
         </button>
       </div>
     </ModalShell>

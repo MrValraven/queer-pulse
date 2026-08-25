@@ -13,10 +13,7 @@ const GettingStartedPage = lazyNamed(
 export function onboardingRoutes() {
   return (
     <>
-      <Route
-        path={routes.gettingStarted}
-        element={<GettingStartedPage />}
-      />
+      <Route path={routes.gettingStarted} element={<GettingStartedPage />} />
     </>
   );
 }

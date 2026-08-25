@@ -107,8 +107,7 @@ export function ConstitutionPage() {
         <span className={styles.versionStrong}>
           {t("marketing:constitution.footer.downloadPdf")}
         </span>{" "}
-        ·{" "}
-        {t("marketing:constitution.footer.seeAssembly")} ·{" "}
+        · {t("marketing:constitution.footer.seeAssembly")} ·{" "}
         {t("marketing:constitution.footer.readCodeOfConduct")}
       </div>
     </PageShell>

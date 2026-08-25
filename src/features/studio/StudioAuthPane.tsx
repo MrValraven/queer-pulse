@@ -92,8 +92,7 @@ export function StudioAuthPane({
           style={{ marginTop: 8 }}
           disabled={!canSubmit}
         >
-          {t(copy.submitCtaKey)}{" "}
-          <FiArrowRight aria-hidden />
+          {t(copy.submitCtaKey)} <FiArrowRight aria-hidden />
         </Button>
       </form>
 
@@ -102,8 +101,7 @@ export function StudioAuthPane({
       <div className={styles.foot}>
         {t(copy.footPromptKey)}{" "}
         <button type="button" onClick={onSwitch}>
-          {t(copy.footSwitchCtaKey)}{" "}
-          <FiArrowRight aria-hidden />
+          {t(copy.footSwitchCtaKey)} <FiArrowRight aria-hidden />
         </button>
         <span className={styles.free}>
           {t(copy.footFreePromptKey)}{" "}

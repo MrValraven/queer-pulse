@@ -35,177 +35,177 @@ function tag(t: TFunction, labelKey: string, kind: TagKind) {
 
 function buildImmediatePanel(t: TFunction): Block[] {
   return [
-      { kind: "preamble", text: t("safety:hateCrime.immediate.preamble") },
-      {
-        kind: "step",
-        number: 1,
-        title: t("safety:hateCrime.immediate.step1.title"),
-        description: t("safety:hateCrime.immediate.step1.desc"),
-        tag: tag(t, "safety:hateCrime.tag.immediate", "immediate"),
-      },
-      {
-        kind: "step",
-        number: 2,
-        title: t("safety:hateCrime.immediate.step2.title"),
-        description: t("safety:hateCrime.immediate.step2.desc"),
-        tag: tag(t, "safety:hateCrime.tag.immediate", "immediate"),
-      },
-      {
-        kind: "step",
-        number: 3,
-        title: t("safety:hateCrime.immediate.step3.title"),
-        description: t("safety:hateCrime.immediate.step3.desc"),
-        tag: tag(t, "safety:hateCrime.tag.ifHurt", "immediate"),
-      },
-      {
-        kind: "step",
-        number: 4,
-        title: t("safety:hateCrime.immediate.step4.title"),
-        description: t("safety:hateCrime.immediate.step4.desc"),
-        tag: tag(t, "safety:hateCrime.tag.recommended", "recommended"),
-      },
-      {
-        kind: "step",
-        number: 5,
-        title: t("safety:hateCrime.immediate.step5.title"),
-        description: t("safety:hateCrime.immediate.step5.desc"),
-        tag: tag(t, "safety:hateCrime.tag.recommended", "recommended"),
-      },
+    { kind: "preamble", text: t("safety:hateCrime.immediate.preamble") },
+    {
+      kind: "step",
+      number: 1,
+      title: t("safety:hateCrime.immediate.step1.title"),
+      description: t("safety:hateCrime.immediate.step1.desc"),
+      tag: tag(t, "safety:hateCrime.tag.immediate", "immediate"),
+    },
+    {
+      kind: "step",
+      number: 2,
+      title: t("safety:hateCrime.immediate.step2.title"),
+      description: t("safety:hateCrime.immediate.step2.desc"),
+      tag: tag(t, "safety:hateCrime.tag.immediate", "immediate"),
+    },
+    {
+      kind: "step",
+      number: 3,
+      title: t("safety:hateCrime.immediate.step3.title"),
+      description: t("safety:hateCrime.immediate.step3.desc"),
+      tag: tag(t, "safety:hateCrime.tag.ifHurt", "immediate"),
+    },
+    {
+      kind: "step",
+      number: 4,
+      title: t("safety:hateCrime.immediate.step4.title"),
+      description: t("safety:hateCrime.immediate.step4.desc"),
+      tag: tag(t, "safety:hateCrime.tag.recommended", "recommended"),
+    },
+    {
+      kind: "step",
+      number: 5,
+      title: t("safety:hateCrime.immediate.step5.title"),
+      description: t("safety:hateCrime.immediate.step5.desc"),
+      tag: tag(t, "safety:hateCrime.tag.recommended", "recommended"),
+    },
   ];
 }
 
 function buildDocumentPanel(t: TFunction): Block[] {
   return [
-      { kind: "preamble", text: t("safety:hateCrime.document.preamble") },
-      {
-        kind: "sectionHead",
-        node: (
-          <Translation
-            i18nKey="safety:hateCrime.document.collectHeading"
-            components={{ em: <em /> }}
-          />
-        ),
-      },
-      {
-        kind: "step",
-        number: 1,
-        title: t("safety:hateCrime.document.step1.title"),
-        description: t("safety:hateCrime.document.step1.desc"),
-      },
-      {
-        kind: "step",
-        number: 2,
-        title: t("safety:hateCrime.document.step2.title"),
-        description: t("safety:hateCrime.document.step2.desc"),
-      },
-      {
-        kind: "step",
-        number: 3,
-        title: t("safety:hateCrime.document.step3.title"),
-        description: t("safety:hateCrime.document.step3.desc"),
-      },
-      {
-        kind: "step",
-        number: 4,
-        title: t("safety:hateCrime.document.step4.title"),
-        description: t("safety:hateCrime.document.step4.desc"),
-      },
-      {
-        kind: "step",
-        number: 5,
-        title: t("safety:hateCrime.document.step5.title"),
-        description: t("safety:hateCrime.document.step5.desc"),
-        tag: tag(t, "safety:hateCrime.tag.ifApplicable", "optional"),
-      },
-      {
-        kind: "sectionHead",
-        node: (
-          <Translation
-            i18nKey="safety:hateCrime.document.keepHeading"
-            components={{ em: <em /> }}
-          />
-        ),
-      },
-      { kind: "note", text: t("safety:hateCrime.document.note") },
+    { kind: "preamble", text: t("safety:hateCrime.document.preamble") },
+    {
+      kind: "sectionHead",
+      node: (
+        <Translation
+          i18nKey="safety:hateCrime.document.collectHeading"
+          components={{ em: <em /> }}
+        />
+      ),
+    },
+    {
+      kind: "step",
+      number: 1,
+      title: t("safety:hateCrime.document.step1.title"),
+      description: t("safety:hateCrime.document.step1.desc"),
+    },
+    {
+      kind: "step",
+      number: 2,
+      title: t("safety:hateCrime.document.step2.title"),
+      description: t("safety:hateCrime.document.step2.desc"),
+    },
+    {
+      kind: "step",
+      number: 3,
+      title: t("safety:hateCrime.document.step3.title"),
+      description: t("safety:hateCrime.document.step3.desc"),
+    },
+    {
+      kind: "step",
+      number: 4,
+      title: t("safety:hateCrime.document.step4.title"),
+      description: t("safety:hateCrime.document.step4.desc"),
+    },
+    {
+      kind: "step",
+      number: 5,
+      title: t("safety:hateCrime.document.step5.title"),
+      description: t("safety:hateCrime.document.step5.desc"),
+      tag: tag(t, "safety:hateCrime.tag.ifApplicable", "optional"),
+    },
+    {
+      kind: "sectionHead",
+      node: (
+        <Translation
+          i18nKey="safety:hateCrime.document.keepHeading"
+          components={{ em: <em /> }}
+        />
+      ),
+    },
+    { kind: "note", text: t("safety:hateCrime.document.note") },
   ];
 }
 
 function buildReportPanel(t: TFunction): Block[] {
   return [
-      { kind: "preamble", text: t("safety:hateCrime.report.preamble") },
-      {
-        kind: "sectionHead",
-        node: (
-          <Translation
-            i18nKey="safety:hateCrime.report.policeHeading"
-            components={{ em: <em /> }}
-          />
-        ),
-      },
-      {
-        kind: "step",
-        number: 1,
-        title: t("safety:hateCrime.report.police.step1.title"),
-        description: t("safety:hateCrime.report.police.step1.desc"),
-      },
-      {
-        kind: "step",
-        number: 2,
-        title: t("safety:hateCrime.report.police.step2.title"),
-        description: t("safety:hateCrime.report.police.step2.desc"),
-        tag: tag(t, "safety:hateCrime.tag.important", "immediate"),
-      },
-      {
-        kind: "step",
-        number: 3,
-        title: t("safety:hateCrime.report.police.step3.title"),
-        description: t("safety:hateCrime.report.police.step3.desc"),
-        tag: tag(t, "safety:hateCrime.tag.stronglyRecommended", "recommended"),
-      },
-      {
-        kind: "sectionHead",
-        node: (
-          <Translation
-            i18nKey="safety:hateCrime.report.ilgaHeading"
-            components={{ em: <em /> }}
-          />
-        ),
-      },
-      {
-        kind: "step",
-        number: 1,
-        title: t("safety:hateCrime.report.ilga.step1.title"),
-        description: t("safety:hateCrime.report.ilga.step1.desc"),
-        tag: tag(t, "safety:hateCrime.tag.anonOptionAvailable", "recommended"),
-      },
-      {
-        kind: "step",
-        number: 2,
-        title: t("safety:hateCrime.report.ilga.step2.title"),
-        description: t("safety:hateCrime.report.ilga.step2.desc"),
-      },
-      {
-        kind: "sectionHead",
-        node: (
-          <Translation
-            i18nKey="safety:hateCrime.report.euHeading"
-            components={{ em: <em /> }}
-          />
-        ),
-      },
-      {
-        kind: "step",
-        number: 1,
-        title: t("safety:hateCrime.report.eu.step1.title"),
-        description: t("safety:hateCrime.report.eu.step1.desc"),
-      },
-      {
-        kind: "step",
-        number: 2,
-        title: t("safety:hateCrime.report.eu.step2.title"),
-        description: t("safety:hateCrime.report.eu.step2.desc"),
-        tag: tag(t, "safety:hateCrime.tag.afterDomesticProcess", "optional"),
-      },
+    { kind: "preamble", text: t("safety:hateCrime.report.preamble") },
+    {
+      kind: "sectionHead",
+      node: (
+        <Translation
+          i18nKey="safety:hateCrime.report.policeHeading"
+          components={{ em: <em /> }}
+        />
+      ),
+    },
+    {
+      kind: "step",
+      number: 1,
+      title: t("safety:hateCrime.report.police.step1.title"),
+      description: t("safety:hateCrime.report.police.step1.desc"),
+    },
+    {
+      kind: "step",
+      number: 2,
+      title: t("safety:hateCrime.report.police.step2.title"),
+      description: t("safety:hateCrime.report.police.step2.desc"),
+      tag: tag(t, "safety:hateCrime.tag.important", "immediate"),
+    },
+    {
+      kind: "step",
+      number: 3,
+      title: t("safety:hateCrime.report.police.step3.title"),
+      description: t("safety:hateCrime.report.police.step3.desc"),
+      tag: tag(t, "safety:hateCrime.tag.stronglyRecommended", "recommended"),
+    },
+    {
+      kind: "sectionHead",
+      node: (
+        <Translation
+          i18nKey="safety:hateCrime.report.ilgaHeading"
+          components={{ em: <em /> }}
+        />
+      ),
+    },
+    {
+      kind: "step",
+      number: 1,
+      title: t("safety:hateCrime.report.ilga.step1.title"),
+      description: t("safety:hateCrime.report.ilga.step1.desc"),
+      tag: tag(t, "safety:hateCrime.tag.anonOptionAvailable", "recommended"),
+    },
+    {
+      kind: "step",
+      number: 2,
+      title: t("safety:hateCrime.report.ilga.step2.title"),
+      description: t("safety:hateCrime.report.ilga.step2.desc"),
+    },
+    {
+      kind: "sectionHead",
+      node: (
+        <Translation
+          i18nKey="safety:hateCrime.report.euHeading"
+          components={{ em: <em /> }}
+        />
+      ),
+    },
+    {
+      kind: "step",
+      number: 1,
+      title: t("safety:hateCrime.report.eu.step1.title"),
+      description: t("safety:hateCrime.report.eu.step1.desc"),
+    },
+    {
+      kind: "step",
+      number: 2,
+      title: t("safety:hateCrime.report.eu.step2.title"),
+      description: t("safety:hateCrime.report.eu.step2.desc"),
+      tag: tag(t, "safety:hateCrime.tag.afterDomesticProcess", "optional"),
+    },
   ];
 }
 
@@ -215,89 +215,89 @@ function buildSupportPanel(
 ): Block[] {
   const { MENTAL, FORUM } = links;
   return [
-      { kind: "preamble", text: t("safety:hateCrime.support.preamble") },
-      {
-        kind: "sectionHead",
-        node: (
-          <Translation
-            i18nKey="safety:hateCrime.support.immediateHeading"
-            components={{ em: <em /> }}
-          />
-        ),
+    { kind: "preamble", text: t("safety:hateCrime.support.preamble") },
+    {
+      kind: "sectionHead",
+      node: (
+        <Translation
+          i18nKey="safety:hateCrime.support.immediateHeading"
+          components={{ em: <em /> }}
+        />
+      ),
+    },
+    {
+      kind: "step",
+      number: 1,
+      title: t("safety:hateCrime.support.step1.title"),
+      description: t("safety:hateCrime.support.step1.desc"),
+    },
+    {
+      kind: "step",
+      number: 2,
+      title: t("safety:hateCrime.support.step2.title"),
+      description: t("safety:hateCrime.support.step2.desc"),
+    },
+    {
+      kind: "step",
+      number: 3,
+      title: t("safety:hateCrime.support.step3.title"),
+      description: t("safety:hateCrime.support.step3.desc"),
+      link: {
+        label: t("safety:hateCrime.support.directoryCta"),
+        href: MENTAL,
       },
-      {
-        kind: "step",
-        number: 1,
-        title: t("safety:hateCrime.support.step1.title"),
-        description: t("safety:hateCrime.support.step1.desc"),
-      },
-      {
-        kind: "step",
-        number: 2,
-        title: t("safety:hateCrime.support.step2.title"),
-        description: t("safety:hateCrime.support.step2.desc"),
-      },
-      {
-        kind: "step",
-        number: 3,
-        title: t("safety:hateCrime.support.step3.title"),
-        description: t("safety:hateCrime.support.step3.desc"),
-        link: {
-          label: t("safety:hateCrime.support.directoryCta"),
-          href: MENTAL,
-        },
-      },
-      {
-        kind: "sectionHead",
-        node: (
-          <Translation
-            i18nKey="safety:hateCrime.support.longerTermHeading"
-            components={{ em: <em /> }}
-          />
-        ),
-      },
-      {
-        kind: "step",
-        number: 4,
-        title: t("safety:hateCrime.support.step4.title"),
-        description: t("safety:hateCrime.support.step4.desc"),
-      },
-      {
-        kind: "step",
-        number: 5,
-        title: t("safety:hateCrime.support.step5.title"),
-        description: t("safety:hateCrime.support.step5.desc"),
-        link: { label: t("safety:hateCrime.support.forumCta"), href: FORUM },
-      },
+    },
+    {
+      kind: "sectionHead",
+      node: (
+        <Translation
+          i18nKey="safety:hateCrime.support.longerTermHeading"
+          components={{ em: <em /> }}
+        />
+      ),
+    },
+    {
+      kind: "step",
+      number: 4,
+      title: t("safety:hateCrime.support.step4.title"),
+      description: t("safety:hateCrime.support.step4.desc"),
+    },
+    {
+      kind: "step",
+      number: 5,
+      title: t("safety:hateCrime.support.step5.title"),
+      description: t("safety:hateCrime.support.step5.desc"),
+      link: { label: t("safety:hateCrime.support.forumCta"), href: FORUM },
+    },
   ];
 }
 
 function buildLawPanel(t: TFunction): Block[] {
   return [
-      { kind: "preamble", text: t("safety:hateCrime.law.preamble") },
-      {
-        kind: "def",
-        h4: t("safety:hateCrime.law.def1.h4"),
-        paragraphs: [
-          t("safety:hateCrime.law.def1.para1"),
-          t("safety:hateCrime.law.def1.para2"),
-        ],
-      },
-      {
-        kind: "def",
-        h4: t("safety:hateCrime.law.def2.h4"),
-        paragraphs: [t("safety:hateCrime.law.def2.para1")],
-      },
-      {
-        kind: "def",
-        h4: t("safety:hateCrime.law.def3.h4"),
-        paragraphs: [t("safety:hateCrime.law.def3.para1")],
-      },
-      {
-        kind: "def",
-        h4: t("safety:hateCrime.law.def4.h4"),
-        paragraphs: [t("safety:hateCrime.law.def4.para1")],
-      },
+    { kind: "preamble", text: t("safety:hateCrime.law.preamble") },
+    {
+      kind: "def",
+      h4: t("safety:hateCrime.law.def1.h4"),
+      paragraphs: [
+        t("safety:hateCrime.law.def1.para1"),
+        t("safety:hateCrime.law.def1.para2"),
+      ],
+    },
+    {
+      kind: "def",
+      h4: t("safety:hateCrime.law.def2.h4"),
+      paragraphs: [t("safety:hateCrime.law.def2.para1")],
+    },
+    {
+      kind: "def",
+      h4: t("safety:hateCrime.law.def3.h4"),
+      paragraphs: [t("safety:hateCrime.law.def3.para1")],
+    },
+    {
+      kind: "def",
+      h4: t("safety:hateCrime.law.def4.h4"),
+      paragraphs: [t("safety:hateCrime.law.def4.para1")],
+    },
   ];
 }
 

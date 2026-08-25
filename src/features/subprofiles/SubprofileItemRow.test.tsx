@@ -68,7 +68,11 @@ describe("SubprofileItemRow", () => {
   it("renders no copyright footer in the editor's docked preview either", async () => {
     render(
       <TestProviders>
-        <SubprofileItemRow item={PROJECT_ITEM} skin="page" interactive={false} />
+        <SubprofileItemRow
+          item={PROJECT_ITEM}
+          skin="page"
+          interactive={false}
+        />
       </TestProviders>,
     );
 

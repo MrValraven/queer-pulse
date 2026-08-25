@@ -99,7 +99,9 @@ function SuggestionRow({
         <div className={styles.rowTop}>
           <span className={styles.rowName}>{suggestion.name}</span>
           <AdminChip tone={CATEGORY_TONE[suggestion.category]} dot>
-            {t(`admin:adminResourceSuggestions.category.${suggestion.category}`)}
+            {t(
+              `admin:adminResourceSuggestions.category.${suggestion.category}`,
+            )}
           </AdminChip>
         </div>
         <div className={styles.rowMeta}>
@@ -173,16 +175,15 @@ export function AdminResourceSuggestionsPage() {
   } = useAdminResourceSuggestions(filter);
   const { decide, pending } = useAdminResourceSuggestionMutations();
 
-  const handleDecide = (
-    id: string,
-    decision: ResourceSuggestionDecision,
-  ) => {
+  const handleDecide = (id: string, decision: ResourceSuggestionDecision) => {
     decide(
       { id, decision },
       {
         onSuccess: () =>
           showToast(
-            t(`admin:adminResourceSuggestions.toast.${DECISION_STATUS[decision]}`),
+            t(
+              `admin:adminResourceSuggestions.toast.${DECISION_STATUS[decision]}`,
+            ),
             "success",
           ),
         onError: () =>

@@ -23,5 +23,5 @@ export const simulations: Catalog = {
   "player.openFullScreen": "Open in new tab",
   "player.loading": "Loading simulation…",
   "player.loadError": "This simulation could not load.",
-  "insideSandbox": "Simulations are not available inside a running simulation.",
+  insideSandbox: "Simulations are not available inside a running simulation.",
 };

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiSearch, FiMoon, FiSun, FiBell, FiMenu } from "react-icons/fi";
 import { useTheme } from "../../../app/providers/themeContext";
@@ -51,9 +51,14 @@ export function AdminShell({
 
   // Growing past the breakpoint reveals the static rail, so drop any open state
   // rather than leave a stale off-canvas panel behind the desktop layout.
-  useEffect(() => {
-    if (!isMobile) setIsDrawerOpen(false);
-  }, [isMobile]);
+  // Enforced during render (rather than in an effect): the invariant "the
+  // drawer can only be open on mobile" is derived purely from render-available
+  // state, and correcting it here avoids painting the stale open state for one
+  // frame first. `isDrawerOpen` is false on the next render, so this
+  // terminates.
+  if (!isMobile && isDrawerOpen) {
+    setIsDrawerOpen(false);
+  }
 
   // Lock page scroll and trap focus only while the drawer is genuinely open on
   // mobile. `useNavDrawerFocus` (shared with MobileNavDrawer) captures the

@@ -50,8 +50,8 @@ export function OwnerSideCard({
     <SideCard
       view={view}
       onOpen={() =>
-        withCreatorSlug((slug) =>
-          void navigate(personaPublicPathForOwner(view, slug)),
+        withCreatorSlug(
+          (slug) => void navigate(personaPublicPathForOwner(view, slug)),
         )
       }
       onEdit={() => void navigate(subprofileEditPath(view.id))}

@@ -73,8 +73,12 @@ const CommunityFeedPage = lazy(() => import("./pages/CommunityFeedPage"));
   src="avatar-small.webp"
   srcset="avatar-small.webp 320w, avatar-large.webp 640w"
   sizes="(max-width: 600px) 50vw, 320px"
-  width="320" height="320"
-  loading="lazy" decoding="async" alt="Member avatar" />
+  width="320"
+  height="320"
+  loading="lazy"
+  decoding="async"
+  alt="Member avatar"
+/>
 ```
 
 ## Fonts

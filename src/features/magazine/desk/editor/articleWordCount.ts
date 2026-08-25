@@ -58,7 +58,11 @@ export function countArticleWords(
   title: string,
   standfirst: string,
 ): number {
-  const text = [stripHtml(title), stripHtml(standfirst), ...blocks.map(wordsInBlock)].join(" ");
+  const text = [
+    stripHtml(title),
+    stripHtml(standfirst),
+    ...blocks.map(wordsInBlock),
+  ].join(" ");
   return text.split(/\s+/).filter(Boolean).length;
 }
 

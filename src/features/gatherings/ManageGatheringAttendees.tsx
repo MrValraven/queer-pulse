@@ -2,7 +2,10 @@ import type { CSSProperties, ReactNode } from "react";
 import { Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { attendeeMeta, type AttendeeRow as AttendeeRowData } from "./api/events.adapters";
+import {
+  attendeeMeta,
+  type AttendeeRow as AttendeeRowData,
+} from "./api/events.adapters";
 import styles from "./ManageGatheringPage.module.css";
 
 /** One attendee row: a tinted initials avatar, the name + composed meta line

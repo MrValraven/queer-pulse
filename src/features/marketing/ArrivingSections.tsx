@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { HOODS, ORGS, COMM_QUICK } from "./arrivingPage.data";
@@ -11,6 +12,12 @@ import styles from "./ArrivingPage.module.css";
 
 const PLATFORMS = routes.platforms;
 const COMMUNITIES = routes.communities;
+
+/** The illustrative "next gathering" shown in FirstStepSection is a fixed
+ *  static example (never fetched, no real event behind it), so its date
+ *  badge is formatted through `useFormat()` rather than a hardcoded month
+ *  string, the same as any other date on the platform. */
+const FIRST_GATHERING_DATE = new Date(2026, 5, 14);
 
 export function InfoCards({ cards }: { cards: InfoCard[] }) {
   return (
@@ -165,6 +172,9 @@ export function OrgsSection() {
 
 export function FirstStepSection() {
   const { t } = useTranslation();
+  const fmt = useFormat();
+  const day = fmt.date(FIRST_GATHERING_DATE, { day: "numeric" });
+  const month = fmt.date(FIRST_GATHERING_DATE, { month: "short" });
   return (
     <MarketingSection
       tone="plum"
@@ -179,19 +189,19 @@ export function FirstStepSection() {
     >
       <Reveal as="div" className={styles.firstGather} delay={160}>
         <div className={styles.fgDate}>
-          <span className={styles.d}>14</span>
-          <span className={styles.m}>Jun</span>
+          <span className={styles.d}>{day}</span>
+          <span className={styles.m}>{month}</span>
         </div>
         <div className={styles.fgBody}>
-          <div className={styles.fgBadge}>Portfolio Night</div>
-          <h3>Designers &amp; Photographers</h3>
-          <p>
-            Príncipe Real · From 7pm · Casual, warm, no agenda. Bring your work
-            or just yourself.
-          </p>
+          <div className={styles.fgBadge}>
+            {t("marketing:arriving.firstStep.example.title")}
+          </div>
+          <h3>{t("marketing:arriving.firstStep.example.subtitle")}</h3>
+          <p>{t("marketing:arriving.firstStep.example.details")}</p>
         </div>
         <Button to={routes.gatherings} variant="ghost-dark">
-          {t("marketing:arriving.firstStep.rsvpCta")} <FiArrowRight aria-hidden />
+          {t("marketing:arriving.firstStep.rsvpCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
       </Reveal>
     </MarketingSection>
@@ -222,7 +232,10 @@ export function CommQuickSection() {
           >
             <span
               className={styles.cqType}
-              style={{ color: community.typeColor, background: community.typeBg }}
+              style={{
+                color: community.typeColor,
+                background: community.typeBg,
+              }}
             >
               {community.type}
             </span>

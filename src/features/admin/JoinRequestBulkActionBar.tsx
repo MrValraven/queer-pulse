@@ -95,7 +95,11 @@ export function JoinRequestBulkActionBar({
           </span>
         )}
         <div className={styles.bulkActions}>
-          <Button variant="jade" onClick={() => void approve()} disabled={pending}>
+          <Button
+            variant="jade"
+            onClick={() => void approve()}
+            disabled={pending}
+          >
             {t("admin:members.verify.bulk.approveCta")}
           </Button>
           <Button

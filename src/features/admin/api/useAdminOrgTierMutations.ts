@@ -17,7 +17,11 @@ const ORG_TIERS_KEY = "org-tiers";
 export function useCreateOrgTier() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<OrgTierAdminDTO | undefined, Error, OrgTierWriteBody>({
+  return useDemoAwareMutation<
+    OrgTierAdminDTO | undefined,
+    Error,
+    OrgTierWriteBody
+  >({
     demoMode,
     demoLatencyMs: 0,
     meta: { silentError: true }, // AdminOrgTierForm toasts locally
@@ -38,7 +42,11 @@ export interface UpdateOrgTierVars {
 export function useUpdateOrgTier() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useDemoAwareMutation<OrgTierAdminDTO | undefined, Error, UpdateOrgTierVars>({
+  return useDemoAwareMutation<
+    OrgTierAdminDTO | undefined,
+    Error,
+    UpdateOrgTierVars
+  >({
     demoMode,
     demoLatencyMs: 0,
     meta: { silentError: true }, // AdminOrgTierForm + AdminOrgTiersPage toast locally

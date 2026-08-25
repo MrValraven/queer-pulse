@@ -78,8 +78,7 @@ export function CalendarSidebar({
             color: "var(--accent-ink)",
           }}
         >
-          {t("gatherings:calendar.hostCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("gatherings:calendar.hostCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>

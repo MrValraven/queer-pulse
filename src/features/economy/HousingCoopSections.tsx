@@ -163,9 +163,11 @@ function CoopCard({
                 {coop.progressLabel} <em>{coop.progressEm}</em>
               </>
             ) : (
-              <>
-                <em>{coop.progressLabel}</em> through
-              </>
+              <Translation
+                i18nKey="economy:housingCoop.card.progressThrough"
+                values={{ percent: coop.progressLabel }}
+                components={{ em: <em /> }}
+              />
             )}
           </div>
         </div>

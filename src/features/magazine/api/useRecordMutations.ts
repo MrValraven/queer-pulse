@@ -79,7 +79,10 @@ export function useRecordMutations(id: string) {
   >({
     mutationFn: async ({ letterId, runInLetters }) => {
       if (demoMode) {
-        showToast(runInLetters ? "Marked to run in letters" : "Removed from letters", "success");
+        showToast(
+          runInLetters ? "Marked to run in letters" : "Removed from letters",
+          "success",
+        );
         return null;
       }
       return sendUpdateLetter(id, letterId, runInLetters);
@@ -88,7 +91,11 @@ export function useRecordMutations(id: string) {
   });
 
   /** POST /magazine/admin/pieces/:id/corrections — publish a dated correction. */
-  const addCorrection = useMutation<CorrectionDto | null, Error, CreateCorrectionDto>({
+  const addCorrection = useMutation<
+    CorrectionDto | null,
+    Error,
+    CreateCorrectionDto
+  >({
     mutationFn: async (body) => {
       if (demoMode) {
         showToast("Correction published", "success");
@@ -99,5 +106,11 @@ export function useRecordMutations(id: string) {
     onSuccess: invalidateRecord,
   });
 
-  return { savePayment, markPaid, addLetter, toggleLetterRunInLetters, addCorrection };
+  return {
+    savePayment,
+    markPaid,
+    addLetter,
+    toggleLetterRunInLetters,
+    addCorrection,
+  };
 }

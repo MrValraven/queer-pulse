@@ -7,6 +7,7 @@ import { SystemStateShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
 import { ApiError } from "../../shared/api/client";
 import { reasonFor } from "../../shared/api/errorMessage";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   claimGenesisAdmin,
   mintGenesisInvite,
@@ -34,11 +35,11 @@ type Outcome =
  * Public, and safe to be: the minted invite is pinned to GENESIS_EMAIL, so a
  * stranger who finds this page can only mint an invite they cannot redeem.
  *
- * This page hardcodes its copy instead of routing it through `useTranslation()`
- * / `system:*` keys like its neighbours — the strings are seen by exactly one
- * person on exactly one occasion, and locale keys would turn cleanup into a
- * multi-file revert across every translation file instead of deleting a
- * directory.
+ * Its copy routes through `useTranslation()` / `system:genesis.*` keys like
+ * its neighbours (see `docs/i18n/extraction-brief.md`), even though it's
+ * seen by exactly one person on exactly one occasion — deleting the page
+ * later also means deleting the `genesis.*` catalog entries, a small
+ * cleanup either way.
  *
  * Delete this file, its styles, its test, the route entry and the backend
  * `src/genesis/` module once the founder account exists.
@@ -49,6 +50,7 @@ type Outcome =
  * available in demo mode" notice instead of simulating a mint/claim.
  */
 export function GenesisPage() {
+  const { t } = useTranslation();
   const { loggedIn, refresh } = useAuth();
   const { demoMode } = useDemoMode();
   const navigate = useNavigate();
@@ -100,48 +102,41 @@ export function GenesisPage() {
   return (
     <SystemStateShell>
       <div className={styles.card}>
-        <div className={styles.eyebrow}>Platform bootstrap</div>
-        <h1 className={styles.heading}>Genesis</h1>
+        <div className={styles.eyebrow}>{t("system:genesis.eyebrow")}</div>
+        <h1 className={styles.heading}>{t("system:genesis.heading")}</h1>
 
         {loggedIn ? (
           <>
-            <p className={styles.lead}>
-              You're in. Claim admin to finish bootstrapping the platform.
-            </p>
+            <p className={styles.lead}>{t("system:genesis.loggedIn.lead")}</p>
             <Button onClick={() => void handleClaim()} disabled={working}>
-              Claim admin
+              {t("system:genesis.loggedIn.claimCta")}
             </Button>
           </>
         ) : (
           <>
-            <p className={styles.lead}>
-              Generate the founding invite. You'll join through the normal
-              invite flow, invited by QueerPulse.
-            </p>
+            <p className={styles.lead}>{t("system:genesis.loggedOut.lead")}</p>
             <Button onClick={() => void handleGenerate()} disabled={working}>
-              Generate invite
+              {t("system:genesis.loggedOut.generateCta")}
             </Button>
           </>
         )}
 
         {outcome.kind === "closed" && (
-          <p className={styles.notice}>Genesis is closed.</p>
+          <p className={styles.notice}>{t("system:genesis.notice.closed")}</p>
         )}
         {outcome.kind === "rejected" && (
-          <p className={styles.notice}>This account cannot claim genesis.</p>
+          <p className={styles.notice}>{t("system:genesis.notice.rejected")}</p>
         )}
         {outcome.kind === "failed" && (
           <p className={styles.notice}>
-            {outcome.reason ?? "Something went wrong. Try again."}
+            {outcome.reason ?? t("system:genesis.notice.failedFallback")}
           </p>
         )}
         {outcome.kind === "claimed" && (
-          <p className={styles.notice}>You are now an admin.</p>
+          <p className={styles.notice}>{t("system:genesis.notice.claimed")}</p>
         )}
         {outcome.kind === "demo" && (
-          <p className={styles.notice}>
-            Genesis isn't available in demo mode.
-          </p>
+          <p className={styles.notice}>{t("system:genesis.notice.demo")}</p>
         )}
       </div>
     </SystemStateShell>

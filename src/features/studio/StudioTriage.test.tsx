@@ -40,11 +40,15 @@ describe("StudioTriageDetail", () => {
       await screen.findByLabelText(/a small sentence that explains the no/i),
       { target: { value: "So close — the bridge undoes it." } },
     );
-    fireEvent.click(screen.getByRole("button", { name: /pass · with the sentence/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /pass · with the sentence/i }),
+    );
 
     // The decision and the typed note both land in the live status region.
     const status = await within(panel).findByRole("status");
-    expect(status).toHaveTextContent("Passed with your sentence, sent to Renato");
+    expect(status).toHaveTextContent(
+      "Passed with your sentence, sent to Renato",
+    );
     expect(status).toHaveTextContent("So close — the bridge undoes it.");
   });
 

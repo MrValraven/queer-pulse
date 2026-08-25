@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiCheckCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -51,13 +51,16 @@ export function GatheringRsvpControl({
   const unrsvp = useUnrsvp(gathering.slug);
   const { data: attendees } = useAttendees(gathering.slug);
 
-  const [status, setStatus] = useState<RsvpStatus>(
-    gathering.myRsvpStatus ?? null,
-  );
-  useEffect(
-    () => setStatus(gathering.myRsvpStatus ?? null),
-    [gathering.myRsvpStatus],
-  );
+  const myRsvpStatus = gathering.myRsvpStatus ?? null;
+  const [prevMyRsvpStatus, setPrevMyRsvpStatus] =
+    useState<RsvpStatus>(myRsvpStatus);
+  const [status, setStatus] = useState<RsvpStatus>(myRsvpStatus);
+  // Adjusted during render (not an effect) so the re-sync lands in the same
+  // commit instead of a follow-up render.
+  if (prevMyRsvpStatus !== myRsvpStatus) {
+    setPrevMyRsvpStatus(myRsvpStatus);
+    setStatus(myRsvpStatus);
+  }
 
   const isWaitlisted = status === "waitlisted";
   const confirmed = status === "going" || isWaitlisted;
@@ -161,11 +164,7 @@ export function GatheringRsvpControl({
             ? t("gatherings:rsvpControl.waitlistCta")
             : t(gathering.ctaKey)}
       </Button>
-      <Button
-        variant="ghost"
-        className={styles.fullBtn}
-        onClick={messageHost}
-      >
+      <Button variant="ghost" className={styles.fullBtn} onClick={messageHost}>
         {messageLabel}
       </Button>
     </div>

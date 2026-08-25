@@ -142,7 +142,8 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           showToast(t("studio:setSubmission.sidebar.submittedToast"), "success")
         }
       >
-        {t("studio:setSubmission.sidebar.submitCta")} <FiArrowRight aria-hidden />
+        {t("studio:setSubmission.sidebar.submitCta")}{" "}
+        <FiArrowRight aria-hidden />
       </button>
     </div>
   );

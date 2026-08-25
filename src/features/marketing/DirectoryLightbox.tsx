@@ -43,7 +43,9 @@ export function DirectoryLightbox({
 
   const go = useCallback(
     (direction: number) =>
-      setIndex((current) => (current + direction + shots.length) % shots.length),
+      setIndex(
+        (current) => (current + direction + shots.length) % shots.length,
+      ),
     [shots.length],
   );
 

@@ -74,7 +74,10 @@ export function AppealResultPanel({ config }: { config: AppealResultConfig }) {
       </div>
       <AppealTimeline stage={stage} />
       <div className={`${s.infoBox} ${infoClass}`}>
-        <Translation i18nKey={config.infoKey} components={{ strong: <strong /> }} />
+        <Translation
+          i18nKey={config.infoKey}
+          components={{ strong: <strong /> }}
+        />
       </div>
       {config.actions}
     </div>
@@ -85,7 +88,9 @@ export function AppealResultPanel({ config }: { config: AppealResultConfig }) {
 export function AppealPendingPanel() {
   const { t } = useTranslation();
   const fmt = useFormat();
-  return <AppealResultPanel config={buildAppealResultConfigs(t, fmt).pending} />;
+  return (
+    <AppealResultPanel config={buildAppealResultConfigs(t, fmt).pending} />
+  );
 }
 
 export function AppealOverturnedPanel() {

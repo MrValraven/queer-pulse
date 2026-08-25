@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { renderHook, act, render, screen, fireEvent } from "@testing-library/react";
+import {
+  renderHook,
+  act,
+  render,
+  screen,
+  fireEvent,
+} from "@testing-library/react";
 import { useCalendarState } from "./useCalendarState";
 import { compareDate } from "./plainDate";
 import { Calendar } from "./Calendar";
@@ -7,7 +13,11 @@ import { DatePicker } from "./DatePicker";
 import { RangeCalendar } from "./RangeCalendar";
 import { TestProviders } from "../../../test/TestProviders";
 
-const base = { value: { year: 2026, month: 3, day: 5 }, onSelect: () => {}, weekStart: 0 };
+const base = {
+  value: { year: 2026, month: 3, day: 5 },
+  onSelect: () => {},
+  weekStart: 0,
+};
 
 describe("useCalendarState", () => {
   it("builds a 6x7 grid for the visible month", () => {
@@ -17,22 +27,38 @@ describe("useCalendarState", () => {
   });
   it("moveFocus('day', 1) advances focus and pages month at boundary", () => {
     const { result } = renderHook(() =>
-      useCalendarState({ ...base, value: { year: 2026, month: 3, day: 31 } }));
+      useCalendarState({ ...base, value: { year: 2026, month: 3, day: 31 } }),
+    );
     act(() => result.current.moveFocus("day", 1));
-    expect(result.current.focusedDate).toEqual({ year: 2026, month: 4, day: 1 });
+    expect(result.current.focusedDate).toEqual({
+      year: 2026,
+      month: 4,
+      day: 1,
+    });
     expect(result.current.visibleMonth.month).toBe(4);
   });
   it("isDisabled respects min/max", () => {
     const { result } = renderHook(() =>
-      useCalendarState({ ...base, minDate: { year: 2026, month: 3, day: 10 } }));
-    expect(result.current.isDisabled({ year: 2026, month: 3, day: 9 })).toBe(true);
-    expect(result.current.isDisabled({ year: 2026, month: 3, day: 10 })).toBe(false);
+      useCalendarState({ ...base, minDate: { year: 2026, month: 3, day: 10 } }),
+    );
+    expect(result.current.isDisabled({ year: 2026, month: 3, day: 9 })).toBe(
+      true,
+    );
+    expect(result.current.isDisabled({ year: 2026, month: 3, day: 10 })).toBe(
+      false,
+    );
   });
   it("select ignores disabled dates", () => {
     let picked: unknown = null;
     const { result } = renderHook(() =>
-      useCalendarState({ ...base, onSelect: (date) => { picked = date; },
-        isDateUnavailable: () => true }));
+      useCalendarState({
+        ...base,
+        onSelect: (date) => {
+          picked = date;
+        },
+        isDateUnavailable: () => true,
+      }),
+    );
     act(() => result.current.select({ year: 2026, month: 3, day: 6 }));
     expect(picked).toBeNull();
   });
@@ -41,10 +67,17 @@ describe("useCalendarState", () => {
   // focus on a disabled cell, or the grid becomes keyboard-unreachable.
   it("clamps a focus jump below minDate onto an enabled cell, not a disabled one", () => {
     const { result } = renderHook(() =>
-      useCalendarState({ ...base, minDate: { year: 2026, month: 3, day: 10 } }));
+      useCalendarState({ ...base, minDate: { year: 2026, month: 3, day: 10 } }),
+    );
     act(() => result.current.focusDate({ year: 2026, month: 3, day: 1 }));
     expect(result.current.isDisabled(result.current.focusedDate)).toBe(false);
-    expect(compareDate(result.current.focusedDate, { year: 2026, month: 3, day: 10 })).toBeGreaterThanOrEqual(0);
+    expect(
+      compareDate(result.current.focusedDate, {
+        year: 2026,
+        month: 3,
+        day: 10,
+      }),
+    ).toBeGreaterThanOrEqual(0);
   });
   it("moveFocus redirects past a disabled target to the nearest enabled day", () => {
     const { result } = renderHook(() =>
@@ -52,7 +85,8 @@ describe("useCalendarState", () => {
         ...base,
         value: { year: 2026, month: 3, day: 10 },
         minDate: { year: 2026, month: 3, day: 10 },
-      }));
+      }),
+    );
     // One day back from the 10th would land on the 9th, which is below
     // minDate: the hook should redirect focus to an enabled day instead.
     act(() => result.current.moveFocus("day", -1));
@@ -68,9 +102,14 @@ describe("useCalendarState", () => {
         ...base,
         value: { year: 2026, month: 3, day: 11 },
         isDateUnavailable: (date) => date.day === 10,
-      }));
+      }),
+    );
     act(() => result.current.moveFocus("day", -1));
-    expect(result.current.focusedDate).toEqual({ year: 2026, month: 3, day: 9 });
+    expect(result.current.focusedDate).toEqual({
+      year: 2026,
+      month: 3,
+      day: 9,
+    });
   });
 });
 
@@ -80,26 +119,37 @@ function renderWithProviders(ui: React.ReactElement) {
 
 describe("Calendar", () => {
   it("renders a grid labelled by the month caption", () => {
-    renderWithProviders(<Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />,
+    );
     expect(screen.getByRole("grid")).toBeInTheDocument();
   });
 
   it("ArrowRight moves focus to the next day", () => {
     renderWithProviders(
-      <Calendar value="2026-03-05" onChange={() => {}} locale="en-US" autoFocusDate />,
+      <Calendar
+        value="2026-03-05"
+        onChange={() => {}}
+        locale="en-US"
+        autoFocusDate
+      />,
     );
     fireEvent.keyDown(screen.getByRole("grid"), { key: "ArrowRight" });
     // day 6 button now has tabindex 0
-    expect(screen.getByRole("button", { name: /March 6, 2026/ })).toHaveAttribute(
-      "tabindex",
-      "0",
-    );
+    expect(
+      screen.getByRole("button", { name: /March 6, 2026/ }),
+    ).toHaveAttribute("tabindex", "0");
   });
 
   it("Enter selects the focused date and calls onChange with ISO", () => {
     const onChange = vi.fn();
     renderWithProviders(
-      <Calendar value="2026-03-05" onChange={onChange} locale="en-US" autoFocusDate />,
+      <Calendar
+        value="2026-03-05"
+        onChange={onChange}
+        locale="en-US"
+        autoFocusDate
+      />,
     );
     fireEvent.keyDown(screen.getByRole("grid"), { key: "Enter" });
     expect(onChange).toHaveBeenCalledWith("2026-03-05");
@@ -107,28 +157,43 @@ describe("Calendar", () => {
 
   it("disables dates before min", () => {
     renderWithProviders(
-      <Calendar value="2026-03-05" min="2026-03-10" onChange={() => {}} locale="en-US" />,
+      <Calendar
+        value="2026-03-05"
+        min="2026-03-10"
+        onChange={() => {}}
+        locale="en-US"
+      />,
     );
-    expect(screen.getByRole("button", { name: /March 9, 2026/ })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /March 9, 2026/ }),
+    ).toBeDisabled();
   });
 
   it("month dropdown jumps the visible month", () => {
-    renderWithProviders(<Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />,
+    );
     fireEvent.click(screen.getByRole("button", { name: "Month" }));
     fireEvent.click(screen.getByRole("option", { name: "June" }));
     expect(screen.getByText("June 2026")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /June 1, 2026/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /June 1, 2026/ }),
+    ).toBeInTheDocument();
   });
 
   it("year dropdown jumps the visible year", () => {
-    renderWithProviders(<Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />,
+    );
     fireEvent.click(screen.getByRole("button", { name: "Year" }));
     fireEvent.click(screen.getByRole("option", { name: "1990" }));
     expect(screen.getByText("March 1990")).toBeInTheDocument();
   });
 
   it("selecting a month leaves focus on the Select trigger, not the grid", () => {
-    renderWithProviders(<Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <Calendar value="2026-03-05" onChange={() => {}} locale="en-US" />,
+    );
     const monthTrigger = screen.getByRole("button", { name: "Month" });
     fireEvent.click(monthTrigger);
     fireEvent.click(screen.getByRole("option", { name: "June" }));
@@ -140,7 +205,13 @@ describe("DatePicker", () => {
   it("opens the calendar popover on trigger click and selects a date", () => {
     const onChange = vi.fn();
     renderWithProviders(
-      <DatePicker mode="date" value="2026-03-05" onChange={onChange} label="Event date" locale="en-US" />,
+      <DatePicker
+        mode="date"
+        value="2026-03-05"
+        onChange={onChange}
+        label="Event date"
+        locale="en-US"
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /choose date/i }));
     fireEvent.click(screen.getByRole("button", { name: /March 12, 2026/ }));
@@ -150,18 +221,36 @@ describe("DatePicker", () => {
   it("clearable resets to null", () => {
     const onChange = vi.fn();
     renderWithProviders(
-      <DatePicker mode="date" value="2026-03-05" clearable onChange={onChange} label="d" locale="en-US" />,
+      <DatePicker
+        mode="date"
+        value="2026-03-05"
+        clearable
+        onChange={onChange}
+        label="d"
+        locale="en-US"
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /clear/i }));
     expect(onChange).toHaveBeenCalledWith(null);
   });
 
   it("exposes formFieldControl for FormField wiring", () => {
-    expect((DatePicker as unknown as { formFieldControl?: boolean }).formFieldControl).toBe(true);
+    expect(
+      (DatePicker as unknown as { formFieldControl?: boolean })
+        .formFieldControl,
+    ).toBe(true);
   });
 
   it("mode=time renders a time field without a date grid", () => {
-    renderWithProviders(<DatePicker mode="time" value="09:30" onChange={() => {}} label="Start" locale="en-US" />);
+    renderWithProviders(
+      <DatePicker
+        mode="time"
+        value="09:30"
+        onChange={() => {}}
+        label="Start"
+        locale="en-US"
+      />,
+    );
     fireEvent.click(screen.getByRole("button", { name: /choose time/i }));
     expect(screen.queryByRole("grid")).toBeNull();
   });
@@ -170,12 +259,21 @@ describe("DatePicker", () => {
     vi.setSystemTime(new Date(2026, 2, 15)); // Sun 15 Mar 2026: RangeCalendar's `value={null}` default anchors on "today"
     const onChange = vi.fn();
     renderWithProviders(
-      <DatePicker mode="range" value={null} onChange={onChange} label="Stay" locale="en-US" />,
+      <DatePicker
+        mode="range"
+        value={null}
+        onChange={onChange}
+        label="Stay"
+        locale="en-US"
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /choose date range/i }));
     fireEvent.click(screen.getByRole("button", { name: /March 5, 2026/ }));
     fireEvent.click(screen.getByRole("button", { name: /March 9, 2026/ }));
-    expect(onChange).toHaveBeenLastCalledWith({ start: "2026-03-05", end: "2026-03-09" });
+    expect(onChange).toHaveBeenLastCalledWith({
+      start: "2026-03-05",
+      end: "2026-03-09",
+    });
     vi.useRealTimers();
   });
 
@@ -224,8 +322,12 @@ describe("DatePicker", () => {
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: /choose date/i }));
-    expect(screen.getByRole("button", { name: "Tomorrow" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Next week" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Tomorrow" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Next week" }),
+    ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /^today$/i }));
     expect(onChange).toHaveBeenCalledWith("2026-03-13");
     vi.useRealTimers();
@@ -235,7 +337,13 @@ describe("DatePicker", () => {
     vi.setSystemTime(new Date(2026, 2, 13)); // Fri 13 Mar 2026
     const onChange = vi.fn();
     renderWithProviders(
-      <DatePicker mode="date" value="2026-03-05" onChange={onChange} label="d" locale="en-US" />,
+      <DatePicker
+        mode="date"
+        value="2026-03-05"
+        onChange={onChange}
+        label="d"
+        locale="en-US"
+      />,
     );
     fireEvent.click(screen.getByRole("button", { name: /choose date/i }));
     fireEvent.click(screen.getByRole("button", { name: /^today$/i }));
@@ -262,7 +370,13 @@ describe("DatePicker", () => {
     }));
     try {
       renderWithProviders(
-        <DatePicker mode="date" value="2026-03-05" onChange={() => {}} label="Event date" locale="en-US" />,
+        <DatePicker
+          mode="date"
+          value="2026-03-05"
+          onChange={() => {}}
+          label="Event date"
+          locale="en-US"
+        />,
       );
       fireEvent.click(screen.getByRole("button", { name: /choose date/i }));
       expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -294,33 +408,49 @@ describe("RangeCalendar", () => {
   it("selects a range across two clicks (start then end)", () => {
     vi.setSystemTime(new Date(2026, 2, 15)); // Sun 15 Mar 2026
     const onChange = vi.fn();
-    renderWithProviders(<RangeCalendar value={null} onChange={onChange} locale="en-US" />);
+    renderWithProviders(
+      <RangeCalendar value={null} onChange={onChange} locale="en-US" />,
+    );
     fireEvent.click(screen.getByRole("button", { name: /March 5, 2026/ }));
     fireEvent.click(screen.getByRole("button", { name: /March 9, 2026/ }));
-    expect(onChange).toHaveBeenLastCalledWith({ start: "2026-03-05", end: "2026-03-09" });
+    expect(onChange).toHaveBeenLastCalledWith({
+      start: "2026-03-05",
+      end: "2026-03-09",
+    });
   });
 
   it("normalizes a reversed selection", () => {
     vi.setSystemTime(new Date(2026, 2, 15)); // Sun 15 Mar 2026
     const onChange = vi.fn();
-    renderWithProviders(<RangeCalendar value={null} onChange={onChange} locale="en-US" />);
+    renderWithProviders(
+      <RangeCalendar value={null} onChange={onChange} locale="en-US" />,
+    );
     fireEvent.click(screen.getByRole("button", { name: /March 9, 2026/ }));
     fireEvent.click(screen.getByRole("button", { name: /March 5, 2026/ }));
-    expect(onChange).toHaveBeenLastCalledWith({ start: "2026-03-05", end: "2026-03-09" });
+    expect(onChange).toHaveBeenLastCalledWith({
+      start: "2026-03-05",
+      end: "2026-03-09",
+    });
   });
 
   it("renders two month grids", () => {
-    renderWithProviders(<RangeCalendar value={null} onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <RangeCalendar value={null} onChange={() => {}} locale="en-US" />,
+    );
     expect(screen.getAllByRole("grid")).toHaveLength(2);
   });
 
   it("ArrowRight moves real DOM focus (not just tabindex) to the next day", () => {
     vi.setSystemTime(new Date(2026, 2, 15)); // Sun 15 Mar 2026
-    renderWithProviders(<RangeCalendar value={null} onChange={() => {}} locale="en-US" />);
+    renderWithProviders(
+      <RangeCalendar value={null} onChange={() => {}} locale="en-US" />,
+    );
     // The left grid's initially-tabbable day (today, per the frozen clock).
     const startButton = screen.getByRole("button", { name: /March 15, 2026/ });
     startButton.focus();
     fireEvent.keyDown(screen.getAllByRole("grid")[0]!, { key: "ArrowRight" });
-    expect(screen.getByRole("button", { name: /March 16, 2026/ })).toHaveFocus();
+    expect(
+      screen.getByRole("button", { name: /March 16, 2026/ }),
+    ).toHaveFocus();
   });
 });

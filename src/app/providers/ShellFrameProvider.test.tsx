@@ -1,10 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import {
-  ShellFrameProvider,
-  useRegisterShellFrame,
-  useShellFrame,
-} from "./ShellFrameProvider";
+import { ShellFrameProvider } from "./ShellFrameProvider";
+import { useRegisterShellFrame, useShellFrame } from "./shellFrame";
 
 function Probe() {
   const { active, fullHeight } = useShellFrame();

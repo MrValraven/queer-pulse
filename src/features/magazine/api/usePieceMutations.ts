@@ -31,7 +31,9 @@ export function usePieceMutations() {
     void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] });
     void queryClient.invalidateQueries({ queryKey: ["magazine-desk-summary"] });
     if (pieceId) {
-      void queryClient.invalidateQueries({ queryKey: ["magazine-piece", pieceId] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-piece", pieceId],
+      });
     }
   }
 
@@ -109,7 +111,11 @@ export function usePieceMutations() {
   });
 
   /** PATCH /magazine/admin/pieces/:id — move a piece to a new pipeline stage. */
-  const moveStage = useMutation<{ id: string }, Error, { id: string; stage: PieceStage }>({
+  const moveStage = useMutation<
+    { id: string },
+    Error,
+    { id: string; stage: PieceStage }
+  >({
     mutationFn: async ({ id, stage }) => {
       if (demoMode) {
         showToast(`Moved to ${STAGE_DTO_TO_VIEW[stage]}`, "success");
@@ -179,5 +185,13 @@ export function usePieceMutations() {
     onSuccess: (_result, pieceId) => invalidateDesk(pieceId),
   });
 
-  return { commission, startDraft, updatePiece, moveStage, assign, assignIssue, remove };
+  return {
+    commission,
+    startDraft,
+    updatePiece,
+    moveStage,
+    assign,
+    assignIssue,
+    remove,
+  };
 }

@@ -150,7 +150,11 @@ function MentionRow({
         <div className={styles.who}>
           <span className={styles.whoName}>
             <Link
-              to={m.actorSlug ? `${routes.members}/${m.actorSlug}` : routes.members}
+              to={
+                m.actorSlug
+                  ? `${routes.members}/${m.actorSlug}`
+                  : routes.members
+              }
             >
               {m.name}
             </Link>
@@ -288,7 +292,12 @@ export function MentionsPanel() {
               </b>{" "}
               {oldestUnreadIso
                 ? t("notifications:mentions.oldestFrom", {
-                    when: relativeAgo(oldestUnreadIso, t, fmt, MENTION_AGO_KEYS),
+                    when: relativeAgo(
+                      oldestUnreadIso,
+                      t,
+                      fmt,
+                      MENTION_AGO_KEYS,
+                    ),
                   })
                 : null}
             </>

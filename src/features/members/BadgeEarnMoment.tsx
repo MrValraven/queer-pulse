@@ -21,7 +21,11 @@ function splitTitle(name: string): { lead: string; last: string } {
 
 /** The celebration moment for earning a badge (or a "preview" of it from the
  *  momentum section, before it's actually earned). Self-contained modal. */
-export function BadgeEarnMoment({ badge, level, onClose }: BadgeEarnMomentProps) {
+export function BadgeEarnMoment({
+  badge,
+  level,
+  onClose,
+}: BadgeEarnMomentProps) {
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
   const titleId = useId();
@@ -45,7 +49,9 @@ export function BadgeEarnMoment({ badge, level, onClose }: BadgeEarnMomentProps)
       >
         <BadgeMedallion badge={badge} earned size="big" landing />
         <div className={styles.earnKicker}>
-          {badge.verifiedBy === "peer" ? t("members:badges.earn.kickerGiven") : t("members:badges.earn.kickerBadge")}
+          {badge.verifiedBy === "peer"
+            ? t("members:badges.earn.kickerGiven")
+            : t("members:badges.earn.kickerBadge")}
         </div>
         <h3 id={titleId}>
           {lead ? `${lead} ` : ""}
@@ -61,7 +67,10 @@ export function BadgeEarnMoment({ badge, level, onClose }: BadgeEarnMomentProps)
           </Button>
         </div>
         <p className={styles.earnFootnote}>
-          {t("members:badges.earn.footnote", { level: level.level, name: level.name })}
+          {t("members:badges.earn.footnote", {
+            level: level.level,
+            name: level.name,
+          })}
         </p>
       </div>
     </div>,

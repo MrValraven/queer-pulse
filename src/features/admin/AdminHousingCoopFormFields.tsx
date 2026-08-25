@@ -92,9 +92,7 @@ export function AdminHousingCoopIdentityFields({
         min={0}
         className={styles.numberInput}
         value={draft.householdCount}
-        onChange={(event) =>
-          onChange({ householdCount: event.target.value })
-        }
+        onChange={(event) => onChange({ householdCount: event.target.value })}
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-phase">
@@ -162,9 +160,7 @@ export function AdminHousingCoopEconomicsFields({
         className={styles.textInput}
         placeholder={t("admin:housingCoop.field.formingSincePlaceholder")}
         value={draft.formingSince}
-        onChange={(event) =>
-          onChange({ formingSince: event.target.value })
-        }
+        onChange={(event) => onChange({ formingSince: event.target.value })}
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-operational-since">
@@ -175,9 +171,7 @@ export function AdminHousingCoopEconomicsFields({
         className={styles.textInput}
         placeholder={t("admin:housingCoop.field.operationalSincePlaceholder")}
         value={draft.operationalSince}
-        onChange={(event) =>
-          onChange({ operationalSince: event.target.value })
-        }
+        onChange={(event) => onChange({ operationalSince: event.target.value })}
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-share-amount">
@@ -189,9 +183,7 @@ export function AdminHousingCoopEconomicsFields({
         min={0}
         className={styles.numberInput}
         value={draft.shareAmountEuros}
-        onChange={(event) =>
-          onChange({ shareAmountEuros: event.target.value })
-        }
+        onChange={(event) => onChange({ shareAmountEuros: event.target.value })}
       />
 
       <label className={styles.fieldLabel} htmlFor="coop-monthly">

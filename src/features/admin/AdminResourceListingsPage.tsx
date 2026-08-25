@@ -16,8 +16,7 @@ import type { AdminResourceListingDTO } from "./api/adminResourceListings.api";
 import styles from "./AdminResourceListingsPage.module.css";
 
 type FormMode =
-  | { kind: "create" }
-  | { kind: "edit"; listing: AdminResourceListingDTO };
+  { kind: "create" } | { kind: "edit"; listing: AdminResourceListingDTO };
 
 /**
  * Admin resource-listings panel (`/admin/resource-listings`) — every Legal

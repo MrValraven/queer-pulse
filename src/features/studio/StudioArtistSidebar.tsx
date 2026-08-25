@@ -3,10 +3,12 @@ import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { ALBUM } from "./studioAlbum.data";
 import styles from "./studio.module.css";
 
 const ARTIST_NAME = "Mariana Sol";
 const SUBSCRIBE_AMOUNT = 3;
+const PREMIERE_DATETIME = "10 Jun · 21:00 Lisbon";
 const SIDEBAR_STATS = {
   plays: 36400,
   earningsStreaming: 1820,
@@ -25,7 +27,9 @@ export function StudioArtistSidebar({ onTip }: { onTip: () => void }) {
         </div>
         <div className={styles.price}>
           €<em>{SUBSCRIBE_AMOUNT}</em>
-          <span style={{ fontSize: 14, color: "var(--text40)" }}>/month</span>
+          <span style={{ fontSize: 14, color: "var(--text40)" }}>
+            {t("studio:artist.sidebar.perMonthSuffix")}
+          </span>
         </div>
         <div className={styles.sub}>
           {t("studio:artist.sidebar.sustainSub", { artist: ARTIST_NAME })}
@@ -80,8 +84,7 @@ export function StudioArtistSidebar({ onTip }: { onTip: () => void }) {
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          {t("studio:detail.fullLedgerCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:detail.fullLedgerCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
 
@@ -93,10 +96,10 @@ export function StudioArtistSidebar({ onTip }: { onTip: () => void }) {
           <span className={styles.k}>
             {t("studio:artist.sidebar.premiereLabel")} ·{" "}
             <em style={{ color: "var(--text)", fontStyle: "italic" }}>
-              Cidade dos santos
+              {ALBUM.title}
             </em>
             <br />
-            10 Jun · 21:00 Lisbon
+            {PREMIERE_DATETIME}
           </span>
           <Link
             to={routes.rsvp}

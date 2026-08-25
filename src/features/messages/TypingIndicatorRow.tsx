@@ -49,7 +49,8 @@ export function TypingIndicatorRow({
   members,
 }: TypingIndicatorRowProps) {
   const { t } = useTranslation();
-  const { typing: counterpartTyping, typingUserIds } = useTypingIndicator(conversationId);
+  const { typing: counterpartTyping, typingUserIds } =
+    useTypingIndicator(conversationId);
   const [mounted, setMounted] = useState(counterpartTyping);
   const hideTimeoutRef = useRef<number | undefined>(undefined);
 
@@ -77,7 +78,10 @@ export function TypingIndicatorRow({
 
   return (
     <div
-      className={[styles.typingRow, !counterpartTyping && styles.typingRowHiding]
+      className={[
+        styles.typingRow,
+        !counterpartTyping && styles.typingRowHiding,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
@@ -95,7 +99,9 @@ export function TypingIndicatorRow({
         aria-live="polite"
         aria-label={
           typingLabel ??
-          t("messages:conversation.typing", { name: counterpartName.split(" ")[0] })
+          t("messages:conversation.typing", {
+            name: counterpartName.split(" ")[0],
+          })
         }
       >
         {isGroup && typingLabel && (

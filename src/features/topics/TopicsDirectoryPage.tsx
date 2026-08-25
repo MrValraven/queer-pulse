@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
 import { FiHash } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState, SearchInput, SkeletonLine } from "../../shared/components/ui";
+import {
+  EmptyState,
+  SearchInput,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useTopics } from "./api/useTopics";
 import { TopicCard } from "./TopicCard";
@@ -51,7 +55,9 @@ export function TopicsDirectoryPage() {
       <section className={styles.body}>
         <div className="wrap">
           <div className={styles.head}>
-            <div className={styles.eyebrow}>{t("topics:directory.eyebrow")}</div>
+            <div className={styles.eyebrow}>
+              {t("topics:directory.eyebrow")}
+            </div>
             <h1 className={styles.h1}>{t("topics:directory.title")}</h1>
             <p className={styles.sub}>{t("topics:directory.sub")}</p>
           </div>

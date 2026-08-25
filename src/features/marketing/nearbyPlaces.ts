@@ -53,5 +53,7 @@ export function nearbyPlaces(
     found.push({ place: candidate, metres });
   }
 
-  return found.sort((left, right) => left.metres - right.metres).slice(0, limit);
+  return found
+    .sort((left, right) => left.metres - right.metres)
+    .slice(0, limit);
 }

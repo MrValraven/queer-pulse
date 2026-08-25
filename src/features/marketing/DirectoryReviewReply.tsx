@@ -47,7 +47,10 @@ export function DirectoryReviewReply({ review, ownerRef, slug }: Props) {
       {
         onSuccess: () => {
           setComposing(false);
-          showToast(t("marketing:directory.detail.reply.successToast"), "success");
+          showToast(
+            t("marketing:directory.detail.reply.successToast"),
+            "success",
+          );
         },
         onError: () =>
           showToast(t("marketing:directory.detail.reply.errorToast"), "error"),
@@ -107,17 +110,15 @@ export function DirectoryReviewReply({ review, ownerRef, slug }: Props) {
             placeholder={t("marketing:directory.detail.reply.placeholder")}
             rows={3}
             maxLength={2000}
-            aria-label={t("marketing:directory.detail.reply.ownerResponseTitle")}
+            aria-label={t(
+              "marketing:directory.detail.reply.ownerResponseTitle",
+            )}
           />
           <div className={s.replyComposerActions}>
             <Button variant="ghost" onClick={() => setComposing(false)}>
               {t("marketing:directory.detail.reply.cancel")}
             </Button>
-            <Button
-              variant="primary"
-              disabled={!canSave}
-              onClick={handleSave}
-            >
+            <Button variant="primary" disabled={!canSave} onClick={handleSave}>
               {reply.isPending
                 ? t("marketing:directory.detail.reply.savingLabel")
                 : t("marketing:directory.detail.reply.save")}

@@ -168,7 +168,10 @@ export function MentorshipPage() {
                         <div className={styles.mcTop}>
                           <div
                             className={styles.mcAv}
-                            style={{ background: mentor.background, color: mentor.color }}
+                            style={{
+                              background: mentor.background,
+                              color: mentor.color,
+                            }}
                           >
                             {mentor.initials}
                           </div>
@@ -233,8 +236,7 @@ export function MentorshipPage() {
         sub={t("economy:mentorship.outro.sub")}
       >
         <Button to={VOLUNTEER} variant="primary" size="lg">
-          {t("economy:mentorship.outro.cta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("economy:mentorship.outro.cta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
 

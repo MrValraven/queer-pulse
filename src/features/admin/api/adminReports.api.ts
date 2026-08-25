@@ -78,7 +78,10 @@ export const getAdminReportsCommunityHealth = () =>
 // exactly, including the version-prefix duplication note there.
 const API_VERSION_PREFIX = "/v1";
 
-async function downloadReportCsv(path: string, filename: string): Promise<void> {
+async function downloadReportCsv(
+  path: string,
+  filename: string,
+): Promise<void> {
   const response = await fetch(`${API_BASE_URL}${API_VERSION_PREFIX}${path}`, {
     credentials: "include",
   });

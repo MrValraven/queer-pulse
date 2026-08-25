@@ -34,7 +34,9 @@ function AppealFiledPanel({ appeal }: { appeal: SubmittedAppealDTO }) {
           components={{ em: <em /> }}
         />
       </h1>
-      <p className={styles.successSub}>{t("safety:appealSubmit.success.sub")}</p>
+      <p className={styles.successSub}>
+        {t("safety:appealSubmit.success.sub")}
+      </p>
       <div className={styles.refBox}>
         <span className={styles.refLabel}>
           {t("safety:appealSubmit.success.filedLabel")}
@@ -67,7 +69,8 @@ function AppealForm({
   const [reason, setReason] = useState("");
 
   const trimmedLength = reason.trim().length;
-  const canSubmit = trimmedLength >= MIN_REASON_LENGTH && !submitAppeal.isPending;
+  const canSubmit =
+    trimmedLength >= MIN_REASON_LENGTH && !submitAppeal.isPending;
   // A specific action id can be deep-linked from the enforcement notification;
   // absent, the backend resolves the latest action against the member.
   const actionId = searchParams.get("action") ?? undefined;

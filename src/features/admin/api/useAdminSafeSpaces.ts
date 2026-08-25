@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ADMIN_SAFE_SPACE_CANDIDATES } from "../adminSafeSpaces.data";
-import { getSafeSpaceCandidates, type SafeSpaceCandidate } from "./adminSafeSpaces.api";
+import {
+  getSafeSpaceCandidates,
+  type SafeSpaceCandidate,
+} from "./adminSafeSpaces.api";
 
 /** Shared with `useSetSafeSpace`, which invalidates this key on a successful toggle. */
 export const ADMIN_SAFE_SPACE_CANDIDATES_KEY = "admin-safe-space-candidates";

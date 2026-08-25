@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FiArchive } from "react-icons/fi";
-import { Button, EmptyState, SearchInput, SkeletonLine } from "../../../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  SearchInput,
+  SkeletonLine,
+} from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useDebouncedValue } from "../../../../shared/hooks/useDebouncedValue";
@@ -65,7 +70,11 @@ export function ArchiveTab() {
         <Button
           size="sm"
           variant="ghost"
-          onClick={() => showToast(t("magazine:issue.archive.readToast", { title: entry.title }))}
+          onClick={() =>
+            showToast(
+              t("magazine:issue.archive.readToast", { title: entry.title }),
+            )
+          }
         >
           {t("magazine:issue.archive.read")}
         </Button>
@@ -84,7 +93,9 @@ export function ArchiveTab() {
           ariaLabel={t("magazine:issue.archive.searchAria")}
         />
         {renderResults()}
-        <p className={styles.hint}>{t("magazine:issue.archive.checkedAutomatically")}</p>
+        <p className={styles.hint}>
+          {t("magazine:issue.archive.checkedAutomatically")}
+        </p>
       </div>
     </div>
   );

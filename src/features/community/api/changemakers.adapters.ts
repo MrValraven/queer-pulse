@@ -21,7 +21,9 @@ export function changemakerDtoToStory(
   dto: ChangemakerDTO,
   formatDate: (value: number) => string,
 ): ChangemakerStory {
-  const published = dto.publishedAt ? new Date(dto.publishedAt).getTime() : null;
+  const published = dto.publishedAt
+    ? new Date(dto.publishedAt).getTime()
+    : null;
   return {
     slug: dto.slug,
     name: dto.name,

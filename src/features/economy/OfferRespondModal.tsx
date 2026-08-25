@@ -172,8 +172,7 @@ export function OfferRespondModal({
             <Sending label={t("economy:offer.acceptingLabel")} />
           ) : (
             <>
-              {t("economy:offer.acceptCta")}{" "}
-              <FiArrowRight aria-hidden />
+              {t("economy:offer.acceptCta")} <FiArrowRight aria-hidden />
             </>
           )}
         </Button>

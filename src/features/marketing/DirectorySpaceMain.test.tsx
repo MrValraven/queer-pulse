@@ -55,7 +55,9 @@ describe("DirectorySpaceMain hours", () => {
     vi.setSystemTime(new Date(2026, 5, 5, 20, 0)); // Fri 5 Jun 2026, 20:00
     const place = {
       ...DIRECTORY_PLACES[0]!,
-      hours: { Fri: { open: true, intervals: [{ from: "18:00", to: "23:00" }] } },
+      hours: {
+        Fri: { open: true, intervals: [{ from: "18:00", to: "23:00" }] },
+      },
     };
 
     renderMain(<DirectorySpaceMain place={place} preview />);

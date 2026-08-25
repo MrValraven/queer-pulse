@@ -13,7 +13,10 @@ import { useConnectionActions } from "./api/useConnectionActions";
 import { ConnectForm } from "./ConnectForm";
 import { ConnectNoticePanel } from "./ConnectNoticePanel";
 import { ConnectSentPanel } from "./ConnectSentPanel";
-import { describeConnectError, type ConnectErrorView } from "./connectErrorView";
+import {
+  describeConnectError,
+  type ConnectErrorView,
+} from "./connectErrorView";
 import styles from "./ConnectModal.module.css";
 
 type Phase = "idle" | "sending" | "sent";

@@ -4,7 +4,11 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { topicFollowKeys } from "./topicFollowKeys";
-import { followTopic, getTopicFollows, unfollowTopic } from "./topicFollows.api";
+import {
+  followTopic,
+  getTopicFollows,
+  unfollowTopic,
+} from "./topicFollows.api";
 
 interface ToggleContext {
   previous: string[];
@@ -77,7 +81,10 @@ export function useTopicFollow(tag: string) {
     },
     onError: (error, _nextFollowing, context) => {
       if (context) {
-        queryClient.setQueryData(topicFollowKeys.list(demoMode), context.previous);
+        queryClient.setQueryData(
+          topicFollowKeys.list(demoMode),
+          context.previous,
+        );
       }
       // The follow endpoint now has two specific refusals worth naming: a
       // malformed tag (400) and the per-member follow cap (409). Everything

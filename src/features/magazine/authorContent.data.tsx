@@ -1111,9 +1111,9 @@ export const AUTHORS: Record<string, Author> = {
       <>
         Sofia has been writing about queer life in Lisbon since 2019, and
         editing it since 2023. She wrote this issue's cover story and edited
-        half the rest: the kind of journalist who's happiest when her own
-        byline isn't the point. Documentary background, interviewer's patience.
-        She's also a QueerPulse member; you can find her in the community too.
+        half the rest: the kind of journalist who's happiest when her own byline
+        isn't the point. Documentary background, interviewer's patience. She's
+        also a QueerPulse member; you can find her in the community too.
       </>
     ),
     stats: [
@@ -1498,6 +1498,7 @@ export function resolveWriter(name: string): ResolvedWriter | null {
     };
   }
   const memberSlug = MEMBER_NAMES[key];
-  if (memberSlug) return { to: `${routes.members}/${memberSlug}`, slug: memberSlug };
+  if (memberSlug)
+    return { to: `${routes.members}/${memberSlug}`, slug: memberSlug };
   return null;
 }

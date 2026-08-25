@@ -56,6 +56,6 @@ No unlabeled icon-only buttons found in these three files.
 
 ## ⚠️ Runtime-only (can't confirm statically)
 
-- Actual caret behavior while typing across a re-render triggered by a *sibling* block's state change (e.g. does selecting/hovering another block ever cause this block's `RichText` to remount via a parent key change) — depends entirely on the not-yet-built parent list, which doesn't exist in this tree yet (confirmed via repo-wide grep: no consumer imports `ArticleBlockEditor` anywhere).
+- Actual caret behavior while typing across a re-render triggered by a _sibling_ block's state change (e.g. does selecting/hovering another block ever cause this block's `RichText` to remount via a parent key change) — depends entirely on the not-yet-built parent list, which doesn't exist in this tree yet (confirmed via repo-wide grep: no consumer imports `ArticleBlockEditor` anywhere).
 - Whether `ImageSlot`'s violet→default tint fallback (`ArticleBlockKindFields.tsx:191`, deliberate per its own comment) looks acceptable visually rather than just compiling — needs a browser check.
 - Focal-point click math (`ImageBlockControls.tsx:38-51`) against a real pointer event vs. the keyboard-activation (`detail === 0`) fallback — logic reads correct but only a real click/keydown in a browser confirms it.

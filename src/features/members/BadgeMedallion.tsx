@@ -77,9 +77,22 @@ export function BadgeMedallion({
       style={{ "--p": percent } as CSSProperties}
       aria-hidden
     >
-      <svg className={styles.medRing} viewBox="0 0 100 100" aria-hidden focusable="false">
-        <polygon className={styles.medRingTrack} points={HEX_POINTS} pathLength={100} />
-        <polygon className={styles.medRingFill} points={HEX_POINTS} pathLength={100} />
+      <svg
+        className={styles.medRing}
+        viewBox="0 0 100 100"
+        aria-hidden
+        focusable="false"
+      >
+        <polygon
+          className={styles.medRingTrack}
+          points={HEX_POINTS}
+          pathLength={100}
+        />
+        <polygon
+          className={styles.medRingFill}
+          points={HEX_POINTS}
+          pathLength={100}
+        />
       </svg>
       {tier >= 2 && <span className={`${styles.medRim} ${styles.medRimR1}`} />}
       {tier >= 3 && <span className={`${styles.medRim} ${styles.medRimR2}`} />}

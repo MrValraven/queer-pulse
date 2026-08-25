@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { FiCheck, FiPlus } from "react-icons/fi";
-import { Button, EmptyState, SearchInput } from "../../../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  SearchInput,
+} from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { FormatBadge } from "../FormatBadge";
 import { StagePill } from "../StagePill";
@@ -111,7 +115,11 @@ export function AddPiecesPanel({
                   data-selected={isSelected}
                   onClick={() => toggle(piece.id)}
                 >
-                  <span className={styles.mark} data-on={isSelected} aria-hidden>
+                  <span
+                    className={styles.mark}
+                    data-on={isSelected}
+                    aria-hidden
+                  >
                     {isSelected && <FiCheck />}
                   </span>
                   <span className={styles.rowText}>

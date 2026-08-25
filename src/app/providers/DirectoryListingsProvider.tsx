@@ -45,7 +45,10 @@ export function DirectoryListingsProvider({
   const [withdrawn, setWithdrawn] = useState<Set<string>>(() => new Set());
 
   const addListing = useCallback(
-    async (draft: ListingDraft, submittedBy: string): Promise<PendingListing> => {
+    async (
+      draft: ListingDraft,
+      submittedBy: string,
+    ): Promise<PendingListing> => {
       if (!demoMode) {
         // Live: persist and adopt the server's real record so the success
         // screen shows the persisted QPL ref and true status, not a

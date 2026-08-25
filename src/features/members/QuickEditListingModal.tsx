@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 import { Button, SkeletonCard } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -40,25 +40,26 @@ export function QuickEditListingModal({
   const [hoursNote, setHoursNote] = useState("");
   const [website, setWebsite] = useState("");
   const [phone, setPhone] = useState("");
-  const [seeded, setSeeded] = useState(false);
+  const [isSeeded, setIsSeeded] = useState(false);
 
-  // Seed the local fields once the owned listing resolves — a plain effect
-  // rather than `initialData` since the fields are locally editable from here.
-  useEffect(() => {
-    if (!listing || seeded) return;
+  // Seed the local fields once the owned listing resolves — adjusted during
+  // render (rather than an effect) since the fields are locally editable
+  // from here; `isSeeded` latches so a later refetch of `listing` never
+  // clobbers the user's in-progress edits.
+  if (listing && !isSeeded) {
+    setIsSeeded(true);
     setBlurb(listing.blurb);
     setHoursNote(listing.hoursNote);
     setWebsite(listing.social.website);
     setPhone(listing.social.phone);
-    setSeeded(true);
-  }, [listing, seeded]);
+  }
 
   const blurbId = useId();
   const hoursNoteId = useId();
   const websiteId = useId();
   const phoneId = useId();
 
-  const canSubmit = seeded && !updateListing.isPending;
+  const canSubmit = isSeeded && !updateListing.isPending;
 
   const submit = () => {
     if (!listing || !canSubmit) return;
@@ -170,9 +171,7 @@ export function QuickEditListingModal({
               components={{
                 a: (
                   // eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/control-has-associated-label -- <a> is an element template; <Translation> clones it with the translated link children at render time.
-                  <a
-                    href={routes.listBusinessEdit.replace(":ref", editRef)}
-                  />
+                  <a href={routes.listBusinessEdit.replace(":ref", editRef)} />
                 ),
               }}
             />

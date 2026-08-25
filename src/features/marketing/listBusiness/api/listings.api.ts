@@ -37,16 +37,15 @@ import type {
  * Everything else is the draft verbatim, which is the shape the API has always
  * accepted.
  */
-export interface UpdateListingDto
-  extends Omit<
-    ListingDraft,
-    | "accessibility"
-    | "services"
-    | "affirmingBaselineAccepted"
-    // Draft-only: who the signed-in member is to this listing. It decides
-    // which payload is built, and is never part of one.
-    | "managementRole"
-  > {
+export interface UpdateListingDto extends Omit<
+  ListingDraft,
+  | "accessibility"
+  | "services"
+  | "affirmingBaselineAccepted"
+  // Draft-only: who the signed-in member is to this listing. It decides
+  // which payload is built, and is never part of one.
+  | "managementRole"
+> {
   accessibility?: { answers: AccessibilityAnswerMap; note: string };
   services?: ListingServiceOffering[];
 }
@@ -77,8 +76,10 @@ export interface CreateListingDto extends UpdateListingDto {
  * moderation queue lists everyone's listings, so this case is real and must
  * be handled by every consumer, not just the owner-scoped ones.
  */
-export interface ListingDTO
-  extends Omit<UpdateListingDto, "photos" | "accessibility"> {
+export interface ListingDTO extends Omit<
+  UpdateListingDto,
+  "photos" | "accessibility"
+> {
   ref: string;
   slug: string;
   status: ListingStatus;
@@ -139,8 +140,10 @@ export interface OwnedListingDTO extends ListingDTO {
 }
 
 /** The same listing minus the owner's own details (see `OWNER_PERSONAL_FIELDS`). */
-export interface CoManagedListingDTO
-  extends Omit<ListingDTO, OwnerPersonalField> {
+export interface CoManagedListingDTO extends Omit<
+  ListingDTO,
+  OwnerPersonalField
+> {
   managementRole: "co_manager";
 }
 
@@ -174,10 +177,7 @@ export interface UpdateListingVisibilityInput {
  *  is the only one that withdraws the listing from public browse, search, map
  *  and safe-space results. */
 export type ListingOperatingState =
-  | "open"
-  | "temporarily_closed"
-  | "permanently_closed"
-  | "moved";
+  "open" | "temporarily_closed" | "permanently_closed" | "moved";
 
 /** The read side of a listing's operating state. Everything but `state` comes
  *  back null while the business is trading normally. */

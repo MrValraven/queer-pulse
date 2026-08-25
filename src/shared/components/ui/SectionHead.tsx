@@ -51,8 +51,7 @@ export function SectionHead({
         <div className={styles.aside}>
           {linkLabel && linkTo && (
             <Link to={linkTo} className={styles.link}>
-              {linkLabel}{" "}
-              <FiArrowRight aria-hidden />
+              {linkLabel} <FiArrowRight aria-hidden />
             </Link>
           )}
           {action}

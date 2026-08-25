@@ -30,7 +30,10 @@ describe("toDirectMessagePush", () => {
       tag: "c1",
       data: { conversationId: "c1", url: "/messages?c=c1" },
     });
-    expect(result?.data).toEqual({ conversationId: "c1", url: "/messages?c=c1" });
+    expect(result?.data).toEqual({
+      conversationId: "c1",
+      url: "/messages?c=c1",
+    });
   });
 });
 
@@ -38,9 +41,9 @@ describe("toDirectMessagePush — rich fields", () => {
   const base = { title: "Ana", body: "hi" };
 
   it("accepts an https icon and a leading-slash icon", () => {
-    expect(toDirectMessagePush({ ...base, icon: "https://cdn/a.png" })?.icon).toBe(
-      "https://cdn/a.png",
-    );
+    expect(
+      toDirectMessagePush({ ...base, icon: "https://cdn/a.png" })?.icon,
+    ).toBe("https://cdn/a.png");
     expect(toDirectMessagePush({ ...base, icon: "/icons/x.png" })?.icon).toBe(
       "/icons/x.png",
     );
@@ -59,13 +62,17 @@ describe("toDirectMessagePush — rich fields", () => {
 
   it("keeps at most two whitelisted actions and drops malformed ones", () => {
     expect(
-      toDirectMessagePush({ ...base, actions: [{ action: "view", title: "View" }] })
-        ?.actions,
+      toDirectMessagePush({
+        ...base,
+        actions: [{ action: "view", title: "View" }],
+      })?.actions,
     ).toEqual([{ action: "view", title: "View" }]);
     // unknown action id -> whole actions field dropped
     expect(
-      toDirectMessagePush({ ...base, actions: [{ action: "delete", title: "X" }] })
-        ?.actions,
+      toDirectMessagePush({
+        ...base,
+        actions: [{ action: "delete", title: "X" }],
+      })?.actions,
     ).toBeUndefined();
     // more than two -> dropped
     expect(
@@ -81,11 +88,15 @@ describe("toDirectMessagePush — rich fields", () => {
   });
 
   it("validates vibrate as an array of small non-negative numbers", () => {
-    expect(toDirectMessagePush({ ...base, vibrate: [80, 40, 80] })?.vibrate).toEqual([
-      80, 40, 80,
-    ]);
-    expect(toDirectMessagePush({ ...base, vibrate: [-1] })?.vibrate).toBeUndefined();
-    expect(toDirectMessagePush({ ...base, vibrate: "buzz" })?.vibrate).toBeUndefined();
+    expect(
+      toDirectMessagePush({ ...base, vibrate: [80, 40, 80] })?.vibrate,
+    ).toEqual([80, 40, 80]);
+    expect(
+      toDirectMessagePush({ ...base, vibrate: [-1] })?.vibrate,
+    ).toBeUndefined();
+    expect(
+      toDirectMessagePush({ ...base, vibrate: "buzz" })?.vibrate,
+    ).toBeUndefined();
   });
 
   it("passes booleans through and defaults them to undefined", () => {
@@ -96,15 +107,23 @@ describe("toDirectMessagePush — rich fields", () => {
         requireInteraction: true,
         silent: false,
       }),
-    ).toMatchObject({ renotify: true, requireInteraction: true, silent: false });
-    expect(toDirectMessagePush({ ...base, renotify: "yes" })?.renotify).toBeUndefined();
+    ).toMatchObject({
+      renotify: true,
+      requireInteraction: true,
+      silent: false,
+    });
+    expect(
+      toDirectMessagePush({ ...base, renotify: "yes" })?.renotify,
+    ).toBeUndefined();
   });
 
   it("accepts an https image and drops an unsafe one", () => {
-    expect(toDirectMessagePush({ ...base, image: "https://cdn/cover.jpg" })?.image).toBe(
-      "https://cdn/cover.jpg",
-    );
-    expect(toDirectMessagePush({ ...base, image: "javascript:x" })?.image).toBeUndefined();
+    expect(
+      toDirectMessagePush({ ...base, image: "https://cdn/cover.jpg" })?.image,
+    ).toBe("https://cdn/cover.jpg");
+    expect(
+      toDirectMessagePush({ ...base, image: "javascript:x" })?.image,
+    ).toBeUndefined();
   });
 });
 
@@ -130,8 +149,10 @@ describe("toDirectMessagePush — l10n", () => {
 
   it("accepts a bodyKey-only block (no titleKey/params)", () => {
     expect(
-      toDirectMessagePush({ ...base, l10n: { bodyKey: "push:event.reminder.body" } })
-        ?.l10n,
+      toDirectMessagePush({
+        ...base,
+        l10n: { bodyKey: "push:event.reminder.body" },
+      })?.l10n,
     ).toEqual({ bodyKey: "push:event.reminder.body" });
   });
 
@@ -141,7 +162,8 @@ describe("toDirectMessagePush — l10n", () => {
 
   it("drops the whole block when a key doesn't start with 'push:'", () => {
     expect(
-      toDirectMessagePush({ ...base, l10n: { bodyKey: "evil:injected" } })?.l10n,
+      toDirectMessagePush({ ...base, l10n: { bodyKey: "evil:injected" } })
+        ?.l10n,
     ).toBeUndefined();
   });
 
@@ -179,7 +201,9 @@ describe("toDirectMessagePush — l10n", () => {
   });
 
   it("drops the whole block when l10n itself isn't an object", () => {
-    expect(toDirectMessagePush({ ...base, l10n: "push:test.body" })?.l10n).toBeUndefined();
+    expect(
+      toDirectMessagePush({ ...base, l10n: "push:test.body" })?.l10n,
+    ).toBeUndefined();
   });
 
   it("otherwise still accepts the rest of a payload with a malformed l10n block", () => {
@@ -197,9 +221,9 @@ describe("toDirectMessagePush — timestamp", () => {
   const base = { title: "Ana", body: "hi" };
 
   it("accepts a finite non-negative epoch-ms timestamp", () => {
-    expect(toDirectMessagePush({ ...base, timestamp: 1_700_000_000_000 })?.timestamp).toBe(
-      1_700_000_000_000,
-    );
+    expect(
+      toDirectMessagePush({ ...base, timestamp: 1_700_000_000_000 })?.timestamp,
+    ).toBe(1_700_000_000_000);
     expect(toDirectMessagePush({ ...base, timestamp: 0 })?.timestamp).toBe(0);
   });
 
@@ -208,12 +232,18 @@ describe("toDirectMessagePush — timestamp", () => {
   });
 
   it("drops a negative timestamp", () => {
-    expect(toDirectMessagePush({ ...base, timestamp: -1 })?.timestamp).toBeUndefined();
+    expect(
+      toDirectMessagePush({ ...base, timestamp: -1 })?.timestamp,
+    ).toBeUndefined();
   });
 
   it("drops a non-finite timestamp (NaN, Infinity)", () => {
-    expect(toDirectMessagePush({ ...base, timestamp: NaN })?.timestamp).toBeUndefined();
-    expect(toDirectMessagePush({ ...base, timestamp: Infinity })?.timestamp).toBeUndefined();
+    expect(
+      toDirectMessagePush({ ...base, timestamp: NaN })?.timestamp,
+    ).toBeUndefined();
+    expect(
+      toDirectMessagePush({ ...base, timestamp: Infinity })?.timestamp,
+    ).toBeUndefined();
   });
 
   it("drops a non-numeric timestamp", () => {

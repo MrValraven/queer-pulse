@@ -22,7 +22,10 @@ interface GroupInfoModalProps {
   managing: boolean;
   onAddMembers: (picks: GroupMemberPick[]) => void;
   onRemoveMember: (member: GroupMemberView) => void;
-  onChangeMemberRole: (member: GroupMemberView, role: "admin" | "member") => void;
+  onChangeMemberRole: (
+    member: GroupMemberView,
+    role: "admin" | "member",
+  ) => void;
   onUpdateInfo: (changes: { title?: string; avatarUrl?: string }) => void;
 }
 
@@ -56,8 +59,9 @@ export function GroupInfoModal({
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   // Member armed for removal — drives the confirm step, so removal never fires
   // straight from the roster's Remove button.
-  const [pendingRemove, setPendingRemove] =
-    useState<GroupMemberView | null>(null);
+  const [pendingRemove, setPendingRemove] = useState<GroupMemberView | null>(
+    null,
+  );
 
   const callerIsOwner = !!active.canManageRoles;
   const isSelf = (member: GroupMemberView) =>
@@ -79,7 +83,9 @@ export function GroupInfoModal({
         footer={
           !active.hasLeft ? (
             <Button variant="ghost" onClick={onLeave} disabled={leaving}>
-              {leaving ? t("messages:group.leaving") : t("messages:group.leave")}
+              {leaving
+                ? t("messages:group.leaving")
+                : t("messages:group.leave")}
             </Button>
           ) : undefined
         }

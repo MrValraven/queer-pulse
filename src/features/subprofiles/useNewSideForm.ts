@@ -69,8 +69,13 @@ async function createAndSeedSubprofile(args: {
     mutations,
     t,
   } = args;
-  const { create, update, replaceSection, replaceSocials, replaceAffiliations } =
-    mutations;
+  const {
+    create,
+    update,
+    replaceSection,
+    replaceSocials,
+    replaceAffiliations,
+  } = mutations;
   // displayName is required and the backend derives the slug — send a valid
   // name (falling back to the source copy name, else the profession).
   const created = await create.mutateAsync({

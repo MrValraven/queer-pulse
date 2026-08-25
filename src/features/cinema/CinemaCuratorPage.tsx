@@ -60,8 +60,7 @@ function DemoCinemaCuratorPage() {
             <span className={styles.sep}>›</span>
             <span className={styles.cur}>{name}</span>
             <Link to={routes.cinemaAbout} className={styles.crumbBack}>
-              <FiArrowLeft aria-hidden />{" "}
-              {t("cinema:curator.crumb.backCta")}
+              <FiArrowLeft aria-hidden /> {t("cinema:curator.crumb.backCta")}
             </Link>
           </div>
         </div>

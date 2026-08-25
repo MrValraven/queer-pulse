@@ -1,7 +1,10 @@
 import { FiPlus, FiX } from "react-icons/fi";
 import { FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { defaultApplyRole, type PostOpportunityForm } from "./usePostOpportunityForm";
+import {
+  defaultApplyRole,
+  type PostOpportunityForm,
+} from "./usePostOpportunityForm";
 import { useTeamMemberOptions } from "./useTeamMemberOptions";
 import {
   MAX_APPLY_ROLE_LENGTH,
@@ -39,10 +42,9 @@ export function PostOpportunityTasks({ form }: { form: PostOpportunityForm }) {
                 placeholder={t(
                   "marketing:postOpportunity.rich.taskTitlePlaceholder",
                 )}
-                aria-label={t(
-                  "marketing:postOpportunity.rich.taskTitleAria",
-                  { index: index + 1 },
-                )}
+                aria-label={t("marketing:postOpportunity.rich.taskTitleAria", {
+                  index: index + 1,
+                })}
               />
               <span className={styles.repFieldCount}>
                 {task.title.length}/{MAX_TASK_TITLE_LENGTH}
@@ -59,10 +61,9 @@ export function PostOpportunityTasks({ form }: { form: PostOpportunityForm }) {
                 placeholder={t(
                   "marketing:postOpportunity.rich.taskDetailPlaceholder",
                 )}
-                aria-label={t(
-                  "marketing:postOpportunity.rich.taskDetailAria",
-                  { index: index + 1 },
-                )}
+                aria-label={t("marketing:postOpportunity.rich.taskDetailAria", {
+                  index: index + 1,
+                })}
               />
               <span className={styles.repFieldCount}>
                 {task.description.length}/{MAX_TASK_DESCRIPTION_LENGTH}
@@ -153,10 +154,9 @@ export function PostOpportunityCommitments({
               type="button"
               className={styles.repRemove}
               onClick={() => removeCommitment(index)}
-              aria-label={t(
-                "marketing:postOpportunity.rich.commitRemoveAria",
-                { index: index + 1 },
-              )}
+              aria-label={t("marketing:postOpportunity.rich.commitRemoveAria", {
+                index: index + 1,
+              })}
             >
               <FiX aria-hidden />
             </button>

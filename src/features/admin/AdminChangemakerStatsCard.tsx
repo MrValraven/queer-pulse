@@ -101,9 +101,7 @@ export function AdminChangemakerStatsCard() {
             min={0}
             className={styles.numberInput}
             value={activeCampaigns}
-            onChange={(event) =>
-              setActiveCampaigns(Number(event.target.value))
-            }
+            onChange={(event) => setActiveCampaigns(Number(event.target.value))}
           />
         </label>
       </div>

@@ -27,9 +27,20 @@ export type TypedArticleBlock =
   /** An attributed block quote; `cite` is the speaker's name. */
   | { kind: "quote"; text: ReactNode; cite?: string }
   /** An inline image with an optional caption. Omit `src` for a placeholder. */
-  | { kind: "image"; src?: string; alt: string; caption?: ReactNode; tint?: ImageSlotTint }
+  | {
+      kind: "image";
+      src?: string;
+      alt: string;
+      caption?: ReactNode;
+      tint?: ImageSlotTint;
+    }
   /** An interview exchange; `answererInitials` labels the answer's avatar. */
-  | { kind: "qa"; question: ReactNode; answer: ReactNode; answererInitials?: string }
+  | {
+      kind: "qa";
+      question: ReactNode;
+      answer: ReactNode;
+      answererInitials?: string;
+    }
   /** A row of headline statistics. */
   | { kind: "stats"; items: { value: ReactNode; label: ReactNode }[] };
 
@@ -55,7 +66,10 @@ export function asTypedBlock(block: ArticleBlock): TypedArticleBlock | null {
   if (typeof block !== "object" || block === null || isValidElement(block)) {
     return null;
   }
-  if ("kind" in block && typeof (block as { kind?: unknown }).kind === "string") {
+  if (
+    "kind" in block &&
+    typeof (block as { kind?: unknown }).kind === "string"
+  ) {
     return block;
   }
   return null;
@@ -136,6 +150,5 @@ export function relationReason(
     return t("magazine:relation.sameSection", { section: candidate.section });
   return t("magazine:relation.editorsPick");
 }
-
 
 export const defaultArticleId = "city-changed";

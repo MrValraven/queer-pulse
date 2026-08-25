@@ -28,13 +28,19 @@ export function buildDeckPublishChecklist(
   t: TFunction,
 ): DeckPublishChecklistItem[] {
   const imageSlides = draft.slides.filter(
-    (slide): slide is Extract<Slide, { layout: "image" }> => slide.layout === "image",
+    (slide): slide is Extract<Slide, { layout: "image" }> =>
+      slide.layout === "image",
   );
   const statSlides = draft.slides.filter(
-    (slide): slide is Extract<Slide, { layout: "stat" }> => slide.layout === "stat",
+    (slide): slide is Extract<Slide, { layout: "stat" }> =>
+      slide.layout === "stat",
   );
-  const everyImageHasAlt = imageSlides.every((slide) => slide.alt.trim() !== "");
-  const everyStatHasSource = statSlides.every((slide) => (slide.source ?? "").trim() !== "");
+  const everyImageHasAlt = imageSlides.every(
+    (slide) => slide.alt.trim() !== "",
+  );
+  const everyStatHasSource = statSlides.every(
+    (slide) => (slide.source ?? "").trim() !== "",
+  );
 
   return [
     {
@@ -66,6 +72,8 @@ export function buildDeckPublishChecklist(
   ];
 }
 
-export function isDeckPublishReady(checklist: DeckPublishChecklistItem[]): boolean {
+export function isDeckPublishReady(
+  checklist: DeckPublishChecklistItem[],
+): boolean {
   return checklist.every((item) => !item.required || item.done);
 }

@@ -35,7 +35,10 @@ function PriceRow({ range }: { range: PriceRange }) {
       <span className={styles.priceLabel}>{t(range.labelKey)}</span>
       <span className={styles.priceValue}>
         &euro;{range.minEuros}&ndash;{range.maxEuros}
-        <span className={styles.pricePer}> {t("economy:housingSafety.price.perMonth")}</span>
+        <span className={styles.pricePer}>
+          {" "}
+          {t("economy:housingSafety.price.perMonth")}
+        </span>
       </span>
     </li>
   );
@@ -51,7 +54,10 @@ export function TenantRightsHelper() {
   const { t } = useTranslation();
   return (
     <div className={styles.helper}>
-      <section className={styles.rightsSection} aria-labelledby="tenant-rights-heading">
+      <section
+        className={styles.rightsSection}
+        aria-labelledby="tenant-rights-heading"
+      >
         <h2 id="tenant-rights-heading" className={styles.sectionTitle}>
           {t("economy:housingSafety.page.rightsTitle")}
         </h2>
@@ -62,17 +68,25 @@ export function TenantRightsHelper() {
         </div>
       </section>
 
-      <Reveal as="section" className={styles.priceCard} aria-labelledby="price-sanity-heading">
+      <Reveal
+        as="section"
+        className={styles.priceCard}
+        aria-labelledby="price-sanity-heading"
+      >
         <h2 id="price-sanity-heading" className={styles.sectionTitle}>
           {t("economy:housingSafety.price.title")}
         </h2>
-        <p className={styles.priceLead}>{t("economy:housingSafety.price.lead")}</p>
+        <p className={styles.priceLead}>
+          {t("economy:housingSafety.price.lead")}
+        </p>
         <ul className={styles.priceList}>
           {LISBON_PRICE_RANGES.map((range) => (
             <PriceRow key={range.id} range={range} />
           ))}
         </ul>
-        <p className={styles.priceNote}>{t("economy:housingSafety.price.note")}</p>
+        <p className={styles.priceNote}>
+          {t("economy:housingSafety.price.note")}
+        </p>
       </Reveal>
     </div>
   );

@@ -115,5 +115,6 @@ export interface SafeSpaceNominationDTO {
  * POST /safe-space-nominations — suggest a place be reviewed for the safe-space
  * badge. Lands in the moderation queue as `pending`; nothing surfaces publicly.
  */
-export const submitSafeSpaceNomination = (body: CreateSafeSpaceNominationBody) =>
-  apiPost<SafeSpaceNominationDTO>("/safe-space-nominations", body);
+export const submitSafeSpaceNomination = (
+  body: CreateSafeSpaceNominationBody,
+) => apiPost<SafeSpaceNominationDTO>("/safe-space-nominations", body);

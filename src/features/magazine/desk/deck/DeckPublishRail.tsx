@@ -3,7 +3,10 @@ import { Button, SegmentedControl } from "../../../../shared/components/ui";
 import { cx } from "../../../../shared/lib/cx";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { DeckDraft } from "../../deckDraft";
-import { buildDeckPublishChecklist, isDeckPublishReady } from "./deckPublishChecklist";
+import {
+  buildDeckPublishChecklist,
+  isDeckPublishReady,
+} from "./deckPublishChecklist";
 import styles from "../pieceTabs.module.css";
 
 export type DeckPublishStatus = "now" | "schedule" | "issue";
@@ -44,7 +47,9 @@ export function DeckPublishRail({
   const checklist = buildDeckPublishChecklist(draft, t);
   const doneCount = checklist.filter((item) => item.done).length;
   const disabled =
-    !canPublish || publishPending || (!published && !isDeckPublishReady(checklist));
+    !canPublish ||
+    publishPending ||
+    (!published && !isDeckPublishReady(checklist));
 
   return (
     <div className={styles.card}>
@@ -62,7 +67,9 @@ export function DeckPublishRail({
       />
 
       {publishStatus !== "now" && (
-        <p className={styles.tiny}>{t("magazine:deck.editor.publish.notNowNote")}</p>
+        <p className={styles.tiny}>
+          {t("magazine:deck.editor.publish.notNowNote")}
+        </p>
       )}
 
       <div>
@@ -74,7 +81,10 @@ export function DeckPublishRail({
         </span>
         <ul className={styles.ticks}>
           {checklist.map((item) => (
-            <li key={item.id} className={cx(!item.done && item.required && styles.open)}>
+            <li
+              key={item.id}
+              className={cx(!item.done && item.required && styles.open)}
+            >
               {item.done ? (
                 <FiCheck aria-hidden />
               ) : item.required ? (
@@ -94,7 +104,9 @@ export function DeckPublishRail({
         aria-busy={publishPending}
         onClick={onPublish}
       >
-        {published ? t("magazine:deck.editor.unpublish") : t("magazine:deck.editor.publish")}
+        {published
+          ? t("magazine:deck.editor.unpublish")
+          : t("magazine:deck.editor.publish")}
       </Button>
     </div>
   );

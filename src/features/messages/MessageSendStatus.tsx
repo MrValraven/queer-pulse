@@ -1,6 +1,5 @@
 // src/features/messages/MessageSendStatus.tsx
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { ChatMessage } from "./data";
 import styles from "./MessagesPage.module.css";
 
 /** The honest send-status ladder the in-bubble tick renders (own bubbles only):
@@ -23,7 +22,11 @@ const STATUS_LABEL_KEY = {
  *  seen. Only ever rendered on the user's own outgoing bubble (so it sits on the
  *  plum surface). Accessible name via the status i18n keys; the SVG is decorative.
  *  Colour: delivered/sent inherit the muted meta colour, only `seen` goes jade. */
-export function SendStatusTick({ status }: { status: Exclude<MetaStatus, null> }) {
+export function SendStatusTick({
+  status,
+}: {
+  status: Exclude<MetaStatus, null>;
+}) {
   const { t } = useTranslation();
   const label = t(STATUS_LABEL_KEY[status]);
   return (
@@ -36,19 +39,46 @@ export function SendStatusTick({ status }: { status: Exclude<MetaStatus, null> }
       title={label}
     >
       {status === "sending" ? (
-        <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" fill="none"
-          stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 16 16"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <circle cx="8" cy="8" r="6" />
           <path d="M8 4.6V8l2.3 1.6" />
         </svg>
       ) : status === "sent" ? (
-        <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true" fill="none"
-          stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 14 14"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M1.5 7.5 5 11l7-8" />
         </svg>
       ) : (
-        <svg width="17" height="12" viewBox="0 0 20 14" aria-hidden="true" fill="none"
-          stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="17"
+          height="12"
+          viewBox="0 0 20 14"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M1.5 7.5 5 11l6.5-8" />
           <path d="M8.5 11 15 3" />
         </svg>
@@ -78,33 +108,13 @@ export function MessageMeta({
     floating && isSent ? styles.bubbleMetaSent : styles.bubbleMetaReceived;
   return (
     <span
-      className={[floating ? styles.bubbleMeta : styles.bubbleMetaBelow, colorClass]
-        .join(" ")}
+      className={[
+        floating ? styles.bubbleMeta : styles.bubbleMetaBelow,
+        colorClass,
+      ].join(" ")}
     >
       {time && <span>{time}</span>}
       {isSent && metaStatus && <SendStatusTick status={metaStatus} />}
     </span>
   );
-}
-
-/** Resolve the honest send-status tick for an OWN outgoing message. Precedence,
- *  highest first: failed (→ null; its own retry row renders) > seen > delivered
- *  > sent > sending. `showSeen`/`showDelivered` are the live watermark flags for
- *  the thread's final outbound message; `message.deliveredAt` is the per-message
- *  stamp that lets earlier own bubbles read "delivered" on load; the demo
- *  simulation drives the same rungs via `status` ("delivered"/"seen"). */
-export function resolveSendStatus(
-  message: ChatMessage,
-  showSeen: boolean,
-  showDelivered: boolean,
-): MetaStatus {
-  if (message.status === "failed") return null;
-  if (message.status === "sending") return "sending";
-  if (message.status === "seen" || showSeen) return "seen";
-  if (message.status === "delivered" || showDelivered || message.deliveredAt) {
-    return "delivered";
-  }
-  // Acked: a demo "sent", or any server message (has an id) → single check.
-  if (message.status === "sent" || message.id) return "sent";
-  return null;
 }

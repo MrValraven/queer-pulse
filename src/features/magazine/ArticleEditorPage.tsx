@@ -20,8 +20,14 @@ import type { EditorMode } from "./desk/editor/editorMode";
 import { useArticleEditorDraftState } from "./desk/editor/useArticleEditorDraftState";
 import { useBlockRemovalUndo } from "./desk/editor/useBlockRemovalUndo";
 import { useArticlePublishHandler } from "./desk/editor/useArticlePublishHandler";
-import { countArticleWords, estimateReadMinutes } from "./desk/editor/articleWordCount";
-import { buildPublishChecklist, isPublishReady } from "./desk/editor/articlePublishChecklist";
+import {
+  countArticleWords,
+  estimateReadMinutes,
+} from "./desk/editor/articleWordCount";
+import {
+  buildPublishChecklist,
+  isPublishReady,
+} from "./desk/editor/articlePublishChecklist";
 import { savedLabelKey } from "./desk/editor/articleSavedLabel";
 import { isFutureInstant } from "./desk/editor/scheduleValidity";
 import { deriveLiveStatus } from "./desk/editor/articleLiveStatus";
@@ -92,13 +98,24 @@ export function ArticleEditorPage() {
   if (isError || !article) return <ArticleEditorStatus variant="not-found" />;
   if (!draft.hasSeeded) return <ArticleEditorStatus variant="loading" />;
 
-  const { title, standfirst, blocks, section, tags, role, metaDescription, socialImage, canonicalUrl } =
-    draft;
+  const {
+    title,
+    standfirst,
+    blocks,
+    section,
+    tags,
+    role,
+    metaDescription,
+    socialImage,
+    canonicalUrl,
+  } = draft;
   const wordCount = countArticleWords(blocks, title, standfirst);
   const readMinutes = estimateReadMinutes(wordCount);
   const liveStatus = deriveLiveStatus(article.publishedAt);
   const published = liveStatus !== "draft";
-  const checklistReady = isPublishReady(buildPublishChecklist(standfirst, blocks, t));
+  const checklistReady = isPublishReady(
+    buildPublishChecklist(standfirst, blocks, t),
+  );
   const scheduleValid = isFutureInstant(scheduledAt);
   const publishDisabled =
     // A save still in flight would race the publish — both PATCH the same
@@ -109,17 +126,25 @@ export function ArticleEditorPage() {
         !checklistReady ||
         (publishStatus === "schedule" && !scheduleValid)));
   const savedLabel = t(
-    savedLabelKey({ isSavePending: save.isPending, isSaveError: save.isError, isDirty: draft.isDirty }),
+    savedLabelKey({
+      isSavePending: save.isPending,
+      isSaveError: save.isError,
+      isDirty: draft.isDirty,
+    }),
   );
   const issueLabel = record?.issueId
     ? t("magazine:write.header.issueScheduled")
     : t("magazine:piece.header.notScheduled");
   const publishNow = () =>
-    void handlePublish(published, publishStatus, scheduledAt, () => setScheduledAt(null));
+    void handlePublish(published, publishStatus, scheduledAt, () =>
+      setScheduledAt(null),
+    );
 
   const nextStage = record ? nextPieceStage(record.stage) : null;
   const sendOnLabel = nextStage
-    ? t("magazine:write.header.sendOnTo", { stage: STAGE_DTO_TO_VIEW[nextStage] })
+    ? t("magazine:write.header.sendOnTo", {
+        stage: STAGE_DTO_TO_VIEW[nextStage],
+      })
     : t("magazine:write.header.sendOn");
   const handleSendOn = () => {
     if (!nextStage) return;
@@ -128,7 +153,10 @@ export function ArticleEditorPage() {
 
   function handleSlashOpen(element: HTMLElement, index: number) {
     const rect = element.getBoundingClientRect();
-    setSlashState({ afterIndex: index, at: { x: rect.left, y: rect.bottom + 8 } });
+    setSlashState({
+      afterIndex: index,
+      at: { x: rect.left, y: rect.bottom + 8 },
+    });
   }
 
   function handleSlashPick(kind: ArticleBlockKind) {

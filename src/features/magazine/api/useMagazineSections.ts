@@ -39,8 +39,9 @@ export function useMagazineSections() {
         return DEMO_SECTIONS.map((section) => ({
           id: section.id,
           name: section.name,
-          articleCount: rows.filter((article) => article.section === section.name)
-            .length,
+          articleCount: rows.filter(
+            (article) => article.section === section.name,
+          ).length,
         }));
       }
       const sections = await getSections();

@@ -114,8 +114,7 @@ function WorkSection({ fields, setField }: SectionProps) {
             </span>
           </span>
           <span className={styles.uploadCta}>
-            {t("economy:jobApply.browse")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("economy:jobApply.browse")} <FiArrowRight aria-hidden />
           </span>
         </label>
       </FormField>
@@ -134,7 +133,9 @@ function WorkSection({ fields, setField }: SectionProps) {
             />
           </span>
           <span className={styles.idLink}>
-            <span className={styles.idLinkIc}>IG</span>
+            <span className={styles.idLinkIc}>
+              {t("economy:jobApply.identityIg")}
+            </span>
             <input
               type="text"
               placeholder={t("economy:jobApply.instagramPlaceholder")}
@@ -143,7 +144,9 @@ function WorkSection({ fields, setField }: SectionProps) {
             />
           </span>
           <span className={`${styles.idLink} ${styles.idLinkOwn}`}>
-            <span className={styles.idLinkIc}>QP</span>
+            <span className={styles.idLinkIc}>
+              {t("economy:jobApply.identityQp")}
+            </span>
             <input type="text" value={fields.profileUrl} readOnly />
           </span>
         </div>
@@ -287,8 +290,7 @@ export function JobApplyForm({
               t("economy:jobApply.sending")
             ) : (
               <>
-                {t("economy:jobApply.sendCta")}{" "}
-                <FiArrowRight aria-hidden />
+                {t("economy:jobApply.sendCta")} <FiArrowRight aria-hidden />
               </>
             )}
           </Button>

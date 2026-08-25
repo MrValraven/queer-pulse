@@ -111,7 +111,9 @@ async function readTheGuidelines() {
  *  RequestInvitePage. */
 function RequestInviteHarness() {
   const [first, setFirst] = useState("");
-  return <RequestInviteForm first={first} setFirst={setFirst} onSent={() => {}} />;
+  return (
+    <RequestInviteForm first={first} setFirst={setFirst} onSent={() => {}} />
+  );
 }
 
 describe("RequestInviteForm age gate", () => {
@@ -182,8 +184,6 @@ describe("RequestInviteForm age gate", () => {
     // silently — the un-ticked attestation is one of them.
     fireEvent.click(submit);
 
-    await waitFor(() =>
-      expect(age).toHaveAttribute("aria-invalid", "true"),
-    );
+    await waitFor(() => expect(age).toHaveAttribute("aria-invalid", "true"));
   });
 });

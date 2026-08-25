@@ -71,9 +71,7 @@ export function SafeSpaceVerifiedAside({
           {space.glance.map((g) => (
             <div className={styles.sideRow} key={g.label}>
               <span>{g.label}</span>
-              <b className={g.accent ? styles.accentV : undefined}>
-                {g.value}
-              </b>
+              <b className={g.accent ? styles.accentV : undefined}>{g.value}</b>
             </div>
           ))}
         </div>
@@ -82,7 +80,11 @@ export function SafeSpaceVerifiedAside({
       <div className={[styles.sideCard, styles.sharePlum].join(" ")}>
         <h4>{t("safety:spaces.detail.shareTitle")}</h4>
         <p>{t("safety:spaces.detail.shareBody")}</p>
-        <Button variant="ghost-dark" className={styles.sideFull} onClick={share}>
+        <Button
+          variant="ghost-dark"
+          className={styles.sideFull}
+          onClick={share}
+        >
           {t("safety:spaces.detail.copyLinkCta")}
         </Button>
       </div>

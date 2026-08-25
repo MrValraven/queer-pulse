@@ -23,7 +23,11 @@ export function ComposerSeveredNotice({
 }: ComposerSeveredNoticeProps) {
   const { t } = useTranslation();
   if (active.official) {
-    return <div className={styles.officialBar}>{t("messages:conversation.officialNotice")}</div>;
+    return (
+      <div className={styles.officialBar}>
+        {t("messages:conversation.officialNotice")}
+      </div>
+    );
   }
   if (blocked) {
     return (

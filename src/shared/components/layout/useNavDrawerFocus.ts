@@ -78,7 +78,9 @@ export function useNavDrawerFocus({
     panel?.focus();
 
     const getFocusable = () =>
-      Array.from(panel?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? []);
+      Array.from(
+        panel?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR) ?? [],
+      );
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {

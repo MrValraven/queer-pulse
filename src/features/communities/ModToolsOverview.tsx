@@ -40,18 +40,24 @@ export function ModToolsOverview({
         <div className={styles.attention}>
           {requestCount > 0 && (
             <AttentionRow
-              label={t("communities:detail.modtools.overview.attention.requests", {
-                count: requestCount,
-              })}
+              label={t(
+                "communities:detail.modtools.overview.attention.requests",
+                {
+                  count: requestCount,
+                },
+              )}
               count={requestCount}
               onClick={() => onOpenSection("requests")}
             />
           )}
           {reportCount > 0 && (
             <AttentionRow
-              label={t("communities:detail.modtools.overview.attention.reports", {
-                count: reportCount,
-              })}
+              label={t(
+                "communities:detail.modtools.overview.attention.reports",
+                {
+                  count: reportCount,
+                },
+              )}
               count={reportCount}
               onClick={() => onOpenSection("reports")}
             />
@@ -62,7 +68,9 @@ export function ModToolsOverview({
           <EmptyState
             compact
             icon={<FiCheckCircle />}
-            title={t("communities:detail.modtools.overview.attention.clear.title")}
+            title={t(
+              "communities:detail.modtools.overview.attention.clear.title",
+            )}
             description={t(
               "communities:detail.modtools.overview.attention.clear.description",
             )}

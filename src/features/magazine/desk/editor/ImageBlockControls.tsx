@@ -1,5 +1,9 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
-import type { ArticleImageBlock, ArticleImageCrop, ArticleImageTint } from "../../api/pieces.api";
+import type {
+  ArticleImageBlock,
+  ArticleImageCrop,
+  ArticleImageTint,
+} from "../../api/pieces.api";
 import { FormField, Select } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { RichText } from "./RichText";
@@ -33,7 +37,10 @@ function clampFraction(value: number): number {
  * and a click-to-set focal-point picker. Ported from the design prototype's
  * `.row2`/`.cropbar`/`.focal`. Every handler patches the block immutably.
  */
-export function ImageBlockControls({ block, onChange }: ImageBlockControlsProps) {
+export function ImageBlockControls({
+  block,
+  onChange,
+}: ImageBlockControlsProps) {
   const { t } = useTranslation();
   const altMissing = block.alt.trim() === "";
   const creditMissing = block.credit.trim() === "";
@@ -64,12 +71,16 @@ export function ImageBlockControls({ block, onChange }: ImageBlockControlsProps)
           <input
             type="text"
             value={block.alt}
-            onChange={(event) => onChange({ ...block, alt: event.target.value })}
+            onChange={(event) =>
+              onChange({ ...block, alt: event.target.value })
+            }
           />
         </FormField>
 
         <div className={styles.field}>
-          <span className={styles.label}>{t("magazine:write.image.tintLabel")}</span>
+          <span className={styles.label}>
+            {t("magazine:write.image.tintLabel")}
+          </span>
           <div className={styles.swatches}>
             {TINTS.map((tint) => (
               <button
@@ -91,12 +102,16 @@ export function ImageBlockControls({ block, onChange }: ImageBlockControlsProps)
         <FormField
           label={t("magazine:write.image.creditLabel")}
           required
-          error={creditMissing ? t("magazine:write.image.creditError") : undefined}
+          error={
+            creditMissing ? t("magazine:write.image.creditError") : undefined
+          }
         >
           <input
             type="text"
             value={block.credit}
-            onChange={(event) => onChange({ ...block, credit: event.target.value })}
+            onChange={(event) =>
+              onChange({ ...block, credit: event.target.value })
+            }
           />
         </FormField>
 
@@ -104,7 +119,10 @@ export function ImageBlockControls({ block, onChange }: ImageBlockControlsProps)
           <Select
             value={block.rights}
             onChange={(value) =>
-              onChange({ ...block, rights: value as ArticleImageBlock["rights"] })
+              onChange({
+                ...block,
+                rights: value as ArticleImageBlock["rights"],
+              })
             }
             options={RIGHTS_VALUES.map((value) => ({
               value,
@@ -115,7 +133,11 @@ export function ImageBlockControls({ block, onChange }: ImageBlockControlsProps)
       </div>
 
       <div className={styles.cropbar}>
-        <div className={styles.crop} role="group" aria-label={t("magazine:write.image.cropAria")}>
+        <div
+          className={styles.crop}
+          role="group"
+          aria-label={t("magazine:write.image.cropAria")}
+        >
           {CROPS.map((crop) => (
             <button
               key={crop}
@@ -139,7 +161,10 @@ export function ImageBlockControls({ block, onChange }: ImageBlockControlsProps)
         >
           <i
             className={styles.focalDot}
-            style={{ left: `${block.focal.x * 100}%`, top: `${block.focal.y * 100}%` }}
+            style={{
+              left: `${block.focal.x * 100}%`,
+              top: `${block.focal.y * 100}%`,
+            }}
             aria-hidden="true"
           />
         </button>

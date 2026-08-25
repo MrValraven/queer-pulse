@@ -39,7 +39,7 @@ export interface VettedGroup {
 
 const SHARED_NORMS = [
   "No hate speech: transphobia, racism, whorephobia, serophobia get you removed.",
-  "Every listing states the rent, up front. No \"message me for price\".",
+  'Every listing states the rent, up front. No "message me for price".',
   "Every listing describes accessibility honestly: stairs, lift, step-free, bathroom.",
   "No brokers, no agencies, no finder's fees. Neighbours helping neighbours.",
   "What's shared here stays here. Don't screenshot people out of the group.",
@@ -50,12 +50,14 @@ const SHARED_NORMS = [
 const SHARED_SCREENING: GroupScreeningQuestion[] = [
   {
     id: "vouch",
-    prompt: "Is there anyone already in the group who knows you? No worries if not.",
+    prompt:
+      "Is there anyone already in the group who knows you? No worries if not.",
     required: false,
   },
   {
     id: "values",
-    prompt: "Our house rules are on this page. Anything there you'd push back on?",
+    prompt:
+      "Our house rules are on this page. Anything there you'd push back on?",
     required: true,
   },
 ];
@@ -80,7 +82,8 @@ export const VETTED_GROUPS: VettedGroup[] = [
           "One room opening in a calm, plant-filled flat we've shared for two years. Looking for someone easy-going who's around for shared dinners but respects quiet.",
         neighbourhood: "Arroios, Lisbon",
         priceEuros: 430,
-        accessibilityInfo: "Third floor, no lift. Step-free once inside. Bathroom door is 70cm.",
+        accessibilityInfo:
+          "Third floor, no lift. Step-free once inside. Bathroom door is 70cm.",
       },
       {
         id: "l-2",
@@ -89,7 +92,8 @@ export const VETTED_GROUPS: VettedGroup[] = [
           "Subletting my ground-floor studio while I'm away for a season. Furnished, bills split, cat stays and comes with instructions.",
         neighbourhood: "Graça, Lisbon",
         priceEuros: 620,
-        accessibilityInfo: "Step-free entry from the street. Wet-room shower, no bath lip.",
+        accessibilityInfo:
+          "Step-free entry from the street. Wet-room shower, no bath lip.",
       },
     ],
   },
@@ -112,7 +116,8 @@ export const VETTED_GROUPS: VettedGroup[] = [
           "A big, loud, loving house near Cedofeita has one room free. We cook together on Sundays and mind our own business the rest of the week.",
         neighbourhood: "Cedofeita, Porto",
         priceEuros: 310,
-        accessibilityInfo: "Second floor, no lift. Narrow stairs. Not step-free.",
+        accessibilityInfo:
+          "Second floor, no lift. Narrow stairs. Not step-free.",
       },
     ],
   },

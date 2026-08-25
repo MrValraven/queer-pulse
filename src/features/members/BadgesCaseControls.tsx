@@ -39,7 +39,9 @@ export function BadgesCaseControls({
   const { t } = useTranslation();
   const [mutePopoverOpen, setMutePopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
-  useOutsideDismiss(mutePopoverOpen, popoverRef, () => setMutePopoverOpen(false));
+  useOutsideDismiss(mutePopoverOpen, popoverRef, () =>
+    setMutePopoverOpen(false),
+  );
 
   return (
     <div className={styles.tools}>
@@ -50,7 +52,8 @@ export function BadgesCaseControls({
           onClick={() => onCategoryFilterChange("all")}
           aria-pressed={categoryFilter === "all"}
         >
-          {t("members:badges.case.filterAll")} <span className={styles.fchipCount}>{totalCount}</span>
+          {t("members:badges.case.filterAll")}{" "}
+          <span className={styles.fchipCount}>{totalCount}</span>
         </button>
         {categories.map((category) => (
           <button
@@ -66,7 +69,10 @@ export function BadgesCaseControls({
             onClick={() => onCategoryFilterChange(category)}
             aria-pressed={categoryFilter === category}
           >
-            {category} <span className={styles.fchipCount}>{countsByCategory[category] ?? 0}</span>
+            {category}{" "}
+            <span className={styles.fchipCount}>
+              {countsByCategory[category] ?? 0}
+            </span>
           </button>
         ))}
       </div>
@@ -117,7 +123,9 @@ export function BadgesCaseControls({
           className={styles.select}
           aria-label={t("members:badges.case.sortLabel")}
           value={sortMode}
-          onChange={(event) => onSortModeChange(event.target.value as BadgeSortMode)}
+          onChange={(event) =>
+            onSortModeChange(event.target.value as BadgeSortMode)
+          }
         >
           <option value="close">{t("members:badges.case.sortClosest")}</option>
           <option value="rare">{t("members:badges.case.sortRarest")}</option>
@@ -129,8 +137,12 @@ export function BadgesCaseControls({
         <div className={styles.mutedNote}>
           <span>
             {mutedCategories.length === 1
-              ? t("members:badges.case.mutedNoteSingle", { category: mutedCategories[0] })
-              : t("members:badges.case.mutedNotePlural", { categories: mutedCategories.join(", ") })}
+              ? t("members:badges.case.mutedNoteSingle", {
+                  category: mutedCategories[0],
+                })
+              : t("members:badges.case.mutedNotePlural", {
+                  categories: mutedCategories.join(", "),
+                })}
           </span>
         </div>
       )}

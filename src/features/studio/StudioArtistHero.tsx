@@ -13,7 +13,12 @@ import { StudioDetailHero } from "./StudioDetailHero";
 import styles from "./studio.module.css";
 
 const ARTIST_NAME = "Mariana Sol";
+const ARTIST_FIRST_NAME = "Mariana";
+const ARTIST_LAST_NAME = "Sol";
 const SUBSCRIBE_AMOUNT = 3;
+const RELEASES_COUNT = 8;
+const SHEET_MUSIC_COUNT = 15;
+const SUSTAINERS_COUNT = 4200;
 
 export function StudioArtistHero({ onTip }: { onTip: () => void }) {
   const { t } = useTranslation();
@@ -40,7 +45,7 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
           height="100%"
           radius={9999}
           shape="circle"
-          placeholder="Mariana Sol"
+          placeholder={ARTIST_NAME}
           initials="MS"
           style={{ position: "absolute", inset: 0 }}
           loading="eager"
@@ -50,14 +55,19 @@ export function StudioArtistHero({ onTip }: { onTip: () => void }) {
       kind="Artist · Sintra"
       title={
         <>
-          Mariana <em>Sol</em>
+          {ARTIST_FIRST_NAME} <em>{ARTIST_LAST_NAME}</em>
         </>
       }
       by={
-        <>
-          8 releases · 15 sheet-music sets ·{" "}
-          <strong>4,200 sustainers</strong>
-        </>
+        <Translation
+          i18nKey="studio:artistHero.statsLine"
+          components={{ strong: <strong /> }}
+          values={{
+            releases: fmt.number(RELEASES_COUNT),
+            sheetMusicSets: fmt.number(SHEET_MUSIC_COUNT),
+            sustainers: fmt.number(SUSTAINERS_COUNT),
+          }}
+        />
       }
       actions={
         <>

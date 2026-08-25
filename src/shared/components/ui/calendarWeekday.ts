@@ -18,13 +18,20 @@ export interface WeekdayLabel {
   full: string;
 }
 
-export function buildWeekdayLabels(locale: string, weekStart: number): WeekdayLabel[] {
+export function buildWeekdayLabels(
+  locale: string,
+  weekStart: number,
+): WeekdayLabel[] {
   const shortFormatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
   const longFormatter = new Intl.DateTimeFormat(locale, { weekday: "long" });
   return Array.from({ length: WEEKDAY_COUNT }, (_unused, index) => {
     const dayOfWeek = (weekStart + index) % WEEKDAY_COUNT;
     const date = addDays(A_SUNDAY, dayOfWeek);
     const jsDate = new Date(date.year, date.month - 1, date.day);
-    return { dayOfWeek, short: shortFormatter.format(jsDate), full: longFormatter.format(jsDate) };
+    return {
+      dayOfWeek,
+      short: shortFormatter.format(jsDate),
+      full: longFormatter.format(jsDate),
+    };
   });
 }

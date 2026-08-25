@@ -44,7 +44,9 @@ export function usePitchMutations() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["magazine-pitches"] });
       void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] });
-      void queryClient.invalidateQueries({ queryKey: ["magazine-desk-summary"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-desk-summary"],
+      });
     },
   });
 

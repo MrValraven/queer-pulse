@@ -31,13 +31,11 @@ beforeEach(() => {
 /** Demo mode: the suite default (empty VITE_API_URL). No network at all. */
 async function loadDemo() {
   vi.resetModules();
-  const { DemoModeProvider } = await import(
-    "../../../app/providers/DemoModeProvider"
-  );
+  const { DemoModeProvider } =
+    await import("../../../app/providers/DemoModeProvider");
   const { AuthProvider } = await import("../../../app/providers/AuthProvider");
-  const { EmployerAffiliationProvider } = await import(
-    "../../../app/providers/EmployerAffiliationProvider"
-  );
+  const { EmployerAffiliationProvider } =
+    await import("../../../app/providers/EmployerAffiliationProvider");
   const mod = await import("./useEmployerAffiliation");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -61,12 +59,10 @@ async function loadLive() {
   vi.doMock("../../../app/providers/authContext", () => ({
     useAuth: () => ({ loggedIn: true, user: null }),
   }));
-  const { DemoModeProvider } = await import(
-    "../../../app/providers/DemoModeProvider"
-  );
-  const { EmployerAffiliationProvider } = await import(
-    "../../../app/providers/EmployerAffiliationProvider"
-  );
+  const { DemoModeProvider } =
+    await import("../../../app/providers/DemoModeProvider");
+  const { EmployerAffiliationProvider } =
+    await import("../../../app/providers/EmployerAffiliationProvider");
   const mod = await import("./useEmployerAffiliation");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -167,7 +163,10 @@ describe("useEmployerAffiliation (live mode via MSW)", () => {
           status: "active",
         }),
       ),
-      http.delete(`${API_V1}/me/affiliation`, () => new HttpResponse(null, { status: 204 })),
+      http.delete(
+        `${API_V1}/me/affiliation`,
+        () => new HttpResponse(null, { status: 204 }),
+      ),
     );
     const { useEmployerAffiliation, wrapper } = await loadLive();
     const { result } = renderHook(() => useEmployerAffiliation(), { wrapper });

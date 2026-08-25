@@ -21,7 +21,9 @@ export function WhoSeesWhatNameChange() {
         {t("members:profile.whoSeesWhat.nameChange.heading")}
       </h3>
       <p className={styles.sectionSub}>
-        {t("members:profile.whoSeesWhat.nameChange.sub", { handle: profile.slug })}
+        {t("members:profile.whoSeesWhat.nameChange.sub", {
+          handle: profile.slug,
+        })}
       </p>
       <Button variant="ghost" to={`${routes.editProfile}#username`}>
         {t("members:profile.whoSeesWhat.nameChange.button")}

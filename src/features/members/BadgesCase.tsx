@@ -18,15 +18,26 @@ interface BadgesCaseProps {
   onOpenBadge: (entries: BadgeDrawerEntry[], index: number) => void;
 }
 
-const RARITY_RANK: Record<Badge["rarity"], number> = { legendary: 0, rare: 1, common: 2 };
+const RARITY_RANK: Record<Badge["rarity"], number> = {
+  legendary: 0,
+  rare: 1,
+  common: 2,
+};
 
-function sortPool(pool: Badge[], earnedKeys: Set<string>, sortMode: BadgeSortMode): Badge[] {
+function sortPool(
+  pool: Badge[],
+  earnedKeys: Set<string>,
+  sortMode: BadgeSortMode,
+): Badge[] {
   const sorted = pool.slice();
-  if (sortMode === "rare") sorted.sort((a, z) => RARITY_RANK[a.rarity] - RARITY_RANK[z.rarity]);
-  else if (sortMode === "xp") sorted.sort((a, z) => (z.xpReward ?? 0) - (a.xpReward ?? 0));
+  if (sortMode === "rare")
+    sorted.sort((a, z) => RARITY_RANK[a.rarity] - RARITY_RANK[z.rarity]);
+  else if (sortMode === "xp")
+    sorted.sort((a, z) => (z.xpReward ?? 0) - (a.xpReward ?? 0));
   else {
     sorted.sort((a, z) => {
-      const earnedDiff = Number(earnedKeys.has(z.key)) - Number(earnedKeys.has(a.key));
+      const earnedDiff =
+        Number(earnedKeys.has(z.key)) - Number(earnedKeys.has(a.key));
       if (earnedDiff !== 0) return earnedDiff;
       return progressPercent(z) - progressPercent(a);
     });
@@ -50,8 +61,14 @@ export function BadgesCase({
   const [sortMode, setSortMode] = useState<BadgeSortMode>("close");
   const [showLocked, setShowLocked] = useState(true);
 
-  const allBadges = useMemo(() => [...earnedBadges, ...lockedBadges], [earnedBadges, lockedBadges]);
-  const earnedKeys = useMemo(() => new Set(earnedBadges.map((badge) => badge.key)), [earnedBadges]);
+  const allBadges = useMemo(
+    () => [...earnedBadges, ...lockedBadges],
+    [earnedBadges, lockedBadges],
+  );
+  const earnedKeys = useMemo(
+    () => new Set(earnedBadges.map((badge) => badge.key)),
+    [earnedBadges],
+  );
   const categories = useMemo(
     () => Array.from(new Set(allBadges.map((badge) => badge.category))).sort(),
     [allBadges],
@@ -65,8 +82,10 @@ export function BadgesCase({
   }, [allBadges]);
 
   const visiblePool = allBadges.filter((badge) => {
-    if (categoryFilter !== "all" && badge.category !== categoryFilter) return false;
-    if (categoryFilter === "all" && isCategoryMuted(badge.category)) return false;
+    if (categoryFilter !== "all" && badge.category !== categoryFilter)
+      return false;
+    if (categoryFilter === "all" && isCategoryMuted(badge.category))
+      return false;
     return showLocked || earnedKeys.has(badge.key);
   });
 
@@ -74,11 +93,20 @@ export function BadgesCase({
     const previewBadges = lockedBadges.slice(0, 3);
     return (
       <section className={styles.sec} id="the-case">
-        <CaseHeading t={t} sub={t("members:badges.case.sub", { earned: 0, remaining: lockedBadges.length })} />
+        <CaseHeading
+          t={t}
+          sub={t("members:badges.case.sub", {
+            earned: 0,
+            remaining: lockedBadges.length,
+          })}
+        />
         <div className={styles.caseEmpty}>
           <div>
             <h3>
-              <Translation i18nKey="members:badges.case.emptyTitle" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="members:badges.case.emptyTitle"
+                components={{ em: <em /> }}
+              />
             </h3>
             <p>{t("members:badges.case.emptyDesc")}</p>
           </div>
@@ -96,13 +124,21 @@ export function BadgesCase({
   }
 
   const grouped = sortMode === "cat";
-  const rendered = grouped ? null : promoteRarestEarned(sortPool(visiblePool, earnedKeys, sortMode), earnedKeys);
+  const rendered = grouped
+    ? null
+    : promoteRarestEarned(
+        sortPool(visiblePool, earnedKeys, sortMode),
+        earnedKeys,
+      );
 
   return (
     <section className={styles.sec} id="the-case">
       <CaseHeading
         t={t}
-        sub={t("members:badges.case.sub", { earned: earnedBadges.length, remaining: lockedBadges.length })}
+        sub={t("members:badges.case.sub", {
+          earned: earnedBadges.length,
+          remaining: lockedBadges.length,
+        })}
       />
       <BadgesCaseControls
         categories={categories}
@@ -120,13 +156,16 @@ export function BadgesCase({
       />
       {grouped ? (
         categories.map((category) => {
-          const rows = visiblePool.filter((badge) => badge.category === category);
+          const rows = visiblePool.filter(
+            (badge) => badge.category === category,
+          );
           if (rows.length === 0) return null;
           return (
             <section key={category} className={styles.grp}>
               <div className={styles.grpHd}>
                 <span className={styles.grpCount}>
-                  {rows.filter((badge) => earnedKeys.has(badge.key)).length}/{rows.length}
+                  {rows.filter((badge) => earnedKeys.has(badge.key)).length}/
+                  {rows.length}
                 </span>
                 <h3>{category}</h3>
               </div>
@@ -139,7 +178,10 @@ export function BadgesCase({
                     story={getStoryNote(badge.key)}
                     onOpen={() =>
                       onOpenBadge(
-                        rows.map((b) => ({ badge: b, earned: earnedKeys.has(b.key) })),
+                        rows.map((b) => ({
+                          badge: b,
+                          earned: earnedKeys.has(b.key),
+                        })),
                         rows.indexOf(badge),
                       )
                     }
@@ -179,9 +221,14 @@ function CaseHeading({ t, sub }: { t: (key: string) => string; sub: string }) {
   return (
     <div className={styles.hd}>
       <div>
-        <span className={styles.hdEyebrow}>{t("members:badges.case.eyebrow")}</span>
+        <span className={styles.hdEyebrow}>
+          {t("members:badges.case.eyebrow")}
+        </span>
         <h2 className={`${styles.hdTitle} ${styles.hdLvl3}`}>
-          <Translation i18nKey="members:badges.case.heading" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="members:badges.case.heading"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={styles.hdSub}>{sub}</p>
       </div>
@@ -197,5 +244,8 @@ function promoteRarestEarned(
   const rarest = rarestBadge(earnedInPool);
   if (!rarest) return pool.map((badge) => ({ badge, isHero: false }));
   const withoutRarest = pool.filter((badge) => badge.key !== rarest.key);
-  return [{ badge: rarest, isHero: true }, ...withoutRarest.map((badge) => ({ badge, isHero: false }))];
+  return [
+    { badge: rarest, isHero: true },
+    ...withoutRarest.map((badge) => ({ badge, isHero: false })),
+  ];
 }

@@ -144,7 +144,9 @@ export function DrawerHeaderFields({
               label: value,
             }))}
             onChange={(value) =>
-              onFieldChange({ priority: (value ?? priority) as RoadmapPriority })
+              onFieldChange({
+                priority: (value ?? priority) as RoadmapPriority,
+              })
             }
           />
         </div>

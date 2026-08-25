@@ -89,7 +89,10 @@ export function MessagesThreadListBody({
           icon={<FiMessageCircle />}
           title={t("messages:thread.emptyTitle")}
           description={t("messages:thread.emptyDescription")}
-          action={{ label: t("messages:thread.newMessage"), onClick: onCompose }}
+          action={{
+            label: t("messages:thread.newMessage"),
+            onClick: onCompose,
+          }}
         />
       )}
       {!loading &&

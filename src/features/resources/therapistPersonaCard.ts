@@ -29,7 +29,9 @@ const initialsOf = (name: string) =>
 
 export function vmFromPublic(dto: SubprofilePublicDTO): TherapistCardVM {
   const handle = dto.handle ?? dto.slug;
-  const specialisms = dto.items.filter((item) => item.section === "specialisms");
+  const specialisms = dto.items.filter(
+    (item) => item.section === "specialisms",
+  );
   const langs = (dto.skinData?.practical?.languages ?? "")
     .split(/[,/]/)
     .map((lang) => lang.trim())

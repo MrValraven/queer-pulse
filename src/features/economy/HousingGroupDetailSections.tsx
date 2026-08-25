@@ -59,7 +59,9 @@ export function GroupNorms({ norms }: { norms: string[] }) {
           {t("economy:housingGroups.norms.title")}{" "}
           <em>{t("economy:housingGroups.norms.titleEm")}</em>
         </h2>
-        <p className={styles.normsSub}>{t("economy:housingGroups.norms.sub")}</p>
+        <p className={styles.normsSub}>
+          {t("economy:housingGroups.norms.sub")}
+        </p>
         <ul className={styles.normsList}>
           {norms.map((norm) => (
             <li className={styles.norm} key={norm}>

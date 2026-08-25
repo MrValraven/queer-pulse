@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
-import { FiAlertCircle, FiAlertTriangle, FiArrowRight, FiCheck } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiAlertTriangle,
+  FiArrowRight,
+  FiCheck,
+} from "react-icons/fi";
 import { Avatar } from "../../../shared/components/ui";
 import { routes } from "../../../app/routeMap";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -15,7 +20,10 @@ interface HousingLandlordPanelProps {
 /** "The landlord" tab content for one housing listing card: past-tenant
  *  verdict and quotes when they exist, or an honest empty state when the
  *  landlord is new to the board. */
-export function HousingLandlordPanel({ landlord, interactive }: HousingLandlordPanelProps) {
+export function HousingLandlordPanel({
+  landlord,
+  interactive,
+}: HousingLandlordPanelProps) {
   const { t } = useTranslation();
 
   return (
@@ -81,7 +89,10 @@ export function HousingLandlordPanel({ landlord, interactive }: HousingLandlordP
                 {fact.known ? (
                   <FiCheck className={styles.sigIcon} aria-hidden />
                 ) : (
-                  <FiAlertCircle className={styles.factNeutralIcon} aria-hidden />
+                  <FiAlertCircle
+                    className={styles.factNeutralIcon}
+                    aria-hidden
+                  />
                 )}
                 <span>{fact.text}</span>
               </div>

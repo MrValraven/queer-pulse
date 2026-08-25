@@ -450,9 +450,10 @@ export function detailFor(member: AdminMember): MemberDetail {
       center: { initials: member.initials, tone: member.tone },
       // Row avatars are the people who vouched FOR this member — all inbound.
       nodes: member.vouchedBy.length
-        ? member.vouchedBy.map(
-            (avatar): GraphNode => ({ ...avatar, direction: "inbound" }),
-          )
+        ? member.vouchedBy.map((avatar): GraphNode => ({
+            ...avatar,
+            direction: "inbound",
+          }))
         : [{ initials: "?", tone: "anon", direction: "inbound" }],
     },
     staffRoles: member.staffRoles,

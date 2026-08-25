@@ -47,7 +47,9 @@ export function applicationsHubCard(demoMode: boolean): StatusCard {
     primaryKey: demoMode
       ? "economy:workHub.card.apps.primary"
       : "economy:workHub.card.apps.trackAll",
-    primaryValues: demoMode ? { active: activeApps, sent: sentApps } : undefined,
+    primaryValues: demoMode
+      ? { active: activeApps, sent: sentApps }
+      : undefined,
     nextKey: demoMode
       ? offers
         ? "economy:workHub.statusLine.offers"

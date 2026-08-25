@@ -3,12 +3,24 @@ import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
 const SettingsPage = lazyNamed(() => import("./SettingsPage"), "SettingsPage");
-const EditProfilePage = lazyNamed(() => import("./EditProfilePage"), "EditProfilePage");
+const EditProfilePage = lazyNamed(
+  () => import("./EditProfilePage"),
+  "EditProfilePage",
+);
 const SecurityPage = lazyNamed(() => import("./SecurityPage"), "SecurityPage");
 const SessionsPage = lazyNamed(() => import("./SessionsPage"), "SessionsPage");
-const PushDevicesPage = lazyNamed(() => import("./PushDevicesPage"), "PushDevicesPage");
-const DataExportPage = lazyNamed(() => import("./DataExportPage"), "DataExportPage");
-const DeleteAccountPage = lazyNamed(() => import("./DeleteAccountPage"), "DeleteAccountPage");
+const PushDevicesPage = lazyNamed(
+  () => import("./PushDevicesPage"),
+  "PushDevicesPage",
+);
+const DataExportPage = lazyNamed(
+  () => import("./DataExportPage"),
+  "DataExportPage",
+);
+const DeleteAccountPage = lazyNamed(
+  () => import("./DeleteAccountPage"),
+  "DeleteAccountPage",
+);
 
 /** Account settings & the account-hub landing redirect. */
 export function settingsRoutes() {

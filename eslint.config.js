@@ -4,6 +4,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import tseslint from "typescript-eslint";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 // jsx-a11y's recommended set ships 31 of its 34 rules at "error". We take the
@@ -16,7 +17,10 @@ export const jsxA11yWarnings = Object.fromEntries(
   Object.entries(jsxA11y.flatConfigs.recommended.rules).map(([id, setting]) => {
     const severity = Array.isArray(setting) ? setting[0] : setting;
     if (severity === "off" || severity === 0) return [id, "off"];
-    return [id, Array.isArray(setting) ? ["warn", ...setting.slice(1)] : "warn"];
+    return [
+      id,
+      Array.isArray(setting) ? ["warn", ...setting.slice(1)] : "warn",
+    ];
   }),
 );
 
@@ -106,7 +110,7 @@ const localPlugin = {
         type: "problem",
         docs: {
           description:
-            "Require rel=\"noopener noreferrer\" on any element with target=\"_blank\" (reverse-tabnabbing hardening).",
+            'Require rel="noopener noreferrer" on any element with target="_blank" (reverse-tabnabbing hardening).',
         },
         messages: {
           missing:
@@ -212,7 +216,9 @@ const localPlugin = {
         const resolveVariable = (identifierNode) => {
           let scope = context.sourceCode.getScope(identifierNode);
           while (scope) {
-            const variable = scope.variables.find((v) => v.name === identifierNode.name);
+            const variable = scope.variables.find(
+              (v) => v.name === identifierNode.name,
+            );
             if (variable) return variable;
             scope = scope.upper;
           }
@@ -248,7 +254,8 @@ const localPlugin = {
           }
 
           if (node.type === "CallExpression") {
-            const calleeName = node.callee.type === "Identifier" ? node.callee.name : null;
+            const calleeName =
+              node.callee.type === "Identifier" ? node.callee.name : null;
             // Unwrap the common `useMemo(() => ..., deps)` / `useCallback(...)`
             // wrapper to check the function it wraps.
             if (calleeName === "useMemo" || calleeName === "useCallback") {
@@ -257,7 +264,10 @@ const localPlugin = {
             return false;
           }
 
-          if (node.type === "ArrowFunctionExpression" || node.type === "FunctionExpression") {
+          if (
+            node.type === "ArrowFunctionExpression" ||
+            node.type === "FunctionExpression"
+          ) {
             if (node.body.type === "BlockStatement") {
               const returnArguments = topLevelReturnArguments(node.body);
               if (returnArguments.length === 0) return false;
@@ -271,7 +281,10 @@ const localPlugin = {
           if (node.type === "Identifier") {
             const variable = resolveVariable(node);
             const definition = variable?.defs?.[0];
-            if (definition?.node?.type === "VariableDeclarator" && definition.node.init) {
+            if (
+              definition?.node?.type === "VariableDeclarator" &&
+              definition.node.init
+            ) {
               return expressionSanitizes(definition.node.init, depth + 1);
             }
             return false;
@@ -291,8 +304,10 @@ const localPlugin = {
             const htmlProperty = expression.properties.find(
               (property) =>
                 property.type === "Property" &&
-                ((property.key.type === "Identifier" && property.key.name === "__html") ||
-                  (property.key.type === "Literal" && property.key.value === "__html")),
+                ((property.key.type === "Identifier" &&
+                  property.key.name === "__html") ||
+                  (property.key.type === "Literal" &&
+                    property.key.value === "__html")),
             );
             if (!htmlProperty) return;
 
@@ -540,6 +555,21 @@ export default defineConfig([
       "local/no-literal-string": "warn",
     },
   },
+  // Demo/mock content catalogs. `*.data.ts(x)` and `*.mock.ts(x)` are the
+  // colocated fixtures that paint demo mode: track titles, artist bios, film
+  // synopses, glossary entries, partner blurbs. Under the scope rule in
+  // docs/i18n/extraction-brief.md §1 every one of those strings is CONTENT — in
+  // live mode the same component fetches it from the API — so none of it may be
+  // translated. The rule can't tell chrome from content (it flags any JSXText
+  // with two+ letters), so it reported ~1650 hits here that were all correct as
+  // written, drowning the genuine chrome findings in the rest of the tree.
+  // Scoped off here so a scan surfaces only strings that CAN be acted on. Chrome
+  // does not belong in a data file in the first place; if one grows a label or a
+  // button, that label belongs in the component that renders it.
+  {
+    files: ["**/*.data.{ts,tsx}", "**/*.mock.{ts,tsx}"],
+    rules: { "local/no-literal-string": "off" },
+  },
   // Country-flag emojis (🇵🇹 🇪🇸 …) have no react-icons equivalent — exempt these files.
   {
     files: [
@@ -621,4 +651,17 @@ export default defineConfig([
       parserOptions: { projectService: false, program: null },
     },
   },
+  // Prettier, LAST so it wins. Two things in one entry (the plugin's own
+  // `recommended` bundle): `eslint-config-prettier` switches off every
+  // stylistic rule above that could disagree with Prettier, and
+  // `prettier/prettier` turns "this file is not Prettier-formatted" into an
+  // ESLint ERROR. It has to stay the final element — anything after it could
+  // re-enable a rule that fights the formatter.
+  //
+  // This mirrors the backend (queerpulse-backend/eslint.config.mjs), which has
+  // always run Prettier this way. The frontend previously shipped Prettier as
+  // a standalone `pnpm format` nobody ran, so ~1876 files had drifted out of
+  // format with nothing to catch it. `pnpm lint` now catches it, and
+  // `pnpm lint:fix` / `pnpm format` fix it.
+  eslintPluginPrettierRecommended,
 ]);

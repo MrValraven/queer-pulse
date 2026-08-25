@@ -16,9 +16,7 @@ import {
 } from "./ModPanelDangerModals";
 import styles from "./ModPanel.module.css";
 
-const modeToTier = (
-  mode: "open" | "request" | "invite",
-): AccessTier =>
+const modeToTier = (mode: "open" | "request" | "invite"): AccessTier =>
   mode === "open" ? "public" : mode === "request" ? "request" : "invite";
 
 export function SettingsTab({
@@ -191,7 +189,10 @@ export function SettingsTab({
       )}
 
       {archiveOpen && (
-        <ArchiveConfirmModal slug={slug} onClose={() => setArchiveOpen(false)} />
+        <ArchiveConfirmModal
+          slug={slug}
+          onClose={() => setArchiveOpen(false)}
+        />
       )}
       {transferOpen && (
         <TransferOwnershipModal

@@ -32,7 +32,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€30 – €80",
     scaleNote:
       "Income-based. First session free to assess fit. No proof required. You set the amount.",
-    description: "Queer-affirming, trauma-informed psychotherapy. Works with gender identity, relationship structures, and life transitions. In-person and remote.",
+    description:
+      "Queer-affirming, trauma-informed psychotherapy. Works with gender identity, relationship structures, and life transitions. In-person and remote.",
     tags: ["LGBTQ+", "trauma", "relationships", "trans-affirming"],
     tint: "jade",
   },
@@ -47,7 +48,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€0 – €120/hr",
     scaleNote:
       "Name-your-price for community members earning under €1,400/month. Full rate for others.",
-    description: "Specialises in NHR applications, D7 visas, residency renewals, and employment contracts. Bilingual consultations in PT, EN, or FR.",
+    description:
+      "Specialises in NHR applications, D7 visas, residency renewals, and employment contracts. Bilingual consultations in PT, EN, or FR.",
     tags: ["visas", "NHR", "employment", "immigration"],
     tint: "plum",
   },
@@ -62,7 +64,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "Free (SNS) or €35 private",
     scaleNote:
       "SNS patients pay nothing. Private appointments for those without a centros de saúde allocation: sliding scale for income under €1,200/month.",
-    description: "LGBTQ+-affirming GP with experience in trans health. Provides referrals for gender dysphoria care within the SNS system. No judgement, ever.",
+    description:
+      "LGBTQ+-affirming GP with experience in trans health. Provides referrals for gender dysphoria care within the SNS system. No judgement, ever.",
     tags: ["GP", "trans-affirming", "SNS", "HRT referrals"],
     tint: "jade",
   },
@@ -77,7 +80,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€25 – €90",
     scaleNote:
       "Sliding scale based on income bracket. Three brackets: under €900, €900–1500, above €1500. You self-select, no questions asked.",
-    description: "Relational and somatic sex therapy. Works with queer, poly, and kinky clients. No prior knowledge of your sexuality or relationship structure required.",
+    description:
+      "Relational and somatic sex therapy. Works with queer, poly, and kinky clients. No prior knowledge of your sexuality or relationship structure required.",
     tags: ["sex therapy", "poly", "kink", "somatic"],
     tint: "coral",
   },
@@ -92,7 +96,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€40 – €150",
     scaleNote:
       "Flat rate for recibos verdes setup (€40). Annual IRS filing: sliding scale by income. Earners under €1,000/month pay €40.",
-    description: "Certified accountant specialising in freelancers and self-employed community members. Recibos verdes, IRS, NHR regime, invoicing. Patient and thorough.",
+    description:
+      "Certified accountant specialising in freelancers and self-employed community members. Recibos verdes, IRS, NHR regime, invoicing. Patient and thorough.",
     tags: ["tax", "freelance", "recibos verdes", "IRS"],
     tint: "plum",
   },
@@ -107,7 +112,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€0 – €60 consultation",
     scaleNote:
       "Consultation and check-up on sliding scale. Treatment costs negotiated separately. No one is turned away for cost alone.",
-    description: "Queer-welcoming dental practice. Trans patients: preferred name and pronouns on file from the first visit. Consultations in PT or EN.",
+    description:
+      "Queer-welcoming dental practice. Trans patients: preferred name and pronouns on file from the first visit. Consultations in PT or EN.",
     tags: ["dental", "LGBTQ+ welcoming", "trans-affirming"],
     tint: "jade",
   },
@@ -122,7 +128,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€15 – €55 consultation",
     scaleNote:
       "Consultation fee sliding scale. Treatments and medications at cost for verified community members in financial difficulty.",
-    description: "Queer-owned veterinary practice. Cats, dogs, rabbits, and some small mammals. Emergency appointments prioritised for community members in crisis.",
+    description:
+      "Queer-owned veterinary practice. Cats, dogs, rabbits, and some small mammals. Emergency appointments prioritised for community members in crisis.",
     tags: ["pets", "cats", "dogs", "emergency"],
     tint: "coral",
   },
@@ -137,7 +144,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€25 – €75",
     scaleNote:
       "You set the amount within the range. Sessions are 50 minutes. No documentation needed.",
-    description: "LGBTQ+-affirming physiotherapy and body-based therapy. Works with chronic pain, post-surgery recovery, and body-gender relationships. Trans clients very welcome.",
+    description:
+      "LGBTQ+-affirming physiotherapy and body-based therapy. Works with chronic pain, post-surgery recovery, and body-gender relationships. Trans clients very welcome.",
     tags: ["physiotherapy", "trans", "chronic pain", "post-surgery"],
     tint: "jade",
   },
@@ -152,7 +160,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€50 – €150",
     scaleNote:
       "Sliding scale by income. Earners under €1,000/month: €50. Community members can request a fee review at any time.",
-    description: "Psychiatrist with expertise in gender dysphoria, trauma, and complex PTSD. Provides psychiatric support letters for gender-affirming procedures.",
+    description:
+      "Psychiatrist with expertise in gender dysphoria, trauma, and complex PTSD. Provides psychiatric support letters for gender-affirming procedures.",
     tags: ["psychiatry", "HRT support", "gender dysphoria", "PTSD"],
     tint: "plum",
   },
@@ -167,7 +176,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€0 – €100/hr",
     scaleNote:
       "Pro bono for community members facing housing discrimination or family exclusion. Sliding scale for other cases.",
-    description: "Specialises in housing rights, eviction defence, same-sex family law, and adoption. Has represented clients in hate-crime civil proceedings.",
+    description:
+      "Specialises in housing rights, eviction defence, same-sex family law, and adoption. Has represented clients in hate-crime civil proceedings.",
     tags: ["housing", "family law", "adoption", "discrimination"],
     tint: "coral",
   },
@@ -182,7 +192,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "€20 – €60",
     scaleNote:
       "Name-your-price within range. Consent and boundaries discussed before every session. No pressure, ever.",
-    description: "Trauma-sensitive massage practitioner. Works with survivors, people in gender transition, and anyone whose relationship with their body is complex.",
+    description:
+      "Trauma-sensitive massage practitioner. Works with survivors, people in gender transition, and anyone whose relationship with their body is complex.",
     tags: ["massage", "trauma-sensitive", "trans-affirming"],
     tint: "jade",
   },
@@ -197,7 +208,8 @@ export const PRACTITIONERS: Practitioner[] = [
     range: "Free – €40",
     scaleNote:
       "SNS referrals: free. Private consultations: sliding scale. PrEP access consultations always free for first visit.",
-    description: "Specialist in sexual health, HIV prevention and treatment, PrEP, and PEP. Works with Checkpoint and GAT. No judgment, complete confidentiality.",
+    description:
+      "Specialist in sexual health, HIV prevention and treatment, PrEP, and PEP. Works with Checkpoint and GAT. No judgment, complete confidentiality.",
     tags: ["HIV", "PrEP", "PEP", "sexual health"],
     tint: "plum",
   },

@@ -119,9 +119,7 @@ export function AccountSuspendedPage() {
         <div className={styles.detailList}>
           <div className={styles.detailRow}>
             <span>{t("system:accountSuspended.details.action")}</span>
-            <b>
-              {t("system:accountSuspended.details.actionValue", { days })}
-            </b>
+            <b>{t("system:accountSuspended.details.actionValue", { days })}</b>
           </div>
           {!moderated && (
             <div className={styles.detailRow}>

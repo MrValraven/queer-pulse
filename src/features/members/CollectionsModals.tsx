@@ -415,7 +415,8 @@ export function AddToCollectionModal({
       </div>
       <div className={styles.foot}>
         <button type="button" className={styles.back} onClick={onClose}>
-          <FiArrowLeft aria-hidden /> {t("members:collections.modal.add.cancel")}
+          <FiArrowLeft aria-hidden />{" "}
+          {t("members:collections.modal.add.cancel")}
         </button>
       </div>
     </Modal>

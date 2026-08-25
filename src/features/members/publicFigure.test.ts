@@ -6,7 +6,9 @@ import {
 } from "./publicFigure";
 
 /** A fully-qualifying member; individual tests override single fields. */
-function baseSignals(overrides: Partial<EligibilitySignals> = {}): EligibilitySignals {
+function baseSignals(
+  overrides: Partial<EligibilitySignals> = {},
+): EligibilitySignals {
   return {
     nowIso: "2026-08-11T00:00:00.000Z",
     verified: true,
@@ -35,7 +37,9 @@ describe("evaluatePublicEligibility", () => {
 
   it("blocks when a hard gate is unmet, but still computes a score", () => {
     const result = evaluatePublicEligibility(baseSignals({ verified: false }));
-    expect(result.gates.find((gate) => gate.key === "verified")?.met).toBe(false);
+    expect(result.gates.find((gate) => gate.key === "verified")?.met).toBe(
+      false,
+    );
     expect(result.eligible).toBe(false);
     expect(result.score.total).toBeGreaterThan(0);
   });
@@ -58,19 +62,25 @@ describe("evaluatePublicEligibility", () => {
       communityPosts: 0,
       lastActiveDaysAgo: 999,
       tenureDays: 90,
-      publishedPieces: Array.from({ length: 12 }, () => ({ at: "2026-07-01T00:00:00.000Z" })),
+      publishedPieces: Array.from({ length: 12 }, () => ({
+        at: "2026-07-01T00:00:00.000Z",
+      })),
       hostedOpenEvents: [],
       workshopsTaught: 0,
       publishedSubprofiles: 0,
     });
-    expect(result.score.families.find((f) => f.key === "contribution")?.points).toBe(50);
+    expect(
+      result.score.families.find((f) => f.key === "contribution")?.points,
+    ).toBe(50);
     expect(result.eligible).toBe(false);
   });
 
   it("still needs participation even with contribution + trust maxed (50 + 35 < 100)", () => {
     const result = evaluatePublicEligibility({
       ...baseSignals(),
-      publishedPieces: Array.from({ length: 12 }, () => ({ at: "2026-07-01T00:00:00.000Z" })),
+      publishedPieces: Array.from({ length: 12 }, () => ({
+        at: "2026-07-01T00:00:00.000Z",
+      })),
       vouchCount: 10,
       endorsementCount: 10,
       connectionCount: 10,
@@ -78,8 +88,12 @@ describe("evaluatePublicEligibility", () => {
       communityPosts: 0,
       lastActiveDaysAgo: 999,
     });
-    expect(result.score.families.find((f) => f.key === "contribution")?.points).toBe(50);
-    expect(result.score.families.find((f) => f.key === "trust")?.points).toBe(35);
+    expect(
+      result.score.families.find((f) => f.key === "contribution")?.points,
+    ).toBe(50);
+    expect(result.score.families.find((f) => f.key === "trust")?.points).toBe(
+      35,
+    );
     expect(result.score.total).toBeLessThan(TARGET_SCORE);
     expect(result.eligible).toBe(false);
   });
@@ -99,8 +113,12 @@ describe("evaluatePublicEligibility", () => {
       workshopsTaught: 0,
       publishedSubprofiles: 0,
     });
-    const recentPts = recent.score.families.find((f) => f.key === "contribution")!.points;
-    const stalePts = stale.score.families.find((f) => f.key === "contribution")!.points;
+    const recentPts = recent.score.families.find(
+      (f) => f.key === "contribution",
+    )!.points;
+    const stalePts = stale.score.families.find(
+      (f) => f.key === "contribution",
+    )!.points;
     expect(stalePts).toBe(Math.round(recentPts * 0.5));
   });
 
@@ -115,13 +133,19 @@ describe("evaluatePublicEligibility", () => {
     const dormant = evaluatePublicEligibility(
       baseSignals({ ...quiet, lastActiveDaysAgo: 120 }),
     );
-    const activePts = active.score.families.find((f) => f.key === "participation")!.points;
-    const dormantPts = dormant.score.families.find((f) => f.key === "participation")!.points;
+    const activePts = active.score.families.find(
+      (f) => f.key === "participation",
+    )!.points;
+    const dormantPts = dormant.score.families.find(
+      (f) => f.key === "participation",
+    )!.points;
     expect(activePts - dormantPts).toBe(6);
   });
 
   it("blocks on a safety veto even with a full score and passing gates", () => {
-    const result = evaluatePublicEligibility(baseSignals({ standingOk: false }));
+    const result = evaluatePublicEligibility(
+      baseSignals({ standingOk: false }),
+    );
     expect(result.score.total).toBeGreaterThanOrEqual(TARGET_SCORE);
     expect(result.standingOk).toBe(false);
     expect(result.eligible).toBe(false);
@@ -129,10 +153,19 @@ describe("evaluatePublicEligibility", () => {
 
   it("ranks score actions by payoff, with unmet gate actions first", () => {
     const result = evaluatePublicEligibility(
-      baseSignals({ verified: false, vouchCount: 0, publishedPieces: [], hostedOpenEvents: [], workshopsTaught: 0, publishedSubprofiles: 0 }),
+      baseSignals({
+        verified: false,
+        vouchCount: 0,
+        publishedPieces: [],
+        hostedOpenEvents: [],
+        workshopsTaught: 0,
+        publishedSubprofiles: 0,
+      }),
     );
     expect(result.nextActions[0]?.family).toBe("gate");
-    const scoreActions = result.nextActions.filter((action) => action.family !== "gate");
+    const scoreActions = result.nextActions.filter(
+      (action) => action.family !== "gate",
+    );
     const points = scoreActions.map((action) => action.points);
     expect(points).toEqual([...points].sort((left, right) => right - left));
   });

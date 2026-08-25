@@ -34,7 +34,13 @@ export function pushSubscriptionResponseToDevice(
     id: dto.id,
     device: deviceLabelFromUserAgent(userAgent),
     deviceType: deviceKindFromUserAgent(userAgent),
-    registeredAgo: relativeAgo(dto.createdAt, t, fmt, PUSH_DEVICE_AGO_KEYS, now),
+    registeredAgo: relativeAgo(
+      dto.createdAt,
+      t,
+      fmt,
+      PUSH_DEVICE_AGO_KEYS,
+      now,
+    ),
     lastUsedAgo: dto.lastUsedAt
       ? relativeAgo(dto.lastUsedAt, t, fmt, PUSH_DEVICE_AGO_KEYS, now)
       : undefined,

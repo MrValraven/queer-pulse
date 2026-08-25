@@ -53,7 +53,9 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
         <ToggleList>
           <ConsentToggleRow
             title={t("settings:notifications.gatherings.newAnnounced.title")}
-            description={t("settings:notifications.gatherings.newAnnounced.desc")}
+            description={t(
+              "settings:notifications.gatherings.newAnnounced.desc",
+            )}
             checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventInvites)}
             onChange={(next) =>
               setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventInvites, next)
@@ -61,7 +63,9 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           />
           <ConsentToggleRow
             title={t("settings:notifications.gatherings.rsvpReminder.title")}
-            description={t("settings:notifications.gatherings.rsvpReminder.desc")}
+            description={t(
+              "settings:notifications.gatherings.rsvpReminder.desc",
+            )}
             checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventReminders)}
             onChange={(next) =>
               setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventReminders, next)
@@ -70,7 +74,9 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           {/* No "spots almost full" notification exists yet — still cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.gatherings.lastFewSpots.title")}
-            description={t("settings:notifications.gatherings.lastFewSpots.desc")}
+            description={t(
+              "settings:notifications.gatherings.lastFewSpots.desc",
+            )}
             comingSoon
             onChange={onChange}
           />
@@ -89,7 +95,9 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           />
           <ConsentToggleRow
             title={t("settings:notifications.messages.connectionRequest.title")}
-            description={t("settings:notifications.messages.connectionRequest.desc")}
+            description={t(
+              "settings:notifications.messages.connectionRequest.desc",
+            )}
             checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.connections)}
             onChange={(next) =>
               setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.connections, next)
@@ -132,7 +140,9 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           />
           <ConsentToggleRow
             title={t("settings:notifications.communities.threadReply.title")}
-            description={t("settings:notifications.communities.threadReply.desc")}
+            description={t(
+              "settings:notifications.communities.threadReply.desc",
+            )}
             checked={isEnabled(
               NOTIFICATION_PREFERENCE_CATEGORY.communityReplies,
             )}
@@ -154,7 +164,9 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           {/* No weekly email digest job exists yet — cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.communities.weeklyDigest.title")}
-            description={t("settings:notifications.communities.weeklyDigest.desc")}
+            description={t(
+              "settings:notifications.communities.weeklyDigest.desc",
+            )}
             comingSoon
             onChange={onChange}
           />

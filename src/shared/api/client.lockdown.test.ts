@@ -111,7 +111,9 @@ describe("platform lockdown detection", () => {
     const { apiGet, ApiError } = await loadClient();
     stubFetch(
       vi.fn(() =>
-        Promise.resolve(res(503, { code: "PLATFORM_LOCKED", message: "Locked" })),
+        Promise.resolve(
+          res(503, { code: "PLATFORM_LOCKED", message: "Locked" }),
+        ),
       ),
     );
 

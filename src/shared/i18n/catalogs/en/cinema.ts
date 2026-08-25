@@ -49,6 +49,7 @@ export const cinema: Catalog = {
 
   // CinemaHero.tsx — CinemaMast / AskStrip / CinemaCover
   "mast.issueLabel": "Programme: Week {week} · {year}",
+  "mast.dateRange": "{start} to {end}",
   "mast.tagline":
     "A theatre, an archive, a co-op. <em>Eighty percent of every rent</em> goes to the filmmaker.",
   "mast.sectionNav.thisWeek": "This week",
@@ -396,6 +397,7 @@ export const cinema: Catalog = {
   "shorts.spotlight.mostWatchedBadge": "Most watched this week",
   "shorts.spotlight.communityPickKicker": "Community pick · week {week}",
   "shorts.spotlight.watchNowCta": "Watch now · free",
+  "shorts.spotlight.tipCollectiveCta": "Tip the collective",
   "shorts.spotlight.becomeSustainerCta": "Become one",
   "shorts.shelf.newThisWeek.title": "New <em>this week</em>",
   "shorts.shelf.newThisWeek.sub":
@@ -446,6 +448,9 @@ export const cinema: Catalog = {
   "shorts.catalog.empty.suggestCta": "Suggest a film",
   "shorts.catalog.count_one": "<em>{count}</em> film · all free to watch",
   "shorts.catalog.count_other": "<em>{count}</em> films · all free to watch",
+  "shorts.card.runtime": "{minutes} min",
+  "shorts.card.ccBadge": "CC",
+  "shorts.card.adBadge": "AD",
   "shorts.card.saveAriaLabel": "Save to watchlist",
   "shorts.card.watches_one": "{count} watch",
   "shorts.card.watches_other": "{count} watches",
@@ -463,6 +468,7 @@ export const cinema: Catalog = {
   "shorts.watchParties.rsvpFreeCta": "RSVP · free",
   "shorts.watchParties.rsvpToast": "You're going · {title}",
   "shorts.vote.title": "Programme the <em>next set</em>",
+  "shorts.vote.window": "Members choose August's theme · voting closes 20 Jul",
   "shorts.vote.yourPickLabel": "Your pick",
   "shorts.vote.voteCta": "Vote",
   "shorts.vote.countedToast": "Vote counted. Thank you",
@@ -667,8 +673,7 @@ export const cinema: Catalog = {
   "openCalls.card.deadlineLabel": "Deadline",
   "openCalls.card.applyNowCta": "Apply now",
   "openCalls.card.downloadBriefCta": "Download brief PDF",
-  "openCalls.card.downloadToast":
-    "Brief PDF is downloading. Check your files.",
+  "openCalls.card.downloadToast": "Brief PDF is downloading. Check your files.",
   "openCalls.card.applyCta": "Apply",
   "openCalls.outro.title": "Fund the <em>next</em> call.",
   "openCalls.outro.sub":
@@ -1086,6 +1091,9 @@ export const cinema: Catalog = {
   "watch.controls.subtitleLang.none": "No subs",
   "watch.controls.ccAria": "English closed captions",
   "watch.controls.adAria": "Audio description",
+  "watch.controls.ccToggleLabel": "CC EN",
+  "watch.controls.adToggleLabel": "AD",
+  "watch.controls.pausedStatus": "Paused at {time} · {remaining} min remaining",
   "watch.sidePanel.lobbyPlaceholder": "Say something to the lobby…",
   "watch.sidePanel.qnaPlaceholder": "Ask {name} a question…",
   "watch.sidePanel.sendCta": "Send",

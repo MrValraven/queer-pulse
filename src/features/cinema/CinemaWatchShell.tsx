@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiFilm } from "react-icons/fi";
 import { EmptyState } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./WatchPage.module.css";
 import { routes } from "../../app/routeMap";
@@ -15,12 +16,14 @@ export function WatchShell({ children }: { children: ReactNode }) {
       <nav className={styles.nav}>
         <Link to={routes.cinemaBrowse} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          Queer<em style={{ fontStyle: "italic" }}>Pulse</em>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em style={{ fontStyle: "italic" }} /> }}
+          />
         </Link>
         <div className={styles.navLinks}>
           <Link to={routes.cinemaBrowse}>
-            <FiArrowLeft aria-hidden />{" "}
-            {t("cinema:watch.nav.backToFilm")}
+            <FiArrowLeft aria-hidden /> {t("cinema:watch.nav.backToFilm")}
           </Link>
           <Link to={routes.cinema}>{t("cinema:watch.nav.cinemaHome")}</Link>
         </div>

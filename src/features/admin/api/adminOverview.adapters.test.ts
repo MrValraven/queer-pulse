@@ -64,8 +64,9 @@ function isoWeeksAgo(weeksAgo: number): string {
   return new Date(2026, 0, 1 + (8 - weeksAgo) * 7).toISOString();
 }
 
-const reportChartWeeks: AdminOverviewDTO["reportsByType"]["weeks"] =
-  Array.from({ length: 8 }, (_, index) => ({
+const reportChartWeeks: AdminOverviewDTO["reportsByType"]["weeks"] = Array.from(
+  { length: 8 },
+  (_, index) => ({
     weekStart: isoWeeksAgo(8 - index),
     values: [index, index + 1, index + 2, index + 3] as [
       number,
@@ -73,7 +74,8 @@ const reportChartWeeks: AdminOverviewDTO["reportsByType"]["weeks"] =
       number,
       number,
     ],
-  }));
+  }),
+);
 
 const baseDto: AdminOverviewDTO = {
   stats: {
@@ -266,7 +268,10 @@ describe("overviewToMetrics", () => {
         communityHealth: { averageScore: 60, needingSupportCount: 5 },
       },
     };
-    const [, , , communityHealthTile] = overviewToMetrics(belowThresholdDto, fmt);
+    const [, , , communityHealthTile] = overviewToMetrics(
+      belowThresholdDto,
+      fmt,
+    );
     expect(communityHealthTile?.trend).toEqual({
       dir: "warn",
       key: "admin:dashboard.metrics.trendNeedsHand",
@@ -420,7 +425,12 @@ describe("overviewToMemberGrowth", () => {
       ...baseDto,
       memberGrowth: {
         points: [
-          { at: "2026-01-01T00:00:00Z", joined: 180, churned: 60, spike: false },
+          {
+            at: "2026-01-01T00:00:00Z",
+            joined: 180,
+            churned: 60,
+            spike: false,
+          },
         ],
       },
     };

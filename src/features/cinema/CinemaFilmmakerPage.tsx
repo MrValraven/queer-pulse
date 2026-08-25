@@ -56,8 +56,7 @@ function DemoCinemaFilmmakerPage() {
               {filmmaker.nameEm}
             </span>
             <Link to={routes.cinema} className={styles.crumbBack}>
-              <FiArrowLeft aria-hidden />{" "}
-              {t("cinema:filmmaker.crumb.backCta")}
+              <FiArrowLeft aria-hidden /> {t("cinema:filmmaker.crumb.backCta")}
             </Link>
           </div>
         </div>
@@ -90,8 +89,7 @@ function DemoCinemaFilmmakerPage() {
         sub={t("cinema:filmmaker.outro.sub")}
       >
         <Button size="lg" to={routes.studioUpload}>
-          {t("cinema:ledger.submitCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("cinema:ledger.submitCta")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
     </PageShell>

@@ -60,7 +60,12 @@ export function IssuePlan({
             </div>
             <div className={styles.slots}>
               {filledPieces.map((piece) => (
-                <SlotCard key={piece.id} piece={piece} stages={stages} onOpen={onOpen} />
+                <SlotCard
+                  key={piece.id}
+                  piece={piece}
+                  stages={stages}
+                  onOpen={onOpen}
+                />
               ))}
               {Array.from({ length: gaps }).map((_, gapIndex) => (
                 <button
@@ -117,7 +122,9 @@ function SlotCard({
       <span className={styles.tiny}>
         {piece.byline} ·{" "}
         {piece.format === "deck"
-          ? t("magazine:desk.issuePlan.slidesCount", { count: piece.slides ?? 0 })
+          ? t("magazine:desk.issuePlan.slidesCount", {
+              count: piece.slides ?? 0,
+            })
           : t("magazine:format.words", { count: piece.words ?? 0 })}
       </span>
       <div className={styles.bar}>

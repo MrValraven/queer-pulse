@@ -146,7 +146,8 @@ export const culture: Catalog = {
   "submitWork.success.body":
     "Recebemos o teu trabalho. A mostra roda oito peças de cada vez, escolhidas pela comunidade.",
   "submitWork.success.step1": "Está guardado na fila da mostra.",
-  "submitWork.success.step2": "Entramos em contacto por email se for selecionado.",
+  "submitWork.success.step2":
+    "Entramos em contacto por email se for selecionado.",
 
   "submitPlaylist.eyebrow": "Rádio da Comunidade",
   "submitPlaylist.title": "Submeter uma <em>playlist</em>",

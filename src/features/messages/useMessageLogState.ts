@@ -75,7 +75,11 @@ export function useMessageLogState(
     () => flatMessages.filter((message) => message.from === "them").length,
     [flatMessages],
   );
-  const dividerAnchorMessage = useUnreadDivider(flatMessages, active.id, active.unreadCount ?? 0);
+  const dividerAnchorMessage = useUnreadDivider(
+    flatMessages,
+    active.id,
+    active.unreadCount ?? 0,
+  );
 
   // "Seen": the last message I sent, and whether the counterpart's read
   // watermark has caught up to it — only that message's run shows the label. A
@@ -89,7 +93,9 @@ export function useMessageLogState(
     return undefined;
   }, [flatMessages]);
   const seenActive =
-    !!lastOutbound?.at && !!counterpartLastReadAt && lastOutbound.at <= counterpartLastReadAt;
+    !!lastOutbound?.at &&
+    !!counterpartLastReadAt &&
+    lastOutbound.at <= counterpartLastReadAt;
   // "Delivered" (double check): the counterpart's delivered watermark has caught
   // the last outbound message. One rung below seen — resolved with lower
   // precedence in the run view, so a seen message never regresses to delivered.
@@ -124,17 +130,18 @@ export function useMessageLogState(
     areaRef,
   );
 
-  const { showJumpPill, newMessagesCount, handleAreaScroll, jumpToLatest } = useMessageScroll(
-    messageCount,
-    inboundCount,
-    active.id,
-    hasMoreOlder,
-    loadingOlder,
-    onLoadOlder,
-    areaRef,
-    contentRef,
-    rowVirtualizer,
-  );
+  const { showJumpPill, newMessagesCount, handleAreaScroll, jumpToLatest } =
+    useMessageScroll(
+      messageCount,
+      inboundCount,
+      active.id,
+      hasMoreOlder,
+      loadingOlder,
+      onLoadOlder,
+      areaRef,
+      contentRef,
+      rowVirtualizer,
+    );
 
   // Re-ack read as new inbound messages land while this thread stays open
   // (`openThread` only covers the moment it's FIRST opened) — see the hook's

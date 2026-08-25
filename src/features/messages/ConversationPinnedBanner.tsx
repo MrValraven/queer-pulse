@@ -7,7 +7,13 @@ import styles from "./MessagesPage.module.css";
 /** A small pin glyph — decorative; the banner carries its own accessible name. */
 function PinGlyph() {
   return (
-    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M12.5 2.5 17.5 7.5M11 4 4 11l1 4 4 1 7-7M8 12l-4.5 4.5"
         stroke="currentColor"
@@ -58,7 +64,9 @@ export function ConversationPinnedBanner({
         onJump(current.id);
         if (pinned.length > 1) setIndex((value) => (value + 1) % pinned.length);
       }}
-      aria-label={t("messages:pinned.jumpAria", { snippet: current.body.slice(0, 80) })}
+      aria-label={t("messages:pinned.jumpAria", {
+        snippet: current.body.slice(0, 80),
+      })}
     >
       <span className={styles.pinnedBannerIcon} aria-hidden="true">
         <PinGlyph />

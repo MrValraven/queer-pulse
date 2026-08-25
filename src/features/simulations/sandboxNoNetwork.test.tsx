@@ -30,7 +30,8 @@ function respondOk(): Promise<Response> {
 async function loadLiveProviders() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", "https://api.example.test");
-  const { DemoModeProvider } = await import("../../app/providers/DemoModeProvider");
+  const { DemoModeProvider } =
+    await import("../../app/providers/DemoModeProvider");
   const { AuthProvider } = await import("../../app/providers/AuthProvider");
   return { DemoModeProvider, AuthProvider };
 }
@@ -49,7 +50,9 @@ describe("sandbox forces demo mode (zero network) even in an otherwise-live buil
     // under the sandbox guard. A resolved (not rejected) implementation means
     // that if the guard ever regresses, the test fails on the assertion below
     // rather than on an unhandled real network attempt from jsdom.
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(respondOk);
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(respondOk);
 
     const { DemoModeProvider, AuthProvider } = await loadLiveProviders();
     const queryClient = new QueryClient({
@@ -81,7 +84,9 @@ describe("sandbox forces demo mode (zero network) even in an otherwise-live buil
     // sandbox guard and not just an artifact of ambient live-mode wiring or
     // this file's env stub.
     vi.doMock(SANDBOX_MODULE_PATH, () => ({ isSandbox: () => false }));
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(respondOk);
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation(respondOk);
 
     const { DemoModeProvider, AuthProvider } = await loadLiveProviders();
     const queryClient = new QueryClient({

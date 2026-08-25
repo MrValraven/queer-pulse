@@ -27,7 +27,10 @@ export function AdminHousingJoinRequests() {
     (request) => request.status === "pending" && !resolved.has(request.id),
   );
 
-  function decide(request: AdminJoinRequestDTO, action: "accepted" | "declined") {
+  function decide(
+    request: AdminJoinRequestDTO,
+    action: "accepted" | "declined",
+  ) {
     triage.mutate(
       { id: request.id, action },
       {
@@ -60,9 +63,7 @@ export function AdminHousingJoinRequests() {
           </p>
         </div>
       ) : requests.length === 0 ? (
-        <p className={styles.emptyText}>
-          {t("admin:housingRequests.empty")}
-        </p>
+        <p className={styles.emptyText}>{t("admin:housingRequests.empty")}</p>
       ) : (
         <div className={styles.rows}>
           {requests.map((request, i) => (

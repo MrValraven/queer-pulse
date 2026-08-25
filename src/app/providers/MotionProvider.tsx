@@ -1,8 +1,7 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { LazyMotion, domMax } from "motion/react";
 import { usePrefersReducedMotion } from "../../shared/hooks/usePrefersReducedMotion";
-
-const ReducedMotionContext = createContext(false);
+import { ReducedMotionContext } from "./motionPrefs";
 
 /**
  * App-wide motion foundation. LazyMotion + domMax loads the full DOM feature
@@ -30,8 +29,4 @@ export function MotionProvider({ children }: { children: ReactNode }) {
       </LazyMotion>
     </ReducedMotionContext.Provider>
   );
-}
-
-export function useMotionPrefs(): { reducedMotion: boolean } {
-  return { reducedMotion: useContext(ReducedMotionContext) };
 }

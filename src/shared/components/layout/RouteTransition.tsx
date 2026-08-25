@@ -3,8 +3,8 @@ import { AnimatePresence, m } from "motion/react";
 import type { ReactNode } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
-import { useMotionPrefs } from "../../../app/providers/MotionProvider";
-import { useNavDirection } from "../../../app/providers/NavDirectionProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
+import { useNavDirection } from "../../../app/providers/navDirection";
 
 /** First path segment — the transition identity (so /feed/1 → /feed/2 doesn't slide). */
 function topSegment(pathname: string): string {
@@ -20,7 +20,8 @@ export function RouteTransition({ children }: { children: ReactNode }) {
   const isMobile = useMediaQuery(mediaMax("mobile"));
 
   // Desktop = opacity-only polish; reduced-motion = opacity snap; mobile = slide.
-  const slide = isMobile && !reducedMotion && (direction === "push" || direction === "pop");
+  const slide =
+    isMobile && !reducedMotion && (direction === "push" || direction === "pop");
   const offset = direction === "pop" ? "-18%" : "18%";
 
   const variants = {
@@ -41,7 +42,10 @@ export function RouteTransition({ children }: { children: ReactNode }) {
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={{ duration: reducedMotion ? 0 : DURATION, ease: [0.22, 1, 0.36, 1] }}
+        transition={{
+          duration: reducedMotion ? 0 : DURATION,
+          ease: [0.22, 1, 0.36, 1],
+        }}
         style={{ minHeight: "100%" }}
       >
         {children}

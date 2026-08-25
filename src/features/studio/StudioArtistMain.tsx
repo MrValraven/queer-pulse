@@ -15,6 +15,9 @@ export function StudioArtistMain({ tab }: { tab: ArtistTabId }) {
   const loading = useSimulatedLoad();
 
   if (tab === "about") {
+    /* eslint-disable local/no-literal-string -- artist bio: the artist's own
+       authored text, fetched from the API in live mode and never translated
+       (extraction-brief §1). */
     return (
       <div className={styles.prose}>
         <p>
@@ -30,6 +33,7 @@ export function StudioArtistMain({ tab }: { tab: ArtistTabId }) {
         </p>
       </div>
     );
+    /* eslint-enable local/no-literal-string */
   }
 
   return (
@@ -63,7 +67,7 @@ export function StudioArtistMain({ tab }: { tab: ArtistTabId }) {
                   width="100%"
                   height="100%"
                   radius={10}
-                  placeholder="cv"
+                  placeholder={t("studio:media.coverLabel")}
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <span className={`${styles.tag} ${styles.tagMem}`}>
@@ -118,7 +122,7 @@ export function StudioArtistMain({ tab }: { tab: ArtistTabId }) {
                   width="100%"
                   height="100%"
                   radius={10}
-                  placeholder="cv"
+                  placeholder={t("studio:media.coverLabel")}
                   style={{ position: "absolute", inset: 0 }}
                 />
                 <span className={`${styles.tag} ${tagClass[s.tag]}`}>

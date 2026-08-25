@@ -73,6 +73,9 @@ export function StudioAlbumMain({ tab }: { tab: AlbumTabId }) {
         </div>
       )}
 
+      {/* eslint-disable local/no-literal-string -- liner notes + credits: the
+          artist's own authored prose/credits, fetched verbatim from the API
+          in live mode and never translated (extraction-brief §1). */}
       {tab === "linerNotes" && (
         <div className={styles.prose}>
           <p>
@@ -107,13 +110,12 @@ export function StudioAlbumMain({ tab }: { tab: AlbumTabId }) {
             voice, piano, words on all 11 tracks · 85% of writer share
           </p>
           <p>
-            João Anjos: cello (2, 7, 11) · Coro de Outubro: choir (4) · Inês
-            T.: percussion (7)
+            João Anjos: cello (2, 7, 11) · Coro de Outubro: choir (4) · Inês T.:
+            percussion (7)
           </p>
           <p>
-            {memberName("sofia")}: engineer + mix · Pedro G.: mastering ·
-            Helena P.: lyric translation,{" "}
-            <em>paid from the solidarity fund.</em>
+            {memberName("sofia")}: engineer + mix · Pedro G.: mastering · Helena
+            P.: lyric translation, <em>paid from the solidarity fund.</em>
           </p>
           <p>
             Recorded at Casa do Comum, in-kind. Every fee is on the public
@@ -121,6 +123,7 @@ export function StudioAlbumMain({ tab }: { tab: AlbumTabId }) {
           </p>
         </div>
       )}
+      {/* eslint-enable local/no-literal-string */}
     </div>
   );
 }

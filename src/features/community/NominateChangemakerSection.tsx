@@ -79,18 +79,14 @@ export function NominateChangemakerSection() {
             autoComplete="off"
             enterKeyHint="send"
             aria-label={t("community:changemakers.nominate.reasonPlaceholder")}
-            placeholder={t(
-              "community:changemakers.nominate.reasonPlaceholder",
-            )}
+            placeholder={t("community:changemakers.nominate.reasonPlaceholder")}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           />
           <Button
             type="submit"
             disabled={
-              nominationMutation.isPending ||
-              !nominee.trim() ||
-              !reason.trim()
+              nominationMutation.isPending || !nominee.trim() || !reason.trim()
             }
           >
             {nominationMutation.isPending

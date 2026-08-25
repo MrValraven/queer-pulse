@@ -95,7 +95,10 @@ export function DeckMetaForm({ draft, onChange }: DeckMetaFormProps) {
           ))}
         </div>
 
-        <Field label={t("magazine:deck.editor.authorBio")} htmlFor={id("authorBio")}>
+        <Field
+          label={t("magazine:deck.editor.authorBio")}
+          htmlFor={id("authorBio")}
+        >
           <textarea
             id={id("authorBio")}
             className={styles.textarea}
@@ -111,16 +114,23 @@ export function DeckMetaForm({ draft, onChange }: DeckMetaFormProps) {
               className={styles.input}
               type="text"
               value={joinCsv(draft.tags)}
-              onChange={(event) => onChange({ tags: splitCsv(event.target.value) })}
+              onChange={(event) =>
+                onChange({ tags: splitCsv(event.target.value) })
+              }
             />
           </Field>
-          <Field label={t("magazine:deck.editor.related")} htmlFor={id("related")}>
+          <Field
+            label={t("magazine:deck.editor.related")}
+            htmlFor={id("related")}
+          >
             <input
               id={id("related")}
               className={styles.input}
               type="text"
               value={joinCsv(draft.related)}
-              onChange={(event) => onChange({ related: splitCsv(event.target.value) })}
+              onChange={(event) =>
+                onChange({ related: splitCsv(event.target.value) })
+              }
             />
           </Field>
         </div>

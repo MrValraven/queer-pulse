@@ -18,13 +18,8 @@ export { FeatureHelp } from "./FeatureHelp";
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";
-export {
-  Modal,
-  ModalSheet,
-  SideSheet,
-  useDismiss,
-  useScrimDismiss,
-} from "./Modal";
+export { Modal, ModalSheet, SideSheet } from "./Modal";
+export { useDismiss, useScrimDismiss } from "./useDismiss";
 export { SuccessPanel } from "./SuccessPanel";
 export { Spinner, Sending } from "./Spinner";
 export { FilterChips, ChipSelect, type ChipOption } from "./ChipSelect";
@@ -41,7 +36,8 @@ export {
 } from "./RadioCardGroup";
 export { useChipSet } from "./useChipSet";
 export { SearchInput } from "./SearchInput";
-export { Tabs, tabIds, tabPanelProps, type Tab } from "./Tabs";
+export { Tabs, type Tab } from "./Tabs";
+export { tabIds, tabPanelProps } from "./tabIds";
 export {
   SegmentedControl,
   Toggle,
@@ -49,11 +45,7 @@ export {
   type SegmentOption,
 } from "./Controls";
 export { Badge, type BadgeTone } from "./Badge";
-export {
-  StaffBadge,
-  type StaffRole,
-  type StaffBadgeSize,
-} from "./StaffBadge";
+export { StaffBadge, type StaffRole, type StaffBadgeSize } from "./StaffBadge";
 export { HubBackLink } from "./HubBackLink";
 export { SubpageIndex, type SubpageItem } from "./SubpageIndex";
 export { ComingSoon } from "./ComingSoon";

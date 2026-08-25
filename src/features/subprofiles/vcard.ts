@@ -48,7 +48,9 @@ export function buildVCard(view: PublicSubprofileView): string {
     if (!href) continue;
     lines.push(`URL:${href}`);
     if (link.platform === "email") {
-      lines.push(`EMAIL:${escapeVCard(link.urlOrHandle.replace(/^mailto:/i, ""))}`);
+      lines.push(
+        `EMAIL:${escapeVCard(link.urlOrHandle.replace(/^mailto:/i, ""))}`,
+      );
     }
   }
 

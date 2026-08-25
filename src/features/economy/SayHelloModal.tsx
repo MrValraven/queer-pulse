@@ -74,7 +74,11 @@ export function SayHelloModal({
 
   if (sentPronouns !== null) {
     return (
-      <ModalShell success onClose={onClose} ariaLabel={t("economy:sayHello.ariaLabel", { name: profile.name })}>
+      <ModalShell
+        success
+        onClose={onClose}
+        ariaLabel={t("economy:sayHello.ariaLabel", { name: profile.name })}
+      >
         <SuccessPanel
           title={t("economy:sayHello.success.title")}
           em={t("economy:sayHello.success.em")}
@@ -82,7 +86,9 @@ export function SayHelloModal({
           closeLabel={t("economy:sayHello.success.close")}
         >
           {sentPronouns
-            ? t("economy:sayHello.success.bodyWithPronouns", { name: profile.name })
+            ? t("economy:sayHello.success.bodyWithPronouns", {
+                name: profile.name,
+              })
             : t("economy:sayHello.success.body", { name: profile.name })}
         </SuccessPanel>
       </ModalShell>
@@ -105,7 +111,10 @@ export function SayHelloModal({
         <p className={styles.helloLede}>{t("economy:sayHello.lede")}</p>
 
         <div className={styles.fieldGroup}>
-          <label className={styles.fieldSubLabel} htmlFor={`${fieldId}-message`}>
+          <label
+            className={styles.fieldSubLabel}
+            htmlFor={`${fieldId}-message`}
+          >
             {t("economy:sayHello.messageLabel")}
           </label>
           <textarea
@@ -147,7 +156,12 @@ export function SayHelloModal({
           <Button type="button" variant="ghost" onClick={onClose}>
             {t("economy:sayHello.cancel")}
           </Button>
-          <Button type="button" variant="primary" onClick={handleSend} disabled={isPending}>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={handleSend}
+            disabled={isPending}
+          >
             {isPending ? (
               t("economy:sayHello.sending")
             ) : (

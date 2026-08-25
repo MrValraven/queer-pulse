@@ -59,6 +59,8 @@ describe("itemRevisions demo overlay", () => {
   });
 
   it("returns undefined from getDemoRevision for an unknown revisionId", () => {
-    expect(getDemoRevision("item-test-unknown", "rev-does-not-exist")).toBeUndefined();
+    expect(
+      getDemoRevision("item-test-unknown", "rev-does-not-exist"),
+    ).toBeUndefined();
   });
 });

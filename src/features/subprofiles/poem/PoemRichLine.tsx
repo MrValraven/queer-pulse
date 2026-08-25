@@ -166,7 +166,10 @@ export const PoemRichLine = forwardRef<PoemRichLineHandle, PoemRichLineProps>(
             idleTimeoutRef.current = null;
           }
           element.innerHTML = serializePoemLines(next);
-          element.setAttribute("data-empty", String(element.textContent === ""));
+          element.setAttribute(
+            "data-empty",
+            String(element.textContent === ""),
+          );
         },
       }),
       [],
@@ -203,7 +206,6 @@ export const PoemRichLine = forwardRef<PoemRichLineHandle, PoemRichLineProps>(
           if (element) onChangeRef.current(parsePoemHtml(element.innerHTML));
         }
       };
-       
     }, []);
 
     function commit() {
@@ -294,7 +296,9 @@ export const PoemRichLine = forwardRef<PoemRichLineHandle, PoemRichLineProps>(
       dispatchInput(event.currentTarget);
     }
 
-    const lineClassName = className ? `${styles.line} ${className}` : styles.line;
+    const lineClassName = className
+      ? `${styles.line} ${className}`
+      : styles.line;
 
     return (
       <div

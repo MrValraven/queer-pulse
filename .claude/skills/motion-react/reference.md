@@ -15,11 +15,11 @@ Use them like normal elements plus animation props.
 import { m } from "motion/react";
 
 <m.div
-  initial={{ opacity: 0, y: 8 }}   // state before mount (skip with initial={false})
-  animate={{ opacity: 1, y: 0 }}   // target on mount + whenever it changes
-  exit={{ opacity: 0, y: 8 }}      // on unmount — needs AnimatePresence
+  initial={{ opacity: 0, y: 8 }} // state before mount (skip with initial={false})
+  animate={{ opacity: 1, y: 0 }} // target on mount + whenever it changes
+  exit={{ opacity: 0, y: 8 }} // on unmount — needs AnimatePresence
   transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-/>
+/>;
 ```
 
 Wrap a custom component with `motion.create(Component)` (component must forward its
@@ -32,8 +32,10 @@ const list = { show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 6 }, show: { opacity: 1, y: 0 } };
 
 <m.ul variants={list} initial="hidden" animate="show">
-  {rows.map((r) => <m.li key={r.id} variants={item} />)}
-</m.ul>
+  {rows.map((r) => (
+    <m.li key={r.id} variants={item} />
+  ))}
+</m.ul>;
 ```
 
 A parent's `animate="show"` cascades the variant name to children — children don't
@@ -86,26 +88,33 @@ import { m, useDragControls, type PanInfo } from "motion/react";
 const controls = useDragControls();
 
 <m.div
-  drag="y"                 // "x" | "y" | true (both)
-  dragListener={false}     // don't arm from the element itself...
-  dragControls={controls}  // ...arm manually from a handle
+  drag="y" // "x" | "y" | true (both)
+  dragListener={false} // don't arm from the element itself...
+  dragControls={controls} // ...arm manually from a handle
   dragConstraints={containerRef} // ref OR {top,left,right,bottom}
-  dragElastic={0}          // 0 = hard stop at constraints
-  dragMomentum={false}     // no inertial fling
+  dragElastic={0} // 0 = hard stop at constraints
+  dragMomentum={false} // no inertial fling
   whileDrag={{ scale: 1.02 }}
   onDragStart={() => {}}
-  onDrag={(_e, info: PanInfo) => { /* info.point / info.offset / info.velocity */ }}
+  onDrag={(_e, info: PanInfo) => {
+    /* info.point / info.offset / info.velocity */
+  }}
   onDragEnd={(_e, info) => {}}
 >
-  <span onPointerDown={(e) => controls.start(e)} style={{ touchAction: "none" }}>handle</span>
-</m.div>
+  <span
+    onPointerDown={(e) => controls.start(e)}
+    style={{ touchAction: "none" }}
+  >
+    handle
+  </span>
+</m.div>;
 ```
 
 `PanInfo`: `point` (pointer viewport coords — matches `getBoundingClientRect`), `offset`
 (since drag start), `velocity` (px/s), `delta`. `dragSnapToOrigin` springs back on release.
 
 **No `Reorder` in this repo** (LazyMotion-incompatible). And don't use this `drag`
-gesture to reorder a *list* — it floats the row and fights `layout`, leaving residual
+gesture to reorder a _list_ — it floats the row and fights `layout`, leaving residual
 overlap. Reorder with pointer-capture slot-swap + `m` `layout` (see the SKILL recipe and
 `useRowDragReorder.ts`). Use `drag` for free gestures (swipe-to-dismiss, sheets).
 
@@ -146,8 +155,9 @@ overlap. Reorder with pointer-capture slot-swap + `m` `layout` (see the SKILL re
 ```
 
 Rules that make exit actually run:
+
 - **Stable, unique `key`** on each direct child (never the array index).
-- Put `AnimatePresence` *around* the conditional, don't conditionally render the
+- Put `AnimatePresence` _around_ the conditional, don't conditionally render the
   `AnimatePresence` itself.
 - `mode`: `"sync"` (default), `"wait"` (one at a time — exit fully before enter), or
   `"popLayout"` (exiting element removed from layout flow so siblings reflow immediately;
@@ -161,20 +171,29 @@ Rules that make exit actually run:
 ## 7. Motion values (animate without React re-renders)
 
 ```tsx
-import { useMotionValue, useTransform, useSpring, useScroll, useVelocity } from "motion/react";
+import {
+  useMotionValue,
+  useTransform,
+  useSpring,
+  useScroll,
+  useVelocity,
+} from "motion/react";
 
 const x = useMotionValue(0);
 const opacity = useTransform(x, [-100, 0, 100], [0, 1, 0]);
 const smoothX = useSpring(x, { stiffness: 300, damping: 30 });
-<m.div style={{ x, opacity }} />       // motion values in `style` update off the React tree
+<m.div style={{ x, opacity }} />; // motion values in `style` update off the React tree
 ```
 
 Scroll-linked:
 
 ```tsx
-const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+const { scrollYProgress } = useScroll({
+  target: ref,
+  offset: ["start end", "end start"],
+});
 const y = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
-<m.div style={{ y: reducedMotion ? 0 : y }} />  // gate parallax on reducedMotion
+<m.div style={{ y: reducedMotion ? 0 : y }} />; // gate parallax on reducedMotion
 ```
 
 `useMotionValueEvent(mv, "change", cb)` to react to changes. Motion values belong in

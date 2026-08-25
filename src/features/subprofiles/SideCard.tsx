@@ -38,7 +38,13 @@ interface SideCardProps {
  * (dual-mode + the actual share/delete flows live in the dashboard page,
  * Task 6, mirroring how `MySubprofilesPage` wires it today).
  */
-export function SideCard({ view, onOpen, onEdit, onShare, onDelete }: SideCardProps) {
+export function SideCard({
+  view,
+  onOpen,
+  onEdit,
+  onShare,
+  onDelete,
+}: SideCardProps) {
   const { t } = useTranslation();
   const accent = view.accent ?? DEFAULT_ACCENT;
   const isDraft = view.status === "draft";
@@ -50,10 +56,7 @@ export function SideCard({ view, onOpen, onEdit, onShare, onDelete }: SideCardPr
 
   return (
     <article className={isDraft ? "side side-draft" : "side"}>
-      <div
-        className="side-top"
-        style={accentTintStyle(accent)}
-      >
+      <div className="side-top" style={accentTintStyle(accent)}>
         {isDraft ? (
           <SideReadinessRing readyCount={readyCount} totalCount={totalCount} />
         ) : (
@@ -74,12 +77,16 @@ export function SideCard({ view, onOpen, onEdit, onShare, onDelete }: SideCardPr
         <h3 className="side-name">
           {view.displayName || t("subprofiles:mine.untitled")}
         </h3>
-        <p className="side-tag">{view.tagline || t("subprofiles:side.noTagline")}</p>
+        <p className="side-tag">
+          {view.tagline || t("subprofiles:side.noTagline")}
+        </p>
 
         <div className="side-pills">
           <span className="pill">{t(tie.labelKey)}</span>
           {availability && (
-            <span className={`pill ${AVAILABILITY_PILL_TONE[availability.value]}`}>
+            <span
+              className={`pill ${AVAILABILITY_PILL_TONE[availability.value]}`}
+            >
               {t(availability.labelKey)}
             </span>
           )}
@@ -90,15 +97,21 @@ export function SideCard({ view, onOpen, onEdit, onShare, onDelete }: SideCardPr
             <span>
               {readyCount >= totalCount
                 ? t("subprofiles:side.readyToPublish")
-                : t("subprofiles:side.thingsLeft", { count: totalCount - readyCount })}
+                : t("subprofiles:side.thingsLeft", {
+                    count: totalCount - readyCount,
+                  })}
             </span>
           ) : (
             <>
               <span>
-                {t("subprofiles:mine.endorsementCount", { count: view.endorsementCount })}
+                {t("subprofiles:mine.endorsementCount", {
+                  count: view.endorsementCount,
+                })}
               </span>
               <span>
-                {t("subprofiles:mine.followerCount", { count: view.followerCount })}
+                {t("subprofiles:mine.followerCount", {
+                  count: view.followerCount,
+                })}
               </span>
               {view.memberCount > 1 && (
                 <span>

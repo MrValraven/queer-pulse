@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import { FiAward, FiFlag, FiMapPin, FiBookOpen, FiHome, FiBriefcase } from "react-icons/fi";
+import {
+  FiAward,
+  FiFlag,
+  FiMapPin,
+  FiBookOpen,
+  FiHome,
+  FiBriefcase,
+} from "react-icons/fi";
 
 /**
  * Maps a backend badge `key` to its icon. Badges are hand-drawn per key, so

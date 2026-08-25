@@ -76,7 +76,8 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
   // the backend's anonymous "public" value is never used here). "community"
   // is only ever a valid selection while `communitySlug` is set — see
   // `setCommunitySlug` below for the fallback when it's cleared.
-  const [audienceScope, setAudienceScope] = useState<EventVisibility>("members");
+  const [audienceScope, setAudienceScope] =
+    useState<EventVisibility>("members");
   const setCommunitySlug = (value: string) => {
     setCommunitySlugValue(value);
     // The "Community members" tier is mutually exclusive with an unset
@@ -84,7 +85,9 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     // drop back to the wizard's default rather than leaving the scope
     // pointing at an audience that no longer exists.
     if (!value) {
-      setAudienceScope((current) => (current === "community" ? "members" : current));
+      setAudienceScope((current) =>
+        current === "community" ? "members" : current,
+      );
     }
   };
   const [address, setAddress] = useState("");

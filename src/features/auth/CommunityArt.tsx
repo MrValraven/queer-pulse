@@ -108,7 +108,9 @@ export function CommunityArt() {
           <line
             key={index}
             className={styles.artStem}
-            style={{ animationDelay: `${ORB_DELAY + index * ORB_STEP + 0.08}s` }}
+            style={{
+              animationDelay: `${ORB_DELAY + index * ORB_STEP + 0.08}s`,
+            }}
             {...trail(orb)}
           />
         ))}

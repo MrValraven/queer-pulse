@@ -67,11 +67,7 @@ function eventLabel(event: ListingModerationEventDTO, t: TFunction): string {
  * to that same variable for the rest of the caller's render — see
  * `useListingHistory`.
  */
-export function ListingHistoryPanel({
-  listingRef,
-}: {
-  listingRef: string;
-}) {
+export function ListingHistoryPanel({ listingRef }: { listingRef: string }) {
   const { t } = useTranslation();
   const { history, isLoading, isError } = useListingHistory(listingRef);
 

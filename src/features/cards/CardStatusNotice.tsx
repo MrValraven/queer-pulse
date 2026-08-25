@@ -4,7 +4,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EffectiveCardStatus } from "./api/cards.api";
 import styles from "./MyCardsPage.module.css";
 
-const ICONS: Record<Exclude<EffectiveCardStatus, "active">, JSX.Element | undefined> = {
+const ICONS: Record<
+  Exclude<EffectiveCardStatus, "active">,
+  JSX.Element | undefined
+> = {
   expired: <FiClock aria-hidden="true" />,
   suspended: <FiAlertCircle aria-hidden="true" />,
   revoked: <FiSlash aria-hidden="true" />,

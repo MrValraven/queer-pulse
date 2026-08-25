@@ -40,7 +40,9 @@ export function BudgetStep({
               placeholder={t(
                 "resources:microGrants.apply.budget.itemPlaceholder",
               )}
-              aria-label={t("resources:microGrants.apply.budget.itemPlaceholder")}
+              aria-label={t(
+                "resources:microGrants.apply.budget.itemPlaceholder",
+              )}
               value={r.item}
               onChange={(e) => updateRow(r.id, "item", e.target.value)}
             />

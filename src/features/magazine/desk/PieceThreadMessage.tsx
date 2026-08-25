@@ -16,10 +16,13 @@ export interface PieceThreadMessageProps {
  */
 export function PieceThreadMessage({ message }: PieceThreadMessageProps) {
   const formatters = useFormat();
-  const timeLabel = formatRelative(message.createdAt, formatters) || message.createdAt;
+  const timeLabel =
+    formatRelative(message.createdAt, formatters) || message.createdAt;
 
   return (
-    <div className={cx(styles.bubbleRow, message.fromMe && styles.bubbleRowMine)}>
+    <div
+      className={cx(styles.bubbleRow, message.fromMe && styles.bubbleRowMine)}
+    >
       <div className={cx(styles.bubble, message.fromMe && styles.bubbleMine)}>
         <div className={styles.bubbleMeta}>
           <span className={styles.bubbleAuthor}>{message.author}</span>

@@ -13,7 +13,9 @@ export function GroupEmptyState() {
         {t("economy:housingGroups.empty.title")}{" "}
         <em>{t("economy:housingGroups.empty.titleEm")}</em>
       </div>
-      <p className={styles.emptyBody}>{t("economy:housingGroups.empty.body")}</p>
+      <p className={styles.emptyBody}>
+        {t("economy:housingGroups.empty.body")}
+      </p>
     </div>
   );
 }

@@ -662,6 +662,7 @@ export const marketing: Catalog = {
   "partners.become.body":
     "If your organisation does aligned work in or around Lisbon, we'd like to hear from you.",
   "partners.become.applyCta": "Apply to partner",
+  "partners.become.emailCta": "hello@queerpulse.com",
   "partners.outro.title": "Know an org that <em>should be here?</em>",
   "partners.outro.sub": "Tell us. We're always looking for aligned partners.",
 
@@ -679,6 +680,7 @@ export const marketing: Catalog = {
   "pressKit.contact.phoneLabel": "<b>By phone</b>, on request",
   "pressKit.contact.responseLabel": "We respond within <b>48 hours</b>",
   "pressKit.contact.languagesLabel": "<b>EN / PT</b>",
+  "pressKit.contact.email": "hello@queerpulse.com",
   "pressKit.footerNote.licence":
     "All assets here are released under a <a>CC BY 4.0</a> licence for editorial use.",
   "pressKit.footerNote.commercial":
@@ -1486,6 +1488,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.sub":
     "Here's everything you've told us. Edit any part by jumping back. Nothing's locked until you send.",
   "listBusiness.step5.slugLabel": "Your listing will live at",
+  "listBusiness.step5.slugDomain": "queerpulse.app/directory/",
   "listBusiness.step5.editCta": "Edit",
   "listBusiness.step5.notAdded": "Not added",
   "listBusiness.step5.onlineBusiness": "Online only",
@@ -2081,6 +2084,10 @@ export const marketing: Catalog = {
     "Your active sessions can now reach a person",
   "changelog.entries.sessions-page-links-reach-a-person.body":
     "\u201cSomething looks wrong? Tell us what happened\u201d on your active sessions opened a page announcing that your account was locked, which was alarming and untrue. Both links on that page now land where they say they will: \u201cwhat to do next\u201d opens the Account section of Help, which walks through an unfamiliar device, and \u201ctell us what happened\u201d opens the contact form with its topic already set to account access, so your message reaches the team. The Back link at the top of the page returns to Settings \u2192 Account, where you opened it from.",
+  "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.title":
+    "Studio and Cinema speak Portuguese in more places",
+  "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.body":
+    "Switching the site to Portuguese left parts of Studio and Cinema still reading in English. The buttons, headings, tab labels, empty states and image descriptions across the music and film sections now follow the language you picked, along with the founder setup screen, the glossary, the invoice and contract tools, and several magazine and partner pages. What has deliberately stayed in English is the work itself: track and album titles, lyrics, artist biographies, film synopses, credits and curator notes. Those are written by the people who made them, and translating someone\u2019s own words without asking would be the wrong call, so they read exactly as their author wrote them in either language.",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.title":
     "Your devices list stops collecting old sign-ins",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.body":
@@ -5786,6 +5793,10 @@ export const marketing: Catalog = {
   "arriving.firstStep.intro":
     "Everything on this page is useful. But the best thing you can do is show up to a gathering. Next one coming up:",
   "arriving.firstStep.rsvpCta": "I'll be there",
+  "arriving.firstStep.example.title": "Portfolio Night",
+  "arriving.firstStep.example.subtitle": "Designers & Photographers",
+  "arriving.firstStep.example.details":
+    "Príncipe Real · From 7pm · Casual, warm, no agenda. Bring your work or just yourself.",
   "arriving.commQuick.eyebrow": "Where to start",
   "arriving.commQuick.title": "Three communities for <em>new arrivals.</em>",
   "arriving.commQuick.intro":

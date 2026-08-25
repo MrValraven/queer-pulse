@@ -6,7 +6,12 @@ import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
-import { emptyDraft, deckDtoToDraft, draftToDeck, type DeckDraft } from "./deckDraft";
+import {
+  emptyDraft,
+  deckDtoToDraft,
+  draftToDeck,
+  type DeckDraft,
+} from "./deckDraft";
 import { type DeckLoad, loadMockDraft, draftsEqual } from "./deckEditorLoad";
 import { DeckMetaForm } from "./DeckMetaForm";
 import { DeckSlidesEditor } from "./DeckSlidesEditor";
@@ -14,10 +19,16 @@ import { useDeckEditorActions } from "./DeckEditorActions";
 import { getAdminDeck } from "./api/magazine.api";
 import { DeckEditorHeader } from "./desk/deck/DeckEditorHeader";
 import { SlideLivePreview } from "./desk/deck/SlideLivePreview";
-import { DeckPublishRail, type DeckPublishStatus } from "./desk/deck/DeckPublishRail";
+import {
+  DeckPublishRail,
+  type DeckPublishStatus,
+} from "./desk/deck/DeckPublishRail";
 import { DeckDangerCard } from "./desk/deck/DeckDangerCard";
 import { DeckModals, type DeckModal } from "./desk/deck/DeckModals";
-import { buildDeckPublishChecklist, isDeckPublishReady } from "./desk/deck/deckPublishChecklist";
+import {
+  buildDeckPublishChecklist,
+  isDeckPublishReady,
+} from "./desk/deck/deckPublishChecklist";
 import styles from "./DeckEditorPage.module.css";
 
 export function DeckEditorPage() {
@@ -32,10 +43,15 @@ export function DeckEditorPage() {
     queryFn: async () => {
       if (!id) return { draft: emptyDraft(), published: false };
       if (demoMode) {
-        return (await loadMockDraft(id)) ?? { draft: emptyDraft(), published: false };
+        return (
+          (await loadMockDraft(id)) ?? { draft: emptyDraft(), published: false }
+        );
       }
       const dto = await getAdminDeck(id);
-      return { draft: deckDtoToDraft(dto), published: Boolean(dto.publishedAt) };
+      return {
+        draft: deckDtoToDraft(dto),
+        published: Boolean(dto.publishedAt),
+      };
     },
   });
 
@@ -47,7 +63,9 @@ export function DeckEditorPage() {
   // navigate below is deferred by a render so it can't out-race the unsaved
   // guard's own effect; see the comment on `pendingNavigateTo`).
   const [createdId, setCreatedId] = useState<string | null>(null);
-  const [pendingNavigateTo, setPendingNavigateTo] = useState<string | null>(null);
+  const [pendingNavigateTo, setPendingNavigateTo] = useState<string | null>(
+    null,
+  );
   const seededForRef = useRef<string | null>(null);
   const effectiveId = id ?? createdId;
 
@@ -125,11 +143,15 @@ export function DeckEditorPage() {
   });
 
   const deck = draftToDeck(draft);
-  const clampedIndex = deck.slides.length === 0 ? 0 : Math.min(previewIndex, deck.slides.length - 1);
+  const clampedIndex =
+    deck.slides.length === 0
+      ? 0
+      : Math.min(previewIndex, deck.slides.length - 1);
   const currentSlide = deck.slides[clampedIndex];
 
   const canPublish = Boolean(effectiveId);
-  const checklistBlocksPublish = !published && !isDeckPublishReady(buildDeckPublishChecklist(draft, t));
+  const checklistBlocksPublish =
+    !published && !isDeckPublishReady(buildDeckPublishChecklist(draft, t));
   const publishDisabled = !canPublish || checklistBlocksPublish;
 
   const savedLabel = isSaving
@@ -184,7 +206,10 @@ export function DeckEditorPage() {
               onPublishStatusChange={setPublishStatus}
               onPublish={handleTogglePublish}
             />
-            <DeckDangerCard onDelete={() => setModal({ kind: "delete" })} disabled={!effectiveId} />
+            <DeckDangerCard
+              onDelete={() => setModal({ kind: "delete" })}
+              disabled={!effectiveId}
+            />
           </aside>
         </div>
       </div>

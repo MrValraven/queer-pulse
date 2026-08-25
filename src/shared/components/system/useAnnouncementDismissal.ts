@@ -49,8 +49,8 @@ export function useAnnouncementDismissal(
   loggedIn: boolean,
   demoMode: boolean,
 ) {
-  const [locallyDismissedVersion, setLocallyDismissedVersion] = useState(
-    () => readLocallyDismissedVersion(),
+  const [locallyDismissedVersion, setLocallyDismissedVersion] = useState(() =>
+    readLocallyDismissedVersion(),
   );
 
   const dismissed =

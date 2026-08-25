@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useScrolled } from "../../shared/hooks/useScrolled";
 import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CinemaShell.module.css";
 import { routes } from "../../app/routeMap";
@@ -33,7 +34,10 @@ export function CinemaShell({ children }: { children: ReactNode }) {
       >
         <Link to={routes.cinema} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          Queer<em>Pulse</em>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
           <span className={styles.brandTag}>{t("cinema:brand.tag")}</span>
         </Link>
         <div className={styles.links}>
@@ -70,7 +74,10 @@ export function CinemaShell({ children }: { children: ReactNode }) {
             <div className={styles.footBrand}>
               <Link to={routes.homepage} className={styles.brand}>
                 <span className={styles.pulseDot} aria-hidden />
-                Queer<em>Pulse</em>
+                <Translation
+                  i18nKey="shared:brand.wordmark"
+                  components={{ em: <em /> }}
+                />
               </Link>
               <p>{t("cinema:footer.tagline")}</p>
             </div>

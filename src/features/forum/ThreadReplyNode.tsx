@@ -88,7 +88,8 @@ export function ThreadReplyNode({
   const descendantCount = countDescendants(node);
   const isReplyTarget = activeReplyTargetId === node.reply.id;
   const atIndentCap = node.depth >= MAX_INDENT_DEPTH;
-  const showChildren = hasChildren && !isCollapsed && (!atIndentCap || continued);
+  const showChildren =
+    hasChildren && !isCollapsed && (!atIndentCap || continued);
 
   // Move focus into the inline composer when it opens for THIS node — not on
   // every render, only the transition into being the active reply target.
@@ -227,7 +228,9 @@ function ReplyBranchToggle({
   return (
     <button
       type="button"
-      className={variant === "continue" ? styles.continueThread : styles.branchToggle}
+      className={
+        variant === "continue" ? styles.continueThread : styles.branchToggle
+      }
       onClick={onClick}
     >
       {label}

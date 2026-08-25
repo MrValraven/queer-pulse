@@ -235,7 +235,8 @@ function FinanceStatCard({
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
-  const { labelKey, value, kind, isJadeHighlighted, footKey, footValues } = stat;
+  const { labelKey, value, kind, isJadeHighlighted, footKey, footValues } =
+    stat;
   const countValue = useCountUp(value, { durationMs: 1200 });
   const showPlaceholder = !demoMode && !isVerified(stat.source);
 

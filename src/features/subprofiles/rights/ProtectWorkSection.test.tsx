@@ -47,7 +47,9 @@ describe("ProtectWorkSection", () => {
 
     expect(await screen.findByText(/Protect this work/i)).toBeInTheDocument();
     expect(
-      await screen.findByRole("button", { name: /Download authorship record/i }),
+      await screen.findByRole("button", {
+        name: /Download authorship record/i,
+      }),
     ).toBeInTheDocument();
   });
 });

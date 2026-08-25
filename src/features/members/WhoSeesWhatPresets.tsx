@@ -70,7 +70,10 @@ export function WhoSeesWhatPresets() {
                 key={key}
                 type="button"
                 aria-pressed={isActive}
-                className={[styles.presetCard, isActive && styles.presetCardActive]
+                className={[
+                  styles.presetCard,
+                  isActive && styles.presetCardActive,
+                ]
                   .filter(Boolean)
                   .join(" ")}
                 onClick={() => setFields(VISIBILITY_PRESETS[key])}

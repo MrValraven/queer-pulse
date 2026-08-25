@@ -3,11 +3,7 @@ import type { MemberRefDTO } from "../../../shared/api/refs";
 
 export type HousingViewingMode = "in_person" | "video";
 export type HousingViewingStatus =
-  | "requested"
-  | "accepted"
-  | "declined"
-  | "cancelled"
-  | "completed";
+  "requested" | "accepted" | "declined" | "cancelled" | "completed";
 export type HousingViewingParty = "requester" | "lister";
 
 /** One viewing, always from the calling member's perspective (`role` is who you
@@ -52,7 +48,11 @@ export const proposeHousingViewing = (
   id: string,
   slots: string[],
   note?: string,
-) => apiPost<HousingViewingDTO>(`/housing-viewings/${id}/propose`, { slots, note });
+) =>
+  apiPost<HousingViewingDTO>(`/housing-viewings/${id}/propose`, {
+    slots,
+    note,
+  });
 
 export const declineHousingViewing = (id: string, note?: string) =>
   apiPost<HousingViewingDTO>(`/housing-viewings/${id}/decline`, { note });

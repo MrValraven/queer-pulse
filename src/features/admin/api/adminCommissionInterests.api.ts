@@ -9,11 +9,7 @@ import { apiGet } from "../../../shared/api/client";
  */
 
 export type CommissionCategory =
-  | "Photo"
-  | "Music"
-  | "Writing"
-  | "Design"
-  | "Film";
+  "Photo" | "Music" | "Writing" | "Design" | "Film";
 
 export interface AdminPersonDTO {
   slug: string;

@@ -63,7 +63,9 @@ export function AssignmentCard({
       <div className={styles.head}>
         <span className={styles.eyebrow}>{assignment.section}</span>
         <div className={styles.badges}>
-          {isActive && <Badge tone="jade">{t("magazine:writer.work.activeBadge")}</Badge>}
+          {isActive && (
+            <Badge tone="jade">{t("magazine:writer.work.activeBadge")}</Badge>
+          )}
           <Badge tone="plum" dot>
             {assignment.state}
           </Badge>
@@ -92,7 +94,11 @@ export function AssignmentCard({
           warn={isOverTarget}
         />
         <KV label={t("magazine:writer.work.feeLabel")} value={assignment.fee} />
-        <KV label={t("magazine:writer.work.paymentLabel")} value={assignment.pay} warn={isPaymentUnpaid} />
+        <KV
+          label={t("magazine:writer.work.paymentLabel")}
+          value={assignment.pay}
+          warn={isPaymentUnpaid}
+        />
       </div>
 
       {hasWordCount && (
@@ -107,17 +113,33 @@ export function AssignmentCard({
       )}
 
       <div className={pieceStyles.row}>
-        <Button size="sm" variant="primary" onClick={() => onFileDraft(assignment)}>
+        <Button
+          size="sm"
+          variant="primary"
+          onClick={() => onFileDraft(assignment)}
+        >
           {t("magazine:writer.work.fileDraft")}
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => onReadBrief(assignment)}>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => onReadBrief(assignment)}
+        >
           {t("magazine:writer.work.readBrief")}
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => onMessageEditor(assignment)}>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => onMessageEditor(assignment)}
+        >
           {t("magazine:writer.work.messageEditor")}
         </Button>
         {!isActive && (
-          <Button size="sm" variant="ghost" onClick={() => onSelect(assignment)}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onSelect(assignment)}
+          >
             {t("magazine:writer.work.setActive")}
           </Button>
         )}

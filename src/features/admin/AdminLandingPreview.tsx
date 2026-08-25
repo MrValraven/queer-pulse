@@ -45,9 +45,14 @@ export function AdminLandingPreview({ section }: { section: LandingSection }) {
   const publicFeed = useLandingFeaturesPublic();
 
   return (
-    <section className={styles.panel} aria-label={t("admin:landing.preview.eyebrow")}>
+    <section
+      className={styles.panel}
+      aria-label={t("admin:landing.preview.eyebrow")}
+    >
       <header className={styles.header}>
-        <div className={styles.eyebrow}>{t("admin:landing.preview.eyebrow")}</div>
+        <div className={styles.eyebrow}>
+          {t("admin:landing.preview.eyebrow")}
+        </div>
         <p className={styles.note}>{t("admin:landing.preview.note")}</p>
       </header>
 
@@ -94,7 +99,10 @@ function PreviewStage({
   }
 
   if (section === "community") {
-    const split = previewCommunityDTOs(features, bySlug(publicFeed.communities));
+    const split = previewCommunityDTOs(
+      features,
+      bySlug(publicFeed.communities),
+    );
     return <CommunityStage split={split} />;
   }
 
@@ -126,7 +134,10 @@ function MemberStage({
           {t("homepage:liveDiscovery.eyebrow")}
         </div>
         <h2 className={liveStyles.title}>
-          <Translation i18nKey="homepage:discovery.title" components={{ em: <em /> }} />
+          <Translation
+            i18nKey="homepage:discovery.title"
+            components={{ em: <em /> }}
+          />
         </h2>
         <p className={liveStyles.sub}>{t("homepage:discovery.sub")}</p>
         <div className={liveStyles.roster}>
@@ -177,7 +188,9 @@ function CommunityStage({
                 components={{ em: <em /> }}
               />
             </h2>
-            <p className={liveStyles.sub}>{t("homepage:liveCommunities.sub")}</p>
+            <p className={liveStyles.sub}>
+              {t("homepage:liveCommunities.sub")}
+            </p>
           </div>
         </div>
         <FeaturedCommunityCard items={views} />
@@ -195,7 +208,9 @@ function PendingCommunities({ items }: { items: PendingCommunityPreview[] }) {
       <div className={styles.pendingTitle}>
         {t("admin:landing.preview.pendingTitle")}
       </div>
-      <p className={styles.pendingNote}>{t("admin:landing.preview.pendingNote")}</p>
+      <p className={styles.pendingNote}>
+        {t("admin:landing.preview.pendingNote")}
+      </p>
       <ul className={styles.pendingList}>
         {items.map((item) => (
           <li key={item.id} className={styles.pendingItem}>
@@ -222,7 +237,11 @@ function ChangemakerStage({
       <div className="wrap">
         <div className={liveStyles.head}>
           <div className={liveStyles.headText}>
-            <div className={[liveStyles.eyebrow, liveStyles.eyebrowLight].join(" ")}>
+            <div
+              className={[liveStyles.eyebrow, liveStyles.eyebrowLight].join(
+                " ",
+              )}
+            >
               {t("homepage:changeMakers.eyebrow")}
             </div>
             <h2 className={[liveStyles.title, liveStyles.titleLight].join(" ")}>

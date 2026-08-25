@@ -336,7 +336,10 @@ function concernUpdateKeyFor(type: string, payload: unknown): string {
  * back to the flat `volunteer_application_decided.*` copy. Non-matching types
  * pass through unchanged.
  */
-function volunteerApplicationDecidedKeyFor(type: string, payload: unknown): string {
+function volunteerApplicationDecidedKeyFor(
+  type: string,
+  payload: unknown,
+): string {
   if (type !== "volunteer_application_decided") return type;
   const status = (payload as { status?: string } | null)?.status;
   return status === "accepted" || status === "declined"
@@ -404,9 +407,10 @@ function verificationUpdateKeyFor(type: string, payload: unknown): string {
  * no level. Non-`verification_update` types are never called with this.
  */
 function verificationLevelToken(payload: unknown, t: TFunction): string {
-  const record = payload as
-    | { toLevel?: string; requestedLevel?: string }
-    | null;
+  const record = payload as {
+    toLevel?: string;
+    requestedLevel?: string;
+  } | null;
   const level = record?.toLevel ?? record?.requestedLevel;
   const isKnownLevel =
     level === "none" ||

@@ -54,7 +54,10 @@ export function PronounField({ value, onChange, labels }: PronounFieldProps) {
           <button
             key={preset}
             type="button"
-            className={[styles.chip, value.includes(preset) && styles.chipSelected]
+            className={[
+              styles.chip,
+              value.includes(preset) && styles.chipSelected,
+            ]
               .filter(Boolean)
               .join(" ")}
             aria-pressed={value.includes(preset)}

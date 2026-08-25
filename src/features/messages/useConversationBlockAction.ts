@@ -50,7 +50,10 @@ export function useConversationBlockAction(slug: string, name: string) {
       ),
       "success",
       6000,
-      { label: t("safety:blockMute.blocked.undoCta", { name }), onClick: undoBlock },
+      {
+        label: t("safety:blockMute.blocked.undoCta", { name }),
+        onClick: undoBlock,
+      },
     );
   };
 

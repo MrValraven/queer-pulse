@@ -161,7 +161,9 @@ export function AdminCommunityDetail({
             </h3>
             <p className={styles.bannerText}>
               {t(supportBannerTextKey(community.moderators.length), {
-                name: community.moderators[0] ? firstName(community.moderators[0].name) : "",
+                name: community.moderators[0]
+                  ? firstName(community.moderators[0].name)
+                  : "",
                 members: community.members,
               })}
             </p>
@@ -189,7 +191,9 @@ export function AdminCommunityDetail({
         <StatCell
           label={t("admin:communities.detail.stat.handled")}
           value={`${community.resolvedPercent}%`}
-          color={community.resolvedPercent >= 95 ? "var(--jade)" : "var(--amber)"}
+          color={
+            community.resolvedPercent >= 95 ? "var(--jade)" : "var(--amber)"
+          }
         />
       </div>
 
@@ -203,9 +207,7 @@ export function AdminCommunityDetail({
       {active === "queue" && <ScopedQueuePane community={community} />}
       {active === "members" && <MembersPane community={community} />}
       {active === "settings" && <SettingsPane community={community} />}
-      {active === "governance" && (
-        <GovernanceLogPane slug={community.slug} />
-      )}
+      {active === "governance" && <GovernanceLogPane slug={community.slug} />}
 
       {health && (
         <AdminHealthModal
@@ -263,7 +265,9 @@ function labelFor(score: number): string {
  * crashing on (or silently blanking) the missing name.
  */
 function supportBannerTextKey(moderatorCount: number): string {
-  if (moderatorCount === 0) return "admin:communities.detail.supportBanner.textNone";
-  if (moderatorCount === 1) return "admin:communities.detail.supportBanner.textAlone";
+  if (moderatorCount === 0)
+    return "admin:communities.detail.supportBanner.textNone";
+  if (moderatorCount === 1)
+    return "admin:communities.detail.supportBanner.textAlone";
   return "admin:communities.detail.supportBanner.textThin";
 }

@@ -49,7 +49,9 @@
   background: transparent;
   color: var(--ink-40);
   cursor: pointer;
-  transition: color 0.16s var(--ease), background 0.16s var(--ease);
+  transition:
+    color 0.16s var(--ease),
+    background 0.16s var(--ease);
 }
 
 .serverErrorDismiss:hover {

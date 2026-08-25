@@ -76,7 +76,9 @@ export function StudioSignInPage() {
             <Translation
               i18nKey="studio:signin.aside.paidThisMonth"
               components={{ em: <em /> }}
-              values={{ amount: format.currency(ASIDE_NOW_PLAYING.paidThisMonth) }}
+              values={{
+                amount: format.currency(ASIDE_NOW_PLAYING.paidThisMonth),
+              }}
             />
           </div>
         </div>
@@ -116,9 +118,7 @@ export function StudioSignInPage() {
 
           <StudioAuthPane
             mode={activeMode}
-            onSwitch={() =>
-              setActiveMode(activeMode === "in" ? "join" : "in")
-            }
+            onSwitch={() => setActiveMode(activeMode === "in" ? "join" : "in")}
           />
         </div>
       </main>

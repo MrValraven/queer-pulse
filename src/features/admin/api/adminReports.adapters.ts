@@ -1,5 +1,8 @@
 import type { GrowthPoint, WeekBar } from "../adminDashboard.data";
-import type { AdminReportsByTypeDTO, AdminReportsGrowthDTO } from "./adminReports.api";
+import type {
+  AdminReportsByTypeDTO,
+  AdminReportsGrowthDTO,
+} from "./adminReports.api";
 
 /**
  * Maps the `/admin/reports` growth / reports-by-type DTOs onto the SAME
@@ -20,9 +23,7 @@ function weekLabelForIndex(index: number, totalWeeks: number): string {
   return String(index - (totalWeeks - 1));
 }
 
-export function reportsByTypeToWeekBars(
-  dto: AdminReportsByTypeDTO,
-): WeekBar[] {
+export function reportsByTypeToWeekBars(dto: AdminReportsByTypeDTO): WeekBar[] {
   const totalWeeks = dto.weeks.length;
   return dto.weeks.map((week, index) => ({
     week: weekLabelForIndex(index, totalWeeks),

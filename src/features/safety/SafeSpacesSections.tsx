@@ -41,6 +41,7 @@ export function BadgeExplainer() {
                 <br />
                 {t("safety:spaces.badge.visualNameLine2")}
               </div>
+              {/* eslint-disable-next-line local/no-literal-string -- brand name, never translated (see docs/i18n/glossary-pt.md) */}
               <div className={styles.bvSub}>QueerPulse</div>
             </div>
             <div className={styles.badgeCaption}>
@@ -112,9 +113,7 @@ export function RemovedSection({ removed }: { removed: RemovedSpace[] }) {
               components={{ em: <em /> }}
             />
           </h2>
-          <p>
-            {t("safety:spaces.removed.lead", { count: removed.length })}
-          </p>
+          <p>{t("safety:spaces.removed.lead", { count: removed.length })}</p>
         </div>
         <div className={styles.removedSteps}>
           <div className={styles.rStep}>

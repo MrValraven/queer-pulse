@@ -18,13 +18,10 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { usePrefersReducedMotion } from "../../../../shared/hooks";
 import type { AdminRoadmapItemDTO } from "../../api/roadmapAdmin.types";
 import { AdminCat, AdminChip } from "../../ui";
-import {
-  matchItem,
-  sortItems,
-  useRoadmapFilters,
-} from "../state/useRoadmapFilters";
-import { useItemDrawer } from "../state/useItemDrawer";
-import { useRoadmapSelection } from "../state/useRoadmapSelection";
+import { matchItem, sortItems } from "../state/roadmapFiltersTypes";
+import { useRoadmapFilters } from "../state/roadmapFiltersHook";
+import { useItemDrawer } from "../state/itemDrawerHook";
+import { useRoadmapSelection } from "../state/roadmapSelectionHook";
 import { useRoadmapShortcuts } from "../state/useRoadmapShortcuts";
 import {
   CONFIDENCE_TONE,
@@ -60,7 +57,10 @@ import styles from "./TimelineView.module.css";
  * this stays inline rather than its own hook file.
  */
 function isInteractiveTarget(target: EventTarget | null): boolean {
-  return target instanceof HTMLElement && Boolean(target.closest("[data-card-interactive]"));
+  return (
+    target instanceof HTMLElement &&
+    Boolean(target.closest("[data-card-interactive]"))
+  );
 }
 
 export function TimelineView({ items }: { items: AdminRoadmapItemDTO[] }) {
@@ -156,13 +156,18 @@ function TimelineColumn({
           aria-valuemax={100}
           aria-label={label}
         >
-          <div className={styles.meterFill} style={{ width: `${progressPct}%` }} />
+          <div
+            className={styles.meterFill}
+            style={{ width: `${progressPct}%` }}
+          />
         </div>
       </header>
 
       <div className={styles.cards}>
         {items.length === 0 && (
-          <p className={styles.emptyNote}>{t("admin:roadmap.board.emptyColumn")}</p>
+          <p className={styles.emptyNote}>
+            {t("admin:roadmap.board.emptyColumn")}
+          </p>
         )}
         {items.map((item) => (
           <TimelineCard
@@ -222,7 +227,9 @@ function TimelineCard({
   return (
     <div
       ref={cardRef}
-      className={[styles.card, focused && styles.cardFocused].filter(Boolean).join(" ")}
+      className={[styles.card, focused && styles.cardFocused]
+        .filter(Boolean)
+        .join(" ")}
       role="button"
       tabIndex={0}
       aria-label={openAriaLabel}
@@ -244,8 +251,12 @@ function TimelineCard({
             aria-label={selectAriaLabel}
           />
         </label>
-        <AdminCat tone="coral">{categoryKey ? t(categoryKey) : item.category}</AdminCat>
-        <AdminChip tone={PRIORITY_TONE[item.priority]}>{item.priority}</AdminChip>
+        <AdminCat tone="coral">
+          {categoryKey ? t(categoryKey) : item.category}
+        </AdminCat>
+        <AdminChip tone={PRIORITY_TONE[item.priority]}>
+          {item.priority}
+        </AdminChip>
         <span className={styles.cardFlags} aria-hidden={false}>
           {item.requested && (
             <FiHeart title={t("admin:roadmap.board.flag.requested")} />
@@ -272,7 +283,9 @@ function TimelineCard({
           {t(`admin:roadmap.board.column.${item.column}`)}
         </AdminChip>
         <AdminChip tone={CONFIDENCE_TONE[item.confidence]}>
-          {t(`admin:roadmap.drawer.commitment.confidence.${item.confidence}.label`)}
+          {t(
+            `admin:roadmap.drawer.commitment.confidence.${item.confidence}.label`,
+          )}
         </AdminChip>
       </div>
     </div>

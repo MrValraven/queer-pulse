@@ -27,8 +27,7 @@ export function detectPlatform(): InstallPlatform {
   if (typeof navigator === "undefined") return "desktop";
   const userAgent = navigator.userAgent;
   // iPadOS 13+ reports as a Mac, distinguished by touch support.
-  const isIpad =
-    /Macintosh/.test(userAgent) && navigator.maxTouchPoints > 1;
+  const isIpad = /Macintosh/.test(userAgent) && navigator.maxTouchPoints > 1;
   if (/iPhone|iPad|iPod/.test(userAgent) || isIpad) return "ios";
   if (/Android/.test(userAgent)) return "android";
   return "desktop";

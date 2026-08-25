@@ -88,16 +88,14 @@ export function ResumeModal({
               onClick={onClose}
               disabled={sending}
             >
-              <FiArrowLeft aria-hidden />{" "}
-              {t("economy:resume.saveClose")}
+              <FiArrowLeft aria-hidden /> {t("economy:resume.saveClose")}
             </button>
             <Button size="lg" type="submit" disabled={sending}>
               {sending ? (
                 <Sending label={t("economy:resume.submittingLabel")} />
               ) : (
                 <>
-                  {t("economy:resume.submitCta")}{" "}
-                  <FiArrowRight aria-hidden />
+                  {t("economy:resume.submitCta")} <FiArrowRight aria-hidden />
                 </>
               )}
             </Button>

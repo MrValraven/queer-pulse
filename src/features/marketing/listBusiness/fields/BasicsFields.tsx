@@ -1,4 +1,8 @@
-import { FormField, RadioCardGroup, Select } from "../../../../shared/components/ui";
+import {
+  FormField,
+  RadioCardGroup,
+  Select,
+} from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import {
   ANCHOR,

@@ -56,7 +56,9 @@ export function GroupsEditor({
                 value={group.name}
                 placeholder={t("members:profileEdit.groups.namePlaceholder")}
                 aria-label={t("members:profileEdit.groups.nameLabel")}
-                onChange={(event) => update(index, { name: event.target.value })}
+                onChange={(event) =>
+                  update(index, { name: event.target.value })
+                }
               />
               <input
                 className={`${editStyles.inlineInput} ${styles.growSecondary}`}
@@ -64,7 +66,9 @@ export function GroupsEditor({
                 list={rolesListId}
                 placeholder={t("members:profileEdit.groups.rolePlaceholder")}
                 aria-label={t("members:profileEdit.groups.roleLabel")}
-                onChange={(event) => update(index, { role: event.target.value })}
+                onChange={(event) =>
+                  update(index, { role: event.target.value })
+                }
               />
             </div>
             <button

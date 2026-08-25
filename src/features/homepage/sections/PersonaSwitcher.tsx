@@ -1,6 +1,10 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { getPersonas, SWITCHER_ORDER, type PersonaKey } from "./personasShowcase.data";
+import {
+  getPersonas,
+  SWITCHER_ORDER,
+  type PersonaKey,
+} from "./personasShowcase.data";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./PersonasShowcase.module.css";
 
@@ -80,7 +84,9 @@ export function PersonaSwitcher({
 
   return (
     <div className={styles.switcher} ref={containerRef}>
-      <span className={styles.swLbl}>{t("homepage:subprofiles.postingAs")}</span>
+      <span className={styles.swLbl}>
+        {t("homepage:subprofiles.postingAs")}
+      </span>
       <button
         ref={triggerRef}
         type="button"
@@ -98,7 +104,9 @@ export function PersonaSwitcher({
         </span>
         <FiChevronDown
           aria-hidden
-          className={open ? `${styles.swChev} ${styles.swChevOpen}` : styles.swChev}
+          className={
+            open ? `${styles.swChev} ${styles.swChevOpen}` : styles.swChev
+          }
         />
       </button>
       {open && (

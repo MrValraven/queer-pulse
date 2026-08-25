@@ -14,7 +14,13 @@ interface BadgeGridCardProps {
 
 /** One badge tile in the case grid: medallion, name, criteria, and either
  *  the earned date + rarity or a locked progress readout. */
-export function BadgeGridCard({ badge, earned, story, hero = false, onOpen }: BadgeGridCardProps) {
+export function BadgeGridCard({
+  badge,
+  earned,
+  story,
+  hero = false,
+  onOpen,
+}: BadgeGridCardProps) {
   const { t } = useTranslation();
   const percent = progressPercent(badge);
   const cardClass = [
@@ -29,7 +35,11 @@ export function BadgeGridCard({ badge, earned, story, hero = false, onOpen }: Ba
     <button type="button" className={cardClass} onClick={onOpen}>
       <BadgeMedallion badge={badge} earned={earned} progressPercent={percent} />
       <span className={styles.bcBody}>
-        {hero && <span className={styles.heroFlag}>{t("members:badges.case.rarestFlag")}</span>}
+        {hero && (
+          <span className={styles.heroFlag}>
+            {t("members:badges.case.rarestFlag")}
+          </span>
+        )}
         <span className={styles.bcCat}>{badge.category}</span>
         <h4>{badge.name}</h4>
         <span className={styles.bcCrit}>{badge.criteria ?? badge.when}</span>
@@ -38,12 +48,16 @@ export function BadgeGridCard({ badge, earned, story, hero = false, onOpen }: Ba
           {earned ? (
             <>
               <span className={styles.bcDate}>{badge.when}</span>
-              <span className={`${styles.bcRare} ${badge.rarity === "legendary" ? styles.bcRareHot : ""}`}>
+              <span
+                className={`${styles.bcRare} ${badge.rarity === "legendary" ? styles.bcRareHot : ""}`}
+              >
                 {t(RARITY_LABEL_KEY[badge.rarity])}
               </span>
             </>
           ) : badge.verifiedBy === "peer" ? (
-            <span className={styles.bcRare}>{t("members:badges.momentum.cannotBeChased")}</span>
+            <span className={styles.bcRare}>
+              {t("members:badges.momentum.cannotBeChased")}
+            </span>
           ) : badge.progress ? (
             <span className={styles.nxProgText}>
               {t("members:badges.momentum.progress", {

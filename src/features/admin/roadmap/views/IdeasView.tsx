@@ -6,7 +6,7 @@ import { useFormat, type Formatters } from "../../../../shared/i18n/format";
 import { describeError } from "../../../../shared/api/errorMessage";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { useAdminRoadmapMutations } from "../../api/useAdminRoadmapMutations";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 import type { AdminRoadmapIdeaDTO } from "../../api/roadmapAdmin.types";
 import styles from "./IdeasView.module.css";
 
@@ -22,18 +22,34 @@ function bareAge(createdAtIso: string, fmt: Formatters): string {
   if (Number.isNaN(createdAtMs)) return "";
   const minutes = Math.max(1, Math.round((Date.now() - createdAtMs) / 60_000));
   if (minutes < 60) {
-    return fmt.number(minutes, { style: "unit", unit: "minute", unitDisplay: "long" });
+    return fmt.number(minutes, {
+      style: "unit",
+      unit: "minute",
+      unitDisplay: "long",
+    });
   }
   const hours = Math.round(minutes / 60);
   if (hours < 24) {
-    return fmt.number(hours, { style: "unit", unit: "hour", unitDisplay: "long" });
+    return fmt.number(hours, {
+      style: "unit",
+      unit: "hour",
+      unitDisplay: "long",
+    });
   }
   const days = Math.round(hours / 24);
   if (days < 30) {
-    return fmt.number(days, { style: "unit", unit: "day", unitDisplay: "long" });
+    return fmt.number(days, {
+      style: "unit",
+      unit: "day",
+      unitDisplay: "long",
+    });
   }
   const months = Math.round(days / 30);
-  return fmt.number(months, { style: "unit", unit: "month", unitDisplay: "long" });
+  return fmt.number(months, {
+    style: "unit",
+    unit: "month",
+    unitDisplay: "long",
+  });
 }
 
 interface IdeaRowProps {
@@ -78,8 +94,14 @@ function IdeaRow({
         </div>
         {duplicateOfName && (
           <p className={styles.duplicateHint}>
-            {t("admin:roadmap.ideasView.duplicateHint", { name: duplicateOfName })}{" "}
-            <button type="button" className={styles.duplicateAction} onClick={onMerge}>
+            {t("admin:roadmap.ideasView.duplicateHint", {
+              name: duplicateOfName,
+            })}{" "}
+            <button
+              type="button"
+              className={styles.duplicateAction}
+              onClick={onMerge}
+            >
               {t("admin:roadmap.ideasView.mergeInsteadCta")}
             </button>
           </p>
@@ -164,7 +186,8 @@ export function IdeasView({ ideas }: { ideas: AdminRoadmapIdeaDTO[] }) {
           pending={pending}
           duplicateOfName={
             idea.duplicateOfItemId
-              ? (items.find((item) => item.id === idea.duplicateOfItemId)?.name ?? null)
+              ? (items.find((item) => item.id === idea.duplicateOfItemId)
+                  ?.name ?? null)
               : null
           }
           onPromote={() => handlePromote(idea)}

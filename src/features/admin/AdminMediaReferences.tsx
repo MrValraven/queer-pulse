@@ -63,7 +63,10 @@ export function AdminMediaReferenceList({
     <ul className={styles.referencesList}>
       {references.map((reference, referenceIndex) => {
         const href = mediaReferenceHref(reference);
-        const text = [t(mediaReferenceLabelKey(reference.type)), reference.label]
+        const text = [
+          t(mediaReferenceLabelKey(reference.type)),
+          reference.label,
+        ]
           .filter(Boolean)
           .join(" · ");
         return (

@@ -6,7 +6,12 @@ import type { HandleAvailability } from "../settings/api/useHandleAvailability";
  *  file so the pane's line count stays under the cap. */
 export type PendingAddressChange =
   | { kind: "switchMode"; target: LinkVisibility }
-  | { kind: "editField"; field: "slug" | "handle"; value: string; previous: string };
+  | {
+      kind: "editField";
+      field: "slug" | "handle";
+      value: string;
+      previous: string;
+    };
 
 /** The public path this persona lives at under a given link mode. */
 export function pathFor(
@@ -31,10 +36,16 @@ export function handleStateLine(
     return { tone: "idle", message: t("settings:usernameField.checking") };
   }
   if (status.status === "unavailable" && status.reason) {
-    return { tone: "bad", message: t(`settings:usernameField.reason.${status.reason}`) };
+    return {
+      tone: "bad",
+      message: t(`settings:usernameField.reason.${status.reason}`),
+    };
   }
   if (status.status === "available") {
-    return { tone: "good", message: t("subprofiles:newModal.handleStateClaim") };
+    return {
+      tone: "good",
+      message: t("subprofiles:newModal.handleStateClaim"),
+    };
   }
   return null;
 }
@@ -43,7 +54,12 @@ export function handleStateLine(
  *  whichever kind of pending change is currently awaiting confirmation. */
 export function warningPathsForPending(
   pending: PendingAddressChange,
-  current: { link: LinkVisibility; ownerSlug: string; slug: string; handle: string },
+  current: {
+    link: LinkVisibility;
+    ownerSlug: string;
+    slug: string;
+    handle: string;
+  },
 ): { oldPath: string; newPath: string; releasesHandle: boolean } {
   const { link, ownerSlug, slug, handle } = current;
   if (pending.kind === "switchMode") {

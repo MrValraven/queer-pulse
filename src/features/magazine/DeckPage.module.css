@@ -250,8 +250,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: max(16px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right))
-    16px max(24px, env(safe-area-inset-left));
+  padding: max(16px, env(safe-area-inset-top))
+    max(24px, env(safe-area-inset-right)) 16px
+    max(24px, env(safe-area-inset-left));
   flex-shrink: 0;
 }
 .presentTitle {

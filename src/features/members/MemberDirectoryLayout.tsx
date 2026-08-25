@@ -5,7 +5,7 @@ import type {
   MemberCard,
   SortKey,
 } from "./memberDirectoryFilter.data";
-import { type SectionKey } from "./FilterSection";
+import { type SectionKey } from "./filterSectionKeys";
 import { FiltersSidebar } from "./MemberFilterCards";
 import { MemberResultsColumn } from "./MemberDirectorySections";
 import styles from "./MemberDirectoryFilterPage.module.css";

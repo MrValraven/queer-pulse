@@ -32,7 +32,10 @@ interface ComposerProps {
   onSendGif?: (attachment: GifAttachment) => void;
   /** Sends an uploaded image as its own message. When absent, the photo
    *  attach button is hidden (e.g. surfaces that don't wire uploads). */
-  onSendImage?: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
+  onSendImage?: (
+    attachment: GifAttachment,
+    localAttachment?: GifAttachment,
+  ) => void;
 }
 
 /**
@@ -71,12 +74,16 @@ export function Composer({
   // per thread instead of needing an effect to resync it.
   const [draft, setDraft] = useState(() => loadDraft(conversationId));
   // Advisory-only, recomputed per keystroke — see `ComposerSafetyNotice`.
-  const safetySignals = useMemo(() => detectContactSafetySignals(draft), [draft]);
+  const safetySignals = useMemo(
+    () => detectContactSafetySignals(draft),
+    [draft],
+  );
   // Keeps the reply-preview banner's content mounted through its collapse/
   // fade-out so dismissing it (✕ or post-send clear) actually animates
   // instead of snapping away — see the hook for why `ComposerReplyPreview`
   // is always rendered rather than conditionally on `replyDraft`.
-  const { previewMessage, open: replyPreviewOpen } = useReplyPreviewTransition(replyDraft);
+  const { previewMessage, open: replyPreviewOpen } =
+    useReplyPreviewTransition(replyDraft);
   // Exactly one composer popover (GIF picker or the shortcut hint) is open at a
   // time — see `useComposerPopovers`.
   const { openPopover, popoverGroupRef, togglePopover, closePopover } =
@@ -143,7 +150,11 @@ export function Composer({
   // see `ComposerSeveredNotice`'s own doc for what each notice says.
   if (active.official || blocked || (active.isGroup && active.hasLeft)) {
     return (
-      <ComposerSeveredNotice active={active} blocked={blocked} firstName={firstName} />
+      <ComposerSeveredNotice
+        active={active}
+        blocked={blocked}
+        firstName={firstName}
+      />
     );
   }
   const composerPlaceholder = active.isGroup

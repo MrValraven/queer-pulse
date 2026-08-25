@@ -45,8 +45,12 @@ export function IssuePage() {
     <PageShell>
       <PageMeta
         title={metaTitle}
-        description={nodeToText(cover?.dek) || t("magazine:issue.metaDescription")}
-        canonical={issueNumber ? `${routes.issue}/${issueNumber}` : routes.issue}
+        description={
+          nodeToText(cover?.dek) || t("magazine:issue.metaDescription")
+        }
+        canonical={
+          issueNumber ? `${routes.issue}/${issueNumber}` : routes.issue
+        }
         noIndex={showEmpty}
       />
       <MagazineMasthead active="issues" />

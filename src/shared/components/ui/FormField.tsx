@@ -52,7 +52,9 @@ type ControlProps = {
  * `htmlFor`); the caller stays responsible for labelling, as `ChipSelect`'s
  * `label`/`labelledBy` props do.
  */
-function wireableControl(children: ReactNode): ReactElement<ControlProps> | null {
+function wireableControl(
+  children: ReactNode,
+): ReactElement<ControlProps> | null {
   if (Children.count(children) !== 1 || !isValidElement(children)) return null;
   const only = children as ReactElement<ControlProps>;
   if (typeof only.type === "string") return only;

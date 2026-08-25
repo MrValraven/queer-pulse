@@ -28,8 +28,7 @@ export function MobileProfileIdentityTop({
   // ""). Show the row only when there is a neighbourhood to show, and honour
   // the owner's own toggle on any non-self view (including their preview).
   const isLocationShown =
-    profile.hood.trim().length > 0 &&
-    (isSelf || profile.hoodVisible !== false);
+    profile.hood.trim().length > 0 && (isSelf || profile.hoodVisible !== false);
   return (
     <div className={styles.identityTop}>
       <Eyebrow live className={styles.identityTopEyebrow}>
@@ -45,7 +44,10 @@ export function MobileProfileIdentityTop({
         <span>
           {profile.role}
           {profile.pronouns && (
-            <span className={styles.identityPronoun}> · {profile.pronouns}</span>
+            <span className={styles.identityPronoun}>
+              {" "}
+              · {profile.pronouns}
+            </span>
           )}
         </span>
         <MemberStaffBadge slug={profile.slug} size="lg" />

@@ -182,7 +182,11 @@ export function PhotoPickerModal({
     setProgress(0);
     setUploading(true);
     try {
-      const { key, previewUrl, crop: appliedCrop } = await uploadImage(file, {
+      const {
+        key,
+        previewUrl,
+        crop: appliedCrop,
+      } = await uploadImage(file, {
         onProgress: (percent) => setProgress(percent),
         crop,
       });
@@ -314,7 +318,9 @@ export function PhotoPickerModal({
             pendingDelete.references.length > 0
               ? t("members:avatar.picker.deleteConfirmBodyInUse", {
                   usedAs: pendingDelete.references
-                    .map((reference) => t(mediaReferenceLabelKey(reference.type)))
+                    .map((reference) =>
+                      t(mediaReferenceLabelKey(reference.type)),
+                    )
                     .join(", "),
                 })
               : t("members:avatar.picker.deleteConfirmBody")

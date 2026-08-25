@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { m, useTransform } from "motion/react";
-import { useMotionPrefs } from "../../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { useTranslation } from "../../i18n/useTranslation";
 import { usePullToRefresh, DEFAULT_THRESHOLD_PX } from "./usePullToRefresh";
 import { Spinner } from "./Spinner";

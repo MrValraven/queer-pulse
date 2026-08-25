@@ -50,12 +50,15 @@ export function StudioFundBalance() {
             maxWidth: "52ch",
           }}
         >
-          {/* Not swept — describes the fund's runway/quarterly-rollover rule,
-              a governance commitment (§6 of the i18n sweep brief). Renders in
-              English via the fallback chain. Flagged in the sweep report. */}
+          {/* eslint-disable local/no-literal-string -- not swept: describes
+              the fund's runway/quarterly-rollover rule, a governance
+              commitment (extraction-brief §6) deliberately left for a
+              native pt-PT reviewer; renders in English via the fallback
+              chain until that review lands. */}
           Healthy: roughly four months of current disbursement. Anything above
           six months' runway rolls into the next quarterly grant round by
           council vote.
+          {/* eslint-enable local/no-literal-string */}
         </div>
       </div>
       <div className={s.balSide}>

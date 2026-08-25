@@ -63,7 +63,11 @@ export function SubprofileShareCard({
 
         <div className={styles.linkRow}>
           <span className={styles.linkText}>{shareUrl}</span>
-          <Button variant="ghost" size="md" onClick={() => void handleCopyLink()}>
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={() => void handleCopyLink()}
+          >
             <FiCopy aria-hidden /> {t("subprofiles:shareCard.copyLink")}
           </Button>
         </div>

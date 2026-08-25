@@ -87,7 +87,8 @@ export function AdminHealthModal({
         onOfferSupport();
       }}
     >
-      {t("admin:communities.health.offerSupportCta")} <FiArrowRight aria-hidden />
+      {t("admin:communities.health.offerSupportCta")}{" "}
+      <FiArrowRight aria-hidden />
     </Button>
   ) : (
     <Button variant="primary" size="md" onClick={onClose}>
@@ -107,11 +108,7 @@ export function AdminHealthModal({
       </>
     ) : (
       <>
-        <Button
-          variant="ghost"
-          size="md"
-          onClick={() => setView("breakdown")}
-        >
+        <Button variant="ghost" size="md" onClick={() => setView("breakdown")}>
           <FiArrowLeft aria-hidden />{" "}
           {t("admin:communities.health.method.backCta")}
         </Button>
@@ -132,12 +129,7 @@ export function AdminHealthModal({
 
   return (
     <AdminModal title={title} onClose={onClose} footer={footer}>
-      <div
-        key={view}
-        ref={paneRef}
-        tabIndex={-1}
-        className={styles.healthPane}
-      >
+      <div key={view} ref={paneRef} tabIndex={-1} className={styles.healthPane}>
         {view === "method" ? (
           <AdminHealthMethod community={community} />
         ) : (

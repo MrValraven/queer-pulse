@@ -235,7 +235,9 @@ function canEncodeWebp(): boolean {
     const probe = document.createElement("canvas");
     probe.width = 1;
     probe.height = 1;
-    webpEncodeSupport = probe.toDataURL("image/webp").startsWith("data:image/webp");
+    webpEncodeSupport = probe
+      .toDataURL("image/webp")
+      .startsWith("data:image/webp");
   } catch {
     webpEncodeSupport = false;
   }
@@ -396,7 +398,10 @@ function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
   // truncated stream, so a bogus 0 can never smuggle raw metadata through.
   const read = (index: number): number => bytes[index] ?? 0;
   // Header (6) + Logical Screen Descriptor (7) = 13 bytes minimum.
-  if (bytes.length < 13 || String.fromCharCode(read(0), read(1), read(2)) !== "GIF") {
+  if (
+    bytes.length < 13 ||
+    String.fromCharCode(read(0), read(1), read(2)) !== "GIF"
+  ) {
     throw new Error("gif-bad-header");
   }
   const chunks: Uint8Array[] = [];
@@ -442,7 +447,9 @@ function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
       }
       if (label === 0xff) {
         // Application Extension — keep only the animation loop-count block.
-        const identifier = String.fromCharCode(...bytes.subarray(dataStart + 1, dataStart + 9));
+        const identifier = String.fromCharCode(
+          ...bytes.subarray(dataStart + 1, dataStart + 9),
+        );
         if (identifier === "NETSCAPE" || identifier === "ANIMEXTS") {
           chunks.push(bytes.subarray(blockStart, end));
         }
@@ -494,7 +501,11 @@ async function stripMetadata(
       const cleaned = sanitizeGif(new Uint8Array(await file.arrayBuffer()));
       return new Blob([cleaned], { type: "image/gif" });
     }
-    const target = capDimensions(decoded.width, decoded.height, MAX_DIMENSION_PX[kind]);
+    const target = capDimensions(
+      decoded.width,
+      decoded.height,
+      MAX_DIMENSION_PX[kind],
+    );
     const canvas = drawResampled(
       decoded.source,
       decoded.width,
@@ -598,14 +609,21 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   "community-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
   "listing-photo": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
   "work-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
-  "gathering-photo": { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  "gathering-photo": {
+    aspect: "free",
+    aspectLabel: "free",
+    allowFreeform: true,
+  },
   // Unused in practice — the message composer never opens the reframe editor
   // (a chat photo sends as-is), but every `UploadKind` needs an entry here.
   "message-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
 };
 
 /** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */
-export function getMinOutput(kind: UploadKind): { width: number; height: number } {
+export function getMinOutput(kind: UploadKind): {
+  width: number;
+  height: number;
+} {
   const limit = UPLOAD_LIMITS[kind];
   return { width: limit.minWidth ?? 1, height: limit.minHeight ?? 1 };
 }

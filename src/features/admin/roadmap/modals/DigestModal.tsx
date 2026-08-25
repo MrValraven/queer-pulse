@@ -6,7 +6,7 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { Translation } from "../../../../shared/i18n/Translation";
 import { useAdminRoadmap } from "../../api/useAdminRoadmap";
 import { AdminModal } from "../../ui";
-import { useRoadmapModals } from "../state/useRoadmapModals";
+import { useRoadmapModals } from "../state/roadmapModalsHook";
 import { buildDigestMarkdown } from "./digestMarkdown";
 import styles from "./roadmapModals.module.css";
 

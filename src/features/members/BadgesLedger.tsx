@@ -20,7 +20,11 @@ const INTEGRITY_ITEMS = [1, 2, 3, 4, 5] as const;
 /** "Receipts": every dated XP event with a running total, plus the trust
  *  bullets explaining why the list can be relied on. Reads `xpLedger`, which
  *  is `[]` in live mode until the backend adds real event logging. */
-export function BadgesLedger({ xpLedger, totalBadgeCount, totalLevelCount }: BadgesLedgerProps) {
+export function BadgesLedger({
+  xpLedger,
+  totalBadgeCount,
+  totalLevelCount,
+}: BadgesLedgerProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const [showAll, setShowAll] = useState(false);
@@ -36,13 +40,20 @@ export function BadgesLedger({ xpLedger, totalBadgeCount, totalLevelCount }: Bad
     <section className={styles.sec}>
       <div className={styles.hd}>
         <div>
-          <span className={styles.hdEyebrow}>{t("members:badges.ledger.eyebrow")}</span>
+          <span className={styles.hdEyebrow}>
+            {t("members:badges.ledger.eyebrow")}
+          </span>
           <h2 className={`${styles.hdTitle} ${styles.hdLvl1}`}>
-            <Translation i18nKey="members:badges.ledger.heading" components={{ em: <em /> }} />
+            <Translation
+              i18nKey="members:badges.ledger.heading"
+              components={{ em: <em /> }}
+            />
           </h2>
           <p className={styles.hdSub}>
             {xpLedger.length > 0
-              ? t("members:badges.ledger.subWithCount", { count: xpLedger.length })
+              ? t("members:badges.ledger.subWithCount", {
+                  count: xpLedger.length,
+                })
               : t("members:badges.ledger.subEmpty")}
           </p>
         </div>
@@ -64,21 +75,43 @@ export function BadgesLedger({ xpLedger, totalBadgeCount, totalLevelCount }: Bad
                 <span>{t("members:badges.ledger.colTotal")}</span>
               </div>
               {rows.map((entry, index) => (
-                <div key={`${entry.createdAt}-${index}`} className={`${styles.lgRow} ${entry.xp < 0 ? styles.lgAdj : ""}`}>
+                <div
+                  key={`${entry.createdAt}-${index}`}
+                  className={`${styles.lgRow} ${entry.xp < 0 ? styles.lgAdj : ""}`}
+                >
                   <span className={styles.lgDate}>
-                    {fmt.date(new Date(entry.createdAt), { day: "numeric", month: "short", year: "numeric" })}
+                    {fmt.date(new Date(entry.createdAt), {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
                   </span>
                   <span className={styles.lgWhat}>
                     {entry.description}
-                    {entry.reason && <span className={styles.lgWhy}>{entry.reason}</span>}
+                    {entry.reason && (
+                      <span className={styles.lgWhy}>{entry.reason}</span>
+                    )}
                   </span>
-                  <span className={styles.lgXp}>{entry.xp < 0 ? "−" : "+"}{Math.abs(entry.xp)}</span>
-                  <span className={styles.lgTotal}>{runningTotals[index]!.toLocaleString()}</span>
+                  <span className={styles.lgXp}>
+                    {entry.xp < 0 ? "−" : "+"}
+                    {Math.abs(entry.xp)}
+                  </span>
+                  <span className={styles.lgTotal}>
+                    {runningTotals[index]!.toLocaleString()}
+                  </span>
                 </div>
               ))}
               {xpLedger.length > VISIBLE_ROWS && (
-                <button type="button" className={styles.lgMore} onClick={() => setShowAll((value) => !value)}>
-                  {showAll ? t("members:badges.ledger.showLess") : t("members:badges.ledger.showAll", { count: xpLedger.length })}
+                <button
+                  type="button"
+                  className={styles.lgMore}
+                  onClick={() => setShowAll((value) => !value)}
+                >
+                  {showAll
+                    ? t("members:badges.ledger.showLess")
+                    : t("members:badges.ledger.showAll", {
+                        count: xpLedger.length,
+                      })}
                 </button>
               )}
             </>
@@ -92,14 +125,20 @@ export function BadgesLedger({ xpLedger, totalBadgeCount, totalLevelCount }: Bad
                 <FiCheck />
               </span>
               <p>
-                <b>{t(`members:badges.ledger.integrity${item}Title`)}</b> {t(`members:badges.ledger.integrity${item}Body`)}
+                <b>{t(`members:badges.ledger.integrity${item}Title`)}</b>{" "}
+                {t(`members:badges.ledger.integrity${item}Body`)}
               </p>
             </div>
           ))}
         </aside>
       </div>
       <div className={styles.footnote}>
-        <span>{t("members:badges.ledger.footnoteCount", { badges: totalBadgeCount, levels: totalLevelCount })}</span>
+        <span>
+          {t("members:badges.ledger.footnoteCount", {
+            badges: totalBadgeCount,
+            levels: totalLevelCount,
+          })}
+        </span>
         <span>{t("members:badges.ledger.footnoteContact")}</span>
       </div>
     </section>

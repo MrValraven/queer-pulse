@@ -76,9 +76,7 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
         />
       </div>
       <div className={styles.field}>
-        <label htmlFor="ls-access">
-          {t("economy:listSpace.accessLabel")}
-        </label>
+        <label htmlFor="ls-access">{t("economy:listSpace.accessLabel")}</label>
         <textarea
           id="ls-access"
           value={form.accessibility}
@@ -88,7 +86,9 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
       </div>
 
       <div className={check.guide}>
-        <p className={check.guideTitle}>{t("economy:listSpace.photoGuide.title")}</p>
+        <p className={check.guideTitle}>
+          {t("economy:listSpace.photoGuide.title")}
+        </p>
         <ul className={check.guideList}>
           <li>{t("economy:listSpace.photoGuide.lit")}</li>
           <li>{t("economy:listSpace.photoGuide.rooms")}</li>

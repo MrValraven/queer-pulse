@@ -1,5 +1,8 @@
 import { communityPath } from "../../../app/routeMap";
-import { initialsFromName, leadingInitials } from "../../../shared/lib/initials";
+import {
+  initialsFromName,
+  leadingInitials,
+} from "../../../shared/lib/initials";
 import type {
   LandingCommunityFaceDTO,
   LandingCommunityFeatureDTO,

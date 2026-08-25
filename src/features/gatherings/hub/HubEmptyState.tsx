@@ -59,7 +59,12 @@ export function HubEmptyState({
  */
 function HubSparkCalendar() {
   return (
-    <svg className={styles.art} viewBox="0 0 200 140" aria-hidden focusable="false">
+    <svg
+      className={styles.art}
+      viewBox="0 0 200 140"
+      aria-hidden
+      focusable="false"
+    >
       <defs>
         <radialGradient id="hubEmptyGlow">
           <stop offset="0%" stopColor="rgba(var(--accent-rgb), 0.22)" />
@@ -81,10 +86,31 @@ function HubSparkCalendar() {
         strokeWidth={2}
       />
       {/* binder tabs */}
-      <rect x={68} y={26} width={7} height={18} rx={3.5} fill="var(--line-strong)" />
-      <rect x={125} y={26} width={7} height={18} rx={3.5} fill="var(--line-strong)" />
+      <rect
+        x={68}
+        y={26}
+        width={7}
+        height={18}
+        rx={3.5}
+        fill="var(--line-strong)"
+      />
+      <rect
+        x={125}
+        y={26}
+        width={7}
+        height={18}
+        rx={3.5}
+        fill="var(--line-strong)"
+      />
       {/* header divider */}
-      <line x1={46} y1={62} x2={154} y2={62} stroke="var(--line-strong)" strokeWidth={2} />
+      <line
+        x1={46}
+        y1={62}
+        x2={154}
+        y2={62}
+        stroke="var(--line-strong)"
+        strokeWidth={2}
+      />
 
       {/* empty, dotted rows — the calendar has nothing on it yet */}
       <line

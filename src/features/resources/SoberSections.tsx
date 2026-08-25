@@ -76,8 +76,7 @@ export function SoberVenuesSection({
         </div>
         <div className={styles.seeAll}>
           <Link to={safeSpacesPath} className={styles.seeAllLink}>
-            {t("resources:sober.venues.seeAllCta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("resources:sober.venues.seeAllCta")} <FiArrowRight aria-hidden />
           </Link>
         </div>
       </div>
@@ -104,7 +103,10 @@ export function SoberVoicesSection() {
               <div className={styles.voiceWho}>
                 <div
                   className={styles.voiceAv}
-                  style={{ background: v.avatarBackground, color: v.avatarColor }}
+                  style={{
+                    background: v.avatarBackground,
+                    color: v.avatarColor,
+                  }}
                 >
                   {v.avatar}
                 </div>
@@ -144,8 +146,7 @@ export function SoberRecoverySection({ linkMap }: SoberRecoverySectionProps) {
                 <div className={styles.recTitle}>{t(o.titleKey)}</div>
                 <div className={styles.recDesc}>{t(o.descriptionKey)}</div>
                 <Link to={linkMap[o.linkKey]!} className={styles.recLink}>
-                  {t(o.linkLabelKey)}{" "}
-                  <FiArrowRight aria-hidden />
+                  {t(o.linkLabelKey)} <FiArrowRight aria-hidden />
                 </Link>
               </div>
             ))}

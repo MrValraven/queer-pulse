@@ -96,7 +96,9 @@ export function HeroVouchRow({
   // the viewer's own profile. `useProfileMutuals` shares its query key with
   // `ProfileMutualsCard` when both are mounted, so React Query dedupes the
   // network request rather than firing it twice.
-  const { data: mutuals } = useProfileMutuals(isSelf ? undefined : profile.slug);
+  const { data: mutuals } = useProfileMutuals(
+    isSelf ? undefined : profile.slug,
+  );
   const mutualsCount = mutuals?.count ?? 0;
 
   // Real voucher faces: demo derives them from the mock registry, live fetches

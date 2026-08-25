@@ -22,7 +22,8 @@ export function AdminWriterApplicationsRow({
   const { triage, pending } = useTriageWriterApplication();
   const [reviewNote, setReviewNote] = useState("");
   const applicantName =
-    application.applicant?.name ?? t("admin:adminWriterApplications.unknownMember");
+    application.applicant?.name ??
+    t("admin:adminWriterApplications.unknownMember");
   const sampleHref = safeHref(application.sampleLink);
 
   return (

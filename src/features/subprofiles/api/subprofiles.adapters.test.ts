@@ -26,7 +26,8 @@ import type {
  */
 
 function makeItem(
-  overrides: Partial<SubprofileItemDTO> & Pick<SubprofileItemDTO, "section" | "title">,
+  overrides: Partial<SubprofileItemDTO> &
+    Pick<SubprofileItemDTO, "section" | "title">,
 ): SubprofileItemDTO {
   return {
     id: "item-test",
@@ -48,7 +49,9 @@ function makeItem(
  *  discography track, no gig rows, and one stray `links` item (no longer a
  *  produced section, so it is dropped) — plus null identity fields so the ""
  *  normalization is exercised. */
-function makeMusicianDto(overrides: Partial<SubprofileDTO> = {}): SubprofileDTO {
+function makeMusicianDto(
+  overrides: Partial<SubprofileDTO> = {},
+): SubprofileDTO {
   return {
     id: "sp-test-musician",
     kind: "musician",
@@ -205,7 +208,9 @@ describe("publicSubprofileToView", () => {
     expect(view.ownerName).toBe("Rui Marçal");
     expect(view.viewerFollowing).toBe(true);
     // Public grouping drops empty sections: only the populated `projects` remains.
-    expect(view.sections.map((section) => section.section)).toEqual(["projects"]);
+    expect(view.sections.map((section) => section.section)).toEqual([
+      "projects",
+    ]);
   });
 
   it("omits owner identity entirely for an unlinked persona", () => {
@@ -244,12 +249,14 @@ describe("Phase 0 skin-specific fields (plumbing only, no UI yet)", () => {
           ticketUrl: "https://example.com/tickets",
           gigState: "sold_out",
           structured: {
-            courses: [
-              { n: "1", name: "Set", dishes: [{ title: "Opener" }] },
-            ],
+            courses: [{ n: "1", name: "Set", dishes: [{ title: "Opener" }] }],
           },
         }),
-        makeItem({ section: "links", title: "Bandcamp", url: "https://x.test" }),
+        makeItem({
+          section: "links",
+          title: "Bandcamp",
+          url: "https://x.test",
+        }),
       ],
       skinData: {
         booker: {

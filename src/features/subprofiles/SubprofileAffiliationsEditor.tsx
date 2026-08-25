@@ -38,12 +38,17 @@ export function SubprofileAffiliationsEditor({
   subprofile: SubprofileView;
 }) {
   const { t } = useTranslation();
-  const { affiliationRows: rows, setAffiliationRows } = useSubprofileEditorContext();
+  const { affiliationRows: rows, setAffiliationRows } =
+    useSubprofileEditorContext();
 
-  const { patch, remove, add, atMax } = useEditorRowList(rows, setAffiliationRows, {
-    max: MAX_AFFILIATIONS,
-    makeEmpty: () => withAffiliationUid(emptyRow()),
-  });
+  const { patch, remove, add, atMax } = useEditorRowList(
+    rows,
+    setAffiliationRows,
+    {
+      max: MAX_AFFILIATIONS,
+      makeEmpty: () => withAffiliationUid(emptyRow()),
+    },
+  );
 
   return (
     <div className="ed-grid">

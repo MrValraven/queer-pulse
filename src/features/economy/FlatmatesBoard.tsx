@@ -203,8 +203,7 @@ export function FlatmatesBoard() {
           {t("economy:flatmates.postProfileCta")}
         </Button>
         <Button to={routes.forum} variant="ghost-dark" size="lg">
-          {t("economy:flatmates.outro.askForum")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("economy:flatmates.outro.askForum")} <FiArrowRight aria-hidden />
         </Button>
       </Outro>
 

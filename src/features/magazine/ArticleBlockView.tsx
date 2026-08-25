@@ -57,7 +57,12 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
       );
 
     case "heading":
-      return <h2 className={styles.h} dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />;
+      return (
+        <h2
+          className={styles.h}
+          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+        />
+      );
 
     case "pullQuote":
       return (
@@ -71,7 +76,9 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
       return (
         <blockquote className={styles.quote}>
           <p dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
-          {block.cite && <cite className={styles.cite}>{`— ${block.cite}`}</cite>}
+          {block.cite && (
+            <cite className={styles.cite}>{`— ${block.cite}`}</cite>
+          )}
         </blockquote>
       );
 
@@ -91,7 +98,9 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
               {block.caption && (
                 <span dangerouslySetInnerHTML={{ __html: sanitizedCaption }} />
               )}
-              {block.credit && <span className={styles.credit}>{block.credit}</span>}
+              {block.credit && (
+                <span className={styles.credit}>{block.credit}</span>
+              )}
             </figcaption>
           )}
         </figure>
@@ -100,9 +109,16 @@ export function ArticleBlockView({ block }: { block: ArticleBlock }) {
     case "qa":
       return (
         <div className={styles.qa}>
-          <p className={styles.q} dangerouslySetInnerHTML={{ __html: sanitizedQuestion }} />
+          <p
+            className={styles.q}
+            dangerouslySetInnerHTML={{ __html: sanitizedQuestion }}
+          />
           <div className={styles.a}>
-            <Avatar initials={initialsFromName(block.who, "?")} size={32} name={block.who} />
+            <Avatar
+              initials={initialsFromName(block.who, "?")}
+              size={32}
+              name={block.who}
+            />
             <div className={styles.aBody}>
               {block.who && <div className={styles.who}>{block.who}</div>}
               <p

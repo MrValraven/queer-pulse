@@ -52,7 +52,9 @@ export function HistoryTab({ record }: HistoryTabProps) {
             </div>
           ))}
         </div>
-        <span className={styles.tiny}>{t("magazine:piece.history.footer")}</span>
+        <span className={styles.tiny}>
+          {t("magazine:piece.history.footer")}
+        </span>
       </div>
     </div>
   );

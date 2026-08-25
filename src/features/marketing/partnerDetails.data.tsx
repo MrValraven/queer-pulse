@@ -11,7 +11,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Portugal",
     name: "Northside LGBTI+ Association",
     city: "Lisbon",
-    description: "An illustrative LGBTQ+ rights organisation. Legal support, crisis services, advocacy. A sample of our most essential kind of partnership: institutional knowledge and community trust.",
+    description:
+      "An illustrative LGBTQ+ rights organisation. Legal support, crisis services, advocacy. A sample of our most essential kind of partnership: institutional knowledge and community trust.",
     tags: ["Rights", "Legal", "Crisis support"],
     featured: true,
     testimonial: {
@@ -29,18 +30,17 @@ export const PARTNERS: Partner[] = [
     about: [
       <>
         <strong>Northside LGBTI+ Association</strong> is a sample rights
-        organisation for this illustration. In this scenario they run a
-        regional LGBT Helpline, operate community centres in two cities, take
-        up cases on behalf of members, lobby for supportive legislation, and
-        publish an annual{" "}
-        <em>community discrimination report</em>.
+        organisation for this illustration. In this scenario they run a regional
+        LGBT Helpline, operate community centres in two cities, take up cases on
+        behalf of members, lobby for supportive legislation, and publish an
+        annual <em>community discrimination report</em>.
       </>,
       <>
-        The partnership shown here is genuinely operational. Northside
-        refers callers from their helpline to specific QueerPulse spaces and
-        members; QueerPulse routes reports filed on the platform to
-        Northside's casework team when they involve legal questions; the two
-        share a sample emergency response protocol.
+        The partnership shown here is genuinely operational. Northside refers
+        callers from their helpline to specific QueerPulse spaces and members;
+        QueerPulse routes reports filed on the platform to Northside's casework
+        team when they involve legal questions; the two share a sample emergency
+        response protocol.
       </>,
     ],
     stats: [
@@ -54,13 +54,12 @@ export const PARTNERS: Partner[] = [
         heading: "What this partnership means in practice",
         body: (
           <>
-            If a member files a hate-crime report through QueerPulse, a
-            casework lead at the partner organisation reads it soon after and
-            reaches out if the member has consented. If someone calls the
-            partner's helpline and wants a connection to a community, they
-            have a sample list of QP-vetted hosts they can hand off to. If a
-            systemic pattern turns up (a service quietly refusing trans
-            care), the partner writes it up.
+            If a member files a hate-crime report through QueerPulse, a casework
+            lead at the partner organisation reads it soon after and reaches out
+            if the member has consented. If someone calls the partner's helpline
+            and wants a connection to a community, they have a sample list of
+            QP-vetted hosts they can hand off to. If a systemic pattern turns up
+            (a service quietly refusing trans care), the partner writes it up.
           </>
         ),
       },
@@ -159,9 +158,9 @@ export const PARTNERS: Partner[] = [
         heading: "The case bridge",
         body: (
           <>
-            Anyone with a casework need (discrimination, hate crime,
-            employment, housing) can opt into routing. Once they sign a
-            one-page consent, the report goes into the partner's queue with a{" "}
+            Anyone with a casework need (discrimination, hate crime, employment,
+            housing) can opt into routing. Once they sign a one-page consent,
+            the report goes into the partner's queue with a{" "}
             <strong>priority tag</strong>. Urgent cases are handled fastest,
             with the rest best-effort.
           </>
@@ -182,18 +181,17 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             We don't share member identities, message contents, or directory
-            data. We don't moderate together. We don't co-sign policy
-            positions automatically. Every joint statement is approved on
-            both sides.
+            data. We don't moderate together. We don't co-sign policy positions
+            automatically. Every joint statement is approved on both sides.
           </>
         ),
       },
     ],
     funding: (
       <>
-        <b>Funding transparency:</b> this sample partnership is unpaid. In
-        this illustration, QueerPulse pays a small per-case fee for the legal
-        consult programme, sustainer-funded. Everything else is reciprocal
+        <b>Funding transparency:</b> this sample partnership is unpaid. In this
+        illustration, QueerPulse pays a small per-case fee for the legal consult
+        programme, sustainer-funded. Everything else is reciprocal
         infrastructure.
       </>
     ),
@@ -223,7 +221,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Portugal",
     name: "Peer Support Network",
     city: "Lisbon",
-    description: "Illustrative mental health, community support, and peer group programmes for LGBTQ+ people. A sample of a space that takes care seriously, as a political act.",
+    description:
+      "Illustrative mental health, community support, and peer group programmes for LGBTQ+ people. A sample of a space that takes care seriously, as a political act.",
     tags: ["Mental health", "Peer support"],
     featured: false,
     testimonial: null,
@@ -235,15 +234,15 @@ export const PARTNERS: Partner[] = [
     about: [
       <>
         <strong>Peer Support Network</strong> is a sample organisation running
-        LGBTQ+-affirming therapy, peer-support groups, and a weekly drop-in,
-        on a sliding scale that turns nobody away. Many of its practitioners
-        share the experience they treat, in this illustration.
+        LGBTQ+-affirming therapy, peer-support groups, and a weekly drop-in, on
+        a sliding scale that turns nobody away. Many of its practitioners share
+        the experience they treat, in this illustration.
       </>,
       <>
         With QueerPulse, the partnership shown here is about access and
         training: the partner delivers the clinical backbone of peer-support
-        volunteering, and QueerPulse routes members who need real care to
-        people who won't make them explain themselves first.
+        volunteering, and QueerPulse routes members who need real care to people
+        who won't make them explain themselves first.
       </>,
     ],
     stats: [
@@ -271,9 +270,9 @@ export const PARTNERS: Partner[] = [
         heading: "Where the boundaries are",
         body: (
           <>
-            Clinical decisions are theirs alone. QueerPulse doesn't see
-            therapy notes; the partner doesn't moderate the platform. Their
-            sliding scale is theirs to set.
+            Clinical decisions are theirs alone. QueerPulse doesn't see therapy
+            notes; the partner doesn't moderate the platform. Their sliding
+            scale is theirs to set.
           </>
         ),
       },
@@ -325,8 +324,8 @@ export const PARTNERS: Partner[] = [
         heading: "Training & supervision",
         body: (
           <>
-            The partner delivers the peer-support curriculum and runs a
-            monthly supervised debrief.{" "}
+            The partner delivers the peer-support curriculum and runs a monthly
+            supervised debrief.{" "}
             <strong>Volunteers are never alone in the room</strong> and a
             practitioner is always on call.
           </>
@@ -346,8 +345,8 @@ export const PARTNERS: Partner[] = [
     funding: (
       <>
         <b>Funding transparency:</b> in this sample, QueerPulse part-funds the
-        training cohort; therapy itself runs on the partner's own sliding
-        scale. No member data is sold or shared.
+        training cohort; therapy itself runs on the partner's own sliding scale.
+        No member data is sold or shared.
       </>
     ),
     atGlance: [
@@ -375,7 +374,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Portugal",
     name: "Youth Alliance",
     city: "Nationwide",
-    description: "An illustrative youth LGBTQ+ association with groups across a region. Peer support, youth activism, and a sample track record of building young queer community.",
+    description:
+      "An illustrative youth LGBTQ+ association with groups across a region. Peer support, youth activism, and a sample track record of building young queer community.",
     tags: ["Youth", "Peer groups"],
     featured: false,
     testimonial: null,
@@ -392,10 +392,9 @@ export const PARTNERS: Partner[] = [
         classrooms most networks never touch.
       </>,
       <>
-        This sample partnership keeps the under-18 work where it belongs:
-        with the specialists. QueerPulse channels volunteers and resources to
-        them and keeps a careful line between the adult network and youth
-        spaces.
+        This sample partnership keeps the under-18 work where it belongs: with
+        the specialists. QueerPulse channels volunteers and resources to them
+        and keeps a careful line between the adult network and youth spaces.
       </>,
     ],
     stats: [
@@ -420,9 +419,9 @@ export const PARTNERS: Partner[] = [
         heading: "Where the boundaries are",
         body: (
           <>
-            All under-18 contact happens through the partner's own
-            safeguarding framework, not QueerPulse's. The adult network and
-            the youth groups stay firmly separate.
+            All under-18 contact happens through the partner's own safeguarding
+            framework, not QueerPulse's. The adult network and the youth groups
+            stay firmly separate.
           </>
         ),
       },
@@ -475,8 +474,8 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             Every facilitator passes an{" "}
-            <strong>enhanced working-with-minors check</strong> and commits to
-            a school year. The partner supervises; QueerPulse recruits and
+            <strong>enhanced working-with-minors check</strong> and commits to a
+            school year. The partner supervises; QueerPulse recruits and
             resources.
           </>
         ),
@@ -493,9 +492,9 @@ export const PARTNERS: Partner[] = [
     ],
     funding: (
       <>
-        <b>Funding transparency:</b> in this sample, QueerPulse funds
-        materials and training costs; the partner retains full programme
-        control. No youth data ever reaches the platform.
+        <b>Funding transparency:</b> in this sample, QueerPulse funds materials
+        and training costs; the partner retains full programme control. No youth
+        data ever reaches the platform.
       </>
     ),
     atGlance: [
@@ -523,7 +522,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Portugal",
     name: "Direct Action Group",
     city: "Lisbon",
-    description: "Illustrative trans rights activism, political organising, and community visibility. A sample of the harder, slower, legislative work that enables everything else.",
+    description:
+      "Illustrative trans rights activism, political organising, and community visibility. A sample of the harder, slower, legislative work that enables everything else.",
     tags: ["Trans rights", "Activism"],
     featured: false,
     testimonial: null,
@@ -535,9 +535,9 @@ export const PARTNERS: Partner[] = [
     about: [
       <>
         <strong>Direct Action Group</strong> is a sample front organising for
-        trans rights: street presence, political pressure, and the
-        unglamorous legislative grind. In this illustration it moves fast and
-        runs on very little.
+        trans rights: street presence, political pressure, and the unglamorous
+        legislative grind. In this illustration it moves fast and runs on very
+        little.
       </>,
       <>
         QueerPulse adds capacity: members supply the comms muscle and turnout,
@@ -556,9 +556,9 @@ export const PARTNERS: Partner[] = [
         heading: "What this partnership means in practice",
         body: (
           <>
-            When a bad bill drops, the partner briefs and QueerPulse
-            mobilises: comms volunteers turn a one-line ask into posts and
-            turnout the same day. <em>Attention is half the fight.</em>
+            When a bad bill drops, the partner briefs and QueerPulse mobilises:
+            comms volunteers turn a one-line ask into posts and turnout the same
+            day. <em>Attention is half the fight.</em>
           </>
         ),
       },
@@ -566,9 +566,9 @@ export const PARTNERS: Partner[] = [
         heading: "Where the boundaries are",
         body: (
           <>
-            The partner sets the political line; QueerPulse doesn't. We
-            amplify, we don't author their positions, and we say so plainly
-            when we differ.
+            The partner sets the political line; QueerPulse doesn't. We amplify,
+            we don't author their positions, and we say so plainly when we
+            differ.
           </>
         ),
       },
@@ -621,8 +621,8 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             The partner writes the brief; the comms crew turns it around.{" "}
-            <strong>No standing meetings</strong>: it lives in a group chat
-            and a shared drive, and moves at the speed a campaign needs.
+            <strong>No standing meetings</strong>: it lives in a group chat and
+            a shared drive, and moves at the speed a campaign needs.
           </>
         ),
       },
@@ -669,7 +669,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Portugal",
     name: "Community Health Collective",
     city: "Lisbon",
-    description: "An illustrative community health clinic running open trans-affirming care nights and vouching for QP-verified therapists. A sample of turning a directory listing into an actual care pathway.",
+    description:
+      "An illustrative community health clinic running open trans-affirming care nights and vouching for QP-verified therapists. A sample of turning a directory listing into an actual care pathway.",
     tags: ["Health", "Trans care", "Therapy"],
     featured: true,
     testimonial: null,
@@ -683,16 +684,16 @@ export const PARTNERS: Partner[] = [
         <strong>Community Health Collective</strong> is a sample
         community-funded health clinic, staffed by clinicians who kept seeing
         the same thing: queer patients arriving late, sicker, and braced for a
-        bad reception. In this illustration, they built a different front
-        door: open clinic nights, no gatekeeping letters, and a care pathway
-        written with trans patients rather than about them.
+        bad reception. In this illustration, they built a different front door:
+        open clinic nights, no gatekeeping letters, and a care pathway written
+        with trans patients rather than about them.
       </>,
       <>
         The partnership shown here is operational. The clinic vouches for
-        therapists before they earn a QP-verified badge; members can book
-        open clinic nights straight from the Resources directory; and when a
-        member reports being turned away for affirming care elsewhere, the
-        clinic holds a standing slot to catch them.
+        therapists before they earn a QP-verified badge; members can book open
+        clinic nights straight from the Resources directory; and when a member
+        reports being turned away for affirming care elsewhere, the clinic holds
+        a standing slot to catch them.
       </>,
     ],
     stats: [
@@ -706,12 +707,12 @@ export const PARTNERS: Partner[] = [
         heading: "What this partnership means in practice",
         body: (
           <>
-            If a therapist wants a QP-verified badge, a clinician here
-            reviews their affirming-care practice before it's granted. If a
-            member books an open clinic night through the directory, they
-            skip the general waitlist. If a member is turned away for hormones
-            or a referral somewhere else, there's a standing slot that exists
-            specifically to catch that.
+            If a therapist wants a QP-verified badge, a clinician here reviews
+            their affirming-care practice before it's granted. If a member books
+            an open clinic night through the directory, they skip the general
+            waitlist. If a member is turned away for hormones or a referral
+            somewhere else, there's a standing slot that exists specifically to
+            catch that.
           </>
         ),
       },
@@ -720,11 +721,10 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             The clinic runs its own medicine. QueerPulse doesn't sit in on
-            consultations, never sees notes, and a QP badge is never a
-            clinical recommendation. It's a signal that someone vouched, and
-            no more than that. The clinic can and does decline to vouch, and
-            we don't
-            ask why.
+            consultations, never sees notes, and a QP badge is never a clinical
+            recommendation. It's a signal that someone vouched, and no more than
+            that. The clinic can and does decline to vouch, and we don't ask
+            why.
           </>
         ),
       },
@@ -794,8 +794,8 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             Twice a month the clinic runs an evening session with no referral
-            requirement. Members book a slot from the Resources directory
-            like any other listing; the clinic confirms by message.{" "}
+            requirement. Members book a slot from the Resources directory like
+            any other listing; the clinic confirms by message.{" "}
             <em>No letters, no gatekeeping questionnaire.</em>
           </>
         ),
@@ -815,17 +815,17 @@ export const PARTNERS: Partner[] = [
         heading: "What we don't do",
         body: (
           <>
-            We never see clinical notes, we don't book on a member's behalf,
-            and we don't treat a badge as medical advice. The clinic decides
-            who it vouches for; we just carry the signal.
+            We never see clinical notes, we don't book on a member's behalf, and
+            we don't treat a badge as medical advice. The clinic decides who it
+            vouches for; we just carry the signal.
           </>
         ),
       },
     ],
     funding: (
       <>
-        <b>Funding transparency:</b> in this sample, the clinic's partnership
-        is unpaid. The Sustainer fund covers the catch-slot appointments so no
+        <b>Funding transparency:</b> in this sample, the clinic's partnership is
+        unpaid. The Sustainer fund covers the catch-slot appointments so no
         turned-away member is billed. Everything else is reciprocal.
       </>
     ),
@@ -855,7 +855,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Portugal",
     name: "Regional Arts Foundation",
     city: "Lisbon",
-    description: "An illustrative multi-year grant funding the QueerPulse micro-grants pool. A sample commitment, with regular reports and an annual review. And, unusually, no strings on who the money reaches.",
+    description:
+      "An illustrative multi-year grant funding the QueerPulse micro-grants pool. A sample commitment, with regular reports and an annual review. And, unusually, no strings on who the money reaches.",
     tags: ["Funder", "Micro-grants", "Institutional"],
     featured: true,
     testimonial: null,
@@ -869,16 +870,16 @@ export const PARTNERS: Partner[] = [
         The <strong>Regional Arts Foundation</strong> is a sample foundation
         that has funded arts, science, and social programmes for decades, in
         this illustration. It committed a multi-year grant to the QueerPulse
-        micro-grants pool: the small, fast fund members draw on for rent
-        gaps, surgery travel, binders, legal fees, and the small emergencies
-        that don't wait for a grant cycle.
+        micro-grants pool: the small, fast fund members draw on for rent gaps,
+        surgery travel, binders, legal fees, and the small emergencies that
+        don't wait for a grant cycle.
       </>,
       <>
         What makes this sample partnership unusual is the restraint. The
         foundation funds the pool but doesn't sit on the panel that awards it.
-        The money is reported regularly and reviewed annually, but who
-        receives it is decided by a member committee. Institutional weight,
-        community control.
+        The money is reported regularly and reviewed annually, but who receives
+        it is decided by a member committee. Institutional weight, community
+        control.
       </>,
     ],
     stats: [
@@ -894,9 +895,8 @@ export const PARTNERS: Partner[] = [
           <>
             The micro-grants fund can say yes faster because the money is
             already there. A member facing a rent gap or a surgery-travel cost
-            applies through a short form; the member committee reviews
-            weekly; funds land within days. The grant is what
-            makes that speed possible.
+            applies through a short form; the member committee reviews weekly;
+            funds land within days. The grant is what makes that speed possible.
           </>
         ),
       },
@@ -905,9 +905,9 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             The foundation funds; it does not govern. It has no seat on the
-            awards committee, no veto on individual grants, and no branding
-            on the programme beyond this page. QueerPulse reports where the
-            money went in aggregate, never who received it.
+            awards committee, no veto on individual grants, and no branding on
+            the programme beyond this page. QueerPulse reports where the money
+            went in aggregate, never who received it.
           </>
         ),
       },
@@ -971,9 +971,9 @@ export const PARTNERS: Partner[] = [
         heading: "How the money moves",
         body: (
           <>
-            The foundation disburses the grant to a ring-fenced pool account.
-            A member committee reviews applications weekly and approves
-            against a published rubric.{" "}
+            The foundation disburses the grant to a ring-fenced pool account. A
+            member committee reviews applications weekly and approves against a
+            published rubric.{" "}
             <em>The funder never sees an individual application.</em>
           </>
         ),
@@ -982,11 +982,10 @@ export const PARTNERS: Partner[] = [
         heading: "How it stays accountable",
         body: (
           <>
-            Every quarter QueerPulse publishes an aggregate report
-            (categories, totals, turnaround times) and once a year an{" "}
-            <strong>independent reviewer</strong> signs off the accounts.
-            That's what keeps the grant renewable without giving the funder a
-            vote.
+            Every quarter QueerPulse publishes an aggregate report (categories,
+            totals, turnaround times) and once a year an{" "}
+            <strong>independent reviewer</strong> signs off the accounts. That's
+            what keeps the grant renewable without giving the funder a vote.
           </>
         ),
       },
@@ -994,9 +993,9 @@ export const PARTNERS: Partner[] = [
         heading: "What we don't do",
         body: (
           <>
-            We don't share recipient identities, we don't let funding steer
-            who gets a grant, and we don't co-brand the programme. The name
-            on this page is the extent of the visibility the money buys.
+            We don't share recipient identities, we don't let funding steer who
+            gets a grant, and we don't co-brand the programme. The name on this
+            page is the extent of the visibility the money buys.
           </>
         ),
       },
@@ -1004,9 +1003,9 @@ export const PARTNERS: Partner[] = [
     funding: (
       <>
         <b>Funding transparency:</b> in this sample, the foundation grants a
-        round annual sum to the micro-grants pool for several years.
-        QueerPulse takes no administration fee from the grant: the
-        committee's work is volunteer, the review is Sustainer-funded.
+        round annual sum to the micro-grants pool for several years. QueerPulse
+        takes no administration fee from the grant: the committee's work is
+        volunteer, the review is Sustainer-funded.
       </>
     ),
     atGlance: [
@@ -1033,7 +1032,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Europe",
     name: "Metro Pride Network",
     city: "Sample city, Southern Europe",
-    description: "An illustrative sister network: a queer professional community in a neighbouring country with whom we share events, members, and the occasional borrowed studio. A sample of cross-border solidarity.",
+    description:
+      "An illustrative sister network: a queer professional community in a neighbouring country with whom we share events, members, and the occasional borrowed studio. A sample of cross-border solidarity.",
     tags: ["Network", "Sister city"],
     featured: false,
     testimonial: null,
@@ -1045,9 +1045,9 @@ export const PARTNERS: Partner[] = [
     about: [
       <>
         <strong>Metro Pride Network</strong> is a sample queer professional
-        community much like ours, one train ride away in this illustration.
-        We built the partnership shown here the obvious way: by visiting,
-        sharing what worked, and borrowing each other's rooms.
+        community much like ours, one train ride away in this illustration. We
+        built the partnership shown here the obvious way: by visiting, sharing
+        what worked, and borrowing each other's rooms.
       </>,
       <>
         For members it means a real welcome in the other city: events you can
@@ -1065,9 +1065,9 @@ export const PARTNERS: Partner[] = [
         heading: "What this partnership means in practice",
         body: (
           <>
-            Travelling to the partner city? Flip on a reciprocal directory
-            pass and you're a guest of Metro Pride Network for the trip:
-            events, hosts, and the same vetting standard.{" "}
+            Travelling to the partner city? Flip on a reciprocal directory pass
+            and you're a guest of Metro Pride Network for the trip: events,
+            hosts, and the same vetting standard.{" "}
             <em>It works in both directions.</em>
           </>
         ),
@@ -1076,9 +1076,9 @@ export const PARTNERS: Partner[] = [
         heading: "Where the boundaries are",
         body: (
           <>
-            Two independent networks, two moderation teams. We share a
-            welcome, and member data stays separate. Guest access is opt-in
-            and time-limited.
+            Two independent networks, two moderation teams. We share a welcome,
+            and member data stays separate. Guest access is opt-in and
+            time-limited.
           </>
         ),
       },
@@ -1131,8 +1131,8 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             A reciprocal pass grants <strong>time-limited guest access</strong>{" "}
-            in the other city. Profiles aren't shared wholesale. You opt in
-            for the trip.
+            in the other city. Profiles aren't shared wholesale. You opt in for
+            the trip.
           </>
         ),
       },
@@ -1178,7 +1178,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Europe",
     name: "Capital Queer Forum",
     city: "Sample city, Central Europe",
-    description: "An illustrative community network and cultural organisation. In this sample, we collaborate on exchange programmes for members travelling between the cities.",
+    description:
+      "An illustrative community network and cultural organisation. In this sample, we collaborate on exchange programmes for members travelling between the cities.",
     tags: ["Cultural exchange", "Network"],
     featured: false,
     testimonial: null,
@@ -1195,9 +1196,9 @@ export const PARTNERS: Partner[] = [
         artists, of ideas.
       </>,
       <>
-        Members moving between cities get a soft landing: introductions,
-        event access, and a residency swap for queer artists once a year, in
-        this sample.
+        Members moving between cities get a soft landing: introductions, event
+        access, and a residency swap for queer artists once a year, in this
+        sample.
       </>,
     ],
     stats: [
@@ -1215,8 +1216,7 @@ export const PARTNERS: Partner[] = [
             contact, a calendar, and a room of people who get it, in this
             illustration.{" "}
             <em>
-              The hardest part of moving is the first month. This shrinks
-              it.
+              The hardest part of moving is the first month. This shrinks it.
             </em>
           </>
         ),
@@ -1278,9 +1278,9 @@ export const PARTNERS: Partner[] = [
         heading: "Exchange, by programme",
         body: (
           <>
-            Each strand (residency, relocation, programming) has its own
-            opt-in. <strong>Nothing is automatic</strong>; you join the
-            programme you need.
+            Each strand (residency, relocation, programming) has its own opt-in.{" "}
+            <strong>Nothing is automatic</strong>; you join the programme you
+            need.
           </>
         ),
       },
@@ -1297,8 +1297,8 @@ export const PARTNERS: Partner[] = [
     funding: (
       <>
         <b>Funding transparency:</b> in this sample, the residency swap is
-        jointly funded; relocation support is volunteer-run. No member data
-        is shared.
+        jointly funded; relocation support is volunteer-run. No member data is
+        shared.
       </>
     ),
     atGlance: [
@@ -1326,7 +1326,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "International",
     name: "Diaspora Creatives Guild",
     city: "Multiple cities, diaspora network",
-    description: "An illustrative network supporting queer creatives across a global diaspora. A sample reminder that the queer experience spans every region, and that solidarity requires listening.",
+    description:
+      "An illustrative network supporting queer creatives across a global diaspora. A sample reminder that the queer experience spans every region, and that solidarity requires listening.",
     tags: ["Diaspora", "Creatives"],
     featured: false,
     testimonial: null,
@@ -1337,11 +1338,10 @@ export const PARTNERS: Partner[] = [
     since: "Illustrative partner",
     about: [
       <>
-        <strong>Diaspora Creatives Guild</strong> is a sample network
-        supporting queer artists across a diaspora: commissions, showcases,
-        and a network that spans continents. The partnership shown here is
-        the youngest on this page, and the one we most consciously approach
-        as students.
+        <strong>Diaspora Creatives Guild</strong> is a sample network supporting
+        queer artists across a diaspora: commissions, showcases, and a network
+        that spans continents. The partnership shown here is the youngest on
+        this page, and the one we most consciously approach as students.
       </>,
       <>
         In practice it means platforming their artists on their terms, paying
@@ -1371,8 +1371,8 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             This is a solidarity partnership.{" "}
-            <em>We listen more than we lead</em>, and curatorial control
-            stays with the guild.
+            <em>We listen more than we lead</em>, and curatorial control stays
+            with the guild.
           </>
         ),
       },
@@ -1441,9 +1441,9 @@ export const PARTNERS: Partner[] = [
     ],
     funding: (
       <>
-        <b>Funding transparency:</b> in this sample, QueerPulse funds
-        showcases and commissions; the guild keeps curatorial and editorial
-        control. Artists are always paid.
+        <b>Funding transparency:</b> in this sample, QueerPulse funds showcases
+        and commissions; the guild keeps curatorial and editorial control.
+        Artists are always paid.
       </>
     ),
     atGlance: [
@@ -1471,7 +1471,8 @@ export const PARTNERS: Partner[] = [
     regionLabel: "Europe",
     name: "Newcomers Support Circle",
     city: "Lisbon",
-    description: "An illustrative support and advocacy service for LGBTQ+ migrants and refugees navigating the local immigration system. In this sample, we refer members to them, they refer people to us.",
+    description:
+      "An illustrative support and advocacy service for LGBTQ+ migrants and refugees navigating the local immigration system. In this sample, we refer members to them, they refer people to us.",
     tags: ["Migration", "Refugees"],
     featured: false,
     testimonial: null,
@@ -1483,14 +1484,13 @@ export const PARTNERS: Partner[] = [
     about: [
       <>
         <strong>Newcomers Support Circle</strong> helps LGBTQ+ migrants and
-        refugees through the immigration and asylum system in this
-        illustration: legal aid, housing leads, and a community that speaks
-        your language.
+        refugees through the immigration and asylum system in this illustration:
+        legal aid, housing leads, and a community that speaks your language.
       </>,
       <>
-        The partnership shown here is a two-way referral seam: we send
-        members who need specialist help, they connect newly-arrived people
-        to community and events.
+        The partnership shown here is a two-way referral seam: we send members
+        who need specialist help, they connect newly-arrived people to community
+        and events.
       </>,
     ],
     stats: [
@@ -1504,10 +1504,10 @@ export const PARTNERS: Partner[] = [
         heading: "What this partnership means in practice",
         body: (
           <>
-            A member facing a visa or asylum problem gets a warm introduction
-            to the circle's caseworkers, in this sample. A newly-arrived
-            person who finds the circle first gets pointed toward community
-            here. <em>Every referral is a route someone has walked.</em>
+            A member facing a visa or asylum problem gets a warm introduction to
+            the circle's caseworkers, in this sample. A newly-arrived person who
+            finds the circle first gets pointed toward community here.{" "}
+            <em>Every referral is a route someone has walked.</em>
           </>
         ),
       },
@@ -1515,8 +1515,8 @@ export const PARTNERS: Partner[] = [
         heading: "Where the boundaries are",
         body: (
           <>
-            The circle handles the legal casework; we don't. Immigration
-            status data never touches the platform.
+            The circle handles the legal casework; we don't. Immigration status
+            data never touches the platform.
           </>
         ),
       },
@@ -1569,8 +1569,8 @@ export const PARTNERS: Partner[] = [
         body: (
           <>
             Referrals move both directions and only with consent.{" "}
-            <strong>Immigration status never reaches the platform</strong>.
-            It stays in the circle's casework.
+            <strong>Immigration status never reaches the platform</strong>. It
+            stays in the circle's casework.
           </>
         ),
       },
@@ -1586,9 +1586,9 @@ export const PARTNERS: Partner[] = [
     ],
     funding: (
       <>
-        <b>Funding transparency:</b> in this sample, QueerPulse supports
-        clinic costs; casework is the circle's own. No status or identity
-        data is shared.
+        <b>Funding transparency:</b> in this sample, QueerPulse supports clinic
+        costs; casework is the circle's own. No status or identity data is
+        shared.
       </>
     ),
     atGlance: [

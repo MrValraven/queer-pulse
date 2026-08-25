@@ -86,7 +86,12 @@ export function DirectoryListView({
     if (hasMore) return;
     if (!hasMoreFromServer || isLoadingMoreFromServer) return;
     onLoadMoreFromServer?.();
-  }, [hasMore, hasMoreFromServer, isLoadingMoreFromServer, onLoadMoreFromServer]);
+  }, [
+    hasMore,
+    hasMoreFromServer,
+    isLoadingMoreFromServer,
+    onLoadMoreFromServer,
+  ]);
 
   function toggleExpand(placeId: string) {
     setExpandedId((current) => (current === placeId ? null : placeId));
@@ -149,7 +154,11 @@ export function DirectoryListView({
               ))}
             </div>
             {hasMore && (
-              <div ref={sentinelRef} className={s.sentinel} aria-hidden="true" />
+              <div
+                ref={sentinelRef}
+                className={s.sentinel}
+                aria-hidden="true"
+              />
             )}
             {!hasMore && isLoadingMoreFromServer && (
               <div className={s.loadingMore} aria-live="polite">

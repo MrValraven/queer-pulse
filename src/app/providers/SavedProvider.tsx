@@ -13,11 +13,7 @@ import {
   dtoToSavedItem,
   savedItemToBody,
 } from "../../features/members/api/saved.api";
-import {
-  SavedContext,
-  type SavedItem,
-  type SavedKind,
-} from "./useSaved";
+import { SavedContext, type SavedItem, type SavedKind } from "./useSaved";
 
 const STORAGE_KEY = "qp.saved.v1";
 
@@ -157,7 +153,11 @@ export function SavedProvider({ children }: { children: ReactNode }) {
             return prev.filter((it) => it.id !== item.id);
           });
           showToast(
-            t(wasSaved ? "common:toast.removeFailed" : "common:toast.saveFailed"),
+            t(
+              wasSaved
+                ? "common:toast.removeFailed"
+                : "common:toast.saveFailed",
+            ),
             "error",
           );
         });

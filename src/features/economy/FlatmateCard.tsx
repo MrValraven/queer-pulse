@@ -1,6 +1,12 @@
 import { useState, type SyntheticEvent } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiCheck, FiClock, FiFlag, FiMapPin } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiCheck,
+  FiClock,
+  FiFlag,
+  FiMapPin,
+} from "react-icons/fi";
 import { useSaved } from "../../app/providers/useSaved";
 import { Avatar, SaveButton } from "../../shared/components/ui";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
@@ -43,7 +49,9 @@ export function FlatmateCard({
     });
     showToast(
       t(
-        now ? "economy:flatmates.card.savedToast" : "economy:flatmates.card.unsavedToast",
+        now
+          ? "economy:flatmates.card.savedToast"
+          : "economy:flatmates.card.unsavedToast",
         { name: p.name },
       ),
       now ? "success" : "info",
@@ -141,7 +149,9 @@ export function FlatmateCard({
             })}
             className={styles.reportBtn}
             onClick={handleReport}
-            onKeyDown={(event) => activateOnKey(event, () => handleReport(event))}
+            onKeyDown={(event) =>
+              activateOnKey(event, () => handleReport(event))
+            }
           >
             <FiFlag aria-hidden />
           </span>

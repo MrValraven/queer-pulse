@@ -26,7 +26,8 @@ export const homepage: Catalog = {
     "Um lugar para descobrires o que se passa na comunidade queer de Lisboa e encontrares as pessoas, comunidades, eventos e oportunidades que dão forma à vida queer na cidade.",
   "hero.requestInviteCta": "Pedir um convite",
   "hero.exploreMembersCta": "Explorar pessoas",
-  "hero.note": "Todas as semanas entram pessoas novas, sempre com um voto de confiança.",
+  "hero.note":
+    "Todas as semanas entram pessoas novas, sempre com um voto de confiança.",
 
   // ── Manifesto ("about") ──────────────────────────────────────────────────
   "manifesto.label": "O nosso manifesto",
@@ -168,13 +169,15 @@ export const homepage: Catalog = {
   "membersExplainer.titlePlain": "A comunidade move a QueerPulse",
   "membersExplainer.lede":
     "O diretório da comunidade abre-se assim que entras. Eis porque o mantemos assim, e como te juntares.",
-  "membersExplainer.pillars.vouched.title": "Pessoas reais, com voto de confiança",
+  "membersExplainer.pillars.vouched.title":
+    "Pessoas reais, com voto de confiança",
   "membersExplainer.pillars.vouched.body":
     "Cada pessoa é convidada e recebe o voto de confiança de alguém que já cá está. Sem bots, sem estranhos a copiar a lista.",
   "membersExplainer.pillars.inside.title": "O melhor abre-se por dentro",
   "membersExplainer.pillars.inside.body":
     "Perfis completos, comunidades e encontros abrem-se no momento em que te juntas.",
-  "membersExplainer.pillars.safe.title": "Só por convite mantém um espaço seguro",
+  "membersExplainer.pillars.safe.title":
+    "Só por convite mantém um espaço seguro",
   "membersExplainer.pillars.safe.body":
     "Manter o diretório só para a comunidade é como quem cá está consegue ser plenamente quem é.",
   "membersExplainer.requestInviteCta": "Pedir um convite",
@@ -391,7 +394,8 @@ export const homepage: Catalog = {
   "subprofiles.everywhereElse": "Em qualquer outro lado",
   "subprofiles.onQueerPulse": "No QueerPulse",
   "subprofiles.proofVs": "vs",
-  "subprofiles.proofCrampRoles": "artista de drag · ceramista · crítica musical",
+  "subprofiles.proofCrampRoles":
+    "artista de drag · ceramista · crítica musical",
   "subprofiles.mainNodeSub": "Perfil principal · design de produto",
   "subprofiles.postingAs": "A publicar como",
 
@@ -413,7 +417,8 @@ export const homepage: Catalog = {
     "O teu perfil principal. Aquele por que as pessoas já te conhecem.",
   "subprofiles.personas.main.note":
     "A falar como tu própria: a carreira em design de produto, a que todas as redes já conhecem.",
-  "subprofiles.personas.main.switcherSub": "Perfil principal · design de produto",
+  "subprofiles.personas.main.switcherSub":
+    "Perfil principal · design de produto",
   "subprofiles.personas.main.laneLabel": "design de produto",
 
   "subprofiles.personas.mara.role": "Artista de drag",
@@ -455,7 +460,8 @@ export const homepage: Catalog = {
     "Creditado ao ateliê: uma página inicial partilhada que duas pessoas podem gerir.",
   "subprofiles.personas.atelier.note":
     "A falar como o estúdio: compradores e galerias veem o trabalho e os preços, creditados ao ateliê em vez de a ti.",
-  "subprofiles.personas.atelier.switcherSub": "Cerâmica · compradores e galerias",
+  "subprofiles.personas.atelier.switcherSub":
+    "Cerâmica · compradores e galerias",
   "subprofiles.personas.atelier.laneLabel": "cerâmica",
   "subprofiles.personas.atelier.deck.skinLabel": "Aspeto de estúdio",
   "subprofiles.personas.atelier.deck.tag":
@@ -465,8 +471,7 @@ export const homepage: Catalog = {
     "Trabalho · preços · dias de estúdio",
 
   "subprofiles.personas.byline.role": "Crítica musical",
-  "subprofiles.personas.byline.sub":
-    "Assinaturas em três revistas desde 2021",
+  "subprofiles.personas.byline.sub": "Assinaturas em três revistas desde 2021",
   "subprofiles.personas.byline.cta": "Ler os artigos",
   "subprofiles.personas.byline.bio":
     "Crítica musical com assinaturas em três revistas, focada em clubbing e diáspora.",

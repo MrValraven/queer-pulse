@@ -1,4 +1,9 @@
-import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
+import {
+  apiDelete,
+  apiGet,
+  apiPatch,
+  apiPost,
+} from "../../../shared/api/client";
 import type { Slide } from "../data/decks";
 import type { ArticleBlock } from "./pieces.api";
 
@@ -236,4 +241,6 @@ export interface ConvertDeckToArticleDto {
 }
 
 export const convertDeckToArticle = (id: string) =>
-  apiPost<ConvertDeckToArticleDto>(`/magazine/admin/decks/${id}/convert-to-article`);
+  apiPost<ConvertDeckToArticleDto>(
+    `/magazine/admin/decks/${id}/convert-to-article`,
+  );

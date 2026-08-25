@@ -23,7 +23,9 @@ const SUGGESTION_LIMIT = 4;
  *  registry (tags only the gated one) filter correctly. */
 function isOpenlyJoinable(community: Community): boolean {
   if (community.privateBadge || community.dashed) return false;
-  return community.accessTier === undefined || community.accessTier === "public";
+  return (
+    community.accessTier === undefined || community.accessTier === "public"
+  );
 }
 
 /** One suggested community with its own join + leave mutations (one hook set per
@@ -51,7 +53,9 @@ function CommunityJoinCard({ community }: { community: Community }) {
       // profile slug on the session. Roll back to joined if the call fails.
       setStatus("idle");
       try {
-        await leaveCommunity.mutateAsync({ memberSlug: user?.profile.slug ?? "" });
+        await leaveCommunity.mutateAsync({
+          memberSlug: user?.profile.slug ?? "",
+        });
       } catch {
         setStatus("joined");
       }
@@ -150,7 +154,8 @@ export function StepCommunities({ onNext, onBack, stepLabel }: StepProps) {
           label={t("auth:onboarding.stepCommunities.skip")}
         />
         <button type="button" className={styles.back} onClick={onBack}>
-          <FiArrowLeft aria-hidden /> {t("auth:onboarding.stepCommunities.back")}
+          <FiArrowLeft aria-hidden />{" "}
+          {t("auth:onboarding.stepCommunities.back")}
         </button>
       </div>
     </>

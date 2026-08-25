@@ -21,10 +21,7 @@ export function useHousingListing(slug: string | undefined) {
   const fmt = useFormat();
   return useQuery<{ listing: HousingListing; ref: string | null } | null>({
     queryKey: [HOUSING_LISTING_KEY, demoMode, slug, language],
-    initialData:
-      demoMode && slug
-        ? wrapDemo(getListing(slug))
-        : undefined,
+    initialData: demoMode && slug ? wrapDemo(getListing(slug)) : undefined,
     queryFn: async () => {
       if (!slug) return null;
       if (demoMode) return wrapDemo(getListing(slug));

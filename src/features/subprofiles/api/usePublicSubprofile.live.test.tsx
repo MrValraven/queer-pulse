@@ -50,9 +50,8 @@ async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
   const { usePublicSubprofile } = await import("./usePublicSubprofile");
-  const { DemoModeProvider } = await import(
-    "../../../app/providers/DemoModeProvider"
-  );
+  const { DemoModeProvider } =
+    await import("../../../app/providers/DemoModeProvider");
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });

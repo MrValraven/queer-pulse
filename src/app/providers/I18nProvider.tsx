@@ -81,7 +81,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
    * (deduped) so the caller never has to remember to.
    */
   const catalogForQueueing = useCallback(
-    (namespaceLanguage: Language, namespace: Namespace): Catalog | undefined => {
+    (
+      namespaceLanguage: Language,
+      namespace: Namespace,
+    ): Catalog | undefined => {
       if (!isLazyNamespace(namespaceLanguage, namespace)) {
         return catalogs[namespaceLanguage][namespace];
       }

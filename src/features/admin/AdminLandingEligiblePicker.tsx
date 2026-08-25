@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
-import { Avatar, SearchInput, Button, SkeletonLine } from "../../shared/components/ui";
+import {
+  Avatar,
+  SearchInput,
+  Button,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { initialsFromName, leadingInitials } from "../../shared/lib/initials";
+import { AdminLandingCopyFields } from "./AdminLandingCopyFields";
 import {
-  AdminLandingCopyFields,
   buildLandingCopy,
   emptyLandingCopyValue,
   isLandingCopyValid,
   type LandingCopyFieldsValue,
-} from "./AdminLandingCopyFields";
+} from "./adminLandingCopyFields.utils";
 import {
   useLandingEligible,
   useCreateLandingFeature,

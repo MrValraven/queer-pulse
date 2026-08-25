@@ -1,11 +1,7 @@
 import { communityPath, thread } from "../../../app/routeMap";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
-import type {
-  Mention,
-  MentionAction,
-  MentionCategory,
-} from "../mentions.data";
+import type { Mention, MentionAction, MentionCategory } from "../mentions.data";
 import type { MentionActorDTO, MentionDTO } from "./mentions.api";
 import type { MentionDay } from "./useMentions";
 
@@ -72,7 +68,10 @@ function whereToFor(dto: MentionDTO): string | undefined {
  * demo's inline reply/RSVP are omitted — replying isn't wired to the backend
  * here, so offering it in live would be a fake affordance.
  */
-function actionsFor(dto: MentionDTO, whereTo: string | undefined): MentionAction[] {
+function actionsFor(
+  dto: MentionDTO,
+  whereTo: string | undefined,
+): MentionAction[] {
   const actions: MentionAction[] = [];
   if (whereTo) {
     actions.push({

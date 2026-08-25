@@ -132,9 +132,7 @@ export function AdminOrgTiersPage() {
         </div>
       ) : tiers.length === 0 ? (
         <div className={styles.empty}>
-          <p className={styles.emptyText}>
-            {t("admin:orgTier.empty")}
-          </p>
+          <p className={styles.emptyText}>{t("admin:orgTier.empty")}</p>
         </div>
       ) : (
         <AdminOrgTierRows

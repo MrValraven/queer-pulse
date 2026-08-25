@@ -7,8 +7,7 @@ import {
 } from "./adminResourceSuggestions.api";
 
 export type AdminResourceSuggestionCategoryFilter =
-  | ResourceListingCategory
-  | "all";
+  ResourceListingCategory | "all";
 
 interface AdminResourceSuggestionsPageVM {
   items: AdminResourceSuggestionDTO[];
@@ -35,9 +34,8 @@ export function useAdminResourceSuggestions(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const { ADMIN_RESOURCE_SUGGESTIONS } = await import(
-          "../adminResourceSuggestions.data"
-        );
+        const { ADMIN_RESOURCE_SUGGESTIONS } =
+          await import("../adminResourceSuggestions.data");
         const filtered = categoryArg
           ? ADMIN_RESOURCE_SUGGESTIONS.filter(
               (suggestion) => suggestion.category === categoryArg,

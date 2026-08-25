@@ -99,9 +99,7 @@ function ProposalRow({
             count: proposal.maxPeople,
           })}
         </div>
-        {proposal.why && (
-          <div className={styles.rowNote}>“{proposal.why}”</div>
-        )}
+        {proposal.why && <div className={styles.rowNote}>“{proposal.why}”</div>}
         <div className={styles.rowDates}>
           {t("admin:adminReadingGroupProposals.row.sent", {
             date: shortDate(fmt, proposal.createdAt),
@@ -164,23 +162,19 @@ export function AdminReadingGroupProposalsPage() {
   } = useAdminReadingGroupProposals(filter);
   const { decide, pending } = useAdminReadingGroupProposalMutations();
 
-  const handleDecide = (
-    id: string,
-    decision: ReadingGroupProposalDecision,
-  ) => {
+  const handleDecide = (id: string, decision: ReadingGroupProposalDecision) => {
     decide(
       { id, decision },
       {
         onSuccess: () =>
           showToast(
-            t(`admin:adminReadingGroupProposals.toast.${DECISION_STATUS[decision]}`),
+            t(
+              `admin:adminReadingGroupProposals.toast.${DECISION_STATUS[decision]}`,
+            ),
             "success",
           ),
         onError: () =>
-          showToast(
-            t("admin:adminReadingGroupProposals.toast.error"),
-            "error",
-          ),
+          showToast(t("admin:adminReadingGroupProposals.toast.error"), "error"),
       },
     );
   };
@@ -245,9 +239,7 @@ export function AdminReadingGroupProposalsPage() {
                   <ProposalRow
                     proposal={proposal}
                     pending={pending}
-                    onDecide={(decision) =>
-                      handleDecide(proposal.id, decision)
-                    }
+                    onDecide={(decision) => handleDecide(proposal.id, decision)}
                   />
                 </FadeIn>
               ))}

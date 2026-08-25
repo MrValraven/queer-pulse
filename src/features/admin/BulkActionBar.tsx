@@ -38,10 +38,7 @@ export function BulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(
-          t("admin:adminListings.bulk.action.publish"),
-          caught,
-        ),
+        describeError(t("admin:adminListings.bulk.action.publish"), caught),
         "error",
       );
     }
@@ -53,10 +50,7 @@ export function BulkActionBar({
       onClear();
     } catch (caught) {
       showToast(
-        describeError(
-          t("admin:adminListings.bulk.action.sendBack"),
-          caught,
-        ),
+        describeError(t("admin:adminListings.bulk.action.sendBack"), caught),
         "error",
       );
     }
@@ -118,11 +112,7 @@ export function BulkActionBar({
           >
             {t("admin:adminListings.bulk.removeCta")}
           </Button>
-          <Button
-            variant="ghost-dark"
-            onClick={onClear}
-            disabled={isPending}
-          >
+          <Button variant="ghost-dark" onClick={onClear} disabled={isPending}>
             {t("admin:adminListings.bulk.clearCta")}
           </Button>
         </div>

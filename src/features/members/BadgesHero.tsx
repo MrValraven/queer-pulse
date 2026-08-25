@@ -26,7 +26,11 @@ interface BadgesHeroProps {
 
 /** Page hero: back link, title, stat trio, level dial + rungs, and the
  *  "print your case" action. The plum-gradient surface where level + XP live. */
-export function BadgesHero({ memberName, since, recognition }: BadgesHeroProps) {
+export function BadgesHero({
+  memberName,
+  since,
+  recognition,
+}: BadgesHeroProps) {
   const { t } = useTranslation();
   const [caseCardOpen, setCaseCardOpen] = useState(false);
   const { level, badges, levelLadder, perks } = recognition;
@@ -44,11 +48,15 @@ export function BadgesHero({ memberName, since, recognition }: BadgesHeroProps) 
               <FiArrowLeft aria-hidden /> {t("members:badges.backToProfile")}
             </Link>
             <h1 className={styles.heroTitle}>
-              <Translation i18nKey="members:badges.pageTitle" components={{ em: <em /> }} />
+              <Translation
+                i18nKey="members:badges.pageTitle"
+                components={{ em: <em /> }}
+              />
             </h1>
             <p className={styles.who}>
               <b>{memberName}</b>
-              {since && ` · ${t("members:profile.hero.memberSince", { since })}`}
+              {since &&
+                ` · ${t("members:profile.hero.memberSince", { since })}`}
             </p>
             <div className={styles.stats}>
               <div className={styles.stat}>
@@ -56,7 +64,9 @@ export function BadgesHero({ memberName, since, recognition }: BadgesHeroProps) 
                   {badges.earnedCount}
                   <em>/{totalCatalog}</em>
                 </div>
-                <div className={styles.statLabel}>{t("members:badges.hero.statEarnedLabel")}</div>
+                <div className={styles.statLabel}>
+                  {t("members:badges.hero.statEarnedLabel")}
+                </div>
               </div>
               <div className={styles.stat}>
                 <div className={`${styles.statNum} ${styles.statNumSm}`}>
@@ -69,7 +79,9 @@ export function BadgesHero({ memberName, since, recognition }: BadgesHeroProps) 
                     t("members:badges.hero.statRareNone")
                   )}
                 </div>
-                <div className={styles.statLabel}>{t("members:badges.hero.statRareLabel")}</div>
+                <div className={styles.statLabel}>
+                  {t("members:badges.hero.statRareLabel")}
+                </div>
               </div>
               <div className={styles.stat}>
                 <div className={`${styles.statNum} ${styles.statNumSm}`}>
@@ -77,18 +89,27 @@ export function BadgesHero({ memberName, since, recognition }: BadgesHeroProps) 
                     <>
                       {closest.name}
                       {closestLeft !== null && (
-                        <em>{t("members:badges.hero.toGo", { count: closestLeft })}</em>
+                        <em>
+                          {t("members:badges.hero.toGo", {
+                            count: closestLeft,
+                          })}
+                        </em>
                       )}
                     </>
                   ) : (
                     t("members:badges.hero.statNearAllEarned")
                   )}
                 </div>
-                <div className={styles.statLabel}>{t("members:badges.hero.statNearLabel")}</div>
+                <div className={styles.statLabel}>
+                  {t("members:badges.hero.statNearLabel")}
+                </div>
               </div>
             </div>
             <div className={styles.heroActs}>
-              <Button variant="ghost-dark" onClick={() => setCaseCardOpen(true)}>
+              <Button
+                variant="ghost-dark"
+                onClick={() => setCaseCardOpen(true)}
+              >
                 {t("members:badges.hero.viewCase")}
               </Button>
               <Button variant="ghost-dark" href="#how-xp">

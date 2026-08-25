@@ -155,14 +155,8 @@ export const overrideVerification = (
 
 /** Every request status, in the lifecycle order the backend's enum declares —
  *  mirrors the backend's `VerificationRequestStatus`. */
-export const VERIFICATION_REQUEST_STATUSES: readonly VerificationRequestStatus[] = [
-  "pending",
-  "in_review",
-  "approved",
-  "rejected",
-  "appealing",
-  "withdrawn",
-];
+export const VERIFICATION_REQUEST_STATUSES: readonly VerificationRequestStatus[] =
+  ["pending", "in_review", "approved", "rejected", "appealing", "withdrawn"];
 
 /** The status tab filter, plus the synthetic `"all"` tab. */
 export type VerificationRequestStatusFilter = VerificationRequestStatus | "all";
@@ -214,8 +208,7 @@ export interface AdminVerificationRequestDTO {
  *  evidence reference, the prior decision (if any) and who reviewed it, the
  *  anti-fraud `signals` snapshot, and the member's full verification audit
  *  trail. Mirrors the backend's `AdminVerificationRequestDetailDTO`. */
-export interface AdminVerificationRequestDetailDTO
-  extends AdminVerificationRequestDTO {
+export interface AdminVerificationRequestDetailDTO extends AdminVerificationRequestDTO {
   context: string | null;
   evidenceRef: string | null;
   decisionReason: string | null;
@@ -228,7 +221,10 @@ export interface AdminVerificationRequestDetailDTO
  *  scoped by the active `q`/`type` search but NOT by `status` — the axis the
  *  six counted tabs vary across. Mirrors the backend's
  *  `Record<VerificationRequestStatus, number>`. */
-export type VerificationRequestCounts = Record<VerificationRequestStatus, number>;
+export type VerificationRequestCounts = Record<
+  VerificationRequestStatus,
+  number
+>;
 
 /** `GET /admin/verifications/requests` response — a page of rows, the
  *  per-status tab counts, and an opaque keyset cursor for "load more". */
@@ -302,7 +298,8 @@ export const getAdminVerificationRequestDetail = (id: string) =>
 /** The three moves a moderator can make on a request — mirrors the backend's
  *  `DecideVerificationRequestDto` action union. `reason` is required by the
  *  backend only for `"reject"` (400 without one). */
-export type VerificationRequestDecisionAction = "in_review" | "approve" | "reject";
+export type VerificationRequestDecisionAction =
+  "in_review" | "approve" | "reject";
 
 /** Decide a request — mark in-review, approve, or reject. Approve raises the
  *  member's level via the Phase 1 override path server-side; reject requires

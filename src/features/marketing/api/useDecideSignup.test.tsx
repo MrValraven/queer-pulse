@@ -29,7 +29,9 @@ describe("useDecideSignup", () => {
   };
 
   beforeEach(() => {
-    queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     queryClient.setQueryData(queryKey, [row]);
   });
 
@@ -53,14 +55,14 @@ describe("useDecideSignup", () => {
       result.current.mutate({ signupId: "signup-1", status: "accepted" });
     });
 
-    expect(
-      queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status,
-    ).toBe("accepted");
+    expect(queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status).toBe(
+      "accepted",
+    );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(
-      queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status,
-    ).toBe("accepted");
+    expect(queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status).toBe(
+      "accepted",
+    );
   });
 
   it("rolls back the optimistic patch when the request fails", async () => {
@@ -71,13 +73,13 @@ describe("useDecideSignup", () => {
     act(() => {
       result.current.mutate({ signupId: "signup-1", status: "accepted" });
     });
-    expect(
-      queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status,
-    ).toBe("accepted");
+    expect(queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status).toBe(
+      "accepted",
+    );
 
     await waitFor(() => expect(result.current.isError).toBe(true));
-    expect(
-      queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status,
-    ).toBe("pending");
+    expect(queryClient.getQueryData<SignupRow[]>(queryKey)?.[0]?.status).toBe(
+      "pending",
+    );
   });
 });

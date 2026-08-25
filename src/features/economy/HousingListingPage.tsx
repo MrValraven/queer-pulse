@@ -45,8 +45,7 @@ export function HousingListingPage() {
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
-            <FiArrowLeft aria-hidden />{" "}
-            {t("economy:housingListing.back")}
+            <FiArrowLeft aria-hidden /> {t("economy:housingListing.back")}
           </Link>
           <HousingListingSkeleton />
         </div>
@@ -67,8 +66,7 @@ export function HousingListingPage() {
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
-            <FiArrowLeft aria-hidden />{" "}
-            {t("economy:housingListing.back")}
+            <FiArrowLeft aria-hidden /> {t("economy:housingListing.back")}
           </Link>
           <HousingListingError onRetry={() => void refetch()} />
         </div>
@@ -114,8 +112,7 @@ export function HousingListingPage() {
     <PageShell>
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>
-          <FiArrowLeft aria-hidden />{" "}
-            {t("economy:housingListing.back")}
+          <FiArrowLeft aria-hidden /> {t("economy:housingListing.back")}
         </Link>
 
         <FadeIn>

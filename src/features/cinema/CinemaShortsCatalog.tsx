@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FiFilm, FiSearch, FiX, FiZap } from "react-icons/fi";
-import { Button, FadeIn, SectionHead, Select } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  SectionHead,
+  Select,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";

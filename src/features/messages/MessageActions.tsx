@@ -28,7 +28,11 @@ export interface MessageActionsProps {
  * root lets the CSS keep the bar visible while the picker is open, even after
  * the pointer leaves.
  */
-export function MessageActions({ onReact, onReply, onOpenOverlay }: MessageActionsProps) {
+export function MessageActions({
+  onReact,
+  onReply,
+  onOpenOverlay,
+}: MessageActionsProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);

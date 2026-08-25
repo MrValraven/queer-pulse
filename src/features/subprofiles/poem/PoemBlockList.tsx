@@ -1,7 +1,4 @@
-import type {
-  PointerEvent as ReactPointerEvent,
-  RefCallback,
-} from "react";
+import type { PointerEvent as ReactPointerEvent, RefCallback } from "react";
 import {
   FiArrowDown,
   FiArrowUp,
@@ -67,7 +64,8 @@ export function PoemBlockList({
   {
     let counter = 0;
     for (const block of blocks) {
-      if (block.kind === "stanza") stanzaIndexByBlockId.set(block.id, ++counter);
+      if (block.kind === "stanza")
+        stanzaIndexByBlockId.set(block.id, ++counter);
     }
   }
 

@@ -36,5 +36,9 @@ export function useMagazineEditors() {
     },
   });
 
-  return { editors: query.data ?? [], isLoading: query.isLoading, isError: query.isError };
+  return {
+    editors: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

@@ -82,18 +82,26 @@ export interface EditorRowsState {
  * other path stays seed-once. Lifted out of `SubprofileEditorProvider` so the
  * provider stays thin wiring.
  */
-export function useEditorRowsState(subprofile: SubprofileView): EditorRowsState {
+export function useEditorRowsState(
+  subprofile: SubprofileView,
+): EditorRowsState {
   const [seed] = useState(() => seedRows(subprofile));
-  const [sectionRows, setSectionRowsState] = useState<SectionRowMap>(seed.sections);
-  const [sectionBaseline, setSectionBaseline] = useState<SectionRowMap>(seed.sections);
+  const [sectionRows, setSectionRowsState] = useState<SectionRowMap>(
+    seed.sections,
+  );
+  const [sectionBaseline, setSectionBaseline] = useState<SectionRowMap>(
+    seed.sections,
+  );
   const [socialRows, setSocialRows] = useState<SocialRow[]>(seed.socials);
-  const [socialBaseline, setSocialBaseline] = useState<SocialRow[]>(seed.socials);
+  const [socialBaseline, setSocialBaseline] = useState<SocialRow[]>(
+    seed.socials,
+  );
   const [affiliationRows, setAffiliationRows] = useState<AffiliationRow[]>(
     seed.affiliations,
   );
-  const [affiliationBaseline, setAffiliationBaseline] = useState<AffiliationRow[]>(
-    seed.affiliations,
-  );
+  const [affiliationBaseline, setAffiliationBaseline] = useState<
+    AffiliationRow[]
+  >(seed.affiliations);
 
   const setSectionRows = useCallback(
     (section: string, rows: SubprofileEditorRow[]) => {
@@ -128,7 +136,10 @@ export function useEditorRowsState(subprofile: SubprofileView): EditorRowsState 
   const sectionLabelKeys = useMemo(
     () =>
       Object.fromEntries(
-        subprofile.sections.map((section) => [section.section, section.labelKey]),
+        subprofile.sections.map((section) => [
+          section.section,
+          section.labelKey,
+        ]),
       ) as Record<string, string>,
     [subprofile.sections],
   );

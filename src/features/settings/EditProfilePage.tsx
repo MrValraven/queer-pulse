@@ -150,7 +150,11 @@ export function EditProfilePage() {
             <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>
               {t("settings:editProfile.saveBar.discard")}
             </Button>
-            <Button variant="primary" onClick={() => void handleSave()} disabled={isSaving}>
+            <Button
+              variant="primary"
+              onClick={() => void handleSave()}
+              disabled={isSaving}
+            >
               {isSaving
                 ? t("settings:editProfile.saveBar.saving")
                 : t("settings:editProfile.saveBar.save")}

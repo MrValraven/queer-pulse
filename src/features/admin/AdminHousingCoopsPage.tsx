@@ -33,9 +33,7 @@ export function AdminHousingCoopsPage() {
   const updateCoop = useUpdateCoop();
   const deleteCoop = useDeleteCoop();
   const [formMode, setFormMode] = useState<FormMode | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<HousingCoopDTO | null>(
-    null,
-  );
+  const [deleteTarget, setDeleteTarget] = useState<HousingCoopDTO | null>(null);
 
   const forbidden =
     isError && error instanceof ApiError && error.status === 403;
@@ -131,9 +129,7 @@ export function AdminHousingCoopsPage() {
         </div>
       ) : coops.length === 0 ? (
         <div className={styles.empty}>
-          <p className={styles.emptyText}>
-            {t("admin:housingCoop.empty")}
-          </p>
+          <p className={styles.emptyText}>{t("admin:housingCoop.empty")}</p>
         </div>
       ) : (
         <AdminHousingCoopRows

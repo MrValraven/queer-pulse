@@ -33,7 +33,10 @@ export interface ProtectWorkSectionProps {
  * The caller (`SubprofileItemDrawer`) only renders this once the item is
  * already saved, since a brand-new draft has no real `createdAt` yet.
  */
-export function ProtectWorkSection({ item, authorName }: ProtectWorkSectionProps) {
+export function ProtectWorkSection({
+  item,
+  authorName,
+}: ProtectWorkSectionProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [isBuildingRecord, setIsBuildingRecord] = useState(false);
@@ -94,7 +97,9 @@ export function ProtectWorkSection({ item, authorName }: ProtectWorkSectionProps
     const subject = encodeURIComponent(
       t("subprofiles:protect.emailSubject", { title: item.title ?? "" }),
     );
-    const body = encodeURIComponent(record.slice(0, EMAIL_BODY_CHARACTER_LIMIT));
+    const body = encodeURIComponent(
+      record.slice(0, EMAIL_BODY_CHARACTER_LIMIT),
+    );
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
 

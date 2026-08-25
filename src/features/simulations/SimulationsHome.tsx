@@ -22,7 +22,9 @@ export function SimulationsHome() {
     // navigate here and boot another simulation inside itself, recursing.
     // The hook above still runs unconditionally, so this check comes after
     // it rather than being the literal first line (see SimulationPlayer.tsx).
-    return <div className={styles.notice}>{t("simulations:insideSandbox")}</div>;
+    return (
+      <div className={styles.notice}>{t("simulations:insideSandbox")}</div>
+    );
   }
   const needle = query.trim().toLowerCase();
   const groups = SIM_GROUPS.map((group) => ({

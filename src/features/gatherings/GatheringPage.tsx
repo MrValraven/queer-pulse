@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight, FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, EmptyState, FeatureHelp, SkeletonLine, Tag } from "../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  FeatureHelp,
+  SkeletonLine,
+  Tag,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -42,7 +48,8 @@ function GatheringUnavailable({ loading }: { loading: boolean }) {
         <div className="wrap">
           <div className={styles.back}>
             <Link to={routes.calendar} className={styles.backLink}>
-              <FiArrowLeft aria-hidden /> {t("gatherings:common.backToGatherings")}
+              <FiArrowLeft aria-hidden />{" "}
+              {t("gatherings:common.backToGatherings")}
             </Link>
           </div>
           {loading ? (
@@ -95,13 +102,17 @@ export function GatheringPage() {
   // call in demo, so the confirmed state has to be held here (re-synced when a
   // live refetch resolves new server truth) — same pattern as
   // GatheringBookmarkButton's "Save" toggle and the sidebar's RSVP control.
-  const [rsvpStatus, setRsvpStatus] = useState<GatheringDetail["myRsvpStatus"]>(
-    gathering?.myRsvpStatus ?? null,
-  );
-  useEffect(
-    () => setRsvpStatus(gathering?.myRsvpStatus ?? null),
-    [gathering?.myRsvpStatus],
-  );
+  const myRsvpStatus = gathering?.myRsvpStatus ?? null;
+  const [prevMyRsvpStatus, setPrevMyRsvpStatus] =
+    useState<GatheringDetail["myRsvpStatus"]>(myRsvpStatus);
+  const [rsvpStatus, setRsvpStatus] =
+    useState<GatheringDetail["myRsvpStatus"]>(myRsvpStatus);
+  // Adjusted during render (not an effect) so the re-sync lands in the same
+  // commit instead of a follow-up render.
+  if (prevMyRsvpStatus !== myRsvpStatus) {
+    setPrevMyRsvpStatus(myRsvpStatus);
+    setRsvpStatus(myRsvpStatus);
+  }
 
   if (!gathering) return <GatheringUnavailable loading={loading} />;
 
@@ -125,7 +136,8 @@ export function GatheringPage() {
         <div className="wrap">
           <div className={styles.back}>
             <Link to={routes.calendar} className={styles.backLink}>
-              <FiArrowLeft aria-hidden /> {t("gatherings:common.backToGatherings")}
+              <FiArrowLeft aria-hidden />{" "}
+              {t("gatherings:common.backToGatherings")}
             </Link>
           </div>
 

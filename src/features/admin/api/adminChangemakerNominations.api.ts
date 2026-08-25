@@ -16,9 +16,7 @@ export interface AdminPersonDTO {
 }
 
 export type AdminChangemakerNominationStatus =
-  | "pending"
-  | "approved"
-  | "dismissed";
+  "pending" | "approved" | "dismissed";
 
 export interface AdminChangemakerNominationDTO {
   id: string;

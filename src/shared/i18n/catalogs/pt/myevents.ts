@@ -216,12 +216,15 @@ export const myevents: Catalog = {
   "tools.addToCalendarOutlook": "Outlook",
   "tools.addToCalendarYahoo": "Yahoo Calendar",
   "tools.addToCalendarApple": "Calendário da Apple",
-  "tools.addToCalendarIcs": "A usar outra aplicação de calendário? Descarrega o ficheiro (.ics)",
+  "tools.addToCalendarIcs":
+    "A usar outra aplicação de calendário? Descarrega o ficheiro (.ics)",
   "tools.addToCalendarToastGoogle": "Aberto no Google Calendar",
   "tools.addToCalendarToastOutlook": "Aberto no Outlook",
   "tools.addToCalendarToastYahoo": "Aberto no Yahoo Calendar",
-  "tools.addToCalendarToastApple": "Descarregado. Abre-o para adicionar ao Calendário da Apple",
-  "tools.addToCalendarToastIcs": "Descarregado. Abre-o na tua aplicação de calendário",
+  "tools.addToCalendarToastApple":
+    "Descarregado. Abre-o para adicionar ao Calendário da Apple",
+  "tools.addToCalendarToastIcs":
+    "Descarregado. Abre-o na tua aplicação de calendário",
   "tools.moreOptionsAria": "Mais opções",
   "tools.more": "Mais",
   "tools.switchToGoing": "Mudar para vou",

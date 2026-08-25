@@ -40,7 +40,9 @@ export function PitchInbox({
         <span>{t("magazine:desk.pitchInbox.heading")}</span>
         {pitches.length > 0 && (
           <span className={styles.count}>
-            {t("magazine:desk.pitchInbox.countLabel", { count: pitches.length })}
+            {t("magazine:desk.pitchInbox.countLabel", {
+              count: pitches.length,
+            })}
           </span>
         )}
       </h2>

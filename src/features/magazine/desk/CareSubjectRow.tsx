@@ -1,4 +1,10 @@
-import { Avatar, Badge, Button, type AvatarTint, type BadgeTone } from "../../../shared/components/ui";
+import {
+  Avatar,
+  Badge,
+  Button,
+  type AvatarTint,
+  type BadgeTone,
+} from "../../../shared/components/ui";
 import { initialsFromName } from "../../../shared/lib/initials";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { PieceCareSubject } from "../api/pieces.api";
@@ -55,17 +61,27 @@ export function CareSubjectRow({ subject, onToast }: CareSubjectRowProps) {
         <span className={styles.chip} data-active={subject.named || undefined}>
           {t("magazine:piece.care.named")}
         </span>
-        <span className={styles.chip} data-active={subject.out === true || undefined}>
+        <span
+          className={styles.chip}
+          data-active={subject.out === true || undefined}
+        >
           {t("magazine:piece.care.outPublicly")}
         </span>
-        <span className={styles.chip} data-active={subject.reply === "sent" || undefined}>
+        <span
+          className={styles.chip}
+          data-active={subject.reply === "sent" || undefined}
+        >
           {t("magazine:piece.care.quotesReadBack")}
         </span>
         <Button
           size="sm"
           variant="ghost"
           onClick={() =>
-            onToast(t("magazine:piece.care.consentFormSentToast", { name: subject.name }))
+            onToast(
+              t("magazine:piece.care.consentFormSentToast", {
+                name: subject.name,
+              }),
+            )
           }
         >
           {t("magazine:piece.care.sendConsentForm")}

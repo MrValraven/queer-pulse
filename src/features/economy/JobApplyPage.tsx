@@ -141,8 +141,7 @@ export function JobApplyPage() {
         <PageShell>
           <div className={styles.page}>
             <Link to={routes.jobs} className={styles.back}>
-              <FiArrowLeft aria-hidden />{" "}
-              {t("economy:jobApply.backToJobs")}
+              <FiArrowLeft aria-hidden /> {t("economy:jobApply.backToJobs")}
             </Link>
             <SkeletonLine width="60%" height={32} style={{ marginTop: 24 }} />
             <SkeletonLine width="90%" height={16} style={{ marginTop: 16 }} />
@@ -202,8 +201,7 @@ export function JobApplyPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={jobPath} className={styles.back}>
-          <FiArrowLeft aria-hidden />{" "}
-          {t("economy:jobApply.backToJob")}
+          <FiArrowLeft aria-hidden /> {t("economy:jobApply.backToJob")}
         </Link>
 
         {submitted ? (
@@ -215,7 +213,9 @@ export function JobApplyPage() {
                 closeLabel={t("economy:jobApply.success.closeLabel")}
                 onClose={() => void navigate(routes.applicationStatus)}
                 steps={[
-                  t("economy:jobApply.success.step1", { org: job.organization }),
+                  t("economy:jobApply.success.step1", {
+                    org: job.organization,
+                  }),
                   t("economy:jobApply.success.step2"),
                   t("economy:jobApply.success.step3"),
                 ]}
@@ -234,7 +234,11 @@ export function JobApplyPage() {
           </FadeIn>
         ) : (
           <FadeIn>
-            <JobApplyHeader job={job} deadlineFull={deadlineFull} percent={pct} />
+            <JobApplyHeader
+              job={job}
+              deadlineFull={deadlineFull}
+              percent={pct}
+            />
             <div className={styles.grid}>
               <JobApplyForm
                 job={job}

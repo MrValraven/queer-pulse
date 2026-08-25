@@ -70,11 +70,11 @@ async function loadLivePublicProfile(
   vi.stubEnv("VITE_DEMO", "");
 
   vi.doMock("../../features/members/api/publicProfile.api", async () => ({
-    ...(await vi.importActual(
-      "../../features/members/api/publicProfile.api",
-    )),
+    ...(await vi.importActual("../../features/members/api/publicProfile.api")),
     getPublicEligibilitySignals,
-    getPublicProfileVisibility: vi.fn(async () => ({ enabled: false })),
+    getPublicProfileVisibility: vi.fn(() =>
+      Promise.resolve({ enabled: false }),
+    ),
   }));
   vi.doMock("./authContext", () => ({
     useAuth: () => ({ loggedIn: true, user: { profile: { slug: "me" } } }),
@@ -128,9 +128,7 @@ describe("PublicProfileProvider", () => {
     expect(result.current.eligibilityStatus).toBe("loading");
     expect(result.current.eligibility.eligible).toBe(false);
 
-    await waitFor(() =>
-      expect(result.current.eligibilityStatus).toBe("ready"),
-    );
+    await waitFor(() => expect(result.current.eligibilityStatus).toBe("ready"));
     expect(result.current.eligibility.eligible).toBe(true);
     expect(getPublicEligibilitySignals).toHaveBeenCalled();
   });
@@ -169,9 +167,7 @@ describe("PublicProfileProvider", () => {
 
     expect(result.current.eligibilityStatus).toBe("loading");
 
-    await waitFor(() =>
-      expect(result.current.eligibilityStatus).toBe("error"),
-    );
+    await waitFor(() => expect(result.current.eligibilityStatus).toBe("error"));
     expect(result.current.eligibility.eligible).toBe(false);
   });
 });

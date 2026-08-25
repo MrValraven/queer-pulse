@@ -21,8 +21,12 @@ export function buildPublishPayload(
 }
 
 /** The i18n key for the success toast after that same publish action resolves. */
-export function publishSuccessToastKey(published: boolean, publishStatus: PublishStatus): string {
+export function publishSuccessToastKey(
+  published: boolean,
+  publishStatus: PublishStatus,
+): string {
   if (published) return "magazine:write.header.unpublishedToast";
-  if (publishStatus === "schedule") return "magazine:write.header.scheduledToast";
+  if (publishStatus === "schedule")
+    return "magazine:write.header.scheduledToast";
   return "magazine:write.header.publishedToast";
 }

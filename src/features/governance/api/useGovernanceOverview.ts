@@ -85,10 +85,11 @@ const TINT_BY_KEY = {
 // same demo experience, no network. The `governance.data` mock is imported on
 // demand inside the demo queryFn (see below) so it never ships in the live
 // bundle.
-async function buildDemo(): Promise<Omit<GovernanceOverviewResult, "loading" | "error" | "retry">> {
-  const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } = await import(
-    "../governance.data"
-  );
+async function buildDemo(): Promise<
+  Omit<GovernanceOverviewResult, "loading" | "error" | "retry">
+> {
+  const { COUNCIL, DECISIONS, HEALTH, PRINCIPLES, STEPS } =
+    await import("../governance.data");
   return {
     health: HEALTH.map((stat) => ({
       value: stat.value,
@@ -174,7 +175,9 @@ function fromDto(
 export function useGovernanceOverview(): GovernanceOverviewResult {
   const { demoMode } = useDemoMode();
 
-  const query = useQuery<Omit<GovernanceOverviewResult, "loading" | "error" | "retry">>({
+  const query = useQuery<
+    Omit<GovernanceOverviewResult, "loading" | "error" | "retry">
+  >({
     queryKey: ["governance-overview", demoMode],
     queryFn: async () =>
       demoMode ? buildDemo() : fromDto(await getGovernanceOverview()),

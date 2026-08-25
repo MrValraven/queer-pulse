@@ -57,10 +57,7 @@ export function SubprofileFeaturedStrip({
 
   if (!featuredHref) {
     return (
-      <div
-        className={styles.featuredStrip}
-        style={accentTintStyle(accent)}
-      >
+      <div className={styles.featuredStrip} style={accentTintStyle(accent)}>
         {content}
       </div>
     );

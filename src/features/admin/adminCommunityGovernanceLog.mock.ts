@@ -37,7 +37,12 @@ const PEOPLE: Record<string, AdminGovernanceLogMemberDTO> = {
     initials: "DO",
     avatarUrl: null,
   },
-  kai: { slug: "kai-sousa", name: "Kai Sousa", initials: "KS", avatarUrl: null },
+  kai: {
+    slug: "kai-sousa",
+    name: "Kai Sousa",
+    initials: "KS",
+    avatarUrl: null,
+  },
   theo: {
     slug: "theo-mendes",
     name: "Théo Mendes",
@@ -66,19 +71,30 @@ type EntrySeed = [
   number,
 ];
 
-function buildTrail(slug: string, seeds: EntrySeed[]): AdminGovernanceLogEntryDTO[] {
-  return seeds.map(([action, actorKey, targetKey, metadata, hoursAgo], index) => ({
-    id: `${slug}-governance-${index + 1}`,
-    action,
-    actor: actorKey ? PEOPLE[actorKey]! : null,
-    target: targetKey ? PEOPLE[targetKey]! : null,
-    metadata,
-    createdAt: new Date(NOW - hoursAgo * HOUR_IN_MS).toISOString(),
-  }));
+function buildTrail(
+  slug: string,
+  seeds: EntrySeed[],
+): AdminGovernanceLogEntryDTO[] {
+  return seeds.map(
+    ([action, actorKey, targetKey, metadata, hoursAgo], index) => ({
+      id: `${slug}-governance-${index + 1}`,
+      action,
+      actor: actorKey ? PEOPLE[actorKey]! : null,
+      target: targetKey ? PEOPLE[targetKey]! : null,
+      metadata,
+      createdAt: new Date(NOW - hoursAgo * HOUR_IN_MS).toISOString(),
+    }),
+  );
 }
 
 const TRANS_FRIENDS_SEEDS: EntrySeed[] = [
-  ["frozen", null, null, { reason: "open reports past the auto-freeze threshold" }, 3],
+  [
+    "frozen",
+    null,
+    null,
+    { reason: "open reports past the auto-freeze threshold" },
+    3,
+  ],
   ["unfrozen", "sofia", null, { adminOverride: true }, 8],
   ["role_changed", "ines", "devon", { fromRole: "member", toRole: "mod" }, 26],
   ["member_removed", "ines", "marsh", null, 31],
@@ -89,15 +105,30 @@ const TRANS_FRIENDS_SEEDS: EntrySeed[] = [
     { changes: { accessTier: { from: "public", to: "private" } } },
     54,
   ],
-  ["role_changed", "sofia", "kai", { adminOverride: true, fromRole: "mod", toRole: "member" }, 73],
+  [
+    "role_changed",
+    "sofia",
+    "kai",
+    { adminOverride: true, fromRole: "mod", toRole: "member" },
+    73,
+  ],
   [
     "settings_changed",
     "sofia",
     null,
-    { adminOverride: true, changes: { requiresSecondVouch: { from: false, to: true } } },
+    {
+      adminOverride: true,
+      changes: { requiresSecondVouch: { from: false, to: true } },
+    },
     96,
   ],
-  ["ownership_transferred", "sofia", "ines", { adminOverride: true, previousOwnerId: null }, 120],
+  [
+    "ownership_transferred",
+    "sofia",
+    "ines",
+    { adminOverride: true, previousOwnerId: null },
+    120,
+  ],
   ["role_changed", "ines", "theo", { fromRole: "member", toRole: "mod" }, 148],
   ["unarchived", "sofia", null, { adminOverride: true }, 170],
   ["archived", "ines", null, null, 176],
@@ -105,7 +136,14 @@ const TRANS_FRIENDS_SEEDS: EntrySeed[] = [
     "settings_changed",
     "ines",
     null,
-    { changes: { tagline: { from: "", to: "A room for trans people and the people who love them" } } },
+    {
+      changes: {
+        tagline: {
+          from: "",
+          to: "A room for trans people and the people who love them",
+        },
+      },
+    },
     200,
   ],
   ["member_removed", "theo", "rita", null, 224],
@@ -124,7 +162,13 @@ const TRANS_FRIENDS_SEEDS: EntrySeed[] = [
     },
     290,
   ],
-  ["owner_auto_promoted", null, "ines", { reason: "owner account erased", previousOwnerId: null }, 340],
+  [
+    "owner_auto_promoted",
+    null,
+    "ines",
+    { reason: "owner account erased", previousOwnerId: null },
+    340,
+  ],
   ["role_changed", "kai", "sofia", { fromRole: "member", toRole: "mod" }, 372],
   ["member_removed", "kai", null, { adminOverride: true }, 400],
   [
@@ -135,7 +179,13 @@ const TRANS_FRIENDS_SEEDS: EntrySeed[] = [
     430,
   ],
   ["role_changed", "kai", "devon", { fromRole: "member", toRole: "mod" }, 470],
-  ["settings_changed", "kai", null, { changes: { isFeatured: { from: false, to: true } } }, 520],
+  [
+    "settings_changed",
+    "kai",
+    null,
+    { changes: { isFeatured: { from: false, to: true } } },
+    520,
+  ],
 ];
 
 const QUEER_CREATIVES_SEEDS: EntrySeed[] = [
@@ -149,15 +199,30 @@ const QUEER_CREATIVES_SEEDS: EntrySeed[] = [
   ],
   ["member_removed", "devon", "marsh", { adminOverride: true }, 130],
   ["unfrozen", "sofia", null, { adminOverride: true }, 210],
-  ["frozen", null, null, { reason: "open reports past the auto-freeze threshold" }, 214],
+  [
+    "frozen",
+    null,
+    null,
+    { reason: "open reports past the auto-freeze threshold" },
+    214,
+  ],
 ];
 
 const LISBON_QUEERS_SEEDS: EntrySeed[] = [
-  ["ownership_transferred", "sofia", "theo", { adminOverride: true, previousOwnerId: null }, 40],
+  [
+    "ownership_transferred",
+    "sofia",
+    "theo",
+    { adminOverride: true, previousOwnerId: null },
+    40,
+  ],
   ["role_changed", "theo", "rita", { fromRole: "member", toRole: "mod" }, 88],
 ];
 
-export const GOVERNANCE_LOG_BY_SLUG: Record<string, AdminGovernanceLogEntryDTO[]> = {
+export const GOVERNANCE_LOG_BY_SLUG: Record<
+  string,
+  AdminGovernanceLogEntryDTO[]
+> = {
   "trans-friends": buildTrail("trans-friends", TRANS_FRIENDS_SEEDS),
   "queer-creatives": buildTrail("queer-creatives", QUEER_CREATIVES_SEEDS),
   "lisbon-queers": buildTrail("lisbon-queers", LISBON_QUEERS_SEEDS),

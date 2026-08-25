@@ -75,7 +75,8 @@ export const safety: Catalog = {
   "report.category.venueSafety": "Comportamento inseguro num convívio",
   "report.category.other": "Outra coisa",
   "report.form.involvedLabel": "Quem ou o que esteve envolvido (opcional)",
-  "report.form.involvedPlaceholder": "Um nome, um lugar, um link, o que tiveres",
+  "report.form.involvedPlaceholder":
+    "Um nome, um lugar, um link, o que tiveres",
   "report.form.involvedHelper":
     "Escrito por ti, com as tuas palavras. Este formulário ainda não consegue ligar uma denúncia a um perfil ou a uma publicação, por isso alguém da moderação lê o que escreveres aqui e procura o registo.",
   // Prefixo da linha "quem ou o quê" dentro do corpo da denúncia enviado à moderação.
@@ -148,7 +149,8 @@ export const safety: Catalog = {
   "reason.housingUnsafe":
     "Alojamento inseguro, discriminatório, ou com informação enganosa",
   "reason.housingScam": "Burla ou anúncio falso",
-  "reason.notAffirming": "Não é afirmativo LGBTQ+: quebrou o compromisso da comunidade",
+  "reason.notAffirming":
+    "Não é afirmativo LGBTQ+: quebrou o compromisso da comunidade",
   "reason.offPlatform": "Pediram para pagar ou sair da plataforma",
   "reason.other": "Outra coisa, explicada em detalhe",
 
@@ -253,7 +255,8 @@ export const safety: Catalog = {
   "profileMenu.withdrawVouchConfirmBody":
     "{name} deixa de poder contar com o teu voto de confiança para a sua reputação na QueerPulse. Podes voltar a dar-lhe um voto de confiança mais tarde.",
   "profileMenu.withdrawVouchConfirmCta": "Retirar voto de confiança",
-  "profileMenu.withdrawVouchToast": "Retiraste o teu voto de confiança a {name}.",
+  "profileMenu.withdrawVouchToast":
+    "Retiraste o teu voto de confiança a {name}.",
   "blockModal.title": "Bloquear {name}?",
   "blockModal.body":
     "Bloquear corta qualquer ligação entre vocês. {name} deixa de poder ver o teu perfil, enviar-te mensagem ou encontrar-te na pesquisa, e nenhum de vocês consegue estabelecer ligação com o outro. Podes desbloquear mais tarde.",
@@ -545,7 +548,6 @@ export const safety: Catalog = {
   "spaces.how.step6.desc":
     "Se algo mudar (um incidente, uma mudança de ambiente), qualquer pessoa pode sinalizar a ficha. Três sinalizações desencadeiam uma revisão imediata e a suspensão temporária do emblema.",
 
-
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Espaços seguros LGBTQ+ verificados em Lisboa",
   "spaces.meta.description":
@@ -629,7 +631,8 @@ export const safety: Catalog = {
     "Aqui está o que acontece a seguir: confirmamos a receção de todas as nomeações no prazo de <strong>48 horas</strong>. Depois, três pessoas verificadas visitam de forma independente e avaliam-no segundo os critérios, antes de um painel de voluntáries decidir. Vamos manter-te informade.",
   "spaces.nominate.anotherCta": "Nomear outro espaço",
   "spaces.nominate.comingSoon.badge": "Brevemente",
-  "spaces.nominate.comingSoon.title": "As nomeações estão <em>a chegar em breve.</em>",
+  "spaces.nominate.comingSoon.title":
+    "As nomeações estão <em>a chegar em breve.</em>",
   "spaces.nominate.comingSoon.body":
     "Ainda estamos a construir o processo de revisão por trás das nomeações de espaços. Ative a plataforma de demonstração para pré-visualizar o fluxo completo, ou volte em breve.",
 
@@ -642,8 +645,10 @@ export const safety: Catalog = {
   "spaces.detail.relyTitle": "Com o que podes contar, <em>aqui</em>",
   "spaces.detail.relySub":
     "Todos os espaços verificados comprometem-se com isto. Verificamos duas vezes por ano.",
-  "spaces.detail.vouchedTitle_one": "Com voto de confiança de <em>{count} pessoa</em>",
-  "spaces.detail.vouchedTitle_other": "Com voto de confiança de <em>{count} pessoas</em>",
+  "spaces.detail.vouchedTitle_one":
+    "Com voto de confiança de <em>{count} pessoa</em>",
+  "spaces.detail.vouchedTitle_other":
+    "Com voto de confiança de <em>{count} pessoas</em>",
   "spaces.detail.vouchedSub":
     "Avaliações de segurança independentes de pessoas verificadas.",
   "spaces.detail.addVouchCta": "Adicionar a tua",
@@ -713,7 +718,8 @@ export const safety: Catalog = {
   "vouchModal.form.submitCta": "Adicionar o meu voto de confiança",
   "vouchModal.form.error": "Não foi possível submeter. Tenta novamente.",
   "vouchModal.comingSoon.badge": "Brevemente",
-  "vouchModal.comingSoon.title": "Os votos de confiança estão <em>a chegar em breve.</em>",
+  "vouchModal.comingSoon.title":
+    "Os votos de confiança estão <em>a chegar em breve.</em>",
   "vouchModal.comingSoon.body":
     "Ainda estamos a construir o processo de confiança por trás dos votos de confiança de membros. Ativa a plataforma de demonstração para pré-visualizar o fluxo completo, ou volta em breve.",
   "vouchModal.comingSoon.doneCta": "Fechar",

@@ -19,7 +19,8 @@
   font-size: 1.25rem;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background var(--dur-fast) var(--ease),
+  transition:
+    background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {

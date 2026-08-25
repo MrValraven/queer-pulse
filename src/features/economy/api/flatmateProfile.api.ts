@@ -1,4 +1,9 @@
-import { apiGet, apiGetNullable, apiPost, apiPut } from "../../../shared/api/client";
+import {
+  apiGet,
+  apiGetNullable,
+  apiPost,
+  apiPut,
+} from "../../../shared/api/client";
 import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 import type { VerificationLevel } from "./verification.api";
@@ -115,9 +120,9 @@ export async function getFlatmateProfiles(
   for (const tag of filters.tags ?? []) query.append("tags", tag);
   if (filters.page) query.set("page", String(filters.page));
   const qs = query.toString();
-  const res = await apiGet<FlatmateProfileDTO[] | ItemsPage<FlatmateProfileDTO>>(
-    `/flatmate-directory${qs ? `?${qs}` : ""}`,
-  );
+  const res = await apiGet<
+    FlatmateProfileDTO[] | ItemsPage<FlatmateProfileDTO>
+  >(`/flatmate-directory${qs ? `?${qs}` : ""}`);
   return toItemsPage(res);
 }
 

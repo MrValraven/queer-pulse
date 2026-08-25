@@ -115,8 +115,7 @@ export function GeoRestrictedPage() {
             />
           </span>
           <Link to={routes.homepage}>
-            {t("system:geoRestricted.goHome")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("system:geoRestricted.goHome")} <FiArrowRight aria-hidden />
           </Link>
         </div>
       </StatusCard>

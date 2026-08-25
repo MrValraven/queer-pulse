@@ -8,11 +8,7 @@ import { apiGet, apiPost, apiPut } from "../../../shared/api/client";
 export type TitleKind = "film" | "short";
 
 export type TitleStatus =
-  | "draft"
-  | "awaiting_upload"
-  | "processing"
-  | "ready"
-  | "failed";
+  "draft" | "awaiting_upload" | "processing" | "ready" | "failed";
 
 export interface MyProgressDTO {
   positionSeconds: number;

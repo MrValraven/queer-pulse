@@ -4,9 +4,7 @@
  * toggle list. Add a role here + on the backend and it appears automatically.
  */
 export type StaffRoleId =
-  | "magazine_editor"
-  | "magazine_writer"
-  | "housing_moderator";
+  "magazine_editor" | "magazine_writer" | "housing_moderator";
 
 export interface StaffRoleMeta {
   id: StaffRoleId;

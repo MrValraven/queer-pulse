@@ -26,7 +26,8 @@ import {
   type MemberCard,
 } from "./memberDirectoryFilter.data";
 import { FilterProfessions } from "./FilterProfessions";
-import { FilterSection, type SectionKey } from "./FilterSection";
+import { FilterSection } from "./FilterSection";
+import { type SectionKey } from "./filterSectionKeys";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Toggle a value within a string[] immutably. */

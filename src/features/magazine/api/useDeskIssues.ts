@@ -51,7 +51,9 @@ export function useDeskIssues() {
 export function suggestNextIssueNumber(issues: IssueSummaryDto[]): string {
   const highest = issues.reduce((currentHighest, issue) => {
     const parsed = Number.parseInt(issue.number, 10);
-    return Number.isNaN(parsed) ? currentHighest : Math.max(currentHighest, parsed);
+    return Number.isNaN(parsed)
+      ? currentHighest
+      : Math.max(currentHighest, parsed);
   }, 0);
   return String(highest + 1).padStart(2, "0");
 }
@@ -91,7 +93,9 @@ export function useCreateIssue() {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [DESK_ISSUES_QUERY_KEY] });
-      void queryClient.invalidateQueries({ queryKey: ["magazine-current-issue"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-current-issue"],
+      });
       // The public archive lists issues too — a newly created issue belongs
       // there as soon as it exists, not only once it ships.
       void queryClient.invalidateQueries({ queryKey: ["magazine-issues"] });

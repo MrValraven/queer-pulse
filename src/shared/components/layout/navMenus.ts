@@ -151,7 +151,8 @@ export const NAV_MENUS: MegaMenu[] = [
           {
             // Activism folded into Volunteering: one entry, the Volunteer page
             // is the entry point; the activism guide is reached from there.
-            labelKey: "shared:megaNav.community.col.organise.activismVolunteering",
+            labelKey:
+              "shared:megaNav.community.col.organise.activismVolunteering",
             href: routes.volunteer,
           },
         ],

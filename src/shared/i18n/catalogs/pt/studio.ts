@@ -1290,8 +1290,7 @@ export const studio: Catalog = {
   "program.publishBar.publishCta": "Publicar ao meio-dia",
 
   "program.toast.addedToSlate": "Adicionado à seleção desta semana",
-  "program.toast.passed":
-    "Recusado. Quem submeteu pode voltar a tentar depois",
+  "program.toast.passed": "Recusado. Quem submeteu pode voltar a tentar depois",
   "program.toast.playingPreview": "A reproduzir pré-visualização…",
   "program.toast.openingRoomPreview": "A abrir a pré-visualização da sala…",
   "program.toast.chooseNewCover": "Escolhe um novo artista de capa…",
@@ -1797,4 +1796,37 @@ export const studio: Catalog = {
     "A nossa plataforma de música em cooperativa (páginas de artistas, sessões ao vivo, pagamentos e o fundo de solidariedade) ainda não abriu ao público. Estamos a construí-la à vista de todes e chega aqui em breve.",
   "comingSoon.exploreCulture": "Explorar a Cultura",
   "comingSoon.backHome": "Voltar ao início",
+
+  // ── sweep no-literal-string: legendas reutilizáveis do ImageSlot ─────────
+  "media.coverLabel": "capa",
+  "media.scoreLabel": "partitura",
+  "media.setArtLabel": "arte do set",
+  "media.collectionLabel": "coleção",
+  "media.portraitLabel": "retrato",
+  "media.trackLabel": "faixa",
+
+  // ── sweep no-literal-string: linhas "de <artista> · <factos>" ────────────
+  "albumHero.byLine": "de <strong>{artist}</strong> · {year} · {location}",
+  "artistHero.statsLine":
+    "{releases} lançamentos · {sheetMusicSets} partituras · <strong>{sustainers} sustentadores</strong>",
+  "artist.sidebar.perMonthSuffix": "/mês",
+  "liveNow.onAirTag": "no ar",
+  "liveNow.byFromLine":
+    "de <strong>{artist}</strong> · do álbum <em>{album}</em>",
+  "liveNow.setBuilding.activityLine":
+    "{curator} escreveu a próxima faixa <em>{elapsed}</em>",
+  "live.ribbon.showLine": '"{title}" · programado e apresentado por {host}',
+  "room.hero.byFromLine":
+    "de <strong>{artist}</strong> · do álbum <em>{album}</em> · {year} · {place}",
+  "track.hero.byFromLine":
+    "de <strong>{artist}</strong> · do álbum <em>{album}</em> · {year}",
+  "track.page.crumbLabel": "faixa {number}",
+
+  // ── sweep no-literal-string: eyebrows/etiquetas diversas ──────────────────
+  "album.sidebar.splitHint":
+    "Se comprares por {price}: <em>{artistShare} para {artist}</em>, {solidarityShare} para o fundo de solidariedade, {platformShare} para a plataforma, processamento absorvido.",
+  "collection.page.curatedByEyebrow": "Coleção · com curadoria de {curator}",
+  "flagReview.reviewedByLine": "Revisto por <em>{reviewer}</em>",
+  "set.page.programmedByEyebrow": "Set · com curadoria de {curator}",
+  "sheet.checkout.leadSheetLabel": "Partitura principal: {title}",
 };

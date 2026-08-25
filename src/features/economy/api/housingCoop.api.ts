@@ -34,8 +34,7 @@ export interface CoopJoinRequestBody {
   note?: string;
 }
 
-export const getHousingCoops = () =>
-  apiGet<HousingCoopDTO[]>("/housing/coops");
+export const getHousingCoops = () => apiGet<HousingCoopDTO[]>("/housing/coops");
 
 export const submitCoopJoinRequest = (
   slug: string,

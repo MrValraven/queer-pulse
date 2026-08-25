@@ -25,7 +25,10 @@ function initialedByline(fullName: string): string {
  * active in the "Your work" list (`WriterWorkspacePage`'s `activeAssignment`,
  * defaulting to the first, selectable per-assignment via `AssignmentCard`).
  */
-export function BylineSafetyCard({ assignment, onUpdateByline }: BylineSafetyCardProps) {
+export function BylineSafetyCard({
+  assignment,
+  onUpdateByline,
+}: BylineSafetyCardProps) {
   const { t } = useTranslation();
   const current = assignment;
   const anonymousByline = t("magazine:writer.byline.anonymous");
@@ -35,7 +38,11 @@ export function BylineSafetyCard({ assignment, onUpdateByline }: BylineSafetyCar
       <h3>{t("magazine:writer.byline.heading")}</h3>
       <p className={pieceStyles.tiny}>{t("magazine:writer.byline.body")}</p>
       {current ? (
-        <FormField label={t("magazine:writer.byline.fieldLabel", { title: current.title })}>
+        <FormField
+          label={t("magazine:writer.byline.fieldLabel", {
+            title: current.title,
+          })}
+        >
           <Select
             value={current.byline}
             onChange={(value) => onUpdateByline(current.id, value ?? "")}
@@ -49,7 +56,9 @@ export function BylineSafetyCard({ assignment, onUpdateByline }: BylineSafetyCar
           />
         </FormField>
       ) : (
-        <p className={pieceStyles.tiny}>{t("magazine:writer.byline.emptyState")}</p>
+        <p className={pieceStyles.tiny}>
+          {t("magazine:writer.byline.emptyState")}
+        </p>
       )}
     </div>
   );

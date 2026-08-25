@@ -26,5 +26,7 @@ export function useGroupIndicators(
   self: { id: string | null; slug?: string },
 ): GroupIndicators {
   if (!active.isGroup) return { groupSeenBy: [] };
-  return { groupSeenBy: computeGroupSeenBy(active.members, lastOutbound, self) };
+  return {
+    groupSeenBy: computeGroupSeenBy(active.members, lastOutbound, self),
+  };
 }

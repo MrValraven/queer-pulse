@@ -76,7 +76,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Bar",
     name: "Purex",
     neighbourhood: "Intendente",
-    description: "One of Lisbon's longest-running queer bars. Genuinely inclusive, with no single type of person dominating the scene. Staff are known to be directly supportive if anything goes wrong. Gender-neutral bathrooms, accessible entrance.",
+    description:
+      "One of Lisbon's longest-running queer bars. Genuinely inclusive, with no single type of person dominating the scene. Staff are known to be directly supportive if anything goes wrong. Gender-neutral bathrooms, accessible entrance.",
     tags: ["Gender-neutral bathrooms", "Accessible", "Trans-welcoming"],
     rating: "4.9",
     reviews: "54 reviews",
@@ -143,7 +144,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Bar",
     name: "Trumps",
     neighbourhood: "Rato",
-    description: "Old-school Lisbon gay bar with a loyal community. Welcoming to lesbians, bi, and non-binary people as much as gay men. Drag nights on Fridays. Some accessibility limitations (stairs to main bar).",
+    description:
+      "Old-school Lisbon gay bar with a loyal community. Welcoming to lesbians, bi, and non-binary people as much as gay men. Drag nights on Fridays. Some accessibility limitations (stairs to main bar).",
     tags: ["Drag nights", "Long-standing", "Stairs noted"],
     rating: "4.7",
     reviews: "38 reviews",
@@ -209,7 +211,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Club",
     name: "Lux Frágil",
     neighbourhood: "Santa Apolónia",
-    description: "Lisbon's most celebrated club has a consistent track record with the queer community. Multiple floors, good lighting in bathrooms, security staff who take complaints seriously. Queer nights occur regularly. Check their calendar.",
+    description:
+      "Lisbon's most celebrated club has a consistent track record with the queer community. Multiple floors, good lighting in bathrooms, security staff who take complaints seriously. Queer nights occur regularly. Check their calendar.",
     tags: ["Queer nights", "Reviewed security", "Multiple floors"],
     rating: "4.6",
     reviews: "47 reviews",
@@ -276,7 +279,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Café",
     name: "Linha d'Água",
     neighbourhood: "Príncipe Real",
-    description: "A calm, queer-owned café. Good for laptop work or a quiet coffee. Community notice board on the wall. Staff know many regulars by name. Fully accessible. One of the few alcohol-free-friendly options in the neighbourhood.",
+    description:
+      "A calm, queer-owned café. Good for laptop work or a quiet coffee. Community notice board on the wall. Staff know many regulars by name. Fully accessible. One of the few alcohol-free-friendly options in the neighbourhood.",
     tags: ["Queer-owned", "Sober-friendly", "Accessible", "Community board"],
     rating: "4.9",
     reviews: "29 reviews",
@@ -343,7 +347,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Healthcare",
     name: "CheckpointLx",
     neighbourhood: "Intendente",
-    description: "Community-run sexual health service. Staff are experienced with queer and trans clients. No judgment, no assumptions about bodies or practices. Free and anonymous. See the sexual health page for full details.",
+    description:
+      "Community-run sexual health service. Staff are experienced with queer and trans clients. No judgment, no assumptions about bodies or practices. Free and anonymous. See the sexual health page for full details.",
     tags: ["Trans-experienced staff", "Free", "Anonymous"],
     rating: "4.9",
     reviews: "84 reviews",
@@ -410,7 +415,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Services",
     name: "Barbearia Mouraria",
     neighbourhood: "Mouraria",
-    description: "A barbershop with community roots. Explicitly welcoming to trans and non-binary people. Staff are experienced with all hair types and won't make your visit about your identity. No gendered pricing.",
+    description:
+      "A barbershop with community roots. Explicitly welcoming to trans and non-binary people. Staff are experienced with all hair types and won't make your visit about your identity. No gendered pricing.",
     tags: ["Trans-welcoming", "No gendered pricing", "Walk-in welcome"],
     rating: "4.8",
     reviews: "22 reviews",
@@ -477,7 +483,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Arts",
     name: "ZDB (Zé dos Bois)",
     neighbourhood: "Bairro Alto",
-    description: "Arts venue with a long history of hosting queer artists and events. Programming is consistently intersectional. Welcomes community events, hosts several regular queer club nights, and has always been a safe space for queerness in Lisbon.",
+    description:
+      "Arts venue with a long history of hosting queer artists and events. Programming is consistently intersectional. Welcomes community events, hosts several regular queer club nights, and has always been a safe space for queerness in Lisbon.",
     tags: ["Queer programming", "Community events", "Accessible"],
     rating: "4.8",
     reviews: "41 reviews",
@@ -548,7 +555,8 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     typeLabel: "Café",
     name: "Copenhagen Coffee Lab",
     neighbourhood: "Cais do Sodré",
-    description: "Queer-staffed, relaxed, and consistently respectful. Gender-neutral bathroom. A go-to for community members who want somewhere quiet and welcoming for a first date or a meeting. No alcohol, sober-friendly.",
+    description:
+      "Queer-staffed, relaxed, and consistently respectful. Gender-neutral bathroom. A go-to for community members who want somewhere quiet and welcoming for a first date or a meeting. No alcohol, sober-friendly.",
     tags: ["Sober-friendly", "Queer staff", "Gender-neutral bathroom"],
     rating: "4.7",
     reviews: "18 reviews",

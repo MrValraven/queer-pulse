@@ -35,7 +35,10 @@ export function BadgeCaseCard({
   const { t } = useTranslation();
   const dialogRef = useDismiss(onClose);
   const titleId = useId();
-  const totalXp = earnedBadges.reduce((sum, badge) => sum + (badge.xpReward ?? 0), 0);
+  const totalXp = earnedBadges.reduce(
+    (sum, badge) => sum + (badge.xpReward ?? 0),
+    0,
+  );
   const shown = earnedBadges
     .slice()
     .sort((a, z) => {
@@ -70,7 +73,9 @@ export function BadgeCaseCard({
               {memberName}
             </div>
           </div>
-          <div className={styles.ccSubtitle}>{t("members:badges.caseCard.subtitle")}</div>
+          <div className={styles.ccSubtitle}>
+            {t("members:badges.caseCard.subtitle")}
+          </div>
         </div>
         <div className={styles.ccMeds}>
           {shown.length ? (
@@ -84,10 +89,14 @@ export function BadgeCaseCard({
                   className={styles.medPlain}
                 />
               ))}
-              {overflowCount > 0 && <span className={styles.ccMore}>+{overflowCount}</span>}
+              {overflowCount > 0 && (
+                <span className={styles.ccMore}>+{overflowCount}</span>
+              )}
             </>
           ) : (
-            <span className={styles.ccEmpty}>{t("members:badges.caseCard.emptyDesc")}</span>
+            <span className={styles.ccEmpty}>
+              {t("members:badges.caseCard.emptyDesc")}
+            </span>
           )}
         </div>
         <div className={styles.ccFoot}>

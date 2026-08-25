@@ -32,8 +32,7 @@ export function MentorDetailPage() {
       <PageShell>
         <div className={styles.page}>
           <Link to={routes.mentorship} className={styles.back}>
-            <FiArrowLeft aria-hidden />{" "}
-            {t("economy:mentorDetail.backToAll")}
+            <FiArrowLeft aria-hidden /> {t("economy:mentorDetail.backToAll")}
           </Link>
           <EmptyState
             icon={<LuTreeDeciduous />}
@@ -62,8 +61,7 @@ export function MentorDetailPage() {
     <PageShell>
       <div className={styles.page}>
         <Link to={base} className={styles.back}>
-          <FiArrowLeft aria-hidden />{" "}
-            {t("economy:mentorDetail.backToAll")}
+          <FiArrowLeft aria-hidden /> {t("economy:mentorDetail.backToAll")}
         </Link>
 
         <MentorCycleNav

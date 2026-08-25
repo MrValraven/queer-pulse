@@ -81,11 +81,7 @@ export function DirectoryReportModal({
 
   if (status === "done") {
     return (
-      <ModalSheet
-        onClose={onClose}
-        success
-        ariaLabel={title}
-      >
+      <ModalSheet onClose={onClose} success ariaLabel={title}>
         <div className={styles.confirm}>
           <span className={styles.confirmIcon} aria-hidden>
             <FiCheck />
@@ -111,10 +107,7 @@ export function DirectoryReportModal({
 
   if (status === "error") {
     return (
-      <ModalSheet
-        onClose={onClose}
-        ariaLabel={title}
-      >
+      <ModalSheet onClose={onClose} ariaLabel={title}>
         <div className={styles.errorPanel}>
           <span className={styles.errorIcon} aria-hidden>
             <FiAlertTriangle />
@@ -139,10 +132,7 @@ export function DirectoryReportModal({
   }
 
   return (
-    <ModalSheet
-      onClose={onClose}
-      ariaLabel={title}
-    >
+    <ModalSheet onClose={onClose} ariaLabel={title}>
       <h2 className={styles.title}>{title}</h2>
       <p className={styles.sub}>
         {t(SUB_KEYS[subjectKind], { name: firstName })}
@@ -150,7 +140,9 @@ export function DirectoryReportModal({
       <div
         className={styles.reasons}
         role="radiogroup"
-        aria-label={t("marketing:directory.detail.reportReview.reasonGroupAria")}
+        aria-label={t(
+          "marketing:directory.detail.reportReview.reasonGroupAria",
+        )}
       >
         {REVIEW_REPORT_REASONS.map((code) => {
           const on = reason === code;
@@ -187,7 +179,9 @@ export function DirectoryReportModal({
           disabled={!reason || status === "sending"}
         >
           {status === "sending" ? (
-            <Sending label={t("marketing:directory.detail.reportReview.sending")} />
+            <Sending
+              label={t("marketing:directory.detail.reportReview.sending")}
+            />
           ) : (
             t("marketing:directory.detail.reportReview.sendCta")
           )}

@@ -2,7 +2,10 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl, { type StyleSpecification } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { MapLoading } from "./MapLoading";
-import { buildWarmStyle, MAP_STYLE_URL } from "../../shared/components/map/siteMapStyle";
+import {
+  buildWarmStyle,
+  MAP_STYLE_URL,
+} from "../../shared/components/map/siteMapStyle";
 import s from "./localMap.module.css";
 
 interface LocationMiniMapProps {
@@ -28,7 +31,11 @@ const PIN_CLASS = s.pickerPin ?? "";
  * while the detail sidebar is sticky. The pin is fixed — this shows a location,
  * it doesn't set one (that's LocationPickerMap's job).
  */
-export function LocationMiniMap({ latitude, longitude, ariaLabel }: LocationMiniMapProps) {
+export function LocationMiniMap({
+  latitude,
+  longitude,
+  ariaLabel,
+}: LocationMiniMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markerRef = useRef<maplibregl.Marker | null>(null);
@@ -55,7 +62,10 @@ export function LocationMiniMap({ latitude, longitude, ariaLabel }: LocationMini
         attributionControl: { compact: true },
       });
       mapRef.current = map;
-      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+      map.addControl(
+        new maplibregl.NavigationControl({ showCompass: false }),
+        "top-right",
+      );
 
       const element = document.createElement("div");
       element.className = PIN_WRAP_CLASS;

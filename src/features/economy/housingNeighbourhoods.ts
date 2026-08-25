@@ -32,7 +32,10 @@ function normalizeName(value: string): string {
 }
 
 const BY_KEY = new Map(
-  LISBON_HOUSING_NEIGHBOURHOODS.map((entry) => [normalizeName(entry.name), entry]),
+  LISBON_HOUSING_NEIGHBOURHOODS.map((entry) => [
+    normalizeName(entry.name),
+    entry,
+  ]),
 );
 
 /** The centroid for a neighbourhood name, or null when we don't know it. */
@@ -40,5 +43,7 @@ export function neighbourhoodCentroid(
   name: string,
 ): { latitude: number; longitude: number } | null {
   const entry = BY_KEY.get(normalizeName(name));
-  return entry ? { latitude: entry.latitude, longitude: entry.longitude } : null;
+  return entry
+    ? { latitude: entry.latitude, longitude: entry.longitude }
+    : null;
 }

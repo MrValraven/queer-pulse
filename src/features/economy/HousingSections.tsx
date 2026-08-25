@@ -74,7 +74,9 @@ export function HousingLandlords({ landlords }: { landlords: LandlordCard[] }) {
                       <FiStar
                         key={starIndex}
                         className={
-                          starIndex < landlord.stars ? styles.llStarOn : undefined
+                          starIndex < landlord.stars
+                            ? styles.llStarOn
+                            : undefined
                         }
                       />
                     ))}

@@ -39,6 +39,7 @@ export function CurrentIssueSection() {
             />
           </div>
           {/* Content: the current issue's own title/dek, kept in English. */}
+          {/* eslint-disable local/no-literal-string -- current issue's own theme line, no backend analogue in demo mode */}
           <h2 className={styles.curH}>
             On <em>health.</em>
           </h2>
@@ -46,6 +47,7 @@ export function CurrentIssueSection() {
             Twelve pieces about how we keep our bodies, our minds, and each
             other. Reported, debated, illustrated.
           </p>
+          {/* eslint-enable local/no-literal-string */}
           <div className={styles.curMeta}>
             <span>{t("magazine:issue.stats.pagesCount", { count: 84 })}</span>
             <span>

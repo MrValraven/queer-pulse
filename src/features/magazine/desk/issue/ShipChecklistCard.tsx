@@ -20,7 +20,10 @@ export interface ShipChecklistCardProps {
  * (via the "pieces behind the gate hold and publish later" warn note), so an
  * editor can still ship on purpose with open items.
  */
-export function ShipChecklistCard({ checklist, onShip }: ShipChecklistCardProps) {
+export function ShipChecklistCard({
+  checklist,
+  onShip,
+}: ShipChecklistCardProps) {
   const { t } = useTranslation();
 
   return (
@@ -28,7 +31,10 @@ export function ShipChecklistCard({ checklist, onShip }: ShipChecklistCardProps)
       <h3>{t("magazine:issue.ship.checklistHeading")}</h3>
       <div className={styles.stack}>
         {checklist.map((item) => (
-          <div key={item.label} className={cx(styles.gaterow, !item.done && styles.open)}>
+          <div
+            key={item.label}
+            className={cx(styles.gaterow, !item.done && styles.open)}
+          >
             {item.done ? (
               <FiCheck className={styles.doneIcon} aria-hidden />
             ) : (

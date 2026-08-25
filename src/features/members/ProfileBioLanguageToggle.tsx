@@ -29,7 +29,9 @@ export function ProfileBioLanguageToggle({ profile }: { profile: Member }) {
             </button>
           ))}
           <span>
-            {t(`members:profile.hero.writtenBy.${lang}`, { name: profile.first })}
+            {t(`members:profile.hero.writtenBy.${lang}`, {
+              name: profile.first,
+            })}
           </span>
         </div>
       )}

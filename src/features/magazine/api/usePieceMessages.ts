@@ -7,7 +7,10 @@ import {
   postEditorPieceMessage,
   type PieceMessageDto,
 } from "./pieces.api";
-import { getWriterPieceMessages, postWriterPieceMessage } from "./writerWorkspace.api";
+import {
+  getWriterPieceMessages,
+  postWriterPieceMessage,
+} from "./writerWorkspace.api";
 import { DEMO_PIECE_MESSAGES } from "../data/pieceMessages.data";
 
 /** Which surface is reading/posting — the editor desk or the writer
@@ -56,7 +59,9 @@ export function usePieceMessages(pieceId: string, side: PieceThreadSide) {
     enabled: pieceId !== "",
     queryFn: async () => {
       if (demoMode) return demoThreadFor(side);
-      return side === "editor" ? getEditorPieceMessages(pieceId) : getWriterPieceMessages(pieceId);
+      return side === "editor"
+        ? getEditorPieceMessages(pieceId)
+        : getWriterPieceMessages(pieceId);
     },
   });
 
@@ -83,7 +88,10 @@ function demoMessageId(): string {
  * response directly into place — matches `useCommentMutations`'s convention
  * so a slow/rejected optimistic update can never diverge from the server.
  */
-export function usePieceMessageMutations(pieceId: string, side: PieceThreadSide) {
+export function usePieceMessageMutations(
+  pieceId: string,
+  side: PieceThreadSide,
+) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const { showToast } = useToast();

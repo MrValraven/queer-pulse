@@ -31,42 +31,46 @@ export interface DateSegmentProps {
   onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
 }
 
-export const DateSegment = forwardRef<HTMLDivElement, DateSegmentProps>(function DateSegment(
-  {
-    label,
-    text,
-    value,
-    min,
-    max,
-    placeholder,
-    disabled = false,
-    ariaDescribedBy,
-    invalid = false,
-    required = false,
-    onKeyDown,
+export const DateSegment = forwardRef<HTMLDivElement, DateSegmentProps>(
+  function DateSegment(
+    {
+      label,
+      text,
+      value,
+      min,
+      max,
+      placeholder,
+      disabled = false,
+      ariaDescribedBy,
+      invalid = false,
+      required = false,
+      onKeyDown,
+    },
+    ref,
+  ) {
+    const isEmpty = value === null;
+    return (
+      <div
+        ref={ref}
+        role="spinbutton"
+        tabIndex={disabled ? -1 : 0}
+        aria-label={label}
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={isEmpty ? undefined : value}
+        aria-valuetext={isEmpty ? placeholder : (text ?? placeholder)}
+        aria-disabled={disabled || undefined}
+        aria-describedby={ariaDescribedBy}
+        aria-invalid={invalid || undefined}
+        aria-required={required || undefined}
+        inputMode="numeric"
+        className={[styles.segment, isEmpty && styles.segmentEmpty]
+          .filter(Boolean)
+          .join(" ")}
+        onKeyDown={onKeyDown}
+      >
+        {isEmpty ? placeholder : text}
+      </div>
+    );
   },
-  ref,
-) {
-  const isEmpty = value === null;
-  return (
-    <div
-      ref={ref}
-      role="spinbutton"
-      tabIndex={disabled ? -1 : 0}
-      aria-label={label}
-      aria-valuemin={min}
-      aria-valuemax={max}
-      aria-valuenow={isEmpty ? undefined : value}
-      aria-valuetext={isEmpty ? placeholder : (text ?? placeholder)}
-      aria-disabled={disabled || undefined}
-      aria-describedby={ariaDescribedBy}
-      aria-invalid={invalid || undefined}
-      aria-required={required || undefined}
-      inputMode="numeric"
-      className={[styles.segment, isEmpty && styles.segmentEmpty].filter(Boolean).join(" ")}
-      onKeyDown={onKeyDown}
-    >
-      {isEmpty ? placeholder : text}
-    </div>
-  );
-});
+);

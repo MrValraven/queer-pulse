@@ -71,9 +71,7 @@ export function VouchMemberModal({
 
   const toggleRelationship = (value: VouchRelationship) =>
     setRelationships((prev) =>
-      prev.includes(value)
-        ? prev.filter((r) => r !== value)
-        : [...prev, value],
+      prev.includes(value) ? prev.filter((r) => r !== value) : [...prev, value],
     );
 
   const submit = () => {

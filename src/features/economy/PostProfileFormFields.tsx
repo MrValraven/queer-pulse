@@ -60,9 +60,7 @@ export function PostProfileFormFields({
           </label>
           <Select
             id={`${fieldId}-neighbourhood`}
-            placeholder={t(
-              "economy:postProfileForm.neighbourhoodPlaceholder",
-            )}
+            placeholder={t("economy:postProfileForm.neighbourhoodPlaceholder")}
             value={form.neighbourhood || null}
             onChange={(value) => form.setNeighbourhood(value ?? "")}
             options={[

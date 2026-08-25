@@ -1,4 +1,9 @@
-import { FiChevronDown, FiChevronUp, FiMoreVertical, FiTrash2 } from "react-icons/fi";
+import {
+  FiChevronDown,
+  FiChevronUp,
+  FiMoreVertical,
+  FiTrash2,
+} from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Slide } from "./data/decks";
 import { BeforeAfterSlideFields } from "./desk/deck/BeforeAfterSlideFields";
@@ -54,7 +59,9 @@ function slideSummary(slide: Slide): string {
   const raw = (() => {
     switch (slide.layout) {
       case "text":
-        return asText(slide.heading) || asText(slide.eyebrow) || asText(slide.body);
+        return (
+          asText(slide.heading) || asText(slide.eyebrow) || asText(slide.body)
+        );
       case "image":
         return slide.caption ?? slide.alt;
       case "stat":
@@ -104,7 +111,11 @@ export function SlideEditorCard({
   const summary = slideSummary(slide);
 
   return (
-    <li className={selected ? `${styles.slideCard} ${styles.sel}` : styles.slideCard}>
+    <li
+      className={
+        selected ? `${styles.slideCard} ${styles.sel}` : styles.slideCard
+      }
+    >
       <div className={styles.header}>
         <button
           type="button"

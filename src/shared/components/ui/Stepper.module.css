@@ -110,7 +110,8 @@
   border-color: var(--stepper-accent);
   background: var(--cream);
   color: var(--stepper-accent);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--stepper-accent) 16%, transparent);
+  box-shadow: 0 0 0 5px
+    color-mix(in srgb, var(--stepper-accent) 16%, transparent);
 }
 .node.current .pip {
   background: var(--stepper-accent);

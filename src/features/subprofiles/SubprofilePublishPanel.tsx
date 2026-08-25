@@ -62,7 +62,10 @@ export function SubprofilePublishPanel({
   // CREATOR's main profile (the only slug that route resolves by), an unlinked
   // one stands on its own handle. Reading the signed-in member's slug here sent
   // every co-owner of a shared persona to a not-found wall.
-  const creatorSlug = usePersonaCreatorSlug(subprofile.id, subprofile.memberCount);
+  const creatorSlug = usePersonaCreatorSlug(
+    subprofile.id,
+    subprofile.memberCount,
+  );
   const livePath = isLinked
     ? creatorSlug
       ? nestedPersonaPath(creatorSlug, subprofile.slug)

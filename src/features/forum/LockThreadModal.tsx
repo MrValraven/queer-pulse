@@ -25,7 +25,12 @@ export function LockThreadModal({
       onClose={onClose}
       footer={
         <>
-          <Button variant="ghost" type="button" onClick={onClose} disabled={busy}>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+          >
             {t("forum:lockReason.cancel")}
           </Button>
           <Button
@@ -34,7 +39,9 @@ export function LockThreadModal({
             disabled={busy}
             onClick={() => onConfirm(reason.trim())}
           >
-            {busy ? t("forum:lockReason.locking") : t("forum:lockReason.confirm")}
+            {busy
+              ? t("forum:lockReason.locking")
+              : t("forum:lockReason.confirm")}
           </Button>
         </>
       }

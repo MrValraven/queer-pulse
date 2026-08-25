@@ -60,7 +60,8 @@ export function personaPublicPathForOwner(
   row: Pick<SubprofileView, "handle" | "slug" | "linkVisibility">,
   ownerSlug: string,
 ): string {
-  if (row.linkVisibility === "linked") return nestedPersonaPath(ownerSlug, row.slug);
+  if (row.linkVisibility === "linked")
+    return nestedPersonaPath(ownerSlug, row.slug);
   return personaPath(row.handle ?? row.slug);
 }
 

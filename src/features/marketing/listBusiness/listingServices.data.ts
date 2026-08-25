@@ -81,7 +81,9 @@ export function serviceRowProblem(
 }
 
 /** True when every started row is complete. Blank rows never fail. */
-export function servicesValid(rows: readonly ListingServiceOffering[]): boolean {
+export function servicesValid(
+  rows: readonly ListingServiceOffering[],
+): boolean {
   return rows.every((row) => serviceRowProblem(row) === null);
 }
 

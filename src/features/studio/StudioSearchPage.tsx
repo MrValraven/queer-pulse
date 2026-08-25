@@ -166,7 +166,7 @@ export function StudioSearchPage() {
                       width="100%"
                       height="100%"
                       radius={10}
-                      placeholder="cv"
+                      placeholder={t("studio:media.coverLabel")}
                       style={{ position: "absolute", inset: 0 }}
                     />
                   </div>

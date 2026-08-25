@@ -47,7 +47,8 @@ function operatingDuration(operationalSince: string, t: TFunction): string {
   const now = new Date();
   const months = Math.max(
     0,
-    (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth()),
+    (now.getFullYear() - start.getFullYear()) * 12 +
+      (now.getMonth() - start.getMonth()),
   );
   const years = Math.floor(months / 12);
   if (years >= 1)

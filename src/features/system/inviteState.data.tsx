@@ -4,11 +4,7 @@ import type { InviteView } from "../auth/api/useInvite";
 
 /** Why an invite link can't be used — drives copy, rows, and CTAs. */
 export type InviteFailureReason =
-  | "expired"
-  | "used"
-  | "revoked"
-  | "notFound"
-  | "inviterInactive";
+  "expired" | "used" | "revoked" | "notFound" | "inviterInactive";
 
 /** A single action button on the invite-state card. */
 export interface InviteStateCta {
@@ -75,7 +71,10 @@ const InactiveStamp = (
   </svg>
 );
 
-export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig> = {
+export const INVITE_STATE_CONFIG: Record<
+  InviteFailureReason,
+  InviteStateConfig
+> = {
   expired: {
     eyebrowKey: "system:inviteState.expired.eyebrow",
     headingKey: "system:inviteState.expired.heading",
@@ -84,8 +83,14 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
     showInviter: true,
     // The recipient can't trigger a resend — that lives on the sender's own
     // invite list now — so the honest primary is to request a fresh invite.
-    primary: { labelKey: "system:inviteState.actions.requestNew", to: routes.requestInvite },
-    secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
+    primary: {
+      labelKey: "system:inviteState.actions.requestNew",
+      to: routes.requestInvite,
+    },
+    secondary: {
+      labelKey: "system:inviteState.actions.contact",
+      to: routes.contact,
+    },
     stamp: ClockStamp,
   },
   used: {
@@ -94,8 +99,14 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
     leadKey: "system:inviteState.used.lead",
     showExpiry: false,
     showInviter: true,
-    primary: { labelKey: "system:inviteState.actions.signIn", to: routes.signIn },
-    secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
+    primary: {
+      labelKey: "system:inviteState.actions.signIn",
+      to: routes.signIn,
+    },
+    secondary: {
+      labelKey: "system:inviteState.actions.contact",
+      to: routes.contact,
+    },
     stamp: CheckStamp,
   },
   revoked: {
@@ -104,8 +115,14 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
     leadKey: "system:inviteState.revoked.lead",
     showExpiry: false,
     showInviter: true,
-    primary: { labelKey: "system:inviteState.actions.requestNew", to: routes.requestInvite },
-    secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
+    primary: {
+      labelKey: "system:inviteState.actions.requestNew",
+      to: routes.requestInvite,
+    },
+    secondary: {
+      labelKey: "system:inviteState.actions.contact",
+      to: routes.contact,
+    },
     stamp: RevokedStamp,
   },
   notFound: {
@@ -114,8 +131,14 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
     leadKey: "system:inviteState.notFound.lead",
     showExpiry: false,
     showInviter: false,
-    primary: { labelKey: "system:inviteState.actions.requestNew", to: routes.requestInvite },
-    secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
+    primary: {
+      labelKey: "system:inviteState.actions.requestNew",
+      to: routes.requestInvite,
+    },
+    secondary: {
+      labelKey: "system:inviteState.actions.contact",
+      to: routes.contact,
+    },
     stamp: QuestionStamp,
   },
   inviterInactive: {
@@ -125,8 +148,14 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
     showExpiry: false,
     // The inviter is gone, so a "Vouched by {name}" row would only confuse.
     showInviter: false,
-    primary: { labelKey: "system:inviteState.actions.requestNew", to: routes.requestInvite },
-    secondary: { labelKey: "system:inviteState.actions.contact", to: routes.contact },
+    primary: {
+      labelKey: "system:inviteState.actions.requestNew",
+      to: routes.requestInvite,
+    },
+    secondary: {
+      labelKey: "system:inviteState.actions.contact",
+      to: routes.contact,
+    },
     stamp: InactiveStamp,
   },
 };
@@ -139,7 +168,9 @@ export const INVITE_STATE_CONFIG: Record<InviteFailureReason, InviteStateConfig>
  * `valid` never otherwise reaches this page, so it falls through to `notFound`
  * defensively.
  */
-export function reasonFromInvite(invite: InviteView | undefined): InviteFailureReason {
+export function reasonFromInvite(
+  invite: InviteView | undefined,
+): InviteFailureReason {
   if (!invite) return "notFound";
   if (invite.inviterActive === false) return "inviterInactive";
   switch (invite.status) {

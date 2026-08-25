@@ -16,8 +16,14 @@ beforeAll(() => {
 
 function loadImage() {
   const image = screen.getByAltText<HTMLImageElement>(/reframe/i);
-  Object.defineProperty(image, "naturalWidth", { value: 1000, configurable: true });
-  Object.defineProperty(image, "naturalHeight", { value: 1000, configurable: true });
+  Object.defineProperty(image, "naturalWidth", {
+    value: 1000,
+    configurable: true,
+  });
+  Object.defineProperty(image, "naturalHeight", {
+    value: 1000,
+    configurable: true,
+  });
   fireEvent.load(image);
 }
 
@@ -39,7 +45,10 @@ describe("PhotoReframeModal", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /save/i }));
     expect(onConfirm).toHaveBeenCalledWith(
-      expect.objectContaining({ width: expect.any(Number), aspect: expect.any(String) }),
+      expect.objectContaining({
+        width: expect.any(Number) as unknown as number,
+        aspect: expect.any(String) as unknown as string,
+      }),
     );
   });
 

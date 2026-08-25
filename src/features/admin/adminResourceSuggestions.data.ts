@@ -28,8 +28,7 @@ export const ADMIN_RESOURCE_SUGGESTIONS: AdminResourceSuggestionDTO[] = [
     member: { slug: "tomas", name: "Tomás Aguiar" },
     category: "legal_aid",
     name: "Porto Queer Legal Clinic",
-    description:
-      "Pro-bono workplace discrimination cases, walk-in Wednesdays.",
+    description: "Pro-bono workplace discrimination cases, walk-in Wednesdays.",
     phone: "+351 220 000 000",
     email: null,
     website: "portoqueerlegal.pt",

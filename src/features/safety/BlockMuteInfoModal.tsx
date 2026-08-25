@@ -25,13 +25,17 @@ export function BlockMuteInfoModal({ onClose }: { onClose: () => void }) {
         <div className={styles.itemTitle}>
           {t("safety:blockMute.explainer.muteTitle")}
         </div>
-        <p className={styles.itemDesc}>{t("safety:blockMute.choose.muteDesc")}</p>
+        <p className={styles.itemDesc}>
+          {t("safety:blockMute.choose.muteDesc")}
+        </p>
       </div>
       <div className={styles.item}>
         <div className={styles.itemTitle}>
           {t("safety:blockMute.explainer.blockTitle")}
         </div>
-        <p className={styles.itemDesc}>{t("safety:blockMute.choose.blockDesc")}</p>
+        <p className={styles.itemDesc}>
+          {t("safety:blockMute.choose.blockDesc")}
+        </p>
       </div>
     </Modal>
   );

@@ -39,24 +39,39 @@ export interface AdminAuditResult {
 }
 
 type RawAuditFeed =
-  | { kind: "demo"; rows: AuditEntry[]; total: number; moderators: { id: string; name: string }[] }
-  | { kind: "live"; rows: AuditFeedRowDTO[]; total: number; moderators: { id: string; name: string }[] };
+  | {
+      kind: "demo";
+      rows: AuditEntry[];
+      total: number;
+      moderators: { id: string; name: string }[];
+    }
+  | {
+      kind: "live";
+      rows: AuditFeedRowDTO[];
+      total: number;
+      moderators: { id: string; name: string }[];
+    };
 
 async function buildDemoAuditFeed(
   filters: AuditFilterState,
   page: number,
   pageSize: number,
 ): Promise<RawAuditFeed> {
-  const { AUDIT_ENTRIES, AUDIT_MODERATORS } = await import(
-    "../adminGovernance.mock"
-  );
+  const { AUDIT_ENTRIES, AUDIT_MODERATORS } =
+    await import("../adminGovernance.mock");
   const query = filters.query.trim().toLowerCase();
   const filtered = AUDIT_ENTRIES.filter((entry) => {
-    if (filters.moderator !== "all" && entry.moderatorName !== filters.moderator)
+    if (
+      filters.moderator !== "all" &&
+      entry.moderatorName !== filters.moderator
+    )
       return false;
     if (filters.action !== "all" && entry.type !== filters.action) return false;
     if (filters.range !== "all" && entry.range !== filters.range) return false;
-    if (query && !`${entry.reason} ${entry.subject}`.toLowerCase().includes(query))
+    if (
+      query &&
+      !`${entry.reason} ${entry.subject}`.toLowerCase().includes(query)
+    )
       return false;
     return true;
   });
@@ -98,7 +113,8 @@ function initialsFromName(name: string): string {
   const firstWord = words[0];
   if (!firstWord) return "";
   const secondWord = words[1];
-  if (words.length === 1 || !secondWord) return firstWord.slice(0, 2).toUpperCase();
+  if (words.length === 1 || !secondWord)
+    return firstWord.slice(0, 2).toUpperCase();
   return (firstWord.charAt(0) + secondWord.charAt(0)).toUpperCase();
 }
 
@@ -106,12 +122,11 @@ const TONE_CYCLE = ["plum", "coral", "jade", "violet", "amber"] as const;
 
 /** Deterministic tone from an id/name — same input always renders the same
  *  avatar colour, without the backend needing to send one. */
-function toneFromId(
-  id: string | null,
-): (typeof TONE_CYCLE)[number] {
+function toneFromId(id: string | null): (typeof TONE_CYCLE)[number] {
   if (!id) return "plum";
   let sum = 0;
-  for (let index = 0; index < id.length; index += 1) sum += id.charCodeAt(index);
+  for (let index = 0; index < id.length; index += 1)
+    sum += id.charCodeAt(index);
   return TONE_CYCLE[sum % TONE_CYCLE.length] ?? "plum";
 }
 

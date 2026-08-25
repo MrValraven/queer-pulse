@@ -3,7 +3,11 @@ import { ParentSize } from "@visx/responsive";
 import { scaleLinear } from "@visx/scale";
 import { curveMonotoneX } from "@visx/curve";
 import { AreaClosed, LinePath } from "@visx/shape";
-import { useChartTooltip, markFocusProps, ChartTooltip } from "../../shared/components/charts";
+import {
+  useChartTooltip,
+  markFocusProps,
+  ChartTooltip,
+} from "../../shared/components/charts";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import chartStyles from "../../shared/components/charts/charts.module.css";
@@ -126,7 +130,9 @@ export function XpSparkline({ entries }: { entries: XpLedgerEntry[] }) {
           {(data) => (
             <>
               <div className={chartStyles.tipStrong}>{data.date}</div>
-              {t("members:badges.ledger.sparkXp", { xp: data.total.toLocaleString() })}
+              {t("members:badges.ledger.sparkXp", {
+                xp: data.total.toLocaleString(),
+              })}
             </>
           )}
         </ChartTooltip>

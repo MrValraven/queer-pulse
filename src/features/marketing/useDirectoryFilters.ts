@@ -154,8 +154,17 @@ export function useDirectoryFilterResults(
   params: DirectoryFilterParams,
 ) {
   const { t } = useTranslation();
-  const { category, query, vibes, safe, sort, setCategory, toggleVibe, setSafe, setQuery } =
-    params;
+  const {
+    category,
+    query,
+    vibes,
+    safe,
+    sort,
+    setCategory,
+    toggleVibe,
+    setSafe,
+    setQuery,
+  } = params;
 
   const filtered = useMemo(
     () =>
@@ -221,7 +230,17 @@ export function useDirectoryFilterResults(
       });
     }
     return list;
-  }, [category, vibes, safe, query, t, setCategory, toggleVibe, setSafe, setQuery]);
+  }, [
+    category,
+    vibes,
+    safe,
+    query,
+    t,
+    setCategory,
+    toggleVibe,
+    setSafe,
+    setQuery,
+  ]);
 
   return { filtered, categoryCounts, mappableCount, activeFilters };
 }

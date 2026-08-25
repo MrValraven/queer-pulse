@@ -8,7 +8,9 @@ import type {
 
 // Unrun per repo policy (`do-not-run-tests-unless-asked`) — verified statically.
 
-function makeItem(overrides: Partial<SubprofileItemView> = {}): SubprofileItemView {
+function makeItem(
+  overrides: Partial<SubprofileItemView> = {},
+): SubprofileItemView {
   return {
     id: "item-test",
     section: "showcase",

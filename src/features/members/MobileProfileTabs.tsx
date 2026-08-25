@@ -1,4 +1,9 @@
-import { useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import {
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+} from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";

@@ -50,7 +50,8 @@ const PLATFORMS: Platform[] = [
     icon: "Gr",
     ic: "rgba(74,140,111,.14)",
     it: "var(--jade)",
-    description: "The largest location-based social app for gay, bi, trans, and queer people. Used by millions globally.",
+    description:
+      "The largest location-based social app for gay, bi, trans, and queer people. Used by millions globally.",
     url: "grindr.com",
   },
   {
@@ -59,7 +60,8 @@ const PLATFORMS: Platform[] = [
     icon: "HER",
     ic: "rgba(232,119,90,.12)",
     it: "var(--accent-ink)",
-    description: "Dating and social app for LGBTQ+ women, non-binary, and queer people. Community features beyond dating.",
+    description:
+      "Dating and social app for LGBTQ+ women, non-binary, and queer people. Community features beyond dating.",
     url: "weareher.com",
   },
   {
@@ -68,7 +70,8 @@ const PLATFORMS: Platform[] = [
     icon: "Lex",
     ic: "rgba(45,27,61,.07)",
     it: "var(--plum)",
-    description: "A text-based social and personal ads app for queer, lesbian, bi, trans and non-binary people. Community first.",
+    description:
+      "A text-based social and personal ads app for queer, lesbian, bi, trans and non-binary people. Community first.",
     url: "www.lex.lgbt",
   },
   {
@@ -77,7 +80,8 @@ const PLATFORMS: Platform[] = [
     icon: "Ff",
     ic: "rgba(122,82,184,.1)",
     it: "var(--violet)",
-    description: "For open-minded individuals exploring connections beyond traditional dating norms.",
+    description:
+      "For open-minded individuals exploring connections beyond traditional dating norms.",
     url: "feeld.co",
   },
   {
@@ -86,7 +90,8 @@ const PLATFORMS: Platform[] = [
     icon: "tm",
     ic: "rgba(45,27,61,.07)",
     it: "var(--plum)",
-    description: "Condé Nast's LGBTQ+ digital media platform, covering culture, politics, and identity with a progressive lens.",
+    description:
+      "Condé Nast's LGBTQ+ digital media platform, covering culture, politics, and identity with a progressive lens.",
     url: "them.us",
   },
   {
@@ -95,7 +100,8 @@ const PLATFORMS: Platform[] = [
     icon: "PN",
     ic: "rgba(232,119,90,.1)",
     it: "var(--accent-ink)",
-    description: "Europe's largest LGBTQ+ news service. Breaking news, analysis, and features on rights and culture.",
+    description:
+      "Europe's largest LGBTQ+ news service. Breaking news, analysis, and features on rights and culture.",
     url: "pinknews.co.uk",
   },
   {
@@ -104,7 +110,8 @@ const PLATFORMS: Platform[] = [
     icon: "Av",
     ic: "rgba(74,140,111,.12)",
     it: "var(--jade)",
-    description: "The world's longest-running LGBTQ+ news magazine, founded in 1967.",
+    description:
+      "The world's longest-running LGBTQ+ news magazine, founded in 1967.",
     url: "advocate.com",
   },
   {
@@ -113,7 +120,8 @@ const PLATFORMS: Platform[] = [
     icon: "O=",
     ic: "rgba(45,27,61,.07)",
     it: "var(--plum)",
-    description: "Global non-profit focused on LGBTQ+ workplace equality. Partnerships, research, and events.",
+    description:
+      "Global non-profit focused on LGBTQ+ workplace equality. Partnerships, research, and events.",
     url: "outandequal.org",
   },
   {
@@ -122,7 +130,8 @@ const PLATFORMS: Platform[] = [
     icon: "IW",
     ic: "rgba(74,140,111,.12)",
     it: "var(--jade)",
-    description: "The International LGBTI Association. Rights advocacy and country-by-country legal data.",
+    description:
+      "The International LGBTI Association. Rights advocacy and country-by-country legal data.",
     url: "ilga.org",
   },
   {
@@ -131,7 +140,8 @@ const PLATFORMS: Platform[] = [
     icon: "RR",
     ic: "rgba(232,119,90,.1)",
     it: "var(--accent-ink)",
-    description: "Helping LGBTQI+ people escape state-sponsored violence in over 80 countries.",
+    description:
+      "Helping LGBTQI+ people escape state-sponsored violence in over 80 countries.",
     url: "rainbowrailroad.org",
   },
   {
@@ -140,7 +150,8 @@ const PLATFORMS: Platform[] = [
     icon: "Eq",
     ic: "rgba(74,140,111,.1)",
     it: "var(--jade)",
-    description: "Collaborative knowledge base mapping LGBTQ+ rights and laws country by country.",
+    description:
+      "Collaborative knowledge base mapping LGBTQ+ rights and laws country by country.",
     url: "equaldex.com",
   },
   {
@@ -149,7 +160,8 @@ const PLATFORMS: Platform[] = [
     icon: "Tv",
     ic: "rgba(232,119,90,.1)",
     it: "var(--accent-ink)",
-    description: "Leading suicide prevention organisation for LGBTQ+ youth. Crisis support, research, and education.",
+    description:
+      "Leading suicide prevention organisation for LGBTQ+ youth. Crisis support, research, and education.",
     url: "thetrevorproject.org",
   },
   {
@@ -158,7 +170,8 @@ const PLATFORMS: Platform[] = [
     icon: "TL",
     ic: "rgba(74,140,111,.12)",
     it: "var(--jade)",
-    description: "Peer support hotline run by and for trans people. A model for trans-led mental health support.",
+    description:
+      "Peer support hotline run by and for trans people. A model for trans-led mental health support.",
     url: "translifeline.org",
   },
   {
@@ -167,7 +180,8 @@ const PLATFORMS: Platform[] = [
     icon: "IL",
     ic: "rgba(74,140,111,.14)",
     it: "var(--jade)",
-    description: "Portugal's leading LGBTQ+ rights organisation. Legal support, advocacy, crisis line, programming.",
+    description:
+      "Portugal's leading LGBTQ+ rights organisation. Legal support, advocacy, crisis line, programming.",
     url: "ilga-portugal.pt",
   },
   {
@@ -176,7 +190,8 @@ const PLATFORMS: Platform[] = [
     icon: "OD",
     ic: "rgba(232,119,90,.1)",
     it: "var(--accent-ink)",
-    description: "Mental health and peer support for LGBTQ+ people in Portugal. Training for allied professionals.",
+    description:
+      "Mental health and peer support for LGBTQ+ people in Portugal. Training for allied professionals.",
     url: "opusdiversus.org",
   },
   {
@@ -185,7 +200,8 @@ const PLATFORMS: Platform[] = [
     icon: "Re",
     ic: "rgba(45,27,61,.08)",
     it: "var(--plum)",
-    description: "Youth-focused LGBTQ+ association with peer support and advocacy groups across Portugal.",
+    description:
+      "Youth-focused LGBTQ+ association with peer support and advocacy groups across Portugal.",
     url: "rea.pt",
   },
 ];
@@ -323,7 +339,9 @@ export function PlatformsPage() {
                                   {t(CAT_LABEL_KEYS[platform.cat]!)}
                                 </div>
                                 <div className={s.pName}>{platform.name}</div>
-                                <p className={s.pDesc}>{platform.description}</p>
+                                <p className={s.pDesc}>
+                                  {platform.description}
+                                </p>
                                 <div className={s.pUrl}>↗ {platform.url}</div>
                               </div>
                             </a>

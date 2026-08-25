@@ -59,13 +59,13 @@ Tests live in `src/**/*.test.ts(x)` and `src/test/**`. Note there is **no CI** i
 
 ## Environment
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `VITE_API_URL` | **Yes, in production** | Backend origin, no trailing slash (`https://api.queerpulse.com`). Inlined at build time; a production build **throws at boot** without it, by design. Unset ⇒ demo mode. |
-| `VITE_DEMO` | No | `1` forces demo mode. **Never set this on a real deployment** — it serves fabricated content as real community data. |
-| `VITE_SITE_ORIGIN` | Recommended | Canonical origin for SEO/OG/sitemap URLs. Unset ⇒ falls back to `https://queerpulse.com`, which is wrong on preview deploys. |
-| `VITE_SENTRY_DSN` | No | Currently **inert** — `@sentry/react` is not installed and the observability layer is a no-op stub. |
-| `VITE_RELEASE` | No | Sentry release tag; inert for the same reason. |
+| Variable           | Required               | Purpose                                                                                                                                                                  |
+| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `VITE_API_URL`     | **Yes, in production** | Backend origin, no trailing slash (`https://api.queerpulse.com`). Inlined at build time; a production build **throws at boot** without it, by design. Unset ⇒ demo mode. |
+| `VITE_DEMO`        | No                     | `1` forces demo mode. **Never set this on a real deployment** — it serves fabricated content as real community data.                                                     |
+| `VITE_SITE_ORIGIN` | Recommended            | Canonical origin for SEO/OG/sitemap URLs. Unset ⇒ falls back to `https://queerpulse.com`, which is wrong on preview deploys.                                             |
+| `VITE_SENTRY_DSN`  | No                     | Currently **inert** — `@sentry/react` is not installed and the observability layer is a no-op stub.                                                                      |
+| `VITE_RELEASE`     | No                     | Sentry release tag; inert for the same reason.                                                                                                                           |
 
 Cookies are `SameSite=Lax` with no `Domain` attribute, so the frontend and API **must share a registrable domain** (`queerpulse.com` + `api.queerpulse.com`). Deploying the frontend on an unrelated domain silently breaks authentication.
 

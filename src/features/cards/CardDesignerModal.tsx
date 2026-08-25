@@ -187,13 +187,9 @@ export function CardDesignerModal({
             photoStyle={draft.photoStyle}
             onPhotoStyleChange={(style) => set({ photoStyle: style })}
             allowsPronouns={draft.allowsPronouns}
-            onAllowsPronounsChange={(allows) =>
-              set({ allowsPronouns: allows })
-            }
+            onAllowsPronounsChange={(allows) => set({ allowsPronouns: allows })}
             textBackdrop={draft.textBackdrop}
-            onTextBackdropChange={(backdrop) =>
-              set({ textBackdrop: backdrop })
-            }
+            onTextBackdropChange={(backdrop) => set({ textBackdrop: backdrop })}
           />
         </div>
       </Modal>

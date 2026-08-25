@@ -52,7 +52,9 @@ export function NotesRail({ pieceId, blockId }: NotesRailProps) {
               key={comment.id}
               comment={comment}
               onReply={(commentId, body) => reply.mutate({ commentId, body })}
-              onToggleResolve={(commentId, resolved) => toggleResolve.mutate({ commentId, resolved })}
+              onToggleResolve={(commentId, resolved) =>
+                toggleResolve.mutate({ commentId, resolved })
+              }
             />
           ))}
         </div>

@@ -36,7 +36,10 @@ describe("resolveAvatarSrc", () => {
 
     it("appends a size directive when the URL has none (avoids Google's small default)", () => {
       expect(
-        resolveAvatarSrc("https://lh3.googleusercontent.com/a/ACg8ocKf123", 900),
+        resolveAvatarSrc(
+          "https://lh3.googleusercontent.com/a/ACg8ocKf123",
+          900,
+        ),
       ).toBe("https://lh3.googleusercontent.com/a/ACg8ocKf123=s900");
     });
 

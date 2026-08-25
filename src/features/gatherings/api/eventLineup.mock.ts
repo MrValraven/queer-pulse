@@ -1,4 +1,8 @@
-import { currentUserSlug, memberAvatar, memberName } from "../../members/data/members";
+import {
+  currentUserSlug,
+  memberAvatar,
+  memberName,
+} from "../../members/data/members";
 import type { EventLineupDTO } from "./events.api";
 
 /**

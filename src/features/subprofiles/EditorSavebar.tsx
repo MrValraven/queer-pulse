@@ -171,7 +171,12 @@ export function EditorSavebar({
           )}
           {mobilePreviewButton}
           {previewToggle}
-          <Button variant="ghost" size="sm" onClick={discardAll} disabled={saving}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={discardAll}
+            disabled={saving}
+          >
             {t("subprofiles:pending.discardAll")}
           </Button>
           <Button

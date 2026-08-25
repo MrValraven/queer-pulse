@@ -167,15 +167,13 @@ export function PostJobComposer({
           <div className={styles.stepNav}>
             {step > 0 && (
               <Button variant="ghost" onClick={prev}>
-                <FiArrowLeft aria-hidden />{" "}
-                {t("economy:postJob.nav.back")}
+                <FiArrowLeft aria-hidden /> {t("economy:postJob.nav.back")}
               </Button>
             )}
             <span className={styles.spacerFlex} />
             {step < LAST ? (
               <Button variant="primary" onClick={next}>
-                {t("economy:postJob.nav.continue")}{" "}
-                <FiArrowRight aria-hidden />
+                {t("economy:postJob.nav.continue")} <FiArrowRight aria-hidden />
               </Button>
             ) : (
               <>

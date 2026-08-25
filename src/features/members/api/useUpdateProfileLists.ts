@@ -50,7 +50,8 @@ export function useUpdateProfileLists() {
     mutationFn: async (lists) => {
       if (demoMode) return;
       const pendingReplacements: Promise<unknown>[] = [];
-      if (lists.work) pendingReplacements.push(replaceWork(workToDto(lists.work)));
+      if (lists.work)
+        pendingReplacements.push(replaceWork(workToDto(lists.work)));
       if (lists.skills)
         pendingReplacements.push(replaceSkills(skillsToDto(lists.skills)));
       if (lists.board)
@@ -58,7 +59,9 @@ export function useUpdateProfileLists() {
       if (lists.groups)
         pendingReplacements.push(replaceGroups(groupsToDto(lists.groups)));
       if (lists.shapings)
-        pendingReplacements.push(replaceShapings(shapingsToDto(lists.shapings)));
+        pendingReplacements.push(
+          replaceShapings(shapingsToDto(lists.shapings)),
+        );
       if (lists.socials)
         pendingReplacements.push(replaceSocials(socialsToDto(lists.socials)));
       await Promise.all(pendingReplacements);

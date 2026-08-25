@@ -78,7 +78,11 @@ export function InvoicePreview(props: InvoicePreviewProps) {
           {issuer.address && (
             <div className={styles.docMeta}>{issuer.address}</div>
           )}
-          {issuer.nif && <div className={styles.docMeta}>NIF {issuer.nif}</div>}
+          {issuer.nif && (
+            <div className={styles.docMeta}>
+              {t("economy:invoiceTool.preview.nifLine", { nif: issuer.nif })}
+            </div>
+          )}
           {issuer.email && <div className={styles.docMeta}>{issuer.email}</div>}
         </div>
         <div className={styles.docHeadRight}>
@@ -102,10 +106,12 @@ export function InvoicePreview(props: InvoicePreviewProps) {
           <div className={styles.docPartyLabel}>
             {t("economy:invoiceTool.preview.billedTo")}
           </div>
-          <div className={styles.docPartyName}>
-            {client.name || <NotSet />}
-          </div>
-          {client.nif && <div className={styles.docMeta}>NIF {client.nif}</div>}
+          <div className={styles.docPartyName}>{client.name || <NotSet />}</div>
+          {client.nif && (
+            <div className={styles.docMeta}>
+              {t("economy:invoiceTool.preview.nifLine", { nif: client.nif })}
+            </div>
+          )}
           {client.address && (
             <div className={styles.docMeta}>{client.address}</div>
           )}
@@ -114,40 +120,38 @@ export function InvoicePreview(props: InvoicePreviewProps) {
 
       <div className={styles.docTableScroll}>
         <table className={styles.docTable}>
-        <thead>
-          <tr>
-            <th className={styles.docTh}>
-              {t("economy:invoiceTool.lines.description")}
-            </th>
-            <th className={`${styles.docTh} ${styles.docNumCol}`}>
-              {t("economy:invoiceTool.lines.qty")}
-            </th>
-            <th className={`${styles.docTh} ${styles.docNumCol}`}>
-              {t("economy:invoiceTool.lines.unit")}
-            </th>
-            <th className={`${styles.docTh} ${styles.docNumCol}`}>
-              {t("economy:invoiceTool.lines.total")}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {lineItems.map((l) => (
-            <tr key={l.id}>
-              <td className={styles.docTd}>
-                {l.description || <NotSet />}
-              </td>
-              <td className={`${styles.docTd} ${styles.docNumCol}`}>
-                {Number.isFinite(l.quantity) ? l.quantity : 0}
-              </td>
-              <td className={`${styles.docTd} ${styles.docNumCol}`}>
-                {fmt.currency(l.unit || 0)}
-              </td>
-              <td className={`${styles.docTd} ${styles.docNumCol}`}>
-                {fmt.currency(lineTotal(l))}
-              </td>
+          <thead>
+            <tr>
+              <th className={styles.docTh}>
+                {t("economy:invoiceTool.lines.description")}
+              </th>
+              <th className={`${styles.docTh} ${styles.docNumCol}`}>
+                {t("economy:invoiceTool.lines.qty")}
+              </th>
+              <th className={`${styles.docTh} ${styles.docNumCol}`}>
+                {t("economy:invoiceTool.lines.unit")}
+              </th>
+              <th className={`${styles.docTh} ${styles.docNumCol}`}>
+                {t("economy:invoiceTool.lines.total")}
+              </th>
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {lineItems.map((l) => (
+              <tr key={l.id}>
+                <td className={styles.docTd}>{l.description || <NotSet />}</td>
+                <td className={`${styles.docTd} ${styles.docNumCol}`}>
+                  {Number.isFinite(l.quantity) ? l.quantity : 0}
+                </td>
+                <td className={`${styles.docTd} ${styles.docNumCol}`}>
+                  {fmt.currency(l.unit || 0)}
+                </td>
+                <td className={`${styles.docTd} ${styles.docNumCol}`}>
+                  {fmt.currency(lineTotal(l))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 

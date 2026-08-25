@@ -81,7 +81,10 @@ export function ReportCommentModal({
 
   if (status === "error") {
     return (
-      <ModalSheet onClose={onClose} ariaLabel={t("magazine:comments.report.title")}>
+      <ModalSheet
+        onClose={onClose}
+        ariaLabel={t("magazine:comments.report.title")}
+      >
         <div className={styles.errorPanel}>
           <span className={styles.errorIcon} aria-hidden>
             <FiAlertTriangle />
@@ -106,7 +109,10 @@ export function ReportCommentModal({
   }
 
   return (
-    <ModalSheet onClose={onClose} ariaLabel={t("magazine:comments.report.title")}>
+    <ModalSheet
+      onClose={onClose}
+      ariaLabel={t("magazine:comments.report.title")}
+    >
       <h2 className={styles.title}>{t("magazine:comments.report.title")}</h2>
       <p className={styles.sub}>
         {t("magazine:comments.report.sub", { name: firstName })}

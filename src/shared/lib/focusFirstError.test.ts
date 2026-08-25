@@ -34,7 +34,7 @@ describe("findFirstInvalidControl", () => {
     expect(findFirstInvalidControl(form)?.id).toBe("b");
   });
 
-  it("ignores aria-invalid=\"false\" and absent attributes", () => {
+  it('ignores aria-invalid="false" and absent attributes', () => {
     const form = mountForm(`
       <input id="a" aria-invalid="false" />
       <input id="b" />

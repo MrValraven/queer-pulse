@@ -142,7 +142,11 @@ export function RequestInviteForm({
   }
 
   return (
-    <form ref={formRef} onSubmit={(event) => void handleSubmit(event)} noValidate>
+    <form
+      ref={formRef}
+      onSubmit={(event) => void handleSubmit(event)}
+      noValidate
+    >
       <RequestInviteFields
         first={first}
         setFirst={setFirst}
@@ -188,7 +192,9 @@ export function RequestInviteForm({
         <label htmlFor="ri-agree">
           <Translation
             i18nKey="auth:requestInvite.agree"
-            components={{ guidelines: <GuidelinesLink onRead={() => setAgreed(true)} /> }}
+            components={{
+              guidelines: <GuidelinesLink onRead={() => setAgreed(true)} />,
+            }}
           />
         </label>
       </div>

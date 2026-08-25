@@ -40,7 +40,11 @@ export interface VouchMemberInput {
 export function useVouchMember() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<{ vouchCount: number } | undefined, Error, VouchMemberInput>({
+  return useMutation<
+    { vouchCount: number } | undefined,
+    Error,
+    VouchMemberInput
+  >({
     mutationFn: async ({ slug, relationships, note, anonymous }) => {
       if (demoMode) return undefined;
       return vouchFor(slug, { relationships, note, anonymous });

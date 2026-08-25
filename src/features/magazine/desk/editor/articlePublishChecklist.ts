@@ -29,7 +29,9 @@ export function buildPublishChecklist(
   const imageBlocks = blocks.filter(
     (block): block is ArticleImageBlock => block.kind === "image",
   );
-  const everyImageHasAlt = imageBlocks.every((block) => block.alt.trim() !== "");
+  const everyImageHasAlt = imageBlocks.every(
+    (block) => block.alt.trim() !== "",
+  );
   const hasStatsBlock = blocks.some((block) => block.kind === "stats");
 
   const items: PublishChecklistItem[] = [

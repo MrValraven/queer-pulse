@@ -26,7 +26,11 @@ const PICKER_PIN_CLASS = s.pickerPin ?? "";
  *  Lisbon style + bounds (shared/components/map/siteMapStyle.ts) so the picker matches every other
  *  map in the app. Mounted only once coordinates already exist (geocoded
  *  upstream); dragging the pin reports the adjusted coordinates via `onChange`. */
-export function LocationPickerMap({ latitude, longitude, onChange }: LocationPickerMapProps) {
+export function LocationPickerMap({
+  latitude,
+  longitude,
+  onChange,
+}: LocationPickerMapProps) {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -59,7 +63,10 @@ export function LocationPickerMap({ latitude, longitude, onChange }: LocationPic
         attributionControl: { compact: true },
       });
       mapRef.current = map;
-      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+      map.addControl(
+        new maplibregl.NavigationControl({ showCompass: false }),
+        "top-right",
+      );
       map.on("load", () => {
         if (!cancelled) setReady(true);
       });
@@ -77,7 +84,6 @@ export function LocationPickerMap({ latitude, longitude, onChange }: LocationPic
       mapRef.current = null;
     };
     // Create-once: coordinate updates are handled by the effect below.
-     
   }, []);
 
   // Reflect coords → marker, once the map has loaded. No coords ⇒ no marker.
@@ -98,7 +104,11 @@ export function LocationPickerMap({ latitude, longitude, onChange }: LocationPic
       const pin = document.createElement("div");
       pin.className = PICKER_PIN_CLASS;
       element.appendChild(pin);
-      const marker = new maplibregl.Marker({ element, draggable: true, anchor: "bottom" })
+      const marker = new maplibregl.Marker({
+        element,
+        draggable: true,
+        anchor: "bottom",
+      })
         .setLngLat(lngLat)
         .addTo(map);
       // Lift the teardrop off its shadow while dragging; the CSS keys off the
@@ -113,7 +123,11 @@ export function LocationPickerMap({ latitude, longitude, onChange }: LocationPic
       });
       markerRef.current = marker;
     }
-    map.easeTo({ center: lngLat, zoom: Math.max(map.getZoom(), 15), duration: 600 });
+    map.easeTo({
+      center: lngLat,
+      zoom: Math.max(map.getZoom(), 15),
+      duration: 600,
+    });
   }, [latitude, longitude, ready]);
 
   return (

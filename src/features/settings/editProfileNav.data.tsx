@@ -1,11 +1,5 @@
 import type { ReactNode } from "react";
-import {
-  FiFileText,
-  FiLink,
-  FiStar,
-  FiUser,
-  FiUsers,
-} from "react-icons/fi";
+import { FiFileText, FiLink, FiStar, FiUser, FiUsers } from "react-icons/fi";
 
 export interface ProfileNavItem {
   /** DOM id of the section this item scrolls to. */

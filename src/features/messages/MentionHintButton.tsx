@@ -19,7 +19,11 @@ interface MentionHintButtonProps {
  *  popover listing the six mention sigils. Tapping a row inserts that sigil.
  *  Controlled so it can't co-exist with the GIF picker — the Composer owns
  *  open state and outside-click/Esc dismissal for both. */
-export function MentionHintButton({ open, onToggle, onInsert }: MentionHintButtonProps) {
+export function MentionHintButton({
+  open,
+  onToggle,
+  onInsert,
+}: MentionHintButtonProps) {
   const { t } = useTranslation();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -37,7 +41,11 @@ export function MentionHintButton({ open, onToggle, onInsert }: MentionHintButto
         <FiHelpCircle aria-hidden />
       </button>
       {open && (
-        <div className={styles.panel} role="dialog" aria-label={t("messages:shortcuts.panelLabel")}>
+        <div
+          className={styles.panel}
+          role="dialog"
+          aria-label={t("messages:shortcuts.panelLabel")}
+        >
           <p className={styles.title}>{t("messages:shortcuts.title")}</p>
           <ul className={styles.list}>
             {MENTION_SHORTCUTS.map((shortcut) => (

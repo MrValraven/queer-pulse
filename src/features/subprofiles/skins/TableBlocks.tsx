@@ -59,7 +59,9 @@ export function TableMenuCard({
               <b>
                 {dish.title}
                 {dish.marks && dish.marks.length > 0 && (
-                  <sup>{dish.marks.map((mark) => mark.toUpperCase()).join(", ")}</sup>
+                  <sup>
+                    {dish.marks.map((mark) => mark.toUpperCase()).join(", ")}
+                  </sup>
                 )}
               </b>
               {dish.note && <em>{dish.note}</em>}

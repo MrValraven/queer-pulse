@@ -37,7 +37,9 @@ export function DepsSection({
       </h3>
 
       {depItems.length === 0 ? (
-        <p className={styles.emptyNote}>{t("admin:roadmap.drawer.deps.none")}</p>
+        <p className={styles.emptyNote}>
+          {t("admin:roadmap.drawer.deps.none")}
+        </p>
       ) : (
         <>
           <p className={styles.cannotShip}>

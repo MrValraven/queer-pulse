@@ -64,7 +64,9 @@ export function TopicPage() {
   // Demo returns the scripted mock (curated or a generic fallback — always a
   // value); the `getTopic` fallback is demo-only so a live 404/error for a slug
   // that collides with a curated topic can't leak scripted data into live mode.
-  const topic = demoMode ? topicQuery.topic ?? getTopic(tag, t) : topicQuery.topic;
+  const topic = demoMode
+    ? (topicQuery.topic ?? getTopic(tag, t))
+    : topicQuery.topic;
   const loading = demoMode ? simLoading : topicQuery.isLoading;
 
   return (

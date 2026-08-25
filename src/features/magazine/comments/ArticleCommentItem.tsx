@@ -39,13 +39,17 @@ export function ArticleCommentItem({
         />
         <div className={styles.commentBody}>
           <div className={styles.commentHead}>
-            <span className={styles.commentName}>{item.author.displayName}</span>
+            <span className={styles.commentName}>
+              {item.author.displayName}
+            </span>
             <span className={styles.commentTime}>
               {fmt.date(new Date(item.createdAt))}
             </span>
           </div>
           {item.deleted ? (
-            <p className={styles.tombstone}>{t("magazine:comments.tombstone")}</p>
+            <p className={styles.tombstone}>
+              {t("magazine:comments.tombstone")}
+            </p>
           ) : editingId === item.id ? (
             <ArticleCommentComposer
               initialValue={item.body}

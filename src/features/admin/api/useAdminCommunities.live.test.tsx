@@ -79,9 +79,8 @@ beforeEach(() => {
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
-  const { useAdminCommunities: useAdminCommunitiesLive } = await import(
-    "./useAdminCommunities"
-  );
+  const { useAdminCommunities: useAdminCommunitiesLive } =
+    await import("./useAdminCommunities");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
   // Imported after resetModules like the others: a statically-imported provider

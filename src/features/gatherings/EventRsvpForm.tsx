@@ -34,7 +34,10 @@ function RsvpTierPicker({
         <button
           type="button"
           key={tier.nameKey}
-          className={[styles.tier, selectedTier === index && styles.tierSelected]
+          className={[
+            styles.tier,
+            selectedTier === index && styles.tierSelected,
+          ]
             .filter(Boolean)
             .join(" ")}
           onClick={() => onSelectTier(index)}
@@ -184,7 +187,9 @@ export function EventRsvpForm({
             onSubmit({ selectedTier, fullName, email, dietaryNeeds })
           }
           disabled={!canSubmit}
-          title={!canSubmit ? t("gatherings:event.rsvp.disabledHint") : undefined}
+          title={
+            !canSubmit ? t("gatherings:event.rsvp.disabledHint") : undefined
+          }
         >
           {isFull
             ? t("gatherings:event.rsvp.joinWaitlistCta")

@@ -18,14 +18,20 @@ export function ForumSearch({
 }) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState(value);
+  const [syncedValue, setSyncedValue] = useState(value);
   const onChangeRef = useRef(onChange);
   useEffect(() => {
     onChangeRef.current = onChange;
   });
 
-  useEffect(() => {
+  // Re-sync the draft when `value` changes from outside (URL nav, "Show
+  // all"). Adjusted during render (React's documented pattern for mirroring
+  // a prop) rather than an effect, since there's no external system here to
+  // synchronize with.
+  if (syncedValue !== value) {
+    setSyncedValue(value);
     setDraft(value);
-  }, [value]);
+  }
 
   useEffect(() => {
     if (draft === value) return;

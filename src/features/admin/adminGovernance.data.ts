@@ -49,7 +49,6 @@ export interface QuarterPoint {
   spend: number;
 }
 
-
 /** Canonical range ids — never translated (compared directly by the chart). */
 export type QuarterRangeId = "4q" | "6q" | "all";
 export const QUARTER_RANGE_IDS: QuarterRangeId[] = ["4q", "6q", "all"];
@@ -122,7 +121,6 @@ export interface AuditEntry {
   when: string;
   range: AuditRange;
 }
-
 
 // ── Audit-log filter option lists ─────────────────────────────────────────────
 

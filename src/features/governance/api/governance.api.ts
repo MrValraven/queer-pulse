@@ -130,11 +130,7 @@ export const publishGovernanceOverview = () =>
 /** The concern categories the form offers (stable keys, not display labels — the
  *  admin dashboard localises them). */
 export type ConcernCategory =
-  | "member"
-  | "gathering"
-  | "content"
-  | "appeal"
-  | "other";
+  "member" | "gathering" | "content" | "appeal" | "other";
 
 export interface ConcernSubmission {
   category: ConcernCategory;

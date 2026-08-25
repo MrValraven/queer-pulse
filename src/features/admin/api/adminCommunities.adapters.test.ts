@@ -1,5 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { cardDtoToCommunity, detailDtoToCommunity } from "./adminCommunities.adapters";
+import {
+  cardDtoToCommunity,
+  detailDtoToCommunity,
+} from "./adminCommunities.adapters";
 import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
 import { createFormatters } from "../../../shared/i18n/format";
 import type { Catalog, TFunction } from "../../../shared/i18n/types";
@@ -88,7 +91,8 @@ const baseQueueItemDto: AdminCommunityQueueItemDTO = {
 
 const baseDetailDto: AdminCommunityDetailDTO = {
   ...baseCardDto,
-  description: "A peer-support and friendship space for trans, non-binary and questioning members.",
+  description:
+    "A peer-support and friendship space for trans, non-binary and questioning members.",
   foundedAt: "2023-03-15T00:00:00.000Z",
   visibility: "private",
   requiresSecondVouch: true,

@@ -42,20 +42,28 @@ export function usePitchTriageActions({
   }
 
   function maybe(id: string): void {
-    runTriage([id], () => pitchMutations.triage.mutate({ id, body: { verdict: "maybe" } }));
+    runTriage([id], () =>
+      pitchMutations.triage.mutate({ id, body: { verdict: "maybe" } }),
+    );
   }
   function pass(id: string): void {
-    runTriage([id], () => pitchMutations.triage.mutate({ id, body: { verdict: "pass" } }));
+    runTriage([id], () =>
+      pitchMutations.triage.mutate({ id, body: { verdict: "pass" } }),
+    );
   }
   function bulkMaybe(): void {
     runTriage(selectedPitchIds, () => {
-      selectedPitchIds.forEach((id) => pitchMutations.triage.mutate({ id, body: { verdict: "maybe" } }));
+      selectedPitchIds.forEach((id) =>
+        pitchMutations.triage.mutate({ id, body: { verdict: "maybe" } }),
+      );
       clearSelectedPitchIds();
     });
   }
   function bulkPass(): void {
     runTriage(selectedPitchIds, () => {
-      selectedPitchIds.forEach((id) => pitchMutations.triage.mutate({ id, body: { verdict: "pass" } }));
+      selectedPitchIds.forEach((id) =>
+        pitchMutations.triage.mutate({ id, body: { verdict: "pass" } }),
+      );
       clearSelectedPitchIds();
     });
   }

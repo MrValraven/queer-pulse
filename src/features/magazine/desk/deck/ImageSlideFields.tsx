@@ -37,10 +37,15 @@ export function ImageSlideFields({ slide, onChange }: FieldsProps<ImageSlide>) {
           type="text"
           className={styles.input}
           value={slide.caption ?? ""}
-          onChange={(event) => onChange({ ...slide, caption: event.target.value })}
+          onChange={(event) =>
+            onChange({ ...slide, caption: event.target.value })
+          }
         />
       </FormField>
-      <TintPicker value={slide.tint} onChange={(tint) => onChange({ ...slide, tint })} />
+      <TintPicker
+        value={slide.tint}
+        onChange={(tint) => onChange({ ...slide, tint })}
+      />
     </>
   );
 }

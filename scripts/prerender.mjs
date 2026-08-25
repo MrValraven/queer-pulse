@@ -76,7 +76,8 @@ function createDistServer(shellHtml) {
     try {
       const body = await readFile(candidate);
       response.writeHead(200, {
-        "Content-Type": CONTENT_TYPES[extname(candidate)] ?? "application/octet-stream",
+        "Content-Type":
+          CONTENT_TYPES[extname(candidate)] ?? "application/octet-stream",
       });
       response.end(body);
     } catch {

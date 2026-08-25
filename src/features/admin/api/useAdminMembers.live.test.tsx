@@ -59,9 +59,8 @@ beforeEach(() => {
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
-  const { useAdminMembers: useAdminMembersLive } = await import(
-    "./useAdminMembers"
-  );
+  const { useAdminMembers: useAdminMembersLive } =
+    await import("./useAdminMembers");
   const { DemoModeProvider } =
     await import("../../../app/providers/DemoModeProvider");
   // Imported after resetModules like the others: a statically-imported
@@ -156,9 +155,8 @@ describe("useAdminFlagged (live mode via MSW)", () => {
     // freshly loaded module (no further `vi.resetModules()` happened in
     // between, so this hits the identical module instance `loadLive` just
     // loaded rather than a third, disconnected one).
-    const { useAdminFlagged: useAdminFlaggedLive } = await import(
-      "./useAdminMembers"
-    );
+    const { useAdminFlagged: useAdminFlaggedLive } =
+      await import("./useAdminMembers");
     const { result } = renderHook(() => useAdminFlaggedLive(), { wrapper });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));

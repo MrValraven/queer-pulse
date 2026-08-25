@@ -28,7 +28,10 @@ export function JoinVouchCallout() {
         </div>
         <p className={styles.text}>{t("gatherings:vouchCallout.body")}</p>
         <div className={styles.actions}>
-          <Button variant="ghost-dark" to={requestInvitePath("gathering_vouch")}>
+          <Button
+            variant="ghost-dark"
+            to={requestInvitePath("gathering_vouch")}
+          >
             {t("gatherings:vouchCallout.requestInviteCta")}
           </Button>
           <Button variant="ghost-dark" to={routes.safety}>

@@ -41,10 +41,14 @@ export function CompanyPage() {
   const jobs = useMemo(() => {
     if (!profile) return [];
     if (apiOpenRoles) return apiOpenRoles;
-    return [...postedJobs, ...JOBS].filter((j) => j.organization === profile.nameText);
+    return [...postedJobs, ...JOBS].filter(
+      (j) => j.organization === profile.nameText,
+    );
   }, [profile, apiOpenRoles, postedJobs]);
 
-  const baseReviews = demoMode ? (profile?.reviews ?? []) : reviewsQuery.reviews;
+  const baseReviews = demoMode
+    ? (profile?.reviews ?? [])
+    : reviewsQuery.reviews;
   const reviews = [...addedReviews, ...baseReviews];
   const reviewCount = (profile?.reviewCount ?? 0) + addedReviews.length;
 

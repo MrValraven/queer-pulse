@@ -18,9 +18,8 @@ export function useAdminGuideFeedback() {
     queryKey: ["admin-guide-feedback", demoMode],
     queryFn: async () => {
       if (demoMode) {
-        const { ADMIN_GUIDE_FEEDBACK } = await import(
-          "../adminGuideFeedback.data"
-        );
+        const { ADMIN_GUIDE_FEEDBACK } =
+          await import("../adminGuideFeedback.data");
         return ADMIN_GUIDE_FEEDBACK;
       }
       return getAdminGuideFeedback();

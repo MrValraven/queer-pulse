@@ -152,68 +152,73 @@ export function SubprofileFeatureCard({
         )}
 
         <div className={styles.featureBody}>
-        <div className={styles.featureTop}>
-          <Avatar
-            initials={initialsFromName(persona.displayName, "?")}
-            src={persona.avatarUrl ?? undefined}
-            tint="plum"
-            size={56}
-            className={styles.featureAvatar}
-          />
-          <div className={styles.featureTopMeta}>
-            <span className={styles.kindBadge}>
-              {t(KIND_LABEL_KEYS[persona.kind])}
-            </span>
-            <SubprofileOwnerBadges
-              status={status}
-              visibility={visibility}
-              className={styles.ownerBadges}
+          <div className={styles.featureTop}>
+            <Avatar
+              initials={initialsFromName(persona.displayName, "?")}
+              src={persona.avatarUrl ?? undefined}
+              tint="plum"
+              size={56}
+              className={styles.featureAvatar}
             />
-            {persona.handle && (
-              <span className={styles.handle}>@{persona.handle}</span>
+            <div className={styles.featureTopMeta}>
+              <span className={styles.kindBadge}>
+                {t(KIND_LABEL_KEYS[persona.kind])}
+              </span>
+              <SubprofileOwnerBadges
+                status={status}
+                visibility={visibility}
+                className={styles.ownerBadges}
+              />
+              {persona.handle && (
+                <span className={styles.handle}>@{persona.handle}</span>
+              )}
+            </div>
+            {ownerControls && (
+              <div className={styles.ownerControlsRow}>{ownerControls}</div>
             )}
           </div>
-          {ownerControls && (
-            <div className={styles.ownerControlsRow}>{ownerControls}</div>
+
+          <h3 className={styles.featureName}>
+            <Link className={styles.featureLink} to={href}>
+              {persona.displayName}
+            </Link>
+          </h3>
+
+          {persona.tagline && (
+            <p className={styles.featureTagline}>{persona.tagline}</p>
           )}
-        </div>
 
-        <h3 className={styles.featureName}>
-          <Link className={styles.featureLink} to={href}>
-            {persona.displayName}
-          </Link>
-        </h3>
+          {persona.featured && (
+            <SubprofileFeaturedStrip item={persona.featured} accent={accent} />
+          )}
 
-        {persona.tagline && (
-          <p className={styles.featureTagline}>{persona.tagline}</p>
-        )}
+          {persona.affiliations.length > 0 && (
+            <TagRow className={styles.affiliations}>
+              {persona.affiliations.map((affiliation) => (
+                <Tag
+                  key={`${affiliation.targetType}-${affiliation.targetSlug}`}
+                >
+                  {affiliation.role
+                    ? `${affiliation.role} · ${affiliation.name}`
+                    : affiliation.name}
+                </Tag>
+              ))}
+            </TagRow>
+          )}
 
-        {persona.featured && (
-          <SubprofileFeaturedStrip item={persona.featured} accent={accent} />
-        )}
+          <SubprofileAvailability
+            value={persona.availability}
+            accent={accent}
+          />
 
-        {persona.affiliations.length > 0 && (
-          <TagRow className={styles.affiliations}>
-            {persona.affiliations.map((affiliation) => (
-              <Tag key={`${affiliation.targetType}-${affiliation.targetSlug}`}>
-                {affiliation.role
-                  ? `${affiliation.role} · ${affiliation.name}`
-                  : affiliation.name}
-              </Tag>
-            ))}
-          </TagRow>
-        )}
+          <SubprofileSocialRow links={persona.socialLinks} accent={accent} />
 
-        <SubprofileAvailability value={persona.availability} accent={accent} />
-
-        <SubprofileSocialRow links={persona.socialLinks} accent={accent} />
-
-        <SubprofileCardFooter
-          persona={persona}
-          href={href}
-          ctaHref={ctaHref}
-          isOwnerViewing={isOwnerViewing}
-        />
+          <SubprofileCardFooter
+            persona={persona}
+            href={href}
+            ctaHref={ctaHref}
+            isOwnerViewing={isOwnerViewing}
+          />
         </div>
       </div>
     </article>

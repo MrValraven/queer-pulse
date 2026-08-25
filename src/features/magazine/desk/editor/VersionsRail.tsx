@@ -40,12 +40,18 @@ interface PendingRestore {
  * rail; `VersionDiff`/`RestoreVersionModal` own their own presentation so
  * this stays thin.
  */
-export function VersionsRail({ pieceId, blocks, onRestored }: VersionsRailProps) {
+export function VersionsRail({
+  pieceId,
+  blocks,
+  onRestored,
+}: VersionsRailProps) {
   const { t } = useTranslation();
   const formatters = useFormat();
   const { versions, isLoading } = useArticleVersions(pieceId);
   const { saveVersion, restoreVersion } = useVersionMutations(pieceId);
-  const [pendingRestore, setPendingRestore] = useState<PendingRestore | null>(null);
+  const [pendingRestore, setPendingRestore] = useState<PendingRestore | null>(
+    null,
+  );
   const [diffVersionId, setDiffVersionId] = useState<string | null>(null);
 
   function handleConfirmRestore() {
@@ -73,9 +79,13 @@ export function VersionsRail({ pieceId, blocks, onRestored }: VersionsRailProps)
       </div>
 
       {isLoading ? (
-        <span className={styles.tiny}>{t("magazine:write.versions.loading")}</span>
+        <span className={styles.tiny}>
+          {t("magazine:write.versions.loading")}
+        </span>
       ) : versions.length === 0 ? (
-        <span className={styles.tiny}>{t("magazine:write.versions.empty")}</span>
+        <span className={styles.tiny}>
+          {t("magazine:write.versions.empty")}
+        </span>
       ) : (
         <div className={styles.trail}>
           {versions.map((version) => (
@@ -85,17 +95,27 @@ export function VersionsRail({ pieceId, blocks, onRestored }: VersionsRailProps)
                 <div>
                   <b>{version.label}</b> · {version.author}
                   <div className={styles.tiny}>
-                    {formatRelative(version.createdAt, formatters) || version.createdAt}
+                    {formatRelative(version.createdAt, formatters) ||
+                      version.createdAt}
                   </div>
                 </div>
                 <div className={cx(styles.row, styles.spacer)}>
-                  <Button size="sm" variant="ghost" onClick={() => setDiffVersionId(version.id)}>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setDiffVersionId(version.id)}
+                  >
                     {t("magazine:write.versions.compare")}
                   </Button>
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => setPendingRestore({ id: version.id, label: version.label })}
+                    onClick={() =>
+                      setPendingRestore({
+                        id: version.id,
+                        label: version.label,
+                      })
+                    }
                   >
                     {t("magazine:write.versions.restore")}
                   </Button>

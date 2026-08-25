@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { useLocation, useNavigationType } from "react-router-dom";
 import {
   foldNavigation,
@@ -6,8 +6,7 @@ import {
   type NavEntry,
   type NavStack,
 } from "../navHistory";
-
-const PreviousLocationContext = createContext<NavEntry | null>(null);
+import { PreviousLocationContext } from "./previousLocation";
 
 /**
  * Tracks a short tail of visited entries so a page can offer a way back to
@@ -42,9 +41,4 @@ export function NavHistoryProvider({ children }: { children: ReactNode }) {
       {children}
     </PreviousLocationContext.Provider>
   );
-}
-
-/** The entry visited immediately before this one, or null if we can't know. */
-export function usePreviousLocation(): NavEntry | null {
-  return useContext(PreviousLocationContext);
 }

@@ -1,9 +1,10 @@
 import { useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
-import { FiMapPin, FiSearch } from "react-icons/fi";
+import { FiMapPin } from "react-icons/fi";
 import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlaces } from "../marketing/api/useDirectory";
 import type { DirectoryPlace } from "../marketing/directoryPlaces";
+import { VenuePickerSearch } from "./VenuePickerSearch";
 import styles from "./VenuePicker.module.css";
 
 /** A gathering's venue: either free text, or a structured link to a real
@@ -59,7 +60,10 @@ export function VenuePicker({
   const [activeIndex, setActiveIndex] = useState(0);
 
   const results = useMemo(
-    () => places.filter((place) => matchesQuery(place, query)).slice(0, MAX_RESULTS),
+    () =>
+      places
+        .filter((place) => matchesQuery(place, query))
+        .slice(0, MAX_RESULTS),
     [places, query],
   );
 
@@ -77,7 +81,11 @@ export function VenuePicker({
   const switchToFreeText = () => {
     setMode("freetext");
     setOpen(false);
-    onChange({ text: query || value.text, listingId: null, venueListing: null });
+    onChange({
+      text: query || value.text,
+      listingId: null,
+      venueListing: null,
+    });
   };
 
   const switchToSearch = () => {
@@ -132,7 +140,11 @@ export function VenuePicker({
             {t("gatherings:venuePicker.fromDirectory")}
           </div>
         </div>
-        <button type="button" className={styles.changeBtn} onClick={startChange}>
+        <button
+          type="button"
+          className={styles.changeBtn}
+          onClick={startChange}
+        >
           {t("gatherings:venuePicker.change")}
         </button>
       </div>
@@ -150,80 +162,40 @@ export function VenuePicker({
           placeholder={t("gatherings:venuePicker.freeTextPlaceholder")}
           value={value.text}
           onChange={(event) =>
-            onChange({ text: event.target.value, listingId: null, venueListing: null })
+            onChange({
+              text: event.target.value,
+              listingId: null,
+              venueListing: null,
+            })
           }
         />
-        <button type="button" className={styles.toggleLink} onClick={switchToSearch}>
+        <button
+          type="button"
+          className={styles.toggleLink}
+          onClick={switchToSearch}
+        >
           {t("gatherings:venuePicker.searchInstead")}
         </button>
       </div>
     );
   }
 
-  const listboxId = `${baseId}-listbox`;
-  const optionId = (index: number) => `${baseId}-opt-${index}`;
-
   return (
-    <div ref={containerRef} className={styles.container}>
-      <div className={styles.searchRow}>
-        <FiSearch aria-hidden className={styles.searchIcon} />
-        <input
-          id={id}
-          aria-labelledby={labelledBy}
-          role="combobox"
-          aria-expanded={open}
-          aria-controls={listboxId}
-          aria-autocomplete="list"
-          aria-activedescendant={
-            open && results[activeIndex] ? optionId(activeIndex) : undefined
-          }
-          type="text"
-          className={styles.searchInput}
-          placeholder={t("gatherings:venuePicker.searchPlaceholder")}
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setActiveIndex(0);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onKeyDown={onKeyDown}
-        />
-      </div>
-      {open && (
-        <div
-          id={listboxId}
-          role="listbox"
-          aria-label={t("gatherings:venuePicker.searchPlaceholder")}
-          className={styles.panel}
-        >
-          {results.length === 0 ? (
-            <div className={styles.empty}>
-              {t("gatherings:venuePicker.noResults")}
-            </div>
-          ) : (
-            results.map((place, index) => (
-              <button
-                key={place.slug}
-                type="button"
-                id={optionId(index)}
-                role="option"
-                aria-selected={index === activeIndex}
-                data-active={index === activeIndex}
-                className={styles.option}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => selectPlace(place)}
-              >
-                <span className={styles.optionName}>{place.name}</span>
-                <span className={styles.optionMeta}>{place.hood}</span>
-              </button>
-            ))
-          )}
-        </div>
-      )}
-      <button type="button" className={styles.toggleLink} onClick={switchToFreeText}>
-        {t("gatherings:venuePicker.enterManually")}
-      </button>
-    </div>
+    <VenuePickerSearch
+      id={id}
+      labelledBy={labelledBy}
+      baseId={baseId}
+      containerRef={containerRef}
+      query={query}
+      setQuery={setQuery}
+      open={open}
+      setOpen={setOpen}
+      activeIndex={activeIndex}
+      setActiveIndex={setActiveIndex}
+      results={results}
+      onKeyDown={onKeyDown}
+      onSelectPlace={selectPlace}
+      onSwitchToFreeText={switchToFreeText}
+    />
   );
 }

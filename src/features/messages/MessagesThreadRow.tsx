@@ -175,7 +175,10 @@ function MessagesThreadRowImpl({
             </div>
             <div className={styles.trPreviewRow}>
               <div
-                className={[styles.trPreview, isUnread && styles.trPreviewUnread]
+                className={[
+                  styles.trPreview,
+                  isUnread && styles.trPreviewUnread,
+                ]
                   .filter(Boolean)
                   .join(" ")}
               >

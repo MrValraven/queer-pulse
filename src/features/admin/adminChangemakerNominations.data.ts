@@ -35,7 +35,8 @@ export const ADMIN_CHANGEMAKER_NOMINATIONS: AdminChangemakerNominationDTO[] = [
     id: "nom_3003",
     nominator: { slug: "marco", name: "Marco Vieira" },
     nomineeName: "Lena Duarte",
-    reason: "Started the Tuesday support circle that's now the biggest one in the city.",
+    reason:
+      "Started the Tuesday support circle that's now the biggest one in the city.",
     status: "pending",
     reviewer: null,
     reviewNote: null,
@@ -49,7 +50,8 @@ export const ADMIN_CHANGEMAKER_NOMINATIONS: AdminChangemakerNominationDTO[] = [
     reason: null,
     status: "dismissed",
     reviewer: { slug: "genesis", name: "QueerPulse Team" },
-    reviewNote: "No contact info and we couldn't verify the story, following up.",
+    reviewNote:
+      "No contact info and we couldn't verify the story, following up.",
     reviewedAt: "2026-07-14T11:30:00.000Z",
     createdAt: "2026-07-12T09:05:00.000Z",
   },

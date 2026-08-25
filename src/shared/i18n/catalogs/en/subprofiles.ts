@@ -457,9 +457,11 @@ export const subprofiles: Catalog = {
   "mine.emptySamples.stage.name": "Hot Mess Express",
   "mine.emptySamples.stage.line": "DJ duo · queer parties",
   "mine.emptySamples.practice.name": "Sofia Neves",
-  "mine.emptySamples.practice.line": "Psychotherapy for LGBTQ+ adults · EN / PT",
+  "mine.emptySamples.practice.line":
+    "Psychotherapy for LGBTQ+ adults · EN / PT",
   "mine.emptySamples.table.name": "Casa Corvo",
-  "mine.emptySamples.table.line": "Supper club for people who arrive hungry and leave late",
+  "mine.emptySamples.table.line":
+    "Supper club for people who arrive hungry and leave late",
   "mine.error.title": "We couldn't load your",
   "mine.error.em": "personas",
   "mine.error.description":
@@ -546,7 +548,8 @@ export const subprofiles: Catalog = {
   "itemEditor.collaboratorsEmpty": "No members match that search.",
   "itemEditor.collaboratorsHelper":
     "Search for members and pick them to credit their work here.",
-  "itemEditor.collaboratorsCapHint": "That's the most collaborators you can add.",
+  "itemEditor.collaboratorsCapHint":
+    "That's the most collaborators you can add.",
 
   // Social links editor (SubprofileSocialLinksEditor)
   "socialEditor.title": "Social links",
@@ -616,7 +619,8 @@ export const subprofiles: Catalog = {
   "newModal.continue": "Continue",
   "newModal.create": "Create draft",
   "newModal.creating": "Creating…",
-  "newModal.craftSummary": "A {kind} persona gets a {skin} page with {sections}.",
+  "newModal.craftSummary":
+    "A {kind} persona gets a {skin} page with {sections}.",
   "newModal.displayNameLabel": "Display name",
   "newModal.displayNameHelper":
     "Optional. Leave it blank to be known by the profession.",
@@ -668,17 +672,22 @@ export const subprofiles: Catalog = {
   "family.chart.note": "An ephemeris page, read by the sky.",
   // Expanded craft families (personas expansion — 6 new page families)
   "family.chair.label": "Chair",
-  "family.chair.note": "A lit mirror and a price list that never asks your gender.",
+  "family.chair.note":
+    "A lit mirror and a price list that never asks your gender.",
   "family.runway.label": "Runway",
-  "family.runway.note": "A lookbook spread: enormous name, tiny credits, tall images.",
+  "family.runway.note":
+    "A lookbook spread: enormous name, tiny credits, tall images.",
   "family.gallery.label": "Gallery",
   "family.gallery.note": "Museum air. Every item is a wall label.",
   "family.history.label": "Record",
-  "family.history.note": "Aged paper and a timeline: dates in the margin, sources named.",
+  "family.history.note":
+    "Aged paper and a timeline: dates in the margin, sources named.",
   "family.collective.label": "Poster",
-  "family.collective.note": "Riso ink on cheap paper: a demand at the top, dates you read across a room.",
+  "family.collective.note":
+    "Riso ink on cheap paper: a demand at the top, dates you read across a room.",
   "family.classroom.label": "Classroom",
-  "family.classroom.note": "A board and a handout: numbered weeks, fees stated before you ask.",
+  "family.classroom.note":
+    "A board and a handout: numbered weeks, fees stated before you ask.",
 
   // Starter templates (Phase 4a) — create-time picker (NewSideModal)
   // and the in-editor "Insert examples" affordance (SubprofileSectionEditor).
@@ -693,8 +702,7 @@ export const subprofiles: Catalog = {
   "template.tagline.developer": "Building things, mostly for people I love.",
   "template.tagline.writer": "Words I couldn't keep to myself.",
   "template.tagline.musician": "Sound for queer nights and quiet mornings.",
-  "template.tagline.visual_artist":
-    "Images that hold what words can't.",
+  "template.tagline.visual_artist": "Images that hold what words can't.",
   "template.tagline.filmmaker": "Stories told frame by frame.",
   "template.tagline.designer":
     "Making things easier, and a little more beautiful.",
@@ -703,13 +711,13 @@ export const subprofiles: Catalog = {
   "template.tagline.dj": "Sets built for the dancefloor.",
   "template.tagline.dancer": "Movement as another way of speaking.",
   "template.tagline.performer": "On stage, for whoever needs it.",
-  "template.tagline.photographer":
-    "Holding still what usually moves too fast.",
+  "template.tagline.photographer": "Holding still what usually moves too fast.",
   "template.tagline.videomaker": "Moving pictures, made with intention.",
   "template.tagline.chef": "Cooking for queer tables, one plate at a time.",
   "template.tagline.mixologist": "Drinks mixed for the night ahead.",
   "template.tagline.therapist": "An affirming space to think things through.",
-  "template.tagline.astrologer": "Charts read slowly, for the life you're living.",
+  "template.tagline.astrologer":
+    "Charts read slowly, for the life you're living.",
   "template.tagline.pole_dancer":
     "On the pole and in the room: I perform, and I teach.",
   "template.tagline.generic": "A few things I've made, gathered here.",
@@ -754,7 +762,8 @@ export const subprofiles: Catalog = {
   "template.section.selected_work.item1.subtitle": "The client or brief",
   "template.section.selected_work.item1.desc":
     "What you made and the problem it solved.",
-  "template.section.clients.item1.title": "A client or brand you've worked with",
+  "template.section.clients.item1.title":
+    "A client or brand you've worked with",
   "template.section.collections.item1.title": "A collection",
   "template.section.collections.item1.desc":
     "What it's made of and what inspired it.",
@@ -763,8 +772,7 @@ export const subprofiles: Catalog = {
   "template.section.shows.item1.title": "A show",
   "template.section.shows.item1.subtitle": "Where you performed",
   "template.section.looks.item1.title": "A look",
-  "template.section.looks.item1.desc":
-    "What inspired it and how you built it.",
+  "template.section.looks.item1.desc": "What inspired it and how you built it.",
   "template.section.mixes.item1.title": "A mix",
   "template.section.mixes.item1.subtitle": "Where you played it",
   "template.section.mixes.item2.title": "Another mix",
@@ -783,8 +791,7 @@ export const subprofiles: Catalog = {
     "What it's about and what ties it together.",
   "template.section.videos.item1.title": "A video",
   "template.section.videos.item1.subtitle": "Where it's from",
-  "template.section.videos.item1.desc":
-    "What it shows, in a line or two.",
+  "template.section.videos.item1.desc": "What it shows, in a line or two.",
   "template.section.showcase.item1.title": "Something I made",
   "template.section.showcase.item1.subtitle": "A short label for it",
   "template.section.showcase.item1.desc": "What it is and why it's here.",
@@ -796,8 +803,7 @@ export const subprofiles: Catalog = {
   "template.section.residencies.item1.subtitle": "Where it happened",
   "template.section.cocktails.item1.title": "A signature cocktail",
   "template.section.cocktails.item1.subtitle": "The base spirit",
-  "template.section.cocktails.item1.desc":
-    "What's in it and what inspired it.",
+  "template.section.cocktails.item1.desc": "What's in it and what inspired it.",
   "template.section.specialisms.item1.title": "An area I work with",
   "template.section.specialisms.item1.desc":
     "Who it's for and how you approach it.",
@@ -830,7 +836,8 @@ export const subprofiles: Catalog = {
   "cover.reposition.saving": "Saving…",
   "cover.reposition.cancel": "Cancel",
   "cover.reposition.saved": "Banner position saved",
-  "cover.reposition.error": "We couldn't save the banner position. Try again in a moment.",
+  "cover.reposition.error":
+    "We couldn't save the banner position. Try again in a moment.",
   "cover.reposition.noRoomAria":
     "Reposition banner. This image already fits the banner exactly, so there's nothing to move.",
   "cover.reposition.sliderAria":
@@ -887,7 +894,8 @@ export const subprofiles: Catalog = {
   "hero.endorse.modal.you": "You",
   "hero.endorse.modal.savedToast": "Your note is saved.",
   "hero.endorse.modal.withdrawnToast": "Your endorsement was withdrawn.",
-  "hero.endorse.modal.success.title": "Thank you for your <em>endorsement</em>.",
+  "hero.endorse.modal.success.title":
+    "Thank you for your <em>endorsement</em>.",
   "hero.endorse.modal.success.body":
     "Your face just joined <b>{name}</b>'s endorsers. That's how good work travels here. Person by person, name by name.",
   "hero.endorse.modal.success.doneCta": "Done",
@@ -941,14 +949,14 @@ export const subprofiles: Catalog = {
 
   // Caption-less gallery section (SubprofileSections) — per-photo alt text,
   // since these tiles carry no title/subtitle of their own.
-  "galleryPhotoAlt": "{name}, gallery photo {number}",
+  galleryPhotoAlt: "{name}, gallery photo {number}",
   // Clickable gallery cell + the full-screen gallery lightbox (GalleryLightbox).
-  "galleryPhotoOpen": "Open {name}'s photo {number} full-screen",
-  "galleryLightboxLabel": "{name}'s photos",
+  galleryPhotoOpen: "Open {name}'s photo {number} full-screen",
+  galleryLightboxLabel: "{name}'s photos",
 
   // Gallery-section editor cap (SubprofileSectionEditor) — shown in place of
   // the Add affordance once the universal gallery section hits its 6-photo max.
-  "galleryFull": "6 photos maximum",
+  galleryFull: "6 photos maximum",
 
   // Add-photos-to-gallery modal (multi-add) — device upload + past-uploads
   // picker, shown from the gallery section's Add affordance.
@@ -1287,7 +1295,8 @@ export const subprofiles: Catalog = {
   "poem.editor.tabPreview": "Preview",
   "poem.editor.paneToggleAria": "Editor view",
   "poem.editor.resplit.title": "This poem's line breaks may have been lost",
-  "poem.editor.resplit.body": "This looks like an older poem saved as one long line. We can suggest new line breaks from its punctuation. You'll still be able to edit them afterwards.",
+  "poem.editor.resplit.body":
+    "This looks like an older poem saved as one long line. We can suggest new line breaks from its punctuation. You'll still be able to edit them afterwards.",
   "poem.editor.resplit.action": "Re-split into lines",
   "poem.row.openAria": "Read the poem “{title}”",
   "poem.reader.withLabel": "With {names}",
@@ -1315,7 +1324,8 @@ export const subprofiles: Catalog = {
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Page blocks",
   "editorPane.skinBlocks.title": "Page blocks",
-  "editorPane.skinBlocks.lede": "The details unique to your page: booking terms, hours, what people should bring. These show on your public page.",
+  "editorPane.skinBlocks.lede":
+    "The details unique to your page: booking terms, hours, what people should bring. These show on your public page.",
   "pending.area.skin": "Page blocks",
   "pending.skinEdited": "{field} updated",
   "skinBlock.addItem": "Add",
@@ -1363,7 +1373,8 @@ export const subprofiles: Catalog = {
   "skinBlock.practice.availability.title": "Availability",
   "skinBlock.practice.availability.startDate": "Calendar starts (a Monday)",
   "skinBlock.practice.availability.slotTime": "Session start time",
-  "skinBlock.practice.availability.help": "Tap a day to cycle it: free, then full, then no sessions.",
+  "skinBlock.practice.availability.help":
+    "Tap a day to cycle it: free, then full, then no sessions.",
   "skinBlock.practice.availability.cellLabel": "Slot {slot}: {state}",
   "skinBlock.practice.availability.state_open": "free",
   "skinBlock.practice.availability.state_full": "full",

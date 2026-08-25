@@ -56,9 +56,8 @@ async function loadHook(opts: {
       user: { profile: { slug: "tiago-costa" } },
     }),
   }));
-  const { useSessionBootstrap, useSessionBootstrapSettled } = await import(
-    "./useSessionBootstrap"
-  );
+  const { useSessionBootstrap, useSessionBootstrapSettled } =
+    await import("./useSessionBootstrap");
   return { useSessionBootstrap, useSessionBootstrapSettled, getBootstrap };
 }
 

@@ -68,4 +68,5 @@ export interface AdminOverviewDTO {
 }
 
 /** Platform-wide dashboard metrics, charts, and activity feed. Admin-only — 403s otherwise. */
-export const getAdminOverview = () => apiGet<AdminOverviewDTO>("/admin/overview");
+export const getAdminOverview = () =>
+  apiGet<AdminOverviewDTO>("/admin/overview");

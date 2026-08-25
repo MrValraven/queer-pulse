@@ -58,7 +58,12 @@ export function MemberIdentity({
   const staffRole = showStaffBadge ? asStaffRole(person.staffRole) : null;
 
   const avatar = (
-    <Avatar initials={initials} tint={tint} src={person.avatarUrl} size={size} />
+    <Avatar
+      initials={initials}
+      tint={tint}
+      src={person.avatarUrl}
+      size={size}
+    />
   );
 
   return (
@@ -66,12 +71,7 @@ export function MemberIdentity({
       {to ? (
         // Decorative duplicate of the name link — hidden from the a11y tree and
         // out of the tab order so there's a single stop per person.
-        <Link
-          to={to}
-          className={styles.avatarLink}
-          aria-hidden
-          tabIndex={-1}
-        >
+        <Link to={to} className={styles.avatarLink} aria-hidden tabIndex={-1}>
           {avatar}
         </Link>
       ) : (

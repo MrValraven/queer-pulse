@@ -113,7 +113,10 @@ export function useModReports(
     // Demo seeds synchronously so the queue never flashes an empty "caught up".
     initialData:
       demoMode && !subjectId
-        ? { pages: [{ ...DEMO_DATA, nextCursor: null }], pageParams: [undefined] }
+        ? {
+            pages: [{ ...DEMO_DATA, nextCursor: null }],
+            pageParams: [undefined],
+          }
         : undefined,
     queryFn: async ({ pageParam: cursor }) => {
       if (demoMode) {
@@ -127,7 +130,8 @@ export function useModReports(
         // narrow the open queue in demo mode.
         const term = subjectId.toLowerCase();
         const open = DEMO_OPEN.filter(
-          (report) => report.reportedName.replace(/^@/, "").toLowerCase() === term,
+          (report) =>
+            report.reportedName.replace(/^@/, "").toLowerCase() === term,
         );
         return {
           open,
@@ -182,7 +186,9 @@ export function useModReports(
         appeals: appeals.map(appealDtoToView),
         resolved: resolved.data.map((dto) => resolvedDtoToView(dto, t)),
         counts: reports.counts,
-        nextCursor: reports.pageInfo.hasMore ? reports.pageInfo.nextCursor : null,
+        nextCursor: reports.pageInfo.hasMore
+          ? reports.pageInfo.nextCursor
+          : null,
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { SKIN_OF, SKIN_META, VISUAL_SECTIONS, skinFor } from "./subprofile-skins";
+import {
+  SKIN_OF,
+  SKIN_META,
+  VISUAL_SECTIONS,
+  skinFor,
+} from "./subprofile-skins";
 import { KIND_SECTIONS } from "./subprofile-kinds";
 import type { SubprofileKind } from "./api/subprofiles.api";
 
@@ -20,7 +25,8 @@ describe("subprofile-skins", () => {
 
   it("only lists real sections as visual", () => {
     const known = new Set(Object.values(KIND_SECTIONS).flat());
-    for (const section of VISUAL_SECTIONS) expect(known.has(section)).toBe(true);
+    for (const section of VISUAL_SECTIONS)
+      expect(known.has(section)).toBe(true);
   });
 
   it("excludes the universal gallery section", () => {

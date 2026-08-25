@@ -145,7 +145,11 @@ export function RequestViewingModal({
             />
           </p>
 
-          <div className={v.modeRow} role="group" aria-label={t("economy:housingViewing.request.modeLabel")}>
+          <div
+            className={v.modeRow}
+            role="group"
+            aria-label={t("economy:housingViewing.request.modeLabel")}
+          >
             <button
               type="button"
               className={[v.modeBtn, mode === "video" && v.modeOn]
@@ -154,7 +158,8 @@ export function RequestViewingModal({
               aria-pressed={mode === "video"}
               onClick={() => setMode("video")}
             >
-              <FiVideo aria-hidden /> {t("economy:housingViewing.request.video")}
+              <FiVideo aria-hidden />{" "}
+              {t("economy:housingViewing.request.video")}
             </button>
             <button
               type="button"

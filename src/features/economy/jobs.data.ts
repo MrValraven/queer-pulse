@@ -62,7 +62,8 @@ export const JOBS: Job[] = [
     location: "Príncipe Real · In-person",
     salary: "€1,200–1,500/mo",
     deadline: new Date(2026, 5, 30),
-    description: "Inês is building out her studio. Looking for a junior designer who cares about type, editorial systems, and making beautiful things. Training provided.",
+    description:
+      "Inês is building out her studio. Looking for a junior designer who cares about type, editorial systems, and making beautiful things. Training provided.",
     tags: ["Graphic design", "Type", "Branding"],
     detail: {
       category: "Design",
@@ -112,7 +113,8 @@ export const JOBS: Job[] = [
     location: "Lisbon · In-person",
     salary: "€1,100–1,300/mo",
     deadline: new Date(2026, 6, 15),
-    description: "Coordinate our community outreach programmes across Lisbon. Manage volunteers, build partnerships. Portuguese required.",
+    description:
+      "Coordinate our community outreach programmes across Lisbon. Manage volunteers, build partnerships. Portuguese required.",
     tags: ["Community", "Outreach", "Advocacy"],
     detail: {
       category: "Community",
@@ -159,7 +161,8 @@ export const JOBS: Job[] = [
     location: "Marvila · Hybrid",
     salary: "€2,800–3,800/mo",
     deadline: null,
-    description: "Growing Lisbon fintech with a strong LGBTQ+ ERG and a genuine commitment to inclusion. Looking for a mid-level backend engineer.",
+    description:
+      "Growing Lisbon fintech with a strong LGBTQ+ ERG and a genuine commitment to inclusion. Looking for a mid-level backend engineer.",
     tags: ["Backend", "Rust", "Go", "Fintech"],
     detail: {
       category: "Tech",
@@ -206,7 +209,8 @@ export const JOBS: Job[] = [
     location: "Lisbon · Flexible",
     salary: "€700/mo",
     deadline: new Date(2026, 5, 20),
-    description: "Help coordinate Rainbow Arts Collective exhibitions, events, and residencies. 20 hours per week.",
+    description:
+      "Help coordinate Rainbow Arts Collective exhibitions, events, and residencies. 20 hours per week.",
     tags: ["Arts admin", "Programming", "Events"],
     detail: {
       category: "Arts & Culture",
@@ -253,7 +257,8 @@ export const JOBS: Job[] = [
     location: "Lisbon · In-person",
     salary: "€900/mo",
     deadline: null,
-    description: "Facilitate peer support groups for LGBTQ+ people in Lisbon. Lived experience matters more than formal qualifications.",
+    description:
+      "Facilitate peer support groups for LGBTQ+ people in Lisbon. Lived experience matters more than formal qualifications.",
     tags: ["Mental health", "Peer support", "Facilitation"],
     detail: {
       category: "Care",
@@ -300,7 +305,8 @@ export const JOBS: Job[] = [
     location: "Anjos · In-person",
     salary: "€800/mo",
     deadline: new Date(2026, 6, 15),
-    description: "Opening September 2026. We're looking for someone who loves queer literature and wants to help build something new in Anjos.",
+    description:
+      "Opening September 2026. We're looking for someone who loves queer literature and wants to help build something new in Anjos.",
     tags: ["Bookshop", "Retail", "Community"],
     detail: {
       category: "Food & Retail",

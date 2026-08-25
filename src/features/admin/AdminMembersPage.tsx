@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Button,
   FadeIn,
@@ -14,10 +14,8 @@ import { AdminMemberRows, AdminFlaggedRows } from "./AdminMemberRows";
 import { AdminVerifyQueue } from "./AdminVerifyQueue";
 import { AdminJoinRequestSamplePage } from "./AdminJoinRequestSamplePage";
 import { AdminMemberDrawer } from "./AdminMemberDrawer";
-import {
-  AdminMemberCardLoadingDrawer,
-  useAdminMemberCardSelection,
-} from "./AdminMemberCardSelection";
+import { AdminMemberCardLoadingDrawer } from "./AdminMemberCardSelection";
+import { useAdminMemberCardSelection } from "./useAdminMemberCardSelection";
 import {
   AdminMembersSearchControls,
   type StatusFilter,
@@ -81,16 +79,18 @@ export function AdminMembersPage() {
 
   // A member who leaves the roster (filtered out, or gone after a refetch)
   // takes the drawer with them, and the stale id is dropped so they can't pop
-  // back open later.
-  useEffect(() => {
-    if (
-      selectedMemberId !== null &&
-      !isLoading &&
-      !members.some((member) => member.id === selectedMemberId)
-    ) {
-      setSelectedMemberId(null);
-    }
-  }, [members, selectedMemberId, isLoading]);
+  // back open later. Adjusted during render (rather than in an effect): the
+  // condition is derived entirely from render-available values, and clearing
+  // it here means the current render already reflects the closed drawer
+  // instead of painting a stale one first. `selectedMemberId !== null` is
+  // false on the next render, so this terminates.
+  if (
+    selectedMemberId !== null &&
+    !isLoading &&
+    !members.some((member) => member.id === selectedMemberId)
+  ) {
+    setSelectedMemberId(null);
+  }
 
   // One drawer serves both tabs: a roster row resolves to a member object
   // straight away, a flagged row arrives once its card has been fetched.

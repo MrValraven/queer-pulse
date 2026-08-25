@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Button, Select, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -65,9 +65,15 @@ export function GovernanceLogPane({ slug }: { slug: string }) {
   const pageSize = data?.pageSize || GOVERNANCE_LOG_PAGE_SIZE;
   const pageCount = data ? Math.max(1, Math.ceil(data.total / pageSize)) : 1;
   const isPageOutOfRange = data !== undefined && page > pageCount;
-  useEffect(() => {
-    if (isPageOutOfRange) setPage(pageCount);
-  }, [isPageOutOfRange, pageCount]);
+  // Adjust during render rather than in an effect: the condition above is
+  // already derived from render-available values, and setting it here (as
+  // opposed to in a post-commit effect) avoids painting the stale out-of-range
+  // page before snapping back. React re-renders immediately with the
+  // corrected page, and isPageOutOfRange is false on that render, so this
+  // terminates.
+  if (isPageOutOfRange) {
+    setPage(pageCount);
+  }
 
   return (
     <div className={styles.pane}>
@@ -237,7 +243,11 @@ function SkeletonTrail() {
             style={{ borderRadius: 999, flex: "none" }}
           />
           <div className={styles.entryBody}>
-            <SkeletonLine width={120} height={22} style={{ borderRadius: 999 }} />
+            <SkeletonLine
+              width={120}
+              height={22}
+              style={{ borderRadius: 999 }}
+            />
             <SkeletonLine width="70%" style={{ marginTop: 10 }} />
             <SkeletonLine width="45%" style={{ marginTop: 10 }} />
           </div>

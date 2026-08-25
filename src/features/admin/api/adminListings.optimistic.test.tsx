@@ -25,7 +25,10 @@ import { useSetListingStatus } from "./useSetListingStatus";
  */
 const COUNTS: ListingQueueCounts = { all: 4, review: 2, question: 1, live: 1 };
 
-function makeRow(ref: string, status: ListingQueueRow["status"]): ListingQueueRow {
+function makeRow(
+  ref: string,
+  status: ListingQueueRow["status"],
+): ListingQueueRow {
   return {
     ref,
     slug: `slug-${ref}`,
@@ -42,7 +45,9 @@ function makeRow(ref: string, status: ListingQueueRow["status"]): ListingQueueRo
 
 function makePage(rows: ListingQueueRow[]): InfiniteData<AdminListingsPageVM> {
   return {
-    pages: [{ rows, total: rows.length, page: 1, pageSize: 20, counts: COUNTS }],
+    pages: [
+      { rows, total: rows.length, page: 1, pageSize: 20, counts: COUNTS },
+    ],
     pageParams: [1],
   };
 }
@@ -60,7 +65,10 @@ describe("patchListingInCache", () => {
     client.setQueryData(keyFor("review"), makePage([makeRow("L1", "review")]));
 
     // Approve L1: review → live.
-    patchListingInCache(client, true, "L1", (row) => ({ ...row, status: "live" }));
+    patchListingInCache(client, true, "L1", (row) => ({
+      ...row,
+      status: "live",
+    }));
 
     const allPage = client.getQueryData<InfiniteData<AdminListingsPageVM>>(
       keyFor("all"),
@@ -78,7 +86,10 @@ describe("patchListingInCache", () => {
 
   it("drops the row from every cached page when the updater removes it", () => {
     const client = new QueryClient();
-    client.setQueryData(keyFor("all"), makePage([makeRow("L1", "review"), makeRow("L2", "review")]));
+    client.setQueryData(
+      keyFor("all"),
+      makePage([makeRow("L1", "review"), makeRow("L2", "review")]),
+    );
 
     patchListingInCache(client, true, "L1", () => null);
 

@@ -87,7 +87,12 @@ export function useSearchData(
   });
 
   if (demoMode) {
-    return { data: SEARCH_DATA, recents: RECENTS, signInRequired: false, loading: false };
+    return {
+      data: SEARCH_DATA,
+      recents: RECENTS,
+      signInRequired: false,
+      loading: false,
+    };
   }
   if (checking) {
     return { data: [], recents: [], signInRequired: false, loading: true };

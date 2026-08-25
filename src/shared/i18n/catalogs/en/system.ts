@@ -448,4 +448,21 @@ export const system: Catalog = {
     "This unsubscribe link doesn't match anything on our side. It may be old or mistyped. If digest emails are still reaching this address, let the team know and we'll sort it.",
   "newsletterUnsubscribe.goHomeCta": "Back to homepage",
   "newsletterUnsubscribe.contactCta": "Talk to the team",
+
+  // ── GenesisPage.tsx (one-time founder bootstrap; deleted post-launch) ────
+  // "Genesis" is the internal name for this bootstrap flow, kept identical
+  // across languages like the other product/brand nouns in this catalog.
+  "genesis.eyebrow": "Platform bootstrap",
+  "genesis.heading": "Genesis",
+  "genesis.loggedIn.lead":
+    "You're in. Claim admin to finish bootstrapping the platform.",
+  "genesis.loggedIn.claimCta": "Claim admin",
+  "genesis.loggedOut.lead":
+    "Generate the founding invite. You'll join through the normal invite flow, invited by QueerPulse.",
+  "genesis.loggedOut.generateCta": "Generate invite",
+  "genesis.notice.closed": "Genesis is closed.",
+  "genesis.notice.rejected": "This account cannot claim genesis.",
+  "genesis.notice.failedFallback": "Something went wrong. Try again.",
+  "genesis.notice.claimed": "You are now an admin.",
+  "genesis.notice.demo": "Genesis isn't available in demo mode.",
 };

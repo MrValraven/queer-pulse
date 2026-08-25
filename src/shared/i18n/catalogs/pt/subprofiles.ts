@@ -459,9 +459,11 @@ export const subprofiles: Catalog = {
   "mine.emptySamples.stage.name": "Hot Mess Express",
   "mine.emptySamples.stage.line": "Dupla de DJs · festas queer",
   "mine.emptySamples.practice.name": "Sofia Neves",
-  "mine.emptySamples.practice.line": "Psicoterapia para pessoas adultas LGBTQ+ · PT / EN",
+  "mine.emptySamples.practice.line":
+    "Psicoterapia para pessoas adultas LGBTQ+ · PT / EN",
   "mine.emptySamples.table.name": "Casa Corvo",
-  "mine.emptySamples.table.line": "Clube de jantar para quem chega com fome e sai tarde",
+  "mine.emptySamples.table.line":
+    "Clube de jantar para quem chega com fome e sai tarde",
   "mine.error.title": "Não conseguimos carregar as tuas",
   "mine.error.em": "personas",
   "mine.error.description":
@@ -527,8 +529,7 @@ export const subprofiles: Catalog = {
   "metaForm.leaveConfirm":
     "Tens alterações por guardar neste perfil. Queres sair sem as guardar?",
   "metaForm.toastSaved": "Detalhes guardados",
-  "metaForm.toastError":
-    "Não conseguimos guardar isso agora. Tenta outra vez.",
+  "metaForm.toastError": "Não conseguimos guardar isso agora. Tenta outra vez.",
 
   // Gaveta de item (SubprofileItemDrawerFields, aberta pela SubprofileItemDrawer)
   "itemEditor.itemNumber": "Item {n}",
@@ -545,8 +546,10 @@ export const subprofiles: Catalog = {
   // Seletor de pessoas colaboradoras (CollaboratorSelect, dentro de SubprofileItemDrawerFields)
   "itemEditor.collaboratorsLabel": "Pessoas colaboradoras",
   "itemEditor.collaboratorsPlaceholder": "Pesquisar pessoas para creditar",
-  "itemEditor.collaboratorsSearchPlaceholder": "Pesquisar por nome ou @identificador",
-  "itemEditor.collaboratorsEmpty": "Nenhuma pessoa corresponde a essa pesquisa.",
+  "itemEditor.collaboratorsSearchPlaceholder":
+    "Pesquisar por nome ou @identificador",
+  "itemEditor.collaboratorsEmpty":
+    "Nenhuma pessoa corresponde a essa pesquisa.",
   "itemEditor.collaboratorsHelper":
     "Pesquisa pessoas e escolhe-as para creditar o trabalho delas aqui.",
   "itemEditor.collaboratorsCapHint":
@@ -616,8 +619,7 @@ export const subprofiles: Catalog = {
   "newModal.sub":
     "Cada uma é uma persona profissional tua. Escolhe para que serve.",
   "newModal.stepIdentityTitle": "Dá-lhe um <em>nome</em>",
-  "newModal.stepIdentitySub":
-    "Como é conhecida, e se dá para ver que és tu.",
+  "newModal.stepIdentitySub": "Como é conhecida, e se dá para ver que és tu.",
   "newModal.stepOf": "Passo {step} de {total}",
   "newModal.cancel": "Cancelar",
   "newModal.back": "Voltar",
@@ -637,8 +639,7 @@ export const subprofiles: Catalog = {
     "Endereço próprio, sem nada a apontar de volta para ti. Tua para manteres à parte.",
   "newModal.handleStateClaim":
     "É teu se publicares primeiro. Os identificadores são por ordem de chegada.",
-  "newModal.toastError":
-    "Não conseguimos começar essa agora. Tenta outra vez.",
+  "newModal.toastError": "Não conseguimos começar essa agora. Tenta outra vez.",
 
   // Duplicar uma persona — seletor de método inicial (StartMethodPicker) e
   // seletor de fonte/modo de cópia (CopySourcePicker, CopyModePreview),
@@ -678,17 +679,22 @@ export const subprofiles: Catalog = {
   "family.chart.note": "Uma página de efemérides, lida pelo céu.",
   // Expanded craft families (personas expansion — 6 new page families)
   "family.chair.label": "Cadeira",
-  "family.chair.note": "Um espelho iluminado e uma tabela de preços que nunca te pergunta o género.",
+  "family.chair.note":
+    "Um espelho iluminado e uma tabela de preços que nunca te pergunta o género.",
   "family.runway.label": "Passerelle",
-  "family.runway.note": "Uma folha de lookbook: nome enorme, créditos minúsculos, imagens altas.",
+  "family.runway.note":
+    "Uma folha de lookbook: nome enorme, créditos minúsculos, imagens altas.",
   "family.gallery.label": "Galeria",
   "family.gallery.note": "Ar de museu. Cada item é uma legenda de parede.",
   "family.history.label": "Registo",
-  "family.history.note": "Papel envelhecido e uma cronologia: datas à margem, fontes nomeadas.",
+  "family.history.note":
+    "Papel envelhecido e uma cronologia: datas à margem, fontes nomeadas.",
   "family.collective.label": "Cartaz",
-  "family.collective.note": "Tinta riso em papel barato: um apelo no topo, datas que se leem à distância.",
+  "family.collective.note":
+    "Tinta riso em papel barato: um apelo no topo, datas que se leem à distância.",
   "family.classroom.label": "Sala de aula",
-  "family.classroom.note": "Um quadro e um enunciado: semanas numeradas, preços ditos antes de perguntares.",
+  "family.classroom.note":
+    "Um quadro e um enunciado: semanas numeradas, preços ditos antes de perguntares.",
 
   // Modelos iniciais (Fase 4a) — seletor no momento de criação
   // (NewSideModal) e o botão "Inserir exemplos" no editor
@@ -703,10 +709,8 @@ export const subprofiles: Catalog = {
   // modelos de secção, mas totalmente editáveis.
   "template.tagline.developer":
     "A construir coisas, sobretudo para quem eu amo.",
-  "template.tagline.writer":
-    "Palavras que não conseguia guardar só para mim.",
-  "template.tagline.musician":
-    "Som para noites queer e manhãs tranquilas.",
+  "template.tagline.writer": "Palavras que não conseguia guardar só para mim.",
+  "template.tagline.musician": "Som para noites queer e manhãs tranquilas.",
   "template.tagline.visual_artist":
     "Imagens que guardam o que as palavras não conseguem.",
   "template.tagline.filmmaker": "Histórias contadas fotograma a fotograma.",
@@ -719,10 +723,8 @@ export const subprofiles: Catalog = {
   "template.tagline.performer": "Em palco, para quem precisar.",
   "template.tagline.photographer":
     "A guardar parado o que normalmente passa depressa demais.",
-  "template.tagline.videomaker":
-    "Imagens em movimento, feitas com intenção.",
-  "template.tagline.chef":
-    "A cozinhar para mesas queer, um prato de cada vez.",
+  "template.tagline.videomaker": "Imagens em movimento, feitas com intenção.",
+  "template.tagline.chef": "A cozinhar para mesas queer, um prato de cada vez.",
   "template.tagline.mixologist": "Bebidas preparadas para a noite que vem aí.",
   "template.tagline.therapist":
     "Um espaço afirmativo para pensar as coisas com calma.",
@@ -756,8 +758,7 @@ export const subprofiles: Catalog = {
   "template.section.gigs.item1.title": "Um concerto",
   "template.section.gigs.item1.subtitle": "Onde tocaste",
   "template.section.portfolio.item1.title": "Uma peça que fiz",
-  "template.section.portfolio.item1.desc":
-    "O que é e o que envolveu criá-la.",
+  "template.section.portfolio.item1.desc": "O que é e o que envolveu criá-la.",
   "template.section.portfolio.item2.title": "Outra peça",
   "template.section.portfolio.item2.desc":
     "Um segundo exemplo. Troca por aquilo que melhor mostra o teu trabalho.",
@@ -783,8 +784,7 @@ export const subprofiles: Catalog = {
   "template.section.shows.item1.title": "Um espetáculo",
   "template.section.shows.item1.subtitle": "Onde atuaste",
   "template.section.looks.item1.title": "Um look",
-  "template.section.looks.item1.desc":
-    "O que o inspirou e como o construíste.",
+  "template.section.looks.item1.desc": "O que o inspirou e como o construíste.",
   "template.section.mixes.item1.title": "Um set",
   "template.section.mixes.item1.subtitle": "Onde o tocaste",
   "template.section.mixes.item2.title": "Outro set",
@@ -800,12 +800,10 @@ export const subprofiles: Catalog = {
   "template.section.appearances.item1.subtitle":
     "O espetáculo, evento ou palco",
   "template.section.series.item1.title": "Uma série",
-  "template.section.series.item1.desc":
-    "Sobre o que é e o que liga tudo.",
+  "template.section.series.item1.desc": "Sobre o que é e o que liga tudo.",
   "template.section.videos.item1.title": "Um vídeo",
   "template.section.videos.item1.subtitle": "De onde é",
-  "template.section.videos.item1.desc":
-    "O que mostra, numa ou duas linhas.",
+  "template.section.videos.item1.desc": "O que mostra, numa ou duas linhas.",
   "template.section.showcase.item1.title": "Algo que fiz",
   "template.section.showcase.item1.subtitle": "Uma etiqueta curta para isto",
   "template.section.showcase.item1.desc": "O que é e porque está aqui.",
@@ -817,11 +815,9 @@ export const subprofiles: Catalog = {
   "template.section.residencies.item1.subtitle": "Onde aconteceu",
   "template.section.cocktails.item1.title": "Um cocktail de assinatura",
   "template.section.cocktails.item1.subtitle": "O destilado base",
-  "template.section.cocktails.item1.desc":
-    "O que leva e o que o inspirou.",
+  "template.section.cocktails.item1.desc": "O que leva e o que o inspirou.",
   "template.section.specialisms.item1.title": "Uma área com que trabalho",
-  "template.section.specialisms.item1.desc":
-    "Para quem é e como a abordas.",
+  "template.section.specialisms.item1.desc": "Para quem é e como a abordas.",
   "template.section.credentials.item1.title": "Uma qualificação ou formação",
   "template.section.credentials.item1.subtitle": "A entidade que a atribui",
   "template.section.charts.item1.title": "Uma leitura que ofereces",
@@ -909,7 +905,8 @@ export const subprofiles: Catalog = {
   "hero.endorse.modal.you": "Tu",
   "hero.endorse.modal.savedToast": "A tua nota foi guardada.",
   "hero.endorse.modal.withdrawnToast": "A tua recomendação foi retirada.",
-  "hero.endorse.modal.success.title": "Obrigade pela tua <em>recomendação</em>.",
+  "hero.endorse.modal.success.title":
+    "Obrigade pela tua <em>recomendação</em>.",
   "hero.endorse.modal.success.body":
     "A tua cara acabou de se juntar a quem recomenda <b>{name}</b>. É assim que o bom trabalho viaja por aqui. Pessoa a pessoa, nome a nome.",
   "hero.endorse.modal.success.doneCta": "Concluído",
@@ -943,7 +940,8 @@ export const subprofiles: Catalog = {
   "shareCard.qrAria": "Código QR que liga à página da persona de {name}",
   "shareCard.copyLink": "Copiar link",
   "qr.loading": "A gerar código QR…",
-  "qr.error": "Não conseguimos gerar o código QR. Aqui tens o link em alternativa.",
+  "qr.error":
+    "Não conseguimos gerar o código QR. Aqui tens o link em alternativa.",
 
   // Destaque do item em foco (SubprofileSpotlight)
   "spotlight.eyebrow": "Comece aqui",
@@ -967,16 +965,16 @@ export const subprofiles: Catalog = {
 
   // Secção de galeria sem legendas (SubprofileSections) — texto alternativo
   // por foto, já que estes blocos não têm título/subtítulo próprio.
-  "galleryPhotoAlt": "{name}, foto {number} da galeria",
+  galleryPhotoAlt: "{name}, foto {number} da galeria",
   // Célula de galeria clicável + a lightbox de galeria em ecrã inteiro
   // (GalleryLightbox).
-  "galleryPhotoOpen": "Abrir a foto {number} de {name} em ecrã inteiro",
-  "galleryLightboxLabel": "Fotos de {name}",
+  galleryPhotoOpen: "Abrir a foto {number} de {name} em ecrã inteiro",
+  galleryLightboxLabel: "Fotos de {name}",
 
   // Limite da secção de galeria no editor (SubprofileSectionEditor) — mostrado
   // no lugar do botão de acrescentar quando a galeria universal atinge o
   // máximo de 6 fotos.
-  "galleryFull": "Máximo de 6 fotos",
+  galleryFull: "Máximo de 6 fotos",
 
   // Modal de adicionar fotos à galeria (várias de uma vez) — carregamento do
   // dispositivo + seletor de fotos anteriores, aberto pelo botão de acrescentar
@@ -1028,7 +1026,8 @@ export const subprofiles: Catalog = {
   // Barra de rascunho quando a pessoa responsável vê a sua própria persona por
   // publicar (SubprofileDraftBanner) — construída, ainda não ligada (ver o
   // comentário do próprio componente para o porquê).
-  "draftBanner.message": "Rascunho. Mais ninguém consegue abrir este endereço ainda.",
+  "draftBanner.message":
+    "Rascunho. Mais ninguém consegue abrir este endereço ainda.",
   "draftBanner.readiness": "{ready} de {total} prontos para publicar",
   "draftBanner.edit": "Editar",
   "draftBanner.publish": "Publicar",
@@ -1109,7 +1108,8 @@ export const subprofiles: Catalog = {
   "owners.leaveModalConfirm": "Sair",
   "owners.leaveModalLeaving": "A sair…",
   "owners.toastLeft": "Saíste desta persona",
-  "owners.toastLeaveError": "Não conseguimos fazer isso agora. Tenta outra vez.",
+  "owners.toastLeaveError":
+    "Não conseguimos fazer isso agora. Tenta outra vez.",
   "owners.removeAria": "Remover {name} da co-propriedade",
   "owners.removeConfirmTitle": "Remover {name}?",
   "owners.removeConfirmBody":
@@ -1151,16 +1151,20 @@ export const subprofiles: Catalog = {
     "Percebo que {name} vai ter acesso total de gestão a esta persona, e vai poder ver a minha identidade real.",
 
   // Painel de convites recebidos (PersonaInvitesBanner, em MySubprofilesPage)
-  "invites.regionLabel": "Convites para seres responsável conjunta de uma persona",
-  "invites.message": "{inviter} convidou-te para seres responsável conjunta de <em>{persona}</em>",
+  "invites.regionLabel":
+    "Convites para seres responsável conjunta de uma persona",
+  "invites.message":
+    "{inviter} convidou-te para seres responsável conjunta de <em>{persona}</em>",
   "invites.accept": "Aceitar",
   "invites.accepting": "A aceitar…",
   "invites.decline": "Recusar",
   "invites.declining": "A recusar…",
   "invites.toastAccepted": "Agora és responsável conjunta de {name}",
-  "invites.toastAcceptError": "Não conseguimos aceitar esse convite. Tenta outra vez.",
+  "invites.toastAcceptError":
+    "Não conseguimos aceitar esse convite. Tenta outra vez.",
   "invites.toastDeclined": "Convite recusado",
-  "invites.toastDeclineError": "Não conseguimos recusar esse convite. Tenta outra vez.",
+  "invites.toastDeclineError":
+    "Não conseguimos recusar esse convite. Tenta outra vez.",
 
   // Etapa de confirmação/aviso antes de aceitar um convite recebido (IDN-2):
   // o par, do lado de quem recebe, da etapa de confirmação do modal de
@@ -1223,7 +1227,8 @@ export const subprofiles: Catalog = {
   "peopleModal.noNote": "Recomendou sem deixar nota",
   "peopleModal.removeAriaLabel": "Remover a tua recomendação a {name}",
   "peopleModal.removeCta": "Remover",
-  "peopleModal.removeError": "Não conseguimos remover isso agora. Tenta outra vez.",
+  "peopleModal.removeError":
+    "Não conseguimos remover isso agora. Tenta outra vez.",
   "peopleModal.followersPrivateTitle": "Seguidores são privados",
   "peopleModal.followersPrivateBody":
     "Só a pessoa responsável por {name} vê quem a segue. Para toda a gente, seguir é anónimo. O teu nome nunca aparece aqui.",
@@ -1261,7 +1266,8 @@ export const subprofiles: Catalog = {
   "skinExtras.practice.feesTitle": "Valores",
   "skinExtras.practice.venueTitle": "Onde atendo",
   "skinExtras.practice.availabilityTitle": "Disponibilidade",
-  "skinExtras.practice.availabilitySlot": "As sessões começam habitualmente às {time}",
+  "skinExtras.practice.availabilitySlot":
+    "As sessões começam habitualmente às {time}",
   "skinExtras.practice.availabilityOpen": "Livre",
   "skinExtras.practice.availabilityFull": "Cheio",
   "skinExtras.practice.vouchesTitle": "Recomendado pela comunidade",
@@ -1305,7 +1311,8 @@ export const subprofiles: Catalog = {
   // Editor e leitor de poema com formatação (ofício poesia, skin página) —
   // blocos estruturados de estrofe/separador/nota com formatação em itálico/negrito.
   "poem.editor.label": "Poema",
-  "poem.editor.stanzaPlaceholder": "Escreve uma estrofe. Enter para uma nova linha",
+  "poem.editor.stanzaPlaceholder":
+    "Escreve uma estrofe. Enter para uma nova linha",
   "poem.editor.notePlaceholder": "Uma epígrafe ou dedicatória",
   "poem.editor.addStanza": "Estrofe",
   "poem.editor.addBreak": "Separador",
@@ -1323,8 +1330,10 @@ export const subprofiles: Catalog = {
   "poem.editor.tabEdit": "Editar",
   "poem.editor.tabPreview": "Pré-visualização",
   "poem.editor.paneToggleAria": "Vista do editor",
-  "poem.editor.resplit.title": "As quebras de linha deste poema podem ter-se perdido",
-  "poem.editor.resplit.body": "Isto parece um poema mais antigo, guardado como uma única linha longa. Podemos sugerir novas quebras de linha a partir da pontuação. Depois poderás sempre editá-las.",
+  "poem.editor.resplit.title":
+    "As quebras de linha deste poema podem ter-se perdido",
+  "poem.editor.resplit.body":
+    "Isto parece um poema mais antigo, guardado como uma única linha longa. Podemos sugerir novas quebras de linha a partir da pontuação. Depois poderás sempre editá-las.",
   "poem.editor.resplit.action": "Voltar a dividir em linhas",
   "poem.row.openAria": "Ler o poema “{title}”",
   "poem.reader.withLabel": "Com {names}",
@@ -1352,7 +1361,8 @@ export const subprofiles: Catalog = {
   // Skin-blocks editor (personas expansion — page-block editor pane, rail entry & field labels)
   "editorRail.skinBlocks": "Blocos da página",
   "editorPane.skinBlocks.title": "Blocos da página",
-  "editorPane.skinBlocks.lede": "Os detalhes próprios da tua página: condições de marcação, horários, o que trazer. Aparecem na tua página pública.",
+  "editorPane.skinBlocks.lede":
+    "Os detalhes próprios da tua página: condições de marcação, horários, o que trazer. Aparecem na tua página pública.",
   "pending.area.skin": "Blocos da página",
   "pending.skinEdited": "Atualização em {field}",
   "skinBlock.addItem": "Adicionar",
@@ -1398,9 +1408,11 @@ export const subprofiles: Catalog = {
   "skinBlock.practice.venue.name": "Nome do espaço",
   "skinBlock.practice.venue.lines": "Morada",
   "skinBlock.practice.availability.title": "Disponibilidade",
-  "skinBlock.practice.availability.startDate": "O calendário começa (uma segunda-feira)",
+  "skinBlock.practice.availability.startDate":
+    "O calendário começa (uma segunda-feira)",
   "skinBlock.practice.availability.slotTime": "Hora de início da sessão",
-  "skinBlock.practice.availability.help": "Toca num dia para alternar: livre, depois cheio, depois sem sessões.",
+  "skinBlock.practice.availability.help":
+    "Toca num dia para alternar: livre, depois cheio, depois sem sessões.",
   "skinBlock.practice.availability.cellLabel": "Espaço {slot}: {state}",
   "skinBlock.practice.availability.state_open": "livre",
   "skinBlock.practice.availability.state_full": "cheio",
@@ -1584,9 +1596,11 @@ export const subprofiles: Catalog = {
   "history.heading": "Histórico de versões",
   "history.view": "Ver",
   "history.restore": "Restaurar",
-  "history.empty": "Ainda não há versões anteriores. As edições guardadas aparecem aqui.",
+  "history.empty":
+    "Ainda não há versões anteriores. As edições guardadas aparecem aqui.",
   "history.restored": "Versão restaurada",
-  "history.restoreFailed": "Não foi possível restaurar esta versão. Tente novamente.",
+  "history.restoreFailed":
+    "Não foi possível restaurar esta versão. Tente novamente.",
 
   // Campos ricos por secção (richFields.data.ts, mostrados por
   // SubprofileItemDrawerFields) — detalhes de concertos, suporte/edição de
@@ -1625,7 +1639,8 @@ export const subprofiles: Catalog = {
   "addressWarning.noticeTitle": "Este endereço está no ar",
   "addressWarning.noticeBody":
     "Já há pessoas com links para {from}. Depois de confirmares, esta persona passa a {to}.",
-  "addressWarning.oldLinksDie": "Os links antigos para {path} deixam de funcionar",
+  "addressWarning.oldLinksDie":
+    "Os links antigos para {path} deixam de funcionar",
   "addressWarning.handleReleased":
     "O teu identificador volta a ficar disponível. Qualquer pessoa o pode reclamar",
   "addressWarning.followersKept":

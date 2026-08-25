@@ -128,7 +128,8 @@ export function StepReview({
           {t("marketing:listBusiness.step5.slugLabel")}
         </div>
         <div className={styles.sbUrl}>
-          queerpulse.app/directory/<b>{slugify(draft.name)}</b>
+          {t("marketing:listBusiness.step5.slugDomain")}
+          <b>{slugify(draft.name)}</b>
         </div>
       </div>
 

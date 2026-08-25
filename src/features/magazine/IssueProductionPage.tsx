@@ -87,7 +87,8 @@ export function IssueProductionPage() {
             action={{
               label: (
                 <>
-                  <FiArrowLeft aria-hidden /> {t("magazine:issue.header.backToDesk")}
+                  <FiArrowLeft aria-hidden />{" "}
+                  {t("magazine:issue.header.backToDesk")}
                 </>
               ),
               to: routes.magazineEditor,
@@ -101,7 +102,9 @@ export function IssueProductionPage() {
   // Re-bind once — TS narrowing from the guard above doesn't persist into the
   // nested `renderTabBody` closure (same pattern as `PieceRecordPage`).
   const production = issue;
-  const readyCount = production.runOrder.filter((entry) => entry.laidOut).length;
+  const readyCount = production.runOrder.filter(
+    (entry) => entry.laidOut,
+  ).length;
   const totalCount = production.runOrder.length;
   const contentsPieces = production.runOrder.map((entry) => entry.piece);
 
@@ -114,10 +117,15 @@ export function IssueProductionPage() {
               runOrder={production.runOrder}
               onReorder={(items) =>
                 saveRunOrder.mutate({
-                  items: items.map((entry) => ({ pieceId: entry.piece.id, pages: entry.pages })),
+                  items: items.map((entry) => ({
+                    pieceId: entry.piece.id,
+                    pages: entry.pages,
+                  })),
                 })
               }
-              onOpen={(piece) => void navigate(routes.magazinePiece.replace(":id", piece.id))}
+              onOpen={(piece) =>
+                void navigate(routes.magazinePiece.replace(":id", piece.id))
+              }
             />
             {issueId && (
               <AddPiecesPanel
@@ -133,7 +141,10 @@ export function IssueProductionPage() {
                         // pieces, so it has to refetch alongside the desk list
                         // the mutation already invalidates.
                         void queryClient.invalidateQueries({
-                          queryKey: ["magazine-issue-production", production.number],
+                          queryKey: [
+                            "magazine-issue-production",
+                            production.number,
+                          ],
                         });
                         showToast(
                           t("magazine:issue.addPieces.addedToast", {
@@ -144,7 +155,10 @@ export function IssueProductionPage() {
                         );
                       },
                       onError: () =>
-                        showToast(t("magazine:issue.addPieces.failedToast"), "error"),
+                        showToast(
+                          t("magazine:issue.addPieces.failedToast"),
+                          "error",
+                        ),
                     },
                   )
                 }
@@ -221,7 +235,11 @@ export function IssueProductionPage() {
       <ShipIssueModal
         open={shipModalOpen}
         issueNumber={production.number}
-        publishesLabel={production.publishedOn ? formatDate(production.publishedOn) : undefined}
+        publishesLabel={
+          production.publishedOn
+            ? formatDate(production.publishedOn)
+            : undefined
+        }
         onClose={() => setShipModalOpen(false)}
         onShip={() => ship.mutate()}
       />

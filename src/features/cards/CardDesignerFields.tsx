@@ -205,7 +205,9 @@ export function CardDesignerFields({
       </div>
 
       <div className={styles.group}>
-        <div className={styles.groupLabel}>{t("cards:designer.printLabel")}</div>
+        <div className={styles.groupLabel}>
+          {t("cards:designer.printLabel")}
+        </div>
         {/* Says what a printed card means for the holder, because a physical
             card behaves differently from the one on their phone: it can be
             handed to someone else, and it keeps working until it is replaced. */}

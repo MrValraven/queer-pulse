@@ -57,9 +57,7 @@ export function AdminSafeSpacePromiseFields({
           />
           <input
             className={styles.textInput}
-            aria-label={t(
-              "admin:adminSafeSpaces.modal.promiseDescPlaceholder",
-            )}
+            aria-label={t("admin:adminSafeSpaces.modal.promiseDescPlaceholder")}
             placeholder={t(
               "admin:adminSafeSpaces.modal.promiseDescPlaceholder",
             )}
@@ -133,9 +131,7 @@ export function AdminSafeSpaceVouchFields({
           />
           <input
             className={styles.textInput}
-            aria-label={t(
-              "admin:adminSafeSpaces.modal.vouchBylinePlaceholder",
-            )}
+            aria-label={t("admin:adminSafeSpaces.modal.vouchBylinePlaceholder")}
             placeholder={t(
               "admin:adminSafeSpaces.modal.vouchBylinePlaceholder",
             )}

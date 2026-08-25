@@ -65,11 +65,7 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
   const profileLink = item?.link ?? `/profile/${DEMO_MEMBER.slug}`;
 
   const sayHi = (
-    <Button
-      variant="primary"
-      size="sm"
-      onClick={() => contact({ slug, name })}
-    >
+    <Button variant="primary" size="sm" onClick={() => contact({ slug, name })}>
       {connected ? t("connect:contact.message") : t("feed:action.sayHi")}
     </Button>
   );
@@ -108,7 +104,9 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
         name={
           <span>
             {name}
-            {pronouns && <span className={styles.pronoun}>{pronouns}</span>}{" "}
+            {pronouns && (
+              <span className={styles.pronoun}>{pronouns}</span>
+            )}{" "}
             <MemberStaffBadge slug={slug || undefined} />
           </span>
         }

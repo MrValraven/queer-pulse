@@ -6,7 +6,10 @@ import { formatDate } from "../../../shared/lib/date";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { readDemoDraft, clearDemoDraft } from "./useListingDraft";
 import { getListingDraft } from "./api/listingDrafts.api";
-import { useListingDrafts, useDeleteListingDraft } from "./api/useListingDrafts";
+import {
+  useListingDrafts,
+  useDeleteListingDraft,
+} from "./api/useListingDrafts";
 import type { ListingDraft } from "./listBusiness.data";
 import styles from "./SavedDraftsPanel.module.css";
 
@@ -65,7 +68,8 @@ function DraftRow({
   onDelete: () => void;
 }) {
   const { t } = useTranslation();
-  const displayName = name.trim() || t("marketing:listBusiness.drafts.untitled");
+  const displayName =
+    name.trim() || t("marketing:listBusiness.drafts.untitled");
   return (
     <div className={styles.row}>
       <div className={styles.rowBody}>
@@ -92,14 +96,22 @@ function DraftRow({
 }
 
 /** Demo: the single localStorage draft, if any. */
-function DemoDraftPanel({ onResume }: { onResume: (target: ResumeTarget) => void }) {
+function DemoDraftPanel({
+  onResume,
+}: {
+  onResume: (target: ResumeTarget) => void;
+}) {
   const [snapshot, setSnapshot] = useState(() => readDemoDraft());
   if (!snapshot) return null;
   return (
     <PanelShell count={1}>
       <DraftRow
         name={snapshot.draft.name}
-        updatedLabel={formatDate(snapshot.savedAt, undefined, UPDATED_AT_OPTIONS)}
+        updatedLabel={formatDate(
+          snapshot.savedAt,
+          undefined,
+          UPDATED_AT_OPTIONS,
+        )}
         busy={false}
         onResume={() =>
           onResume({ draft: snapshot.draft, step: snapshot.step })
@@ -114,7 +126,11 @@ function DemoDraftPanel({ onResume }: { onResume: (target: ResumeTarget) => void
 }
 
 /** Live: the member's cross-device drafts. */
-function LiveDraftsPanel({ onResume }: { onResume: (target: ResumeTarget) => void }) {
+function LiveDraftsPanel({
+  onResume,
+}: {
+  onResume: (target: ResumeTarget) => void;
+}) {
   const { t } = useTranslation();
   const { data: drafts, error } = useListingDrafts();
   const removeDraft = useDeleteListingDraft();
@@ -123,7 +139,9 @@ function LiveDraftsPanel({ onResume }: { onResume: (target: ResumeTarget) => voi
   if (error)
     return (
       <PanelShell count={0}>
-        <p className={styles.error}>{t("marketing:listBusiness.drafts.loadError")}</p>
+        <p className={styles.error}>
+          {t("marketing:listBusiness.drafts.loadError")}
+        </p>
       </PanelShell>
     );
   if (!drafts?.length) return null;

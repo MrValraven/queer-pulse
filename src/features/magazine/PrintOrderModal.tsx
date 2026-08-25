@@ -108,7 +108,9 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
               <div className={styles.stepper}>
                 <button
                   type="button"
-                  onClick={() => setQuantity((previous) => Math.max(1, previous - 1))}
+                  onClick={() =>
+                    setQuantity((previous) => Math.max(1, previous - 1))
+                  }
                   disabled={quantity <= 1 || stage === "placing"}
                   aria-label={t("magazine:printOrder.fewerCopiesAria")}
                 >
@@ -119,7 +121,9 @@ export function PrintOrderModal({ onClose }: { onClose: () => void }) {
                 </span>
                 <button
                   type="button"
-                  onClick={() => setQuantity((previous) => Math.min(10, previous + 1))}
+                  onClick={() =>
+                    setQuantity((previous) => Math.min(10, previous + 1))
+                  }
                   disabled={quantity >= 10 || stage === "placing"}
                   aria-label={t("magazine:printOrder.moreCopiesAria")}
                 >

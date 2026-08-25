@@ -72,11 +72,7 @@ export function StatGrid({
       // `grid-template-columns`. An inline value would beat every responsive
       // rule, pinning N columns at any width and overflowing on mobile; the
       // `.gridFixed` track formula caps at N wide and wraps down gracefully.
-      style={
-        columns
-          ? ({ "--sg-cols": columns } as CSSProperties)
-          : undefined
-      }
+      style={columns ? ({ "--sg-cols": columns } as CSSProperties) : undefined}
     >
       {children}
     </div>

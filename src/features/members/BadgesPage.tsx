@@ -27,7 +27,8 @@ export function BadgesPage() {
   // mode shows loading/error/empty states instead of the zeroed placeholder
   // (and never the demo fixtures). Demo mode always has real data.
   const recognition = useRecognition();
-  const { mutedCategories, isCategoryMuted, toggleCategory, unmuteAll } = useMutedBadgeCategories();
+  const { mutedCategories, isCategoryMuted, toggleCategory, unmuteAll } =
+    useMutedBadgeCategories();
   const { getStoryNote } = useBadgeStoryNotes();
   const [drawerSelection, setDrawerSelection] = useState<{
     entries: BadgeDrawerEntry[];
@@ -35,7 +36,8 @@ export function BadgesPage() {
   } | null>(null);
 
   const badgesEmpty =
-    recognition.badges.earned.length === 0 && recognition.badges.locked.length === 0;
+    recognition.badges.earned.length === 0 &&
+    recognition.badges.locked.length === 0;
   const openBadge = (entries: BadgeDrawerEntry[], index: number) =>
     setDrawerSelection({ entries, index });
 
@@ -86,11 +88,16 @@ export function BadgesPage() {
           getStoryNote={getStoryNote}
           onOpenBadge={openBadge}
         />
-        <BadgesSeasonal seasonalBadges={recognition.badges.seasonal} onOpenBadge={openBadge} />
+        <BadgesSeasonal
+          seasonalBadges={recognition.badges.seasonal}
+          onOpenBadge={openBadge}
+        />
         <BadgesLadder perksLadder={recognition.perks.ladder} />
         <BadgesLedger
           xpLedger={recognition.xpLedger}
-          totalBadgeCount={recognition.badges.earnedCount + recognition.badges.discoverCount}
+          totalBadgeCount={
+            recognition.badges.earnedCount + recognition.badges.discoverCount
+          }
           totalLevelCount={recognition.perks.ladder.length}
         />
       </>
@@ -103,11 +110,17 @@ export function BadgesPage() {
         <div className="wrap">
           {(recognition.isLoading || recognition.isError || badgesEmpty) && (
             <div className={styles.simpleHeader}>
-              <Link to={routes.accountProfile} className={styles.simpleBackLink}>
+              <Link
+                to={routes.accountProfile}
+                className={styles.simpleBackLink}
+              >
                 <FiArrowLeft aria-hidden /> {t("members:badges.backToProfile")}
               </Link>
               <h1 className={styles.simpleTitle}>
-                <Translation i18nKey="members:badges.pageTitle" components={{ em: <em /> }} />
+                <Translation
+                  i18nKey="members:badges.pageTitle"
+                  components={{ em: <em /> }}
+                />
               </h1>
             </div>
           )}
@@ -118,7 +131,9 @@ export function BadgesPage() {
         <BadgeDrawer
           entries={drawerSelection.entries}
           index={drawerSelection.index}
-          onNavigate={(index) => setDrawerSelection((prev) => (prev ? { ...prev, index } : prev))}
+          onNavigate={(index) =>
+            setDrawerSelection((prev) => (prev ? { ...prev, index } : prev))
+          }
           onClose={() => setDrawerSelection(null)}
         />
       )}

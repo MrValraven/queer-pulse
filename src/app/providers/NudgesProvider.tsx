@@ -78,9 +78,7 @@ export function NudgesProvider({ children }: { children: ReactNode }) {
 
   const dismiss = useCallback(
     (key: NudgeKey) => {
-      setDismissedKeys((prev) =>
-        prev.includes(key) ? prev : [...prev, key],
-      );
+      setDismissedKeys((prev) => (prev.includes(key) ? prev : [...prev, key]));
       // Idempotent on the backend; fire-and-forget, demo mode no-ops.
       void dismissNudge(key, demoMode);
     },

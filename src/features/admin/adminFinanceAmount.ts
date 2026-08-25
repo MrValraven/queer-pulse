@@ -51,9 +51,7 @@ const AMOUNT_NOISE = /\s|EUR|[€$£¥]/gi;
  *  alone"; `invalid` is "this cannot be read as a number" and must block a
  *  save rather than be dropped. */
 export type ParsedAmount =
-  | { status: "blank" }
-  | { status: "invalid" }
-  | { status: "ok"; value: number };
+  { status: "blank" } | { status: "invalid" } | { status: "ok"; value: number };
 
 type DecimalSeparator = "." | "," | null;
 

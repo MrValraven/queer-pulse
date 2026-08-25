@@ -17,9 +17,11 @@ export function MagazineMasthead({ active }: { active?: string }) {
       <div className="wrap">
         <div className={styles.mmTop}>
           <Link to={linkToPath(routes.magazine)} className={styles.mmBrand}>
+            {/* eslint-disable local/no-literal-string -- brand wordmark: "QueerPulse" is a proper noun, never translated or inflected (see glossary-pt.md) */}
             Queer<em>Pulse</em>
+            {/* eslint-enable local/no-literal-string */}
             <br />
-            Magazine
+            {t("magazine:masthead.brandMagazine")}
           </Link>
           <div className={styles.mmMeta}>
             {/* The current issue number/date is fabricated demo chrome — there
@@ -47,21 +49,21 @@ export function MagazineMasthead({ active }: { active?: string }) {
           className={styles.magNav}
           aria-label={t("magazine:masthead.sectionsAriaLabel")}
         >
-          {MASTHEAD_NAV.filter(
-            (item) => demoMode || !item.demoOnly,
-          ).map((item) => {
-            const isActive = item.key === active;
-            return (
-              <Link
-                key={item.key}
-                to={linkToPath(item.href)}
-                className={`${styles.mnLink} ${isActive ? styles.mnLinkActive : ""}`}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {t(item.labelKey)}
-              </Link>
-            );
-          })}
+          {MASTHEAD_NAV.filter((item) => demoMode || !item.demoOnly).map(
+            (item) => {
+              const isActive = item.key === active;
+              return (
+                <Link
+                  key={item.key}
+                  to={linkToPath(item.href)}
+                  className={`${styles.mnLink} ${isActive ? styles.mnLinkActive : ""}`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {t(item.labelKey)}
+                </Link>
+              );
+            },
+          )}
         </nav>
       </div>
     </div>

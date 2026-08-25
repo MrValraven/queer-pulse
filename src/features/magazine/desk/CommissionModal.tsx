@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Modal, Button, DatePicker, FormField, SegmentedControl, Select } from "../../../shared/components/ui";
+import {
+  Modal,
+  Button,
+  DatePicker,
+  FormField,
+  SegmentedControl,
+  Select,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { DeskTrack } from "./DeskTrackTabs";
 import styles from "./DeskModals.module.css";
@@ -47,7 +54,9 @@ export function CommissionModal({
 }: CommissionModalProps) {
   const { t } = useTranslation();
   const [angle, setAngle] = useState(pitch?.note ?? "");
-  const [section, setSection] = useState(sectionName ?? sections[0]?.name ?? "");
+  const [section, setSection] = useState(
+    sectionName ?? sections[0]?.name ?? "",
+  );
   const [words, setWords] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [fee, setFee] = useState("");

@@ -30,9 +30,8 @@ export interface AttendeesResult {
 /** Shape the mock manage-page attendee arrays into the shared AttendeeRow.
  *  The mock registry is loaded lazily so live-mode bundles never pull it in. */
 async function mockRows(): Promise<AttendeesResult> {
-  const { GOING_ATTENDEES, WAITLIST_ATTENDEES } = await import(
-    "../manageGathering.data"
-  );
+  const { GOING_ATTENDEES, WAITLIST_ATTENDEES } =
+    await import("../manageGathering.data");
   const going: AttendeeRow[] = GOING_ATTENDEES.map((a) => ({
     ...a,
     slug: a.id,
@@ -113,8 +112,7 @@ export function useAttendees(slug: string | undefined) {
             ...current,
             waitlist: [...current.waitlist, ...rows],
             waitlistPage: nextPage,
-            hasMoreWaitlist:
-              current.waitlist.length + rows.length < page.total,
+            hasMoreWaitlist: current.waitlist.length + rows.length < page.total,
           };
     });
   };

@@ -18,7 +18,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
-import { defaultArticleId, firstPlainText, relationReason } from "./data/articles";
+import {
+  defaultArticleId,
+  firstPlainText,
+  relationReason,
+} from "./data/articles";
 import { ArticleReaderBody } from "./ArticleReaderBody";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";

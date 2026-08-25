@@ -55,7 +55,9 @@ describe("SignInPage — closed states", () => {
 
     // The admin's own message wins over the catalog fallback. It's a literal
     // passed straight through (not a translation), so it's present immediately.
-    expect(screen.getByText("We paused signups for a bit.")).toBeInTheDocument();
+    expect(
+      screen.getByText("We paused signups for a bit."),
+    ).toBeInTheDocument();
     // Sign-in itself is never gated on this flag — the whole point of it.
     // `findBy` awaits the lazy `auth` namespace so the button's translated
     // label resolves.
@@ -77,6 +79,8 @@ describe("SignInPage — closed states", () => {
     expect(
       await screen.findByRole("button", { name: /Continue with Google/ }),
     ).toBeEnabled();
-    expect(screen.queryByText("New accounts are paused")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("New accounts are paused"),
+    ).not.toBeInTheDocument();
   });
 });

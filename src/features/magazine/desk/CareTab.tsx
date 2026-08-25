@@ -22,7 +22,9 @@ export function CareTab({ record, onToast }: CareTabProps) {
       <div className={styles.stack}>
         <div className={styles.card}>
           <h3>{t("magazine:piece.care.heading")}</h3>
-          <p className={styles.tiny}>{t("magazine:piece.care.noCareRecordYet")}</p>
+          <p className={styles.tiny}>
+            {t("magazine:piece.care.noCareRecordYet")}
+          </p>
         </div>
       </div>
     );
@@ -63,7 +65,10 @@ export function CareTab({ record, onToast }: CareTabProps) {
             </div>
             <ul className={styles.ticks}>
               {read.checks.map((check) => (
-                <li key={check.label} className={check.done ? undefined : styles.open}>
+                <li
+                  key={check.label}
+                  className={check.done ? undefined : styles.open}
+                >
                   {check.done ? <FiCheck /> : <FiX />}
                   {check.label}
                 </li>
@@ -83,7 +88,11 @@ export function CareTab({ record, onToast }: CareTabProps) {
               <Button
                 size="sm"
                 onClick={() =>
-                  onToast(t("magazine:piece.care.nudgedToast", { reader: read.reader }))
+                  onToast(
+                    t("magazine:piece.care.nudgedToast", {
+                      reader: read.reader,
+                    }),
+                  )
                 }
               >
                 {t("magazine:piece.care.nudgeReader")}
@@ -91,7 +100,9 @@ export function CareTab({ record, onToast }: CareTabProps) {
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => onToast(t("magazine:piece.care.secondReaderToast"))}
+                onClick={() =>
+                  onToast(t("magazine:piece.care.secondReaderToast"))
+                }
               >
                 {t("magazine:piece.care.askSecondReader")}
               </Button>
@@ -99,11 +110,15 @@ export function CareTab({ record, onToast }: CareTabProps) {
           </>
         ) : (
           <>
-            <p className={styles.tiny}>{t("magazine:piece.care.noReadRequestedYet")}</p>
+            <p className={styles.tiny}>
+              {t("magazine:piece.care.noReadRequestedYet")}
+            </p>
             <div className={styles.row}>
               <Button
                 size="sm"
-                onClick={() => onToast(t("magazine:piece.care.askForReadToast"))}
+                onClick={() =>
+                  onToast(t("magazine:piece.care.askForReadToast"))
+                }
               >
                 {t("magazine:piece.care.askForRead")}
               </Button>
@@ -114,15 +129,23 @@ export function CareTab({ record, onToast }: CareTabProps) {
 
       <div className={styles.card}>
         <h3>{t("magazine:piece.care.peopleHeading")}</h3>
-        <span className={styles.tiny}>{t("magazine:piece.care.peopleSubline")}</span>
+        <span className={styles.tiny}>
+          {t("magazine:piece.care.peopleSubline")}
+        </span>
         {care.subjects.map((subject) => (
-          <CareSubjectRow key={subject.name} subject={subject} onToast={onToast} />
+          <CareSubjectRow
+            key={subject.name}
+            subject={subject}
+            onToast={onToast}
+          />
         ))}
       </div>
 
       <div className={styles.card}>
         <h3>{t("magazine:piece.care.contentNotesHeading")}</h3>
-        <span className={styles.tiny}>{t("magazine:piece.care.contentNotesSubline")}</span>
+        <span className={styles.tiny}>
+          {t("magazine:piece.care.contentNotesSubline")}
+        </span>
         <div className={styles.chips}>
           {care.contentNotes.map((note) => (
             <Badge key={note} tone="plum">
@@ -132,7 +155,9 @@ export function CareTab({ record, onToast }: CareTabProps) {
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => onToast(t("magazine:piece.care.contentNoteAddedToast"))}
+            onClick={() =>
+              onToast(t("magazine:piece.care.contentNoteAddedToast"))
+            }
           >
             {t("magazine:piece.care.addContentNote")}
           </Button>
@@ -144,7 +169,10 @@ export function CareTab({ record, onToast }: CareTabProps) {
         {care.flags.map((flag) => (
           <div key={flag.key} className={styles.flagrow}>
             <span
-              className={[styles.dot, flag.on ? styles.dotAmber : styles.dotMuted].join(" ")}
+              className={[
+                styles.dot,
+                flag.on ? styles.dotAmber : styles.dotMuted,
+              ].join(" ")}
             />
             <div>
               <b>{flag.key}</b>

@@ -17,7 +17,10 @@ import type {
 export function flattenSectionItems(
   sections: SubprofileSectionView[],
   predicate: (section: SubprofileSectionView) => boolean,
-  mapItems: (items: SubprofileItemView[]) => SubprofileItemView[] = (items) => items,
+  mapItems: (items: SubprofileItemView[]) => SubprofileItemView[] = (items) =>
+    items,
 ): SubprofileItemView[] {
-  return sections.filter(predicate).flatMap((section) => mapItems(section.items));
+  return sections
+    .filter(predicate)
+    .flatMap((section) => mapItems(section.items));
 }

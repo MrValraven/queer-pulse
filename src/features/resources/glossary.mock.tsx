@@ -88,8 +88,8 @@ export const BLOCKS: LetterBlock[] = [
         def: (
           <>
             A central Lisbon neighbourhood that, since the late 2010s, has
-            hosted much of the city's organised queer community space,
-            including Clínica do Largo and the Trans Hub office.{" "}
+            hosted much of the city's organised queer community space, including
+            Clínica do Largo and the Trans Hub office.{" "}
             <b>Not a "gayborhood" in the Castro sense.</b> The community is
             woven into the existing residential fabric.
           </>
@@ -98,9 +98,9 @@ export const BLOCKS: LetterBlock[] = [
           <>
             Um bairro central de Lisboa que, desde o final da década de 2010,
             acolhe grande parte do espaço comunitário queer organizado da
-            cidade, incluindo a Clínica do Largo e o escritório
-            do Trans Hub. <b>Não é um "gayborhood" ao estilo de Castro.</b> A
-            comunidade está entrelaçada no tecido residencial existente.
+            cidade, incluindo a Clínica do Largo e o escritório do Trans Hub.{" "}
+            <b>Não é um "gayborhood" ao estilo de Castro.</b> A comunidade está
+            entrelaçada no tecido residencial existente.
           </>
         ),
         search: "anjos lisbon neighbourhood community space lisboa bairro",

@@ -113,7 +113,9 @@ export function ConnectionReportModal({
         </>
       }
     >
-      <div className={styles.reportLabel}>{t("safety:flag.form.concernLabel")}</div>
+      <div className={styles.reportLabel}>
+        {t("safety:flag.form.concernLabel")}
+      </div>
       <div className={styles.reportOpts}>
         {reasons.map((option) => (
           <label

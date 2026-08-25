@@ -5,13 +5,7 @@
 // slash menu (Task 6) and the block renderer (Task 7) can import it.
 
 export type ArticleBlockKind =
-  | "paragraph"
-  | "heading"
-  | "pullQuote"
-  | "quote"
-  | "image"
-  | "qa"
-  | "stats";
+  "paragraph" | "heading" | "pullQuote" | "quote" | "image" | "qa" | "stats";
 
 export interface BlockKindOption {
   kind: ArticleBlockKind;

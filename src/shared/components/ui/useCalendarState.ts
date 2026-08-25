@@ -5,7 +5,15 @@
  */
 
 import { useCallback, useMemo, useState } from "react";
-import { addDays, addMonths, addYears, isSameDate, startOfWeek, todayPlain, type PlainDate } from "./plainDate";
+import {
+  addDays,
+  addMonths,
+  addYears,
+  isSameDate,
+  startOfWeek,
+  todayPlain,
+  type PlainDate,
+} from "./plainDate";
 import { isDateDisabled, resolveFocusTarget } from "./calendarFocusTarget";
 
 const WEEKS_IN_GRID = 6;
@@ -45,10 +53,19 @@ function isSameMonth(date: PlainDate, month: PlainDate): boolean {
 }
 
 export function useCalendarState(args: UseCalendarStateArgs): CalendarState {
-  const { value, onSelect, minDate = null, maxDate = null, isDateUnavailable, weekStart } = args;
+  const {
+    value,
+    onSelect,
+    minDate = null,
+    maxDate = null,
+    isDateUnavailable,
+    weekStart,
+  } = args;
 
   const initialFocus = value ?? todayPlain();
-  const [visibleMonth, setVisibleMonthState] = useState<PlainDate>(startOfMonth(initialFocus));
+  const [visibleMonth, setVisibleMonthState] = useState<PlainDate>(
+    startOfMonth(initialFocus),
+  );
   const [focusedDate, setFocusedDate] = useState<PlainDate>(initialFocus);
 
   const weeks = useMemo<PlainDate[][]>(() => {
@@ -59,7 +76,12 @@ export function useCalendarState(args: UseCalendarStateArgs): CalendarState {
     }
     const rows: PlainDate[][] = [];
     for (let weekIndex = 0; weekIndex < WEEKS_IN_GRID; weekIndex += 1) {
-      rows.push(days.slice(weekIndex * DAYS_IN_WEEK, weekIndex * DAYS_IN_WEEK + DAYS_IN_WEEK));
+      rows.push(
+        days.slice(
+          weekIndex * DAYS_IN_WEEK,
+          weekIndex * DAYS_IN_WEEK + DAYS_IN_WEEK,
+        ),
+      );
     }
     return rows;
   }, [visibleMonth, weekStart]);
@@ -70,10 +92,17 @@ export function useCalendarState(args: UseCalendarStateArgs): CalendarState {
 
   const focusDate = useCallback(
     (date: PlainDate) => {
-      const resolvedDate = resolveFocusTarget(date, minDate, maxDate, isDateUnavailable);
+      const resolvedDate = resolveFocusTarget(
+        date,
+        minDate,
+        maxDate,
+        isDateUnavailable,
+      );
       setFocusedDate(resolvedDate);
       setVisibleMonthState((currentVisibleMonth) =>
-        isSameMonth(resolvedDate, currentVisibleMonth) ? currentVisibleMonth : startOfMonth(resolvedDate),
+        isSameMonth(resolvedDate, currentVisibleMonth)
+          ? currentVisibleMonth
+          : startOfMonth(resolvedDate),
       );
     },
     [minDate, maxDate, isDateUnavailable],
@@ -113,7 +142,9 @@ export function useCalendarState(args: UseCalendarStateArgs): CalendarState {
       setFocusedDate((currentFocusedDate) => {
         const weekStartDate = startOfWeek(currentFocusedDate, weekStart);
         const naturalNextFocusedDate =
-          edge === "start" ? weekStartDate : addDays(weekStartDate, DAYS_IN_WEEK - 1);
+          edge === "start"
+            ? weekStartDate
+            : addDays(weekStartDate, DAYS_IN_WEEK - 1);
         const resolvedFocusedDate = resolveFocusTarget(
           naturalNextFocusedDate,
           minDate,
@@ -132,16 +163,26 @@ export function useCalendarState(args: UseCalendarStateArgs): CalendarState {
     [weekStart, minDate, maxDate, isDateUnavailable],
   );
 
-  const isSelected = useCallback((date: PlainDate) => isSameDate(date, value), [value]);
+  const isSelected = useCallback(
+    (date: PlainDate) => isSameDate(date, value),
+    [value],
+  );
 
   const isDisabled = useCallback(
-    (date: PlainDate) => isDateDisabled(date, minDate, maxDate, isDateUnavailable),
+    (date: PlainDate) =>
+      isDateDisabled(date, minDate, maxDate, isDateUnavailable),
     [minDate, maxDate, isDateUnavailable],
   );
 
-  const isToday = useCallback((date: PlainDate) => isSameDate(date, todayPlain()), []);
+  const isToday = useCallback(
+    (date: PlainDate) => isSameDate(date, todayPlain()),
+    [],
+  );
 
-  const isOutsideMonth = useCallback((date: PlainDate) => !isSameMonth(date, visibleMonth), [visibleMonth]);
+  const isOutsideMonth = useCallback(
+    (date: PlainDate) => !isSameMonth(date, visibleMonth),
+    [visibleMonth],
+  );
 
   const select = useCallback(
     (date: PlainDate) => {

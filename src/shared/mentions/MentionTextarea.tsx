@@ -1,6 +1,9 @@
 import { useId, useRef, useState, type RefObject } from "react";
 import { detectTrigger } from "./detectTrigger";
-import { useMentionSuggestions, type Suggestion } from "./useMentionSuggestions";
+import {
+  useMentionSuggestions,
+  type Suggestion,
+} from "./useMentionSuggestions";
 import styles from "./MentionTextarea.module.css";
 
 interface MentionTextareaProps {
@@ -36,7 +39,8 @@ export function MentionTextarea(props: MentionTextareaProps) {
   const { members, communities, topics, businesses, events, threads } =
     useMentionSuggestions();
   const [active, setActive] = useState(0);
-  const [trigger, setTrigger] = useState<ReturnType<typeof detectTrigger>>(null);
+  const [trigger, setTrigger] =
+    useState<ReturnType<typeof detectTrigger>>(null);
   // Stable base id for the aria-combobox wiring below (one per instance).
   const listboxId = useId();
   const optionId = (index: number) => `${listboxId}-option-${index}`;
@@ -118,7 +122,9 @@ export function MentionTextarea(props: MentionTextareaProps) {
   }
 
   return (
-    <div className={[styles.wrap, props.wrapClassName].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.wrap, props.wrapClassName].filter(Boolean).join(" ")}
+    >
       <textarea
         id={props.id}
         ref={ref}
@@ -141,7 +147,10 @@ export function MentionTextarea(props: MentionTextareaProps) {
       />
       {open && (
         <ul
-          className={[styles.menu, props.placement === "above" && styles.menuAbove]
+          className={[
+            styles.menu,
+            props.placement === "above" && styles.menuAbove,
+          ]
             .filter(Boolean)
             .join(" ")}
           role="listbox"

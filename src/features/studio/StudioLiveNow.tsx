@@ -23,9 +23,40 @@ const LIVE_TRACK = {
   id: "post:studio-live-carta-para-a-santa",
   kind: "post" as const,
   title: "Carta para a santa",
+  titlePre: "Carta para a ",
+  titleEm: "santa",
   href: "/studio/live",
   meta: "Mariana Sol · live set",
 };
+
+const LIVE_ARTIST_NAME = "Mariana Sol";
+const LIVE_ALBUM_TITLE = "Cidade dos santos";
+const SET_BUILDING_CURATOR = "Sara";
+const SET_BUILDING_ELAPSED = "2 sec ago";
+
+/** Set-building header: heading + "curator typed the next track" activity line. */
+function SetBuildingHeader() {
+  return (
+    <div className={s.tlH}>
+      <h3>
+        <Translation
+          i18nKey="studio:liveNow.setBuilding.heading"
+          components={{ em: <em /> }}
+        />
+      </h3>
+      <div className="meta">
+        <Translation
+          i18nKey="studio:liveNow.setBuilding.activityLine"
+          components={{ em: <em /> }}
+          values={{
+            curator: SET_BUILDING_CURATOR,
+            elapsed: SET_BUILDING_ELAPSED,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 
 /** Mirrors live .setRow: number, cover, title, pay, time. */
 function LiveSetRowSkeleton() {
@@ -62,11 +93,11 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
               width="100%"
               height="100%"
               radius={14}
-              placeholder="cover · Carta para a santa"
+              placeholder={`${t("studio:media.coverLabel")} · ${LIVE_TRACK.title}`}
               style={{ position: "absolute", inset: 0 }}
             />
             <span className={s.stamp}>
-              <span className={s.live} /> on air
+              <span className={s.live} /> {t("studio:liveNow.onAirTag")}
             </span>
           </div>
           <div className={s.nowInfo}>
@@ -74,10 +105,15 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
               {t("studio:liveNow.trackPosition", { current: 6, total: 12 })}
             </div>
             <h2>
-              Carta para a <em>santa</em>
+              {LIVE_TRACK.titlePre}
+              <em>{LIVE_TRACK.titleEm}</em>
             </h2>
             <div className={s.by}>
-              by <strong>Mariana Sol</strong> · from <em>Cidade dos santos</em>
+              <Translation
+                i18nKey="studio:liveNow.byFromLine"
+                components={{ strong: <strong />, em: <em /> }}
+                values={{ artist: LIVE_ARTIST_NAME, album: LIVE_ALBUM_TITLE }}
+              />
             </div>
             <div className={s.wf}>
               {WF.map((h, i) => (
@@ -135,7 +171,8 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                 )}
               </button>
               <Link to={routes.studioTrack} className={s.bt}>
-                {t("studio:liveNow.lyricsNotesCta")} <FiArrowRight aria-hidden />
+                {t("studio:liveNow.lyricsNotesCta")}{" "}
+                <FiArrowRight aria-hidden />
               </Link>
             </div>
           </div>
@@ -169,17 +206,7 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
         </div>
       </div>
 
-      <div className={s.tlH}>
-        <h3>
-          <Translation
-            i18nKey="studio:liveNow.setBuilding.heading"
-            components={{ em: <em /> }}
-          />
-        </h3>
-        <div className="meta">
-          Sara typed the up-next track <em>2 sec ago</em>
-        </div>
-      </div>
+      <SetBuildingHeader />
       <div className={s.setCard}>
         {loading
           ? Array.from({ length: 8 }).map((_, skeletonIndex) => (

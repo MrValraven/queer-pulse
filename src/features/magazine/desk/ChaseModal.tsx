@@ -20,7 +20,9 @@ export function ChaseModal({ piece, onClose }: ChaseModalProps) {
   const { t } = useTranslation();
   return (
     <Modal
-      title={t("magazine:desk.modals.chase.title", { name: firstName(piece.byline) })}
+      title={t("magazine:desk.modals.chase.title", {
+        name: firstName(piece.byline),
+      })}
       onClose={onClose}
     >
       <p className={styles.body}>{t("magazine:desk.modals.chase.body")}</p>

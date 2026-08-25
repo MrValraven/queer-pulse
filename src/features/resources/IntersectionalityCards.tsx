@@ -85,8 +85,7 @@ export function InfoCards({ cards, loading, animate }: InfoCardsProps) {
                 {card.link && (
                   <div className={styles.icLink}>
                     <Link to={card.link.href}>
-                      {t(card.link.labelKey)}{" "}
-                      <FiArrowRight aria-hidden />
+                      {t(card.link.labelKey)} <FiArrowRight aria-hidden />
                     </Link>
                   </div>
                 )}

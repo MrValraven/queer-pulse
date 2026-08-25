@@ -30,13 +30,22 @@ export function CinemaMast() {
               })}
             </div>
             <h1 className={styles.mastBrand}>
-              Queer<em>Pulse</em> Cinema <FeatureHelp id="cinema.hub" />
+              <Translation
+                i18nKey="shared:brand.wordmark"
+                components={{ em: <em /> }}
+              />{" "}
+              {t("cinema:brand.tag")} <FeatureHelp id="cinema.hub" />
             </h1>
           </div>
           <div className={styles.mastMeta}>
             <div className={styles.issue}>
-              {fmt.date(PROGRAMME_WEEK_START, { day: "numeric" })} to{" "}
-              {fmt.date(PROGRAMME_WEEK_END, { day: "numeric", month: "long" })}
+              {t("cinema:mast.dateRange", {
+                start: fmt.date(PROGRAMME_WEEK_START, { day: "numeric" }),
+                end: fmt.date(PROGRAMME_WEEK_END, {
+                  day: "numeric",
+                  month: "long",
+                }),
+              })}
             </div>
             <div className={styles.mastTag}>
               <Translation
@@ -87,8 +96,7 @@ export function AskStrip() {
             {t("cinema:ask.text")}
           </div>
           <Button to={routes.cinemaBrowse}>
-            {t("cinema:ask.cta")}{" "}
-            <FiArrowRight aria-hidden />
+            {t("cinema:ask.cta")} <FiArrowRight aria-hidden />
           </Button>
         </div>
       </div>

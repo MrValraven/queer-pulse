@@ -26,7 +26,9 @@ export function DirectoryRatingDistribution({ reviews, rating }: Props) {
             told the rating twice. */}
         <Stars score={roundedScore} />
         <span className={s.ratingDistCount}>
-          {t("marketing:directory.detail.reviewsCount", { count: rating.count })}
+          {t("marketing:directory.detail.reviewsCount", {
+            count: rating.count,
+          })}
         </span>
       </div>
 

@@ -36,7 +36,11 @@
   a.iconLink:hover {
     /* Mix toward the skin foreground (not the fixed --ink) so the glyph stays
        legible on the dark stage ground, and lift the wash for press feedback. */
-    color: color-mix(in srgb, var(--accent-tint) 55%, var(--sk-ink, var(--ink)));
+    color: color-mix(
+      in srgb,
+      var(--accent-tint) 55%,
+      var(--sk-ink, var(--ink))
+    );
     background: color-mix(in srgb, var(--accent-tint) 18%, transparent);
     border-color: color-mix(in srgb, var(--accent-tint) 45%, transparent);
     transform: translateY(-1px);

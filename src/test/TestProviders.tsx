@@ -95,8 +95,8 @@ const NOOP_ELIGIBILITY: PublicEligibility = {
 
 const NOOP_PUBLIC_PROFILE_CONTEXT: PublicProfileContextValue = {
   enabled: false,
-  setEnabled: async () => true,
-  toggle: async () => true,
+  setEnabled: () => Promise.resolve(true),
+  toggle: () => Promise.resolve(true),
   saving: false,
   eligibility: NOOP_ELIGIBILITY,
   eligibilityStatus: "ready",

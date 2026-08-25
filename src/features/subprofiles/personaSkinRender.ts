@@ -94,7 +94,9 @@ export function workMeta(item: {
   dimensions: string | null;
   edition: string | null;
 }): string {
-  return [item.medium, item.dimensions, item.edition].filter(Boolean).join(" · ");
+  return [item.medium, item.dimensions, item.edition]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 /**

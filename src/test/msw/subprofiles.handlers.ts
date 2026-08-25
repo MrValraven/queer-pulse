@@ -222,12 +222,15 @@ export function subprofileHandlers(api: string) {
         });
       },
     ),
-    http.put(`${api}/subprofiles/:id/social-links`, async ({ params, request }) => {
-      const current = mockSubprofileById(String(params.id));
-      if (!current) return new HttpResponse(null, { status: 404 });
-      const body = (await request.json()) as { items: SocialLinkDTO[] };
-      return HttpResponse.json({ ...current, socialLinks: body.items });
-    }),
+    http.put(
+      `${api}/subprofiles/:id/social-links`,
+      async ({ params, request }) => {
+        const current = mockSubprofileById(String(params.id));
+        if (!current) return new HttpResponse(null, { status: 404 });
+        const body = (await request.json()) as { items: SocialLinkDTO[] };
+        return HttpResponse.json({ ...current, socialLinks: body.items });
+      },
+    ),
     http.put(
       `${api}/subprofiles/:id/affiliations`,
       async ({ params, request }) => {

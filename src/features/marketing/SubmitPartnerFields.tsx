@@ -148,7 +148,9 @@ export function SubmitPartnerFields({ form }: { form: SubmitPartnerForm }) {
             type="text"
             value={state.website}
             onChange={(event) => set("website", event.target.value)}
-            placeholder={t("marketing:submitPartner.fields.website.placeholder")}
+            placeholder={t(
+              "marketing:submitPartner.fields.website.placeholder",
+            )}
           />
         </FormField>
 

@@ -21,8 +21,7 @@ export function useListingReviews(slug: string | undefined) {
   return useQuery<HousingListingReviewsDTO>({
     queryKey: economyKeys.listingReviews(demoMode, slug),
     enabled: Boolean(slug),
-    initialData:
-      demoMode && slug ? demoListingReviews(slug) : undefined,
+    initialData: demoMode && slug ? demoListingReviews(slug) : undefined,
     queryFn: async () => {
       if (!slug) return { averageRating: null, count: 0, reviews: [] };
       if (demoMode) return demoListingReviews(slug);

@@ -10,7 +10,10 @@ interface ConversationComposerDockProps {
   active: Conversation;
   onSend: (body: string) => void;
   onSendGif?: (attachment: GifAttachment) => void;
-  onSendImage?: (attachment: GifAttachment, localAttachment?: GifAttachment) => void;
+  onSendImage?: (
+    attachment: GifAttachment,
+    localAttachment?: GifAttachment,
+  ) => void;
   blocked: boolean;
   replyDraft?: ChatMessage | null;
   onCancelReply?: () => void;
@@ -44,9 +47,15 @@ export function ConversationComposerDock({
   return (
     <div className={styles.composerDock}>
       {showJumpPill && (
-        <button type="button" className={styles.jumpPill} onClick={onJumpToLatest}>
+        <button
+          type="button"
+          className={styles.jumpPill}
+          onClick={onJumpToLatest}
+        >
           <span>
-            {t("messages:conversation.newMessagesCount", { count: newMessagesCount })}
+            {t("messages:conversation.newMessagesCount", {
+              count: newMessagesCount,
+            })}
           </span>
           <FiArrowDown aria-hidden />
         </button>

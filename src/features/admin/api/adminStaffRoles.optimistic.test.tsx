@@ -100,7 +100,10 @@ function flaggedKey(language: string) {
 describe("patchStaffRolesInCache / restoreStaffRolesSnapshot", () => {
   it("adds a role to both the roster page and the open drawer detail", async () => {
     const client = new QueryClient();
-    client.setQueryData(rosterKey("en"), makeRosterPage([makeMember("m1", [])]));
+    client.setQueryData(
+      rosterKey("en"),
+      makeRosterPage([makeMember("m1", [])]),
+    );
     client.setQueryData(detailKey("m1", "en"), makeDetail("m1", []));
 
     await patchStaffRolesInCache(client, true, "m1", (current) =>
@@ -113,9 +116,7 @@ describe("patchStaffRolesInCache / restoreStaffRolesSnapshot", () => {
       rosterKey("en"),
     );
     const detail = client.getQueryData<MemberDetail>(detailKey("m1", "en"));
-    expect(roster?.pages[0]?.items[0]?.staffRoles).toEqual([
-      "magazine_editor",
-    ]);
+    expect(roster?.pages[0]?.items[0]?.staffRoles).toEqual(["magazine_editor"]);
     expect(detail?.staffRoles).toEqual(["magazine_editor"]);
   });
 
@@ -135,16 +136,16 @@ describe("patchStaffRolesInCache / restoreStaffRolesSnapshot", () => {
     const roster = client.getQueryData<InfiniteData<RosterPageVM>>(
       rosterKey("en"),
     );
-    expect(roster?.pages[0]?.items[0]?.staffRoles).toEqual([
-      "magazine_editor",
-    ]);
+    expect(roster?.pages[0]?.items[0]?.staffRoles).toEqual(["magazine_editor"]);
   });
 
   it("removes a role via a filtering updater (revoke)", async () => {
     const client = new QueryClient();
     client.setQueryData(
       rosterKey("en"),
-      makeRosterPage([makeMember("m1", ["magazine_editor", "magazine_writer"])]),
+      makeRosterPage([
+        makeMember("m1", ["magazine_editor", "magazine_writer"]),
+      ]),
     );
     client.setQueryData(
       detailKey("m1", "en"),
@@ -159,9 +160,7 @@ describe("patchStaffRolesInCache / restoreStaffRolesSnapshot", () => {
       rosterKey("en"),
     );
     const detail = client.getQueryData<MemberDetail>(detailKey("m1", "en"));
-    expect(roster?.pages[0]?.items[0]?.staffRoles).toEqual([
-      "magazine_writer",
-    ]);
+    expect(roster?.pages[0]?.items[0]?.staffRoles).toEqual(["magazine_writer"]);
     expect(detail?.staffRoles).toEqual(["magazine_writer"]);
   });
 
@@ -180,7 +179,10 @@ describe("patchStaffRolesInCache / restoreStaffRolesSnapshot", () => {
 
   it("restoreStaffRolesSnapshot reverses the patch exactly — the onError rollback path", async () => {
     const client = new QueryClient();
-    client.setQueryData(rosterKey("en"), makeRosterPage([makeMember("m1", [])]));
+    client.setQueryData(
+      rosterKey("en"),
+      makeRosterPage([makeMember("m1", [])]),
+    );
     client.setQueryData(detailKey("m1", "en"), makeDetail("m1", []));
 
     const snapshot = await patchStaffRolesInCache(
@@ -232,9 +234,7 @@ describe("patchStaffRolesInCache / restoreStaffRolesSnapshot", () => {
       "all",
       "en",
     ]);
-    const demoDetail = client.getQueryData<MemberDetail>(
-      detailKey("m1", "en"),
-    );
+    const demoDetail = client.getQueryData<MemberDetail>(detailKey("m1", "en"));
     const liveDetail = client.getQueryData<MemberDetail>([
       "admin-members",
       "detail",
@@ -297,9 +297,7 @@ describe("useGrantStaffRole (demo)", () => {
         "magazine_editor",
       ]);
     });
-    const detail = client.getQueryData<MemberDetail>(
-      detailKey("m1", language),
-    );
+    const detail = client.getQueryData<MemberDetail>(detailKey("m1", language));
     expect(detail?.staffRoles).toEqual(["magazine_editor"]);
   });
 });
@@ -339,9 +337,7 @@ describe("useRevokeStaffRole (demo)", () => {
       );
       expect(roster?.pages[0]?.items[0]?.staffRoles).toEqual([]);
     });
-    const detail = client.getQueryData<MemberDetail>(
-      detailKey("m1", language),
-    );
+    const detail = client.getQueryData<MemberDetail>(detailKey("m1", language));
     expect(detail?.staffRoles).toEqual([]);
   });
 });

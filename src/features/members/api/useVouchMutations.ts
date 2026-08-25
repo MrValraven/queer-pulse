@@ -97,9 +97,7 @@ export function useVouchMutations({
     onError: (_error, slug, context) => {
       // Roll back the optimistic removal (restore most-recent-first) if it existed.
       if (existedBySlugRef.current[slug]) {
-        setVouched((prev) =>
-          prev.includes(slug) ? prev : [slug, ...prev],
-        );
+        setVouched((prev) => (prev.includes(slug) ? prev : [slug, ...prev]));
       }
       if (context?.previousGivenVouches) {
         queryClient.setQueryData<GivenVouchFace[]>(

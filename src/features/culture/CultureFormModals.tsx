@@ -1,5 +1,10 @@
 import { useState, type ReactNode } from "react";
-import { Button, ChipSelect, Select, Sending } from "../../shared/components/ui";
+import {
+  Button,
+  ChipSelect,
+  Select,
+  Sending,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";

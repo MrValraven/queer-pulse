@@ -32,7 +32,11 @@ function DaySkeleton() {
         {Array.from({ length: 2 }).map((_, i) => (
           <div className={styles.entry} key={i}>
             <div className={styles.entryHead}>
-              <SkeletonLine width={72} height={18} style={{ borderRadius: 6 }} />
+              <SkeletonLine
+                width={72}
+                height={18}
+                style={{ borderRadius: 6 }}
+              />
               <SkeletonLine width="50%" height={16} />
             </div>
             <SkeletonLine width="100%" height={14.5} style={{ marginTop: 8 }} />

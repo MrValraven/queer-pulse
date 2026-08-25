@@ -3,11 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import styles from "./GlossaryPage.module.css";
-import {
-  Button,
-  FadeIn,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { ResourceHero } from "./ResourceHero";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -182,6 +178,7 @@ export function GlossaryPage() {
                 className={lang === "en" ? styles.langActive : undefined}
                 onClick={() => setLang("en")}
               >
+                {/* eslint-disable-line local/no-literal-string -- a language's own name is never translated (this toggles GLOSSARY_COPY's own term-language, independent of the site locale — see the catalog header comment) */}
                 English
               </button>
               <button
@@ -189,6 +186,7 @@ export function GlossaryPage() {
                 className={lang === "pt" ? styles.langActive : undefined}
                 onClick={() => setLang("pt")}
               >
+                {/* eslint-disable-line local/no-literal-string -- a language's own name is never translated (this toggles GLOSSARY_COPY's own term-language, independent of the site locale — see the catalog header comment) */}
                 Português
               </button>
             </div>
@@ -259,8 +257,7 @@ export function GlossaryPage() {
               <h3>{copy.noResultsTitle}</h3>
               <p>{copy.noResultsBody}</p>
               <Button to={CONTACT} variant="primary">
-                {copy.suggestTerm}{" "}
-                <FiArrowRight aria-hidden />
+                {copy.suggestTerm} <FiArrowRight aria-hidden />
               </Button>
             </div>
           )}

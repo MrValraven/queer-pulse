@@ -1,16 +1,8 @@
 import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { HealthStatDTO } from "./api/adminGovernanceOverview.api";
+import { HEALTH_TREND_KEYS } from "./adminGovernanceHealthFields.utils";
 import styles from "./AdminGovernancePage.module.css";
-
-export const HEALTH_TREND_KEYS = [
-  "upThisQuarter",
-  "steady",
-  "allResolved",
-  "cocViolations",
-  "upVsQ1",
-  "ofFiled",
-] as const;
 
 /**
  * One health stat's editable fields (value, trend, trend count, direction),

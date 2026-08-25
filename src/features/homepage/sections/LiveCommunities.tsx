@@ -57,7 +57,8 @@ export function LiveCommunities() {
     [communities],
   );
 
-  const { state, patch, clear, visible, total } = useLiveCommunityFilters(views);
+  const { state, patch, clear, visible, total } =
+    useLiveCommunityFilters(views);
 
   const [selectedKey, setSelectedKey] = useState<string | null>(
     views[0]?.key ?? null,

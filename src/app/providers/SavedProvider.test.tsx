@@ -5,7 +5,12 @@ import type { ReactNode } from "react";
 
 const savedPage = {
   items: [
-    { id: "article:one", kind: "article", title: "One", savedAt: "2026-01-01T00:00:00Z" },
+    {
+      id: "article:one",
+      kind: "article",
+      title: "One",
+      savedAt: "2026-01-01T00:00:00Z",
+    },
   ],
   total: 1,
   page: 1,
@@ -23,16 +28,18 @@ async function loadLiveSaved(client: QueryClient) {
     getSaved,
   }));
   vi.doMock("./authContext", () => ({
-    useAuth: () => ({ loggedIn: true, user: { profile: { slug: "tiago-costa" } } }),
+    useAuth: () => ({
+      loggedIn: true,
+      user: { profile: { slug: "tiago-costa" } },
+    }),
   }));
 
   const { SavedProvider } = await import("./SavedProvider");
   const { useSaved } = await import("./useSaved");
   const { DemoModeProvider } = await import("./DemoModeProvider");
   const { I18nProvider } = await import("./I18nProvider");
-  const { ToastProvider } = await import(
-    "../../shared/components/feedback/ToastProvider"
-  );
+  const { ToastProvider } =
+    await import("../../shared/components/feedback/ToastProvider");
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
       <I18nProvider>
@@ -69,16 +76,18 @@ async function loadLiveSavedBootstrapError(client: QueryClient) {
     getBootstrap: vi.fn().mockRejectedValue(new Error("bootstrap unavailable")),
   }));
   vi.doMock("./authContext", () => ({
-    useAuth: () => ({ loggedIn: true, user: { profile: { slug: "tiago-costa" } } }),
+    useAuth: () => ({
+      loggedIn: true,
+      user: { profile: { slug: "tiago-costa" } },
+    }),
   }));
 
   const { SavedProvider } = await import("./SavedProvider");
   const { useSaved } = await import("./useSaved");
   const { DemoModeProvider } = await import("./DemoModeProvider");
   const { I18nProvider } = await import("./I18nProvider");
-  const { ToastProvider } = await import(
-    "../../shared/components/feedback/ToastProvider"
-  );
+  const { ToastProvider } =
+    await import("../../shared/components/feedback/ToastProvider");
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>
       <I18nProvider>
@@ -99,7 +108,9 @@ beforeEach(() => {
 
 describe("SavedProvider (live mode)", () => {
   it("hydrates from the bootstrap payload without calling getSaved", async () => {
-    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     client.setQueryData(["bootstrap"], {
       profile: { slug: "tiago-costa", limited: false },
       saved: savedPage,
@@ -116,13 +127,16 @@ describe("SavedProvider (live mode)", () => {
   });
 
   it("falls back to getSaved when the bootstrap query settles in error", async () => {
-    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     // No ["bootstrap"] data seeded: the real (mocked-to-reject) getBootstrap
     // runs, so the query settles with isError: true and no data — this is what
     // must trigger the fallback. Without it, `items` would stay empty forever
     // and this assertion would time out.
 
-    const { useSaved, wrapper, getSaved } = await loadLiveSavedBootstrapError(client);
+    const { useSaved, wrapper, getSaved } =
+      await loadLiveSavedBootstrapError(client);
     const { result } = renderHook(() => useSaved(), { wrapper });
 
     await waitFor(() => expect(result.current.items).toHaveLength(1));

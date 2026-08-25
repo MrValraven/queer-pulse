@@ -13,7 +13,10 @@ describe("WorkRightsFooter", () => {
   it("renders the copyright year, author name, and 'All rights reserved'", async () => {
     render(
       <TestProviders>
-        <WorkRightsFooter authorName="Tiago" createdAtISO="2025-07-14T09:32:00.000Z" />
+        <WorkRightsFooter
+          authorName="Tiago"
+          createdAtISO="2025-07-14T09:32:00.000Z"
+        />
       </TestProviders>,
     );
 

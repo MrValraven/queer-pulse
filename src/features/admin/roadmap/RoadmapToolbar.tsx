@@ -8,7 +8,8 @@ import type {
   RoadmapTeamMemberDTO,
 } from "../api/roadmapAdmin.types";
 import { getUniqueCategories, SORT_OPTIONS } from "./roadmapChrome.data";
-import { useRoadmapFilters, type RoadmapSort } from "./state/useRoadmapFilters";
+import { useRoadmapFilters } from "./state/roadmapFiltersHook";
+import type { RoadmapSort } from "./state/roadmapFiltersTypes";
 import { useRoadmapShortcuts } from "./state/useRoadmapShortcuts";
 import styles from "./RoadmapChrome.module.css";
 
@@ -92,7 +93,9 @@ export function RoadmapToolbar({
           value: option.value,
           label: t(option.labelKey),
         }))}
-        onChange={(value) => setFilter("sort", (value ?? filters.sort) as RoadmapSort)}
+        onChange={(value) =>
+          setFilter("sort", (value ?? filters.sort) as RoadmapSort)
+        }
       />
 
       <span className={styles.denseToggleGroup}>

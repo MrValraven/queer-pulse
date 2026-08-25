@@ -28,7 +28,8 @@ export function StepWelcome({
   // fabricate an inviter — an absent payload means we simply don't show one.
   const [welcome] = useState(readInviteWelcome);
   const [hasPhotoFailed, setHasPhotoFailed] = useState(false);
-  const firstName = user?.profile.firstName ?? (demoMode ? currentUser.first : "");
+  const firstName =
+    user?.profile.firstName ?? (demoMode ? currentUser.first : "");
 
   const demoInviter = demoMode
     ? (() => {

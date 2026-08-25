@@ -31,7 +31,8 @@ export function LisbonMap({
   const markerLabels = useMemo<MarkerLabels>(
     () => ({
       venuePin: (name, type) => {
-        const typeKey = TYPE_LABEL_KEYS[type] ?? LOCAL_CATEGORY_LABEL_KEYS[type];
+        const typeKey =
+          TYPE_LABEL_KEYS[type] ?? LOCAL_CATEGORY_LABEL_KEYS[type];
         const localizedType = typeKey ? t(typeKey) : type;
         return t("marketing:map.pinAria", { name, type: localizedType });
       },

@@ -68,7 +68,11 @@ function useCrossfadedMembers(members: MemberCard[]) {
     };
   }, [signature, displayed.signature, members, prefersReducedMotion]);
 
-  return { members: displayed.members, generation: displayed.generation, fading };
+  return {
+    members: displayed.members,
+    generation: displayed.generation,
+    fading,
+  };
 }
 
 /**
@@ -78,7 +82,11 @@ function useCrossfadedMembers(members: MemberCard[]) {
  * 200-line single-component limit and the virtualizer's row-measurement
  * plumbing lives in one small, focused place.
  */
-export function MemberResultsGrid({ members: incoming }: { members: MemberCard[] }) {
+export function MemberResultsGrid({
+  members: incoming,
+}: {
+  members: MemberCard[];
+}) {
   const { members, generation, fading } = useCrossfadedMembers(incoming);
   const { containerRef, columnCount, rows, rowVirtualizer } =
     useMemberDirectoryVirtualizer(members);
@@ -113,7 +121,10 @@ export function MemberResultsGrid({ members: incoming }: { members: MemberCard[]
               // `generation` in the key forces every visible card to replay its
               // entrance after a filter change, so the whole grid re-staggers in
               // together rather than only the rows whose membership changed.
-              <FadeIn key={`${generation}:${member.slug}`} delay={columnIndex * 85}>
+              <FadeIn
+                key={`${generation}:${member.slug}`}
+                delay={columnIndex * 85}
+              >
                 <MemberResultCard member={member} />
               </FadeIn>
             ))}

@@ -57,7 +57,9 @@ export function CollaboratorSelect({
   const memberSuggestions = useMemberSuggestions();
 
   const atCap = collaborators.length >= MAX_COLLABORATORS;
-  const selectedHandles = collaborators.map((collaborator) => collaborator.handle);
+  const selectedHandles = collaborators.map(
+    (collaborator) => collaborator.handle,
+  );
   const selectedSet = new Set(selectedHandles);
 
   // Members already credited on this item, so a toggle preserves their resolved
@@ -103,21 +105,29 @@ export function CollaboratorSelect({
 
   function handleChange(nextHandles: string[]) {
     // Cap defensively — disabled options already stop additions past the cap.
-    const next = nextHandles.slice(0, MAX_COLLABORATORS).map<CollaboratorDTO>((handle) => {
-      const existing = existingByHandle.get(handle);
-      if (existing) return existing;
-      const member = memberByHandle.get(handle);
-      if (member) {
+    const next = nextHandles
+      .slice(0, MAX_COLLABORATORS)
+      .map<CollaboratorDTO>((handle) => {
+        const existing = existingByHandle.get(handle);
+        if (existing) return existing;
+        const member = memberByHandle.get(handle);
+        if (member) {
+          return {
+            handle,
+            type: "member",
+            name: member.name,
+            avatarUrl: member.avatarUrl ?? null,
+            slug: handle,
+          };
+        }
         return {
           handle,
           type: "member",
-          name: member.name,
-          avatarUrl: member.avatarUrl ?? null,
-          slug: handle,
+          name: handle,
+          avatarUrl: null,
+          slug: null,
         };
-      }
-      return { handle, type: "member", name: handle, avatarUrl: null, slug: null };
-    });
+      });
     onChange(next);
   }
 
@@ -131,10 +141,14 @@ export function CollaboratorSelect({
           src={meta?.avatarUrl ?? undefined}
         />
         <span className={styles.optionText}>
-          <span className={styles.optionName}>{meta?.name ?? option.value}</span>
+          <span className={styles.optionName}>
+            {meta?.name ?? option.value}
+          </span>
           <span className={styles.optionHandle}>@{option.value}</span>
         </span>
-        {state.selected && <FiCheck className={styles.optionCheck} aria-hidden />}
+        {state.selected && (
+          <FiCheck className={styles.optionCheck} aria-hidden />
+        )}
       </span>
     );
   }
@@ -153,7 +167,9 @@ export function CollaboratorSelect({
         aria-describedby={helperId}
         searchable
         placeholder={t("subprofiles:itemEditor.collaboratorsPlaceholder")}
-        searchPlaceholder={t("subprofiles:itemEditor.collaboratorsSearchPlaceholder")}
+        searchPlaceholder={t(
+          "subprofiles:itemEditor.collaboratorsSearchPlaceholder",
+        )}
         emptyText={t("subprofiles:itemEditor.collaboratorsEmpty")}
         renderOption={renderOption}
       />

@@ -41,9 +41,7 @@ export function GroupListingFields({ form }: { form: GroupListingForm }) {
           maxLength={120}
           value={form.neighbourhood}
           onChange={(event) => form.setNeighbourhood(event.target.value)}
-          placeholder={t(
-            "economy:groupListing.field.neighbourhoodPlaceholder",
-          )}
+          placeholder={t("economy:groupListing.field.neighbourhoodPlaceholder")}
         />
       </div>
 

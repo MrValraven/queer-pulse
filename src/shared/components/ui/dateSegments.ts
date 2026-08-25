@@ -17,7 +17,8 @@
 import { catalogs } from "../../i18n/catalogs";
 import type { Language } from "../../i18n/types";
 
-export type SegmentType = "day" | "month" | "year" | "hour" | "minute" | "meridiem";
+export type SegmentType =
+  "day" | "month" | "year" | "hour" | "minute" | "meridiem";
 
 const REFERENCE_DATE = new Date(2000, 0, 2);
 const DATE_TYPES: SegmentType[] = ["day", "month", "year"];
@@ -25,9 +26,10 @@ const TIME_TYPES: SegmentType[] = ["hour", "minute"];
 
 /** Detects a 12-hour clock: `locale` formats a time with an AM/PM `dayPeriod` part. */
 export function isTwelveHourLocale(locale: string): boolean {
-  const parts = new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "numeric" }).formatToParts(
-    new Date(2000, 0, 1, 13, 0),
-  );
+  const parts = new Intl.DateTimeFormat(locale, {
+    hour: "numeric",
+    minute: "numeric",
+  }).formatToParts(new Date(2000, 0, 1, 13, 0));
   return parts.some((part) => part.type === "dayPeriod");
 }
 
@@ -39,7 +41,10 @@ function dateOrder(locale: string): SegmentType[] {
     day: "numeric",
   }).formatToParts(REFERENCE_DATE);
   return parts
-    .filter((part) => part.type === "day" || part.type === "month" || part.type === "year")
+    .filter(
+      (part) =>
+        part.type === "day" || part.type === "month" || part.type === "year",
+    )
     .map((part) => part.type as SegmentType);
 }
 
@@ -53,7 +58,8 @@ export function buildSegmentOrder(
   locale: string,
   is12Hour: boolean,
 ): SegmentType[] {
-  if (mode === "month") return dateOrder(locale).filter((type) => type !== "day");
+  if (mode === "month")
+    return dateOrder(locale).filter((type) => type !== "day");
   if (mode === "time") return timeOrder(is12Hour);
   if (mode === "date") return dateOrder(locale);
   return [...dateOrder(locale), ...timeOrder(is12Hour)];
@@ -61,7 +67,10 @@ export function buildSegmentOrder(
 
 /** The visible separator glyph between two adjacent segments, or `null` for a
  *  boundary that only needs the layout gap (date→time, before the meridiem). */
-export function separatorAfter(type: SegmentType, nextType: SegmentType | undefined): string | null {
+export function separatorAfter(
+  type: SegmentType,
+  nextType: SegmentType | undefined,
+): string | null {
   if (!nextType) return null;
   if (DATE_TYPES.includes(type) && DATE_TYPES.includes(nextType)) return "/";
   if (TIME_TYPES.includes(type) && TIME_TYPES.includes(nextType)) return ":";

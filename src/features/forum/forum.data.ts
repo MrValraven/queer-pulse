@@ -31,16 +31,20 @@ export const CATS: { id: string; nameKey: string; icon: IconType }[] = [
   { id: "trans", nameKey: "forum:cat.trans", icon: FiZap },
 ];
 
-export const CAT_STYLE: Record<string, { background: string; color: string }> = {
-  general: { background: "rgba(45,27,61,.08)", color: "var(--plum)" },
-  housing: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
-  health: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
-  arts: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
-  activism: { background: "rgba(var(--danger-rgb),.07)", color: "var(--danger)" },
-  guides: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
-  jobs: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
-  trans: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
-};
+export const CAT_STYLE: Record<string, { background: string; color: string }> =
+  {
+    general: { background: "rgba(45,27,61,.08)", color: "var(--plum)" },
+    housing: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
+    health: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
+    arts: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
+    activism: {
+      background: "rgba(var(--danger-rgb),.07)",
+      color: "var(--danger)",
+    },
+    guides: { background: "rgba(74,140,111,.1)", color: "var(--jade)" },
+    jobs: { background: "rgba(232,119,90,.1)", color: "var(--accent-ink)" },
+    trans: { background: "rgba(122,82,184,.1)", color: "var(--violet)" },
+  };
 
 export interface Reply {
   /** Stable identity for tree assembly. Live = backend post id; demo = seeded/generated id. */
@@ -157,17 +161,20 @@ export interface Thread {
 // non-member voice is the institutional QueerPulse account.
 
 // Solid avatar (thread authors) by member tint.
-const SOLID: Partial<Record<AvatarTint, { background: string; color: string }>> = {
+const SOLID: Partial<
+  Record<AvatarTint, { background: string; color: string }>
+> = {
   coral: { background: "var(--accent)", color: "var(--paper)" },
   jade: { background: "var(--jade)", color: "var(--paper)" },
   plum: { background: "var(--plum)", color: "var(--cream)" },
 };
 // Soft avatar (reply authors) by member tint.
-const SOFT: Partial<Record<AvatarTint, { background: string; color: string }>> = {
-  coral: { background: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
-  jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
-  plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
-};
+const SOFT: Partial<Record<AvatarTint, { background: string; color: string }>> =
+  {
+    coral: { background: "rgba(232,119,90,.14)", color: "var(--accent-ink)" },
+    jade: { background: "rgba(74,140,111,.15)", color: "var(--jade)" },
+    plum: { background: "rgba(45,27,61,.1)", color: "var(--plum)" },
+  };
 const solid = (tint: AvatarTint) => SOLID[tint] ?? SOLID.plum!;
 const soft = (tint: AvatarTint) => SOFT[tint] ?? SOFT.plum!;
 
@@ -190,7 +197,14 @@ function reply(
   slug: string,
   rest: Omit<
     Reply,
-    "avatar" | "background" | "color" | "name" | "slug" | "photo" | "official" | "mod"
+    | "avatar"
+    | "background"
+    | "color"
+    | "name"
+    | "slug"
+    | "photo"
+    | "official"
+    | "mod"
   >,
 ): Reply {
   const m = MEMBERS[slug]!;
@@ -221,7 +235,14 @@ const qpReply = (
   mod: string,
   rest: Omit<
     Reply,
-    "avatar" | "background" | "color" | "name" | "slug" | "photo" | "official" | "mod"
+    | "avatar"
+    | "background"
+    | "color"
+    | "name"
+    | "slug"
+    | "photo"
+    | "official"
+    | "mod"
   >,
 ): Reply => ({
   avatar: "QP",

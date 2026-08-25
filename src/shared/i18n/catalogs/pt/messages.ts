@@ -56,7 +56,8 @@ export const messages: Catalog = {
   "gif.loadMore": "Ver mais",
   "gif.poweredBy": "Com tecnologia KLIPY",
   "gif.comingSoonTitle": "Os GIFs estão a chegar",
-  "gif.comingSoonHint": "Estamos a preparar a pesquisa de GIFs. Volta em breve para dar movimento às tuas mensagens.",
+  "gif.comingSoonHint":
+    "Estamos a preparar a pesquisa de GIFs. Volta em breve para dar movimento às tuas mensagens.",
 
   // Anexos de imagem (ImageComposerButton do Composer, MessageBubbleBody)
   "attachments.open": "Enviar uma foto",
@@ -67,7 +68,8 @@ export const messages: Catalog = {
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
   // thread — surfaces when the member is offline or the socket is reconnecting.
-  "connection.offline": "Estás offline. As mensagens serão enviadas quando voltares a ligar-te.",
+  "connection.offline":
+    "Estás offline. As mensagens serão enviadas quando voltares a ligar-te.",
   "connection.reconnecting": "A reconectar…",
 
   // Atalhos — o "?" no compositor que lista os símbolos de menção. Tocar numa
@@ -200,7 +202,8 @@ export const messages: Catalog = {
 
   // Escolha de destinatário para reencaminhar (NewMessageModal, modo reencaminhar)
   "forward.title": "Reencaminhar para…",
-  "forward.sub": "Escolhe uma ligação ou grupo para reencaminhar esta mensagem.",
+  "forward.sub":
+    "Escolhe uma ligação ou grupo para reencaminhar esta mensagem.",
   "forward.sectionPeople": "Pessoas",
   "forward.sectionGroups": "Grupos",
 
@@ -242,7 +245,8 @@ export const messages: Catalog = {
   "request.sendingLabel": "A enviar…",
   "request.sentToast": "Pedido de mensagem enviado a {name}.",
   "request.sentDirectToast": "Mensagem enviada a {name}.",
-  "request.errorToast": "Não foi possível enviar a tua mensagem. Tenta de novo.",
+  "request.errorToast":
+    "Não foi possível enviar a tua mensagem. Tenta de novo.",
 
   // Separador "Pedidos" da caixa de entrada (pedidos de mensagem recebidos,
   // com aceitar/recusar)

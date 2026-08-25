@@ -3,7 +3,15 @@ import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { ALBUM } from "./studioAlbum.data";
 import s from "./creator.module.css";
+
+// Content: a specific scheduled-plan note (bundles the mock album title +
+// a fixed date), computed from live data in live mode.
+const GO_LIVE_PLAN_NOTE = `Plan: Wed 10 Jun · premiere of ${ALBUM.title}`;
+// Content: a specific upcoming payout figure/date — comes from the ledger
+// in live mode.
+const NEXT_PAYOUT_NOTE = "Next: €2,140 on 5 Jul · SEPA";
 
 export function StudioDashboardSide() {
   const { t } = useTranslation();
@@ -54,7 +62,7 @@ export function StudioDashboardSide() {
             </span>
             <span className={s.quickNm}>
               {t("studio:dashboard.side.quickActions.goLive.label")}
-              <small>Plan: Wed 10 Jun · premiere of Cidade dos santos</small>
+              <small>{GO_LIVE_PLAN_NOTE}</small>
             </span>
             <span className={s.quickArr} aria-hidden>
               <FiArrowRight />
@@ -73,7 +81,7 @@ export function StudioDashboardSide() {
             </span>
             <span className={s.quickNm}>
               {t("studio:dashboard.side.quickActions.payouts.label")}
-              <small>Next: €2,140 on 5 Jul · SEPA</small>
+              <small>{NEXT_PAYOUT_NOTE}</small>
             </span>
             <span className={s.quickArr} aria-hidden>
               <FiArrowRight />

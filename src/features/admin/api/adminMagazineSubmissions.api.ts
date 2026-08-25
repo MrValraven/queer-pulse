@@ -10,12 +10,7 @@ import { apiGet } from "../../../shared/api/client";
  */
 
 export type MagazineSubmissionStatus =
-  | "draft"
-  | "submitted"
-  | "in_review"
-  | "accepted"
-  | "rejected"
-  | "published";
+  "draft" | "submitted" | "in_review" | "accepted" | "rejected" | "published";
 
 export interface AdminPersonDTO {
   slug: string;

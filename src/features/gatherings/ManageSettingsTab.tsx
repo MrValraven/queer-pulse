@@ -40,7 +40,10 @@ export function SettingsTab({
   const isLive = allowWaitlist !== undefined || showAttendeeCount !== undefined;
   const [toggles, setToggles] = useState<Record<SettingId, boolean>>(() =>
     isLive
-      ? { allowWaitlist: allowWaitlist ?? true, showAttendeeCount: showAttendeeCount ?? true }
+      ? {
+          allowWaitlist: allowWaitlist ?? true,
+          showAttendeeCount: showAttendeeCount ?? true,
+        }
       : (Object.fromEntries(
           GATHERING_SETTINGS.map((setting) => [setting.id, setting.on]),
         ) as Record<SettingId, boolean>),

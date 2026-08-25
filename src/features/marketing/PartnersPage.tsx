@@ -213,7 +213,7 @@ export function PartnersPage() {
                 variant="ghost"
                 href="mailto:hello@queerpulse.com"
               >
-                hello@queerpulse.com
+                {t("marketing:partners.become.emailCta")}
               </Button>
             </div>
           </div>

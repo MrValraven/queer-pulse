@@ -149,7 +149,9 @@ export function VerificationRequestDrawer({
             <div>
               <h2 className={styles.dName}>{name}</h2>
               <div className={styles.dChips}>
-                <AdminChip tone={VERIFICATION_STATUS_TONE[detail.requestedLevel]}>
+                <AdminChip
+                  tone={VERIFICATION_STATUS_TONE[detail.requestedLevel]}
+                >
                   {t(`admin:verifications.level.${detail.requestedLevel}`)}
                 </AdminChip>
                 <AdminChip
@@ -232,7 +234,10 @@ export function VerificationRequestDrawer({
         <>
           {detail.signals?.duplicateProviderRef && (
             <p className={styles.duplicateBanner}>
-              <FiAlertTriangle aria-hidden className={styles.duplicateBannerIcon} />
+              <FiAlertTriangle
+                aria-hidden
+                className={styles.duplicateBannerIcon}
+              />
               {t("admin:verifications.requests.drawer.duplicateBanner", {
                 count: detail.signals.duplicateProviderRef.count,
               })}
@@ -244,10 +249,7 @@ export function VerificationRequestDrawer({
             </p>
           )}
           <RequestContextSection detail={detail} />
-          <VerificationHistoryPanel
-            events={detail.history}
-            isLoading={false}
-          />
+          <VerificationHistoryPanel events={detail.history} isLoading={false} />
           <VerificationSignalsPanel signals={detail.signals} />
         </>
       )}

@@ -17,7 +17,11 @@ import { OwnerSideCard, type PersonaShareTarget } from "./OwnerSideCard";
 import { SubprofileDeleteModal } from "./SubprofileDeleteModal";
 import { NewSideModal } from "./NewSideModal";
 import { PersonaInvitesBanner } from "./PersonaInvitesBanner";
-import { LoadingSides, EmptySides, ErrorSides } from "./SubprofileDashboardStates";
+import {
+  LoadingSides,
+  EmptySides,
+  ErrorSides,
+} from "./SubprofileDashboardStates";
 // The global `.sides`/`.side`/`.empty-hero`/`.new-side` dashboard styles.
 // Imported here (a lazy owner-only route) rather than globally so they ride
 // this route's chunk instead of the app-wide bundle.
@@ -120,7 +124,10 @@ export function MySubprofilesPage() {
           </div>
           <div className={styles.headActions}>
             <span className={styles.count}>
-              {t("subprofiles:mine.count", { n: list.length, max: MAX_SUBPROFILES })}
+              {t("subprofiles:mine.count", {
+                n: list.length,
+                max: MAX_SUBPROFILES,
+              })}
             </span>
             <Button
               variant="primary"
@@ -129,7 +136,9 @@ export function MySubprofilesPage() {
             >
               <FiPlus size={16} aria-hidden /> {t("subprofiles:mine.newCta")}
             </Button>
-            {atCap && <p className={styles.atCapNote}>{t("subprofiles:mine.atCap")}</p>}
+            {atCap && (
+              <p className={styles.atCapNote}>{t("subprofiles:mine.atCap")}</p>
+            )}
           </div>
         </div>
 

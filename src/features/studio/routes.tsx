@@ -3,44 +3,158 @@ import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
 const StudioPage = lazyNamed(() => import("./StudioPage"), "StudioPage");
-const StudioAlbumPage = lazyNamed(() => import("./StudioAlbumPage"), "StudioAlbumPage");
-const StudioArtistPage = lazyNamed(() => import("./StudioArtistPage"), "StudioArtistPage");
-const StudioDashboardPage = lazyNamed(() => import("./StudioDashboardPage"), "StudioDashboardPage");
-const StudioUploadPage = lazyNamed(() => import("./StudioUploadPage"), "StudioUploadPage");
-const StudioPayoutsPage = lazyNamed(() => import("./StudioPayoutsPage"), "StudioPayoutsPage");
-const StudioTrackPage = lazyNamed(() => import("./StudioTrackPage"), "StudioTrackPage");
-const StudioLivePage = lazyNamed(() => import("./StudioLivePage"), "StudioLivePage");
-const StudioCollectionPage = lazyNamed(() => import("./StudioCollectionPage"), "StudioCollectionPage");
-const StudioSetPage = lazyNamed(() => import("./StudioSetPage"), "StudioSetPage");
-const StudioSearchPage = lazyNamed(() => import("./StudioSearchPage"), "StudioSearchPage");
-const StudioLibraryPage = lazyNamed(() => import("./StudioLibraryPage"), "StudioLibraryPage");
-const StudioCheckoutPage = lazyNamed(() => import("./StudioCheckoutPage"), "StudioCheckoutPage");
-const StudioSheetStorePage = lazyNamed(() => import("./StudioSheetStorePage"), "StudioSheetStorePage");
-const StudioSolidarityFundPage = lazyNamed(() => import("./StudioSolidarityFundPage"), "StudioSolidarityFundPage");
-const StudioOpenCallsPage = lazyNamed(() => import("./StudioOpenCallsPage"), "StudioOpenCallsPage");
-const StudioSetSubmissionPage = lazyNamed(() => import("./StudioSetSubmissionPage"), "StudioSetSubmissionPage");
-const StudioCouncilPage = lazyNamed(() => import("./StudioCouncilPage"), "StudioCouncilPage");
-const StudioTriagePage = lazyNamed(() => import("./StudioTriagePage"), "StudioTriagePage");
-const StudioFlagReviewPage = lazyNamed(() => import("./StudioFlagReviewPage"), "StudioFlagReviewPage");
-const StudioOffAirPage = lazyNamed(() => import("./StudioOffAirPage"), "StudioOffAirPage");
-const Studio404Page = lazyNamed(() => import("./Studio404Page"), "Studio404Page");
-const Studio500Page = lazyNamed(() => import("./Studio500Page"), "Studio500Page");
-const StudioSignInPage = lazyNamed(() => import("./StudioSignInPage"), "StudioSignInPage");
-const StudioSettingsPage = lazyNamed(() => import("./StudioSettingsPage"), "StudioSettingsPage");
-const StudioAboutPage = lazyNamed(() => import("./StudioAboutPage"), "StudioAboutPage");
-const StudioAccessibilityPage = lazyNamed(() => import("./StudioAccessibilityPage"), "StudioAccessibilityPage");
-const StudioTermsPage = lazyNamed(() => import("./StudioTermsPage"), "StudioTermsPage");
-const StudioHelpPage = lazyNamed(() => import("./StudioHelpPage"), "StudioHelpPage");
-const StudioPressPage = lazyNamed(() => import("./StudioPressPage"), "StudioPressPage");
-const StudioEndCardPage = lazyNamed(() => import("./StudioEndCardPage"), "StudioEndCardPage");
-const StudioNotificationsPage = lazyNamed(() => import("./StudioNotificationsPage"), "StudioNotificationsPage");
-const StudioReceiptPage = lazyNamed(() => import("./StudioReceiptPage"), "StudioReceiptPage");
-const StudioRightsPage = lazyNamed(() => import("./StudioRightsPage"), "StudioRightsPage");
-const StudioProgramPage = lazyNamed(() => import("./StudioProgramPage"), "StudioProgramPage");
-const StudioBroadcastPage = lazyNamed(() => import("./StudioBroadcastPage"), "StudioBroadcastPage");
-const StudioWelcomePage = lazyNamed(() => import("./StudioWelcomePage"), "StudioWelcomePage");
-const StudioWithdrawnPage = lazyNamed(() => import("./StudioWithdrawnPage"), "StudioWithdrawnPage");
-const StudioComingSoonPage = lazyNamed(() => import("./StudioComingSoonPage"), "StudioComingSoonPage");
+const StudioAlbumPage = lazyNamed(
+  () => import("./StudioAlbumPage"),
+  "StudioAlbumPage",
+);
+const StudioArtistPage = lazyNamed(
+  () => import("./StudioArtistPage"),
+  "StudioArtistPage",
+);
+const StudioDashboardPage = lazyNamed(
+  () => import("./StudioDashboardPage"),
+  "StudioDashboardPage",
+);
+const StudioUploadPage = lazyNamed(
+  () => import("./StudioUploadPage"),
+  "StudioUploadPage",
+);
+const StudioPayoutsPage = lazyNamed(
+  () => import("./StudioPayoutsPage"),
+  "StudioPayoutsPage",
+);
+const StudioTrackPage = lazyNamed(
+  () => import("./StudioTrackPage"),
+  "StudioTrackPage",
+);
+const StudioLivePage = lazyNamed(
+  () => import("./StudioLivePage"),
+  "StudioLivePage",
+);
+const StudioCollectionPage = lazyNamed(
+  () => import("./StudioCollectionPage"),
+  "StudioCollectionPage",
+);
+const StudioSetPage = lazyNamed(
+  () => import("./StudioSetPage"),
+  "StudioSetPage",
+);
+const StudioSearchPage = lazyNamed(
+  () => import("./StudioSearchPage"),
+  "StudioSearchPage",
+);
+const StudioLibraryPage = lazyNamed(
+  () => import("./StudioLibraryPage"),
+  "StudioLibraryPage",
+);
+const StudioCheckoutPage = lazyNamed(
+  () => import("./StudioCheckoutPage"),
+  "StudioCheckoutPage",
+);
+const StudioSheetStorePage = lazyNamed(
+  () => import("./StudioSheetStorePage"),
+  "StudioSheetStorePage",
+);
+const StudioSolidarityFundPage = lazyNamed(
+  () => import("./StudioSolidarityFundPage"),
+  "StudioSolidarityFundPage",
+);
+const StudioOpenCallsPage = lazyNamed(
+  () => import("./StudioOpenCallsPage"),
+  "StudioOpenCallsPage",
+);
+const StudioSetSubmissionPage = lazyNamed(
+  () => import("./StudioSetSubmissionPage"),
+  "StudioSetSubmissionPage",
+);
+const StudioCouncilPage = lazyNamed(
+  () => import("./StudioCouncilPage"),
+  "StudioCouncilPage",
+);
+const StudioTriagePage = lazyNamed(
+  () => import("./StudioTriagePage"),
+  "StudioTriagePage",
+);
+const StudioFlagReviewPage = lazyNamed(
+  () => import("./StudioFlagReviewPage"),
+  "StudioFlagReviewPage",
+);
+const StudioOffAirPage = lazyNamed(
+  () => import("./StudioOffAirPage"),
+  "StudioOffAirPage",
+);
+const Studio404Page = lazyNamed(
+  () => import("./Studio404Page"),
+  "Studio404Page",
+);
+const Studio500Page = lazyNamed(
+  () => import("./Studio500Page"),
+  "Studio500Page",
+);
+const StudioSignInPage = lazyNamed(
+  () => import("./StudioSignInPage"),
+  "StudioSignInPage",
+);
+const StudioSettingsPage = lazyNamed(
+  () => import("./StudioSettingsPage"),
+  "StudioSettingsPage",
+);
+const StudioAboutPage = lazyNamed(
+  () => import("./StudioAboutPage"),
+  "StudioAboutPage",
+);
+const StudioAccessibilityPage = lazyNamed(
+  () => import("./StudioAccessibilityPage"),
+  "StudioAccessibilityPage",
+);
+const StudioTermsPage = lazyNamed(
+  () => import("./StudioTermsPage"),
+  "StudioTermsPage",
+);
+const StudioHelpPage = lazyNamed(
+  () => import("./StudioHelpPage"),
+  "StudioHelpPage",
+);
+const StudioPressPage = lazyNamed(
+  () => import("./StudioPressPage"),
+  "StudioPressPage",
+);
+const StudioEndCardPage = lazyNamed(
+  () => import("./StudioEndCardPage"),
+  "StudioEndCardPage",
+);
+const StudioNotificationsPage = lazyNamed(
+  () => import("./StudioNotificationsPage"),
+  "StudioNotificationsPage",
+);
+const StudioReceiptPage = lazyNamed(
+  () => import("./StudioReceiptPage"),
+  "StudioReceiptPage",
+);
+const StudioRightsPage = lazyNamed(
+  () => import("./StudioRightsPage"),
+  "StudioRightsPage",
+);
+const StudioProgramPage = lazyNamed(
+  () => import("./StudioProgramPage"),
+  "StudioProgramPage",
+);
+const StudioBroadcastPage = lazyNamed(
+  () => import("./StudioBroadcastPage"),
+  "StudioBroadcastPage",
+);
+const StudioWelcomePage = lazyNamed(
+  () => import("./StudioWelcomePage"),
+  "StudioWelcomePage",
+);
+const StudioWithdrawnPage = lazyNamed(
+  () => import("./StudioWithdrawnPage"),
+  "StudioWithdrawnPage",
+);
+const StudioComingSoonPage = lazyNamed(
+  () => import("./StudioComingSoonPage"),
+  "StudioComingSoonPage",
+);
 
 /** The music studio (creator platform): catalogue, upload/payouts, live sets,
  *  moderation council/triage, the public shopfront, and its own state screens.

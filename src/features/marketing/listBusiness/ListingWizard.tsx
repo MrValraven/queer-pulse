@@ -80,11 +80,15 @@ export function ListingWizard(props: ListingWizardProps) {
   const [listing, setListing] = useState<PendingListing | null>(null);
 
   // A resumed draft keeps autosaving but doesn't re-offer the in-wizard banner.
-  const { saved, savedAt, clearDraft, saveAndExit } = useListingDraft(draft, step, {
-    enabled: true,
-    offerResume: !isResumed,
-    initialDraftId: props.initialDraftId,
-  });
+  const { saved, savedAt, clearDraft, saveAndExit } = useListingDraft(
+    draft,
+    step,
+    {
+      enabled: true,
+      offerResume: !isResumed,
+      initialDraftId: props.initialDraftId,
+    },
+  );
   const { isBannerVisible, resumeDraft, discardDraft } = useListingDraftBanner(
     saved,
     clearDraft,
@@ -106,7 +110,9 @@ export function ListingWizard(props: ListingWizardProps) {
   const mountedRef = useRef(true);
   useEffect(() => {
     mountedRef.current = true;
-    return () => { mountedRef.current = false; };
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
   const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
 

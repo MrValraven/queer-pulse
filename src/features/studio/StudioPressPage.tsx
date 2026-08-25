@@ -21,7 +21,22 @@ import {
   PRESS_QUOTES,
   BOILERPLATE,
 } from "./studioPress.data";
+import { ALBUM } from "./studioAlbum.data";
 import styles from "./StudioPressPage.module.css";
+
+// Content: the artist's own name, tagline, and press-kit facts — comes from
+// the artist record in live mode.
+const ARTIST_NAME = "Mariana Sol";
+const ARTIST_FIRST_NAME = "Mariana";
+const ARTIST_LAST_NAME = "Sol";
+const TAGLINE_PRE = "Fado that refuses church. ";
+const TAGLINE_EM = "A hymn for the ones who left and the ones who stayed.";
+const PREVIEW_TRACK_TITLE_PRE = "Carta para a ";
+const PREVIEW_TRACK_TITLE_EM = "santa";
+const RELEASE_META = "Album · 11 tracks · released 14 Mar 2026 · CC-BY-NC";
+const CONTACT_PRE = "Mariana handles her own press. No gatekeepers. ";
+const CONTACT_EMAIL = "press@marianasol.pt";
+const CONTACT_POST = " · usually replies within a day.";
 
 /** Auto-generated artist press kit for Mariana Sol. Standalone dark page. */
 export function StudioPressPage() {
@@ -38,7 +53,9 @@ export function StudioPressPage() {
       <div className={styles.wrap}>
         <Hero />
         <PreviewSection />
-        <BioSection onCopyBoth={() => void copy(`${BIO_SHORT}\n\n${BIO_LONG}`)} />
+        <BioSection
+          onCopyBoth={() => void copy(`${BIO_SHORT}\n\n${BIO_LONG}`)}
+        />
         <PhotosSection
           onDownloadAll={() =>
             showToast(t("studio:press.downloadingPhotosToast"), "success")
@@ -72,18 +89,18 @@ function Hero() {
           shape="circle"
           width="100%"
           height="100%"
-          placeholder="portrait · Mariana Sol"
+          placeholder={`${t("studio:media.portraitLabel")} · ${ARTIST_NAME}`}
           style={{ position: "absolute", inset: 0 }}
         />
       </div>
       <div className={styles.hi}>
         <div className={styles.eb}>{t("studio:press.eyebrow")}</div>
         <h1>
-          Mariana <em>Sol</em>
+          {ARTIST_FIRST_NAME} <em>{ARTIST_LAST_NAME}</em>
         </h1>
         <div className={styles.tagline}>
-          Fado that refuses church.{" "}
-          <em>A hymn for the ones who left and the ones who stayed.</em>
+          {TAGLINE_PRE}
+          <em>{TAGLINE_EM}</em>
         </div>
         <div className={styles.facts}>
           {facts.map((f) => (
@@ -161,7 +178,8 @@ function PreviewSection() {
         </button>
         <div className={styles.ptInfo}>
           <h4>
-            Carta para a <em>santa</em>
+            {PREVIEW_TRACK_TITLE_PRE}
+            <em>{PREVIEW_TRACK_TITLE_EM}</em>
           </h4>
           <div
             className={`${styles.ptWave} ${playing ? styles.wavePlaying : ""}`}
@@ -283,17 +301,16 @@ function ReleaseSection() {
             width="100%"
             height="100%"
             radius={12}
-            placeholder="cover · Cidade dos santos"
+            placeholder={`${t("studio:media.coverLabel")} · ${ALBUM.title}`}
             style={{ position: "absolute", inset: 0 }}
           />
         </div>
         <div className={styles.ptInfo}>
           <h4>
-            Cidade dos <em>santos</em>
+            {ALBUM.titlePre}
+            <em>{ALBUM.titleEm}</em>
           </h4>
-          <div className={styles.relMeta}>
-            Album · 11 tracks · released 14 Mar 2026 · CC-BY-NC
-          </div>
+          <div className={styles.relMeta}>{RELEASE_META}</div>
         </div>
         <span className={`${styles.wmBadge} ${styles.jade}`}>
           {t("studio:press.outNowBadge")}
@@ -366,8 +383,9 @@ function ContactSection({ onRequest }: { onRequest: () => void }) {
             />
           </h3>
           <p>
-            Mariana handles her own press. No gatekeepers.{" "}
-            <em>press@marianasol.pt</em> · usually replies within a day.
+            {CONTACT_PRE}
+            <em>{CONTACT_EMAIL}</em>
+            {CONTACT_POST}
           </p>
         </div>
         <Button variant="ghost-dark" size="lg" to={routes.studioArtist}>

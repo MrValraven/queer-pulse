@@ -14,9 +14,7 @@ describe("SubmitStoryPage", () => {
     );
     // Anchored: SubmitStoryMeta also renders a "Byline note" label in the
     // same row, and an unanchored /byline/i would match both.
-    expect(
-      await screen.findByLabelText(/^byline$/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByLabelText(/^byline$/i)).toBeInTheDocument();
   });
 
   // This repo's TestProviders has no documented way to force demoMode: false

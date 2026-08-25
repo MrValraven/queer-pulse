@@ -108,14 +108,17 @@ function FeaturedEssay() {
           {t("magazine:sections.essayOfMonthKicker")}
         </div>
         {/* Content: the featured essay's own headline/excerpt/pull-quote. */}
+        {/* eslint-disable local/no-literal-string -- hand-picked essay's own headline, arrives from the API in live mode */}
         <h2 className={styles.feTitle}>
           I didn't come out.
           <br />
           <em>I arrived.</em>
         </h2>
+        {/* eslint-enable local/no-literal-string */}
         <div className={styles.feByline}>
-          By <AuthorLink name={memberName("tomas")} />
+          {t("magazine:cover.byline")} <AuthorLink name={memberName("tomas")} />
         </div>
+        {/* eslint-disable-next-line local/no-literal-string -- hand-picked essay's own excerpt, arrives from the API in live mode */}
         <p className={styles.feExcerpt}>
           Coming out implies a before and an after. A door, a room, a
           revelation. What if it was never that clean? What if you just quietly
@@ -123,10 +126,10 @@ function FeaturedEssay() {
           knew?
         </p>
         <Link className={styles.feRead} to={`${routes.article}?id=i-arrived`}>
-          {t("magazine:sections.readEssayCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("magazine:sections.readEssayCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
+      {/* eslint-disable-next-line local/no-literal-string -- essay's own pull-quote, editorial content */}
       <div className={styles.fePull}>
         "The community did not follow my identity. My identity followed the
         community."
@@ -154,7 +157,8 @@ function FeaturedDeck() {
         <Tag>{t("magazine:deck.badge")}</Tag>
         <h2 className={styles.fdTitle}>{FEATURED_DECK.title}</h2>
         <div className={styles.feByline}>
-          By <AuthorLink name={FEATURED_DECK.byline} />
+          {t("magazine:cover.byline")}{" "}
+          <AuthorLink name={FEATURED_DECK.byline} />
         </div>
         <p className={styles.feExcerpt}>{FEATURED_DECK.excerpt}</p>
         <Link
@@ -203,7 +207,10 @@ function ArchiveSection() {
             to={`${routes.issue}/${issue.issueNumber}`}
             className={styles.archiveIssue}
           >
-            <div className={styles.aiCover} style={{ background: issue.background }}>
+            <div
+              className={styles.aiCover}
+              style={{ background: issue.background }}
+            >
               {/* Content: the issue's own cover title. */}
               <div className={styles.aiCoverTitle}>{issue.title}</div>
             </div>

@@ -28,7 +28,8 @@ function icsEscape(text: string): string {
 
 /** Generate an event UID, falling back when crypto.randomUUID is unavailable. */
 function uid(): string {
-  return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+  return typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
@@ -54,7 +55,10 @@ export function buildIcs(input: CalendarEventInput): string {
 }
 
 /** Build and download an .ics file for `input` under `filename`. */
-export function downloadIcsFile(filename: string, input: CalendarEventInput): void {
+export function downloadIcsFile(
+  filename: string,
+  input: CalendarEventInput,
+): void {
   downloadBlob(filename, buildIcs(input), "text/calendar");
 }
 

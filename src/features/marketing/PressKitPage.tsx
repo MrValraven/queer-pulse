@@ -73,7 +73,9 @@ export function PressKitPage() {
               i18nKey="marketing:pressKit.contact.deskLabel"
               components={{ b: <b /> }}
             />{" "}
-            <a href="mailto:hello@queerpulse.com">hello@queerpulse.com</a>
+            <a href="mailto:hello@queerpulse.com">
+              {t("marketing:pressKit.contact.email")}
+            </a>
           </span>
           <span className={styles.sep}>·</span>
           <span>

@@ -14,7 +14,8 @@ export const ADMIN_INVITES: AdminInviteDTO[] = [
     inviter: { slug: "tiago", name: "Tiago Costa" },
     invitee: { slug: "marco", name: "Marco Vieira" },
     note: "Marco! Finally getting you in here. See you Thursday.",
-    vouch: "I've organised three community nights with Marco. He shows up for people and holds space with real care.",
+    vouch:
+      "I've organised three community nights with Marco. He shows up for people and holds space with real care.",
     createdAt: "2026-06-18T10:42:00.000Z",
     expiresAt: "2026-06-25T10:42:00.000Z",
   },
@@ -25,7 +26,8 @@ export const ADMIN_INVITES: AdminInviteDTO[] = [
     inviter: { slug: "ines", name: "Inês Marques" },
     email: "someone@example.pt",
     note: "Thought of you the moment I joined. Come say hi.",
-    vouch: "We were housemates for two years. One of the kindest, most reliable people I know.",
+    vouch:
+      "We were housemates for two years. One of the kindest, most reliable people I know.",
     createdAt: "2026-07-01T14:10:00.000Z",
     expiresAt: "2026-07-08T14:10:00.000Z",
   },

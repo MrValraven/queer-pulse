@@ -16,11 +16,7 @@ import type { PublicSubprofileView } from "./api/subprofiles.adapters";
  * "Draft", never "Published". Every non-owner viewer only ever reaches a
  * published persona, so `status` is "published" for them.
  */
-export function SubprofileTitleBlock({
-  view,
-}: {
-  view: PublicSubprofileView;
-}) {
+export function SubprofileTitleBlock({ view }: { view: PublicSubprofileView }) {
   const { t } = useTranslation();
   return (
     <dl className="pp-titleblock">

@@ -62,7 +62,8 @@ export function useMessageRowJump(
         let attempts = 0;
         const retry = () => {
           if (retryTokenRef.current !== token) return; // superseded by a newer jump
-          if (jumpToMessage(messageId) || attempts >= HIGHLIGHT_RETRY_ATTEMPTS) return;
+          if (jumpToMessage(messageId) || attempts >= HIGHLIGHT_RETRY_ATTEMPTS)
+            return;
           attempts += 1;
           window.setTimeout(retry, HIGHLIGHT_RETRY_DELAY_MS);
         };

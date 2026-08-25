@@ -2,7 +2,10 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl, { type StyleSpecification } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { MapLoading } from "../marketing/MapLoading";
-import { buildWarmStyle, MAP_STYLE_URL } from "../../shared/components/map/siteMapStyle";
+import {
+  buildWarmStyle,
+  MAP_STYLE_URL,
+} from "../../shared/components/map/siteMapStyle";
 import mapStyles from "../marketing/localMap.module.css";
 import s from "./housingLocationMap.module.css";
 

@@ -30,7 +30,9 @@ export function JoinGroupModal({
     .filter((question) => question.required)
     .every((question) => (answers[question.id] ?? "").trim().length > 0);
   const valid =
-    name.trim().length > 1 && relationship.trim().length > 1 && requiredAnswered;
+    name.trim().length > 1 &&
+    relationship.trim().length > 1 &&
+    requiredAnswered;
 
   const handleSubmit = () => {
     if (!valid) return;

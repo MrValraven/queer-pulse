@@ -115,9 +115,7 @@ export function CommunityVote({ notify }: { notify: (m: string) => void }) {
             components={{ em: <em /> }}
           />
         </h3>
-        <span className={styles.vhSub}>
-          Members choose August's theme · voting closes 20 Jul
-        </span>
+        <span className={styles.vhSub}>{t("cinema:shorts.vote.window")}</span>
       </div>
       <div className={styles.voteOpts}>
         {voteOptions.map((o) => {

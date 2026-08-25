@@ -33,12 +33,20 @@ export function ScamSafetyBanner({
   const [dismissed, setDismissed] = useState(false);
   if (dismissed) return null;
 
-  const tips = typeof limit === "number" ? SCAM_SAFETY_TIPS.slice(0, limit) : SCAM_SAFETY_TIPS;
+  const tips =
+    typeof limit === "number"
+      ? SCAM_SAFETY_TIPS.slice(0, limit)
+      : SCAM_SAFETY_TIPS;
 
   return (
-    <aside className={styles.banner} aria-label={t("economy:housingSafety.banner.ariaLabel")}>
+    <aside
+      className={styles.banner}
+      aria-label={t("economy:housingSafety.banner.ariaLabel")}
+    >
       <div className={styles.bannerHead}>
-        <p className={styles.bannerEyebrow}>{t("economy:housingSafety.banner.eyebrow")}</p>
+        <p className={styles.bannerEyebrow}>
+          {t("economy:housingSafety.banner.eyebrow")}
+        </p>
         {dismissible && (
           <button
             type="button"

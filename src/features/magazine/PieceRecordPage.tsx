@@ -35,9 +35,8 @@ export function PieceRecordPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { record, isLoading, isError } = usePieceRecord(id!);
-  const { markPaid, toggleLetterRunInLetters, addCorrection, savePayment } = useRecordMutations(
-    id!,
-  );
+  const { markPaid, toggleLetterRunInLetters, addCorrection, savePayment } =
+    useRecordMutations(id!);
   const { showToast } = useToast();
   const { t } = useTranslation();
   const [tab, setTab] = useState<PieceRecordTabId>("brief");
@@ -66,7 +65,8 @@ export function PieceRecordPage() {
             action={{
               label: (
                 <>
-                  <FiArrowLeft aria-hidden /> {t("magazine:piece.header.backToDesk")}
+                  <FiArrowLeft aria-hidden />{" "}
+                  {t("magazine:piece.header.backToDesk")}
                 </>
               ),
               to: routes.magazineEditor,
@@ -81,8 +81,11 @@ export function PieceRecordPage() {
   // persist into the nested closures below (`handleRunInLetters`,
   // `renderTabBody`), so re-bind once here instead of asserting repeatedly.
   const pieceRecord = record;
-  const displayStage = STAGE_DTO_TO_VIEW[pieceRecord.stage] ?? pieceRecord.stage;
-  const openGateCount = pieceRecord.publishGate.filter((item) => !item.done).length;
+  const displayStage =
+    STAGE_DTO_TO_VIEW[pieceRecord.stage] ?? pieceRecord.stage;
+  const openGateCount = pieceRecord.publishGate.filter(
+    (item) => !item.done,
+  ).length;
   const hasOpenGateItems = openGateCount > 0;
   const formatLabel =
     pieceRecord.format === "article"
@@ -106,7 +109,9 @@ export function PieceRecordPage() {
       return;
     }
     void navigate(
-      pieceRecord.deckId ? `${routes.deckEditor}?id=${pieceRecord.deckId}` : routes.deckEditor,
+      pieceRecord.deckId
+        ? `${routes.deckEditor}?id=${pieceRecord.deckId}`
+        : routes.deckEditor,
     );
   };
 
@@ -156,7 +161,8 @@ export function PieceRecordPage() {
           <div className={styles.title}>
             <b>{pieceRecord.title}</b>
             <span className={styles.titleSub}>
-              {formatLabel} · {pieceRecord.section} · {issueLabel} · {pieceRecord.byline}
+              {formatLabel} · {pieceRecord.section} · {issueLabel} ·{" "}
+              {pieceRecord.byline}
             </span>
           </div>
           <StagePill stage={displayStage} />
@@ -164,7 +170,12 @@ export function PieceRecordPage() {
             <Button variant="ghost" size="sm" onClick={handleOpenDraft}>
               {t("magazine:piece.header.openDraft")}
             </Button>
-            <Button variant="plum" size="sm" disabled={hasOpenGateItems} onClick={publishStub}>
+            <Button
+              variant="plum"
+              size="sm"
+              disabled={hasOpenGateItems}
+              onClick={publishStub}
+            >
               {t("magazine:piece.header.publish")}
             </Button>
           </div>
@@ -172,14 +183,24 @@ export function PieceRecordPage() {
 
         <div className={styles.ework}>
           <div>
-            <PieceTabsNav tab={tab} onChange={setTab} openGateCount={openGateCount} />
+            <PieceTabsNav
+              tab={tab}
+              onChange={setTab}
+              openGateCount={openGateCount}
+            />
             {renderTabBody()}
           </div>
 
           <aside className={styles.erail}>
-            <PublishGateCard publishGate={pieceRecord.publishGate} onPublish={publishStub} />
+            <PublishGateCard
+              publishGate={pieceRecord.publishGate}
+              onPublish={publishStub}
+            />
             <StageStepper stage={pieceRecord.stage} />
-            <MoneyMiniCard payment={pieceRecord.payment} onOpenMoney={() => setTab("money")} />
+            <MoneyMiniCard
+              payment={pieceRecord.payment}
+              onOpenMoney={() => setTab("money")}
+            />
           </aside>
         </div>
       </div>

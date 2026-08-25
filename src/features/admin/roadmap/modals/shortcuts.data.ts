@@ -14,7 +14,10 @@ export interface RoadmapShortcutRow {
 export const ROADMAP_SHORTCUTS: RoadmapShortcutRow[] = [
   { keys: ["/"], labelKey: "admin:roadmap.modals.shortcuts.filter" },
   { keys: ["n"], labelKey: "admin:roadmap.modals.shortcuts.newItem" },
-  { keys: ["j", "k"], labelKey: "admin:roadmap.modals.shortcuts.moveThroughCards" },
+  {
+    keys: ["j", "k"],
+    labelKey: "admin:roadmap.modals.shortcuts.moveThroughCards",
+  },
   { keys: ["e"], labelKey: "admin:roadmap.modals.shortcuts.editFocused" },
   { keys: ["⌘", "↵"], labelKey: "admin:roadmap.modals.shortcuts.saveClose" },
   { keys: ["esc"], labelKey: "admin:roadmap.modals.shortcuts.close" },

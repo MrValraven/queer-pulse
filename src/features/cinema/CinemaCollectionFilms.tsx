@@ -28,7 +28,11 @@ function FilmEntry({ film }: { film: CollectionFilm }) {
           <span className={styles.kind}>{film.kind}</span>
         </div>
         <div className={styles.entryTitle}>
-          <SplitTitle pre={film.titlePre} em={film.titleEm} post={film.titlePost} />
+          <SplitTitle
+            pre={film.titlePre}
+            em={film.titleEm}
+            post={film.titlePost}
+          />
         </div>
         <div className={styles.entryMeta}>{film.meta}</div>
         <blockquote className={styles.why}>

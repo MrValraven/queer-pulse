@@ -48,7 +48,8 @@ function resolveProvenance(
   if (level === "none" && events.length === 0) return { kind: "none" };
   const grantingEvent = events.find((event) => event.toLevel === level);
   if (grantingEvent?.actor) {
-    const actorName = `${grantingEvent.actor.firstName} ${grantingEvent.actor.lastName}`.trim();
+    const actorName =
+      `${grantingEvent.actor.firstName} ${grantingEvent.actor.lastName}`.trim();
     return { kind: "granted", actorName };
   }
   return { kind: "earned" };
@@ -178,7 +179,11 @@ export function VerificationDetailDrawer({
             <p className={styles.provenanceLine}>
               <ProvenanceLine
                 t={t}
-                provenance={resolveProvenance(events, row.level, historyLoading)}
+                provenance={resolveProvenance(
+                  events,
+                  row.level,
+                  historyLoading,
+                )}
               />
             </p>
           </div>
@@ -198,9 +203,7 @@ export function VerificationDetailDrawer({
                 label: t(`admin:verifications.level.${levelOption}`),
               }))}
               onChange={(value) =>
-                setSelectedLevel(
-                  (value ?? selectedLevel) as VerificationLevel,
-                )
+                setSelectedLevel((value ?? selectedLevel) as VerificationLevel)
               }
             />
           </div>

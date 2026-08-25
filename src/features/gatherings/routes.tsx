@@ -3,18 +3,42 @@ import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 import { GatheringComingSoon } from "./GatheringComingSoon";
 
-const GatheringPage = lazyNamed(() => import("./GatheringPage"), "GatheringPage");
-const GatheringRecapPage = lazyNamed(() => import("./GatheringRecapPage"), "GatheringRecapPage");
-const GatheringCancelledPage = lazyNamed(() => import("./GatheringCancelledPage"), "GatheringCancelledPage");
-const GatheringDashboardPage = lazyNamed(() => import("./GatheringDashboardPage"), "GatheringDashboardPage");
-const ManageGatheringPage = lazyNamed(() => import("./ManageGatheringPage"), "ManageGatheringPage");
-const GatheringPhotosPage = lazyNamed(() => import("./GatheringPhotosPage"), "GatheringPhotosPage");
-const CoHostInvitePage = lazyNamed(() => import("./CoHostInvitePage"), "CoHostInvitePage");
+const GatheringPage = lazyNamed(
+  () => import("./GatheringPage"),
+  "GatheringPage",
+);
+const GatheringRecapPage = lazyNamed(
+  () => import("./GatheringRecapPage"),
+  "GatheringRecapPage",
+);
+const GatheringCancelledPage = lazyNamed(
+  () => import("./GatheringCancelledPage"),
+  "GatheringCancelledPage",
+);
+const GatheringDashboardPage = lazyNamed(
+  () => import("./GatheringDashboardPage"),
+  "GatheringDashboardPage",
+);
+const ManageGatheringPage = lazyNamed(
+  () => import("./ManageGatheringPage"),
+  "ManageGatheringPage",
+);
+const GatheringPhotosPage = lazyNamed(
+  () => import("./GatheringPhotosPage"),
+  "GatheringPhotosPage",
+);
+const CoHostInvitePage = lazyNamed(
+  () => import("./CoHostInvitePage"),
+  "CoHostInvitePage",
+);
 const EventPage = lazyNamed(() => import("./EventPage"), "EventPage");
 const RsvpPage = lazyNamed(() => import("./RsvpPage"), "RsvpPage");
 const RsvpRedirect = lazyNamed(() => import("./RsvpRedirect"), "RsvpRedirect");
 const HostPage = lazyNamed(() => import("./HostPage"), "HostPage");
-const CreateGatheringPage = lazyNamed(() => import("./CreateGatheringPage"), "CreateGatheringPage");
+const CreateGatheringPage = lazyNamed(
+  () => import("./CreateGatheringPage"),
+  "CreateGatheringPage",
+);
 
 /** The gatherings surface: calendar, events, a gathering's detail + management
  *  sub-pages, RSVP, hosting, and the gatherings index.
@@ -76,7 +100,9 @@ export function gatheringRoutes(demoMode: boolean) {
       />
       <Route
         path={routes.event}
-        element={demoMode ? <EventPage /> : <GatheringComingSoon variant="event" />}
+        element={
+          demoMode ? <EventPage /> : <GatheringComingSoon variant="event" />
+        }
       />
       {/* RSVP is now an action INSIDE the gathering detail (GatheringRsvpControl),
           so the standalone confirmation page is retired in LIVE: `/rsvp`
@@ -89,7 +115,10 @@ export function gatheringRoutes(demoMode: boolean) {
       />
       <Route path={routes.host} element={<HostPage />} />
       <Route path={routes.createGathering} element={<CreateGatheringPage />} />
-      <Route path={routes.gatherings} element={<Navigate to={routes.events} replace />} />
+      <Route
+        path={routes.gatherings}
+        element={<Navigate to={routes.events} replace />}
+      />
     </>
   );
 }

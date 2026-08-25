@@ -20,7 +20,11 @@ export interface CommentThreadProps {
  * another reply (see `ArticleCommentDto`'s doc comment), so nesting stops at
  * one level and there is nothing to thread further.
  */
-export function CommentThread({ comment, onReply, onToggleResolve }: CommentThreadProps) {
+export function CommentThread({
+  comment,
+  onReply,
+  onToggleResolve,
+}: CommentThreadProps) {
   const { t } = useTranslation();
   const formatters = useFormat();
   const [isReplying, setIsReplying] = useState(false);
@@ -47,11 +51,21 @@ export function CommentThread({ comment, onReply, onToggleResolve }: CommentThre
         resolved={comment.resolved}
         actions={
           <div className={styles.row}>
-            <Button size="sm" variant="ghost" onClick={() => setIsReplying((open) => !open)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsReplying((open) => !open)}
+            >
               {t("magazine:write.notes.reply")}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => onToggleResolve(comment.id, !comment.resolved)}>
-              {comment.resolved ? t("magazine:write.notes.reopen") : t("magazine:write.notes.resolve")}
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => onToggleResolve(comment.id, !comment.resolved)}
+            >
+              {comment.resolved
+                ? t("magazine:write.notes.reopen")
+                : t("magazine:write.notes.resolve")}
             </Button>
           </div>
         }
@@ -75,7 +89,9 @@ export function CommentThread({ comment, onReply, onToggleResolve }: CommentThre
         <div className={styles.replies}>
           <div className={styles.field}>
             <textarea
-              aria-label={t("magazine:write.notes.replyAria", { who: comment.author })}
+              aria-label={t("magazine:write.notes.replyAria", {
+                who: comment.author,
+              })}
               placeholder={t("magazine:write.notes.replyPlaceholder")}
               value={replyText}
               onChange={(event) => setReplyText(event.target.value)}

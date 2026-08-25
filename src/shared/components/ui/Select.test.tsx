@@ -80,9 +80,9 @@ describe("Select", () => {
 
     await user.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "true");
-    expect(within(screen.getByRole("listbox")).getAllByRole("option")).toHaveLength(
-      FRUITS.length,
-    );
+    expect(
+      within(screen.getByRole("listbox")).getAllByRole("option"),
+    ).toHaveLength(FRUITS.length);
   });
 
   it("selects a single option and closes", async () => {
@@ -96,9 +96,9 @@ describe("Select", () => {
     expect(onChange).toHaveBeenCalledWith("banana");
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     // The chosen label now shows on the trigger.
-    expect(screen.getByRole("button", { name: /Fruit|Banana/ })).toHaveTextContent(
-      "Banana",
-    );
+    expect(
+      screen.getByRole("button", { name: /Fruit|Banana/ }),
+    ).toHaveTextContent("Banana");
   });
 
   it("filters options via the typeahead", async () => {
@@ -109,7 +109,9 @@ describe("Select", () => {
     await user.type(screen.getByRole("combobox"), "ban");
 
     expect(screen.getByRole("option", { name: "Banana" })).toBeInTheDocument();
-    expect(screen.queryByRole("option", { name: "Apple" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("option", { name: "Apple" }),
+    ).not.toBeInTheDocument();
   });
 
   it("matches on keywords, not just the visible label", async () => {
@@ -120,7 +122,9 @@ describe("Select", () => {
     await user.type(screen.getByRole("combobox"), "medjool");
 
     expect(screen.getByRole("option", { name: "Date" })).toBeInTheDocument();
-    expect(screen.queryByRole("option", { name: "Apple" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("option", { name: "Apple" }),
+    ).not.toBeInTheDocument();
   });
 
   it("navigates with the arrow keys and selects with Enter", async () => {

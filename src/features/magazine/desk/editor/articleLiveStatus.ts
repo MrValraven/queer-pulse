@@ -6,7 +6,11 @@ import type { ArticleLiveStatus } from "./ArticleEditorHeader";
  * `"scheduled"`, never `"published"`, so nothing in the UI claims a piece is
  * live before it actually is.
  */
-export function deriveLiveStatus(publishedAt: string | null): ArticleLiveStatus {
+export function deriveLiveStatus(
+  publishedAt: string | null,
+): ArticleLiveStatus {
   if (!publishedAt) return "draft";
-  return new Date(publishedAt).getTime() > Date.now() ? "scheduled" : "published";
+  return new Date(publishedAt).getTime() > Date.now()
+    ? "scheduled"
+    : "published";
 }

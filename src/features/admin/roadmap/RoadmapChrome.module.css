@@ -67,7 +67,9 @@
   background-position:
     calc(100% - 16px) center,
     calc(100% - 11px) center;
-  background-size: 5px 5px, 5px 5px;
+  background-size:
+    5px 5px,
+    5px 5px;
   background-repeat: no-repeat;
 }
 

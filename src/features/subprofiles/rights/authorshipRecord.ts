@@ -34,11 +34,7 @@ export function canonicalContent(item: SubprofileItemView): string {
     if (item.subtitle) parts.push(item.subtitle);
     if (item.description) parts.push(item.description);
   }
-  return parts
-    .filter(Boolean)
-    .join("\n")
-    .replace(/\r\n/g, "\n")
-    .trim();
+  return parts.filter(Boolean).join("\n").replace(/\r\n/g, "\n").trim();
 }
 
 /** Lowercase hex SHA-256 digest of `text`, via the Web Crypto API. */

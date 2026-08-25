@@ -136,15 +136,24 @@ export function usePushSubscription(): PushSubscriptionApi {
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     function handleServiceWorkerMessage(event: MessageEvent) {
-      if ((event.data as { type?: string } | undefined)?.type === "push-subscription-changed") {
+      if (
+        (event.data as { type?: string } | undefined)?.type ===
+        "push-subscription-changed"
+      ) {
         void syncSubscriptionHealth();
       }
     }
-    navigator.serviceWorker.addEventListener("message", handleServiceWorkerMessage);
+    navigator.serviceWorker.addEventListener(
+      "message",
+      handleServiceWorkerMessage,
+    );
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      navigator.serviceWorker.removeEventListener("message", handleServiceWorkerMessage);
+      navigator.serviceWorker.removeEventListener(
+        "message",
+        handleServiceWorkerMessage,
+      );
     };
   }, [supported, demoMode]);
 

@@ -50,7 +50,8 @@ export function CommunityFrozenBanner({
   const frozenSince = freezeDetail.frozenAt
     ? new Date(freezeDetail.frozenAt)
     : null;
-  const isValidDate = frozenSince != null && !Number.isNaN(frozenSince.getTime());
+  const isValidDate =
+    frozenSince != null && !Number.isNaN(frozenSince.getTime());
   const publicNote = freezeDetail.frozenNote?.trim() ?? "";
 
   return (

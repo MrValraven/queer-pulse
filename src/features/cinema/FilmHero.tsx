@@ -20,11 +20,13 @@ export function FilmHero() {
             <span className={styles.dot} />
             <span className={styles.by}>
               {t("cinema:film.hero.programmedBy")}{" "}
+              {/* eslint-disable-next-line local/no-literal-string -- curator's own name; content per the scope rule */}
               <Link to={`${routes.cinemaCurator}/joao-ribeiro`}>
                 João Ribeiro
               </Link>
             </span>
           </div>
+          {/* eslint-disable local/no-literal-string -- this film's own title, credits, and curator pull-quote; content per the scope rule, arrives over the wire in live mode */}
           <h1 className={styles.title}>
             The light <em>between</em> rooms
           </h1>
@@ -40,8 +42,8 @@ export function FilmHero() {
             <div className={styles.cpText}>
               “A patient, generous film about Lisbon's working-class queer
               elders, made over three years in the kitchens that raised them.{" "}
-              <em>Stay for the second hour</em>. It's where the film stops
-              being about loss and starts being about teaching.”
+              <em>Stay for the second hour</em>. It's where the film stops being
+              about loss and starts being about teaching.”
               <span className="who">
                 <Link to={`${routes.cinemaCurator}/joao-ribeiro`}>
                   João Ribeiro
@@ -50,9 +52,11 @@ export function FilmHero() {
               </span>
             </div>
           </div>
+          {/* eslint-enable local/no-literal-string */}
 
           <FilmHeroWatch />
 
+          {/* eslint-disable local/no-literal-string -- this film's own scheduled live Q&A announcement; content per the scope rule, arrives over the wire in live mode */}
           <div className={styles.liveStrip}>
             <span className="live" />
             <div>
@@ -62,6 +66,7 @@ export function FilmHero() {
               Co-hosted with Casa do Comum.{" "}
               <em>Live captions in EN &amp; PT.</em>
             </div>
+            {/* eslint-enable local/no-literal-string */}
             <Link to={routes.rsvp}>
               {t("cinema:film.hero.rsvpCta")} <FiArrowRight aria-hidden />
             </Link>

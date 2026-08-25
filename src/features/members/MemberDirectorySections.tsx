@@ -20,16 +20,13 @@ import {
   type SortKey,
   type MemberCard,
 } from "./memberDirectoryFilter.data";
-import { type SectionKey } from "./FilterSection";
+import { type SectionKey } from "./filterSectionKeys";
 import { FiltersSidebar, MemberResultSkeleton } from "./MemberFilterCards";
 import { MemberResultsGrid } from "./MemberResultsGrid";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Remove one value from whichever filter group a chip belongs to. */
-function removeChip(
-  filters: FilterState,
-  chip: AppliedChip,
-): FilterState {
+function removeChip(filters: FilterState, chip: AppliedChip): FilterState {
   const drop = (values: string[]) => values.filter((v) => v !== chip.value);
   switch (chip.group) {
     case "openTo":
@@ -88,7 +85,10 @@ export function MemberDirectoryHeader({
         <FeatureHelp id="members.hub" />
       </h1>
       <p className={styles.lead}>
-        <Translation i18nKey="members:directory.lead" components={{ b: <b /> }} />
+        <Translation
+          i18nKey="members:directory.lead"
+          components={{ b: <b /> }}
+        />
       </p>
     </FadeIn>
   );

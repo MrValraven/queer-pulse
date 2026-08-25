@@ -10,10 +10,26 @@ const TYPE_STYLE: Record<
   HousingListingDTO["type"],
   { tint: Tint; typeColor: string; typeText: string }
 > = {
-  sublet: { tint: "coral", typeColor: "rgba(var(--accent-rgb),.1)", typeText: "var(--accent-ink)" },
-  room: { tint: "jade", typeColor: "rgba(var(--jade-rgb),.1)", typeText: "var(--jade)" },
-  short: { tint: "plum", typeColor: "rgba(var(--plum-rgb),.08)", typeText: "var(--plum)" },
-  studio: { tint: "plum", typeColor: "rgba(var(--violet-rgb),.1)", typeText: "var(--violet)" },
+  sublet: {
+    tint: "coral",
+    typeColor: "rgba(var(--accent-rgb),.1)",
+    typeText: "var(--accent-ink)",
+  },
+  room: {
+    tint: "jade",
+    typeColor: "rgba(var(--jade-rgb),.1)",
+    typeText: "var(--jade)",
+  },
+  short: {
+    tint: "plum",
+    typeColor: "rgba(var(--plum-rgb),.08)",
+    typeText: "var(--plum)",
+  },
+  studio: {
+    tint: "plum",
+    typeColor: "rgba(var(--violet-rgb),.1)",
+    typeText: "var(--violet)",
+  },
 };
 
 /**
@@ -30,8 +46,12 @@ function posterFrom(
   if (!lister) {
     const fallbackName = t("economy:member.fallbackName");
     return {
-      initials: "", name: fallbackName, fullName: fallbackName,
-      tint: "coral", memberSince: "", bio: "",
+      initials: "",
+      name: fallbackName,
+      fullName: fallbackName,
+      tint: "coral",
+      memberSince: "",
+      bio: "",
       verificationLevel,
     };
   }

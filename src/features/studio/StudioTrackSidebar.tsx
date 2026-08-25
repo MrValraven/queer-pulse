@@ -8,6 +8,18 @@ import trackStyles from "./track.module.css";
 // Content — the curator's quote, the per-track split/credits breakdown and
 // the track/artist names are content, left English in both locales (§1).
 const TRACK_TITLE = "Carta para a santa";
+const CURATOR_INITIALS = "SM";
+const CURATOR_NAME = "Sara Marques";
+const CURATOR_ROLE = "programming lead · the Wednesday set";
+const CURATOR_QUOTE_PRE =
+  '"Track six of an album I have not stopped playing since April. A ' +
+  "devotional addressed plainly to a saint who isn't listening; a piano " +
+  "arrangement that knows when to step out of the room. ";
+const CURATOR_QUOTE_EM = "Stay through the second verse.";
+const CURATOR_QUOTE_POST = '"';
+const TRACK_ARTIST_SHARE_TO = " to Mariana. €";
+const TRACK_PLATFORM_SHARE_NOTE = " keeps the room open.";
+const SHEET_MUSIC_SPEC = "6 pages · piano + voice · CC-BY-NC · Mariana Sol";
 
 export function StudioTrackSidebar() {
   const { t } = useTranslation();
@@ -18,19 +30,16 @@ export function StudioTrackSidebar() {
           {t("studio:track.sidebar.curatorNoteLabel")}
         </div>
         <div className={trackStyles.noteHead}>
-          <div className={trackStyles.noteAv}>SM</div>
+          <div className={trackStyles.noteAv}>{CURATOR_INITIALS}</div>
           <div>
-            <div className={trackStyles.noteName}>Sara Marques</div>
-            <div className={trackStyles.noteRole}>
-              programming lead · the Wednesday set
-            </div>
+            <div className={trackStyles.noteName}>{CURATOR_NAME}</div>
+            <div className={trackStyles.noteRole}>{CURATOR_ROLE}</div>
           </div>
         </div>
         <p>
-          "Track six of an album I have not stopped playing since April. A
-          devotional addressed plainly to a saint who isn't listening; a piano
-          arrangement that knows when to step out of the room.{" "}
-          <em>Stay through the second verse.</em>"
+          {CURATOR_QUOTE_PRE}
+          <em>{CURATOR_QUOTE_EM}</em>
+          {CURATOR_QUOTE_POST}
         </p>
       </div>
 
@@ -39,7 +48,10 @@ export function StudioTrackSidebar() {
           {t("studio:track.sidebar.splitHeading")}
         </div>
         <div className={trackStyles.splitLead}>
-          €<em>0.80</em> to Mariana. €<em>0.20</em> keeps the room open.
+          €<em>0.80</em>
+          {TRACK_ARTIST_SHARE_TO}
+          <em>0.20</em>
+          {TRACK_PLATFORM_SHARE_NOTE}
         </div>
         <div className={trackStyles.splitBar}>
           <span style={{ width: "80%", background: "var(--accent)" }} />
@@ -92,11 +104,10 @@ export function StudioTrackSidebar() {
           <b>
             {t("studio:track.sidebar.leadSheetLabel")} · <em>{TRACK_TITLE}</em>
           </b>
-          <small>6 pages · piano + voice · CC-BY-NC · Mariana Sol</small>
+          <small>{SHEET_MUSIC_SPEC}</small>
         </div>
         <Link to={routes.studioSheetStore}>
-          {t("studio:track.sidebar.downloadCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:track.sidebar.downloadCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>

@@ -31,7 +31,8 @@ function toCalendarInput(ev: MyEvent): CalendarEventInput {
  *  gate behaviour. */
 function isApplePlatform(): boolean {
   return (
-    typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent)
+    typeof navigator !== "undefined" &&
+    /Mac|iPhone|iPad|iPod/.test(navigator.userAgent)
   );
 }
 
@@ -42,7 +43,11 @@ interface CalendarOption {
   onSelect: () => void;
 }
 
-function CalendarOptionRow({ icon, label, onSelect }: Omit<CalendarOption, "id">) {
+function CalendarOptionRow({
+  icon,
+  label,
+  onSelect,
+}: Omit<CalendarOption, "id">) {
   return (
     <li className={styles.row}>
       <button type="button" className={styles.rowBtn} onClick={onSelect}>
@@ -100,7 +105,10 @@ export function AddToCalendarModal({
     icon: <SiGoogle size={17} />,
     label: t("myevents:tools.addToCalendarGoogle"),
     onSelect: () =>
-      openLink(googleCalendarUrl(input), "myevents:tools.addToCalendarToastGoogle"),
+      openLink(
+        googleCalendarUrl(input),
+        "myevents:tools.addToCalendarToastGoogle",
+      ),
   };
   const appleRow: CalendarOption = {
     id: "apple",
@@ -113,14 +121,20 @@ export function AddToCalendarModal({
     icon: <FiCalendar size={17} />,
     label: t("myevents:tools.addToCalendarOutlook"),
     onSelect: () =>
-      openLink(outlookCalendarUrl(input), "myevents:tools.addToCalendarToastOutlook"),
+      openLink(
+        outlookCalendarUrl(input),
+        "myevents:tools.addToCalendarToastOutlook",
+      ),
   };
   const yahooRow: CalendarOption = {
     id: "yahoo",
     icon: <FiCalendar size={17} />,
     label: t("myevents:tools.addToCalendarYahoo"),
     onSelect: () =>
-      openLink(yahooCalendarUrl(input), "myevents:tools.addToCalendarToastYahoo"),
+      openLink(
+        yahooCalendarUrl(input),
+        "myevents:tools.addToCalendarToastYahoo",
+      ),
   };
 
   // Apple-platform visitors see Apple Calendar lead; everyone else sees
@@ -133,7 +147,9 @@ export function AddToCalendarModal({
     <ModalSheet onClose={onClose} ariaLabel={title}>
       <header className={styles.head}>
         <h3 className={styles.title}>{title}</h3>
-        <p className={styles.sub}>{`${dateLabel} · ${timeLabel} · ${ev.venue}`}</p>
+        <p
+          className={styles.sub}
+        >{`${dateLabel} · ${timeLabel} · ${ev.venue}`}</p>
       </header>
       <ul className={styles.list}>
         {rows.map((row) => (

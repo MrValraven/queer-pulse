@@ -28,8 +28,10 @@ function isOverride(value: unknown): value is ConversationPrefOverride {
   if (!value || typeof value !== "object") return false;
   const candidate = value as Record<string, unknown>;
   return (
-    (candidate.pinnedAt === undefined || typeof candidate.pinnedAt === "string") &&
-    (candidate.favorite === undefined || typeof candidate.favorite === "boolean") &&
+    (candidate.pinnedAt === undefined ||
+      typeof candidate.pinnedAt === "string") &&
+    (candidate.favorite === undefined ||
+      typeof candidate.favorite === "boolean") &&
     (candidate.muted === undefined || typeof candidate.muted === "boolean")
   );
 }

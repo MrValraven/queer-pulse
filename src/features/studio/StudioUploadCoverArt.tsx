@@ -3,6 +3,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Check } from "./StudioUploadIcons";
 import s from "./creator.module.css";
 
+// Content: the uploaded mock cover-art file's name and technical metadata —
+// comes from the uploaded file in live mode.
+const UPLOADED_FILENAME = "cidade_cover.jpg";
+const UPLOADED_FILE_META =
+  "2400 × 2400 · sRGB · 4.2 MB · no text in upper third";
+
 export function CoverArt() {
   const { t } = useTranslation();
   return (
@@ -35,10 +41,8 @@ export function CoverArt() {
           </svg>
         </span>
         <div>
-          <h5>cidade_cover.jpg</h5>
-          <div className={s.fileMeta}>
-            2400 × 2400 · sRGB · 4.2 MB · no text in upper third
-          </div>
+          <h5>{UPLOADED_FILENAME}</h5>
+          <div className={s.fileMeta}>{UPLOADED_FILE_META}</div>
         </div>
         <span className={s.fileCheck}>
           <Check />

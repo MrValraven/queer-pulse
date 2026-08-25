@@ -9,7 +9,7 @@ import {
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { m } from "motion/react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useMotionPrefs } from "../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { formatMonthYear } from "../../shared/lib/date";
 import { ImageSlot } from "../../shared/components/ui";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
@@ -80,7 +80,11 @@ export function EditorItemRow({
 }: EditorItemRowProps) {
   const { t, language } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const subtitle = [item.subtitle, item.meta, formatMonthYear(item.date, language)]
+  const subtitle = [
+    item.subtitle,
+    item.meta,
+    formatMonthYear(item.date, language),
+  ]
     .filter(Boolean)
     .join(" · ");
 

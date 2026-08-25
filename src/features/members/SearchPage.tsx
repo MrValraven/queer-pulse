@@ -20,8 +20,12 @@ export function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
   const [tab, setTab] = useState<ResultType | "all">("all");
-  const { data: searchData, recents, signInRequired, loading } =
-    useSearchData(query, tab);
+  const {
+    data: searchData,
+    recents,
+    signInRequired,
+    loading,
+  } = useSearchData(query, tab);
   // The prototype's fake fetch delay is DEMO-ONLY. In live mode `useSearchData`
   // reports real loading, so OR-ing this in only added 600ms of skeleton to
   // every visit, including ones react-query could answer from cache.

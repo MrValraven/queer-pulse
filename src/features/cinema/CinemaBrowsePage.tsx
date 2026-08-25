@@ -92,7 +92,11 @@ function FilmCard({
         {formatLabel(film.format, t)} · {film.meta.split("·").pop()?.trim()}
       </div>
       <div className={styles.fcTitle}>
-        <SplitTitle pre={film.titlePre} em={film.titleEm} post={film.titlePost} />
+        <SplitTitle
+          pre={film.titlePre}
+          em={film.titleEm}
+          post={film.titlePost}
+        />
       </div>
       <div className={styles.fcMeta}>
         {film.meta.split("·")[0]!.trim()} · {film.country} · {film.year}

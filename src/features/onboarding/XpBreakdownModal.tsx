@@ -18,7 +18,10 @@ interface XpBreakdownModalProps {
  * like the teaser's preview, just complete). Footer links on to the Badges
  * page for the deeper badge case and dated XP ledger.
  */
-export function XpBreakdownModal({ breakdown, onClose }: XpBreakdownModalProps) {
+export function XpBreakdownModal({
+  breakdown,
+  onClose,
+}: XpBreakdownModalProps) {
   const { t } = useTranslation();
   const sorted = [...breakdown].sort((a, b) => b.xp - a.xp);
 

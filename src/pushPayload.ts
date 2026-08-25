@@ -50,7 +50,11 @@ function safeImageUrl(value: unknown): string | undefined {
 function safeActions(
   value: unknown,
 ): { action: string; title: string }[] | undefined {
-  if (!Array.isArray(value) || value.length === 0 || value.length > MAX_ACTIONS) {
+  if (
+    !Array.isArray(value) ||
+    value.length === 0 ||
+    value.length > MAX_ACTIONS
+  ) {
     return undefined;
   }
   const parsed: { action: string; title: string }[] = [];

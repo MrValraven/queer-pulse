@@ -12,8 +12,10 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (originalLocal) Object.defineProperty(window, "localStorage", originalLocal);
-  if (originalSession) Object.defineProperty(window, "sessionStorage", originalSession);
+  if (originalLocal)
+    Object.defineProperty(window, "localStorage", originalLocal);
+  if (originalSession)
+    Object.defineProperty(window, "sessionStorage", originalSession);
   if (originalCookie) Object.defineProperty(document, "cookie", originalCookie);
   else Reflect.deleteProperty(document, "cookie");
   window.localStorage.clear();

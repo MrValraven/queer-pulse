@@ -22,10 +22,7 @@ export type CardTextBackdrop = "shade" | "panel" | "veil";
 /** The status a verifier sees: the card's own state combined with the
  *  issuing community's freeze/archive state and the expiry clock. */
 export type EffectiveCardStatus =
-  | "active"
-  | "suspended"
-  | "revoked"
-  | "expired";
+  "active" | "suspended" | "revoked" | "expired";
 
 export interface CardProgramDTO {
   isEnabled: boolean;
@@ -227,7 +224,8 @@ export const setCardHolderStatus = (
   slug: string,
   cardId: string,
   body: { status: "active" | "suspended" | "revoked"; reason?: string },
-) => apiPatch<{ ok: true }>(`/communities/${slug}/card/holders/${cardId}`, body);
+) =>
+  apiPatch<{ ok: true }>(`/communities/${slug}/card/holders/${cardId}`, body);
 
 /**
  * Voids every printed copy of one card by moving its code to a new generation.

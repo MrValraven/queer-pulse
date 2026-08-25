@@ -30,7 +30,11 @@ interface Props {
  * Moderators previewing a listing see neither. Owners don't see the contest
  * control (they get "Edit this listing").
  */
-export function DirectoryAsideFooter({ place, preview = false, ownerRef }: Props) {
+export function DirectoryAsideFooter({
+  place,
+  preview = false,
+  ownerRef,
+}: Props) {
   const { t } = useTranslation();
   // An owner sees neither control (the report is for other people's listings,
   // and the contest control hides itself for them), so the block that frames

@@ -55,8 +55,11 @@ export function CalendarCell({
 }: CalendarCellProps) {
   const { t } = useTranslation();
   const iso = formatIsoDate(date);
-  const richLabel = buildRichLabel(date, locale, { isToday, isSelected, isDisabled }, (key) =>
-    t(`shared:calendar.state.${key}`),
+  const richLabel = buildRichLabel(
+    date,
+    locale,
+    { isToday, isSelected, isDisabled },
+    (key) => t(`shared:calendar.state.${key}`),
   );
 
   return (

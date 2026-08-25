@@ -37,12 +37,36 @@ export interface ScamTip {
  * verification; keep the conversation on-platform; never rent sight-unseen.
  */
 export const SCAM_SAFETY_TIPS: ScamTip[] = [
-  { id: "neverPayFirst", icon: "creditCard", labelKey: "economy:housingSafety.tips.neverPayFirst" },
-  { id: "videoCall", icon: "video", labelKey: "economy:housingSafety.tips.videoCall" },
-  { id: "lowPrice", icon: "tag", labelKey: "economy:housingSafety.tips.lowPrice" },
-  { id: "noTransfers", icon: "lock", labelKey: "economy:housingSafety.tips.noTransfers" },
-  { id: "stayOnPlatform", icon: "shield", labelKey: "economy:housingSafety.tips.stayOnPlatform" },
-  { id: "neverSightUnseen", icon: "eye", labelKey: "economy:housingSafety.tips.neverSightUnseen" },
+  {
+    id: "neverPayFirst",
+    icon: "creditCard",
+    labelKey: "economy:housingSafety.tips.neverPayFirst",
+  },
+  {
+    id: "videoCall",
+    icon: "video",
+    labelKey: "economy:housingSafety.tips.videoCall",
+  },
+  {
+    id: "lowPrice",
+    icon: "tag",
+    labelKey: "economy:housingSafety.tips.lowPrice",
+  },
+  {
+    id: "noTransfers",
+    icon: "lock",
+    labelKey: "economy:housingSafety.tips.noTransfers",
+  },
+  {
+    id: "stayOnPlatform",
+    icon: "shield",
+    labelKey: "economy:housingSafety.tips.stayOnPlatform",
+  },
+  {
+    id: "neverSightUnseen",
+    icon: "eye",
+    labelKey: "economy:housingSafety.tips.neverSightUnseen",
+  },
 ];
 
 /** A verified Lisbon monthly-rent range, in euros, for a rough sanity check. */
@@ -56,9 +80,24 @@ export interface PriceRange {
 
 /** Lisbon monthly-rent sanity ranges (verified as of the 2026 content pass). */
 export const LISBON_PRICE_RANGES: PriceRange[] = [
-  { id: "room", minEuros: 450, maxEuros: 600, labelKey: "economy:housingSafety.price.room.label" },
-  { id: "double", minEuros: 350, maxEuros: 450, labelKey: "economy:housingSafety.price.double.label" },
-  { id: "studio", minEuros: 700, maxEuros: 1000, labelKey: "economy:housingSafety.price.studio.label" },
+  {
+    id: "room",
+    minEuros: 450,
+    maxEuros: 600,
+    labelKey: "economy:housingSafety.price.room.label",
+  },
+  {
+    id: "double",
+    minEuros: 350,
+    maxEuros: 450,
+    labelKey: "economy:housingSafety.price.double.label",
+  },
+  {
+    id: "studio",
+    minEuros: 700,
+    maxEuros: 1000,
+    labelKey: "economy:housingSafety.price.studio.label",
+  },
 ];
 
 /** One tenant-rights topic — a titled card with a few plain-language points. */

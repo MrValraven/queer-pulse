@@ -56,7 +56,9 @@ export function EditHistoryModal({
             </div>
             {revision.previousTitle && (
               <p className={styles.historyTitleChange}>
-                {t("forum:history.titleChange", { title: revision.previousTitle })}
+                {t("forum:history.titleChange", {
+                  title: revision.previousTitle,
+                })}
               </p>
             )}
             <p className={styles.historyBody}>{revision.previousBody}</p>

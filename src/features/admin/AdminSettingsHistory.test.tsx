@@ -76,7 +76,7 @@ describe("AdminSettingsHistory", () => {
     expect(await screen.findByText("by a deleted admin")).toBeInTheDocument();
   });
 
-  it("renders boolean strings as on/off rather than the raw \"true\"/\"false\"", async () => {
+  it('renders boolean strings as on/off rather than the raw "true"/"false"', async () => {
     changes = [{ ...base, oldValue: "true", newValue: "false" }];
     renderHistory();
     expect(
@@ -86,7 +86,7 @@ describe("AdminSettingsHistory", () => {
     expect(screen.queryByText(/\bfalse\b/)).not.toBeInTheDocument();
   });
 
-  it("renders a null newValue as \"cleared\" rather than the literal null", async () => {
+  it('renders a null newValue as "cleared" rather than the literal null', async () => {
     changes = [
       {
         ...base,

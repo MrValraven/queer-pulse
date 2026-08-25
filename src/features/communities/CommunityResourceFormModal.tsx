@@ -147,7 +147,9 @@ export function CommunityResourceFormModal({
         <Select
           value={kind}
           labelledBy={kindLabelId}
-          onChange={(next) => setKind((next as CommunityResourceKind) ?? "link")}
+          onChange={(next) =>
+            setKind((next as CommunityResourceKind) ?? "link")
+          }
           options={COMMUNITY_RESOURCE_KINDS.map((resourceKind) => ({
             value: resourceKind,
             label: t(`communities:detail.resources.kind.${resourceKind}`),

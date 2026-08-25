@@ -58,9 +58,16 @@ function deriveInitials(name: string): string {
 }
 
 /** Fields that must be filled before the application can be submitted. */
-export type RequiredField = "name" | "orgType" | "city" | "tagline" | "description";
+export type RequiredField =
+  "name" | "orgType" | "city" | "tagline" | "description";
 
-const REQUIRED: RequiredField[] = ["name", "orgType", "city", "tagline", "description"];
+const REQUIRED: RequiredField[] = [
+  "name",
+  "orgType",
+  "city",
+  "tagline",
+  "description",
+];
 
 /**
  * State + payload builder for the "Apply to partner" form. Holds every field the

@@ -26,7 +26,9 @@ export function MagazineSectionsPage() {
       <section className={styles.body}>
         <div className="wrap">
           <div className={styles.head}>
-            <div className={styles.eyebrow}>{t("magazine:sections.eyebrow")}</div>
+            <div className={styles.eyebrow}>
+              {t("magazine:sections.eyebrow")}
+            </div>
             <h1 className={styles.h1}>{t("magazine:sections.title")}</h1>
             <p className={styles.sub}>{t("magazine:sections.sub")}</p>
           </div>

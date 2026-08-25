@@ -1,8 +1,16 @@
 import { useState, type KeyboardEvent } from "react";
 import { FiSend } from "react-icons/fi";
-import { Button, EmptyState, SkeletonLine } from "../../../shared/components/ui";
+import {
+  Button,
+  EmptyState,
+  SkeletonLine,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { usePieceMessages, usePieceMessageMutations, type PieceThreadSide } from "../api/usePieceMessages";
+import {
+  usePieceMessages,
+  usePieceMessageMutations,
+  type PieceThreadSide,
+} from "../api/usePieceMessages";
 import { PieceThreadMessage } from "./PieceThreadMessage";
 import styles from "./PieceThread.module.css";
 
@@ -58,7 +66,9 @@ export function PieceThread({ pieceId, side }: PieceThreadProps) {
             description={t("magazine:pieceThread.emptyDescription")}
           />
         ) : (
-          messages.map((message) => <PieceThreadMessage key={message.id} message={message} />)
+          messages.map((message) => (
+            <PieceThreadMessage key={message.id} message={message} />
+          ))
         )}
       </div>
 

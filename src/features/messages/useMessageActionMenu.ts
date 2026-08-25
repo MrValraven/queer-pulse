@@ -11,20 +11,18 @@ import { type ChatMessage } from "./data";
 /** The message the long-press/right-click action menu is open for. `source`
  *  decides the surface — touch long-press → full-screen overlay; desktop
  *  right-click/keyboard → compact context menu at `point`. */
-export type ActionOverlayTarget =
-  | {
-      message: ChatMessage;
-      rect: DOMRect;
-      isSent: boolean;
-      /** Server-authoritative (`MessageResponse.canEdit`), snapshotted at open
-       *  time. Never recomputed client-side — the server is the sole authority
-       *  on the edit window, mirroring exactly what the edit endpoint accepts.
-       *  Absent (demo/optimistic messages) reads as false. */
-      canEdit: boolean;
-      source: "touch" | "pointer";
-      point?: { x: number; y: number };
-    }
-  | null;
+export type ActionOverlayTarget = {
+  message: ChatMessage;
+  rect: DOMRect;
+  isSent: boolean;
+  /** Server-authoritative (`MessageResponse.canEdit`), snapshotted at open
+   *  time. Never recomputed client-side — the server is the sole authority
+   *  on the edit window, mirroring exactly what the edit endpoint accepts.
+   *  Absent (demo/optimistic messages) reads as false. */
+  canEdit: boolean;
+  source: "touch" | "pointer";
+  point?: { x: number; y: number };
+} | null;
 
 export interface MessageActionMenu {
   actionTarget: ActionOverlayTarget;
@@ -60,7 +58,9 @@ export interface MessageActionMenu {
  * reaction only ever fire on a message with a server id (demo mock/optimistic
  * messages have none), so every handler no-ops without one.
  */
-export function useMessageActionMenu(conversationId: string): MessageActionMenu {
+export function useMessageActionMenu(
+  conversationId: string,
+): MessageActionMenu {
   const toggleReaction = useToggleReaction(conversationId);
   const deleteMessage = useDeleteMessage(conversationId);
   const editMessage = useEditMessage(conversationId);

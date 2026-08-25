@@ -249,8 +249,8 @@ export const MEMBERS: Member[] = [
     note: (
       <>
         "Gave the spring grant to seven first-timers this week. Not one has a
-        manager. <em>Good.</em> The point was never to find the ready. It was
-        to make people ready."
+        manager. <em>Good.</em> The point was never to find the ready. It was to
+        make people ready."
       </>
     ),
     slatesCount: "7 this year",

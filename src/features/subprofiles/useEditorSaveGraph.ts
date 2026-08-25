@@ -1,7 +1,10 @@
 import { ApiError } from "../../shared/api/client";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { SubprofileSection, UpdateSubprofileDTO } from "./api/subprofiles.api";
+import type {
+  SubprofileSection,
+  UpdateSubprofileDTO,
+} from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { itemsToInputDto } from "./api/subprofiles.adapters";
 import { useSubprofileMutations } from "./api/useSubprofileMutations";
@@ -42,7 +45,10 @@ const filledAffiliations = (rows: AffiliationRow[]) =>
   rows.filter((row) => row.targetSlug.trim());
 
 const hasRowChange = (counts: RowDiffCounts) =>
-  counts.added > 0 || counts.removed > 0 || counts.edited > 0 || counts.reordered;
+  counts.added > 0 ||
+  counts.removed > 0 ||
+  counts.edited > 0 ||
+  counts.reordered;
 
 export interface EditorSaveGraph {
   /** Live, itemized list of every unsaved change across all areas. */
@@ -100,7 +106,11 @@ export function useEditorSaveGraph(
   const socialChange = rowDiffToChange(
     { kind: "socials" },
     "subprofiles:pending.area.socials",
-    diffRowsBy(filledSocials(socialRows), filledSocials(socialBaseline), socialComparable),
+    diffRowsBy(
+      filledSocials(socialRows),
+      filledSocials(socialBaseline),
+      socialComparable,
+    ),
   );
   if (socialChange) pending.push(socialChange);
   const affiliationChange = rowDiffToChange(
@@ -134,7 +144,11 @@ export function useEditorSaveGraph(
     }
     const changedCount = pending.length;
 
-    type SaveTask = { labelKey: string; run: () => Promise<unknown>; commit: () => void };
+    type SaveTask = {
+      labelKey: string;
+      run: () => Promise<unknown>;
+      commit: () => void;
+    };
     const tasks: SaveTask[] = [];
 
     // The persona PATCH carries meta fields AND the whole `skinData` column
@@ -174,7 +188,11 @@ export function useEditorSaveGraph(
     }
     for (const section of Object.keys(sectionRows)) {
       const sectionRowsForKey = sectionRows[section] ?? [];
-      if (!hasRowChange(diffRows(sectionRowsForKey, sectionBaseline[section] ?? [])))
+      if (
+        !hasRowChange(
+          diffRows(sectionRowsForKey, sectionBaseline[section] ?? []),
+        )
+      )
         continue;
       tasks.push({
         labelKey: sectionLabelKeys[section] ?? "subprofiles:pending.area.meta",
@@ -185,18 +203,27 @@ export function useEditorSaveGraph(
             items: itemsToInputDto(sectionRowsForKey),
           }),
         commit: () =>
-          setSectionBaseline((current) => ({ ...current, [section]: sectionRowsForKey })),
+          setSectionBaseline((current) => ({
+            ...current,
+            [section]: sectionRowsForKey,
+          })),
       });
     }
     if (
       hasRowChange(
-        diffRowsBy(filledSocials(socialRows), filledSocials(socialBaseline), socialComparable),
+        diffRowsBy(
+          filledSocials(socialRows),
+          filledSocials(socialBaseline),
+          socialComparable,
+        ),
       )
     ) {
-      const items = filledSocials(socialRows).map(({ platform, urlOrHandle }) => ({
-        platform,
-        urlOrHandle: urlOrHandle.trim(),
-      }));
+      const items = filledSocials(socialRows).map(
+        ({ platform, urlOrHandle }) => ({
+          platform,
+          urlOrHandle: urlOrHandle.trim(),
+        }),
+      );
       tasks.push({
         labelKey: "subprofiles:pending.area.socials",
         run: () => replaceSocials.mutateAsync({ id: subprofile.id, items }),
@@ -213,7 +240,11 @@ export function useEditorSaveGraph(
       )
     ) {
       const items = filledAffiliations(affiliationRows).map(
-        ({ targetType, targetSlug, role }) => ({ targetType, targetSlug: targetSlug.trim(), role }),
+        ({ targetType, targetSlug, role }) => ({
+          targetType,
+          targetSlug: targetSlug.trim(),
+          role,
+        }),
       );
       tasks.push({
         labelKey: "subprofiles:pending.area.affiliations",
@@ -231,7 +262,10 @@ export function useEditorSaveGraph(
     });
 
     if (failed.length === 0) {
-      showToast(t("subprofiles:pending.savedToast", { count: changedCount }), "success");
+      showToast(
+        t("subprofiles:pending.savedToast", { count: changedCount }),
+        "success",
+      );
       return;
     }
     // Client-error responses name the actual problem — a 400 names an offending
@@ -245,7 +279,11 @@ export function useEditorSaveGraph(
       [400, 409, 422].includes(rejection.reason.status)
         ? rejection.reason.message
         : null;
-    showToast(detail ?? t("subprofiles:pending.saveError", { areas: failed.join(", ") }), "error");
+    showToast(
+      detail ??
+        t("subprofiles:pending.saveError", { areas: failed.join(", ") }),
+      "error",
+    );
   }
 
   return { pending, dirty, canSave, saving, saveAll };

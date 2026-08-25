@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Modal, Button, FilterChips, FormField } from "../../../shared/components/ui";
+import {
+  Modal,
+  Button,
+  FilterChips,
+  FormField,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PASS_TEMPLATES } from "./deskModals.data";
 import styles from "./DeskModals.module.css";
@@ -45,7 +50,11 @@ export function PassModal({ pitch, onClose, onPass }: PassModalProps) {
           <Button variant="ghost" onClick={onClose}>
             {t("magazine:desk.modals.cancel")}
           </Button>
-          <Button variant="primary" onClick={send} disabled={body.trim().length === 0}>
+          <Button
+            variant="primary"
+            onClick={send}
+            disabled={body.trim().length === 0}
+          >
             {t("magazine:desk.modals.pass.send")}
           </Button>
         </div>

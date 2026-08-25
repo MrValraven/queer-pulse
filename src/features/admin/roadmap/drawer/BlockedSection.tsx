@@ -55,7 +55,9 @@ export function BlockedSection({
             className={styles.textInput}
             value={blockedBy}
             placeholder={t("admin:roadmap.drawer.blocked.byPlaceholder")}
-            onChange={(event) => onFieldChange({ blockedBy: event.target.value })}
+            onChange={(event) =>
+              onFieldChange({ blockedBy: event.target.value })
+            }
           />
 
           <label className={styles.fieldLabel} htmlFor="blocked-why">
@@ -67,7 +69,9 @@ export function BlockedSection({
             rows={2}
             value={blockedWhy ?? ""}
             placeholder={t("admin:roadmap.drawer.blocked.whyPlaceholder")}
-            onChange={(event) => onFieldChange({ blockedWhy: event.target.value })}
+            onChange={(event) =>
+              onFieldChange({ blockedWhy: event.target.value })
+            }
           />
 
           <Button

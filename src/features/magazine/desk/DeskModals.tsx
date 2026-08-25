@@ -100,7 +100,9 @@ export function DeskModals({
         />
       );
     case "pass":
-      return <PassModal pitch={modal.pitch} onClose={onClose} onPass={onPass} />;
+      return (
+        <PassModal pitch={modal.pitch} onClose={onClose} onPass={onPass} />
+      );
     case "chase":
       return <ChaseModal piece={modal.piece} onClose={onClose} />;
     case "handoff":

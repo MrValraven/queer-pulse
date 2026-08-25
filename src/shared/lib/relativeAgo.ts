@@ -39,7 +39,8 @@ export function relativeAgo(
   if (Number.isNaN(then)) return t(keys.unknown);
   const delta = Math.max(0, now - then);
   if (delta < MINUTE) return t(keys.justNow);
-  if (delta < HOUR) return fmt.relativeTime(-Math.floor(delta / MINUTE), "minute");
+  if (delta < HOUR)
+    return fmt.relativeTime(-Math.floor(delta / MINUTE), "minute");
   if (delta < DAY) return fmt.relativeTime(-Math.floor(delta / HOUR), "hour");
   return fmt.relativeTime(-Math.floor(delta / DAY), "day");
 }

@@ -16,7 +16,8 @@ interface Options {
 
 function countsOf(clusters: HousingCluster[]): Record<string, number> {
   const counts: Record<string, number> = {};
-  for (const cluster of clusters) counts[cluster.name] = cluster.listings.length;
+  for (const cluster of clusters)
+    counts[cluster.name] = cluster.listings.length;
   return counts;
 }
 
@@ -30,7 +31,11 @@ function boundsOf(
   return freguesiaBounds(names) ?? GREATER_LISBON_BOUNDS;
 }
 
-export function useHousingNeighbourhoodMap({ clusters, selected, onSelect }: Options) {
+export function useHousingNeighbourhoodMap({
+  clusters,
+  selected,
+  onSelect,
+}: Options) {
   const overlayRef = useRef<FreguesiaOverlay | null>(null);
 
   const clustersRef = useRef(clusters);

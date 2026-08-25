@@ -365,225 +365,213 @@ async function renderRouteLive(path: string) {
 }
 
 describe("request budget (live mode)", () => {
-  it(
-    "/feed fires exactly its known request budget — no new eager provider slips in unnoticed",
-    async () => {
-      registerSessionHandlers();
-      registerAppWideHandlers();
-      // FeedPage's own data, all feed-specific (none fires on the other routes
-      // below): the feed itself (`/feed`), the viewer's cross-community
-      // membership map (`/me/communities` via `useMyCommunities()` in
-      // `useFeedPage`), and the sidebar's upcoming-events rail (`/events` via
-      // `useEvents({ filter: "upcoming" })`).
-      server.use(
-        http.get(`${API_V1}/feed`, () => HttpResponse.json([])),
-        http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
-        http.get(`${API_V1}/events`, () => HttpResponse.json([])),
-      );
+  it("/feed fires exactly its known request budget — no new eager provider slips in unnoticed", async () => {
+    registerSessionHandlers();
+    registerAppWideHandlers();
+    // FeedPage's own data, all feed-specific (none fires on the other routes
+    // below): the feed itself (`/feed`), the viewer's cross-community
+    // membership map (`/me/communities` via `useMyCommunities()` in
+    // `useFeedPage`), and the sidebar's upcoming-events rail (`/events` via
+    // `useEvents({ filter: "upcoming" })`).
+    server.use(
+      http.get(`${API_V1}/feed`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/events`, () => HttpResponse.json([])),
+    );
 
-      const seen = await renderRouteLive("/feed");
+    const seen = await renderRouteLive("/feed");
 
-      // Exact equality is load-bearing (see file header): a `toContain` or
-      // subset check would let a new eager provider add a request without this
-      // test ever noticing — precisely the regression this guards against.
-      //
-      // `/blocks`, `/mutes` and `/profiles/${SLUG}` are CONFIRMED ABSENT:
-      // `useSessionBootstrapSettled` holds `blocksQuery`/`mutesQuery`/the
-      // own-profile query at `enabled: false` until the bootstrap `queryFn` —
-      // which seeds those exact cache keys before it returns — has resolved,
-      // so by the time `enabled` flips true the seeded data is ~0ms old, well
-      // under this client's `staleTime: 30_000`; `shouldFetchOptionally`'s
-      // `isStaleByTime` check is then false and no fetch is dispatched.
-      //
-      // `/listings/mine` is absent: DirectoryListingsProvider now holds only
-      // the optimistic overlay, and `useDirectoryListings` (the composition
-      // hook in features/marketing/listBusiness/api/) owns the query. Its sole
-      // reader is PlacesSection on /account/profile — see that test below.
-      expect(seen).toEqual(
-        [
-          ...SESSION_REQUEST_BUDGET,
-          ...APP_WIDE_REQUEST_BUDGET,
-          "/v1/events",
-          "/v1/feed",
-          "/v1/me/communities",
-        ].sort(),
-      );
-    },
-    15000,
-  );
+    // Exact equality is load-bearing (see file header): a `toContain` or
+    // subset check would let a new eager provider add a request without this
+    // test ever noticing — precisely the regression this guards against.
+    //
+    // `/blocks`, `/mutes` and `/profiles/${SLUG}` are CONFIRMED ABSENT:
+    // `useSessionBootstrapSettled` holds `blocksQuery`/`mutesQuery`/the
+    // own-profile query at `enabled: false` until the bootstrap `queryFn` —
+    // which seeds those exact cache keys before it returns — has resolved,
+    // so by the time `enabled` flips true the seeded data is ~0ms old, well
+    // under this client's `staleTime: 30_000`; `shouldFetchOptionally`'s
+    // `isStaleByTime` check is then false and no fetch is dispatched.
+    //
+    // `/listings/mine` is absent: DirectoryListingsProvider now holds only
+    // the optimistic overlay, and `useDirectoryListings` (the composition
+    // hook in features/marketing/listBusiness/api/) owns the query. Its sole
+    // reader is PlacesSection on /account/profile — see that test below.
+    expect(seen).toEqual(
+      [
+        ...SESSION_REQUEST_BUDGET,
+        ...APP_WIDE_REQUEST_BUDGET,
+        "/v1/events",
+        "/v1/feed",
+        "/v1/me/communities",
+      ].sort(),
+    );
+  }, 15000);
 
-  it(
-    "/local/directory/list does not fire /listings/mine — ListBusinessPage is a write-only consumer",
-    async () => {
-      registerSessionHandlers();
-      registerAppWideHandlers();
-      // The wizard's SavedDraftsPanel now reads the caller's in-progress drafts
-      // (`GET /listing-drafts`, cross-device drafts) on mount — a resume list,
-      // not the `/listings/mine` published-listings read this test guards against.
-      server.use(
-        http.get(`${API_V1}/listing-drafts`, () => HttpResponse.json([])),
-      );
-      const seen = await renderRouteLive("/local/directory/list");
+  it("/local/directory/list does not fire /listings/mine — ListBusinessPage is a write-only consumer", async () => {
+    registerSessionHandlers();
+    registerAppWideHandlers();
+    // The wizard's SavedDraftsPanel now reads the caller's in-progress drafts
+    // (`GET /listing-drafts`, cross-device drafts) on mount — a resume list,
+    // not the `/listings/mine` published-listings read this test guards against.
+    server.use(
+      http.get(`${API_V1}/listing-drafts`, () => HttpResponse.json([])),
+    );
+    const seen = await renderRouteLive("/local/directory/list");
 
-      // The load-bearing assertion is the ABSENCE of /listings/mine.
-      // ListBusinessPage calls `useDirectoryListingsActions` (overlay +
-      // mutators, no query subscription — confirmed by reading
-      // ListBusinessPage.tsx and grepping every file under
-      // features/marketing/listBusiness/ for a `useDirectoryListings` or
-      // `useMyListings` call: only the actions hook is imported). If someone
-      // "simplifies" it back to `useDirectoryListings`, nothing visibly
-      // breaks — the page still works, the request just comes back. This is
-      // the only test that catches it.
-      expect(seen).not.toContain("/v1/listings/mine");
+    // The load-bearing assertion is the ABSENCE of /listings/mine.
+    // ListBusinessPage calls `useDirectoryListingsActions` (overlay +
+    // mutators, no query subscription — confirmed by reading
+    // ListBusinessPage.tsx and grepping every file under
+    // features/marketing/listBusiness/ for a `useDirectoryListings` or
+    // `useMyListings` call: only the actions hook is imported). If someone
+    // "simplifies" it back to `useDirectoryListings`, nothing visibly
+    // breaks — the page still works, the request just comes back. This is
+    // the only test that catches it.
+    expect(seen).not.toContain("/v1/listings/mine");
 
-      // OBSERVED (see file header): ListBusinessPage is a PageShell marketing
-      // wizard. Its one route-level read is the SavedDraftsPanel's
-      // `/v1/listing-drafts` resume list; everything else comes from the shared
-      // session layer alone — nothing else route-specific, and nothing app-wide
-      // (those reads are App-chrome-level, not mounted by this harness — see the
-      // budget constants). That keeps it a clean guard that no *listings* read
-      // (esp. `/v1/listings/mine`) has crept into the wizard. In particular the
-      // profile-page reads (`/v1/communities`, `/v1/connections/accepted`,
-      // `/v1/directory/by-member/:slug`, `/v1/me/communities`) do NOT fire here:
-      // they are subscribed by member-profile components, not by this page.
-      expect(seen).toEqual(
-        [
-          ...SESSION_REQUEST_BUDGET,
-          ...APP_WIDE_REQUEST_BUDGET,
-          "/v1/listing-drafts",
-        ].sort(),
-      );
-    },
-    15000,
-  );
+    // OBSERVED (see file header): ListBusinessPage is a PageShell marketing
+    // wizard. Its one route-level read is the SavedDraftsPanel's
+    // `/v1/listing-drafts` resume list; everything else comes from the shared
+    // session layer alone — nothing else route-specific, and nothing app-wide
+    // (those reads are App-chrome-level, not mounted by this harness — see the
+    // budget constants). That keeps it a clean guard that no *listings* read
+    // (esp. `/v1/listings/mine`) has crept into the wizard. In particular the
+    // profile-page reads (`/v1/communities`, `/v1/connections/accepted`,
+    // `/v1/directory/by-member/:slug`, `/v1/me/communities`) do NOT fire here:
+    // they are subscribed by member-profile components, not by this page.
+    expect(seen).toEqual(
+      [
+        ...SESSION_REQUEST_BUDGET,
+        ...APP_WIDE_REQUEST_BUDGET,
+        "/v1/listing-drafts",
+      ].sort(),
+    );
+  }, 15000);
 
-  it(
-    "/account/profile fires /listings/mine — PlacesSection is the reader that owns it",
-    async () => {
-      registerSessionHandlers();
-      registerAppWideHandlers();
-      server.use(
-        // ProfilePage self-view reads subscribed by the profile's own sections
-        // (each traced in the assertion comment below): the viewer's
-        // communities + membership map (ProfileCommunitiesSection), accepted
-        // connections (member-contact affordance), and the owner's directory
-        // listings.
-        http.get(`${API_V1}/communities`, () => HttpResponse.json([])),
-        http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
-        http.get(`${API_V1}/connections/accepted`, () => HttpResponse.json([])),
-        http.get(`${API_V1}/directory/by-member/${SLUG}`, () =>
-          HttpResponse.json([]),
-        ),
-        http.get(`${API_V1}/listings/mine`, () => HttpResponse.json(EMPTY_PAGE)),
-        // PlacesSection also mounts CoManagerInvitesInbox, which asks whether
-        // anybody has invited this member to help run their listing.
-        http.get(`${API_V1}/listings/co-manager-invites`, () =>
-          HttpResponse.json([]),
-        ),
-        // The following four are route-scoped composition-hook reads
-        // PlacesSection's siblings pull in on the self view of /account/profile
-        // — see the comment on the assertion below for how each was found.
-        http.get(`${API_V1}/me/public-profile`, () =>
-          HttpResponse.json({ enabled: false }),
-        ),
-        http.get(`${API_V1}/me/vouches/given`, () => HttpResponse.json([])),
-        http.get(`${API_V1}/profiles/${SLUG}/subprofiles`, () =>
-          HttpResponse.json([]),
-        ),
-        http.get(`${API_V1}/me/recognition`, () =>
-          HttpResponse.json({
-            level: {
-              level: 1,
-              name: "Newcomer",
-              xp: 0,
-              xpMax: 100,
-              percent: 0,
-              xpToNext: 100,
-              nextName: "Regular",
-            },
-            levelLadder: [],
-            badges: { earnedCount: 0, discoverCount: 0, earned: [], locked: [] },
-            perks: { availableCount: 0, groups: [], ladder: [] },
-          }),
-        ),
-        http.get(`${API_V1}/members/${SLUG}/vouchers`, () =>
-          HttpResponse.json({ vouchers: [] }),
-        ),
-        // ProfileHero (src/features/members/ProfileSections.tsx) renders
-        // MemberStaffBadge, which reads useStaffRole()'s useStaffMap() →
-        // GET /platform/staff (enabled when logged in). Response shape is
-        // PlatformStaffRowDTO[]; an empty array means the mocked member
-        // holds no staff role, which is all this test needs.
-        http.get(`${API_V1}/platform/staff`, () => HttpResponse.json([])),
-      );
+  it("/account/profile fires /listings/mine — PlacesSection is the reader that owns it", async () => {
+    registerSessionHandlers();
+    registerAppWideHandlers();
+    server.use(
+      // ProfilePage self-view reads subscribed by the profile's own sections
+      // (each traced in the assertion comment below): the viewer's
+      // communities + membership map (ProfileCommunitiesSection), accepted
+      // connections (member-contact affordance), and the owner's directory
+      // listings.
+      http.get(`${API_V1}/communities`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/me/communities`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/connections/accepted`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/directory/by-member/${SLUG}`, () =>
+        HttpResponse.json([]),
+      ),
+      http.get(`${API_V1}/listings/mine`, () => HttpResponse.json(EMPTY_PAGE)),
+      // PlacesSection also mounts CoManagerInvitesInbox, which asks whether
+      // anybody has invited this member to help run their listing.
+      http.get(`${API_V1}/listings/co-manager-invites`, () =>
+        HttpResponse.json([]),
+      ),
+      // The following four are route-scoped composition-hook reads
+      // PlacesSection's siblings pull in on the self view of /account/profile
+      // — see the comment on the assertion below for how each was found.
+      http.get(`${API_V1}/me/public-profile`, () =>
+        HttpResponse.json({ enabled: false }),
+      ),
+      http.get(`${API_V1}/me/vouches/given`, () => HttpResponse.json([])),
+      http.get(`${API_V1}/profiles/${SLUG}/subprofiles`, () =>
+        HttpResponse.json([]),
+      ),
+      http.get(`${API_V1}/me/recognition`, () =>
+        HttpResponse.json({
+          level: {
+            level: 1,
+            name: "Newcomer",
+            xp: 0,
+            xpMax: 100,
+            percent: 0,
+            xpToNext: 100,
+            nextName: "Regular",
+          },
+          levelLadder: [],
+          badges: { earnedCount: 0, discoverCount: 0, earned: [], locked: [] },
+          perks: { availableCount: 0, groups: [], ladder: [] },
+        }),
+      ),
+      http.get(`${API_V1}/members/${SLUG}/vouchers`, () =>
+        HttpResponse.json({ vouchers: [] }),
+      ),
+      // ProfileHero (src/features/members/ProfileSections.tsx) renders
+      // MemberStaffBadge, which reads useStaffRole()'s useStaffMap() →
+      // GET /platform/staff (enabled when logged in). Response shape is
+      // PlatformStaffRowDTO[]; an empty array means the mocked member
+      // holds no staff role, which is all this test needs.
+      http.get(`${API_V1}/platform/staff`, () => HttpResponse.json([])),
+    );
 
-      const seen = await renderRouteLive("/account/profile");
+    const seen = await renderRouteLive("/account/profile");
 
-      // The positive half of the phase-5 guard. /listings/mine is EXPECTED
-      // here: ProfilePage mounts PlacesSection, which calls the composition
-      // hook, which subscribes useMyListings. A guard that only asserted the
-      // request's absence on other routes would be satisfied by a hook that
-      // never fetches at all.
-      expect(seen).toContain("/v1/listings/mine");
+    // The positive half of the phase-5 guard. /listings/mine is EXPECTED
+    // here: ProfilePage mounts PlacesSection, which calls the composition
+    // hook, which subscribes useMyListings. A guard that only asserted the
+    // request's absence on other routes would be satisfied by a hook that
+    // never fetches at all.
+    expect(seen).toContain("/v1/listings/mine");
 
-      // OBSERVED (see file header). Beyond the shared session + app-wide +
-      // PageShell chrome layers, ProfilePage's own self-view render tree pulls
-      // in these route-specific reads, each traced to its component:
-      //   - ProfileHero → PublicProfileBadge (isSelf) →
-      //     usePublicProfileEligibility() → GET /me/public-eligibility. The
-      //     badge reads eligibility only, so it no longer subscribes to
-      //     GET /me/public-profile: the stored preference is fetched when the
-      //     modal that shows it opens.
-      //   - SubprofileShowcase → SubprofileAffiliations → useEndorsers() →
-      //     GET /subprofiles/{id}/endorsements for the rendered persona.
-      //   - ProfileHero/HeroVouchRow → useVouch() → useGivenVouches() →
-      //     GET /me/vouches/given
-      //   - ProfileSubprofilesSection → useProfileSubprofiles(selfSlug) →
-      //     GET /profiles/{slug}/subprofiles  (+ the app-wide /subprofiles/mine
-      //     served by the shared subprofiles barrel handler)
-      //   - ProfileHero's HeroRecognition chips (isSelf only) →
-      //     useRecognition() → GET /me/recognition (no slug passed, so the
-      //     owner's own view correctly hits the owner-only route, which also
-      //     triggers the backend's recompute-on-read).
-      //   - HeroVouchRow → useVouchers(profile.slug) →
-      //     GET /members/{slug}/vouchers (a THIRD, distinct vouch-related
-      //     endpoint from /me/vouches/given and vouch mutations — do not
-      //     conflate the three)
-      //   - ProfileHero → MemberStaffBadge → useStaffRole()/useStaffMap() →
-      //     GET /platform/staff (self-view staff badge, confirmed intended)
-      //   - PlacesSection → useDirectoryListings() → GET /listings/mine
-      //   - PlacesSection → CoManagerInvitesInbox → useCoManagerInvites() →
-      //     GET /listings/co-manager-invites (self view only: the invitations
-      //     waiting on this member to help run somebody else's listing,
-      //     answered where an accepted one lands)
-      expect(seen).toEqual(
-        [
-          ...SESSION_REQUEST_BUDGET,
-          ...APP_WIDE_REQUEST_BUDGET,
-          "/v1/communities",
-          // ProfileNetworkSection → useProfileNetwork(slug) →
-          // useConnectionsList("all") → GET /connections?tab=all&page=1.
-          "/v1/connections",
-          // ProfileHero → PublicProfileBadge (isSelf) →
-          // usePublicProfileEligibility(), the ONLY thing that turns this
-          // fetch on. Its absence from every other route's budget is the
-          // assertion that the provider no longer fetches app-wide.
-          "/v1/me/public-eligibility",
-          "/v1/connections/accepted",
-          `/v1/directory/by-member/${SLUG}`,
-          "/v1/listings/co-manager-invites",
-          "/v1/listings/mine",
-          "/v1/me/communities",
-          "/v1/me/recognition",
-          "/v1/me/vouches/given",
-          `/v1/members/${SLUG}/vouchers`,
-          "/v1/platform/staff",
-          `/v1/profiles/${SLUG}/subprofiles`,
-          "/v1/subprofiles/mine",
-          "/v1/subprofiles/sp-tiago-draft/endorsements",
-        ].sort(),
-      );
-    },
-    15000,
-  );
+    // OBSERVED (see file header). Beyond the shared session + app-wide +
+    // PageShell chrome layers, ProfilePage's own self-view render tree pulls
+    // in these route-specific reads, each traced to its component:
+    //   - ProfileHero → PublicProfileBadge (isSelf) →
+    //     usePublicProfileEligibility() → GET /me/public-eligibility. The
+    //     badge reads eligibility only, so it no longer subscribes to
+    //     GET /me/public-profile: the stored preference is fetched when the
+    //     modal that shows it opens.
+    //   - SubprofileShowcase → SubprofileAffiliations → useEndorsers() →
+    //     GET /subprofiles/{id}/endorsements for the rendered persona.
+    //   - ProfileHero/HeroVouchRow → useVouch() → useGivenVouches() →
+    //     GET /me/vouches/given
+    //   - ProfileSubprofilesSection → useProfileSubprofiles(selfSlug) →
+    //     GET /profiles/{slug}/subprofiles  (+ the app-wide /subprofiles/mine
+    //     served by the shared subprofiles barrel handler)
+    //   - ProfileHero's HeroRecognition chips (isSelf only) →
+    //     useRecognition() → GET /me/recognition (no slug passed, so the
+    //     owner's own view correctly hits the owner-only route, which also
+    //     triggers the backend's recompute-on-read).
+    //   - HeroVouchRow → useVouchers(profile.slug) →
+    //     GET /members/{slug}/vouchers (a THIRD, distinct vouch-related
+    //     endpoint from /me/vouches/given and vouch mutations — do not
+    //     conflate the three)
+    //   - ProfileHero → MemberStaffBadge → useStaffRole()/useStaffMap() →
+    //     GET /platform/staff (self-view staff badge, confirmed intended)
+    //   - PlacesSection → useDirectoryListings() → GET /listings/mine
+    //   - PlacesSection → CoManagerInvitesInbox → useCoManagerInvites() →
+    //     GET /listings/co-manager-invites (self view only: the invitations
+    //     waiting on this member to help run somebody else's listing,
+    //     answered where an accepted one lands)
+    expect(seen).toEqual(
+      [
+        ...SESSION_REQUEST_BUDGET,
+        ...APP_WIDE_REQUEST_BUDGET,
+        "/v1/communities",
+        // ProfileNetworkSection → useProfileNetwork(slug) →
+        // useConnectionsList("all") → GET /connections?tab=all&page=1.
+        "/v1/connections",
+        // ProfileHero → PublicProfileBadge (isSelf) →
+        // usePublicProfileEligibility(), the ONLY thing that turns this
+        // fetch on. Its absence from every other route's budget is the
+        // assertion that the provider no longer fetches app-wide.
+        "/v1/me/public-eligibility",
+        "/v1/connections/accepted",
+        `/v1/directory/by-member/${SLUG}`,
+        "/v1/listings/co-manager-invites",
+        "/v1/listings/mine",
+        "/v1/me/communities",
+        "/v1/me/recognition",
+        "/v1/me/vouches/given",
+        `/v1/members/${SLUG}/vouchers`,
+        "/v1/platform/staff",
+        `/v1/profiles/${SLUG}/subprofiles`,
+        "/v1/subprofiles/mine",
+        "/v1/subprofiles/sp-tiago-draft/endorsements",
+      ].sort(),
+    );
+  }, 15000);
 });

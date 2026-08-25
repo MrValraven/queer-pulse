@@ -31,7 +31,9 @@ export function useCreateDeck() {
       return { id: deck.id, slug: deck.slug };
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["magazine-admin-decks"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-admin-decks"],
+      });
     },
   });
 }
@@ -52,7 +54,9 @@ export function useUpdateDeck() {
       return { id: deck.id, slug: deck.slug };
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["magazine-admin-decks"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-admin-decks"],
+      });
       void queryClient.invalidateQueries({ queryKey: ["magazine-deck"] });
     },
   });
@@ -69,7 +73,9 @@ export function useDeleteDeck() {
       await deleteDeck(id);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["magazine-admin-decks"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-admin-decks"],
+      });
       void queryClient.invalidateQueries({ queryKey: ["magazine-deck"] });
     },
   });
@@ -87,11 +93,14 @@ export function useConvertDeckToArticle() {
   return useMutation<ConvertDeckToArticleDto, Error, string>({
     meta: { silentError: true },
     mutationFn: async (id) => {
-      if (demoMode) return { pieceId: "demo", articleId: "demo", droppedSlideKinds: [] };
+      if (demoMode)
+        return { pieceId: "demo", articleId: "demo", droppedSlideKinds: [] };
       return convertDeckToArticle(id);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["magazine-admin-decks"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["magazine-admin-decks"],
+      });
       void queryClient.invalidateQueries({ queryKey: ["magazine-deck"] });
     },
   });

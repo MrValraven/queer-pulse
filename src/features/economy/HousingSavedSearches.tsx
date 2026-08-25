@@ -35,7 +35,9 @@ export function HousingSavedSearches({
 
   return (
     <div className={s.savedWrap}>
-      <div className={s.savedHead}>{t("economy:housing.savedSearches.title")}</div>
+      <div className={s.savedHead}>
+        {t("economy:housing.savedSearches.title")}
+      </div>
       <div className={s.savedRow}>
         {searches.map((search) => (
           <span key={search.id} className={s.savedChip}>

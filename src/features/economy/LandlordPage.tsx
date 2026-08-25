@@ -49,8 +49,7 @@ export function LandlordPage() {
       <PageShell>
         <div className={s.page}>
           <Link to={routes.housing} className={s.back}>
-            <FiArrowLeft aria-hidden />{" "}
-            {t("economy:housingListing.back")}
+            <FiArrowLeft aria-hidden /> {t("economy:housingListing.back")}
           </Link>
           <LandlordSkeleton />
         </div>
@@ -90,8 +89,7 @@ export function LandlordPage() {
     <PageShell>
       <div className={s.page}>
         <Link to={routes.housing} className={s.back}>
-          <FiArrowLeft aria-hidden />{" "}
-            {t("economy:housingListing.back")}
+          <FiArrowLeft aria-hidden /> {t("economy:housingListing.back")}
         </Link>
 
         <FadeIn>
@@ -142,7 +140,9 @@ export function LandlordPage() {
           eyebrow={t("economy:landlordPage.intro.eyebrow")}
           title={t("economy:landlordPage.intro.title")}
           em={t("economy:landlordPage.intro.em")}
-          subtitle={t("economy:landlordPage.intro.sub", { name: landlord.name })}
+          subtitle={t("economy:landlordPage.intro.sub", {
+            name: landlord.name,
+          })}
           preset={t("economy:landlordPage.intro.preset", { firstName })}
           successTitle={t("economy:landlordPage.intro.successTitle")}
           successEm={t("economy:landlordPage.intro.successEm")}

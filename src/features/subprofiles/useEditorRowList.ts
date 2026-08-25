@@ -19,7 +19,9 @@ export function useEditorRowList<Row extends { _uid: string }>(
   const atMax = rows.length >= max;
 
   function patch(uid: string, patchValue: Partial<Row>) {
-    setRows(rows.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)));
+    setRows(
+      rows.map((row) => (row._uid === uid ? { ...row, ...patchValue } : row)),
+    );
   }
   function remove(uid: string) {
     setRows(rows.filter((row) => row._uid !== uid));

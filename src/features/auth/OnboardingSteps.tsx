@@ -185,7 +185,9 @@ export function StepNorms({ stepLabel, onNext, onBack }: StepProps) {
         <label htmlFor="ob-agree" className={styles.agreeLabel}>
           <Translation
             i18nKey="auth:onboarding.stepNorms.agree"
-            components={{ guidelines: <GuidelinesLink onRead={() => setAgreed(true)} /> }}
+            components={{
+              guidelines: <GuidelinesLink onRead={() => setAgreed(true)} />,
+            }}
           />
         </label>
       </div>
@@ -302,7 +304,10 @@ export function StepDone({
       <div className={styles.quickStart}>
         {QUICK_STARTS.map((qs) => (
           <Link key={qs.to} to={qs.to} className={styles.qsCard}>
-            <span className={styles.qsIcon} style={{ background: qs.iconBackground }}>
+            <span
+              className={styles.qsIcon}
+              style={{ background: qs.iconBackground }}
+            >
               <qs.icon />
             </span>
             <div className={styles.qsBody}>

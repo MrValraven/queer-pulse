@@ -90,14 +90,16 @@ export const forum: Catalog = {
   // ── ComposeThreadModal · tags field ─────────────────────────────────────
   "compose.tagsFieldLabel": "Tags",
   "compose.tagsPlaceholder": "Add a tag and press Enter",
-  "compose.tagsHint": "Up to {max} tags. Keep them simple, like #housing or #health.",
+  "compose.tagsHint":
+    "Up to {max} tags. Keep them simple, like #housing or #health.",
   "compose.removeTagAria": "Remove tag {tag}",
 
   // ── Forum search ────────────────────────────────────────────────────────
   "search.placeholder": "Search the forum…",
   "search.ariaLabel": "Search the forum",
   "search.clearAria": "Clear search",
-  "search.hint": "Searches thread titles, not the text inside posts and replies.",
+  "search.hint":
+    "Searches thread titles, not the text inside posts and replies.",
 
   // ── ForumThreadList ─────────────────────────────────────────────────────
   "threadList.top": "Top",
@@ -293,6 +295,7 @@ export const forum: Catalog = {
   "toast.threadUnpinned": "Thread unpinned.",
   "toast.threadMarkedOfficial": "Posted as QueerPulse Official.",
   "toast.threadUnmarkedOfficial": "Reverted to the original author.",
-  "toast.pinCapReached": "Only 3 threads can be pinned at once. Unpin one first.",
+  "toast.pinCapReached":
+    "Only 3 threads can be pinned at once. Unpin one first.",
   "toast.error": "Something went wrong. Try again in a moment.",
 };

@@ -345,10 +345,8 @@ export const unrsvpEvent = (slug: string, scope?: SeriesScope) =>
 
 /** PATCH /events/:slug/rsvp/details — the caller's own RSVP ("Anything we
  *  should know?"). 404s when the caller has no active RSVP to the event. */
-export const updateRsvpDetails = (
-  slug: string,
-  dto: UpdateRsvpDetailsDto,
-) => apiPatch<RsvpDetailsDTO>(`/events/${slug}/rsvp/details`, dto);
+export const updateRsvpDetails = (slug: string, dto: UpdateRsvpDetailsDto) =>
+  apiPatch<RsvpDetailsDTO>(`/events/${slug}/rsvp/details`, dto);
 
 /** POST /events/:slug/bookmark — save the event (idempotent). */
 export const bookmarkEvent = (slug: string) =>
@@ -530,4 +528,3 @@ export const respondCohostInvite = (id: string, action: "accept" | "decline") =>
     `/event-cohost-invites/${id}`,
     { action },
   );
-

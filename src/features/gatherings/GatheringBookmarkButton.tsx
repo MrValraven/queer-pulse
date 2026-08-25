@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiBookmark } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -28,10 +28,16 @@ export function GatheringBookmarkButton({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const toggle = useToggleEventBookmark(slug, param);
+  const [prevBookmarked, setPrevBookmarked] = useState(bookmarked);
   const [saved, setSaved] = useState(bookmarked);
 
   // Re-sync when a live refetch resolves a new server truth for this event.
-  useEffect(() => setSaved(bookmarked), [bookmarked]);
+  // Adjusted during render (not an effect) so it lands in the same commit
+  // instead of a follow-up render.
+  if (prevBookmarked !== bookmarked) {
+    setPrevBookmarked(bookmarked);
+    setSaved(bookmarked);
+  }
 
   const handleClick = () => {
     const next = !saved;
@@ -39,7 +45,11 @@ export function GatheringBookmarkButton({
     toggle.mutate(next, {
       onSuccess: () =>
         showToast(
-          t(next ? "myevents:bookmark.savedToast" : "myevents:bookmark.removedToast"),
+          t(
+            next
+              ? "myevents:bookmark.savedToast"
+              : "myevents:bookmark.removedToast",
+          ),
           "success",
         ),
       onError: () => setSaved(!next),

@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { getReaderComments, type ReaderCommentsPage } from "./readerComments.api";
+import {
+  getReaderComments,
+  type ReaderCommentsPage,
+} from "./readerComments.api";
 import { DEMO_READER_COMMENTS } from "./readerComments.data";
 
 /** Shared by `useReaderComments` and `useReaderCommentMutations` so the

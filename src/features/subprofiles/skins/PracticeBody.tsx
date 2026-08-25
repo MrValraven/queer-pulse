@@ -5,7 +5,11 @@ import { SubprofileSections } from "../SubprofileSections";
 import { SubprofileSpotlight } from "../SubprofileSpotlight";
 import { SubprofileAffiliations } from "../SubprofileAffiliations";
 import { useEndorsers } from "../api/useEndorsers";
-import { PracticePractical, PracticeFirstSession, PracticeAccess } from "./PracticeBlocks";
+import {
+  PracticePractical,
+  PracticeFirstSession,
+  PracticeAccess,
+} from "./PracticeBlocks";
 import {
   PracticeApproach,
   PracticeTraining,
@@ -15,7 +19,10 @@ import {
   PracticeVouches,
 } from "./PracticeTherapistBlocks";
 import type { PersonaAction, PersonaViewMode } from "../personaSkinRender";
-import type { PublicSubprofileView, SubprofileItemView } from "../api/subprofiles.adapters";
+import type {
+  PublicSubprofileView,
+  SubprofileItemView,
+} from "../api/subprofiles.adapters";
 
 /**
  * The practice skin's (therapist) rich two-column `.wrap` body — branched out
@@ -75,11 +82,15 @@ export function PracticeBody({
   const [primaryName, secondaryName] = KIND_SECTIONS[data.kind];
   const primary = {
     ...data,
-    sections: data.sections.filter((section) => section.section === primaryName),
+    sections: data.sections.filter(
+      (section) => section.section === primaryName,
+    ),
   };
   const secondary = {
     ...data,
-    sections: data.sections.filter((section) => section.section === secondaryName),
+    sections: data.sections.filter(
+      (section) => section.section === secondaryName,
+    ),
   };
   // `gallery`/`links` are universal — every kind, including practice, can
   // carry them (e.g. the Sofia Neves demo persona has real `gallery`
@@ -89,7 +100,8 @@ export function PracticeBody({
   const rest = {
     ...data,
     sections: data.sections.filter(
-      (section) => section.section !== primaryName && section.section !== secondaryName,
+      (section) =>
+        section.section !== primaryName && section.section !== secondaryName,
     ),
   };
   const sectionProps = {
@@ -137,7 +149,12 @@ export function PracticeBody({
         </aside>
       </div>
 
-      <SubprofileAffiliations persona={data} skin="practice" mode={mode} onAction={onAction} />
+      <SubprofileAffiliations
+        persona={data}
+        skin="practice"
+        mode={mode}
+        onAction={onAction}
+      />
     </>
   );
 }

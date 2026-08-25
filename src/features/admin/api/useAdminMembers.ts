@@ -95,11 +95,12 @@ export function useAdminMembers(filter: "all" | "verified" | "new") {
           pageSize: ACTIVE_MEMBER_COUNT,
         };
       }
-      const listDto = await getAdminMembers({ page: pageParam as number, filter });
+      const listDto = await getAdminMembers({
+        page: pageParam as number,
+        filter,
+      });
       return {
-        items: listDto.items.map((cardDto) =>
-          cardDtoToMember(cardDto, t, fmt),
-        ),
+        items: listDto.items.map((cardDto) => cardDtoToMember(cardDto, t, fmt)),
         total: listDto.total,
         page: listDto.page,
         pageSize: listDto.pageSize,

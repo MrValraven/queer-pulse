@@ -332,7 +332,12 @@ export const SEED: SeedPlace[] = [
   { name: "Clínica do Largo", cat: "health", hood: "Anjos", badge: "friendly" },
   { name: "Livraria Rosa", cat: "culture", hood: "Graça", badge: "owned" },
   { name: "Estúdio Marvila", cat: "design", hood: "Marvila", badge: "owned" },
-  { name: "Barbearia Lux", cat: "grooming", hood: "Arroios", badge: "friendly" },
+  {
+    name: "Barbearia Lux",
+    cat: "grooming",
+    hood: "Arroios",
+    badge: "friendly",
+  },
   {
     name: "Ginásio Corpo Livre",
     cat: "fitness",
@@ -612,7 +617,10 @@ function toMinutes(hourMinute: string): number {
 
 /** Two same-day intervals overlap? Overnight intervals are treated as reaching
  *  midnight for this check, which is enough to catch obvious editor mistakes. */
-function intervalsOverlap(first: HoursInterval, second: HoursInterval): boolean {
+function intervalsOverlap(
+  first: HoursInterval,
+  second: HoursInterval,
+): boolean {
   const span = (interval: HoursInterval): [number, number] => {
     const start = toMinutes(interval.from);
     const end = isOvernight(interval) ? 24 * 60 : toMinutes(interval.to);
@@ -641,7 +649,9 @@ export function dayHoursValid(day: DayHours): boolean {
 
 /** Every open day across the week is well-formed. */
 export function hoursValid(hours: Record<string, DayHours>): boolean {
-  return DAYS.every((day) => dayHoursValid(hours[day.id] ?? { open: false, intervals: [] }));
+  return DAYS.every((day) =>
+    dayHoursValid(hours[day.id] ?? { open: false, intervals: [] }),
+  );
 }
 
 /** At least one day is open somewhere in the week. */

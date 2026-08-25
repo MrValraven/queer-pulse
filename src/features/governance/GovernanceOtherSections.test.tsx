@@ -263,9 +263,7 @@ describe("RaiseSection dual-mode submit", () => {
         description: "Someone is following me across threads.",
       }),
     );
-    await waitFor(() =>
-      expect(showToast.mock.calls[0]![1]).toBe("success"),
-    );
+    await waitFor(() => expect(showToast.mock.calls[0]![1]).toBe("success"));
   });
 
   it("surfaces a failed live submit as an error, not a false confirmation", async () => {

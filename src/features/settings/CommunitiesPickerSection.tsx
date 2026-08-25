@@ -74,9 +74,8 @@ export function CommunitiesPickerSection({
     .map((slug) =>
       eligibleCommunities.find((communityRef) => communityRef.slug === slug),
     )
-    .filter(
-      (communityRef): communityRef is NonNullable<typeof communityRef> =>
-        Boolean(communityRef),
+    .filter((communityRef): communityRef is NonNullable<typeof communityRef> =>
+      Boolean(communityRef),
     );
   const remainingCommunityRefs = eligibleCommunities.filter(
     (communityRef) => !featuredSlugs.includes(communityRef.slug),

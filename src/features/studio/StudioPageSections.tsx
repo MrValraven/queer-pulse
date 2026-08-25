@@ -44,7 +44,7 @@ export function StudioHero() {
             width="100%"
             height="100%"
             radius={16}
-            placeholder="cover · Mariana Sol"
+            placeholder={`${t("studio:media.coverLabel")} · ${HERO_TRACK.artist}`}
             style={{ position: "absolute", inset: 0 }}
           />
         </div>
@@ -60,8 +60,16 @@ export function StudioHero() {
             <em>{HERO_TRACK.titleEm}</em>
           </h1>
           <div className={styles.by}>
-            by <strong>{HERO_TRACK.artist}</strong> · from{" "}
-            <em>{HERO_TRACK.album}</em> · {HERO_TRACK.year} · {HERO_TRACK.place}
+            <Translation
+              i18nKey="studio:room.hero.byFromLine"
+              components={{ strong: <strong />, em: <em /> }}
+              values={{
+                artist: HERO_TRACK.artist,
+                album: HERO_TRACK.album,
+                year: HERO_TRACK.year,
+                place: HERO_TRACK.place,
+              }}
+            />
           </div>
           <div className={styles.stats}>
             <span>
@@ -295,8 +303,7 @@ function StudioSideCol() {
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>
-          {t("studio:room.set.readPlanCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:room.set.readPlanCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
     </div>
@@ -317,8 +324,7 @@ export function StudioTracksSection() {
         </h2>
         <div className={styles.sub}>{t("studio:room.tracks.subtitle")}</div>
         <Link to={routes.studioAlbum} className={styles.all}>
-          {t("studio:room.tracks.allCta")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("studio:room.tracks.allCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
       <div className={styles.rowGrid}>
@@ -335,7 +341,7 @@ export function StudioTracksSection() {
                 width="100%"
                 height="100%"
                 radius={10}
-                placeholder="cover"
+                placeholder={t("studio:media.coverLabel")}
                 style={{ position: "absolute", inset: 0 }}
               />
               <span className={`${styles.tag} ${tagClass[track.tag]}`}>

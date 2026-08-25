@@ -64,16 +64,30 @@ export interface EditorRailGroup {
  * than the ring graphic itself, the task's explicitly-allowed lower-risk option
  * given the rail row's tight vertical space).
  */
-export function buildEditorRailGroups(subprofile: SubprofileView): EditorRailGroup[] {
+export function buildEditorRailGroups(
+  subprofile: SubprofileView,
+): EditorRailGroup[] {
   const readiness = estimateDraftReadiness(subprofile);
 
   return [
     {
       headingKey: "subprofiles:editorRail.thisSide",
       entries: [
-        { key: "identity", labelKey: "subprofiles:editorRail.identity", icon: FiUser },
-        { key: "presence", labelKey: "subprofiles:editorRail.presence", icon: FiImage },
-        { key: "address", labelKey: "subprofiles:editorRail.address", icon: FiGlobe },
+        {
+          key: "identity",
+          labelKey: "subprofiles:editorRail.identity",
+          icon: FiUser,
+        },
+        {
+          key: "presence",
+          labelKey: "subprofiles:editorRail.presence",
+          icon: FiImage,
+        },
+        {
+          key: "address",
+          labelKey: "subprofiles:editorRail.address",
+          icon: FiGlobe,
+        },
         // Only when this persona's derived skin has owner-editable SkinData
         // blocks (studio/workshop have none) — see `hasSkinBlocks`.
         ...(hasSkinBlocks(subprofile.kind)
@@ -114,7 +128,10 @@ export function buildEditorRailGroups(subprofile: SubprofileView): EditorRailGro
           key: "publish",
           labelKey: "subprofiles:editorRail.getItLive",
           icon: FiCheckCircle,
-          ring: { readyCount: readiness.readyCount, totalCount: readiness.totalCount },
+          ring: {
+            readyCount: readiness.readyCount,
+            totalCount: readiness.totalCount,
+          },
         },
       ],
     },

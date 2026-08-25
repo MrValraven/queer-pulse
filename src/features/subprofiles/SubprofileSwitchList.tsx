@@ -108,7 +108,9 @@ export function SubprofileSwitchList({
   // activation" pattern — there's no separate activate step here, picking a
   // row always previews it).
   function handleTablistKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    const currentIndex = visible.findIndex((persona) => persona.slug === activeSlug);
+    const currentIndex = visible.findIndex(
+      (persona) => persona.slug === activeSlug,
+    );
     if (currentIndex === -1) return;
 
     let nextIndex: number;

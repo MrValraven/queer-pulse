@@ -62,7 +62,9 @@ test("messaging actions: hovering a bubble opens the reaction picker", async ({
   // bar (React + More) renders on every bubble regardless of `message.id`, and
   // opening the reaction picker is pure local component state — so this slice
   // is deterministic in demo even though picking a reaction is a no-op here.
-  const ownBubble = page.getByText("Are you going to the book club on Saturday?");
+  const ownBubble = page.getByText(
+    "Are you going to the book club on Saturday?",
+  );
   await ownBubble.hover();
 
   // Only the hovered bubble's bar is revealed (CSS `.bubbleWrap:hover`), so of
@@ -77,66 +79,76 @@ test("messaging actions: hovering a bubble opens the reaction picker", async ({
   // The picker is a labelled toolbar of the six reaction emoji (ReactionPicker:
   // role="toolbar", aria-label "React to message"; each emoji button's
   // aria-label is its reaction key, e.g. "love").
-  const reactionPicker = page.getByRole("toolbar", { name: "React to message" });
+  const reactionPicker = page.getByRole("toolbar", {
+    name: "React to message",
+  });
   await expect(reactionPicker).toBeVisible();
-  await expect(reactionPicker.getByRole("button", { name: "love" })).toBeVisible();
+  await expect(
+    reactionPicker.getByRole("button", { name: "love" }),
+  ).toBeVisible();
 });
 
 // ── Blocked in demo (see the file header) — kept as executable intent ─────────
 
-test.fixme(
-  "messaging actions: replying to a message enters composer quote mode",
-  async ({ page }) => {
-    // BLOCKED IN DEMO: demo bubbles have no `message.id`, so the hover bar's
-    // "Reply" button is not rendered (MessageBubble passes `onReply: undefined`)
-    // and no other trigger (long-press/right-click/Enter/swipe) is enabled.
-    // With no way to arm a reply, `replyDraft` never sets and the composer's
-    // reply-preview banner never opens. This script is the intended flow for
-    // LIVE mode (or a demo seed with ids).
-    await openJordanConversation(page);
+test.fixme("messaging actions: replying to a message enters composer quote mode", async ({
+  page,
+}) => {
+  // BLOCKED IN DEMO: demo bubbles have no `message.id`, so the hover bar's
+  // "Reply" button is not rendered (MessageBubble passes `onReply: undefined`)
+  // and no other trigger (long-press/right-click/Enter/swipe) is enabled.
+  // With no way to arm a reply, `replyDraft` never sets and the composer's
+  // reply-preview banner never opens. This script is the intended flow for
+  // LIVE mode (or a demo seed with ids).
+  await openJordanConversation(page);
 
-    const receivedBubble = page.getByText("See you at the book club on Saturday");
-    await receivedBubble.hover();
-    await page.getByRole("button", { name: "Reply" }).and(page.locator(":visible")).click();
+  const receivedBubble = page.getByText("See you at the book club on Saturday");
+  await receivedBubble.hover();
+  await page
+    .getByRole("button", { name: "Reply" })
+    .and(page.locator(":visible"))
+    .click();
 
-    // Composer.tsx renders a reply-preview banner (quoted sender name + snippet)
-    // above the textarea once `replyDraft` is set.
-    const replyPreview = page.getByText(/See you at the book club on Saturday/);
-    await expect(replyPreview).toBeVisible();
+  // Composer.tsx renders a reply-preview banner (quoted sender name + snippet)
+  // above the textarea once `replyDraft` is set.
+  const replyPreview = page.getByText(/See you at the book club on Saturday/);
+  await expect(replyPreview).toBeVisible();
 
-    const composer = page.getByPlaceholder(/Message Jordan/i);
-    await composer.fill("Saturday works — see you there!");
-    await page.getByRole("button", { name: "Send" }).click();
+  const composer = page.getByPlaceholder(/Message Jordan/i);
+  await composer.fill("Saturday works — see you there!");
+  await page.getByRole("button", { name: "Send" }).click();
 
-    // The sent bubble carries its reply context (the quoted snippet) alongside
-    // the new text.
-    await expect(page.getByText("Saturday works — see you there!")).toBeVisible();
-    await expect(
-      page.getByText(/See you at the book club on Saturday/),
-    ).toBeVisible();
-  },
-);
+  // The sent bubble carries its reply context (the quoted snippet) alongside
+  // the new text.
+  await expect(page.getByText("Saturday works — see you there!")).toBeVisible();
+  await expect(
+    page.getByText(/See you at the book club on Saturday/),
+  ).toBeVisible();
+});
 
-test.fixme(
-  "messaging actions: picking a reaction renders a pill on the bubble",
-  async ({ page }) => {
-    // BLOCKED IN DEMO: the reaction picker OPENS (covered by the passing test
-    // above), but picking a reaction calls useMessageActions' toggle mutation,
-    // whose demo branch is an explicit no-op (`if (demoMode) return`) — there is
-    // no server id to mutate — so no reaction pill is ever appended. This script
-    // is the intended flow for LIVE mode (bubbles carry ids; the mutation runs).
-    await openJordanConversation(page);
+test.fixme("messaging actions: picking a reaction renders a pill on the bubble", async ({
+  page,
+}) => {
+  // BLOCKED IN DEMO: the reaction picker OPENS (covered by the passing test
+  // above), but picking a reaction calls useMessageActions' toggle mutation,
+  // whose demo branch is an explicit no-op (`if (demoMode) return`) — there is
+  // no server id to mutate — so no reaction pill is ever appended. This script
+  // is the intended flow for LIVE mode (bubbles carry ids; the mutation runs).
+  await openJordanConversation(page);
 
-    const ownBubble = page.getByText("Are you going to the book club on Saturday?");
-    await ownBubble.hover();
-    await page.getByRole("button", { name: "React" }).and(page.locator(":visible")).click();
-    await page
-      .getByRole("toolbar", { name: "React to message" })
-      .getByRole("button", { name: "love" })
-      .click();
+  const ownBubble = page.getByText(
+    "Are you going to the book club on Saturday?",
+  );
+  await ownBubble.hover();
+  await page
+    .getByRole("button", { name: "React" })
+    .and(page.locator(":visible"))
+    .click();
+  await page
+    .getByRole("toolbar", { name: "React to message" })
+    .getByRole("button", { name: "love" })
+    .click();
 
-    // BubbleReactionStrip renders the toggled reaction as a pill under the
-    // bubble (its aria-label carries the reaction key + count).
-    await expect(page.getByRole("button", { name: /love/i })).toBeVisible();
-  },
-);
+  // BubbleReactionStrip renders the toggled reaction as a pill under the
+  // bubble (its aria-label carries the reaction key + count).
+  await expect(page.getByRole("button", { name: /love/i })).toBeVisible();
+});

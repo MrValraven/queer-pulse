@@ -64,8 +64,10 @@ export const GOVERNANCE_ROLE_KEYS: Record<string, string> = {
  * switch.
  */
 export const GOVERNANCE_FIELD_KEYS: Record<string, string> = {
-  requiresSecondVouch: "communities.governanceLog.meta.field.requiresSecondVouch",
-  autoFreezeOnReports: "communities.governanceLog.meta.field.autoFreezeOnReports",
+  requiresSecondVouch:
+    "communities.governanceLog.meta.field.requiresSecondVouch",
+  autoFreezeOnReports:
+    "communities.governanceLog.meta.field.autoFreezeOnReports",
   isFeatured: "communities.governanceLog.meta.field.isFeatured",
   name: "communities.governanceLog.meta.field.name",
   purpose: "communities.governanceLog.meta.field.purpose",

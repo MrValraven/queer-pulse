@@ -49,9 +49,8 @@ export function useJobApplications(slug: string | undefined) {
     queryFn: async ({ signal }) => {
       if (!slug) return [];
       if (demoMode) {
-        const { DEMO_JOB_APPLICATIONS } = await import(
-          "../jobApplications.data"
-        );
+        const { DEMO_JOB_APPLICATIONS } =
+          await import("../jobApplications.data");
         return DEMO_JOB_APPLICATIONS;
       }
       const dtos = await getJobApplications(slug, signal);

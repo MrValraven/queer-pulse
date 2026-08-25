@@ -80,14 +80,18 @@ export function AdminGovernanceAuditFilters({
         label={t("admin:governance.audit.filterAction")}
         value={filters.action}
         options={actionOptions}
-        onChange={(v) => set("action", (v ?? "all") as AuditFilterState["action"])}
+        onChange={(v) =>
+          set("action", (v ?? "all") as AuditFilterState["action"])
+        }
       />
       <Select
         size="sm"
         label={t("admin:governance.audit.filterRange")}
         value={filters.range}
         options={rangeOptions}
-        onChange={(v) => set("range", (v ?? "all") as AuditFilterState["range"])}
+        onChange={(v) =>
+          set("range", (v ?? "all") as AuditFilterState["range"])
+        }
       />
 
       <Button

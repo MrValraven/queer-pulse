@@ -92,32 +92,30 @@ export function useMyHousingListingAction() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const key = economyKeys.myHousingListings(demoMode);
-  return useMutation<
-    MyHousingListingRow | null,
-    Error,
-    MyHousingListingAction
-  >({
-    meta: { silentError: true },
-    mutationFn: async (input) => {
-      if (demoMode) {
-        await new Promise((resolve) => setTimeout(resolve, 400));
-        const current = queryClient
-          .getQueryData<MyHousingListingRow[]>(key)
-          ?.find((row) => row.ref === input.ref);
-        return current ? applyDemoTransition(current, input) : null;
-      }
-      const dto = await runLiveAction(input);
-      return dtoToMyHousingListingRow(dto);
+  return useMutation<MyHousingListingRow | null, Error, MyHousingListingAction>(
+    {
+      meta: { silentError: true },
+      mutationFn: async (input) => {
+        if (demoMode) {
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          const current = queryClient
+            .getQueryData<MyHousingListingRow[]>(key)
+            ?.find((row) => row.ref === input.ref);
+          return current ? applyDemoTransition(current, input) : null;
+        }
+        const dto = await runLiveAction(input);
+        return dtoToMyHousingListingRow(dto);
+      },
+      onSuccess: (updated) => {
+        if (!updated) return;
+        queryClient.setQueryData<MyHousingListingRow[]>(key, (previous) =>
+          (previous ?? []).map((row) =>
+            row.ref === updated.ref ? updated : row,
+          ),
+        );
+      },
     },
-    onSuccess: (updated) => {
-      if (!updated) return;
-      queryClient.setQueryData<MyHousingListingRow[]>(key, (previous) =>
-        (previous ?? []).map((row) =>
-          row.ref === updated.ref ? updated : row,
-        ),
-      );
-    },
-  });
+  );
 }
 
 /** Delete one of the caller's own housing listings — irreversible, so the

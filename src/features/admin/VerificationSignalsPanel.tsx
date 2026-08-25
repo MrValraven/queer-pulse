@@ -55,12 +55,14 @@ export function VerificationSignalsPanel({
             days: signals.accountAgeDays,
           })}
         </AdminChip>
-        <AdminChip tone={hasPriorRejections ? "warn" : "plum"} dot={hasPriorRejections}>
+        <AdminChip
+          tone={hasPriorRejections ? "warn" : "plum"}
+          dot={hasPriorRejections}
+        >
           {hasPriorRejections
-            ? t(
-                "admin:verifications.requests.drawer.signals.priorRejections",
-                { count: signals.priorRejections },
-              )
+            ? t("admin:verifications.requests.drawer.signals.priorRejections", {
+                count: signals.priorRejections,
+              })
             : t(
                 "admin:verifications.requests.drawer.signals.noPriorRejections",
               )}

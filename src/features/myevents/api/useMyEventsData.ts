@@ -95,9 +95,8 @@ export function useMyEventsData(options?: {
       if (demoMode) {
         // Demo mock is code-split: the registry loads only when the demo
         // dashboard actually mounts, never on the eager import path.
-        const { INITIAL_EVENTS, INITIAL_NOTIFS } = await import(
-          "../myEvents.mock"
-        );
+        const { INITIAL_EVENTS, INITIAL_NOTIFS } =
+          await import("../myEvents.mock");
         return { events: INITIAL_EVENTS, notifs: INITIAL_NOTIFS };
       }
       const [pages, invites, notifications] = await Promise.all([
@@ -115,7 +114,9 @@ export function useMyEventsData(options?: {
       // Keep only the event-change kinds the "What's changed" panel is about;
       // every other notification stays in the main notifications centre.
       const notifs = notifications
-        .filter((notification) => EVENT_PANEL_NOTIF_KINDS.has(notification.type))
+        .filter((notification) =>
+          EVENT_PANEL_NOTIF_KINDS.has(notification.type),
+        )
         .map((notification) => eventNotificationToNotif(notification, t, fmt));
       return { events: [...fromFilters, ...fromInvites], notifs };
     },

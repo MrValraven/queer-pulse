@@ -158,7 +158,10 @@ export function matchesHousingFilters(
   if (filters.priceMin !== undefined && price < filters.priceMin) return false;
   if (filters.priceMax !== undefined && price > filters.priceMax) return false;
   if (filters.bedroomsMin !== undefined) {
-    if (listing.bedrooms === undefined || listing.bedrooms < filters.bedroomsMin) {
+    if (
+      listing.bedrooms === undefined ||
+      listing.bedrooms < filters.bedroomsMin
+    ) {
       return false;
     }
   }

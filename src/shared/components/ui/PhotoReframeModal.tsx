@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { CROP_CONFIG, getMinOutput } from "../../../features/members/api/uploadProcessing";
+import {
+  CROP_CONFIG,
+  getMinOutput,
+} from "../../../features/members/api/uploadProcessing";
 import type { UploadKind } from "../../../features/members/api/uploads.api";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Button } from "./Button";
@@ -50,7 +53,10 @@ export default function PhotoReframeModal({
           <Button variant="ghost" onClick={onCancel}>
             {t("shared:reframe.cancel")}
           </Button>
-          <Button onClick={() => onConfirm(rect ?? IDENTITY_CROP)} disabled={!rect}>
+          <Button
+            onClick={() => onConfirm(rect ?? IDENTITY_CROP)}
+            disabled={!rect}
+          >
             {t("shared:reframe.save")}
           </Button>
         </>

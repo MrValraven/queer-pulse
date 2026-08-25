@@ -87,28 +87,32 @@ export const THREADS: Thread[] = [
   {
     initials: "ML",
     tint: "jade",
-    question: "Baldwin's Paris as escape vs. prison: does that tension still resonate in Lisbon today?",
+    question:
+      "Baldwin's Paris as escape vs. prison: does that tension still resonate in Lisbon today?",
     meta: "Mariana Loução · 2h ago · Book Club",
     replies: 14,
   },
   {
     initials: "SA",
     tint: "coral",
-    question: "The look vs. the gaze: how Sciamma plays with who has the power to see in Portrait",
+    question:
+      "The look vs. the gaze: how Sciamma plays with who has the power to see in Portrait",
     meta: "Sofia Andrade · 5h ago · Film Club",
     replies: 9,
   },
   {
     initials: "RP",
     tint: "plum",
-    question: "July nominations: I'm pushing hard for Detransition, Baby. Who else has a strong case?",
+    question:
+      "July nominations: I'm pushing hard for Detransition, Baby. Who else has a strong case?",
     meta: "Rafael Pinto · 1d ago · Nominations",
     replies: 21,
   },
   {
     initials: "BN",
     tint: "jade",
-    question: "Kehlani and vulnerability as armour: production choices that shape the emotional arc",
+    question:
+      "Kehlani and vulnerability as armour: production choices that shape the emotional arc",
     meta: "Beatriz Noronha · 2d ago · Music Club",
     replies: 7,
   },
@@ -140,7 +144,8 @@ export const COMMISSIONS: Commission[] = [
   {
     category: "Photo",
     title: "Portraits of Queer Elders in Mouraria",
-    description: "Documenting the queer people who have lived in this neighbourhood for 30+ years, before gentrification, before visibility. I have access and subjects. I need a writer for long-form captions and an editor who knows photo books.",
+    description:
+      "Documenting the queer people who have lived in this neighbourhood for 30+ years, before gentrification, before visibility. I have access and subjects. I need a writer for long-form captions and an editor who knows photo books.",
     seeking: "Looking for: Writer · Photo editor",
     tags: [
       "Documentary",
@@ -158,7 +163,8 @@ export const COMMISSIONS: Commission[] = [
   {
     category: "Music",
     title: "EP about growing up queer in Setúbal",
-    description: "Six songs in Portuguese, recorded live. Fully produced. Looking for a cellist for two tracks, and someone with a Lisbon studio who'd let me finish the mixing session. Non-commercial, first EP, for the community.",
+    description:
+      "Six songs in Portuguese, recorded live. Fully produced. Looking for a cellist for two tracks, and someone with a Lisbon studio who'd let me finish the mixing session. Non-commercial, first EP, for the community.",
     seeking: "Looking for: Cellist · Studio space",
     tags: ["Portuguese", "Acoustic", "Credit offered"],
     who: { initials: "TB", tint: "jade", name: "Tomás Beto", role: "Chef" },
@@ -166,7 +172,8 @@ export const COMMISSIONS: Commission[] = [
   {
     category: "Writing",
     title: "Translating a forgotten queer Portuguese novel into English",
-    description: "Working on an English translation of a 1987 novel no one outside Portugal has read. Looking for a co-translator who can catch what I miss in idiomatic English, and a sensitivity reader for LGBTQ+ nuance.",
+    description:
+      "Working on an English translation of a 1987 novel no one outside Portugal has read. Looking for a co-translator who can catch what I miss in idiomatic English, and a sensitivity reader for LGBTQ+ nuance.",
     seeking: "Looking for: Co-translator (EN/PT) · Sensitivity reader",
     tags: ["Translation", "Literary fiction", "Historical"],
     who: {
@@ -179,7 +186,8 @@ export const COMMISSIONS: Commission[] = [
   {
     category: "Design",
     title: "Zine on queer housing discrimination in Lisbon",
-    description: "Combining collected testimonials (anonymised) with data visualisation. Need an illustrator and a typesetter. This will be printed and distributed at community spaces across the city.",
+    description:
+      "Combining collected testimonials (anonymised) with data visualisation. Need an illustrator and a typesetter. This will be printed and distributed at community spaces across the city.",
     seeking: "Looking for: Illustrator · Typesetter",
     tags: ["Print", "Social justice", "Housing", "Data viz"],
     who: {

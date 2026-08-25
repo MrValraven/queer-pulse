@@ -1481,7 +1481,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "preset", id: "casualMeetups" },
     ],
     work: [
-      { category: "Chapbook", title: "Border Tongues", year: "2025", links: [] },
+      {
+        category: "Chapbook",
+        title: "Border Tongues",
+        year: "2025",
+        links: [],
+      },
       {
         category: "Translation",
         title: "Selected poems of Svetlana V. (sl→pt)",
@@ -1770,7 +1775,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "preset", id: "collaborating" },
     ],
     work: [
-      { category: "Film", title: "Last Call (in production)", year: "2026", links: [] },
+      {
+        category: "Film",
+        title: "Last Call (in production)",
+        year: "2026",
+        links: [],
+      },
       {
         category: "Short",
         title: "Smoke Room, Malmö queer techno",
@@ -2825,7 +2835,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         links: [],
       },
-      { category: "Feature", title: "Who Funds the Backlash?", year: "2024", links: [] },
+      {
+        category: "Feature",
+        title: "Who Funds the Backlash?",
+        year: "2024",
+        links: [],
+      },
     ],
     board: [
       {
@@ -2903,7 +2918,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "custom", label: "Pairing new organisers with mentors" },
     ],
     work: [
-      { category: "Essay", title: "On Patience and Rage", year: "2025", links: [] },
+      {
+        category: "Essay",
+        title: "On Patience and Rage",
+        year: "2025",
+        links: [],
+      },
       {
         category: "Pamphlet",
         title: "Your Documents, Your Rights",
@@ -3001,7 +3021,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         year: "2025",
         links: [],
       },
-      { category: "Workshop", title: "Reading Your Lease", year: "2024", links: [] },
+      {
+        category: "Workshop",
+        title: "Reading Your Lease",
+        year: "2024",
+        links: [],
+      },
     ],
     board: [
       {
@@ -3283,7 +3308,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "custom", label: "Cross-disciplinary collaborators" },
     ],
     work: [
-      { category: "Performance", title: "Soft Animals", year: "2025", links: [] },
+      {
+        category: "Performance",
+        title: "Soft Animals",
+        year: "2025",
+        links: [],
+      },
       {
         category: "Residency",
         title: "Floorwork: a queer practice",
@@ -3367,7 +3397,12 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       { kind: "custom", label: "Venues wanting a welfare point" },
     ],
     work: [
-      { category: "Programme", title: "The Night Welfare Point", year: "2026", links: [] },
+      {
+        category: "Programme",
+        title: "The Night Welfare Point",
+        year: "2026",
+        links: [],
+      },
       {
         category: "Guide",
         title: "Looking After Each Other Till Dawn",

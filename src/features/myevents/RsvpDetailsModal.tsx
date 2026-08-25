@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Modal,
@@ -50,14 +50,21 @@ export function RsvpDetailsModal() {
 
   // Seed the editable fields from the caller's real saved values once they
   // load — never fires in demo mode (`savedDetails` stays undefined there),
-  // so the modal keeps its prior all-local starting state.
-  useEffect(() => {
-    if (!savedDetails) return;
-    setGuest(savedDetails.guestCount > 0);
-    setAccessNeeds(savedDetails.accessNeeds ?? "");
-    setDietaryNeeds(savedDetails.dietaryNeeds ?? "");
-    if (savedDetails.visibility) setVis(savedDetails.visibility);
-  }, [savedDetails]);
+  // so the modal keeps its prior all-local starting state. Adjusted during
+  // render (React's documented pattern for resetting state when a loaded
+  // value changes) rather than an effect, keyed on the query result's own
+  // identity so it only re-seeds when a genuinely new value lands.
+  const [previousSavedDetails, setPreviousSavedDetails] =
+    useState(savedDetails);
+  if (savedDetails !== previousSavedDetails) {
+    setPreviousSavedDetails(savedDetails);
+    if (savedDetails) {
+      setGuest(savedDetails.guestCount > 0);
+      setAccessNeeds(savedDetails.accessNeeds ?? "");
+      setDietaryNeeds(savedDetails.dietaryNeeds ?? "");
+      if (savedDetails.visibility) setVis(savedDetails.visibility);
+    }
+  }
 
   const visLabel: Record<Visibility, string> = {
     everyone: t("myevents:rsvpModal.visibility.everyone"),

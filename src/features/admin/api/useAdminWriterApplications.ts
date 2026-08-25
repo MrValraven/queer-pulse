@@ -19,9 +19,8 @@ export function useAdminWriterApplications(
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        const { ADMIN_WRITER_APPLICATIONS } = await import(
-          "../adminWriterApplications.data"
-        );
+        const { ADMIN_WRITER_APPLICATIONS } =
+          await import("../adminWriterApplications.data");
         const filtered = statusArg
           ? ADMIN_WRITER_APPLICATIONS.filter(
               (item) => item.status === statusArg,

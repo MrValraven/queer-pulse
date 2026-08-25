@@ -71,9 +71,7 @@ export function ResourceCard({
             }
           }}
         >
-          {ctaLabel}
-          {" "}
-          <FiArrowRight aria-hidden />
+          {ctaLabel} <FiArrowRight aria-hidden />
         </span>
       </div>
     </Wrapper>

@@ -60,8 +60,8 @@ export const CALLS: Call[] = [
     titlePost: " night",
     brief: (
       <>
-        We're scoring the June 28th broadcast, a 90-minute live room marking
-        the anniversary. We want <em>one original track</em>, 3–6 minutes, that
+        We're scoring the June 28th broadcast, a 90-minute live room marking the
+        anniversary. We want <em>one original track</em>, 3–6 minutes, that
         holds the room between speakers. Yours to keep and re-release.
       </>
     ),
@@ -110,8 +110,8 @@ export const CALLS: Call[] = [
     brief: (
       <>
         Unrestricted €1,200 grants for trans and non-binary composers working in
-        any form: score, ambient, choral, club. No deliverable required; we
-        fund the <em>practice</em> itself. Twelve grants this round.
+        any form: score, ambient, choral, club. No deliverable required; we fund
+        the <em>practice</em> itself. Twelve grants this round.
       </>
     ),
     amount: 1200,

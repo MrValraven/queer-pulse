@@ -19,13 +19,20 @@ export function ContractPreview({ ctx, selected, lang }: ContractPreviewProps) {
       <p className={styles.parties}>
         {S.between}{" "}
         <strong>{show(ctx.providerName, S.providerFallback)}</strong>
+        {/* "NIF" (Portuguese tax-ID acronym) is invariant across the
+            document's own EN/PT toggle — contract.helpers.ts already bakes
+            the identical " (NIF …)" run into clause bodies for both `lang`
+            values, so this stays a plain expression rather than a DOC_STRINGS
+            entry or an app-catalog key. */}
         {ctx.providerNif.trim() && (
-          <span className={styles.nif}> (NIF {ctx.providerNif.trim()})</span>
+          <span
+            className={styles.nif}
+          >{` (NIF ${ctx.providerNif.trim()})`}</span>
         )}
         {` ${S.and} `}
         <strong>{show(ctx.clientName, S.clientFallback)}</strong>
         {ctx.clientNif.trim() && (
-          <span className={styles.nif}> (NIF {ctx.clientNif.trim()})</span>
+          <span className={styles.nif}>{` (NIF ${ctx.clientNif.trim()})`}</span>
         )}
         .
       </p>

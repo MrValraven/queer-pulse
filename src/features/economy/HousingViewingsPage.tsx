@@ -21,8 +21,7 @@ export function HousingViewingsPage() {
   const [reviewing, setReviewing] = useState<HousingViewingDTO | null>(null);
 
   const needsResponse = data.filter(
-    (viewing) =>
-      viewing.status === "requested" && !viewing.youProposedLast,
+    (viewing) => viewing.status === "requested" && !viewing.youProposedLast,
   );
   const upcoming = data.filter(
     (viewing) =>
@@ -54,7 +53,9 @@ export function HousingViewingsPage() {
         <p className={v.pageSub}>{t("economy:housingViewing.list.sub")}</p>
 
         {data.length === 0 ? (
-          <div className={v.empty}>{t("economy:housingViewing.list.empty")}</div>
+          <div className={v.empty}>
+            {t("economy:housingViewing.list.empty")}
+          </div>
         ) : (
           <FadeIn>
             {groups.map(

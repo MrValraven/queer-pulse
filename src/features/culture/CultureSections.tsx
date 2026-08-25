@@ -1,6 +1,17 @@
 import { useState } from "react";
-import { FiBookOpen, FiBriefcase, FiCheck, FiImage, FiRadio } from "react-icons/fi";
-import { Avatar, Button, EmptyState, SectionHead } from "../../shared/components/ui";
+import {
+  FiBookOpen,
+  FiBriefcase,
+  FiCheck,
+  FiImage,
+  FiRadio,
+} from "react-icons/fi";
+import {
+  Avatar,
+  Button,
+  EmptyState,
+  SectionHead,
+} from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -133,7 +144,9 @@ function CommissionCard({ commission }: { commission: Commission }) {
   const [open, setOpen] = useState(false);
   return (
     <article className={styles.projCard}>
-      <div className={`${styles.pcPill} ${styles[`pill_${commission.category}`]}`}>
+      <div
+        className={`${styles.pcPill} ${styles[`pill_${commission.category}`]}`}
+      >
         {t(COMMISSION_CAT_LABEL_KEY[commission.category])}
       </div>
       <div className={styles.pcTitle}>{commission.title}</div>

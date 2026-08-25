@@ -57,7 +57,9 @@ export function SubprofileItemLinksField({
 
   return (
     <div className={styles.fieldWrap}>
-      <span className={styles.fieldLabel}>{t("subprofiles:itemLinks.label")}</span>
+      <span className={styles.fieldLabel}>
+        {t("subprofiles:itemLinks.label")}
+      </span>
       <div className={styles.linksEditor}>
         {links.map((link, index) => {
           const meta = socialPlatform(link.platform);

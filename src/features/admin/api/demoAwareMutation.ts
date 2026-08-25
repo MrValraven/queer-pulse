@@ -76,10 +76,8 @@ export function demoAwareMutationFn<Variables, Data>({
 }
 
 export interface DemoAwareMutationOptions<Data, Error, Variables, Context>
-  extends Omit<
-      UseMutationOptions<Data, Error, Variables, Context>,
-      "mutationFn"
-    >,
+  extends
+    Omit<UseMutationOptions<Data, Error, Variables, Context>, "mutationFn">,
     DemoAwareMutationFnConfig<Variables, Data> {
   /** Runs on success in LIVE mode only — where the `invalidateQueries` that demo
    *  mode skips belongs (its fixture never goes stale, so there is nothing to

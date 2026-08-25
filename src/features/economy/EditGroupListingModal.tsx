@@ -49,10 +49,7 @@ export function EditGroupListingModal({
       {
         // Confirmed from the server's answer, never before it.
         onSuccess: () => {
-          showToast(
-            t("economy:groupListing.toast.backToReview"),
-            "info",
-          );
+          showToast(t("economy:groupListing.toast.backToReview"), "info");
           onClose();
         },
         onError: (error) => {
@@ -101,7 +98,9 @@ export function EditGroupListingModal({
         <Button
           variant="primary"
           size="lg"
-          disabled={!form.isValid || !form.hasChanges || updateListing.isPending}
+          disabled={
+            !form.isValid || !form.hasChanges || updateListing.isPending
+          }
           onClick={handleSubmit}
         >
           {updateListing.isPending ? (

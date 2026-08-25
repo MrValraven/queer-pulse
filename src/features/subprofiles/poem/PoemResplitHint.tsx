@@ -22,8 +22,12 @@ export function PoemResplitHint({ onResplit }: PoemResplitHintProps) {
     <div className={styles.hint} role="note">
       <FiScissors aria-hidden className={styles.icon} />
       <div className={styles.copy}>
-        <p className={styles.title}>{t("subprofiles:poem.editor.resplit.title")}</p>
-        <p className={styles.body}>{t("subprofiles:poem.editor.resplit.body")}</p>
+        <p className={styles.title}>
+          {t("subprofiles:poem.editor.resplit.title")}
+        </p>
+        <p className={styles.body}>
+          {t("subprofiles:poem.editor.resplit.body")}
+        </p>
       </div>
       <button type="button" className={styles.action} onClick={onResplit}>
         {t("subprofiles:poem.editor.resplit.action")}

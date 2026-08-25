@@ -59,7 +59,9 @@ export function MessageBubbleBody({
         !message.replyTo!.deleted && onJumpToMessage?.(message.replyTo!.id)
       }
     >
-      <span className={styles.replyQuoteName}>{message.replyTo.senderName}</span>
+      <span className={styles.replyQuoteName}>
+        {message.replyTo.senderName}
+      </span>
       <span className={styles.replyQuoteSnippet}>
         {message.replyTo.deleted ? (
           t("messages:replyDeleted")
@@ -76,7 +78,10 @@ export function MessageBubbleBody({
   // so neither ever falls through to text. Reply-quote/forwarded labels still
   // apply. The meta sits below (not floating), since neither has a coloured
   // bubble to tuck it into.
-  if ((message.kind === "gif" || message.kind === "image") && message.attachment) {
+  if (
+    (message.kind === "gif" || message.kind === "image") &&
+    message.attachment
+  ) {
     const { url, width, height } = message.attachment;
     // Reserve the bubble's final box BEFORE the image decodes. The provider's
     // (or upload's) per-item dimensions are sometimes missing/zero, in which
@@ -86,7 +91,9 @@ export function MessageBubbleBody({
     // entrance has already played.
     const aspectRatio = width > 0 && height > 0 ? width / height : 1;
     const imageAlt =
-      message.kind === "image" ? t("messages:attachments.imageAlt") : message.text;
+      message.kind === "image"
+        ? t("messages:attachments.imageAlt")
+        : message.text;
     return (
       <>
         {forwardedNode}
@@ -125,7 +132,11 @@ export function MessageBubbleBody({
       <>
         {forwardedNode}
         {replyQuoteNode}
-        <div className={styles.imagePreviewUnavailable} role="img" aria-label={t("messages:attachments.previewUnavailable")}>
+        <div
+          className={styles.imagePreviewUnavailable}
+          role="img"
+          aria-label={t("messages:attachments.previewUnavailable")}
+        >
           <FiImage aria-hidden size={20} />
           <span>{t("messages:attachments.previewUnavailable")}</span>
         </div>
@@ -213,16 +224,41 @@ export function MessageMarks({
   return (
     <span className={styles.messageMarks}>
       {pinned && (
-        <span className={styles.messageMark} role="img" aria-label={t("messages:pinned.indicator")}>
-          <svg width="12" height="12" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M12.5 2.5 17.5 7.5M11 4 4 11l1 4 4 1 7-7M8 12l-4.5 4.5"
-              stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        <span
+          className={styles.messageMark}
+          role="img"
+          aria-label={t("messages:pinned.indicator")}
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 20 20"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M12.5 2.5 17.5 7.5M11 4 4 11l1 4 4 1 7-7M8 12l-4.5 4.5"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </span>
       )}
       {starred && (
-        <span className={styles.messageMark} role="img" aria-label={t("messages:starred.indicator")}>
-          <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <span
+          className={styles.messageMark}
+          role="img"
+          aria-label={t("messages:starred.indicator")}
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
             <path d="M10 1.8l2.35 4.76 5.25.76-3.8 3.7.9 5.23L10 13.75l-4.7 2.48.9-5.23-3.8-3.7 5.25-.76z" />
           </svg>
         </span>

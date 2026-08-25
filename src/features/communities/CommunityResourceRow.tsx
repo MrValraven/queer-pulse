@@ -7,7 +7,7 @@ import {
   FiMoreVertical,
   FiTrash2,
 } from "react-icons/fi";
-import { useMotionPrefs } from "../../app/providers/MotionProvider";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ShelfResource } from "./api/useCommunityResources";
 import { RESOURCE_ICON } from "./communityResourceIcons";

@@ -38,12 +38,10 @@ beforeEach(() => {
 async function loadLive() {
   vi.resetModules();
   vi.stubEnv("VITE_API_URL", API);
-  const { useDiscoverableIdentities } = await import(
-    "./useDiscoverableIdentities"
-  );
-  const { DemoModeProvider } = await import(
-    "../../../app/providers/DemoModeProvider"
-  );
+  const { useDiscoverableIdentities } =
+    await import("./useDiscoverableIdentities");
+  const { DemoModeProvider } =
+    await import("../../../app/providers/DemoModeProvider");
   const wrapper = ({ children }: { children: ReactNode }) => (
     <DemoModeProvider>{children}</DemoModeProvider>
   );

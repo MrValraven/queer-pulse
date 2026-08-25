@@ -11,11 +11,15 @@ describe("parseGoogleMapsUrl", () => {
   });
 
   it("falls back to @lat,lng and to q=/query=", () => {
-    expect(parseGoogleMapsUrl("https://www.google.com/maps/@38.7223,-9.1393,17z")).toEqual({
+    expect(
+      parseGoogleMapsUrl("https://www.google.com/maps/@38.7223,-9.1393,17z"),
+    ).toEqual({
       latitude: 38.7223,
       longitude: -9.1393,
     });
-    expect(parseGoogleMapsUrl("https://maps.google.com/?q=38.7223,-9.1393")).toEqual({
+    expect(
+      parseGoogleMapsUrl("https://maps.google.com/?q=38.7223,-9.1393"),
+    ).toEqual({
       latitude: 38.7223,
       longitude: -9.1393,
     });
@@ -27,7 +31,9 @@ describe("parseGoogleMapsUrl", () => {
   });
 
   it("returns null for out-of-range coords", () => {
-    expect(parseGoogleMapsUrl("https://www.google.com/maps/@200,-9,17z")).toBeNull();
+    expect(
+      parseGoogleMapsUrl("https://www.google.com/maps/@200,-9,17z"),
+    ).toBeNull();
   });
 });
 

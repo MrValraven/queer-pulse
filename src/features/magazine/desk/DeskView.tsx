@@ -2,7 +2,11 @@ import { DeskHeader, type DeskLayout } from "./DeskHeader";
 import { DeskTrackTabs, type DeskTrack } from "./DeskTrackTabs";
 import { NeedsStrip } from "./NeedsStrip";
 import { DeskStats } from "./DeskStats";
-import { DeskToolbar, type DeskFormatFilter, type DeskSortKey } from "./DeskToolbar";
+import {
+  DeskToolbar,
+  type DeskFormatFilter,
+  type DeskSortKey,
+} from "./DeskToolbar";
 import { SavedViews } from "./SavedViews";
 import { PiecesPipeline } from "./PiecesPipeline";
 import { PiecesBoard } from "./PiecesBoard";

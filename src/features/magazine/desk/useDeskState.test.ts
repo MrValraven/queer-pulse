@@ -56,9 +56,9 @@ describe("useDeskState", () => {
     ).map((piece) => piece.id);
 
     expect(expectedIds.length).toBeGreaterThan(0);
-    expect(result.current.visiblePieces.map((piece) => piece.id).sort()).toEqual(
-      expectedIds.sort(),
-    );
+    expect(
+      result.current.visiblePieces.map((piece) => piece.id).sort(),
+    ).toEqual(expectedIds.sort());
   });
 
   it("q filters visiblePieces by a title substring", () => {

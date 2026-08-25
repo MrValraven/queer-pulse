@@ -8,7 +8,8 @@ import {
   professionsForFields,
   type FilterState,
 } from "./memberDirectoryFilter.data";
-import { FilterSection, type SectionKey } from "./FilterSection";
+import { FilterSection } from "./FilterSection";
+import { type SectionKey } from "./filterSectionKeys";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Toggle a value within a string[] immutably. */
@@ -135,8 +136,8 @@ function ProfessionFilterCard({
         ? DISCIPLINES.map((discipline) => ({
             fieldId: discipline.id,
             labelKey: discipline.labelKey,
-            professions: (PROFESSIONS_BY_FIELD[discipline.id] ?? []).filter((p) =>
-              t(p.labelKey).toLowerCase().includes(q),
+            professions: (PROFESSIONS_BY_FIELD[discipline.id] ?? []).filter(
+              (p) => t(p.labelKey).toLowerCase().includes(q),
             ),
           })).filter((group) => group.professions.length > 0)
         : [],

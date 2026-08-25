@@ -37,13 +37,25 @@ export function skinVars(accent: AccentKey): CSSProperties {
   return { "--sk-tint": tint, "--sk-on": on } as CSSProperties;
 }
 
-export const ACCENT_OPTIONS: AccentKey[] = ["plum", "coral", "jade", "amber", "violet"];
+export const ACCENT_OPTIONS: AccentKey[] = [
+  "plum",
+  "coral",
+  "jade",
+  "amber",
+  "violet",
+];
 
 /** Fallback accent when a persona has none set. */
 export const DEFAULT_ACCENT: AccentKey = "plum";
 
-export const AVAILABILITY_OPTIONS: { value: AvailabilityKey; labelKey: string }[] = [
-  { value: "open_to_collabs", labelKey: "subprofiles:availability.openToCollabs" },
+export const AVAILABILITY_OPTIONS: {
+  value: AvailabilityKey;
+  labelKey: string;
+}[] = [
+  {
+    value: "open_to_collabs",
+    labelKey: "subprofiles:availability.openToCollabs",
+  },
   { value: "booking", labelKey: "subprofiles:availability.booking" },
   { value: "not_available", labelKey: "subprofiles:availability.notAvailable" },
 ];
@@ -54,7 +66,10 @@ export const AVAILABILITY_OPTIONS: { value: AvailabilityKey; labelKey: string }[
  *  row). Open reads positive (jade), booking reads as an active call-to-action
  *  (coral), and not-available stays neutral (muted) — never colour-only, the
  *  pill always carries its `AVAILABILITY_OPTIONS` label text too. */
-export const AVAILABILITY_PILL_TONE: Record<AvailabilityKey, "jade" | "coral" | "muted"> = {
+export const AVAILABILITY_PILL_TONE: Record<
+  AvailabilityKey,
+  "jade" | "coral" | "muted"
+> = {
   open_to_collabs: "jade",
   booking: "coral",
   not_available: "muted",

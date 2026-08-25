@@ -45,15 +45,18 @@ function findNearestEnabledDate(
   isDateUnavailable: ((date: PlainDate) => boolean) | undefined,
   preferForward: boolean,
 ): PlainDate {
-  if (!isDateDisabled(startDate, minDate, maxDate, isDateUnavailable)) return startDate;
+  if (!isDateDisabled(startDate, minDate, maxDate, isDateUnavailable))
+    return startDate;
   const primaryStep = preferForward ? 1 : -1;
   for (let offset = 1; offset <= FOCUS_SEARCH_WINDOW_DAYS; offset += 1) {
     const primaryCandidate = addDays(startDate, primaryStep * offset);
-    if (!isDateDisabled(primaryCandidate, minDate, maxDate, isDateUnavailable)) return primaryCandidate;
+    if (!isDateDisabled(primaryCandidate, minDate, maxDate, isDateUnavailable))
+      return primaryCandidate;
   }
   for (let offset = 1; offset <= FOCUS_SEARCH_WINDOW_DAYS; offset += 1) {
     const fallbackCandidate = addDays(startDate, -primaryStep * offset);
-    if (!isDateDisabled(fallbackCandidate, minDate, maxDate, isDateUnavailable)) return fallbackCandidate;
+    if (!isDateDisabled(fallbackCandidate, minDate, maxDate, isDateUnavailable))
+      return fallbackCandidate;
   }
   return startDate;
 }
@@ -71,5 +74,11 @@ export function resolveFocusTarget(
   preferForward = true,
 ): PlainDate {
   const clampedDate = clampDate(desiredDate, minDate, maxDate);
-  return findNearestEnabledDate(clampedDate, minDate, maxDate, isDateUnavailable, preferForward);
+  return findNearestEnabledDate(
+    clampedDate,
+    minDate,
+    maxDate,
+    isDateUnavailable,
+    preferForward,
+  );
 }

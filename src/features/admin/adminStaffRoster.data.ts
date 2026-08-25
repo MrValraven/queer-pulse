@@ -8,8 +8,28 @@ import type { PlatformStaffRowDTO } from "./api/adminStaffRoster.api";
  * shapes of the same underlying `GET /platform/staff` fixture.
  */
 export const ADMIN_STAFF_ROSTER_DEMO: PlatformStaffRowDTO[] = [
-  { slug: "tiago", firstName: "Tiago", lastName: "Costa", platformRole: "admin" },
-  { slug: "mariana", firstName: "Mariana", lastName: "Loução", platformRole: "moderator" },
-  { slug: "rui", firstName: "Rui", lastName: "Marçal", platformRole: "moderator" },
-  { slug: "ana", firstName: "Ana", lastName: "Reis", platformRole: "moderator" },
+  {
+    slug: "tiago",
+    firstName: "Tiago",
+    lastName: "Costa",
+    platformRole: "admin",
+  },
+  {
+    slug: "mariana",
+    firstName: "Mariana",
+    lastName: "Loução",
+    platformRole: "moderator",
+  },
+  {
+    slug: "rui",
+    firstName: "Rui",
+    lastName: "Marçal",
+    platformRole: "moderator",
+  },
+  {
+    slug: "ana",
+    firstName: "Ana",
+    lastName: "Reis",
+    platformRole: "moderator",
+  },
 ];

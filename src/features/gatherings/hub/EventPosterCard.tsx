@@ -1,6 +1,10 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { ImageSlot, Tag, type ImageSlotTint } from "../../../shared/components/ui";
+import {
+  ImageSlot,
+  Tag,
+  type ImageSlotTint,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import type { CalendarEvent } from "../data";
@@ -32,7 +36,9 @@ interface EventPosterCardProps {
 function WhenRibbon({ date, now }: { date: Date; now: Date }) {
   const { t } = useTranslation();
   return (
-    <span className={styles.ribbon}>{t(timeBucketLabelKey(timeBucketOf(date, now)))}</span>
+    <span className={styles.ribbon}>
+      {t(timeBucketLabelKey(timeBucketOf(date, now)))}
+    </span>
   );
 }
 
@@ -60,7 +66,13 @@ function EventTime({ event, fmt }: { event: CalendarEvent; fmt: Formatters }) {
 
 /** Event-vs-gathering badge. `onScrim` swaps to the opaque, always-legible
  *  variant used when the chip sits directly over cover artwork. */
-function KindTag({ kind, onScrim }: { kind: CalendarEvent["kind"]; onScrim?: boolean }) {
+function KindTag({
+  kind,
+  onScrim,
+}: {
+  kind: CalendarEvent["kind"];
+  onScrim?: boolean;
+}) {
   const { t } = useTranslation();
   const isEvent = kind === "event";
   const className = isEvent
@@ -72,7 +84,11 @@ function KindTag({ kind, onScrim }: { kind: CalendarEvent["kind"]; onScrim?: boo
       : styles.kindGathering;
   return (
     <Tag className={className}>
-      {t(isEvent ? "gatherings:events.kindEvent" : "gatherings:events.kindGathering")}
+      {t(
+        isEvent
+          ? "gatherings:events.kindEvent"
+          : "gatherings:events.kindGathering",
+      )}
     </Tag>
   );
 }
@@ -97,8 +113,14 @@ function PricePill({
             min: fmt.currency(event.priceMin),
             max: fmt.currency(event.priceMax),
           })
-        : t("gatherings:events.priceSingle", { price: fmt.currency(event.priceMin) });
-  return <span className={onScrim ? styles.pricePillScrim : styles.pricePill}>{label}</span>;
+        : t("gatherings:events.priceSingle", {
+            price: fmt.currency(event.priceMin),
+          });
+  return (
+    <span className={onScrim ? styles.pricePillScrim : styles.pricePill}>
+      {label}
+    </span>
+  );
 }
 
 /** "See it" hover/focus affordance for `featured`/`list`. Purely decorative —
@@ -134,14 +156,23 @@ function MetaRow({ event, fmt }: { event: CalendarEvent; fmt: Formatters }) {
  * row for `list`. One `<Link>` per card; `aria-label` pins the accessible name to
  * the event title regardless of how much text sits inside.
  */
-export function EventPosterCard({ event, variant, now, priority = false }: EventPosterCardProps) {
+export function EventPosterCard({
+  event,
+  variant,
+  now,
+  priority = false,
+}: EventPosterCardProps) {
   const fmt = useFormat();
   const effectiveNow = now ?? new Date();
-  const tint: ImageSlotTint = event.orgColor === "var(--accent)" ? "coral" : "plum";
+  const tint: ImageSlotTint =
+    event.orgColor === "var(--accent)" ? "coral" : "plum";
   const loading: "eager" | "lazy" = priority ? "eager" : "lazy";
   const targetWidth = COVER_TARGET_WIDTH[variant];
   const imageProps = {
-    src: targetWidth === undefined ? event.coverImageUrl : sizedCover(event.coverImageUrl, targetWidth),
+    src:
+      targetWidth === undefined
+        ? event.coverImageUrl
+        : sizedCover(event.coverImageUrl, targetWidth),
     alt: "",
     tint,
     placeholder: event.title,
@@ -155,7 +186,11 @@ export function EventPosterCard({ event, variant, now, priority = false }: Event
 
   if (variant === "list") {
     return (
-      <Link to={event.to} aria-label={event.title} className={`${styles.link} ${styles.list}`}>
+      <Link
+        to={event.to}
+        aria-label={event.title}
+        className={`${styles.link} ${styles.list}`}
+      >
         <span className={styles.thumb}>
           <ImageSlot {...imageProps} />
         </span>
@@ -174,7 +209,11 @@ export function EventPosterCard({ event, variant, now, priority = false }: Event
 
   if (variant === "compact") {
     return (
-      <Link to={event.to} aria-label={event.title} className={`${styles.link} ${styles.compact}`}>
+      <Link
+        to={event.to}
+        aria-label={event.title}
+        className={`${styles.link} ${styles.compact}`}
+      >
         <span className={styles.thumb}>
           <ImageSlot {...imageProps} />
         </span>
@@ -191,7 +230,11 @@ export function EventPosterCard({ event, variant, now, priority = false }: Event
   const showRibbon = variant === "lead" || variant === "featured";
 
   return (
-    <Link to={event.to} aria-label={event.title} className={`${styles.link} ${styles[variant]}`}>
+    <Link
+      to={event.to}
+      aria-label={event.title}
+      className={`${styles.link} ${styles[variant]}`}
+    >
       <span className={styles.frame}>
         <ImageSlot {...imageProps} />
         <span className={styles.scrim} aria-hidden />
