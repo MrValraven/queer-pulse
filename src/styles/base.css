@@ -30,6 +30,28 @@ html {
      x-axis WITHOUT establishing a scroll container and WITHOUT touching the
      y-axis, so the viewport keeps its single, native vertical scroll. */
   overflow-x: clip;
+
+  /* Kill the elastic "rubber band" overscroll at the top and bottom of the
+     page. Without this, a trackpad flick on macOS (and any touch device) drags
+     the whole document past its own edges and exposes the browser's backdrop
+     behind the header/footer, which reads as the layout coming unstuck.
+
+     Y AXIS ONLY, deliberately. The `overscroll-behavior` shorthand would also
+     set the x axis to `none`, and on Chrome/Safari that disables the two-finger
+     swipe back/forward navigation gesture. The x axis stays `auto` so those
+     keep working; there is no horizontal scroll to bounce anyway (overflow-x is
+     clipped above).
+
+     Declared on <html>: per the CSS overflow spec the viewport takes its
+     overscroll behaviour from the root element, and a value on <body> is only
+     consulted while the root's is `auto`. Putting it here is what actually
+     reaches the viewport.
+
+     This also switches off the browser's OWN native pull-to-refresh on Android,
+     which is wanted: PullToRefresh (usePullToRefresh) implements the gesture
+     itself off `window.scrollY` + touch deltas, so ours still fires and the
+     native one can no longer double up on top of it. */
+  overscroll-behavior-y: none;
 }
 
 body {
