@@ -2096,6 +2096,9 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.entries.sharper-photos.title": "Fotografias nítidas em qualquer ecrã",
+  "changelog.entries.sharper-photos.body":
+    "As fotografias que carregas mantêm agora muito mais detalhe. As imagens grandes são reduzidas por etapas cuidadas, em vez de num único passo tosco, que era o que deixava um banner ou uma foto de perfil com um aspeto ligeiramente desfocado, e passam a ser guardadas num formato mais recente que retém mais detalhe no mesmo tamanho. Capturas de ecrã e desenhos ficam perfeitos ao pixel. As imagens são também pedidas no tamanho que o teu ecrã consegue mostrar, por isso um telemóvel nítido recebe uma imagem nítida e ninguém paga por detalhe que não consegue ver.",
   "changelog.entries.listing-pages-rebuild.title":
     "Páginas de negócios, refeitas à volta do que vieste saber",
   "changelog.entries.listing-pages-rebuild.body":

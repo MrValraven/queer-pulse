@@ -90,6 +90,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "sharper-photos",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("sharper-photos"),
+      },
+      {
         id: "listing-pages-rebuild",
         category: "feature",
         date: "25 Aug 2026",

@@ -2040,6 +2040,9 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
+  "changelog.entries.sharper-photos.title": "Photos that stay sharp on every screen",
+  "changelog.entries.sharper-photos.body":
+    "Photos you upload now keep more of their detail. Large pictures are shrunk in careful stages rather than one rough pass, which is what used to leave a banner or a profile photo looking slightly soft, and they are saved in a newer format that holds more detail for the same size. Screenshots and drawings stay pixel-perfect. Pictures are also requested at the size your screen can actually show, so a sharp phone gets a sharp picture and nobody pays for detail they cannot see.",
   "changelog.entries.listing-pages-rebuild.title":
     "Business pages, rebuilt around what you came to find out",
   "changelog.entries.listing-pages-rebuild.body":

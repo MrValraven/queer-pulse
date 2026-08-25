@@ -167,13 +167,144 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
 
 /** Re-encode quality used once an image is actually being downscaled — a
  *  smaller canvas can afford more compression than the pass-through case
- *  below, since the byte-size win is the whole point of resizing. */
+ *  below, since the byte-size win is the whole point of resizing. Applies to
+ *  the JPEG/WebP fallback path; WebP has its own pair below. */
 const DOWNSCALE_QUALITY = 0.8;
 
 /** Re-encode quality when the source is already within `MAX_DIMENSION_PX` —
  *  the canvas round-trip still happens (it's what strips EXIF), so this
  *  stays high to avoid visibly softening an image that didn't need shrinking. */
 const PASSTHROUGH_QUALITY = 0.92;
+
+/**
+ * WebP quality pair, used whenever the browser can encode it (`canEncodeWebp`).
+ *
+ * WebP is roughly 25-35% smaller than JPEG at matched visual quality, and it
+ * carries alpha — so it is the better output for EVERY source format we accept
+ * here, including a PNG (whose `quality` argument `canvas.toBlob` ignores
+ * entirely, leaving a photo-shaped PNG stored losslessly at several MB). The
+ * numbers sit slightly above the JPEG pair because WebP's quality scale is not
+ * the same curve: q0.82 lands around JPEG q0.90 to the eye while still coming
+ * out meaningfully smaller.
+ *
+ * The point of the saving is CRISPNESS, not just bytes: the same byte budget
+ * now buys more stored pixels, which is what keeps a full-bleed banner sharp
+ * on a 2× display.
+ */
+const WEBP_DOWNSCALE_QUALITY = 0.82;
+const WEBP_PASSTHROUGH_QUALITY = 0.9;
+
+/**
+ * Quality used for a PNG source that is NOT being downscaled.
+ *
+ * `canvas.toBlob` ignores the quality argument for `image/png`, so a PNG has
+ * always been stored LOSSLESSLY up to now. Screenshots and line art reach us as
+ * PNG (a chat `message-image` especially), and those are exactly the images
+ * where lossy ringing on hard edges is visible, so re-encoding them at 0.9
+ * would be a real quality regression to pay for a byte saving. Quality 1 asks
+ * for lossless WebP (Chrome honours it as lossless outright; other engines give
+ * their maximum lossy setting), which still comes out smaller than the PNG it
+ * replaces. A PNG that IS being downscaled takes the normal lossy path — the
+ * resample already gave up pixel-exactness, so there is nothing left to
+ * preserve.
+ */
+const WEBP_LOSSLESS_QUALITY = 1;
+
+/**
+ * Steepest reduction we allow a single `drawImage` to perform. Canvas
+ * downscaling samples a fixed, small neighbourhood of source pixels, so a
+ * one-shot 4032px → 1600px draw (2.5×) simply throws most of the source away:
+ * the result aliases on fine detail and reads as SOFT, which is a large part of
+ * the "my photo looks blurry" report. Halving repeatedly until the remaining
+ * step is within this ratio keeps every pass inside the range the sampler
+ * handles well, at the cost of a couple of extra intermediate canvases.
+ */
+const MAX_RESAMPLE_STEP_RATIO = 2;
+
+/**
+ * Whether `canvas.toBlob` on this browser can actually produce WebP. Every
+ * current browser can (Safari since 14), but the check is cheap and the failure
+ * mode without it is bad: `toBlob` silently answers PNG for a type it cannot
+ * encode, which for a 3200px photo is a multi-MB lossless file that may blow the
+ * per-kind byte cap. Memoized — the probe canvas is built at most once.
+ */
+let webpEncodeSupport: boolean | null = null;
+function canEncodeWebp(): boolean {
+  if (webpEncodeSupport !== null) return webpEncodeSupport;
+  try {
+    const probe = document.createElement("canvas");
+    probe.width = 1;
+    probe.height = 1;
+    webpEncodeSupport = probe.toDataURL("image/webp").startsWith("data:image/webp");
+  } catch {
+    webpEncodeSupport = false;
+  }
+  return webpEncodeSupport;
+}
+
+/** A 2D canvas of the given size with high-quality resampling switched on.
+ *  `imageSmoothingQuality` defaults to `"low"`, which is the cheapest and
+ *  softest filter the browser has — for a downscale we want its best. */
+function makeSmoothCanvas(
+  width: number,
+  height: number,
+): { canvas: HTMLCanvasElement; ctx: CanvasRenderingContext2D } {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("no-2d-context");
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  return { canvas, ctx };
+}
+
+/**
+ * Draw `source` down to exactly `targetWidth`×`targetHeight`, halving through
+ * intermediate canvases while the remaining reduction is steeper than
+ * `MAX_RESAMPLE_STEP_RATIO` (see that constant for why one big step is worse).
+ * An upscale or a mild reduction takes the single-draw path, so nothing extra
+ * is allocated for the images that never needed it.
+ */
+function drawResampled(
+  source: CanvasImageSource,
+  sourceWidth: number,
+  sourceHeight: number,
+  targetWidth: number,
+  targetHeight: number,
+): HTMLCanvasElement {
+  let currentSource = source;
+  let currentWidth = sourceWidth;
+  let currentHeight = sourceHeight;
+  // Each pass at most halves, and never undershoots the target, so this
+  // strictly decreases towards `targetWidth` and terminates.
+  while (currentWidth > targetWidth * MAX_RESAMPLE_STEP_RATIO) {
+    const stepWidth = Math.max(targetWidth, Math.round(currentWidth / 2));
+    const stepHeight = Math.max(targetHeight, Math.round(currentHeight / 2));
+    const step = makeSmoothCanvas(stepWidth, stepHeight);
+    step.ctx.drawImage(currentSource, 0, 0, stepWidth, stepHeight);
+    currentSource = step.canvas;
+    currentWidth = stepWidth;
+    currentHeight = stepHeight;
+  }
+  const output = makeSmoothCanvas(targetWidth, targetHeight);
+  output.ctx.drawImage(currentSource, 0, 0, targetWidth, targetHeight);
+  return output.canvas;
+}
+
+/** `canvas.toBlob` as a promise, throwing rather than resolving `null` so the
+ *  fail-closed contract in `stripMetadata` holds. */
+async function encodeCanvas(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality: number,
+): Promise<Blob> {
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, type, quality),
+  );
+  if (!blob) throw new Error("encode-failed");
+  return blob;
+}
 
 /**
  * Scale `width`×`height` down so its longest edge is at most `maxDimension`,
@@ -191,9 +322,11 @@ function capDimensions(
     return { width, height, scaled: false };
   }
   const scaleFactor = maxDimension / longestEdge;
+  // `Math.max(1, ...)` guards the extreme-aspect case (a 4000×1 strip rounds its
+  // short edge to 0), where a zero-sized canvas would fail the encode outright.
   return {
-    width: Math.round(width * scaleFactor),
-    height: Math.round(height * scaleFactor),
+    width: Math.max(1, Math.round(width * scaleFactor)),
+    height: Math.max(1, Math.round(height * scaleFactor)),
     scaled: true,
   };
 }
@@ -343,9 +476,13 @@ function sanitizeGif(bytes: Uint8Array): Uint8Array<ArrayBuffer> {
  *   - GIFs are sanitized in place (`sanitizeGif`) so animation survives.
  *   - JPEG/PNG/WebP are re-encoded through a `<canvas>`, which drops metadata
  *     AND downscales to the per-kind `MAX_DIMENSION_PX` cap on the longest edge
- *     (full-res originals only cost storage/bandwidth forever after). Lossy
- *     re-encode uses quality 0.92 when passed through unscaled, 0.8 when
- *     actually downscaled.
+ *     (full-res originals only cost storage/bandwidth forever after). The
+ *     downscale runs through `drawResampled` (stepped halving at
+ *     `imageSmoothingQuality: "high"`) rather than one coarse draw, and the
+ *     output is WebP wherever the browser can encode it — see
+ *     `WEBP_DOWNSCALE_QUALITY` and `MAX_RESAMPLE_STEP_RATIO`. A browser that
+ *     cannot encode WebP falls back to the source format at the original
+ *     quality 0.92 unscaled / 0.8 downscaled.
  */
 async function stripMetadata(
   file: File,
@@ -358,17 +495,38 @@ async function stripMetadata(
       return new Blob([cleaned], { type: "image/gif" });
     }
     const target = capDimensions(decoded.width, decoded.height, MAX_DIMENSION_PX[kind]);
-    const canvas = document.createElement("canvas");
-    canvas.width = target.width;
-    canvas.height = target.height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("no-2d-context");
-    ctx.drawImage(decoded.source, 0, 0, target.width, target.height);
-    const quality = target.scaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY;
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, file.type, quality),
+    const canvas = drawResampled(
+      decoded.source,
+      decoded.width,
+      decoded.height,
+      target.width,
+      target.height,
     );
-    if (!blob) throw new Error("encode-failed");
+    if (!canEncodeWebp()) {
+      // Legacy path: re-encode in the source's own format, exactly as before.
+      return await encodeCanvas(
+        canvas,
+        file.type,
+        target.scaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY,
+      );
+    }
+    const webpQuality = target.scaled
+      ? WEBP_DOWNSCALE_QUALITY
+      : file.type === "image/png"
+        ? WEBP_LOSSLESS_QUALITY
+        : WEBP_PASSTHROUGH_QUALITY;
+    const blob = await encodeCanvas(canvas, "image/webp", webpQuality);
+    // `toBlob` answers PNG for a type it cannot encode rather than failing, and
+    // `canEncodeWebp` is a probe, not a promise — so confirm what we actually
+    // got and fall back to the source format rather than uploading a multi-MB
+    // lossless PNG that could exceed the kind's byte cap.
+    if (blob.type !== "image/webp") {
+      return await encodeCanvas(
+        canvas,
+        file.type,
+        target.scaled ? DOWNSCALE_QUALITY : PASSTHROUGH_QUALITY,
+      );
+    }
     return blob;
   } catch (err) {
     if (err instanceof ImageProcessingError) throw err;

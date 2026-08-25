@@ -1,4 +1,24 @@
 /**
+ * Device pixel ratio to multiply a slot's CSS size by when asking a resizable
+ * host for pixels.
+ *
+ * Callers used to hardcode `× 2`, which is wrong in both directions: a 1× laptop
+ * fetches four times the pixels it can show, and a 3× phone still gets a render
+ * it has to stretch. Clamped at both ends — below 1 there is nothing to gain,
+ * and past 3 the bytes climb quadratically while the extra sharpness stops being
+ * visible at normal viewing distance. Falls back to 2 where there is no `window`
+ * (tests, any non-DOM render), which is the value this replaced.
+ */
+export const MAX_IMAGE_PIXEL_RATIO = 3;
+
+export function imagePixelRatio(): number {
+  if (typeof window === "undefined") return 2;
+  const ratio = window.devicePixelRatio;
+  if (!Number.isFinite(ratio) || ratio < 1) return 1;
+  return Math.min(ratio, MAX_IMAGE_PIXEL_RATIO);
+}
+
+/**
  * Normalise a Google-hosted image URL so it renders crisply at roughly `px`
  * device pixels.
  *

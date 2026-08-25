@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { resolveAvatarSrc } from "../../lib/avatarUrl";
+import { imagePixelRatio, resolveAvatarSrc } from "../../lib/avatarUrl";
 import { useTranslation } from "../../i18n/useTranslation";
 import { cropFocalPosition, cropToImgStyle, type CropRect } from "./cropGeometry";
 import styles from "./ImageSlot.module.css";
@@ -15,9 +15,11 @@ interface ImageSlotProps {
   radius?: number;
   width?: number | string;
   height?: number | string;
-  /** Explicit pixel width to request from resizable (Google) image hosts.
-   *  Defaults to 2× a numeric `width`, else 256. Set this on a full-width slot
-   *  (`width="100%"`) whose 256 default would otherwise fetch a blurry crop. */
+  /** Explicit pixel width to request from resizable (Google/Unsplash) image
+   *  hosts. Defaults to a numeric `width` times the device pixel ratio; for a
+   *  non-numeric width (`"100%"`, a `clamp()`) it falls back to the viewport
+   *  width times that ratio, capped at `FLUID_SLOT_CAP_PX`. Pass it explicitly
+   *  when you know the slot's real rendered width and want to stop over-asking. */
   srcSize?: number;
   /** Caption shown in the empty placeholder frame. */
   placeholder?: string;
@@ -45,6 +47,35 @@ interface ImageSlotProps {
    *  a card's cover strip — where `crop` would distort. Ignored when `crop` is
    *  also passed, which is the stricter, exact-frame rendering. */
   focus?: CropRect;
+}
+
+/**
+ * Ceiling on the width requested for a slot whose CSS width is fluid
+ * (`"100%"`, a `clamp()`), where the real rendered width is unknowable at
+ * render time. A fluid slot is usually a card cover or a full-bleed hero, so
+ * the viewport width is the honest upper bound; the cap keeps a 4K window at
+ * 2× from asking for an 8000px file that no slot on the page ever shows.
+ */
+const FLUID_SLOT_CAP_PX = 2560;
+
+/** Fallback for the viewport width off-DOM (tests) — a mid-size laptop. */
+const FALLBACK_VIEWPORT_PX = 1280;
+
+/**
+ * Device pixels to ask a resizable host for, given the slot's CSS width.
+ *
+ * The old default was `width × 2` for a numeric width and a flat **256** for
+ * everything else. That 256 was the bug behind soft covers and hero banners:
+ * every `width="100%"` slot on the platform is fluid, so every one of them
+ * silently asked a resizable host for a 256px render and then stretched it
+ * across a card or the whole viewport.
+ */
+function defaultSrcSize(width: number | string): number {
+  const ratio = imagePixelRatio();
+  if (typeof width === "number") return Math.round(width * ratio);
+  const viewport =
+    typeof window === "undefined" ? FALLBACK_VIEWPORT_PX : window.innerWidth;
+  return Math.round(Math.min(viewport, FLUID_SLOT_CAP_PX) * ratio);
 }
 
 /**
@@ -92,12 +123,10 @@ export function ImageSlot({
         { objectPosition: cropFocalPosition(focus) }
       : undefined;
   const borderRadius = shape === "circle" ? "50%" : radius;
-  // Only Google/OAuth avatar URLs are rewritten (for a crisp 2× crop); every
-  // other src — Unsplash covers, magazine art — passes through unchanged.
-  const resolvedSrc = resolveAvatarSrc(
-    src,
-    srcSize ?? (typeof width === "number" ? Math.round(width * 2) : 256),
-  );
+  // Only resizable hosts (Google/OAuth, Unsplash) are rewritten; every other
+  // src — our own `/files/<key>` uploads, magazine art — passes through
+  // unchanged, so asking generously here costs nothing on those.
+  const resolvedSrc = resolveAvatarSrc(src, srcSize ?? defaultSrcSize(width));
   const cls = [
     styles.slot,
     styles[tint],

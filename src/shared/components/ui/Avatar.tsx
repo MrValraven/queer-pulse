@@ -1,5 +1,5 @@
 import { useState, type CSSProperties, type HTMLAttributes } from "react";
-import { resolveAvatarSrc } from "../../lib/avatarUrl";
+import { imagePixelRatio, resolveAvatarSrc } from "../../lib/avatarUrl";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./Avatar.module.css";
 
@@ -49,9 +49,12 @@ export function Avatar({
     "--avatar-font": `${Math.round(size * 0.34)}px`,
   } as CSSProperties;
 
-  const px = Math.round(size * 2);
-  // One resolver for every host. Unsplash gets a face-aware square crop at 2x
-  // the render size so small avatars aren't off-centre or blurry; Google/OAuth
+  // The render size in DEVICE pixels. This was a hardcoded `× 2`, which under-
+  // asks on a 3× phone (where an avatar circle is the one image a member looks
+  // at closely) and over-asks on a 1× display.
+  const px = Math.round(size * imagePixelRatio());
+  // One resolver for every host. Unsplash gets a face-aware square crop at the
+  // device-pixel size so small avatars aren't off-centre or blurry; Google/OAuth
   // avatars get their size directive bumped. This used to build the Unsplash URL
   // inline with an unguarded `new URL(src)`, which THREW during render on a
   // malformed src that happened to contain "unsplash.com" — `resolveAvatarSrc`

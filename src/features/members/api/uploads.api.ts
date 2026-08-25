@@ -57,6 +57,11 @@ export type UploadKind =
  *      the geolocation-outing risk; the client-side strip in `uploadProcessing`
  *      is only best-effort defence-in-depth.
  *   4. Resize / re-encode per kind to WebP/AVIF with a JPEG fallback. Targets:
+ *      (The client now sends WebP already — `stripMetadata` re-encodes every
+ *      non-GIF upload to `image/webp` wherever the browser can encode it, and
+ *      `contentType` below is read off the processed blob, so the declared type
+ *      is `image/webp` for almost every upload regardless of what the member
+ *      picked. A server re-encode must not assume JPEG input.)
  *      avatar ≥1024², but the full-bleed COVER + LISTING heroes need ~2560px on
  *      the long edge — they paint edge-to-edge and a lower cap renders a visibly
  *      soft banner — and `persona-cover` needs ~3200px, since a persona banner
