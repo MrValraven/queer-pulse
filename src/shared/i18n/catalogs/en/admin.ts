@@ -386,12 +386,13 @@ export const admin: Catalog = {
   "members.verify.source.other": "Another page",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
-  // Approved: an invite email now goes out automatically; the copy-link
-  // option below stays as a manual backup, so say so plainly, not that
-  // nothing was sent.
+  // Approved: QueerPulse sends no email, so approval reaches the applicant
+  // only when the reviewer carries the link over themselves. Say that
+  // plainly here; promising an inbox delivery would strand people.
   "members.verify.approvedLabel": "Welcomed in",
   "members.verify.sendYourself":
-    "An invite email is on its way to {email}. You can also copy the link below and send it yourself as a backup.",
+    "Invites go out by hand. Copy the link below and send it to {email} yourself.",
+  "members.verify.linkFieldLabel": "Invite link",
   "members.verify.copyLink": "Copy link",
   "members.verify.copiedLink": "Copied",
   "members.verify.copiedToast": "Invite link copied. Now send it to them",

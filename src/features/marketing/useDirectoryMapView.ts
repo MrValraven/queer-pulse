@@ -35,13 +35,26 @@ export function useDirectoryMapView(places: LocalPlace[]) {
     null,
   );
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  // A place picked straight off the map. It takes over the sidebar (one card,
+  // its own heading) instead of being hunted for inside a parish list.
+  const [focusedId, setFocusedId] = useState<string | null>(null);
   const [been, setBeen] = useState<Record<string, number>>({});
 
   const mappable = useMemo(
     () => places.filter((place) => place.coords !== null),
     [places],
   );
-  const markers = useMemo(() => mappable.map(localPlaceToMarker), [mappable]);
+  // Picking a parish narrows the map to that parish's own pins. Every other
+  // parish keeps its name and count label (see `counts`, which stays computed
+  // over the whole set) so an emptied area still says how much is in it.
+  const markers = useMemo(
+    () =>
+      (selectedFreguesia
+        ? mappable.filter((place) => place.freguesia === selectedFreguesia)
+        : mappable
+      ).map(localPlaceToMarker),
+    [mappable, selectedFreguesia],
+  );
 
   const counts = useMemo(() => {
     const byFreguesia: Record<string, number> = {};
@@ -51,16 +64,22 @@ export function useDirectoryMapView(places: LocalPlace[]) {
     return byFreguesia;
   }, [mappable]);
 
-  const items = useMemo(
-    () =>
-      selectedFreguesia
-        ? mappable.filter((place) => place.freguesia === selectedFreguesia)
-        : mappable,
-    [mappable, selectedFreguesia],
+  // Resolved rather than stored, so a place that upstream filters drop stops
+  // holding the sidebar hostage.
+  const focusedPlace = useMemo(
+    () => mappable.find((place) => place.id === focusedId) ?? null,
+    [mappable, focusedId],
   );
 
+  const items = useMemo(() => {
+    if (focusedPlace) return [focusedPlace];
+    return selectedFreguesia
+      ? mappable.filter((place) => place.freguesia === selectedFreguesia)
+      : mappable;
+  }, [mappable, selectedFreguesia, focusedPlace]);
+
   const groups = useMemo(() => {
-    if (selectedFreguesia) return null;
+    if (selectedFreguesia || focusedPlace) return null;
     const grouped: { freguesia: string; places: LocalPlace[] }[] = [];
     items.forEach((place) => {
       let group = grouped.find((entry) => entry.freguesia === place.freguesia);
@@ -71,18 +90,30 @@ export function useDirectoryMapView(places: LocalPlace[]) {
       group.places.push(place);
     });
     return grouped;
-  }, [items, selectedFreguesia]);
+  }, [items, selectedFreguesia, focusedPlace]);
 
   const scrollBehavior: ScrollBehavior = reducedMotion ? "auto" : "smooth";
 
   function selectFreguesia(name: string | null) {
     setSelectedFreguesia(name);
     setExpandedId(null);
+    setFocusedId(null);
   }
-  // Tapping a map pin expands its card; on mobile the list sits below the map,
-  // so bring the card into view rather than leaving the tap feel like a no-op.
+  // The map's own parish handler. The overlay only reports which parish was
+  // clicked, so clicking the highlighted one again is what clears the
+  // selection: pins come back everywhere and the camera eases out.
+  const toggleFreguesia = useCallback((name: string) => {
+    setSelectedFreguesia((current) => (current === name ? null : name));
+    setExpandedId(null);
+    setFocusedId(null);
+  }, []);
+  // Tapping a map pin hands the sidebar over to that one place: the parish
+  // filter steps aside, since the pin itself is the answer, and the card
+  // opens. On mobile the list sits below the map, so bring it into view too.
   const selectPlace = useCallback(
     (placeId: string) => {
+      setSelectedFreguesia(null);
+      setFocusedId(placeId);
       setExpandedId(placeId);
       if (!isMobile) return;
       requestAnimationFrame(() => {
@@ -93,6 +124,10 @@ export function useDirectoryMapView(places: LocalPlace[]) {
     },
     [isMobile, scrollBehavior],
   );
+  function clearFocus() {
+    setFocusedId(null);
+    setExpandedId(null);
+  }
   function toggleExpand(placeId: string) {
     setExpandedId((current) => (current === placeId ? null : placeId));
   }
@@ -108,13 +143,16 @@ export function useDirectoryMapView(places: LocalPlace[]) {
     cardRefs,
     selectedFreguesia,
     expandedId,
+    focusedPlace,
     been,
     markers,
     counts,
     items,
     groups,
     selectFreguesia,
+    toggleFreguesia,
     selectPlace,
+    clearFocus,
     toggleExpand,
     markBeen,
     jumpToList,

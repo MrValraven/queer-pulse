@@ -14,6 +14,9 @@
   background: var(--jade);
 }
 .heroCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
   margin-top: 26px;
 }
 .heroCta svg {

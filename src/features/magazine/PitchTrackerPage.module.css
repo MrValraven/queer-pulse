@@ -1,7 +1,7 @@
 /* ---- Page shell ---- */
 .page {
   max-width: 980px;
-  margin: 0 auto;
+  margin: 0;
   padding: 40px 28px 80px;
 }
 

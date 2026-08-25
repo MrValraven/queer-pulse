@@ -24,6 +24,11 @@ export interface DefaultMeta {
   description: string;
   /** Root-relative path to the self-hosted default social image (in public/). */
   image: string;
+  /** Alt text for the default social image. */
+  imageAlt: string;
+  /** Intrinsic pixel size of the default social image. */
+  imageWidth: number;
+  imageHeight: number;
   twitterCard: string;
   twitterHandle: string;
   locale: string;
@@ -35,6 +40,9 @@ export const defaultMeta: DefaultMeta = {
   description:
     "A place to discover what's happening across Lisbon's queer community and find the people, communities, events, and opportunities shaping queer life in the city.",
   image: "/og-default.png",
+  imageAlt: "QueerPulse: a queer network, rooted in Lisbon",
+  imageWidth: 1200,
+  imageHeight: 630,
   twitterCard: "summary_large_image",
   twitterHandle: "@queerpulse",
   locale: "en_GB",

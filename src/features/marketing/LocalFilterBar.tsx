@@ -16,9 +16,11 @@ import s from "./LocalFilterBar.module.css";
 
 /**
  * Shared filter bar for the Local page (both list + map views). On desktop it's
- * the sticky inline bar (search + category chips + refine drawer). On phones the
- * whole set collapses behind a single "Filters" sheet, and the List/Map switcher
- * rides in the compact sticky bar so it stays reachable while scrolled.
+ * an inline bar that scrolls away with the page: one row of search + a "Refine"
+ * toggle, with every filter group (place type, safe spaces, vibe) in the drawer
+ * below. On phones the whole set collapses behind a single "Filters" sheet, and
+ * the List/Map switcher rides in a compact sticky bar so it stays reachable
+ * while scrolled.
  */
 export function LocalFilterBar({
   view,
@@ -96,7 +98,7 @@ export function LocalFilterBar({
                 {t("marketing:local.filter.filters")}
               </h2>
             </div>
-            <LocalFilterFields {...fields} />
+            <LocalFilterFields {...fields} variant="sheet" />
             <div className={s.sheetActions}>
               <Button variant="primary" onClick={() => setSheetOpen(false)}>
                 {t("marketing:local.filter.showResults", {

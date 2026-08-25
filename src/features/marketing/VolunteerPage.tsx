@@ -7,6 +7,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useOpportunities } from "./api/useOpportunities";
+import { useMyOpportunities } from "./api/useMyOpportunities";
 import { causeToLower } from "./api/volunteering.adapters";
 import type { VolunteerCause } from "./volunteerOpportunities.types";
 import type { Cause, Commit } from "./api/volunteering.api";
@@ -29,6 +30,16 @@ export function VolunteerPage() {
   const cause: Cause | undefined = CAUSE_FILTERS.has(filter)
     ? causeToLower(filter as VolunteerCause)
     : undefined;
+
+  // The hero CTA only appears once the viewer actually has applicants to
+  // review: `/volunteering/mine` returns what they posted themselves plus
+  // anything attributed to a community they own or moderate, which is exactly
+  // the tier the dashboard serves. Skipped entirely for signed-out visitors
+  // (the endpoint is member-guarded).
+  const { data: myOpportunities = [] } = useMyOpportunities({
+    enabled: Boolean(user),
+  });
+  const hasOpportunitiesToManage = myOpportunities.length > 0;
 
   const {
     items: opps,
@@ -77,7 +88,7 @@ export function VolunteerPage() {
           <Button to={routes.postVolunteer} variant="ghost-dark">
             <FiPlus aria-hidden /> {t("marketing:volunteer.hero.postCta")}
           </Button>
-          {user && (
+          {user && hasOpportunitiesToManage && (
             <Button to={routes.manageVolunteerApplicants} variant="ghost-dark">
               <FiUsers aria-hidden /> {t("marketing:volunteer.hero.manageCta")}
             </Button>

@@ -49,7 +49,7 @@ export function HousingPage() {
           { name: pageTitle, path: routes.housing },
         ])}
       />
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
             {t("economy:housing.hero.eyebrow")}
@@ -69,7 +69,7 @@ export function HousingPage() {
             {t("economy:housing.hero.note")}
           </Reveal>
         </div>
-      </div>
+      </header>
 
       <div className={styles.tabBar}>
         <div className="wrap">

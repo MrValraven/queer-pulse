@@ -27,8 +27,9 @@ export function DirectoryMapView({
           venues={state.markers}
           freguesia={state.selectedFreguesia}
           selectedVenueId={state.expandedId}
+          focusedVenueId={state.focusedPlace?.id ?? null}
           counts={state.counts}
-          onSelectFreguesia={state.selectFreguesia}
+          onSelectFreguesia={state.toggleFreguesia}
           onSelectVenue={state.selectPlace}
         />
 

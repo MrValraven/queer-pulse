@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { NavigationType, useLocation, useNavigationType } from "react-router-dom";
 import { scrollBus } from "./scrollBus";
 import { paneScrollRegistry } from "./paneScrollRegistry";
@@ -89,9 +89,43 @@ export function scrollKeyForPath(pathname: string, historyKey: string): string {
   return tabOf(pathname) === pathname ? pathname : historyKey;
 }
 
+export interface ScrollRouteLocation {
+  pathname: string;
+  search: string;
+}
+
+/**
+ * Is this navigation just the SAME page re-stating its own query string?
+ *
+ * Every filter/tab/view control that lives in the URL (the local directory's
+ * List/Map toggle, its category + search + vibe filters, the communities and
+ * events tab params, the forum's page state) navigates to mutate its search
+ * params, and react-router mints a brand-new `location.key` for each of those:
+ * on `replace` exactly as on `push`. Without this check the navigation effect
+ * below reads every one of them as a fresh page and glides the window back to
+ * the top, so flipping the directory from map to list (or ticking a filter, or
+ * typing one more letter into a search box) yanked the visitor away from the
+ * rows they were reading.
+ *
+ * Same pathname + a different query string means the visitor is re-filtering the
+ * page they are already on, so their scroll offset must survive it. A changed
+ * pathname is a real navigation and still resets to the top.
+ */
+export function isSameRouteQueryChange(
+  previous: ScrollRouteLocation | null,
+  next: ScrollRouteLocation,
+): boolean {
+  if (!previous) return false;
+  return previous.pathname === next.pathname && previous.search !== next.search;
+}
+
 export function ScrollManager() {
-  const { pathname, hash, key } = useLocation();
+  const { pathname, search, hash, key } = useLocation();
   const navigationType = useNavigationType();
+  // What the PREVIOUS navigation landed on, so the effect below can tell a real
+  // page change from the same page re-stating its query string. Null until the
+  // first navigation completes, which keeps the initial load resetting to top.
+  const previousRouteRef = useRef<ScrollRouteLocation | null>(null);
 
   // Own scroll restoration ourselves; the browser's guess fights our restore.
   useEffect(() => {
@@ -149,6 +183,9 @@ export function ScrollManager() {
   }, [pathname]);
 
   useEffect(() => {
+    const previousRoute = previousRouteRef.current;
+    previousRouteRef.current = { pathname, search };
+
     // The window isn't this route's scroller — don't drive window.scrollTo (top,
     // pop-restore, or tab-restore) or it fights the pane. Hand the same intent
     // to the pane's registered scroll container instead: POP restores the
@@ -164,16 +201,19 @@ export function ScrollManager() {
       return;
     }
 
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    const behavior: ScrollBehavior = prefersReduced ? "auto" : "smooth";
-
     // In-page anchor links (e.g. "/#discovery") always win — jump to the target.
+    // Gliding to it is only right when the visitor is ALREADY on that page and
+    // asked to travel down it (a jump-link in the page or its nav). Arriving
+    // with a hash from a DIFFERENT page is a page change like any other, so it
+    // lands instantly rather than animating the whole new page past them.
     if (hash) {
       const target = document.getElementById(hash.slice(1));
       if (target) {
-        target.scrollIntoView({ behavior, block: "start" });
+        const isSamePage = previousRoute?.pathname === pathname;
+        target.scrollIntoView({
+          behavior: isSamePage ? "smooth" : "instant",
+          block: "start",
+        });
         return;
       }
     }
@@ -191,13 +231,27 @@ export function ScrollManager() {
       }
     }
 
+    // Re-filtering the page you are already on (List/Map, a category chip, a
+    // sort, a keystroke in a search field) only rewrites the query string. Leave
+    // the visitor exactly where they were reading. See isSameRouteQueryChange.
+    if (isSameRouteQueryChange(previousRoute, { pathname, search })) return;
+
     // A fresh navigation with no hash target — including opening a bottom tab
     // (PUSH or tab-switch) — starts at the top. We intentionally do NOT resume
     // the tab's last offset here: on a tall page (e.g. `/events`, whose hero is
     // ~80svh) that silently scrolled visitors into the middle of the page.
     // Only browser Back/forward (POP, handled above) restores a prior offset.
-    window.scrollTo({ top: 0, behavior });
-  }, [pathname, hash, key, navigationType]);
+    //
+    // `behavior: "instant"`, not "auto" (which would defer to the global
+    // `html { scroll-behavior: smooth }` in base.css): a page change must land
+    // at the top immediately. Animating it scrolled the OUTGOING page's full
+    // height past the visitor — from the bottom of a long list like the
+    // listings directory to a profile, that is a long, disorienting glide, and
+    // any tap during it (a nav item, the new page's own controls) fought the
+    // running animation. Only the deliberate tap-the-active-tab gesture, where
+    // you stay on the page you are looking at, still glides.
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname, search, hash, key, navigationType]);
 
   return null;
 }

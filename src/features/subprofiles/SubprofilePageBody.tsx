@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
-import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { SubprofileCoverBand } from "./SubprofileCoverBand";
 import { SubprofileHero } from "./SubprofileHero";
 import { SubprofileSections } from "./SubprofileSections";
 import { SubprofileSpotlight } from "./SubprofileSpotlight";
@@ -69,34 +69,7 @@ export function SubprofilePageBody({
       style={skinVars}
       ref={rootRef}
     >
-      <div className="pp-cover" data-has-cover={data.coverUrl ? "" : undefined}>
-        <ImageSlot
-          src={data.coverUrl || undefined}
-          alt=""
-          tint="plum"
-          // The member framed this in the reframe editor at the banner's own
-          // 3:1 aspect, but the band it lands in is 4:1-7:1 wide on desktop and
-          // ~2:1 on a phone, and changes again per skin — so the crop is
-          // honoured as a FOCAL POINT (see `cropFocalPosition`) rather than
-          // reproduced exactly, which would distort it. Without this the
-          // browser just kept the middle of the file and threw the member's
-          // framing away.
-          focus={data.coverCrop}
-          radius={0}
-          width="100%"
-          height="100%"
-          className="ph"
-          // Skins that always render the cover band (stage/studio/table) must
-          // show a plain tinted frame when no image is uploaded, never the
-          // literal "Image" placeholder caption. (page/practice hide the band,
-          // and workshop hides it unless a cover was uploaded.)
-          placeholder=""
-          // The single above-the-fold hero image on the page — eager + high
-          // priority so it isn't lazy-deferred as the LCP candidate.
-          loading="eager"
-          fetchPriority="high"
-        />
-      </div>
+      <SubprofileCoverBand data={data} mode={mode} />
 
       <div className="wrap">
         {skin === "practice" ? (

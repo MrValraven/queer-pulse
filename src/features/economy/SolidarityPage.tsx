@@ -11,7 +11,7 @@ export function SolidarityPage() {
   const { t } = useTranslation();
   return (
     <PageShell>
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.eye}>
             {t("economy:solidarity.hero.eyebrow")}

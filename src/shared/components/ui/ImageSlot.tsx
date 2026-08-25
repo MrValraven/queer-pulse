@@ -47,6 +47,14 @@ interface ImageSlotProps {
    *  a card's cover strip — where `crop` would distort. Ignored when `crop` is
    *  also passed, which is the stricter, exact-frame rendering. */
   focus?: CropRect;
+  /** Extra inline style merged onto the `<img>` itself, applied AFTER the
+   *  `crop`/`focus` positioning above so it can override it. For callers that
+   *  drive the framing from a CSS custom property rather than from React state
+   *  — the persona banner's owner reposition control writes its live drag
+   *  position straight onto the DOM node, so a value like
+   *  `` `50% var(--pp-cover-y, 40%)` `` has to reach the image. Leave it unset
+   *  everywhere else; `crop`/`focus` are the declarative way in. */
+  imgStyle?: CSSProperties;
 }
 
 /**
@@ -100,6 +108,7 @@ export function ImageSlot({
   fetchPriority,
   crop,
   focus,
+  imgStyle,
 }: ImageSlotProps) {
   const { t } = useTranslation();
   // Tracks the most recent `src` that failed to load (a 404/broken hotlink),
@@ -115,13 +124,15 @@ export function ImageSlot({
   // position-relative) `.slot` box, overriding the default cover fit so the
   // crop math isn't re-cropped by the browser. Absent = no inline style at
   // all, i.e. today's `.slot img { object-fit: cover }` behavior.
-  const cropImgStyle: CSSProperties | undefined = crop
+  const positionStyle: CSSProperties | undefined = crop
     ? { position: "absolute", objectFit: "fill", ...cropToImgStyle(crop) }
     : focus
       ? // Focal mode keeps the stylesheet's `object-fit: cover` and only moves
         // WHICH part of the image survives the crop the box forces.
         { objectPosition: cropFocalPosition(focus) }
       : undefined;
+  const cropImgStyle: CSSProperties | undefined =
+    positionStyle || imgStyle ? { ...positionStyle, ...imgStyle } : undefined;
   const borderRadius = shape === "circle" ? "50%" : radius;
   // Only resizable hosts (Google/OAuth, Unsplash) are rewritten; every other
   // src — our own `/files/<key>` uploads, magazine art — passes through

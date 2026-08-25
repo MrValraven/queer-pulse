@@ -513,6 +513,40 @@
   flex: 0 0 auto;
 }
 
+/* Phone-only summary line: EditorSavebar renders this INSTEAD of the heading +
+   list ≤560px, so the dirty pill costs one row rather than six while the
+   on-screen keyboard is up. Tapping it reveals the same `.savebar-list` below.
+   Parent-scoped to out-specify the generic `.savebar span`/button resets. */
+.savebar .savebar-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: start;
+  cursor: pointer;
+}
+.savebar .savebar-summary svg {
+  flex: none;
+  color: var(--ink-60);
+}
+/* Expanded on a phone, the list still can't be allowed to reclaim the height
+   the collapse just bought — cap it lower than the 132px desktop scroller.
+   AFTER `.savebar-list` above: same specificity, so source order decides. */
+@container (max-width: 560px) {
+  .savebar-list {
+    max-height: 84px;
+  }
+}
+
 /* ── publish readiness (Task 7 — PublishChecklist restyle) ───────────── */
 .ready {
   display: flex;

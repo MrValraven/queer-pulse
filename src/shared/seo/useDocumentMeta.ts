@@ -15,8 +15,9 @@ export interface DocumentMeta {
   /** Social image — root-relative path or absolute URL. Falls back to default. */
   image?: string;
   /** Alt text for the social image — emitted as `og:image:alt` /
-   *  `twitter:image:alt`. Omitted entirely when absent (an empty alt is worse
-   *  than none for a social card). */
+   *  `twitter:image:alt`. When an `image` override arrives without one, the
+   *  alt tags are dropped: the shell's alt describes the default card and
+   *  would misdescribe the new image. */
   imageAlt?: string;
   /** Twitter card style — `"summary"` (small square thumb) or
    *  `"summary_large_image"` (wide hero). Defaults to the site default. Pass
@@ -28,80 +29,87 @@ export interface DocumentMeta {
   type?: string;
 }
 
-/** Upsert a <meta> tag, returning a function that restores the prior state. */
-function upsertMeta(
-  attr: "name" | "property",
+/** Upsert a <meta> tag's content, creating the tag if the shell lacks it. */
+function setMeta(
+  attribute: "name" | "property",
   key: string,
   content: string,
-): () => void {
-  const existing = document.head.querySelector<HTMLMetaElement>(
-    `meta[${attr}="${key}"]`,
+): void {
+  let element = document.head.querySelector<HTMLMetaElement>(
+    `meta[${attribute}="${key}"]`,
   );
-  const created = existing === null;
-  const previous = existing?.getAttribute("content") ?? null;
-
-  const el = existing ?? document.createElement("meta");
-  if (created) {
-    el.setAttribute(attr, key);
-    document.head.appendChild(el);
+  if (element === null) {
+    element = document.createElement("meta");
+    element.setAttribute(attribute, key);
+    document.head.appendChild(element);
   }
-  el.setAttribute("content", content);
+  element.setAttribute("content", content);
+}
 
-  return () => {
-    if (created) {
-      el.remove();
-    } else if (previous !== null) {
-      el.setAttribute("content", previous);
-    }
-  };
+/** Remove a <meta> tag if it is present. */
+function removeMeta(attribute: "name" | "property", key: string): void {
+  document.head
+    .querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`)
+    ?.remove();
+}
+
+/** Upsert the canonical <link>, creating it if the shell lacks it. */
+function setCanonical(href: string): void {
+  let element = document.head.querySelector<HTMLLinkElement>(
+    'link[rel="canonical"]',
+  );
+  if (element === null) {
+    element = document.createElement("link");
+    element.setAttribute("rel", "canonical");
+    document.head.appendChild(element);
+  }
+  element.setAttribute("href", href);
 }
 
 /**
- * Remove a <meta> tag (if present), restoring it on cleanup. Used to drop the
- * static shell's fixed `og:image:width`/`height` when a page overrides
- * `og:image` with an image of unknown dimensions — announcing a square avatar
- * as 1200×630 makes scrapers crop it. Re-appends the original node on cleanup
- * (order among head tags is irrelevant), so the default shell dimensions
- * survive for the next page.
+ * Put the document head back to the neutral site defaults — the same values the
+ * static shell (index.html) ships, mirrored from `defaultMeta`.
+ *
+ * This is the baseline every page returns to on unmount. It is deliberately
+ * *absolute* rather than "whatever the head held when this page mounted":
+ * `scripts/prerender.mjs` writes a per-path `dist/<path>/index.html` with that
+ * page's own title and tags baked in, so a session that lands on a prerendered
+ * public page starts with a page-specific head. Restoring that captured state
+ * left every route entered afterwards wearing e.g. "The Magazine — QueerPulse",
+ * which is visible on the gated routes (feed, local directory) because they
+ * render no <PageMeta> of their own.
+ *
+ * Canonical / og:url are rebuilt from the live pathname: cleanup runs after the
+ * router has already committed the new URL, so this describes the page being
+ * entered rather than the one being left.
  */
-function removeMeta(attr: "name" | "property", key: string): () => void {
-  const existing = document.head.querySelector<HTMLMetaElement>(
-    `meta[${attr}="${key}"]`,
-  );
-  if (existing === null) return () => {};
-  existing.remove();
-  return () => {
-    document.head.appendChild(existing);
-  };
-}
+export function applyDefaultDocumentMeta(): void {
+  const image = toAbsoluteUrl(defaultMeta.image);
+  const url = toAbsoluteUrl(window.location.pathname);
 
-/** Upsert the canonical <link>, returning a restore function. */
-function upsertCanonical(href: string): () => void {
-  const existing = document.head.querySelector<HTMLLinkElement>(
-    'link[rel="canonical"]',
-  );
-  const created = existing === null;
-  const previous = existing?.getAttribute("href") ?? null;
-
-  const el = existing ?? document.createElement("link");
-  if (created) {
-    el.setAttribute("rel", "canonical");
-    document.head.appendChild(el);
-  }
-  el.setAttribute("href", href);
-
-  return () => {
-    if (created) {
-      el.remove();
-    } else if (previous !== null) {
-      el.setAttribute("href", previous);
-    }
-  };
+  document.title = defaultMeta.title;
+  setMeta("name", "description", defaultMeta.description);
+  setCanonical(url);
+  setMeta("property", "og:type", "website");
+  setMeta("property", "og:url", url);
+  setMeta("property", "og:title", defaultMeta.title);
+  setMeta("property", "og:description", defaultMeta.description);
+  setMeta("property", "og:image", image);
+  setMeta("property", "og:image:width", String(defaultMeta.imageWidth));
+  setMeta("property", "og:image:height", String(defaultMeta.imageHeight));
+  setMeta("property", "og:image:alt", defaultMeta.imageAlt);
+  setMeta("name", "twitter:card", defaultMeta.twitterCard);
+  setMeta("name", "twitter:title", defaultMeta.title);
+  setMeta("name", "twitter:description", defaultMeta.description);
+  setMeta("name", "twitter:image", image);
+  setMeta("name", "twitter:image:alt", defaultMeta.imageAlt);
+  removeMeta("name", "robots");
 }
 
 /**
  * Imperatively set `document.title` and upsert the SEO/social meta tags for the
- * current page, restoring the previous values on unmount / dependency change.
+ * current page, resetting the head to the site defaults on unmount / dependency
+ * change (see `applyDefaultDocumentMeta`).
  *
  * React-19-native and dependency-free: it manages tags via a single effect so
  * it composes cleanly with the static defaults baked into `index.html`.
@@ -131,41 +139,43 @@ export function useDocumentMeta(meta: DocumentMeta): void {
     const url = toAbsoluteUrl(canonical ?? pathname);
     const resolvedImage = toAbsoluteUrl(image ?? defaultMeta.image);
 
-    const previousTitle = document.title;
     document.title = title;
-
-    const cleanups: Array<() => void> = [
-      upsertMeta("name", "description", resolvedDescription),
-      upsertCanonical(url),
-      upsertMeta("property", "og:title", title),
-      upsertMeta("property", "og:description", resolvedDescription),
-      upsertMeta("property", "og:url", url),
-      upsertMeta("property", "og:image", resolvedImage),
-      upsertMeta("property", "og:type", type),
-      upsertMeta("name", "twitter:card", twitterCard ?? defaultMeta.twitterCard),
-      upsertMeta("name", "twitter:title", title),
-      upsertMeta("name", "twitter:description", resolvedDescription),
-      upsertMeta("name", "twitter:image", resolvedImage),
-    ];
+    setMeta("name", "description", resolvedDescription);
+    setCanonical(url);
+    setMeta("property", "og:title", title);
+    setMeta("property", "og:description", resolvedDescription);
+    setMeta("property", "og:url", url);
+    setMeta("property", "og:image", resolvedImage);
+    setMeta("property", "og:type", type);
+    setMeta("name", "twitter:card", twitterCard ?? defaultMeta.twitterCard);
+    setMeta("name", "twitter:title", title);
+    setMeta("name", "twitter:description", resolvedDescription);
+    setMeta("name", "twitter:image", resolvedImage);
 
     if (imageAlt) {
-      cleanups.push(upsertMeta("property", "og:image:alt", imageAlt));
-      cleanups.push(upsertMeta("name", "twitter:image:alt", imageAlt));
+      setMeta("property", "og:image:alt", imageAlt);
+      setMeta("name", "twitter:image:alt", imageAlt);
+    } else if (image) {
+      // An image override with no alt of its own: the shell's alt describes the
+      // default 1200×630 card, so leaving it would caption someone's avatar or
+      // cover with brand copy. No alt is better than a wrong one.
+      removeMeta("property", "og:image:alt");
+      removeMeta("name", "twitter:image:alt");
     }
 
-    // The static shell (index.html) hardcodes og:image:width=1200 / height=630
-    // for the default 1200×630 social card. When a page overrides `image` — e.g.
-    // a persona route pointing og:image at a square avatar or an arbitrary cover —
-    // those fixed dimensions are stale and misdescribe the new image, so scrapers
-    // crop it to 1200×630. We don't know the override's real size here, so drop
-    // the width/height tags entirely and let consumers read the actual image.
+    // The defaults declare og:image:width=1200 / height=630 for the 1200×630
+    // social card. When a page overrides `image` — e.g. a persona route pointing
+    // og:image at a square avatar or an arbitrary cover — those dimensions are
+    // stale and misdescribe the new image, so scrapers crop it to 1200×630. We
+    // don't know the override's real size here, so drop the width/height tags
+    // entirely and let consumers read the actual image. Cleanup puts them back.
     if (image) {
-      cleanups.push(removeMeta("property", "og:image:width"));
-      cleanups.push(removeMeta("property", "og:image:height"));
+      removeMeta("property", "og:image:width");
+      removeMeta("property", "og:image:height");
     }
 
     if (noIndex) {
-      cleanups.push(upsertMeta("name", "robots", "noindex, nofollow"));
+      setMeta("name", "robots", "noindex, nofollow");
     }
 
     // Signals scripts/prerender.mjs that this route's metadata has been
@@ -173,10 +183,8 @@ export function useDocumentMeta(meta: DocumentMeta): void {
     document.documentElement.dataset.prerenderReady = "true";
 
     return () => {
-      document.title = previousTitle;
       delete document.documentElement.dataset.prerenderReady;
-      // Restore in reverse so overlapping tags unwind cleanly.
-      for (let i = cleanups.length - 1; i >= 0; i--) cleanups[i]?.();
+      applyDefaultDocumentMeta();
     };
   }, [
     title,

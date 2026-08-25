@@ -10,7 +10,8 @@ import { VolunteerApplicantsList } from "./VolunteerApplicantsList";
 import styles from "./VolunteerApplicantsDashboardPage.module.css";
 
 /**
- * Poster-only dashboard: pick one of your posted opportunities on the left,
+ * Applicant-review desk: pick one of the opportunities you can review on the
+ * left (yours, plus any attributed to a community you own or moderate),
  * review/accept/decline its applicants on the right. `?opportunity=<slug>`
  * seeds the initial selection so `VolunteerSignupsCard`'s "N to review" link
  * can deep-link straight to the relevant opportunity.

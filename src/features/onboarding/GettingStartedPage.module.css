@@ -16,11 +16,6 @@
   min-width: 0;
 }
 
-.doneCol {
-  max-width: 680px;
-  margin-inline: auto;
-}
-
 .sideCol {
   display: flex;
   flex-direction: column;

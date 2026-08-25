@@ -148,8 +148,10 @@ export function GettingStartedPage() {
   return (
     <AppShell>
       <main className={styles.page}>
-        {allDone ? (
-          <div className={styles.doneCol}>
+        {/* One two-column shell for both states: finishing the checklist swaps
+            what each column holds, it doesn't reflow the page. */}
+        <div className={styles.layout}>
+          <div className={styles.mainCol}>
             <header className={styles.head}>
               <Eyebrow>{t("auth:gettingStarted.eyebrow")}</Eyebrow>
               <h1 className={styles.title}>
@@ -158,64 +160,63 @@ export function GettingStartedPage() {
                   components={{ em: <em /> }}
                 />
               </h1>
-              <p className={styles.lede}>{t("auth:gettingStarted.lede")}</p>
+              <p className={styles.lede}>
+                {/* The all-done panel already says "you're all set", so the lede
+                    stays the plain welcome rather than a "6 of 6" count. */}
+                {!allDone && completedCount > 0
+                  ? t("auth:gettingStarted.ledeProgress", {
+                      done: completedCount,
+                      total: totalCount,
+                    })
+                  : t("auth:gettingStarted.lede")}
+              </p>
             </header>
-            <SuccessPanel
-              title={t("auth:gettingStarted.allDone.title")}
-              em={t("auth:gettingStarted.allDone.em")}
-              closeLabel={t("auth:gettingStarted.allDone.cta")}
-              onClose={() => {
-                void navigate(routes.feed);
-              }}
-              steps={[
-                ...steps.map((step) => t(step.titleKey)),
-                t("auth:gettingStarted.success.badge"),
-              ]}
-            >
-              {t("auth:gettingStarted.allDone.body")}
-            </SuccessPanel>
-            <LevelXpStrip
-              hint={t("auth:gettingStarted.levelStrip.hintDone")}
-            />
-            <SideQuests />
+            {allDone ? (
+              <>
+                <SuccessPanel
+                  title={t("auth:gettingStarted.allDone.title")}
+                  em={t("auth:gettingStarted.allDone.em")}
+                  closeLabel={t("auth:gettingStarted.allDone.cta")}
+                  onClose={() => {
+                    void navigate(routes.feed);
+                  }}
+                  steps={[
+                    ...steps.map((step) => t(step.titleKey)),
+                    t("auth:gettingStarted.success.badge"),
+                  ]}
+                >
+                  {t("auth:gettingStarted.allDone.body")}
+                </SuccessPanel>
+                <SideQuests />
+              </>
+            ) : (
+              <>
+                <ProgressMeter
+                  done={completedCount}
+                  total={totalCount}
+                  loading={loading}
+                />
+                <ol className={styles.list}>
+                  {steps.map((step) => (
+                    <StepRow key={step.key} step={step} />
+                  ))}
+                </ol>
+              </>
+            )}
           </div>
-        ) : (
-          <div className={styles.layout}>
-            <div className={styles.mainCol}>
-              <header className={styles.head}>
-                <Eyebrow>{t("auth:gettingStarted.eyebrow")}</Eyebrow>
-                <h1 className={styles.title}>
-                  <Translation
-                    i18nKey="auth:gettingStarted.title"
-                    components={{ em: <em /> }}
-                  />
-                </h1>
-                <p className={styles.lede}>
-                  {completedCount > 0
-                    ? t("auth:gettingStarted.ledeProgress", {
-                        done: completedCount,
-                        total: totalCount,
-                      })
-                    : t("auth:gettingStarted.lede")}
-                </p>
-              </header>
-              <ProgressMeter
-                done={completedCount}
-                total={totalCount}
-                loading={loading}
-              />
-              <ol className={styles.list}>
-                {steps.map((step) => (
-                  <StepRow key={step.key} step={step} />
-                ))}
-              </ol>
-            </div>
-            <aside className={styles.sideCol}>
-              <LevelXpStrip force />
-              <XpSourcesTeaser />
-            </aside>
-          </div>
-        )}
+          <aside className={styles.sideCol}>
+            {allDone ? (
+              <LevelXpStrip hint={t("auth:gettingStarted.levelStrip.hintDone")} />
+            ) : (
+              <>
+                {/* `force` while steps remain: a member can finish several in
+                    minutes and would otherwise read a throttled XP total. */}
+                <LevelXpStrip force />
+                <XpSourcesTeaser />
+              </>
+            )}
+          </aside>
+        </div>
       </main>
     </AppShell>
   );

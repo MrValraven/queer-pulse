@@ -92,7 +92,7 @@ export function SecurityPage() {
 
   return (
     <PageShell>
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.heroEye}>{t("settings:security.hero.eyebrow")}</div>
           <h1 className={styles.heroH}>

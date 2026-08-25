@@ -1,3 +1,4 @@
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { MEMBERS, memberName } from "../members/data/members";
 import {
   formatDayHours,
@@ -274,6 +275,10 @@ export interface DirectoryPlace {
    * places, which fall back to the `gallery` caption blocks. */
   photos?: Record<PhotoKey, string | null>;
   alt?: Record<PhotoKey, string>;
+  /** The crop the owner framed for the cover photo, read as a FOCAL REGION
+   * (not an exact frame) because the card's photo strip is a fixed 168px band
+   * whose aspect won't match the saved rect. Absent ⇒ the image is centred. */
+  photoFocus?: CropRect;
   /** Real per-weekday hours keyed by `DAYS` id (`Mon`..`Sun`). Absent → the
    * templated `hoursRows(hoursType)` fallback renders instead. */
   hours?: Record<string, DayHours>;
@@ -2237,6 +2242,30 @@ export function parseListingDate(
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
+
+/**
+ * Which of the three ownership badges a place wears, in the one place both the
+ * card and the detail header read it from so they can never disagree.
+ *
+ * "verified" is the moderator-checked grant (`queerOwnedVerified`, already
+ * computed as granted-and-unexpired by the backend). "owned" is the owner's
+ * own unconfirmed claim, which still deserves saying: a queer-owned business
+ * that no moderator has got to yet is not an allied one, and reading it as
+ * "LGBTQ+ friendly" got the fact wrong. "friendly" is everything else.
+ */
+export type OwnershipBadgeState = "verified" | "owned" | "friendly";
+
+export function ownershipBadgeOf(place: DirectoryPlace): OwnershipBadgeState {
+  if (place.queerOwnedVerified) return "verified";
+  return place.owned ? "owned" : "friendly";
+}
+
+/** Catalog key for each ownership state, as the grid card renders it. */
+export const OWNERSHIP_BADGE_KEYS: Record<OwnershipBadgeState, string> = {
+  verified: "marketing:directory.badge.queerOwnedVerified",
+  owned: "marketing:directory.badge.queerOwned",
+  friendly: "marketing:directory.badge.friendly",
+};
 
 /**
  * Whether a business is still trading. Absent `operatingState` (demo fixtures,

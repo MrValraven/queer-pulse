@@ -87,7 +87,7 @@ export interface ListingDTO
   createdAt: string;
   photos: Record<PhotoKey, string | null>;
   /** Moderator-verified confirmation of the "queer-owned" badge — distinct
-   *  from `linkToProfile` (the member's own self-reported claim). Toggled via
+   *  from `badge` (the member's own self-reported claim). Toggled via
    *  `PATCH /listings/:ref/queer-owned-verified` (moderator/admin only). */
   queerOwnedVerified: boolean;
   /** The business's own report about whether it is still trading. Distinct

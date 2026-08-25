@@ -637,21 +637,58 @@ export const magazine: Catalog = {
   "desk.header.produce": "Issue production",
   "desk.header.slotsFilledAria": "Issue slots filled",
   "desk.header.layoutAria": "Desk layout",
-  "desk.header.highlightsEyebrow": "Standalone highlights",
-  "desk.header.highlightsMeta":
-    "Pieces that run on their own across the platform, not tied to any one issue.",
+  "desk.header.metaPublishesOnly": "Publishes {publishes}",
+  "desk.header.unassignedEyebrow": "Not in an issue yet",
+  "desk.header.unassignedMeta":
+    "Pieces waiting to be filed. Assign one to an issue when you know where it runs.",
 
-  // ── DeskTrackTabs (Highlights ⇄ Issue) ───────────────────────────────────
-  "desk.trackTabs.highlights": "Highlights",
+  // ── Issue switcher + create (desk header) ────────────────────────────────
+  "desk.header.workingOn": "Working on",
+  "desk.header.workingOnAria": "Which issue you are working on",
+  "desk.header.issueOption": "Issue {number} · {title}",
+  "desk.header.newIssueCta": "New issue",
+
+  // ── DeskTrackTabs (Unassigned ⇄ Issue) ───────────────────────────────────
+  "desk.trackTabs.unassigned": "Unassigned",
   "desk.trackTabs.issue": "Issue {number}",
   "desk.trackTabs.issueNoNumber": "Issue",
 
-  // ── Track reassignment (piece row action) ────────────────────────────────
-  "desk.reassign.addToIssue": "Add to issue {number}",
-  "desk.reassign.makeStandalone": "Make standalone",
+  // ── Issue assignment (piece row action + picker) ─────────────────────────
+  "desk.reassign.addToIssue": "Add to issue…",
+  "desk.reassign.moveIssue": "Move issue…",
   "desk.reassign.addedToIssueToast": "Added to issue {number}.",
-  "desk.reassign.madeStandaloneToast": "Now a standalone highlight.",
+  "desk.reassign.madeUnassignedToast": "Back in the unassigned pool.",
   "desk.reassign.failedToast": "That didn't save. Give it another try.",
+
+  "desk.assignIssue.title": "Which issue does this run in?",
+  "desk.assignIssue.subPieces_one": "{count} piece",
+  "desk.assignIssue.subPieces_other": "{count} pieces",
+  "desk.assignIssue.issueOption": "Issue {number} · {title}",
+  "desk.assignIssue.issueOptionMeta": "{filled} of {slots} slots filled",
+  "desk.assignIssue.unassignedOption": "No issue",
+  "desk.assignIssue.unassignedOptionMeta":
+    "Leave it in the unassigned pool for now.",
+  "desk.assignIssue.currentSuffix": "where it is now",
+  "desk.assignIssue.confirm_one": "Move it",
+  "desk.assignIssue.confirm_other": "Move {count} pieces",
+
+  // ── New issue modal ──────────────────────────────────────────────────────
+  "desk.newIssue.title": "Create a magazine issue",
+  "desk.newIssue.sub":
+    "Everything else — the cover, the running order, the digest — is set up on the issue's own page once it exists.",
+  "desk.newIssue.numberLabel": "Number",
+  "desk.newIssue.numberHelper": "Digits only. \u201c1\u201d becomes \u201c01\u201d.",
+  "desk.newIssue.publishesLabel": "Publishes",
+  "desk.newIssue.titleLabel": "Title",
+  "desk.newIssue.titlePlaceholder": "The long way round",
+  "desk.newIssue.themeLabel": "Theme",
+  "desk.newIssue.themeHelper": "One or two words. It shows beside the number.",
+  "desk.newIssue.themePlaceholder": "Aftercare",
+  "desk.newIssue.create": "Create issue",
+  "desk.newIssue.creating": "Creating\u2026",
+  "desk.newIssue.createdToast": "Issue {number} created. You're on it now.",
+  "desk.newIssue.duplicateNumberError": "Issue {number} already exists.",
+  "desk.newIssue.saveFailedError": "That didn't save. Give it another try.",
 
   // ── NeedsStrip ───────────────────────────────────────────────────────────
   "desk.needsStrip.lateDue": "Late · due {due}",
@@ -690,6 +727,7 @@ export const magazine: Catalog = {
   "desk.pipeline.columnStage": "Stage",
   "desk.pipeline.columnWaitingOn": "Waiting on",
   "desk.pipeline.columnDue": "Due",
+  "desk.pipeline.selectAllAria": "Select every piece shown",
 
   // ── PieceRow ─────────────────────────────────────────────────────────────
   "desk.pieceRow.newVoice": "New voice",
@@ -699,6 +737,7 @@ export const magazine: Catalog = {
   "desk.pieceRow.edit": "Edit",
   "desk.pieceRow.chase": "Chase",
   "desk.pieceRow.handOff": "Hand off",
+  "desk.pieceRow.selectAria": "Select {title}",
 
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Empty",
@@ -735,6 +774,17 @@ export const magazine: Catalog = {
   "desk.bulkTriage.clearSelection": "Clear selection",
   "desk.bulkTriage.maybe": "Maybe",
   "desk.bulkTriage.passKindly": "Pass, kindly",
+
+  // ── Bulk assign to issue (pipeline rows) ─────────────────────────────────
+  "desk.bulkAssign.selected_one": "{count} piece selected",
+  "desk.bulkAssign.selected_other": "{count} pieces selected",
+  "desk.bulkAssign.ariaLabel": "Bulk assign to issue",
+  "desk.bulkAssign.clearSelection": "Clear selection",
+  "desk.bulkAssign.assignToIssue": "Assign to issue\u2026",
+  "desk.bulkAssign.assignedToast_one": "{count} piece moved to issue {number}.",
+  "desk.bulkAssign.assignedToast_other": "{count} pieces moved to issue {number}.",
+  "desk.bulkAssign.unassignedToast_one": "{count} piece back in the unassigned pool.",
+  "desk.bulkAssign.unassignedToast_other": "{count} pieces back in the unassigned pool.",
 
   // ── DeskSidebar ──────────────────────────────────────────────────────────
   "desk.sidebar.issueStanding": "Where the issue stands",
@@ -808,7 +858,7 @@ export const magazine: Catalog = {
   "desk.modals.commission.feeLabel": "Fee",
   "desk.modals.commission.feePlaceholder": "e.g. €150",
   "desk.modals.commission.trackLabel": "Where it runs",
-  "desk.modals.commission.trackHighlights": "Standalone",
+  "desk.modals.commission.trackUnassigned": "No issue",
   "desk.modals.commission.trackIssue": "Issue {number}",
 
   // ── PassModal ────────────────────────────────────────────────────────────
@@ -1515,6 +1565,23 @@ export const magazine: Catalog = {
   "issue.runOrder.deckNoPageCount": "Deck: no page count",
   "issue.runOrder.pagesPrefix": "pp. {pages}",
   "issue.runOrder.laidOut": "Laid out",
+
+  // ── Add pieces panel (issue production, running order tab) ───────────────
+  "issue.addPieces.title": "Add pieces to this issue",
+  "issue.addPieces.sub":
+    "Pull from the pieces that aren't in an issue yet. They land at the end of the running order.",
+  "issue.addPieces.addCtaEmpty": "Add to issue {number}",
+  "issue.addPieces.addCta_one": "Add 1 to issue {number}",
+  "issue.addPieces.addCta_other": "Add {count} to issue {number}",
+  "issue.addPieces.searchPlaceholder": "Search unassigned pieces\u2026",
+  "issue.addPieces.searchLabel": "Search unassigned pieces",
+  "issue.addPieces.noMatches": "Nothing matches that search.",
+  "issue.addPieces.emptyTitle": "Everything is filed",
+  "issue.addPieces.emptyDescription":
+    "No pieces are waiting to be assigned. Commission one from the desk to start.",
+  "issue.addPieces.addedToast_one": "{count} piece added to issue {number}.",
+  "issue.addPieces.addedToast_other": "{count} pieces added to issue {number}.",
+  "issue.addPieces.failedToast": "That didn't save. Give it another try.",
   "issue.runOrder.inLayout": "In layout",
   "issue.runOrder.moveEarlierAria":
     "Move “{title}” earlier in the running order",

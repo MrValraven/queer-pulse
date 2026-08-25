@@ -87,7 +87,7 @@ export function BarterPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
             {t("economy:barter.hero.eyebrow")}
@@ -114,7 +114,7 @@ export function BarterPage() {
             ))}
           </div>
         </div>
-      </div>
+      </header>
 
       <BarterControls
         query={query}

@@ -63,23 +63,27 @@
   position: relative;
   margin: -16px -18px 0;
 }
+/* Single overlay (the map venue card's lone "friendly" pill). */
 .photoBadge {
   position: absolute;
   inset-block-end: 12px;
   inset-inline-start: 12px;
 }
-/* An opaque backdrop behind the (semi-transparent) SafeSpaceBadge so it stays
-   legible over an arbitrary photo instead of just its own light jade wash. */
-.photoBadgeSolid {
-  display: inline-flex;
-  background: var(--paper);
-  border-radius: 999px;
-  padding: 3px;
-  box-shadow: 0 2px 8px rgba(var(--plum-rgb), 0.18);
+/* The directory card's badge corner: the ownership pill, then the safe-space
+   mark beside it. A row rather than one slot, so a verified safe space no
+   longer hides what the place actually is. */
+.photoBadges {
+  position: absolute;
+  inset-block-end: 12px;
+  inset-inline-start: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .photoBadgeDark {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -88,7 +92,64 @@
   background: rgba(var(--plum-rgb), 0.72);
   border-radius: 999px;
   padding: 5px 11px;
+  white-space: nowrap;
 }
+/* The tick that separates a moderator-confirmed queer-owned badge from the
+   owner's own (still worth saying) claim. */
+.photoBadgeCheck {
+  width: 11px;
+  height: 11px;
+  flex: none;
+  stroke-width: 3;
+}
+/* Verified safe space, reduced to its mark: the words live in its tooltip and
+   its accessible name. It sits on a member-supplied photo, so it carries its
+   own opaque ground and a two-value edge rather than trusting the image. */
+.safeSpaceMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: var(--jade);
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgba(var(--line-rgb), 0.12),
+    0 2px 8px rgba(var(--plum-rgb), 0.22);
+}
+.safeSpaceMark svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.2;
+}
+/* A small chip over the photo's top-left corner (the "Within a short walk"
+   distance). It sits on a member-supplied photo, so it carries its own opaque
+   ground and a two-value edge rather than trusting the image underneath. */
+.photoTag {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-start: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent-ink);
+  background: var(--paper);
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 1px rgba(var(--line-rgb), 0.12),
+    0 2px 8px rgba(var(--plum-rgb), 0.22);
+  white-space: nowrap;
+}
+.photoTag svg {
+  width: 12px;
+  height: 12px;
+}
+
 .saveBtn {
   position: absolute;
   inset-block-start: 8px;

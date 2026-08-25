@@ -1,10 +1,8 @@
-import { Link } from "react-router-dom";
 import { FiMapPin } from "react-icons/fi";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { businessPath } from "../../app/routeMap";
 import { useDirectoryPlaces } from "./api/useDirectory";
-import { categoryLabel } from "./localPlaces";
+import { LocalBusinessCard } from "./LocalBusinessCard";
 import { nearbyPlaces } from "./nearbyPlaces";
 import { type DirectoryPlace } from "./directoryPlaces";
 import s from "./DirectorySpacePage.module.css";
@@ -15,9 +13,15 @@ const METRES_IN_A_KILOMETRE = 1000;
 const METRE_ROUNDING = 50;
 
 /**
- * "Within a short walk": a compact strip of the places a member could
- * reasonably add to the same evening, nearest first, each with the distance
- * from the place they are looking at.
+ * "Within a short walk": the places a member could reasonably add to the same
+ * evening, nearest first, each with the distance from the place they are
+ * looking at.
+ *
+ * Renders the same `LocalBusinessCard` the directory grid uses — photo, badge,
+ * rating, description, pills, opening status — so a suggestion here is judged
+ * on exactly what a listing shows in the directory, rather than on a name and
+ * a category. The only addition is the walking distance, pinned to the photo's
+ * top-left corner where it clears both the badge and the bookmark.
  *
  * Distances come from `nearbyPlaces`, which drops anything with no
  * coordinates and anything not trading normally, so this never invents a
@@ -56,22 +60,21 @@ export function DirectoryNearbyPlaces({ place }: { place: DirectoryPlace }) {
       <p className={s.nearbySub}>
         {t("marketing:directory.detail.nearby.sub", { name: place.name })}
       </p>
-      <ul className={s.nearbyList}>
-        {nearby.map(({ place: neighbour, metres }) => (
-          <li key={neighbour.slug}>
-            <Link className={s.nearbyItem} to={businessPath(neighbour.slug)}>
-              <span className={s.nearbyName}>{neighbour.name}</span>
-              <span className={s.nearbyMeta}>
-                {categoryLabel(t, neighbour.cat)} · {neighbour.hood}
-              </span>
-              <span className={s.nearbyDistance}>
+      <div className={s.relatedGrid}>
+        {nearby.map(({ place: neighbour, metres }, index) => (
+          <LocalBusinessCard
+            key={neighbour.slug}
+            place={neighbour}
+            index={index}
+            photoTag={
+              <>
                 <FiMapPin aria-hidden />
                 {distanceLabel(metres)}
-              </span>
-            </Link>
-          </li>
+              </>
+            }
+          />
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

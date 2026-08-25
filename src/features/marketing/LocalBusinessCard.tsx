@@ -1,4 +1,4 @@
-import { type SyntheticEvent } from "react";
+import { type ReactNode, type SyntheticEvent } from "react";
 import { Link } from "react-router-dom";
 import { FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -13,9 +13,13 @@ import s from "./DirectoryPage.module.css";
 export function LocalBusinessCard({
   place,
   index,
+  photoTag,
 }: {
   place: DirectoryPlace;
   index: number;
+  /** Optional chip over the photo — the "Within a short walk" strip passes
+   *  the walking distance so its cards match the directory grid exactly. */
+  photoTag?: ReactNode;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -54,6 +58,7 @@ export function LocalBusinessCard({
       <LocalBusinessCardBody
         place={place}
         saveControl={{ saved, onSave: handleSave }}
+        photoTag={photoTag}
       />
     </FadeIn>
   );

@@ -53,7 +53,7 @@ export function EmployerReviewsPage() {
 
   return (
     <PageShell>
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.eyebrow}>
             <span className={styles.live} />

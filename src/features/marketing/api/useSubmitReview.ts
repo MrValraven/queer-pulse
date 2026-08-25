@@ -15,11 +15,11 @@ function recomputeRating(reviews: Review[]): { score: string; count: number } {
 /**
  * Leave a review on a directory listing.
  *
- * Live mode POSTs to the member-gated endpoint and invalidates the listing's
- * detail query, so the new review and the recomputed star rating come straight
- * from the server. Demo mode never hits the network: it builds the review from
- * the signed-in mock profile and patches it into the cached detail directly,
- * mirroring how the rest of the app's demo writes stay self-contained.
+ * Live mode POSTs to the member-gated endpoint, patches the created review into
+ * the cached detail so it lands on screen immediately, then invalidates that
+ * query so the server has the last word. Demo mode never hits the network: it
+ * builds the review from the signed-in mock profile and takes the same patch
+ * path, mirroring how the rest of the app's demo writes stay self-contained.
  */
 export function useSubmitReview(slug: string) {
   const { demoMode } = useDemoMode();
@@ -52,19 +52,26 @@ export function useSubmitReview(slug: string) {
       return submitReview(slug, input);
     },
     onSuccess: (review) => {
-      if (demoMode) {
-        // Patch the review into every cached detail entry for this slug
-        // (its key also carries demoMode + language), newest first.
-        queryClient.setQueriesData<DirectoryPlace | undefined>(
-          { queryKey: [DIRECTORY_KEY, "detail", slug] },
-          (place) => {
-            if (!place) return place;
-            const reviews = [review, ...place.reviews];
-            return { ...place, reviews, rating: recomputeRating(reviews) };
-          },
-        );
-        return;
-      }
+      // Patch the review into every cached detail entry for this slug (its key
+      // also carries demoMode + language), newest first, so it is on screen the
+      // moment the write succeeds rather than one network round trip later. In
+      // live mode this is the server's own review object, in the same shape the
+      // detail read returns (`reviews: dto.reviews` passes straight through),
+      // so nothing here is a client-side guess. The rating is safe to recompute
+      // because the detail derives its own aggregate from this same array (see
+      // `getDirectoryBySlug`), so the two cannot disagree.
+      queryClient.setQueriesData<DirectoryPlace | undefined>(
+        { queryKey: [DIRECTORY_KEY, "detail", slug] },
+        (place) => {
+          if (!place) return place;
+          const reviews = [review, ...place.reviews];
+          return { ...place, reviews, rating: recomputeRating(reviews) };
+        },
+      );
+      if (demoMode) return;
+      // Then revalidate, so anything the server owns and this patch cannot know
+      // (the author identity it resolved, moderation state) settles from the
+      // real read.
       void queryClient.invalidateQueries({
         queryKey: [DIRECTORY_KEY, "detail", slug],
       });

@@ -88,7 +88,7 @@ export function DataExportPage() {
 
   return (
     <PageShell>
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.eye}>
             {t("settings:dataExport.hero.eyebrow")}

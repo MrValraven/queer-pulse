@@ -90,6 +90,218 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "invites-go-out-by-hand",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("invites-go-out-by-hand"),
+      },
+      {
+        id: "plum-headers-reach-the-top",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("plum-headers-reach-the-top"),
+      },
+      {
+        id: "volunteer-applicants-community-organisers",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("volunteer-applicants-community-organisers"),
+        tag: {
+          labelKey: "marketing:changelog.tag.volunteer",
+          to: routes.volunteer,
+        },
+      },
+      {
+        id: "footer-closes-the-page",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("footer-closes-the-page"),
+      },
+      {
+        id: "tab-title-follows-the-page",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("tab-title-follows-the-page"),
+      },
+      {
+        id: "magazine-issues-run-the-desk",
+        category: "feature",
+        date: "25 Aug 2026",
+        ...entryKeys("magazine-issues-run-the-desk"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineDesk",
+          to: routes.magazineEditor,
+        },
+      },
+      {
+        id: "local-map-reads-clearly",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("local-map-reads-clearly"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "menu-resizes-smoothly",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("menu-resizes-smoothly"),
+      },
+      {
+        id: "directory-filters-in-one-row",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("directory-filters-in-one-row"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "reviews-sort-on-quiet-listings",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("reviews-sort-on-quiet-listings"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "map-narrows-to-the-area-you-pick",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("map-narrows-to-the-area-you-pick"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "pages-open-at-the-top",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("pages-open-at-the-top"),
+      },
+      {
+        id: "queer-owned-says-queer-owned",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("queer-owned-says-queer-owned"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "review-appears-immediately",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("review-appears-immediately"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "star-pickers-follow-your-cursor",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("star-pickers-follow-your-cursor"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "review-line-breaks",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("review-line-breaks"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "review-stars-hint",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("review-stars-hint"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "filters-keep-your-place",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("filters-keep-your-place"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "nearby-places-full-cards",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("nearby-places-full-cards"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "map-pin-opens-place",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("map-pin-opens-place"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "directory-card-cover-photo",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("directory-card-cover-photo"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "persona-banner-reposition",
+        category: "feature",
+        date: "25 Aug 2026",
+        ...entryKeys("persona-banner-reposition"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "listing-owner-photo",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("listing-owner-photo"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "persona-savebar-compact",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("persona-savebar-compact"),
+      },
+      {
         id: "sharper-photos",
         category: "improvement",
         date: "25 Aug 2026",

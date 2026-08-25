@@ -41,17 +41,20 @@ interface Props extends DirectoryMapViewState {
 
 /** The map view's parish-grouped sidebar: heading + count, a clear-filter
  * chip, an empty state, loading skeletons, or the (optionally
- * freguesia-grouped) list of place cards. Pin↔card selection and the
+ * freguesia-grouped) list of place cards. When a pin is tapped the whole
+ * panel narrows to that one place's details. Pin↔card selection and the
  * "I've been here" tally live in `useDirectoryMapView`. */
 export function DirectoryMapSidebar({
   sidebarRef,
   cardRefs,
   selectedFreguesia,
   expandedId,
+  focusedPlace,
   been,
   items,
   groups,
   selectFreguesia,
+  clearFocus,
   toggleExpand,
   markBeen,
   loading,
@@ -84,23 +87,32 @@ export function DirectoryMapSidebar({
       <div className={s.sbTop}>
         <div>
           <div className={s.sbHeading}>
-            {selectedFreguesia ?? t("marketing:map.sidebar.allVenues")}
+            {focusedPlace?.name ??
+              selectedFreguesia ??
+              t("marketing:map.sidebar.allVenues")}
           </div>
           <div className={s.sbCount}>
-            <Translation
-              i18nKey="marketing:map.sidebar.venueCount"
-              values={{ count: items.length }}
-              components={{ b: <b /> }}
-            />
+            {focusedPlace ? (
+              focusedPlace.neighbourhood
+            ) : (
+              <Translation
+                i18nKey="marketing:map.sidebar.venueCount"
+                values={{ count: items.length }}
+                components={{ b: <b /> }}
+              />
+            )}
           </div>
         </div>
-        {selectedFreguesia && (
+        {(focusedPlace || selectedFreguesia) && (
           <button
             type="button"
             className={s.clear}
-            onClick={() => selectFreguesia(null)}
+            onClick={focusedPlace ? clearFocus : () => selectFreguesia(null)}
           >
-            <FiX /> {t("marketing:map.sidebar.clear")}
+            <FiX />{" "}
+            {focusedPlace
+              ? t("marketing:map.sidebar.backToAll")
+              : t("marketing:map.sidebar.clear")}
           </button>
         )}
       </div>

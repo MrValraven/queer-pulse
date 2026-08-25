@@ -24,7 +24,7 @@ export function ReciboVerdeGuidePage() {
   const { t } = useTranslation();
   return (
     <PageShell>
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <Reveal as="div">
             <Eyebrow>{t("economy:toolPage.eyebrowFreelance")}</Eyebrow>

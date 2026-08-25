@@ -186,51 +186,61 @@ export function App() {
           <ScrollManager />
           <ShellFrameProvider>
             <DataProviders>
-              {/* Chrome lives INSIDE DataProviders (but above the route switch, so
-                  still mounted once and never remounting on navigation): its
-                  Navbar/BottomTabBar read member/session state — e.g. the DM
-                  unread badge transitively calls useDeletedConversations, whose
-                  provider is in DataProviders. Rendered outside it, AppChrome
-                  throws "must be used within DeletedConversationsProvider". */}
-              <AppChrome />
-              {/* Tracks a short tail of visited entries so a page can offer a
-                  way back to where the visitor actually came from (the
-                  member-profile back link). Router context only, like
-                  NavDirectionProvider below, so it wraps the routed content. */}
-              <NavHistoryProvider>
-                {/* Nav-direction classification (push/pop/tab-switch/replace)
-                    for RouteTransition below; needs react-router context
-                    (inside BrowserRouter) but not member/session state, so it
-                    only needs to wrap the routed content, not AppChrome. */}
-                <NavDirectionProvider>
-                  {/* Offline fallback: in live mode a dead network swaps the routed
-                    UI for the branded OfflinePage (paired with the SW navigation
-                    catch handler). No-op in demo mode, which needs no network. */}
-                  <OfflineGate>
-                    {/* Edge-swipe-to-go-back (mobile only; inert/unwrapped on
-                      desktop) wraps the transition so a committed swipe's
-                      navigate(-1) plays the same pop animation as the Back
-                      button. Inside OfflineGate so the offline fallback isn't
-                      draggable; around RouteTransition so it tracks the whole
-                      content plane, not just its animated inner div. */}
-                    <SwipeBackShell>
-                      {/* Animates only the routed content (transform/opacity) on
-                        navigation; chrome (AppChrome, above) stays fixed. */}
-                      <RouteTransition>
-                        <AppRoutes />
-                      </RouteTransition>
-                    </SwipeBackShell>
-                  </OfflineGate>
-                  <Suspense fallback={null}>
-                    <CommandPalette />
-                  </Suspense>
-                </NavDirectionProvider>
-              </NavHistoryProvider>
-              {/* The Footer is in-flow, so — unlike the fixed Navbar/BottomTabBar
-                  in AppChrome above — it is rendered AFTER the routed content so
-                  it lands at the bottom of the page, not the top. Kept inside
-                  DataProviders so it still sees member/session context. */}
-              <AppFooter />
+              {/* The one full-height frame the whole routed app lives in.
+                  It is `min-height: 100dvh` and a flex column (base.css
+                  `.app-frame`), which is what lets the in-flow <AppFooter/>
+                  below pin itself to the bottom of the window on pages whose
+                  content is shorter than the viewport, instead of stopping
+                  mid-screen with page canvas showing beneath it. Wraps the
+                  fixed chrome too, harmlessly: fixed elements are out of flow,
+                  so they are not flex items and do not move. */}
+              <div className="app-frame">
+                {/* Chrome lives INSIDE DataProviders (but above the route switch, so
+                    still mounted once and never remounting on navigation): its
+                    Navbar/BottomTabBar read member/session state — e.g. the DM
+                    unread badge transitively calls useDeletedConversations, whose
+                    provider is in DataProviders. Rendered outside it, AppChrome
+                    throws "must be used within DeletedConversationsProvider". */}
+                <AppChrome />
+                {/* Tracks a short tail of visited entries so a page can offer a
+                    way back to where the visitor actually came from (the
+                    member-profile back link). Router context only, like
+                    NavDirectionProvider below, so it wraps the routed content. */}
+                <NavHistoryProvider>
+                  {/* Nav-direction classification (push/pop/tab-switch/replace)
+                      for RouteTransition below; needs react-router context
+                      (inside BrowserRouter) but not member/session state, so it
+                      only needs to wrap the routed content, not AppChrome. */}
+                  <NavDirectionProvider>
+                    {/* Offline fallback: in live mode a dead network swaps the routed
+                      UI for the branded OfflinePage (paired with the SW navigation
+                      catch handler). No-op in demo mode, which needs no network. */}
+                    <OfflineGate>
+                      {/* Edge-swipe-to-go-back (mobile only; inert/unwrapped on
+                        desktop) wraps the transition so a committed swipe's
+                        navigate(-1) plays the same pop animation as the Back
+                        button. Inside OfflineGate so the offline fallback isn't
+                        draggable; around RouteTransition so it tracks the whole
+                        content plane, not just its animated inner div. */}
+                      <SwipeBackShell>
+                        {/* Animates only the routed content (transform/opacity) on
+                          navigation; chrome (AppChrome, above) stays fixed. */}
+                        <RouteTransition>
+                          <AppRoutes />
+                        </RouteTransition>
+                      </SwipeBackShell>
+                    </OfflineGate>
+                    <Suspense fallback={null}>
+                      <CommandPalette />
+                    </Suspense>
+                  </NavDirectionProvider>
+                </NavHistoryProvider>
+                {/* The Footer is in-flow, so — unlike the fixed Navbar/BottomTabBar
+                    in AppChrome above — it is rendered AFTER the routed content so
+                    it lands at the bottom of the page, not the top. Kept inside
+                    DataProviders so it still sees member/session context. */}
+                <AppFooter />
+              </div>
             </DataProviders>
           </ShellFrameProvider>
           <RoomLoader />

@@ -2,23 +2,24 @@ import { Tabs, type Tab } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./DeskTrackTabs.module.css";
 
-/** The two editorial tracks the desk groups pieces into: standalone platform
- *  highlights (`issueId === null`) vs. work bound to the current full issue. */
-export type DeskTrack = "highlights" | "issue";
+/** The two tracks the desk groups pieces into: unfiled work
+ *  (`issueId === null`) vs. work bound to the SELECTED issue. Pieces on any
+ *  other issue belong to neither and are reached by switching issue. */
+export type DeskTrack = "unassigned" | "issue";
 
 export interface DeskTrackTabsProps {
   track: DeskTrack;
   onTrack: (track: DeskTrack) => void;
-  /** The current issue's display number, for the "Issue N" tab label. */
+  /** The selected issue's display number, for the "Issue N" tab label. */
   issueNumber: string;
-  /** Whether a current issue exists at all — the tab loses its number when not. */
+  /** Whether an issue is selected at all — the tab loses its number when not. */
   hasCurrentIssue: boolean;
-  highlightsCount: number;
+  unassignedCount: number;
   issueCount: number;
 }
 
 /**
- * Top-level track switch above the desk pipeline: Highlights ⇄ Issue N.
+ * Top-level track switch above the desk pipeline: Unassigned ⇄ Issue N.
  * Switching swaps the whole pipeline/list to that track. Reuses the shared
  * `Tabs` primitive (pill variant, count badges, APG tablist keyboard nav).
  */
@@ -27,16 +28,16 @@ export function DeskTrackTabs({
   onTrack,
   issueNumber,
   hasCurrentIssue,
-  highlightsCount,
+  unassignedCount,
   issueCount,
 }: DeskTrackTabsProps) {
   const { t } = useTranslation();
 
   const tabs: Tab[] = [
     {
-      id: "highlights",
-      label: t("magazine:desk.trackTabs.highlights"),
-      count: highlightsCount || undefined,
+      id: "unassigned",
+      label: t("magazine:desk.trackTabs.unassigned"),
+      count: unassignedCount || undefined,
     },
     {
       id: "issue",

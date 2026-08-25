@@ -13,7 +13,7 @@ export function HostPage() {
   const { t } = useTranslation();
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.cat}>{t("gatherings:host.hero.eyebrow")}</div>
           <h1 className={styles.title}>
@@ -31,7 +31,7 @@ export function HostPage() {
             ))}
           </div>
         </div>
-      </div>
+      </header>
 
       <div className={styles.body}>
         <div className="wrap">

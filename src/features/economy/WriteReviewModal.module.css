@@ -1,11 +1,15 @@
 .stars {
   display: flex;
-  gap: 6px;
+  /* Deliberately no gap: a gap between two buttons is a dead strip where the
+     cursor is over the row but over no star, so the preview dropped out
+     halfway across the picker. The 10px between the glyphs comes from the
+     buttons' own padding instead, which keeps the hit areas edge to edge. */
+  gap: 0;
 }
 .star {
   background: none;
   border: none;
-  padding: 2px;
+  padding: 5px;
   cursor: pointer;
   color: rgba(var(--ink-rgb), 0.25);
   line-height: 0;
@@ -13,14 +17,34 @@
     color 0.18s var(--ease),
     transform 0.18s var(--ease);
 }
+.star svg {
+  /* Feather ships fill="none", which has nothing to interpolate towards, so
+     the resting star holds a fully transparent coral and the colour pours in. */
+  fill: rgba(var(--accent-rgb), 0);
+  transition: fill 0.18s var(--ease);
+}
 @media (hover: hover) {
   .star:hover {
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(1.1);
   }
+}
+.star:active {
+  transform: scale(0.92);
 }
 .starOn {
   color: var(--accent);
 }
+/* Same specificity as `.star svg`, so this has to stay below it to win. */
 .starOn svg {
   fill: currentColor;
+}
+@media (prefers-reduced-motion: reduce) {
+  .star,
+  .star svg {
+    transition: none;
+  }
+  .star:hover,
+  .star:active {
+    transform: none;
+  }
 }

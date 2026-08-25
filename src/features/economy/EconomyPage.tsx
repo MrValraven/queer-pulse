@@ -19,7 +19,7 @@ export function EconomyPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.cat}>{t("economy:hub.eyebrow")}</div>
           <h1>
@@ -45,7 +45,7 @@ export function EconomyPage() {
             ))}
           </div>
         </div>
-      </div>
+      </header>
 
       <div className={styles.body}>
         <div className="wrap">

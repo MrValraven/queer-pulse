@@ -1,22 +1,20 @@
-import { FiCheck, FiSend } from "react-icons/fi";
+import { FiCheck, FiLink } from "react-icons/fi";
 import { CopyLinkRow } from "../../shared/components/ui";
 import { AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
-import { inviteFullUrlFor } from "../../shared/lib/inviteUrl";
+import { inviteFullUrlFor, inviteUrlFor } from "../../shared/lib/inviteUrl";
 import styles from "./AdminMembersPage.module.css";
 
 /**
  * What the reviewer sees straight after welcoming someone in: the invite link
  * built from their code, ready to copy.
  *
- * Approval also sends the applicant an invite email automatically
- * (`join_request_approved` template, fired best-effort after the approval
- * transaction commits). This card's copy link stays as a manual backup for
- * when that send fails, bounces, or is slow to arrive, or a reviewer wants
- * to hand it over some other way, which is why the applicant's email
- * address is still repeated right next to it.
+ * Handing that link over is the reviewer's job. QueerPulse has no email
+ * delivery, so approval puts nothing in the applicant's inbox and this card
+ * is the only route the invite has to them, which is why their email address
+ * is repeated right next to the link they need to send it to.
  */
 export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
   const { t } = useTranslation();
@@ -47,7 +45,7 @@ export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
       </div>
 
       <p className={styles.queueSendNote}>
-        <FiSend aria-hidden />
+        <FiLink aria-hidden />
         {t("admin:members.verify.sendYourself", { email: item.email })}
       </p>
 
@@ -55,6 +53,10 @@ export function JoinRequestApprovedCard({ item }: { item: JoinRequestView }) {
         <CopyLinkRow
           tone="paper"
           value={url}
+          // The field is narrow inside a queue column, so show the short,
+          // scheme-less form; the full absolute URL is still what is copied.
+          display={item.inviteCode ? inviteUrlFor(item.inviteCode) : undefined}
+          fieldLabel={t("admin:members.verify.linkFieldLabel")}
           copyLabel={t("admin:members.verify.copyLink")}
           copiedLabel={t("admin:members.verify.copiedLink")}
           copiedToast={t("admin:members.verify.copiedToast")}

@@ -38,7 +38,10 @@ export function SafeSpacesPage() {
           { name: pageTitle, path: routes.safeSpaces },
         ])}
       />
-      <div className={styles.hero}>
+      {/* `<header data-plum>` (the same contract PageHero uses) so
+          base.css tints the reserved nav band plum instead of leaving
+          cream showing behind the floating nav. */}
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.cat}>{t("safety:spaces.hero.category")}</div>
           <h1>
@@ -70,7 +73,7 @@ export function SafeSpacesPage() {
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
       <BadgeExplainer />
 

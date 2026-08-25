@@ -16,6 +16,10 @@ interface ListingPhotoFieldProps {
   height: number;
   wide?: boolean;
   placeholder: string;
+  /** Standing caption above the frame. The cover slot uses it to say the photo
+   *  is the one the directory card shows — the `placeholder` caption can't,
+   *  since it vanishes the moment a photo fills the slot. */
+  note?: string;
   displayValue: string;
   uploadPhoto: (
     file: File,
@@ -37,6 +41,7 @@ export function ListingPhotoField({
   height,
   wide,
   placeholder,
+  note,
   displayValue,
   uploadPhoto,
   onResolved,
@@ -113,6 +118,7 @@ export function ListingPhotoField({
         .filter(Boolean)
         .join(" ")}
     >
+      {note && <p className={styles.photoNote}>{note}</p>}
       <ImageSlot
         tint={tint}
         radius={14}

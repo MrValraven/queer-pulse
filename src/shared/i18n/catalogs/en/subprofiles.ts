@@ -822,6 +822,21 @@ export const subprofiles: Catalog = {
   "imageUpload.removeConfirm.confirm": "Remove",
   "imageUpload.removeConfirm.cancel": "Keep it",
 
+  // Banner reposition (PersonaCoverReposition) — the owner's in-page control
+  // for where the cover image sits vertically inside the band.
+  "cover.reposition.cta": "Reposition",
+  "cover.reposition.hint": "Drag the banner up or down",
+  "cover.reposition.save": "Save position",
+  "cover.reposition.saving": "Saving…",
+  "cover.reposition.cancel": "Cancel",
+  "cover.reposition.saved": "Banner position saved",
+  "cover.reposition.error": "We couldn't save the banner position. Try again in a moment.",
+  "cover.reposition.noRoomAria":
+    "Reposition banner. This image already fits the banner exactly, so there's nothing to move.",
+  "cover.reposition.sliderAria":
+    "Banner position. Drag, or use the arrow keys. Enter saves, Escape cancels.",
+  "cover.reposition.valueText": "{percent}% down the image",
+
   // Persona hero (SubprofileHero)
   "hero.message": "Message",
   "hero.edit": "Edit persona",
@@ -1466,6 +1481,9 @@ export const subprofiles: Catalog = {
   "pending.discardAll": "Discard all",
   "pending.saveError": "Couldn't save {areas}",
   "pending.heading": "Unsaved changes",
+  // Phone savebar: the collapsed one-line stand-in for the itemized list.
+  "pending.summary_one": "{count} unsaved change",
+  "pending.summary_other": "{count} unsaved changes",
   "pending.field.displayName": "Name",
   "pending.field.tagline": "Tagline",
   "pending.field.bio": "Bio",

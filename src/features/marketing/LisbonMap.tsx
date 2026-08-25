@@ -12,8 +12,9 @@ interface LisbonMapProps {
   venues: VenueMarkerData[];
   freguesia: string | null;
   selectedVenueId: string | null;
+  focusedVenueId: string | null;
   counts: Record<string, number>;
-  onSelectFreguesia: (name: string | null) => void;
+  onSelectFreguesia: (name: string) => void;
   onSelectVenue: (venueId: string) => void;
 }
 
@@ -21,6 +22,7 @@ export function LisbonMap({
   venues,
   freguesia,
   selectedVenueId,
+  focusedVenueId,
   counts,
   onSelectFreguesia,
   onSelectVenue,
@@ -42,6 +44,7 @@ export function LisbonMap({
     venues,
     selectedFreguesia: freguesia,
     selectedVenueId,
+    focusedVenueId,
     counts,
     markerLabels,
     onSelectFreguesia,

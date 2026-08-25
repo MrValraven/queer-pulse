@@ -111,7 +111,7 @@ export function ReadingGroupsPage() {
 
   return (
     <PageShell>
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.eye}>
             {t("community:readingGroups.hero.eye")}

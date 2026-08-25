@@ -1322,6 +1322,14 @@ export const economy: Catalog = {
     "Pronomes respeitados, inclusão real, liderança que percebe do assunto…",
   "companyReview.consLabel": "O que foi difícil, o resto",
   "companyReview.consPlaceholder": "Onde o acompanhamento ficou aquém…",
+  "companyReview.missingHint":
+    "Preenche {fields} para desbloquear o botão.",
+  "companyReview.missing.company": "uma empresa",
+  "companyReview.missing.headline": "um título",
+  "companyReview.missing.rating": "uma classificação em estrelas",
+  "companyReview.missing.role": "o teu cargo",
+  "companyReview.missing.prosOrCons":
+    "o que resultou ou o que foi difícil",
   "companyReview.cancel": "Cancelar",
   "companyReview.posting": "A publicar…",
   "companyReview.submitCta": "Publicar avaliação",

@@ -12,6 +12,7 @@ import { DirectoryReviewHelpful } from "./DirectoryReviewHelpful";
 import { DirectoryReviewMeta } from "./DirectoryReviewMeta";
 import { DirectoryReviewPhoto } from "./DirectoryReviewPhoto";
 import { DirectoryReviewReply } from "./DirectoryReviewReply";
+import { DirectoryReviewText } from "./DirectoryReviewText";
 import { DirectoryReportControl } from "./DirectoryReportControl";
 import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
@@ -120,7 +121,7 @@ export function DirectoryReviewCard({
         />
       ) : (
         <>
-          <div className={s.revText}>{review.text}</div>
+          <DirectoryReviewText text={review.text} />
           {review.photoUrl && (
             <DirectoryReviewPhoto
               photoUrl={review.photoUrl}

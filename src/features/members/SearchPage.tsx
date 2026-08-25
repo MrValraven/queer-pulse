@@ -31,7 +31,7 @@ export function SearchPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.label}>{t("members:search.hero.label")}</div>
           <h1 className={styles.title}>
@@ -72,7 +72,7 @@ export function SearchPage() {
             </div>
           )}
         </div>
-      </div>
+      </header>
 
       <div className={styles.body}>
         <div className="wrap">

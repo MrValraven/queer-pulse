@@ -1448,8 +1448,10 @@ export const marketing: Catalog = {
     "As imagens ajudam as pessoas a sentir a sala antes de chegarem. E gostamos de saber quem está por trás da porta.",
   "listBusiness.step4.photosLabel": "Algumas fotos (opcional)",
   "listBusiness.step4.photosHelper":
-    "Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
+    "O plano geral é a sua capa: é a foto que aparece no seu cartão no diretório. Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
   "listBusiness.step4.gallery.wide": "Plano geral do espaço",
+  "listBusiness.step4.gallery.wideNote":
+    "Foto de capa · aparece no seu cartão no diretório",
   "listBusiness.step4.gallery.detail": "Um detalhe",
   "listBusiness.step4.gallery.vibe": "Pessoas / ambiente",
   "listBusiness.step4.alt.wide": "Plano geral · texto alternativo",
@@ -1696,7 +1698,8 @@ export const marketing: Catalog = {
 
   "listBusiness.editor.section.services": "Quanto custa",
   "listBusiness.editor.section.accessibility": "Como se entra",
-  "listBusiness.editor.section.tradingAndVisibility": "Atividade e visibilidade",
+  "listBusiness.editor.section.tradingAndVisibility":
+    "Atividade e visibilidade",
   "listBusiness.editor.section.whoCanEdit": "Quem pode editar",
   "listBusiness.editor.section.roleOnListing": "Função mostrada na página",
 
@@ -1809,7 +1812,8 @@ export const marketing: Catalog = {
     "Seis perguntas que alguém pode precisar de ver respondidas antes de decidir se consegue vir. Responde ao que souberes.",
   "listBusiness.accessibility.reassurance":
     "Um não honesto é útil. Quem anda em cadeira de rodas prefere muito mais ler que há dois degraus à tua porta do que aparecer e descobrir na hora. Nada disto conta contra o teu anúncio.",
-  "listBusiness.accessibility.noteLabel": "Mais alguma coisa que valha a pena saber",
+  "listBusiness.accessibility.noteLabel":
+    "Mais alguma coisa que valha a pena saber",
   "listBusiness.accessibility.noteHint":
     "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar à porta.",
   "listBusiness.accessibility.notePlaceholder":
@@ -1850,7 +1854,8 @@ export const marketing: Catalog = {
     "Retira o teu anúncio do diretório durante um tempo e volta a pô-lo quando quiseres. Fica tudo onde está enquanto estiver fora.",
   "listBusiness.visibility.distinction":
     "Isto é diferente do estado de atividade acima. Fechado temporariamente mantém-te no diretório e diz às pessoas que estás fechado por agora. Pausar tira o anúncio da exploração, da pesquisa e do mapa, e não diz nada sobre se estás aberto.",
-  "listBusiness.visibility.state.showing.title": "O teu anúncio está a aparecer",
+  "listBusiness.visibility.state.showing.title":
+    "O teu anúncio está a aparecer",
   "listBusiness.visibility.state.showing.sub":
     "As pessoas encontram-no na exploração, na pesquisa e no mapa.",
   "listBusiness.visibility.state.hidden.title": "O teu anúncio está em pausa",
@@ -1868,8 +1873,7 @@ export const marketing: Catalog = {
   "listBusiness.visibility.applying": "A atualizar…",
   "listBusiness.visibility.saved.hidden":
     "O teu anúncio ficou em pausa. Está fora do diretório até o voltares a pôr.",
-  "listBusiness.visibility.saved.shown":
-    "O teu anúncio voltou ao diretório.",
+  "listBusiness.visibility.saved.shown": "O teu anúncio voltou ao diretório.",
   "listBusiness.visibility.saveError":
     "Não foi possível atualizar. Tenta novamente.",
   "listBusiness.visibility.banner.title": "Este anúncio está em pausa",
@@ -1896,8 +1900,7 @@ export const marketing: Catalog = {
   //    dispositivo; o formulário mantém-se igual ao que o servidor devolveu
   //    até a pessoa carregar em repor, por isso nada publicado é substituído
   //    em silêncio.
-  "listBusiness.editor.restore.title":
-    "Tens alterações por guardar de {when}",
+  "listBusiness.editor.restore.title": "Tens alterações por guardar de {when}",
   "listBusiness.editor.restore.sub":
     "Ficaram guardadas neste dispositivo e nunca foram enviadas. O teu anúncio publicado não mudou.",
   "listBusiness.editor.restore.serverChanged":
@@ -1967,12 +1970,10 @@ export const marketing: Catalog = {
   //    confirmado por quem o gere. Pedido com mais insistência à medida que o
   //    carimbo envelhece.
   "listBusiness.confirmDetails.title.fresh": "Estes dados estão confirmados",
-  "listBusiness.confirmDetails.title.ageing":
-    "Estes dados continuam certos?",
+  "listBusiness.confirmDetails.title.ageing": "Estes dados continuam certos?",
   "listBusiness.confirmDetails.title.stale":
     "Já ninguém verifica estes dados há algum tempo",
-  "listBusiness.confirmDetails.lastConfirmed":
-    "Última confirmação {when}.",
+  "listBusiness.confirmDetails.lastConfirmed": "Última confirmação {when}.",
   "listBusiness.confirmDetails.never":
     "Nunca os confirmaste, por isso quem visita só tem o dia em que os escreveste.",
   "listBusiness.confirmDetails.justNow": "há instantes",
@@ -2096,7 +2097,105 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
-  "changelog.entries.sharper-photos.title": "Fotografias nítidas em qualquer ecrã",
+  "changelog.entries.menu-resizes-smoothly.title":
+    "O menu principal muda de tamanho suavemente entre secções",
+  "changelog.entries.menu-resizes-smoothly.body":
+    "Ao percorrer o menu de topo, por exemplo de Trabalho para Sobre, o painel aberto saltava para a nova altura de uma só vez, o que parecia uma falha. O painel passa agora a ajustar a altura de forma gradual à medida que mudas de secção, acompanhando o esbatimento das ligações lá dentro. Com o movimento reduzido ativo, continua a mudar de tamanho de imediato.",
+  "changelog.entries.nearby-places-full-cards.title":
+    "Os locais a curta dist\u00e2ncia a p\u00e9 passam a mostrar o cart\u00e3o completo",
+  "changelog.entries.nearby-places-full-cards.body":
+    "As sugest\u00f5es \u201cA curta dist\u00e2ncia a p\u00e9\u201d no fim de uma ficha eram uma linha de texto: nome, categoria e dist\u00e2ncia. Passam a aparecer como os mesmos cart\u00f5es do diret\u00f3rio local, com a foto, o selo de espa\u00e7o seguro, a avalia\u00e7\u00e3o, a descri\u00e7\u00e3o e se a porta est\u00e1 aberta agora. A dist\u00e2ncia a p\u00e9 fica sobre a foto, para continuar a planear a noite pela dist\u00e2ncia entre as coisas.",
+  "changelog.entries.map-pin-opens-place.title":
+    "Tocar num local no mapa passa a abri-lo",
+  "changelog.entries.map-pin-opens-place.body":
+    "Se tinha escolhido uma freguesia no mapa local e depois tocava num local noutro s\u00edtio, o painel ao lado do mapa continuava a mostrar essa freguesia e muitas vezes dizia que nada correspondia aos filtros. Tocar num pino passa a limpar o filtro de \u00e1rea e a entregar o painel inteiro a esse local, com o mapa a aproximar-se dele. \u201cTodos os locais\u201d leva-o de volta \u00e0 lista completa.",
+  "changelog.entries.review-line-breaks.title":
+    "As avaliações mantêm os teus parágrafos e dobram-se quando ficam longas",
+  "changelog.entries.review-line-breaks.body":
+    "Uma avaliação escrita em vários parágrafos aparecia na página como um bloco único: todas as quebras de linha e linhas em branco que escreveste eram descartadas ao mostrar o texto. Agora as tuas quebras ficam exatamente como as escreveste. As avaliações longas passam também a dobrar-se nas primeiras linhas, com uma ligação Ler mais, para que uma avaliação muito comprida deixe de enterrar todas as que vêm a seguir.",
+  "changelog.entries.directory-filters-in-one-row.title":
+    "A barra de filtros do diretório passa a ser uma só linha",
+  "changelog.entries.directory-filters-in-one-row.body":
+    "Ao percorrer o diretório, o campo de pesquisa subia para trás da navegação flutuante e as duas barras ficavam sobrepostas. A barra de filtros passa a assentar logo abaixo da navegação e mantém-se legível durante todo o percurso da página, em qualquer disposição: a barra flutuante, a coluna lateral e a barra estreita no telemóvel. Os tipos de lugar mudaram-se para dentro do botão Refinar, ao lado de espaços seguros verificados e ambiente, pelo que a barra é uma linha de pesquisa mais um único controlo. O Refinar mostra o número de filtros aplicados e cada filtro ativo continua a aparecer como etiqueta removível por cima dos resultados.",
+  "changelog.entries.volunteer-applicants-community-organisers.title":
+    "As comunidades passam a poder rever as suas candidaturas de voluntariado",
+  "changelog.entries.volunteer-applicants-community-organisers.body":
+    'Rever quem se inscreveu numa oportunidade de voluntariado dependia inteiramente de quem a tinha publicado. Se essa pessoa desaparecesse, as candidaturas ficavam à espera. Agora quem detém, co-detém ou modera a comunidade em que a oportunidade foi publicada pode abri-la, ler as candidaturas e aceitar ou recusar, para que uma comunidade nunca dependa de uma só pessoa para responder a quem ofereceu o seu tempo. Editar e fechar uma oportunidade continuam a pertencer a quem a publicou. O botão "Gerir candidaturas" na página de voluntariado também deixa de aparecer a quem não tem nada para rever.',
+  "changelog.entries.invites-go-out-by-hand.title":
+    "Aprovar um pedido de adesão passa a dizer com clareza o que acontece a seguir",
+  "changelog.entries.invites-go-out-by-hand.body":
+    "Quando alguém da equipa acolhia uma pessoa, a confirmação dizia que ia a caminho um email de convite. A QueerPulse não tem serviço de email, por isso nunca era enviado nada e o convite podia ficar por reclamar com as duas pessoas à espera. O cartão passa a dizer que os convites seguem à mão e mostra ali mesmo a ligação para copiar, e os três botões de decisão deixam de sair para fora do cartão.",
+  "changelog.entries.plum-headers-reach-the-top.title":
+    "Os cabe\u00e7alhos cor de ameixa passam a chegar ao topo",
+  "changelog.entries.plum-headers-reach-the-top.body":
+    "Nas p\u00e1ginas com um cabe\u00e7alho cor de ameixa, como Espa\u00e7os seguros, Cultura, Empregos e Habita\u00e7\u00e3o, ficava uma faixa fina de p\u00e1gina em creme atr\u00e1s da barra de navega\u00e7\u00e3o flutuante, pelo que a cor parecia come\u00e7ar um pouco abaixo do topo do ecr\u00e3. A cor de ameixa passa a preencher essa faixa em todas estas p\u00e1ginas e mant\u00e9m-se correta tamb\u00e9m nas disposi\u00e7\u00f5es de barra lateral e m\u00f3vel.",
+  "changelog.entries.footer-closes-the-page.title":
+    "As páginas curtas passam a acabar no fundo da janela",
+  "changelog.entries.footer-closes-the-page.body":
+    "Uma página com pouco conteúdo, como os teus cartões de membro antes de uma comunidade te emitir um, ficava a meio: o rodapé aterrava a meio do ecrã com uma faixa de página vazia por baixo, como se a disposição se tivesse soltado. Todas as páginas passam a chegar ao limite inferior da janela, para que o rodapé a feche sempre. As páginas mais longas mantêm-se iguais.",
+  "changelog.entries.tab-title-follows-the-page.title":
+    "O separador do navegador diz em que p\u00e1gina est\u00e1s",
+  "changelog.entries.tab-title-follows-the-page.body":
+    "Abrires uma p\u00e1gina p\u00fablica como a revista e voltares depois ao teu Feed ou ao diret\u00f3rio local deixava o nome antigo no separador do navegador, pelo que uma janela deixada aberta para mais tarde podia dizer \u201cThe Magazine\u201d enquanto mostrava o teu Feed. As p\u00e1ginas que t\u00eam nome pr\u00f3prio continuam a defini-lo, e todas as outras passam a mostrar o nome QueerPulse assim que chegas.",
+  "changelog.entries.magazine-issues-run-the-desk.title":
+    "As edições passam a mandar na redação",
+  "changelog.entries.magazine-issues-run-the-desk.body":
+    "A redação só conseguia trabalhar numa edição: a que tivesse o número mais alto. Não havia como criar uma nova, nem como voltar a uma anterior. Agora há um botão \u201cNova edição\u201d e um seletor no cabeçalho que diz em que edição estás a trabalhar. As peças começam sem edição nenhuma, numa via \u201cSem edição\u201d, até alguém as arrumar. Podes arrumar uma a partir da própria linha, selecionar várias e atribuí-las de uma vez, ou entrar numa edição e puxar trabalho a partir da página dela. Uma peça pode passar diretamente de uma edição para outra. E publicar uma edição passa a arquivar os artigos debaixo dela, para que o índice público da edição mostre mesmo o que saiu.",
+  "changelog.entries.local-map-reads-clearly.title":
+    "O mapa local voltou a ler-se bem",
+  "changelog.entries.local-map-reads-clearly.body":
+    "O mapa do diret\u00f3rio local estava esbatido. As ruas eram desenhadas a branco e cinzento claro, cores pensadas para outro fundo, e sobre o nosso creme quase desapareciam. Cada nome trazia um brilho branco \u00e0 volta que deixava o texto desfocado, e alguns nomes de freguesia apareciam duas vezes, com poucos p\u00edxeis de diferen\u00e7a. As ruas passam agora por uma escala quente e com contorno pr\u00f3prio, para conseguires seguir uma rua pela cidade. Os nomes recortam-se com nitidez sobre o fundo, e cada freguesia \u00e9 nomeada uma s\u00f3 vez. Os mapas tamb\u00e9m perdiam nitidez sempre que ampliavas o navegador ou passavas a janela para um segundo ecr\u00e3, e ficavam assim at\u00e9 recarregares a p\u00e1gina. Agora qualquer mapa \u00e9 desenhado com mais detalhe do que o ecr\u00e3 pede e mant\u00e9m-se n\u00edtido em qualquer n\u00edvel de zoom, em qualquer ecr\u00e3.",
+  "changelog.entries.reviews-sort-on-quiet-listings.title":
+    "Ordenar e filtrar avalia\u00e7\u00f5es passa a funcionar nos espa\u00e7os mais sossegados",
+  "changelog.entries.reviews-sort-on-quiet-listings.body":
+    "A lista de avalia\u00e7\u00f5es trazia a linha \u201cMais recentes\u201d sem nada que pudesses usar para a mudar. Os controlos existiam, apenas ficavam guardados at\u00e9 um espa\u00e7o juntar quatro avalia\u00e7\u00f5es, pelo que a maioria dos an\u00fancios nunca os mostrava. A partir da segunda avalia\u00e7\u00e3o j\u00e1 podes ordenar e filtrar. Ordena por mais recentes, mais antigas, mais \u00fateis ou melhor e pior avaliadas; limita a lista a um n\u00famero de estrelas; e fica s\u00f3 com as avalia\u00e7\u00f5es que trouxeram foto ou que j\u00e1 tiveram resposta de quem gere o espa\u00e7o. Se uma combina\u00e7\u00e3o deixar o ecr\u00e3 vazio, limpas tudo com um toque.",
+  "changelog.entries.map-narrows-to-the-area-you-pick.title":
+    "Escolher uma zona no mapa limpa as restantes",
+  "changelog.entries.map-narrows-to-the-area-you-pick.body":
+    "Clicar numa freguesia no mapa local destacava-a e filtrava a lista ao lado, mas todos os outros pinos ficavam no s\u00edtio, pelo que a zona que acabavas de escolher continuava perdida no meio da cidade inteira. Escolher uma zona deixa agora apenas os pinos dessa zona no mapa. Cada uma das outras freguesias mant\u00e9m o nome e um n\u00famero com o que l\u00e1 existe, para continuares a perceber onde fica o resto da cidade. Clica outra vez na zona destacada para trazer tudo de volta.",
+  "changelog.entries.pages-open-at-the-top.title":
+    "Mudar de p\u00e1gina leva-te ao topo de imediato",
+  "changelog.entries.pages-open-at-the-top.body":
+    "Sa\u00edres de uma p\u00e1gina onde tinhas descido muito, por exemplo o fundo do diret\u00f3rio de an\u00fancios, e abrires outra, como o teu perfil, fazia o navegador deslizar lentamente at\u00e9 cima antes de a nova p\u00e1gina assentar. Numa lista comprida esse deslize demorava, e tudo o que tocasses entretanto lutava com a anima\u00e7\u00e3o. Agora a mudan\u00e7a de p\u00e1gina aparece logo no topo. O bot\u00e3o de retroceder continua a devolver-te ao ponto exato onde estavas, e tocar no separador em que j\u00e1 est\u00e1s continua a subir suavemente, como antes.",
+  "changelog.entries.queer-owned-says-queer-owned.title":
+    "Os neg\u00f3cios queer j\u00e1 o dizem no cart\u00e3o",
+  "changelog.entries.queer-owned-says-queer-owned.body":
+    "Um neg\u00f3cio cujo dono nos disse que \u00e9 queer continuava rotulado como \u201cLGBTQ+ friendly\u201d no diret\u00f3rio. Havia dois problemas: o cart\u00e3o estava a ler uma defini\u00e7\u00e3o completamente diferente (se o dono mostra o an\u00fancio no perfil dele) e um espa\u00e7o seguro verificado ocupava sozinho o canto do selo, pelo que esses lugares nem chegavam a dizer o que s\u00e3o. Agora os cart\u00f5es mostram o selo em tr\u00eas n\u00edveis honestos: neg\u00f3cio queer verificado, neg\u00f3cio queer ou LGBTQ+ friendly. A marca de espa\u00e7o seguro passou para o lado, como um escudo jade, e basta passar o rato ou o foco para saber o que \u00e9.",
+  "changelog.entries.review-appears-immediately.title":
+    "A tua avaliação aparece assim que a publicas",
+  "changelog.entries.review-appears-immediately.body":
+    "Publicar uma avaliação de um espaço dizia-te que tinha resultado e depois deixava a página igual ao que estava antes: as tuas palavras só apareciam se recarregasses. A página estava a receber uma cópia do espaço guardada mesmo antes de escreveres. Agora a tua avaliação aparece na lista no instante em que a publicas, já contada na classificação em estrelas. A mesma cópia desatualizada podia chegar a qualquer página pública, por isso as páginas de persona, as apresentações de comunidades, os grupos de habitação, as cooperativas, o roteiro e o diretório de changemakers também passam a mostrar as tuas alterações de imediato.",
+  "changelog.entries.star-pickers-follow-your-cursor.title":
+    "As estrelas j\u00e1 acompanham o cursor como deve ser",
+  "changelog.entries.star-pickers-follow-your-cursor.body":
+    "Classificar um espa\u00e7o ou uma empresa obrigava a acertar em cheio em cada estrela: os espa\u00e7os entre elas n\u00e3o contavam para nada, por isso a pr\u00e9-visualiza\u00e7\u00e3o voltava a zero enquanto percorrias a linha, e a cor entrava de repente. As estrelas passam a ficar encostadas umas \u00e0s outras, portanto qualquer ponto da linha acende a classifica\u00e7\u00e3o que est\u00e1s a apontar, e o coral entra a preencher em vez de saltar.",
+  "changelog.entries.review-stars-hint.title":
+    "As avaliações já dizem porque é que o botão está desativado",
+  "changelog.entries.review-stars-hint.body":
+    "Dava para escrever uma avaliação inteira de um espaço, ir ao botão e encontrá-lo desativado, sem nada que explicasse que as estrelas lá em cima continuavam por escolher. Agora, assim que começas a escrever, aparece uma linha ao lado do botão a pedir uma classificação em estrelas, para que a única peça em falta seja dita onde estás mesmo a olhar.",
+  "changelog.entries.filters-keep-your-place.title":
+    "Filtrar uma p\u00e1gina j\u00e1 n\u00e3o te atira de volta para o topo",
+  "changelog.entries.filters-keep-your-place.body":
+    "Alternar o diret\u00f3rio local entre mapa e lista atirava a p\u00e1gina toda para o in\u00edcio, e o mesmo acontecia ao ativar um filtro ou escrever mais uma letra numa pesquisa. Tudo o que vive na barra de endere\u00e7o contava como uma p\u00e1gina nova. Agora a aplica\u00e7\u00e3o distingue um filtro de uma navega\u00e7\u00e3o a s\u00e9rio: muda de vista ou afina uma lista e ficas exatamente onde estavas a ler.",
+  "changelog.entries.directory-card-cover-photo.title":
+    "A foto do seu neg\u00f3cio j\u00e1 aparece no diret\u00f3rio",
+  "changelog.entries.directory-card-cover-photo.body":
+    "Todos os cart\u00f5es do diret\u00f3rio local diziam \u201cFoto brevemente\u201d, mesmo para neg\u00f3cios cujos donos tinham carregado um plano geral h\u00e1 meses. A foto sempre l\u00e1 esteve; a grelha \u00e9 que nunca a pedia. Os cart\u00f5es passam a mostrar o plano geral da sua ficha, enquadrado como o recortou, e o passo das fotos diz claramente qual delas fica como capa.",
+  "changelog.entries.persona-banner-reposition.title":
+    "Põe o banner da tua persona exatamente onde queres",
+  "changelog.entries.persona-banner-reposition.body":
+    "O teu banner já não tem de ficar onde o recorte calhou. Passa o rato por cima dele na tua própria página de persona, escolhe “Reposicionar” e arrasta a imagem para cima ou para baixo até a parte que te interessa ficar enquadrada. As setas do teclado também funcionam. Guarda, e é assim que toda a gente a vê.",
+
+  "changelog.entries.listing-owner-photo.title":
+    "A cara por tr\u00e1s de um an\u00fancio aparece mesmo",
+  "changelog.entries.listing-owner-photo.body":
+    "O cart\u00e3o \u201cQuem gere\u201d numa p\u00e1gina de neg\u00f3cio mostrava as iniciais mesmo quando quem gere tinha foto de perfil, e o mesmo acontecia \u00e0s fotografias ao lado das avalia\u00e7\u00f5es e das perguntas. As imagens apontavam para o s\u00edtio errado e nunca chegavam a carregar. Passam a carregar bem, e quem desligou a sua foto nas defini\u00e7\u00f5es de privacidade continua a aparecer com iniciais, como escolheu.",
+  "changelog.entries.persona-savebar-compact.title":
+    "Mais espaço para escrever ao editar uma persona no telemóvel",
+  "changelog.entries.persona-savebar-compact.body":
+    "A barra de alterações por guardar no editor de personas listava todas as edições, o que num ecrã pequeno deixava quase nenhum espaço acima do teclado. No telemóvel passa a mostrar uma única linha com o número de alterações à espera, e basta tocar para abrir a lista completa. Guardar e Descartar ficam onde sempre estiveram.",
+  "changelog.entries.sharper-photos.title":
+    "Fotografias nítidas em qualquer ecrã",
   "changelog.entries.sharper-photos.body":
     "As fotografias que carregas mantêm agora muito mais detalhe. As imagens grandes são reduzidas por etapas cuidadas, em vez de num único passo tosco, que era o que deixava um banner ou uma foto de perfil com um aspeto ligeiramente desfocado, e passam a ser guardadas num formato mais recente que retém mais detalhe no mesmo tamanho. Capturas de ecrã e desenhos ficam perfeitos ao pixel. As imagens são também pedidas no tamanho que o teu ecrã consegue mostrar, por isso um telemóvel nítido recebe uma imagem nítida e ninguém paga por detalhe que não consegue ver.",
   "changelog.entries.listing-pages-rebuild.title":
@@ -2107,7 +2206,8 @@ export const marketing: Catalog = {
     "Mais controlo para quem gere um espaço",
   "changelog.entries.listing-owner-control.body":
     "Editar o teu anúncio já não o retira do diretório enquanto espera por nova verificação. Depois de aprovado, as tuas correções ficam no ar assim que guardas. O editor é um único ecrã em vez de seis passos, guarda um rascunho se fores interrompido e mostra-te a página real antes de publicares. Podes definir horários de feriado, marcar-te como temporariamente fechado ou mudado, pôr um anúncio em pausa sem o apagar, listar os teus serviços e preços, e ver o que as pessoas sugeriram ou perguntaram.",
-  "changelog.entries.persona-banner-framing.title": "Banners de persona, enquadrados como tu os enquadraste",
+  "changelog.entries.persona-banner-framing.title":
+    "Banners de persona, enquadrados como tu os enquadraste",
   "changelog.entries.persona-banner-framing.body":
     "Os banners de persona passam a reenquadrar-se em 3:1 (a forma com que realmente aparecem) em vez do 2:1 usado nas capas da revista, e a página mantém aquilo que centraste no enquadramento em vez de cortar uma faixa arbitrária do meio. Os banners também são carregados com mais resolução, por isso mantêm-se nítidos de ponta a ponta num ecrã grande, e agora sobem até ao topo da página.",
   "changelog.entries.card-check-page-rebuild.title":
@@ -4738,10 +4838,10 @@ export const marketing: Catalog = {
   "volunteer.hero.manageCta": "Gerir candidaturas",
   "volunteerManage.title": "Gerir candidaturas",
   "volunteerManage.sub":
-    "Revê e decide sobre quem se inscreveu nas oportunidades que publicaste.",
+    "Revê e decide sobre quem se inscreveu nas oportunidades que publicaste, ou que uma comunidade que organizas publicou.",
   "volunteerManage.loading": "A carregar as tuas oportunidades…",
   "volunteerManage.empty":
-    "Ainda não publicaste nenhuma oportunidade de voluntariado.",
+    "Ainda não publicaste nenhuma oportunidade de voluntariado, e as comunidades que organizas também não.",
   "volunteerManage.loadingApplicants": "A carregar candidaturas…",
   "volunteerManage.noApplicants": "Ainda ninguém se candidatou.",
   "volunteerManage.pendingCount": "{count} pendentes",
@@ -5213,6 +5313,7 @@ export const marketing: Catalog = {
   "directory.sort.default": "Em destaque",
   "directory.sort.name": "A–Z",
   "directory.sort.hood": "Por bairro",
+  "directory.badge.queerOwnedVerified": "Negócio queer verificado",
   "directory.badge.queerOwned": "Negócio queer",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Gerido por uma pessoa da comunidade",
@@ -5260,6 +5361,7 @@ export const marketing: Catalog = {
   "directory.detail.breadcrumbHome": "Diretório",
   "directory.detail.relatedTitle": "Mais {category} por perto",
   "directory.detail.badge.verifiedOwned": "Negócio queer verificado",
+  "directory.detail.badge.owned": "Negócio queer",
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} avaliações",
   "directory.detail.newBadge": "Novo",
@@ -5315,6 +5417,8 @@ export const marketing: Catalog = {
   "directory.detail.review.starAria": "{count} de 5 estrelas",
   "directory.detail.review.placeholder":
     "Conta como foi a tua visita: o que resultou e para quem é.",
+  "directory.detail.review.starsRequiredHint":
+    "Escolhe uma classificação em estrelas para desbloquear o botão.",
   "directory.detail.review.submit": "Publicar avaliação",
   "directory.detail.review.submitting": "A publicar…",
   "directory.detail.review.successToast":
@@ -5380,13 +5484,25 @@ export const marketing: Catalog = {
   "directory.detail.reviews.photoOpen": "Abrir a foto da avaliação de {name}",
   "directory.detail.reviews.sortHelpful": "Mais úteis",
   "directory.detail.reviews.sortedByHelpful": "Ordenado por mais úteis.",
+  "directory.detail.reviews.sortOldest": "Mais antigas",
+  "directory.detail.reviews.sortedByOldest": "Ordenado por mais antigas.",
+  "directory.detail.reviews.filterContentAria":
+    "Filtrar avaliações pelo que incluem",
+  "directory.detail.reviews.filterPhotos": "Com fotos",
+  "directory.detail.reviews.filterReply": "Com resposta",
+  "directory.detail.reviews.noMatchingReviews":
+    "Ainda não há avaliações que correspondam a estes filtros.",
+  "directory.detail.reviews.clearFilters": "Limpar filtros",
   "directory.detail.reviews.noStarReviews":
     "Ainda não há avaliações de {count} estrelas.",
   "directory.detail.reviews.ratingAria":
     "Classificado com {count} em 5 estrelas",
+  "directory.detail.reviews.readMore": "Ler mais",
+  "directory.detail.reviews.showLess": "Mostrar menos",
   "directory.detail.visitTitle": "Onde fica",
   "directory.detail.accessTitle": "Entrar e ser compreendido",
-  "directory.detail.accessSub": "Conforme {name} declarou. Pergunta se precisares de ter a certeza.",
+  "directory.detail.accessSub":
+    "Conforme {name} declarou. Pergunta se precisares de ter a certeza.",
 
   // ── Respostas estruturadas de acessibilidade. Três estados, e os três são
   //    informação: `unknown` nunca aparece como "não" e nunca desaparece.
@@ -5413,8 +5529,7 @@ export const marketing: Catalog = {
     "Negócio queer, confirmado por <strong>{verifier}</strong>.",
   "directory.detail.queerOwned.onDate":
     "Negócio queer, confirmado pela última vez a <strong>{date}</strong>.",
-  "directory.detail.queerOwned.nextCheck":
-    "A confirmar de novo até {date}.",
+  "directory.detail.queerOwned.nextCheck": "A confirmar de novo até {date}.",
 
   // ── O compromisso afirmativo, DECLARADO. Todos os anúncios daqui
   //    concordaram com ele, por isso isto é um facto sobre o diretório.
@@ -5427,7 +5542,8 @@ export const marketing: Catalog = {
   "directory.detail.baseline.scope":
     "O compromisso é sobre a forma como um negócio trata as pessoas que serve, e sobre agir quando alguém no espaço fica aquém. Não dá a ninguém autorização para recusar uma pessoa por quem ela é.",
   "directory.detail.nearby.title": "A curta distância a pé",
-  "directory.detail.nearby.sub": "Outros sítios que podes juntar à mesma noite, medidos a partir de {name}.",
+  "directory.detail.nearby.sub":
+    "Outros sítios que podes juntar à mesma noite, medidos a partir de {name}.",
   "directory.detail.nearby.metres": "{distance} m",
   "directory.detail.nearby.kilometres": "{distance} km",
   "directory.detail.visitWebsite": "Visitar o site",
@@ -5544,16 +5660,14 @@ export const marketing: Catalog = {
     "O que é que o horário devia dizer?",
   "directory.detail.suggestEdit.value.hours.placeholder":
     "Ter a dom, 12:00 às 23:00. Fecha à segunda.",
-  "directory.detail.suggestEdit.value.address.label":
-    "Qual é a morada certa?",
+  "directory.detail.suggestEdit.value.address.label": "Qual é a morada certa?",
   "directory.detail.suggestEdit.value.address.placeholder":
     "Rua da Prata 42, 1100-052 Lisboa",
-  "directory.detail.suggestEdit.value.phone.label":
-    "Qual é o telefone certo?",
+  "directory.detail.suggestEdit.value.phone.label": "Qual é o telefone certo?",
   "directory.detail.suggestEdit.value.phone.placeholder": "+351 21 000 0000",
-  "directory.detail.suggestEdit.value.website.label":
-    "Qual é o site certo?",
-  "directory.detail.suggestEdit.value.website.placeholder": "https://exemplo.pt",
+  "directory.detail.suggestEdit.value.website.label": "Qual é o site certo?",
+  "directory.detail.suggestEdit.value.website.placeholder":
+    "https://exemplo.pt",
   "directory.detail.suggestEdit.value.description.label":
     "O que é que a descrição devia dizer?",
   "directory.detail.suggestEdit.value.description.placeholder":
@@ -5958,6 +6072,7 @@ export const marketing: Catalog = {
   "map.sidebar.venueCount_one": "<b>{count}</b> espaço",
   "map.sidebar.venueCount_other": "<b>{count}</b> espaços",
   "map.sidebar.clear": "Limpar",
+  "map.sidebar.backToAll": "Todos os locais",
   "map.sidebar.empty": "Nenhum espaço corresponde a estes filtros.",
   "map.jumpToList": "Ver a lista · {count}",
   "map.venueCard.beenCount_one": "<b>{count}</b> pessoa já esteve aqui",
@@ -5980,7 +6095,7 @@ export const marketing: Catalog = {
   "local.view.toggleAria": "Escolher vista de lista ou mapa",
   "local.card.seeFullDetails": "Ver detalhes",
   "local.filter.searchPlaceholder": "Procurar espaços e locais…",
-  "local.filter.categoryAria": "Filtrar por categoria",
+  "local.filter.categoryLabel": "Tipo de lugar",
   "local.filter.refine": "Refinar",
   "local.filter.vibeLabel": "Ambiente",
   "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",

@@ -1140,6 +1140,16 @@
   font-size: 12px;
   color: var(--accent);
 }
+/* Standing note for a slot (the cover slot's "shown on your directory card").
+   Rendered above the frame so it labels it, and it stays put once a photo fills
+   the slot — unlike the ImageSlot placeholder caption, which disappears exactly
+   when the owner most needs to know where that photo lands. */
+.photoNote {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(var(--ink-rgb), 0.62);
+}
 
 /* ===== Member toggle row ===== */
 .memToggle {

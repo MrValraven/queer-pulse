@@ -111,7 +111,9 @@
 }
 .mapPanel {
   position: sticky;
-  top: 88px;
+  /* Under the nav chrome. The filter bar above scrolls away with the page, so
+     nothing else has to be cleared here. */
+  top: calc(var(--sticky-top) + 10px);
   /* cream tinted with plum for the map panel surface */
   background: color-mix(in srgb, var(--cream) 88%, var(--plum));
   border: 1px solid rgba(var(--line-rgb), 0.12);
@@ -309,10 +311,10 @@
 }
 
 .sidebar {
-  max-height: calc(100svh - 120px);
+  max-height: calc(100svh - var(--sticky-top) - 40px);
   overflow-y: auto;
   position: sticky;
-  top: 88px;
+  top: calc(var(--sticky-top) + 10px);
 }
 .sbTop {
   display: flex;

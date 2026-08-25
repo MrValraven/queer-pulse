@@ -339,6 +339,26 @@
   margin-top: 2px;
   color: var(--accent-ink);
 }
+/* The reason a footer's submit button is dead, said just above it. Right-aligned
+   so it lands next to the button the member is trying to press. */
+.formHint {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin: 10px 0 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-60);
+  text-align: right;
+}
+.formHint svg {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
+}
 .foot {
   display: flex;
   align-items: center;

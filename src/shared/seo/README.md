@@ -28,8 +28,15 @@ export function MyPage() {
   brand-level copy — **never** invite-specific).
 - Canonical / `og:url` default to `SITE_ORIGIN + current path`. Override
   `SITE_ORIGIN` at build time with `VITE_SITE_ORIGIN`.
-- `<PageMeta>` restores the previous tag values on unmount, so it composes with
-  the static defaults baked into `index.html`.
+- `<PageMeta>` resets the head to the neutral site defaults on unmount — the
+  same values `index.html` ships, mirrored from `defaultMeta`. The baseline is
+  deliberately _absolute_ rather than "whatever the head held when this page
+  mounted": the prerenderer bakes each public page's own title into its
+  `dist/<path>/index.html`, so a session that lands on one starts with a
+  page-specific head, and restoring that captured state left every route
+  entered afterwards wearing the entry page's title. That is visible on the
+  gated routes (feed, local directory), which render no `<PageMeta>` of their
+  own. See `applyDefaultDocumentMeta` in `useDocumentMeta.ts`.
 
 ## The SPA-crawler problem — and how it is solved
 

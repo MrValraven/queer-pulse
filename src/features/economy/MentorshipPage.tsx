@@ -59,7 +59,7 @@ export function MentorshipPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.cat}>
             {t("economy:mentorship.hero.eyebrow")}
@@ -82,7 +82,7 @@ export function MentorshipPage() {
             </div>
           )}
         </div>
-      </div>
+      </header>
 
       <section className={styles.choose}>
         <div className="wrap">

@@ -1,0 +1,79 @@
+/* Desk — "which issue does this run in?" picker. Used by both the pipeline's
+   row action and the bulk assign bar (`AssignIssueModal.tsx`). */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.option:hover {
+  background: var(--wash);
+}
+
+.option[data-selected="true"] {
+  border-color: var(--accent);
+  background: var(--wash);
+}
+
+.optionMark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--paper);
+  font-size: 12px;
+}
+
+.option[data-selected="true"] .optionMark {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.optionText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.optionLabel {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.optionMeta {
+  color: var(--ink-40);
+  font-size: 12.5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option {
+    transition: none;
+  }
+}

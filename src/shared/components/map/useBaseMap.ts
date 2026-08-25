@@ -30,6 +30,45 @@ interface UseBaseMapResult {
   failed: boolean;
 }
 
+// MapLibre renders at `devicePixelRatio` by default. That is right for a
+// retina screen, but on a 1x display it puts the map on a coarser grid than
+// the DOM text beside it, and it gets worse below 100% browser zoom, where the
+// ratio drops UNDER 1 (a 90% zoom on a 1x monitor reports 0.9, so a 754px-wide
+// panel is drawn into 678 pixels and stretched back out). Rendering at a floor
+// of 2 and letting the compositor resolve it down is plain supersampling: thin
+// road casings and SDF label edges land on a finer grid before they reach the
+// screen. This costs fragment work only on the low-DPI displays that have the
+// headroom for it, since a 2x or 3x screen already sits above the floor.
+const MIN_RENDER_PIXEL_RATIO = 2;
+
+function renderPixelRatio(): number {
+  return Math.max(window.devicePixelRatio, MIN_RENDER_PIXEL_RATIO);
+}
+
+// MapLibre samples `devicePixelRatio` once, when the map is constructed, and
+// never looks again. Zoom the browser, or drag the window from a retina screen
+// onto an external 1x monitor, and the ratio changes underneath a live map: the
+// canvas keeps its old backing store and the compositor stretches it to fit.
+// That is the "blurry map", and it is measurable — after a 1x to 2x move the
+// canvas holds exactly half the pixels its CSS box needs, and it never recovers,
+// because `resize()` reuses the stored ratio. A media query on the CURRENT ratio
+// fires the moment that ratio stops being current, so each change re-arms a
+// fresh query for whatever the ratio has become.
+function watchPixelRatio(map: MapLibreMap): () => void {
+  let query: MediaQueryList | undefined;
+  const arm = () => {
+    query?.removeEventListener("change", handleChange);
+    query = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+    query.addEventListener("change", handleChange);
+  };
+  const handleChange = () => {
+    map.setPixelRatio(renderPixelRatio());
+    arm();
+  };
+  arm();
+  return () => query?.removeEventListener("change", handleChange);
+}
+
 // Builds the warm-recoloured basemap, constructs it once, and reveals it only
 // once painted: the lifecycle shared by every map in the app. Domain logic
 // (freguesia overlay, venue pins, neighbourhood pins) lives entirely in the
@@ -62,6 +101,7 @@ export function useBaseMap({
     if (!container) return;
     let cancelled = false;
     let revealTimer: ReturnType<typeof setTimeout> | undefined;
+    let stopPixelRatioWatch: (() => void) | undefined;
 
     buildWarmStyle()
       .then((style) => {
@@ -71,9 +111,11 @@ export function useBaseMap({
           style,
           bounds,
           fitBoundsOptions,
+          pixelRatio: renderPixelRatio(),
           attributionControl: { compact: true },
         });
         mapRef.current = map;
+        stopPixelRatioWatch = watchPixelRatio(map);
         map.addControl(
           new maplibregl.NavigationControl({ showCompass: false }),
           "top-right",
@@ -103,6 +145,7 @@ export function useBaseMap({
     return () => {
       cancelled = true;
       clearTimeout(revealTimer);
+      stopPixelRatioWatch?.();
       onCleanupRef.current?.();
       mapRef.current?.remove();
       mapRef.current = null;

@@ -129,9 +129,22 @@ export function cropToImgStyle(rect: CropRect): {
  * framed at the top of the image stays anchored to the top).
  */
 export function cropFocalPosition(rect: CropRect): string {
-  const x = clamp((rect.x + rect.width / 2) * 100, 0, 100);
-  const y = clamp((rect.y + rect.height / 2) * 100, 0, 100);
+  const { x, y } = cropFocalXY(rect);
+  return `${x}% ${y}%`;
+}
+
+/**
+ * The same focal point as `cropFocalPosition`, as the two numbers rather than
+ * the joined `object-position` string. Callers that need to override one axis
+ * on its own (the persona banner's owner reposition control, which moves only
+ * the vertical focus) need the halves separately; splitting the string back
+ * apart would be the same maths done twice.
+ */
+export function cropFocalXY(rect: CropRect): { x: number; y: number } {
   // One decimal is well below a single device pixel on any real banner width;
   // rounding keeps the inline style stable across re-renders.
-  return `${Math.round(x * 10) / 10}% ${Math.round(y * 10) / 10}%`;
+  return {
+    x: Math.round(clamp((rect.x + rect.width / 2) * 100, 0, 100) * 10) / 10,
+    y: Math.round(clamp((rect.y + rect.height / 2) * 100, 0, 100) * 10) / 10,
+  };
 }

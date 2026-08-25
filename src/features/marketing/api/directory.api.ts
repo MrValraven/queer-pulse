@@ -1,5 +1,6 @@
 import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 import type { ItemsPage } from "../../../shared/api/pagination";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import {
   validateDirectoryDetail,
   validateDirectoryList,
@@ -22,6 +23,23 @@ import type { ListingServiceOffering } from "../listBusiness/listingServices.dat
 
 /** Photos as the detail endpoint returns them — each slot resolved to a URL or null. */
 export type PhotoSetView = Record<PhotoKey, string | null>;
+
+/**
+ * The listing's cover photo as the card endpoints return it: the first entry
+ * of the owner's ordered gallery, which is the wide shot they uploaded first.
+ * `null` when the listing has no photos at all — the card then falls back to
+ * its tinted placeholder frame.
+ *
+ * `crop` is the rect the owner framed in the photo-reframe editor. The card
+ * strip is a fixed 168px band whose aspect won't match that rect, so it is
+ * read as a FOCAL REGION (`ImageSlot`'s `focus`) rather than an exact frame.
+ */
+export interface CoverPhotoView {
+  image: string | null;
+  alt: string;
+  caption: string;
+  crop?: CropRect;
+}
 
 /**
  * A directory grid card from the public `GET /directory` endpoint. Mirrors the
@@ -59,6 +77,10 @@ export interface DirectoryCardDTO {
    * newer backend addition and the demo/session card sources never carry it;
    * absent is read through `operatingStateOf`, which defaults to `"open"`. */
   operatingState?: OperatingStateView;
+  /** The listing's cover photo, so the grid card shows the owner's own wide
+   * shot instead of the "Photo coming" placeholder. Optional here because the
+   * demo/session card sources never carry it. */
+  coverPhoto?: CoverPhotoView | null;
 }
 
 /** GET /directory — every live directory listing (public), optionally

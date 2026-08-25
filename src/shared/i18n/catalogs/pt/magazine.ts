@@ -654,21 +654,58 @@ export const magazine: Catalog = {
   "desk.header.produce": "Produção da edição",
   "desk.header.slotsFilledAria": "Vagas da edição preenchidas",
   "desk.header.layoutAria": "Esquema da redação",
-  "desk.header.highlightsEyebrow": "Destaques autónomos",
-  "desk.header.highlightsMeta":
-    "Peças que saem por conta própria na plataforma, sem estarem presas a nenhuma edição.",
+  "desk.header.metaPublishesOnly": "Sai a {publishes}",
+  "desk.header.unassignedEyebrow": "Ainda sem edição",
+  "desk.header.unassignedMeta":
+    "Peças à espera de destino. Junta uma a uma edição quando souberes onde sai.",
 
-  // ── DeskTrackTabs (Destaques ⇄ Edição) ───────────────────────────────────
-  "desk.trackTabs.highlights": "Destaques",
+  // ── Seletor de edição + criação (cabeçalho da redação) ───────────────────
+  "desk.header.workingOn": "A trabalhar em",
+  "desk.header.workingOnAria": "Edição em que estás a trabalhar",
+  "desk.header.issueOption": "Edição {number} · {title}",
+  "desk.header.newIssueCta": "Nova edição",
+
+  // ── DeskTrackTabs (Sem edição ⇄ Edição) ──────────────────────────────────
+  "desk.trackTabs.unassigned": "Sem edição",
   "desk.trackTabs.issue": "Edição {number}",
   "desk.trackTabs.issueNoNumber": "Edição",
 
-  // ── Reatribuição de via (ação na linha da peça) ──────────────────────────
-  "desk.reassign.addToIssue": "Juntar à edição {number}",
-  "desk.reassign.makeStandalone": "Tornar autónoma",
+  // ── Atribuição a uma edição (ação na linha da peça + seletor) ────────────
+  "desk.reassign.addToIssue": "Juntar a uma edição…",
+  "desk.reassign.moveIssue": "Mudar de edição…",
   "desk.reassign.addedToIssueToast": "Juntámos à edição {number}.",
-  "desk.reassign.madeStandaloneToast": "Agora é um destaque autónomo.",
+  "desk.reassign.madeUnassignedToast": "Voltou para as peças sem edição.",
   "desk.reassign.failedToast": "Não deu para guardar. Tenta outra vez.",
+
+  "desk.assignIssue.title": "Em que edição é que isto sai?",
+  "desk.assignIssue.subPieces_one": "{count} peça",
+  "desk.assignIssue.subPieces_other": "{count} peças",
+  "desk.assignIssue.issueOption": "Edição {number} · {title}",
+  "desk.assignIssue.issueOptionMeta": "{filled} de {slots} vagas preenchidas",
+  "desk.assignIssue.unassignedOption": "Nenhuma edição",
+  "desk.assignIssue.unassignedOptionMeta":
+    "Deixa por agora nas peças sem edição.",
+  "desk.assignIssue.currentSuffix": "onde está agora",
+  "desk.assignIssue.confirm_one": "Mudar",
+  "desk.assignIssue.confirm_other": "Mudar {count} peças",
+
+  // ── Modal de nova edição ─────────────────────────────────────────────────
+  "desk.newIssue.title": "Criar uma edição da revista",
+  "desk.newIssue.sub":
+    "O resto (capa, ordem de publicação, resumo) trata-se na página da própria edição, assim que ela existir.",
+  "desk.newIssue.numberLabel": "Número",
+  "desk.newIssue.numberHelper": "Só dígitos. “1” passa a “01”.",
+  "desk.newIssue.publishesLabel": "Sai a",
+  "desk.newIssue.titleLabel": "Título",
+  "desk.newIssue.titlePlaceholder": "O caminho mais longo",
+  "desk.newIssue.themeLabel": "Tema",
+  "desk.newIssue.themeHelper": "Uma ou duas palavras. Aparece ao lado do número.",
+  "desk.newIssue.themePlaceholder": "Cuidar depois",
+  "desk.newIssue.create": "Criar edição",
+  "desk.newIssue.creating": "A criar…",
+  "desk.newIssue.createdToast": "Edição {number} criada. Já estás nela.",
+  "desk.newIssue.duplicateNumberError": "A edição {number} já existe.",
+  "desk.newIssue.saveFailedError": "Não deu para guardar. Tenta outra vez.",
 
   // ── NeedsStrip ───────────────────────────────────────────────────────────
   "desk.needsStrip.lateDue": "Atrasada · prazo {due}",
@@ -707,6 +744,7 @@ export const magazine: Catalog = {
   "desk.pipeline.columnStage": "Estado",
   "desk.pipeline.columnWaitingOn": "À espera de",
   "desk.pipeline.columnDue": "Prazo",
+  "desk.pipeline.selectAllAria": "Selecionar todas as peças à vista",
 
   // ── PieceRow ─────────────────────────────────────────────────────────────
   "desk.pieceRow.newVoice": "Voz nova",
@@ -716,6 +754,7 @@ export const magazine: Catalog = {
   "desk.pieceRow.edit": "Edição",
   "desk.pieceRow.chase": "Insistir",
   "desk.pieceRow.handOff": "Passar",
+  "desk.pieceRow.selectAria": "Selecionar {title}",
 
   // ── PiecesBoard ──────────────────────────────────────────────────────────
   "desk.board.columnEmpty": "Vazia",
@@ -752,6 +791,17 @@ export const magazine: Catalog = {
   "desk.bulkTriage.clearSelection": "Limpar seleção",
   "desk.bulkTriage.maybe": "Talvez",
   "desk.bulkTriage.passKindly": "Recusar com delicadeza",
+
+  // ── Atribuição em lote a uma edição (linhas do fluxo) ────────────────────
+  "desk.bulkAssign.selected_one": "{count} peça selecionada",
+  "desk.bulkAssign.selected_other": "{count} peças selecionadas",
+  "desk.bulkAssign.ariaLabel": "Atribuir peças a uma edição em lote",
+  "desk.bulkAssign.clearSelection": "Limpar seleção",
+  "desk.bulkAssign.assignToIssue": "Atribuir a uma edição…",
+  "desk.bulkAssign.assignedToast_one": "{count} peça passou para a edição {number}.",
+  "desk.bulkAssign.assignedToast_other": "{count} peças passaram para a edição {number}.",
+  "desk.bulkAssign.unassignedToast_one": "{count} peça voltou para as peças sem edição.",
+  "desk.bulkAssign.unassignedToast_other": "{count} peças voltaram para as peças sem edição.",
 
   // ── DeskSidebar ──────────────────────────────────────────────────────────
   "desk.sidebar.issueStanding": "Como está a edição",
@@ -825,7 +875,7 @@ export const magazine: Catalog = {
   "desk.modals.commission.feeLabel": "Valor",
   "desk.modals.commission.feePlaceholder": "ex.: 150 €",
   "desk.modals.commission.trackLabel": "Onde sai",
-  "desk.modals.commission.trackHighlights": "Autónoma",
+  "desk.modals.commission.trackUnassigned": "Nenhuma edição",
   "desk.modals.commission.trackIssue": "Edição {number}",
 
   // ── PassModal ────────────────────────────────────────────────────────────
@@ -1530,6 +1580,24 @@ export const magazine: Catalog = {
   "issue.runOrder.deckNoPageCount": "Deck: sem contagem de páginas",
   "issue.runOrder.pagesPrefix": "pp. {pages}",
   "issue.runOrder.laidOut": "Paginada",
+
+  // ── Painel de juntar peças (produção da edição, ordem de publicação) ─────
+  "issue.addPieces.title": "Juntar peças a esta edição",
+  "issue.addPieces.sub":
+    "Vai buscar às peças que ainda não têm edição. Entram no fim da ordem de publicação.",
+  "issue.addPieces.addCtaEmpty": "Juntar à edição {number}",
+  "issue.addPieces.addCta_one": "Juntar 1 à edição {number}",
+  "issue.addPieces.addCta_other": "Juntar {count} à edição {number}",
+  "issue.addPieces.searchPlaceholder": "Procurar peças sem edição…",
+  "issue.addPieces.searchLabel": "Procurar peças sem edição",
+  "issue.addPieces.noMatches": "Nada corresponde a essa procura.",
+  "issue.addPieces.emptyTitle": "Está tudo arrumado",
+  "issue.addPieces.emptyDescription":
+    "Não há peças à espera de edição. Encomenda uma na redação para começar.",
+  "issue.addPieces.addedToast_one": "{count} peça juntou-se à edição {number}.",
+  "issue.addPieces.addedToast_other": "{count} peças juntaram-se à edição {number}.",
+  "issue.addPieces.failedToast": "Não deu para guardar. Tenta outra vez.",
+
   "issue.runOrder.inLayout": "Em paginação",
   "issue.runOrder.moveEarlierAria":
     "Mover “{title}” para mais cedo na ordem de publicação",

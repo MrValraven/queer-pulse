@@ -42,8 +42,35 @@ export interface IssueProductionDto {
   pages: { editorial: number; total: number; max: number };
 }
 
+/**
+ * One row of the desk's issue switcher, from GET /magazine/admin/issues —
+ * mirrors backend `IssueSummaryResponse`. Carries `id`, which the public
+ * `GET /magazine/issues` deliberately omits and which is exactly what the
+ * desk writes onto `magazine_piece.issueId`.
+ */
+export interface IssueSummaryDto {
+  id: string;
+  number: string;
+  title: string;
+  theme: string;
+  publishedOn: string;
+  filled: number;
+  slots: number;
+}
+
 // ── Admin request bodies ─────────────────────────────────────────────────
 // Mirrors backend `dto/{update-run-order,update-digest,update-cover}.ts`.
+
+/** Body of `POST /magazine/admin/issues`. `number` may be sent unpadded
+ *  ("1"); the backend normalizes it to the stored two-digit form ("01"). */
+export interface CreateIssueDto {
+  number: string;
+  title: string;
+  theme: string;
+  /** `YYYY-MM-DD`, straight from an `<input type="date">`. */
+  publishedOn: string;
+  dek?: string;
+}
 
 /** Body of `PATCH /magazine/admin/issues/:number/run-order`. */
 export interface UpdateRunOrderDto {
@@ -64,6 +91,12 @@ export interface UpdateCoverDto {
 }
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
+
+export const getIssues = () =>
+  apiGet<IssueSummaryDto[]>("/magazine/admin/issues");
+
+export const createIssue = (body: CreateIssueDto) =>
+  apiPost<IssueSummaryDto>("/magazine/admin/issues", body);
 
 export const getIssueProduction = (number: string) =>
   apiGet<IssueProductionDto>(`/magazine/admin/issues/${number}`);

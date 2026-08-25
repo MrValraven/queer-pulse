@@ -1,7 +1,15 @@
-import { FiCalendar, FiFileText, FiGrid, FiList, FiPlus, FiUser } from "react-icons/fi";
+import {
+  FiBookOpen,
+  FiCalendar,
+  FiFileText,
+  FiGrid,
+  FiList,
+  FiPlus,
+  FiUser,
+} from "react-icons/fi";
 import { Button, SegmentedControl, Select } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { Editor, Issue } from "../data/desk.data";
+import type { Editor, Issue, IssueSummary } from "../data/desk.data";
 import type { DeskTrack } from "./DeskTrackTabs";
 import styles from "./DeskHeader.module.css";
 
@@ -10,13 +18,21 @@ export type DeskLayout = "list" | "board" | "plan";
 
 /**
  * Desk page header. On the Issue track it shows the issue eyebrow + title,
- * close/publish meta and the slot-progress track. On the Highlights track it
- * drops the slot progress and the Produce button (highlights aren't an
- * assembled release) and swaps in highlight-oriented copy. Both tracks keep
- * the "Viewing as" picker, the Commission action, and the 3-way layout switch.
+ * close/publish meta and the slot-progress track. On the Unassigned track it
+ * drops the slot progress and the Produce button (unfiled work is not an
+ * assembled release) and swaps in pool-oriented copy. Both tracks keep the
+ * issue switcher, the "New issue" and "Viewing as" controls, the Commission
+ * action, and the 3-way layout switch.
+ *
+ * The issue switcher is what makes the desk multi-issue: before it, the
+ * working issue was whichever had the highest display number, so no earlier
+ * issue could be worked on at all.
  */
 export function DeskHeader({
   issue,
+  issues,
+  onSelectIssue,
+  onNewIssue,
   track,
   editors,
   me,
@@ -27,6 +43,10 @@ export function DeskHeader({
   onProduce,
 }: {
   issue: Issue;
+  /** Every issue, newest number first, for the switcher. */
+  issues: IssueSummary[];
+  onSelectIssue: (issueNumber: string) => void;
+  onNewIssue: () => void;
   track: DeskTrack;
   editors: Editor[];
   me: string;
@@ -41,12 +61,14 @@ export function DeskHeader({
   const filledPercent =
     issue.slots > 0 ? (issue.filled / issue.slots) * 100 : 0;
   // The backend doesn't model an editorial calendar yet, so live issues carry
-  // a real number/theme/filled/slots but blanked-out closes/publishes/
-  // daysLeft. Only render the eyebrow + close/publish meta line when there's
-  // real calendar data (i.e. demo mode) to show.
-  const hasIssueCalendar = Boolean(issue.theme && issue.closes && issue.publishes);
-  // The Produce button only needs a real issue to link to — gate it on the
-  // issue existing at all, not on the (live-mode-absent) calendar fields.
+  // a real number/theme/publishes but a blank closes/daysLeft. The two halves
+  // of the meta line are gated separately so a live issue still shows its real
+  // publish date instead of hiding it behind a "closes" value that will never
+  // arrive.
+  const hasIssueTheme = Boolean(issue.theme);
+  const hasCloseDate = Boolean(issue.closes);
+  const hasPublishDate = Boolean(issue.publishes);
+  // The Produce button only needs a real issue to link to.
   const hasIssue = issue.number !== "";
 
   const layoutOptions = [
@@ -72,7 +94,7 @@ export function DeskHeader({
       <div className={styles.deskHead}>
         <div className={styles.meta}>
           {isIssueTrack ? (
-            hasIssueCalendar && (
+            hasIssueTheme && (
               <span className={styles.eyebrow}>
                 {t("magazine:desk.header.eyebrow", {
                   number: issue.number,
@@ -82,7 +104,7 @@ export function DeskHeader({
             )
           ) : (
             <span className={styles.eyebrow}>
-              {t("magazine:desk.header.highlightsEyebrow")}
+              {t("magazine:desk.header.unassignedEyebrow")}
             </span>
           )}
           <h1 className={styles.title}>{t("magazine:desk.header.title")}</h1>
@@ -90,16 +112,20 @@ export function DeskHeader({
         <div className={styles.metaTight}>
           {isIssueTrack ? (
             <>
-              {hasIssueCalendar && (
+              {(hasCloseDate || hasPublishDate) && (
                 <span className={styles.tiny}>
-                  {t("magazine:desk.header.meta", {
-                    closes: issue.closes,
-                    publishes: issue.publishes,
-                  })}
+                  {hasCloseDate
+                    ? t("magazine:desk.header.meta", {
+                        closes: issue.closes,
+                        publishes: issue.publishes,
+                      })
+                    : t("magazine:desk.header.metaPublishesOnly", {
+                        publishes: issue.publishes,
+                      })}
                 </span>
               )}
               <span className={styles.muted}>
-                {hasIssueCalendar && (
+                {hasCloseDate && (
                   <>
                     <b>{t("magazine:desk.header.daysLeft", { days: issue.daysLeft })}</b>{" "}
                     {t("magazine:desk.header.toClose")} ·{" "}
@@ -113,11 +139,31 @@ export function DeskHeader({
             </>
           ) : (
             <span className={styles.muted}>
-              {t("magazine:desk.header.highlightsMeta")}
+              {t("magazine:desk.header.unassignedMeta")}
             </span>
           )}
         </div>
         <div className={styles.actions}>
+          {issues.length > 0 && (
+            <span className={styles.picker}>
+              <FiBookOpen aria-hidden />
+              {t("magazine:desk.header.workingOn")}
+              <Select
+                size="sm"
+                className={styles.viewingAsSelect}
+                value={issue.number || null}
+                onChange={(value) => value && onSelectIssue(value)}
+                label={t("magazine:desk.header.workingOnAria")}
+                options={issues.map((option) => ({
+                  value: option.number,
+                  label: t("magazine:desk.header.issueOption", {
+                    number: option.number,
+                    title: option.title,
+                  }),
+                }))}
+              />
+            </span>
+          )}
           <span className={styles.picker}>
             <FiUser aria-hidden />
             {t("magazine:desk.header.viewingAs")}
@@ -133,6 +179,10 @@ export function DeskHeader({
               }))}
             />
           </span>
+          <Button variant="ghost" onClick={onNewIssue}>
+            <FiPlus aria-hidden />
+            {t("magazine:desk.header.newIssueCta")}
+          </Button>
           {isIssueTrack && hasIssue && (
             <Button variant="ghost" onClick={onProduce}>
               <FiCalendar aria-hidden />

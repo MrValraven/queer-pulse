@@ -173,21 +173,37 @@ export function JoinRequestCard({
         {t("admin:members.verify.identityReminder")}
       </p>
 
+      {/* The three labels are `white-space: nowrap` and together outrun a
+          narrow queue column, so the row wraps: the two quiet options share
+          the first line and "welcome in" gets a full-width line below. */}
       <div className={styles.queueActions}>
-        <Button variant="ghost" size="md" disabled={isBusy} onClick={onDecline}>
+        <Button
+          variant="ghost"
+          size="md"
+          className={styles.queueActionSecondary}
+          disabled={isBusy}
+          onClick={onDecline}
+        >
           {t("admin:members.verify.declineCta")}
         </Button>
         {stage === "pending" && onWaitlist && (
           <Button
             variant="ghost"
             size="md"
+            className={styles.queueActionSecondary}
             disabled={isBusy}
             onClick={onWaitlist}
           >
             {t("admin:members.verify.waitlistCta")}
           </Button>
         )}
-        <Button variant="jade" size="md" disabled={isBusy} onClick={onApprove}>
+        <Button
+          variant="jade"
+          size="md"
+          className={styles.queueActionPrimary}
+          disabled={isBusy}
+          onClick={onApprove}
+        >
           {t("admin:members.verify.approveCta")}
         </Button>
       </div>

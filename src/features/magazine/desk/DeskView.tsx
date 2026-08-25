@@ -9,11 +9,21 @@ import { PiecesBoard } from "./PiecesBoard";
 import { IssuePlan } from "./IssuePlan";
 import { PitchInbox } from "./PitchInbox";
 import { BulkTriageBar } from "./BulkTriageBar";
+import { BulkAssignBar } from "./BulkAssignBar";
 import { DeskSidebar } from "./DeskSidebar";
 import { DeskSkeleton, DeskEmptyState, DeskErrorBand } from "./DeskStates";
 import { EditorDecksSection } from "../EditorDecksSection";
 import type { DeskSummaryDto } from "../api/pieces.api";
-import type { Editor, Issue, Piece, Pitch, SavedViewId, Section, Stage } from "../data/desk.data";
+import type {
+  Editor,
+  Issue,
+  IssueSummary,
+  Piece,
+  Pitch,
+  SavedViewId,
+  Section,
+  Stage,
+} from "../data/desk.data";
 import styles from "./DeskView.module.css";
 
 export interface DeskViewProps {
@@ -22,13 +32,17 @@ export interface DeskViewProps {
   onRetry: () => void;
   isEmpty: boolean;
   issue: Issue;
-  /** The active editorial track — partitions the pipeline into Highlights vs. Issue. */
+  /** Every issue, newest number first — the header's issue switcher. */
+  issues: IssueSummary[];
+  onSelectIssue: (issueNumber: string) => void;
+  onNewIssue: () => void;
+  /** The active track — partitions the pipeline into Unassigned vs. Issue. */
   track: DeskTrack;
   onTrack: (track: DeskTrack) => void;
-  /** Whether a current issue exists (drives the Issue tab number + reassignment). */
+  /** Whether an issue is selected (drives the Issue tab number + assignment). */
   hasCurrentIssue: boolean;
   /** Piece counts per track, for the tab badges. */
-  highlightsCount: number;
+  unassignedCount: number;
   issueCount: number;
   editors: Editor[];
   me: string;
@@ -60,7 +74,15 @@ export interface DeskViewProps {
   onEditPiece: (piece: Piece) => void;
   onChasePiece: (piece: Piece) => void;
   onHandoffPiece: (piece: Piece) => void;
-  onReassignPiece: (piece: Piece) => void;
+  /** Opens the issue picker for one piece. */
+  onAssignPieceIssue: (piece: Piece) => void;
+  /** Bulk selection over the pipeline rows, for assign-to-issue. */
+  selectedPieceIds: string[];
+  areAllPiecesSelected: boolean;
+  onTogglePieceSelect: (piece: Piece) => void;
+  onToggleAllPieceSelect: () => void;
+  onBulkAssignIssue: () => void;
+  onClearPieceSelection: () => void;
   onMovePiece: (piece: Piece, stage: Stage) => void;
   onCommissionSection: (sectionName: string) => void;
   selectedPitchIds: string[];
@@ -99,11 +121,14 @@ export function DeskView(props: DeskViewProps) {
         onTrack={props.onTrack}
         issueNumber={props.issue.number}
         hasCurrentIssue={props.hasCurrentIssue}
-        highlightsCount={props.highlightsCount}
+        unassignedCount={props.unassignedCount}
         issueCount={props.issueCount}
       />
       <DeskHeader
         issue={props.issue}
+        issues={props.issues}
+        onSelectIssue={props.onSelectIssue}
+        onNewIssue={props.onNewIssue}
         track={props.track}
         editors={props.editors}
         me={props.me}
@@ -150,13 +175,16 @@ export function DeskView(props: DeskViewProps) {
                   pieces={props.visiblePieces}
                   focusId={props.focusId}
                   track={props.track}
-                  hasCurrentIssue={props.hasCurrentIssue}
-                  issueNumber={props.issue.number}
+                  hasAnyIssue={props.issues.length > 0}
+                  selectedPieceIds={props.selectedPieceIds}
+                  areAllSelected={props.areAllPiecesSelected}
+                  onToggleSelect={props.onTogglePieceSelect}
+                  onToggleSelectAll={props.onToggleAllPieceSelect}
                   onOpen={props.onOpenPiece}
                   onEdit={props.onEditPiece}
                   onChase={props.onChasePiece}
                   onHandoff={props.onHandoffPiece}
-                  onReassign={props.onReassignPiece}
+                  onAssignIssue={props.onAssignPieceIssue}
                 />
               )}
               {props.layout === "board" && (
@@ -190,11 +218,19 @@ export function DeskView(props: DeskViewProps) {
         </div>
         <DeskSidebar summary={props.summary} editors={props.editors} />
       </div>
+      {/* Only one bulk bar can be on screen at a time: both are fixed to the
+          same bottom slot, and the pitch selection is cleared when a piece
+          selection starts (and vice versa) in `EditorDashboardPage`. */}
       <BulkTriageBar
         count={props.selectedPitchIds.length}
         onMaybe={props.onBulkMaybe}
         onPass={props.onBulkPass}
         onClear={props.onClearBulkSelection}
+      />
+      <BulkAssignBar
+        count={props.selectedPieceIds.length}
+        onAssign={props.onBulkAssignIssue}
+        onClear={props.onClearPieceSelection}
       />
     </div>
   );

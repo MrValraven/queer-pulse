@@ -66,6 +66,7 @@ export function WriteReviewModal({
           idPrefix="wr"
           sending={sending}
           submitDisabled={company.trim().length === 0}
+          submitDisabledLabel={t("economy:companyReview.missing.company")}
           onSubmit={handleSubmit}
           onClose={onClose}
           copy={{

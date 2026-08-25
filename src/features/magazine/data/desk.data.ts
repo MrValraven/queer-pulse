@@ -103,6 +103,66 @@ export const DEMO_ISSUE: Issue = {
   slots: 15,
 };
 
+/**
+ * One row of the desk's issue switcher. Structurally identical to the
+ * backend-mirroring `IssueSummaryDto` (`api/issueProduction.api.ts`), and
+ * declared here rather than imported so this demo-data module keeps its
+ * no-dependency shape — the two are interchangeable by structural typing.
+ *
+ * Distinct from `Issue` above: that one carries the desk header's editorial
+ * calendar (`closes`/`publishes`/`daysLeft`), which the backend does not
+ * model and therefore blanks out in live mode.
+ */
+export interface IssueSummary {
+  id: string;
+  number: string;
+  title: string;
+  theme: string;
+  publishedOn: string;
+  filled: number;
+  slots: number;
+}
+
+/**
+ * The demo magazine's back catalogue for the issue switcher, newest number
+ * first (the order `GET /magazine/admin/issues` returns). Issue 14 is
+ * `DEMO_ISSUE` — the same id `DEMO_PIECES` reference — so switching to it in
+ * demo mode shows real pieces; the earlier issues are shipped and empty.
+ *
+ * Mutable on purpose: `useCreateIssue` unshifts onto this array in demo mode
+ * so a created issue actually appears in the switcher, mirroring how
+ * `usePieceMutations` patches `DEMO_PIECES` in place.
+ */
+export const DEMO_ISSUES: IssueSummary[] = [
+  {
+    id: DEMO_ISSUE.id,
+    number: DEMO_ISSUE.number,
+    title: "Aftercare",
+    theme: DEMO_ISSUE.theme,
+    publishedOn: "2026-09-01",
+    filled: DEMO_ISSUE.filled,
+    slots: DEMO_ISSUE.slots,
+  },
+  {
+    id: "demo-issue-13",
+    number: "13",
+    title: "The long way round",
+    theme: "Distance",
+    publishedOn: "2026-06-01",
+    filled: 14,
+    slots: 15,
+  },
+  {
+    id: "demo-issue-12",
+    number: "12",
+    title: "Small rooms, loud rooms",
+    theme: "Nightlife",
+    publishedOn: "2026-03-01",
+    filled: 15,
+    slots: 15,
+  },
+];
+
 export const DEMO_EDITORS: Editor[] = [
   { id: "marta", name: "Marta Cruz", initials: "MC", tint: "coral", cap: 7 },
   { id: "sara", name: "Sara Pinheiro", initials: "SP", tint: "jade", cap: 7 },

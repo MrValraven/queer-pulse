@@ -36,7 +36,7 @@ export function CulturePage() {
         description={t("culture:meta.description")}
         canonical={routes.culture}
       />
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.cat}>{t("culture:hero.eyebrow")}</div>
           <h1 className={styles.heroH}>

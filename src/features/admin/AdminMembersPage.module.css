@@ -433,8 +433,25 @@
 
 .queueActions {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+/* Three nowrap labels never fit one line of a ~300px queue column (and the
+   Portuguese labels are longer again), so the row wraps by design instead of
+   overhanging the card edge: the two quiet options split the first line... */
+.queueActionSecondary {
+  flex: 1 1 auto;
+  min-width: 116px;
+}
+
+/* ...and the affirmative decision always takes a full-width line of its own,
+   which also makes it the obvious anchor of the card. */
+.queueActionPrimary {
+  flex: 1 0 100%;
 }
 
 /* Applicant facts a reviewer needs: how to reach them, and where they are. */
@@ -524,11 +541,16 @@
   height: 13px;
 }
 
+/* Reads as the reviewer's next step, so it sits in its own quiet jade panel
+   directly above the link it is telling them to copy. */
 .queueSendNote {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: 9px;
   margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(var(--jade-rgb), 0.07);
   font-size: 13px;
   line-height: 1.55;
   color: var(--ink-60);
@@ -539,7 +561,7 @@
   height: 15px;
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--accent-ink);
+  color: var(--jade);
 }
 
 .queueNoCode {

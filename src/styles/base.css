@@ -162,6 +162,41 @@ button {
   display: none !important;
 }
 
+/* ---------- Sticky footer frame ----------
+   Everything routed renders as a single in-flow column inside #root: the
+   content plane, then the in-flow site Footer (App.tsx -> AppFooter.tsx).
+   Nothing in that column carried a height, so a page whose content is shorter
+   than the window ended its footer mid-screen with the cream page canvas
+   showing underneath — the footer read as detached from the bottom of the
+   viewport instead of closing the page.
+
+   `.app-frame` is at least one viewport tall and lays its children out as a
+   column, so `margin-top: auto` on the footer absorbs every pixel of leftover
+   space and pins it to the bottom edge. Taller pages are untouched: with no
+   free space to absorb, `auto` resolves to 0 and the footer keeps sitting
+   directly after the content, exactly as before.
+
+   Only the FIRST-LEVEL footer is targeted (`>`), so a page that nests its own
+   footer-ish region deeper down can never accidentally claim the free space.
+
+   `dvh` with a `vh` fallback, not `vh` alone: on mobile `100vh` measures the
+   LARGEST viewport (URL bar hidden), so with the bar on screen the frame
+   overshoots and re-opens the same gap below the fold. A page short enough for
+   any of this to matter cannot scroll, so the dynamic unit never resizes
+   mid-scroll here — no jitter is traded for the correctness.
+
+   Fixed chrome (Navbar, BottomTabBar) is out of flow and therefore not a flex
+   item, so wrapping it changes nothing about where those bars sit. */
+.app-frame {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.app-frame > .site-footer {
+  margin-top: auto;
+}
+
 /* Centered content wrapper used by every section */
 .wrap {
   max-width: var(--maxw);

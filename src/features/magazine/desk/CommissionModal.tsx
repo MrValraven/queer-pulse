@@ -10,8 +10,9 @@ export interface CommissionPayload {
   words: number | null;
   dueDate: string;
   fee: string;
-  /** Which editorial track the new piece lands in — `issue` stamps the current
-   *  issue's id, `highlights` leaves it standalone (`issueId: null`). */
+  /** Which track the new piece lands in — `issue` stamps the selected issue's
+   *  id, `unassigned` leaves it unfiled (`issueId: null`) for someone to
+   *  assign later. */
   track: DeskTrack;
 }
 
@@ -21,9 +22,9 @@ interface CommissionModalProps {
   sections: { name: string }[];
   /** Track pre-selected to match the desk's active tab. */
   defaultTrack: DeskTrack;
-  /** Whether a current issue exists — the Issue choice is disabled without one. */
+  /** Whether an issue is selected — the Issue choice is disabled without one. */
   hasCurrentIssue: boolean;
-  /** The current issue's display number, for the Issue choice label. */
+  /** The selected issue's display number, for the Issue choice label. */
   issueNumber: string;
   onClose: () => void;
   onCommission: (payload: CommissionPayload) => void;
@@ -50,10 +51,10 @@ export function CommissionModal({
   const [words, setWords] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [fee, setFee] = useState("");
-  // Without a current issue there's nowhere to bind an issue piece, so a
-  // commission can only land as a standalone highlight.
+  // Without a selected issue there's nowhere to bind an issue piece, so a
+  // commission can only land unfiled.
   const [track, setTrack] = useState<DeskTrack>(
-    hasCurrentIssue ? defaultTrack : "highlights",
+    hasCurrentIssue ? defaultTrack : "unassigned",
   );
 
   const send = () => {
@@ -102,8 +103,8 @@ export function CommissionModal({
             onChange={(value) => setTrack(value as DeskTrack)}
             options={[
               {
-                value: "highlights",
-                label: t("magazine:desk.modals.commission.trackHighlights"),
+                value: "unassigned",
+                label: t("magazine:desk.modals.commission.trackUnassigned"),
               },
               {
                 value: "issue",

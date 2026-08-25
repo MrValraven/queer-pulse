@@ -1,5 +1,11 @@
-import { useState, type FormEvent } from "react";
-import { FiStar } from "react-icons/fi";
+import {
+  useId,
+  useState,
+  type FocusEvent,
+  type FormEvent,
+  type MouseEvent,
+} from "react";
+import { FiInfo, FiStar } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DirectoryReviewPhotoField } from "./DirectoryReviewPhotoField";
@@ -48,6 +54,7 @@ export function DirectoryReviewComposer({
   onCancel,
 }: Props) {
   const { t } = useTranslation();
+  const hintId = useId();
   const [stars, setStars] = useState(initialStars);
   const [hoveredStars, setHoveredStars] = useState(0);
   const [text, setText] = useState(initialText);
@@ -60,6 +67,25 @@ export function DirectoryReviewComposer({
 
   const shownStars = hoveredStars || stars;
   const canSubmit = stars >= 1 && text.trim().length > 0 && !isPending;
+  /* Someone who has written their review but not touched the stars sees only a
+     dead submit button, with the reason (the untouched picker) scrolled above
+     the words they just typed. Say it next to the button instead. */
+  const isStarsHintShown = stars < 1 && text.trim().length > 0;
+
+  /* The preview is dropped only when the pointer or focus leaves the whole
+     row. Clearing on each button's own exit fires before the next button's
+     enter, so sweeping across the picker flashed empty between every pair. */
+  const handleStarExit = (
+    event: MouseEvent<HTMLButtonElement> | FocusEvent<HTMLButtonElement>,
+  ) => {
+    const next = event.relatedTarget;
+    if (
+      next instanceof Node &&
+      event.currentTarget.parentElement?.contains(next)
+    )
+      return;
+    setHoveredStars(0);
+  };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -89,12 +115,14 @@ export function DirectoryReviewComposer({
             })}
             aria-pressed={value <= stars}
             onMouseEnter={() => setHoveredStars(value)}
-            onMouseLeave={() => setHoveredStars(0)}
+            onMouseLeave={handleStarExit}
             onFocus={() => setHoveredStars(value)}
-            onBlur={() => setHoveredStars(0)}
+            onBlur={handleStarExit}
             onClick={() => setStars(value)}
           >
-            <FiStar className={value <= shownStars ? s.starPicked : undefined} />
+            <FiStar
+              className={value <= shownStars ? s.starPicked : undefined}
+            />
           </button>
         ))}
       </div>
@@ -120,12 +148,23 @@ export function DirectoryReviewComposer({
         }}
       />
       <div className={s.reviewFormActions}>
+        {isStarsHintShown && (
+          <p className={s.reviewHint} id={hintId} role="status">
+            <FiInfo aria-hidden />
+            {t("marketing:directory.detail.review.starsRequiredHint")}
+          </p>
+        )}
         {onCancel && (
           <Button variant="ghost" type="button" onClick={onCancel}>
             {t("marketing:directory.detail.review.cancel")}
           </Button>
         )}
-        <Button type="submit" variant="primary" disabled={!canSubmit}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={!canSubmit}
+          aria-describedby={isStarsHintShown ? hintId : undefined}
+        >
           {isPending ? pendingLabel : submitLabel}
         </Button>
       </div>

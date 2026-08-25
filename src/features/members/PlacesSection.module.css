@@ -117,7 +117,10 @@
 /* Owner management row, below the card's own footer. */
 .ownerBar {
   display: flex;
-  align-items: center;
+  /* The ref sits at 11.5px and the actions at 13px, so centring the two boxes
+     left their text baselines a hair apart and the row read as crooked. With
+     mixed type sizes, "on the same line" means a shared baseline. */
+  align-items: baseline;
   gap: 12px;
   flex-wrap: wrap;
   padding-top: 12px;
@@ -131,7 +134,7 @@
 }
 .ownerActions {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 14px;
   flex-wrap: wrap;
   margin-inline-start: auto;

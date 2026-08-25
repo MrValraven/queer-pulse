@@ -210,6 +210,23 @@ export interface CurrentIssueDto {
   slots: number;
 }
 
+/** Body of `PATCH /magazine/admin/pieces/assign-issue` — mirrors backend
+ *  `AssignIssueDto`. `issueId: null` detaches every listed piece back to the
+ *  unassigned pool. */
+export interface AssignIssueDto {
+  pieceIds: string[];
+  issueId: string | null;
+}
+
+/** Result of a bulk assign — mirrors the backend's `{ assigned, issueNumber }`.
+ *  `assigned` counts only pieces that actually moved: ids already on the
+ *  target issue, and ids matching no piece, are skipped rather than failing
+ *  the batch. */
+export interface AssignIssueResultDto {
+  assigned: number;
+  issueNumber: string | null;
+}
+
 /**
  * Full piece detail from GET/POST/PATCH /magazine/admin/pieces/:id — mirrors
  * `PieceRecordFull` (brief/care/audit from Phase 1, `payment`/`letters`/
@@ -500,6 +517,13 @@ export const updatePiece = (id: string, body: UpdatePieceDto) =>
 
 export const deletePiece = (id: string) =>
   apiDelete<void>(`/magazine/admin/pieces/${id}`);
+
+/** PATCH /magazine/admin/pieces/assign-issue — move a batch of pieces onto
+ *  one issue, or detach them all with `issueId: null`. One request for the
+ *  whole selection, so a bulk assign lands or fails as a unit. Single-piece
+ *  assignment keeps using `updatePiece` with `{ issueId }`. */
+export const assignPiecesToIssue = (body: AssignIssueDto) =>
+  apiPatch<AssignIssueResultDto>("/magazine/admin/pieces/assign-issue", body);
 
 export const getPitches = () => apiGet<PitchDto[]>("/magazine/admin/pitches");
 

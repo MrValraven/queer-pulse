@@ -364,6 +364,15 @@ export interface SkinData {
   /** Owner display preference: fade the cover banner into the page background
    *  at its bottom edge (see `.pp[data-cover-bleed]` in persona-skins.css). */
   coverBleed?: boolean;
+  /** Where the banner sits vertically, as an `object-position` percentage:
+   *  0 pins the image's top edge to the band's, 100 its bottom. Set by the
+   *  owner's in-page reposition control (`PersonaCoverReposition`); absent
+   *  means "wherever the reframe crop's focal point puts it".
+   *
+   *  Stored per persona rather than on the image, because the reframe crop
+   *  belongs to the media asset and is shared by every placement of the same
+   *  file — and because a crop covering the whole image has no `y` to move. */
+  coverOffsetY?: number;
   booker?: { fee: string; rider: string; press: string; contact: string } | null;
   excerpt?: { from: string; lines: string[] } | null;
   colophon?: string | null;

@@ -1,14 +1,15 @@
 import type { ReactNode, SyntheticEvent } from "react";
-import { FiArrowRight, FiBookmark } from "react-icons/fi";
-import { Avatar, ImageSlot, Stars } from "../../shared/components/ui";
+import { FiArrowRight, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
+import { Avatar, ImageSlot, Stars, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
-import { SafeSpaceBadge } from "../safety/SafeSpaceBadge";
 import { categoryLabel } from "./localPlaces";
 import {
   openStatus,
   operatingStateOf,
+  ownershipBadgeOf,
   zonedNow,
+  OWNERSHIP_BADGE_KEYS,
   type DirectoryPlace,
 } from "./directoryPlaces";
 import s from "./DirectoryPage.module.css";
@@ -76,6 +77,48 @@ function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
 }
 
 /**
+ * The two things the photo's bottom-left corner says about a place: how it is
+ * connected to the community (always), and whether it is a verified safe space
+ * (only when it is).
+ *
+ * They sit side by side rather than one replacing the other: the safe-space
+ * pill used to occupy the same slot and simply hide the ownership badge, so a
+ * verified safe space never got to say it was queer-owned. Safe space is the
+ * narrower, rarer claim, so it shrinks to an icon with its meaning on hover,
+ * focus and via its accessible name, leaving the wordier badge the room.
+ */
+function DirectoryCardBadges({ place }: { place: DirectoryPlace }) {
+  const { t } = useTranslation();
+  const ownership = ownershipBadgeOf(place);
+  const safeSpaceLabel = t("marketing:directory.card.verifiedBadge");
+
+  return (
+    <span className={s.photoBadges}>
+      <span className={s.photoBadgeDark}>
+        {ownership === "verified" && (
+          <FiCheck className={s.photoBadgeCheck} aria-hidden />
+        )}
+        {t(OWNERSHIP_BADGE_KEYS[ownership])}
+      </span>
+      {place.safeSpaceStatus === "verified" && (
+        <Tooltip label={safeSpaceLabel} placement="top">
+          {/* Not a button: the whole card is already one link, and this only
+              ever names itself. `role="img"` + the label is what a screen
+              reader announces; the bubble is decorative. */}
+          <span
+            className={s.safeSpaceMark}
+            role="img"
+            aria-label={safeSpaceLabel}
+          >
+            <FiShield aria-hidden />
+          </span>
+        </Tooltip>
+      )}
+    </span>
+  );
+}
+
+/**
  * The card's visuals only — photo, badges, name/rating, meta, description,
  * pills, and footer. Shared by `LocalBusinessCard` (the live, clickable card
  * in the directory grid) and the listing wizard's sticky preview, so the two
@@ -89,6 +132,7 @@ export function LocalBusinessCardBody({
   showRating = true,
   showHost = true,
   visitSlot,
+  photoTag,
 }: {
   place: DirectoryPlace;
   /** Present on the live card (wraps a real save toggle); absent on the
@@ -112,6 +156,11 @@ export function LocalBusinessCardBody({
   /** Replaces the footer's "Visit →" call to action, so the owner grid can
    *  say "View listing →" (or "Awaiting review" while it's still pending). */
   visitSlot?: ReactNode;
+  /** A small chip pinned to the photo's top-left corner. The "Within a short
+   *  walk" strip puts the distance there: it sits clear of both the badge
+   *  (bottom-left) and the bookmark (top-right), so the card is otherwise
+   *  identical to the one in the directory grid. */
+  photoTag?: ReactNode;
 }) {
   const { t } = useTranslation();
 
@@ -122,26 +171,16 @@ export function LocalBusinessCardBody({
           src={place.photos?.wide ?? undefined}
           alt={place.alt?.wide ?? place.name}
           height={168}
+          // The saved rect is a focal REGION here, never an exact frame: the
+          // strip is a fixed 168px band and `crop` would distort an off-aspect
+          // photo (see ImageSlot's `crop` vs `focus`).
+          focus={place.photoFocus}
           style={{ borderRadius: "18px 18px 0 0" }}
           placeholder={
             photoOverlay ? "" : t("marketing:directory.card.photoComing")
           }
         />
-        {place.safeSpaceStatus === "verified" ? (
-          <span className={`${s.photoBadge} ${s.photoBadgeSolid}`}>
-            <SafeSpaceBadge
-              label={t("marketing:directory.card.verifiedBadge")}
-            />
-          </span>
-        ) : (
-          <span className={`${s.photoBadge} ${s.photoBadgeDark}`}>
-            {t(
-              place.queerOwnedVerified
-                ? "marketing:directory.badge.queerOwned"
-                : "marketing:directory.badge.friendly",
-            )}
-          </span>
-        )}
+        <DirectoryCardBadges place={place} />
         {topRight ??
           (saveControl ? (
             <span
@@ -170,6 +209,7 @@ export function LocalBusinessCardBody({
               <FiBookmark aria-hidden fill="none" />
             </span>
           ))}
+        {photoTag && <span className={s.photoTag}>{photoTag}</span>}
         {photoOverlay}
       </div>
 

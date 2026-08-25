@@ -390,12 +390,13 @@ export const admin: Catalog = {
   "members.verify.source.other": "Outra página",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
-  // Aprovado: agora é enviado um email de convite automaticamente; a opção
-  // de copiar a ligação abaixo mantém-se como recurso manual, por isso
-  // dizê-lo com clareza, não que nada foi enviado.
+  // Aprovado: a QueerPulse não envia emails, por isso a aprovação só chega a
+  // quem se candidatou quando quem revê leva a ligação até lá. Dizê-lo com
+  // clareza aqui; prometer um email deixaria as pessoas à espera.
   "members.verify.approvedLabel": "Recebide na comunidade",
   "members.verify.sendYourself":
-    "Um email de convite está a caminho de {email}. Também podes copiar a ligação abaixo e enviá-la tu mesme, como reforço.",
+    "Os convites seguem à mão. Copia a ligação abaixo e envia-a tu mesme a {email}.",
+  "members.verify.linkFieldLabel": "Ligação de convite",
   "members.verify.copyLink": "Copiar ligação",
   "members.verify.copiedLink": "Copiada",
   "members.verify.copiedToast": "Ligação de convite copiada. Agora envia-lha",

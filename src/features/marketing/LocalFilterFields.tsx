@@ -22,11 +22,22 @@ export interface LocalFilterFieldsProps {
   onToggleSafeOnly: () => void;
 }
 
+interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
+  /**
+   * Where this set is rendered. `"bar"` (default) is the desktop sticky bar,
+   * where every filter collapses behind the "Refine" toggle so the bar stays
+   * one row tall. `"sheet"` is the mobile Filters sheet, which is itself
+   * already a collapsed surface — nesting a second drawer inside it would put
+   * the place types two taps deep, so there the groups render flat.
+   */
+  variant?: "bar" | "sheet";
+}
+
 /**
- * The filter set itself — search + unified category chips + a collapsible drawer
- * of secondary refinements (verified-safe-spaces + vibe chips). Rendered inline
- * in the desktop bar, or inside the mobile "Filters" sheet; one markup source so
- * the two layouts never diverge in behaviour.
+ * The filter set itself — search plus the filter groups: place type, verified
+ * safe spaces, and (demo-only) vibe. Rendered inline in the desktop bar behind
+ * the "Refine" toggle, or flat inside the mobile "Filters" sheet; one markup
+ * source so the two layouts never diverge in behaviour.
  */
 export function LocalFilterFields({
   category,
@@ -38,13 +49,15 @@ export function LocalFilterFields({
   onToggleVibe,
   safeOnly,
   onToggleSafeOnly,
-}: LocalFilterFieldsProps) {
+  variant = "bar",
+}: LocalFilterFieldsVariantProps) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const categoryLabelId = useId();
   const vibeLabelId = useId();
   const refineBodyId = useId();
-  // The secondary refinements (safe-spaces + vibe) collapse behind one toggle so
-  // the bar stays uncluttered; the visitor's open/closed choice sticks per device.
+  // Every filter collapses behind one toggle so the sticky bar stays a single
+  // row; the visitor's open/closed choice sticks per device.
   const [refineOpen, setRefineOpen] = useLocalStorage(
     "qp.local.refineOpen",
     false,
@@ -58,14 +71,16 @@ export function LocalFilterFields({
   // vibe-tag field exists on live businesses.
   const showVibeFilter = demoMode;
   // Surfaced on the collapsed toggle so hidden-but-active filters still read.
-  const activeRefineCount = vibes.length + (safeOnly ? 1 : 0);
+  // The place type counts too now that it lives inside the drawer.
+  const activeRefineCount =
+    vibes.length + (safeOnly ? 1 : 0) + (category !== "all" ? 1 : 0);
   const count = (value: string) => (
     <span className={s.count} aria-hidden>
       {categoryCounts[value] ?? 0}
     </span>
   );
   // Each category chip leads with a colour swatch that mirrors its map pin
-  // (category fill + white icon), so the filter bar doubles as a live legend.
+  // (category fill + white icon), so the filter group doubles as a live legend.
   const categoryChip = (categoryId: string, label: string) => {
     const Icon = CATEGORY_ICON[categoryId];
     return {
@@ -73,7 +88,11 @@ export function LocalFilterFields({
       label: (
         <>
           {Icon && (
-            <span className={s.catSwatch} data-category={categoryId} aria-hidden>
+            <span
+              className={s.catSwatch}
+              data-category={categoryId}
+              aria-hidden
+            >
               <Icon />
             </span>
           )}
@@ -98,57 +117,124 @@ export function LocalFilterFields({
     ),
   ];
 
-  return (
+  const search = (
+    <div className={s.search}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        aria-hidden
+      >
+        <circle cx={11} cy={11} r={7} />
+        <path d="M21 21l-4.35-4.35" />
+      </svg>
+      <input
+        type="text"
+        aria-label={t("marketing:local.filter.searchPlaceholder")}
+        placeholder={t("marketing:local.filter.searchPlaceholder")}
+        value={query}
+        onChange={(event) => onQueryChange(event.target.value)}
+      />
+    </div>
+  );
+
+  // The groups, in one place: the bar renders them inside the refine drawer,
+  // the sheet renders them straight into its body.
+  const groups = (
     <>
-      <div className={s.search}>
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          aria-hidden
-        >
-          <circle cx={11} cy={11} r={7} />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
-        <input
-          type="text"
-          aria-label={t("marketing:local.filter.searchPlaceholder")}
-          placeholder={t("marketing:local.filter.searchPlaceholder")}
-          value={query}
-          onChange={(event) => onQueryChange(event.target.value)}
+      <div className={s.group}>
+        <span className={s.groupLabel} id={categoryLabelId}>
+          {t("marketing:local.filter.categoryLabel")}
+        </span>
+        <FilterChips
+          labelledBy={categoryLabelId}
+          options={categoryOptions}
+          value={category}
+          onChange={onCategoryChange}
         />
       </div>
-      <FilterChips
-        label={t("marketing:local.filter.categoryAria")}
-        options={categoryOptions}
-        value={category}
-        onChange={onCategoryChange}
-      />
-      <button
-        type="button"
-        className={s.refineToggle}
-        aria-expanded={refineOpen}
-        aria-controls={refineBodyId}
-        onClick={() => setRefineOpen((open) => !open)}
+      <div
+        className={s.safeRow}
+        role="group"
+        aria-label={t("marketing:local.filter.verifiedSafeSpaces")}
       >
-        <FiSliders aria-hidden />
-        {t("marketing:local.filter.refine")}
-        {activeRefineCount > 0 && (
-          <span className={s.refineCount} aria-hidden>
-            {activeRefineCount}
-          </span>
-        )}
-        <span
-          className={[s.refineChevron, refineOpen && s.refineChevronOpen]
-            .filter(Boolean)
-            .join(" ")}
-          aria-hidden
+        <button
+          type="button"
+          aria-pressed={safeOnly}
+          className={[s.chip, safeOnly && s.chipOn].filter(Boolean).join(" ")}
+          onClick={onToggleSafeOnly}
         >
-          <FiChevronDown />
-        </span>
-      </button>
+          <FiShield aria-hidden />
+          {t("marketing:local.filter.verifiedSafeSpaces")}
+        </button>
+      </div>
+      {showVibeFilter && (
+        <div className={s.vibeRow} role="group" aria-labelledby={vibeLabelId}>
+          <span className={s.vibeLabel} id={vibeLabelId}>
+            {t("marketing:local.filter.vibeLabel")}
+          </span>
+          {VIBES.map((vibe) => (
+            <button
+              type="button"
+              key={vibe}
+              aria-pressed={vibes.includes(vibe)}
+              className={[s.chip, s.vibe, vibes.includes(vibe) && s.chipOn]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={() => onToggleVibe(vibe)}
+            >
+              {t(VIBE_LABEL_KEYS[vibe]!)}
+            </button>
+          ))}
+          {vibes.length > 0 && (
+            <span className={s.vibeNote}>
+              {t("marketing:local.filter.vibeVenueNote")}
+            </span>
+          )}
+        </div>
+      )}
+    </>
+  );
+
+  if (variant === "sheet") {
+    return (
+      <>
+        {search}
+        {groups}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className={s.barRow}>
+        {search}
+        <button
+          type="button"
+          className={s.refineToggle}
+          aria-expanded={refineOpen}
+          aria-controls={refineBodyId}
+          onClick={() => setRefineOpen((open) => !open)}
+        >
+          <FiSliders aria-hidden />
+          {t("marketing:local.filter.refine")}
+          {activeRefineCount > 0 && (
+            <span className={s.refineCount} aria-hidden>
+              {activeRefineCount}
+            </span>
+          )}
+          <span
+            className={[s.refineChevron, refineOpen && s.refineChevronOpen]
+              .filter(Boolean)
+              .join(" ")}
+            aria-hidden
+          >
+            <FiChevronDown />
+          </span>
+        </button>
+      </div>
       {/* Body stays mounted so it can animate open AND closed. The grid-rows
           0fr↔1fr trick collapses it without measuring; `inert` keeps the
           hidden refinements out of tab order and off screen readers. */}
@@ -162,48 +248,7 @@ export function LocalFilterFields({
           className={s.refineBody}
           inert={!refineOpen || undefined}
         >
-          <div
-            className={s.safeRow}
-            role="group"
-            aria-label={t("marketing:local.filter.verifiedSafeSpaces")}
-          >
-            <button
-              type="button"
-              aria-pressed={safeOnly}
-              className={[s.chip, safeOnly && s.chipOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={onToggleSafeOnly}
-            >
-              <FiShield aria-hidden />
-              {t("marketing:local.filter.verifiedSafeSpaces")}
-            </button>
-          </div>
-          {showVibeFilter && (
-            <div className={s.vibeRow} role="group" aria-labelledby={vibeLabelId}>
-              <span className={s.vibeLabel} id={vibeLabelId}>
-                {t("marketing:local.filter.vibeLabel")}
-              </span>
-              {VIBES.map((vibe) => (
-                <button
-                  type="button"
-                  key={vibe}
-                  aria-pressed={vibes.includes(vibe)}
-                  className={[s.chip, s.vibe, vibes.includes(vibe) && s.chipOn]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={() => onToggleVibe(vibe)}
-                >
-                  {t(VIBE_LABEL_KEYS[vibe]!)}
-                </button>
-              ))}
-              {vibes.length > 0 && (
-                <span className={s.vibeNote}>
-                  {t("marketing:local.filter.vibeVenueNote")}
-                </span>
-              )}
-            </div>
-          )}
+          {groups}
         </div>
       </div>
     </>

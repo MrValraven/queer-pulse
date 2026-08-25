@@ -103,6 +103,15 @@
   transform: translate3d(0, var(--pp-cover-shift, 0), 0) scale(1.06);
   will-change: transform;
 }
+/* Freeze it while the owner drags the banner into place. The reposition maths
+   works in layout pixels, so a live translate + scale between the pointer and
+   the image would make the drag lag the cursor by the scale factor and by
+   however far the page happens to be scrolled. Specificity has to beat the
+   rule above, hence the repeated attribute selectors. */
+.pp[data-motion] .pp-cover[data-has-cover][data-repositioning] img {
+  transform: none;
+  will-change: auto;
+}
 
 /* ═══════════ 3. section reveal ═══════════
    Sections start hidden + nudged down; the hook adds `is-in` as each scrolls

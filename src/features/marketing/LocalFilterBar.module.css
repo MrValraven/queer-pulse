@@ -1,16 +1,10 @@
+/* Scrolls away with the page. Pinned, the frosted strip sat over the map and
+   under the nav pill, which read as clutter for a control a visitor sets once.
+   The mobile toolbar below stays sticky: it's one compact row and it carries
+   the List/Map switcher. */
 .bar {
-  padding: 24px 0;
+  padding: 20px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(var(--cream-rgb), 0.88);
-  backdrop-filter: blur(12px);
-}
-/* Frosted sticky bar: flip to a dark frost in dark mode (the light cream
-   channels don't flip on their own, leaving a bright bar on the dark page). */
-:global([data-theme="dark"]) .bar {
-  background: rgba(26, 16, 40, 0.86);
 }
 .search {
   display: flex;
@@ -20,7 +14,6 @@
   border-radius: 12px;
   padding: 11px 16px;
   background: var(--paper);
-  margin-bottom: 14px;
 }
 .search svg {
   width: 17px;
@@ -47,6 +40,12 @@
   flex-wrap: wrap;
   margin-top: 14px;
 }
+/* A labelled block of refinements inside the drawer (place type). The vibe/safe
+   rows keep their inline label; this one heads a wrapping chip grid. */
+.group {
+  margin-top: 14px;
+}
+.groupLabel,
 .vibeLabel {
   font-size: 11px;
   font-weight: 700;
@@ -54,6 +53,11 @@
   text-transform: uppercase;
   color: var(--ink-40);
   margin-right: 2px;
+}
+.groupLabel {
+  display: block;
+  margin-right: 0;
+  margin-bottom: 9px;
 }
 .chip {
   display: inline-flex;
@@ -159,13 +163,27 @@
   font-style: italic;
 }
 
-/* "Refine" toggle: reveals the secondary safe-spaces + vibe filters so the bar
-   stays uncluttered by default. A pill sitting under the category chips. */
+/* Desktop bar row: the search field and the "Refine" pill share one line, so
+   the bar is a single compact strip until the drawer is opened. */
+.barRow {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+.barRow .search {
+  flex: 1;
+  min-width: 0;
+}
+.barRow .refineToggle {
+  flex: none;
+}
+
+/* "Refine" toggle: opens the drawer holding every filter (place type, verified
+   safe spaces, vibe) so the bar itself stays one row. */
 .refineToggle {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 14px;
   font-family: var(--sans);
   font-size: 12.5px;
   font-weight: 600;
@@ -250,11 +268,12 @@
    eat 200–260px of a sticky bar, so it collapses behind a single "Filters"
    control that opens the set in a bottom sheet. The List/Map switcher rides
    alongside it so a visitor scrolled deep into the list can still flip to the
-   map without scrolling back up. Frosted like the desktop `.bar`. */
+   map without scrolling back up. Frosted, since it overlays the scrolling page
+   (the desktop `.bar` scrolls away instead). */
 .mobileBar {
   position: sticky;
-  top: 0;
-  z-index: 20;
+  top: var(--sticky-top);
+  z-index: var(--z-sticky);
   padding: 10px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   background: rgba(var(--cream-rgb), 0.88);

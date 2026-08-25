@@ -33,7 +33,12 @@ function initialsForName(name: string): string {
 
 /** First name of the owner (mirrors backend `ownerFirstName`). */
 function ownerFirstName(ownerName: string): string {
-  return ownerName.trim().split(/[\s&·]+/).filter(Boolean)[0] ?? "";
+  return (
+    ownerName
+      .trim()
+      .split(/[\s&·]+/)
+      .filter(Boolean)[0] ?? ""
+  );
 }
 
 /**
@@ -127,7 +132,11 @@ export function listingDtoToPreviewPlace(
     name: dto.name,
     cat: category,
     hood: dto.hood,
-    owned: dto.linkToProfile,
+    // The submitter's own step-1 ownership claim, exactly as the public card
+    // reads it. `linkToProfile` below is a different question (does the owner
+    // want this listing shown on their profile), and answers the "run by"
+    // line only.
+    owned: dto.badge === "owned",
     member: dto.linkToProfile ? identity.first || undefined : undefined,
     av: initialsForName(dto.name),
     tint: tintForSlug(dto.slug),

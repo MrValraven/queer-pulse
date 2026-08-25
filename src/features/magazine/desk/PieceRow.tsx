@@ -1,4 +1,5 @@
 import type { KeyboardEvent, MouseEvent } from "react";
+import { FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { FormatBadge } from "./FormatBadge";
 import { StagePill } from "./StagePill";
@@ -12,43 +13,42 @@ interface PieceRowProps {
   piece: Piece;
   /** Whether this is the keyboard-navigated "current" row (inset accent shadow). */
   focused: boolean;
-  /** The track this row is rendered under, so the reassignment action points
-   *  the other way (Issue → standalone, Highlights → into the issue). */
+  /** The track this row is rendered under, so the assignment action reads
+   *  "Add to issue" for unfiled work and "Move issue" for filed work. */
   track: DeskTrack;
-  /** Whether a current issue exists — the "Add to issue" action is hidden without one. */
-  hasCurrentIssue: boolean;
-  /** The current issue's display number, for the "Add to issue N" label. */
-  issueNumber: string;
+  /** Whether any issue exists at all — with none, there is nothing to file to. */
+  hasAnyIssue: boolean;
+  /** Whether this row is part of the bulk selection. */
+  selected: boolean;
+  onToggleSelect: (piece: Piece) => void;
   onOpen: (piece: Piece) => void;
   onEdit: (piece: Piece) => void;
   onChase: (piece: Piece) => void;
   onHandoff: (piece: Piece) => void;
-  onReassign: (piece: Piece) => void;
+  /** Opens the issue picker for this one piece. */
+  onAssignIssue: (piece: Piece) => void;
 }
 
 /**
- * One row of `PiecesPipeline`: title/format/section/byline, stage pill, who
- * the piece is waiting on, its due date, and hover-revealed row actions.
- * Keyboard-focusable — Enter opens the piece, matching a click. Ported from
- * the design's `.prow` (`mag-desk.jsx`/`mag.css`).
+ * One row of `PiecesPipeline`: a selection checkbox, title/format/section/
+ * byline, stage pill, who the piece is waiting on, its due date, and
+ * hover-revealed row actions. Keyboard-focusable — Enter opens the piece,
+ * matching a click. Ported from the design's `.prow` (`mag-desk.jsx`/`mag.css`).
  */
 export function PieceRow({
   piece,
   focused,
   track,
-  hasCurrentIssue,
-  issueNumber,
+  hasAnyIssue,
+  selected,
+  onToggleSelect,
   onOpen,
   onEdit,
   onChase,
   onHandoff,
-  onReassign,
+  onAssignIssue,
 }: PieceRowProps) {
   const { t } = useTranslation();
-  // Reassignment points the opposite way to the current track. On the Issue
-  // track any piece can be lifted back out to stand alone; on the Highlights
-  // track it can be pulled into the current issue — but only when one exists.
-  const showReassign = track === "issue" || hasCurrentIssue;
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     if (event.key === "Enter") onOpen(piece);
@@ -62,11 +62,28 @@ export function PieceRow({
     <div
       className={styles.prow}
       data-focus={focused}
+      data-selected={selected}
       role="button"
       tabIndex={0}
       onClick={() => onOpen(piece)}
       onKeyDown={handleKeyDown}
     >
+      {/* Its own control rather than a click on the row: the row itself opens
+          the piece, so selection needs a target that does not fight that. */}
+      <button
+        type="button"
+        role="checkbox"
+        aria-checked={selected}
+        className={styles.selectBox}
+        data-on={selected}
+        aria-label={t("magazine:desk.pieceRow.selectAria", { title: piece.title })}
+        onClick={(event) => {
+          event.stopPropagation();
+          onToggleSelect(piece);
+        }}
+      >
+        {selected && <FiCheck aria-hidden />}
+      </button>
       <div className={styles.titleCell}>
         <h4 className={styles.title}>{piece.title}</h4>
         <div className={styles.sub}>
@@ -116,11 +133,11 @@ export function PieceRow({
         <Button variant="ghost" size="sm" onClick={() => onHandoff(piece)}>
           {t("magazine:desk.pieceRow.handOff")}
         </Button>
-        {showReassign && (
-          <Button variant="ghost" size="sm" onClick={() => onReassign(piece)}>
+        {hasAnyIssue && (
+          <Button variant="ghost" size="sm" onClick={() => onAssignIssue(piece)}>
             {track === "issue"
-              ? t("magazine:desk.reassign.makeStandalone")
-              : t("magazine:desk.reassign.addToIssue", { number: issueNumber })}
+              ? t("magazine:desk.reassign.moveIssue")
+              : t("magazine:desk.reassign.addToIssue")}
           </Button>
         )}
       </div>

@@ -115,6 +115,11 @@
   transition:--pp-cover-fade .5s cubic-bezier(.16,1,.3,1);
 }
 .pp[data-cover-bleed="true"] .pp-cover{--pp-cover-fade:62%}
+/* While the owner is repositioning the banner, show the whole band. The bleed
+   fade dissolves the bottom edge, which is exactly where the Cancel/Save bar
+   sits — and a framing decision is easier to make against the real image than
+   against a version of it that's melting into the page. */
+.pp-cover[data-repositioning]{-webkit-mask-image:none;mask-image:none}
 /* When the banner bleeds, its faded bottom edge sits closer to the identity
    block; nudge the whole content column down a touch so the photo + name keep
    a little breathing room from the dissolving banner instead of crowding it.

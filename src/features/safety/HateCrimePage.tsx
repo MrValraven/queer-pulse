@@ -28,7 +28,7 @@ export function HateCrimePage() {
           { name: pageTitle, path: routes.hateCrime },
         ])}
       />
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <HubBackLink
             to={routes.safety}

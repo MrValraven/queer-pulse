@@ -13,6 +13,8 @@ const GALLERY: {
   height: number;
   wide?: boolean;
   captionKey: string;
+  /** Standing note above the frame — only the cover slot carries one. */
+  noteKey?: string;
 }[] = [
   {
     key: "wide",
@@ -20,6 +22,10 @@ const GALLERY: {
     height: 150,
     wide: true,
     captionKey: "marketing:listBusiness.step4.gallery.wide",
+    // The wide shot IS the directory cover: the backend's `coverPhoto` is the
+    // first entry of the ordered gallery, and this slot writes it. Say so here
+    // rather than leaving owners to discover it from the live grid.
+    noteKey: "marketing:listBusiness.step4.gallery.wideNote",
   },
   {
     key: "d1",
@@ -73,6 +79,7 @@ export function ListingPhotoGallery({
             height={slot.height}
             wide={slot.wide}
             placeholder={t(slot.captionKey)}
+            note={slot.noteKey ? t(slot.noteKey) : undefined}
             displayValue={photoPreviews[slot.key] || draft.photos[slot.key]}
             uploadPhoto={uploadPhoto}
             onResolved={(persist, preview) => {

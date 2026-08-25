@@ -1,5 +1,11 @@
-import { useState, type CSSProperties } from "react";
-import { FiEye, FiEyeOff, FiSmartphone } from "react-icons/fi";
+import { useId, useState, type CSSProperties } from "react";
+import {
+  FiChevronDown,
+  FiChevronUp,
+  FiEye,
+  FiEyeOff,
+  FiSmartphone,
+} from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useMediaQuery } from "../../shared/hooks";
 import { useVisualViewportInset } from "../../shared/hooks/useVisualViewportInset";
@@ -15,6 +21,10 @@ import { MobilePersonaPreview } from "./MobilePersonaPreview";
  * "Save all" that fans out to every dirty area's mutation, and "Discard all".
  * When nothing is dirty it falls back to the neutral status note. It also still
  * owns the docked-preview show/hide toggle (flips `.ed`'s `data-preview`).
+ *
+ * ≤560px the itemized list is collapsed behind a "{count} unsaved changes"
+ * summary button (`.savebar-summary`) — the full list plus its heading took
+ * roughly 90px out of a viewport the on-screen keyboard had already halved.
  */
 export function EditorSavebar({
   previewOpen,
@@ -30,6 +40,22 @@ export function EditorSavebar({
   // offer the same live preview in a bottom sheet instead (Task 4).
   const isMobile = useMediaQuery("(max-width: 860px)");
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
+  // Phones: the heading + itemized list ate ~90px of an already keyboard-shrunk
+  // viewport, so the list collapses behind a one-line summary the owner can
+  // open on demand. Matches the 560px container step the savebar already wraps
+  // at in `persona-editor.css`.
+  const isCompact = useMediaQuery("(max-width: 560px)");
+  const [changesOpen, setChangesOpen] = useState(false);
+  const changesListId = useId();
+  // Every fresh dirty state starts collapsed, so the pill can't grow on its own
+  // between one edit and the next while the owner is typing. React's documented
+  // adjust-state-during-render pattern rather than an effect — no cascading
+  // render, and the collapsed bar paints on the very first clean→dirty frame.
+  const [wasDirty, setWasDirty] = useState(dirty);
+  if (wasDirty !== dirty) {
+    setWasDirty(dirty);
+    if (!dirty) setChangesOpen(false);
+  }
   // The savebar is `position: sticky; bottom: 0`. On iOS the on-screen keyboard
   // overlays the layout viewport, so a bottom-pinned bar hides behind it — lift
   // it by the keyboard's overlap. 0px (and no transform) whenever no keyboard.
@@ -108,8 +134,34 @@ export function EditorSavebar({
     <>
       <div className="savebar savebar-dirty" style={savebarStyle}>
         <div className="savebar-changes">
-          <span className="savebar-heading">{t("subprofiles:pending.heading")}</span>
-          <PendingChangesList pending={pending} />
+          {isCompact ? (
+            <>
+              <button
+                type="button"
+                className="savebar-summary"
+                aria-expanded={changesOpen}
+                aria-controls={changesListId}
+                onClick={() => setChangesOpen((open) => !open)}
+              >
+                {t("subprofiles:pending.summary", { count: pending.length })}
+                {changesOpen ? (
+                  <FiChevronUp size={16} aria-hidden />
+                ) : (
+                  <FiChevronDown size={16} aria-hidden />
+                )}
+              </button>
+              <div id={changesListId} hidden={!changesOpen}>
+                <PendingChangesList pending={pending} />
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="savebar-heading">
+                {t("subprofiles:pending.heading")}
+              </span>
+              <PendingChangesList pending={pending} />
+            </>
+          )}
         </div>
         <div className="savebar-actions">
           {blockReasonKey && (

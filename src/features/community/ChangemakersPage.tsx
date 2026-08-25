@@ -41,7 +41,7 @@ export function ChangemakersPage() {
 
   return (
     <PageShell>
-      <section className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
             {t("community:changemakers.hero.cat")}
@@ -74,7 +74,7 @@ export function ChangemakersPage() {
             </div>
           )}
         </div>
-      </section>
+      </header>
 
       {featured && (
         <section className={styles.featured}>

@@ -1409,8 +1409,10 @@ export const marketing: Catalog = {
     "Pictures help people feel the room before they arrive. And we like to know who's behind the door.",
   "listBusiness.step4.photosLabel": "A few photos (optional)",
   "listBusiness.step4.photosHelper":
-    "Landscape works best · aim for ≥1200px wide · under 5MB each · no text-heavy graphics.",
+    "The wide shot is your cover: it's the photo people see on your card in the directory. Landscape works best · aim for ≥1200px wide · under 5MB each · no text-heavy graphics.",
   "listBusiness.step4.gallery.wide": "Wide shot of the space",
+  "listBusiness.step4.gallery.wideNote":
+    "Cover photo · shown on your card in the directory",
   "listBusiness.step4.gallery.detail": "A detail",
   "listBusiness.step4.gallery.vibe": "People / vibe",
   "listBusiness.step4.alt.wide": "Wide shot · alt text",
@@ -1644,7 +1646,8 @@ export const marketing: Catalog = {
   "listBusiness.editor.unsavedChanges": "You have unsaved changes.",
   "listBusiness.editor.noChanges": "Everything here is saved.",
   "listBusiness.editor.previewCta": "Preview page",
-  "listBusiness.editor.preview.eyebrow": "Preview, including your unsaved edits",
+  "listBusiness.editor.preview.eyebrow":
+    "Preview, including your unsaved edits",
   "listBusiness.editor.preview.sub":
     "Your listing page as visitors will see it. Nothing here is saved until you press save.",
   "listBusiness.editor.preview.subCoManager":
@@ -1681,8 +1684,7 @@ export const marketing: Catalog = {
     "Nobody else can edit this listing yet. Invite someone below when you would like a hand.",
   "listBusiness.coManagers.empty.descriptionCoManager":
     "Nobody else is looking after this listing right now.",
-  "listBusiness.coManagers.removedToast":
-    "They no longer edit this listing.",
+  "listBusiness.coManagers.removedToast": "They no longer edit this listing.",
   "listBusiness.coManagers.removeError":
     "We couldn't make that change just now. Try again.",
   "listBusiness.coManagers.inviteHeading": "Invite someone to help",
@@ -1698,7 +1700,8 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.sendCta": "Send invitation",
   "listBusiness.coManagers.sendingCta": "Sending...",
   "listBusiness.coManagers.invitedToast": "Invitation sent.",
-  "listBusiness.coManagers.error.self": "This listing is already yours to edit.",
+  "listBusiness.coManagers.error.self":
+    "This listing is already yours to edit.",
   "listBusiness.coManagers.error.seatsFull":
     "All the places are taken. Remove someone, or cancel an invitation, to free one up.",
   "listBusiness.coManagers.error.alreadyThere":
@@ -1717,8 +1720,7 @@ export const marketing: Catalog = {
   "listBusiness.coManagers.leaveError":
     "We couldn't do that just now. Try again.",
   "listBusiness.coManagers.banner.title": "You help run this listing",
-  "listBusiness.coManagers.banner.titleNamed":
-    "You help {name} run {listing}",
+  "listBusiness.coManagers.banner.titleNamed": "You help {name} run {listing}",
   "listBusiness.coManagers.banner.body":
     "You can change everything about the business: what it says, its hours, photos, services, access answers, and the replies to reviews and questions. The owner's own contact details and profile choices stay private to them, and deleting the listing or changing who can edit it stays with them too.",
   "listBusiness.coManagers.roleFieldLabel": "Role shown on the listing",
@@ -1777,7 +1779,8 @@ export const marketing: Catalog = {
   "listBusiness.services.empty":
     "Nothing listed yet. Add a row for each thing you want people to see a price for.",
   "listBusiness.services.addCta": "Add a service",
-  "listBusiness.services.addHint": "Optional. Most listings do well with a handful.",
+  "listBusiness.services.addHint":
+    "Optional. Most listings do well with a handful.",
   "listBusiness.services.ceilingHint":
     "That is the limit of {count}. A longer price list belongs on your own site.",
   "listBusiness.services.nameLabel": "What it is",
@@ -1833,7 +1836,8 @@ export const marketing: Catalog = {
 
   // ── The affirming baseline, agreed to once at submission. Absent from the
   //    update payload on purpose: there is no edit that un-agrees to it.
-  "listBusiness.baseline.title": "The one thing <em>every listing agrees to.</em>",
+  "listBusiness.baseline.title":
+    "The one thing <em>every listing agrees to.</em>",
   "listBusiness.baseline.body":
     "Businesses in this directory commit to welcoming and serving LGBTQ+ people, and to dealing with it when someone in their space falls short. That commitment is what makes this list worth reading.",
   "listBusiness.baseline.scope":
@@ -2040,7 +2044,105 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
 
-  "changelog.entries.sharper-photos.title": "Photos that stay sharp on every screen",
+  "changelog.entries.menu-resizes-smoothly.title":
+    "The main menu changes size smoothly between sections",
+  "changelog.entries.menu-resizes-smoothly.body":
+    "Moving across the top menu, from Work to About say, made the open panel snap to its new height in a single step, which read as a flicker. The panel now eases between sizes as you move from one section to the next, in step with the fade of the links inside it. With reduced motion turned on it still resizes instantly.",
+  "changelog.entries.nearby-places-full-cards.title":
+    "Places within a short walk now show their full card",
+  "changelog.entries.nearby-places-full-cards.body":
+    "The \u201cWithin a short walk\u201d suggestions at the foot of a listing were a line of text: a name, a category and a distance. They now appear as the same cards you see in the local directory, with the photo, the safer-space badge, the rating, the description and whether the door is open right now. The walking distance sits on the photo, so you can still plan the evening by how far apart things are.",
+  "changelog.entries.map-pin-opens-place.title":
+    "Tapping a place on the map now opens it",
+  "changelog.entries.map-pin-opens-place.body":
+    "If you had picked a neighbourhood on the local map and then tapped a place somewhere else, the panel beside the map kept showing that neighbourhood and often said nothing matched your filters. Tapping a pin now drops the area filter and gives the whole panel over to that one place, with the map easing in on it. \u201cAll places\u201d takes you back to the full list.",
+  "changelog.entries.review-line-breaks.title":
+    "Reviews keep your paragraphs, and fold up when they run long",
+  "changelog.entries.review-line-breaks.body":
+    "A review typed as several paragraphs landed on the page as one unbroken block: every line break and blank line you wrote was quietly dropped when it was displayed. Your breaks are now kept exactly as you typed them. Long reviews also fold down to their first few lines with a Read more link, so one very long review no longer buries every review beneath it.",
+  "changelog.entries.directory-filters-in-one-row.title":
+    "The directory filter bar is now one tidy row",
+  "changelog.entries.directory-filters-in-one-row.body":
+    "Scrolling the directory used to slide the search field up behind the floating navigation, so the filter bar and the top bar sat on top of each other. The filter bar now parks just below the navigation and stays readable the whole way down the page, in every layout: the floating pill, the sidebar rail, and the slim bar on phones. The place types have moved inside the Refine button, alongside verified safe spaces and vibe, so the bar is one line of search plus a single control. Refine carries a count of everything you have applied, and each active filter still shows as a removable chip above the results.",
+  "changelog.entries.volunteer-applicants-community-organisers.title":
+    "Communities can review their own volunteer applicants",
+  "changelog.entries.volunteer-applicants-community-organisers.body":
+    'Reviewing who signed up for a volunteering opportunity used to rest entirely on the one person who posted it. If they went quiet, applicants waited. Now owners, co-owners, and moderators of the community an opportunity is posted under can open it, read the applications, and accept or decline, so a community is never one person away from answering people who offered their time. Editing and closing an opportunity stay with whoever posted it. The "Manage applicants" button on the volunteering page also stops appearing for members who have nothing to review.',
+  "changelog.entries.invites-go-out-by-hand.title":
+    "Approving a join request now says plainly what happens next",
+  "changelog.entries.invites-go-out-by-hand.body":
+    "When a reviewer welcomed someone in, the confirmation said an invite email was on its way to them. QueerPulse has no mail service, so nothing was ever sent and the invite could sit unclaimed while both people waited. The card now says that invites go out by hand and puts the link to copy right there, and its three decision buttons no longer spill past the edge of the card.",
+  "changelog.entries.plum-headers-reach-the-top.title":
+    "Plum page headers now run all the way to the top",
+  "changelog.entries.plum-headers-reach-the-top.body":
+    "On pages with a deep plum header, such as Safe spaces, Culture, Jobs and Housing, a thin strip of cream page stayed behind the floating navigation bar, so the colour appeared to start a little way down the screen. The plum now fills that strip on every one of these pages, and it stays correct in the sidebar and mobile layouts too.",
+  "changelog.entries.footer-closes-the-page.title":
+    "Short pages now end at the bottom of the window",
+  "changelog.entries.footer-closes-the-page.body":
+    "A page with little on it, such as your membership cards before a community has issued you one, used to stop short: the footer landed partway down the screen with a band of empty page showing underneath it, as though the layout had come loose. Every page now reaches the bottom edge of the window, so the footer always closes it. Longer pages are untouched.",
+  "changelog.entries.tab-title-follows-the-page.title":
+    "The browser tab names the page you are on",
+  "changelog.entries.tab-title-follows-the-page.body":
+    "Opening a public page such as the magazine and then heading back to your feed or the local directory left the old name sitting in the browser tab, so a window kept open for later could read \u201cThe Magazine\u201d while showing your feed. Pages that carry a name of their own still set it, and every other page now shows the plain QueerPulse name the moment you arrive.",
+  "changelog.entries.magazine-issues-run-the-desk.title":
+    "Magazine issues now run the desk",
+  "changelog.entries.magazine-issues-run-the-desk.body":
+    "The editor desk could only ever work on one issue: whichever had the highest number. There was no way to make a new one, and no way back to an older one. Now there is a \u201cNew issue\u201d button, and a switcher in the header that says which issue you are working on. Pieces start with no issue at all, sitting in an Unassigned track until someone files them. You can file one from its row, select several and assign them together, or sit inside an issue and pull work in from its own page. A piece can move straight from one issue to another. And shipping an issue now files its articles under it, so the issue's public contents page actually lists what ran.",
+  "changelog.entries.local-map-reads-clearly.title":
+    "The local map reads clearly again",
+  "changelog.entries.local-map-reads-clearly.body":
+    "The map on the local directory had gone hazy. Its streets were drawn in white and pale grey, colours meant for a different background, so against our cream they all but disappeared. Every place name carried a soft white glow that left the text looking out of focus, and some parish names were printed twice a few pixels apart. Streets now sit on a warm scale with an edge of their own, so you can follow a road across the city. Names are cut cleanly out of the background, and each parish is named once. Maps also lost their sharpness whenever the browser was zoomed or the window moved to a second screen, and stayed soft until you reloaded the page. Every map is now drawn at a finer resolution than the screen asks for and stays sharp at any zoom level, on any display.",
+  "changelog.entries.reviews-sort-on-quiet-listings.title":
+    "Sorting and filtering reviews now works on quieter listings",
+  "changelog.entries.reviews-sort-on-quiet-listings.body":
+    "The review list carried a line reading \u201cNewest first\u201d with nothing you could use to change it. The controls were built, they were simply held back until a place had gathered four reviews, so most listings never showed them at all. Reviews now sort and filter from the second review onwards. Order them by newest, oldest, most helpful, or highest and lowest rating; narrow the list to one star rating; and keep only the reviews that came with a photo or that the owner has answered. If a combination leaves nothing on screen, one tap clears it.",
+  "changelog.entries.map-narrows-to-the-area-you-pick.title":
+    "Picking an area on the map clears the rest",
+  "changelog.entries.map-narrows-to-the-area-you-pick.body":
+    "Clicking a parish on the local map highlighted it and filtered the list beside it, yet every other pin stayed put, so the area you had just chosen was still buried under the whole city. Choosing an area now leaves only that area\u2019s pins on the map. Every other parish keeps its name and a number for how much sits inside it, so you can still tell where the rest of the city is. Click the highlighted area again to bring everything back.",
+  "changelog.entries.pages-open-at-the-top.title":
+    "Changing pages lands you at the top straight away",
+  "changelog.entries.pages-open-at-the-top.body":
+    "Leaving a page you had scrolled a long way down, say the bottom of the listings directory, and opening another one such as your profile, made the browser glide all the way back up before the new page settled. On a long list that glide took a while, and anything you tapped during it fought the animation. Page changes now land at the top instantly. Browser back still returns you to the exact spot you left, and tapping the tab you are already on still glides up as before.",
+  "changelog.entries.queer-owned-says-queer-owned.title":
+    "Queer-owned places say so on their card",
+  "changelog.entries.queer-owned-says-queer-owned.body":
+    "A business whose owner told us it is queer-owned was still labelled \u201cLGBTQ+ friendly\u201d in the directory. Two things were wrong: the card was reading a completely different setting (whether the owner shows the listing on their profile), and a verified safe space took over the badge corner entirely, so those places could not say what they were at all. Cards now carry the ownership badge in three honest steps: verified queer-owned, queer-owned, or LGBTQ+ friendly. The safe-space mark has moved beside it as a jade shield, and hovering or focusing it names it.",
+  "changelog.entries.review-appears-immediately.title":
+    "Your review shows up the moment you post it",
+  "changelog.entries.review-appears-immediately.body":
+    "Posting a review on a place told you it had worked, then left the page looking exactly as it did before: your words only turned up if you reloaded. The page had been quietly handed a copy of the listing saved just before you wrote. Your review now appears in the list the instant it is posted, with the star rating already counting it. The same stale copy could reach any public page, so persona pages, community teasers, housing groups, co-ops, the roadmap and the changemaker directory all now show your changes straight away too.",
+  "changelog.entries.star-pickers-follow-your-cursor.title":
+    "Star pickers now follow your cursor properly",
+  "changelog.entries.star-pickers-follow-your-cursor.body":
+    "Rating a place or a company meant aiming at each star exactly: the gaps between them counted as nowhere, so the preview kept dropping back to empty as you moved along the row, and the colour arrived in a hard snap. The stars now sit shoulder to shoulder, so anywhere in the row lights up the rating you are pointing at, and the coral pours in instead of jumping.",
+  "changelog.entries.review-stars-hint.title":
+    "Reviews now tell you why the post button is greyed out",
+  "changelog.entries.review-stars-hint.body":
+    "You could write a whole review of a place, reach for the button, and find it dead, with nothing to say the star picker further up was still untouched. Now, the moment you start writing, a line appears beside the button asking for a star rating, so the one missing piece is named where you are actually looking.",
+  "changelog.entries.filters-keep-your-place.title":
+    "Filtering a page no longer throws you back to the top",
+  "changelog.entries.filters-keep-your-place.body":
+    "Flipping the local directory between map and list used to fling the page back to the very top, and so did ticking a filter or typing another letter into a search box. Anything that lives in the address bar counted as a whole new page. Now the app can tell a filter from a real navigation: switch views or narrow a list and you stay exactly where you were reading.",
+  "changelog.entries.directory-card-cover-photo.title":
+    "Your listing's photo now shows up in the directory",
+  "changelog.entries.directory-card-cover-photo.body":
+    "Every card in the local directory read \u201cPhoto coming\u201d, even for businesses whose owners had uploaded a wide shot months ago. The photo was there the whole time; the grid simply never asked for it. Cards now show the wide shot from your listing, framed the way you cropped it, and the photos step says plainly which one becomes your cover.",
+  "changelog.entries.persona-banner-reposition.title":
+    "Put your persona banner exactly where you want it",
+  "changelog.entries.persona-banner-reposition.body":
+    "Your banner no longer has to sit wherever the crop landed. Hover it on your own persona page, take “Reposition”, and drag the image up or down until the part you care about is in frame. Arrow keys work too. Save, and that's how everyone sees it.",
+
+  "changelog.entries.listing-owner-photo.title":
+    "The face behind a listing actually shows up",
+  "changelog.entries.listing-owner-photo.body":
+    "The \u201cWho runs it\u201d card on a business page fell back to initials even when the owner had a profile photo, and the same thing happened to the photos beside reviews and questions. Their pictures were being pointed at the wrong place and never loaded. They now load properly, and anyone who has turned their photo off in their privacy settings still shows initials, as they chose.",
+  "changelog.entries.persona-savebar-compact.title":
+    "More room to type when editing a persona on a phone",
+  "changelog.entries.persona-savebar-compact.body":
+    "The unsaved-changes bar in the persona editor used to list every edit in full, which on a small screen left barely any space above the keyboard. On phones it now shows a single line telling you how many changes are waiting, and you can tap it open whenever you want the full list. Save and Discard stay exactly where they were.",
+  "changelog.entries.sharper-photos.title":
+    "Photos that stay sharp on every screen",
   "changelog.entries.sharper-photos.body":
     "Photos you upload now keep more of their detail. Large pictures are shrunk in careful stages rather than one rough pass, which is what used to leave a banner or a profile photo looking slightly soft, and they are saved in a newer format that holds more detail for the same size. Screenshots and drawings stay pixel-perfect. Pictures are also requested at the size your screen can actually show, so a sharp phone gets a sharp picture and nobody pays for detail they cannot see.",
   "changelog.entries.listing-pages-rebuild.title":
@@ -2051,7 +2153,8 @@ export const marketing: Catalog = {
     "More control if you run a place",
   "changelog.entries.listing-owner-control.body":
     "Editing your listing no longer takes it off the directory while it waits to be checked again. Once you are approved, your corrections go live as you save them. The editor is one screen instead of six steps, it keeps a draft if you get interrupted, and it shows you the real page before you publish. You can set holiday hours, mark yourself temporarily closed or moved, pause a listing without deleting it, list your services and prices, and see what people have suggested or asked.",
-  "changelog.entries.persona-banner-framing.title": "Persona banners, framed the way you framed them",
+  "changelog.entries.persona-banner-framing.title":
+    "Persona banners, framed the way you framed them",
   "changelog.entries.persona-banner-framing.body":
     "Persona banners now reframe at 3:1 — the shape they actually paint at — instead of the 2:1 used for magazine covers, and the page keeps whatever you centred in the frame rather than slicing an arbitrary strip out of the middle. Banners upload at a higher resolution too, so they stay sharp edge to edge on a big screen, and they now run all the way up to the top of the page.",
   "changelog.entries.card-check-page-rebuild.title":
@@ -4643,10 +4746,10 @@ export const marketing: Catalog = {
   "volunteer.hero.manageCta": "Manage applicants",
   "volunteerManage.title": "Manage applicants",
   "volunteerManage.sub":
-    "Review and decide on people who signed up for opportunities you posted.",
+    "Review and decide on people who signed up for opportunities you posted, or that a community you organise posted.",
   "volunteerManage.loading": "Loading your opportunities…",
   "volunteerManage.empty":
-    "You haven't posted any volunteer opportunities yet.",
+    "You haven't posted any volunteer opportunities yet, and neither have the communities you organise.",
   "volunteerManage.loadingApplicants": "Loading applicants…",
   "volunteerManage.noApplicants": "No one has applied yet.",
   "volunteerManage.pendingCount": "{count} pending",
@@ -5101,6 +5204,7 @@ export const marketing: Catalog = {
   "directory.sort.default": "Featured",
   "directory.sort.name": "A–Z",
   "directory.sort.hood": "By neighbourhood",
+  "directory.badge.queerOwnedVerified": "Verified queer-owned",
   "directory.badge.queerOwned": "Queer-owned",
   "directory.badge.friendly": "LGBTQ+ friendly",
   "directory.card.memberRun": "Member-run",
@@ -5147,6 +5251,7 @@ export const marketing: Catalog = {
   "directory.detail.breadcrumbHome": "Directory",
   "directory.detail.relatedTitle": "More {category} nearby",
   "directory.detail.badge.verifiedOwned": "Verified queer-owned",
+  "directory.detail.badge.owned": "Queer-owned",
   "directory.detail.badge.friendly": "LGBTQ+ friendly",
   "directory.detail.reviewsCount": "· {count} reviews",
   "directory.detail.newBadge": "New",
@@ -5198,6 +5303,8 @@ export const marketing: Catalog = {
   "directory.detail.review.starAria": "{count} out of 5 stars",
   "directory.detail.review.placeholder":
     "Share what your visit was like, what worked, and who it's for.",
+  "directory.detail.review.starsRequiredHint":
+    "Pick a star rating to unlock the button.",
   "directory.detail.review.submit": "Post review",
   "directory.detail.review.submitting": "Posting…",
   "directory.detail.review.successToast": "Thanks. Your review is up.",
@@ -5259,11 +5366,23 @@ export const marketing: Catalog = {
   "directory.detail.reviews.photoOpen": "Open the photo from {name}'s review",
   "directory.detail.reviews.sortHelpful": "Most helpful",
   "directory.detail.reviews.sortedByHelpful": "Sorted by most helpful.",
+  "directory.detail.reviews.sortOldest": "Oldest first",
+  "directory.detail.reviews.sortedByOldest": "Oldest first.",
+  "directory.detail.reviews.filterContentAria":
+    "Filter reviews by what they include",
+  "directory.detail.reviews.filterPhotos": "With photos",
+  "directory.detail.reviews.filterReply": "Owner replied",
+  "directory.detail.reviews.noMatchingReviews":
+    "No reviews match these filters yet.",
+  "directory.detail.reviews.clearFilters": "Clear filters",
   "directory.detail.reviews.noStarReviews": "No {count}-star reviews yet.",
   "directory.detail.reviews.ratingAria": "Rated {count} out of 5 stars",
+  "directory.detail.reviews.readMore": "Read more",
+  "directory.detail.reviews.showLess": "Show less",
   "directory.detail.visitTitle": "Where it is",
   "directory.detail.accessTitle": "Getting in, and being understood",
-  "directory.detail.accessSub": "As {name} declared it. Ask if you need to be sure.",
+  "directory.detail.accessSub":
+    "As {name} declared it. Ask if you need to be sure.",
 
   // ── Structured accessibility answers. Three states, and all three are
   //    information: `unknown` is never rendered as a "no" and never dropped.
@@ -5302,7 +5421,8 @@ export const marketing: Catalog = {
   "directory.detail.baseline.scope":
     "The commitment is about how a business treats the people it serves, and about stepping in when someone in the space falls short. It gives nobody permission to turn a person away over who they are.",
   "directory.detail.nearby.title": "Within a short walk",
-  "directory.detail.nearby.sub": "Other places you could add to the same evening, measured from {name}.",
+  "directory.detail.nearby.sub":
+    "Other places you could add to the same evening, measured from {name}.",
   "directory.detail.nearby.metres": "{distance} m",
   "directory.detail.nearby.kilometres": "{distance} km",
   "directory.detail.visitWebsite": "Visit website",
@@ -5420,7 +5540,8 @@ export const marketing: Catalog = {
   "directory.detail.suggestEdit.value.phone.placeholder": "+351 21 000 0000",
   "directory.detail.suggestEdit.value.website.label":
     "What is the right website?",
-  "directory.detail.suggestEdit.value.website.placeholder": "https://example.pt",
+  "directory.detail.suggestEdit.value.website.placeholder":
+    "https://example.pt",
   "directory.detail.suggestEdit.value.description.label":
     "What should the description say instead?",
   "directory.detail.suggestEdit.value.description.placeholder":
@@ -5809,6 +5930,7 @@ export const marketing: Catalog = {
   "map.sidebar.venueCount_one": "<b>{count}</b> place",
   "map.sidebar.venueCount_other": "<b>{count}</b> places",
   "map.sidebar.clear": "Clear",
+  "map.sidebar.backToAll": "All places",
   "map.sidebar.empty": "No places match these filters.",
   "map.jumpToList": "View the list · {count}",
   "map.venueCard.beenCount_one": "<b>{count}</b> person been here",
@@ -5832,7 +5954,7 @@ export const marketing: Catalog = {
   "local.view.toggleAria": "Choose list or map view",
   "local.card.seeFullDetails": "See full details",
   "local.filter.searchPlaceholder": "Search places and venues…",
-  "local.filter.categoryAria": "Filter by category",
+  "local.filter.categoryLabel": "Place type",
   "local.filter.refine": "Refine",
   "local.filter.vibeLabel": "Vibe",
   "local.filter.vibeVenueNote": "Vibe filters apply to venues",

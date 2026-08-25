@@ -12,7 +12,7 @@ export function ComingOutPage() {
 
   return (
     <PageShell>
-      <header className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <Reveal className={styles.eyebrow}>
             {t("community:comingOut.hero.eyebrow")}

@@ -16,6 +16,11 @@
   html[data-nav-mode="sidebar"][data-nav-collapsed="true"] {
     --rail-w: 68px;
   }
+  /* No top bar in this mode — the nav is the left rail — so a sticky in-page
+     bar has nothing to clear and pins flush to the viewport top. */
+  html[data-nav-mode="sidebar"] {
+    --sticky-top: 0px;
+  }
   html[data-nav-mode="sidebar"] main[data-page-main],
   html[data-nav-mode="sidebar"] .site-footer {
     padding-left: var(--rail-w);

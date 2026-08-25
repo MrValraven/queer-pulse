@@ -846,6 +846,21 @@ export const subprofiles: Catalog = {
   // Cabeçalho da persona (SubprofileHero)
   "hero.message": "Mensagem",
   "hero.edit": "Editar persona",
+  // Reposicionamento do banner (PersonaCoverReposition).
+  "cover.reposition.cta": "Reposicionar",
+  "cover.reposition.hint": "Arrasta o banner para cima ou para baixo",
+  "cover.reposition.save": "Guardar posição",
+  "cover.reposition.saving": "A guardar…",
+  "cover.reposition.cancel": "Cancelar",
+  "cover.reposition.saved": "Posição do banner guardada",
+  "cover.reposition.error":
+    "Não conseguimos guardar a posição do banner. Tenta outra vez daqui a pouco.",
+  "cover.reposition.noRoomAria":
+    "Reposicionar banner. Esta imagem já encaixa exatamente no banner, por isso não há nada para mover.",
+  "cover.reposition.sliderAria":
+    "Posição do banner. Arrasta, ou usa as setas do teclado. Enter guarda, Escape cancela.",
+  "cover.reposition.valueText": "{percent}% a contar do topo da imagem",
+
   "hero.report.cta": "Denunciar esta persona",
   "hero.more.ariaLabel": "Mais ações para {name}",
   "hero.viewPhotoAria": "Ver foto de {name}",
@@ -1505,6 +1520,8 @@ export const subprofiles: Catalog = {
   "pending.discardAll": "Descartar tudo",
   "pending.saveError": "Não conseguimos guardar {areas}",
   "pending.heading": "Alterações por guardar",
+  "pending.summary_one": "{count} alteração por guardar",
+  "pending.summary_other": "{count} alterações por guardar",
   "pending.field.displayName": "Nome",
   "pending.field.tagline": "Frase de apresentação",
   "pending.field.bio": "Biografia",

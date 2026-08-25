@@ -207,7 +207,7 @@ export function JobsPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <Reveal as="div" className={styles.cat}>
             {t("economy:jobs.eyebrow")}
@@ -234,7 +234,7 @@ export function JobsPage() {
             </span>
           </Reveal>
         </div>
-      </div>
+      </header>
 
       <div className={styles.body}>
         <div className="wrap">

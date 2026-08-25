@@ -1,5 +1,5 @@
-import { useState, type FormEvent, type ReactNode } from "react";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -49,6 +49,7 @@ export function ReviewForm({
   showTitle = false,
   companySelect,
   submitDisabled = false,
+  submitDisabledLabel,
   sending,
   onSubmit,
   onClose,
@@ -62,11 +63,15 @@ export function ReviewForm({
   companySelect?: ReactNode;
   /** Extra gate merged into canSubmit for modal-owned state (company/slug). */
   submitDisabled?: boolean;
+  /** What `submitDisabled` is waiting for, phrased for the missing-fields hint
+   *  (e.g. "a company"). Without it that gate stays unexplained. */
+  submitDisabledLabel?: string;
   sending: boolean;
   onSubmit: (values: ReviewFormValues) => void;
   onClose: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const hintId = useId();
   const [title, setTitle] = useState("");
   const [rating, setRating] = useState(0);
   const [role, setRole] = useState("");
@@ -79,6 +84,27 @@ export function ReviewForm({
     (pros.trim().length > 0 || cons.trim().length > 0) &&
     (!showTitle || title.trim().length > 0);
   const canSubmit = fieldsValid && !submitDisabled;
+
+  /* Someone who has written their review and found a dead button is owed the
+     reason. Collected in the order the fields appear, so the sentence reads as
+     a route back up the form. The star picker is the usual culprit: unlike an
+     empty text input, an untouched row of stars doesn't look unfinished. */
+  const missingLabels = [
+    submitDisabled && submitDisabledLabel,
+    showTitle && !title.trim() && t("economy:companyReview.missing.headline"),
+    rating === 0 && t("economy:companyReview.missing.rating"),
+    !role.trim() && t("economy:companyReview.missing.role"),
+    !pros.trim() &&
+      !cons.trim() &&
+      t("economy:companyReview.missing.prosOrCons"),
+  ].filter((label): label is string => typeof label === "string");
+  const hasStarted =
+    rating > 0 ||
+    [title, role, pros, cons].some((value) => value.trim().length > 0);
+  const isHintShown = hasStarted && missingLabels.length > 0;
+  const missingList = new Intl.ListFormat(language, {
+    type: "conjunction",
+  }).format(missingLabels);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -152,6 +178,13 @@ export function ReviewForm({
         />
       </div>
 
+      {isHintShown && (
+        <p className={shell.formHint} id={hintId} role="status">
+          <FiInfo aria-hidden />
+          {t("economy:companyReview.missingHint", { fields: missingList })}
+        </p>
+      )}
+
       <div className={shell.foot}>
         <button
           type="button"
@@ -162,7 +195,12 @@ export function ReviewForm({
           <FiArrowLeft aria-hidden />{" "}
           {t("economy:companyReview.cancel")}
         </button>
-        <Button size="lg" type="submit" disabled={sending || !canSubmit}>
+        <Button
+          size="lg"
+          type="submit"
+          disabled={sending || !canSubmit}
+          aria-describedby={isHintShown ? hintId : undefined}
+        >
           {sending ? (
             <Sending label={t("economy:companyReview.posting")} />
           ) : (

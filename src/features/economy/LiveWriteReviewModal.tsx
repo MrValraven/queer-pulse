@@ -90,6 +90,7 @@ export function LiveWriteReviewModal({
           showTitle
           sending={sending}
           submitDisabled={slug.length === 0}
+          submitDisabledLabel={t("economy:companyReview.missing.company")}
           onSubmit={(values) => void handleSubmit(values)}
           onClose={onClose}
           copy={{

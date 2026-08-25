@@ -8,13 +8,38 @@ import {
 } from "../listBusiness/listBusiness.data";
 import { normalizeAccessibilityAnswers } from "../listBusiness/listingAccessibility.data";
 import { servicesForPayload } from "../listBusiness/listingServices.data";
-import type { DirectoryCardDTO, DirectoryDetailDTO } from "./directory.api";
+import type {
+  CoverPhotoView,
+  DirectoryCardDTO,
+  DirectoryDetailDTO,
+} from "./directory.api";
+
+/**
+ * Spread the card DTO's `coverPhoto` into the `photos`/`alt`/`photoFocus`
+ * fields the card body reads.
+ *
+ * Returns an EMPTY object for a listing with no photo, rather than a `photos`
+ * record of nulls: `LocalBusinessCardBody` shows its placeholder caption when
+ * `photos?.wide` is falsy either way, but leaving the field undefined keeps a
+ * photoless card indistinguishable from the demo places, which carry no
+ * `photos` at all and fall back to their `gallery` caption blocks.
+ */
+function cardCoverPhoto(
+  cover: CoverPhotoView | null | undefined,
+): Pick<DirectoryPlace, "photos" | "alt" | "photoFocus"> {
+  if (!cover?.image) return {};
+  return {
+    photos: { wide: cover.image, d1: null, d2: null, vibe: null },
+    alt: { wide: cover.alt, d1: "", d2: "", vibe: "" },
+    ...(cover.crop ? { photoFocus: cover.crop } : {}),
+  };
+}
 
 /**
  * Map a public `DirectoryCardDTO` onto the `DirectoryPlace` view model the grid
  * renders. The grid reads only card-level fields (name, cat, hood, desc, tint,
- * av, owned, member); the detail-only fields are filled with empty defaults
- * here because the detail page fetches its own richer payload via
+ * av, owned, member, cover photo); the detail-only fields are filled with empty
+ * defaults here because the detail page fetches its own richer payload via
  * `useDirectoryPlace` — these placeholder values are never rendered.
  */
 export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
@@ -40,6 +65,11 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     // card carries its state too. Absent on older payloads → left undefined
     // and read through `operatingStateOf`, which defaults to "open".
     operatingState: dto.operatingState,
+    // The owner's cover photo, so the card shows the wide shot they uploaded
+    // rather than the "Photo coming" frame. The card reads the `wide` slot, and
+    // the cover IS the first gallery entry (the wide shot), so it lands there;
+    // the remaining slots stay empty because a card payload never carries them.
+    ...cardCoverPhoto(dto.coverPhoto),
     // detail-only fields — unused by the grid, filled by the detail fetch
     tagline: "",
     pills: [],

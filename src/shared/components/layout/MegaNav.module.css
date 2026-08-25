@@ -65,6 +65,17 @@
   overflow: hidden;
   animation: megaPanelIn 0.22s var(--ease) both;
 }
+/* Only once the first measurement has landed, so the auto-to-pixels handover
+   on open can't animate. See useMeasuredContentHeight. */
+.panelSized {
+  transition: height 0.26s var(--ease);
+}
+
+/* Measured wrapper: its height is the panel's natural height, so it must never
+   be constrained by the explicit height written onto .panel. */
+.panelInner {
+  display: flow-root;
+}
 
 @keyframes megaPanelIn {
   from {
@@ -333,5 +344,8 @@
   .panel,
   .columns {
     animation: none;
+  }
+  .panelSized {
+    transition: none;
   }
 }

@@ -1,0 +1,137 @@
+/* The owner's banner reposition control (PersonaCoverReposition).
+
+   Everything here sits ON an uploaded photo, which is a ground we know nothing
+   about: it can be near-black or near-white, busy or flat. So every surface
+   gets the same two-value edge — a light hairline for dark grounds plus a dark
+   ring outside it for pale ones — over a plum scrim. `--plum-rgb` and
+   `--cream-rgb` are the two channel tokens that do NOT theme-switch, which is
+   what a fixed object over a photo needs: the control looks the same in light
+   and dark mode because the photo underneath it does. */
+
+.pill,
+.bar {
+  border-radius: 999px;
+  border: 1px solid rgba(var(--cream-rgb), 0.5);
+  background: rgba(var(--plum-rgb), 0.62);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  backdrop-filter: blur(10px) saturate(1.1);
+  /* Dark ring first (it paints outside the border), then the drop shadow. */
+  box-shadow:
+    0 0 0 1px rgba(var(--plum-rgb), 0.45),
+    0 4px 14px rgba(var(--plum-rgb), 0.35);
+  color: rgb(var(--cream-rgb));
+}
+
+/* ── The resting affordance ──────────────────────────────────────────────
+   Offset below `--pp-cover-rise-on`: on the real persona page the banner runs
+   up THROUGH the floating pill nav's band, so a pill pinned to the image's top
+   edge would sit under the nav. The variable is zero on every layout that
+   doesn't rise (sidebar, mobile app bar, the editor's docked preview), so this
+   reduces to a plain 12px inset there. */
+.pill {
+  position: absolute;
+  top: calc(var(--pp-cover-rise-on, 0px) + 12px);
+  right: 12px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    opacity 0.18s var(--ease),
+    background-color 0.18s var(--ease);
+}
+/* Sizes the react-icons <svg>, which inherits `1em`. */
+.pill svg {
+  font-size: 15px;
+}
+.pill:disabled {
+  cursor: not-allowed;
+  color: rgba(var(--cream-rgb), 0.6);
+}
+
+/* Hover-reveal only where hovering is a real thing. On touch there is no
+   hover state to discover the control through, so it stays visible. */
+@media (hover: hover) {
+  .pill {
+    opacity: 0;
+  }
+  :global(.pp-cover):hover .pill,
+  .pill:focus-visible {
+    opacity: 1;
+  }
+  .pill:hover:not(:disabled) {
+    background: rgba(var(--plum-rgb), 0.78);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
+}
+
+/* ── Reposition mode ─────────────────────────────────────────────────────
+   The overlay itself is inert; only the drag surface and the action bar take
+   the pointer, so nothing else in the band swallows a click. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.surface {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+  cursor: grab;
+  /* Without this a vertical drag on a phone scrolls the page instead. */
+  touch-action: none;
+  /* A faint scrim, so it reads as "this band is in an editing state" without
+     hiding the framing decision being made. */
+  background: rgba(var(--plum-rgb), 0.18);
+}
+.surface[data-dragging] {
+  cursor: grabbing;
+}
+.surface:focus-visible {
+  outline: 2px solid rgba(var(--cream-rgb), 0.9);
+  outline-offset: -4px;
+}
+
+.bar {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 4;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px 7px 16px;
+  max-width: calc(100% - 24px);
+}
+
+.hint {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: rgba(var(--cream-rgb), 0.85);
+  white-space: nowrap;
+}
+
+/* A phone's banner is a ~2:1 strip and the bar has two buttons to fit; the
+   hint is the part a small screen can do without. */
+@media (--mobile) {
+  .hint {
+    display: none;
+  }
+  .bar {
+    padding-left: 8px;
+  }
+}

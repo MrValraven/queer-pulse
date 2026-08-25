@@ -17,9 +17,14 @@ interface UseLisbonMapOptions {
   venues: VenueMarkerData[];
   selectedFreguesia: string | null;
   selectedVenueId: string | null;
+  /** The venue the sidebar is showing on its own, picked off the map. */
+  focusedVenueId: string | null;
   counts: Record<string, number>;
   markerLabels: MarkerLabels;
-  onSelectFreguesia: (name: string | null) => void;
+  /** The overlay only ever reports which parish was clicked, so this takes a
+   *  name: clearing the selection (clicking the highlighted parish again) is
+   *  the caller's decision to make. */
+  onSelectFreguesia: (name: string) => void;
   onSelectVenue: (venueId: string) => void;
 }
 
@@ -27,6 +32,7 @@ export function useLisbonMap({
   venues,
   selectedFreguesia,
   selectedVenueId,
+  focusedVenueId,
   counts,
   markerLabels,
   onSelectFreguesia,
@@ -41,6 +47,7 @@ export function useLisbonMap({
   const venuesRef = useRef(venues);
   const selectedFreguesiaRef = useRef(selectedFreguesia);
   const selectedVenueIdRef = useRef(selectedVenueId);
+  const focusedVenueIdRef = useRef(focusedVenueId);
   const markerLabelsRef = useRef(markerLabels);
   const selectFreguesiaRef = useRef(onSelectFreguesia);
   const selectVenueRef = useRef(onSelectVenue);
@@ -48,6 +55,7 @@ export function useLisbonMap({
     venuesRef.current = venues;
     selectedFreguesiaRef.current = selectedFreguesia;
     selectedVenueIdRef.current = selectedVenueId;
+    focusedVenueIdRef.current = focusedVenueId;
     markerLabelsRef.current = markerLabels;
     selectFreguesiaRef.current = onSelectFreguesia;
     selectVenueRef.current = onSelectVenue;
@@ -64,6 +72,9 @@ export function useLisbonMap({
           selectedFreguesiaRef.current ? [selectedFreguesiaRef.current] : [],
         ),
         onSelect: (name) => selectFreguesiaRef.current(name),
+        // Pins render for the selected parish only, so its count line would
+        // just double up on them.
+        hideSelectedCount: true,
       });
 
       const markerManager = createVenueMarkerManager(
@@ -115,10 +126,37 @@ export function useLisbonMap({
     const bounds = selectedFreguesia ? freguesiaBounds([selectedFreguesia]) : null;
     if (bounds) {
       map.fitBounds(bounds, { padding: 56, maxZoom: 15.5, duration: 700 });
-    } else if (!selectedFreguesia) {
+    } else if (!focusedVenueIdRef.current) {
+      // Picking a pin drops the parish filter, so this effect fires with
+      // nothing selected. Don't yank the camera back out to the whole city:
+      // the focus effect below is about to ease onto that pin instead.
       map.fitBounds(GREATER_LISBON_BOUNDS, { padding: 24, duration: 700 });
     }
   }, [selectedFreguesia, ready, mapRef]);
+
+  // Ease onto the focused pin, and back out to the city when focus is dropped
+  // (unless a parish is holding the camera).
+  const hadFocusRef = useRef(false);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const focused = focusedVenueId
+      ? venues.find((venue) => venue.id === focusedVenueId)
+      : undefined;
+    if (focused) {
+      hadFocusRef.current = true;
+      map.easeTo({
+        center: [focused.longitude, focused.latitude],
+        zoom: Math.max(map.getZoom(), 15),
+        duration: 700,
+      });
+    } else if (hadFocusRef.current) {
+      hadFocusRef.current = false;
+      if (!selectedFreguesia) {
+        map.fitBounds(GREATER_LISBON_BOUNDS, { padding: 24, duration: 700 });
+      }
+    }
+  }, [focusedVenueId, venues, selectedFreguesia, ready, mapRef]);
 
   // Reflect the selected venue pin.
   useEffect(() => {

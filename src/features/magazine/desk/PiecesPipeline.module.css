@@ -14,7 +14,7 @@
 .phead,
 .prow {
   display: grid;
-  grid-template-columns: minmax(0, 2.5fr) 118px 130px 96px 96px;
+  grid-template-columns: 22px minmax(0, 2.5fr) 118px 130px 96px 96px;
   gap: var(--gap-sm);
   align-items: center;
   padding: var(--gap-sm) var(--gap-grid);
@@ -42,12 +42,37 @@
 }
 
 .prow:hover,
+.prow:focus-visible,
 .prow[data-focus="true"] {
   background: var(--wash);
 }
 
 .prow[data-focus="true"] {
   box-shadow: inset 3px 0 0 var(--accent);
+}
+
+/* Selected rows stay tinted whether or not they are hovered, so a bulk
+   selection reads as a set rather than as one hovered row at a time. */
+.prow[data-selected="true"] {
+  background: var(--wash);
+}
+
+.selectBox {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+  color: var(--paper);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.selectBox[data-on="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
 }
 
 .titleCell {
@@ -130,7 +155,11 @@
    hidden — they're pulled out of grid flow and overlaid on hover/focus,
    on an opaque surface so they cleanly cover the stage/due text underneath
    instead of drawing over it (the ghost buttons' own fill is transparent,
-   so a translucent wash tint here would still let that text show through). */
+   so a translucent wash tint here would still let that text show through).
+   That surface repaints the row's own hover colour — `--wash` is a 5%-alpha
+   tint, so it's layered over `--paper` as a flat gradient rather than set as
+   the background colour, giving an opaque match for the hovered row instead
+   of a pale patch over the last two columns. */
 .rowActs {
   position: absolute;
   top: 0;
@@ -139,7 +168,8 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  background: var(--paper);
+  padding-right: var(--gap-grid);
+  background: linear-gradient(var(--wash), var(--wash)) var(--paper);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-fast) var(--ease);
@@ -165,8 +195,14 @@
   }
 
   .prow {
-    grid-template-columns: 1fr;
+    grid-template-columns: 22px 1fr;
     gap: 10px;
+  }
+
+  /* Stacked card: the checkbox keeps its own narrow first column, every
+     other cell spans the full width beneath it. */
+  .prow > *:not(.selectBox) {
+    grid-column: 2;
   }
 
   /* No hover on touch — the stacked card shows its actions in normal flow,
@@ -174,6 +210,7 @@
   .rowActs {
     position: static;
     flex-wrap: wrap;
+    padding-right: 0;
     background: none;
     opacity: 1;
     pointer-events: auto;

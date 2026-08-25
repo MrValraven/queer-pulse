@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MagazineDeskShell, useMagazineShellOverlay } from "../../shared/components/layout";
@@ -6,23 +6,28 @@ import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { DEMO_SECTIONS, DEMO_STAGES, type Issue } from "./data/desk.data";
+import { DEMO_SECTIONS, DEMO_STAGES } from "./data/desk.data";
 import { usePieces } from "./api/usePieces";
 import { usePitches } from "./api/usePitches";
 import { useDeskSummary } from "./api/useDeskSummary";
 import { useMagazineEditors } from "./api/useMagazineEditors";
 import { useCurrentIssue } from "./api/useCurrentIssue";
+import { useCreateIssue, useDeskIssues } from "./api/useDeskIssues";
 import { usePieceMutations } from "./api/usePieceMutations";
 import { usePitchMutations } from "./api/usePitchMutations";
 import type { DeskLayout } from "./desk/DeskHeader";
 import { useDeskState } from "./desk/useDeskState";
 import { useDeskTracks } from "./desk/useDeskTracks";
+import { useDeskIssueSelection } from "./desk/useDeskIssueSelection";
+import { useDeskPieceSelection } from "./desk/useDeskPieceSelection";
+import { useDeskAssignment } from "./desk/useDeskAssignment";
 import { useDeskPieceActions } from "./desk/useDeskPieceActions";
 import { useDeskKeyboard } from "./desk/useDeskKeyboard";
 import { useDeskModals } from "./desk/useDeskModals";
 import { usePitchTriageActions } from "./desk/usePitchTriageActions";
 import { DeskView } from "./desk/DeskView";
 import { DeskModals } from "./desk/DeskModals";
+import { DeskIssueModals } from "./desk/DeskIssueModals";
 
 /**
  * The magazine editor desk. Thin by design: owns the page shell, dual-mode
@@ -53,24 +58,18 @@ export function EditorDashboardPage() {
   // sidebar's editor-load names — real names in live mode, not editorIds.
   const { editors } = useMagazineEditors();
 
-  // Live mode's current-issue lookup is `null` until an issue exists — keep
-  // the honest-blank header (no fabricated theme/dates, no Produce button)
-  // in that case rather than deriving a fake issue from the piece count.
+  // Every issue, for the header switcher and the new-issue modal's suggested
+  // number. `useCurrentIssue` is now only the DEFAULT selection: which issue
+  // the desk works on is the editor's choice (`?issue=`), so an older issue is
+  // reachable and a newly created low-numbered issue is not stranded.
+  const { issues } = useDeskIssues();
   const { issue: currentIssue } = useCurrentIssue();
-  const issue: Issue = useMemo(
-    () =>
-      currentIssue ?? {
-        id: "",
-        number: "",
-        theme: "",
-        closes: "",
-        publishes: "",
-        daysLeft: 0,
-        filled: 0,
-        slots: 0,
-      },
-    [currentIssue],
-  );
+  const { deskIssue: issue, selectIssue } = useDeskIssueSelection({
+    issues,
+    currentIssue,
+    searchParams,
+    setSearchParams,
+  });
 
   // The `editorId` stamped on new commissions must be a real user UUID. In live
   // mode that's the signed-in editor (this desk is `magazine_editor`-guarded);
@@ -81,9 +80,9 @@ export function EditorDashboardPage() {
   const [meState, setMeState] = useState("");
   const activeMe = meState || (demoMode ? editors[0]?.id : user?.id) || "";
 
-  // The desk splits into two editorial tracks (Highlights vs. Issue). The
-  // partition, the URL-persisted active track, and the cross-track reassignment
-  // all live in `useDeskTracks`; only the active track feeds the existing
+  // The desk splits into two tracks (Unassigned vs. the selected issue). The
+  // partition, the URL-persisted active track, and the assignment handler all
+  // live in `useDeskTracks`; only the active track feeds the existing
   // filter/sort/saved-view pipeline (`useDeskState`).
   const tracks = useDeskTracks({
     pieces,
@@ -95,8 +94,20 @@ export function EditorDashboardPage() {
     translate: t,
   });
   const deskState = useDeskState(tracks.activePieces, activeMe);
+  const pieceSelection = useDeskPieceSelection(deskState.visiblePieces);
 
   const [layout, setLayout] = useState<DeskLayout>("list");
+
+  const [isNewIssueOpen, setIsNewIssueOpen] = useState(false);
+  const createIssue = useCreateIssue();
+  const assignment = useDeskAssignment({
+    pieceMutations,
+    pieceSelection,
+    assignPieceToIssue: tracks.assignPieceToIssue,
+    pitchSelection: deskState,
+    showToast,
+    translate: t,
+  });
 
   const modals = useDeskModals({
     activeMe,
@@ -154,10 +165,13 @@ export function EditorDashboardPage() {
         onRetry={() => void queryClient.invalidateQueries({ queryKey: ["magazine-pieces"] })}
         isEmpty={isEmpty}
         issue={issue}
+        issues={issues}
+        onSelectIssue={selectIssue}
+        onNewIssue={() => setIsNewIssueOpen(true)}
         track={tracks.track}
         onTrack={tracks.setTrack}
         hasCurrentIssue={tracks.hasCurrentIssue}
-        highlightsCount={tracks.highlightsPieces.length}
+        unassignedCount={tracks.unassignedPieces.length}
         issueCount={tracks.issuePieces.length}
         editors={editors}
         me={activeMe}
@@ -191,11 +205,17 @@ export function EditorDashboardPage() {
         onEditPiece={pieceActions.editPiece}
         onChasePiece={modals.openChase}
         onHandoffPiece={modals.openHandoff}
-        onReassignPiece={tracks.reassignPiece}
+        onAssignPieceIssue={assignment.openForPiece}
+        selectedPieceIds={pieceSelection.selectedPieceIds}
+        areAllPiecesSelected={pieceSelection.areAllSelected}
+        onTogglePieceSelect={assignment.togglePieceSelect}
+        onToggleAllPieceSelect={assignment.toggleAllPieceSelect}
+        onBulkAssignIssue={() => assignment.openForSelection(deskState.visiblePieces)}
+        onClearPieceSelection={pieceSelection.clearPieceSelection}
         onMovePiece={pieceActions.movePiece}
         onCommissionSection={modals.openCommissionForSection}
         selectedPitchIds={deskState.selected}
-        onTogglePitchSelect={deskState.toggleSelect}
+        onTogglePitchSelect={assignment.togglePitchSelect}
         onCommissionPitch={modals.openCommissionFromPitch}
         onMaybePitch={triage.maybe}
         onPassPitch={modals.openPassFromPitch}
@@ -217,6 +237,27 @@ export function EditorDashboardPage() {
         onCommission={modals.submitCommission}
         onPass={modals.submitPass}
         onHandoff={modals.confirmHandoff}
+      />
+
+      <DeskIssueModals
+        assignTargets={assignment.assignTargets}
+        onCloseAssign={assignment.close}
+        onAssign={assignment.submit}
+        isNewIssueOpen={isNewIssueOpen}
+        onCloseNewIssue={() => setIsNewIssueOpen(false)}
+        isCreatingIssue={createIssue.isPending}
+        issues={issues}
+        onCreateIssue={async (body) => {
+          const created = await createIssue.mutateAsync(body);
+          // Land on the issue that was just made — creating one and then still
+          // looking at the previous issue is the wrong default.
+          selectIssue(created.number);
+          showToast(
+            t("magazine:desk.newIssue.createdToast", { number: created.number }),
+            "success",
+          );
+          return created;
+        }}
       />
     </MagazineDeskShell>
   );

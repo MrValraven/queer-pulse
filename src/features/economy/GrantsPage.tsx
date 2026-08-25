@@ -45,7 +45,7 @@ export function GrantsPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <Reveal as="div" className={styles.eye}>
             {t("economy:grants.hero.eyebrow")}
@@ -76,7 +76,7 @@ export function GrantsPage() {
             </div>
           )}
         </div>
-      </div>
+      </header>
 
       {demoMode && (
         <div className={styles.bar}>

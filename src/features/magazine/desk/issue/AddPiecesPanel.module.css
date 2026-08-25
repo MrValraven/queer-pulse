@@ -1,0 +1,120 @@
+/* Issue production — "Add pieces" pool panel (`AddPiecesPanel.tsx`). Sits
+   under the running order on the Running order tab. */
+
+.panel {
+  margin-top: var(--gap-grid);
+  padding: var(--gap-grid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+.sub {
+  margin-top: 3px;
+  color: var(--ink-40);
+  font-size: 13px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.row:hover {
+  background: var(--wash);
+}
+
+.row[data-selected="true"] {
+  border-color: var(--accent);
+  background: var(--wash);
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--paper);
+  font-size: 11px;
+}
+
+.mark[data-on="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.rowText {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rowTitle {
+  overflow: hidden;
+  color: var(--text-strong);
+  font-family: var(--serif);
+  font-size: 15.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowSub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-40);
+  font-size: 12.5px;
+}
+
+.noMatches {
+  padding: 10px 2px;
+  color: var(--ink-40);
+  font-size: 13px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}

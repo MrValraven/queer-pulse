@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiArrowLeft } from "react-icons/fi";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
@@ -9,7 +10,11 @@ import { formatDate } from "../../shared/lib/date";
 import { routes } from "../../app/routeMap";
 import { useIssueProduction } from "./api/useIssueProduction";
 import { useIssueMutations } from "./api/useIssueMutations";
+import { usePieces } from "./api/usePieces";
+import { usePieceMutations } from "./api/usePieceMutations";
+import { useDeskIssues } from "./api/useDeskIssues";
 import { RunningOrderTab } from "./desk/issue/RunningOrderTab";
+import { AddPiecesPanel } from "./desk/issue/AddPiecesPanel";
 import { CoverContentsTab } from "./desk/issue/CoverContentsTab";
 import { DigestSocialTab } from "./desk/issue/DigestSocialTab";
 import { ArchiveTab } from "./desk/issue/ArchiveTab";
@@ -35,8 +40,21 @@ export function IssueProductionPage() {
     useIssueMutations(number!);
   const { showToast } = useToast();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [tab, setTab] = useState<IssueTabId>("runningOrder");
   const [shipModalOpen, setShipModalOpen] = useState(false);
+
+  // The unfiled pool the "Add pieces" panel pulls from. `usePieces` is the
+  // desk's own list hook, so this shares its `["magazine-pieces"]` cache
+  // rather than opening a second query — assigning here invalidates that key
+  // and the desk stays in step.
+  const { pieces } = usePieces({});
+  const { issues } = useDeskIssues();
+  const { assignIssue } = usePieceMutations();
+  const unassignedPieces = pieces.filter((piece) => piece.issueId === null);
+  // `useIssueProduction` is keyed by display number; assignment needs the
+  // issue's uuid, which only the switcher list carries.
+  const issueId = issues.find((entry) => entry.number === number)?.id ?? null;
 
   if (isLoading) {
     return (
@@ -84,15 +102,48 @@ export function IssueProductionPage() {
     switch (tab) {
       case "runningOrder":
         return (
-          <RunningOrderTab
-            runOrder={production.runOrder}
-            onReorder={(items) =>
-              saveRunOrder.mutate({
-                items: items.map((entry) => ({ pieceId: entry.piece.id, pages: entry.pages })),
-              })
-            }
-            onOpen={(piece) => void navigate(routes.magazinePiece.replace(":id", piece.id))}
-          />
+          <>
+            <RunningOrderTab
+              runOrder={production.runOrder}
+              onReorder={(items) =>
+                saveRunOrder.mutate({
+                  items: items.map((entry) => ({ pieceId: entry.piece.id, pages: entry.pages })),
+                })
+              }
+              onOpen={(piece) => void navigate(routes.magazinePiece.replace(":id", piece.id))}
+            />
+            {issueId && (
+              <AddPiecesPanel
+                unassignedPieces={unassignedPieces}
+                issueNumber={production.number}
+                isSaving={assignIssue.isPending}
+                onAdd={(pieceIds) =>
+                  assignIssue.mutate(
+                    { pieceIds, issueId },
+                    {
+                      onSuccess: (result) => {
+                        // The production record counts and orders by assigned
+                        // pieces, so it has to refetch alongside the desk list
+                        // the mutation already invalidates.
+                        void queryClient.invalidateQueries({
+                          queryKey: ["magazine-issue-production", production.number],
+                        });
+                        showToast(
+                          t("magazine:issue.addPieces.addedToast", {
+                            count: result.assigned,
+                            number: production.number,
+                          }),
+                          "success",
+                        );
+                      },
+                      onError: () =>
+                        showToast(t("magazine:issue.addPieces.failedToast"), "error"),
+                    },
+                  )
+                }
+              />
+            )}
+          </>
         );
       case "coverContents":
         return (

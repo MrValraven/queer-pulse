@@ -37,6 +37,13 @@
      longer each hardcode it. nav-mode.css (sidebar) and standalone.css (mobile
      app bar) reconcile against this same value with a negative margin-top. */
   --nav-band: calc(var(--nav-top) + var(--nav-height));
+  /* How much of the viewport top is occupied by fixed nav chrome — i.e. what an
+     in-page `position: sticky` bar must sit below so the nav doesn't cover it.
+     Defaults to the floating pill's band; the two alternate nav layouts
+     override it in place (nav-mode.css: sidebar rail, so nothing is at the top;
+     standalone.css: the slimmer mobile app bar). Sticky page bars read this
+     instead of `top: 0`, which parks them underneath the nav. */
+  --sticky-top: var(--nav-band);
   /* Installed-PWA top app bar. Published here so Navbar.module.css and
      standalone.css read one value. */
   --app-bar-h: 48px;

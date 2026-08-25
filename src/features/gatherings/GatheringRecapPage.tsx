@@ -96,7 +96,7 @@ function LiveGatheringRecap({ gathering }: { gathering: GatheringDetail }) {
   const canUpload = Boolean(gathering.viewerIsOrganizer);
   return (
     <AppShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.eyebrow}>{t("gatherings:recap.eyebrow")}</div>
           <div className={styles.title}>{gathering.title}</div>
@@ -110,7 +110,7 @@ function LiveGatheringRecap({ gathering }: { gathering: GatheringDetail }) {
             · {gathering.hood}
           </div>
         </div>
-      </div>
+      </header>
       <div className={styles.body}>
         <div className="wrap">
           <GatheringPhotosLive slug={gathering.slug} canUpload={canUpload} />
@@ -212,7 +212,7 @@ function DemoGatheringRecap() {
 
   return (
     <AppShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.eyebrow}>{t("gatherings:recap.eyebrow")}</div>
           <div className={styles.title}>
@@ -234,7 +234,7 @@ function DemoGatheringRecap() {
             })}
           </div>
         </div>
-      </div>
+      </header>
 
       <div className={styles.body}>
         <div className="wrap">

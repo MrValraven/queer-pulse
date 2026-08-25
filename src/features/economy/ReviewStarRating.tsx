@@ -1,6 +1,13 @@
+import {
+  useState,
+  type FocusEvent,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import { FiStar } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./WriteReviewModal.module.css";
+
+const STAR_VALUES = [1, 2, 3, 4, 5];
 
 /** Star rating picker, 1–5. Shared across the company-review modals. */
 export function ReviewStarRating({
@@ -11,13 +18,34 @@ export function ReviewStarRating({
   onChange: (rating: number) => void;
 }) {
   const { t } = useTranslation();
+  const [hoveredRating, setHoveredRating] = useState(0);
+  /* What the row draws: the rating under the cursor while one is being
+     considered, the committed one otherwise. `aria-checked` stays on the
+     committed value - a preview is not a choice. */
+  const shownRating = hoveredRating || value;
+
+  /* The preview is dropped only when the pointer or focus leaves the whole
+     row. Clearing on each button's own exit fires before the next button's
+     enter, so sweeping across the picker flashed empty between every pair. */
+  const handleStarExit = (
+    event: ReactMouseEvent<HTMLButtonElement> | FocusEvent<HTMLButtonElement>,
+  ) => {
+    const next = event.relatedTarget;
+    if (
+      next instanceof Node &&
+      event.currentTarget.parentElement?.contains(next)
+    )
+      return;
+    setHoveredRating(0);
+  };
+
   return (
     <div
       className={styles.stars}
       role="radiogroup"
       aria-label={t("economy:companyReview.overallRatingAriaLabel")}
     >
-      {[1, 2, 3, 4, 5].map((starValue) => (
+      {STAR_VALUES.map((starValue) => (
         <button
           key={starValue}
           type="button"
@@ -26,9 +54,13 @@ export function ReviewStarRating({
           aria-label={t("economy:companyReview.starAriaLabel", {
             count: starValue,
           })}
-          className={[styles.star, starValue <= value && styles.starOn]
+          className={[styles.star, starValue <= shownRating && styles.starOn]
             .filter(Boolean)
             .join(" ")}
+          onMouseEnter={() => setHoveredRating(starValue)}
+          onMouseLeave={handleStarExit}
+          onFocus={() => setHoveredRating(starValue)}
+          onBlur={handleStarExit}
           onClick={() => onChange(starValue)}
         >
           <FiStar size={26} aria-hidden />

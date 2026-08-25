@@ -32,6 +32,12 @@
        Mirrors the `main[data-page-main]` padding rule below, which already
        gets this right. */
     --bottom-inset: calc(var(--tab-bar-h) + env(safe-area-inset-bottom));
+
+    /* On mobile the floating pill is swapped for the slim `.appBar` strip
+       (Navbar.module.css), which is shorter than the reserved nav band — so a
+       sticky in-page bar clears the strip's real height (plus the notch inset)
+       rather than the desktop band, which would leave a dead gap. */
+    --sticky-top: calc(var(--app-bar-h) + env(safe-area-inset-top));
   }
 
   /* Inside a conversation on a phone the bottom tab bar is hidden (see

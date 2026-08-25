@@ -2,9 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import {
+  assignPiecesToIssue as sendAssignPiecesToIssue,
   createPiece,
   deletePiece,
   updatePiece as sendUpdatePiece,
+  type AssignIssueResultDto,
   type CreatePieceDto,
   type PieceStage,
   type UpdatePieceDto,
@@ -114,6 +116,35 @@ export function usePieceMutations() {
     onSuccess: (result) => invalidateDesk(result.id),
   });
 
+  /** PATCH /magazine/admin/pieces/assign-issue — move a whole selection onto
+   *  one issue (or detach it with `issueId: null`) in a single request.
+   *
+   *  Silent by contract (`meta.silentError`): the bulk bar owns the toast so
+   *  it can report how many pieces actually moved and name the target issue.
+   *  Demo mode patches `DEMO_PIECES` the same way `updatePiece` does, so the
+   *  selection really does hop tracks with no backend. */
+  const assignIssue = useMutation<
+    AssignIssueResultDto,
+    Error,
+    { pieceIds: string[]; issueId: string | null }
+  >({
+    meta: { silentError: true },
+    mutationFn: async ({ pieceIds, issueId }) => {
+      if (demoMode) {
+        const pieceIdSet = new Set(pieceIds);
+        let assigned = 0;
+        DEMO_PIECES.forEach((piece, index) => {
+          if (!pieceIdSet.has(piece.id) || piece.issueId === issueId) return;
+          DEMO_PIECES[index] = { ...piece, issueId };
+          assigned += 1;
+        });
+        return { assigned, issueNumber: null };
+      }
+      return sendAssignPiecesToIssue({ pieceIds, issueId });
+    },
+    onSuccess: () => invalidateDesk(),
+  });
+
   /** DELETE /magazine/admin/pieces/:id — remove a piece from the desk. */
   const remove = useMutation<void, Error, string>({
     mutationFn: async (id) => {
@@ -126,5 +157,5 @@ export function usePieceMutations() {
     onSuccess: (_result, pieceId) => invalidateDesk(pieceId),
   });
 
-  return { commission, updatePiece, moveStage, assign, remove };
+  return { commission, updatePiece, moveStage, assign, assignIssue, remove };
 }

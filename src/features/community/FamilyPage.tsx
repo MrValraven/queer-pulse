@@ -52,7 +52,7 @@ export function FamilyPage() {
 
   return (
     <PageShell>
-      <div className={styles.hero}>
+      <header className={styles.hero} data-plum>
         <div className="wrap">
           <div className={styles.cat}>{t("community:family.hero.cat")}</div>
           <h1>
@@ -67,7 +67,7 @@ export function FamilyPage() {
             {t("community:family.hero.legalNote")}
           </div>
         </div>
-      </div>
+      </header>
 
       <section className={styles.sitSection}>
         <div className="wrap">
