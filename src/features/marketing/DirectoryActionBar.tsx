@@ -6,8 +6,12 @@ import { useShareLink } from "../../shared/hooks";
 import { useAuth } from "../../app/providers/authContext";
 import { useSaved } from "../../app/providers/useSaved";
 import { businessPath, routes } from "../../app/routeMap";
-import { type DirectoryPlace } from "./directoryPlaces";
-import { BUSINESS_COORDS } from "./businessCoords";
+import {
+  isPlaceGone,
+  operatingStateOf,
+  type DirectoryPlace,
+} from "./directoryPlaces";
+import { placeCoordinates } from "./businessCoords";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -16,12 +20,9 @@ interface Props {
   preview?: boolean;
 }
 
-/** Same coords fallback order DirectorySpaceAside uses for its map card. */
+/** Same coords fallback order the map card and the nearby strip use. */
 function directionsHref(place: DirectoryPlace): string {
-  const coords =
-    place.latitude != null && place.longitude != null
-      ? { latitude: place.latitude, longitude: place.longitude }
-      : BUSINESS_COORDS[place.slug];
+  const coords = placeCoordinates(place);
   return coords
     ? `https://www.google.com/maps/dir/?api=1&destination=${coords.latitude},${coords.longitude}`
     : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place.address)}`;
@@ -31,6 +32,21 @@ function directionsHref(place: DirectoryPlace): string {
  * Primary venue actions — Directions, Call, Share, Save — the things a top
  * business page leads with. Sits above the map card in the aside column and
  * collapses to a sticky bottom bar on mobile for one-handed reach.
+ *
+ * Operating state gates two of them, on different grounds.
+ *
+ * Directions goes away for a `permanently_closed` or `moved` business: the
+ * address on this page no longer leads anywhere worth going, and routing
+ * somebody across the city to a shuttered door is the exact failure this
+ * gating exists to prevent. A `temporarily_closed` business keeps Directions,
+ * because it is still that place at that address and will open again.
+ *
+ * Call goes away only for a `permanently_closed` business, where the line is
+ * as dead as the door. A moved business kept trading and almost certainly
+ * kept its number, so taking the phone away would help nobody.
+ *
+ * Share and Save survive every state: the page remains a record worth passing
+ * on, and stripping Save would strand anybody who had already saved the place.
  *
  * Preview handling: the admin moderation drawer reuses this whole page body
  * (`DirectorySpaceView`) to show what a listing looks like live. None of
@@ -53,6 +69,10 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
 
   if (preview) return null;
 
+  // "Gone" = permanently closed or moved: whatever else is still true, the
+  // address on this page is no longer where the business is.
+  const isGone = isPlaceGone(place);
+  const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
   const savedId = `listing:${place.slug}`;
   const saved = isSaved(savedId);
 
@@ -90,17 +110,19 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
 
   return (
     <div className={s.actionBar}>
-      <Button
-        variant="primary"
-        className={s.actionBarBtn}
-        href={directionsHref(place)}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <FiNavigation aria-hidden />
-        {t("marketing:directory.detail.action.directions")}
-      </Button>
-      {place.social.phone && (
+      {!isGone && (
+        <Button
+          variant="primary"
+          className={s.actionBarBtn}
+          href={directionsHref(place)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FiNavigation aria-hidden />
+          {t("marketing:directory.detail.action.directions")}
+        </Button>
+      )}
+      {!isPermanentlyClosed && place.social.phone && (
         <Button
           variant="ghost"
           className={s.actionBarBtn}
@@ -131,7 +153,10 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
               : t("marketing:directory.detail.action.save")
           }
         >
-          <FiHeart aria-hidden style={{ fill: saved ? "currentColor" : "none" }} />
+          <FiHeart
+            aria-hidden
+            style={{ fill: saved ? "currentColor" : "none" }}
+          />
           {saved
             ? t("marketing:directory.detail.action.saved")
             : t("marketing:directory.detail.action.save")}

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { emptyHours, hoursForPayload } from "./listBusiness.data";
 import { dtoToDraft } from "./dtoToDraft";
 import type { ListingDTO } from "./api/listings.api";
 
@@ -14,8 +15,15 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
       lastName: "",
     },
     createdAt: "2026-07-01T00:00:00.000Z",
+    operatingState: {
+      state: "open",
+      note: null,
+      setAt: null,
+      movedToAddress: null,
+    },
+    movedToListingId: null,
+    detailsConfirmedAt: null,
     path: "claim",
-    verify: "",
     name: "Atelier Pulso",
     cats: ["Studio"],
     hood: "Arroios",
@@ -45,7 +53,6 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
     visibility: "public",
     linkToProfile: true,
     contactEmail: "",
-    notify: [],
     consentOuting: true,
     consentGuide: true,
     queerOwnedVerified: false,
@@ -74,5 +81,33 @@ describe("dtoToDraft", () => {
     expect(draft.slug).toBeUndefined();
     expect(draft.submittedBy).toBeUndefined();
     expect(draft.createdAt).toBeUndefined();
+  });
+});
+
+describe("hoursForPayload", () => {
+  it("empties a closed day's intervals, which the API rejects otherwise", () => {
+    const payload = hoursForPayload({
+      ...emptyHours(),
+      Mon: { open: false, intervals: [{ from: "09:00", to: "18:00" }] },
+    });
+    expect(payload.Mon).toEqual({ open: false, intervals: [] });
+  });
+
+  it("leaves an open day's intervals alone", () => {
+    const payload = hoursForPayload({
+      ...emptyHours(),
+      Fri: { open: true, intervals: [{ from: "18:00", to: "02:00" }] },
+    });
+    expect(payload.Fri).toEqual({
+      open: true,
+      intervals: [{ from: "18:00", to: "02:00" }],
+    });
+  });
+
+  it("empties every closed day a blank draft starts with", () => {
+    const payload = hoursForPayload(emptyHours());
+    for (const day of Object.values(payload)) {
+      expect(day.intervals).toEqual([]);
+    }
   });
 });

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiAlertCircle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
@@ -71,6 +72,17 @@ export function DirectoryReviewReply({ review, ownerRef, slug }: Props) {
             </span>
           </div>
           <div className={s.ownerReplyText}>{review.ownerReply.text}</div>
+          {/* Server-precomputed (`isEditedAfterOwnerReply`), never re-derived
+              here from timestamps: the reviewer changed their words after this
+              reply went up, so the reply may be answering text that is no
+              longer on the page. Said plainly, next to the reply, so a reader
+              can weigh it without blaming either side. */}
+          {review.isEditedAfterOwnerReply && (
+            <p className={s.ownerReplyStale}>
+              <FiAlertCircle aria-hidden />
+              {t("marketing:directory.detail.reply.editedAfterReply")}
+            </p>
+          )}
         </div>
       )}
 

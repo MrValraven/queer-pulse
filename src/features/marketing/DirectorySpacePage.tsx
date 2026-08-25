@@ -8,6 +8,7 @@ import { useDirectoryPlace } from "./api/useDirectory";
 import { useDirectoryListings } from "./listBusiness/api/useDirectoryListings";
 import { routes } from "../../app/routeMap";
 import { DirectorySpaceView } from "./DirectorySpaceView";
+import { DirectoryNearbyPlaces } from "./DirectoryNearbyPlaces";
 import { DirectoryRelatedPlaces } from "./DirectoryRelatedPlaces";
 import { categoryLabel, normalizeCategory } from "./localPlaces";
 import { PageMeta } from "../../shared/seo/PageMeta";
@@ -138,6 +139,11 @@ export function DirectorySpacePage() {
         </div>
       </div>
       <DirectorySpaceView place={place} ownerRef={owned?.ref} />
+      {/* Walk-able first, then the wider "more like this" row: an evening is
+          usually planned by geography before category. Both sit outside
+          `DirectorySpaceView`, so the moderation preview keeps showing only
+          the listing under review. */}
+      <DirectoryNearbyPlaces place={place} />
       <DirectoryRelatedPlaces place={place} />
     </PageShell>
   );

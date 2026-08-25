@@ -1,7 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import { resolveAvatarSrc } from "../../lib/avatarUrl";
 import { useTranslation } from "../../i18n/useTranslation";
-import { cropToImgStyle, type CropRect } from "./cropGeometry";
+import { cropFocalPosition, cropToImgStyle, type CropRect } from "./cropGeometry";
 import styles from "./ImageSlot.module.css";
 
 export type ImageSlotTint = "default" | "coral" | "jade" | "plum";
@@ -38,6 +38,13 @@ interface ImageSlotProps {
    *  images; only pass it when the caller actually has a saved crop. Absent =
    *  today's unchanged `object-fit: cover` rendering. */
   crop?: CropRect;
+  /** Saved crop treated as a FOCAL REGION rather than an exact frame: the image
+   *  still `object-fit: cover`s the slot, but the visible window is panned
+   *  towards the centre of what the member framed. Use this (not `crop`) for
+   *  any slot whose box aspect doesn't match the crop's — a full-bleed banner,
+   *  a card's cover strip — where `crop` would distort. Ignored when `crop` is
+   *  also passed, which is the stricter, exact-frame rendering. */
+  focus?: CropRect;
 }
 
 /**
@@ -61,6 +68,7 @@ export function ImageSlot({
   loading = "lazy",
   fetchPriority,
   crop,
+  focus,
 }: ImageSlotProps) {
   const { t } = useTranslation();
   // Tracks the most recent `src` that failed to load (a 404/broken hotlink),
@@ -78,7 +86,11 @@ export function ImageSlot({
   // all, i.e. today's `.slot img { object-fit: cover }` behavior.
   const cropImgStyle: CSSProperties | undefined = crop
     ? { position: "absolute", objectFit: "fill", ...cropToImgStyle(crop) }
-    : undefined;
+    : focus
+      ? // Focal mode keeps the stylesheet's `object-fit: cover` and only moves
+        // WHICH part of the image survives the crop the box forces.
+        { objectPosition: cropFocalPosition(focus) }
+      : undefined;
   const borderRadius = shape === "circle" ? "50%" : radius;
   // Only Google/OAuth avatar URLs are rewritten (for a crisp 2× crop); every
   // other src — Unsplash covers, magazine art — passes through unchanged.

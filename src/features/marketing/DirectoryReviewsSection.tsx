@@ -1,17 +1,13 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { Avatar } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { DirectoryPlace } from "./directoryPlaces";
 import { DirectoryRatingDistribution } from "./DirectoryRatingDistribution";
+import { DirectoryReviewCard } from "./DirectoryReviewCard";
 import { DirectoryReviewControls } from "./DirectoryReviewControls";
 import { DirectoryReviewForm } from "./DirectoryReviewForm";
-import { DirectoryReviewReply } from "./DirectoryReviewReply";
-import { DirectoryReviewReportControl } from "./DirectoryReviewReportControl";
 import type { ReviewSort, ReviewStarFilter } from "./reviewSort";
 import { countByStar, sortAndFilterReviews } from "./reviewSort";
-import { Stars } from "./DirectoryStars";
 import s from "./DirectorySpacePage.module.css";
 
 /** Below this many reviews, sort/filter controls would sit over a couple of
@@ -20,14 +16,15 @@ import s from "./DirectorySpacePage.module.css";
  *  off in practice. */
 const MIN_REVIEWS_FOR_CONTROLS = 4;
 
-/** Full-sentence sub-line per active sort mode, shown instead of the static
- *  `reviewsSub` copy once the controls are visible — otherwise picking
- *  "Highest rated" left the line reading "Sorted by most helpful", which
- *  contradicted the list below it. */
+/** Full-sentence sub-line per active sort mode, so the line above the list
+ *  always describes the order actually on screen. The default mode's line is
+ *  also the one shown when the list is too short for the controls, since that
+ *  short list is in the same newest-first order. */
 const SORTED_BY_KEYS: Record<ReviewSort, string> = {
-  helpful: "marketing:directory.detail.reviews.sortedByHelpful",
+  newest: "marketing:directory.detail.reviews.sortedByNewest",
   highest: "marketing:directory.detail.reviews.sortedByHighest",
   lowest: "marketing:directory.detail.reviews.sortedByLowest",
+  helpful: "marketing:directory.detail.reviews.sortedByHelpful",
 };
 
 interface Props {
@@ -42,9 +39,9 @@ interface Props {
 
 /**
  * The directory detail page's "Member reviews" section: the rating
- * distribution, the write-a-review form, and every review row (each with its
- * owner-reply block/composer via `DirectoryReviewReply`). Extracted out of
- * `DirectorySpaceMain` to keep that component under the 200-line limit.
+ * distribution, the write-a-review form, and every review row (each rendered
+ * by `DirectoryReviewCard`, which owns the review's own dates, photo, helpful
+ * vote, report control, author edit and owner reply).
  */
 export function DirectoryReviewsSection({
   place,
@@ -52,7 +49,7 @@ export function DirectoryReviewsSection({
   ownerRef,
 }: Props) {
   const { t } = useTranslation();
-  const [sort, setSort] = useState<ReviewSort>("helpful");
+  const [sort, setSort] = useState<ReviewSort>("newest");
   const [starFilter, setStarFilter] = useState<ReviewStarFilter>("all");
 
   // Below the threshold, skip the controls (and the filter/sort work) entirely
@@ -67,10 +64,7 @@ export function DirectoryReviewsSection({
     [place.reviews, sort, starFilter, showControls],
   );
 
-  const starCounts = useMemo(
-    () => countByStar(place.reviews),
-    [place.reviews],
-  );
+  const starCounts = useMemo(() => countByStar(place.reviews), [place.reviews]);
 
   return (
     <section className={s.sec}>
@@ -87,7 +81,7 @@ export function DirectoryReviewsSection({
             ? "marketing:directory.detail.reviews.emptySub"
             : showControls
               ? SORTED_BY_KEYS[sort]
-              : "marketing:directory.detail.reviewsSub",
+              : SORTED_BY_KEYS.newest,
         )}
       </p>
       {place.reviews.length > 0 && (
@@ -120,69 +114,16 @@ export function DirectoryReviewsSection({
           </button>
         </p>
       ) : (
-        displayedReviews.map((review) => {
-          // Avatar + name/byline. The name label is visible beside the avatar,
-          // so `Avatar` gets no `name` (avoids a redundant SR announcement).
-          const author = (
-            <>
-              <Avatar
-                initials={review.initials}
-                tint={review.tint}
-                src={review.avatarUrl ?? undefined}
-                size={36}
-              />
-              <div>
-                <div className={s.revName}>{review.name}</div>
-                <div className={s.revByline}>{review.byline}</div>
-              </div>
-            </>
-          );
-          return (
-            <div key={review.id} className={s.rev}>
-              <div className={s.revHead}>
-                {review.authorSlug ? (
-                  <Link
-                    to={`/members/${review.authorSlug}`}
-                    className={s.revAuthor}
-                  >
-                    {author}
-                  </Link>
-                ) : (
-                  <div className={s.revAuthor}>{author}</div>
-                )}
-                <Stars
-                  score={review.stars}
-                  className={s.revStars}
-                  label={t("marketing:directory.detail.reviews.ratingAria", {
-                    count: review.stars,
-                  })}
-                />
-              </div>
-              <div className={s.revText}>{review.text}</div>
-              <div className={s.revHelpful}>
-                <Translation
-                  i18nKey="marketing:directory.detail.helpful"
-                  components={{ b: <b /> }}
-                  values={{ count: review.helpful }}
-                />
-              </div>
-              {/* Visible to any viewer, not just the owner (unlike the reply
-                  composer below) — hidden only in the moderation preview,
-                  same as the write-a-review form above. */}
-              {!preview && (
-                <DirectoryReviewReportControl
-                  reviewId={review.id}
-                  reviewerName={review.name}
-                />
-              )}
-              <DirectoryReviewReply
-                review={review}
-                ownerRef={ownerRef}
-                slug={place.slug}
-              />
-            </div>
-          );
-        })
+        displayedReviews.map((review) => (
+          <DirectoryReviewCard
+            key={review.id}
+            review={review}
+            slug={place.slug}
+            placeName={place.name}
+            preview={preview}
+            ownerRef={ownerRef}
+          />
+        ))
       )}
     </section>
   );

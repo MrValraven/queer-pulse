@@ -32,8 +32,12 @@ export interface StudioLightboxProps {
  *
  * `items` only ever draws from `VISUAL_SECTIONS` (see `getStudioWorks`),
  * which never includes `"poems"`. The `section !== "poems"` guard on
- * `WorkRightsFooter` below is defensive only, matching the same guard on
- * every other public item surface.
+ * `WorkRightsFooter` below is defensive only.
+ *
+ * This is one of the two single-work surfaces that still carry their own
+ * `WorkRightsFooter` (the other is `PoemReaderModal`): exactly one work is on
+ * screen, so the notice is about that work rather than repeated page furniture.
+ * The persona page itself shows one `PersonaRightsFooter` at the end instead.
  */
 export function StudioLightbox({
   items,

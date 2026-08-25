@@ -475,6 +475,11 @@ describe("request budget (live mode)", () => {
           HttpResponse.json([]),
         ),
         http.get(`${API_V1}/listings/mine`, () => HttpResponse.json(EMPTY_PAGE)),
+        // PlacesSection also mounts CoManagerInvitesInbox, which asks whether
+        // anybody has invited this member to help run their listing.
+        http.get(`${API_V1}/listings/co-manager-invites`, () =>
+          HttpResponse.json([]),
+        ),
         // The following four are route-scoped composition-hook reads
         // PlacesSection's siblings pull in on the self view of /account/profile
         // — see the comment on the assertion below for how each was found.
@@ -547,6 +552,10 @@ describe("request budget (live mode)", () => {
       //   - ProfileHero → MemberStaffBadge → useStaffRole()/useStaffMap() →
       //     GET /platform/staff (self-view staff badge, confirmed intended)
       //   - PlacesSection → useDirectoryListings() → GET /listings/mine
+      //   - PlacesSection → CoManagerInvitesInbox → useCoManagerInvites() →
+      //     GET /listings/co-manager-invites (self view only: the invitations
+      //     waiting on this member to help run somebody else's listing,
+      //     answered where an accepted one lands)
       expect(seen).toEqual(
         [
           ...SESSION_REQUEST_BUDGET,
@@ -562,6 +571,7 @@ describe("request budget (live mode)", () => {
           "/v1/me/public-eligibility",
           "/v1/connections/accepted",
           `/v1/directory/by-member/${SLUG}`,
+          "/v1/listings/co-manager-invites",
           "/v1/listings/mine",
           "/v1/me/communities",
           "/v1/me/recognition",

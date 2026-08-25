@@ -1,11 +1,24 @@
-import { apiGet, apiPost } from "../../../shared/api/client";
+import { apiDelete, apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 import type { ItemsPage } from "../../../shared/api/pagination";
 import {
   validateDirectoryDetail,
   validateDirectoryList,
 } from "../../../shared/api/validation";
-import type { HoursType, Owner, Review, Tint } from "../directoryPlaces";
+import type {
+  AffirmingBaselineView,
+  HoursType,
+  ListingHoursException,
+  MovedToListingView,
+  OperatingStateView,
+  ListingPublicQuestion,
+  Owner,
+  QueerOwnedVerificationView,
+  Review,
+  Tint,
+} from "../directoryPlaces";
 import type { DayHours, PhotoKey } from "../listBusiness/listBusiness.data";
+import type { ListingAccessibilityView } from "../listBusiness/listingAccessibility.data";
+import type { ListingServiceOffering } from "../listBusiness/listingServices.data";
 
 /** Photos as the detail endpoint returns them — each slot resolved to a URL or null. */
 export type PhotoSetView = Record<PhotoKey, string | null>;
@@ -42,6 +55,10 @@ export interface DirectoryCardDTO {
   safeSpaceStatus: "none" | "verified" | "removed";
   /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise. */
   safeSpaceTier: number | null;
+  /** Whether the business is still trading. Optional here because it is a
+   * newer backend addition and the demo/session card sources never carry it;
+   * absent is read through `operatingStateOf`, which defaults to `"open"`. */
+  operatingState?: OperatingStateView;
 }
 
 /** GET /directory — every live directory listing (public), optionally
@@ -157,7 +174,23 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   pills: string[];
   gallery: string[];
   whatItIs: string[];
+  /** Atmosphere bullets only, every one a positive check. Accessibility moved
+   * out of here into `accessibility` below, which can answer no. */
   goodFor: { label: string; yes: boolean }[];
+  /** The venue's structured accessibility answers plus its free-text note. All
+   * six questions are always present; `unknown` is a real answer and must not
+   * be rendered as a negative or dropped. Optional here only because a payload
+   * predating the feature carries none. */
+  accessibility?: ListingAccessibilityView;
+  /** What the business sells and what it costs, in the owner's own words
+   * ("from 25 EUR", "sliding scale"). Empty when it prices nothing. */
+  services?: ListingServiceOffering[];
+  /** The listing's agreement to the affirming baseline. True on every listing
+   * by definition, so it is never a distinguishing badge and never a filter. */
+  affirmingBaseline?: AffirmingBaselineView;
+  /** Who confirmed the queer-owned badge, when, on what basis, and when it
+   * lapses — the same kind of evidence the safe-space block beside it carries. */
+  queerOwnedVerification?: QueerOwnedVerificationView;
   hoursType: HoursType;
   hoursNote: string;
   owner: Owner;
@@ -170,6 +203,10 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   address: string;
   rating: { score: string; count: number };
   reviews: Review[];
+  /** The listing's most recent public questions, newest first, capped at 10 by
+   * the backend. Optional on the wire: a payload predating the public-questions
+   * work carries none, and the Q&A section then reads as "no questions yet". */
+  questions?: ListingPublicQuestionDTO[];
   /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`.
    * `id`/`slug` deep-link into the Events Hub (`/events/:slug`). */
   upcoming: { id: string; slug: string; startAt: string; title: string }[];
@@ -186,6 +223,15 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   safeSpacePromises: SafeSpacePromiseDTO[];
   safeSpaceVouches: DirectorySafeSpaceVouchDTO[];
   safeSpaceRemoval: SafeSpaceRemovalDTO | null;
+  /** One-off date overrides of the weekly grid (holiday closures, special
+   * hours). Optional: a payload predating the feature simply has none. */
+  hoursExceptions?: ListingHoursException[];
+  /** The successor listing when `operatingState.state` is `"moved"` and the new
+   * premises are themselves listed here; `null` otherwise. */
+  movedToListing?: MovedToListingView | null;
+  /** ISO-8601 timestamp the owner last confirmed the practical details are
+   * still correct; `null` when they never have. */
+  detailsConfirmedAt?: string | null;
 }
 
 /**
@@ -202,12 +248,22 @@ export const getListingsByMember = (slug: string) =>
 
 /** GET /directory/:slug — one live directory listing by slug (public). */
 export const getDirectorySpace = (slug: string) =>
-  apiGet<DirectoryDetailDTO>(`/directory/${slug}`, undefined, validateDirectoryDetail);
+  apiGet<DirectoryDetailDTO>(
+    `/directory/${slug}`,
+    undefined,
+    validateDirectoryDetail,
+  );
 
 /** Body for leaving a review. */
 export interface SubmitReviewInput {
   stars: number;
   text: string;
+  /**
+   * A `listing-photo` presign key from `useUploadImage("listing-photo")` — the
+   * private storage key, never a fetchable URL. Omit to post a text-only
+   * review; send `""` to clear a photo that was attached before.
+   */
+  photo?: string;
 }
 
 /**
@@ -216,3 +272,80 @@ export interface SubmitReviewInput {
  */
 export const submitReview = (slug: string, input: SubmitReviewInput) =>
   apiPost<Review>(`/directory/${slug}/reviews`, input);
+
+/** Body for editing your own review. Same shape as leaving one. */
+export type EditReviewInput = SubmitReviewInput;
+
+/**
+ * PATCH /directory/:slug/reviews/:reviewId — rewrite your own review. The
+ * endpoint is author-gated and answers 403 for anyone else, so the UI only
+ * ever offers this on a review whose `authorSlug` matches the signed-in
+ * member. Returns the updated review in the detail page's own shape.
+ */
+export const editReview = (
+  slug: string,
+  reviewId: string,
+  input: EditReviewInput,
+) => apiPatch<Review>(`/directory/${slug}/reviews/${reviewId}`, input);
+
+/**
+ * The answer to a helpful-vote mutation. This is the ONLY place a member's own
+ * vote state (`hasVoted`) is ever revealed: the public reads are CDN-cached,
+ * so carrying it there would hand one member's vote to the next reader. See
+ * `useReviewHelpful` for how the control is built around that.
+ */
+export interface ReviewHelpfulResponse {
+  reviewId: string;
+  helpful: number;
+  hasVoted: boolean;
+}
+
+/** POST /directory/:slug/reviews/:reviewId/helpful — idempotent; 400 on your
+ *  own review. */
+export const voteReviewHelpful = (slug: string, reviewId: string) =>
+  apiPost<ReviewHelpfulResponse>(
+    `/directory/${slug}/reviews/${reviewId}/helpful`,
+  );
+
+/** DELETE /directory/:slug/reviews/:reviewId/helpful — idempotent. */
+export const clearReviewHelpful = (slug: string, reviewId: string) =>
+  apiDelete<ReviewHelpfulResponse>(
+    `/directory/${slug}/reviews/${reviewId}/helpful`,
+  );
+
+/** The wire shape of one public question. Structurally identical to the
+ *  frontend's own `ListingPublicQuestion`, aliased here so call sites read as
+ *  DTOs at the API seam. */
+export type ListingPublicQuestionDTO = ListingPublicQuestion;
+
+/**
+ * GET /directory/:slug/questions — the full, paged question list, for
+ * everything beyond the ten the detail payload carries. Newest first.
+ */
+export const getListingQuestions = (slug: string, page: number) =>
+  apiGet<ItemsPage<ListingPublicQuestionDTO>>(
+    `/directory/${slug}/questions?page=${page}`,
+  );
+
+/**
+ * POST /directory/:slug/questions — ask the business something in public.
+ * Member-gated and throttled: 400 when you own the listing yourself, 429 once
+ * you are over quota (that body carries a plain reason worth showing).
+ */
+export const askListingQuestion = (slug: string, body: string) =>
+  apiPost<ListingPublicQuestionDTO>(`/directory/${slug}/questions`, { body });
+
+/**
+ * POST /listings/:ref/public-questions/:id/answer — the owner answering, keyed
+ * by the listing's `ref` (its owner-facing id, distinct from the public
+ * `slug` — see `DirectorySpacePage`'s `owned.ref`).
+ */
+export const answerListingQuestion = (
+  ref: string,
+  questionId: string,
+  answer: string,
+) =>
+  apiPost<ListingPublicQuestionDTO>(
+    `/listings/${ref}/public-questions/${questionId}/answer`,
+    { answer },
+  );

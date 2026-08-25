@@ -1173,6 +1173,25 @@ export const members: Catalog = {
   "places.deleted": "Anúncio eliminado.",
   "places.viewListingCta": "Ver anúncio",
   "places.awaitingReview": "Aguarda revisão",
+  "places.coManaging": "Ajudas a gerir",
+
+  // ── Convites para ajudar a gerir um espaço de outra pessoa, respondidos
+  //    aqui porque é aqui que um convite aceite vai parar.
+  "places.coManagerInvites.title_one": "1 convite à espera de resposta",
+  "places.coManagerInvites.title_other":
+    "{count} convites à espera de resposta",
+  "places.coManagerInvites.sub":
+    "Alguém te pediu ajuda para gerir um espaço. Sem pressa: nada muda até responderes.",
+  "places.coManagerInvites.fromNamed": "Convite de <b>{name}</b>.",
+  "places.coManagerInvites.from":
+    "Um convite para ajudar a gerir este espaço.",
+  "places.coManagerInvites.acceptCta": "Aceitar",
+  "places.coManagerInvites.declineCta": "Recusar",
+  "places.coManagerInvites.acceptedToast":
+    "Passaste a ajudar a gerir {listing}.",
+  "places.coManagerInvites.declinedToast": "Convite recusado.",
+  "places.coManagerInvites.error":
+    "Não conseguimos enviar a tua resposta. Tenta outra vez.",
   "places.empty.title": "Ainda sem espaços",
   "places.empty.description":
     "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",

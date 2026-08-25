@@ -8,10 +8,10 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ListingWizard } from "./ListingWizard";
+import { ListingEditor } from "./editor/ListingEditor";
 import { SavedDraftsPanel, type ResumeTarget } from "./SavedDraftsPanel";
 import { useOwnedListing } from "./api/useListings";
 import { useResumeListingDraft } from "./api/useListingDrafts";
-import { dtoToDraft } from "./dtoToDraft";
 import styles from "./ListBusinessPage.module.css";
 
 export function ListBusinessPage() {
@@ -108,7 +108,6 @@ function ResumeByToken({ token }: { token: string }) {
 
   return (
     <ListingWizard
-      mode="create"
       initialDraft={record.payload.draft}
       initialStep={record.payload.step}
       initialDraftId={record.id}
@@ -133,7 +132,6 @@ function FreshListingFlow() {
       <SavedDraftsPanel onResume={handleResume} />
       <ListingWizard
         key={resumed ? `resume-${resumeSeq}` : "fresh"}
-        mode="create"
         initialDraft={resumed?.draft}
         initialStep={resumed?.step}
         initialDraftId={resumed?.id}
@@ -142,8 +140,10 @@ function FreshListingFlow() {
   );
 }
 
-/** Loads the owner's listing before mounting the wizard in edit mode — a
- *  clean loading/blocked state instead of a blank or default-create wizard. */
+/** Loads the owner's listing before mounting the editor: a clean
+ *  loading/blocked state instead of a blank or default-create form. Editing is
+ *  a single scrollable page: an owner usually arrives to change one line, and
+ *  a guided six-step sequence makes that a walk. */
 function EditListingGate({ editRef }: { editRef: string }) {
   const { t } = useTranslation();
   const { listing, isLoading, error } = useOwnedListing(editRef);
@@ -174,13 +174,5 @@ function EditListingGate({ editRef }: { editRef: string }) {
     );
   }
 
-  return (
-    <ListingWizard
-      mode="edit"
-      editRef={editRef}
-      initialDraft={dtoToDraft(listing)}
-      editSlug={listing.slug}
-      editStatus={listing.status}
-    />
-  );
+  return <ListingEditor listing={listing} />;
 }

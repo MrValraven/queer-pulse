@@ -1,0 +1,220 @@
+/* ===========================================================
+   Owner controls for a listing's own life: is the business still
+   trading, and are these details still accurate. Both act on
+   their own endpoints, so they read as decisions rather than as
+   fields waiting on the save bar.
+   =========================================================== */
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── "Currently: open" ───────────────────────────────────────── */
+
+.currently {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+.currentlyLabel {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 11px;
+  color: var(--ink-40);
+}
+.currentlySince {
+  margin-left: 8px;
+  color: var(--ink-40);
+}
+
+/* ── The four state cards ────────────────────────────────────── */
+
+.stateGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (max-width: 760px) {
+  .stateGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.stateCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px;
+  text-align: left;
+  border: 1px solid rgba(var(--line-rgb), 0.11);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+  cursor: pointer;
+  transition:
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease),
+    box-shadow 0.18s var(--ease);
+}
+.stateCardOn {
+  border-color: rgba(var(--plum-rgb), 0.35);
+  box-shadow: 0 0 0 1px rgba(var(--plum-rgb), 0.22) inset;
+  background: rgba(var(--plum-rgb), 0.04);
+}
+@media (hover: hover) {
+  .stateCard:hover {
+    border-color: rgba(var(--plum-rgb), 0.22);
+  }
+}
+
+.stateIcon {
+  display: inline-flex;
+  font-size: 17px;
+  color: var(--jade);
+}
+/* Permanently closed is the one state that takes the business out of
+   every public result, so it never looks like the other three. */
+.stateIconGrave {
+  color: var(--accent-ink);
+}
+
+.stateLabel {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-strong);
+}
+.stateDesc {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.field {
+  margin: 0;
+}
+
+.failure {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.08);
+  border-radius: var(--radius-tag);
+  padding: 8px 11px;
+}
+
+.applyRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.applyHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+/* ── The permanent-closure confirmation's consequence list ───── */
+
+.consequences {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+.consequences li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.consequenceIcon {
+  flex: none;
+  margin-top: 2px;
+  font-size: 15px;
+  color: var(--accent-ink);
+}
+
+/* ── "Still accurate?" ───────────────────────────────────────── */
+
+.confirmCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.11);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+@media (max-width: 620px) {
+  .confirmCard {
+    flex-wrap: wrap;
+  }
+}
+
+/* Recently confirmed: a receipt, not a request. */
+.confirmFresh .confirmIcon {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+
+/* Three months on: a plain ask. */
+.confirmAgeing {
+  border-color: rgba(var(--plum-rgb), 0.2);
+  background: rgba(var(--plum-rgb), 0.04);
+}
+.confirmAgeing .confirmIcon {
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.09);
+}
+
+/* Six months on, or never confirmed at all: the loudest thing here. */
+.confirmStale {
+  border-color: rgba(var(--accent-rgb), 0.32);
+  background: rgba(var(--accent-rgb), 0.07);
+}
+.confirmStale .confirmIcon {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
+.confirmIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-avatar);
+  font-size: 16px;
+}
+
+.confirmText {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.confirmTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.confirmSub {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stateCard {
+    transition: none;
+  }
+}

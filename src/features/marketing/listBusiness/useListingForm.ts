@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import { useStepGate } from "../../../shared/hooks/useWizardForm";
+import { useHoursExceptionSetters } from "./useHoursExceptionSetters";
 import {
   allSocialsValid,
   anyDayOpen,
   defaultInterval,
   emailValid,
   emptyHours,
+  hoursExceptionsValid,
   hoursValid,
   witLine,
   ANCHOR,
@@ -19,6 +21,16 @@ import {
   type ListingPath,
   type PhotoKey,
 } from "./listBusiness.data";
+import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
+import { servicesValid } from "./listingServices.data";
+import { useAccessibilitySetters } from "./useAccessibilitySetters";
+import { useServiceSetters } from "./useServiceSetters";
+
+/** A brand-new draft's accessibility block: all six questions unanswered and
+ *  no note. Unanswered is a real state, never a hidden "no". */
+function emptyAccessibilityDraft() {
+  return normalizeAccessibilityDraft(null);
+}
 
 /** Fields we can safely pre-fill from the signed-in member's profile (item #3).
  *  Only applied when building a BLANK draft — never over an edit/resumed one. */
@@ -31,7 +43,6 @@ export interface ListingSeed {
 function blankDraft(seed?: ListingSeed): ListingDraft {
   return {
     path: "",
-    verify: "",
     name: "",
     cats: [],
     hood: "",
@@ -43,6 +54,8 @@ function blankDraft(seed?: ListingSeed): ListingDraft {
     whatItIs: [witLine()],
     tags: [],
     goodFor: [],
+    accessibility: emptyAccessibilityDraft(),
+    services: [],
     langs: [],
     online: false,
     address: "",
@@ -51,6 +64,7 @@ function blankDraft(seed?: ListingSeed): ListingDraft {
     longitude: null,
     hours: emptyHours(),
     hoursNote: "",
+    hoursExceptions: [],
     social: { instagram: "", website: "", email: "", phone: "" },
     photos: { wide: "", d1: "", d2: "", vibe: "" },
     alt: { wide: "", d1: "", d2: "", vibe: "" },
@@ -61,9 +75,11 @@ function blankDraft(seed?: ListingSeed): ListingDraft {
     visibility: "public",
     linkToProfile: true,
     contactEmail: seed?.contactEmail ?? "",
-    notify: ["live", "question"],
     consentOuting: false,
     consentGuide: false,
+    // Agreeing is the condition of listing at all, so a fresh draft starts
+    // un-agreed and the submit stays out of reach until the member says yes.
+    affirmingBaselineAccepted: false,
   };
 }
 
@@ -88,6 +104,14 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     setPhotoPreviews((previews) => ({ ...previews, [key]: value }));
   }, []);
 
+  // Dated overrides of the weekly grid live in their own hook: they are a
+  // self-contained sub-editor, and keeping them here would bury the rest.
+  const hoursExceptionSetters = useHoursExceptionSetters(setDraft);
+  // Same reasoning for the two structured blocks: each is a self-contained
+  // sub-editor with its own merge rules, so its setters live beside each other.
+  const accessibilitySetters = useAccessibilitySetters(setDraft);
+  const serviceSetters = useServiceSetters(setDraft);
+
   /** Patch one or more top-level fields. */
   const set = useCallback((patch: Partial<ListingDraft>) => {
     setDraft((d) => ({ ...d, ...patch }));
@@ -107,7 +131,6 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       path,
       // sensible relationship default the member can change at step 4
       rel: d.rel || (path === "claim" ? "own" : "regular"),
-      verify: path === "claim" ? d.verify || "email" : "",
     }));
   }, []);
 
@@ -124,18 +147,15 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     setDraft((d) => ({ ...d, badge }));
   }, []);
 
-  const toggleIn = useCallback(
-    (key: "goodFor" | "langs" | "notify", id: string) => {
-      setDraft((d) => {
-        const arr = d[key];
-        return {
-          ...d,
-          [key]: arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id],
-        };
-      });
-    },
-    [],
-  );
+  const toggleIn = useCallback((key: "goodFor" | "langs", id: string) => {
+    setDraft((d) => {
+      const arr = d[key];
+      return {
+        ...d,
+        [key]: arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id],
+      };
+    });
+  }, []);
 
   /* what-it-is lines (1–4) */
   const setWit = useCallback((i: number, v: string) => {
@@ -286,6 +306,11 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
      outing/guide consents gate both paths regardless. */
   const missing = useMemo(() => {
     const isClaim = draft.path === "claim";
+    /* A CO-MANAGER never sees the owner's own fields and never sends them, so
+       they can never fill them in either. Requiring them would leave the save
+       bar permanently blocked on inputs that are not on the page. `ownerRole`
+       is not among them: it describes the business, so it stays required. */
+    const isOwnerEditing = draft.managementRole !== "co_manager";
 
     /** A still-missing item + the DOM anchor its chip jumps to. Holds the
      * catalog key, not the resolved string, so the chip label follows the
@@ -296,8 +321,6 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     const s0: MissingField[] = [];
     if (!draft.path)
       add(s0, "marketing:listBusiness.missing.path", ANCHOR.path);
-    if (isClaim && !draft.verify)
-      add(s0, "marketing:listBusiness.missing.verify", ANCHOR.verify);
 
     const s1: MissingField[] = [];
     if (!draft.name.trim())
@@ -313,6 +336,11 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       add(s1, "marketing:listBusiness.missing.price", ANCHOR.price);
     if (!draft.blurb.trim())
       add(s1, "marketing:listBusiness.missing.blurb", ANCHOR.blurb);
+    // Services are optional, so this only fires when a row the owner STARTED
+    // is still missing its name or its price — the same "finish what you began"
+    // shape the socials chip has, never a demand for a price list.
+    if (!servicesValid(draft.services ?? []))
+      add(s1, "marketing:listBusiness.missing.services", ANCHOR.services);
 
     const s2: MissingField[] = [];
     if (isClaim && !draft.tagline.trim())
@@ -333,19 +361,27 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       add(s3, "marketing:listBusiness.missing.hours", ANCHOR.hours);
     if (!draft.online && !hoursValid(draft.hours))
       add(s3, "marketing:listBusiness.missing.hoursInvalid", ANCHOR.hours);
+    // Dated overrides are optional, so this only fires when one that EXISTS is
+    // malformed — the same "fix the format" shape the socials chip has.
+    if (!hoursExceptionsValid(draft.hoursExceptions ?? []))
+      add(
+        s3,
+        "marketing:listBusiness.missing.hoursExceptionsInvalid",
+        ANCHOR.hoursExceptions,
+      );
     // Socials are optional; this only fires when a filled one is malformed, so
     // the chip reads "fix the format", not "add socials" (item #10).
     if (!allSocialsValid(draft.social))
       add(s3, "marketing:listBusiness.missing.socialFormat", ANCHOR.social);
 
     const s4: MissingField[] = [];
-    if (isClaim && !draft.rel)
+    if (isClaim && isOwnerEditing && !draft.rel)
       add(s4, "marketing:listBusiness.missing.rel", ANCHOR.rel);
-    if (isClaim && !draft.ownerName.trim())
+    if (isClaim && isOwnerEditing && !draft.ownerName.trim())
       add(s4, "marketing:listBusiness.missing.ownerName", ANCHOR.ownerName);
     if (isClaim && !draft.ownerRole.trim())
       add(s4, "marketing:listBusiness.missing.ownerRole", ANCHOR.ownerRole);
-    if (isClaim && !emailValid(draft.contactEmail))
+    if (isClaim && isOwnerEditing && !emailValid(draft.contactEmail))
       add(
         s4,
         "marketing:listBusiness.missing.contactEmail",
@@ -360,8 +396,17 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       add(s4, "marketing:listBusiness.missing.alt", ANCHOR.photos);
 
     const s5: MissingField[] = [];
-    if (!draft.consentOuting || !draft.consentGuide)
+    if (isOwnerEditing && (!draft.consentOuting || !draft.consentGuide))
       add(s5, "marketing:listBusiness.missing.consent", ANCHOR.consent);
+    // The affirming baseline is the condition of being listed, so the submit
+    // stays out of reach until the submitter agrees to it. An existing listing
+    // agreed when it was created, so this never blocks an owner's edit.
+    if (!draft.affirmingBaselineAccepted)
+      add(
+        s5,
+        "marketing:listBusiness.missing.affirmingBaseline",
+        ANCHOR.affirmingBaseline,
+      );
 
     const perStep: Record<number, MissingField[]> = {
       0: s0,
@@ -397,6 +442,9 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     removeInterval,
     copyMonToAll,
     clearHours,
+    ...accessibilitySetters,
+    ...serviceSetters,
+    ...hoursExceptionSetters,
     setSocial,
     setPhoto,
     setAlt,

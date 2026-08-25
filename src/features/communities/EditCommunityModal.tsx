@@ -22,6 +22,10 @@ import {
 import { useUpdateCommunity } from "./api/useCommunityMutations";
 import { useCommunityForm } from "./startCommunity/useCommunityForm";
 import { EditCommunityRules } from "./EditCommunityRules";
+import {
+  CommunityCardPreview,
+  type CommunityCardStats,
+} from "./CommunityCardPreview";
 import { ImageUploadField } from "../subprofiles/ImageUploadField";
 import styles from "./EditCommunityModal.module.css";
 
@@ -35,6 +39,10 @@ interface EditCommunityModalProps {
    *  as read-only rather than editing into a 403. Defaults to true for callers
    *  that only ever open this as the owner. */
   canChangeAccess?: boolean;
+  /** Current member count and weekly activity, so the live card preview's
+   *  footer matches the real Discover card. Neither is editable here; they
+   *  ride along purely so the preview isn't missing lines the card will have. */
+  previewStats?: CommunityCardStats;
   onClose: () => void;
   onSaved?: () => void;
 }
@@ -43,11 +51,17 @@ interface EditCommunityModalProps {
  * Owner/mod edit of a community's info. Seeds the shared wizard-draft shape
  * from the current editable values, then PATCHes (live) or writes the demo
  * override store via `useUpdateCommunity`. Required fields gate the submit.
+ *
+ * The form sits beside a live `CommunityCardPreview` — the real Discover card,
+ * redrawn from the draft on every keystroke — because name, tagline, cover,
+ * kind, tags and access tier are all *card* decisions, and until now the only
+ * way to see what they did to the card was to save and go look.
  */
 export function EditCommunityModal({
   slug,
   editable,
   canChangeAccess = true,
+  previewStats,
   onClose,
   onSaved,
 }: EditCommunityModalProps) {
@@ -104,6 +118,7 @@ export function EditCommunityModal({
         title={t("communities:edit.title")}
         eyebrow={t("communities:edit.eyebrow")}
         onClose={onClose}
+        className={styles.dialog}
         footer={
           <>
             <Button variant="ghost" type="button" onClick={onClose}>
@@ -122,18 +137,42 @@ export function EditCommunityModal({
           </>
         }
       >
-        <form id={FORM_ID} onSubmit={onSubmit} className={styles.form}>
-          <EditCommunityFields
-            draft={draft}
-            set={set}
-            toggleFeature={toggleFeature}
-            addRule={addRule}
-            toggleRule={toggleRule}
-            error={error}
-            onSuggestTag={() => setSuggestingTag(true)}
-            canChangeAccess={canChangeAccess}
-          />
-        </form>
+        <div className={styles.layout}>
+          {/* Ahead of the form in the DOM so the stacked (mobile) order puts
+              the card on top, where it is visible without scrolling the whole
+              settings column first. On desktop the grid places it right. */}
+          <aside
+            className={styles.preview}
+            aria-label={t("communities:edit.preview.title")}
+          >
+            <span className={styles.previewLabel}>
+              {t("communities:edit.preview.title")}
+            </span>
+            <div className={styles.previewStage}>
+              <CommunityCardPreview
+                slug={slug}
+                draft={draft}
+                {...previewStats}
+              />
+            </div>
+            <p className={styles.previewHint}>
+              {t("communities:edit.preview.hint")}
+            </p>
+          </aside>
+
+          <form id={FORM_ID} onSubmit={onSubmit} className={styles.form}>
+            <EditCommunityFields
+              draft={draft}
+              set={set}
+              toggleFeature={toggleFeature}
+              addRule={addRule}
+              toggleRule={toggleRule}
+              error={error}
+              onSuggestTag={() => setSuggestingTag(true)}
+              canChangeAccess={canChangeAccess}
+            />
+          </form>
+        </div>
       </Modal>
 
       {suggestingTag && (

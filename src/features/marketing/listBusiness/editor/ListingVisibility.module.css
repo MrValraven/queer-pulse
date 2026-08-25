@@ -1,0 +1,192 @@
+/* ── Showing or pausing the listing ─────────────────────────────────────────
+   Sits under the trading controls on purpose. The two answer different
+   questions and an owner has to be able to tell which one they want, so the
+   divider and the "these are different" line above are load-bearing, not
+   decoration. */
+.block {
+  margin-top: 34px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+}
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin-bottom: 6px;
+}
+.intro {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  max-width: 66ch;
+  text-wrap: pretty;
+}
+/* The one line that keeps a pause from being confused with "we are closed
+   today". Quiet, but it has to be read before the button. */
+.distinction {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px 15px;
+  border-radius: 12px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 70ch;
+}
+.distinctionIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--ink-60);
+}
+.distinctionIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Current state. Loud when the listing is hidden, because a listing sitting
+   invisible while its owner assumes it is live is the failure this whole
+   control has to prevent. */
+.state {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 15px 17px;
+  border-radius: 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+}
+.stateHidden {
+  background: rgba(var(--accent-rgb), 0.07);
+  border-color: rgba(var(--accent-rgb), 0.28);
+}
+.stateIcon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade);
+}
+.stateHidden .stateIcon {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent);
+}
+.stateIcon svg {
+  width: 15px;
+  height: 15px;
+}
+.stateText {
+  min-width: 0;
+}
+.stateTitle {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.stateSub {
+  display: block;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 3px;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+.stateSince {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin-top: 4px;
+}
+
+.keptList {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+.keptList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.keptIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  color: var(--jade);
+}
+.keptIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.failure {
+  margin-top: 12px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--accent);
+  max-width: 62ch;
+}
+
+/* ── The banner at the top of the editor ────────────────────────────────────
+   The same fact, restated where an owner cannot miss it on arrival. */
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 17px;
+  border-radius: 14px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+}
+.bannerIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--accent);
+}
+.bannerIcon svg {
+  width: 100%;
+  height: 100%;
+}
+.bannerText {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 70ch;
+}
+.bannerTitle {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+}

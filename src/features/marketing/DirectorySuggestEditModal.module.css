@@ -52,3 +52,63 @@
   margin-block-start: 6px;
   text-align: right;
 }
+
+/* ── The optional "what should it say instead?" value ──────────────────────
+   Shaped by the chosen bucket, capped at the same length the real listing
+   column allows, and never offered for the catch-all bucket, which has no
+   column a value could be written to.
+   ────────────────────────────────────────────────────────────────────── */
+
+.optional {
+  font-weight: 500;
+  color: var(--ink-40);
+}
+
+.valueInput,
+.valueTextarea {
+  width: 100%;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-badge);
+  padding: 10px 14px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text-strong);
+  background: var(--cream);
+}
+.valueTextarea {
+  min-height: 62px;
+  resize: vertical;
+}
+
+.valueInput:focus-visible,
+.valueTextarea:focus-visible {
+  outline: none;
+  border-color: var(--line-strong);
+  background: var(--paper);
+}
+
+.valueInput[aria-invalid="true"],
+.valueTextarea[aria-invalid="true"] {
+  border-color: rgba(var(--accent-rgb), 0.55);
+}
+
+.valueHint,
+.proseOnly {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--ink-40);
+  margin-block: 6px 0;
+}
+.proseOnly {
+  margin-block-start: 12px;
+}
+
+.valueRejection {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.08);
+  border-radius: var(--radius-tag);
+  padding: 8px 11px;
+  margin-block: 8px 0;
+}

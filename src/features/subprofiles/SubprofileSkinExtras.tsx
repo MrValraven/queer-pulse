@@ -57,10 +57,6 @@ export interface SubprofileSkinExtrasProps {
    *  spotlight is the generic `Spotlight` component, rendered by the host,
    *  not through this switch. */
   featured?: SubprofileItemView | null;
-  /** The persona's public display name, only read for `slot="spotlight"`:
-   *  passed straight through to table's `TableMenuCard` as its
-   *  `WorkRightsFooter` copyright holder. */
-  authorName?: string;
   /** Opens the studio lightbox at a flattened work index. Passed through to
    *  `StudioChecklist` (slot="end") only when `mode !== "preview"`; the host
    *  owns the open/closed state and must derive its `StudioLightbox` `items`
@@ -83,7 +79,6 @@ export function SubprofileSkinExtras({
   slot,
   mode,
   featured,
-  authorName,
   onOpenWork,
 }: SubprofileSkinExtrasProps) {
   const interactive = mode !== "preview";
@@ -107,13 +102,7 @@ export function SubprofileSkinExtras({
       // Every other skin's featured item renders through the generic
       // Spotlight — the host only reaches this slot for skin="table".
       if (skin === "table")
-        return (
-          <TableMenuCard
-            featured={featured ?? null}
-            authorName={authorName ?? ""}
-            interactive={interactive}
-          />
-        );
+        return <TableMenuCard featured={featured ?? null} />;
       return null;
     case "end":
       if (skin === "stage") return <StageBooker persona={persona} />;

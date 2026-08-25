@@ -1,0 +1,142 @@
+/* Operating-state banner for a listing that is no longer trading normally.
+   One block, three palettes, selected by `data-state`, so the copy and the
+   colour always agree about how serious the situation is. */
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 16px 0;
+}
+
+.banner {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  background: var(--paper);
+  margin: 0 0 6px;
+}
+
+.icon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.body {
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  letter-spacing: -0.015em;
+  margin: 0 0 4px;
+  color: var(--text-strong);
+}
+
+.lead {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--ink);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.note {
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 10px 0 0;
+  padding-left: 12px;
+  border-left: 2px solid rgba(var(--line-rgb), 0.18);
+  color: var(--ink);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.meta {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-60);
+  margin-top: 10px;
+}
+
+.newAddress {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14.5px;
+  color: var(--ink);
+  margin-top: 12px;
+}
+
+.newAddress svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+.successor {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.4);
+  padding-bottom: 1px;
+}
+
+.successor:hover {
+  color: var(--accent-deep);
+}
+
+/* --- temporarily closed: amber, a pause rather than an ending --- */
+.banner[data-state="temporarily_closed"] {
+  background: rgba(var(--amber-rgb), 0.1);
+  border-color: rgba(var(--amber-rgb), 0.4);
+}
+.banner[data-state="temporarily_closed"] .icon {
+  background: rgba(var(--amber-rgb), 0.24);
+  color: var(--amber-ink);
+}
+
+/* --- moved: the listing still points somewhere, so it stays legible plum --- */
+.banner[data-state="moved"] {
+  background: rgba(var(--violet-rgb), 0.08);
+  border-color: rgba(var(--violet-rgb), 0.3);
+}
+.banner[data-state="moved"] .icon {
+  background: rgba(var(--violet-rgb), 0.18);
+  color: var(--violet);
+}
+
+/* --- permanently closed: the heaviest treatment on the page --- */
+.banner[data-state="permanently_closed"] {
+  background: var(--plum);
+  border-color: var(--plum);
+}
+.banner[data-state="permanently_closed"] .title,
+.banner[data-state="permanently_closed"] .lead,
+.banner[data-state="permanently_closed"] .note {
+  color: var(--cream);
+}
+.banner[data-state="permanently_closed"] .note {
+  border-left-color: rgba(var(--cream-rgb), 0.3);
+}
+.banner[data-state="permanently_closed"] .meta {
+  color: rgba(var(--cream-rgb), 0.66);
+}
+.banner[data-state="permanently_closed"] .icon {
+  background: rgba(var(--cream-rgb), 0.14);
+  color: var(--cream);
+}

@@ -13,13 +13,18 @@ interface EditListingSaveOptions {
 }
 
 /**
- * Encapsulates `ListingWizard`'s edit-mode "save changes" flow: PATCH the
- * listing, toast, and navigate away — a Live listing goes back to its public
- * page, anything else (still under review, etc.) goes back to the account
- * profile, where `PlacesSection` lists the owner's own listings.
+ * Encapsulates the owner editor's "save changes" flow (`ListingEditor`): PATCH
+ * the listing, toast, and navigate away.
  *
- * `saveEdit` throws on failure so the caller can restore the form to the
- * review step and show its own recovery UI.
+ * An approved listing stays live through owner edits, so a Live listing lands
+ * straight on its public page with the changes already showing. A listing that
+ * has not been approved yet (still in review, or waiting on a moderator's
+ * question) goes back to the account profile, where `PlacesSection` lists the
+ * owner's own listings, and its toast says so instead of implying the edit is
+ * now public.
+ *
+ * `saveEdit` throws on failure so the caller can put the form back on screen
+ * and show its own recovery UI.
  */
 export function useEditListingSave({
   editRef,
@@ -33,7 +38,16 @@ export function useEditListingSave({
 
   const saveEdit = async (draft: ListingDraft) => {
     await updateListingMutation.mutateAsync({ ref: editRef as string, draft });
-    showToast(t("marketing:listBusiness.edit.saved"), "success");
+    const isAwaitingModerator =
+      editStatus === "review" || editStatus === "question";
+    showToast(
+      t(
+        isAwaitingModerator
+          ? "marketing:listBusiness.edit.savedInReview"
+          : "marketing:listBusiness.edit.saved",
+      ),
+      "success",
+    );
     if (editStatus === "live" && editSlug) {
       void navigate(`${routes.directory}/${editSlug}`);
     } else {

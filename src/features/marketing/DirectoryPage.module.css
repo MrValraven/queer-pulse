@@ -223,6 +223,19 @@
   background: var(--jade);
   box-shadow: 0 0 0 3px rgba(var(--jade-rgb), 0.25);
 }
+.statusClosingSoon {
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(var(--amber-rgb), 0.25);
+}
+/* A card whose business is temporarily closed, permanently closed or moved:
+   the trading state replaces the live open/closed line entirely. */
+.statusFlag {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.statusFlag .statusDot {
+  background: var(--accent-text);
+}
 .host {
   display: inline-flex;
   align-items: center;

@@ -4,10 +4,47 @@ import {
   normalizeDayHours,
   normalizeHours,
   type DayHours,
+  type HoursInterval,
   type PhotoKey,
 } from "./listBusiness/listBusiness.data";
+import type { ListingAccessibilityView } from "./listBusiness/listingAccessibility.data";
+import type { ListingServiceOffering } from "./listBusiness/listingServices.data";
 
 export type Tint = "coral" | "jade" | "plum";
+
+/**
+ * The listing's agreement to the LGBTQ+ affirming baseline.
+ *
+ * `isAccepted` is true on every listing in the directory, because agreeing is
+ * the condition of appearing at all. It exists so a page can STATE the
+ * commitment, never so one listing can be compared with another: it is not a
+ * badge some places earned, and it is not a browse filter. The commitment is
+ * about how the business treats the people it serves, and it grants nobody
+ * permission to exclude anyone over who they are.
+ */
+export interface AffirmingBaselineView {
+  isAccepted: boolean;
+  acceptedAt: string | null;
+}
+
+/**
+ * The evidence behind the verified queer-owned badge, shaped to read as a
+ * sibling of the safe-space verification block beside it.
+ *
+ * `isGranted` is the raw record and deliberately stays true after a grant
+ * lapses. Whether the badge currently READS as verified is the separate
+ * top-level `queerOwnedVerified` boolean, which the backend already computes
+ * as `isGranted && !isExpired`. Never re-derive that here.
+ */
+export interface QueerOwnedVerificationView {
+  isGranted: boolean;
+  verifier: string | null;
+  /** `YYYY-MM-DD` the confirmation was last made. */
+  reVerifiedAt: string | null;
+  basis: string | null;
+  /** `YYYY-MM-DD` the confirmation next needs re-making. */
+  expiresAt: string | null;
+}
 export type HoursType =
   | "cafe"
   | "restaurant"
@@ -59,6 +96,24 @@ export interface Review {
   stars: number;
   text: string;
   helpful: number;
+  /** ISO-8601 timestamp of when the review was posted. Live payloads always
+   * carry it; the demo fixture has none, so every display path must treat an
+   * absent value as "no date to show" rather than rendering an Invalid Date. */
+  createdAt?: string;
+  /** ISO-8601 timestamp of the reviewer's last edit, or `null`/absent when the
+   * review has never been edited. Drives the quiet "edited" marker. */
+  editedAt?: string | null;
+  /**
+   * Precomputed server-side: the reviewer changed their words AFTER the owner
+   * had already replied, so the reply may be answering text nobody can read
+   * any more. Never re-derive this from `editedAt` vs `ownerReply.at` — the
+   * server owns the comparison (clock skew, reply overwrites, moderation
+   * edits), the frontend only renders it.
+   */
+  isEditedAfterOwnerReply?: boolean;
+  /** A single photo the reviewer attached, already resolved to a fetchable URL
+   * server-side. Absent/null → the review is text only. */
+  photoUrl?: string | null;
   ownerReply?: ReviewOwnerReply | null;
   /** Reviewer's profile photo (member-authored reviews). Absent/null → the
    * tinted `initials` avatar is shown instead. */
@@ -67,6 +122,75 @@ export interface Review {
    * links to `/members/:authorSlug`; absent/null → plain-text name (seeded or
    * non-member review). */
   authorSlug?: string | null;
+}
+
+/**
+ * Who wrote the public answer under a question. `"owner"` is the business
+ * itself; `"moderator"` is a QueerPulse moderator stepping in. The two are
+ * never presented the same way — a moderator's words must never read as the
+ * business speaking (see `DirectoryQuestionAnswer`). `null` alongside a `null`
+ * `answer` simply means nobody has answered yet, which is a normal state.
+ */
+export type ListingQuestionAnswerRole = "owner" | "moderator";
+
+/**
+ * One public question a member asked on a listing, plus its answer when one
+ * exists. Mirrors the backend's `ListingPublicQuestionDTO` exactly. Reads come
+ * from the detail payload (newest first, capped at 10) and from
+ * `GET /directory/:slug/questions` for everything beyond that cap.
+ */
+export interface ListingPublicQuestion {
+  id: string;
+  body: string;
+  askerName: string;
+  askerSlug: string | null;
+  askerAvatarUrl: string | null;
+  createdAt: string;
+  answer: string | null;
+  answeredAt: string | null;
+  answeredByRole: ListingQuestionAnswerRole | null;
+}
+
+/**
+ * Whether a business is still trading. Mirrors the backend's
+ * `OperatingStateView.state`. Everything other than `"open"` means the page
+ * must stop presenting the listing as a place you can go to today. A
+ * `permanently_closed` listing is already dropped from browse, search and map
+ * results server-side; its detail page still resolves on purpose, so existing
+ * links and the reviews it collected survive as a record.
+ */
+export type OperatingStateValue =
+  "open" | "temporarily_closed" | "permanently_closed" | "moved";
+
+/** The operating-state block carried by both the card and the detail DTO. */
+export interface OperatingStateView {
+  state: OperatingStateValue;
+  /** The owner's own explanation. `null` while the business is open. */
+  note: string | null;
+  /** ISO-8601 date the state was set. `null` while the business is open. */
+  setAt: string | null;
+  /** The new street address. `null` unless `state` is `"moved"`. */
+  movedToAddress: string | null;
+}
+
+/** The successor listing a moved business points at, when it has one here. */
+export interface MovedToListingView {
+  slug: string;
+  name: string;
+}
+
+/**
+ * A one-off override of the weekly grid for a single calendar date: either a
+ * closure or a set of special hours. `open: false` means CLOSED that day (the
+ * `intervals` are then ignored); `open: true` with intervals means the venue
+ * runs those hours instead of its usual weekday row. Dates are `"YYYY-MM-DD"`
+ * in the venue's own timezone, so they sort and compare as plain strings.
+ */
+export interface ListingHoursException {
+  date: string;
+  open: boolean;
+  intervals: HoursInterval[];
+  note: string;
 }
 
 export interface DirectoryPlace {
@@ -101,7 +225,23 @@ export interface DirectoryPlace {
   rating: { score: string; count: number };
   gallery: string[];
   whatItIs: string[];
+  /** Atmosphere tags (dog-friendly, solo-friendly and the like). Access claims
+   * are NOT in here: they live in `accessibility`, which can answer no. */
   goodFor: { label: string; yes: boolean }[];
+  /** The venue's structured accessibility answers plus its free-text note.
+   * All six questions always arrive, `unknown` included. Absent on demo
+   * fixtures and older payloads, which simply show no accessibility section. */
+  accessibility?: ListingAccessibilityView;
+  /** What the business sells and what it costs, in the owner's own words.
+   * Absent/empty when it prices nothing; the `pills` price band is unchanged. */
+  services?: ListingServiceOffering[];
+  /** The listing's agreement to the affirming baseline. Carried so the record
+   * is complete; the page states the commitment for the whole directory rather
+   * than reading this per listing. */
+  affirmingBaseline?: AffirmingBaselineView;
+  /** Who confirmed the queer-owned badge, when, and on what basis. Read
+   * `queerOwnedVerified` for whether the badge currently applies. */
+  queerOwnedVerification?: QueerOwnedVerificationView;
   hoursType: HoursType;
   hoursNote: string;
   owner: Owner;
@@ -137,6 +277,22 @@ export interface DirectoryPlace {
   /** Real per-weekday hours keyed by `DAYS` id (`Mon`..`Sun`). Absent → the
    * templated `hoursRows(hoursType)` fallback renders instead. */
   hours?: Record<string, DayHours>;
+  /** One-off date overrides of the weekly grid (holiday closures, special
+   * hours). Absent on demo fixtures and older payloads → treated as an empty
+   * list everywhere, so nothing regresses when the field is missing. */
+  hoursExceptions?: ListingHoursException[];
+  /** Whether the business is still trading, and the owner's explanation when
+   * it isn't. Absent on demo fixtures and older payloads → read through
+   * `operatingStateOf`, which defaults to `"open"`. */
+  operatingState?: OperatingStateView;
+  /** The successor listing of a business whose `operatingState.state` is
+   * `"moved"`, when the new premises are themselves listed here. `null`/absent
+   * ⇒ the banner shows the new address as plain text with no link. */
+  movedToListing?: MovedToListingView | null;
+  /** ISO-8601 timestamp the owner last confirmed the practical details (hours,
+   * address, contacts) are still correct. `null`/absent ⇒ never confirmed, and
+   * the page says so rather than implying freshness it can't vouch for. */
+  detailsConfirmedAt?: string | null;
   langs?: string[];
   /** `slug` deep-links to the Events Hub (`/events/:slug`); `id` is the DB PK,
    * present when the source event carries one. `startAt` is the raw ISO
@@ -151,6 +307,13 @@ export interface DirectoryPlace {
     startAt?: string;
   }[];
   reviews: Review[];
+  /**
+   * The most recent public questions on this listing (newest first, capped at
+   * 10 by the detail endpoint). Absent on demo fixtures and on submitted
+   * drafts, which the Q&A section reads as "no questions yet" — a normal,
+   * unremarkable state, never an error.
+   */
+  questions?: ListingPublicQuestion[];
   /** Count of members who saved this listing — backend-only field. Absent for
    * most demo places (the "hidden when absent" path); a few carry a seeded
    * value so the trust signal is visible in demo mode too. */
@@ -1278,7 +1441,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         tint: J,
         byline: "he/they · first visit",
         stars: 3,
-        text: "The cut itself was solid, and nobody blinked when I said \"no, shorter than that.\" Felt a little rushed near the end though. Would've liked five more minutes on the beard line.",
+        text: 'The cut itself was solid, and nobody blinked when I said "no, shorter than that." Felt a little rushed near the end though. Would\'ve liked five more minutes on the beard line.',
         helpful: 2,
       },
     ],
@@ -1644,10 +1807,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
 // bare `initials`/`name`) simply don't match and stay unlinked, as intended.
 (() => {
   const byName = new Map(
-    Object.values(MEMBERS).map((member) => [
-      memberName(member.slug),
-      member,
-    ]),
+    Object.values(MEMBERS).map((member) => [memberName(member.slug), member]),
   );
   for (const place of DIRECTORY_PLACES) {
     for (const review of place.reviews) {
@@ -1772,7 +1932,15 @@ export function realHoursRows(
   hours: Record<string, DayHours>,
 ): { dayKey: string; val: string | null; closed: boolean }[] {
   const dayIds = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const dayKeys = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+  const dayKeys = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
   return dayIds.map((dayId, index) => {
     // `formatDayHours` renders one or two intervals ("12:00–15:00 · 19:00–02:00")
     // and returns null when the day is closed or blank.
@@ -1799,12 +1967,6 @@ function minutesOf(hourMinute: string): number {
   return hour * 60 + minute;
 }
 
-/**
- * Live open/closed state from real per-weekday hours. Returns `unknown` when no
- * hours are set (the page then hides the status chip). A window whose `to` is
- * less than or equal to `from` is treated as closing after midnight, so a late
- * bar reads correctly in the small hours of the next day.
- */
 /**
  * The current wall-clock time in a venue's timezone, returned as a `Date` whose
  * LOCAL getters (`getHours`, `getDay`, …) already reflect that zone. Feeding
@@ -1860,33 +2022,241 @@ export function websiteLabel(raw: string): string {
     .replace(/\/.*$/, "");
 }
 
+/**
+ * The venue's own calendar date for a `zonedNow()` result, as `"YYYY-MM-DD"`.
+ * Built from the LOCAL getters on purpose: `zonedNow` already shifted the
+ * clock into the venue's timezone, so these are the venue's year/month/day,
+ * which is exactly the key an hours exception is stored under.
+ */
+export function isoDateOf(date: Date): string {
+  const year = String(date.getFullYear()).padStart(4, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+/** The exception covering one `"YYYY-MM-DD"` date, if the listing has one. */
+function exceptionOn(
+  exceptions: ListingHoursException[] | undefined,
+  isoDate: string,
+): ListingHoursException | undefined {
+  return exceptions?.find((exception) => exception.date === isoDate);
+}
+
+/**
+ * The intervals actually in force on a given date: the exception's own when one
+ * covers that date, the weekday grid otherwise. This is where an exception
+ * WINS over the weekday row, and it is the whole point of exceptions: a venue
+ * closed on Christmas Eve must not read as open because Tuesdays usually are.
+ *
+ * An exception with `open: false` yields no intervals (closed, whatever the
+ * weekday row says). An exception with `open: true` and no intervals is
+ * malformed; it also yields none rather than silently falling back to the
+ * weekday row, which would resurrect the hours the owner just overrode.
+ */
+function effectiveIntervals(
+  hours: Record<string, DayHours> | undefined,
+  exceptions: ListingHoursException[] | undefined,
+  isoDate: string,
+  dayIndex: number,
+): HoursInterval[] {
+  const exception = exceptionOn(exceptions, isoDate);
+  if (exception) return exception.open ? exception.intervals : [];
+  const weekday = normalizeDayHours(hours?.[dayIdAt(dayIndex)]);
+  return weekday.open ? weekday.intervals : [];
+}
+
+/** The same calendar date shifted by whole days, in the venue's own clock. */
+function shiftDays(date: Date, days: number): Date {
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() + days,
+    date.getHours(),
+    date.getMinutes(),
+  );
+}
+
+/** Minutes left before an interval that is currently running closes. */
+function minutesUntilClose(
+  interval: HoursInterval,
+  nowMinutes: number,
+): number {
+  const from = minutesOf(interval.from);
+  const to = minutesOf(interval.to);
+  // Same-day window: it closes later today. Overnight window (`to <= from`,
+  // the convention documented on `HoursInterval`): if we are past `from` it
+  // closes after midnight, so the remaining time wraps through midnight;
+  // otherwise we are in the tail of a window that opened yesterday.
+  if (to > from) return to - nowMinutes;
+  if (nowMinutes >= from) return 24 * 60 - nowMinutes + to;
+  return to - nowMinutes;
+}
+
+/** How long before closing the venue starts reading as "closing soon". */
+const CLOSING_SOON_MINUTES = 60;
+
+export interface OpenStatus {
+  state: "open" | "closed" | "unknown";
+  /** True when an open venue closes within the next hour. A sub-state of
+   * `"open"` rather than a fourth `state` value, so a caller that only asks
+   * "is it open?" keeps answering correctly. */
+  isClosingSoon: boolean;
+  /** `"HH:MM"` the window currently running ends at; `null` unless open. */
+  closesAt: string | null;
+}
+
+/**
+ * Live open/closed state from a listing's real per-weekday hours, with any
+ * one-off `exceptions` for today (or for yesterday, when an overnight window
+ * is still running) taking precedence over the weekday grid.
+ *
+ * Returns `unknown` when there is nothing to evaluate at all (no hours and no
+ * exception for today), so the page hides the status chip rather than claiming
+ * a venue is closed when nobody ever said.
+ *
+ * `now` must already be the VENUE's wall clock, so pass `zonedNow(place.timezone)`.
+ * Every date and weekday below is read off that same object, so the timezone
+ * correctness is carried end to end, exceptions included.
+ */
 export function openStatus(
   hours: Record<string, DayHours> | undefined,
   now: Date,
-): { state: "open" | "closed" | "unknown" } {
-  if (!hours || Object.keys(hours).length === 0) return { state: "unknown" };
+  exceptions?: ListingHoursException[],
+): OpenStatus {
+  const todayIso = isoDateOf(now);
+  const hasHours = !!hours && Object.keys(hours).length > 0;
+  if (!hasHours && !exceptionOn(exceptions, todayIso)) {
+    return { state: "unknown", isClosingSoon: false, closesAt: null };
+  }
+
   const todayIndex = (now.getDay() + 6) % 7; // 0 = Monday
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const today = normalizeDayHours(hours[dayIdAt(todayIndex)]);
-  if (today.open) {
-    for (const interval of today.intervals) {
-      const from = minutesOf(interval.from);
-      const to = minutesOf(interval.to);
-      // A same-day window is open in [from, to); an overnight window (to <= from)
-      // is open from `from` until midnight tonight.
-      if (to > from ? nowMinutes >= from && nowMinutes < to : nowMinutes >= from)
-        return { state: "open" };
+  for (const interval of effectiveIntervals(
+    hours,
+    exceptions,
+    todayIso,
+    todayIndex,
+  )) {
+    const from = minutesOf(interval.from);
+    const to = minutesOf(interval.to);
+    // A same-day window is open in [from, to); an overnight window (to <= from)
+    // is open from `from` until midnight tonight.
+    const isRunning =
+      to > from ? nowMinutes >= from && nowMinutes < to : nowMinutes >= from;
+    if (isRunning) {
+      const remaining = minutesUntilClose(interval, nowMinutes);
+      return {
+        state: "open",
+        isClosingSoon: remaining > 0 && remaining <= CLOSING_SOON_MINUTES,
+        closesAt: interval.to,
+      };
     }
   }
-  // An overnight window opened yesterday may still be running past midnight.
-  const yesterday = normalizeDayHours(hours[dayIdAt((todayIndex + 6) % 7)]);
-  if (yesterday.open) {
-    for (const interval of yesterday.intervals) {
-      const from = minutesOf(interval.from);
-      const to = minutesOf(interval.to);
-      if (to <= from && nowMinutes < to) return { state: "open" };
+
+  // An overnight window that opened yesterday may still be running past
+  // midnight, and yesterday's own exception governs it, same as above.
+  const yesterdayIso = isoDateOf(shiftDays(now, -1));
+  const yesterdayIndex = (todayIndex + 6) % 7;
+  for (const interval of effectiveIntervals(
+    hours,
+    exceptions,
+    yesterdayIso,
+    yesterdayIndex,
+  )) {
+    const from = minutesOf(interval.from);
+    const to = minutesOf(interval.to);
+    if (to <= from && nowMinutes < to) {
+      const remaining = minutesUntilClose(interval, nowMinutes);
+      return {
+        state: "open",
+        isClosingSoon: remaining > 0 && remaining <= CLOSING_SOON_MINUTES,
+        closesAt: interval.to,
+      };
     }
   }
-  return { state: "closed" };
+  return { state: "closed", isClosingSoon: false, closesAt: null };
+}
+
+/** How many upcoming exceptions the detail page is willing to list at once. */
+export const UPCOMING_EXCEPTIONS_LIMIT = 5;
+
+/**
+ * The exceptions still ahead of the venue's own today, soonest first and capped
+ * because a past holiday closure is noise. Dates are `"YYYY-MM-DD"`, so a plain
+ * string comparison is both the correct ordering and the correct cutoff.
+ * Today's own exception counts as upcoming: it is the one that matters most.
+ */
+export function upcomingHoursExceptions(
+  exceptions: ListingHoursException[] | undefined,
+  now: Date,
+  limit: number = UPCOMING_EXCEPTIONS_LIMIT,
+): ListingHoursException[] {
+  if (!exceptions || exceptions.length === 0) return [];
+  const todayIso = isoDateOf(now);
+  return exceptions
+    .filter((exception) => exception.date >= todayIso)
+    .slice()
+    .sort((first, second) => first.date.localeCompare(second.date))
+    .slice(0, limit);
+}
+
+/** One exception's hours as a compact `"12:00–15:00 · 19:00–02:00"` string, or
+ *  `null` when the date is a closure (the caller renders "Closed" chrome). */
+export function formatExceptionHours(
+  exception: ListingHoursException,
+): string | null {
+  return formatDayHours({
+    open: exception.open,
+    intervals: exception.intervals,
+  });
+}
+
+/**
+ * A listing date from the API turned into a `Date` the localized `fmt.date`
+ * helper can format. A bare `"YYYY-MM-DD"` (the operating state's `setAt`, an
+ * exception's `date`) is read as LOCAL midnight rather than through
+ * `new Date(string)`, which would treat it as UTC and could render the day
+ * before west of Greenwich. A full ISO timestamp (`detailsConfirmedAt`) parses
+ * normally. Returns `null` for anything unparseable, so a bad value shows
+ * nothing instead of "Invalid Date".
+ */
+export function parseListingDate(
+  value: string | null | undefined,
+): Date | null {
+  if (!value) return null;
+  const dayOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
+  if (dayOnly) {
+    return new Date(
+      Number(dayOnly[1]),
+      Number(dayOnly[2]) - 1,
+      Number(dayOnly[3]),
+    );
+  }
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+/**
+ * Whether a business is still trading. Absent `operatingState` (demo fixtures,
+ * older payloads) means `"open"`, so nothing regresses when the field is
+ * missing. Nothing is invented either: a listing only claims to be closed
+ * or moved when the backend actually says so.
+ */
+export function operatingStateOf(place: DirectoryPlace): OperatingStateValue {
+  return place.operatingState?.state ?? "open";
+}
+
+/** True when the business is trading normally, so the page may keep offering
+ *  the go-there-now actions (directions, calling, live hours). */
+export function isPlaceOperating(place: DirectoryPlace): boolean {
+  return operatingStateOf(place) === "open";
+}
+
+/** True when the business will never trade at this address again. This is the state
+ *  where offering Directions is actively harmful. */
+export function isPlaceGone(place: DirectoryPlace): boolean {
+  const state = operatingStateOf(place);
+  return state === "permanently_closed" || state === "moved";
 }

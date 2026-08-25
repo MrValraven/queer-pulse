@@ -16,7 +16,6 @@ function demoListing(overrides: Partial<ListingDTO> & Pick<
 >): ListingDTO {
   return {
     path: "claim",
-    verify: "",
     badge: "owned",
     evidence: "",
     cats: ["food"],
@@ -34,6 +33,7 @@ function demoListing(overrides: Partial<ListingDTO> & Pick<
     longitude: null,
     hours: {},
     hoursNote: "",
+    hoursExceptions: [],
     social: { instagram: "", website: "", email: "", phone: "" },
     photos: { wide: null, d1: null, d2: null, vibe: null },
     alt: { wide: "", d1: "", d2: "", vibe: "" },
@@ -44,7 +44,14 @@ function demoListing(overrides: Partial<ListingDTO> & Pick<
     visibility: "public",
     linkToProfile: true,
     contactEmail: "",
-    notify: [],
+    operatingState: {
+      state: "open",
+      note: null,
+      setAt: null,
+      movedToAddress: null,
+    },
+    movedToListingId: null,
+    detailsConfirmedAt: null,
     consentOuting: false,
     consentGuide: false,
     queerOwnedVerified: false,

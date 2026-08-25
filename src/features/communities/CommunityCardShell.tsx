@@ -47,6 +47,7 @@ export function CommunityCardShell({
   badge,
   footAction,
   className,
+  isPreview = false,
 }: {
   slug?: string;
   name: string;
@@ -67,16 +68,17 @@ export function CommunityCardShell({
   /** Extra root classes — pass them from this same CSS module so the
    *  `.privateCard .shoulder` style descendant selectors still match. */
   className?: string;
+  /** Renders the same card as an inert `<div>` instead of a `<Link>`, for the
+   *  edit modal's live preview: a card inside a dialog must not be tabbable
+   *  and must not navigate the member away from the form they are filling in. */
+  isPreview?: boolean;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const shownRoster = roster ?? [];
 
-  return (
-    <Link
-      to={`/community/${slug}`}
-      className={[styles.card, className].filter(Boolean).join(" ")}
-    >
+  const face = (
+    <>
       <div
         className={[
           styles.shoulder,
@@ -143,7 +145,7 @@ export function CommunityCardShell({
 
       <div className={styles.foot}>
         <span className={styles.metaStack}>
-          <span className={styles.meta}>{countLabel}</span>
+          {countLabel && <span className={styles.meta}>{countLabel}</span>}
           {/* The demo registry carries no activity, the live card DTO does —
               so this line appears wherever a real number exists and is simply
               absent where none does, in either mode. */}
@@ -156,6 +158,18 @@ export function CommunityCardShell({
         </span>
         {footAction}
       </div>
+    </>
+  );
+
+  const rootClassName = [styles.card, className].filter(Boolean).join(" ");
+
+  if (isPreview) {
+    return <div className={rootClassName}>{face}</div>;
+  }
+
+  return (
+    <Link to={`/community/${slug}`} className={rootClassName}>
+      {face}
     </Link>
   );
 }

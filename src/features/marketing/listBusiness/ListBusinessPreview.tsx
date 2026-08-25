@@ -33,16 +33,11 @@ export function ListBusinessPreview({
   draft,
   userName,
   photoPreviews,
-  editSlug,
   onAddPhoto,
 }: {
   draft: ListingDraft;
   userName: string;
   photoPreviews: Record<PhotoKey, string>;
-  /** Public slug of the listing being edited — present in edit mode, so the
-   *  preview's deterministic tint matches the real card's. Absent in create
-   *  mode, where the eventual slug doesn't exist yet. */
-  editSlug?: string;
   /** Jumps the wizard to the photos step — wired to the preview's "add cover
    *  photo" call to action when there's no photo yet. */
   onAddPhoto: () => void;
@@ -62,7 +57,7 @@ export function ListBusinessPreview({
     ? submittedToPlace({
         ...draft,
         ref: "",
-        slug: editSlug || slugify(draft.name),
+        slug: slugify(draft.name),
         status: "review",
         submittedBy: "",
         photos: PHOTO_KEYS.reduce(

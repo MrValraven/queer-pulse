@@ -55,6 +55,11 @@ export function MobilePersonaPreview({ onClose }: { onClose: () => void }) {
     bio: editor.bio,
     avatarUrl: editor.avatarPreview || editor.avatarUrl || null,
     coverUrl: editor.coverPreview || editor.coverUrl || null,
+    // Pair the crop with whichever cover is actually showing: a fresh pick's
+    // own framing while it's up, else the crop saved for the committed one.
+    coverCrop: editor.coverPreview
+      ? editor.coverPreviewCrop
+      : editor.coverCrop,
     accent: editor.accent || null,
     availability: editor.availability || null,
     ctaLabel: editor.ctaLabel,

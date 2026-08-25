@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type {
   AccentKey,
   AvailabilityKey,
@@ -47,7 +47,14 @@ export interface SubprofileMetaEditor {
   coverUrl: string;
   setCoverUrl: (value: string) => void;
   coverPreview: string | null;
-  setCoverPreview: (value: string | null) => void;
+  setCoverPreview: (value: string | null, crop?: CropRect) => void;
+  /** Saved reframe crop for the CURRENTLY COMMITTED `subprofile.coverUrl`, and
+   *  the crop of a freshly picked cover that hasn't been saved yet. Pair them
+   *  the same way `coverPreview`/`coverUrl` pair: a fresh pick's crop wins
+   *  while it's showing. Display-only — the crop is persisted separately,
+   *  keyed by the upload, and never rides in the save payload. */
+  coverCrop: CropRect | undefined;
+  coverPreviewCrop: CropRect | undefined;
   coverBleed: boolean;
   setCoverBleed: (value: boolean) => void;
   accent: AccentKey | "";
@@ -149,7 +156,17 @@ export function useSubprofileMetaEditor(
     reason: null,
   });
   const [coverUrl, setCoverUrl] = useState(subprofile.coverUrl ?? "");
-  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [coverPreview, setCoverPreviewUrl] = useState<string | null>(null);
+  const [coverPreviewCrop, setCoverPreviewCrop] = useState<CropRect | undefined>(
+    undefined,
+  );
+  // One setter for the (url, crop) pair so the two can never drift apart: a
+  // pick without a crop (a GIF, which bypasses the reframer) must CLEAR any
+  // crop left over from the previous pick, not inherit it.
+  const setCoverPreview = useCallback((value: string | null, crop?: CropRect) => {
+    setCoverPreviewUrl(value);
+    setCoverPreviewCrop(crop);
+  }, []);
   const [coverBleed, setCoverBleed] = useState<boolean>(
     subprofile.skinData?.coverBleed ?? false,
   );
@@ -407,6 +424,8 @@ export function useSubprofileMetaEditor(
     setCoverUrl,
     coverPreview,
     setCoverPreview,
+    coverCrop: subprofile.coverCrop,
+    coverPreviewCrop,
     coverBleed,
     setCoverBleed,
     accent,

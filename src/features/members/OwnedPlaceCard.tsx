@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiArrowRight, FiClock } from "react-icons/fi";
+import { FiArrowRight, FiClock, FiUsers } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -28,6 +28,9 @@ const STATUS_LABEL_KEY: Record<ListingStatus, string> = {
  * listing has no reviews, and the host is the profile you're already on), and
  * a second footer row carries the management actions.
  *
+ * A place this member only CO-MANAGES wears its own chip and is offered no
+ * delete: removing a listing stays with the person who owns it.
+ *
  * The card is an `<article>` rather than a `<Link>` like the directory card,
  * because it holds real buttons and a button inside a router link is banned.
  * A live listing still gets the whole-card click: only the visual body is
@@ -47,6 +50,9 @@ export function OwnedPlaceCard({
   const { t } = useTranslation();
   const { place, ref, status } = entry;
   const isLive = status === "live";
+  // Somebody else owns this one. Said on the card rather than only inside the
+  // editor, because the grid is where an owner scans what is theirs.
+  const isCoManaged = entry.managementRole === "co_manager";
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [quickEditing, setQuickEditing] = useState(false);
 
@@ -58,14 +64,22 @@ export function OwnedPlaceCard({
       showRating={place.rating.count > 0}
       showHost={false}
       topRight={
-        <span
-          className={[
-            styles.status,
-            isLive ? styles.statusLive : styles.statusReview,
-          ].join(" ")}
-        >
-          {!isLive && <FiClock size={11} aria-hidden />}
-          {t(STATUS_LABEL_KEY[status])}
+        <span className={styles.statusStack}>
+          {isCoManaged && (
+            <span className={`${styles.status} ${styles.statusCoManaged}`}>
+              <FiUsers size={11} aria-hidden />
+              {t("members:places.coManaging")}
+            </span>
+          )}
+          <span
+            className={[
+              styles.status,
+              isLive ? styles.statusLive : styles.statusReview,
+            ].join(" ")}
+          >
+            {!isLive && <FiClock size={11} aria-hidden />}
+            {t(STATUS_LABEL_KEY[status])}
+          </span>
         </span>
       }
       visitSlot={

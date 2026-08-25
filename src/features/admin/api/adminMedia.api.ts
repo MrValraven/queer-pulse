@@ -8,6 +8,7 @@ export type AdminMediaKind =
   | "avatars"
   | "work"
   | "story-covers"
+  | "persona-covers"
   | "gathering-photos"
   | "group-avatars"
   | "listing-photos";
@@ -17,6 +18,7 @@ export const ADMIN_MEDIA_KINDS: AdminMediaKind[] = [
   "avatars",
   "work",
   "story-covers",
+  "persona-covers",
   "gathering-photos",
   "group-avatars",
   "listing-photos",

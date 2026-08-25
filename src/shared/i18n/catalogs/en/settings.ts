@@ -397,6 +397,7 @@ export const settings: Catalog = {
   "uploads.kind.avatar": "Profile photo",
   "uploads.kind.work-image": "Showcase image",
   "uploads.kind.story-cover": "Story cover",
+  "uploads.kind.persona-cover": "Persona banner",
   "uploads.kind.gathering-photo": "Event photo",
   "uploads.kind.group-avatar": "Group photo",
   "uploads.kind.listing-photo": "Listing photo",

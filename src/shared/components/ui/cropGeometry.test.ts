@@ -4,6 +4,8 @@ import {
   cropRectFromPanZoom,
   panZoomFromCropRect,
   cropToImgStyle,
+  cropFocalPosition,
+  IDENTITY_CROP,
 } from './cropGeometry';
 
 const wide = { width: 2000, height: 1000 }; // 2:1 source
@@ -41,5 +43,26 @@ describe('cropToImgStyle', () => {
     expect(style.height).toBe('100%');
     expect(style.left).toBe('-50%');    // -100 * 0.25 / 0.5
     expect(style.top).toBe('0%');
+  });
+});
+
+describe('cropFocalPosition', () => {
+  it('centres on the middle of the crop rect', () => {
+    // A 3:1 band taken from the TOP THIRD of a tall source: the subject the
+    // member framed sits at 1/6 down the file, so that is where the banner
+    // must anchor — not the 50% the browser would default to.
+    expect(
+      cropFocalPosition({ x: 0, y: 0, width: 1, height: 1 / 3, aspect: '3:1' }),
+    ).toBe('50% 16.7%');
+  });
+
+  it('is the plain centre for an unreframed crop', () => {
+    expect(cropFocalPosition(IDENTITY_CROP)).toBe('50% 50%');
+  });
+
+  it('clamps a rect that runs past the image edge', () => {
+    expect(
+      cropFocalPosition({ x: 0.9, y: 0.9, width: 1, height: 1, aspect: 'free' }),
+    ).toBe('100% 100%');
   });
 });

@@ -1264,29 +1264,8 @@ export const marketing: Catalog = {
   "listBusiness.step0.suggest.title": "Estou a sugerir um lugar de que gosto",
   "listBusiness.step0.suggest.desc":
     "Um sítio que tem sido bom para ti. A equipa vai contactar quem o gere antes de ficar no ar.",
-  "listBusiness.step0.verifyLabel":
-    "Como devemos verificar que geres este lugar?",
-  "listBusiness.step0.verifyHelp":
-    "É isto que mantém o diretório de confiança. Escolhe o que for mais fácil para ti.",
   "listBusiness.step0.signedInAs":
     "Tens sessão iniciada como <b>{name}</b>. Vamos associar esta submissão ao teu perfil para a equipa saber a quem agradecer (e a quem perguntar, se for preciso).",
-  // Opções de verificação
-  "listBusiness.verify.email.label": "Email do negócio",
-  "listBusiness.verify.email.desc":
-    "Enviamos um código para um endereço do teu domínio.",
-  "listBusiness.verify.email.badge": "Mais rápido",
-  "listBusiness.verify.instagram.label": "Instagram",
-  "listBusiness.verify.instagram.desc":
-    "Confirma com uma mensagem direta da conta indicada.",
-  "listBusiness.verify.instagram.badge": "Fácil",
-  "listBusiness.verify.post.label": "Postal para a morada",
-  "listBusiness.verify.post.desc":
-    "À moda antiga. O código chega em 3 a 5 dias.",
-  "listBusiness.verify.post.badge": "3–5 dias",
-  "listBusiness.verify.later.label": "Verificar depois da revisão",
-  "listBusiness.verify.later.desc":
-    "A equipa verifica contigo diretamente, de pessoa para pessoa.",
-  "listBusiness.verify.later.badge": "Humano",
   // Passo 1 — básico
   "listBusiness.step1.title": "Começa com",
   "listBusiness.step1.em": "o básico.",
@@ -1512,7 +1491,8 @@ export const marketing: Catalog = {
     "Para ti, que submetes: fica privado, nunca aparece no anúncio.",
   "listBusiness.step4.contactEmailPlaceholder":
     "Para te podermos contactar sobre este anúncio",
-  "listBusiness.step4.notifyLabel": "Envia-me email quando… (opcional)",
+  "listBusiness.step4.notifyNote":
+    "Enviamos-te um email quando o teu anúncio ficar no ar, e se a equipa tiver alguma pergunta sobre ele.",
   "listBusiness.step4.consent":
     "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anónime” acima. Não há problema nenhum.",
   // Opções de ligação
@@ -1533,10 +1513,6 @@ export const marketing: Catalog = {
   "listBusiness.vis.role.desc": "“Dono”, mas sem nome.",
   "listBusiness.vis.anon.label": "Manter-me anónime",
   "listBusiness.vis.anon.desc": "Visível só para a equipa da comunidade.",
-  // Opções de notificação
-  "listBusiness.notify.live.label": "Ficar no ar",
-  "listBusiness.notify.question.label": "A equipa tiver uma pergunta",
-  "listBusiness.notify.news.label": "Houver novidades ocasionais do diretório",
   // Passo 5 — revisão
   "listBusiness.step5.title": "Uma última vista de olhos",
   "listBusiness.step5.em": "antes de ir para a equipa.",
@@ -1552,7 +1528,6 @@ export const marketing: Catalog = {
   "listBusiness.step5.group.practical": "Prático",
   "listBusiness.step5.group.photosYou": "Fotos e tu",
   "listBusiness.step5.row.listingAs": "A anunciar como",
-  "listBusiness.step5.row.verification": "Verificação",
   "listBusiness.step5.row.name": "Nome",
   "listBusiness.step5.row.category": "Categoria",
   "listBusiness.step5.row.neighbourhood": "Bairro",
@@ -1622,7 +1597,6 @@ export const marketing: Catalog = {
     "Referência · <b>{ref}</b>  ·  guarda-a algures",
   // Etiquetas dos chips de "o que falta"
   "listBusiness.missing.path": "como conheces o lugar",
-  "listBusiness.missing.verify": "uma forma de verificar",
   "listBusiness.missing.name": "um nome",
   "listBusiness.missing.cats": "uma categoria",
   "listBusiness.missing.hood": "um bairro",
@@ -1635,6 +1609,8 @@ export const marketing: Catalog = {
   "listBusiness.missing.pin": "um pino no mapa",
   "listBusiness.missing.hours": "o horário",
   "listBusiness.missing.hoursInvalid": "uma correção no horário",
+  "listBusiness.missing.hoursExceptionsInvalid":
+    "uma correção nas exceções por data",
   "listBusiness.missing.social": "links de contacto válidos",
   "listBusiness.missing.socialFormat":
     "o formato dos links de contacto corrigido",
@@ -1644,6 +1620,8 @@ export const marketing: Catalog = {
   "listBusiness.missing.contactEmail": "um email de contacto",
   "listBusiness.missing.alt": "texto alternativo para as tuas fotos",
   "listBusiness.missing.consent": "as duas confirmações",
+  "listBusiness.missing.services": "um nome e um preço em cada serviço",
+  "listBusiness.missing.affirmingBaseline": "o compromisso afirmativo",
   // Coluna de pré-visualização ao vivo
   "listBusiness.preview.head":
     "Pré-visualização ao vivo · atualiza enquanto escreves",
@@ -1681,12 +1659,357 @@ export const marketing: Catalog = {
   "listBusiness.edit.saveCta": "Guardar alterações",
   "listBusiness.edit.saving": "A guardar as alterações…",
   "listBusiness.edit.saved": "O teu anúncio foi atualizado.",
+  "listBusiness.edit.savedInReview":
+    "As tuas alterações foram guardadas. O anúncio continua em análise.",
+  "listBusiness.edit.status.liveBody":
+    "Este anúncio está ativo. Guardar as alterações atualiza a página pública de imediato.",
+  "listBusiness.edit.status.reviewBody":
+    "Este anúncio ainda não é público. A moderação está a lê-lo, e guardar atualiza o que a equipa vê.",
+  "listBusiness.edit.status.questionBody":
+    "A moderação tem uma pergunta sobre este anúncio antes de poder ficar ativo. Guardar atualiza o que a equipa vê.",
+  "listBusiness.edit.verifiedBadge.title": "Selo de negócio queer verificado",
+  "listBusiness.edit.verifiedBadge.body":
+    "A moderação confirmou este selo para o negócio tal como está hoje. Alterar o nome do negócio, o selo Queer-owned ou LGBTQ+ friendly, ou a ligação deste anúncio ao teu perfil, remove o selo até a moderação confirmar o negócio outra vez. Tudo o resto que editares aqui não lhe toca.",
   "listBusiness.edit.saveError":
     "Não conseguimos guardar as alterações. Tenta de novo.",
   "listBusiness.edit.discardConfirm":
     "Descartar as alterações não guardadas a este anúncio?",
   "listBusiness.edit.notAllowed":
     "Só podes editar um anúncio que tenhas submetido.",
+
+  // ── Editor de anúncio num só ecrã (modo de edição). O fluxo de criação
+  //    continua um assistente guiado; a edição põe tudo numa página.
+  "listBusiness.editor.section.aboutYou": "Sobre ti",
+  "listBusiness.editor.section.permissions": "Permissões",
+  "listBusiness.editor.nav.label": "Ir para",
+  "listBusiness.editor.nav.aria": "Ir para uma secção do teu anúncio",
+  "listBusiness.editor.nav.missingCount": "Faltam {count}",
+  "listBusiness.editor.unsavedChanges": "Tens alterações por guardar.",
+  "listBusiness.editor.noChanges": "Está tudo guardado.",
+  "listBusiness.editor.previewCta": "Pré-visualizar página",
+  "listBusiness.editor.preview.eyebrow":
+    "Pré-visualização, com as alterações por guardar",
+  "listBusiness.editor.preview.sub":
+    "A página do teu anúncio como quem visita a vai ver. Nada fica guardado até carregares em guardar.",
+  "listBusiness.editor.preview.subCoManager":
+    "A página do anúncio como quem visita a vai ver. Nada fica guardado até carregares em guardar. O bloco sobre a pessoa por trás do negócio aparece vazio nesta pré-visualização e preenchido na página real.",
+
+  "listBusiness.editor.section.services": "Quanto custa",
+  "listBusiness.editor.section.accessibility": "Como se entra",
+  "listBusiness.editor.section.tradingAndVisibility": "Atividade e visibilidade",
+  "listBusiness.editor.section.whoCanEdit": "Quem pode editar",
+  "listBusiness.editor.section.roleOnListing": "Função mostrada na página",
+
+  // ── Cogestão. Quem mais pode editar uma página, e o convite que os leva lá.
+  //    Só para membros: nada disto chega à página pública.
+  "listBusiness.coManagers.introOwner":
+    "Gerir um espaço raramente é trabalho para uma pessoa só. Convida alguém de confiança para ajudar a manter esta página atualizada. Essa pessoa pode alterar tudo sobre o negócio. Os teus dados pessoais, e quem pode editar, continuam contigo.",
+  "listBusiness.coManagers.introCoManager":
+    "Quem trata desta página. Só quem é proprietário pode convidar pessoas ou retirar um lugar.",
+  "listBusiness.coManagers.status.active": "Pode editar",
+  "listBusiness.coManagers.status.invited": "À espera de resposta",
+  "listBusiness.coManagers.formerMember": "Alguém que entretanto saiu",
+  "listBusiness.coManagers.invitedOn": "Convite enviado a {date}",
+  "listBusiness.coManagers.editingSince": "Ajuda desde {date}",
+  "listBusiness.coManagers.removeCta": "Retirar",
+  "listBusiness.coManagers.cancelInviteCta": "Cancelar convite",
+  "listBusiness.coManagers.removeConfirm":
+    "Retirar <b>{name}</b> desta página? Fica tudo o que essa pessoa acrescentou, e podes voltar a convidá-la quando quiseres.",
+  "listBusiness.coManagers.cancelInviteConfirm":
+    "Cancelar o convite para <b>{name}</b>? Podes voltar a enviá-lo quando quiseres.",
+  "listBusiness.coManagers.keepCta": "Voltar atrás",
+  "listBusiness.coManagers.removeYes": "Retirar",
+  "listBusiness.coManagers.cancelInviteYes": "Cancelar convite",
+  "listBusiness.coManagers.empty.title": "Por agora, só tu",
+  "listBusiness.coManagers.empty.descriptionOwner":
+    "Ainda não há mais ninguém a editar esta página. Convida alguém aqui em baixo quando quiseres uma ajuda.",
+  "listBusiness.coManagers.empty.descriptionCoManager":
+    "Neste momento não há mais ninguém a tratar desta página.",
+  "listBusiness.coManagers.removedToast":
+    "Essa pessoa deixou de editar esta página.",
+  "listBusiness.coManagers.removeError":
+    "Não conseguimos fazer essa alteração agora. Tenta outra vez.",
+  "listBusiness.coManagers.inviteHeading": "Convidar alguém para ajudar",
+  "listBusiness.coManagers.inviteIntro":
+    "Encontra a pessoa em quem estás a pensar e envia o convite. Nada muda para ela até aceitar.",
+  "listBusiness.coManagers.seats":
+    "{used} de {cap} lugares ocupados. Um convite ocupa um lugar enquanto espera resposta.",
+  "listBusiness.coManagers.seatsFullNotice":
+    "Os lugares estão todos ocupados. Retira alguém, ou cancela um convite, para libertar um.",
+  "listBusiness.coManagers.searchPlaceholder": "Procurar membros pelo nome",
+  "listBusiness.coManagers.searchHint":
+    "Escreve um nome para encontrar a pessoa em quem estás a pensar.",
+  "listBusiness.coManagers.sendCta": "Enviar convite",
+  "listBusiness.coManagers.sendingCta": "A enviar...",
+  "listBusiness.coManagers.invitedToast": "Convite enviado.",
+  "listBusiness.coManagers.error.self": "Esta página já é tua para editar.",
+  "listBusiness.coManagers.error.seatsFull":
+    "Os lugares estão todos ocupados. Retira alguém, ou cancela um convite, para libertar um.",
+  "listBusiness.coManagers.error.alreadyThere":
+    "Essa pessoa já tem lugar aqui, ou um convite à espera.",
+  "listBusiness.coManagers.error.generic":
+    "Não conseguimos enviar esse convite. Tenta outra vez.",
+  "listBusiness.coManagers.stepDownHeading": "Deixar de gerir esta página",
+  "listBusiness.coManagers.stepDownIntro":
+    "Podes devolvê-la quando quiseres. Tudo o que acrescentaste fica com a página.",
+  "listBusiness.coManagers.stepDownCta": "Deixar de gerir",
+  "listBusiness.coManagers.stepDownConfirm":
+    "Deixar de ajudar com {name}? O teu acesso termina de imediato, e só quem é proprietário te pode trazer de volta.",
+  "listBusiness.coManagers.stepDownCancel": "Voltar atrás",
+  "listBusiness.coManagers.stepDownYes": "Sim, deixar de gerir",
+  "listBusiness.coManagers.leftToast": "Já não ajudas com {name}.",
+  "listBusiness.coManagers.leaveError":
+    "Não conseguimos fazer isso agora. Tenta outra vez.",
+  "listBusiness.coManagers.banner.title": "Ajudas a gerir esta página",
+  "listBusiness.coManagers.banner.titleNamed":
+    "Ajudas {name} a gerir {listing}",
+  "listBusiness.coManagers.banner.body":
+    "Podes alterar tudo sobre o negócio: o que diz, os horários, as fotografias, os serviços, as respostas de acessibilidade, e as respostas a avaliações e perguntas. Os dados de contacto e as escolhas de perfil de quem é proprietário ficam privados, e apagar a página ou mudar quem pode editar também fica com essa pessoa.",
+  "listBusiness.coManagers.roleFieldLabel": "Função mostrada na página",
+  "listBusiness.coManagers.roleFieldHelper":
+    "O cargo apresentado ao lado do negócio na página pública.",
+  "listBusiness.coManagers.ownerPrivateNotice":
+    "O nome, a apresentação, o email de contacto e as escolhas de perfil de quem é proprietário são privados. Não aparecem aqui, e nada do que guardares os altera.",
+
+  // ── Vocabulário de acessibilidade. As seis perguntas são fixas e
+  //    partilhadas com a API, que guarda os slugs tal e qual.
+  "listBusiness.accessibility.question.stepFree.label": "Entrada sem degraus",
+  "listBusiness.accessibility.question.stepFree.help":
+    "Dá para chegar da rua à porta sem subir degraus.",
+  "listBusiness.accessibility.question.interior.label":
+    "Interior acessível em cadeira de rodas",
+  "listBusiness.accessibility.question.interior.help":
+    "Há espaço para circular e chegar à zona principal em cadeira de rodas.",
+  "listBusiness.accessibility.question.accessibleToilet.label":
+    "Casa de banho acessível",
+  "listBusiness.accessibility.question.accessibleToilet.help":
+    "Uma casa de banho com o espaço e os apoios de que uma pessoa em cadeira de rodas precisa.",
+  "listBusiness.accessibility.question.genderNeutralToilet.label":
+    "Casa de banho neutra",
+  "listBusiness.accessibility.question.genderNeutralToilet.help":
+    "Pelo menos uma casa de banho para a qual ninguém tem de escolher uma porta com género.",
+  "listBusiness.accessibility.question.quietHours.label":
+    "Horas calmas, de baixo estímulo",
+  "listBusiness.accessibility.question.quietHours.help":
+    "Horários regulares com a música baixa e as luzes suaves.",
+  "listBusiness.accessibility.question.assistanceAnimals.label":
+    "Animais de assistência bem-vindos",
+  "listBusiness.accessibility.question.assistanceAnimals.help":
+    "Cães-guia e outros animais de assistência podem entrar. A política sobre animais de companhia é uma pergunta à parte.",
+
+  // Palavras de quem lê na página pública; palavras de quem gere no editor.
+  "listBusiness.accessibility.answer.yes.reader": "Sim",
+  "listBusiness.accessibility.answer.yes.owner": "Sim",
+  "listBusiness.accessibility.answer.no.reader": "Não",
+  "listBusiness.accessibility.answer.no.owner": "Não",
+  "listBusiness.accessibility.answer.unknown.reader": "Ninguém nos disse",
+  "listBusiness.accessibility.answer.unknown.owner": "Ainda não sei",
+
+  "listBusiness.accessibility.intro":
+    "Seis perguntas que alguém pode precisar de ver respondidas antes de decidir se consegue vir. Responde ao que souberes.",
+  "listBusiness.accessibility.reassurance":
+    "Um não honesto é útil. Quem anda em cadeira de rodas prefere muito mais ler que há dois degraus à tua porta do que aparecer e descobrir na hora. Nada disto conta contra o teu anúncio.",
+  "listBusiness.accessibility.noteLabel": "Mais alguma coisa que valha a pena saber",
+  "listBusiness.accessibility.noteHint":
+    "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar à porta.",
+  "listBusiness.accessibility.notePlaceholder":
+    "Dois degraus à porta da frente e a equipa ajuda com a rampa. Toca à campainha da esquerda.",
+
+  // ── Serviços com preço, do lado de quem gere.
+  "listBusiness.services.intro":
+    "O que vendes e quanto custa. A tua faixa de preço continua a ser o sinal rápido; aqui dizes o que ela compra. Deixa vazio se os preços não funcionarem assim contigo.",
+  "listBusiness.services.empty":
+    "Ainda não há nada. Adiciona uma linha por cada coisa para a qual queres mostrar um preço.",
+  "listBusiness.services.addCta": "Adicionar um serviço",
+  "listBusiness.services.addHint":
+    "Opcional. A maioria dos anúncios fica bem com meia dúzia.",
+  "listBusiness.services.ceilingHint":
+    "Chegaste ao limite de {count}. Uma lista de preços mais longa fica melhor no teu próprio site.",
+  "listBusiness.services.nameLabel": "O que é",
+  "listBusiness.services.namePlaceholder": "Consulta, primeira sessão",
+  "listBusiness.services.nameError":
+    "Dá um nome a esta linha, ou limpa o preço para a remover.",
+  "listBusiness.services.priceLabel": "Quanto custa",
+  "listBusiness.services.pricePlaceholder": "Desde 25 EUR, escala variável",
+  "listBusiness.services.priceError":
+    "Diz quanto custa. Serve tudo o que for verdade: um número, um intervalo ou uma escala variável.",
+  "listBusiness.services.noteLabel": "Uma linha de detalhe",
+  "listBusiness.services.noteHint": "Opcional.",
+  "listBusiness.services.notePlaceholder":
+    "45 minutos, inclui mensagem de seguimento",
+  "listBusiness.services.unnamedRow": "linha {position}",
+  "listBusiness.services.moveUp": "Mover {name} para cima",
+  "listBusiness.services.moveDown": "Mover {name} para baixo",
+  "listBusiness.services.remove": "Remover {name}",
+
+  // ── A pausa de quem gere. Uma pergunta diferente do estado de atividade
+  //    acima: isto é sobre se o ANÚNCIO aparece, e não diz nada sobre se o
+  //    negócio está aberto.
+  "listBusiness.visibility.heading": "A aparecer no diretório",
+  "listBusiness.visibility.intro":
+    "Retira o teu anúncio do diretório durante um tempo e volta a pô-lo quando quiseres. Fica tudo onde está enquanto estiver fora.",
+  "listBusiness.visibility.distinction":
+    "Isto é diferente do estado de atividade acima. Fechado temporariamente mantém-te no diretório e diz às pessoas que estás fechado por agora. Pausar tira o anúncio da exploração, da pesquisa e do mapa, e não diz nada sobre se estás aberto.",
+  "listBusiness.visibility.state.showing.title": "O teu anúncio está a aparecer",
+  "listBusiness.visibility.state.showing.sub":
+    "As pessoas encontram-no na exploração, na pesquisa e no mapa.",
+  "listBusiness.visibility.state.hidden.title": "O teu anúncio está em pausa",
+  "listBusiness.visibility.state.hidden.sub":
+    "Neste momento está fora da exploração, da pesquisa e do mapa. Ninguém o encontra no diretório até o voltares a pôr.",
+  "listBusiness.visibility.hiddenSince": "Em pausa {when}",
+  "listBusiness.visibility.kept.reviews":
+    "As tuas avaliações, classificações e respostas ficam exatamente como estão.",
+  "listBusiness.visibility.kept.content":
+    "Fotografias, horários, contactos e os selos que tiveres ficam todos guardados.",
+  "listBusiness.visibility.kept.reversible":
+    "Podes voltar a pô-lo quando quiseres, e ele regressa inteiro.",
+  "listBusiness.visibility.hideCta": "Pôr este anúncio em pausa",
+  "listBusiness.visibility.showCta": "Voltar a mostrar",
+  "listBusiness.visibility.applying": "A atualizar…",
+  "listBusiness.visibility.saved.hidden":
+    "O teu anúncio ficou em pausa. Está fora do diretório até o voltares a pôr.",
+  "listBusiness.visibility.saved.shown":
+    "O teu anúncio voltou ao diretório.",
+  "listBusiness.visibility.saveError":
+    "Não foi possível atualizar. Tenta novamente.",
+  "listBusiness.visibility.banner.title": "Este anúncio está em pausa",
+  "listBusiness.visibility.banner.body":
+    "Neste momento está fora da exploração, da pesquisa e do mapa. As tuas alterações guardam-se normalmente, e ninguém as vê até voltares a mostrar o anúncio.",
+
+  // ── O compromisso afirmativo, assumido uma vez na submissão. Fora do
+  //    pedido de atualização de propósito: não há edição que o desfaça.
+  "listBusiness.baseline.title":
+    "A única coisa com que <em>todos os anúncios concordam.</em>",
+  "listBusiness.baseline.body":
+    "Os negócios deste diretório comprometem-se a acolher e servir pessoas LGBTQ+, e a agir quando alguém no seu espaço fica aquém. É esse compromisso que faz esta lista valer a pena.",
+  "listBusiness.baseline.scope":
+    "É sobre a forma como tratas as pessoas que serves. Não dá a ninguém autorização para recusar uma pessoa por quem ela é.",
+  "listBusiness.baseline.agreeTitle": "Concordamos com isto",
+  "listBusiness.baseline.agreeSub":
+    "Obrigatório. Todos os anúncios do diretório concordaram com o mesmo.",
+  "listBusiness.baseline.noticeTitle":
+    "Concordaste com o compromisso afirmativo LGBTQ+ quando este anúncio foi criado.",
+  "listBusiness.baseline.noticeBody":
+    "Mantém-se enquanto o anúncio existir, por isso não há nada para mudar aqui. Todos os negócios do diretório concordaram com o mesmo.",
+
+  // ── Guardado automático local do editor. OFERECE uma cópia guardada neste
+  //    dispositivo; o formulário mantém-se igual ao que o servidor devolveu
+  //    até a pessoa carregar em repor, por isso nada publicado é substituído
+  //    em silêncio.
+  "listBusiness.editor.restore.title":
+    "Tens alterações por guardar de {when}",
+  "listBusiness.editor.restore.sub":
+    "Ficaram guardadas neste dispositivo e nunca foram enviadas. O teu anúncio publicado não mudou.",
+  "listBusiness.editor.restore.serverChanged":
+    "Atenção: este anúncio foi atualizado depois de essas alterações terem sido guardadas, por isso reposicioná-las substituiria o texto mais recente.",
+  "listBusiness.editor.restore.restoreCta": "Repor",
+  "listBusiness.editor.restore.discardCta": "Descartar",
+  "listBusiness.editor.restore.justNow": "há instantes",
+  "listBusiness.editor.restore.unknownWhen": "uma sessão anterior",
+
+  // ── Estado de funcionamento: o que o próprio negócio diz sobre si. Definir
+  //    isto nunca mexe no estado de moderação nem obriga a nova revisão.
+  "listBusiness.trading.groupAria": "Este negócio ainda está em atividade?",
+  "listBusiness.trading.currently": "Neste momento",
+  "listBusiness.trading.since": "definido {when}",
+  "listBusiness.trading.justNow": "há instantes",
+  "listBusiness.trading.unknownWhen": "há algum tempo",
+  "listBusiness.trading.state.open.label": "Aberto como sempre",
+  "listBusiness.trading.state.open.desc":
+    "A funcionar normalmente. Não aparece nada de extra na tua página.",
+  "listBusiness.trading.state.temporarilyClosed.label":
+    "Fechado temporariamente",
+  "listBusiness.trading.state.temporarilyClosed.desc":
+    "Continua listado em todo o lado, com um aviso de fecho na tua página.",
+  "listBusiness.trading.state.moved.label": "Mudou de sítio",
+  "listBusiness.trading.state.moved.desc":
+    "Continua listado em todo o lado, com a morada nova na tua página.",
+  "listBusiness.trading.state.permanentlyClosed.label": "Fechado de vez",
+  "listBusiness.trading.state.permanentlyClosed.desc":
+    "Retirado da exploração, da pesquisa e do mapa.",
+  "listBusiness.trading.noteLabel": "O que é que as pessoas devem saber?",
+  "listBusiness.trading.noteHint":
+    "Aparece no teu anúncio, por isso mantém curto e simples.",
+  "listBusiness.trading.notePlaceholder":
+    "Fechado para obras, de volta em setembro.",
+  "listBusiness.trading.movedToLabel": "Onde é que te encontram agora?",
+  "listBusiness.trading.movedToHint":
+    "Uma mudança sem destino não diz a quem lê nada que já não tivesse percebido à porta.",
+  "listBusiness.trading.movedToPlaceholder": "Rua da Prata 42, Baixa",
+  "listBusiness.trading.applyCta": "Atualizar estado",
+  "listBusiness.trading.applying": "A atualizar…",
+  "listBusiness.trading.applyHint":
+    "Isto aplica-se sozinho, separado do botão de guardar abaixo.",
+  "listBusiness.trading.saveError":
+    "Não foi possível atualizar o estado. Tenta novamente.",
+  "listBusiness.trading.saved.open":
+    "O teu anúncio volta a estar aberto como sempre.",
+  "listBusiness.trading.saved.temporarily_closed":
+    "O teu anúncio passa a aparecer como fechado temporariamente.",
+  "listBusiness.trading.saved.permanently_closed":
+    "O teu anúncio ficou marcado como fechado de vez.",
+  "listBusiness.trading.saved.moved":
+    "O teu anúncio passa a mostrar a morada nova.",
+  "listBusiness.trading.closeConfirm.title":
+    "Marcar {name} como fechado de vez?",
+  "listBusiness.trading.closeConfirm.lead":
+    "Este é o único estado que tira o teu negócio dos resultados do diretório. É isto que acontece.",
+  "listBusiness.trading.closeConfirm.removed":
+    "Deixa de aparecer na exploração, na pesquisa, no mapa e nos resultados de espaços seguros.",
+  "listBusiness.trading.closeConfirm.kept":
+    "A tua página continua acessível, por isso links guardados, avaliações e o teu aviso de fecho mantêm-se.",
+  "listBusiness.trading.closeConfirm.reversible":
+    "Podes voltar a pôr aberto quando quiseres. Não se apaga nada.",
+  "listBusiness.trading.closeConfirm.cancel": "Manter listado",
+  "listBusiness.trading.closeConfirm.confirm": "Sim, fechar de vez",
+
+  // ── "Continua certo?": um toque barato que carimba o anúncio como
+  //    confirmado por quem o gere. Pedido com mais insistência à medida que o
+  //    carimbo envelhece.
+  "listBusiness.confirmDetails.title.fresh": "Estes dados estão confirmados",
+  "listBusiness.confirmDetails.title.ageing":
+    "Estes dados continuam certos?",
+  "listBusiness.confirmDetails.title.stale":
+    "Já ninguém verifica estes dados há algum tempo",
+  "listBusiness.confirmDetails.lastConfirmed":
+    "Última confirmação {when}.",
+  "listBusiness.confirmDetails.never":
+    "Nunca os confirmaste, por isso quem visita só tem o dia em que os escreveste.",
+  "listBusiness.confirmDetails.justNow": "há instantes",
+  "listBusiness.confirmDetails.unknownWhen": "há algum tempo",
+  "listBusiness.confirmDetails.cta": "Continua certo",
+  "listBusiness.confirmDetails.saving": "A guardar…",
+  "listBusiness.confirmDetails.toast":
+    "Obrigade. O teu anúncio fica carimbado como verificado hoje.",
+  "listBusiness.confirmDetails.error":
+    "Não foi possível registar isso agora. Tenta novamente.",
+
+  // ── Exceções por data ao horário semanal (só no editor de quem gere).
+  "listBusiness.hoursExceptions.heading": "Datas que são diferentes",
+  "listBusiness.hoursExceptions.hint":
+    "Feriados, pausa de verão, uma noite mais longa. Cada data aqui substitui o horário semanal nesse dia.",
+  "listBusiness.hoursExceptions.empty":
+    "Ainda não há exceções, por isso o horário semanal aplica-se todas as semanas.",
+  "listBusiness.hoursExceptions.addCta": "Adicionar uma data",
+  "listBusiness.hoursExceptions.clearPastCta_one": "Remover 1 data passada",
+  "listBusiness.hoursExceptions.clearPastCta_other":
+    "Remover {count} datas passadas",
+  "listBusiness.hoursExceptions.count": "{used} de {max} datas",
+  "listBusiness.hoursExceptions.capReached":
+    "Chegaste ao limite de {max} datas. Remove uma para adicionar outra.",
+  "listBusiness.hoursExceptions.dateLabel": "Data",
+  "listBusiness.hoursExceptions.untitledDate": "esta data",
+  "listBusiness.hoursExceptions.pastTag": "Passada",
+  "listBusiness.hoursExceptions.removeAria": "Remover a exceção de {date}",
+  "listBusiness.hoursExceptions.noteAria": "Etiqueta para {date}",
+  "listBusiness.hoursExceptions.notePlaceholder":
+    "Véspera de Natal, fecha mais cedo",
+  "listBusiness.hoursExceptions.problem.date":
+    "Indica uma data real do calendário, como 2026-12-24.",
+  "listBusiness.hoursExceptions.problem.duplicate":
+    "Já existe uma entrada para esta data. Edita essa em vez de criar outra.",
+  "listBusiness.hoursExceptions.problem.intervals":
+    "Uma data aberta precisa de pelo menos uma janela, e as horas não podem ser iguais nem sobrepor-se.",
 
   // ── Etiqueta partilhada de regresso ao hub (secção Governação) ─────────
   "hub.governanceLabel": "Governação",
@@ -1772,6 +2095,35 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Apadrinhar alguém",
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
+
+  "changelog.entries.listing-pages-rebuild.title":
+    "Páginas de negócios, refeitas à volta do que vieste saber",
+  "changelog.entries.listing-pages-rebuild.body":
+    "Cada página de negócio começa agora pelo que realmente vieste ver: se está aberto, onde fica, o que é e como é entrar lá. As perguntas de acessibilidade são respondidas com sim, não, ou ninguém nos disse, para que uma pergunta sem resposta deixe de parecer um não. Podes perguntar algo em público a um negócio e ler o que outras pessoas perguntaram, ver quando uma avaliação foi escrita, marcá-la como útil e juntar uma foto à tua. Os sítios que fecharam, mudaram de morada ou estão em pausa passam a dizê-lo, em vez de parecerem abertos.",
+  "changelog.entries.listing-owner-control.title":
+    "Mais controlo para quem gere um espaço",
+  "changelog.entries.listing-owner-control.body":
+    "Editar o teu anúncio já não o retira do diretório enquanto espera por nova verificação. Depois de aprovado, as tuas correções ficam no ar assim que guardas. O editor é um único ecrã em vez de seis passos, guarda um rascunho se fores interrompido e mostra-te a página real antes de publicares. Podes definir horários de feriado, marcar-te como temporariamente fechado ou mudado, pôr um anúncio em pausa sem o apagar, listar os teus serviços e preços, e ver o que as pessoas sugeriram ou perguntaram.",
+  "changelog.entries.persona-banner-framing.title": "Banners de persona, enquadrados como tu os enquadraste",
+  "changelog.entries.persona-banner-framing.body":
+    "Os banners de persona passam a reenquadrar-se em 3:1 (a forma com que realmente aparecem) em vez do 2:1 usado nas capas da revista, e a página mantém aquilo que centraste no enquadramento em vez de cortar uma faixa arbitrária do meio. Os banners também são carregados com mais resolução, por isso mantêm-se nítidos de ponta a ponta num ecrã grande, e agora sobem até ao topo da página.",
+  "changelog.entries.card-check-page-rebuild.title":
+    "A p\u00e1gina de verifica\u00e7\u00e3o do cart\u00e3o passa a mostrar a fotografia",
+  "changelog.entries.card-check-page-rebuild.body":
+    "Ler um cart\u00e3o de s\u00f3cie dava uma linha de texto e um aviso a dizer para olhar para a fotografia do cart\u00e3o. A verifica\u00e7\u00e3o passa a chegar como o pr\u00f3prio cart\u00e3o: o nome de quem o tem numa linha s\u00f3, os pronomes por baixo, a comunidade, o papel e o n\u00famero do cart\u00e3o, e a fotografia que o cart\u00e3o cont\u00e9m, vinda dos registos da pr\u00f3pria comunidade, para que esteja a comparar a pessoa \u00e0 sua frente com uma c\u00f3pia que ningu\u00e9m \u00e0 porta poderia ter alterado. Um cart\u00e3o que n\u00e3o passa a verifica\u00e7\u00e3o passa a explicar o que pode causar isso, o que fazer a seguir, e que isso n\u00e3o \u00e9 um ju\u00edzo sobre a pessoa. E uma leitura que falha por falta de rede passa a dizer isso mesmo em vez de parecer uma recusa.",
+  "changelog.entries.persona-rights-footer-once.title":
+    "Um s\u00f3 aviso de direitos por p\u00e1gina de persona",
+  "changelog.entries.persona-rights-footer-once.body":
+    "O aviso \u201cTodos os direitos reservados\u201d repetia-se ao lado de cada item de uma p\u00e1gina de persona. Passa a aparecer uma \u00fanica vez, no fim da p\u00e1gina, a cobrir todo o trabalho dessa persona. Ao abrir um poema ou uma obra em separado, continua a ver-se o aviso pr\u00f3prio.",
+  "changelog.entries.community-card-live-preview.title":
+    "Vê o cartão da tua comunidade enquanto a editas",
+  "changelog.entries.community-card-live-preview.body":
+    "Editar uma comunidade era adivinhar: o nome, a frase de assinatura, a foto de capa, o tipo de espaço, as etiquetas e quem a pode encontrar mudam todos o cartão por onde as pessoas te conhecem, e só depois de guardar e ir ver é que se percebia o resultado. A janela de edição passa a mostrar esse cartão ao lado do formulário, desenhado a partir do que estás a escrever, para veres o corte da capa ou uma frase mais curta antes de decidires.",
+
+  "changelog.entries.card-co-owner-role.title":
+    "Os cartões de sócie identificam corretamente quem é cotitular",
+  "changelog.entries.card-co-owner-role.body":
+    "As comunidades podem dar poderes de responsável a uma pessoa membro, tornando-a cotitular. Os cartões de sócie ainda não conheciam esse papel, por isso o cartão de uma pessoa cotitular chamava-lhe membro: no próprio cartão, no painel de titulares e na página que abre ao ler o código. Os cartões passam a apresentar o papel que a comunidade regista, e promover alguém atualiza o cartão de imediato, sem ser preciso recarregar a página.",
 
   "changelog.entries.profile-community-cards.title":
     "As tuas comunidades ficam iguais no perfil e na página de comunidades",
@@ -4867,6 +5219,11 @@ export const marketing: Catalog = {
   "directory.card.photoComing": "Foto brevemente",
   "directory.card.openTill": "Aberto até às {time}",
   "directory.card.closedNow": "Fechado",
+  "directory.card.openNow": "Aberto agora",
+  "directory.card.closingSoon": "Fecha às {time}",
+  "directory.card.state.temporarily_closed": "Temporariamente fechado",
+  "directory.card.state.permanently_closed": "Fechado definitivamente",
+  "directory.card.state.moved": "Mudou de morada",
   "directory.card.saveAriaLabel": "Guardar {name}",
   "directory.card.unsaveAriaLabel": "Remover {name} das guardadas",
   "directory.card.savedToast": "Guardaste {name}",
@@ -4905,8 +5262,6 @@ export const marketing: Catalog = {
   "directory.detail.newBadge": "Novo",
   "directory.detail.onlineBusiness": "Só online",
   "directory.detail.whatItIsTitle": "O que <em>é, na prática.</em>",
-  "directory.detail.goodForTitle":
-    "Para que é que a comunidade diz que é <em>bom</em>",
   "directory.detail.offersTitle": "O que este espaço <em>oferece</em>",
   "directory.detail.goodForSub": "Como {name} descreve.",
   "directory.detail.hoursTitle": "Horário",
@@ -4914,9 +5269,40 @@ export const marketing: Catalog = {
   "directory.detail.hoursClosed": "Encerrado",
   "directory.detail.openNow": "Aberto agora",
   "directory.detail.closedNow": "Encerrado",
+  "directory.detail.closingSoon": "Fecha às {time}",
+  "directory.detail.formerAddress": "Morada anterior",
+  "directory.detail.operating.temporarily_closed.title":
+    "Temporariamente fechado",
+  "directory.detail.operating.temporarily_closed.lead":
+    "Este espaço não está aberto de momento. Os horários abaixo são os habituais, para quando reabrir.",
+  "directory.detail.operating.temporarily_closed.since": "Fechado desde {date}",
+  "directory.detail.operating.temporarily_closed.chip":
+    "Temporariamente fechado",
+  "directory.detail.operating.temporarily_closed.hoursNote":
+    "Estes são os horários habituais. Estão suspensos enquanto o espaço estiver fechado.",
+  "directory.detail.operating.permanently_closed.title":
+    "Fechado definitivamente",
+  "directory.detail.operating.permanently_closed.lead":
+    "Este negócio fechou de vez. A página fica aqui para que as avaliações, as fotografias e a história que os membros construíram à volta dele se mantenham.",
+  "directory.detail.operating.permanently_closed.since": "Fechou a {date}",
+  "directory.detail.operating.moved.title": "Este negócio mudou de morada",
+  "directory.detail.operating.moved.lead":
+    "Já não funciona na morada indicada nesta página.",
+  "directory.detail.operating.moved.since": "Mudou a {date}",
+  "directory.detail.operating.moved.newAddress": "Nova morada: {address}",
+  "directory.detail.operating.moved.seeSuccessor": "Ver a página de {name}",
+  "directory.detail.exceptions.title": "Alterações previstas",
+  "directory.detail.freshness.confirmedBy":
+    "Dados confirmados por {name} a {date}",
+  "directory.detail.freshness.confirmed": "Dados confirmados a {date}",
+  "directory.detail.freshness.staleBy":
+    "{name} confirmou estes dados pela última vez a {date}. Podem ter mudado entretanto.",
+  "directory.detail.freshness.stale":
+    "Estes dados foram confirmados pela última vez a {date}. Podem ter mudado entretanto.",
+  "directory.detail.freshness.unconfirmed":
+    "Ainda ninguém confirmou estes dados. Vale a pena confirmar antes de se deslocar.",
   "directory.detail.reviewsTitle":
     "Avaliações da comunidade · <em>{count}</em>",
-  "directory.detail.reviewsSub": "Ordenado por mais úteis.",
   "directory.detail.reviews.emptySub":
     "Ainda sem avaliações. Sê a primeira pessoa a deixar uma.",
   "directory.detail.ratingBreakdown": "Distribuição das avaliações",
@@ -4935,10 +5321,28 @@ export const marketing: Catalog = {
   "directory.detail.review.signInPrompt":
     "Inicia sessão para avaliar este espaço.",
   "directory.detail.review.signInCta": "Iniciar sessão",
+  "directory.detail.review.cancel": "Cancelar",
+  "directory.detail.review.editCta": "Editar",
+  "directory.detail.review.editTitle": "Editar a tua avaliação",
+  "directory.detail.review.saveEdit": "Guardar alterações",
+  "directory.detail.review.savingEdit": "A guardar…",
+  "directory.detail.review.editSuccessToast": "A tua avaliação foi atualizada.",
+  "directory.detail.review.editErrorToast":
+    "Não foi possível guardar as alterações. Tenta novamente.",
+  "directory.detail.review.photo.add": "Adicionar uma foto",
+  "directory.detail.review.photo.change": "Mudar a foto",
+  "directory.detail.review.photo.remove": "Remover",
+  "directory.detail.review.photo.uploading": "A carregar…",
+  "directory.detail.review.photo.error":
+    "Não foi possível carregar essa foto. Tenta novamente.",
+  "directory.detail.review.photo.previewAlt":
+    "A foto que vais juntar a esta avaliação",
   "directory.detail.reply.ownerResponseTitle":
     "Resposta de quem gere este espaço",
   "directory.detail.reply.replyCta": "Responder",
   "directory.detail.reply.editReplyCta": "Editar resposta",
+  "directory.detail.reply.editedAfterReply":
+    "Esta avaliação foi editada depois de esta resposta ser publicada.",
   "directory.detail.reply.placeholder":
     "Escreve uma resposta pública a esta avaliação…",
   "directory.detail.reply.save": "Guardar resposta",
@@ -4947,12 +5351,11 @@ export const marketing: Catalog = {
   "directory.detail.reply.successToast": "A tua resposta está publicada.",
   "directory.detail.reply.errorToast":
     "Não foi possível publicar a tua resposta. Tenta novamente.",
-  "directory.detail.helpful": "<b>{count}</b> pessoas acharam isto útil",
   "directory.detail.reviews.sortLabel": "Ordenar",
-  "directory.detail.reviews.sortHelpful": "Mais úteis",
+  "directory.detail.reviews.sortNewest": "Mais recentes",
   "directory.detail.reviews.sortHighest": "Melhor avaliadas",
   "directory.detail.reviews.sortLowest": "Pior avaliadas",
-  "directory.detail.reviews.sortedByHelpful": "Ordenado por mais úteis.",
+  "directory.detail.reviews.sortedByNewest": "Ordenado por mais recentes.",
   "directory.detail.reviews.sortedByHighest": "Ordenado por melhor avaliadas.",
   "directory.detail.reviews.sortedByLowest": "Ordenado por pior avaliadas.",
   "directory.detail.reviews.filterAria":
@@ -4960,10 +5363,70 @@ export const marketing: Catalog = {
   "directory.detail.reviews.filterAll": "Todas as avaliações",
   "directory.detail.reviews.filterStars_one": "{count} estrela",
   "directory.detail.reviews.filterStars_other": "{count} estrelas",
+  "directory.detail.reviews.edited": "editada",
+  "directory.detail.reviews.helpfulCta": "Útil",
+  "directory.detail.reviews.helpfulAria_one":
+    "Útil. {count} pessoa marcou esta avaliação como útil.",
+  "directory.detail.reviews.helpfulAria_other":
+    "Útil. {count} pessoas marcaram esta avaliação como útil.",
+  "directory.detail.reviews.helpfulSignIn":
+    "Inicia sessão para marcar esta avaliação como útil",
+  "directory.detail.reviews.helpfulError":
+    "Não foi possível registar isso. Tenta novamente.",
+  "directory.detail.reviews.photoAlt": "Foto da avaliação de {name}",
+  "directory.detail.reviews.photoOpen": "Abrir a foto da avaliação de {name}",
+  "directory.detail.reviews.sortHelpful": "Mais úteis",
+  "directory.detail.reviews.sortedByHelpful": "Ordenado por mais úteis.",
   "directory.detail.reviews.noStarReviews":
     "Ainda não há avaliações de {count} estrelas.",
   "directory.detail.reviews.ratingAria":
     "Classificado com {count} em 5 estrelas",
+  "directory.detail.visitTitle": "Onde fica",
+  "directory.detail.accessTitle": "Entrar e ser compreendido",
+  "directory.detail.accessSub": "Conforme {name} declarou. Pergunta se precisares de ter a certeza.",
+
+  // ── Respostas estruturadas de acessibilidade. Três estados, e os três são
+  //    informação: `unknown` nunca aparece como "não" e nunca desaparece.
+  "directory.detail.accessibility.noteLabel": "Nas palavras de quem gere",
+  "directory.detail.accessibility.noteLabelNamed": "Nas palavras de {name}",
+  "directory.detail.accessibility.unansweredLine_one":
+    "Falta responder a uma pergunta. Ninguém nos disse nada num sentido nem no outro, por isso pergunta antes de ires se isso for importante para ti.",
+  "directory.detail.accessibility.unansweredLine_other":
+    "Faltam responder a {count} perguntas. Ninguém nos disse nada num sentido nem no outro, por isso pergunta antes de ires se alguma delas for importante para ti.",
+
+  // ── Serviços com preço. A faixa de preço no cabeçalho continua a ser o
+  //    sinal rápido; isto diz o que essa faixa compra.
+  "directory.detail.services.title": "Quanto <em>custa.</em>",
+  "directory.detail.services.sub":
+    "Preços tal como o negócio os escreveu. Pergunta se precisares de um orçamento para algo específico.",
+  "directory.detail.services.subNamed":
+    "Preços tal como {name} os escreveu. Pergunta se precisares de um orçamento para algo específico.",
+
+  // ── A prova por trás do selo de negócio queer verificado, escrita como
+  //    irmã da linha de verificação do espaço seguro ao lado.
+  "directory.detail.queerOwned.byOnDate":
+    "Negócio queer, confirmado por <strong>{verifier}</strong> a <strong>{date}</strong>.",
+  "directory.detail.queerOwned.by":
+    "Negócio queer, confirmado por <strong>{verifier}</strong>.",
+  "directory.detail.queerOwned.onDate":
+    "Negócio queer, confirmado pela última vez a <strong>{date}</strong>.",
+  "directory.detail.queerOwned.nextCheck":
+    "A confirmar de novo até {date}.",
+
+  // ── O compromisso afirmativo, DECLARADO. Todos os anúncios daqui
+  //    concordaram com ele, por isso isto é um facto sobre o diretório.
+  //    Nunca um selo por anúncio e nunca um filtro de pesquisa: qualquer um
+  //    dos dois faria um mínimo obrigatório parecer uma opção.
+  "directory.detail.baseline.lead":
+    "Todos os negócios aqui se comprometeram a acolher e <em>servir pessoas LGBTQ+.</em>",
+  "directory.detail.baseline.condition":
+    "Concordar com isso é a condição para sequer aparecer nesta lista. Todos os negócios do diretório assumiram o mesmo compromisso, por isso não vais encontrar isto assinalado numas páginas e ausente noutras.",
+  "directory.detail.baseline.scope":
+    "O compromisso é sobre a forma como um negócio trata as pessoas que serve, e sobre agir quando alguém no espaço fica aquém. Não dá a ninguém autorização para recusar uma pessoa por quem ela é.",
+  "directory.detail.nearby.title": "A curta distância a pé",
+  "directory.detail.nearby.sub": "Outros sítios que podes juntar à mesma noite, medidos a partir de {name}.",
+  "directory.detail.nearby.metres": "{distance} m",
+  "directory.detail.nearby.kilometres": "{distance} km",
   "directory.detail.visitWebsite": "Visitar o site",
   "directory.detail.getInTouch": "Entrar em contacto",
   "directory.detail.backToDirectory": "Voltar ao diretório",
@@ -4992,6 +5455,56 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.errorBody":
     "Algo correu mal do nosso lado. Por favor, tenta novamente.",
   "directory.detail.reportReview.retryCta": "Tentar novamente",
+  "directory.detail.reportQuestion.title": "Denunciar esta pergunta",
+  "directory.detail.reportQuestion.sub":
+    "Diz-nos o que está errado na pergunta de {name}. Um moderador analisa todas as denúncias, e não será dito quem a fez.",
+  "directory.detail.questions.title":
+    "Pergunta a quem gere, <em>em público</em>",
+  "directory.detail.questions.sub_one":
+    "{count} pergunta, da mais recente para a mais antiga.",
+  "directory.detail.questions.sub_other":
+    "{count} perguntas, da mais recente para a mais antiga.",
+  "directory.detail.questions.emptySub":
+    "Ainda ninguém perguntou nada por aqui.",
+  "directory.detail.questions.emptyBody":
+    "Faz a primeira pergunta. Tudo o que quiseres saber antes de ir: como se entra, como é o espaço, se a cozinha ainda serve às dez.",
+  "directory.detail.questions.askLabel": "Pergunta em público",
+  "directory.detail.questions.askPlaceholder":
+    "O que gostarias de saber antes de ir?",
+  "directory.detail.questions.askHint":
+    "Toda a gente que lê esta ficha vê a tua pergunta e a resposta.",
+  "directory.detail.questions.askCta": "Perguntar",
+  "directory.detail.questions.asking": "A enviar…",
+  "directory.detail.questions.successToast": "A tua pergunta está publicada.",
+  "directory.detail.questions.errorGeneric":
+    "Não foi possível enviar a tua pergunta. Tenta novamente.",
+  "directory.detail.questions.signInPrompt":
+    "Inicia sessão para fazer uma pergunta a este espaço.",
+  "directory.detail.questions.signInCta": "Iniciar sessão",
+  "directory.detail.questions.ownerNote":
+    "Esta ficha é tua. Responde a qualquer pergunta aqui em baixo e a tua resposta fica visível para toda a gente.",
+  "directory.detail.questions.awaitingAnswer": "Ainda sem resposta.",
+  "directory.detail.questions.answeredByOwner": "{name} respondeu",
+  "directory.detail.questions.answeredByModerator": "Moderação da QueerPulse",
+  "directory.detail.questions.moderatorNote":
+    "Esta resposta foi escrita por um moderador da QueerPulse. O negócio ainda não respondeu aqui.",
+  "directory.detail.questions.answerCta": "Responder",
+  "directory.detail.questions.editAnswerCta": "Editar resposta",
+  "directory.detail.questions.answerPlaceholder":
+    "Responde a esta pergunta em público…",
+  "directory.detail.questions.answerSave": "Publicar resposta",
+  "directory.detail.questions.answerSaving": "A publicar…",
+  "directory.detail.questions.answerCancel": "Cancelar",
+  "directory.detail.questions.answerSuccessToast":
+    "A tua resposta está publicada.",
+  "directory.detail.questions.answerErrorToast":
+    "Não foi possível publicar a tua resposta. Tenta novamente.",
+  "directory.detail.questions.cardAria": "Pergunta de {name}",
+  "directory.detail.questions.seeAll": "Ver todas as perguntas",
+  "directory.detail.questions.loadMore": "Carregar mais perguntas",
+  "directory.detail.questions.loadingMore": "A carregar…",
+  "directory.detail.questions.loadError":
+    "Não foi possível carregar as restantes perguntas. Tenta novamente.",
   "directory.detail.suggestEdit.cta": "Sugerir uma correção",
   "directory.detail.suggestEdit.ariaLabel": "Sugerir uma correção para {name}",
   "directory.detail.suggestEdit.title": "Sugerir uma correção",
@@ -5014,6 +5527,34 @@ export const marketing: Catalog = {
     "Obrigade. Vamos passar isto a quem gere este espaço.",
   "directory.detail.suggestEdit.errorToast":
     "Não foi possível enviar a tua sugestão. Tenta novamente.",
+  // O valor de substituição, opcional. O balde "outra coisa" não corresponde a
+  // nenhuma coluna do anúncio, por isso aceita só texto livre e o campo nunca
+  // aparece para ele.
+  "directory.detail.suggestEdit.value.optional": "(opcional)",
+  "directory.detail.suggestEdit.value.hint":
+    "Deixa em branco se só sabes que algo está errado. A nota por si só já ajuda.",
+  "directory.detail.suggestEdit.value.rejected":
+    "Esse valor não foi aceite: {reason}",
+  "directory.detail.suggestEdit.value.proseOnly":
+    "Para o resto, descreve a correção na nota acima. Este balde não aceita um valor de substituição.",
+  "directory.detail.suggestEdit.value.hours.label":
+    "O que é que o horário devia dizer?",
+  "directory.detail.suggestEdit.value.hours.placeholder":
+    "Ter a dom, 12:00 às 23:00. Fecha à segunda.",
+  "directory.detail.suggestEdit.value.address.label":
+    "Qual é a morada certa?",
+  "directory.detail.suggestEdit.value.address.placeholder":
+    "Rua da Prata 42, 1100-052 Lisboa",
+  "directory.detail.suggestEdit.value.phone.label":
+    "Qual é o telefone certo?",
+  "directory.detail.suggestEdit.value.phone.placeholder": "+351 21 000 0000",
+  "directory.detail.suggestEdit.value.website.label":
+    "Qual é o site certo?",
+  "directory.detail.suggestEdit.value.website.placeholder": "https://exemplo.pt",
+  "directory.detail.suggestEdit.value.description.label":
+    "O que é que a descrição devia dizer?",
+  "directory.detail.suggestEdit.value.description.placeholder":
+    "Uma linha sobre o que é o espaço.",
   "directory.detail.contest.cta":
     "Sugerir uma correção ou reivindicar este negócio",
   "directory.detail.contest.ariaLabel":
@@ -5088,7 +5629,7 @@ export const marketing: Catalog = {
   "directory.detail.trust.howLink": "Como funciona a verificação",
   "directory.detail.whoRunsIt": "Quem gere isto",
   "directory.detail.onQueerPulse": "Na QueerPulse",
-  "directory.detail.communityVouched": "Avalizado pela comunidade",
+  "directory.detail.addedByMember": "Adicionado por um membro",
   "directory.detail.viewProfile": "Ver o perfil de {name}",
   "directory.detail.savedByMembers_one": "Guardado por {count} membro",
   "directory.detail.savedByMembers_other": "Guardado por {count} membros",

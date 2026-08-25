@@ -4,12 +4,10 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CardProgramDTO, IssuerCardDTO } from "./api/cards.api";
 import { CardHolderActions, type PendingCardStatus } from "./CardHolderActions";
+import { cardRoleLabelKey } from "./cardRoles";
 import { MembershipCardFace } from "./MembershipCardFace";
 import { holderCardFace } from "./holderCard.data";
 import styles from "./CardHolderCardModal.module.css";
-
-/** The catalog only names the three roles a card can carry, as on the back. */
-const KNOWN_ROLES: readonly string[] = ["owner", "mod", "member"];
 
 /**
  * One holder's card, at full size, as their community's owner or mod sees it.
@@ -110,13 +108,7 @@ export function CardHolderCardModal({
             </div>
             <div>
               <dt>{t("cards:face.role")}</dt>
-              <dd>
-                {t(
-                  `cards:role.${
-                    KNOWN_ROLES.includes(holder.role) ? holder.role : "member"
-                  }`,
-                )}
-              </dd>
+              <dd>{t(cardRoleLabelKey(holder.role))}</dd>
             </div>
             {holder.revokedAt ? (
               <div>

@@ -2,23 +2,38 @@
   position: relative;
   display: inline-flex;
 }
+/* The trigger sits ON the persona skin's ground, so it has to be skinned like
+   the ghost action buttons it shares the row with (Button.module.css `.ghost`):
+   transparent fill, a hairline at the WCAG 1.4.11 3:1 strength, and the skin's
+   own legible ink. It used to fill with `var(--paper)` and `--line-rgb` at
+   0.14 -- but persona-skins.css remaps --sk-ink / --text-strong / --line-rgb
+   per skin and never touches --paper, so on any dark-ground skin (chart,
+   stage, chair) this painted a solid white disc in the middle of a themed
+   action row. Size matches the 44px ghost pill beside it, not a 48px circle. */
 .trigger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
+  /* Sizes the react-icons <svg>, which inherits `1em`. */
+  font-size: 18px;
   border-radius: 999px;
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: var(--paper);
-  color: var(--text-strong);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  background: transparent;
+  color: var(--sk-ink, var(--text-strong));
   cursor: pointer;
   touch-action: manipulation;
-  transition: background-color 0.15s var(--ease);
+  transition:
+    background-color 0.15s var(--ease),
+    border-color 0.15s var(--ease);
 }
 @media (hover: hover) {
   .trigger:hover {
-    background: var(--wash);
+    /* The skins don't remap --wash (the old hover fill), so on a dark ground
+       it flashed an app-light grey; --line-rgb follows the skin's ink. */
+    background: rgba(var(--line-rgb), 0.08);
+    border-color: var(--line-strong);
   }
 }
 .menu {
@@ -30,8 +45,13 @@
   min-width: 210px;
   max-width: min(280px, calc(100vw - 32px));
   padding: 6px;
+  /* The open panel is an APP surface (it paints itself on --paper), so its
+     hairline and ink must stay app-coloured even though it renders inside a
+     skinned hero. --line-rgb / --ink are remapped by the skins -- chair's --ink
+     is near-white, which is invisible on white paper -- while --ink-rgb is not
+     remapped by any skin and still flips to light channels in dark mode. */
   background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border: 1px solid rgba(var(--ink-rgb), 0.12);
   border-radius: 12px;
   box-shadow: 0 12px 32px rgba(var(--plum-rgb), 0.14);
 }
@@ -45,7 +65,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: var(--ink);
+  color: rgba(var(--ink-rgb), 0.92);
   font: inherit;
   white-space: nowrap;
   text-align: left;

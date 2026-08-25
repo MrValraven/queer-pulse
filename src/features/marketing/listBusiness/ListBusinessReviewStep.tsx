@@ -1,22 +1,21 @@
 import { type ReactNode } from "react";
 import { FiShield } from "react-icons/fi";
-import { CheckLine } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { TFunction } from "../../../shared/i18n/types";
 import {
-  ANCHOR,
   catLabel,
   DAYS,
   goodForLabel,
   langLabel,
   PRICES,
   slugify,
-  VERIFY,
   type ListingDraft,
 } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
+import { ConsentChecks } from "./fields/ConsentChecks";
+import { AffirmingBaselineAgreement } from "./fields/AffirmingBaselineAgreement";
 import styles from "./ListBusinessPage.module.css";
 
 function optionLabel(
@@ -115,7 +114,7 @@ export function StepReview({
   onEdit: (step: number) => void;
 }) {
   const { t } = useTranslation();
-  const { draft, set } = form;
+  const { draft } = form;
   return (
     <div className={styles.stepBody}>
       <PaneHeader
@@ -144,11 +143,6 @@ export function StepReview({
               ? t("marketing:listBusiness.step5.listingAs.suggest")
               : ""}
         </Row>
-        {draft.path === "claim" && (
-          <Row k={t("marketing:listBusiness.step5.row.verification")}>
-            {optionLabel(t, VERIFY, draft.verify)}
-          </Row>
-        )}
       </Group>
 
       <Group
@@ -253,22 +247,12 @@ export function StepReview({
       <h3 className={styles.groupH}>
         {t("marketing:listBusiness.step5.beforeSendHeading")}
       </h3>
-      <div id={ANCHOR.consent} className={styles.consentChecks}>
-        <div className={styles.flagOuting}>
-          <CheckLine
-            checked={draft.consentOuting}
-            onChange={(v) => set({ consentOuting: v })}
-            title={t("marketing:listBusiness.step5.consentOuting.title")}
-            sub={t("marketing:listBusiness.step5.consentOuting.sub")}
-          />
-        </div>
-        <CheckLine
-          checked={draft.consentGuide}
-          onChange={(v) => set({ consentGuide: v })}
-          title={t("marketing:listBusiness.step5.consentGuide.title")}
-          sub={t("marketing:listBusiness.step5.consentGuide.sub")}
-        />
-      </div>
+      <ConsentChecks form={form} />
+      {/* The condition of appearing in this directory at all, agreed to once
+          at submission. Not a preference and not a per-listing badge: every
+          listing here has made the same commitment, which is why it is asked
+          for here and never offered as a setting afterwards. */}
+      <AffirmingBaselineAgreement form={form} />
 
       <div className={styles.submitNote}>
         <span className={styles.ic}>

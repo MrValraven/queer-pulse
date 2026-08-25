@@ -1,6 +1,7 @@
 import { FiCheck } from "react-icons/fi";
 import { FormField, SegmentedControl, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
 import { ImageUploadField } from "./ImageUploadField";
 import {
@@ -15,8 +16,11 @@ const MAX_CTA_LABEL = 40;
 
 interface SubprofilePresenceFieldsProps {
   coverUrl: string;
+  /** Saved reframe crop for the committed cover, shown as the slot's focal
+   *  point until a fresh pick this session supersedes it. */
+  coverCrop?: CropRect;
   onCoverUrlChange: (value: string) => void;
-  onCoverPreviewChange: (value: string | null) => void;
+  onCoverPreviewChange: (value: string | null, crop?: CropRect) => void;
   coverBleed: boolean;
   onCoverBleedChange: (value: boolean) => void;
   accent: AccentKey | "";
@@ -41,6 +45,7 @@ interface SubprofilePresenceFieldsProps {
  */
 export function SubprofilePresenceFields({
   coverUrl,
+  coverCrop,
   onCoverUrlChange,
   onCoverPreviewChange,
   coverBleed,
@@ -70,10 +75,22 @@ export function SubprofilePresenceFields({
 
   return (
     <>
-      <FormField label={t("subprofiles:metaForm.coverLabel")}>
+      <FormField
+        label={t("subprofiles:metaForm.coverLabel")}
+        // State the banner's real shape up front. The reframe editor used to
+        // frame these at the magazine cover's 2:1 while the page painted a far
+        // wider strip, so members were being told one set of dimensions and
+        // shown another.
+        helper={t("subprofiles:metaForm.coverHelper")}
+      >
         <ImageUploadField
           value={coverUrl}
-          kind="story-cover"
+          // Its own kind, not the magazine's `story-cover`: a persona banner
+          // reframes at 3:1 (the shape it actually paints at) rather than the
+          // 2:1 plate a magazine cover is, and takes a higher resolution cap
+          // because it spans the full viewport.
+          kind="persona-cover"
+          focus={coverCrop}
           size={160}
           placeholder={t("subprofiles:metaForm.coverPlaceholder")}
           onChange={onCoverUrlChange}

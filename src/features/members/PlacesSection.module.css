@@ -54,6 +54,18 @@
   }
 }
 
+/* The chips over the cover photo, in the bookmark's corner: what moderation
+   thinks of the listing, and (when it applies) that this member helps run it
+   rather than owning it. Stacked so a co-managed listing can carry both. */
+.statusStack {
+  position: absolute;
+  inset-block-start: 10px;
+  inset-inline-end: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
 /* LIVE / IN REVIEW, taking the bookmark's corner over the cover photo. Opaque
    paper ground + shadow so it stays legible on any photo. */
 .status {
@@ -78,6 +90,20 @@
 }
 .statusLive {
   color: var(--jade);
+}
+/* Inside the stack the chips flow, so the corner offset comes from the stack
+   itself rather than from each chip. */
+.statusStack .status {
+  position: static;
+}
+/* "Co-managing" reads as information rather than as a warning, so it stays
+   quiet beside the status chip. The icon carries the meaning alongside the
+   words; the colour never does it alone. */
+.statusCoManaged {
+  color: var(--ink-60);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-weight: 600;
 }
 /* Sits where the card footer's "Visit →" would, for a listing with no public
    page yet. */

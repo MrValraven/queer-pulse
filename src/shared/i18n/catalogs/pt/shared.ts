@@ -242,6 +242,7 @@ export const shared: Catalog = {
 
   // MemberSelectList — empty search result
   "memberSelect.noResults": "Sem resultados",
+  "memberSelect.searching": "A procurar...",
 
   // VisibilityBadge (wording matches members:visibility.* precedent)
   "visibilityBadge.open": "Aberto a novos contactos",

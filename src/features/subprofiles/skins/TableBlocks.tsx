@@ -1,6 +1,5 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { DIETARY } from "../personaSkinRender";
-import { WorkRightsFooter } from "../rights/WorkRightsFooter";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
@@ -35,24 +34,12 @@ export function TableMenuHeader({ persona }: { persona: SkinExtrasPersona }) {
  *
  *  This card stands in for the generic `SubprofileSpotlight` for the table
  *  skin (see `SubprofilePageBody`'s `skin === "table" && courses.length > 0`
- *  branch), so it carries the SAME `WorkRightsFooter` that component renders:
- *  `interactive` mirrors `SubprofileSpotlight`'s own `mode !== "preview"`
- *  gate (suppressed in the editor's docked preview, via `SubprofileSkinExtras`
- *  deriving it the same way), and `section !== "poems"` guards against ever
- *  double-rendering a poem's footer (defensive here: a table persona's
- *  featured item with `structured.courses` is never a poem in practice). */
+ *  branch), and like that component it carries no copyright footer of its
+ *  own: the page shows one `PersonaRightsFooter` at the end instead. */
 export function TableMenuCard({
   featured,
-  authorName,
-  interactive,
 }: {
   featured: SubprofileItemView | null | undefined;
-  /** The persona's public display name, used as the `WorkRightsFooter`
-   *  copyright holder for this featured menu. */
-  authorName: string;
-  /** `false` only in the editor's docked `mode="preview"`, mirroring
-   *  `SubprofileSkinExtras`' own `interactive` derivation. */
-  interactive: boolean;
 }) {
   const courses = featured?.structured?.courses;
   if (!featured || !courses || courses.length === 0) return null;
@@ -80,9 +67,6 @@ export function TableMenuCard({
           ))}
         </div>
       ))}
-      {interactive && featured.section !== "poems" && (
-        <WorkRightsFooter authorName={authorName} createdAtISO={featured.createdAt} />
-      )}
     </div>
   );
 }

@@ -101,6 +101,7 @@ export function EditorPaneRouter({
         <div className="ed-grid">
           <SubprofilePresenceFields
             coverUrl={meta.coverUrl}
+            coverCrop={meta.coverPreviewCrop ?? meta.coverCrop}
             onCoverUrlChange={meta.setCoverUrl}
             onCoverPreviewChange={meta.setCoverPreview}
             coverBleed={meta.coverBleed}

@@ -1,0 +1,77 @@
+/* ── "What it costs" ────────────────────────────────────────────────────────
+   The price band in the header stays the at-a-glance signal; this is the
+   answer to the question the band cannot carry. Prices are the owner's own
+   free text, so "from 25 EUR", "sliding scale" and "by quote" all have to sit
+   in the same column without one of them looking broken. */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  overflow: hidden;
+}
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 18px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.row:first-child {
+  border-top: none;
+}
+.body {
+  min-width: 0;
+}
+.name {
+  display: block;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.note {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-top: 3px;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+.price {
+  flex: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-strong);
+  text-align: end;
+  /* Long free text ("first session free, then sliding scale") has to wrap
+     inside its own column rather than shove the name out of the row. */
+  max-width: 15ch;
+}
+@media (--sm) {
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .price {
+    max-width: none;
+    text-align: start;
+  }
+}
+/* Same container-driven collapse the rest of the detail page uses, so the
+   moderation preview drawer reflows on its own width. */
+@container directorySpace (max-width: 420px) {
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .price {
+    max-width: none;
+    text-align: start;
+  }
+}

@@ -10,12 +10,10 @@ import { useUploadImage } from "../../members/api/useUploadImage";
 import {
   TOTAL_STEPS,
   type ListingDraft,
-  type ListingStatus,
   type PendingListing,
 } from "./listBusiness.data";
 import { useListingForm } from "./useListingForm";
 import { useListingDraft } from "./useListingDraft";
-import { useEditListingSave, useEditUnsavedGuard } from "./useEditListingSave";
 import { DraftBanner, SendingPanel } from "./ListBusinessChrome";
 import { WizardFormPane } from "./WizardFormPane";
 import { ListBusinessSuccess } from "./ListBusinessSuccess";
@@ -31,28 +29,28 @@ type Phase = "form" | "sending" | "success";
 const MIN_SEND_MS = 700;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/**
+ * The guided six-step flow for submitting a NEW listing.
+ *
+ * Create-only by design. Editing an existing listing is a different job and
+ * has its own surface (`editor/ListingEditor`, mounted by the `/:ref` route):
+ * an owner arrives to change one line and should not walk a step sequence to
+ * reach it. Both surfaces render the same field components (see `./fields`),
+ * so there is one copy of every input and one set of validation rules.
+ */
 export interface ListingWizardProps {
-  mode: "create" | "edit";
-  /** Ref of the listing being edited — present in edit mode. */
-  editRef?: string;
-  /** Seed draft for edit mode, OR a create-mode draft being resumed (from the
-   *  landing drafts list / a `?draft` deep link). Undefined in a fresh create →
-   *  the form starts blank. */
+  /** A create-mode draft being resumed (from the landing drafts list or a
+   *  `?draft` deep link). Undefined in a fresh create, so the form starts
+   *  blank. */
   initialDraft?: ListingDraft;
-  /** Create-mode resume: the wizard step the resumed draft had reached. */
+  /** The wizard step the resumed draft had reached. */
   initialStep?: number;
-  /** Create-mode resume (live): the server draft-row id, so autosave keeps
-   *  upserting the same row instead of minting a duplicate. */
+  /** Live resume: the server draft-row id, so autosave keeps upserting the
+   *  same row instead of minting a duplicate. */
   initialDraftId?: string;
-  /** The edited listing's public slug — routes back to it on save. */
-  editSlug?: string;
-  /** The edited listing's status — Live navigates to the public page on
-   *  save, anything else navigates back to the account profile. */
-  editStatus?: ListingStatus;
 }
 
 export function ListingWizard(props: ListingWizardProps) {
-  const isEdit = props.mode === "edit";
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -61,40 +59,30 @@ export function ListingWizard(props: ListingWizardProps) {
   const { profile } = useProfileData();
   const { user } = useAuth();
   const userName = `${profile.first} ${profile.last}`;
-  const editSave = useEditListingSave({
-    editRef: props.editRef,
-    editSlug: props.editSlug,
-    editStatus: props.editStatus,
-  });
-  // Prefill create-mode from the member (item #3). Create-only: `useListingForm`
-  // applies it only when building a blank draft (no `initialDraft`). Memoised so
-  // the form's `reset` keeps a stable identity across renders.
+  // Prefill from the member (item #3). `useListingForm` applies it only when
+  // building a blank draft (no `initialDraft`). Memoised so the form's `reset`
+  // keeps a stable identity across renders.
   const seed = useMemo(
-    () =>
-      isEdit
-        ? undefined
-        : {
-            ownerName: userName.trim(),
-            ownerBio: profile.bio ?? "",
-            contactEmail: user?.email ?? "",
-          },
-    [isEdit, userName, profile.bio, user?.email],
+    () => ({
+      ownerName: userName.trim(),
+      ownerBio: profile.bio ?? "",
+      contactEmail: user?.email ?? "",
+    }),
+    [userName, profile.bio, user?.email],
   );
   const form = useListingForm(props.initialDraft, seed);
   const { draft } = form;
   const uploadPhoto = useUploadImage("listing-photo");
-  // A create-mode draft resumed from the landing list / a `?draft` deep link.
-  const isResumed = !isEdit && Boolean(props.initialDraft);
-  // Edit seeds past StepPath (step 0); a resumed create draft lands on its step.
-  const [step, setStep] = useState(isEdit ? 1 : (props.initialStep ?? 0));
+  // A draft resumed from the landing list / a `?draft` deep link.
+  const isResumed = Boolean(props.initialDraft);
+  const [step, setStep] = useState(props.initialStep ?? 0);
   const [phase, setPhase] = useState<Phase>("form");
   const [listing, setListing] = useState<PendingListing | null>(null);
 
-  // Autosave/resume is create-only — edit must never touch that draft slot. A
-  // resumed draft keeps autosaving but doesn't re-offer the in-wizard banner.
+  // A resumed draft keeps autosaving but doesn't re-offer the in-wizard banner.
   const { saved, savedAt, clearDraft, saveAndExit } = useListingDraft(draft, step, {
-    enabled: !isEdit,
-    offerResume: !isEdit && !isResumed,
+    enabled: true,
+    offerResume: !isResumed,
     initialDraftId: props.initialDraftId,
   });
   const { isBannerVisible, resumeDraft, discardDraft } = useListingDraftBanner(
@@ -113,7 +101,6 @@ export function ListingWizard(props: ListingWizardProps) {
     routeSubmitError,
     saveAndFinishLater,
   } = useListingSubmit({ setStep, saveAndExit, flashClass: styles.fieldFlash });
-  useEditUnsavedGuard(isEdit, draft, props.initialDraft, phase === "form");
   // Guard against setState after unmount mid-send. Reset on setup so
   // StrictMode's mount→cleanup→remount doesn't leave the ref stuck at false.
   const mountedRef = useRef(true);
@@ -124,8 +111,7 @@ export function ListingWizard(props: ListingWizardProps) {
   const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   const goToStep = (n: number) => {
-    // Step 0 (StepPath) is locked in edit mode — clamp any jump there to step 1.
-    setStep(isEdit ? Math.max(1, n) : n);
+    setStep(n);
     setServerError(null);
     scrollUp();
   };
@@ -139,16 +125,6 @@ export function ListingWizard(props: ListingWizardProps) {
     setServerError(null);
     setPhase("sending");
     scrollUp();
-    if (isEdit) {
-      try {
-        await editSave.saveEdit(draft);
-      } catch (error) {
-        if (!mountedRef.current) return;
-        setPhase("form");
-        routeSubmitError(error, () => editSave.showSaveError());
-      }
-      return;
-    }
     try {
       const [created] = await Promise.all([
         addListing(draft, profile.slug),
@@ -170,11 +146,6 @@ export function ListingWizard(props: ListingWizardProps) {
   };
 
   const back = () => {
-    if (isEdit) {
-      // Defensive clamp — WizardFormPane already hides Back on step 1.
-      if (step > 1) goToStep(step - 1);
-      return;
-    }
     if (step === 0) void navigate(routes.directory);
     else goToStep(step - 1);
   };
@@ -206,14 +177,11 @@ export function ListingWizard(props: ListingWizardProps) {
             <WizardFormChrome
               serverError={serverError}
               onDismissError={() => setServerError(null)}
-              isSaveLaterVisible={!isEdit && draft.path !== ""}
+              isSaveLaterVisible={draft.path !== ""}
               onSaveLater={() => void saveAndFinishLater()}
               isSavingLater={savingLater}
             />
             <WizardFormPane
-              mode={props.mode}
-              editRef={props.editRef}
-              editSlug={props.editSlug}
               form={form}
               step={step}
               savedAt={savedAt}
@@ -228,7 +196,7 @@ export function ListingWizard(props: ListingWizardProps) {
           </>
         )}
 
-        {phase === "sending" && <SendingPanel isEdit={isEdit} />}
+        {phase === "sending" && <SendingPanel />}
 
         {phase === "success" && listing && (
           <div className={styles.page}>

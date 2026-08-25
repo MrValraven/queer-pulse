@@ -107,3 +107,31 @@ export function cropToImgStyle(rect: CropRect): {
     top: `${(-100 * rect.y) / rect.height}%`,
   };
 }
+
+/**
+ * `object-position` value that keeps a saved crop's SUBJECT in frame when the
+ * image is `object-fit: cover`-ed into a box of a DIFFERENT aspect than the
+ * crop was framed at.
+ *
+ * `cropToImgStyle` above renders a crop EXACTLY, which only works when the box
+ * matches the crop's own aspect — anywhere else it distorts (it pairs with
+ * `object-fit: fill`). A persona banner has no single aspect to match: the same
+ * crop lands in a ~2:1 strip on a phone and a ~6:1 strip on a wide desktop, and
+ * it varies again per skin. So instead of forcing the crop's box, treat the
+ * crop as a FOCAL REGION: keep `object-fit: cover` (no distortion, no
+ * letterboxing, fills any band) and pan the visible window towards the centre
+ * of what the member framed, instead of letting the browser default to the
+ * middle of the file.
+ *
+ * Percentage `object-position` aligns the p% point of the image with the p%
+ * point of the box, so passing the focal point's own fraction both centres it
+ * where there is overflow to spend AND degrades correctly at the edges (a crop
+ * framed at the top of the image stays anchored to the top).
+ */
+export function cropFocalPosition(rect: CropRect): string {
+  const x = clamp((rect.x + rect.width / 2) * 100, 0, 100);
+  const y = clamp((rect.y + rect.height / 2) * 100, 0, 100);
+  // One decimal is well below a single device pixel on any real banner width;
+  // rounding keeps the inline style stable across re-renders.
+  return `${Math.round(x * 10) / 10}% ${Math.round(y * 10) / 10}%`;
+}

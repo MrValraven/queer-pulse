@@ -10,12 +10,9 @@ import { StepReview } from "./ListBusinessReviewStep";
 import { ListBusinessPreview } from "./ListBusinessPreview";
 import styles from "./ListBusinessPage.module.css";
 
-/** The active "form" phase of the wizard: step pills, current step pane
+/** The active "form" phase of the create wizard: step pills, current step pane
  *  (with its back/next footer), and the live preview column. */
 export function WizardFormPane({
-  mode,
-  editRef,
-  editSlug,
   form,
   step,
   savedAt,
@@ -27,12 +24,6 @@ export function WizardFormPane({
   onNext,
   uploadPhoto,
 }: {
-  mode: "create" | "edit";
-  /** Ref of the listing being edited — present in edit mode. */
-  editRef?: string;
-  /** Public slug of the listing being edited — present in edit mode; drives
-   *  the preview card's deterministic tint. */
-  editSlug?: string;
   form: ListingForm;
   step: number;
   savedAt: number | null;
@@ -48,29 +39,20 @@ export function WizardFormPane({
   ) => Promise<{ key: string; previewUrl: string }>;
 }) {
   const { t } = useTranslation();
-  const isEdit = mode === "edit";
-  const nextLabel =
-    step === 5 && isEdit
-      ? t("marketing:listBusiness.edit.saveCta")
-      : t(NEXT_LABEL_KEYS[step] ?? "marketing:listBusiness.next.continue");
+  const nextLabel = t(
+    NEXT_LABEL_KEYS[step] ?? "marketing:listBusiness.next.continue",
+  );
 
   return (
     <div className={styles.page}>
       <div className={styles.grid}>
         <div>
-          <WizardChrome
-            step={step}
-            savedAt={savedAt}
-            isEdit={isEdit}
-            onJump={goToStep}
-          />
+          <WizardChrome step={step} savedAt={savedAt} onJump={goToStep} />
           {/* Keyed by step so the pane remounts on navigation, replaying
               the staggered entrance of each .stepBody child. */}
           <div key={step} className={styles.pane}>
-            {/* StepPath (the type/path choice) is create-only — an edit
-                seeds straight past it and never renders it again. */}
-            {!isEdit && step === 0 && <StepPath form={form} userName={userName} />}
-            {step === 1 && <StepBasics form={form} editRef={editRef} />}
+            {step === 0 && <StepPath form={form} userName={userName} />}
+            {step === 1 && <StepBasics form={form} />}
             {step === 2 && <StepStory form={form} />}
             {step === 3 && <StepPractical form={form} />}
             {step === 4 && (
@@ -86,7 +68,6 @@ export function WizardFormPane({
             )}
             <PaneActions
               onBack={onBack}
-              hideBack={isEdit && step === 1}
               backLabel={
                 step === 0
                   ? t("marketing:listBusiness.paneActions.cancel")
@@ -94,7 +75,6 @@ export function WizardFormPane({
               }
               onNext={onNext}
               nextLabel={nextLabel}
-              nextArrow={!(step === 5 && isEdit)}
               missing={form.missing[step] ?? []}
             />
           </div>
@@ -104,7 +84,6 @@ export function WizardFormPane({
           draft={draft}
           userName={userName}
           photoPreviews={form.photoPreviews}
-          editSlug={editSlug}
           onAddPhoto={() => goToStep(4)}
         />
       </div>

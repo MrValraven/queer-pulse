@@ -42,6 +42,11 @@ export function DirectoryAsideOwner({ place, preview, ownerRef }: Props) {
       />
       <div className={s.ownerName}>{place.owner.name}</div>
       <div className={s.ownerRole}>{place.owner.role}</div>
+      {/* The person who runs this place either has a QueerPulse account or
+          does not. The second case is not an endorsement: nobody vouched for
+          anything, a member simply put the listing here. The chip says that
+          and nothing more, so the platform's real vouching system keeps the
+          only claim to the word. */}
       <span
         className={[
           s.qpChip,
@@ -51,7 +56,7 @@ export function DirectoryAsideOwner({ place, preview, ownerRef }: Props) {
         {t(
           place.owner.inQueerPulse
             ? "marketing:directory.detail.onQueerPulse"
-            : "marketing:directory.detail.communityVouched",
+            : "marketing:directory.detail.addedByMember",
         )}
       </span>
       <p className={s.ownerBio}>{place.owner.bio}</p>

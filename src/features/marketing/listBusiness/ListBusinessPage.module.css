@@ -615,7 +615,7 @@
   margin-bottom: 10px;
 }
 
-/* ===== Selectable option cards (own / verify / radio) ===== */
+/* ===== Selectable option cards (own / radio) ===== */
 .optGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -627,8 +627,7 @@
   }
 }
 .optCard,
-.radioOpt,
-.verifyOpt {
+.radioOpt {
   text-align: left;
   padding: 17px 18px;
   border: 1.5px solid rgba(var(--line-rgb), 0.12);
@@ -643,8 +642,7 @@
 }
 @media (hover: hover) {
   .optCard:not(.optOn):hover,
-  .radioOpt:not(.optOn):hover,
-  .verifyOpt:not(.optOn):hover {
+  .radioOpt:not(.optOn):hover {
     border-color: rgba(var(--line-rgb), 0.3);
   }
 }
@@ -738,36 +736,6 @@
 }
 .optOn .roDot::after {
   transform: scale(1);
-}
-
-.verifyOpt {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
-}
-.voIc {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(var(--plum-rgb), 0.06);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  color: var(--text-strong);
-}
-.voBadge {
-  margin-left: auto;
-  align-self: center;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--jade);
-  background: rgba(var(--jade-rgb), 0.12);
-  border-radius: 999px;
-  padding: 3px 9px;
-  white-space: nowrap;
 }
 
 /* ===== What-it-is lines ===== */
@@ -1209,11 +1177,6 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 14px;
-}
-/* When Back is hidden (edit mode's first step), Next sits alone on the right
-   instead of drifting to flex-start. */
-.paneActionsEnd {
-  justify-content: flex-end;
 }
 .neededBar {
   display: flex;

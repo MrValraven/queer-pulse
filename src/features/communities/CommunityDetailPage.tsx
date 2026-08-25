@@ -61,6 +61,7 @@ export function CommunityDetailPage() {
   const {
     slug,
     community,
+    cardStats,
     detail,
     editable,
     living,
@@ -217,6 +218,7 @@ export function CommunityDetailPage() {
           slug={slug}
           editable={editable}
           canChangeAccess={role === "owner"}
+          previewStats={cardStats}
           onClose={() => setEditing(false)}
         />
       )}

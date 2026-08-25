@@ -51,7 +51,7 @@ export function useReportReview() {
   const { demoMode } = useDemoMode();
 
   return useMutation<void, Error, ReportReviewInput>({
-    // DirectoryReviewReportModal renders its own error state — silence the
+    // DirectoryReportModal renders its own error state, so silence the
     // global duplicate toast, mirroring useDisputeListing/useSuggestEdit.
     meta: { silentError: true },
     mutationFn: async ({ reviewId, reasonCode }) => {

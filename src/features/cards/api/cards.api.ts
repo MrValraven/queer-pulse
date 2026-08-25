@@ -139,6 +139,15 @@ export interface CardVerificationDTO {
   /** The pronouns the card prints, or null, so whoever scanned it can address
    *  the holder correctly. Present only when the card itself carries them. */
   holderPronouns: string | null;
+  /**
+   * The face the card prints, served by the ISSUER rather than by the object
+   * being shown, so a door compares the person in front of it against a copy
+   * nobody at the door could have edited. Null unless the card both carries a
+   * face and is currently active. */
+  holderPhotoUrl: string | null;
+  /** How the card itself renders that face, so the portrait a verifier
+   *  compares against matches the one printed on the card in their hand. */
+  photoStyle: CardPhotoStyle;
 }
 
 export interface UpsertCardProgramBody {

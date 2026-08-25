@@ -1,7 +1,7 @@
 import { FiGlobe } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { type DirectoryPlace } from "./directoryPlaces";
-import { BUSINESS_COORDS } from "./businessCoords";
+import { isPlaceGone, type DirectoryPlace } from "./directoryPlaces";
+import { placeCoordinates } from "./businessCoords";
 import { LocationMiniMap } from "./LocationMiniMap";
 import { DirectoryMapPlaceholder } from "./DirectoryMapPlaceholder";
 import s from "./DirectorySpacePage.module.css";
@@ -27,10 +27,13 @@ export function DirectoryAsideLocation({ place }: { place: DirectoryPlace }) {
   // Live listings carry their pin on the DTO; demo places have it hand-placed
   // in BUSINESS_COORDS by slug (same fallback order as localPlaces.ts). When
   // neither exists (location-less listings) we keep the decorative placeholder.
-  const coords =
-    place.latitude != null && place.longitude != null
-      ? { latitude: place.latitude, longitude: place.longitude }
-      : BUSINESS_COORDS[place.slug];
+  const coords = placeCoordinates(place);
+
+  // The venue is permanently closed or has moved: the map and the address stay
+  // (this is where it WAS, and that is worth recording), but the address is
+  // relabelled so nobody reads it as somewhere to go today. The Directions
+  // action is suppressed separately in `DirectoryActionBar`.
+  const isFormerAddress = isPlaceGone(place);
 
   // Some listings arrive with no real street address — often the venue name
   // repeated into the field. Show the address line only when it adds something
@@ -56,6 +59,11 @@ export function DirectoryAsideLocation({ place }: { place: DirectoryPlace }) {
       </div>
       <div className={s.addr}>
         <strong className={s.addrName}>{place.name}</strong>
+        {isFormerAddress && (
+          <span className={s.formerAddressTag}>
+            {t("marketing:directory.detail.formerAddress")}
+          </span>
+        )}
         {showAddress && place.address}
       </div>
     </>

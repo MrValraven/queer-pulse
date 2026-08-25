@@ -19,10 +19,12 @@ export const cards: Catalog = {
   "remove.toast": "Cartão removido.",
 
   "photo.consent": "Mostrar a minha fotografia neste cartão",
-  "photo.consentAria": "Mostrar a minha fotografia no meu cartão de {community}",
+  "photo.consentAria":
+    "Mostrar a minha fotografia no meu cartão de {community}",
 
   "pronouns.consent": "Mostrar os meus pronomes neste cartão",
-  "pronouns.consentAria": "Mostrar os meus pronomes no meu cartão de {community}",
+  "pronouns.consentAria":
+    "Mostrar os meus pronomes no meu cartão de {community}",
   "pronouns.noneSet":
     "O teu cartão de {community} mostra os teus pronomes ao lado do nome. Acrescenta-os ao teu perfil e aparecem aqui.",
 
@@ -54,14 +56,17 @@ export const cards: Catalog = {
   "qrNotice.revoked": "Este cartão já não é válido",
 
   "status.expired": "Este cartão expirou. Pede um novo à comunidade.",
-  "status.suspended": "Este cartão está suspenso. A comunidade pode explicar-te.",
-  "status.revoked": "Este cartão já não é válido. A comunidade pode explicar-te.",
+  "status.suspended":
+    "Este cartão está suspenso. A comunidade pode explicar-te.",
+  "status.revoked":
+    "Este cartão já não é válido. A comunidade pode explicar-te.",
   "status.tag.active": "Ativo",
   "status.tag.expired": "Expirado",
   "status.tag.suspended": "Suspenso",
   "status.tag.revoked": "Revogado",
 
   "role.owner": "Responsável",
+  "role.coOwner": "Cotitular",
   "role.mod": "Moderadore",
   "role.member": "Sócie",
 
@@ -78,6 +83,50 @@ export const cards: Catalog = {
     "Confirme a fotografia do cartão com a pessoa que o mostra.",
   "verify.checkNoPhoto":
     "Este cartão não tem fotografia, por isso não confirma quem o tem na mão. Peça o nome ou outra coisa em que confie.",
+
+  "verify.lead.active":
+    "A comunidade abaixo emitiu este cartão e ele é válido hoje.",
+  "verify.lead.expired":
+    "Este cartão foi genuíno e o seu prazo terminou. A comunidade pode renová-lo.",
+  "verify.lead.suspended":
+    "A comunidade suspendeu este cartão. Trate-o como não válido hoje.",
+  "verify.lead.revoked":
+    "A comunidade retirou este cartão. Trate-o como não válido.",
+
+  "verify.face.label": "O rosto que consta deste cartão",
+  "verify.face.caption":
+    "Esta cópia veio dos registos da própria comunidade. Compare-a com a pessoa que lhe mostra o cartão.",
+
+  "verify.stamp": "Verificado às {time}",
+  "verify.stampNote":
+    "Esta página é feita em direto, por isso uma captura de ecrã dela não prova nada.",
+
+  "verify.unverified.lead":
+    "O código que leu não corresponde a um cartão válido hoje.",
+  "verify.unverified.whyTitle": "Porque é que isto acontece",
+  "verify.unverified.why.replaced":
+    "O cartão foi substituído e esta é uma cópia antiga, impressa ou guardada.",
+  "verify.unverified.why.screenshot":
+    "O código veio de uma captura de ecrã ou de uma fotografia de um cartão em vez do próprio cartão.",
+  "verify.unverified.why.partial":
+    "O endereço foi copiado ou escrito de forma incompleta.",
+  "verify.unverified.why.foreign":
+    "Nenhuma comunidade no QueerPulse emitiu alguma vez este código.",
+  "verify.unverified.privacy":
+    "O QueerPulse responde a tudo isto da mesma maneira de propósito, para que quem ande a ler códigos ao acaso não fique a saber nada sobre quem tem cartão aqui.",
+  "verify.unverified.next":
+    "Peça à pessoa para abrir o cartão no QueerPulse e leia o código a partir do ecrã dela.",
+  "verify.unverified.fair":
+    "Isto não diz nada sobre a pessoa à sua frente. Um cartão pode falhar a verificação por motivos completamente fora do controlo dela.",
+
+  "verify.unreachable.title": "Não conseguimos contactar o QueerPulse",
+  "verify.unreachable.lead":
+    "Nada foi verificado e nada foi decidido sobre este cartão. O seu dispositivo não conseguiu obter resposta.",
+  "verify.unreachable.next":
+    "Verifique a rede ou o wi-fi e tente de novo. Se a pessoa estiver à espera, peça-lhe para abrir o cartão no QueerPulse na ligação dela.",
+  "verify.retry": "Tentar de novo",
+  "verify.retrying": "A verificar…",
+  "verify.checking": "A verificar este cartão…",
 
   "designer.ariaLabel": "Desenhar o cartão de sócio da tua comunidade",
   "designer.defaultCardName": "Sócie",
@@ -148,7 +197,8 @@ export const cards: Catalog = {
   "designer.validityHelperNever":
     "Os cartões continuam a funcionar até os pausares ou revogares.",
   "designer.previewCaption": "Como quem é membro vê o seu cartão.",
-  "designer.previewThemeLabel": "Pré-visualizar o cartão em modo claro ou escuro",
+  "designer.previewThemeLabel":
+    "Pré-visualizar o cartão em modo claro ou escuro",
   "designer.previewLight": "Claro",
   "designer.previewDark": "Escuro",
   "designer.save": "Guardar e emitir cartões",

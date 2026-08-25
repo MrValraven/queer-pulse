@@ -15,6 +15,10 @@ interface ImageUploadFieldProps {
    *  `circle` avatar slot where `width === height`) — never for a freeform
    *  (work-image) slot, whose box aspect doesn't match an arbitrary crop. */
   crop?: CropRect;
+  /** Saved crop for `value` rendered as a FOCAL POINT rather than an exact
+   *  frame — for a non-circle slot (the cover), whose box aspect never matches
+   *  the crop's. Superseded by a fresh pick's own crop while one is showing. */
+  focus?: CropRect;
   onChange: (key: string) => void;
   /**
    * Optional: report the local, immediately-renderable preview URL to the
@@ -25,7 +29,7 @@ interface ImageUploadFieldProps {
    * pick instantly there too. For a device upload the URL is a `blob:` URL; for
    * a past-upload pick it's the resolved absolute URL.
    */
-  onPreviewChange?: (previewUrl: string | null) => void;
+  onPreviewChange?: (previewUrl: string | null, crop?: CropRect) => void;
   /** Which upload surface — sets size/dimension limits (avatar vs work image). */
   kind: UploadKind;
   circle?: boolean;
@@ -52,6 +56,7 @@ interface ImageUploadFieldProps {
 export function ImageUploadField({
   value,
   crop,
+  focus,
   onChange,
   onPreviewChange,
   kind,
@@ -80,6 +85,9 @@ export function ImageUploadField({
   // The crop to render: a fresh pick's own crop while it's showing, else the
   // saved crop the parent passed in for the currently-committed `value`.
   const displayedCrop = pick && pick.key === value ? pick.crop : crop;
+  // Same pairing for the focal-point slot: a fresh pick's own crop wins while
+  // it's showing, else the saved crop for the committed value.
+  const displayedFocus = pick && pick.key === value ? pick.crop : focus;
 
   useEffect(() => {
     // Revoke the previous pick's blob when it's replaced, and the last one on
@@ -94,7 +102,10 @@ export function ImageUploadField({
     // effect cleanup above.
     setPick({ key, url: newPreviewUrl, crop: newCrop });
     onChange(key);
-    onPreviewChange?.(newPreviewUrl);
+    // The crop rides along so a live preview elsewhere (the editor's docked
+    // card) frames the fresh pick the way the member just framed it, instead of
+    // falling back to the crop saved for the image they just replaced.
+    onPreviewChange?.(newPreviewUrl, newCrop);
   }
 
   function clear() {
@@ -125,6 +136,10 @@ export function ImageUploadField({
         // work-image) box isn't guaranteed to match its crop's aspect, so it
         // always renders uncropped regardless of what the caller passed in.
         crop={circle ? displayedCrop : undefined}
+        // The non-circle (cover) slot renders the crop as a focal point — its
+        // box is a fixed-height strip that never matches the crop's aspect, so
+        // an exact `crop` here would distort it.
+        focus={circle ? undefined : displayedFocus}
       />
       <div className={styles.imgActions}>
         <button

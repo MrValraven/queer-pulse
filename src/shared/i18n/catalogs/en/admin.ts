@@ -1053,6 +1053,7 @@ export const admin: Catalog = {
   "media.kinds.avatars": "Avatars",
   "media.kinds.work": "Work images",
   "media.kinds.story-covers": "Story covers",
+  "media.kinds.persona-covers": "Persona banners",
   "media.kinds.gathering-photos": "Gathering photos",
   "media.kinds.group-avatars": "Group avatars",
   "media.kinds.listing-photos": "Listing photos",

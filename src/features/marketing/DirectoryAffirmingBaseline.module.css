@@ -1,0 +1,69 @@
+/* ── The affirming baseline, stated ─────────────────────────────────────────
+   Every listing here agreed to this, because agreeing is the condition of
+   appearing at all. So this is deliberately NOT drawn as a badge, a chip, a
+   seal or anything else that could read as a distinction one business earned
+   and another did not: it is a wide, quiet standing statement about the whole
+   directory, closer to a house rule than to a credential. */
+.panel {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 44px;
+  padding: 22px 24px;
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.icon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent);
+}
+.icon svg {
+  width: 17px;
+  height: 17px;
+}
+.body {
+  min-width: 0;
+}
+.lead {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+.lead em {
+  font-style: italic;
+  color: var(--accent);
+}
+.detail {
+  margin-top: 9px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-60);
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+.detail + .detail {
+  margin-top: 6px;
+}
+
+@media (--sm) {
+  .panel {
+    padding: 18px 18px;
+    gap: 13px;
+  }
+  .lead {
+    font-size: 17px;
+  }
+}

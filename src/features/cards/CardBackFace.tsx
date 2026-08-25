@@ -1,6 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { MyCardDTO } from "./api/cards.api";
+import { cardRoleLabelKey } from "./cardRoles";
 import { CardQr } from "./CardQr";
 import styles from "./MembershipCardFace.module.css";
 
@@ -13,9 +14,6 @@ function verifyUrl(token: string): string {
 // who does scan a screenshot of a preview lands on the honest "could not be
 // verified" screen rather than on someone's live card.
 const PREVIEW_QR_URL = `${window.location.origin}/cards/verify/preview`;
-
-/** The catalog only names the three roles a card can actually carry. */
-const KNOWN_ROLES: readonly string[] = ["owner", "mod", "member"];
 
 /**
  * The credential side of a membership card: the scannable code beside the
@@ -44,7 +42,7 @@ export function CardBackFace({
   const { t } = useTranslation();
   const format = useFormat();
   const canProve = card.status === "active";
-  const roleKey = KNOWN_ROLES.includes(card.role) ? card.role : "member";
+  const roleKey = cardRoleLabelKey(card.role);
 
   return (
     <>
@@ -104,7 +102,7 @@ export function CardBackFace({
           </div>
           <div>
             <dt>{t("cards:face.role")}</dt>
-            <dd>{t(`cards:role.${roleKey}`)}</dd>
+            <dd>{t(roleKey)}</dd>
           </div>
         </dl>
       </div>

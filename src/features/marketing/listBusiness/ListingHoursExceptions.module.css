@@ -1,0 +1,183 @@
+/* ===========================================================
+   Dated overrides of the weekly opening-hours grid: closed on
+   Christmas Eve, open late for Pride, shut for two weeks in
+   August. Owner-editor only. The time controls themselves are
+   the weekly grid's (ListingHoursIntervalRows), so nothing
+   here restyles them.
+   =========================================================== */
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hint,
+.empty {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin: 0;
+}
+
+.empty {
+  padding: 12px 14px;
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.02);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.11);
+  border-radius: var(--radius-badge);
+  background: var(--paper);
+}
+
+/* A date that has already gone by. Quieter, never removed on the
+   owner's behalf: it is still their record of what happened. */
+.rowPast {
+  background: rgba(var(--plum-rgb), 0.03);
+  border-style: dashed;
+}
+
+.rowHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toggle {
+  flex: none;
+  padding: 6px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.toggleOpen {
+  background: rgba(var(--jade-rgb), 0.12);
+  border-color: rgba(var(--jade-rgb), 0.28);
+  color: var(--jade);
+}
+
+.pastTag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  background: rgba(var(--plum-rgb), 0.06);
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+.remove {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-40);
+  font-size: 15px;
+  cursor: pointer;
+  transition:
+    color 0.18s var(--ease),
+    background 0.18s var(--ease);
+}
+@media (hover: hover) {
+  .remove:hover {
+    color: var(--accent-ink);
+    background: rgba(var(--accent-rgb), 0.08);
+  }
+}
+
+.note {
+  width: 100%;
+}
+
+.problem {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.08);
+  border-radius: 8px;
+  padding: 5px 9px;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.add,
+.clearPast {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: color 0.18s var(--ease);
+}
+.add:disabled {
+  color: var(--ink-40);
+  cursor: not-allowed;
+}
+.clearPast {
+  color: var(--ink-60);
+  text-decoration: underline;
+}
+@media (hover: hover) {
+  .add:not(:disabled):hover,
+  .clearPast:hover {
+    color: var(--accent);
+  }
+}
+
+.count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .remove,
+  .add,
+  .clearPast {
+    transition: none;
+  }
+}

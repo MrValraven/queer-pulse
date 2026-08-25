@@ -10,9 +10,10 @@ import {
   getMyListings,
   updateListing,
   type CreateListingDto,
-  type ListingDTO,
+  type ManagedListingDTO,
 } from "./listings.api";
 import { listingDtoToPending } from "./listings.adapters";
+import { draftToUpdateDto } from "../draftToDto";
 
 export interface MyListingsResult {
   items: PendingListing[];
@@ -123,7 +124,7 @@ export function useListingMutations() {
 export function useOwnedListing(ref: string | undefined) {
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
-  const query = useQuery<ListingDTO>({
+  const query = useQuery<ManagedListingDTO>({
     queryKey: ["listings", "detail", ref],
     enabled: !demoMode && loggedIn && Boolean(ref),
     queryFn: () => getListing(ref as string),
@@ -135,13 +136,23 @@ export function useOwnedListing(ref: string | undefined) {
 export function useUpdateListing() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<ListingDTO | null, Error, { ref: string; draft: ListingDraft }>({
+  return useMutation<
+    ManagedListingDTO | null,
+    Error,
+    { ref: string; draft: ListingDraft }
+  >({
     // useEditListingSave re-throws so ListingWizard toasts via showSaveError, so
     // silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async ({ ref, draft }) => {
       if (demoMode) return null;
-      return updateListing(ref, draft);
+      // Through the mapper, never raw: the PATCH body must normalise hours and
+      // services, must NOT carry `affirmingBaselineAccepted` (the API rejects
+      // it, because no edit can un-agree to the baseline), and must drop the
+      // owner's eight personal fields when the draft says this member only
+      // co-manages the listing (the API answers 403 to any of them, which
+      // would fail the whole save).
+      return updateListing(ref, draftToUpdateDto(draft));
     },
     onSuccess: (data, variables) => {
       if (demoMode) return;

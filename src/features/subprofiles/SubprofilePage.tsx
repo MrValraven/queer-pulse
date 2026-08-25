@@ -184,6 +184,10 @@ export function SubprofilePage() {
         data={data}
         skin={skin}
         mode={mode}
+        // The banner runs to the very top of the page, under the floating pill
+        // nav — except when the owner's draft banner sits above it, which the
+        // rise would otherwise slide up over.
+        coverRise={!isOwnerDraftPreview}
         skinVars={skinStyle}
         onAction={handleAction}
         onOpenWorkAt={lightbox.openAt}

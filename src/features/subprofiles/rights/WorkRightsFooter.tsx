@@ -7,14 +7,27 @@ export interface WorkRightsFooterProps {
   authorName: string;
   /** The item's ISO 8601 `createdAt` (first-published date). */
   createdAtISO: string;
+  /** `"item"` (default) is the inline footer under a single work's body, used
+   *  by the one-work modal surfaces. `"page"` is the centred, full-width
+   *  notice that closes a whole persona page — see `PersonaRightsFooter`. */
+  variant?: "item" | "page";
 }
 
 /**
- * Public copyright + provenance footer for a portfolio item: a "© {year}
- * {author}. All rights reserved." line plus a "First published on
- * QueerPulse · {date}" line. Rendered after the item body, tokens only.
+ * Copyright + provenance notice: a "© {year} {author}. All rights reserved."
+ * line plus a "First published on QueerPulse · {date}" line. Tokens only.
+ *
+ * It is deliberately NOT rendered per row/spotlight/menu-card on a persona
+ * page — repeating it beside every item read as spam. The page shows it once
+ * at the end via `PersonaRightsFooter`; the only other places it appears are
+ * the single-work modals (`PoemReaderModal`, `StudioLightbox`), where exactly
+ * one work is on screen and the provenance is the point.
  */
-export function WorkRightsFooter({ authorName, createdAtISO }: WorkRightsFooterProps) {
+export function WorkRightsFooter({
+  authorName,
+  createdAtISO,
+  variant = "item",
+}: WorkRightsFooterProps) {
   const { t, language } = useTranslation();
   const createdAt = new Date(createdAtISO);
   const year = String(createdAt.getFullYear());
@@ -25,7 +38,11 @@ export function WorkRightsFooter({ authorName, createdAtISO }: WorkRightsFooterP
   });
 
   return (
-    <footer className={styles.rights}>
+    <footer
+      className={
+        variant === "page" ? `${styles.rights} ${styles.page}` : styles.rights
+      }
+    >
       <FiShield aria-hidden className={styles.icon} />
       <div>
         <p className={styles.copyright}>

@@ -1,25 +1,25 @@
 import type { Review } from "./directoryPlaces";
 
 /**
- * Client-side review sort modes. There is no `createdAt`/date field on the FE
- * `Review` type (see `directoryPlaces.ts`), so "most recent" is intentionally
- * not offered here — only fields that actually exist on the review.
+ * Client-side review sort modes.
+ *
+ * "newest" is the default and does no reordering of its own: the server already
+ * sends the list recency-ordered (live payloads also carry `createdAt`), so
+ * newest-first means "the order the server sent", plus any just-posted review
+ * the optimistic update prepended.
+ *
+ * "helpful" ranks by the members-found-this-helpful count, which is a real,
+ * member-driven number again now that the vote control writes to it. Reviews
+ * with no votes keep their incoming recency order behind the voted ones,
+ * because the sort is stable.
  */
-export type ReviewSort = "helpful" | "highest" | "lowest";
+export type ReviewSort = "newest" | "highest" | "lowest" | "helpful";
 
 /** Star-rating filter value: "all", or a stringified 1–5 star rating (the
  *  `<select>`/chip value type, kept as a string to match the shared chip
  *  controls' `value: string` API). */
 export type ReviewStarFilter = string;
 
-/**
- * Apply the star filter then the sort, over a **copy** of `reviews` — never
- * mutates the source array (which is `place.reviews`, owned by the caller).
- * `Array.prototype.sort` is a stable sort in all supported engines, so the
- * default "helpful" mode preserves the backend's existing helpful-desc/
- * recency tiebreak order exactly (unchanged behaviour when controls are
- * hidden or left at their defaults).
- */
 /** 5★→1★ counts, e.g. { 5: 12, 4: 3, 3: 0, 2: 1, 1: 0 }. Shared by the rating
  *  distribution bars and the review star-filter chips (which show the same
  *  per-star counts next to each option). */
@@ -32,6 +32,12 @@ export function countByStar(reviews: Review[]): Record<number, number> {
   return counts;
 }
 
+/**
+ * Apply the star filter then the sort, over a **copy** of `reviews`: never
+ * mutates the source array (which is `place.reviews`, owned by the caller).
+ * `Array.prototype.sort` is a stable sort in all supported engines, so the
+ * star sorts keep the incoming (recency) order inside each star bucket.
+ */
 export function sortAndFilterReviews(
   reviews: Review[],
   sort: ReviewSort,
@@ -44,9 +50,16 @@ export function sortAndFilterReviews(
           (review) => Math.round(review.stars) === Number(starFilter),
         );
 
-  return [...filtered].sort((a, b) => {
-    if (sort === "highest") return b.stars - a.stars;
-    if (sort === "lowest") return a.stars - b.stars;
-    return b.helpful - a.helpful; // "helpful" — the default, matches backend order
-  });
+  // "newest": the server's own order, untouched (see ReviewSort above).
+  if (sort === "newest") return [...filtered];
+
+  if (sort === "helpful") {
+    return [...filtered].sort(
+      (first, second) => second.helpful - first.helpful,
+    );
+  }
+
+  return [...filtered].sort((first, second) =>
+    sort === "highest" ? second.stars - first.stars : first.stars - second.stars,
+  );
 }

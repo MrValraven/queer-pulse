@@ -20,8 +20,8 @@ interface FieldLocation {
 }
 
 const FIELD_TO_STEP: Record<string, FieldLocation> = {
-  // Step 0 — path / verification
-  verify: { step: 0, anchor: ANCHOR.verify },
+  // Step 0 — how you know the place
+  path: { step: 0, anchor: ANCHOR.path },
   // Step 1 — basics
   name: { step: 1, anchor: ANCHOR.name },
   cats: { step: 1, anchor: ANCHOR.cats },

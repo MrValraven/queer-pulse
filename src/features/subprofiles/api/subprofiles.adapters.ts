@@ -95,6 +95,10 @@ export interface SubprofileView {
   tagline: string;
   bio: string;
   coverUrl: string | null;
+  /** Saved reframe crop for `coverUrl`, passed to `ImageSlot`'s `focus` (never
+   *  its `crop`): the banner's aspect changes per skin and per viewport, so the
+   *  rect is honoured as a focal point rather than reproduced literally. */
+  coverCrop?: CropRect;
   accent: AccentKey | null;
   availability: AvailabilityKey | null;
   ctaLabel: string;
@@ -127,6 +131,10 @@ export interface PublicSubprofileView {
   tagline: string;
   bio: string;
   coverUrl: string | null;
+  /** Saved reframe crop for `coverUrl`, passed to `ImageSlot`'s `focus` (never
+   *  its `crop`): the banner's aspect changes per skin and per viewport, so the
+   *  rect is honoured as a focal point rather than reproduced literally. */
+  coverCrop?: CropRect;
   accent: AccentKey | null;
   availability: AvailabilityKey | null;
   ctaLabel: string;
@@ -243,6 +251,7 @@ export function subprofileToView(dto: SubprofileDTO): SubprofileView {
     tagline: dto.tagline ?? "",
     bio: dto.bio ?? "",
     coverUrl: dto.coverUrl,
+    coverCrop: dto.coverCrop ?? undefined,
     accent: isAccentKey(dto.accent) ? dto.accent : null,
     availability: isAvailabilityKey(dto.availability) ? dto.availability : null,
     ctaLabel: dto.ctaLabel ?? "",
@@ -276,6 +285,7 @@ export function publicSubprofileToView(
     tagline: dto.tagline ?? "",
     bio: dto.bio ?? "",
     coverUrl: dto.coverUrl,
+    coverCrop: dto.coverCrop ?? undefined,
     accent: isAccentKey(dto.accent) ? dto.accent : null,
     availability: isAvailabilityKey(dto.availability) ? dto.availability : null,
     ctaLabel: dto.ctaLabel ?? "",
@@ -319,6 +329,7 @@ export function ownerViewToShowcaseView(
     tagline: view.tagline,
     bio: view.bio,
     coverUrl: view.coverUrl,
+    coverCrop: view.coverCrop,
     accent: view.accent,
     availability: view.availability,
     ctaLabel: view.ctaLabel,

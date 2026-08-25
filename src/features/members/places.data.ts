@@ -1,5 +1,8 @@
 import { DIRECTORY_PLACES, type DirectoryPlace } from "../marketing/directoryPlaces";
-import type { ListingStatus } from "../marketing/listBusiness/listBusiness.data";
+import type {
+  ListingStatus,
+  ManagementRole,
+} from "../marketing/listBusiness/listBusiness.data";
 
 /**
  * One place on a profile. The card visuals come from the same
@@ -13,6 +16,13 @@ export interface MemberPlace {
   status: ListingStatus;
   /** Submission reference, shown only to the owner. */
   ref?: string;
+  /**
+   * What this member is to the place: its owner, or somebody the owner asked
+   * to help run it. Only ever set on the member's own view of their own
+   * profile. Absent on a visitor's card and on a registry place, where the
+   * question does not arise.
+   */
+  managementRole?: ManagementRole;
   /** What the card renders — see `LocalBusinessCardBody`. */
   place: DirectoryPlace;
 }

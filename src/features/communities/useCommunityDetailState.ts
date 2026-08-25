@@ -239,10 +239,19 @@ export function useCommunityDetailState() {
     }
   };
 
+  // The two card-footer numbers the edit modal's live preview needs. `living`
+  // holds the authoritative count in live mode; `memberNum` is the demo
+  // registry's parsed one, and neither exists for a community with no count.
+  const cardStats = {
+    memberCount: living?.stats.members ?? (hasCount ? memberNum : undefined),
+    activeThisWeek: living?.stats.activeThisWeek ?? community.activeThisWeek,
+  };
+
   return {
     status: "ready" as const,
     slug,
     community,
+    cardStats,
     detail,
     editable,
     living,

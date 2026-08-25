@@ -5,9 +5,20 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../app/providers/I18nProvider";
 import { DemoModeProvider } from "../../app/providers/DemoModeProvider";
+import { AuthProvider } from "../../app/providers/AuthProvider";
 import { ToastProvider } from "../../shared/components/feedback/ToastProvider";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
 import { DIRECTORY_PLACES } from "./directoryPlaces";
+
+// The main column now carries the "Where it is" block, whose mini-map builds a
+// real maplibre-gl instance backed by WebGL, and jsdom has no implementation of
+// that. These assertions are about the hours block, so the map is stubbed with
+// a plain element carrying the same accessible name.
+vi.mock("./LocationMiniMap", () => ({
+  LocationMiniMap: ({ ariaLabel }: { ariaLabel: string }) => (
+    <div role="img" aria-label={ariaLabel} />
+  ),
+}));
 
 function renderMain(node: ReactNode) {
   const queryClient = new QueryClient({
@@ -17,11 +28,18 @@ function renderMain(node: ReactNode) {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <DemoModeProvider>
-          <ToastProvider>
-            {/* DirectorySpaceMain always renders DirectoryReviewsSection,
-                which links out via react-router <Link> — provide a router. */}
-            <MemoryRouter>{node}</MemoryRouter>
-          </ToastProvider>
+          {/* Review rows read the signed-in member (to offer the author their
+              own edit affordance, and to keep the helpful vote off their own
+              review), so the auth context has to be present. Demo mode is
+              forced on in vitest, so this is the mock user and no network. */}
+          <AuthProvider>
+            <ToastProvider>
+              {/* DirectorySpaceMain always renders DirectoryReviewsSection,
+                  which links out via react-router <Link>, so provide a
+                  router. */}
+              <MemoryRouter>{node}</MemoryRouter>
+            </ToastProvider>
+          </AuthProvider>
         </DemoModeProvider>
       </I18nProvider>
     </QueryClientProvider>,

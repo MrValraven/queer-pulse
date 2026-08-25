@@ -10,6 +10,7 @@ export type UploadKind =
   | "avatar"
   | "work-image"
   | "story-cover"
+  | "persona-cover"
   | "gathering-photo"
   | "group-avatar"
   | "listing-photo"
@@ -58,12 +59,15 @@ export type UploadKind =
  *   4. Resize / re-encode per kind to WebP/AVIF with a JPEG fallback. Targets:
  *      avatar ≥1024², but the full-bleed COVER + LISTING heroes need ~2560px on
  *      the long edge — they paint edge-to-edge and a lower cap renders a visibly
- *      soft banner. NOTE: avatars are displayed in a ~430px-tall profile hero,
- *      so on a 2×/3× retina screen they need ~860-1290px — do NOT cap the server
- *      avatar resize below ~1024² or the hero renders soft. (The client already
- *      downscales each kind to its longest-edge cap — 1600px for most, 2560px
- *      for cover/listing — so this server step only re-crops/formats; keep each
- *      kind's server target at or above the matching client cap.)
+ *      soft banner — and `persona-cover` needs ~3200px, since a persona banner
+ *      spans the WHOLE viewport with nothing inset around it (~3800 device px
+ *      on a 2× display at a wide window). NOTE: avatars are displayed in a
+ *      ~430px-tall profile hero, so on a 2×/3× retina screen they need
+ *      ~860-1290px — do NOT cap the server avatar resize below ~1024² or the
+ *      hero renders soft. (The client already downscales each kind to its
+ *      longest-edge cap — 1600px for most, 2560px for cover/listing, 3200px
+ *      for the persona banner — so this server step only re-crops/formats;
+ *      keep each kind's server target at or above the matching client cap.)
  *   5. Private-by-default bucket; presign grants write to a single key only.
  *
  *   NOTE: `listing-photo` is a new kind (added 2026-07-30) — same presign flow,

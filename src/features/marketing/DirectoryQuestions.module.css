@@ -1,0 +1,277 @@
+/* "Ask the owner, in public": the questions members put to a business and the
+   answers that came back. Lives in its own module (rather than growing the
+   already-large DirectorySpacePage.module.css) because it is a self-contained
+   block; the section frame itself still comes from that page module's `.sec`. */
+
+/* ── Ask composer ─────────────────────────────────────────────────────────── */
+.askForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+}
+/* Label above the field, always visible. The placeholder is only an example;
+   the label carries the meaning. */
+.askLabel {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-strong);
+}
+.askInput {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.6;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 12px;
+  resize: vertical;
+}
+.askInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.askFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.askHint {
+  flex: 1 1 20ch;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+/* The refusal, where the member is looking. Icon-free but colour-plus-text:
+   the words carry the meaning on their own. */
+.askError {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--danger);
+}
+.signIn {
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  color: var(--ink-40);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+}
+.signIn a {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+/* Shown to the owner in place of the ask composer: they answer here, they do
+   not ask themselves questions. */
+.ownerNote {
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.05);
+  border-radius: 14px;
+}
+
+/* ── The list ─────────────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.question {
+  padding: 20px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+}
+.questionHead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.asker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+}
+.asker:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.askerName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-strong);
+  transition: color 0.18s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  a.asker:hover .askerName {
+    color: var(--accent-ink);
+  }
+}
+.questionDate {
+  margin-inline-start: auto;
+  flex: none;
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+.questionBody {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.questionActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* ── Answers ──────────────────────────────────────────────────────────────── */
+
+/* No answer yet. An ordinary state for a fresh question, so it is written and
+   styled as information: no warning colour, no icon, nothing held against the
+   business. */
+.awaiting {
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-40);
+}
+
+/* The business answering: the house plum block, same shape the owner's reply
+   to a review uses, bylined with the listing's own name. */
+.answerOwner,
+.answerModerator {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 0 12px 12px 0;
+}
+.answerOwner {
+  background: rgba(var(--plum-rgb), 0.06);
+  border-inline-start: 3px solid var(--plum);
+}
+/* A moderator answering. A different ground, a different rule colour, a shield
+   icon and its own explanatory line below, so this can never be mistaken for
+   the business speaking. */
+.answerModerator {
+  background: rgba(var(--jade-rgb), 0.08);
+  border-inline-start: 3px solid var(--jade);
+}
+.answerHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.answerBy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--plum);
+}
+.answerModerator .answerBy {
+  color: var(--jade-ink);
+}
+.answerBy svg {
+  width: 13px;
+  height: 13px;
+}
+.answerDate {
+  flex: none;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+.answerText {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.answerNote {
+  margin-top: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── Owner answer composer ────────────────────────────────────────────────── */
+.answerToggle {
+  margin-top: 12px;
+  padding: 8px 18px;
+  font-size: 13px;
+}
+.answerComposer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.answerInput {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 12px;
+  resize: vertical;
+}
+.answerInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.answerComposerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ── Empty state + paging ─────────────────────────────────────────────────── */
+.empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 18px 4px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+.empty svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+}
+.moreRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}

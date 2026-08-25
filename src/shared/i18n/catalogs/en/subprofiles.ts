@@ -499,6 +499,8 @@ export const subprofiles: Catalog = {
 
   // Presence fields (SubprofilePresenceFields): cover, accent, availability, CTA
   "metaForm.coverLabel": "Cover image",
+  "metaForm.coverHelper":
+    "A wide banner across the top of your persona page. Frame it at 3:1 (at least 1500 × 500px); the page keeps whatever you centre in the frame, and trims a little from the top and bottom on wide screens.",
   "metaForm.coverPlaceholder": "Cover image",
   "metaForm.accentLabel": "Accent colour",
   "metaForm.bannerEdgeLabel": "Banner edge",

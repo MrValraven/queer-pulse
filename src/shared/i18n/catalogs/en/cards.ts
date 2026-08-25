@@ -54,8 +54,7 @@ export const cards: Catalog = {
 
   "status.expired":
     "This card expired. Ask the community to issue you a new one.",
-  "status.suspended":
-    "This card is paused. The community can tell you more.",
+  "status.suspended": "This card is paused. The community can tell you more.",
   "status.revoked":
     "This card is no longer valid. The community can tell you more.",
   "status.tag.active": "Active",
@@ -64,6 +63,7 @@ export const cards: Catalog = {
   "status.tag.revoked": "Revoked",
 
   "role.owner": "Owner",
+  "role.coOwner": "Co-owner",
   "role.mod": "Moderator",
   "role.member": "Member",
 
@@ -80,6 +80,50 @@ export const cards: Catalog = {
     "Check the photo on the card against the person showing it.",
   "verify.checkNoPhoto":
     "This card carries no photo, so it cannot confirm who is holding it. Ask for a name or something else you trust.",
+
+  "verify.lead.active":
+    "The community below issued this card and it stands today.",
+  "verify.lead.expired":
+    "This card was genuine and its term has run out. Its community can renew it.",
+  "verify.lead.suspended":
+    "Its community has put this card on hold. Treat it as not valid today.",
+  "verify.lead.revoked":
+    "Its community has withdrawn this card. Treat it as not valid.",
+
+  "verify.face.label": "The face on this card",
+  "verify.face.caption":
+    "This copy came from the community's own records. Compare it with the person showing you the card.",
+
+  "verify.stamp": "Checked at {time}",
+  "verify.stampNote":
+    "This page is live, so a screenshot of it proves nothing.",
+
+  "verify.unverified.lead":
+    "The code you scanned does not match a card that stands today.",
+  "verify.unverified.whyTitle": "Why this happens",
+  "verify.unverified.why.replaced":
+    "The card was replaced, and this is an older printed or saved copy.",
+  "verify.unverified.why.screenshot":
+    "The code came from a screenshot or a photograph of a card rather than from the card itself.",
+  "verify.unverified.why.partial":
+    "The address was copied or typed incompletely.",
+  "verify.unverified.why.foreign":
+    "No community on QueerPulse ever issued this code.",
+  "verify.unverified.privacy":
+    "QueerPulse answers all of these the same way on purpose, so that anyone scanning codes at random learns nothing about who holds a card here.",
+  "verify.unverified.next":
+    "Ask the person to open their card in QueerPulse and scan the code from their own screen.",
+  "verify.unverified.fair":
+    "This says nothing about the person in front of you. A card can fail to verify for reasons entirely outside their hands.",
+
+  "verify.unreachable.title": "We could not reach QueerPulse",
+  "verify.unreachable.lead":
+    "Nothing was checked and nothing was decided about this card. Your device could not get an answer.",
+  "verify.unreachable.next":
+    "Check your signal or wi-fi and try again. If the person is waiting, ask them to open their card in QueerPulse on their own connection.",
+  "verify.retry": "Try again",
+  "verify.retrying": "Checking…",
+  "verify.checking": "Checking this card…",
 
   "designer.ariaLabel": "Design your community's membership card",
   "designer.defaultCardName": "Member",

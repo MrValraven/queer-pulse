@@ -1,0 +1,72 @@
+/* Status header + verified-badge disclosure shown above the listing editor's
+   step pane (edit mode only). The chip mirrors the owner's own place card on
+   /account/profile (see PlacesSection.module.css `.status`), minus the
+   absolute positioning that card needs to sit in the photo corner. */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 13px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: rgba(var(--plum-rgb), 0.05);
+}
+.chipLive {
+  color: var(--jade);
+}
+.chipReview {
+  color: var(--accent-ink);
+}
+
+.body {
+  flex: 1 1 260px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* Quiet, factual disclosure about the moderator-granted badge. Same accent
+   tint as the wizard's other inline notices. */
+.badgeNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  background: rgba(var(--accent-rgb), 0.06);
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  border-radius: 13px;
+}
+.badgeNotice svg {
+  color: var(--accent-ink);
+  flex: none;
+  margin-top: 2px;
+}
+.badgeNoticeText {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.badgeNoticeTitle {
+  display: block;
+  font-weight: 700;
+  color: var(--accent-ink);
+  margin-bottom: 3px;
+}

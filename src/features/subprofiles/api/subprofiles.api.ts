@@ -472,6 +472,10 @@ export interface SubprofileDTO {
   tagline: string | null;
   bio: string | null;
   coverUrl: string | null;
+  /** Saved reframe crop for `coverUrl`. Rendered as a FOCAL POINT, not an
+   *  exact frame — the banner's box aspect changes with the skin and the
+   *  viewport, so no slot can reproduce the crop rect literally. */
+  coverCrop?: CropRect | null;
   accent: string | null;
   availability: string | null;
   ctaLabel: string | null;
@@ -521,6 +525,10 @@ export interface SubprofilePublicDTO {
   tagline: string | null;
   bio: string | null;
   coverUrl: string | null;
+  /** Saved reframe crop for `coverUrl`. Rendered as a FOCAL POINT, not an
+   *  exact frame — the banner's box aspect changes with the skin and the
+   *  viewport, so no slot can reproduce the crop rect literally. */
+  coverCrop?: CropRect | null;
   accent: string | null;
   availability: string | null;
   ctaLabel: string | null;

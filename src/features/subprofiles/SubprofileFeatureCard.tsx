@@ -129,6 +129,11 @@ export function SubprofileFeatureCard({
             src={coverHref}
             alt=""
             tint="plum"
+            // Same reason as the persona page's own banner: the crop was framed
+            // at 3:1 and this strip is nowhere near it (a bled band is ~4.7:1,
+            // the wide layout's side panel is portrait), so the rect is
+            // honoured as a focal point instead of being reproduced exactly.
+            focus={persona.coverCrop}
             // Bleed squares the corners (the card's rounded top re-clips it);
             // contained keeps the inset rounded strip.
             radius={coverBleed ? 0 : 14}

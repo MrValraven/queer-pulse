@@ -3,12 +3,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useDirectoryListings } from "../marketing/listBusiness/api/useDirectoryListings";
+import { CoManagerInvitesInbox } from "../marketing/listBusiness/coManagers/CoManagerInvitesInbox";
 import { routes } from "../../app/routeMap";
 import { EmptyState } from "../../shared/components/ui";
-import { LocalBusinessCard } from "../marketing/LocalBusinessCard";
 import { submittedToPlace } from "../marketing/api/directory.adapters";
 import { useMemberListings } from "./api/useMemberListings";
-import { OwnedPlaceCard } from "./OwnedPlaceCard";
+import { PlacesGrid } from "./PlacesGrid";
 import {
   mergePlaces,
   registryPlacesForMember,
@@ -16,15 +16,16 @@ import {
 } from "./places.data";
 import styles from "./PlacesSection.module.css";
 
-/** "Places I run" (owner) / "Places {firstName} runs" (visitor) — merges the
- *  static directory registry with this member's session-submitted listings. */
+/** "Places I run" (owner) / "Places {firstName} runs" (visitor). Merges the
+ *  static directory registry with this member's session-submitted listings,
+ *  and puts any co-management invitation waiting on them above the grid. */
 export function PlacesSection({
   memberSlug,
   isSelf,
   firstName,
 }: {
   memberSlug: string;
-  /** Owner view — adds pending submissions and their status chips/ref line. */
+  /** Owner view: adds pending submissions and their status chips/ref line. */
   isSelf: boolean;
   /** For the visitor title ("Places João runs"). */
   firstName: string;
@@ -35,32 +36,55 @@ export function PlacesSection({
   const { submitted, withdrawListing } = useDirectoryListings();
   // Visitor source: demo → static registry, live → GET /directory/by-member/:slug.
   const visitorPlaces = useMemberListings(memberSlug);
-  // Owner source: this member's own submissions from GET /listings/mine.
-  // `submittedToPlace` is the same adapter the listing wizard's preview uses,
-  // so an owner's card is exactly the card the directory will show.
+  // Owner source: this member's own submissions from GET /listings/mine, which
+  // also returns the listings they were invited to help run. A co-managed one
+  // belongs to somebody else, so it matches neither the submitter test nor the
+  // link-to-profile one and needs its own clause.
   const mine: MemberPlace[] = submitted
     .filter(
-      (listing) => listing.submittedBy === memberSlug && listing.linkToProfile,
+      (listing) =>
+        listing.managementRole === "co_manager" ||
+        (listing.submittedBy === memberSlug && listing.linkToProfile),
     )
     .map((listing) => ({
       key: listing.ref,
       status: listing.status,
       ref: listing.ref,
+      managementRole: listing.managementRole,
       place: submittedToPlace(listing),
     }));
-  // The static registry is a mock — only a base in demo, never for a real
-  // member in live mode (that would leak a demo persona's places).
+  // The static registry is a mock. It is a base in demo only; using it for a
+  // real member in live mode would leak a demo persona's places.
   const ownerRegistry = demoMode ? registryPlacesForMember(memberSlug) : [];
   const places = isSelf
     ? mergePlaces(ownerRegistry, mine, true)
     : visitorPlaces;
 
   // Visitors see nothing rather than an empty shell; the owner gets a prompt.
+  // An owner with no places of their own may still have an invitation waiting,
+  // so the section stays for them either way.
   if (places.length === 0 && !isSelf) return null;
 
-  if (places.length === 0) {
-    return (
-      <section id="places" className={`${styles.section} wrap`}>
+  // A live listing addresses its own ref for edit and delete; both need the
+  // same owner + live-mode + real-ref gate.
+  const canManage = (entry: MemberPlace) => Boolean(entry.ref) && !demoMode;
+  // Deleting a listing stays with its owner, so a co-managed place is offered
+  // no delete at all rather than one that would be refused.
+  const removeHandler = (entry: MemberPlace) => {
+    if (!canManage(entry) || entry.managementRole === "co_manager") {
+      return undefined;
+    }
+    return () => {
+      withdrawListing(entry.ref as string);
+      showToast(t("members:places.deleted"), "info");
+    };
+  };
+
+  return (
+    <section id="places" className={`${styles.section} wrap`}>
+      {isSelf && <CoManagerInvitesInbox />}
+
+      {places.length === 0 ? (
         <EmptyState
           title={t("members:places.empty.title")}
           description={t("members:places.empty.description")}
@@ -69,60 +93,35 @@ export function PlacesSection({
             to: routes.listBusiness,
           }}
         />
-      </section>
-    );
-  }
-
-  return (
-    <section id="places" className={`${styles.section} wrap`}>
-      <div className={styles.head}>
-        <h2 className={styles.title}>
-          {isSelf ? (
-            <Translation
-              i18nKey="members:places.selfTitle"
-              components={{ em: <em /> }}
-            />
-          ) : (
-            <Translation
-              i18nKey="members:places.visitorTitle"
-              values={{ firstName }}
-              components={{ em: <em /> }}
-            />
-          )}
-        </h2>
-        {isSelf && (
-          <p className={styles.sub}>{t("members:places.selfSubtitle")}</p>
-        )}
-      </div>
-      <div className={styles.grid}>
-        {places.map((entry, index) =>
-          isSelf ? (
-            <OwnedPlaceCard
-              key={entry.key}
-              entry={entry}
-              // A live listing addresses its own ref for edit/delete; both need
-              // the same owner + live-mode + real-ref gate.
-              canManage={Boolean(entry.ref) && !demoMode}
-              onRemove={
-                entry.ref && !demoMode
-                  ? () => {
-                      withdrawListing(entry.ref as string);
-                      showToast(t("members:places.deleted"), "info");
-                    }
-                  : undefined
-              }
-            />
-          ) : (
-            // A visitor's view is the directory card, unmodified — save
-            // bookmark, rating, whole-card link and all.
-            <LocalBusinessCard
-              key={entry.key}
-              place={entry.place}
-              index={index}
-            />
-          ),
-        )}
-      </div>
+      ) : (
+        <>
+          <div className={styles.head}>
+            <h2 className={styles.title}>
+              {isSelf ? (
+                <Translation
+                  i18nKey="members:places.selfTitle"
+                  components={{ em: <em /> }}
+                />
+              ) : (
+                <Translation
+                  i18nKey="members:places.visitorTitle"
+                  values={{ firstName }}
+                  components={{ em: <em /> }}
+                />
+              )}
+            </h2>
+            {isSelf && (
+              <p className={styles.sub}>{t("members:places.selfSubtitle")}</p>
+            )}
+          </div>
+          <PlacesGrid
+            places={places}
+            isSelf={isSelf}
+            canManage={canManage}
+            onRemove={removeHandler}
+          />
+        </>
+      )}
     </section>
   );
 }

@@ -502,6 +502,8 @@ export const subprofiles: Catalog = {
 
   // Campos de presença (SubprofilePresenceFields): capa, cor, disponibilidade, CTA
   "metaForm.coverLabel": "Imagem de capa",
+  "metaForm.coverHelper":
+    "Um banner largo no topo da tua página de persona. Enquadra-o em 3:1 (pelo menos 1500 × 500px); a página mantém o que centraste no enquadramento e corta um pouco em cima e em baixo nos ecrãs largos.",
   "metaForm.coverPlaceholder": "Imagem de capa",
   "metaForm.accentLabel": "Cor de destaque",
   "metaForm.bannerEdgeLabel": "Borda do banner",

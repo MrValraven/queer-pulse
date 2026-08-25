@@ -26,6 +26,21 @@ function matchesAccessKeyword(text: string): boolean {
   return ACCESS_KEYWORDS.some((keyword) => lower.includes(keyword));
 }
 
+/** The canonical amenity ids on this listing that are both switched on and
+ *  accessibility-flavoured, in the order the owner's own `goodFor` list holds
+ *  them. Exported so a section wrapper can ask "is there anything to say
+ *  here?" without duplicating the filter or rendering an empty heading. */
+export function accessibilityLabelIds(place: DirectoryPlace): string[] {
+  return place.goodFor
+    .filter(
+      (item) =>
+        item.yes &&
+        GOODFOR_LABEL_KEYS[item.label] &&
+        matchesAccessKeyword(item.label),
+    )
+    .map((item) => item.label);
+}
+
 interface Props {
   place: DirectoryPlace;
 }
@@ -46,14 +61,9 @@ interface Props {
 export function DirectoryAccess({ place }: Props) {
   const { t } = useTranslation();
 
-  const items = place.goodFor
-    .filter(
-      (item) =>
-        item.yes &&
-        GOODFOR_LABEL_KEYS[item.label] &&
-        matchesAccessKeyword(item.label),
-    )
-    .map((item) => goodForLabel(t, item.label));
+  const items = accessibilityLabelIds(place).map((labelId) =>
+    goodForLabel(t, labelId),
+  );
 
   if (items.length === 0) return null;
 

@@ -4,6 +4,7 @@ import type {
   HoursType,
   Tint,
 } from "../../marketing/directoryPlaces";
+import { normalizeAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
 
 // ── Ported from backend `listing-response.ts` so the moderator preview renders
 //    exactly what `GET /directory/:slug` would once the listing is live. Keep
@@ -35,6 +36,30 @@ function ownerFirstName(ownerName: string): string {
   return ownerName.trim().split(/[\s&·]+/).filter(Boolean)[0] ?? "";
 }
 
+/**
+ * The listing fields this mapper actually reads: everything the owner authors,
+ * plus the public slug the page is served at. A saved `ListingDTO` satisfies
+ * it as-is (it is that DTO minus the server-only identity/moderation fields),
+ * and so does an UNSAVED editor draft once the caller supplies the slug the
+ * listing already has, which is how the owner's editor previews changes it has
+ * not committed yet.
+ */
+export type ListingPreviewSource = Omit<
+  ListingDTO,
+  | "ref"
+  | "status"
+  | "submittedBy"
+  | "createdAt"
+  | "queerOwnedVerified"
+  // A preview is built from the fields the editor edits. Operating state
+  // (open / closed / moved) and the "still accurate" stamp live on their own
+  // owner endpoints and are not part of a draft, so a preview neither claims
+  // the business is trading nor claims it is shut.
+  | "operatingState"
+  | "movedToListingId"
+  | "detailsConfirmedAt"
+>;
+
 interface OwnerIdentityView {
   name: string;
   role: string;
@@ -44,7 +69,7 @@ interface OwnerIdentityView {
 }
 
 /** Owner identity redacted per the wizard visibility choice (mirrors backend `ownerIdentity`). */
-function ownerIdentity(dto: ListingDTO): OwnerIdentityView {
+function ownerIdentity(dto: ListingPreviewSource): OwnerIdentityView {
   if (dto.visibility === "anon") {
     return { name: "", role: "", bio: "", first: "", inQueerPulse: false };
   }
@@ -83,13 +108,18 @@ function hoursTypeForCategory(category: string): HoursType {
 }
 
 /**
- * Map a full `ListingDTO` (as the admin queue returns it) onto the
- * `DirectoryPlace` view model the public detail components render. Faithful to
- * the live page: same tint, initials, redaction, pills, gallery, hours
- * template. Rating/reviews/upcoming are empty — a submission under review has
- * none yet.
+ * Map a listing onto the `DirectoryPlace` view model the public detail
+ * components render. Faithful to the live page: same tint, initials,
+ * redaction, pills, gallery, hours template. Rating/reviews/upcoming are empty:
+ * a submission under review has none yet.
+ *
+ * Takes the widened `ListingPreviewSource`, so the same mapper serves the
+ * moderator drawer (passing the full `ListingDTO` the admin queue returns) and
+ * the owner's editor (passing its unsaved draft). One mapper, one live view.
  */
-export function listingDtoToPreviewPlace(dto: ListingDTO): DirectoryPlace {
+export function listingDtoToPreviewPlace(
+  dto: ListingPreviewSource,
+): DirectoryPlace {
   const identity = ownerIdentity(dto);
   const category = dto.cats[0] ?? "";
   return {
@@ -119,8 +149,25 @@ export function listingDtoToPreviewPlace(dto: ListingDTO): DirectoryPlace {
       (caption) => caption.length > 0,
     ),
     whatItIs: dto.whatItIs.map((line) => line.text),
-    // The listing stores positive bullets only, so every one is a "yes".
+    // Atmosphere tags only, and the listing stores positive bullets, so every
+    // one is a "yes". Access claims live on `accessibility` below, which can
+    // answer no.
     goodFor: dto.goodFor.map((label) => ({ label, yes: true })),
+    // Both structured blocks are part of what a moderator reviews and what an
+    // owner previews, so they render exactly as the public page would. Healed
+    // on the way through: a draft written before these existed answers all six
+    // questions as "not answered" rather than as nothing at all.
+    accessibility: {
+      answers: normalizeAccessibilityAnswers(dto.accessibility?.answers),
+      note: dto.accessibility?.note?.trim() || null,
+    },
+    services: (dto.services ?? [])
+      .filter((service) => service.name.trim() !== "")
+      .map((service) => ({
+        name: service.name.trim(),
+        price: service.price.trim(),
+        note: service.note.trim(),
+      })),
     hoursType: hoursTypeForCategory(category),
     hoursNote: dto.hoursNote,
     owner: {

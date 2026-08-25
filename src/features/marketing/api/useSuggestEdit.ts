@@ -15,6 +15,18 @@ export type SuggestEditField =
 export interface SuggestEditInput {
   field: SuggestEditField;
   message: string;
+  /**
+   * The exact replacement value, when the member happens to know it: the new
+   * phone number, the corrected address, the real closing time. Optional on
+   * purpose. "The hours are wrong and I do not know what they are now" is a
+   * genuinely useful report, so prose alone is always a valid submission.
+   *
+   * The server validates it against the rules of the real listing column the
+   * chosen `field` writes to, and answers a 400 naming the constraint that
+   * failed. It also refuses one on the `other` bucket, which maps to no column
+   * at all, so the form never offers the input there.
+   */
+  proposedValue?: string;
 }
 
 /**

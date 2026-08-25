@@ -1,0 +1,149 @@
+/* ── The owner's accessibility answers ──────────────────────────────────────
+   Six questions, three answers each. The whole point of this editor is that
+   "no" is a first-class answer: an owner who says there is a step at the door
+   is doing right by the people who need to know, so nothing here treats that
+   choice as a lesser one. The three buttons are the same size, the same shape
+   and the same weight; only the icon and the selected tint differ. */
+.intro {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  max-width: 66ch;
+  margin-bottom: 6px;
+  text-wrap: pretty;
+}
+.reassurance {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 15px;
+  margin-bottom: 22px;
+  border-radius: 12px;
+  background: rgba(var(--jade-rgb), 0.07);
+  border: 1px solid rgba(var(--jade-rgb), 0.16);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 70ch;
+}
+.reassuranceIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--jade);
+}
+.reassuranceIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.questions {
+  display: grid;
+  gap: 14px;
+}
+
+.question {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px 20px;
+  padding: 15px 17px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.questionText {
+  min-width: 0;
+}
+.questionLabel {
+  display: block;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.questionHelp {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  margin-top: 3px;
+  max-width: 54ch;
+  text-wrap: pretty;
+}
+
+/* The three-way control. A radiogroup named by the question beside it. */
+.answers {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+.answer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: var(--tap-min);
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: transparent;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.answer svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .answer:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+    color: var(--ink);
+  }
+}
+
+/* Selected. Each answer gets its own tint so the chosen state is legible at a
+   glance, and each keeps its own icon so none of it rests on colour alone.
+   Keyed off the ROW's `data-answer`, which always equals the one checked
+   option, so the primitive keeps owning radiogroup semantics and only the
+   caller's own markup carries the styling hook. */
+.question[data-answer="yes"] .answerOn {
+  background: rgba(var(--jade-rgb), 0.13);
+  border-color: var(--jade);
+  color: var(--jade);
+}
+.question[data-answer="no"] .answerOn {
+  background: rgba(var(--plum-rgb), 0.09);
+  border-color: rgba(var(--line-rgb), 0.4);
+  color: var(--text-strong);
+}
+.question[data-answer="unknown"] .answerOn {
+  background: transparent;
+  border-style: dashed;
+  border-color: rgba(var(--line-rgb), 0.4);
+  color: var(--ink);
+}
+
+@media (--lg) {
+  .question {
+    grid-template-columns: 1fr;
+  }
+  .answers {
+    flex-wrap: wrap;
+  }
+  .answer {
+    flex: 1 1 auto;
+  }
+}
+
+.noteField {
+  margin-top: 22px;
+}

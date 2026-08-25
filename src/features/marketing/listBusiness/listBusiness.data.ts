@@ -10,7 +10,7 @@
    data, so these keep their canonical English id and gain a `_LABEL_KEYS`
    lookup + `xLabel(s)` helper resolved with `t()` only at render time — the
    "fused mock string" pattern from the extraction brief, applied to enum
-   values instead of a composed sentence. REL/VIS/NOTIFY/VERIFY/PRICES/DAYS
+   values instead of a composed sentence. REL/VIS/PRICES/DAYS
    already had a separate `id`, so their label fields become `labelKey`s
    directly. NEIGHBOURHOODS (Lisbon place names) are left untouched — proper
    nouns that read identically in pt-PT, same rationale as the gatherings
@@ -20,6 +20,8 @@
 import type { TFunction } from "../../../shared/i18n/types";
 import { leadingInitials } from "../../../shared/lib/initials";
 import { LOCAL_CATEGORIES, categoryLabel } from "../localPlaces";
+import type { ListingAccessibilityDraft } from "./listingAccessibility.data";
+import type { ListingServiceRow } from "./listingServices.data";
 
 export const TOTAL_STEPS = 6;
 
@@ -49,7 +51,6 @@ export const NEXT_LABEL_KEYS = [
    builds the missing list) and the steps (which render the anchors). */
 export const ANCHOR = {
   path: "lb-path",
-  verify: "lb-verify",
   name: "lb-name",
   cats: "lb-cats",
   hood: "lb-hood",
@@ -60,6 +61,7 @@ export const ANCHOR = {
   whatItIs: "lb-what-it-is",
   address: "lb-address",
   hours: "lb-hours",
+  hoursExceptions: "lb-hours-exceptions",
   social: "lb-social",
   photos: "lb-photos",
   rel: "lb-rel",
@@ -67,6 +69,9 @@ export const ANCHOR = {
   ownerRole: "lb-owner-role",
   contactEmail: "lb-contact-email",
   consent: "lb-consent",
+  services: "lb-services",
+  accessibility: "lb-accessibility",
+  affirmingBaseline: "lb-affirming-baseline",
 } as const;
 
 /** A still-unfilled required field: its label key + the anchor to jump to. */
@@ -212,62 +217,6 @@ export const VIS: OptionRow[] = [
   },
 ];
 
-export interface NotifyOption {
-  id: string;
-  labelKey: string;
-  on: boolean;
-}
-export const NOTIFY: NotifyOption[] = [
-  {
-    id: "live",
-    labelKey: "marketing:listBusiness.notify.live.label",
-    on: true,
-  },
-  {
-    id: "question",
-    labelKey: "marketing:listBusiness.notify.question.label",
-    on: true,
-  },
-  {
-    id: "news",
-    labelKey: "marketing:listBusiness.notify.news.label",
-    on: false,
-  },
-];
-
-export interface VerifyOption {
-  id: string;
-  labelKey: string;
-  descKey: string;
-  badgeKey: string;
-}
-export const VERIFY: VerifyOption[] = [
-  {
-    id: "email",
-    labelKey: "marketing:listBusiness.verify.email.label",
-    descKey: "marketing:listBusiness.verify.email.desc",
-    badgeKey: "marketing:listBusiness.verify.email.badge",
-  },
-  {
-    id: "instagram",
-    labelKey: "marketing:listBusiness.verify.instagram.label",
-    descKey: "marketing:listBusiness.verify.instagram.desc",
-    badgeKey: "marketing:listBusiness.verify.instagram.badge",
-  },
-  {
-    id: "post",
-    labelKey: "marketing:listBusiness.verify.post.label",
-    descKey: "marketing:listBusiness.verify.post.desc",
-    badgeKey: "marketing:listBusiness.verify.post.badge",
-  },
-  {
-    id: "later",
-    labelKey: "marketing:listBusiness.verify.later.label",
-    descKey: "marketing:listBusiness.verify.later.desc",
-    badgeKey: "marketing:listBusiness.verify.later.badge",
-  },
-];
-
 export interface DayDef {
   id: string;
   labelKey: string;
@@ -400,6 +349,40 @@ export type ListingPath = "claim" | "suggest";
 export type OwnerRel = "own" | "run" | "work" | "regular";
 export type OwnerVisibility = "public" | "role" | "anon";
 
+/**
+ * What a member is to a listing they can reach: its owner, or somebody the
+ * owner invited to help run it. A co-manager does the day-to-day work
+ * (content, hours, photos, services, access answers, replies, trading state)
+ * and nothing else: deleting the listing and changing who can edit it stay
+ * with the owner alone.
+ */
+export type ManagementRole = "owner" | "co_manager";
+
+/**
+ * The eight fields that belong to the OWNER as a person rather than to the
+ * business. A co-manager never receives them (the API leaves the keys out of
+ * its response entirely) and a PATCH carrying any of them is refused with a
+ * 403, so this list is the single place the client names them: the payload
+ * mapper strips exactly these keys, `dtoToDraft` blanks exactly these keys,
+ * and the editor hides exactly these fields.
+ *
+ * `ownerRole` is deliberately NOT here. It is the role printed on the public
+ * listing ("Founder", "Head chef"), so it belongs to the business and stays
+ * editable by everyone who can manage it.
+ */
+export const OWNER_PERSONAL_FIELDS = [
+  "rel",
+  "ownerName",
+  "ownerBio",
+  "visibility",
+  "linkToProfile",
+  "contactEmail",
+  "consentOuting",
+  "consentGuide",
+] as const;
+
+export type OwnerPersonalField = (typeof OWNER_PERSONAL_FIELDS)[number];
+
 /** A single "what it actually is" line, with a stable id for React keys. */
 export interface WitLine {
   id: string;
@@ -426,12 +409,28 @@ export interface DayHours {
   intervals: HoursInterval[];
 }
 
+/* ---------- Per-date hours exceptions ----------
+   A dated override of the weekly grid: "closed on Christmas Eve", "opens late
+   on Pride Saturday". `open: false` means CLOSED that date, and a closed date
+   carries NO intervals at all — the backend rejects a closed entry that still
+   lists opening windows, so the editor's setters keep the two in step. */
+export interface HoursException extends DayHours {
+  /** "YYYY-MM-DD". */
+  date: string;
+  /** Short owner-facing label, e.g. "Christmas Eve, closing early". */
+  note: string;
+}
+
+/** Server ceiling on how many dated overrides one listing may carry. */
+export const MAX_HOURS_EXCEPTIONS = 60;
+/** Server ceiling on one exception's note. */
+export const HOURS_EXCEPTION_NOTE_MAX = 140;
+
 export type PhotoKey = "wide" | "d1" | "d2" | "vibe";
 export const PHOTO_KEYS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
 
 export interface ListingDraft {
   path: ListingPath | "";
-  verify: string; // VERIFY id, claim path only
   name: string;
   cats: string[]; // up to 2
   hood: string;
@@ -442,7 +441,16 @@ export interface ListingDraft {
   tagline: string;
   whatItIs: WitLine[]; // 2-4 lines
   tags: string[]; // <=6
-  goodFor: string[]; // GOODFOR ids
+  /** Atmosphere tags only (GOODFOR ids). Access claims live in `accessibility`,
+   *  which can answer no; these are all positive claims. */
+  goodFor: string[];
+  /** The venue's six accessibility answers plus the owner's free-text note.
+   *  Optional so a draft written before the feature existed stays valid; every
+   *  reader heals it through `normalizeAccessibilityDraft`. */
+  accessibility?: ListingAccessibilityDraft;
+  /** What the business sells and what it costs. Each row carries a client-only
+   *  `id` for React keys, stripped by `servicesForPayload` before it is sent. */
+  services?: ListingServiceRow[];
   langs: string[];
   /** Online-only business — no physical location. When true the wizard skips
    *  the address/pin (and neighbourhood) requirements and the listing carries
@@ -454,6 +462,11 @@ export interface ListingDraft {
   longitude: number | null;
   hours: Record<string, DayHours>; // keyed by DAYS id
   hoursNote: string;
+  /** Per-date overrides of the weekly grid ("closed on Christmas Eve", "opens
+   *  late on Pride Saturday"). Optional on purpose: the backend column is
+   *  optional too, and most listings never carry one, so every existing
+   *  `ListingDraft` literal stays valid without a filler value. */
+  hoursExceptions?: HoursException[];
   social: {
     instagram: string;
     website: string;
@@ -469,9 +482,24 @@ export interface ListingDraft {
   visibility: OwnerVisibility; // VIS id
   linkToProfile: boolean;
   contactEmail: string;
-  notify: string[]; // NOTIFY ids
   consentOuting: boolean;
   consentGuide: boolean;
+  /** The submitter agrees to the LGBTQ+ affirming baseline. Required to be
+   *  `true` to create a listing at all: it is the condition of appearing in
+   *  this directory, matching the housing side's mandatory pledge. There is no
+   *  edit that un-agrees to it, so it is CREATE-ONLY — `draftToUpdateDto`
+   *  leaves it out of every PATCH, which the API rejects it from. */
+  affirmingBaselineAccepted: boolean;
+  /**
+   * Who the signed-in member is to this listing, carried on the draft so the
+   * payload mapper can answer "may this save send the owner's personal
+   * fields?" without every call site remembering to thread a flag through.
+   *
+   * Draft-only: `draftToUpdateDto` builds its body from an explicit allow-list
+   * that never names this key, so it is read on the way out and never sent.
+   * Absent on a brand-new draft, which is always being written by its owner.
+   */
+  managementRole?: ManagementRole;
 }
 
 export interface PendingListing extends ListingDraft {
@@ -536,6 +564,31 @@ export function normalizeHours(
   return hours;
 }
 
+/**
+ * The week's hours as the API accepts them: a CLOSED day carries no intervals.
+ *
+ * The editor deliberately keeps a closed day's times in the draft, so toggling
+ * a day shut and open again restores what was there rather than resetting it to
+ * 09:00. The API takes the opposite view: `@IsValidDayHours()` rejects a closed
+ * day that still carries intervals as a contradiction, and rejects the whole
+ * request with it. Those two are both right for their own side, so the
+ * reconciliation belongs here at the write boundary, applied once, instead of
+ * either surface bending to the other.
+ */
+export function hoursForPayload(
+  hours: Record<string, DayHours>,
+): Record<string, DayHours> {
+  const payload: Record<string, DayHours> = {};
+  DAYS.forEach((day) => {
+    const dayHours = normalizeDayHours(hours[day.id]);
+    payload[day.id] = {
+      open: dayHours.open,
+      intervals: dayHours.open ? dayHours.intervals : [],
+    };
+  });
+  return payload;
+}
+
 /** True when this interval closes after midnight (spills into the next day). */
 export function isOvernight(interval: HoursInterval): boolean {
   return interval.to <= interval.from;
@@ -594,6 +647,99 @@ export function hoursValid(hours: Record<string, DayHours>): boolean {
 /** At least one day is open somewhere in the week. */
 export function anyDayOpen(hours: Record<string, DayHours>): boolean {
   return DAYS.some((day) => hours[day.id]?.open);
+}
+
+/* ---------- Hours-exception helpers ----------
+   These mirror the backend's own rules (`hours-exceptions.validator.ts` and
+   `day-hours.validator.ts`) so an owner is told what is wrong while the field
+   is still in front of them, instead of collecting a 400 on save. */
+
+const CALENDAR_DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+/** True when `value` is a "YYYY-MM-DD" string naming a date that really
+ *  exists. The pattern alone accepts 2026-02-31, so the parts are round-tripped
+ *  through `Date.UTC` and compared back: a rolled-over date no longer matches
+ *  what was written. */
+export function isCalendarDate(value: string): boolean {
+  const match = CALENDAR_DATE_PATTERN.exec(value);
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return false;
+  const roundTripped = new Date(Date.UTC(year, month - 1, day));
+  return (
+    roundTripped.getUTCFullYear() === year &&
+    roundTripped.getUTCMonth() === month - 1 &&
+    roundTripped.getUTCDate() === day
+  );
+}
+
+/** Today as "YYYY-MM-DD" in the reader's own timezone, so "past" means what a
+ *  person in Lisbon would call past. */
+export function todayDateString(now: Date = new Date()): string {
+  const year = String(now.getFullYear()).padStart(4, "0");
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+/** A fresh exception row: closed on the given date, which is the common case
+ *  (a holiday shutdown) and the one that needs no further input. */
+export function newHoursException(date = ""): HoursException {
+  return { date, open: false, intervals: [], note: "" };
+}
+
+/** Heal one stored exception into the current shape, or null when the value is
+ *  not an exception at all. A closed entry always comes back with no intervals. */
+export function normalizeHoursException(raw: unknown): HoursException | null {
+  if (!raw || typeof raw !== "object") return null;
+  const record = raw as Record<string, unknown>;
+  if (typeof record.date !== "string") return null;
+  const day = normalizeDayHours(record);
+  const intervals = Array.isArray(record.intervals) ? day.intervals : [];
+  return {
+    date: record.date,
+    open: day.open,
+    intervals: day.open ? intervals : [],
+    note: typeof record.note === "string" ? record.note : "",
+  };
+}
+
+/** Heal a whole stored array (tolerates junk entries and a missing column). */
+export function normalizeHoursExceptions(raw: unknown): HoursException[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map(normalizeHoursException)
+    .filter((entry): entry is HoursException => entry !== null);
+}
+
+/** Why one exception row is unacceptable, or null when it is fine. Ordered so
+ *  the reader is told about the date before the times inside it. */
+export type HoursExceptionProblem = "date" | "duplicate" | "intervals";
+
+export function hoursExceptionProblem(
+  entry: HoursException,
+  index: number,
+  entries: HoursException[],
+): HoursExceptionProblem | null {
+  if (!isCalendarDate(entry.date)) return "date";
+  const isDuplicate = entries.some(
+    (other, otherIndex) => otherIndex !== index && other.date === entry.date,
+  );
+  if (isDuplicate) return "duplicate";
+  if (!entry.open) return entry.intervals.length === 0 ? null : "intervals";
+  if (entry.intervals.length < 1 || entry.intervals.length > 2)
+    return "intervals";
+  return dayHoursValid(entry) ? null : "intervals";
+}
+
+/** Every exception row is acceptable and the array is within the server cap. */
+export function hoursExceptionsValid(entries: HoursException[]): boolean {
+  if (entries.length > MAX_HOURS_EXCEPTIONS) return false;
+  return entries.every(
+    (entry, index) => hoursExceptionProblem(entry, index, entries) === null,
+  );
 }
 
 export function slugify(s: string): string {

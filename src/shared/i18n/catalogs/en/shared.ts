@@ -255,6 +255,7 @@ export const shared: Catalog = {
 
   // MemberSelectList — empty search result
   "memberSelect.noResults": "No matches",
+  "memberSelect.searching": "Looking...",
 
   // VisibilityBadge
   "visibilityBadge.open": "Open to connect",

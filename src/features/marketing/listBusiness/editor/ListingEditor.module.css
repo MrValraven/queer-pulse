@@ -1,0 +1,271 @@
+/* ===========================================================================
+   Single-screen listing editor. Every field of the listing on one page, with
+   a jump nav beside it (above it on narrow screens) and a save bar that
+   travels with the reader.
+   =========================================================================== */
+
+.layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 38px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* ── Jump nav ───────────────────────────────────────────────────────────── */
+
+.nav {
+  position: sticky;
+  top: calc(var(--nav-band) + 12px);
+  z-index: 3;
+}
+.navLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 10px;
+  padding-left: 12px;
+}
+.navList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast, 0.16s) var(--ease),
+    color var(--dur-fast, 0.16s) var(--ease);
+}
+.navItem:hover {
+  background: rgba(var(--plum-rgb), 0.05);
+  color: var(--text-strong);
+}
+.navItemOn {
+  background: var(--paper);
+  border-color: rgba(var(--line-rgb), 0.11);
+  color: var(--text-strong);
+}
+.navItemLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.navBadge {
+  flex: none;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent-ink);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* On narrow screens the rail becomes a self-contained horizontal scroller
+   pinned under the site nav, so any section is one tap away without the page
+   ever scrolling sideways. */
+@media (max-width: 900px) {
+  .nav {
+    top: var(--nav-band);
+    /* Stays inside the content box: a full-bleed negative margin would have to
+       reconcile with `.wrap`'s safe-area padding, and getting that wrong is
+       how a page starts scrolling sideways on a phone. */
+    padding: 8px 0;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+  .navLabel {
+    display: none;
+  }
+  .navList {
+    flex-direction: row;
+    gap: 6px;
+    width: max-content;
+  }
+  .navItem {
+    border-color: rgba(var(--line-rgb), 0.1);
+    background: var(--paper);
+    padding: 7px 14px;
+  }
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+.section {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 30px 34px;
+  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
+  /* Clears the sticky site nav (and the sticky section scroller on mobile)
+     when a jump link scrolls this into view. */
+  scroll-margin-top: calc(var(--nav-band) + 64px);
+}
+.section:focus {
+  outline: none;
+}
+.section:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (max-width: 520px) {
+  .section {
+    padding: 24px 18px;
+  }
+}
+.sectionTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.012em;
+  color: var(--text-strong);
+  margin: 0 0 20px;
+}
+
+/* ── Save bar ───────────────────────────────────────────────────────────── */
+
+.saveBar {
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.11);
+  border-radius: var(--radius-badge);
+  box-shadow: 0 -2px 18px rgba(var(--plum-rgb), 0.08);
+}
+.saveBarMissing {
+  margin-bottom: 12px;
+}
+.saveBarRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.saveBarState {
+  font-size: 13px;
+  color: var(--ink-60);
+}
+.saveBarActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* ── Full-page preview ──────────────────────────────────────────────────── */
+
+.previewFrame {
+  border-radius: var(--radius-badge);
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+}
+
+/* ── Unsaved local copy ───────────────────────────────────────────────────
+   The offer of work autosaved on this device and never sent. It offers, it
+   never acts: the form under it is still exactly what the server returned.
+   ────────────────────────────────────────────────────────────────────── */
+
+.restore {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(var(--plum-rgb), 0.22);
+  border-radius: var(--radius-badge);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+@media (max-width: 620px) {
+  .restore {
+    flex-wrap: wrap;
+  }
+}
+
+.restoreIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-avatar);
+  font-size: 16px;
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.09);
+}
+
+.restoreText {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.restoreTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.restoreSub {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.restoreWarn {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--accent-ink);
+}
+
+.restoreActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}

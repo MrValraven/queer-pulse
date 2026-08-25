@@ -1151,6 +1151,11 @@ export const communities: Catalog = {
   "edit.rules.remove": "Remove rule",
   "edit.toast.saved": "Changes saved",
   "edit.toast.error": "Couldn't save your changes. Please try again.",
+  "edit.preview.title": "Your card",
+  "edit.preview.hint":
+    "This is how your community appears on Discover and on members' profiles. It updates as you type.",
+  "edit.preview.namePlaceholder": "Your community",
+  "edit.preview.taglinePlaceholder": "Your tagline shows up here.",
 
   // ── Discover: tags filter ─────────────────────────────────────────────────
   "discover.filter.tagsTitle": "Tags",

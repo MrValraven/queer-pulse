@@ -1,14 +1,10 @@
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
-import {
-  FiAlertCircle,
-  FiArrowLeft,
-  FiArrowRight,
-  FiCheck,
-} from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { usePrefersReducedMotion } from "../../../shared/hooks/usePrefersReducedMotion";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { MissingFieldsBar } from "./MissingFieldsBar";
 import {
   PILL_LABEL_KEYS,
   TOTAL_STEPS,
@@ -16,31 +12,6 @@ import {
 } from "./listBusiness.data";
 import styles from "./ListBusinessPage.module.css";
 import chrome from "./ListBusinessChrome.module.css";
-
-/**
- * Scroll to the field a "what's still needed" chip names, flash it, and move
- * focus to its first control. Selectors match native inputs plus the button
- * groups used for radio/chip choices.
- */
-function jumpToField(anchor: string) {
-  const el = document.getElementById(anchor);
-  if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-  const focusable = el.querySelector<HTMLElement>(
-    'input:not([type="hidden"]), select, textarea, [role="radio"], button',
-  );
-  // Let the smooth scroll settle before pulling focus (which would otherwise
-  // yank the viewport back).
-  window.setTimeout(() => focusable?.focus({ preventScroll: true }), 340);
-  const flash = styles.fieldFlash;
-  if (flash) {
-    // Restart the flash even if the same chip is clicked twice in a row.
-    el.classList.remove(flash);
-    void el.offsetWidth;
-    el.classList.add(flash);
-    window.setTimeout(() => el.classList.remove(flash), 1400);
-  }
-}
 
 /** Step pills + progress bar + autosave status.
  *
@@ -56,25 +27,20 @@ function jumpToField(anchor: string) {
 export function WizardChrome({
   step,
   savedAt,
-  isEdit = false,
   onJump,
 }: {
   step: number;
   savedAt: number | null;
-  /** Edit mode never renders StepPath (step 0) — drop its pill so it doesn't
-   *  show as a completed step that isn't actually reachable. */
-  isEdit?: boolean;
   /** Jump back to a visited step. When absent, pills stay non-interactive. */
   onJump?: (step: number) => void;
 }) {
   const { t } = useTranslation();
   const reducedMotion = usePrefersReducedMotion();
   const activePillRef = useRef<HTMLDivElement | null>(null);
-  const baseStep = isEdit ? 1 : 0; // wizard step index that pills[0] maps to
-  const pills = isEdit ? PILL_LABEL_KEYS.slice(1) : PILL_LABEL_KEYS;
+  const pills = PILL_LABEL_KEYS;
   const lastStep = TOTAL_STEPS - 1;
-  const fill = ((step - baseStep) / (lastStep - baseStep)) * 100;
-  const currentIndex = step - baseStep; // pill position (0-based) of the current step
+  const fill = (step / lastStep) * 100;
+  const currentIndex = step; // pill position (0-based) of the current step
 
   // Keep the active pill visible when the row is a narrow horizontal scroller.
   // block:"nearest" avoids yanking the page vertically when it's already in view.
@@ -97,9 +63,8 @@ export function WizardChrome({
       </p>
       <div className={chrome.pillRow}>
         {pills.map((labelKey, index) => {
-          const actualStep = index + baseStep; // the real wizard step this pill maps to
-          const isDone = actualStep < step;
-          const isCurrent = actualStep === step;
+          const isDone = index < step;
+          const isCurrent = index === step;
           const cls = isDone
             ? styles.wpDone
             : isCurrent
@@ -127,7 +92,7 @@ export function WizardChrome({
                 <button
                   type="button"
                   className={[pillClass, chrome.jumpable].join(" ")}
-                  onClick={() => onJump?.(actualStep)}
+                  onClick={() => onJump?.(index)}
                   aria-label={t(
                     "marketing:listBusiness.wizard.stepJumpAria",
                     { number: index + 1, label },
@@ -255,22 +220,14 @@ export function SendingPanel({ isEdit = false }: { isEdit?: boolean }) {
 export function PaneActions({
   onBack,
   backLabel,
-  hideBack = false,
   onNext,
   nextLabel,
-  nextArrow = true,
   missing,
 }: {
   onBack: () => void;
   backLabel?: string;
-  /** Edit mode's step 1 has nowhere to go back to (StepPath is locked away)
-   *  — hide the Back button instead of rendering a dead-end no-op. */
-  hideBack?: boolean;
   onNext: () => void;
   nextLabel: string;
-  /** Whether the "next" button carries a forward arrow (false for the
-   *  edit-mode "Save" action, which isn't a step-forward affordance). */
-  nextArrow?: boolean;
   missing: MissingField[];
 }) {
   const { t } = useTranslation();
@@ -279,51 +236,19 @@ export function PaneActions({
   // so the back arrow only rides the default "Back".
   const isDefaultBack = backLabel === undefined;
   const back = backLabel ?? t("marketing:listBusiness.paneActions.back");
-  const actionsCls = [styles.paneActions, hideBack && styles.paneActionsEnd]
-    .filter(Boolean)
-    .join(" ");
   return (
     <div className={styles.paneFooter}>
-      {blocked && (
-        <div className={styles.neededBar}>
-          <FiAlertCircle size={15} className={styles.neededIcon} aria-hidden />
-          <span className={styles.neededLabel}>
-            {t("marketing:listBusiness.paneActions.neededLabel")}
-          </span>
-          <span className={styles.neededChips}>
-            {missing.map((m) => {
-              const label = t(m.labelKey);
-              return (
-                <button
-                  key={m.anchor}
-                  type="button"
-                  className={styles.neededChip}
-                  onClick={() => jumpToField(m.anchor)}
-                  aria-label={t(
-                    "marketing:listBusiness.paneActions.jumpToAria",
-                    { label },
-                  )}
-                >
-                  {label}
-                  <FiArrowRight size={11} aria-hidden />
-                </button>
-              );
-            })}
-          </span>
-        </div>
-      )}
-      <div className={actionsCls}>
-        {!hideBack && (
-          <Button variant="ghost" onClick={onBack}>
-            {isDefaultBack ? (
-              <>
-                <FiArrowLeft aria-hidden /> {back}
-              </>
-            ) : (
-              back
-            )}
-          </Button>
-        )}
+      <MissingFieldsBar missing={missing} />
+      <div className={styles.paneActions}>
+        <Button variant="ghost" onClick={onBack}>
+          {isDefaultBack ? (
+            <>
+              <FiArrowLeft aria-hidden /> {back}
+            </>
+          ) : (
+            back
+          )}
+        </Button>
         <Button
           variant="primary"
           onClick={onNext}
@@ -334,13 +259,7 @@ export function PaneActions({
               : undefined
           }
         >
-          {nextLabel}
-          {nextArrow && (
-            <>
-              {" "}
-              <FiArrowRight aria-hidden />
-            </>
-          )}
+          {nextLabel} <FiArrowRight aria-hidden />
         </Button>
       </div>
     </div>

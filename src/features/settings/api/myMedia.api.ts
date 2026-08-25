@@ -6,6 +6,7 @@ export type MyMediaKind =
   | "avatar"
   | "work-image"
   | "story-cover"
+  | "persona-cover"
   | "gathering-photo"
   | "group-avatar"
   | "listing-photo";

@@ -118,7 +118,6 @@ export function PracticeBody({
               skin="practice"
               mode={mode}
               accent={data.accent}
-              authorName={data.displayName}
             />
           )}
           <SubprofileSections persona={primary} {...sectionProps} />

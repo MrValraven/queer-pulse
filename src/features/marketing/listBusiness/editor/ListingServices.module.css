@@ -1,0 +1,77 @@
+/* ── The owner's priced services ────────────────────────────────────────────
+   A short menu, not a price list: the single price band stays the at-a-glance
+   signal and this says what that band actually buys. */
+.intro {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  max-width: 66ch;
+  margin-bottom: 18px;
+  text-wrap: pretty;
+}
+
+.rows {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: start;
+  padding: 14px 15px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+/* The note runs the full width under the name and price it belongs to. */
+.noteCell {
+  grid-column: 1 / -1;
+}
+.controls {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  /* Line the buttons up with the inputs rather than with the labels above. */
+  align-self: end;
+}
+
+/* No margin inside the row: the grid gap owns the spacing. */
+.field {
+  margin: 0;
+  min-width: 0;
+}
+
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.addHint {
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+.empty {
+  padding: 20px 18px;
+  border-radius: 14px;
+  border: 1px dashed rgba(var(--line-rgb), 0.22);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  max-width: 66ch;
+  text-wrap: pretty;
+}
+
+@media (--lg) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+  .controls {
+    justify-content: flex-end;
+  }
+}

@@ -6,6 +6,7 @@ import { SubprofileSections } from "./SubprofileSections";
 import { SubprofileSpotlight } from "./SubprofileSpotlight";
 import { SubprofileSkinExtras } from "./SubprofileSkinExtras";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
+import { PersonaRightsFooter } from "./rights/PersonaRightsFooter";
 import { KIND_LABEL_KEYS } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
 import { PracticeBody } from "./skins/PracticeBody";
@@ -22,7 +23,8 @@ import type { SkinFamily } from "./subprofile-skins";
 
 /**
  * The skinned `.pp` tree itself — cover, per-slot `SkinExtras`, hero,
- * spotlight/sections, and the foot — factored out of `SubprofilePage` so that
+ * spotlight/sections, the foot and the page's single `PersonaRightsFooter`
+ * — factored out of `SubprofilePage` so that
  * component stays under the repo's per-component line budget. Purely
  * presentational: all data comes from `data`, all interactivity is
  * delegated back up via `onAction`/`onOpenWorkAt`/`onOpenWorkItem`.
@@ -37,6 +39,7 @@ export function SubprofilePageBody({
   onOpenWorkItem,
   onOpenGalleryPhoto,
   onOpenPoem,
+  coverRise = false,
 }: {
   data: PublicSubprofileView;
   skin: SkinFamily;
@@ -47,6 +50,12 @@ export function SubprofilePageBody({
   onOpenWorkItem: (item: SubprofileItemView) => void;
   onOpenGalleryPhoto: (item: SubprofileItemView) => void;
   onOpenPoem: (item: SubprofileItemView) => void;
+  /** Let the banner run up THROUGH the page's reserved nav band to the very
+   *  top of the page, under the floating pill nav. Only the real persona page
+   *  passes this — the editor's docked preview and the mobile preview render
+   *  this same tree inside a card, where pulling the cover out of its own box
+   *  would just spill it over whatever sits above. Off unless asked. */
+  coverRise?: boolean;
 }) {
   const { t } = useTranslation();
   const rootRef = usePersonaMotion();
@@ -56,6 +65,7 @@ export function SubprofilePageBody({
       className="pp"
       data-skin={skin}
       data-cover-bleed={data.coverUrl && data.skinData?.coverBleed ? "true" : undefined}
+      data-cover-rise={coverRise ? "true" : undefined}
       style={skinVars}
       ref={rootRef}
     >
@@ -64,6 +74,14 @@ export function SubprofilePageBody({
           src={data.coverUrl || undefined}
           alt=""
           tint="plum"
+          // The member framed this in the reframe editor at the banner's own
+          // 3:1 aspect, but the band it lands in is 4:1-7:1 wide on desktop and
+          // ~2:1 on a phone, and changes again per skin — so the crop is
+          // honoured as a FOCAL POINT (see `cropFocalPosition`) rather than
+          // reproduced exactly, which would distort it. Without this the
+          // browser just kept the middle of the file and threw the member's
+          // framing away.
+          focus={data.coverCrop}
           radius={0}
           width="100%"
           height="100%"
@@ -122,7 +140,6 @@ export function SubprofilePageBody({
                     slot="spotlight"
                     mode={mode}
                     featured={data.featured}
-                    authorName={data.displayName}
                   />
                 ) : (
                   <SubprofileSpotlight
@@ -130,7 +147,6 @@ export function SubprofilePageBody({
                     skin={skin}
                     mode={mode}
                     accent={data.accent}
-                    authorName={data.displayName}
                   />
                 ))}
 
@@ -157,6 +173,11 @@ export function SubprofilePageBody({
             <SubprofileAffiliations persona={data} skin={skin} mode={mode} onAction={onAction} />
           </>
         )}
+
+        {/* One copyright + provenance notice for the whole page, after every
+            skin branch. Never in the editor's docked preview, mirroring how
+            the per-item footer used to gate itself on `interactive`. */}
+        {mode !== "preview" && <PersonaRightsFooter persona={data} />}
       </div>
     </article>
   );

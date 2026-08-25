@@ -1,30 +1,30 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiStar } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useSubmitReview } from "./api/useSubmitReview";
+import { DirectoryReviewComposer } from "./DirectoryReviewComposer";
 import s from "./DirectorySpacePage.module.css";
 
-const STARS = [1, 2, 3, 4, 5];
-
 /**
- * "Write a review" form for a directory listing. Member-only: logged-out
- * visitors (the directory is a public page) see a prompt to sign in instead of
- * the form. Submits through `useSubmitReview`, which POSTs in live mode and
- * patches the cached detail in demo mode.
+ * "Write a review" for a directory listing. Member-only: logged-out visitors
+ * (the directory is a public page) see a prompt to sign in instead of the
+ * form, matching how Save routes them. Submits through `useSubmitReview`,
+ * which POSTs in live mode and patches the cached detail in demo mode.
+ *
+ * The form itself lives in `DirectoryReviewComposer`, shared with the edit
+ * flow so writing and rewriting a review offer the same stars, words and
+ * photo. A `resetKey` remounts the composer after a successful post, which
+ * clears it back to empty.
  */
 export function DirectoryReviewForm({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { showToast } = useToast();
-  const submit = useSubmitReview(slug);
-  const [stars, setStars] = useState(0);
-  const [hover, setHover] = useState(0);
-  const [text, setText] = useState("");
+  const submitReview = useSubmitReview(slug);
+  const [resetKey, setResetKey] = useState(0);
 
   if (!user) {
     return (
@@ -37,78 +37,29 @@ export function DirectoryReviewForm({ slug }: { slug: string }) {
     );
   }
 
-  const canSubmit = stars >= 1 && text.trim().length > 0 && !submit.isPending;
-  const shown = hover || stars;
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    if (!canSubmit) return;
-    submit.mutate(
-      { stars, text: text.trim() },
-      {
-        onSuccess: () => {
-          setStars(0);
-          setHover(0);
-          setText("");
-          showToast(
-            t("marketing:directory.detail.review.successToast"),
-            "success",
-          );
-        },
-        onError: () =>
-          showToast(
-            t("marketing:directory.detail.review.errorToast"),
-            "error",
-          ),
-      },
-    );
-  };
-
   return (
-    <form className={s.reviewForm} onSubmit={handleSubmit}>
-      <div className={s.reviewFormTitle}>
-        {t("marketing:directory.detail.review.formTitle")}
-      </div>
-      <div
-        className={s.starPick}
-        role="radiogroup"
-        aria-label={t("marketing:directory.detail.review.starsAria")}
-      >
-        {STARS.map((value) => (
-          <button
-            key={value}
-            type="button"
-            className={s.starBtn}
-            aria-label={t("marketing:directory.detail.review.starAria", {
-              count: value,
-            })}
-            aria-pressed={value <= stars}
-            onMouseEnter={() => setHover(value)}
-            onMouseLeave={() => setHover(0)}
-            onFocus={() => setHover(value)}
-            onBlur={() => setHover(0)}
-            onClick={() => setStars(value)}
-          >
-            <FiStar className={value <= shown ? s.starPicked : undefined} />
-          </button>
-        ))}
-      </div>
-      <textarea
-        className={s.reviewInput}
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        aria-label={t("marketing:directory.detail.review.placeholder")}
-        placeholder={t("marketing:directory.detail.review.placeholder")}
-        rows={3}
-        maxLength={2000}
-      />
-      <div className={s.reviewFormActions}>
-        <Button type="submit" variant="primary" disabled={!canSubmit}>
-          {submit.isPending
-            ? t("marketing:directory.detail.review.submitting")
-            : t("marketing:directory.detail.review.submit")}
-        </Button>
-      </div>
-    </form>
+    <DirectoryReviewComposer
+      key={resetKey}
+      title={t("marketing:directory.detail.review.formTitle")}
+      submitLabel={t("marketing:directory.detail.review.submit")}
+      pendingLabel={t("marketing:directory.detail.review.submitting")}
+      isPending={submitReview.isPending}
+      onSubmit={(values) =>
+        submitReview.mutate(values, {
+          onSuccess: () => {
+            setResetKey((current) => current + 1);
+            showToast(
+              t("marketing:directory.detail.review.successToast"),
+              "success",
+            );
+          },
+          onError: () =>
+            showToast(
+              t("marketing:directory.detail.review.errorToast"),
+              "error",
+            ),
+        })
+      }
+    />
   );
 }

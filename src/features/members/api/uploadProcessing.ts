@@ -73,6 +73,17 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // A persona's banner. Its own kind rather than a second use of `story-cover`
+  // because it renders at a far wider shape (see CROP_CONFIG below): the
+  // minimum is stated at the banner's own 3:1 aspect so the reframe editor's
+  // minimum-crop clamp stays aspect-consistent instead of squaring off the
+  // frame at one edge.
+  "persona-cover": {
+    maxBytes: 10 * MB,
+    maxLabel: "10 MB",
+    minWidth: 1500,
+    minHeight: 500,
+  },
   // Listing gallery photo — landscape, matches the "≥1200px wide · under 5MB" hint.
   "listing-photo": {
     maxBytes: 5 * MB,
@@ -139,6 +150,15 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   "story-cover": 2560,
   "listing-photo": 2560,
   "community-cover": 2560,
+  // Higher than the other wide heroes, and deliberately so: a persona banner
+  // is the ONE image on the page that spans the full viewport at full
+  // browser width with nothing inset around it, so on a 2× display at a
+  // ~1900px-wide window it has to fill ~3800 device px. At the 2560 cap it
+  // shared with `story-cover` the browser was upscaling it ~1.5×, which is
+  // exactly the soft, blurry banner members were reporting. 3200 costs a few
+  // hundred KB more per cover and takes the upscale down to ~1.2×, which is
+  // no longer visible on line art or type.
+  "persona-cover": 3200,
   // A chat bubble never renders wider than the message column — a photo
   // slot, not a full-bleed hero, so it gets the same 1600px cap as an avatar/
   // work image rather than the wide-hero kinds above.
@@ -409,6 +429,14 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   avatar: { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
   "group-avatar": { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
   "story-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  // A persona banner is NOT a 2:1 plate like a magazine cover. It paints as a
+  // full-bleed strip whose real aspect runs ~4:1 to ~7:1 across the skins at
+  // desktop width and narrows to ~2:1 on a phone, so no single number is
+  // truthful everywhere. 3:1 sits in the middle of that range — close enough
+  // that the frame the member sees is close to the frame they get — and
+  // `cropFocalPosition` covers the remaining difference by panning towards
+  // the centre of the crop rather than the centre of the file.
+  "persona-cover": { aspect: 3, aspectLabel: "3:1", allowFreeform: false },
   "community-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
   "listing-photo": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
   "work-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },

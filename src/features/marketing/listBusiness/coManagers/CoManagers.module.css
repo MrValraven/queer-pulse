@@ -1,0 +1,284 @@
+/* ── Co-managers ────────────────────────────────────────────────────────────
+   Who can edit a listing, the invitations waiting on a member, and the badge
+   that tells a co-managed place apart from an owned one.
+
+   Everything here is member-facing only. Nothing about co-management appears
+   on the public listing page, so none of these classes are reachable from the
+   directory. */
+
+.intro {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  max-width: 66ch;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/* ── The role banner at the top of the editor ─────────────────────────────
+   A co-manager arriving on a form full of somebody else's business needs to
+   know whose it is before they change anything. */
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-block-end: 18px;
+  padding: 14px 17px;
+  border-radius: 16px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.bannerIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 20px;
+  block-size: 20px;
+  margin-block-start: 2px;
+  color: var(--accent);
+}
+.bannerIcon svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+.bannerText {
+  min-inline-size: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-inline-size: 70ch;
+  text-wrap: pretty;
+}
+.bannerTitle {
+  display: block;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-block-end: 2px;
+}
+
+/* ── The roster ───────────────────────────────────────────────────────────── */
+
+.roster {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-block: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.row:first-child {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+.rowIdentity {
+  flex: 1 1 12rem;
+  min-inline-size: 0;
+}
+.rowMeta {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+
+/* ── Confirming a removal ─────────────────────────────────────────────────── */
+
+.confirm {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 13px 15px;
+  border-radius: 14px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.confirmText {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.confirmActions {
+  display: flex;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+
+/* ── Inviting ─────────────────────────────────────────────────────────────── */
+
+.invite {
+  margin-block-start: 28px;
+  padding-block-start: 24px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.12);
+}
+.heading {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin: 0 0 6px;
+}
+.seats {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.picker {
+  margin-block-start: 14px;
+}
+.pickerFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px 14px;
+  margin-block-start: 14px;
+}
+
+/* Colour is never the only signal: every one of these carries an icon and a
+   full sentence. */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-block-start: 14px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  color: var(--ink);
+}
+.noticeError {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.noticeIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 17px;
+  block-size: 17px;
+  margin-block-start: 2px;
+  color: var(--ink-60);
+}
+.noticeErrorIcon {
+  color: var(--accent);
+}
+.noticeIcon svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* ── Stepping down ────────────────────────────────────────────────────────── */
+
+.stepDown {
+  margin-block-start: 28px;
+  padding-block-start: 24px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.12);
+}
+.stepDownActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-block-start: 14px;
+}
+
+/* ── The invitation inbox on the account profile ──────────────────────────── */
+
+.inbox {
+  margin-block-end: 26px;
+  padding: 22px 24px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgba(var(--plum-rgb), 0.04);
+}
+@media (max-width: 520px) {
+  .inbox {
+    padding: 18px 16px;
+  }
+}
+.inboxTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin: 0 0 6px;
+}
+.inviteList {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+.inviteRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding-block: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.inviteRow:first-child {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+.inviteBody {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+}
+.inviteName {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-strong);
+  margin: 0 0 3px;
+}
+.inviteFrom {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+.inviteActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+
+/* ── The badge on a co-managed place card ─────────────────────────────────── */
+
+.placeRole {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+.placeRole svg {
+  inline-size: 12px;
+  block-size: 12px;
+}

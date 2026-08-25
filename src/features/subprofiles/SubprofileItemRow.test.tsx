@@ -5,12 +5,11 @@ import { SubprofileItemRow } from "./SubprofileItemRow";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 
 /**
- * Task 3b: every non-poem portfolio item's public row shows the SAME
- * `WorkRightsFooter` copyright block poems already get in `PoemReaderModal`
- * (Task 3). Verifies the footer appears on an interactive, non-poem row and
- * is withheld both for poem items (avoids doubling the footer poems already
- * show in the reader modal) and in the editor's docked
- * `interactive={false}` preview.
+ * A public portfolio row carries NO copyright footer. It used to render one
+ * per item, which stacked the same "All rights reserved." line beside every
+ * row on a persona page; the page now shows it once at the end via
+ * `PersonaRightsFooter` (see `PersonaRightsFooter.test.tsx`). These guard
+ * against the per-item footer creeping back in.
  */
 const PROJECT_ITEM = {
   id: "item-neon-skyline",
@@ -44,49 +43,36 @@ const POEM_ITEM = {
 } satisfies SubprofileItemView;
 
 describe("SubprofileItemRow", () => {
-  it("renders WorkRightsFooter's copyright text for an interactive non-poem item", async () => {
+  it("renders the item without a per-item copyright footer", async () => {
     render(
       <TestProviders>
-        <SubprofileItemRow
-          item={PROJECT_ITEM}
-          skin="page"
-          interactive
-          authorName="Sofia Neves"
-        />
+        <SubprofileItemRow item={PROJECT_ITEM} skin="page" interactive />
       </TestProviders>,
     );
 
-    expect(await screen.findByText(/All rights reserved/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Sofia Neves/)).toBeInTheDocument();
-  });
-
-  it("does not render the footer for a poem item (PoemReaderModal owns it instead)", () => {
-    render(
-      <TestProviders>
-        <SubprofileItemRow
-          item={POEM_ITEM}
-          skin="page"
-          interactive
-          authorName="Sofia Neves"
-        />
-      </TestProviders>,
-    );
-
+    expect(await screen.findByText("Neon Skyline")).toBeInTheDocument();
     expect(screen.queryByText(/All rights reserved/i)).not.toBeInTheDocument();
   });
 
-  it("does not render the footer when non-interactive (editor's docked preview)", () => {
+  it("renders a poem row without a copyright footer", async () => {
     render(
       <TestProviders>
-        <SubprofileItemRow
-          item={PROJECT_ITEM}
-          skin="page"
-          interactive={false}
-          authorName="Sofia Neves"
-        />
+        <SubprofileItemRow item={POEM_ITEM} skin="page" interactive />
       </TestProviders>,
     );
 
+    expect(await screen.findByText("Pecado")).toBeInTheDocument();
+    expect(screen.queryByText(/All rights reserved/i)).not.toBeInTheDocument();
+  });
+
+  it("renders no copyright footer in the editor's docked preview either", async () => {
+    render(
+      <TestProviders>
+        <SubprofileItemRow item={PROJECT_ITEM} skin="page" interactive={false} />
+      </TestProviders>,
+    );
+
+    expect(await screen.findByText("Neon Skyline")).toBeInTheDocument();
     expect(screen.queryByText(/All rights reserved/i)).not.toBeInTheDocument();
   });
 });

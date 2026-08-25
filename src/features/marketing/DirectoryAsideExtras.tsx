@@ -13,16 +13,30 @@ interface Props {
   preview: boolean;
 }
 
-/** Two small, independently-conditional aside cards: a demo-only "members
- * here lately" roster, and "what's happening here" for a place with upcoming
- * gatherings. Grouped in one file since neither is big enough to warrant its
- * own — see component-decomposition's "several small components per file" allowance. */
+/** Two small, independently-conditional aside cards: "what's happening here"
+ * for a place with upcoming gatherings, and a demo-only "members here lately"
+ * roster. Grouped in one file since neither is big enough to warrant its own
+ * (see component-decomposition's "several small components per file" allowance).
+ *
+ * Upcoming gatherings lead: a night already booked at this venue can change a
+ * plan, which is more than a roster of who dropped by can do. */
 export function DirectoryAsideExtras({ place, preview }: Props) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
 
   return (
     <>
+      {place.upcoming && place.upcoming.length > 0 && (
+        <div className={s.sideCard}>
+          <h4>{t("marketing:directory.detail.upcomingHere")}</h4>
+          <DirectoryUpcoming
+            upcoming={place.upcoming}
+            placeName={place.name}
+            preview={preview}
+          />
+        </div>
+      )}
+
       {/* "Members here lately" is a fabricated demo roster (directorySpace.data)
           with no per-place backing from the API — show it only in demo so real
           business pages never display invented visitors. */}
@@ -40,17 +54,6 @@ export function DirectoryAsideExtras({ place, preview }: Props) {
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {place.upcoming && place.upcoming.length > 0 && (
-        <div className={s.sideCard}>
-          <h4>{t("marketing:directory.detail.upcomingHere")}</h4>
-          <DirectoryUpcoming
-            upcoming={place.upcoming}
-            placeName={place.name}
-            preview={preview}
-          />
         </div>
       )}
     </>

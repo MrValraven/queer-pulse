@@ -1231,27 +1231,8 @@ export const marketing: Catalog = {
   "listBusiness.step0.suggest.title": "I'm suggesting a place I love",
   "listBusiness.step0.suggest.desc":
     "A spot that's been good to you. The team will reach out to the owner before it goes live.",
-  "listBusiness.step0.verifyLabel": "How should we verify you run this place?",
-  "listBusiness.step0.verifyHelp":
-    "It's what keeps the directory trustworthy. Pick whatever's easiest for you.",
   "listBusiness.step0.signedInAs":
     "You're signed in as <b>{name}</b>. We'll attach this submission to your member profile so the team knows who to thank (and ask, if needed).",
-  // Verify options
-  "listBusiness.verify.email.label": "Business email",
-  "listBusiness.verify.email.desc":
-    "We send a code to an address on your domain.",
-  "listBusiness.verify.email.badge": "Fastest",
-  "listBusiness.verify.instagram.label": "Instagram",
-  "listBusiness.verify.instagram.desc":
-    "Confirm with a DM from the listed account.",
-  "listBusiness.verify.instagram.badge": "Easy",
-  "listBusiness.verify.post.label": "Postcard to the address",
-  "listBusiness.verify.post.desc": "Old-school. A code arrives in 3–5 days.",
-  "listBusiness.verify.post.badge": "3–5 days",
-  "listBusiness.verify.later.label": "Verify after review",
-  "listBusiness.verify.later.desc":
-    "The team verifies with you directly, human to human.",
-  "listBusiness.verify.later.badge": "Human",
   // Step 1 — basics
   "listBusiness.step1.title": "Start with",
   "listBusiness.step1.em": "the basics.",
@@ -1472,7 +1453,8 @@ export const marketing: Catalog = {
     "For you, the submitter, kept private, never shown on the listing.",
   "listBusiness.step4.contactEmailPlaceholder":
     "So we can reach you about this listing",
-  "listBusiness.step4.notifyLabel": "Email me when… (optional)",
+  "listBusiness.step4.notifyNote":
+    "We'll email you when your listing goes live, and if the team has a question about it.",
   "listBusiness.step4.consent":
     "You're in control of what's public. <b>Contact details you leave blank stay off the listing.</b> Want your name kept private? Pick “role only” or “anonymous” above. That's completely fine.",
   // Relationship options
@@ -1492,10 +1474,6 @@ export const marketing: Catalog = {
   "listBusiness.vis.role.desc": "“Owner”, but no name.",
   "listBusiness.vis.anon.label": "Keep me anonymous",
   "listBusiness.vis.anon.desc": "Visible only to the community team.",
-  // Notify options
-  "listBusiness.notify.live.label": "It goes live",
-  "listBusiness.notify.question.label": "The team has a question",
-  "listBusiness.notify.news.label": "Occasional directory news",
   // Step 5 — review
   "listBusiness.step5.title": "One last look",
   "listBusiness.step5.em": "before it goes to the team.",
@@ -1511,7 +1489,6 @@ export const marketing: Catalog = {
   "listBusiness.step5.group.practical": "Practical",
   "listBusiness.step5.group.photosYou": "Photos & you",
   "listBusiness.step5.row.listingAs": "Listing as",
-  "listBusiness.step5.row.verification": "Verification",
   "listBusiness.step5.row.name": "Name",
   "listBusiness.step5.row.category": "Category",
   "listBusiness.step5.row.neighbourhood": "Neighbourhood",
@@ -1581,7 +1558,6 @@ export const marketing: Catalog = {
     "Reference · <b>{ref}</b>  ·  keep it somewhere",
   // "What's still needed" chip labels
   "listBusiness.missing.path": "how you know the place",
-  "listBusiness.missing.verify": "a way to verify",
   "listBusiness.missing.name": "a name",
   "listBusiness.missing.cats": "a category",
   "listBusiness.missing.hood": "a neighbourhood",
@@ -1594,6 +1570,8 @@ export const marketing: Catalog = {
   "listBusiness.missing.pin": "a map pin",
   "listBusiness.missing.hours": "opening hours",
   "listBusiness.missing.hoursInvalid": "a fix to the opening hours",
+  "listBusiness.missing.hoursExceptionsInvalid":
+    "a fix to the dated exceptions",
   "listBusiness.missing.social": "valid contact links",
   "listBusiness.missing.socialFormat": "the contact-link format fixed",
   "listBusiness.missing.rel": "your connection",
@@ -1602,6 +1580,8 @@ export const marketing: Catalog = {
   "listBusiness.missing.contactEmail": "a contact email",
   "listBusiness.missing.alt": "alt text for your photos",
   "listBusiness.missing.consent": "both confirmations",
+  "listBusiness.missing.services": "a name and a price on every service",
+  "listBusiness.missing.affirmingBaseline": "the affirming baseline",
   // Live preview column
   "listBusiness.preview.head": "Live preview · updates as you type",
   "listBusiness.preview.addPhoto": "Add cover photo",
@@ -1638,10 +1618,344 @@ export const marketing: Catalog = {
   "listBusiness.edit.saveCta": "Save changes",
   "listBusiness.edit.saving": "Saving your changes…",
   "listBusiness.edit.saved": "Your listing is updated.",
+  "listBusiness.edit.savedInReview":
+    "Your changes are saved. Your listing is still in review.",
+  "listBusiness.edit.status.liveBody":
+    "This listing is live. Saving your changes updates the public page right away.",
+  "listBusiness.edit.status.reviewBody":
+    "This listing is not public yet. A moderator is reading it, and saving updates what they see.",
+  "listBusiness.edit.status.questionBody":
+    "A moderator has a question about this listing before it can go live. Saving updates what they see.",
+  "listBusiness.edit.verifiedBadge.title": "Verified queer-owned badge",
+  "listBusiness.edit.verifiedBadge.body":
+    "A moderator confirmed this badge for the business as it stands today. Changing the business name, the Queer-owned or LGBTQ+ friendly badge, or whether this listing links to your profile clears it until a moderator confirms the business again. Everything else you edit here leaves it alone.",
   "listBusiness.edit.saveError": "We couldn't save your changes. Try again.",
   "listBusiness.edit.discardConfirm":
     "Discard your unsaved changes to this listing?",
   "listBusiness.edit.notAllowed": "You can only edit a listing you submitted.",
+
+  // ── Single-screen owner editor (edit mode). The create flow stays a guided
+  //    wizard; editing puts every field on one page with a jump nav.
+  "listBusiness.editor.section.aboutYou": "About you",
+  "listBusiness.editor.section.permissions": "Permissions",
+  "listBusiness.editor.nav.label": "Jump to",
+  "listBusiness.editor.nav.aria": "Jump to a section of your listing",
+  "listBusiness.editor.nav.missingCount": "{count} still needed",
+  "listBusiness.editor.unsavedChanges": "You have unsaved changes.",
+  "listBusiness.editor.noChanges": "Everything here is saved.",
+  "listBusiness.editor.previewCta": "Preview page",
+  "listBusiness.editor.preview.eyebrow": "Preview, including your unsaved edits",
+  "listBusiness.editor.preview.sub":
+    "Your listing page as visitors will see it. Nothing here is saved until you press save.",
+  "listBusiness.editor.preview.subCoManager":
+    "The listing page as visitors will see it. Nothing here is saved until you press save. The block about the person behind the business is blank in this preview and filled in on the real page.",
+
+  "listBusiness.editor.section.services": "What it costs",
+  "listBusiness.editor.section.accessibility": "Getting in",
+  "listBusiness.editor.section.tradingAndVisibility": "Trading and visibility",
+  "listBusiness.editor.section.whoCanEdit": "Who can edit",
+  "listBusiness.editor.section.roleOnListing": "Role shown on the listing",
+
+  // ── Co-managers. Who else can edit a listing, and the invitation that puts
+  //    them there. Member-facing only: none of this reaches the public page.
+  "listBusiness.coManagers.introOwner":
+    "Running a place is rarely a job for one person. Invite someone you trust to help keep this listing up to date. They can change everything about the business. Your own details, and who can edit, stay with you.",
+  "listBusiness.coManagers.introCoManager":
+    "Everyone looking after this listing. Only its owner can invite people or take a place back.",
+  "listBusiness.coManagers.status.active": "Can edit",
+  "listBusiness.coManagers.status.invited": "Waiting for a reply",
+  "listBusiness.coManagers.formerMember": "A member who has since left",
+  "listBusiness.coManagers.invitedOn": "Invitation sent {date}",
+  "listBusiness.coManagers.editingSince": "Helping out since {date}",
+  "listBusiness.coManagers.removeCta": "Remove",
+  "listBusiness.coManagers.cancelInviteCta": "Cancel invitation",
+  "listBusiness.coManagers.removeConfirm":
+    "Take <b>{name}</b> off this listing? Everything they added stays, and you can ask them again whenever you like.",
+  "listBusiness.coManagers.cancelInviteConfirm":
+    "Cancel the invitation to <b>{name}</b>? You can send it again whenever you like.",
+  "listBusiness.coManagers.keepCta": "Go back",
+  "listBusiness.coManagers.removeYes": "Remove",
+  "listBusiness.coManagers.cancelInviteYes": "Cancel invitation",
+  "listBusiness.coManagers.empty.title": "Just you for now",
+  "listBusiness.coManagers.empty.descriptionOwner":
+    "Nobody else can edit this listing yet. Invite someone below when you would like a hand.",
+  "listBusiness.coManagers.empty.descriptionCoManager":
+    "Nobody else is looking after this listing right now.",
+  "listBusiness.coManagers.removedToast":
+    "They no longer edit this listing.",
+  "listBusiness.coManagers.removeError":
+    "We couldn't make that change just now. Try again.",
+  "listBusiness.coManagers.inviteHeading": "Invite someone to help",
+  "listBusiness.coManagers.inviteIntro":
+    "Find the member you have in mind and send the invitation. Nothing changes for them until they accept.",
+  "listBusiness.coManagers.seats":
+    "{used} of {cap} places taken. An invitation holds a place while it waits for an answer.",
+  "listBusiness.coManagers.seatsFullNotice":
+    "All the places are taken. Remove someone, or cancel an invitation, to free one up.",
+  "listBusiness.coManagers.searchPlaceholder": "Search members by name",
+  "listBusiness.coManagers.searchHint":
+    "Type a name to find the person you have in mind.",
+  "listBusiness.coManagers.sendCta": "Send invitation",
+  "listBusiness.coManagers.sendingCta": "Sending...",
+  "listBusiness.coManagers.invitedToast": "Invitation sent.",
+  "listBusiness.coManagers.error.self": "This listing is already yours to edit.",
+  "listBusiness.coManagers.error.seatsFull":
+    "All the places are taken. Remove someone, or cancel an invitation, to free one up.",
+  "listBusiness.coManagers.error.alreadyThere":
+    "That member already has a place here, or an invitation waiting.",
+  "listBusiness.coManagers.error.generic":
+    "We couldn't send that invitation. Try again.",
+  "listBusiness.coManagers.stepDownHeading": "Step down from this listing",
+  "listBusiness.coManagers.stepDownIntro":
+    "You can hand this back whenever you like. Everything you added stays with the listing.",
+  "listBusiness.coManagers.stepDownCta": "Step down",
+  "listBusiness.coManagers.stepDownConfirm":
+    "Stop helping with {name}? Your access ends straight away, and only the owner can bring you back.",
+  "listBusiness.coManagers.stepDownCancel": "Go back",
+  "listBusiness.coManagers.stepDownYes": "Yes, step down",
+  "listBusiness.coManagers.leftToast": "You no longer help with {name}.",
+  "listBusiness.coManagers.leaveError":
+    "We couldn't do that just now. Try again.",
+  "listBusiness.coManagers.banner.title": "You help run this listing",
+  "listBusiness.coManagers.banner.titleNamed":
+    "You help {name} run {listing}",
+  "listBusiness.coManagers.banner.body":
+    "You can change everything about the business: what it says, its hours, photos, services, access answers, and the replies to reviews and questions. The owner's own contact details and profile choices stay private to them, and deleting the listing or changing who can edit it stays with them too.",
+  "listBusiness.coManagers.roleFieldLabel": "Role shown on the listing",
+  "listBusiness.coManagers.roleFieldHelper":
+    "The job title printed beside the business on its public page.",
+  "listBusiness.coManagers.ownerPrivateNotice":
+    "The owner's name, short bio, contact email and profile choices are private to them. They are not shown here, and nothing you save changes them.",
+
+  // ── Accessibility vocabulary. The six questions are fixed and shared with
+  //    the API, which stores their slugs verbatim.
+  "listBusiness.accessibility.question.stepFree.label": "Step-free entrance",
+  "listBusiness.accessibility.question.stepFree.help":
+    "Someone can get from the street to the door without steps.",
+  "listBusiness.accessibility.question.interior.label":
+    "Wheelchair-accessible inside",
+  "listBusiness.accessibility.question.interior.help":
+    "There is room to move around and reach the main area in a wheelchair.",
+  "listBusiness.accessibility.question.accessibleToilet.label":
+    "Accessible toilet",
+  "listBusiness.accessibility.question.accessibleToilet.help":
+    "A toilet with the space and the fittings a wheelchair user needs.",
+  "listBusiness.accessibility.question.genderNeutralToilet.label":
+    "Gender-neutral toilet",
+  "listBusiness.accessibility.question.genderNeutralToilet.help":
+    "At least one toilet nobody has to pick a gendered door for.",
+  "listBusiness.accessibility.question.quietHours.label":
+    "Quiet, low-sensory hours",
+  "listBusiness.accessibility.question.quietHours.help":
+    "Regular times with the music down and the lights low.",
+  "listBusiness.accessibility.question.assistanceAnimals.label":
+    "Assistance animals welcome",
+  "listBusiness.accessibility.question.assistanceAnimals.help":
+    "Guide dogs and other assistance animals can come in. A pets policy is a separate question.",
+
+  // Reader wording on the public page; owner wording in the editor.
+  "listBusiness.accessibility.answer.yes.reader": "Yes",
+  "listBusiness.accessibility.answer.yes.owner": "Yes",
+  "listBusiness.accessibility.answer.no.reader": "No",
+  "listBusiness.accessibility.answer.no.owner": "No",
+  "listBusiness.accessibility.answer.unknown.reader": "Nobody has told us",
+  "listBusiness.accessibility.answer.unknown.owner": "Not sure yet",
+
+  "listBusiness.accessibility.intro":
+    "Six questions someone might need answered before they decide whether they can come. Answer what you know.",
+  "listBusiness.accessibility.reassurance":
+    "An honest no is useful. Someone who uses a wheelchair would far rather read that there are two steps at your door than turn up and find out. Nothing here counts against your listing.",
+  "listBusiness.accessibility.noteLabel": "Anything else worth knowing",
+  "listBusiness.accessibility.noteHint":
+    "The details a checklist cannot hold. Say what someone would actually meet at the door.",
+  "listBusiness.accessibility.notePlaceholder":
+    "Two steps at the front door and staff will help with the ramp. Ring the bell on the left.",
+
+  // ── Priced services, owner side.
+  "listBusiness.services.intro":
+    "What you sell and what it costs. Your price band stays the quick signal; this is where you say what it buys. Leave it empty if prices do not work that way for you.",
+  "listBusiness.services.empty":
+    "Nothing listed yet. Add a row for each thing you want people to see a price for.",
+  "listBusiness.services.addCta": "Add a service",
+  "listBusiness.services.addHint": "Optional. Most listings do well with a handful.",
+  "listBusiness.services.ceilingHint":
+    "That is the limit of {count}. A longer price list belongs on your own site.",
+  "listBusiness.services.nameLabel": "What it is",
+  "listBusiness.services.namePlaceholder": "Consultation, first session",
+  "listBusiness.services.nameError":
+    "Give this row a name, or clear the price to remove it.",
+  "listBusiness.services.priceLabel": "What it costs",
+  "listBusiness.services.pricePlaceholder": "From 25 EUR, sliding scale",
+  "listBusiness.services.priceError":
+    "Say what it costs. Anything true works: a number, a range, or a sliding scale.",
+  "listBusiness.services.noteLabel": "One line of detail",
+  "listBusiness.services.noteHint": "Optional.",
+  "listBusiness.services.notePlaceholder":
+    "45 minutes, includes a follow-up message",
+  "listBusiness.services.unnamedRow": "row {position}",
+  "listBusiness.services.moveUp": "Move {name} up",
+  "listBusiness.services.moveDown": "Move {name} down",
+  "listBusiness.services.remove": "Remove {name}",
+
+  // ── The owner's pause. A different question from the trading state above
+  //    it: this is about whether the LISTING is shown, and it says nothing
+  //    about whether the business is open.
+  "listBusiness.visibility.heading": "Showing in the directory",
+  "listBusiness.visibility.intro":
+    "Take your listing out of the directory for a while and put it back whenever you want. Everything stays where it is while it is away.",
+  "listBusiness.visibility.distinction":
+    "This is a different thing from the trading status above. Temporarily closed keeps you in the directory and tells people you are shut for now. Pausing takes the listing out of browse, search and the map, and says nothing about whether you are open.",
+  "listBusiness.visibility.state.showing.title": "Your listing is showing",
+  "listBusiness.visibility.state.showing.sub":
+    "People can find it in browse, search and the map.",
+  "listBusiness.visibility.state.hidden.title": "Your listing is paused",
+  "listBusiness.visibility.state.hidden.sub":
+    "It is out of browse, search and the map right now. Nobody can find it in the directory until you put it back.",
+  "listBusiness.visibility.hiddenSince": "Paused {when}",
+  "listBusiness.visibility.kept.reviews":
+    "Your reviews, ratings and replies stay exactly as they are.",
+  "listBusiness.visibility.kept.content":
+    "Photos, hours, contacts and any badges you have are all kept.",
+  "listBusiness.visibility.kept.reversible":
+    "You can put it back at any time, and it returns whole.",
+  "listBusiness.visibility.hideCta": "Pause this listing",
+  "listBusiness.visibility.showCta": "Show it again",
+  "listBusiness.visibility.applying": "Updating…",
+  "listBusiness.visibility.saved.hidden":
+    "Your listing is paused. It is out of the directory until you put it back.",
+  "listBusiness.visibility.saved.shown":
+    "Your listing is back in the directory.",
+  "listBusiness.visibility.saveError":
+    "Couldn't update this. Please try again.",
+  "listBusiness.visibility.banner.title": "This listing is paused",
+  "listBusiness.visibility.banner.body":
+    "It is out of browse, search and the map right now. Your edits will save as normal, and nobody will see them until you show the listing again.",
+
+  // ── The affirming baseline, agreed to once at submission. Absent from the
+  //    update payload on purpose: there is no edit that un-agrees to it.
+  "listBusiness.baseline.title": "The one thing <em>every listing agrees to.</em>",
+  "listBusiness.baseline.body":
+    "Businesses in this directory commit to welcoming and serving LGBTQ+ people, and to dealing with it when someone in their space falls short. That commitment is what makes this list worth reading.",
+  "listBusiness.baseline.scope":
+    "It is about how you treat the people you serve. It gives nobody permission to turn a person away over who they are.",
+  "listBusiness.baseline.agreeTitle": "We agree to this",
+  "listBusiness.baseline.agreeSub":
+    "Required. Every listing in the directory has agreed to the same thing.",
+  "listBusiness.baseline.noticeTitle":
+    "You agreed to the affirming baseline when this listing was created.",
+  "listBusiness.baseline.noticeBody":
+    "It stands for as long as the listing does, so there is nothing to change here. Every business in the directory has agreed to the same thing.",
+
+  // ── Local autosave for the owner editor. It OFFERS a copy saved on this
+  //    device; the form stays exactly what the server returned until the owner
+  //    presses restore, so nothing published is ever quietly replaced.
+  "listBusiness.editor.restore.title": "You have unsaved changes from {when}",
+  "listBusiness.editor.restore.sub":
+    "They were saved on this device and never sent. Your live listing has not changed.",
+  "listBusiness.editor.restore.serverChanged":
+    "Careful: this listing has been updated since those changes were saved, so bringing them back would replace the newer wording.",
+  "listBusiness.editor.restore.restoreCta": "Bring them back",
+  "listBusiness.editor.restore.discardCta": "Discard them",
+  "listBusiness.editor.restore.justNow": "a moment ago",
+  "listBusiness.editor.restore.unknownWhen": "an earlier session",
+
+  // ── Operating state: the business's own report about itself. Setting it
+  //    never moves the moderation status and never triggers a re-review.
+  "listBusiness.trading.groupAria": "Is this business still trading?",
+  "listBusiness.trading.currently": "Right now",
+  "listBusiness.trading.since": "set {when}",
+  "listBusiness.trading.justNow": "a moment ago",
+  "listBusiness.trading.unknownWhen": "some time ago",
+  "listBusiness.trading.state.open.label": "Open as usual",
+  "listBusiness.trading.state.open.desc":
+    "Trading normally. Nothing extra appears on your page.",
+  "listBusiness.trading.state.temporarilyClosed.label": "Temporarily closed",
+  "listBusiness.trading.state.temporarilyClosed.desc":
+    "Still listed everywhere, with a closed notice on your page.",
+  "listBusiness.trading.state.moved.label": "Moved",
+  "listBusiness.trading.state.moved.desc":
+    "Still listed everywhere, with your new address on your page.",
+  "listBusiness.trading.state.permanentlyClosed.label": "Closed for good",
+  "listBusiness.trading.state.permanentlyClosed.desc":
+    "Taken out of browse, search and the map.",
+  "listBusiness.trading.noteLabel": "What should people know?",
+  "listBusiness.trading.noteHint":
+    "Shown on your listing, so keep it short and plain.",
+  "listBusiness.trading.notePlaceholder":
+    "Closed for refurbishment, back in September.",
+  "listBusiness.trading.movedToLabel": "Where can people find you now?",
+  "listBusiness.trading.movedToHint":
+    "A move with no destination tells a reader nothing they had not already worked out at the door.",
+  "listBusiness.trading.movedToPlaceholder": "Rua da Prata 42, Baixa",
+  "listBusiness.trading.applyCta": "Update trading status",
+  "listBusiness.trading.applying": "Updating…",
+  "listBusiness.trading.applyHint":
+    "This applies on its own, separately from the save button below.",
+  "listBusiness.trading.saveError":
+    "Couldn't update your trading status. Please try again.",
+  "listBusiness.trading.saved.open": "Your listing is open as usual again.",
+  "listBusiness.trading.saved.temporarily_closed":
+    "Your listing now shows as temporarily closed.",
+  "listBusiness.trading.saved.permanently_closed":
+    "Your listing is marked closed for good.",
+  "listBusiness.trading.saved.moved":
+    "Your listing now shows your new address.",
+  "listBusiness.trading.closeConfirm.title": "Mark {name} closed for good?",
+  "listBusiness.trading.closeConfirm.lead":
+    "This is the one status that takes your business out of the directory's results. Here is exactly what happens.",
+  "listBusiness.trading.closeConfirm.removed":
+    "It stops appearing in browse, search, the map and safe-space results.",
+  "listBusiness.trading.closeConfirm.kept":
+    "Your page stays reachable, so saved links, reviews and your closing notice all survive.",
+  "listBusiness.trading.closeConfirm.reversible":
+    "You can set it back to open whenever you like. Nothing is deleted.",
+  "listBusiness.trading.closeConfirm.cancel": "Keep it listed",
+  "listBusiness.trading.closeConfirm.confirm": "Yes, close it for good",
+
+  // ── "Still accurate?": one cheap press that stamps the listing as vouched
+  //    for by the person who runs it. Asked louder as the stamp ages.
+  "listBusiness.confirmDetails.title.fresh": "These details are confirmed",
+  "listBusiness.confirmDetails.title.ageing": "Are these details still right?",
+  "listBusiness.confirmDetails.title.stale":
+    "Nobody has checked these details in a while",
+  "listBusiness.confirmDetails.lastConfirmed": "Last confirmed {when}.",
+  "listBusiness.confirmDetails.never":
+    "You have never confirmed them, so visitors only have the day you wrote them.",
+  "listBusiness.confirmDetails.justNow": "a moment ago",
+  "listBusiness.confirmDetails.unknownWhen": "some time ago",
+  "listBusiness.confirmDetails.cta": "Still accurate",
+  "listBusiness.confirmDetails.saving": "Saving…",
+  "listBusiness.confirmDetails.toast":
+    "Thanks. Your listing is stamped as checked today.",
+  "listBusiness.confirmDetails.error":
+    "Couldn't record that just now. Please try again.",
+
+  // ── Dated overrides of the weekly hours grid (owner editor only).
+  "listBusiness.hoursExceptions.heading": "Dates that are different",
+  "listBusiness.hoursExceptions.hint":
+    "Holidays, a summer break, one late night. Each date here overrides your weekly grid on that day.",
+  "listBusiness.hoursExceptions.empty":
+    "No dated exceptions yet, so your weekly hours apply every week.",
+  "listBusiness.hoursExceptions.addCta": "Add a date",
+  "listBusiness.hoursExceptions.clearPastCta_one": "Remove 1 past date",
+  "listBusiness.hoursExceptions.clearPastCta_other":
+    "Remove {count} past dates",
+  "listBusiness.hoursExceptions.count": "{used} of {max} dates",
+  "listBusiness.hoursExceptions.capReached":
+    "That is the limit of {max} dates. Remove one to add another.",
+  "listBusiness.hoursExceptions.dateLabel": "Date",
+  "listBusiness.hoursExceptions.untitledDate": "this date",
+  "listBusiness.hoursExceptions.pastTag": "Past",
+  "listBusiness.hoursExceptions.removeAria": "Remove the exception for {date}",
+  "listBusiness.hoursExceptions.noteAria": "Label for {date}",
+  "listBusiness.hoursExceptions.notePlaceholder":
+    "Christmas Eve, closing early",
+  "listBusiness.hoursExceptions.problem.date":
+    "Give a real calendar date, like 2026-12-24.",
+  "listBusiness.hoursExceptions.problem.duplicate":
+    "There is already an entry for this date. Edit that one instead.",
+  "listBusiness.hoursExceptions.problem.intervals":
+    "An open date needs at least one window, and its times cannot match or overlap.",
 
   // ── Shared hub back-link label (Governance section) ────────────────────
   "hub.governanceLabel": "Governance",
@@ -1725,6 +2039,35 @@ export const marketing: Catalog = {
   "changelog.tag.vouch": "Vouch for someone",
   "changelog.tag.culture": "Visit Culture",
   "changelog.tag.myCards": "See your cards",
+
+  "changelog.entries.listing-pages-rebuild.title":
+    "Business pages, rebuilt around what you came to find out",
+  "changelog.entries.listing-pages-rebuild.body":
+    "Every business page now opens with what you actually came for: whether it is open right now, where it is, what it is, and how easy it is to get into. Accessibility questions are answered yes, no, or nobody has told us, so a question no one has answered stops looking like a no. You can ask a business something in public and read what other people asked, see when a review was written, mark one helpful, and add a photo to your own. Places that have closed, moved, or paused now say so instead of quietly looking open.",
+  "changelog.entries.listing-owner-control.title":
+    "More control if you run a place",
+  "changelog.entries.listing-owner-control.body":
+    "Editing your listing no longer takes it off the directory while it waits to be checked again. Once you are approved, your corrections go live as you save them. The editor is one screen instead of six steps, it keeps a draft if you get interrupted, and it shows you the real page before you publish. You can set holiday hours, mark yourself temporarily closed or moved, pause a listing without deleting it, list your services and prices, and see what people have suggested or asked.",
+  "changelog.entries.persona-banner-framing.title": "Persona banners, framed the way you framed them",
+  "changelog.entries.persona-banner-framing.body":
+    "Persona banners now reframe at 3:1 — the shape they actually paint at — instead of the 2:1 used for magazine covers, and the page keeps whatever you centred in the frame rather than slicing an arbitrary strip out of the middle. Banners upload at a higher resolution too, so they stay sharp edge to edge on a big screen, and they now run all the way up to the top of the page.",
+  "changelog.entries.card-check-page-rebuild.title":
+    "The card check page now shows the member\u2019s photo",
+  "changelog.entries.card-check-page-rebuild.body":
+    "Scanning a membership card used to give a plain line of text and a note telling you to look at the photo on the card. The check now comes back as the card itself: the holder\u2019s name on its own line with their pronouns beneath it, the community, role and card number, and the photo the card carries, served from the community\u2019s own records so you are comparing the person in front of you against a copy nobody at the door could have edited. A card that does not check out now says what can cause that, what to try next, and that it is not a judgement about the person. And a scan that fails because your phone lost its connection now says so instead of reading as a refusal.",
+  "changelog.entries.persona-rights-footer-once.title":
+    "One copyright notice per persona page",
+  "changelog.entries.persona-rights-footer-once.body":
+    "The \u201cAll rights reserved\u201d notice used to repeat beside every single item on a persona page. It now appears once, at the end of the page, covering all of that persona\u2019s work. Opening a poem or an artwork on its own still shows its own notice.",
+  "changelog.entries.community-card-live-preview.title":
+    "See your community's card while you edit it",
+  "changelog.entries.community-card-live-preview.body":
+    "Editing a community meant guessing: the name, tagline, cover photo, kind of space, tags and who can find it all change the card people meet you through, and the only way to see the result was to save and go look. The edit dialog now shows that card beside the form, drawn from what you are typing, so you can see a cover crop or a shorter tagline land before you commit to it.",
+
+  "changelog.entries.card-co-owner-role.title":
+    "Membership cards name co-owners correctly",
+  "changelog.entries.card-co-owner-role.body":
+    "Communities can hand a member owner-level powers as a co-owner. Membership cards did not know that role yet, so a co-owner's card called them a member on the card itself, in the holders panel and on the page a scanned card opens. Cards now print the role the roster actually holds, and promoting someone updates their card straight away instead of waiting for the page to reload.",
 
   "changelog.entries.profile-community-cards.title":
     "Your communities look the same on your profile as on the communities page",
@@ -4764,6 +5107,11 @@ export const marketing: Catalog = {
   "directory.card.photoComing": "Photo coming",
   "directory.card.openTill": "Open till {time}",
   "directory.card.closedNow": "Closed",
+  "directory.card.openNow": "Open now",
+  "directory.card.closingSoon": "Closes at {time}",
+  "directory.card.state.temporarily_closed": "Temporarily closed",
+  "directory.card.state.permanently_closed": "Permanently closed",
+  "directory.card.state.moved": "Moved",
   "directory.card.saveAriaLabel": "Save {name}",
   "directory.card.unsaveAriaLabel": "Remove {name} from saved",
   "directory.card.savedToast": "Saved {name}",
@@ -4801,7 +5149,6 @@ export const marketing: Catalog = {
   "directory.detail.newBadge": "New",
   "directory.detail.onlineBusiness": "Online only",
   "directory.detail.whatItIsTitle": "What it <em>actually is.</em>",
-  "directory.detail.goodForTitle": "What members say it's <em>good for</em>",
   "directory.detail.offersTitle": "What this place <em>offers</em>",
   "directory.detail.goodForSub": "As {name} describes it.",
   "directory.detail.hoursTitle": "Hours",
@@ -4809,8 +5156,36 @@ export const marketing: Catalog = {
   "directory.detail.hoursClosed": "Closed",
   "directory.detail.openNow": "Open now",
   "directory.detail.closedNow": "Closed",
+  "directory.detail.closingSoon": "Closing at {time}",
+  "directory.detail.formerAddress": "Former address",
+  "directory.detail.operating.temporarily_closed.title": "Temporarily closed",
+  "directory.detail.operating.temporarily_closed.lead":
+    "This place is not open at the moment. The hours below are its usual ones, for when it comes back.",
+  "directory.detail.operating.temporarily_closed.since": "Closed since {date}",
+  "directory.detail.operating.temporarily_closed.chip": "Temporarily closed",
+  "directory.detail.operating.temporarily_closed.hoursNote":
+    "These are the usual hours. They are on hold while the place is closed.",
+  "directory.detail.operating.permanently_closed.title": "Permanently closed",
+  "directory.detail.operating.permanently_closed.lead":
+    "This business has closed for good. Its page stays here so the reviews, photos and history members built around it are kept.",
+  "directory.detail.operating.permanently_closed.since": "Closed on {date}",
+  "directory.detail.operating.moved.title": "This business has moved",
+  "directory.detail.operating.moved.lead":
+    "It no longer trades at the address on this page.",
+  "directory.detail.operating.moved.since": "Moved on {date}",
+  "directory.detail.operating.moved.newAddress": "New address: {address}",
+  "directory.detail.operating.moved.seeSuccessor": "See the listing for {name}",
+  "directory.detail.exceptions.title": "Upcoming changes",
+  "directory.detail.freshness.confirmedBy":
+    "Details confirmed by {name} on {date}",
+  "directory.detail.freshness.confirmed": "Details confirmed on {date}",
+  "directory.detail.freshness.staleBy":
+    "{name} last confirmed these details on {date}. They may have changed since.",
+  "directory.detail.freshness.stale":
+    "These details were last confirmed on {date}. They may have changed since.",
+  "directory.detail.freshness.unconfirmed":
+    "Nobody has confirmed these details yet. Worth a quick check before you travel.",
   "directory.detail.reviewsTitle": "Member reviews · <em>{count}</em>",
-  "directory.detail.reviewsSub": "Sorted by most helpful.",
   "directory.detail.reviews.emptySub":
     "No reviews yet. Be the first to leave one.",
   "directory.detail.ratingBreakdown": "Rating breakdown",
@@ -4828,9 +5203,27 @@ export const marketing: Catalog = {
   "directory.detail.review.signInPrompt":
     "Sign in to leave a review of this space.",
   "directory.detail.review.signInCta": "Sign in",
+  "directory.detail.review.cancel": "Cancel",
+  "directory.detail.review.editCta": "Edit",
+  "directory.detail.review.editTitle": "Edit your review",
+  "directory.detail.review.saveEdit": "Save changes",
+  "directory.detail.review.savingEdit": "Saving…",
+  "directory.detail.review.editSuccessToast": "Your review is updated.",
+  "directory.detail.review.editErrorToast":
+    "Couldn't save your changes. Please try again.",
+  "directory.detail.review.photo.add": "Add a photo",
+  "directory.detail.review.photo.change": "Change photo",
+  "directory.detail.review.photo.remove": "Remove",
+  "directory.detail.review.photo.uploading": "Uploading…",
+  "directory.detail.review.photo.error":
+    "Couldn't upload that photo. Please try again.",
+  "directory.detail.review.photo.previewAlt":
+    "The photo you are attaching to this review",
   "directory.detail.reply.ownerResponseTitle": "Response from the owner",
   "directory.detail.reply.replyCta": "Reply",
   "directory.detail.reply.editReplyCta": "Edit reply",
+  "directory.detail.reply.editedAfterReply":
+    "This review was edited after this reply was posted.",
   "directory.detail.reply.placeholder": "Write a public reply to this review…",
   "directory.detail.reply.save": "Save reply",
   "directory.detail.reply.cancel": "Cancel",
@@ -4838,20 +5231,77 @@ export const marketing: Catalog = {
   "directory.detail.reply.successToast": "Your reply is up.",
   "directory.detail.reply.errorToast":
     "Couldn't post your reply. Please try again.",
-  "directory.detail.helpful": "<b>{count}</b> members found this helpful",
   "directory.detail.reviews.sortLabel": "Sort",
-  "directory.detail.reviews.sortHelpful": "Most helpful",
+  "directory.detail.reviews.sortNewest": "Newest first",
   "directory.detail.reviews.sortHighest": "Highest rated",
   "directory.detail.reviews.sortLowest": "Lowest rated",
-  "directory.detail.reviews.sortedByHelpful": "Sorted by most helpful.",
+  "directory.detail.reviews.sortedByNewest": "Newest first.",
   "directory.detail.reviews.sortedByHighest": "Sorted by highest rated.",
   "directory.detail.reviews.sortedByLowest": "Sorted by lowest rated.",
   "directory.detail.reviews.filterAria": "Filter reviews by star rating",
   "directory.detail.reviews.filterAll": "All ratings",
   "directory.detail.reviews.filterStars_one": "{count} star",
   "directory.detail.reviews.filterStars_other": "{count} stars",
+  "directory.detail.reviews.edited": "edited",
+  "directory.detail.reviews.helpfulCta": "Helpful",
+  "directory.detail.reviews.helpfulAria_one":
+    "Helpful. {count} member has marked this review helpful.",
+  "directory.detail.reviews.helpfulAria_other":
+    "Helpful. {count} members have marked this review helpful.",
+  "directory.detail.reviews.helpfulSignIn":
+    "Sign in to mark this review helpful",
+  "directory.detail.reviews.helpfulError":
+    "Couldn't record that. Please try again.",
+  "directory.detail.reviews.photoAlt": "Photo from {name}'s review",
+  "directory.detail.reviews.photoOpen": "Open the photo from {name}'s review",
+  "directory.detail.reviews.sortHelpful": "Most helpful",
+  "directory.detail.reviews.sortedByHelpful": "Sorted by most helpful.",
   "directory.detail.reviews.noStarReviews": "No {count}-star reviews yet.",
   "directory.detail.reviews.ratingAria": "Rated {count} out of 5 stars",
+  "directory.detail.visitTitle": "Where it is",
+  "directory.detail.accessTitle": "Getting in, and being understood",
+  "directory.detail.accessSub": "As {name} declared it. Ask if you need to be sure.",
+
+  // ── Structured accessibility answers. Three states, and all three are
+  //    information: `unknown` is never rendered as a "no" and never dropped.
+  "directory.detail.accessibility.noteLabel": "In the owner's words",
+  "directory.detail.accessibility.noteLabelNamed": "In {name}'s words",
+  "directory.detail.accessibility.unansweredLine_one":
+    "One question has still to be answered. Nobody has told us either way, so ask before you go if it matters to you.",
+  "directory.detail.accessibility.unansweredLine_other":
+    "{count} questions have still to be answered. Nobody has told us either way, so ask before you go if any of them matter to you.",
+
+  // ── Priced services. The header's price band stays the at-a-glance signal;
+  //    this says what that band buys.
+  "directory.detail.services.title": "What it <em>costs.</em>",
+  "directory.detail.services.sub":
+    "Prices as the business wrote them. Ask if you need a quote for something specific.",
+  "directory.detail.services.subNamed":
+    "Prices as {name} wrote them. Ask if you need a quote for something specific.",
+
+  // ── Evidence behind the verified queer-owned badge, phrased as the sibling
+  //    of the safe-space block's own verifier + re-checked date line.
+  "directory.detail.queerOwned.byOnDate":
+    "Queer-owned, confirmed by <strong>{verifier}</strong> on <strong>{date}</strong>.",
+  "directory.detail.queerOwned.by":
+    "Queer-owned, confirmed by <strong>{verifier}</strong>.",
+  "directory.detail.queerOwned.onDate":
+    "Queer-owned, last confirmed on <strong>{date}</strong>.",
+  "directory.detail.queerOwned.nextCheck": "Due for another check by {date}.",
+
+  // ── The affirming baseline, STATED. Every listing here agreed to it, so
+  //    this is a fact about the directory. Never a per-listing badge and never
+  //    a browse filter: either would make a baseline look like an option.
+  "directory.detail.baseline.lead":
+    "Every business here has agreed to welcome and <em>serve LGBTQ+ people.</em>",
+  "directory.detail.baseline.condition":
+    "Agreeing to it is the condition of being listed here at all. Every business in the directory has made the same commitment, so you will not find it flagged on some pages and missing from others.",
+  "directory.detail.baseline.scope":
+    "The commitment is about how a business treats the people it serves, and about stepping in when someone in the space falls short. It gives nobody permission to turn a person away over who they are.",
+  "directory.detail.nearby.title": "Within a short walk",
+  "directory.detail.nearby.sub": "Other places you could add to the same evening, measured from {name}.",
+  "directory.detail.nearby.metres": "{distance} m",
+  "directory.detail.nearby.kilometres": "{distance} km",
   "directory.detail.visitWebsite": "Visit website",
   "directory.detail.getInTouch": "Get in touch",
   "directory.detail.backToDirectory": "Back to directory",
@@ -4878,6 +5328,51 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.errorBody":
     "Something went wrong on our end. Please try again.",
   "directory.detail.reportReview.retryCta": "Try again",
+  "directory.detail.reportQuestion.title": "Report this question",
+  "directory.detail.reportQuestion.sub":
+    "Tell us what's wrong with {name}'s question. A moderator reviews every report, and they won't be told who filed it.",
+  "directory.detail.questions.title": "Ask the owner, <em>in public</em>",
+  "directory.detail.questions.sub_one": "{count} question, newest first.",
+  "directory.detail.questions.sub_other": "{count} questions, newest first.",
+  "directory.detail.questions.emptySub": "Nobody has asked anything here yet.",
+  "directory.detail.questions.emptyBody":
+    "Ask the first question. Anything you would want to know before you go: how to get in, what the room is like, whether the kitchen is still open at ten.",
+  "directory.detail.questions.askLabel": "Ask something in public",
+  "directory.detail.questions.askPlaceholder":
+    "What would you want to know before you go?",
+  "directory.detail.questions.askHint":
+    "Everyone reading this listing can see your question and the answer.",
+  "directory.detail.questions.askCta": "Ask",
+  "directory.detail.questions.asking": "Sending…",
+  "directory.detail.questions.successToast": "Your question is up.",
+  "directory.detail.questions.errorGeneric":
+    "Couldn't send your question. Please try again.",
+  "directory.detail.questions.signInPrompt":
+    "Sign in to ask this space a question.",
+  "directory.detail.questions.signInCta": "Sign in",
+  "directory.detail.questions.ownerNote":
+    "This is your listing. Answer any question below and your reply shows up here for everyone.",
+  "directory.detail.questions.awaitingAnswer": "No answer yet.",
+  "directory.detail.questions.answeredByOwner": "{name} answered",
+  "directory.detail.questions.answeredByModerator": "QueerPulse moderator",
+  "directory.detail.questions.moderatorNote":
+    "A QueerPulse moderator wrote this answer. The business has stayed quiet here so far.",
+  "directory.detail.questions.answerCta": "Answer",
+  "directory.detail.questions.editAnswerCta": "Edit answer",
+  "directory.detail.questions.answerPlaceholder":
+    "Answer this question in public…",
+  "directory.detail.questions.answerSave": "Post answer",
+  "directory.detail.questions.answerSaving": "Posting…",
+  "directory.detail.questions.answerCancel": "Cancel",
+  "directory.detail.questions.answerSuccessToast": "Your answer is up.",
+  "directory.detail.questions.answerErrorToast":
+    "Couldn't post your answer. Please try again.",
+  "directory.detail.questions.cardAria": "Question from {name}",
+  "directory.detail.questions.seeAll": "See all questions",
+  "directory.detail.questions.loadMore": "Load more questions",
+  "directory.detail.questions.loadingMore": "Loading…",
+  "directory.detail.questions.loadError":
+    "Couldn't load the rest of the questions. Please try again.",
   "directory.detail.suggestEdit.cta": "Suggest an edit",
   "directory.detail.suggestEdit.ariaLabel": "Suggest an edit for {name}",
   "directory.detail.suggestEdit.title": "Suggest an edit",
@@ -4900,6 +5395,33 @@ export const marketing: Catalog = {
     "Thanks. We'll pass it along to the owner.",
   "directory.detail.suggestEdit.errorToast":
     "Couldn't send your suggestion. Please try again.",
+  // The optional typed replacement value. `other` maps to no listing column,
+  // so it takes prose only and the input is never offered for it.
+  "directory.detail.suggestEdit.value.optional": "(optional)",
+  "directory.detail.suggestEdit.value.hint":
+    "Leave it blank if you only know something is off. The note on its own is still useful.",
+  "directory.detail.suggestEdit.value.rejected":
+    "That value wasn't accepted: {reason}",
+  "directory.detail.suggestEdit.value.proseOnly":
+    "For anything else, describe the correction in the note above. This one takes no replacement value.",
+  "directory.detail.suggestEdit.value.hours.label":
+    "What should the hours say instead?",
+  "directory.detail.suggestEdit.value.hours.placeholder":
+    "Tue to Sun, 12:00 to 23:00. Closed Mondays.",
+  "directory.detail.suggestEdit.value.address.label":
+    "What is the right address?",
+  "directory.detail.suggestEdit.value.address.placeholder":
+    "Rua da Prata 42, 1100-052 Lisboa",
+  "directory.detail.suggestEdit.value.phone.label":
+    "What is the right phone number?",
+  "directory.detail.suggestEdit.value.phone.placeholder": "+351 21 000 0000",
+  "directory.detail.suggestEdit.value.website.label":
+    "What is the right website?",
+  "directory.detail.suggestEdit.value.website.placeholder": "https://example.pt",
+  "directory.detail.suggestEdit.value.description.label":
+    "What should the description say instead?",
+  "directory.detail.suggestEdit.value.description.placeholder":
+    "One line on what the place is.",
   "directory.detail.contest.cta": "Suggest an edit or claim this listing",
   "directory.detail.contest.ariaLabel": "Suggest an edit or claim {name}",
   "directory.detail.contest.title": "Suggest an edit or claim this listing",
@@ -4970,7 +5492,7 @@ export const marketing: Catalog = {
   "directory.detail.trust.howLink": "How verification works",
   "directory.detail.whoRunsIt": "Who runs it",
   "directory.detail.onQueerPulse": "On QueerPulse",
-  "directory.detail.communityVouched": "Community-vouched",
+  "directory.detail.addedByMember": "Added by a member",
   "directory.detail.viewProfile": "View {name}'s profile",
   "directory.detail.savedByMembers_one": "Saved by {count} member",
   "directory.detail.savedByMembers_other": "Saved by {count} members",

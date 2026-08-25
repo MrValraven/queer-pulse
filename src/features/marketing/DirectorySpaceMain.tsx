@@ -1,168 +1,63 @@
-import { Translation } from "../../shared/i18n/Translation";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  type DirectoryPlace,
-  hoursRows,
-  openStatus,
-  realHoursRows,
-  zonedNow,
-} from "./directoryPlaces";
+import { type DirectoryPlace } from "./directoryPlaces";
+import { DirectoryHoursSection } from "./DirectoryHoursSection";
+import { DirectoryVisitSection } from "./DirectoryVisitSection";
+import { DirectoryAboutSection } from "./DirectoryAboutSection";
+import { DirectoryServicesSection } from "./DirectoryServicesSection";
+import { DirectoryAccessSection } from "./DirectoryAccessSection";
+import { DirectoryQuestionsSection } from "./DirectoryQuestionsSection";
 import { DirectoryReviewsSection } from "./DirectoryReviewsSection";
-import s from "./DirectorySpacePage.module.css";
-
-const Check = () => (
-  <svg viewBox="0 0 24 24">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-const Dash = () => (
-  <svg viewBox="0 0 24 24">
-    <line x1={5} y1={12} x2={19} y2={12} />
-  </svg>
-);
 
 interface Props {
   place: DirectoryPlace;
-  /** Moderation preview: hide the interactive review form (read-only view). */
+  /** Moderation preview: hide the interactive review form and the navigation
+   *  call to action (read-only view). */
   preview?: boolean;
-  /** The viewer's own ref for this listing, present only when they own it —
-   * see `DirectorySpacePage`. Threaded down to show owner-reply compose
+  /** The viewer's own ref for this listing, present only when they own it.
+   * See `DirectorySpacePage`. Threaded down to show owner-reply compose
    * controls; undefined (non-owner, or preview) keeps reviews read-only. */
   ownerRef?: string;
 }
 
+/**
+ * The detail page's main column, in the order a member actually decides in.
+ *
+ * The page used to serve two readers at equal weight, and the owner won: their
+ * story, bio and portrait held a whole card while the answers a visitor came
+ * for were scattered around it. This column now answers the visitor's
+ * questions in the order they ask them, and the owner's story became the trust
+ * layer in the aside underneath.
+ *
+ * 1. Is it open? The live status chip, the weekly grid, the dated
+ *    exceptions and the freshness stamp, all unchanged and now first.
+ * 2. Where is it, and how do I reach it? The map, address, every contact
+ *    route and the primary call to action, moved up out of the aside.
+ * 3. What is it? The owner's description and their amenity list, then what
+ *    it costs: the itemised services behind the header's price band.
+ * 4. Can I get in? Accessibility and languages, promoted out of two grey
+ *    rows at the bottom of a sidebar card into a section of their own.
+ * 5. What is still unclear? The public questions members put to the business,
+ *    and the answers that came back. Sits between the listing's own words and
+ *    other members' verdicts, because that is where an unanswered detail
+ *    surfaces.
+ * 6. What do people say? The reviews, the longest block and the last one,
+ *    because nobody scrolls past it to find the address any more.
+ *
+ * On a phone this order IS the page: one column, top to bottom, exactly as
+ * listed. That is what the order was chosen for.
+ */
 export function DirectorySpaceMain({ place, preview = false, ownerRef }: Props) {
-  const { t } = useTranslation();
-  const hasRealHours = place.hours != null && Object.keys(place.hours).length > 0;
-  const rows = hasRealHours ? realHoursRows(place.hours!) : hoursRows(place.hoursType);
-  // Evaluate "today" and open/closed against the VENUE's clock, not the
-  // visitor's browser timezone (Europe/Lisbon by default) — see `zonedNow`.
-  const venueNow = zonedNow(place.timezone);
-  const todayIdx = (venueNow.getDay() + 6) % 7;
-  // With no reviews yet, the "what members say" framing claims a consensus
-  // that doesn't exist — present the same checklist honestly as what the
-  // place declares it offers. The subline underneath is always attributed to
-  // the owner (see goodForSub), never to review count: these tags are set
-  // once at listing creation, not mined from reviews.
-  const hasReviews = place.rating.count > 0;
-
-  const hasWhatItIs = place.whatItIs.length > 0;
-  const hasGoodFor = place.goodFor.length > 0;
-
   return (
     <div>
-      {hasWhatItIs && (
-        <section className={s.sec}>
-          <h2>
-            <Translation
-              i18nKey="marketing:directory.detail.whatItIsTitle"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          {place.whatItIs.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </section>
-      )}
-
-      {hasGoodFor && (
-        <section className={s.sec}>
-          <h2>
-            <Translation
-              i18nKey={
-                hasReviews
-                  ? "marketing:directory.detail.goodForTitle"
-                  : "marketing:directory.detail.offersTitle"
-              }
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={s.subLine}>
-            {t("marketing:directory.detail.goodForSub", {
-              name: place.owner.first,
-            })}
-          </p>
-          <div className={s.features}>
-            {place.goodFor.map((feature) => (
-              <div
-                key={feature.label}
-                className={[s.feature, !feature.yes && s.featureMaybe]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <div className={s.featureIc}>
-                  {feature.yes ? <Check /> : <Dash />}
-                </div>
-                {feature.label}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {!place.online && (
-        <section className={s.sec}>
-          <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
-          <p className={s.subLine}>{place.hoursNote}</p>
-          {hasRealHours &&
-            (() => {
-              const status = openStatus(place.hours, venueNow);
-              if (status.state === "unknown") return null;
-              return (
-                <span
-                  className={
-                    status.state === "open" ? s.openChip : s.closedChip
-                  }
-                >
-                  {t(
-                    status.state === "open"
-                      ? "marketing:directory.detail.openNow"
-                      : "marketing:directory.detail.closedNow",
-                  )}
-                </span>
-              );
-            })()}
-          {!hasRealHours && place.hoursType === "appointment" ? (
-            <div className={s.apptNote}>
-              <div className={s.featureIc}>
-                <svg viewBox="0 0 24 24">
-                  <circle cx={12} cy={12} r={9} />
-                  <path d="M12 7v5l3 2" />
-                </svg>
-              </div>
-              {place.hoursNote}
-            </div>
-          ) : (
-            <div className={s.hoursTable}>
-              {rows.map((row, index) => (
-                <div
-                  key={row.dayKey}
-                  className={[
-                    s.hoursRow,
-                    index === todayIdx && s.hoursToday,
-                    row.closed && s.hoursClosed,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                >
-                  <span className={s.hoursDay}>
-                    {t(`marketing:directory.days.${row.dayKey}`)}
-                    {index === todayIdx && (
-                      <span className={s.todayTag}>
-                        {t("marketing:directory.detail.today")}
-                      </span>
-                    )}
-                  </span>
-                  <span>
-                    {row.val ?? t("marketing:directory.detail.hoursClosed")}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-      )}
-
+      <DirectoryHoursSection place={place} />
+      <DirectoryVisitSection place={place} preview={preview} />
+      <DirectoryAboutSection place={place} />
+      <DirectoryServicesSection place={place} />
+      <DirectoryAccessSection place={place} />
+      <DirectoryQuestionsSection
+        place={place}
+        preview={preview}
+        ownerRef={ownerRef}
+      />
       <DirectoryReviewsSection
         place={place}
         preview={preview}

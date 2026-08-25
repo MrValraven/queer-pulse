@@ -54,6 +54,13 @@ const TYPE_SHORT: Record<CommunityType, string> = {
   professional: "Professional",
 };
 
+/** The short grid label a card shows for a community type. Exported so the
+ *  edit modal's live card preview labels the letterhead exactly the way the
+ *  saved card will, instead of re-deriving its own wording. */
+export function shortTypeLabel(type: CommunityType): string {
+  return TYPE_SHORT[type] ?? "Community";
+}
+
 /** Join-CTA label per access tier, matching the mock grid copy. */
 function joinLabelFor(tier: AccessTier, translate: TFunction): string {
   return tier === "public"
@@ -121,7 +128,7 @@ export function cardDtoToCommunity(
     slug: dto.slug,
     href: `/community/${dto.slug}`,
     type: dto.type,
-    typeLabel: TYPE_SHORT[dto.type] ?? "Community",
+    typeLabel: shortTypeLabel(dto.type),
     name: dto.name,
     description: dto.tagline,
     count:

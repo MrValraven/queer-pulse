@@ -40,6 +40,12 @@ export function useSubmitReview(slug: string) {
           stars: input.stars,
           text: input.text,
           helpful: 0,
+          createdAt: new Date().toISOString(),
+          editedAt: null,
+          isEditedAfterOwnerReply: false,
+          // In demo mode `useUploadImage` hands back a local blob preview as
+          // its "key", so the attached photo is already displayable as-is.
+          photoUrl: input.photo || null,
         };
         return demoReview;
       }

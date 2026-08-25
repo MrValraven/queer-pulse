@@ -1,0 +1,51 @@
+/* ── Queer-owned verification provenance ────────────────────────────────────
+   Sits directly under the badge it explains, so a reader can check the claim
+   where they meet it. Deliberately quiet: the badge is the statement, this is
+   the evidence behind it, and it reads as the sibling of the safe-space
+   block's "verified by X, re-checked on Y" line further down the page. */
+.provenance {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 11px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+  background: rgba(var(--jade-rgb), 0.05);
+  max-width: 70ch;
+}
+.icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-tag);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+.icon svg {
+  width: 13px;
+  height: 13px;
+}
+.body {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.line {
+  margin: 0;
+}
+.line strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.basis {
+  margin: 3px 0 0;
+  text-wrap: pretty;
+}
+.renewal {
+  margin: 3px 0 0;
+}

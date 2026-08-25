@@ -5,12 +5,12 @@ import { TableMenuCard } from "./TableBlocks";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
 
 /**
- * Task 3b fix round 1: `TableMenuCard` is the table skin's (chef/mixologist)
- * stand-in for the generic `SubprofileSpotlight` (see `SubprofilePageBody`'s
- * `skin === "table" && courses.length > 0` branch), so it needs the SAME
- * `WorkRightsFooter` `SubprofileSpotlight` itself carries. Only
- * `TestProviders` for the lazy `subprofiles` catalog, so translated text
- * comes via `findBy*`.
+ * `TableMenuCard` is the table skin's (chef/mixologist) stand-in for the
+ * generic `SubprofileSpotlight` (see `SubprofilePageBody`'s
+ * `skin === "table" && courses.length > 0` branch), and like that component it
+ * carries no copyright footer of its own: the persona page shows one
+ * `PersonaRightsFooter` at the end instead. Only `TestProviders` for the lazy
+ * `subprofiles` catalog, so translated text comes via `findBy*`.
  */
 const MENU_ITEM = {
   id: "item-tasting-menu",
@@ -46,32 +46,14 @@ const MENU_ITEM = {
 } satisfies SubprofileItemView;
 
 describe("TableMenuCard", () => {
-  it("renders WorkRightsFooter's copyright text when interactive", async () => {
+  it("renders the menu without a copyright footer", async () => {
     render(
       <TestProviders>
-        <TableMenuCard
-          featured={MENU_ITEM}
-          authorName="Chef Rui"
-          interactive
-        />
+        <TableMenuCard featured={MENU_ITEM} />
       </TestProviders>,
     );
 
-    expect(await screen.findByText(/All rights reserved/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Chef Rui/)).toBeInTheDocument();
-  });
-
-  it("does not render the footer in the editor's docked preview (interactive=false)", () => {
-    render(
-      <TestProviders>
-        <TableMenuCard
-          featured={MENU_ITEM}
-          authorName="Chef Rui"
-          interactive={false}
-        />
-      </TestProviders>,
-    );
-
+    expect(await screen.findByText("Tasting Menu")).toBeInTheDocument();
     expect(screen.queryByText(/All rights reserved/i)).not.toBeInTheDocument();
   });
 });

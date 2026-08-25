@@ -6,6 +6,8 @@ import {
   type PendingListing,
   type PhotoKey,
 } from "../listBusiness/listBusiness.data";
+import { normalizeAccessibilityAnswers } from "../listBusiness/listingAccessibility.data";
+import { servicesForPayload } from "../listBusiness/listingServices.data";
 import type { DirectoryCardDTO, DirectoryDetailDTO } from "./directory.api";
 
 /**
@@ -34,6 +36,10 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     longitude: dto.longitude,
     safeSpaceStatus: dto.safeSpaceStatus ?? "none",
     safeSpaceTier: dto.safeSpaceTier ?? null,
+    // A temporarily closed or moved business still appears in results, so the
+    // card carries its state too. Absent on older payloads → left undefined
+    // and read through `operatingStateOf`, which defaults to "open".
+    operatingState: dto.operatingState,
     // detail-only fields — unused by the grid, filled by the detail fetch
     tagline: "",
     pills: [],
@@ -100,6 +106,13 @@ export function detailDtoToPlace(
     gallery: dto.gallery,
     whatItIs: dto.whatItIs,
     goodFor: dto.goodFor,
+    // Optional on the wire: a payload predating the accessibility/services/
+    // baseline work simply carries none of them, and every consumer treats an
+    // absent block as "this listing has said nothing" rather than as a "no".
+    accessibility: dto.accessibility,
+    services: dto.services ?? [],
+    affirmingBaseline: dto.affirmingBaseline,
+    queerOwnedVerification: dto.queerOwnedVerification,
     hoursType: dto.hoursType,
     hoursNote: dto.hoursNote,
     owner: dto.owner,
@@ -108,9 +121,19 @@ export function detailDtoToPlace(
     photos: dto.photos,
     alt: dto.alt,
     hours: dto.hours ? normalizeHours(dto.hours) : dto.hours,
+    // Every field below is optional on the wire: a payload predating the
+    // operating-state work simply has none of them, and the page then reads
+    // as a plain open listing exactly as it did before.
+    hoursExceptions: dto.hoursExceptions ?? [],
+    operatingState: dto.operatingState,
+    movedToListing: dto.movedToListing ?? null,
+    detailsConfirmedAt: dto.detailsConfirmedAt ?? null,
     langs: dto.langs,
     savedCount: dto.savedCount,
     reviews: dto.reviews,
+    // Optional on the wire (a payload predating the public-questions work has
+    // none) — an absent block reads as "nobody has asked anything yet".
+    questions: dto.questions ?? [],
     upcoming: dto.upcoming.map((event) => {
       const startAt = new Date(event.startAt);
       return {
@@ -153,7 +176,12 @@ export function tintForSlug(slug: string): Tint {
 /** First word of a free-text owner name, for the "run by <first>" line.
  * Mirrors the backend's `ownerFirstName`. */
 function ownerFirstNameOf(ownerName: string): string {
-  return ownerName.trim().split(/[\s&·]+/).filter(Boolean)[0] ?? "";
+  return (
+    ownerName
+      .trim()
+      .split(/[\s&·]+/)
+      .filter(Boolean)[0] ?? ""
+  );
 }
 
 interface SubmittedOwnerIdentity {
@@ -168,7 +196,9 @@ interface SubmittedOwnerIdentity {
  * chosen in the listing wizard — mirrors the backend's `ownerIdentity`, which
  * is the real boundary for live listings. Reproduced here so a demo listing's
  * own detail page looks the same regardless of source. */
-function submittedOwnerIdentity(listing: PendingListing): SubmittedOwnerIdentity {
+function submittedOwnerIdentity(
+  listing: PendingListing,
+): SubmittedOwnerIdentity {
   if (listing.visibility === "anon") {
     return { name: "", role: "", bio: "", first: "", inQueerPulse: false };
   }
@@ -258,6 +288,17 @@ export function submittedToPlace(
     ].filter((caption) => caption.length > 0),
     whatItIs: listing.whatItIs.map((line) => line.text),
     goodFor: listing.goodFor.map((id) => ({ label: id, yes: true })),
+    // A draft saved before these fields existed carries neither, so both are
+    // healed rather than read straight: the answer map is filled up to all six
+    // questions and the service rows lose their client-only keys.
+    accessibility: {
+      answers: normalizeAccessibilityAnswers(listing.accessibility?.answers),
+      note: listing.accessibility?.note?.trim() || null,
+    },
+    services: servicesForPayload(listing.services ?? []),
+    // Every listing agrees to the baseline in order to exist, this one
+    // included; the wizard's own agreement is what created it.
+    affirmingBaseline: { isAccepted: true, acceptedAt: null },
     hoursType: "appointment",
     hoursNote: listing.hoursNote,
     owner: {

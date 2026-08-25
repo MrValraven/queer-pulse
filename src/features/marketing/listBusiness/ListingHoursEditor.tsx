@@ -1,15 +1,9 @@
-import { DatePicker, FormField } from "../../../shared/components/ui";
+import { FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import {
-  ANCHOR,
-  DAYS,
-  anyDayOpen,
-  dayHoursValid,
-  isOvernight,
-} from "./listBusiness.data";
+import { ANCHOR, DAYS, anyDayOpen, dayHoursValid } from "./listBusiness.data";
+import { ListingHoursIntervalRows } from "./ListingHoursIntervalRows";
 import type { ListingForm } from "./useListingForm";
 import pageStyles from "./ListBusinessPage.module.css";
-import styles from "./ListingHoursEditor.module.css";
 
 /**
  * Opening-hours editor (item #6). Each day is closed, or open across one or two
@@ -70,7 +64,10 @@ export function ListingHoursEditor({ form }: { form: ListingForm }) {
                 <button
                   type="button"
                   aria-pressed={dayHours.open}
-                  className={[pageStyles.htg, dayHours.open && pageStyles.htgOpen]
+                  className={[
+                    pageStyles.htg,
+                    dayHours.open && pageStyles.htgOpen,
+                  ]
                     .filter(Boolean)
                     .join(" ")}
                   onClick={() => setDayOpen(day.id, !dayHours.open)}
@@ -81,69 +78,16 @@ export function ListingHoursEditor({ form }: { form: ListingForm }) {
                 </button>
 
                 {dayHours.open ? (
-                  <div className={styles.stack}>
-                    {dayHours.intervals.map((interval, index) => (
-                      <div key={index} className={pageStyles.htimes}>
-                        <DatePicker
-                          mode="time"
-                          size="sm"
-                          label={t("marketing:listBusiness.step3.opensAria", {
-                            day: dayLabel,
-                          })}
-                          value={interval.from || null}
-                          onChange={(value) =>
-                            setInterval(day.id, index, { from: value ?? "" })
-                          }
-                        />
-                        <span className={pageStyles.dash}>–</span>
-                        <DatePicker
-                          mode="time"
-                          size="sm"
-                          label={t("marketing:listBusiness.step3.closesAria", {
-                            day: dayLabel,
-                          })}
-                          value={interval.to || null}
-                          onChange={(value) =>
-                            setInterval(day.id, index, { to: value ?? "" })
-                          }
-                        />
-                        {isOvernight(interval) && interval.from && interval.to && (
-                          <span className={styles.nextDay}>
-                            {t("marketing:listBusiness.step3.nextDay")}
-                          </span>
-                        )}
-                        {dayHours.intervals.length === 2 && (
-                          <button
-                            type="button"
-                            className={styles.remove}
-                            aria-label={t(
-                              "marketing:listBusiness.step3.removeHoursAria",
-                              { day: dayLabel },
-                            )}
-                            onClick={() => removeInterval(day.id, index)}
-                          >
-                            ×
-                          </button>
-                        )}
-                      </div>
-                    ))}
-
-                    {dayHours.intervals.length < 2 && (
-                      <button
-                        type="button"
-                        className={styles.add}
-                        onClick={() => addInterval(day.id)}
-                      >
-                        {t("marketing:listBusiness.step3.addHours")}
-                      </button>
-                    )}
-
-                    {invalid && (
-                      <p role="status" className={styles.warn}>
-                        {t("marketing:listBusiness.step3.hoursWarning")}
-                      </p>
-                    )}
-                  </div>
+                  <ListingHoursIntervalRows
+                    intervals={dayHours.intervals}
+                    rowLabel={dayLabel}
+                    isInvalid={invalid}
+                    onChangeInterval={(index, patch) =>
+                      setInterval(day.id, index, patch)
+                    }
+                    onAddInterval={() => addInterval(day.id)}
+                    onRemoveInterval={(index) => removeInterval(day.id, index)}
+                  />
                 ) : (
                   <span className={pageStyles.closedLbl}>
                     {t("marketing:listBusiness.step3.closed")}

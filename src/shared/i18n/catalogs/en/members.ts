@@ -1147,6 +1147,22 @@ export const members: Catalog = {
   "places.deleted": "Listing deleted.",
   "places.viewListingCta": "View listing",
   "places.awaitingReview": "Awaiting review",
+  "places.coManaging": "Co-managing",
+
+  // ── Invitations to help run somebody else's place, answered here because
+  //    this is where an accepted one lands.
+  "places.coManagerInvites.title_one": "1 invitation waiting",
+  "places.coManagerInvites.title_other": "{count} invitations waiting",
+  "places.coManagerInvites.sub":
+    "Someone asked you to help run their place. Take your time: nothing changes until you answer.",
+  "places.coManagerInvites.fromNamed": "Invitation from <b>{name}</b>.",
+  "places.coManagerInvites.from": "An invitation to help run this place.",
+  "places.coManagerInvites.acceptCta": "Accept",
+  "places.coManagerInvites.declineCta": "Decline",
+  "places.coManagerInvites.acceptedToast": "You now help run {listing}.",
+  "places.coManagerInvites.declinedToast": "Invitation declined.",
+  "places.coManagerInvites.error":
+    "We couldn't send your answer. Try again.",
   "places.empty.title": "No places yet",
   "places.empty.description":
     "Run a studio, shop, clinic or space in Lisbon? List it in the directory. Once it's live, it'll show up here too.",

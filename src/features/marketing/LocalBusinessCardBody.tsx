@@ -5,23 +5,74 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { SafeSpaceBadge } from "../safety/SafeSpaceBadge";
 import { categoryLabel } from "./localPlaces";
-import { openStatus, zonedNow, type DirectoryPlace } from "./directoryPlaces";
-import { normalizeDayHours, type DayHours } from "./listBusiness/listBusiness.data";
+import {
+  openStatus,
+  operatingStateOf,
+  zonedNow,
+  type DirectoryPlace,
+} from "./directoryPlaces";
 import s from "./DirectoryPage.module.css";
 
-const WEEK_DAY_IDS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
+/**
+ * The card's one-line trading status.
+ *
+ * A business that is temporarily closed, permanently closed or has moved still
+ * turns up in results, so the card has to say so rather than showing an "Open
+ * till 23:00" line computed from hours that no longer describe anything. The
+ * operating state therefore replaces the live calculation outright instead of
+ * sitting beside it.
+ *
+ * For an open business the live status comes from `openStatus`, which resolves
+ * the venue's own timezone and lets a one-off date exception override the
+ * weekday grid, and which reports the window it is actually inside, so
+ * "closes at" is the real closing time and not merely the last interval of the
+ * day. Renders nothing when there are no hours to reason about.
+ */
+function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
+  const { t } = useTranslation();
+  const operatingState = operatingStateOf(place);
 
-/** Today's closing time ("HH:MM"), or null when closed/unknown/no hours data. */
-function closingTimeToday(
-  hours: Record<string, DayHours> | undefined,
-  now: Date,
-): string | null {
-  if (!hours) return null;
-  const today = normalizeDayHours(
-    hours[WEEK_DAY_IDS[(now.getDay() + 6) % 7]!],
+  if (operatingState !== "open") {
+    return (
+      <span className={`${s.status} ${s.statusFlag}`}>
+        <span className={s.statusDot} />
+        {t(`marketing:directory.card.state.${operatingState}`)}
+      </span>
+    );
+  }
+
+  const status = openStatus(
+    place.hours,
+    zonedNow(place.timezone),
+    place.hoursExceptions,
   );
-  if (!today.open) return null;
-  return today.intervals.at(-1)?.to ?? null;
+  if (status.state === "unknown") return null;
+
+  if (status.state === "closed") {
+    return (
+      <span className={s.status}>
+        <span className={s.statusDot} />
+        {t("marketing:directory.card.closedNow")}
+      </span>
+    );
+  }
+
+  // `closesAt` is always set alongside an "open" state; the null branch below
+  // exists so the copy stays honest rather than because it is expected.
+  const closesAt = status.closesAt;
+  const isClosingSoon = status.isClosingSoon && closesAt !== null;
+  return (
+    <span className={s.status}>
+      <span
+        className={`${s.statusDot} ${isClosingSoon ? s.statusClosingSoon : s.statusOpen}`}
+      />
+      {closesAt === null
+        ? t("marketing:directory.card.openNow")
+        : isClosingSoon
+          ? t("marketing:directory.card.closingSoon", { time: closesAt })
+          : t("marketing:directory.card.openTill", { time: closesAt })}
+    </span>
+  );
 }
 
 /**
@@ -63,9 +114,6 @@ export function LocalBusinessCardBody({
   visitSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
-  const now = zonedNow();
-  const status = openStatus(place.hours, now);
-  const closesAt = closingTimeToday(place.hours, now);
 
   return (
     <>
@@ -81,7 +129,9 @@ export function LocalBusinessCardBody({
         />
         {place.safeSpaceStatus === "verified" ? (
           <span className={`${s.photoBadge} ${s.photoBadgeSolid}`}>
-            <SafeSpaceBadge label={t("marketing:directory.card.verifiedBadge")} />
+            <SafeSpaceBadge
+              label={t("marketing:directory.card.verifiedBadge")}
+            />
           </span>
         ) : (
           <span className={`${s.photoBadge} ${s.photoBadgeDark}`}>
@@ -92,28 +142,34 @@ export function LocalBusinessCardBody({
             )}
           </span>
         )}
-        {topRight ?? (saveControl ? (
-          <span
-            role="button"
-            tabIndex={0}
-            aria-pressed={saveControl.saved}
-            aria-label={t(
-              saveControl.saved
-                ? "marketing:directory.card.unsaveAriaLabel"
-                : "marketing:directory.card.saveAriaLabel",
-              { name: place.name },
-            )}
-            className={`${s.saveBtn} ${saveControl.saved ? s.saveBtnOn : ""}`}
-            onClick={saveControl.onSave}
-            onKeyDown={(event) => activateOnKey(event, () => saveControl.onSave(event))}
-          >
-            <FiBookmark aria-hidden fill={saveControl.saved ? "currentColor" : "none"} />
-          </span>
-        ) : (
-          <span className={s.saveBtn} aria-hidden>
-            <FiBookmark aria-hidden fill="none" />
-          </span>
-        ))}
+        {topRight ??
+          (saveControl ? (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-pressed={saveControl.saved}
+              aria-label={t(
+                saveControl.saved
+                  ? "marketing:directory.card.unsaveAriaLabel"
+                  : "marketing:directory.card.saveAriaLabel",
+                { name: place.name },
+              )}
+              className={`${s.saveBtn} ${saveControl.saved ? s.saveBtnOn : ""}`}
+              onClick={saveControl.onSave}
+              onKeyDown={(event) =>
+                activateOnKey(event, () => saveControl.onSave(event))
+              }
+            >
+              <FiBookmark
+                aria-hidden
+                fill={saveControl.saved ? "currentColor" : "none"}
+              />
+            </span>
+          ) : (
+            <span className={s.saveBtn} aria-hidden>
+              <FiBookmark aria-hidden fill="none" />
+            </span>
+          ))}
         {photoOverlay}
       </div>
 
@@ -146,19 +202,14 @@ export function LocalBusinessCardBody({
         )}
       </div>
       <div className={s.foot}>
-        {status.state !== "unknown" && (
-          <span className={s.status}>
-            <span
-              className={`${s.statusDot} ${status.state === "open" ? s.statusOpen : ""}`}
-            />
-            {status.state === "open" && closesAt
-              ? t("marketing:directory.card.openTill", { time: closesAt })
-              : t("marketing:directory.card.closedNow")}
-          </span>
-        )}
+        <DirectoryCardStatus place={place} />
         {showHost && (
           <span className={s.host}>
-            <Avatar initials={place.owner.initials} tint={place.owner.tint} size={20} />
+            <Avatar
+              initials={place.owner.initials}
+              tint={place.owner.tint}
+              size={20}
+            />
             {place.owner.first}
           </span>
         )}

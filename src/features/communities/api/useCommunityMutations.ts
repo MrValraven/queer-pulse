@@ -275,6 +275,11 @@ export function useSetMemberRole(slug: string) {
       void queryClient.invalidateQueries({ queryKey: ["roster", slug] });
       void queryClient.invalidateQueries({ queryKey: ["community", slug] });
       void queryClient.invalidateQueries({ queryKey: ["my-communities"] });
+      // Membership cards print the holder's CURRENT roster role, read live by
+      // the backend rather than snapshotted at issue. Without this, a member
+      // promoted here keeps their old role on an already-loaded holders
+      // roster until that query goes stale on its own.
+      void queryClient.invalidateQueries({ queryKey: ["card-holders", slug] });
     },
   });
 }

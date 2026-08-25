@@ -1,35 +1,39 @@
-import type { ReactElement } from "react";
 import { useParams } from "react-router-dom";
-import { FiCheckCircle, FiClock, FiSlash, FiXCircle } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { SkeletonLine } from "../../shared/components/ui";
+import { Spinner } from "../../shared/components/ui";
 import { PageMeta } from "../../shared/seo";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCardVerification } from "./api/useCardVerification";
-import type { EffectiveCardStatus } from "./api/cards.api";
+import { CardVerifyFailure } from "./CardVerifyFailure";
+import { CardVerifyResult } from "./CardVerifyResult";
+import { STATUS_TONE } from "./cardVerify.data";
 import styles from "./CardVerifyPage.module.css";
-
-const STATUS_ICON: Record<EffectiveCardStatus, ReactElement> = {
-  active: <FiCheckCircle aria-hidden="true" />,
-  expired: <FiClock aria-hidden="true" />,
-  suspended: <FiXCircle aria-hidden="true" />,
-  revoked: <FiSlash aria-hidden="true" />,
-};
 
 /**
  * What a scanned card resolves to. Public and logged-out on purpose: the
  * point of a membership card is that a stranger at a door can check it
  * without holding a QueerPulse account.
  *
- * Every failure renders the same "could not be verified" result. The backend
- * already collapses bad signature, expired token, and unknown card into one
- * 404, and this page must not re-open that distinction. The DTO never
- * carries a revocation reason, so none is rendered here either.
+ * The page gives one of four answers, and the panel's tone carries which:
+ * a card that stands (jade), a card that no longer does (amber or coral), a
+ * code that resolves to nothing (coral), and a check that never happened
+ * (neutral). The last of those is the one worth keeping separate: the backend
+ * collapses bad signature, expired token and unknown card into a single 404 so
+ * nothing leaks about the platform's card population, but a device that never
+ * got a response has not been told anything at all, and a door must not read
+ * its own lost signal as a refusal.
  */
 export function CardVerifyPage() {
   const { t } = useTranslation();
   const { token } = useParams<{ token: string }>();
-  const { verification, isLoading, isInvalid } = useCardVerification(token);
+  const { verification, isLoading, isInvalid, failure, retry, isRetrying } =
+    useCardVerification(token);
+
+  const tone = verification
+    ? STATUS_TONE[verification.status]
+    : failure === "unverified"
+      ? "bad"
+      : "neutral";
 
   return (
     <PageShell>
@@ -39,73 +43,22 @@ export function CardVerifyPage() {
           surfacing it at all, mirroring SubprofilePage's use of the same
           flag for the same reason. */}
       <PageMeta title={t("cards:verify.metaTitle")} noIndex />
-      <div className={styles.page}>
-        <div className={styles.panel}>
+      <div className={styles.page} data-tone={tone}>
+        <article className={styles.panel}>
           {isLoading ? (
-            <SkeletonLine height={180} />
-          ) : isInvalid || !verification ? (
-            <p className={`${styles.result} ${styles.bad}`} role="status">
-              <FiXCircle aria-hidden="true" /> {t("cards:verify.unverified")}
+            <p className={styles.checking}>
+              <Spinner /> {t("cards:verify.checking")}
             </p>
+          ) : verification ? (
+            <CardVerifyResult verification={verification} />
           ) : (
-            <>
-              <p
-                className={`${styles.result} ${
-                  verification.status === "active" ? styles.good : styles.bad
-                }`}
-                role="status"
-              >
-                {STATUS_ICON[verification.status]}{" "}
-                {t(`cards:verify.status.${verification.status}`)}
-              </p>
-              {/* Pronouns beside the name, exactly as the card prints them,
-                  so whoever just scanned it can address the person in front of
-                  them correctly. Present only when the card itself carries
-                  them: this page never says more about a holder than the
-                  object in the verifier's hand does. */}
-              <p className={styles.holder}>
-                {verification.holderName}
-                {verification.holderPronouns ? (
-                  <span className={styles.holderPronouns}>
-                    {" "}
-                    ({verification.holderPronouns})
-                  </span>
-                ) : null}
-              </p>
-              <p className={styles.issuer}>{verification.issuerName}</p>
-              <dl className={styles.meta}>
-                <div>
-                  <dt>{t("cards:verify.role")}</dt>
-                  <dd>{t(`cards:role.${verification.role}`)}</dd>
-                </div>
-                <div>
-                  <dt>{t("cards:verify.serial")}</dt>
-                  <dd>{verification.serial}</dd>
-                </div>
-                <div>
-                  <dt>{t("cards:verify.memberSince")}</dt>
-                  <dd>{new Date(verification.memberSince).getFullYear()}</dd>
-                </div>
-              </dl>
-
-              {/* One permanent code serves both a phone screen and a printed
-                  card, so this page cannot tell which it just resolved. That
-                  makes the face on the card the only thing binding it to a
-                  person, and this says whether there is one to check.
-
-                  Only for a card that is currently good: telling a door how
-                  to check the face on a revoked card is an instruction with
-                  no purpose. */}
-              {verification.status === "active" && (
-                <p className={styles.check}>
-                  {verification.hasPhoto
-                    ? t("cards:verify.checkPhoto")
-                    : t("cards:verify.checkNoPhoto")}
-                </p>
-              )}
-            </>
+            <CardVerifyFailure
+              kind={isInvalid && failure ? failure : "unverified"}
+              onRetry={retry}
+              isRetrying={isRetrying}
+            />
           )}
-        </div>
+        </article>
       </div>
     </PageShell>
   );

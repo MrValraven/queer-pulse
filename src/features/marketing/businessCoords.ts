@@ -6,6 +6,9 @@
  * are omitted so they stay list-only. Values are hand-placed from the real
  * street addresses; refine against the rendered map in slice 3.
  */
+import type { Coordinates } from "./geoDistance";
+import type { DirectoryPlace } from "./directoryPlaces";
+
 export const BUSINESS_COORDS: Record<
   string,
   { latitude: number; longitude: number }
@@ -22,3 +25,20 @@ export const BUSINESS_COORDS: Record<
   "clinica-da-estrela": { latitude: 38.713, longitude: -9.16 },
   "galeria-lume": { latitude: 38.736, longitude: -9.105 },
 };
+
+/**
+ * Where a place actually sits, in the one fallback order the whole directory
+ * agrees on: the listing's own pin first (live listings carry it on the DTO),
+ * then the hand-placed demo table above, keyed by slug.
+ *
+ * Returns `null` when neither exists: an online-only business, or a listing
+ * with no location at all. Callers must treat that as "not on the map" and
+ * never substitute a placeholder point, which would put a real pin somewhere
+ * the business has never been.
+ */
+export function placeCoordinates(place: DirectoryPlace): Coordinates | null {
+  if (place.latitude != null && place.longitude != null) {
+    return { latitude: place.latitude, longitude: place.longitude };
+  }
+  return BUSINESS_COORDS[place.slug] ?? null;
+}

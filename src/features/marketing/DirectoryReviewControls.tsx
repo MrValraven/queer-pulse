@@ -3,8 +3,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { ReviewSort, ReviewStarFilter } from "./reviewSort";
 import s from "./DirectorySpacePage.module.css";
 
-const SORT_OPTIONS: ReviewSort[] = ["helpful", "highest", "lowest"];
+const SORT_OPTIONS: ReviewSort[] = ["newest", "helpful", "highest", "lowest"];
 const SORT_LABEL_KEYS: Record<ReviewSort, string> = {
+  newest: "marketing:directory.detail.reviews.sortNewest",
   helpful: "marketing:directory.detail.reviews.sortHelpful",
   highest: "marketing:directory.detail.reviews.sortHighest",
   lowest: "marketing:directory.detail.reviews.sortLowest",

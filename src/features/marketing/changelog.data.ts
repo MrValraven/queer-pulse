@@ -90,6 +90,76 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "listing-pages-rebuild",
+        category: "feature",
+        date: "25 Aug 2026",
+        ...entryKeys("listing-pages-rebuild"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "listing-owner-control",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("listing-owner-control"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "persona-banner-framing",
+        category: "improvement",
+        date: "24 Aug 2026",
+        ...entryKeys("persona-banner-framing"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "card-check-page-rebuild",
+        category: "improvement",
+        date: "24 Aug 2026",
+        ...entryKeys("card-check-page-rebuild"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
+        id: "persona-rights-footer-once",
+        category: "improvement",
+        date: "24 Aug 2026",
+        ...entryKeys("persona-rights-footer-once"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "community-card-live-preview",
+        category: "improvement",
+        date: "24 Aug 2026",
+        ...entryKeys("community-card-live-preview"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "card-co-owner-role",
+        category: "fix",
+        date: "24 Aug 2026",
+        ...entryKeys("card-co-owner-role"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
         id: "profile-community-cards",
         category: "improvement",
         date: "23 Aug 2026",

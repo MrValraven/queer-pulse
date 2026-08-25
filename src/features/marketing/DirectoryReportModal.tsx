@@ -6,25 +6,44 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { logError } from "../../shared/observability/logger";
 import { REASON_LABEL_KEYS, type ReasonCode } from "../safety/reportReasons";
 import { REVIEW_REPORT_REASONS, useReportReview } from "./api/useReportReview";
-import styles from "./DirectoryReviewReportModal.module.css";
+import { useReportQuestion } from "./api/useReportQuestion";
+import styles from "./DirectoryReportModal.module.css";
+
+/** Which kind of member-authored content is being reported. Both file through
+ *  the same `POST /reports` pipeline and offer the same reasons; only the
+ *  subject type and the heading copy differ. */
+export type DirectoryReportSubject = "review" | "question";
 
 interface Props {
-  /** The review's own uuid — the report's `subjectId`. */
-  reviewId: string;
-  /** The reviewer's display name, for the heading. */
-  reviewerName: string;
+  /** The subject's own uuid — the report's `subjectId`. */
+  subjectId: string;
+  subjectKind: DirectoryReportSubject;
+  /** The author's display name, for the heading. */
+  authorName: string;
   onClose: () => void;
 }
 
+const TITLE_KEYS: Record<DirectoryReportSubject, string> = {
+  review: "marketing:directory.detail.reportReview.title",
+  question: "marketing:directory.detail.reportQuestion.title",
+};
+const SUB_KEYS: Record<DirectoryReportSubject, string> = {
+  review: "marketing:directory.detail.reportReview.sub",
+  question: "marketing:directory.detail.reportQuestion.sub",
+};
+
 /**
- * "Report this review" (gap-audit HSG-6): pick a reason → real submit → the
- * plum-panel confirmation (or an honest retry panel on failure). Mirrors
- * `forum/ReportReplyModal`'s pick-reason/submit/confirm shape exactly, scoped
- * to a single directory review instead of a forum post/reply.
+ * "Report this" for a directory review or a public question: pick a reason →
+ * real submit → the plum-panel confirmation (or an honest retry panel on
+ * failure). Mirrors `forum/ReportReplyModal`'s pick-reason/submit/confirm shape
+ * exactly. Both subjects share one modal because a question is abusive in the
+ * same ways a review is; only the subject type sent to `POST /reports` and the
+ * heading copy differ.
  */
-export function DirectoryReviewReportModal({
-  reviewId,
-  reviewerName,
+export function DirectoryReportModal({
+  subjectId,
+  subjectKind,
+  authorName,
   onClose,
 }: Props) {
   const { t } = useTranslation();
@@ -32,23 +51,32 @@ export function DirectoryReviewReportModal({
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
     "idle",
   );
+  // Both hooks are plain `useMutation` calls with no side effects until
+  // `.mutate`, so calling both unconditionally keeps hook order stable.
   const reportReview = useReportReview();
+  const reportQuestion = useReportQuestion();
 
-  const firstName = reviewerName.split(" ")[0] ?? reviewerName;
+  const firstName = authorName.split(" ")[0] ?? authorName;
+  const title = t(TITLE_KEYS[subjectKind]);
 
   const submit = () => {
     if (!reason) return;
     setStatus("sending");
-    reportReview.mutate(
-      { reviewId, reasonCode: reason },
-      {
-        onSuccess: () => setStatus("done"),
-        onError: (error) => {
-          logError(error, { scope: "marketing.reportReview" });
-          setStatus("error");
-        },
+    const onSettled = {
+      onSuccess: () => setStatus("done"),
+      onError: (error: Error) => {
+        logError(error, { scope: `marketing.report.${subjectKind}` });
+        setStatus("error");
       },
-    );
+    };
+    if (subjectKind === "question") {
+      reportQuestion.mutate(
+        { questionId: subjectId, reasonCode: reason },
+        onSettled,
+      );
+      return;
+    }
+    reportReview.mutate({ reviewId: subjectId, reasonCode: reason }, onSettled);
   };
 
   if (status === "done") {
@@ -56,7 +84,7 @@ export function DirectoryReviewReportModal({
       <ModalSheet
         onClose={onClose}
         success
-        ariaLabel={t("marketing:directory.detail.reportReview.title")}
+        ariaLabel={title}
       >
         <div className={styles.confirm}>
           <span className={styles.confirmIcon} aria-hidden>
@@ -85,7 +113,7 @@ export function DirectoryReviewReportModal({
     return (
       <ModalSheet
         onClose={onClose}
-        ariaLabel={t("marketing:directory.detail.reportReview.title")}
+        ariaLabel={title}
       >
         <div className={styles.errorPanel}>
           <span className={styles.errorIcon} aria-hidden>
@@ -113,13 +141,11 @@ export function DirectoryReviewReportModal({
   return (
     <ModalSheet
       onClose={onClose}
-      ariaLabel={t("marketing:directory.detail.reportReview.title")}
+      ariaLabel={title}
     >
-      <h2 className={styles.title}>
-        {t("marketing:directory.detail.reportReview.title")}
-      </h2>
+      <h2 className={styles.title}>{title}</h2>
       <p className={styles.sub}>
-        {t("marketing:directory.detail.reportReview.sub", { name: firstName })}
+        {t(SUB_KEYS[subjectKind], { name: firstName })}
       </p>
       <div
         className={styles.reasons}

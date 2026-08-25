@@ -1167,6 +1167,11 @@ export const communities: Catalog = {
   "edit.rules.remove": "Remover regra",
   "edit.toast.saved": "Alterações guardadas",
   "edit.toast.error": "Não foi possível guardar as alterações. Tenta de novo.",
+  "edit.preview.title": "O teu cartão",
+  "edit.preview.hint":
+    "É assim que a tua comunidade aparece no Descobrir e nos perfis das pessoas. Atualiza-se enquanto escreves.",
+  "edit.preview.namePlaceholder": "A tua comunidade",
+  "edit.preview.taglinePlaceholder": "A tua frase de assinatura aparece aqui.",
 
   // ── Descobrir: filtro de etiquetas ────────────────────────────────────────
   "discover.filter.tagsTitle": "Etiquetas",

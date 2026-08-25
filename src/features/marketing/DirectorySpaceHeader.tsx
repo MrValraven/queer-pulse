@@ -3,6 +3,7 @@ import { type DirectoryPlace } from "./directoryPlaces";
 import { categoryLabel } from "./localPlaces";
 import { Stars } from "./DirectoryStars";
 import { DirectoryActionBar } from "./DirectoryActionBar";
+import { DirectoryQueerOwnedProvenance } from "./DirectoryQueerOwnedProvenance";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -83,6 +84,11 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
                 </span>
               )}
             </div>
+            {/* Directly under the badge it explains: who confirmed the
+                queer-owned claim, when, and on what basis, so a reader can
+                check it where they meet it. Renders nothing unless the badge
+                currently applies AND there is provenance on record. */}
+            <DirectoryQueerOwnedProvenance place={place} />
           </div>
           <div className={s.spaceHeadActions}>
             <DirectoryActionBar place={place} preview={preview} />
