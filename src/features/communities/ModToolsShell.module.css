@@ -1,0 +1,129 @@
+/* The mod console: a section rail on the left, one pane on the right.
+   The community's own right-hand sidebar is suppressed while this tab is open
+   (see CommunityDetailPage), so the shell gets the full page width rather than
+   squeezing a third column into what was already a 1fr/300px split. */
+.shell {
+  display: grid;
+  grid-template-columns: 216px minmax(0, 1fr);
+  gap: 40px;
+  align-items: flex-start;
+  margin-top: 22px;
+}
+
+/* Doubled specificity: this restyles the shared <Tabs> pill row into a
+   vertical rail, and both classes land on the same element, so a single class
+   would depend on stylesheet order to win. */
+.rail.rail {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 2px;
+  position: sticky;
+  top: 90px;
+}
+
+.rail.rail > button {
+  justify-content: space-between;
+  border-radius: 11px;
+  padding: 10px 13px;
+  text-align: left;
+}
+
+.pane {
+  min-width: 0;
+}
+
+/* A pane's own heading is the first thing in it now, so the top margin those
+   section labels carried to separate them from the section above is dead
+   space here. Two rules because some sections return their label as a bare
+   fragment child and others wrap it in a spacing <div> first. */
+.pane > :first-child,
+.pane > :first-child > :first-child {
+  margin-top: 0;
+}
+
+/* ── Overview: what needs attention ──────────────────────────────────────── */
+.attention {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.attentionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  color: var(--text-strong);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.16s var(--ease),
+    background 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .attentionRow:hover {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    background: var(--wash);
+  }
+}
+
+.attentionLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.attentionRow svg {
+  flex: none;
+  width: 17px;
+  height: 17px;
+  color: var(--ink-40);
+}
+
+.attentionCount {
+  flex: none;
+  min-width: 22px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--text-strong);
+}
+
+@media (--mobile) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    margin-top: 16px;
+  }
+  /* The rail is the console's only navigation, so on mobile it becomes a
+     horizontally scrolling chip row above the pane rather than disappearing
+     the way the page's other sidebars do. */
+  .rail.rail {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .rail.rail::-webkit-scrollbar {
+    display: none;
+  }
+  .rail.rail > button {
+    flex: none;
+  }
+}

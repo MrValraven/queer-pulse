@@ -398,7 +398,7 @@ export interface IssueResponse {
   number: string;
   title: string;
   dek: string;
-  publishedOn: string;
+  publishedOn: string | null;
   coverUrl: string | null;
 }
 

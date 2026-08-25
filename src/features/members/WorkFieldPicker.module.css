@@ -1,0 +1,25 @@
+/* Default styling for the shared work picker's own sub-headings. Host surfaces
+   that already have a label style (the profile editor, Settings → Interests)
+   pass `headingClassName` and never see these. */
+.head {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+/* Separates the profession group from the field chips above it. A wrapper
+   rather than a second class on the heading, so it never collides with the
+   host's own heading margin. */
+.professionGroup {
+  margin-top: 18px;
+}
+
+.prompt {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-40);
+  font-style: italic;
+  margin: 0;
+  max-width: 46ch;
+}

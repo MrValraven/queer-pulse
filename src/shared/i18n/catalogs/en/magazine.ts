@@ -634,6 +634,14 @@ export const magazine: Catalog = {
   "desk.header.viewingAs": "Viewing as",
   "desk.header.viewingAsEditorAria": "Viewing as editor",
   "desk.header.commissionCta": "Commission",
+  "desk.header.writeCta": "Write",
+
+  // ── Write (a piece the editor writes themselves) ─────────────────────────
+  "desk.write.untitledTitle": "Untitled piece",
+  "desk.write.editorNotReady":
+    "Still loading your editor profile. Try again in a moment.",
+  "desk.write.noSection":
+    "No sections are set up yet, so there is nowhere for this piece to run.",
   "desk.header.produce": "Issue production",
   "desk.header.slotsFilledAria": "Issue slots filled",
   "desk.header.layoutAria": "Desk layout",
@@ -679,6 +687,8 @@ export const magazine: Catalog = {
   "desk.newIssue.numberLabel": "Number",
   "desk.newIssue.numberHelper": "Digits only. \u201c1\u201d becomes \u201c01\u201d.",
   "desk.newIssue.publishesLabel": "Publishes",
+  "desk.newIssue.publishesHelper":
+    "Optional. Leave it open and set the date when you know it.",
   "desk.newIssue.titleLabel": "Title",
   "desk.newIssue.titlePlaceholder": "The long way round",
   "desk.newIssue.themeLabel": "Theme",
@@ -798,7 +808,8 @@ export const magazine: Catalog = {
   // ── DeskStates ───────────────────────────────────────────────────────────
   "desk.states.emptyIssueTitle": "Issue {number} is empty",
   "desk.states.emptyIssueDescription":
-    "Nothing has been commissioned yet. Start the pipeline with your first piece.",
+    "Nothing has been filed yet. Start the pipeline with your first piece.",
+  "desk.states.writePiece": "Write a piece",
   "desk.states.commissionPiece": "Commission a piece",
   "desk.states.errorBand":
     "Could not reach the pipeline. Showing what we last had.",
@@ -808,7 +819,7 @@ export const magazine: Catalog = {
   "desk.palette.kindArticle": "Article",
   "desk.palette.kindDeck": "Deck",
   "desk.palette.kindAction": "Action",
-  "desk.palette.newPiece": "New piece",
+  "desk.palette.writePiece": "Write a piece",
   "desk.palette.goToDesk": "Go to the desk",
   "desk.palette.ariaLabel": "Command palette",
   "desk.palette.searchPlaceholder": "Jump to a piece, or start a new one…",
@@ -816,24 +827,14 @@ export const magazine: Catalog = {
   "desk.palette.commandsAria": "Commands",
   "desk.palette.noResults": "Nothing matches “{query}”.",
 
-  // ── DeskNotifications ────────────────────────────────────────────────────
-  "desk.notifications.ariaLabel": "Desk notifications",
-  "desk.notifications.sinceFriday": "Since Friday",
-  "desk.notifications.subhead":
-    "What happened on the desk while you were away.",
-  "desk.notifications.empty":
-    "You're all caught up. Nothing new since you last looked.",
-  "desk.notifications.markAllRead": "Mark all as read",
-
   // ── MagazineDeskShell (the editor's left rail) ───────────────────────────
   "deskShell.issueEyebrow": "Issue {number} · {theme}",
   "deskShell.menuAria": "Magazine desk sections",
   "deskShell.nav.desk": "Desk",
   "deskShell.nav.pitches": "Pitches",
   "deskShell.nav.issue": "Issue",
-  "deskShell.bellCountAria": "Since Friday: {count} new",
   "deskShell.openNow": "Open now",
-  "deskShell.newPiece": "New piece",
+  "deskShell.writePiece": "Write",
   "deskShell.kbdHintSuffix": "to jump · ? for keys",
   "deskShell.backToPlatform": "Back to QueerPulse",
 
@@ -886,8 +887,6 @@ export const magazine: Catalog = {
   "desk.page.stubOpensLater": "Opens in a later release.",
   "desk.page.savingViewsUnavailable":
     "Saving custom views isn't available yet.",
-  "desk.page.notificationsNotWired":
-    "Notifications aren't wired to real navigation yet.",
 
   // ══════════════════ Piece record (Phase 2) ═══════════════════════════════
   // Brief/Care/Money/History/After. Record content (audit `what` text, letter
@@ -1555,6 +1554,15 @@ export const magazine: Catalog = {
   "issue.tabs.archive": "Archive",
 
   // ── PagesCard ────────────────────────────────────────────────────────────
+  "issue.publishDate.heading": "Publish date",
+  "issue.publishDate.set": "This issue is set to run on {date}.",
+  "issue.publishDate.unset":
+    "Not scheduled yet. Set a date whenever you know it, or let shipping stamp today's.",
+  "issue.publishDate.save": "Save date",
+  "issue.publishDate.clear": "Clear date",
+  "issue.publishDate.saving": "Saving\u2026",
+  "issue.publishDate.savedToast": "Issue set to run on {date}.",
+  "issue.publishDate.clearedToast": "Publish date cleared. The issue is unscheduled again.",
   "issue.pages.heading": "Pages",
   "issue.pages.editorial": "Editorial",
   "issue.pages.total": "Total",
@@ -1647,6 +1655,11 @@ export const magazine: Catalog = {
   "writer.tabs.pitches": "Your pitches",
   "writer.tabs.payments": "Payments",
   "writer.tabs.ariaLabel": "Writer workspace tabs",
+  "writer.page.heading": "Your desk",
+  "writer.page.openCount_one": "{count} assignment open",
+  "writer.page.openCount_other": "{count} assignments open",
+  "writer.page.nextDue": "next due {date}",
+  "writer.page.nothingOpen": "Nothing open right now",
   "writer.page.errorTitle": "Your workspace didn't load",
   "writer.page.errorDescription":
     "Something went wrong fetching your assignments. Try refreshing the page.",

@@ -81,7 +81,7 @@ export function VisasPage() {
             />
           </Reveal>
           <div className={styles.routeGrid}>
-            {ROUTES.map((route, index) => (
+            {ROUTES.map(({ icon: RouteIcon, ...route }, index) => (
               <Reveal
                 key={route.nameKey}
                 as="button"
@@ -95,6 +95,9 @@ export function VisasPage() {
                 delay={index * 60}
                 onClick={() => selectRoute(index, route.tab)}
               >
+                <span className={styles.rcChip} aria-hidden>
+                  <RouteIcon />
+                </span>
                 <div className={styles.rcName}>{t(route.nameKey)}</div>
                 <div className={styles.rcDesc}>{t(route.descKey)}</div>
                 <div className={styles.rcTo}>

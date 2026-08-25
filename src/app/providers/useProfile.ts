@@ -65,9 +65,12 @@ export interface ProfileDraft {
   /** Ordered slugs of the communities the member has chosen to feature on
    *  their profile — editable via the featured-communities picker. */
   featuredCommunities: string[];
-  /** Broad professional field(s) — Settings → Interests. */
+  /** Broad professional field(s) — the profile editor's work picker, mirrored
+   *  in onboarding and Settings → Interests. Public: the member directory's
+   *  "What they do" filter searches these. */
   discipline: string[];
-  /** Specific job(s) within `discipline` — Settings → Interests. */
+  /** Specific job(s) within `discipline`, from the same picker. Public: the
+   *  directory's "Profession" filter searches these. */
   profession: string[];
   languages: string[];
   /** Whether other members can see this member's real avatar photo. Owner-
@@ -150,12 +153,13 @@ export function isDraftDirty(draft: ProfileDraft, committed: Member): boolean {
  *  belongs to — drives `getChangedSectionLabelKeys`' itemized "what changed"
  *  summary in `ProfileEditBar`. Only fields with an editor reachable from
  *  that page's own edit session are listed: fields edited elsewhere (Settings
- *  → Interests' `identities`/`discipline`/`profession`/`languages`, the "Who
- *  sees what" sheet's `photoVisible`/`hoodVisible`/`vouchersVisible`/
+ *  → Interests' `identities`/`languages`, the "Who sees what"
+ *  sheet's `photoVisible`/`hoodVisible`/`vouchersVisible`/
  *  `privateNetwork`, the rail's instant-save `hiddenUntil`, and the featured-
  *  communities picker's `featuredConsent`/`featuredCommunities`) can't change
  *  while this session is open, so giving them a section here would never
- *  surface one. */
+ *  surface one. `discipline`/`profession` ARE listed: their picker now lives
+ *  in this page's own editor, alongside its copy in Settings → Interests. */
 const FIELD_CHANGE_SECTION: Partial<Record<keyof ProfileDraft, string>> = {
   photo: "photo",
   avatarCrop: "photo",
@@ -171,6 +175,10 @@ const FIELD_CHANGE_SECTION: Partial<Record<keyof ProfileDraft, string>> = {
   now: "now",
   openTo: "openTo",
   notHereFor: "notHereFor",
+  // "workField" is the field-of-work/profession picker, distinct from the
+  // `work` section below (the member's selected-work portfolio items).
+  discipline: "workField",
+  profession: "workField",
   tags: "tags",
   socials: "links",
   lookingFor: "lookingFor",
@@ -198,6 +206,7 @@ const SECTION_ORDER: { id: string; labelKey: string }[] = [
   { id: "now", labelKey: "members:profileEdit.now.label" },
   { id: "openTo", labelKey: "members:profileEdit.openTo.label" },
   { id: "notHereFor", labelKey: "members:profileEdit.notHereFor.label" },
+  { id: "workField", labelKey: "members:profileEdit.work.label" },
   { id: "tags", labelKey: "members:profileEdit.field.tags" },
   { id: "links", labelKey: "members:profileEdit.field.links" },
   { id: "lookingFor", labelKey: "members:profileEdit.field.lookingFor" },
@@ -219,13 +228,13 @@ export function getChangedSectionLabelKeys(
 ): string[] {
   const committedDraft = toDraft(committed);
   const changed = new Set<string>();
-  (Object.entries(FIELD_CHANGE_SECTION) as [keyof ProfileDraft, string][]).forEach(
-    ([key, section]) => {
-      if (JSON.stringify(draft[key]) !== JSON.stringify(committedDraft[key])) {
-        changed.add(section);
-      }
-    },
-  );
+  (
+    Object.entries(FIELD_CHANGE_SECTION) as [keyof ProfileDraft, string][]
+  ).forEach(([key, section]) => {
+    if (JSON.stringify(draft[key]) !== JSON.stringify(committedDraft[key])) {
+      changed.add(section);
+    }
+  });
   return SECTION_ORDER.filter((s) => changed.has(s.id)).map((s) => s.labelKey);
 }
 

@@ -1,7 +1,8 @@
-/* The writer workspace chrome: `.ebar` identity header, `.ework` two-column
+/* The writer workspace chrome: `.ebar` heading bar, `.ework` two-column
    grid (tabs + active tab body / `.erail` sidebar), `.tabs` nav. Mirrors
    `PieceRecordPage.module.css` (same layout shape, different header content —
-   a writer identity instead of a piece title/stage). Card/KV/simrow/progress
+   the surface name + open workload instead of a piece title/stage).
+   Card/KV/simrow/progress
    styles for the tab bodies live in `desk/pieceTabs.module.css`, shared with
    the piece-record tabs.
 */
@@ -32,9 +33,10 @@
   min-width: 0;
 }
 
-.title b {
+.title h1 {
+  margin: 0;
   font-family: var(--serif);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--text-strong);
   white-space: nowrap;

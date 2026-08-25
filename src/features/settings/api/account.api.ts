@@ -171,15 +171,20 @@ export const listDsar = () => apiGet<DsarRequest[]>("/account/dsar");
  *
  * Verified against the backend rather than guessed: `account.controller.ts`
  * `listSessions` → `AccountService.listSessions` → `toSessionResponse`
- * (`account-response.ts`). A "session" IS a non-revoked row in the
- * refresh-token store, newest first. That store has no geo/IP, no
- * last-seen and no device-name column, so this shape carries NO location and
- * NO last-activity — the page must not invent either. `deviceLabel` is
- * likewise always `null` today (the column doesn't exist yet); it stays in the
- * contract because the backend already emits the key and intends to fill it.
- * `current` is resolved server-side from the presenting `refresh_token` cookie.
+ * (`account-response.ts`). A "session" is one DEVICE: a family of refresh-token
+ * rows descended from a single sign-in, newest first. That store has no geo/IP
+ * and no device-name column, so this shape carries NO location — the page must
+ * not invent one. `deviceLabel` is likewise always `null` today (the column
+ * doesn't exist yet); it stays in the contract because the backend already
+ * emits the key and intends to fill it. `current` is resolved server-side from
+ * the presenting `refresh_token` cookie.
  */
 export interface SessionResponse {
+  /**
+   * The session's stable id (a refresh-token family). Safe to hold across a
+   * rotation, which is what `revokeSession` below relies on: the page can sit
+   * open for an hour and its Sign out buttons still address the right devices.
+   */
   id: string;
   /** Always `null` today — no device-name column in the refresh-token store. */
   deviceLabel: string | null;
@@ -187,7 +192,15 @@ export interface SessionResponse {
   userAgent: string;
   /** True for the session making this request (matched on the refresh cookie). */
   current: boolean;
+  /** When this device SIGNED IN, unchanged by the rotations since. */
   createdAt: string;
+  /**
+   * The last time this device rotated a token. The nearest thing the store has
+   * to "last seen", and coarse by nature: a tab refreshes on its own schedule,
+   * so this trails real activity by up to one access-token lifetime. Shown as
+   * an approximate "last activity", never as an audit trail.
+   */
+  lastUsedAt: string;
   expiresAt: string;
 }
 

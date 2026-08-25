@@ -1,7 +1,8 @@
 /**
  * Desk keyboard shortcuts: j/k move focus through the visible pieces,
- * o opens the focused piece, c chases it, ? opens the shortcuts sheet,
- * y/n triage the top pitch. ⌘K is handled by the page, not here.
+ * o opens the focused piece, c chases it, w starts a piece you write
+ * yourself, ? opens the shortcuts sheet, y/n triage the top pitch. ⌘K is
+ * handled by the page, not here.
  */
 
 import { useEffect } from "react";
@@ -13,6 +14,7 @@ export interface UseDeskKeyboardParams {
   setFocusId: (id: string) => void;
   onOpen: (piece: Piece) => void;
   onChase: (piece: Piece) => void;
+  onWrite: () => void;
   onShortcuts: () => void;
   topPitchId: string | null;
   onTriageTop: (verdict: "maybe" | "no") => void;
@@ -34,6 +36,7 @@ export function useDeskKeyboard(params: UseDeskKeyboardParams): void {
     setFocusId,
     onOpen,
     onChase,
+    onWrite,
     onShortcuts,
     topPitchId,
     onTriageTop,
@@ -71,6 +74,9 @@ export function useDeskKeyboard(params: UseDeskKeyboardParams): void {
           if (focusedPiece) onChase(focusedPiece);
           break;
         }
+        case "w":
+          onWrite();
+          break;
         case "?":
           onShortcuts();
           break;
@@ -87,5 +93,5 @@ export function useDeskKeyboard(params: UseDeskKeyboardParams): void {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [visiblePieces, focusId, setFocusId, onOpen, onChase, onShortcuts, topPitchId, onTriageTop, enabled]);
+  }, [visiblePieces, focusId, setFocusId, onOpen, onChase, onWrite, onShortcuts, topPitchId, onTriageTop, enabled]);
 }

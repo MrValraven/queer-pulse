@@ -134,7 +134,7 @@ export function ModReportedPosts({
   const communityTime = useCommunityTime();
   return (
     <>
-      <div className={detail.secLbl} style={{ marginTop: 32 }}>
+      <div className={detail.secLbl}>
         {t("communities:detail.modtools.reports.label")}{" "}
         {reports.length > 0 && (
           <span className={detail.tabCount}>{reports.length}</span>
@@ -235,7 +235,7 @@ export function ModMemberManagement({
   const { t } = useTranslation();
   return (
     <>
-      <div className={detail.secLbl} style={{ marginTop: 32 }}>
+      <div className={detail.secLbl}>
         {t("communities:detail.modtools.members.label")}{" "}
         <span className={detail.tabCount}>{members.length}</span>
       </div>

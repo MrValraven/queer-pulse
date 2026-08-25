@@ -583,7 +583,35 @@
 }
 
 .sec {
-  margin-bottom: 44px;
+  margin-bottom: 40px;
+}
+/* Consecutive answers in the main column, separated by a hairline instead of
+   pure air: the block boundaries were invisible, so a heading, a loose chip
+   and a narrow card all read as one drift of content. */
+.sec + .sec {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+  padding-top: 34px;
+}
+/* Heading row: the title, with any live status chip on the same baseline right
+   beside it — "Hours · Open now" reads as one statement, where the chip on its
+   own line under the heading read as a third loose thing. Wraps before it ever
+   squashes the title. */
+.secHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-bottom: 14px;
+}
+.secHead h2 {
+  margin-bottom: 0;
+}
+/* The chips carry their own trailing margin for the old stacked layout; inside
+   the heading row the flex gap does that job. */
+.secHead .openChip,
+.secHead .closedChip,
+.secHead .closingSoonChip {
+  margin: 0;
 }
 .sec h2 {
   font-family: var(--serif);
@@ -667,17 +695,65 @@
   stroke: var(--ink-40);
 }
 
-.hoursTable {
+/* One card holds the whole hours answer — the week, any one-off changes, and
+   who last vouched for it — so the section is a single object in the column
+   instead of a 380px table with a stamp drifting below it.
+   Its own container: the week splits into two columns on the width the card
+   actually has, which is not the viewport's (the moderation preview drawer
+   renders this same body far narrower). */
+.hoursCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
+  border-radius: 18px;
   overflow: hidden;
-  max-width: 380px;
+  container: directoryHours / inline-size;
+}
+.hoursTable {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+/* The by-appointment note replaces the week inside the same card, so it drops
+   the border and radius it carried as a standalone panel. */
+.hoursCard .apptNote {
+  border: none;
+  border-radius: 0;
+  max-width: none;
+}
+/* Footer strip: the freshness stamp, attached to the hours it vouches for.
+   The stamp is a <p>, so `.sec p`'s trailing 1em outranks `.freshness`'s own
+   `margin: 0` on specificity — reset it here, where the strip owns the
+   padding. */
+.hoursFoot {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  background: rgba(var(--line-rgb), 0.03);
+  padding: 12px 16px;
+}
+.hoursFoot > .freshness {
+  margin: 0;
+}
+/* Mon–Thu beside Fri–Sun. A single 636px-wide column of seven rows strands the
+   day at one end and the time at the other; two short columns keep the pair
+   readable and use the width the main column actually has. */
+@container directoryHours (min-width: 480px) {
+  .hoursTable {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, auto);
+    grid-auto-flow: column;
+  }
+  /* Row 4 closes the left column; rows 5-7 are the right one, which needs the
+     vertical rule between them. (Always exactly seven rows.) */
+  .hoursTable > .hoursRow:nth-child(4) {
+    border-bottom: none;
+  }
+  .hoursTable > .hoursRow:nth-child(n + 5) {
+    border-left: 1px solid rgba(var(--line-rgb), 0.06);
+  }
 }
 .hoursRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   padding: 11px 16px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: 14px;
@@ -770,9 +846,11 @@
 }
 
 /* ---- one-off date exceptions (holiday closures / special hours) ---- */
+/* A band inside the hours card (see `.hoursCard`), not a second bordered list
+   nested in the first. */
 .exceptions {
-  margin-top: 16px;
-  max-width: 380px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  padding: 16px 16px 6px;
 }
 .exceptionsTitle {
   font-family: var(--sans);
@@ -787,17 +865,13 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 14px;
-  overflow: hidden;
 }
 .exceptionRow {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 2px 12px;
   align-items: baseline;
-  padding: 11px 16px;
+  padding: 9px 0;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
   font-size: 14px;
   color: var(--ink);
@@ -829,8 +903,7 @@
   display: flex;
   align-items: flex-start;
   gap: 7px;
-  margin: 14px 0 0;
-  max-width: 380px;
+  margin: 0;
   font-size: 13px;
   line-height: 1.5;
   color: var(--ink-60);
@@ -853,7 +926,6 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: 14px;
   padding: 18px 20px;
-  max-width: 380px;
   font-size: 14.5px;
   color: var(--ink);
   display: flex;
@@ -1244,6 +1316,24 @@
     padding-bottom: calc(80px + 60px + env(safe-area-inset-bottom));
   }
 }
+/* The aside's closing affordances (report / suggest an edit). Both ship their
+   own centred wrapper sized for the loose stack they used to sit in, which left
+   two lines of grey text floating under the last card with no edge to belong
+   to. Here they are one quiet block, hairline-topped and aligned with the cards
+   above it. Element selectors reach into the two foreign modules; both controls
+   open their real UI in a portalled Modal, so nothing else is in range. */
+.sideFooter {
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.sideFooter > div {
+  padding-top: 0;
+  text-align: left;
+}
+.sideFooter > div > button {
+  padding: 7px 0;
+  text-align: left;
+}
 .sideCard {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -1258,16 +1348,18 @@
   color: var(--ink-40);
   margin-bottom: 14px;
 }
-.map {
-  aspect-ratio: 1 / 1;
-  max-height: 200px;
-  border-radius: 14px;
+/* The map slot inside the visit card: fills whatever cell the card gives it
+   (full height beside the details on a wide card, a 16/9 band above them when
+   the card is narrow). `position: relative` is what `LocationMiniMap`'s
+   absolutely-placed canvas and the placeholder's `.pin` both anchor to. */
+.visitMap {
+  position: relative;
   overflow: hidden;
   background: var(--map-tint);
-  position: relative;
-  margin-bottom: 14px;
+  min-height: 190px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
 }
-.map svg {
+.visitMap > svg {
   width: 100%;
   height: 100%;
   display: block;
@@ -1287,15 +1379,15 @@
 }
 .addr {
   font-size: 14px;
-  color: var(--ink);
+  color: var(--ink-60);
   line-height: 1.55;
-  margin-bottom: 12px;
 }
 .addrName {
   display: block;
-  color: var(--plum);
+  color: var(--text-strong);
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 20px;
+  letter-spacing: -0.01em;
   margin-bottom: 3px;
 }
 .onlinePlace {
@@ -1303,7 +1395,6 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  margin-bottom: 12px;
   border: 1px solid rgba(var(--plum-rgb), 0.09);
   border-radius: 12px;
   background: rgba(var(--plum-rgb), 0.04);
@@ -1391,6 +1482,15 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 14px;
+}
+/* Inside the visit card the action is one button in a column that is already
+   narrow: let it size to its label rather than spanning the whole cell. */
+.visitFoot .cta {
+  margin-top: 0;
+  align-items: flex-start;
+}
+.visitFoot .ctaBtn {
+  width: auto;
 }
 .ctaBtn {
   width: 100%;
@@ -1776,30 +1876,85 @@
    and address sit beside the contact rows and call to action on anything with
    room, and stack on a phone. Flex rather than a media query so it responds to
    the column it lands in, including the narrow admin preview drawer. */
-.visitLayout {
+/* ── "Where it is" ──────────────────────────────────────────────────────────
+   One card: the map flush against its left edge, every detail beside it. It
+   used to be two loose flex columns — a 200px map with the address stranded
+   underneath, and a details column holding a saved-count and a full-width
+   "back to directory" button with nothing else to anchor them. The card gives
+   the two halves one shared edge and a single background.
+
+   The shell exists purely to carry the container: an element cannot query the
+   container it establishes, and the card itself is what has to respond. */
+.visitShell {
+  container: directoryVisit / inline-size;
+}
+.visitCard {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 18px;
+  overflow: hidden;
+}
+@container directoryVisit (min-width: 480px) {
+  .visitCard {
+    grid-template-columns: minmax(0, 264px) minmax(0, 1fr);
+    align-items: stretch;
+  }
+  /* Side by side the seam runs vertically, so the map's divider turns with it. */
+  .visitMap {
+    border-bottom: none;
+    border-right: 1px solid rgba(var(--line-rgb), 0.09);
+  }
+}
+/* An online-only listing has no map, so the details take the whole card. */
+.visitCardOnline {
+  grid-template-columns: 1fr;
+}
+.visitBody {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 28px;
-  align-items: flex-start;
-}
-.visitPlace {
-  flex: 1 1 240px;
-  min-width: 0;
-  max-width: 340px;
-}
-.visitDetails {
-  flex: 2 1 260px;
+  flex-direction: column;
+  padding: 20px 22px;
   min-width: 0;
 }
-/* The map's own trailing gap is the flex gap's job once the two sit side by
-   side; keep a little breathing room when they stack. */
-.visitPlace .map {
-  margin-bottom: 10px;
+/* The address heads the details column. The contact rows below it each carry a
+   top hairline, and the first of those doubles as the rule dividing the two. */
+.visitBody > .addr {
+  margin-bottom: 14px;
 }
-/* First contact row in the details column has the section heading above it
-   rather than another row, so its hairline would float unattached. */
-.visitDetails > .contactRow:first-child {
-  border-top: none;
+/* Saved-count and the primary action close the column, pinned to its foot so
+   a listing with no contact rows doesn't leave them floating mid-card. */
+.visitFoot {
+  margin-top: auto;
+  padding-top: 14px;
+}
+.visitFoot > .savedSignal {
+  margin-bottom: 0;
+}
+.visitFoot > .savedSignal + .cta {
+  margin-top: 12px;
+}
+/* Getting back to the directory is navigation, not a call to action: a quiet
+   link under the card, where the breadcrumb's counterpart belongs, instead of
+   a full-width button competing with "Visit website". */
+.visitBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+}
+.visitBack svg {
+  width: 15px;
+  height: 15px;
+}
+@media (hover: hover) {
+  .visitBack:hover {
+    color: var(--accent-ink);
+  }
 }
 
 /* ── "Access & languages" section (main column) ─────────────────────────────

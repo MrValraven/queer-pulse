@@ -574,6 +574,10 @@ export const marketing: Catalog = {
   "help.qa.privateProfile.q": "Posso tornar o meu perfil privado?",
   "help.qa.privateProfile.a":
     "Sim, em <settingsLink>Definições</settingsLink> → Privacidade. Um perfil privado continua visível para as tuas ligações. Só <strong>não aparece na pesquisa nem no diretório público</strong>.",
+  "help.qa.unknownSession.q":
+    "Não reconheço um dispositivo nas minhas sessões ativas. E agora?",
+  "help.qa.unknownSession.a":
+    "Termina essa sessão em <sessionsLink>sessões ativas</sessionsLink>. O início de sessão é feito através da Google, por isso revê também a segurança da tua conta Google, já que quem tiver acesso a ela consegue entrar aqui. Depois <contactLink>conta-nos o que aconteceu</contactLink> e ajudamos-te a proteger a tua conta.",
   "help.qa.deleteAccount.q": "Como elimino a minha conta?",
   "help.qa.deleteAccount.a":
     "Em <settingsLink>Definições</settingsLink> → Conta, mais abaixo. Isto é permanente. Vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
@@ -2052,6 +2056,7 @@ export const marketing: Catalog = {
   "changelog.tag.directory": "Abrir o diretório",
   "changelog.tag.cinema": "Visitar o Cinema",
   "changelog.tag.forum": "Visitar o fórum",
+  "changelog.tag.sessions": "Vê as tuas sessões ativas",
   "changelog.tag.profile": "Abrir o seu perfil",
   "changelog.tag.gatherings": "Ver encontros",
   "changelog.tag.members": "Conhecer os membros",
@@ -2125,6 +2130,94 @@ export const marketing: Catalog = {
     "Aprovar um pedido de adesão passa a dizer com clareza o que acontece a seguir",
   "changelog.entries.invites-go-out-by-hand.body":
     "Quando alguém da equipa acolhia uma pessoa, a confirmação dizia que ia a caminho um email de convite. A QueerPulse não tem serviço de email, por isso nunca era enviado nada e o convite podia ficar por reclamar com as duas pessoas à espera. O cartão passa a dizer que os convites seguem à mão e mostra ali mesmo a ligação para copiar, e os três botões de decisão deixam de sair para fora do cartão.",
+  "changelog.entries.sessions-page-links-reach-a-person.title":
+    "As tuas sessões ativas já conseguem chegar a uma pessoa",
+  "changelog.entries.sessions-page-links-reach-a-person.body":
+    "\u201cAlgo parece errado? Conta-nos o que aconteceu\u201d, nas tuas sessões ativas, abria uma página a anunciar que a tua conta estava bloqueada, o que era assustador e falso. Os dois links dessa página passam a levar-te ao que prometem: \u201co que fazer a seguir\u201d abre a secção Conta da Ajuda, que explica o que fazer com um dispositivo estranho, e \u201cconta-nos o que aconteceu\u201d abre o formulário de contacto com o tema já definido como acesso à conta, para a tua mensagem chegar à equipa. O link Voltar, no topo da página, regressa a Definições \u2192 Conta, de onde a abriste.",
+  "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.title":
+    "A tua lista de dispositivos deixa de acumular sess\u00f5es antigas",
+  "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.body":
+    "Onde tens sess\u00e3o iniciada podia encher-se de entradas de um dispositivo que usaste uma \u00fanica vez. Cada in\u00edcio de sess\u00e3o criava uma sess\u00e3o, e voltar a entrar no mesmo navegador criava outra ao lado da primeira em vez de a substituir, por isso um cookie apagado, uma janela an\u00f3nima ou uma sess\u00e3o que simplesmente caducou deixavam sempre uma entrada para tr\u00e1s. Essas entradas ficavam l\u00e1 um m\u00eas, todas com o mesmo aspeto, o que tornava quase imposs\u00edvel responder \u00e0 \u00fanica pergunta para que a p\u00e1gina existe: h\u00e1 aqui alguma coisa que n\u00e3o sou eu? Agora, iniciar sess\u00e3o substitui a que este navegador j\u00e1 tinha, e as sess\u00f5es que caducaram saem da lista em vez de ficarem at\u00e9 serem eliminadas. Se a tua lista j\u00e1 est\u00e1 cheia, Terminar todas as outras sess\u00f5es limpa-a de uma vez e mant\u00e9m-te com sess\u00e3o iniciada aqui.",
+  "changelog.entries.devices-say-when-you-signed-in-and-when-you-were-last-there.title":
+    "Cada dispositivo diz quando iniciaste sess\u00e3o e mais ou menos quando l\u00e1 estiveste pela \u00faltima vez",
+  "changelog.entries.devices-say-when-you-signed-in-and-when-you-were-last-there.body":
+    "O Sess\u00e3o iniciada de cada dispositivo estava a medir a coisa errada. A tua sess\u00e3o renova-se sozinha em segundo plano de poucos em poucos minutos, e a p\u00e1gina mostrava a renova\u00e7\u00e3o mais recente, por isso o port\u00e1til onde tens sess\u00e3o desde junho anunciava-se como tendo chegado h\u00e1 sete minutos. Passa a mostrar quando iniciaste mesmo sess\u00e3o nesse dispositivo, e acrescenta uma linha aproximada de \u00faltima atividade quando o dispositivo voltou desde ent\u00e3o. Um dispositivo onde iniciaste sess\u00e3o e ao qual nunca voltaste mostra apenas o in\u00edcio de sess\u00e3o, porque \u00e9 tudo o que sabemos sobre ele.",
+  "changelog.entries.profile-sections-share-one-left-edge.title":
+    "Todas as secções do teu perfil alinham pela mesma margem",
+  "changelog.entries.profile-sections-share-one-left-edge.body":
+    "Num ecrã largo, as secções do teu perfil ficavam ligeiramente desalinhadas entre si: Comunidades, o teu trabalho, as tuas competências e as restantes estavam recuadas uns pixéis que \u201cEspaços que geres\u201d não tinha, e a coluna parecia torta. A página estava a aplicar a margem lateral duas vezes a essas secções, uma vez pela página e outra pela própria secção. Passam todas a partilhar a mesma margem esquerda de \u201cEspaços que geres\u201d, do topo da página até ao fim. No telemóvel, \u201cEspaços que geres\u201d passa a ter a mesma margem lateral que as outras secções já tinham, para os cartões respirarem junto à margem.",
+  "changelog.entries.my-communities-waits-instead-of-saying-you-have-none.title":
+    "As minhas comunidades esperam pela tua lista em vez de dizerem que n\u00e3o tens nenhuma",
+  "changelog.entries.my-communities-waits-instead-of-saying-you-have-none.body":
+    "Abrir Comunidades mostrava \u201cAinda n\u00e3o entraste em nenhuma comunidade\u201d durante o instante que demorava a ir buscar as tuas ades\u00f5es, mesmo quando pertencias a seis. O separador passa a mostrar um esqueleto com a forma dos teus cart\u00f5es at\u00e9 a tua lista chegar, e a linha por baixo do t\u00edtulo fica em sil\u00eancio at\u00e9 poder citar o n\u00famero verdadeiro, para nunca ler \u201cnas tuas 0 comunidades\u201d pelo caminho. O estado vazio continua a aparecer assim que sabemos que \u00e9 verdade, com o mesmo convite para ires descobrir uma comunidade.",
+  "changelog.entries.say-what-you-do-on-your-profile.title":
+    "Podes dizer o que fazes no teu perfil e ser encontrada por isso",
+  "changelog.entries.say-what-you-do-on-your-profile.body":
+    "O diret\u00f3rio de membros sempre permitiu filtrar por \u00e1rea e por fun\u00e7\u00e3o, mas o \u00fanico s\u00edtio para definir as tuas estava escondido nas Defini\u00e7\u00f5es, por isso a maioria dos perfis n\u00e3o tinha nada para corresponder. Passas a escolher a tua \u00e1rea, e as fun\u00e7\u00f5es dentro dela, diretamente na vista de edi\u00e7\u00e3o do teu perfil, e o assistente faz a mesma pergunta a quem chega de novo. O que escolheres aparece no teu perfil em \u201cTrabalha em\u201d e \u00e9 o que te coloca nos resultados quando algu\u00e9m filtra o diret\u00f3rio por fot\u00f3grafa, enfermeiro ou advogada. Escolher uma fun\u00e7\u00e3o seleciona a \u00e1rea por ti, e as fun\u00e7\u00f5es s\u00f3 aparecem depois de escolheres uma \u00e1rea, para nunca teres setenta op\u00e7\u00f5es \u00e0 frente de uma vez.",
+  "changelog.entries.admin-account-menu-is-real.title":
+    "O botão de conta da barra de administração passou a fazer alguma coisa",
+  "changelog.entries.admin-account-menu-is-real.body":
+    "O botão no fundo da barra de administração mostrava um nome que nunca foi o teu e um cargo que ninguém tem, e clicar nele não fazia rigorosamente nada. Passa a mostrar a conta com que estás mesmo autenticado, com o endereço ao lado do nome, e abre um menu com aquilo que a administração não tinha caminho nenhum para alcançar: o teu perfil, as definições da conta, as sessões ativas e terminar sessão. Terminar sessão era o que mais faltava. Voltar à plataforma sai da consola mas mantém a sessão aberta, por isso sair a sério obrigava a mais três navegações já no site principal, o que é um percurso longo num computador partilhado. O menu diz também que acesso esta conta tem, incluindo as permissões de equipa que determinam quais secções da barra funcionam.",
+  "changelog.entries.admin-sidebar-grouped-sections.title":
+    "A barra lateral de administração está agrupada em secções que podes fechar",
+  "changelog.entries.admin-sidebar-grouped-sections.body":
+    "A barra de administração tinha crescido para trinta e dois links numa lista única, longa ao ponto de encontrar seja o que for exigir percorrer quase tudo. Esses links passam a estar em oito secções identificadas: Confiança e segurança, Pessoas e acessos, Comunidades, Diretório, Editorial, Parcerias e reconhecimento, Conteúdo do site e Plataforma. Cada cabeçalho abre e fecha com um deslize curto, e a barra lembra-se dos que deixaste abertos. Um cabeçalho fechado continua a mostrar o total de itens à espera lá dentro, por isso uma secção fechada nunca esconde uma fila que precisa de atenção, e abrir uma página dentro de uma secção fechada abre essa secção por ti.",
+  "changelog.entries.since-friday-panel-removed.title":
+    "O painel Desde sexta da redação deixou de existir",
+  "changelog.entries.since-friday-panel-removed.body":
+    "O painel lateral de quem edita tinha um botão Desde sexta que abria uma lista do que tinha acontecido na redação enquanto estiveste fora. Repetia o que a redação já mostra: o feed de atividade na barra lateral lê o mesmo registo, e cada peça mantém o seu separador de Histórico. O botão e o painel foram removidos, e o painel lateral ficou mais curto.",
+  "changelog.entries.writer-desk-header-says-whats-due.title":
+    "O cabeçalho do teu espaço de escrita passa a dizer o que está para entregar",
+  "changelog.entries.writer-desk-header-says-whats-due.body":
+    "O topo do teu espaço de escrita mostrava o teu avatar, o teu nome e a palavra Contributor, coisas que a barra de navegação já mostra logo acima. Essa palavra estava fixa: dizia Contributor a toda a gente, sempre, e ficava em inglês no site em português. A barra passa a identificar a página e a dizer-te como está o teu trabalho, com quantos trabalhos tens em aberto e quando é a entrega mais próxima, ou uma linha discreta a dizer que não tens nada em mãos.",
+  "changelog.entries.editors-can-write-their-own-pieces.title":
+    "Quem edita a revista pode escrever uma peça, e não apenas encomendá-la",
+  "changelog.entries.editors-can-write-their-own-pieces.body":
+    'A secretária de edição só tinha uma forma de começar uma peça: encomendá-la. Isso obrigava quem quisesse simplesmente escrever algo a enviar um briefing a si mesmo, com honorário e prazo, antes de poder escrever uma palavra. Escrever passa a ser a ação principal da secretária, e Encomendar fica ao lado para as vezes em que a peça vai mesmo para outra pessoa. Escrever dispensa o formulário: a peça é criada contigo como autoria, começa em rascunho em vez de ficar à espera de um briefing que nunca vai chegar, e cais diretamente no editor de artigo com o cursor pronto. O título, a secção, a assinatura e a edição definem-se na barra lateral do próprio editor, que é onde iam ser alterados de qualquer maneira. Uma peça começada assim entra na edição em que estás a trabalhar, ou fica por arquivar se começaste no separador das não atribuídas, e o histórico da secretária diz "começou a escrever" em vez de registar uma encomenda que não aconteceu. A tecla w na secretária faz o mesmo, tal como o botão Escrever na barra lateral e na paleta de comandos.',
+  "changelog.entries.editor-pages-start-at-the-top.title":
+    "As páginas do editor da revista já não começam com uma faixa de creme vazio",
+  "changelog.entries.editor-pages-start-at-the-top.body":
+    "Todos os ecrãs do editor da revista reservavam uma faixa de espaço no topo para a barra de navegação flutuante do site, que esses ecrãs nunca mostram: correm sobre a sua própria barra lateral. O resultado era uma faixa vazia e alta acima da secretária, do registo de propostas e do plano da edição, e empurrava as barras de título fixas de uma peça, de uma edição e de um dossiê para fora do limite da janela. Esse espaço deixou de ser reservado, por isso cada página do editor começa onde começa o seu conteúdo e as barras fixas ficam encostadas ao topo. Quem usa a navegação lateral da aplicação também tinha a secretária empurrada para o lado pela largura de uma barra que não é desenhada nessas páginas; esse desvio também desapareceu.",
+  "changelog.entries.issue-publish-date-optional.title":
+    "Uma edição da revista já não precisa de data para existir",
+  "changelog.entries.issue-publish-date-optional.body":
+    "Criar uma edição na redação exigia uma data de publicação antes de mais nada, o que obrigava quem edita a inventar uma só para abrir o número. A data passa a ser opcional: preenche o número, o título e o tema, e a edição existe. A página de produção da edição tem agora um cartão de Data de publicação na barra lateral, onde a data pode ser definida mais tarde, alterada ou removida se o plano mudar. Uma edição sem data aparece como sem data marcada em vez de mostrar um dia inventado, e o envio continua a marcar o dia em que saiu se ninguém tiver definido nenhum.",
+  "changelog.entries.cohost-invite-form-reads-properly.title":
+    "Convidar quem co-organiza já se lê como deve ser",
+  "changelog.entries.cohost-invite-form-reads-properly.body":
+    "O segundo passo do convite para co-organizar, onde quem organiza define as condições, mostrava etiquetas internas em vez de palavras a sério: o nome de cada campo, as duas listas e os dois botões apareciam em código. Agora lê-se por inteiro, em português e em inglês. A pessoa convidada fica visível no topo do formulário, com fotografia e pronomes, e um único botão volta atrás se for a pessoa errada. Ao escolher uma função ou um compromisso de tempo aparece a mesma descrição que a pessoa convidada vai ler no convite, para ninguém escolher às cegas. O campo do recado conta os 500 caracteres disponíveis, a data de resposta já não pode ficar no passado e diz que é opcional, e os botões de enviar e cancelar ficam dentro do painel em qualquer largura de janela. A mesma correção chegou à página do convite, que estava sem a frase sobre o que passa a poder fazer quem aceita e o que fica com a pessoa anfitriã principal, e às Definições, onde a parte pública do teu perfil (a tua área, a tua função e as línguas que falas) tinha ficado sem títulos.",
+  "changelog.entries.desk-activity-reads-in-plain-language.title":
+    "A atividade da reda\u00e7\u00e3o passa a ler-se em linguagem normal",
+  "changelog.entries.desk-activity-reads-in-plain-language.body":
+    "Havia dois s\u00edtios na reda\u00e7\u00e3o que escreviam as suas linhas tal como saem da base de dados: o painel de Atividade na barra lateral e o hist\u00f3rico na ficha de cada pe\u00e7a. Ambos mostravam um identificador longo no lugar do nome, um c\u00f3digo interno como \u201carticle_edited\u201d no lugar da a\u00e7\u00e3o, e uma data de m\u00e1quina. Ningu\u00e9m percebia quem tinha mexido em qu\u00ea. Agora leem-se como frases: a pessoa pelo nome, o que fez em palavras simples, e quando. O painel da reda\u00e7\u00e3o diz o t\u00edtulo de cada pe\u00e7a e h\u00e1 quanto tempo aconteceu; o hist\u00f3rico de uma pe\u00e7a diz \u201cesta pe\u00e7a\u201d e mostra a data e a hora, por ser o registo permanente. As notas deixadas num rascunho, os rascunhos repostos e as apresenta\u00e7\u00f5es convertidas em artigo passam tamb\u00e9m a ter texto pr\u00f3prio. As linhas de um passo autom\u00e1tico aparecem como Sistema, e uma pe\u00e7a entretanto apagada aparece de forma neutra em vez de mostrar um identificador.",
+  "changelog.entries.mod-tools-became-a-console.title":
+    "As ferramentas de modera\u00e7\u00e3o passam a ser uma consola com barra de sec\u00e7\u00f5es",
+  "changelog.entries.mod-tools-became-a-console.body":
+    "O separador de ferramentas de modera\u00e7\u00e3o de uma comunidade empilhava oito superf\u00edcies num s\u00f3 scroll, e por isso as duas coisas com tempo, quem pede para entrar e as publica\u00e7\u00f5es denunciadas, ficavam enterradas sob um painel de estat\u00edsticas e por cima da lista completa de pessoas. As ferramentas abrem agora num resumo que responde primeiro a uma pergunta: h\u00e1 alguma coisa \u00e0 tua espera. Ao lado corre uma barra com Resumo, Pedidos, Den\u00fancias, Pessoas, Convites, Cart\u00e3o de membro e Zona de risco, e cada uma abre sozinha, uma de cada vez. Pedidos e Den\u00fancias mostram um contador quando h\u00e1 algo em espera. Os banimentos passaram para dentro de Pessoas, onde a situa\u00e7\u00e3o de um membro j\u00e1 est\u00e1 a ser lida. Cada sec\u00e7\u00e3o tem agora o seu pr\u00f3prio endere\u00e7o, por isso podes enviar a outra pessoa da modera\u00e7\u00e3o diretamente para a fila de den\u00fancias e o bot\u00e3o de voltar sai de l\u00e1. No telem\u00f3vel a barra passa a ser uma linha de fichas por cima da sec\u00e7\u00e3o.",
+  "changelog.entries.share-card-shows-your-own-gathering.title":
+    "O cart\u00e3o de partilha de um conv\u00edvio mostra agora esse conv\u00edvio",
+  "changelog.entries.share-card-shows-your-own-gathering.body":
+    "No painel de gest\u00e3o de um conv\u00edvio que organizas, o cart\u00e3o de partilha na barra lateral mostrava sempre o mesmo evento de exemplo: um t\u00edtulo fixo, uma data e um bairro fixos, e um link que levava \u00e0 lista de conv\u00edvios em vez da tua p\u00e1gina. Passa a mostrar o conv\u00edvio que est\u00e1s a gerir, com o seu t\u00edtulo, data e local, e a foto de capa quando a carregaste. Copiar coloca o link p\u00fablico real do conv\u00edvio na \u00e1rea de transfer\u00eancia, e \u201cVer p\u00e1gina p\u00fablica\u201d abre a p\u00e1gina desse conv\u00edvio.",
+  "changelog.entries.place-page-reads-in-one-piece.title":
+    "A p\u00e1gina de um espa\u00e7o passa a ler-se como um todo",
+  "changelog.entries.place-page-reads-in-one-piece.body":
+    "Na p\u00e1gina de um neg\u00f3cio do diret\u00f3rio, o hor\u00e1rio ficava numa tabela estreita com uma faixa vazia ao lado, a linha que diz quem confirmou os detalhes andava perdida por baixo, e o mapa era um quadrado pequeno com a morada abandonada em baixo. O hor\u00e1rio passa a viver num s\u00f3 cart\u00e3o: a semana em duas colunas, as altera\u00e7\u00f5es previstas, e a linha de confirma\u00e7\u00e3o no rodap\u00e9. O estado do momento aparece ao lado do t\u00edtulo, como em \u201cHor\u00e1rio \u00b7 Aberto agora\u201d. A sec\u00e7\u00e3o \u201cOnde fica\u201d passa tamb\u00e9m a ser um \u00fanico cart\u00e3o, com o mapa a correr de um lado e a morada, todas as formas de chegar ao espa\u00e7o e a a\u00e7\u00e3o principal ao lado. Voltar ao diret\u00f3rio passa a ser uma liga\u00e7\u00e3o discreta por baixo desse cart\u00e3o, e uma linha fina separa cada sec\u00e7\u00e3o da p\u00e1gina da seguinte.",
+  "changelog.entries.place-pages-open-all-at-once.title":
+    "A p\u00e1gina de um espa\u00e7o passa a abrir j\u00e1 com as fotografias",
+  "changelog.entries.place-pages-open-all-at-once.body":
+    "Ao abrir um neg\u00f3cio no diret\u00f3rio de neg\u00f3cios queer, a p\u00e1gina mostrava o nome, os detalhes e quatro molduras vazias, que depois se iam preenchendo \u00e0 medida que cada imagem chegava. A p\u00e1gina passa a esperar atr\u00e1s de um ecr\u00e3 de carregamento que diz em que passo vai, e aparece com as fotografias no lugar. Se alguma estiver lenta ou em falta, a p\u00e1gina abre na mesma em vez de te deixar \u00e0 espera.",
+  "changelog.entries.browse-every-tag-by-category.title":
+    "Explora todas as etiquetas por categoria em vez de adivinhar a palavra",
+  "changelog.entries.browse-every-tag-by-category.body":
+    "O campo de etiquetas do teu perfil mostrava apenas seis etiquetas populares e uma caixa de pesquisa, pelo que tinhas de j\u00e1 saber que uma etiqueta existia para a encontrares. Passa a haver um bot\u00e3o \u201cVer todas\u201d que abre a lista completa agrupada por categoria: design e cria\u00e7\u00e3o visual, palavras e comunica\u00e7\u00e3o, tecnologia, comunidade e cuidado, pr\u00e1tico e profissional, m\u00fasica e performance. Toca numa etiqueta para a adicionar, toca outra vez para a retirar, e pesquisa em todas as categorias a partir do topo do painel. As tuas escolhas ficam no perfil \u00e0 medida que as fazes.",
+  "changelog.entries.backspace-keeps-your-tags.title":
+    "O backspace deixa de apagar as etiquetas que j\u00e1 escolheste",
+  "changelog.entries.backspace-keeps-your-tags.body":
+    "Em todos os campos onde vais juntando etiquetas, as compet\u00eancias do teu perfil, aquilo a que est\u00e1s aberta ou aberto e as etiquetas de uma publica\u00e7\u00e3o no f\u00f3rum, manter o backspace premido para limpar o que tinhas escrito continuava para as etiquetas \u00e0 esquerda do cursor e ia-as removendo uma a uma, sem forma de desfazer. O backspace passa a apagar apenas o texto que est\u00e1s a escrever. As etiquetas saem quando carregas no \u00d7 da pr\u00f3pria etiqueta.",
+  "changelog.entries.map-loader-stays-in-its-panel.title":
+    "O mapa do diret\u00f3rio passa a carregar dentro do seu pr\u00f3prio painel",
+  "changelog.entries.map-loader-stays-in-its-panel.body":
+    "Na primeira vez que mudavas o diret\u00f3rio de neg\u00f3cios queer de Lista para Mapa, o ecr\u00e3 de carregamento ocupava toda a janela em vez de ficar no painel do mapa, pelo que a p\u00e1gina parecia desaparecer por instantes. O carregamento passa a preencher o mesmo painel arredondado onde o mapa aterra, e a p\u00e1gina \u00e0 volta mant\u00e9m-se no lugar.",
   "changelog.entries.plum-headers-reach-the-top.title":
     "Os cabe\u00e7alhos cor de ameixa passam a chegar ao topo",
   "changelog.entries.plum-headers-reach-the-top.body":
@@ -5119,6 +5212,7 @@ export const marketing: Catalog = {
   "contact.form.topicLabel": "Sobre o que é?",
   "contact.form.topicPick": "Escolhe um tema",
   "contact.form.topic.general": "Pergunta geral ou feedback",
+  "contact.form.topic.account": "Acesso à conta ou segurança",
   "contact.form.topic.safety": "Preocupação de segurança",
   "contact.form.topic.press": "Pedido de imprensa ou investigação",
   "contact.form.topic.partnership": "Proposta de parceria",
@@ -5550,6 +5644,12 @@ export const marketing: Catalog = {
   "directory.detail.getInTouch": "Entrar em contacto",
   "directory.detail.backToDirectory": "Voltar ao diretório",
   "directory.detail.claimCta": "És tu que geres este espaço? Reivindica-o",
+  "directory.detail.loader.ariaLabel": "A abrir este espaço",
+  "directory.detail.loader.title": "A abrir este espaço",
+  "directory.detail.loader.caption": "Vale a pena ver tudo de uma vez.",
+  "directory.detail.loader.steps.fetchingListing": "A encontrar o negócio",
+  "directory.detail.loader.steps.preparingDetails": "A organizar os detalhes",
+  "directory.detail.loader.steps.loadingPhotos": "A trazer as fotografias",
   "directory.detail.notFound.title": "Não encontrámos este espaço",
   "directory.detail.notFound.body":
     "Este negócio pode ter sido removido, ou o link pode estar desatualizado. Todos os outros lugares abertos a nós continuam no diretório.",

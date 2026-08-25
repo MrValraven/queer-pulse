@@ -36,8 +36,9 @@ const EMPTY_SESSIONS: Session[] = [];
  * this security page was showing five fabricated devices while its "Sign out"
  * button revoked mock ids the server had never heard of.
  *
- * The list is small and unpaginated by design (one row per live refresh token),
- * so a single fetch covers it.
+ * The list is small and unpaginated by design (one entry per live session, and
+ * a session is a whole family of refresh-token rows rather than one row), so a
+ * single fetch covers it.
  */
 export function useSessions(): SessionsResult {
   const { demoMode } = useDemoMode();

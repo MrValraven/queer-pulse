@@ -6,6 +6,7 @@ import type { TFunction } from "../../../shared/i18n/types";
 import {
   deviceLabelFor,
   deviceTypeFromUserAgent,
+  lastActivityAgo,
   sessionResponseToSession,
   signedInAgo,
 } from "./sessions.adapters";
@@ -44,6 +45,9 @@ function response(over: Partial<SessionResponse> = {}): SessionResponse {
     userAgent: MAC_SAFARI,
     current: false,
     createdAt: "2026-07-16T09:00:00.000Z",
+    // A device that signed in and never came back: it has rotated no token
+    // since, so its last use IS its sign-in.
+    lastUsedAt: "2026-07-16T09:00:00.000Z",
     expiresAt: "2026-08-16T09:00:00.000Z",
     ...over,
   };
@@ -124,6 +128,46 @@ describe("signedInAgo", () => {
   });
 });
 
+describe("lastActivityAgo", () => {
+  const now = Date.parse("2026-07-16T12:00:00.000Z");
+
+  it("is undefined when last use buckets to the same phrase as the sign-in", () => {
+    // Otherwise the card reads "Signed in 3 hours ago · Last activity 3 hours
+    // ago", implying a second observation the store never made.
+    expect(lastActivityAgo(response(), t, fmt, now)).toBeUndefined();
+  });
+
+  it("is undefined when a later rotation still lands in the same bucket", () => {
+    // Signed in 3h10m ago, rotated 3h ago: both read "3 hours ago", so the
+    // second line would add nothing but false precision.
+    expect(
+      lastActivityAgo(
+        response({
+          createdAt: "2026-07-16T08:50:00.000Z",
+          lastUsedAt: "2026-07-16T09:00:00.000Z",
+        }),
+        t,
+        fmt,
+        now,
+      ),
+    ).toBeUndefined();
+  });
+
+  it("reports the last rotation when the device kept using the session", () => {
+    expect(
+      lastActivityAgo(
+        response({
+          createdAt: "2026-07-08T12:00:00.000Z",
+          lastUsedAt: "2026-07-16T11:30:00.000Z",
+        }),
+        t,
+        fmt,
+        now,
+      ),
+    ).toBe("30 minutes ago");
+  });
+});
+
 describe("sessionResponseToSession", () => {
   const now = Date.parse("2026-07-16T12:00:00.000Z");
 
@@ -134,7 +178,22 @@ describe("sessionResponseToSession", () => {
       variant: "normal",
       deviceType: "desktop",
       signedIn: "3 hours ago",
+      lastActivity: undefined,
     });
+  });
+
+  it("shows last activity when the device came back after signing in", () => {
+    const session = sessionResponseToSession(
+      response({
+        createdAt: "2026-07-08T12:00:00.000Z",
+        lastUsedAt: "2026-07-16T11:00:00.000Z",
+      }),
+      t,
+      fmt,
+      now,
+    );
+    expect(session.signedIn).toBe("8 days ago");
+    expect(session.lastActivity).toBe("1 hour ago");
   });
 
   it("badges the presenting session as current", () => {
@@ -145,12 +204,11 @@ describe("sessionResponseToSession", () => {
   });
 
   // The point of the whole workstream: the backend's refresh-token store has no
-  // location, no last-seen and no risk signal, so the adapter must leave those
-  // blank rather than fabricate a plausible-looking one.
-  it("invents no location and no last activity", () => {
+  // location and no risk signal, so the adapter must leave those blank rather
+  // than fabricate a plausible-looking one.
+  it("invents no location and no risk badge", () => {
     const session = sessionResponseToSession(response(), t, fmt, now);
     expect(session.location).toBeUndefined();
-    expect(session.lastActivity).toBeUndefined();
     expect(session.extra).toBeUndefined();
   });
 

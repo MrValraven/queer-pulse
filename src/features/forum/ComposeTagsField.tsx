@@ -15,8 +15,8 @@ function normalizeTag(raw: string): string {
 
 /**
  * Chip-entry tags input for the compose modal: type a tag, Enter/comma commits
- * it, Backspace on an empty field removes the last one. Normalized + deduped,
- * capped at five. Lifts the tag array up via `onChange`.
+ * it, the × on a chip removes it. Normalized + deduped, capped at five. Lifts
+ * the tag array up via `onChange`.
  */
 export function ComposeTagsField({
   tags,
@@ -39,9 +39,10 @@ export function ComposeTagsField({
     if (event.key === "Enter" || event.key === ",") {
       event.preventDefault();
       commit(draft);
-    } else if (event.key === "Backspace" && !draft && tags.length > 0) {
-      onChange(tags.slice(0, -1));
     }
+    // Backspace deliberately does NOT remove the previous tag. Holding it to
+    // clear what you typed would run on into the chips you already committed
+    // and silently delete them; the × on each tag is the only way to remove one.
   }
 
   return (

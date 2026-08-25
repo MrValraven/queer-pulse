@@ -188,7 +188,8 @@ export const gatherings: Catalog = {
   "event.rsvp.disabledHint": "Enter your name and a valid email to continue",
   "event.rsvp.noteFull":
     "We'll email you the moment a spot opens. Leaving the waitlist is one click.",
-  "event.rsvp.confirmationEmailNote": "Your place is saved. You'll find it under your gatherings.",
+  "event.rsvp.confirmationEmailNote":
+    "Your place is saved. You'll find it under your gatherings.",
   "event.rsvp.cancelPolicy": "You can cancel up to 48 hours before the event.",
   "event.rsvp.waitlistTitle": "You're on the <em>waitlist.</em>",
   "event.rsvp.errorToast": "That didn't go through. Try again in a moment.",
@@ -242,8 +243,10 @@ export const gatherings: Catalog = {
   "rsvp.withLabel": "You're going with",
   "rsvp.othersCount_one": "and {count} other member",
   "rsvp.othersCount_other": "and {count} other members",
-  "rsvp.live.goingWith_one": "You're going, along with <strong>{count} other member</strong>.",
-  "rsvp.live.goingWith_other": "You're going, along with <strong>{count} other members</strong>.",
+  "rsvp.live.goingWith_one":
+    "You're going, along with <strong>{count} other member</strong>.",
+  "rsvp.live.goingWith_other":
+    "You're going, along with <strong>{count} other members</strong>.",
   "rsvp.live.waitlistNote_one": "{count} more is on the waitlist.",
   "rsvp.live.waitlistNote_other": "{count} more are on the waitlist.",
   "rsvp.host.roleLabel": "Reading group organiser",
@@ -351,6 +354,8 @@ export const gatherings: Catalog = {
   "cohostInvite.actionMeta":
     "Either choice messages {host} directly. She'll see your decision but not be notified by push. <b>This is meant to be relaxed</b>.",
   "cohostInvite.openMessagesCta": "Open messages",
+  "cohostInvite.permissionsNote":
+    "Accepting lets you edit the page, message guests and manage RSVPs. <b>Cancelling the gathering and the host fund stay with {host}.</b>",
 
   // GatheringCancelledPage
   "cancelled.back": "Back to calendar",
@@ -685,7 +690,8 @@ export const gatherings: Catalog = {
   // AudienceScopeField.tsx — shared by the create wizard (step 3) and the
   // manage-gathering edit modal.
   "audienceScope.label": "Who can see this gathering?",
-  "audienceScope.hint": "Choose how wide this reaches. You can change it anytime.",
+  "audienceScope.hint":
+    "Choose how wide this reaches. You can change it anytime.",
   "audienceScope.members.label": "Public",
   "audienceScope.members.helper":
     "Anyone on QueerPulse can find this and RSVP.",
@@ -944,6 +950,8 @@ export const gatherings: Catalog = {
   "manage.cancelConfirm_other":
     "Cancel {title}? All {count} attendees will be notified.",
   "manage.linkCopiedToast": "Link copied!",
+  "manage.linkCopyFailedToast":
+    "We couldn't reach your clipboard. Copy the link from the share card instead.",
 
   // ── Manage: live-mode coming-soon (host tools not wired yet) ─────────────────
   "manageComingSoon.title": "Host tools are <em>coming soon</em>",
@@ -1042,6 +1050,7 @@ export const gatherings: Catalog = {
   "manage.settings.cancelCta": "Cancel gathering",
 
   // ── Manage: sidebar ───────────────────────────────────────────────────────────
+  "manage.sidebar.coverAlt": "Cover photo for {title}",
   "manage.sidebar.coverPhotoLine1": "gathering",
   "manage.sidebar.coverPhotoLine2": "cover photo",
   "manage.sidebar.copyCta": "Copy",
@@ -1156,6 +1165,7 @@ export const gatherings: Catalog = {
     "No cohosts yet. Adding one means you're not carrying the night alone.",
   "cohost.roleCohost": "Cohost",
   "cohost.addedToast": "{name} added as a cohost",
+  "cohost.inviteSentToast": "Co-host invite sent to {name}",
   "cohost.removedToast": "{name} removed as a cohost",
   "cohost.confirmPrompt": "Remove?",
   "cohost.confirmYes": "Yes, remove",
@@ -1168,6 +1178,24 @@ export const gatherings: Catalog = {
   "cohost.addModal.sub":
     "A cohost can edit the page, message guests and manage RSVPs alongside you. Pick someone you trust. They'll be asked to accept.",
   "cohost.addModal.searchLabel": "Search members to add as cohost",
+  "cohost.addModal.step2Eyebrow": "Co-host invite",
+  "cohost.addModal.step2Title": "Invite <em>{name}</em>",
+  "cohost.addModal.step2Sub":
+    "Say what you'd like help with and how much time it takes. They can accept or decline, and nothing changes until they accept.",
+  "cohost.addModal.roleLabel": "What they'd help with",
+  "cohost.addModal.rolePlaceholder": "Choose a role",
+  "cohost.addModal.commitmentLabel": "How much time it takes",
+  "cohost.addModal.commitmentPlaceholder": "Choose a commitment",
+  "cohost.addModal.messageLabel": "A note for them",
+  "cohost.addModal.messageHelper":
+    "Optional. It sits at the top of their invite.",
+  "cohost.addModal.messagePlaceholder":
+    "Why you're asking them, and anything they should know before saying yes.",
+  "cohost.addModal.replyByLabel": "Reply by",
+  "cohost.addModal.replyByHelper":
+    "Optional. They see this date on the invite and can still answer sooner.",
+  "cohost.addModal.sendCta": "Send invite",
+  "cohost.addModal.backCta": "Pick someone else",
   "cohost.picker.searchLabelDefault": "Search members",
   "cohost.picker.placeholder": "Search by name or role…",
   "cohost.picker.noResults": 'No members match "{query}".',
@@ -1238,7 +1266,8 @@ export const gatherings: Catalog = {
   "hub.host.cta": "Host a gathering",
   "hub.ways.heading": "Ways to gather",
   "hub.empty.title": "Nothing on the calendar yet.",
-  "hub.empty.body": "New gatherings turn up here all the time. You could host the first.",
+  "hub.empty.body":
+    "New gatherings turn up here all the time. You could host the first.",
   "hub.card.cta": "See it",
   "hub.loading": "Finding what's on…",
 
@@ -1247,7 +1276,8 @@ export const gatherings: Catalog = {
   // post-gathering persona nudge (GatheringPerformerNudge). Personas
   // discovery Phase 5, Moment 5.
   "lineup.title": "Lineup",
-  "lineup.description": "Tag who's performing, hosting or working this gathering.",
+  "lineup.description":
+    "Tag who's performing, hosting or working this gathering.",
   "lineup.empty": "Nobody's tagged yet.",
   "lineup.addCta": "Tag someone",
   "lineup.roleLabel": "Their role",

@@ -41,10 +41,12 @@ export const auth: Catalog = {
   "signIn.notice.inviteInvalid.title": "That invite isn't valid",
   "signIn.notice.inviteInvalid.body":
     "This invite link has expired or was already used. Ask your inviter for a fresh one, or request an invite yourself.",
-  "signIn.notice.inviteEmailMismatch.title": "This invite was set for a different email",
+  "signIn.notice.inviteEmailMismatch.title":
+    "This invite was set for a different email",
   "signIn.notice.inviteEmailMismatch.body":
     "Someone set this invite aside for one specific address. Sign in with that email, or ask them for a new invite for the one you're using.",
-  "signIn.notice.inviteInviterInactive.title": "The person who invited you has moved on",
+  "signIn.notice.inviteInviterInactive.title":
+    "The person who invited you has moved on",
   "signIn.notice.inviteInviterInactive.body":
     "Whoever sent this invite is no longer active on QueerPulse, so it can't bring you in. Ask another member you know for a fresh invite, or request one yourself.",
   "signIn.notice.accessDenied.title": "Sign-in was cancelled",
@@ -90,8 +92,7 @@ export const auth: Catalog = {
   // Pre-emptive states, rendered from GET /platform-status BEFORE submit so
   // nobody round-trips through Google only to be rejected at the callback.
   "signIn.closed.title": "New accounts are paused",
-  "signIn.closed.body":
-    "You can still sign in to an existing account below.",
+  "signIn.closed.body": "You can still sign in to an existing account below.",
 
   // ── The abstract "gathered hearth" illustration on the sign-in art tile ──
   "communityArt.ariaLabel":
@@ -166,7 +167,8 @@ export const auth: Catalog = {
   "invite.ready.copyLinkAriaLabel": "Copy invite link",
   "invite.ready.shareThrough": "Share through",
   "invite.ready.qrHint": "Or let them scan it",
-  "invite.ready.qrLabel": "QR code for this invite link. Scan it to open the invitation",
+  "invite.ready.qrLabel":
+    "QR code for this invite link. Scan it to open the invitation",
   "invite.ready.oneTimeLink": "One-time link",
   "invite.ready.expiresIn7Days": "Expires in 7 days",
   "invite.ready.expiresOn": "Expires {date}",
@@ -200,7 +202,8 @@ export const auth: Catalog = {
     "We couldn't revoke that invite just now. It's still live, so give it another try in a moment.",
   "invite.sentList.resendCta": "Send again",
   "invite.sentList.resending": "Sending…",
-  "invite.sentList.resentToast": "Invite sent again: same link, fresh for another week.",
+  "invite.sentList.resentToast":
+    "Invite sent again: same link, fresh for another week.",
   "invite.sentList.resendError.notYours":
     "This isn't one of your invites to send again.",
   "invite.sentList.resendError.notFound":
@@ -325,7 +328,8 @@ export const auth: Catalog = {
   // is a person sending a link by hand, and a decline sends nothing at all.
   // Promising "you hear back either way" would be a quiet lie to someone who
   // then waits for a reply that can never arrive.
-  "requestInvite.whatNext.hearBack.title": "If it's a yes, someone gets in touch",
+  "requestInvite.whatNext.hearBack.title":
+    "If it's a yes, someone gets in touch",
   "requestInvite.whatNext.hearBack.body":
     "A member sends your invite link to the address you gave us, usually within a couple of weeks. We can't reply to every request, so if it stays quiet, asking someone you already know here is the surest way in.",
 
@@ -427,7 +431,8 @@ export const auth: Catalog = {
     "You can block, mute, or report any member, any time. <a>See how blocking and muting work</a>.",
 
   "onboarding.stepIntents.heading": "What brings you <em>here?</em>",
-  "onboarding.stepIntents.hint": "Pick at least one, and choose as many as fit.",
+  "onboarding.stepIntents.hint":
+    "Pick at least one, and choose as many as fit.",
   "onboarding.stepIntents.continue": "Continue",
   "onboarding.stepIntents.skip": "Skip for now, you can share this later",
   "onboarding.stepIntents.back": "Back",
@@ -438,6 +443,18 @@ export const auth: Catalog = {
     "Other members will see what you're looking for on your profile.",
   "onboarding.stepIntents.visibility.descPrivate":
     "Kept to yourself. You can turn this on any time in Settings.",
+  // ── Step 6: what do you do (StepWork) ───────────────────────────────────────
+  // Writes the profile's own field/profession, which is what the member
+  // directory filters on, so this step is what makes a new member findable by
+  // their work. Optional: skipping writes nothing.
+  "onboarding.stepWork.heading": "What do <em>you do?</em>",
+  "onboarding.stepWork.hint":
+    "Pick your field, then the roles that fit. This is public, and it's how people find you in the member directory.",
+  "onboarding.stepWork.continue": "Continue",
+  "onboarding.stepWork.skip": "Skip for now, you can add this later",
+  "onboarding.stepWork.back": "Back",
+  "onboarding.stepWork.saveError":
+    "We couldn't save that just now. Please try again.",
   "onboarding.intent.community": "Community",
   "onboarding.intent.gatherings": "Gatherings & events",
   "onboarding.intent.professional": "Professional connections",
@@ -471,7 +488,8 @@ export const auth: Catalog = {
   "onboarding.stepDone.notifications.title": "Stay in the loop",
   "onboarding.stepDone.notifications.desc":
     "Get notified about messages, invites, and gathering reminders on your phone. Change this anytime in Settings.",
-  "onboarding.stepDone.stampFailed.title": "We couldn't save that you're finished",
+  "onboarding.stepDone.stampFailed.title":
+    "We couldn't save that you're finished",
   "onboarding.stepDone.stampFailed.desc":
     "You're in either way. Without this we might walk you through the same setup again next time.",
   "onboarding.stepDone.stampFailed.retry": "Try again",
@@ -505,8 +523,10 @@ export const auth: Catalog = {
   "gettingStarted.progress": "{done} of {total} done",
   "gettingStarted.levelStrip.eyebrow": "Your level",
   "gettingStarted.levelStrip.progress": "{xp} of {xpMax} XP",
-  "gettingStarted.levelStrip.hint": "Each step you finish earns XP toward your next level.",
-  "gettingStarted.levelStrip.hintDone": "Keep exploring QueerPulse to earn more.",
+  "gettingStarted.levelStrip.hint":
+    "Each step you finish earns XP toward your next level.",
+  "gettingStarted.levelStrip.hintDone":
+    "Keep exploring QueerPulse to earn more.",
   "gettingStarted.xpSources.eyebrow": "What's earned it so far",
   "gettingStarted.xpSources.amount": "+{xp} XP",
   "gettingStarted.xpSources.seeAll": "See full breakdown",

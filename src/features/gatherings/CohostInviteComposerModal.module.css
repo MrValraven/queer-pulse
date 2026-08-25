@@ -1,0 +1,32 @@
+/* Step 2 of the cohost invite composer: the picked-person summary and the
+   field pairing. Step 1 (the member picker) is all shared primitives. */
+
+/* Who the invite is going to, kept visible while the terms are being set. The
+   title names them, this row shows their face and pronouns and gives a way
+   back to the picker without closing the modal. */
+.pickedRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+}
+
+/* Role and commitment are both one-line picks. Pairing them keeps all four
+   fields plus the footer inside one screen instead of pushing the send button
+   below the fold. Stacks back to one column on phones. */
+.pairRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 14px;
+}
+@media (--sm-up) {
+  .pairRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}

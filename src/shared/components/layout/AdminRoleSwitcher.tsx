@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiChevronDown } from "react-icons/fi";
 import { useTeamRole } from "../../../features/admin/adminRole";
@@ -8,6 +7,7 @@ import { initialsFromParts } from "../../lib/initials";
 import { useTranslation } from "../../i18n/useTranslation";
 import { modPanel } from "../../../app/routeMap";
 import { STEWARDED, ADMIN_PROFILE } from "./adminNav.data";
+import { useSidebarMenu } from "./useSidebarMenu";
 import styles from "./AdminShell.module.css";
 
 const COMMUNITY_SLUGS = ["trans-hub", "rainbow-arts"];
@@ -54,70 +54,8 @@ export function AdminRoleSwitcher() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node))
-        setOpen(false);
-    };
-    const onKey = (event: globalThis.KeyboardEvent) => {
-      // Escape closes and restores focus to the trigger (APG menu button).
-      if (event.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
-
-  // Move focus into the menu (first item) when it opens.
-  useEffect(() => {
-    if (open)
-      menuRef.current
-        ?.querySelector<HTMLButtonElement>(
-          '[role="menuitem"], [role="menuitemradio"]',
-        )
-        ?.focus();
-  }, [open]);
-
-  // Up/Down roving between the role/community options, Home/End to the ends.
-  const onMenuKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
-    const items = Array.from(
-      menuRef.current?.querySelectorAll<HTMLButtonElement>(
-        '[role="menuitem"], [role="menuitemradio"]',
-      ) ?? [],
-    );
-    if (items.length === 0) return;
-    event.preventDefault();
-    const currentIndex = items.indexOf(
-      document.activeElement as HTMLButtonElement,
-    );
-    let nextIndex: number;
-    if (event.key === "Home") {
-      nextIndex = 0;
-    } else if (event.key === "End") {
-      nextIndex = items.length - 1;
-    } else if (event.key === "ArrowDown") {
-      nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % items.length;
-    } else {
-      nextIndex =
-        currentIndex < 0
-          ? items.length - 1
-          : (currentIndex - 1 + items.length) % items.length;
-    }
-    items[nextIndex]?.focus();
-  };
+  const { open, toggle, close, wrapRef, menuRef, triggerRef, onMenuKeyDown } =
+    useSidebarMenu();
 
   const isAdmin = role === "admin";
   const roleLabel = isAdmin
@@ -144,12 +82,12 @@ export function AdminRoleSwitcher() {
   }
 
   return (
-    <div className={styles.switch} ref={ref}>
+    <div className={styles.switch} ref={wrapRef}>
       <button
         ref={triggerRef}
         type="button"
         className={styles.switchBtn}
-        onClick={() => setOpen((o) => !o)}
+        onClick={toggle}
         aria-haspopup="menu"
         aria-expanded={open}
       >
@@ -183,7 +121,7 @@ export function AdminRoleSwitcher() {
               .join(" ")}
             onClick={() => {
               setRole("admin");
-              setOpen(false);
+              close();
               showToast(t("shared:adminRoleSwitcher.toastNowStaff"), "info");
             }}
           >
@@ -218,7 +156,7 @@ export function AdminRoleSwitcher() {
               className={styles.switchOpt}
               onClick={() => {
                 setRole("moderator");
-                setOpen(false);
+                close();
                 void navigate(modPanel(COMMUNITY_SLUGS[i] ?? ""));
               }}
             >

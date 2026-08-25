@@ -15,20 +15,6 @@ import type {
   WriterPitchDto,
 } from "../api/writerWorkspace.api";
 
-/** The logged-in writer's header identity. FE-only — there's no `/magazine/writer/me`
- *  endpoint; live mode derives this from `useAuth().user` instead (see `useWriterWorkspace`). */
-export interface WriterIdentity {
-  name: string;
-  role: string;
-  tint: "jade" | "coral" | "plum" | "violet";
-}
-
-const ME: WriterIdentity = {
-  name: "Sara Pinheiro",
-  role: "Contributor",
-  tint: "jade",
-};
-
 /** The house terms every commission carries — mirrors the backend's static
  *  `HOUSE_RIGHTS_TERM`/`HOUSE_EDITS_TERM` (`magazine-writer-response.ts`). */
 const HOUSE_RIGHTS_TERM = "First publication, you keep the rest";
@@ -112,7 +98,6 @@ const PAYMENTS: WriterPaymentDto[] = [
 
 /** Demo-mode fixture for `useWriterWorkspace` — the writer's own work only. */
 export const DEMO_WRITER = {
-  me: ME,
   assignments: ASSIGNMENTS,
   pitches: PITCHES,
   payments: PAYMENTS,

@@ -81,6 +81,10 @@ export function LivingHubTabs({
         const params = new URLSearchParams(prev);
         if (next === "pulse") params.delete("tab");
         else params.set("tab", next);
+        // `?mod=` addresses a pane inside Mod tools and means nothing
+        // anywhere else, so it leaves with the tab rather than trailing
+        // along in the URL of every tab a mod visits afterwards.
+        if (next !== "modtools") params.delete("mod");
         return params;
       },
       { replace: true },

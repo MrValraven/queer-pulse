@@ -144,13 +144,37 @@ export const shared: Catalog = {
 
   // AdminSidebar
   "adminSidebar.badge": "Admin",
-  "adminSidebar.oversight": "Oversight",
+  "adminSidebar.navLabel": "Admin sections",
   "adminSidebar.backToPlatform": "Back to platform",
-  "adminSidebar.toastProfile": "Your admin profile",
+
+  // AdminAccountMenu — the staff account control at the foot of the rail.
+  // "Your access" summarises the account tier plus any additive staff grants;
+  // for an admin the grants are the whole catalogue, so it reads "Every admin
+  // area" instead of listing them.
+  "adminSidebar.account.accessHeading": "Your access",
+  // Only the "member" tier needs its own key: the admin/moderator labels are
+  // reused from `adminRoleSwitcher.role*` so the rail's two ends never drift.
+  "adminSidebar.account.tierMember": "Member",
+  "adminSidebar.account.allAreas": "Every admin area",
+  "adminSidebar.account.profile": "My profile",
+  "adminSidebar.account.settings": "Account settings",
+  "adminSidebar.account.sessions": "Active sessions",
 
   // adminNav.data.ts — ADMIN_NAV item labels (STEWARDED + ADMIN_PROFILE stay
   // English: in live mode those are the moderator's real communities/role,
   // fetched data, not platform chrome).
+  // Collapsible section headings. `pendingSuffix` is visually hidden: it only
+  // gives the rolled-up count on a collapsed heading a meaning when read aloud.
+  "adminNav.sections.trust": "Trust & safety",
+  "adminNav.sections.people": "People & access",
+  "adminNav.sections.communities": "Communities",
+  "adminNav.sections.directory": "Directory",
+  "adminNav.sections.editorial": "Editorial",
+  "adminNav.sections.partners": "Partners & recognition",
+  "adminNav.sections.site": "Site content",
+  "adminNav.sections.platform": "Platform",
+  "adminNav.pendingSuffix": "pending",
+
   "adminNav.items.overview": "Overview",
   "adminNav.items.landing": "Landing page",
   "adminNav.items.pressKit": "Press kit",

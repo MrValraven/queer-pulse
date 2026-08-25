@@ -1,4 +1,4 @@
-import { FiAlertTriangle, FiFileText, FiPlus, FiRefreshCw } from "react-icons/fi";
+import { FiAlertTriangle, FiEdit3, FiFileText, FiPlus, FiRefreshCw } from "react-icons/fi";
 import { Button, EmptyState, SkeletonLine } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./DeskStates.module.css";
@@ -39,14 +39,20 @@ export function DeskSkeleton() {
 export interface DeskEmptyStateProps {
   /** The current issue number, so the copy can say exactly which one is bare. */
   issueNumber: string;
+  onWrite: () => void;
   onCommission: () => void;
 }
 
 /**
- * First-run / "the desk is clear" state: nothing has been commissioned yet
- * for the current issue. One recovery action — commission the first piece.
+ * First-run / "the desk is clear" state: nothing has been filed yet for the
+ * current issue. Two recovery actions, in the same order as the header:
+ * write the first piece yourself, or commission it out.
  */
-export function DeskEmptyState({ issueNumber, onCommission }: DeskEmptyStateProps) {
+export function DeskEmptyState({
+  issueNumber,
+  onWrite,
+  onCommission,
+}: DeskEmptyStateProps) {
   const { t } = useTranslation();
   return (
     <EmptyState
@@ -54,6 +60,14 @@ export function DeskEmptyState({ issueNumber, onCommission }: DeskEmptyStateProp
       title={t("magazine:desk.states.emptyIssueTitle", { number: issueNumber })}
       description={t("magazine:desk.states.emptyIssueDescription")}
       action={{
+        label: (
+          <>
+            <FiEdit3 aria-hidden /> {t("magazine:desk.states.writePiece")}
+          </>
+        ),
+        onClick: onWrite,
+      }}
+      secondaryAction={{
         label: (
           <>
             <FiPlus aria-hidden /> {t("magazine:desk.states.commissionPiece")}

@@ -17,8 +17,8 @@ export interface IssueDTO {
   number: string;
   title: string;
   dek: string;
-  /** YYYY-MM-DD */
-  publishedOn: string;
+  /** YYYY-MM-DD, or null while the issue is still unscheduled. */
+  publishedOn: string | null;
   coverUrl: string | null;
 }
 

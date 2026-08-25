@@ -2,23 +2,22 @@ import { useState } from "react";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace, type Tint } from "./directoryPlaces";
-import { type PhotoKey } from "./listBusiness/listBusiness.data";
+import {
+  GALLERY_HERO_PX,
+  GALLERY_THUMB_PX,
+  galleryShotsOf,
+  type GalleryShot,
+} from "./directoryGalleryShots";
 import { DirectoryLightbox } from "./DirectoryLightbox";
 import styles from "./DirectorySpacePage.module.css";
 
-export interface GalleryShot {
-  url: string;
-  alt: string;
-}
+export type { GalleryShot };
 
 const GCELL: Record<Tint, string> = {
   coral: "",
   jade: styles.gCellJade!,
   plum: styles.gCellPlum!,
 };
-
-/** Slot order for the four uploadable photo positions. */
-const PHOTO_SLOTS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
 
 /**
  * Directory detail cover. Places with real uploaded photos get a photo hero
@@ -30,10 +29,7 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const shots: GalleryShot[] = PHOTO_SLOTS.map((key) => ({
-    url: place.photos?.[key] ?? null,
-    alt: place.alt?.[key] ?? "",
-  })).flatMap((shot) => (shot.url ? [{ url: shot.url, alt: shot.alt }] : []));
+  const shots: GalleryShot[] = galleryShotsOf(place);
 
   if (shots.length === 0) {
     // No uploaded photos. If the listing at least described its slots, keep the
@@ -104,7 +100,7 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
             aria-label={hero!.alt || viewPhotoLabel}
           >
             <img
-              src={resolveAvatarSrc(hero!.url, 1400)}
+              src={resolveAvatarSrc(hero!.url, GALLERY_HERO_PX)}
               alt={hero!.alt}
               loading="eager"
               fetchPriority="high"
@@ -123,7 +119,7 @@ export function DirectoryGallery({ place }: { place: DirectoryPlace }) {
                   aria-label={shot.alt || viewPhotoLabel}
                 >
                   <img
-                    src={resolveAvatarSrc(shot.url, 500)}
+                    src={resolveAvatarSrc(shot.url, GALLERY_THUMB_PX)}
                     alt={shot.alt}
                     loading="lazy"
                     decoding="async"

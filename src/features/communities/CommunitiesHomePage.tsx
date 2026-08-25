@@ -1,5 +1,5 @@
 import { FiUsers } from "react-icons/fi";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
@@ -32,12 +32,19 @@ export function CommunitiesHome() {
   // covers is mock-derived and always empty in live mode, so live members were
   // waiting half a second for nothing.
   const isSimulatedLoading = useSimulatedLoad(500);
-  const isLoading = demoMode && isSimulatedLoading;
+  const isPulseLoading = demoMode && isSimulatedLoading;
   // The signed-in member (real profile live, mock currentUser in demo mode).
   const { profile } = useProfileData();
   const firstName = profile.first;
-  const { pulse, todos, myCommunities, upcoming, suggestions, digest } =
-    useCommunitiesHomeData();
+  const {
+    isLoading: isMembershipsLoading,
+    pulse,
+    todos,
+    myCommunities,
+    upcoming,
+    suggestions,
+    digest,
+  } = useCommunitiesHomeData();
   const hasSidebar = upcoming.length > 0 || suggestions.length > 0;
 
   return (
@@ -53,13 +60,26 @@ export function CommunitiesHome() {
                 components={{ em: <em /> }}
               />
             </h2>
-            <p className={styles.sub}>
-              {t("communities:hub.sub", { count: myCommunities.length })}
-            </p>
+            {/* The lead line is a count, so it can't render until the count is
+                known: "across your 0 communities" for the length of the
+                membership fetch is a wrong number, not a loading state. */}
+            {isMembershipsLoading ? (
+              <div className={styles.sub} aria-hidden>
+                <SkeletonLine width="min(42ch, 100%)" height={15} />
+              </div>
+            ) : (
+              <p className={styles.sub}>
+                {t("communities:hub.sub", { count: myCommunities.length })}
+              </p>
+            )}
           </div>
         </div>
 
-        {myCommunities.length === 0 ? (
+        {/* Only an empty membership map we've actually resolved earns the
+            empty state. While it's still in flight we fall through to the
+            grid, which carries its own card skeletons, so a member who does
+            belong to communities never gets told they belong to none. */}
+        {!isMembershipsLoading && myCommunities.length === 0 ? (
           <EmptyState
             icon={<FiUsers />}
             title={t("communities:hub.empty.title")}
@@ -73,6 +93,7 @@ export function CommunitiesHome() {
           <>
             <CommunitiesGrid
               scope="mine"
+              isPending={isMembershipsLoading}
               afterFilters={
                 /* The weekly digest is derived entirely from the `getLiving`
                    mock — there's no live feed backend — so it only renders in
@@ -95,7 +116,7 @@ export function CommunitiesHome() {
             >
               <div>
                 <CommunitiesHomeTodos todos={todos} />
-                <CommunitiesHomePulse loading={isLoading} pulse={pulse} />
+                <CommunitiesHomePulse loading={isPulseLoading} pulse={pulse} />
               </div>
 
               {hasSidebar && (

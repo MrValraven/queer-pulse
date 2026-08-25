@@ -313,6 +313,10 @@
 .sidebar {
   max-height: calc(100svh - var(--sticky-top) - 40px);
   overflow-y: auto;
+  /* Keep the scrollbar off the cards: the track always occupies its own gutter
+     and the padding stops card corners (and the save button) from touching it. */
+  scrollbar-gutter: stable;
+  padding-right: 14px;
   position: sticky;
   top: calc(var(--sticky-top) + 10px);
 }
@@ -513,6 +517,12 @@
   .sidebar {
     position: static;
     max-height: none;
+  }
+  /* Stacked under the map, the list scrolls with the page: no gutter to
+     reserve, and the padding would misalign it with the map panel above. */
+  .sidebar {
+    scrollbar-gutter: auto;
+    padding-right: 0;
   }
   /* Fluid, viewport-relative height so the map doesn't eat the whole screen on
      a phone (was a fixed 560px). svh stays stable under mobile browser chrome. */

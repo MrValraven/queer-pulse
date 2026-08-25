@@ -90,6 +90,212 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "your-devices-list-stops-collecting-old-sign-ins",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("your-devices-list-stops-collecting-old-sign-ins"),
+        tag: {
+          labelKey: "marketing:changelog.tag.sessions",
+          to: routes.sessions,
+        },
+      },
+      {
+        id: "devices-say-when-you-signed-in-and-when-you-were-last-there",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys(
+          "devices-say-when-you-signed-in-and-when-you-were-last-there",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.sessions",
+          to: routes.sessions,
+        },
+      },
+      {
+        id: "sessions-page-links-reach-a-person",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("sessions-page-links-reach-a-person"),
+        tag: {
+          labelKey: "marketing:changelog.tag.sessions",
+          to: routes.sessions,
+        },
+      },
+      {
+        id: "profile-sections-share-one-left-edge",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("profile-sections-share-one-left-edge"),
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
+      },
+      {
+        id: "my-communities-waits-instead-of-saying-you-have-none",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("my-communities-waits-instead-of-saying-you-have-none"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "say-what-you-do-on-your-profile",
+        category: "feature",
+        date: "25 Aug 2026",
+        ...entryKeys("say-what-you-do-on-your-profile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.profile",
+          to: routes.accountProfile,
+        },
+      },
+      {
+        id: "admin-account-menu-is-real",
+        category: "feature",
+        date: "25 Aug 2026",
+        ...entryKeys("admin-account-menu-is-real"),
+      },
+      {
+        id: "admin-sidebar-grouped-sections",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("admin-sidebar-grouped-sections"),
+      },
+      {
+        id: "since-friday-panel-removed",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("since-friday-panel-removed"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "writer-desk-header-says-whats-due",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("writer-desk-header-says-whats-due"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "editors-can-write-their-own-pieces",
+        category: "feature",
+        date: "25 Aug 2026",
+        ...entryKeys("editors-can-write-their-own-pieces"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "editor-pages-start-at-the-top",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("editor-pages-start-at-the-top"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "issue-publish-date-optional",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("issue-publish-date-optional"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "cohost-invite-form-reads-properly",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("cohost-invite-form-reads-properly"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "desk-activity-reads-in-plain-language",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("desk-activity-reads-in-plain-language"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "mod-tools-became-a-console",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("mod-tools-became-a-console"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "share-card-shows-your-own-gathering",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("share-card-shows-your-own-gathering"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "place-page-reads-in-one-piece",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("place-page-reads-in-one-piece"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "browse-every-tag-by-category",
+        category: "feature",
+        date: "25 Aug 2026",
+        ...entryKeys("browse-every-tag-by-category"),
+      },
+      {
+        id: "place-pages-open-all-at-once",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("place-pages-open-all-at-once"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "backspace-keeps-your-tags",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("backspace-keeps-your-tags"),
+      },
+      {
+        id: "map-loader-stays-in-its-panel",
+        category: "fix",
+        date: "25 Aug 2026",
+        ...entryKeys("map-loader-stays-in-its-panel"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "invites-go-out-by-hand",
         category: "fix",
         date: "25 Aug 2026",

@@ -136,6 +136,7 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     series: dto.series ?? null,
     goingAttendeesPreview: dto.goingAttendeesPreview ?? [],
     goingAttendeesPreviewTotal: dto.goingAttendeesPreviewTotal ?? 0,
+    coverImageUrl: dto.coverImageUrl ?? null,
   };
 }
 

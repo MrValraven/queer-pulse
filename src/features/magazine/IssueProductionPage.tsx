@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiArrowLeft } from "react-icons/fi";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
-import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
@@ -18,10 +18,10 @@ import { AddPiecesPanel } from "./desk/issue/AddPiecesPanel";
 import { CoverContentsTab } from "./desk/issue/CoverContentsTab";
 import { DigestSocialTab } from "./desk/issue/DigestSocialTab";
 import { ArchiveTab } from "./desk/issue/ArchiveTab";
-import { ShipChecklistCard } from "./desk/issue/ShipChecklistCard";
 import { ShipIssueModal } from "./desk/issue/ShipIssueModal";
 import { IssueTabsNav, type IssueTabId } from "./desk/issue/IssueTabsNav";
-import { PagesCard } from "./desk/issue/PagesCard";
+import { IssueProductionHeader } from "./desk/issue/IssueProductionHeader";
+import { IssueRail } from "./desk/issue/IssueRail";
 import styles from "./IssueProductionPage.module.css";
 
 /**
@@ -36,8 +36,15 @@ export function IssueProductionPage() {
   const { number } = useParams();
   const navigate = useNavigate();
   const { issue, isLoading, isError } = useIssueProduction(number!);
-  const { saveRunOrder, saveDigest, saveCover, saveContentsBlurb, ship, sendDigestTest } =
-    useIssueMutations(number!);
+  const {
+    saveRunOrder,
+    saveDigest,
+    saveCover,
+    saveContentsBlurb,
+    saveSchedule,
+    ship,
+    sendDigestTest,
+  } = useIssueMutations(number!);
   const { showToast } = useToast();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -184,39 +191,13 @@ export function IssueProductionPage() {
   return (
     <MagazineDeskShell>
       <div className={styles.page}>
-        <div className={styles.ebar}>
-          <Button
-            variant="ghost"
-            size="sm"
-            to={routes.magazineEditor}
-            aria-label={t("magazine:issue.header.backToDesk")}
-          >
-            <FiArrowLeft aria-hidden />
-          </Button>
-          <div className={styles.title}>
-            <b>
-              {t("magazine:issue.header.title", {
-                number: production.number,
-                theme: production.theme,
-              })}
-            </b>
-            <span className={styles.titleSub}>
-              {t("magazine:issue.header.laidOut", { ready: readyCount, total: totalCount })}
-            </span>
-          </div>
-          <div className={styles.right}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => showToast(t("magazine:issue.header.proofToast"))}
-            >
-              {t("magazine:issue.header.proof")}
-            </Button>
-            <Button variant="plum" size="sm" onClick={() => setShipModalOpen(true)}>
-              {t("magazine:issue.ship.cta")}
-            </Button>
-          </div>
-        </div>
+        <IssueProductionHeader
+          number={production.number}
+          theme={production.theme}
+          readyCount={readyCount}
+          totalCount={totalCount}
+          onShip={() => setShipModalOpen(true)}
+        />
 
         <div className={styles.ework}>
           <div>
@@ -225,11 +206,14 @@ export function IssueProductionPage() {
           </div>
 
           <aside className={styles.erail}>
-            <ShipChecklistCard
-              checklist={production.shipChecklist}
+            <IssueRail
+              production={production}
+              isSavingSchedule={saveSchedule.isPending}
               onShip={() => setShipModalOpen(true)}
+              onSaveSchedule={(publishedOn, onSaved) =>
+                saveSchedule.mutate({ publishedOn }, { onSuccess: onSaved })
+              }
             />
-            <PagesCard pages={production.pages} />
           </aside>
         </div>
       </div>

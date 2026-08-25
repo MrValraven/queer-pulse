@@ -67,7 +67,16 @@ export function LocationMiniMap({ latitude, longitude, ariaLabel }: LocationMini
         .addTo(map);
 
       map.on("load", () => {
-        if (!cancelled) setReady(true);
+        if (cancelled) return;
+        // maplibre renders its compact attribution EXPANDED on first paint, and
+        // in a frame this small the credit line covers a third of the map. Drop
+        // it back to the "i" button it was configured for; the control's own
+        // toggle still opens the full credit on click, so the attribution stays
+        // one tap away rather than being the loudest thing in the picture.
+        container
+          ?.querySelector(".maplibregl-ctrl-attrib")
+          ?.classList.remove("maplibregl-compact-show");
+        setReady(true);
       });
     }
 

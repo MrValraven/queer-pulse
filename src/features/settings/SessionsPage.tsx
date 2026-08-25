@@ -224,8 +224,11 @@ export function SessionsPage() {
   return (
     <AppShell>
       <div className={styles.page}>
-        <Link to={routes.security} className={styles.back}>
-          <FiArrowLeft aria-hidden /> {t("settings:sessions.backToSecurity")}
+        {/* Back to the pane this page is opened from: Settings → Account,
+            which holds the "Active sessions" card. NOT /account/security,
+            which is the public vulnerability-disclosure policy. */}
+        <Link to={`${routes.settings}?pane=account`} className={styles.back}>
+          <FiArrowLeft aria-hidden /> {t("settings:sessions.backToAccount")}
         </Link>
 
         <div className={styles.eyebrow}>{t("settings:sessions.eyebrow")}</div>
@@ -236,9 +239,12 @@ export function SessionsPage() {
           />
         </h1>
         <p className={styles.lead}>
+          {/* "What to do next" is the help page's account section, which
+              answers an unfamiliar device. It is NOT /system/account-locked:
+              that page states the account is locked, which it isn't. */}
           <Translation
             i18nKey="settings:sessions.lead"
-            components={{ a: <Link to={routes.accountLocked} /> }}
+            components={{ a: <Link to={`${routes.help}#account`} /> }}
           />
         </p>
 
@@ -280,7 +286,9 @@ export function SessionsPage() {
             i18nKey="settings:sessions.footNote"
             components={{
               strong: <b />,
-              a: <Link to={routes.accountLocked} />,
+              // Reporting a compromised account goes to the contact form
+              // with its topic preselected, so it reaches ops as an inquiry.
+              a: <Link to={`${routes.contact}?topic=account`} />,
             }}
           />
         </div>

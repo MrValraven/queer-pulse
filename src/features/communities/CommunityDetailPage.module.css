@@ -221,6 +221,12 @@
   gap: 44px;
   align-items: flex-start;
 }
+/* Mod tools brings its own rail + pane, so the hub drops the community
+   sidebar and hands the console the full width rather than stacking a third
+   column into an already-split page. */
+.layoutWide {
+  grid-template-columns: minmax(0, 1fr);
+}
 @media (--mobile) {
   .layout {
     grid-template-columns: 1fr;

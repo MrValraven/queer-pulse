@@ -80,7 +80,7 @@ export function ModToolsCardSection({
 
   return (
     <>
-      <div className={detail.secLbl} style={{ marginTop: 32 }}>
+      <div className={detail.secLbl}>
         <FiCreditCard aria-hidden /> {t("cards:modTools.title")}
       </div>
 

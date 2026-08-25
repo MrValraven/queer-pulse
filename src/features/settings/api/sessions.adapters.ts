@@ -14,10 +14,13 @@ import type { SessionResponse } from "./account.api";
  *
  * The guiding rule: **never invent a field the backend doesn't have.** The
  * refresh-token store behind `GET /account/sessions` carries only
- * `id / userAgent / current / createdAt / expiresAt`, so:
+ * `id / userAgent / current / createdAt / lastUsedAt / expiresAt`, so:
  *
- * - `location` and `lastActivity` are left undefined (the card omits them) rather
- *   than filled with a plausible-looking city or timestamp.
+ * - `location` is left undefined (the card omits the line) rather than filled
+ *   with a plausible-looking city.
+ * - `lastActivity` comes from `lastUsedAt`, which is a real recorded value: the
+ *   last time that device rotated a refresh token. It is coarse, and it is
+ *   omitted when it would only repeat `signedIn`.
  * - `variant` is only ever `current` or `normal`. There is no server-side
  *   "this login looks suspicious" signal, so no session is ever badged
  *   `suspect` in live mode — a fake risk badge is worse than none.
@@ -63,6 +66,28 @@ export function signedInAgo(
   return relativeAgo(iso, t, fmt, SESSION_AGO_KEYS, now);
 }
 
+/**
+ * "Last activity", or undefined when it would say nothing.
+ *
+ * A device that signed in and never came back has `lastUsedAt` equal to its
+ * sign-in, and both bucket to the same phrase — a card reading "Signed in 3
+ * days ago · Last activity 3 days ago" implies a second, corroborating
+ * observation that does not exist. Dropping the line when the two agree keeps
+ * the card honest about how much it actually knows.
+ */
+export function lastActivityAgo(
+  dto: SessionResponse,
+  t: TFunction,
+  fmt: Formatters,
+  now?: number,
+): string | undefined {
+  if (!dto.lastUsedAt) return undefined;
+  const lastUsed = signedInAgo(dto.lastUsedAt, t, fmt, now);
+  return lastUsed === signedInAgo(dto.createdAt, t, fmt, now)
+    ? undefined
+    : lastUsed;
+}
+
 export function sessionResponseToSession(
   dto: SessionResponse,
   t: TFunction,
@@ -75,5 +100,6 @@ export function sessionResponseToSession(
     variant: dto.current ? "current" : "normal",
     deviceType: deviceTypeFromUserAgent(dto.userAgent ?? ""),
     signedIn: signedInAgo(dto.createdAt, t, fmt, now),
+    lastActivity: lastActivityAgo(dto, t, fmt, now),
   };
 }

@@ -140,6 +140,10 @@ export const settings: Catalog = {
   "interests.lookingFor.heading": "O que procuras aqui?",
   "interests.lookingFor.helper": "Seleciona quantas quiseres.",
   "interests.lookingFor.showOnProfile": "Mostrar no meu perfil o que procuro",
+  "interests.professional.heading": "O que fazes",
+  "interests.professional.helper":
+    "Estes três são públicos. Aparecem no teu cartão de perfil e ajudam as pessoas a encontrar-te pelos filtros do diretório.",
+  "interests.professional.languagesHeading": "Línguas que falas",
   "interests.life.heading": "Um pouco sobre a tua vida",
   "interests.life.note": "(privado: ajuda com sugestões locais)",
   "interests.life.cityLabel": "Cidade / região",
@@ -562,7 +566,7 @@ export const settings: Catalog = {
   // vindos de GET /account/sessions — ficam em inglês) ─────────────────────
   "sessions.ago.justNow": "agora mesmo",
   "sessions.ago.unknown": "desconhecido",
-  "sessions.backToSecurity": "Segurança",
+  "sessions.backToAccount": "Conta",
   "sessions.eyebrow": "Segurança · Sessões ativas",
   "sessions.h1": "Onde tens <em>sessão iniciada</em> agora mesmo.",
   "sessions.lead":
@@ -605,14 +609,16 @@ export const settings: Catalog = {
   "pushDevices.ago.unknown": "desconhecido",
   "pushDevices.backToNotifications": "Notificações",
   "pushDevices.eyebrow": "Notificações · Dispositivos push",
-  "pushDevices.h1": "Dispositivos que recebem as tuas <em>notificações push</em>.",
+  "pushDevices.h1":
+    "Dispositivos que recebem as tuas <em>notificações push</em>.",
   "pushDevices.lead":
     "Todos os dispositivos registados para receber notificações push da QueerPulse. Remove os que não reconheças, incluindo um telemóvel perdido ou roubado.",
   "pushDevices.sectionRegistered": "Dispositivos registados",
   "pushDevices.card.registered": "Registado <strong>{when}</strong>",
   "pushDevices.card.lastUsed": "Última notificação <strong>{when}</strong>",
   "pushDevices.card.remove": "Remover",
-  "pushDevices.empty.error.title": "Não conseguimos carregar os teus dispositivos",
+  "pushDevices.empty.error.title":
+    "Não conseguimos carregar os teus dispositivos",
   "pushDevices.empty.error.desc":
     "Em vez de te mostrarmos uma lista em que não podemos confiar, não mostrámos nada. Tenta novamente dentro de momentos.",
   "pushDevices.empty.none.title": "Ainda sem dispositivos",
@@ -701,7 +707,8 @@ export const settings: Catalog = {
   "dataExport.type.subprofiles.sub":
     "Todas as personas que criaste, incluindo as não associadas",
   "dataExport.type.listings.label": "Anúncios no diretório local",
-  "dataExport.type.listings.sub": "Anúncios de negócios ou espaços que submeteste",
+  "dataExport.type.listings.sub":
+    "Anúncios de negócios ou espaços que submeteste",
   "dataExport.type.housing.label": "Habitação",
   "dataExport.type.housing.sub":
     "Anúncios de habitação, perfil de colega de casa, pedidos de visita",

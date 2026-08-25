@@ -98,13 +98,20 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
 
   return (
     <section className={s.sec}>
-      <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
-      <p className={s.subLine}>{place.hoursNote}</p>
-      {/* The "temporarily closed" statement does not depend on there being
+      {/* The status chip rides the heading's baseline instead of sitting on a
+          line of its own between the title and the table. It is the answer to
+          the heading's question, so it belongs beside it.
+          The "temporarily closed" statement does not depend on there being
           hours to evaluate, so it shows either way. */}
-      {(hasRealHours || isTemporarilyClosed) && (
-        <HoursStatusChip place={place} venueNow={venueNow} />
-      )}
+      <div className={s.secHead}>
+        <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
+        {(hasRealHours || isTemporarilyClosed) && (
+          <HoursStatusChip place={place} venueNow={venueNow} />
+        )}
+      </div>
+      {/* Optional on the listing — an empty <p> here left a stray 18px gap
+          under every heading that had no note to carry. */}
+      {place.hoursNote && <p className={s.subLine}>{place.hoursNote}</p>}
       {isTemporarilyClosed && (
         <p className={s.hoursStateNote}>
           {t(
@@ -112,52 +119,60 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
           )}
         </p>
       )}
-      {isAppointmentOnly ? (
-        <div className={s.apptNote}>
-          <div className={s.featureIc}>
-            <ClockIcon />
-          </div>
-          {place.hoursNote}
-        </div>
-      ) : (
-        <div
-          className={
-            isTemporarilyClosed
-              ? `${s.hoursTable} ${s.hoursMuted}`
-              : s.hoursTable
-          }
-        >
-          {rows.map((row, index) => (
-            <div
-              key={row.dayKey}
-              className={[
-                s.hoursRow,
-                index === todayIndex && !isTemporarilyClosed && s.hoursToday,
-                row.closed && s.hoursClosed,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <span className={s.hoursDay}>
-                {t(`marketing:directory.days.${row.dayKey}`)}
-                {index === todayIndex && !isTemporarilyClosed && (
-                  <span className={s.todayTag}>
-                    {t("marketing:directory.detail.today")}
-                  </span>
-                )}
-              </span>
-              <span>
-                {row.val ?? t("marketing:directory.detail.hoursClosed")}
-              </span>
+      {/* One card for the whole answer: the week, the dated exceptions that
+          override it, and the stamp saying who last vouched for any of it.
+          Those three used to be a narrow table with two loose blocks trailing
+          below it, which read as three unrelated things. */}
+      <div className={s.hoursCard}>
+        {isAppointmentOnly ? (
+          <div className={s.apptNote}>
+            <div className={s.featureIc}>
+              <ClockIcon />
             </div>
-          ))}
+            {place.hoursNote}
+          </div>
+        ) : (
+          <div
+            className={
+              isTemporarilyClosed
+                ? `${s.hoursTable} ${s.hoursMuted}`
+                : s.hoursTable
+            }
+          >
+            {rows.map((row, index) => (
+              <div
+                key={row.dayKey}
+                className={[
+                  s.hoursRow,
+                  index === todayIndex && !isTemporarilyClosed && s.hoursToday,
+                  row.closed && s.hoursClosed,
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                <span className={s.hoursDay}>
+                  {t(`marketing:directory.days.${row.dayKey}`)}
+                  {index === todayIndex && !isTemporarilyClosed && (
+                    <span className={s.todayTag}>
+                      {t("marketing:directory.detail.today")}
+                    </span>
+                  )}
+                </span>
+                <span>
+                  {row.val ?? t("marketing:directory.detail.hoursClosed")}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+        <DirectoryHoursExceptions
+          exceptions={place.hoursExceptions}
+          venueNow={venueNow}
+        />
+        <div className={s.hoursFoot}>
+          <DirectoryFreshnessStamp place={place} venueNow={venueNow} />
         </div>
-      )}
-      <DirectoryHoursExceptions
-        exceptions={place.hoursExceptions}
-        venueNow={venueNow}
-      />
-      <DirectoryFreshnessStamp place={place} venueNow={venueNow} />
+      </div>
     </section>
   );
 }

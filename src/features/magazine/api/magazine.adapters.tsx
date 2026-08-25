@@ -120,9 +120,12 @@ export function issueToTile(
   fmt: Formatters,
   t: TFunction,
 ): IssueTile {
-  const d = new Date(dto.publishedOn);
-  const season = Number.isNaN(d.getTime()) ? "" : SEASON_BY_MONTH[d.getMonth()];
-  const year = Number.isNaN(d.getTime()) ? "" : String(d.getFullYear());
+  // `publishedOn` is null while an issue is still unscheduled, so every label
+  // built from it degrades to "" rather than to an "Invalid Date" string.
+  const d = dto.publishedOn ? new Date(dto.publishedOn) : null;
+  const hasDate = d !== null && !Number.isNaN(d.getTime());
+  const season = hasDate ? SEASON_BY_MONTH[d.getMonth()] : "";
+  const year = hasDate ? String(d.getFullYear()) : "";
   const current = index === 0;
   const inaugural = index === total - 1;
 
@@ -143,10 +146,12 @@ export function issueToTile(
     }),
     dek: dto.dek,
     meta: {
-      season: [season, year].filter(Boolean).join(" ") || dto.publishedOn,
-      detail: t("magazine:live.publishedOn", {
-        date: formatDayMonthYear(dto.publishedOn, fmt),
-      }),
+      season: [season, year].filter(Boolean).join(" ") || dto.publishedOn || "",
+      detail: hasDate
+        ? t("magazine:live.publishedOn", {
+            date: formatDayMonthYear(dto.publishedOn, fmt),
+          })
+        : "",
     },
   };
 }

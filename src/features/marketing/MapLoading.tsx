@@ -63,3 +63,16 @@ export function MapLoading({ ready }: { ready: boolean }) {
     </div>
   );
 }
+
+/** The same loader inside its own framed panel — for use as a Suspense fallback
+ *  while a lazily-imported map view is still downloading. `MapLoading` is an
+ *  absolutely-positioned overlay that expects the map's `.mapPanel` beneath it;
+ *  as a bare fallback there is no such parent yet, so it would stretch to the
+ *  whole viewport. This supplies the positioned, map-sized box. */
+export function MapLoadingPanel() {
+  return (
+    <div className={s.panel}>
+      <MapLoading ready={false} />
+    </div>
+  );
+}

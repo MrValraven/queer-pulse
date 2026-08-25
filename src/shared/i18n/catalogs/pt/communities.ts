@@ -335,6 +335,28 @@ export const communities: Catalog = {
   "detail.roster.loadingMore": "A carregar…",
 
   // ── Separador de ferramentas de moderação (hub completo) ──────────────────
+  // A barra de secções da consola. Banimentos não tem entrada própria: vive
+  // dentro de Pessoas, porque um banimento é o estado de um membro.
+  "detail.modtools.nav.label": "Secções das ferramentas de moderação",
+  "detail.modtools.nav.overview": "Resumo",
+  "detail.modtools.nav.requests": "Pedidos",
+  "detail.modtools.nav.reports": "Denúncias",
+  "detail.modtools.nav.members": "Pessoas",
+  "detail.modtools.nav.invites": "Convites",
+  "detail.modtools.nav.card": "Cartão de membro",
+  "detail.modtools.nav.danger": "Zona de risco",
+  "detail.modtools.overview.attention.label": "A precisar de ti",
+  "detail.modtools.overview.attention.requests_one":
+    "Uma pessoa está à espera para entrar",
+  "detail.modtools.overview.attention.requests_other":
+    "{count} pessoas estão à espera para entrar",
+  "detail.modtools.overview.attention.reports_one":
+    "Uma publicação foi denunciada",
+  "detail.modtools.overview.attention.reports_other":
+    "{count} publicações foram denunciadas",
+  "detail.modtools.overview.attention.clear.title": "Nada à tua espera",
+  "detail.modtools.overview.attention.clear.description":
+    "Sem pedidos para entrar e sem denúncias. O que aparecer de novo fica aqui.",
   "detail.modtools.insights.label": "Estatísticas da comunidade",
   "detail.modtools.insights.error.title":
     "Não foi possível carregar as estatísticas",

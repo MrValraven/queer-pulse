@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Eyebrow, Reveal, SkeletonLine, Tag, TagRow } from "../../shared/components/ui";
+import {
+  Eyebrow,
+  Reveal,
+  SkeletonLine,
+  Tag,
+  TagRow,
+} from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useVouch } from "../../app/providers/useVouch";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -15,6 +21,7 @@ import { ProfileHeroActions } from "./ProfileHeroActions";
 import { ProfileNamePronunciation } from "./ProfileNamePronunciation";
 import { ProfileSafetyMenu } from "./ProfileSafetyMenu";
 import { ProfileSettingsMenu } from "./ProfileSettingsMenu";
+import { ProfileWorkRow } from "./ProfileWorkRow";
 import { PublicProfileBadge } from "./PublicProfileBadge";
 import { SocialLinksRow } from "./SocialLinksRow";
 import { VISIBILITY_LABEL_KEY } from "./profileSections.data";
@@ -48,7 +55,7 @@ interface ProfileHeroMainProps {
  * The profile hero's main column: eyebrow/visibility, name (+ pronunciation),
  * role/pronouns/staff badge, curator link, the recognition strip (a fuller
  * self view, or a visitor's narrower view of the profile being viewed),
- * bio (with the EN/PT toggle), "here for" chips, tags, the boundary note,
+ * bio (with the EN/PT toggle), "here for" chips, the "works in" row, tags, the boundary note,
  * social links, the CTA row (say hello / vouch / safety menu) and the vouch
  * row. Decomposed from the former monolithic `ProfileHero` in
  * `ProfileSections.tsx`, which is now a thin composer of this component,
@@ -108,8 +115,7 @@ export function ProfileHeroMain({
           className={styles.curatorLink}
           to={`${routes.cinemaCurator}/${curatorSlug}`}
         >
-          {t("members:profile.hero.curatorLink")}{" "}
-          <FiArrowRight aria-hidden />
+          {t("members:profile.hero.curatorLink")} <FiArrowRight aria-hidden />
         </Link>
       )}
       {isSelf ? (
@@ -139,6 +145,14 @@ export function ProfileHeroMain({
             )}
           </div>
         )}
+      <ProfileWorkRow
+        profile={profile}
+        classNames={{
+          row: pageStyles.hereFor,
+          label: pageStyles.hereForLabel,
+          chip: pageStyles.hereForChip,
+        }}
+      />
       {profile.tags.length > 0 && (
         <div className={styles.tagsGroup}>
           <span className={pageStyles.hereForLabel}>
@@ -152,7 +166,11 @@ export function ProfileHeroMain({
         </div>
       )}
       <ProfileBoundaryNote profile={profile} self={isSelf} />
-      <SocialLinksRow links={profile.socials} self={isSelf} onEdit={onEditLinks} />
+      <SocialLinksRow
+        links={profile.socials}
+        self={isSelf}
+        onEdit={onEditLinks}
+      />
       <div className={styles.ctaRow}>
         <ProfileHeroActions
           profile={profile}
@@ -168,7 +186,9 @@ export function ProfileHeroMain({
           <ProfileSafetyMenu
             slug={profile.slug}
             firstName={profile.first}
-            onWithdrawVouch={vouched ? () => removeVouch(profile.slug) : undefined}
+            onWithdrawVouch={
+              vouched ? () => removeVouch(profile.slug) : undefined
+            }
           />
         )}
         {/* The settings-menu counterpart: only on your own profile, and only
@@ -184,7 +204,11 @@ export function ProfileHeroMain({
           />
         )}
       </div>
-      <HeroVouchRow profile={profile} realSelf={Boolean(self)} isSelf={isSelf} />
+      <HeroVouchRow
+        profile={profile}
+        realSelf={Boolean(self)}
+        isSelf={isSelf}
+      />
     </Reveal>
   );
 }

@@ -1,4 +1,5 @@
-import { FiArrowRight, FiHeart } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiHeart } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -7,13 +8,17 @@ import {
   type DirectoryPlace,
   websiteHref,
 } from "./directoryPlaces";
-import { DirectoryAsideLocation } from "./DirectoryAsideLocation";
+import {
+  DirectoryPlaceAddress,
+  DirectoryPlaceMap,
+  DirectoryPlaceOnline,
+} from "./DirectoryPlaceLocation";
 import { DirectoryContactRows } from "./DirectoryContactRows";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
   place: DirectoryPlace;
-  /** Moderation preview: the "back to directory" CTA doesn't render, matching
+  /** Moderation preview: the "back to directory" link doesn't render, matching
    *  how the rest of the page's navigation is inert there. */
   preview?: boolean;
 }
@@ -27,56 +32,93 @@ interface Props {
  * map, the address, every contact route and the primary call to action now sit
  * one screen below the hours, where somebody deciding where to go tonight can
  * actually find them.
+ *
+ * They now sit in ONE card rather than two loose flex columns. The old pair
+ * left a 200px square map with its address orphaned underneath, and a details
+ * column that — for a listing with no phone, site or Instagram — held nothing
+ * but a saved-count and a full-width "back to directory" button, floating in
+ * the middle of the page with no edge to belong to. The card gives the map and
+ * the details one shared border, pins the saved-count and the real call to
+ * action to the foot of the details column, and demotes "back to directory" to
+ * a quiet link below the card, which is what a navigation escape hatch is.
  */
 export function DirectoryVisitSection({ place, preview = false }: Props) {
   const { t } = useTranslation();
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
 
+  // A closed business's inbox is not somewhere to write to (see
+  // `DirectoryContactRows` for the same distinction on the rows themselves), so
+  // the email fallback disappears with it and the card may have no action left.
+  const primaryAction = place.social.website
+    ? "website"
+    : place.social.email && !isPermanentlyClosed
+      ? "email"
+      : null;
+  const hasSavedSignal = place.savedCount != null && place.savedCount > 0;
+
   return (
     <section className={s.sec}>
-      <h2>{t("marketing:directory.detail.visitTitle")}</h2>
-      <div className={s.visitLayout}>
-        <div className={s.visitPlace}>
-          <DirectoryAsideLocation place={place} />
-        </div>
-        <div className={s.visitDetails}>
-          {place.savedCount != null && place.savedCount > 0 && (
-            <div className={s.savedSignal}>
-              <FiHeart aria-hidden />
-              {t("marketing:directory.detail.savedByMembers", {
-                count: place.savedCount,
-              })}
-            </div>
-          )}
-          <DirectoryContactRows place={place} />
-          <div className={s.cta}>
-            {place.social.website ? (
-              <Button
-                variant="primary"
-                className={s.ctaBtn}
-                href={websiteHref(place.social.website)}
-              >
-                {t("marketing:directory.detail.visitWebsite")}{" "}
-                <FiArrowRight aria-hidden />
-              </Button>
-            ) : place.social.email && !isPermanentlyClosed ? (
-              <Button
-                variant="primary"
-                className={s.ctaBtn}
-                href={`mailto:${place.social.email}`}
-              >
-                {t("marketing:directory.detail.getInTouch")}{" "}
-                <FiArrowRight aria-hidden />
-              </Button>
-            ) : null}
-            {!preview && (
-              <Button variant="ghost" className={s.ctaBtn} to={routes.directory}>
-                {t("marketing:directory.detail.backToDirectory")}
-              </Button>
+      <div className={s.secHead}>
+        <h2>{t("marketing:directory.detail.visitTitle")}</h2>
+      </div>
+      <div className={s.visitShell}>
+        <div
+          className={
+            place.online ? `${s.visitCard} ${s.visitCardOnline}` : s.visitCard
+          }
+        >
+          {!place.online && <DirectoryPlaceMap place={place} />}
+          <div className={s.visitBody}>
+            {place.online ? (
+              <DirectoryPlaceOnline place={place} />
+            ) : (
+              <DirectoryPlaceAddress place={place} />
+            )}
+            <DirectoryContactRows place={place} />
+            {(hasSavedSignal || primaryAction) && (
+              <div className={s.visitFoot}>
+                {hasSavedSignal && (
+                  <div className={s.savedSignal}>
+                    <FiHeart aria-hidden />
+                    {t("marketing:directory.detail.savedByMembers", {
+                      count: place.savedCount!,
+                    })}
+                  </div>
+                )}
+                {primaryAction && (
+                  <div className={s.cta}>
+                    {primaryAction === "website" ? (
+                      <Button
+                        variant="primary"
+                        className={s.ctaBtn}
+                        href={websiteHref(place.social.website!)}
+                      >
+                        {t("marketing:directory.detail.visitWebsite")}{" "}
+                        <FiArrowRight aria-hidden />
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        className={s.ctaBtn}
+                        href={`mailto:${place.social.email}`}
+                      >
+                        {t("marketing:directory.detail.getInTouch")}{" "}
+                        <FiArrowRight aria-hidden />
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
       </div>
+      {!preview && (
+        <Link to={routes.directory} className={s.visitBack}>
+          <FiArrowLeft aria-hidden />
+          {t("marketing:directory.detail.backToDirectory")}
+        </Link>
+      )}
     </section>
   );
 }

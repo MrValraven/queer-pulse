@@ -51,8 +51,9 @@ const BLANK_DESK_ISSUE: Issue = {
  * Widens a switcher row into the desk header's `Issue` shape. The backend
  * models no editorial calendar, so `closes`/`daysLeft` are carried over only
  * from the current-issue lookup and only when it IS the selected issue —
- * blank otherwise, never fabricated. `publishes` is real for every issue now
- * that the switcher carries each one's publish date.
+ * blank otherwise, never fabricated. `publishes` is real whenever the issue has
+ * a date, and blank while it is still unscheduled (the date is optional at
+ * creation): the header hides the meta line rather than inventing one.
  */
 function toDeskIssue(
   selectedIssue: IssueSummary | null,
@@ -65,7 +66,7 @@ function toDeskIssue(
     number: selectedIssue.number,
     theme: selectedIssue.theme,
     closes: isCurrent ? currentIssue.closes : "",
-    publishes: selectedIssue.publishedOn,
+    publishes: selectedIssue.publishedOn ?? "",
     daysLeft: isCurrent ? currentIssue.daysLeft : 0,
     filled: selectedIssue.filled,
     slots: selectedIssue.slots,

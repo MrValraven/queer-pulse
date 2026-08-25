@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
  * Demo fallback for `SessionsPage`. Live mode fetches the real
  * `GET /account/sessions` instead (see `api/useSessions.ts`); this mock is the
  * demo branch only, and is the richer of the two shapes — the backend's
- * refresh-token store has no location or last-activity column, so `location` and
- * `lastActivity` are optional and simply absent in live mode rather than
- * invented (see `api/sessions.adapters.ts`).
+ * refresh-token store has no location column, so `location` is optional and
+ * simply absent in live mode rather than invented (see
+ * `api/sessions.adapters.ts`).
  */
 
 export type SessionVariant = "current" | "suspect" | "normal";
@@ -19,8 +19,13 @@ export interface Session {
   deviceType: DeviceType;
   /** Where the session was seen. Demo-only — the backend stores no geo/IP. */
   location?: ReactNode;
+  /** When this device signed in. */
   signedIn: string;
-  /** Demo-only — the backend stores no last-seen timestamp. */
+  /**
+   * Roughly when this device was last seen. Live mode derives it from the
+   * session's last token rotation, and leaves it undefined when that would only
+   * restate `signedIn` (see `api/sessions.adapters.ts`).
+   */
   lastActivity?: string;
   extra?: string;
 }

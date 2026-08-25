@@ -23,11 +23,13 @@ export interface NewIssueModalProps {
 
 /**
  * Creates a magazine issue from the desk. Deliberately four fields: an issue
- * needs a number to be addressable, a title and theme to be recognisable in
- * the switcher, and a publish date to be schedulable. Cover art, coverlines,
- * the running order and the digest all belong to the issue-production page,
- * and duplicating them here would give a brand-new issue a ship checklist
- * that already looks half-finished.
+ * needs a number to be addressable and a title and theme to be recognisable
+ * in the switcher. The publish date is the one optional field — editors open
+ * a number long before they know when it runs, so an issue can be created
+ * unscheduled and dated later (shipping stamps today's date if nobody ever
+ * does). Cover art, coverlines, the running order and the digest all belong
+ * to the issue-production page, and duplicating them here would give a
+ * brand-new issue a ship checklist that already looks half-finished.
  */
 export function NewIssueModal({
   suggestedNumber,
@@ -43,10 +45,7 @@ export function NewIssueModal({
   const [numberError, setNumberError] = useState<string | null>(null);
 
   const isComplete =
-    number.trim() !== "" &&
-    title.trim() !== "" &&
-    theme.trim() !== "" &&
-    publishedOn !== "";
+    number.trim() !== "" && title.trim() !== "" && theme.trim() !== "";
 
   const submit = async () => {
     if (!isComplete || isSaving) return;
@@ -56,7 +55,9 @@ export function NewIssueModal({
         number: number.trim(),
         title: title.trim(),
         theme: theme.trim(),
-        publishedOn,
+        // Omitted rather than sent as "": the backend stores an absent date as
+        // NULL, and an empty string would fail its YYYY-MM-DD validation.
+        ...(publishedOn ? { publishedOn } : {}),
       });
       onClose();
     } catch (error) {
@@ -114,7 +115,10 @@ export function NewIssueModal({
             }}
           />
         </FormField>
-        <FormField label={t("magazine:desk.newIssue.publishesLabel")} required>
+        <FormField
+          label={t("magazine:desk.newIssue.publishesLabel")}
+          helper={t("magazine:desk.newIssue.publishesHelper")}
+        >
           <DatePicker
             mode="date"
             label={t("magazine:desk.newIssue.publishesLabel")}

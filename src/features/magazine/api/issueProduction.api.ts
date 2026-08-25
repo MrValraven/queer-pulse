@@ -53,7 +53,8 @@ export interface IssueSummaryDto {
   number: string;
   title: string;
   theme: string;
-  publishedOn: string;
+  /** `YYYY-MM-DD`, or `null` while the issue is still unscheduled. */
+  publishedOn: string | null;
   filled: number;
   slots: number;
 }
@@ -67,8 +68,10 @@ export interface CreateIssueDto {
   number: string;
   title: string;
   theme: string;
-  /** `YYYY-MM-DD`, straight from an `<input type="date">`. */
-  publishedOn: string;
+  /** `YYYY-MM-DD`, straight from the date picker. Optional: an issue is opened
+   *  before it is scheduled, and an omitted date leaves it unscheduled until
+   *  someone sets one (or until shipping stamps today's date). */
+  publishedOn?: string;
   dek?: string;
 }
 
@@ -82,6 +85,13 @@ export interface UpdateDigestDto {
   items: { pieceId: string; blurb: string; on: boolean }[];
   /** CNT-6 "Schedule with issue" toggle — omitted leaves it untouched. */
   sendOnPublish?: boolean;
+}
+
+/** Body of `PATCH /magazine/admin/issues/:number/schedule`. `null` clears the
+ *  date and puts the issue back to unscheduled, so the field is required and
+ *  nullable rather than optional. */
+export interface UpdateIssueScheduleDto {
+  publishedOn: string | null;
 }
 
 /** Body of `PATCH /magazine/admin/issues/:number/cover`. */
@@ -109,6 +119,15 @@ export const updateDigest = (number: string, body: UpdateDigestDto) =>
 
 export const updateCover = (number: string, body: UpdateCoverDto) =>
   apiPatch<IssueProductionDto>(`/magazine/admin/issues/${number}/cover`, body);
+
+export const updateIssueSchedule = (
+  number: string,
+  body: UpdateIssueScheduleDto,
+) =>
+  apiPatch<IssueProductionDto>(
+    `/magazine/admin/issues/${number}/schedule`,
+    body,
+  );
 
 export const shipIssue = (number: string) =>
   apiPost<IssueProductionDto>(`/magazine/admin/issues/${number}/ship`);

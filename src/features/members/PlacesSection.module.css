@@ -1,5 +1,11 @@
+/* Block padding only. This element also carries the shared `.wrap` class, and a
+   `padding` shorthand here would silently clear that container's 28px inline
+   gutter (plus its safe-area insets) on the phone and edit layouts, where this
+   wrap is the section's only container. Inside the desktop profile's right
+   column the outer wrap owns the gutter instead, so `ProfilePage.module.css`
+   zeroes the inner one there. */
 .section {
-  padding: 8px 0 40px;
+  padding-block: 8px 40px;
 }
 .head {
   margin-bottom: 20px;

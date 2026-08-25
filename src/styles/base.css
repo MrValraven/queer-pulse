@@ -252,6 +252,15 @@ main[data-page-main] {
 main[data-page-main][data-shell="full-height"] {
   padding-top: 0;
 }
+/* The `rail` shells (MagazineDeskShell) keep `data-page-main` for the page
+   landmark, but render their own left rail INSTEAD of the floating Navbar —
+   they register no shell frame, so AppChrome mounts no nav at all. Reserving
+   the band there is 80px of dead cream above every editor surface, and it also
+   pushed the sticky top bars on the piece/issue/deck editors (`top: 0`) down
+   off the viewport edge. Same escape hatch as `full-height` above. */
+main[data-page-main][data-shell="rail"] {
+  padding-top: 0;
+}
 
 /* When a page's first content is a plum `<PageHero>` (`data-plum` — a plain
    attribute, not a CSS-module class, so it's reachable from here), tint the

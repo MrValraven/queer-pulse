@@ -1,4 +1,5 @@
 import { routes } from "../../app/routeMap";
+import { appHost, appOrigin } from "../../shared/lib/inviteUrl";
 import { memberName } from "../members/data/members";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
@@ -138,6 +139,10 @@ export interface GatheringDetail {
   /** The filtered total behind `goingAttendeesPreview` (NOT the raw
    *  `spots`/`goingCount` number) — drives the "+N more" line. */
   goingAttendeesPreviewTotal?: number;
+  /** Live mode only: the cover the host uploaded, or null when they never set
+   *  one. The manage dashboard's share card shows it; absent (demo registry,
+   *  or a coverless gathering) leaves the tinted placeholder frame. */
+  coverImageUrl?: string | null;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {
@@ -567,6 +572,17 @@ export const gatheringPhotosPath = (slug: string): string =>
   `${gatheringPath(slug)}/photos`;
 export const coHostInvitePath = (slug: string, inviteId: string): string =>
   `${gatheringPath(slug)}/co-host-invite/${inviteId}`;
+
+/**
+ * The gathering's public link, built off the running instance's origin (see
+ * `appOrigin`) so a link copied in dev opens in dev. `gatheringShareUrl` is
+ * what gets copied and opened; `gatheringShareDisplayUrl` is the scheme-less
+ * form for a URL field, matching the invite-link pair.
+ */
+export const gatheringShareUrl = (slug: string): string =>
+  `${appOrigin()}${gatheringPath(slug)}`;
+export const gatheringShareDisplayUrl = (slug: string): string =>
+  `${appHost()}${gatheringPath(slug)}`;
 
 /**
  * The concrete gathering each lifecycle page renders in demo mode. The pages

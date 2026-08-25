@@ -16,9 +16,9 @@ import type {
   CorrectionDto,
   LetterDto,
   PaymentDto,
-  PieceAuditEntryDto,
   PieceBrief,
   PieceCare,
+  PieceEventEntryDto,
   PieceRecordDto,
   PublishGateItemDto,
 } from "../api/pieces.api";
@@ -122,27 +122,57 @@ const PAYMENT: PaymentDto = {
   paidOn: null,
 };
 
-const AUDIT: PieceAuditEntryDto[] = [
-  { actorId: "Marta", action: "commissioned the piece", detail: null, createdAt: "2 Jul, 10:12" },
+// `when` is display copy here rather than an ISO timestamp — `HistoryTab`
+// falls back to printing it verbatim when it can't parse a date, which is
+// what keeps this hand-written fixture readable.
+const AUDIT: PieceEventEntryDto[] = [
   {
-    actorId: "Sara Pinheiro",
-    action: "filed a draft: 3,140 words, 340 over",
-    detail: null,
-    createdAt: "29 Jul, 22:03",
+    id: "demo-audit-1",
+    actorId: "editor-marta",
+    isSystem: false,
+    who: "Marta",
+    what: "commissioned this piece",
+    when: "2 Jul, 10:12",
   },
-  { actorId: "Marta", action: "moved it to first edit", detail: null, createdAt: "2 Aug, 11:15" },
   {
-    actorId: "Marta",
-    action: "asked Ana for a sensitivity read",
-    detail: null,
-    createdAt: "3 Aug, 09:40",
+    id: "demo-audit-2",
+    actorId: "writer-sara",
+    isSystem: false,
+    who: "Sara Pinheiro",
+    what: "filed a draft of this piece: 3,140 words, 340 over",
+    when: "29 Jul, 22:03",
   },
-  { actorId: "Ana Duarte", action: "opened the read", detail: null, createdAt: "4 Aug, 14:02" },
   {
-    actorId: "System",
-    action: "flagged: names a health provider, second reader required",
-    detail: null,
-    createdAt: "4 Aug, 14:02",
+    id: "demo-audit-3",
+    actorId: "editor-marta",
+    isSystem: false,
+    who: "Marta",
+    what: "moved this piece to first edit",
+    when: "2 Aug, 11:15",
+  },
+  {
+    id: "demo-audit-4",
+    actorId: "editor-marta",
+    isSystem: false,
+    who: "Marta",
+    what: "asked Ana for a sensitivity read on this piece",
+    when: "3 Aug, 09:40",
+  },
+  {
+    id: "demo-audit-5",
+    actorId: "editor-ana",
+    isSystem: false,
+    who: "Ana Duarte",
+    what: "opened the read on this piece",
+    when: "4 Aug, 14:02",
+  },
+  {
+    id: "demo-audit-6",
+    actorId: null,
+    isSystem: true,
+    who: "System",
+    what: "flagged this piece: names a health provider, second reader required",
+    when: "4 Aug, 14:02",
   },
 ];
 

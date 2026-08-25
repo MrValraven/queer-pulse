@@ -1,6 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { FiFileText, FiLayers, FiPlus, FiSearch, FiZap } from "react-icons/fi";
+import { FiEdit3, FiFileText, FiLayers, FiSearch, FiZap } from "react-icons/fi";
 import { useScrollLock } from "../../../shared/hooks";
 import {
   pushModal,
@@ -100,8 +100,8 @@ export function CommandPalette({
     const staticRows: CommandRow[] = [
       {
         key: "new-piece",
-        label: t("magazine:desk.palette.newPiece"),
-        icon: <FiPlus aria-hidden />,
+        label: t("magazine:desk.palette.writePiece"),
+        icon: <FiEdit3 aria-hidden />,
         kind: actionKind,
         run: onNewPiece,
       },

@@ -1,26 +1,44 @@
-import { ConfirmDialog } from "../../shared/components/ui";
+import { useId } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Tabs, tabPanelProps } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LivingCommunity } from "./community.model";
 import type { CommunityRole } from "./membership.types";
 import type { PulsePaging } from "./api/useCommunityPosts";
-
-type RosterPaging = Pick<
-  PulsePaging,
-  "hasNextPage" | "fetchNextPage" | "isFetchingNextPage"
->;
 import {
   ModJoinRequests,
   ModMemberManagement,
   ModReportedPosts,
   ModToolsCardSection,
 } from "./ModToolsSections";
-import { ModToolsInsights } from "./ModToolsInsights";
+import { ModToolsOverview } from "./ModToolsOverview";
 import { ModToolsInvites } from "./ModToolsInvites";
 import { ModToolsBans } from "./ModToolsBans";
+import { ModToolsConfirmDialog } from "./ModToolsConfirmDialog";
 import { CommunityDangerZone } from "./CommunityDangerZone";
 import { useModToolsActions } from "./useModToolsActions";
-import { modConfirmCopy } from "./modToolsConfirm";
+import { MOD_NAV, isModSection, type ModSection } from "./modToolsNav.data";
+import styles from "./ModToolsShell.module.css";
 
+type RosterPaging = Pick<
+  PulsePaging,
+  "hasNextPage" | "fetchNextPage" | "isFetchingNextPage"
+>;
+
+/**
+ * The mod console: a section rail, and one pane at a time.
+ *
+ * This used to be all eight moderation surfaces stacked in a single scroll,
+ * which buried the two that are actually time-sensitive (join requests and
+ * reports) under a stats panel and above a full paginated roster. The rail
+ * gives each surface its own address, and Overview answers "is anything
+ * waiting on me" before a mod has to go looking.
+ *
+ * The queues stay panes rather than modals on purpose: they are lists you
+ * page through, come back to, and link a co-moderator at, none of which a
+ * modal does well, and the confirm step in front of every destructive action
+ * would then be a dialog stacked on a dialog.
+ */
 export function ModToolsTab({
   living,
   role,
@@ -35,105 +53,176 @@ export function ModToolsTab({
   rosterPaging: RosterPaging;
 }) {
   const { t } = useTranslation();
-  const {
-    requests,
-    requestsState,
-    reports,
-    reportsState,
-    manageable,
-    memberKey,
-    roleOverrides,
-    resolveRequest,
-    promote,
-    demote,
-    confirmGrantCoOwner,
-    confirmRevokeCoOwner,
-    dismissReportRow,
-    confirming,
-    setConfirming,
-    confirmRemoveMember,
-    confirmRemoveReport,
-    isConfirmPending,
-    isRequestPending,
-  } = useModToolsActions(living);
+  const railId = useId();
+  const actions = useModToolsActions(living);
 
-  const confirmCopy = confirming ? modConfirmCopy(confirming, t) : null;
+  // The open section lives in the URL beside the tab (?tab=modtools&mod=…),
+  // so a pane is deep-linkable, survives a refresh, and the back button walks
+  // out of it. An unknown value falls back to Overview.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rawSection = searchParams.get("mod");
+  const section: ModSection = isModSection(rawSection) ? rawSection : "overview";
+  const openSection = (next: ModSection) =>
+    setSearchParams(
+      (prev) => {
+        const params = new URLSearchParams(prev);
+        if (next === "overview") params.delete("mod");
+        else params.set("mod", next);
+        return params;
+      },
+      { replace: true },
+    );
+
+  const counts: Partial<Record<ModSection, number>> = {
+    requests: actions.requests.length,
+    reports: actions.reports.length,
+  };
 
   return (
-    <div>
-      <ModToolsInsights slug={living.slug} />
+    <>
+      <div className={styles.shell}>
+        <Tabs
+          className={styles.rail}
+          idPrefix={railId}
+          label={t("communities:detail.modtools.nav.label")}
+          tabs={MOD_NAV.map((item) => ({
+            id: item.id,
+            label: t(item.labelKey),
+            // Only a queue with something in it gets a badge. A rail of
+            // zeroes reads as work rather than as an all-clear.
+            ...(item.badge && counts[item.id]
+              ? { count: counts[item.id] }
+              : {}),
+          }))}
+          active={section}
+          onChange={(id) => openSection(id as ModSection)}
+        />
+
+        <div className={styles.pane} {...tabPanelProps(railId, section)}>
+          <ModToolsPane
+            section={section}
+            living={living}
+            role={role}
+            communityName={communityName}
+            rosterPaging={rosterPaging}
+            actions={actions}
+            onOpenSection={openSection}
+          />
+        </div>
+      </div>
+
+      {actions.confirming && (
+        <ModToolsConfirmDialog
+          confirming={actions.confirming}
+          isPending={actions.isConfirmPending}
+          onClose={() => actions.setConfirming(null)}
+          onRemoveMember={actions.confirmRemoveMember}
+          onGrantCoOwner={actions.confirmGrantCoOwner}
+          onRevokeCoOwner={actions.confirmRevokeCoOwner}
+          onRemoveReport={actions.confirmRemoveReport}
+        />
+      )}
+    </>
+  );
+}
+
+/** The open section's surface. Split out of `ModToolsTab` (which owns the
+ *  rail, the URL and the confirm dialog) to keep each component under the
+ *  repo's per-component line limit. */
+function ModToolsPane({
+  section,
+  living,
+  role,
+  communityName,
+  rosterPaging,
+  actions,
+  onOpenSection,
+}: {
+  section: ModSection;
+  living: LivingCommunity;
+  role: CommunityRole | null;
+  communityName: string;
+  rosterPaging: RosterPaging;
+  actions: ReturnType<typeof useModToolsActions>;
+  onOpenSection: (section: ModSection) => void;
+}) {
+  const { setConfirming } = actions;
+
+  if (section === "overview") {
+    return (
+      <ModToolsOverview
+        slug={living.slug}
+        requestCount={actions.requests.length}
+        reportCount={actions.reports.length}
+        onOpenSection={onOpenSection}
+      />
+    );
+  }
+  if (section === "requests") {
+    return (
       <ModJoinRequests
-        requests={requests}
-        state={requestsState}
-        onResolve={resolveRequest}
-        isPending={isRequestPending}
+        requests={actions.requests}
+        state={actions.requestsState}
+        onResolve={actions.resolveRequest}
+        isPending={actions.isRequestPending}
       />
-      <ModToolsInvites slug={living.slug} />
+    );
+  }
+  if (section === "reports") {
+    return (
       <ModReportedPosts
-        reports={reports}
-        state={reportsState}
+        reports={actions.reports}
+        state={actions.reportsState}
         onRemove={(report) => setConfirming({ kind: "removeReport", report })}
-        onDismiss={dismissReportRow}
+        onDismiss={actions.dismissReportRow}
       />
-      <ModMemberManagement
-        members={manageable}
-        memberKey={memberKey}
-        roleOverrides={roleOverrides}
-        viewerRole={role}
-        paging={rosterPaging}
-        onPromote={promote}
-        onDemote={demote}
-        onGrantCoOwner={(memberSlug, name) =>
-          setConfirming({ kind: "grantCoOwner", memberSlug, name })
-        }
-        onRevokeCoOwner={(memberSlug, name) =>
-          setConfirming({ kind: "revokeCoOwner", memberSlug, name })
-        }
-        onRemove={(memberSlug, name) =>
-          setConfirming({ kind: "removeMember", memberSlug, name })
-        }
-      />
-      <ModToolsBans slug={living.slug} />
+    );
+  }
+  if (section === "members") {
+    return (
+      <>
+        <ModMemberManagement
+          members={actions.manageable}
+          memberKey={actions.memberKey}
+          roleOverrides={actions.roleOverrides}
+          viewerRole={role}
+          paging={rosterPaging}
+          onPromote={actions.promote}
+          onDemote={actions.demote}
+          onGrantCoOwner={(memberSlug, name) =>
+            setConfirming({ kind: "grantCoOwner", memberSlug, name })
+          }
+          onRevokeCoOwner={(memberSlug, name) =>
+            setConfirming({ kind: "revokeCoOwner", memberSlug, name })
+          }
+          onRemove={(memberSlug, name) =>
+            setConfirming({ kind: "removeMember", memberSlug, name })
+          }
+        />
+        {/* A ban is a member's state, so it answers the same question this
+            pane is already open to answer. */}
+        <ModToolsBans slug={living.slug} />
+      </>
+    );
+  }
+  if (section === "invites") {
+    return <ModToolsInvites slug={living.slug} />;
+  }
+  if (section === "card") {
+    return (
       <ModToolsCardSection
         slug={living.slug}
         communityName={communityName}
         role={role}
       />
-
-      <CommunityDangerZone
-        slug={living.slug}
-        name={communityName}
-        role={role}
-        roster={manageable}
-      />
-
-      {/* Removing a member, taking a post down and moving someone in or out of
-          co-ownership are each confirmed first — the same rule the danger zone
-          below already follows. */}
-      {confirming && confirmCopy && (
-        <ConfirmDialog
-          open
-          tone={confirmCopy.tone}
-          loading={isConfirmPending}
-          title={confirmCopy.title}
-          description={confirmCopy.body}
-          confirmLabel={
-            isConfirmPending ? t("communities:common.loading") : confirmCopy.cta
-          }
-          onClose={() => setConfirming(null)}
-          onConfirm={() => {
-            if (confirming.kind === "removeMember") {
-              confirmRemoveMember(confirming.memberSlug, confirming.name);
-            } else if (confirming.kind === "grantCoOwner") {
-              confirmGrantCoOwner(confirming.memberSlug, confirming.name);
-            } else if (confirming.kind === "revokeCoOwner") {
-              confirmRevokeCoOwner(confirming.memberSlug, confirming.name);
-            } else {
-              confirmRemoveReport(confirming.report);
-            }
-          }}
-        />
-      )}
-    </div>
+    );
+  }
+  return (
+    <CommunityDangerZone
+      slug={living.slug}
+      name={communityName}
+      role={role}
+      roster={actions.manageable}
+    />
   );
 }

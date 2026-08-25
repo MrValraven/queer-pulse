@@ -54,6 +54,28 @@ export function usePieceMutations() {
     },
   });
 
+  /**
+   * POST /magazine/admin/pieces — start a piece the editor writes themselves.
+   * Same endpoint as `commission`, different editorial act: the caller stamps
+   * `writerId` equal to `editorId`, which the backend reads as "no brief goes
+   * out", starting the piece at `drafting` and logging it as "started
+   * writing". Kept separate from `commission` so the demo toast and any future
+   * per-action handling can differ without a flag threaded through the body.
+   */
+  const startDraft = useMutation<{ id: string }, Error, CreatePieceDto>({
+    mutationFn: async (body) => {
+      if (demoMode) {
+        showToast("Draft started", "success");
+        // Demo's article draft fixture ignores the piece id, so any id opens
+        // the editor. Live mode returns the real one to navigate to.
+        return { id: "demo" };
+      }
+      const piece = await createPiece(body);
+      return { id: piece.id };
+    },
+    onSuccess: () => invalidateDesk(),
+  });
+
   /** PATCH /magazine/admin/pieces/:id — update any piece field. */
   const updatePiece = useMutation<
     { id: string },
@@ -157,5 +179,5 @@ export function usePieceMutations() {
     onSuccess: (_result, pieceId) => invalidateDesk(pieceId),
   });
 
-  return { commission, updatePiece, moveStage, assign, assignIssue, remove };
+  return { commission, startDraft, updatePiece, moveStage, assign, assignIssue, remove };
 }

@@ -1,13 +1,13 @@
 import { Avatar, type AvatarTint } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { STAGE_DTO_TO_VIEW } from "../api/pieces.adapters";
-import type { DeskSummaryDto } from "../api/pieces.api";
+import type { DeskSummaryView } from "../api/useDeskSummary";
 import { stripEm } from "../data/desk.copy";
 import type { Editor } from "../data/desk.data";
 import styles from "./DeskSidebar.module.css";
 
 export interface DeskSidebarProps {
-  summary: DeskSummaryDto | undefined;
+  summary: DeskSummaryView | undefined;
   editors: Editor[];
 }
 
@@ -30,8 +30,10 @@ function initialsFromLabel(label: string): string {
 /**
  * The desk's right rail: where the issue stands (stage load), editor load
  * (flagging anyone over their cap), and a recent-activity feed. Reads the
- * server-aggregated `DeskSummaryDto` — never raw pieces — so demo and live
- * mode share the exact same rendering path. Renders no phase badges.
+ * server-aggregated summary — never raw pieces — so demo and live mode share
+ * the exact same rendering path. Activity rows arrive already resolved to a
+ * name and a human phrase naming the piece by its title, so no uuid or
+ * `action` enum is ever rendered here. Renders no phase badges.
  */
 export function DeskSidebar({ summary, editors }: DeskSidebarProps) {
   const { t } = useTranslation();
@@ -106,20 +108,23 @@ export function DeskSidebar({ summary, editors }: DeskSidebarProps) {
           </span>
         ) : (
           <div className={styles.feed}>
-            {activity.map((entry, index) => (
-              <div
-                className={styles.feedRow}
-                key={`${entry.actorId ?? "unknown"}-${entry.createdAt}-${index}`}
-              >
-                <Avatar initials={initialsFromLabel(entry.actorId ?? "?")} size={26} />
-                <span>
-                  <b className={styles.actor}>
-                    {entry.actorId ?? t("magazine:desk.sidebar.someone")}
-                  </b>{" "}
-                  {stripEm(entry.action)} <time>{entry.createdAt}</time>
-                </span>
-              </div>
-            ))}
+            {activity.map((entry) => {
+              const editor = editors.find((candidate) => candidate.id === entry.actorId);
+              const who = entry.who || t("magazine:desk.sidebar.someone");
+              return (
+                <div className={styles.feedRow} key={entry.id}>
+                  <Avatar
+                    initials={editor?.initials ?? initialsFromLabel(who)}
+                    tint={editor ? EDITOR_TINT_TO_AVATAR_TINT[editor.tint] : "default"}
+                    size={26}
+                  />
+                  <span>
+                    <b className={styles.actor}>{who}</b> {stripEm(entry.what)}{" "}
+                    <time>{entry.when}</time>
+                  </span>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

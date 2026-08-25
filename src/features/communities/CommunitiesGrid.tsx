@@ -36,18 +36,27 @@ function CommunityCardSkeleton() {
  * `afterFilters` is a slot between the category chips and the results line —
  * the "My communities" tab drops its weekly digest in there, which is why the
  * digest sits inside the filter bar rather than above the whole page.
+ *
+ * `isPending` lets the host hold the grid on its skeletons past its own
+ * fetch. The "My communities" tab needs it: its membership map (a separate
+ * query) decides whether the tab shows this grid at all, so if the list
+ * endpoint lands first the grid would otherwise flash "no communities match"
+ * before the host even knows whether the member has any.
  */
 export function CommunitiesGrid({
   scope = "discover",
   afterFilters,
+  isPending = false,
 }: {
   scope?: CommunitiesScope;
   afterFilters?: ReactNode;
+  isPending?: boolean;
 }) {
   const { t } = useTranslation();
   const { isMember } = useCommunityMembership();
   const discover = useDiscoverCommunities(scope);
-  const { demoMode, featured, isShowingSkeletons } = discover;
+  const { demoMode, featured } = discover;
+  const isShowingSkeletons = discover.isShowingSkeletons || isPending;
 
   /** Demo reads the session membership store; live trusts the card's own DTO. */
   const isJoined = (

@@ -16,7 +16,7 @@ import { LocalFilterBar } from "./LocalFilterBar";
 import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
 import { DirectoryListView } from "./DirectoryListView";
 import { DirectoryVerificationSection } from "./DirectoryVerificationSection";
-import { MapLoading } from "./MapLoading";
+import { MapLoadingPanel } from "./MapLoading";
 import s from "./DirectoryPage.module.css";
 
 // Code-split the map view (pulls in maplibre-gl) so it stays off the entry
@@ -132,7 +132,13 @@ export function DirectoryPage() {
           onLoadMoreFromServer={fetchNextPage}
         />
       ) : (
-        <Suspense fallback={<MapLoading ready={false} />}>
+        <Suspense
+          fallback={
+            <div className="wrap">
+              <MapLoadingPanel />
+            </div>
+          }
+        >
           <DirectoryMapView
             places={filtered}
             loading={loading}

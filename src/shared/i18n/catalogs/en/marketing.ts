@@ -561,6 +561,10 @@ export const marketing: Catalog = {
   "help.qa.privateProfile.q": "Can I make my profile private?",
   "help.qa.privateProfile.a":
     "Yes, in <settingsLink>Settings</settingsLink> → Privacy. A private profile is still visible to people you're connected with. It just <strong>won't appear in search or the public directory</strong>.",
+  "help.qa.unknownSession.q":
+    "I don't recognise a device in my active sessions. What now?",
+  "help.qa.unknownSession.a":
+    "Sign that session out from <sessionsLink>your active sessions</sessionsLink>. Signing in runs through Google, so review your Google account's security too, since anyone with access to it can get in here. Then <contactLink>tell us what happened</contactLink> and we'll help you lock things down.",
   "help.qa.deleteAccount.q": "How do I delete my account?",
   "help.qa.deleteAccount.a":
     "In <settingsLink>Settings</settingsLink> → Account, at the bottom. This is permanent. See the Privacy Policy for what's retained and for how long.",
@@ -2000,6 +2004,7 @@ export const marketing: Catalog = {
   "changelog.tag.cinema": "Visit Cinema",
   "changelog.tag.forum": "Visit the forum",
   "changelog.tag.profile": "Open your profile",
+  "changelog.tag.sessions": "See your active sessions",
   "changelog.tag.gatherings": "See gatherings",
   "changelog.tag.members": "Meet the members",
   "changelog.tag.events": "Open the Events Hub",
@@ -2072,6 +2077,94 @@ export const marketing: Catalog = {
     "Approving a join request now says plainly what happens next",
   "changelog.entries.invites-go-out-by-hand.body":
     "When a reviewer welcomed someone in, the confirmation said an invite email was on its way to them. QueerPulse has no mail service, so nothing was ever sent and the invite could sit unclaimed while both people waited. The card now says that invites go out by hand and puts the link to copy right there, and its three decision buttons no longer spill past the edge of the card.",
+  "changelog.entries.sessions-page-links-reach-a-person.title":
+    "Your active sessions can now reach a person",
+  "changelog.entries.sessions-page-links-reach-a-person.body":
+    "\u201cSomething looks wrong? Tell us what happened\u201d on your active sessions opened a page announcing that your account was locked, which was alarming and untrue. Both links on that page now land where they say they will: \u201cwhat to do next\u201d opens the Account section of Help, which walks through an unfamiliar device, and \u201ctell us what happened\u201d opens the contact form with its topic already set to account access, so your message reaches the team. The Back link at the top of the page returns to Settings \u2192 Account, where you opened it from.",
+  "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.title":
+    "Your devices list stops collecting old sign-ins",
+  "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.body":
+    "Where you're signed in could fill up with entries for a device you only ever used once. Every sign-in started a session, and signing in again on the same browser started another one beside it instead of taking over from the first, so a cleared cookie, a private window or a session that had simply lapsed each left an entry behind. Those entries then sat there for a month, all reading the same thing, which made the one question the page exists to answer, is anything here not me, almost impossible to answer. Signing in now replaces whatever this browser was already holding, and sessions that have run out drop off the list instead of lingering until they're deleted. If your list is already crowded, Sign out all other sessions clears it in one go and keeps you signed in here.",
+  "changelog.entries.devices-say-when-you-signed-in-and-when-you-were-last-there.title":
+    "Each device says when you signed in and roughly when you were last there",
+  "changelog.entries.devices-say-when-you-signed-in-and-when-you-were-last-there.body":
+    "Signed in on each device was measuring the wrong thing. Your session quietly renews itself in the background every few minutes, and the page was reporting the most recent renewal, so the laptop you've been signed in on since June announced itself as having arrived seven minutes ago. It now shows when you actually signed in on that device, and adds a rough last activity line when the device has been back since. A device you signed in on and never returned to shows only the sign-in, because that's all we know about it.",
+  "changelog.entries.profile-sections-share-one-left-edge.title":
+    "Every section of your profile lines up down one edge",
+  "changelog.entries.profile-sections-share-one-left-edge.body":
+    "On a wide screen the sections down your profile sat slightly out of line with each other: Communities, your work, your skills and the rest were all indented by a hair that \u201cPlaces you run\u201d did not have, so the column read as crooked. The page was quietly applying its side gutter twice to those sections, once for the page and once for the section itself. They now share the same left edge as \u201cPlaces you run\u201d, from the top of the page to the bottom. On a phone, \u201cPlaces you run\u201d picks up the same side margin every other section already had, so its cards clear the edge of the screen.",
+  "changelog.entries.my-communities-waits-instead-of-saying-you-have-none.title":
+    "My communities waits for your list instead of saying you have none",
+  "changelog.entries.my-communities-waits-instead-of-saying-you-have-none.body":
+    "Opening Communities used to greet you with \u201cYou haven\u2019t joined any communities yet\u201d for the moment it took to fetch your memberships, even when you belonged to six of them. The tab now holds a skeleton in the shape of your cards until your list arrives, and the line under the heading stays quiet until it can quote the real number, so it never reads \u201cacross your 0 communities\u201d on the way. The empty state still appears the moment we know it is true, with the same invitation to go and find a community.",
+  "changelog.entries.say-what-you-do-on-your-profile.title":
+    "You can say what you do on your profile, and be found for it",
+  "changelog.entries.say-what-you-do-on-your-profile.body":
+    "The member directory has always let people filter by field of work and profession, but the only place to set yours was buried in Settings, so most profiles had nothing to match against. You can now pick your field, and the roles within it, straight from the edit view on your profile, and the wizard asks new members the same question while they are setting up. What you pick shows on your profile under \u201cWorks in\u201d, and it is what puts you in the results when someone filters the directory for a photographer, a nurse, or a lawyer. Choosing a role selects its field for you, and the roles stay hidden until you pick a field, so you never face seventy chips at once.",
+  "changelog.entries.admin-account-menu-is-real.title":
+    "The admin sidebar's account button actually does something now",
+  "changelog.entries.admin-account-menu-is-real.body":
+    "The button at the foot of the admin rail showed a name that was never yours and a job title nobody holds, and clicking it did nothing at all. It now shows the account you are really signed in as, with the address alongside your name, and opens a menu with the things admin had no route to: your profile, your account settings, your active sessions, and a sign out. Signing out mattered most. Back to platform leaves the console but keeps the session open, so genuinely signing off used to mean three more navigations out on the main site, which is a long walk on a shared machine. The menu also spells out the access this account holds, including the staff grants that decide which sidebar sections work at all.",
+  "changelog.entries.admin-sidebar-grouped-sections.title":
+    "The admin sidebar is grouped into sections you can collapse",
+  "changelog.entries.admin-sidebar-grouped-sections.body":
+    "The admin rail had grown to thirty-two links in one flat list, long enough that finding anything meant scrolling past most of it. Those links now sit in eight labelled sections: Trust & safety, People & access, Communities, Directory, Editorial, Partners & recognition, Site content, and Platform. Every heading opens and closes with a short slide, and the rail remembers which ones you left open. A closed heading still shows the total number of items waiting inside it, so a collapsed section can never hide a queue that needs attention, and landing on a page inside a closed section opens that section for you.",
+  "changelog.entries.since-friday-panel-removed.title":
+    "The magazine desk's Since Friday panel is gone",
+  "changelog.entries.since-friday-panel-removed.body":
+    "The editor's left rail carried a Since Friday button that opened a panel listing what had happened on the desk while you were away. It duplicated what the desk already shows you: the activity feed in the sidebar reads the same record, and every piece keeps its own History tab. The button and the panel have been removed, and the rail is shorter for it.",
+  "changelog.entries.writer-desk-header-says-whats-due.title":
+    "The writer's desk header now says what's due",
+  "changelog.entries.writer-desk-header-says-whats-due.body":
+    "The top of your writing workspace showed your own avatar, your name and the word Contributor, all of which the navigation bar already carries a few pixels above it. That word was also fixed in place: it read Contributor for everyone, always, and stayed in English on the Portuguese site. The bar now names the page and tells you where your work stands, with how many assignments are open and when the nearest one is due, or a quiet line saying nothing is open when your desk is clear.",
+  "changelog.entries.editors-can-write-their-own-pieces.title":
+    "Magazine editors can write a piece themselves, not only commission one",
+  "changelog.entries.editors-can-write-their-own-pieces.body":
+    "The editor desk had one way to start a piece: commission it. That meant an editor who simply wanted to write something had to send themselves a brief, complete with a fee and a deadline, before they could type a word. Write is now the desk's main action, and Commission sits beside it for the times a piece really is going out to somebody else. Write skips the form entirely: the piece is created with you as its own writer, it starts in drafting rather than waiting on a brief that will never arrive, and you land straight in the article editor with the cursor ready. Its title, section, byline and issue are all set in the editor's own side rail, where they were always going to be edited anyway. A piece started this way files onto whichever issue you are working on, or stays unfiled if you started from the Unassigned tab, and the desk's history reads \"started writing\" instead of a commission that never happened. Pressing w on the desk does the same thing, as does the Write button in the left rail and in the command palette.",
+  "changelog.entries.editor-pages-start-at-the-top.title":
+    "The magazine editor's pages no longer start with a band of empty cream",
+  "changelog.entries.editor-pages-start-at-the-top.body":
+    "Every screen in the magazine editor reserved a strip of space at the top for the site's floating navigation bar, which those screens never show: they run on their own left rail instead. The result was a tall empty band above the desk, the pitch tracker and the issue plan, and it pushed the sticky title bars on a piece, an issue and a deck down off the edge of the window. That space is no longer held back, so each editor page starts where its content starts and the sticky bars sit flush at the top. Editors who use the app's left sidebar navigation also had the desk pushed sideways by the width of a rail that isn't drawn on those pages; that offset is gone too.",
+  "changelog.entries.issue-publish-date-optional.title":
+    "A magazine issue no longer needs a date to exist",
+  "changelog.entries.issue-publish-date-optional.body":
+    "Creating an issue on the editor desk demanded a publish date before anything else could happen, which meant an editor had to invent one to open a number. The date is now optional: fill in the number, the title and the theme, and the issue exists. Its own production page carries a Publish date card in the right rail where the date can be set later, moved, or cleared again if the plan changes. An issue with no date reads as unscheduled everywhere it appears instead of showing a made-up day, and shipping still stamps the day it went out if nobody ever set one.",
+  "changelog.entries.cohost-invite-form-reads-properly.title":
+    "Inviting a co-host reads properly now",
+  "changelog.entries.cohost-invite-form-reads-properly.body":
+    "The second step of the co-host invite, where a host sets the terms, was showing raw internal labels instead of real words: every field name, both dropdowns and both buttons printed a code. It now reads in full, in English and Portuguese. The person being invited stays visible at the top of the form with their photo and pronouns, and a single button goes back to the picker if it is the wrong person. Choosing a role or a time commitment shows the same description the invited person will read on their invite, so nobody picks blind. The note field counts down to its 500-character limit, the reply-by date can no longer be set in the past and says it is optional, and the send and cancel buttons stay inside the panel at any window width. The same fix reached the co-host invite page, which was missing its line about which powers a co-host gets on accepting and which stay with the lead host, and Settings, where the public part of your profile (your field, your role and the languages you speak) had lost its headings.",
+  "changelog.entries.desk-activity-reads-in-plain-language.title":
+    "Magazine desk activity now reads in plain language",
+  "changelog.entries.desk-activity-reads-in-plain-language.body":
+    "Two places in the magazine desk printed their lines straight out of the database: the Activity panel in the right rail, and the History trail on a piece's own record. Both showed a long identifier where a name belongs, an internal code like \u201carticle_edited\u201d where the action belongs, and a machine timestamp. Nobody could tell who had touched what. Both now read as sentences: the editor or writer by name, what they did in plain words, and when. The desk feed names each piece by its title and says how long ago it happened; a piece's own History says \u201cthis piece\u201d and gives the date and time, since that trail is the permanent record. Notes left on a draft, restored drafts and slideshows converted to articles get proper wording too. Lines from an automatic step read as System, and a piece that has since been deleted reads neutrally instead of showing an id.",
+  "changelog.entries.mod-tools-became-a-console.title":
+    "Mod tools is now a console with a section rail",
+  "changelog.entries.mod-tools-became-a-console.body":
+    "A community's Mod tools tab stacked eight surfaces in one long scroll, so the two things that are actually time-sensitive, people asking to join and reported posts, sat buried under a statistics panel and above the full member roster. Mod tools now opens on an overview that answers one question first: is anything waiting on you. Beside it runs a rail with Overview, Requests, Reports, Members, Invites, Member card and Danger zone, and each opens on its own, one at a time. Requests and Reports carry a count when something is waiting. Bans moved in under Members, where a member\u2019s standing is already being read. Each section has its own web address now, so a moderator can link a co-moderator straight to the reports queue and the back button walks out of it. On a phone the rail becomes a row of chips above the section.",
+  "changelog.entries.share-card-shows-your-own-gathering.title":
+    "A gathering's share card now shows that gathering",
+  "changelog.entries.share-card-shows-your-own-gathering.body":
+    "On the manage dashboard for a gathering you are hosting, the share card in the sidebar always showed the same sample event: one fixed title, one fixed date and neighbourhood, and a link that led to the gatherings index rather than to your listing. It now shows the gathering you are managing, with its own title, date and venue, and its cover photo when you have uploaded one. Copy puts the gathering's real public link on your clipboard, and \u201cView public listing\u201d opens that gathering's own page.",
+  "changelog.entries.place-page-reads-in-one-piece.title":
+    "A place's page now reads as one thing",
+  "changelog.entries.place-page-reads-in-one-piece.body":
+    "On a business page in the directory, the opening hours sat in a narrow table with a wide empty strip beside it, the line saying who last confirmed the details drifted underneath it, and the map was a small square with the address stranded below. Hours now sit in one card: the week in two columns, any upcoming changes to it, and the confirmation line along the bottom. The live status reads beside the heading, as in \u201cHours \u00b7 Open now\u201d. \u201cWhere it is\u201d became a single card too, with the map running down one side and the address, every way to reach the place and the main action beside it. Getting back to the directory is now a quiet link under that card, and a hairline separates each section of the page from the next.",
+  "changelog.entries.place-pages-open-all-at-once.title":
+    "A place's page now opens with its photos already there",
+  "changelog.entries.place-pages-open-all-at-once.body":
+    "Opening a business in the queer business directory used to paint the name, the details and four empty photo frames, which then filled in one at a time as each picture arrived. The page now waits behind a short loading screen that tells you which step it is on, and lands with the photos in place. If a photo is slow or missing the page comes through anyway rather than leaving you waiting.",
+  "changelog.entries.browse-every-tag-by-category.title":
+    "Browse every tag by category instead of guessing the word",
+  "changelog.entries.browse-every-tag-by-category.body":
+    "The tags field on your profile only ever showed six popular chips and a search box, so you had to already know a tag existed to find it. There is now a \u201cBrowse all\u201d button that opens the full list grouped by category: design and visual craft, words and communication, tech, community and care, practical and professional, music and performance. Tap a tag to add it, tap it again to take it off, and search across every category from the top of the panel. Your picks land on the profile as you make them.",
+  "changelog.entries.backspace-keeps-your-tags.title":
+    "Backspace no longer eats the tags you already picked",
+  "changelog.entries.backspace-keeps-your-tags.body":
+    "In every field where you build up a row of tags, the skills on your profile, what you are open to, and the tags on a forum post, holding backspace to clear what you had typed carried on into the tags sitting to the left of the cursor and removed them one by one, with no way to undo it. Backspace now only clears the text you are typing. Tags come off when you press the \u00d7 on the tag itself.",
+  "changelog.entries.map-loader-stays-in-its-panel.title":
+    "The directory map now loads inside its own panel",
+  "changelog.entries.map-loader-stays-in-its-panel.body":
+    "The first time you switched the queer business directory from List to Map, the loading screen covered the whole window instead of sitting in the map panel, so the page appeared to disappear for a moment. The loader now fills the same rounded panel the map lands in, and the page around it stays put.",
   "changelog.entries.plum-headers-reach-the-top.title":
     "Plum page headers now run all the way to the top",
   "changelog.entries.plum-headers-reach-the-top.body":
@@ -5018,6 +5111,7 @@ export const marketing: Catalog = {
   "contact.form.topicLabel": "What's this about?",
   "contact.form.topicPick": "Pick a topic",
   "contact.form.topic.general": "General question or feedback",
+  "contact.form.topic.account": "Account access or security",
   "contact.form.topic.safety": "Safety concern",
   "contact.form.topic.press": "Press or research inquiry",
   "contact.form.topic.partnership": "Partnership proposal",
@@ -5429,6 +5523,12 @@ export const marketing: Catalog = {
   "directory.detail.getInTouch": "Get in touch",
   "directory.detail.backToDirectory": "Back to directory",
   "directory.detail.claimCta": "Do you run this place? Claim it",
+  "directory.detail.loader.ariaLabel": "Opening this place",
+  "directory.detail.loader.title": "Opening this place",
+  "directory.detail.loader.caption": "Worth seeing it all at once.",
+  "directory.detail.loader.steps.fetchingListing": "Finding the listing",
+  "directory.detail.loader.steps.preparingDetails": "Laying out the details",
+  "directory.detail.loader.steps.loadingPhotos": "Bringing in the photos",
   "directory.detail.notFound.title": "We couldn't find this place",
   "directory.detail.notFound.body":
     "This listing may have been taken down, or the link might be out of date. Everywhere else that's open to us is still in the directory.",

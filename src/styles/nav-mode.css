@@ -36,6 +36,19 @@
   html[data-nav-mode="sidebar"] main[data-page-main] {
     margin-top: calc(-1 * (var(--nav-top) + var(--nav-height)));
   }
+  /* A `rail` shell (MagazineDeskShell) renders its own left rail and registers
+     no shell frame, so AppChrome mounts neither the Navbar nor the sidebar it
+     swaps to in this mode — the global rail simply is not on screen there.
+     `data-nav-mode` still lives on <html> (it is a stored member preference,
+     not a per-route flag), so without this reset an editor who prefers the
+     sidebar got the desk indented by a rail width that isn't there, and the
+     band-cancelling `margin-top` clipped 80px off the top of the page now that
+     the band itself is gone (base.css, `data-shell="rail"`). Both offsets exist
+     only to reconcile against chrome this shell doesn't have. */
+  html[data-nav-mode="sidebar"] main[data-page-main][data-shell="rail"] {
+    padding-left: 0;
+    margin-top: 0;
+  }
   /* MegaNav mode centres the `.wrap` container (margin: 0 auto). Beside the
      rail, hug it to the left instead so content sits next to the sidebar
      rather than floating centred in the remaining space. */

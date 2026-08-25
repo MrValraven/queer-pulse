@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { IconType } from "react-icons";
 import {
   FiArrowRight,
@@ -18,6 +19,27 @@ import { useSubmitInquiry } from "./api/useSubmitInquiry";
 import s from "./ContactPage.module.css";
 
 const CONTACT_EMAIL = "hello@queerpulse.com";
+
+/** The topic selector's values. Each one has a `contact.form.topic.<value>`
+ *  label, and any of them may arrive preselected as `?topic=<value>` from a
+ *  page that already knows what the message is about (e.g. the sessions page
+ *  linking someone here after an unfamiliar sign-in). */
+const TOPICS = [
+  "general",
+  "account",
+  "safety",
+  "press",
+  "partnership",
+  "other",
+] as const;
+
+type ContactTopic = (typeof TOPICS)[number];
+
+/** Narrow an incoming value (a `?topic=` param or the select's own change) to
+ *  a known topic, so a hand-typed URL can't put an unlabelled value in. */
+function toTopic(value: string | null): ContactTopic | "" {
+  return TOPICS.includes(value as ContactTopic) ? (value as ContactTopic) : "";
+}
 
 const ROUTES: {
   icon: IconType;
@@ -56,7 +78,13 @@ export function ContactPage() {
   const { showToast } = useToast();
   const submitInquiry = useSubmitInquiry();
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", topic: "", message: "" });
+  const [searchParams] = useSearchParams();
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    topic: toTopic(searchParams.get("topic")),
+    message: "",
+  });
   const valid =
     form.name.trim() &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
@@ -188,19 +216,13 @@ export function ContactPage() {
                 <FormField label={t("marketing:contact.form.topicLabel")}>
                   <Select
                     placeholder={t("marketing:contact.form.topicPick")}
-                    options={[
-                      "general",
-                      "safety",
-                      "press",
-                      "partnership",
-                      "other",
-                    ].map((topic) => ({
+                    options={TOPICS.map((topic) => ({
                       value: topic,
                       label: t(`marketing:contact.form.topic.${topic}`),
                     }))}
                     value={form.topic || null}
                     onChange={(value) =>
-                      setForm({ ...form, topic: value ?? "" })
+                      setForm({ ...form, topic: toTopic(value) })
                     }
                   />
                 </FormField>

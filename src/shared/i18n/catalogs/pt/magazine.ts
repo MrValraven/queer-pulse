@@ -651,6 +651,14 @@ export const magazine: Catalog = {
   "desk.header.viewingAs": "A ver como",
   "desk.header.viewingAsEditorAria": "Ver como esta pessoa editora",
   "desk.header.commissionCta": "Encomendar",
+  "desk.header.writeCta": "Escrever",
+
+  // ── Escrever (uma peça que a própria pessoa editora escreve) ─────────────
+  "desk.write.untitledTitle": "Peça sem título",
+  "desk.write.editorNotReady":
+    "Ainda estamos a carregar o teu perfil de edição. Tenta outra vez daqui a pouco.",
+  "desk.write.noSection":
+    "Ainda não há secções configuradas, por isso esta peça não teria onde sair.",
   "desk.header.produce": "Produção da edição",
   "desk.header.slotsFilledAria": "Vagas da edição preenchidas",
   "desk.header.layoutAria": "Esquema da redação",
@@ -696,6 +704,8 @@ export const magazine: Catalog = {
   "desk.newIssue.numberLabel": "Número",
   "desk.newIssue.numberHelper": "Só dígitos. “1” passa a “01”.",
   "desk.newIssue.publishesLabel": "Sai a",
+  "desk.newIssue.publishesHelper":
+    "Opcional. Deixa em aberto e define a data quando souberes.",
   "desk.newIssue.titleLabel": "Título",
   "desk.newIssue.titlePlaceholder": "O caminho mais longo",
   "desk.newIssue.themeLabel": "Tema",
@@ -815,7 +825,8 @@ export const magazine: Catalog = {
   // ── DeskStates ───────────────────────────────────────────────────────────
   "desk.states.emptyIssueTitle": "A Edição {number} está vazia",
   "desk.states.emptyIssueDescription":
-    "Ainda não foi encomendada nenhuma peça. Começa o fluxo com a tua primeira peça.",
+    "Ainda não há nada nesta edição. Começa o fluxo com a tua primeira peça.",
+  "desk.states.writePiece": "Escrever uma peça",
   "desk.states.commissionPiece": "Encomendar uma peça",
   "desk.states.errorBand":
     "Não conseguimos aceder ao fluxo. A mostrar os últimos dados que tínhamos.",
@@ -825,7 +836,7 @@ export const magazine: Catalog = {
   "desk.palette.kindArticle": "Artigo",
   "desk.palette.kindDeck": "Deck",
   "desk.palette.kindAction": "Ação",
-  "desk.palette.newPiece": "Nova peça",
+  "desk.palette.writePiece": "Escrever uma peça",
   "desk.palette.goToDesk": "Ir para a redação",
   "desk.palette.ariaLabel": "Paleta de comandos",
   "desk.palette.searchPlaceholder": "Ir diretamente a uma peça, ou começar uma nova…",
@@ -833,24 +844,14 @@ export const magazine: Catalog = {
   "desk.palette.commandsAria": "Comandos",
   "desk.palette.noResults": "Nada corresponde a “{query}”.",
 
-  // ── DeskNotifications ────────────────────────────────────────────────────
-  "desk.notifications.ariaLabel": "Notificações da redação",
-  "desk.notifications.sinceFriday": "Desde sexta",
-  "desk.notifications.subhead":
-    "O que aconteceu na redação enquanto estiveste fora.",
-  "desk.notifications.empty":
-    "Estás em dia. Nada de novo desde a última vez que viste.",
-  "desk.notifications.markAllRead": "Marcar tudo como lido",
-
   // ── MagazineDeskShell (o painel lateral de quem edita) ───────────────────
   "deskShell.issueEyebrow": "Edição {number} · {theme}",
   "deskShell.menuAria": "Secções da redação",
   "deskShell.nav.desk": "Redação",
   "deskShell.nav.pitches": "Propostas",
   "deskShell.nav.issue": "Edição",
-  "deskShell.bellCountAria": "Desde sexta: {count} novidades",
   "deskShell.openNow": "Abertos agora",
-  "deskShell.newPiece": "Novo texto",
+  "deskShell.writePiece": "Escrever",
   "deskShell.kbdHintSuffix": "para saltar · ? para atalhos",
   "deskShell.backToPlatform": "Voltar ao QueerPulse",
 
@@ -903,8 +904,6 @@ export const magazine: Catalog = {
   "desk.page.stubOpensLater": "Abre numa versão futura.",
   "desk.page.savingViewsUnavailable":
     "Ainda não é possível guardar vistas personalizadas.",
-  "desk.page.notificationsNotWired":
-    "As notificações ainda não estão ligadas à navegação real.",
 
   // ══════════════════ Ficha da peça (Fase 2) ════════════════════════════════
   // Briefing/Cuidado/Dinheiro/Histórico/Depois. O conteúdo do registo (texto
@@ -1570,6 +1569,15 @@ export const magazine: Catalog = {
   "issue.tabs.archive": "Arquivo",
 
   // ── PagesCard ────────────────────────────────────────────────────────────
+  "issue.publishDate.heading": "Data de publicação",
+  "issue.publishDate.set": "Esta edição está marcada para {date}.",
+  "issue.publishDate.unset":
+    "Ainda sem data. Define-a quando souberes, ou deixa que o envio marque a de hoje.",
+  "issue.publishDate.save": "Guardar data",
+  "issue.publishDate.clear": "Limpar data",
+  "issue.publishDate.saving": "A guardar\u2026",
+  "issue.publishDate.savedToast": "Edição marcada para {date}.",
+  "issue.publishDate.clearedToast": "Data removida. A edição ficou outra vez sem data.",
   "issue.pages.heading": "Páginas",
   "issue.pages.editorial": "Editorial",
   "issue.pages.total": "Total",
@@ -1670,6 +1678,11 @@ export const magazine: Catalog = {
   "writer.tabs.pitches": "As tuas propostas",
   "writer.tabs.payments": "Pagamentos",
   "writer.tabs.ariaLabel": "Separadores do espaço de trabalho",
+  "writer.page.heading": "O teu espaço de trabalho",
+  "writer.page.openCount_one": "{count} trabalho em aberto",
+  "writer.page.openCount_other": "{count} trabalhos em aberto",
+  "writer.page.nextDue": "próxima entrega {date}",
+  "writer.page.nothingOpen": "Nada em aberto de momento",
   "writer.page.errorTitle": "O teu espaço de trabalho não carregou",
   "writer.page.errorDescription":
     "Algo correu mal ao carregar as tuas atribuições. Tenta atualizar a página.",

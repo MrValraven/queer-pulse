@@ -1,5 +1,8 @@
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useMyCommunities } from "./api/useMyCommunities";
+import {
+  useMyCommunities,
+  useMyCommunitiesResolving,
+} from "./api/useMyCommunities";
 import { useAllCommunities } from "./useAllCommunities";
 import { getLiving } from "./livingCommunities.data";
 import type { HubPost } from "./HubPulseCard";
@@ -26,6 +29,12 @@ function interleave(lists: HubPost[][]): HubPost[] {
 export function useCommunitiesHomeData() {
   const { demoMode } = useDemoMode();
   const memberships = useMyCommunities();
+  // Same react-query key as the map above, so this is a read of the in-flight
+  // state and never a second request. The home body needs it to tell "you
+  // belong to nothing" apart from "we don't know yet": without it a live
+  // member is shown the "you haven't joined any communities yet" empty state
+  // for the length of the `GET /me/communities` round trip.
+  const isLoading = useMyCommunitiesResolving();
   const communities = useAllCommunities();
 
   const mine = Object.keys(memberships).map((slug) => {
@@ -109,7 +118,15 @@ export function useCommunitiesHomeData() {
     ),
   };
 
-  return { pulse, todos, myCommunities, upcoming, suggestions, digest };
+  return {
+    isLoading,
+    pulse,
+    todos,
+    myCommunities,
+    upcoming,
+    suggestions,
+    digest,
+  };
 }
 
 export type HomeTodo = ReturnType<

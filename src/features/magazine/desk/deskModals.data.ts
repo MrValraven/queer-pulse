@@ -39,6 +39,7 @@ export const SHORTCUTS: [string, string][] = [
   ["j / k", "Move between pieces"],
   ["o", "Open the focused piece"],
   ["c", "Chase the writer"],
+  ["w", "Write a piece yourself"],
   ["y / n", "Triage the top pitch"],
   ["⌘K", "Jump anywhere, or start a piece"],
   ["?", "This list"],

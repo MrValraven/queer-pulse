@@ -98,7 +98,12 @@
      with no reset. The extra attribute makes this selector strictly more
      specific than the plain `main[data-page-main]` rules above, so it always
      wins regardless of source order. */
-  main[data-page-main][data-shell="full-height"] {
+  main[data-page-main][data-shell="full-height"],
+  /* A `rail` shell (MagazineDeskShell) renders neither the app bar nor the
+     bottom tab bar — it has its own sticky `.mobileBar` hamburger strip — so
+     both offsets are pure dead space there: a negative margin pulling content
+     under a strip that does not exist, and padding for an absent tab bar. */
+  main[data-page-main][data-shell="rail"] {
     margin-top: 0;
     padding-bottom: 0;
   }

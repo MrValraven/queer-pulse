@@ -97,19 +97,25 @@
   outline-offset: 2px;
 }
 
-.issueBar {
+/* One control line under the title: the layout switch sits at the leading
+   edge, the issue/editor pickers and the Commission action at the trailing
+   edge. `.deskBar` stacks that line above the slot-progress track (Issue
+   track only) so the header keeps its bottom margin on both tracks. */
+.deskBar {
   margin: var(--gap-grid) 0 var(--gap-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.controlBar {
   display: flex;
   align-items: center;
   gap: 16px;
-}
-
-.spacer {
-  flex: 1;
+  flex-wrap: wrap;
 }
 
 .track {
-  flex: 1;
   height: 7px;
   border-radius: var(--radius-pill);
   background: rgba(var(--plum-rgb), 0.06);
@@ -131,8 +137,13 @@
     align-items: flex-start;
   }
 
+  .controlBar {
+    align-items: stretch;
+  }
+
   .actions {
     margin-left: 0;
     width: 100%;
+    flex-wrap: wrap;
   }
 }

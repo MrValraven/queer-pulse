@@ -18,7 +18,7 @@ import { HousingSavedSearches } from "./HousingSavedSearches";
 import { HousingLandlords, HousingTips } from "./HousingSections";
 import { ListSpaceModal } from "./ListSpaceModal";
 import { AffirmingBaselineNote } from "./AffirmingBaseline";
-import { MapLoading } from "../marketing/MapLoading";
+import { MapLoadingPanel } from "../marketing/MapLoading";
 import styles from "./HousingPage.module.css";
 
 // Code-split the map view (pulls in maplibre-gl) so it stays off the entry
@@ -157,7 +157,7 @@ export function HousingBoard() {
               onListSpace={() => setListing(true)}
             />
           ) : (
-            <Suspense fallback={<MapLoading ready={false} />}>
+            <Suspense fallback={<MapLoadingPanel />}>
               <HousingMapView
                 listings={visible}
                 selectedAreas={filters.areas ?? []}

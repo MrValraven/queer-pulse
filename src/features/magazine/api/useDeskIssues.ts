@@ -80,7 +80,7 @@ export function useCreateIssue() {
           number,
           title: body.title,
           theme: body.theme,
-          publishedOn: body.publishedOn,
+          publishedOn: body.publishedOn ?? null,
           filled: 0,
           slots: DEMO_ISSUES[0]?.slots ?? 0,
         };

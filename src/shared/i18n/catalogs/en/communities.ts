@@ -332,6 +332,27 @@ export const communities: Catalog = {
   "detail.roster.loadingMore": "Loading…",
 
   // ── Mod tools tab (living hub) ─────────────────────────────────────────────
+  // The console's section rail. Bans has no entry: it lives under Members,
+  // because a ban is a member's state.
+  "detail.modtools.nav.label": "Mod tools sections",
+  "detail.modtools.nav.overview": "Overview",
+  "detail.modtools.nav.requests": "Requests",
+  "detail.modtools.nav.reports": "Reports",
+  "detail.modtools.nav.members": "Members",
+  "detail.modtools.nav.invites": "Invites",
+  "detail.modtools.nav.card": "Member card",
+  "detail.modtools.nav.danger": "Danger zone",
+  "detail.modtools.overview.attention.label": "Needs attention",
+  "detail.modtools.overview.attention.requests_one":
+    "One person is waiting to join",
+  "detail.modtools.overview.attention.requests_other":
+    "{count} people are waiting to join",
+  "detail.modtools.overview.attention.reports_one": "One post has been reported",
+  "detail.modtools.overview.attention.reports_other":
+    "{count} posts have been reported",
+  "detail.modtools.overview.attention.clear.title": "Nothing waiting on you",
+  "detail.modtools.overview.attention.clear.description":
+    "No join requests and no reports. Anything new will show up here.",
   "detail.modtools.insights.label": "Community insights",
   "detail.modtools.insights.error.title": "Couldn't load insights",
   "detail.modtools.insights.error.description":

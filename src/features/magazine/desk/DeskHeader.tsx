@@ -1,6 +1,7 @@
 import {
   FiBookOpen,
   FiCalendar,
+  FiEdit3,
   FiFileText,
   FiGrid,
   FiList,
@@ -21,8 +22,12 @@ export type DeskLayout = "list" | "board" | "plan";
  * close/publish meta and the slot-progress track. On the Unassigned track it
  * drops the slot progress and the Produce button (unfiled work is not an
  * assembled release) and swaps in pool-oriented copy. Both tracks keep the
- * issue switcher, the "New issue" and "Viewing as" controls, the Commission
- * action, and the 3-way layout switch.
+ * issue switcher, the "New issue" and "Viewing as" controls, the Write and
+ * Commission actions, and the 3-way layout switch.
+ *
+ * Write is the primary action and Commission the secondary one: an editor
+ * writing a piece themselves is the everyday case, and sending a brief out to
+ * someone else is the occasional one.
  *
  * The issue switcher is what makes the desk multi-issue: before it, the
  * working issue was whichever had the highest display number, so no earlier
@@ -39,6 +44,8 @@ export function DeskHeader({
   onMe,
   layout,
   onLayout,
+  onWrite,
+  isWriting,
   onCommission,
   onProduce,
 }: {
@@ -53,6 +60,9 @@ export function DeskHeader({
   onMe: (editorId: string) => void;
   layout: DeskLayout;
   onLayout: (layout: DeskLayout) => void;
+  onWrite: () => void;
+  /** True while the new draft is being created, to hold Write disabled. */
+  isWriting: boolean;
   onCommission: () => void;
   onProduce: () => void;
 }) {
@@ -143,60 +153,72 @@ export function DeskHeader({
             </span>
           )}
         </div>
-        <div className={styles.actions}>
-          {issues.length > 0 && (
+      </div>
+      <div className={styles.deskBar}>
+        <div className={styles.controlBar}>
+          <SegmentedControl
+            label={t("magazine:desk.header.layoutAria")}
+            value={layout}
+            onChange={(value) => onLayout(value as DeskLayout)}
+            options={layoutOptions}
+          />
+          <div className={styles.actions}>
+            {issues.length > 0 && (
+              <span className={styles.picker}>
+                <FiBookOpen aria-hidden />
+                {t("magazine:desk.header.workingOn")}
+                <Select
+                  size="sm"
+                  className={styles.viewingAsSelect}
+                  value={issue.number || null}
+                  onChange={(value) => value && onSelectIssue(value)}
+                  label={t("magazine:desk.header.workingOnAria")}
+                  options={issues.map((option) => ({
+                    value: option.number,
+                    label: t("magazine:desk.header.issueOption", {
+                      number: option.number,
+                      title: option.title,
+                    }),
+                  }))}
+                />
+              </span>
+            )}
             <span className={styles.picker}>
-              <FiBookOpen aria-hidden />
-              {t("magazine:desk.header.workingOn")}
+              <FiUser aria-hidden />
+              {t("magazine:desk.header.viewingAs")}
               <Select
                 size="sm"
                 className={styles.viewingAsSelect}
-                value={issue.number || null}
-                onChange={(value) => value && onSelectIssue(value)}
-                label={t("magazine:desk.header.workingOnAria")}
-                options={issues.map((option) => ({
-                  value: option.number,
-                  label: t("magazine:desk.header.issueOption", {
-                    number: option.number,
-                    title: option.title,
-                  }),
+                value={me}
+                onChange={(value) => onMe(value ?? "")}
+                label={t("magazine:desk.header.viewingAsEditorAria")}
+                options={editors.map((editor) => ({
+                  value: editor.id,
+                  label: editor.name.split(" ")[0],
                 }))}
               />
             </span>
-          )}
-          <span className={styles.picker}>
-            <FiUser aria-hidden />
-            {t("magazine:desk.header.viewingAs")}
-            <Select
-              size="sm"
-              className={styles.viewingAsSelect}
-              value={me}
-              onChange={(value) => onMe(value ?? "")}
-              label={t("magazine:desk.header.viewingAsEditorAria")}
-              options={editors.map((editor) => ({
-                value: editor.id,
-                label: editor.name.split(" ")[0],
-              }))}
-            />
-          </span>
-          <Button variant="ghost" onClick={onNewIssue}>
-            <FiPlus aria-hidden />
-            {t("magazine:desk.header.newIssueCta")}
-          </Button>
-          {isIssueTrack && hasIssue && (
-            <Button variant="ghost" onClick={onProduce}>
-              <FiCalendar aria-hidden />
-              {t("magazine:desk.header.produce")}
+            <Button variant="ghost" onClick={onNewIssue}>
+              <FiPlus aria-hidden />
+              {t("magazine:desk.header.newIssueCta")}
             </Button>
-          )}
-          <Button variant="primary" onClick={onCommission}>
-            <FiPlus aria-hidden />
-            {t("magazine:desk.header.commissionCta")}
-          </Button>
+            {isIssueTrack && hasIssue && (
+              <Button variant="ghost" onClick={onProduce}>
+                <FiCalendar aria-hidden />
+                {t("magazine:desk.header.produce")}
+              </Button>
+            )}
+            <Button variant="ghost" onClick={onCommission}>
+              <FiPlus aria-hidden />
+              {t("magazine:desk.header.commissionCta")}
+            </Button>
+            <Button variant="primary" onClick={onWrite} disabled={isWriting}>
+              <FiEdit3 aria-hidden />
+              {t("magazine:desk.header.writeCta")}
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className={styles.issueBar}>
-        {isIssueTrack ? (
+        {isIssueTrack && (
           <div
             className={styles.track}
             role="progressbar"
@@ -210,15 +232,7 @@ export function DeskHeader({
               style={{ width: `${filledPercent}%` }}
             />
           </div>
-        ) : (
-          <div className={styles.spacer} />
         )}
-        <SegmentedControl
-          label={t("magazine:desk.header.layoutAria")}
-          value={layout}
-          onChange={(value) => onLayout(value as DeskLayout)}
-          options={layoutOptions}
-        />
       </div>
     </>
   );

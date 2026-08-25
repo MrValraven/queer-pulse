@@ -135,11 +135,28 @@ export const shared: Catalog = {
 
   // AdminSidebar
   "adminSidebar.badge": "Admin",
-  "adminSidebar.oversight": "Supervisão",
+  "adminSidebar.navLabel": "Secções de administração",
   "adminSidebar.backToPlatform": "Voltar à plataforma",
-  "adminSidebar.toastProfile": "O teu perfil de admin",
+
+  // AdminAccountMenu — o controlo de conta no fundo da barra lateral.
+  "adminSidebar.account.accessHeading": "O teu acesso",
+  "adminSidebar.account.tierMember": "Membro",
+  "adminSidebar.account.allAreas": "Todas as áreas de administração",
+  "adminSidebar.account.profile": "O meu perfil",
+  "adminSidebar.account.settings": "Definições da conta",
+  "adminSidebar.account.sessions": "Sessões ativas",
 
   // adminNav.data.ts
+  "adminNav.sections.trust": "Confiança e segurança",
+  "adminNav.sections.people": "Pessoas e acessos",
+  "adminNav.sections.communities": "Comunidades",
+  "adminNav.sections.directory": "Diretório",
+  "adminNav.sections.editorial": "Editorial",
+  "adminNav.sections.partners": "Parcerias e reconhecimento",
+  "adminNav.sections.site": "Conteúdo do site",
+  "adminNav.sections.platform": "Plataforma",
+  "adminNav.pendingSuffix": "pendentes",
+
   "adminNav.items.overview": "Visão geral",
   "adminNav.items.landing": "Página inicial",
   "adminNav.items.pressKit": "Kit de imprensa",

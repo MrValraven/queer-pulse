@@ -3,7 +3,7 @@ import { FiCalendar } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { useShareLink } from "../../shared/hooks/useClipboard";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -32,6 +32,7 @@ import {
 import {
   DEMO_GATHERING_SLUGS,
   gatheringCancelledPath,
+  gatheringShareUrl,
   type GatheringDetail,
 } from "./data";
 import { useEvent } from "./api/useEvent";
@@ -116,9 +117,14 @@ function ManageGatheringMain({
   slug: string;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const fmt = useFormat();
   const navigate = useNavigate();
+  // The share card's Copy button writes the real public link to the clipboard
+  // — it used to only raise the "Link copied!" toast without copying anything.
+  const { share } = useShareLink({
+    copied: t("gatherings:manage.linkCopiedToast"),
+    failed: t("gatherings:manage.linkCopyFailedToast"),
+  });
   const updateEvent = useUpdateEvent(slug);
   const cancelEvent = useCancelEvent(slug);
   // Shared with the Attendees tab via the react-query cache (same key), so this
@@ -247,9 +253,12 @@ function ManageGatheringMain({
               }}
             />
             <ManageGatheringSidebar
-              onCopyLink={() =>
-                showToast(t("gatherings:manage.linkCopiedToast"), "success")
-              }
+              slug={slug}
+              title={gatheringState.title}
+              startAt={gatheringState.startAt}
+              location={gatheringState.location}
+              coverImageUrl={gathering?.coverImageUrl}
+              onCopyLink={() => void share(gatheringShareUrl(slug))}
             />
           </div>
         </div>

@@ -308,6 +308,17 @@ export const members: Catalog = {
   "profileEdit.field.bioHelp":
     "The longer version, on your profile page. If you leave your short bio empty, your directory card borrows the opening of this.",
   "profileEdit.field.tags": "Tags",
+  // ── Field of work / profession picker (WorkFieldPicker) ─────────────────────
+  // Rendered in three places — the profile editor, onboarding's "what do you
+  // do" step, and Settings → Interests — so the chip vocabulary reads the same
+  // wherever a member meets it.
+  "profileEdit.work.label": "What you do",
+  "profileEdit.work.help":
+    "Public. Shown on your profile, and how people find you under \u201cWhat they do\u201d and \u201cProfession\u201d in the member directory.",
+  "workPicker.fieldHeading": "Your field",
+  "workPicker.professionHeading": "Your role",
+  "workPicker.professionPrompt":
+    "Pick a field above to see the roles within it.",
   "profileEdit.field.addSkillPlaceholder": "Search skills…",
   "profileEdit.field.links": "Links",
   "profileEdit.field.photo": "Photo",
@@ -317,6 +328,22 @@ export const members: Catalog = {
   "profileEdit.addTagPlaceholder": "Add a tag…",
   "profileEdit.searchTagPlaceholder": "Search skills…",
   "profileEdit.popularTagsLabel": "Popular",
+
+  // ── Browse-all-tags modal (ProfileTagBrowserModal) ────────────────────────
+  "profileEdit.tagBrowser.open": "Browse all",
+  "profileEdit.tagBrowser.title": "All tags",
+  "profileEdit.tagBrowser.selectedCount_one": "{count} tag on your profile",
+  "profileEdit.tagBrowser.selectedCount_other": "{count} tags on your profile",
+  "profileEdit.tagBrowser.searchLabel": "Search tags",
+  "profileEdit.tagBrowser.searchPlaceholder": "Search tags…",
+  "profileEdit.tagBrowser.noMatches": "No tags match “{query}”.",
+  "profileEdit.tagBrowser.done": "Done",
+  "profileEdit.tagCategory.design": "Design & visual craft",
+  "profileEdit.tagCategory.words": "Words & communication",
+  "profileEdit.tagCategory.tech": "Tech",
+  "profileEdit.tagCategory.community": "Community, care & organising",
+  "profileEdit.tagCategory.practical": "Practical & professional",
+  "profileEdit.tagCategory.performance": "Music & performance",
   "profileEdit.addTagLabel": "Add a tag",
   "profileEdit.removeTagLabel": "Remove {tag}",
   "profileEdit.visibilityGroupLabel": "Profile visibility",
@@ -450,6 +477,9 @@ export const members: Catalog = {
 
   // ── Hero tags row (ProfileHeroMain) ─────────────────────────────────────────
   "hero.tags.label": "Tags",
+
+  // ── Hero "works in" row (ProfileWorkRow) ────────────────────────────────────
+  "hero.worksIn.label": "Works in",
 
   // ── Public profile page (PublicProfilePage) ─────────────────────────────────
   // ── /public-profile/:slug — the logged-out, indexable public profile ──────
@@ -1161,8 +1191,7 @@ export const members: Catalog = {
   "places.coManagerInvites.declineCta": "Decline",
   "places.coManagerInvites.acceptedToast": "You now help run {listing}.",
   "places.coManagerInvites.declinedToast": "Invitation declined.",
-  "places.coManagerInvites.error":
-    "We couldn't send your answer. Try again.",
+  "places.coManagerInvites.error": "We couldn't send your answer. Try again.",
   "places.empty.title": "No places yet",
   "places.empty.description":
     "Run a studio, shop, clinic or space in Lisbon? List it in the directory. Once it's live, it'll show up here too.",

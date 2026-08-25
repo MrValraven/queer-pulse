@@ -13,7 +13,7 @@ import { BulkAssignBar } from "./BulkAssignBar";
 import { DeskSidebar } from "./DeskSidebar";
 import { DeskSkeleton, DeskEmptyState, DeskErrorBand } from "./DeskStates";
 import { EditorDecksSection } from "../EditorDecksSection";
-import type { DeskSummaryDto } from "../api/pieces.api";
+import type { DeskSummaryView } from "../api/useDeskSummary";
 import type {
   Editor,
   Issue,
@@ -49,6 +49,9 @@ export interface DeskViewProps {
   onMe: (editorId: string) => void;
   layout: DeskLayout;
   onLayout: (layout: DeskLayout) => void;
+  onWrite: () => void;
+  /** True while a new self-written draft is being created. */
+  isWriting: boolean;
   onCommission: () => void;
   onProduce: () => void;
   pieces: Piece[];
@@ -94,7 +97,7 @@ export interface DeskViewProps {
   onBulkMaybe: () => void;
   onBulkPass: () => void;
   onClearBulkSelection: () => void;
-  summary: DeskSummaryDto | undefined;
+  summary: DeskSummaryView | undefined;
 }
 
 /**
@@ -135,6 +138,8 @@ export function DeskView(props: DeskViewProps) {
         onMe={props.onMe}
         layout={props.layout}
         onLayout={props.onLayout}
+        onWrite={props.onWrite}
+        isWriting={props.isWriting}
         onCommission={props.onCommission}
         onProduce={props.onProduce}
       />
@@ -167,7 +172,11 @@ export function DeskView(props: DeskViewProps) {
       <div className={styles.grid}>
         <div>
           {props.isEmpty ? (
-            <DeskEmptyState issueNumber={props.issue.number} onCommission={props.onCommission} />
+            <DeskEmptyState
+              issueNumber={props.issue.number}
+              onWrite={props.onWrite}
+              onCommission={props.onCommission}
+            />
           ) : (
             <>
               {props.layout === "list" && (

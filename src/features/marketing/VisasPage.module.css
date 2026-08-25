@@ -33,12 +33,24 @@
   font-style: italic;
   color: var(--accent);
 }
+/*
+ * Every card is one column of a subgrid, so the four content rows (chip, name,
+ * description, call to action) line up across all five cards no matter how many
+ * lines a translated title takes. `auto-fill` (not `auto-fit`) keeps the tracks
+ * equal width when the row wraps, so a lone trailing card stays card-sized.
+ * The 5px row-gap is the cards' internal rhythm, topped up by child margins.
+ */
 .routeGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px;
+  column-gap: 10px;
+  row-gap: 5px;
 }
 .routeCard {
+  display: grid;
+  /* Fallback for no subgrid: equal heights with the CTA pinned to the bottom. */
+  grid-template-rows: auto auto 1fr auto;
+  height: 100%;
   background: var(--paper);
   border: 1.5px solid rgba(var(--line-rgb), 0.1);
   border-radius: 16px;
@@ -51,21 +63,52 @@
     background 0.22s var(--ease),
     transform 0.22s var(--ease);
 }
+@supports (grid-template-rows: subgrid) {
+  .routeCard {
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+  }
+}
 @media (hover: hover) {
   .routeCard:hover {
     border-color: rgba(var(--line-rgb), 0.28);
     transform: translateY(-2px);
+  }
+  .routeCard:hover .rcChip {
+    background: rgba(var(--accent-rgb), 0.18);
   }
 }
 .routeSel {
   border-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.05);
 }
+.rcChip {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+  justify-self: start;
+  margin-bottom: 7px;
+  transition:
+    background 0.22s var(--ease),
+    color 0.22s var(--ease);
+}
+.rcChip svg {
+  width: 17px;
+  height: 17px;
+}
+.routeSel .rcChip {
+  background: var(--accent);
+  color: var(--cream);
+}
+
 .rcName {
   font-size: 15px;
   font-weight: 600;
   color: var(--text-strong);
-  margin-bottom: 5px;
 }
 .rcDesc {
   font-size: 12.5px;
@@ -76,7 +119,8 @@
   font-size: 11.5px;
   color: var(--accent-ink);
   font-weight: 600;
-  margin-top: 9px;
+  align-self: start;
+  margin-top: 4px;
 }
 
 .tabNav {

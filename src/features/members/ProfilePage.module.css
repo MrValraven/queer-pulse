@@ -133,6 +133,18 @@ div.backBar {
 .pageCol {
   min-width: 0;
 }
+/* Every below-hero section carries its own `.wrap`, because the phone and the
+   edit layouts render it bare with no container of its own. In this column it
+   already sits inside the page-level `.wrap` around `.pageGrid`, so that inner
+   wrap adds a second 28px gutter and the section lands 28px inboard of the
+   column. That is why "Communities" sat out of line with "Places you run",
+   whose `.section` padding shorthand happens to zero its own wrap's inline
+   padding. Cancel the inner wrap here: the outer one owns the gutter, and the
+   safe-area inset with it, so the whole right column shares one left edge. */
+.pageCol :global(.wrap) {
+  max-width: none;
+  padding-inline: 0;
+}
 @media (--mobile) {
   .pageGrid {
     display: contents;

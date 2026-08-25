@@ -11,9 +11,7 @@ import { LeaveCommunityModal } from "./LeaveCommunityModal";
 import { CommunityDetailHero } from "./CommunityDetailHero";
 import { CommunityFrozenBanner } from "./CommunityFrozenBanner";
 import { CommunityRulesUpdateNotice } from "./CommunityRulesUpdateNotice";
-import { LivingHubTabs } from "./LivingHubTabs";
-import { FallbackHubTabs } from "./FallbackHubTabs";
-import { CommunitySidebar } from "./CommunitySidebar";
+import { CommunityHubLayout } from "./CommunityHubLayout";
 import { SimilarCommunitiesSection } from "./SimilarCommunitiesSection";
 import { useCommunityDetailState } from "./useCommunityDetailState";
 import styles from "./CommunityDetailPage.module.css";
@@ -154,41 +152,24 @@ export function CommunityDetailPage() {
               isMember={joined}
             />
           )}
-          <div className={styles.layout}>
-            {living ? (
-              <LivingHubTabs
-                community={community}
-                info={detail}
-                living={living}
-                threads={discussionThreads}
-                slug={living.slug}
-                isMember={joined}
-                role={role}
-                pulsePaging={posts}
-                discussionPaging={discussionPaging}
-                rosterPaging={rosterResult}
-                communityPulse={communityPulse}
-              />
-            ) : (
-              <FallbackHubTabs
-                detail={detail}
-                members={members}
-                hasCount={hasCount}
-                memberNum={memberNum}
-                threads={discussionThreads}
-                slug={slug ?? ""}
-                isMember={joined}
-                canModerate={canEdit}
-                discussionPaging={discussionPaging}
-              />
-            )}
-
-            <CommunitySidebar
-              detail={detail}
-              related={related}
-              communityPulse={communityPulse}
-            />
-          </div>
+          <CommunityHubLayout
+            community={community}
+            detail={detail}
+            living={living}
+            slug={slug}
+            threads={discussionThreads}
+            joined={joined}
+            role={role}
+            canEdit={canEdit}
+            members={members}
+            memberNum={memberNum}
+            hasCount={hasCount}
+            posts={posts}
+            discussionPaging={discussionPaging}
+            rosterResult={rosterResult}
+            related={related}
+            communityPulse={communityPulse}
+          />
 
           {slug && <SimilarCommunitiesSection currentSlug={slug} />}
         </div>

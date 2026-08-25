@@ -1,31 +1,27 @@
 import { Link, NavLink } from "react-router-dom";
-import { FiArrowLeft, FiPlus, FiZap } from "react-icons/fi";
+import { FiArrowLeft, FiEdit3 } from "react-icons/fi";
 import { Button } from "../ui";
 import { routes } from "../../../app/routeMap";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { useCurrentIssue } from "../../../features/magazine/api/useCurrentIssue";
-import { useMagazineNotifications } from "../../../features/magazine/api/useMagazineNotifications";
 import { MAGAZINE_NAV, MAGAZINE_ISSUE_FALLBACK_ROUTE } from "./magazineNav.data";
 import { MagazineSidebarRecents } from "./MagazineSidebarRecents";
 import styles from "./MagazineSidebar.module.css";
 
 export function MagazineSidebar({
   onNavigate,
-  onOpenNotifications,
 }: {
   /** Called when a navigation link is activated — the mobile off-canvas
    * drawer passes its close handler so tapping a link dismisses the drawer.
    * Absent on desktop, where the rail is static and nothing needs closing. */
   onNavigate?: () => void;
-  onOpenNotifications: () => void;
 }) {
   const { t } = useTranslation();
   // Dual-mode, honest-empty: `issue` is `null` before any issue exists in
   // live mode, in which case the eyebrow and the "Issue" nav destination
   // both fall back rather than fabricating a number/theme.
   const { issue } = useCurrentIssue();
-  const { unreadCount } = useMagazineNotifications();
 
   return (
     <aside className={styles.rail}>
@@ -66,19 +62,6 @@ export function MagazineSidebar({
         })}
       </nav>
 
-      <button type="button" className={styles.bell} onClick={onOpenNotifications}>
-        <FiZap aria-hidden />
-        <span>{t("magazine:desk.notifications.sinceFriday")}</span>
-        {unreadCount > 0 && (
-          <span
-            className={styles.pip}
-            aria-label={t("magazine:deskShell.bellCountAria", { count: unreadCount })}
-          >
-            {unreadCount}
-          </span>
-        )}
-      </button>
-
       <MagazineSidebarRecents onNavigate={onNavigate} />
 
       <div className={styles.railFoot}>
@@ -89,10 +72,10 @@ export function MagazineSidebar({
         <Button
           variant="primary"
           size="sm"
-          to={`${routes.magazineEditor}?commission=new`}
+          to={`${routes.magazineEditor}?write=new`}
           onClick={onNavigate}
         >
-          <FiPlus aria-hidden /> {t("magazine:deskShell.newPiece")}
+          <FiEdit3 aria-hidden /> {t("magazine:deskShell.writePiece")}
         </Button>
         <span className={styles.kbdHint}>
           <span className={styles.kbd}>⌘K</span> {t("magazine:deskShell.kbdHintSuffix")}

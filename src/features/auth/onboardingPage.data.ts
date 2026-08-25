@@ -25,7 +25,7 @@ export const ONBOARDING_PREVIEW = [
 // Total number of onboarding steps, including the warm intro (counted as step 1)
 // and the final "you're all set" screen. Used to render an honest, linear
 // "Step X of N" indicator and progress bar across every step.
-export const TOTAL_STEPS = 7;
+export const TOTAL_STEPS = 8;
 
 // Self-identification shorthand the member picks for themselves — kept as the
 // widely-recognised English pronoun-set convention (he/him, she/her, they/them

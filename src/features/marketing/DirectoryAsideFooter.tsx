@@ -2,6 +2,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ReportSubjectControl } from "../safety/ReportSubjectControl";
 import { type DirectoryPlace } from "./directoryPlaces";
 import { DirectoryContestControl } from "./DirectoryContestControl";
+import s from "./DirectorySpacePage.module.css";
 
 interface Props {
   place: DirectoryPlace;
@@ -31,22 +32,25 @@ interface Props {
  */
 export function DirectoryAsideFooter({ place, preview = false, ownerRef }: Props) {
   const { t } = useTranslation();
-  if (preview) return null;
+  // An owner sees neither control (the report is for other people's listings,
+  // and the contest control hides itself for them), so the block that frames
+  // them would otherwise render as an empty hairline under the last card.
+  if (preview || ownerRef) return null;
 
   return (
-    <>
-      {!ownerRef && (
-        <ReportSubjectControl
-          subjectType="business"
-          subjectId={place.slug}
-          subjectName={place.name}
-          label={t("marketing:directory.detail.reportCta")}
-          ariaLabel={t("marketing:directory.detail.reportAriaLabel", {
-            name: place.name,
-          })}
-        />
-      )}
+    <div className={s.sideFooter}>
+      <ReportSubjectControl
+        subjectType="business"
+        subjectId={place.slug}
+        subjectName={place.name}
+        label={t("marketing:directory.detail.reportCta")}
+        ariaLabel={t("marketing:directory.detail.reportAriaLabel", {
+          name: place.name,
+        })}
+      />
+      {/* Member-only, and self-gated: renders nothing for a signed-out visitor,
+          who still gets the report path above. */}
       <DirectoryContestControl place={place} ownerRef={ownerRef} />
-    </>
+    </div>
   );
 }

@@ -6,6 +6,8 @@ import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PronounField } from "../../shared/identity/PronounField";
+import { WorkFieldPicker } from "../members/WorkFieldPicker";
+import { type WorkFieldSelection } from "../members/workFieldPicker.data";
 import { IdentityPhotoField } from "./EditProfileIdentityFields";
 import styles from "./EditProfilePage.module.css";
 
@@ -115,7 +117,9 @@ export function IdentitySection({
           placeholder: t("settings:editProfile.pronouns.writeOwnPlaceholder"),
           add: t("settings:editProfile.skills.add"),
           removeAria: (pronoun) =>
-            t("settings:editProfile.pronouns.removeCustomAriaLabel", { pronoun }),
+            t("settings:editProfile.pronouns.removeCustomAriaLabel", {
+              pronoun,
+            }),
         }}
       />
       <div className={styles.field}>
@@ -144,8 +148,12 @@ export function IdentitySection({
 interface BioSectionProps {
   bioText: string;
   occupation: string;
+  /** The member's field(s) of work and profession(s) — the shared picker's
+   *  selection, persisted as `discipline`/`profession` on the profile. */
+  work: WorkFieldSelection;
   onBioChange: (v: string) => void;
   onOccupationChange: (v: string) => void;
+  onWorkChange: (next: WorkFieldSelection) => void;
 }
 
 const BIO_MAX = 300;
@@ -153,8 +161,10 @@ const BIO_MAX = 300;
 export function BioSection({
   bioText,
   occupation,
+  work,
   onBioChange,
   onOccupationChange,
+  onWorkChange,
 }: BioSectionProps) {
   const { t } = useTranslation();
   const fieldId = useId();
@@ -197,6 +207,20 @@ export function BioSection({
           type="text"
           value={occupation}
           onChange={(e) => onOccupationChange(e.target.value)}
+        />
+      </div>
+      {/* The occupation line above is the member's own words; this is the same
+          answer in the directory's vocabulary, so a search for a photographer
+          finds them. Same picker as the profile editor and onboarding. */}
+      <div className={styles.field}>
+        <span className={styles.fieldLabel}>
+          {t("members:profileEdit.work.label")}
+        </span>
+        <WorkFieldPicker
+          discipline={work.discipline}
+          profession={work.profession}
+          headingClassName={styles.fieldLabel}
+          onChange={onWorkChange}
         />
       </div>
     </div>

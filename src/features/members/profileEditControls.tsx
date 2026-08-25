@@ -5,11 +5,12 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { FiPlus, FiX } from "react-icons/fi";
+import { FiGrid, FiPlus, FiX } from "react-icons/fi";
 import type { VisibilityMode } from "../../shared/components/ui/VisibilityBadge";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUN_PRESETS } from "../../shared/identity/pronouns";
 import { VISIBILITY_OPTIONS } from "./profileEdit.data";
+import { ProfileTagBrowserModal } from "./ProfileTagBrowserModal";
 import { POPULAR_PROFILE_TAGS, PROFILE_TAG_OPTIONS } from "./profileTags.data";
 import styles from "./ProfileEdit.module.css";
 
@@ -181,6 +182,7 @@ export function TagEditor({
   const [input, setInput] = useState("");
   const [highlight, setHighlight] = useState(-1);
   const [focused, setFocused] = useState(false);
+  const [isBrowserOpen, setIsBrowserOpen] = useState(false);
 
   const isSelected = (option: string) =>
     tags.some((tag) => tag.toLowerCase() === option.toLowerCase());
@@ -230,9 +232,10 @@ export function TagEditor({
       event.stopPropagation();
       setInput("");
       setHighlight(-1);
-    } else if (event.key === "Backspace" && !input && tags.length) {
-      onChange(tags.slice(0, -1));
     }
+    // Backspace deliberately does NOT remove the previous tag. Holding it to
+    // clear what you typed would run on into the chips you already picked and
+    // silently delete them; the × on each tag is the only way to remove one.
   }
 
   return (
@@ -298,23 +301,44 @@ export function TagEditor({
         </div>
       </div>
 
-      {popular.length > 0 && (
-        <div className={styles.tagPopular}>
-          <span className={styles.tagPopularLabel}>
-            {t("members:profileEdit.popularTagsLabel")}
-          </span>
-          {popular.map((option) => (
-            <button
-              key={option}
-              type="button"
-              className={styles.tagAdd}
-              onClick={() => add(option)}
-            >
-              <FiPlus aria-hidden />
-              {option}
-            </button>
-          ))}
-        </div>
+      <div className={styles.tagPopular}>
+        {popular.length > 0 && (
+          <>
+            <span className={styles.tagPopularLabel}>
+              {t("members:profileEdit.popularTagsLabel")}
+            </span>
+            {popular.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={styles.tagAdd}
+                onClick={() => add(option)}
+              >
+                <FiPlus aria-hidden />
+                {option}
+              </button>
+            ))}
+          </>
+        )}
+        {/* The popular chips and the type-ahead only ever reveal a sliver of the
+            vocabulary, so anyone who doesn't already know a tag exists can't
+            find it. This opens the full grouped list. */}
+        <button
+          type="button"
+          className={`${styles.tagAdd} ${styles.tagBrowseAll}`}
+          onClick={() => setIsBrowserOpen(true)}
+        >
+          <FiGrid aria-hidden />
+          {t("members:profileEdit.tagBrowser.open")}
+        </button>
+      </div>
+
+      {isBrowserOpen && (
+        <ProfileTagBrowserModal
+          tags={tags}
+          onChange={onChange}
+          onClose={() => setIsBrowserOpen(false)}
+        />
       )}
     </div>
   );

@@ -114,12 +114,25 @@ export interface PitchDto {
   fresh: boolean;
 }
 
-/** One row of the piece audit trail — mirrors `PieceAuditEntry`. */
-export interface PieceAuditEntryDto {
+/**
+ * One row of the `magazine_piece_event` trail — mirrors `PieceEventEntry`.
+ * Shared by a piece's History tab (`PieceRecordDto.audit`) and the desk
+ * sidebar's activity feed (`DeskSummaryDto.activity`). Already resolved to
+ * display strings on the backend (`who` is a real name or "System", `what` is
+ * a human phrase), so a raw uuid or `action` enum never reaches the screen.
+ * The History tab's phrases say "this piece"; the desk feed spans every piece
+ * so its phrases name each one by title. `when` is the raw ISO timestamp, for
+ * the frontend to format.
+ */
+export interface PieceEventEntryDto {
+  id: string;
+  /** For matching the row against the editor directory (avatar only) — the
+   *  visible attribution is always `who`. `null` for a system event. */
   actorId: string | null;
-  action: string;
-  detail: string | null;
-  createdAt: string;
+  isSystem: boolean;
+  who: string;
+  what: string;
+  when: string;
 }
 
 /** `MagazinePayment.status` — mirrors backend `PaymentStatus`. */
@@ -164,26 +177,7 @@ export interface PublishGateItemDto {
 export interface DeskSummaryDto {
   stageLoad: { stage: PieceStage; count: number }[];
   editorLoad: { editorId: string; count: number; cap: number }[];
-  activity: PieceAuditEntryDto[];
-}
-
-/**
- * A row from GET /magazine/admin/notifications — mirrors
- * `MagazineNotificationResponse` (the "Since Friday" desk activity panel,
- * built from the real `magazine_piece_event` log). Newest-first, ~20 rows.
- * `who` is a resolved display name or "An editor"/"System" — never an email
- * or raw uuid. `route` is already a real FE path (e.g.
- * `/magazine/editor/piece/:id`), not an enum key. `tone` is `'warn'` for
- * payment/late/kill-fee-shaped events, `'normal'` otherwise.
- */
-export interface MagazineNotificationDto {
-  id: string;
-  who: string;
-  what: string;
-  when: string;
-  route: string;
-  isUnread: boolean;
-  tone: "normal" | "warn";
+  activity: PieceEventEntryDto[];
 }
 
 /**
@@ -235,7 +229,7 @@ export interface AssignIssueResultDto {
 export interface PieceRecordDto extends PieceListItemDto {
   brief: PieceBrief | null;
   care: PieceCare | null;
-  audit: PieceAuditEntryDto[];
+  audit: PieceEventEntryDto[];
   payment: PaymentDto | null;
   letters: LetterDto[];
   corrections: CorrectionDto[];
@@ -539,14 +533,6 @@ export const getDeskSummary = () =>
 
 export const getMagazineEditors = () =>
   apiGet<MagazineEditorDto[]>("/magazine/admin/editors");
-
-export const getMagazineNotifications = () =>
-  apiGet<MagazineNotificationDto[]>("/magazine/admin/notifications");
-
-/** POST /magazine/admin/notifications/read-all — advance the caller's read
- *  cursor to now, so every currently-listed notification reads as read. */
-export const markMagazineNotificationsRead = () =>
-  apiPost<void>("/magazine/admin/notifications/read-all");
 
 export const getCurrentIssue = () =>
   apiGet<CurrentIssueDto | null>("/magazine/admin/issues/current");

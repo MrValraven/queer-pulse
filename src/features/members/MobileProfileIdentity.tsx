@@ -1,13 +1,15 @@
 import { Tag, TagRow } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ProfileNetworkStats } from "./ProfileNetworkStats";
+import { ProfileWorkRow } from "./ProfileWorkRow";
 import { SocialLinksRow } from "./SocialLinksRow";
 import type { MemberProfile } from "./data/memberProfiles";
 import styles from "./MobileProfile.module.css";
 
 /**
  * The left-aligned details block of the Instagram-style mobile profile
- * header: member-since, the "Here for" intent block, bio, tags and social
+ * header: member-since, the "Here for" intent block, the "works in" row,
+ * bio, tags and social
  * links. Sits below the centered identity cap and full-width stats row in
  * `MobileProfileHeader` — the eyebrow, name, role/pronouns and location now
  * live in `MobileProfileIdentityTop`, split out so the header can center
@@ -55,6 +57,14 @@ export function MobileProfileIdentity({
             )}
           </div>
         )}
+      <ProfileWorkRow
+        profile={profile}
+        classNames={{
+          row: styles.identityHereFor,
+          label: styles.identityHereForLabel,
+          chip: styles.identityHereForChip,
+        }}
+      />
       <p className={styles.identityBio}>{profile.bio}</p>
       <TagRow className={styles.identityTags}>
         {profile.tags.map((tag) => (

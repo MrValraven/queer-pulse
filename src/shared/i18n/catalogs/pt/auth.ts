@@ -38,10 +38,12 @@ export const auth: Catalog = {
   "signIn.notice.inviteInvalid.title": "Esse convite não é válido",
   "signIn.notice.inviteInvalid.body":
     "Este link de convite expirou ou já foi usado. Pede um novo a quem te convidou, ou pede um convite diretamente.",
-  "signIn.notice.inviteEmailMismatch.title": "Este convite era para outro email",
+  "signIn.notice.inviteEmailMismatch.title":
+    "Este convite era para outro email",
   "signIn.notice.inviteEmailMismatch.body":
     "Alguém reservou este convite para um endereço específico. Inicia sessão com esse email, ou pede um novo convite para o que estás a usar.",
-  "signIn.notice.inviteInviterInactive.title": "Quem te convidou já não está por cá",
+  "signIn.notice.inviteInviterInactive.title":
+    "Quem te convidou já não está por cá",
   "signIn.notice.inviteInviterInactive.body":
     "A pessoa que enviou este convite já não está ativa no QueerPulse, por isso não te consegue trazer para dentro. Pede um novo convite a outra pessoa que conheças, ou pede um diretamente.",
   "signIn.notice.accessDenied.title": "O início de sessão foi cancelado",
@@ -160,12 +162,12 @@ export const auth: Catalog = {
   "invite.ready.sub":
     "Partilha da forma que fizer mais sentido. É válido para uma utilização.",
   "invite.ready.linkCopied": "Link copiado",
-  "invite.ready.copyFailed":
-    "Não foi possível copiar. Tenta selecionar o link",
+  "invite.ready.copyFailed": "Não foi possível copiar. Tenta selecionar o link",
   "invite.ready.copyLinkAriaLabel": "Copiar link de convite",
   "invite.ready.shareThrough": "Partilhar através de",
   "invite.ready.qrHint": "Ou deixa que o leiam",
-  "invite.ready.qrLabel": "Código QR deste link de convite, lê-o para abrir o convite",
+  "invite.ready.qrLabel":
+    "Código QR deste link de convite, lê-o para abrir o convite",
   "invite.ready.oneTimeLink": "Link de utilização única",
   "invite.ready.expiresIn7Days": "Expira em 7 dias",
   "invite.ready.expiresOn": "Expira a {date}",
@@ -189,7 +191,8 @@ export const auth: Catalog = {
   "invite.sentList.detail.sent": "Enviado {sent}",
   "invite.sentList.revokeCta": "Revogar",
   "invite.sentList.revoking": "A revogar…",
-  "invite.sentList.revokedToast": "Convite revogado. O link deixou de funcionar.",
+  "invite.sentList.revokedToast":
+    "Convite revogado. O link deixou de funcionar.",
   "invite.sentList.revokeConfirm.title": "Revogar este convite?",
   "invite.sentList.revokeConfirm.body":
     "O código {code} deixa de funcionar assim que o revogares e não há forma de o recuperar. Se já o entregaste a alguém, essa pessoa não vai conseguir entrar com ele.",
@@ -199,7 +202,8 @@ export const auth: Catalog = {
     "Não conseguimos revogar esse convite agora. Continua ativo, por isso tenta novamente daqui a pouco.",
   "invite.sentList.resendCta": "Enviar de novo",
   "invite.sentList.resending": "A enviar…",
-  "invite.sentList.resentToast": "Convite enviado de novo: o mesmo link, válido por mais uma semana.",
+  "invite.sentList.resentToast":
+    "Convite enviado de novo: o mesmo link, válido por mais uma semana.",
   "invite.sentList.resendError.notYours":
     "Este convite não é teu para voltares a enviar.",
   "invite.sentList.resendError.notFound":
@@ -235,7 +239,8 @@ export const auth: Catalog = {
   "under18.title": "Vamos estar aqui <em>quando estiveres preparade</em>",
   "under18.body1":
     "A parte comunitária do QueerPulse é 18+ por agora, por isso ainda não podemos criar-te uma conta. Isto não diz nada sobre ti. Mas quase tudo o que fazemos está aberto a toda a gente, sem precisares de iniciar sessão. Pertences à comunidade queer, e há muita dela à tua espera aqui mesmo.",
-  "under18.body2": "Dá uma vista de olhos à biblioteca e a tudo o resto que já é teu:",
+  "under18.body2":
+    "Dá uma vista de olhos à biblioteca e a tudo o resto que já é teu:",
   "under18.link.library": "A biblioteca: livre para explorares, sem conta",
   "under18.link.queer101": "Queer 101: o essencial, sem barreiras",
   "under18.link.comingOut": "Assumir-te, ao teu próprio ritmo",
@@ -315,7 +320,8 @@ export const auth: Catalog = {
   "requestInvite.whatNext.connection.title": "Procuramos uma ligação",
   "requestInvite.whatNext.connection.body":
     "Se já houver alguém aqui que te possa avalizar, essa é a forma mais certa de entrar. Partilhar o email dessa pessoa ajuda-nos a encontrá-la.",
-  "requestInvite.whatNext.hearBack.title": "Se for que sim, alguém entra em contacto",
+  "requestInvite.whatNext.hearBack.title":
+    "Se for que sim, alguém entra em contacto",
   "requestInvite.whatNext.hearBack.body":
     "Uma pessoa da comunidade envia o teu link de convite para o endereço que nos deste, normalmente dentro de umas semanas. Não conseguimos responder a todos os pedidos, por isso, se ficar tudo calado, pedir a alguém que já conheces aqui é a forma mais certa de entrar.",
 
@@ -383,7 +389,8 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.lastName.label": "Apelido",
   "onboarding.stepPhoto.name.helper":
     "É isto que as outras pessoas vão ver no teu perfil. Tirámos isto da tua conta Google, mas podes mudá-lo.",
-  "onboarding.stepPhoto.preview.caption": "Como vai ficar o teu cartão de perfil",
+  "onboarding.stepPhoto.preview.caption":
+    "Como vai ficar o teu cartão de perfil",
   "onboarding.stepPhoto.pronouns.label": "Pronomes",
   "onboarding.stepPhoto.pronouns.helper":
     "Como preferires que as outras pessoas se refiram a ti. Totalmente opcional.",
@@ -424,7 +431,8 @@ export const auth: Catalog = {
   "onboarding.stepIntents.hint":
     "Escolhe pelo menos uma, e quantas fizerem sentido.",
   "onboarding.stepIntents.continue": "Continuar",
-  "onboarding.stepIntents.skip": "Saltar por agora, podes partilhar isto depois",
+  "onboarding.stepIntents.skip":
+    "Saltar por agora, podes partilhar isto depois",
   "onboarding.stepIntents.back": "Voltar",
   "onboarding.stepIntents.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
@@ -433,6 +441,17 @@ export const auth: Catalog = {
     "Outros membros vão ver no teu perfil o que procuras.",
   "onboarding.stepIntents.visibility.descPrivate":
     "Fica só para ti. Podes ativar quando quiseres nas Definições.",
+  // ── Passo 6: o que fazes (StepWork) ─────────────────────────────────────────
+  // Guarda a área e a função no próprio perfil, que é o que os filtros do
+  // diretório procuram. Opcional: saltar não guarda nada.
+  "onboarding.stepWork.heading": "O que <em>fazes?</em>",
+  "onboarding.stepWork.hint":
+    "Escolhe a tua área e depois as funções que encaixam. Isto é público e é assim que as pessoas te encontram no diretório de membros.",
+  "onboarding.stepWork.continue": "Continuar",
+  "onboarding.stepWork.skip": "Saltar por agora, podes adicionar isto depois",
+  "onboarding.stepWork.back": "Voltar",
+  "onboarding.stepWork.saveError":
+    "Não conseguimos guardar isso agora. Tenta novamente.",
   "onboarding.intent.community": "Comunidade",
   "onboarding.intent.gatherings": "Convívios e eventos",
   "onboarding.intent.professional": "Ligações profissionais",
@@ -474,8 +493,7 @@ export const auth: Catalog = {
   "onboarding.stepDone.stampFailed.retry": "Tentar de novo",
   "onboarding.quickStart.browseDirectory.title":
     "Explora o diretório de pessoas",
-  "onboarding.quickStart.browseDirectory.desc":
-    "Membros em Lisboa e não só",
+  "onboarding.quickStart.browseDirectory.desc": "Membros em Lisboa e não só",
   "onboarding.quickStart.gatherings.title": "Vê os próximos convívios",
   "onboarding.quickStart.gatherings.desc": "Eventos reais para a comunidade",
   "onboarding.quickStart.magazine.title": "Lê a revista da comunidade",
@@ -504,8 +522,10 @@ export const auth: Catalog = {
   "gettingStarted.progress": "{done} de {total} feitos",
   "gettingStarted.levelStrip.eyebrow": "O teu nível",
   "gettingStarted.levelStrip.progress": "{xp} de {xpMax} XP",
-  "gettingStarted.levelStrip.hint": "Cada passo que concluis dá XP para o teu próximo nível.",
-  "gettingStarted.levelStrip.hintDone": "Continua a explorar a QueerPulse para ganhares mais.",
+  "gettingStarted.levelStrip.hint":
+    "Cada passo que concluis dá XP para o teu próximo nível.",
+  "gettingStarted.levelStrip.hintDone":
+    "Continua a explorar a QueerPulse para ganhares mais.",
   "gettingStarted.xpSources.eyebrow": "O que já rendeu XP",
   "gettingStarted.xpSources.amount": "+{xp} XP",
   "gettingStarted.xpSources.seeAll": "Ver detalhe completo",

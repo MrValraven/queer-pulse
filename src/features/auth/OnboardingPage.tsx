@@ -17,6 +17,7 @@ import { StepIntents } from "./StepIntents";
 import { StepWelcome } from "./StepWelcome";
 import { StepPhoto } from "./StepPhoto";
 import { StepCommunities } from "./StepCommunities";
+import { StepWork } from "./StepWork";
 
 // Per-member resume marker: the current step is persisted so an abandoned
 // onboarding picks up where it left off instead of restarting at step 0.
@@ -48,7 +49,7 @@ export function OnboardingPage() {
   // version", which is the correct answer either way.
   const guidelinesVersion = usePlatformStatus().data?.guidelinesVersion;
 
-  // Seven steps in total, indexed 0–6. Step 0 is the warm "let's begin" intro,
+  // Eight steps in total, indexed 0–7. Step 0 is the warm "let's begin" intro,
   // counted as Step 1 so the "Step X of N" label is honest and continuous.
   // Live members resume their saved step; demo mode forces the scope to null so
   // nothing is persisted and the flow always previews from the start.
@@ -188,13 +189,20 @@ export function OnboardingPage() {
             />
           )}
           {step === 5 && (
-            <StepCommunities
+            <StepWork
               stepLabel={stepLabel}
               onNext={() => go(6)}
               onBack={() => go(4)}
             />
           )}
           {step === 6 && (
+            <StepCommunities
+              stepLabel={stepLabel}
+              onNext={() => go(7)}
+              onBack={() => go(5)}
+            />
+          )}
+          {step === 7 && (
             <StepDone
               stepLabel={stepLabel}
               hasStampFailed={hasStampFailed}

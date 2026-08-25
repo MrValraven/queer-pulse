@@ -190,7 +190,8 @@ export const gatherings: Catalog = {
     "Indica o teu nome e um email válido para continuar",
   "event.rsvp.noteFull":
     "Enviamos-te um email assim que surgir uma vaga. Sair da lista de espera é só um clique.",
-  "event.rsvp.confirmationEmailNote": "O teu lugar está guardado. Encontra-lo nos teus convívios.",
+  "event.rsvp.confirmationEmailNote":
+    "O teu lugar está guardado. Encontra-lo nos teus convívios.",
   "event.rsvp.cancelPolicy": "Podes cancelar até 48 horas antes do evento.",
   "event.rsvp.waitlistTitle": "Estás na <em>lista de espera.</em>",
   "event.rsvp.errorToast": "Não foi possível concluir. Tenta daqui a pouco.",
@@ -245,8 +246,10 @@ export const gatherings: Catalog = {
   "rsvp.withLabel": "Vais com",
   "rsvp.othersCount_one": "e mais {count} pessoa",
   "rsvp.othersCount_other": "e mais {count} pessoas",
-  "rsvp.live.goingWith_one": "Vais, juntamente com <strong>mais {count} pessoa</strong>.",
-  "rsvp.live.goingWith_other": "Vais, juntamente com <strong>mais {count} pessoas</strong>.",
+  "rsvp.live.goingWith_one":
+    "Vais, juntamente com <strong>mais {count} pessoa</strong>.",
+  "rsvp.live.goingWith_other":
+    "Vais, juntamente com <strong>mais {count} pessoas</strong>.",
   "rsvp.live.waitlistNote_one": "Há mais {count} pessoa na lista de espera.",
   "rsvp.live.waitlistNote_other": "Há mais {count} pessoas na lista de espera.",
   "rsvp.host.roleLabel": "Organização do clube de leitura",
@@ -303,8 +306,7 @@ export const gatherings: Catalog = {
   "cohostInvite.commitment.half_event.description":
     "Presente durante boa parte, com o resto assegurado por outra pessoa.",
   "cohostInvite.commitment.full_event.label": "O convívio inteiro",
-  "cohostInvite.commitment.full_event.description":
-    "Da montagem à arrumação.",
+  "cohostInvite.commitment.full_event.description": "Da montagem à arrumação.",
   "cohostInvite.commitment.ongoing.label": "Contínuo",
   "cohostInvite.commitment.ongoing.description":
     "Este e os seguintes, como coanfitrião regular.",
@@ -350,6 +352,8 @@ export const gatherings: Catalog = {
   "cohostInvite.actionMeta":
     "Qualquer uma das opções envia uma mensagem direta a {host}. Ela vê a tua decisão mas não recebe notificação push. <b>Isto é para ser tranquilo</b>.",
   "cohostInvite.openMessagesCta": "Abrir mensagens",
+  "cohostInvite.permissionsNote":
+    "Ao aceitares, podes editar a página, enviar mensagens às pessoas convidadas e gerir as inscrições. <b>Cancelar o convívio e o fundo da pessoa anfitriã ficam com {host}.</b>",
 
   // GatheringCancelledPage
   "cancelled.back": "Voltar ao calendário",
@@ -966,9 +970,12 @@ export const gatherings: Catalog = {
   "manage.cancelConfirm_other":
     "Cancelar {title}? {count} pessoas vão ser avisadas.",
   "manage.linkCopiedToast": "Link copiado!",
+  "manage.linkCopyFailedToast":
+    "Não conseguimos aceder à área de transferência. Copia o link a partir do cartão de partilha.",
 
   // ── Manage: live-mode coming-soon (host tools not wired yet) ─────────────────
-  "manageComingSoon.title": "As ferramentas de anfitrião <em>chegam em breve</em>",
+  "manageComingSoon.title":
+    "As ferramentas de anfitrião <em>chegam em breve</em>",
   "manageComingSoon.description":
     "Gerir um encontro por aqui ainda não está disponível. Podes continuar a explorar e a confirmar presença no que está a acontecer. O painel de anfitrião chega em breve.",
   "manageComingSoon.browseCta": "Explorar encontros",
@@ -980,7 +987,8 @@ export const gatherings: Catalog = {
   "eventComingSoon.title": "Este encontro <em>chega em breve</em>",
   "eventComingSoon.description":
     "Isto é uma pré-visualização de como fica um encontro. Ainda não é um evento real, por isso não há aqui presença para confirmar. Explora o que está mesmo a acontecer e reserva o teu lugar por lá.",
-  "rsvpComingSoon.title": "As confirmações de presença <em>chegam em breve</em>",
+  "rsvpComingSoon.title":
+    "As confirmações de presença <em>chegam em breve</em>",
   "rsvpComingSoon.description":
     "Esta página de confirmação faz parte do protótipo e ainda não está ligada a uma presença real. Explora o que se passa e reserva um lugar a sério. A tua confirmação aparece aqui assim que a organização estiver disponível.",
   "cohostInviteComingSoon.title": "Coanfitriões <em>chegam em breve</em>",
@@ -1045,7 +1053,8 @@ export const gatherings: Catalog = {
   "manage.messages.openedOf": "{opened} / {total} abriram",
   "manage.messages.sentToast_one": "Novidade enviada a {count} pessoa",
   "manage.messages.sentToast_other": "Novidade enviada a {count} pessoas",
-  "manage.messages.liveUnavailableTitle": "Mensagens para participantes a caminho",
+  "manage.messages.liveUnavailableTitle":
+    "Mensagens para participantes a caminho",
   "manage.messages.liveUnavailableBody":
     "Enviar novidades a toda a gente que vai ainda não está disponível. Entretanto, partilha as novidades na página do encontro ou fala com quem já tens ligação.",
 
@@ -1072,6 +1081,7 @@ export const gatherings: Catalog = {
   "manage.settings.cancelCta": "Cancelar convívio",
 
   // ── Manage: sidebar ───────────────────────────────────────────────────────────
+  "manage.sidebar.coverAlt": "Foto de capa de {title}",
   "manage.sidebar.coverPhotoLine1": "Foto de capa",
   "manage.sidebar.coverPhotoLine2": "do convívio",
   "manage.sidebar.copyCta": "Copiar",
@@ -1187,6 +1197,7 @@ export const gatherings: Catalog = {
     "Ainda não tens nenhuma pessoa coanfitriã. Adicionar uma significa teres companhia para a noite.",
   "cohost.roleCohost": "Pessoa coanfitriã",
   "cohost.addedToast": "{name} é agora pessoa coanfitriã",
+  "cohost.inviteSentToast": "Convite para co-organizar enviado a {name}",
   "cohost.removedToast": "{name} deixou de ser pessoa coanfitriã",
   "cohost.confirmPrompt": "Remover?",
   "cohost.confirmYes": "Sim, remover",
@@ -1200,6 +1211,24 @@ export const gatherings: Catalog = {
     "Uma pessoa coanfitriã pode editar a página, enviar mensagens às pessoas convidadas e gerir as inscrições contigo. Escolhe alguém em quem confies. Vai receber um pedido para aceitar.",
   "cohost.addModal.searchLabel":
     "Procurar pessoas para adicionar como coanfitriã",
+  "cohost.addModal.step2Eyebrow": "Convite para co-organizar",
+  "cohost.addModal.step2Title": "Convidar <em>{name}</em>",
+  "cohost.addModal.step2Sub":
+    "Diz em que gostavas de ter ajuda e quanto tempo é preciso. A pessoa pode aceitar ou recusar, e nada muda até aceitar.",
+  "cohost.addModal.roleLabel": "Em que vai ajudar",
+  "cohost.addModal.rolePlaceholder": "Escolhe uma função",
+  "cohost.addModal.commitmentLabel": "Quanto tempo é preciso",
+  "cohost.addModal.commitmentPlaceholder": "Escolhe um compromisso",
+  "cohost.addModal.messageLabel": "Um recado",
+  "cohost.addModal.messageHelper":
+    "Opcional. Aparece no topo do convite da pessoa.",
+  "cohost.addModal.messagePlaceholder":
+    "Porque estás a convidar esta pessoa e o que deve saber antes de dizer que sim.",
+  "cohost.addModal.replyByLabel": "Responder até",
+  "cohost.addModal.replyByHelper":
+    "Opcional. A pessoa vê esta data no convite e pode responder antes.",
+  "cohost.addModal.sendCta": "Enviar convite",
+  "cohost.addModal.backCta": "Escolher outra pessoa",
   "cohost.picker.searchLabelDefault": "Procurar pessoas",
   "cohost.picker.placeholder": "Procurar por nome ou função…",
   "cohost.picker.noResults": 'Nenhuma pessoa corresponde a "{query}".',
@@ -1270,7 +1299,8 @@ export const gatherings: Catalog = {
   "hub.host.cta": "Organiza um encontro",
   "hub.ways.heading": "Formas de te juntares",
   "hub.empty.title": "Ainda nada no calendário.",
-  "hub.empty.body": "Aparecem coisas novas por aqui a toda a hora. Podias organizar a primeira.",
+  "hub.empty.body":
+    "Aparecem coisas novas por aqui a toda a hora. Podias organizar a primeira.",
   "hub.card.cta": "Vê",
   "hub.loading": "A ver o que há…",
 
@@ -1279,7 +1309,8 @@ export const gatherings: Catalog = {
   // convívio, mais o lembrete pós-convívio de persona (GatheringPerformerNudge).
   // Descoberta de personas, Fase 5, Momento 5.
   "lineup.title": "Lineup",
-  "lineup.description": "Marca quem vai atuar, organizar ou trabalhar neste convívio.",
+  "lineup.description":
+    "Marca quem vai atuar, organizar ou trabalhar neste convívio.",
   "lineup.empty": "Ainda ninguém foi marcado.",
   "lineup.addCta": "Marcar alguém",
   "lineup.roleLabel": "O papel da pessoa",

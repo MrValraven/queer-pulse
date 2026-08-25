@@ -142,3 +142,24 @@
     stroke-dashoffset: 0;
   }
 }
+
+/* Framed panel for the loader when it is used as a Suspense fallback, i.e.
+   while a lazily-imported map view is still downloading. `.loading` above is an
+   absolutely-positioned overlay that expects `.mapPanel` (localMap.module.css)
+   underneath it; rendered bare it has no positioned ancestor and stretches to
+   the whole viewport. This gives it the same positioned, sized, rounded box the
+   real map lands in, so the swap doesn't jump. */
+.panel {
+  position: relative;
+  block-size: 560px;
+  margin-block: 32px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+}
+@media (--compact) {
+  /* Matches .mapCanvas's compact height so the frame tracks the real map. */
+  .panel {
+    block-size: clamp(300px, 56svh, 460px);
+  }
+}

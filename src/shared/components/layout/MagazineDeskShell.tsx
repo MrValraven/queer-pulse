@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
-import { useToast } from "../feedback/useToast";
 import { useTranslation } from "../../i18n/useTranslation";
 import { useMediaQuery, useScrollLock } from "../../hooks";
 import { mediaMax } from "../../theme/breakpoints";
 import { routes } from "../../../app/routeMap";
 import { usePieces } from "../../../features/magazine/api/usePieces";
 import { CommandPalette } from "../../../features/magazine/desk/CommandPalette";
-import { DeskNotifications } from "../../../features/magazine/desk/DeskNotifications";
 import { MagazineSidebar } from "./MagazineSidebar";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import { SkipToContentLink, MAIN_CONTENT_ID } from "./SkipToContentLink";
@@ -29,14 +27,13 @@ const MOBILE_QUERY = mediaMax("wide");
  * render. Skipping it here is the entire mechanism that drops the meganav on
  * every editor surface, exactly like `AdminShell`.
  *
- * Also hoists the two globals every editor surface shares: the ⌘K command
- * palette and the "Since Friday" notifications panel (both used to live only
- * on `EditorDashboardPage`) — see `useMagazineShellOverlay` for how pages
- * with their own single-key shortcuts coordinate with these overlays.
+ * Also hoists the one global every editor surface shares: the ⌘K command
+ * palette (it used to live only on `EditorDashboardPage`) — see
+ * `useMagazineShellOverlay` for how pages with their own single-key shortcuts
+ * coordinate with it.
  */
 export function MagazineDeskShell({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const navigate = useNavigate();
 
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -62,7 +59,6 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
     : {};
 
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   // Dual-mode piece list, shared by the palette's search and the rail's
   // "Open now" recents — react-query dedupes both callers onto one request.
   const { pieces } = usePieces();
@@ -83,10 +79,7 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
     [pieces],
   );
 
-  const overlayState = useMemo(
-    () => ({ isPaletteOpen, isNotificationsOpen }),
-    [isPaletteOpen, isNotificationsOpen],
-  );
+  const overlayState = useMemo(() => ({ isPaletteOpen }), [isPaletteOpen]);
 
   return (
     <MagazineShellOverlayContext.Provider value={overlayState}>
@@ -104,10 +97,7 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
           inert={isMobile && !isDrawerOpen}
           {...drawerDialogProps}
         >
-          <MagazineSidebar
-            onNavigate={closeDrawer}
-            onOpenNotifications={() => setIsNotificationsOpen(true)}
-          />
+          <MagazineSidebar onNavigate={closeDrawer} />
         </div>
 
         <div className={styles.main}>
@@ -127,7 +117,20 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
           )}
 
           <SkipToContentLink />
-          <main id={MAIN_CONTENT_ID} tabIndex={-1} data-page-main className={styles.content}>
+          {/* `data-page-main` keeps this <main> reachable as the app's page landmark (skip
+              link, nav-drawer focus fallback), but this shell renders NO floating
+              Navbar/BottomTabBar — AppChrome only mounts those for a registered shell frame,
+              and this shell deliberately registers none. So it opts out of the chrome offsets
+              that attribute otherwise carries (base.css's `--nav-band` padding, nav-mode.css's
+              rail indent, standalone.css's mobile app-bar margin + tab-bar padding) with
+              `data-shell="rail"` — the same escape hatch `full-height` uses. */}
+          <main
+            id={MAIN_CONTENT_ID}
+            tabIndex={-1}
+            data-page-main
+            data-shell="rail"
+            className={styles.content}
+          >
             {children}
           </main>
         </div>
@@ -139,16 +142,7 @@ export function MagazineDeskShell({ children }: { children: ReactNode }) {
         pieces={paletteItems}
         onSelectPiece={(id) => void navigate(routes.magazinePiece.replace(":id", id))}
         onGoDesk={() => void navigate(routes.magazineEditor)}
-        onNewPiece={() => void navigate(`${routes.magazineEditor}?commission=new`)}
-      />
-      <DeskNotifications
-        open={isNotificationsOpen}
-        onClose={() => setIsNotificationsOpen(false)}
-        onNavigate={(route) =>
-          route
-            ? void navigate(route)
-            : showToast(t("magazine:desk.page.notificationsNotWired"), "info")
-        }
+        onNewPiece={() => void navigate(`${routes.magazineEditor}?write=new`)}
       />
     </MagazineShellOverlayContext.Provider>
   );

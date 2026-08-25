@@ -15,11 +15,7 @@ import { UsernameSection } from "./UsernameSection";
 
 /** Section id of a change, so the host can list what was edited on save. */
 export type ProfileSection =
-  | "identity"
-  | "bio"
-  | "links"
-  | "skills"
-  | "communities";
+  "identity" | "bio" | "links" | "skills" | "communities";
 
 /**
  * Full profile editor — the rich Identity / Pronouns / Bio / Skills / Visibility
@@ -142,12 +138,17 @@ export function EditProfilePane({
       <BioSection
         bioText={draft.bio}
         occupation={draft.role}
+        work={{ discipline: draft.discipline, profession: draft.profession }}
         onBioChange={(v) => {
           updateDraft({ bio: v });
           onChange("bio");
         }}
         onOccupationChange={(v) => {
           updateDraft({ role: v });
+          onChange("bio");
+        }}
+        onWorkChange={(next) => {
+          updateDraft(next);
           onChange("bio");
         }}
       />

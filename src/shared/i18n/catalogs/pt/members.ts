@@ -314,6 +314,17 @@ export const members: Catalog = {
   "profileEdit.field.bioHelp":
     "A versão mais longa, na tua página de perfil. Se deixares a biografia curta em branco, o teu cartão no diretório usa o início desta.",
   "profileEdit.field.tags": "Etiquetas",
+  // ── Seletor de área e função (WorkFieldPicker) ──────────────────────────────
+  // Aparece em três sítios — o editor de perfil, o passo "o que fazes" do
+  // onboarding e Definições → Interesses — por isso o vocabulário tem de ler
+  // sempre igual.
+  "profileEdit.work.label": "O que fazes",
+  "profileEdit.work.help":
+    "Público. Aparece no teu perfil e é assim que as pessoas te encontram em \u201cO que fazem\u201d e \u201cProfiss\u00e3o\u201d no diret\u00f3rio.",
+  "workPicker.fieldHeading": "A tua área",
+  "workPicker.professionHeading": "A tua função",
+  "workPicker.professionPrompt":
+    "Escolhe uma área acima para veres as funções dessa área.",
   "profileEdit.field.addSkillPlaceholder": "Procurar competências…",
   "profileEdit.field.links": "Links",
   "profileEdit.field.photo": "Foto",
@@ -323,6 +334,24 @@ export const members: Catalog = {
   "profileEdit.addTagPlaceholder": "Adicionar uma etiqueta…",
   "profileEdit.searchTagPlaceholder": "Procurar competências…",
   "profileEdit.popularTagsLabel": "Populares",
+
+  // ── Modal de todas as etiquetas (ProfileTagBrowserModal) ──────────────────
+  "profileEdit.tagBrowser.open": "Ver todas",
+  "profileEdit.tagBrowser.title": "Todas as etiquetas",
+  "profileEdit.tagBrowser.selectedCount_one": "{count} etiqueta no teu perfil",
+  "profileEdit.tagBrowser.selectedCount_other":
+    "{count} etiquetas no teu perfil",
+  "profileEdit.tagBrowser.searchLabel": "Procurar etiquetas",
+  "profileEdit.tagBrowser.searchPlaceholder": "Procurar etiquetas…",
+  "profileEdit.tagBrowser.noMatches":
+    "Nenhuma etiqueta corresponde a “{query}”.",
+  "profileEdit.tagBrowser.done": "Concluído",
+  "profileEdit.tagCategory.design": "Design e criação visual",
+  "profileEdit.tagCategory.words": "Palavras e comunicação",
+  "profileEdit.tagCategory.tech": "Tecnologia",
+  "profileEdit.tagCategory.community": "Comunidade, cuidado e organização",
+  "profileEdit.tagCategory.practical": "Prático e profissional",
+  "profileEdit.tagCategory.performance": "Música e performance",
   "profileEdit.addTagLabel": "Adicionar uma etiqueta",
   "profileEdit.removeTagLabel": "Remover {tag}",
   "profileEdit.visibilityGroupLabel": "Visibilidade do perfil",
@@ -459,6 +488,9 @@ export const members: Catalog = {
 
   // ── Linha de etiquetas do hero (ProfileHeroMain) ────────────────────────────
   "hero.tags.label": "Etiquetas",
+
+  // ── Linha "trabalha em" do hero (ProfileWorkRow) ────────────────────────────
+  "hero.worksIn.label": "Trabalha em",
 
   // ── Página de perfil público (PublicProfilePage) ────────────────────────────
   // ── /public-profile/:slug — o perfil público, visível sem sessão ──────────
@@ -1183,8 +1215,7 @@ export const members: Catalog = {
   "places.coManagerInvites.sub":
     "Alguém te pediu ajuda para gerir um espaço. Sem pressa: nada muda até responderes.",
   "places.coManagerInvites.fromNamed": "Convite de <b>{name}</b>.",
-  "places.coManagerInvites.from":
-    "Um convite para ajudar a gerir este espaço.",
+  "places.coManagerInvites.from": "Um convite para ajudar a gerir este espaço.",
   "places.coManagerInvites.acceptCta": "Aceitar",
   "places.coManagerInvites.declineCta": "Recusar",
   "places.coManagerInvites.acceptedToast":

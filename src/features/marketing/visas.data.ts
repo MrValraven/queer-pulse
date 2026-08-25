@@ -1,3 +1,11 @@
+import {
+  FiBriefcase,
+  FiFlag,
+  FiHeart,
+  FiTrendingUp,
+  FiWifi,
+} from "react-icons/fi";
+import type { IconType } from "react-icons";
 import { routes } from "../../app/routeMap";
 
 export type TabId = "eu" | "d7" | "d8" | "work" | "partner" | "citizenship";
@@ -28,6 +36,7 @@ export interface Tab {
 }
 
 export const ROUTES: {
+  icon: IconType;
   nameKey: string;
   descKey: string;
   ctaKey: string;
@@ -35,6 +44,7 @@ export const ROUTES: {
   tab: TabId;
 }[] = [
   {
+    icon: FiFlag,
     nameKey: "marketing:visas.routePicker.euCitizen.name",
     descKey: "marketing:visas.routePicker.euCitizen.desc",
     ctaKey: "marketing:visas.routePicker.euCitizen.cta",
@@ -42,6 +52,7 @@ export const ROUTES: {
     tab: "eu",
   },
   {
+    icon: FiTrendingUp,
     nameKey: "marketing:visas.routePicker.remoteWorker.name",
     descKey: "marketing:visas.routePicker.remoteWorker.desc",
     ctaKey: "marketing:visas.routePicker.remoteWorker.cta",
@@ -49,6 +60,7 @@ export const ROUTES: {
     tab: "d7",
   },
   {
+    icon: FiWifi,
     nameKey: "marketing:visas.routePicker.digitalNomad.name",
     descKey: "marketing:visas.routePicker.digitalNomad.desc",
     ctaKey: "marketing:visas.routePicker.digitalNomad.cta",
@@ -56,6 +68,7 @@ export const ROUTES: {
     tab: "d8",
   },
   {
+    icon: FiBriefcase,
     nameKey: "marketing:visas.routePicker.jobOffer.name",
     descKey: "marketing:visas.routePicker.jobOffer.desc",
     ctaKey: "marketing:visas.routePicker.jobOffer.cta",
@@ -63,6 +76,7 @@ export const ROUTES: {
     tab: "work",
   },
   {
+    icon: FiHeart,
     nameKey: "marketing:visas.routePicker.partner.name",
     descKey: "marketing:visas.routePicker.partner.desc",
     ctaKey: "marketing:visas.routePicker.partner.cta",

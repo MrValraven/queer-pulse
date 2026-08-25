@@ -405,6 +405,20 @@
     background: rgba(var(--plum-rgb), 0.04);
   }
 }
+/* The "browse all" entry point sits in the same chip row as the popular
+   quick-adds but reads as a control rather than a value: solid edge, plum ink. */
+.tagBrowseAll {
+  border-style: solid;
+  border-color: rgba(var(--line-rgb), 0.22);
+  color: var(--accent);
+}
+@media (hover: hover) {
+  .tagBrowseAll:hover {
+    color: var(--accent);
+    border-color: rgba(var(--accent-rgb), 0.45);
+    background: rgba(var(--accent-rgb), 0.07);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .tagSuggestItem,
   .tagAdd {

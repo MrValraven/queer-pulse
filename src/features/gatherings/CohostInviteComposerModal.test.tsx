@@ -42,11 +42,8 @@ describe("CohostInviteComposerModal", () => {
     const candidateRow = await screen.findByText("Sofia Reyes");
     fireEvent.click(candidateRow);
 
-    // The addModal.* catalog keys land in Task 12; until then the Select
-    // trigger's accessible name is the raw translation key it was given as
-    // a placeholder (`t()`'s missing-key fallback).
     const sendButton = await screen.findByRole("button", {
-      name: "gatherings:cohost.addModal.sendCta",
+      name: "Send invite",
     });
     expect(sendButton).toBeDisabled();
   });
@@ -56,27 +53,18 @@ describe("CohostInviteComposerModal", () => {
 
     fireEvent.click(await screen.findByText("Sofia Reyes"));
 
-    fireEvent.click(
-      await screen.findByRole("button", {
-        name: "gatherings:cohost.addModal.roleLabel",
-      }),
-    );
+    // Clicked by its visible trigger text. FormField's `<label htmlFor>` names
+    // the trigger button after the field label, so the placeholder reaches the
+    // test as content rather than as the button's accessible name.
+    fireEvent.click(await screen.findByText("Choose a role"));
     fireEvent.click(await screen.findByRole("option", { name: "Greeter" }));
 
-    fireEvent.click(
-      await screen.findByRole("button", {
-        name: "gatherings:cohost.addModal.commitmentLabel",
-      }),
-    );
+    fireEvent.click(await screen.findByText("Choose a commitment"));
     fireEvent.click(
       await screen.findByRole("option", { name: "Just the day of" }),
     );
 
-    fireEvent.click(
-      await screen.findByRole("button", {
-        name: "gatherings:cohost.addModal.sendCta",
-      }),
-    );
+    fireEvent.click(await screen.findByRole("button", { name: "Send invite" }));
 
     await waitFor(() =>
       expect(mutate).toHaveBeenCalledWith(

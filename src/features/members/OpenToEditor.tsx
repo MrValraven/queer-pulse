@@ -65,10 +65,10 @@ export function OpenToEditor({
     if (event.key === "Enter") {
       event.preventDefault();
       addCustom();
-    } else if (event.key === "Backspace" && !input && customs.length) {
-      const last = customs[customs.length - 1];
-      onChange(entries.filter((entry) => entry !== last));
     }
+    // Backspace deliberately does NOT remove the previous chip. Holding it to
+    // clear what you typed would run on into the entries you already added and
+    // silently delete them; the × on each chip is the only way to remove one.
   }
 
   return (

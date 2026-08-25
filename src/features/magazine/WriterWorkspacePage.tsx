@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { AppShell } from "../../shared/components/layout";
-import { Avatar, EmptyState, SkeletonLine, type AvatarTint } from "../../shared/components/ui";
+import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { cx } from "../../shared/lib/cx";
+import { formatDate } from "../../shared/lib/date";
 import { useWriterWorkspace } from "./api/useWriterWorkspace";
 import { useWriterMutations } from "./api/useWriterMutations";
 import type { WriterAssignmentDto } from "./api/writerWorkspace.api";
@@ -27,33 +28,39 @@ const TAB_LABEL_KEYS: Record<WriterTab, string> = {
 
 const TAB_IDS: WriterTab[] = ["work", "pitches", "payments"];
 
-/** `WriterIdentity.tint` includes "violet", which `<Avatar>` doesn't define —
- *  fall back to "default" rather than widen the shared `AvatarTint` union for
- *  one caller. */
-function toAvatarTint(tint: string): AvatarTint {
-  return tint === "coral" || tint === "jade" || tint === "plum" ? tint : "default";
-}
+/** A bare `yyyy-mm-dd`, which is what live `due` values are (`magazine_piece.due_on`
+ *  is a Postgres `date`) — and what the demo fixture's free text ("4 Aug") is not. */
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-/** "Sara Pinheiro" → "SP"; falls back to "?" for an empty name. */
-function initialsOf(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  return parts
-    .slice(0, 2)
-    .map((part) => part[0]!.toUpperCase())
-    .join("");
+/**
+ * The soonest deadline across the writer's open assignments, as its raw `due`
+ * value. ISO values sort lexically, so live mode gets a real "next up"; the demo
+ * fixture's free-text dates can't be ordered, so those fall back to the first
+ * assignment that carries one. Returns `null` when nothing has a date set.
+ */
+function nextDueValue(assignments: WriterAssignmentDto[]): string | null {
+  const dueValues = assignments
+    .map((assignment) => assignment.due)
+    .filter((due): due is string => Boolean(due));
+  const isoValues = dueValues.filter((due) => ISO_DATE_PATTERN.test(due)).sort();
+  return isoValues[0] ?? dueValues[0] ?? null;
 }
 
 /**
  * The signed-in writer's own workspace at `/magazine/writer` — assignments,
  * pitches, and payments, all scoped server-side to this writer (never other
  * contributors' data, see `magazine-writer.controller.ts`). Chrome mirrors
- * `PieceRecordPage` (`.ebar` identity header, `.ework` tabs + `.erail`
- * sidebar); tab bodies and rail cards reuse `desk/pieceTabs.module.css`.
+ * `PieceRecordPage` (`.ebar` heading bar, `.ework` tabs + `.erail` sidebar);
+ * tab bodies and rail cards reuse `desk/pieceTabs.module.css`.
+ *
+ * The `.ebar` names the surface and summarises the writer's open workload. It
+ * deliberately does NOT restate who you are: the meganav already carries the
+ * signed-in avatar and name a few pixels above, so a second identity block
+ * would spend a sticky header on nothing.
  */
 export function WriterWorkspacePage() {
-  const { t } = useTranslation();
-  const { me, assignments, pitches, payments, isLoading, isError } = useWriterWorkspace();
+  const { t, language } = useTranslation();
+  const { assignments, pitches, payments, isLoading, isError } = useWriterWorkspace();
   const { submitPitch, updateByline, fileDraft } = useWriterMutations();
   const [tab, setTab] = useState<WriterTab>("work");
   const [filingAssignment, setFilingAssignment] = useState<WriterAssignmentDto | null>(null);
@@ -125,14 +132,31 @@ export function WriterWorkspacePage() {
     }
   }
 
+  const nextDue = nextDueValue(assignments);
+  // "2 assignments open · next due 29 Aug", collapsing to a quiet line when the
+  // desk is clear. `formatDate` returns an unparseable value unchanged, so the
+  // demo fixture's "4 Aug" passes straight through.
+  const workloadSummary =
+    assignments.length === 0
+      ? t("magazine:writer.page.nothingOpen")
+      : [
+          t("magazine:writer.page.openCount", { count: assignments.length }),
+          nextDue
+            ? t("magazine:writer.page.nextDue", {
+                date: formatDate(nextDue, language, { day: "numeric", month: "short" }),
+              })
+            : null,
+        ]
+          .filter(Boolean)
+          .join(" · ");
+
   return (
     <AppShell>
       <div className={styles.page}>
         <div className={styles.ebar}>
-          <Avatar initials={initialsOf(me.name)} tint={toAvatarTint(me.tint)} name={me.name} />
           <div className={styles.title}>
-            <b>{me.name}</b>
-            <span className={styles.titleSub}>{me.role}</span>
+            <h1>{t("magazine:writer.page.heading")}</h1>
+            <span className={styles.titleSub}>{workloadSummary}</span>
           </div>
         </div>
 

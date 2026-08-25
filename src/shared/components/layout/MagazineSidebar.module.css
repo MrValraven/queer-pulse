@@ -92,51 +92,6 @@
   white-space: nowrap;
 }
 
-/* ── "Since Friday" bell ────────────────────────────────────────────────── */
-.bell {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 12px;
-  margin-top: 8px;
-  border: none;
-  border-radius: 12px;
-  font: inherit;
-  font-size: 13.5px;
-  color: rgba(var(--cream-rgb), 0.66);
-  background: transparent;
-  width: 100%;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background var(--dur, 0.18s) var(--ease, ease),
-    color var(--dur, 0.18s) var(--ease, ease);
-}
-.bell svg {
-  width: 17px;
-  height: 17px;
-  flex: none;
-}
-@media (hover: hover) {
-  .bell:hover {
-    background: rgba(var(--cream-rgb), 0.08);
-    color: rgba(var(--cream-rgb), 1);
-  }
-}
-.pip {
-  margin-left: auto;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
-  font-size: 11px;
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-}
-
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 .railFoot {
   margin-top: auto;

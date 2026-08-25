@@ -1,6 +1,6 @@
 import { useState, type ReactElement } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useMotionPrefs } from "../../app/providers/MotionProvider";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button } from "../../shared/components/ui";
@@ -68,6 +68,14 @@ const CATEGORIES: Category[] = [
         aComponents: {
           settingsLink: <Link to={routes.settings} />,
           strong: <strong />,
+        },
+      },
+      {
+        qKey: "marketing:help.qa.unknownSession.q",
+        aKey: "marketing:help.qa.unknownSession.a",
+        aComponents: {
+          sessionsLink: <Link to={routes.sessions} />,
+          contactLink: <Link to={`${routes.contact}?topic=account`} />,
         },
       },
       {
@@ -180,8 +188,17 @@ const CATEGORIES: Category[] = [
 export function HelpPage() {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const [tab, setTab] = useState(CATEGORIES[0]!.id);
-  const [open, setOpen] = useState<string | null>(`${CATEGORIES[0]!.id}-0`);
+  // A link may address one category directly (`/about/help#account`), so a page
+  // that sends someone here for a specific answer lands them on it.
+  const { hash } = useLocation();
+  const requestedCategory = hash.replace("#", "");
+  const initialCategory = CATEGORIES.some(
+    (candidate) => candidate.id === requestedCategory,
+  )
+    ? requestedCategory
+    : CATEGORIES[0]!.id;
+  const [tab, setTab] = useState(initialCategory);
+  const [open, setOpen] = useState<string | null>(`${initialCategory}-0`);
   const category = CATEGORIES.find((c) => c.id === tab)!;
   const pageTitle = t("marketing:help.meta.title");
   const pageDescription = t("marketing:help.meta.description");

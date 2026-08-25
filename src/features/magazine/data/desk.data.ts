@@ -118,7 +118,9 @@ export interface IssueSummary {
   number: string;
   title: string;
   theme: string;
-  publishedOn: string;
+  /** `null` while the issue is still unscheduled: the desk opens a number
+   *  first and picks the publish date later. */
+  publishedOn: string | null;
   filled: number;
   slots: number;
 }

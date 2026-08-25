@@ -1,0 +1,131 @@
+/* A page-level sibling of RoomLoader.module.css: same checklist language, but
+   quieter (no wordmark, no decorative blooms) because this one interrupts a
+   page the visitor is already inside rather than opening a session. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  /* Shares the blocking-full-screen-loader tier. Above the skip link, because
+     there is nothing to skip to while the page underneath is not readable. */
+  z-index: var(--z-room-loader);
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  opacity: 0;
+  transition: opacity 0.42s var(--ease);
+}
+.overlay.shown {
+  opacity: 1;
+}
+
+.inner {
+  position: relative;
+  text-align: center;
+  max-width: 340px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.45s var(--ease),
+    transform 0.45s var(--ease);
+}
+.overlay.shown .inner {
+  opacity: 1;
+  transform: none;
+}
+
+.title {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(24px, 3.6vw, 32px);
+  color: var(--text-strong);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 26px;
+}
+
+.steps {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 13px;
+  text-align: left;
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-40);
+  transition: color 0.3s var(--ease);
+}
+.step.active {
+  color: var(--ink);
+}
+.step.done {
+  color: var(--ink-60);
+}
+.step.pending {
+  color: var(--ink-40);
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.done .icon {
+  background: rgba(var(--jade-rgb), 0.15);
+}
+.active .icon {
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--line-rgb), 0.18);
+  border-top-color: var(--accent);
+  /* Declared in THIS module: a CSS-module `animation` name is localized, so a
+     keyframe defined in another file silently never runs. */
+  animation: stagedLoaderSpin 0.7s linear infinite;
+}
+.pendingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(var(--plum-rgb), 0.22);
+}
+
+.caption {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-40);
+}
+
+@keyframes stagedLoaderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .inner,
+  .step {
+    transition: none;
+  }
+  .spinner {
+    animation: none;
+    border-top-color: rgba(var(--line-rgb), 0.18);
+  }
+}

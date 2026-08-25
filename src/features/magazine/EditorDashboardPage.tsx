@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { MagazineDeskShell, useMagazineShellOverlay } from "../../shared/components/layout";
@@ -22,6 +22,8 @@ import { useDeskIssueSelection } from "./desk/useDeskIssueSelection";
 import { useDeskPieceSelection } from "./desk/useDeskPieceSelection";
 import { useDeskAssignment } from "./desk/useDeskAssignment";
 import { useDeskPieceActions } from "./desk/useDeskPieceActions";
+import { useDeskWriteAction } from "./desk/useDeskWriteAction";
+import { useDeskEntryParams } from "./desk/useDeskEntryParams";
 import { useDeskKeyboard } from "./desk/useDeskKeyboard";
 import { useDeskModals } from "./desk/useDeskModals";
 import { usePitchTriageActions } from "./desk/usePitchTriageActions";
@@ -33,11 +35,10 @@ import { DeskIssueModals } from "./desk/DeskIssueModals";
  * The magazine editor desk. Thin by design: owns the page shell, dual-mode
  * data hooks, local filter/sort/selection state, and overlay state (the
  * commission/pass/chase/handoff modal) — the visible layout lives in
- * `DeskView`. The ⌘K command palette and the "Since Friday" notifications
- * panel are now hoisted into `MagazineDeskShell` (they run on every editor
- * surface, not just this one) — `useMagazineShellOverlay` reads their open
- * state so this page's own j/k/o/c/y/n shortcuts stay disabled while either
- * is open.
+ * `DeskView`. The ⌘K command palette is now hoisted into `MagazineDeskShell`
+ * (it runs on every editor surface, not just this one) —
+ * `useMagazineShellOverlay` reads its open state so this page's own
+ * j/k/o/c/y/n shortcuts stay disabled while the palette is open.
  */
 export function EditorDashboardPage() {
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ export function EditorDashboardPage() {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isPaletteOpen, isNotificationsOpen } = useMagazineShellOverlay();
+  const { isPaletteOpen } = useMagazineShellOverlay();
 
   const { pieces, isLoading: piecesLoading, isError: piecesError } = usePieces({});
   const { pitches, isLoading: pitchesLoading } = usePitches();
@@ -121,21 +122,29 @@ export function EditorDashboardPage() {
     clearSelectedPitchIds: deskState.clearSelected,
   });
 
-  // The shell's global "New piece" (rail button + ⌘K palette row) reaches
-  // this page's own commission modal via a `?commission=new` flag rather
-  // than a shared modal instance — the modal needs this page's `editors`/
-  // `sections` data, which only exists here. Consumed once, then stripped so
-  // navigating back doesn't reopen it.
-  useEffect(() => {
-    if (searchParams.get("commission") !== "new") return;
-    modals.openCommission();
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.delete("commission");
-    setSearchParams(nextParams, { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
   const pieceActions = useDeskPieceActions({ issue, pieceMutations });
+
+  // "Write" creates the piece with this editor as its own writer and lands in
+  // the article editor. No modal: the fields a brief-less piece needs are all
+  // in the editor's meta rail.
+  const writeAction = useDeskWriteAction({
+    activeMe,
+    editors,
+    sections: DEMO_SECTIONS,
+    issue,
+    track: tracks.track,
+    pieceMutations,
+    showToast,
+    translate: t,
+  });
+
+  useDeskEntryParams({
+    searchParams,
+    setSearchParams,
+    onWrite: writeAction.startWriting,
+    isWriteReady: Boolean(activeMe),
+    onCommission: modals.openCommission,
+  });
 
   useDeskKeyboard({
     visiblePieces: deskState.visiblePieces,
@@ -143,6 +152,7 @@ export function EditorDashboardPage() {
     setFocusId: deskState.setFocusId,
     onOpen: pieceActions.openPiece,
     onChase: modals.openChase,
+    onWrite: writeAction.startWriting,
     onShortcuts: modals.openShortcuts,
     topPitchId: pitches[0]?.id ?? null,
     onTriageTop: (verdict) => {
@@ -151,7 +161,7 @@ export function EditorDashboardPage() {
       if (verdict === "maybe") triage.maybe(topPitch.id);
       else triage.pass(topPitch.id);
     },
-    enabled: modals.modal === null && !isPaletteOpen && !isNotificationsOpen,
+    enabled: modals.modal === null && !isPaletteOpen,
   });
 
   const isLoading = piecesLoading || pitchesLoading;
@@ -178,6 +188,8 @@ export function EditorDashboardPage() {
         onMe={setMeState}
         layout={layout}
         onLayout={setLayout}
+        onWrite={writeAction.startWriting}
+        isWriting={writeAction.isStarting}
         onCommission={modals.openCommission}
         onProduce={pieceActions.produceIssue}
         pieces={tracks.activePieces}

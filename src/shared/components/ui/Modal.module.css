@@ -113,6 +113,10 @@
 .modalFoot {
   display: flex;
   align-items: center;
+  /* Two pill buttons with long labels (or a long translation) overflowed the
+     dialog's right edge instead of moving down. Wrapping keeps every action
+     reachable at any width. */
+  flex-wrap: wrap;
   gap: 10px;
   padding: 16px 24px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);

@@ -145,6 +145,10 @@ export const settings: Catalog = {
   "interests.lookingFor.helper": "Select as many as you like.",
   "interests.lookingFor.showOnProfile":
     "Show what I'm looking for on my profile",
+  "interests.professional.heading": "What you do",
+  "interests.professional.helper":
+    "These three are public. They show on your profile card and let people find you through the member directory's filters.",
+  "interests.professional.languagesHeading": "Languages you speak",
   "interests.life.heading": "A bit about your life",
   "interests.life.note": "(private: helps with local suggestions)",
   "interests.life.cityLabel": "City / region",
@@ -553,7 +557,7 @@ export const settings: Catalog = {
   // fallback for GET /account/sessions, live device/UA content) ────────────
   "sessions.ago.justNow": "just now",
   "sessions.ago.unknown": "unknown",
-  "sessions.backToSecurity": "Security",
+  "sessions.backToAccount": "Account",
   "sessions.eyebrow": "Security · Active sessions",
   "sessions.h1": "Where you're <em>signed in</em> right now.",
   "sessions.lead":
@@ -685,15 +689,18 @@ export const settings: Catalog = {
   "dataExport.type.activityLog.label": "Activity log",
   "dataExport.type.activityLog.sub": "Login history, device sessions",
   "dataExport.type.subprofiles.label": "Personas",
-  "dataExport.type.subprofiles.sub": "Every persona you've created, including unlinked ones",
+  "dataExport.type.subprofiles.sub":
+    "Every persona you've created, including unlinked ones",
   "dataExport.type.listings.label": "Local directory listings",
   "dataExport.type.listings.sub": "Business or venue listings you've submitted",
   "dataExport.type.housing.label": "Housing",
-  "dataExport.type.housing.sub": "Housing listings, flatmate profile, viewing requests",
+  "dataExport.type.housing.sub":
+    "Housing listings, flatmate profile, viewing requests",
   "dataExport.type.saved.label": "Saved items",
   "dataExport.type.saved.sub": "Bookmarks and saved collections",
   "dataExport.type.notifications.label": "Notifications",
-  "dataExport.type.notifications.sub": "Your notification history and preferences",
+  "dataExport.type.notifications.sub":
+    "Your notification history and preferences",
   "dataExport.type.consent.label": "Consent records",
   "dataExport.type.consent.sub": "What you've agreed to, and when",
 
@@ -888,8 +895,7 @@ export const settings: Catalog = {
   // ── Step-up re-authentication (useReauthToken.ts) ────────────────────────
   "reauth.completion.success":
     "You're re-authenticated. Press confirm again to finish.",
-  "reauth.completion.failed":
-    "We couldn't confirm that was you. Try again.",
+  "reauth.completion.failed": "We couldn't confirm that was you. Try again.",
   "deleteAccount.options.deactivate.title": "Deactivate",
   "deleteAccount.options.deactivate.desc":
     "Your profile becomes invisible. Your data is preserved. You can reactivate any time by signing back in.",

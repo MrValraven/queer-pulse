@@ -1,0 +1,135 @@
+/* Browse-all-tags modal (ProfileTagBrowserModal). */
+
+/* Sticky so the search stays reachable while the categories scroll. The
+   negative inline margin bleeds the cream backdrop out to the modal body's
+   24px padding, otherwise chips would scroll visibly past its left and right
+   edges. */
+.searchRow {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 -24px 4px;
+  padding: 8px 24px 12px;
+  background: var(--cream);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.searchIcon {
+  flex: none;
+  color: var(--ink-40);
+}
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--text-strong);
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(var(--line-rgb), 0.24);
+  border-radius: 0;
+  padding: 7px 2px;
+  outline: none;
+  transition: border-color 0.18s var(--ease);
+}
+.searchInput::placeholder {
+  color: var(--ink-40);
+}
+.searchInput:focus {
+  border-bottom-color: var(--accent);
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-bottom: 4px;
+}
+.category {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.categoryTitle {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Unselected chips echo the inline editor's dashed "add" affordance so the two
+   surfaces read as one control; selected chips switch to the solid accent fill
+   that marks a tag already on the profile. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1.5px dashed rgba(var(--line-rgb), 0.28);
+  border-radius: 999px;
+  padding: 6px 13px;
+  cursor: pointer;
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    background 0.18s var(--ease);
+}
+.chipOn {
+  color: var(--accent);
+  border-style: solid;
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.08);
+}
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--text-strong);
+    border-color: var(--line-strong);
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+  .chipOn:hover {
+    color: var(--accent);
+    border-color: rgba(var(--accent-rgb), 0.6);
+    background: rgba(var(--accent-rgb), 0.14);
+  }
+}
+.chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
+}
+.searchInput:focus-visible {
+  outline: none;
+}
+
+.empty {
+  margin: 18px 0 8px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.footRow {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .searchInput {
+    transition: none;
+  }
+}

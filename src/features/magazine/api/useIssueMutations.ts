@@ -6,13 +6,18 @@ import {
   shipIssue as sendShipIssue,
   updateCover as sendUpdateCover,
   updateDigest as sendUpdateDigest,
+  updateIssueSchedule as sendUpdateIssueSchedule,
   updateRunOrder as sendUpdateRunOrder,
   type IssueProductionDto,
   type UpdateCoverDto,
   type UpdateDigestDto,
+  type UpdateIssueScheduleDto,
   type UpdateRunOrderDto,
 } from "./issueProduction.api";
 import { updatePiece as sendUpdatePieceContentsBlurb } from "./pieces.api";
+import { DESK_ISSUES_QUERY_KEY } from "./useDeskIssues";
+import { DEMO_ISSUES } from "../data/desk.data";
+import { DEMO_ISSUE_PRODUCTION } from "../data/issueProduction.data";
 
 /**
  * Issue-production mutations, dual-mode. Demo never touches the network —
@@ -67,6 +72,33 @@ export function useIssueMutations(number: string) {
     onSuccess: invalidateIssue,
   });
 
+  /** PATCH /magazine/admin/issues/:number/schedule — set, move, or clear the
+   *  publish date. `DEMO_ISSUES` is patched in place in demo mode so the
+   *  switcher and the header really do show the new date, matching how
+   *  `useCreateIssue` unshifts onto the same array. The desk list is
+   *  invalidated alongside the production record since the issue switcher
+   *  reads the date too. */
+  const saveSchedule = useMutation<void, Error, UpdateIssueScheduleDto>({
+    mutationFn: async (body) => {
+      if (demoMode) {
+        // Both fixtures, in place: the production page reads
+        // `DEMO_ISSUE_PRODUCTION` while the switcher and desk header read
+        // `DEMO_ISSUES`, so patching one alone would leave the two disagreeing
+        // about when the issue runs.
+        DEMO_ISSUE_PRODUCTION.publishedOn = body.publishedOn;
+        const demoIssue = DEMO_ISSUES.find((entry) => entry.number === number);
+        if (demoIssue) demoIssue.publishedOn = body.publishedOn;
+        return;
+      }
+      await sendUpdateIssueSchedule(number, body);
+    },
+    onSuccess: () => {
+      invalidateIssue();
+      void queryClient.invalidateQueries({ queryKey: [DESK_ISSUES_QUERY_KEY] });
+      void queryClient.invalidateQueries({ queryKey: ["magazine-issues"] });
+    },
+  });
+
   /** POST /magazine/admin/issues/:number/digest/test-send — CNT-6 "Send test".
    *  Silent by contract (`meta.silentError`): `DigestSocialTab` owns the
    *  success/failure toast on the `mutateAsync` call, mirroring
@@ -107,5 +139,13 @@ export function useIssueMutations(number: string) {
     onSuccess: invalidateIssue,
   });
 
-  return { saveRunOrder, saveDigest, saveCover, saveContentsBlurb, ship, sendDigestTest };
+  return {
+    saveRunOrder,
+    saveDigest,
+    saveCover,
+    saveContentsBlurb,
+    saveSchedule,
+    ship,
+    sendDigestTest,
+  };
 }

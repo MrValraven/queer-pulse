@@ -253,13 +253,106 @@
   min-height: 0;
   overflow-y: auto;
 }
+
+/* A collapsible group: its heading button plus the links it holds. The top
+   margin also separates the first section from the loose Overview link. */
+.navSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 7px;
+}
+
+/* The section heading is a real toggle button, so it carries aria-expanded and
+   picks up the global :focus-visible halo. */
 .navHead {
-  padding: 6px 12px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px 7px;
+  border: 0;
+  border-radius: 11px;
+  background: none;
+  font-family: inherit;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-align: left;
   color: rgba(var(--cream-rgb), 0.5);
+  cursor: pointer;
+  transition:
+    background var(--dur, 0.18s) var(--ease, ease),
+    color var(--dur, 0.18s) var(--ease, ease);
+}
+@media (hover: hover) {
+  .navHead:hover {
+    background: rgba(var(--cream-rgb), 0.06);
+    color: rgba(var(--cream-rgb), 0.85);
+  }
+}
+.navHeadLabel {
+  flex: 1;
+  min-width: 0;
+}
+.navHeadChevron {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  /* Points right while shut, down while open. */
+  transform: rotate(-90deg);
+  transition: transform var(--dur, 0.18s) var(--ease, ease);
+}
+.navHeadChevronOpen {
+  transform: rotate(0deg);
+}
+/* The heading's letter-spacing would smear the rolled-up count's digits. */
+.navHead .navCount {
+  letter-spacing: 0;
+}
+
+/* Opening and closing animate `grid-template-rows` between 0fr and 1fr, which
+   resolves to the links' real height without measuring it in JS or guessing a
+   `max-height`. The row only collapses to nothing if its child can shrink, hence
+   `min-height: 0` on .navSectionLinks.
+
+   `visibility` is what keeps a shut section out of the tab order and the a11y
+   tree. It flips in immediately on open and waits out the animation on close,
+   so the links are still there to be seen sliding away.
+
+   `overflow` is what clips the links to the growing box; it turns visible once
+   the section is open so a focused link's halo isn't cut off. Browsers without
+   `transition-behavior: allow-discrete` just flip it a frame early, which costs
+   nothing at rest. */
+.navSectionItems {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--dur, 0.18s) var(--ease, ease),
+    opacity var(--dur, 0.18s) var(--ease, ease),
+    visibility 0s linear var(--dur, 0.18s);
+}
+.navSectionItemsOpen {
+  grid-template-rows: 1fr;
+  overflow: visible;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows var(--dur, 0.18s) var(--ease, ease),
+    opacity var(--dur, 0.18s) var(--ease, ease),
+    overflow 0s linear var(--dur, 0.18s),
+    visibility 0s;
+  transition-behavior: allow-discrete;
+}
+.navSectionLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
 }
 .navItem {
   display: flex;
@@ -364,6 +457,13 @@
   }
 }
 
+/* ── Account menu (sidebar foot) ─────────────────────────────────────────────
+   Positioning context for the menu, which opens UPWARD: the trigger is the last
+   thing in the rail, so there is nothing below it to open into. */
+.meWrap {
+  position: relative;
+}
+
 .me {
   display: flex;
   align-items: center;
@@ -383,18 +483,6 @@
     background: rgba(var(--cream-rgb), 0.06);
   }
 }
-.meAv {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  flex: none;
-  font-size: 12px;
-  font-weight: 700;
-  background: rgba(var(--accent-rgb), 0.22);
-  color: var(--accent-soft);
-}
 .meTx {
   display: flex;
   flex-direction: column;
@@ -408,13 +496,113 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* The account address. Long ones must ellipsis rather than widen the rail. */
 .meRole {
   font-size: 11px;
   color: rgba(var(--cream-rgb), 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .meGear {
   flex: none;
   opacity: 0.55;
+  transition: transform var(--dur, 0.18s) var(--ease, ease);
+}
+.meChevOpen {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .meGear {
+    transition: none;
+  }
+}
+
+.meMenu {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--plum-deep);
+  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.4);
+  animation: axMenuUpIn 0.16s var(--ease, ease);
+}
+/* Declared in THIS module: a CSS-module `animation` name is localized, so
+   naming a keyframe defined elsewhere silently never runs. */
+@keyframes axMenuUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .meMenu {
+    animation: none;
+  }
+}
+
+/* Which powers this account actually holds — the tier plus any additive staff
+   grants. The role chip at the top of the rail never shows the grants. */
+.meMenuAccess {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+  margin-bottom: 4px;
+}
+.meMenuAccessLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.5);
+}
+.meMenuAccessValue {
+  font-size: 12px;
+  color: rgba(var(--cream-rgb), 0.86);
+  overflow-wrap: anywhere;
+}
+
+.meMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  text-decoration: none;
+  color: rgba(var(--cream-rgb), 1);
+  transition: background var(--dur, 0.18s) var(--ease, ease);
+}
+.meMenuItem svg {
+  flex: none;
+  opacity: 0.7;
+}
+@media (hover: hover) {
+  .meMenuItem:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+.meMenuRule {
+  height: 1px;
+  margin: 4px 6px;
+  background: rgba(var(--cream-rgb), 0.08);
+}
+.meMenuSignOut {
+  color: var(--accent-soft);
+}
+.meMenuSignOut svg {
+  opacity: 1;
 }
 
 /* ── Main ────────────────────────────────────────────────────────────────── */
