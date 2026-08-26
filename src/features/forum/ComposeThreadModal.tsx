@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 import {
   Button,
@@ -12,6 +12,11 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CATS } from "./forum.data";
 import { ComposeTagsField } from "./ComposeTagsField";
+import { ForumImageAttach } from "./ForumImageAttach";
+import { usePostImageAttach } from "../communities/usePostImageAttach";
+import { useForumComposerDraft } from "./useForumComposerDraft";
+import { NEW_THREAD_DRAFT_ID } from "./api/forumDrafts.api";
+import { routes } from "../../app/routeMap";
 import styles from "./ComposeThreadModal.module.css";
 
 /**
@@ -33,6 +38,11 @@ export interface NewThreadInput {
   /** Publish under the "QueerPulse Official" byline instead of the caller.
    *  Only ever set from the admin-only checkbox below. */
   isOfficial?: boolean;
+  /** Storage key of one photo on the opening post (live), or a local blob URL
+   *  (demo) — both come back from the shared presigned upload pipeline. */
+  image?: string;
+  /** Local blob preview of that photo, for the optimistic card. */
+  imagePreviewUrl?: string;
 }
 
 interface ComposeThreadModalProps {
@@ -71,37 +81,31 @@ export function ComposeThreadModal({
   const [communitySlug, setCommunitySlug] = useState("");
   const [isOfficial, setIsOfficial] = useState(false);
   const myCommunityOptions = useMyCommunityOptions();
+  // The shared presigned upload pipeline, same hook the community composers
+  // use — no forum-only upload path.
+  const attach = usePostImageAttach();
+  const onRestoreDraft = useCallback(
+    (restored: string) => setBody(restored),
+    [],
+  );
+  // Autosave, through the EXISTING generic drafts module (`/me/drafts`) rather
+  // than a second drafts system. One draft per member for this composer, under
+  // a stable id, so an interrupted post is still there on the next visit.
+  const { status: draftStatus, clearDraft } = useForumComposerDraft({
+    draftId: NEW_THREAD_DRAFT_ID,
+    body,
+    onRestore: onRestoreDraft,
+    title,
+    href: routes.forum,
+    kind: t("forum:draft.threadKind"),
+  });
 
   const isPublishing = status === "publishing";
   const canPublish =
     title.trim().length > 0 && body.trim().length > 0 && !isPublishing;
 
   if (status === "published") {
-    return (
-      <ModalSheet
-        onClose={onClose}
-        success
-        ariaLabel={t("forum:compose.title")}
-      >
-        <div className={styles.confirm}>
-          <span className={styles.confirmIcon} aria-hidden>
-            <FiCheck />
-          </span>
-          <h2 className={styles.confirmTitle}>
-            <Translation
-              i18nKey="forum:compose.confirmTitle"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={styles.confirmBody}>{t("forum:compose.confirmBody")}</p>
-          <div className={styles.confirmActions}>
-            <Button variant="ghost-dark" onClick={onClose}>
-              {t("forum:compose.done")}
-            </Button>
-          </div>
-        </div>
-      </ModalSheet>
-    );
+    return <ComposeThreadConfirm onClose={onClose} />;
   }
 
   return (
@@ -117,7 +121,17 @@ export function ComposeThreadModal({
             tags,
             ...(communitySlug ? { communitySlug } : {}),
             ...(isAdmin && isOfficial ? { isOfficial: true } : {}),
+            ...(attach.image
+              ? {
+                  image: attach.image.key,
+                  imagePreviewUrl: attach.image.previewUrl,
+                }
+              : {}),
           });
+          // The thread is on its way; the draft it came from is spent. A
+          // failed publish keeps the form (and the member's text) on screen,
+          // and the next keystroke re-creates the draft.
+          void clearDraft();
         }}
       >
         <h2 className={styles.dialogTitle}>{t("forum:compose.title")}</h2>
@@ -203,6 +217,14 @@ export function ComposeThreadModal({
           />
         </label>
 
+        <div className={styles.attachRow}>
+          <ForumImageAttach
+            attach={attach}
+            buttonLabel={t("forum:compose.imageAttachThreadAria")}
+          />
+          <ComposeDraftStatus status={draftStatus} />
+        </div>
+
         {status === "error" && (
           <p className={styles.publishError} role="alert">
             <FiAlertTriangle aria-hidden />
@@ -219,7 +241,11 @@ export function ComposeThreadModal({
           >
             {t("forum:compose.cancel")}
           </Button>
-          <Button variant="primary" type="submit" disabled={!canPublish}>
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={!canPublish || attach.uploading}
+          >
             {isPublishing ? (
               <Sending label={t("forum:compose.publishing")} />
             ) : status === "error" ? (
@@ -231,5 +257,55 @@ export function ComposeThreadModal({
         </div>
       </form>
     </ModalSheet>
+  );
+}
+
+/** The plum confirmation sheet shown once the server has really created the
+ *  thread. Extracted so `ComposeThreadModal` itself stays inside the
+ *  200-line component budget after growing a photo field and autosave. */
+function ComposeThreadConfirm({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <ModalSheet onClose={onClose} success ariaLabel={t("forum:compose.title")}>
+      <div className={styles.confirm}>
+        <span className={styles.confirmIcon} aria-hidden>
+          <FiCheck />
+        </span>
+        <h2 className={styles.confirmTitle}>
+          <Translation
+            i18nKey="forum:compose.confirmTitle"
+            components={{ em: <em /> }}
+          />
+        </h2>
+        <p className={styles.confirmBody}>{t("forum:compose.confirmBody")}</p>
+        <div className={styles.confirmActions}>
+          <Button variant="ghost-dark" onClick={onClose}>
+            {t("forum:compose.done")}
+          </Button>
+        </div>
+      </div>
+    </ModalSheet>
+  );
+}
+
+/** The quiet "we have your text" line beside the attach control. Silent until
+ *  there is something true to say. */
+function ComposeDraftStatus({
+  status,
+}: {
+  status: "idle" | "saving" | "saved" | "restored";
+}) {
+  const { t } = useTranslation();
+  if (status === "idle") return null;
+  const labelKey =
+    status === "saving"
+      ? "forum:draft.saving"
+      : status === "saved"
+        ? "forum:draft.saved"
+        : "forum:draft.restored";
+  return (
+    <span className={styles.draftStatus} role="status">
+      {t(labelKey)}
+    </span>
   );
 }

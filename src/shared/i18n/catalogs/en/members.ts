@@ -23,6 +23,14 @@ export const members: Catalog = {
   "card.mutualsCount_one": "{count} mutual",
   "card.mutualsCount_other": "{count} mutuals",
 
+  // ── Coarse "recently active" band (ActivityBandPill) ──────────────────────
+  // Three buckets over a value stored as a MONTH. Never a date, never a time,
+  // never a live-presence phrasing: the copy must not imply the platform knows
+  // more than the month. A member with nothing recorded shows no line at all.
+  "activityBand.thisMonth": "Active this month",
+  "activityBand.last3Months": "Active in the last 3 months",
+  "activityBand.dormant": "Not active recently",
+
   // ── Upload pipeline error messages (api/uploadProcessing.ts, api/useUploadImage.ts) ──
   "upload.error.unsupportedType":
     "That image type isn't supported. Use a JPEG, PNG, WebP or GIF.",
@@ -314,7 +322,7 @@ export const members: Catalog = {
   // wherever a member meets it.
   "profileEdit.work.label": "What you do",
   "profileEdit.work.help":
-    "Public. Shown on your profile, and how people find you under \u201cWhat they do\u201d and \u201cProfession\u201d in the member directory.",
+    "Public. Shown on your profile, and how people find you under “What they do” and “Profession” in the member directory.",
   "workPicker.fieldHeading": "Your field",
   "workPicker.professionHeading": "Your role",
   "workPicker.professionPrompt":
@@ -469,6 +477,11 @@ export const members: Catalog = {
     "No vouches yet. They'll appear here as people who know you add their name. The only number that matters.",
   "hero.vouch.emptyOther":
     "No vouches for {first} yet. If you know them, yours could be the first.",
+  // The viewer-relative trust cue. Shown only when the count is one or more,
+  // and the backend withholds it entirely when this member has hidden their
+  // voucher roster.
+  "hero.vouch.mutualVouchers_one": "{count} member you know vouched",
+  "hero.vouch.mutualVouchers_other": "{count} members you know vouched",
 
   // ── "Here for" intent line (ProfileHero) ────────────────────────────────────
   "hero.hereFor.label": "Here for",
@@ -524,7 +537,6 @@ export const members: Catalog = {
   "publicProfile.bottomCta.title": "Want the <em>full picture?</em>",
   "publicProfile.bottomCta.body":
     "QueerPulse is invite-based. {firstName} can vouch for you if you've met in person. Or request an invite from us directly.",
-  "publicProfile.bottomCta.vouchCta": "Ask {firstName} to vouch",
 
   // ── Public profile sections (PublicProfileSections) ─────────────────────────
   "publicProfile.preview.ownerLabel":
@@ -590,7 +602,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.tenure.remaining_other": "{count} days to go",
   "publicProfile.eligibility.family.contribution.label": "Public contribution",
   "publicProfile.eligibility.family.contribution.hint":
-    "Publishing pieces, hosting open events & workshops",
+    "Publishing pieces, hosting open events & personas",
   "publicProfile.eligibility.family.trust.label": "Community trust",
   "publicProfile.eligibility.family.trust.hint":
     "Vouches, endorsements & connections from other members",
@@ -636,12 +648,14 @@ export const members: Catalog = {
   "search.type.community": "Communities",
   "search.type.event": "Events",
   "search.type.forum": "Forum",
+  // Reply BODIES, kept apart from thread titles: a hit here is an answer
+  // someone already wrote, which is a different thing to find (SOC-08).
+  "search.type.forumPost": "Forum replies",
   "search.type.business": "Businesses",
   "search.type.magazine": "Magazine",
   "search.type.job": "Jobs",
   "search.type.housing": "Housing",
   "search.type.resource": "Resources",
-  "search.type.workshop": "Workshops",
   "search.type.subprofile": "Subprofiles",
   "search.type.board": "Board",
   "search.type.topic": "Topics",
@@ -657,6 +671,12 @@ export const members: Catalog = {
   "search.upcomingEvents": "Upcoming events",
   "search.jumpTo": "Jump to <b>{name}</b>",
   "search.seeAllIn": "See all in {category}",
+  // ── Paging one category past the first page (SearchLoadMore, SOC-08) ──
+  "search.loadMore.action": "Load more results",
+  "search.loadMore.loading": "Loading…",
+  "search.loadMore.retry": "Try again",
+  "search.loadMore.failed": "That page did not load.",
+  "search.loadMore.end": "That is everything for this search.",
   "search.resultCount_one": `<b>{count}</b> result for "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> results for "<b>{query}</b>"`,
   "search.empty.title": "Nothing found",
@@ -681,6 +701,7 @@ export const members: Catalog = {
   "directory.memberCountLabel_other": "members",
   "directory.sortLabel": "Sort",
   "directory.sort.recentlyJoined": "Recently joined",
+  "directory.sort.recentlyActive": "Recently active",
   "directory.sort.closestMutuals": "Closest mutuals",
   "directory.sort.aToZ": "A to Z",
   "directory.sort.mostVouched": "Most vouched",
@@ -871,24 +892,21 @@ export const members: Catalog = {
   "commandPalette.seeAllResults": "See all results for “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Open full search",
 
-  // ── Vouch-for-an-invite page (VouchPage) ────────────────────────────────────
-  "vouch.page.toast": "Your vouch for {name} is on its way to the council.",
-  "vouch.page.success.title": "That's a <em>real welcome.</em>",
-  "vouch.page.success.body":
-    "Your vouch for {name} has gone to the membership council. They'll know someone already had their back before they even walked in.",
-  "vouch.page.success.connectionsCta": "Back to connections",
-  "vouch.page.success.browseCta": "Browse members",
+  // ── Vouch page: pick a member and vouch for them (VouchPage) ─────────
   "vouch.page.eyebrow": "Vouch",
   "vouch.page.title": "Tell us you <em>know them.</em>",
-  "vouch.page.noteLabel": "Add a short note (optional)",
-  "vouch.page.notePlaceholder":
-    "How do you know {name}, and what should the council know?",
-  "vouch.page.submitCta": "Send my vouch",
-  "vouch.page.skipCta": "Not right now",
-  "vouch.page.emptyLive.title": "Vouch invitations arrive by link",
-  "vouch.page.emptyLive.description":
-    "When someone asks you to vouch for them, you'll get a personal link that opens their request right here. There's nobody waiting on your vouch at the moment.",
-  "vouch.page.emptyLive.cta": "Browse members",
+  "vouch.page.lede":
+    "Find the member you want to vouch for. A vouch is public and carries your name, and you can withdraw it whenever you want.",
+  "vouch.picker.searchPlaceholder": "Search members by name",
+  "vouch.picker.searchAria": "Search members to vouch for",
+  "vouch.picker.noResults":
+    "Nobody here matches “{query}”. Try another spelling.",
+  "vouch.picker.alreadyVouched": "Vouched",
+  "vouch.picker.vouchCta": "Vouch for {name}",
+  "vouch.picker.error.title": "The member list didn't load",
+  "vouch.picker.error.description":
+    "Something went wrong on the way to the directory. Give it another go.",
+  "vouch.picker.error.retry": "Try again",
 
   // ── Why-vouch explainer (vouch.data.ts MEANS) ───────────────────────────────
   "vouch.means.know.title": "You know them, really",
@@ -1264,8 +1282,6 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.endorsements": "Endorsements received",
   "badges.xpBreakdown.sources.endorsementsDesc":
     "Being endorsed by another member.",
-  "badges.xpBreakdown.sources.workshops": "Workshops taught",
-  "badges.xpBreakdown.sources.workshopsDesc": "Hosting a workshop.",
   "badges.xpBreakdown.sources.tenure": "Days on QueerPulse",
   "badges.xpBreakdown.sources.tenureDesc":
     "Being part of QueerPulse, one day at a time.",
@@ -1515,6 +1531,18 @@ export const members: Catalog = {
   "profile.whoSeesWhat.presets.closed.desc":
     "Photo, neighbourhood, vouchers and what you're looking for all stay private.",
 
+  "profile.whoSeesWhat.activity.heading": "How recently you were here",
+  "profile.whoSeesWhat.activity.sub":
+    "Other members can see roughly how recently you were around. We keep the month and nothing finer: no dates, no times, no dot saying you are online right now.",
+  "profile.whoSeesWhat.activity.hideLabel": "Hide this from other members",
+  "profile.whoSeesWhat.activity.hideDesc":
+    "Turns the line off for everyone else and takes you out of the Recently active sort. You will still see it here.",
+  "profile.whoSeesWhat.activity.current": "Right now you read as: {band}.",
+  "profile.whoSeesWhat.activity.none":
+    "Nothing recorded yet, so your profile shows no line at all.",
+  "profile.whoSeesWhat.activity.error": "That did not save. Try again.",
+  "profile.whoSeesWhat.activity.demo":
+    "This is the demo. Sign in to change the setting for real.",
   "profile.whoSeesWhat.fields.heading": "Visibility switches",
   "profile.whoSeesWhat.fields.sub": "Each of these takes effect right away.",
   "profile.whoSeesWhat.fields.photo.label": "Photo",
@@ -1657,13 +1685,125 @@ export const members: Catalog = {
   "profile.accountData.dsar.submitCta": "Send request",
   "profile.accountData.dsar.pastTitle": "Past requests",
   "profile.accountData.dsar.pastHint":
-    "We answer every request by email. This list is for your records, it won't change status on its own.",
+    "We answer every request with a QueerPulse notification, and the status here updates when we do.",
   "profile.accountData.dsar.pastLoading": "Loading your requests…",
   "profile.accountData.dsar.pastError": "We couldn't load your past requests.",
   "profile.accountData.dsar.pastEmpty": "You haven't filed a request yet.",
   "profile.accountData.dsar.pastRowDueBy": "Reply by {date}",
   "profile.accountData.dsar.toast.submitted":
-    "Request received, reference {ref}. We'll reply by email by {date}.",
+    "Request received, reference {ref}. We'll answer with a QueerPulse notification by {date}.",
   "profile.accountData.dsar.toast.submitError":
     "We couldn't send that request. Please try again.",
+
+  // --- Saved lists (SOC-12) -------------------------------------------------
+  // Collections became saved lists so a list can be handed to somebody. The
+  // copy below is deliberate about one thing above all: a share link is public,
+  // and the member reads that sentence before a link exists.
+  "savedLists.header.eyebrow": "Your saves",
+  "savedLists.header.title": "Lists worth <em>passing on</em>",
+  "savedLists.header.lead":
+    "Everything you save lands in one list. Make others for the reasons you saved things: a first date, somewhere open late, the clinics you would send a friend to.",
+  "savedLists.header.newCta": "New list",
+
+  "savedLists.empty.title": "Nothing saved yet",
+  "savedLists.empty.description":
+    "Save an article, a place or a gathering and it will show up here. You can group your saves into lists whenever you want to.",
+
+  "savedLists.newCard.title": "New list",
+  "savedLists.newCard.subtitle": "Group saves by the reason you kept them",
+
+  "savedLists.card.meta_one": "1 thing · updated {time}",
+  "savedLists.card.meta_other": "{count} things · updated {time}",
+
+  "savedLists.state.private": "Private",
+  "savedLists.state.shared": "Link on",
+
+  "savedLists.recent.heading": "Recently saved",
+  "savedLists.recent.count_one": "1 save",
+  "savedLists.recent.count_other": "{count} saves",
+  "savedLists.recent.fileCta": "Add to a list",
+
+  "savedLists.new.eyebrow": "New list",
+  "savedLists.new.title": "Name your list",
+  "savedLists.new.nameLabel": "List name",
+  "savedLists.new.namePlaceholder": "Trans-friendly healthcare",
+  "savedLists.new.privateNote":
+    "New lists are private. You can create a share link later, from inside the list.",
+  "savedLists.new.cancel": "Cancel",
+  "savedLists.new.submit": "Create list",
+
+  "savedLists.file.eyebrow": "Add to a list",
+  "savedLists.file.title": "Which list?",
+  "savedLists.file.cancel": "Cancel",
+  "savedLists.file.filing": "Adding…",
+  "savedLists.file.empty":
+    "You have no lists yet. Create one and this save can go straight into it.",
+  "savedLists.file.success.title": "Added",
+  "savedLists.file.success.body":
+    "It is in {name} now, and still in your saves.",
+  "savedLists.file.success.done": "Done",
+
+  "savedLists.detail.rename": "Rename",
+  "savedLists.detail.renameLabel": "List name",
+  "savedLists.detail.renameSave": "Save",
+  "savedLists.detail.renameCancel": "Cancel",
+  "savedLists.detail.removeItem": "Take {title} out of this list",
+  "savedLists.detail.delete": "Delete list",
+  "savedLists.detail.close": "Close",
+  "savedLists.detail.empty": "Nothing in this list yet.",
+  "savedLists.detail.defaultNote":
+    "This list holds everything you have saved. To take something out of it, unsave it.",
+  "savedLists.detail.deleteConfirm.title": "Delete {name}?",
+  "savedLists.detail.deleteConfirm.body":
+    "The list goes. Everything in it stays saved, and stays in any other list you filed it under. Any share link for this list stops working.",
+  "savedLists.detail.deleteConfirm.cta": "Delete list",
+
+  "savedLists.share.private.heading": "This list is private",
+  "savedLists.share.private.body":
+    "Only you can see it. If you want to hand it to someone, you can create a link.",
+  "savedLists.share.private.warning":
+    "Anyone who has the link can open this list. There is no password and no sign-in, so treat the link itself as the key and only send it to people you trust with it.",
+  "savedLists.share.private.cta": "Create a share link",
+  "savedLists.share.points.noAccount":
+    "They do not need a QueerPulse account to read it.",
+  "savedLists.share.points.anonymous":
+    "They see the list name and what is in it. They do not see your name, your profile or your photo.",
+  "savedLists.share.points.revocable":
+    "You can turn the link off at any time. Every copy of it stops working straight away.",
+
+  "savedLists.share.live.heading": "Anyone with this link can open it",
+  "savedLists.share.live.body":
+    "The link works without an account. It shows the list name and what is in it, and nothing about you.",
+  "savedLists.share.live.fieldLabel": "Share link for this list",
+  "savedLists.share.live.copy": "Copy",
+  "savedLists.share.live.copied": "Copied",
+  "savedLists.share.live.copiedToast": "Link copied",
+  "savedLists.share.live.copyErrorToast": "Could not copy the link",
+  "savedLists.share.live.revoke": "Turn the link off",
+  "savedLists.share.live.since": "On since {time}",
+
+  "savedLists.shared.metaTitle": "A shared list",
+  "savedLists.shared.loading": "Opening the list…",
+  "savedLists.shared.eyebrow": "Shared with you",
+  "savedLists.shared.count_one": "1 thing",
+  "savedLists.shared.count_other": "{count} things",
+  "savedLists.shared.note":
+    "Someone made this list on QueerPulse and sent you the link. They can turn it off whenever they want to, and this page will stop working when they do.",
+  "savedLists.shared.gone.title": "This list is not available",
+  "savedLists.shared.gone.body":
+    "The link may have been turned off, or it may never have been a real one. Ask whoever sent it to you for a new link.",
+
+  "savedLists.toast.created": "List created",
+  "savedLists.toast.createError": "Could not create the list",
+  "savedLists.toast.renamed": "List renamed",
+  "savedLists.toast.renameError": "Could not rename the list",
+  "savedLists.toast.deleted": "List deleted",
+  "savedLists.toast.deleteError": "Could not delete the list",
+  "savedLists.toast.shared": "Share link created",
+  "savedLists.toast.shareError": "Could not create the link",
+  "savedLists.toast.revoked": "Link turned off",
+  "savedLists.toast.revokeError": "Could not turn the link off",
+  "savedLists.toast.fileError": "Could not add it to that list",
+  "savedLists.toast.unfiled": "Taken out of the list",
+  "savedLists.toast.unfileError": "Could not take it out of the list",
 };

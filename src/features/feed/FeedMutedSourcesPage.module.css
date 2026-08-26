@@ -1,0 +1,63 @@
+.page {
+  background: var(--cream);
+  min-height: 100vh;
+  padding: 28px 0 64px;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+  margin-bottom: 14px;
+}
+.title {
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+.blurb {
+  color: var(--ink-60);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 58ch;
+  margin: 0 0 22px;
+}
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.rowText {
+  min-width: 0;
+  flex: 1;
+}
+.rowName {
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.rowLink {
+  color: inherit;
+}
+.rowMeta {
+  font-size: 0.8rem;
+  color: var(--ink-60);
+  margin-top: 4px;
+}

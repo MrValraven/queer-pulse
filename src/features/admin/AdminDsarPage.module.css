@@ -1,0 +1,207 @@
+/* Data-subject request queue (/admin/dsar). Row shape mirrors
+   AdminInvitesPage.module.css so the two oversight surfaces read as one
+   family; what is new here is the statutory clock rail on the left of every
+   row, which is the only thing this queue is really about. */
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.emptyLine {
+  font-size: 14px;
+  color: var(--ink-60);
+  margin: 20px 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 18px 14px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-inline-start: 4px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-card, 22px);
+  cursor: pointer;
+  text-align: start;
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    border-color: rgba(var(--line-rgb), 0.22);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--jade);
+  outline-offset: 2px;
+}
+
+/* The overdue treatment: a danger-toned edge on the whole row, paired with the
+   row's own "N days overdue" chip so the colour is never the only signal. */
+.rowOverdue {
+  border-inline-start-color: var(--danger);
+  background: rgba(var(--danger-rgb), 0.04);
+}
+
+/* A week or less of statutory time left. */
+.rowUrgent {
+  border-inline-start-color: var(--amber);
+}
+
+.rowMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reference {
+  /* The tracking code the member was shown. Tabular figures so a column of
+     references lines up; STYLE-RULES bans monospace in the product UI. */
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.rowMeta {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.rowDetails {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rowDates {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+.rowSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+/* ── Drawer ─────────────────────────────────────────────────────────────── */
+
+.drawerHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drawerChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detailRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+
+.detailLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-40, var(--ink-60));
+}
+
+.detailValue {
+  font-size: 14px;
+  color: var(--text-strong);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.scopeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.outcomeForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.outcomeLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.outcomeInput {
+  width: 100%;
+  min-height: 92px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--text-strong);
+  resize: vertical;
+}
+
+.outcomeInput:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.outcomeHint {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+.footActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+:global([data-theme="dark"]) .row {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}

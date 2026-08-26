@@ -906,8 +906,23 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.status.rejected": "Declined",
   "adminMagazineSubmissions.status.published": "Published",
   "adminMagazineSubmissions.status.draft": "Draft",
+  // A commission is a yes that ALSO put the piece in the desk's pitch inbox,
+  // so it shows as a second chip next to the "Accepted" status.
+  "adminMagazineSubmissions.status.commissioned": "Commissioned",
   "adminMagazineSubmissions.row.by": "From {name}",
   "adminMagazineSubmissions.row.sent": "Sent {date}",
+  "adminMagazineSubmissions.row.decided": "Decided {date}",
+  "adminMagazineSubmissions.row.readPiece": "Read the full piece",
+  "adminMagazineSubmissions.row.coverAlt": "Cover submitted with {title}",
+  // The note is the decider's own words (content); only the label around it
+  // is translated.
+  "adminMagazineSubmissions.row.reply": "Reply sent: {note}",
+  "adminMagazineSubmissions.row.replyLabel": "Reply to the writer",
+  "adminMagazineSubmissions.row.replyPlaceholder":
+    "Optional reply to the writer",
+  "adminMagazineSubmissions.row.declineCta": "Decline",
+  "adminMagazineSubmissions.row.acceptCta": "Accept",
+  "adminMagazineSubmissions.row.commissionCta": "Commission",
   "adminMagazineSubmissions.loadMore": "Load more",
   "adminMagazineSubmissions.loadingMore": "Loading…",
 
@@ -1740,6 +1755,7 @@ export const admin: Catalog = {
   "governance.tabs.finances": "Finances",
   "governance.tabs.policy": "Policy & versions",
   "governance.tabs.proposals": "Proposals",
+  "governance.tabs.motions": "Motions",
   "governance.tabs.audit": "Audit log",
 
   // NOTE: the rest of `governance.overview.*` (the Policy tab's
@@ -1794,6 +1810,53 @@ export const admin: Catalog = {
     "Could not open the proposal. Please try again.",
   "governance.proposals.form.validation":
     "Fill in every field before opening the proposal.",
+
+  // ── Motions tab (GOV-01) ──────────────────────────────────────────────────
+  // The screening queue. These are member-raised motions that already
+  // cleared their co-signature threshold and are waiting on a reviewer.
+  // Approving one schedules its ballot; rejecting one publishes the
+  // reviewer's written reason on the public Governance page, so the copy
+  // says so before the decision is taken rather than after.
+  "governance.motions.header.eyebrow": "Member motions",
+  "governance.motions.header.title": "Motions <em>awaiting review</em>",
+  "governance.motions.header.sub":
+    "Motions members raised that reached their co-signature threshold. Approve one to schedule its vote, or reject it with a reason every member will read.",
+  "governance.motions.loading": "Loading motions…",
+  "governance.motions.empty": "No motion is waiting for review.",
+  "governance.motions.error": "Could not load the motion queue.",
+  "governance.motions.retry": "Try again",
+  "governance.motions.approveCta": "Approve",
+  "governance.motions.rejectCta": "Reject",
+  "governance.motions.list.cosignatures": "Co-signatures: {count}",
+  "governance.motions.list.raisedBy": "Raised by {name}",
+  "governance.motions.list.filedOn": "Filed {date}",
+  "governance.motions.approve.eyebrow": "Motion review",
+  "governance.motions.approve.title": "Open this motion for voting",
+  "governance.motions.approve.sub":
+    "Set when the ballot opens and when it closes. Members can vote at any point inside that window.",
+  "governance.motions.approve.opensAt": "Voting opens",
+  "governance.motions.approve.closesAt": "Voting closes",
+  "governance.motions.approve.cancel": "Cancel",
+  "governance.motions.approve.save": "Open for voting",
+  "governance.motions.approve.saving": "Opening…",
+  "governance.motions.approve.saved": "Motion approved. Voting is scheduled.",
+  "governance.motions.approve.error":
+    "Could not approve the motion. Please try again.",
+  "governance.motions.approve.validation":
+    "Set both an opening and a closing date.",
+  "governance.motions.approve.orderError":
+    "Voting has to close after it opens.",
+  "governance.motions.reject.title": "Reject this motion?",
+  "governance.motions.reject.body":
+    "The motion will not go to a vote. Your reason is published on the public Governance page, where every member can read it.",
+  "governance.motions.reject.confirmCta": "Reject motion",
+  "governance.motions.reject.reasonLabel": "Reason",
+  "governance.motions.reject.reasonPlaceholder":
+    "Explain why this motion is not going to a vote.",
+  "governance.motions.reject.saved":
+    "Motion rejected. The reason is published.",
+  "governance.motions.reject.error":
+    "Could not reject the motion. Please try again.",
 
   "governance.finances.stat.sustainerMrr": "Sustainer MRR",
   "governance.finances.stat.totalIncome": "Total monthly income",
@@ -3775,4 +3838,760 @@ export const admin: Catalog = {
   "communities.queue.status.open": "Open",
   "communities.queue.status.resolved": "Resolved",
   "communities.queue.status.escalated": "Escalated",
+
+  // ── ID-04 · Data-subject request (DSAR) review queue (/admin/dsar) ──
+  // A DSAR starts a 30-day statutory clock the moment a member files it, so
+  // every string here is written around that clock. Nothing in this block may
+  // promise email: the only channel this platform has is a QueerPulse
+  // notification.
+  "adminDsar.navLabel": "Data requests",
+  "adminDsar.title": "Data <em>requests</em>",
+  "adminDsar.header.eyebrow": "Review queue",
+  "adminDsar.header.title": "Data-subject <em>requests</em>",
+  "adminDsar.header.sub":
+    "Every data request members have filed, closest statutory deadline first. Each one has 30 days.",
+  "adminDsar.header.subOverdue":
+    "Closest statutory deadline first. Past their 30-day deadline right now: {count}.",
+  "adminDsar.filter.received": "Received",
+  "adminDsar.filter.in_review": "In review",
+  "adminDsar.filter.resolved": "Resolved",
+  "adminDsar.filter.rejected": "Rejected",
+  "adminDsar.filter.all": "All",
+  "adminDsar.status.received": "Received",
+  "adminDsar.status.in_review": "In review",
+  "adminDsar.status.resolved": "Resolved",
+  "adminDsar.status.rejected": "Rejected",
+  "adminDsar.article.access": "Access (Art. 15)",
+  "adminDsar.article.rectification": "Rectification (Art. 16)",
+  "adminDsar.article.erasure": "Erasure (Art. 17)",
+  "adminDsar.article.objection": "Objection (Art. 21)",
+  "adminDsar.clock.overdue": "{days} days overdue",
+  "adminDsar.clock.dueToday": "Due today",
+  "adminDsar.clock.urgent": "{days} days left",
+  "adminDsar.clock.remaining": "{days} days left",
+  "adminDsar.clock.closed": "Clock stopped",
+  "adminDsar.row.openAriaLabel": "Open data request {reference}",
+  "adminDsar.row.filedBy": "Filed by {name}",
+  "adminDsar.row.dueBy": "Answer due by {date}",
+  "adminDsar.unknownMember": "A member",
+  "adminDsar.drawer.label": "Data request {reference}",
+  "adminDsar.drawer.member": "Filed by",
+  "adminDsar.drawer.asked": "What they asked for",
+  "adminDsar.drawer.scopes": "Data they named",
+  "adminDsar.drawer.filed": "Filed",
+  "adminDsar.drawer.due": "Statutory deadline",
+  "adminDsar.drawer.answered": "Answered",
+  "adminDsar.drawer.context": "Filed from",
+  "adminDsar.drawer.outcome": "Outcome",
+  "adminDsar.outcome.label": "Outcome note",
+  "adminDsar.outcome.placeholder": "What did we do about this request?",
+  "adminDsar.outcome.notifyHint":
+    "Closing a request sends the member a QueerPulse notification. No email is sent.",
+  "adminDsar.outcome.requiredHint":
+    "Write an outcome note before you close a request.",
+  "adminDsar.outcome.closedHint":
+    "This request is closed. The member was notified in QueerPulse.",
+  "adminDsar.action.startReview": "Start review",
+  "adminDsar.action.resolve": "Resolve",
+  "adminDsar.action.reject": "Reject",
+  "adminDsar.toast.in_review": "Moved to in review.",
+  "adminDsar.toast.resolved": "Request resolved. The member has been notified.",
+  "adminDsar.toast.rejected": "Request rejected. The member has been notified.",
+  "adminDsar.toast.movedOn":
+    "This request already moved on. Reload the queue to see where it went.",
+  "adminDsar.toast.error": "Couldn't update that request.",
+  "adminDsar.empty": "No data requests in this filter.",
+  "adminDsar.error": "Couldn't load data requests.",
+  "adminDsar.loadMore": "Load more",
+  "adminDsar.loadingMore": "Loading…",
+
+  // ── Topic directory console (/admin/topics, SOC-01) ───────────────────────
+  "topics.eyebrow": "Discovery",
+  "topics.title": "Topic <em>directory</em>",
+  "topics.sub":
+    "The interest graph behind /topics, every topic page, and the topic results in search. Archiving retires a topic and keeps its posts and its followers.",
+  "topics.newCta": "New topic",
+  "topics.empty":
+    "No topics yet. Create the first one and it is in the directory straight away.",
+  "topics.loadError": "Couldn't load the topic directory.",
+  "topics.postsCount_one": "{count} post",
+  "topics.postsCount_other": "{count} posts",
+  "topics.followersCount_one": "{count} follower",
+  "topics.followersCount_other": "{count} followers",
+  "topics.crisisBadge": "Crisis support card",
+  "topics.archivedBadge": "Archived",
+  "topics.archiveCta": "Archive",
+  "topics.restoreCta": "Restore",
+  "topics.archiveError": "Couldn't change that topic's archive state.",
+  "topics.deleteError": "Couldn't delete that topic.",
+  "topics.toast.created": "#{tag} is live in the directory.",
+  "topics.toast.updated": "#{tag} updated.",
+  "topics.toast.archived": "#{tag} archived. Its posts and followers are kept.",
+  "topics.toast.restored": "#{tag} is back in the directory.",
+  "topics.toast.deleted": "#{tag} deleted.",
+  "topics.form.createTitle": "New topic",
+  "topics.form.createCta": "Create topic",
+  "topics.form.saveError": "Couldn't save that topic.",
+  "topics.form.tagField": "Tag",
+  "topics.form.tagHint":
+    "Lowercase letters, numbers and hyphens. This becomes the page address and the hashtag members write.",
+  "topics.form.tagLockedHint":
+    "A tag can't change: it is the page address, the hashtag already inside posts, and the key every follow is stored under. Archive this topic and create the new tag.",
+  "topics.form.labelField": "Label",
+  "topics.form.labelHint":
+    'The plain name shown in the directory and in search, for example "Mental health".',
+  "topics.form.descriptionField": "Description",
+  "topics.form.descriptionHint":
+    "One or two sentences on what belongs here. Shown on the directory card and at the top of the topic page.",
+  "topics.form.crisisField": "Show the crisis support card",
+  "topics.form.crisisHint":
+    "Adds the crisis support panel to this topic's sidebar, for topics where someone may arrive in a hard moment.",
+  "topics.delete.title": "Delete #{tag}?",
+  "topics.delete.body":
+    "This destroys the topic along with {posts} posts and {followers} follows. Archiving takes it out of the directory just the same and keeps all of it.",
+  "topics.delete.confirmCta": "Delete topic",
+
+  // ── Resource guide console (CON-08 / CON-09) ────────────────────────────
+  // The editorial surface for the ~31 resource guides: edit the prose,
+  // stamp a review, see what is stale.
+  "adminResourceGuides.title": "Resource <em>guides</em>",
+  "adminResourceGuides.header.eyebrow": "Editorial",
+  "adminResourceGuides.header.sub":
+    "Every guide on the platform, stalest first. Edit the prose here instead of shipping a deploy, and stamp a review when you have read one end to end.",
+  "adminResourceGuides.sortLabel": "Sort guides",
+  "adminResourceGuides.sort.reviewDue": "Review due",
+  "adminResourceGuides.sort.title": "Title",
+  "adminResourceGuides.sort.updated": "Recently updated",
+  "adminResourceGuides.staleBanner":
+    "{count} guides have never been reviewed by anyone.",
+  "adminResourceGuides.empty":
+    "No guides yet. Once the backfill migration has run, every guide appears here.",
+  "adminResourceGuides.viewPublicIndexCta": "Open the public guide index",
+  "adminResourceGuides.loadError": "Couldn't load the guides.",
+
+  "adminResourceGuides.row.unpublished": "Unpublished",
+  "adminResourceGuides.row.notManaged": "Page still hardcoded",
+  "adminResourceGuides.row.reviewed": "Reviewed {date}",
+  "adminResourceGuides.row.reviewedBy": "Reviewed {date} by {reviewer}",
+  "adminResourceGuides.row.neverReviewed": "Never reviewed",
+  "adminResourceGuides.row.overdue": "Overdue since {date}",
+  "adminResourceGuides.row.reviewCta": "Mark reviewed",
+  "adminResourceGuides.row.editCta": "Edit",
+
+  "adminResourceGuides.editor.title": "Edit guide",
+  "adminResourceGuides.editor.saveCta": "Save changes",
+  "adminResourceGuides.editor.takeoverNotice":
+    "Adding a section takes this page over: readers will see what you write here instead of the built-in page.",
+  "adminResourceGuides.tab.details": "Details",
+  "adminResourceGuides.tab.prose": "Prose (EN)",
+  "adminResourceGuides.tab.prosePt": "Prose (PT)",
+  "adminResourceGuides.field.title": "Title",
+  "adminResourceGuides.field.titlePt": "Title (Portuguese)",
+  "adminResourceGuides.field.description": "Description",
+  "adminResourceGuides.field.descriptionPt": "Description (Portuguese)",
+  "adminResourceGuides.field.category": "Category",
+  "adminResourceGuides.field.routePath": "Page path",
+  "adminResourceGuides.field.meta": "Card chip",
+
+  "adminResourceGuides.sections.empty":
+    "No sections yet. This guide's page is still hardcoded in the app.",
+  "adminResourceGuides.sections.headingLabel": "Section heading",
+  "adminResourceGuides.sections.anchorLabel": "Anchor id",
+  "adminResourceGuides.sections.kindLabel": "Block type",
+  "adminResourceGuides.sections.textLabel": "Block text",
+  "adminResourceGuides.sections.addSectionCta": "Add section",
+  "adminResourceGuides.sections.addBlockCta": "Add block",
+  "adminResourceGuides.sections.moveUp": "Move section up",
+  "adminResourceGuides.sections.moveDown": "Move section down",
+  "adminResourceGuides.sections.removeSection": "Remove section",
+  "adminResourceGuides.sections.removeBlock": "Remove block",
+  "adminResourceGuides.blockKind.paragraph": "Paragraph",
+  "adminResourceGuides.blockKind.subheading": "Subheading",
+  "adminResourceGuides.blockKind.listItem": "List item",
+  "adminResourceGuides.blockKind.note": "Callout",
+
+  "adminResourceGuides.review.title": "Mark this guide reviewed",
+  "adminResourceGuides.review.body":
+    "Confirm you have read this guide end to end and everything in it is still accurate: phone numbers, eligibility rules, clinic hours, statute references.",
+  "adminResourceGuides.review.reviewedByLabel": "Reviewed by",
+  "adminResourceGuides.review.reviewedByHint": "A person or a team",
+  "adminResourceGuides.review.reviewedOnLabel": "Reviewed on",
+  "adminResourceGuides.review.dueLabel": "Next review due",
+  "adminResourceGuides.review.confirmCta": "Mark reviewed",
+
+  // ── AdminHousingListingsPage — the housing review console (LOC-01) ──────
+  // Every member listing lands in `review` and public browse serves `live`
+  // only, so nothing reached the board until this console existed.
+  "housingListings.nav": "Housing listings",
+  "housingListings.title": "Housing <em>review.</em>",
+  "housingListings.eyebrow": "Housing board",
+  "housingListings.header.title": "Homes waiting on a <em>decision.</em>",
+  "housingListings.header.sub":
+    "Every listing a member posts waits here until somebody reads it. Riskiest first, with the signals that put it there.",
+  "housingListings.keyHint":
+    "J and K move between listings. A approves, C sends it back for changes, R refuses it, D pulls a live one.",
+  "housingListings.count_one": "{count} listing",
+  "housingListings.count_other": "{count} listings",
+  "housingListings.loadMore": "Show more",
+  "housingListings.loadingMore": "Loading…",
+  "housingListings.tab.review": "Waiting",
+  "housingListings.tab.question": "Sent back",
+  "housingListings.tab.live": "Live",
+  "housingListings.tab.rejected": "Refused",
+  "housingListings.tab.taken_down": "Pulled",
+  "housingListings.tab.all": "Everything",
+  "housingListings.sort.label": "Sort",
+  "housingListings.sort.risk": "Riskiest",
+  "housingListings.sort.oldest": "Longest waiting",
+  "housingListings.sort.newest": "Newest",
+  "housingListings.empty.title": "Nothing waiting here",
+  "housingListings.empty.body":
+    "No listing is in this state right now. Try another tab when you want to look back over what was decided.",
+  "housingListings.error.title": "Couldn't load the queue",
+  "housingListings.error.body":
+    "Something went wrong on our end. Check your connection and try again.",
+  "housingListings.error.retry": "Try again",
+  "housingListings.status.review": "Waiting",
+  "housingListings.status.question": "Sent back",
+  "housingListings.status.live": "Live",
+  "housingListings.status.rejected": "Refused",
+  "housingListings.status.takenDown": "Pulled",
+  "housingListings.row.submitted": "Posted {date}",
+  "housingListings.row.rent": "{amount} a month",
+  "housingListings.row.bedrooms_one": "{count} bedroom",
+  "housingListings.row.bedrooms_other": "{count} bedrooms",
+  "housingListings.row.billsIncluded": "Bills included",
+  "housingListings.row.billsExcluded": "Bills on top",
+  "housingListings.row.photoAlt": "Photo {position} of {title}",
+  "housingListings.row.noPhotos": "No photos on this listing",
+  "housingListings.risk.band.high": "High risk",
+  "housingListings.risk.band.medium": "Some flags",
+  "housingListings.risk.band.low": "Low risk",
+  "housingListings.risk.scoreTitle":
+    "Risk score out of 100, computed from the signals listed below",
+  "housingListings.risk.heading_one": "{count} signal, scoring {score}",
+  "housingListings.risk.heading_other": "{count} signals, scoring {score}",
+  "housingListings.risk.weight": "+{weight}",
+  "housingListings.risk.noneRaised": "No risk signals were raised",
+  "housingListings.risk.rentFarBelowMarket":
+    "Rent is far below anything plausible for this kind of home, the classic advance-fee hook",
+  "housingListings.risk.rentBelowMarket":
+    "Rent sits below the bottom of a plausible range for this kind of home",
+  "housingListings.risk.contactInfoInText":
+    "The listing carries a phone number, email, IBAN or messenger handle, moving the conversation off the platform",
+  "housingListings.risk.offPlatformPayment":
+    "The listing asks for money before a viewing, or by a method nobody can trace",
+  "housingListings.risk.discriminatoryLanguage":
+    "The wording gates the home on identity or beliefs rather than describing the space",
+  "housingListings.risk.listerUnverified":
+    "The lister has only confirmed an email address",
+  "housingListings.risk.listerPhoneOnly":
+    "The lister has confirmed a phone number and no identity document",
+  "housingListings.risk.incompleteListing":
+    "The description is too short to tell anyone what the home is like",
+  "housingListings.risk.noPhotos": "The listing has no photos",
+  "housingListings.risk.missingAccessibilityInfo":
+    "The listing says nothing about getting in and around",
+  "housingListings.lister.erased":
+    "This lister erased their account. There is nobody left to notify about a decision.",
+  "housingListings.lister.verification.none": "Nothing confirmed",
+  "housingListings.lister.verification.email": "Email confirmed",
+  "housingListings.lister.verification.phone": "Phone confirmed",
+  "housingListings.lister.verification.id": "Identity verified",
+  "housingListings.lister.memberSince": "Here since {date}",
+  "housingListings.lister.agent": "Agent",
+  "housingListings.lister.history.total_one": "{count} listing in all",
+  "housingListings.lister.history.total_other": "{count} listings in all",
+  "housingListings.lister.history.live_one": "{count} live",
+  "housingListings.lister.history.live_other": "{count} live",
+  "housingListings.lister.history.changes_one": "{count} sent back",
+  "housingListings.lister.history.changes_other": "{count} sent back",
+  "housingListings.lister.history.rejected_one": "{count} refused",
+  "housingListings.lister.history.rejected_other": "{count} refused",
+  "housingListings.lister.history.takenDown_one": "{count} pulled",
+  "housingListings.lister.history.takenDown_other": "{count} pulled",
+  "housingListings.details.open": "The listing as written",
+  "housingListings.details.noDescription": "No description was written.",
+  "housingListings.details.access": "Getting in and around",
+  "housingListings.details.noAccess": "Nothing said",
+  "housingListings.details.available": "Available from",
+  "housingListings.details.availableNow": "Now",
+  "housingListings.details.minStay": "Shortest stay",
+  "housingListings.details.minStayMonths_one": "{count} month",
+  "housingListings.details.minStayMonths_other": "{count} months",
+  "housingListings.details.minStayNone": "No minimum",
+  "housingListings.details.address": "Address",
+  "housingListings.details.noAddress": "No address on file",
+  "housingListings.details.tourLink": "Open the virtual tour",
+  "housingListings.details.priorDecision": "Last decided {date}",
+  "housingListings.details.priorDecisionNoReason":
+    "Approved with no note attached.",
+  "housingListings.details.decidedBy": "Decided by {name}",
+  "housingListings.decide.approve": "Publish",
+  "housingListings.decide.requestChanges": "Ask for changes",
+  "housingListings.decide.reject": "Refuse",
+  "housingListings.decide.takeDown": "Pull from the board",
+  "housingListings.decide.cancel": "Cancel",
+  "housingListings.decide.reasonEyebrow": "Housing review",
+  "housingListings.decide.reasonTitle.request_changes": "What needs changing?",
+  "housingListings.decide.reasonTitle.reject": "Why are you refusing this?",
+  "housingListings.decide.reasonTitle.take_down": "Why are you pulling this?",
+  "housingListings.decide.reasonLabel": "Your reason",
+  "housingListings.decide.reasonHint":
+    "The lister reads this word for word, in their notifications and on their own listings page. Write it to them.",
+  "housingListings.decide.reasonPlaceholder.request_changes":
+    "e.g. Could you add a photo of the kitchen and say whether the rent includes water? Once that is in, this is good to go.",
+  "housingListings.decide.reasonPlaceholder.reject":
+    "e.g. This listing asks for a deposit before a viewing, which we don't allow here. You're welcome to post again without it.",
+  "housingListings.decide.reasonPlaceholder.take_down":
+    "e.g. Two members told us this home was already let. We've pulled it for now, tell us if that's wrong.",
+  "housingListings.toast.approve": "{title} is on the board.",
+  "housingListings.toast.request_changes": "Sent {title} back to its lister.",
+  "housingListings.toast.reject": "{title} was refused.",
+  "housingListings.toast.take_down": "{title} was pulled from the board.",
+  "housingListings.toast.error":
+    "Couldn't record that decision. Check your connection and try again.",
+
+  "adminResourceGuides.toast.saved": "Saved {title}.",
+  "adminResourceGuides.toast.reviewed": "{title} marked reviewed.",
+  "adminResourceGuides.error.save": "Couldn't save the guide.",
+  "adminResourceGuides.error.review": "Couldn't record the review.",
+
+  // ── Trust, safety and moderation (section 1 build) ──────────────────────
+  // Community attribution on the report queue (TS-14).
+  "moderation.community.all": "All communities",
+  "moderation.community.filterLabel": "Filter by community",
+  "moderation.community.rowFlag": "From {community}",
+
+  // Clustered rows: one pile-on reads as one thing (TS-06).
+  "moderation.cluster.clearAllCta_one": "Clear {count}",
+  "moderation.cluster.clearAllCta_other": "Clear all {count}",
+  "moderation.cluster.heading_one": "{count} open report about {subject}",
+  "moderation.cluster.heading_other": "{count} open reports about {subject}",
+  "moderation.cluster.notOnPage_one":
+    "{count} more report in this pile has not loaded yet.",
+  "moderation.cluster.notOnPage_other":
+    "{count} more reports in this pile have not loaded yet.",
+  "moderation.cluster.overdue_one": "{count} past its window",
+  "moderation.cluster.overdue_other": "{count} past their window",
+  "moderation.cluster.reporters_one": "from 1 member",
+  "moderation.cluster.reporters_other": "from {count} different members",
+  "moderation.cluster.selectAllCta_one": "Select {count}",
+  "moderation.cluster.selectAllCta_other": "Select all {count}",
+  "moderation.cluster.surge": "Surge",
+  "moderation.cluster.surgeHint":
+    "Several people reported this at once. Read it as one event before acting on any single report: a pile-on and a real emergency look identical row by row.",
+
+  // The overdue and surge filters that ride the queue (TS-06).
+  "moderation.filters.overdue": "Overdue",
+  "moderation.filters.surge": "Surges",
+
+  // The reason-keyed library a decision note is prefilled from (TS-16).
+  "moderation.templates.activeToggleLabel": "Active: {label}",
+  "moderation.templates.anyAction": "Any action",
+  "moderation.templates.anyReason": "Any reason",
+  "moderation.templates.delete.body":
+    "The response disappears from the picker. Notes already sent to members are unaffected: what a moderator approved is stored on the decision itself. Deactivate it instead if you may want it back.",
+  "moderation.templates.delete.confirmCta": "Delete response",
+  "moderation.templates.delete.title": 'Delete "{label}"?',
+  "moderation.templates.empty":
+    "There are no saved responses yet. Add one and it appears in the report drawer straight away.",
+  "moderation.templates.eyebrow": "Moderation",
+  "moderation.templates.form.actionField": "Action it suits",
+  "moderation.templates.form.bodyField": "What the member reads",
+  "moderation.templates.form.bodyHint":
+    "You can use {tokens}. They are filled in before the moderator sends the note, and the moderator can still edit the result.",
+  "moderation.templates.form.createCta": "Add response",
+  "moderation.templates.form.createTitle": "New saved response",
+  "moderation.templates.form.editTitle": "Edit saved response",
+  "moderation.templates.form.labelField": "Name",
+  "moderation.templates.form.labelHint":
+    "Only moderators see this. Members never do.",
+  "moderation.templates.form.reasonField": "Reason it is for",
+  "moderation.templates.form.saveError": "Couldn't save that response",
+  "moderation.templates.loadError": "The saved responses could not be loaded.",
+  "moderation.templates.moveDownAriaLabel": "Move {label} down",
+  "moderation.templates.moveUpAriaLabel": "Move {label} up",
+  "moderation.templates.navLabel": "Saved responses",
+  "moderation.templates.newCta": "New response",
+  "moderation.templates.picker.anyCommunity": "the platform",
+  "moderation.templates.picker.empty":
+    "No saved response fits this reason and action yet.",
+  "moderation.templates.picker.hint":
+    "Fills the note below. Read it and edit it before you confirm.",
+  "moderation.templates.picker.loadError":
+    "The saved responses could not be loaded.",
+  "moderation.templates.picker.replaceBody":
+    'You have already written a note. Using "{label}" replaces it.',
+  "moderation.templates.picker.replaceCancelCta": "Keep mine",
+  "moderation.templates.picker.replaceConfirmCta": "Replace",
+  "moderation.templates.picker.replaceTitle": "Replace what you have written?",
+  "moderation.templates.picker.title": "Saved responses",
+  "moderation.templates.picker.undoAriaLabel": "Undo the prefilled note",
+  "moderation.templates.picker.undoCta": "Undo",
+  "moderation.templates.picker.useAriaLabel": "Use the saved response {label}",
+  "moderation.templates.removeError": "Couldn't remove that response",
+  "moderation.templates.reorderError": "Couldn't change the order",
+  "moderation.templates.sub":
+    "The wording moderators can prefill into a decision. Every note is still edited and approved before it is sent.",
+  "moderation.templates.title": "Saved <em>responses</em>",
+  "moderation.templates.toast.created": '"{label}" added',
+  "moderation.templates.toast.removed": '"{label}" removed',
+  "moderation.templates.toast.updated": '"{label}" saved',
+
+  // Lifting a scoped restriction from the member drawer (TS-09).
+  "members.restriction.confirm.body":
+    "{name} gets posting, commenting and messaging back straight away. They are told the restriction is over and read exactly what you write below.",
+  "members.restriction.confirm.confirmCta": "Lift restriction",
+  "members.restriction.confirm.noteLabel": "What {name} will read",
+  "members.restriction.confirm.notePlaceholder":
+    "Say what changed, in the words the member will see.",
+  "members.restriction.confirm.title": "Lift the restriction on {name}?",
+  "members.restriction.description":
+    "This member is restricted: they can still read, but they cannot post, comment or send messages. Lifting it takes effect at once and tells them why.",
+  "members.restriction.descriptionUntil":
+    "This member is restricted until {date}: they can still read, but they cannot post, comment or send messages. Lifting it takes effect at once and tells them why.",
+  "members.restriction.liftCta": "Lift restriction",
+  "members.restriction.liftedToast": "{name} can post again.",
+  "members.restriction.missingNoteToast":
+    "Write what the member will read before lifting.",
+  "members.restriction.sectionTitle": "Restriction",
+
+  // The returning-account signal on invite review (TS-05).
+  "invites.banEvasion.accountErased": "That account has since been erased.",
+  "invites.banEvasion.context.community": "Removed from {community} on {date}.",
+  "invites.banEvasion.context.communityUnnamed":
+    "Removed from a community on {date}.",
+  "invites.banEvasion.context.platform": "Removed from QueerPulse on {date}.",
+  "invites.banEvasion.note":
+    "This is a signal to check. Read the removed account first, then judge this application on its own merits.",
+  "invites.banEvasion.reasons.intakeContact":
+    "Applied with the address a removed account applied with",
+  "invites.banEvasion.reasons.inviterOfRemoved":
+    "Invited by the member who invited a removed account",
+  "invites.banEvasion.reasons.inviterRemoved":
+    "Invited by a member who was themselves removed",
+  "invites.banEvasion.reasons.referenceOfRemoved":
+    "Names a reference who vouched for a removed account",
+  "invites.banEvasion.reasons.referenceRemoved":
+    "Names a reference who was themselves removed",
+  "invites.banEvasion.reasons.signInIdentifier":
+    "Signs in with the identifier a removed account used",
+  "invites.banEvasion.reasons.statedDetails":
+    "States the same name a removed account stated",
+  "invites.banEvasion.tier.high": "High confidence",
+  "invites.banEvasion.tier.low": "Low confidence",
+  "invites.banEvasion.tier.medium": "Medium confidence",
+  "invites.banEvasion.title": "Possible returning account",
+  "invites.banEvasion.viewAccount": "View the removed account",
+
+  // ── Group-listing review queue (/admin/housing-group-listings) — LOC-19 ────
+  // The PRE-publication decision on a room posted into a vetted housing group.
+  // Distinct from housingGroups.listings.*, which is the post-publication hide.
+  "groupListingQueue.title": "Rooms <em>waiting</em>",
+  "groupListingQueue.eyebrow": "Vetted housing",
+  "groupListingQueue.header.title": "Rooms waiting on <em>you</em>",
+  "groupListingQueue.header.sub":
+    "Every room posted into a housing group lands here before anyone can see it. Publish it, ask the poster something, or say plainly that it will not go up.",
+  "groupListingQueue.keyHint":
+    "J and K move between rooms. P publishes, Q sends a question, D declines, R puts a declined room back in the queue.",
+
+  "groupListingQueue.tab.review": "Waiting",
+  "groupListingQueue.tab.question": "Asked",
+  "groupListingQueue.tab.live": "Published",
+  "groupListingQueue.tab.declined": "Declined",
+  "groupListingQueue.tab.all": "Everything",
+  "groupListingQueue.groupFilter.label": "Group",
+  "groupListingQueue.groupFilter.placeholder": "Filter by group slug",
+
+  "groupListingQueue.count_one": "{count} room",
+  "groupListingQueue.count_other": "{count} rooms",
+  "groupListingQueue.loadMore": "Load more",
+  "groupListingQueue.loadingMore": "Loading…",
+
+  "groupListingQueue.empty.title": "Nothing waiting",
+  "groupListingQueue.empty.body":
+    "Every room in this view has an answer. Check another tab to see what has been decided.",
+  "groupListingQueue.error.title": "The queue didn't load",
+  "groupListingQueue.error.body":
+    "Something went wrong on the way here. Try again in a moment.",
+  "groupListingQueue.error.retry": "Try again",
+  "groupListingQueue.forbidden.title": "This queue is for housing moderators",
+  "groupListingQueue.forbidden.body":
+    "You need the moderator or admin role, or the housing moderator grant, to review rooms.",
+
+  "groupListingQueue.status.review": "Waiting",
+  "groupListingQueue.status.question": "Question sent",
+  "groupListingQueue.status.live": "Published",
+  "groupListingQueue.status.declined": "Declined",
+
+  "groupListingQueue.row.hidden": "Hidden",
+  "groupListingQueue.row.noGroup": "No group",
+  "groupListingQueue.row.noPoster":
+    "The account that posted this room is gone, so nobody will be told what you decide.",
+  "groupListingQueue.row.perMonth": "{amount} a month",
+  "groupListingQueue.row.submitted": "Posted {age}",
+  "groupListingQueue.row.waitingDays_one": "Waiting {count} day",
+  "groupListingQueue.row.waitingDays_other": "Waiting {count} days",
+
+  "groupListingQueue.prior.heading": "Already decided",
+  "groupListingQueue.prior.meta": "{date} by {moderator}",
+  "groupListingQueue.prior.unknownStaff": "a moderator",
+
+  "groupListingQueue.risk.band.high": "High",
+  "groupListingQueue.risk.band.medium": "Medium",
+  "groupListingQueue.risk.band.low": "Low",
+  "groupListingQueue.risk.scoreTitle":
+    "Red-flag score. It sorts this queue and decides nothing.",
+  "groupListingQueue.risk.listLabel": "Signals behind the score",
+  "groupListingQueue.risk.noneRaised": "Nothing flagged.",
+  "groupListingQueue.risk.reason.rent_far_below_market":
+    "Rent far below market",
+  "groupListingQueue.risk.reason.rent_below_market": "Rent below market",
+  "groupListingQueue.risk.reason.contact_info_in_text":
+    "Contact details in the text",
+  "groupListingQueue.risk.reason.off_platform_payment_language":
+    "Asks for payment off the platform",
+  "groupListingQueue.risk.reason.discriminatory_language":
+    "Possible discriminatory language",
+  "groupListingQueue.risk.reason.lister_unverified": "Poster is unverified",
+  "groupListingQueue.risk.reason.lister_phone_only":
+    "Poster verified by phone only",
+  "groupListingQueue.risk.reason.incomplete_listing": "Thin on detail",
+  "groupListingQueue.risk.reason.no_photos": "No photos",
+  "groupListingQueue.risk.reason.missing_accessibility_info":
+    "No accessibility information",
+
+  "groupListingQueue.decide.publish": "Publish",
+  "groupListingQueue.decide.question": "Ask the poster",
+  "groupListingQueue.decide.decline": "Decline",
+  "groupListingQueue.decide.reopen": "Back to the queue",
+  "groupListingQueue.decide.groupLabel": "Decisions for {title}",
+  "groupListingQueue.decide.liveNote":
+    "This room is published. To take it down for breaking the group norms, use Hide on the housing groups page.",
+  "groupListingQueue.decide.reasonEyebrow": "The poster reads this",
+  "groupListingQueue.decide.reasonTitle.live": "Anything to send with this?",
+  "groupListingQueue.decide.reasonTitle.question": "What do you need to ask?",
+  "groupListingQueue.decide.reasonTitle.declined":
+    "Why is this room not going up?",
+  "groupListingQueue.decide.reasonTitle.review":
+    "Why is this going back to the queue?",
+  "groupListingQueue.decide.reasonLabel": "Your message",
+  "groupListingQueue.decide.reasonPlaceholder.live":
+    "Anything you want the poster to know.",
+  "groupListingQueue.decide.reasonPlaceholder.question":
+    "Could you say whether bills are included?",
+  "groupListingQueue.decide.reasonPlaceholder.declined":
+    "Say what stopped this going up, and what would change it.",
+  "groupListingQueue.decide.reasonPlaceholder.review":
+    "Say why this is going back to the queue.",
+  "groupListingQueue.decide.reasonHint":
+    "This reaches the poster word for word, in the app and on their phone. Write it to them.",
+
+  "groupListingQueue.toast.live": "{title} is live in the group.",
+  "groupListingQueue.toast.question":
+    "Your question is on its way to the poster.",
+  "groupListingQueue.toast.declined":
+    "The poster has been told, with your reason.",
+  "groupListingQueue.toast.review": "Back in the queue.",
+  "groupListingQueue.toast.error": "That decision didn't save. Try again.",
+
+  // ── Landlord directory console (/admin/landlords) — LOC-19 ─────────────────
+  // Two member-facing promises on one page: a suggested landlord waiting to be
+  // published, and a member waiting to be introduced to one.
+  "landlords.title": "Landlord <em>directory</em>",
+  "landlords.eyebrow": "Housing",
+  "landlords.header.title": "Landlords worth <em>knowing</em>",
+  "landlords.header.sub":
+    "Members suggest landlords they have rented from, and ask to be introduced. Both are waiting on an answer from you.",
+
+  "landlords.pane.directory": "Directory",
+  "landlords.pane.introductions": "Introductions",
+  "landlords.filter.review": "Waiting",
+  "landlords.filter.live": "Published",
+  "landlords.filter.all": "Everything",
+  "landlords.introFilter.pending": "Waiting",
+  "landlords.introFilter.accepted": "Accepted",
+  "landlords.introFilter.declined": "Declined",
+  "landlords.introFilter.all": "Everything",
+  "landlords.search.label": "Search",
+  "landlords.search.placeholder": "Search by name",
+
+  "landlords.count_one": "{count} entry",
+  "landlords.count_other": "{count} entries",
+  "landlords.loadMore": "Load more",
+  "landlords.loadingMore": "Loading…",
+
+  "landlords.empty.title": "Nothing waiting",
+  "landlords.empty.body":
+    "No entries in this view. Try another tab to see what has been decided.",
+  "landlords.error.title": "The directory didn't load",
+  "landlords.error.body":
+    "Something went wrong on the way here. Try again in a moment.",
+  "landlords.error.retry": "Try again",
+  "landlords.forbidden.title": "This console is for moderators",
+  "landlords.forbidden.body":
+    "You need the moderator or admin role to work these queues.",
+
+  "landlords.status.review": "Waiting",
+  "landlords.status.live": "Published",
+
+  "landlords.row.noHood": "Neighbourhood not given",
+  "landlords.row.recommendations_one": "{count} recommendation",
+  "landlords.row.recommendations_other": "{count} recommendations",
+  "landlords.row.suggestedBy": "Suggested by {name}",
+  "landlords.row.staffAdded": "Added by staff",
+  "landlords.row.added": "Added {age}",
+  "landlords.row.waitingDays_one": "Waiting {count} day",
+  "landlords.row.waitingDays_other": "Waiting {count} days",
+
+  "landlords.action.publish": "Publish",
+  "landlords.action.holdBack": "Hold back",
+  "landlords.action.remove": "Remove",
+
+  "landlords.prior.heading": "Already decided",
+  "landlords.prior.meta": "{date} by {moderator}",
+  "landlords.prior.unknownStaff": "a moderator",
+
+  "landlords.toast.published": "{name} is in the directory.",
+  "landlords.toast.heldBack":
+    "{name} is back in review, and the member who suggested it has been told.",
+  "landlords.toast.removed": "{name} has been removed, with your reason.",
+  "landlords.toast.error": "That decision didn't save. Try again.",
+
+  "landlords.reason.label": "Your message",
+  "landlords.reason.labelOptional": "Your message (optional)",
+  "landlords.reason.hint":
+    "This reaches the member word for word, in the app and on their phone. Write it to them.",
+  "landlords.reason.eyebrow.holdBack": "The member reads this",
+  "landlords.reason.eyebrow.remove": "The member reads this",
+  "landlords.reason.eyebrow.introAccept": "The member reads this",
+  "landlords.reason.eyebrow.introDecline": "The member reads this",
+  "landlords.reason.title.holdBack": "Why is this going back to review?",
+  "landlords.reason.title.remove": "Why is this entry coming out?",
+  "landlords.reason.title.introAccept": "What happens next?",
+  "landlords.reason.title.introDecline":
+    "Why can this introduction not happen?",
+  "landlords.reason.confirm.holdBack": "Hold back",
+  "landlords.reason.confirm.remove": "Remove",
+  "landlords.reason.confirm.introAccept": "Accept",
+  "landlords.reason.confirm.introDecline": "Decline",
+  "landlords.reason.placeholder.holdBack":
+    "Say what needs checking before this goes in the directory.",
+  "landlords.reason.placeholder.remove": "Say why this is coming out.",
+  "landlords.reason.placeholder.introAccept":
+    "We have passed your note on. Expect to hear back this week.",
+  "landlords.reason.placeholder.introDecline":
+    "Say what got in the way, and what they could try instead.",
+
+  "landlords.intro.status.pending": "Waiting",
+  "landlords.intro.status.accepted": "Accepted",
+  "landlords.intro.status.declined": "Declined",
+  "landlords.intro.askedBy": "{name} asked",
+  "landlords.intro.askedByName": "Asked by {name}",
+  "landlords.intro.asked": "Asked {age}",
+  "landlords.intro.waitingDays_one": "Waiting {count} day",
+  "landlords.intro.waitingDays_other": "Waiting {count} days",
+  "landlords.intro.acceptCta": "Accept",
+  "landlords.intro.declineCta": "Decline",
+  "landlords.intro.answered": "Answered",
+  "landlords.intro.count_one": "{count} request",
+  "landlords.intro.count_other": "{count} requests",
+  "landlords.intro.empty.title": "Nobody waiting",
+  "landlords.intro.empty.body":
+    "Every introduction in this view has an answer.",
+  "landlords.intro.error.title": "The requests didn't load",
+  "landlords.intro.error.body":
+    "Something went wrong on the way here. Try again in a moment.",
+  "landlords.intro.reasonSubject": "{member} asked to be introduced to {name}",
+  "landlords.intro.toast.accepted":
+    "The member has been told you'll make the introduction to {name}.",
+  "landlords.intro.toast.declined":
+    "The member has been told, with your reason.",
+  "landlords.intro.toast.error": "That answer didn't save. Try again.",
+
+  // ── ADDITIONS to the existing housingGroups.listings.* group ───────────────
+  "housingGroups.listings.reviewQueueNote":
+    "Hiding takes a published listing down. Whether a room goes up at all is decided in the review queue.",
+  "housingGroups.listings.reviewQueueCta": "Open the review queue",
+
+  // ── ADDITIONS to the existing adminReadingGroupProposals.* group ───────────
+  "adminReadingGroupProposals.statusTab.pending": "Waiting",
+  "adminReadingGroupProposals.statusTab.approved": "Approved",
+  "adminReadingGroupProposals.statusTab.declined": "Declined",
+  "adminReadingGroupProposals.statusTab.archived": "Archived",
+  "adminReadingGroupProposals.statusTab.all": "Everything",
+  "adminReadingGroupProposals.filter.formatLabel": "Format",
+  "adminReadingGroupProposals.row.decided": "decided {date}",
+  "adminReadingGroupProposals.row.decisionNote": "What they were told: {note}",
+  "adminReadingGroupProposals.row.openCommunity":
+    "Open the community this created",
+  "adminReadingGroupProposals.decline.eyebrow": "The proposer reads this",
+  "adminReadingGroupProposals.decline.title":
+    "Why is this group not going ahead?",
+  "adminReadingGroupProposals.decline.label": "Your message",
+  "adminReadingGroupProposals.decline.placeholder":
+    "Say what got in the way, and whether a different book or format would work.",
+  "adminReadingGroupProposals.decline.hint":
+    "This reaches the member word for word, in the app and on their phone. Write it to them.",
+
+  // ── Appeals and ban ratification (section 1 build) ──────────────────────
+  // Appeal deadlines and the awaiting/decided split (TS-11).
+  "moderation.appeals.awaitingTab": "Waiting ({count})",
+  "moderation.appeals.decidedTab": "Decided ({count})",
+  "moderation.appeals.drawerDue": "A decision is due by {date}.",
+  "moderation.appeals.drawerOverdue":
+    "This appeal was due on {date}. The member has been waiting longer than the Code of Conduct promises.",
+  "moderation.appeals.dueFlag": "Due {date}",
+  "moderation.appeals.noDecided": "No appeals have been decided yet.",
+  "moderation.appeals.noOverdue":
+    "Every appeal is inside its window. That is the whole job done on time.",
+  "moderation.appeals.overdueFilter": "Past their window ({count})",
+  "moderation.appeals.overdueFlag": "Past its window",
+  "moderation.appeals.tabsAriaLabel": "Filter appeals",
+  "moderation.appeals.windowNote":
+    "The Code of Conduct promises every appeal is decided within 7 days, by someone other than the moderator who made the original call.",
+
+  // The second signature a permanent ban waits on (TS-12).
+  "moderation.ratification.askedBy": "{name} asked for this on {date}",
+  "moderation.ratification.badge": "Permanent ban",
+  "moderation.ratification.confirmCta": "Confirm the ban",
+  "moderation.ratification.confirmModal.askedByLabel": "What {name} wrote",
+  "moderation.ratification.confirmModal.body":
+    "This ends {name}'s account. Every session is signed out and they cannot come back. The way back is an appeal, which a different moderator decides.",
+  "moderation.ratification.confirmModal.cta": "Confirm the ban",
+  "moderation.ratification.confirmModal.lapseNote":
+    "If nobody confirms it, this lapses on {date} and their account comes back.",
+  "moderation.ratification.confirmModal.noteLabel": "Your own note (optional)",
+  "moderation.ratification.confirmModal.notePlaceholder":
+    "Anything you want on the record about why you agreed.",
+  "moderation.ratification.confirmModal.title": "Remove {name}'s account?",
+  "moderation.ratification.confirmedToast": "{name} has been removed.",
+  "moderation.ratification.declineCta": "Refuse it",
+  "moderation.ratification.declineModal.body":
+    "{name} comes straight back. The moderator who asked can make the case again with more to go on.",
+  "moderation.ratification.declineModal.cta": "Refuse it",
+  "moderation.ratification.declineModal.notePlaceholder":
+    "Say why, so the moderator who asked knows what would change your mind.",
+  "moderation.ratification.declineModal.title": "Refuse the ban on {name}?",
+  "moderation.ratification.declinedToast":
+    "{name} is back. The ban was refused.",
+  "moderation.ratification.empty": "Nothing is waiting on a second moderator.",
+  "moderation.ratification.errorToast": "That did not go through. Try again.",
+  "moderation.ratification.interim":
+    "They are suspended in the meantime. If nobody confirms, the suspension ends by itself and their account comes back.",
+  "moderation.ratification.intro":
+    "A permanent ban takes <em>two</em> moderators. One asks, a second confirms. Nothing here has removed anyone yet, and anything nobody confirms simply lapses.",
+  "moderation.ratification.lapsed": "Lapsed",
+  "moderation.ratification.lapsesAt": "Lapses {date}",
+  "moderation.ratification.noReason":
+    "No reason was written. Ask before you confirm.",
+  "moderation.ratification.ownRequest":
+    "You asked for this one, so it needs someone else's eyes.",
+  "moderation.ratification.title": "Remove {name} from QueerPulse",
+
+  // Remaining section 1 moderation keys.
+  "appeal.live.decidedLabel": "Decided on",
+  "appeal.live.dueLabel": "A decision is due by",
+  "moderation.tabs.ratification": "Waiting on a second look",
 };

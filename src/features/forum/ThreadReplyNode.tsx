@@ -5,6 +5,7 @@ import { type Reply } from "./forum.data";
 import { countDescendants, type ReplyNode } from "./buildReplyTree";
 import { ThreadReplyItem } from "./ThreadReplyItem";
 import { ThreadComposer } from "./ThreadComposer";
+import type { StagedPostImage } from "../communities/usePostImageAttach";
 import styles from "./ThreadPage.module.css";
 
 /** Past this depth the visual indent stops nudging further right — deep
@@ -37,8 +38,13 @@ interface ThreadReplyNodeProps {
   activeReplyTargetId: string | null;
   onStartReply: (reply: Reply) => void;
   onCancelReply: () => void;
-  onPostReply: (body: string) => void;
+  onPostReply: (body: string, image?: StagedPostImage) => void;
   onReport: (reply: Reply) => void;
+  /** Mark this reply as the thread's answer, or clear the mark. Omitted for a
+   *  viewer who may not. */
+  onAcceptAnswer?: (reply: Reply) => void;
+  /** Start a reply that quotes this one. */
+  onQuote: (reply: Reply) => void;
   inlineDraft: string;
   setInlineDraft: (value: string) => void;
 }
@@ -73,6 +79,8 @@ export function ThreadReplyNode({
   onCancelReply,
   onPostReply,
   onReport,
+  onAcceptAnswer,
+  onQuote,
   inlineDraft,
   setInlineDraft,
 }: ThreadReplyNodeProps) {
@@ -132,6 +140,12 @@ export function ThreadReplyNode({
             : onStartReply
         }
         onReport={onReport}
+        onAcceptAnswer={onAcceptAnswer}
+        // Quoting is a reply, so it is withheld exactly where replying is:
+        // a closed thread, or a reply whose backend id has not landed yet.
+        onQuote={
+          isLocked || (!demoMode && !node.reply.postId) ? undefined : onQuote
+        }
         collapse={
           hasChildren
             ? {
@@ -205,6 +219,8 @@ export function ThreadReplyNode({
             onCancelReply={onCancelReply}
             onPostReply={onPostReply}
             onReport={onReport}
+            onAcceptAnswer={onAcceptAnswer}
+            onQuote={onQuote}
             inlineDraft={inlineDraft}
             setInlineDraft={setInlineDraft}
           />

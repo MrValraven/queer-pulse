@@ -13,6 +13,7 @@ import {
   WHO_PARAGRAPH_KEYS,
   WHY_PARAGRAPH_KEYS,
 } from "./about.data";
+import { AboutStandSection } from "./AboutStandSection";
 import { MarketingSection } from "./MarketingSection";
 import m from "./marketing.module.css";
 import s from "./AboutPage.module.css";
@@ -109,18 +110,23 @@ export function AboutPage() {
         }
       >
         <div className={s.valuesGrid}>
-          {VALUES.map((value, index) => (
+          {VALUES.map(({ icon: Icon, titleKey, bodyKey }, index) => (
             <Reveal
-              key={value.titleKey}
+              key={titleKey}
               className={s.valCard}
               delay={Math.min(index, 8) * 60}
             >
-              <div className={s.valTitle}>{t(value.titleKey)}</div>
-              <div className={s.valText}>{t(value.bodyKey)}</div>
+              <span className={s.valChip} aria-hidden>
+                <Icon />
+              </span>
+              <div className={s.valTitle}>{t(titleKey)}</div>
+              <div className={s.valText}>{t(bodyKey)}</div>
             </Reveal>
           ))}
         </div>
       </MarketingSection>
+
+      <AboutStandSection />
 
       <MarketingSection flush eyebrow={t("marketing:about.who.eyebrow")}>
         <Reveal as="h2" className={m.sectionTitle} delay={60}>

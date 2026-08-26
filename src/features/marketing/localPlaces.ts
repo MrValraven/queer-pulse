@@ -1,15 +1,28 @@
 import { routes } from "../../app/routeMap";
-import type { TFunction } from "../../shared/i18n/types";
-import type { DirectoryPlace } from "./directoryPlaces";
+import { normalizeCategory, VENUE_TYPE_TO_CATEGORY } from "./localCategories";
+import {
+  isPlaceOperating,
+  openStatus,
+  zonedNow,
+  type DirectoryPlace,
+} from "./directoryPlaces";
+import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
 import { FREGUESIAS } from "../../shared/components/map/freguesias.data";
 
 export type LocalKind = "business" | "venue";
 
-/** Safe-space verification state, mirrored from the directory card DTO.
- * "none" = never reviewed. */
-export type SafeSpaceStatus = "none" | "verified" | "removed";
+/**
+ * The badge as it CURRENTLY speaks for a place, mirrored from the directory
+ * card DTO. `"none"` = never reviewed.
+ *
+ * `"suspended"` is a granted badge the platform has put on hold while a review
+ * runs: the grant is untouched, so the stored column still reads verified, and
+ * only this derived value tells the truth. It matches neither `"verified"` nor
+ * `"removed"`, so every existing comparison against `"verified"` fails safe.
+ */
+export type SafeSpaceStatus = "none" | "verified" | "suspended" | "removed";
 
 export interface Coords {
   latitude: number;
@@ -34,7 +47,7 @@ export interface LocalPlace {
   /** Venue-only extras; undefined for businesses without a venue twin. */
   vibe?: string[];
   beenHere?: number;
-  /** Safe-space verification state, from the live directory card DTO.
+  /** The badge as it currently speaks, from the live directory card DTO.
    * Undefined for demo-only venues — never synthesize this for a venue. */
   safeSpaceStatus?: SafeSpaceStatus;
   /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise/absent. */
@@ -94,65 +107,6 @@ function warnIfUnknownFreguesia(freguesia: string, source: string): string {
     );
   }
   return freguesia;
-}
-
-/** Venue `type` → unified category id (folds bar/club/sauna into "nightlife"). */
-export const VENUE_TYPE_TO_CATEGORY: Record<string, string> = {
-  café: "food",
-  clinic: "health",
-  gym: "fitness",
-  barbershop: "grooming",
-  bookshop: "culture",
-  "community space": "space",
-  bar: "nightlife",
-  club: "nightlife",
-  sauna: "nightlife",
-};
-
-/** Unified category ids, in chip order. "nightlife" is new; the rest mirror the directory. */
-export const LOCAL_CATEGORIES = [
-  "food",
-  "design",
-  "health",
-  "space",
-  "culture",
-  "tech",
-  "grooming",
-  "fitness",
-  "nightlife",
-] as const;
-
-/**
- * Legacy wizard display strings → canonical slug. Early listings stored the
- * visible label ("Food & drink") as the category, which matches no map/filter
- * slug and paints a black pin. This heals those rows at read time so no DB
- * migration is needed; new places are written as slugs directly.
- */
-const CATEGORY_LABEL_TO_SLUG: Record<string, string> = {
-  "food & drink": "food",
-  "design & craft": "design",
-  "health & care": "health",
-  spaces: "space",
-  culture: "culture",
-  tech: "tech",
-  "barbershop & salon": "grooming",
-  "gym & fitness": "fitness",
-  nightlife: "nightlife",
-};
-
-const CANONICAL_CATEGORIES: ReadonlySet<string> = new Set(LOCAL_CATEGORIES);
-
-/**
- * Canonicalize any category token to a unified slug. Accepts already-canonical
- * slugs (pass through), the legacy wizard display strings, and folded venue
- * types. Unknown values return unchanged so the `var(--ink)` pin fallback still
- * guards genuinely unmapped data.
- */
-export function normalizeCategory(value: string): string {
-  if (!value) return value;
-  if (CANONICAL_CATEGORIES.has(value)) return value;
-  const key = value.trim().toLowerCase();
-  return CATEGORY_LABEL_TO_SLUG[key] ?? VENUE_TYPE_TO_CATEGORY[key] ?? value;
 }
 
 /** Normalize a name for cross-dataset matching: fold diacritics + trim + lowercase. */
@@ -256,36 +210,63 @@ export function mergeLocalPlaces(
   return [...mergedBusinesses, ...venueByName.values()];
 }
 
-/** Unified category id → i18n label key. "nightlife" is the only new key. */
-export const LOCAL_CATEGORY_LABEL_KEYS: Record<string, string> = {
-  food: "marketing:directory.cat.food",
-  design: "marketing:directory.cat.design",
-  health: "marketing:directory.cat.health",
-  space: "marketing:directory.cat.space",
-  culture: "marketing:directory.cat.culture",
-  tech: "marketing:directory.cat.tech",
-  grooming: "marketing:directory.cat.grooming",
-  fitness: "marketing:directory.cat.fitness",
-  nightlife: "marketing:local.cat.nightlife",
-};
-
-/**
- * The one way to render a category label. Canonicalizes the token first, so it
- * resolves both unified slugs and any legacy display-string value; falls back
- * to the raw value for genuinely unknown tokens.
- */
-export function categoryLabel(t: TFunction, category: string): string {
-  const slug = normalizeCategory(category);
-  const key = LOCAL_CATEGORY_LABEL_KEYS[slug];
-  return key ? t(key) : category;
-}
-
 export interface LocalFilters {
   category: string;
   query: string;
   vibes: string[];
   /** `"verified"` restricts to safe-space-verified places; `null`/absent = no restriction. */
   safe?: "verified" | null;
+  /** Keep only places open at this moment on their OWN clock. */
+  openNow?: boolean;
+  /** Accessibility needs that must all be met. Empty/absent = no restriction. */
+  access?: AccessibilitySlug[];
+}
+
+/**
+ * Whether a place is trading RIGHT NOW, on its own wall clock.
+ *
+ * Three states collapse to `false` here, and each of them is a deliberate no:
+ *
+ * - a listing that has never published hours answers `"unknown"`, which is not
+ *   the same as open. Someone filtering for "open now" is asking to be able to
+ *   walk in, and a guess is worse than an omission.
+ * - a business that is temporarily closed, permanently closed or has moved is
+ *   not open however healthy its weekday grid looks.
+ * - a demo-only venue carries no hours field at all.
+ *
+ * Computed client-side on purpose: the grid is CDN-cached, so a server-baked
+ * open state would go stale in the dangerous direction, saying open when shut.
+ */
+export function isPlaceOpenNow(place: LocalPlace): boolean {
+  if (place.kind !== "business") return false;
+  const business = place.source as DirectoryPlace;
+  if (!isPlaceOperating(business)) return false;
+  const status = openStatus(
+    business.hours,
+    zonedNow(business.timezone),
+    business.hoursExceptions,
+  );
+  return status.state === "open";
+}
+
+/**
+ * Whether a place meets EVERY listed accessibility need.
+ *
+ * The match is on a stored answer of exactly `"yes"`, mirroring the backend's
+ * `access=` filter. `unknown` never counts: "nobody has told us" is a real,
+ * different answer, and surfacing it as a met need would send a wheelchair user
+ * to a door that may have steps. A listing that has answered nothing at all
+ * carries no accessibility block, and so meets nothing.
+ */
+export function placeMeetsAccess(
+  place: LocalPlace,
+  access: AccessibilitySlug[],
+): boolean {
+  if (access.length === 0) return true;
+  if (place.kind !== "business") return false;
+  const answers = (place.source as DirectoryPlace).accessibility?.answers;
+  if (!answers) return false;
+  return access.every((slug) => answers[slug] === "yes");
 }
 
 /**
@@ -296,6 +277,18 @@ export interface LocalFilters {
  * of silently deleting every business the moment a vibe is picked. `safe` is a
  * hard filter like category: demo-only venues never carry `safeSpaceStatus`
  * (undefined), so they're naturally excluded once it's active.
+ *
+ * `safe` matches `"verified"` EXACTLY, which is the rule the server applies to
+ * `?safe=verified`: it anti-joins the open badge suspensions inside the query,
+ * so a paused badge never reaches the page or its `total`. A place whose badge
+ * is on hold reads `"suspended"` and drops out here too, so the two agree
+ * rather than one of them quietly re-admitting what the other excluded.
+ * Nothing is filtered twice: in live mode the server has already dropped them
+ * and this predicate simply never re-adds one.
+ *
+ * `openNow` and `access` are hard filters too, and both refuse to guess: a
+ * place with no published hours is never "open now", and a need nobody has
+ * answered is never "met". See `isPlaceOpenNow` / `placeMeetsAccess`.
  */
 export function filterLocalPlaces(
   places: LocalPlace[],
@@ -318,7 +311,15 @@ export function filterLocalPlaces(
         return false;
       }
     }
+    // Exactly "verified". A suspended badge is not a verified one, and this
+    // must never soften into a truthiness check.
     if (filters.safe === "verified" && place.safeSpaceStatus !== "verified") {
+      return false;
+    }
+    if (filters.openNow && !isPlaceOpenNow(place)) {
+      return false;
+    }
+    if (!placeMeetsAccess(place, filters.access ?? [])) {
       return false;
     }
     return true;

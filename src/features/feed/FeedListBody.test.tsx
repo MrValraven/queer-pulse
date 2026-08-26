@@ -1,4 +1,5 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { FeedListBody } from "./FeedPage";
@@ -20,8 +21,19 @@ const COMMUNITY_POST_ITEM: FeedItem = {
   createdAt: "2026-08-04T12:00:00.000Z",
   title: "Trans Wellness Circle",
   summary: "COMMUNITY_POST_UNIQUE_BODY_TEXT",
-  link: "/communities/trans-wellness/posts/post-1",
+  link: "/community/trans-wellness/post/post-1",
   actor: { handle: "maya", displayName: "Maya Okonkwo", avatarUrl: null },
+  // SOC-04/SOC-18 signals the backend now carries on every ranked item.
+  reason: "membership",
+  reasonSubject: "Trans Wellness Circle",
+  reactionCount: 3,
+  replyCount: 2,
+  myReaction: null,
+  source: {
+    kind: "community",
+    id: "community-1",
+    name: "Trans Wellness Circle",
+  },
 };
 
 const FORUM_THREAD_ITEM: FeedItem = {
@@ -30,8 +42,16 @@ const FORUM_THREAD_ITEM: FeedItem = {
   createdAt: "2026-08-04T11:00:00.000Z",
   title: "FORUM_THREAD_UNIQUE_TITLE",
   summary: "Nightlife · 12 replies",
-  link: "/forum/threads/best-bars-porto",
+  link: "/thread/best-bars-porto",
   actor: { handle: "noor", displayName: "Noor Haddad", avatarUrl: null },
+  reason: "topic",
+  reasonSubject: "nightlife",
+  replyCount: 12,
+  source: {
+    kind: "forum_thread",
+    id: "thread-1",
+    name: "FORUM_THREAD_UNIQUE_TITLE",
+  },
 };
 
 const GATHERING_ITEM: FeedItem = {
@@ -42,6 +62,8 @@ const GATHERING_ITEM: FeedItem = {
   summary: "Casual meetup, all levels welcome.",
   link: "/gatherings/board-games-night",
   actor: { handle: "sam", displayName: "Sam Duarte", avatarUrl: null },
+  reason: "recent",
+  reasonSubject: null,
 };
 
 const NEW_MEMBER_ITEM: FeedItem = {
@@ -124,5 +146,68 @@ describe("FeedListBody (live mode)", () => {
 
     expect(hrefs).toContain(COMMUNITY_POST_ITEM.link);
     expect(hrefs).not.toContain("/communities");
+  });
+
+  it("says why a ranked item is in the feed, naming the fact behind it (SOC-04)", async () => {
+    renderLiveBody(MIXED_TYPE_FEED_ITEMS);
+
+    // Membership names the community; a followed topic names the topic; an
+    // item with no explicit tie says exactly that and nothing more.
+    await screen.findByText("You're in Trans Wellness Circle");
+    await screen.findByText("You follow nightlife");
+    await screen.findByText("New across QueerPulse");
+  });
+
+  it("renders the community_post card's inline reaction and reply controls with the item's counts (SOC-04)", async () => {
+    renderLiveBody([COMMUNITY_POST_ITEM]);
+
+    const reactButton = await screen.findByRole("button", {
+      name: "Like post",
+    });
+    expect(reactButton).toHaveAttribute("aria-pressed", "false");
+    expect(reactButton).toHaveTextContent("Count me in · 3");
+
+    const replyButton = await screen.findByRole("button", {
+      name: "Reply to post",
+    });
+    expect(replyButton).toHaveTextContent("Reply · 2");
+  });
+
+  it("shows an already-reacted post as pressed", async () => {
+    renderLiveBody([{ ...COMMUNITY_POST_ITEM, myReaction: "like" }]);
+
+    const reactButton = await screen.findByRole("button", {
+      name: "Unlike post",
+    });
+    expect(reactButton).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("opens an inline reply composer instead of navigating away (SOC-04)", async () => {
+    const user = userEvent.setup();
+    renderLiveBody([COMMUNITY_POST_ITEM]);
+
+    await user.click(
+      await screen.findByRole("button", { name: "Reply to post" }),
+    );
+
+    expect(await screen.findByLabelText("Write a reply")).toBeInTheDocument();
+  });
+
+  it("offers 'show less of this' for the card's own source, never for the person (SOC-18)", async () => {
+    const user = userEvent.setup();
+    renderLiveBody([COMMUNITY_POST_ITEM]);
+
+    await user.click(
+      await screen.findByRole("button", { name: "Post options" }),
+    );
+    const menu = await screen.findByRole("menu");
+
+    // The community is the source; muting it is a feed preference, so the
+    // copy must never read as leaving.
+    within(menu).getByRole("menuitem", {
+      name: "Show less of Trans Wellness Circle",
+    });
+    // The person-scoped mute is a separate, existing affordance.
+    within(menu).getByRole("menuitem", { name: "Mute Maya Okonkwo" });
   });
 });

@@ -59,7 +59,14 @@ export function useNotifications(unreadOnly = false): NotificationsResult {
       // belt-and-braces guard against a future regression re-introducing one.
       const items = res.items
         .filter((dto) => dto.type !== "new_message")
-        .map((dto) => notificationDtoToView(dto, t, fmt));
+        // `otherActorCount` is carried across here rather than inside
+        // `notificationDtoToView`, which owns the text/actor/icon mapping and
+        // is deliberately left alone: a bundled row differs from an ordinary
+        // one only by this count, and the row component is what renders it.
+        .map((dto) => ({
+          ...notificationDtoToView(dto, t, fmt),
+          otherActorCount: dto.otherActorCount ?? 0,
+        }));
       return { items, total: res.total, page: res.page };
     },
     getNextPageParam: (last, all) => {

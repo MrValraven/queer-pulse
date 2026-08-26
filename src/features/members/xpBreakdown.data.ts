@@ -8,7 +8,6 @@ import {
   FiCalendar,
   FiEdit3,
   FiThumbsUp,
-  FiBookOpen,
   FiClock,
   FiShield,
   FiCheckSquare,
@@ -71,11 +70,6 @@ export const XP_SOURCE_META: Record<string, XpSourceMeta> = {
     labelKey: "members:badges.xpBreakdown.sources.endorsements",
     descKey: "members:badges.xpBreakdown.sources.endorsementsDesc",
     icon: FiThumbsUp,
-  },
-  workshops: {
-    labelKey: "members:badges.xpBreakdown.sources.workshops",
-    descKey: "members:badges.xpBreakdown.sources.workshopsDesc",
-    icon: FiBookOpen,
   },
   tenure: {
     labelKey: "members:badges.xpBreakdown.sources.tenure",

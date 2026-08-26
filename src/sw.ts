@@ -206,6 +206,15 @@ self.addEventListener("push", (event) => {
             lang,
           )
         : formatPushCopy(payload, lang);
+      // DEFENCE IN DEPTH, no longer the primary mechanism (ID-13). The server
+      // now reads `member_preferences.hide_push_previews` per recipient and
+      // composes a generic payload for anyone hiding previews, so on the happy
+      // path there is nothing left here to redact. This substitution stays
+      // because it costs nothing and covers what the server cannot: a payload
+      // composed by an older backend, or a type that reaches `showNotification`
+      // without having gone through the split. It has never worked on iOS,
+      // which is why the server had to take over.
+      //
       // Substitute AFTER coalescing so the burst logic still runs (the tag and
       // count are not identifying), but before the options are built so the
       // sender's name in `title` and the message text in `body` never render.
@@ -226,7 +235,15 @@ self.addEventListener("push", (event) => {
         body: shownBody,
         tag: payload.tag,
         data: isDirectMessagePush ? { ...payload.data, count } : payload.data,
-        icon: payload.icon ?? "/icons/icon-192-v2.png",
+        // The sender's avatar arrives as `payload.icon` on most types, and a
+        // face on the lock screen names them as surely as the text does, so
+        // hidden previews fall back to the app icon rather than merely
+        // rewriting the words above it. The server no longer sends an actor
+        // icon to a member who hides previews; this is the same rule applied
+        // locally, for a payload composed before that landed.
+        icon: shouldHidePreviews
+          ? "/icons/icon-192-v2.png"
+          : (payload.icon ?? "/icons/icon-192-v2.png"),
         // Android/Chrome renders `badge` as a small monochrome status-bar glyph
         // and hard-masks it to a single colour: a full-colour app icon here comes
         // out as a grey blob. Point at a dedicated transparent, single-colour

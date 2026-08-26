@@ -3,6 +3,7 @@ import { type DirectoryPlace } from "./directoryPlaces";
 import { type Venue } from "./map.data";
 import { LocalBusinessCard } from "./LocalBusinessCard";
 import { LocalVenueCard } from "./LocalVenueCard";
+import { LocalWalkTimeTag } from "./LocalWalkTimeTag";
 
 /**
  * Renders one unified place as the right card for its kind, wired to shared
@@ -11,6 +12,7 @@ import { LocalVenueCard } from "./LocalVenueCard";
 export function LocalPlaceCard({
   place,
   index,
+  distanceMetres,
   expandedId,
   been,
   onToggleExpand,
@@ -18,6 +20,10 @@ export function LocalPlaceCard({
 }: {
   place: LocalPlace;
   index: number;
+  /** How far the member is from here, once they have opted in to "use my
+   *  location". Undefined whenever there is no position, or whenever this
+   *  place has no coordinates of its own to measure to. */
+  distanceMetres?: number;
   expandedId: string | null;
   been: Record<string, number>;
   onToggleExpand: (placeId: string) => void;
@@ -25,7 +31,15 @@ export function LocalPlaceCard({
 }) {
   if (place.kind === "business") {
     return (
-      <LocalBusinessCard place={place.source as DirectoryPlace} index={index} />
+      <LocalBusinessCard
+        place={place.source as DirectoryPlace}
+        index={index}
+        photoTag={
+          distanceMetres === undefined ? undefined : (
+            <LocalWalkTimeTag metres={distanceMetres} />
+          )
+        }
+      />
     );
   }
   const venue = place.source as Venue;

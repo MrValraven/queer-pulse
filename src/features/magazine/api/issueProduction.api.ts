@@ -15,7 +15,11 @@ export interface IssueRunOrderEntryDto {
   laidOut: boolean;
 }
 
-/** One row of the members' digest — mirrors backend `IssueDigestItem`. */
+/**
+ * One curated entry on the issue panel — mirrors backend `IssueDigestItem`.
+ * The `digest` name is historical (CON-05 retired the members' email digest);
+ * these rows now feed the reader-facing "In this issue" panel.
+ */
 export interface IssueDigestItemDto {
   pieceId: string;
   blurb: string;
@@ -35,7 +39,8 @@ export interface IssueProductionDto {
   coverlines: string[];
   runOrder: IssueRunOrderEntryDto[];
   digest: IssueDigestItemDto[];
-  /** CNT-6 "Schedule with issue" toggle + send watermark. */
+  /** "Announce with the issue" toggle + the watermark stamped once the
+   *  in-app announcement has gone out. */
   digestSendOnPublish: boolean;
   digestSentAt: string | null;
   shipChecklist: PublishGateItemDto[];
@@ -134,8 +139,3 @@ export const updateIssueSchedule = (
 
 export const shipIssue = (number: string) =>
   apiPost<IssueProductionDto>(`/magazine/admin/issues/${number}/ship`);
-
-/** POST /magazine/admin/issues/:number/digest/test-send — CNT-6 "Send test":
- *  sends the current members' digest to the caller's own inbox. */
-export const sendDigestTest = (number: string) =>
-  apiPost<void>(`/magazine/admin/issues/${number}/digest/test-send`);

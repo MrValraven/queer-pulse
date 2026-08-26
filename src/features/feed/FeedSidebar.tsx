@@ -11,7 +11,12 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
-import type { SidebarGathering, SidebarMember } from "./feed.data";
+import type {
+  SidebarConnections,
+  SidebarGathering,
+  SidebarMember,
+} from "./feed.data";
+import { FEED_MUTED_PATH } from "./feedMutedPath";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import styles from "./FeedPage.module.css";
 
@@ -77,13 +82,18 @@ function ConnectionsSkeleton() {
   );
 }
 
+const NO_CONNECTIONS: SidebarConnections = { count: 0, avatars: [] };
+
 export function FeedSidebar({
   loading = false,
   populated = false,
   members = [],
   gatherings = [],
+  connections = NO_CONNECTIONS,
 }: {
   loading?: boolean;
+  /** Demo-only switch for the "Upcoming" widget's curated mock rows. It no
+   *  longer gates the connections widget: see SOC-06 below. */
   populated?: boolean;
   /** Rows for the "New this week" widget — the demo mock in demo mode, the
    *  live recently-joined members in live mode. Empty renders the empty state. */
@@ -92,6 +102,9 @@ export function FeedSidebar({
    *  Ignored in demo mode, which renders its own curated rows. Empty renders the
    *  empty state. */
   gatherings?: SidebarGathering[];
+  /** The member's real connection count and a short avatar sample, in BOTH
+   *  modes (SOC-06). */
+  connections?: SidebarConnections;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -199,44 +212,44 @@ export function FeedSidebar({
         </Link>
       </div>
 
+      {/* SOC-06: no `populated` gate here any more. The widget used to be
+          shown only in demo mode, where it was six hardcoded initials and a
+          fixed "42"; in live mode every member was permanently told they had
+          no connections. Both modes now read the real list, and the empty
+          state means what it says. */}
       <div className={styles.sbCard}>
         <div className={styles.sbTitle}>
           {t("feed:sidebar.connectionsHeading")}
         </div>
         {loading ? (
           <ConnectionsSkeleton />
-        ) : !populated ? (
+        ) : connections.count === 0 ? (
           <p className={styles.sbEmpty}>{t("feed:sidebar.connectionsEmpty")}</p>
         ) : (
           <div className={`${styles.connWidget} ${styles.revealRow}`}>
-            <AvatarStack
-              size={28}
-              avatars={[
-                { initials: "SR", tint: "jade" },
-                { initials: "AK", tint: "coral" },
-                { initials: "JP", tint: "plum" },
-                { initials: "TM", tint: "jade" },
-                { initials: "MF", tint: "coral" },
-                { initials: "KL", tint: "plum" },
-              ]}
-            />
+            <AvatarStack size={28} avatars={connections.avatars} />
             <div>
               <div className={styles.connCount}>
-                {t("feed:sidebar.connectionsCount", { count: 42 })}
+                {t("feed:sidebar.connectionsCount", {
+                  count: connections.count,
+                })}
               </div>
-              <Link
-                to={routes.connections}
-                style={{
-                  fontSize: 12,
-                  color: "var(--accent-ink)",
-                  fontWeight: 600,
-                }}
-              >
+              <Link to={routes.connections} className={styles.sbInlineLink}>
                 {t("feed:sidebar.manage")} <FiArrowRight aria-hidden />
               </Link>
             </div>
           </div>
         )}
+      </div>
+
+      {/* SOC-18: the way back. A mute a member cannot find again is a mute
+          they cannot undo, so the managed list is one tap from the feed. */}
+      <div className={styles.sbCard}>
+        <div className={styles.sbTitle}>{t("feed:mute.sidebarHeading")}</div>
+        <p className={styles.sbEmpty}>{t("feed:mute.sidebarBlurb")}</p>
+        <Link to={FEED_MUTED_PATH} className={styles.sbLink}>
+          {t("feed:mute.manageLink")} <FiArrowRight aria-hidden />
+        </Link>
       </div>
     </aside>
   );

@@ -16,6 +16,15 @@ export interface DraftSnapshot {
   metaDescription: string;
   socialImage: string;
   canonicalUrl: string;
+  /**
+   * CON-04 — the piece's lead art. Named for the wire field
+   * (`UpdateArticleDraftDto.heroImageKey`) because the whole snapshot is
+   * spread straight into the PATCH body. Holds whichever reference the editor
+   * currently has: the resolved `/files/<key>` URL the draft was seeded with,
+   * or the bare key a fresh upload just produced. The backend normalises both
+   * to a key.
+   */
+  heroImageKey: string;
 }
 
 export function snapshotsEqual(a: DraftSnapshot, b: DraftSnapshot): boolean {
@@ -28,6 +37,7 @@ export function snapshotsEqual(a: DraftSnapshot, b: DraftSnapshot): boolean {
     a.role === b.role &&
     a.metaDescription === b.metaDescription &&
     a.socialImage === b.socialImage &&
-    a.canonicalUrl === b.canonicalUrl
+    a.canonicalUrl === b.canonicalUrl &&
+    a.heroImageKey === b.heroImageKey
   );
 }

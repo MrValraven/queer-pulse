@@ -309,6 +309,20 @@ export const system: Catalog = {
     "Procura o aviso de instalação · normalmente no canto superior direito",
   "pwaPrompt.toast.snoozed": "Não voltamos a perguntar durante 30 dias",
 
+  // ── InstallNudge.tsx / PushNotificationRow.tsx ───────────────────────────
+  // ID-17. Ver o catálogo EN: no iPhone e no iPad o push só existe para a
+  // aplicação instalada no ecrã principal.
+  "pwaInstall.pushRow.helper":
+    "No iPhone e no iPad, as notificações precisam da QueerPulse adicionada ao ecrã principal. O Safari só dá push à aplicação instalada.",
+  "pwaInstall.pushRow.cta": "Como instalar",
+  "pwaInstall.nudge.title": "Instalar a QueerPulse",
+  "pwaInstall.nudge.body":
+    "Instala a aplicação para receberes notificações e teres a QueerPulse a um toque de distância.",
+  "pwaInstall.nudge.bodyIos":
+    "Adiciona ao ecrã principal para receberes notificações. Demora cerca de 30 segundos.",
+  "pwaInstall.nudge.cta": "Mostra-me como",
+  "pwaInstall.nudge.dismiss": "Dispensar a sugestão de instalação",
+
   // ── ServerErrorPage.tsx ───────────────────────────────────────────────────
   "serverError.countdown.label": "Previsão de regresso em",
   "serverError.demoModeAria": "Modo de demonstração",
@@ -337,10 +351,66 @@ export const system: Catalog = {
   "status.hero.title": "Estado da <em>plataforma</em>",
   "status.hero.sub": "Atualizado agora mesmo · Atualiza a cada 60 s",
   "status.hero.subLive":
-    "A monitorização pública de disponibilidade está a caminho.",
-  "status.live.title": "O relatório de estado em tempo real está quase aí",
-  "status.live.description":
-    "Estamos a preparar a monitorização pública de disponibilidade, o estado dos serviços e o histórico de incidentes. Os avisos de incidentes por email fazem parte do mesmo trabalho. Volta em breve.",
+    "Estado dos serviços em tempo real, mais tudo o que a equipa tenha registado.",
+
+  // ── StatusLive.tsx / StatusLiveComponents.tsx / StatusLiveIncidents.tsx ──
+  // ID-16. A superfície de estado EM DIRETO, alimentada pelo `GET /status`
+  // público. Abre sem sessão nenhuma, por isso este texto é lido por quem está
+  // com sessão terminada, suspenso ou bloqueado: nunca assume uma conta e diz
+  // com clareza se o problema é nosso.
+  "status.live.overall.operational.title": "Está tudo operacional",
+  "status.live.overall.operational.body":
+    "Todas as partes da plataforma que conseguimos verificar estão a responder normalmente.",
+  "status.live.overall.degraded.title": "Algumas partes estão degradadas",
+  "status.live.overall.degraded.body":
+    "Neste momento há partes da plataforma mais lentas ou menos fiáveis do que o habitual. Os detalhes estão abaixo.",
+  "status.live.overall.down.title": "Estamos com uma falha",
+  "status.live.overall.down.body":
+    "Há pelo menos uma parte da plataforma que não está a funcionar. Esta é nossa, e não tens de fazer nada.",
+  "status.live.state.operational": "Operacional",
+  "status.live.state.degraded": "Degradado",
+  "status.live.state.down": "Indisponível",
+  "status.live.componentsHeading": "Partes da plataforma",
+  "status.live.component.accounts.name": "Sessão e contas",
+  "status.live.component.accounts.desc":
+    "Iniciar sessão, convites e definições da conta",
+  "status.live.component.messaging.name": "Mensagens",
+  "status.live.component.messaging.desc": "Mensagens diretas e de grupo",
+  "status.live.component.communities.name": "Comunidades e fórum",
+  "status.live.component.communities.desc":
+    "Espaços de comunidade, tópicos e encontros",
+  "status.live.component.directory.name": "Diretório local",
+  "status.live.component.directory.desc": "Locais, espaços seguros e o mapa",
+  "status.live.component.magazine.name": "Revista",
+  "status.live.component.magazine.desc": "Artigos, edições e o arquivo",
+  "status.live.component.media.name": "Fotografias e carregamentos",
+  "status.live.component.media.desc":
+    "Fotografias de perfil, galerias e tudo o que carregas",
+  "status.live.incidentsHeading": "Incidentes",
+  "status.live.incidentState.open": "A decorrer",
+  "status.live.incidentState.monitoring": "Em observação",
+  "status.live.incidentState.resolved": "Resolvido",
+  "status.live.severity.minor": "Ligeiro",
+  "status.live.severity.major": "Grave",
+  "status.live.severity.critical": "Crítico",
+  "status.live.incidents.started": "Começou a {date} às {time}",
+  "status.live.incidents.resolved": "resolvido a {date} às {time}",
+  "status.live.incidents.affects": "Afeta: {components}",
+  "status.live.incidents.none.title": "Sem incidentes nos últimos 30 dias",
+  "status.live.incidents.none.description":
+    "Não há nada registado recentemente. Sempre que algo corre mal, é aqui que o dizemos.",
+  "status.live.incidents.unavailable":
+    "Não conseguimos carregar o histórico de incidentes, o que normalmente quer dizer que o problema é do nosso lado. O estado das partes acima mantém-se válido.",
+  "status.live.lastChecked": "Última verificação {when}",
+  "status.live.refreshCta": "Verificar de novo",
+  "status.live.refreshingCta": "A verificar",
+  "status.live.refreshAriaLabel": "Verificar de novo o estado da plataforma",
+  "status.live.signedOutNote":
+    "Esta página funciona sem conta. Se aqui está tudo operacional e mesmo assim não consegues iniciar sessão, o problema está na tua conta, e a equipa pode ver isso contigo.",
+  "status.live.unreachable.title":
+    "Não conseguimos contactar o serviço de estado",
+  "status.live.unreachable.body":
+    "Ou a plataforma está em baixo ou a tua ligação está. Tenta de novo daqui a pouco.",
   "status.services.sectionEye": "Serviços",
   "status.serviceStatus.operational": "Operacional",
   "status.serviceStatus.degraded": "Degradado",
@@ -478,4 +548,62 @@ export const system: Catalog = {
   "genesis.notice.claimed": "Agora fazes parte da administração.",
   "genesis.notice.demo":
     "O Genesis não está disponível no modo de demonstração.",
+
+  // ── AdminStatusIncidentsPage.tsx / AdminStatusIncidentForm.tsx (ID-16) ───
+  // A secretária de quem opera a página pública de estado. Fica neste catálogo
+  // e não em `admin.ts` de propósito: o texto e a superfície que descreve são a
+  // mesma funcionalidade, e a metade pública já vive aqui.
+  "statusAdmin.navLabel": "Incidentes de estado",
+  "statusAdmin.breadcrumb": "Administração",
+  "statusAdmin.eyebrow": "Plataforma",
+  "statusAdmin.title": "Incidentes de <em>estado</em>",
+  "statusAdmin.headerSub":
+    "O que os membros veem na página pública de estado. Tudo o que for publicado aqui é legível sem conta, incluindo por quem não consegue iniciar sessão.",
+  "statusAdmin.newCta": "Novo incidente",
+  "statusAdmin.empty": "Ainda não há nada registado.",
+  "statusAdmin.loadError": "Não foi possível carregar a lista de incidentes.",
+  "statusAdmin.forbidden": "Não tens acesso a este painel.",
+  "statusAdmin.demoNotice":
+    "O modo de demonstração não grava nada. Nada do que fizeres aqui chega à página pública de estado.",
+  "statusAdmin.row.started": "Começou a {date}",
+  "statusAdmin.row.resolved": "Resolvido a {date}",
+  "statusAdmin.row.affects": "Afeta: {components}",
+  "statusAdmin.row.affectsNone": "Sem partes marcadas como afetadas",
+  "statusAdmin.row.author": "Registado por {name}",
+  "statusAdmin.action.edit": "Editar",
+  "statusAdmin.action.resolve": "Marcar como resolvido",
+  "statusAdmin.action.cancel": "Cancelar",
+  "statusAdmin.action.save": "Guardar alterações",
+  "statusAdmin.action.publish": "Publicar incidente",
+  "statusAdmin.form.createEyebrow": "Novo incidente",
+  "statusAdmin.form.editEyebrow": "Editar incidente",
+  "statusAdmin.form.createTitle": "Registar um incidente",
+  "statusAdmin.form.editTitle": "Editar este incidente",
+  "statusAdmin.form.drawerLabel": "Editor de incidentes",
+  "statusAdmin.field.title": "Título",
+  "statusAdmin.field.titleHint":
+    "Uma linha, em linguagem simples. É a primeira coisa que um membro lê.",
+  "statusAdmin.field.body": "O que se está a passar",
+  "statusAdmin.field.bodyHint":
+    "Texto simples. Qualquer marcação é removida ao guardar.",
+  "statusAdmin.field.severity": "Gravidade",
+  "statusAdmin.field.status": "Estado",
+  "statusAdmin.field.startedAt": "Começou a",
+  "statusAdmin.field.components": "Partes afetadas",
+  "statusAdmin.field.componentsHint":
+    "Tudo o que marcares aqui aparece como degradado na página pública, ou como indisponível se o incidente for crítico, até isto ficar resolvido.",
+  "statusAdmin.severity.minor": "Ligeiro",
+  "statusAdmin.severity.major": "Grave",
+  "statusAdmin.severity.critical": "Crítico",
+  "statusAdmin.status.open": "A decorrer",
+  "statusAdmin.status.monitoring": "Em observação",
+  "statusAdmin.status.resolved": "Resolvido",
+  "statusAdmin.toast.created": "Incidente publicado.",
+  "statusAdmin.toast.updated": "Incidente atualizado.",
+  "statusAdmin.toast.resolved": "Incidente marcado como resolvido.",
+  "statusAdmin.error.create": "Não foi possível publicar o incidente.",
+  "statusAdmin.error.save": "Não foi possível guardar as alterações.",
+  "statusAdmin.error.resolve":
+    "Não foi possível marcar o incidente como resolvido.",
+  "statusAdmin.error.required": "Dá um título e uma descrição ao incidente.",
 };

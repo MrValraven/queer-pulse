@@ -774,6 +774,13 @@
   display: block;
   margin-top: 10px;
 }
+.sbInlineLink {
+  /* Replaces an inline `style` object on the connections widget's manage
+     link, so the colour reads from a token like everything else. */
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
 .sbEmpty {
   font-size: 13px;
   color: var(--ink-60);

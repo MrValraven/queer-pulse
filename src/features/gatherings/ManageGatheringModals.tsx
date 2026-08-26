@@ -11,11 +11,12 @@ export type SeriesScopeModalMode = "edit" | "cancel" | null;
 
 /**
  * Every modal the manage dashboard can raise, in one place: edit details, the
- * recurring-series this-vs-future prompt, and the demo-only message-attendees
- * composer. Purely a shell — each modal owns its own state, and every decision
- * about what to do with the result stays on the page.
+ * recurring-series this-vs-future prompt, and the announcement composer.
+ * Purely a shell — each modal owns its own state, and every decision about
+ * what to do with the result stays on the page.
  */
 export function ManageGatheringModals({
+  slug,
   editInitial,
   onCloseEdit,
   onSaveEdit,
@@ -26,6 +27,8 @@ export function ManageGatheringModals({
   attendeeCount,
   onCloseMessage,
 }: {
+  /** The gathering the announcement is sent to. */
+  slug: string;
   /** The edit modal's starting draft, or null when it isn't open. */
   editInitial: GatheringDetailsDraft | null;
   onCloseEdit: () => void;
@@ -57,6 +60,7 @@ export function ManageGatheringModals({
 
       {isMessageOpen && (
         <MessageAttendeesModal
+          slug={slug}
           attendeeCount={attendeeCount}
           onClose={onCloseMessage}
         />

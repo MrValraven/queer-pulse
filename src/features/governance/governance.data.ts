@@ -36,6 +36,11 @@ export const GOVERNING_DOCS = [
     to: routes.codeOfConduct,
     blurbKey: "governance:governingDocs.codeOfConduct.blurb",
   },
+  {
+    labelKey: "governance:governingDocs.transparency.label",
+    to: routes.transparencyReport,
+    blurbKey: "governance:governingDocs.transparency.blurb",
+  },
 ];
 
 /**

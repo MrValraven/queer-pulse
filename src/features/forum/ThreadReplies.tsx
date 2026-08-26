@@ -16,6 +16,7 @@ import { memberPath } from "./forumAuthor.helpers";
 import { memberName } from "../members/data/members";
 import { ThreadRepliesSkeleton } from "./ThreadRepliesSkeleton";
 import { ThreadReplyNode } from "./ThreadReplyNode";
+import type { StagedPostImage } from "../communities/usePostImageAttach";
 import { type ReplyNode } from "./buildReplyTree";
 import styles from "./ThreadPage.module.css";
 
@@ -107,6 +108,8 @@ export function ThreadReplies({
   onCancelReply,
   onPostReply,
   onReport,
+  onAcceptAnswer,
+  onQuote,
   inlineDraft,
   setInlineDraft,
 }: {
@@ -139,9 +142,14 @@ export function ThreadReplies({
   activeReplyTargetId: string | null;
   onStartReply: (reply: Reply) => void;
   onCancelReply: () => void;
-  onPostReply: (body: string) => void;
+  onPostReply: (body: string, image?: StagedPostImage) => void;
   /** Report a specific reply — opens the report modal targeting its `postId`. */
   onReport: (reply: Reply) => void;
+  /** Mark this reply as the thread's answer, or clear the mark. Omitted for a
+   *  viewer who may not, which is what hides the action. */
+  onAcceptAnswer?: (reply: Reply) => void;
+  /** Start a reply that quotes this one. */
+  onQuote: (reply: Reply) => void;
   inlineDraft: string;
   setInlineDraft: (value: string) => void;
 }) {
@@ -204,6 +212,8 @@ export function ThreadReplies({
             onCancelReply={onCancelReply}
             onPostReply={onPostReply}
             onReport={onReport}
+            onAcceptAnswer={onAcceptAnswer}
+            onQuote={onQuote}
             inlineDraft={inlineDraft}
             setInlineDraft={setInlineDraft}
           />

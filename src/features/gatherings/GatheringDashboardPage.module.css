@@ -651,3 +651,34 @@
   color: rgba(var(--cream-rgb), 0.5);
   text-align: center;
 }
+
+/* "Load more" under a paged door roster — the guest list is fetched a page at
+   a time, so a large gathering does not hand the door desk a thousand rows it
+   will never scroll to. */
+.moreRow {
+  display: flex;
+  justify-content: center;
+  padding-block: 14px 4px;
+}
+
+/* The live door: the card reader on top, the roster underneath, one column on
+   a phone and two on a desk. A host works this one-handed while people are
+   talking to them, so the reader sits where a thumb reaches first. */
+.doorLayout {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+@media (min-width: 62rem) {
+  .doorLayout {
+    grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+  }
+}
+.doorLead {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  margin: 0 0 14px;
+  max-width: 52ch;
+  text-wrap: pretty;
+}

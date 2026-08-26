@@ -13,6 +13,7 @@ import {
 } from "./data/memberProfiles";
 import { useVouchers, type VoucherFace } from "./api/useVouchers";
 import { useProfileMutuals } from "./api/useProfileMutuals";
+import { MutualVouchersChip } from "./MutualVouchersChip";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import { RELATIONSHIPS, type VouchRelationship } from "./vouchMember.data";
 import type { AuthUser } from "../auth/api/auth.api";
@@ -100,6 +101,11 @@ export function HeroVouchRow({
     isSelf ? undefined : profile.slug,
   );
   const mutualsCount = mutuals?.count ?? 0;
+
+  // "N members you know vouched for them" (SOC-15), already gated by the
+  // backend: null when the viewer IS this member, and when this member hid
+  // their voucher roster. `?? 0` collapses that into "render nothing".
+  const mutualVoucherCount = profile.mutualVoucherCount ?? 0;
 
   // Real voucher faces: demo derives them from the mock registry, live fetches
   // GET /members/:slug/vouchers. In demo the fetch already resolves against the
@@ -238,7 +244,9 @@ export function HeroVouchRow({
                 ? "members:hero.vouch.onlyNumberMattersSelf"
                 : "members:hero.vouch.onlyNumberMatters",
             )}
-            {(textureRelationships.length > 0 || mutualsCount > 0) && (
+            {(textureRelationships.length > 0 ||
+              mutualsCount > 0 ||
+              mutualVoucherCount > 0) && (
               <div className={styles.hereFor}>
                 {textureRelationships.map((relationship) => (
                   <span key={relationship} className={styles.hereForChip}>
@@ -250,6 +258,7 @@ export function HeroVouchRow({
                     {t("members:card.mutualsCount", { count: mutualsCount })}
                   </span>
                 )}
+                <MutualVouchersChip count={mutualVoucherCount} />
               </div>
             )}
           </div>

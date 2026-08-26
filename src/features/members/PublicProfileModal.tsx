@@ -25,14 +25,22 @@ export function PublicProfileModal({ onClose }: { onClose: () => void }) {
     usePublicProfileEligibility();
   const { showToast } = useToast();
 
-  // The preference persists but nothing reads it yet: there's no unauthenticated
-  // profile endpoint, so the toast confirms a *saved preference*, never "you're
-  // live"; a failed write says so instead of claiming success.
+  // A failed write says so instead of claiming success.
+  //
+  // Turning it ON can now be REFUSED by the server: `PUT /me/public-profile`
+  // evaluates eligibility and 403s a member who does not qualify, which is
+  // reachable if their standing changed after the signals were fetched. So a
+  // failed enable also refetches the signals: the modal re-locks and the
+  // checklist below explains why, rather than leaving a switch on screen that
+  // the server will keep rejecting. A failed disable is never an eligibility
+  // problem (turning it off is always allowed), so it just reports.
   async function onToggle() {
     if (saving) return;
+    const wasEnabling = !enabled;
     const ok = await toggle();
     if (!ok) {
       showToast(t("members:publicProfile.control.toast.failed"), "error", 7000);
+      if (wasEnabling) retryEligibility();
       return;
     }
     showToast(

@@ -1,9 +1,13 @@
 import { type ReactNode } from "react";
 import {
   FiAlertTriangle,
+  FiChevronDown,
+  FiChevronRight,
   FiFlag,
   FiCheck,
   FiClock,
+  FiInfo,
+  FiTrendingUp,
   FiUsers,
   FiUserCheck,
   FiUserPlus,
@@ -19,6 +23,7 @@ import {
   chipLabel,
   priorReportsText,
   reporterCredibilityText,
+  type Ratification,
 } from "./adminModeration.data";
 import {
   ageLabelOf,
@@ -28,6 +33,10 @@ import {
   type ResolvedItemView,
 } from "./moderationAge";
 import { reporterDisplayName } from "./moderationReporter";
+import type { ModReportCluster } from "./moderationQueue.types";
+
+/** Which way a second moderator went on a pending ban (TS-12). */
+export type RatifyDecision = "ratify" | "decline";
 import styles from "./AdminModerationPage.module.css";
 
 /** Server-computed SLA deadline check (COM-8) — past-due only matters while the
@@ -171,6 +180,18 @@ export function ReportCard({
               })}
             </span>
           )}
+          {/* TS-14: which room this came from. It decides whether to act on a
+              person or on a space, and whether this is the fourth report from
+              that community this week. Absent for a member or message report,
+              which belong to no single community. */}
+          {report.community && (
+            <span className={styles.communityFlag}>
+              <FiUsers aria-hidden />{" "}
+              {t("admin:moderation.community.rowFlag", {
+                community: report.community,
+              })}
+            </span>
+          )}
         </span>
       </button>
 
@@ -186,6 +207,123 @@ export function ReportCard({
         <AdminChip tone={report.risk.tone}>{t(report.risk.key)}</AdminChip>
       </div>
     </article>
+  );
+}
+
+/* ── Clustered subject row (TS-06) ──────────────────────────────────────── */
+
+/**
+ * One `(subjectType, subjectId)` pile, headed by the two counts that decide
+ * what to do about it.
+ *
+ * The queue used to render thirty people reporting one member as thirty
+ * independent rows, each with its own SLA clock, which read as thirty times
+ * the urgency and hid the fact that mattered: whether thirty PEOPLE were
+ * behind it or one person filing thirty times. `distinctReporterCount` is that
+ * fact, and it is stated in words beside the total rather than implied.
+ *
+ * The header carries the whole pile's actions. "Select all" reaches every open
+ * report about the subject, including the ones no page has loaded, because the
+ * ids come from the server's own count. Expanding shows the reports this page
+ * actually holds, which is usually fewer.
+ */
+export function ClusterRow({
+  cluster,
+  isExpanded,
+  onToggleExpanded,
+  onSelectAll,
+  isFullySelected,
+  loadedCount,
+  children,
+}: {
+  cluster: ModReportCluster;
+  isExpanded: boolean;
+  onToggleExpanded: () => void;
+  /** Selects (or clears) every open report in the pile for the bulk bar. */
+  onSelectAll: () => void;
+  isFullySelected: boolean;
+  /** How many of the pile's reports this page actually loaded. */
+  loadedCount: number;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  const sev = SEVERITY[cluster.highestSeverity];
+  const panelId = `cluster-${cluster.subjectType}-${cluster.subjectId}`;
+  const notOnPage = Math.max(0, cluster.openCount - loadedCount);
+
+  return (
+    <section
+      className={styles.cluster}
+      style={{ ["--stripe" as string]: sev.stripe }}
+    >
+      <div className={styles.clusterHead}>
+        <button
+          type="button"
+          className={styles.clusterToggle}
+          aria-expanded={isExpanded}
+          aria-controls={panelId}
+          onClick={onToggleExpanded}
+        >
+          {isExpanded ? (
+            <FiChevronDown aria-hidden />
+          ) : (
+            <FiChevronRight aria-hidden />
+          )}
+          <span className={styles.clusterTitle}>
+            {t("admin:moderation.cluster.heading", {
+              count: cluster.openCount,
+              subject: cluster.subjectId,
+            })}
+          </span>
+        </button>
+
+        <div className={styles.clusterFacts}>
+          <AdminCat tone={sev.category}>{t(sev.labelKey)}</AdminCat>
+          <span className={styles.clusterReporters}>
+            <FiUsers aria-hidden />{" "}
+            {t("admin:moderation.cluster.reporters", {
+              count: cluster.distinctReporterCount,
+            })}
+          </span>
+          {cluster.overdueCount > 0 && (
+            <AdminChip tone="danger">
+              {t("admin:moderation.cluster.overdue", {
+                count: cluster.overdueCount,
+              })}
+            </AdminChip>
+          )}
+          {cluster.isSurge && (
+            <span className={styles.clusterSurge}>
+              <FiTrendingUp aria-hidden /> {t("admin:moderation.cluster.surge")}
+            </span>
+          )}
+        </div>
+
+        <Button variant="ghost" onClick={onSelectAll}>
+          {t(
+            isFullySelected
+              ? "admin:moderation.cluster.clearAllCta"
+              : "admin:moderation.cluster.selectAllCta",
+            { count: cluster.openCount },
+          )}
+        </Button>
+      </div>
+
+      {cluster.isSurge && (
+        <p className={styles.clusterHint}>
+          {t("admin:moderation.cluster.surgeHint")}
+        </p>
+      )}
+
+      <div id={panelId} hidden={!isExpanded} className={styles.clusterBody}>
+        {children}
+        {notOnPage > 0 && (
+          <p className={styles.clusterNote}>
+            {t("admin:moderation.cluster.notOnPage", { count: notOnPage })}
+          </p>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -404,8 +542,140 @@ export function AppealCard({
           <FiClock aria-hidden /> {ageLabelOf(appeal, fmt)}
         </span>
         <AdminChip tone={appeal.status.tone}>{t(appeal.status.key)}</AdminChip>
+        {/* TS-11. The published 7-day decision window, on the row, because a
+            deadline nobody can see on the queue is a deadline nobody keeps. */}
+        {appeal.slaDueAt && (
+          <span
+            className={[
+              styles.appealDue,
+              appeal.isOverdue && styles.appealDueLate,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {appeal.isOverdue ? (
+              <>
+                <FiAlertTriangle aria-hidden />{" "}
+                {t("admin:moderation.appeals.overdueFlag")}
+              </>
+            ) : (
+              t("admin:moderation.appeals.dueFlag", {
+                date: fmt.date(new Date(appeal.slaDueAt), {
+                  day: "numeric",
+                  month: "short",
+                }),
+              })
+            )}
+          </span>
+        )}
       </div>
     </div>
+  );
+}
+
+/* ── Pending ratifications (TS-12) ──────────────────────────────────────── */
+
+/**
+ * One permanent ban waiting on a second moderator.
+ *
+ * Built around the first moderator's own words. The card leads with who is
+ * being removed and who asked, then quotes the reason in full rather than
+ * truncating it: this is the one surface where a moderator decides whether to
+ * put their name to ending somebody's account, and a 140-character preview of
+ * the case is not enough to do that on.
+ *
+ * The two buttons are deliberately unequal. Confirming is the destructive one
+ * and is styled as such; refusing is the ordinary path and needs no ceremony,
+ * because refusing to remove someone must never be the harder click.
+ */
+export function RatificationCard({
+  ratification,
+  isOwnRequest,
+  onDecide,
+}: {
+  ratification: Ratification;
+  /** True when the signed-in moderator is the one who ASKED for this ban. The
+   *  server refuses their confirmation outright; showing them the buttons
+   *  anyway would be an affordance that only ever errors. */
+  isOwnRequest: boolean;
+  onDecide: (ratification: Ratification, decision: RatifyDecision) => void;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const lapsesAt = new Date(ratification.expiresAt);
+
+  return (
+    <article className={styles.ratifyCard}>
+      <div className={styles.ratifyHead}>
+        <AdminCat tone="danger">
+          {t("admin:moderation.ratification.badge")}
+        </AdminCat>
+        <span
+          className={[
+            styles.ratifyLapse,
+            ratification.isExpired && styles.ratifyLapsed,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <FiClock aria-hidden />{" "}
+          {ratification.isExpired
+            ? t("admin:moderation.ratification.lapsed")
+            : t("admin:moderation.ratification.lapsesAt", {
+                date: `${fmt.date(lapsesAt, { day: "numeric", month: "short" })} ${fmt.time(lapsesAt)}`,
+              })}
+        </span>
+      </div>
+
+      <h3 className={styles.ratifyTitle}>
+        {t("admin:moderation.ratification.title", {
+          name: ratification.targetName,
+        })}
+      </h3>
+
+      <p className={styles.ratifyMeta}>
+        {t("admin:moderation.ratification.askedBy", {
+          name: ratification.requestedByName,
+          date: fmt.date(new Date(ratification.requestedAt), {
+            day: "numeric",
+            month: "short",
+          }),
+        })}
+      </p>
+
+      <blockquote className={styles.ratifyReason}>
+        {ratification.note ?? t("admin:moderation.ratification.noReason")}
+      </blockquote>
+
+      <p className={styles.ratifyInterim}>
+        <FiInfo aria-hidden /> {t("admin:moderation.ratification.interim")}
+      </p>
+
+      {isOwnRequest ? (
+        <p className={styles.ratifyOwn}>
+          <FiInfo aria-hidden /> {t("admin:moderation.ratification.ownRequest")}
+        </p>
+      ) : (
+        !ratification.isExpired && (
+          <div className={styles.ratifyActions}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDecide(ratification, "decline")}
+            >
+              {t("admin:moderation.ratification.declineCta")}
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => onDecide(ratification, "ratify")}
+            >
+              {t("admin:moderation.ratification.confirmCta")}
+            </Button>
+          </div>
+        )
+      )}
+    </article>
   );
 }
 

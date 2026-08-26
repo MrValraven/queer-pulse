@@ -17,6 +17,7 @@ export function ThreadOpSection({
   onVote,
   bookmarked,
   onToggleBookmark,
+  onEditTags,
   moderation,
 }: {
   thread: Thread;
@@ -27,6 +28,9 @@ export function ThreadOpSection({
   /** Persist/unpersist this thread in the member's saved items (real endpoint,
    *  optimistic + dual-mode via the app-wide saved store). */
   onToggleBookmark: () => void;
+  /** Open the tag editor (SOC-13). Omitted for a viewer who may not re-file
+   *  this thread. */
+  onEditTags?: () => void;
   moderation: ReturnType<typeof useThreadModeration>;
 }) {
   return (
@@ -62,6 +66,7 @@ export function ThreadOpSection({
       onHistory={() =>
         thread.opPostId && moderation.setHistoryPostId(thread.opPostId)
       }
+      onEditTags={onEditTags}
     />
   );
 }

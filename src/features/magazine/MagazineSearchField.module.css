@@ -1,0 +1,31 @@
+/* CON-12 — the magazine's search field. Mounts directly under the masthead,
+   so it sits on cream and reads as part of the masthead block rather than as
+   page content. */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 0 0;
+}
+
+.field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.submit {
+  flex: 0 0 auto;
+}
+
+/* On a phone the button drops under the field rather than squeezing it. */
+@media (max-width: 520px) {
+  .bar {
+    flex-wrap: wrap;
+  }
+  .field {
+    flex: 1 1 100%;
+  }
+  .submit {
+    flex: 1 1 100%;
+  }
+}

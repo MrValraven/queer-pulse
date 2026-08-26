@@ -1,5 +1,11 @@
 import { useState } from "react";
 import type { IconType } from "react-icons";
+import {
+  emptyAccessibilityAnswers,
+  type AccessibilityAnswer,
+  type AccessibilityAnswerMap,
+  type AccessibilitySlug,
+} from "../marketing/listBusiness/listingAccessibility.data";
 import type {
   EventVisibility,
   RecurrenceCadence,
@@ -94,7 +100,18 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
   const [directions, setDirections] = useState("");
   const [cap, setCap] = useState("14");
   const [lang, setLang] = useState(LANGS[0]!.value);
-  const [access, setAccess] = useState<Set<string>>(new Set());
+  // Free-text door price (LOC-18): "5 to 15 EUR sliding scale", "pay what you
+  // can at the door", "free". DISPLAY ONLY. There is no payment integration
+  // behind this field and nothing in the wizard may suggest otherwise.
+  const [cost, setCost] = useState("");
+  // The six canonical accessibility questions, three-valued, exactly as a
+  // business listing answers them. A checkbox list used to stand here, which
+  // could only ever say "yes" or say nothing: "there is a step at the door"
+  // and "nobody has told us" came out as the same blank, and a wheelchair user
+  // cannot plan an evening around that. Starts as a complete map of `unknown`,
+  // which is a real answer rather than an absent key.
+  const [accessibilityAnswers, setAccessibilityAnswers] =
+    useState<AccessibilityAnswerMap>(emptyAccessibilityAnswers);
   const [accessNotes, setAccessNotes] = useState("");
   // Two publish-gating confirmations (Code of Care + accessibility accuracy)
   // — matches `CONFIRM_CHECK_KEYS.length` (createGathering.data.ts). The
@@ -106,13 +123,15 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     setType(name);
     setTypeIcon(() => icon);
   };
-  const toggleAccess = (name: string) =>
-    setAccess((prev) => {
-      const n = new Set(prev);
-      if (n.has(name)) n.delete(name);
-      else n.add(name);
-      return n;
-    });
+  const setAccessibilityAnswer = (
+    slug: AccessibilitySlug,
+    answer: AccessibilityAnswer,
+  ) => setAccessibilityAnswers((previous) => ({ ...previous, [slug]: answer }));
+  /** How many of the six the host has actually answered, so the review step
+   *  can say what is still unanswered instead of implying six confident nos. */
+  const answeredAccessibilityCount = Object.values(accessibilityAnswers).filter(
+    (answer) => answer !== "unknown",
+  ).length;
   const toggleCheck = (i: number) =>
     setChecks((prev) => prev.map((v, j) => (j === i ? !v : v)));
 
@@ -159,7 +178,8 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     address.trim().length > 0 ||
     directions.trim().length > 0 ||
     accessNotes.trim().length > 0 ||
-    access.size > 0 ||
+    cost.trim().length > 0 ||
+    answeredAccessibilityCount > 0 ||
     checks.some(Boolean) ||
     audienceScope !== "members" ||
     repeats;
@@ -208,7 +228,11 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     setCap,
     lang,
     setLang,
-    access,
+    cost,
+    setCost,
+    accessibilityAnswers,
+    setAccessibilityAnswer,
+    answeredAccessibilityCount,
     accessNotes,
     setAccessNotes,
     checks,
@@ -217,7 +241,6 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     dateValid,
     dirty,
     selectType,
-    toggleAccess,
     toggleCheck,
   };
 }

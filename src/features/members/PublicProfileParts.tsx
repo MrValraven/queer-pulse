@@ -8,6 +8,8 @@ import {
   FiFileText,
   FiMessageCircle,
   FiMusic,
+  FiUserPlus,
+  FiUsers,
 } from "react-icons/fi";
 import { FadeIn, ImageSlot } from "../../shared/components/ui";
 import { safeHref } from "../../shared/lib/safeHref";
@@ -29,6 +31,8 @@ const ACTIVITY_ICONS: Record<ActivityKind, IconType> = {
   edit: FiEdit3,
   photo: FiCamera,
   music: FiMusic,
+  community: FiUsers,
+  persona: FiUserPlus,
 };
 
 /**

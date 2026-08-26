@@ -108,6 +108,7 @@ export function ArticleEditorPage() {
     metaDescription,
     socialImage,
     canonicalUrl,
+    heroImageKey,
   } = draft;
   const wordCount = countArticleWords(blocks, title, standfirst);
   const readMinutes = estimateReadMinutes(wordCount);
@@ -252,6 +253,8 @@ export function ArticleEditorPage() {
               onMetaDescriptionChange={draft.setMetaDescription}
               socialImage={socialImage}
               onSocialImageChange={draft.setSocialImage}
+              heroImageKey={heroImageKey}
+              onHeroImageKeyChange={draft.setHeroImageKey}
               canonicalUrl={canonicalUrl}
               onCanonicalUrlChange={draft.setCanonicalUrl}
               slug={article.slug}

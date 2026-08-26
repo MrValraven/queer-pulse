@@ -7,7 +7,8 @@ import { useSocial } from "../../app/providers/useSocial";
 import { memberAvatar } from "../members/data/members";
 import { tintForSlug } from "../../shared/api/refs";
 import { initials, relativeTime } from "./api/feed.adapters";
-import type { FeedItem } from "../../shared/contracts/contracts";
+import type { FeedItem } from "./api/feed.api";
+import { FeedReasonLine } from "./FeedPostActions";
 import { DEMO_MEMBER } from "./feedCards.data";
 import {
   FeedActionLink,
@@ -113,6 +114,7 @@ export function MemberCard({ item }: { item?: FeedItem } = {}) {
         meta={meta}
       />
       {quote && <FeedQuote>{quote}</FeedQuote>}
+      <FeedReasonLine reason={item?.reason} subject={item?.reasonSubject} />
       {!item && (
         <FeedTagRow tags={DEMO_MEMBER.tags.map((label) => ({ label }))} />
       )}

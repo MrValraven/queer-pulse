@@ -7,6 +7,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import type { GatheringDetail } from "./data";
 import { useRsvp, useUnrsvp } from "./api/useEventMutations";
 import { useAttendees } from "./api/useAttendees";
+import { rsvpErrorMessage } from "./rsvpErrors";
 import styles from "./GatheringPage.module.css";
 
 /** The contact affordance returned by `useMemberContact` (connect vs. message). */
@@ -90,7 +91,13 @@ export function GatheringRsvpControl({
           ),
           "success",
         ),
-      onError: () => setStatus(gathering.myRsvpStatus ?? null),
+      // A refusal (barred, or a block in either direction) is surfaced as a
+      // plain sentence rather than a silent no-op that leaves the button
+      // looking broken. It never names who decided it — see `rsvpErrors.ts`.
+      onError: (error) => {
+        setStatus(gathering.myRsvpStatus ?? null);
+        showToast(rsvpErrorMessage(error, t), "error");
+      },
     });
   };
 

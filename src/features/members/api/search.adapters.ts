@@ -20,6 +20,10 @@ const hrefFor = (result: SearchResultDTO): string => {
       return gatheringPath(result.slug);
     case "forum":
       return thread(result.slug);
+    case "forumPost":
+      // A reply has no page of its own: its slug IS its thread's, so the hit
+      // opens the discussion the reply lives in.
+      return thread(result.slug);
     case "business":
       return businessPath(result.slug);
     case "magazine":
@@ -31,8 +35,6 @@ const hrefFor = (result: SearchResultDTO): string => {
       return `${routes.housing}/${result.slug}`;
     case "resource":
       return `${routes.resources}/${result.slug}`;
-    case "workshop":
-      return `${routes.skills}/${result.slug}`;
     case "subprofile":
       // A subprofile hit's slug IS its public handle (/p/:handle).
       return personaPath(result.slug);

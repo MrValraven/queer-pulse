@@ -291,15 +291,16 @@ export function LockedSection({
 }
 
 /**
- * The "join us / vouch for {firstName}" footer.
+ * The "join us" footer on a public profile.
  *
- * DEMO-ONLY, because of the second button: `routes.vouch` (`VouchPage`) only
- * has a candidate to vouch for in demo mode and renders an `EmptyState`
- * otherwise, so in live mode this invited a visitor to vouch for a named person
- * and then told them there was nothing to vouch for. Its only caller is
- * `PublicProfileOwnPreviewDemo`; the live surfaces use
- * `PublicProfilePublicView`'s request-invite footer instead. Bring the vouch CTA
- * back here once it can route into a real member's vouch flow.
+ * It used to carry a second button, "Ask {firstName} to vouch", pointing at
+ * `/vouch`. That button is gone (SOC-15). It promised something the software
+ * cannot do: this footer is read by a LOGGED-OUT visitor, only a member can
+ * vouch, there is no ask-for-a-vouch request anywhere in the product, and
+ * QueerPulse sends no email, so there was no way for the ask to reach the
+ * member at all. `/vouch` itself is now a real member picker for members who
+ * want to vouch for someone. Requesting an invite is the one thing a visitor
+ * here can genuinely do, so it is the one CTA.
  */
 export function BottomCta({ firstName }: { firstName: string }) {
   const { t } = useTranslation();
@@ -317,9 +318,6 @@ export function BottomCta({ firstName }: { firstName: string }) {
       <div className={styles.bottomCtaActions}>
         <Button variant="primary" to={requestInvitePath("public_profile")}>
           {t("common:cta.requestInvite")}
-        </Button>
-        <Button variant="ghost-dark" to={routes.vouch}>
-          {t("members:publicProfile.bottomCta.vouchCta", { firstName })}
         </Button>
       </div>
     </div>

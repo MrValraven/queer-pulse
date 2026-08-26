@@ -35,6 +35,7 @@ export const magazine: Catalog = {
   "masthead.nav.authors": "Writers",
   "masthead.nav.write": "Write for us",
   "masthead.nav.sections": "Sections",
+  "masthead.nav.search": "Search",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
   "landing.meta.title": "The Magazine: QueerPulse",
@@ -49,6 +50,15 @@ export const magazine: Catalog = {
   "landing.nav.communityLife": "Community Life",
   "landing.nav.letters": "Letters",
   "landing.nav.archive": "Archive",
+
+  // ── The editor-arranged front (MagazineLiveSections / MagazineFrontLead,
+  //    CON-13) — chrome around the current issue's own run order. The section
+  //    rail headings are the desk's own section names and stay as they were
+  //    written, so they are not keys.
+  "front.leadKicker": "Cover story",
+  "front.coverLabel": "Cover · Issue {number}",
+  "front.moreInIssue": "More <em>in this issue</em>",
+  "front.fromTheMagazine": "From the magazine",
 
   // ── MagazineCover ────────────────────────────────────────────────────────
   "cover.coverAlt": "Cover portrait",
@@ -91,6 +101,16 @@ export const magazine: Catalog = {
   "sections.emptyLive.description":
     "Our first issue is on the way. We're lining up essays, features, interviews and reviews from the community. Check back soon, or pitch us something to run in it.",
 
+  // ── Members-only wall (MagazineSignInWall, CON-07) ───────────────────────
+  // A 401 from the magazine read endpoints means "you are not signed in",
+  // never "nothing is published". Shown to a logged-out visitor who followed a
+  // shared article link, with a ?next= sign-in CTA back to where they landed.
+  "signInWall.title": "The magazine is for members",
+  "signInWall.description":
+    "Essays, features, interviews and reviews from the community live behind the member wall, so writers know who is reading them. Sign in to pick up where you left off.",
+  "signInWall.signInCta": "Sign in to read",
+  "signInWall.requestInviteCta": "Request an invite",
+
   // ── ArticlePage ──────────────────────────────────────────────────────────
   "article.notFoundMetaTitle": "Article not found: QueerPulse Magazine",
   "article.notFoundTitle": "We couldn't find that piece.",
@@ -100,6 +120,35 @@ export const magazine: Catalog = {
   "article.pageTitleSuffix": ": QueerPulse Magazine",
   "article.backToMagazine": "Magazine",
   "article.relatedHeading": "Keep <em>reading</em>",
+
+  // ── ArticleNotes: content notes (CON-06) and corrections (CON-02) ────────
+  "article.contentNotesHeading": "Content notes",
+  "article.contentNotesDismissAria": "Hide the content notes for this piece",
+  "article.correctionsHeading": "Corrections",
+
+  // ── CON-16: the dated lifecycle banner and the language switcher ────────
+  // Chrome only. The journalism itself is never in this catalog: a translated
+  // piece is its own article row with its own byline (see the `locale` /
+  // `translation_of` model), which is the whole point of CON-16.
+  "article.lifecycle.publishedOn": "Published {date}",
+  "article.lifecycle.readReplacement": "Read {title}",
+  "article.lifecycle.reviewDue": "We will look at this again on {date}.",
+  "article.lifecycle.under_review.heading": "We are checking this piece",
+  "article.lifecycle.under_review.changedOn": "under review since {date}",
+  "article.lifecycle.under_review.fallbackNote":
+    "Something this piece describes has changed. We are going through it now, so parts of it may already be out of date.",
+  "article.lifecycle.archived.heading": "From the archive",
+  "article.lifecycle.archived.changedOn": "archived {date}",
+  "article.lifecycle.archived.fallbackNote":
+    "We keep this piece as a record of its time. It is no longer maintained, so read it as history.",
+  "article.lifecycle.superseded.heading": "There is a newer piece",
+  "article.lifecycle.superseded.changedOn": "replaced {date}",
+  "article.lifecycle.superseded.fallbackNote":
+    "A newer piece covers this ground. This one stays here as a record.",
+  "article.language.label": "Read in",
+  "article.language.onlyIn": "This piece is only in {language} for now.",
+  "article.language.inProgress": "{language} in progress",
+  "article.language.translatedBy": "Translated by {name}",
 
   // ── relationReason() (data/articles.tsx) ────────────────────────────────
   "relation.sameAuthor": "Same author",
@@ -289,6 +338,15 @@ export const magazine: Catalog = {
   "contents.print.readOnlineCta": "Read online free",
   "contents.print.imageAlt": "Print edition mockup · Issue {issue}",
 
+  // ── IssueContentsPanel (live) ────────────────────────────────────────────
+  // The desk's curated running order and per-piece blurbs, on the issue's own
+  // page. This curation used to be destined for an email; QueerPulse sends
+  // none, so nothing here may promise a delivery.
+  "contents.liveHeading": "In this <em>issue</em>",
+  "contents.liveMeta_one": "{count} piece, in the order the desk arranged it",
+  "contents.liveMeta_other":
+    "{count} pieces, in the order the desk arranged them",
+
   // ── IssuesPage ───────────────────────────────────────────────────────────
   "issues.eyebrow": "Magazine · all editions",
   "issues.heroTitle": "Nine issues, <em>quarterly</em>, since 2024.",
@@ -328,6 +386,29 @@ export const magazine: Catalog = {
   "author.followWriterCta": "Follow writer",
   "author.portraitAlt": "Portrait of {slug}",
   "author.portraitPlaceholder": "Portrait",
+  // CON-11 — the byline as a real person: the link back to the member
+  // account behind it, and the editor for whoever may fill it in.
+  "author.viewMemberProfile": "See {name}'s member profile",
+  "author.editBylineCta": "Edit this byline",
+  "author.editMyBylineCta": "Edit my author profile",
+  "author.editor.eyebrow": "Magazine · byline",
+  "author.editor.title": "Author profile",
+  "author.editor.sub":
+    "This is what readers see beside your name on every piece you publish.",
+  "author.editor.nameLabel": "Byline name",
+  "author.editor.nameHelper":
+    "Printed on published pieces. Only editors can change it.",
+  "author.editor.nameRequired": "A byline needs a name.",
+  "author.editor.bioLabel": "Bio",
+  "author.editor.bioHelper":
+    "A couple of lines about the writer, shown on the author page and under each piece.",
+  "author.editor.portraitLabel": "Portrait",
+  "author.editor.portraitAlt": "Author portrait preview",
+  "author.editor.saveCta": "Save",
+  "author.editor.savingCta": "Saving…",
+  "author.editor.cancelCta": "Cancel",
+  "author.editor.savedToast": "Author profile updated.",
+  "author.editor.errorToast": "We couldn't save that. Try again.",
 
   // ── AuthorWork ───────────────────────────────────────────────────────────
   "author.work.mostRecentHeading": "Most recent · <em>featured</em>",
@@ -352,6 +433,19 @@ export const magazine: Catalog = {
   "authorsDirectory.emptyTitle": "No writers to show yet.",
   "authorsDirectory.emptyBody":
     "The directory is still being set up. Bylines will land here soon.",
+  // CON-11 — the directory shows people, not just names.
+  "authorsDirectory.noBio": "No bio yet.",
+  "authorsDirectory.pieceCount_one": "{count} piece",
+  "authorsDirectory.pieceCount_other": "{count} pieces",
+  "authorsDirectory.memberChip": "Member",
+
+  // ── ProfileWritingSection (CON-11) ───────────────────────────────────────
+  "profileWriting.selfTitle": "Your <em>writing</em>",
+  "profileWriting.visitorTitle": "{firstName}'s <em>writing</em>",
+  "profileWriting.sub_one": "{count} piece published in the magazine.",
+  "profileWriting.sub_other": "{count} pieces published in the magazine.",
+  "profileWriting.allCta_one": "See all {count} piece",
+  "profileWriting.allCta_other": "See all {count} pieces",
 
   // ── MagazineSectionsPage (CNT-20) ────────────────────────────────────────
   "sections.eyebrow": "Magazine · sections",
@@ -375,6 +469,33 @@ export const magazine: Catalog = {
   "sectionArticles.emptyTitle": "Nothing published here yet.",
   "sectionArticles.emptyBody":
     "This section is still waiting on its first piece. Check back soon.",
+
+  // ── Magazine search + tag browse (CON-12) ────────────────────────────────
+  // The tags themselves are editorial vocabulary and print as authored; only
+  // the chrome around them is translated.
+  "tags.listAriaLabel": "Tags on this piece",
+  "search.formAriaLabel": "Search the magazine",
+  "search.fieldAriaLabel": "Search the magazine",
+  "search.placeholder": "A name, a place, a subject",
+  "search.submitCta": "Search",
+  "search.metaTitle": "Search the magazine",
+  "search.metaDescription":
+    "Search every piece the magazine has published, and browse by tag.",
+  "search.eyebrow": "Magazine · search",
+  "search.heading": "Search the magazine.",
+  "search.taggedLabel": "Tagged",
+  "search.resultCount_one": "{count} piece found",
+  "search.resultCount_other": "{count} pieces found",
+  "search.promptTitle": "What are you looking for?",
+  "search.promptBody":
+    "Search everything we have published, headlines and bodies alike. Or follow a tag from any article to see what else we have run on it.",
+  "search.errorTitle": "We couldn't run that search.",
+  "search.errorBody":
+    "Something interrupted us on the way there. Your words are still in the field, so give it another try.",
+  "search.retryCta": "Try again",
+  "search.emptyTitle": "Nothing matched that.",
+  "search.emptyBody":
+    "We haven't published on this yet, or it goes by another name here. Try fewer words, or browse by section.",
 
   // ══════════════════ Editor dashboard (staff-only) ════════════════════════
   // Piece/pitch RECORDS (titles, notes, activity feed, section names) are
@@ -843,6 +964,7 @@ export const magazine: Catalog = {
   "deskShell.nav.desk": "Desk",
   "deskShell.nav.pitches": "Pitches",
   "deskShell.nav.issue": "Issue",
+  "deskShell.nav.lifecycle": "Archive",
   "deskShell.openNow": "Open now",
   "deskShell.writePiece": "Write",
   "deskShell.kbdHintSuffix": "to jump · ? for keys",
@@ -974,6 +1096,9 @@ export const magazine: Catalog = {
   "piece.money.agreedFee": "Agreed fee",
   "piece.money.expenses": "Expenses",
   "piece.money.noneFiled": "None filed",
+  "piece.money.noFeeAgreed": "No fee agreed",
+  "piece.money.feeAsFiled": "Fee, as filed: {text}",
+  "piece.money.expensesAsFiled": "Expenses, as filed: {text}",
   "piece.money.invoice": "Invoice",
   "piece.money.notReceived": "Not received",
   "piece.money.filed": "Filed",
@@ -1235,6 +1360,9 @@ export const magazine: Catalog = {
   // The note author/body are an editor's own words (content); only the
   // "{author} wrote:" chrome phrase around them is translated.
   "pitchTracker.card.noteWrote": "{author} wrote:",
+  // Byline for the reply a live decision carries. The desk speaks as the desk
+  // here: the bell and this card never name which staff member decided.
+  "pitchTracker.card.deskAuthor": "The desk",
 
   // ── Shared stage-rail vocabulary (PitchStages.tsx) ──────────────────────
   "pitchTracker.stage.pitched": "Pitched",
@@ -1258,6 +1386,9 @@ export const magazine: Catalog = {
   "pitchTracker.statusLabel.accepted": "Accepted",
   "pitchTracker.statusLabel.published": "Published",
   "pitchTracker.statusLabel.rejected": "Not accepted this issue",
+  // A commission is a yes that also put the piece in the desk's pitch inbox,
+  // so it reads differently from a plain "Accepted".
+  "pitchTracker.statusLabel.commissioned": "Commissioned",
 
   // ── Mock PITCHES per-pitch statusLabel (demo-only, pitch-specific copy) ──
   "pitchTracker.pitch.pharmacist.statusLabel": "In edit · w/ Marta",
@@ -1407,9 +1538,12 @@ export const magazine: Catalog = {
   "write.block.statLabelAria": "Stat {number} label",
   "write.block.statRemoveAria": "Remove stat {number}",
   "write.block.addStat": "Add stat",
-  "write.block.imageUrlLabel": "Image URL",
 
   // ── ImageBlockControls ────────────────────────────────────────────────────
+  "write.image.sourceLabel": "The picture",
+  "write.image.sourceHelper":
+    "Upload the art for this spot. Freeform crop: the frame and focal point below decide how it runs.",
+  "write.image.sourcePlaceholder": "No picture yet",
   "write.image.altLabel": "Alt text",
   "write.image.altError": "Required for screen readers and captions.",
   "write.image.tintLabel": "Tint",
@@ -1478,6 +1612,10 @@ export const magazine: Catalog = {
   "write.meta.metaDescriptionLabel": "Meta description",
   "write.meta.metaDescriptionHelper":
     "Shown in search results and link previews. Optional.",
+  "write.meta.heroImageLabel": "Lead art",
+  "write.meta.heroImageHelper":
+    "The picture that opens the piece and rides on every card pointing at it. At least 1200 by 600.",
+  "write.meta.heroImagePlaceholder": "No lead art yet",
   "write.meta.socialImageLabel": "Social image",
   "write.meta.socialImageHelper":
     "Image URL used when this article is shared. Optional.",
@@ -1571,7 +1709,7 @@ export const magazine: Catalog = {
   "issue.tabs.ariaLabel": "Issue production sections",
   "issue.tabs.runningOrder": "Running order",
   "issue.tabs.coverContents": "Cover & contents",
-  "issue.tabs.digestSocial": "Digest & social",
+  "issue.tabs.digestSocial": "Issue panel & social",
   "issue.tabs.archive": "Archive",
 
   // ── PagesCard ────────────────────────────────────────────────────────────
@@ -1590,6 +1728,24 @@ export const magazine: Catalog = {
   "issue.pages.total": "Total",
   "issue.pages.spare_one": "{count} page spare",
   "issue.pages.spare_other": "{count} pages spare",
+
+  // ── IssueCostsCard (CON-18) ──────────────────────────────────────────────
+  "issue.costs.heading": "What this issue cost",
+  "issue.costs.fees": "Fees",
+  "issue.costs.expenses": "Expenses",
+  "issue.costs.total": "Total",
+  "issue.costs.paid": "Paid",
+  "issue.costs.outstanding": "Still owed",
+  "issue.costs.nothingPriced": "Nothing on this issue carries a fee yet.",
+  "issue.costs.loadFailed": "The costs could not be loaded just now.",
+  "issue.costs.unpriced_one":
+    "{count} payment has no amount, so it sits outside these totals.",
+  "issue.costs.unpriced_other":
+    "{count} payments have no amount, so they sit outside these totals.",
+  "issue.costs.coverage_one":
+    "{payments} payments across {count} piece in this issue.",
+  "issue.costs.coverage_other":
+    "{payments} payments across {count} pieces in this issue.",
 
   // ── RunningOrderTab ──────────────────────────────────────────────────────
   "issue.runOrder.deckNoPageCount": "Deck: no page count",
@@ -1631,24 +1787,27 @@ export const magazine: Catalog = {
   "issue.contents.blurbPlaceholder": "One sentence, written by the desk.",
 
   // ── DigestSocialTab ──────────────────────────────────────────────────────
-  "issue.digest.heading": "Members' digest",
+  // CON-05: this tab used to curate an EMAIL. QueerPulse delivers none, so the
+  // send path is gone and the same curation now feeds the "In this issue"
+  // panel on the issue's public page, plus one in-app announcement on ship.
+  // No string here may describe a delivery. The `issue.digest.*` key prefix is
+  // historical; the copy underneath it is not.
+  "issue.digest.heading": "Issue panel",
   "issue.digest.hint":
-    "Goes out at 09:00 on the day the issue publishes. Order here is the order in the email.",
-  "issue.digest.includeAria": "Include “{title}” in the members' digest",
-  "issue.digest.editBlurbAria": "Edit digest blurb for “{title}”",
+    "This is what readers see on the issue's page. Order here is the reading order.",
+  "issue.digest.includeAria": "Show “{title}” on the issue panel",
+  "issue.digest.editBlurbAria": "Edit the issue-panel blurb for “{title}”",
   "issue.digest.save": "Save",
   "issue.digest.cancel": "Cancel",
   "issue.digest.edit": "Edit",
-  "issue.digest.sendTest": "Send me a test",
-  "issue.digest.sendTestToast": "A test digest is on its way to your inbox.",
-  "issue.digest.sendTestError":
-    "We couldn't send the test digest. Please try again.",
-  "issue.digest.scheduleWithIssue": "Schedule with the issue",
-  "issue.digest.scheduledWithIssue": "Scheduled with the issue",
-  "issue.digest.scheduleToast": "The digest will go out with the issue.",
-  "issue.digest.scheduleOffToast":
-    "The digest will no longer go out automatically with this issue.",
-  "issue.digest.alreadySent": "Sent to subscribers on {date}",
+  "issue.digest.previewPanel": "See the reader's page",
+  "issue.digest.announceWithIssue": "Announce with the issue",
+  "issue.digest.announceScheduled": "Announcing with the issue",
+  "issue.digest.announceOnToast":
+    "Members get a notification when this issue ships.",
+  "issue.digest.announceOffToast":
+    "Shipping this issue will no longer notify members.",
+  "issue.digest.alreadyAnnounced": "Announced to members on {date}",
   "issue.digest.socialHeading": "Social out",
   "issue.digest.socialAltHint":
     "Alt text is copied from the image, so it's always filled in.",
@@ -1907,4 +2066,86 @@ export const magazine: Catalog = {
   "comments.deleteConfirm.body":
     "It will be replaced with a note saying the comment was deleted. This can't be undone.",
   "comments.deleteConfirm.cta": "Delete comment",
+
+  // ── CON-16: the lifecycle desk (/magazine/editor/lifecycle) ──────────────
+  "lifecycle.pageTitle": "Archive · QueerPulse Magazine",
+  "lifecycle.heading": "The archive",
+  "lifecycle.blurb":
+    "Where every published piece stands today, and which ones the desk promised to check again. Retiring a piece keeps it readable and gives the reader a dated note, so nothing anyone shared turns into a dead link.",
+  "lifecycle.horizon": "{days} days",
+  "lifecycle.horizonAria": "How far ahead the review queue looks",
+  "lifecycle.saved": "Saved. Readers see this on the piece now.",
+  "lifecycle.saveFailed": "That didn't save. Try again.",
+
+  "lifecycle.state.live": "Live",
+  "lifecycle.state.underReview": "Under review",
+  "lifecycle.state.archived": "Archived",
+  "lifecycle.state.superseded": "Superseded",
+  "lifecycle.hint.live":
+    "Current. We stand by it as written, and no banner shows.",
+  "lifecycle.hint.underReview":
+    "We are re-checking it against the law or the service as they stand now. Readers are told parts may be out of date.",
+  "lifecycle.hint.archived":
+    "Of its time. Kept as a record, no longer maintained, and read as history.",
+  "lifecycle.hint.superseded":
+    "A newer piece replaces it. The banner sends the reader straight there.",
+
+  "lifecycle.counts.overdue": "Overdue",
+
+  "lifecycle.queue.heading": "Due for a look",
+  "lifecycle.queue.blurb":
+    "Pieces the desk promised to re-check, oldest promise first. Most are still live, because nobody has looked yet.",
+  "lifecycle.queue.empty": "Nothing is due in this window.",
+  "lifecycle.flagged.heading": "Carrying a banner",
+  "lifecycle.flagged.blurb":
+    "Everything a reader currently sees a note on. A piece can be here and in the queue above at the same time.",
+  "lifecycle.flagged.empty": "Every published piece is live.",
+
+  "lifecycle.row.published": "published {date}",
+  "lifecycle.row.replacedBy": "Replaced by {title}",
+  "lifecycle.row.dueIn": "Due in {days} days",
+  "lifecycle.row.overdueBy": "{days} days overdue",
+  "lifecycle.row.noReview": "No review set",
+  "lifecycle.row.edit": "Set status",
+  "lifecycle.row.editAria": "Set the status of {title}",
+
+  "lifecycle.modal.eyebrow": "Lifecycle",
+  "lifecycle.modal.sub":
+    "This is what a reader sees at the top of the piece. The piece stays published and stays in the archive either way.",
+  "lifecycle.modal.stateLabel": "Where this piece stands",
+  "lifecycle.modal.replacementLabel": "The piece that replaces it",
+  "lifecycle.modal.replacementHelper":
+    "Its slug, the part after ?id= in its address.",
+  "lifecycle.modal.replacementRequired":
+    "A superseded piece needs somewhere to send the reader.",
+  "lifecycle.modal.noteLabel": "What to tell the reader",
+  "lifecycle.modal.noteHelper":
+    "One sentence in your own words. Leave it blank and the piece gets the general wording for this status.",
+  "lifecycle.modal.reviewLabel": "Check this again on",
+  "lifecycle.modal.reviewHelper":
+    "The day this lands back on the desk. Readers see the promise too.",
+  "lifecycle.modal.cancel": "Cancel",
+  "lifecycle.modal.save": "Save status",
+
+  "lifecycle.row.languages": "Languages",
+  "lifecycle.row.languagesAria": "Languages for {title}",
+  "lifecycle.languages.eyebrow": "Languages",
+  "lifecycle.languages.sub":
+    "A translation is its own piece: its own address, its own byline for whoever translates it, and its own publish date. It ships when the translator is done.",
+  "lifecycle.languages.published": "Published",
+  "lifecycle.languages.drafting": "Still drafting",
+  "lifecycle.languages.translator": "translated by {name}",
+  "lifecycle.languages.emptyTitle": "One language so far",
+  "lifecycle.languages.emptyBody":
+    "Open a translation below and it arrives on the desk with the original's paragraphs already in place.",
+  "lifecycle.languages.localeLabel": "Translate into",
+  "lifecycle.languages.localePlaceholder": "Pick a language",
+  "lifecycle.languages.translatorLabel": "Who is translating it",
+  "lifecycle.languages.translatorHelper":
+    "Their name as it should read in the credit. Leave it blank and credit them later.",
+  "lifecycle.languages.open": "Open translation",
+  "lifecycle.languages.opened": "Translation opened at {slug}.",
+  "lifecycle.languages.openFailed": "That didn't open. Try again.",
+  "lifecycle.languages.allDone":
+    "This piece already exists in every language we publish.",
 };

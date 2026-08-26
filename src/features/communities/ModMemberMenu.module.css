@@ -1,0 +1,91 @@
+.container {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color 0.15s var(--ease),
+    border-color 0.15s var(--ease),
+    color 0.15s var(--ease);
+}
+.trigger svg {
+  width: 17px;
+  height: 17px;
+}
+@media (hover: hover) {
+  .trigger:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+    color: var(--ink);
+  }
+}
+.trigger[aria-expanded="true"] {
+  border-color: rgba(var(--line-rgb), 0.3);
+  color: var(--ink);
+}
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 30;
+  min-width: 220px;
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(var(--plum-rgb), 0.14);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.itemIcon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-40);
+}
+.itemIcon svg {
+  width: 14px;
+  height: 14px;
+}
+@media (hover: hover) {
+  .item:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+.danger {
+  color: var(--danger);
+}
+.danger .itemIcon {
+  color: var(--danger);
+}
+@media (prefers-reduced-motion: reduce) {
+  .trigger {
+    transition: none;
+  }
+}

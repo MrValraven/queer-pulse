@@ -6,6 +6,7 @@ import {
 } from "../../../shared/api/client";
 import { API_BASE_URL } from "../../../shared/api/config";
 import { validateAuthUser } from "../../../shared/api/validation";
+import type { PolicyVersions } from "../../../shared/api/consent.api";
 import { TERMS_VERSION } from "./ageAttestation.api";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 
@@ -64,6 +65,17 @@ export interface AuthUser {
    * narrow with `isStaffRoleId`/`STAFF_ROLE_IDS` (see `useMyStaffRoles`).
    */
   staffRoles: string[];
+  /**
+   * The Terms + Community Guidelines revisions this member has agreed to,
+   * paired with the ones currently in effect (ID-14). When either `accepted*`
+   * is behind (or `null`) the re-acceptance sheet opens over the member surface
+   * — see `needsPolicyReacceptance` in `app/authGate.ts`.
+   *
+   * Optional so an older backend that predates the field simply never triggers
+   * the sheet, rather than failing `validateAuthUser` and holding every gated
+   * route.
+   */
+  policyVersions?: PolicyVersions;
   profile: {
     slug: string;
     firstName: string;

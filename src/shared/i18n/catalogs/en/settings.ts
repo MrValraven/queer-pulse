@@ -206,25 +206,81 @@ export const settings: Catalog = {
   "notifications.section.messagesConnections": "Messages & connections",
   "notifications.section.communitiesBoard": "Communities & board",
   "notifications.section.delivery": "Delivery",
-  "notifications.gatherings.newAnnounced.title": "New gathering announced",
-  "notifications.gatherings.newAnnounced.desc":
-    "When a gathering matching your interests is posted",
-  "notifications.gatherings.rsvpReminder.title": "RSVP reminder",
-  "notifications.gatherings.rsvpReminder.desc":
-    "48 hours before a gathering you've said you're going to",
+
+  // ── Notification volume (SOC-10) ──────────────────────────────────────────
+  "notifications.section.phonePush": "On your phone",
+  "notifications.section.yourWork": "Your work and your listings",
+  "notifications.volume.eventInvites.title": "New gathering announced",
+  "notifications.volume.eventInvites.desc":
+    "When you are invited to a gathering",
+  "notifications.volume.eventReminders.title": "RSVP reminder",
+  "notifications.volume.eventReminders.desc":
+    "Before a gathering you said you are going to",
+  "notifications.volume.eventActivity.title": "Activity on gatherings you run",
+  "notifications.volume.eventActivity.desc":
+    "New RSVPs, and invitations to co-host",
+  "notifications.volume.newMessages.title": "New message",
+  "notifications.volume.newMessages.desc":
+    "When someone sends you a direct message",
+  "notifications.volume.connections.title": "Connection requests",
+  "notifications.volume.connections.desc":
+    "When someone asks to connect, or accepts your request",
+  "notifications.volume.vouches.title": "Vouches",
+  "notifications.volume.vouches.desc":
+    "When someone vouches for you, or for a space you run",
+  "notifications.volume.invitations.title": "Invitations and introductions",
+  "notifications.volume.invitations.desc":
+    "When an invite you sent is accepted, someone introduces you, or a community invites you in",
+  "notifications.volume.mentions.title": "Mentions",
+  "notifications.volume.mentions.desc":
+    "When someone names you in a post or a discussion",
+  "notifications.volume.replies.title": "Replies to threads you are in",
+  "notifications.volume.replies.desc":
+    "When someone responds in a discussion you have taken part in",
+  "notifications.volume.posts.title": "New posts in your communities",
+  "notifications.volume.posts.desc":
+    "Ordinary posts and shared resources. Set the level per community below to keep some rooms loud and others quiet",
+  "notifications.volume.announcements.title": "Community announcements",
+  "notifications.volume.announcements.desc":
+    "Only what an owner or moderator marked as an announcement",
+  "notifications.volume.topicFollows.title": "Topics you follow",
+  "notifications.volume.topicFollows.desc":
+    "New posts under a topic you chose to follow",
+  "notifications.volume.recognition.title": "Recognition",
+  "notifications.volume.recognition.desc":
+    "Levels, badges, endorsements, credits, and new followers",
+  "notifications.volume.personas.title": "Personas",
+  "notifications.volume.personas.desc":
+    "Invitations to co-own a persona, and who joined one",
+  "notifications.volume.listings.title": "Listings you manage",
+  "notifications.volume.listings.desc":
+    "Public questions, accepted edits, and co-manager invitations",
+  "notifications.volume.opportunities.title": "Opportunities",
+  "notifications.volume.opportunities.desc":
+    "Applications to what you posted, swap proposals, and homes matching a search you saved",
+  "notifications.volume.magazine.title": "The magazine",
+  "notifications.volume.magazine.desc":
+    "Messages on a piece you are working on, and a new issue shipping",
+  "notifications.volume.alwaysOn.label": "Always delivered",
+  "notifications.volume.alwaysOn.desc":
+    "Safety and moderation outcomes, account and security alerts, changes to a community you belong to, and decisions on things you asked for are always delivered. They cannot be turned off.",
+  "notifications.perCommunity.label": "Volume, community by community",
+  "notifications.perCommunity.intro":
+    "Turn a busy room down without leaving it. This is the same setting the community's own page offers.",
+  "notifications.perCommunity.rowDesc": "How much you hear from this community",
+  "notifications.perCommunity.level.all": "Everything",
+  "notifications.perCommunity.level.announcements": "Announcements only",
+  "notifications.perCommunity.level.muted": "Off",
+  "notifications.delivery.quietHours.title": "Quiet hours",
+  "notifications.delivery.quietHours.desc":
+    "Hold your phone notifications during these hours, read on your own clock. Nothing is lost: everything still arrives in your notifications, it just does not buzz.",
+  "notifications.delivery.quietHours.none": "No quiet hours",
+
   "notifications.gatherings.lastFewSpots.title": "Last few spots",
   "notifications.gatherings.lastFewSpots.desc":
     "When a gathering you saved is almost full",
-  "notifications.messages.newMessage.title": "New message",
-  "notifications.messages.newMessage.desc":
-    "When someone sends you a direct message",
-  "notifications.messages.connectionRequest.title": "Connection request",
-  "notifications.messages.connectionRequest.desc":
-    "When someone asks to connect with you",
   "notifications.messages.sayHello.title": '"Say hello" received',
   "notifications.messages.sayHello.desc": "When someone waves at your profile",
-  "notifications.messages.vouch.title": "Vouches",
-  "notifications.messages.vouch.desc": "When someone vouches for you",
   "notifications.phonePush.title": "Phone notifications",
   "notifications.phonePush.desc":
     "Get a nudge on your phone when someone messages you, even when QueerPulse is closed. Add QueerPulse to your home screen first.",
@@ -232,9 +288,9 @@ export const settings: Catalog = {
     "Your browser can’t show phone notifications yet.",
   "notifications.phonePush.blocked":
     "Notifications are blocked. Turn them back on in your browser settings, then try again.",
-  "notifications.phonePush.previews.title": "Hide message previews",
+  "notifications.phonePush.previews.title": "Hide notification previews",
   "notifications.phonePush.previews.desc":
-    "Show that something arrived without naming who it is from or what it says. Useful if other people can see your lock screen.",
+    "Show that something arrived without naming who it is from or what it says. Applies on every device you are signed in on, including iPhone. Useful if other people can see your lock screen.",
   "notifications.phonePush.previews.error":
     "We could not save that. Your previews have not changed.",
   "notifications.phonePush.test.title": "Send yourself a test",
@@ -248,29 +304,6 @@ export const settings: Catalog = {
   "notifications.phonePush.manage.desc":
     "See every device receiving your push notifications, and remove any you don't recognise.",
   "notifications.phonePush.manage.cta": "Manage devices",
-  "notifications.communities.newPost.title": "New post in my communities",
-  "notifications.communities.newPost.desc":
-    "Activity in communities you've joined",
-  "notifications.communities.threadReply.title": "Reply to a thread I'm in",
-  "notifications.communities.threadReply.desc":
-    "When someone responds to a thread you've participated in",
-  "notifications.communities.mention.title": "Mentions",
-  "notifications.communities.mention.desc":
-    "When someone mentions you in a post or discussion",
-  "notifications.communities.weeklyDigest.title": "Weekly community digest",
-  "notifications.communities.weeklyDigest.desc":
-    "A quiet summary of what's happening: one email, once a week",
-  "notifications.delivery.email.title": "Email notifications",
-  "notifications.delivery.email.desc":
-    "How often to batch and send notifications by email",
-  "notifications.delivery.email.immediately": "Immediately",
-  "notifications.delivery.email.dailyDigest": "Daily digest",
-  "notifications.delivery.email.weeklyDigest": "Weekly digest",
-  "notifications.delivery.email.never": "Never",
-  "notifications.delivery.quietHours.title": "Quiet hours",
-  "notifications.delivery.quietHours.desc":
-    "Don't send anything between these hours",
-  "notifications.delivery.quietHours.none": "No quiet hours",
 
   // ── SettingsPanes.tsx — LanguagePane ──────────────────────────────────────
   "language.title": "Language & <em>terminology.</em>",
@@ -373,8 +406,11 @@ export const settings: Catalog = {
   "account.twoFactor.desc":
     "Adds a second step when logging in from a new device",
   "account.loginAlerts.title": "Login alerts",
+  // Names the two channels that exist. The previous line said "Email me",
+  // which QueerPulse has never been able to do and never will.
   "account.loginAlerts.desc":
-    "Email me when my account is accessed from a new device",
+    "Tell me here and on my phone when my account is signed in to from a device I haven't used before",
+  "account.loginAlerts.toastError": "We couldn't save that setting. Try again.",
   "account.sessions.title": "Active sessions",
   "account.sessions.desc":
     "See every device signed into your account right now, and sign out anywhere you don't recognize.",
@@ -570,6 +606,10 @@ export const settings: Catalog = {
   "sessions.bulk.signOutAll": "Sign out all other sessions",
   "sessions.sectionActiveNow": "Active now",
   "sessions.card.badgeThis": "This session",
+  "sessions.card.currentDeviceNote": "You're using this device right now.",
+  // Opens the collapsed raw User-Agent. Named for what it is, so nobody has to
+  // read it to know they can skip it.
+  "sessions.card.technicalDetail": "Technical detail",
   "sessions.card.badgeReview": "Review",
   "sessions.card.signedIn": "Signed in <strong>{when}</strong>",
   "sessions.card.lastActivity": "Last activity <strong>{when}</strong>",

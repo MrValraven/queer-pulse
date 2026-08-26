@@ -3,7 +3,10 @@ import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { accessLabelKey } from "./createGathering.data";
+import {
+  ACCESSIBILITY_QUESTIONS,
+  type AccessibilityAnswerMap,
+} from "../marketing/listBusiness/listingAccessibility.data";
 import { gatheringPath } from "./data";
 import styles from "./CreateGatheringPage.module.css";
 
@@ -13,14 +16,20 @@ import styles from "./CreateGatheringPage.module.css";
  * shell component stays under the 200-line limit.
  */
 export function CreateGatheringSuccess({
-  access,
+  accessibilityAnswers,
   /** Slug the backend assigned (null in demo — the CTA falls back to the board). */
   createdSlug,
 }: {
-  access: Set<string>;
+  accessibilityAnswers: AccessibilityAnswerMap;
   createdSlug: string | null;
 }) {
   const { t } = useTranslation();
+  // Only what the host confirmed is echoed back here. The nos and the
+  // unanswered questions are on the gathering's own page, where somebody
+  // deciding whether they can get through the door will read them.
+  const confirmed = ACCESSIBILITY_QUESTIONS.filter(
+    (question) => accessibilityAnswers[question.slug] === "yes",
+  );
   return (
     <div className={styles.success}>
       <div className={styles.successIcon}>
@@ -33,15 +42,15 @@ export function CreateGatheringSuccess({
         />
       </div>
       <p className={styles.successSub}>{t("gatherings:create.success.body")}</p>
-      {access.size > 0 && (
+      {confirmed.length > 0 && (
         <div className={styles.successAccess}>
           <span className={styles.successAccessLbl}>
             {t("gatherings:create.success.accessLabel")}
           </span>
           <div className={styles.successAccessTags}>
-            {[...access].map((accessValue) => (
-              <span key={accessValue} className={styles.successAccessTag}>
-                <FiCheck /> {t(accessLabelKey(accessValue) ?? accessValue)}
+            {confirmed.map((question) => (
+              <span key={question.slug} className={styles.successAccessTag}>
+                <FiCheck aria-hidden /> {t(question.labelKey)}
               </span>
             ))}
           </div>

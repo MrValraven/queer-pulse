@@ -108,7 +108,7 @@ export const culture: Catalog = {
     "Recebemos a tua nomeação. A comunidade decide o que lemos, vemos e ouvimos a seguir.",
   "suggestPick.success.step1": "Entra na votação de último domingo.",
   "suggestPick.success.step2":
-    "Ainda não enviamos um email com os resultados, por isso volta aqui depois da votação.",
+    "O resultado é publicado aqui nesta página depois da votação.",
 
   "postProject.title": "Publicar um <em>projeto</em>",
   "postProject.sub":
@@ -126,7 +126,7 @@ export const culture: Catalog = {
     "Recebemos o teu projeto. O quadro ainda é pequeno, por isso as publicações ainda não são associadas automaticamente a colaboradores.",
   "postProject.success.step1": "Está guardado e visível para a nossa equipa.",
   "postProject.success.step2":
-    "Entramos em contacto por email se alguém quiser avançar como colaborador.",
+    "Se alguém quiser avançar como colaborador, uma curadora responde-te por mensagem na QueerPulse.",
 
   "submitWork.title": "Submete o teu <em>trabalho</em>",
   "submitWork.sub":
@@ -147,7 +147,7 @@ export const culture: Catalog = {
     "Recebemos o teu trabalho. A mostra roda oito peças de cada vez, escolhidas pela comunidade.",
   "submitWork.success.step1": "Está guardado na fila da mostra.",
   "submitWork.success.step2":
-    "Entramos em contacto por email se for selecionado.",
+    "Se for selecionado, uma curadora responde-te por mensagem na QueerPulse.",
 
   "submitPlaylist.eyebrow": "Rádio da Comunidade",
   "submitPlaylist.title": "Submeter uma <em>playlist</em>",
@@ -169,7 +169,7 @@ export const culture: Catalog = {
   "submitPlaylist.success.step1":
     "Está guardada aqui para uma pessoa da curadoria considerar.",
   "submitPlaylist.success.step2":
-    "Entramos em contacto por email se conseguirmos reservar-te um lugar.",
+    "Se conseguirmos reservar-te um lugar, uma curadora responde-te por mensagem na QueerPulse.",
 
   "commissionInterest.errorToast":
     "Não foi possível enviar o teu interesse. Tenta novamente.",
@@ -188,7 +188,7 @@ export const culture: Catalog = {
   "commissionInterest.success.step1":
     "{name} pode ver a tua nota e o teu perfil.",
   "commissionInterest.success.step2":
-    "Se quiser avançar, apresentamos-vos por email.",
+    "Se quiser avançar, a apresentação acontece por mensagem na QueerPulse.",
   "commissionInterest.success.step3":
     "Sem pressão de qualquer forma. As colaborações aqui são sempre um sim de ambos os lados.",
 
@@ -217,4 +217,15 @@ export const culture: Catalog = {
   "options.vibe.dancefloor": "Pista de dança",
   "options.vibe.healing": "Cura",
   "options.vibe.nostalgic": "Nostálgico",
+
+  // ── Página "ainda não lançado" em modo live (CultureComingSoon, CON-14) ───
+  // Os conteúdos de todos os separadores são curadoria só de demonstração, sem
+  // qualquer forma de publicar, por isso em modo live /magazine/culture resolve
+  // aqui e a entrada no meganav desaparece.
+  "comingSoon.metaTitle": "Cultura: em breve na QueerPulse",
+  "comingSoon.title": "A Cultura ainda está a ser montada",
+  "comingSoon.description":
+    "As escolhas de noite, o quadro de encomendas, a montra de arte e a rádio comunitária ainda estão a ser construídos e não há nada publicado. Entretanto, a revista já está a sair e é nas comunidades que a cena se organiza.",
+  "comingSoon.magazineCta": "Ler a revista",
+  "comingSoon.communitiesCta": "Explorar comunidades",
 };

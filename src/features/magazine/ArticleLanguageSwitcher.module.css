@@ -1,0 +1,100 @@
+/* CON-16 — the article page's language switcher.
+
+   Sits under the byline, at the weight of the metadata pills around it. A
+   language choice is orientation, so it reads as a quiet row of options
+   rather than as a call to action competing with the headline. */
+
+.switcher {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.options {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.option,
+.current,
+.pending {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-badge);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.option {
+  color: var(--ink-60);
+  text-decoration: none;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  transition:
+    color var(--dur-fast, 0.16s) var(--ease, ease),
+    border-color var(--dur-fast, 0.16s) var(--ease, ease);
+}
+@media (hover: hover) {
+  .option:hover {
+    color: var(--ink);
+    border-color: rgba(var(--line-rgb), 0.4);
+  }
+}
+
+/* The language on screen. Filled rather than outlined so the reader can see
+   at a glance which one they are in. */
+.current {
+  color: var(--cream);
+  background: var(--plum);
+  border: 1px solid var(--plum);
+}
+
+/* Drafted, not shipped. Deliberately not a link: nobody is sent to a piece
+   that is not published yet. */
+.pending {
+  color: var(--ink-40);
+  border: 1px dashed rgba(var(--line-rgb), 0.24);
+}
+
+.translator {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+/* The one-line answer for a reader whose language this piece is not in. */
+.onlyIn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+@media (max-width: 600px) {
+  .switcher {
+    gap: 6px 10px;
+  }
+}

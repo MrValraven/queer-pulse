@@ -8,11 +8,48 @@ import { toItemsPage, type ItemsPage } from "../../../shared/api/pagination";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 import type { VerificationLevel } from "./verification.api";
 
+/**
+ * Where a listing sits in moderation. Mirrors the backend's
+ * `HousingListingStatus`: `review` is where every create and every content edit
+ * lands, `question` means a moderator sent it back with a reason, `rejected`
+ * means it was refused before it was ever published, and `taken_down` means it
+ * was pulled after being live. The last two arrived with the review console
+ * (LOC-01) and are owner/moderator-visible only.
+ */
+export type HousingListingStatus =
+  "review" | "question" | "live" | "rejected" | "taken_down";
+
+/**
+ * The moderator's last decision on a listing, attached only for its owner and
+ * for moderators. `reason` is written by a person and shown to the lister
+ * verbatim, so render it as prose rather than mapping it to a canned string.
+ */
+export interface HousingListingDecisionDTO {
+  /** The status the moderator moved the listing into. */
+  status: HousingListingStatus;
+  /** Required for everything except an approval, where it is an optional note. */
+  reason: string | null;
+  at: string;
+}
+
+/**
+ * The lister block a housing listing embeds. `MemberRefDTO` plus the two fields
+ * the detail page renders next to the enquiry button: when they joined, and
+ * their own public bio. Both come from the member's own profile, so nothing is
+ * disclosed here that a reader could not reach by opening their profile.
+ */
+export interface HousingListerRefDTO extends MemberRefDTO {
+  /** ISO-8601 join date, or null when the profile row is gone. */
+  memberSince: string | null;
+  /** The member's own bio, plain text, or null when they wrote none. */
+  bio: string | null;
+}
+
 export interface HousingListingDTO {
   ref: string;
   slug: string;
-  status: "review" | "question" | "live";
-  lister: MemberRefDTO | null;
+  status: HousingListingStatus;
+  lister: HousingListerRefDTO | null;
   /** The lister's real identity-verification level (honest badge). */
   listerVerificationLevel: VerificationLevel;
   /** Whether the backend derived this listing as verified (id-verified lister +
@@ -22,6 +59,10 @@ export interface HousingListingDTO {
    * failing gate) — powers an honest tooltip. */
   listingVerifiedReason: string;
   createdAt: string;
+  /** The moderator's last decision, attached only for the owner and for
+   * moderators. Null while nothing has been decided, and null for every viewer
+   * who is not entitled to it, so a public read cannot tell the two apart. */
+  decision: HousingListingDecisionDTO | null;
   /** Owner "found a place / no longer looking" signal (HSG-1), or null while
    * still looking. Set by the owner or by the daily expiry sweep. */
   filledAt: string | null;
@@ -33,6 +74,9 @@ export interface HousingListingDTO {
   title: string;
   blurb: string;
   city: string;
+  /** IANA zone every date on this listing is expressed in. Served explicitly so
+   * no client hardcodes a fallback. Always `Europe/Lisbon` today. */
+  timezone: string;
   area: string;
   rentEuros: number;
   /** Bedroom count (0 = studio), or null when the lister didn't set it. */
@@ -90,10 +134,25 @@ export interface HousingListingFilters {
   page?: number;
 }
 
+/**
+ * The one city QueerPulse housing serves. There is no city picker and no
+ * cities abstraction: the backend owns the value (`housing-city.ts` stores
+ * `"Lisbon"` whatever a client sends) and the form sends it so the request
+ * reads honestly rather than leaving the column to a fallback.
+ *
+ * The form used to send `city: area.trim()`, which put a neighbourhood name in
+ * the city column and degraded saved-search matching, since a saved search
+ * matches on area AND city.
+ */
+export const HOUSING_CITY = "Lisbon";
+
 export interface CreateHousingListingBody {
   type: HousingListingDTO["type"];
   title: string;
-  city: string;
+  /** Always {@link HOUSING_CITY}. Optional on the wire; the backend normalises
+   *  anything else to the one city rather than 400ing an older client. */
+  city?: string;
+  /** The neighbourhood, kept separate from the city above. */
   area?: string;
   rentEuros: number;
   bedrooms?: number;
@@ -107,6 +166,23 @@ export interface CreateHousingListingBody {
   accessibilityInfo: string;
   /** Omitted → member. Agents are labelled, not barred. */
   listerKind?: "member" | "agent";
+  /** YYYY-MM-DD move-in date. Omitted means available now. */
+  availableFrom?: string;
+  /** Shortest stay the lister will take, in months. */
+  minStayMonths?: number;
+  /** What the home has, up to 20 entries of 60 characters. */
+  features?: string[];
+  /** Who the home suits, up to 20 entries of 60 characters. Scanned by the
+   *  backend's risk assessment, because this is the field where an exclusion
+   *  ("straight couples only") actually gets typed. */
+  idealFor?: string[];
+  /**
+   * Up to 8 photos, each an upload reference: the private storage `key` a
+   * presigned upload returned, or the resolved `/files/<key>` URL an existing
+   * listing was read back with (the backend normalises that form back to the
+   * key). Never a raw external URL.
+   */
+  gallery?: string[];
   /** Optional 360°/virtual-tour link (https). */
   virtualTourUrl?: string;
 }

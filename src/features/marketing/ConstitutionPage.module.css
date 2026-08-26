@@ -175,9 +175,11 @@
   color: var(--ink-60);
   font-weight: 600;
 }
-/* Inert emphasis, not a control: this footer item has no destination and no
-   handler, so it carries no pointer cursor and no link affordance. */
-.versionStrong {
-  color: var(--text-strong);
+/* The footer's one real affordance: a router link through to the Code of
+   Conduct, styled as an inline text link so it reads as a destination. */
+.versionLink {
+  color: var(--accent);
   font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

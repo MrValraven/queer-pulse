@@ -332,12 +332,6 @@
     color: var(--ink);
   }
 }
-@media (hover: hover) {
-  .removeBtn:hover {
-    border-color: var(--accent);
-    color: var(--accent-ink);
-  }
-}
 .ownerTag {
   display: inline-flex;
   align-items: center;

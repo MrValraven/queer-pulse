@@ -115,13 +115,6 @@ export const help: Catalog = {
     "Filtra por categoria como design, tecnologia ou cuidado para afinar o mural.\nAbre um anúncio para ler toda a função, a proposta e quem analisa as candidaturas.\nGuarda os que gostas e , ou publica o teu com “Publicar vaga”.",
   "economy.jobs.demo":
     "um anúncio como Junior Graphic Designer no Atelier Pulso, um estúdio de gestão queer no Príncipe Real, onde as candidaturas são lidas pela própria fundadora.",
-  "economy.skills.title": "Competências",
-  "economy.skills.intro":
-    "Um mural de partilha de competências onde os membros oferecem o que sabem e pedem o que querem aprender: de branding a engenharia backend até olaria em torno. É ensino entre pares, gratuito e partilhado dentro da comunidade.",
-  "economy.skills.use":
-    "Explora por categoria ou vê em “A oferecer” e “A querer aprender”.\nContacta um membro cuja oferta corresponda ao que precisas.\nPartilha a tua própria competência ou anuncia um workshop para outros participarem.",
-  "economy.skills.demo":
-    "uma oferta como a Inês a ensinar identidade visual e branding, um a um, no seu estúdio, ou alguém que quer aprender a angariar fundos para um projeto comunitário.",
   "economy.tools.title": "Gerador de faturas",
   "economy.tools.intro":
     "Um gerador de faturas gratuito que transforma os teus dados numa fatura-recibo pronta a imprimir, diretamente no navegador. Sem conta e sem que os dados saiam do teu dispositivo. Feito para freelancers a lidar com o trabalho independente em Portugal.",

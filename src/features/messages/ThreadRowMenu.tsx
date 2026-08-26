@@ -7,9 +7,11 @@ import {
   type ReactNode,
 } from "react";
 import {
+  FiArchive,
   FiBell,
   FiBellOff,
   FiHeart,
+  FiInbox,
   FiMoreHorizontal,
   FiTrash2,
 } from "react-icons/fi";
@@ -35,15 +37,17 @@ export function ThreadRowMenu({
   onTogglePin,
   onToggleFavorite,
   onToggleMute,
+  onToggleArchive,
   onDelete,
 }: {
-  /** Carries this row's own pinned/favorite/muted state — the pin cap check
-   *  itself lives in `useTogglePin` (the caller computes and passes the
+  /** Carries this row's own pinned/favorite/muted/archived state — the pin cap
+   *  check itself lives in `useTogglePin` (the caller computes and passes the
    *  pinned count into its `mutate()` call, not through this component). */
   thread: Conversation;
   onTogglePin: () => void;
   onToggleFavorite: () => void;
   onToggleMute: () => void;
+  onToggleArchive: () => void;
   /** Opens the delete-confirmation flow for this conversation. */
   onDelete: () => void;
 }) {
@@ -56,6 +60,7 @@ export function ThreadRowMenu({
   const isPinned = !!thread.pinnedAt;
   const isFavorite = !!thread.favorite;
   const isMuted = !!thread.muted;
+  const isArchived = !!thread.archivedAt;
 
   const items: MenuItemDef[] = useMemo(
     () => [
@@ -84,6 +89,14 @@ export function ThreadRowMenu({
         onSelect: onToggleMute,
       },
       {
+        key: "archive",
+        label: isArchived
+          ? t("messages:thread.unarchiveChat")
+          : t("messages:thread.archiveChat"),
+        icon: isArchived ? <FiInbox aria-hidden /> : <FiArchive aria-hidden />,
+        onSelect: onToggleArchive,
+      },
+      {
         key: "delete",
         label: t("messages:thread.deleteChat"),
         icon: <FiTrash2 aria-hidden />,
@@ -95,9 +108,11 @@ export function ThreadRowMenu({
       isPinned,
       isFavorite,
       isMuted,
+      isArchived,
       onTogglePin,
       onToggleFavorite,
       onToggleMute,
+      onToggleArchive,
       onDelete,
       t,
     ],

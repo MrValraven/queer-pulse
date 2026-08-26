@@ -1,0 +1,100 @@
+/* Block padding only — this element also carries the shared `.wrap` class, and
+   a `padding` shorthand would clear that container's inline gutter. Mirrors
+   `PlacesSection.module.css`, the sibling profile section. */
+.section {
+  padding-block: 8px 40px;
+}
+.head {
+  margin-bottom: 20px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 3vw, 30px);
+  color: var(--text-strong);
+  letter-spacing: -0.015em;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: 14px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 6px;
+  max-width: 56ch;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.piece {
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+@media (hover: hover) {
+  .piece:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .piece:hover .pieceTitle {
+    color: var(--accent-ink);
+  }
+}
+.piece:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pieceTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.25;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  transition: color var(--dur-base) var(--ease);
+}
+.pieceDek {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.pieceMeta {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-top: 2px;
+}
+
+.allLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .allLink:hover {
+    text-decoration: underline;
+  }
+}

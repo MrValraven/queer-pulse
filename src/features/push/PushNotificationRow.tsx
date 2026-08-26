@@ -1,61 +1,61 @@
-import { useEffect, useState } from "react";
-import { FiSend } from "react-icons/fi";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiArrowRight, FiSend } from "react-icons/fi";
+import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useDisplayMode } from "../../app/providers/displayModeContext";
 import { Button, Toggle } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "../settings/SettingsPage.module.css";
+import rowStyles from "./PushNotificationRow.module.css";
 import { testPush } from "./push.api";
 import { usePushSubscription } from "./usePushSubscription";
-import { readHidePushPreviews, writeHidePushPreviews } from "../../pushPrivacy";
+import { useHidePushPreviews } from "../settings/api/useHidePushPreviews";
 
 export function PushNotificationRow() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
-  const { supported, permission, isSubscribed, busy, enable, disable } =
-    usePushSubscription();
+  const {
+    supported,
+    supportState,
+    permission,
+    isSubscribed,
+    busy,
+    enable,
+    disable,
+  } = usePushSubscription();
+  const { isInstalled } = useDisplayMode();
   const [sending, setSending] = useState(false);
-  // Seeded from IndexedDB (the service worker's own source of truth) rather
-  // than from React state, so the toggle always shows what the worker will
-  // actually do, including after a reinstall on another device.
-  const [isHidingPreviews, setIsHidingPreviews] = useState(false);
-  const [isPreviewPrefLoaded, setIsPreviewPrefLoaded] = useState(false);
-
-  useEffect(() => {
-    let isActive = true;
-    void readHidePushPreviews().then((stored) => {
-      if (!isActive) return;
-      setIsHidingPreviews(stored);
-      setIsPreviewPrefLoaded(true);
-    });
-    return () => {
-      isActive = false;
-    };
-  }, []);
-
-  // Writing can fail (a locked-down browser context, private mode), and this
-  // is a privacy control: if the write did not land, the toggle must snap back
-  // rather than claim previews are hidden while the lock screen still shows
-  // them.
-  const handlePreviewToggle = async (next: boolean) => {
-    setIsHidingPreviews(next);
-    try {
-      await writeHidePushPreviews(next);
-    } catch {
-      setIsHidingPreviews(!next);
-      showToast(t("settings:notifications.phonePush.previews.error"), "error");
-    }
-  };
+  // Read from the SERVER, not from IndexedDB (ID-13). The browser flag this
+  // row used to own could not be honoured on iPhone at all, because iOS never
+  // runs the service worker's push handler, so the setting moved onto
+  // `member_preferences` where the composer can read it before a payload is
+  // ever built. The hook writes the local mirror too, and surfaces a failed
+  // save as a toast: a privacy control that silently did not save is worse
+  // than one that was never offered.
+  const {
+    isHidingPreviews,
+    setHidingPreviews,
+    isLoading: isPreviewPrefLoading,
+  } = useHidePushPreviews();
 
   const blocked = permission === "denied";
   const disabled = !supported || blocked || busy;
-  const helper = !supported
-    ? t("settings:notifications.phonePush.unsupported")
-    : blocked
-      ? t("settings:notifications.phonePush.blocked")
-      : t("settings:notifications.phonePush.desc");
+  // ID-17. iOS and iPadOS Safari expose push only to a web app added to the
+  // Home Screen, so "needsInstall" gets the install route instead of the
+  // generic "your browser can't do this yet" dead end this row used to show
+  // every iPhone member.
+  const needsInstall = supportState === "needsInstall";
+  const helper = needsInstall
+    ? t("system:pwaInstall.pushRow.helper")
+    : !supported
+      ? t("settings:notifications.phonePush.unsupported")
+      : blocked
+        ? t("settings:notifications.phonePush.blocked")
+        : t("settings:notifications.phonePush.desc");
 
   const title = t("settings:notifications.phonePush.title");
 
@@ -106,6 +106,16 @@ export function PushNotificationRow() {
         <div className={styles.toggleLabel}>
           <div className={styles.toggleTitle}>{title}</div>
           <div className={styles.toggleDesc}>{helper}</div>
+          {/* Until now nothing in production linked to PwaPromptPage. It holds
+              correct per-platform steps already, so this points at it rather
+              than repeating them. Shown to anyone still in a browser tab, and
+              it is the actual fix for the "needsInstall" helper above. */}
+          {!isInstalled && (
+            <Link className={rowStyles.installLink} to={routes.pwaPrompt}>
+              {t("system:pwaInstall.pushRow.cta")}
+              <FiArrowRight aria-hidden />
+            </Link>
+          )}
         </div>
         <div
           className={disabled ? styles.comingSoonControl : undefined}
@@ -130,14 +140,14 @@ export function PushNotificationRow() {
         </div>
         <div
           className={
-            !isPreviewPrefLoaded ? styles.comingSoonControl : undefined
+            isPreviewPrefLoading ? styles.comingSoonControl : undefined
           }
-          inert={!isPreviewPrefLoaded}
+          inert={isPreviewPrefLoading}
         >
           <Toggle
             tone="coral"
             checked={isHidingPreviews}
-            onChange={(next) => void handlePreviewToggle(next)}
+            onChange={setHidingPreviews}
             label={t("settings:notifications.phonePush.previews.title")}
           />
         </div>

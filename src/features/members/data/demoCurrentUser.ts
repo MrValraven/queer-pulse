@@ -5,12 +5,12 @@ import { routes } from "../../../app/routeMap";
 // ── The demo-mode signed-in user, standalone ────────────────────────────────
 // `members.ts` builds `currentUser`/`currentUserSlug` off its full ~3,400-line
 // MEMBERS registry (every seed + real member, ~120KB) just to pick out the one
-// "tiago" record — but three root providers (AuthProvider, ProfileProvider,
-// WorkshopsProvider) import `currentUser`/`currentUserSlug` from there and are
+// "tiago" record — but two root providers (AuthProvider, ProfileProvider)
+// import `currentUser`/`currentUserSlug` from there and are
 // ALWAYS mounted (src/app/App.tsx's RootProviders/DataProviders, never behind
 // a lazy route), so that whole registry rode along in the entry chunk purely
 // for this one persona. This file holds only tiago's own record — a verbatim
-// copy of `MEMBERS.tiago` from members.ts — so those three providers (and any
+// copy of `MEMBERS.tiago` from members.ts — so those providers (and any
 // other always-mounted demo-identity read) never pull in the other members.
 // `data/members.ts` itself is untouched and still exports the same values (for
 // its own `currentUser`/`currentUserSlug`) for every already-lazy route/hook

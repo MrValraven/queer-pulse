@@ -44,9 +44,8 @@ import styles from "./ManageGatheringPage.module.css";
 /**
  * The gathering-management dashboard. Demo renders the static Pride-Brunch
  * prototype; live resolves the real event off `:slug` and drives edit / cancel /
- * attendees / cohost / invite against its real id (organizer-gated server-side).
- * The "message attendees" surfaces stay demo-only — there is no message-
- * attendees endpoint, so live must not fake a send.
+ * attendees / cohost / invite / announcements / bars against its real id
+ * (organizer-gated server-side).
  */
 export function ManageGatheringPage() {
   const { slug: param } = useParams();
@@ -212,7 +211,6 @@ function ManageGatheringMain({
             title={gatheringState.title}
             daysToGo={daysToGo}
             slug={slug}
-            canMessageAttendees={demoMode}
             onEditDetails={() => setEditOpen(true)}
             onMessageAttendees={() => setMessageOpen(true)}
           />
@@ -267,6 +265,7 @@ function ManageGatheringMain({
       </div>
 
       <ManageGatheringModals
+        slug={slug}
         editInitial={
           editOpen
             ? {

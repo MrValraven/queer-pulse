@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import {
-  sendDigestTest as sendDigestTestEmail,
   shipIssue as sendShipIssue,
   updateCover as sendUpdateCover,
   updateDigest as sendUpdateDigest,
@@ -101,19 +100,6 @@ export function useIssueMutations(number: string) {
     },
   });
 
-  /** POST /magazine/admin/issues/:number/digest/test-send — CNT-6 "Send test".
-   *  Silent by contract (`meta.silentError`): `DigestSocialTab` owns the
-   *  success/failure toast on the `mutateAsync` call, mirroring
-   *  `useDeckEditorActions`. Demo mode never hits the network — there's no
-   *  real mailbox to deliver to. */
-  const sendDigestTest = useMutation<void, Error, void>({
-    meta: { silentError: true },
-    mutationFn: async () => {
-      if (demoMode) return;
-      await sendDigestTestEmail(number);
-    },
-  });
-
   /** POST /magazine/admin/issues/:number/ship — ship the issue (publish every piece past the gate). */
   const ship = useMutation<IssueProductionDto | void, Error, void>({
     mutationFn: async () => {
@@ -152,6 +138,5 @@ export function useIssueMutations(number: string) {
     saveContentsBlurb,
     saveSchedule,
     ship,
-    sendDigestTest,
   };
 }

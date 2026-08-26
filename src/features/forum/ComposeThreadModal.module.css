@@ -176,3 +176,19 @@
   font-size: 13.5px;
   line-height: 1.5;
 }
+
+/* ── Photo attach + autosave status (SOC-13) ───────────────────────────── */
+/* The compose form's photo row: the attach button, the staged preview and its
+   remove control, any upload error, and the quiet "draft saved" line. */
+.attachRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.draftStatus {
+  font-size: 12px;
+  color: var(--ink-60);
+  margin-left: auto;
+}

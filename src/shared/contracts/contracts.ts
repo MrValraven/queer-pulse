@@ -386,7 +386,16 @@ export interface AuthorResponse {
   slug: string;
   name: string;
   bio: string | null;
+  /** The byline's own portrait, or the linked member's avatar as a fallback. */
   avatarUrl: string | null;
+  /**
+   * CON-11 — the member profile slug this byline is linked to, or `null` for
+   * a contributor credited by name only. Bylines link to `/members/<slug>`
+   * when it is set and to the magazine author page when it is not.
+   */
+  memberSlug: string | null;
+  /** Published pieces carrying this byline. */
+  pieceCount: number;
 }
 
 export interface IssueResponse {
@@ -397,6 +406,20 @@ export interface IssueResponse {
   coverUrl: string | null;
 }
 
+/**
+ * `GET /magazine/articles` query params: `issue`, `tag`, `author`, `section`,
+ * `page`, and (CON-12) `q`.
+ *
+ * `q` is free-text search over the magazine's own archive, matched against
+ * `magazine_article.search_vector` — a generated `tsvector` covering the
+ * title, dek, standfirst, tags, and both body representations (the legacy
+ * `body` text and the block-editor `blocks` jsonb). Results come back ranked
+ * by relevance (`ts_rank_cd`, headline matches weighted above body mentions)
+ * with publish date as the tiebreaker, so a `q` search does NOT answer in
+ * publish order the way every other filter does. Every token is prefix-matched
+ * and the tokens are AND-ed. The response shape is the ordinary
+ * `Paginated<ArticleListItem>`.
+ */
 export interface ArticleListItem {
   slug: string;
   title: string;
@@ -406,18 +429,132 @@ export interface ArticleListItem {
   tags: string[];
   readMinutes: number;
   publishedAt: string | null;
+  /** CON-04 — the piece's lead art, resolved to a fetchable URL. `null` when
+   *  the desk commissioned none, in which case the card keeps its tinted
+   *  `ImageSlot` placeholder rather than standing in a stock photograph. */
+  heroImageUrl: string | null;
+  /** CON-16 — where this piece stands today, so a card can mark an archived
+   *  or superseded piece instead of presenting it as current. */
+  lifecycle: ArticleLifecycle;
+  /** CON-16 — the language this row is written in. An issue is often only
+   *  partly translated, so each row states its own. */
+  locale: ContentLocale;
+}
+
+/**
+ * CON-16 — where a published piece stands, independent of whether it is
+ * published at all. `published_at` alone answered "is this visible?", so the
+ * only way to retire a piece was to unpublish it, which also deleted it from
+ * the archive and broke every link anyone had shared.
+ *
+ *  - `live` — current; the desk stands by it as written.
+ *  - `under_review` — being re-checked against the law or service as they
+ *    stand now; parts may already be out of date.
+ *  - `archived` — of its time, kept as a record, no longer maintained.
+ *  - `superseded` — a newer piece replaces it.
+ *
+ * Never a reason to hide a row: every public read still returns archived and
+ * superseded pieces, and the reader gets a dated banner instead of a 404.
+ */
+export type ArticleLifecycle =
+  "live" | "under_review" | "archived" | "superseded";
+
+/** CON-16 — the languages the magazine publishes journalism in. Mirrors the
+ *  chrome's `Language` union, so a reader's interface language is directly
+ *  usable as a content language. */
+export type ContentLocale = "en" | "pt";
+
+/** CON-16 — the rest of the dated lifecycle banner (the state itself is the
+ *  article's `lifecycle`). */
+export interface ArticleLifecycleNotice {
+  /** The editor's own sentence, or `""` when the banner falls back to the
+   *  generic wording for the state. */
+  note: string;
+  /** ISO 8601 instant the piece entered this state, or null. The DATE in
+   *  "dated banner": the reader is told when the desk last looked. */
+  changedAt: string | null;
+  /** YYYY-MM-DD, or null when no re-review is scheduled. */
+  reviewDueOn: string | null;
+  supersededBy: { slug: string; title: string } | null;
+}
+
+/**
+ * CON-16 — one language a piece is readable in, for the article page's
+ * switcher. Always includes the piece the reader is on, so the switcher can
+ * render a selected option without a special case.
+ *
+ * A translation is a first-class article: its own row, slug, publish state,
+ * lifecycle and comments, linked to the original through `translation_of`.
+ * `GET /magazine/articles/:slug?lang=xx` resolves to the sibling in that
+ * language when one is published and returns the piece as written otherwise.
+ */
+export interface ArticleTranslationLink {
+  locale: ContentLocale;
+  slug: string;
+  title: string;
+  /** False for a translation drafted but not shipped: the switcher shows it
+   *  as in progress rather than linking the reader to a 404. */
+  isPublished: boolean;
+}
+
+/** CON-02 — a published correction, shown as a dated note at the foot of the
+ *  piece. The desk's promise is "we never edit silently". */
+export interface ArticleCorrection {
+  id: string;
+  text: string;
+  /** YYYY-MM-DD. */
+  publishedOn: string;
 }
 
 export interface ArticleResponse extends ArticleListItem {
   body: string;
+  /** CON-06 — the care-tab content notes the publish gate insists on. */
+  contentNotes: string[];
+  /** CON-02 — newest first, empty when the piece has never been corrected. */
+  corrections: ArticleCorrection[];
+  /** CON-17 — the SEO rail's fields, served so `PageMeta` can use them.
+   *  Empty/null falls back to the derived description, hero image and route. */
+  metaDescription: string;
+  socialImage: string | null;
+  canonicalUrl: string;
+  /** CON-04 — the reframe crop saved for `heroImageUrl`. Rendered as a FOCAL
+   *  POINT (`ImageSlot`'s `focus`), never as an exact frame: the hero is a
+   *  full-bleed banner whose box aspect never matches an arbitrary crop, and
+   *  `crop` would distort the art there. */
+  heroCrop?: CropRect;
+  /** CON-16 — the dated lifecycle banner's data. Always present; a `live`
+   *  piece draws no banner. */
+  lifecycleNotice: ArticleLifecycleNotice;
+  /** CON-16 — every language this piece is readable in, the current one
+   *  included. One entry means there is no translation. */
+  translations: ArticleTranslationLink[];
+  /** CON-16 — the original this piece translates, or null when it IS the
+   *  original. */
+  translationOf: { locale: ContentLocale; slug: string } | null;
+  /** CON-16 — the translator's byline. `author` stays the writer's, always:
+   *  a translator is a second contributor with their own credit. */
+  translator: AuthorSummary | null;
 }
+
+/** The staff verdict on a reader's story. Deliberately separate from
+ *  `SubmissionStatus`: `accepted` and `commissioned` are both a yes and both
+ *  land `status` on `accepted`, differing only in whether the piece also
+ *  entered the desk's pitch inbox. */
+export type SubmissionDecision = "accepted" | "declined" | "commissioned";
 
 export interface StorySubmissionResponse {
   id: string;
   format: string;
   workingTitle: string;
   pitch: string;
+  deck: string | null;
+  coverUrl: string | null;
   status: SubmissionStatus;
+  decision: SubmissionDecision | null;
+  /** The reply the decider wrote back. There is no email in this product, so
+   *  this and the in-app bell are how a submitter hears. */
+  decisionNote: string | null;
+  decidedAt: string | null;
   createdAt: string;
 }
 
@@ -557,6 +694,22 @@ export interface TopicPostResponse {
 
 // --- Resources ---
 
+/** One block of an editor-authored guide body. Plain text: the renderer
+ *  prints it, so there is no markup for an editor to get wrong. */
+export type GuideBlockKind = "paragraph" | "subheading" | "listItem" | "note";
+
+export interface GuideBlock {
+  kind: GuideBlockKind;
+  text: string;
+}
+
+/** One H2 section of a guide body, plus its ordered blocks. */
+export interface GuideSection {
+  id: string;
+  heading: string;
+  blocks: GuideBlock[];
+}
+
 export interface ResourceResponse {
   slug: string;
   category: string;
@@ -566,12 +719,39 @@ export interface ResourceResponse {
   externalUrl: string | null;
   /** ISO timestamp of the last editorial verification, or null if never verified. */
   lastVerifiedAt: string | null;
+  /** Portuguese copy, or null when the guide has no translation yet. */
+  titlePt: string | null;
+  descriptionPt: string | null;
+  /** The editor-authored prose. EMPTY means the guide is metadata-only and
+   *  the frontend keeps rendering its hardcoded page. */
+  sections: GuideSection[];
+  sectionsPt: GuideSection[] | null;
+  /** Site-relative path the guide is addressable at, e.g. "/resources/sober". */
+  routePath: string | null;
+  /** ISO date (YYYY-MM-DD) an editor last read the guide end to end, who
+   *  that was, and when it is due again. All null means never reviewed. */
+  lastReviewedOn: string | null;
+  reviewedBy: string | null;
+  reviewDueOn: string | null;
+}
+
+/** Compact row for the guide index: every published guide, one request. */
+export interface ResourceIndexEntryResponse {
+  slug: string;
+  category: string;
+  title: string;
+  description: string;
+  routePath: string | null;
+  lastReviewedOn: string | null;
+  isManaged: boolean;
 }
 
 export interface GlossaryTermResponse {
   slug: string;
   term: string;
   definition: string;
+  /** Portuguese definition, or null when the term has no translation yet. */
+  definitionPt: string | null;
   category: string | null;
 }
 

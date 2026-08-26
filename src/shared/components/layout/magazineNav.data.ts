@@ -1,4 +1,4 @@
-import { FiList, FiInbox, FiCalendar } from "react-icons/fi";
+import { FiList, FiInbox, FiCalendar, FiArchive } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
 
@@ -43,6 +43,15 @@ export const MAGAZINE_NAV: MagazineNavItem[] = [
     icon: FiCalendar,
     end: true,
     needsCurrentIssueNumber: true,
+  },
+  // CON-16 — the archive's own surface: where a published piece is archived,
+  // superseded or put back under review, and where a promised re-review comes
+  // due. Every other desk destination runs a piece towards publication.
+  {
+    labelKey: "magazine:deskShell.nav.lifecycle",
+    to: routes.magazineLifecycle,
+    icon: FiArchive,
+    end: true,
   },
 ];
 

@@ -247,6 +247,16 @@
   color: var(--text-strong);
   font-weight: 600;
 }
+.logoPreviewImg {
+  width: 200px;
+  max-width: 100%;
+  height: auto;
+}
+.markUsageNote {
+  font-size: 14px;
+  color: var(--ink-60);
+  margin-top: 18px;
+}
 .logoMeta a,
 .logoMeta button {
   appearance: none;
@@ -299,40 +309,6 @@
   color: var(--ink-40);
   margin-top: 4px;
   line-height: 1.4;
-}
-
-.imgGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-@media (--lg) {
-  .imgGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (--xs) {
-  .imgGrid {
-    grid-template-columns: 1fr;
-  }
-}
-.imgCard {
-  aspect-ratio: 4 / 3;
-  border-radius: 14px;
-  display: flex;
-  align-items: flex-end;
-  padding: 14px;
-  font-size: 12px;
-  color: var(--ink-40);
-}
-.tintA {
-  background: rgba(var(--accent-rgb), 0.12);
-}
-.tintB {
-  background: rgba(var(--jade-rgb), 0.12);
-}
-.tintC {
-  background: rgba(var(--plum-rgb), 0.08);
 }
 
 .teamGrid {
@@ -600,6 +576,8 @@
 }
 .dlArrow {
   margin-left: auto;
+  display: flex;
+  align-items: center;
   color: var(--ink-40);
   font-size: 18px;
 }

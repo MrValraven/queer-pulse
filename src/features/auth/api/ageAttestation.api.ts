@@ -13,5 +13,15 @@
  *
  * It is also sent with a public join request (`useCreateJoinRequest`), where the
  * applicant has no account yet.
+ *
+ * NO LONGER AUTHORITATIVE (ID-14). The backend's `consent/policy-versions.ts`
+ * declares every policy revision, and the live value arrives as `termsVersion`
+ * on the public `GET /platform-status`. This literal is the fallback for the
+ * moment before that query resolves and for demo mode, kept equal to the
+ * backend constant. `redirectToGoogle` still reads it directly — it is a plain
+ * function performing a full-page navigation, with no hook context to read the
+ * query from — but that path is now belt-and-braces: `AuthService` falls back
+ * to its OWN `CURRENT_TERMS_VERSION` when the OAuth state carries none, so a
+ * stale literal here can no longer decide what gets stored.
  */
 export const TERMS_VERSION = "2.4";

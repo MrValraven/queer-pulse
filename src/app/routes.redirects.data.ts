@@ -61,8 +61,6 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/jobs", routes.jobs],
   ["/housing", routes.housing],
   ["/housing-coop", routes.housingCoop],
-  ["/skills", routes.skills],
-  ["/workshop", `${routes.skills}/risograph-zine`],
   ["/grants", routes.grants],
   ["/barter", routes.barter],
   ["/offer", routes.offer],

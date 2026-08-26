@@ -6,6 +6,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { PREVIOUS_MESSAGES, ATTENDEE_COUNT } from "./manageGathering.data";
+import { ManageAnnouncements } from "./ManageAnnouncements";
 import { messageRelativeTime } from "./manageGatheringDates";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -29,7 +30,7 @@ interface SentMessage {
   openedCount: number;
 }
 
-export function MessagesTab() {
+export function MessagesTab({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const composerLabelId = useId();
@@ -40,18 +41,11 @@ export function MessagesTab() {
 
   const messages = [...sent, ...PREVIOUS_MESSAGES];
 
-  // There is no message-attendees endpoint on the backend, so live mode never
-  // fakes a send: it shows an honest "not available yet" state instead of the
-  // demo composer + mock message history.
-  if (!demoMode) {
-    return (
-      <EmptyState
-        icon={<FiSend />}
-        title={t("gatherings:manage.messages.liveUnavailableTitle")}
-        description={t("gatherings:manage.messages.liveUnavailableBody")}
-      />
-    );
-  }
+  // Live mode drives the real announcements endpoint (LOC-06). This used to
+  // be an honest "not available yet" panel, because the only alternative was
+  // a composer that set a boolean and claimed a send. Demo keeps the
+  // prototype's own composer + mock history below.
+  if (!demoMode) return <ManageAnnouncements slug={slug} />;
 
   const send = () => {
     const text = message.trim();

@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { postToReply, threadDetail, threadToCard } from "./forum.adapters";
-import type {
-  ForumPostResponse,
-  ForumThreadResponse,
-} from "../../../shared/contracts/contracts";
+import type { ForumPostResponse, ForumThreadResponse } from "./forum.api";
 
 const t = ((k: string) => k) as never;
 const fmt = {
@@ -28,6 +25,8 @@ function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
     canDelete: true,
     canRestore: false,
     canViewHistory: false,
+    image: null,
+    isAccepted: false,
     ...overrides,
   };
 }
@@ -62,6 +61,10 @@ describe("forum adapters carry the post id + flags", () => {
       opVoteCount: 0,
       myVote: 0,
       tags: [],
+      isSubscribed: false,
+      acceptedPostId: null,
+      canAcceptAnswer: false,
+      canEditTags: false,
     };
     const detail = threadDetail(
       thread,
@@ -101,6 +104,10 @@ describe("forum adapters carry the post id + flags", () => {
       opVoteCount: 0,
       myVote: 0,
       tags: [],
+      isSubscribed: false,
+      acceptedPostId: null,
+      canAcceptAnswer: false,
+      canEditTags: false,
     };
     const card = threadToCard(thread, t, fmt);
     expect(card.author.official).toBe(true);

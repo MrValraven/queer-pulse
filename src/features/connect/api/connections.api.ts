@@ -2,6 +2,7 @@ import {
   apiGet,
   apiPost,
   apiPatch,
+  apiPut,
   apiDelete,
 } from "../../../shared/api/client";
 
@@ -9,6 +10,9 @@ import {
  *  map onto these: "all" → all, "incoming" → incoming, "sent" → outgoing,
  *  "vouched" → vouched. "blocked" is owned by SocialProvider, not this endpoint. */
 export type ConnectionApiTab = "all" | "incoming" | "outgoing" | "vouched";
+
+/** How a page of connections is ordered. `recent` is the server default. */
+export type ConnectionSort = "recent" | "alphabetical" | "mutuals";
 
 /** How the current user relates to a connection, mirroring the mock vouch badge. */
 export type ConnectionVouchBadge = "vouched-for-you" | "you-vouched" | "mutual";
@@ -48,6 +52,12 @@ export interface ConnectionDTO {
   requestMessage: string | null;
   /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
   requestReason: string | null;
+  /** Whether YOU sent this request. Once accepted, `direction` is "connected"
+   *  for both sides, so this is what attributes the reason to a person. */
+  isRequestedByYou: boolean;
+  /** YOUR private note about this connection, or null. Never the other
+   *  party's: the server only ever reads notes whose author is the viewer. */
+  note: string | null;
   /** ISO timestamp the request was created. */
   createdAt: string;
   /** ISO timestamp it was accepted/declined, or null while still pending. */
@@ -69,11 +79,26 @@ export interface ConnectionsPageDTO {
   pageSize: number;
 }
 
-/** GET /connections?tab=… — the list for one tab. */
-export function getConnections(tab: ConnectionApiTab, page?: number) {
-  const q = new URLSearchParams({ tab });
-  if (page) q.set("page", String(page));
-  return apiGet<ConnectionsPageDTO>(`/connections?${q.toString()}`);
+/** The optional filter and ordering the list endpoint accepts. */
+export interface ConnectionsListParams {
+  /** Free text over the other member's name, handle, and headline. Matched
+   *  accent-insensitively server-side, so "Sao" finds "São". */
+  searchTerm?: string;
+  sort?: ConnectionSort;
+}
+
+/** GET /connections?tab=&page=&q=&sort= — the list for one tab. */
+export function getConnections(
+  tab: ConnectionApiTab,
+  page?: number,
+  params?: ConnectionsListParams,
+) {
+  const query = new URLSearchParams({ tab });
+  if (page) query.set("page", String(page));
+  const searchTerm = params?.searchTerm?.trim();
+  if (searchTerm) query.set("q", searchTerm);
+  if (params?.sort && params.sort !== "recent") query.set("sort", params.sort);
+  return apiGet<ConnectionsPageDTO>(`/connections?${query.toString()}`);
 }
 
 /**
@@ -110,6 +135,17 @@ export const respondConnection = (id: string, action: ConnectionAction) =>
 /** DELETE /connections/:id — remove an existing connection. */
 export const removeConnection = (id: string) =>
   apiDelete<{ ok: true }>(`/connections/${id}`);
+
+/** The stored private note, echoed back after a write. */
+export interface ConnectionNoteDTO {
+  /** The note as stored (markup stripped), or null once it was cleared. */
+  note: string | null;
+}
+
+/** PUT /connections/:id/note — write or clear YOUR private note. An empty body
+ *  clears it, so the editor needs no separate delete call. */
+export const setConnectionNote = (id: string, body: string) =>
+  apiPut<ConnectionNoteDTO>(`/connections/${id}/note`, { body });
 
 /** GET /connections/accepted — bare slugs of the viewer's accepted connections.
  *  The lightweight signal that flips a member's "Say hello" to "Message". */

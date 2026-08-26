@@ -8,20 +8,29 @@ interface DeepLinksDeps {
   allThreads: Conversation[];
   /** From the navigation sub-hook — opens (and marks read) an existing thread. */
   openThread: (id: string) => void;
+  /** From the navigation sub-hook — opens a thread and arms a scroll-to +
+   *  highlight of one of its messages (the same mechanism a cross-inbox
+   *  search/starred pick uses). Falls back to a plain `openThread` when no
+   *  message id is present. */
+  openThreadAtMessage: (conversationId: string, messageId?: string) => void;
   /** From the thread-creation sub-hook — find-or-creates a thread for a
    *  recipient. */
   startThread: (recipient: Conversation) => void;
 }
 
 /**
- * The two deep-link effects: "Message <member>" (`location.state.to`) and the
- * notification-tap `?c=<conversationId>` param. Both materialize or open a
- * thread, so they live together. Extracted from `useMessageCreation`;
- * behaviour is unchanged.
+ * The three deep-link effects: "Message <member>" (`location.state.to`), the
+ * notification-tap `?c=<conversationId>` param, and its optional
+ * `&m=<messageId>` sibling (a mention notification's href, or any future
+ * per-message deep link) that additionally scrolls to and highlights the
+ * named message once the thread is open. All materialize or open a thread, so
+ * they live together. Extracted from `useMessageCreation`; behaviour is
+ * otherwise unchanged.
  */
 export function useMessageDeepLinks({
   allThreads,
   openThread,
+  openThreadAtMessage,
   startThread,
 }: DeepLinksDeps): void {
   const location = useLocation();
@@ -76,8 +85,13 @@ export function useMessageDeepLinks({
     if (!conversationId) return;
     const exists = allThreads.some((thread) => thread.id === conversationId);
     if (!exists) return;
-    // One-shot notification-tap deep-link; the `c` param is cleared right after.
-    openThread(conversationId);
+    // One-shot notification-tap deep-link; the `c` (and optional `m`) params
+    // are cleared right after. `m` is the server message id to scroll to +
+    // highlight — e.g. a mention notification's href — once the thread is
+    // open; omitted, this behaves exactly like the plain `c`-only tap it
+    // always has.
+    const messageId = searchParams.get("m") ?? undefined;
+    openThreadAtMessage(conversationId, messageId);
     setSearchParams({}, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, allThreads, setSearchParams]);

@@ -1,0 +1,251 @@
+/* Live status page (ID-16). Tokens only — no raw channels, no hardcoded hex. */
+
+.section {
+  padding: 32px 0;
+}
+
+.sectionHeading {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+
+/* ── Overall banner ─────────────────────────────────────────────────────── */
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-left-width: 5px;
+}
+
+.bannerOperational {
+  border-left-color: var(--jade);
+}
+
+.bannerDegraded {
+  border-left-color: var(--amber);
+}
+
+.bannerDown {
+  border-left-color: var(--accent);
+}
+
+.bannerIcon {
+  display: inline-flex;
+  font-size: 1.6rem;
+  flex: none;
+}
+
+.bannerOperational .bannerIcon {
+  color: var(--jade-ink);
+}
+
+.bannerDegraded .bannerIcon {
+  color: var(--amber-ink);
+}
+
+.bannerDown .bannerIcon {
+  color: var(--accent-text);
+}
+
+.bannerText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bannerTitle {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+
+.bannerBody {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* ── Last checked + refresh ─────────────────────────────────────────────── */
+
+.checkedRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.checkedAt {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-60);
+}
+
+.signedOutNote {
+  margin: 14px 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-40);
+  max-width: 62ch;
+}
+
+.skeletonRows {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ── Component rows ─────────────────────────────────────────────────────── */
+
+.componentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.componentRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.componentText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.componentName {
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.componentDesc {
+  font-size: 0.87rem;
+  color: var(--ink-40);
+  overflow-wrap: anywhere;
+}
+
+/* ── State pill: icon + words, never colour alone ───────────────────────── */
+
+.statePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+}
+
+.stateOperational {
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+
+.stateDegraded {
+  color: var(--amber-ink);
+  background: rgba(var(--amber-rgb), 0.16);
+}
+
+.stateDown {
+  color: var(--accent-text);
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
+/* ── Incidents ──────────────────────────────────────────────────────────── */
+
+.incidentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.incidentItem {
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.incidentTags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.severityTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-60);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+}
+
+.incidentTitle {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  margin: 0 0 6px;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.incidentBody {
+  margin: 0 0 10px;
+  color: var(--ink-60);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.incidentMeta {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--ink-40);
+  overflow-wrap: anywhere;
+}
+
+.notice {
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  color: var(--ink-60);
+}
+
+@media (max-width: 640px) {
+  .banner {
+    align-items: flex-start;
+  }
+
+  .componentRow {
+    align-items: flex-start;
+  }
+}

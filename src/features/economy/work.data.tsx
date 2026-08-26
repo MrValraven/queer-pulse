@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import {
   FiFileText,
   FiAward,
-  FiBookOpen,
   FiBookmark,
   FiDollarSign,
   FiStar,
@@ -148,14 +147,6 @@ export const STATUS_CARDS: StatusCard[] = [
     nextKey: "economy:workHub.card.mentor.next",
     nextValues: { count: openMentors },
     to: routes.mentorship,
-  },
-  {
-    key: "skills",
-    icon: <FiBookOpen />,
-    labelKey: "economy:workHub.card.skills.label",
-    primaryKey: "economy:workHub.card.skills.primary",
-    nextKey: "economy:workHub.card.skills.next",
-    to: routes.skills,
   },
   {
     key: "saved",

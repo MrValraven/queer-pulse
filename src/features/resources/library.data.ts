@@ -49,7 +49,49 @@ export const CATEGORIES = [
     label: "Trans life",
     labelKey: "resources:library.category.trans",
   },
+  // CON-10 added three categories the ~31 guide routes actually fall into.
+  // The old five covered the library's own cards; the guides that had no
+  // inbound link anywhere were largely the ones with nowhere to sit.
+  {
+    id: "safety",
+    label: "Safety & privacy",
+    labelKey: "resources:library.category.safety",
+  },
+  {
+    id: "community",
+    label: "Community life",
+    labelKey: "resources:library.category.community",
+  },
+  {
+    id: "culture",
+    label: "Culture & archive",
+    labelKey: "resources:library.category.culture",
+  },
 ] as const;
+
+/**
+ * Display order for the guide index's category groups (CON-10). Health and
+ * trans life lead because those are the guides people arrive needing; the
+ * backend keeps `Resource.category` free-form, so any category not listed
+ * here still renders, sorted alphabetically after these.
+ */
+export const GUIDE_INDEX_CATEGORY_ORDER = [
+  "health",
+  "trans",
+  "legal",
+  "safety",
+  "housing",
+  "finance",
+  "community",
+  "culture",
+] as const;
+
+/** Whether a backend category has a catalog label, so the index can print a
+ *  translated heading for the ones it knows and the raw key for the rest,
+ *  rather than rendering a bare `resources:library.category.x` on screen. */
+export function isKnownGuideCategory(category: string): boolean {
+  return CATEGORIES.some((entry) => entry.id === category);
+}
 
 export const GUIDES: Guide[] = [
   {

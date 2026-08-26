@@ -44,12 +44,26 @@ export function EditHousingListingModal({
     virtualTour: listing.virtualTourUrl ?? "",
     billsIncluded: listing.billsIncluded,
     isAgent: listing.listerKind === "agent",
+    blurb: listing.blurb,
+    description: listing.description,
+    availableFrom: listing.availableFrom ?? "",
+    minStayMonths:
+      listing.minStayMonths !== null ? String(listing.minStayMonths) : "",
+    features: listing.features,
+    idealFor: listing.idealFor,
+    // Already-stored photos come back as resolved `/files/<key>` URLs. Both
+    // halves are that URL: it renders directly, and the backend normalises it
+    // back to the storage key when this form re-sends it.
+    photos: listing.gallery.map((photoUrl) => ({
+      reference: photoUrl,
+      previewUrl: photoUrl,
+    })),
   });
   const action = useMyHousingListingAction();
   const isCurrentlyLive = listing.status === "live";
 
   const handleSubmit = () => {
-    if (!form.valid) return;
+    if (!form.isValid) return;
     const body: UpdateHousingListingBody = form.buildBody();
     action.mutate(
       { ref: listing.ref, action: "update", body },
@@ -103,7 +117,7 @@ export function EditHousingListingModal({
         <Button
           variant="primary"
           size="lg"
-          disabled={!form.valid || action.isPending}
+          disabled={!form.isValid || action.isPending}
           onClick={handleSubmit}
         >
           {action.isPending ? (

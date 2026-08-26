@@ -1,9 +1,12 @@
+import { Link } from "react-router-dom";
 import { Button, Reveal } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { manifestoAssurances } from "./Manifesto.data";
 import styles from "./Manifesto.module.css";
+
+const standPath = `${routes.about}#stand`;
 
 export function Manifesto() {
   const { t } = useTranslation();
@@ -30,6 +33,14 @@ export function Manifesto() {
             </Reveal>
             <Reveal as="p" className={styles.body} delay={200}>
               {t("homepage:manifesto.body3")}
+            </Reveal>
+            <Reveal as="p" className={styles.body} delay={220}>
+              <Translation
+                i18nKey="homepage:manifesto.body4"
+                components={{
+                  a: <Link className={styles.bodyLink} to={standPath} />,
+                }}
+              />
             </Reveal>
             <Reveal as="p" className={styles.highlight} delay={240}>
               {t("homepage:manifesto.highlight")}

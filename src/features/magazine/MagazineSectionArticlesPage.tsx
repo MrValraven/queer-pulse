@@ -2,23 +2,14 @@ import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
+import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
+import { MagazineArticleRows } from "./MagazineArticleRows";
+import { MagazineSearchLauncher } from "./MagazineSearchField";
 import { useSectionArticles } from "./api/useSectionArticles";
-import { firstPlainText } from "./data/articles";
 import styles from "./MagazineSectionArticlesPage.module.css";
-
-function ArticleRowSkeleton() {
-  return (
-    <div className={styles.row} aria-hidden>
-      <SkeletonLine width="70%" height={20} />
-      <SkeletonLine width="90%" height={14} style={{ marginTop: 10 }} />
-      <SkeletonLine width="40%" height={12} style={{ marginTop: 8 }} />
-    </div>
-  );
-}
 
 /**
  * CNT-20 — the drill-down for one `MagazineSectionsPage` tile: every
@@ -26,6 +17,11 @@ function ArticleRowSkeleton() {
  * (`${routes.magazineSections}/:section`, decoded — a section like
  * "Last word" round-trips through `encodeURIComponent`/`decodeURIComponent`
  * on either side of the link).
+ *
+ * CON-12 — the rows now come from the shared `MagazineArticleRows`, so each
+ * piece prints its tags as links into `?tag=`, and the masthead search field
+ * is mounted here too: a reader who has drilled into a section is exactly the
+ * reader who might want to search the rest of the archive.
  */
 export function MagazineSectionArticlesPage() {
   const { t } = useTranslation();
@@ -42,6 +38,9 @@ export function MagazineSectionArticlesPage() {
         canonical={`${routes.magazineSections}/${sectionParam}`}
       />
       <MagazineMasthead active="sections" />
+      <div className="wrap">
+        <MagazineSearchLauncher />
+      </div>
       <section className={styles.body}>
         <div className="wrap">
           <Link to={routes.magazineSections} className={styles.back}>
@@ -70,28 +69,7 @@ export function MagazineSectionArticlesPage() {
               }
             />
           ) : (
-            <div className={styles.list}>
-              {isLoading
-                ? Array.from({ length: 4 }).map((_, index) => (
-                    <ArticleRowSkeleton key={index} />
-                  ))
-                : articles.map((article) => {
-                    const dek = firstPlainText(article.body);
-                    return (
-                      <Link
-                        key={article.id}
-                        to={`${routes.article}?id=${article.id}`}
-                        className={styles.row}
-                      >
-                        <h2 className={styles.rowTitle}>{article.title}</h2>
-                        {dek && <p className={styles.rowDek}>{dek}</p>}
-                        <p className={styles.rowMeta}>
-                          {article.byline} · {article.date} · {article.readTime}
-                        </p>
-                      </Link>
-                    );
-                  })}
-            </div>
+            <MagazineArticleRows articles={articles} isLoading={isLoading} />
           )}
         </div>
       </section>

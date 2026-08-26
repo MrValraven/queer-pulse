@@ -194,9 +194,6 @@ export const economy: Catalog = {
   "workHub.card.mentor.label": "Mentoria",
   "workHub.card.mentor.primary": "1 mentoria ativa",
   "workHub.card.mentor.next": "{count} pessoas mentoras com vagas abertas",
-  "workHub.card.skills.label": "Troca de saberes",
-  "workHub.card.skills.primary": "A ensinar 2 · A aprender 1",
-  "workHub.card.skills.next": "Um novo pedido combina contigo",
   "workHub.card.saved.label": "Vagas guardadas",
   "workHub.card.saved.primary": "5 vagas guardadas",
   "workHub.card.saved.next": "2 a fechar esta semana",
@@ -652,7 +649,7 @@ export const economy: Catalog = {
   "listSpace.eyebrow": "Quadro de habitação",
   "listSpace.title": "Anuncia o teu <em>espaço.</em>",
   "listSpace.sub":
-    "Abre o teu espaço a uma pessoa verificada da comunidade. Só precisas de alguns detalhes agora. Podes acrescentar fotos assim que for aprovado.",
+    "Abre o teu espaço a uma pessoa verificada da comunidade. Conta como é viver lá, junta algumas fotos, e uma pessoa moderadora lê cada anúncio antes de chegar ao quadro.",
   "listSpace.titleLabel": "Título do anúncio *",
   "listSpace.titlePlaceholder":
     "ex.: Quarto soalheiro numa casa partilhada queer",
@@ -674,6 +671,64 @@ export const economy: Catalog = {
     "Mostra mais do que um quarto, e também a cozinha e a casa de banho.",
   "listSpace.photoGuide.consent":
     "Deixa de fora os rostos de colegas de casa, a menos que tenham dado autorização.",
+  // ── ListSpaceDetailFields + ListSpacePhotoField (LOC-09) ───────────────
+  "listSpace.areaHint":
+    "Só o bairro. Todas as casas deste quadro ficam em {city}.",
+  "listSpace.blurbLabel": "Resumo numa linha",
+  "listSpace.blurbPlaceholder":
+    "ex.: Um quarto duplo numa casa partilhada queer de quatro pessoas",
+  "listSpace.blurbHint":
+    "A linha que as pessoas leem no quadro. Se ficar em branco, usamos o início da tua descrição.",
+  "listSpace.descriptionLabel": "Sobre esta casa",
+  "listSpace.descriptionPlaceholder":
+    "Como é o espaço, quem mais lá vive, como é a rua, tudo o que gostarias de saber antes de te mudares.",
+  "listSpace.descriptionHint":
+    "Algumas frases honestas ajudam mais do que uma lista longa. É isto que as pessoas leem antes de te escreverem.",
+  "listSpace.availableLabel": "Disponível a partir de",
+  "listSpace.availableHint": "Deixa vazio se o espaço já está livre.",
+  "listSpace.minStayLabel": "Estadia mínima (meses)",
+  "listSpace.minStayPlaceholder": "ex.: 6",
+  "listSpace.minStayHint": "Deixa vazio se estás aberte a qualquer duração.",
+  "listSpace.featuresLabel": "O que o espaço tem",
+  "listSpace.idealForLabel": "Para quem é indicado",
+  "listSpace.idealForHint":
+    "Descreve a casa e as questões práticas. Todas as casas aqui estão abertas a toda a comunidade.",
+  "listSpace.photos.label": "Fotos",
+  "listSpace.photos.hint":
+    "Até {max}. A primeira é a foto que as pessoas veem no quadro. Os dados de localização são removidos de cada foto antes de sair do teu dispositivo.",
+  "listSpace.photos.add": "Adicionar foto",
+  "listSpace.photos.uploading": "A adicionar…",
+  "listSpace.photos.full": "Este anúncio já tem todas as fotos que cabem",
+  "listSpace.photos.cover": "Capa",
+  "listSpace.photos.remove": "Remover a foto {position}",
+  "listSpace.photos.previewAlt": "Foto {position} do teu anúncio",
+  "listSpace.photos.error":
+    "Não foi possível adicionar essa foto. Verifica a ligação e tenta outra vez.",
+  "listSpace.feature.furnished": "Mobilado",
+  "listSpace.feature.light": "Luz natural",
+  "listSpace.feature.balcony": "Varanda",
+  "listSpace.feature.outdoor": "Espaço exterior",
+  "listSpace.feature.lift": "Elevador",
+  "listSpace.feature.washing": "Máquina de lavar roupa",
+  "listSpace.feature.dishwasher": "Máquina de lavar loiça",
+  "listSpace.feature.heating": "Aquecimento",
+  "listSpace.feature.cooling": "Ar condicionado",
+  "listSpace.feature.desk": "Espaço de secretária",
+  "listSpace.feature.bathroom": "Casa de banho privativa",
+  "listSpace.feature.kitchen": "Cozinha partilhada",
+  "listSpace.feature.bike": "Arrumação para bicicletas",
+  "listSpace.feature.pets": "Animais bem-vindos",
+  "listSpace.feature.quiet": "Rua sossegada",
+  "listSpace.ideal.new": "Quem chegou agora a Lisboa",
+  "listSpace.ideal.longStay": "Estadias longas",
+  "listSpace.ideal.shortStay": "Estadias curtas",
+  "listSpace.ideal.wfh": "Trabalhar a partir de casa",
+  "listSpace.ideal.students": "Estudantes",
+  "listSpace.ideal.couples": "Casais",
+  "listSpace.ideal.pet": "Quem tem um animal",
+  "listSpace.ideal.quiet": "Uma casa sossegada",
+  "listSpace.ideal.social": "Uma casa sociável",
+  "listSpace.ideal.cyclists": "Quem anda de bicicleta",
   "listSpace.tourLabel": "Link de visita virtual",
   "listSpace.tourPlaceholder": "Matterport, um passeio em vídeo no YouTube…",
   "listSpace.tourHint":
@@ -711,6 +766,14 @@ export const economy: Catalog = {
   "myHousingListings.status.live": "No ar",
   "myHousingListings.status.filled": "Ocupado",
   "myHousingListings.status.expired": "Expirado",
+  "myHousingListings.status.rejected": "Não publicado",
+  "myHousingListings.status.takenDown": "Removido",
+  "myHousingListings.decision.question":
+    "Uma pessoa moderadora pediu uma alteração",
+  "myHousingListings.decision.rejected": "Porque não foi publicado",
+  "myHousingListings.decision.takenDown": "Porque foi removido",
+  "myHousingListings.decision.questionHint":
+    "Edita o anúncio com isto resolvido e volta para a fila.",
   "myHousingListings.postedOn": "Publicado {date}",
   "myHousingListings.expiresOn": "Expira {date}",
   "myHousingListings.expiredHint": "Expirado, prolonga para voltar a publicar",
@@ -1500,7 +1563,7 @@ export const economy: Catalog = {
   "grants.sidebar.skillsExchange.cta": "Explorar as trocas",
   "grants.sidebar.appHelp.title": "Ajuda com a <em>candidatura</em>",
   "grants.sidebar.appHelp.body":
-    "Pessoas da comunidade com experiência em candidaturas dão workshops e apoio individual através da troca de competências.",
+    "Pessoas da comunidade com experiência em candidaturas dão apoio individual através da mentoria.",
   "grants.sidebar.appHelp.cta": "Encontrar mentoria",
 
   // ── JobApplyPage (+ cabeçalho / formulário / barra lateral) ────────────
@@ -2409,261 +2472,6 @@ export const economy: Catalog = {
   "compareRow.startDate": "Data de início",
   "compareRow.respondBy": "Responder até",
   "compareRow.howItPays": "Como paga",
-
-  // ── WorkshopsSection / WorkshopPage (+ sidebar / reserve / add modals) ──
-  "workshopsSection.newBadge": "Novo",
-  "workshopsSection.loadMoreCta": "Ver mais workshops",
-  "workshopsSection.loadingMore": "A carregar…",
-  "workshopsSection.withTutor": "com <b>{name}</b>",
-  "workshopsSection.seatsLeft_one": "<b>{count}</b> lugar disponível",
-  "workshopsSection.seatsLeft_other": "<b>{count}</b> lugares disponíveis",
-  "workshopsSection.cohortFull": "Turma completa",
-  "workshopsSection.viewCta": "Ver workshop",
-  "workshopsSection.heading": "Workshops <em>avançados</em>",
-  "workshopsSection.blurb":
-    "Cursos estruturados de várias semanas, liderados por pessoas da comunidade que se aprofundam numa técnica. Turmas pequenas, preços em escala variável, e no final fazes algo real. Também dás um curso? Publica-o aqui.",
-  "workshopsSection.listCta": "Publicar um workshop",
-
-  "workshopPage.notFound.title": "Workshop não encontrado",
-  "workshopPage.notFound.description":
-    "Este workshop pode ter terminado ou ter sido retirado. Explora o que está a decorrer agora em Competências e aprendizagem.",
-  "workshopPage.notFound.backCta": "Voltar a Competências",
-  "workshopPage.backToSkills": "Competências e aprendizagem",
-  "workshopPage.footerBackCta": "Todos os workshops e competências",
-  "workshopPage.newBadge": "Novo",
-
-  "workshopSections.about.title": "O que vais <em>mesmo fazer</em>",
-  "workshopSections.sessions.title_one": "A <em>{count} sessão</em>",
-  "workshopSections.sessions.title_other": "As <em>{count} sessões</em>",
-  "workshopSections.needs.title": "O que <em>está incluído</em>, o que trazer",
-  "workshopSections.pastWork.title": "O que a turma anterior <em>fez</em>",
-  "workshopSections.pastWork.intro": "Algumas peças da última turma:",
-
-  "workshopSidebar.reserveTitle": "Reservar um lugar",
-  "workshopSidebar.spotsFilled": "Lugares preenchidos",
-  "workshopSidebar.startDate": "Data de início",
-  "workshopSidebar.cancellation": "Cancelamento",
-  "workshopSidebar.cohortFull": "Turma completa",
-  "workshopSidebar.reserveCta": "Reservar um lugar",
-  "workshopSidebar.askQuestion": "Fazer uma pergunta",
-  "workshopSidebar.askQuestionToast":
-    "Vamos passar a tua pergunta a {firstName}.",
-  "workshopSidebar.footNote":
-    "Tarifa de solidariedade · basta dizê-lo no formulário, sem qualquer prova. Ninguém vê que tarifa escolheste.",
-  "workshopSidebar.taughtBy": "Dado por",
-  "workshopSidebar.where": "Onde",
-
-  // ── WorkshopRsvpControl (reservar um lugar, a sério) ──────────────────────
-  "workshopRsvp.reserveCta": "Reservar um lugar",
-  "workshopRsvp.joinWaitlistCta": "Entrar na lista de espera",
-  "workshopRsvp.savingLabel": "Um momento…",
-  "workshopRsvp.holdingTitle": "O teu lugar está reservado.",
-  "workshopRsvp.holdingNote":
-    "Por agora não há mais nada a fazer. É só aparecer. Podes devolver o lugar quando quiseres, se os planos mudarem.",
-  "workshopRsvp.releaseCta": "Devolver o teu lugar",
-  "workshopRsvp.waitlistTitle": "Estás na lista de espera.",
-  "workshopRsvp.waitlistNote":
-    "Se alguém devolver um lugar, a fila anda e o teu pode ser o próximo. Volta aqui para ver, ainda não te conseguimos enviar nenhuma mensagem.",
-  "workshopRsvp.leaveWaitlistCta": "Sair da lista de espera",
-  "workshopRsvp.failedNote":
-    "Não foi possível concluir, nada mudou. Tenta outra vez daqui a pouco.",
-  "workshopRsvp.hostCountNone": "Ainda ninguém reservou lugar.",
-  "workshopRsvp.hostCount_one": "Há uma pessoa com lugar.",
-  "workshopRsvp.hostCount_other": "Há {count} pessoas com lugar.",
-  "workshopRsvp.hostNote":
-    "Só tu vês isto. Quem reservar depois de a turma encher fica em lista de espera, e sobe sozinhe se algum lugar ficar livre.",
-
-  "workshopReserve.ariaLabel": "Reservar um lugar em {title}",
-  "workshopReserve.success.title": "Lugar",
-  "workshopReserve.success.em": "reservado.",
-  "workshopReserve.success.closeLabel": "Concluído",
-  "workshopReserve.success.body":
-    "O teu lugar em <strong>{title}</strong> fica reservado por 48 horas. Enviámos a {firstName} um link de pagamento na tarifa <strong>{amount}</strong>. Paga quando estiveres pronte, sem pressa. Vemo-nos {date}.",
-  "workshopReserve.title": "Reservar um lugar em <em>{title}</em>",
-  "workshopReserve.sub":
-    "{seatsLeft} de {seatsTotal} lugares disponíveis. Reservar garante o teu lugar, sem pagamento por agora.",
-  "workshopReserve.nameLabel": "O teu nome *",
-  "workshopReserve.namePlaceholder": "Como te devemos chamar?",
-  "workshopReserve.emailLabel": "Email *",
-  "workshopReserve.emailPlaceholder": "Para onde enviamos o link de pagamento",
-  "workshopReserve.tierLabel": "Quanto vais pagar *",
-  "workshopReserve.noteLabel": "Algo que a pessoa tutora deva saber",
-  "workshopReserve.notePlaceholder":
-    "Necessidades de acesso, nível de experiência, uma pergunta…",
-  "workshopReserve.slidingNote":
-    "Escolhe a tarifa que for certa para ti. Sem provas, sem perguntas, a escala variável existe para manter isto aberto a todes.",
-  "workshopReserve.cancel": "Cancelar",
-  "workshopReserve.holdingLabel": "A reservar…",
-  "workshopReserve.submitCta": "Reservar o meu lugar",
-
-  "addWorkshop.ariaLabel": "Publicar um workshop",
-  "addWorkshop.eyebrow": "Competências e aprendizagem",
-  "addWorkshop.title": "Publica um <em>workshop avançado.</em>",
-  "addWorkshop.sub":
-    "Partilha um curso de várias semanas que estás a dar. Sê honesto sobre o nível e o ritmo, as pessoas estão a confiar-te tempo real.",
-  "addWorkshop.titleLabel": "Título do workshop *",
-  "addWorkshop.titlePlaceholder":
-    "ex.: Tipografia, desde a composição até uma página impressa",
-  "addWorkshop.blurbLabel": "Resumo numa linha *",
-  "addWorkshop.blurbPlaceholder": "Para quem é e com o que vão ficar",
-  "addWorkshop.aboutLabel": "O que vais mesmo fazer *",
-  "addWorkshop.aboutPlaceholder":
-    "A forma das sessões, o nível assumido, o que as pessoas fazem. Uma ideia por linha.",
-  "addWorkshop.categoryLabel": "Categoria *",
-  "addWorkshop.formatLabel": "Formato *",
-  "addWorkshop.weeksLabel": "Duração (semanas) *",
-  "addWorkshop.sizeLabel": "Tamanho da turma *",
-  "addWorkshop.priceLabel": "Preço padrão (€) *",
-  "addWorkshop.venueLabel": "Onde (local · bairro)",
-  "addWorkshop.venuePlaceholder": "ex.: Estúdio Graça · Graça",
-  "addWorkshop.note":
-    "Vamos configurar automaticamente uma tarifa reduzida e uma de solidariedade a partir do teu preço padrão. Podes ajustá-las depois. As sessões começam vazias; adiciona o plano semana a semana a partir da página do teu workshop.",
-  "addWorkshop.failedNote":
-    "Não conseguimos publicar agora, nada ficou listado. Os teus dados continuam aqui, por isso tenta outra vez daqui a pouco.",
-  "addWorkshop.cancel": "Cancelar",
-  "addWorkshop.publishingLabel": "A publicar…",
-  "addWorkshop.publishCta": "Publicar workshop",
-  "addWorkshop.listed.title": "Workshop",
-  "addWorkshop.listed.em": "publicado.",
-  "addWorkshop.listed.closeLabel": "Concluído",
-  "addWorkshop.listed.viewCta": "Ver o teu workshop",
-  "addWorkshop.listed.body":
-    "<strong>{title}</strong> já está publicado em Competências e aprendizagem. As pessoas podem explorá-lo, ler o plano, e reservar um lugar. Edita os detalhes ou adiciona sessões a qualquer momento a partir da página do teu workshop.",
-
-  // ── Editar um workshop que organizas (mesmo formulário, outro enquadramento) ──
-  "editWorkshop.ariaLabel": "Editar o teu workshop",
-  "editWorkshop.eyebrow": "O teu workshop",
-  "editWorkshop.title": "Edita o teu <em>workshop.</em>",
-  "editWorkshop.sub":
-    "Muda o que já não corresponde. Quem já reservou mantém o lugar. Só mudam os detalhes desta página.",
-  "editWorkshop.note":
-    "As tarifas reduzida e solidária acompanham o preço normal. O plano semana a semana e os lugares já ocupados ficam como estão.",
-  "editWorkshop.failedNote":
-    "Não conseguimos guardar agora, nada mudou. As tuas alterações continuam aqui, por isso tenta outra vez daqui a pouco.",
-  "editWorkshop.savingLabel": "A guardar…",
-  "editWorkshop.saveCta": "Guardar alterações",
-  "editWorkshop.saved.title": "Alterações",
-  "editWorkshop.saved.em": "guardadas.",
-  "editWorkshop.saved.body":
-    "<strong>{title}</strong> está atualizado em Competências e aprendizagem. Quem abrir a partir de agora vê os novos detalhes.",
-
-  // ── Eliminar um workshop que organizas ──────────────────────────────────
-  // Um workshop à volta do qual há pessoas a planear semanas não é uma coisa
-  // neutra de remover, por isso este texto é claro sobre o que eliminar faz
-  // e — tão importante quanto isso — sobre o que não faz. Não há serviço de
-  // email nem modelo de reservas por trás disto, portanto nada aqui pode
-  // sugerir que alguém é avisado. Dizê-lo é o que permite a quem organiza ir
-  // avisar as pessoas.
-  "workshopHost.label": "Organizas este",
-  "workshopHost.note":
-    "Só tu vês isto. As edições aparecem logo para quem estiver a ver esta página.",
-  "workshopHost.editCta": "Editar workshop",
-  "workshopHost.deleteCta": "Eliminar",
-  "deleteWorkshop.title": "Eliminar este workshop?",
-  "deleteWorkshop.body":
-    "Eliminar é permanente. Sai de Competências e aprendizagem de imediato, e quem tiver o link não vai encontrar nada.",
-  // Ver a nota no catálogo EN: o número é real, o aviso continua a não existir.
-  "deleteWorkshop.attendeesNote_one":
-    "Há uma pessoa com lugar neste workshop. Eliminar tira-lho, e não é enviada nenhuma mensagem, se queres que saiba por ti, avisa-a primeiro.",
-  "deleteWorkshop.attendeesNote_other":
-    "Há {count} pessoas com lugar neste workshop. Eliminar tira-lhos, e não é enviada nenhuma mensagem, se queres que saibam por ti, avisa-as primeiro.",
-  "deleteWorkshop.noAttendeesNote":
-    "Ainda ninguém reservou lugar, por isso hoje ninguém perde nada.",
-  "deleteWorkshop.keepCta": "Manter",
-  "deleteWorkshop.confirmCta": "Eliminar workshop",
-  "deleteWorkshop.deletingLabel": "A eliminar…",
-  "deleteWorkshop.failedNote":
-    "Não conseguimos eliminar agora, o teu workshop continua no ar. Tenta outra vez daqui a pouco.",
-  "deleteWorkshop.toast": "Workshop eliminado",
-
-  "addWorkshop.cat.creative": "Criativo",
-  "addWorkshop.cat.craft": "Artesanato",
-  "addWorkshop.cat.design": "Design",
-  "addWorkshop.cat.tech": "Tecnologia",
-  "addWorkshop.cat.business": "Negócios",
-  "addWorkshop.cat.care": "Cuidado",
-  "addWorkshop.mode.inPerson": "Presencial",
-  "addWorkshop.mode.online": "Online",
-  "addWorkshop.mode.hybrid": "Híbrido",
-  "addWorkshop.build.tutorRole":
-    "Pessoa membro da QueerPulse · a fazer isto pela primeira vez",
-
-  // ── addWorkshop.build.ts (valores por omissão para um workshop publicado
-  // por uma pessoa membro) ────────────────────────────────────────────────
-  // Os workshops ainda não têm backend live (ver WorkshopsProvider) — este
-  // construtor corre sempre no cliente, por isso os valores por omissão são
-  // chrome, não conteúdo obtido por fetch. `draft.title`/`blurb`/`about`/
-  // `venue` são as palavras da própria pessoa e mantêm-se por traduzir, tal
-  // como o texto livre do salário de uma vaga.
-  "addWorkshop.build.freeTier": "Gratuito · paga o que puderes",
-  "addWorkshop.build.free": "Gratuito",
-  "addWorkshop.build.standardRate": "Preço normal",
-  "addWorkshop.build.reduced": "Reduzido",
-  "addWorkshop.build.solidaritySlot": "Solidariedade · 1 lugar",
-  "addWorkshop.build.weeks_one": "{count} semana",
-  "addWorkshop.build.weeks_other": "{count} semanas",
-  "addWorkshop.build.format": "Workshop · {weeks} · grupo de {size}",
-  "addWorkshop.build.priceSub": "{weeks} · escala flexível disponível",
-  "addWorkshop.build.heroPlaceholder": "{title} · workshop",
-  "addWorkshop.build.startDateTba": "A anunciar",
-  "addWorkshop.build.cancellation": "Reembolso total · antes de começar",
-  "addWorkshop.build.sessionTitle": "Semana {n} · a planear",
-  "addWorkshop.build.sessionDesc":
-    "Acrescenta o que esta sessão aborda a partir da página do teu workshop.",
-  "addWorkshop.build.sessionDateTba": "A confirmar",
-  "addWorkshop.build.sessionLength": "3 h",
-  "addWorkshop.build.needsMaterialsLabel": "Materiais",
-  "addWorkshop.build.needsMaterialsDetail":
-    "Quem dá o workshop confirma o que é fornecido antes da primeira sessão.",
-  "addWorkshop.build.needsIncludedTag": "incluído",
-  "addWorkshop.build.needsYourselfLabel": "A tua presença",
-  "addWorkshop.build.needsYourselfDetail":
-    "Vem com curiosidade. O resto resolve-se com o teu grupo.",
-  "addWorkshop.build.venueTba": "Local a confirmar",
-  "addWorkshop.build.venueSharedOnReserve": "Partilhado quando reservares",
-  "addWorkshop.build.accessNote":
-    "Quem dá o workshop partilha os detalhes de acesso, percursos sem degraus, casas de banho, transportes, antes de te comprometeres.",
-
-  // ── SkillsPage (+ section / card) ───────────────────────────────────────
-  "skills.hero.eyebrow": "Competências e aprendizagem",
-  "skills.hero.title": "Aprende com a tua <em>comunidade.</em>",
-  "skills.hero.lead":
-    "Sem propinas, sem algoritmos, sem falsa autoridade. Só pessoas boas naquilo que fazem e dispostas a partilhar o que sabem, e pessoas que querem melhorar.",
-  "skills.filter.browseBy": "Explorar por:",
-  "skills.filter.all": "Todas as competências",
-  "skills.filter.design": "Design",
-  "skills.filter.tech": "Tecnologia",
-  "skills.filter.business": "Negócios",
-  "skills.filter.craft": "Artesanato",
-  "skills.filter.care": "Cuidado",
-  "skills.filter.creative": "Criativo",
-  "skills.intro":
-    "Tudo aqui é oferecido e pedido por pessoas da comunidade. Se queres aprender algo, publica um Pedido no quadro. Se queres ensinar algo, publica uma Oferta.",
-  "skills.empty.title": "Ainda ninguém partilhou uma competência aqui",
-  "skills.empty.description":
-    "Quando as pessoas se oferecerem para ensinar aquilo em que são boas, ou pedirem para aprender algo novo, vai aparecer aqui. Sê a primeira pessoa: publica um workshop, ou o que podes ensinar no quadro.",
-  "skills.empty.listWorkshopCta": "Publicar um workshop",
-  "skills.empty.postBoardCta": "Publicar no quadro",
-  "skills.section.offeringTitle": "Pessoas a <em>oferecer-se</em> para ensinar",
-  "skills.section.offeringEmpty":
-    "Ainda ninguém se ofereceu para ensinar nesta categoria. Limpa o filtro para ver tudo o que a comunidade está a partilhar.",
-  "skills.section.lookingTitle": "Pessoas <em>a querer</em> aprender",
-  "skills.section.lookingEmpty":
-    "Ainda ninguém pediu para aprender nesta categoria. Limpa o filtro para ver o que o resto da comunidade quer aprender.",
-  "skills.section.nothingMatches": "Nada corresponde ao teu filtro",
-  "skills.section.clearFilters": "Limpar filtros",
-  "skills.offerStrip.title": "Tens algo <em>para ensinar?</em>",
-  "skills.offerStrip.body":
-    "Publica uma oferta de competência no quadro, o que podes ensinar, como, e para quem é. A comunidade vai encontrar-te.",
-  "skills.offerStrip.cta": "Publicar no quadro",
-  "skills.outro.title":
-    "A melhor forma de melhorar é <em>conhecer alguém mais avançado.</em>",
-  "skills.outro.sub":
-    "Junta-te à rede e encontra pessoas que te podem ajudar a crescer, e pessoas que podes ajudar em troca.",
-  "skills.outro.cta": "Pedir um convite",
-  "skills.card.teaching": "A ensinar",
-  "skills.card.learning": "A aprender",
-  "skills.card.reachOut": "Contactar",
 
   // ── SolidarityPage (+ directory) ────────────────────────────────────────
   "solidarity.hero.eyebrow": "Cuidado comunitário",
@@ -4040,6 +3848,7 @@ export const economy: Catalog = {
   "housing.beds.count_one": "{count} quarto",
   "housing.beds.count_other": "{count} quartos",
   "housing.period.month": "mês",
+  "housing.lister.memberSince": "Aqui desde {year}",
   "company.badge.queerRun": "Gerida por pessoas queer",
   "company.badge.queerRunVerified": "Gerida por pessoas queer · verificada",
   "company.badge.queerLed": "Liderada por pessoas queer",
@@ -4106,10 +3915,6 @@ export const economy: Catalog = {
   "myHousingListings.toast.backToReview":
     "Guardado. O teu anúncio voltou para revisão, por isso está fora do quadro até um moderador o aprovar.",
   // ── Anúncios em grupos de habitação: editar e retirar o teu (BE-HSG-20) ──
-  "groupListing.manage.startCta": "Gerir um quarto que publicaste",
-  "groupListing.manage.doneCta": "Terminar",
-  "groupListing.manage.note":
-    "Só quem publicou um quarto o pode editar ou retirar. Escolhe o teu aqui em baixo e nós confirmamos com o grupo.",
   "groupListing.manage.editCta": "Editar",
   "groupListing.manage.editAriaLabel": "Editar o anúncio {title}",
   "groupListing.manage.withdrawCta": "Retirar",
@@ -4156,6 +3961,45 @@ export const economy: Catalog = {
   "groupListing.toast.withdrawn":
     "Esse quarto está fora. Obrigado por manteres o grupo em ordem.",
   "groupListing.toast.withdrawFailed": "Não foi possível retirar esse anúncio",
+
+  // ── Anúncios de grupo: publicar um quarto e ver onde estão os teus ──
+  "groupListing.post.ariaLabel": "Publicar um quarto em {group}",
+  "groupListing.post.eyebrow": "Partilhar um quarto",
+  "groupListing.post.title": "Publica um quarto <em>no grupo</em>",
+  "groupListing.post.sub":
+    "Diz a quem está em {group} o que está livre, quanto custa e como é chegar ao sítio.",
+  "groupListing.post.reviewNotice":
+    "Um moderador lê todos os quartos antes de irem para a página do grupo. O teu fica em revisão até lá e nós dizemos-te aqui o que ficou decidido.",
+  "groupListing.post.submitCta": "Enviar para revisão",
+  "groupListing.post.submitting": "A enviar…",
+  "groupListing.post.failed": "Não foi possível enviar esse quarto",
+  "groupListing.post.success.title": "O teu quarto está",
+  "groupListing.post.success.titleEm": "com um moderador",
+  "groupListing.post.success.body":
+    "Um moderador de <strong>{group}</strong> lê-o a seguir e ele vai para a página do grupo assim que for aprovado. De uma forma ou de outra, encontra-lo aqui nos teus quartos.",
+
+  "groupListing.mine.title": "Os teus quartos",
+  "groupListing.mine.titleEm": "neste grupo",
+  "groupListing.mine.sub":
+    "Tudo o que partilhaste aqui e em que ponto está cada um. Nada chega à página do grupo antes de um moderador o ler.",
+  "groupListing.mine.postCta": "Publicar um quarto",
+  "groupListing.mine.empty":
+    "Ainda não partilhaste nenhum quarto aqui. Quando o fizeres, aparece neste sítio com o estado da revisão.",
+  "groupListing.mine.postedOn": "Publicado a {date}",
+
+  "groupListing.mine.status.review": "À espera de revisão",
+  "groupListing.mine.status.question": "Uma pergunta para ti",
+  "groupListing.mine.status.live": "Na página do grupo",
+  "groupListing.mine.status.declined": "Não publicado",
+  "groupListing.mine.status.takenDown": "Retirado",
+
+  "groupListing.mine.decision.question": "Um moderador perguntou-te uma coisa",
+  "groupListing.mine.decision.declined": "Porque é que este não vai para o ar",
+  "groupListing.mine.decision.takenDown": "Porque é que este foi retirado",
+  "groupListing.mine.decision.questionHint":
+    "Responde a editar o quarto. Ao guardares, ele volta para as mãos de um moderador.",
+  "groupListing.mine.decision.editHint":
+    "Edita o quarto para corrigir o que está indicado aqui. Ao guardares, ele volta para as mãos de um moderador.",
 
   // ── Recomendações de senhorios: retirar a tua (BE-HSG-18) ──
   "landlordPage.recommendation.yoursBadge": "Tua",

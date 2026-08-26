@@ -1,4 +1,5 @@
 import { FiMapPin } from "react-icons/fi";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlaces } from "./api/useDirectory";
@@ -33,7 +34,8 @@ export function DirectoryNearbyPlaces({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const places = useDirectoryPlaces();
-  const nearby = nearbyPlaces(place, places);
+  const { demoMode } = useDemoMode();
+  const nearby = nearbyPlaces(place, places, demoMode);
   if (nearby.length === 0) return null;
 
   const distanceLabel = (metres: number): string =>

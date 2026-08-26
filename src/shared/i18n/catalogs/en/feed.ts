@@ -211,4 +211,41 @@ export const feed: Catalog = {
   "post.inCommunity": "in {community} · {count} replies",
   "banner.joined": "{count} people joined near you this week",
   "banner.sharing": "{count} share your communities",
+
+  // ── Why an item is in the feed (SOC-04) ─────────────────────────────────
+  // Ranking that cannot explain itself is a black box. Every reason names a
+  // fact the member created on purpose and can undo.
+  "reason.membership": "You're in {subject}",
+  "reason.connection": "From {subject}, in your connections",
+  "reason.topic": "You follow {subject}",
+  "reason.recent": "New across QueerPulse",
+
+  // ── Inline card actions (SOC-04) ────────────────────────────────────────
+  "action.react": "Count me in",
+  "action.reactionFailed": "That reaction didn't save. Try again?",
+  "action.replySent": "Reply posted.",
+  "action.replyFailed": "That reply didn't send. Try again?",
+
+  // ── Feed source mutes (SOC-18) ──────────────────────────────────────────
+  // Muting turns a source down in your own feed. It never removes you from
+  // anything, and the community is never told.
+  "mute.showLess": "Show less of {name}",
+  "mute.showAgain": "Show {name} again",
+  "mute.mutedToast": "You'll see less of {name}. You're still a member.",
+  "mute.unmutedToast": "{name} is back in your feed.",
+  "mute.failedToast": "That didn't save. Try again?",
+  "mute.sidebarHeading": "Quieter feed",
+  "mute.sidebarBlurb": "Turn a community or a thread down without leaving it.",
+  "mute.manageLink": "Sources you've turned down",
+  "mute.pageTitle": "Sources you've turned down",
+  "mute.pageBlurb":
+    "These are quieter in your feed. You are still a member of every community here, you still have full access, and nobody was told.",
+  "mute.backToFeed": "Back to your feed",
+  "mute.emptyTitle": "Nothing turned down",
+  "mute.emptyDescription":
+    "When a community or a thread is more than you want in your feed, choose \u2018Show less\u2019 on one of its cards. It will appear here so you can bring it back.",
+  "mute.kind.community": "Community",
+  "mute.kind.forum_thread": "Thread",
+  "mute.mutedOn": "Turned down {date}",
+  "mute.unmute": "Show again",
 };

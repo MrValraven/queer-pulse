@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FiShield } from "react-icons/fi";
-import { Button, FeatureHelp, Toggle } from "../../shared/components/ui";
+import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
 import { useProfileEdit } from "../../app/providers/useProfile";
 import { useConsent } from "../../app/providers/useConsent";
@@ -9,14 +9,16 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Language } from "../../shared/i18n/types";
 import { TERMS } from "./settings.data";
-import {
-  EMAIL_DELIVERY_OPTIONS,
-  QUIET_HOURS_RANGES,
-  VISIBILITY_OPTIONS,
-} from "./SettingsPanes.data";
+import { VISIBILITY_OPTIONS } from "./SettingsPanes.data";
 import { PushNotificationRow } from "../push/PushNotificationRow";
-import { NOTIFICATION_PREFERENCE_CATEGORY } from "./api/notificationPreferences.api";
-import { useNotificationPreferences } from "./api/useNotificationPreferences";
+import { useNotificationDelivery } from "./api/useNotificationDelivery";
+import {
+  CommunityVolumeSection,
+  ConsentToggleRow,
+  NotificationCategorySections,
+  QuietHoursSection,
+} from "./NotificationVolumeSections";
+import { useLoginAlerts } from "./api/useLoginAlerts";
 import { DestructiveActionFlow } from "./DestructiveActionFlow";
 import { buildDestructiveFlow } from "./destructiveFlows.data";
 import {
@@ -31,11 +33,7 @@ import styles from "./SettingsPage.module.css";
 
 export function NotificationsPane({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
-  // Genuinely-wired per-category switches (demo = local, live = GET/PUT
-  // /me/notification-preferences). These save immediately on flip, so they do
-  // NOT participate in the pane's dirty/save flow (`onChange`) — that stays for
-  // the still-cosmetic rows below.
-  const { isEnabled, setEnabled } = useNotificationPreferences();
+  const { delivery, setDelivery } = useNotificationDelivery();
   return (
     <Pane
       title={
@@ -49,28 +47,13 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
       }
       sub={t("settings:notifications.sub")}
     >
-      <Section label={t("settings:notifications.section.gatherings")}>
+      {/* Every category switch, grouped. All of them are genuinely persisted
+          and save on flip, so none participates in the pane's dirty/save flow
+          (`onChange`): that stays for the still-cosmetic rows below. */}
+      <NotificationCategorySections />
+      <Section label={t("settings:notifications.section.phonePush")}>
         <ToggleList>
-          <ConsentToggleRow
-            title={t("settings:notifications.gatherings.newAnnounced.title")}
-            description={t(
-              "settings:notifications.gatherings.newAnnounced.desc",
-            )}
-            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventInvites)}
-            onChange={(next) =>
-              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventInvites, next)
-            }
-          />
-          <ConsentToggleRow
-            title={t("settings:notifications.gatherings.rsvpReminder.title")}
-            description={t(
-              "settings:notifications.gatherings.rsvpReminder.desc",
-            )}
-            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventReminders)}
-            onChange={(next) =>
-              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.eventReminders, next)
-            }
-          />
+          <PushNotificationRow />
           {/* No "spots almost full" notification exists yet — still cosmetic. */}
           <ToggleRow
             title={t("settings:notifications.gatherings.lastFewSpots.title")}
@@ -79,37 +62,6 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
             )}
             comingSoon
             onChange={onChange}
-          />
-        </ToggleList>
-      </Section>
-      <Section label={t("settings:notifications.section.messagesConnections")}>
-        <ToggleList>
-          <PushNotificationRow />
-          <ConsentToggleRow
-            title={t("settings:notifications.messages.newMessage.title")}
-            description={t("settings:notifications.messages.newMessage.desc")}
-            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.newMessages)}
-            onChange={(next) =>
-              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.newMessages, next)
-            }
-          />
-          <ConsentToggleRow
-            title={t("settings:notifications.messages.connectionRequest.title")}
-            description={t(
-              "settings:notifications.messages.connectionRequest.desc",
-            )}
-            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.connections)}
-            onChange={(next) =>
-              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.connections, next)
-            }
-          />
-          <ConsentToggleRow
-            title={t("settings:notifications.messages.vouch.title")}
-            description={t("settings:notifications.messages.vouch.desc")}
-            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.vouches)}
-            onChange={(next) =>
-              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.vouches, next)
-            }
           />
           {/* No "wave"/"say hello" notification type exists yet — cosmetic. */}
           <ToggleRow
@@ -128,80 +80,8 @@ export function NotificationsPane({ onChange }: { onChange: () => void }) {
           />
         </div>
       </Section>
-      <Section label={t("settings:notifications.section.communitiesBoard")}>
-        <ToggleList>
-          {/* No "new post in a community" notification is emitted (only replies)
-              — still cosmetic. */}
-          <ToggleRow
-            title={t("settings:notifications.communities.newPost.title")}
-            description={t("settings:notifications.communities.newPost.desc")}
-            comingSoon
-            onChange={onChange}
-          />
-          <ConsentToggleRow
-            title={t("settings:notifications.communities.threadReply.title")}
-            description={t(
-              "settings:notifications.communities.threadReply.desc",
-            )}
-            checked={isEnabled(
-              NOTIFICATION_PREFERENCE_CATEGORY.communityReplies,
-            )}
-            onChange={(next) =>
-              setEnabled(
-                NOTIFICATION_PREFERENCE_CATEGORY.communityReplies,
-                next,
-              )
-            }
-          />
-          <ConsentToggleRow
-            title={t("settings:notifications.communities.mention.title")}
-            description={t("settings:notifications.communities.mention.desc")}
-            checked={isEnabled(NOTIFICATION_PREFERENCE_CATEGORY.mentions)}
-            onChange={(next) =>
-              setEnabled(NOTIFICATION_PREFERENCE_CATEGORY.mentions, next)
-            }
-          />
-          {/* No weekly email digest job exists yet — cosmetic. */}
-          <ToggleRow
-            title={t("settings:notifications.communities.weeklyDigest.title")}
-            description={t(
-              "settings:notifications.communities.weeklyDigest.desc",
-            )}
-            comingSoon
-            onChange={onChange}
-          />
-        </ToggleList>
-      </Section>
-      <Section label={t("settings:notifications.section.delivery")}>
-        <SelectRow
-          title={t("settings:notifications.delivery.email.title")}
-          description={t("settings:notifications.delivery.email.desc")}
-          options={EMAIL_DELIVERY_OPTIONS.map((option) => ({
-            value: option.value,
-            label: t(option.key),
-          }))}
-          defaultValue="dailyDigest"
-          comingSoon
-          onChange={onChange}
-        />
-        <SelectRow
-          title={t("settings:notifications.delivery.quietHours.title")}
-          description={t("settings:notifications.delivery.quietHours.desc")}
-          options={[
-            {
-              value: "none",
-              label: t("settings:notifications.delivery.quietHours.none"),
-            },
-            ...QUIET_HOURS_RANGES.map((range) => ({
-              value: range,
-              label: range,
-            })),
-          ]}
-          defaultValue="22:00 – 08:00"
-          comingSoon
-          onChange={onChange}
-        />
-      </Section>
+      <CommunityVolumeSection />
+      <QuietHoursSection delivery={delivery} onChange={setDelivery} />
     </Pane>
   );
 }
@@ -264,49 +144,6 @@ export function LanguagePane() {
 }
 
 /** Controlled consent row bound to real state (not the cosmetic ToggleRow). */
-function ConsentToggleRow({
-  title,
-  description,
-  checked,
-  onChange,
-  disabled,
-  disabledHint,
-}: {
-  title: string;
-  description: string;
-  checked: boolean;
-  onChange: (next: boolean) => void;
-  /** Disables the toggle when a prerequisite isn't met (e.g. the profile
-   *  isn't public yet) without hiding the row. */
-  disabled?: boolean;
-  /** Shown below the description in place of normal interaction, explaining
-   *  why the toggle is disabled. Only rendered when `disabled` is true. */
-  disabledHint?: string;
-}) {
-  return (
-    <div className={styles.toggleRow}>
-      <div className={styles.toggleLabel}>
-        <div className={styles.toggleTitle}>{title}</div>
-        <div className={styles.toggleDesc}>{description}</div>
-        {disabled && disabledHint && (
-          <div className={styles.toggleHint}>{disabledHint}</div>
-        )}
-      </div>
-      <div
-        className={disabled ? styles.disabledControl : undefined}
-        inert={disabled}
-      >
-        <Toggle
-          tone="coral"
-          checked={checked}
-          onChange={onChange}
-          label={title}
-        />
-      </div>
-    </div>
-  );
-}
-
 export function DataPane({
   onChange,
   onDeleteClick,
@@ -545,6 +382,8 @@ export function VisibilityPane({
 export function AccountPane({ onChange }: { onChange: () => void }) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { isEnabled: isLoginAlertsEnabled, setEnabled: setLoginAlertsEnabled } =
+    useLoginAlerts();
   return (
     <Pane
       title={
@@ -583,11 +422,16 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
             comingSoon
             onChange={onChange}
           />
-          <ToggleRow
+          {/* Genuinely wired since ID-06: `GET|PUT /me/login-alerts` backs it,
+              and `AuthService.issueTokens` reads it before emitting the
+              `security_new_sign_in` notification. It saves on flip, so it does
+              NOT take part in this pane's dirty/save flow (`onChange`) — the
+              same rule the Notifications pane's real toggles follow. */}
+          <ConsentToggleRow
             title={t("settings:account.loginAlerts.title")}
             description={t("settings:account.loginAlerts.desc")}
-            comingSoon
-            onChange={onChange}
+            checked={isLoginAlertsEnabled}
+            onChange={setLoginAlertsEnabled}
           />
         </ToggleList>
         <div className={styles.dataCards}>

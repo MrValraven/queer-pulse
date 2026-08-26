@@ -1,4 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useBanEvasionAssessments } from "./AdminBanEvasionSignals";
 import { useJoinRequests } from "./api/useJoinRequests";
 import { useJoinRequestQueueDecisions } from "./useJoinRequestQueueDecisions";
 import {
@@ -9,6 +10,7 @@ import {
 import { JoinRequestDeclineModal } from "./JoinRequestDeclineModal";
 import { JoinRequestBulkActionBar } from "./JoinRequestBulkActionBar";
 import styles from "./AdminMembersPage.module.css";
+import { ModerationStanceNote } from "../safety/ModerationStanceNote";
 
 /**
  * Moderator review of incoming platform join requests. Sourced from
@@ -31,6 +33,13 @@ export function AdminVerifyQueue() {
   const { data, isLoading } = useJoinRequests("pending");
   const { data: waitlisted } = useJoinRequests("waitlisted");
   const decisions = useJoinRequestQueueDecisions(data ?? []);
+  // One assessment call covers every row on screen, pending and waitlisted
+  // alike: a waitlisted applicant is exactly the one a reviewer comes back to
+  // later, so the signal has to still be there when they do.
+  const banEvasionBySubjectId = useBanEvasionAssessments([
+    ...(data ?? []).map((item) => item.id),
+    ...(waitlisted ?? []).map((item) => item.id),
+  ]);
 
   if (isLoading) return <AdminVerifyQueueSkeleton />;
 
@@ -50,6 +59,7 @@ export function AdminVerifyQueue() {
 
   return (
     <div>
+      <ModerationStanceNote variant="applicants" />
       <p className={styles.queueIntro}>{t("admin:members.verify.intro")}</p>
       <p className={styles.queueIntroEm}>
         <em>{t("admin:members.verify.introEm")}</em>
@@ -65,6 +75,7 @@ export function AdminVerifyQueue() {
         onDecline={decisions.requestDecline}
         onWaitlist={(item) => decisions.resolve(item, "waitlisted")}
         onToggleSelect={decisions.selection.toggleSelected}
+        banEvasionBySubjectId={banEvasionBySubjectId}
       />
 
       {decisions.selection.selectedIds.size > 0 && (
@@ -81,6 +92,7 @@ export function AdminVerifyQueue() {
           decidingId={decisions.decidingId}
           onApprove={(item) => decisions.resolve(item, "approved")}
           onDecline={decisions.requestDecline}
+          banEvasionBySubjectId={banEvasionBySubjectId}
         />
       )}
 

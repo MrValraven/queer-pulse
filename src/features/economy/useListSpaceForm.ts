@@ -1,40 +1,73 @@
-import { useState } from "react";
-import type { CreateHousingListingBody } from "./api/housingListing.api";
+import { useCallback, useState } from "react";
+import {
+  HOUSING_CITY,
+  type CreateHousingListingBody,
+} from "./api/housingListing.api";
 
 /**
- * Field state + validity + request-body builder for the "list a space" form.
- * Split out of `ListSpaceModal` so the modal stays a thin orchestrator (submit /
- * step-up / success) under the 200-line rule and the fields render from one
- * `form` object instead of a dozen threaded props.
+ * One photo staged on the "list a space" form.
+ *
+ * `reference` is what goes on the wire in `gallery`: the private storage key a
+ * presigned upload returned, or the resolved `/files/<key>` URL an existing
+ * listing was read back with (the backend normalises that form back to the key
+ * and re-accepts it, which is how the edit flow re-saves photos it did not
+ * just upload). In demo mode it is a local blob URL, and demo mode never
+ * submits to the network.
+ *
+ * `previewUrl` is always locally renderable, so a picked photo appears the
+ * instant it finishes processing.
  */
-export interface ListSpaceForm {
+export interface ListSpacePhoto {
+  reference: string;
+  previewUrl: string;
+}
+
+/** The backend accepts at most 8 gallery photos (`CreateHousingListingDto`). */
+export const LIST_SPACE_MAX_PHOTOS = 8;
+
+/** Every field the form holds. One object so the hook stays small and the
+ * fields render from a single `values` bag instead of a dozen threaded props. */
+export interface ListSpaceValues {
   title: string;
-  setTitle: (value: string) => void;
+  /** The NEIGHBOURHOOD. The city is a constant, never typed here. */
   area: string;
-  setArea: (value: string) => void;
   rent: string;
-  setRent: (value: string) => void;
   type: string;
-  setType: (value: string) => void;
   bedrooms: string;
-  setBedrooms: (value: string) => void;
   accessibility: string;
-  setAccessibility: (value: string) => void;
   virtualTour: string;
-  setVirtualTour: (value: string) => void;
+  /** One-line card summary. Falls back to the opening of `description`. */
+  blurb: string;
+  description: string;
+  /** YYYY-MM-DD, or "" for available now. */
+  availableFrom: string;
+  minStayMonths: string;
   billsIncluded: boolean;
-  setBillsIncluded: (value: boolean) => void;
   isAgent: boolean;
-  setIsAgent: (value: boolean) => void;
-  valid: boolean;
-  /** True when a non-empty virtual-tour link isn't a valid https URL — drives an
-   * inline field error without blocking submit for the empty (optional) case. */
-  virtualTourInvalid: boolean;
+  features: string[];
+  idealFor: string[];
+  photos: ListSpacePhoto[];
+}
+
+export interface ListSpaceForm {
+  values: ListSpaceValues;
+  setField: <Key extends keyof ListSpaceValues>(
+    key: Key,
+    value: ListSpaceValues[Key],
+  ) => void;
+  /** Adds or removes one value in `features`/`idealFor`. */
+  toggleChip: (key: "features" | "idealFor", value: string) => void;
+  addPhoto: (photo: ListSpacePhoto) => void;
+  removePhoto: (reference: string) => void;
+  isValid: boolean;
+  /** True when a non-empty tour link isn't a valid https URL. Drives an inline
+   * field error without blocking submit for the empty (optional) case. */
+  isVirtualTourInvalid: boolean;
   buildBody: () => CreateHousingListingBody;
 }
 
 /** Whether a non-empty tour link is a usable https URL (the same shape the
- * backend validates). Empty is fine — the field is optional. */
+ * backend validates). Empty is fine, the field is optional. */
 function isHttpsUrl(value: string): boolean {
   try {
     return new URL(value.trim()).protocol === "https:";
@@ -43,87 +76,149 @@ function isHttpsUrl(value: string): boolean {
   }
 }
 
-/** Seeds the form with an existing listing's values — the edit flow's only
- * difference from create (`MyHousingListingsPage`'s edit modal passes this;
- * omitting it, as every create-flow caller does, is the original blank form). */
-export interface ListSpaceFormInitial {
-  title?: string;
-  area?: string;
-  rent?: string;
-  type?: string;
-  bedrooms?: string;
-  accessibility?: string;
-  virtualTour?: string;
-  billsIncluded?: boolean;
-  isAgent?: boolean;
+/** The card summary the board renders. A lister who wrote a description and
+ * skipped the summary gets their own opening words rather than a blank card. */
+function resolveBlurb(values: ListSpaceValues): string {
+  const written = values.blurb.trim();
+  if (written.length > 0) return written.slice(0, 200);
+  return values.description.trim().slice(0, 200);
 }
 
+const EMPTY_VALUES: ListSpaceValues = {
+  title: "",
+  area: "",
+  rent: "",
+  type: "",
+  bedrooms: "",
+  accessibility: "",
+  virtualTour: "",
+  blurb: "",
+  description: "",
+  availableFrom: "",
+  minStayMonths: "",
+  billsIncluded: false,
+  isAgent: false,
+  features: [],
+  idealFor: [],
+  photos: [],
+};
+
+/** Seeds the form with an existing listing's values. The edit flow's only
+ * difference from create (`MyHousingListingsPage`'s edit modal passes this;
+ * omitting it, as every create-flow caller does, is the original blank form). */
+export type ListSpaceFormInitial = Partial<ListSpaceValues>;
+
+/**
+ * Field state, validity and the request-body builder for the "list a space"
+ * form. Split out of `ListSpaceModal` so the modal stays a thin orchestrator
+ * (submit / step-up / success) and the fields render from one `form` object.
+ *
+ * The form now sends everything the detail page renders: photos, the long
+ * description, the move-in date, the minimum stay, the features and the
+ * "ideal for" chips. It also separates the city from the neighbourhood. It
+ * used to send `city: area.trim()`, which put "Arroios" in the city column and
+ * degraded saved-search matching, since a saved search matches on area AND
+ * city. Lisbon is the only city this product serves, so the city is a constant
+ * rather than a field anyone fills in.
+ */
 export function useListSpaceForm(
   initial: ListSpaceFormInitial = {},
 ): ListSpaceForm {
-  const [title, setTitle] = useState(initial.title ?? "");
-  const [area, setArea] = useState(initial.area ?? "");
-  const [rent, setRent] = useState(initial.rent ?? "");
-  const [type, setType] = useState(initial.type ?? "");
-  const [bedrooms, setBedrooms] = useState(initial.bedrooms ?? "");
-  const [accessibility, setAccessibility] = useState(
-    initial.accessibility ?? "",
+  const [values, setValues] = useState<ListSpaceValues>(() => ({
+    ...EMPTY_VALUES,
+    ...initial,
+  }));
+
+  const setField = useCallback(
+    <Key extends keyof ListSpaceValues>(
+      key: Key,
+      value: ListSpaceValues[Key],
+    ) => {
+      setValues((current) => ({ ...current, [key]: value }));
+    },
+    [],
   );
-  const [virtualTour, setVirtualTour] = useState(initial.virtualTour ?? "");
-  const [billsIncluded, setBillsIncluded] = useState(
-    initial.billsIncluded ?? false,
+
+  const toggleChip = useCallback(
+    (key: "features" | "idealFor", value: string) => {
+      setValues((current) => {
+        const chips = current[key];
+        return {
+          ...current,
+          [key]: chips.includes(value)
+            ? chips.filter((chip) => chip !== value)
+            : [...chips, value],
+        };
+      });
+    },
+    [],
   );
-  const [isAgent, setIsAgent] = useState(initial.isAgent ?? false);
 
-  const virtualTourInvalid =
-    virtualTour.trim().length > 0 && !isHttpsUrl(virtualTour);
+  const addPhoto = useCallback((photo: ListSpacePhoto) => {
+    setValues((current) =>
+      current.photos.length >= LIST_SPACE_MAX_PHOTOS
+        ? current
+        : { ...current, photos: [...current.photos, photo] },
+    );
+  }, []);
 
-  const valid =
-    title.trim().length > 3 &&
-    area.trim().length > 1 &&
-    !!rent &&
-    !!type &&
-    accessibility.trim().length > 3 &&
-    !virtualTourInvalid;
+  const removePhoto = useCallback((reference: string) => {
+    setValues((current) => ({
+      ...current,
+      photos: current.photos.filter((photo) => photo.reference !== reference),
+    }));
+  }, []);
 
-  const buildBody = (): CreateHousingListingBody => {
-    const trimmedTour = virtualTour.trim();
-    const trimmedBedrooms = bedrooms.trim();
+  const isVirtualTourInvalid =
+    values.virtualTour.trim().length > 0 && !isHttpsUrl(values.virtualTour);
+
+  const isValid =
+    values.title.trim().length > 3 &&
+    values.area.trim().length > 1 &&
+    !!values.rent &&
+    !!values.type &&
+    values.accessibility.trim().length > 3 &&
+    !isVirtualTourInvalid;
+
+  const buildBody = useCallback((): CreateHousingListingBody => {
+    const trimmedTour = values.virtualTour.trim();
+    const trimmedBedrooms = values.bedrooms.trim();
+    const trimmedMinStay = values.minStayMonths.trim();
+    const trimmedDescription = values.description.trim();
+    const blurb = resolveBlurb(values);
     return {
-      type: type as CreateHousingListingBody["type"],
-      title: title.trim(),
-      city: area.trim(),
-      area: area.trim(),
-      rentEuros: Number(rent),
+      type: values.type as CreateHousingListingBody["type"],
+      title: values.title.trim(),
+      city: HOUSING_CITY,
+      area: values.area.trim(),
+      rentEuros: Number(values.rent),
       ...(trimmedBedrooms !== "" ? { bedrooms: Number(trimmedBedrooms) } : {}),
-      accessibilityInfo: accessibility.trim(),
-      billsIncluded,
-      listerKind: isAgent ? "agent" : "member",
+      accessibilityInfo: values.accessibility.trim(),
+      billsIncluded: values.billsIncluded,
+      listerKind: values.isAgent ? "agent" : "member",
+      ...(blurb !== "" ? { blurb } : {}),
+      ...(trimmedDescription !== "" ? { description: trimmedDescription } : {}),
+      ...(values.availableFrom ? { availableFrom: values.availableFrom } : {}),
+      ...(trimmedMinStay !== ""
+        ? { minStayMonths: Number(trimmedMinStay) }
+        : {}),
+      ...(values.features.length ? { features: values.features } : {}),
+      ...(values.idealFor.length ? { idealFor: values.idealFor } : {}),
+      ...(values.photos.length
+        ? { gallery: values.photos.map((photo) => photo.reference) }
+        : {}),
       ...(trimmedTour !== "" ? { virtualTourUrl: trimmedTour } : {}),
     };
-  };
+  }, [values]);
 
   return {
-    title,
-    setTitle,
-    area,
-    setArea,
-    rent,
-    setRent,
-    type,
-    setType,
-    bedrooms,
-    setBedrooms,
-    accessibility,
-    setAccessibility,
-    virtualTour,
-    setVirtualTour,
-    billsIncluded,
-    setBillsIncluded,
-    isAgent,
-    setIsAgent,
-    valid,
-    virtualTourInvalid,
+    values,
+    setField,
+    toggleChip,
+    addPhoto,
+    removePhoto,
+    isValid,
+    isVirtualTourInvalid,
     buildBody,
   };
 }

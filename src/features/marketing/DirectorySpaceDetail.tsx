@@ -8,7 +8,7 @@ import { type DirectoryPlace } from "./directoryPlaces";
 import { DirectorySpaceView } from "./DirectorySpaceView";
 import { DirectoryNearbyPlaces } from "./DirectoryNearbyPlaces";
 import { DirectoryRelatedPlaces } from "./DirectoryRelatedPlaces";
-import { categoryLabel, normalizeCategory } from "./localPlaces";
+import { categoryLabel, normalizeCategory } from "./localCategories";
 import s from "./DirectorySpacePage.module.css";
 
 /** Truncate a listing's tagline/description to a sensible social-meta length. */

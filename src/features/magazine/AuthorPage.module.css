@@ -93,6 +93,46 @@
   border-radius: 999px;
   font-weight: 600;
 }
+/* CON-11 — the byline as a person: a link to the member profile behind it,
+   and the "fill this in" affordance for staff or for the writer themselves. */
+.identityRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.memberLink,
+.editByline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: transparent;
+  color: var(--ink-60);
+  text-decoration: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .memberLink:hover,
+  .editByline:hover {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+.memberLink:focus-visible,
+.editByline:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 .portrait {
   justify-self: end;
   width: 100%;

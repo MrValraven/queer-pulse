@@ -23,6 +23,7 @@ import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
 import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineupSection } from "./GatheringLineupSection";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
+import { GatheringDetailPanels } from "./GatheringDetailPanels";
 import {
   gatheringDetails,
   gatheringKind,
@@ -32,6 +33,7 @@ import {
 import { eventZoneFormat } from "./eventTimezone";
 import { useEvent } from "./api/useEvent";
 import { useRsvp, useUnrsvp } from "./api/useEventMutations";
+import { rsvpErrorMessage } from "./rsvpErrors";
 
 import styles from "./GatheringPage.module.css";
 
@@ -220,8 +222,12 @@ export function GatheringPage() {
                           ),
                           "success",
                         ),
-                      onError: () =>
-                        setRsvpStatus(gathering.myRsvpStatus ?? null),
+                      // Barred, or blocked in either direction: said plainly,
+                      // and never naming who decided it (`rsvpErrors.ts`).
+                      onError: (error) => {
+                        setRsvpStatus(gathering.myRsvpStatus ?? null);
+                        showToast(rsvpErrorMessage(error, t), "error");
+                      },
                     });
                   }}
                 >
@@ -247,6 +253,14 @@ export function GatheringPage() {
               </div>
 
               <GoingAttendeesPreview gathering={gathering} />
+
+              {/* LOC-04/06/08 — announcements, where it actually is, the six
+                  accessibility answers, and "tell someone where I'm going".
+                  Live only: the demo registry carries none of that data. */}
+              <GatheringDetailPanels
+                gathering={gathering}
+                demoMode={demoMode}
+              />
 
               {/* "Meet the table" is demo-only: the backend exposes no seat /
                   attendee data yet, so live mode omits it rather than leak the

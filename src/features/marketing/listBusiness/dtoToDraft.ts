@@ -9,7 +9,7 @@ import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { toServiceRows } from "./listingServices.data";
 import type { ManagedListingDTO } from "./api/listings.api";
 import { ownerPersonalFieldsFrom } from "./ownerPersonalFields";
-import { normalizeCategory } from "../localPlaces";
+import { normalizeCategory } from "../localCategories";
 
 /**
  * Convert a `ManagedListingDTO` into a clean `ListingDraft` for seeding the

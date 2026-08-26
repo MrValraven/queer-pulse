@@ -1,4 +1,5 @@
 import { communityPath, thread } from "../../../app/routeMap";
+import { communityPostPath } from "../../communities/communityPostPath";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Mention, MentionAction, MentionCategory } from "../mentions.data";
@@ -55,11 +56,23 @@ function whereTextFor(dto: MentionDTO, t: TFunction): string {
   return dto.sourceLabel ?? t("notifications:mentions.liveWhere.fallback");
 }
 
-/** A deep-link to the mention's source, or `undefined` when it can't be built. */
+/**
+ * A deep-link to the mention's source, or `undefined` when it can't be built.
+ *
+ * A community mention resolves to the POST'S OWN PERMALINK when the row
+ * carries a `postId` (SOC-02). It used to resolve to `communityPath` and drop
+ * the id, so "@you were mentioned" opened the top of a paginated timeline and
+ * left the member to find the sentence with their name in it. A community
+ * mention with no `postId` still opens the community, which is the honest
+ * destination when the post is not identified.
+ */
 function whereToFor(dto: MentionDTO): string | undefined {
   if (dto.source === "forum" && dto.threadSlug) return thread(dto.threadSlug);
-  if (dto.source === "community" && dto.communitySlug)
-    return communityPath(dto.communitySlug);
+  if (dto.source === "community" && dto.communitySlug) {
+    return dto.postId
+      ? communityPostPath(dto.communitySlug, dto.postId)
+      : communityPath(dto.communitySlug);
+  }
   return undefined;
 }
 

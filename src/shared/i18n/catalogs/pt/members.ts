@@ -21,6 +21,11 @@ export const members: Catalog = {
   "card.mutualsCount_one": "{count} contacto em comum",
   "card.mutualsCount_other": "{count} contactos em comum",
 
+  // ── Faixa "ativo recentemente" (ActivityBandPill) ─────────────────────────
+  "activityBand.thisMonth": "Ativo este mês",
+  "activityBand.last3Months": "Ativo nos últimos 3 meses",
+  "activityBand.dormant": "Sem atividade recente",
+
   // ── Mensagens de erro do carregamento de imagens (api/uploadProcessing.ts, api/useUploadImage.ts) ──
   "upload.error.unsupportedType":
     "Esse tipo de imagem não é suportado. Usa um ficheiro JPEG, PNG, WebP ou GIF.",
@@ -320,7 +325,7 @@ export const members: Catalog = {
   // sempre igual.
   "profileEdit.work.label": "O que fazes",
   "profileEdit.work.help":
-    "Público. Aparece no teu perfil e é assim que as pessoas te encontram em \u201cO que fazem\u201d e \u201cProfiss\u00e3o\u201d no diret\u00f3rio.",
+    "Público. Aparece no teu perfil e é assim que as pessoas te encontram em “O que fazem” e “Profiss\u00e3o” no diret\u00f3rio.",
   "workPicker.fieldHeading": "A tua área",
   "workPicker.professionHeading": "A tua função",
   "workPicker.professionPrompt":
@@ -480,6 +485,13 @@ export const members: Catalog = {
     "Ainda sem votos de confiança. Vão aparecer aqui à medida que quem te conhece juntar o nome. É o único número que importa.",
   "hero.vouch.emptyOther":
     "Ainda ninguém deu um voto de confiança a {first}. Se conheces esta pessoa, o teu pode ser o primeiro.",
+  // A pista de confiança relativa a quem está a ver. Só aparece a partir de
+  // um, e o backend nem sequer a envia quando esta pessoa escondeu a lista de
+  // quem lhe deu voto de confiança.
+  "hero.vouch.mutualVouchers_one":
+    "{count} pessoa que conheces deu voto de confiança",
+  "hero.vouch.mutualVouchers_other":
+    "{count} pessoas que conheces deram voto de confiança",
 
   // ── Linha de intenção "Aqui para" (ProfileHero) ─────────────────────────────
   "hero.hereFor.label": "Aqui para",
@@ -535,8 +547,6 @@ export const members: Catalog = {
   "publicProfile.bottomCta.title": "Queres <em>ver tudo?</em>",
   "publicProfile.bottomCta.body":
     "A QueerPulse funciona por convite. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
-  "publicProfile.bottomCta.vouchCta":
-    "Pedir a {firstName} um voto de confiança",
 
   // ── Secções de perfil público (PublicProfileSections) ──────────────────────
   "publicProfile.preview.ownerLabel":
@@ -604,7 +614,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.tenure.remaining_other": "faltam {count} dias",
   "publicProfile.eligibility.family.contribution.label": "Contribuição pública",
   "publicProfile.eligibility.family.contribution.hint":
-    "Publicar textos, organizar eventos abertos e oficinas",
+    "Publicar textos, organizar eventos abertos e personas",
   "publicProfile.eligibility.family.trust.label": "Confiança da comunidade",
   "publicProfile.eligibility.family.trust.hint":
     "Apadrinhamentos, recomendações e ligações de outros membros",
@@ -651,12 +661,12 @@ export const members: Catalog = {
   "search.type.community": "Comunidades",
   "search.type.event": "Eventos",
   "search.type.forum": "Fórum",
+  "search.type.forumPost": "Respostas do fórum",
   "search.type.business": "Negócios",
   "search.type.magazine": "Revista",
   "search.type.job": "Vagas",
   "search.type.housing": "Habitação",
   "search.type.resource": "Recursos",
-  "search.type.workshop": "Workshops",
   "search.type.subprofile": "Subperfis",
   "search.type.board": "Quadro",
   "search.type.topic": "Tópicos",
@@ -672,6 +682,12 @@ export const members: Catalog = {
   "search.upcomingEvents": "Próximos eventos",
   "search.jumpTo": "Ir para <b>{name}</b>",
   "search.seeAllIn": "Ver tudo em {category}",
+  // ── Paginação de uma categoria além da primeira página (SearchLoadMore, SOC-08) ──
+  "search.loadMore.action": "Carregar mais resultados",
+  "search.loadMore.loading": "A carregar…",
+  "search.loadMore.retry": "Tentar de novo",
+  "search.loadMore.failed": "Essa página não carregou.",
+  "search.loadMore.end": "Isto é tudo para esta pesquisa.",
   "search.resultCount_one": `<b>{count}</b> resultado para "<b>{query}</b>"`,
   "search.resultCount_other": `<b>{count}</b> resultados para "<b>{query}</b>"`,
   "search.empty.title": "Nada encontrado",
@@ -698,6 +714,7 @@ export const members: Catalog = {
   "directory.memberCountLabel_other": "pessoas",
   "directory.sortLabel": "Ordenar",
   "directory.sort.recentlyJoined": "Juntaram-se recentemente",
+  "directory.sort.recentlyActive": "Ativos recentemente",
   "directory.sort.closestMutuals": "Mais contactos em comum",
   "directory.sort.aToZ": "De A a Z",
   "directory.sort.mostVouched": "Com mais votos de confiança",
@@ -894,26 +911,21 @@ export const members: Catalog = {
     "Ver todos os resultados para “<b>{query}</b>”",
   "commandPalette.openFullSearch": "Abrir pesquisa completa",
 
-  // ── Página de aval para convite (VouchPage) ─────────────────────────────────
-  "vouch.page.toast":
-    "O teu voto de confiança para {name} já está a caminho do conselho.",
-  "vouch.page.success.title": "Isso é <em>um verdadeiro acolhimento.</em>",
-  "vouch.page.success.body":
-    "O teu voto de confiança para {name} já chegou ao conselho da comunidade. Vão saber que já havia alguém a torcer por esta pessoa antes mesmo de ela entrar.",
-  "vouch.page.success.connectionsCta": "Voltar às ligações",
-  "vouch.page.success.browseCta": "Explorar pessoas",
+  // ── Página de voto de confiança: escolher alguém (VouchPage) ─────────
   "vouch.page.eyebrow": "Voto de confiança",
   "vouch.page.title": "Diz-nos que <em>as conheces.</em>",
-  "vouch.page.noteLabel": "Adiciona uma nota curta (opcional)",
-  "vouch.page.notePlaceholder":
-    "Como conheces {name}, e o que deve saber o conselho?",
-  "vouch.page.submitCta": "Enviar o meu voto de confiança",
-  "vouch.page.skipCta": "Agora não",
-  "vouch.page.emptyLive.title":
-    "Os convites para dar um voto de confiança chegam por link",
-  "vouch.page.emptyLive.description":
-    "Quando alguém te pedir um voto de confiança, recebes um link pessoal que abre o pedido aqui mesmo. De momento não há ninguém à espera do teu voto de confiança.",
-  "vouch.page.emptyLive.cta": "Ver membros",
+  "vouch.page.lede":
+    "Encontra a pessoa a quem queres dar um voto de confiança. O voto é público e leva o teu nome, e podes retirá-lo quando quiseres.",
+  "vouch.picker.searchPlaceholder": "Procurar pessoas pelo nome",
+  "vouch.picker.searchAria": "Procurar pessoas para dar um voto de confiança",
+  "vouch.picker.noResults":
+    "Ninguém aqui corresponde a “{query}”. Tenta outra grafia.",
+  "vouch.picker.alreadyVouched": "Com o teu voto",
+  "vouch.picker.vouchCta": "Dar voto de confiança a {name}",
+  "vouch.picker.error.title": "A lista de pessoas não carregou",
+  "vouch.picker.error.description":
+    "Algo correu mal a caminho do diretório. Tenta outra vez.",
+  "vouch.picker.error.retry": "Tentar outra vez",
 
   // ── Explicação de porquê dar um voto de confiança (vouch.data.ts MEANS) ─────
   "vouch.means.know.title": "Conheces esta pessoa, a sério",
@@ -1293,8 +1305,6 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.endorsements": "Endossos recebidos",
   "badges.xpBreakdown.sources.endorsementsDesc":
     "Seres endossade por outro membro.",
-  "badges.xpBreakdown.sources.workshops": "Workshops que deste",
-  "badges.xpBreakdown.sources.workshopsDesc": "Dares um workshop.",
   "badges.xpBreakdown.sources.tenure": "Dias na QueerPulse",
   "badges.xpBreakdown.sources.tenureDesc":
     "Fazeres parte da QueerPulse, dia a dia.",
@@ -1545,6 +1555,20 @@ export const members: Catalog = {
   "profile.whoSeesWhat.presets.closed.desc":
     "Foto, bairro, votos de confiança e o que procuras ficam todos privados.",
 
+  "profile.whoSeesWhat.activity.heading": "Há quanto tempo estiveste por cá",
+  "profile.whoSeesWhat.activity.sub":
+    "Os outros membros conseguem ver mais ou menos há quanto tempo estiveste por cá. Guardamos o mês e nada mais preciso: sem datas, sem horas, sem um ponto a dizer que estás online agora.",
+  "profile.whoSeesWhat.activity.hideLabel": "Esconder isto dos outros membros",
+  "profile.whoSeesWhat.activity.hideDesc":
+    "Desliga a linha para toda a gente e tira-te da ordenação Ativos recentemente. Continuas a vê-la aqui.",
+  "profile.whoSeesWhat.activity.current":
+    "Neste momento apareces como: {band}.",
+  "profile.whoSeesWhat.activity.none":
+    "Ainda não há nada registado, por isso o teu perfil não mostra linha nenhuma.",
+  "profile.whoSeesWhat.activity.error":
+    "Não foi possível guardar. Tenta outra vez.",
+  "profile.whoSeesWhat.activity.demo":
+    "Isto é a demonstração. Inicia sessão para mudares a definição a sério.",
   "profile.whoSeesWhat.fields.heading": "Controlos instantâneos",
   "profile.whoSeesWhat.fields.sub": "Cada um destes produz efeito de imediato.",
   "profile.whoSeesWhat.fields.photo.label": "Foto",
@@ -1690,14 +1714,127 @@ export const members: Catalog = {
   "profile.accountData.dsar.submitCta": "Enviar pedido",
   "profile.accountData.dsar.pastTitle": "Pedidos anteriores",
   "profile.accountData.dsar.pastHint":
-    "Respondemos a cada pedido por email. Esta lista é para o teu registo, o estado não muda sozinho aqui.",
+    "Respondemos a cada pedido com uma notificação no QueerPulse, e o estado aqui é atualizado quando o fizermos.",
   "profile.accountData.dsar.pastLoading": "A carregar os teus pedidos…",
   "profile.accountData.dsar.pastError":
     "Não conseguimos carregar os teus pedidos anteriores.",
   "profile.accountData.dsar.pastEmpty": "Ainda não fizeste nenhum pedido.",
   "profile.accountData.dsar.pastRowDueBy": "Resposta até {date}",
   "profile.accountData.dsar.toast.submitted":
-    "Pedido recebido, referência {ref}. Responderemos por email até {date}.",
+    "Pedido recebido, referência {ref}. Respondemos com uma notificação no QueerPulse até {date}.",
   "profile.accountData.dsar.toast.submitError":
     "Não conseguimos enviar esse pedido. Tenta novamente.",
+
+  // --- Listas de guardados (SOC-12) ----------------------------------------
+  // Mesmo conjunto de chaves do catálogo EN. A frase que avisa que o link é
+  // público aparece antes de o link existir, tal como no EN.
+  "savedLists.header.eyebrow": "Os teus guardados",
+  "savedLists.header.title": "Listas que vale a pena <em>passar adiante</em>",
+  "savedLists.header.lead":
+    "Tudo o que guardas fica numa lista. Cria outras pelas razões por que guardaste as coisas: um primeiro encontro, um sítio aberto até tarde, as clínicas que indicarias a uma amiga.",
+  "savedLists.header.newCta": "Nova lista",
+
+  "savedLists.empty.title": "Ainda não guardaste nada",
+  "savedLists.empty.description":
+    "Guarda um artigo, um sítio ou um encontro e aparece aqui. Podes agrupar os teus guardados em listas quando quiseres.",
+
+  "savedLists.newCard.title": "Nova lista",
+  "savedLists.newCard.subtitle":
+    "Agrupa guardados pela razão por que os guardaste",
+
+  "savedLists.card.meta_one": "1 coisa · atualizada {time}",
+  "savedLists.card.meta_other": "{count} coisas · atualizada {time}",
+
+  "savedLists.state.private": "Privada",
+  "savedLists.state.shared": "Link ativo",
+
+  "savedLists.recent.heading": "Guardados recentemente",
+  "savedLists.recent.count_one": "1 guardado",
+  "savedLists.recent.count_other": "{count} guardados",
+  "savedLists.recent.fileCta": "Adicionar a uma lista",
+
+  "savedLists.new.eyebrow": "Nova lista",
+  "savedLists.new.title": "Dá um nome à tua lista",
+  "savedLists.new.nameLabel": "Nome da lista",
+  "savedLists.new.namePlaceholder": "Saúde trans-friendly",
+  "savedLists.new.privateNote":
+    "As listas novas são privadas. Podes criar um link de partilha mais tarde, dentro da lista.",
+  "savedLists.new.cancel": "Cancelar",
+  "savedLists.new.submit": "Criar lista",
+
+  "savedLists.file.eyebrow": "Adicionar a uma lista",
+  "savedLists.file.title": "Que lista?",
+  "savedLists.file.cancel": "Cancelar",
+  "savedLists.file.filing": "A adicionar…",
+  "savedLists.file.empty":
+    "Ainda não tens listas. Cria uma e este guardado vai direto para lá.",
+  "savedLists.file.success.title": "Adicionado",
+  "savedLists.file.success.body":
+    "Já está em {name}, e continua nos teus guardados.",
+  "savedLists.file.success.done": "Concluído",
+
+  "savedLists.detail.rename": "Mudar o nome",
+  "savedLists.detail.renameLabel": "Nome da lista",
+  "savedLists.detail.renameSave": "Guardar",
+  "savedLists.detail.renameCancel": "Cancelar",
+  "savedLists.detail.removeItem": "Tirar {title} desta lista",
+  "savedLists.detail.delete": "Apagar lista",
+  "savedLists.detail.close": "Fechar",
+  "savedLists.detail.empty": "Ainda não há nada nesta lista.",
+  "savedLists.detail.defaultNote":
+    "Esta lista tem tudo o que guardaste. Para tirar alguma coisa daqui, deixa de a guardar.",
+  "savedLists.detail.deleteConfirm.title": "Apagar {name}?",
+  "savedLists.detail.deleteConfirm.body":
+    "A lista desaparece. Tudo o que está nela continua guardado, e continua em qualquer outra lista onde o tenhas posto. Qualquer link de partilha desta lista deixa de funcionar.",
+  "savedLists.detail.deleteConfirm.cta": "Apagar lista",
+
+  "savedLists.share.private.heading": "Esta lista é privada",
+  "savedLists.share.private.body":
+    "Só tu a vês. Se quiseres passá-la a alguém, podes criar um link.",
+  "savedLists.share.private.warning":
+    "Qualquer pessoa com o link consegue abrir esta lista. Não há palavra-passe nem início de sessão, por isso o link é a chave: envia-o só a quem confias com ele.",
+  "savedLists.share.private.cta": "Criar link de partilha",
+  "savedLists.share.points.noAccount":
+    "Não precisam de conta na QueerPulse para a ler.",
+  "savedLists.share.points.anonymous":
+    "Veem o nome da lista e o que está nela. Não veem o teu nome, o teu perfil nem a tua foto.",
+  "savedLists.share.points.revocable":
+    "Podes desligar o link a qualquer momento. Todas as cópias dele deixam de funcionar de imediato.",
+
+  "savedLists.share.live.heading":
+    "Qualquer pessoa com este link consegue abri-lo",
+  "savedLists.share.live.body":
+    "O link funciona sem conta. Mostra o nome da lista e o que está nela, e nada sobre ti.",
+  "savedLists.share.live.fieldLabel": "Link de partilha desta lista",
+  "savedLists.share.live.copy": "Copiar",
+  "savedLists.share.live.copied": "Copiado",
+  "savedLists.share.live.copiedToast": "Link copiado",
+  "savedLists.share.live.copyErrorToast": "Não foi possível copiar o link",
+  "savedLists.share.live.revoke": "Desligar o link",
+  "savedLists.share.live.since": "Ativo desde {time}",
+
+  "savedLists.shared.metaTitle": "Uma lista partilhada",
+  "savedLists.shared.loading": "A abrir a lista…",
+  "savedLists.shared.eyebrow": "Partilhada contigo",
+  "savedLists.shared.count_one": "1 coisa",
+  "savedLists.shared.count_other": "{count} coisas",
+  "savedLists.shared.note":
+    "Alguém fez esta lista na QueerPulse e enviou-te o link. Pode desligá-lo quando quiser, e esta página deixa de funcionar quando o fizer.",
+  "savedLists.shared.gone.title": "Esta lista não está disponível",
+  "savedLists.shared.gone.body":
+    "O link pode ter sido desligado, ou pode nunca ter sido real. Pede um link novo a quem to enviou.",
+
+  "savedLists.toast.created": "Lista criada",
+  "savedLists.toast.createError": "Não foi possível criar a lista",
+  "savedLists.toast.renamed": "Nome da lista alterado",
+  "savedLists.toast.renameError": "Não foi possível mudar o nome da lista",
+  "savedLists.toast.deleted": "Lista apagada",
+  "savedLists.toast.deleteError": "Não foi possível apagar a lista",
+  "savedLists.toast.shared": "Link de partilha criado",
+  "savedLists.toast.shareError": "Não foi possível criar o link",
+  "savedLists.toast.revoked": "Link desligado",
+  "savedLists.toast.revokeError": "Não foi possível desligar o link",
+  "savedLists.toast.fileError": "Não foi possível adicionar a essa lista",
+  "savedLists.toast.unfiled": "Tirado da lista",
+  "savedLists.toast.unfileError": "Não foi possível tirar da lista",
 };

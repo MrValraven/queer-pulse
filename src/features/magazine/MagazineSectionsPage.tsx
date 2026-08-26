@@ -3,6 +3,7 @@ import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { MagazineSectionGrid } from "./MagazineSectionGrid";
+import { MagazineSearchLauncher } from "./MagazineSearchField";
 import { useMagazineSections } from "./api/useMagazineSections";
 import styles from "./MagazineSectionsPage.module.css";
 
@@ -23,6 +24,12 @@ export function MagazineSectionsPage() {
   return (
     <PageShell>
       <MagazineMasthead active="sections" />
+      {/* CON-12 — the archive's search field, mounted under the masthead on
+          the magazine's browse hub. Sections answer "what kinds of pieces do
+          you run"; search answers "have you written about this". */}
+      <div className="wrap">
+        <MagazineSearchLauncher />
+      </div>
       <section className={styles.body}>
         <div className="wrap">
           <div className={styles.head}>

@@ -53,6 +53,15 @@ export interface Notification {
    */
   sourceHref?: string;
   text: ReactNode;
+  /**
+   * How many members beyond the one named in `text` did the same thing to the
+   * same subject. `0` (or absent) on an ordinary row; a positive count turns the
+   * row into "Ana and 39 others replied", which is one row for one conversation
+   * rather than forty rows for forty replies. See the backend's
+   * `notification-bundling.ts` for which notifications collapse and which never
+   * do.
+   */
+  otherActorCount?: number;
   meta: string;
   time: string;
   /**

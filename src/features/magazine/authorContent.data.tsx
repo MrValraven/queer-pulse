@@ -71,6 +71,16 @@ export interface Author {
   reading: ReadingItem[];
   elsewhere: ElsewhereLink[];
   portrait: string;
+  /**
+   * CON-11 — the member profile slug behind this byline, when the byline is a
+   * real account. Drives the "see their member profile" link on the author
+   * page and the owner's permission to edit their own author bio. Optional:
+   * the curated demo registry sets it at read time, and a byline credited by
+   * name only genuinely has none.
+   */
+  memberSlug?: string | null;
+  /** Published pieces carrying this byline (live `AuthorDTO.pieceCount`). */
+  pieceCount?: number;
 }
 
 export const AUTHORS: Record<string, Author> = {

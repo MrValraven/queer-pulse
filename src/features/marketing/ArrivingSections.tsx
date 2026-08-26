@@ -1,61 +1,13 @@
-import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
-import { Button, Reveal } from "../../shared/components/ui";
+import { FiExternalLink } from "react-icons/fi";
+import { Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
-import { HOODS, ORGS, COMM_QUICK } from "./arrivingPage.data";
-import { HEALTH, HOUSING, type InfoCard } from "./arrivingPageCards.data";
+import { HOODS, ORGS } from "./arrivingPage.data";
+import { HEALTH, HOUSING } from "./arrivingPageCards.data";
+import { InfoCards } from "./ArrivingInfoCards";
+import { TONE_CLASS } from "./arrivingTone";
 import { MarketingSection } from "./MarketingSection";
 import styles from "./ArrivingPage.module.css";
-
-const PLATFORMS = routes.platforms;
-const COMMUNITIES = routes.communities;
-
-/** The illustrative "next gathering" shown in FirstStepSection is a fixed
- *  static example (never fetched, no real event behind it), so its date
- *  badge is formatted through `useFormat()` rather than a hardcoded month
- *  string, the same as any other date on the platform. */
-const FIRST_GATHERING_DATE = new Date(2026, 5, 14);
-
-export function InfoCards({ cards }: { cards: InfoCard[] }) {
-  return (
-    <div className={styles.infoGrid}>
-      {cards.map((card, index) => (
-        <Reveal
-          as="div"
-          className={styles.infoCard}
-          key={card.title}
-          delay={index * 55}
-        >
-          <div className={styles.icHead}>
-            <div className={styles.icIcon} style={{ background: card.iconBg }}>
-              <card.icon />
-            </div>
-            <div className={styles.icTitle}>{card.title}</div>
-          </div>
-          <p className={styles.icBody}>{card.body}</p>
-          {card.link &&
-            (card.link.external ? (
-              <a
-                href={card.link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.icLink}
-              >
-                {card.link.label} <FiArrowRight aria-hidden />
-              </a>
-            ) : (
-              <Link to={card.link.href} className={styles.icLink}>
-                {card.link.label} <FiArrowRight aria-hidden />
-              </Link>
-            ))}
-        </Reveal>
-      ))}
-    </div>
-  );
-}
 
 export function NeighbourhoodsSection() {
   const { t } = useTranslation();
@@ -75,18 +27,19 @@ export function NeighbourhoodsSection() {
           <Reveal
             as="div"
             className={styles.hoodCard}
-            key={hood.name}
+            key={hood.id}
             delay={index * 55}
           >
-            <span
-              className={styles.hoodTag}
-              style={{ color: hood.tagColor, background: hood.tagBg }}
-            >
-              {hood.tag}
+            <span className={`${styles.hoodTag} ${TONE_CLASS[hood.tone]}`}>
+              {t(`marketing:arriving.hoods.${hood.id}.tag`)}
             </span>
-            <div className={styles.hoodName}>{hood.name}</div>
-            <p className={styles.hoodDesc}>{hood.description}</p>
-            <div className={styles.hoodNote}>{hood.note}</div>
+            <h3 className={styles.hoodName}>{hood.name}</h3>
+            <p className={styles.hoodDesc}>
+              {t(`marketing:arriving.hoods.${hood.id}.body`)}
+            </p>
+            <p className={styles.hoodNote}>
+              {t(`marketing:arriving.hoods.${hood.id}.note`)}
+            </p>
           </Reveal>
         ))}
       </div>
@@ -130,6 +83,13 @@ export function HousingSection() {
   );
 }
 
+/**
+ * The three organisations worth knowing first. Each row is a link to the
+ * organisation's own site, which is reachable without a QueerPulse account and
+ * is what a newcomer can act on today. The rows used to point at
+ * `/about/platforms`, a QueerPulse index page that says nothing about any of
+ * them, and printed the domain as dead text beside an arrow glyph.
+ */
 export function OrgsSection() {
   const { t } = useTranslation();
   return (
@@ -146,110 +106,32 @@ export function OrgsSection() {
       <div className={styles.orgList}>
         {ORGS.map((org, index) => (
           <Reveal
-            as={Link}
-            to={PLATFORMS}
+            as="a"
+            href={org.website}
+            target="_blank"
+            rel="noopener noreferrer"
             className={styles.org}
-            key={org.name}
-            delay={index * 55}
-          >
-            <div
-              className={styles.orgAv}
-              style={{ background: org.background, color: org.color }}
-            >
-              {org.initials}
-            </div>
-            <div className={styles.orgBody}>
-              <div className={styles.orgName}>{org.name}</div>
-              <p className={styles.orgDesc}>{org.description}</p>
-              <div className={styles.orgUrl}>{org.url}</div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </MarketingSection>
-  );
-}
-
-export function FirstStepSection() {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  const day = fmt.date(FIRST_GATHERING_DATE, { day: "numeric" });
-  const month = fmt.date(FIRST_GATHERING_DATE, { month: "short" });
-  return (
-    <MarketingSection
-      tone="plum"
-      eyebrow={t("marketing:arriving.firstStep.eyebrow")}
-      title={
-        <Translation
-          i18nKey="marketing:arriving.firstStep.title"
-          components={{ em: <em /> }}
-        />
-      }
-      lead={t("marketing:arriving.firstStep.intro")}
-    >
-      <Reveal as="div" className={styles.firstGather} delay={160}>
-        <div className={styles.fgDate}>
-          <span className={styles.d}>{day}</span>
-          <span className={styles.m}>{month}</span>
-        </div>
-        <div className={styles.fgBody}>
-          <div className={styles.fgBadge}>
-            {t("marketing:arriving.firstStep.example.title")}
-          </div>
-          <h3>{t("marketing:arriving.firstStep.example.subtitle")}</h3>
-          <p>{t("marketing:arriving.firstStep.example.details")}</p>
-        </div>
-        <Button to={routes.gatherings} variant="ghost-dark">
-          {t("marketing:arriving.firstStep.rsvpCta")}{" "}
-          <FiArrowRight aria-hidden />
-        </Button>
-      </Reveal>
-    </MarketingSection>
-  );
-}
-
-export function CommQuickSection() {
-  const { t } = useTranslation();
-  return (
-    <MarketingSection
-      eyebrow={t("marketing:arriving.commQuick.eyebrow")}
-      title={
-        <Translation
-          i18nKey="marketing:arriving.commQuick.title"
-          components={{ em: <em /> }}
-        />
-      }
-      lead={t("marketing:arriving.commQuick.intro")}
-    >
-      <div className={styles.commQuick}>
-        {COMM_QUICK.map((community, index) => (
-          <Reveal
-            as={Link}
-            to={COMMUNITIES}
-            className={styles.cqCard}
-            key={community.name}
+            key={org.id}
             delay={index * 55}
           >
             <span
-              className={styles.cqType}
-              style={{
-                color: community.typeColor,
-                background: community.typeBg,
-              }}
+              className={`${styles.orgAv} ${TONE_CLASS[org.tone]}`}
+              aria-hidden
             >
-              {community.type}
+              {org.initials}
             </span>
-            <div className={styles.cqName}>{community.name}</div>
-            <p className={styles.cqReason}>{community.reason}</p>
+            <span className={styles.orgBody}>
+              <span className={styles.orgName}>{org.name}</span>
+              <span className={styles.orgDesc}>
+                {t(`marketing:arriving.orgs.items.${org.id}.body`)}
+              </span>
+              <span className={styles.orgUrl}>
+                {org.domain} <FiExternalLink aria-hidden />
+              </span>
+            </span>
           </Reveal>
         ))}
       </div>
-      <Reveal as="div" className={styles.commCta} delay={120}>
-        <Button to={COMMUNITIES} variant="ghost">
-          {t("marketing:arriving.commQuick.browseCta")}{" "}
-          <FiArrowRight aria-hidden />
-        </Button>
-      </Reveal>
     </MarketingSection>
   );
 }

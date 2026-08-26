@@ -4,8 +4,11 @@ import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { audienceScopeLabelKey } from "../audienceScope.data";
 import {
+  ACCESSIBILITY_ANSWER_BY_ID,
+  ACCESSIBILITY_QUESTIONS,
+} from "../../marketing/listBusiness/listingAccessibility.data";
+import {
   CONFIRM_CHECK_KEYS,
-  accessLabelKey,
   hoodLabelKey,
   langLabelKey,
   typeNameKey,
@@ -17,18 +20,43 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const TypeIcon = form.typeIcon;
-  const accessList = [...form.access];
+  // Only the questions the host actually answered are listed back, each with
+  // its own word: an unanswered question is reported as a count underneath
+  // rather than shown as a quiet "no". The pledge below is about exactly this.
+  const answered = ACCESSIBILITY_QUESTIONS.filter(
+    (question) => form.accessibilityAnswers[question.slug] !== "unknown",
+  );
+  const unansweredCount = ACCESSIBILITY_QUESTIONS.length - answered.length;
   const accessVal =
-    accessList.length || form.accessNotes.trim() ? (
+    answered.length || form.accessNotes.trim() ? (
       <span className={styles.reviewAccess}>
-        {accessList.map((a) => (
-          <span key={a} className={styles.reviewAccessTag}>
-            <FiCheck /> {t(accessLabelKey(a) ?? a)}
-          </span>
-        ))}
+        {answered.map((question) => {
+          const answer = form.accessibilityAnswers[question.slug];
+          const AnswerIcon = ACCESSIBILITY_ANSWER_BY_ID[answer].icon;
+          return (
+            <span
+              key={question.slug}
+              className={styles.reviewAccessTag}
+              data-answer={answer}
+            >
+              <AnswerIcon aria-hidden />{" "}
+              {t("gatherings:create.step5.accessAnswer", {
+                question: t(question.labelKey),
+                answer: t(ACCESSIBILITY_ANSWER_BY_ID[answer].readerKey),
+              })}
+            </span>
+          );
+        })}
         {form.accessNotes.trim() && (
           <span className={styles.reviewAccessNote}>
             {form.accessNotes.trim()}
+          </span>
+        )}
+        {unansweredCount > 0 && (
+          <span className={styles.reviewAccessEmpty}>
+            {t("gatherings:create.step5.accessUnanswered", {
+              count: unansweredCount,
+            })}
           </span>
         )}
       </span>
@@ -80,6 +108,14 @@ export function ReviewStep({ form }: { form: GatheringForm }) {
         cap: form.cap || "—",
         lang: langLabel,
       }),
+    },
+    {
+      l: t("gatherings:create.step5.row.cost"),
+      v: form.cost.trim() ? (
+        <strong>{form.cost.trim()}</strong>
+      ) : (
+        t("gatherings:create.step5.costFree")
+      ),
     },
     {
       l: t("gatherings:create.step5.row.audience"),

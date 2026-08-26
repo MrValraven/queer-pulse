@@ -168,6 +168,21 @@ export interface SidebarGathering {
   venue: string;
 }
 
+/**
+ * The sidebar's connections widget, in BOTH modes (SOC-06).
+ *
+ * It used to be gated on a `populated` flag the page passed as `demoMode`, so
+ * every live member was told, on the most-visited page in the product, that
+ * they had no connections — while demo mode showed six hardcoded initials and
+ * a fixed "42 connections". Now both modes read the real relationship list.
+ *
+ * `avatars` is a short display sample, `count` is the true total.
+ */
+export interface SidebarConnections {
+  count: number;
+  avatars: { initials: string; tint: AvatarTint; src?: string }[];
+}
+
 export const NEW_THIS_WEEK: SidebarMember[] = NEW_SLUGS.map((slug) => {
   const member = MEMBERS[slug]!;
   return {

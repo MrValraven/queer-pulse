@@ -65,6 +65,10 @@ export const connect: Catalog = {
   "card.sentAgo": "Enviado <b>{sentAgo}</b>",
   "card.introducedBy": "Apresentado por <a>{name}</a>",
   "card.reason": "Sobre <b>{reason}</b>",
+  // Porque começou uma ligação já aceite, mostrado na ligação em que se
+  // tornou. Qual das duas frases depende de quem enviou o pedido.
+  "card.reasonTheyAsked": "{name} escreveu-te sobre <b>{reason}</b>",
+  "card.reasonYouAsked": "Escreveste sobre <b>{reason}</b>",
   "card.decline": "Recusar",
   "card.accept": "Aceitar",
   "card.awaitingReply": "A aguardar resposta",
@@ -85,8 +89,9 @@ export const connect: Catalog = {
     "Pessoas a quem deste um voto de confiança, ou que to deram. <em>Dar um voto de confiança é um gesto pequeno mas significativo</em>. Fica associado ao perfil dessa pessoa.",
 
   // Separador Todas as ligações (ConnectionsAllTab)
-  "allTab.searchPlaceholder": "Pesquisar por nome, função ou comunidade",
+  "allTab.searchPlaceholder": "Pesquisar por nome, identificador ou ocupação",
   "allTab.searchAria": "Pesquisar ligações",
+  "allTab.sortLabel": "Ordenar",
   "allTab.sortRecentlyConnected": "Mais recentes",
   "allTab.sortAToZ": "A a Z",
   "allTab.sortClosestMutuals": "Mais em comum",
@@ -109,6 +114,20 @@ export const connect: Catalog = {
   "panels.blockedEmptyTitle": "Ainda não bloqueaste ninguém",
   "panels.blockedEmptyDescription":
     "Se alguém tornar o espaço inseguro, bloquear essa pessoa impede as mensagens dela e esconde as tuas atualizações. Aparece aqui se alguma vez precisares de desfazer isso.",
+
+  // Nota privada por ligação (ConnectionNoteEditor). Só quem a escreve a vê: o
+  // servidor só lê uma nota sob o id de quem a escreveu.
+  "note.add": "Adicionar uma nota privada",
+  "note.addAria": "Adicionar uma nota privada sobre {name}",
+  "note.editAria": "Editar a tua nota privada sobre {name}",
+  "note.inputAria": "A tua nota privada sobre {name}",
+  "note.placeholder":
+    "Onde se conheceram, do que falaram, o que preferes não esquecer.",
+  "note.privacy": "Só tu vês isto. Nunca é mostrado a essa pessoa.",
+  "note.save": "Guardar nota",
+  "note.saving": "A guardar…",
+  "note.cancel": "Cancelar",
+  "note.saveFailed": "Não foi possível guardar a nota. Tenta de novo.",
 
   // Idade relativa de um pedido (connections.adapters): as duas expressões que
   // o Intl.RelativeTimeFormat não deriva sozinho.
@@ -179,5 +198,23 @@ export const connect: Catalog = {
   "notice.cannotConnect.title":
     "Não consegues contactar {name} <em>agora.</em>",
   "notice.cannotConnect.body": "Este contacto não está disponível de momento.",
+  // Pessoas que talvez conheças (SOC-05). Cada sugestão traz o FACTO que a
+  // explica. Redigido na 3.ª pessoa para evitar concordância de género
+  // ("Também está em" em vez de "Estão os dois em"). Nomes de comunidades,
+  // interesses e frases de disponibilidade são dados de pessoas e mantêm-se
+  // na língua em que foram escritos.
+  "suggested.heading": "Pessoas que talvez conheças",
+  "suggested.blurb":
+    "Cada uma partilha contigo um grupo, uma ligação ou um interesse.",
+  "suggested.reasonCommunity": "Também está em {name}",
+  "suggested.reasonMutuals_one": "{count} ligação em comum",
+  "suggested.reasonMutuals_other": "{count} ligações em comum",
+  "suggested.reasonOpenTo": "Também tem disponibilidade para {label}",
+  "suggested.reasonTag": "Também tem interesse em {label}",
+  "suggested.reasonProfession": "Também trabalha em {label}",
+  "suggested.sayHello": "Dizer olá",
+  "suggested.dismissAria": "Deixar de sugerir {name}",
+  "suggested.hideStripAria": "Esconder pessoas que talvez conheças",
+  "suggested.browseMembers": "Ver todas as pessoas",
   "contact.message": "Mensagem",
 };

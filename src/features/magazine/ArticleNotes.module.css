@@ -1,0 +1,141 @@
+/* CON-06 content notes and CON-02 corrections: the two things the desk has
+   always collected and never showed a reader.
+
+   Both are deliberately quieter than an alert. A content note is care, so it
+   gets a warm amber wash rather than a red banner; a correction is a matter of
+   record, so it gets a hairline-ruled footer block in the same serif family as
+   the piece it belongs to. Neither competes with the headline. */
+
+/* ── Content notes (above the body) ───────────────────────────────────────── */
+
+.notes {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  margin-bottom: 32px;
+  border-radius: var(--radius-badge);
+  border: 1px solid rgba(var(--amber-rgb), 0.32);
+  background: rgba(var(--amber-rgb), 0.12);
+  animation: articleNotesIn var(--dur-base, 0.32s) var(--ease, ease) both;
+}
+
+/* Declared in THIS module on purpose: Vite hashes animation-name per CSS
+   module, so a keyframe named anywhere else would silently never run. */
+@keyframes articleNotesIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notes {
+    animation: none;
+  }
+}
+
+.notesIcon {
+  display: flex;
+  flex: none;
+  margin-top: 1px;
+  font-size: 18px;
+  color: var(--amber-ink);
+}
+
+.notesBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.notesHeading {
+  margin: 0;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber-ink);
+}
+
+.notesList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.notesList li + li {
+  margin-top: 4px;
+}
+
+.notesDismiss {
+  flex: none;
+  color: var(--ink-40);
+  border-radius: 50%;
+}
+@media (hover: hover) {
+  .notesDismiss:hover:not(:disabled) {
+    color: var(--ink);
+    background: rgba(var(--line-rgb), 0.08);
+  }
+}
+
+/* ── Corrections (foot of the piece) ──────────────────────────────────────── */
+
+.corrections {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.18);
+}
+
+.correctionsHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.correctionsIcon {
+  display: flex;
+  font-size: 14px;
+}
+
+.correctionsList {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.correction + .correction {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+
+.correctionDate {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+.correctionText {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}

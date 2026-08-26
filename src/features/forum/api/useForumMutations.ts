@@ -10,12 +10,16 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   deletePost,
   editPost,
+  editThreadTags,
   editThreadTitle,
+  followThread,
   lockThread,
   pinThread,
   replyToThread,
   restorePost,
+  setAcceptedAnswer,
   setThreadOfficial,
+  unfollowThread,
   unlockThread,
   unpinThread,
   votePost,
@@ -40,18 +44,18 @@ export function useReply(slug: string | undefined) {
   return useMutation<
     ForumPostResponse | undefined,
     Error,
-    { body: string; parentPostId?: string | null }
+    { body: string; parentPostId?: string | null; image?: string | null }
   >({
     // The thread page owns this write's error UI: it rolls the optimistic
     // reply back out and names the reason (closed thread vs a community the
     // member isn't in). Without this the global handler toasted on top of it.
     meta: { silentError: true },
-    mutationFn: async ({ body, parentPostId }) => {
+    mutationFn: async ({ body, parentPostId, image }) => {
       if (demoMode || !slug) return undefined;
       // The created post is RETURNED (not discarded) so the caller can stamp
       // the server's real post id onto its optimistic reply — nesting a reply
       // under a client-generated uuid used to POST that fake id and 4xx.
-      return replyToThread(slug, body, parentPostId);
+      return replyToThread(slug, body, parentPostId, image);
     },
     onSuccess: () => {
       if (demoMode) return;
@@ -86,10 +90,14 @@ function invalidateThread(queryClient: ReturnType<typeof useQueryClient>) {
 export function useEditPost() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { postId: string; body: string }>({
-    mutationFn: async ({ postId, body }) => {
+  return useMutation<
+    void,
+    Error,
+    { postId: string; body: string; image?: string }
+  >({
+    mutationFn: async ({ postId, body, image }) => {
       if (demoMode) return;
-      await editPost(postId, body);
+      await editPost(postId, body, image);
     },
     onSuccess: () => {
       if (demoMode) return;
@@ -501,6 +509,122 @@ export function useEditThreadTitle(slug: string | undefined) {
     onSuccess: () => {
       if (demoMode) return;
       invalidateThread(queryClient);
+    },
+  });
+}
+
+/**
+ * Follow / unfollow a thread (SOC-13).
+ *
+ * Consumer interface:
+ * ```ts
+ * const { setFollowing, isPending } = useFollowThread();
+ * setFollowing(slug, true);   // POST /forum/threads/:slug/follow
+ * ```
+ * On success it invalidates the thread meta (so the button re-reads
+ * `isSubscribed`) and the thread list. DEMO is a no-op: the thread page keeps
+ * its own local follow state, exactly as it does for the OP vote.
+ */
+export function useFollowThread() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<void, Error, FollowVars>({
+    mutationFn: async ({ slug, isFollowing }) => {
+      if (demoMode) return;
+      if (isFollowing) await followThread(slug);
+      else await unfollowThread(slug);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      invalidateThread(queryClient);
+      void queryClient.invalidateQueries(THREADS_KEY);
+    },
+  });
+
+  return {
+    setFollowing: (
+      slug: string,
+      isFollowing: boolean,
+      options?: MutateOptions<void, Error, FollowVars>,
+    ) => mutation.mutate({ slug, isFollowing }, options),
+    isPending: mutation.isPending,
+  };
+}
+
+/** Mutation variables for the follow toggle. */
+interface FollowVars {
+  slug: string;
+  isFollowing: boolean;
+}
+
+/**
+ * Mark a reply as the thread's accepted answer, or clear the mark (SOC-13).
+ *
+ * Consumer interface:
+ * ```ts
+ * const { setAccepted, isPending } = useAcceptAnswer();
+ * setAccepted(slug, postId);  // mark      setAccepted(slug, null);  // clear
+ * ```
+ * Invalidating the POSTS as well as the meta is the point, not an extra: the
+ * accepted answer changes the server-side ORDER of the replies (it is hoisted
+ * to the top of the first page), so a stale posts cache would leave it sitting
+ * where it was. DEMO is a no-op.
+ */
+export function useAcceptAnswer() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation<void, Error, AcceptVars>({
+    mutationFn: async ({ slug, postId }) => {
+      if (demoMode) return;
+      await setAcceptedAnswer(slug, postId);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      invalidateThread(queryClient);
+      void queryClient.invalidateQueries(THREADS_KEY);
+    },
+  });
+
+  return {
+    setAccepted: (
+      slug: string,
+      postId: string | null,
+      options?: MutateOptions<void, Error, AcceptVars>,
+    ) => mutation.mutate({ slug, postId }, options),
+    isPending: mutation.isPending,
+  };
+}
+
+/** Mutation variables for the accepted-answer toggle. `postId: null` clears. */
+interface AcceptVars {
+  slug: string;
+  postId: string | null;
+}
+
+/**
+ * PATCH /forum/threads/:slug — replace the thread's tag set (SOC-13).
+ *
+ * The endpoint has accepted a `tags` field since the forum shipped and nothing
+ * ever sent it, so a thread's tags were frozen at the moment it was composed.
+ * Accepted from the author or a moderator; the author-only title edit stays in
+ * `useEditThreadTitle`. A missing slug THROWS rather than reporting a silent
+ * success, same as that hook.
+ */
+export function useEditThreadTags(slug: string | undefined) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { tags: string[] }>({
+    mutationFn: async ({ tags }) => {
+      if (demoMode) return;
+      if (!slug) throw new Error("Cannot edit thread tags without its slug");
+      await editThreadTags(slug, tags);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      invalidateThread(queryClient);
+      void queryClient.invalidateQueries(THREADS_KEY);
     },
   });
 }

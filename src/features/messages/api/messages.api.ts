@@ -6,7 +6,7 @@ import {
 } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
 import type {
-  ConversationResponse,
+  ConversationResponse as BaseConversationResponse,
   MessageRequestResponse,
   MessageResponse,
   MessageSearchResponse,
@@ -21,7 +21,24 @@ import type { GifAttachment } from "../../../shared/api/gifs";
 // for the message history — it's an infinite, newest-first thread the panel loads
 // older on scroll-up. The conversations list is small enough to fetch in one page.
 
-export type { ConversationResponse, MessageResponse };
+/**
+ * `ConversationResponse` widened with `archivedAt`/`draft` (SOC-16: archive +
+ * cross-device draft sync) — the backend's `message-response.ts` already sends
+ * both (per-caller preferences, same convention as `pinnedAt`/`muted`/
+ * `favorite`), but the SHARED contract type in `shared/contracts/contracts.ts`
+ * is outside this change's file ownership for this build pass, so the two
+ * fields are widened locally here rather than edited there directly.
+ * Coordination note: add `archivedAt?: string | null` and
+ * `draft?: string | null` to `ConversationResponse` in
+ * `shared/contracts/contracts.ts` directly (mirroring `pinnedAt`) as a
+ * follow-up cleanup — purely additive, no behavior change once done.
+ */
+export interface ConversationResponse extends BaseConversationResponse {
+  archivedAt?: string | null;
+  draft?: string | null;
+}
+
+export type { MessageResponse };
 
 /**
  * GET /conversations — the inbox list, most-recent first.
@@ -138,7 +155,13 @@ export const editMessage = (
  *  `useTogglePin`). */
 export const updateConversationPrefs = (
   conversationId: string,
-  changes: { pinned?: boolean; favorite?: boolean; muted?: boolean },
+  changes: {
+    pinned?: boolean;
+    favorite?: boolean;
+    muted?: boolean;
+    archived?: boolean;
+    draft?: string;
+  },
 ) =>
   apiPatch<ConversationResponse>(`/conversations/${conversationId}`, changes);
 

@@ -64,9 +64,7 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
   };
 
   if (confirmed?.intent === "waitlisted") {
-    return (
-      <WaitlistSuccess email={confirmed.draft.email} onLeave={cancelRsvp} />
-    );
+    return <WaitlistSuccess onLeave={cancelRsvp} />;
   }
 
   return (
@@ -74,7 +72,6 @@ export function EventRsvpCard({ slug = "welcome-dinner" }: { slug?: string }) {
       {confirmed ? (
         <ReservedSuccess
           selectedTier={confirmed.draft.selectedTier}
-          email={confirmed.draft.email}
           onCancel={cancelRsvp}
         />
       ) : (

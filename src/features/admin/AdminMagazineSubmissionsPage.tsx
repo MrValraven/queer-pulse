@@ -1,19 +1,15 @@
 import { useState } from "react";
 import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
+import { AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { routes } from "../../app/routeMap";
 import {
   useAdminMagazineSubmissions,
   type AdminMagazineSubmissionFilter,
 } from "./api/useAdminMagazineSubmissions";
-import type {
-  AdminMagazineSubmissionDTO,
-  MagazineSubmissionStatus,
-} from "./api/adminMagazineSubmissions.api";
+import { AdminMagazineSubmissionRow } from "./AdminMagazineSubmissionRow";
 import styles from "./AdminSubmissionList.module.css";
 
 const FILTERS: AdminMagazineSubmissionFilter[] = [
@@ -25,58 +21,6 @@ const FILTERS: AdminMagazineSubmissionFilter[] = [
   "published",
   "draft",
 ];
-
-const STATUS_TONE: Record<MagazineSubmissionStatus, AdminTone> = {
-  draft: "ghost",
-  submitted: "amber",
-  in_review: "violet",
-  accepted: "jade",
-  rejected: "coral",
-  published: "plum",
-};
-
-function shortDate(fmt: Formatters, iso: string): string {
-  return fmt.date(new Date(iso), {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-function SubmissionRow({
-  submission,
-}: {
-  submission: AdminMagazineSubmissionDTO;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  const submitterName =
-    submission.submitter?.name ??
-    t("admin:adminMagazineSubmissions.unknownMember");
-  return (
-    <div className={styles.row}>
-      <div className={styles.rowMain}>
-        <div className={styles.rowTop}>
-          <span className={styles.rowName}>{submission.workingTitle}</span>
-          <AdminChip tone={STATUS_TONE[submission.status]} dot>
-            {t(`admin:adminMagazineSubmissions.status.${submission.status}`)}
-          </AdminChip>
-        </div>
-        <div className={styles.rowMeta}>
-          {t("admin:adminMagazineSubmissions.row.by", { name: submitterName })}
-          {" · "}
-          {submission.format}
-        </div>
-        <div className={styles.rowNote}>{submission.pitch}</div>
-        <div className={styles.rowDates}>
-          {t("admin:adminMagazineSubmissions.row.sent", {
-            date: shortDate(fmt, submission.createdAt),
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function RowsSkeleton() {
   return (
@@ -93,11 +37,11 @@ function RowsSkeleton() {
 }
 
 /**
- * Admin magazine-submission oversight: every reader story pitch — submitter,
- * working title, format, pitch, and status — filterable by status. This is the
- * READ surface the submissions editor was previously mock-only for. Demo mode
- * reads the colocated fixture; live mode calls `GET /admin/magazine-submissions`
- * with pagination.
+ * Admin magazine-submission oversight: every reader story — submitter, working
+ * title, format, the piece as written, its cover, and its status — filterable
+ * by status, with accept / decline / commission on each open row
+ * (`AdminMagazineSubmissionRow`). Demo mode reads the colocated fixture; live
+ * mode calls `GET /admin/magazine-submissions` with pagination.
  */
 export function AdminMagazineSubmissionsPage() {
   const { t } = useTranslation();
@@ -165,7 +109,7 @@ export function AdminMagazineSubmissionsPage() {
             <div className={styles.rows}>
               {submissions.map((submission, index) => (
                 <FadeIn key={submission.id} delay={Math.min(index, 8) * 50}>
-                  <SubmissionRow submission={submission} />
+                  <AdminMagazineSubmissionRow submission={submission} />
                 </FadeIn>
               ))}
             </div>

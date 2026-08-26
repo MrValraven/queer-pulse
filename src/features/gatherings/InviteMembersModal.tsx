@@ -9,6 +9,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useConnectionsList } from "../connect/api/useConnectionsList";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import { MEMBER_POOL } from "./manageCohosts.data";
 import { useInviteMembers } from "./api/useEventMutations";
@@ -30,21 +32,40 @@ export function InviteMembersModal({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const staffMap = useStaffMap();
+  const { demoMode } = useDemoMode();
   const inviteMembers = useInviteMembers(slug);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [sent, setSent] = useState(false);
 
-  const people = useMemo<MemberSelectPerson[]>(
-    () =>
-      MEMBER_POOL.map((candidate) => ({
-        slug: candidate.slug,
-        name: candidate.name,
-        avatarUrl: candidate.photo,
-        pronouns: candidate.pronouns,
-        staffRole: staffMap[candidate.slug],
-      })),
-    [staffMap],
-  );
+  // Who a host can invite: their own accepted connections. Live mode must never
+  // fall through to `MEMBER_POOL`, which is the demo registry — a real host
+  // would be offered invented people, and inviting one would 404 on a slug the
+  // backend has never heard of.
+  const { views: connections, loading: connectionsLoading } =
+    useConnectionsList("all");
+
+  const people = useMemo<MemberSelectPerson[]>(() => {
+    const candidates = demoMode
+      ? MEMBER_POOL.map((candidate) => ({
+          slug: candidate.slug,
+          name: candidate.name,
+          photo: candidate.photo,
+          pron: candidate.pronouns,
+        }))
+      : connections.map((connection) => ({
+          slug: connection.slug,
+          name: connection.name,
+          photo: connection.photo,
+          pron: connection.pron,
+        }));
+    return candidates.map((candidate) => ({
+      slug: candidate.slug,
+      name: candidate.name,
+      avatarUrl: candidate.photo,
+      pronouns: candidate.pron,
+      staffRole: staffMap[candidate.slug],
+    }));
+  }, [demoMode, connections, staffMap]);
 
   const atCap = selected.size >= MAX_INVITES;
 
@@ -129,6 +150,11 @@ export function InviteMembersModal({
         cap={MAX_INVITES}
         excludeSlugs={excludeSlugs}
         searchPlaceholder={t("gatherings:manage.invite.searchLabel")}
+        emptyHint={
+          connectionsLoading
+            ? t("gatherings:manage.invite.loadingPeople")
+            : t("gatherings:manage.invite.noConnections")
+        }
       />
 
       <div className={styles.pickerFooter}>

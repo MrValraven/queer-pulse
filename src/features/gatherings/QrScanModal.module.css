@@ -338,3 +338,18 @@
 .full {
   width: 100%;
 }
+
+/* The live camera feed behind the viewfinder frame (LOC-03). Absolutely
+   positioned so the corner marks and the hint keep sitting on top of it, and
+   cover-cropped so a portrait phone fills the square without letterboxing. */
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.vfStack {
+  position: relative;
+  z-index: 1;
+}

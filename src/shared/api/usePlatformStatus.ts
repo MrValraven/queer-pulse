@@ -20,6 +20,10 @@ const DEMO_STATUS: PlatformStatusDTO = {
   // Demo has no backend to read the real current version from; kept in step
   // with the backend's own demo/live default by convention, not by import.
   guidelinesVersion: "1.0",
+  // Same for the Terms and Privacy revisions (ID-14): demo mode records no
+  // acceptance and posts no consent, so these only ever feed copy.
+  termsVersion: "2.4",
+  privacyPolicyVersion: "3.4",
   // Demo mode never shows the sitewide announcement banner by default — the
   // Admin Settings page's demo fixture (`DEMO_PLATFORM_SETTINGS`) is the
   // source of truth for previewing it while demoing.

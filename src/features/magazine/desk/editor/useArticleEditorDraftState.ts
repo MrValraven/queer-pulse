@@ -54,6 +54,10 @@ export function useArticleEditorDraftState(
   const [metaDescription, setMetaDescription] = useState("");
   const [socialImage, setSocialImage] = useState("");
   const [canonicalUrl, setCanonicalUrl] = useState("");
+  // CON-04 — the lead art, held as whatever reference the editor currently
+  // has (the resolved `/files/<key>` URL the draft was seeded with, or the
+  // bare key a fresh upload just produced).
+  const [heroImageKey, setHeroImageKey] = useState("");
   // The last snapshot the SERVER has confirmed. State rather than a ref
   // because `isDirty` is read during render (see the rules-of-hooks note
   // above), and because a save resolving has to re-render the header.
@@ -82,6 +86,7 @@ export function useArticleEditorDraftState(
       metaDescription,
       socialImage,
       canonicalUrl,
+      heroImageKey,
     }),
     [
       title,
@@ -93,6 +98,7 @@ export function useArticleEditorDraftState(
       metaDescription,
       socialImage,
       canonicalUrl,
+      heroImageKey,
     ],
   );
   const debouncedSnapshot = useDebouncedValue(snapshot, 1200);
@@ -226,6 +232,9 @@ export function useArticleEditorDraftState(
     setMetaDescription(article.metaDescription);
     setSocialImage(article.socialImage);
     setCanonicalUrl(article.canonicalUrl);
+    // Seeded with the RESOLVED url the draft carries, which is what the upload
+    // field renders; re-sending it verbatim is a no-op server-side.
+    setHeroImageKey(article.heroImageUrl ?? "");
     setLastSavedSnapshot({
       title: seededTitle,
       standfirst: seededStandfirst,
@@ -236,6 +245,7 @@ export function useArticleEditorDraftState(
       metaDescription: article.metaDescription,
       socialImage: article.socialImage,
       canonicalUrl: article.canonicalUrl,
+      heroImageKey: article.heroImageUrl ?? "",
     });
   }
 
@@ -272,6 +282,7 @@ export function useArticleEditorDraftState(
       metaDescription,
       socialImage,
       canonicalUrl,
+      heroImageKey,
     });
     setRestoreGeneration((generation) => generation + 1);
   }
@@ -295,6 +306,8 @@ export function useArticleEditorDraftState(
     setSocialImage,
     canonicalUrl,
     setCanonicalUrl,
+    heroImageKey,
+    setHeroImageKey,
     blockOps,
     applyVersionRestore,
     isDirty,

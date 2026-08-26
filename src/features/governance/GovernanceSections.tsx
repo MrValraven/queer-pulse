@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import {
   Button,
@@ -8,6 +9,7 @@ import {
   StatGrid,
   StatTile,
 } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -139,6 +141,14 @@ export function ModerationSection() {
             {t("governance:sections.moderation.wontTolerate.label")}
           </strong>{" "}
           {t("governance:sections.moderation.wontTolerate.text")}
+        </p>
+        {/* The figures behind this section. The steps above describe the
+            process; the report says what the process actually did. */}
+        <p>
+          <Translation
+            i18nKey="governance:sections.moderation.transparencyLink"
+            components={{ a: <Link to={routes.transparencyReport} /> }}
+          />
         </p>
       </div>
     </Reveal>

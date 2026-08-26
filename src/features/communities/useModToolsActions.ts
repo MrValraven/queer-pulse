@@ -6,11 +6,9 @@ import type { LivingCommunity, ModReport } from "./community.model";
 import { useJoinRequests } from "./api/useJoinRequests";
 import { memberKey, useModMemberRoles } from "./useModMemberRoles";
 import { useCommunityReports } from "./api/useCommunityReports";
-import {
-  useDeleteCommunityPost,
-  useDismissCommunityReport,
-  useRemoveMember,
-} from "./api/useCommunityMutations";
+import { useRemoveMember } from "./api/useCommunityMutations";
+import { useActOnCommunityReport } from "./api/useCommunityReportActions";
+import type { ReasonCode } from "../safety/reportReasons";
 import { useTriageJoinRequest } from "./api/useCommunityJoin";
 import {
   triagePayloadFor,
@@ -49,8 +47,8 @@ export function useModToolsActions(living: LivingCommunity) {
   // a "no" says which no it is and can say why.
   const reviewRequest = useTriageJoinRequest(living.slug);
   const removeMember = useRemoveMember(living.slug);
-  const deletePost = useDeleteCommunityPost(living.slug);
-  const dismissReport = useDismissCommunityReport(living.slug);
+  // One write behind dismiss, remove and escalate (TS-07 / TS-08).
+  const actOnReport = useActOnCommunityReport(living.slug);
 
   // Join requests come from the join-requests endpoint (demo returns the mock
   // queue synchronously). A local resolved-id set owns the moderator's in-session
@@ -165,34 +163,38 @@ export function useModToolsActions(living: LivingCommunity) {
     });
   };
 
-  /** "Remove post" reuses the owner/mod delete-post action (only wired for
-   *  post-subject reports, see `ModReportedPosts`), then closes the report
-   *  itself — without that second call the post is gone but the report is
-   *  back in the queue on the next load. */
-  const confirmRemoveReport = (report: ModReport) => {
+  /**
+   * Taking the reported post or reply down (TS-08).
+   *
+   * This used to delete the post through the community delete endpoint and
+   * then close the report as `dismiss` with an empty note, so the audit log,
+   * the resolution block and the admin badge all read "Dismissed" for the most
+   * common community action there is, and no takedown was ever recorded.
+   * Anyone auditing the community read "dismissed" repeatedly and concluded
+   * its moderators did nothing.
+   *
+   * It is now ONE call carrying the moderator's real reason and words. The
+   * server applies the takedown and closes the report in the same transaction,
+   * so the separate delete is gone: there is no window where the post is down
+   * and the report is still open, and no second call that can 403 on its own.
+   */
+  const confirmRemoveReport = (
+    report: ModReport,
+    decision: { reasonCode: ReasonCode; note: string },
+  ) => {
     hideReport(report.id);
-    const removedToast = () =>
-      showToast(t("communities:detail.modtools.toast.postRemoved"), "success");
-    if (demoMode || !report.subjectId) {
+    const done = () => {
       setConfirming(null);
-      removedToast();
+      showToast(t("communities:detail.modtools.toast.postRemoved"), "success");
+    };
+    if (demoMode) {
+      done();
       return;
     }
-    deletePost.mutate(
-      { id: report.subjectId },
+    actOnReport.mutate(
+      { id: report.id, action: "remove_content", ...decision },
       {
-        onSuccess: () => {
-          setConfirming(null);
-          removedToast();
-          // The dismiss can 403 on its own (it is platform-moderator gated,
-          // which a community mod may not be) — the post is down either way,
-          // so only the report row comes back, with the global error toast
-          // carrying the reason.
-          dismissReport.mutate(
-            { id: report.id },
-            { onError: () => showReportAgain(report.id) },
-          );
-        },
+        onSuccess: done,
         onError: () => {
           showReportAgain(report.id);
           setConfirming(null);
@@ -210,12 +212,44 @@ export function useModToolsActions(living: LivingCommunity) {
       done();
       return;
     }
-    dismissReport.mutate(
-      { id: report.id },
+    actOnReport.mutate(
+      { id: report.id, action: "dismiss", reasonCode: "other", note: "" },
       {
         onSuccess: done,
         // The mutation carries no `silentError`, so the reason already
         // surfaces globally — just put the report back.
+        onError: () => showReportAgain(report.id),
+      },
+    );
+  };
+
+  /**
+   * Hand a report to platform staff (TS-07).
+   *
+   * The one answer available on an outing or doxxing report, which the server
+   * refuses to let a community moderator settle: that dismissal would be
+   * platform-wide and terminal, and it would land before anyone trained had
+   * seen it. Escalating is also the honest answer to anything a moderator
+   * would rather not decide alone, so it is offered on every report.
+   *
+   * The row leaves the community queue because the report is no longer this
+   * community's to answer.
+   */
+  const escalateReportRow = (report: ModReport) => {
+    hideReport(report.id);
+    const done = () =>
+      showToast(
+        t("communities:detail.modtools.toast.reportEscalated"),
+        "success",
+      );
+    if (demoMode) {
+      done();
+      return;
+    }
+    actOnReport.mutate(
+      { id: report.id, action: "escalate", reasonCode: "other", note: "" },
+      {
+        onSuccess: done,
         onError: () => showReportAgain(report.id),
       },
     );
@@ -253,11 +287,12 @@ export function useModToolsActions(living: LivingCommunity) {
     confirmGrantCoOwner,
     confirmRevokeCoOwner,
     dismissReportRow,
+    escalateReportRow,
     confirming,
     setConfirming,
     confirmRemoveMember,
     confirmRemoveReport,
     isConfirmPending:
-      removeMember.isPending || deletePost.isPending || isRoleChangePending,
+      removeMember.isPending || actOnReport.isPending || isRoleChangePending,
   };
 }

@@ -3,10 +3,14 @@ import type { DirectoryPlace, Tint } from "../directoryPlaces";
 import {
   initials,
   normalizeHours,
+  type DayHours,
   type PendingListing,
   type PhotoKey,
 } from "../listBusiness/listBusiness.data";
-import { normalizeAccessibilityAnswers } from "../listBusiness/listingAccessibility.data";
+import {
+  normalizeAccessibilityAnswers,
+  type AccessibilityAnswerMap,
+} from "../listBusiness/listingAccessibility.data";
 import { servicesForPayload } from "../listBusiness/listingServices.data";
 import type {
   CoverPhotoView,
@@ -36,11 +40,48 @@ function cardCoverPhoto(
 }
 
 /**
+ * A card's weekly hours, or `undefined` when it has none to reason about.
+ *
+ * The empty object is the whole point of this helper. `normalizeHours` fills
+ * every one of the seven days, so running it over `{}` produces a complete grid
+ * of CLOSED days, and `openStatus` would then answer "closed" for a listing
+ * that has simply never published its hours. Those are different facts, and the
+ * card must say the honest one, so an empty grid stays `undefined` and
+ * `openStatus` keeps returning `"unknown"` (which the card renders as nothing
+ * at all, never as open and never as closed).
+ */
+function cardHours(
+  hours: Record<string, DayHours> | undefined,
+): Record<string, DayHours> | undefined {
+  if (!hours || Object.keys(hours).length === 0) return undefined;
+  return normalizeHours(hours);
+}
+
+/**
+ * The card's accessibility block, or `undefined` when the payload carries no
+ * answers at all.
+ *
+ * Absent answers are left absent rather than healed into six `unknown`s: the
+ * card shows only the needs a listing has actually said YES to, so a listing
+ * that has answered nothing and a listing that has answered "no" to everything
+ * both correctly show no access row. The card never carries the owner's
+ * free-text note, which stays on the detail page (`accessibility.note`) where
+ * there is room to read it.
+ */
+function cardAccessibility(
+  answers: AccessibilityAnswerMap | undefined,
+): DirectoryPlace["accessibility"] | undefined {
+  if (!answers) return undefined;
+  return { answers: normalizeAccessibilityAnswers(answers), note: null };
+}
+
+/**
  * Map a public `DirectoryCardDTO` onto the `DirectoryPlace` view model the grid
  * renders. The grid reads only card-level fields (name, cat, hood, desc, tint,
- * av, owned, member, cover photo); the detail-only fields are filled with empty
- * defaults here because the detail page fetches its own richer payload via
- * `useDirectoryPlace` — these placeholder values are never rendered.
+ * av, owned, member, cover photo, opening hours, accessibility answers); the
+ * detail-only fields are filled with empty defaults here because the detail
+ * page fetches its own richer payload via `useDirectoryPlace` — those
+ * placeholder values are never rendered.
  */
 export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
   return {
@@ -59,8 +100,13 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     online: dto.online ?? false,
     latitude: dto.latitude,
     longitude: dto.longitude,
+    // Both safe-space fields come across DERIVED, never raw: `"suspended"` is
+    // a granted badge the platform has paused, and `isBadgeDueForReReview` is
+    // the age of a badge that still stands. See `safeSpaceCardBadgeOf`, which
+    // is the one place the card turns them into a mark.
     safeSpaceStatus: dto.safeSpaceStatus ?? "none",
     safeSpaceTier: dto.safeSpaceTier ?? null,
+    isBadgeDueForReReview: dto.isBadgeDueForReReview ?? false,
     // A temporarily closed or moved business still appears in results, so the
     // card carries its state too. Absent on older payloads → left undefined
     // and read through `operatingStateOf`, which defaults to "open".
@@ -70,6 +116,18 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     // the cover IS the first gallery entry (the wide shot), so it lands there;
     // the remaining slots stay empty because a card payload never carries them.
     ...cardCoverPhoto(dto.coverPhoto),
+    // Opening hours on the card, so "Open till 23:00" is answered in the grid
+    // instead of one click away. The three fields are exactly the ones
+    // `openStatus` reads, in exactly the shapes the detail page already used:
+    // the venue's own timezone (null ⇒ Europe/Lisbon, which `zonedNow`
+    // defaults to), the weekly grid, and the near-term exception slice
+    // (yesterday..+7 days) that lets a dated closure beat its weekday row.
+    timezone: dto.timezone ?? undefined,
+    hours: cardHours(dto.hours),
+    hoursExceptions: dto.hoursExceptions ?? [],
+    // The six accessibility answers, so a card can show what it meets and the
+    // grid can be filtered on real needs. `unknown` travels through intact.
+    accessibility: cardAccessibility(dto.accessibilityAnswers),
     // detail-only fields — unused by the grid, filled by the detail fetch
     tagline: "",
     pills: [],
@@ -81,12 +139,21 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     hoursNote: "",
     owner: {
       name: "",
-      initials: dto.av,
+      // The MEMBER's initial, never `dto.av` (the BUSINESS's initials): this
+      // avatar sits beside the owner's first name in the card footer, so
+      // "Maison Du Tiago" was showing "MD" next to "Tiago". An owner who
+      // names nobody keeps the business initials, and the footer drops the
+      // whole line rather than printing a lone bubble.
+      initials: dto.memberFirst ? initials(dto.memberFirst) : dto.av,
       tint: dto.tint,
       role: "",
       bio: "",
       inQueerPulse: dto.memberFirst !== null,
       first: dto.memberFirst ?? "",
+      // The one owner field the card DOES render (beside the first name): the
+      // real photo behind the footer's "run by <first>" avatar, already
+      // redacted server-side. Absent on an older payload → initials.
+      avatarUrl: dto.memberAvatarUrl ?? null,
     },
     social: {},
     address: "",
@@ -122,6 +189,7 @@ export function detailDtoToPlace(
     longitude: dto.longitude,
     safeSpaceStatus: dto.safeSpaceStatus ?? "none",
     safeSpaceTier: dto.safeSpaceTier ?? null,
+    isBadgeDueForReReview: dto.isBadgeDueForReReview ?? false,
     safeSpaceVerifier: dto.safeSpaceVerifier,
     safeSpaceReVerifiedAt: dto.safeSpaceReVerifiedAt,
     safeSpaceSub: dto.safeSpaceSub,

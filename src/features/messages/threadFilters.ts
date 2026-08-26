@@ -3,8 +3,16 @@ import type { Conversation } from "./data";
 /** "requests" (MSG-1) isn't a conversation filter at all — it swaps the whole
  *  list body for `MessagesRequestsPanel` (incoming first-contact message
  *  requests), so `filterThreadsByTab` below just returns no conversation rows
- *  for it; the real data comes from `useConnectionsList("incoming")`. */
-export type InboxTab = "all" | "unread" | "favorites" | "groups" | "requests";
+ *  for it; the real data comes from `useConnectionsList("incoming")`.
+ *
+ *  "archived" (SOC-16) is the mirror image of every other tab: every OTHER
+ *  tab hides an archived thread (it's out of the main inbox experience by
+ *  definition), and only this tab shows them. A thread never sits in both —
+ *  the moment it's archived it drops out of "all"/"unread"/"favorites"/
+ *  "groups" and appears only here, until it's explicitly unarchived or a new
+ *  message auto-unarchives it server-side. */
+export type InboxTab =
+  "all" | "unread" | "favorites" | "groups" | "archived" | "requests";
 
 /** Same unread rule `MessagesThreadRow` uses for its dot/badge — unread flag
  *  on, not locally marked read this session, and not the thread currently
@@ -26,18 +34,27 @@ export function filterThreadsByTab(
   activeId: string,
   readIds: Set<string>,
 ): Conversation[] {
+  if (tab === "archived") {
+    return threads.filter((thread) => !!thread.archivedAt);
+  }
+  if (tab === "requests") {
+    return [];
+  }
+  // Every other tab is a view of the MAIN inbox — an archived thread is out
+  // of it by definition until it's unarchived (or a new message
+  // auto-unarchives it server-side), regardless of which of these it would
+  // otherwise match.
+  const unarchived = threads.filter((thread) => !thread.archivedAt);
   switch (tab) {
     case "unread":
-      return threads.filter((thread) =>
+      return unarchived.filter((thread) =>
         isThreadUnread(thread, activeId, readIds),
       );
     case "favorites":
-      return threads.filter((thread) => thread.favorite === true);
+      return unarchived.filter((thread) => thread.favorite === true);
     case "groups":
-      return threads.filter((thread) => thread.isGroup === true);
-    case "requests":
-      return [];
+      return unarchived.filter((thread) => thread.isGroup === true);
     default:
-      return threads;
+      return unarchived;
   }
 }

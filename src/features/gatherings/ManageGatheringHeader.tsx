@@ -18,21 +18,20 @@ function renderTitle(title: string) {
 
 /**
  * The manage dashboard's page header: status line and the host's three primary
- * actions. "Message attendees" is demo-only — there is no message-attendees
- * endpoint, so live must not offer a send it can't make.
+ * actions. "Message attendees" posts a real announcement in both modes now
+ * (LOC-06); it used to be hidden in live, because the only send behind it was
+ * a local boolean.
  */
 export function ManageGatheringHeader({
   title,
   daysToGo,
   slug,
-  canMessageAttendees,
   onEditDetails,
   onMessageAttendees,
 }: {
   title: string;
   daysToGo: number;
   slug: string;
-  canMessageAttendees: boolean;
   onEditDetails: () => void;
   onMessageAttendees: () => void;
 }) {
@@ -56,15 +55,13 @@ export function ManageGatheringHeader({
           >
             {t("gatherings:manage.actions.editDetails")}
           </Button>
-          {canMessageAttendees && (
-            <Button
-              variant="ghost"
-              className={styles.actionBtn}
-              onClick={onMessageAttendees}
-            >
-              {t("gatherings:manage.actions.messageAttendees")}
-            </Button>
-          )}
+          <Button
+            variant="ghost"
+            className={styles.actionBtn}
+            onClick={onMessageAttendees}
+          >
+            {t("gatherings:manage.actions.messageAttendees")}
+          </Button>
           <Button
             variant="primary"
             className={styles.actionBtn}

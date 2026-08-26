@@ -1,4 +1,4 @@
-import { FiCheck, FiLock, FiSettings, FiUsers } from "react-icons/fi";
+import { FiCheck, FiLock, FiUsers } from "react-icons/fi";
 import { Button, HubBackLink, Reveal } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -75,27 +75,16 @@ export function GroupNorms({ norms }: { norms: string[] }) {
   );
 }
 
-/** The group's norm-compliant listings (each carries price + accessibility),
- *  plus the poster's own manage mode. */
-export function GroupListings({
-  listings,
-  canManage,
-  isManaging,
-  onToggleManaging,
-  busyListingId,
-  onEdit,
-  onWithdraw,
-}: {
-  listings: GroupListing[];
-  /** Signed-in members can ask to manage a room; signed-out readers cannot. */
-  canManage: boolean;
-  isManaging: boolean;
-  onToggleManaging: () => void;
-  /** The listing with a write in flight, so its controls stay disabled. */
-  busyListingId: string | null;
-  onEdit: (listing: GroupListing) => void;
-  onWithdraw: (listing: GroupListing) => void;
-}) {
+/**
+ * The group's norm-compliant listings, each carrying the price and the access
+ * line the group requires.
+ *
+ * This grid is the PUBLIC board: every room here has already been cleared by a
+ * moderator. A member's own rooms, in whatever state they are in, live in
+ * `MyGroupListings` below, where ownership comes from the query rather than
+ * from a control that hopes for the best and answers with a 403.
+ */
+export function GroupListings({ listings }: { listings: GroupListing[] }) {
   const { t } = useTranslation();
   return (
     <section className={styles.listingsSection}>
@@ -104,27 +93,7 @@ export function GroupListings({
           <h2 className={styles.listingsTitle}>
             {t("economy:housingGroups.listings.title")}
           </h2>
-          {canManage && listings.length > 0 && (
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={onToggleManaging}
-              aria-pressed={isManaging}
-            >
-              <FiSettings aria-hidden />
-              {t(
-                isManaging
-                  ? "economy:groupListing.manage.doneCta"
-                  : "economy:groupListing.manage.startCta",
-              )}
-            </Button>
-          )}
         </div>
-        {isManaging && (
-          <p className={styles.manageNote}>
-            {t("economy:groupListing.manage.note")}
-          </p>
-        )}
         {listings.length === 0 ? (
           <p className={styles.listingsEmpty}>
             {t("economy:housingGroups.listings.empty")}
@@ -132,14 +101,7 @@ export function GroupListings({
         ) : (
           <div className={styles.listingsGrid}>
             {listings.map((listing) => (
-              <GroupListingCard
-                key={listing.id}
-                listing={listing}
-                isManaging={isManaging}
-                isBusy={busyListingId === listing.id}
-                onEdit={() => onEdit(listing)}
-                onWithdraw={() => onWithdraw(listing)}
-              />
+              <GroupListingCard key={listing.id} listing={listing} />
             ))}
           </div>
         )}

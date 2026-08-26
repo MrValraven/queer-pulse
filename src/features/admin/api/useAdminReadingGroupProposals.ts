@@ -4,9 +4,12 @@ import {
   getAdminReadingGroupProposals,
   type AdminReadingGroupProposalDTO,
   type ReadingGroupFormat,
+  type ReadingGroupProposalStatus,
 } from "./adminReadingGroupProposals.api";
 
 export type AdminReadingGroupFormatFilter = ReadingGroupFormat | "all";
+/** The queue filter the console opens on: `pending` is "what needs a decision". */
+export type AdminReadingGroupStatusFilter = ReadingGroupProposalStatus | "all";
 
 interface AdminReadingGroupProposalsPageVM {
   items: AdminReadingGroupProposalDTO[];
@@ -26,21 +29,23 @@ interface AdminReadingGroupProposalsPageVM {
  */
 export function useAdminReadingGroupProposals(
   filter: AdminReadingGroupFormatFilter,
+  statusFilter: AdminReadingGroupStatusFilter = "all",
 ) {
   const { demoMode } = useDemoMode();
   const formatArg = filter === "all" ? undefined : filter;
+  const statusArg = statusFilter === "all" ? undefined : statusFilter;
   const query = useInfiniteQuery<AdminReadingGroupProposalsPageVM>({
-    queryKey: ["admin-reading-group-proposals", demoMode, filter],
+    queryKey: ["admin-reading-group-proposals", demoMode, filter, statusFilter],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
         const { ADMIN_READING_GROUP_PROPOSALS } =
           await import("../adminReadingGroupProposals.data");
-        const filtered = formatArg
-          ? ADMIN_READING_GROUP_PROPOSALS.filter(
-              (proposal) => proposal.format === formatArg,
-            )
-          : ADMIN_READING_GROUP_PROPOSALS;
+        const filtered = ADMIN_READING_GROUP_PROPOSALS.filter(
+          (proposal) =>
+            (!formatArg || proposal.format === formatArg) &&
+            (!statusArg || proposal.status === statusArg),
+        );
         return {
           items: filtered,
           total: filtered.length,
@@ -51,6 +56,7 @@ export function useAdminReadingGroupProposals(
       return getAdminReadingGroupProposals({
         page: pageParam as number,
         format: formatArg,
+        status: statusArg,
       });
     },
     getNextPageParam: (lastPage) =>

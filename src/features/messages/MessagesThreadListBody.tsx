@@ -9,12 +9,19 @@ import type { InboxTab } from "./threadFilters";
 import type { Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
 
-/** Empty-state copy per non-"all" tab — "All" can't be empty here (that case
- *  is the whole-inbox empty state above it), so it has no key. */
+/** Empty-state copy per tab. "All" used to be unreachable here (the
+ *  whole-inbox empty state above it already covers a fully empty `threads`),
+ *  but archiving (SOC-16) made a NEW all-empty case possible: every thread
+ *  archived, so `threads.length > 0` yet the "all" tab's own filtered view is
+ *  empty. Its copy points at the Archived tab rather than repeating the
+ *  whole-inbox "start a conversation" copy, which would be misleading when
+ *  the member very much has conversations, just all tucked away. */
 const TAB_EMPTY_KEY: Partial<Record<InboxTab, string>> = {
+  all: "thread.tabEmptyAllArchived",
   unread: "thread.tabEmptyUnread",
   favorites: "thread.tabEmptyFavorites",
   groups: "thread.tabEmptyGroups",
+  archived: "thread.tabEmptyArchived",
 };
 
 /**

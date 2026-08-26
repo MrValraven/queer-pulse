@@ -123,13 +123,6 @@ export const help: Catalog = {
     "Filter by category like design, tech, or care to narrow the board.\nOpen a listing to read the full role, the offer, and who reviews applications.\nBookmark the ones you like, , or post your own with “Post a job”.",
   "economy.jobs.demo":
     "a listing like Junior Graphic Designer at Atelier Pulso, a queer-run studio in Príncipe Real, where applications are read by the founder herself.",
-  "economy.skills.title": "Skills",
-  "economy.skills.intro":
-    "A skill-share board where members offer what they know and ask for what they want to learn: from branding to backend engineering to wheel-throwing. It's peer teaching, kept free and shared within the community.",
-  "economy.skills.use":
-    "Browse by category, or look under “Offering” and “Looking to learn”.\nReach out to a member whose offer fits what you need.\nShare your own skill, or list a workshop for others to join.",
-  "economy.skills.demo":
-    "an offer like Inês teaching visual identity and branding one-to-one in her studio, or someone looking to learn fundraising for a community project.",
   "economy.tools.title": "Invoice generator",
   "economy.tools.intro":
     "A free invoice generator that turns your details into a print-ready fatura-recibo, right in the browser. No account, no data leaves your device. Built for freelancers navigating Portuguese self-employment.",

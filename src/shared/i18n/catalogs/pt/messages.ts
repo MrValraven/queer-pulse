@@ -29,15 +29,22 @@ export const messages: Catalog = {
   "thread.muteChat": "Silenciar notificações",
   "thread.unmuteChat": "Reativar notificações",
   "thread.mutedIndicator": "Notificações silenciadas",
+  "thread.archiveChat": "Arquivar conversa",
+  "thread.unarchiveChat": "Desarquivar conversa",
+  "thread.archivedIndicator": "Conversa arquivada",
   "thread.deleteChat": "Apagar conversa",
   // Separadores de filtro da caixa de entrada
   "thread.tabAll": "Todas",
   "thread.tabUnread": "Não lidas",
   "thread.tabFavorites": "Favoritas",
   "thread.tabGroups": "Grupos",
+  "thread.tabArchived": "Arquivadas",
   "thread.tabEmptyUnread": "Sem conversas por ler",
   "thread.tabEmptyFavorites": "Ainda sem conversas favoritas",
   "thread.tabEmptyGroups": "Ainda sem conversas de grupo",
+  "thread.tabEmptyArchived": "Sem conversas arquivadas",
+  "thread.tabEmptyAllArchived":
+    "Todas as conversas estão arquivadas. Vê o separador Arquivadas para as encontrar.",
   "deleteChat.confirmTitle": "Apagar esta conversa?",
   "deleteChat.confirmBody":
     "Desaparece da tua caixa de entrada e limpa a tua cópia. {name} mantém a dele(a), e se te enviar mensagem outra vez, a conversa volta só com as mensagens novas.",

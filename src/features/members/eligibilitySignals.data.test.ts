@@ -12,7 +12,6 @@ const dto: PublicEligibilitySignalsDto = {
   tenureDays: 400,
   publishedPieces: ["2026-07-01T00:00:00.000Z", "2026-05-01T00:00:00.000Z"],
   hostedOpenEvents: ["2026-06-01T00:00:00.000Z"],
-  workshopsTaught: 1,
   publishedSubprofiles: 2,
   vouchCount: 3,
   vouchesGivenCount: 1,
@@ -47,7 +46,6 @@ describe("eligibility signal builders", () => {
     expect(signals.hostedOpenEvents).toEqual([
       { at: "2026-06-01T00:00:00.000Z" },
     ]);
-    expect(signals.workshopsTaught).toBe(1);
     expect(signals.endorsementCount).toBe(4);
     expect(signals.connectionCount).toBe(12);
     expect(signals.eventsAttended).toBe(6);

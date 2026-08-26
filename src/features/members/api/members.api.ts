@@ -43,6 +43,11 @@ export interface MemberCardDTO {
   identityFacets?: string[];
   /** Years on QueerPulse, floor-rounded from `joinedAt`. */
   years?: number;
+  /** Coarse "recently active" band: `"thisMonth"`, `"last3Months"`,
+   *  `"dormant"`, or `null`. NEVER a timestamp: the backend stores a month and
+   *  ships a bucket. `null` covers both "opted out" and "nothing recorded" and
+   *  the UI must render both as nothing at all. */
+  activityBand?: string | null;
   /** Member-controlled visibility toggles (backend `ProfileCard.photoVisible`).
    *  ALWAYS the true stored value for every viewer — they say whether `avatarUrl`
    *  is gated, they are never themselves gated. Backend default `true`; optional
@@ -154,17 +159,39 @@ export interface ShapingItemDTO {
 
 /** Semantic activity type; the frontend maps each to an icon. */
 export type ActivityKind =
-  "post" | "event" | "message" | "reading" | "edit" | "photo" | "music";
+  | "post"
+  | "event"
+  | "message"
+  | "reading"
+  | "edit"
+  | "photo"
+  | "music"
+  /** Joined a public community. */
+  | "community"
+  /** Published a persona. */
+  | "persona";
 /** A recent public action, linking to where it happened ("Recent activity"). */
 export interface ActivityItemDTO {
   kind: ActivityKind;
   title: string;
-  sub: string;
-  /** Path (or URL) the activity links to. */
-  to: string;
+  sub?: string | null;
+  /** Path the activity links to, or `null` when it has none.
+   *
+   *  The backend stores a link only for a subject that is already public to
+   *  the reader, and re-verifies that on every read. Rows written before links
+   *  were stored are all `null`, so this must always be treated as optional. */
+  to?: string | null;
 }
 
 export interface ProfileDTO extends MemberCardDTO {
+  /** How many of the viewer's own accepted connections vouched for this member
+   *  (backend `FullProfileResponse.mutualVoucherCount`).
+   *
+   *  `null` is "no answer": the viewer is this member, or this member hid their
+   *  voucher roster, in which case the count would be a partial roster. `0`
+   *  always means the real answer is zero. Optional here defensively, so a
+   *  backend older than this build does not crash the profile. */
+  mutualVoucherCount?: number | null;
   bio?: string;
   /** Portuguese translation of `bio`. Ungated, same as `bio`. */
   bioPt?: string;
@@ -258,7 +285,8 @@ export function getMembers(
     yearsFrom?: number;
     yearsTo?: number;
     /** Server-side sort order; one of the `MemberSort` wire tokens
-     *  (`recentlyJoined` | `closestMutuals` | `aToZ` | `mostVouched`). */
+     *  (`recentlyJoined` | `recentlyActive` | `closestMutuals` | `aToZ` |
+     *  `mostVouched`). */
     sort?: string;
     page?: number;
   } = {},

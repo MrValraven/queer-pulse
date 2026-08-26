@@ -1,0 +1,354 @@
+/* The group-listing review console: a queue somebody works through every
+ * morning. Cards rather than a dense table, because one decision needs the
+ * poster, the risk reasoning, the room's own words and any prior decision
+ * side by side, and a table row cannot carry that and stay readable. */
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-block: 18px 10px;
+}
+
+.groupField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: min(260px, 100%);
+}
+
+.groupLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.groupInput {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 12px;
+  padding: 9px 13px;
+  min-width: 0;
+}
+
+.groupInput:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+}
+
+.keyHint {
+  margin: 0 0 18px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.queueCount {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.skeletons,
+.queue {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.queue {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 20px;
+}
+
+/* ── One listing ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: 20px 22px;
+  scroll-margin-block: 90px;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.card:focus-visible,
+.cardFocused {
+  outline: none;
+  border-color: rgba(var(--accent-rgb), 0.6);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
+}
+
+.cardTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-block-end: 12px;
+}
+
+/* How long this one has been waiting. Pushed to the end of the row on its own
+   so the age of the queue is scannable down a single column. */
+.cardAge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-inline-start: auto;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+.cardAgeStale {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.cardTitle {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+  line-height: 1.25;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.cardFacts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+.cardDescription {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 70ch;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* ── Risk ────────────────────────────────────────────────────────────── */
+.riskPill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 4px 11px 5px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  line-height: 1;
+}
+
+.riskPillScore {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.riskPillBand {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.riskPill_high {
+  background: rgba(var(--danger-rgb), 0.12);
+  border-color: rgba(var(--danger-rgb), 0.3);
+  color: var(--danger);
+}
+
+.riskPill_medium {
+  background: rgba(var(--amber-rgb), 0.14);
+  border-color: rgba(var(--amber-rgb), 0.32);
+  color: var(--ink);
+}
+
+.riskPill_low {
+  background: rgba(var(--jade-rgb), 0.1);
+  border-color: rgba(var(--jade-rgb), 0.24);
+  color: var(--jade);
+}
+
+.riskList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+/* ── Poster + audit trail ────────────────────────────────────────────── */
+.poster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-block-end: 14px;
+}
+
+.posterBody {
+  min-width: 0;
+}
+
+.posterName {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.posterName a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.posterName a:hover,
+.posterName a:focus-visible {
+  text-decoration: underline;
+}
+
+.posterMeta {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+.posterGone {
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+.priorDecision {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-block-end: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.priorDecisionHead {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.priorDecisionBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.priorDecisionMeta {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* ── Decisions ───────────────────────────────────────────────────────── */
+.decisionBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-block-start: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.reasonListing {
+  margin: 0 0 16px;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.reasonLabel {
+  display: block;
+  margin-block-end: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+
+.reasonInput {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 12px;
+  padding: 11px 15px;
+  resize: vertical;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.reasonInput:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  background: var(--paper);
+}
+
+.reasonHint {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+:global([data-theme="dark"]) .card,
+:global([data-theme="dark"]) .priorDecision {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+@media (--xs) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card {
+    padding: 16px 15px;
+  }
+
+  .cardAge {
+    margin-inline-start: 0;
+  }
+}

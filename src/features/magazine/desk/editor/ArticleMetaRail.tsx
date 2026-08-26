@@ -1,4 +1,5 @@
 import { FormField } from "../../../../shared/components/ui";
+import { ImageUploadField } from "../../../subprofiles/ImageUploadField";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ArticleSeoFields } from "./ArticleSeoFields";
 import styles from "../pieceTabs.module.css";
@@ -19,6 +20,18 @@ export interface ArticleMetaRailProps {
   onRoleChange: (value: string) => void;
   metaDescription: string;
   onMetaDescriptionChange: (value: string) => void;
+  /**
+   * CON-04 — the piece's LEAD ART: the photograph or illustration that runs
+   * on the article page and on every card pointing at it. Whichever reference
+   * the editor currently holds (the resolved `/files/<key>` URL the draft was
+   * seeded with, or the bare storage key a fresh upload just produced); the
+   * backend collapses both to a key.
+   *
+   * Separate from `socialImage` below, which is the share-card override. An
+   * editor may set either without the other.
+   */
+  heroImageKey: string;
+  onHeroImageKeyChange: (value: string) => void;
   socialImage: string;
   onSocialImageChange: (value: string) => void;
   canonicalUrl: string;
@@ -60,6 +73,8 @@ export function ArticleMetaRail({
   onRoleChange,
   metaDescription,
   onMetaDescriptionChange,
+  heroImageKey,
+  onHeroImageKeyChange,
   socialImage,
   onSocialImageChange,
   canonicalUrl,
@@ -115,6 +130,23 @@ export function ArticleMetaRail({
         helper={t("magazine:write.meta.slugHelper")}
       >
         <input type="text" value={slug} readOnly />
+      </FormField>
+
+      <FormField
+        label={t("magazine:write.meta.heroImageLabel")}
+        helper={t("magazine:write.meta.heroImageHelper")}
+      >
+        <ImageUploadField
+          // The same upload surface a magazine cover uses: a 2:1 plate, up to
+          // 10 MB, at least 1200x600. Reusing the kind reuses its reframe
+          // aspect, its media-library label and its `/files/*` visibility
+          // rather than inventing a fourth near-identical one.
+          kind="story-cover"
+          value={heroImageKey}
+          onChange={onHeroImageKeyChange}
+          size={120}
+          placeholder={t("magazine:write.meta.heroImagePlaceholder")}
+        />
       </FormField>
 
       <ArticleSeoFields

@@ -9,6 +9,7 @@ import type { GatheringForm } from "../useGatheringForm";
 import { initialsFromParts } from "../../../shared/lib/initials";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
+import { normalizeAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
 import type {
   AttendeeDTO,
   CreateEventDto,
@@ -36,13 +37,47 @@ function orgColorFor(org?: string): string {
   return orgColors.community;
 }
 
-function hostName(dto?: EventCardDTO["host"], org?: string): string {
+/**
+ * The "Hosted by" name.
+ *
+ * `host` became nullable when erasure stopped cascading gatherings away with
+ * their host, so a past gathering can outlive the member who ran it. A
+ * QueerPulse-run gathering always carries an `org` AND a staff host, so no host
+ * and no org means exactly one thing: the host erased their account. It used to
+ * fall through to "QueerPulse", which credited the platform for a member's
+ * event.
+ *
+ * `t` is resolved here rather than at render because `host` is a plain string
+ * every consumer prints directly. The cost is that this one fallback sits in
+ * the query cache in the language it was fetched in, so it trails a language
+ * switch until the next refetch. Real host names, which is nearly every
+ * gathering, are unaffected.
+ */
+function hostName(
+  dto: EventCardDTO["host"] | undefined,
+  org: string | undefined,
+  t: TFunction,
+): string {
   if (dto) return `${dto.firstName} ${dto.lastName}`.trim();
-  return org ?? "QueerPulse";
+  return org ?? t("gatherings:common.hostRemoved");
 }
 
-/** The "spots" line as a catalog key + its interpolation values. */
+/**
+ * The "spots" line as a catalog key + its interpolation values.
+ *
+ * Spots left is derived from `seatsTaken`, never from the row count (LOC-07):
+ * a going member who declared two guests occupies three seats, so a 20-seat
+ * gathering where ten people each bring a plus-one has nothing left, however
+ * many rows the attendee table holds.
+ */
 function spotsLabel(dto: EventCardDTO): SpotsLabel {
+  const seatsTaken = dto.seatsTaken ?? dto.goingCount;
+  if (typeof dto.capacity === "number" && typeof seatsTaken === "number") {
+    return {
+      key: "gatherings:spots.spotsLeft",
+      values: { count: Math.max(0, dto.capacity - seatsTaken) },
+    };
+  }
   if (typeof dto.spotsLeft === "number")
     return {
       key: "gatherings:spots.spotsLeft",
@@ -67,7 +102,11 @@ function priceRange(price?: string): { priceMin?: number; priceMax?: number } {
 
 /** GET /events card → the Events Hub / calendar `CalendarEvent` shape. */
 export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
-  const org = dto.org ?? (dto.host ? "Community" : "QueerPulse");
+  // A QueerPulse-run gathering always sets `org`, so an absent one is
+  // community-run whether or not its host row survived erasure. This used to
+  // read a missing host as "QueerPulse" and byline the platform for a member's
+  // gathering once that member erased their account.
+  const org = dto.org ?? "Community";
   return {
     date: new Date(dto.startAt),
     // Only carried when the API actually knows the host's zone — absent leaves
@@ -79,6 +118,13 @@ export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
     hood: dto.neighbourhood ?? dto.venue ?? (dto.isOnline ? "Online" : ""),
     to: gatheringPath(dto.slug),
     kind: dto.host ? "gathering" : "event",
+    // The wizard's own gathering type, when the host picked one (LOC-04).
+    ...(dto.eventType ? { eventType: dto.eventType } : {}),
+    // LOC-18 — the host's own words about what it costs, plus the server's
+    // own "does this read as free" verdict. DISPLAY ONLY: there is no payment
+    // anywhere behind this, so no card may offer to take one.
+    ...(dto.cost ? { cost: dto.cost } : {}),
+    ...(dto.isFree !== undefined ? { isFree: dto.isFree } : {}),
     ticketed: dto.ticketed,
     ...priceRange(dto.price),
     ...(dto.coverImageUrl ? { coverImageUrl: dto.coverImageUrl } : {}),
@@ -89,7 +135,10 @@ export function cardToCalendarEvent(dto: EventCardDTO): CalendarEvent {
 }
 
 /** GET /events/:slug → the GatheringPage `GatheringDetail` view-model. */
-export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
+export function detailToGathering(
+  dto: EventDetailDTO,
+  t: TFunction,
+): GatheringDetail {
   // The host turned off "Show attendee count" (`SettingsTab`) — a
   // non-organizer viewer sees the generic "open to all" copy instead of a
   // real headcount. Organizers always see the real number (their own
@@ -98,14 +147,17 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
   const hideCount = dto.isOrganizer !== true && dto.showAttendeeCount === false;
   return {
     slug: dto.slug,
-    type: dto.type ?? "Gathering",
+    // The wizard's own gathering type is the real answer here (LOC-04). The
+    // backend never sent a `type`, so this row read the literal word
+    // "Gathering" on every live event, whatever the host had chosen.
+    type: dto.eventType ?? dto.type ?? "Gathering",
     date: new Date(dto.startAt),
     // The zone the host scheduled in, when the API carries one. See
     // `eventZoneFormat` — absent falls back to the reader's own zone.
     ...(dto.timezone ? { timezone: dto.timezone } : {}),
     title: dto.title,
     hood: dto.neighbourhood ?? dto.venue ?? (dto.isOnline ? "Online" : ""),
-    host: hostName(dto.host, dto.org),
+    host: hostName(dto.host, dto.org, t),
     hostSlug: dto.host?.slug ?? "",
     hostFirst: dto.host?.firstName,
     hostLast: dto.host?.lastName,
@@ -137,6 +189,25 @@ export function detailToGathering(dto: EventDetailDTO): GatheringDetail {
     goingAttendeesPreview: dto.goingAttendeesPreview ?? [],
     goingAttendeesPreviewTotal: dto.goingAttendeesPreviewTotal ?? 0,
     coverImageUrl: dto.coverImageUrl ?? null,
+    // ── Where it actually is (LOC-04) ────────────────────────────────────
+    // `address` and `arrivalNotes` arrive as `null` for a viewer who has not
+    // RSVP'd. That absence is a fact the page states plainly ("the exact
+    // address is shared with the people who are going"), never an empty line.
+    address: dto.address ?? null,
+    arrivalNotes: dto.arrivalNotes ?? null,
+    locationPrecision: dto.locationPrecision ?? "venue",
+    neighbourhood: dto.neighbourhood ?? null,
+    venue: dto.venue ?? null,
+    language: dto.language ?? null,
+    accessibilityAnswers: normalizeAccessibilityAnswers(
+      dto.accessibilityAnswers,
+    ),
+    accessibilityNote: dto.accessibilityNote ?? "",
+    // LOC-18 — display only.
+    cost: dto.cost ?? null,
+    isFree: dto.isFree ?? true,
+    announcements: dto.announcements ?? [],
+    seatsTaken: dto.seatsTaken ?? dto.goingCount ?? 0,
   };
 }
 
@@ -177,6 +248,18 @@ export interface AttendeeRow {
   /** When they joined the waitlist, and their place in the queue. */
   waitlistedAt?: Date;
   waitlistPosition?: number;
+  /** When a host or co-host marked them as arrived, or `null` (LOC-03).
+   *  Organiser-only server-side; every other reader gets `null`. */
+  checkedInAt?: Date | null;
+  /** ── The attendee's own answers, organisers only (LOC-07) ─────────────
+   *  `undefined` = the viewer is not an organiser and was never sent these.
+   *  A `null` free text = the attendee wrote nothing, or chose "just me". */
+  guestCount?: number;
+  accessNeeds?: string | null;
+  dietaryNeeds?: string | null;
+  /** Their own "who can see this" choice, so the host's list can say why a
+   *  needs line is absent rather than implying nobody has any. */
+  detailsVisibility?: string | null;
 }
 
 /**
@@ -223,6 +306,17 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     name: `${dto.firstName} ${dto.lastName}`.trim(),
     pronouns: dto.pronouns,
     ...(dto.rsvpAt ? { rsvpAt: new Date(dto.rsvpAt) } : {}),
+    ...(typeof dto.waitlistPosition === "number"
+      ? { waitlistPosition: dto.waitlistPosition }
+      : {}),
+    checkedInAt: dto.checkedInAt ? new Date(dto.checkedInAt) : null,
+    // Organiser-only fields (LOC-07). `undefined` here means "the viewer is
+    // not an organiser", which is a different fact from a `null` free-text
+    // answer ("the attendee withheld it, or wrote nothing").
+    guestCount: dto.guestCount,
+    accessNeeds: dto.accessNeeds,
+    dietaryNeeds: dto.dietaryNeeds,
+    detailsVisibility: dto.detailsVisibility ?? null,
   };
 }
 
@@ -238,9 +332,16 @@ function combineDateTime(date: string, time: string): string {
     : iso.toISOString();
 }
 
-/** Map the create-gathering wizard form state onto the CreateEventDto the
- *  backend accepts. Prototype-only fields (access tags, tiers, notes) aren't
- *  part of the endpoint and are dropped — a documented known gap. */
+/**
+ * Map the create-gathering wizard form state onto the CreateEventDto.
+ *
+ * Everything the wizard asks for is sent (LOC-04/LOC-18). It used to send the
+ * title, description, schedule, venue and capacity and silently drop the
+ * street address, arrival directions, neighbourhood, language, gathering type
+ * and every accessibility answer — while still making the host tick "the
+ * accessibility information I have given is accurate" before publishing. The
+ * platform was extracting a truthfulness pledge about data it deleted.
+ */
 export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
   const isOnline = form.hood === "Online";
   const capacity = Number.parseInt(form.cap, 10);
@@ -260,6 +361,27 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
       ? { listingId: form.venueListingId }
       : {}),
     isOnline,
+    // Where it actually is. An online gathering has no door, so neither the
+    // address nor the arrival notes are sent for one.
+    ...(!isOnline && form.address.trim()
+      ? { address: form.address.trim() }
+      : {}),
+    ...(!isOnline && form.directions.trim()
+      ? { arrivalNotes: form.directions.trim() }
+      : {}),
+    ...(!isOnline && form.hood ? { neighbourhood: form.hood } : {}),
+    ...(form.lang ? { language: form.lang } : {}),
+    ...(form.type ? { eventType: form.type } : {}),
+    // The six three-valued answers plus the host's note. Sent on every create,
+    // including one where the host answered nothing: a complete map of
+    // `unknown` is the honest starting state, and it is what the accuracy
+    // pledge on the review step is now a pledge about.
+    accessibility: {
+      answers: form.accessibilityAnswers,
+      ...(form.accessNotes.trim() ? { note: form.accessNotes.trim() } : {}),
+    },
+    // LOC-18 — free text, display only. Nothing here takes a payment.
+    ...(form.cost.trim() ? { cost: form.cost.trim() } : {}),
     capacity: Number.isFinite(capacity) ? capacity : undefined,
     // The host's audience-scope pick from the wizard (default "members" —
     // Public). See docs/superpowers/specs/2026-08-13-gathering-audience-scope-design.md.

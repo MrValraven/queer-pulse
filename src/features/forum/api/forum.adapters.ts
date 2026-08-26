@@ -56,6 +56,35 @@ function paragraphs(body: string): string[] {
     .filter(Boolean);
 }
 
+/**
+ * Peels a quote-reply's leading blockquote off its body.
+ *
+ * Quote-reply used to exist only as curated demo data: the `Reply.quote` field
+ * was rendered but nothing could ever produce one live. The live affordance
+ * (SOC-13) writes the quoted passage as `>`-prefixed leading lines of an
+ * ORDINARY reply body, so it needs no column, no DTO field and no migration —
+ * and a member who types `>` by hand gets the same rendering, which is the
+ * convention every forum they have used already behaves this way.
+ *
+ * Only a run of blockquote lines at the very START counts. A `>` further down
+ * is left in the prose, so an unrelated line beginning with a chevron is never
+ * hoisted into a quote box.
+ */
+function splitLeadingQuote(body: string): { quoted: string; rest: string } {
+  const lines = body.split("\n");
+  let index = 0;
+  const quotedLines: string[] = [];
+  while (index < lines.length && lines[index]!.startsWith(">")) {
+    quotedLines.push(lines[index]!.replace(/^>\s?/, ""));
+    index += 1;
+  }
+  if (!quotedLines.length) return { quoted: "", rest: body };
+  return {
+    quoted: quotedLines.join("\n").trim(),
+    rest: lines.slice(index).join("\n"),
+  };
+}
+
 /** ForumThreadResponse → the `Thread` list card (body/replies filled later). */
 export function threadToCard(
   dto: ForumThreadResponse,
@@ -95,6 +124,12 @@ export function threadToCard(
     tags: dto.tags ?? [],
     body: [],
     replies: [],
+    // SOC-13 — following, the accepted answer, and the two permissions that
+    // gate the Follow / Accept / tag-edit affordances.
+    isSubscribed: dto.isSubscribed ?? false,
+    acceptedPostId: dto.acceptedPostId ?? null,
+    canAcceptAnswer: dto.canAcceptAnswer ?? false,
+    canEditTags: dto.canEditTags ?? false,
     // Row-moderation permissions (denormalized onto the thread DTO) so the list
     // row can render its ⋯ menu without fetching the OP post. `canLock` is the
     // thread-level moderator permission (close / reopen replies).
@@ -113,16 +148,20 @@ export function threadToCard(
   };
 }
 
-/** ForumPostResponse → a `Reply` (used for the OP body too). */
+/** ForumPostResponse → a `Reply` (used for the OP body too). `quoteCite` is
+ *  the display name of the post this one quotes, resolved by `threadDetail`
+ *  from the parent post already in the loaded page. */
 export function postToReply(
   dto: ForumPostResponse,
   t: TFunction,
   fmt: Formatters,
   isOP = false,
+  quoteCite?: string,
 ): Reply {
   const slug = dto.author.handle;
   const tint = tintForSlug(slug);
   const soft = SOFT[tint];
+  const { quoted, rest } = splitLeadingQuote(dto.body);
   return {
     id: dto.id,
     parentPostId: dto.parentPostId ?? null,
@@ -134,7 +173,11 @@ export function postToReply(
     photo: dto.author.avatarUrl ?? undefined,
     time: relative(dto.createdAt, t, fmt),
     isOP,
-    body: paragraphs(dto.body),
+    ...(quoted ? { quote: { cite: quoteCite, text: quoted } } : {}),
+    body: paragraphs(rest),
+    image: dto.image ?? undefined,
+    // The server's own answer mark, not a client-side guess (SOC-13).
+    accepted: dto.isAccepted ?? false,
     reactions: dto.voteCount,
     myVote: dto.myVote,
     postId: dto.id,
@@ -148,23 +191,6 @@ export function postToReply(
   };
 }
 
-/**
- * Flags the reply/replies with the highest NON-ZERO `reactions` (net vote
- * count) as `helpful`, ties included. Backs live "Most helpful" (see
- * `threadDetail`'s call site for the full rationale) — computed once over the
- * currently-loaded page of replies, so it recomputes as more pages load.
- */
-function markMostHelpful(replies: Reply[]): Reply[] {
-  const maxReactions = replies.reduce(
-    (max, reply) => Math.max(max, reply.reactions),
-    0,
-  );
-  if (maxReactions === 0) return replies;
-  return replies.map((reply) =>
-    reply.reactions === maxReactions ? { ...reply, helpful: true } : reply,
-  );
-}
-
 /** Combine thread meta + its posts page into the full `Thread` detail. */
 export function threadDetail(
   dto: ForumThreadResponse,
@@ -174,8 +200,19 @@ export function threadDetail(
 ): Thread {
   const card = threadToCard(dto, t, fmt);
   const [op, ...rest] = posts;
+  // Display name per loaded post id, so a quote-reply can be attributed to the
+  // post it quotes without a second request.
+  const authorNameByPostId = new Map(
+    posts.map((post) => [post.id, post.author.displayName]),
+  );
   const mappedReplies = rest.map((post) =>
-    postToReply(post, t, fmt, post.author.handle === op?.author.handle),
+    postToReply(
+      post,
+      t,
+      fmt,
+      post.author.handle === op?.author.handle,
+      post.parentPostId ? authorNameByPostId.get(post.parentPostId) : undefined,
+    ),
   );
   return {
     ...card,
@@ -186,16 +223,15 @@ export function threadDetail(
     // count + the viewer's own vote and stays consistent with `useVotePost`.
     upvotes: op?.voteCount ?? card.upvotes,
     myVote: op?.myVote ?? card.myVote,
-    // "Most helpful" (see REPLY_SORTS/buildReplyTree) has no dedicated backend
-    // concept — it's wired here to the real vote signal already on every post
-    // (`forum_post_vote`, exposed as `reactions`/`voteCount`): the reply/replies
-    // with the page's highest NON-ZERO vote count are flagged `helpful`, which
-    // both drives buildReplyTree's sort (its `helpful` tiebreak now has a real
-    // live signal, not just demo-curated data) and lights the "Most helpful"
-    // badge (ThreadReplyItem). A thread with no votes yet flags nothing — zero
-    // votes isn't a helpfulness signal.
-    replies: markMostHelpful(mappedReplies),
+    // No client-side "most helpful" pass any more (SOC-13). It ranked only the
+    // replies that happened to have loaded, so the badge moved as you paged,
+    // and it was a guess dressed as an answer. The server now hoists the
+    // thread's ACCEPTED answer to the top of the first page and flags it
+    // (`isAccepted` → `Reply.accepted`), which is a real, author-given signal.
+    // The order here is the server's order, verbatim.
+    replies: mappedReplies,
     opPostId: op?.id ?? card.opPostId,
+    opImage: op?.image ?? undefined,
     editedAt: op?.editedAt ?? null,
     deleted: op?.deleted ?? false,
     removedByModerator: op?.moderationRemoved ?? false,

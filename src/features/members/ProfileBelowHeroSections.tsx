@@ -1,6 +1,7 @@
 import { ProfileContent, type ProfileContentEdit } from "./ProfileSections";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { PlacesSection } from "./PlacesSection";
+import { ProfileWritingSection } from "../magazine/ProfileWritingSection";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 
@@ -42,6 +43,14 @@ export function ProfileBelowHeroSections({
         firstName={profile.first}
       />
       <PlacesSection
+        memberSlug={ownerSlug}
+        isSelf={selfView}
+        firstName={profile.first}
+      />
+      {/* CON-11 — the magazine credit a member gets for writing. Renders
+          nothing unless their byline is linked to this account AND has
+          published pieces, so it never leaves an empty heading behind. */}
+      <ProfileWritingSection
         memberSlug={ownerSlug}
         isSelf={selfView}
         firstName={profile.first}

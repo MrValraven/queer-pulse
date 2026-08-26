@@ -41,15 +41,22 @@ export const messages: Catalog = {
   "thread.muteChat": "Mute notifications",
   "thread.unmuteChat": "Unmute notifications",
   "thread.mutedIndicator": "Notifications muted",
+  "thread.archiveChat": "Archive chat",
+  "thread.unarchiveChat": "Unarchive chat",
+  "thread.archivedIndicator": "Archived chat",
   "thread.deleteChat": "Delete chat",
   // Inbox filter tabs
   "thread.tabAll": "All",
   "thread.tabUnread": "Unread",
   "thread.tabFavorites": "Favorites",
   "thread.tabGroups": "Groups",
+  "thread.tabArchived": "Archived",
   "thread.tabEmptyUnread": "No unread chats",
   "thread.tabEmptyFavorites": "No favorite chats yet",
   "thread.tabEmptyGroups": "No group chats yet",
+  "thread.tabEmptyArchived": "No archived chats",
+  "thread.tabEmptyAllArchived":
+    "Every chat is archived. Check the Archived tab to find them.",
   "deleteChat.confirmTitle": "Delete this chat?",
   "deleteChat.confirmBody":
     "It disappears from your inbox and clears your copy. {name} keeps theirs, and if they message you again, the chat comes back with only the new messages.",

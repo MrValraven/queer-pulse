@@ -1,0 +1,34 @@
+/* The safe-space mark on a directory card's photo.
+   Its own module rather than a class in DirectoryPage.module.css so the mark
+   and its three states travel together with the component that owns them.
+   It sits on a member-supplied photo, so it carries its own opaque ground and
+   a two-value edge (light border + dark ring) rather than trusting whatever
+   image is underneath. */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: var(--jade);
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgba(var(--line-rgb), 0.12),
+    0 2px 8px rgba(var(--plum-rgb), 0.22);
+}
+.mark svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.2;
+}
+
+/* A badge the platform has put on hold. The mark is deliberately still THERE
+   and deliberately no longer jade: withholding the claim reads as honest,
+   while removing the mark outright would leave a member who saw it yesterday
+   with no explanation at all. Never colour alone: the icon is a pause rather
+   than a shield, and the accessible name says so in words. */
+.paused {
+  color: var(--ink-60);
+  background: var(--paper);
+}

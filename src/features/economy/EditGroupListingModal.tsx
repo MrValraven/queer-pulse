@@ -5,7 +5,7 @@ import { describeError } from "../../shared/api/errorMessage";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUpdateGroupListing } from "./api/useGroupListingOwnerActions";
-import type { GroupListing } from "./housingGroups.data";
+import type { MyGroupListing } from "./housingGroups.data";
 import { ModalShell, Sending } from "./ModalKit";
 import { GroupListingFields } from "./GroupListingFields";
 import { useGroupListingForm } from "./useGroupListingForm";
@@ -18,11 +18,15 @@ import styles from "./ApplicationModals.module.css";
  * advertised.
  *
  * Every field here is one the group page renders, so every field is moderated:
- * saving a change sends the listing back to `review` and it leaves the group
- * page until a moderator clears it. That is said plainly before submit, and
- * submit stays closed while nothing has actually changed, so nobody pays the
- * review cost for a no-op save. The success toast repeats it rather than
- * claiming a quiet save.
+ * saving a change returns the listing to `review` and it leaves the group page
+ * until a moderator clears it. That is said plainly before submit, and submit
+ * stays closed while nothing has actually changed, so nobody pays the review
+ * cost for a no-op save. The success toast repeats it rather than claiming a
+ * quiet save.
+ *
+ * This is also the recovery path out of a question or a refusal: rewriting the
+ * room clears the old verdict and puts it back in front of a moderator, which
+ * is why the decision note on the card points here.
  *
  * A 403 means the signed-in member did not post this room. The API's own
  * message is surfaced through `describeError` rather than being flattened into
@@ -34,7 +38,7 @@ export function EditGroupListingModal({
   onClose,
 }: {
   groupSlug: string;
-  listing: GroupListing;
+  listing: MyGroupListing;
   onClose: () => void;
 }) {
   const { t } = useTranslation();

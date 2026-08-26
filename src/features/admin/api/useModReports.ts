@@ -8,9 +8,9 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { loadModerationTranslate } from "./moderationTranslate";
 import {
+  APPEALS,
   EMERGENCY_REPORTS,
   OTHER_REPORTS,
-  APPEALS,
   RESOLVED,
 } from "../adminModeration.data";
 import type {
@@ -18,23 +18,42 @@ import type {
   ModReportView,
   ResolvedItemView,
 } from "../moderationAge";
-import { getAppeals, getModReports } from "./moderation.api";
+import { getModReports } from "./moderation.api";
 import {
-  appealDtoToView,
+  modReportClusterDtoToView,
   modReportDtoToView,
   resolvedDtoToView,
 } from "./moderation.adapters";
+import { clustersFromRows } from "../moderationQueue.helpers";
+import {
+  SURGE_MIN_REPORTERS,
+  SURGE_MIN_REPORTS,
+  type ModReportCluster,
+} from "../moderationQueue.types";
 
 export interface ModQueueData {
   /** Live rows carry `createdAt` so the age renders localized per locale
    *  (FE-ADM-26) and "oldest" is a real comparison (FE-ADM-29); the demo seed's
    *  plain `ModReport` rows stay assignable through the optional field. */
   open: ModReportView[];
+  /**
+   * ALWAYS EMPTY since TS-11, and kept on the shape rather than deleted so the
+   * queue's optimistic-row machinery keeps one type for both tabs.
+   * `useAppealsQueue` owns the appeals rows now: they page on their own keyset,
+   * ordered by the published decision deadline, and reading them here meant
+   * they loaded exactly once, on page one of the REPORTS cursor. The header's
+   * appeal count still comes from `counts` below, which the reports endpoint
+   * returns.
+   */
   appeals: AppealView[];
   /** Live rows carry `closedAt` for the same reason: the "Closed …" line is
    *  formatted per locale at render time (`closedLabelOf`). */
   resolved: ResolvedItemView[];
   counts: { open: number; appeals: number; resolved: number };
+  /** TS-06: the piles behind the open rows. Live rows carry the server's
+   *  counts over every open report about the subject; demo mode derives them
+   *  from the seed, where the seed is the whole world. */
+  clusters: ModReportCluster[];
 }
 
 /** One fetched page. Only the OPEN queue pages: appeals and the resolved tab
@@ -47,7 +66,8 @@ interface ModQueuePage extends ModQueueData {
  *  and "Emergencies" narrow the WHOLE queue instead of whatever landed on the
  *  first page. `computeCounts()` is filter-independent server-side, so the tab
  *  counts stay true totals either way. */
-export type ModQueueFilter = "all" | "emergencies" | "mine";
+export type ModQueueFilter =
+  "all" | "emergencies" | "mine" | "overdue" | "surge";
 
 /** The opaque keyset cursor `GET /mod/reports` returns; absent on page one. */
 type ModCursor = string | undefined;
@@ -55,15 +75,27 @@ type ModCursor = string | undefined;
 /** Stable demo seed — module constants so refetches don't clobber optimistic edits. */
 const DEMO_OPEN: ModReportView[] = [...EMERGENCY_REPORTS, ...OTHER_REPORTS];
 
+const DEMO_CLUSTERS: ModReportCluster[] = clustersFromRows(
+  DEMO_OPEN,
+  SURGE_MIN_REPORTS,
+  SURGE_MIN_REPORTERS,
+);
+
+// The appeals TAB COUNT in demo mode. The rows themselves come from
+// `useAppealsQueue`; only the header number lives here, mirroring live mode,
+// where the count rides on the reports response and the rows do not.
+const DEMO_APPEAL_COUNT = APPEALS.length;
+
 const DEMO_DATA: ModQueueData = {
   open: DEMO_OPEN,
-  appeals: APPEALS,
+  appeals: [],
   resolved: RESOLVED,
   counts: {
     open: DEMO_OPEN.length,
-    appeals: APPEALS.length,
+    appeals: DEMO_APPEAL_COUNT,
     resolved: RESOLVED.length,
   },
+  clusters: DEMO_CLUSTERS,
 };
 
 /**
@@ -91,6 +123,7 @@ const DEMO_DATA: ModQueueData = {
 export function useModReports(
   subjectId?: string,
   filter: ModQueueFilter = "all",
+  community?: string,
 ) {
   const { demoMode } = useDemoMode();
   // The adapters resolve catalog keys (reason label, triage category, "X
@@ -108,7 +141,14 @@ export function useModReports(
     QueryKey,
     ModCursor
   >({
-    queryKey: ["mod-reports", demoMode, subjectId ?? null, filter, language],
+    queryKey: [
+      "mod-reports",
+      demoMode,
+      subjectId ?? null,
+      filter,
+      community ?? null,
+      language,
+    ],
     initialPageParam: undefined,
     // Demo seeds synchronously so the queue never flashes an empty "caught up".
     initialData:
@@ -135,9 +175,18 @@ export function useModReports(
         );
         return {
           open,
-          appeals: APPEALS,
+          appeals: [],
           resolved: [],
-          counts: { open: open.length, appeals: APPEALS.length, resolved: 0 },
+          counts: {
+            open: open.length,
+            appeals: DEMO_APPEAL_COUNT,
+            resolved: 0,
+          },
+          clusters: clustersFromRows(
+            open,
+            SURGE_MIN_REPORTS,
+            SURGE_MIN_REPORTERS,
+          ),
           nextCursor: null,
         };
       }
@@ -154,6 +203,7 @@ export function useModReports(
             sort: "priority",
             subjectId,
             filter: serverFilter,
+            community,
             cursor,
           }),
           loadModerationTranslate(language),
@@ -163,18 +213,24 @@ export function useModReports(
           appeals: [],
           resolved: [],
           counts: more.counts,
+          clusters: more.clusters.map(modReportClusterDtoToView),
           nextCursor: more.pageInfo.hasMore ? more.pageInfo.nextCursor : null,
         };
       }
-      const [reports, appeals, resolved, t] = await Promise.all([
+      const [reports, resolved, t] = await Promise.all([
         getModReports({
           tab: "open",
           sort: "priority",
           subjectId,
           filter: serverFilter,
+          community,
         }),
-        getAppeals(),
-        getModReports({ tab: "resolved", sort: "priority", subjectId }),
+        getModReports({
+          tab: "resolved",
+          sort: "priority",
+          subjectId,
+          community,
+        }),
         loadModerationTranslate(language),
       ]);
       // Canonical cursor-page envelope: rows live under `.data`, real per-tab
@@ -183,9 +239,10 @@ export function useModReports(
       // drives the queue's "Load more".
       return {
         open: reports.data.map((dto) => modReportDtoToView(dto, t)),
-        appeals: appeals.map(appealDtoToView),
+        appeals: [],
         resolved: resolved.data.map((dto) => resolvedDtoToView(dto, t)),
         counts: reports.counts,
+        clusters: reports.clusters.map(modReportClusterDtoToView),
         nextCursor: reports.pageInfo.hasMore
           ? reports.pageInfo.nextCursor
           : null,
@@ -202,11 +259,25 @@ export function useModReports(
   const data = useMemo<ModQueueData | undefined>(() => {
     if (!pages) return undefined;
     const first = pages[0]!;
+    // Clusters are per-page: page two brings the piles behind ITS rows, and a
+    // pile that spans both pages is described identically by both (the server
+    // counts over every open report, not over the page). De-duplicated by
+    // subject so the later page's copy wins, which is the fresher read.
+    const clustersByKey = new Map<string, ModReportCluster>();
+    for (const page of pages) {
+      for (const cluster of page.clusters) {
+        clustersByKey.set(
+          `${cluster.subjectType}:${cluster.subjectId}`,
+          cluster,
+        );
+      }
+    }
     return {
       open: pages.flatMap((page) => page.open),
       appeals: first.appeals,
       resolved: first.resolved,
       counts: pages[pages.length - 1]!.counts,
+      clusters: [...clustersByKey.values()],
     };
   }, [pages]);
 

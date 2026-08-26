@@ -1,4 +1,4 @@
-import type { EventFilter } from "./events.api";
+import type { EventBrowseFilters, EventFilter } from "./events.api";
 
 /**
  * Per-domain react-query key factory for the events domain.
@@ -22,8 +22,35 @@ export const eventKeys = {
 
   /** Prefix matching every events-list query (any filter, any mode). */
   listRoot: ["events"] as const,
-  list: (filter: EventFilter | undefined, demoMode: boolean) =>
-    ["events", filter, demoMode] as const,
+  /**
+   * The browse filters (LOC-17) are part of the key because they change WHICH
+   * rows the server returns: a change has to start a fresh infinite query
+   * rather than append a differently-filtered page 2 onto pages fetched under
+   * the old filter. An unfiltered call produces the same key it always did, so
+   * the hub's own `filter=upcoming` fetch and an unfiltered browse still share
+   * one request.
+   */
+  list: (
+    filter: EventFilter | undefined,
+    demoMode: boolean,
+    browse?: EventBrowseFilters,
+  ) =>
+    [
+      "events",
+      filter,
+      demoMode,
+      ...(browse && Object.values(browse).some(Boolean) ? [browse] : []),
+    ] as const,
+
+  /** Prefix matching every announcements query (any slug, any mode). */
+  announcementsRoot: ["event-announcements"] as const,
+  announcements: (slug: string | undefined, demoMode: boolean) =>
+    ["event-announcements", slug, demoMode] as const,
+
+  /** Prefix matching every event-bans query (any slug, any mode). */
+  bansRoot: ["event-bans"] as const,
+  bans: (slug: string | undefined, demoMode: boolean) =>
+    ["event-bans", slug, demoMode] as const,
 
   /** Prefix matching every attendees query (any slug, any mode). */
   attendeesRoot: ["attendees"] as const,

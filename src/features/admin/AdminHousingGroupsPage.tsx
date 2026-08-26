@@ -26,9 +26,11 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * them. Sourced from moderator/admin-only endpoints that 403 for anyone else;
  * demo mode is an honest empty queue and empty table (see adminHousingGroups.data.ts).
  *
- * FOLLOW-UP: the co-op relocation queue (coop_relocation_requests, shipped by the
- * community agent's admin relocation routes) has no admin UI yet — a separate,
- * clearly-scoped panel, deliberately deferred to keep this page focused.
+ * The co-op relocation queue this comment used to defer has been REMOVED, not
+ * deferred: `coop_relocation_requests` never had a submission affordance, so no
+ * member could ever file one and the table was always empty. Building a console
+ * for it would have been a second triage pipeline alongside the live one in
+ * `src/intakes/`. If the need becomes real, it belongs there as an intake kind.
  */
 export function AdminHousingGroupsPage() {
   const { t } = useTranslation();

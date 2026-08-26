@@ -70,9 +70,16 @@
 .pWho {
   min-width: 0;
 }
-.pMenu {
+/* Byline-row trailing controls: the copy-permalink button, then the actions
+   kebab. One flex row so the two sit together and the group is pushed to the
+   end of the header, which is what the old single-child `.pMenu` did before
+   the copy control joined it. */
+.pActions {
   margin-left: auto;
   flex: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 .pName {
   font-size: 14px;

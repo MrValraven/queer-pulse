@@ -143,10 +143,24 @@ export interface PieceEventEntryDto {
 /** `MagazinePayment.status` — mirrors backend `PaymentStatus`. */
 export type PaymentStatus = "agreed" | "approved_unpaid" | "paid";
 
-/** The 1:1 payment row for a piece — mirrors `PaymentResponse`. */
+/**
+ * The 1:1 payment row for a piece — mirrors `PaymentResponse`.
+ *
+ * CON-18 — `fee` and `expenses` are DECIMAL STRINGS off Postgres `numeric`
+ * ("420.00"), `null` when that field has never been priced. Keep them
+ * strings: `Number("0.1") + Number("0.2")` is not 0.3, and these are the
+ * figures an issue's cost is built from. Totals come from the server.
+ */
 export interface PaymentDto {
-  fee: string;
+  /** ISO 4217 code both amounts are in. */
+  currency: string;
+  fee: string | null;
+  /** The fee as the desk originally wrote it, when it says more than the amount. */
+  feeText: string | null;
   expenses: string | null;
+  /** The expenses as the desk originally wrote them ("18 travel"). */
+  expensesText: string | null;
+  /** An invoice REFERENCE ("INV-2026-084"), never an amount. */
   invoice: string | null;
   filedOn: string | null;
   terms: string;
@@ -339,6 +353,16 @@ export interface ArticleDraftDto {
   metaDescription: string;
   socialImage: string;
   canonicalUrl: string;
+  /**
+   * CON-04 — the piece's lead art, served as a RESOLVED `/files/<key>` URL so
+   * the editor's upload field can render it (a bare storage key is not
+   * fetchable). `null` while the desk has commissioned no art.
+   *
+   * Saved back as `heroImageKey` below: the backend collapses our own resolved
+   * URL to the bare key before persisting, so re-sending this value verbatim
+   * is a no-op. Same round-trip the community cover editor uses.
+   */
+  heroImageUrl: string | null;
   tags: string[];
   contentNotes: string[];
   blocks: ArticleBlock[];
@@ -366,7 +390,14 @@ export type UpdateArticleDraftDto = Partial<
     | "contentNotes"
     | "blocks"
   >
->;
+> & {
+  /**
+   * CON-04 — the lead art. Named for what is STORED (a storage key), while the
+   * read above is named for what is served (a URL); either shape is accepted
+   * on the wire and the backend normalises it. `""` clears the art.
+   */
+  heroImageKey?: string;
+};
 
 // ── Admin request bodies ─────────────────────────────────────────────────
 // Bodies for the editor-only `AdminMagazinePiecesController` endpoints
@@ -435,10 +466,21 @@ export type UpdatePieceDto = Omit<Partial<CreatePieceDto>, "issueId"> & {
   issueId?: string | null;
 };
 
-/** Body of `PATCH /magazine/admin/pieces/:id/payment` — every field patchable. */
+/**
+ * Body of `PATCH /magazine/admin/pieces/:id/payment` — every field patchable.
+ *
+ * CON-18 — `fee`/`expenses` are plain amounts ("420" or "420.50"), no
+ * currency mark and no words; the backend rejects anything else. The currency
+ * goes in `currency`, and anything the desk wants to say beyond the number
+ * goes in `feeText`/`expensesText`. An empty string clears an amount.
+ */
 export interface UpdatePaymentDto {
   fee?: string;
+  feeText?: string;
   expenses?: string;
+  expensesText?: string;
+  /** Three-letter ISO 4217 code, e.g. "EUR". */
+  currency?: string;
   invoice?: string;
   filedOn?: string;
   terms?: string;

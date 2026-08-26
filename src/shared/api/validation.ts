@@ -159,8 +159,30 @@ export const validateAuthUser: ResponseValidator<AuthUser> = (data) => {
       )
     : [];
 
+  // `policyVersions` (ID-14) is normalised rather than asserted, for the same
+  // reason as `staffRoles`: a backend that predates the field, or one that
+  // sends a half-shaped object, must not 422 every gated route — it should just
+  // mean "no re-acceptance signal", which the gate reads as "nothing to ask".
+  // Anything that is not a complete, well-typed pair is dropped entirely.
+  data.policyVersions = isValidPolicyVersions(data.policyVersions)
+    ? data.policyVersions
+    : undefined;
+
   return data as unknown as AuthUser;
 };
+
+/** True only for a complete, well-typed `AuthUser["policyVersions"]`. */
+function isValidPolicyVersions(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  const isVersionOrNull = (field: unknown) =>
+    field === null || typeof field === "string";
+  return (
+    typeof value.currentTerms === "string" &&
+    typeof value.currentGuidelines === "string" &&
+    isVersionOrNull(value.acceptedTerms) &&
+    isVersionOrNull(value.acceptedGuidelines)
+  );
+}
 
 const VISIBILITIES = ["open", "network", "private"] as const;
 
@@ -189,7 +211,16 @@ export const validateProfile: ResponseValidator<ProfileDTO> = (data) => {
 };
 
 const TINTS = ["coral", "jade", "plum"] as const;
-const SAFE_SPACE_STATUSES = ["none", "verified", "removed"] as const;
+// Four values, not three: "suspended" is a granted badge the platform has put
+// on hold pending review. The server derives it per card, so a validator that
+// only knew the three stored values would reject an entirely valid directory
+// page the moment one badge was suspended.
+const SAFE_SPACE_STATUSES = [
+  "none",
+  "verified",
+  "suspended",
+  "removed",
+] as const;
 
 /**
  * Assert one directory card's required shape in place, prefixing the field path
@@ -264,12 +295,14 @@ const SEARCH_RESULT_TYPES = [
   "community",
   "event",
   "forum",
+  // A single forum REPLY, distinct from "forum" (a thread). Search reaches
+  // into post bodies since SOC-08, so a reply is now its own result type.
+  "forumPost",
   "business",
   "magazine",
   "job",
   "housing",
   "resource",
-  "workshop",
   "subprofile",
   "topic",
 ] as const;

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
+import { routes } from "../../app/routeMap";
 import { Button, Outro, SubpageIndex } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
@@ -127,6 +128,15 @@ export function ResourceLibraryPage() {
               </Button>
             </div>
           )}
+
+          {/* CON-10: the library grid only ever linked the guides whose
+              cards it renders. This reaches the full index, including the
+              guides that had no inbound link anywhere in the app. */}
+          <div className={s.loadMore}>
+            <Button to={routes.guideIndex} variant="ghost">
+              {t("resources:guideIndex.linkCta")}
+            </Button>
+          </div>
 
           <SuggestEditTrigger
             subjectOptions={guides.map((guide) => guide.title)}

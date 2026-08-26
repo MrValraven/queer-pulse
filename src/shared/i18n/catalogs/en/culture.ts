@@ -134,7 +134,7 @@ export const culture: Catalog = {
     "We've received your nomination. The community decides what we read, watch and listen to next.",
   "suggestPick.success.step1": "It joins the ballot for the last-Sunday vote.",
   "suggestPick.success.step2":
-    "We don't send a results email yet, so check back here after the vote.",
+    "The result is posted here on this page after the vote.",
 
   // ── Post a project modal ───────────────────────────────────────────────
   "postProject.title": "Post a <em>project</em>",
@@ -152,7 +152,7 @@ export const culture: Catalog = {
     "We've received your project. The board is still small, so posts aren't matched automatically yet.",
   "postProject.success.step1": "It's saved and visible to our team.",
   "postProject.success.step2":
-    "We'll reach out by email if a collaborator wants to move forward.",
+    "A curator replies as a QueerPulse message if a collaborator wants to move forward.",
 
   // ── Submit your work modal ─────────────────────────────────────────────
   "submitWork.title": "Submit your <em>work</em>",
@@ -171,7 +171,8 @@ export const culture: Catalog = {
   "submitWork.success.body":
     "We've received your work. The showcase rotates eight pieces at a time, chosen by the community.",
   "submitWork.success.step1": "It's saved for the showcase queue.",
-  "submitWork.success.step2": "We'll reach out by email if it's selected.",
+  "submitWork.success.step2":
+    "A curator replies as a QueerPulse message if it's selected.",
 
   // ── Submit a playlist modal ─────────────────────────────────────────────
   "submitPlaylist.eyebrow": "Community Radio",
@@ -192,7 +193,7 @@ export const culture: Catalog = {
     "We've received your playlist. We rotate guest DJs so the sound stays human.",
   "submitPlaylist.success.step1": "It's saved here for a curator to consider.",
   "submitPlaylist.success.step2":
-    "We'll reach out by email if we can book you a slot.",
+    "A curator replies as a QueerPulse message if we can book you a slot.",
 
   // ── Commission interest modal ───────────────────────────────────────────
   "commissionInterest.errorToast":
@@ -211,7 +212,7 @@ export const culture: Catalog = {
     "We'll connect you with {name} if they'd like to take it further.",
   "commissionInterest.success.step1": "{name} can see your note and profile.",
   "commissionInterest.success.step2":
-    "If they want to move forward, we'll introduce you by email.",
+    "If they want to move forward, the introduction happens as a QueerPulse message.",
   "commissionInterest.success.step3":
     "No pressure either way. Collaborations here are always a yes from both sides.",
 
@@ -241,4 +242,15 @@ export const culture: Catalog = {
   "options.vibe.dancefloor": "Dancefloor",
   "options.vibe.healing": "Healing",
   "options.vibe.nostalgic": "Nostalgic",
+
+  // ── Live-mode not-launched page (CultureComingSoon, CON-14) ──────────────
+  // Every tab's listing is demo-only curated content with no publishing
+  // pipeline behind it, so live mode resolves /magazine/culture here and the
+  // meganav entry is dropped.
+  "comingSoon.metaTitle": "Culture: coming soon to QueerPulse",
+  "comingSoon.title": "Culture is still being put together",
+  "comingSoon.description":
+    "The club picks, the commission board, the art showcase and community radio are still being built, and there is nothing published there yet. In the meantime the magazine is running, and our communities are where the scene is being organised.",
+  "comingSoon.magazineCta": "Read the magazine",
+  "comingSoon.communitiesCta": "Browse communities",
 };

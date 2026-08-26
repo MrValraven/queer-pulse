@@ -4,6 +4,7 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useShareLink } from "../../shared/hooks";
 import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSaved } from "../../app/providers/useSaved";
 import { businessPath, routes } from "../../app/routeMap";
 import {
@@ -21,8 +22,8 @@ interface Props {
 }
 
 /** Same coords fallback order the map card and the nearby strip use. */
-function directionsHref(place: DirectoryPlace): string {
-  const coords = placeCoordinates(place);
+function directionsHref(place: DirectoryPlace, demoMode: boolean): string {
+  const coords = placeCoordinates(place, demoMode);
   return coords
     ? `https://www.google.com/maps/dir/?api=1&destination=${coords.latitude},${coords.longitude}`
     : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place.address)}`;
@@ -64,6 +65,7 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
     failed: t("marketing:directory.detail.action.shareError"),
   });
   const { user } = useAuth();
+  const { demoMode } = useDemoMode();
   const { isSaved, toggleSave } = useSaved();
   const [sharing, setSharing] = useState(false);
 
@@ -114,7 +116,7 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
         <Button
           variant="primary"
           className={s.actionBarBtn}
-          href={directionsHref(place)}
+          href={directionsHref(place, demoMode)}
           target="_blank"
           rel="noopener noreferrer"
         >

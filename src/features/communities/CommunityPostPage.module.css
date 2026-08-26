@@ -1,0 +1,61 @@
+/* The single-post permalink page. Deliberately narrow: one post and its
+   replies are the whole page, so the column is capped rather than stretched
+   across a desktop width the Pulse timeline never uses either. */
+.body {
+  padding: 52px 0 100px;
+  background: var(--cream);
+}
+
+.back {
+  margin-bottom: 18px;
+}
+
+.heading {
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--text-strong);
+  margin: 0 0 20px;
+}
+
+/* Skeleton shell, matching the paper card `PulseTab.module.css` gives a real
+   post, so the swap from placeholder to content does not shift the layout. */
+.card {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+
+.skeletonHead {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+/* Mirrors the Pulse tab's own read-only notice, so a non-member sees the same
+   framing here that they see on the timeline. */
+.joinHint {
+  margin: 22px 0 0;
+  background: rgba(var(--line-rgb), 0.05);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.14);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}
+
+@media (max-width: 700px) {
+  .body {
+    padding: 32px 0 72px;
+  }
+  .heading {
+    font-size: 22px;
+  }
+}

@@ -32,7 +32,9 @@ import {
   getAdminFlagged,
   getAdminMember,
   getAdminMembers,
+  getMemberRestriction,
   grantStaffRole,
+  liftMemberRestriction,
   liftUserSuspension,
   patchAdminMemberRole,
   restrictMember,
@@ -41,6 +43,8 @@ import {
   type AdminMemberRoleDTO,
   type AdminStaffRolesDTO,
   type CitedMemberDTO,
+  type LiftRestrictionInput,
+  type MemberRestrictionDTO,
   type MemberRole,
   type RestrictedMemberDTO,
   type RestrictMemberInput,
@@ -277,6 +281,59 @@ export function useLiftSuspension() {
     live: async ({ memberId }) => {
       await liftUserSuspension(memberId);
     },
+    onLiveSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
+    },
+  });
+}
+
+/**
+ * A member's live scoped restriction, so the drawer only offers a lift when
+ * there is one in force.
+ *
+ * `restricted` is not carried on any other admin DTO, so this is its own small
+ * read. Demo mode answers "not restricted" without touching the network: the
+ * fixtures model suspension, not the scoped restriction, and inventing one
+ * would put a control in the demo that maps to nothing.
+ */
+export function useMemberRestriction(memberId: string) {
+  const { demoMode } = useDemoMode();
+  return useQuery<MemberRestrictionDTO>({
+    queryKey: ["admin-members", "restriction", memberId],
+    queryFn: () => getMemberRestriction(memberId),
+    enabled: !demoMode && Boolean(memberId),
+    initialData: demoMode
+      ? { id: memberId, restricted: false, restrictedUntil: null }
+      : undefined,
+  });
+}
+
+/**
+ * Lift a member's scoped restriction (TS-09) — the way back out of a `restrict`
+ * that did not exist before.
+ *
+ * Demo mode resolves synthetically. Live mode calls
+ * `PATCH /admin/members/:id/restriction`, which is idempotent and tells the
+ * member. On success the shared `["admin-members"]` prefix is invalidated, so
+ * both this member's restriction read and the roster re-read.
+ */
+export function useLiftRestriction() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<
+    MemberRestrictionDTO,
+    unknown,
+    { memberId: string; input: LiftRestrictionInput }
+  >({
+    demoMode,
+    demoLatencyMs: 0,
+    mutationKey: ["admin-members", "lift-restriction"],
+    demoResult: ({ memberId }) => ({
+      id: memberId,
+      restricted: false,
+      restrictedUntil: null,
+    }),
+    live: ({ memberId, input }) => liftMemberRestriction(memberId, input),
     onLiveSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["admin-members"] });
     },

@@ -170,7 +170,7 @@ export function CreateGatheringPage() {
 
               {published && (
                 <CreateGatheringSuccess
-                  access={form.access}
+                  accessibilityAnswers={form.accessibilityAnswers}
                   createdSlug={createdSlug}
                 />
               )}

@@ -5,6 +5,9 @@ import { type Reply, type ReplySortId } from "./forum.data";
 import { type ReplyNode } from "./buildReplyTree";
 import { ReplySortBar, ThreadReplies } from "./ThreadReplies";
 import { ThreadComposer } from "./ThreadComposer";
+import { replyDraftId } from "./api/forumDrafts.api";
+import type { StagedPostImage } from "../communities/usePostImageAttach";
+import { thread as threadPath } from "../../app/routeMap";
 import { type useThreadModeration } from "./useThreadModeration";
 import { type useNestedReplyComposer } from "./useNestedReplyComposer";
 import styles from "./ThreadPage.module.css";
@@ -36,9 +39,13 @@ export function ThreadReplySection({
   moderation,
   nestedReplies,
   authorName,
+  threadSlug,
+  threadTitle,
   reply,
   setReply,
   onPost,
+  onAcceptAnswer,
+  onQuote,
   textareaRef,
 }: {
   sort: ReplySortId;
@@ -66,9 +73,25 @@ export function ThreadReplySection({
   moderation: ReturnType<typeof useThreadModeration>;
   nestedReplies: ReturnType<typeof useNestedReplyComposer>;
   authorName: string;
+  /** The thread's backend slug, keying its autosaved reply draft. Undefined on
+   *  a demo mock thread, where the draft falls back to the numeric id. */
+  threadSlug: string | undefined;
+  /** Row title on the member's drafts list, so a recovered reply says which
+   *  conversation it belongs to. */
+  threadTitle: string;
   reply: string;
   setReply: (v: string) => void;
-  onPost: (body: string, parentPostId?: string | null) => void;
+  onPost: (
+    body: string,
+    parentPostId?: string | null,
+    image?: StagedPostImage,
+  ) => void;
+  /** Mark this reply as the thread's answer, or clear the mark. Omitted for a
+   *  viewer who is neither the thread's author nor a moderator, which is what
+   *  hides the action. */
+  onAcceptAnswer?: (replyItem: Reply) => void;
+  /** Start a reply that quotes this one. */
+  onQuote: (replyItem: Reply) => void;
   textareaRef: RefObject<HTMLTextAreaElement | null>;
 }) {
   return (
@@ -108,7 +131,11 @@ export function ThreadReplySection({
         activeReplyTargetId={nestedReplies.replyTargetId}
         onStartReply={(replyItem) => nestedReplies.startReply(replyItem.id)}
         onCancelReply={nestedReplies.cancelReply}
-        onPostReply={(body) => onPost(body, nestedReplies.replyTargetId)}
+        onPostReply={(body, image) =>
+          onPost(body, nestedReplies.replyTargetId, image)
+        }
+        onAcceptAnswer={onAcceptAnswer}
+        onQuote={onQuote}
         onReport={(replyItem) =>
           // Report the reply's REAL backend post (`postId`); demo replies carry
           // no postId, so fall back to the local id (demo never hits the network).
@@ -129,8 +156,13 @@ export function ThreadReplySection({
           authorName={authorName}
           reply={reply}
           setReply={setReply}
-          onPost={onPost}
+          onPost={(body, image) => onPost(body, null, image)}
           textareaRef={textareaRef}
+          draft={{
+            draftId: replyDraftId(threadSlug ?? "unsaved"),
+            title: threadTitle,
+            href: threadPath(threadSlug ?? ""),
+          }}
         />
       )}
     </>

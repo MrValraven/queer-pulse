@@ -346,3 +346,26 @@
 .sheetActions > * {
   flex: 1;
 }
+
+/* ── Access needs ──────────────────────────────────────────────────────────
+   A real fieldset, so the six questions are announced as one named group.
+   The browser's default fieldset chrome is dropped; the legend keeps the same
+   uppercase treatment as the other group labels in this bar. */
+.accessGroup {
+  margin: 14px 0 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+.accessNote {
+  margin: 0 0 9px;
+  max-width: 46ch;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+.accessChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

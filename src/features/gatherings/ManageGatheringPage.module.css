@@ -252,6 +252,14 @@
   color: var(--jade);
   font-weight: 700;
 }
+/* "10 people going" under a seat count that reads higher, so a host can see
+   at a glance that the difference is declared guests rather than a bug. */
+.capNote {
+  display: block;
+  color: var(--ink-40);
+  font-size: 12px;
+  margin-top: 2px;
+}
 .capBar {
   height: 8px;
   background: rgba(var(--plum-rgb), 0.08);

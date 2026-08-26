@@ -1,4 +1,6 @@
 import { memberProfiles } from "./data/memberProfiles";
+import { compareActivityBands, type ActivityBand } from "./activityBand";
+import { demoBandForSlug } from "./activityBand.data";
 import { OPEN_TO_PRESETS, openToPresetIds, type OpenToId } from "./openTo.data";
 
 export interface ChipOption {
@@ -46,6 +48,11 @@ export interface MemberCard {
   joinedRank: number;
   vouchCount: number;
   mutualsCount: number;
+  /** Coarse "recently active" band, or `null`/absent when the member opted out
+   *  or the platform has never observed a session for them. See
+   *  `activityBand.ts`: `null` renders as nothing at all, never as "not active
+   *  recently". */
+  activityBand?: ActivityBand | null;
 }
 
 /** The filter's checkbox rows — now the same vocabulary the profile chips use.
@@ -686,6 +693,9 @@ function buildMembers(): MemberCard[] {
       joinedRank: count - i,
       vouchCount,
       mutualsCount,
+      // Demo only. Live cards carry the real band off the wire; see
+      // `cardDtoToMemberCard`.
+      activityBand: demoBandForSlug(slug),
     });
   }
   return out;
@@ -695,15 +705,22 @@ function buildMembers(): MemberCard[] {
  *  page of these at a time. */
 export const MEMBERS: MemberCard[] = buildMembers();
 
-// "Recently active" is deliberately absent: the backend tracks no last-active
-// timestamp, so in live mode it could only ever be a no-op (which is exactly the
-// "sort does nothing" bug it caused). Sorting is server-side in live mode, so a
-// key with no real ordering must not exist. "Recently joined" is the default.
+// "Recently active" orders by the coarse activity band, which is a MONTH under
+// the hood and three buckets on the wire (see activityBand.ts). It is a real
+// server-side ordering in live mode and a band comparison in demo mode, so the
+// key earns its place in this list. Members who opted out and members the
+// platform has never observed carry no ordering value and land at the end.
+// "Recently joined" is still the default.
 export type SortKey =
-  "Recently joined" | "Closest mutuals" | "A to Z" | "Most vouched";
+  | "Recently joined"
+  | "Recently active"
+  | "Closest mutuals"
+  | "A to Z"
+  | "Most vouched";
 
 export const SORTS: SortKey[] = [
   "Recently joined",
+  "Recently active",
   "Closest mutuals",
   "A to Z",
   "Most vouched",
@@ -715,6 +732,7 @@ export const SORTS: SortKey[] = [
  *  is translated. */
 export const SORT_LABEL_KEY: Record<SortKey, string> = {
   "Recently joined": "members:directory.sort.recentlyJoined",
+  "Recently active": "members:directory.sort.recentlyActive",
   "Closest mutuals": "members:directory.sort.closestMutuals",
   "A to Z": "members:directory.sort.aToZ",
   "Most vouched": "members:directory.sort.mostVouched",
@@ -725,6 +743,7 @@ export const SORT_LABEL_KEY: Record<SortKey, string> = {
  *  and ignores this; live mode sends it and renders the server's order. */
 export const SORT_PARAM: Record<SortKey, string> = {
   "Recently joined": "recentlyJoined",
+  "Recently active": "recentlyActive",
   "Closest mutuals": "closestMutuals",
   "A to Z": "aToZ",
   "Most vouched": "mostVouched",
@@ -818,6 +837,15 @@ export function sortMembers(list: MemberCard[], sort: SortKey): MemberCard[] {
   switch (sort) {
     case "Recently joined":
       return out.sort((a, b) => a.joinedRank - b.joinedRank);
+    case "Recently active":
+      // Band order first, then the joined tiebreaker, so the many members who
+      // share a band keep a stable order. Demo only: live mode renders the
+      // server's page in the order it arrived.
+      return out.sort(
+        (a, b) =>
+          compareActivityBands(a.activityBand, b.activityBand) ||
+          a.joinedRank - b.joinedRank,
+      );
     case "Closest mutuals":
       return out.sort((a, b) => b.mutualsCount - a.mutualsCount);
     case "Most vouched":

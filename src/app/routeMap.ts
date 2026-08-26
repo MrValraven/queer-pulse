@@ -55,6 +55,9 @@ export function linkToPath(href: string): string {
 export const routes = {
   admin: "/admin",
   adminCommunities: "/admin/communities",
+  /** SOC-01: the topic directory console (`TopicsAdminPage`). Create, edit,
+   *  archive and delete the topics behind `/topics` and `/topic/:tag`. */
+  adminTopics: "/admin/topics",
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",
   adminMembers: "/admin/members",
@@ -73,7 +76,11 @@ export const routes = {
   adminMagazineSubmissions: "/admin/magazine-submissions",
   adminWriterApplications: "/admin/writer-applications",
   adminModeration: "/admin/moderation",
+  adminModResponseTemplates: "/admin/mod-response-templates",
   adminConcerns: "/admin/concerns",
+  /** ID-04: the data-subject request (DSAR) review queue. Statutory 30-day
+   *  clock per request, so the queue is sorted by deadline, never by arrival. */
+  adminDsar: "/admin/dsar",
   adminSafeSpaces: "/admin/safe-spaces",
   adminListings: "/admin/listings",
   adminMedia: "/admin/media",
@@ -82,14 +89,24 @@ export const routes = {
   adminRoadmap: "/admin/roadmap",
   adminHousingCoops: "/admin/housing",
   adminHousingGroups: "/admin/housing-groups",
+  /** LOC-19: pre-publication review of rooms posted into a vetted housing
+   *  group. Distinct from the post-publication hide on /admin/housing-groups. */
+  adminHousingGroupListings: "/admin/housing-group-listings",
+  adminHousingListings: "/admin/housing-listings",
+  /** LOC-19: landlord directory console (suggestions + introduction requests). */
+  adminLandlords: "/admin/landlords",
   adminVerifications: "/admin/verifications",
   adminOrgTiers: "/admin/org-tiers",
   adminResourceListings: "/admin/resource-listings",
+  /** CON-08/CON-09: the resource guide console — edit a guide's prose
+   *  and stamp its editorial review, stalest first. */
+  adminResourceGuides: "/admin/resource-guides",
   adminResourceSuggestions: "/admin/resource-suggestions",
   adminCommunityTagRequests: "/admin/community-tag-requests",
   adminPartnerApplications: "/admin/partner-applications",
   adminSettings: "/admin/settings",
   adminReports: "/admin/reports",
+  adminStatusIncidents: "/admin/status-incidents",
   about: "/about",
   account: "/account",
   accountProfile: "/account/profile",
@@ -109,6 +126,10 @@ export const routes = {
   /** CNT-20 — the section/topic browse page (`MagazineSectionsPage`); a
    *  section's filtered article list lives at `${magazineSections}/:section`. */
   magazineSections: "/magazine/sections",
+  /** CON-12 — the magazine's own search (`MagazineSearchPage`). Reads `?q=`
+   *  (free text over the published archive) and `?tag=` (every article
+   *  carrying one tag); the two combine. Tag pills link here. */
+  magazineSearch: "/magazine/search",
   barter: "/work/barter",
   businessDirectory: "/business-directory",
   calendar: "/calendar",
@@ -121,6 +142,11 @@ export const routes = {
   cinema: "/cinema",
   codeOfConduct: "/about/governance/code-of-conduct",
   collections: "/account/collections",
+  /** Public per-token page a shared saved list resolves to (`/lists/:token`,
+   *  declared in `members/routes.tsx`). Deliberately NOT under `/account`: the
+   *  backend's shared read is `@Public()`, so someone without an account has to
+   *  be able to open the link. Never in the sitemap. */
+  sharedSavedList: "/lists",
   comingOut: "/coming-out",
   communities: "/communities",
   startCommunity: "/communities/start",
@@ -168,6 +194,14 @@ export const routes = {
   qtipocArchive: "/resources/qtipoc-archive",
   disabilityHealthcare: "/resources/disability-healthcare",
   spoonTheory: "/resources/spoon-theory",
+  /** CON-10: the category-grouped index of EVERY guide route. Seventeen
+   *  guides had no `routes.*` reference anywhere and were reachable only by
+   *  typing the URL; this is what links them. */
+  guideIndex: "/resources/guides",
+  /** CON-08: the slug-addressable renderer for a database-managed guide.
+   *  Also the honest landing place for a guide whose curated route is
+   *  missing, instead of silently bouncing the reader to the library. */
+  resourceGuide: "/resources/guide",
   editProfile: "/account/edit-profile",
   employerReviews: "/work/employer-reviews",
   caregivers: "/caregivers",
@@ -211,6 +245,9 @@ export const routes = {
   deckEditor: "/magazine/editor/deck",
   magazinePiece: "/magazine/editor/piece/:id",
   magazineIssueProd: "/magazine/editor/issue/:number",
+  /** CON-16 — the content lifecycle desk: what the published archive is still
+   *  telling readers, and which pieces are due a promised re-review. */
+  magazineLifecycle: "/magazine/editor/lifecycle",
   magazineWrite: "/magazine/editor/write/:id",
   map: "/local/map",
   members: "/members",
@@ -252,7 +289,6 @@ export const routes = {
   sexualHealth: "/resources/sexual-health",
   signIn: "/auth/sign-in",
   simulations: "/simulations",
-  skills: "/work/skills",
   sober: "/resources/sober",
   solidarity: "/work/solidarity",
   spacesMap: "/spaces-map",
@@ -288,6 +324,11 @@ export const routes = {
   terms: "/policies/terms",
   transHealthcare: "/resources/trans-healthcare",
   transHub: "/resources/trans-hub",
+  /** The public Transparency Report, the document Article VI clause 3 of the
+   *  Constitution names. Sits under `/about/governance` alongside the
+   *  Constitution and the Code of Conduct because it is a governing document,
+   *  and it is public for the same reason they are. */
+  transparencyReport: "/about/governance/transparency",
   visas: "/local/visas",
   volunteer: "/about/volunteer",
   postVolunteer: "/about/volunteer/post",

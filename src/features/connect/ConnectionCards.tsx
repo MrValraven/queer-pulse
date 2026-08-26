@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useStaffMap } from "../../shared/staff/useStaffRole";
 import { reasonLabel } from "./connectModal.data";
 import { ConnectionMoreMenu } from "./ConnectionMoreMenu";
+import { ConnectionNoteEditor } from "./ConnectionNoteEditor";
 import {
   profilePath,
   vouchBadgeLabelKey,
@@ -147,6 +148,34 @@ function ConnectionMeta({ view }: { view: ConnectionView }) {
   );
 }
 
+/**
+ * Why this person reached out, shown back on the connection it became.
+ *
+ * The reason was captured when the request was sent and then disappeared the
+ * moment it was accepted, which is exactly when a member starts needing it:
+ * "who is this again?" is answered by "they wrote to you about the choir".
+ * `isRequestedByYou` decides the wording, since after acceptance both sides
+ * read as simply connected.
+ */
+function AcceptedRequestReason({ view }: { view: ConnectionView }) {
+  const { t } = useTranslation();
+  const reason = reasonLabel(view.meta.requestReason, t);
+  if (!reason) return null;
+  return (
+    <p className={styles.reqReason}>
+      <Translation
+        i18nKey={
+          view.meta.isRequestedByYou
+            ? "connect:card.reasonYouAsked"
+            : "connect:card.reasonTheyAsked"
+        }
+        components={{ b: <b /> }}
+        values={{ reason, name: view.name.split(" ")[0] ?? view.name }}
+      />
+    </p>
+  );
+}
+
 export function AllConnectionCard({
   view,
   blocked,
@@ -173,6 +202,14 @@ export function AllConnectionCard({
       )}
       <ConnectionTags tags={view.tags} />
       <ConnectionMeta view={view} />
+      {!blocked && (
+        <>
+          <AcceptedRequestReason view={view} />
+          {/* The member's own private jotting. Never visible to the other
+              party: the server only reads a note back under its author. */}
+          <ConnectionNoteEditor view={view} />
+        </>
+      )}
       <div className={styles.actions}>
         {blocked ? (
           <Button type="button" variant="ghost" onClick={onUnblock}>

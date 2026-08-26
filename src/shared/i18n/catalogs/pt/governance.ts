@@ -43,6 +43,9 @@ export const governance: Catalog = {
   "governingDocs.codeOfConduct.label": "Código de Conduta",
   "governingDocs.codeOfConduct.blurb":
     "O que esperamos umas das outras, e o que acontece quando é violado.",
+  "governingDocs.transparency.label": "Relatório de Transparência",
+  "governingDocs.transparency.blurb":
+    "O que a moderação recebeu, o que fez e onde errou. Contado a cada trimestre.",
   "subpageIndex.eyebrow": "Documentos de governação",
   "subpageIndex.title": "Lê a letra pequena.",
 
@@ -77,6 +80,8 @@ export const governance: Catalog = {
   "sections.moderation.wontTolerate.label": "O que não toleramos:",
   "sections.moderation.wontTolerate.text":
     "Qualquer comportamento que faça alguém sentir-se inseguro ou não bem-vinde por causa da sua identidade, corpo, ou percurso. Assédio de qualquer tipo. Solicitação comercial sem autorização. Violação da privacidade de outra pessoa.",
+  "sections.moderation.transparencyLink":
+    "Os números por detrás deste processo são publicados a cada trimestre no <a>Relatório de Transparência</a>.",
 
   "steps.reportFiled.title": "Denúncia apresentada",
   "steps.reportFiled.text":
@@ -163,8 +168,13 @@ export const governance: Catalog = {
     "Há duas coisas nesta página decididas por voto da comunidade, não por decisão administrativa: encerrar um lugar no conselho consultivo exige dois terços dos votos, e aceitar financiamento fora das nossas fontes habituais exige maioria. Todas as propostas em aberto estão listadas aqui, e as anteriores continuam visíveis com o respetivo resultado.",
   "sections.proposals.type.council_removal": "Lugar no conselho",
   "sections.proposals.type.funding_change": "Mudança de financiamento",
+  "sections.proposals.type.member_motion": "Moção da comunidade",
   "sections.proposals.status.passed": "Aprovada",
   "sections.proposals.status.failed": "Não aprovada",
+  "sections.proposals.status.gathering": "A reunir apoio",
+  "sections.proposals.status.screening": "Em análise",
+  "sections.proposals.status.rejected": "Não foi a votos",
+  "sections.proposals.status.lapsed": "Sem assinaturas suficientes",
   "sections.proposals.targetSeat": "Lugar em avaliação: {name}",
   "sections.proposals.tallyCaption":
     "{forCount} a favor · {againstCount} contra · {forPercent}% a favor (linha dos dois terços marcada)",
@@ -176,6 +186,84 @@ export const governance: Catalog = {
   "sections.proposals.votedAgainst": "Votaste contra esta proposta.",
   "sections.proposals.resolvedHeading": "Propostas anteriores",
   "sections.proposals.empty": "Ainda não foi aberta nenhuma proposta.",
+
+  // ── Moções da comunidade (GOV-01) ───────────────────────────────────────
+  // Qualquer pessoa pode pôr algo a votos, por isso uma moção passa por
+  // três fases antes de existir uma votação: reúne assinaturas, a equipa
+  // analisa-a, e só então abre a votação. Cada cadeia abaixo nomeia a fase
+  // em que a moção está mesmo, porque uma moção ainda a reunir nomes nunca
+  // pode ler-se como uma votação que correu mal.
+  "sections.proposals.raisedBy": "Proposta por {name}",
+  "sections.proposals.tallyLabel": "Votos expressos",
+  "sections.proposals.gatheringHeading": "A reunir assinaturas",
+  "sections.proposals.votingHeading": "Em votação",
+
+  // Apresentar uma moção. A dica e o subtítulo dizem ambos o que acontece
+  // a seguir, porque um formulário que arruma a tua moção numa fila em
+  // silêncio é a forma mais rápida de a democracia aqui parecer decorativa.
+  "sections.proposals.compose.cta": "Pôr algo a votos",
+  "sections.proposals.compose.hint":
+    "Qualquer pessoa da comunidade pode apresentar uma moção. São precisas dez pessoas a apoiá-la antes de a equipa a analisar, e a tua conta como a primeira.",
+  "sections.proposals.compose.eyebrow": "Moção da comunidade",
+  "sections.proposals.compose.title": "Pôr algo a votos",
+  "sections.proposals.compose.sub":
+    "Isto não vai diretamente a votos. A tua moção reúne primeiro assinaturas de outras pessoas, depois a equipa analisa-a, e só então abre a votação.",
+  "sections.proposals.compose.titleField": "O que estás a propor?",
+  "sections.proposals.compose.titlePlaceholder":
+    "Uma linha, em palavras simples.",
+  "sections.proposals.compose.descriptionField": "Os argumentos",
+  "sections.proposals.compose.descriptionHelper":
+    "Diz o que deve mudar e porquê. As pessoas leem isto antes de decidirem se assinam.",
+  "sections.proposals.compose.descriptionPlaceholder":
+    "O que queres que mude, quem afeta, e o que acontece se nada mudar.",
+  "sections.proposals.compose.cancel": "Cancelar",
+  "sections.proposals.compose.submit": "Apresentar moção",
+  "sections.proposals.compose.submitting": "A apresentar…",
+  "sections.proposals.compose.successToast":
+    "Moção apresentada. Está agora a reunir assinaturas.",
+  "sections.proposals.compose.errorToast":
+    "Não foi possível apresentar a moção. Tenta novamente.",
+
+  // A recolha de assinaturas. `progress` recebe a contagem e o limiar;
+  // `progressComplete` recebe só a contagem, e serve tanto quando o limiar
+  // foi atingido como quando a moção não tem limiar nenhum.
+  "sections.proposals.cosign.progress":
+    "Assinaturas: {count} das {threshold} necessárias",
+  "sections.proposals.cosign.progressComplete": "Assinaturas: {count}",
+  "sections.proposals.cosign.cta": "Assinar esta moção",
+  "sections.proposals.cosign.withdrawCta": "Retirar a minha assinatura",
+  "sections.proposals.cosign.signed": "Assinaste esta moção.",
+  "sections.proposals.cosign.proposerNote":
+    "Levantaste esta moção, por isso a tua assinatura já é a primeira.",
+  "sections.proposals.cosign.signedInOnly":
+    "Inicia sessão para assinares esta moção.",
+  "sections.proposals.cosign.awaitingReview":
+    "Já há assinaturas suficientes. A equipa está a ler esta moção antes de abrir a votação.",
+  "sections.proposals.cosign.closes": "As assinaturas encerram {date}",
+  "sections.proposals.cosign.closed": "Assinaturas encerradas a {date}",
+  "sections.proposals.cosign.errorToast":
+    "Não foi possível guardar a tua assinatura. Tenta novamente.",
+
+  // O quórum é a participação, e é uma leitura separada da maioria de dois
+  // terços acima dele: uma proposta pode passar os dois terços dos votos
+  // expressos e mesmo assim ficar sem quórum por terem votado poucas
+  // pessoas. `missed` diz exatamente isso, para que uma proposta com pouca
+  // participação nunca se leia como uma que perdeu o argumento.
+  "sections.proposals.quorum.label": "Quórum",
+  "sections.proposals.quorum.pending":
+    "{totalVotes} dos {quorumRequired} votos necessários para o resultado contar",
+  "sections.proposals.quorum.met":
+    "{totalVotes} votos expressos, acima dos {quorumRequired} necessários para o resultado contar",
+  "sections.proposals.quorum.missed":
+    "Só foram expressos {totalVotes} dos {quorumRequired} votos necessários, por isso esta proposta ficou sem quórum.",
+
+  // Uma moção resolvida que nunca chegou a votação. O motivo da recusa é
+  // publicado para toda a gente, por isso a etiqueta fica neutra e factual.
+  "sections.proposals.outcome.lapsed":
+    "Esta moção reuniu {count} das {threshold} assinaturas de que precisava, por isso nunca chegou a votação.",
+  "sections.proposals.outcome.reviewedOn": "Analisada a {date}",
+  "sections.proposals.outcome.rejectedLabel":
+    "Porque é que isto não foi a votos",
 
   // ── Registo de decisões ─────────────────────────────────────────────────
   "sections.decisions.eyebrow": "Decisões recentes",
@@ -227,4 +315,120 @@ export const governance: Catalog = {
   // grelha vazia sem explicação.
   "error.body": "Não foi possível carregar esta secção neste momento.",
   "error.retry": "Tentar novamente",
+
+  // ── Relatório de Transparência (/about/governance/transparency) ─────────
+  // O documento que o artigo VI, cláusula 3, da Constituição nomeia. Todos os
+  // números vêm de `GET /transparency/report`; a cópia abaixo é da plataforma, e
+  // as chaves `category.*` / `action.*` / `outcome.*` são as etiquetas dos
+  // identificadores estáveis que esse endpoint envia.
+  "transparency.meta.title":
+    "Relatório de Transparência: números da moderação da QueerPulse",
+  "transparency.meta.description":
+    "Contado a cada trimestre: denúncias apresentadas e sobre o quê, quanto tempo demorou uma resposta, o que a moderação fez, recursos apresentados e quantas decisões foram revertidas.",
+
+  "transparency.hero.eyebrow": "Relatório de Transparência",
+  "transparency.hero.title": "O que a moderação <em>fez mesmo.</em>",
+  "transparency.hero.dek1":
+    "Todos os números desta página são contados a partir do registo vivo da moderação no momento em que a carregas. Nada é escrito à mão e nada é estimado. Quando um número seria pequeno o suficiente para descrever uma pessoa, é retido, e a página diz onde.",
+  "transparency.hero.dek2":
+    "O artigo VI da <a>Constituição</a> promete este relatório. É este.",
+
+  "transparency.period.label": "Período do relatório",
+  "transparency.period.option.current": "Este trimestre",
+  "transparency.period.option.previous": "Trimestre anterior",
+  "transparency.period.rangeComplete":
+    "<b>{id}</b> decorreu de {start} a {end}. O trimestre está fechado, por isso estes números são definitivos.",
+  "transparency.period.rangePartial":
+    "<b>{id}</b> ainda está a decorrer. Estes números cobrem de {start} a {until} e vão continuar a mudar até o trimestre fechar.",
+  "transparency.period.generated": "Contado a {generated}.",
+
+  "transparency.reports.title": "Denúncias <em>apresentadas</em>",
+  "transparency.reports.lead":
+    "Uma denúncia é alguém a dizer-nos que algo está errado. Recebidas conta as denúncias apresentadas durante o período; fechadas conta as que foram concluídas nele. São conjuntos diferentes, por isso não têm de coincidir.",
+  "transparency.reports.received": "Denúncias recebidas",
+  "transparency.reports.resolved": "Denúncias fechadas",
+  "transparency.reports.tableCaption": "Denúncias recebidas, por tipo",
+  "transparency.reports.categoryColumn": "O que foi denunciado",
+  "transparency.reports.countColumn": "Denúncias",
+
+  "transparency.category.privacy":
+    "Exposição da identidade ou partilha de informação privada",
+  "transparency.category.harassment":
+    "Assédio, discurso de ódio ou contacto indesejado",
+  "transparency.category.impersonation": "Falsa identidade",
+  "transparency.category.spam": "Spam e perturbação",
+  "transparency.category.space_safety":
+    "Segurança de um espaço, de uma casa ou de um anúncio",
+  "transparency.category.other": "Tudo o resto",
+
+  "transparency.timing.title": "Quanto tempo demorou uma <em>resposta</em>",
+  "transparency.timing.lead":
+    "Medido entre o momento em que a denúncia foi apresentada e o momento em que a moderação a fechou, sobre as denúncias fechadas neste período.",
+  "transparency.timing.median": "Metade das denúncias teve resposta em",
+  "transparency.timing.p90": "Nove em cada dez tiveram resposta em",
+  "transparency.timing.hours": "{value} horas",
+  "transparency.timing.withheld":
+    "Poucas denúncias fechadas para publicar isto sem descrever casos isolados",
+
+  "transparency.actions.title": "O que a <em>moderação</em> fez",
+  "transparency.actions.lead":
+    "Cada decisão da moderação é escrita num registo de auditoria no momento em que é tomada. Estas são essas linhas, contadas. Concluir que nenhuma regra foi quebrada é um resultado real e é contado como qualquer outro.",
+  "transparency.actions.accountsRemoved": "Contas removidas em definitivo",
+  "transparency.actions.tableCaption":
+    "Decisões da moderação tomadas durante o período",
+  "transparency.actions.actionColumn": "Decisão",
+  "transparency.actions.countColumn": "Vezes tomada",
+
+  "transparency.action.dismiss": "Nenhuma regra foi quebrada",
+  "transparency.action.warn": "Aviso dado",
+  "transparency.action.hide_content": "Conteúdo ocultado",
+  "transparency.action.remove_content": "Conteúdo removido",
+  "transparency.action.restrict": "Conta restringida por um período",
+  "transparency.action.suspend": "Conta suspensa por um período",
+  "transparency.action.ban": "Conta removida em definitivo",
+  "transparency.action.escalate": "Enviado para revisão adicional",
+
+  "transparency.communities.frozen": "Comunidades congeladas",
+
+  "transparency.appeals.title": "<em>Recursos</em>",
+  "transparency.appeals.lead":
+    "Qualquer pessoa pode recorrer de uma decisão tomada a seu respeito. Os resultados são contados no período em que o recurso foi apresentado, por isso as linhas abaixo somam sempre os recursos apresentados. Alguns ainda estão em revisão.",
+  "transparency.appeals.filed": "Recursos apresentados",
+  "transparency.appeals.overturnRate": "Decisões revertidas em recurso",
+  "transparency.appeals.ratePercent": "{value}%",
+  "transparency.appeals.rateWithheld":
+    "Poucos recursos decididos neste período para uma percentagem significar algo",
+  "transparency.appeals.tableCaption":
+    "Recursos apresentados durante o período, por resultado",
+  "transparency.appeals.outcomeColumn": "Resultado",
+  "transparency.appeals.countColumn": "Recursos",
+
+  "transparency.outcome.upheld": "Decisão original mantida",
+  "transparency.outcome.overturned": "Decisão original revertida",
+  "transparency.outcome.awaiting": "Ainda em revisão",
+
+  "transparency.suppressed.value": "Menos de {floor}",
+  "transparency.suppressed.unavailable": "Indisponível",
+
+  "transparency.method.title": "Como estes números são <em>feitos</em>",
+  "transparency.method.counted":
+    "Cada número é uma contagem ou um resumo tirado diretamente do registo da moderação no momento em que carregaste esta página. Não há uma base de dados de relatórios à parte, não há passo de introdução manual, e não há arredondamento além de uma casa decimal nas horas. As mesmas linhas alimentam a fila da própria equipa de moderação, por isso este relatório e a vista interna não podem divergir.",
+  "transparency.method.suppression":
+    "Uma contagem de uma ou duas não é anónima. Numa comunidade deste tamanho pode ser uma pessoa concreta e um incidente concreto, por isso qualquer número abaixo de <b>{floor}</b> é retido e mostrado como menos de {floor}. O zero é publicado como zero, porque um zero não identifica ninguém. Quando reter um número ainda permitiria deduzi-lo subtraindo os restantes ao total, um segundo número é retido com ele.",
+  "transparency.method.pairs":
+    "Denúncias recebidas e denúncias fechadas contam conjuntos diferentes. Uma denúncia apresentada na última semana de um trimestre costuma ser respondida no seguinte, por isso os dois números movem-se de forma independente.",
+
+  "transparency.notCounted.title": "O que este relatório não conta",
+  "transparency.notCounted.communityModeration":
+    "A moderação que as comunidades fazem por si próprias. Quando quem gere uma comunidade remove ou barra alguém, isso entra no registo de governação dessa comunidade e não no da plataforma. Contar a arrumação de uma sala como aplicação de regras da plataforma inflacionaria estes números.",
+  "transparency.notCounted.appealTiming":
+    "Quanto tempo demorou um recurso. Um recurso regista quando foi apresentado e o que foi decidido, e nada regista quando a decisão foi tomada, por isso o número fica de fora em vez de ser estimado.",
+  "transparency.notCounted.outsidePlatform":
+    "Danos que aconteceram noutro sítio e nunca foram denunciados aqui. Nada consegue contar o que ninguém nos contou, e um trimestre calmo não é prova de um trimestre seguro.",
+  "transparency.notCounted.selfReported":
+    "Se uma decisão foi certa. Estas são contagens do que aconteceu. Os números dos recursos são o mais perto que este relatório chega de avaliar o seu próprio trabalho.",
+
+  "transparency.links.constitution": "Ler a Constituição",
+  "transparency.links.codeOfConduct": "Ler o Código de Conduta",
+  "transparency.links.governance": "Voltar a Governação",
 };

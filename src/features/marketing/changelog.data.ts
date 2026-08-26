@@ -90,6 +90,458 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "the-transparency-report-is-published",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-transparency-report-is-published"),
+        tag: {
+          labelKey: "marketing:changelog.tag.transparency",
+          to: routes.transparencyReport,
+        },
+      },
+      {
+        id: "a-permanent-ban-needs-two-moderators",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("a-permanent-ban-needs-two-moderators"),
+        tag: {
+          labelKey: "marketing:changelog.tag.constitution",
+          to: routes.constitution,
+        },
+      },
+      {
+        id: "appeals-have-a-deadline",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("appeals-have-a-deadline"),
+        tag: {
+          labelKey: "marketing:changelog.tag.codeOfConduct",
+          to: routes.codeOfConduct,
+        },
+      },
+      {
+        id: "a-community-ban-can-end",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("a-community-ban-can-end"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "a-warning-now-reaches-you",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("a-warning-now-reaches-you"),
+      },
+      {
+        id: "community-mods-can-read-what-was-reported",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("community-mods-can-read-what-was-reported"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "post-a-room-in-a-housing-group",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("post-a-room-in-a-housing-group"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housingGroups",
+          to: routes.housingGroups,
+        },
+      },
+      {
+        id: "the-housing-board-is-open",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-housing-board-is-open"),
+        tag: {
+          labelKey: "marketing:changelog.tag.housing",
+          to: routes.housing,
+        },
+      },
+      {
+        id: "gatherings-say-where-and-what-they-cost",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("gatherings-say-where-and-what-they-cost"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "hosts-run-their-own-door",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("hosts-run-their-own-door"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "the-safe-space-badge-has-a-mechanism",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-safe-space-badge-has-a-mechanism"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safeSpaces",
+          to: routes.safeSpaces,
+        },
+      },
+      {
+        id: "the-directory-answers-is-it-open-and-can-i-get-in",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-directory-answers-is-it-open-and-can-i-get-in"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "a-venue-is-asked-before-it-hosts-you",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("a-venue-is-asked-before-it-hosts-you"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "arriving-points-at-real-things",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("arriving-points-at-real-things"),
+        tag: {
+          labelKey: "marketing:changelog.tag.arriving",
+          to: routes.arriving,
+        },
+      },
+      {
+        id: "what-you-send-in-now-gets-an-answer",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("what-you-send-in-now-gets-an-answer"),
+      },
+      {
+        id: "the-magazine-has-pictures",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-magazine-has-pictures"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "an-older-piece-tells-you-where-it-stands",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("an-older-piece-tells-you-where-it-stands"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "corrections-and-content-notes-reach-the-reader",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("corrections-and-content-notes-reach-the-reader"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "the-magazine-front-page-is-editors-work",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-magazine-front-page-is-editors-work"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "search-the-whole-magazine-archive",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("search-the-whole-magazine-archive"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazineSearch",
+          to: routes.magazineSearch,
+        },
+      },
+      {
+        id: "a-byline-is-a-person-now",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("a-byline-is-a-person-now"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "your-story-submission-gets-an-answer",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("your-story-submission-gets-an-answer"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "every-guide-says-when-it-was-last-checked",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("every-guide-says-when-it-was-last-checked"),
+        tag: {
+          labelKey: "marketing:changelog.tag.resources",
+          to: routes.guideIndex,
+        },
+      },
+      {
+        id: "the-reading-group-directory-is-real",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-reading-group-directory-is-real"),
+        tag: {
+          labelKey: "marketing:changelog.tag.readingGroups",
+          to: routes.readingGroups,
+        },
+      },
+      {
+        id: "in-this-issue-replaces-the-members-digest",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("in-this-issue-replaces-the-members-digest"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "the-press-kit-carries-real-brand-assets",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("the-press-kit-carries-real-brand-assets"),
+        tag: {
+          labelKey: "marketing:changelog.tag.pressKit",
+          to: routes.pressKit,
+        },
+      },
+      {
+        id: "cinema-and-culture-say-what-they-are",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("cinema-and-culture-say-what-they-are"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "an-issue-stays-under-wraps-until-it-ships",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("an-issue-stays-under-wraps-until-it-ships"),
+        tag: {
+          labelKey: "marketing:changelog.tag.magazine",
+          to: routes.magazine,
+        },
+      },
+      {
+        id: "the-directory-stopped-going-blank",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("the-directory-stopped-going-blank"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "notification-previews-stay-hidden-on-iphone",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("notification-previews-stay-hidden-on-iphone"),
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.settings,
+        },
+      },
+      {
+        id: "leaving-no-longer-deletes-other-peoples-gatherings",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("leaving-no-longer-deletes-other-peoples-gatherings"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "a-new-device-signing-in-tells-you",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("a-new-device-signing-in-tells-you"),
+        tag: {
+          labelKey: "marketing:changelog.tag.sessions",
+          to: routes.sessions,
+        },
+      },
+      {
+        id: "nothing-promises-you-an-email-any-more",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("nothing-promises-you-an-email-any-more"),
+        tag: {
+          labelKey: "marketing:changelog.tag.notifications",
+          to: routes.notifications,
+        },
+      },
+      {
+        id: "the-status-page-works-without-an-account",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-status-page-works-without-an-account"),
+      },
+      {
+        id: "data-requests-get-a-real-answer",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("data-requests-get-a-real-answer"),
+      },
+      {
+        id: "we-ask-again-when-the-rules-change",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("we-ask-again-when-the-rules-change"),
+        tag: {
+          labelKey: "marketing:changelog.tag.terms",
+          to: routes.terms,
+        },
+      },
+      {
+        id: "iphone-notifications-explain-the-install-step",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("iphone-notifications-explain-the-install-step"),
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.settings,
+        },
+      },
+      {
+        id: "a-heads-up-before-your-account-is-deleted",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("a-heads-up-before-your-account-is-deleted"),
+      },
+      {
+        id: "moderators-see-the-positions-at-the-queue",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("moderators-see-the-positions-at-the-queue"),
+        tag: {
+          labelKey: "marketing:changelog.tag.guidelines",
+          to: routes.guidelines,
+        },
+      },
+      {
+        id: "where-we-stand-intersectionality-and-palestine",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("where-we-stand-intersectionality-and-palestine"),
+        tag: {
+          labelKey: "marketing:changelog.tag.about",
+          to: routes.about,
+        },
+      },
+      {
+        id: "directory-cards-show-who-runs-the-place",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("directory-cards-show-who-runs-the-place"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "members-can-put-something-to-a-vote",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("members-can-put-something-to-a-vote"),
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
+      },
+      {
+        id: "a-governance-vote-now-needs-enough-people-to-count",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("a-governance-vote-now-needs-enough-people-to-count"),
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
+      },
+      {
+        id: "anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys(
+          "anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet",
+        ),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "the-constitution-links-through-to-the-code-of-conduct",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("the-constitution-links-through-to-the-code-of-conduct"),
+        tag: {
+          labelKey: "marketing:changelog.tag.governance",
+          to: routes.governance,
+        },
+      },
+      {
+        id: "mod-tools-sections-fade-in-as-you-switch",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("mod-tools-sections-fade-in-as-you-switch"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "member-rows-in-mod-tools-hold-their-actions-in-one-menu",
+        category: "improvement",
+        date: "25 Aug 2026",
+        ...entryKeys("member-rows-in-mod-tools-hold-their-actions-in-one-menu"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
         id: "studio-and-cinema-speak-portuguese-in-more-places",
         category: "improvement",
         date: "25 Aug 2026",

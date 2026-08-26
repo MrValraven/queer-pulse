@@ -21,6 +21,7 @@ export const communities: Catalog = {
     "Found a community on QueerPulse: name what it is for, decide who it is for, set its shared values, and open the door.",
   "seo.detail.title": "{name} · QueerPulse",
   "seo.detail.imageAlt": "Cover image for the {name} community",
+  "seo.post.title": "A post in {name} · QueerPulse",
 
   // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
   "hubShell.title": "Communities &",
@@ -415,8 +416,35 @@ export const communities: Catalog = {
   "detail.modtools.reports.meta":
     "From {author} · flagged by {reporter} · {time} ago",
   "detail.modtools.reports.metaLive": "Flagged {time} ago",
-  "detail.modtools.reports.removeCta": "Remove post",
+  "detail.modtools.reports.metaAuthor": "From {author} · flagged {time} ago",
+  "detail.modtools.reports.metaErasedAuthor":
+    "From an account that has since been removed · flagged {time} ago",
+  // Severity is derived from the reason code, never chosen by the reporter.
+  // Each badge spells its level out beside the icon, so the tint is a second
+  // channel and never the only one.
+  "detail.modtools.reports.severity.emergency": "Emergency",
+  "detail.modtools.reports.severity.high": "High priority",
+  "detail.modtools.reports.severity.medium": "Medium priority",
+  "detail.modtools.reports.severity.low": "Low priority",
+  "detail.modtools.reports.overdue": "Past its response window",
+  "detail.modtools.reports.state.hidden": "Hidden from members right now",
+  "detail.modtools.reports.state.removed": "Already removed",
+  "detail.modtools.reports.state.deleted": "Already deleted",
+  "detail.modtools.reports.excerptTruncated":
+    "This is the start of it. Open the thread to read the rest before you decide.",
+  "detail.modtools.reports.contentMissing":
+    "The post or reply this report is about is no longer there. Dismissing closes the report.",
+  "detail.modtools.reports.openThread": "Open the thread",
+  "detail.modtools.reports.openThreadLabel":
+    "Open the thread this report is about",
+  "detail.modtools.reports.removeCta": "Take it down",
   "detail.modtools.reports.dismissCta": "Dismiss",
+  "detail.modtools.reports.escalateCta": "Send to platform staff",
+  "detail.modtools.reports.staffOnlyNote":
+    "This report is about outing or doxxing. Trained platform staff decide these, so sending it up is the action available here.",
+  // Unused since TS-08: removing a reply now goes through the report itself,
+  // the same way removing a post does. Kept so nothing that still resolves it
+  // renders a raw key.
   "detail.modtools.reports.replyNote":
     "This report is on a reply. It can be dismissed here; removing it means opening the post it sits under.",
   "detail.modtools.members.label": "Members",
@@ -428,12 +456,15 @@ export const communities: Catalog = {
     "Co-owners share your powers here: reviewing join requests, moderating posts, editing the community and managing the roster. Transferring ownership, archiving the community and changing a co-owner's role stay with you alone.",
   "detail.modtools.members.removeCta": "Remove from community",
   "detail.modtools.members.ownerTag": "Owner",
+  "detail.modtools.members.actionsAria": "Actions for {name}",
   "detail.modtools.toast.approved": "{name} approved. Welcome them in.",
   "detail.modtools.toast.declined":
     "{name}'s request wasn't approved this time.",
   "detail.modtools.toast.postRemoved":
     "Post removed. The author has been reached.",
   "detail.modtools.toast.reportDismissed": "Report dismissed.",
+  "detail.modtools.toast.reportEscalated":
+    "Sent to platform staff. They take it from here.",
   "detail.modtools.toast.promoted": "{name} is now a mod.",
   "detail.modtools.toast.demoted": "{name} is a member again.",
   "detail.modtools.toast.coOwnerGranted": "{name} is now a co-owner.",
@@ -455,8 +486,12 @@ export const communities: Catalog = {
   "detail.modtools.confirm.revokeCoOwner.confirmCta": "Remove co-owner",
   "detail.modtools.confirm.removePost.title": "Take this post down?",
   "detail.modtools.confirm.removePost.body":
-    "The post comes down for everyone and the report leaves your queue. This can't be undone from here.",
-  "detail.modtools.confirm.removePost.confirmCta": "Remove post",
+    "It comes down for everyone and the report leaves your queue. Your reason is recorded on the report, so the decision can be read back later. This can't be undone from here.",
+  "detail.modtools.confirm.removePost.confirmCta": "Take it down",
+  "detail.modtools.confirm.removePost.reasonLabel": "What this breaks",
+  "detail.modtools.confirm.removePost.noteLabel": "Why it came down",
+  "detail.modtools.confirm.removePost.notePlaceholder":
+    "Say what happened, in your own words.",
 
   // ── Danger zone (Mod tools tab, living hub) ────────────────────────────────
   "detail.dangerZone.heading": "Danger zone",
@@ -622,6 +657,12 @@ export const communities: Catalog = {
   "detail.pulse.loadingMore": "Loading…",
   "detail.pulse.loadMoreCta": "Load more posts",
 
+  // ── Copy a post's permalink (SOC-02) ──────────────────────────────────────
+  "detail.pulse.copyLink.ariaLabel": "Copy a link to this post",
+  "detail.pulse.copyLink.copiedToast": "Link copied. Paste it anywhere.",
+  "detail.pulse.copyLink.failedToast":
+    "We couldn't reach the clipboard. Copy the address bar instead.",
+
   // ── Announcements (owner / co-owner / moderator) ──────────────────────────
   "detail.pulse.announcement.toggleLabel": "Post as an announcement",
   "detail.pulse.announcement.toggleHint":
@@ -653,6 +694,15 @@ export const communities: Catalog = {
     "Post the first hello. A line about your week is plenty to get a room talking.",
   "detail.pulse.empty.visitorDescription":
     "This community has not posted yet. Join to be part of what comes next.",
+
+  // ── Single post permalink page (/community/:slug/post/:postId) ────────────
+  "post.heading": "A post in {name}",
+  "post.backTo": "Back to {name}",
+  "post.loadMoreReplies": "Load more replies",
+  "post.notFound.title": "This post isn't here",
+  "post.notFound.description":
+    "It may have been taken down, or it lives in a community you are not part of.",
+  "post.notFound.cta": "Go to the community",
 
   // ── About + Resources tab (living hub) ────────────────────────────────────
   "detail.aboutResources.houseRules": "House rules",

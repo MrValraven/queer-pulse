@@ -1,0 +1,47 @@
+/**
+ * The stable identifiers the Transparency Report endpoint sends, in the order
+ * the page renders them.
+ *
+ * The backend already sends its rows in a fixed order, so these lists are the
+ * page's ALLOW-LIST rather than its sort: a key the catalogue has no label for
+ * is dropped from the table instead of printed raw. A published governing
+ * document showing `space_safety` to a reader would undo the credibility the
+ * page exists to build, and it is a visible prompt to add the missing label.
+ *
+ * Each list mirrors a closed, server-owned vocabulary:
+ * `TransparencyReasonCategory`, `MOD_ACTION_CODES`, and `AppealStatus`.
+ */
+
+export const REASON_CATEGORY_KEYS = [
+  "privacy",
+  "harassment",
+  "impersonation",
+  "spam",
+  "space_safety",
+  "other",
+] as const;
+
+export const ACTION_KEYS = [
+  "dismiss",
+  "warn",
+  "hide_content",
+  "remove_content",
+  "restrict",
+  "suspend",
+  "ban",
+  "escalate",
+] as const;
+
+export const APPEAL_OUTCOME_KEYS = [
+  "upheld",
+  "overturned",
+  "awaiting",
+] as const;
+
+/** The limits the report states about itself, in render order. */
+export const NOT_COUNTED_KEYS = [
+  "communityModeration",
+  "appealTiming",
+  "outsidePlatform",
+  "selfReported",
+] as const;

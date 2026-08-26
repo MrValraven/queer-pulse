@@ -3,6 +3,17 @@
  * fetched/authored-by-a-member content anywhere on it), so every field below
  * is a catalog key that AboutPage.tsx resolves with `t()`.
  */
+import {
+  FiEyeOff,
+  FiHome,
+  FiKey,
+  FiRepeat,
+  FiTool,
+  FiUsers,
+} from "react-icons/fi";
+import type { IconType } from "react-icons";
+import { routes } from "../../app/routeMap";
+
 export const WHY_PARAGRAPH_KEYS = [
   "marketing:about.why.p1",
   "marketing:about.why.p2",
@@ -30,29 +41,156 @@ export const WHO_PARAGRAPH_KEYS = [
   "marketing:about.who.p2",
 ];
 
-export const VALUES: { titleKey: string; bodyKey: string }[] = [
+/**
+ * The six values. Each carries a decorative icon so the grid reads as a set of
+ * distinct beliefs at a glance instead of six identical text blocks.
+ */
+export const VALUES: { icon: IconType; titleKey: string; bodyKey: string }[] = [
   {
+    icon: FiHome,
     titleKey: "marketing:about.values.smallByDesign.title",
     bodyKey: "marketing:about.values.smallByDesign.body",
   },
   {
+    icon: FiTool,
     titleKey: "marketing:about.values.infrastructure.title",
     bodyKey: "marketing:about.values.infrastructure.body",
   },
   {
+    icon: FiRepeat,
     titleKey: "marketing:about.values.communityEconomy.title",
     bodyKey: "marketing:about.values.communityEconomy.body",
   },
   {
+    icon: FiUsers,
     titleKey: "marketing:about.values.communityOwns.title",
     bodyKey: "marketing:about.values.communityOwns.body",
   },
   {
+    icon: FiEyeOff,
     titleKey: "marketing:about.values.noDataEconomy.title",
     bodyKey: "marketing:about.values.noDataEconomy.body",
   },
   {
+    icon: FiKey,
     titleKey: "marketing:about.values.accessNotEarned.title",
     bodyKey: "marketing:about.values.accessNotEarned.body",
+  },
+];
+
+/** Intersectionality lead-in for the "Where we stand" section. */
+export const STAND_PARAGRAPH_KEYS = [
+  "marketing:about.stand.p1",
+  "marketing:about.stand.p2",
+];
+
+export interface StandCommitment {
+  titleKey: string;
+  bodyKey: string;
+  link?: { labelKey: string; href: string };
+}
+
+/**
+ * A full-weight position panel. `accent` marks the one that carries the coral
+ * edge; everything else renders as the plain plum panel.
+ */
+export interface StandPanel {
+  id: string;
+  titleKey: string;
+  paragraphKeys: string[];
+  commitments: StandCommitment[];
+  accent?: boolean;
+}
+
+export const STAND_PANELS: StandPanel[] = [
+  {
+    id: "trans",
+    titleKey: "marketing:about.stand.trans.title",
+    accent: true,
+    paragraphKeys: [
+      "marketing:about.stand.trans.p1",
+      "marketing:about.stand.trans.p2",
+      "marketing:about.stand.trans.p3",
+    ],
+    commitments: [
+      {
+        titleKey: "marketing:about.stand.trans.commitment.notADebate.title",
+        bodyKey: "marketing:about.stand.trans.commitment.notADebate.body",
+      },
+      {
+        titleKey: "marketing:about.stand.trans.commitment.exclusion.title",
+        bodyKey: "marketing:about.stand.trans.commitment.exclusion.body",
+        link: {
+          labelKey: "marketing:about.stand.trans.commitment.exclusion.link",
+          href: routes.guidelines,
+        },
+      },
+      {
+        titleKey: "marketing:about.stand.trans.commitment.selfId.title",
+        bodyKey: "marketing:about.stand.trans.commitment.selfId.body",
+        link: {
+          labelKey: "marketing:about.stand.trans.commitment.selfId.link",
+          href: routes.transHealthcare,
+        },
+      },
+    ],
+  },
+  {
+    id: "palestine",
+    titleKey: "marketing:about.stand.palestine.title",
+    paragraphKeys: [
+      "marketing:about.stand.palestine.p1",
+      "marketing:about.stand.palestine.p2",
+    ],
+    commitments: [
+      {
+        titleKey: "marketing:about.stand.commitment.speech.title",
+        bodyKey: "marketing:about.stand.commitment.speech.body",
+        link: {
+          labelKey: "marketing:about.stand.commitment.speech.link",
+          href: routes.guidelines,
+        },
+      },
+      {
+        titleKey: "marketing:about.stand.commitment.money.title",
+        bodyKey: "marketing:about.stand.commitment.money.body",
+      },
+      {
+        titleKey: "marketing:about.stand.commitment.mutualAid.title",
+        bodyKey: "marketing:about.stand.commitment.mutualAid.body",
+        link: {
+          labelKey: "marketing:about.stand.commitment.mutualAid.link",
+          href: routes.governance,
+        },
+      },
+    ],
+  },
+];
+
+/** Shorter positions, rendered as cards beneath the two full panels. */
+export const STAND_POSITIONS: {
+  titleKey: string;
+  bodyKey: string;
+  link?: { labelKey: string; href: string };
+}[] = [
+  {
+    titleKey: "marketing:about.stand.position.sexWork.title",
+    bodyKey: "marketing:about.stand.position.sexWork.body",
+  },
+  {
+    titleKey: "marketing:about.stand.position.migration.title",
+    bodyKey: "marketing:about.stand.position.migration.body",
+    link: {
+      labelKey: "marketing:about.stand.position.migration.link",
+      href: routes.intersectionality,
+    },
+  },
+  {
+    titleKey: "marketing:about.stand.position.hiv.title",
+    bodyKey: "marketing:about.stand.position.hiv.body",
+    link: {
+      labelKey: "marketing:about.stand.position.hiv.link",
+      href: routes.sexualHealth,
+    },
   },
 ];

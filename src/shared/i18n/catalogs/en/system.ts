@@ -299,6 +299,23 @@ export const system: Catalog = {
     "Look for the install prompt · usually top-right",
   "pwaPrompt.toast.snoozed": "Won't ask again for 30 days",
 
+  // ── InstallNudge.tsx / PushNotificationRow.tsx ───────────────────────────
+  // ID-17. iOS and iPadOS Safari hand `PushManager` only to a web app added to
+  // the Home Screen, so on an iPhone every notification this platform sends is
+  // gated behind an install step. Push is also the only out-of-band channel
+  // QueerPulse has, so this copy names the install as the fix instead of
+  // leaving the member on a "your browser can't do this yet" dead end.
+  "pwaInstall.pushRow.helper":
+    "On iPhone and iPad, notifications need QueerPulse added to your Home Screen. Safari only gives push to the installed app.",
+  "pwaInstall.pushRow.cta": "How to install it",
+  "pwaInstall.nudge.title": "Install QueerPulse",
+  "pwaInstall.nudge.body":
+    "Install the app to get notifications and keep QueerPulse a tap away.",
+  "pwaInstall.nudge.bodyIos":
+    "Add it to your Home Screen to get notifications. Takes about 30 seconds.",
+  "pwaInstall.nudge.cta": "Show me how",
+  "pwaInstall.nudge.dismiss": "Dismiss the install suggestion",
+
   // ── ServerErrorPage.tsx ───────────────────────────────────────────────────
   "serverError.countdown.label": "Estimated back online in",
   "serverError.demoModeAria": "Demo mode",
@@ -325,10 +342,66 @@ export const system: Catalog = {
   "status.hero.allOperational": "All systems operational",
   "status.hero.title": "Platform <em>status</em>",
   "status.hero.sub": "Updated just now · Refreshes every 60 s",
-  "status.hero.subLive": "Public uptime monitoring is on the way.",
-  "status.live.title": "Live status reporting is coming soon",
-  "status.live.description":
-    "We're setting up public uptime monitoring, service health and incident history. Email alerts for incidents are part of the same work. Check back soon.",
+  "status.hero.subLive":
+    "Live component health, plus anything the team has written up.",
+
+  // ── StatusLive.tsx / StatusLiveComponents.tsx / StatusLiveIncidents.tsx ──
+  // ID-16. The LIVE status surface, fed by the public `GET /status`. It renders
+  // with no session at all, so this copy is read by people who are signed out,
+  // suspended or locked out: it never assumes an account, and it says plainly
+  // whether the trouble is ours.
+  "status.live.overall.operational.title": "Everything is operational",
+  "status.live.overall.operational.body":
+    "Every part of the platform we can check is answering normally.",
+  "status.live.overall.degraded.title": "Some parts are degraded",
+  "status.live.overall.degraded.body":
+    "Parts of the platform are slower or less reliable than usual right now. The details are below.",
+  "status.live.overall.down.title": "We're having an outage",
+  "status.live.overall.down.body":
+    "At least one part of the platform isn't working. This one is on us, and there's nothing you need to do.",
+  "status.live.state.operational": "Operational",
+  "status.live.state.degraded": "Degraded",
+  "status.live.state.down": "Down",
+  "status.live.componentsHeading": "Parts of the platform",
+  "status.live.component.accounts.name": "Sign-in and accounts",
+  "status.live.component.accounts.desc":
+    "Signing in, invites and account settings",
+  "status.live.component.messaging.name": "Messages",
+  "status.live.component.messaging.desc": "Direct and group messages",
+  "status.live.component.communities.name": "Communities and forum",
+  "status.live.component.communities.desc":
+    "Community spaces, threads and gatherings",
+  "status.live.component.directory.name": "Local directory",
+  "status.live.component.directory.desc": "Places, safe spaces and the map",
+  "status.live.component.magazine.name": "Magazine",
+  "status.live.component.magazine.desc": "Articles, issues and the archive",
+  "status.live.component.media.name": "Photos and uploads",
+  "status.live.component.media.desc":
+    "Avatars, galleries and anything you upload",
+  "status.live.incidentsHeading": "Incidents",
+  "status.live.incidentState.open": "Ongoing",
+  "status.live.incidentState.monitoring": "Monitoring",
+  "status.live.incidentState.resolved": "Resolved",
+  "status.live.severity.minor": "Minor",
+  "status.live.severity.major": "Major",
+  "status.live.severity.critical": "Critical",
+  "status.live.incidents.started": "Started {date} at {time}",
+  "status.live.incidents.resolved": "resolved {date} at {time}",
+  "status.live.incidents.affects": "Affects: {components}",
+  "status.live.incidents.none.title": "No incidents in the last 30 days",
+  "status.live.incidents.none.description":
+    "Nothing has been written up recently. Whenever something goes wrong, this is where we say so.",
+  "status.live.incidents.unavailable":
+    "We couldn't load the incident history, which usually means the trouble is on our side. The component states above still stand.",
+  "status.live.lastChecked": "Last checked {when}",
+  "status.live.refreshCta": "Check again",
+  "status.live.refreshingCta": "Checking",
+  "status.live.refreshAriaLabel": "Check again for platform status updates",
+  "status.live.signedOutNote":
+    "This page works without an account. If everything here reads operational and you still can't sign in, the trouble sits with your account, and the team can look into that for you.",
+  "status.live.unreachable.title": "We couldn't reach the status service",
+  "status.live.unreachable.body":
+    "Either the platform is down or your connection is. Try again in a moment.",
   "status.services.sectionEye": "Services",
   "status.serviceStatus.operational": "Operational",
   "status.serviceStatus.degraded": "Degraded",
@@ -465,4 +538,61 @@ export const system: Catalog = {
   "genesis.notice.failedFallback": "Something went wrong. Try again.",
   "genesis.notice.claimed": "You are now an admin.",
   "genesis.notice.demo": "Genesis isn't available in demo mode.",
+
+  // ── AdminStatusIncidentsPage.tsx / AdminStatusIncidentForm.tsx (ID-16) ───
+  // The operator desk behind the public status page. Filed in this catalog
+  // rather than `admin.ts` deliberately: the copy and the surface it describes
+  // are one feature, and the public half already lives here.
+  "statusAdmin.navLabel": "Status incidents",
+  "statusAdmin.breadcrumb": "Admin",
+  "statusAdmin.eyebrow": "Platform",
+  "statusAdmin.title": "Status <em>incidents</em>",
+  "statusAdmin.headerSub":
+    "What members see on the public status page. Anything published here is readable with no account, including by someone who can't sign in.",
+  "statusAdmin.newCta": "New incident",
+  "statusAdmin.empty": "Nothing has been written up yet.",
+  "statusAdmin.loadError": "The incident list couldn't be loaded.",
+  "statusAdmin.forbidden": "You don't have access to this panel.",
+  "statusAdmin.demoNotice":
+    "Demo mode writes nothing. Nothing you do here reaches the public status page.",
+  "statusAdmin.row.started": "Started {date}",
+  "statusAdmin.row.resolved": "Resolved {date}",
+  "statusAdmin.row.affects": "Affects: {components}",
+  "statusAdmin.row.affectsNone": "No parts marked as affected",
+  "statusAdmin.row.author": "Written up by {name}",
+  "statusAdmin.action.edit": "Edit",
+  "statusAdmin.action.resolve": "Mark resolved",
+  "statusAdmin.action.cancel": "Cancel",
+  "statusAdmin.action.save": "Save changes",
+  "statusAdmin.action.publish": "Publish incident",
+  "statusAdmin.form.createEyebrow": "New incident",
+  "statusAdmin.form.editEyebrow": "Edit incident",
+  "statusAdmin.form.createTitle": "Write up an incident",
+  "statusAdmin.form.editTitle": "Edit this incident",
+  "statusAdmin.form.drawerLabel": "Incident editor",
+  "statusAdmin.field.title": "Title",
+  "statusAdmin.field.titleHint":
+    "One line, plain language. This is the first thing a member reads.",
+  "statusAdmin.field.body": "What's happening",
+  "statusAdmin.field.bodyHint":
+    "Plain text. Any markup is stripped when it's saved.",
+  "statusAdmin.field.severity": "Severity",
+  "statusAdmin.field.status": "Status",
+  "statusAdmin.field.startedAt": "Started at",
+  "statusAdmin.field.components": "Parts affected",
+  "statusAdmin.field.componentsHint":
+    "Whatever you tick here reads as degraded on the public page, or as down for a critical incident, until this is resolved.",
+  "statusAdmin.severity.minor": "Minor",
+  "statusAdmin.severity.major": "Major",
+  "statusAdmin.severity.critical": "Critical",
+  "statusAdmin.status.open": "Ongoing",
+  "statusAdmin.status.monitoring": "Monitoring",
+  "statusAdmin.status.resolved": "Resolved",
+  "statusAdmin.toast.created": "Incident published.",
+  "statusAdmin.toast.updated": "Incident updated.",
+  "statusAdmin.toast.resolved": "Incident marked resolved.",
+  "statusAdmin.error.create": "The incident couldn't be published.",
+  "statusAdmin.error.save": "The changes couldn't be saved.",
+  "statusAdmin.error.resolve": "The incident couldn't be marked resolved.",
+  "statusAdmin.error.required": "Give the incident a title and a description.",
 };

@@ -12,6 +12,7 @@ import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import type { VisibilityMode } from "../../../shared/components/ui/VisibilityBadge";
 import { routes } from "../../../app/routeMap";
+import type { ActivityBand } from "../activityBand";
 import type { OpenToEntry } from "../openTo.data";
 import type { WorkLink } from "../workLink.data";
 import type { FeaturedCommunityRef } from "../profileCommunities.types";
@@ -90,8 +91,16 @@ export interface RelatedMember {
 export interface ActivityItem {
   icon: IconType;
   title: string;
-  sub: string;
-  to: string;
+  sub: string | null;
+  /** Where the row links, or `null` when it has no public destination.
+   *
+   *  The backend stores a deep link only for rows whose subject is already
+   *  public to the reader, and re-checks that on every read (a gathering
+   *  switched to members-only, a community turned private, a persona
+   *  unpublished). A row that survives that check without a link is still a
+   *  true statement, so it renders as a plain row instead of a link. Rows
+   *  written before links were stored are all `null`. */
+  to: string | null;
 }
 export interface Member {
   /** Stable numeric id, assigned by registration order. */
@@ -153,6 +162,11 @@ export interface Member {
    *  homepage. Owner-only control; defaults to false when absent. Only
    *  meaningful when the profile's `visibility` is `"open"`. */
   featuredConsent?: boolean;
+  /** Coarse "recently active" band, already gated by the backend for this
+   *  viewer. Absent or `null` means render nothing: the member opted out, or
+   *  the platform has never observed a session for them. Never a timestamp,
+   *  never live presence. See `../activityBand.ts`. */
+  activityBand?: ActivityBand | null;
   /** Broad professional field(s) — Settings → Interests. Ungated, like `tags`. */
   discipline?: string[];
   /** Specific job(s) within `discipline` — Settings → Interests. */
@@ -162,6 +176,15 @@ export interface Member {
   /** Member slugs of people who have vouched (cross-referenced into the registry). */
   vouchers: string[];
   voucherNames: string;
+  /** How many of the VIEWER's own accepted connections vouched for this member:
+   *  the "members you know vouched for them" trust cue (SOC-15).
+   *
+   *  `null` means "no answer", for exactly two reasons: the viewer IS this
+   *  member, or this member has hidden their voucher roster. A viewer-relative
+   *  count over people the viewer knows by name is a partial roster, so
+   *  `vouchersVisible: false` suppresses it too. `0` therefore always means the
+   *  real answer is zero, and the UI renders nothing for either. */
+  mutualVoucherCount?: number | null;
   /** Demo mode: slugs of related members, resolved against the mock registry at
    *  render time. Live mode leaves this empty and populates `relatedCards`. */
   related: string[];

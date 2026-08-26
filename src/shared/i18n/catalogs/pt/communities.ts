@@ -26,6 +26,7 @@ export const communities: Catalog = {
     "Funda uma comunidade no QueerPulse: diz para que serve, decide para quem é, define os valores partilhados e abre a porta.",
   "seo.detail.title": "{name} · QueerPulse",
   "seo.detail.imageAlt": "Imagem de capa da comunidade {name}",
+  "seo.post.title": "Uma publicação em {name} · QueerPulse",
 
   // ── Merged page shell (CommunitiesHubPage + header + top tabs) ────────────
   "hubShell.title": "Comunidades e",
@@ -417,8 +418,31 @@ export const communities: Catalog = {
   "detail.modtools.reports.meta":
     "De {author} · denunciado por {reporter} · há {time}",
   "detail.modtools.reports.metaLive": "Denunciado há {time}",
-  "detail.modtools.reports.removeCta": "Remover publicação",
+  "detail.modtools.reports.metaAuthor": "De {author} · denunciado há {time}",
+  "detail.modtools.reports.metaErasedAuthor":
+    "De uma conta entretanto removida · denunciado há {time}",
+  "detail.modtools.reports.severity.emergency": "Emergência",
+  "detail.modtools.reports.severity.high": "Prioridade alta",
+  "detail.modtools.reports.severity.medium": "Prioridade média",
+  "detail.modtools.reports.severity.low": "Prioridade baixa",
+  "detail.modtools.reports.overdue": "Fora do prazo de resposta",
+  "detail.modtools.reports.state.hidden": "Escondido das pessoas neste momento",
+  "detail.modtools.reports.state.removed": "Já removido",
+  "detail.modtools.reports.state.deleted": "Já apagado",
+  "detail.modtools.reports.excerptTruncated":
+    "Isto é apenas o início. Abre o tópico para ler o resto antes de decidires.",
+  "detail.modtools.reports.contentMissing":
+    "A publicação ou resposta em causa já não existe. Ignorar encerra a denúncia.",
+  "detail.modtools.reports.openThread": "Abrir o tópico",
+  "detail.modtools.reports.openThreadLabel": "Abrir o tópico desta denúncia",
+  "detail.modtools.reports.removeCta": "Remover",
   "detail.modtools.reports.dismissCta": "Ignorar",
+  "detail.modtools.reports.escalateCta": "Enviar para a equipa",
+  "detail.modtools.reports.staffOnlyNote":
+    "Esta denúncia é sobre exposição forçada ou divulgação de dados pessoais. Estas são decididas pela equipa da plataforma, por isso enviá-la para cima é a ação disponível aqui.",
+  // Sem uso desde a TS-08: remover uma resposta passa agora pela própria
+  // denúncia, tal como remover uma publicação. Mantida para que nada que ainda
+  // a resolva mostre a chave em bruto.
   "detail.modtools.reports.replyNote":
     "Esta denúncia é sobre uma resposta. Pode ser ignorada aqui; para a remover é preciso abrir a publicação onde está.",
   "detail.modtools.members.label": "Pessoas",
@@ -430,12 +454,15 @@ export const communities: Catalog = {
     "Quem é cotitular partilha os teus poderes aqui: rever pedidos de entrada, moderar publicações, editar a comunidade e gerir as pessoas. Transferir a titularidade, arquivar a comunidade e mudar o papel de quem é cotitular continuam a ser só teus.",
   "detail.modtools.members.removeCta": "Remover da comunidade",
   "detail.modtools.members.ownerTag": "Responsável",
+  "detail.modtools.members.actionsAria": "Ações para {name}",
   "detail.modtools.toast.approved": "{name} aprovade. Dá-lhe as boas-vindas.",
   "detail.modtools.toast.declined":
     "O pedido de {name} não foi aprovado desta vez.",
   "detail.modtools.toast.postRemoved":
     "Publicação removida. Já foi contactada a pessoa autora.",
   "detail.modtools.toast.reportDismissed": "Denúncia ignorada.",
+  "detail.modtools.toast.reportEscalated":
+    "Enviada para a equipa da plataforma. A partir daqui é com elas.",
   "detail.modtools.toast.promoted": "{name} é agora mod.",
   "detail.modtools.toast.demoted": "{name} volta a ser membro.",
   "detail.modtools.toast.coOwnerGranted": "{name} é agora cotitular.",
@@ -457,8 +484,12 @@ export const communities: Catalog = {
   "detail.modtools.confirm.revokeCoOwner.confirmCta": "Remover cotitular",
   "detail.modtools.confirm.removePost.title": "Remover esta publicação?",
   "detail.modtools.confirm.removePost.body":
-    "A publicação deixa de estar visível para toda a gente e a denúncia sai da tua fila. Não é possível anular aqui.",
-  "detail.modtools.confirm.removePost.confirmCta": "Remover publicação",
+    "Deixa de estar visível para toda a gente e a denúncia sai da tua fila. O teu motivo fica registado na denúncia, para que a decisão possa ser lida mais tarde. Não é possível anular aqui.",
+  "detail.modtools.confirm.removePost.confirmCta": "Remover",
+  "detail.modtools.confirm.removePost.reasonLabel": "O que isto infringe",
+  "detail.modtools.confirm.removePost.noteLabel": "Porque foi removido",
+  "detail.modtools.confirm.removePost.notePlaceholder":
+    "Diz o que aconteceu, pelas tuas palavras.",
 
   // ── Zona de risco (separador de ferramentas de moderação, hub completo) ───
   "detail.dangerZone.heading": "Zona de risco",
@@ -631,6 +662,12 @@ export const communities: Catalog = {
   "detail.pulse.loadingMore": "A carregar…",
   "detail.pulse.loadMoreCta": "Carregar mais publicações",
 
+  // ── Copiar a ligação de uma publicação (SOC-02) ───────────────────────────
+  "detail.pulse.copyLink.ariaLabel": "Copiar a ligação desta publicação",
+  "detail.pulse.copyLink.copiedToast": "Ligação copiada. Cola onde quiseres.",
+  "detail.pulse.copyLink.failedToast":
+    "Não foi possível aceder à área de transferência. Copia antes o endereço da barra.",
+
   // ── Anúncios (organização / co-organização / moderação) ───────────────────
   "detail.pulse.announcement.toggleLabel": "Publicar como anúncio",
   "detail.pulse.announcement.toggleHint":
@@ -662,6 +699,15 @@ export const communities: Catalog = {
     "Publica o primeiro olá. Uma linha sobre a tua semana chega para pôr a sala a conversar.",
   "detail.pulse.empty.visitorDescription":
     "Esta comunidade ainda não publicou nada. Junta-te para fazer parte do que vem a seguir.",
+
+  // ── Página de uma só publicação (/community/:slug/post/:postId) ───────────
+  "post.heading": "Uma publicação em {name}",
+  "post.backTo": "Voltar a {name}",
+  "post.loadMoreReplies": "Carregar mais respostas",
+  "post.notFound.title": "Esta publicação não está aqui",
+  "post.notFound.description":
+    "Pode ter sido removida, ou está numa comunidade de que não fazes parte.",
+  "post.notFound.cta": "Ir para a comunidade",
 
   // ── Separador Sobre + Recursos (hub completo) ─────────────────────────────
   "detail.aboutResources.houseRules": "Regras da casa",

@@ -205,27 +205,83 @@ export const settings: Catalog = {
   "notifications.section.messagesConnections": "Mensagens e ligações",
   "notifications.section.communitiesBoard": "Comunidades e mural",
   "notifications.section.delivery": "Entrega",
-  "notifications.gatherings.newAnnounced.title": "Novo convívio anunciado",
-  "notifications.gatherings.newAnnounced.desc":
-    "Quando é publicado um convívio que corresponde aos teus interesses",
-  "notifications.gatherings.rsvpReminder.title":
-    "Lembrete de confirmação de presença",
-  "notifications.gatherings.rsvpReminder.desc":
-    "48 horas antes de um convívio a que confirmaste presença",
+
+  // ── Notification volume (SOC-10) ──────────────────────────────────────────
+  "notifications.section.phonePush": "No teu telemóvel",
+  "notifications.section.yourWork": "O teu trabalho e os teus anúncios",
+  "notifications.volume.eventInvites.title": "Novo convívio anunciado",
+  "notifications.volume.eventInvites.desc":
+    "Quando és convidada para um convívio",
+  "notifications.volume.eventReminders.title": "Lembrete de presença",
+  "notifications.volume.eventReminders.desc":
+    "Antes de um convívio a que disseste que ias",
+  "notifications.volume.eventActivity.title":
+    "Atividade nos convívios que organizas",
+  "notifications.volume.eventActivity.desc":
+    "Novas confirmações e convites para co-organizar",
+  "notifications.volume.newMessages.title": "Nova mensagem",
+  "notifications.volume.newMessages.desc":
+    "Quando alguém te envia uma mensagem direta",
+  "notifications.volume.connections.title": "Pedidos de ligação",
+  "notifications.volume.connections.desc":
+    "Quando alguém pede para se ligar, ou aceita o teu pedido",
+  "notifications.volume.vouches.title": "Abonações",
+  "notifications.volume.vouches.desc":
+    "Quando alguém abona por ti, ou por um espaço que geres",
+  "notifications.volume.invitations.title": "Convites e apresentações",
+  "notifications.volume.invitations.desc":
+    "Quando um convite que enviaste é aceite, alguém te apresenta, ou uma comunidade te convida",
+  "notifications.volume.mentions.title": "Menções",
+  "notifications.volume.mentions.desc":
+    "Quando alguém te nomeia numa publicação ou numa conversa",
+  "notifications.volume.replies.title":
+    "Respostas em conversas onde participas",
+  "notifications.volume.replies.desc":
+    "Quando alguém responde numa conversa em que participaste",
+  "notifications.volume.posts.title": "Novas publicações nas tuas comunidades",
+  "notifications.volume.posts.desc":
+    "Publicações comuns e recursos partilhados. Define o nível por comunidade abaixo para manter umas salas altas e outras baixas",
+  "notifications.volume.announcements.title": "Anúncios das comunidades",
+  "notifications.volume.announcements.desc":
+    "Apenas o que quem gere ou modera marcou como anúncio",
+  "notifications.volume.topicFollows.title": "Temas que segues",
+  "notifications.volume.topicFollows.desc":
+    "Novas publicações num tema que escolheste seguir",
+  "notifications.volume.recognition.title": "Reconhecimento",
+  "notifications.volume.recognition.desc":
+    "Níveis, distintivos, apoios, créditos e novos seguidores",
+  "notifications.volume.personas.title": "Personas",
+  "notifications.volume.personas.desc":
+    "Convites para co-gerir uma persona, e quem se juntou a uma",
+  "notifications.volume.listings.title": "Anúncios que geres",
+  "notifications.volume.listings.desc":
+    "Perguntas públicas, edições aceites e convites para co-gerir",
+  "notifications.volume.opportunities.title": "Oportunidades",
+  "notifications.volume.opportunities.desc":
+    "Candidaturas ao que publicaste, propostas de troca e casas que correspondem a uma pesquisa que guardaste",
+  "notifications.volume.magazine.title": "A revista",
+  "notifications.volume.magazine.desc":
+    "Mensagens sobre uma peça em que trabalhas, e uma nova edição a sair",
+  "notifications.volume.alwaysOn.label": "Sempre entregues",
+  "notifications.volume.alwaysOn.desc":
+    "Decisões de segurança e moderação, alertas de conta e de acesso, mudanças numa comunidade a que pertences e decisões sobre coisas que pediste são sempre entregues. Não podem ser desligadas.",
+  "notifications.perCommunity.label": "Volume, comunidade a comunidade",
+  "notifications.perCommunity.intro":
+    "Baixa o volume de uma sala movimentada sem sair dela. É a mesma definição que a página da própria comunidade oferece.",
+  "notifications.perCommunity.rowDesc": "Quanto queres ouvir desta comunidade",
+  "notifications.perCommunity.level.all": "Tudo",
+  "notifications.perCommunity.level.announcements": "Só anúncios",
+  "notifications.perCommunity.level.muted": "Desligado",
+  "notifications.delivery.quietHours.title": "Horas de silêncio",
+  "notifications.delivery.quietHours.desc":
+    "Segura as notificações no telemóvel durante estas horas, lidas pelo teu próprio relógio. Nada se perde: chega tudo às tuas notificações, apenas não vibra.",
+  "notifications.delivery.quietHours.none": "Sem horas de silêncio",
+
   "notifications.gatherings.lastFewSpots.title": "Últimas vagas",
   "notifications.gatherings.lastFewSpots.desc":
     "Quando um convívio que guardaste está quase esgotado",
-  "notifications.messages.newMessage.title": "Nova mensagem",
-  "notifications.messages.newMessage.desc":
-    "Quando alguém te envia uma mensagem direta",
-  "notifications.messages.connectionRequest.title": "Pedido de ligação",
-  "notifications.messages.connectionRequest.desc":
-    "Quando alguém te pede para se ligar a ti",
   "notifications.messages.sayHello.title": "Recebeste um «Olá»",
   "notifications.messages.sayHello.desc": "Quando alguém te acena no perfil",
-  "notifications.messages.vouch.title": "Votos de confiança",
-  "notifications.messages.vouch.desc":
-    "Quando alguém te dá um voto de confiança",
   "notifications.phonePush.title": "Notificações no telemóvel",
   "notifications.phonePush.desc":
     "Recebe um aviso no telemóvel quando alguém te envia mensagem, mesmo com o QueerPulse fechado. Adiciona primeiro o QueerPulse ao ecrã principal.",
@@ -235,7 +291,7 @@ export const settings: Catalog = {
     "As notificações estão bloqueadas. Volta a ativá-las nas definições do navegador e tenta de novo.",
   "notifications.phonePush.previews.title": "Esconder pré-visualizações",
   "notifications.phonePush.previews.desc":
-    "Mostra que chegou algo sem dizer de quem é nem o que diz. Útil se outras pessoas conseguem ver o teu ecrã bloqueado.",
+    "Mostra que chegou algo sem dizer de quem é nem o que diz. Aplica-se em todos os dispositivos onde tens sessão iniciada, incluindo no iPhone. Útil se outras pessoas conseguem ver o teu ecrã bloqueado.",
   "notifications.phonePush.previews.error":
     "Não conseguimos guardar. As tuas pré-visualizações não mudaram.",
   "notifications.phonePush.test.title": "Envia um teste a ti",
@@ -250,31 +306,6 @@ export const settings: Catalog = {
   "notifications.phonePush.manage.desc":
     "Vê todos os dispositivos que recebem as tuas notificações push e remove os que não reconheças.",
   "notifications.phonePush.manage.cta": "Gerir dispositivos",
-  "notifications.communities.newPost.title":
-    "Nova publicação nas minhas comunidades",
-  "notifications.communities.newPost.desc":
-    "Atividade nas comunidades a que te juntaste",
-  "notifications.communities.threadReply.title":
-    "Resposta a um tópico em que participo",
-  "notifications.communities.threadReply.desc":
-    "Quando alguém responde a um tópico em que participaste",
-  "notifications.communities.mention.title": "Menções",
-  "notifications.communities.mention.desc":
-    "Quando alguém te menciona numa publicação ou discussão",
-  "notifications.communities.weeklyDigest.title":
-    "Resumo semanal da comunidade",
-  "notifications.communities.weeklyDigest.desc":
-    "Um resumo tranquilo do que se passa: um email, uma vez por semana",
-  "notifications.delivery.email.title": "Notificações por email",
-  "notifications.delivery.email.desc":
-    "Com que frequência agrupar e enviar notificações por email",
-  "notifications.delivery.email.immediately": "Imediatamente",
-  "notifications.delivery.email.dailyDigest": "Resumo diário",
-  "notifications.delivery.email.weeklyDigest": "Resumo semanal",
-  "notifications.delivery.email.never": "Nunca",
-  "notifications.delivery.quietHours.title": "Horas de silêncio",
-  "notifications.delivery.quietHours.desc": "Não enviar nada entre estas horas",
-  "notifications.delivery.quietHours.none": "Sem horas de silêncio",
 
   // ── SettingsPanes.tsx — LanguagePane ──────────────────────────────────────
   "language.title": "Idioma e <em>terminologia.</em>",
@@ -378,8 +409,12 @@ export const settings: Catalog = {
   "account.twoFactor.desc":
     "Adiciona um segundo passo ao iniciar sessão num novo dispositivo",
   "account.loginAlerts.title": "Alertas de início de sessão",
+  // Nomeia os dois canais que existem. A linha anterior dizia "por email", que
+  // a QueerPulse nunca conseguiu enviar e nunca vai.
   "account.loginAlerts.desc":
-    "Avisa-me por email quando a minha conta é acedida a partir de um novo dispositivo",
+    "Avisa-me aqui e no telemóvel quando a minha conta iniciar sessão a partir de um dispositivo que ainda não usei",
+  "account.loginAlerts.toastError":
+    "Não conseguimos guardar essa definição. Tenta novamente.",
   "account.sessions.title": "Sessões ativas",
   "account.sessions.desc":
     "Vê todos os dispositivos com sessão iniciada na tua conta e termina sessão em qualquer um que não reconheças.",
@@ -580,6 +615,11 @@ export const settings: Catalog = {
   "sessions.bulk.signOutAll": "Terminar sessão em todos os outros dispositivos",
   "sessions.sectionActiveNow": "Ativas agora",
   "sessions.card.badgeThis": "Esta sessão",
+  "sessions.card.currentDeviceNote":
+    "Estás a usar este dispositivo neste momento.",
+  // Abre o User-Agent em bruto, recolhido. Nomeado pelo que é, para ninguém
+  // ter de o ler para saber que o pode ignorar.
+  "sessions.card.technicalDetail": "Detalhe técnico",
   "sessions.card.badgeReview": "Rever",
   "sessions.card.signedIn": "Sessão iniciada <strong>{when}</strong>",
   "sessions.card.lastActivity": "Última atividade <strong>{when}</strong>",

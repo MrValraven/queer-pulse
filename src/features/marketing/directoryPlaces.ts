@@ -266,11 +266,18 @@ export interface DirectoryPlace {
   /** Map pin from the listing; absent for demo places (they use BUSINESS_COORDS). */
   latitude?: number | null;
   longitude?: number | null;
-  /** Safe-space verification state, threaded from the live directory card DTO.
-   * Absent for demo places and submitted drafts (no live safe-space data). */
-  safeSpaceStatus?: "none" | "verified" | "removed";
+  /** The badge as it CURRENTLY speaks for this place, threaded from the live
+   * directory card DTO. `"suspended"` is a granted badge the platform has put
+   * on hold pending review: the grant is untouched, so the stored column still
+   * reads verified, and only this derived value tells the truth. Absent for
+   * demo places and submitted drafts (no live safe-space data). */
+  safeSpaceStatus?: "none" | "verified" | "suspended" | "removed";
   /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise/absent. */
   safeSpaceTier?: number | null;
+  /** A badge that still stands and is more than a year old, so it is due its
+   * annual re-review. Never a suspension: the badge keeps showing, and this
+   * only says how old the claim is. */
+  isBadgeDueForReReview?: boolean;
   /** Real uploaded images (URL per slot, null when empty). Absent for demo
    * places, which fall back to the `gallery` caption blocks. */
   photos?: Record<PhotoKey, string | null>;
@@ -693,6 +700,17 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     hoursType: "shop",
     hoursNote: "Open Tue–Sun. Event nights run later.",
+    accessibility: {
+      answers: {
+        "step-free-entrance": "yes",
+        "wheelchair-accessible-interior": "yes",
+        "accessible-toilet": "no",
+        "gender-neutral-toilet": "yes",
+        "quiet-hours": "yes",
+        "assistance-animals-welcome": "yes",
+      },
+      note: "Two low steps at the door and a bell by the ramp. Ask and someone will come out.",
+    },
     owner: {
       name: "Bertha collective",
       initials: "LB",
@@ -731,6 +749,11 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     langs: ["pt", "en"],
     safeSpaceStatus: "verified",
     safeSpaceTier: 2,
+    // Demo fixture for a badge that STILL STANDS and is past its yearly check.
+    // The card keeps the verified mark; only the wording carries the age of
+    // the claim, because dimming it would say this place lost something it
+    // has not lost.
+    isBadgeDueForReReview: true,
     safeSpaceVerifier: "Mod team · 2 visits",
     safeSpaceReVerifiedAt: "12 May 2026",
     safeSpaceSub:
@@ -837,6 +860,26 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     hoursType: "cafe",
     hoursNote: "Open daily, early. Closes by evening.",
+    accessibility: {
+      answers: {
+        "step-free-entrance": "yes",
+        "wheelchair-accessible-interior": "unknown",
+        "accessible-toilet": "no",
+        "gender-neutral-toilet": "no",
+        "quiet-hours": "unknown",
+        "assistance-animals-welcome": "unknown",
+      },
+      note: null,
+    },
+    hours: normalizeHours({
+      Mon: { open: true, from: "07:30", to: "19:00" },
+      Tue: { open: true, from: "07:30", to: "19:00" },
+      Wed: { open: true, from: "07:30", to: "19:00" },
+      Thu: { open: true, from: "07:30", to: "19:00" },
+      Fri: { open: true, from: "07:30", to: "19:00" },
+      Sat: { open: true, from: "08:00", to: "19:00" },
+      Sun: { open: true, from: "08:00", to: "14:00" },
+    }),
     owner: {
       name: "The Sousa family",
       initials: "CM",
@@ -961,6 +1004,45 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     hoursType: "gym",
     hoursNote: "Open Mon–Sat, generous hours.",
+    accessibility: {
+      answers: {
+        "step-free-entrance": "yes",
+        "wheelchair-accessible-interior": "yes",
+        "accessible-toilet": "yes",
+        "gender-neutral-toilet": "yes",
+        "quiet-hours": "unknown",
+        "assistance-animals-welcome": "unknown",
+      },
+      note: null,
+    },
+    hours: normalizeHours({
+      Mon: { open: true, from: "07:00", to: "22:00" },
+      Tue: { open: true, from: "07:00", to: "22:00" },
+      Wed: { open: true, from: "07:00", to: "22:00" },
+      Thu: { open: true, from: "07:00", to: "22:00" },
+      Fri: { open: true, from: "07:00", to: "22:00" },
+      Sat: { open: true, from: "09:00", to: "18:00" },
+    }),
+    // Demo fixture for a SUSPENDED badge: a real grant the platform has put on
+    // hold while a review runs. The stored column would still read "verified"
+    // in the database, which is exactly why the card must read this derived
+    // value instead. No flag count lives here, in demo data or anywhere else.
+    safeSpaceStatus: "suspended",
+    safeSpaceTier: 1,
+    safeSpaceVerifier: "Mod team · 2 visits",
+    safeSpaceReVerifiedAt: "9 Mar 2026",
+    safeSpaceSub:
+      "A coworking space that put its inclusion policy in writing. The badge is paused while the mod team takes another look.",
+    safeSpacePromises: [
+      {
+        title: "De-gendered bathrooms, single-stall.",
+        desc: "No gendered doors and no queue politics, on every floor.",
+      },
+      {
+        title: "An inclusion policy on the wall.",
+        desc: "Written down, given to every hire, and pointed to when it needs to be.",
+      },
+    ],
     owner: {
       name: "Espaço Intendente",
       initials: "EI",
@@ -1027,6 +1109,17 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     hoursType: "bar",
     hoursNote: "Evenings, Tue–Sun. Closed Mondays.",
+    accessibility: {
+      answers: {
+        "step-free-entrance": "no",
+        "wheelchair-accessible-interior": "no",
+        "accessible-toilet": "no",
+        "gender-neutral-toilet": "yes",
+        "quiet-hours": "unknown",
+        "assistance-animals-welcome": "yes",
+      },
+      note: "The building is old and the door has a step we cannot change. We will always help you in.",
+    },
     owner: {
       name: "Marco & Renato",
       initials: "AF",
@@ -1230,6 +1323,25 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     hoursType: "clinic",
     hoursNote: "Mon–Sat by appointment. Closed Sundays.",
+    accessibility: {
+      answers: {
+        "step-free-entrance": "yes",
+        "wheelchair-accessible-interior": "yes",
+        "accessible-toilet": "yes",
+        "gender-neutral-toilet": "yes",
+        "quiet-hours": "unknown",
+        "assistance-animals-welcome": "yes",
+      },
+      note: "Level entry from the street, a lift to the first-floor rooms, and an accessible toilet on both floors.",
+    },
+    hours: normalizeHours({
+      Mon: { open: true, from: "09:00", to: "19:00" },
+      Tue: { open: true, from: "09:00", to: "19:00" },
+      Wed: { open: true, from: "09:00", to: "19:00" },
+      Thu: { open: true, from: "09:00", to: "19:00" },
+      Fri: { open: true, from: "09:00", to: "19:00" },
+      Sat: { open: true, from: "09:00", to: "13:00" },
+    }),
     owner: {
       name: "Clínica da Estrela",
       initials: "CE",
@@ -1294,6 +1406,24 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     hoursType: "gallery",
     hoursNote: "Open Wed–Sun afternoons. Openings run late.",
+    accessibility: {
+      answers: {
+        "step-free-entrance": "yes",
+        "wheelchair-accessible-interior": "yes",
+        "accessible-toilet": "yes",
+        "gender-neutral-toilet": "yes",
+        "quiet-hours": "no",
+        "assistance-animals-welcome": "yes",
+      },
+      note: "Openings get loud and full. Weekday afternoons are the quiet way to see a show.",
+    },
+    hours: normalizeHours({
+      Wed: { open: true, from: "14:00", to: "20:00" },
+      Thu: { open: true, from: "14:00", to: "20:00" },
+      Fri: { open: true, from: "14:00", to: "22:00" },
+      Sat: { open: true, from: "12:00", to: "20:00" },
+      Sun: { open: true, from: "12:00", to: "18:00" },
+    }),
     owner: {
       name: "Lume collective",
       initials: "GL",
@@ -2258,6 +2388,32 @@ export type OwnershipBadgeState = "verified" | "owned" | "friendly";
 export function ownershipBadgeOf(place: DirectoryPlace): OwnershipBadgeState {
   if (place.queerOwnedVerified) return "verified";
   return place.owned ? "owned" : "friendly";
+}
+
+/**
+ * How a place's safe-space badge should read on a CARD, resolved from the card
+ * payload alone so a grid of 25 places costs no extra request.
+ *
+ * Four card states, from three DTO fields:
+ * - `null` — no badge to speak of (never reviewed, or removed). Nothing renders.
+ * - `"verified"` — the badge stands.
+ * - `"due"` — the badge stands AND is past its yearly check. Still valid, so it
+ *   keeps the verified mark; the wording alone carries the age of the claim.
+ * - `"paused"` — the platform has put the badge on hold while a review runs.
+ *   The mark changes outright, because "verified" is no longer true.
+ *
+ * Deliberately derived rather than read off a single field: the DETAIL page
+ * asks `GET /safe-spaces/:slug/badge-state` for the full five-state truth, and
+ * calling that per card would be an N+1 across the grid.
+ */
+export type SafeSpaceCardBadgeState = "verified" | "due" | "paused";
+
+export function safeSpaceCardBadgeOf(
+  place: DirectoryPlace,
+): SafeSpaceCardBadgeState | null {
+  if (place.safeSpaceStatus === "suspended") return "paused";
+  if (place.safeSpaceStatus !== "verified") return null;
+  return place.isBadgeDueForReReview === true ? "due" : "verified";
 }
 
 /** Catalog key for each ownership state, as the grid card renders it. */

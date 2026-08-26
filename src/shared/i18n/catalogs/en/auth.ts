@@ -255,6 +255,27 @@ export const auth: Catalog = {
     "You're signed in right now, so we'll close that session here. Come back when you turn 18 and someone will gladly invite you in.",
   "under18.signOut": "Sign out",
 
+  // ── Re-agreeing after the Terms or Community Guidelines change (ID-14) ──
+  // Shown in a blocking sheet when a member's stored revision has fallen
+  // behind. Dismissal is deliberately impossible, so the copy has to earn the
+  // interruption: say what moved, offer the documents, and keep it short.
+  "policyReacceptance.eyebrow": "Before you carry on",
+  "policyReacceptance.title": "We've updated <em>the rules we share</em>",
+  "policyReacceptance.lede":
+    "Some of what you agreed to when you joined has changed. We'd rather ask than assume, so have a read and tell us you're on board.",
+  "policyReacceptance.documents.terms": "Terms of Service",
+  "policyReacceptance.documents.guidelines": "Community Guidelines",
+  "policyReacceptance.versionChanged":
+    "You agreed to version {previous}. Version {current} is now in effect.",
+  "policyReacceptance.versionUnrecorded":
+    "We have no agreement on record for you. Version {current} is now in effect.",
+  "policyReacceptance.read": "Read it",
+  "policyReacceptance.agree": "I've read it and I agree",
+  "policyReacceptance.agreeing": "Saving…",
+  "policyReacceptance.error":
+    "We couldn't record that just now. Check your connection and try again.",
+  "policyReacceptance.signOut": "Sign out instead",
+
   // ── Confirm email (six-digit code) ──
 
   // ── Magic link sign-in ──

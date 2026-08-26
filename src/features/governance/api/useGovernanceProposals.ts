@@ -1,8 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
+  approveGovernanceMotion,
+  getAdminGovernanceMotions,
+  rejectGovernanceMotion,
+  type ApproveGovernanceMotionBody,
+  type RejectGovernanceMotionBody,
+} from "./adminGovernanceMotions.api";
+import {
   castGovernanceVote,
+  composeGovernanceMotion,
+  cosignGovernanceProposal,
   getGovernanceProposals,
+  withdrawGovernanceCosignature,
+  type ComposeGovernanceMotionBody,
   type GovernanceProposalDTO,
   type GovernanceVoteChoice,
 } from "./governanceProposals.api";
@@ -20,6 +31,16 @@ export interface GovernanceProposalsResult {
 
 const proposalsQueryKey = (demoMode: boolean) =>
   ["governance-proposals", demoMode] as const;
+
+const motionQueueQueryKey = (demoMode: boolean) =>
+  ["admin-governance-motions", demoMode] as const;
+
+/** Demo pauses long enough to read as a round-trip, matching the admin
+ *  proposal-create mutation's simulated latency. */
+const DEMO_LATENCY_MS = 400;
+
+const simulateDemoRoundTrip = () =>
+  new Promise((resolve) => setTimeout(resolve, DEMO_LATENCY_MS));
 
 /**
  * Data source for the Governance page's Proposals section. Demo mode returns
@@ -74,4 +95,173 @@ export function useGovernanceProposalVote() {
     },
   });
   return { demoMode, vote: mutation.mutate, pending: mutation.isPending };
+}
+
+/**
+ * Files a member motion, which opens in `gathering` and starts collecting
+ * co-signatures. Demo mode resolves without a network call (the fixture list
+ * is illustrative and never grows); live mode posts and invalidates the
+ * shared list so the new motion appears on the gathering shelf.
+ */
+export function useGovernanceMotionCompose() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: ComposeGovernanceMotionBody) => {
+      if (demoMode) {
+        await simulateDemoRoundTrip();
+        return;
+      }
+      await composeGovernanceMotion(body);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: proposalsQueryKey(false),
+      });
+    },
+  });
+}
+
+/**
+ * Adds or withdraws the signed-in member's co-signature on a gathering
+ * motion. Demo mode resolves locally (the calling row tracks its own "just
+ * signed" state, exactly as the vote row does); live mode calls the real
+ * endpoint and invalidates so the count and `hasCosigned` come back from the
+ * server rather than being guessed here.
+ */
+export function useGovernanceCosign() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async ({
+      proposalId,
+      isWithdrawing,
+    }: {
+      proposalId: string;
+      isWithdrawing: boolean;
+    }) => {
+      if (demoMode) {
+        await simulateDemoRoundTrip();
+        return;
+      }
+      if (isWithdrawing) {
+        await withdrawGovernanceCosignature(proposalId);
+        return;
+      }
+      await cosignGovernanceProposal(proposalId);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: proposalsQueryKey(false),
+      });
+    },
+  });
+  return {
+    demoMode,
+    cosign: mutation.mutate,
+    pending: mutation.isPending,
+  };
+}
+
+export interface AdminGovernanceMotionsResult {
+  motions: GovernanceProposalDTO[];
+  loading: boolean;
+  error: boolean;
+  retry: () => void;
+}
+
+/**
+ * The admin screening queue: motions that cleared their co-signature
+ * threshold and are waiting on a reviewer. Demo mode filters the page's own
+ * fixture (dynamically imported so it never ships in the live bundle); live
+ * mode calls `GET /admin/governance/motions?status=screening`.
+ */
+export function useAdminGovernanceMotions(): AdminGovernanceMotionsResult {
+  const { demoMode } = useDemoMode();
+
+  const query = useQuery<GovernanceProposalDTO[]>({
+    queryKey: motionQueueQueryKey(demoMode),
+    queryFn: async () => {
+      if (!demoMode) return getAdminGovernanceMotions();
+      const { DEMO_GOVERNANCE_PROPOSALS } =
+        await import("../governanceProposals.data");
+      return DEMO_GOVERNANCE_PROPOSALS.filter(
+        (proposal) => proposal.status === "screening",
+      );
+    },
+  });
+
+  const retry = () => {
+    void query.refetch();
+  };
+
+  return {
+    motions: query.data ?? [],
+    loading: query.isPending,
+    error: query.isError,
+    retry,
+  };
+}
+
+/** Invalidate both the queue and the public list after a screening decision. */
+function useRefreshAfterScreening() {
+  const queryClient = useQueryClient();
+  return () => {
+    void queryClient.invalidateQueries({
+      queryKey: motionQueueQueryKey(false),
+    });
+    void queryClient.invalidateQueries({ queryKey: proposalsQueryKey(false) });
+  };
+}
+
+/** Opens a screened motion for voting over the reviewer's chosen window. */
+export function useAdminGovernanceMotionApprove() {
+  const { demoMode } = useDemoMode();
+  const refresh = useRefreshAfterScreening();
+  return useMutation({
+    mutationFn: async ({
+      motionId,
+      body,
+    }: {
+      motionId: string;
+      body: ApproveGovernanceMotionBody;
+    }) => {
+      if (demoMode) {
+        await simulateDemoRoundTrip();
+        return;
+      }
+      await approveGovernanceMotion(motionId, body);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      refresh();
+    },
+  });
+}
+
+/** Turns a screened motion down, recording the reason the public page shows. */
+export function useAdminGovernanceMotionReject() {
+  const { demoMode } = useDemoMode();
+  const refresh = useRefreshAfterScreening();
+  return useMutation({
+    mutationFn: async ({
+      motionId,
+      body,
+    }: {
+      motionId: string;
+      body: RejectGovernanceMotionBody;
+    }) => {
+      if (demoMode) {
+        await simulateDemoRoundTrip();
+        return;
+      }
+      await rejectGovernanceMotion(motionId, body);
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      refresh();
+    },
+  });
 }

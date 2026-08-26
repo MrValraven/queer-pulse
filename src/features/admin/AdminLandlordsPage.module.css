@@ -1,0 +1,265 @@
+/* The landlord directory console: two queues on one page, both of them a
+ * member waiting on an answer. Rows rather than cards, because a directory
+ * entry and an introduction request are each small enough to decide from one
+ * line plus its history. */
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-block: 18px 12px;
+}
+
+.searchField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: min(260px, 100%);
+}
+
+.searchLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.searchInput {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 12px;
+  padding: 9px 13px;
+  min-width: 0;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+}
+
+.count {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.rows,
+.skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 20px;
+}
+
+/* ── One row ─────────────────────────────────────────────────────────── */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.rowMain {
+  flex: 1 1 min(320px, 100%);
+  min-width: 0;
+}
+
+.rowTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.rowName {
+  margin: 0;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.rowName a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.rowName a:hover,
+.rowName a:focus-visible {
+  text-decoration: underline;
+}
+
+.rowMeta {
+  margin: 7px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.rowNote {
+  margin: 7px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 70ch;
+  overflow-wrap: anywhere;
+}
+
+/* Who submitted it and how long it has been sitting. A queue without an age
+   column becomes a queue nobody works. */
+.rowSubmitter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-block-start: 9px;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+.rowAgeStale {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.rowPrior {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-block-start: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.rowPriorHead {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.rowPriorBody {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.rowPriorMeta {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+}
+
+.rowActionsNote {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+/* ── The reason dialog ───────────────────────────────────────────────── */
+.reasonSubject {
+  margin: 0 0 16px;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.reasonLabel {
+  display: block;
+  margin-block-end: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+
+.reasonInput {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 12px;
+  padding: 11px 15px;
+  resize: vertical;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.reasonInput:focus {
+  outline: none;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
+  background: var(--paper);
+}
+
+.reasonHint {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+:global([data-theme="dark"]) .row,
+:global([data-theme="dark"]) .rowPrior {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+@media (--xs) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .row {
+    padding: 14px 15px;
+  }
+
+  .rowActions {
+    margin-inline-start: 0;
+  }
+}

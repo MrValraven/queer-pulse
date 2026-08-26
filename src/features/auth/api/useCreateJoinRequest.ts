@@ -6,6 +6,7 @@ import {
 } from "./joinRequest.api";
 import type { JoinRequestSource } from "./joinRequestSource";
 import { TERMS_VERSION } from "./ageAttestation.api";
+import { usePlatformStatus } from "../../../shared/api/usePlatformStatus";
 
 /** What the request-invite form hands the mutation. */
 export interface JoinRequestVars {
@@ -32,6 +33,12 @@ export interface JoinRequestVars {
  */
 export function useCreateJoinRequest() {
   const { demoMode } = useDemoMode();
+  // The Terms revision in effect, from the backend — the single source of
+  // truth for it (ID-14). `TERMS_VERSION` is the fallback for the moment
+  // before this public query resolves; the applicant has no session, which is
+  // why it rides `/platform-status` rather than `/auth/me`.
+  const { data: platformStatus } = usePlatformStatus();
+  const termsVersion = platformStatus?.termsVersion ?? TERMS_VERSION;
   return useMutation<CreateJoinRequestResult, Error, JoinRequestVars>({
     // RequestInviteForm toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
@@ -57,7 +64,7 @@ export function useCreateJoinRequest() {
         message,
         mutualMemberEmail: mutualMemberEmail?.trim() || undefined,
         ageAttested: true,
-        termsVersion: TERMS_VERSION,
+        termsVersion,
         source,
       });
     },

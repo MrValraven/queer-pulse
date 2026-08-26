@@ -6,11 +6,13 @@ import {
   attendeeMeta,
   type AttendeeRow as AttendeeRowData,
 } from "./api/events.adapters";
+import { AttendeeNeeds } from "./AttendeeNeeds";
 import styles from "./ManageGatheringPage.module.css";
 
 /** One attendee row: a tinted initials avatar, the name + composed meta line
- *  ("she/her · RSVP'd 2 Jun"), and a caller-supplied trailing action (Remove for
- *  the going list, Promote for the waitlist). */
+ *  ("she/her · RSVP'd 2 Jun"), whatever they typed into "Anything we should
+ *  know?" (organisers only, LOC-07), and a caller-supplied trailing action
+ *  (Remove for the going list, Promote for the waitlist). */
 export function AttendeeRow({
   attendee,
   action,
@@ -31,6 +33,7 @@ export function AttendeeRow({
       <div className={styles.attInfo}>
         <div className={styles.attName}>{attendee.name}</div>
         <div className={styles.attMeta}>{attendeeMeta(attendee, t, fmt)}</div>
+        <AttendeeNeeds attendee={attendee} />
       </div>
       <div className={styles.attActions}>{action}</div>
     </div>

@@ -6,7 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { PressKitDownloadModal } from "./PressKitDownloadModal";
-import { buildKitManifest, buildKitPreview } from "./pressKitAssets.data";
+import { PRESS_ASSETS, buildKitPreview } from "./pressKitAssets.data";
 import {
   BoilerplateSection,
   ColourSection,
@@ -14,15 +14,13 @@ import {
   DownloadsSection,
   FactsSection,
   MarkSection,
-  PhotographySection,
   TeamSection,
 } from "./PressKitSections";
 import styles from "./PressKitPage.module.css";
 
 export function PressKitPage() {
   const { t } = useTranslation();
-  const [showDownload, setShowDownload] = useState(false);
-  const kitManifest = useMemo(() => buildKitManifest(t), [t]);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const kitPreview = useMemo(() => buildKitPreview(t), [t]);
   const pageTitle = t("marketing:pressKit.meta.title");
   const pageDescription = t("marketing:pressKit.meta.description");
@@ -56,7 +54,7 @@ export function PressKitPage() {
           <Button
             type="button"
             variant="primary"
-            onClick={() => setShowDownload(true)}
+            onClick={() => setIsDownloadOpen(true)}
           >
             {t("marketing:pressKit.hero.downloadKitCta")}
           </Button>
@@ -105,7 +103,6 @@ export function PressKitPage() {
         <BoilerplateSection />
         <MarkSection />
         <ColourSection />
-        <PhotographySection />
         <TeamSection />
         <FactsSection />
         <CoverageSection />
@@ -148,7 +145,7 @@ export function PressKitPage() {
         </Button>
       </Outro>
 
-      {showDownload && (
+      {isDownloadOpen && (
         <PressKitDownloadModal
           eyebrow={t("marketing:pressKit.downloadModal.eyebrow")}
           title={
@@ -164,9 +161,9 @@ export function PressKitPage() {
             />
           }
           rows={kitPreview}
-          asset={kitManifest}
+          asset={PRESS_ASSETS.completeKit}
           buttonLabel={t("marketing:pressKit.downloadModal.buttonLabel")}
-          onClose={() => setShowDownload(false)}
+          onClose={() => setIsDownloadOpen(false)}
         />
       )}
 

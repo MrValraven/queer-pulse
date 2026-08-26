@@ -1,0 +1,81 @@
+.citation {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 var(--radius-input) var(--radius-input) 0;
+  background: var(--wash);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.citationIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ink-40);
+}
+
+.citationBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.citationLabel {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.citationStale {
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+.editorForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.editorGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.editorLegend {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.editorHint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+
+.editorTextarea {
+  width: 100%;
+  min-height: 84px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-input);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.editorTextarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

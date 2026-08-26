@@ -24,7 +24,6 @@ const demoXpBreakdown: XpBreakdownItem[] = [
   { key: "events", units: 1, cap: 12, perUnit: 50, xp: 50 },
   { key: "posts", units: 4, cap: 20, perUnit: 15, xp: 60 },
   { key: "endorsements", units: 1, cap: 10, perUnit: 20, xp: 20 },
-  { key: "workshops", units: 0, cap: 5, perUnit: 80, xp: 0 },
   { key: "tenure", units: 60, cap: 365, perUnit: 1, xp: 60 },
   { key: "verified", units: 1, cap: 1, perUnit: 50, xp: 50 },
   { key: "gettingStarted", units: 6, cap: 6, perUnit: 25, xp: 150 },

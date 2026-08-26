@@ -2,6 +2,7 @@ import { REASON_LABEL_KEYS } from "../../safety/reportReasons";
 import type { TFunction } from "../../../shared/i18n/types";
 import type {
   PriorReports,
+  Ratification,
   ReportDetail,
   ReporterCredibility,
   ReportChip,
@@ -16,11 +17,14 @@ import type { AdminTone } from "../ui";
 import { reasonCategoryKey } from "./moderationCategories";
 import type {
   AppealDTO,
+  BanRatificationDTO,
   ModActionCode,
+  ModReportClusterDTO,
   ModReportDTO,
   ModSeverity,
   ResolutionNotifiedParty,
 } from "./moderation.api";
+import type { ModReportCluster } from "../moderationQueue.types";
 
 /**
  * DTO → existing view-model adapters (spec 04). The moderation UI is built
@@ -91,6 +95,32 @@ function reporterCredibilityFrom(
     kind: "history",
     filed: reporter.priorReports,
     dismissed: reporter.priorDismissed,
+  };
+}
+
+/**
+ * TS-06: the server's cluster summary, as the queue's own view model.
+ *
+ * A near-identity map, deliberately kept: it is the one place the DTO's
+ * vocabulary meets the queue's, so a server-side rename shows up here as a
+ * type error rather than as a silently missing badge. Nothing here needs a
+ * translator: every field is a count, a timestamp or an id, and the words
+ * around them are resolved at render.
+ */
+export function modReportClusterDtoToView(
+  dto: ModReportClusterDTO,
+): ModReportCluster {
+  return {
+    subjectType: dto.subjectType,
+    subjectId: dto.subjectId,
+    openCount: dto.openCount,
+    distinctReporterCount: dto.distinctReporterCount,
+    overdueCount: dto.overdueCount,
+    highestSeverity: dto.highestSeverity,
+    firstReportedAt: dto.firstReportedAt,
+    lastReportedAt: dto.lastReportedAt,
+    isSurge: dto.isSurge,
+    reportIds: dto.reportIds,
   };
 }
 
@@ -216,6 +246,44 @@ export function appealDtoToView(dto: AppealDTO): AppealView {
     },
     argument: dto.argument,
     supporters: [],
+    // TS-11. The published deadline travels with the row so the card can say
+    // "due Thursday" or "past its window" without recomputing what late means:
+    // `isOverdue` is decided server-side, against the same instant for every
+    // appeal on the page.
+    slaDueAt: dto.slaDueAt,
+    isOverdue: dto.isOverdue,
+    decidedAt: dto.decidedAt,
+    decision: dto.decision,
+  };
+}
+
+/**
+ * One pending ban hold, as the ratification queue renders it (TS-12).
+ *
+ * A near-passthrough on purpose. Every field here is either a fact the second
+ * moderator has to weigh (who asked, in whose words, about whom) or a deadline,
+ * and none of it is worth reshaping between the server and the card.
+ */
+export function banRatificationDtoToView(
+  dto: BanRatificationDTO,
+): Ratification {
+  return {
+    id: dto.id,
+    targetName: dto.targetName,
+    targetUserId: dto.targetUserId,
+    requestedByName: dto.requestedByName,
+    requestedById: dto.requestedById,
+    note: dto.note,
+    reasonCode: dto.reasonCode,
+    interimAction: dto.interimAction,
+    requestedAt: dto.requestedAt,
+    expiresAt: dto.expiresAt,
+    isExpired: dto.isExpired,
+    status: dto.status,
+    decidedByName: dto.decidedByName,
+    decidedAt: dto.decidedAt,
+    decisionNote: dto.decisionNote,
+    reportId: dto.reportId,
   };
 }
 
@@ -230,7 +298,6 @@ const OUTCOME_TONE: Record<ModActionCode, "danger" | "coral" | "jade"> = {
   hide_content: "coral",
   escalate: "coral",
   dismiss: "jade",
-  shield: "jade",
 };
 
 /** "X notified" lines under a resolved row. Chrome this code composes from a

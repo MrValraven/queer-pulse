@@ -7,11 +7,18 @@ const GovernancePage = lazyNamed(
   "GovernancePage",
 );
 
-/** The public governance overview page. */
+const TransparencyPage = lazyNamed(
+  () => import("./TransparencyPage"),
+  "TransparencyPage",
+);
+
+/** The public governance overview page, and the Transparency Report the
+ *  Constitution's Article VI names. */
 export function governanceRoutes() {
   return (
     <>
       <Route path={routes.governance} element={<GovernancePage />} />
+      <Route path={routes.transparencyReport} element={<TransparencyPage />} />
     </>
   );
 }

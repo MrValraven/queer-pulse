@@ -34,11 +34,12 @@ export const MAX_NEARBY = 4;
 export function nearbyPlaces(
   origin: DirectoryPlace,
   candidates: DirectoryPlace[],
+  demoMode: boolean,
   options: { radiusMetres?: number; limit?: number } = {},
 ): NearbyPlace[] {
   const radiusMetres = options.radiusMetres ?? WALKING_RADIUS_METRES;
   const limit = options.limit ?? MAX_NEARBY;
-  const from = placeCoordinates(origin);
+  const from = placeCoordinates(origin, demoMode);
   if (!from || origin.online) return [];
 
   const found: NearbyPlace[] = [];
@@ -46,7 +47,7 @@ export function nearbyPlaces(
     if (candidate.slug === origin.slug) continue;
     if (candidate.online) continue;
     if (!isPlaceOperating(candidate)) continue;
-    const to: Coordinates | null = placeCoordinates(candidate);
+    const to: Coordinates | null = placeCoordinates(candidate, demoMode);
     if (!to) continue;
     const metres = distanceInMetres(from, to);
     if (metres > radiusMetres) continue;

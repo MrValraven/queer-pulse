@@ -250,7 +250,10 @@ function summaryToReaction(s: CommunityReactionSummary): Reaction {
   return { key: s.key, count: s.count, reacted: s.mine };
 }
 
-function replyDtoToPostReply(
+/** GET .../posts/:id/replies item → a Pulse `PostReply`. Exported so the
+ *  single-post permalink page can append a loaded-more reply to the post's
+ *  embedded preview in the SAME shape the preview already carries. */
+export function replyDtoToPostReply(
   dto: CommunityReplyDTO,
   translate: TFunction,
 ): PostReply {
@@ -329,17 +332,52 @@ export function joinRequestToModRequest(
   };
 }
 
-/** `GET /communities/:slug/reports` item → the mod-tools `ModReport`. Leaner
- *  than the demo mock (no author/reporter/excerpt — the backend DTO doesn't
- *  carry them): `ModReportedPosts` resolves `reasonCode` to a label at render
- *  time via `REASON_LABEL_KEYS` and renders a plainer row for these. */
+/** The reported content's author as the queue row draws it. `refToPerson`
+ *  substitutes a translated "some member" for an absent ref, which would need
+ *  a translator here and would also read as a real person: on this surface an
+ *  absent author means the account was erased, and the row says so itself. */
+function reportAuthorPerson(
+  ref: MemberRefDTO | null | undefined,
+): Person | undefined {
+  const person = memberRefToPerson(ref);
+  if (!person) return undefined;
+  return {
+    initials: person.initials,
+    name: person.name,
+    tint: person.tint as Tint,
+    slug: person.slug,
+    avatarUrl: person.avatarUrl,
+  };
+}
+
+/** `GET /communities/:slug/reports` item → the mod-tools `ModReport`.
+ *
+ *  Carries everything the row needs to be judged: the reported body, who
+ *  wrote it, how urgent it is, whether the SLA window has closed, and the
+ *  thread to open. `reporter` stays unset, because the backend deliberately
+ *  keeps who filed a report away from a community moderator. Takes no
+ *  translator, so `useCommunityReports` maps a whole page with a bare
+ *  `.map()`. `ModReportedPosts` resolves `reasonCode` to a label at render
+ *  time via `REASON_LABEL_KEYS`. */
 export function communityReportToModReport(dto: CommunityReportDTO): ModReport {
+  const content = dto.content;
   return {
     id: dto.id,
     createdAt: dto.createdAt,
     reasonCode: dto.reasonCode,
+    severity: dto.severity,
+    slaDueAt: dto.slaDueAt,
+    isOverdue: dto.isOverdue,
     subjectType: dto.subjectType,
     subjectId: dto.subjectId,
+    postExcerpt: content?.excerpt || undefined,
+    isExcerptTruncated: content?.isExcerptTruncated ?? false,
+    author: reportAuthorPerson(content?.author),
+    threadPostId: content?.postId,
+    isContentDeleted: content?.isDeleted ?? false,
+    isContentHidden: content?.isHidden ?? false,
+    isContentRemoved: content?.isRemoved ?? false,
+    isContentMissing: content === null,
   };
 }
 

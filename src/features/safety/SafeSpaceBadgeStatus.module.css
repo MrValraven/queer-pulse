@@ -1,0 +1,165 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* One panel, retoned by state. Never a colour-only signal: the icon, the
+   headline and the body copy all change with it. */
+.panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: var(--radius-card, 22px);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-inline-start: 3px solid var(--ink-40);
+}
+
+.panel[data-tone="verified"] {
+  border-inline-start-color: var(--jade);
+}
+
+.panel[data-tone="due"],
+.panel[data-tone="under_review"] {
+  border-inline-start-color: var(--accent);
+}
+
+.panel[data-tone="suspended"],
+.panel[data-tone="removed"] {
+  background: var(--plum);
+  border-color: transparent;
+  border-inline-start-color: var(--accent);
+  color: var(--cream);
+}
+
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 38px;
+  block-size: 38px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.06);
+  color: var(--ink);
+}
+
+.panel[data-tone="verified"] .seal {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+
+.panel[data-tone="due"] .seal,
+.panel[data-tone="under_review"] .seal {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--accent);
+}
+
+.panel[data-tone="suspended"] .seal,
+.panel[data-tone="removed"] .seal {
+  background: rgba(var(--accent-rgb), 0.2);
+  color: var(--accent);
+}
+
+.body {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: inherit;
+}
+
+.lead {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  max-inline-size: 62ch;
+  color: var(--ink-60);
+}
+
+.panel[data-tone="suspended"] .lead,
+.panel[data-tone="removed"] .lead {
+  color: rgba(247, 243, 238, 0.8);
+}
+
+.reason {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  background: rgba(var(--plum-rgb), 0.05);
+  color: var(--ink);
+}
+
+.panel[data-tone="suspended"] .reason,
+.panel[data-tone="removed"] .reason {
+  background: rgba(247, 243, 238, 0.1);
+  color: var(--cream);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin: 14px 0 0;
+}
+
+.fact {
+  min-width: 0;
+}
+
+.fact dt {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.fact dd {
+  margin: 2px 0 0;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.panel[data-tone="suspended"] .fact dt,
+.panel[data-tone="removed"] .fact dt {
+  color: rgba(247, 243, 238, 0.5);
+}
+
+.panel[data-tone="suspended"] .fact dd,
+.panel[data-tone="removed"] .fact dd {
+  color: var(--cream);
+}
+
+@media (max-width: 560px) {
+  .panel {
+    padding: 16px;
+    gap: 12px;
+  }
+}
+
+/* ── The member flag affordance, sitting under the badge state ─────────── */
+.flagRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding-inline: 4px;
+}
+
+.flagNote {
+  flex: 1 1 22ch;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}

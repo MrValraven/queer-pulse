@@ -129,8 +129,13 @@ const CARE: PieceCare = {
 };
 
 const PAYMENT: PaymentDto = {
-  fee: "€420",
-  expenses: "€18 travel",
+  // CON-18 — amounts are decimal strings with the currency beside them; the
+  // expenses line keeps the desk's own wording, which the amount cannot carry.
+  currency: "EUR",
+  fee: "420.00",
+  feeText: null,
+  expenses: "18.00",
+  expensesText: "18 travel",
   invoice: "INV-2026-084",
   filedOn: "29 Jul",
   terms: "21 days",

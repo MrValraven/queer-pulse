@@ -1,11 +1,12 @@
 import { useId } from "react";
-import { FiChevronDown, FiShield, FiSliders } from "react-icons/fi";
-import { FilterChips } from "../../shared/components/ui";
+import { FiChevronDown, FiClock, FiShield, FiSliders } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useLocalStorage } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { LOCAL_CATEGORIES, LOCAL_CATEGORY_LABEL_KEYS } from "./localPlaces";
-import { CATEGORY_ICON, VIBES, VIBE_LABEL_KEYS } from "./map.data";
+import { LocalAccessFilter } from "./LocalAccessFilter";
+import { LocalCategoryFilter } from "./LocalCategoryFilter";
+import { LocalVibeFilter } from "./LocalVibeFilter";
+import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
 import s from "./LocalFilterBar.module.css";
 
 export interface LocalFilterFieldsProps {
@@ -20,6 +21,13 @@ export interface LocalFilterFieldsProps {
   /** Whether the "Verified safe spaces" filter (`?safe=verified`) is active. */
   safeOnly: boolean;
   onToggleSafeOnly: () => void;
+  /** Whether the "Open now" filter (`?open=now`) is active. */
+  openNow: boolean;
+  onToggleOpenNow: () => void;
+  /** Accessibility needs currently filtered on (`?access=`), all of which a
+   *  place must meet to appear. */
+  access: AccessibilitySlug[];
+  onToggleAccess: (slug: AccessibilitySlug) => void;
 }
 
 interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
@@ -34,10 +42,11 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
 }
 
 /**
- * The filter set itself — search plus the filter groups: place type, verified
- * safe spaces, and (demo-only) vibe. Rendered inline in the desktop bar behind
- * the "Refine" toggle, or flat inside the mobile "Filters" sheet; one markup
- * source so the two layouts never diverge in behaviour.
+ * The filter set itself: search, then the groups. Place type, the two one-tap
+ * narrowings (open now, verified safe spaces), access needs, and (demo-only)
+ * vibe. Rendered inline in the desktop bar behind the "Refine" toggle, or flat
+ * inside the mobile "Filters" sheet; one markup source so the two layouts never
+ * diverge in behaviour.
  */
 export function LocalFilterFields({
   category,
@@ -49,12 +58,14 @@ export function LocalFilterFields({
   onToggleVibe,
   safeOnly,
   onToggleSafeOnly,
+  openNow,
+  onToggleOpenNow,
+  access,
+  onToggleAccess,
   variant = "bar",
 }: LocalFilterFieldsVariantProps) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const categoryLabelId = useId();
-  const vibeLabelId = useId();
   const refineBodyId = useId();
   // Every filter collapses behind one toggle so the sticky bar stays a single
   // row; the visitor's open/closed choice sticks per device.
@@ -73,49 +84,11 @@ export function LocalFilterFields({
   // Surfaced on the collapsed toggle so hidden-but-active filters still read.
   // The place type counts too now that it lives inside the drawer.
   const activeRefineCount =
-    vibes.length + (safeOnly ? 1 : 0) + (category !== "all" ? 1 : 0);
-  const count = (value: string) => (
-    <span className={s.count} aria-hidden>
-      {categoryCounts[value] ?? 0}
-    </span>
-  );
-  // Each category chip leads with a colour swatch that mirrors its map pin
-  // (category fill + white icon), so the filter group doubles as a live legend.
-  const categoryChip = (categoryId: string, label: string) => {
-    const Icon = CATEGORY_ICON[categoryId];
-    return {
-      value: categoryId,
-      label: (
-        <>
-          {Icon && (
-            <span
-              className={s.catSwatch}
-              data-category={categoryId}
-              aria-hidden
-            >
-              <Icon />
-            </span>
-          )}
-          {label}
-          {count(categoryId)}
-        </>
-      ),
-    };
-  };
-  const categoryOptions = [
-    {
-      value: "all",
-      label: (
-        <>
-          {t("marketing:directory.cat.all")}
-          {count("all")}
-        </>
-      ),
-    },
-    ...LOCAL_CATEGORIES.map((categoryId) =>
-      categoryChip(categoryId, t(LOCAL_CATEGORY_LABEL_KEYS[categoryId]!)),
-    ),
-  ];
+    vibes.length +
+    access.length +
+    (safeOnly ? 1 : 0) +
+    (openNow ? 1 : 0) +
+    (category !== "all" ? 1 : 0);
 
   const search = (
     <div className={s.search}>
@@ -144,22 +117,28 @@ export function LocalFilterFields({
   // the sheet renders them straight into its body.
   const groups = (
     <>
-      <div className={s.group}>
-        <span className={s.groupLabel} id={categoryLabelId}>
-          {t("marketing:local.filter.categoryLabel")}
-        </span>
-        <FilterChips
-          labelledBy={categoryLabelId}
-          options={categoryOptions}
-          value={category}
-          onChange={onCategoryChange}
-        />
-      </div>
+      <LocalCategoryFilter
+        category={category}
+        onCategoryChange={onCategoryChange}
+        categoryCounts={categoryCounts}
+      />
+      {/* The two one-tap narrowings, side by side: is it open right now, and
+          has it been verified as a safe space. Each chip names itself, so the
+          group only needs a name for the set as a whole. */}
       <div
         className={s.safeRow}
         role="group"
-        aria-label={t("marketing:local.filter.verifiedSafeSpaces")}
+        aria-label={t("marketing:local.filter.quickFiltersLabel")}
       >
+        <button
+          type="button"
+          aria-pressed={openNow}
+          className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
+          onClick={onToggleOpenNow}
+        >
+          <FiClock aria-hidden />
+          {t("marketing:local.filter.openNow")}
+        </button>
         <button
           type="button"
           aria-pressed={safeOnly}
@@ -170,30 +149,9 @@ export function LocalFilterFields({
           {t("marketing:local.filter.verifiedSafeSpaces")}
         </button>
       </div>
+      <LocalAccessFilter access={access} onToggleAccess={onToggleAccess} />
       {showVibeFilter && (
-        <div className={s.vibeRow} role="group" aria-labelledby={vibeLabelId}>
-          <span className={s.vibeLabel} id={vibeLabelId}>
-            {t("marketing:local.filter.vibeLabel")}
-          </span>
-          {VIBES.map((vibe) => (
-            <button
-              type="button"
-              key={vibe}
-              aria-pressed={vibes.includes(vibe)}
-              className={[s.chip, s.vibe, vibes.includes(vibe) && s.chipOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => onToggleVibe(vibe)}
-            >
-              {t(VIBE_LABEL_KEYS[vibe]!)}
-            </button>
-          ))}
-          {vibes.length > 0 && (
-            <span className={s.vibeNote}>
-              {t("marketing:local.filter.vibeVenueNote")}
-            </span>
-          )}
-        </div>
+        <LocalVibeFilter vibes={vibes} onToggleVibe={onToggleVibe} />
       )}
     </>
   );

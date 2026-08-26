@@ -1,6 +1,7 @@
 import { Badge, Button, type BadgeTone } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { PaymentDto, PaymentStatus } from "../api/pieces.api";
+import { formatMoney } from "./money";
 import styles from "../PieceRecordPage.module.css";
 import tabStyles from "./pieceTabs.module.css";
 
@@ -28,7 +29,11 @@ export function MoneyMiniCard({ payment, onOpenMoney }: MoneyMiniCardProps) {
     <div className={tabStyles.card}>
       <h3>{t("magazine:piece.moneyMini.heading")}</h3>
       <div className={styles.moneyRow}>
-        <span>{payment?.fee ?? t("magazine:piece.moneyMini.noFeeYet")}</span>
+        <span>
+          {(payment
+            ? (formatMoney(payment.currency, payment.fee) ?? payment.feeText)
+            : null) ?? t("magazine:piece.moneyMini.noFeeYet")}
+        </span>
         {payment && (
           <Badge tone={PAYMENT_STATUS_TONE[payment.status]}>
             {paymentStatusLabel[payment.status]}

@@ -1,17 +1,23 @@
 import { FiX } from "react-icons/fi";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { FadeIn, FeatureHelp } from "../../shared/components/ui";
+import { FadeIn, FeatureHelp, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { AdminPageHeader, AdminTabs } from "./ui";
 import { AdminReportDrawer } from "./AdminReportDrawer";
 import { AdminAppealDrawer } from "./AdminAppealDrawer";
-import { OpenPane, AppealsPane, ResolvedPane } from "./AdminModerationPanes";
+import {
+  OpenPane,
+  AppealsPane,
+  RatificationPane,
+  ResolvedPane,
+} from "./AdminModerationPanes";
 import {
   useModerationQueue,
   type TabId,
   type FilterId,
 } from "./useModerationQueue";
+import { ALL_COMMUNITIES } from "./moderationQueue.types";
 import styles from "./AdminModerationPage.module.css";
 
 export function AdminModerationPage() {
@@ -19,10 +25,22 @@ export function AdminModerationPage() {
   const q = useModerationQueue();
   const { tab, filter } = q;
 
+  // TS-14: which community a report came from is the most useful triage signal
+  // the queue has, so it is also something to narrow by. Options are the
+  // communities actually present in the loaded queue, plus "all".
+  const communityOptions = [
+    { value: ALL_COMMUNITIES, label: t("admin:moderation.community.all") },
+    ...q.communityOptions.map((slug) => ({ value: slug, label: slug })),
+  ];
+
+  // TS-06 adds the last two: the reports whose response window has already
+  // closed, and the subjects several different people are reporting at once.
   const FILTERS: { id: FilterId; labelKey: string }[] = [
     { id: "all", labelKey: "admin:moderation.filters.all" },
     { id: "emergencies", labelKey: "admin:moderation.filters.emergencies" },
     { id: "mine", labelKey: "admin:moderation.filters.mine" },
+    { id: "overdue", labelKey: "admin:moderation.filters.overdue" },
+    { id: "surge", labelKey: "admin:moderation.filters.surge" },
   ];
 
   return (
@@ -93,6 +111,15 @@ export function AdminModerationPage() {
               label: t("admin:moderation.tabs.resolved"),
               count: q.counts.resolved,
             },
+            // TS-12. Its own tab rather than a banner on the open queue:
+            // nothing on it is a report, and a hold nobody can find is a hold
+            // nobody ratifies, which would quietly turn every permanent ban
+            // into a 72-hour suspension.
+            {
+              id: "ratification",
+              label: t("admin:moderation.tabs.ratification"),
+              count: q.counts.ratification,
+            },
           ]}
           active={tab}
           onChange={(id) => q.setTab(id as TabId)}
@@ -116,6 +143,16 @@ export function AdminModerationPage() {
                 {t(f.labelKey)}
               </button>
             ))}
+            {q.communityOptions.length > 0 && (
+              <Select
+                size="sm"
+                className={styles.communityFilter}
+                label={t("admin:moderation.community.filterLabel")}
+                options={communityOptions}
+                value={q.community}
+                onChange={(value) => q.setCommunity(value ?? ALL_COMMUNITIES)}
+              />
+            )}
           </div>
         )}
       </div>
@@ -123,6 +160,7 @@ export function AdminModerationPage() {
       {tab === "open" && <OpenPane q={q} />}
       {tab === "appeals" && <AppealsPane q={q} />}
       {tab === "resolved" && <ResolvedPane q={q} />}
+      {tab === "ratification" && <RatificationPane q={q} />}
 
       {q.selected && (
         <AdminReportDrawer

@@ -3,6 +3,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { UpdatePaymentDto } from "../api/pieces.api";
 import type { PieceRecordView } from "../data/pieceRecord.data";
 import { KV } from "./KV";
+import { formatMoney, moneyNote } from "./money";
 import styles from "./pieceTabs.module.css";
 
 export interface MoneyTabProps {
@@ -20,6 +21,11 @@ export function MoneyTab({
 }: MoneyTabProps) {
   const { t } = useTranslation();
   const payment = record.payment;
+  const feeNote = moneyNote(payment?.fee ?? null, payment?.feeText ?? null);
+  const expensesNote = moneyNote(
+    payment?.expenses ?? null,
+    payment?.expensesText ?? null,
+  );
 
   if (!payment) {
     return (
@@ -38,10 +44,21 @@ export function MoneyTab({
       <div className={styles.card}>
         <h3>{t("magazine:piece.money.feeHeading")}</h3>
         <div className={styles.kvs}>
-          <KV label={t("magazine:piece.money.agreedFee")} value={payment.fee} />
+          <KV
+            label={t("magazine:piece.money.agreedFee")}
+            value={
+              formatMoney(payment.currency, payment.fee) ??
+              payment.feeText ??
+              t("magazine:piece.money.noFeeAgreed")
+            }
+          />
           <KV
             label={t("magazine:piece.money.expenses")}
-            value={payment.expenses ?? t("magazine:piece.money.noneFiled")}
+            value={
+              formatMoney(payment.currency, payment.expenses) ??
+              payment.expensesText ??
+              t("magazine:piece.money.noneFiled")
+            }
           />
           <KV
             label={t("magazine:piece.money.invoice")}
@@ -58,6 +75,21 @@ export function MoneyTab({
             warn
           />
         </div>
+        {/* CON-18 — the desk's own wording, shown only when it says something
+            the amount cannot ("18 travel, receipts with Marta"). */}
+        {feeNote || expensesNote ? (
+          <div className={styles.note}>
+            {feeNote
+              ? t("magazine:piece.money.feeAsFiled", { text: feeNote })
+              : null}
+            {feeNote && expensesNote ? " · " : null}
+            {expensesNote
+              ? t("magazine:piece.money.expensesAsFiled", {
+                  text: expensesNote,
+                })
+              : null}
+          </div>
+        ) : null}
         {payment.status === "approved_unpaid" ? (
           <div className={`${styles.note} ${styles.warn}`}>
             {t("magazine:piece.money.unpaidWarning")}

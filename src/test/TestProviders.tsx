@@ -27,7 +27,6 @@ import { CommunityMembershipProvider } from "../app/providers/CommunityMembershi
 import { CommunityEditsProvider } from "../app/providers/CommunityEditsProvider";
 import { DeletedConversationsProvider } from "../app/providers/DeletedConversationsProvider";
 import { DirectoryListingsProvider } from "../app/providers/DirectoryListingsProvider";
-import { WorkshopsProvider } from "../app/providers/WorkshopsProvider";
 import {
   PublicProfileContext,
   type PublicProfileContextValue,
@@ -74,7 +73,6 @@ const PROVIDERS: ProviderComponent[] = [
   CommunityEditsProvider,
   DeletedConversationsProvider,
   DirectoryListingsProvider,
-  WorkshopsProvider,
 ];
 
 function nest(providers: ProviderComponent[], children: ReactNode): ReactNode {

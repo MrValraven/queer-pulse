@@ -102,27 +102,6 @@
   flex: none;
   stroke-width: 3;
 }
-/* Verified safe space, reduced to its mark: the words live in its tooltip and
-   its accessible name. It sits on a member-supplied photo, so it carries its
-   own opaque ground and a two-value edge rather than trusting the image. */
-.safeSpaceMark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  color: var(--jade);
-  background: var(--paper);
-  box-shadow:
-    0 0 0 1px rgba(var(--line-rgb), 0.12),
-    0 2px 8px rgba(var(--plum-rgb), 0.22);
-}
-.safeSpaceMark svg {
-  width: 14px;
-  height: 14px;
-  stroke-width: 2.2;
-}
 /* A small chip over the photo's top-left corner (the "Within a short walk"
    distance). It sits on a member-supplied photo, so it carries its own opaque
    ground and a two-value edge rather than trusting the image underneath. */
@@ -543,4 +522,110 @@
   padding: 24px 0 4px;
   color: var(--ink-60);
   font-size: 0.9rem;
+}
+
+/* ── Accessibility on the card ─────────────────────────────────────────────
+   The needs this place has answered YES to. Jade because it reads as a met
+   condition beside the neutral price/tag pills above it; the tick means the
+   state is never carried by colour alone. Only positives appear here, so the
+   row is short and the listing keeps the honest three-state account. */
+.accessRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.accessPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.1);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.accessPill svg {
+  inline-size: 12px;
+  block-size: 12px;
+  flex: none;
+}
+.accessMore {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-40);
+  padding-block: 4px;
+}
+
+/* ── "Use my location" ─────────────────────────────────────────────────────
+   Sits in the results header beside the sort, because that is where ordering
+   is decided. The note under it carries the privacy promise while the feature
+   is on, so it stays part of the control rather than fine print elsewhere. */
+.nearMe {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+.nearMeButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: transparent;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 6px 13px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    color 0.18s var(--ease),
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nearMeButton:not(.nearMeButtonOn):hover {
+    border-color: var(--line-strong);
+    color: var(--text-strong);
+  }
+}
+/* Touch: lift the resting ~32px control to the 44px target minimum, matching
+   the filter chips. Padding is unchanged so the ink stays compact on desktop. */
+@media (pointer: coarse) {
+  .nearMeButton {
+    min-height: 44px;
+  }
+}
+.nearMeButtonOn {
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  border-color: var(--line-strong);
+}
+.nearMeButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.nearMeNote {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  max-width: 34ch;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+.nearMeNote svg {
+  inline-size: 12px;
+  block-size: 12px;
+  flex: none;
 }

@@ -1,0 +1,23 @@
+.loadMoreRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+.loadMoreEnd,
+.loadMoreError {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  text-align: center;
+}
+.loadMoreEnd {
+  color: rgba(var(--plum-rgb), 0.55);
+}
+.loadMoreError {
+  color: var(--accent);
+}
+.extraGrid {
+  margin-top: 18px;
+}

@@ -1,7 +1,7 @@
 import type { Catalog } from "../../types";
 
 /**
- * Economy — jobs, mentorship, housing, barter, grants, workshops, solidarity
+ * Economy — jobs, mentorship, housing, barter, grants, solidarity
  * pricing, and the freelance/tax document generators. Namespace `economy`.
  *
  * Scope note: mock job/listing/review/salary *content* (job descriptions,
@@ -185,9 +185,6 @@ export const economy: Catalog = {
   "workHub.card.mentor.label": "Mentorship",
   "workHub.card.mentor.primary": "1 active mentorship",
   "workHub.card.mentor.next": "{count} mentors with open spots",
-  "workHub.card.skills.label": "Skills exchange",
-  "workHub.card.skills.primary": "Teaching 2 · Learning 1",
-  "workHub.card.skills.next": "A new request matches you",
   "workHub.card.saved.label": "Saved roles",
   "workHub.card.saved.primary": "5 saved jobs",
   "workHub.card.saved.next": "2 closing this week",
@@ -635,7 +632,7 @@ export const economy: Catalog = {
   "listSpace.eyebrow": "Housing board",
   "listSpace.title": "List your <em>space.</em>",
   "listSpace.sub":
-    "Open your place to a verified member of the community. A few details now. You can add photos once it's approved.",
+    "Open your place to a verified member of the community. Tell people what it's like to live there, add a few photos, and a moderator reads every listing before it reaches the board.",
   "listSpace.titleLabel": "Listing title *",
   "listSpace.titlePlaceholder": "e.g. Sunny room in a queer flatshare",
   "listSpace.areaLabel": "Neighbourhood / area *",
@@ -656,6 +653,64 @@ export const economy: Catalog = {
     "Show more than one room, plus the kitchen and bathroom.",
   "listSpace.photoGuide.consent":
     "Leave housemates' faces out unless they've said it's okay.",
+  // ── ListSpaceDetailFields + ListSpacePhotoField (LOC-09) ───────────────
+  "listSpace.areaHint":
+    "Just the neighbourhood. Every home on this board is in {city}.",
+  "listSpace.blurbLabel": "One-line summary",
+  "listSpace.blurbPlaceholder":
+    "e.g. A double room in a four-person queer flatshare",
+  "listSpace.blurbHint":
+    "The line people read on the board. Leave it blank and we'll use the opening of your description.",
+  "listSpace.descriptionLabel": "About this home",
+  "listSpace.descriptionPlaceholder":
+    "What the place is like, who else lives there, what the street is like, anything you'd want to know before moving in.",
+  "listSpace.descriptionHint":
+    "A few honest sentences help more than a long list. This is what people read before they write to you.",
+  "listSpace.availableLabel": "Available from",
+  "listSpace.availableHint": "Leave it empty if the place is free now.",
+  "listSpace.minStayLabel": "Shortest stay (months)",
+  "listSpace.minStayPlaceholder": "e.g. 6",
+  "listSpace.minStayHint": "Leave it empty if you're open to any length.",
+  "listSpace.featuresLabel": "What the place has",
+  "listSpace.idealForLabel": "Who it suits",
+  "listSpace.idealForHint":
+    "Describe the home and the practicalities. Every home here is open to the whole community.",
+  "listSpace.photos.label": "Photos",
+  "listSpace.photos.hint":
+    "Up to {max}. The first one is the photo people see on the board. Location data is removed from every photo before it leaves your device.",
+  "listSpace.photos.add": "Add a photo",
+  "listSpace.photos.uploading": "Adding…",
+  "listSpace.photos.full": "That's all the photos this listing can hold",
+  "listSpace.photos.cover": "Cover",
+  "listSpace.photos.remove": "Remove photo {position}",
+  "listSpace.photos.previewAlt": "Photo {position} of your listing",
+  "listSpace.photos.error":
+    "Couldn't add that photo. Check your connection and try again.",
+  "listSpace.feature.furnished": "Furnished",
+  "listSpace.feature.light": "Natural light",
+  "listSpace.feature.balcony": "Balcony",
+  "listSpace.feature.outdoor": "Outdoor space",
+  "listSpace.feature.lift": "Lift",
+  "listSpace.feature.washing": "Washing machine",
+  "listSpace.feature.dishwasher": "Dishwasher",
+  "listSpace.feature.heating": "Heating",
+  "listSpace.feature.cooling": "Air conditioning",
+  "listSpace.feature.desk": "Desk space",
+  "listSpace.feature.bathroom": "Private bathroom",
+  "listSpace.feature.kitchen": "Shared kitchen",
+  "listSpace.feature.bike": "Bike storage",
+  "listSpace.feature.pets": "Pets welcome",
+  "listSpace.feature.quiet": "Quiet street",
+  "listSpace.ideal.new": "Someone new to Lisbon",
+  "listSpace.ideal.longStay": "Long stays",
+  "listSpace.ideal.shortStay": "Short stays",
+  "listSpace.ideal.wfh": "Working from home",
+  "listSpace.ideal.students": "Students",
+  "listSpace.ideal.couples": "Couples",
+  "listSpace.ideal.pet": "Someone with a pet",
+  "listSpace.ideal.quiet": "A quiet household",
+  "listSpace.ideal.social": "A sociable household",
+  "listSpace.ideal.cyclists": "Cyclists",
   "listSpace.tourLabel": "Virtual tour link",
   "listSpace.tourPlaceholder": "Matterport, a YouTube walkthrough…",
   "listSpace.tourHint":
@@ -693,6 +748,13 @@ export const economy: Catalog = {
   "myHousingListings.status.live": "Live",
   "myHousingListings.status.filled": "Filled",
   "myHousingListings.status.expired": "Expired",
+  "myHousingListings.status.rejected": "Not published",
+  "myHousingListings.status.takenDown": "Removed",
+  "myHousingListings.decision.question": "A moderator asked for a change",
+  "myHousingListings.decision.rejected": "Why this wasn't published",
+  "myHousingListings.decision.takenDown": "Why this was removed",
+  "myHousingListings.decision.questionHint":
+    "Edit the listing with this sorted and it goes back into the queue.",
   "myHousingListings.postedOn": "Posted {date}",
   "myHousingListings.expiresOn": "Expires {date}",
   "myHousingListings.expiredHint": "Expired, extend it to relist",
@@ -1468,7 +1530,7 @@ export const economy: Catalog = {
   "grants.sidebar.skillsExchange.cta": "Explore the exchange",
   "grants.sidebar.appHelp.title": "Get <em>application help</em>",
   "grants.sidebar.appHelp.body":
-    "Members with grant-writing experience offer workshops and one-to-one support via the skills exchange.",
+    "Members with grant-writing experience offer one-to-one support through mentorship.",
   "grants.sidebar.appHelp.cta": "Find a mentor",
 
   // ── JobApplyPage (+ header / form / sidebar) ───────────────────────────
@@ -2395,279 +2457,6 @@ export const economy: Catalog = {
   "compareRow.startDate": "Start date",
   "compareRow.respondBy": "Respond by",
   "compareRow.howItPays": "How it pays",
-
-  // ── WorkshopsSection / WorkshopPage (+ sidebar / reserve / add modals) ──
-  // Scope note: individual workshop content in workshops.data.ts /
-  // addWorkshop.build.ts (title, blurb, sessions, needs, tutor, location,
-  // tier labels, mode/category values) is member-authored course content —
-  // in live mode fetched — left in English throughout. Only page/modal chrome
-  // is translated. The Category/Format pickers in AddWorkshopModal feed
-  // directly into that same stored content (like the pre-seeded workshops'
-  // own English mode/category values), so their option lists are left
-  // untranslated too, for consistency with the content they produce.
-  // "New" is now derived from `createdAt` (the backend stores no `added` flag),
-  // so it marks anyone's recent listing — not only the viewer's own.
-  "workshopsSection.newBadge": "New",
-  "workshopsSection.loadMoreCta": "Load more workshops",
-  "workshopsSection.loadingMore": "Loading…",
-  "workshopsSection.withTutor": "with <b>{name}</b>",
-  "workshopsSection.seatsLeft_one": "<b>{count}</b> seat left",
-  "workshopsSection.seatsLeft_other": "<b>{count}</b> seats left",
-  "workshopsSection.cohortFull": "Cohort full",
-  "workshopsSection.viewCta": "View workshop",
-  "workshopsSection.heading": "Advanced <em>workshops</em>",
-  "workshopsSection.blurb":
-    "Structured, multi-week courses led by members who go deep on one craft. Small cohorts, sliding-scale pricing, and you make something real by the end. Running a course yourself? List it here.",
-  "workshopsSection.listCta": "List a workshop",
-
-  "workshopPage.notFound.title": "Workshop not found",
-  "workshopPage.notFound.description":
-    "This workshop may have wrapped up or been taken down. Browse what's running now over on Skills & learning.",
-  "workshopPage.notFound.backCta": "Back to Skills",
-  "workshopPage.backToSkills": "Skills & learning",
-  "workshopPage.footerBackCta": "All workshops & skills",
-  "workshopPage.newBadge": "New",
-
-  "workshopSections.about.title": "What you'll <em>actually do</em>",
-  "workshopSections.sessions.title_one": "The <em>{count} session</em>",
-  "workshopSections.sessions.title_other": "The <em>{count} sessions</em>",
-  "workshopSections.needs.title": "What's <em>included</em>, what to bring",
-  "workshopSections.pastWork.title": "What previous folks <em>made</em>",
-  "workshopSections.pastWork.intro": "A few pieces from the last cohort:",
-
-  "workshopSidebar.reserveTitle": "Reserve a seat",
-  "workshopSidebar.spotsFilled": "Spots filled",
-  "workshopSidebar.startDate": "Start date",
-  "workshopSidebar.cancellation": "Cancellation",
-  "workshopSidebar.cohortFull": "Cohort is full",
-  "workshopSidebar.reserveCta": "Reserve a spot",
-  "workshopSidebar.askQuestion": "Ask a question",
-  "workshopSidebar.askQuestionToast":
-    "We'll pass your question to {firstName}.",
-  "workshopSidebar.footNote":
-    "Solidarity rate · just say so on the form, no proof of anything. No one sees which rate you picked.",
-  "workshopSidebar.taughtBy": "Taught by",
-  "workshopSidebar.where": "Where",
-
-  // ── WorkshopRsvpControl (reserving a spot, for real) ───────────────────────
-  // Nothing here promises a message, an email, or a payment link — none of
-  // those exist. Reserving holds a spot and that is all it claims to do.
-  "workshopRsvp.reserveCta": "Reserve a spot",
-  "workshopRsvp.joinWaitlistCta": "Join the waitlist",
-  "workshopRsvp.savingLabel": "One moment…",
-  "workshopRsvp.holdingTitle": "Your spot is held.",
-  "workshopRsvp.holdingNote":
-    "Nothing else to do for now. Just turn up. You can give the spot back any time if plans change.",
-  "workshopRsvp.releaseCta": "Give up your spot",
-  "workshopRsvp.waitlistTitle": "You're on the waitlist.",
-  "workshopRsvp.waitlistNote":
-    "If someone gives a spot back, the queue moves and yours could be next. Check back here, there's no message we can send you yet.",
-  "workshopRsvp.leaveWaitlistCta": "Leave the waitlist",
-  "workshopRsvp.failedNote":
-    "That didn't go through. Nothing changed. Try again in a moment.",
-  // Host view: the count, in place of a control they can't use. Zero gets its
-  // own line — English has no CLDR "zero" category, so "0 people have spots"
-  // is what the plural rules would otherwise produce.
-  "workshopRsvp.hostCountNone": "No one has booked a spot yet.",
-  "workshopRsvp.hostCount_one": "One person has a spot.",
-  "workshopRsvp.hostCount_other": "{count} people have spots.",
-  "workshopRsvp.hostNote":
-    "Only you can see this. Anyone who books after the cohort fills goes on the waitlist, and moves up on their own if a spot frees.",
-
-  "workshopReserve.ariaLabel": "Reserve a spot in {title}",
-  "workshopReserve.success.title": "Seat",
-  "workshopReserve.success.em": "held.",
-  "workshopReserve.success.closeLabel": "Done",
-  "workshopReserve.success.body":
-    "Your spot in <strong>{title}</strong> is held for 48 hours. We've emailed {firstName} a payment link at the <strong>{amount}</strong> rate. Pay whenever you're ready, no rush. See you {date}.",
-  "workshopReserve.title": "Reserve a spot in <em>{title}</em>",
-  "workshopReserve.sub":
-    "{seatsLeft} of {seatsTotal} seats left. Reserving holds your place, no payment yet.",
-  "workshopReserve.nameLabel": "Your name *",
-  "workshopReserve.namePlaceholder": "What should we call you?",
-  "workshopReserve.emailLabel": "Email *",
-  "workshopReserve.emailPlaceholder": "Where we send the payment link",
-  "workshopReserve.tierLabel": "What you'll pay *",
-  "workshopReserve.noteLabel": "Anything the tutor should know",
-  "workshopReserve.notePlaceholder":
-    "Access needs, experience level, a question…",
-  "workshopReserve.slidingNote":
-    "Pick whichever rate is right for you. No proof, no questions, the sliding scale is how this stays open to everyone.",
-  "workshopReserve.cancel": "Cancel",
-  "workshopReserve.holdingLabel": "Holding…",
-  "workshopReserve.submitCta": "Hold my spot",
-
-  "addWorkshop.ariaLabel": "List a workshop",
-  "addWorkshop.eyebrow": "Skills & learning",
-  "addWorkshop.title": "List an <em>advanced workshop.</em>",
-  "addWorkshop.sub":
-    "Share a multi-week course you're running. Keep it honest about the level and the pace, people are trusting you with real time.",
-  "addWorkshop.titleLabel": "Workshop title *",
-  "addWorkshop.titlePlaceholder":
-    "e.g. Letterpress, from setting type to a printed page",
-  "addWorkshop.blurbLabel": "One-line summary *",
-  "addWorkshop.blurbPlaceholder":
-    "Who it's for and what they'll walk away with",
-  "addWorkshop.aboutLabel": "What you'll actually do *",
-  "addWorkshop.aboutPlaceholder":
-    "The shape of the sessions, the level assumed, what people make. One idea per line.",
-  "addWorkshop.categoryLabel": "Category *",
-  "addWorkshop.formatLabel": "Format *",
-  "addWorkshop.weeksLabel": "Length (weeks) *",
-  "addWorkshop.sizeLabel": "Cohort size *",
-  "addWorkshop.priceLabel": "Standard price (€) *",
-  "addWorkshop.venueLabel": "Where (venue · neighbourhood)",
-  "addWorkshop.venuePlaceholder": "e.g. Estúdio Graça · Graça",
-  "addWorkshop.note":
-    "We'll set up a reduced and a solidarity rate automatically from your standard price. You can tune them later. Sessions start empty; add the week-by-week plan from your workshop page.",
-  "addWorkshop.failedNote":
-    "We couldn't publish that just now. Nothing was listed. Your details are still here, so try again in a moment.",
-  "addWorkshop.cancel": "Cancel",
-  "addWorkshop.publishingLabel": "Publishing…",
-  "addWorkshop.publishCta": "Publish workshop",
-  "addWorkshop.listed.title": "Workshop",
-  "addWorkshop.listed.em": "listed.",
-  "addWorkshop.listed.closeLabel": "Done",
-  "addWorkshop.listed.viewCta": "View your workshop",
-  "addWorkshop.listed.body":
-    "<strong>{title}</strong> is live on Skills & learning. Members can browse it, read the plan, and reserve a seat. Edit the details or add sessions any time from your workshop page.",
-
-  // ── Editing a workshop you host (same form, different framing) ──────────
-  "editWorkshop.ariaLabel": "Edit your workshop",
-  "editWorkshop.eyebrow": "Your workshop",
-  "editWorkshop.title": "Edit your <em>workshop.</em>",
-  "editWorkshop.sub":
-    "Change anything that's moved on. People who've already reserved keep their spot, only the details on this page change.",
-  "editWorkshop.note":
-    "Your reduced and solidarity rates follow the standard price. The week-by-week plan and the spots already taken stay as they are.",
-  "editWorkshop.failedNote":
-    "We couldn't save that just now. Nothing changed. Your edits are still here, so try again in a moment.",
-  "editWorkshop.savingLabel": "Saving…",
-  "editWorkshop.saveCta": "Save changes",
-  "editWorkshop.saved.title": "Changes",
-  "editWorkshop.saved.em": "saved.",
-  "editWorkshop.saved.body":
-    "<strong>{title}</strong> is updated on Skills & learning. Anyone opening it from here on sees the new details.",
-
-  // ── Deleting a workshop you host ────────────────────────────────────────
-  // A workshop people may be planning their weeks around is not a neutral
-  // thing to remove, so this copy is plain about what deleting does and —
-  // just as importantly — about what it does not do. There is no email
-  // service and no reservations model behind this, so nothing here may
-  // suggest that anyone gets told. Saying so is what lets the host go and
-  // tell people themselves.
-  "workshopHost.label": "You host this",
-  "workshopHost.note":
-    "Only you can see these. Edits show up straight away for anyone looking at this page.",
-  "workshopHost.editCta": "Edit workshop",
-  "workshopHost.deleteCta": "Delete",
-  "deleteWorkshop.title": "Delete this workshop?",
-  "deleteWorkshop.body":
-    "Deleting is permanent. It comes off Skills & learning right away, and anyone holding the link will find nothing there.",
-  // Booked people lose their spot when the workshop goes — the cascade is real
-  // now, so the copy names them. It still can't claim anyone is told: there's
-  // no email service and no notification behind this. The number is the weight.
-  "deleteWorkshop.attendeesNote_one":
-    "One person has a spot in this. Deleting takes it away, and no message goes out, if you want them to hear it from you, tell them first.",
-  "deleteWorkshop.attendeesNote_other":
-    "{count} people have spots in this. Deleting takes them away, and no message goes out, if you want them to hear it from you, tell them first.",
-  "deleteWorkshop.noAttendeesNote":
-    "Nobody has booked a spot yet, so no one loses anything today.",
-  "deleteWorkshop.keepCta": "Keep it",
-  "deleteWorkshop.confirmCta": "Delete workshop",
-  "deleteWorkshop.deletingLabel": "Deleting…",
-  "deleteWorkshop.failedNote":
-    "We couldn't delete that just now, your workshop is still up. Try again in a moment.",
-  "deleteWorkshop.toast": "Workshop deleted",
-
-  "addWorkshop.cat.creative": "Creative",
-  "addWorkshop.cat.craft": "Craft",
-  "addWorkshop.cat.design": "Design",
-  "addWorkshop.cat.tech": "Tech",
-  "addWorkshop.cat.business": "Business",
-  "addWorkshop.cat.care": "Care",
-  "addWorkshop.mode.inPerson": "In-person",
-  "addWorkshop.mode.online": "Online",
-  "addWorkshop.mode.hybrid": "Hybrid",
-  "addWorkshop.build.tutorRole":
-    "QueerPulse member · running this for the first time",
-
-  // ── addWorkshop.build.ts (chrome defaults for a member-listed workshop) ──
-  // Workshops have no live backend yet (see WorkshopsProvider) — this builder
-  // always runs client-side, so its boilerplate defaults are chrome, not
-  // fetched content. `draft.title`/`blurb`/`about`/`venue` are the poster's own
-  // words and stay untranslated, same treatment as a job's free-text salary.
-  "addWorkshop.build.freeTier": "Free · pay what you can",
-  "addWorkshop.build.free": "Free",
-  "addWorkshop.build.standardRate": "Standard rate",
-  "addWorkshop.build.reduced": "Reduced",
-  "addWorkshop.build.solidaritySlot": "Solidarity · 1 slot",
-  "addWorkshop.build.weeks_one": "{count} week",
-  "addWorkshop.build.weeks_other": "{count} weeks",
-  "addWorkshop.build.format": "Workshop · {weeks} · group of {size}",
-  "addWorkshop.build.priceSub": "{weeks} · sliding scale available",
-  "addWorkshop.build.heroPlaceholder": "{title} · workshop",
-  "addWorkshop.build.startDateTba": "To be announced",
-  "addWorkshop.build.cancellation": "Full refund · before it starts",
-  "addWorkshop.build.sessionTitle": "Week {n} · to be planned",
-  "addWorkshop.build.sessionDesc":
-    "Add what this session covers from your workshop page.",
-  "addWorkshop.build.sessionDateTba": "TBA",
-  "addWorkshop.build.sessionLength": "3 hr",
-  "addWorkshop.build.needsMaterialsLabel": "Materials",
-  "addWorkshop.build.needsMaterialsDetail":
-    "The tutor will confirm what's provided before the first session.",
-  "addWorkshop.build.needsIncludedTag": "included",
-  "addWorkshop.build.needsYourselfLabel": "Yourself",
-  "addWorkshop.build.needsYourselfDetail":
-    "Come curious. The rest gets sorted with your cohort.",
-  "addWorkshop.build.venueTba": "Venue to be confirmed",
-  "addWorkshop.build.venueSharedOnReserve": "Shared once you reserve",
-  "addWorkshop.build.accessNote":
-    "The tutor will share access details, step-free routes, bathrooms, transit, before you commit.",
-
-  // ── SkillsPage (+ section / card) ───────────────────────────────────────
-  // Scope note: skills.data.ts skill offers/asks are member-authored posts —
-  // in live mode fetched — left in English. Only page chrome is translated.
-  "skills.hero.eyebrow": "Skills & learning",
-  "skills.hero.title": "Learn from your <em>community.</em>",
-  "skills.hero.lead":
-    "No course fees, no algorithms, no performative expertise. Just members who are good at things and willing to share what they know, and members who want to get better.",
-  "skills.filter.browseBy": "Browse by:",
-  "skills.filter.all": "All skills",
-  "skills.filter.design": "Design",
-  "skills.filter.tech": "Tech",
-  "skills.filter.business": "Business",
-  "skills.filter.craft": "Craft",
-  "skills.filter.care": "Care",
-  "skills.filter.creative": "Creative",
-  "skills.intro":
-    "Everything here is offered and requested by members. If you want to learn something, post an Ask on the board. If you want to teach something, post an Offer.",
-  "skills.empty.title": "No one's shared a skill here yet",
-  "skills.empty.description":
-    "When members offer to teach what they're good at, or ask to learn something new, it'll show up here. Be the first: list a workshop, or post what you can teach on the board.",
-  "skills.empty.listWorkshopCta": "List a workshop",
-  "skills.empty.postBoardCta": "Post on the board",
-  "skills.section.offeringTitle": "Members <em>offering</em> to teach",
-  "skills.section.offeringEmpty":
-    "No one's offered to teach in this category yet. Clear the filter to see everything members are sharing.",
-  "skills.section.lookingTitle": "Members <em>wanting</em> to learn",
-  "skills.section.lookingEmpty":
-    "No one's asked to learn in this category yet. Clear the filter to see what the rest of the community is hoping to pick up.",
-  "skills.section.nothingMatches": "Nothing matches your filter",
-  "skills.section.clearFilters": "Clear filters",
-  "skills.offerStrip.title": "Have something <em>to teach?</em>",
-  "skills.offerStrip.body":
-    "Post a skill offer on the board, what you can teach, how, and who it's for. The community will find you.",
-  "skills.offerStrip.cta": "Post on the board",
-  "skills.outro.title":
-    "The best way to get better is to <em>know someone further along.</em>",
-  "skills.outro.sub":
-    "Join the network and find the people who can help you grow, and the people you can help in return.",
-  "skills.outro.cta": "Request an invite",
-  "skills.card.teaching": "Teaching",
-  "skills.card.learning": "Learning",
-  "skills.card.reachOut": "Reach out",
 
   // ── SolidarityPage (+ directory) ────────────────────────────────────────
   // Scope note: solidarity.data.ts practitioner listings (bio, pricing notes,
@@ -4018,6 +3807,9 @@ export const economy: Catalog = {
   "housing.beds.count_one": "{count} bed",
   "housing.beds.count_other": "{count} beds",
   "housing.period.month": "month",
+  // The lister block on a listing detail page. `{year}` is the year the member
+  // joined, from their own profile.
+  "housing.lister.memberSince": "Member since {year}",
   "company.badge.queerRun": "Queer-run",
   "company.badge.queerRunVerified": "Queer-run · verified",
   "company.badge.queerLed": "Queer-led",
@@ -4083,10 +3875,6 @@ export const economy: Catalog = {
   "myHousingListings.toast.backToReview":
     "Saved. Your listing is back in review, so it is off the board until a moderator clears it.",
   // ── Housing-group listings: the poster's own edit + withdraw (BE-HSG-20) ──
-  "groupListing.manage.startCta": "Manage a room you posted",
-  "groupListing.manage.doneCta": "Done managing",
-  "groupListing.manage.note":
-    "Only the person who posted a room can edit or withdraw it. Pick yours below and we will check with the group.",
   "groupListing.manage.editCta": "Edit",
   "groupListing.manage.editAriaLabel": "Edit the listing {title}",
   "groupListing.manage.withdrawCta": "Withdraw",
@@ -4131,6 +3919,45 @@ export const economy: Catalog = {
   "groupListing.toast.withdrawn":
     "That room is down. Thanks for keeping the group tidy.",
   "groupListing.toast.withdrawFailed": "Couldn't withdraw that listing",
+
+  // ── Housing-group listings: post a room, and see where yours stand ──
+  "groupListing.post.ariaLabel": "Post a room in {group}",
+  "groupListing.post.eyebrow": "Share a room",
+  "groupListing.post.title": "Post a room in <em>the group</em>",
+  "groupListing.post.sub":
+    "Tell the people in {group} what is free, what it costs, and what getting into the place is like.",
+  "groupListing.post.reviewNotice":
+    "A moderator reads every room before it goes on the group page. Yours will sit in review until then, and you will hear back here.",
+  "groupListing.post.submitCta": "Send for review",
+  "groupListing.post.submitting": "Sending…",
+  "groupListing.post.failed": "Couldn't send that room",
+  "groupListing.post.success.title": "Your room is",
+  "groupListing.post.success.titleEm": "with a moderator",
+  "groupListing.post.success.body":
+    "A moderator in <strong>{group}</strong> reads it next and it goes on the group page once they clear it. You will find it under your rooms here either way.",
+
+  "groupListing.mine.title": "Your rooms",
+  "groupListing.mine.titleEm": "in this group",
+  "groupListing.mine.sub":
+    "Everything you have shared here, and where each one stands. Nothing reaches the group page before a moderator reads it.",
+  "groupListing.mine.postCta": "Post a room",
+  "groupListing.mine.empty":
+    "You have not shared a room here yet. When you do, it will show up in this spot with its review state.",
+  "groupListing.mine.postedOn": "Posted {date}",
+
+  "groupListing.mine.status.review": "Waiting for review",
+  "groupListing.mine.status.question": "A question for you",
+  "groupListing.mine.status.live": "On the group page",
+  "groupListing.mine.status.declined": "Not published",
+  "groupListing.mine.status.takenDown": "Taken down",
+
+  "groupListing.mine.decision.question": "A moderator asked you something",
+  "groupListing.mine.decision.declined": "Why this is not going up",
+  "groupListing.mine.decision.takenDown": "Why this came down",
+  "groupListing.mine.decision.questionHint":
+    "Answer it by editing the room. Saving puts it back in front of a moderator.",
+  "groupListing.mine.decision.editHint":
+    "Edit the room to fix what is named here. Saving puts it back in front of a moderator.",
 
   // ── Landlord recommendations: withdraw your own (BE-HSG-18) ──
   "landlordPage.recommendation.yoursBadge": "Yours",

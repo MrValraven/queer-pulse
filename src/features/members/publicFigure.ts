@@ -1,3 +1,5 @@
+import type { PublicEligibilityDecisionDto } from "./api/publicProfile.api";
+
 /** One public piece, timestamped so recency can decay its weight. */
 export interface DatedPiece {
   /** ISO timestamp of when the piece went public. */
@@ -18,7 +20,6 @@ export interface EligibilitySignals {
   // Public contribution
   publishedPieces: DatedPiece[];
   hostedOpenEvents: DatedPiece[];
-  workshopsTaught: number;
   publishedSubprofiles: number;
   // Community trust
   vouchCount: number;
@@ -80,11 +81,16 @@ export const TARGET_SCORE = 100;
  * racking up posts and events in their first week. Ninety days is roughly a
  * season: long enough to demonstrate you're a real, sustained presence here
  * rather than a fast-moving account optimizing for exposure, short enough
- * that a genuinely engaged member isn't locked out for a year. The backend's
- * `PublicEligibilityService` (`public-eligibility.service.ts`) only supplies
- * the raw `tenureDays` signal; this frontend constant is the sole place the
- * 90-day threshold itself is applied, so there is no backend copy to keep in
- * sync.
+ * that a genuinely engaged member isn't locked out for a year.
+ *
+ * THE SERVER IS NOW THE SOURCE OF TRUTH. The rule moved to
+ * `queerpulse-backend/src/public-eligibility/public-eligibility.rules.ts`,
+ * which `PUT /me/public-profile` enforces with a 403. A gate that lives only
+ * in the client is no gate at all, and this one publishes to the open web.
+ * The constants here still drive DEMO mode (which has no server) and are kept
+ * byte-for-byte identical to the backend's. In live mode the evaluator's
+ * output is replaced by `publicEligibilityFromDecision` below, so a divergence
+ * between the two copies can never change what a real member sees.
  */
 export const TENURE_FLOOR_DAYS = 90;
 export const CAP = { contribution: 50, trust: 35, participation: 30 } as const;
@@ -92,6 +98,14 @@ export const RECENCY_MONTHS = 6;
 export const RECENCY_DECAY = 0.5;
 export const DORMANT_DAYS = 90;
 export const ACTIVE_WINDOW_DAYS = 30;
+
+/** The one place each family's copy key lives, so the local evaluator and the
+ *  server-decision mapper below label them identically. */
+const FAMILY_LABEL_KEY: Record<FamilyScore["key"], string> = {
+  contribution: "members:publicProfile.eligibility.family.contribution.label",
+  trust: "members:publicProfile.eligibility.family.trust.label",
+  participation: "members:publicProfile.eligibility.family.participation.label",
+};
 
 /** Diminishing per-piece value for the contribution family. */
 const CONTRIBUTION_SERIES = [20, 12, 8, 6, 4, 3, 2, 1];
@@ -114,7 +128,7 @@ function contributionScore(signals: EligibilitySignals): number {
       ? RECENCY_DECAY
       : 1,
   );
-  const undatedRecent = signals.workshopsTaught + signals.publishedSubprofiles;
+  const undatedRecent = signals.publishedSubprofiles;
   for (let index = 0; index < undatedRecent; index += 1) datedWeights.push(1);
 
   // Full-weight pieces claim the biggest series slots first.
@@ -151,22 +165,28 @@ function participationScore(signals: EligibilitySignals): number {
   return Math.min(CAP.participation, total);
 }
 
-function buildGates(signals: EligibilitySignals): [Gate, Gate] {
+/** The two gates with their copy attached. Takes already-decided values so the
+ *  local evaluator and the server-decision mapper produce identical wording. */
+function buildGates(
+  isVerifiedMet: boolean,
+  isTenureMet: boolean,
+  tenureDaysRemaining: number,
+): [Gate, Gate] {
   return [
     {
       key: "verified",
       // Reuse the profile hero's verified-badge wording.
       labelKey: "members:profile.hero.verifiedBadge",
       hintKey: "members:publicProfile.eligibility.verified.hint",
-      met: signals.verified === true,
+      met: isVerifiedMet,
     },
     {
       key: "tenure",
       labelKey: "members:publicProfile.eligibility.tenure.label",
       hintKey: "members:publicProfile.eligibility.tenure.hint",
-      met: signals.tenureDays >= TENURE_FLOOR_DAYS,
+      met: isTenureMet,
       remainingKey: "members:publicProfile.eligibility.tenure.remaining",
-      remainingCount: Math.max(0, TENURE_FLOOR_DAYS - signals.tenureDays),
+      remainingCount: tenureDaysRemaining,
     },
   ];
 }
@@ -193,21 +213,23 @@ function buildNextActions(
 
   const scoreActions: NextAction[] = [];
   if (total < TARGET_SCORE) {
-    const byKey = (key: FamilyScore["key"]) =>
-      families.find((family) => family.key === key)!;
-    if (byKey("contribution").points < CAP.contribution)
+    // `families` can now arrive from the server, so a missing family is read as
+    // "no points earned" rather than asserted away.
+    const pointsIn = (key: FamilyScore["key"]) =>
+      families.find((family) => family.key === key)?.points ?? 0;
+    if (pointsIn("contribution") < CAP.contribution)
       scoreActions.push({
         family: "contribution",
         labelKey: "members:publicProfile.eligibility.action.host",
         points: 15,
       });
-    if (byKey("trust").points < CAP.trust && signals.vouchCount < 3)
+    if (pointsIn("trust") < CAP.trust && signals.vouchCount < 3)
       scoreActions.push({
         family: "trust",
         labelKey: "members:publicProfile.eligibility.action.vouch",
         points: signals.vouchCount < 2 ? 12 : 8,
       });
-    if (byKey("participation").points < CAP.participation)
+    if (pointsIn("participation") < CAP.participation)
       scoreActions.push({
         family: "participation",
         labelKey: "members:publicProfile.eligibility.action.attend",
@@ -227,23 +249,27 @@ function buildNextActions(
 export function evaluatePublicEligibility(
   signals: EligibilitySignals,
 ): PublicEligibility {
-  const gates = buildGates(signals);
+  const gates = buildGates(
+    signals.verified === true,
+    signals.tenureDays >= TENURE_FLOOR_DAYS,
+    Math.max(0, TENURE_FLOOR_DAYS - signals.tenureDays),
+  );
   const families: FamilyScore[] = [
     {
       key: "contribution",
-      labelKey: "members:publicProfile.eligibility.family.contribution.label",
+      labelKey: FAMILY_LABEL_KEY.contribution,
       points: contributionScore(signals),
       cap: CAP.contribution,
     },
     {
       key: "trust",
-      labelKey: "members:publicProfile.eligibility.family.trust.label",
+      labelKey: FAMILY_LABEL_KEY.trust,
       points: trustScore(signals),
       cap: CAP.trust,
     },
     {
       key: "participation",
-      labelKey: "members:publicProfile.eligibility.family.participation.label",
+      labelKey: FAMILY_LABEL_KEY.participation,
       points: participationScore(signals),
       cap: CAP.participation,
     },
@@ -262,5 +288,49 @@ export function evaluatePublicEligibility(
     standingOk,
     eligible,
     nextActions: buildNextActions(signals, gates, families, total),
+  };
+}
+
+/**
+ * Build the same display shape from the SERVER's decision.
+ *
+ * This is the live-mode path. The server decides (gates, per-family points,
+ * total, standing veto) and this function only attaches the i18n copy and the
+ * ranked "do this next" list, so the checklist a member reads is a rendering
+ * of the very numbers `PUT /me/public-profile` will enforce. `signals` is
+ * still passed because the next-action ranking reads `vouchCount`; nothing in
+ * it can change the verdict.
+ */
+export function publicEligibilityFromDecision(
+  decision: PublicEligibilityDecisionDto,
+  signals: EligibilitySignals,
+): PublicEligibility {
+  const gates = buildGates(
+    decision.gates.isVerifiedMet,
+    decision.gates.isTenureMet,
+    decision.gates.tenureDaysRemaining,
+  );
+  const families: FamilyScore[] = decision.score.families.map((family) => ({
+    key: family.key,
+    labelKey: FAMILY_LABEL_KEY[family.key],
+    points: family.points,
+    cap: family.cap,
+  }));
+
+  return {
+    gates,
+    score: {
+      total: decision.score.total,
+      target: decision.score.target,
+      families,
+    },
+    standingOk: decision.isStandingOk,
+    eligible: decision.isEligible,
+    nextActions: buildNextActions(
+      signals,
+      gates,
+      families,
+      decision.score.total,
+    ),
   };
 }

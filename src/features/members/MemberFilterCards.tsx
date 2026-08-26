@@ -330,6 +330,7 @@ export function MemberResultCard({ member }: { member: MemberCard }) {
         isMe={isMe}
         vouchCount={member.vouchCount}
         mutualsCount={member.mutualsCount}
+        activityBand={member.activityBand}
       />
     </Link>
   );

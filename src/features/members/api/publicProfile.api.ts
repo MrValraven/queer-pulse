@@ -56,13 +56,59 @@ export interface PublicProfileDTO {
   activity: PublicProfileActivityDTO[];
 }
 
+/** The three capped scoring families, as the server names them. */
+export type PublicEligibilityFamilyKey =
+  "contribution" | "trust" | "participation";
+
+/** Why the server says a member may not publish. Coarse on purpose: a member
+ *  vetoed on standing gets the generic `not_eligible`, never a confirmation
+ *  that they are under a moderator takedown. */
+export type PublicEligibilityReasonCode =
+  | "profile_not_verified"
+  | "tenure_too_short"
+  | "score_below_target"
+  | "not_eligible";
+
+/**
+ * The server's authoritative answer to "may this member publish to the open
+ * web?", computed by `PublicEligibilityService` and enforced by
+ * `PUT /me/public-profile`, which 403s an ineligible member.
+ *
+ * The frontend renders these numbers rather than scoring the signals itself,
+ * so the checklist a member reads and the gate that stops the write can never
+ * disagree. The i18n copy that explains each gate and family stays here in
+ * `publicFigure.ts`.
+ */
+export interface PublicEligibilityDecisionDto {
+  isEligible: boolean;
+  /** `null` exactly when `isEligible` is true. */
+  reasonCode: PublicEligibilityReasonCode | null;
+  gates: {
+    isVerifiedMet: boolean;
+    isTenureMet: boolean;
+    /** Days of membership still owed before the tenure gate opens. */
+    tenureDaysRemaining: number;
+    /** The floor itself, so no copy of it is kept client-side. */
+    tenureFloorDays: number;
+  };
+  score: {
+    total: number;
+    target: number;
+    families: {
+      key: PublicEligibilityFamilyKey;
+      points: number;
+      cap: number;
+    }[];
+  };
+  isStandingOk: boolean;
+}
+
 /** The signed-in member's real eligibility signals (live mode). */
 export interface PublicEligibilitySignalsDto {
   verified: boolean;
   tenureDays: number;
   publishedPieces: string[];
   hostedOpenEvents: string[];
-  workshopsTaught: number;
   publishedSubprofiles: number;
   vouchCount: number;
   /** How many members this member has vouched FOR (not withdrawn), the
@@ -76,6 +122,10 @@ export interface PublicEligibilitySignalsDto {
   communityPosts: number;
   lastActiveDaysAgo: number;
   standingOk: boolean;
+  /** The server's verdict on these signals. Optional only so a response from a
+   *  backend that predates the server-side gate still parses; when it is
+   *  present it is what the UI shows, and it is what the write path enforces. */
+  decision?: PublicEligibilityDecisionDto;
 }
 
 /** GET /me/public-eligibility */

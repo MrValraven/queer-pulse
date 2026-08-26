@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { communityPath } from "../../app/routeMap";
+import { ReadingGroupJoinButton } from "./ReadingGroupJoinButton";
 import {
   GENRE_BG,
   GENRE_FG,
@@ -8,18 +11,25 @@ import {
 } from "./readingGroups.data";
 import styles from "./ReadingGroupsPage.module.css";
 
+/** The format line's prefix key. `either` gets its own phrase rather than
+ *  being rounded down to one side of an answer the member gave as both. */
+const FORMAT_PREFIX_KEY: Record<Group["format"], string> = {
+  irl: "community:readingGroups.card.formatPrefix.irl",
+  online: "community:readingGroups.card.formatPrefix.online",
+  either: "community:readingGroups.card.formatPrefix.either",
+};
+
 export function ReadingGroupCard({
-  g,
+  group,
   messagesPath,
   onWaitlist,
   waitlistPosition,
   isWaitlistEnabled = true,
 }: {
-  g: Group;
-  /** Where "Request to join" goes. Omitted when there is nobody to reach:
-   *  reading groups carry no lister account, so live mode has no recipient
-   *  for the request and the card shows an honest disabled state instead of
-   *  dropping the member into an empty inbox. */
+  group: Group;
+  /** Where the DEMO card's "Request to join" goes. The curated prototype
+   *  groups carry no lister account, so the prototype points at the inbox; a
+   *  live group has a real owner and uses `ReadingGroupJoinButton` instead. */
   messagesPath?: string;
   onWaitlist: () => void;
   /** The user's position on this group's waitlist, if they've joined. */
@@ -31,57 +41,93 @@ export function ReadingGroupCard({
 }) {
   const { t } = useTranslation();
   const spotsClass =
-    g.spots === 0
+    group.spots === 0
       ? styles.spotsFull
-      : g.spots <= 1
+      : group.spots !== null && group.spots <= 1
         ? styles.spotsAlmost
         : styles.spotsOpen;
   const spotsText =
-    g.spots === 0
+    group.spots === 0
       ? t("community:readingGroups.card.spots.full")
-      : t("community:readingGroups.card.spots.left", { count: g.spots });
+      : t("community:readingGroups.card.spots.left", {
+          count: group.spots ?? 0,
+        });
+  const detailPath = group.communitySlug
+    ? communityPath(group.communitySlug)
+    : null;
+  const formatClass =
+    group.format === "online" ? styles.gmOnline : styles.gmIrl;
 
   return (
     <article className={styles.gc}>
       <div className={styles.gcBook}>
-        <div className={styles.gcSpine} style={{ background: g.spineColor }}>
-          {g.spine}
+        <div
+          className={styles.gcSpine}
+          style={{ background: group.spineColor }}
+        >
+          {group.spine}
         </div>
         <div className={styles.gcBookInfo}>
-          <div className={styles.gcBookTitle}>{g.book}</div>
-          <div className={styles.gcBookAuthor}>{g.author}</div>
-          <span
-            className={styles.gcGenre}
-            style={{ background: GENRE_BG[g.genre], color: GENRE_FG[g.genre] }}
-          >
-            {t(`community:${GENRE_LABEL_KEY[g.genre]}`)}
-          </span>
+          <div className={styles.gcBookTitle}>
+            {detailPath ? (
+              <Link to={detailPath}>{group.book}</Link>
+            ) : (
+              group.book
+            )}
+          </div>
+          {group.author && (
+            <div className={styles.gcBookAuthor}>{group.author}</div>
+          )}
+          {group.genre && (
+            <span
+              className={styles.gcGenre}
+              style={{
+                background: GENRE_BG[group.genre],
+                color: GENRE_FG[group.genre],
+              }}
+            >
+              {t(`community:${GENRE_LABEL_KEY[group.genre]}`)}
+            </span>
+          )}
         </div>
       </div>
       <div className={styles.gcBody}>
-        <div className={styles.gcName}>{g.name}</div>
-        <div className={styles.gcDesc}>{g.description}</div>
+        {group.name && <div className={styles.gcName}>{group.name}</div>}
+        {group.description && (
+          <div className={styles.gcDesc}>{group.description}</div>
+        )}
         <div className={styles.gcMeta}>
-          <span
-            className={[
-              styles.gm,
-              g.format === "irl" ? styles.gmIrl : styles.gmOnline,
-            ].join(" ")}
-          >
-            {t(
-              g.format === "irl"
-                ? "community:readingGroups.card.formatPrefix.irl"
-                : "community:readingGroups.card.formatPrefix.online",
-            )}
-            {g.where}
+          <span className={[styles.gm, formatClass].join(" ")}>
+            {t(FORMAT_PREFIX_KEY[group.format])}
+            {group.where ?? ""}
           </span>
-          <span className={styles.gm}>{g.frequency}</span>
-          <span className={styles.gm}>{g.language}</span>
+          {group.frequency && (
+            <span className={styles.gm}>{group.frequency}</span>
+          )}
+          {group.language && (
+            <span className={styles.gm}>{group.language}</span>
+          )}
         </div>
       </div>
       <div className={styles.gcFoot}>
-        <span className={`${styles.gcSpots} ${spotsClass}`}>{spotsText}</span>
-        {g.spots === 0 ? (
+        {group.spots !== null ? (
+          <span className={`${styles.gcSpots} ${spotsClass}`}>{spotsText}</span>
+        ) : (
+          // A live group states the roster it HAS. Spare seats would have to be
+          // derived from a headcount nobody re-confirmed after the group
+          // started, so the card shows the number it can stand behind.
+          <span className={`${styles.gcSpots} ${styles.spotsOpen}`}>
+            {t("community:readingGroups.card.members", {
+              count: group.memberCount ?? 0,
+            })}
+          </span>
+        )}
+        {group.communitySlug ? (
+          <ReadingGroupJoinButton
+            slug={group.communitySlug}
+            isJoined={group.isJoined ?? false}
+          />
+        ) : group.spots === 0 ? (
           waitlistPosition ? (
             <Button variant="ghost" size="sm" disabled>
               {t("community:readingGroups.card.onWaitlist", {

@@ -1,16 +1,16 @@
 import type { ReactNode } from "react";
-import { FiAlertTriangle, FiFlag } from "react-icons/fi";
+import { FiAlertTriangle } from "react-icons/fi";
 import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { REASON_LABEL_KEYS } from "../safety/reportReasons";
+import { ModerationStanceNote } from "../safety/ModerationStanceNote";
 import type { LivingCommunity } from "./community.model";
 import { ModJoinRequestRow } from "./ModJoinRequestRow";
+import { ModToolsReportRow } from "./ModToolsReportRow";
 import type { JoinRequestDecision } from "./joinRequestReview.data";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { ModMemberRow, type ModMemberRowActions } from "./ModMemberRow";
 import type { AssignableRole } from "./api/communities.api";
 import type { CommunityRole } from "./membership.types";
-import { useCommunityTime } from "./communityTime";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./CommunityHubTabs.module.css";
 
@@ -95,6 +95,7 @@ export function ModJoinRequests({
           <span className={detail.tabCount}>{requests.length}</span>
         )}
       </div>
+      <ModerationStanceNote variant="applicants" />
       <ModQueueStatus state={state}>
         {requests.length === 0 ? (
           <EmptyState
@@ -121,17 +122,22 @@ export function ModJoinRequests({
 
 export function ModReportedPosts({
   reports,
+  slug,
   state,
   onRemove,
   onDismiss,
+  onEscalate,
 }: {
   reports: Report[];
+  /** The community this queue belongs to: each row links into its thread. */
+  slug: string;
   state: ModQueueState;
   onRemove: (report: Report) => void;
   onDismiss: (report: Report) => void;
+  /** Hands a report to platform staff (TS-07). */
+  onEscalate: (report: Report) => void;
 }) {
   const { t } = useTranslation();
-  const communityTime = useCommunityTime();
   return (
     <>
       <div className={detail.secLbl}>
@@ -140,6 +146,7 @@ export function ModReportedPosts({
           <span className={detail.tabCount}>{reports.length}</span>
         )}
       </div>
+      <ModerationStanceNote />
       <ModQueueStatus state={state}>
         {reports.length === 0 ? (
           <EmptyState
@@ -150,59 +157,20 @@ export function ModReportedPosts({
             )}
           />
         ) : (
-          reports.map((rep) => {
-            // Demo mocks author a free-text `reason`; live rows only carry a
-            // stable `reasonCode` (the leaner `GET /communities/:slug/reports`
-            // shape), resolved to a label here.
-            const reasonLabel =
-              rep.reason ??
-              (rep.reasonCode ? t(REASON_LABEL_KEYS[rep.reasonCode]) : "");
-            // "Remove" deletes a post by id — this queue has no parent-post id
-            // for a reply report, so that action only wires up for posts.
-            const canRemove =
-              rep.subjectType == null || rep.subjectType === "post";
-            return (
-              <div className={styles.reportCard} key={rep.id}>
-                <div className={styles.reportReason}>
-                  <FiFlag aria-hidden /> {reasonLabel}
-                </div>
-                {rep.postExcerpt && (
-                  <p className={styles.reportExcerpt}>“{rep.postExcerpt}”</p>
-                )}
-                <div className={styles.modMeta}>
-                  {rep.author && rep.reporter
-                    ? t("communities:detail.modtools.reports.meta", {
-                        author: rep.author.name,
-                        reporter: rep.reporter.name,
-                        time: communityTime.ago(rep),
-                      })
-                    : t("communities:detail.modtools.reports.metaLive", {
-                        time: communityTime.ago(rep),
-                      })}
-                </div>
-                {!canRemove && (
-                  <p className={styles.modMeta}>
-                    {t("communities:detail.modtools.reports.replyNote")}
-                  </p>
-                )}
-                <div className={styles.modActions} style={{ marginTop: 12 }}>
-                  {canRemove && (
-                    <Button variant="primary" onClick={() => onRemove(rep)}>
-                      {t("communities:detail.modtools.reports.removeCta")}
-                    </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={styles.declineBtn}
-                    onClick={() => onDismiss(rep)}
-                  >
-                    {t("communities:detail.modtools.reports.dismissCta")}
-                  </Button>
-                </div>
-              </div>
-            );
-          })
+          reports.map((report) => (
+            // "Remove" now works for a reply as well as a post (TS-08): the
+            // takedown goes through the report itself rather than through the
+            // community delete-post endpoint, and the server keys it on the
+            // report's own subject type.
+            <ModToolsReportRow
+              key={report.id}
+              report={report}
+              slug={slug}
+              onRemove={onRemove}
+              onDismiss={onDismiss}
+              onEscalate={onEscalate}
+            />
+          ))
         )}
       </ModQueueStatus>
     </>

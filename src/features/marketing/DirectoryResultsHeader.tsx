@@ -19,8 +19,9 @@ const SORT_OPTIONS: LocalSort[] = ["default", "name", "hood"];
 
 /**
  * Results header shared by both Local views: the "showing X of Y places" count
- * on the left, and the sort + List/Map view switcher on the right. A second row
- * of removable chips appears whenever any filter is active, with a Clear all.
+ * on the left, and the "use my location" control, sort and List/Map view
+ * switcher on the right. A second row of removable chips appears whenever any
+ * filter is active, with a Clear all.
  */
 export function DirectoryResultsHeader({
   shown,
@@ -33,6 +34,7 @@ export function DirectoryResultsHeader({
   onSortChange,
   activeFilters,
   onClearFilters,
+  nearMeSlot,
 }: {
   shown: number;
   total: number;
@@ -44,6 +46,10 @@ export function DirectoryResultsHeader({
   onSortChange: (next: string) => void;
   activeFilters: ActiveFilter[];
   onClearFilters: () => void;
+  /** The "use my location" control, passed in rather than built here so this
+   *  header stays presentational and the member's position never travels
+   *  further than the one component that owns it. */
+  nearMeSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
   return (
@@ -71,6 +77,7 @@ export function DirectoryResultsHeader({
           </p>
 
           <div className={s.resultsControls}>
+            {nearMeSlot}
             <label className={s.sort}>
               <span className={s.sortLabel}>
                 {t("marketing:directory.sort.label")}

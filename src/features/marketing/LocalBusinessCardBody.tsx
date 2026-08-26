@@ -1,9 +1,11 @@
 import type { ReactNode, SyntheticEvent } from "react";
-import { FiArrowRight, FiBookmark, FiCheck, FiShield } from "react-icons/fi";
-import { Avatar, ImageSlot, Stars, Tooltip } from "../../shared/components/ui";
+import { FiArrowRight, FiBookmark, FiCheck } from "react-icons/fi";
+import { Avatar, ImageSlot, Stars } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
-import { categoryLabel } from "./localPlaces";
+import { DirectoryCardAccess } from "./DirectoryCardAccess";
+import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
+import { categoryLabel } from "./localCategories";
 import {
   openStatus,
   operatingStateOf,
@@ -78,19 +80,23 @@ function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
 
 /**
  * The two things the photo's bottom-left corner says about a place: how it is
- * connected to the community (always), and whether it is a verified safe space
- * (only when it is).
+ * connected to the community (always), and what its safe-space badge is
+ * currently saying (only when there is a badge to speak of).
  *
  * They sit side by side rather than one replacing the other: the safe-space
  * pill used to occupy the same slot and simply hide the ownership badge, so a
  * verified safe space never got to say it was queer-owned. Safe space is the
  * narrower, rarer claim, so it shrinks to an icon with its meaning on hover,
  * focus and via its accessible name, leaving the wordier badge the room.
+ *
+ * The safe-space half lives in `SafeSpaceCardMark`, which is the only place
+ * that turns the card payload into a mark. This used to test
+ * `safeSpaceStatus === "verified"` inline, which printed the verified shield
+ * for a badge the platform had already suspended.
  */
 function DirectoryCardBadges({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const ownership = ownershipBadgeOf(place);
-  const safeSpaceLabel = t("marketing:directory.card.verifiedBadge");
 
   return (
     <span className={s.photoBadges}>
@@ -100,20 +106,7 @@ function DirectoryCardBadges({ place }: { place: DirectoryPlace }) {
         )}
         {t(OWNERSHIP_BADGE_KEYS[ownership])}
       </span>
-      {place.safeSpaceStatus === "verified" && (
-        <Tooltip label={safeSpaceLabel} placement="top">
-          {/* Not a button: the whole card is already one link, and this only
-              ever names itself. `role="img"` + the label is what a screen
-              reader announces; the bubble is decorative. */}
-          <span
-            className={s.safeSpaceMark}
-            role="img"
-            aria-label={safeSpaceLabel}
-          >
-            <FiShield aria-hidden />
-          </span>
-        </Tooltip>
-      )}
+      <SafeSpaceCardMark place={place} />
     </span>
   );
 }
@@ -241,13 +234,24 @@ export function LocalBusinessCardBody({
           </span>
         )}
       </div>
+      <DirectoryCardAccess place={place} />
       <div className={s.foot}>
         <DirectoryCardStatus place={place} />
-        {showHost && (
+        {/* No name means nobody to show: a listing submitted anonymously (or
+            under a role alone) used to print a bare initials bubble with no
+            one beside it, which read as a person the card was refusing to
+            name. */}
+        {showHost && place.owner.first !== "" && (
           <span className={s.host}>
+            {/* The member's real photo when they have one and chose to show
+                it (the server redacts it exactly as it redacts the name);
+                initials over their tint otherwise. No `name`/`alt`: their
+                first name is right there beside it, so the image is
+                decorative rather than read twice. */}
             <Avatar
               initials={place.owner.initials}
               tint={place.owner.tint}
+              src={place.owner.avatarUrl ?? undefined}
               size={20}
             />
             {place.owner.first}

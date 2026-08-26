@@ -4,6 +4,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { issueLabelText } from "./magazineFormat";
+import { useCurrentIssueLabel } from "./api/useMagazineFront";
 import { MASTHEAD_META, MASTHEAD_NAV } from "./magazineMasthead.data";
 import styles from "./MagazineMasthead.module.css";
 
@@ -11,6 +12,22 @@ export function MagazineMasthead({ active }: { active?: string }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
+  const currentIssue = useCurrentIssueLabel();
+
+  // CON-13: the issue label is real now. Demo keeps its fixed showcase issue;
+  // live names the most recently PUBLISHED issue, straight off
+  // `GET /magazine/current-issue`. Before any issue has shipped there is
+  // nothing to name, so the label stays out and the tagline carries the block
+  // on its own — the same honest-blank treatment as before, now reached only
+  // when it is actually true.
+  const issueNumber = demoMode
+    ? String(MASTHEAD_META.issueNumber)
+    : (currentIssue?.number ?? null);
+  const issueDate = demoMode
+    ? MASTHEAD_META.date
+    : currentIssue?.publishedOn
+      ? new Date(currentIssue.publishedOn)
+      : null;
 
   return (
     <div className={styles.masthead}>
@@ -24,21 +41,15 @@ export function MagazineMasthead({ active }: { active?: string }) {
             {t("magazine:masthead.brandMagazine")}
           </Link>
           <div className={styles.mmMeta}>
-            {/* The current issue number/date is fabricated demo chrome — there
-                is no cheap "current issue" endpoint to feed the masthead, so
-                live mode shows only the (translated) publishing cadence. */}
-            {demoMode && (
-              <>
-                <div className={styles.mmIssue}>
-                  {issueLabelText(MASTHEAD_META.issueNumber, t)}
-                </div>
-                <div className={styles.mmDate}>
-                  {fmt.date(MASTHEAD_META.date, {
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </div>
-              </>
+            {issueNumber && (
+              <div className={styles.mmIssue}>
+                {issueLabelText(issueNumber, t)}
+              </div>
+            )}
+            {issueDate && (
+              <div className={styles.mmDate}>
+                {fmt.date(issueDate, { month: "long", year: "numeric" })}
+              </div>
             )}
             <div className={styles.mmTagline}>
               {t(MASTHEAD_META.taglineKey)}

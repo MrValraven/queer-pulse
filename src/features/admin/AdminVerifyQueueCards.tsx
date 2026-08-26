@@ -1,5 +1,6 @@
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { BanEvasionAssessmentDTO } from "./api/adminInvites.api";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { JoinRequestApprovedCard } from "./JoinRequestApprovedCard";
 import { JoinRequestCard } from "./JoinRequestCard";
@@ -42,6 +43,7 @@ export function AdminVerifyQueueCards({
   onDecline,
   onWaitlist,
   onToggleSelect,
+  banEvasionBySubjectId,
 }: {
   /** Rows already welcomed in this session, held on screen for the invite link. */
   approved: JoinRequestView[];
@@ -54,6 +56,10 @@ export function AdminVerifyQueueCards({
   onDecline: (item: JoinRequestView) => void;
   onWaitlist: (item: JoinRequestView) => void;
   onToggleSelect: (id: string) => void;
+  /** Ban-evasion assessments for the whole page, keyed by join-request id.
+   *  Advisory signals for the reviewer; empty for every applicant with
+   *  nothing to check. */
+  banEvasionBySubjectId: Map<string, BanEvasionAssessmentDTO>;
 }) {
   return (
     <div className={styles.queueGrid}>
@@ -81,6 +87,7 @@ export function AdminVerifyQueueCards({
               onWaitlist={() => onWaitlist(item)}
               onToggleSelect={onToggleSelect}
               isBusy={isDeciding}
+              banEvasion={banEvasionBySubjectId.get(item.id)}
             />
           </FadeIn>
         );
@@ -94,11 +101,13 @@ export function AdminVerifyQueueWaitlist({
   decidingId,
   onApprove,
   onDecline,
+  banEvasionBySubjectId,
 }: {
   items: JoinRequestView[];
   decidingId: string | null;
   onApprove: (item: JoinRequestView) => void;
   onDecline: (item: JoinRequestView) => void;
+  banEvasionBySubjectId: Map<string, BanEvasionAssessmentDTO>;
 }) {
   const { t } = useTranslation();
   return (
@@ -125,6 +134,7 @@ export function AdminVerifyQueueWaitlist({
                 onDecline={() => onDecline(item)}
                 onToggleSelect={() => {}}
                 isBusy={isDeciding}
+                banEvasion={banEvasionBySubjectId.get(item.id)}
               />
             </FadeIn>
           );

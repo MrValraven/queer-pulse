@@ -94,8 +94,27 @@ export interface EventCardDTO {
   coverImageUrl?: string | null;
   /** Org / category label shown on the card ("QueerPulse", "Community", …). */
   org?: string;
-  /** Event type label ("Supper Club", "Mixer", …). */
+  /** Event type label ("Supper Club", "Mixer", …). Live mode fills this from
+   *  the wizard's own gathering type (`EventSummary.eventType`, backend). */
   type?: string;
+  /** The wizard's gathering type verbatim (LOC-04) — "Supper club",
+   *  "Workshop / talk", … `null` for a gathering created before the column
+   *  existed. `type` above is derived from it. */
+  eventType?: string | null;
+  /** The host's free-text door price (LOC-18): "5 to 15 EUR sliding scale",
+   *  "pay what you can at the door". DISPLAY ONLY. This platform takes no
+   *  payment, so nothing that renders it may promise a charge or a ticket. */
+  cost?: string | null;
+  /** Whether `cost` reads as free (or was never set). Derived server-side by
+   *  the same rule the `cost=free` browse filter uses, so a "Free" chip can
+   *  never disagree with the filter that produced the card. */
+  isFree?: boolean;
+  /** Seats the going RSVPs actually occupy: one per going member plus every
+   *  declared extra guest (LOC-07). This, never `goingCount`, is the number
+   *  capacity is measured against. */
+  seatsTaken?: number;
+  /** True when the gathering is at capacity (`seatsTaken >= capacity`). */
+  isFull?: boolean;
   host?: EventHostDTO;
   capacity?: number;
   goingCount?: number;
@@ -122,11 +141,61 @@ export interface EventsPage {
 }
 
 /** Full event detail from GET /events/:slug. */
+/** The three answers a gathering can give to an accessibility question. The
+ *  SAME vocabulary a business listing uses, deliberately: someone who uses a
+ *  wheelchair should read the same six facts in the same three-valued language
+ *  on a Tuesday supper club as on a bar's page, and "nobody has said" has to
+ *  stay a different answer from "no". See
+ *  `features/marketing/listBusiness/listingAccessibility.data.ts`. */
+export type EventAccessibilityAnswer = "yes" | "no" | "unknown";
+
+/** A complete six-question answer map, keyed by the canonical question slugs. */
+export type EventAccessibilityAnswers = Record<
+  string,
+  EventAccessibilityAnswer
+>;
+
+/** What the wizard and the edit flow send: a partial answer map (the server
+ *  fills the rest with a real `unknown`) plus the host's free-text note. */
+export interface EventAccessibilityInput {
+  answers?: Partial<EventAccessibilityAnswers>;
+  note?: string;
+}
+
+/** One announcement a host or co-host sent to everyone coming (LOC-06).
+ *  Delivered in-app and by push. This platform sends no email, so nothing
+ *  rendering these may describe one. */
+export interface EventAnnouncementDTO {
+  id: string;
+  body: string;
+  /** ISO 8601. */
+  createdAt: string;
+  author: EventHostDTO | null;
+  /** How many members the fan-out reached at send time. */
+  recipientCount: number;
+}
+
 export interface EventDetailDTO extends EventCardDTO {
   description?: string;
-  accessibility?: string[];
-  language?: string;
+  language?: string | null;
   guidelines?: string;
+  /** The street address, or `null` when the viewer has not earned it (LOC-04).
+   *  The backend discloses it only to an organiser or someone holding a
+   *  confirmed "going" RSVP, so an absent value is a real state the UI must
+   *  say out loud rather than render as an empty line. */
+  address?: string | null;
+  /** The host's arrival directions, gated exactly like `address`. */
+  arrivalNotes?: string | null;
+  /** Which of the two the viewer is holding: `"venue"` (name + neighbourhood
+   *  only) or `"exact"` (the door). */
+  locationPrecision?: "venue" | "exact";
+  /** The gathering's six accessibility answers, always a complete map. */
+  accessibilityAnswers?: EventAccessibilityAnswers;
+  /** The host's free-text access note, or "" when they wrote none. */
+  accessibilityNote?: string;
+  /** Announcements the organisers have sent, newest first. Empty for a viewer
+   *  with no stake in the gathering. */
+  announcements?: EventAnnouncementDTO[];
   /** Sliding-scale / ticket tiers, if the event is ticketed. */
   tiers?: { name: string; desc?: string; price: string }[];
   /** True when the viewer is the host or a cohost (organizer-only actions). */
@@ -211,6 +280,23 @@ export interface AttendeeDTO {
   rsvpAt?: string;
   /** Waitlist rank, when status is "waitlisted". */
   waitlistPosition?: number;
+  /** When a host or co-host marked this attendee as arrived, or `null`
+   *  (LOC-03). ORGANISERS ONLY: the backend sends `null` to every other
+   *  reader of a guest list. ISO 8601. */
+  checkedInAt?: string | null;
+  /**
+   * ── ATTENDEE PII, ORGANISERS ONLY (LOC-07) ──────────────────────────────
+   * What the attendee typed into "Anything we should know?". Present only for
+   * the host and co-hosts, and only as far as the attendee's own `visibility`
+   * choice allows: `justMe` withholds the two free-text needs (the guest count
+   * still shows, because it is how many seats the host has to lay).
+   */
+  guestCount?: number;
+  accessNeeds?: string | null;
+  dietaryNeeds?: string | null;
+  /** The attendee's own "who can see this" choice, echoed so the host's UI can
+   *  say why a needs line is absent rather than implying nobody has any. */
+  detailsVisibility?: string | null;
 }
 
 /** GET /events/:slug/attendees?status=&page= — one RSVP status's own
@@ -223,6 +309,16 @@ export interface AttendeesPageDTO {
   page: number;
   pageSize: number;
   capacity?: number | null;
+  /** Members holding a "going" RSVP, whichever status page was requested. */
+  goingCount?: number;
+  /** Seats those RSVPs occupy: going members plus their declared guests. The
+   *  number to compare against `capacity` (LOC-07). */
+  seatsTaken?: number;
+  /** Members on the waitlist, whichever status page was requested. */
+  waitlistCount?: number;
+  /** How many going members have been checked in at the door (LOC-03).
+   *  Always 0 for a viewer who is not an organiser. */
+  checkedInCount?: number;
 }
 
 // ── Create / update payloads ────────────────────────────────────────────────
@@ -251,6 +347,27 @@ export interface CreateEventDto {
    *  backend default (`true` — unlimited waitlist, counts shown). */
   allowWaitlist?: boolean;
   showAttendeeCount?: boolean;
+  // ── Where it actually is, and what kind it is (LOC-04) ───────────────────
+  // The wizard has always asked for these. Until the columns existed they were
+  // collected and dropped, which meant a host pledged that their accessibility
+  // answers were accurate about data the platform deleted a second later.
+  /** The street address. The server discloses it only to organisers and
+   *  confirmed attendees, so a house party can be listed at all. */
+  address?: string | null;
+  /** Arrival directions: "through the courtyard, second door, ring twice". */
+  arrivalNotes?: string | null;
+  /** The Lisbon neighbourhood the host picked. Public: it is what makes a
+   *  gathering findable, and what the browse filter narrows on. */
+  neighbourhood?: string | null;
+  /** "PT / EN bilingual", "Portuguese only", … */
+  language?: string | null;
+  /** The wizard's gathering type: "Supper club", "Workshop / talk", … */
+  eventType?: string | null;
+  /** The six accessibility answers plus the host's note. */
+  accessibility?: EventAccessibilityInput;
+  /** Free-text door price (LOC-18). DISPLAY ONLY: there is no payment
+   *  integration, so nothing about this field may promise a charge. */
+  cost?: string | null;
   /** Optional repeat rule (MSG-10) — see `RecurrenceInput`'s doc. CREATE-only:
    *  `UpdateEventDto` never carries this (converting an existing standalone
    *  gathering into a series after the fact is out of scope). */
@@ -271,6 +388,32 @@ export type UpdateEventDto = Partial<
 
 // ── Raw calls (one per endpoint) ────────────────────────────────────────────
 
+/**
+ * The discovery axes `GET /events` narrows on in SQL (LOC-17).
+ *
+ * Every one of these used to be a client-side pass over whatever pages had
+ * already loaded, so "what is on this Friday near Arroios" under-reported
+ * until the member had scrolled the entire feed. Applied server-side they
+ * survive pagination and the counts are honest.
+ *
+ * Lisbon is the only city this product serves, so `hood` is a neighbourhood.
+ */
+export interface EventBrowseFilters {
+  /** Inclusive lower bound on the start, ISO 8601. */
+  from?: string;
+  /** Inclusive upper bound on the start, ISO 8601. */
+  to?: string;
+  /** A Lisbon neighbourhood, matched case-insensitively. */
+  hood?: string;
+  /** A gathering type ("Supper club", "Workshop / talk", …). */
+  type?: string;
+  /** Free text over title, venue, neighbourhood and description. */
+  q?: string;
+  /** `free` or `paid` — three-state by omission, because "the host has not
+   *  said" is a real answer and must not be sorted into either bucket. */
+  cost?: "free" | "paid";
+}
+
 export async function getEvents(
   params: {
     filter?: EventFilter;
@@ -281,13 +424,19 @@ export async function getEvents(
     hostSlug?: string;
     /** Pairs with `hostSlug` — drops one event out of its own results. */
     excludeSlug?: string;
-  } = {},
+  } & EventBrowseFilters = {},
 ): Promise<EventsPage> {
   const q = new URLSearchParams();
   if (params.filter) q.set("filter", params.filter);
   if (params.page) q.set("page", String(params.page));
   if (params.hostSlug) q.set("hostSlug", params.hostSlug);
   if (params.excludeSlug) q.set("excludeSlug", params.excludeSlug);
+  if (params.from) q.set("from", params.from);
+  if (params.to) q.set("to", params.to);
+  if (params.hood) q.set("hood", params.hood);
+  if (params.type) q.set("type", params.type);
+  if (params.q) q.set("q", params.q);
+  if (params.cost) q.set("cost", params.cost);
   const qs = q.toString();
   const res = await apiGet<EventCardDTO[] | EventsPage>(
     `/events${qs ? `?${qs}` : ""}`,
@@ -528,3 +677,89 @@ export const respondCohostInvite = (id: string, action: "accept" | "decline") =>
     `/event-cohost-invites/${id}`,
     { action },
   );
+
+// ── Host announcements (LOC-06) ────────────────────────────────────────────
+// A host's way to say "we moved to the back room" or "the door code is 4471".
+// Delivered as an in-app notification plus a push, and stored on the gathering
+// so an attendee can find it again at the door. QueerPulse sends no email, so
+// no copy on either side of this may describe one.
+
+/** Longest one announcement may be — mirrors the backend's
+ *  `MAX_EVENT_ANNOUNCEMENT_LENGTH` so the composer's counter matches the
+ *  server's ceiling instead of guessing at it. */
+export const MAX_EVENT_ANNOUNCEMENT_LENGTH = 1000;
+
+/** GET /events/:slug/announcements — organisers, plus anyone holding a live
+ *  RSVP or a standing invite. Everyone else gets 403. */
+export const getEventAnnouncements = (slug: string) =>
+  apiGet<EventAnnouncementDTO[]>(`/events/${slug}/announcements`);
+
+/** POST /events/:slug/announcements — host and co-host only, rate-limited
+ *  server-side at ten a minute. */
+export const createEventAnnouncement = (slug: string, body: string) =>
+  apiPost<EventAnnouncementDTO>(`/events/${slug}/announcements`, { body });
+
+// ── The host's own door (LOC-08) ───────────────────────────────────────────
+
+/** One member barred from a gathering. ORGANISERS ONLY: `reason` is the
+ *  organisers' private note and is never sent to the person it is about. */
+export interface EventBanDTO {
+  slug: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string | null;
+  reason: string | null;
+  /** ISO 8601. */
+  createdAt: string;
+}
+
+/** GET /events/:slug/bans — host and co-host only. */
+export const getEventBans = (slug: string) =>
+  apiGet<EventBanDTO[]>(`/events/${slug}/bans`);
+
+/** POST /events/:slug/bans — bar a member. Cancels any RSVP they hold and
+ *  stops them RSVPing again. They are not notified. */
+export const banFromEvent = (
+  slug: string,
+  memberSlug: string,
+  reason?: string,
+) =>
+  apiPost<EventBanDTO>(`/events/${slug}/bans`, {
+    memberSlug,
+    ...(reason?.trim() ? { reason: reason.trim() } : {}),
+  });
+
+/** DELETE /events/:slug/bans/:memberSlug — lift a bar. Idempotent. Lifting
+ *  does not re-add them: they choose whether to come back. */
+export const liftEventBan = (slug: string, memberSlug: string) =>
+  apiDelete<{ ok: true }>(`/events/${slug}/bans/${memberSlug}`);
+
+// ── Day-of check-in (LOC-03) ───────────────────────────────────────────────
+
+/** What a check-in (or an undo) reports back: the attendee's row as the
+ *  organiser now sees it, plus the four numbers the door desk watches. */
+export interface CheckInResultDTO {
+  attendee: AttendeeDTO;
+  goingCount: number;
+  seatsTaken: number;
+  waitlistCount: number;
+  checkedInCount: number;
+}
+
+/**
+ * POST /events/:slug/check-ins — host and co-host only.
+ *
+ * Exactly ONE identifier: `memberSlug` (the host tapped a name) or `cardToken`
+ * (the host read the QR on the member's membership card, the same permanent
+ * code `GET /cards/verify/:token` resolves). Idempotent: a second check-in
+ * keeps the first arrival time.
+ */
+export const checkInAttendee = (
+  slug: string,
+  input: { memberSlug: string } | { cardToken: string },
+) => apiPost<CheckInResultDTO>(`/events/${slug}/check-ins`, input);
+
+/** DELETE /events/:slug/check-ins/:memberSlug — undo, for the tap that landed
+ *  on the wrong name. Idempotent. */
+export const undoCheckIn = (slug: string, memberSlug: string) =>
+  apiDelete<CheckInResultDTO>(`/events/${slug}/check-ins/${memberSlug}`);

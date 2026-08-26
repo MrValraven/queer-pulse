@@ -7,6 +7,7 @@ import { PostActionsMenu } from "../forum/PostActionsMenu";
 import type { Post } from "./community.model";
 import { photoOf, roleLookup } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
+import { CopyPostLinkButton } from "./CopyPostLinkButton";
 import { useCommunityTime } from "./communityTime";
 import type { PulsePostPermissions } from "./usePulsePostState";
 import detail from "./CommunityDetailPage.module.css";
@@ -47,6 +48,12 @@ export function PulsePostHeader({
     permissions.canDelete ||
     permissions.canRestore ||
     permissions.canViewHistory;
+  // The permalink needs a post that actually exists at a URL. An optimistic
+  // post the composer just added locally (`usePulseTabActions`'s `me-…` id)
+  // has no server row yet, so it gets no copy-link control until the refetch
+  // replaces it with the real one.
+  const hasPermalink =
+    Boolean(post.communitySlug) && !post.id.startsWith("me-");
 
   return (
     <header className={styles.pHead}>
@@ -72,8 +79,14 @@ export function PulsePostHeader({
           )}
         </div>
       </div>
-      {hasAnyAction && (
-        <span className={styles.pMenu}>
+      <span className={styles.pActions}>
+        {hasPermalink && (
+          <CopyPostLinkButton
+            communitySlug={post.communitySlug}
+            postId={post.id}
+          />
+        )}
+        {hasAnyAction && (
           <PostActionsMenu
             canEdit={permissions.canEdit}
             canDelete={permissions.canDelete}
@@ -89,8 +102,8 @@ export function PulsePostHeader({
             canReport={permissions.canReport}
             onReport={onReport}
           />
-        </span>
-      )}
+        )}
+      </span>
     </header>
   );
 }

@@ -33,12 +33,23 @@ export function NotificationItem({
   const rowHref = notification.sourceHref ?? notification.actor?.href;
   const rowGoesToProfile = !notification.sourceHref && Boolean(rowHref);
 
-  // The row's accessible name for the overlay link below.
+  // How many members beyond the one named did the same thing to the same
+  // subject. A bundled row is one row for one conversation: forty replies to a
+  // thread used to be forty rows, forty unread, and forty taps to clear.
+  const otherActorCount = notification.otherActorCount ?? 0;
+  const othersLabel =
+    otherActorCount > 0
+      ? t("notifications:bundle.others", { count: otherActorCount })
+      : "";
+
+  // The row's accessible name for the overlay link below. The bundle count is
+  // part of it: a screen reader must hear "and 39 others", since that is the
+  // difference between one reply and a conversation.
   const rowLabel = `${
     typeof notification.text === "string"
       ? notification.text
       : notification.meta
-  }. ${t(
+  }${othersLabel ? ` ${othersLabel}` : ""}. ${t(
     rowGoesToProfile
       ? "notifications:actions.viewProfile"
       : "notifications:actions.viewThread",
@@ -112,6 +123,9 @@ export function NotificationItem({
             />
           ) : (
             notification.text
+          )}
+          {othersLabel && (
+            <span className={styles.bundleCount}> {othersLabel}</span>
           )}
         </div>
         <div className={styles.meta}>{notification.meta}</div>

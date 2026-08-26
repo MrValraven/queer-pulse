@@ -1794,7 +1794,7 @@ export const studio: Catalog = {
   "comingSoon.title": "O Studio ainda está a <em>afinar</em>",
   "comingSoon.description":
     "A nossa plataforma de música em cooperativa (páginas de artistas, sessões ao vivo, pagamentos e o fundo de solidariedade) ainda não abriu ao público. Estamos a construí-la à vista de todes e chega aqui em breve.",
-  "comingSoon.exploreCulture": "Explorar a Cultura",
+  "comingSoon.readMagazine": "Ler a revista",
   "comingSoon.backHome": "Voltar ao início",
 
   // ── sweep no-literal-string: legendas reutilizáveis do ImageSlot ─────────

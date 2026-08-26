@@ -1,16 +1,20 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPatch } from "../../../shared/api/client";
 
 /**
  * Admin oversight of magazine story submissions
- * (`/admin/magazine-submissions`, admin-only). Lists every reader pitch — the
- * submitter, their working title, format, pitch text, and status — so editors
- * can see the pipeline (this is the READ side the submissions editor was
- * previously mock-only for). The backend scopes this to admins and 403s
- * otherwise; this file only owns the wire shape.
+ * (`/admin/magazine-submissions`, admin-only). Lists every reader story — the
+ * submitter, their working title, format, the piece as they wrote it, and its
+ * status — and records the editorial decision on one. The backend scopes both
+ * to admins and 403s otherwise; this file only owns the wire shape.
  */
 
 export type MagazineSubmissionStatus =
   "draft" | "submitted" | "in_review" | "accepted" | "rejected" | "published";
+
+/** The staff verdict. `accepted` and `commissioned` both land `status` on
+ *  `accepted`; a commission also creates a pitch in the desk's inbox. */
+export type MagazineSubmissionDecision =
+  "accepted" | "declined" | "commissioned";
 
 export interface AdminPersonDTO {
   slug: string;
@@ -20,14 +24,27 @@ export interface AdminPersonDTO {
 
 export interface AdminMagazineSubmissionDTO {
   id: string;
-  /** The member who pitched (null if their profile is gone). */
+  /** The member who submitted (null if their profile is gone). */
   submitter: AdminPersonDTO | null;
-  /** The section/format the pitch targets (editorial config, free text). */
+  /** The section/format the story targets (editorial config, free text). */
   format: string;
   workingTitle: string;
-  /** The pitch body, as the member wrote it. */
+  /** The short summary, as the member wrote it. */
   pitch: string;
+  /** The standfirst. Null on rows written before deck/body were split out. */
+  deck: string | null;
+  /** The piece itself. Null on rows written before the split — those carry
+   *  everything in `pitch`. */
+  body: string | null;
+  /** The cover the member uploaded, already resolved to a URL. */
+  coverUrl: string | null;
   status: MagazineSubmissionStatus;
+  decision: MagazineSubmissionDecision | null;
+  /** The reply the decider wrote back to the submitter. */
+  decisionNote: string | null;
+  decidedAt: string | null;
+  /** Set when a commission put this piece in the desk's pitch inbox. */
+  commissionedPitchId: string | null;
   createdAt: string;
 }
 
@@ -51,3 +68,14 @@ export const getAdminMagazineSubmissions = (parameters: {
     `/admin/magazine-submissions${querySuffix ? `?${querySuffix}` : ""}`,
   );
 };
+
+/** Accept, decline, or commission one submission. 409s if it was already
+ *  decided (another editor got there first). */
+export const decideAdminMagazineSubmission = (
+  id: string,
+  dto: { decision: MagazineSubmissionDecision; replyNote?: string },
+) =>
+  apiPatch<AdminMagazineSubmissionDTO>(
+    `/admin/magazine-submissions/${id}`,
+    dto,
+  );

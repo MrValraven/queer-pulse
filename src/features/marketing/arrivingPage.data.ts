@@ -1,147 +1,127 @@
+import { routes } from "../../app/routeMap";
+
+/**
+ * Static shape for `/local/arriving` (LOC-13).
+ *
+ * Nothing user-facing is written in English here any more: every card carries
+ * an i18n `keyPrefix` and the component resolves `<prefix>.title` /
+ * `.body` / `.note` through `t()`, so the whole page translates. What stays in
+ * this file is the non-translatable spine: proper nouns (Lisbon neighbourhood
+ * names, organisation names), real destinations, icons, and the colour tone
+ * each card wears.
+ *
+ * The page is Lisbon-only by product decision, so nothing here is
+ * parameterised by city.
+ */
+
+/** Which tinted chip/icon treatment a card wears. Resolved to a CSS-module
+ *  class in the component, since the class map depends on the CSS import. */
+export type ArrivingTone = "coral" | "jade" | "violet" | "neutral";
+
 export interface Hood {
-  tag: string;
-  tagColor: string;
-  tagBg: string;
+  /** Stable id, also the i18n leaf: `marketing:arriving.hoods.<id>.*`. */
+  id: string;
+  /** Neighbourhood name. A Lisbon proper noun, identical in both languages. */
   name: string;
-  description: string;
-  note: string;
+  tone: ArrivingTone;
 }
 
-export interface InfoCard {
-  icon: string;
-  iconBg: string;
-  title: string;
-  body: string;
-  link?: { label: string; href: string; external?: boolean };
+export interface ArrivingLink {
+  href: string;
+  /** External sites open in a new tab and get the external-link icon. */
+  isExternal?: boolean;
+  /** True when the destination is inside QueerPulse and needs an account, so
+   *  a logged-out reader is told before they click rather than after. */
+  isMemberOnly?: boolean;
 }
 
 export interface Org {
+  /** Stable id, also the i18n leaf: `marketing:arriving.orgs.items.<id>.body`. */
+  id: string;
+  /** Organisation name. A proper noun, identical in both languages. */
+  name: string;
   initials: string;
-  background: string;
-  color: string;
-  name: string;
-  description: string;
-  url: string;
+  tone: ArrivingTone;
+  /** The organisation's own site. Real, public, and reachable logged out,
+   *  which is the point: a newcomer can act on it before they have an invite. */
+  website: string;
+  /** Bare domain, shown as the visible link text. */
+  domain: string;
 }
 
-export interface CommQuick {
-  type: string;
-  typeColor: string;
-  typeBg: string;
-  name: string;
-  reason: string;
+export interface ChecklistStep {
+  /** Stable id. Also the i18n leaf AND the token persisted to localStorage,
+   *  so renaming one silently un-ticks it. Append, don't rename. */
+  id: string;
+  link?: ArrivingLink;
 }
 
+/**
+ * Six neighbourhoods, each a real Lisbon freguesia or bairro. The notes used
+ * to name-drop demo personas ("Inês Tavares (designer)"), who exist in no live
+ * database and could not be linked to a profile. They now say something true
+ * about the place instead.
+ */
 export const HOODS: Hood[] = [
-  {
-    tag: "Social · Creative",
-    tagColor: "var(--accent-ink)",
-    tagBg: "rgba(232,119,90,.1)",
-    name: "Príncipe Real",
-    description:
-      "The heart of queer social life in Lisbon. Beautiful garden square, wine bars, independent bookshops, and a high concentration of queer creatives. Most visible, most welcoming. Start here.",
-    note: "QueerPulse members here: Inês Tavares (designer), among others",
-  },
-  {
-    tag: "Activism · Community",
-    tagColor: "var(--plum)",
-    tagBg: "rgba(45,27,61,.08)",
-    name: "Mouraria",
-    description:
-      "A neighbourhood that has always welcomed the outsider. Fado roots, immigrant community, and the most active queer community organising in the city. Home to the Housing Justice Network.",
-    note: "Where the Queer Supper Club runs, and where Catarina Vaz organises",
-  },
-  {
-    tag: "Nightlife · Arts",
-    tagColor: "var(--jade)",
-    tagBg: "rgba(74,140,111,.1)",
-    name: "Bairro Alto",
-    description:
-      "The nightlife neighbourhood. Small bars, independent music venues, late nights, and a long queer history. Where queer Lisbon goes to dance. Lively after 10pm, quiet in the morning.",
-    note: "Diogo Vasques (music producer) is based here",
-  },
-  {
-    tag: "Creative · Riverside",
-    tagColor: "var(--accent-ink)",
-    tagBg: "rgba(232,119,90,.1)",
-    name: "Cais do Sodré",
-    description:
-      "Creative energy by the river. Formerly the rough end of the city, now full of independent studios, cultural spaces, and the Pink Street. Where new Lisbon meets old Lisbon. André's studio is here.",
-    note: "Home to the Pink Street, Lisbon's most famous queer bar strip",
-  },
-  {
-    tag: "Growing · Affordable",
-    tagColor: "var(--jade)",
-    tagBg: "rgba(74,140,111,.1)",
-    name: "Arroios",
-    description:
-      "More affordable, more diverse, and rapidly growing as a hub for queer newcomers and creatives priced out of Príncipe Real. Excellent food, tight community. If you're just arriving, look here for housing.",
-    note: "One of the most diverse neighbourhoods in the city",
-  },
-  {
-    tag: "Industrial · New Lisbon",
-    tagColor: "var(--plum)",
-    tagBg: "rgba(45,27,61,.08)",
-    name: "Marvila",
-    description:
-      "Warehouses, studios, and a quieter kind of creative life. Further out but increasingly the home of people who want space to make things. Rui Marçal runs his infrastructure studio here.",
-    note: "Good for studios and larger living spaces at lower cost",
-  },
+  { id: "principeReal", name: "Príncipe Real", tone: "coral" },
+  { id: "mouraria", name: "Mouraria", tone: "neutral" },
+  { id: "bairroAlto", name: "Bairro Alto", tone: "jade" },
+  { id: "caisDoSodre", name: "Cais do Sodré", tone: "coral" },
+  { id: "arroios", name: "Arroios", tone: "jade" },
+  { id: "marvila", name: "Marvila", tone: "neutral" },
 ];
 
+/**
+ * The three organisations most useful in a first month. Each row links to the
+ * organisation's OWN site rather than to a QueerPulse index page: these are
+ * outside bodies with no listing slug to resolve, and their site is the thing
+ * a newcomer can actually use on day one.
+ */
 export const ORGS: Org[] = [
   {
-    initials: "IL",
-    background: "rgba(74,140,111,.12)",
-    color: "var(--jade)",
+    id: "ilga",
     name: "ILGA Portugal",
-    description:
-      "Portugal's leading LGBTQ+ rights organisation. Legal support, anti-discrimination advice, housing referrals, a crisis support line, and community programming. Your first call for anything serious.",
-    url: "↗ ilga-portugal.pt",
+    initials: "IL",
+    tone: "jade",
+    website: "https://ilga-portugal.pt",
+    domain: "ilga-portugal.pt",
   },
   {
-    initials: "OD",
-    background: "rgba(232,119,90,.1)",
-    color: "var(--accent-ink)",
+    id: "opusDiversus",
     name: "Opus Diversus",
-    description:
-      "Mental health and peer support for LGBTQ+ people. Runs training for allied health professionals. If you're struggling with the move or with visibility in a new city, this is where to go.",
-    url: "↗ opusdiversus.org",
+    initials: "OD",
+    tone: "coral",
+    website: "https://opusdiversus.org",
+    domain: "opusdiversus.org",
   },
   {
-    initials: "Re",
-    background: "rgba(45,27,61,.08)",
-    color: "var(--plum)",
+    id: "redeExAequo",
     name: "Rede ex aequo",
-    description:
-      "Youth-focused LGBTQ+ association with active groups in Lisbon. Peer support, advocacy, and a welcoming environment for people who are younger or who are still figuring things out.",
-    url: "↗ rea.pt",
+    initials: "Re",
+    tone: "violet",
+    website: "https://rea.pt",
+    domain: "rea.pt",
   },
 ];
 
-export const COMM_QUICK: CommQuick[] = [
+/**
+ * The practical first-fortnight list. Every step points somewhere real: a
+ * public QueerPulse guide, an official Portuguese service, or an organisation's
+ * own site. Ticks live in this browser only (see `ArrivingChecklist`).
+ */
+export const CHECKLIST_STEPS: ChecklistStep[] = [
+  { id: "nif", link: { href: routes.visas } },
   {
-    type: "Social",
-    typeColor: "var(--jade)",
-    typeBg: "rgba(74,140,111,.1)",
-    name: "Queer Social Lisbon",
-    reason:
-      "No agenda, no pressure. The best room for a first social step in the city.",
+    id: "sns",
+    link: { href: "https://www.sns.gov.pt", isExternal: true },
   },
+  { id: "doctor", link: { href: routes.transHealthcare } },
+  { id: "room", link: { href: routes.housing, isMemberOnly: true } },
+  { id: "rights", link: { href: routes.tenantRights, isMemberOnly: true } },
   {
-    type: "Support",
-    typeColor: "var(--violet)",
-    typeBg: "rgba(122,82,184,.1)",
-    name: "Queer Immigrant Support",
-    reason:
-      "Specifically for LGBTQ+ people who have recently arrived. Community, resources, practical help.",
+    id: "crisis",
+    link: { href: "https://ilga-portugal.pt", isExternal: true },
   },
-  {
-    type: "Sports",
-    typeColor: "var(--jade)",
-    typeBg: "rgba(74,140,111,.1)",
-    name: "Queer Runners Lisboa",
-    reason:
-      "Weekly runs along the Tejo. All paces welcome. A surprisingly easy way to meet people.",
-  },
+  { id: "gathering", link: { href: routes.gatherings, isMemberOnly: true } },
+  { id: "community", link: { href: routes.communities, isMemberOnly: true } },
 ];

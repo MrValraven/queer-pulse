@@ -8,10 +8,38 @@ import { toPage } from "../../../shared/api/pagination";
 import type {
   AuthorSummary,
   ForumPostHistoryResponse,
-  ForumPostResponse,
-  ForumThreadResponse,
+  ForumPostResponse as BaseForumPostResponse,
+  ForumThreadResponse as BaseForumThreadResponse,
   Paginated,
 } from "../../../shared/contracts/contracts";
+
+/**
+ * The forum DTOs, plus the fields SOC-13 added to them.
+ *
+ * Declared here rather than edited into `shared/contracts/contracts.ts`
+ * because these four fields are read by exactly one feature. The base
+ * interfaces stay the shared cross-feature contract; the forum's own
+ * extensions live next to the calls that produce them.
+ */
+export interface ForumThreadResponse extends BaseForumThreadResponse {
+  /** Is the viewer following this thread (notified about new replies)? */
+  isSubscribed: boolean;
+  /** The reply marked as the answer, or null while the question is open. */
+  acceptedPostId: string | null;
+  /** May the viewer set/clear the accepted answer (author or moderator)? */
+  canAcceptAnswer: boolean;
+  /** May the viewer replace the tag set (author or moderator)? Wider than
+   *  `canEdit`, which is the author-only title permission. */
+  canEditTags: boolean;
+}
+
+export interface ForumPostResponse extends BaseForumPostResponse {
+  /** Resolved URL of the photo attached to this post, or null. Blanked
+   *  alongside the body on a tombstoned/removed post. */
+  image: string | null;
+  /** Is this post its thread's accepted answer? */
+  isAccepted: boolean;
+}
 
 // ── Forum DTOs + raw calls ───────────────────────────────────────────────────
 // Shapes come from src/shared/contracts/contracts.ts. PAGINATION: cursor-based
@@ -19,11 +47,7 @@ import type {
 // posts — both are infinite. A thread's opening post is the FIRST item of its
 // posts page; the remainder are replies.
 
-export type {
-  ForumThreadResponse,
-  ForumPostResponse,
-  ForumPostHistoryResponse,
-};
+export type { ForumPostHistoryResponse };
 
 /** Server-supported orderings for the thread list. */
 export type ForumSort = "new" | "top" | "active" | "unanswered";
@@ -115,6 +139,9 @@ export interface CreateThreadDto {
    *  Only an admin's value is actually honored — the backend silently
    *  coerces it to `false` for anyone else. */
   isOfficial?: boolean;
+  /** Storage key of one photo on the opening post, from the shared presigned
+   *  upload pipeline (`useUploadImage`). */
+  image?: string;
 }
 
 /** POST /forum/threads — ComposeThreadModal. */
@@ -128,10 +155,12 @@ export const replyToThread = (
   slug: string,
   body: string,
   parentPostId?: string | null,
+  image?: string | null,
 ) =>
   apiPost<ForumPostResponse>(`/forum/threads/${slug}/posts`, {
     body,
     ...(parentPostId ? { parentPostId } : {}),
+    ...(image ? { image } : {}),
   });
 
 /** POST /forum/posts/:id/vote — cast (`value: 1`) or clear (`value: 0`) the
@@ -140,9 +169,13 @@ export const replyToThread = (
 export const votePost = (id: string, value: 0 | 1) =>
   apiPost<ForumPostResponse>(`/forum/posts/${id}/vote`, { value });
 
-/** PATCH /forum/posts/:id — author edits a post body. */
-export const editPost = (id: string, body: string) =>
-  apiPatch<ForumPostResponse>(`/forum/posts/${id}`, { body });
+/** PATCH /forum/posts/:id — author edits a post body, and optionally its
+ *  photo. Omitting `image` leaves the existing one; an empty string clears it. */
+export const editPost = (id: string, body: string, image?: string) =>
+  apiPatch<ForumPostResponse>(`/forum/posts/${id}`, {
+    body,
+    ...(image !== undefined ? { image } : {}),
+  });
 
 /** DELETE /forum/posts/:id — soft tombstone (author or staff). */
 export const deletePost = (id: string) =>
@@ -155,6 +188,28 @@ export const restorePost = (id: string) =>
 /** PATCH /forum/threads/:slug — author edits the thread title. */
 export const editThreadTitle = (slug: string, title: string) =>
   apiPatch<ForumThreadResponse>(`/forum/threads/${slug}`, { title });
+
+/** PATCH /forum/threads/:slug — replace the thread's tag set. Accepted from
+ *  the author OR a moderator (filing a thread is janitorial, unlike the
+ *  author-only title edit). An empty array clears every tag. The endpoint has
+ *  accepted this field since the forum shipped; nothing ever sent it. */
+export const editThreadTags = (slug: string, tags: string[]) =>
+  apiPatch<ForumThreadResponse>(`/forum/threads/${slug}`, { tags });
+
+/** POST /forum/threads/:slug/accepted-answer — mark a reply as the thread's
+ *  answer, or clear the mark by passing `null`. Thread author or moderator. */
+export const setAcceptedAnswer = (slug: string, postId: string | null) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/accepted-answer`, {
+    postId,
+  });
+
+/** POST /forum/threads/:slug/follow — start hearing about new replies. */
+export const followThread = (slug: string) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/follow`);
+
+/** POST /forum/threads/:slug/unfollow — stop hearing about new replies. */
+export const unfollowThread = (slug: string) =>
+  apiPost<ForumThreadResponse>(`/forum/threads/${slug}/unfollow`);
 
 /** POST /forum/threads/:slug/lock — moderator closes the thread to replies,
  *  with an optional note explaining why (shown on the locked banner). Returns

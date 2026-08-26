@@ -1,4 +1,5 @@
 import { FiGlobe } from "react-icons/fi";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isPlaceGone, type DirectoryPlace } from "./directoryPlaces";
 import { placeCoordinates } from "./businessCoords";
@@ -21,10 +22,11 @@ import s from "./DirectorySpacePage.module.css";
  *  decorative placeholder. Fills whatever cell the card gives it. */
 export function DirectoryPlaceMap({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
   // Live listings carry their pin on the DTO; demo places have it hand-placed
   // in BUSINESS_COORDS by slug (same fallback order as localPlaces.ts). When
   // neither exists (location-less listings) we keep the decorative placeholder.
-  const coords = placeCoordinates(place);
+  const coords = placeCoordinates(place, demoMode);
 
   return (
     <div className={s.visitMap}>

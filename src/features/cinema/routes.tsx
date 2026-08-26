@@ -49,10 +49,37 @@ const CinemaRightsPage = lazyNamed(
   "CinemaRightsPage",
 );
 const FilmPage = lazyNamed(() => import("./FilmPage"), "FilmPage");
+const CinemaComingSoon = lazyNamed(
+  () => import("./CinemaComingSoon"),
+  "CinemaComingSoon",
+);
 
 /** The cinema: browsing, collections, membership, watching, filmmaker/curator
- *  pages, submissions, shorts, open calls, rights, and a film's detail page. */
-export function cinemaRoutes() {
+ *  pages, submissions, shorts, open calls, rights, and a film's detail page.
+ *
+ *  Cinema is not launched: the backend ships
+ *  `launchedFeatures.cinema = { launched: false }`, so every `/cinema/*` call
+ *  404s, and the pages below are fabricated `*.data.ts` content: a EUR 7 and
+ *  EUR 20 per month membership with no payment path behind it, a public ledger
+ *  quoting money paid to filmmakers, and a 142-film catalogue that is empty.
+ *  So in LIVE mode (`demoMode === false`) the entire `/cinema/*` surface
+ *  resolves to a single honest not-launched page, the same treatment
+ *  `studioRoutes` gives Studio. Demo mode keeps the full mock experience.
+ *
+ *  To launch: flip `launchedFeatures.cinema.launched` in the backend (which
+ *  makes the MUX_* env vars mandatory at boot) and delete the `!demoMode`
+ *  branch below. CON-03. */
+export function cinemaRoutes(demoMode: boolean) {
+  if (!demoMode) {
+    // `/film` is the one cinema page registered outside the `/cinema` prefix,
+    // so it needs its own entry or it would fall through to the 404 page.
+    return (
+      <>
+        <Route path="/cinema/*" element={<CinemaComingSoon />} />
+        <Route path={routes.film} element={<CinemaComingSoon />} />
+      </>
+    );
+  }
   return (
     <>
       <Route path={routes.cinema} element={<CinemaPage />} />

@@ -5,7 +5,10 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { tintForSlug } from "../../shared/api/refs";
 import { initials, relativeTime } from "./api/feed.adapters";
-import type { FeedItem } from "../../shared/contracts/contracts";
+import type { FeedItem } from "./api/feed.api";
+import { MoreMenu } from "./FeedModeration";
+import { FeedReasonLine } from "./FeedPostActions";
+import styles from "./FeedCard.module.css";
 import {
   FeedActionLink,
   FeedActions,
@@ -26,6 +29,11 @@ import {
  *
  * Backend mapping: `title` = thread title, `summary` =
  * "{category} · N replies", `link` = `/forum/threads/{slug}`.
+ *
+ * SOC-04/SOC-18: it also carries the "why am I seeing this" line and a
+ * per-thread "show me less of this". Muting a thread quiets that one
+ * conversation in this member's feed; the thread itself is untouched and
+ * still reachable from the forum.
  */
 export function ForumThreadCard({ item }: { item: FeedItem }) {
   const { t } = useTranslation();
@@ -40,10 +48,29 @@ export function ForumThreadCard({ item }: { item: FeedItem }) {
 
   return (
     <FeedCardShell accent="ink">
-      <FeedCardHead
-        label={t("feed:card.eyebrow.forumThread")}
-        timestamp={timestamp}
-      />
+      <div className={styles.postHeadRow}>
+        <FeedCardHead
+          label={t("feed:card.eyebrow.forumThread")}
+          timestamp={timestamp}
+        />
+        {/* No Report item here: a forum thread is reported through its
+            OPENING POST, whose id the aggregated feed item does not carry —
+            offering it would file a report against the wrong subject. The
+            thread page itself has the correct affordance. */}
+        <MoreMenu
+          authorName={authorName}
+          slug={authorSlug}
+          muteTarget={
+            item.source
+              ? {
+                  sourceKind: item.source.kind,
+                  sourceId: item.source.id,
+                  name: item.source.name,
+                }
+              : undefined
+          }
+        />
+      </div>
       <FeedIdentity
         lead={
           <FeedAvatarLink slug={authorSlug} name={authorName}>
@@ -68,6 +95,7 @@ export function ForumThreadCard({ item }: { item: FeedItem }) {
         }
       />
       <FeedQuote>{item.title}</FeedQuote>
+      <FeedReasonLine reason={item.reason} subject={item.reasonSubject} />
       <FeedActions
         primary={
           <Button variant="ghost" size="sm" to={item.link}>

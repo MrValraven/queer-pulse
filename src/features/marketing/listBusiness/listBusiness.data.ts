@@ -19,7 +19,7 @@
 
 import type { TFunction } from "../../../shared/i18n/types";
 import { leadingInitials } from "../../../shared/lib/initials";
-import { LOCAL_CATEGORIES, categoryLabel } from "../localPlaces";
+import { LOCAL_CATEGORIES, categoryLabel } from "../localCategories";
 import type { ListingAccessibilityDraft } from "./listingAccessibility.data";
 import type { ListingServiceRow } from "./listingServices.data";
 

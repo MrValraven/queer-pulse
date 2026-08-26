@@ -70,3 +70,91 @@
   color: var(--danger);
   margin-block-start: 4px;
 }
+
+/* Group label for a chip row (features / ideal for). Matches `.field label`
+ * from ApplicationModals so the chip groups read as ordinary fields. */
+.chipLabel {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.02em;
+}
+
+/* ── Gallery upload ──────────────────────────────────────────────────────
+ * Up to eight photos, the first one being the cover the board shows. The grid
+ * reflows intrinsically rather than stepping at a breakpoint. */
+.photoField {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+  align-items: flex-start;
+}
+.photoLabel {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.02em;
+}
+.photoGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+}
+.photoItem {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: var(--cream);
+}
+.photoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.photoCover {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-start: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--plum);
+  color: var(--cream);
+}
+.photoRemove {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-end: 6px;
+  inline-size: 30px;
+  block-size: 30px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--cream);
+  background: rgba(var(--plum-rgb), 0.72);
+  transition: background var(--dur-base) var(--ease);
+}
+.photoRemove:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .photoRemove:hover {
+    background: var(--plum);
+  }
+}

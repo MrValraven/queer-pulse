@@ -174,6 +174,25 @@ export function useModerationQueueActions({
       return next;
     });
 
+  /**
+   * TS-06: select every report in one cluster at once, so the bulk bar can act
+   * on a whole pile-on in a single call.
+   *
+   * The ids come from the SERVER's cluster, which counts every open report
+   * about the subject, so most of them are usually not on screen. That is the
+   * point: `bulkAct` sends the id list to `PATCH /mod/reports/bulk` whether or
+   * not a row for it was ever rendered, and the ids that are on screen still
+   * animate out. Selecting a cluster that is already fully selected clears it,
+   * so the same control toggles.
+   */
+  const pickCluster = (ids: string[]) =>
+    setPicked((prev) => {
+      const isFullySelected = ids.length > 0 && ids.every((id) => prev.has(id));
+      const next = new Set(prev);
+      ids.forEach((id) => (isFullySelected ? next.delete(id) : next.add(id)));
+      return next;
+    });
+
   // Claim/release don't touch the Undo/removal machinery this hook is built
   // around, only the assignee fields on the row — see
   // `useModerationAssignmentActions`.
@@ -268,6 +287,7 @@ export function useModerationQueueActions({
     resolveReport,
     openReport,
     togglePick,
+    pickCluster,
     bulkAct,
     assignToMe,
     unassignReport,

@@ -96,6 +96,8 @@ export function useCreateThreadFlow({
     tags,
     communitySlug,
     isOfficial,
+    image,
+    imagePreviewUrl,
   }: NewThreadInput) {
     // A client-only temp id keys the optimistic card so the create response can
     // reconcile it (stamp the server slug) once it resolves.
@@ -132,6 +134,9 @@ export function useCreateThreadFlow({
           .split("\n")
           .map((paragraph) => paragraph.trim())
           .filter(Boolean),
+        // The upload's local blob, so the optimistic card shows the photo at
+        // once; the list refetch swaps in the server's resolved `/files/` URL.
+        opImage: imagePreviewUrl,
         replies: [],
       },
       ...prev,
@@ -152,6 +157,7 @@ export function useCreateThreadFlow({
         tags,
         ...(communitySlug ? { communitySlug } : {}),
         ...(isOfficial ? { isOfficial: true } : {}),
+        ...(image ? { image } : {}),
       },
       {
         onSuccess: (created) => {

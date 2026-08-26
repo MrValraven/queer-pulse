@@ -1,54 +1,44 @@
 import { useState } from "react";
-import { Button, FadeIn, SkeletonLine } from "../../shared/components/ui";
+import {
+  Button,
+  FadeIn,
+  SegmentedControl,
+  SkeletonLine,
+} from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip, type AdminTone } from "./ui";
+import { AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import {
   useAdminReadingGroupProposals,
   type AdminReadingGroupFormatFilter,
+  type AdminReadingGroupStatusFilter,
 } from "./api/useAdminReadingGroupProposals";
 import { useAdminReadingGroupProposalMutations } from "./api/useAdminReadingGroupProposalMutations";
 import type {
   AdminReadingGroupProposalDTO,
-  ReadingGroupFormat,
   ReadingGroupProposalDecision,
   ReadingGroupProposalStatus,
 } from "./api/adminReadingGroupProposals.api";
+import { AdminReadingGroupProposalRow } from "./AdminReadingGroupProposalRow";
+import { AdminReadingGroupDeclineModal } from "./AdminReadingGroupDeclineModal";
 import styles from "./AdminSubmissionList.module.css";
 
-const FILTERS: AdminReadingGroupFormatFilter[] = [
+const STATUS_TABS: AdminReadingGroupStatusFilter[] = [
+  "pending",
+  "approved",
+  "declined",
+  "archived",
+  "all",
+];
+
+const FORMAT_FILTERS: AdminReadingGroupFormatFilter[] = [
   "all",
   "In-person",
   "Online",
   "Either",
-];
-
-const FORMAT_TONE: Record<ReadingGroupFormat, AdminTone> = {
-  "In-person": "jade",
-  Online: "violet",
-  Either: "plum",
-};
-
-const STATUS_TONE: Record<ReadingGroupProposalStatus, AdminTone> = {
-  pending: "amber",
-  approved: "jade",
-  declined: "danger",
-  archived: "ghost",
-};
-
-// Each action button, and the status its proposal lands in — used to disable
-// the button that matches the current status (no-op re-decision).
-const ACTIONS: {
-  decision: ReadingGroupProposalDecision;
-  status: ReadingGroupProposalStatus;
-}[] = [
-  { decision: "approve", status: "approved" },
-  { decision: "decline", status: "declined" },
-  { decision: "archive", status: "archived" },
 ];
 
 // The status each decision resolves to — for the confirmation toast key.
@@ -60,73 +50,6 @@ const DECISION_STATUS: Record<
   decline: "declined",
   archive: "archived",
 };
-
-function shortDate(fmt: Formatters, iso: string): string {
-  return fmt.date(new Date(iso), {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-function ProposalRow({
-  proposal,
-  onDecide,
-  pending,
-}: {
-  proposal: AdminReadingGroupProposalDTO;
-  onDecide: (decision: ReadingGroupProposalDecision) => void;
-  pending: boolean;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  const memberName =
-    proposal.member?.name ??
-    t("admin:adminReadingGroupProposals.unknownMember");
-  return (
-    <div className={styles.row}>
-      <div className={styles.rowMain}>
-        <div className={styles.rowTop}>
-          <span className={styles.rowName}>{proposal.book}</span>
-          <AdminChip tone={FORMAT_TONE[proposal.format]} dot>
-            {t(`admin:adminReadingGroupProposals.format.${proposal.format}`)}
-          </AdminChip>
-        </div>
-        <div className={styles.rowMeta}>
-          {t("admin:adminReadingGroupProposals.row.by", { name: memberName })}
-          {" · "}
-          {t("admin:adminReadingGroupProposals.row.maxPeople", {
-            count: proposal.maxPeople,
-          })}
-        </div>
-        {proposal.why && <div className={styles.rowNote}>“{proposal.why}”</div>}
-        <div className={styles.rowDates}>
-          {t("admin:adminReadingGroupProposals.row.sent", {
-            date: shortDate(fmt, proposal.createdAt),
-          })}
-        </div>
-      </div>
-      <div className={styles.rowActions}>
-        <AdminChip tone={STATUS_TONE[proposal.status]} dot>
-          {t(`admin:adminReadingGroupProposals.status.${proposal.status}`)}
-        </AdminChip>
-        <div className={styles.rowActionButtons}>
-          {ACTIONS.map(({ decision, status }) => (
-            <Button
-              key={decision}
-              variant="ghost"
-              size="sm"
-              disabled={pending || proposal.status === status}
-              onClick={() => onDecide(decision)}
-            >
-              {t(`admin:adminReadingGroupProposals.action.${decision}`)}
-            </Button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function RowsSkeleton() {
   return (
@@ -144,14 +67,24 @@ function RowsSkeleton() {
 
 /**
  * Admin reading-group-proposal oversight: every "Start your own group" a member
- * has submitted — the book, their reason, format, and size — filterable by
- * format. Demo mode reads the colocated fixture; live mode calls
+ * has submitted, filterable by decision state and by format.
+ *
+ * It opens on what still needs a decision, because approving now CREATES the
+ * community the member proposed and tells them, and declining sends them the
+ * reason. A proposal left pending is a member waiting.
+ *
+ * Demo mode reads the colocated fixture; live mode calls
  * `GET /admin/reading-group-proposals` with pagination.
  */
 export function AdminReadingGroupProposalsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [filter, setFilter] = useState<AdminReadingGroupFormatFilter>("all");
+  const [statusFilter, setStatusFilter] =
+    useState<AdminReadingGroupStatusFilter>("pending");
+  const [formatFilter, setFormatFilter] =
+    useState<AdminReadingGroupFormatFilter>("all");
+  const [declining, setDeclining] =
+    useState<AdminReadingGroupProposalDTO | null>(null);
   const {
     proposals,
     isLoading,
@@ -159,24 +92,43 @@ export function AdminReadingGroupProposalsPage() {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useAdminReadingGroupProposals(filter);
+  } = useAdminReadingGroupProposals(formatFilter, statusFilter);
   const { decide, pending } = useAdminReadingGroupProposalMutations();
 
-  const handleDecide = (id: string, decision: ReadingGroupProposalDecision) => {
+  const runDecision = (
+    id: string,
+    decision: ReadingGroupProposalDecision,
+    note?: string,
+  ) => {
     decide(
-      { id, decision },
+      { id, decision, note },
       {
-        onSuccess: () =>
+        onSuccess: () => {
+          setDeclining(null);
           showToast(
             t(
               `admin:adminReadingGroupProposals.toast.${DECISION_STATUS[decision]}`,
             ),
             "success",
-          ),
+          );
+        },
         onError: () =>
           showToast(t("admin:adminReadingGroupProposals.toast.error"), "error"),
       },
     );
+  };
+
+  const handleDecide = (
+    proposal: AdminReadingGroupProposalDTO,
+    decision: ReadingGroupProposalDecision,
+  ) => {
+    // A decline carries a required reason the proposer reads, so it asks for
+    // the words before it sends anything.
+    if (decision === "decline") {
+      setDeclining(proposal);
+      return;
+    }
+    runDecision(proposal.id, decision);
   };
 
   return (
@@ -206,16 +158,27 @@ export function AdminReadingGroupProposalsPage() {
 
       <FadeIn delay={60}>
         <AdminTabs
-          tabs={FILTERS.map((value) => ({
+          tabs={STATUS_TABS.map((value) => ({
             id: value,
+            label: t(`admin:adminReadingGroupProposals.statusTab.${value}`),
+          }))}
+          active={statusFilter}
+          onChange={(value) =>
+            setStatusFilter(value as AdminReadingGroupStatusFilter)
+          }
+        />
+        <SegmentedControl
+          label={t("admin:adminReadingGroupProposals.filter.formatLabel")}
+          options={FORMAT_FILTERS.map((value) => ({
+            value,
             label:
               value === "all"
                 ? t("admin:adminReadingGroupProposals.filter.all")
                 : t(`admin:adminReadingGroupProposals.format.${value}`),
           }))}
-          active={filter}
+          value={formatFilter}
           onChange={(value) =>
-            setFilter(value as AdminReadingGroupFormatFilter)
+            setFormatFilter(value as AdminReadingGroupFormatFilter)
           }
         />
       </FadeIn>
@@ -236,10 +199,10 @@ export function AdminReadingGroupProposalsPage() {
             <div className={styles.rows}>
               {proposals.map((proposal, index) => (
                 <FadeIn key={proposal.id} delay={Math.min(index, 8) * 50}>
-                  <ProposalRow
+                  <AdminReadingGroupProposalRow
                     proposal={proposal}
                     pending={pending}
-                    onDecide={(decision) => handleDecide(proposal.id, decision)}
+                    onDecide={(decision) => handleDecide(proposal, decision)}
                   />
                 </FadeIn>
               ))}
@@ -261,6 +224,15 @@ export function AdminReadingGroupProposalsPage() {
           </>
         )}
       </FadeIn>
+
+      {declining && (
+        <AdminReadingGroupDeclineModal
+          book={declining.book}
+          isPending={pending}
+          onSubmit={(reason) => runDecision(declining.id, "decline", reason)}
+          onClose={() => setDeclining(null)}
+        />
+      )}
     </AdminShell>
   );
 }

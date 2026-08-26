@@ -7,6 +7,7 @@ import {
   FiSlash,
   FiCheck,
   FiAlertTriangle,
+  FiEyeOff,
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
@@ -14,6 +15,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useSocial } from "../../app/providers/useSocial";
+import { useFeedMutes, type FeedMuteTarget } from "./api/useFeedMutes";
 import { SAFETY_EMAIL } from "./feed.data";
 import { useCreateReport } from "../safety/api/useCreateReport";
 import {
@@ -30,14 +32,34 @@ interface MoreMenuProps {
   authorName: string;
   /** Author profile slug — the canonical key blocks/mutes are stored under. */
   slug: string;
-  onReport: () => void;
+  /** Opens the report flow. Omit it on a card whose reportable subject the
+   *  feed item doesn't carry (a forum thread is reported through its opening
+   *  post), and the Report item is left out rather than filing against the
+   *  wrong id. */
+  onReport?: () => void;
+  /**
+   * The SOURCE this card came from — a community or a thread (SOC-18). When
+   * present the menu offers "show me less of this", which quiets that source
+   * in this member's feed and NOTHING else: they stay in the community, keep
+   * their access, and the community is never told. Omit it and the menu is
+   * exactly the person-scoped one it always was.
+   */
+  muteTarget?: FeedMuteTarget;
 }
 
-/** Keyboard-accessible three-dot moderation menu (Report / Mute / Block). */
-export function MoreMenu({ authorName, slug, onReport }: MoreMenuProps) {
+/** Keyboard-accessible three-dot moderation menu (Report / Show less /
+ *  Mute person / Block). */
+export function MoreMenu({
+  authorName,
+  slug,
+  onReport,
+  muteTarget,
+}: MoreMenuProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { isMuted, toggleMute, isBlocked, toggleBlock } = useSocial();
+  const { mutedIds, mute, unmute } = useFeedMutes();
+  const isSourceMuted = muteTarget ? mutedIds.has(muteTarget.sourceId) : false;
   const muted = isMuted(slug);
   const blocked = isBlocked(slug);
   const [open, setOpen] = useState(false);
@@ -62,7 +84,27 @@ export function MoreMenu({ authorName, slug, onReport }: MoreMenuProps) {
   }, [open]);
 
   const items: { label: string; icon: React.ReactNode; run: () => void }[] = [
-    { label: t("feed:moderation.reportPost"), icon: <FiFlag />, run: onReport },
+    ...(onReport
+      ? [
+          {
+            label: t("feed:moderation.reportPost"),
+            icon: <FiFlag />,
+            run: onReport,
+          },
+        ]
+      : []),
+    ...(muteTarget
+      ? [
+          {
+            label: t(
+              isSourceMuted ? "feed:mute.showAgain" : "feed:mute.showLess",
+              { name: muteTarget.name },
+            ),
+            icon: <FiEyeOff />,
+            run: () => (isSourceMuted ? unmute(muteTarget) : mute(muteTarget)),
+          },
+        ]
+      : []),
     {
       label: t(muted ? "feed:moderation.unmute" : "feed:moderation.mute", {
         name: authorName,

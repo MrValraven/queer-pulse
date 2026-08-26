@@ -12,15 +12,35 @@ const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
   CATEGORIES.map((category) => [category.id, category.label]),
 );
 
-/** Curated title → route pairing lifted from the demo `GUIDES` mock — every
- *  seeded backend `Resource` shares its title with one of these (the backend
- *  seed is generated verbatim from `library.data.ts`'s `GUIDES`, see
- *  `queerpulse-backend/src/resources/resources.seed.ts`). A future resource
- *  with no curated pairing yet falls back to the library page itself rather
- *  than a broken link. */
+/** Curated title → route pairing lifted from the demo `GUIDES` mock. Kept as
+ *  the second choice behind the backend's own `routePath`, for rows written
+ *  before `route_path` existed. */
 const TITLE_TO_ROUTE: Record<string, string> = Object.fromEntries(
   GUIDES.map((guide) => [guide.title, guide.to]),
 );
+
+/**
+ * Where a live guide card should link.
+ *
+ * The backend now stores each guide's `routePath`, so the link is a stored
+ * fact rather than a guess. Before CON-10 this was a title-string lookup that
+ * fell back to `routes.resources` on a miss, which silently bounced the
+ * reader from a guide card back to the library they clicked it from: a click
+ * that looked broken, with nothing explaining why, every time an editor
+ * changed a title.
+ *
+ * A miss now lands on the guide's own slug-addressable page, which either
+ * renders it or says plainly that it has no page yet. Either way the reader
+ * ends up somewhere about the guide they asked for.
+ */
+export function guideRouteFor(
+  dto: Pick<ResourceResponseDTO, "slug" | "title" | "routePath">,
+): string {
+  if (dto.routePath) return dto.routePath;
+  const curated = TITLE_TO_ROUTE[dto.title];
+  if (curated) return curated;
+  return `${routes.resourceGuide}/${dto.slug}`;
+}
 
 /** Maps a live `ResourceResponseDTO` onto the page's local `Guide` shape —
  *  the same type `marketing/ResourceLibraryPage` already renders in demo mode. */
@@ -31,7 +51,7 @@ export function resourceToGuide(dto: ResourceResponseDTO): Guide {
     category: dto.category,
     categoryLabel: CATEGORY_LABELS[dto.category] ?? dto.category,
     meta: dto.meta ?? "Guide",
-    to: TITLE_TO_ROUTE[dto.title] ?? routes.resources,
+    to: guideRouteFor(dto),
     lastVerifiedAt: dto.lastVerifiedAt,
   };
 }
@@ -61,14 +81,18 @@ function deriveTypeKind(category: string | null): TypeKind {
 
 /** Maps a live `GlossaryTermResponseDTO` onto the page's local `Term` shape.
  *
- *  Live mode has no Portuguese translation and no cross-reference `meta`
- *  links — both are presentation-only fields the backend intentionally
- *  doesn't persist (see the `GlossaryTerm` entity comment). The English
- *  `def`/`type` are reused for the `*Pt` fields as a documented gap, rather
- *  than a fake translation — the same treatment `useMyEventsData` gives
- *  notifications that have no backend contract yet. */
+ *  The backend now persists a Portuguese definition (CON-08), so `defPt` is
+ *  real whenever an editor has written one. Cross-reference `meta` links stay
+ *  presentation-only and unpersisted, and the category chip's label is still
+ *  the raw English category in live mode — both documented gaps rather than
+ *  fabricated content. */
 export function glossaryTermToTerm(dto: GlossaryTermResponseDTO): Term {
   const def: ReactNode = dto.definition;
+  // CON-08 gave the glossary a real Portuguese column and an admin editor to
+  // fill it. A term that has not been translated yet still falls back to the
+  // English definition, which is a documented gap rather than a fake
+  // translation.
+  const defPt: ReactNode = dto.definitionPt ?? def;
   const type = dto.category ?? "";
   return {
     name: dto.term,
@@ -76,7 +100,7 @@ export function glossaryTermToTerm(dto: GlossaryTermResponseDTO): Term {
     typePt: type,
     typeKind: deriveTypeKind(dto.category),
     def,
-    defPt: def,
+    defPt,
     search: `${dto.term} ${dto.definition}`.toLowerCase(),
   };
 }

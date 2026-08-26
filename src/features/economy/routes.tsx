@@ -51,8 +51,6 @@ const HousingViewingsPage = lazyNamed(
   "HousingViewingsPage",
 );
 const LandlordPage = lazyNamed(() => import("./LandlordPage"), "LandlordPage");
-const SkillsPage = lazyNamed(() => import("./SkillsPage"), "SkillsPage");
-const WorkshopPage = lazyNamed(() => import("./WorkshopPage"), "WorkshopPage");
 const GrantsPage = lazyNamed(() => import("./GrantsPage"), "GrantsPage");
 const BarterPage = lazyNamed(() => import("./BarterPage"), "BarterPage");
 const BarterDetailPage = lazyNamed(
@@ -180,8 +178,6 @@ export function economyRoutes() {
           <ParamRedirect build={(p) => `/local/housing/${p.slug ?? ""}`} />
         }
       />
-      <Route path={routes.skills} element={<SkillsPage />} />
-      <Route path={`${routes.skills}/:id`} element={<WorkshopPage />} />
       <Route path={routes.grants} element={<GrantsPage />} />
       <Route path={routes.barter} element={<BarterPage />} />
       {/* Owner-side proposal inbox. Static segment declared before the `:id`

@@ -298,4 +298,42 @@ export const forum: Catalog = {
   "toast.pinCapReached":
     "Only 3 threads can be pinned at once. Unpin one first.",
   "toast.error": "Something went wrong. Try again in a moment.",
+
+  // ── Following a thread (SOC-13) ───────────────────────────────────────────
+  "follow.followCta": "Follow",
+  "follow.unfollowCta": "Following",
+  "follow.followedToast": "You'll hear about new replies here.",
+  "follow.unfollowedToast": "You've stopped following this thread.",
+
+  // ── Accepted answer (SOC-13) ──────────────────────────────────────────────
+  "replies.acceptedBadge": "Accepted answer",
+  "replies.markAnswer": "Mark as answer",
+  "replies.unmarkAnswer": "Unmark answer",
+  "replies.quote": "Quote",
+  "answer.acceptedToast": "Marked as the answer.",
+  "answer.clearedToast": "Answer mark removed.",
+
+  // ── Tag editing (SOC-13) ──────────────────────────────────────────────────
+  "tagsEdit.title": "Edit tags",
+  "tagsEdit.body":
+    "Tags are how people find this thread later. Up to five, lowercase.",
+  "tagsEdit.editCta": "Edit tags",
+  "tagsEdit.addCta": "Add tags",
+  "tagsEdit.save": "Save tags",
+  "tagsEdit.saving": "Saving…",
+  "tagsEdit.cancel": "Cancel",
+  "tagsEdit.savedToast": "Tags updated.",
+
+  // ── Composer photo + autosave (SOC-13) ────────────────────────────────────
+  "compose.imageAttachCta": "Add a photo",
+  "compose.imageUploading": "Uploading…",
+  "compose.imageRemoveAria": "Remove the attached photo",
+  "compose.imageAttachThreadAria": "Add a photo to this post",
+  "compose.imageAttachReplyAria": "Add a photo to this reply",
+  "post.imageAlt": "Photo attached to this post",
+  "draft.saving": "Saving…",
+  "draft.saved": "Draft saved",
+  "draft.restored": "Draft restored",
+  "draft.threadKind": "POST",
+  "draft.replyKind": "REPLY",
 };

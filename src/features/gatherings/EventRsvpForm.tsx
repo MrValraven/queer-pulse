@@ -9,12 +9,12 @@ import styles from "./EventPage.module.css";
 
 /** What the member filled in before submitting. `dietaryNeeds` is the only
  *  field the RSVP API can actually carry (PATCH /events/:slug/rsvp/details);
- *  the name and email are the prototype's own contact fields, echoed back on
- *  the confirmation screen. */
+ *  `fullName` is the prototype's own contact field. No email is collected:
+ *  QueerPulse sends no mail, so the waitlist and confirmation both land as
+ *  in-app notifications instead, and an address here would go nowhere. */
 export interface EventRsvpDraft {
   selectedTier: number;
   fullName: string;
-  email: string;
   dietaryNeeds: string;
 }
 
@@ -90,7 +90,7 @@ function RsvpSpots({ isFull }: { isFull: boolean }) {
 
 /**
  * The pre-RSVP body of the ticket card: how full the gathering is, the sliding
- * scale, and the contact fields. Self-contained — it owns every field's state
+ * scale, and the name/dietary fields. Self-contained — it owns every field's state
  * and hands the finished draft to `onSubmit`, so the card above it only deals
  * with the mutation and the confirmed state.
  */
@@ -106,11 +106,9 @@ export function EventRsvpForm({
   const { t } = useTranslation();
   const [selectedTier, setSelectedTier] = useState(1);
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
   const [dietaryNeeds, setDietaryNeeds] = useState("");
 
-  const isEmailValid = /^\S+@\S+\.\S+$/.test(email);
-  const canSubmit = fullName.trim().length > 0 && isEmailValid && !isSubmitting;
+  const canSubmit = fullName.trim().length > 0 && !isSubmitting;
 
   return (
     <>
@@ -147,21 +145,6 @@ export function EventRsvpForm({
           value={fullName}
           onChange={(event) => setFullName(event.target.value)}
         />
-        <input
-          className={styles.input}
-          type="email"
-          inputMode="email"
-          autoComplete="email"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          aria-label={t("gatherings:event.rsvp.emailPlaceholder")}
-          placeholder={t("gatherings:event.rsvp.emailPlaceholder")}
-          required
-          aria-required="true"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-        />
         {!isFull && (
           <input
             className={styles.input}
@@ -183,9 +166,7 @@ export function EventRsvpForm({
         <button
           type="button"
           className={styles.rsvpBtn}
-          onClick={() =>
-            onSubmit({ selectedTier, fullName, email, dietaryNeeds })
-          }
+          onClick={() => onSubmit({ selectedTier, fullName, dietaryNeeds })}
           disabled={!canSubmit}
           title={
             !canSubmit ? t("gatherings:event.rsvp.disabledHint") : undefined
@@ -200,7 +181,7 @@ export function EventRsvpForm({
       <div className={styles.note}>
         {isFull
           ? t("gatherings:event.rsvp.noteFull")
-          : `${t("gatherings:event.rsvp.confirmationEmailNote")} ${t("gatherings:event.rsvp.cancelPolicy")}`}
+          : `${t("gatherings:event.rsvp.confirmationNote")} ${t("gatherings:event.rsvp.cancelPolicy")}`}
       </div>
     </>
   );

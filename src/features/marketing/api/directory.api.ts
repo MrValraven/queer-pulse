@@ -23,7 +23,11 @@ import type {
   Tint,
 } from "../directoryPlaces";
 import type { DayHours, PhotoKey } from "../listBusiness/listBusiness.data";
-import type { ListingAccessibilityView } from "../listBusiness/listingAccessibility.data";
+import type {
+  AccessibilityAnswerMap,
+  AccessibilitySlug,
+  ListingAccessibilityView,
+} from "../listBusiness/listingAccessibility.data";
 import type { ListingServiceOffering } from "../listBusiness/listingServices.data";
 
 /** Photos as the detail endpoint returns them — each slot resolved to a URL or null. */
@@ -69,15 +73,46 @@ export interface DirectoryCardDTO {
    * `owned` claim above. Drives the "VERIFIED QUEER-OWNED" badge. */
   queerOwnedVerified: boolean;
   memberFirst: string | null;
+  /** The owner's profile photo for the card's "run by <first>" line, resolved
+   * server-side and gated exactly like `memberFirst` (null for an unlinked,
+   * anonymous or role-only listing, and for a member who hid their photo).
+   * Absent on older payloads — the card then falls back to initials. */
+  memberAvatarUrl?: string | null;
   /** Online-only business (no physical location). Absent on older payloads. */
   online?: boolean;
   // Map pin the owner placed while listing. null ⇒ list-only (no pin).
   latitude: number | null;
   longitude: number | null;
-  /** Safe-space verification state. "none" = never reviewed. */
-  safeSpaceStatus: "none" | "verified" | "removed";
+  /**
+   * The badge as it CURRENTLY speaks for this place, which is wider than the
+   * `listings.safe_space_status` column the backend stores.
+   *
+   * `"suspended"` is the fourth value and the reason this is derived server
+   * side rather than copied: three member flags (or a moderator) pause a badge
+   * immediately, and while that review is open the stored column deliberately
+   * still reads `verified` because the grant itself is untouched. Serialising
+   * that column onto a card would print "verified" for a place the platform
+   * has just stopped vouching for, the exact failure the badge exists to
+   * prevent.
+   *
+   * `"none"` = never reviewed. Any reader still comparing against
+   * `"verified"` fails safe: `"suspended"` matches neither `"verified"` nor
+   * `"removed"`, so the badge stops rendering rather than lying.
+   */
+  safeSpaceStatus: "none" | "verified" | "suspended" | "removed";
   /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise. */
   safeSpaceTier: number | null;
+  /**
+   * A badge that is still speaking and has been for more than a year, so it is
+   * due its annual re-review.
+   *
+   * This is NOT a suspension: an overdue re-review takes nothing down, so
+   * `safeSpaceStatus` stays `"verified"` and the badge still shows. What it
+   * carries is the AGE of the claim, so a surface can say when it was last
+   * checked instead of implying it was checked this morning. Always `false`
+   * for a badge that is suspended, absent or removed. Absent on older payloads.
+   */
+  isBadgeDueForReReview?: boolean;
   /** Whether the business is still trading. Optional here because it is a
    * newer backend addition and the demo/session card sources never carry it;
    * absent is read through `operatingStateOf`, which defaults to `"open"`. */
@@ -86,6 +121,48 @@ export interface DirectoryCardDTO {
    * shot instead of the "Photo coming" placeholder. Optional here because the
    * demo/session card sources never carry it. */
   coverPhoto?: CoverPhotoView | null;
+  /** IANA timezone the hours below run on, so "Open now" is computed on the
+   * VENUE's clock rather than the visitor's. `null`/absent ⇒ Europe/Lisbon. */
+  timezone?: string | null;
+  /** Weekly grid keyed by the frontend's `DAYS` id (`"Mon"`..`"Sun"`). An
+   * EMPTY object means the listing has never published hours, which is a
+   * different fact from "closed" and must never be rendered as either an open
+   * or a closed state. Absent on older payloads and on the demo/session card
+   * sources; read it through `cardDtoToPlace`, which drops the empty case. */
+  hours?: Record<string, DayHours>;
+  /**
+   * Dated overrides of `hours`, NEAR-TERM ONLY here: yesterday through +7 days,
+   * which is everything `openStatus` reads (today's entry, plus yesterday's for
+   * an overnight window still running). `DirectoryDetailDTO` carries the
+   * complete list instead, so never treat this slice as the whole history.
+   */
+  hoursExceptions?: ListingHoursException[];
+  /** All six canonical accessibility questions, always complete when present.
+   * `unknown` is a real answer ("nobody has told us") and is never the same as
+   * `no`. Absent on older payloads and on the demo/session card sources, which
+   * the card then reads as "this listing has said nothing at all". */
+  accessibilityAnswers?: AccessibilityAnswerMap;
+}
+
+/**
+ * Write the accessibility filter onto a directory query string.
+ *
+ * The backend accepts the repeated form and the comma-joined form as exact
+ * equivalents; the comma-joined one is used here so the shareable URL stays
+ * short and reads the same as the `access=` parameter the page itself holds.
+ *
+ * Semantics that matter to every caller: multiple values are an AND (the
+ * listing must meet all of them), and a listing matches only when its stored
+ * answer is exactly `"yes"`. An `unknown` answer never matches, because
+ * "nobody has told us" is not a met need. An unrecognised slug is a 400 rather
+ * than a silently dropped filter, so only the six canonical
+ * `AccessibilitySlug` values may ever reach this.
+ */
+function setAccessParam(
+  search: URLSearchParams,
+  access: AccessibilitySlug[] | undefined,
+): void {
+  if (access && access.length > 0) search.set("access", access.join(","));
 }
 
 /** GET /directory — every live directory listing (public), optionally
@@ -100,11 +177,14 @@ export function getDirectory(params?: {
   /** `"verified"` restricts to safe-space-verified listings (also boosted
    * first by the backend's default order). */
   safe?: "verified";
+  /** Accessibility needs that must ALL be met (see `setAccessParam`). */
+  access?: AccessibilitySlug[];
 }): Promise<DirectoryCardDTO[]> {
   const search = new URLSearchParams();
   if (params?.cat) search.set("cat", params.cat);
   if (params?.q) search.set("q", params.q);
   if (params?.safe) search.set("safe", params.safe);
+  setAccessParam(search, params?.access);
   const query = search.toString();
   return apiGet<DirectoryCardDTO[]>(
     `/directory${query ? `?${query}` : ""}`,
@@ -131,11 +211,14 @@ export function getDirectory(params?: {
 export function getDirectoryPage(params: {
   q?: string;
   safe?: "verified";
+  /** Accessibility needs that must ALL be met (see `setAccessParam`). */
+  access?: AccessibilitySlug[];
   page: number;
 }): Promise<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>> {
   const search = new URLSearchParams();
   if (params.q) search.set("q", params.q);
   if (params.safe) search.set("safe", params.safe);
+  setAccessParam(search, params.access);
   search.set("page", String(params.page));
   return apiGet<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>>(
     `/directory?${search.toString()}`,
@@ -251,7 +334,9 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   safeSpaceVouches: DirectorySafeSpaceVouchDTO[];
   safeSpaceRemoval: SafeSpaceRemovalDTO | null;
   /** One-off date overrides of the weekly grid (holiday closures, special
-   * hours). Optional: a payload predating the feature simply has none. */
+   * hours). Optional: a payload predating the feature simply has none. The
+   * COMPLETE list here, unlike the card's near-term slice, because the detail
+   * page lists the closures still ahead of the venue's own today. */
   hoursExceptions?: ListingHoursException[];
   /** The successor listing when `operatingState.state` is `"moved"` and the new
    * premises are themselves listed here; `null` otherwise. */

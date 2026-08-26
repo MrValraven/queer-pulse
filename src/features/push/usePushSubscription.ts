@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { useDisplayMode } from "../../app/providers/displayModeContext";
+import { detectPlatform } from "../../shared/hooks/useInstallPrompt";
 import {
   clearPendingSubscription,
   readLastSyncedEndpoint,
@@ -14,10 +16,9 @@ const vapidPublicKey = (import.meta.env.VITE_VAPID_PUBLIC_KEY ?? "").trim();
 /**
  * A deploy with no `VITE_VAPID_PUBLIC_KEY` cannot create a subscription at
  * all, so it counts as unsupported rather than as a toggle that flips back
- * with no explanation. The row then shows its "your browser can't do this yet"
- * helper, which is at least an honest dead end.
+ * with no explanation.
  */
-function isSupported(): boolean {
+function hasPushApis(): boolean {
   return (
     typeof navigator !== "undefined" &&
     "serviceWorker" in navigator &&
@@ -26,6 +27,41 @@ function isSupported(): boolean {
     "Notification" in window &&
     vapidPublicKey.length > 0
   );
+}
+
+/**
+ * Why push is or is not available here.
+ *
+ * `needsInstall` is the case this split exists for. iOS and iPadOS Safari
+ * expose `PushManager` ONLY to a web app that has been added to the Home
+ * Screen; in a normal Safari tab the API is simply absent, which is
+ * indistinguishable from a browser that will never support push unless the
+ * platform is checked too. Collapsing both into one boolean told an iPhone
+ * member "your browser can't do this yet" when the honest answer is "install
+ * it to the Home Screen and it works" — and push is the only out-of-band
+ * channel this product has.
+ */
+export type PushSupportState = "supported" | "needsInstall" | "unsupported";
+
+/**
+ * `isInstalled` comes from the app-wide display-mode provider (the same one
+ * `PwaPromptPage` reads), so there is exactly one answer to "are we running as
+ * an installed app" rather than a second detector drifting from the first.
+ */
+function resolvePushSupportState(isInstalled: boolean): PushSupportState {
+  if (hasPushApis()) return "supported";
+  // Only worth offering the install route when installing would actually fix
+  // it: an iOS/iPadOS browser tab, on a deploy that has a VAPID key at all.
+  if (
+    !isInstalled &&
+    vapidPublicKey.length > 0 &&
+    detectPlatform() === "ios" &&
+    typeof navigator !== "undefined" &&
+    "serviceWorker" in navigator
+  ) {
+    return "needsInstall";
+  }
+  return "unsupported";
 }
 
 /**
@@ -57,7 +93,10 @@ export type PushEnableResult =
   | { status: "failed"; error: unknown };
 
 export interface PushSubscriptionApi {
+  /** True only for `supportState === "supported"`. */
   supported: boolean;
+  /** Why push is (un)available, so callers can offer the install route. */
+  supportState: PushSupportState;
   permission: NotificationPermission;
   isSubscribed: boolean;
   busy: boolean;
@@ -67,7 +106,9 @@ export interface PushSubscriptionApi {
 
 export function usePushSubscription(): PushSubscriptionApi {
   const { demoMode } = useDemoMode();
-  const supported = isSupported();
+  const { isInstalled } = useDisplayMode();
+  const supportState = resolvePushSupportState(isInstalled);
+  const supported = supportState === "supported";
   const [permission, setPermission] = useState<NotificationPermission>(
     supported ? Notification.permission : "denied",
   );
@@ -239,5 +280,13 @@ export function usePushSubscription(): PushSubscriptionApi {
     }
   }, [demoMode, supported]);
 
-  return { supported, permission, isSubscribed, busy, enable, disable };
+  return {
+    supported,
+    supportState,
+    permission,
+    isSubscribed,
+    busy,
+    enable,
+    disable,
+  };
 }

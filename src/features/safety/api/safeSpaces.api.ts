@@ -7,6 +7,14 @@ import type { Category } from "../safeSpaces";
  * composes the "N reviews" string at the adapter boundary so it can localize.
  */
 export interface SafeSpaceCardDTO {
+  /**
+   * The union discriminant against `RemovedSpaceCardDTO`, and DELIBERATELY
+   * still `"verified"` for a space whose badge is suspended. A third value
+   * here would drop a suspended space into the removed branch, which reads as
+   * "we took it away" and is a worse untruth than the one being fixed. Read
+   * `isBadgeSuspended` below to know whether the badge currently speaks, never
+   * this field.
+   */
   status: "verified";
   slug: string;
   cat: Category;
@@ -18,6 +26,26 @@ export interface SafeSpaceCardDTO {
   rating: string;
   reviews: number;
   tier: number | null;
+  /**
+   * True while an open review stands against this badge: members flagged the
+   * space, or a moderator paused it directly. The grant itself is untouched
+   * and comes back when the review closes.
+   *
+   * Any surface rendering a badge MUST read this. A space carrying `true` has
+   * to read as under review, never as verified. It carries no flag count and
+   * names no flagger, and neither may anything built on it: a public tally
+   * would turn a safety mechanism into a pillory and make flagging unsafe for
+   * the person who did it.
+   *
+   * The LIST never carries a suspended card (the server drops them from
+   * `verified`, from the "verified first" ordering and from `stats`), so in
+   * practice only the DETAIL arrives with `true`. Absent on older payloads.
+   */
+  isBadgeSuspended?: boolean;
+  /** The badge still stands and has stood for more than a year, so it is due
+   * its annual re-review. Never a suspension: the badge still shows. Absent on
+   * older payloads. */
+  isBadgeDueForReReview?: boolean;
 }
 
 /**

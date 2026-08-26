@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiUser } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { Avatar, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -14,6 +15,8 @@ function AuthorCardSkeleton() {
       <SkeletonLine width={56} height={56} style={{ borderRadius: "50%" }} />
       <SkeletonLine width="60%" height={18} style={{ marginTop: 14 }} />
       <SkeletonLine width="90%" height={13} style={{ marginTop: 8 }} />
+      <SkeletonLine width="45%" height={13} style={{ marginTop: 6 }} />
+      <SkeletonLine width={70} height={12} style={{ marginTop: 18 }} />
     </div>
   );
 }
@@ -22,6 +25,13 @@ function AuthorCardSkeleton() {
  * CNT-9 — every writer the magazine has ever published, in one browsable
  * index. Before this page existed, an individual author page was only
  * reachable by guessing its slug in the URL bar.
+ *
+ * CON-11 turned the cards from a list of strings into a list of people: each
+ * one carries the writer's portrait (their member avatar when the byline has
+ * no portrait of its own), a bio snippet, how many pieces they have
+ * published, and a chip when the byline belongs to a member account. A card
+ * links to the member profile when there is one, since that is the fuller
+ * page, and to the magazine author page otherwise.
  */
 export function AuthorsDirectoryPage() {
   const { t } = useTranslation();
@@ -76,9 +86,29 @@ export function AuthorsDirectoryPage() {
                         name={author.initialsSeed}
                       />
                       <div className={styles.cardName}>{author.name}</div>
-                      {author.subtitle && (
+                      {author.subtitle ? (
                         <p className={styles.cardSub}>{author.subtitle}</p>
+                      ) : (
+                        // An honest gap rather than a blank card: a byline
+                        // auto-created on publish starts with no bio at all
+                        // until staff or the writer fills one in.
+                        <p className={styles.cardNoBio}>
+                          {t("magazine:authorsDirectory.noBio")}
+                        </p>
                       )}
+                      <div className={styles.cardFoot}>
+                        <span className={styles.cardCount}>
+                          {t("magazine:authorsDirectory.pieceCount", {
+                            count: author.pieceCount,
+                          })}
+                        </span>
+                        {author.memberSlug && (
+                          <span className={styles.memberChip}>
+                            <FiUser aria-hidden />
+                            {t("magazine:authorsDirectory.memberChip")}
+                          </span>
+                        )}
+                      </div>
                     </Link>
                   ))}
             </div>

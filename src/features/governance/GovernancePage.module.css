@@ -673,6 +673,136 @@
   margin-top: 8px;
 }
 
+/* ── GOV-01: member motions ───────────────────────────────────────────────
+   The compose entry point, the lifecycle badges, the co-signature drive, the
+   quorum reading, and the published rejection reason. */
+.proposalComposeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin: 18px 0 4px;
+}
+.proposalComposeHint {
+  font-size: 12.5px;
+  color: var(--ink-40);
+  margin: 0;
+}
+.proposalStatusGathering {
+  color: var(--accent-ink);
+}
+.proposalStatusScreening {
+  color: var(--violet);
+}
+.proposalStatusRejected,
+.proposalStatusLapsed {
+  color: var(--ink-40);
+}
+.proposalProposer {
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-bottom: 12px;
+}
+/* Labels the for/against bar so the quorum reading below it reads as a
+   second, separate figure rather than a restatement of the same one. */
+.proposalTallyLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 6px;
+}
+.proposalQuorum {
+  margin-top: 14px;
+}
+.proposalQuorumTrack {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.07);
+  overflow: hidden;
+}
+.proposalQuorumFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--violet);
+}
+.proposalQuorumFillShort {
+  background: var(--ink-40);
+}
+.proposalQuorumCaption {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--ink-40);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.proposalQuorumMissed {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.proposalCosign {
+  margin: 4px 0 12px;
+}
+.proposalCosignText {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-bottom: 8px;
+}
+.proposalCosignTrack {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(var(--plum-rgb), 0.07);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.proposalCosignFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--jade);
+}
+.proposalCosignNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.55;
+  margin: 8px 0 0;
+}
+.proposalScreeningNote {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: rgba(var(--plum-rgb), 0.04);
+}
+.proposalScreeningNoteLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 6px;
+}
+.proposalScreeningNote p {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin: 0;
+}
+
 @media (--compact) {
   .layout {
     grid-template-columns: 1fr;
@@ -697,6 +827,7 @@
 :global([data-theme="dark"]) .prinItem,
 :global([data-theme="dark"]) .eventsCard,
 :global([data-theme="dark"]) .raiseCard,
-:global([data-theme="dark"]) .proposalCard {
+:global([data-theme="dark"]) .proposalCard,
+:global([data-theme="dark"]) .proposalScreeningNote {
   border-color: rgba(var(--cream-rgb), 0.1);
 }

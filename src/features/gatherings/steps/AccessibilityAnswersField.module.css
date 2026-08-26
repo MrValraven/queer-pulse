@@ -1,0 +1,110 @@
+/* Six questions, each with its own three-way answer. One row per question so a
+   host works down the list the way somebody arrives: the door, the room, the
+   toilets, then the quieter needs. */
+.questions {
+  display: grid;
+  gap: 10px;
+  margin-block: 6px 4px;
+}
+
+.question {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 13px 15px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 12px;
+  background: var(--paper);
+}
+
+.text {
+  min-width: 0;
+  flex: 1 1 16rem;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.help {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  margin-top: 3px;
+  max-width: 52ch;
+}
+
+.options {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+/* Every answer carries an icon AND its own word, so none of this depends on
+   colour. Targets stay at the 44px touch floor on a phone. */
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-badge);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: transparent;
+  color: var(--ink-60);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-fast, 150ms) var(--ease),
+    color var(--dur-fast, 150ms) var(--ease),
+    border-color var(--dur-fast, 150ms) var(--ease);
+}
+
+.option svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    border-color: rgba(var(--line-rgb), 0.28);
+    color: var(--ink);
+  }
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* A confirmed provision. */
+.optionOn[data-answer="yes"] {
+  background: rgba(var(--jade-rgb), 0.12);
+  border-color: rgba(var(--jade-rgb), 0.4);
+  color: var(--jade);
+}
+
+/* An equally definite answer, and an honest one. Same solid treatment as a
+   yes: no alarm colour, no apology. */
+.optionOn[data-answer="no"] {
+  background: rgba(var(--plum-rgb), 0.09);
+  border-color: rgba(var(--line-rgb), 0.28);
+  color: var(--text-strong);
+}
+
+/* A third thing entirely, and never a quiet no. */
+.optionOn[data-answer="unknown"] {
+  background: transparent;
+  border-style: dashed;
+  border-color: rgba(var(--line-rgb), 0.28);
+  color: var(--ink-60);
+}

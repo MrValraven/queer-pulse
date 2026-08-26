@@ -16,6 +16,18 @@ import styles from "./SubmitStoryPage.module.css";
 
 const MIN_WORDS = 50;
 
+/** Longest a derived `pitch` summary gets before it is cut at a word boundary
+ *  and given an ellipsis. Only used when the member left the deck empty. */
+const SUMMARY_MAX_CHARS = 280;
+
+/** First `SUMMARY_MAX_CHARS` of the body, cut at a word boundary. */
+function summarize(body: string): string {
+  if (body.length <= SUMMARY_MAX_CHARS) return body;
+  const cut = body.slice(0, SUMMARY_MAX_CHARS);
+  const lastSpace = cut.lastIndexOf(" ");
+  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()}\u2026`;
+}
+
 export function SubmitStoryEditor({
   onSubmit,
 }: {
@@ -26,13 +38,17 @@ export function SubmitStoryEditor({
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   const [form, setForm] = useState<DraftForm>(INITIAL_DRAFT);
-  const [coverName, setCoverName] = useState<string | null>(null);
+  // The storage KEY of the uploaded cover, not a display name: `SubmitStoryCover`
+  // emits `key` from `useUploadImage`, and that key is what the submission
+  // persists. It used to be held here and then dropped at submit time, so the
+  // member paid for an upload the magazine threw away.
+  const [coverKey, setCoverKey] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   // Real, guarded localStorage persistence (mirrors the listing wizard): the
   // draft actually survives navigation, and `saveState` reflects the write.
   const { saved, savedAt, saveState, saveNow, clearDraft } = useStoryDraft(
     form,
-    coverName,
+    coverKey,
   );
   const [showResumeBanner, setShowResumeBanner] = useState(Boolean(saved));
 
@@ -50,7 +66,7 @@ export function SubmitStoryEditor({
   const resumeDraft = () => {
     if (saved) {
       setForm(saved.form);
-      setCoverName(saved.coverName);
+      setCoverKey(saved.coverName);
     }
     setShowResumeBanner(false);
   };
@@ -85,16 +101,23 @@ export function SubmitStoryEditor({
     }
 
     if (!demoMode) {
-      const pitch = [form.deck, form.body]
-        .map((part) => part.trim())
-        .filter(Boolean)
-        .join("\n\n");
+      const deck = form.deck.trim();
+      const body = form.body.trim();
       setSubmitting(true);
       try {
         await createStorySubmission({
           format: form.section,
           workingTitle: form.headline.trim(),
-          pitch,
+          // The short summary the admin list and the tracker card preview.
+          // The deck when the member wrote one; otherwise an excerpt of the
+          // piece, so the summary is never blank and never the whole story.
+          pitch: deck || summarize(body),
+          // Sent as their own fields (they used to be concatenated into
+          // `pitch`, so the editor never saw the piece as written), together
+          // with the cover that was already uploaded and then discarded.
+          deck: deck || undefined,
+          body: body || undefined,
+          coverImageKey: coverKey,
         });
         await queryClient.invalidateQueries({
           queryKey: [MY_SUBMISSIONS_QUERY_KEY],
@@ -148,7 +171,7 @@ export function SubmitStoryEditor({
         saveState={saveState}
         hasSavedDraft={savedAt !== null}
       />
-      <SubmitStoryCover onChange={setCoverName} />
+      <SubmitStoryCover onChange={setCoverKey} />
 
       <div className={styles.actions}>
         <Button

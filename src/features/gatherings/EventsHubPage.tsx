@@ -61,15 +61,9 @@ export function EventsDiscover() {
     );
   };
   const now = useMemo(() => new Date(), []);
-  const {
-    items,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-    refetch,
-  } = useEvents({ filter: "upcoming" });
+  const { items, isLoading, isError, refetch } = useEvents({
+    filter: "upcoming",
+  });
   const lead = useMemo(
     () => pickHighlights(items, now, { count: 1 })[0] ?? null,
     [items, now],
@@ -111,15 +105,11 @@ export function EventsDiscover() {
           {view === "highlights" && (
             <HighlightsView events={items} now={now} isLoading={isLoading} />
           )}
-          {view === "browse" && (
-            <BrowseView
-              events={items}
-              isLoading={isLoading}
-              hasNextPage={hasNextPage}
-              fetchNextPage={fetchNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            />
-          )}
+          {/* Browse runs its own server-filtered query (LOC-17), so it takes
+              no page set from here: its filters have to reach the API, not a
+              slice of already-loaded rows. With no filters set it shares this
+              same request. */}
+          {view === "browse" && <BrowseView />}
           {view === "calendar" && <CalendarView events={items} now={now} />}
         </PullToRefresh>
       </div>

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppShell } from "../../shared/components/layout";
-import { FiArrowLeft, FiMonitor, FiSmartphone } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiChevronRight,
+  FiMonitor,
+  FiSmartphone,
+} from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -106,6 +111,30 @@ function SessionCard({
             )}
             {session.extra && <span>{session.extra}</span>}
           </div>
+        )}
+        {isCurrent && (
+          <div className={styles.currentNote}>
+            {t("settings:sessions.card.currentDeviceNote")}
+          </div>
+        )}
+        {session.userAgent && (
+          /* The raw User-Agent, one disclosure below the line a member
+             actually reads. It used to BE that line, which is why nobody could
+             tell their own laptop from an intruder's. Kept reachable rather
+             than deleted: it is the only thing precise enough to distinguish
+             two devices that share a coarse label, and the only thing worth
+             pasting into a support message.
+
+             A native <details> rather than a state-driven toggle — the summary
+             text is the control's accessible name, expansion is announced with
+             no aria wiring, and it costs no JavaScript. */
+          <details className={styles.uaDisclosure}>
+            <summary className={styles.uaSummary}>
+              <FiChevronRight aria-hidden />
+              {t("settings:sessions.card.technicalDetail")}
+            </summary>
+            <p className={styles.uaValue}>{session.userAgent}</p>
+          </details>
         )}
       </div>
       {isCurrent ? (

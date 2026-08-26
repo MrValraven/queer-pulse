@@ -15,7 +15,6 @@ function baseSignals(
     tenureDays: 400,
     publishedPieces: [{ at: "2026-07-01T00:00:00.000Z" }],
     hostedOpenEvents: [{ at: "2026-06-01T00:00:00.000Z" }],
-    workshopsTaught: 1,
     publishedSubprofiles: 1,
     vouchCount: 4,
     endorsementCount: 3,
@@ -66,7 +65,6 @@ describe("evaluatePublicEligibility", () => {
         at: "2026-07-01T00:00:00.000Z",
       })),
       hostedOpenEvents: [],
-      workshopsTaught: 0,
       publishedSubprofiles: 0,
     });
     expect(
@@ -103,14 +101,12 @@ describe("evaluatePublicEligibility", () => {
       ...baseSignals(),
       publishedPieces: [{ at: "2026-08-01T00:00:00.000Z" }],
       hostedOpenEvents: [],
-      workshopsTaught: 0,
       publishedSubprofiles: 0,
     });
     const stale = evaluatePublicEligibility({
       ...baseSignals(),
       publishedPieces: [{ at: "2024-01-01T00:00:00.000Z" }],
       hostedOpenEvents: [],
-      workshopsTaught: 0,
       publishedSubprofiles: 0,
     });
     const recentPts = recent.score.families.find(
@@ -158,7 +154,6 @@ describe("evaluatePublicEligibility", () => {
         vouchCount: 0,
         publishedPieces: [],
         hostedOpenEvents: [],
-        workshopsTaught: 0,
         publishedSubprofiles: 0,
       }),
     );

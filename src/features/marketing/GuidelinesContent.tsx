@@ -10,7 +10,7 @@ interface Clause {
   body: ReactNode;
 }
 
-const REVISED_DATE = new Date(2026, 5, 1);
+const REVISED_DATE = new Date(2026, 7, 1);
 
 /**
  * i18n Pattern B. Every clause is platform-authored governance chrome (the
@@ -19,9 +19,10 @@ const REVISED_DATE = new Date(2026, 5, 1);
  * `reportLead`/`reportBody`, `p3Lead`/`p3Rest`) rather than one string.
  *
  * Order is content-authored, not the catalog key order: the hard-lines clause
- * (catalog key `clause07`) leads so the enforceable lines come first, followed
- * by `clause01`..`clause06`. Display numbers are derived from array position
- * in the render below, not from the catalog key suffix.
+ * (catalog key `clause07`) leads so the enforceable lines come first, then the
+ * political-speech clause (`clause08`) that marks their boundary, followed by
+ * `clause01`..`clause06`. Display numbers are derived from array position in
+ * the render below, not from the catalog key suffix.
  */
 function buildClauses(t: TFunction): Clause[] {
   return [
@@ -47,6 +48,31 @@ function buildClauses(t: TFunction): Clause[] {
           <p>
             <b>{t("marketing:guidelines.clause07.reportLead")}</b>{" "}
             {t("marketing:guidelines.clause07.reportBody")}
+          </p>
+        </>
+      ),
+    },
+    {
+      titlePreKey: "guidelines.clause08.titlePre",
+      titleEmKey: "guidelines.clause08.titleEm",
+      body: (
+        <>
+          <p>{t("marketing:guidelines.clause08.p1")}</p>
+          <p>{t("marketing:guidelines.clause08.p2")}</p>
+          <div className={s.hardLines}>
+            <div className={s.hlHead}>
+              {t("marketing:guidelines.clause08.hardLinesHead")}
+            </div>
+            <ul>
+              <li>{t("marketing:guidelines.clause08.li1")}</li>
+              <li>{t("marketing:guidelines.clause08.li2")}</li>
+              <li>{t("marketing:guidelines.clause08.li3")}</li>
+              <li>{t("marketing:guidelines.clause08.li4")}</li>
+            </ul>
+          </div>
+          <p>
+            <b>{t("marketing:guidelines.clause08.p3Lead")}</b>{" "}
+            {t("marketing:guidelines.clause08.p3Rest")}
           </p>
         </>
       ),

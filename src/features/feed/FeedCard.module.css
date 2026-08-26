@@ -260,3 +260,49 @@
   color: var(--ink-60);
   align-self: center;
 }
+
+/* ── Inline card actions (SOC-04) ─────────────────────────────────────────
+   The reaction/reply row that turns a read-only card into one a member can
+   act on without leaving the feed. */
+.inlineComposer {
+  /* Sits in the wrapping `.actionButtons` row, so it claims a full line of
+     its own beneath the react/reply buttons rather than squeezing in beside
+     them. */
+  flex: 1 0 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.inlineComposerField {
+  width: 100%;
+  min-height: 62px;
+  resize: vertical;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+}
+.inlineComposerField:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.inlineComposerRow {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* The "why am I seeing this" line (SOC-04). Quiet by design: it explains,
+   it never sells. */
+.reasonLine {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--ink-60);
+}

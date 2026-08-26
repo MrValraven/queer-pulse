@@ -108,6 +108,64 @@ export function isInviteNotRevocableError(err: unknown): boolean {
   return err instanceof ApiError && err.status === 409;
 }
 
+/**
+ * Ban-evasion signals for the invite review console
+ * (`GET /admin/ban-evasion/join-requests`, moderator + admin).
+ *
+ * ADVISORY ONLY. The backend never blocks anyone on these: it returns a
+ * confidence tier and a list of reasons, each one about a specific account that
+ * was removed, and the reviewer in front of the queue decides what to do. There
+ * is no endpoint anywhere that acts on them.
+ *
+ * Declared here rather than in a file of its own because the only consumer is
+ * the invite review queue, the same reason `patchAdminInviteQuota` lives here.
+ */
+
+/** How loudly the console asks a reviewer to look. */
+export type BanEvasionTier = "none" | "low" | "medium" | "high";
+
+/** Stable reason keys, resolved to copy by the frontend catalogue — the same
+ *  shape the queue's existing join-request flags use. */
+export type BanEvasionSignalKind =
+  | "sign_in_identifier_match"
+  | "intake_contact_match"
+  | "stated_details_match"
+  | "inviter_removed"
+  | "inviter_of_removed_account"
+  | "reference_removed"
+  | "reference_of_removed_account";
+
+export interface BanEvasionSignalDTO {
+  kind: BanEvasionSignalKind;
+  removalKind: "platform_ban" | "community_ban";
+  /** ISO timestamp of the removal. */
+  removedAt: string;
+  /** Null once the removed account has been erased, which is the ordinary
+   *  case: only the date and the kind of removal survive erasure. */
+  removedAccountName: string | null;
+  removedAccountSlug: string | null;
+  /** Named for a community ban; null for a platform ban. */
+  communityName: string | null;
+}
+
+export interface BanEvasionAssessmentDTO {
+  /** The join-request id this assessment is about. */
+  subjectId: string;
+  tier: BanEvasionTier;
+  score: number;
+  signals: BanEvasionSignalDTO[];
+}
+
+/**
+ * Assess a page of the review queue in one call. Addressed by join-request id,
+ * never by a raw email, so this can never be used as a "has this address ever
+ * been banned" lookup.
+ */
+export const getBanEvasionForJoinRequests = (joinRequestIds: string[]) =>
+  apiGet<BanEvasionAssessmentDTO[]>(
+    `/admin/ban-evasion/join-requests?ids=${encodeURIComponent(joinRequestIds.join(","))}`,
+  );
+
 /** The shape returned after setting or clearing a member's invite quota
  *  override. Mirrors the backend's `updateInviteQuota` response. */
 export interface AdminInviteQuotaDTO {

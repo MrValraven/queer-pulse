@@ -173,11 +173,11 @@ export const listDsar = () => apiGet<DsarRequest[]>("/account/dsar");
  * `listSessions` → `AccountService.listSessions` → `toSessionResponse`
  * (`account-response.ts`). A "session" is one DEVICE: a family of refresh-token
  * rows descended from a single sign-in, newest first. That store has no geo/IP
- * and no device-name column, so this shape carries NO location — the page must
- * not invent one. `deviceLabel` is likewise always `null` today (the column
- * doesn't exist yet); it stays in the contract because the backend already
- * emits the key and intends to fill it. `current` is resolved server-side from
- * the presenting `refresh_token` cookie.
+ * and no IP column, so this shape carries NO location — the page must not
+ * invent one. `deviceLabel` IS filled now (a coarse "Chrome on macOS", stored
+ * at sign-in since `AddSecurityAlertsAndDeviceLabel1794610100000`), and comes
+ * back `null` only for sessions that started before that column existed.
+ * `current` is resolved server-side from the presenting `refresh_token` cookie.
  */
 export interface SessionResponse {
   /**
@@ -186,7 +186,11 @@ export interface SessionResponse {
    * open for an hour and its Sign out buttons still address the right devices.
    */
   id: string;
-  /** Always `null` today — no device-name column in the refresh-token store. */
+  /**
+   * A coarse device name — "Chrome on macOS", "Safari on iPhone" — stored at
+   * sign-in. `null` for sessions that predate the column, which is why the page
+   * still falls back to parsing `userAgent` (see `sessions.adapters.ts`).
+   */
   deviceLabel: string | null;
   /** Raw UA string captured at sign-in; `""` when the client sent none. */
   userAgent: string;
@@ -208,9 +212,12 @@ export interface SessionResponse {
 export const getSessions = () => apiGet<SessionResponse[]>("/account/sessions");
 
 /**
- * DELETE /account/sessions/:id — revoke one session. A revoke from an
- * unrecognised device is what triggers the "new device / incident" security
- * email (spec 11), so the UI only claims an email is coming after this 2xx.
+ * DELETE /account/sessions/:id — revoke one session.
+ *
+ * The security signal that pairs with this is the in-app `security_new_sign_in`
+ * notification (plus push), raised when a device the member has not used before
+ * signs in. There is no email in this flow, or in any other: QueerPulse
+ * delivers none, so the UI must never claim one is on the way.
  */
 export const revokeSession = (id: string) =>
   apiDelete<void>(`/account/sessions/${id}`);

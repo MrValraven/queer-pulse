@@ -24,8 +24,10 @@ const ISSUE_TAB_LABEL_KEYS: Record<IssueTabId, string> = {
   archive: "magazine:issue.tabs.archive",
 };
 
-/** Running order / Cover & contents / Digest & social / Archive tab nav for
- *  the issue-production page. */
+/** Running order / Cover & contents / Issue panel & social / Archive tab nav
+ *  for the issue-production page. The `digestSocial` id is historical (CON-05
+ *  retired the members' email digest); the tab now curates the reader-facing
+ *  "In this issue" panel. */
 export function IssueTabsNav({ tab, onChange }: IssueTabsNavProps) {
   const { t } = useTranslation();
 

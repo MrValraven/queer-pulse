@@ -1,0 +1,171 @@
+/* The policy re-acceptance sheet (ID-14). Modelled on Modal.module.css's
+   bottom-sheet (rises on mobile, centers on desktop) but written here rather
+   than reusing <ModalSheet>, because this dialog deliberately has NO close
+   chrome: there is no grabber, no X, and Escape does nothing. Dismissing it
+   would either have to count as agreement (which would be a lie) or drop the
+   member into an app they have not agreed to be in. The way out is one of the
+   real controls inside it: read the documents, agree, or sign out. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(26, 26, 31, 0.62);
+  backdrop-filter: blur(4px);
+  padding-block-end: var(--keyboard-inset, 0px);
+}
+@media (min-width: 720px) {
+  .scrim {
+    align-items: center;
+    padding: 24px;
+  }
+}
+
+.sheet {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: 92svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--cream);
+  border-radius: 28px 28px 0 0;
+  padding: 40px 28px max(36px, env(safe-area-inset-bottom));
+  box-shadow: 0 -20px 60px -30px rgba(0, 0, 0, 0.5);
+}
+@media (min-width: 720px) {
+  .sheet {
+    border-radius: 28px;
+    padding: 44px 44px 40px;
+    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 10px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  margin: 0;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lede {
+  margin: 14px 0 0;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink-60);
+}
+
+/* One row per document that actually moved. The list names WHAT changed rather
+   than saying "our policies have been updated" and leaving the member to guess
+   which one, or whether it matters to them. */
+.documents {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.document {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 16px;
+  background: rgba(var(--line-rgb), 0.03);
+}
+.documentIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--accent);
+  font-size: 17px;
+}
+.documentBody {
+  min-width: 0;
+}
+.documentName {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--text-strong);
+}
+.documentVersions {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.documentLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.error {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--danger-rgb, 200, 60, 60), 0.28);
+  background: rgba(var(--danger-rgb, 200, 60, 60), 0.07);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+}
+/* Signing out is the honest alternative to agreeing, so it is a real, visible
+   control rather than a hidden escape — but quiet, so it never competes with
+   the primary action. */
+.signOut {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 6px 2px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.signOut:hover {
+  color: var(--text-strong);
+}

@@ -9,7 +9,6 @@ import type {
 import { Avatar } from "../../../../shared/components/ui";
 import { initialsFromName } from "../../../../shared/lib/initials";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { ImageUrlField } from "../../ImageUrlField";
 import { RichText } from "./RichText";
 import { ImageBlockControls } from "./ImageBlockControls";
 import styles from "./ArticleBlockEditor.module.css";
@@ -196,28 +195,20 @@ export function StatsBlockFields({
   );
 }
 
-/** The image block's own body: the URL field with its built-in tinted
- * `ImageSlot` preview (reusing the deck editor's `ImageUrlField` pattern
- * rather than a fake upload-with-progress control), plus the full set of
- * image-specific controls in `ImageBlockControls`. `ImageUrlField`'s tint
- * vocabulary has no "violet" (it mirrors `AvatarTint`), so that one tint
- * falls back to the default preview frame — the swatch in
- * `ImageBlockControls` still records the real value on the block. */
+/** The image block's own body. CON-04 moved the picture ITSELF into
+ * `ImageBlockControls`, alongside the alt/credit/rights/crop/focal controls
+ * that describe it: it used to be a paste-an-image-URL field here, so the
+ * only art an editor could put mid-piece was a hotlink to somebody else's
+ * server, and the rights and focal controls beside it described an image the
+ * desk could never actually supply. It is now a real upload through the same
+ * presigned stack the story cover and the deck cover use. */
 export function ImageBlockFields({
   block,
   onSelect,
   onChange,
 }: KindFieldsProps<ArticleImageBlock>) {
-  const { t } = useTranslation();
   return (
     <div className={styles.image} onFocus={onSelect}>
-      <ImageUrlField
-        label={t("magazine:write.block.imageUrlLabel")}
-        value={block.src ?? ""}
-        onChange={(src) => onChange({ ...block, src })}
-        alt={block.alt}
-        tint={block.tint === "violet" ? "default" : block.tint}
-      />
       <ImageBlockControls block={block} onChange={onChange} />
     </div>
   );

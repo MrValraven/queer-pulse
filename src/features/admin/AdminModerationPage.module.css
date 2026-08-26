@@ -1189,3 +1189,267 @@ button.reportMain:focus-visible {
 .decOverturnOn .decTitle {
   color: var(--jade);
 }
+
+/* TS-14: the community a report came from, on the queue row. Same pill shape
+   as .priorFlag/.assignedFlag/.reporterFlag, in the neutral plum the admin
+   surfaces use for "context", since naming the room is neither a warning nor
+   an endorsement. */
+.communityFlag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.1);
+  color: var(--ink-60);
+  font-weight: 600;
+  font-size: 11.5px;
+}
+.communityFlag svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* The queue's community filter sits in the same row as the severity filter
+   chips, so it is capped rather than stretching the toolbar when a community
+   slug runs long. */
+.communityFilter {
+  min-width: 160px;
+  max-width: 240px;
+}
+
+/* ── Clustered subject row (TS-06) ───────────────────────────────────────
+   One pile-on, headed by its real counts. The card reads as a container for
+   the rows inside it rather than as another report, so it sits on the tinted
+   ground instead of paper and its severity stripe runs down the left edge the
+   same way a report's does. */
+.cluster {
+  position: relative;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-card, 22px);
+  background: rgba(var(--line-rgb), 0.045);
+  padding: 14px 16px;
+  overflow: hidden;
+}
+.cluster::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--stripe, var(--line));
+}
+.clusterHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.clusterToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 240px;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+.clusterToggle svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-60);
+}
+.clusterTitle {
+  font-weight: 650;
+  font-size: 14.5px;
+  overflow-wrap: anywhere;
+}
+.clusterFacts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.clusterReporters {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.1);
+  color: var(--ink-60);
+  font-weight: 600;
+  font-size: 11.5px;
+}
+.clusterReporters svg {
+  width: 11px;
+  height: 11px;
+}
+/* A surge is a signal to read the pile as one event. Amber, never danger: it
+   says "slow down and look", it does not say anyone is in the wrong. */
+.clusterSurge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(var(--amber-rgb), 0.16);
+  color: var(--amber-ink);
+  font-weight: 700;
+  font-size: 11.5px;
+}
+.clusterSurge svg {
+  width: 11px;
+  height: 11px;
+}
+.clusterHint {
+  margin: 10px 0 0;
+  color: var(--ink-60);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.clusterBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+.clusterNote {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: 12px;
+}
+
+/* ── Appeal deadlines (TS-11) ───────────────────────────────────────────── */
+
+/*
+ * The published 7-day decision window, on the queue row. Quiet by default: an
+ * appeal that is simply within its window is the normal case and should not
+ * shout. `.appealDueLate` is the exception, and reuses the same danger tone the
+ * overdue report flag uses so "late" reads identically across both queues.
+ */
+.appealDue {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(var(--line-rgb), 0.5);
+  color: var(--ink-60);
+  font-weight: 600;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+.appealDueLate {
+  background: rgba(var(--danger-rgb), 0.14);
+  color: var(--danger);
+}
+.appealDue svg {
+  width: 11px;
+  height: 11px;
+}
+.appealsWindow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: -6px 2px 14px;
+  color: var(--ink-40);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.appealsWindow svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+/* ── Pending ban ratifications (TS-12) ──────────────────────────────────── */
+
+.ratifyCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 22px;
+  border: 1px solid rgba(var(--line-rgb), 0.9);
+  /* A left edge in the danger tone, matching how a report row carries its
+     severity stripe: this is the most consequential row in the console. */
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-card, 18px);
+  background: var(--surface);
+}
+.ratifyHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ratifyLapse {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-60);
+  font-weight: 600;
+  font-size: 12px;
+}
+.ratifyLapse svg {
+  width: 12px;
+  height: 12px;
+}
+.ratifyLapsed {
+  color: var(--danger);
+}
+.ratifyTitle {
+  margin: 0;
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.ratifyMeta {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: 12.5px;
+}
+/* The first moderator's own words, quoted rather than summarized. */
+.ratifyReason {
+  margin: 4px 0;
+  padding: 12px 14px;
+  border-left: 2px solid rgba(var(--accent-rgb), 0.55);
+  border-radius: 0 10px 10px 0;
+  background: rgba(var(--line-rgb), 0.35);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.ratifyInterim,
+.ratifyOwn {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0;
+  color: var(--ink-40);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.ratifyInterim svg,
+.ratifyOwn svg {
+  flex: none;
+  margin-top: 2px;
+  width: 13px;
+  height: 13px;
+}
+.ratifyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}

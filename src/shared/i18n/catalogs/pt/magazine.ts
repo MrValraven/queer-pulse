@@ -38,6 +38,7 @@ export const magazine: Catalog = {
   "masthead.nav.authors": "Autoria",
   "masthead.nav.write": "Escreve para nós",
   "masthead.nav.sections": "Secções",
+  "masthead.nav.search": "Pesquisar",
 
   // ── MagazinePage ─────────────────────────────────────────────────────────
   "landing.meta.title": "A Revista: QueerPulse",
@@ -52,6 +53,13 @@ export const magazine: Catalog = {
   "landing.nav.communityLife": "Vida da comunidade",
   "landing.nav.letters": "Cartas",
   "landing.nav.archive": "Arquivo",
+
+  // ── A capa organizada pela redação (MagazineLiveSections /
+  //    MagazineFrontLead, CON-13).
+  "front.leadKicker": "Reportagem de capa",
+  "front.coverLabel": "Capa · Edição {number}",
+  "front.moreInIssue": "Mais <em>nesta edição</em>",
+  "front.fromTheMagazine": "Da revista",
 
   // ── MagazineCover ────────────────────────────────────────────────────────
   "cover.coverAlt": "Retrato de capa",
@@ -91,6 +99,16 @@ export const magazine: Catalog = {
   "sections.emptyLive.description":
     "A nossa primeira edição está a caminho. Estamos a juntar ensaios, reportagens, entrevistas e críticas da comunidade. Volta em breve, ou propõe-nos algo para publicar.",
 
+  // ── Muro de acesso a membros (MagazineSignInWall, CON-07) ────────────────
+  // Um 401 dos endpoints da revista significa "não tens sessão iniciada", e
+  // nunca "não há nada publicado". Aparece a quem chega de fora por um link
+  // partilhado, com um CTA de entrada que traz a pessoa de volta a esta página.
+  "signInWall.title": "A revista é para membros",
+  "signInWall.description":
+    "Os ensaios, reportagens, entrevistas e críticas da comunidade ficam do lado de dentro, para quem escreve saber quem está a ler. Inicia sessão para continuar a leitura.",
+  "signInWall.signInCta": "Iniciar sessão para ler",
+  "signInWall.requestInviteCta": "Pedir um convite",
+
   // ── ArticlePage ──────────────────────────────────────────────────────────
   "article.notFoundMetaTitle": "Artigo não encontrado: Revista QueerPulse",
   "article.notFoundTitle": "Não conseguimos encontrar este artigo.",
@@ -100,6 +118,36 @@ export const magazine: Catalog = {
   "article.pageTitleSuffix": ": Revista QueerPulse",
   "article.backToMagazine": "Revista",
   "article.relatedHeading": "Continua a <em>ler</em>",
+
+  // ── ArticleNotes: notas de conteúdo (CON-06) e correções (CON-02) ────────
+  "article.contentNotesHeading": "Notas de conteúdo",
+  "article.contentNotesDismissAria":
+    "Esconder as notas de conteúdo deste artigo",
+  "article.correctionsHeading": "Correções",
+
+  // ── CON-16: o aviso datado do ciclo de vida e o seletor de idioma ────────
+  // Só interface. O jornalismo nunca entra neste catálogo: uma tradução é um
+  // artigo próprio, com assinatura própria (ver o modelo `locale` /
+  // `translation_of`), que é precisamente o objetivo do CON-16.
+  "article.lifecycle.publishedOn": "Publicado a {date}",
+  "article.lifecycle.readReplacement": "Ler {title}",
+  "article.lifecycle.reviewDue": "Vamos rever este texto a {date}.",
+  "article.lifecycle.under_review.heading": "Estamos a rever este texto",
+  "article.lifecycle.under_review.changedOn": "em revisão desde {date}",
+  "article.lifecycle.under_review.fallbackNote":
+    "Alguma coisa que este texto descreve mudou. Estamos a revê-lo agora, por isso partes dele podem já estar desatualizadas.",
+  "article.lifecycle.archived.heading": "Do arquivo",
+  "article.lifecycle.archived.changedOn": "arquivado a {date}",
+  "article.lifecycle.archived.fallbackNote":
+    "Guardamos este texto como registo do seu tempo. Já não é atualizado, por isso lê-o como história.",
+  "article.lifecycle.superseded.heading": "Há um texto mais recente",
+  "article.lifecycle.superseded.changedOn": "substituído a {date}",
+  "article.lifecycle.superseded.fallbackNote":
+    "Um texto mais recente cobre este assunto. Este fica aqui como registo.",
+  "article.language.label": "Ler em",
+  "article.language.onlyIn": "Por agora, este texto só existe em {language}.",
+  "article.language.inProgress": "{language} em curso",
+  "article.language.translatedBy": "Tradução de {name}",
 
   // ── relationReason() (data/articles.tsx) ────────────────────────────────
   "relation.sameAuthor": "Mesma autoria",
@@ -290,6 +338,14 @@ export const magazine: Catalog = {
   "contents.print.readOnlineCta": "Ler online, grátis",
   "contents.print.imageAlt": "Simulação da edição impressa · Edição {issue}",
 
+  // ── IssueContentsPanel (live) ────────────────────────────────────────────
+  // A ordem curada pela redação e os resumos de cada peça, na própria página
+  // da edição. Esta curadoria destinava-se a um email; a QueerPulse não envia
+  // nenhum, por isso nada aqui pode prometer um envio.
+  "contents.liveHeading": "Nesta <em>edição</em>",
+  "contents.liveMeta_one": "{count} peça, na ordem escolhida pela redação",
+  "contents.liveMeta_other": "{count} peças, na ordem escolhida pela redação",
+
   // ── IssuesPage ───────────────────────────────────────────────────────────
   "issues.eyebrow": "Revista · todas as edições",
   "issues.heroTitle": "Nove edições, <em>trimestrais</em>, desde 2024.",
@@ -330,6 +386,29 @@ export const magazine: Catalog = {
   "author.followWriterCta": "Seguir esta pessoa",
   "author.portraitAlt": "Retrato de {slug}",
   "author.portraitPlaceholder": "Retrato",
+  // CON-11 — a assinatura como pessoa real: a ligação à conta de membro por
+  // trás dela e o editor para quem a pode preencher.
+  "author.viewMemberProfile": "Ver o perfil de membro de {name}",
+  "author.editBylineCta": "Editar esta assinatura",
+  "author.editMyBylineCta": "Editar o meu perfil de autoria",
+  "author.editor.eyebrow": "Revista · assinatura",
+  "author.editor.title": "Perfil de autoria",
+  "author.editor.sub":
+    "É isto que quem lê vê ao lado do teu nome em cada peça que publicas.",
+  "author.editor.nameLabel": "Nome na assinatura",
+  "author.editor.nameHelper":
+    "Aparece nas peças publicadas. Só a equipa editorial o pode mudar.",
+  "author.editor.nameRequired": "Uma assinatura precisa de um nome.",
+  "author.editor.bioLabel": "Biografia",
+  "author.editor.bioHelper":
+    "Duas linhas sobre quem escreve, mostradas na página de autoria e sob cada peça.",
+  "author.editor.portraitLabel": "Retrato",
+  "author.editor.portraitAlt": "Pré-visualização do retrato",
+  "author.editor.saveCta": "Guardar",
+  "author.editor.savingCta": "A guardar…",
+  "author.editor.cancelCta": "Cancelar",
+  "author.editor.savedToast": "Perfil de autoria atualizado.",
+  "author.editor.errorToast": "Não conseguimos guardar. Tenta novamente.",
 
   // ── AuthorWork ───────────────────────────────────────────────────────────
   "author.work.mostRecentHeading": "Mais recente · <em>em destaque</em>",
@@ -355,6 +434,19 @@ export const magazine: Catalog = {
   "authorsDirectory.emptyTitle": "Ainda não há autoria para mostrar.",
   "authorsDirectory.emptyBody":
     "O diretório ainda está a ser preparado. As assinaturas chegam em breve.",
+  // CON-11 — o diretório mostra pessoas, não apenas nomes.
+  "authorsDirectory.noBio": "Ainda sem biografia.",
+  "authorsDirectory.pieceCount_one": "{count} peça",
+  "authorsDirectory.pieceCount_other": "{count} peças",
+  "authorsDirectory.memberChip": "Membro",
+
+  // ── ProfileWritingSection (CON-11) ───────────────────────────────────────
+  "profileWriting.selfTitle": "A tua <em>escrita</em>",
+  "profileWriting.visitorTitle": "A <em>escrita</em> de {firstName}",
+  "profileWriting.sub_one": "{count} peça publicada na revista.",
+  "profileWriting.sub_other": "{count} peças publicadas na revista.",
+  "profileWriting.allCta_one": "Ver a {count} peça",
+  "profileWriting.allCta_other": "Ver todas as {count} peças",
 
   // ── MagazineSectionsPage (CNT-20) ────────────────────────────────────────
   "sections.eyebrow": "Revista · secções",
@@ -378,6 +470,33 @@ export const magazine: Catalog = {
   "sectionArticles.emptyTitle": "Ainda nada publicado aqui.",
   "sectionArticles.emptyBody":
     "Esta secção ainda espera pela primeira peça. Volta em breve.",
+
+  // ── Pesquisa na revista + etiquetas (CON-12) ─────────────────────────────
+  // As etiquetas são vocabulário editorial e aparecem como foram escritas;
+  // só o chrome à volta delas é traduzido.
+  "tags.listAriaLabel": "Etiquetas desta peça",
+  "search.formAriaLabel": "Pesquisar na revista",
+  "search.fieldAriaLabel": "Pesquisar na revista",
+  "search.placeholder": "Um nome, um lugar, um tema",
+  "search.submitCta": "Pesquisar",
+  "search.metaTitle": "Pesquisar na revista",
+  "search.metaDescription":
+    "Pesquisa todas as peças que a revista publicou e explora por etiqueta.",
+  "search.eyebrow": "Revista · pesquisa",
+  "search.heading": "Pesquisa na revista.",
+  "search.taggedLabel": "Com a etiqueta",
+  "search.resultCount_one": "{count} peça encontrada",
+  "search.resultCount_other": "{count} peças encontradas",
+  "search.promptTitle": "O que procuras?",
+  "search.promptBody":
+    "Pesquisa em tudo o que já publicámos, títulos e textos. Ou segue uma etiqueta a partir de qualquer artigo para veres o que mais saiu sobre isso.",
+  "search.errorTitle": "Não conseguimos fazer essa pesquisa.",
+  "search.errorBody":
+    "Algo nos interrompeu a caminho. As tuas palavras continuam no campo, por isso tenta novamente.",
+  "search.retryCta": "Tentar novamente",
+  "search.emptyTitle": "Nada corresponde a isso.",
+  "search.emptyBody":
+    "Ainda não publicámos sobre isto, ou por aqui tem outro nome. Tenta menos palavras ou explora por secção.",
 
   // ══════════════════ Painel de edição (uso interno) ═══════════════════════
   // Os REGISTOS de peças/propostas (títulos, notas, feed de atividade, nomes
@@ -857,6 +976,7 @@ export const magazine: Catalog = {
   "deskShell.nav.desk": "Redação",
   "deskShell.nav.pitches": "Propostas",
   "deskShell.nav.issue": "Edição",
+  "deskShell.nav.lifecycle": "Arquivo",
   "deskShell.openNow": "Abertos agora",
   "deskShell.writePiece": "Escrever",
   "deskShell.kbdHintSuffix": "para saltar · ? para atalhos",
@@ -989,6 +1109,9 @@ export const magazine: Catalog = {
   "piece.money.agreedFee": "Valor acordado",
   "piece.money.expenses": "Despesas",
   "piece.money.noneFiled": "Nenhuma entregue",
+  "piece.money.noFeeAgreed": "Sem valor acordado",
+  "piece.money.feeAsFiled": "Valor, como foi registado: {text}",
+  "piece.money.expensesAsFiled": "Despesas, como foram registadas: {text}",
   "piece.money.invoice": "Fatura",
   "piece.money.notReceived": "Não recebida",
   "piece.money.filed": "Entregue",
@@ -1245,6 +1368,7 @@ export const magazine: Catalog = {
   // Autoria e texto da nota são palavras próprias de quem edita (conteúdo);
   // só a expressão de chrome "{author} escreveu:" à volta é traduzida.
   "pitchTracker.card.noteWrote": "{author} escreveu:",
+  "pitchTracker.card.deskAuthor": "A redação",
 
   // ── Shared stage-rail vocabulary (PitchStages.tsx) ──────────────────────
   "pitchTracker.stage.pitched": "Proposta enviada",
@@ -1268,6 +1392,7 @@ export const magazine: Catalog = {
   "pitchTracker.statusLabel.accepted": "Aceite",
   "pitchTracker.statusLabel.published": "Publicada",
   "pitchTracker.statusLabel.rejected": "Não aceite nesta edição",
+  "pitchTracker.statusLabel.commissioned": "Encomendada",
 
   // ── Mock PITCHES per-pitch statusLabel (demo-only, pitch-specific copy) ──
   "pitchTracker.pitch.pharmacist.statusLabel": "Em edição · c/ Marta",
@@ -1417,9 +1542,12 @@ export const magazine: Catalog = {
   "write.block.statLabelAria": "Etiqueta da estatística {number}",
   "write.block.statRemoveAria": "Remover estatística {number}",
   "write.block.addStat": "Adicionar estatística",
-  "write.block.imageUrlLabel": "URL da imagem",
 
   // ── ImageBlockControls ────────────────────────────────────────────────────
+  "write.image.sourceLabel": "A imagem",
+  "write.image.sourceHelper":
+    "Carrega a arte para este sítio. Recorte livre: o enquadramento e o ponto focal abaixo decidem como aparece.",
+  "write.image.sourcePlaceholder": "Ainda sem imagem",
   "write.image.altLabel": "Texto alternativo",
   "write.image.altError": "Obrigatório para leitores de ecrã e legendas.",
   "write.image.tintLabel": "Cor",
@@ -1489,6 +1617,10 @@ export const magazine: Catalog = {
   "write.meta.metaDescriptionLabel": "Meta descrição",
   "write.meta.metaDescriptionHelper":
     "Aparece nos resultados de pesquisa e nas pré-visualizações de partilha. Opcional.",
+  "write.meta.heroImageLabel": "Arte de abertura",
+  "write.meta.heroImageHelper":
+    "A imagem que abre a peça e acompanha todos os cartões que apontam para ela. Pelo menos 1200 por 600.",
+  "write.meta.heroImagePlaceholder": "Ainda sem arte de abertura",
   "write.meta.socialImageLabel": "Imagem para partilha",
   "write.meta.socialImageHelper":
     "URL da imagem usada quando este artigo é partilhado. Opcional.",
@@ -1582,7 +1714,7 @@ export const magazine: Catalog = {
   "issue.tabs.ariaLabel": "Secções da produção da edição",
   "issue.tabs.runningOrder": "Ordem de publicação",
   "issue.tabs.coverContents": "Capa e índice",
-  "issue.tabs.digestSocial": "Digest e redes",
+  "issue.tabs.digestSocial": "Painel da edição e redes",
   "issue.tabs.archive": "Arquivo",
 
   // ── PagesCard ────────────────────────────────────────────────────────────
@@ -1601,6 +1733,24 @@ export const magazine: Catalog = {
   "issue.pages.total": "Total",
   "issue.pages.spare_one": "{count} página de folga",
   "issue.pages.spare_other": "{count} páginas de folga",
+
+  // ── IssueCostsCard (CON-18) ──────────────────────────────────────────────
+  "issue.costs.heading": "Quanto custou esta edição",
+  "issue.costs.fees": "Valores",
+  "issue.costs.expenses": "Despesas",
+  "issue.costs.total": "Total",
+  "issue.costs.paid": "Pago",
+  "issue.costs.outstanding": "Ainda em dívida",
+  "issue.costs.nothingPriced": "Ainda nada nesta edição tem valor definido.",
+  "issue.costs.loadFailed": "Não foi possível carregar os custos agora.",
+  "issue.costs.unpriced_one":
+    "{count} pagamento não tem valor, por isso fica fora destes totais.",
+  "issue.costs.unpriced_other":
+    "{count} pagamentos não têm valor, por isso ficam fora destes totais.",
+  "issue.costs.coverage_one":
+    "{payments} pagamentos em {count} peça desta edição.",
+  "issue.costs.coverage_other":
+    "{payments} pagamentos em {count} peças desta edição.",
 
   // ── RunningOrderTab ──────────────────────────────────────────────────────
   "issue.runOrder.deckNoPageCount": "Deck: sem contagem de páginas",
@@ -1645,25 +1795,27 @@ export const magazine: Catalog = {
   "issue.contents.blurbPlaceholder": "Uma frase, escrita pela redação.",
 
   // ── DigestSocialTab ──────────────────────────────────────────────────────
-  "issue.digest.heading": "Digest para a comunidade",
+  // CON-05: esta secção curava um EMAIL. A QueerPulse não envia nenhum, por
+  // isso a mesma curadoria passa a alimentar o painel "Nesta edição" na página
+  // pública da edição, mais um aviso na app quando a edição sai. Nenhuma
+  // string aqui pode descrever um envio por email.
+  "issue.digest.heading": "Painel da edição",
   "issue.digest.hint":
-    "Sai às 09:00 no dia em que a edição é publicada. A ordem aqui é a ordem no email.",
-  "issue.digest.includeAria": "Incluir “{title}” no digest para a comunidade",
-  "issue.digest.editBlurbAria": "Editar o resumo do digest de “{title}”",
+    "É isto que as pessoas veem na página da edição. A ordem aqui é a ordem de leitura.",
+  "issue.digest.includeAria": "Mostrar “{title}” no painel da edição",
+  "issue.digest.editBlurbAria":
+    "Editar o resumo de “{title}” no painel da edição",
   "issue.digest.save": "Guardar",
   "issue.digest.cancel": "Cancelar",
   "issue.digest.edit": "Editar",
-  "issue.digest.sendTest": "Enviar-me um teste",
-  "issue.digest.sendTestError":
-    "Não foi possível enviar o digest de teste. Tenta novamente.",
-  "issue.digest.scheduledWithIssue": "Agendado com a edição",
-  "issue.digest.scheduleOffToast":
-    "O digest deixa de sair automaticamente com esta edição.",
-  "issue.digest.alreadySent": "Enviado às pessoas subscritoras a {date}",
-  "issue.digest.sendTestToast":
-    "Um digest de teste está a caminho da tua caixa de entrada.",
-  "issue.digest.scheduleWithIssue": "Agendar com a edição",
-  "issue.digest.scheduleToast": "O digest sai junto com a edição.",
+  "issue.digest.previewPanel": "Ver a página de quem lê",
+  "issue.digest.announceScheduled": "A anunciar com a edição",
+  "issue.digest.announceOffToast":
+    "Publicar esta edição deixa de avisar a comunidade.",
+  "issue.digest.alreadyAnnounced": "Anunciado à comunidade a {date}",
+  "issue.digest.announceWithIssue": "Anunciar com a edição",
+  "issue.digest.announceOnToast":
+    "A comunidade recebe um aviso quando esta edição sair.",
   "issue.digest.socialHeading": "Redes sociais",
   "issue.digest.socialAltHint":
     "O texto alternativo é copiado da imagem, por isso está sempre preenchido.",
@@ -1922,4 +2074,86 @@ export const magazine: Catalog = {
   "comments.deleteConfirm.body":
     "Passa a mostrar uma nota a dizer que o comentário foi eliminado. Isto não pode ser anulado.",
   "comments.deleteConfirm.cta": "Eliminar comentário",
+
+  // ── CON-16: a secretaria do arquivo (/magazine/editor/lifecycle) ─────────
+  "lifecycle.pageTitle": "Arquivo · Revista QueerPulse",
+  "lifecycle.heading": "O arquivo",
+  "lifecycle.blurb":
+    "Onde está hoje cada texto publicado e quais prometemos rever. Retirar um texto mantém-no legível e dá ao leitor uma nota datada, para que nada do que alguém partilhou se torne um link morto.",
+  "lifecycle.horizon": "{days} dias",
+  "lifecycle.horizonAria": "Até onde a fila de revisão olha",
+  "lifecycle.saved": "Guardado. Os leitores já veem isto no texto.",
+  "lifecycle.saveFailed": "Não foi possível guardar. Tenta outra vez.",
+
+  "lifecycle.state.live": "No ar",
+  "lifecycle.state.underReview": "Em revisão",
+  "lifecycle.state.archived": "Arquivado",
+  "lifecycle.state.superseded": "Substituído",
+  "lifecycle.hint.live":
+    "Atual. Mantemos o texto como está e não aparece nenhum aviso.",
+  "lifecycle.hint.underReview":
+    "Estamos a confrontá-lo com a lei ou o serviço tal como estão agora. O leitor é avisado de que partes podem estar desatualizadas.",
+  "lifecycle.hint.archived":
+    "Do seu tempo. Fica como registo, deixa de ser atualizado e lê-se como história.",
+  "lifecycle.hint.superseded":
+    "Um texto mais recente substitui-o. O aviso leva o leitor diretamente para lá.",
+
+  "lifecycle.counts.overdue": "Em atraso",
+
+  "lifecycle.queue.heading": "Para rever",
+  "lifecycle.queue.blurb":
+    "Textos que prometemos voltar a verificar, a promessa mais antiga primeiro. A maioria continua no ar, porque ainda ninguém olhou.",
+  "lifecycle.queue.empty": "Nada a rever neste período.",
+  "lifecycle.flagged.heading": "Com aviso",
+  "lifecycle.flagged.blurb":
+    "Tudo aquilo em que o leitor vê neste momento uma nota. Um texto pode estar aqui e na fila acima ao mesmo tempo.",
+  "lifecycle.flagged.empty": "Todos os textos publicados estão no ar.",
+
+  "lifecycle.row.published": "publicado a {date}",
+  "lifecycle.row.replacedBy": "Substituído por {title}",
+  "lifecycle.row.dueIn": "Faltam {days} dias",
+  "lifecycle.row.overdueBy": "{days} dias de atraso",
+  "lifecycle.row.noReview": "Sem revisão marcada",
+  "lifecycle.row.edit": "Definir estado",
+  "lifecycle.row.editAria": "Definir o estado de {title}",
+
+  "lifecycle.modal.eyebrow": "Ciclo de vida",
+  "lifecycle.modal.sub":
+    "É isto que o leitor vê no topo do texto. De qualquer forma, o texto continua publicado e continua no arquivo.",
+  "lifecycle.modal.stateLabel": "Onde está este texto",
+  "lifecycle.modal.replacementLabel": "O texto que o substitui",
+  "lifecycle.modal.replacementHelper":
+    "O slug dele, a parte a seguir a ?id= no endereço.",
+  "lifecycle.modal.replacementRequired":
+    "Um texto substituído precisa de um sítio para onde enviar o leitor.",
+  "lifecycle.modal.noteLabel": "O que dizer ao leitor",
+  "lifecycle.modal.noteHelper":
+    "Uma frase tua. Se ficar em branco, o texto recebe a formulação geral deste estado.",
+  "lifecycle.modal.reviewLabel": "Rever de novo a",
+  "lifecycle.modal.reviewHelper":
+    "O dia em que isto volta à redação. O leitor também vê a promessa.",
+  "lifecycle.modal.cancel": "Cancelar",
+  "lifecycle.modal.save": "Guardar estado",
+
+  "lifecycle.row.languages": "Idiomas",
+  "lifecycle.row.languagesAria": "Idiomas de {title}",
+  "lifecycle.languages.eyebrow": "Idiomas",
+  "lifecycle.languages.sub":
+    "Uma tradução é um texto próprio: endereço próprio, assinatura própria de quem traduz e data de publicação própria. Sai quando a tradução estiver pronta.",
+  "lifecycle.languages.published": "Publicado",
+  "lifecycle.languages.drafting": "Ainda a escrever",
+  "lifecycle.languages.translator": "tradução de {name}",
+  "lifecycle.languages.emptyTitle": "Por enquanto, um idioma",
+  "lifecycle.languages.emptyBody":
+    "Abre uma tradução aqui em baixo e ela chega à redação já com os parágrafos do original no lugar.",
+  "lifecycle.languages.localeLabel": "Traduzir para",
+  "lifecycle.languages.localePlaceholder": "Escolhe um idioma",
+  "lifecycle.languages.translatorLabel": "Quem vai traduzir",
+  "lifecycle.languages.translatorHelper":
+    "O nome tal como deve aparecer nos créditos. Podes deixar em branco e creditar depois.",
+  "lifecycle.languages.open": "Abrir tradução",
+  "lifecycle.languages.opened": "Tradução aberta em {slug}.",
+  "lifecycle.languages.openFailed": "Não foi possível abrir. Tenta outra vez.",
+  "lifecycle.languages.allDone":
+    "Este texto já existe em todos os idiomas em que publicamos.",
 };

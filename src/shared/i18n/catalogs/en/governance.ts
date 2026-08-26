@@ -40,6 +40,9 @@ export const governance: Catalog = {
   "governingDocs.codeOfConduct.label": "Code of Conduct",
   "governingDocs.codeOfConduct.blurb":
     "What we expect of each other, and what happens when it's breached.",
+  "governingDocs.transparency.label": "Transparency Report",
+  "governingDocs.transparency.blurb":
+    "What moderation received, what it did, and what it got wrong. Counted every quarter.",
   "subpageIndex.eyebrow": "Governing documents",
   "subpageIndex.title": "Read the fine print.",
 
@@ -74,6 +77,8 @@ export const governance: Catalog = {
   "sections.moderation.wontTolerate.label": "What we won't tolerate:",
   "sections.moderation.wontTolerate.text":
     "Any behaviour that makes a member feel unsafe or unwelcome on the basis of their identity, body, or background. Harassment of any form. Commercial solicitation without permission. Violation of another member's privacy.",
+  "sections.moderation.transparencyLink":
+    "The figures behind this process are published every quarter in the <a>Transparency Report</a>.",
 
   "steps.reportFiled.title": "Report filed",
   "steps.reportFiled.text":
@@ -157,8 +162,13 @@ export const governance: Catalog = {
     "Two things on this page are decided by member vote, not admin fiat: removing an advisory-council seat needs a two-thirds vote, and accepting funding outside our usual sources needs a majority. Every open proposal is listed here, and every past one stays visible with its result.",
   "sections.proposals.type.council_removal": "Council seat",
   "sections.proposals.type.funding_change": "Funding change",
+  "sections.proposals.type.member_motion": "Member motion",
   "sections.proposals.status.passed": "Passed",
   "sections.proposals.status.failed": "Did not pass",
+  "sections.proposals.status.gathering": "Gathering support",
+  "sections.proposals.status.screening": "In review",
+  "sections.proposals.status.rejected": "Not opened for voting",
+  "sections.proposals.status.lapsed": "Short of co-signatures",
   "sections.proposals.targetSeat": "Seat under review: {name}",
   "sections.proposals.tallyCaption":
     "{forCount} for · {againstCount} against · {forPercent}% in favour (two-thirds line marked)",
@@ -170,6 +180,82 @@ export const governance: Catalog = {
   "sections.proposals.votedAgainst": "You voted against this proposal.",
   "sections.proposals.resolvedHeading": "Past proposals",
   "sections.proposals.empty": "No proposal has been opened yet.",
+
+  // ── Member motions (GOV-01) ─────────────────────────────────────────────
+  // Anyone can put something to a vote, so a motion travels through three
+  // stages before a ballot exists: it gathers co-signatures, staff screen
+  // it, then voting opens. Every string below names the stage it is
+  // actually at, because a motion still collecting names must never read
+  // as a vote that went badly.
+  "sections.proposals.raisedBy": "Raised by {name}",
+  "sections.proposals.tallyLabel": "Votes cast",
+  "sections.proposals.gatheringHeading": "Gathering co-signatures",
+  "sections.proposals.votingHeading": "Open for voting",
+
+  // Filing a motion. The hint and the sub-line both say what happens next,
+  // because a form that quietly parks your motion in a queue is how people
+  // conclude the democracy here is decorative.
+  "sections.proposals.compose.cta": "Put something to a vote",
+  "sections.proposals.compose.hint":
+    "Any member can file a motion. Ten members have to stand behind it before staff screen it, and yours counts as the first.",
+  "sections.proposals.compose.eyebrow": "Member motion",
+  "sections.proposals.compose.title": "Put something to a vote",
+  "sections.proposals.compose.sub":
+    "This does not go straight to a ballot. Your motion gathers co-signatures from other members first, then staff screen it, and only then does voting open.",
+  "sections.proposals.compose.titleField": "What are you proposing?",
+  "sections.proposals.compose.titlePlaceholder": "One line, in plain words.",
+  "sections.proposals.compose.descriptionField": "The case for it",
+  "sections.proposals.compose.descriptionHelper":
+    "Say what should change and why. Members read this before deciding whether to co-sign.",
+  "sections.proposals.compose.descriptionPlaceholder":
+    "What you want changed, who it affects, and what happens if nothing changes.",
+  "sections.proposals.compose.cancel": "Cancel",
+  "sections.proposals.compose.submit": "File motion",
+  "sections.proposals.compose.submitting": "Filing…",
+  "sections.proposals.compose.successToast":
+    "Motion filed. It is now gathering co-signatures.",
+  "sections.proposals.compose.errorToast":
+    "Could not file that motion. Please try again.",
+
+  // The co-signature drive. `progress` gets both the signed count and the
+  // threshold; `progressComplete` only the count, and stands in either when
+  // the threshold is met or when the motion carries no threshold at all.
+  "sections.proposals.cosign.progress":
+    "Co-signatures: {count} of the {threshold} needed",
+  "sections.proposals.cosign.progressComplete": "Co-signatures: {count}",
+  "sections.proposals.cosign.cta": "Co-sign this motion",
+  "sections.proposals.cosign.withdrawCta": "Withdraw my signature",
+  "sections.proposals.cosign.signed": "You have co-signed this motion.",
+  "sections.proposals.cosign.proposerNote":
+    "You raised this motion, so your signature is already the first one on it.",
+  "sections.proposals.cosign.signedInOnly":
+    "Sign in to put your name to this motion.",
+  "sections.proposals.cosign.awaitingReview":
+    "Enough members have signed. Staff are reading this motion before voting opens.",
+  "sections.proposals.cosign.closes": "Co-signatures close {date}",
+  "sections.proposals.cosign.closed": "Co-signatures closed {date}",
+  "sections.proposals.cosign.errorToast":
+    "Could not save your signature. Please try again.",
+
+  // Quorum is turnout, and it is a separate reading from the two-thirds
+  // majority above it: a proposal can clear two-thirds of the votes cast
+  // and still fail because too few members voted. `missed` says exactly
+  // that, so a proposal short on turnout is never read as one that lost
+  // the argument.
+  "sections.proposals.quorum.label": "Quorum",
+  "sections.proposals.quorum.pending":
+    "{totalVotes} of the {quorumRequired} ballots needed for the result to count",
+  "sections.proposals.quorum.met":
+    "{totalVotes} ballots cast, past the {quorumRequired} needed for the result to count",
+  "sections.proposals.quorum.missed":
+    "Only {totalVotes} of the {quorumRequired} ballots needed were cast, so this proposal failed on turnout.",
+
+  // A resolved motion that never reached a ballot. The rejection note is
+  // published to everyone, so its label stays neutral and factual.
+  "sections.proposals.outcome.lapsed":
+    "This motion gathered {count} of the {threshold} co-signatures it needed, so it never reached a vote.",
+  "sections.proposals.outcome.reviewedOn": "Reviewed {date}",
+  "sections.proposals.outcome.rejectedLabel": "Why this did not go to a vote",
 
   // ── Decision log ────────────────────────────────────────────────────────
   "sections.decisions.eyebrow": "Recent decisions",
@@ -219,4 +305,120 @@ export const governance: Catalog = {
   // error surfaces as a retry prompt rather than a silently-empty grid.
   "error.body": "We couldn't load this section just now.",
   "error.retry": "Try again",
+
+  // ── Transparency Report (/about/governance/transparency) ────────────────
+  // The document Article VI clause 3 of the Constitution names. Every figure is
+  // fetched from `GET /transparency/report`; the copy below is chrome, and the
+  // `category.*` / `action.*` / `outcome.*` keys are the labels for the stable
+  // identifiers that endpoint sends.
+  "transparency.meta.title":
+    "Transparency Report: QueerPulse moderation figures",
+  "transparency.meta.description":
+    "Counted every quarter: reports members filed and what they were about, how long an answer took, what moderators did, appeals filed, and how many decisions were overturned.",
+
+  "transparency.hero.eyebrow": "Transparency Report",
+  "transparency.hero.title": "What moderation <em>actually did.</em>",
+  "transparency.hero.dek1":
+    "Every figure on this page is counted from the live moderation record at the moment you load it. Nothing is typed in by hand and nothing is estimated. Where a number would be small enough to describe one person, it is withheld, and the page says where.",
+  "transparency.hero.dek2":
+    "Article VI of the <a>Constitution</a> promises this report. This is it.",
+
+  "transparency.period.label": "Reporting period",
+  "transparency.period.option.current": "This quarter",
+  "transparency.period.option.previous": "Last quarter",
+  "transparency.period.rangeComplete":
+    "<b>{id}</b> ran from {start} to {end}. The quarter is closed, so these figures are final.",
+  "transparency.period.rangePartial":
+    "<b>{id}</b> is still running. These figures cover {start} to {until} and will keep moving until the quarter closes.",
+  "transparency.period.generated": "Counted on {generated}.",
+
+  "transparency.reports.title": "Reports members <em>filed</em>",
+  "transparency.reports.lead":
+    "A report is one member telling us something is wrong. Received counts the reports filed during the period; closed counts the ones finished during it. They are different sets, so they do not have to match.",
+  "transparency.reports.received": "Reports received",
+  "transparency.reports.resolved": "Reports closed",
+  "transparency.reports.tableCaption": "Reports received, by what was reported",
+  "transparency.reports.categoryColumn": "What was reported",
+  "transparency.reports.countColumn": "Reports",
+
+  "transparency.category.privacy":
+    "Outing, or sharing someone's private information",
+  "transparency.category.harassment":
+    "Harassment, hate speech, or unwanted contact",
+  "transparency.category.impersonation": "Impersonation",
+  "transparency.category.spam": "Spam and disruption",
+  "transparency.category.space_safety":
+    "Safety of a venue, a home, or a listing",
+  "transparency.category.other": "Everything else",
+
+  "transparency.timing.title": "How long an <em>answer</em> took",
+  "transparency.timing.lead":
+    "Measured from the moment a report was filed to the moment a moderator closed it, over the reports closed during this period.",
+  "transparency.timing.median": "Half of reports were answered within",
+  "transparency.timing.p90": "Nine in ten were answered within",
+  "transparency.timing.hours": "{value} hours",
+  "transparency.timing.withheld":
+    "Too few reports closed to publish this without describing single cases",
+
+  "transparency.actions.title": "What moderators <em>did</em>",
+  "transparency.actions.lead":
+    "Every moderator decision is written to an audit log the moment it is taken. These are those rows, counted. A finding that no rule was broken is a real outcome and is counted like any other.",
+  "transparency.actions.accountsRemoved": "Accounts removed permanently",
+  "transparency.actions.tableCaption":
+    "Moderator decisions taken during the period",
+  "transparency.actions.actionColumn": "Decision",
+  "transparency.actions.countColumn": "Times taken",
+
+  "transparency.action.dismiss": "No rule was broken",
+  "transparency.action.warn": "Warning given",
+  "transparency.action.hide_content": "Content hidden",
+  "transparency.action.remove_content": "Content removed",
+  "transparency.action.restrict": "Account restricted for a set time",
+  "transparency.action.suspend": "Account suspended for a set time",
+  "transparency.action.ban": "Account removed permanently",
+  "transparency.action.escalate": "Sent for further review",
+
+  "transparency.communities.frozen": "Communities frozen",
+
+  "transparency.appeals.title": "<em>Appeals</em>",
+  "transparency.appeals.lead":
+    "Anyone can appeal a decision made about them. Outcomes are counted against the period the appeal was filed in, so the rows below always add up to the appeals filed. Some of them are still being reviewed.",
+  "transparency.appeals.filed": "Appeals filed",
+  "transparency.appeals.overturnRate": "Decisions overturned on appeal",
+  "transparency.appeals.ratePercent": "{value}%",
+  "transparency.appeals.rateWithheld":
+    "Too few appeals decided this period for a rate to mean anything",
+  "transparency.appeals.tableCaption":
+    "Appeals filed during the period, by outcome",
+  "transparency.appeals.outcomeColumn": "Outcome",
+  "transparency.appeals.countColumn": "Appeals",
+
+  "transparency.outcome.upheld": "Original decision upheld",
+  "transparency.outcome.overturned": "Original decision overturned",
+  "transparency.outcome.awaiting": "Still being reviewed",
+
+  "transparency.suppressed.value": "Fewer than {floor}",
+  "transparency.suppressed.unavailable": "Not available",
+
+  "transparency.method.title": "How these numbers are <em>made</em>",
+  "transparency.method.counted":
+    "Each figure is a count or a summary taken straight from the moderation record at the moment you loaded this page. There is no separate reporting database, no manual entry step, and no rounding beyond one decimal place on the hour figures. The same rows feed the moderators' own queue, so this report and the team's internal view cannot disagree.",
+  "transparency.method.suppression":
+    "A count of one or two is not anonymous. On a community this size it can be a specific person and a specific incident, so any figure below <b>{floor}</b> is withheld and shown as fewer than {floor}. Zero is published as zero, because a zero identifies nobody. Where withholding one figure would still let you work it out by subtracting the rest from the total, a second figure is withheld with it.",
+  "transparency.method.pairs":
+    "Reports received and reports closed count different sets. A report filed in the last week of one quarter is usually answered in the next, so the two figures move independently.",
+
+  "transparency.notCounted.title": "What this report does not count",
+  "transparency.notCounted.communityModeration":
+    "Moderation that communities do for themselves. When a community's own owners remove or bar someone, it goes into that community's governance log rather than the platform's. Counting a room's housekeeping as platform enforcement would inflate these figures.",
+  "transparency.notCounted.appealTiming":
+    "How long an appeal took. An appeal records when it was filed and what was decided, and nothing records when the decision was made, so the figure is left out rather than estimated.",
+  "transparency.notCounted.outsidePlatform":
+    "Harm that happened elsewhere and was never reported here. Nothing can count what nobody told us about, and a quiet quarter is not proof of a safe one.",
+  "transparency.notCounted.selfReported":
+    "Whether a decision was right. These are counts of what happened. The appeal figures are the closest this report comes to marking its own work.",
+
+  "transparency.links.constitution": "Read the Constitution",
+  "transparency.links.codeOfConduct": "Read the Code of Conduct",
+  "transparency.links.governance": "Back to Governance",
 };

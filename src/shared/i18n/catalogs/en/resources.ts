@@ -427,7 +427,7 @@ export const resources: Catalog = {
   "pronounsGuide.pronouns.eyebrow": "Pronouns",
   "pronounsGuide.pronouns.title": "Setting and <em>changing pronouns.</em>",
   "pronounsGuide.pronouns.body1":
-    "Your pronouns appear on your profile page, next to your name in message threads, and in the member directory if you've made that section visible. They do not appear in URLs, notification emails, or search result snippets.",
+    "Your pronouns appear on your profile page, next to your name in message threads, and in the member directory if you've made that section visible. They do not appear in URLs, push notifications, or search result snippets.",
   "pronounsGuide.pronouns.body2":
     "You can set multiple pronoun sets (e.g. she/they) and add a custom string if none of the presets fit. Changes take effect immediately and there's no limit to how often you can update them.",
   "pronounsGuide.pronouns.body3":
@@ -463,7 +463,7 @@ export const resources: Catalog = {
   "pronounsGuide.table.displayName.who": "All members",
   "pronounsGuide.table.chosenName.field": "Chosen name",
   "pronounsGuide.table.chosenName.use":
-    "Emails from QueerPulse, internal comms",
+    "QueerPulse notifications, internal comms",
   "pronounsGuide.table.chosenName.who": "Only you",
   "pronounsGuide.table.username.field": "Username",
   "pronounsGuide.table.username.use": "URL handle (queerpulse.com/@username)",
@@ -1024,7 +1024,7 @@ export const resources: Catalog = {
   "sober.host.success.hostTitle": "Gathering <em>submitted.</em>",
   "sober.host.success.attendTitle": "You're <em>in.</em>",
   "sober.host.success.hostSub":
-    "A coordinator will confirm the alcohol-free listing and add it to the calendar within a day. You'll get the host checklist by email.",
+    "A coordinator will confirm the alcohol-free listing and add it to the calendar within a day. The host checklist reaches you as a QueerPulse message.",
   "sober.host.success.attendSub":
     "We've saved your spot. The private location and a gentle reminder will reach you the day before, and nothing is shared publicly.",
   "sober.host.comingSoon.title": "Sober meet-ups are <em>coming.</em>",
@@ -1067,6 +1067,9 @@ export const resources: Catalog = {
   "library.category.legal": "Legal",
   "library.category.finance": "Finance",
   "library.category.trans": "Trans life",
+  "library.category.safety": "Safety & privacy",
+  "library.category.community": "Community life",
+  "library.category.culture": "Culture & archive",
   "library.empty": "No guides match that yet. Try a different search.",
   "library.readGuideCta": "Read the guide",
   "library.loadingMore": "Loading more guides…",
@@ -1297,7 +1300,7 @@ export const resources: Catalog = {
   "microGrants.apply.submitCta": "Submit application",
   "microGrants.apply.success.title": "Application <em>submitted.</em>",
   "microGrants.apply.success.sub":
-    "We'll confirm receipt by email within 24 hours. The review panel meets in mid-July. You'll hear back before 31 July regardless of outcome.",
+    "Your application is recorded and goes to the review panel, which meets in mid-July. The panel decides this round before 31 July and replies as a QueerPulse message either way.",
   "microGrants.apply.success.closeCta": "Close",
   "microGrants.apply.comingSoon.title": "Applications open <em>soon.</em>",
   "microGrants.apply.comingSoon.sub":
@@ -2412,4 +2415,33 @@ export const resources: Catalog = {
   "suggest.success.title": "Thanks. <em>We'll take it from here.</em>",
   "suggest.success.sub":
     "Our team verifies every suggestion before it's published, so we don't send anyone to a wrong number or a defunct clinic.",
+
+  // ── Guide index + database-managed guides (CON-08 / CON-09 / CON-10) ────
+  // The index lists every guide route; seventeen of them had no link
+  // anywhere in the app before it existed.
+  "guideIndex.meta.title": "Every QueerPulse guide, in one place",
+  "guideIndex.meta.description":
+    "The full index of QueerPulse guides: health, trans life, legal, safety, community and culture. Everything we have written, grouped and linked.",
+  "guideIndex.hero.eyebrow": "Guide index",
+  "guideIndex.hero.title": "Everything we've <em>written down.</em>",
+  "guideIndex.hero.lead":
+    "Every guide on QueerPulse, grouped by what it is for. Some of these were hard to find before this page existed.",
+  "guideIndex.empty": "No guides are published yet.",
+  "guideIndex.card.reviewedOn": "Reviewed {date}",
+  "guideIndex.card.notReviewed": "Not reviewed yet",
+  "guideIndex.linkCta": "Browse every guide",
+
+  // Shown on a guide whose prose is maintained in the editor rather than in
+  // the codebase.
+  "guide.managedEyebrow": "Guide",
+  "guide.review.ariaLabel": "Editorial review status",
+  "guide.review.reviewedOn": "Reviewed {date}",
+  "guide.review.reviewedOnBy": "Reviewed {date} by {reviewer}",
+  "guide.review.never": "Nobody has reviewed this guide yet.",
+  "guide.review.due": "Next review due {date}",
+  "guide.review.overdue": "Review overdue since {date}",
+  "guide.missing.title": "No page for this one <em>yet.</em>",
+  "guide.missing.sub":
+    "This guide is listed but has nothing written in it so far. The index has everything that does.",
+  "guide.missing.indexCta": "See every guide",
 };

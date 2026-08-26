@@ -62,6 +62,21 @@ export function loadDraft(conversationId: string): string {
   return loadDrafts()[conversationId] ?? "";
 }
 
+/**
+ * The draft to SEED a freshly-mounted composer with (SOC-16): this device's
+ * own LOCAL copy if it has one (always freshest here — every keystroke writes
+ * through immediately), else the server's cross-device copy (synced by
+ * `useDraftSync`, carried on the fetched `Conversation.draft`) so a draft
+ * started on another device still shows up. Never the other way around — a
+ * stale server value must not clobber text this device already has.
+ */
+export function loadDraftOrServerFallback(
+  conversationId: string,
+  serverDraft: string | null | undefined,
+): string {
+  return loadDraft(conversationId) || serverDraft || "";
+}
+
 /** Persist (or, for empty text, clear) one conversation's draft. Empty drafts
  *  are dropped so the store doesn't accumulate empty keys as threads drain. */
 export function saveDraft(conversationId: string, text: string): void {

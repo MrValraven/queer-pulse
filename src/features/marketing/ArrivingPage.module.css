@@ -1,3 +1,25 @@
+/* ── Tinted chip / icon tones ────────────────────────────────────────────
+   These replace the per-card inline `color`/`background` pairs the data
+   files used to carry (hand-written plum channels among them). Every value
+   here flips correctly in dark mode: `--accent-ink`, `--jade-ink` and
+   `--ink-60` are ink-tier tokens, and `--line-rgb` flips to cream channels. */
+.toneCoral {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+.toneJade {
+  color: var(--jade-ink);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+.toneViolet {
+  color: var(--violet);
+  background: rgba(var(--violet-rgb), 0.12);
+}
+.toneNeutral {
+  color: var(--ink-60);
+  background: rgba(var(--line-rgb), 0.08);
+}
+
 .section {
   padding: 88px 0;
 }
@@ -76,6 +98,7 @@
   align-self: flex-start;
 }
 .hoodName {
+  margin: 0;
   font-family: var(--serif);
   font-weight: 500;
   font-size: 22px;
@@ -89,6 +112,7 @@
   flex: 1;
 }
 .hoodNote {
+  margin: 0;
   font-size: 13px;
   font-style: italic;
   color: var(--ink-40);
@@ -129,6 +153,7 @@
   flex: none;
 }
 .icTitle {
+  margin: 0;
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
@@ -195,35 +220,58 @@
 }
 .orgBody {
   flex: 1;
+  min-width: 0;
 }
 .orgName {
+  display: block;
   font-size: 16px;
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 4px;
 }
 .orgDesc {
+  display: block;
   font-size: 14px;
   color: var(--ink-60);
   line-height: 1.6;
 }
 .orgUrl {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
   color: var(--accent-ink);
   font-weight: 600;
   margin-top: 6px;
 }
 
+.fgList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 .firstGather {
   background: rgba(var(--cream-rgb), 0.08);
   border: 1px solid rgba(var(--cream-rgb), 0.14);
   border-radius: var(--radius-card);
-  padding: 28px 30px;
+  padding: 24px 26px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
   flex-wrap: wrap;
+  text-decoration: none;
+  transition:
+    background 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .firstGather:hover {
+    background: rgba(var(--cream-rgb), 0.13);
+    transform: translateY(-2px);
+  }
+  .firstGather:hover .fgGo {
+    transform: translateX(3px);
+  }
 }
 .fgDate {
   font-family: var(--serif);
@@ -244,19 +292,33 @@
   margin-top: 4px;
   display: block;
 }
-.fgBody h3 {
+.fgBody {
+  flex: 1;
+  min-width: 0;
+}
+.fgTitle {
+  display: block;
   font-family: var(--serif);
   font-weight: 500;
-  font-size: 24px;
+  font-size: clamp(20px, 2.4vw, 24px);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 6px;
 }
-.fgBody p {
+.fgMeta {
+  display: block;
   font-size: 14px;
   color: rgba(var(--cream-rgb), 0.62);
 }
+.fgGo {
+  display: inline-flex;
+  align-items: center;
+  font-size: 20px;
+  color: var(--jade);
+  transition: transform 0.3s var(--ease);
+}
 .fgBadge {
+  display: block;
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -299,6 +361,7 @@
   align-self: flex-start;
 }
 .cqName {
+  display: block;
   font-family: var(--serif);
   font-weight: 500;
   font-size: 18px;
@@ -307,9 +370,10 @@
   line-height: 1.2;
 }
 .cqReason {
+  display: block;
   font-size: 13px;
   color: var(--ink-60);
-  font-style: italic;
+  line-height: 1.55;
 }
 .commCta {
   margin-top: 32px;
@@ -330,5 +394,174 @@
   }
   .fgDate {
     text-align: left;
+  }
+}
+
+/* ── Link rows ─────────────────────────────────────────────────────────── */
+.linkRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 2px;
+}
+/* Some destinations sit behind the member gate. Saying so beside the link is
+   cheaper for the reader than a sign-in wall they didn't expect. */
+.memberOnly {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* A quiet paragraph used for the honest empty / signed-out lines. */
+.plainNote {
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 56ch;
+  color: var(--ink-60);
+  margin: 0 0 8px;
+}
+
+/* ── Gatherings panel states (on plum) ─────────────────────────────────── */
+.fgNotice {
+  background: rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-card);
+  padding: 26px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.fgNotice p {
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 52ch;
+  color: rgba(var(--cream-rgb), 0.78);
+  margin: 0;
+}
+.fgSkeleton {
+  background: rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: var(--radius-card);
+  padding: 24px 26px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.fgSkeleton + .fgSkeleton {
+  margin-top: 14px;
+}
+.fgSkeletonText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Arrival checklist ─────────────────────────────────────────────────── */
+.checklist {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  padding: clamp(20px, 3vw, 30px);
+  max-width: 72ch;
+}
+.checklistHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.checklistProgress {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.checklistList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.checkItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.checkItem:last-child {
+  border-bottom: 0;
+}
+.checkInput {
+  /* A native checkbox: keyboard-operable and labelled for free. Sized past the
+     44px touch target via the label's own hit area below. */
+  inline-size: 20px;
+  block-size: 20px;
+  margin-block-start: 2px;
+  flex: none;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.checkText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.checkTitle {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  /* Widen the tap target to the full row without moving anything visually. */
+  padding-block: 6px;
+  margin-block: -6px;
+}
+.checkNote {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.checkItemDone .checkTitle {
+  color: var(--ink-40);
+  text-decoration: line-through;
+}
+.checkItemDone .checkNote {
+  color: var(--ink-40);
+}
+.checklistPrivacy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-40);
+}
+
+@media (max-width: 720px) {
+  .fgNotice,
+  .fgSkeleton {
+    padding: 22px 20px;
+  }
+  .fgSkeleton {
+    align-items: flex-start;
   }
 }

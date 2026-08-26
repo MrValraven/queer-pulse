@@ -1,0 +1,41 @@
+/* CON-16 — the lifecycle desk page frame. The board's own chrome lives in
+   `desk/lifecycle/LifecycleBoard.module.css`; this is only the page head and
+   its width. */
+
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.15;
+}
+
+.blurb {
+  margin: 6px 0 0;
+  max-width: 60ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 20px 14px 48px;
+  }
+  .title {
+    font-size: 23px;
+  }
+}

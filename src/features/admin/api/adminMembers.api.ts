@@ -200,6 +200,49 @@ export interface RestrictMemberInput {
 export const restrictMember = (memberId: string, input: RestrictMemberInput) =>
   apiPost<RestrictedMemberDTO>(`/admin/members/${memberId}/restrict`, input);
 
+/**
+ * A member's SCOPED restriction (`users.restricted`), which is a different
+ * thing from the suspension `RestrictedMemberDTO` above reports: a restricted
+ * member stays active and keeps reading, but the write paths
+ * `NotRestrictedGuard` covers refuse them until it lifts. Mirrors the backend
+ * `MemberRestrictionDTO`.
+ */
+export interface MemberRestrictionDTO {
+  id: string;
+  restricted: boolean;
+  /** ISO expiry; `null` when there is no restriction in force. */
+  restrictedUntil: string | null;
+}
+
+/** Read a member's scoped restriction, so the drawer knows whether there is one
+ *  to offer a lift for. Moderator/admin-only. */
+export const getMemberRestriction = (memberId: string) =>
+  apiGet<MemberRestrictionDTO>(`/admin/members/${memberId}/restriction`);
+
+/** The `PATCH /admin/members/:id/restriction` body — the reason cited and the
+ *  member-facing text they read in the outcome notification. */
+export interface LiftRestrictionInput {
+  reasonCode: string;
+  note: string;
+  reportId?: string;
+}
+
+/**
+ * Lift a member's scoped restriction (TS-09). The counterpart `liftSuspension`
+ * always had and `restrict` never did: before this endpoint the only way out of
+ * a restriction was winning an appeal or waiting for it to lapse. Idempotent —
+ * lifting one that is not in force returns the current state rather than an
+ * error.
+ */
+export const liftMemberRestriction = (
+  memberId: string,
+  input: LiftRestrictionInput,
+) =>
+  apiPatch<MemberRestrictionDTO>(
+    `/admin/members/${memberId}/restriction`,
+    input,
+  );
+
 /** The shape returned after citing evidence against a member (ADM-9). Mirrors
  *  the backend `CitedMemberDTO`. */
 export interface CitedMemberDTO {

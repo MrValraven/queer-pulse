@@ -38,6 +38,16 @@ export interface VerifiedSpace {
   metaPills: { label: string; accent?: boolean }[];
   /** Trust tier as a number; the label is composed at render so it localizes. */
   tier: number;
+  /**
+   * True while an open review stands against this badge. `status` stays
+   * `"verified"` (it is the discriminant against a REMOVED space, and a
+   * suspended space is not a removed one), so this is the only field that says
+   * whether the badge currently speaks. Never carries a flag count or names
+   * anyone. Optional: the demo fixtures below are all unsuspended.
+   */
+  isBadgeSuspended?: boolean;
+  /** The badge still stands and is past its yearly check. Not a suspension. */
+  isBadgeDueForReReview?: boolean;
   reVerified: string;
   verifier: string;
   promises: Promise[];

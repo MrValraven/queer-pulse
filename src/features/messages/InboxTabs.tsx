@@ -3,10 +3,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { InboxTab } from "./threadFilters";
 import styles from "./MessagesPage.module.css";
 
-/** Inbox filter tabs (All · Unread · Favorites · Groups · Requests), sitting
- *  under the search box. Purely local UI state upstream (`MessagesThreadList`)
- *  — it doesn't need to persist across visits. Hidden entirely while a search
- *  is active or the inbox is empty (see the caller). */
+/** Inbox filter tabs (All · Unread · Favorites · Groups · Archived ·
+ *  Requests), sitting under the search box. Purely local UI state upstream
+ *  (`MessagesThreadList`) — it doesn't need to persist across visits. Hidden
+ *  entirely while a search is active or the inbox is empty (see the
+ *  caller). */
 export function InboxTabs({
   active,
   onChange,
@@ -25,6 +26,7 @@ export function InboxTabs({
     { id: "unread", label: t("messages:thread.tabUnread") },
     { id: "favorites", label: t("messages:thread.tabFavorites") },
     { id: "groups", label: t("messages:thread.tabGroups") },
+    { id: "archived", label: t("messages:thread.tabArchived") },
     {
       id: "requests",
       label: t("messages:requests.tabLabel"),

@@ -104,6 +104,25 @@ function PricePill({
   onScrim?: boolean;
 }) {
   const { t } = useTranslation();
+  // LOC-18 — the host's own words about the door, when they wrote any.
+  // DISPLAY ONLY: nothing on this card takes a payment, and the pill is a
+  // label rather than a control for exactly that reason. A gathering the
+  // server marked free wears the "Free" chip instead.
+  const cost = event.cost?.trim();
+  if (cost) {
+    return (
+      <span className={onScrim ? styles.pricePillScrim : styles.pricePill}>
+        {cost}
+      </span>
+    );
+  }
+  if (event.isFree) {
+    return (
+      <span className={onScrim ? styles.pricePillScrim : styles.pricePill}>
+        {t("gatherings:events.freeTag")}
+      </span>
+    );
+  }
   if (!event.ticketed) return null;
   const label =
     event.priceMin === undefined

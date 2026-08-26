@@ -64,6 +64,10 @@ export const connect: Catalog = {
   "card.sentAgo": "Sent <b>{sentAgo}</b>",
   "card.introducedBy": "Introduced by <a>{name}</a>",
   "card.reason": "About <b>{reason}</b>",
+  // Why an accepted connection started, shown back on the connection it
+  // became. Which of the two reads depends on who sent the request.
+  "card.reasonTheyAsked": "{name} reached out about <b>{reason}</b>",
+  "card.reasonYouAsked": "You reached out about <b>{reason}</b>",
   "card.decline": "Decline",
   "card.accept": "Accept",
   "card.awaitingReply": "Awaiting reply",
@@ -83,8 +87,9 @@ export const connect: Catalog = {
     "People you've vouched for, or who've vouched for you. <em>Vouching is a small but meaningful act</em>. It stays attached to that member's profile.",
 
   // All-connections tab (ConnectionsAllTab)
-  "allTab.searchPlaceholder": "Search by name, role, or community",
+  "allTab.searchPlaceholder": "Search by name, handle, or what they do",
   "allTab.searchAria": "Search connections",
+  "allTab.sortLabel": "Sort",
   "allTab.sortRecentlyConnected": "Recently connected",
   "allTab.sortAToZ": "A to Z",
   "allTab.sortClosestMutuals": "Closest mutuals",
@@ -107,6 +112,20 @@ export const connect: Catalog = {
   "panels.blockedEmptyTitle": "You haven't blocked anyone",
   "panels.blockedEmptyDescription":
     "If someone makes the room feel unsafe, blocking them stops their messages and hides your updates. They'll show up here if you ever need to undo it.",
+
+  // Private per-connection note (ConnectionNoteEditor). Only its author ever
+  // sees it: the server reads a note back solely under the author's own id.
+  "note.add": "Add a private note",
+  "note.addAria": "Add a private note about {name}",
+  "note.editAria": "Edit your private note about {name}",
+  "note.inputAria": "Your private note about {name}",
+  "note.placeholder":
+    "Where you met, what you talked about, anything you'd rather not forget.",
+  "note.privacy": "Only you can see this. It is never shown to them.",
+  "note.save": "Save note",
+  "note.saving": "Saving…",
+  "note.cancel": "Cancel",
+  "note.saveFailed": "That note didn't save. Please try again.",
 
   // Relative age of a request (connections.adapters), for the two idioms the
   // shared localized helper can't derive from Intl.RelativeTimeFormat.
@@ -174,5 +193,24 @@ export const connect: Catalog = {
     "They reach out through people they already know. Ask a mutual connection to introduce you.",
   "notice.cannotConnect.title": "You can't reach {name} <em>right now.</em>",
   "notice.cannotConnect.body": "This connection isn't available right now.",
+  // People you might know (SOC-05). Every suggestion carries the FACT behind
+  // it, so these lines are the whole point of the card: there is deliberately
+  // no "recommended for you" string here, because the server never sends a
+  // suggestion it cannot explain. Community names, interest tags and custom
+  // availability phrases are member data and stay in the language they were
+  // written in.
+  "suggested.heading": "People you might know",
+  "suggested.blurb":
+    "Each one shares a room, a connection or an interest with you.",
+  "suggested.reasonCommunity": "You are both in {name}",
+  "suggested.reasonMutuals_one": "{count} mutual connection",
+  "suggested.reasonMutuals_other": "{count} mutual connections",
+  "suggested.reasonOpenTo": "You are both open to {label}",
+  "suggested.reasonTag": "You both listed {label}",
+  "suggested.reasonProfession": "You both work in {label}",
+  "suggested.sayHello": "Say hello",
+  "suggested.dismissAria": "Stop suggesting {name}",
+  "suggested.hideStripAria": "Hide people you might know",
+  "suggested.browseMembers": "Browse all members",
   "contact.message": "Message",
 };

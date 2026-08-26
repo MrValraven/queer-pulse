@@ -1,8 +1,56 @@
-import { FiCheck, FiRotateCcw, FiInfo } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiCheck,
+  FiClock,
+  FiRotateCcw,
+  FiInfo,
+} from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import styles from "./AdminModerationPage.module.css";
 
 export type AppealDecision = "uphold" | "overturn";
+
+/**
+ * The published decision deadline, at the top of the drawer (TS-11).
+ *
+ * §05 promises a member their appeal is decided within 7 days. Putting that
+ * date in front of the moderator who is about to decide it is the cheapest way
+ * to make the promise real: an overdue appeal says so plainly rather than
+ * looking like every other row.
+ */
+export function AppealDeadlineSection({
+  slaDueAt,
+  isOverdue,
+}: {
+  slaDueAt: string | undefined;
+  isOverdue: boolean | undefined;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  // A demo-seeded or pre-deadline appeal carries no due date. Say nothing
+  // rather than invent one: a deadline the software cannot stand behind is
+  // worse than no deadline on screen.
+  if (!slaDueAt) return null;
+
+  const due = new Date(slaDueAt);
+  return (
+    <p
+      className={[styles.appealDue, isOverdue && styles.appealDueLate]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {isOverdue ? <FiAlertTriangle aria-hidden /> : <FiClock aria-hidden />}{" "}
+      {isOverdue
+        ? t("admin:moderation.appeals.drawerOverdue", {
+            date: fmt.date(due, { day: "numeric", month: "short" }),
+          })
+        : t("admin:moderation.appeals.drawerDue", {
+            date: fmt.date(due, { day: "numeric", month: "short" }),
+          })}
+    </p>
+  );
+}
 
 /** The uphold/overturn radiogroup, the reason note, and the transparency line
  *  — the interactive tail of the appeal drawer. */

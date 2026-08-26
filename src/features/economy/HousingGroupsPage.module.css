@@ -278,15 +278,6 @@
   justify-content: space-between;
   gap: 12px;
 }
-/* Manage mode is progressive disclosure: the note explains, before anything is
-   clicked, that only the person who posted a room can change it. */
-.manageNote {
-  margin-block-start: 12px;
-  max-width: 62ch;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--ink-60);
-}
 .listingsEmpty {
   margin-block-start: 12px;
   color: var(--ink-60);
@@ -359,4 +350,101 @@
 }
 .listingWithdraw {
   margin-inline-start: auto;
+}
+
+/* ── Your rooms in this group (LOC-19) ───────────────────────────────────
+   The poster's own submissions, in whatever state each is in. Sits below the
+   public board and reads as a quieter, member-private area, so a cream-tinted
+   band separates it from the group's own listings without a boxed card. */
+.mineSection {
+  padding-block: 40px 80px;
+  background: var(--cream);
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.mineHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.mineSub {
+  margin-block-start: 8px;
+  max-width: 60ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.mineEmpty {
+  margin-block-start: 20px;
+  max-width: 60ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.mineGrid {
+  margin-block-start: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 20px;
+}
+.mineCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 22px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+.mineTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.mineTop .listingTitle {
+  min-width: 0;
+}
+.mineMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* ── The moderator's decision, in their own words ─────────────────────────
+   Amber-tinted so it reads as "something to act on" without the alarm of the
+   destructive tone, matching the sibling listing console. */
+.decision {
+  margin-block: 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(var(--amber-rgb), 0.09);
+  border: 1px solid rgba(var(--amber-rgb), 0.22);
+}
+.decisionHead {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.decisionBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.decisionHint {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
 }

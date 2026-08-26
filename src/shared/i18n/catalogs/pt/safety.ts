@@ -524,29 +524,30 @@ export const safety: Catalog = {
   "spaces.criteria.accessible.lead": "Acessível",
   "spaces.criteria.accessible.rest":
     ", ou as limitações de acesso claramente comunicadas",
-  "spaces.criteria.reviews.lead": "Mínimo de 3 avaliações independentes",
-  "spaces.criteria.reviews.rest": " de pessoas verificadas da QueerPulse",
+  "spaces.criteria.reviews.lead": "Mínimo de 3 visitas independentes",
+  "spaces.criteria.reviews.rest":
+    " de pessoas sem qualquer interesse no espaço",
   "spaces.criteria.annualReview.lead": "Reavaliação anual",
   "spaces.criteria.annualReview.rest": ": o estatuto não dura para sempre",
 
   "spaces.how.step1.title": "Qualquer pessoa pode nomear",
   "spaces.how.step1.desc":
-    "Submete um espaço com uma breve nota sobre porque achas que deve ser verificado. Confirmamos a receção no prazo de 48 horas.",
+    "Submete um espaço com uma breve nota sobre porque achas que deve ser verificado. Confirmamos a receção na aplicação no prazo de 48 horas, e podes acompanhar em que ponto está.",
   "spaces.how.step2.title": "Três visitas independentes",
   "spaces.how.step2.desc":
-    "Três pessoas verificadas visitam o espaço de forma independente e submetem avaliações estruturadas de acordo com os critérios. Não sabem as avaliações umas das outras.",
-  "spaces.how.step3.title": "O painel de revisão decide",
+    "Três pessoas sem qualquer interesse no espaço vão lá e escrevem o que encontraram. Quem nomeou o espaço não conta para as três, e o mesmo vale para quem é proprietárie ou ajuda a geri-lo.",
+  "spaces.how.step3.title": "A equipa de revisão decide",
   "spaces.how.step3.desc":
-    "Um pequeno painel de voluntáries lê as avaliações e decide se os critérios são cumpridos. O espaço só sabe o resultado depois da decisão.",
+    "A equipa de revisão lê as visitas e decide se os critérios são cumpridos. Em qualquer dos casos é obrigatório escrever uma justificação, que fica registada com quem decidiu e quando. O espaço é informado depois da decisão.",
   "spaces.how.step4.title": "Emblema atribuído",
   "spaces.how.step4.desc":
-    "Se aprovado, o espaço recebe um emblema físico e uma ficha digital. Pode exibir o emblema na montra. É conquistado ao cumprir o padrão.",
+    "Se for aprovado, o espaço recebe um nível de confiança e o emblema na sua ficha do diretório, com a data em que foi atribuído. É conquistado ao cumprir o padrão.",
   "spaces.how.step5.title": "Reavaliação anual",
   "spaces.how.step5.desc":
-    "Todas as fichas são reavaliadas todos os anos. Nenhum estatuto é permanente. Mudança de proprietáries, alterações de equipa, ou incidentes denunciados desencadeiam uma revisão antecipada.",
+    "O emblema tem data, e um ano depois o espaço volta à fila de revisão. Nenhum estatuto aqui é permanente, e uma sinalização traz um espaço de volta mais cedo.",
   "spaces.how.step6.title": "Qualquer pessoa pode sinalizar",
   "spaces.how.step6.desc":
-    "Se algo mudar (um incidente, uma mudança de ambiente), qualquer pessoa pode sinalizar a ficha. Três sinalizações desencadeiam uma revisão imediata e a suspensão temporária do emblema.",
+    "Se algo mudar (um incidente, uma mudança de ambiente), qualquer pessoa pode sinalizar a ficha com um motivo. Três sinalizações distintas suspendem o emblema de imediato e abrem uma revisão. O espaço nunca sabe quem sinalizou.",
 
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Espaços seguros LGBTQ+ verificados em Lisboa",
@@ -723,4 +724,247 @@ export const safety: Catalog = {
   "vouchModal.comingSoon.body":
     "Ainda estamos a construir o processo de confiança por trás dos votos de confiança de membros. Ativa a plataforma de demonstração para pré-visualizar o fluxo completo, ou volta em breve.",
   "vouchModal.comingSoon.doneCta": "Fechar",
+
+  // ── SafeSpaceBadgeStatus.tsx — os estados honestos do emblema ─────────
+  "badge.state.none.title": "Sem emblema de espaço seguro",
+  "badge.state.none.lead":
+    "Ainda ninguém nomeou este espaço para uma revisão de espaço seguro.",
+  "badge.state.under_review.title": "Em revisão",
+  "badge.state.under_review.lead":
+    "Este espaço foi nomeado e há pessoas a visitá-lo neste momento. Ainda não tem emblema.",
+  "badge.state.verified.title": "Espaço seguro verificado",
+  "badge.state.verified.titleTier":
+    "Espaço seguro verificado · Nível de confiança {tier}",
+  "badge.state.verified.lead":
+    "Pessoas sem qualquer interesse neste espaço foram lá e ele cumpriu o padrão. O emblema pode ser suspenso se as coisas mudarem.",
+  "badge.state.due.title": "Verificado, e com a reavaliação anual em atraso",
+  "badge.state.due.lead":
+    "O emblema mantém-se. Passou um ano desde que foi atribuído, por isso este espaço está na fila para novas visitas.",
+  "badge.state.suspended.title": "Emblema suspenso enquanto isto é revisto",
+  "badge.state.suspended.lead":
+    "O emblema está suspenso, por isso trata este espaço como não verificado para já. Dizemos aqui quando a revisão fechar.",
+  "badge.state.removed.title": "Emblema retirado",
+  "badge.state.removed.lead":
+    "Este espaço já não cumpre o padrão. O registo do motivo permanece público.",
+  "badge.fact.visits": "Visitas independentes",
+  "badge.fact.visitsValue": "{count} de {required}",
+  "badge.fact.awarded": "Emblema atribuído",
+  "badge.fact.reReview": "Próxima reavaliação",
+  "badge.fact.verifier": "Revisto por",
+
+  // ── SafeSpaceFlagControl.tsx / SafeSpaceFlagModal.tsx ──────────────────
+  "flag.prompt": "Notaste algo diferente por aqui?",
+  "flag.openCta": "Fala connosco",
+  "flag.alreadyNote":
+    "Já assinalaste algo sobre este espaço. A equipa de revisão tem isso.",
+  "flag.withdrawCta": "Retirar",
+  "flag.withdrawnToast": "Retirado",
+  "flag.errorToast": "Não foi possível enviar. Tenta novamente.",
+  "flag.modal.title": "Assinalar algo sobre {name}",
+  "flag.modal.sub": "A equipa de revisão lê todas estas mensagens.",
+  "flag.modal.privacy":
+    "O teu nome nunca chega ao espaço. Só a equipa de revisão vê isto, tal como a autoria de uma denúncia se mantém privada.",
+  "flag.modal.reasonLabel": "Do que se trata?",
+  "flag.modal.detailLabel": "Algo que queiras acrescentar",
+  "flag.modal.detailHelper":
+    "Opcional, e só moderadores leem. Deixa de fora tudo o que preferires não ver registado.",
+  "flag.modal.detailPlaceholder": "O que aconteceu, e quando",
+  "flag.modal.cancelCta": "Cancelar",
+  "flag.modal.sendCta": "Enviar à equipa de revisão",
+  "flag.modal.sendingCta": "A enviar…",
+  "flag.reason.not_safe.label": "Não pareceu seguro",
+  "flag.reason.not_safe.desc": "Aconteceu alguma coisa, ou o ambiente mudou.",
+  "flag.reason.discrimination.label": "Discriminação",
+  "flag.reason.discrimination.desc": "Alguém foi mal tratade por ser quem é.",
+  "flag.reason.staff_conduct.label": "Conduta da equipa",
+  "flag.reason.staff_conduct.desc":
+    "A forma como as pessoas que lá trabalham se comportaram.",
+  "flag.reason.accessibility.label": "O acesso piorou",
+  "flag.reason.accessibility.desc": "Entrar é mais difícil do que a ficha diz.",
+  "flag.reason.closed_or_changed.label": "Fechou ou mudou de proprietáries",
+  "flag.reason.closed_or_changed.desc":
+    "O espaço mudou de mãos, mudou de sítio, ou fechou.",
+  "flag.reason.other.label": "Outra coisa",
+  "flag.reason.other.desc": "Conta-nos pelas tuas palavras.",
+  "flag.done.title": "Obrigade",
+  "flag.done.panelTitle": "A equipa de revisão",
+  "flag.done.panelEm": "tem isto.",
+  "flag.done.alreadyTitle": "Já tinhas assinalado",
+  "flag.done.alreadyEm": "esta situação.",
+  "flag.done.body":
+    "Nada disto é público. Ao espaço é dito que há uma revisão aberta, e nunca quem a abriu.",
+  "flag.done.step.read": "Une moderadore lê e decide o que acontece a seguir.",
+  "flag.done.step.anonymous": "{name} nunca fica a saber quem assinalou isto.",
+  "flag.done.step.threshold":
+    "{count} sinalizações distintas suspendem o emblema de imediato enquanto a revisão decorre.",
+  "flag.done.closeCta": "Fechar",
+
+  // ── AdminSafeSpaceNominationsPage.tsx — a fila de revisão ──────────────
+  "governance.nominations.eyebrow": "Espaços seguros",
+  "governance.nominations.title": "Fila de <em>nomeações.</em>",
+  "governance.nominations.sub":
+    "Mais antigas primeiro, porque a promessa publicada é uma nomeação confirmada no prazo de 48 horas. Tudo o que passou a janela fica marcado.",
+  "governance.scope.open": "Abertas",
+  "governance.scope.decided": "Decididas",
+  "governance.scope.all": "Todas",
+  "governance.sort.oldest": "Mais antigas primeiro",
+  "governance.sort.newest": "Mais recentes primeiro",
+  "governance.filter.breachedOnly": "Só as que passaram a janela",
+  "governance.filter.searchPlaceholder": "Procurar pelo nome do espaço",
+  "governance.summary.inQueue_one": "{count} nomeação nesta vista.",
+  "governance.summary.inQueue_other": "{count} nomeações nesta vista.",
+  "governance.summary.breaching_one":
+    "{count} passou a janela de confirmação de {hours} horas.",
+  "governance.summary.breaching_other":
+    "{count} passaram a janela de confirmação de {hours} horas.",
+  "governance.summary.flags_one":
+    "{count} sinalização nesta vista. {threshold} sinalizações abertas sobre o mesmo espaço suspendem o emblema automaticamente.",
+  "governance.summary.flags_other":
+    "{count} sinalizações nesta vista. {threshold} sinalizações abertas sobre o mesmo espaço suspendem o emblema automaticamente.",
+  "governance.summary.reReview_one":
+    "{count} emblema passou a verificação anual.",
+  "governance.summary.reReview_other":
+    "{count} emblemas passaram a verificação anual.",
+  "governance.empty": "Nada nesta vista de momento.",
+  "governance.status.pending": "À espera",
+  "governance.status.acknowledged": "Confirmada",
+  "governance.status.in_review": "Em revisão",
+  "governance.status.approved": "Emblema atribuído",
+  "governance.status.rejected": "Recusada",
+  "governance.chip.breached": "Passou {hours}h",
+  "governance.chip.acknowledgedLate": "Confirmada tarde",
+  "governance.chip.visits": "{count}/{required} visitas",
+  "governance.chip.unassigned": "Ainda sem ficha",
+  "governance.row.age_one": "À espera há {hours} hora",
+  "governance.row.age_other": "À espera há {hours} horas",
+  "governance.detail.nominatorWords": "Nas palavras de quem nomeou",
+  "governance.detail.clock": "O prazo de 48 horas",
+  "governance.detail.received": "Recebida",
+  "governance.detail.dueBy": "Confirmação devida",
+  "governance.detail.acknowledged": "Confirmada",
+  "governance.detail.notYet": "Ainda não",
+  "governance.detail.placeType": "Tipo de espaço",
+  "governance.detail.address": "Morada",
+  "governance.detail.assignmentNote":
+    "O que foi pedido para as visitas verificarem",
+  "governance.detail.decision": "Decisão e justificação",
+  "governance.detail.trail": "Registo de auditoria",
+  "governance.detail.trailEmpty": "Ainda não há nada registado nesta.",
+  "governance.detail.decide": "Fazer avançar esta nomeação",
+  "governance.detail.openListingCta": "Abrir a ficha",
+  "governance.visits.title": "Três visitas independentes",
+  "governance.visits.unassigned":
+    "Ainda não há nenhuma ficha ligada a esta nomeação, por isso não há contra o que contar visitas. Atribui uma ficha abaixo para a abrir a visitas.",
+  "governance.visits.met":
+    "{count} de {required} visitas independentes. O mínimo está cumprido.",
+  "governance.visits.short":
+    "{count} de {required} visitas independentes. O mínimo ainda não está cumprido.",
+  "governance.visits.notIndependent_one":
+    "Há mais {count} voto de confiança de alguém com interesse no espaço (quem é proprietárie, quem ajuda a geri-lo, ou quem o nomeou). Não conta.",
+  "governance.visits.notIndependent_other":
+    "Há mais {count} votos de confiança de pessoas com interesse no espaço (quem é proprietárie, quem ajuda a geri-lo, ou quem o nomeou). Não contam.",
+  "governance.visits.whoNote":
+    "Os relatos das visitas estão na página do próprio espaço. A decisão é tua, e a contagem fica aqui para que o registo mostre contra o que decidiste.",
+  "governance.audit.nomination_acknowledged": "Confirmada",
+  "governance.audit.nomination_assigned": "Ligada a uma ficha",
+  "governance.audit.nomination_awarded": "Emblema atribuído",
+  "governance.audit.nomination_declined": "Recusada",
+  "governance.audit.nomination_reopened": "Reaberta",
+  "governance.audit.flag_raised": "Sinalização feita",
+  "governance.audit.flag_withdrawn": "Sinalização retirada",
+  "governance.audit.flag_resolved": "Sinalização resolvida",
+  "governance.audit.badge_suspended": "Emblema suspenso",
+  "governance.audit.badge_restored": "Emblema reposto",
+  "governance.action.acknowledgeLabel": "Confirmar esta nomeação",
+  "governance.action.acknowledgeHelper":
+    "Para o prazo de 48 horas e diz a quem nomeou que alguém está a tratar disto. A nota fica interna.",
+  "governance.action.notePlaceholder": "Nota interna (opcional)",
+  "governance.action.acknowledgeCta": "Confirmar",
+  "governance.action.assignLabel": "Ficha em revisão",
+  "governance.action.assignHelper":
+    "A ref ou o slug da ficha. Atribuir abre a nomeação a visitas de membres, e confirma-a se ainda ninguém o tiver feito.",
+  "governance.action.assignPlaceholder": "ref-da-ficha ou slug",
+  "governance.action.assignCta": "Atribuir para visitas",
+  "governance.action.reasonLabel": "Justificação da decisão",
+  "governance.action.reasonHelper":
+    "Obrigatória em qualquer dos casos. Quem nomeou vai ler isto, por isso escreve para essa pessoa.",
+  "governance.action.tierLabel": "Nível de confiança a atribuir",
+  "governance.action.tierOption": "Nível {tier}",
+  "governance.action.awardCta": "Atribuir o emblema",
+  "governance.action.declineCta": "Recusar",
+  "governance.action.reopenLabel": "Motivo da reabertura",
+  "governance.action.reopenHelper":
+    "Devolve a nomeação à fila. O motivo fica registado.",
+  "governance.action.reopenCta": "Reabrir",
+  "governance.toast.acknowledged": "Confirmada",
+  "governance.toast.assigned": "Atribuída para visitas",
+  "governance.toast.awarded": "Emblema atribuído",
+  "governance.toast.declined": "Recusada",
+  "governance.toast.reopened": "Reaberta",
+  "governance.toast.failed": "Não foi possível enviar. Tenta novamente.",
+  "governance.toast.flagUpheld": "Sinalização confirmada",
+  "governance.toast.flagDismissed": "Sinalização arquivada",
+  "governance.toast.suspended": "O emblema de {name} está suspenso",
+  "governance.toast.restored": "O emblema de {name} está de volta",
+
+  // ── AdminSafeSpaceFlagsPage.tsx — sinalizações, suspensões, reavaliação ─
+  "governance.tab.nominations": "Nomeações",
+  "governance.tab.flags": "Sinalizações",
+  "governance.tab.listings": "Fichas",
+  "governance.tab.reReview": "Emblemas a rever",
+  "governance.flags.eyebrow": "Espaços seguros",
+  "governance.flags.title": "Sinalizações e <em>suspensões.</em>",
+  "governance.flags.sub":
+    "O que membres assinalaram sobre espaços com emblema, e que emblemas estão suspensos ou passaram a verificação anual.",
+  "governance.flagState.open": "Abertas",
+  "governance.flagState.resolved": "Resolvidas",
+  "governance.flagState.all": "Todas",
+  "governance.flags.empty": "Nenhuma sinalização nesta vista.",
+  "governance.flags.privacyNote":
+    "Só moderadores. Nunca digas a um espaço quem o sinalizou, e não deixes que uma contagem ou um horário o tornem adivinhável.",
+  "governance.flags.unknownSpace": "Espaço desconhecido",
+  "governance.flags.reviewCta": "Rever",
+  "governance.flags.dismissCta": "Arquivar",
+  "governance.flags.upholdCta": "Confirmar",
+  "governance.flags.noteLabel": "Nota para o registo",
+  "governance.flags.notePlaceholder":
+    "O que encontraste, e o que acontece a seguir",
+  "governance.flags.resolution.upheld": "Confirmada",
+  "governance.flags.resolution.dismissed": "Arquivada",
+  "governance.reReview.empty": "Todos os emblemas estão dentro do prazo.",
+  "governance.reReview.suspendedChip": "Suspenso",
+  "governance.reReview.dueChip_one": "{days} dia de atraso",
+  "governance.reReview.dueChip_other": "{days} dias de atraso",
+  "governance.reReview.openFlags_one": "{count} sinalização aberta",
+  "governance.reReview.openFlags_other": "{count} sinalizações abertas",
+  "governance.reReview.awarded": "Atribuído a {date}",
+  "governance.reReview.noAwardDate": "Sem data de atribuição registada",
+  "governance.reReview.openCta": "Abrir a ficha",
+  "governance.badge.suspendTitle": "Suspender este emblema",
+  "governance.badge.restoreTitle": "Levantar esta suspensão",
+  "governance.badge.suspendCta": "Suspender",
+  "governance.badge.restoreCta": "Repor",
+  "governance.badge.cancelCta": "Cancelar",
+  "governance.badge.suspendNote":
+    "O emblema deixa de aparecer como verificado em todo o lado ao mesmo tempo. A atribuição em si fica intacta e volta quando o repuseres.",
+  "governance.badge.restoreNote":
+    "O emblema volta a falar pelo espaço a partir do momento em que o repuseres.",
+  "governance.badge.reasonLabel": "Motivo",
+  "moderationStance.head": "Como lemos estes casos",
+  "moderationStance.rule.politicalSpeech":
+    "Criticar um Estado, o seu governo, o seu ex\u00e9rcito ou as suas pol\u00edticas \u00e9 discurso pol\u00edtico, e a defesa da Palestina \u00e9 bem-vinda aqui. A defesa dirigida a uma classe de pessoas membras n\u00e3o \u00e9 discurso pol\u00edtico, seja qual for o vocabul\u00e1rio que use.",
+  "moderationStance.rule.noBothSides":
+    "Se uma pessoa membra merece direitos n\u00e3o \u00e9 um debate que acolhemos. N\u00e3o arquives uma den\u00fancia com o argumento de que o outro lado merece ser ouvido.",
+  "moderationStance.rule.neverProveGender":
+    "Nunca pe\u00e7as a uma pessoa membra que prove o seu g\u00e9nero, e encerra qualquer den\u00fancia que equivalha a esse pedido. A norma \u00e9 a autodetermina\u00e7\u00e3o.",
+  "moderationStance.applicantHead":
+    "Est\u00e1s a avaliar uma pessoa, n\u00e3o um perfil",
+  "moderationStance.applicantRule.neverProveIdentity":
+    "Nunca pe\u00e7as a quem se candidata que prove o seu g\u00e9nero, a sua condi\u00e7\u00e3o queer ou a sua identidade, e nunca recuses algu\u00e9m por duvidares disso. A norma \u00e9 a autodetermina\u00e7\u00e3o, aqui como em todo o lado.",
+  "moderationStance.applicantRule.politicsNotAScreen":
+    "A pol\u00edtica n\u00e3o \u00e9 um crit\u00e9rio de triagem. Apoiar a liberta\u00e7\u00e3o da Palestina n\u00e3o \u00e9 um sinal de alarme. Organizar-se contra uma classe de pessoas membras \u00e9, e essa \u00e9 a \u00fanica leitura pol\u00edtica que fazemos.",
+  "moderationStance.applicantRule.judgeTheApplication":
+    "Avalia o que a pessoa escreveu. Um nome, uma fotografia, uma forma de escrever ou um sotaque nas respostas n\u00e3o s\u00e3o prova de nada, e agir com base nisso \u00e9 a falha mais prov\u00e1vel nesta fila.",
+  "moderationStance.link.guidelines": "Diretrizes: as linhas vermelhas",
+  "moderationStance.link.stand": "Onde nos posicionamos",
 };

@@ -4,7 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useLisbonMap } from "./useLisbonMap";
 import { MapLoading } from "./MapLoading";
 import { TYPE_LABEL_KEYS } from "./map.data";
-import { LOCAL_CATEGORY_LABEL_KEYS } from "./localPlaces";
+import { LOCAL_CATEGORY_LABEL_KEYS } from "./localCategories";
 import type { MarkerLabels, VenueMarkerData } from "./venueMarker";
 import s from "./localMap.module.css";
 

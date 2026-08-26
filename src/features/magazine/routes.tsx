@@ -18,6 +18,10 @@ const MagazineSectionArticlesPage = lazyNamed(
   () => import("./MagazineSectionArticlesPage"),
   "MagazineSectionArticlesPage",
 );
+const MagazineSearchPage = lazyNamed(
+  () => import("./MagazineSearchPage"),
+  "MagazineSearchPage",
+);
 const IssuePage = lazyNamed(() => import("./IssuePage"), "IssuePage");
 const IssuesPage = lazyNamed(() => import("./IssuesPage"), "IssuesPage");
 const SubmitStoryPage = lazyNamed(
@@ -51,6 +55,10 @@ const IssueProductionPage = lazyNamed(
 const ArticleEditorPage = lazyNamed(
   () => import("./ArticleEditorPage"),
   "ArticleEditorPage",
+);
+const LifecycleDeskPage = lazyNamed(
+  () => import("./LifecycleDeskPage"),
+  "LifecycleDeskPage",
 );
 const ApplyToWritePage = lazyNamed(
   () => import("./ApplyToWritePage"),
@@ -87,6 +95,10 @@ export function magazineRoutes() {
         path={`${routes.magazineSections}/:section`}
         element={<MagazineSectionArticlesPage />}
       />
+      {/* CON-12 — the magazine's own search and tag browse. Reads `?q=` and
+          `?tag=` from the URL, so a search is shareable and every tag pill in
+          the magazine links here. */}
+      <Route path={routes.magazineSearch} element={<MagazineSearchPage />} />
       <Route path={routes.issue} element={<IssuePage />} />
       {/* CNT-8 fix: a real per-issue route — every archive/masthead link used
           to point at this same bare path (always issue 09), so no past issue
@@ -129,6 +141,10 @@ export function magazineRoutes() {
       <Route path={routes.pitchTracker} element={<PitchTrackerPage />} />
       <Route path={routes.magazineEditor} element={<EditorDashboardPage />} />
       <Route path={routes.magazineWriter} element={<WriterWorkspacePage />} />
+      {/* CON-16 — the lifecycle desk. Declared before the `:id`-bearing editor
+          routes below is unnecessary (no wildcard collides with this literal
+          path), so it sits with the other editor surfaces. */}
+      <Route path={routes.magazineLifecycle} element={<LifecycleDeskPage />} />
       <Route path={routes.deckEditor} element={<DeckEditorPage />} />
       <Route path={routes.magazinePiece} element={<PieceRecordPage />} />
       <Route

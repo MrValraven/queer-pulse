@@ -9,6 +9,8 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { BanRow } from "./ModToolsBanRow";
+import { CommunityRuleBanEditor } from "./CommunityRuleBanEditor";
+import type { CommunityBanDTO } from "./api/communityBans.api";
 import { useCommunityBans, useLiftCommunityBan } from "./api/useCommunityBans";
 import detail from "./CommunityDetailPage.module.css";
 import styles from "./ModToolsPanels.module.css";
@@ -20,18 +22,27 @@ import styles from "./ModToolsPanels.module.css";
  * A ban is otherwise invisible after the moment it is applied: nothing in mod
  * tools said who was barred, by whom, when or why, so the decision could not
  * be reviewed by the people responsible for it. Every row carries all four,
- * because "should this still stand" is unanswerable without them.
+ * because "should this still stand" is unanswerable without them, plus the
+ * term of the bar and the house rule it rests on.
  *
- * Lifting sits behind a confirm: it reverses another moderator's decision.
+ * Two controls per row. Lifting sits behind a confirm, because it reverses
+ * another moderator's decision. Editing opens the terms: an end date on a
+ * permanent bar, a shorter or longer one, a rewritten reason, a rule citation.
+ * Every ban written before timed bans existed is permanent, and that dialog is
+ * how one of them stops being a life sentence.
  */
 export function ModToolsBans({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
-  const { bans, isLoading, isError, refetch } = useCommunityBans(slug);
+  const { bans, rules, isLoading, isError, refetch } = useCommunityBans(slug);
   const liftBan = useLiftCommunityBan(slug);
   const [confirming, setConfirming] = useState<{
     memberSlug: string;
+    name: string;
+  } | null>(null);
+  const [editing, setEditing] = useState<{
+    ban: CommunityBanDTO;
     name: string;
   } | null>(null);
 
@@ -93,6 +104,7 @@ export function ModToolsBans({ slug }: { slug: string }) {
               key={ban.id}
               ban={ban}
               onLift={(memberSlug, name) => setConfirming({ memberSlug, name })}
+              onEdit={(edited, name) => setEditing({ ban: edited, name })}
               formatDate={(iso) => fmt.date(new Date(iso))}
             />
           ))}
@@ -114,6 +126,16 @@ export function ModToolsBans({ slug }: { slug: string }) {
           )}
           onClose={() => setConfirming(null)}
           onConfirm={confirmLift}
+        />
+      )}
+
+      {editing && (
+        <CommunityRuleBanEditor
+          slug={slug}
+          ban={editing.ban}
+          memberName={editing.name}
+          rules={rules}
+          onClose={() => setEditing(null)}
         />
       )}
     </div>

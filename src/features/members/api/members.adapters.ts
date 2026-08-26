@@ -7,6 +7,8 @@ import {
   FiFileText,
   FiMessageCircle,
   FiMusic,
+  FiUserPlus,
+  FiUsers,
 } from "react-icons/fi";
 import type { Member } from "../data/members";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
@@ -32,6 +34,7 @@ import type {
   WorkLinkDTO,
 } from "./members.api";
 import type { MemberCard } from "../memberDirectoryFilter.data";
+import { toActivityBand } from "../activityBand";
 
 const TINTS: AvatarTint[] = ["coral", "plum", "jade"];
 
@@ -63,6 +66,8 @@ const ACTIVITY_ICONS: Record<ActivityKind, IconType> = {
   edit: FiEdit3,
   photo: FiCamera,
   music: FiMusic,
+  community: FiUsers,
+  persona: FiUserPlus,
 };
 
 const KNOWN_WORK_REF_ENTITIES = new Set<WorkRefEntity>([
@@ -184,6 +189,9 @@ export function cardDtoToMemberCard(dto: MemberCardDTO): MemberCard {
     joinedRank: 0,
     vouchCount: dto.vouchCount,
     mutualsCount: 0,
+    // Narrowed rather than cast: a backend ahead of this build must degrade to
+    // no band, never render a raw token.
+    activityBand: toActivityBand(dto.activityBand),
   };
 }
 
@@ -210,6 +218,15 @@ export function profileToMember(dto: ProfileDTO): Member {
     // another member's profile and only carries a real value on the owner's
     // own fetch, matching `ProfileSettingsMenu`'s `resolvedProfile.hiddenUntil` read.
     hiddenUntil: dto.hiddenUntil,
+    // The band the BACKEND decided this viewer may see: it has already applied
+    // the member's opt-out (with the owner exempted), so there is no gate to
+    // re-apply here. See backend `visibleBand`.
+    activityBand: toActivityBand(dto.activityBand),
+    // The gate is the BACKEND's: it sends null when the viewer is this member
+    // or when this member hid their voucher roster, so there is nothing to
+    // re-apply here. `?? null` only normalises a backend that predates the
+    // field. See backend `MutualVoucherCount`.
+    mutualVoucherCount: dto.mutualVoucherCount ?? null,
     discipline: dto.discipline ?? [],
     profession: dto.profession ?? [],
     languages: dto.languages ?? [],
@@ -244,11 +261,14 @@ export function profileToMember(dto: ProfileDTO): Member {
         { title: s.title, note: s.note },
       ]),
     ),
-    activity: (dto.activity ?? []).map((a) => ({
-      icon: ACTIVITY_ICONS[a.kind] ?? FiFileText,
-      title: a.title,
-      sub: a.sub,
-      to: a.to,
+    activity: (dto.activity ?? []).map((activityRow) => ({
+      icon: ACTIVITY_ICONS[activityRow.kind] ?? FiFileText,
+      title: activityRow.title,
+      sub: activityRow.sub ?? null,
+      // Normalised to null so the renderer has one "no destination" case. A
+      // backend that stores no link for this row, and every row written before
+      // links existed, both arrive as null/undefined here.
+      to: activityRow.to ?? null,
     })),
     // "Also in the room": the backend already returns full related-member
     // cards, so we resolve them here into `relatedCards` (name, hood, avatar,

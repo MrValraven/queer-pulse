@@ -145,8 +145,10 @@ export function manageGatheringCounts(
           overviewCounts: {
             going: attendees.goingCount,
             waitlist: attendees.waitlistCount,
+            // Seats, never rows (LOC-07): a going member who declared two
+            // guests occupies three of them.
             spotsLeft: attendees.capacity
-              ? Math.max(0, attendees.capacity - attendees.goingCount)
+              ? Math.max(0, attendees.capacity - attendees.seatsTaken)
               : 0,
           },
         }),

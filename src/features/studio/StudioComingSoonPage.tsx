@@ -31,8 +31,12 @@ export function StudioComingSoonPage() {
           }
           description={t("studio:comingSoon.description")}
           action={{
-            label: t("studio:comingSoon.exploreCulture"),
-            to: routes.culture,
+            // CON-14: this used to point at Culture, which is itself a
+            // demo-only surface that now resolves to its own not-launched page
+            // in live mode. The magazine is the neighbouring surface that
+            // actually publishes.
+            label: t("studio:comingSoon.readMagazine"),
+            to: routes.magazine,
           }}
           secondaryAction={{
             label: t("studio:comingSoon.backHome"),

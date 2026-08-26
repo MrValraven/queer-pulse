@@ -36,6 +36,7 @@ import {
 import { FeedLoadMore } from "./FeedLoadMore";
 import { useFeedPage } from "./useFeedPage";
 import { FeedSidebar } from "./FeedSidebar";
+import { SuggestedPeopleStrip } from "./SuggestedPeopleStrip";
 import styles from "./FeedPage.module.css";
 
 /** react-icons glyph for each tab's empty/error panel. */
@@ -124,7 +125,30 @@ function FeedTabs({
 function renderLiveFeedCard(item: FeedItem, fmt: Formatters): React.ReactNode {
   switch (item.type) {
     case "community_post":
-      return <CommunityPostCard post={feedItemToPost(item, fmt)} />;
+      return (
+        <CommunityPostCard
+          post={feedItemToPost(item, fmt)}
+          // SOC-04: ranking explanation + the counts that make the card
+          // actable. SOC-18: the room this came from, so its menu can offer
+          // "show me less of this" without ever touching membership.
+          signals={{
+            reason: item.reason,
+            reasonSubject: item.reasonSubject,
+            reactionCount: item.reactionCount,
+            replyCount: item.replyCount,
+            myReaction: item.myReaction,
+          }}
+          muteTarget={
+            item.source
+              ? {
+                  sourceKind: item.source.kind,
+                  sourceId: item.source.id,
+                  name: item.source.name,
+                }
+              : undefined
+          }
+        />
+      );
     case "gathering":
       return <GatheringCard item={item} />;
     case "forum_thread":
@@ -248,6 +272,7 @@ export function FeedPage() {
     sidebarLoading,
     sidebarMembers,
     sidebarGatherings,
+    sidebarConnections,
     tabCopy,
   } = useFeedPage();
 
@@ -306,6 +331,11 @@ export function FeedPage() {
 
           <div className={styles.layout}>
             <div>
+              {/* SOC-05: people you might know. Sits ABOVE the tabs on
+                  purpose, so it survives every tab switch instead of
+                  re-mounting with the list, and renders nothing at all when
+                  there is no explainable suggestion to make. */}
+              <SuggestedPeopleStrip />
               <FeedTabs activeTab={targetTab} onSelect={selectTab} />
               {/* useSequencedTabSwap fades the outgoing content (`.leaving`)
                   before committing the swap, then eases this viewport's height
@@ -376,6 +406,7 @@ export function FeedPage() {
               populated={demoMode}
               members={sidebarMembers}
               gatherings={sidebarGatherings}
+              connections={sidebarConnections}
             />
           </div>
         </div>

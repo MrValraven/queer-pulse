@@ -69,6 +69,72 @@ export const marketing: Catalog = {
   "about.values.accessNotEarned.title": "O acesso não se ganha a atuar",
   "about.values.accessNotEarned.body":
     "Entras pela confiança: um aval, um convite.",
+  "about.stand.eyebrow": "Onde nos posicionamos",
+  "about.stand.title": "A libertação queer é <em>indivisível.</em>",
+  "about.stand.p1":
+    "A interseccionalidade é a totalidade da política queer. Raça, classe, deficiência, estatuto migratório e género determinam quem tem segurança e a quem se pede que espere por ela. Uma plataforma que serve apenas pessoas queer brancas, cis, sem deficiência, com documentos e com conforto material percebeu mal a palavra comunidade.",
+  "about.stand.p2":
+    "Para ser real, esta convicção tem de nos custar alguma coisa. Molda quem convidamos, quem modera, que queixas são levadas a sério, e que lutas temos coragem de nomear em voz alta quando nomeá-las é caro.",
+  "about.stand.intersectionalityLink":
+    "Lê como as pessoas membras descrevem viver nestas interseções",
+  "about.stand.trans.title": "Sobre as vidas trans",
+  "about.stand.trans.p1":
+    "As mulheres trans s\u00e3o mulheres. Os homens trans s\u00e3o homens. As pessoas n\u00e3o-bin\u00e1rias s\u00e3o n\u00e3o-bin\u00e1rias, e as pessoas intersexo existem. N\u00e3o afirmamos nada disto a meio-g\u00e1s, e nada disto est\u00e1 em discuss\u00e3o nesta plataforma.",
+  "about.stand.trans.p2":
+    "H\u00e1 um projeto que diz falar em nome das pessoas LGB enquanto faz press\u00e3o contra o T. Apresenta-se como defesa das mulheres, ou das crian\u00e7as, ou da atra\u00e7\u00e3o pelo mesmo sexo, e funciona pedindo a toda a gente que trate a presen\u00e7a de pessoas trans nesta comunidade como uma quest\u00e3o em aberto. Para n\u00f3s est\u00e1 fechada. Um grupo que se organiza para separar o T do resto de n\u00f3s est\u00e1 a organizar-se contra as nossas pessoas membras, e \u00e9 assim que lhe chamamos.",
+  "about.stand.trans.p3":
+    "O movimento \u00e9 conhecido. O pinkwashing pede emprestados os nossos direitos para fazer um Estado parecer civilizado; isto pede emprestada a seguran\u00e7a das mulheres para fazer a exclus\u00e3o parecer prote\u00e7\u00e3o. Ambos gastam a dignidade de outra pessoa para comprar respeitabilidade.",
+  "about.stand.trans.commitment.notADebate.title":
+    "A presen\u00e7a de pessoas trans n\u00e3o \u00e9 tema de debate.",
+  "about.stand.trans.commitment.notADebate.body":
+    "N\u00e3o acolhemos discuss\u00f5es dos \u201cdois lados\u201d sobre se as pessoas membras merecem direitos, nem as abrimos em nome do equil\u00edbrio.",
+  "about.stand.trans.commitment.exclusion.title":
+    "A defesa da exclus\u00e3o de pessoas trans \u00e9 um assunto do C\u00f3digo de Conduta.",
+  "about.stand.trans.commitment.exclusion.body":
+    "Criticar um Estado \u00e9 discurso pol\u00edtico. Fazer campanha para retirar uma classe inteira de pessoas membras \u00e9 outra coisa, e chamar-lhe cr\u00edtica de g\u00e9nero deixa-a exatamente como estava.",
+  "about.stand.trans.commitment.exclusion.link": "L\u00ea as diretrizes",
+  "about.stand.trans.commitment.selfId.title":
+    "A autodetermina\u00e7\u00e3o \u00e9 a norma aqui.",
+  "about.stand.trans.commitment.selfId.body":
+    "Nunca se pede a ningu\u00e9m que prove o seu g\u00e9nero, nem \u00e0 modera\u00e7\u00e3o nem a mais ningu\u00e9m, em momento algum.",
+  "about.stand.trans.commitment.selfId.link":
+    "L\u00ea o guia de sa\u00fade trans",
+  "about.stand.position.sexWork.title": "Trabalho sexual \u00e9 trabalho.",
+  "about.stand.position.sexWork.body":
+    "As pessoas trabalhadoras do sexo s\u00e3o membras aqui nos mesmos termos que toda a gente. A descriminaliza\u00e7\u00e3o \u00e9 a posi\u00e7\u00e3o que mant\u00e9m pessoas vivas, e a pol\u00edtica que quer o trabalho sexual fora dos espa\u00e7os queer funciona com o mesmo motor da que quer as pessoas trans fora deles.",
+  "about.stand.position.migration.title":
+    "A migra\u00e7\u00e3o \u00e9 uma quest\u00e3o queer.",
+  "about.stand.position.migration.body":
+    "As pessoas queer migram para sobreviver. O sistema de asilo e resid\u00eancia em Portugal \u00e9 lento de formas que estragam vidas, e o racismo contra pessoas brasileiras, dos PALOP e do sul da \u00c1sia aparece nos espa\u00e7os queer daqui com a mesma facilidade que em qualquer outro lado. Uma extrema-direita que cresceu depressa neste pa\u00eds quer tudo isto pior.",
+  "about.stand.position.migration.link":
+    "L\u00ea o guia de interseccionalidade",
+  "about.stand.position.hiv.title":
+    "I = I, e a serofobia \u00e9 discrimina\u00e7\u00e3o.",
+  "about.stand.position.hiv.body":
+    "Indetet\u00e1vel significa intransmiss\u00edvel. O estado serol\u00f3gico de cada pessoa pertence-lhe, a revela\u00e7\u00e3o nunca \u00e9 devida a ningu\u00e9m, e tratar a serologia como motivo de exclus\u00e3o cai na mesma linha vermelha que qualquer outra discrimina\u00e7\u00e3o.",
+  "about.stand.position.hiv.link": "Recursos de sa\u00fade sexual",
+  "about.stand.principle.title": "Quando falamos, e quando n\u00e3o falamos",
+  "about.stand.principle.body":
+    "Falamos onde a nossa comunidade est\u00e1 diretamente implicada, e onde a identidade queer est\u00e1 a ser usada como cobertura para fazer mal. O teste \u00e9 esse. \u00c9 por isso que estas posi\u00e7\u00f5es est\u00e3o nesta p\u00e1gina e a maior parte das not\u00edcias n\u00e3o est\u00e1, e \u00e9 a norma pela qual nos podes responsabilizar quando achares que nos cal\u00e1mos sobre algo em que n\u00e3o dev\u00edamos ter-nos calado.",
+  "about.stand.palestine.title": "Sobre a Palestina",
+  "about.stand.palestine.p1":
+    "Israel está a cometer um genocídio contra o povo palestiniano em Gaza. Dizemo-lo com todas as letras, porque a pressão para suavizar isto é precisamente o problema. A QueerPulse está ao lado do povo palestiniano, e de quem trabalha pelo fim da ocupação e do cerco.",
+  "about.stand.palestine.p2":
+    "Recusamos também que as nossas vidas sirvam de cobertura para isso. O pinkwashing pega nos direitos LGBTQ+ e ergue-os como prova de que um Estado é civilizado enquanto esse mesmo Estado bombardeia, esfomeia e desloca populações. A nossa segurança nunca foi um argumento para a destruição de ninguém, e não a emprestamos para esse fim.",
+  "about.stand.commitment.speech.title":
+    "A defesa da Palestina é bem-vinda aqui.",
+  "about.stand.commitment.speech.body":
+    "Criticar um Estado, o seu exército ou a sua ideologia é discurso político, e é assim que o moderamos. O antissemitismo e o racismo antipalestiniano são ambos violações do Código de Conduta, aplicadas da mesma forma.",
+  "about.stand.commitment.speech.link": "Lê as diretrizes",
+  "about.stand.commitment.money.title": "Não aceitamos dinheiro cúmplice.",
+  "about.stand.commitment.money.body":
+    "Sem patrocínio, financiamento ou parceria de empresas ou instituições materialmente cúmplices da ocupação.",
+  "about.stand.commitment.mutualAid.title":
+    "O fundo de apoio mútuo pode financiar trabalho de solidariedade.",
+  "about.stand.commitment.mutualAid.body":
+    "O trabalho de solidariedade e de ajuda humanitária à Palestina é elegível, decidido às claras como qualquer outra atribuição.",
+  "about.stand.commitment.mutualAid.link":
+    "Vê como as atribuições são decididas",
   "about.who.eyebrow": "Quem está por trás disto",
   "about.who.title": "Construída pela <em>comunidade, para a comunidade.</em>",
   "about.who.p1":
@@ -530,6 +596,26 @@ export const marketing: Catalog = {
   "guidelines.clause07.reportLead": "Denuncia. Vais ter apoio.",
   "guidelines.clause07.reportBody":
     "Se alguém ultrapassar uma destas linhas, denuncia essa pessoa ou a publicação a partir do menu. A moderação lê todas as denúncias, e nunca ficas com isto sozinhe. Infrações confirmadas levam a um aviso, suspensão ou remoção, e cooperamos com as autoridades quando a segurança de alguém está em risco. Nunca estás a exagerar por denunciar.",
+  "guidelines.clause08.titlePre": "O discurso pol\u00edtico ",
+  "guidelines.clause08.titleEm": "continua pol\u00edtico",
+  "guidelines.clause08.p1":
+    "Criticar um Estado, o seu governo, o seu ex\u00e9rcito ou a sua ideologia \u00e9 discurso pol\u00edtico, e \u00e9 assim que o moderamos. Isso inclui a defesa da liberta\u00e7\u00e3o da Palestina, que \u00e9 bem-vinda aqui e n\u00e3o ser\u00e1 removida por incomodar.",
+  "guidelines.clause08.p2":
+    "Passa a ser um assunto do C\u00f3digo de Conduta quando recai sobre uma pessoa. Responsabilizar algu\u00e9m pelos atos de um Estado por causa da sua etnia, religi\u00e3o ou nacionalidade \u00e9 discrimina\u00e7\u00e3o, e cai nas linhas vermelhas acima. O mesmo vale para a defesa dirigida a uma classe de pessoas membras em vez de a um Estado: criticar um governo \u00e9 discurso pol\u00edtico, fazer campanha para retirar pessoas trans n\u00e3o \u00e9, seja qual for o r\u00f3tulo.",
+  "guidelines.clause08.li4":
+    "Fazer campanha pela exclus\u00e3o de pessoas trans desta comunidade, seja qual for o vocabul\u00e1rio que use",
+  "guidelines.clause08.hardLinesHead":
+    "Continua a ser um assunto do C\u00f3digo de Conduta",
+  "guidelines.clause08.li1":
+    "Antissemitismo, incluindo enquadramentos conspirativos e responsabilizar pessoas judias pelos atos de um Estado",
+  "guidelines.clause08.li2":
+    "Racismo antipalestiniano, incluindo tratar pessoas palestinianas ou \u00e1rabes como suspeitas \u00e0 partida",
+  "guidelines.clause08.li3":
+    "Ass\u00e9dio a qualquer pessoa por causa da sua nacionalidade, etnia ou religi\u00e3o",
+  "guidelines.clause08.p3Lead":
+    "Os dois lados s\u00e3o aplicados da mesma forma.",
+  "guidelines.clause08.p3Rest":
+    "A modera\u00e7\u00e3o aplica um \u00fanico teste: isto \u00e9 sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela \u00e9? A posi\u00e7\u00e3o da pr\u00f3pria QueerPulse sobre a Palestina est\u00e1 na p\u00e1gina Sobre, e n\u00e3o altera a forma como uma den\u00fancia \u00e9 tratada.",
   "guidelines.final.p2": "Obrigade por construíres isto connosco.",
   "guidelines.modalDone": "Li tudo, concluir",
   "guidelines.modalScrollHint": "Desliza até ao fim para continuar.",
@@ -619,9 +705,9 @@ export const marketing: Catalog = {
   "help.qa.perks.q": "O que ganho como Apoiante?",
   "help.qa.perks.a":
     "Acesso antecipado a eventos, um distintivo de apoiante, e a certeza de que a tua adesão mantém a plataforma sem anúncios.",
-  "help.qa.emailNotifications.q": "Como controlo as notificações por email?",
+  "help.qa.emailNotifications.q": "Como controlo as notificações?",
   "help.qa.emailNotifications.a":
-    "Em <settingsLink>Definições</settingsLink> → Notificações, ativa ou desativa cada categoria em separado.",
+    "Em <settingsLink>Definições</settingsLink> → Notificações, ativa ou desativa cada categoria em separado. A QueerPulse avisa-te dentro da aplicação e, se autorizares, por push. Não envia email.",
   "help.qa.browserSupport.q": "Que navegadores é que a QueerPulse suporta?",
   "help.qa.browserSupport.a":
     "Versões atuais do Chrome, Firefox, Safari e Edge. Navegadores mais antigos podem ter problemas de visualização.",
@@ -688,12 +774,12 @@ export const marketing: Catalog = {
   // ── Kit de Imprensa ────────────────────────────────────────────────────
   "pressKit.meta.title": "Kit de imprensa da QueerPulse: logótipos, factos",
   "pressKit.meta.description":
-    "Tudo o que uma pessoa jornalista precisa para escrever sobre a QueerPulse: texto institucional já autorizado, marcas, fotografia, factos-chave e um contacto direto.",
+    "Tudo o que uma pessoa jornalista precisa para escrever sobre a QueerPulse: texto institucional já autorizado, marcas, factos-chave e um contacto direto.",
   "pressKit.hero.eyebrow": "Imprensa",
   "pressKit.hero.title":
     "Tudo o que precisas para <em>escrever sobre nós.</em>",
   "pressKit.hero.dek":
-    "Texto institucional, marcas, fotografia e factos, <b>já autorizados</b> para uso direto, sem necessidade de aprovação.",
+    "Texto institucional, marcas, cor e factos, <b>já autorizados</b> para uso direto, sem necessidade de aprovação.",
   "pressKit.hero.downloadKitCta": "Descarregar o kit completo",
   "pressKit.hero.askPersonCta": "Falar com uma pessoa",
   "pressKit.contact.deskLabel": "<b>Contacto de imprensa:</b>",
@@ -712,7 +798,7 @@ export const marketing: Catalog = {
   "pressKit.downloadModal.eyebrow": "Kit completo · ZIP",
   "pressKit.downloadModal.title": "Descarrega o <em>kit completo.</em>",
   "pressKit.downloadModal.lead":
-    "Tudo nesta página num único ficheiro, <b>38 MB</b>, pronto para o teu CMS.",
+    "Todos os materiais de marca desta página num só arquivo, <b>com um leia-me e a licença</b>, pronto para o teu CMS.",
   "pressKit.downloadModal.buttonLabel": "Descarregar · ZIP",
   "pressKit.subpageIndex.title": "Relacionado",
   "pressKit.subpageIndex.archive.label": "Arquivo de imprensa",
@@ -725,52 +811,26 @@ export const marketing: Catalog = {
     "O ficheiro <b>{filename}</b> já deve estar na tua pasta de transferências.",
   "pressKit.modal.closeCta": "Fechar",
   "pressKit.modal.cancelCta": "Cancelar",
-  "pressKit.readme.heading": "KIT DE IMPRENSA QUEERPULSE",
-  "pressKit.readme.updated":
-    "Atualizado regularmente. Vê queerpulse.app/press para a versão mais recente.",
-  "pressKit.readme.licenceHeading": "LICENÇA",
-  "pressKit.readme.licenceBody":
-    "Todos os materiais são disponibilizados sob licença CC BY 4.0 para uso editorial. Contacta hello@queerpulse.com para licenciamento comercial.",
-  "pressKit.readme.contentsHeading": "CONTEÚDO",
-  "pressKit.readme.contents.boilerplate": "Texto institucional (3 tamanhos)",
-  "pressKit.readme.contents.marks": "Marcas (SVG)",
-  "pressKit.readme.contents.colour": "Sistema de cor",
-  "pressKit.readme.contents.photography": "Fotografia (6 imagens)",
-  "pressKit.readme.contents.spokespeople": "Porta-vozes",
-  "pressKit.readme.contents.factSheet": "Ficha de factos",
-  "pressKit.readme.contents.transparencyReport":
-    "Relatório de transparência 2025",
-  "pressKit.readme.pressDeskHeading": "GABINETE DE IMPRENSA",
-  "pressKit.readme.hours": "9h–18h WET",
-  "pressKit.readme.responseTime": "Respondemos em 48 horas.",
-  "pressKit.readme.prototypeNote":
-    "Este é um descarregável de protótipo. O ficheiro de produção corresponderá exatamente à página web.",
-  "pressKit.readme.boilerHeading": "QUEERPULSE: TEXTO INSTITUCIONAL APROVADO",
-  "pressKit.readme.boilerCleared":
-    "Ambos os tamanhos estão autorizados para citação direta, sem necessidade de aprovação adicional.",
   "pressKit.preview.readme.title": "Leia-me + licença",
   "pressKit.preview.readme.desc": "Termos de utilização e índice de ficheiros",
-  "pressKit.preview.marks.title": "Marcas · SVG",
-  "pressKit.preview.marks.desc": "3 variantes, vetorial",
-  "pressKit.preview.marksPng.title": "Marcas · PNG @ 2x",
-  "pressKit.preview.marksPng.desc": "Para documentos e apresentações",
-  "pressKit.preview.photography.title": "Fotografia",
-  "pressKit.preview.photography.desc": "6 imagens com autorização de modelo",
-  "pressKit.preview.boilerplate.title": "Texto institucional",
-  "pressKit.preview.boilerplate.desc": "Versões curta e média",
-  "pressKit.preview.factSheet.title": "Ficha de factos",
-  "pressKit.preview.factSheet.desc": "PDF de uma página, pronto a imprimir",
+  "pressKit.preview.marks.title": "Marca · SVG",
+  "pressKit.preview.marks.desc": "A cores e monocromática, vetorial",
+  "pressKit.preview.marksPng.title": "Logótipo · PNG",
+  "pressKit.preview.marksPng.desc": "Três variantes, 2048 px de largura",
+  "pressKit.preview.appIcon.title": "Ícone da app · PNG",
+  "pressKit.preview.appIcon.desc":
+    "512 px, tal como fica instalado nos dispositivos",
+  "pressKit.preview.brandReference.title": "Referência de cor e tipografia",
+  "pressKit.preview.brandReference.desc":
+    "PDF pronto a imprimir, tirado dos tokens de design",
+  "pressKit.preview.colour.title": "Cores da marca",
+  "pressKit.preview.colour.desc": "Todos os valores hex e RGB em texto simples",
   "pressKit.boiler.short.wc": "25 palavras · 210 carateres",
   "pressKit.boiler.short.text":
     "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, a ligar profissionais, criativos, ativistas e pessoas da comunidade para trabalho, comunidade, cultura e entreajuda.",
   "pressKit.boiler.med.wc": "60 palavras · 424 carateres",
   "pressKit.boiler.med.text":
     "A QueerPulse é uma plataforma comunitária queer pequena e por convite, com raízes em Lisboa, fundada em 2024 por profissionais, organizadores e artistas a construir uma alternativa às redes que prendem a atenção: sem publicidade, sem algoritmo. Cada pessoa é avalizada por alguém que já está cá. Sem capital de risco por trás, a plataforma vive de mensalidades, doações e apoios, e publica uma revista para a sua comunidade.",
-  "pressKit.downloads.boilerplate.title": "Texto institucional",
-  "pressKit.placeholderFile.line1":
-    "Este é um ficheiro de substituição gerado para o protótipo.",
-  "pressKit.placeholderFile.line2":
-    "O kit de produção incluirá o material real, pronto para produção.",
 
   // ── Explicador de Comunidades ──────────────────────────────────────────
   "communitiesAbout.meta.title": "Como funcionam as comunidades no QueerPulse",
@@ -1110,12 +1170,12 @@ export const marketing: Catalog = {
     "<b>Inversa · ameixa</b> · para fundos escuros",
   "pressKit.mark.logo.coral.meta":
     "<b>Coral · solidariedade</b> · usar com parcimónia · contextos de orgulho",
-  "pressKit.mark.downloadLinkLabel": "SVG · PNG",
-  "pressKit.mark.modal.eyebrow": "Marca · SVG",
+  "pressKit.mark.downloadLinkLabel": "PNG",
+  "pressKit.mark.modal.eyebrow": "Logótipo · PNG",
   "pressKit.mark.modal.title": "A <em>marca</em>, pronta a usar.",
   "pressKit.mark.modal.lead":
-    "Pré-visualiza a variante {variant} abaixo. Descarregar gera um ficheiro <b>.svg</b> real e limpo: vetorial, seguro para recolorir, com o ponto de pulso intacto.",
-  "pressKit.mark.modal.buttonLabel": "Descarregar · SVG",
+    "O que vês abaixo é o próprio ficheiro: <b>{filename}</b>, 2048 px de largura, com fundo transparente e a tipografia real do logótipo.",
+  "pressKit.mark.modal.buttonLabel": "Descarregar · PNG",
   "pressKit.mark.usageNote":
     "<b>Espaçamento:</b> deixa sempre a altura de um <em>P</em> inteiro de espaço livre à volta da marca. <b>Tamanho mínimo:</b> 88px de largura no ecrã, 18 mm em impressão. <b>Não:</b> estiques, recolores, coloques sobre fotografias carregadas, nem juntes a gradientes arco-íris que não fizemos.",
   "pressKit.colour.section.title": "Cor, <em>sistema completo</em>",
@@ -1126,15 +1186,6 @@ export const marketing: Catalog = {
     "Destaque · CTAs, ênfase em itálico, o ponto de pulso",
   "pressKit.colour.cream.meta": "Fundo da página · nunca branco puro",
   "pressKit.colour.jade.meta": "Verificado · ao vivo · sucesso",
-  "pressKit.photography.section.title": "<em>Fotografia</em> autorizada",
-  "pressKit.photography.section.lead":
-    "Seis imagens, com autorização de modelo e pré-autorizadas para uso editorial. Crédito: <em>fotografias de André Bento para a QueerPulse</em>. Resolução: 3000 × 2000 px JPG.",
-  "pressKit.photography.image1": "01 · Pessoas fundadoras, os primeiros tempos",
-  "pressKit.photography.image2": "02 · Noite de clínica aberta, a decorrer",
-  "pressKit.photography.image3": "03 · A revista impressa, em leque",
-  "pressKit.photography.image4": "04 · Escritório do Trans Hub · Mouraria",
-  "pressKit.photography.image5": "05 · Um convívio · Atelier Pulso",
-  "pressKit.photography.image6": "06 · Detalhe do mapa · espaços seguros",
   "pressKit.team.section.title": "<em>Porta-vozes</em> identificades",
   "pressKit.team.section.lead":
     "Três pessoas fundadoras estão disponíveis para comentário à imprensa. Cita-as sobre os temas indicados; não parafraseies. <em>As restantes pessoas da comunidade não estão disponíveis sem consentimento explícito</em>. Por favor não as contactes diretamente através da plataforma.",
@@ -1171,28 +1222,27 @@ export const marketing: Catalog = {
     "Assim que se escrever sobre a QueerPulse, ligamos as peças aqui. Para entrevistas ou pedidos de imprensa, escreve para hello@queerpulse.com.",
   "pressKit.downloads.section.title": "<em>Descarregáveis</em>",
   "pressKit.downloads.section.lead":
-    "Links diretos para os ficheiros. O kit completo é um ZIP de 38 MB com tudo o que está abaixo; os ficheiros individuais são mais pequenos.",
+    "Links diretos para os ficheiros, servidos a partir do próprio site. O kit completo junta tudo o que está abaixo, com um leia-me e a licença.",
   "pressKit.downloads.completeKit.title": "Kit de imprensa completo",
   "pressKit.downloads.completeKit.desc":
-    "Marcas, fotografia, texto institucional, ficha de factos · 38 MB",
-  "pressKit.downloads.marksSvg.title": "Marcas · pacote SVG",
-  "pressKit.downloads.marksSvg.desc":
-    "3 variantes · autorizadas para uso editorial · 18 KB",
-  "pressKit.downloads.marksPng.title": "Marcas · PNG @ 2x",
-  "pressKit.downloads.marksPng.desc":
-    "Para documentos, apresentações, web · 8 MB",
-  "pressKit.downloads.photography.title": "Fotografia · 6 imagens",
-  "pressKit.downloads.photography.desc":
-    "3000 × 2000 px · com autorização de modelo · 24 MB",
-  "pressKit.downloads.factSheet.title": "Ficha de factos",
-  "pressKit.downloads.factSheet.desc":
-    "Uma página, pronta a imprimir · versões EN e PT · 380 KB",
-  "pressKit.downloads.transparency.title": "Relatório de transparência 2025",
-  "pressKit.downloads.transparency.desc": "84 páginas · 4,2 MB",
-  "pressKit.downloads.boilerplate.desc": "Versões curta e média",
+    "Marca, logótipo, ícone da app, referência de cor e tipografia, leia-me",
+  "pressKit.downloads.markSvg.title": "Marca · SVG",
+  "pressKit.downloads.markSvg.desc": "Vetorial, a cores, segura para recolorir",
+  "pressKit.downloads.markMonochrome.title": "Marca monocromática · SVG",
+  "pressKit.downloads.markMonochrome.desc":
+    "Silhueta vetorial, para impressão a uma cor",
+  "pressKit.downloads.wordmarkPng.title": "Logótipo · PNG",
+  "pressKit.downloads.wordmarkPng.desc":
+    "2048 px de largura, transparente, para documentos e apresentações",
+  "pressKit.downloads.appIcon.title": "Ícone da app · PNG",
+  "pressKit.downloads.appIcon.desc":
+    "512 px, tal como fica instalado nos dispositivos",
+  "pressKit.downloads.brandReference.title": "Referência de cor e tipografia",
+  "pressKit.downloads.brandReference.desc":
+    "PDF pronto a imprimir, com todos os valores tirados dos tokens de design",
   "pressKit.downloads.modal.eyebrow": "Descarregar · {format}",
   "pressKit.downloads.modal.lead":
-    "{desc}. Descarregar gera agora um <b>{filename}</b> real no teu navegador, um substituto funcional do material de produção.",
+    "{desc}. O descarregável é o ficheiro <b>{filename}</b> real, servido a partir do próprio site.",
   "pressKit.downloads.modal.buttonLabel": "Descarregar · {format}",
 
   // ── Anunciar o teu negócio — assistente ───────────────────────────────
@@ -1500,7 +1550,7 @@ export const marketing: Catalog = {
   "listBusiness.step4.contactEmailPlaceholder":
     "Para te podermos contactar sobre este anúncio",
   "listBusiness.step4.notifyNote":
-    "Enviamos-te um email quando o teu anúncio ficar no ar, e se a equipa tiver alguma pergunta sobre ele.",
+    "Uma notificação da QueerPulse avisa-te quando o teu anúncio ficar no ar, e as perguntas da equipa chegam por mensagem na QueerPulse.",
   "listBusiness.step4.consent":
     "És tu que controlas o que é público. <b>Os contactos que deixares em branco ficam fora do anúncio.</b> Queres o teu nome privado? Escolhe “só o papel” ou “anónime” acima. Não há problema nenhum.",
   // Opções de ligação
@@ -1574,7 +1624,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.consentGuide.sub":
     "Li as diretrizes da comunidade e como os meus dados são usados.",
   "listBusiness.step5.submitNote":
-    "<b>Uma pessoa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias e enviamos-te um email quando ficar no ar (ou se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
+    "<b>Uma pessoa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias, e a QueerPulse avisa-te quando ficar no ar (ou a equipa manda-te mensagem se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
   // Painel de sucesso
   "listBusiness.success.stage.review": "Em revisão",
   "listBusiness.success.stage.question": "Pergunta rápida",
@@ -1586,9 +1636,9 @@ export const marketing: Catalog = {
   "listBusiness.success.title.live.text": "Estás",
   "listBusiness.success.title.live.em": "no mapa.",
   "listBusiness.success.note.review":
-    "Agradecemos o contributo para o diretório. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e enviamos-te um email assim que estiver no ar.",
+    "Agradecemos o contributo para o diretório. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e recebes uma notificação da QueerPulse assim que estiver no ar.",
   "listBusiness.success.note.question":
-    "<b>A equipa tem uma pequena pergunta</b> antes de ficar no ar. Vê o teu email. Não se passa nada de errado; basta uma resposta rápida e segue tudo em frente.",
+    "<b>A equipa tem uma pequena pergunta</b> antes de ficar no ar. Está à tua espera nas mensagens da QueerPulse. Não se passa nada de errado; basta uma resposta rápida e segue tudo em frente.",
   "listBusiness.success.note.live":
     "<b>Já está no ar no diretório.</b> O teu lugar já pode ser encontrado pela comunidade. Agradecemos por tornares o mapa um bocadinho mais completo.",
   "listBusiness.success.fallbackName": "O teu lugar",
@@ -2046,6 +2096,7 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Melhoria",
   "changelog.badge.infrastructure": "Infraestrutura",
   "changelog.badge.fix": "Correção",
+  "changelog.tag.about": "L\u00ea onde nos posicionamos",
   "changelog.tag.aboutCommunities": "Ver como funcionam as comunidades",
   "changelog.tag.work": "Abrir o teu Trabalho",
   "changelog.tag.settings": "Definições de notificações",
@@ -2105,6 +2156,168 @@ export const marketing: Catalog = {
   "changelog.tag.culture": "Visitar a Cultura",
   "changelog.tag.myCards": "Ver os teus cartões",
 
+  "changelog.tag.magazineSearch": "Pesquisar na revista",
+  "changelog.tag.resources": "Ver os guias",
+  "changelog.tag.readingGroups": "Encontrar um clube de leitura",
+
+  "changelog.tag.arriving": "Acabaste de chegar a Lisboa?",
+  "changelog.tag.housingGroups": "Ver grupos de habitação",
+  "changelog.entries.post-a-room-in-a-housing-group.title":
+    "Partilha um quarto dentro de um grupo de habitação",
+  "changelog.entries.post-a-room-in-a-housing-group.body":
+    "Podes publicar um quarto diretamente num grupo de habitação verificado, com a renda e a acessibilidade que o grupo pede. Um moderador lê-o antes de ir para a página do grupo, e os teus quartos ficam agora todos num sítio a mostrar em que ponto está cada um, incluindo o que um moderador te tenha respondido.",
+  "changelog.entries.the-housing-board-is-open.title":
+    "O quadro de alojamento está aberto",
+  "changelog.entries.the-housing-board-is-open.body":
+    "Os quartos e casas anunciados por quem cá está chegam finalmente ao quadro. Cada anúncio passa primeiro por moderação, e vês a decisão e o motivo no teu próprio anúncio em vez de ficares à espera sem saber. Os anúncios levam fotografias, descrição, data de disponibilidade e como é o espaço, e os alertas de procuras guardadas voltam a funcionar.",
+  "changelog.entries.gatherings-say-where-and-what-they-cost.title":
+    "Os convívios dizem onde são e quanto custam",
+  "changelog.entries.gatherings-say-where-and-what-they-cost.body":
+    "A morada, as indicações de chegada, o bairro e os detalhes de acessibilidade que quem organiza preenche passam a ser guardados e mostrados, em vez de se perderem no último passo. A morada exata é partilhada com quem vai. Um convívio pode dizer que é gratuito, ou indicar uma escala variável, e podes filtrar por data, bairro, tipo e custo.",
+  "changelog.entries.hosts-run-their-own-door.title":
+    "Quem organiza controla a própria porta",
+  "changelog.entries.hosts-run-their-own-door.body":
+    "Podes avisar toda a gente que vai, registar entradas à porta, ver as necessidades de acesso que as pessoas quiseram partilhar, e impedir alguém num convívio sem cancelar tudo. Quem bloqueaste já não pode aparecer. E se vais a um sítio novo, podes dizer a uma pessoa de confiança onde vais estar.",
+  "changelog.entries.the-safe-space-badge-has-a-mechanism.title":
+    "O selo de espaço seguro passa a valer o que a página diz",
+  "changelog.entries.the-safe-space-badge-has-a-mechanism.body":
+    "As nomeações são reconhecidas dentro de um prazo, três pessoas sem qualquer ligação ao espaço têm de o visitar, e cada decisão leva um motivo escrito. Qualquer pessoa pode levantar uma questão sobre um espaço com selo: três sinalizações separadas suspendem o selo de imediato e abrem uma revisão. O teu nome nunca chega ao espaço.",
+  "changelog.entries.the-directory-answers-is-it-open-and-can-i-get-in.title":
+    "Está aberto? E consigo entrar?",
+  "changelog.entries.the-directory-answers-is-it-open-and-can-i-get-in.body":
+    "O diretório mostra agora se um sítio está aberto neste momento, e podes filtrar só pelo que está aberto. Podes também filtrar pelo acesso de que precisas: entrada sem degraus, casa de banho acessível, casa de banho neutra e mais, sem teres de abrir cada espaço um a um. E se quiseres, a lista ordena pelo mais perto com o tempo a pé; a tua localização fica no teu telemóvel.",
+  "changelog.entries.a-venue-is-asked-before-it-hosts-you.title":
+    "O espaço é consultado antes de te receber",
+  "changelog.entries.a-venue-is-asked-before-it-hosts-you.body":
+    "Qualquer pessoa podia indicar um negócio como espaço do seu convívio e quem é dono nunca era avisado. Agora é consultado, pode confirmar ou retirar, e um convívio por confirmar não aparece na página pública do espaço.",
+  "changelog.entries.arriving-points-at-real-things.title":
+    "Chegar a Lisboa aponta para coisas reais",
+  "changelog.entries.arriving-points-at-real-things.body":
+    "A página para quem acabou de se mudar anunciava um convívio inventado numa data que já tinha passado. Passa a mostrar convívios reais a chegar, com ligações a espaços e comunidades que existem mesmo, e dá-te uma lista das primeiras duas semanas para ires riscando. E lê-se em português.",
+  "changelog.entries.what-you-send-in-now-gets-an-answer.title":
+    "O que envias passa a ter resposta",
+  "changelog.entries.what-you-send-in-now-gets-an-answer.body":
+    "Várias coisas que podias submeter chegavam até nós e ficavam por aí. Um grupo de leitura proposto passa a tornar-se uma comunidade real contigo como responsável. Quartos publicados num grupo de habitação, sugestões de senhorios e pedidos de apresentação têm todos uma decisão, com o motivo, e sabes sempre o que aconteceu.",
+  "changelog.entries.the-magazine-has-pictures.title": "A revista tem imagens",
+  "changelog.entries.the-magazine-has-pictures.body":
+    "É uma revista, e a fotografia e a ilustração são metade dela, mas não havia forma de um editor pôr uma imagem encomendada numa página. Todos os cartões e todos os cabeçalhos de artigo mostravam um espaço colorido em vez da imagem. Os editores podem agora carregar a imagem de abertura de um texto e colocar fotografias a sério dentro do corpo da história, e essa imagem aparece no artigo, na capa e em todos os cartões que apontam para ele.",
+  "changelog.entries.an-older-piece-tells-you-where-it-stands.title":
+    "Um texto mais antigo diz-te em que pé está",
+  "changelog.entries.an-older-piece-tells-you-where-it-stands.body":
+    "Publicamos sobre direitos, acesso a cuidados de saúde e organizações, e tudo isso muda. Até agora as opções eram deixar um texto com ar de actual ou retirá-lo, o que também o apagava do arquivo. Um texto pode agora ser marcado como em revisão, arquivado ou substituído por outro mais recente, e continua a poder ser lido com uma nota datada no topo a dizer que idade tem, quando o vimos pela última vez e o que diríamos dele hoje. Os artigos podem também ser publicados em português como texto próprio, com crédito a quem traduziu e um selector de língua na página.",
+  "changelog.entries.corrections-and-content-notes-reach-the-reader.title":
+    "As correcções e os avisos de conteúdo chegam-te agora",
+  "changelog.entries.corrections-and-content-notes-reach-the-reader.body":
+    "A revista promete que uma correcção é publicada como uma nota datada no fim do texto e que nunca editamos em silêncio. Até agora os editores registavam essas correcções e nenhum leitor via nenhuma. A partir de hoje aparecem no artigo, com data, pela ordem em que foram feitas. Com os avisos de conteúdo passava-se o mesmo: um texto não pode ser publicado sem pelo menos um, e estavam a ser recolhidos e depois escondidos precisamente de quem precisa deles. Passam a ficar antes do corpo do artigo, onde os podes ler primeiro e dispensar se preferires.",
+  "changelog.entries.the-magazine-front-page-is-editors-work.title":
+    "A capa da revista volta a ser o trabalho dos editores",
+  "changelog.entries.the-magazine-front-page-is-editors-work.body":
+    "A capa era só os nove textos mais recentes, pela ordem em que calhou serem publicados. Passa a abrir com o texto que os editores escolheram para abrir e a seguir a ordem da edição actual, agrupada pelas suas secções, com o resto por baixo. O cabeçalho diz-te que edição estás a ler e a data em que saiu.",
+  "changelog.entries.search-the-whole-magazine-archive.title":
+    "Pesquisa tudo o que a revista publicou",
+  "changelog.entries.search-the-whole-magazine-archive.body":
+    "Não havia forma de pesquisar dentro da revista, por isso tudo o que ficasse abaixo do primeiro ecrã da capa estava praticamente perdido. Podes agora pesquisar todo o arquivo por título, entrada, corpo e etiqueta, ordenado por quão bem cada texto corresponde. As etiquetas de cada artigo também são links, para seguires uma e veres o que mais publicámos sobre o assunto.",
+  "changelog.entries.a-byline-is-a-person-now.title":
+    "Uma assinatura na revista é uma pessoa a sério",
+  "changelog.entries.a-byline-is-a-person-now.body":
+    "Uma assinatura era um nome e mais nada: sem fotografia, sem biografia, sem forma de a editar fora da base de dados e sem ligação a quem escreveu o texto. Quem escreve tem agora um perfil de autoria que pode editar, as assinaturas ligam ao perfil de membro quando quem escreve é um de nós, e os textos publicados aparecem creditados no perfil de quem os escreveu.",
+  "changelog.entries.your-story-submission-gets-an-answer.title":
+    "A tua proposta de texto tem agora uma resposta",
+  "changelog.entries.your-story-submission-gets-an-answer.body":
+    "Escrever para a revista significava preencher um texto inteiro, carregar uma capa e depois ver o acompanhamento a dizer “enviado” para sempre, porque do outro lado não havia nada que a pudesse aceitar ou recusar. Os editores podem agora aceitar, recusar ou encomendar uma proposta e escrever-te uma nota de volta. A decisão chega-te no acompanhamento e nas notificações, e um texto encomendado entra directamente na redacção. A tua entrada, o teu corpo de texto e a tua imagem de capa passam a ser guardados em vez de serem juntados todos num só campo.",
+  "changelog.entries.every-guide-says-when-it-was-last-checked.title":
+    "Cada guia diz quando foi visto pela última vez",
+  "changelog.entries.every-guide-says-when-it-was-last-checked.body":
+    "Os nossos guias cobrem percursos de saúde, redução de riscos, saúde sexual, linhas de apoio e apoio jurídico, e nenhum deles te dizia se alguém os tinha revisto este ano. Cada guia passa a ter uma data de revisão, e a equipa consegue ver quais estão por rever. Os editores podem também actualizar o texto dos guias e o glossário directamente, sem esperar por uma nova versão da aplicação. Há um novo índice na página dos guias com todos eles, incluindo cerca de dezassete que não tinham ligação em lado nenhum e só se alcançavam escrevendo o endereço.",
+  "changelog.entries.the-reading-group-directory-is-real.title":
+    "O directório de clubes de leitura é real",
+  "changelog.entries.the-reading-group-directory-is-real.body":
+    "Os clubes de leitura viviam só no navegador: o directório esvaziava-se ao recarregar a página e pedir para entrar estava desligado. Uma proposta aprovada passa a criar um grupo a sério, que podes encontrar, abrir e pedir para entrar, com quem o propôs como anfitrião.",
+  "changelog.entries.in-this-issue-replaces-the-members-digest.title":
+    "“Nesta edição” substitui a newsletter para membros",
+  "changelog.entries.in-this-issue-replaces-the-members-digest.body":
+    "A redacção andava a preparar uma newsletter que estava configurada para ser enviada por email. A QueerPulse não envia email e nunca vai enviar, por isso todo esse caminho desapareceu. O trabalho de selecção fica e passa a ter onde aterrar: cada página de edição tem um painel “Nesta edição” pela ordem que os editores escolheram, e uma notificação avisa-te quando uma edição sai.",
+  "changelog.entries.the-press-kit-carries-real-brand-assets.title":
+    "O kit de imprensa tem ficheiros de marca a sério",
+  "changelog.entries.the-press-kit-carries-real-brand-assets.body":
+    "Todos os downloads do kit de imprensa eram ficheiros de exemplo criados no teu navegador, por isso um jornalista que pedisse o logótipo recebia um ficheiro a dizer isso mesmo. O kit passa a servir ficheiros reais: a marca em vectorial e em alta resolução, uma versão monocromática, o ícone da aplicação e uma referência de cores e tipografia pronta a imprimir, gerada a partir dos próprios valores de desenho da plataforma.",
+  "changelog.entries.cinema-and-culture-say-what-they-are.title":
+    "O Cinema e a Cultura deixaram de anunciar o que não existe",
+  "changelog.entries.cinema-and-culture-say-what-they-are.body":
+    "O Cinema oferecia publicamente subscrições mensais e citava um registo de dinheiro pago a realizadores, sem qualquer forma de pagar e sem catálogo por trás. A Cultura estava no menu como quatro secções vazias com os botões de contribuir desligados. Ambos dizem agora com clareza que ainda não abriram. A revista também deixou de dizer a quem não tem sessão iniciada que estava para breve quando já publica há algum tempo: pede-te para entrares e leva-te de volta ao texto que querias.",
+  "changelog.entries.an-issue-stays-under-wraps-until-it-ships.title":
+    "Uma edição fica guardada até sair",
+  "changelog.entries.an-issue-stays-under-wraps-until-it-ships.body":
+    "O número, o título, o tema e a capa de uma edição ainda não publicada eram visíveis para qualquer pessoa com conta, e a edição aparecia no arquivo. As edições por publicar ficam agora guardadas em todos os sítios onde um leitor pode espreitar, e a redacção mantém a sua vista completa.",
+
+  "changelog.entries.the-directory-stopped-going-blank.title":
+    "O directório local deixou de ficar em branco",
+  "changelog.entries.the-directory-stopped-going-blank.body":
+    "Conforme a página de onde vinhas, o directório e o formulário para listares o teu negócio podiam abrir num ecrã vazio em vez dos lugares. Dois ficheiros precisavam um do outro antes de qualquer um ter acabado de carregar, por isso o primeiro a arrancar encontrava os horários a meio e parava. Os nomes das categorias passam a viver por si, e assim nada fica à espera de nada.",
+  "changelog.entries.notification-previews-stay-hidden-on-iphone.title":
+    "Esconder as pré-visualizações já funciona no iPhone",
+  "changelog.entries.notification-previews-stay-hidden-on-iphone.body":
+    "A opção só era respeitada por navegadores que correm o nosso código em segundo plano, coisa que o iPhone nunca faz, por isso o ecrã bloqueado continuava a dizer quem te escreveu enquanto o botão dizia “ligado”. A tua escolha passa a viajar com a conta, e a notificação sai já sem nada: diz que chegou algo sem dizer de quem nem o quê. Vem ligada por omissão, em todos os dispositivos onde tens sessão iniciada.",
+  "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.title":
+    "Sair já não apaga os encontros de outras pessoas",
+  "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.body":
+    "Apagar uma conta levava com ela todos os encontros que essa pessoa tinha organizado, incluindo os futuros, e as inscrições de toda a gente. Agora um encontro futuro passa para quem co-organiza, ou é cancelado com uma notificação para quem disse que ia. Anúncios, vagas e voluntariado fecham em vez de desaparecer, e as avaliações continuam legíveis sem o nome de quem as escreveu.",
+  "changelog.entries.a-new-device-signing-in-tells-you.title":
+    "Ficas a saber quando um novo dispositivo inicia sessão",
+  "changelog.entries.a-new-device-signing-in-tells-you.body":
+    "Se a tua conta for aberta num dispositivo que ainda não conhecia, passas a receber uma notificação a dizer que tipo de dispositivo e quando. A lista de sessões ativas identifica cada uma, como “Chrome no macOS”, e assinala aquela em que estás, para distinguires o teu portátil do de outra pessoa.",
+  "changelog.entries.nothing-promises-you-an-email-any-more.title":
+    "Já nada te promete um email",
+  "changelog.entries.nothing-promises-you-an-email-any-more.body":
+    "A QueerPulse não envia emails, por isso cada ecrã que dizia que ia enviar estava a pedir-te para esperares por algo que nunca chegaria. A lista de espera dos encontros, os anúncios do diretório, as propostas da Cultura, as candidaturas a bolsas e a checklist de anfitrião sem álcool passam a dizer onde a resposta chega mesmo: nas tuas notificações e mensagens da QueerPulse.",
+  "changelog.entries.the-status-page-works-without-an-account.title":
+    "A página de estado funciona sem conta",
+  "changelog.entries.the-status-page-works-without-an-account.body":
+    "Se não consegues iniciar sessão, a pergunta mais difícil é se o problema é nosso ou teu. A página de estado passa a mostrar o estado real dos serviços e os incidentes que registámos, e funciona sem conta nenhuma, para distinguires uma falha nossa de um problema com o teu acesso.",
+  "changelog.entries.data-requests-get-a-real-answer.title":
+    "Os pedidos de dados têm uma resposta a sério",
+  "changelog.entries.data-requests-get-a-real-answer.body":
+    "Um pedido sobre os teus dados era registado e ficava onde ninguém via o prazo a correr. Passa a entrar numa fila de revisão ordenada pelo prazo legal, e quando há decisão recebes uma notificação com o teu pedido e o número de referência.",
+  "changelog.entries.we-ask-again-when-the-rules-change.title":
+    "Voltamos a perguntar quando os Termos ou as Diretrizes mudam",
+  "changelog.entries.we-ask-again-when-the-rules-change.body":
+    "Concordar uma vez no registo valia como concordar para sempre, por isso uma regra podia mudar sem ninguém chegar a vê-la. Quando um destes documentos muda de forma relevante, passas a ser convidada a ler o que mudou e a concordar de novo, e fica um registo com data. Isto conta sobretudo se alguma vez fores moderada por uma regra criada depois de te juntares.",
+  "changelog.entries.iphone-notifications-explain-the-install-step.title":
+    "As notificações no iPhone explicam o passo da instalação",
+  "changelog.entries.iphone-notifications-explain-the-install-step.body":
+    "O Safari só entrega notificações da QueerPulse depois de a adicionares ao ecrã principal, e nada dizia isso: ativá-las falhava apenas com um aviso de que o teu navegador ainda não conseguia fazer isto. A definição passa a explicar o passo da instalação e a ligar diretamente para ele.",
+  "changelog.entries.a-heads-up-before-your-account-is-deleted.title":
+    "Um aviso antes de a tua conta ser apagada",
+  "changelog.entries.a-heads-up-before-your-account-is-deleted.body":
+    "Pedir para apagar a conta abre um período em que era fácil esquecer o assunto e não ouvir nada até já não haver volta. Passas a receber uma notificação três dias antes de se tornar definitivo, enquanto cancelar ainda é um passo só.",
+  "changelog.entries.moderators-see-the-positions-at-the-queue.title":
+    "A modera\u00e7\u00e3o v\u00ea as posi\u00e7\u00f5es junto \u00e0 fila",
+  "changelog.entries.moderators-see-the-positions-at-the-queue.body":
+    "As duas filas de den\u00fancias, a da consola de modera\u00e7\u00e3o da comunidade e a da equipa da plataforma, passam a abrir com as tr\u00eas regras que a modera\u00e7\u00e3o tem de acertar: criticar um Estado \u00e9 discurso pol\u00edtico e a defesa da Palestina \u00e9 bem-vinda, a defesa dirigida a uma classe de pessoas membras n\u00e3o \u00e9, se algu\u00e9m merece direitos n\u00e3o \u00e9 um debate que acolhemos, e nunca se pede a ningu\u00e9m que prove o seu g\u00e9nero. At\u00e9 agora nenhuma superf\u00edcie de modera\u00e7\u00e3o ligava sequer \u00e0s Diretrizes.",
+  "changelog.entries.where-we-stand-intersectionality-and-palestine.title":
+    "Onde nos posicionamos: vidas trans, Palestina, e o resto",
+  "changelog.entries.where-we-stand-intersectionality-and-palestine.body":
+    "A p\u00e1gina Sobre passa a ter uma posi\u00e7\u00e3o, e n\u00e3o apenas um conjunto de valores de produto. Uma nova sec\u00e7\u00e3o \u201cOnde nos posicionamos\u201d explica porque a interseccionalidade \u00e9 insepar\u00e1vel da liberta\u00e7\u00e3o queer, nomeia o genoc\u00eddio em Gaza com todas as letras, recusa o pinkwashing, e apresenta tr\u00eas compromissos pelos quais podemos ser responsabilizadas: a defesa da Palestina \u00e9 discurso pol\u00edtico e \u00e9 moderada como tal, n\u00e3o aceitamos dinheiro de entidades c\u00famplices da ocupa\u00e7\u00e3o, e o fundo de apoio m\u00fatuo pode financiar trabalho de solidariedade. Come\u00e7a pelas vidas trans (a autodetermina\u00e7\u00e3o como norma, nenhum debate dos \u201cdois lados\u201d sobre se as pessoas membras merecem direitos, e a campanha pela exclus\u00e3o de pessoas trans tratada como assunto do C\u00f3digo de Conduta), depois a Palestina, e depois posi\u00e7\u00f5es mais curtas sobre trabalho sexual, migra\u00e7\u00e3o e racismo em Portugal, e serofobia. Termina no teste que decide quando falamos. O manifesto da homepage liga para l\u00e1, e as Diretrizes da Comunidade ganharam uma cl\u00e1usula equivalente que explica onde acaba o discurso pol\u00edtico e come\u00e7a um assunto do C\u00f3digo de Conduta.",
+  "changelog.entries.directory-cards-show-who-runs-the-place.title":
+    "Quem gere um espaço mostra agora a sua cara no cartão",
+  "changelog.entries.directory-cards-show-who-runs-the-place.body":
+    "Cada cartão do diretório local termina com uma linha que nomeia o membro que gere o espaço, e ao lado desse nome ficava um pequeno círculo com as iniciais do negócio. Um cartão do Maison Du Tiago, gerido pelo Tiago, mostrava MD ao lado de Tiago, o que se lia como um segundo logótipo onde devia estar uma pessoa. Esse círculo passa a mostrar a fotografia de perfil do próprio membro, a mesma que aparece no seu perfil, e mostra a inicial quando ainda não há fotografia. A fotografia segue exatamente as mesmas regras do nome ao lado: uma ficha cujo dono escolheu ficar anónimo, ou aparecer apenas pelo cargo, continua a não mostrar nenhum dos dois, e quem desligou a sua fotografia no resto do site mantém-na desligada aqui também.",
+  "changelog.entries.members-can-put-something-to-a-vote.title":
+    "Pode submeter algo a votação",
+  "changelog.entries.members-can-put-something-to-a-vote.body":
+    "As votações de governação eram algo em que podia participar mas que nunca podia iniciar. As propostas na página de governação eram abertas por administradores, por isso, se achasse que a comunidade devia decidir alguma coisa, não havia nenhum botão que lhe permitisse dizê-lo. Passa a poder apresentar uma moção: um título, uma descrição e a questão que quer ver colocada à comunidade. Uma moção tem de merecer o seu lugar no boletim de voto. São precisos dez membros que assinem por baixo, e você conta como o primeiro, por isso outras nove pessoas têm de concordar que merece ser votada. Ao chegar aos dez, segue para apreciação da equipa e, se for aprovada, esta define o período de votação e a moção abre como qualquer outra votação. Se for recusada, o motivo fica escrito na moção, à vista de todos. Uma moção que nunca chegue aos dez membros encerra sozinha ao fim de trinta dias. Também pode juntar o seu nome à moção de outra pessoa e retirá-lo enquanto a recolha estiver a decorrer.",
+  "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.title":
+    "Uma votação de governação passa a precisar de gente suficiente para contar",
+  "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.body":
+    "Uma proposta era aprovada com dois terços de quem calhasse votar, sem qualquer mínimo de participação. Uma pessoa a votar a favor e ninguém contra eram dois terços dos votos expressos, por isso a proposta passava. Isso não é uma decisão da comunidade, e a página de governação descrevia-a como se fosse. Todas as votações passam também a ter de cumprir um quórum: um número mínimo de votos para que o resultado conte, fixado em um décimo dos membros ativos ou dez pessoas, consoante o que for maior. O número perante o qual a proposta foi avaliada fica registado no seu encerramento, para que um resultado antigo mostre sempre a fasquia que realmente cumpriu, e não uma que mudou depois. As propostas passam a mostrar a participação face ao quórum enquanto a votação decorre, e uma proposta que falhou por terem votado poucas pessoas di-lo de forma explícita, para nunca ser confundida com uma que perdeu a votação.",
+  "changelog.entries.anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet.title":
+    "Qualquer pessoa numa comunidade pode sinalizar um proprietário ausente",
+  "changelog.entries.anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet.body":
+    "Quando o proprietário de uma comunidade desaparece, a comunidade fica parada: ninguém pode alterar as definições, transferir a propriedade ou nomear um moderador que a desbloqueie. Sinalizar um proprietário ausente estava limitado a moderadores e coproprietários, o que deixava de fora precisamente o caso em que era mais necessário, porque uma comunidade pequena cujo proprietário desapareceu antes de nomear alguém não tinha ninguém que pudesse fazê-lo. Qualquer membro de uma comunidade passa a poder levantar a questão, uma vez por dia, e com uma revisão aberta de cada vez por comunidade. Mudaram ainda duas coisas relacionadas. Se um proprietário apagar a sua conta, a propriedade passa primeiro para um coproprietário, caso exista, por ser a pessoa em quem o proprietário já tinha confiado poderes equivalentes, e só depois para o moderador mais antigo. E uma comunidade cujo proprietário não é visto há muito tempo passa a ser sinalizada automaticamente à equipa, para que uma comunidade abandonada apareça mesmo quando ninguém lá dentro se lembra de a reportar.",
+  "changelog.entries.the-constitution-links-through-to-the-code-of-conduct.title":
+    "A Constituição liga ao Código de Conduta",
+  "changelog.entries.the-constitution-links-through-to-the-code-of-conduct.body":
+    "O rodapé da Constituição oferecia três coisas para clicar e nenhuma delas fazia nada. Ler o Código de Conduta passa a abrir o Código de Conduta. As outras duas, Descarregar PDF e Ver a Assembleia, apontavam para um ficheiro e uma página que não existem, por isso foram retiradas em vez de continuarem ali com o aspeto de algo que se pudesse abrir.",
   "changelog.entries.menu-resizes-smoothly.title":
     "O menu principal muda de tamanho suavemente entre secções",
   "changelog.entries.menu-resizes-smoothly.body":
@@ -2137,6 +2350,18 @@ export const marketing: Catalog = {
     "As tuas sessões ativas já conseguem chegar a uma pessoa",
   "changelog.entries.sessions-page-links-reach-a-person.body":
     "\u201cAlgo parece errado? Conta-nos o que aconteceu\u201d, nas tuas sessões ativas, abria uma página a anunciar que a tua conta estava bloqueada, o que era assustador e falso. Os dois links dessa página passam a levar-te ao que prometem: \u201co que fazer a seguir\u201d abre a secção Conta da Ajuda, que explica o que fazer com um dispositivo estranho, e \u201cconta-nos o que aconteceu\u201d abre o formulário de contacto com o tema já definido como acesso à conta, para a tua mensagem chegar à equipa. O link Voltar, no topo da página, regressa a Definições \u2192 Conta, de onde a abriste.",
+  "changelog.entries.skills-and-learning-workshops-retired.title":
+    "Compet\u00eancias e aprendizagem foi encerrado",
+  "changelog.entries.skills-and-learning-workshops-retired.body":
+    "Compet\u00eancias e aprendizagem listava oficinas dinamizadas por membros, com lugares, listas de espera e uma p\u00e1gina para cada pessoa que ensinava, e nunca chegou a um ponto que justificasse o teu tempo: meia d\u00fazia de cursos de exemplo, nenhuma forma real de pagar e ningu\u00e9m do outro lado quando reservavas um lugar. Em vez de o deixar no menu Trabalho com ar de estar aberto, retir\u00e1mos o quadro por completo. Os dois lugares onde ensinar e aprender j\u00e1 funcionam continuam c\u00e1. A Troca de Sabres troca tempo e talento sem dinheiro envolvido, e organizar um conv\u00edvio cobre uma oficina ou uma conversa com tudo o que um evento a s\u00e9rio precisa, incluindo lista de presen\u00e7as e data.",
+  "changelog.entries.mod-tools-sections-fade-in-as-you-switch.title":
+    "As sec\u00e7\u00f5es das ferramentas de modera\u00e7\u00e3o chegam em vez de aparecerem de repente",
+  "changelog.entries.mod-tools-sections-fade-in-as-you-switch.body":
+    "Passar entre Resumo, Pedidos, Den\u00fancias, Pessoas, Convites e o resto da consola de modera\u00e7\u00e3o trocava o painel inteiro num s\u00f3 instante, o que fazia cada mudan\u00e7a parecer um salto da p\u00e1gina em vez de uma passagem. Agora cada sec\u00e7\u00e3o aparece com um ligeiro subir e esbatimento durante uma fra\u00e7\u00e3o de segundo, para que o olhar acompanhe o destaque da esquerda at\u00e9 \u00e0 superf\u00edcie que acabaste de abrir. Se pediste ao teu dispositivo para reduzir o movimento, o painel continua a mudar de imediato, sem anima\u00e7\u00e3o nenhuma.",
+  "changelog.entries.member-rows-in-mod-tools-hold-their-actions-in-one-menu.title":
+    "Gerir as pessoas de uma comunidade volta a ler-se como uma lista de pessoas",
+  "changelog.entries.member-rows-in-mod-tools-hold-their-actions-in-one-menu.body":
+    "A secção Pessoas das ferramentas de moderação colocava todos os controlos de função na própria linha, por isso cada pessoa chegava atrás de três botões a disputar atenção e o nome que procuravas ficava espremido no espaço que sobrava. Tornar alguém mod, dar cotitularidade e remover da comunidade passam a viver atrás de um único botão ⋯ no fim da linha, que abre um menu curto quando precisas. A linha mostra a pessoa, a fotografia e a função, e as ações que podes tomar continuam a ser exatamente as que aparecem: nada surge no menu que a tua função não te permita fazer.",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.title":
     "O Studio e o Cinema falam portugu\u00eas em mais s\u00edtios",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.body":
@@ -5421,6 +5646,12 @@ export const marketing: Catalog = {
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
   "directory.card.verifiedBadge": "Espaço seguro verificado",
+  // O selo de espaço seguro no cartão, nos dois estados que não são um
+  // "verificado" simples. Ambos falam do SELO, nunca do espaço.
+  "directory.card.safeSpaceDueBadge":
+    "Espaço seguro verificado, com a verificação anual pendente",
+  "directory.card.safeSpacePausedBadge":
+    "Selo de espaço seguro em pausa enquanto voltamos a verificar",
   "directory.card.photoComing": "Foto brevemente",
   "directory.card.openTill": "Aberto até às {time}",
   "directory.card.closedNow": "Fechado",
@@ -5431,6 +5662,12 @@ export const marketing: Catalog = {
   "directory.card.state.moved": "Mudou de morada",
   "directory.card.saveAriaLabel": "Guardar {name}",
   "directory.card.unsaveAriaLabel": "Remover {name} das guardadas",
+  // As necessidades a que um local respondeu SIM, no cartão da grelha. Nunca
+  // uma lista completa: um "não" e um "ninguém nos disse" são respostas
+  // diferentes e ambas precisam do espaço que a página do local lhes dá.
+  "directory.card.access": "Acessibilidade confirmada por este local",
+  "directory.card.accessMore_one": "mais {count}",
+  "directory.card.accessMore_other": "mais {count}",
   "directory.card.savedToast": "Guardaste {name}",
   "directory.card.unsavedToast": "Removeste {name} dos guardados",
   "directory.submitStrip.title":
@@ -5896,48 +6133,206 @@ export const marketing: Catalog = {
   //    das secções. As descrições de bairros, organizações e comunidades
   //    (`arrivingPage.data.ts`, `arrivingPageCards.data.ts`) são conteúdo de
   //    guia da cidade — ficam em inglês, o mesmo precedente das descrições
-  //    por cidade da página Cities.
+  // ── Arriving (guia para quem chega a Lisboa) — agora totalmente traduzido
+  //    (LOC-13). As descrições de bairros, saúde, habitação, organizações e a
+  //    checklist estavam escritas em inglês dentro de `arrivingPage.data.ts` /
+  //    `arrivingPageCards.data.ts` e não podiam ser traduzidas. Passaram para
+  //    aqui, nos dois catálogos. Nos ficheiros de dados fica apenas o que não
+  //    se traduz: nomes de bairros e de organizações (nomes próprios, iguais
+  //    nas duas línguas), destinos e ícones.
   "arriving.meta.title": "Acabaste de chegar a Lisboa? Um guia queer",
   "arriving.meta.description":
     "Um guia prático para pessoas LGBTQ+ recém-chegadas a Lisboa: bairros acolhedores, recursos de saúde, noções básicas de habitação, organizações-chave, e primeiros passos.",
   "arriving.hero.eyebrow": "Acabaste de chegar a Lisboa",
-  "arriving.hero.title":
-    "Queer e acabaste de chegar a Lisboa? <em>Bem-vinde.</em>",
+  "arriving.hero.title": "Queer e acabaste de chegar? <em>Bem-vinde.</em>",
   "arriving.hero.body":
-    "Esta cidade tem muito para nós: uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer um trabalho sério, e pessoas que vão genuinamente ajudar-te a instalares-te. Aqui está o que precisas de saber primeiro.",
+    "Esta cidade tem muito para nós: uma comunidade queer real e enraizada, bairros acolhedores, organizações a fazer trabalho sério, e pessoas que te vão mesmo ajudar a assentar. Aqui fica o que convém saber primeiro.",
+
+  // Aparece ao lado de um link cujo destino precisa de conta na QueerPulse,
+  // para que quem não tem sessão iniciada saiba antes de clicar.
+  "arriving.memberOnly": "Só para membros",
+
+  // ── Checklist de chegada. As marcações ficam guardadas apenas no browser
+  //    de quem lê; não há conta por trás nem nada é enviado para lado nenhum.
+  "arriving.checklist.eyebrow": "As tuas primeiras duas semanas",
+  "arriving.checklist.title": "O que vale a pena tratar <em>cedo.</em>",
+  "arriving.checklist.intro":
+    "Papelada, médico, um quarto, e uma sala cheia de gente. Vai riscando à medida que avanças. A lista fica guardada neste browser, por isso podes fechar o separador e voltar mais tarde.",
+  "arriving.checklist.progress": "{done} de {total} feitos",
+  "arriving.checklist.reset": "Recomeçar",
+  "arriving.checklist.storedHere":
+    "Guardado neste browser, neste aparelho. Nada é enviado para lado nenhum e mais ninguém consegue ver.",
+  "arriving.checklist.steps.nif.title": "Tirar o NIF",
+  "arriving.checklist.steps.nif.note":
+    "O número de identificação fiscal. Quase nada funciona sem ele: contrato de arrendamento, contrato de telemóvel, conta bancária. Faz disto o primeiro recado.",
+  "arriving.checklist.steps.nif.linkLabel": "Vistos e residência",
+  "arriving.checklist.steps.sns.title": "Inscrever-te no SNS",
+  "arriving.checklist.steps.sns.note":
+    "Assim que tiveres NIF, inscreve-te no teu Centro de Saúde. É isso que te dá direito a médico de família no Serviço Nacional de Saúde.",
+  "arriving.checklist.steps.sns.linkLabel": "sns.gov.pt",
+  "arriving.checklist.steps.doctor.title": "Pedir médico afirmativo",
+  "arriving.checklist.steps.doctor.note":
+    "O SNS cobre cuidados de saúde trans, e o médico que te calha continua a fazer muita diferença. Trata disto enquanto nada é urgente.",
+  "arriving.checklist.steps.doctor.linkLabel": "O guia de saúde trans",
+  "arriving.checklist.steps.room.title": "Começar a procurar quarto cedo",
+  "arriving.checklist.steps.room.note":
+    "Os quartos no centro saem em dias. Começa a procurar antes de chegares, se der, e continua a procurar depois de ficares com o primeiro.",
+  "arriving.checklist.steps.room.linkLabel": "O quadro de habitação",
+  "arriving.checklist.steps.rights.title":
+    "Ler os teus direitos antes de assinar",
+  "arriving.checklist.steps.rights.note":
+    "O que a senhoria pode pedir, quanto pode ser a caução, e o que tem de ficar por escrito. Dez minutos agora poupam-te um ano mau.",
+  "arriving.checklist.steps.rights.linkLabel": "Direitos de quem arrenda",
+  "arriving.checklist.steps.crisis.title": "Guardar um número para um dia mau",
+  "arriving.checklist.steps.crisis.note":
+    "A ILGA Portugal tem uma linha de apoio para discriminação, violência e crise, e pode encaminhar-te para apoio jurídico. Guarda o número no telemóvel enquanto está tudo calmo.",
+  "arriving.checklist.steps.crisis.linkLabel": "ilga-portugal.pt",
+  "arriving.checklist.steps.gathering.title":
+    "Ir a um encontro nas primeiras duas semanas",
+  "arriving.checklist.steps.gathering.note":
+    "Ler sobre uma cidade é uma coisa diferente de estar numa sala dela. Uma noite muda a sensação do mês inteiro.",
+  "arriving.checklist.steps.gathering.linkLabel": "O que aí vem",
+  "arriving.checklist.steps.community.title":
+    "Entrar numa comunidade que se encontre presencialmente",
+  "arriving.checklist.steps.community.note":
+    "Escolhe a que se encontra perto de ti. Aparecer duas vezes é o que transforma desconhecidos em pessoas que conheces.",
+  "arriving.checklist.steps.community.linkLabel": "Ver comunidades",
+
+  // ── Bairros. As notas costumavam mencionar pessoas que só existem no
+  //    registo de demonstração e que nunca poderiam ligar a um perfil real;
+  //    agora dizem algo verdadeiro sobre o sítio.
   "arriving.neighbourhoods.eyebrow": "Os bairros de Lisboa",
   "arriving.neighbourhoods.title": "Onde é que a vida queer <em>acontece.</em>",
   "arriving.neighbourhoods.intro":
-    "Lisboa não tem um único bairro queer. Tem vários bolsões, cada um com o seu próprio caráter. Aqui vai um guia honesto sobre onde está a comunidade.",
+    "Lisboa não tem um bairro queer. Tem vários núcleos, cada um com o seu carácter. Aqui fica um guia honesto de onde está a comunidade.",
+  "arriving.hoods.principeReal.tag": "Social · Criativo",
+  "arriving.hoods.principeReal.body":
+    "O coração da vida social queer em Lisboa. Um jardim, bares de vinhos, livrarias independentes, e muita gente criativa queer. O mais visível dos núcleos e o mais fácil de entrar.",
+  "arriving.hoods.principeReal.note":
+    "Um bom primeiro passeio se quiseres sentir a cidade sem planear nada.",
+  "arriving.hoods.mouraria.tag": "Ativismo · Comunidade",
+  "arriving.hoods.mouraria.body":
+    "Um bairro que sempre fez espaço a quem vem de fora. Raízes de fado, uma grande comunidade imigrante, e boa parte do ativismo queer da cidade.",
+  "arriving.hoods.mouraria.note":
+    "Onde grande parte da organização e da ajuda mútua acontece de facto.",
+  "arriving.hoods.bairroAlto.tag": "Noite · Artes",
+  "arriving.hoods.bairroAlto.body":
+    "Bares pequenos, salas de música independente, noites longas, e uma longa história queer. É onde a Lisboa queer vai dançar.",
+  "arriving.hoods.bairroAlto.note":
+    "Barulhento depois das 22h e muito sossegado de manhã.",
+  "arriving.hoods.caisDoSodre.tag": "Criativo · Beira-rio",
+  "arriving.hoods.caisDoSodre.body":
+    "Energia criativa junto ao rio. Estúdios independentes, espaços culturais, e a Pink Street. Onde a Lisboa nova encontra a Lisboa antiga.",
+  "arriving.hoods.caisDoSodre.note":
+    "Onde fica a Pink Street, a rua de bares queer mais conhecida da cidade.",
+  "arriving.hoods.arroios.tag": "Em crescimento · Acessível",
+  "arriving.hoods.arroios.body":
+    "Mais acessível, mais diverso, e a crescer depressa como casa de quem chega e de gente criativa empurrada para fora do Príncipe Real. Comida excelente, comunidade próxima.",
+  "arriving.hoods.arroios.note":
+    "Um dos bairros mais diversos da cidade, e um sítio sensato para procurar quarto.",
+  "arriving.hoods.marvila.tag": "Industrial · Lisboa nova",
+  "arriving.hoods.marvila.body":
+    "Armazéns, estúdios, e uma vida criativa mais sossegada. Mais longe, e cada vez mais casa de quem quer espaço para fazer coisas.",
+  "arriving.hoods.marvila.note":
+    "Bom para estúdios e quartos maiores com renda mais baixa.",
+
+  // ── Saúde. Cada cartão liga a um destino real: um serviço português
+  //    oficial, um guia público da QueerPulse, ou o site da própria
+  //    organização.
   "arriving.health.eyebrow": "Saúde",
-  "arriving.health.title":
-    "Cuidados de saúde em Lisboa, <em>o que precisas de saber.</em>",
+  "arriving.health.title": "Saúde em Lisboa, <em>o que precisas de saber.</em>",
   "arriving.health.intro":
-    "Portugal tem um serviço nacional de saúde (SNS) no qual te podes inscrever. Os cuidados afirmativos para pessoas trans melhoraram muito, mas é preciso saber onde procurar.",
+    "Portugal tem um serviço nacional de saúde (SNS) onde te podes inscrever. Os cuidados afirmativos para pessoas trans melhoraram bastante, mas é preciso saber onde ir.",
+  "arriving.health.cards.sns.title": "Inscrição no SNS",
+  "arriving.health.cards.sns.body":
+    "Inscreve-te no Serviço Nacional de Saúde assim que tiveres NIF. Tens direito a médico de família. Pergunta no teu Centro de Saúde: Arroios, Mouraria e Príncipe Real têm todos centros ativos.",
+  "arriving.health.cards.sns.linkLabel": "sns.gov.pt",
+  "arriving.health.cards.trans.title": "Cuidados afirmativos trans",
+  "arriving.health.cards.trans.body":
+    "A Lei de Identidade de Género portuguesa é das mais progressistas da Europa, e o SNS presta cuidados de saúde trans, hormonas incluídas. Encontrar médico à vontade com isto é a parte que vale a pena preparar.",
+  "arriving.health.cards.trans.linkLabel": "O guia de saúde trans",
+  "arriving.health.cards.mental.title": "Apoio em saúde mental",
+  "arriving.health.cards.mental.body":
+    "Mudar de país pesa mesmo quando é a decisão certa: outra língua, outro tipo de visibilidade, e ninguém que te conheça há anos. Há apoio entre pares e opções mais baratas.",
+  "arriving.health.cards.mental.linkLabel": "Recursos de saúde mental",
+  "arriving.health.cards.crisis.title": "Crise e discriminação",
+  "arriving.health.cards.crisis.body":
+    "A ILGA Portugal tem uma linha de apoio para pessoas LGBTQ+ em crise ou a viver discriminação ou violência, e pode ligar-te a apoio jurídico. A linha é sobretudo em português, por isso leva contigo alguém que fale, se ajudar.",
+  "arriving.health.cards.crisis.linkLabel": "ilga-portugal.pt",
+
+  // ── Habitação. O cartão do mercado não tem link de propósito: descreve uma
+  //    situação em vez de apontar para um destino.
   "arriving.housing.eyebrow": "Habitação",
-  "arriving.housing.title":
-    "Encontrar um lugar para viver, <em>com honestidade.</em>",
+  "arriving.housing.title": "Encontrar onde viver, <em>com honestidade.</em>",
   "arriving.housing.intro":
-    "O mercado de habitação em Lisboa é caro e competitivo. Aqui vai um retrato honesto do que esperar, e onde procurar ajuda.",
+    "O mercado de habitação em Lisboa é caro e competitivo. Aqui fica um retrato honesto do que esperar, e de onde pedir ajuda.",
+  "arriving.housing.cards.market.title": "Como é o mercado, na realidade",
+  "arriving.housing.cards.market.body":
+    "As rendas subiram muito nos últimos cinco anos. Conta com cerca de 800 a 1100 euros por um quarto num bairro central. Arroios e Mouraria ainda têm melhor relação preço-qualidade. Os bons anúncios saem em dias, por isso avança depressa quando vires um.",
+  "arriving.housing.cards.board.title":
+    "Quartos partilhados dentro da comunidade",
+  "arriving.housing.cards.board.body":
+    "As pessoas membros publicam quartos, subarrendamentos e partilhas no quadro de habitação da QueerPulse. As melhores pistas chegam quase sempre por pessoas e não por portais.",
+  "arriving.housing.cards.board.linkLabel": "O quadro de habitação",
+  "arriving.housing.cards.rights.title": "Saber o que estás a assinar",
+  "arriving.housing.cards.rights.body":
+    "A lei do arrendamento dá-te mais do que uma senhoria apressada te vai dizer: quanto pode ser a caução, que pré-aviso te é devido, e o que tem de ficar por escrito.",
+  "arriving.housing.cards.rights.linkLabel": "Direitos de quem arrenda",
+  "arriving.housing.cards.visas.title": "Residência e casa ao mesmo tempo",
+  "arriving.housing.cards.visas.body":
+    "Se estás a tratar da autorização de residência ao mesmo tempo que de um contrato de arrendamento, a ordem da papelada conta. O NIF vem primeiro, e quase tudo o resto vem atrás dele.",
+  "arriving.housing.cards.visas.linkLabel": "Vistos e residência",
+  "arriving.housing.cards.ask.title": "Perguntar em voz alta",
+  "arriving.housing.cards.ask.body":
+    "Dizer que procuras quarto ou um subarrendamento curto e que chegas no mês que vem é uma coisa perfeitamente normal de publicar aqui. As pessoas respondem. Alguém costuma conhecer alguém.",
+  "arriving.housing.cards.ask.linkLabel": "Ir para o fórum",
+
+  // ── Organizações. Cada linha abre o site da própria organização, que se
+  //    alcança sem conta na QueerPulse.
   "arriving.orgs.eyebrow": "Organizações",
   "arriving.orgs.title": "Conhece estas <em>três primeiro.</em>",
   "arriving.orgs.intro":
-    "Estas são as organizações mais úteis nas tuas primeiras semanas em Lisboa: para apoio jurídico, saúde mental, ou simplesmente para te ligares à comunidade.",
+    "Estas três são as mais úteis nas tuas primeiras semanas: para apoio jurídico, saúde mental, ou simplesmente para te ligares à comunidade. Cada uma abre o site da própria organização.",
+  "arriving.orgs.items.ilga.body":
+    "A principal organização de direitos LGBTQ+ em Portugal. Apoio jurídico, aconselhamento contra discriminação, encaminhamento para habitação, linha de apoio, e programação comunitária. A primeira chamada para qualquer coisa séria.",
+  "arriving.orgs.items.opusDiversus.body":
+    "Saúde mental e apoio entre pares para pessoas LGBTQ+, e formação para profissionais de saúde aliades. Um bom sítio para começar se a mudança ou a nova visibilidade estiverem a pesar.",
+  "arriving.orgs.items.redeExAequo.body":
+    "Associação LGBTQ+ focada em juventude, com grupos ativos em Lisboa. Apoio entre pares, ativismo, e uma sala tranquila para quem é mais jovem ou ainda está a descobrir-se.",
+
+  // ── Primeiro passo. Encontros reais que aí vêm, ao vivo nos dois modos.
+  //    Esta secção anunciava um cartão fixo datado de 14 de junho de 2026.
   "arriving.firstStep.eyebrow": "O teu primeiro passo",
   "arriving.firstStep.title": "Vem a algo <em>presencialmente.</em>",
   "arriving.firstStep.intro":
-    "Tudo nesta página é útil. Mas a melhor coisa que podes fazer é aparecer num encontro. O próximo já aí vem:",
-  "arriving.firstStep.rsvpCta": "Vou estar lá",
-  "arriving.firstStep.example.title": "Noite de Portefólio",
-  "arriving.firstStep.example.subtitle": "Design e Fotografia",
-  "arriving.firstStep.example.details":
-    "Príncipe Real · A partir das 19h · Descontraído, caloroso, sem agenda marcada. Traz o teu trabalho, ou só a tua presença.",
+    "Tudo o que está acima ajuda. O que muda mesmo um primeiro mês é entrar numa sala. Aqui fica o que aí vem.",
+  "arriving.firstStep.eventMeta": "{hood} · {time}",
+  "arriving.firstStep.loading": "A carregar o que aí vem",
+  "arriving.firstStep.error":
+    "A lista de encontros não carregou agora. Tenta outra vez daqui a pouco.",
+  "arriving.firstStep.retry": "Tentar outra vez",
+  "arriving.firstStep.empty":
+    "Não há nada no calendário neste momento. Aparecem encontros novos quase todas as semanas, por isso vale a pena voltar em breve.",
+  "arriving.firstStep.emptyCta": "Ver a página de encontros",
+  "arriving.firstStep.allCta": "Ver todos os encontros",
+  "arriving.firstStep.locked":
+    "O calendário de encontros vive dentro da QueerPulse. Quem é membro vê o que há esta semana e diz que vai.",
+  "arriving.firstStep.lockedCta": "Pedir um convite",
+
+  // ── Comunidades. Comunidades reais, da mesma fonte que a grelha de
+  //    descoberta lê, cada uma a ligar à sua própria página.
   "arriving.commQuick.eyebrow": "Por onde começar",
-  "arriving.commQuick.title":
-    "Três comunidades para <em>quem chega agora.</em>",
+  "arriving.commQuick.title": "Comunidades para <em>quem chega agora.</em>",
   "arriving.commQuick.intro":
-    "Não sabes por onde começar? Estas três comunidades são particularmente acolhedoras para quem é novo em Lisboa.",
+    "Salas fáceis de entrar que se encontram presencialmente, aqui na cidade. Escolhe uma e aparece duas vezes.",
   "arriving.commQuick.browseCta": "Ver todas as comunidades",
+  "arriving.commQuick.loading": "A carregar comunidades",
+  "arriving.commQuick.empty":
+    "Não há nada aberto a quem chega agora neste momento. A lista completa continua a valer uma vista de olhos.",
+  "arriving.commQuick.locked":
+    "As comunidades vivem dentro da QueerPulse, para que as pessoas membros falem umas com as outras sem plateia.",
+  "arriving.commQuick.lockedCta": "Pedir um convite",
+
   "arriving.outro.title": "Vamos conhecer <em>a comunidade?</em>",
   "arriving.outro.sub":
     "Pede um convite para a QueerPulse e ganha acesso à rede completa: pessoas, encontros, o quadro, e tudo o resto nesta página.",
@@ -6212,6 +6607,26 @@ export const marketing: Catalog = {
   "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
   "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",
   "local.filter.filters": "Filtros",
+  "local.filter.quickFiltersLabel": "Filtros rápidos",
+  "local.filter.openNow": "Aberto agora",
+  "local.filter.accessLabel": "Necessidades de acesso",
+  "local.filter.accessNote":
+    "Mostra os locais que responderam sim a tudo o que escolheres. Um local sobre o qual ninguém perguntou fica de fora dos resultados.",
+  // ── Usar a minha localização. Opcional, reversível e nunca sai do dispositivo.
+  "local.nearMe.on": "Usar a minha localização",
+  "local.nearMe.off": "Desligar a minha localização",
+  "local.nearMe.asking": "A encontrar-te…",
+  "local.nearMe.privacy": "A tua localização fica neste dispositivo.",
+  "local.nearMe.onNote":
+    "Ordenado por proximidade. A tua localização fica neste dispositivo.",
+  "local.nearMe.denied":
+    "A localização está desligada para este site. Podes voltar a ligá-la nas definições do navegador.",
+  "local.nearMe.timeout":
+    "Isto demorou demasiado. Tenta de novo quando quiseres.",
+  "local.nearMe.unavailable":
+    "O teu dispositivo não conseguiu perceber onde estás neste momento.",
+  "local.nearMe.walkChip": "{minutes} min a pé",
+  "local.nearMe.walkAria": "Cerca de {minutes} minutos a pé de ti",
   "local.filter.showResults_one": "Ver {count} lugar",
   "local.filter.showResults_other": "Ver {count} lugares",
   "local.venue.back": "Voltar ao mapa",
@@ -6303,7 +6718,7 @@ export const marketing: Catalog = {
   "constitution.art6.clause2":
     "O orçamento anual é aprovado pela Assembleia. O círculo de finanças pode reequilibrar entre categorias ao longo do ano sem nova aprovação, até 10% por categoria.",
   "constitution.art6.clause3":
-    "As contas anuais são <strong>publicadas na íntegra,</strong> em linguagem simples, como parte do Relatório de Transparência. Os valores são reportados pela própria equipa de voluntários.",
+    "As contas anuais são <strong>publicadas na íntegra,</strong> em linguagem simples, como parte do <a>Relatório de Transparência</a>. Os valores são reportados pela própria equipa de voluntários.",
   "constitution.art6.clause4":
     "O coletivo não pode contrair dívidas superiores a 10 000 € sem aprovação explícita da Assembleia.",
 
@@ -6314,7 +6729,7 @@ export const marketing: Catalog = {
   "constitution.art7.clause2":
     "<strong>A QueerPulse não modera críticas a si própria.</strong> Publicações críticas da QueerPulse, das suas decisões, ou de quem a organiza não podem ser removidas ao abrigo de nenhuma cláusula do Código de Conduta.",
   "constitution.art7.clause3":
-    "As decisões de moderação são recorríveis junto de um painel de recurso permanente composto por três pessoas-membro que não pertençam ao círculo que decidiu. Os recursos revertem decisões em cerca de 11% dos casos (valor de 2025).",
+    "As decisões de moderação são recorríveis junto de um painel de recurso permanente composto por três pessoas-membro de fora do círculo que decidiu. A percentagem de decisões revertidas em recurso é contada a partir do registo da moderação e publicada a cada trimestre no <a>Relatório de Transparência</a>.",
 
   "constitution.art8.toc": "VIII · Remoção",
   "constitution.art8.title": "Remoção",
@@ -6358,9 +6773,7 @@ export const marketing: Catalog = {
     "O versionamento é sequencial (v1.0, v1.1…). O texto integral da versão em vigor é publicado em permanência.",
 
   "constitution.footer.version":
-    "<b>Constituição v1.4</b> · adotada a 14 nov. 2025 · em vigor desde 1 jan. 2026 ·",
-  "constitution.footer.downloadPdf": "Descarregar PDF",
-  "constitution.footer.seeAssembly": "Ver a Assembleia",
+    "<b>Constituição v1.4</b> · adotada a 14 nov. 2025 · em vigor desde 1 jan. 2026",
   "constitution.footer.readCodeOfConduct": "Ler o Código de Conduta",
 
   // ── Biblioteca de Recursos — chrome de página/filtros/cartão. Os registos
@@ -6531,4 +6944,33 @@ export const marketing: Catalog = {
     "Alojamento e perfis alternativos, mais próximos do real na homepage",
   "changelog.entries.homepage-housing-personas-showcase.body":
     'As secções de Alojamento e Perfis Alternativos da homepage mostram agora como as funcionalidades funcionam de verdade: dois anúncios reais com um separador para o quarto e outro para o senhorio (avaliações, veredictos, e um honesto "ainda sem avaliações" quando o senhorio é novo), e um baralho de perfis interativo onde podes ver como a página pública muda consoante o perfil escolhido.',
+
+  // Trust, safety and moderation (section 1 build).
+  "changelog.tag.transparency": "Ler o relatório de transparência",
+  "changelog.tag.constitution": "Ler a constituição",
+  "changelog.tag.codeOfConduct": "Ler o código de conduta",
+  "changelog.entries.the-transparency-report-is-published.title":
+    "O relatório de transparência foi publicado",
+  "changelog.entries.the-transparency-report-is-published.body":
+    "A nossa constituição sempre falou de um relatório de transparência. Agora existe. Todos os trimestres publica o que foi denunciado e porquê, quanto tempo demoraram as decisões, que medidas foram tomadas e quantos recursos foram aceites. Só números, contados a partir do registo de moderação. Os valores muito baixos ficam reservados para que nenhum número possa ser ligado a uma pessoa.",
+  "changelog.entries.a-permanent-ban-needs-two-moderators.title":
+    "Uma remoção definitiva passa a precisar de um segundo moderador",
+  "changelog.entries.a-permanent-ban-needs-two-moderators.body":
+    "O artigo VIII dizia que uma remoção tem de ser ratificada por outro moderador. Agora o software cumpre isso. Quando um moderador bane alguém de forma definitiva, o conteúdo nocivo é retirado de imediato e a decisão sobre a conta fica à espera da confirmação de um segundo moderador. Se ninguém confirmar em 72 horas, a suspensão caduca sozinha.",
+  "changelog.entries.appeals-have-a-deadline.title":
+    "Os recursos passam a ter um prazo que é medido",
+  "changelog.entries.appeals-have-a-deadline.body":
+    "O código de conduta dá-te 14 dias para recorrer e promete uma decisão em 7. Os dois prazos ficam agora registados em cada recurso, e a fila de revisão está ordenada pelo que vence primeiro, para que nenhum recurso fique esquecido. Também podes recorrer de uma expulsão de uma comunidade e de uma restrição, o que antes era impossível.",
+  "changelog.entries.a-community-ban-can-end.title":
+    "Uma expulsão de uma comunidade pode ter data de fim",
+  "changelog.entries.a-community-ban-can-end.body":
+    "Sair de uma comunidade a pedido da moderação era definitivo e sem explicação. A moderação pode agora definir uma data de fim, e passas a saber o que aconteceu: o motivo, a regra da casa em que se baseia e o dia em que termina. Uma semana difícil deixa de significar perder um espaço para sempre.",
+  "changelog.entries.a-warning-now-reaches-you.title":
+    "Um aviso passa mesmo a chegar-te",
+  "changelog.entries.a-warning-now-reaches-you.body":
+    "Se uma publicação, uma resposta, uma mensagem ou um comentário teu recebia um aviso, ninguém te dizia nada. A denúncia era fechada, o registo dizia que tinhas sido avisado e tu nunca soubeste. Os avisos passam a chegar a quem escreveu, com o motivo incluído.",
+  "changelog.entries.community-mods-can-read-what-was-reported.title":
+    "A moderação de uma comunidade passa a ver o que foi denunciado",
+  "changelog.entries.community-mods-can-read-what-was-reported.body":
+    "Ao abrir uma denúncia, a moderação via um motivo e uma data e tinha de decidir se removia algo que não conseguia ler. As denúncias passam a incluir a publicação, quem a escreveu, o grau de urgência e o prazo. As denúncias urgentes sobre exposição ou dados pessoais seguem para a equipa com formação.",
 };

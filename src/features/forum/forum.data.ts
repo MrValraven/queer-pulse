@@ -70,8 +70,18 @@ export interface Reply {
   time: string;
   isOP?: boolean;
   helpful?: boolean;
-  quote?: { cite: string; text: string };
+  /** This reply is the thread's accepted answer (SOC-13). Live-provided
+   *  (`ForumPostResponse.isAccepted`); demo threads set it locally. */
+  accepted?: boolean;
+  /** A passage this reply quotes. `cite` is the quoted author's display name,
+   *  absent when the quoted post is not in the loaded page. Live quotes are
+   *  written as `>`-prefixed leading lines of the reply body (see
+   *  `splitLeadingQuote`); demo threads carry curated ones. */
+  quote?: { cite?: string; text: string };
   body: string[];
+  /** Resolved URL of a photo attached to this reply (live), or a local blob
+   *  preview (demo / an optimistic just-posted reply). */
+  image?: string;
   reactions: number;
   // ── Live edit/delete/restore metadata (backend-provided; absent in demo) ──
   /** Backend post id — the edit/delete/restore/history target. */
@@ -152,6 +162,20 @@ export interface Thread {
    *  Live-provided; absent on demo threads, so the row menu's Pin item is
    *  live-only (demo threads already carry a fixed `pinned` badge instead). */
   canPin?: boolean;
+  /** Is the viewer following this thread (SOC-13)? Live-provided; demo keeps
+   *  its own local toggle. */
+  isSubscribed?: boolean;
+  /** The reply marked as this thread's answer, or null while it is open. */
+  acceptedPostId?: string | null;
+  /** Whether the viewer may set/clear the accepted answer (thread author or
+   *  moderator). Live-provided. */
+  canAcceptAnswer?: boolean;
+  /** Whether the viewer may replace the tag set (author or moderator).
+   *  Deliberately wider than `canEdit`, which is the author-only title
+   *  permission. Live-provided. */
+  canEditTags?: boolean;
+  /** Resolved URL of a photo attached to the opening post, when there is one. */
+  opImage?: string;
 }
 
 // ── Author / reply identity, driven by the member registry ──────────────────

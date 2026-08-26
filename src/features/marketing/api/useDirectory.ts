@@ -10,6 +10,7 @@ import {
   getPlace,
   type DirectoryPlace,
 } from "../directoryPlaces";
+import type { AccessibilitySlug } from "../listBusiness/listingAccessibility.data";
 import {
   cardDtoToPlace,
   detailDtoToPlace,
@@ -62,6 +63,14 @@ export interface DirectoryPlacesPageFilters {
   /** `"verified"` restricts to safe-space-verified listings — sent
    * server-side as `safe`. `null`/absent = no restriction. */
   safe?: "verified" | null;
+  /**
+   * Accessibility needs that must ALL be met — sent server-side as `access`,
+   * where the match is on a stored answer of exactly `"yes"`. Empty/absent
+   * applies no accessibility filter. Only the six canonical slugs are ever
+   * sent: the endpoint answers 400 to anything else rather than quietly
+   * ignoring it, which is the behaviour that keeps a filter honest.
+   */
+  access?: AccessibilitySlug[];
 }
 
 export interface DirectoryPlacesPageResult {
@@ -109,9 +118,13 @@ export function useDirectoryPlacesPage(
   const { demoMode } = useDemoMode();
   const trimmedQuery = (filters.query ?? "").trim();
   const safe = filters.safe ?? undefined;
+  // Sorted + joined so the cache key is stable whatever order the member
+  // ticked the boxes in, and so two identical filter sets share one page cache.
+  const access = [...(filters.access ?? [])].sort();
+  const accessKey = access.join(",");
 
   const query = useInfiniteQuery<DirectoryPageVM>({
-    queryKey: [DIRECTORY_KEY, "page", demoMode, trimmedQuery, safe],
+    queryKey: [DIRECTORY_KEY, "page", demoMode, trimmedQuery, safe, accessKey],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
@@ -125,6 +138,7 @@ export function useDirectoryPlacesPage(
         await getDirectoryPage({
           q: trimmedQuery || undefined,
           safe,
+          access: access.length > 0 ? access : undefined,
           page: pageParam as number,
         }),
       );

@@ -5,7 +5,8 @@ import { Avatar, Button } from "../../shared/components/ui";
 import { gatheringPath } from "../gatherings/data";
 import { tintForSlug } from "../../shared/api/refs";
 import { initials, relativeTime } from "./api/feed.adapters";
-import type { FeedItem } from "../../shared/contracts/contracts";
+import type { FeedItem } from "./api/feed.api";
+import { FeedReasonLine } from "./FeedPostActions";
 import { DEMO_GATHERING as g } from "./feedCards.data";
 import {
   FeedActionLink,
@@ -70,6 +71,7 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
           }
         />
         <FeedQuote>{item.summary}</FeedQuote>
+        <FeedReasonLine reason={item.reason} subject={item.reasonSubject} />
         <FeedActions
           primary={
             <Button variant="primary" size="sm" to={item.link}>

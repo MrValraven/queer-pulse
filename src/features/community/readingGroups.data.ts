@@ -1,21 +1,60 @@
 export type Genre = "fiction" | "nonfiction" | "theory" | "poetry" | "memoir";
-export type Format = "irl" | "online";
 
+/** How a group meets. `either` is a real answer the "start your own group"
+ *  form offers, and a live group carries it through rather than being
+ *  flattened onto one side; both format filters match it. */
+export type Format = "irl" | "online" | "either";
+
+/**
+ * One card in the reading-group directory.
+ *
+ * DEMO groups come from the curated `GROUPS` set below and fill every field.
+ * LIVE groups are communities tagged `book-club` (see
+ * `readingGroups.adapters.ts`) and legitimately know less: the proposal form
+ * asks for a book, a reason, a format and a headcount, and never asks for a
+ * genre, a meeting place, a cadence or a language. Those fields are nullable
+ * for exactly that reason, and every surface omits a null one rather than
+ * printing a plausible-looking default.
+ */
 export interface Group {
   id: string;
-  genre: Genre;
+  genre: Genre | null;
   format: Format;
   book: string;
-  author: string;
+  author: string | null;
   spine: string;
   spineColor: string;
-  name: string;
-  description: string;
-  where: string;
-  frequency: string;
-  spots: number;
-  language: string;
+  name: string | null;
+  description: string | null;
+  where: string | null;
+  frequency: string | null;
+  /** Seats still open. Null on a live group: a community counts the members it
+   *  has, and inventing spare chairs from a headcount nobody has re-confirmed
+   *  would be a number the card cannot stand behind. */
+  spots: number | null;
+  language: string | null;
+  /** LIVE only: the community this group IS. Present means the card links to a
+   *  real page and its join affordance reaches a real owner. */
+  communitySlug?: string;
+  /** LIVE only: how many members the group's community has. */
+  memberCount?: number;
+  /** LIVE only: true when the viewer is already on the group's roster, so the
+   *  card offers the way in rather than the way to ask. */
+  isJoined?: boolean;
 }
+
+/**
+ * Spine colours a LIVE group's book gets, picked deterministically from its
+ * slug so a group keeps the same spine on every visit and across devices. The
+ * curated demo groups carry their own hand-picked colour instead.
+ */
+export const SPINE_COLORS = [
+  "var(--plum)",
+  "var(--jade)",
+  "var(--accent-ink)",
+  "var(--violet)",
+  "var(--amber)",
+] as const satisfies readonly [string, ...string[]];
 
 export const GROUPS: Group[] = [
   {

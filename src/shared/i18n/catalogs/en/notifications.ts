@@ -174,6 +174,84 @@ export const notifications: Catalog = {
   "type.report_resolved.text": "We've followed up on a report you filed.",
   "type.report_resolved.meta": "Report update",
 
+  // Duty mail for whoever can act on a new report. The bell never names the
+  // reporter, so this copy never promises one. The `.emergency.*` variants are
+  // outing and doxxing, the two reasons carrying a 1-hour SLA.
+  "type.report_filed.text": "A new report is waiting in the moderation queue.",
+  "type.report_filed.meta": "Report filed",
+  "type.report_filed.emergency.text":
+    "An urgent report needs a decision within the hour.",
+  "type.report_filed.emergency.meta": "Urgent report",
+
+  "type.community_report_filed.text":
+    "Something in {communityName} has been reported.",
+  "type.community_report_filed.meta": "Report in your community",
+  "type.community_report_filed.emergency.text":
+    "An urgent report in {communityName} needs a decision within the hour.",
+  "type.community_report_filed.emergency.meta": "Urgent report",
+
+  // ── Removed from a community (TS-10) ─────────────────────────────────────
+  // The payload names no moderator, so this copy does not either. It does
+  // carry the terms, because the bell is the only place the member can read
+  // them: QueerPulse sends no email, and there is no way to message a
+  // community's moderators. A timed bar and a permanent one get separate
+  // sentences rather than one hedged string.
+  "type.community_banned.permanent.text":
+    "You have been removed from {communityName}. The reason given: {reason}",
+  "type.community_banned.permanent.meta": "Removed from a community",
+  "type.community_banned.permanent.rule.text":
+    "You have been removed from {communityName} under its rule \u201c{ruleText}\u201d. The reason given: {reason}",
+  "type.community_banned.permanent.rule.meta": "Removed from a community",
+  "type.community_banned.timed.text":
+    "You cannot post in {communityName} until {expiresAt}. The reason given: {reason}",
+  "type.community_banned.timed.meta": "Paused in a community",
+  "type.community_banned.timed.rule.text":
+    "You cannot post in {communityName} until {expiresAt}, under its rule \u201c{ruleText}\u201d. The reason given: {reason}",
+  "type.community_banned.timed.rule.meta": "Paused in a community",
+  "type.community_banned.whenFallback": "a date that was not recorded",
+
+  // ── Account and security (ID-06) ─────────────────────────────────────────
+  // The only rows in this catalog about the ACCOUNT rather than the community.
+  //
+  // Two rules govern the wording, and both are about what a member reads on a
+  // lock screen before they have decided to unlock the phone:
+  //  - Nothing here names QueerPulse's subject matter, another member, or any
+  //    content. A push preview that outs somebody is a harm this feature would
+  //    have created rather than prevented.
+  //  - Nothing here promises an email. QueerPulse delivers none. The channels
+  //    are this bell and Web Push, which is what "here and on your phone"
+  //    means in the settings copy.
+  //
+  // `{deviceLabel}` is the coarse server-stored name ("Chrome on macOS") and
+  // `{when}` is resolved by `signInTimeToken` in the member's own language.
+  "type.security_new_sign_in.text":
+    "Your account was signed in to on {deviceLabel}, {when}. If that was you, nothing to do.",
+  "type.security_new_sign_in.deviceFallback": "a device we don't recognise",
+  "type.security_new_sign_in.meta": "New device signed in",
+  // Used when the sign-in time cannot be read from the payload. Vague on
+  // purpose: a wrong time on a security alert is worse than no time.
+  "type.security_new_sign_in.whenFallback": "recently",
+  // The lock-screen line for the same alert. Deliberately shorter and vaguer
+  // than the bell copy: a push preview is read by whoever is holding the phone,
+  // so it names no device and no time, only that there is something to open.
+  "type.security_new_sign_in.push": "A new device signed in to your account.",
+
+  "type.account_export_ready.text":
+    "Your data export has finished and is ready to download.",
+  "type.account_export_ready.meta": "Export ready",
+
+  // `{daysRemaining}` comes straight from the payload. Phrased around what the
+  // member can still do, because for these few days they still can.
+  // Flat form, for a row whose payload carries no readable day count. The
+  // plural forms below win whenever it does.
+  "type.account_deletion_final_warning.text":
+    "Your account is scheduled for deletion soon. You can still cancel until then.",
+  "type.account_deletion_final_warning.text_one":
+    "Your account is deleted in {daysRemaining} day. You can still cancel until then.",
+  "type.account_deletion_final_warning.text_other":
+    "Your account is deleted in {daysRemaining} days. You can still cancel until then.",
+  "type.account_deletion_final_warning.meta": "Deletion scheduled",
+
   "type.appeal_resolved.text": "There's a decision on your appeal.",
   "type.appeal_resolved.meta": "Appeal update",
 
@@ -190,6 +268,13 @@ export const notifications: Catalog = {
   "type.roadmap_status.text": "There's an update on an idea you shared.",
   "type.roadmap_status.meta": "Roadmap update",
 
+  // A shipped magazine issue (CON-05). `{issueNumber}` and `{issueTitle}` come
+  // straight from the payload. This replaced an email digest, so the copy names
+  // the page and nothing else: nothing is on its way anywhere.
+  "type.magazine_issue_published.text":
+    "Issue {issueNumber} is out: {issueTitle}. See what's in it.",
+  "type.magazine_issue_published.meta": "New issue",
+
   // Concern outcome — headline per terminal status (resolved/dismissed); the
   // flat keys are the fallback for an unrecognised status.
   "type.concern_update.text": "There's an update on a concern you raised.",
@@ -200,6 +285,55 @@ export const notifications: Catalog = {
   "type.concern_update.dismissed.text":
     "The concern you raised has been reviewed and closed.",
   "type.concern_update.dismissed.meta": "Concern update",
+
+  // ── Intake outcomes ──────────────────────────────────────────────────────
+  // Every form in the backend's `intake_submissions` table EXCEPT a governance
+  // concern, which keeps the `concern_update` copy above. These used to borrow
+  // it, so a member who sent Culture a playlist was told their "concern" had
+  // been reviewed. `{form}` is resolved by `intakeFormToken` from the payload's
+  // `kind`, so the row names the form they actually filled in.
+  "type.intake_reviewed.text": "We've reviewed what you sent us.",
+  "type.intake_reviewed.meta": "Submission reviewed",
+  "type.intake_reviewed.resolved.text":
+    "We've reviewed {form} and we're taking it forward.",
+  "type.intake_reviewed.resolved.meta": "Submission reviewed",
+  "type.intake_reviewed.dismissed.text":
+    "We've reviewed {form}. We're not taking it further this time.",
+  "type.intake_reviewed.dismissed.meta": "Submission reviewed",
+  // One per backend intake kind. Each reads as the object of "We've reviewed
+  // …", so they stay lowercase and name the thing rather than the form.
+  "type.intake_reviewed.form.grant": "your micro-grant application",
+  "type.intake_reviewed.form.suggest_edit": "your suggested edit",
+  "type.intake_reviewed.form.sober_host": "your alcohol-free listing",
+  "type.intake_reviewed.form.panel_signup": "your panel sign-up",
+  "type.intake_reviewed.form.incubator_cohort":
+    "your incubator cohort application",
+  "type.intake_reviewed.form.incubator_mentor": "your mentor sign-up",
+  "type.intake_reviewed.form.incubator_session": "your session request",
+  "type.intake_reviewed.form.culture_suggest_pick": "your suggested pick",
+  "type.intake_reviewed.form.culture_post_project": "your project post",
+  "type.intake_reviewed.form.culture_submit_work": "the work you submitted",
+  "type.intake_reviewed.form.culture_submit_playlist": "your playlist",
+  // Used when the payload names a form this catalog has not learned yet.
+  "type.intake_reviewed.formFallback": "what you sent us",
+
+  // ── Data-subject request outcome ─────────────────────────────────────────
+  // A statutory data right, reported back as one. This also used to borrow
+  // `concern_update`. `{reference}` is the member's own case number, the same
+  // string the data-request page lists in their history, which is where the row
+  // links. Nothing here promises an email: QueerPulse sends none.
+  "type.dsar_resolved.text":
+    "There's a decision on the data request you filed.",
+  "type.dsar_resolved.meta": "Data request",
+  "type.dsar_resolved.resolved.text":
+    "Your data request is complete. Reference: {reference}.",
+  "type.dsar_resolved.resolved.meta": "Data request",
+  "type.dsar_resolved.rejected.text":
+    "Your data request was reviewed and couldn't be granted. Reference: {reference}.",
+  "type.dsar_resolved.rejected.meta": "Data request",
+  // Used when the case number cannot be read from the payload, so the sentence
+  // stays whole rather than ending in "Reference: .".
+  "type.dsar_resolved.referenceFallback": "not recorded",
 
   // An admin manually adjusted the member's verification standing
   // (VerificationService.override). Names only the level they were moved to;
@@ -248,6 +382,12 @@ export const notifications: Catalog = {
   "type.moderation_outcome.ban.text":
     "Your account has been permanently suspended.",
   "type.moderation_outcome.ban.meta": "{note}",
+  // A lifted restriction is good news, and the generic
+  // "there's a decision from the moderation team" line reads as more bad news
+  // arriving. It gets its own sentence for that reason.
+  "type.moderation_outcome.restriction_lifted.text":
+    "Your restriction has been lifted.",
+  "type.moderation_outcome.restriction_lifted.meta": "{note}",
 
   // A fellow member credited a persona of yours as a collaborator on one of
   // their items (personas discovery Phase 5, Moment 6). The first live kind
@@ -272,6 +412,22 @@ export const notifications: Catalog = {
   "type.writer_application_declined.text":
     "Your writer application wasn't accepted this time.",
   "type.writer_application_declined.meta": "Writer application",
+
+  // A staff decision on a story a member sent the magazine. {workingTitle} is
+  // the member's OWN headline, read back to them. The desk's reply note is not
+  // in the payload — it waits on their submissions tracker.
+  "type.story_submission_decided.accepted.text":
+    "The magazine accepted \u201C{workingTitle}\u201D. Open your submissions to read the desk's reply.",
+  "type.story_submission_decided.accepted.meta": "Story submission",
+  "type.story_submission_decided.commissioned.text":
+    "\u201C{workingTitle}\u201D has been commissioned. Open your submissions to read the desk's reply.",
+  "type.story_submission_decided.commissioned.meta": "Story submission",
+  "type.story_submission_decided.declined.text":
+    "\u201C{workingTitle}\u201D wasn't taken this time. Open your submissions to read the desk's reply.",
+  "type.story_submission_decided.declined.meta": "Story submission",
+  "type.story_submission_decided.text":
+    "The magazine has decided on \u201C{workingTitle}\u201D.",
+  "type.story_submission_decided.meta": "Story submission",
 
   "type.volunteer_application_received.text":
     "Someone applied to volunteer for one of your opportunities.",
@@ -327,6 +483,13 @@ export const notifications: Catalog = {
   "page.loadingMore": "Loading…",
 
   // Filter tabs (data.tsx's notificationTabs + the link-style Mentions tab)
+  // ── Bundled rows (SOC-10) ─────────────────────────────────────────────────
+  // Appended after the row's own text, so "Ana replied" becomes
+  // "Ana replied and 39 others". One row for one conversation: forty replies to
+  // a thread used to be forty rows, forty unread, and forty taps to clear.
+  "bundle.others_one": "and 1 other",
+  "bundle.others_other": "and {count} others",
+
   "tabs.all": "All",
   "tabs.events": "Events",
   "tabs.community": "Community",

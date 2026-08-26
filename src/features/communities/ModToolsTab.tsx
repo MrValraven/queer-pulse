@@ -100,7 +100,15 @@ export function ModToolsTab({
           onChange={(id) => openSection(id as ModSection)}
         />
 
-        <div className={styles.pane} {...tabPanelProps(railId, section)}>
+        {/* Re-keyed on the open section so the entrance animation replays on
+            every switch. React would otherwise keep this element and only
+            swap its children, which is the instant pop the rail used to
+            produce. */}
+        <div
+          key={section}
+          className={`${styles.pane} ${styles.paneIn}`}
+          {...tabPanelProps(railId, section)}
+        >
           <ModToolsPane
             section={section}
             living={living}
@@ -174,9 +182,11 @@ function ModToolsPane({
     return (
       <ModReportedPosts
         reports={actions.reports}
+        slug={living.slug}
         state={actions.reportsState}
         onRemove={(report) => setConfirming({ kind: "removeReport", report })}
         onDismiss={actions.dismissReportRow}
+        onEscalate={actions.escalateReportRow}
       />
     );
   }

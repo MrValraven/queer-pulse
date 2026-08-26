@@ -1,0 +1,91 @@
+/* CON-10: the category-grouped index of every guide route. A plain, dense
+   list on purpose — this page exists so nothing is unreachable, so legibility
+   and completeness beat presentation. */
+.body {
+  padding: 56px 0 88px;
+  background: var(--paper);
+}
+
+.group {
+  margin-bottom: 52px;
+}
+
+.groupTitle {
+  font-family: var(--serif);
+  font-size: 26px;
+  margin-bottom: 18px;
+  color: var(--text-strong);
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.skeletons {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 18px 20px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-card);
+  background: var(--cream);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: rgba(var(--accent-rgb), 0.5);
+  transform: translateY(-2px);
+}
+
+.cardTitle {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--text-strong);
+}
+
+.cardDesc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-60);
+  flex: 1;
+}
+
+.cardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+
+.reviewed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardArrow {
+  color: var(--accent);
+  flex: none;
+}
+
+.empty {
+  font-size: 15px;
+  color: var(--ink-60);
+}

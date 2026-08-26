@@ -8,6 +8,7 @@ import { portrait } from "./adminPeople.data";
 import { chipKey, chipLabel, type Appeal } from "./adminModeration.data";
 import { useOriginalReport } from "./api/useOriginalReport";
 import {
+  AppealDeadlineSection,
   AppealDecisionSection,
   type AppealDecision as Decision,
 } from "./AdminAppealSections";
@@ -148,6 +149,13 @@ export function AdminAppealDrawer({
         </div>
       }
     >
+      {/* TS-11: the published 7-day decision deadline, in front of the person
+          about to decide. */}
+      <AppealDeadlineSection
+        slaDueAt={appeal.slaDueAt}
+        isOverdue={appeal.isOverdue}
+      />
+
       {/* Original decision */}
       <section className={styles.dSec}>
         <h3 className={styles.dSecLabel}>

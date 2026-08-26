@@ -4,6 +4,8 @@ import { memberName } from "../members/data/members";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
 import type {
+  EventAccessibilityAnswers,
+  EventAnnouncementDTO,
   EventHostDTO,
   EventSeriesDTO,
   EventVisibility,
@@ -143,6 +145,50 @@ export interface GatheringDetail {
    *  one. The manage dashboard's share card shows it; absent (demo registry,
    *  or a coverless gathering) leaves the tinted placeholder frame. */
   coverImageUrl?: string | null;
+
+  // ── Where it actually is (LOC-04) ────────────────────────────────────────
+  /**
+   * Live mode only: the street address, or `null` when the viewer has not
+   * earned it. The server discloses the exact door to organisers and to people
+   * holding a confirmed "going" RSVP, and to nobody else, which is what makes
+   * a house party or a pop-up listable at all.
+   *
+   * A `null` here is a state the page says out loud ("the exact address is
+   * shared with the people who are going"), never an empty line.
+   */
+  address?: string | null;
+  /** Live mode only: the host's arrival directions, gated exactly like
+   *  `address` ("through the courtyard, second door, ring twice"). */
+  arrivalNotes?: string | null;
+  /** Which of the two the viewer is holding: the venue and neighbourhood, or
+   *  the door itself. */
+  locationPrecision?: "venue" | "exact";
+  /** Live mode only: the Lisbon neighbourhood, always public. `hood` above
+   *  falls back to the venue name; this is the neighbourhood itself. */
+  neighbourhood?: string | null;
+  /** Live mode only: the venue as the host wrote it, whether or not it is
+   *  linked to a directory listing. Public, like the neighbourhood: a venue
+   *  name is what makes a gathering findable, and only the exact door is
+   *  held back until somebody has RSVP'd. */
+  venue?: string | null;
+  /** Live mode only: "PT / EN bilingual", "Portuguese only", … */
+  language?: string | null;
+  /** Live mode only: the six accessibility answers, always a complete map in
+   *  the same three-valued vocabulary the business directory uses. */
+  accessibilityAnswers?: EventAccessibilityAnswers;
+  /** Live mode only: the host's free-text access note, or "". */
+  accessibilityNote?: string;
+  /** Live mode only (LOC-18): the host's own words about what it costs.
+   *  DISPLAY ONLY. Nothing rendering this may offer to take a payment. */
+  cost?: string | null;
+  /** Live mode only: whether `cost` reads as free (or was never set). */
+  isFree?: boolean;
+  /** Live mode only (LOC-06): what the organisers have told everyone who is
+   *  coming, newest first. Empty for a viewer with no stake in the gathering. */
+  announcements?: EventAnnouncementDTO[];
+  /** Live mode only (LOC-07): seats the going RSVPs occupy, guests included.
+   *  This, never the row count, is what capacity is measured against. */
+  seatsTaken?: number;
 }
 
 export const gatheringDetails: Record<string, GatheringDetail> = {
@@ -643,6 +689,19 @@ export interface CalendarEvent {
   to: string;
   /** Official QueerPulse event vs member/community-created gathering. */
   kind: "event" | "gathering";
+  /** The wizard's gathering type ("Supper club", "Workshop / talk", …) when
+   *  the host picked one. Live only; the demo registry does not model it. */
+  eventType?: string;
+  /**
+   * The host's own words about what it costs (LOC-18): "5 to 15 EUR sliding
+   * scale", "pay what you can at the door". DISPLAY ONLY. This platform takes
+   * no payment, so no card rendering this may offer to take one.
+   */
+  cost?: string;
+  /** Whether `cost` reads as free (or was never set) — computed server-side by
+   *  the same rule the "free" browse filter uses, so a chip can never
+   *  disagree with the filter that produced the card. */
+  isFree?: boolean;
   /** Paid events surface a sliding-scale / price pill. */
   ticketed?: boolean;
   /** Sliding-scale floor, in euros. Formatted at render, never baked. */

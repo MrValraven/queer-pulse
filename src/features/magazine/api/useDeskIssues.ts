@@ -96,8 +96,10 @@ export function useCreateIssue() {
       void queryClient.invalidateQueries({
         queryKey: ["magazine-current-issue"],
       });
-      // The public archive lists issues too — a newly created issue belongs
-      // there as soon as it exists, not only once it ships.
+      // The public archive lists issues too. It only ever shows PUBLISHED
+      // ones (CON-18), so a freshly opened issue stays out of it until it
+      // ships; this refetch keeps the two in step for the case where the
+      // desk creates an issue already dated today or earlier.
       void queryClient.invalidateQueries({ queryKey: ["magazine-issues"] });
     },
   });

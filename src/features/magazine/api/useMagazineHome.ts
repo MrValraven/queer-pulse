@@ -44,5 +44,10 @@ export function useMagazineHome() {
     data: query.data,
     isLoading: query.isLoading,
     isError: query.isError,
+    /** The thrown error, so callers can tell a 401 (no session: every read
+     *  endpoint sits behind `ActiveMemberGuard`) from a genuine failure and
+     *  render a sign-in wall instead of a retry panel. CON-07. */
+    error: query.error,
+    refetch: query.refetch,
   };
 }

@@ -1,0 +1,132 @@
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
+}
+
+.panel {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 20px;
+  padding: 32px 34px;
+}
+@media (--xs) {
+  .panel {
+    padding: 24px 20px;
+  }
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(30px, 4.4vw, 42px);
+  color: var(--text-strong);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+.count {
+  font-size: 13px;
+  color: var(--ink-60);
+  margin: 0 0 24px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: 12px;
+}
+.rowBadge {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--text-strong);
+}
+.rowTitle {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+.rowMeta {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-60);
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+.rowBlurb {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.note {
+  margin: 26px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  font-size: 12.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+
+.gone {
+  text-align: center;
+  padding: 20px 0 8px;
+}
+.gone svg {
+  width: 30px;
+  height: 30px;
+  color: var(--ink-40);
+  margin-bottom: 12px;
+}
+.goneTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--text-strong);
+  margin: 0 0 10px;
+}
+.goneBody {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.7;
+  max-width: 46ch;
+  margin: 0 auto;
+}
+
+.checking {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+}

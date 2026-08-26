@@ -9,6 +9,7 @@ import { MagazineComingSoon } from "./MagazineComingSoon";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { IssueCover } from "./IssueCover";
 import { IssueContents } from "./IssueContents";
+import { IssueContentsPanel } from "./IssueContentsPanel";
 import { DEMO_ISSUE_COVER } from "./issue.data";
 import { useIssue } from "./api/useIssue";
 import styles from "./IssuePage.module.css";
@@ -23,8 +24,9 @@ export function IssuePage() {
   const { data: liveIssue, isLoading, isError } = useIssue(issueNumberParam);
 
   // Demo mode renders the fabricated issue-09 record; live mode overlays the
-  // real title/dek/date and shows ONLY those — the TOC, contributors, stat
-  // counts and editor's letter have no backend analogue, so they stay demo-only.
+  // real title/dek/date plus the desk's curated "In this issue" panel
+  // (CON-05). Contributors, stat counts and the editor's letter still have no
+  // backend analogue, so those stay demo-only.
   const cover = demoMode ? DEMO_ISSUE_COVER : liveIssue;
   const showEmpty = !demoMode && !isLoading && (isError || !cover);
 
@@ -73,7 +75,16 @@ export function IssuePage() {
             dek={cover?.dek}
             publishedLabel={cover?.publishedLabel}
           />
-          {demoMode && <IssueContents />}
+          {demoMode ? (
+            <IssueContents />
+          ) : (
+            // CON-05: the desk's issue-panel curation (the running order it
+            // arranged and the blurb it wrote for each piece) used to be
+            // destined for an email QueerPulse will never send. This is where
+            // it lands instead. Renders nothing until the issue has shipped
+            // published pieces, so an unshipped issue stays a bare cover.
+            <IssueContentsPanel issueNumber={issueNumber || undefined} />
+          )}
         </>
       )}
     </PageShell>

@@ -1,0 +1,40 @@
+/* The per-guide editorial freshness line (CON-09). Quiet by design: it sits
+   under the guide's own outro and reports a fact, so it reads as a colophon
+   rather than another call to action. */
+.footer {
+  padding: 20px 0 32px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  background: var(--paper);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: center;
+  font-size: 14px;
+  color: var(--ink-60);
+}
+
+.reviewed,
+.never,
+.due,
+.overdue {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.reviewed svg {
+  color: var(--jade);
+}
+
+.never svg,
+.overdue svg {
+  color: var(--accent);
+}
+
+.overdue {
+  color: var(--accent);
+  font-weight: 600;
+}

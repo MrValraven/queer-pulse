@@ -110,7 +110,8 @@ export const gatherings: Catalog = {
   "rsvpControl.goingCount_one": "{count} member going so far",
   "rsvpControl.goingCount_other": "{count} members going so far",
   "rsvpControl.waitlistPosition": "You're number {position} in line",
-  "rsvpControl.waitlistNote": "We'll let you know the moment a spot opens.",
+  "rsvpControl.waitlistNote":
+    "A QueerPulse notification reaches you the moment a spot opens.",
   "rsvpControl.cancelCta": "Cancel RSVP",
   "rsvpControl.goingToast": "You're going",
   "rsvpControl.waitlistToast": "You're on the waitlist",
@@ -130,6 +131,7 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Gatherings",
   "common.hostedBy": "Hosted by",
+  "common.hostRemoved": "A former member",
   "common.connectCta": "Connect",
   "common.timeRangeTo": "to",
 
@@ -172,36 +174,35 @@ export const gatherings: Catalog = {
   "event.rsvp.headTitleFull": "This gathering is full",
   "event.rsvp.headTitle": "Reserve your place",
   "event.rsvp.headSubFull":
-    "Join the waitlist. We'll email you if a spot opens.",
+    "Join the waitlist. A QueerPulse notification reaches you if a spot opens.",
   "event.rsvp.headSub": "Pay what you can. All tiers include everything.",
   "event.rsvp.spotsRemaining_one": "<strong>{count} spot</strong> remaining",
   "event.rsvp.spotsRemaining_other": "<strong>{count} spots</strong> remaining",
   "event.rsvp.filledOfCapacity": "{filled} of {capacity} filled",
   "event.rsvp.namePlaceholder": "Your name *",
-  "event.rsvp.emailPlaceholder": "Your email *",
   "event.rsvp.dietaryPlaceholder": "Dietary requirements (optional)",
   "event.rsvp.requiredHintFull":
-    "Name and email are required. We send your waitlist update there.",
+    "Your name is required. Waitlist updates arrive in your QueerPulse notifications.",
   "event.rsvp.requiredHint":
-    "Name and email are required. We send your confirmation there.",
+    "Your name is required. Your place is saved to your account.",
   "event.rsvp.joinWaitlistCta": "Join the waitlist",
   "event.rsvp.reserveCta": "Reserve my place",
-  "event.rsvp.disabledHint": "Enter your name and a valid email to continue",
+  "event.rsvp.disabledHint": "Enter your name to continue",
   "event.rsvp.noteFull":
-    "We'll email you the moment a spot opens. Leaving the waitlist is one click.",
-  "event.rsvp.confirmationEmailNote":
+    "A QueerPulse notification reaches you the moment a spot opens. Leaving the waitlist is one click.",
+  "event.rsvp.confirmationNote":
     "Your place is saved. You'll find it under your gatherings.",
   "event.rsvp.cancelPolicy": "You can cancel up to 48 hours before the event.",
   "event.rsvp.waitlistTitle": "You're on the <em>waitlist.</em>",
   "event.rsvp.errorToast": "That didn't go through. Try again in a moment.",
   "event.rsvp.waitlistBody":
-    "This gathering is full, but we'll <strong>email {email}</strong> the moment a spot opens, usually within a day or two of someone cancelling.",
+    "This gathering is full, but <strong>a QueerPulse notification reaches you</strong> the moment a spot opens, usually within a day or two of someone cancelling.",
   "event.rsvp.waitlistMeta": "You can leave the waitlist at any time.",
   "event.rsvp.leaveWaitlistCta": "Leave the waitlist",
   "event.rsvp.reservedTitle": "You're <em>going.</em>",
   "event.rsvp.reservedTier": "Reserved on the <strong>{tier}</strong> tier",
-  "event.rsvp.confirmationOnWay":
-    "A confirmation is on its way to <strong>{email}</strong>.",
+  "event.rsvp.confirmationSaved":
+    "Your place is confirmed. Find it any time under <strong>your gatherings</strong>.",
   "event.rsvp.addToCalendarCta": "Add to calendar",
   "event.rsvp.messageHostCta": "Message host",
   "event.rsvp.cancelReservationCta": "Cancel my reservation",
@@ -406,10 +407,7 @@ export const gatherings: Catalog = {
   "calendar.noEventsDay": "No events on this day.",
   "calendar.subscribeTitle": "Subscribe to calendar",
   "calendar.subscribeBody":
-    "Get all queer community events delivered to your calendar app. Works with Google Calendar, Apple Calendar, and Outlook.",
-  "calendar.emailPlaceholder": "your@email.com",
-  "calendar.subscribeCta": "Subscribe",
-  "calendar.subscribedCta": "Subscribed",
+    "A feed you can subscribe to from Google Calendar, Apple Calendar or Outlook is still being built. Until it lands, open any gathering and add that one to your calendar from its page.",
   "calendar.hostCta": "Host your own gathering",
 
   // Events
@@ -1125,6 +1123,9 @@ export const gatherings: Catalog = {
   "manage.invite.sub":
     "Pick the members you'd like at this gathering. They'll get a warm invite they can accept or pass on, no pressure either way.",
   "manage.invite.searchLabel": "Search members to invite",
+  "manage.invite.loadingPeople": "Finding the people you are connected to.",
+  "manage.invite.noConnections":
+    "You can invite the people you are connected to. Once you have connections, they show up here.",
   "manage.invite.noneSelected": "No one selected yet",
   "manage.invite.selectedCount_one": "<b>{count}</b> selected",
   "manage.invite.selectedCount_other": "<b>{count}</b> selected",
@@ -1294,4 +1295,180 @@ export const gatherings: Catalog = {
     "You performed as {name}, {craft}. Want a page for that?",
   "performerNudge.startCta": "Start it",
   "performerNudge.dismissCta": "Not now",
+  // ── LOC-18: what a gathering costs (display only, no payment anywhere) ────
+  "create.step3.costLabel": "What it costs",
+  "create.step3.costHint":
+    "Say it in your own words. Nobody pays through QueerPulse, so whatever you write here is what people should expect at the door.",
+  "create.step3.costPlaceholder":
+    "Free, pay what you can, 5 to 15 EUR sliding scale…",
+  "create.step5.row.cost": "Cost",
+  "create.step5.costFree": "Free",
+  "create.step5.accessAnswer": "{question}: {answer}",
+  "create.step5.accessUnanswered_one": "1 question you haven't answered yet",
+  "create.step5.accessUnanswered_other":
+    "{count} questions you haven't answered yet",
+  "events.freeTag": "Free",
+
+  // ── LOC-03: the door ──────────────────────────────────────────────────────
+  "door.expectedSeats": "Seats expected",
+  "door.checkInCta": "Check in",
+  "door.checkInAria": "Check in {name}",
+  "door.arrivedAt": "Arrived {time}",
+  "door.undoCta": "Undo",
+  "door.undoAria": "Undo check-in for {name}",
+  "door.undoneToast": "Check-in undone",
+  "door.failedToast": "That didn't go through. Try again in a moment.",
+  "door.emptyTitle": "Nobody on the list yet",
+  "door.emptyDescription":
+    "As people RSVP they show up here, ready to check in at the door.",
+  "door.notYoursTitle": "This door isn't yours to open",
+  "door.notYoursDescription":
+    "Only the host and co-hosts of a gathering can see who's coming to it.",
+  "door.scan.heading": "At the door",
+  "door.scan.lead":
+    "Read someone's membership card, or find them on the list below.",
+  "door.scan.openCta": "Read a card",
+  "door.scan.eyebrow": "Check in",
+  "door.scan.title": "Read a membership card",
+  "door.scan.viewfinderAria": "Camera view for reading a membership card",
+  "door.scan.startingHint": "Waking the camera up…",
+  "door.scan.pointHint": "Hold the card's code in the frame",
+  "door.scan.deniedHint":
+    "This browser hasn't been given the camera. Type the code from the card instead.",
+  "door.scan.unsupportedHint":
+    "This browser can't read a code from the camera. Type the code from the card instead.",
+  "door.scan.failedHint":
+    "The camera didn't start. Type the code from the card instead.",
+  "door.scan.codeLabel": "Code from the card",
+  "door.scan.codeHelper":
+    "Every membership card carries this under its code. Paste or type it and it works the same way.",
+  "door.scan.codePlaceholder": "Paste or type the code",
+  "door.scan.checkInCta": "Check in",
+  "door.scan.checkingCta": "Checking in…",
+  "door.scan.doneCta": "Done",
+
+  // ── LOC-04: where it is, and who can get in ───────────────────────────────
+  "gathering.where.heading": "Getting there",
+  "gathering.where.placeLabel": "Where",
+  "gathering.where.addressLabel": "Address",
+  "gathering.where.addressWithheld":
+    "The exact address is shared with the people who are going. RSVP and it appears here.",
+  "gathering.where.arrivalLabel": "Finding the door",
+  "gathering.where.languageLabel": "Language",
+  "gathering.where.costLabel": "Cost",
+  "gathering.where.costFree": "Free",
+  "gathering.where.costNote":
+    "Whatever you pay happens between you and the host. QueerPulse takes no money.",
+  "gathering.access.heading": "Access",
+  "gathering.access.lead":
+    "What the host has told us about getting in and being comfortable. An unanswered question means nobody has said, so ask if you need to know.",
+
+  // ── LOC-06: what the organisers have said ─────────────────────────────────
+  "gathering.announcements.heading": "From the hosts",
+  "gathering.announcements.lead":
+    "Updates the organisers sent to everyone coming.",
+  "gathering.announcements.from": "{name}",
+  "gathering.announcements.fromOrganiser": "One of the organisers",
+  "manage.announcements.composerLabel": "Tell everyone who's coming",
+  "manage.announcements.placeholder":
+    "We've moved to the back room. The door code is 4471, come up the stairs on the left.",
+  "manage.announcements.deliveryHint":
+    "Lands as a notification and a push for everyone holding an RSVP or an invite.",
+  "manage.announcements.sendCta": "Send it",
+  "manage.announcements.sendingCta": "Sending…",
+  "manage.announcements.sentToast": "Sent to everyone coming",
+  "manage.announcements.errorToast": "That didn't send. Try again in a moment.",
+  "manage.announcements.previousHeading": "What you've sent",
+  "manage.announcements.emptyTitle": "Nothing sent yet",
+  "manage.announcements.emptyDescription":
+    "Anything you send lands here too, so people can find it again at the door.",
+  "manage.announcements.reached_one": "Reached 1 person",
+  "manage.announcements.reached_other": "Reached {count} people",
+  "manage.messageModal.bodyHelper":
+    "Everyone holding an RSVP or an invite gets this as a notification and a push.",
+  "manage.messageModal.sendingCta": "Sending…",
+  "manage.messageModal.errorToast": "That didn't send. Try again in a moment.",
+
+  // ── LOC-07: what attendees told the host, and how many seats that is ──────
+  "manage.attendees.seatsFilled": "{seats} of {capacity} seats taken",
+  "manage.attendees.seatsFromGuests_one": "1 person going, guests included",
+  "manage.attendees.seatsFromGuests_other":
+    "{count} people going, guests included",
+  "manage.attendees.needs.privateLabel": "Private to the organisers",
+  "manage.attendees.needs.guests_one": "Bringing 1 guest",
+  "manage.attendees.needs.guests_other": "Bringing {count} guests",
+  "manage.attendees.needs.accessLabel": "Access:",
+  "manage.attendees.needs.dietaryLabel": "Food:",
+  "manage.attendees.needs.withheld": "They chose to keep their answers private",
+
+  // ── LOC-08: the host's own door ───────────────────────────────────────────
+  "manage.bans.eyebrow": "This gathering only",
+  "manage.bans.title": "Bar {name} from this gathering",
+  "manage.bans.sub":
+    "They won't be told, and they won't be able to RSVP again.",
+  "manage.bans.explainer":
+    "This covers this gathering and nothing else. It says nothing about them anywhere else on QueerPulse. If you want them out of your whole space, block them from their profile instead.",
+  "manage.bans.reasonLabel": "A note for you",
+  "manage.bans.reasonHelper":
+    "Only the organisers ever see this. It is never sent to them.",
+  "manage.bans.reasonPlaceholder": "What happened, in your own words",
+  "manage.bans.barCta": "Bar them",
+  "manage.bans.barringCta": "Barring…",
+  "manage.bans.barShortCta": "Bar",
+  "manage.bans.barAria": "Bar {name} from this gathering",
+  "manage.bans.barredToast": "{name} is barred from this gathering",
+  "manage.bans.errorToast": "That didn't go through. Try again in a moment.",
+  "manage.bans.listHeading_one": "Barred (1)",
+  "manage.bans.listHeading_other": "Barred ({count})",
+  "manage.bans.emptyTitle": "Nobody is barred",
+  "manage.bans.emptyDescription":
+    "If you ever need to keep someone away from this one gathering, you can do it from their row above.",
+  "manage.bans.barredOn": "Barred {date}",
+  "manage.bans.liftCta": "Lift",
+  "manage.bans.liftAria": "Lift the bar on {name}",
+  "manage.bans.liftedToast": "{name} can RSVP again",
+  "rsvpControl.refusedToast": "The host has removed you from this gathering.",
+  "rsvpControl.goneToast": "This gathering isn't there any more.",
+  "rsvpControl.errorToast": "That didn't go through. Try again in a moment.",
+  "sharePlans.panelHeading": "Tell someone where you'll be",
+  "sharePlans.panelLead":
+    "Send one person you trust the time and the place. It goes as an ordinary message, and only they see it.",
+  "sharePlans.openCta": "Share my plans",
+  "sharePlans.eyebrow": "Just between you two",
+  "sharePlans.title": "Tell someone <em>where you'll be</em>",
+  "sharePlans.sub":
+    "Pick one of your connections. They get it as a normal message you can both read back later.",
+  "sharePlans.searchLabel": "Search your connections",
+  "sharePlans.loadingConnections": "Finding your connections…",
+  "sharePlans.noConnections":
+    "You have no connections yet. Connect with someone first and they'll show up here.",
+  "sharePlans.messageLabel": "What they'll get",
+  "sharePlans.messageHint": "Edit this however you like before it goes.",
+  "sharePlans.sendCta": "Send it",
+  "sharePlans.sendingCta": "Sending…",
+  "sharePlans.errorToast": "That didn't send. Try again in a moment.",
+  "sharePlans.successTitle": "They <em>know</em>",
+  "sharePlans.successSub": "{name} has your plans for this one.",
+  "sharePlans.successMeta":
+    "It's in your messages if you want to add anything.",
+  "sharePlans.template.opening": "I'm going to {title} on {when}.",
+  "sharePlans.template.place": "It's at {place}.",
+  "sharePlans.template.link": "Details: {link}",
+
+  // ── LOC-17: browse filters ────────────────────────────────────────────────
+  "hub.browse.when.groupLabel": "When",
+  "hub.browse.when.any": "Any time",
+  "hub.browse.when.today": "Today",
+  "hub.browse.when.weekend": "This weekend",
+  "hub.browse.when.week": "Next 7 days",
+  "hub.browse.when.month": "Next 30 days",
+  "hub.browse.hoodLabel": "Neighbourhood",
+  "hub.browse.hoodAny": "Anywhere in Lisbon",
+  "hub.browse.typeLabel": "Kind of gathering",
+  "hub.browse.typeAny": "Any kind",
+  "hub.browse.cost.groupLabel": "Cost",
+  "hub.browse.cost.any": "Any cost",
+  "hub.browse.cost.free": "Free",
+  "hub.browse.cost.paid": "Has a door price",
+  "hub.browse.clearFilters": "Clear filters",
 };

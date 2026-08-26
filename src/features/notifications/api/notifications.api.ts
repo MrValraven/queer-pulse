@@ -37,6 +37,12 @@ export interface NotificationDTO {
   createdAt: string;
   /** The acting member, when the backend could resolve one. */
   actor?: NotificationActorDTO | null;
+  /**
+   * How many FURTHER members did the same thing to the same subject after this
+   * row was written, so one row renders as "Ana and 39 others replied". `0` or
+   * absent on an ordinary row. `actor` is always the most recent of them.
+   */
+  otherActorCount?: number;
 }
 
 /**

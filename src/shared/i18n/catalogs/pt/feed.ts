@@ -217,4 +217,38 @@ export const feed: Catalog = {
   "post.inCommunity": "em {community} · {count} respostas",
   "banner.joined": "{count} pessoas juntaram-se perto de ti esta semana",
   "banner.sharing": "{count} partilham as tuas comunidades",
+
+  // ── Porque este item está no feed (SOC-04) ──────────────────────────────
+  "reason.membership": "Fazes parte de {subject}",
+  "reason.connection": "De {subject}, nas tuas ligações",
+  "reason.topic": "Segues {subject}",
+  "reason.recent": "Novo em toda a QueerPulse",
+
+  // ── Ações diretas no cartão (SOC-04) ────────────────────────────────────
+  "action.react": "Conta comigo",
+  "action.reactionFailed": "A reação não ficou guardada. Tentar de novo?",
+  "action.replySent": "Resposta publicada.",
+  "action.replyFailed": "A resposta não foi enviada. Tentar de novo?",
+
+  // ── Silenciar fontes no feed (SOC-18) ───────────────────────────────────
+  "mute.showLess": "Mostrar menos de {name}",
+  "mute.showAgain": "Voltar a mostrar {name}",
+  "mute.mutedToast": "Vais ver menos de {name}. Continuas a ser membro.",
+  "mute.unmutedToast": "{name} voltou ao teu feed.",
+  "mute.failedToast": "Não foi possível guardar. Tentar de novo?",
+  "mute.sidebarHeading": "Feed mais calmo",
+  "mute.sidebarBlurb":
+    "Baixa o volume de uma comunidade ou de um tópico sem sair.",
+  "mute.manageLink": "Fontes que baixaste de volume",
+  "mute.pageTitle": "Fontes que baixaste de volume",
+  "mute.pageBlurb":
+    "Estas aparecem menos no teu feed. Continuas a ser membro de todas as comunidades aqui, mantens o acesso completo e ninguém foi avisado.",
+  "mute.backToFeed": "Voltar ao teu feed",
+  "mute.emptyTitle": "Nada baixado de volume",
+  "mute.emptyDescription":
+    "Quando uma comunidade ou um tópico for mais do que queres no teu feed, escolhe \u2018Mostrar menos\u2019 num dos cartões. Vai aparecer aqui para o poderes trazer de volta.",
+  "mute.kind.community": "Comunidade",
+  "mute.kind.forum_thread": "Tópico",
+  "mute.mutedOn": "Baixado a {date}",
+  "mute.unmute": "Voltar a mostrar",
 };

@@ -8,6 +8,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
 import { useLockThread, useSetThreadOfficial } from "./api/useForumMutations";
 import { LockThreadModal } from "./LockThreadModal";
+import { ThreadFollowButton } from "./ThreadFollowButton";
 import type { Thread } from "./forum.data";
 import styles from "./ThreadPage.module.css";
 
@@ -22,7 +23,10 @@ export function ThreadTopbar({
   thread,
 }: {
   categoryName?: string;
-  thread?: Pick<Thread, "slug" | "isLocked" | "canLock" | "author">;
+  thread?: Pick<
+    Thread,
+    "slug" | "isLocked" | "canLock" | "author" | "isSubscribed"
+  >;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -88,8 +92,12 @@ export function ThreadTopbar({
           </Link>
           <span className={styles.sep} />
           <span className={styles.topCat}>{categoryName}</span>
-          {(canLock || canSetOfficial) && (
+          {thread && (
             <div className={styles.topbarActions}>
+              {/* Follow is for everyone reading, not only staff — it is the
+                  whole point of SOC-13 that a thread you neither started nor
+                  replied to can still reach you. */}
+              <ThreadFollowButton thread={thread} />
               {canSetOfficial && (
                 <Button
                   type="button"

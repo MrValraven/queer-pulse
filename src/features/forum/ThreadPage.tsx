@@ -39,6 +39,8 @@ export function ThreadPage() {
     replyTree,
     likedReplies,
     addReply,
+    answerAndTags,
+    quoteReply,
   } = useThreadPageState();
 
   // Live mode has no thread until the fetch resolves — skeleton, then a real
@@ -107,6 +109,7 @@ export function ThreadPage() {
               }}
               bookmarked={bookmarked}
               onToggleBookmark={toggleBookmark}
+              onEditTags={answerAndTags.openTagsEditor}
               moderation={moderation}
             />
 
@@ -132,9 +135,13 @@ export function ThreadPage() {
               moderation={moderation}
               nestedReplies={nestedReplies}
               authorName={thread.author.name}
+              threadSlug={thread.slug}
+              threadTitle={thread.title}
               reply={reply}
               setReply={setReply}
               onPost={addReply}
+              onAcceptAnswer={answerAndTags.acceptAnswer}
+              onQuote={quoteReply}
               textareaRef={replyBoxRef}
             />
           </div>
@@ -161,6 +168,11 @@ export function ThreadPage() {
           onCloseDelete={() => moderation.setConfirmDelete(null)}
           historyPostId={moderation.historyPostId}
           onCloseHistory={() => moderation.setHistoryPostId(null)}
+          isEditingTags={answerAndTags.isEditingTags}
+          threadTags={thread.tags}
+          isTagsSaving={answerAndTags.isTagsSaving}
+          onSaveTags={answerAndTags.saveTags}
+          onCloseTags={answerAndTags.closeTagsEditor}
         />
       </MentionNamesProvider>
     </PageShell>

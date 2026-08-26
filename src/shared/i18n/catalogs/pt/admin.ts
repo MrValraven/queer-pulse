@@ -917,8 +917,19 @@ export const admin: Catalog = {
   "adminMagazineSubmissions.status.rejected": "Recusada",
   "adminMagazineSubmissions.status.published": "Publicada",
   "adminMagazineSubmissions.status.draft": "Rascunho",
+  "adminMagazineSubmissions.status.commissioned": "Encomendada",
   "adminMagazineSubmissions.row.by": "De {name}",
   "adminMagazineSubmissions.row.sent": "Enviado {date}",
+  "adminMagazineSubmissions.row.decided": "Decidido {date}",
+  "adminMagazineSubmissions.row.readPiece": "Ler o texto completo",
+  "adminMagazineSubmissions.row.coverAlt": "Capa enviada com {title}",
+  "adminMagazineSubmissions.row.reply": "Resposta enviada: {note}",
+  "adminMagazineSubmissions.row.replyLabel": "Resposta a quem escreveu",
+  "adminMagazineSubmissions.row.replyPlaceholder":
+    "Resposta opcional a quem escreveu",
+  "adminMagazineSubmissions.row.declineCta": "Recusar",
+  "adminMagazineSubmissions.row.acceptCta": "Aceitar",
+  "adminMagazineSubmissions.row.commissionCta": "Encomendar",
   "adminMagazineSubmissions.loadMore": "Carregar mais",
   "adminMagazineSubmissions.loadingMore": "A carregar…",
 
@@ -1765,6 +1776,7 @@ export const admin: Catalog = {
   "governance.tabs.finances": "Finanças",
   "governance.tabs.policy": "Política e versões",
   "governance.tabs.proposals": "Propostas",
+  "governance.tabs.motions": "Moções",
   "governance.tabs.audit": "Registo de auditoria",
 
   // NOTA: o resto de `governance.overview.*` (os editores de
@@ -1816,6 +1828,54 @@ export const admin: Catalog = {
     "Não foi possível abrir a proposta. Tenta novamente.",
   "governance.proposals.form.validation":
     "Preenche todos os campos antes de abrir a proposta.",
+
+  // ── Separador Moções (GOV-01) ─────────────────────────────────────────────
+  // A fila de análise. São moções levantadas por membros que já atingiram
+  // o limiar de assinaturas e esperam por quem as analisa. Aprovar uma
+  // agenda a votação; rejeitar uma publica o motivo escrito na página
+  // pública de Governação, por isso a cópia diz isso antes de a decisão
+  // ser tomada, e não depois.
+  "governance.motions.header.eyebrow": "Moções da comunidade",
+  "governance.motions.header.title": "Moções <em>a aguardar análise</em>",
+  "governance.motions.header.sub":
+    "Moções levantadas por membros que atingiram o limiar de assinaturas. Aprova uma para agendar a votação, ou rejeita-a com um motivo que toda a comunidade vai ler.",
+  "governance.motions.loading": "A carregar moções…",
+  "governance.motions.empty": "Não há moções a aguardar análise.",
+  "governance.motions.error": "Não foi possível carregar a fila de moções.",
+  "governance.motions.retry": "Tentar novamente",
+  "governance.motions.approveCta": "Aprovar",
+  "governance.motions.rejectCta": "Rejeitar",
+  "governance.motions.list.cosignatures": "Assinaturas: {count}",
+  "governance.motions.list.raisedBy": "Levantada por {name}",
+  "governance.motions.list.filedOn": "Apresentada a {date}",
+  "governance.motions.approve.eyebrow": "Análise de moção",
+  "governance.motions.approve.title": "Abrir esta moção a votação",
+  "governance.motions.approve.sub":
+    "Define quando a votação abre e quando encerra. As pessoas podem votar em qualquer momento dentro dessa janela.",
+  "governance.motions.approve.opensAt": "Votação abre",
+  "governance.motions.approve.closesAt": "Votação encerra",
+  "governance.motions.approve.cancel": "Cancelar",
+  "governance.motions.approve.save": "Abrir a votação",
+  "governance.motions.approve.saving": "A abrir…",
+  "governance.motions.approve.saved":
+    "Moção aprovada. A votação está agendada.",
+  "governance.motions.approve.error":
+    "Não foi possível aprovar a moção. Tenta novamente.",
+  "governance.motions.approve.validation":
+    "Define uma data de abertura e uma data de encerramento.",
+  "governance.motions.approve.orderError":
+    "A votação tem de encerrar depois de abrir.",
+  "governance.motions.reject.title": "Rejeitar esta moção?",
+  "governance.motions.reject.body":
+    "A moção não vai a votos. O teu motivo é publicado na página pública de Governação, onde toda a gente o pode ler.",
+  "governance.motions.reject.confirmCta": "Rejeitar moção",
+  "governance.motions.reject.reasonLabel": "Motivo",
+  "governance.motions.reject.reasonPlaceholder":
+    "Explica porque é que esta moção não vai a votos.",
+  "governance.motions.reject.saved":
+    "Moção rejeitada. O motivo está publicado.",
+  "governance.motions.reject.error":
+    "Não foi possível rejeitar a moção. Tenta novamente.",
 
   "governance.finances.stat.sustainerMrr": "MRR de apoiantes",
   "governance.finances.stat.totalIncome": "Receita mensal total",
@@ -3844,4 +3904,767 @@ export const admin: Catalog = {
   "communities.queue.status.open": "Aberta",
   "communities.queue.status.resolved": "Resolvida",
   "communities.queue.status.escalated": "Encaminhada",
+
+  // ── ID-04 · Fila de revisão de pedidos sobre dados pessoais (/admin/dsar) ──
+  // Um pedido RGPD arranca um prazo legal de 30 dias no momento em que é
+  // submetido, por isso toda a redação aqui gira à volta desse prazo. Nada
+  // neste bloco pode prometer email: o único canal que a plataforma tem é uma
+  // notificação QueerPulse.
+  "adminDsar.navLabel": "Pedidos de dados",
+  "adminDsar.title": "Pedidos de <em>dados</em>",
+  "adminDsar.header.eyebrow": "Fila de revisão",
+  "adminDsar.header.title": "Pedidos sobre <em>dados pessoais</em>",
+  "adminDsar.header.sub":
+    "Todos os pedidos de dados submetidos por membros, com o prazo legal mais próximo à cabeça. Cada um tem 30 dias.",
+  "adminDsar.header.subOverdue":
+    "Prazo legal mais próximo à cabeça. Fora do prazo de 30 dias neste momento: {count}.",
+  "adminDsar.filter.received": "Recebidos",
+  "adminDsar.filter.in_review": "Em análise",
+  "adminDsar.filter.resolved": "Resolvidos",
+  "adminDsar.filter.rejected": "Recusados",
+  "adminDsar.filter.all": "Todos",
+  "adminDsar.status.received": "Recebido",
+  "adminDsar.status.in_review": "Em análise",
+  "adminDsar.status.resolved": "Resolvido",
+  "adminDsar.status.rejected": "Recusado",
+  "adminDsar.article.access": "Acesso (Art. 15.º)",
+  "adminDsar.article.rectification": "Retificação (Art. 16.º)",
+  "adminDsar.article.erasure": "Apagamento (Art. 17.º)",
+  "adminDsar.article.objection": "Oposição (Art. 21.º)",
+  "adminDsar.clock.overdue": "{days} dias fora do prazo",
+  "adminDsar.clock.dueToday": "Termina hoje",
+  "adminDsar.clock.urgent": "Faltam {days} dias",
+  "adminDsar.clock.remaining": "Faltam {days} dias",
+  "adminDsar.clock.closed": "Prazo parado",
+  "adminDsar.row.openAriaLabel": "Abrir o pedido de dados {reference}",
+  "adminDsar.row.filedBy": "Submetido por {name}",
+  "adminDsar.row.dueBy": "Resposta devida até {date}",
+  "adminDsar.unknownMember": "Um membro",
+  "adminDsar.drawer.label": "Pedido de dados {reference}",
+  "adminDsar.drawer.member": "Submetido por",
+  "adminDsar.drawer.asked": "O que pediram",
+  "adminDsar.drawer.scopes": "Dados indicados",
+  "adminDsar.drawer.filed": "Submetido",
+  "adminDsar.drawer.due": "Prazo legal",
+  "adminDsar.drawer.answered": "Respondido",
+  "adminDsar.drawer.context": "Submetido a partir de",
+  "adminDsar.drawer.outcome": "Desfecho",
+  "adminDsar.outcome.label": "Nota de desfecho",
+  "adminDsar.outcome.placeholder": "O que foi feito sobre este pedido?",
+  "adminDsar.outcome.notifyHint":
+    "Fechar um pedido envia uma notificação QueerPulse ao membro. Não é enviado nenhum email.",
+  "adminDsar.outcome.requiredHint":
+    "Escreve uma nota de desfecho antes de fechar o pedido.",
+  "adminDsar.outcome.closedHint":
+    "Este pedido está fechado. O membro foi notificado no QueerPulse.",
+  "adminDsar.action.startReview": "Iniciar análise",
+  "adminDsar.action.resolve": "Resolver",
+  "adminDsar.action.reject": "Recusar",
+  "adminDsar.toast.in_review": "Passou para em análise.",
+  "adminDsar.toast.resolved": "Pedido resolvido. O membro foi notificado.",
+  "adminDsar.toast.rejected": "Pedido recusado. O membro foi notificado.",
+  "adminDsar.toast.movedOn":
+    "Este pedido já mudou de estado. Recarrega a fila para veres onde ficou.",
+  "adminDsar.toast.error": "Não conseguimos atualizar esse pedido.",
+  "adminDsar.empty": "Não há pedidos de dados neste filtro.",
+  "adminDsar.error": "Não conseguimos carregar os pedidos de dados.",
+  "adminDsar.loadMore": "Carregar mais",
+  "adminDsar.loadingMore": "A carregar…",
+
+  // ── Consola do diretório de tópicos (/admin/topics, SOC-01) ───────────────
+  "topics.eyebrow": "Descoberta",
+  "topics.title": "Diretório de <em>tópicos</em>",
+  "topics.sub":
+    "O grafo de interesses por trás de /topics, de cada página de tópico e dos resultados de tópicos na pesquisa. Arquivar retira um tópico e mantém as publicações e quem o segue.",
+  "topics.newCta": "Novo tópico",
+  "topics.empty":
+    "Ainda não há tópicos. Cria o primeiro e fica já no diretório.",
+  "topics.loadError": "Não foi possível carregar o diretório de tópicos.",
+  "topics.postsCount_one": "{count} publicação",
+  "topics.postsCount_other": "{count} publicações",
+  "topics.followersCount_one": "{count} seguidor",
+  "topics.followersCount_other": "{count} seguidores",
+  "topics.crisisBadge": "Cartão de apoio em crise",
+  "topics.archivedBadge": "Arquivado",
+  "topics.archiveCta": "Arquivar",
+  "topics.restoreCta": "Restaurar",
+  "topics.archiveError":
+    "Não foi possível alterar o estado de arquivo desse tópico.",
+  "topics.deleteError": "Não foi possível eliminar esse tópico.",
+  "topics.toast.created": "#{tag} está no diretório.",
+  "topics.toast.updated": "#{tag} atualizado.",
+  "topics.toast.archived":
+    "#{tag} arquivado. As publicações e quem o segue ficam guardados.",
+  "topics.toast.restored": "#{tag} voltou ao diretório.",
+  "topics.toast.deleted": "#{tag} eliminado.",
+  "topics.form.createTitle": "Novo tópico",
+  "topics.form.createCta": "Criar tópico",
+  "topics.form.saveError": "Não foi possível guardar esse tópico.",
+  "topics.form.tagField": "Etiqueta",
+  "topics.form.tagHint":
+    "Letras minúsculas, números e hífenes. Passa a ser o endereço da página e o hashtag que os membros escrevem.",
+  "topics.form.tagLockedHint":
+    "A etiqueta não pode mudar: é o endereço da página, o hashtag já dentro das publicações e a chave onde cada seguidor está guardado. Arquiva este tópico e cria a nova etiqueta.",
+  "topics.form.labelField": "Nome",
+  "topics.form.labelHint":
+    'O nome simples mostrado no diretório e na pesquisa, por exemplo "Saúde mental".',
+  "topics.form.descriptionField": "Descrição",
+  "topics.form.descriptionHint":
+    "Uma ou duas frases sobre o que pertence aqui. Aparece no cartão do diretório e no topo da página do tópico.",
+  "topics.form.crisisField": "Mostrar o cartão de apoio em crise",
+  "topics.form.crisisHint":
+    "Acrescenta o painel de apoio em crise à barra lateral deste tópico, para tópicos onde alguém pode chegar num momento difícil.",
+  "topics.delete.title": "Eliminar #{tag}?",
+  "topics.delete.body":
+    "Isto destrói o tópico, {posts} publicações e {followers} seguidores. Arquivar retira-o do diretório na mesma e guarda tudo.",
+  "topics.delete.confirmCta": "Eliminar tópico",
+
+  // ── Consola de guias de recursos (CON-08 / CON-09) ──────────────────────
+  "adminResourceGuides.title": "Guias de <em>recursos</em>",
+  "adminResourceGuides.header.eyebrow": "Editorial",
+  "adminResourceGuides.header.sub":
+    "Todos os guias da plataforma, os mais desatualizados primeiro. Edite o texto aqui em vez de fazer um deploy, e marque a revisão quando tiver lido um de ponta a ponta.",
+  "adminResourceGuides.sortLabel": "Ordenar guias",
+  "adminResourceGuides.sort.reviewDue": "Revisão pendente",
+  "adminResourceGuides.sort.title": "Título",
+  "adminResourceGuides.sort.updated": "Atualizados recentemente",
+  "adminResourceGuides.staleBanner":
+    "{count} guias nunca foram revistos por ninguém.",
+  "adminResourceGuides.empty":
+    "Ainda não há guias. Assim que a migração de conteúdo correr, todos aparecem aqui.",
+  "adminResourceGuides.viewPublicIndexCta": "Abrir o índice público de guias",
+  "adminResourceGuides.loadError": "Não foi possível carregar os guias.",
+
+  "adminResourceGuides.row.unpublished": "Não publicado",
+  "adminResourceGuides.row.notManaged": "Página ainda no código",
+  "adminResourceGuides.row.reviewed": "Revisto a {date}",
+  "adminResourceGuides.row.reviewedBy": "Revisto a {date} por {reviewer}",
+  "adminResourceGuides.row.neverReviewed": "Nunca revisto",
+  "adminResourceGuides.row.overdue": "Em atraso desde {date}",
+  "adminResourceGuides.row.reviewCta": "Marcar como revisto",
+  "adminResourceGuides.row.editCta": "Editar",
+
+  "adminResourceGuides.editor.title": "Editar guia",
+  "adminResourceGuides.editor.saveCta": "Guardar alterações",
+  "adminResourceGuides.editor.takeoverNotice":
+    "Adicionar uma secção passa a controlar esta página: quem a ler vê o que escrever aqui em vez da página incorporada.",
+  "adminResourceGuides.tab.details": "Detalhes",
+  "adminResourceGuides.tab.prose": "Texto (EN)",
+  "adminResourceGuides.tab.prosePt": "Texto (PT)",
+  "adminResourceGuides.field.title": "Título",
+  "adminResourceGuides.field.titlePt": "Título (português)",
+  "adminResourceGuides.field.description": "Descrição",
+  "adminResourceGuides.field.descriptionPt": "Descrição (português)",
+  "adminResourceGuides.field.category": "Categoria",
+  "adminResourceGuides.field.routePath": "Caminho da página",
+  "adminResourceGuides.field.meta": "Etiqueta do cartão",
+
+  "adminResourceGuides.sections.empty":
+    "Ainda sem secções. A página deste guia continua no código da aplicação.",
+  "adminResourceGuides.sections.headingLabel": "Título da secção",
+  "adminResourceGuides.sections.anchorLabel": "Identificador de âncora",
+  "adminResourceGuides.sections.kindLabel": "Tipo de bloco",
+  "adminResourceGuides.sections.textLabel": "Texto do bloco",
+  "adminResourceGuides.sections.addSectionCta": "Adicionar secção",
+  "adminResourceGuides.sections.addBlockCta": "Adicionar bloco",
+  "adminResourceGuides.sections.moveUp": "Mover secção para cima",
+  "adminResourceGuides.sections.moveDown": "Mover secção para baixo",
+  "adminResourceGuides.sections.removeSection": "Remover secção",
+  "adminResourceGuides.sections.removeBlock": "Remover bloco",
+  "adminResourceGuides.blockKind.paragraph": "Parágrafo",
+  "adminResourceGuides.blockKind.subheading": "Subtítulo",
+  "adminResourceGuides.blockKind.listItem": "Item de lista",
+  "adminResourceGuides.blockKind.note": "Destaque",
+
+  "adminResourceGuides.review.title": "Marcar este guia como revisto",
+  "adminResourceGuides.review.body":
+    "Confirme que leu este guia de ponta a ponta e que tudo continua correto: números de telefone, critérios de elegibilidade, horários de clínicas, referências legais.",
+  "adminResourceGuides.review.reviewedByLabel": "Revisto por",
+  "adminResourceGuides.review.reviewedByHint": "Uma pessoa ou uma equipa",
+  "adminResourceGuides.review.reviewedOnLabel": "Revisto a",
+  "adminResourceGuides.review.dueLabel": "Próxima revisão",
+  "adminResourceGuides.review.confirmCta": "Marcar como revisto",
+
+  // ── AdminHousingListingsPage — consola de revisão de habitação (LOC-01) ──
+  "housingListings.nav": "Anúncios de habitação",
+  "housingListings.title": "Revisão de <em>habitação.</em>",
+  "housingListings.eyebrow": "Quadro de habitação",
+  "housingListings.header.title": "Casas à espera de uma <em>decisão.</em>",
+  "housingListings.header.sub":
+    "Cada anúncio publicado por alguém espera aqui até uma pessoa o ler. Primeiro os de maior risco, com os sinais que os puseram lá.",
+  "housingListings.keyHint":
+    "J e K movem entre anúncios. A publica, C devolve para alterações, R recusa, D retira um que esteja no ar.",
+  "housingListings.count_one": "{count} anúncio",
+  "housingListings.count_other": "{count} anúncios",
+  "housingListings.loadMore": "Mostrar mais",
+  "housingListings.loadingMore": "A carregar…",
+  "housingListings.tab.review": "À espera",
+  "housingListings.tab.question": "Devolvidos",
+  "housingListings.tab.live": "No ar",
+  "housingListings.tab.rejected": "Recusados",
+  "housingListings.tab.taken_down": "Retirados",
+  "housingListings.tab.all": "Tudo",
+  "housingListings.sort.label": "Ordenar",
+  "housingListings.sort.risk": "Maior risco",
+  "housingListings.sort.oldest": "À espera há mais tempo",
+  "housingListings.sort.newest": "Mais recentes",
+  "housingListings.empty.title": "Nada à espera aqui",
+  "housingListings.empty.body":
+    "Neste momento não há nenhum anúncio neste estado. Usa outro separador para rever o que já foi decidido.",
+  "housingListings.error.title": "Não foi possível carregar a fila",
+  "housingListings.error.body":
+    "Algo correu mal do nosso lado. Verifica a ligação e tenta outra vez.",
+  "housingListings.error.retry": "Tentar novamente",
+  "housingListings.status.review": "À espera",
+  "housingListings.status.question": "Devolvido",
+  "housingListings.status.live": "No ar",
+  "housingListings.status.rejected": "Recusado",
+  "housingListings.status.takenDown": "Retirado",
+  "housingListings.row.submitted": "Publicado {date}",
+  "housingListings.row.rent": "{amount} por mês",
+  "housingListings.row.bedrooms_one": "{count} quarto",
+  "housingListings.row.bedrooms_other": "{count} quartos",
+  "housingListings.row.billsIncluded": "Despesas incluídas",
+  "housingListings.row.billsExcluded": "Despesas à parte",
+  "housingListings.row.photoAlt": "Foto {position} de {title}",
+  "housingListings.row.noPhotos": "Este anúncio não tem fotos",
+  "housingListings.risk.band.high": "Risco alto",
+  "housingListings.risk.band.medium": "Alguns sinais",
+  "housingListings.risk.band.low": "Risco baixo",
+  "housingListings.risk.scoreTitle":
+    "Pontuação de risco em 100, calculada a partir dos sinais listados abaixo",
+  "housingListings.risk.heading_one": "{count} sinal, a somar {score}",
+  "housingListings.risk.heading_other": "{count} sinais, a somar {score}",
+  "housingListings.risk.weight": "+{weight}",
+  "housingListings.risk.noneRaised": "Não foi levantado nenhum sinal de risco",
+  "housingListings.risk.rentFarBelowMarket":
+    "A renda está muito abaixo do plausível para este tipo de casa, o isco clássico do pagamento adiantado",
+  "housingListings.risk.rentBelowMarket":
+    "A renda fica abaixo do limite inferior plausível para este tipo de casa",
+  "housingListings.risk.contactInfoInText":
+    "O anúncio traz um número de telefone, email, IBAN ou contacto de mensagens, levando a conversa para fora da plataforma",
+  "housingListings.risk.offPlatformPayment":
+    "O anúncio pede dinheiro antes de uma visita, ou por um meio que ninguém consegue rastrear",
+  "housingListings.risk.discriminatoryLanguage":
+    "A escrita condiciona a casa a identidades ou crenças em vez de descrever o espaço",
+  "housingListings.risk.listerUnverified":
+    "Quem anuncia só confirmou um endereço de email",
+  "housingListings.risk.listerPhoneOnly":
+    "Quem anuncia confirmou um telefone e nenhum documento de identidade",
+  "housingListings.risk.incompleteListing":
+    "A descrição é curta demais para dizer a alguém como é a casa",
+  "housingListings.risk.noPhotos": "O anúncio não tem fotos",
+  "housingListings.risk.missingAccessibilityInfo":
+    "O anúncio não diz nada sobre como se entra e se circula",
+  "housingListings.lister.erased":
+    "Esta pessoa apagou a conta. Já não há ninguém a quem comunicar uma decisão.",
+  "housingListings.lister.verification.none": "Nada confirmado",
+  "housingListings.lister.verification.email": "Email confirmado",
+  "housingListings.lister.verification.phone": "Telefone confirmado",
+  "housingListings.lister.verification.id": "Identidade verificada",
+  "housingListings.lister.memberSince": "Aqui desde {date}",
+  "housingListings.lister.agent": "Agência",
+  "housingListings.lister.history.total_one": "{count} anúncio no total",
+  "housingListings.lister.history.total_other": "{count} anúncios no total",
+  "housingListings.lister.history.live_one": "{count} no ar",
+  "housingListings.lister.history.live_other": "{count} no ar",
+  "housingListings.lister.history.changes_one": "{count} devolvido",
+  "housingListings.lister.history.changes_other": "{count} devolvidos",
+  "housingListings.lister.history.rejected_one": "{count} recusado",
+  "housingListings.lister.history.rejected_other": "{count} recusados",
+  "housingListings.lister.history.takenDown_one": "{count} retirado",
+  "housingListings.lister.history.takenDown_other": "{count} retirados",
+  "housingListings.details.open": "O anúncio tal como foi escrito",
+  "housingListings.details.noDescription": "Não foi escrita nenhuma descrição.",
+  "housingListings.details.access": "Como se entra e se circula",
+  "housingListings.details.noAccess": "Nada indicado",
+  "housingListings.details.available": "Disponível a partir de",
+  "housingListings.details.availableNow": "Já",
+  "housingListings.details.minStay": "Estadia mínima",
+  "housingListings.details.minStayMonths_one": "{count} mês",
+  "housingListings.details.minStayMonths_other": "{count} meses",
+  "housingListings.details.minStayNone": "Sem mínimo",
+  "housingListings.details.address": "Morada",
+  "housingListings.details.noAddress": "Sem morada registada",
+  "housingListings.details.tourLink": "Abrir a visita virtual",
+  "housingListings.details.priorDecision": "Última decisão a {date}",
+  "housingListings.details.priorDecisionNoReason": "Aprovado sem nota anexada.",
+  "housingListings.details.decidedBy": "Decidido por {name}",
+  "housingListings.decide.approve": "Publicar",
+  "housingListings.decide.requestChanges": "Pedir alterações",
+  "housingListings.decide.reject": "Recusar",
+  "housingListings.decide.takeDown": "Retirar do quadro",
+  "housingListings.decide.cancel": "Cancelar",
+  "housingListings.decide.reasonEyebrow": "Revisão de habitação",
+  "housingListings.decide.reasonTitle.request_changes":
+    "O que precisa de mudar?",
+  "housingListings.decide.reasonTitle.reject": "Porque estás a recusar isto?",
+  "housingListings.decide.reasonTitle.take_down":
+    "Porque estás a retirar isto?",
+  "housingListings.decide.reasonLabel": "A tua razão",
+  "housingListings.decide.reasonHint":
+    "Quem anunciou lê isto palavra por palavra, nas notificações e na própria página de anúncios. Escreve para essa pessoa.",
+  "housingListings.decide.reasonPlaceholder.request_changes":
+    "ex.: Podes acrescentar uma foto da cozinha e dizer se a renda inclui a água? Assim que isso estiver, fica pronto.",
+  "housingListings.decide.reasonPlaceholder.reject":
+    "ex.: Este anúncio pede um depósito antes de uma visita, o que não permitimos aqui. És bem-vinde a publicar de novo sem isso.",
+  "housingListings.decide.reasonPlaceholder.take_down":
+    "ex.: Duas pessoas disseram-nos que esta casa já estava arrendada. Retirámos por agora, diz-nos se estiver errado.",
+  "housingListings.toast.approve": "{title} está no quadro.",
+  "housingListings.toast.request_changes":
+    "{title} foi devolvido a quem o publicou.",
+  "housingListings.toast.reject": "{title} foi recusado.",
+  "housingListings.toast.take_down": "{title} foi retirado do quadro.",
+  "housingListings.toast.error":
+    "Não foi possível registar essa decisão. Verifica a ligação e tenta outra vez.",
+
+  "adminResourceGuides.toast.saved": "{title} guardado.",
+  "adminResourceGuides.toast.reviewed": "{title} marcado como revisto.",
+  "adminResourceGuides.error.save": "Não foi possível guardar o guia.",
+  "adminResourceGuides.error.review": "Não foi possível registar a revisão.",
+
+  // ── Trust, safety and moderation (section 1 build) ──────────────────────
+  // Community attribution on the report queue (TS-14).
+  "moderation.community.all": "Todas as comunidades",
+  "moderation.community.filterLabel": "Filtrar por comunidade",
+  "moderation.community.rowFlag": "De {community}",
+
+  // Clustered rows: one pile-on reads as one thing (TS-06).
+  "moderation.cluster.clearAllCta_one": "Limpar {count}",
+  "moderation.cluster.clearAllCta_other": "Limpar todas ({count})",
+  "moderation.cluster.heading_one": "{count} denúncia aberta sobre {subject}",
+  "moderation.cluster.heading_other":
+    "{count} denúncias abertas sobre {subject}",
+  "moderation.cluster.notOnPage_one":
+    "Falta carregar mais {count} denúncia deste conjunto.",
+  "moderation.cluster.notOnPage_other":
+    "Faltam carregar mais {count} denúncias deste conjunto.",
+  "moderation.cluster.overdue_one": "{count} fora do prazo",
+  "moderation.cluster.overdue_other": "{count} fora do prazo",
+  "moderation.cluster.reporters_one": "de 1 pessoa",
+  "moderation.cluster.reporters_other": "de {count} pessoas diferentes",
+  "moderation.cluster.selectAllCta_one": "Selecionar {count}",
+  "moderation.cluster.selectAllCta_other": "Selecionar todas ({count})",
+  "moderation.cluster.surge": "Onda",
+  "moderation.cluster.surgeHint":
+    "Várias pessoas denunciaram isto ao mesmo tempo. Lê como um só acontecimento antes de agir sobre uma denúncia isolada: uma perseguição em grupo e uma emergência real são iguais linha a linha.",
+
+  // The overdue and surge filters that ride the queue (TS-06).
+  "moderation.filters.overdue": "Fora do prazo",
+  "moderation.filters.surge": "Ondas",
+
+  // The reason-keyed library a decision note is prefilled from (TS-16).
+  "moderation.templates.activeToggleLabel": "Ativa: {label}",
+  "moderation.templates.anyAction": "Qualquer ação",
+  "moderation.templates.anyReason": "Qualquer motivo",
+  "moderation.templates.delete.body":
+    "A resposta desaparece do seletor. As notas já enviadas aos membros não são afetadas: o que o moderador aprovou fica guardado na própria decisão. Desative-a se puder vir a precisar dela.",
+  "moderation.templates.delete.confirmCta": "Eliminar resposta",
+  "moderation.templates.delete.title": 'Eliminar "{label}"?',
+  "moderation.templates.empty":
+    "Ainda não há respostas guardadas. Adicione uma e aparece já no painel do relatório.",
+  "moderation.templates.eyebrow": "Moderação",
+  "moderation.templates.form.actionField": "Ação a que se adequa",
+  "moderation.templates.form.bodyField": "O que o membro lê",
+  "moderation.templates.form.bodyHint":
+    "Pode usar {tokens}. São preenchidos antes de o moderador enviar a nota, e o moderador pode na mesma editar o resultado.",
+  "moderation.templates.form.createCta": "Adicionar resposta",
+  "moderation.templates.form.createTitle": "Nova resposta guardada",
+  "moderation.templates.form.editTitle": "Editar resposta guardada",
+  "moderation.templates.form.labelField": "Nome",
+  "moderation.templates.form.labelHint":
+    "Só os moderadores veem isto. Os membros nunca.",
+  "moderation.templates.form.reasonField": "Motivo a que se destina",
+  "moderation.templates.form.saveError":
+    "Não foi possível guardar essa resposta",
+  "moderation.templates.loadError":
+    "Não foi possível carregar as respostas guardadas.",
+  "moderation.templates.moveDownAriaLabel": "Mover {label} para baixo",
+  "moderation.templates.moveUpAriaLabel": "Mover {label} para cima",
+  "moderation.templates.navLabel": "Respostas guardadas",
+  "moderation.templates.newCta": "Nova resposta",
+  "moderation.templates.picker.anyCommunity": "a plataforma",
+  "moderation.templates.picker.empty":
+    "Ainda não há uma resposta guardada para este motivo e ação.",
+  "moderation.templates.picker.hint":
+    "Preenche a nota abaixo. Leia-a e edite-a antes de confirmar.",
+  "moderation.templates.picker.loadError":
+    "Não foi possível carregar as respostas guardadas.",
+  "moderation.templates.picker.replaceBody":
+    'Já escreveu uma nota. Usar "{label}" substitui-a.',
+  "moderation.templates.picker.replaceCancelCta": "Manter a minha",
+  "moderation.templates.picker.replaceConfirmCta": "Substituir",
+  "moderation.templates.picker.replaceTitle": "Substituir o que escreveu?",
+  "moderation.templates.picker.title": "Respostas guardadas",
+  "moderation.templates.picker.undoAriaLabel": "Anular a nota preenchida",
+  "moderation.templates.picker.undoCta": "Anular",
+  "moderation.templates.picker.useAriaLabel":
+    "Usar a resposta guardada {label}",
+  "moderation.templates.removeError": "Não foi possível remover essa resposta",
+  "moderation.templates.reorderError": "Não foi possível alterar a ordem",
+  "moderation.templates.sub":
+    "As mensagens que os moderadores podem preencher numa decisão. Cada nota continua a ser editada e aprovada antes de ser enviada.",
+  "moderation.templates.title": "Respostas <em>guardadas</em>",
+  "moderation.templates.toast.created": '"{label}" adicionada',
+  "moderation.templates.toast.removed": '"{label}" removida',
+  "moderation.templates.toast.updated": '"{label}" guardada',
+
+  // Lifting a scoped restriction from the member drawer (TS-09).
+  "members.restriction.confirm.body":
+    "{name} recupera de imediato a possibilidade de publicar, comentar e enviar mensagens. É avisado de que a restrição terminou e lê exatamente o que escreveres abaixo.",
+  "members.restriction.confirm.confirmCta": "Levantar restrição",
+  "members.restriction.confirm.noteLabel": "O que {name} vai ler",
+  "members.restriction.confirm.notePlaceholder":
+    "Diz o que mudou, nas palavras que o membro vai ver.",
+  "members.restriction.confirm.title": "Levantar a restrição de {name}?",
+  "members.restriction.description":
+    "Este membro está restrito: continua a poder ler, mas não pode publicar, comentar nem enviar mensagens. Levantar a restrição tem efeito imediato e explica-lhe porquê.",
+  "members.restriction.descriptionUntil":
+    "Este membro está restrito até {date}: continua a poder ler, mas não pode publicar, comentar nem enviar mensagens. Levantar a restrição tem efeito imediato e explica-lhe porquê.",
+  "members.restriction.liftCta": "Levantar restrição",
+  "members.restriction.liftedToast": "{name} já pode publicar.",
+  "members.restriction.missingNoteToast":
+    "Escreve o que o membro vai ler antes de levantar.",
+  "members.restriction.sectionTitle": "Restrição",
+
+  // The returning-account signal on invite review (TS-05).
+  "invites.banEvasion.accountErased": "Essa conta foi entretanto apagada.",
+  "invites.banEvasion.context.community": "Removida de {community} a {date}.",
+  "invites.banEvasion.context.communityUnnamed":
+    "Removida de uma comunidade a {date}.",
+  "invites.banEvasion.context.platform": "Removida da QueerPulse a {date}.",
+  "invites.banEvasion.note":
+    "Isto é um sinal para verificar. Lê primeiro a conta removida e depois avalia esta candidatura pelos seus próprios méritos.",
+  "invites.banEvasion.reasons.intakeContact":
+    "Candidatou-se com o endereço com que uma conta removida se candidatou",
+  "invites.banEvasion.reasons.inviterOfRemoved":
+    "Convidada pelo membro que convidou uma conta removida",
+  "invites.banEvasion.reasons.inviterRemoved":
+    "Convidada por um membro que foi ele próprio removido",
+  "invites.banEvasion.reasons.referenceOfRemoved":
+    "Indica como referência alguém que abonou por uma conta removida",
+  "invites.banEvasion.reasons.referenceRemoved":
+    "Indica como referência alguém que foi ele próprio removido",
+  "invites.banEvasion.reasons.signInIdentifier":
+    "Inicia sessão com o identificador que uma conta removida usava",
+  "invites.banEvasion.reasons.statedDetails":
+    "Indica o mesmo nome que uma conta removida indicou",
+  "invites.banEvasion.tier.high": "Confiança alta",
+  "invites.banEvasion.tier.low": "Confiança baixa",
+  "invites.banEvasion.tier.medium": "Confiança média",
+  "invites.banEvasion.title": "Possível conta que regressa",
+  "invites.banEvasion.viewAccount": "Ver a conta removida",
+
+  // ── Fila de revisão de quartos de grupo (/admin/housing-group-listings) ────
+  "groupListingQueue.title": "Quartos à <em>espera</em>",
+  "groupListingQueue.eyebrow": "Habitação verificada",
+  "groupListingQueue.header.title": "Quartos à espera de <em>ti</em>",
+  "groupListingQueue.header.sub":
+    "Todos os quartos publicados num grupo de habitação chegam aqui antes de alguém os ver. Publica, faz uma pergunta a quem publicou, ou diz claramente que não vai avançar.",
+  "groupListingQueue.keyHint":
+    "J e K movem-se entre quartos. P publica, Q envia uma pergunta, D recusa, R devolve um quarto recusado à fila.",
+
+  "groupListingQueue.tab.review": "À espera",
+  "groupListingQueue.tab.question": "Perguntado",
+  "groupListingQueue.tab.live": "Publicado",
+  "groupListingQueue.tab.declined": "Recusado",
+  "groupListingQueue.tab.all": "Tudo",
+  "groupListingQueue.groupFilter.label": "Grupo",
+  "groupListingQueue.groupFilter.placeholder": "Filtrar pelo slug do grupo",
+
+  "groupListingQueue.count_one": "{count} quarto",
+  "groupListingQueue.count_other": "{count} quartos",
+  "groupListingQueue.loadMore": "Ver mais",
+  "groupListingQueue.loadingMore": "A carregar…",
+
+  "groupListingQueue.empty.title": "Nada à espera",
+  "groupListingQueue.empty.body":
+    "Todos os quartos nesta vista já têm resposta. Vê outro separador para saber o que foi decidido.",
+  "groupListingQueue.error.title": "A fila não carregou",
+  "groupListingQueue.error.body":
+    "Algo correu mal pelo caminho. Tenta outra vez daqui a pouco.",
+  "groupListingQueue.error.retry": "Tentar outra vez",
+  "groupListingQueue.forbidden.title":
+    "Esta fila é para moderação de habitação",
+  "groupListingQueue.forbidden.body":
+    "Precisas do papel de moderação ou administração, ou da permissão de moderação de habitação, para rever quartos.",
+
+  "groupListingQueue.status.review": "À espera",
+  "groupListingQueue.status.question": "Pergunta enviada",
+  "groupListingQueue.status.live": "Publicado",
+  "groupListingQueue.status.declined": "Recusado",
+
+  "groupListingQueue.row.hidden": "Escondido",
+  "groupListingQueue.row.noGroup": "Sem grupo",
+  "groupListingQueue.row.noPoster":
+    "A conta que publicou este quarto já não existe, por isso ninguém será avisado da tua decisão.",
+  "groupListingQueue.row.perMonth": "{amount} por mês",
+  "groupListingQueue.row.submitted": "Publicado {age}",
+  "groupListingQueue.row.waitingDays_one": "À espera há {count} dia",
+  "groupListingQueue.row.waitingDays_other": "À espera há {count} dias",
+
+  "groupListingQueue.prior.heading": "Já decidido",
+  "groupListingQueue.prior.meta": "{date} por {moderator}",
+  "groupListingQueue.prior.unknownStaff": "alguém da moderação",
+
+  "groupListingQueue.risk.band.high": "Alto",
+  "groupListingQueue.risk.band.medium": "Médio",
+  "groupListingQueue.risk.band.low": "Baixo",
+  "groupListingQueue.risk.scoreTitle":
+    "Pontuação de sinais de alerta. Ordena esta fila e não decide nada.",
+  "groupListingQueue.risk.listLabel": "Sinais por trás da pontuação",
+  "groupListingQueue.risk.noneRaised": "Nada assinalado.",
+  "groupListingQueue.risk.reason.rent_far_below_market":
+    "Renda muito abaixo do mercado",
+  "groupListingQueue.risk.reason.rent_below_market": "Renda abaixo do mercado",
+  "groupListingQueue.risk.reason.contact_info_in_text":
+    "Contactos no meio do texto",
+  "groupListingQueue.risk.reason.off_platform_payment_language":
+    "Pede pagamento fora da plataforma",
+  "groupListingQueue.risk.reason.discriminatory_language":
+    "Possível linguagem discriminatória",
+  "groupListingQueue.risk.reason.lister_unverified":
+    "Quem publicou não está verificado",
+  "groupListingQueue.risk.reason.lister_phone_only":
+    "Verificado apenas por telemóvel",
+  "groupListingQueue.risk.reason.incomplete_listing": "Pouco detalhe",
+  "groupListingQueue.risk.reason.no_photos": "Sem fotografias",
+  "groupListingQueue.risk.reason.missing_accessibility_info":
+    "Sem informação de acessibilidade",
+
+  "groupListingQueue.decide.publish": "Publicar",
+  "groupListingQueue.decide.question": "Perguntar",
+  "groupListingQueue.decide.decline": "Recusar",
+  "groupListingQueue.decide.reopen": "Devolver à fila",
+  "groupListingQueue.decide.groupLabel": "Decisões para {title}",
+  "groupListingQueue.decide.liveNote":
+    "Este quarto está publicado. Para o retirar por quebrar as normas do grupo, usa Esconder na página dos grupos de habitação.",
+  "groupListingQueue.decide.reasonEyebrow": "Quem publicou vai ler isto",
+  "groupListingQueue.decide.reasonTitle.live":
+    "Queres enviar alguma coisa com isto?",
+  "groupListingQueue.decide.reasonTitle.question":
+    "O que precisas de perguntar?",
+  "groupListingQueue.decide.reasonTitle.declined":
+    "Porque é que este quarto não avança?",
+  "groupListingQueue.decide.reasonTitle.review":
+    "Porque é que isto volta para a fila?",
+  "groupListingQueue.decide.reasonLabel": "A tua mensagem",
+  "groupListingQueue.decide.reasonPlaceholder.live":
+    "Algo que queiras que quem publicou saiba.",
+  "groupListingQueue.decide.reasonPlaceholder.question":
+    "Podes dizer se as despesas estão incluídas?",
+  "groupListingQueue.decide.reasonPlaceholder.declined":
+    "Diz o que impediu isto de avançar, e o que mudaria a decisão.",
+  "groupListingQueue.decide.reasonPlaceholder.review":
+    "Diz porque é que isto volta para a fila.",
+  "groupListingQueue.decide.reasonHint":
+    "Isto chega a quem publicou palavra por palavra, na app e no telemóvel. Escreve para essa pessoa.",
+
+  "groupListingQueue.toast.live": "{title} está no ar no grupo.",
+  "groupListingQueue.toast.question":
+    "A tua pergunta segue para quem publicou.",
+  "groupListingQueue.toast.declined":
+    "Quem publicou já foi avisado, com a tua razão.",
+  "groupListingQueue.toast.review": "De volta à fila.",
+  "groupListingQueue.toast.error":
+    "Essa decisão não ficou guardada. Tenta outra vez.",
+
+  // ── Consola do diretório de senhorios (/admin/landlords) ───────────────────
+  "landlords.title": "Diretório de <em>senhorios</em>",
+  "landlords.eyebrow": "Habitação",
+  "landlords.header.title": "Senhorios que vale a pena <em>conhecer</em>",
+  "landlords.header.sub":
+    "As pessoas sugerem senhorios de quem já arrendaram, e pedem para serem apresentadas. As duas coisas estão à espera de uma resposta tua.",
+
+  "landlords.pane.directory": "Diretório",
+  "landlords.pane.introductions": "Apresentações",
+  "landlords.filter.review": "À espera",
+  "landlords.filter.live": "Publicado",
+  "landlords.filter.all": "Tudo",
+  "landlords.introFilter.pending": "À espera",
+  "landlords.introFilter.accepted": "Aceite",
+  "landlords.introFilter.declined": "Recusado",
+  "landlords.introFilter.all": "Tudo",
+  "landlords.search.label": "Procurar",
+  "landlords.search.placeholder": "Procurar por nome",
+
+  "landlords.count_one": "{count} registo",
+  "landlords.count_other": "{count} registos",
+  "landlords.loadMore": "Ver mais",
+  "landlords.loadingMore": "A carregar…",
+
+  "landlords.empty.title": "Nada à espera",
+  "landlords.empty.body":
+    "Nenhum registo nesta vista. Vê outro separador para saber o que foi decidido.",
+  "landlords.error.title": "O diretório não carregou",
+  "landlords.error.body":
+    "Algo correu mal pelo caminho. Tenta outra vez daqui a pouco.",
+  "landlords.error.retry": "Tentar outra vez",
+  "landlords.forbidden.title": "Esta consola é para a moderação",
+  "landlords.forbidden.body":
+    "Precisas do papel de moderação ou administração para trabalhar estas filas.",
+
+  "landlords.status.review": "À espera",
+  "landlords.status.live": "Publicado",
+
+  "landlords.row.noHood": "Bairro não indicado",
+  "landlords.row.recommendations_one": "{count} recomendação",
+  "landlords.row.recommendations_other": "{count} recomendações",
+  "landlords.row.suggestedBy": "Sugerido por {name}",
+  "landlords.row.staffAdded": "Adicionado pela equipa",
+  "landlords.row.added": "Adicionado {age}",
+  "landlords.row.waitingDays_one": "À espera há {count} dia",
+  "landlords.row.waitingDays_other": "À espera há {count} dias",
+
+  "landlords.action.publish": "Publicar",
+  "landlords.action.holdBack": "Segurar",
+  "landlords.action.remove": "Remover",
+
+  "landlords.prior.heading": "Já decidido",
+  "landlords.prior.meta": "{date} por {moderator}",
+  "landlords.prior.unknownStaff": "alguém da moderação",
+
+  "landlords.toast.published": "{name} está no diretório.",
+  "landlords.toast.heldBack":
+    "{name} voltou para revisão, e quem sugeriu já foi avisado.",
+  "landlords.toast.removed": "{name} foi removido, com a tua razão.",
+  "landlords.toast.error": "Essa decisão não ficou guardada. Tenta outra vez.",
+
+  "landlords.reason.label": "A tua mensagem",
+  "landlords.reason.labelOptional": "A tua mensagem (opcional)",
+  "landlords.reason.hint":
+    "Isto chega à pessoa palavra por palavra, na app e no telemóvel. Escreve para ela.",
+  "landlords.reason.eyebrow.holdBack": "A pessoa vai ler isto",
+  "landlords.reason.eyebrow.remove": "A pessoa vai ler isto",
+  "landlords.reason.eyebrow.introAccept": "A pessoa vai ler isto",
+  "landlords.reason.eyebrow.introDecline": "A pessoa vai ler isto",
+  "landlords.reason.title.holdBack": "Porque é que isto volta para revisão?",
+  "landlords.reason.title.remove": "Porque é que este registo sai?",
+  "landlords.reason.title.introAccept": "O que acontece a seguir?",
+  "landlords.reason.title.introDecline":
+    "Porque é que esta apresentação não pode acontecer?",
+  "landlords.reason.confirm.holdBack": "Segurar",
+  "landlords.reason.confirm.remove": "Remover",
+  "landlords.reason.confirm.introAccept": "Aceitar",
+  "landlords.reason.confirm.introDecline": "Recusar",
+  "landlords.reason.placeholder.holdBack":
+    "Diz o que falta confirmar antes de isto entrar no diretório.",
+  "landlords.reason.placeholder.remove": "Diz porque é que isto sai.",
+  "landlords.reason.placeholder.introAccept":
+    "Já passámos a tua nota. Deves ter notícias esta semana.",
+  "landlords.reason.placeholder.introDecline":
+    "Diz o que impediu, e o que essa pessoa pode tentar em alternativa.",
+
+  "landlords.intro.status.pending": "À espera",
+  "landlords.intro.status.accepted": "Aceite",
+  "landlords.intro.status.declined": "Recusado",
+  "landlords.intro.askedBy": "{name} pediu",
+  "landlords.intro.askedByName": "Pedido por {name}",
+  "landlords.intro.asked": "Pedido {age}",
+  "landlords.intro.waitingDays_one": "À espera há {count} dia",
+  "landlords.intro.waitingDays_other": "À espera há {count} dias",
+  "landlords.intro.acceptCta": "Aceitar",
+  "landlords.intro.declineCta": "Recusar",
+  "landlords.intro.answered": "Respondido",
+  "landlords.intro.count_one": "{count} pedido",
+  "landlords.intro.count_other": "{count} pedidos",
+  "landlords.intro.empty.title": "Ninguém à espera",
+  "landlords.intro.empty.body":
+    "Todas as apresentações nesta vista já têm resposta.",
+  "landlords.intro.error.title": "Os pedidos não carregaram",
+  "landlords.intro.error.body":
+    "Algo correu mal pelo caminho. Tenta outra vez daqui a pouco.",
+  "landlords.intro.reasonSubject":
+    "{member} pediu para ser apresentado a {name}",
+  "landlords.intro.toast.accepted":
+    "A pessoa já sabe que vais fazer a apresentação a {name}.",
+  "landlords.intro.toast.declined": "A pessoa já foi avisada, com a tua razão.",
+  "landlords.intro.toast.error":
+    "Essa resposta não ficou guardada. Tenta outra vez.",
+
+  // ── ADIÇÕES ao grupo existente housingGroups.listings.* ────────────────────
+  "housingGroups.listings.reviewQueueNote":
+    "Esconder retira um anúncio já publicado. Se um quarto chega a ser publicado é decidido na fila de revisão.",
+  "housingGroups.listings.reviewQueueCta": "Abrir a fila de revisão",
+
+  // ── ADIÇÕES ao grupo existente adminReadingGroupProposals.* ────────────────
+  "adminReadingGroupProposals.statusTab.pending": "À espera",
+  "adminReadingGroupProposals.statusTab.approved": "Aprovado",
+  "adminReadingGroupProposals.statusTab.declined": "Recusado",
+  "adminReadingGroupProposals.statusTab.archived": "Arquivado",
+  "adminReadingGroupProposals.statusTab.all": "Tudo",
+  "adminReadingGroupProposals.filter.formatLabel": "Formato",
+  "adminReadingGroupProposals.row.decided": "decidido {date}",
+  "adminReadingGroupProposals.row.decisionNote": "O que lhe foi dito: {note}",
+  "adminReadingGroupProposals.row.openCommunity":
+    "Abrir a comunidade que isto criou",
+  "adminReadingGroupProposals.decline.eyebrow": "Quem propôs vai ler isto",
+  "adminReadingGroupProposals.decline.title":
+    "Porque é que este grupo não avança?",
+  "adminReadingGroupProposals.decline.label": "A tua mensagem",
+  "adminReadingGroupProposals.decline.placeholder":
+    "Diz o que impediu, e se um livro ou formato diferente funcionaria.",
+  "adminReadingGroupProposals.decline.hint":
+    "Isto chega à pessoa palavra por palavra, na app e no telemóvel. Escreve para ela.",
+
+  // ── Appeals and ban ratification (section 1 build) ──────────────────────
+  // Appeal deadlines and the awaiting/decided split (TS-11).
+  "moderation.appeals.awaitingTab": "À espera ({count})",
+  "moderation.appeals.decidedTab": "Decididos ({count})",
+  "moderation.appeals.drawerDue": "A decisão é devida até {date}.",
+  "moderation.appeals.drawerOverdue":
+    "Este recurso era devido a {date}. A pessoa está à espera há mais tempo do que o Código de Conduta promete.",
+  "moderation.appeals.dueFlag": "Até {date}",
+  "moderation.appeals.noDecided": "Ainda não foi decidido nenhum recurso.",
+  "moderation.appeals.noOverdue":
+    "Todos os recursos estão dentro do prazo. É o trabalho todo feito a tempo.",
+  "moderation.appeals.overdueFilter": "Fora do prazo ({count})",
+  "moderation.appeals.overdueFlag": "Fora do prazo",
+  "moderation.appeals.tabsAriaLabel": "Filtrar recursos",
+  "moderation.appeals.windowNote":
+    "O Código de Conduta promete que cada recurso é decidido no prazo de 7 dias, por alguém que não o moderador que tomou a decisão original.",
+
+  // The second signature a permanent ban waits on (TS-12).
+  "moderation.ratification.askedBy": "{name} pediu isto a {date}",
+  "moderation.ratification.badge": "Expulsão permanente",
+  "moderation.ratification.confirmCta": "Confirmar a expulsão",
+  "moderation.ratification.confirmModal.askedByLabel": "O que {name} escreveu",
+  "moderation.ratification.confirmModal.body":
+    "Isto termina a conta de {name}. Todas as sessões são encerradas e a pessoa não pode voltar. O caminho de volta é um recurso, decidido por outro moderador.",
+  "moderation.ratification.confirmModal.cta": "Confirmar a expulsão",
+  "moderation.ratification.confirmModal.lapseNote":
+    "Se ninguém confirmar, isto caduca a {date} e a conta volta.",
+  "moderation.ratification.confirmModal.noteLabel": "A tua nota (opcional)",
+  "moderation.ratification.confirmModal.notePlaceholder":
+    "O que quiseres deixar registado sobre porque concordaste.",
+  "moderation.ratification.confirmModal.title": "Expulsar a conta de {name}?",
+  "moderation.ratification.confirmedToast": "{name} foi expulso.",
+  "moderation.ratification.declineCta": "Recusar",
+  "moderation.ratification.declineModal.body":
+    "{name} volta de imediato. O moderador que pediu pode voltar a apresentar o caso com mais fundamento.",
+  "moderation.ratification.declineModal.cta": "Recusar",
+  "moderation.ratification.declineModal.notePlaceholder":
+    "Diz porquê, para o moderador que pediu saber o que te faria mudar de ideias.",
+  "moderation.ratification.declineModal.title": "Recusar a expulsão de {name}?",
+  "moderation.ratification.declinedToast":
+    "{name} está de volta. A expulsão foi recusada.",
+  "moderation.ratification.empty":
+    "Não há nada à espera de um segundo moderador.",
+  "moderation.ratification.errorToast": "Isto não foi. Tenta de novo.",
+  "moderation.ratification.interim":
+    "Entretanto a conta está suspensa. Se ninguém confirmar, a suspensão termina sozinha e a conta volta.",
+  "moderation.ratification.intro":
+    "Uma expulsão permanente exige <em>dois</em> moderadores. Um pede, outro confirma. Nada aqui expulsou ninguém ainda, e o que ninguém confirmar caduca sozinho.",
+  "moderation.ratification.lapsed": "Caducou",
+  "moderation.ratification.lapsesAt": "Caduca a {date}",
+  "moderation.ratification.noReason":
+    "Não foi escrita nenhuma razão. Pergunta antes de confirmares.",
+  "moderation.ratification.ownRequest":
+    "Foste tu que pediste esta, por isso precisa dos olhos de outra pessoa.",
+  "moderation.ratification.title": "Expulsar {name} da QueerPulse",
+
+  // Remaining section 1 moderation keys.
+  "appeal.live.decidedLabel": "Decidido a",
+  "appeal.live.dueLabel": "Decisão devida até",
+  "moderation.tabs.ratification": "À espera de segunda opinião",
 };

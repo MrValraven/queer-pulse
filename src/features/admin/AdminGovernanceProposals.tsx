@@ -159,7 +159,7 @@ function ProposalRow({ proposal }: { proposal: GovernanceProposalDTO }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { tally, status } = proposal;
-  const passed = status === "passed";
+  const hasPassed = status === "passed";
 
   return (
     <div className={[styles.card, styles.proposalAdminCard].join(" ")}>
@@ -168,10 +168,16 @@ function ProposalRow({ proposal }: { proposal: GovernanceProposalDTO }) {
         {status !== "open" && (
           <span
             className={
-              passed ? styles.proposalStatusPassed : styles.proposalStatusFailed
+              hasPassed
+                ? styles.proposalStatusPassed
+                : styles.proposalStatusFailed
             }
           >
-            {passed ? <FiCheckCircle aria-hidden /> : <FiXCircle aria-hidden />}{" "}
+            {hasPassed ? (
+              <FiCheckCircle aria-hidden />
+            ) : (
+              <FiXCircle aria-hidden />
+            )}{" "}
             {t(`admin:governance.proposals.list.status.${status}`)}
           </span>
         )}

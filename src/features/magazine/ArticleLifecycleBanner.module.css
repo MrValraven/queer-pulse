@@ -1,0 +1,128 @@
+/* CON-16 — the dated lifecycle banner.
+
+   Shares the shape of the CON-06 content-notes block above it (icon, eyebrow,
+   body, hairline-tinted panel) so a reader who has learned to read one reads
+   the other without effort. What changes is the tone, because the three states
+   are three different messages:
+
+     under_review — amber. Something here may already be wrong.
+     archived     — plum wash. A matter of record, no alarm.
+     superseded   — jade. There is somewhere better to go.
+
+   All three stay quieter than the headline. None of them is a red alert: an
+   old piece is not an error. */
+
+.banner {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  margin-bottom: 32px;
+  border-radius: var(--radius-badge);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+
+.review {
+  border-color: rgba(var(--amber-rgb), 0.32);
+  background: rgba(var(--amber-rgb), 0.12);
+}
+.review .icon,
+.review .heading {
+  color: var(--amber-ink);
+}
+
+.archive {
+  border-color: rgba(var(--line-rgb), 0.16);
+  background: rgba(var(--plum-rgb), 0.05);
+}
+.archive .icon,
+.archive .heading {
+  color: var(--ink-60);
+}
+
+.superseded {
+  border-color: rgba(var(--jade-rgb), 0.32);
+  background: rgba(var(--jade-rgb), 0.1);
+}
+.superseded .icon,
+.superseded .heading {
+  color: var(--jade-ink);
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  margin-top: 1px;
+  font-size: 18px;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.heading {
+  margin: 0;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* How old the piece is, and when the desk last looked. The two facts the
+   reader needs before the note itself makes sense. */
+.meta {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-40);
+}
+
+.metaDot {
+  color: inherit;
+}
+
+.note {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.replacement {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--jade-ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--jade-rgb), 0.4);
+  padding-bottom: 1px;
+  transition: color var(--dur-fast, 0.16s) var(--ease, ease);
+}
+@media (hover: hover) {
+  .replacement:hover {
+    color: var(--ink);
+    border-bottom-color: rgba(var(--line-rgb), 0.4);
+  }
+}
+
+/* The desk's standing promise to look again, said out loud. */
+.promise {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+@media (max-width: 600px) {
+  .banner {
+    padding: 14px 14px;
+    gap: 10px;
+  }
+}

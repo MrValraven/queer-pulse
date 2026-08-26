@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
@@ -18,7 +16,6 @@ export function CalendarSidebar({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const [subscribed, setSubscribed] = useState(false);
 
   return (
     <div className={styles.side}>
@@ -46,28 +43,12 @@ export function CalendarSidebar({
             </div>
           ))}
       </div>
+      {/* No email capture here. QueerPulse sends no mail, and the strip used
+          to take an address, flip to "Subscribed" and do nothing at all with
+          it. Until a real subscribable feed exists, the strip says so. */}
       <div className={styles.subStrip}>
         <h3>{t("gatherings:calendar.subscribeTitle")}</h3>
         <p>{t("gatherings:calendar.subscribeBody")}</p>
-        <form
-          className={styles.subForm}
-          onSubmit={(event) => {
-            event.preventDefault();
-            setSubscribed(true);
-          }}
-        >
-          <input
-            className={styles.subInput}
-            type="email"
-            aria-label={t("gatherings:calendar.emailPlaceholder")}
-            placeholder={t("gatherings:calendar.emailPlaceholder")}
-          />
-          <Button type="submit" variant="primary" disabled={subscribed}>
-            {subscribed
-              ? t("gatherings:calendar.subscribedCta")
-              : t("gatherings:calendar.subscribeCta")}
-          </Button>
-        </form>
       </div>
       <div style={{ marginTop: 16 }}>
         <Link

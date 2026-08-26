@@ -52,6 +52,17 @@ export interface MemberAppealDTO {
   severity: "emergency" | "high" | "medium" | "low";
   community: string | null;
   createdAt: string;
+  /**
+   * When the platform has undertaken to decide this appeal by (TS-11).
+   *
+   * Sent to the MEMBER on purpose. The Code of Conduct §05 publishes a 7-day
+   * decision window to them, so the deadline is theirs to hold the platform
+   * to, and a member locked out by the decision they are appealing has no
+   * other surface to read it from.
+   */
+  slaDueAt: string;
+  /** When it was decided. Null while it is still awaiting. */
+  decidedAt: string | null;
 }
 
 /**

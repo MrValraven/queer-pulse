@@ -8,11 +8,21 @@ import { apiGet, apiPut } from "../../../shared/api/client";
 export const NOTIFICATION_PREFERENCE_CATEGORY = {
   eventInvites: "event_invites",
   eventReminders: "event_reminders",
+  eventActivity: "event_activity",
   newMessages: "new_messages",
   connections: "connections",
   communityReplies: "community_replies",
+  communityPosts: "community_posts",
+  communityAnnouncements: "community_announcements",
+  topicFollows: "topic_follows",
   mentions: "mentions",
   vouches: "vouches",
+  recognition: "recognition",
+  personas: "personas",
+  invitations: "invitations",
+  listings: "listings",
+  opportunities: "opportunities",
+  magazine: "magazine",
 } as const;
 
 export type NotificationPreferenceCategory =

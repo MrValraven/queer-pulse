@@ -13,9 +13,11 @@ import {
   FEED_TAB_COPY,
   NEW_THIS_WEEK,
   type FeedTab,
+  type SidebarConnections,
   type SidebarMember,
   type SidebarGathering,
 } from "./feed.data";
+import { useConnectionsList } from "../connect/api/useConnectionsList";
 import { useEvents } from "../gatherings/api/useEvents";
 import { initials } from "./api/feed.adapters";
 import { tintForSlug } from "../../shared/api/refs";
@@ -107,6 +109,12 @@ export function useFeedPage() {
   // `useEvents` branches demo/live internally; in demo the sidebar keeps its own
   // curated rows and ignores this.
   const upcomingFeed = useEvents({ filter: "upcoming" });
+  // SOC-06: the sidebar's connections widget used to render its empty state
+  // for every live member on every feed load, and a hardcoded "42" in demo.
+  // `useConnectionsList` already branches demo/live internally and returns
+  // both the true total and card views with avatars, so one hook serves both
+  // modes and the widget can finally tell the truth.
+  const connectionsList = useConnectionsList("all");
 
   // Defense-in-depth: hide any author I've blocked or muted from my feed. The
   // server is authoritative in live mode; this stops any flash of their content.
@@ -216,6 +224,18 @@ export function useFeedPage() {
           venue: event.hood,
         }));
 
+  // A short avatar sample plus the true total. `total` is the server count in
+  // live mode and the exact local count in demo, so the number under the
+  // stack is never a guess.
+  const sidebarConnections: SidebarConnections = {
+    count: connectionsList.total ?? connectionsList.views.length,
+    avatars: connectionsList.views.slice(0, 6).map((connection) => ({
+      initials: connection.initials,
+      tint: connection.tint,
+      src: connection.photo,
+    })),
+  };
+
   const selectTab = (tab: FeedTab) => {
     setHasSwitchedTab(true);
     swapTab(tab);
@@ -258,9 +278,13 @@ export function useFeedPage() {
     isFetchingNextPage: feed.isFetchingNextPage,
     sidebarLoading:
       loading ||
-      (!demoMode && (sidebarFeed.isLoading || upcomingFeed.isLoading)),
+      (!demoMode &&
+        (sidebarFeed.isLoading ||
+          upcomingFeed.isLoading ||
+          connectionsList.loading)),
     sidebarMembers,
     sidebarGatherings,
+    sidebarConnections,
     tabCopy,
   };
 }

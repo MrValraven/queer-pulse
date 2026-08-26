@@ -129,6 +129,12 @@
   font-weight: 600;
   color: var(--text-strong);
 }
+/* "and 39 others" on a bundled row: same line as the text it extends, one step
+   quieter, because the named actor is the subject and the count is context. */
+.bundleCount {
+  color: var(--ink-40);
+  font-weight: 500;
+}
 /* Row-level navigation as a stretched overlay link. The row itself stays
    plain, non-interactive markup, so its real links and action buttons are no
    longer interactive content nested inside a role="button". Everything the

@@ -10,6 +10,8 @@ import {
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { AdminBanEvasionFlag } from "./AdminBanEvasionFlag";
+import type { BanEvasionAssessmentDTO } from "./api/adminInvites.api";
 import { AdminAvatar } from "./ui";
 import { portrait } from "./adminPeople.data";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -44,6 +46,7 @@ export function JoinRequestCard({
   onWaitlist,
   onToggleSelect,
   isBusy = false,
+  banEvasion,
 }: {
   item: JoinRequestView;
   leaving: boolean;
@@ -60,6 +63,11 @@ export function JoinRequestCard({
    *  render a real disabled state and a second click cannot fire a second
    *  review of the same request. */
   isBusy?: boolean;
+  /** Ban-evasion signals for this applicant, when the queue has them.
+   *  Undefined while they load, and for the great majority of applicants,
+   *  where there is nothing to say. Advisory: the panel never gates a
+   *  decision, it only tells the reviewer which removed account to read. */
+  banEvasion?: BanEvasionAssessmentDTO;
 }) {
   const { t } = useTranslation();
   return (
@@ -105,6 +113,10 @@ export function JoinRequestCard({
       {item.priorDeclineLine && (
         <div className={styles.queueHistory}>{item.priorDeclineLine}</div>
       )}
+      {/* Sits with the other triage signals, above the facts a reviewer reads
+          to make the call — so it frames the reading rather than arriving
+          after it as a verdict. */}
+      <AdminBanEvasionFlag assessment={banEvasion} />
 
       <dl className={styles.queueFacts}>
         <div className={styles.queueFact}>

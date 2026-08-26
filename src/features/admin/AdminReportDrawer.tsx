@@ -33,6 +33,8 @@ import { auditActionLabel } from "./moderationActionLabels";
 import { isAnonymousReporter, reporterDisplayName } from "./moderationReporter";
 import { useReportAudit } from "./api/useReportAudit";
 import { useModReportDetail } from "./api/useModReportDetail";
+import { AdminResponseTemplatePicker } from "./AdminResponseTemplatePicker";
+import { ACTION_CODE } from "./moderationQueue.types";
 import type { ReasonCode } from "../safety/reportReasons";
 import type { ResolveOpts } from "./useModerationQueue";
 import styles from "./AdminModerationPage.module.css";
@@ -41,6 +43,14 @@ import styles from "./AdminModerationPage.module.css";
  *  unlike `ban`, there is no permanent restriction. */
 const RESTRICT_DURATIONS = ["24h", "7d", "30d"] as const;
 const DEFAULT_RESTRICT_DURATION: (typeof RESTRICT_DURATIONS)[number] = "7d";
+
+/** The drawer holds a MOD_ACTIONS tile id ("hide"); the saved-response library
+ *  is keyed by the server action code ("hide_content"). `ACTION_CODE` is the
+ *  same map `useModerationQueue` uses when it files the action, so the picker
+ *  filters on exactly the code the report will be resolved with. */
+function modActionCodeFor(action: string | null) {
+  return action ? (ACTION_CODE[action] ?? null) : null;
+}
 
 /** Reported content + surrounding thread + people involved (read-only context). */
 function ReportContext({ detail }: { detail: ReportDetail }) {
@@ -376,12 +386,18 @@ function ReportDrawerReasonNote({
   note,
   onNoteChange,
   reportedName,
+  actionCode,
+  communityName,
 }: {
   reason: ReasonCode | null;
   onReasonChange: (id: ReasonCode) => void;
   note: string;
   onNoteChange: (value: string) => void;
   reportedName: string;
+  /** The server action code for the tile selected above, for narrowing the
+   *  saved-response picker. Null until an action is chosen. */
+  actionCode: ReturnType<typeof modActionCodeFor>;
+  communityName: string | null;
 }) {
   const { t } = useTranslation();
   return (
@@ -407,6 +423,15 @@ function ReportDrawerReasonNote({
           </label>
         ))}
       </div>
+
+      <AdminResponseTemplatePicker
+        reasonCode={reason}
+        actionCode={actionCode}
+        note={note}
+        onNoteChange={onNoteChange}
+        memberName={reportedName}
+        communityName={communityName}
+      />
 
       <textarea
         aria-label={t("admin:moderation.reportDrawer.noteAriaLabel")}
@@ -580,6 +605,8 @@ export function AdminReportDrawer({
         note={note}
         onNoteChange={setNote}
         reportedName={report.reportedName}
+        actionCode={modActionCodeFor(action)}
+        communityName={report.community ?? null}
       />
 
       <ReportAudit reportId={report.id} />

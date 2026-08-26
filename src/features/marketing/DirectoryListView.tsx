@@ -40,6 +40,7 @@ function DirectoryCardSkeleton() {
 /** The unified Local list: business cards + venue cards, sharing one grid. */
 export function DirectoryListView({
   places,
+  distanceById,
   total,
   loading,
   hasActiveFilters,
@@ -49,6 +50,11 @@ export function DirectoryListView({
   onLoadMoreFromServer,
 }: {
   places: LocalPlace[];
+  /** Metres from the member to each place that has real coordinates, keyed by
+   *  `LocalPlace.id`. `null` whenever "use my location" is off; a place absent
+   *  from the map simply shows no walking time, because inventing one would be
+   *  the single most misleading thing this grid could do. */
+  distanceById?: ReadonlyMap<string, number> | null;
   total: number;
   loading: boolean;
   hasActiveFilters: boolean;
@@ -145,6 +151,7 @@ export function DirectoryListView({
                 <LocalPlaceCard
                   key={place.id}
                   place={place}
+                  distanceMetres={distanceById?.get(place.id)}
                   index={index}
                   expandedId={expandedId}
                   been={been}

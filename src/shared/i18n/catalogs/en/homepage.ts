@@ -32,6 +32,8 @@ export const homepage: Catalog = {
     "We believe community works differently when there is trust behind it. When you know who you are connecting with, when you have control over what you share, and when there are people looking out for the spaces you use.",
   "manifesto.body3":
     "That is why QueerPulse is invite-only, why members are vouched for, and why safety and privacy are built into the foundation of the platform.",
+  "manifesto.body4":
+    "Queer liberation is indivisible from every other struggle for safety and self-determination, Palestinian liberation among them. <a>Where we stand</a>.",
   "manifesto.highlight":
     "We are building a place where being queer is the starting point for real connection.",
   "manifesto.safetyCta": "How we keep this safe",

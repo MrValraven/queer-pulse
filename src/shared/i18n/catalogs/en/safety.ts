@@ -506,29 +506,29 @@ export const safety: Catalog = {
   "spaces.criteria.accessible.lead": "Accessible",
   "spaces.criteria.accessible.rest":
     ", or access limitations clearly communicated",
-  "spaces.criteria.reviews.lead": "Minimum 3 independent reviews",
-  "spaces.criteria.reviews.rest": " from verified QueerPulse members",
+  "spaces.criteria.reviews.lead": "Minimum 3 independent visits",
+  "spaces.criteria.reviews.rest": " from members with no stake in the place",
   "spaces.criteria.annualReview.lead": "Annual re-review",
   "spaces.criteria.annualReview.rest": ": status doesn't last forever",
 
   "spaces.how.step1.title": "Any member nominates",
   "spaces.how.step1.desc":
-    "Submit a space with a brief note on why you think it should be verified. We acknowledge within 48 hours.",
+    "Submit a space with a brief note on why you think it should be verified. We acknowledge it in the app within 48 hours, and you can follow where it got to.",
   "spaces.how.step2.title": "Three independent visits",
   "spaces.how.step2.desc":
-    "Three verified members visit the space independently and submit structured reviews against the criteria. They don't know each other's assessments.",
-  "spaces.how.step3.title": "Review panel decides",
+    "Three members with no stake in the place go there and write up what they found. The person who nominated it does not count towards the three, and neither do the owner or anyone who helps run it.",
+  "spaces.how.step3.title": "The review team decides",
   "spaces.how.step3.desc":
-    "A small volunteer panel reads the reviews and decides whether the criteria are met. The space isn't told the result until after the decision.",
+    "The review team reads the visits and decides whether the criteria are met. A written reason is required either way, and it goes on the record along with who decided and when. The space is told after the decision.",
   "spaces.how.step4.title": "Badge awarded",
   "spaces.how.step4.desc":
-    "If approved, the venue receives a physical badge and a digital listing. They can display the badge in their window. It's earned by meeting the standard.",
+    "If it is approved, the space gets a trust tier and the badge on its directory listing, dated from the day it was granted. It is earned by meeting the standard.",
   "spaces.how.step5.title": "Annual re-review",
   "spaces.how.step5.desc":
-    "Every listing is re-reviewed each year. No status is permanent. New ownership, staff changes, or reported incidents trigger an early review.",
+    "A badge is dated, and a year later the space comes back into the review queue. No status here is permanent, and a flag brings a space back early.",
   "spaces.how.step6.title": "Any member can flag",
   "spaces.how.step6.desc":
-    "If something changes (an incident, a shift in atmosphere), any member can flag the listing. Three flags trigger an immediate review and temporary suspension of the badge.",
+    "If something changes (an incident, a shift in atmosphere), any member can flag the listing with a reason. Three separate flags suspend the badge straight away and open a review. The venue is never told who raised it.",
 
   // ── SafeSpacesPage.tsx ─────────────────────────────────────────────────
   "spaces.meta.title": "Verified LGBTQ+ safe spaces in Lisbon",
@@ -697,4 +697,244 @@ export const safety: Catalog = {
   "vouchModal.comingSoon.body":
     "We're still building the trust pipeline behind member vouches. Switch on the demo platform to preview the full flow, or check back soon.",
   "vouchModal.comingSoon.doneCta": "Close",
+
+  // ── SafeSpaceBadgeStatus.tsx — the honest badge states ────────────────
+  "badge.state.none.title": "No safe-space badge",
+  "badge.state.none.lead":
+    "Nobody has nominated this place for a safe-space review yet.",
+  "badge.state.under_review.title": "Under review",
+  "badge.state.under_review.lead":
+    "This place has been nominated and members are visiting it now. It carries no badge yet.",
+  "badge.state.verified.title": "Verified safe space",
+  "badge.state.verified.titleTier": "Verified safe space · Trust tier {tier}",
+  "badge.state.verified.lead":
+    "Members with no stake in this place went there and it met the standard. The badge can be suspended if things change.",
+  "badge.state.due.title": "Verified, and due for its yearly re-review",
+  "badge.state.due.lead":
+    "The badge still stands. A year has passed since it was granted, so this space is in the queue for a fresh set of visits.",
+  "badge.state.suspended.title": "Badge suspended while this is reviewed",
+  "badge.state.suspended.lead":
+    "The badge is on hold, so treat this space as unverified for now. We will say here when the review closes.",
+  "badge.state.removed.title": "Badge removed",
+  "badge.state.removed.lead":
+    "This space no longer meets the standard. The record of why stays public.",
+  "badge.fact.visits": "Independent visits",
+  "badge.fact.visitsValue": "{count} of {required}",
+  "badge.fact.awarded": "Badge granted",
+  "badge.fact.reReview": "Next re-review",
+  "badge.fact.verifier": "Reviewed by",
+
+  // ── SafeSpaceFlagControl.tsx / SafeSpaceFlagModal.tsx ──────────────────
+  "flag.prompt": "Noticed something different here?",
+  "flag.openCta": "Raise it with us",
+  "flag.alreadyNote":
+    "You have raised something about this space. The review team has it.",
+  "flag.withdrawCta": "Withdraw",
+  "flag.withdrawnToast": "Withdrawn",
+  "flag.errorToast": "That didn't go through. Please try again.",
+  "flag.modal.title": "Raise something about {name}",
+  "flag.modal.sub": "The review team reads every one of these.",
+  "flag.modal.privacy":
+    "Your name never reaches the venue. Only the review team sees this, the same way the author of a report stays private.",
+  "flag.modal.reasonLabel": "What is this about?",
+  "flag.modal.detailLabel": "Anything you want to add",
+  "flag.modal.detailHelper":
+    "Optional, and only moderators read it. Leave out anything you would rather not have written down.",
+  "flag.modal.detailPlaceholder": "What happened, and when",
+  "flag.modal.cancelCta": "Cancel",
+  "flag.modal.sendCta": "Send to the review team",
+  "flag.modal.sendingCta": "Sending…",
+  "flag.reason.not_safe.label": "It did not feel safe",
+  "flag.reason.not_safe.desc":
+    "Something happened, or the atmosphere has changed.",
+  "flag.reason.discrimination.label": "Discrimination",
+  "flag.reason.discrimination.desc":
+    "Someone was treated badly for who they are.",
+  "flag.reason.staff_conduct.label": "Staff conduct",
+  "flag.reason.staff_conduct.desc": "How the people working there behaved.",
+  "flag.reason.accessibility.label": "Access has got worse",
+  "flag.reason.accessibility.desc":
+    "Getting in is harder than the listing says.",
+  "flag.reason.closed_or_changed.label": "Closed or under new ownership",
+  "flag.reason.closed_or_changed.desc":
+    "The place has changed hands, moved, or shut.",
+  "flag.reason.other.label": "Something else",
+  "flag.reason.other.desc": "Tell us in your own words.",
+  "flag.done.title": "Thank you",
+  "flag.done.panelTitle": "The review team",
+  "flag.done.panelEm": "has this.",
+  "flag.done.alreadyTitle": "You already raised",
+  "flag.done.alreadyEm": "this one.",
+  "flag.done.body":
+    "Nothing about this is public. The venue is told a review is open, and never who opened it.",
+  "flag.done.step.read": "A moderator reads it and decides what happens next.",
+  "flag.done.step.anonymous": "{name} is never told who raised this.",
+  "flag.done.step.threshold":
+    "{count} separate flags put the badge on hold straight away while the review runs.",
+  "flag.done.closeCta": "Close",
+
+  // ── AdminSafeSpaceNominationsPage.tsx — the review queue ───────────────
+  "governance.nominations.eyebrow": "Safe spaces",
+  "governance.nominations.title": "Nomination <em>queue.</em>",
+  "governance.nominations.sub":
+    "Oldest first, because the published promise is a nomination acknowledged within 48 hours. Anything past the window is marked.",
+  "governance.scope.open": "Open",
+  "governance.scope.decided": "Decided",
+  "governance.scope.all": "All",
+  "governance.sort.oldest": "Oldest first",
+  "governance.sort.newest": "Newest first",
+  "governance.filter.breachedOnly": "Past the window only",
+  "governance.filter.searchPlaceholder": "Search by place name",
+  "governance.summary.inQueue_one": "{count} nomination in this view.",
+  "governance.summary.inQueue_other": "{count} nominations in this view.",
+  "governance.summary.breaching_one":
+    "{count} is past the {hours}-hour acknowledgement window.",
+  "governance.summary.breaching_other":
+    "{count} are past the {hours}-hour acknowledgement window.",
+  "governance.summary.flags_one":
+    "{count} flag in this view. {threshold} open flags on one space suspend its badge automatically.",
+  "governance.summary.flags_other":
+    "{count} flags in this view. {threshold} open flags on one space suspend its badge automatically.",
+  "governance.summary.reReview_one": "{count} badge is past its yearly check.",
+  "governance.summary.reReview_other":
+    "{count} badges are past their yearly check.",
+  "governance.empty": "Nothing in this view right now.",
+  "governance.status.pending": "Waiting",
+  "governance.status.acknowledged": "Acknowledged",
+  "governance.status.in_review": "In review",
+  "governance.status.approved": "Badge granted",
+  "governance.status.rejected": "Declined",
+  "governance.chip.breached": "Past {hours}h",
+  "governance.chip.acknowledgedLate": "Acknowledged late",
+  "governance.chip.visits": "{count}/{required} visits",
+  "governance.chip.unassigned": "No listing yet",
+  "governance.row.age_one": "Waiting {hours} hour",
+  "governance.row.age_other": "Waiting {hours} hours",
+  "governance.detail.nominatorWords": "In the nominator's words",
+  "governance.detail.clock": "The 48-hour clock",
+  "governance.detail.received": "Received",
+  "governance.detail.dueBy": "Acknowledgement due",
+  "governance.detail.acknowledged": "Acknowledged",
+  "governance.detail.notYet": "Not yet",
+  "governance.detail.placeType": "Type of place",
+  "governance.detail.address": "Address",
+  "governance.detail.assignmentNote": "What the visitors were asked to check",
+  "governance.detail.decision": "Decision and reason",
+  "governance.detail.trail": "Audit trail",
+  "governance.detail.trailEmpty": "Nothing recorded on this one yet.",
+  "governance.detail.decide": "Move this nomination",
+  "governance.detail.openListingCta": "Open the listing",
+  "governance.visits.title": "Three independent visits",
+  "governance.visits.unassigned":
+    "No listing is tied to this nomination yet, so there is nothing to count visits against. Assign it below to open it for visits.",
+  "governance.visits.met":
+    "{count} of {required} independent visits. The bar is met.",
+  "governance.visits.short":
+    "{count} of {required} independent visits. The bar is not met yet.",
+  "governance.visits.notIndependent_one":
+    "{count} more vouch is on file from someone with a stake in the place (the owner, someone who helps run it, or the nominator). It does not count.",
+  "governance.visits.notIndependent_other":
+    "{count} more vouches are on file from people with a stake in the place (the owner, someone who helps run it, or the nominator). They do not count.",
+  "governance.visits.whoNote":
+    "The visit write-ups sit on the space's own page. You decide, and the count is reported here so the record shows what you decided against.",
+  "governance.audit.nomination_acknowledged": "Acknowledged",
+  "governance.audit.nomination_assigned": "Assigned to a listing",
+  "governance.audit.nomination_awarded": "Badge granted",
+  "governance.audit.nomination_declined": "Declined",
+  "governance.audit.nomination_reopened": "Re-opened",
+  "governance.audit.flag_raised": "Flag raised",
+  "governance.audit.flag_withdrawn": "Flag withdrawn",
+  "governance.audit.flag_resolved": "Flag resolved",
+  "governance.audit.badge_suspended": "Badge suspended",
+  "governance.audit.badge_restored": "Badge restored",
+  "governance.action.acknowledgeLabel": "Acknowledge this nomination",
+  "governance.action.acknowledgeHelper":
+    "Stops the 48-hour clock and tells the nominator a reviewer has it. Any note stays internal.",
+  "governance.action.notePlaceholder": "Internal note (optional)",
+  "governance.action.acknowledgeCta": "Acknowledge",
+  "governance.action.assignLabel": "Listing under review",
+  "governance.action.assignHelper":
+    "The listing ref or slug. Assigning opens the nomination for member visits, and acknowledges it if nobody has yet.",
+  "governance.action.assignPlaceholder": "listing-ref or slug",
+  "governance.action.assignCta": "Assign for visits",
+  "governance.action.reasonLabel": "Reason for the decision",
+  "governance.action.reasonHelper":
+    "Required either way. The nominator reads this, so write it to them.",
+  "governance.action.tierLabel": "Trust tier to award",
+  "governance.action.tierOption": "Tier {tier}",
+  "governance.action.awardCta": "Grant the badge",
+  "governance.action.declineCta": "Decline",
+  "governance.action.reopenLabel": "Reason for re-opening",
+  "governance.action.reopenHelper":
+    "Puts the nomination back in the queue. The reason goes on the record.",
+  "governance.action.reopenCta": "Re-open",
+  "governance.toast.acknowledged": "Acknowledged",
+  "governance.toast.assigned": "Assigned for visits",
+  "governance.toast.awarded": "Badge granted",
+  "governance.toast.declined": "Declined",
+  "governance.toast.reopened": "Re-opened",
+  "governance.toast.failed": "That didn't go through. Please try again.",
+  "governance.toast.flagUpheld": "Flag upheld",
+  "governance.toast.flagDismissed": "Flag dismissed",
+  "governance.toast.suspended": "{name}'s badge is suspended",
+  "governance.toast.restored": "{name}'s badge is back",
+
+  // ── AdminSafeSpaceFlagsPage.tsx — flags, suspensions, re-review ────────
+  "governance.tab.nominations": "Nominations",
+  "governance.tab.flags": "Flags",
+  "governance.tab.listings": "Listings",
+  "governance.tab.reReview": "Badges due",
+  "governance.flags.eyebrow": "Safe spaces",
+  "governance.flags.title": "Flags and <em>suspensions.</em>",
+  "governance.flags.sub":
+    "What members raised about badged spaces, and which badges are on hold or past their yearly check.",
+  "governance.flagState.open": "Open",
+  "governance.flagState.resolved": "Resolved",
+  "governance.flagState.all": "All",
+  "governance.flags.empty": "No flags in this view.",
+  "governance.flags.privacyNote":
+    "Moderators only. Never tell a venue who flagged it, and never let a count or a timing make it guessable.",
+  "governance.flags.unknownSpace": "Unknown space",
+  "governance.flags.reviewCta": "Review",
+  "governance.flags.dismissCta": "Dismiss",
+  "governance.flags.upholdCta": "Uphold",
+  "governance.flags.noteLabel": "Note for the record",
+  "governance.flags.notePlaceholder": "What you found, and what happens next",
+  "governance.flags.resolution.upheld": "Upheld",
+  "governance.flags.resolution.dismissed": "Dismissed",
+  "governance.reReview.empty": "Every badge is inside its year.",
+  "governance.reReview.suspendedChip": "Suspended",
+  "governance.reReview.dueChip_one": "{days} day overdue",
+  "governance.reReview.dueChip_other": "{days} days overdue",
+  "governance.reReview.openFlags_one": "{count} open flag",
+  "governance.reReview.openFlags_other": "{count} open flags",
+  "governance.reReview.awarded": "Granted {date}",
+  "governance.reReview.noAwardDate": "No grant date on record",
+  "governance.reReview.openCta": "Open the listing",
+  "governance.badge.suspendTitle": "Suspend this badge",
+  "governance.badge.restoreTitle": "Lift this suspension",
+  "governance.badge.suspendCta": "Suspend",
+  "governance.badge.restoreCta": "Restore",
+  "governance.badge.cancelCta": "Cancel",
+  "governance.badge.suspendNote":
+    "The badge stops rendering as verified everywhere at once. The grant itself is untouched and comes back when you restore it.",
+  "governance.badge.restoreNote":
+    "The badge speaks for the space again from the moment you restore it.",
+  "governance.badge.reasonLabel": "Reason",
+  "moderationStance.head": "How we read these",
+  "moderationStance.rule.politicalSpeech":
+    "Criticism of a state, its government, its military, or its policies is political speech, and Palestine advocacy is welcome here. Advocacy aimed at a class of member is not political speech, whatever vocabulary it borrows.",
+  "moderationStance.rule.noBothSides":
+    "Whether a member deserves rights is not a debate we host. Do not dismiss a report on the grounds that the other side deserves a hearing.",
+  "moderationStance.rule.neverProveGender":
+    "Never ask a member to prove their gender, and close any report that amounts to that request. Self-identification is the standard.",
+  "moderationStance.applicantHead": "Reviewing a person, not a profile",
+  "moderationStance.applicantRule.neverProveIdentity":
+    "Never ask an applicant to prove their gender, their queerness, or their identity, and never decline someone because you doubt it. Self-identification is the standard here as everywhere else.",
+  "moderationStance.applicantRule.politicsNotAScreen":
+    "Politics is not a screening test. Support for Palestinian liberation is not a flag. Organising against a class of member is, and that is the only political read we make.",
+  "moderationStance.applicantRule.judgeTheApplication":
+    "Judge what the person wrote. A name, a photo, a way of writing, or an accent in their answers is not evidence of anything, and acting on it is the failure this queue is most prone to.",
+  "moderationStance.link.guidelines": "Guidelines: the hard lines",
+  "moderationStance.link.stand": "Where we stand",
 };

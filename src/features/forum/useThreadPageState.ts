@@ -15,6 +15,11 @@ import { ApiError } from "../../shared/api/client";
 import { buildReplyTree } from "./buildReplyTree";
 import { useThreadModeration } from "./useThreadModeration";
 import { useNestedReplyComposer } from "./useNestedReplyComposer";
+import type { StagedPostImage } from "../communities/usePostImageAttach";
+import {
+  buildQuoteDraft,
+  useThreadAnswerAndTags,
+} from "./useThreadAnswerAndTags";
 
 /**
  * Catalog key for a failed reply. The endpoint answers 403 for TWO different
@@ -118,6 +123,26 @@ export function useThreadPageState() {
     replyKey,
   });
 
+  // Accepted answer + tag re-filing (SOC-13). Both return undefined handlers
+  // when the viewer lacks the permission, which is what hides the affordances.
+  const answerAndTags = useThreadAnswerAndTags({
+    thread: threadData,
+    demoMode,
+    setLocalReplies,
+  });
+
+  /**
+   * Quote-reply, made real in live mode (SOC-13). It opens the inline composer
+   * against the quoted post and seeds it with that post's text as a
+   * blockquote, so the quote travels as part of an ordinary reply body — no
+   * column, no DTO field, no migration — and `splitLeadingQuote` renders it
+   * back out as a quote box on both sides of a reload.
+   */
+  function quoteReply(replyItem: Reply) {
+    nestedReplies.startReply(replyItem.id);
+    nestedReplies.setInlineDraft(buildQuoteDraft(replyItem));
+  }
+
   // Cast a vote on one reply — toggle off if the viewer already voted.
   // LIVE: `vote(postId,…)` patches the posts cache, which flows back into
   // `localReplies` (so the count + pressed state update in place).
@@ -197,7 +222,11 @@ export function useThreadPageState() {
     [localReplies],
   );
 
-  function addReply(body: string, parentPostId: string | null = null) {
+  function addReply(
+    body: string,
+    parentPostId: string | null = null,
+    image?: StagedPostImage,
+  ) {
     // Belt-and-suspenders: the composer is already disabled when the thread is
     // locked, but a lock landing between load and submit still 403s server-side.
     if (threadData?.isLocked) {
@@ -226,6 +255,10 @@ export function useThreadPageState() {
         photo: profile.photo,
         time: t("forum:time.justNow"),
         body: [body],
+        // In live this is the upload's local blob preview, so the optimistic
+        // reply shows the photo instantly; the refetch swaps in the server's
+        // resolved `/files/` URL. In demo it is the whole record.
+        image: image?.previewUrl,
         reactions: 0,
       },
     ]);
@@ -236,7 +269,7 @@ export function useThreadPageState() {
     // On failure (e.g. a 403 because the thread locked), drop the optimistic
     // reply and tell the member honestly rather than leaving a phantom post.
     postReply.mutate(
-      { body, parentPostId },
+      { body, parentPostId, image: image?.key },
       {
         onSuccess: (created) => {
           // Stamp the SERVER's post id onto the optimistic reply (demo returns
@@ -287,5 +320,7 @@ export function useThreadPageState() {
     replyTree,
     likedReplies,
     addReply,
+    answerAndTags,
+    quoteReply,
   };
 }

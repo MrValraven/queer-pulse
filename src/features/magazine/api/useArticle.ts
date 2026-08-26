@@ -27,12 +27,15 @@ export interface ArticleData {
  * i18n: `language` joins the query key because the adapters locale-format
  * each article's `date` via `fmt` — switching language must re-derive it.
  */
-export function useArticle(id: string) {
+export function useArticle(id: string, lang?: string) {
   const { demoMode } = useDemoMode();
   const fmt = useFormat();
   const { t, language } = useTranslation();
   return useQuery<ArticleData>({
-    queryKey: ["magazine-article", demoMode, language, id],
+    // CON-16: `lang` is part of the key because it changes WHICH article the
+    // server returns (a published translation in place of the addressed
+    // piece), not merely how it is formatted.
+    queryKey: ["magazine-article", demoMode, language, id, lang ?? null],
     queryFn: async () => {
       if (demoMode) {
         // Demo-only mock registry — dynamically imported so it never ships in
@@ -50,7 +53,7 @@ export function useArticle(id: string) {
       // Only a real 404 renders the not-found wall — every other failure is
       // rethrown so react-query retries and the page shows a retry state
       // (FE-CNT-08). An API blip must never be reported as "no such article".
-      const dto = await getArticle(id).catch(nullOnNotFound);
+      const dto = await getArticle(id, lang).catch(nullOnNotFound);
       if (!dto) return { article: null, related: [] };
 
       // CNT-17 fix: the author lookup and the related-articles lookup only
@@ -62,7 +65,10 @@ export function useArticle(id: string) {
         // than failing an article that already loaded.
         getAuthor(dto.author.handle).catch(ignoreEnrichmentError),
         tag
-          ? getArticles({ tag }).catch(ignoreEnrichmentError)
+          ? // The rail follows the reader's language too: a Portuguese reader
+            // finishing a Portuguese piece should be offered the Portuguese
+            // version of what comes next where one exists.
+            getArticles({ tag, lang }).catch(ignoreEnrichmentError)
           : Promise.resolve(null),
       ]);
 

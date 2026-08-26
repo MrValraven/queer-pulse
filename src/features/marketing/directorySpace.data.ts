@@ -1,7 +1,7 @@
 import { type Tint } from "./directoryPlaces";
 
 /* Category labels are now resolved through the single `categoryLabel` helper in
- * localPlaces.ts (slug-keyed `LOCAL_CATEGORY_LABEL_KEYS`), which normalizes
+ * localCategories.ts (slug-keyed `LOCAL_CATEGORY_LABEL_KEYS`), which normalizes
  * legacy display-string categories too. The former local `CAT_LABEL_KEYS`
  * duplicate lived here — removed to keep one source of truth. */
 

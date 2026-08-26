@@ -135,3 +135,83 @@ export const VETTED_GROUPS: VettedGroup[] = [
     listings: [],
   },
 ];
+
+/**
+ * The four states a room a member submitted can be in. `review` is where every
+ * submission lands, `live` is on the group page, `question` means a moderator
+ * needs something answered first, and `declined` means it will not go up.
+ */
+export type MyGroupListingStatus = "review" | "question" | "live" | "declined";
+
+/**
+ * A room the signed-in member submitted to a group, with the moderation state
+ * the public group page deliberately hides. `decisionReason` is the
+ * moderator's own sentence, shown to the poster verbatim.
+ */
+export interface MyGroupListing extends GroupListing {
+  status: MyGroupListingStatus;
+  /** Taken down after publication for a norm the moderator recorded. */
+  hidden: boolean;
+  hiddenReason: string | null;
+  decidedAt: string | null;
+  decisionReason: string | null;
+  createdAt: string;
+}
+
+/**
+ * Demo fixtures for "your rooms in this group", keyed by group slug. Live mode
+ * reads `GET /housing-groups/:slug/listings/mine` instead and never touches
+ * these. Deliberately covers all four states in one group, since the whole
+ * point of the surface is that a member can see which one they are in.
+ */
+export const DEMO_MY_GROUP_LISTINGS: Record<string, MyGroupListing[]> = {
+  "lisbon-trans-housing": [
+    {
+      id: "mine-1",
+      title: "Sunny room in a two-person trans household",
+      description:
+        "One room opening in a calm, plant-filled flat we've shared for two years. Looking for someone easy-going who's around for shared dinners but respects quiet.",
+      neighbourhood: "Arroios, Lisbon",
+      priceEuros: 430,
+      accessibilityInfo:
+        "Third floor, no lift. Step-free once inside. Bathroom door is 70cm.",
+      status: "live",
+      hidden: false,
+      hiddenReason: null,
+      decidedAt: "2026-08-19T10:20:00.000Z",
+      decisionReason: null,
+      createdAt: "2026-08-18T18:04:00.000Z",
+    },
+    {
+      id: "mine-2",
+      title: "Small room, short let over the summer",
+      description:
+        "Free from June to September while my flatmate is away. Furnished, bills split four ways.",
+      neighbourhood: "Anjos, Lisbon",
+      priceEuros: 340,
+      accessibilityInfo: "Second floor, no lift. Narrow stairwell.",
+      status: "question",
+      hidden: false,
+      hiddenReason: null,
+      decidedAt: "2026-08-24T09:12:00.000Z",
+      decisionReason:
+        "Could you say whether the 340 covers bills or sits on top of them? The group rule is that the number people read is the number they pay.",
+      createdAt: "2026-08-23T21:40:00.000Z",
+    },
+    {
+      id: "mine-3",
+      title: "Room available, message me for details",
+      description: "Nice place, quiet street. Get in touch and we'll talk.",
+      neighbourhood: "Lisbon",
+      priceEuros: 1,
+      accessibilityInfo: "Ask me.",
+      status: "declined",
+      hidden: false,
+      hiddenReason: null,
+      decidedAt: "2026-08-21T15:02:00.000Z",
+      decisionReason:
+        "Two house rules are missing here: the real rent has to be in the post, and access has to be described rather than left as a question. Post it again with both and it will go straight up.",
+      createdAt: "2026-08-21T11:15:00.000Z",
+    },
+  ],
+};

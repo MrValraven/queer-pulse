@@ -83,7 +83,44 @@
   line-height: 1.55;
   margin-top: 6px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* CON-11 — the directory used to be a list of names. The footer row carries
+   what makes each row a person: how much they have published, and whether
+   the byline belongs to a member you can go and meet. */
+.cardFoot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 14px;
+}
+.cardCount {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-60);
+}
+.memberChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: 999px;
+  padding: 4px 9px;
+}
+.cardNoBio {
+  font-size: 13px;
+  color: var(--ink-40);
+  font-style: italic;
+  line-height: 1.55;
+  margin-top: 6px;
 }

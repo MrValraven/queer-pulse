@@ -252,6 +252,24 @@ export const auth: Catalog = {
     "Neste momento tens sessão iniciada, por isso vamos fechá-la aqui. Volta quando fizeres 18 anos e alguém te convidará com todo o gosto.",
   "under18.signOut": "Terminar sessão",
 
+  // ── Voltar a concordar quando os Termos ou as Diretrizes mudam (ID-14) ──
+  "policyReacceptance.eyebrow": "Antes de continuares",
+  "policyReacceptance.title": "Atualizámos <em>as regras que partilhamos</em>",
+  "policyReacceptance.lede":
+    "Parte do que aceitaste quando entraste mudou. Preferimos perguntar a presumir, por isso lê com calma e diz-nos que estás de acordo.",
+  "policyReacceptance.documents.terms": "Termos de Serviço",
+  "policyReacceptance.documents.guidelines": "Diretrizes da Comunidade",
+  "policyReacceptance.versionChanged":
+    "Aceitaste a versão {previous}. Está agora em vigor a versão {current}.",
+  "policyReacceptance.versionUnrecorded":
+    "Não temos registo de nenhuma aceitação tua. Está agora em vigor a versão {current}.",
+  "policyReacceptance.read": "Ler",
+  "policyReacceptance.agree": "Li e concordo",
+  "policyReacceptance.agreeing": "A guardar…",
+  "policyReacceptance.error":
+    "Não conseguimos registar isso agora. Verifica a ligação e tenta de novo.",
+  "policyReacceptance.signOut": "Terminar sessão",
+
   // ── Confirmar email (código de seis dígitos) ──
 
   // ── Entrar por link mágico ──

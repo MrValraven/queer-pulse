@@ -795,4 +795,21 @@ export const community: Catalog = {
   "readingGroups.listGroup.defaultWhereIrl": "Lisboa (a confirmar)",
   "readingGroups.listGroup.defaultFrequency": "Mensal",
   "readingGroups.listGroup.defaultLang": "EN / PT",
+
+  // ── Diretório ao vivo (um grupo de leitura É uma comunidade `book-club`) ──
+  "readingGroups.card.formatPrefix.either": "Presencial ou online · ",
+  "readingGroups.card.members_one": "{count} membro",
+  "readingGroups.card.members_other": "{count} membros",
+  "readingGroups.card.openGroupCta": "Abrir o grupo",
+  "readingGroups.card.requestPendingCta": "A enviar…",
+  "readingGroups.card.requestSentCta": "Pedido enviado",
+  "readingGroups.card.joinedToast": "Estás dentro. Diz olá no grupo",
+  "readingGroups.card.requestedToast":
+    "Pedido enviado. Quem organiza o grupo decide quem entra",
+  "readingGroups.card.joinErrorToast":
+    "Não foi possível enviar o teu pedido. Tenta de novo.",
+  "readingGroups.liveError.title": "O diretório não carregou",
+  "readingGroups.liveError.description":
+    "Algo correu mal ao procurar os grupos. Normalmente é momentâneo.",
+  "readingGroups.liveError.retryCta": "Tentar de novo",
 };

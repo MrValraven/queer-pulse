@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import { Button, FeatureHelp, Outro, Reveal } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
+import { useMyLocation, useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta } from "../../shared/seo/PageMeta";
@@ -13,6 +13,7 @@ import {
   useDirectoryFilterResults,
 } from "./useDirectoryFilters";
 import { LocalFilterBar } from "./LocalFilterBar";
+import { DirectoryNearMe } from "./DirectoryNearMe";
 import { DirectoryResultsHeader } from "./DirectoryResultsHeader";
 import { DirectoryListView } from "./DirectoryListView";
 import { DirectoryVerificationSection } from "./DirectoryVerificationSection";
@@ -36,6 +37,8 @@ export function DirectoryPage() {
     sort,
     vibes,
     safe,
+    openNow,
+    access,
     query,
     selectView,
     setCategory,
@@ -43,6 +46,8 @@ export function DirectoryPage() {
     setSort,
     toggleVibe,
     setSafe,
+    setOpenNow,
+    toggleAccess,
     clearFilters,
   } = filterParams;
   const {
@@ -52,9 +57,18 @@ export function DirectoryPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useLocalPlaces({ query, safe });
-  const { filtered, categoryCounts, mappableCount, activeFilters } =
-    useDirectoryFilterResults(places, filterParams);
+  } = useLocalPlaces({ query, safe, access });
+  // Opt-in, memory-only, never sent anywhere. Held here so one position serves
+  // both the ordering and the walking times, and so turning it off is a single
+  // state change that hands the previous ordering straight back.
+  const myLocation = useMyLocation();
+  const {
+    filtered,
+    categoryCounts,
+    mappableCount,
+    activeFilters,
+    distanceById,
+  } = useDirectoryFilterResults(places, filterParams, myLocation.coordinates);
   const loading = useSimulatedLoad() || placesLoading;
   const hasActiveFilters = activeFilters.length > 0;
 
@@ -101,6 +115,10 @@ export function DirectoryPage() {
         onToggleVibe={toggleVibe}
         safeOnly={safe === "verified"}
         onToggleSafeOnly={() => setSafe(safe !== "verified")}
+        openNow={openNow}
+        onToggleOpenNow={() => setOpenNow(!openNow)}
+        access={access}
+        onToggleAccess={toggleAccess}
         view={view}
         onViewChange={selectView}
         activeFilterCount={activeFilters.length}
@@ -118,11 +136,13 @@ export function DirectoryPage() {
         onSortChange={setSort}
         activeFilters={activeFilters}
         onClearFilters={clearFilters}
+        nearMeSlot={<DirectoryNearMe location={myLocation} />}
       />
 
       {view === "list" ? (
         <DirectoryListView
           places={filtered}
+          distanceById={distanceById}
           total={serverTotal}
           loading={loading}
           hasActiveFilters={hasActiveFilters}

@@ -1137,13 +1137,14 @@ export const cinema: Catalog = {
     "Our streaming format needs Safari on a Mac, iPhone or iPad today. Open this page there and the film will play. Support for Chrome and Firefox is being built.",
   "live.unsupported.cta": "Browse the programme",
 
-  // ── Live-mode placeholder (CinemaComingSoon) ──────────────────────────────
-  // Shown for the Cinema sections not wired to the backend yet (collections,
-  // made-here shorts, filmmaker/curator profiles, open calls, film detail).
-  // Browse and Watch are live, so this points people to the real catalogue.
-  "comingSoon.title": "This reel is still in the edit",
+  // ── Live-mode not-launched page (CinemaComingSoon, CON-03) ────────────────
+  // Shown for EVERY /cinema/* route when demo mode is off. Cinema ships with
+  // `launchedFeatures.cinema.launched = false`, so nothing streams and no
+  // membership can be bought — this page must never re-state the offer.
+  "comingSoon.metaTitle": "QueerPulse Cinema: opening soon",
+  "comingSoon.title": "The cinema hasn't opened yet",
   "comingSoon.description":
-    "Collections, filmmaker profiles and open calls are still in production. The films themselves are live, though. Browse the catalogue and press play.",
-  "comingSoon.browseCta": "Browse films",
+    "Our co-op cinema is still being built: the programme, the memberships and the filmmaker revenue split all land together. Nothing is on sale and no film is streaming yet. We'll announce it here when the doors open.",
+  "comingSoon.magazineCta": "Read the magazine",
   "comingSoon.backHome": "Back to home",
 };

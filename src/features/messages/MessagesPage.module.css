@@ -284,7 +284,8 @@
 }
 .trPinnedIcon,
 .trFavoriteIcon,
-.trMutedIcon {
+.trMutedIcon,
+.trArchivedIcon {
   display: inline-flex;
   font-size: 12px;
 }
@@ -295,6 +296,9 @@
   color: var(--accent);
 }
 .trMutedIcon {
+  color: var(--ink-40);
+}
+.trArchivedIcon {
   color: var(--ink-40);
 }
 .trPreviewRow {

@@ -146,7 +146,6 @@ export const BUILDING: BuildingItem[] = [
     progress: 25,
     features: [
       "Job Board with queer-affirming employers",
-      "Skills & Learning workshops",
       "Mentorship matching",
       "Employer Reviews from the community",
       "Skills Exchange for bartering time and talent",

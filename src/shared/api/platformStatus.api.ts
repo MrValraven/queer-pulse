@@ -19,6 +19,24 @@ export interface PlatformStatusDTO {
    */
   guidelinesVersion: string;
   /**
+   * The Terms of Service revision currently in effect, and the Privacy Policy
+   * revision cookie consent pins to — both mirroring
+   * `queerpulse-backend/src/consent/policy-versions.ts`, which is now the ONE
+   * place any policy revision is declared (ID-14).
+   *
+   * Read from here rather than from a frontend literal for the same reason
+   * `guidelinesVersion` already was, generalised: the privacy version HAD
+   * drifted (frontend `3.4`, backend `3.3`) precisely because both sides kept
+   * their own copy. They ride this PUBLIC endpoint, not `/auth/me`, because the
+   * surfaces that need them run with no session — the cookie banner and the
+   * request-invite form's 18+ attestation.
+   *
+   * Optional on the wire only so an older backend that predates the fields
+   * degrades to the local fallback constants instead of failing validation.
+   */
+  termsVersion?: string;
+  privacyPolicyVersion?: string;
+  /**
    * Sitewide announcement banner (ADM-25), read by `AnnouncementBanner`. The
    * backend already accounts for `announcementExpiresAt` — this is `false`
    * once that time passes, even if an admin never flipped the switch off.

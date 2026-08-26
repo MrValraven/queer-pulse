@@ -39,6 +39,8 @@ export const homepage: Catalog = {
     "Acreditamos que a comunidade funciona de outra forma quando há confiança por trás. Quando sabes com quem estás a ligar-te, quando tens controlo sobre o que partilhas, e quando há pessoas a zelar pelos espaços que usas.",
   "manifesto.body3":
     "É por isso que a QueerPulse é só por convite, que as pessoas têm voto de confiança, e que a segurança e a privacidade fazem parte da base da plataforma.",
+  "manifesto.body4":
+    "A libertação queer é indivisível de todas as outras lutas por segurança e autodeterminação, incluindo a libertação da Palestina. <a>Onde nos posicionamos</a>.",
   "manifesto.highlight":
     "Estamos a construir um lugar onde ser queer é o ponto de partida para uma ligação verdadeira.",
   "manifesto.safetyCta": "Como mantemos isto seguro",

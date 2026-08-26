@@ -4,12 +4,11 @@ import { Button } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { type PressAsset } from "./pressKitAssets.data";
 import styles from "./MarketingModal.module.css";
 
 export interface PreviewRow {
-  ic: string;
+  format: string;
   title: string;
   description: string;
 }
@@ -35,13 +34,8 @@ export function PressKitDownloadModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const [done, setDone] = useState(false);
+  const [isDownloaded, setIsDownloaded] = useState(false);
   useScrollLock();
-
-  const download = () => {
-    downloadBlob(asset.filename, asset.content, asset.mime);
-    setDone(true);
-  };
 
   return createPortal(
     <div
@@ -52,7 +46,7 @@ export function PressKitDownloadModal({
       }}
     >
       <div
-        className={`${styles.modal} ${done ? styles.modalSuccess : ""}`}
+        className={`${styles.modal} ${isDownloaded ? styles.modalSuccess : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label={t("marketing:pressKit.modal.dialogAriaLabel")}
@@ -66,7 +60,7 @@ export function PressKitDownloadModal({
           ×
         </button>
 
-        {done ? (
+        {isDownloaded ? (
           <div className={styles.success}>
             <div className={styles.successIcon}>
               <svg viewBox="0 0 24 24" aria-hidden>
@@ -100,12 +94,12 @@ export function PressKitDownloadModal({
 
             {rows && rows.length > 0 && (
               <div className={styles.previewList}>
-                {rows.map((r) => (
-                  <div className={styles.previewRow} key={r.title}>
-                    <div className={styles.previewIc}>{r.ic}</div>
+                {rows.map((row) => (
+                  <div className={styles.previewRow} key={row.title}>
+                    <div className={styles.previewIc}>{row.format}</div>
                     <div className={styles.previewInfo}>
-                      <b>{r.title}</b>
-                      <span>{r.description}</span>
+                      <b>{row.title}</b>
+                      <span>{row.description}</span>
                     </div>
                   </div>
                 ))}
@@ -116,7 +110,15 @@ export function PressKitDownloadModal({
               <button type="button" className={styles.back} onClick={onClose}>
                 {t("marketing:pressKit.modal.cancelCta")}
               </button>
-              <Button size="lg" type="button" onClick={download}>
+              {/* A real, same-origin file fetch: the browser saves what the
+                  static host serves, with its own MIME type, under the
+                  asset's filename. No blob is synthesised here. */}
+              <Button
+                size="lg"
+                href={asset.path}
+                download={asset.filename}
+                onClick={() => setIsDownloaded(true)}
+              >
                 {buttonLabel}
               </Button>
             </div>

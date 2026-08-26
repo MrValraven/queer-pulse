@@ -4,6 +4,7 @@ import { getEvent } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import { detailToGathering } from "./events.adapters";
 import { resolveGathering, type GatheringDetail } from "../data";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 
 export interface EventResult {
   gathering: GatheringDetail;
@@ -20,6 +21,7 @@ export interface EventResult {
  */
 export function useEvent(param: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
   const slug = (param ?? "").replace(/-[a-z0-9]+$/i, "") || (param ?? "");
   return useQuery<EventResult>({
     queryKey: eventKeys.detail(param, demoMode),
@@ -33,7 +35,7 @@ export function useEvent(param: string | undefined) {
     queryFn: async () => {
       if (demoMode) return { gathering: resolveGathering(param) };
       const dto = await getEvent(slug);
-      return { gathering: detailToGathering(dto) };
+      return { gathering: detailToGathering(dto, t) };
     },
   });
 }

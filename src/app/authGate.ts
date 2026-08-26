@@ -4,16 +4,21 @@ import { useDemoMode } from "./providers/DemoModeProvider";
 import { linkToPath, routes } from "./routeMap";
 import { safeInternalPath } from "../shared/lib/safeInternalPath";
 import type { StaffRoleId } from "../features/admin/staffRoles.registry";
+import type { AuthUser } from "../features/auth/api/auth.api";
 
 /**
  * Auth gating policy for the walled-garden model.
  *
  * QueerPulse is invite-only, so the member surface (feed, messages, communities,
  * gatherings, economy, studio, the account area, admin/mod, …) is closed to
- * logged-out visitors. Marketing, the magazine/culture, cinema browsing,
- * resources, safety/crisis pages, policies, and the auth flow stay public so the
- * platform can still attract members and support people in crisis who aren't
- * signed in.
+ * logged-out visitors. Marketing, the magazine, cinema browsing, resources,
+ * safety/crisis pages, policies, and the auth flow stay public so the platform
+ * can still attract members and support people in crisis who aren't signed in.
+ *
+ * "Public" is not the same as "launched": cinema, culture and studio are all
+ * ungated here yet resolve to an honest not-launched page in live mode, decided
+ * in each feature's `routes.tsx` (see `DEMO_ONLY_NAV_PATTERNS` below for the
+ * matching nav rule).
  *
  * This is a denylist: anything not matched here is public by default, which keeps
  * legal/marketing pages from ever being locked by accident. To gate a new page,
@@ -114,7 +119,11 @@ const GATED_PATTERNS: string[] = [
   "/local/housing/*",
   "/business-directory",
   "/spaces-map",
-  // Cinema: browsing films is public; watching + membership are gated
+  // Cinema: browsing films is public; watching + membership are gated.
+  // Inert while cinema is unlaunched: in live mode every `/cinema/*` route
+  // resolves to the not-launched page (see `cinemaRoutes`), so these two only
+  // start doing work again on the day cinema launches. Kept so that day does
+  // not ship an ungated player and membership page. CON-03.
   "/cinema/watch",
   "/cinema/membership",
 ];
@@ -170,8 +179,6 @@ const COMING_SOON_PATTERNS: string[] = [
   "/work/jobs/*",
   "/work/companies",
   "/work/companies/*",
-  "/work/skills",
-  "/work/skills/*",
   "/work/mentorship",
   "/work/mentorship/*",
   "/work/employer-reviews",
@@ -204,6 +211,44 @@ export function isComingSoonLink(href: string): boolean {
 }
 
 /**
+ * Demo-only surfaces whose nav/footer entries must disappear in live mode.
+ *
+ * Culture (`/magazine/culture`) renders four empty tabs live: the club picks,
+ * commission board, showcase and radio listings are curated editorial content
+ * that only exists in the demo mocks, and there is no pipeline by which
+ * anything ever appears there. Its routes resolve to an honest not-launched
+ * page in live mode (see `cultureRoutes`), so the meganav must stop
+ * advertising it as a destination too. CON-14.
+ *
+ * Cinema and Studio deliberately stay OUT of this list: both also resolve to a
+ * not-launched page in live mode, but they keep their nav entries as an honest
+ * "this is being built" signal, which is the pattern Studio has shipped since
+ * its live-mode gate landed.
+ *
+ * Unlike COMING_SOON_PATTERNS this is keyed on demo mode rather than on
+ * `import.meta.env.DEV`, so a deployed demo build keeps the full mock
+ * experience. Every call site passes `demoMode` in.
+ */
+const DEMO_ONLY_NAV_PATTERNS: string[] = [
+  routes.culture,
+  `${routes.culture}/*`,
+  // The legacy `/culture` alias, which redirects to `routes.culture`.
+  "/culture",
+];
+
+/** True when a path is a demo-only surface hidden from the live-mode nav. */
+export function isDemoOnlyNavPath(pathname: string): boolean {
+  return matchesAny(pathname, DEMO_ONLY_NAV_PATTERNS);
+}
+
+/** The link-href form of `isDemoOnlyNavPath` (see `isGatedLink`). */
+export function isDemoOnlyNavLink(href: string): boolean {
+  const path = linkToPath(href).split(/[?#]/)[0] || "/";
+  if (!path.startsWith("/")) return false; // external / mailto / tel
+  return isDemoOnlyNavPath(path);
+}
+
+/**
  * Role-gated surfaces. Being logged in is not enough for these — the admin panel
  * requires an admin, the community/`/mod` moderation surfaces require a moderator
  * (or admin). Enforced client-side in live mode; the backend remains the source
@@ -233,6 +278,34 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // tab of the admin-only `/admin/members`; this dedicated path is how a
   // moderator gets to it.
   routes.adminJoinRequests,
+  // The DSAR review queue (ID-04). Its controller authorizes
+  // `@Roles(Moderator, Admin)`, and the queue runs on a statutory 30-day clock
+  // per request — a surface with a legal deadline cannot depend on an admin
+  // being the one who happens to be online.
+  routes.adminDsar,
+  `${routes.adminDsar}/*`,
+  // The status-incident console (ID-16), likewise `@Roles(Moderator, Admin)`.
+  // Publishing "we know, we are on it" during an outage is the one job that is
+  // useless if it waits: whoever notices first has to be able to post it.
+  routes.adminStatusIncidents,
+  `${routes.adminStatusIncidents}/*`,
+  // The housing review queue (LOC-01). `AdminHousingListingsController` is
+  // guarded by `HousingModerationGuard`, which passes Moderator or Admin OR a
+  // member holding `housing_moderator`. The role half is expressed here; the
+  // additive half is CAPABILITY_ELEVATED_PATTERNS below. Every member listing
+  // sits invisible until somebody works this queue, so it cannot wait for an
+  // admin to be the one online.
+  routes.adminHousingListings,
+  `${routes.adminHousingListings}/*`,
+  // LOC-19. The group-listing review queue is the same `HousingModerationGuard`
+  // union as the housing queue above (so it appears in
+  // CAPABILITY_ELEVATED_PATTERNS too); the landlord console is a plain
+  // `@Roles(Moderator, Admin)`. Both are queues a moderator works daily, and
+  // both answer a submission a member is waiting on.
+  routes.adminHousingGroupListings,
+  `${routes.adminHousingGroupListings}/*`,
+  routes.adminLandlords,
+  `${routes.adminLandlords}/*`,
 ];
 
 /**
@@ -257,6 +330,49 @@ const CAPABILITY_PATTERNS: { patterns: string[]; capability: StaffRoleId }[] = [
 ];
 
 /**
+ * Surfaces an additive staff-role grant OPENS.
+ *
+ * The mirror image of CAPABILITY_PATTERNS. There, a grant NARROWS a surface: the
+ * path is closed to the ordinary member tier and the capability is the only way
+ * in besides being an admin. Here a grant WIDENS one: the path already carries a
+ * role requirement, and holding the capability satisfies it on its own.
+ *
+ * This exists because `requiredRole` and `requiredCapability` are checked in
+ * series, so the role test rejects a plain member before their grant is ever
+ * consulted. Without this list a member holding `housing_moderator` and nothing
+ * else would be bounced from a queue their own backend guard admits them to.
+ *
+ * Keep each entry pinned to a backend guard that genuinely accepts the union.
+ */
+const CAPABILITY_ELEVATED_PATTERNS: {
+  patterns: string[];
+  capability: StaffRoleId;
+}[] = [
+  {
+    // `HousingModerationGuard`: Moderator or Admin, OR `housing_moderator`.
+    // Both housing queues are guarded by it, so both elevate the same way.
+    patterns: [
+      routes.adminHousingListings,
+      `${routes.adminHousingListings}/*`,
+      routes.adminHousingGroupListings,
+      `${routes.adminHousingGroupListings}/*`,
+    ],
+    capability: "housing_moderator",
+  },
+];
+
+/**
+ * The staff role that, on its own, satisfies `pathname`'s role requirement, or
+ * null when no grant elevates into it.
+ */
+export function elevatingCapability(pathname: string): StaffRoleId | null {
+  for (const entry of CAPABILITY_ELEVATED_PATTERNS) {
+    if (matchesAny(pathname, entry.patterns)) return entry.capability;
+  }
+  return null;
+}
+
+/**
  * Guest-only surfaces: the sign-in / sign-up entry pages that only make sense to
  * a logged-out visitor. A signed-in member has nothing to do here, so the gate
  * bounces them to their feed (or the `?next=` they were headed for). This is the
@@ -273,6 +389,90 @@ const GUEST_ONLY_PATTERNS: string[] = [
 /** True when a path is only meaningful to logged-out visitors. */
 export function isGuestOnlyPath(pathname: string): boolean {
   return matchesAny(pathname, GUEST_ONLY_PATTERNS);
+}
+
+/**
+ * Paths the policy re-acceptance sheet must never cover (ID-14).
+ *
+ * Being asked to agree again is a hard stop on the member surface, and a hard
+ * stop has to leave three doors open or it stops being a request and becomes a
+ * hostage situation:
+ *   - the DOCUMENTS themselves. Nobody can be asked to agree to something they
+ *     are not allowed to go and read, so Terms, Privacy and the Community
+ *     Guidelines stay open. (The sheet's own links point here, and it re-opens
+ *     the moment they navigate anywhere else, so reading is a detour rather
+ *     than an escape.)
+ *   - LEAVING. `routes.deleteAccount` is carved out for the same reason the
+ *     onboarding and deactivation gates already carve it out: a member who has
+ *     decided to go should never have to agree to a new rule on the way out.
+ *   - SIGNING OUT, which needs no path — the sheet has its own sign-out button.
+ *
+ * Only the member surface is covered in the first place (see
+ * `usePolicyReacceptanceRequired`), so public marketing, the magazine, support
+ * and the crisis pages are untouched whether or not they are listed here.
+ */
+const POLICY_REACCEPTANCE_EXEMPT_PATHS: string[] = [
+  routes.terms,
+  routes.privacy,
+  routes.guidelines,
+  routes.deleteAccount,
+];
+
+/**
+ * True when the member's agreement is behind the revisions now in effect.
+ *
+ * `null`/absent `accepted*` counts as behind on purpose. Those columns were
+ * never backfilled (agreeing is a specific act, so a manufactured version would
+ * be a lie), which means a null is not "they are fine", it is "we have no
+ * evidence they ever saw this" — and the whole point of the item is to stop
+ * moderating people under rules nobody can show they were shown.
+ *
+ * Absent `policyVersions` entirely (an older backend, or a payload the
+ * validator dropped) is NOT behind: with no signal at all, silently blocking
+ * every member out of the app would be a far worse failure than asking nobody.
+ */
+export function needsPolicyReacceptance(
+  policyVersions: AuthUser["policyVersions"],
+): boolean {
+  if (!policyVersions) return false;
+  return (
+    policyVersions.acceptedTerms !== policyVersions.currentTerms ||
+    policyVersions.acceptedGuidelines !== policyVersions.currentGuidelines
+  );
+}
+
+/**
+ * Whether the re-acceptance sheet should be showing right now (ID-14).
+ *
+ * Deliberately a separate hook from `useAuthGateRedirect` rather than another
+ * branch inside it: this gate has no destination to redirect TO. There is no
+ * "re-accept" page — the member stays exactly where they are and a blocking
+ * sheet covers the surface, so agreeing returns them to what they were doing
+ * instead of dumping them on the feed. `App.tsx` mounts the sheet next to the
+ * consent banner and reads this.
+ *
+ * Live mode only, and only for a settled, ordinary session:
+ *   - demo mode records no acceptance and has no real member row;
+ *   - `checking` means `/auth/me` is still in flight, so the answer is not yet
+ *     knowable and flashing the sheet on every reload would be worse than
+ *     waiting;
+ *   - a member still mid-onboarding agrees to the guidelines at the end of the
+ *     wizard, so asking them in a sheet on top of it would ask twice;
+ *   - a suspended or deactivated member is already redirected to a page that
+ *     explains their status, and a sheet over it would bury that explanation
+ *     behind a request they cannot act on usefully anyway.
+ */
+export function usePolicyReacceptanceRequired(): boolean {
+  const { loggedIn, checking, status, user } = useAuth();
+  const { demoMode } = useDemoMode();
+  const { pathname } = useLocation();
+
+  if (demoMode || checking || !loggedIn) return false;
+  if (status !== "active") return false;
+  if (!user?.onboardedAt) return false;
+  if (POLICY_REACCEPTANCE_EXEMPT_PATHS.includes(pathname)) return false;
+  if (!isGatedPath(pathname)) return false;
+  return needsPolicyReacceptance(user.policyVersions);
 }
 
 /** The role a path demands, or null when logged-in access is sufficient. */
@@ -320,8 +520,11 @@ export function isGatedLink(href: string): boolean {
  */
 export function useIsLinkVisible(): (href: string) => boolean {
   const { loggedIn } = useAuth();
+  const { demoMode } = useDemoMode();
   return (href: string) =>
-    !isComingSoonLink(href) && (loggedIn || !isGatedLink(href));
+    !isComingSoonLink(href) &&
+    (demoMode || !isDemoOnlyNavLink(href)) &&
+    (loggedIn || !isGatedLink(href));
 }
 
 /**
@@ -351,7 +554,24 @@ export function useAuthGateRedirect(): string | null {
     // Note the backend auto-reactivates a *deactivated* member on Google
     // sign-in, so in practice this catches the erasure-grace case.
     if (!demoMode && status === "deactivated") {
-      return pathname === routes.deleteAccount ? null : routes.deleteAccount;
+      // Two carve-outs, both for the same reason — a blanket redirect would
+      // hide the one page that explains what is happening.
+      //   - `routes.deleteAccount` is the destination itself, and hosts the
+      //     cancel button that is the only way back out of erasure grace.
+      //   - `routes.status` is the public platform-status page (ID-16). It is
+      //     the single surface that tells someone whether the PLATFORM is down
+      //     rather than their account being broken. Bouncing a deactivated
+      //     member off it during an outage leaves them looking at a
+      //     delete-account screen with no way to learn that nothing is wrong
+      //     with them. It is public, so this grants nothing they could not
+      //     already read signed out.
+      const reachableWhileDeactivated: string[] = [
+        routes.deleteAccount,
+        routes.status,
+      ];
+      return reachableWhileDeactivated.includes(pathname)
+        ? null
+        : routes.deleteAccount;
     }
     // A suspended member: their sessions are revoked and every ActiveMemberGuard
     // route 403s, so a gated page would render a blank screen with no
@@ -384,8 +604,20 @@ export function useAuthGateRedirect(): string | null {
     // by `vite build`, so the guard below is unconditional in every artifact.
     if (!demoMode || !import.meta.env.DEV) {
       const need = requiredRole(pathname);
-      if (need === "admin" && role !== "admin") return routes.homepage;
-      if (need === "mod" && role !== "moderator" && role !== "admin") {
+      // An additive grant can satisfy a role requirement on its own, wherever
+      // the backend guard accepts the same union (CAPABILITY_ELEVATED_PATTERNS).
+      const elevating = elevatingCapability(pathname);
+      const hasElevatingGrant =
+        elevating !== null && (staffRoles ?? []).includes(elevating);
+      if (need === "admin" && role !== "admin" && !hasElevatingGrant) {
+        return routes.homepage;
+      }
+      if (
+        need === "mod" &&
+        role !== "moderator" &&
+        role !== "admin" &&
+        !hasElevatingGrant
+      ) {
         return routes.homepage;
       }
       // Capability-gated surfaces (e.g. /magazine/editor): the account tier

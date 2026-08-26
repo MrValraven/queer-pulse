@@ -86,6 +86,10 @@ export function dtoToMeta(
     connectedAtIso: dto.respondedAt ?? dto.createdAt,
     requestMessage: dto.requestMessage ?? undefined,
     requestReason: dto.requestReason ?? undefined,
+    isRequestedByYou: dto.isRequestedByYou,
+    // The viewer's own note. The server never sends the other party's, so
+    // there is nothing here to gate on the client.
+    note: dto.note ?? undefined,
     sentAgo: relativeAgo(dto.createdAt, t, fmt),
     introducedBy: introducer
       ? {

@@ -23,6 +23,7 @@
     "prerender": "node scripts/prerender.mjs",
     "icons": "node scripts/generate-icons.mjs",
     "og": "node scripts/generate-og-image.mjs",
+    "press:assets": "node scripts/generate-press-assets.mjs",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

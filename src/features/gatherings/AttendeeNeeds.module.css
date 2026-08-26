@@ -1,0 +1,59 @@
+/* An attendee's own answers, visible to the organisers and nobody else. The
+   plum-tinted ground and the standing "private to you" label make that
+   obvious at a glance, including on a phone held at a door. */
+.needs {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(var(--plum-rgb), 0.05);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.privateLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  margin-bottom: 6px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 62ch;
+  overflow-wrap: anywhere;
+}
+
+.item svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
+.itemLabel {
+  font-weight: 600;
+}
+
+.itemMuted {
+  color: var(--ink-60);
+}
+
+.itemMuted svg {
+  color: var(--ink-40);
+}

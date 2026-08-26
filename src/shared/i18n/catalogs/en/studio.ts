@@ -1777,7 +1777,7 @@ export const studio: Catalog = {
   "comingSoon.title": "The Studio is <em>still tuning up</em>",
   "comingSoon.description":
     "Our co-op music platform (artist pages, live sets, payouts and the solidarity fund) isn't open to the public yet. We're building it in the open and it'll land here soon.",
-  "comingSoon.exploreCulture": "Explore Culture",
+  "comingSoon.readMagazine": "Read the magazine",
   "comingSoon.backHome": "Back to home",
 
   // ── no-literal-string sweep: reusable ImageSlot placeholder captions ─────

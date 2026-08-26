@@ -169,30 +169,18 @@ export function langLabelKey(value: string): string | undefined {
   return LANGS.find((lang) => lang.value === value)?.labelKey;
 }
 
-export const ACCESS_OPTIONS: { value: string; labelKey: string }[] = [
-  {
-    value: "Step-free access throughout",
-    labelKey: "gatherings:create.access.stepFree",
-  },
-  { value: "Accessible toilet", labelKey: "gatherings:create.access.toilet" },
-  {
-    value: "Seating available throughout",
-    labelKey: "gatherings:create.access.seating",
-  },
-  {
-    value: "Low sensory / quiet option available",
-    labelKey: "gatherings:create.access.lowSensory",
-  },
-  {
-    value: "Dietary requirements can be accommodated",
-    labelKey: "gatherings:create.access.dietary",
-  },
-];
-
-/** Resolve a stored `form.access` entry back to its display key. */
-export function accessLabelKey(value: string): string | undefined {
-  return ACCESS_OPTIONS.find((option) => option.value === value)?.labelKey;
-}
+/**
+ * The accessibility checklist that used to live here was five tick boxes, and
+ * a tick box can only say "yes" or say nothing. "There is a step at the door"
+ * and "nobody has told us" came out as the same blank, which is precisely the
+ * ambiguity someone who uses a wheelchair cannot plan around.
+ *
+ * The wizard now asks the SAME six three-valued questions a business listing
+ * answers (`marketing/listBusiness/listingAccessibility.data.ts`), so a member
+ * reads one vocabulary across the directory and the gatherings board, and the
+ * host's "the accessibility information I have given is accurate" pledge is a
+ * pledge about answers that are actually stored.
+ */
 
 // "slidingScale" (ticket-pricing honesty) dropped along with the pricing
 // step above — there is no pricing to confirm honest anymore.

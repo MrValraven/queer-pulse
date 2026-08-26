@@ -1,11 +1,3 @@
-export const CANDIDATE = {
-  initials: "JF",
-  name: "Jonas Ferreira",
-  tint: "jade" as const,
-  context: "Asked you to vouch · applied 3 days ago",
-  bio: "Sound designer, recently moved from Porto. You met at the Mouraria supper club in May.",
-};
-
 import type { IconType } from "react-icons";
 import { FiEye, FiShield, FiUsers } from "react-icons/fi";
 

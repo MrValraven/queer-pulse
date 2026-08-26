@@ -32,6 +32,13 @@ export interface ConnectionMeta {
   requestMessage?: string;
   /** Why they reached out: `open:<id>` | `custom:<label>` | a REASONS id. */
   requestReason?: string;
+  /** Whether the viewer is the one who sent the request. Once a connection is
+   *  accepted both sides read as "connected", so this is what lets a card say
+   *  "you reached out about…" rather than "they did". */
+  isRequestedByYou?: boolean;
+  /** The viewer's OWN private note about this connection. Never the other
+   *  party's: the server only ever reads notes authored by the viewer. */
+  note?: string;
   sentAgo?: string;
   /** The mutual who introduced this requester (live-mode network intros only). */
   introducedBy?: { slug: string; name: string };

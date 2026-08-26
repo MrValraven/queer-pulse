@@ -164,7 +164,9 @@ export const shared: Catalog = {
   "adminNav.items.staff": "Equipa e papéis",
   "adminNav.items.concerns": "Preocupações",
   "adminNav.items.safeSpaces": "Espaços seguros",
+  "adminNav.items.topics": "Tópicos",
   "adminNav.items.listings": "Espaços",
+  "adminNav.items.housingListings": "Revisão de alojamento",
   "adminNav.items.media": "Imagens enviadas",
   "adminNav.items.invites": "Convites",
   "adminNav.items.changemakerNominations": "Nomeações",
@@ -176,6 +178,7 @@ export const shared: Catalog = {
   "adminNav.items.partnerships": "Parcerias",
   "adminNav.items.verifications": "Verificações",
   "adminNav.items.orgTiers": "Níveis de parceria",
+  "adminNav.items.resourceGuides": "Guias de recursos",
   "adminNav.items.resourceListings": "Diretório de recursos",
   "adminNav.items.resourceSuggestions": "Sugestões de recursos",
   "adminNav.items.communityTagRequests": "Pedidos de etiquetas de comunidades",
@@ -190,6 +193,8 @@ export const shared: Catalog = {
   // errorHandling.ts / errorMessage.ts
   "apiError.server": "Algo correu mal do nosso lado. Tenta outra vez.",
   "apiError.forbidden": "Não tens acesso a isso.",
+  "apiError.accountRestricted":
+    "Não podes fazer isso enquanto estiver em vigor uma restrição de moderação. Podes recorrer nas definições da tua conta.",
   "apiError.generic": "Algo correu mal.",
   "apiError.genericRetry": "Algo correu mal. Tenta outra vez.",
   "apiError.tryAgainTail": " Tenta outra vez.",
@@ -346,6 +351,7 @@ export const shared: Catalog = {
   "megaNav.resources.col.safety.safetyGuide": "Guia de segurança",
   "megaNav.resources.col.learn.head": "Aprender e pertencer",
   "megaNav.resources.col.learn.resourceLibrary": "Biblioteca de recursos",
+  "megaNav.resources.col.learn.guideIndex": "Todos os guias A–Z",
   "megaNav.resources.col.learn.transNbHub": "Centro trans e não-binárie",
   "megaNav.resources.col.learn.comingOut": "Assumir-se",
   "megaNav.resources.col.learn.familyParenting": "Família e parentalidade",
@@ -513,4 +519,8 @@ export const shared: Catalog = {
   // (AnnouncementBanner.tsx), montada tanto no AppShell como no PageShell —
   // mostrada a todas as pessoas visitantes, com ou sem sessão iniciada (ADM-25).
   "announcement.dismiss": "Dispensar este aviso",
+
+  // pt/shared.ts
+  "adminNav.items.housingGroupListings": "Anúncios de grupo",
+  "adminNav.items.landlords": "Senhorios",
 };

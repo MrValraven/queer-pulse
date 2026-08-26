@@ -1,0 +1,27 @@
+QUEERPULSE BRAND COLOURS
+========================
+
+Read from the platform's own design tokens (src/styles/tokens/colors.css),
+so these are the exact values the product renders.
+
+Plum        #2D1B3D   rgb(45, 27, 61)   Brand anchor. Dark surfaces, headings, the app's theme colour.
+Plum deep   #241430   rgb(36, 20, 48)   The deeper end of the plum gradient.
+Coral       #E8775A   rgb(232, 119, 90)   The accent. Fills, tints, the pulse dot. Never small text.
+Coral text  #A84430   rgb(168, 68, 48)   Coral as text on light surfaces. Clears WCAG AA.
+Coral fill  #D5431E   rgb(213, 67, 30)   Coral as a filled button carrying a white label. Clears AA.
+Cream       #F7F3EE   rgb(247, 243, 238)   Page background. Never pure white.
+Paper       #FFFFFF   rgb(255, 255, 255)   Card surface.
+Jade        #4A8C6F   rgb(74, 140, 111)   Verified, live, success.
+Jade text   #3C7159   rgb(60, 113, 89)   Jade as small text on light surfaces. Clears AA.
+Amber       #E8B44A   rgb(232, 180, 74)   Warning and medium states. A fill colour, never type.
+Danger      #B91C1C   rgb(185, 28, 28)   Destructive actions: delete, block, report.
+Ink         #1A1A1F   rgb(26, 26, 31)   Body text.
+
+TYPE
+----
+Wordmark and editorial type: Fraunces (SIL Open Font License 1.1), semibold,
+"Pulse" set in the italic, -0.01em tracking.
+Interface and body type: DM Sans (SIL Open Font License 1.1).
+
+Released under a Creative Commons Attribution 4.0 licence for editorial use.
+For commercial use, write to hello@queerpulse.com first.

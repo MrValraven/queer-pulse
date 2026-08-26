@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { FiBookOpen } from "react-icons/fi";
+import { useMemo, useState } from "react";
+import { FiAlertCircle, FiBookOpen } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import {
   Button,
@@ -16,6 +16,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
+import { useReadingGroups } from "./api/useReadingGroups";
+import { communityCardToReadingGroup } from "./readingGroups.adapters";
 import {
   FORMAT_FILTERS,
   GENRE_FILTERS,
@@ -61,35 +63,59 @@ function ReadingGroupCardSkeleton() {
   );
 }
 
+/** A group posted as meeting "either" way matches BOTH format filters: it is
+ *  one of the three answers the propose form offers, and hiding it from the
+ *  two filters a member actually uses would bury it. */
+function matchesFormat(group: Group, format: Format | "all"): boolean {
+  if (format === "all") return true;
+  return group.format === format || group.format === "either";
+}
+
 export function ReadingGroupsPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  // The skeleton delay is the prototype's fake fetch. Live mode has nothing to
-  // wait for here (the only groups are the ones this member proposed, held in
-  // local state), so a live visit would pay 600ms of placeholder for nothing.
-  const isSimulatedLoading = useSimulatedLoad();
-  const isLoading = demoMode && isSimulatedLoading;
   const { showToast } = useToast();
+
+  // LIVE: the directory is `GET /communities?tags=book-club` — a reading group
+  // IS a community, so an approved proposal produces a real, refresh-surviving
+  // row here. This replaced a `useState` list seeded from nothing and lost on
+  // every reload, whose one visible outcome was whatever the member had typed
+  // into the propose form that session.
+  const readingGroupsQuery = useReadingGroups();
+  const liveGroups = useMemo(
+    () =>
+      (readingGroupsQuery.data?.items ?? []).map(communityCardToReadingGroup),
+    [readingGroupsQuery.data],
+  );
+
+  // The skeleton delay is the prototype's fake fetch; live has a real one.
+  const isSimulatedLoading = useSimulatedLoad();
+  const isLoading = demoMode
+    ? isSimulatedLoading
+    : readingGroupsQuery.isLoading;
+
   const [genre, setGenre] = useState<Genre | "all">("all");
   const [format, setFormat] = useState<Format | "all">("all");
   /** Map of group id → the user's position on that group's waitlist. */
   const [waitlist, setWaitlist] = useState<Record<string, number>>({});
-  /** Groups the user has listed this session, prepended to the directory. */
+  /** Groups the user has listed this session. DEMO ONLY: the prototype's
+   *  propose form lists instantly, while a live proposal goes to an admin for
+   *  review and appears here only once it is approved into a real group. */
   const [myGroups, setMyGroups] = useState<Group[]>([]);
-  // "Request to join" needs somebody to reach. A Group carries no lister
-  // account, so live has no recipient and linking to the inbox would land the
-  // member on an empty conversation list; the card falls back to an honest
-  // disabled state. The prototype keeps its inbox link.
+  // The prototype's curated groups carry no lister account, so its card points
+  // at the inbox. A live card does not need this: it has a real owner and a
+  // real join flow (see `ReadingGroupJoinButton`).
   const messagesPath = demoMode ? routes.messages : undefined;
 
-  // The curated GROUPS directory is prototype-only editorial content with no
-  // server listing. In live mode only the groups the member proposes this
-  // session appear; the propose flow (ListGroupStrip) works in both modes.
-  const allGroups = demoMode ? [...myGroups, ...GROUPS] : myGroups;
+  // Genre is a demo-only facet: nothing asks a proposer for one, so every live
+  // group has none, and offering the filter would only ever empty the grid.
+  const isGenreFilterShown = demoMode;
+
+  const allGroups = demoMode ? [...myGroups, ...GROUPS] : liveGroups;
   const items = allGroups.filter(
-    (g) =>
-      (genre === "all" || g.genre === genre) &&
-      (format === "all" || g.format === format),
+    (group) =>
+      (!isGenreFilterShown || genre === "all" || group.genre === genre) &&
+      matchesFormat(group, format),
   );
 
   function joinWaitlist(id: string, name: string) {
@@ -144,30 +170,34 @@ export function ReadingGroupsPage() {
 
       <div className={styles.filterBar}>
         <div className={styles.fbInner}>
-          <span className={styles.fbLabel} id="rg-genre-label">
-            {t("community:readingGroups.filterBar.genreLabel")}
-          </span>
-          <FilterChips
-            labelledBy="rg-genre-label"
-            options={GENRE_FILTERS.map((f) => ({
-              value: f.id,
-              label: t(`community:${f.labelKey}`),
-            }))}
-            value={genre}
-            onChange={(v) => setGenre(v as Genre | "all")}
-          />
-          <div className={styles.fbSep} />
+          {isGenreFilterShown && (
+            <>
+              <span className={styles.fbLabel} id="rg-genre-label">
+                {t("community:readingGroups.filterBar.genreLabel")}
+              </span>
+              <FilterChips
+                labelledBy="rg-genre-label"
+                options={GENRE_FILTERS.map((filter) => ({
+                  value: filter.id,
+                  label: t(`community:${filter.labelKey}`),
+                }))}
+                value={genre}
+                onChange={(value) => setGenre(value as Genre | "all")}
+              />
+              <div className={styles.fbSep} />
+            </>
+          )}
           <span className={styles.fbLabel} id="rg-format-label">
             {t("community:readingGroups.filterBar.formatLabel")}
           </span>
           <FilterChips
             labelledBy="rg-format-label"
-            options={FORMAT_FILTERS.map((f) => ({
-              value: f.id,
-              label: t(`community:${f.labelKey}`),
+            options={FORMAT_FILTERS.map((filter) => ({
+              value: filter.id,
+              label: t(`community:${filter.labelKey}`),
             }))}
             value={format}
-            onChange={(v) => setFormat(v as Format | "all")}
+            onChange={(value) => setFormat(value as Format | "all")}
           />
           <div className={styles.fbSep} />
           <div className={styles.count}>
@@ -182,12 +212,25 @@ export function ReadingGroupsPage() {
         <div className="wrap">
           <div className={styles.grid}>
             {isLoading &&
-              Array.from({ length: 4 }).map((_, i) => (
-                <ReadingGroupCardSkeleton key={i} />
+              Array.from({ length: 4 }).map((_, index) => (
+                <ReadingGroupCardSkeleton key={index} />
               ))}
+            {!isLoading && readingGroupsQuery.isError && (
+              <EmptyState
+                className={styles.empty}
+                icon={<FiAlertCircle />}
+                title={t("community:readingGroups.liveError.title")}
+                description={t("community:readingGroups.liveError.description")}
+                action={{
+                  label: t("community:readingGroups.liveError.retryCta"),
+                  onClick: () => void readingGroupsQuery.refetch(),
+                }}
+              />
+            )}
             {!isLoading &&
+              !readingGroupsQuery.isError &&
               items.length === 0 &&
-              (!demoMode && allGroups.length === 0 ? (
+              (allGroups.length === 0 ? (
                 <EmptyState
                   className={styles.empty}
                   icon={<FiBookOpen />}
@@ -212,13 +255,16 @@ export function ReadingGroupsPage() {
                 />
               ))}
             {!isLoading &&
-              items.map((g, i) => (
-                <FadeIn key={g.id} delay={Math.min(i, 8) * 60}>
+              !readingGroupsQuery.isError &&
+              items.map((group, index) => (
+                <FadeIn key={group.id} delay={Math.min(index, 8) * 60}>
                   <ReadingGroupCard
-                    g={g}
+                    group={group}
                     messagesPath={messagesPath}
-                    onWaitlist={() => joinWaitlist(g.id, g.name)}
-                    waitlistPosition={waitlist[g.id]}
+                    onWaitlist={() =>
+                      joinWaitlist(group.id, group.name ?? group.book)
+                    }
+                    waitlistPosition={waitlist[group.id]}
                     isWaitlistEnabled={demoMode}
                   />
                 </FadeIn>
@@ -228,7 +274,7 @@ export function ReadingGroupsPage() {
           <WaitlistPanel waitlist={waitlist} />
 
           <ListGroupStrip
-            onListed={(g) => setMyGroups((prev) => [g, ...prev])}
+            onListed={(group) => setMyGroups((prev) => [group, ...prev])}
           />
         </div>
       </div>

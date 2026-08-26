@@ -6,10 +6,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSocial } from "../../app/providers/useSocial";
 import { useAuth } from "../../app/providers/authContext";
 import { useStorageScope } from "../../app/providers/useStorageScope";
-import {
-  useJoinConversation,
-  useRealtimeConnection,
-} from "../../shared/api/realtime";
+import { useJoinConversation } from "../../shared/api/realtime";
 import { type ChatMessage, type Conversation } from "./data";
 import { clearConversationPrefs } from "./conversationPrefs";
 import { clearOutbox, loadOutbox, setMessageOutboxScope } from "./outbox";
@@ -77,9 +74,10 @@ export function useMessagesController() {
   const isMobile = useMediaQuery(mediaMax(768));
   const [view, setView] = useState<"list" | "thread">("list");
 
-  // Open the realtime socket only while this page is mounted — live DMs/read
-  // receipts should stream here, not app-wide. Inert in demo/logged-out.
-  useRealtimeConnection();
+  // The realtime socket is opened app-wide by `AppChrome` now (so live DMs/
+  // notifications stream in from anywhere, not only while this page is
+  // mounted) — no need for this page to additionally request it; `request()`
+  // is refcounted, so the old call here was harmless but redundant.
 
   // Source of truth for the inbox: demo returns the scripted mock, live calls
   // GET /conversations. Either way the page renders the same view-model.
@@ -233,7 +231,7 @@ export function useMessagesController() {
     markRead,
     deleteConversationMutation,
   });
-  const { openThread } = navigation;
+  const { openThread, openThreadAtMessage } = navigation;
 
   // Optimistic send + the offline outbox (operates on `sent` above; the
   // composer's own draft text is passed straight into `send`/`sendGif`).
@@ -275,6 +273,7 @@ export function useMessagesController() {
     startConversation,
     createGroupMutation,
     openThread,
+    openThreadAtMessage,
     appendOptimistic,
     deliver,
     migrateOutboxConversation,

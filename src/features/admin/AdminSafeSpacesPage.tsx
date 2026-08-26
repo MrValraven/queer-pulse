@@ -1,47 +1,33 @@
 import { useState } from "react";
-import { FadeIn, SkeletonLine } from "../../shared/components/ui";
+import { FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
-import { AdminSafeSpaceRows } from "./AdminSafeSpaceRows";
-import { AdminSafeSpaceModal } from "./AdminSafeSpaceModal";
-import { useAdminSafeSpaces } from "./api/useAdminSafeSpaces";
-import type {
-  SafeSpaceCandidate,
-  SafeSpaceStatus,
-} from "./api/adminSafeSpaces.api";
-import styles from "./AdminSafeSpacesPage.module.css";
+import { AdminPageHeader, AdminTabs } from "./ui";
+import { AdminSafeSpaceListingsPanel } from "./AdminSafeSpaceListingsPanel";
+import { AdminSafeSpaceNominationsPanel } from "./AdminSafeSpaceNominationsPanel";
+import { AdminSafeSpaceFlagsPanel } from "./AdminSafeSpaceFlagsPanel";
+
+type PaneId = "nominations" | "flags" | "listings";
 
 /**
- * Moderator queue for Safe Space listings: mark/unmark a listing with one
- * click, or open the full profile editor for tier, verifier, promises, and
- * vouches (spec Task 9/10, on top of the Task 3/4 backend + Task 9 hooks).
+ * The safe-space moderation console, in three panes that follow the published
+ * six-step promise end to end:
+ *
+ *  - NOMINATIONS: the review queue, oldest first, because the promise is a
+ *    nomination acknowledged within 48 hours. Acknowledge, assign for member
+ *    visits, decide with a written reason, re-open.
+ *  - FLAGS: what members raised about badged spaces, which badges are
+ *    suspended, and which are past their annual re-review.
+ *  - LISTINGS: the direct mark/unmark and profile editor this page used to be
+ *    on its own, kept for the correction a nomination has nothing to hang on.
+ *
+ * The queue lands first because it is the pane with a clock running on it.
  */
 export function AdminSafeSpacesPage() {
   const { t } = useTranslation();
-  const { candidates, isLoading } = useAdminSafeSpaces();
-  const [editingCandidate, setEditingCandidate] =
-    useState<SafeSpaceCandidate | null>(null);
-  // Demo mode's mutation resolves without ever touching the static fixture
-  // (see useSetSafeSpace), so this local map reflects the just-saved status
-  // over the fetched list — the moderator sees their change take effect
-  // immediately even though the underlying demo data never actually moves.
-  const [statusOverrides, setStatusOverrides] = useState<
-    Record<string, SafeSpaceStatus>
-  >({});
-
-  const visibleCandidates = candidates.map((candidate) => {
-    const overrideStatus = statusOverrides[candidate.ref];
-    return overrideStatus
-      ? { ...candidate, safeSpaceStatus: overrideStatus }
-      : candidate;
-  });
-
-  function handleStatusChanged(ref: string, status: SafeSpaceStatus) {
-    setStatusOverrides((current) => ({ ...current, [ref]: status }));
-  }
+  const [pane, setPane] = useState<PaneId>("nominations");
 
   return (
     <AdminShell
@@ -68,41 +54,24 @@ export function AdminSafeSpacesPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={80}>
-        {isLoading ? (
-          <SafeSpaceRowsSkeleton />
-        ) : (
-          <AdminSafeSpaceRows
-            candidates={visibleCandidates}
-            onStatusChanged={handleStatusChanged}
-            onEdit={setEditingCandidate}
-          />
-        )}
+      <FadeIn delay={50}>
+        <AdminTabs
+          active={pane}
+          onChange={(id) => setPane(id as PaneId)}
+          tabs={[
+            {
+              id: "nominations",
+              label: t("safety:governance.tab.nominations"),
+            },
+            { id: "flags", label: t("safety:governance.tab.flags") },
+            { id: "listings", label: t("safety:governance.tab.listings") },
+          ]}
+        />
       </FadeIn>
 
-      {editingCandidate && (
-        <AdminSafeSpaceModal
-          candidate={editingCandidate}
-          onClose={() => setEditingCandidate(null)}
-          onSaved={(status) =>
-            handleStatusChanged(editingCandidate.ref, status)
-          }
-        />
-      )}
+      {pane === "nominations" && <AdminSafeSpaceNominationsPanel />}
+      {pane === "flags" && <AdminSafeSpaceFlagsPanel />}
+      {pane === "listings" && <AdminSafeSpaceListingsPanel />}
     </AdminShell>
-  );
-}
-
-function SafeSpaceRowsSkeleton() {
-  return (
-    <div className={styles.rows}>
-      {[0, 1, 2, 3].map((skeletonIndex) => (
-        <SkeletonLine
-          key={skeletonIndex}
-          height={64}
-          style={{ borderRadius: 14 }}
-        />
-      ))}
-    </div>
   );
 }

@@ -24,8 +24,13 @@ import type { SessionResponse } from "./account.api";
  * - `variant` is only ever `current` or `normal`. There is no server-side
  *   "this login looks suspicious" signal, so no session is ever badged
  *   `suspect` in live mode — a fake risk badge is worse than none.
- * - `device` is derived from the UA string alone, and degrades to a plain
- *   "Unknown device" when the UA is empty rather than guessing.
+ * - `device` prefers the server's `deviceLabel` (a coarse "Chrome on macOS",
+ *   stored at sign-in since `AddSecurityAlertsAndDeviceLabel1794610100000`) and
+ *   falls back to parsing the UA here for sessions that predate that column,
+ *   degrading to a plain "Unknown device" rather than guessing.
+ * - `userAgent` is passed through verbatim for the card's collapsed technical
+ *   detail. It is the string `device` was derived from, kept reachable without
+ *   being the line anybody has to read.
  *
  * The UA-parsing itself lives in `shared/lib/deviceUserAgent.ts` — the same
  * two helpers back `PushDevicesPage.tsx`'s device labels, since a push
@@ -37,8 +42,10 @@ export function deviceTypeFromUserAgent(userAgent: string): DeviceType {
 }
 
 /**
- * A human label for a session, from the only two things the backend gives us:
- * an optional `deviceLabel` (always null today) and the raw UA string.
+ * A human label for a session, from the two things the backend gives us: the
+ * stored `deviceLabel` and the raw UA string it was derived from. The stored
+ * label always wins; the UA parse is the fallback for sessions started before
+ * the column existed.
  */
 export function deviceLabelFor(dto: SessionResponse): string {
   return deviceLabelFromUserAgent(dto.userAgent ?? "", dto.deviceLabel);
@@ -101,5 +108,8 @@ export function sessionResponseToSession(
     deviceType: deviceTypeFromUserAgent(dto.userAgent ?? ""),
     signedIn: signedInAgo(dto.createdAt, t, fmt, now),
     lastActivity: lastActivityAgo(dto, t, fmt, now),
+    // Empty string collapses the card's disclosure rather than opening onto
+    // nothing, so a client that sent no UA shows no technical detail at all.
+    userAgent: dto.userAgent || undefined,
   };
 }

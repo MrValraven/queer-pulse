@@ -1,7 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlaces } from "./api/useDirectory";
 import { LocalBusinessCard } from "./LocalBusinessCard";
-import { categoryLabel, normalizeCategory } from "./localPlaces";
+import { categoryLabel, normalizeCategory } from "./localCategories";
 import { type DirectoryPlace } from "./directoryPlaces";
 import s from "./DirectorySpacePage.module.css";
 

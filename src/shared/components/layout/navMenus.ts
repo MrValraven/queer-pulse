@@ -263,6 +263,13 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.resources,
             featured: true,
           },
+          // CON-10: the index of every guide route. Seventeen guides had no
+          // link anywhere in the app; this is one of the two places that
+          // reach them (the library page is the other).
+          {
+            labelKey: "shared:megaNav.resources.col.learn.guideIndex",
+            href: routes.guideIndex,
+          },
           {
             labelKey: "shared:megaNav.resources.col.learn.transNbHub",
             href: routes.transHub,
@@ -380,10 +387,6 @@ export const NAV_MENUS: MegaMenu[] = [
           {
             labelKey: "shared:megaNav.work.col.career.jobBoard",
             href: routes.jobs,
-          },
-          {
-            labelKey: "shared:megaNav.work.col.career.skillsLearning",
-            href: routes.skills,
           },
           {
             labelKey: "shared:megaNav.work.col.career.mentorship",

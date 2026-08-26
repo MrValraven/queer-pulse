@@ -31,6 +31,7 @@ import { PublicProfileProvider } from "./providers/PublicProfileProvider";
 import { ProfileThemeProvider } from "./providers/ProfileThemeProvider";
 import { VouchProvider } from "./providers/VouchProvider";
 import { SessionBootstrapProvider } from "./providers/SessionBootstrapProvider";
+import { PushPreviewMirrorProvider } from "../features/push/PushPreviewMirrorProvider";
 import { WorkProfileProvider } from "./providers/WorkProfileProvider";
 import { EmployerAffiliationProvider } from "./providers/EmployerAffiliationProvider";
 import { PostedJobsProvider } from "./providers/PostedJobsProvider";
@@ -41,7 +42,6 @@ import { CommunityMembershipProvider } from "./providers/CommunityMembershipProv
 import { CommunityEditsProvider } from "./providers/CommunityEditsProvider";
 import { DeletedConversationsProvider } from "./providers/DeletedConversationsProvider";
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
-import { WorkshopsProvider } from "./providers/WorkshopsProvider";
 import { lazyNamed } from "./routeHelpers";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
 import { AuthErrorToast } from "../shared/components/feedback/AuthErrorToast";
@@ -49,6 +49,7 @@ import { QueryErrorToastBridge } from "../shared/components/feedback/QueryErrorT
 import { ErrorBoundary } from "../shared/components/feedback/ErrorBoundary";
 import { ConsentBanner } from "../shared/components/consent/ConsentBanner";
 import { ConsentPreferencesGate } from "../shared/components/consent/ConsentPreferencesGate";
+import { PolicyReacceptanceGate } from "../features/auth/PolicyReacceptanceGate";
 import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { OfflineGate } from "../features/system/OfflineGate";
 import { ScrollManager } from "./ScrollManager";
@@ -146,6 +147,11 @@ const RootProviders = composeProviders([
 // Member/session state that only needs to wrap the routed UI (inside the router).
 const DataProviders = composeProviders([
   SessionBootstrapProvider,
+  // Syncs the server-side "hide notification previews" setting into the
+  // IndexedDB mirror the service worker reads, so the choice follows the
+  // member onto this device (ID-13). Renders nothing and, on a browser with no
+  // service worker, fetches nothing.
+  PushPreviewMirrorProvider,
   WorkProfileProvider,
   EmployerAffiliationProvider,
   PostedJobsProvider,
@@ -163,7 +169,6 @@ const DataProviders = composeProviders([
   CommunityEditsProvider,
   DeletedConversationsProvider,
   DirectoryListingsProvider,
-  WorkshopsProvider,
   // Innermost on purpose: ConnectProvider renders <ConnectModal> as a sibling
   // of its children, so the modal only sees contexts provided ABOVE it. It
   // calls useConnectionActions → useSocial/useConnections, so it must sit below
@@ -246,6 +251,12 @@ export function App() {
           <RoomLoader />
           <ConsentBanner />
           <ConsentPreferencesGate />
+          {/* ID-14: blocks the member surface when someone's agreement to the
+              Terms or Community Guidelines has fallen behind the revision in
+              effect. App-level and session-scoped like the consent banner above
+              it, and inert in demo mode / signed out / on the policy pages
+              themselves — see usePolicyReacceptanceRequired in app/authGate.ts. */}
+          <PolicyReacceptanceGate />
           <AuthErrorToast />
           <PwaUpdatePrompt />
           <QueryErrorToastBridge />

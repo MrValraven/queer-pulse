@@ -176,6 +176,88 @@ export const notifications: Catalog = {
   "type.report_resolved.text": "Demos seguimento a uma denúncia que fizeste.",
   "type.report_resolved.meta": "Atualização de denúncia",
 
+  // Aviso de serviço para quem pode agir sobre uma nova denúncia. O sino nunca
+  // identifica quem a apresentou, por isso esta copy também não o faz. As
+  // variantes `.emergency.*` são exposição e divulgação de dados pessoais, os
+  // dois motivos com prazo de uma hora.
+  "type.report_filed.text":
+    "Há uma nova denúncia à espera na fila de moderação.",
+  "type.report_filed.meta": "Denúncia apresentada",
+  "type.report_filed.emergency.text":
+    "Uma denúncia urgente precisa de uma decisão dentro de uma hora.",
+  "type.report_filed.emergency.meta": "Denúncia urgente",
+
+  "type.community_report_filed.text": "Algo em {communityName} foi denunciado.",
+  "type.community_report_filed.meta": "Denúncia na tua comunidade",
+  "type.community_report_filed.emergency.text":
+    "Uma denúncia urgente em {communityName} precisa de uma decisão dentro de uma hora.",
+  "type.community_report_filed.emergency.meta": "Denúncia urgente",
+
+  // ── Remoção de uma comunidade (TS-10) ────────────────────────────────────
+  // O payload não nomeia nenhum moderador, por isso esta cópia também não o
+  // faz. Traz os termos, porque o sino é o único sítio onde a pessoa os pode
+  // ler: a QueerPulse não envia email e não há forma de contactar a moderação
+  // de uma comunidade. Uma pausa com prazo e uma remoção definitiva têm frases
+  // separadas. Reformulação neutra: nenhuma concorda em género.
+  "type.community_banned.permanent.text":
+    "Já não fazes parte de {communityName}. O motivo indicado: {reason}",
+  "type.community_banned.permanent.meta": "Remoção de uma comunidade",
+  "type.community_banned.permanent.rule.text":
+    "Já não fazes parte de {communityName}, ao abrigo da regra \u201c{ruleText}\u201d. O motivo indicado: {reason}",
+  "type.community_banned.permanent.rule.meta": "Remoção de uma comunidade",
+  "type.community_banned.timed.text":
+    "Não podes publicar em {communityName} até {expiresAt}. O motivo indicado: {reason}",
+  "type.community_banned.timed.meta": "Pausa numa comunidade",
+  "type.community_banned.timed.rule.text":
+    "Não podes publicar em {communityName} até {expiresAt}, ao abrigo da regra \u201c{ruleText}\u201d. O motivo indicado: {reason}",
+  "type.community_banned.timed.rule.meta": "Pausa numa comunidade",
+  "type.community_banned.whenFallback": "uma data que não ficou registada",
+
+  // ── Conta e segurança (ID-06) ────────────────────────────────────────────
+  // As únicas linhas deste catálogo sobre a CONTA e não sobre a comunidade.
+  //
+  // Duas regras mandam na redação, ambas sobre o que se lê num ecrã bloqueado
+  // antes sequer de decidir desbloquear o telemóvel:
+  //  - Nada aqui nomeia o tema da QueerPulse, outra pessoa, ou qualquer
+  //    conteúdo. Uma pré-visualização de push que exponha alguém seria um dano
+  //    criado por esta funcionalidade, não evitado por ela.
+  //  - Nada aqui promete email. A QueerPulse não envia nenhum. Os canais são
+  //    este sino e as notificações push.
+  //
+  // `{deviceLabel}` é o nome grosso guardado no servidor ("Chrome on macOS") e
+  // `{when}` é resolvido por `signInTimeToken` na língua de quem lê.
+  "type.security_new_sign_in.text":
+    "A tua conta iniciou sessão em {deviceLabel}, {when}. Se foste tu, não tens de fazer nada.",
+  "type.security_new_sign_in.deviceFallback":
+    "um dispositivo que não reconhecemos",
+  "type.security_new_sign_in.meta": "Novo dispositivo com sessão iniciada",
+  // Usado quando não se consegue ler a hora do início de sessão. Vago de
+  // propósito: uma hora errada num alerta de segurança é pior do que hora
+  // nenhuma.
+  "type.security_new_sign_in.whenFallback": "há pouco",
+  // A linha de ecrã bloqueado para o mesmo alerta. De propósito mais curta e
+  // mais vaga do que o texto do sino: uma pré-visualização de push é lida por
+  // quem tiver o telemóvel na mão, por isso não nomeia dispositivo nem hora,
+  // apenas que há algo para abrir.
+  "type.security_new_sign_in.push":
+    "Um novo dispositivo iniciou sessão na tua conta.",
+
+  "type.account_export_ready.text":
+    "A exportação dos teus dados terminou e está pronta para transferir.",
+  "type.account_export_ready.meta": "Exportação pronta",
+
+  // `{daysRemaining}` vem diretamente do payload. Redigido à volta do que
+  // ainda se pode fazer, porque durante estes dias ainda se pode.
+  // Flat form, for a row whose payload carries no readable day count. The
+  // plural forms below win whenever it does.
+  "type.account_deletion_final_warning.text":
+    "A tua conta está agendada para eliminação em breve. Até lá ainda podes cancelar.",
+  "type.account_deletion_final_warning.text_one":
+    "A tua conta é eliminada dentro de {daysRemaining} dia. Até lá ainda podes cancelar.",
+  "type.account_deletion_final_warning.text_other":
+    "A tua conta é eliminada dentro de {daysRemaining} dias. Até lá ainda podes cancelar.",
+  "type.account_deletion_final_warning.meta": "Eliminação agendada",
+
   "type.appeal_resolved.text": "Há uma decisão sobre o teu recurso.",
   "type.appeal_resolved.meta": "Atualização de recurso",
 
@@ -192,6 +274,13 @@ export const notifications: Catalog = {
   "type.roadmap_status.text": "Há novidades sobre uma ideia que partilhaste.",
   "type.roadmap_status.meta": "Atualização do roteiro",
 
+  // Uma edição da revista publicada (CON-05). `{issueNumber}` e `{issueTitle}`
+  // vêm diretamente do payload. Isto substituiu um digest por email, por isso o
+  // texto nomeia a página e mais nada: não vai nada a caminho.
+  "type.magazine_issue_published.text":
+    "A edição {issueNumber} saiu: {issueTitle}. Vê o que traz.",
+  "type.magazine_issue_published.meta": "Nova edição",
+
   // Desfecho de uma preocupação — título por estado terminal
   // (resolvida/descartada); as chaves simples são o recurso alternativo.
   "type.concern_update.text":
@@ -203,6 +292,60 @@ export const notifications: Catalog = {
   "type.concern_update.dismissed.text":
     "A preocupação que levantaste foi analisada e encerrada.",
   "type.concern_update.dismissed.meta": "Atualização de preocupação",
+
+  // ── Desfecho de formulários enviados ─────────────────────────────────────
+  // Todos os formulários da tabela `intake_submissions` EXCETO uma preocupação
+  // de governação, que mantém o texto de `concern_update` acima. Estes andavam
+  // a usá-lo emprestado, por isso quem enviava uma playlist à Cultura lia que a
+  // sua "preocupação" tinha sido analisada. `{form}` é resolvido por
+  // `intakeFormToken` a partir do `kind` do payload, para a linha nomear o
+  // formulário que a pessoa preencheu mesmo.
+  "type.intake_reviewed.text": "Analisámos o que nos enviaste.",
+  "type.intake_reviewed.meta": "Submissão analisada",
+  "type.intake_reviewed.resolved.text":
+    "Analisámos {form} e vamos avançar com isso.",
+  "type.intake_reviewed.resolved.meta": "Submissão analisada",
+  "type.intake_reviewed.dismissed.text":
+    "Analisámos {form}. Desta vez não vamos avançar.",
+  "type.intake_reviewed.dismissed.meta": "Submissão analisada",
+  // Um por cada tipo de formulário do backend. Cada um funciona como
+  // complemento de "Analisámos …", por isso ficam em minúsculas.
+  "type.intake_reviewed.form.grant": "a tua candidatura a microfinanciamento",
+  "type.intake_reviewed.form.suggest_edit": "a tua sugestão de correção",
+  "type.intake_reviewed.form.sober_host": "a tua listagem sem álcool",
+  "type.intake_reviewed.form.panel_signup": "a tua inscrição no painel",
+  "type.intake_reviewed.form.incubator_cohort":
+    "a tua candidatura à coorte da incubadora",
+  "type.intake_reviewed.form.incubator_mentor":
+    "a tua inscrição como pessoa mentora",
+  "type.intake_reviewed.form.incubator_session": "o teu pedido de sessão",
+  "type.intake_reviewed.form.culture_suggest_pick": "a tua sugestão",
+  "type.intake_reviewed.form.culture_post_project":
+    "a publicação do teu projeto",
+  "type.intake_reviewed.form.culture_submit_work": "o trabalho que enviaste",
+  "type.intake_reviewed.form.culture_submit_playlist": "a tua playlist",
+  // Usado quando o payload nomeia um formulário que este catálogo ainda não
+  // conhece.
+  "type.intake_reviewed.formFallback": "o que nos enviaste",
+
+  // ── Desfecho de um pedido de acesso a dados ──────────────────────────────
+  // Um direito legal sobre dados, comunicado como tal. Também andava a usar
+  // `concern_update` emprestado. `{reference}` é o número do processo da própria
+  // pessoa, o mesmo que a página de pedido de dados lista no histórico, que é
+  // para onde a linha liga. Nada aqui promete email: a QueerPulse não envia
+  // nenhum.
+  "type.dsar_resolved.text":
+    "Há uma decisão sobre o pedido de dados que fizeste.",
+  "type.dsar_resolved.meta": "Pedido de dados",
+  "type.dsar_resolved.resolved.text":
+    "O teu pedido de dados está concluído. Referência: {reference}.",
+  "type.dsar_resolved.resolved.meta": "Pedido de dados",
+  "type.dsar_resolved.rejected.text":
+    "O teu pedido de dados foi analisado e não pôde ser satisfeito. Referência: {reference}.",
+  "type.dsar_resolved.rejected.meta": "Pedido de dados",
+  // Usado quando não se consegue ler o número do processo do payload, para a
+  // frase não acabar em "Referência: .".
+  "type.dsar_resolved.referenceFallback": "não registada",
 
   // Um admin ajustou manualmente o estado de verificação do membro. Nomeia
   // apenas o nível para o qual foi movido; {level} é uma das quatro etiquetas
@@ -249,6 +392,12 @@ export const notifications: Catalog = {
   "type.moderation_outcome.ban.text":
     "A tua conta foi suspensa permanentemente.",
   "type.moderation_outcome.ban.meta": "{note}",
+  // Uma restrição levantada é boa notícia, e a frase genérica sobre "uma
+  // decisão da equipa de moderação" soa a mais uma má notícia a chegar. Por
+  // isso tem uma frase própria.
+  "type.moderation_outcome.restriction_lifted.text":
+    "A tua restrição foi levantada.",
+  "type.moderation_outcome.restriction_lifted.meta": "{note}",
 
   // Outro membro creditou uma persona tua como colaboradora num item dele
   // (descoberta de personas, Fase 5, Momento 6). O primeiro tipo ao vivo cujo
@@ -272,6 +421,19 @@ export const notifications: Catalog = {
   "type.writer_application_declined.text":
     "A tua candidatura a escritor não foi aceite desta vez.",
   "type.writer_application_declined.meta": "Candidatura a escritor",
+
+  "type.story_submission_decided.accepted.text":
+    "A revista aceitou \u201C{workingTitle}\u201D. Abre as tuas submissões para ler a resposta da redação.",
+  "type.story_submission_decided.accepted.meta": "Submissão de história",
+  "type.story_submission_decided.commissioned.text":
+    "\u201C{workingTitle}\u201D foi encomendada. Abre as tuas submissões para ler a resposta da redação.",
+  "type.story_submission_decided.commissioned.meta": "Submissão de história",
+  "type.story_submission_decided.declined.text":
+    "\u201C{workingTitle}\u201D não foi aceite desta vez. Abre as tuas submissões para ler a resposta da redação.",
+  "type.story_submission_decided.declined.meta": "Submissão de história",
+  "type.story_submission_decided.text":
+    "A revista decidiu sobre \u201C{workingTitle}\u201D.",
+  "type.story_submission_decided.meta": "Submissão de história",
 
   "type.volunteer_application_received.text":
     "Alguém candidatou-se a uma das tuas oportunidades de voluntariado.",
@@ -330,6 +492,13 @@ export const notifications: Catalog = {
   "page.loadingMore": "A carregar…",
 
   // Separadores de filtro (notificationTabs em data.tsx + o separador Menções)
+  // ── Linhas agrupadas (SOC-10) ─────────────────────────────────────────────
+  // Acrescentado ao texto da própria linha, para que "Ana respondeu" passe a
+  // "Ana respondeu e mais 39". Uma linha para uma conversa: quarenta respostas
+  // eram quarenta linhas, quarenta por ler e quarenta toques para limpar.
+  "bundle.others_one": "e mais 1",
+  "bundle.others_other": "e mais {count}",
+
   "tabs.all": "Todas",
   "tabs.events": "Encontros",
   "tabs.community": "Comunidade",

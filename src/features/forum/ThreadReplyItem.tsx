@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { FiStar, FiHeart, FiPlus, FiMinus } from "react-icons/fi";
+import {
+  FiStar,
+  FiHeart,
+  FiPlus,
+  FiMinus,
+  FiCheckCircle,
+} from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type Reply } from "./forum.data";
@@ -9,6 +15,7 @@ import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { PostActionsMenu } from "./PostActionsMenu";
+import { ForumPostImage } from "./ForumImageAttach";
 import { ModeratorByline } from "./ThreadReplies";
 import styles from "./ThreadPage.module.css";
 
@@ -38,6 +45,8 @@ export function ThreadReplyItem({
   onHistory,
   onReply,
   onReport,
+  onAcceptAnswer,
+  onQuote,
   collapse,
 }: {
   reply: Reply;
@@ -60,6 +69,13 @@ export function ThreadReplyItem({
   /** Renders a "Report" action for this reply, carrying its real `postId` as
    *  the report subject. Omitted keeps the actions row report-free. */
   onReport?: (reply: Reply) => void;
+  /** Renders "Mark as answer" / "Unmark answer" (SOC-13). Omitted for a viewer
+   *  who is neither the thread's author nor a moderator, which is what hides
+   *  the action rather than showing one the server would refuse. */
+  onAcceptAnswer?: (reply: Reply) => void;
+  /** Renders "Quote", which opens a reply to this one prefilled with its text
+   *  as a blockquote. Omitted where replying itself is withheld. */
+  onQuote?: (reply: Reply) => void;
   /** Nested-replies feature: renders a compact collapse/expand toggle near the
    *  author line when the reply has descendants. */
   collapse?: ThreadReplyCollapseProps;
@@ -79,7 +95,10 @@ export function ThreadReplyItem({
   return (
     <FadeIn
       delay={Math.min(index, 8) * 60}
-      className={[styles.reply, reply.helpful && styles.replyHighlighted]
+      className={[
+        styles.reply,
+        (reply.helpful || reply.accepted) && styles.replyHighlighted,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
@@ -115,14 +134,7 @@ export function ThreadReplyItem({
           </span>
           <MemberStaffBadge slug={reply.slug} />
           {reply.official && <OfficialBadge />}
-          {reply.isOP && (
-            <span className={styles.opBadge}>{t("forum:replies.opBadge")}</span>
-          )}
-          {reply.helpful && (
-            <span className={styles.helpfulBadge}>
-              <FiStar /> {t("forum:replies.mostHelpfulBadge")}
-            </span>
-          )}
+          <ReplyBadges reply={reply} />
           <span className={styles.replyTime}>{reply.time}</span>
           <span className={styles.replyMenu}>
             <PostActionsMenu
@@ -166,7 +178,9 @@ export function ThreadReplyItem({
             <div className={styles.replyBody}>
               {reply.quote && (
                 <div className={styles.quote}>
-                  <cite>{reply.quote.cite}</cite>
+                  {/* `cite` is absent when the quoted post is not in the
+                      loaded page; the passage still stands on its own. */}
+                  {reply.quote.cite && <cite>{reply.quote.cite}</cite>}
                   {reply.quote.text}
                 </div>
               )}
@@ -175,6 +189,7 @@ export function ThreadReplyItem({
                   <MentionText text={paragraph} />
                 </p>
               ))}
+              <ForumPostImage src={reply.image} />
               {reply.editedAt && (
                 <span className={styles.editedMark}>
                   {t("forum:edited.mark")}
@@ -187,6 +202,8 @@ export function ThreadReplyItem({
               toggleReplyLike={toggleReplyLike}
               onReply={onReply}
               onReport={onReport}
+              onAcceptAnswer={onAcceptAnswer}
+              onQuote={onQuote}
             />
           </>
         )}
@@ -195,19 +212,49 @@ export function ThreadReplyItem({
   );
 }
 
-/** The like / reply / report row under a reply body. */
+/** The small markers on a reply's author line: original poster, the thread
+ *  author's accepted-answer mark, and the demo mock's curated "most helpful"
+ *  flag. The accepted mark outranks "most helpful" and replaces it where both
+ *  could apply: one is the author's answer, the other a guess. */
+function ReplyBadges({ reply }: { reply: Reply }) {
+  const { t } = useTranslation();
+  return (
+    <>
+      {reply.isOP && (
+        <span className={styles.opBadge}>{t("forum:replies.opBadge")}</span>
+      )}
+      {reply.accepted && (
+        <span className={styles.acceptedBadge}>
+          <FiCheckCircle aria-hidden="true" />{" "}
+          {t("forum:replies.acceptedBadge")}
+        </span>
+      )}
+      {reply.helpful && !reply.accepted && (
+        <span className={styles.helpfulBadge}>
+          <FiStar /> {t("forum:replies.mostHelpfulBadge")}
+        </span>
+      )}
+    </>
+  );
+}
+
+/** The like / reply / quote / answer / report row under a reply body. */
 function ReplyActionsRow({
   reply,
   isLiked,
   toggleReplyLike,
   onReply,
   onReport,
+  onAcceptAnswer,
+  onQuote,
 }: {
   reply: Reply;
   isLiked: boolean;
   toggleReplyLike: (reply: Reply) => void;
   onReply?: (reply: Reply) => void;
   onReport?: (reply: Reply) => void;
+  onAcceptAnswer?: (reply: Reply) => void;
+  onQuote?: (reply: Reply) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -234,6 +281,34 @@ function ReplyActionsRow({
           onClick={() => onReply(reply)}
         >
           {t("forum:replies.reply")}
+        </button>
+      )}
+      {onQuote && (
+        <button
+          type="button"
+          className={styles.replyReplyBtn}
+          onClick={() => onQuote(reply)}
+        >
+          {t("forum:replies.quote")}
+        </button>
+      )}
+      {onAcceptAnswer && (
+        <button
+          type="button"
+          className={[
+            styles.replyReplyBtn,
+            reply.accepted && styles.replyAcceptOn,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          aria-pressed={!!reply.accepted}
+          onClick={() => onAcceptAnswer(reply)}
+        >
+          {t(
+            reply.accepted
+              ? "forum:replies.unmarkAnswer"
+              : "forum:replies.markAnswer",
+          )}
         </button>
       )}
       {onReport && (

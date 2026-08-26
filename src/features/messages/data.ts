@@ -177,6 +177,19 @@ export interface Conversation {
    *  counting/badges are unaffected (mirrors WhatsApp). Drives the row's
    *  mute indicator. */
   muted?: boolean;
+  /** ISO timestamp this chat was archived out of the main inbox. Absent/null =
+   *  not archived. The reversible replacement for the destructive clear-for-me
+   *  as the everyday way to declutter — server auto-clears this the instant a
+   *  new message lands (`ConversationParticipant.archivedAt`'s own doc), so an
+   *  archived thread can never be the reason a reply goes unseen. Drives the
+   *  Archived inbox filter/tab. */
+  archivedAt?: string | null;
+  /** This member's own unsent composer text, synced from whichever device last
+   *  wrote it (server cross-device layer). Absent/null = no stored draft. Only
+   *  read once, to SEED the composer on mount alongside the instant local
+   *  `drafts.ts` copy — never patched into a live cache the way `preview`/
+   *  `unread` are, since the composer itself is the only writer once open. */
+  draft?: string | null;
   /** Counterpart's read watermark (ISO, live). Drives the "Seen" receipt. */
   otherLastReadAt?: string;
   /** Counterpart's delivered watermark (ISO, live). Drives the "double check". */

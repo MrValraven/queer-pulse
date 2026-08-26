@@ -299,3 +299,15 @@
   color: rgba(var(--cream-rgb), 0.62);
   line-height: 1.6;
 }
+
+/* A plain explanatory paragraph inside a modal body — used where a decision
+   needs a sentence of context before the form (barring somebody from a
+   gathering, for instance). */
+.note {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink-60);
+  margin: 0;
+  max-width: 62ch;
+  text-wrap: pretty;
+}

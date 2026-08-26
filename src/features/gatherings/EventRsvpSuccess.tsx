@@ -12,13 +12,7 @@ import styles from "./EventPage.module.css";
  *  surface never learns one (the real place in line comes from the event
  *  detail's `myWaitlistPosition`, which the in-gathering RSVP control shows),
  *  and inventing a plausible-looking number would be a lie. */
-export function WaitlistSuccess({
-  email,
-  onLeave,
-}: {
-  email: string;
-  onLeave: () => void;
-}) {
+export function WaitlistSuccess({ onLeave }: { onLeave: () => void }) {
   const { t } = useTranslation();
 
   return (
@@ -46,7 +40,6 @@ export function WaitlistSuccess({
         <p className={styles.successText}>
           <Translation
             i18nKey="gatherings:event.rsvp.waitlistBody"
-            values={{ email }}
             components={{ strong: <strong /> }}
           />
         </p>
@@ -63,11 +56,9 @@ export function WaitlistSuccess({
 
 export function ReservedSuccess({
   selectedTier,
-  email,
   onCancel,
 }: {
   selectedTier: number;
-  email: string;
   onCancel: () => void;
 }) {
   const { t } = useTranslation();
@@ -109,8 +100,7 @@ export function ReservedSuccess({
       </p>
       <p className={styles.successText}>
         <Translation
-          i18nKey="gatherings:event.rsvp.confirmationOnWay"
-          values={{ email }}
+          i18nKey="gatherings:event.rsvp.confirmationSaved"
           components={{ strong: <strong /> }}
         />
       </p>

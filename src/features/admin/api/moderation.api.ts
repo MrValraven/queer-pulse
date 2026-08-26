@@ -15,7 +15,14 @@ export type ModStatus = "open" | "resolved" | "escalated";
 /** Which parties a resolved report's outcome was communicated to. */
 export type ResolutionNotifiedParty = "member" | "reporter" | "affected";
 
-/** Moderator action codes. `hide_content`/`remove_content` map to hide/remove. */
+/**
+ * Moderator action codes. `hide_content`/`remove_content` map to hide/remove.
+ *
+ * `shield` is gone (TS-02). It was selectable in the drawer and implemented
+ * nowhere: the report closed, the audit row read "shielded member", and nothing
+ * happened to anyone. The backend's `MOD_ACTION_CODES` no longer accepts it, so
+ * sending it now 400s rather than quietly resolving a report.
+ */
 export type ModActionCode =
   | "dismiss"
   | "warn"
@@ -24,7 +31,6 @@ export type ModActionCode =
   | "restrict"
   | "suspend"
   | "ban"
-  | "shield"
   | "escalate";
 
 export interface ModReportDTO {
@@ -52,6 +58,14 @@ export interface ModReportDTO {
         priorDismissed: number;
       };
   reported: { id: string; handle: string; priorReports: number };
+  /**
+   * The community this report came from, as a slug (TS-14). Populated for a
+   * `community` subject (it IS the slug), for a `post`/`reply` whose content
+   * lives in a community, and for a gathering hosted inside one. `null` for a
+   * member, message or venue report, which belong to no single community —
+   * the same line `admin-communities/community-report-scope.ts` draws
+   * server-side.
+   */
   community: string | null;
   createdAt: string;
   slaDueAt: string;
@@ -117,6 +131,36 @@ export interface ModCounts {
 }
 
 /**
+ * TS-06: one `(subjectType, subjectId)` pile, summarized server-side.
+ *
+ * The queue is a flat list, so thirty people reporting one member inside ten
+ * minutes arrived as thirty rows with nothing saying the other twenty-nine
+ * existed, and thirty separate SLA clocks made it read as thirty times the
+ * urgency. `distinctReporterCount` is the number that separates a genuine
+ * emergency from a pile-on, where the right action is usually against the
+ * reporters. Counted over EVERY open report about the subject, so it stays
+ * true about the reports that did not fit on the page.
+ *
+ * Only subjects with more than one open report get a cluster.
+ */
+export interface ModReportClusterDTO {
+  subjectType: ReportSubjectType;
+  subjectId: string;
+  openCount: number;
+  distinctReporterCount: number;
+  overdueCount: number;
+  highestSeverity: ModSeverity;
+  firstReportedAt: string;
+  lastReportedAt: string;
+  /** The pile met the same volume + distinct-reporter thresholds that freeze a
+   *  community. A signal to read the pile as one event, never a verdict. */
+  isSurge: boolean;
+  /** Open report ids, oldest first, capped at 100 (the bulk-action limit) so
+   *  the whole pile can be actioned in one `PATCH /mod/reports/bulk`. */
+  reportIds: string[];
+}
+
+/**
  * The moderation queue answers with the app's canonical cursor-page envelope
  * (`Paginated<T>` = `{ data, pageInfo: { nextCursor, hasMore } }`, the same
  * shape the feed/forum/messages lists use), with the real per-tab `counts`
@@ -127,17 +171,26 @@ export interface ModCounts {
  */
 export interface ModReportsResponse extends Paginated<ModReportDTO> {
   counts: ModCounts;
+  /** TS-06: the piles behind the rows on this page, one per subject carrying
+   *  more than one open report. Empty when every row stands alone. */
+  clusters: ModReportClusterDTO[];
 }
 
 export interface ModReportsParams {
   tab?: "open" | "appeals" | "resolved";
-  filter?: "all" | "emergencies" | "mine";
+  /** `overdue` is "the response window has already closed"; `surge` narrows to
+   *  subjects several different people are reporting at once (TS-06). */
+  filter?: "all" | "emergencies" | "mine" | "overdue" | "surge";
   severity?: ModSeverity;
   subjectType?: ReportSubjectType;
   /** Filters to reports about this exact subject — the same literal value
    *  `reported.priorReports` is counted against. Powers the "view this
    *  member's report history" click-through from the prior-reports chip. */
   subjectId?: string;
+  /** Narrows the queue to reports from ONE community, by slug — the same value
+   *  `ModReportDTO.community` reports back, so a row's community chip can filter
+   *  to everything else from that room. */
+  community?: string;
   sort?: "priority" | "age";
   cursor?: string;
 }
@@ -197,11 +250,89 @@ export interface AppealDTO {
   original: { action: string; by: string; when: string; reason: string };
   createdAt: string;
   status: "awaiting" | "upheld" | "overturned";
+  /**
+   * When the Code of Conduct's published 7-day decision window closes on this
+   * appeal (TS-11). The awaiting queue is ordered by it, soonest first.
+   */
+  slaDueAt: string;
+  /** When it was decided. Null while awaiting, and also on an appeal decided
+   *  before the backend recorded decision times at all. */
+  decidedAt: string | null;
+  /** Awaiting and past its window. Computed server-side so the queue and the
+   *  published promise agree about what "late" means. */
+  isOverdue: boolean;
+  /** The moderator's decision text, once there is one. */
+  decision: string | null;
+}
+
+/**
+ * `GET /mod/appeals` params (TS-11). The endpoint used to take none: one
+ * unpaginated list, newest first, with decided appeals mixed in among the
+ * awaiting ones — which put the appeal closest to breaching its deadline at
+ * the BOTTOM of the list.
+ */
+export interface ModAppealsParams {
+  /** Defaults to `awaiting` server-side. */
+  tab?: "awaiting" | "decided";
+  /** `overdue` narrows the awaiting tab to appeals past their window. It is
+   *  ignored on the decided tab, where there is no window left to be outside
+   *  of. */
+  filter?: "all" | "overdue";
+  cursor?: string;
+}
+
+export interface ModAppealsResponse extends Paginated<AppealDTO> {
+  counts: { awaiting: number; decided: number; overdue: number };
 }
 
 export interface AppealDecisionInput {
   decision: "uphold" | "overturn";
   note: string;
+}
+
+/**
+ * One permanent ban waiting on a second moderator (TS-12).
+ *
+ * Article VIII promises removal is "ratified by one additional independent
+ * moderator", and nothing implemented it: one moderator could permanently ban
+ * a member in a single call, or across up to 100 reports at once. A `ban` now
+ * opens one of these instead. The member is suspended for the length of the
+ * hold (`interimAction`), and the account is only removed when a SECOND,
+ * different moderator confirms. If nobody does, the hold lapses and the
+ * suspension lapses with it.
+ */
+export interface BanRatificationDTO {
+  id: string;
+  reportId: string | null;
+  targetUserId: string;
+  /** Display-name snapshot taken when the ban was asked for, so the queue can
+   *  still name the member after they are erased. */
+  targetName: string;
+  requestedById: string | null;
+  requestedByName: string;
+  /** The first moderator's exact member-facing reason. The second moderator
+   *  has to be able to read it before putting their name to a removal. */
+  note: string | null;
+  reasonCode: string | null;
+  /** What is happening to the member meanwhile. Always
+   *  `suspended_pending_ratification` today. */
+  interimAction: string;
+  requestedAt: string;
+  /** When the hold lapses if nobody confirms it. */
+  expiresAt: string;
+  isExpired: boolean;
+  status: "pending" | "ratified" | "declined" | "expired" | "withdrawn";
+  decidedById: string | null;
+  decidedByName: string | null;
+  decidedAt: string | null;
+  decisionNote: string | null;
+}
+
+export interface RatifyBanInput {
+  decision: "ratify" | "decline";
+  /** Optional on a confirmation, wanted on a refusal. Deliberately never
+   *  required: refusing to remove someone must not be the harder path. */
+  note?: string;
 }
 
 function qs(params: ModReportsParams): string {
@@ -211,6 +342,7 @@ function qs(params: ModReportsParams): string {
   if (params.severity) p.set("severity", params.severity);
   if (params.subjectType) p.set("subjectType", params.subjectType);
   if (params.subjectId) p.set("subjectId", params.subjectId);
+  if (params.community) p.set("community", params.community);
   if (params.sort) p.set("sort", params.sort);
   if (params.cursor) p.set("cursor", params.cursor);
   const s = p.toString();
@@ -247,8 +379,34 @@ export const getReportAudit = (reportId: string) =>
     `/mod/reports/audit?reportId=${encodeURIComponent(reportId)}`,
   );
 
-/** Appeals queue. */
-export const getAppeals = () => apiGet<AppealDTO[]>("/mod/appeals");
+function appealsQs(params: ModAppealsParams): string {
+  const search = new URLSearchParams();
+  if (params.tab) search.set("tab", params.tab);
+  if (params.filter) search.set("filter", params.filter);
+  if (params.cursor) search.set("cursor", params.cursor);
+  const query = search.toString();
+  return query ? `?${query}` : "";
+}
+
+/** One page of the appeals queue, plus the awaiting/decided/overdue totals. */
+export const getAppeals = (params: ModAppealsParams = {}) =>
+  apiGet<ModAppealsResponse>(`/mod/appeals${appealsQs(params)}`);
+
+/** Permanent bans waiting on a second moderator (TS-12). Defaults to the
+ *  pending holds; pass a status to read the history. */
+export const getBanRatifications = (status?: BanRatificationDTO["status"]) =>
+  apiGet<BanRatificationDTO[]>(
+    `/mod/ratifications${status ? `?status=${encodeURIComponent(status)}` : ""}`,
+  );
+
+/** Confirm or refuse another moderator's permanent ban. The server refuses
+ *  (403) a moderator confirming a ban they asked for themselves, admins
+ *  included. */
+export const decideBanRatification = (id: string, body: RatifyBanInput) =>
+  apiPatch<BanRatificationDTO>(
+    `/mod/ratifications/${encodeURIComponent(id)}`,
+    body,
+  );
 
 /** Uphold / overturn an appeal. Overturn reverses the original action + re-notifies.
  *  Server rejects (403) a moderator reviewing the appeal of their own original

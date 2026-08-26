@@ -149,6 +149,24 @@
   border-radius: 6px;
   padding: 4px 10px;
 }
+/* Re-file the thread. Sits with the chips it edits, deliberately quieter than
+   them so it never reads as another tag. */
+.opTagEdit {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--accent-ink);
+  background: none;
+  border: 1px dashed rgba(var(--line-rgb), 0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.opTagEdit:hover {
+  border-style: solid;
+}
 .opFooter {
   display: flex;
   align-items: center;
@@ -291,6 +309,25 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent-ink);
+}
+/* The thread author's own answer mark. Jade, the platform's confirmation
+   colour, so it reads as settled rather than merely popular. */
+.acceptedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--jade);
+  background: rgba(var(--plum-rgb), 0.04);
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+.replyAcceptOn {
+  color: var(--jade);
+  font-weight: 600;
 }
 .replyMenu {
   margin-left: auto;
@@ -552,8 +589,75 @@
 }
 .crFooter {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 12px;
+}
+/* The submit button sits at the far end; the attach control and the draft
+   status line lead. */
+.crFooter > :last-child {
+  margin-left: auto;
+}
+
+/* ── Composer photo attach (SOC-13) ───────────────────────────────────── */
+.attachBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink-60);
+  background: none;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: color 0.18s var(--ease);
+}
+.attachBtn:hover:not(:disabled) {
+  color: var(--accent-ink);
+}
+.attachBtn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.stagedImage {
+  position: relative;
+  flex: 0 0 auto;
+}
+.stagedImage img {
+  display: block;
+  max-height: 96px;
+  max-width: 160px;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  object-fit: cover;
+}
+.stagedImageRemove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+.attachError {
+  flex: 1 0 100%;
+  font-size: 12px;
+  color: var(--danger);
+  margin: 0;
+}
+.draftStatus {
+  font-size: 12px;
+  color: var(--ink-60);
+}
+/* A published photo, under an opening post or a reply. */
+.postImage {
+  display: block;
+  max-width: 100%;
+  max-height: 420px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  margin: 12px 0 4px;
+  object-fit: contain;
 }
 
 :global([data-theme="dark"]) .opCard,

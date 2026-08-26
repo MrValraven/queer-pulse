@@ -5,6 +5,7 @@ import type {
   ArticleImageTint,
 } from "../../api/pieces.api";
 import { FormField, Select } from "../../../../shared/components/ui";
+import { ImageUploadField } from "../../../subprofiles/ImageUploadField";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { RichText } from "./RichText";
 import styles from "./ImageBlockControls.module.css";
@@ -31,7 +32,8 @@ function clampFraction(value: number): number {
 }
 
 /**
- * Every image-specific control for an `ArticleImageBlock`: alt text and
+ * Every image-specific control for an `ArticleImageBlock`: the art itself
+ * (uploaded through the repo's presigned-upload stack, CON-04), alt text and
  * credit (both REQUIRED — publishing gates on them, see the Task 8 publish
  * checklist), caption, rights, a tint swatch row, a crop segmented control,
  * and a click-to-set focal-point picker. Ported from the design prototype's
@@ -62,6 +64,25 @@ export function ImageBlockControls({
 
   return (
     <div className={styles.controls}>
+      <FormField
+        label={t("magazine:write.image.sourceLabel")}
+        helper={t("magazine:write.image.sourceHelper")}
+      >
+        <ImageUploadField
+          // CON-04. This used to be a paste-a-URL field, in a codebase with a
+          // full presigned-upload stack: an editor could not put commissioned
+          // art on the page at all, and a pasted external URL hotlinks and
+          // rots. `work-image` rather than the hero's `story-cover` kind
+          // because an inline image is framed freeform — the block carries its
+          // own 16:9 / 4:5 / 1:1 crop and focal point below.
+          kind="work-image"
+          value={block.src ?? ""}
+          onChange={(src) => onChange({ ...block, src })}
+          size={140}
+          placeholder={t("magazine:write.image.sourcePlaceholder")}
+        />
+      </FormField>
+
       <div className={styles.row2}>
         <FormField
           label={t("magazine:write.image.altLabel")}

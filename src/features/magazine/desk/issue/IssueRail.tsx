@@ -2,6 +2,7 @@ import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { formatDate } from "../../../../shared/lib/date";
 import type { IssueProductionDto } from "../../api/issueProduction.api";
+import { IssueCostsCard } from "./IssueCostsCard";
 import { PagesCard } from "./PagesCard";
 import { PublishDateCard } from "./PublishDateCard";
 import { ShipChecklistCard } from "./ShipChecklistCard";
@@ -53,6 +54,10 @@ export function IssueRail({
         }
       />
       <PagesCard pages={production.pages} />
+      {/* CON-18 — the money the desk could not total while every fee was
+          free text. Reads its own endpoint, so it never delays the rest of
+          the rail. */}
+      <IssueCostsCard number={production.number} />
     </>
   );
 }

@@ -2,7 +2,7 @@ import { QueryClient, type InfiniteData } from "@tanstack/react-query";
 import { render, renderHook, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
-import type { ForumPostResponse } from "../../shared/contracts/contracts";
+import type { ForumPostResponse } from "./api/forum.api";
 import { useVotePost } from "./api/useForumMutations";
 import type { ThreadPostsPage } from "./api/useForum";
 import { ThreadReplySection } from "./ThreadReplySection";
@@ -39,6 +39,8 @@ function post(overrides: Partial<ForumPostResponse> = {}): ForumPostResponse {
     canDelete: true,
     canRestore: false,
     canViewHistory: false,
+    image: null,
+    isAccepted: false,
     ...overrides,
   };
 }
@@ -116,9 +118,12 @@ function renderReplySection(isLocked: boolean) {
         moderation={moderationStub}
         nestedReplies={nestedRepliesStub}
         authorName="Rita V"
+        threadSlug="welcome"
+        threadTitle="Welcome"
         reply=""
         setReply={() => {}}
         onPost={() => {}}
+        onQuote={() => {}}
         textareaRef={{ current: null }}
       />
     </TestProviders>,

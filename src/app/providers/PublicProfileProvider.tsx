@@ -11,6 +11,7 @@ import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import {
   evaluatePublicEligibility,
+  publicEligibilityFromDecision,
   type PublicEligibility,
 } from "../../features/members/publicFigure";
 import {
@@ -83,12 +84,20 @@ export function PublicProfileProvider({ children }: { children: ReactNode }) {
     // within a session. ISO string keeps the evaluator wall-clock-free.
     const nowIso = new Date().toISOString();
     if (demoMode) {
+      // Demo mode has no server to ask, so it keeps the local evaluator. Its
+      // constants are held identical to the backend's.
       return evaluatePublicEligibility(demoEligibilitySignals(nowIso));
     }
     if (signalsQuery.data) {
-      return evaluatePublicEligibility(
-        liveEligibilitySignals(signalsQuery.data, nowIso),
-      );
+      const signals = liveEligibilitySignals(signalsQuery.data, nowIso);
+      // LIVE MODE READS THE SERVER'S VERDICT. `PUT /me/public-profile` 403s an
+      // ineligible member, so scoring locally would risk showing an unlocked
+      // switch that the write path then refuses. The local evaluator remains
+      // only as the fallback for a response that carries no decision.
+      const { decision } = signalsQuery.data;
+      return decision
+        ? publicEligibilityFromDecision(decision, signals)
+        : evaluatePublicEligibility(signals);
     }
     return PENDING_ELIGIBILITY;
   }, [demoMode, signalsQuery.data]);

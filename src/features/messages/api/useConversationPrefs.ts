@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import {
@@ -8,8 +9,33 @@ import {
 } from "../../../shared/api/messageCache";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { Conversation } from "../data";
 import { writeConversationPrefOverride } from "../conversationPrefs";
 import { updateConversationPrefs } from "./messages.api";
+
+/**
+ * Patches `archivedAt` onto a cached inbox row in place — `useToggleArchive`'s
+ * optimistic update in both demo and live mode. A no-op if the row isn't
+ * cached. Kept local (rather than added to `shared/api/messageCache.ts`
+ * alongside its `pinnedAt`/`favorite`/`muted` siblings) purely because that
+ * shared file sits outside this change's file ownership for this build pass;
+ * a follow-up cleanup could move it there to match the others exactly.
+ */
+function patchConversationArchived(
+  queryClient: QueryClient,
+  conversationId: string,
+  archivedAt: string | undefined,
+): void {
+  queryClient.setQueriesData<Conversation[]>(
+    { queryKey: ["conversations"] },
+    (previous) =>
+      previous?.map((conversation) =>
+        conversation.id === conversationId
+          ? { ...conversation, archivedAt }
+          : conversation,
+      ),
+  );
+}
 
 /**
  * Pin-to-top / favorite a CHAT (WhatsApp-style, CONVERSATION-scoped) — distinct
@@ -129,6 +155,49 @@ export function useToggleMute() {
     },
     onSuccess: (_result, { conversationId, muted }) => {
       patchConversationMuted(queryClient, conversationId, !muted);
+      if (!demoMode) {
+        void queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      }
+    },
+  });
+}
+
+export interface ToggleArchiveInput {
+  conversationId: string;
+  /** Whether this chat is currently archived — decides archive vs. unarchive. */
+  archived: boolean;
+}
+
+/**
+ * Archive/unarchive a chat (SOC-16) — the reversible, everyday way to
+ * declutter the inbox, replacing destructive clear-for-me for that purpose
+ * (clear-for-me itself is unchanged and still available for its own,
+ * genuinely destructive, meaning). Mirrors `useToggleMute` exactly: live mode
+ * PATCHes `/conversations/:id`, demo mode writes through to
+ * `conversationPrefs.ts`. The server independently unarchives a conversation
+ * for every participant the instant a new message lands — this mutation only
+ * ever fires from an explicit member action (the row menu / thread header).
+ */
+export function useToggleArchive() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, ToggleArchiveInput>({
+    mutationFn: async ({ conversationId, archived }) => {
+      if (demoMode) {
+        writeConversationPrefOverride(conversationId, {
+          archivedAt: archived ? undefined : new Date().toISOString(),
+        });
+        return;
+      }
+      await updateConversationPrefs(conversationId, { archived: !archived });
+    },
+    onSuccess: (_result, { conversationId, archived }) => {
+      patchConversationArchived(
+        queryClient,
+        conversationId,
+        archived ? undefined : new Date().toISOString(),
+      );
       if (!demoMode) {
         void queryClient.invalidateQueries({ queryKey: ["conversations"] });
       }

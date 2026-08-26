@@ -58,6 +58,11 @@ const COPY = {
     key: "shared:apiError.forbidden",
     fallback: "You don't have access to that.",
   },
+  accountRestricted: {
+    key: "shared:apiError.accountRestricted",
+    fallback:
+      "You can't do that while a moderation restriction is in effect. You can appeal it from your account settings.",
+  },
   generic: {
     key: "shared:apiError.generic",
     fallback: "Something went wrong.",
@@ -85,8 +90,18 @@ function messageFor(error: unknown): string | null {
       return null; // PlatformLockProvider owns this (maintenance screen)
     if (error.status === 404) return null; // pages own their empty state
     if (error.status >= 500) return resolve(COPY.server);
-    if (error.status === 403)
+    if (error.status === 403) {
+      // A moderation restriction gets its own translated copy naming the
+      // appeal, because the appeal is the only route out of a restriction.
+      // Otherwise the member reads the backend's English sentence, which
+      // `reasonFor` deliberately passes through untranslated.
+      if (
+        (error.data as { code?: string } | null)?.code === "ACCOUNT_RESTRICTED"
+      ) {
+        return resolve(COPY.accountRestricted);
+      }
       return resolve(reasonFor(error) ?? COPY.forbidden);
+    }
     return resolve(reasonFor(error) ?? COPY.generic);
   }
   return resolve(reasonFor(error) ?? COPY.genericRetry);

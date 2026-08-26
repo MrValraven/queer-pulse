@@ -20,6 +20,9 @@ export interface ConversationPrefOverride {
   pinnedAt?: string;
   favorite?: boolean;
   muted?: boolean;
+  /** ISO timestamp this chat was archived (demo-mode override, like
+   *  `pinnedAt`). Undefined = not archived. */
+  archivedAt?: string;
 }
 
 export type ConversationPrefsMap = Record<string, ConversationPrefOverride>;
@@ -32,7 +35,9 @@ function isOverride(value: unknown): value is ConversationPrefOverride {
       typeof candidate.pinnedAt === "string") &&
     (candidate.favorite === undefined ||
       typeof candidate.favorite === "boolean") &&
-    (candidate.muted === undefined || typeof candidate.muted === "boolean")
+    (candidate.muted === undefined || typeof candidate.muted === "boolean") &&
+    (candidate.archivedAt === undefined ||
+      typeof candidate.archivedAt === "string")
   );
 }
 
@@ -59,7 +64,12 @@ function saveConversationPrefs(map: ConversationPrefsMap): void {
   try {
     const trimmed: ConversationPrefsMap = {};
     for (const [conversationId, override] of Object.entries(map)) {
-      if (override.pinnedAt || override.favorite || override.muted) {
+      if (
+        override.pinnedAt ||
+        override.favorite ||
+        override.muted ||
+        override.archivedAt
+      ) {
         trimmed[conversationId] = override;
       }
     }
@@ -106,6 +116,7 @@ export function applyConversationPrefs(
       pinnedAt: override.pinnedAt ?? conversation.pinnedAt,
       favorite: override.favorite ?? conversation.favorite,
       muted: override.muted ?? conversation.muted,
+      archivedAt: override.archivedAt ?? conversation.archivedAt,
     };
   });
 }

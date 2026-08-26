@@ -4,7 +4,7 @@ import {
   type DirectoryPlace,
   type OwnershipBadgeState,
 } from "./directoryPlaces";
-import { categoryLabel } from "./localPlaces";
+import { categoryLabel } from "./localCategories";
 import { Stars } from "./DirectoryStars";
 import { DirectoryActionBar } from "./DirectoryActionBar";
 import { DirectoryQueerOwnedProvenance } from "./DirectoryQueerOwnedProvenance";

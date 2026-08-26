@@ -95,7 +95,7 @@ export function ManageGatheringTabs({
         />
       )}
       {tab === "attendees" && <AttendeesTab slug={slug} />}
-      {tab === "messages" && <MessagesTab />}
+      {tab === "messages" && <MessagesTab slug={slug} />}
       {tab === "settings" && (
         <SettingsTab
           slug={slug}

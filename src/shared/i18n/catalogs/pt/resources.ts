@@ -438,7 +438,7 @@ export const resources: Catalog = {
   "pronounsGuide.pronouns.eyebrow": "Pronomes",
   "pronounsGuide.pronouns.title": "Definir e <em>mudar pronomes.</em>",
   "pronounsGuide.pronouns.body1":
-    "Os teus pronomes aparecem na tua página de perfil, junto ao teu nome nas conversas de mensagens, e no diretório de pessoas se tiveres tornado essa secção visível. Não aparecem em URLs, emails de notificação, ou excertos de resultados de pesquisa.",
+    "Os teus pronomes aparecem na tua página de perfil, junto ao teu nome nas conversas de mensagens, e no diretório de pessoas se tiveres tornado essa secção visível. Não aparecem em URLs, notificações push, ou excertos de resultados de pesquisa.",
   "pronounsGuide.pronouns.body2":
     "Podes definir vários conjuntos de pronomes (ex.: ela/elu) e adicionar uma string personalizada se nenhuma das opções predefinidas encaixar. As alterações têm efeito imediato e não há limite de quantas vezes as podes atualizar.",
   "pronounsGuide.pronouns.body3":
@@ -475,7 +475,7 @@ export const resources: Catalog = {
   "pronounsGuide.table.displayName.who": "Todas as pessoas",
   "pronounsGuide.table.chosenName.field": "Nome escolhido",
   "pronounsGuide.table.chosenName.use":
-    "Emails da QueerPulse, comunicações internas",
+    "Notificações da QueerPulse, comunicações internas",
   "pronounsGuide.table.chosenName.who": "Só tu",
   "pronounsGuide.table.username.field": "Nome de utilizador",
   "pronounsGuide.table.username.use":
@@ -1026,7 +1026,7 @@ export const resources: Catalog = {
   "sober.host.success.hostTitle": "Convívio <em>submetido.</em>",
   "sober.host.success.attendTitle": "Estás <em>dentro.</em>",
   "sober.host.success.hostSub":
-    "Um coordenador vai confirmar a listagem sem álcool e adicioná-la ao calendário dentro de um dia. Vais receber a checklist de anfitrião por email.",
+    "Um coordenador vai confirmar a listagem sem álcool e adicioná-la ao calendário dentro de um dia. A checklist de anfitrião chega-te por mensagem na QueerPulse.",
   "sober.host.success.attendSub":
     "Guardámos o teu lugar. A localização privada e um lembrete simpático vão chegar-te no dia anterior, e nada é partilhado publicamente.",
   "sober.host.comingSoon.title":
@@ -1067,6 +1067,9 @@ export const resources: Catalog = {
   "library.category.legal": "Direito",
   "library.category.finance": "Finanças",
   "library.category.trans": "Vida trans",
+  "library.category.safety": "Segurança e privacidade",
+  "library.category.community": "Vida em comunidade",
+  "library.category.culture": "Cultura e arquivo",
   "library.empty": "Ainda não há guias que correspondam. Tenta outra pesquisa.",
   "library.readGuideCta": "Ler o guia",
   "library.loadingMore": "A carregar mais guias…",
@@ -1304,7 +1307,7 @@ export const resources: Catalog = {
   "microGrants.apply.submitCta": "Submeter candidatura",
   "microGrants.apply.success.title": "Candidatura <em>submetida.</em>",
   "microGrants.apply.success.sub":
-    "Vamos confirmar a receção por email dentro de 24 horas. O painel de avaliação reúne-se em meados de julho. Terás uma resposta antes de 31 de julho, seja qual for o resultado.",
+    "A tua candidatura fica registada e segue para o painel de avaliação, que reúne em meados de julho. O painel decide esta ronda antes de 31 de julho e responde por mensagem na QueerPulse, seja qual for o resultado.",
   "microGrants.apply.success.closeCta": "Fechar",
   "microGrants.apply.comingSoon.title":
     "As candidaturas abrem <em>em breve.</em>",
@@ -2427,4 +2430,29 @@ export const resources: Catalog = {
   "suggest.success.title": "Obrigade. <em>Tratamos do resto.</em>",
   "suggest.success.sub":
     "A nossa equipa verifica todas as sugestões antes de as publicar, para nunca enviar ninguém para um número errado ou uma clínica encerrada.",
+
+  // ── Índice de guias + guias geridos na base de dados ────────────────────
+  "guideIndex.meta.title": "Todos os guias da QueerPulse num só sítio",
+  "guideIndex.meta.description":
+    "O índice completo dos guias da QueerPulse: saúde, vida trans, questões legais, segurança, comunidade e cultura. Tudo o que escrevemos, agrupado e com ligação.",
+  "guideIndex.hero.eyebrow": "Índice de guias",
+  "guideIndex.hero.title": "Tudo o que já <em>escrevemos.</em>",
+  "guideIndex.hero.lead":
+    "Todos os guias da QueerPulse, agrupados por aquilo que servem. Alguns eram difíceis de encontrar antes desta página existir.",
+  "guideIndex.empty": "Ainda não há guias publicados.",
+  "guideIndex.card.reviewedOn": "Revisto a {date}",
+  "guideIndex.card.notReviewed": "Ainda sem revisão",
+  "guideIndex.linkCta": "Ver todos os guias",
+
+  "guide.managedEyebrow": "Guia",
+  "guide.review.ariaLabel": "Estado da revisão editorial",
+  "guide.review.reviewedOn": "Revisto a {date}",
+  "guide.review.reviewedOnBy": "Revisto a {date} por {reviewer}",
+  "guide.review.never": "Ainda ninguém reviu este guia.",
+  "guide.review.due": "Próxima revisão a {date}",
+  "guide.review.overdue": "Revisão em atraso desde {date}",
+  "guide.missing.title": "Ainda <em>sem página.</em>",
+  "guide.missing.sub":
+    "Este guia está listado mas ainda não tem nada escrito. O índice tem tudo o que já tem.",
+  "guide.missing.indexCta": "Ver todos os guias",
 };

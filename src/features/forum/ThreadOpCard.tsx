@@ -1,4 +1,4 @@
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiTag } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { CATS, CAT_STYLE, type Thread } from "./forum.data";
@@ -9,6 +9,7 @@ import { MentionText } from "../../shared/mentions/MentionText";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import { FeatureHelp } from "../../shared/components/ui";
 import { PostActionsMenu } from "./PostActionsMenu";
+import { ForumPostImage } from "./ForumImageAttach";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadOpCard({
@@ -29,6 +30,7 @@ export function ThreadOpCard({
   onDelete,
   onRestore,
   onHistory,
+  onEditTags,
 }: {
   thread: Thread;
   title: string;
@@ -52,6 +54,9 @@ export function ThreadOpCard({
   onDelete: () => void;
   onRestore: () => void;
   onHistory: () => void;
+  /** Open the tag editor (SOC-13). Omitted for a viewer who may not re-file
+   *  this thread, which is what hides the control. */
+  onEditTags?: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -159,56 +164,107 @@ export function ThreadOpCard({
             )}
           </p>
         ) : (
-          body.map((paragraph, index) => (
-            <p key={index}>
-              <MentionText text={paragraph} />
-            </p>
-          ))
+          <>
+            {body.map((paragraph, index) => (
+              <p key={index}>
+                <MentionText text={paragraph} />
+              </p>
+            ))}
+            <ForumPostImage src={thread.opImage} />
+          </>
         )}
       </div>
-      <div className={styles.opTags}>
-        {thread.tags.map((t) => (
-          <span key={t} className={styles.opTag}>
-            {t}
-          </span>
-        ))}
-      </div>
+      <OpTagsRow tags={thread.tags} onEditTags={onEditTags} />
       {!deleted && (
-        <div className={styles.opFooter}>
-          <button
-            type="button"
-            aria-pressed={voted}
-            aria-label={
-              voted
-                ? t("forum:threadOp.unvoteAria")
-                : t("forum:threadOp.voteAria")
-            }
-            className={[styles.reaction, voted && styles.reactionOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={onVote}
-          >
-            {/* Same icon as the reply like button (ThreadReplyItem), so the OP
-                and its replies no longer carry two different heart glyphs. */}
-            <FiHeart aria-hidden="true" /> {thread.upvotes}
-          </button>
-          <button
-            type="button"
-            className={[styles.reaction, bookmarked && styles.reactionOn]
-              .filter(Boolean)
-              .join(" ")}
-            aria-pressed={bookmarked}
-            onClick={onToggleBookmark}
-          >
-            {bookmarked
-              ? t("forum:threadOp.saved")
-              : t("forum:threadOp.bookmark")}
-          </button>
-          <button type="button" className={styles.report} onClick={onReport}>
-            {t("forum:threadOp.report")}
-          </button>
-        </div>
+        <OpFooterActions
+          upvotes={thread.upvotes}
+          voted={voted}
+          onVote={onVote}
+          bookmarked={bookmarked}
+          onToggleBookmark={onToggleBookmark}
+          onReport={onReport}
+        />
       )}
+    </div>
+  );
+}
+
+/** The thread's tag chips, plus the re-file control for whoever may use it.
+ *  Extracted so `ThreadOpCard` itself stays inside the 200-line component
+ *  budget as the card grew a tag editor and a photo. */
+function OpTagsRow({
+  tags,
+  onEditTags,
+}: {
+  tags: string[];
+  onEditTags?: () => void;
+}) {
+  const { t } = useTranslation();
+  if (!tags.length && !onEditTags) return null;
+  return (
+    <div className={styles.opTags}>
+      {tags.map((tag) => (
+        <span key={tag} className={styles.opTag}>
+          {tag}
+        </span>
+      ))}
+      {onEditTags && (
+        <button type="button" className={styles.opTagEdit} onClick={onEditTags}>
+          <FiTag aria-hidden="true" />
+          {t(tags.length ? "forum:tagsEdit.editCta" : "forum:tagsEdit.addCta")}
+        </button>
+      )}
+    </div>
+  );
+}
+
+/** Upvote / save / report, under the opening post. */
+function OpFooterActions({
+  upvotes,
+  voted,
+  onVote,
+  bookmarked,
+  onToggleBookmark,
+  onReport,
+}: {
+  upvotes: number;
+  voted: boolean;
+  onVote: () => void;
+  bookmarked: boolean;
+  onToggleBookmark: () => void;
+  onReport: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.opFooter}>
+      <button
+        type="button"
+        aria-pressed={voted}
+        aria-label={
+          voted ? t("forum:threadOp.unvoteAria") : t("forum:threadOp.voteAria")
+        }
+        className={[styles.reaction, voted && styles.reactionOn]
+          .filter(Boolean)
+          .join(" ")}
+        onClick={onVote}
+      >
+        {/* Same icon as the reply like button (ThreadReplyItem), so the OP
+            and its replies no longer carry two different heart glyphs. */}
+        <FiHeart aria-hidden="true" /> {upvotes}
+      </button>
+      <button
+        type="button"
+        className={[styles.reaction, bookmarked && styles.reactionOn]
+          .filter(Boolean)
+          .join(" ")}
+        aria-pressed={bookmarked}
+        onClick={onToggleBookmark}
+      >
+        {bookmarked ? t("forum:threadOp.saved") : t("forum:threadOp.bookmark")}
+      </button>
+      <button type="button" className={styles.report} onClick={onReport}>
+        {t("forum:threadOp.report")}
+      </button>
     </div>
   );
 }

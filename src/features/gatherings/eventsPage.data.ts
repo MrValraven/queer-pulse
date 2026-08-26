@@ -1,42 +1,16 @@
-import { orgColors } from "./data";
-
-// Static copy + filter categories for the Events list page.
-// The events themselves come from `calendarEvents` in ./data.
+// Static copy for the Events list page. The events themselves come from
+// `calendarEvents` in ./data.
 //
-// i18n Pattern A — the eyebrow/subtitle and every category label are
-// platform-authored chrome, so this file holds catalog *keys*; `EventsPage`
-// resolves them with `t()`. `dot`/`colors` stay untouched — they're styling.
+// i18n Pattern A — the eyebrow/subtitle are platform-authored chrome, so this
+// file holds catalog *keys*; the page resolves them with `t()`.
+//
+// The org filter categories that used to live here are gone (LOC-17). They
+// matched an event's `orgColor`, a colour the DEMO registry assigns and the
+// API never sends, so on a live board the chips filtered on a value that was
+// not there. Browse now filters on real columns (date, neighbourhood, type,
+// cost, free text) server-side — see `hub/browseFilters.ts`.
 
 export const eventsHeader = {
   eyebrowKey: "gatherings:events.eyebrow",
   subtitleKey: "gatherings:events.subtitle",
 };
-
-export interface EventCategory {
-  key: string;
-  labelKey: string;
-  /** Dot colour for the filter chip. */
-  dot: string;
-  /** Event `orgColor` values this category matches. Omitted for "All". */
-  colors?: string[];
-}
-
-export const EVENT_CATEGORIES: EventCategory[] = [
-  {
-    key: "all",
-    labelKey: "gatherings:events.categoryAll",
-    dot: orgColors.queerpulse,
-  },
-  {
-    key: "queerpulse",
-    labelKey: "gatherings:events.categoryQueerpulse",
-    dot: orgColors.queerpulse,
-    colors: [orgColors.queerpulse],
-  },
-  {
-    key: "community",
-    labelKey: "gatherings:events.categoryCommunity",
-    dot: orgColors.community,
-    colors: [orgColors.community],
-  },
-];

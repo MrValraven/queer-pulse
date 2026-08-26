@@ -1,5 +1,5 @@
 import { FiUserPlus, FiUserMinus, FiStar, FiX, FiShield } from "react-icons/fi";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
@@ -7,6 +7,7 @@ import type { LivingCommunity } from "./community.model";
 import type { CommunityRole } from "./membership.types";
 import { photoOf } from "./communityPeople";
 import { RoleBadge } from "./CommunityBadges";
+import { ModMemberMenu, type ModMemberMenuAction } from "./ModMemberMenu";
 import styles from "./CommunityHubTabs.module.css";
 
 type RosterMember = LivingCommunity["roster"][number];
@@ -20,10 +21,11 @@ export interface ModMemberRowActions {
 }
 
 /**
- * One roster row in mod tools, with the role controls the *viewer* is actually
- * allowed to use. The gates mirror `CommunitiesService.setMemberRole` and
- * `removeMember` exactly, so a button is never offered that the server would
- * answer with a 403:
+ * One roster row in mod tools. The role controls the *viewer* is actually
+ * allowed to use live behind the row's `⋯` menu, so the row reads as a person
+ * (avatar, name, role) rather than a line of competing verbs. The gates mirror
+ * `CommunitiesService.setMemberRole` and `removeMember` exactly, so an item is
+ * never offered that the server would answer with a 403:
  *
  * - Granting or revoking co-owner, and touching a co-owner's row at all, is
  *   the owner's alone (co-owner is owner-level; a co-owner who could appoint
@@ -61,6 +63,51 @@ export function ModMemberRow({
       ? isViewerOwnerLevel
       : true;
 
+  const possibleActions: (ModMemberMenuAction | false)[] = [
+    !isOwner &&
+      !isCoOwner &&
+      !isMod &&
+      canChangeThisRole && {
+        key: "promote",
+        label: t("communities:detail.modtools.members.makeModCta"),
+        icon: <FiUserPlus />,
+        run: () => actions.onPromote(member.slug, member.name),
+      },
+    !isOwner &&
+      !isCoOwner &&
+      isViewerOwner && {
+        key: "grantCoOwner",
+        label: t("communities:detail.modtools.members.makeCoOwnerCta"),
+        icon: <FiStar />,
+        run: () => actions.onGrantCoOwner(member.slug, member.name),
+      },
+    isCoOwner &&
+      isViewerOwner && {
+        key: "revokeCoOwner",
+        label: t("communities:detail.modtools.members.removeCoOwnerCta"),
+        icon: <FiUserMinus />,
+        run: () => actions.onRevokeCoOwner(member.slug, member.name),
+      },
+    isMod &&
+      canChangeThisRole && {
+        key: "demote",
+        label: t("communities:detail.modtools.members.demoteCta"),
+        icon: <FiUserMinus />,
+        run: () => actions.onDemote(member.slug, member.name),
+      },
+    !isOwner &&
+      canChangeThisRole && {
+        key: "remove",
+        label: t("communities:detail.modtools.members.removeCta"),
+        icon: <FiX />,
+        run: () => actions.onRemove(member.slug, member.name),
+        danger: true,
+      },
+  ];
+  const menuActions = possibleActions.filter(
+    (action): action is ModMemberMenuAction => action !== false,
+  );
+
   return (
     <div className={styles.modRow}>
       <Avatar
@@ -78,67 +125,18 @@ export function ModMemberRow({
         {member.title && <div className={styles.modMeta}>{member.title}</div>}
       </div>
       <div className={styles.modActions}>
-        {!isOwner && !isCoOwner && !isMod && canChangeThisRole && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={styles.declineBtn}
-            onClick={() => actions.onPromote(member.slug, member.name)}
-          >
-            <FiUserPlus aria-hidden />{" "}
-            {t("communities:detail.modtools.members.makeModCta")}
-          </Button>
-        )}
-        {!isOwner && !isCoOwner && isViewerOwner && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={styles.declineBtn}
-            onClick={() => actions.onGrantCoOwner(member.slug, member.name)}
-          >
-            <FiStar aria-hidden />{" "}
-            {t("communities:detail.modtools.members.makeCoOwnerCta")}
-          </Button>
-        )}
-        {isCoOwner && isViewerOwner && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={styles.declineBtn}
-            onClick={() => actions.onRevokeCoOwner(member.slug, member.name)}
-          >
-            <FiUserMinus aria-hidden />{" "}
-            {t("communities:detail.modtools.members.removeCoOwnerCta")}
-          </Button>
-        )}
-        {isMod && canChangeThisRole && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={styles.declineBtn}
-            onClick={() => actions.onDemote(member.slug, member.name)}
-          >
-            <FiUserMinus aria-hidden />{" "}
-            {t("communities:detail.modtools.members.demoteCta")}
-          </Button>
-        )}
-        {!isOwner && canChangeThisRole && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className={[styles.declineBtn, styles.removeBtn].join(" ")}
-            onClick={() => actions.onRemove(member.slug, member.name)}
-          >
-            <FiX aria-hidden />{" "}
-            {t("communities:detail.modtools.members.removeCta")}
-          </Button>
-        )}
         {isOwner && (
           <span className={styles.ownerTag}>
             <FiShield aria-hidden />{" "}
             {t("communities:detail.modtools.members.ownerTag")}
           </span>
         )}
+        <ModMemberMenu
+          ariaLabel={t("communities:detail.modtools.members.actionsAria", {
+            name: member.name,
+          })}
+          actions={menuActions}
+        />
       </div>
     </div>
   );

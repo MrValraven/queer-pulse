@@ -1,4 +1,7 @@
-import type { HousingListingDTO } from "./api/housingListing.api";
+import type {
+  HousingListingDecisionDTO,
+  HousingListingDTO,
+} from "./api/housingListing.api";
 
 /**
  * The row shape `MyHousingListingsPage` renders AND the edit modal seeds its
@@ -13,6 +16,12 @@ export interface MyHousingListingRow {
   ref: string;
   slug: string;
   status: HousingListingDTO["status"];
+  /**
+   * The moderator's last decision on this listing, and the reason they wrote.
+   * Owner-visible: it is how a lister learns their home needs changes, was
+   * refused, or was pulled. Null while nothing has been decided.
+   */
+  decision: HousingListingDecisionDTO | null;
   /** Owner "found a place" signal (HSG-1), or null while still looking. */
   filledAt: string | null;
   /** TTL (HSG-3). */
@@ -33,6 +42,15 @@ export interface MyHousingListingRow {
   accessibilityInfo: string;
   listerKind: "member" | "agent";
   virtualTourUrl?: string;
+  blurb: string;
+  description: string;
+  availableFrom: string | null;
+  minStayMonths: number | null;
+  features: string[];
+  idealFor: string[];
+  /** Already-resolved photo URLs. Re-sent verbatim on save: the backend
+   * normalises its own `/files/<key>` URL back to the storage key. */
+  gallery: string[];
 }
 
 /** Demo fixture: three listings covering the states the page needs to render
@@ -56,6 +74,19 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     billsIncluded: true,
     accessibilityInfo: "Third floor, no lift.",
     listerKind: "member",
+    decision: {
+      status: "live",
+      reason: null,
+      at: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    blurb: "A bright double room in a four-person queer flatshare.",
+    description:
+      "The room faces east, so it gets the morning sun. Two of us work from home, one is a nurse on shifts, and we keep the flat calm. Metro is a six-minute walk.",
+    availableFrom: null,
+    minStayMonths: 6,
+    features: ["Furnished", "Natural light", "Washing machine"],
+    idealFor: ["Long stays", "A quiet household"],
+    gallery: [],
   },
   {
     ref: "QPH-2026-0098",
@@ -74,6 +105,15 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     billsIncluded: false,
     accessibilityInfo: "Ground floor, step-free entrance.",
     listerKind: "member",
+    decision: null,
+    blurb: "A small studio a few minutes from Anjos metro.",
+    description:
+      "Everything in one room, with a separate bathroom and a kitchenette along one wall. Good for a short stay while you find something longer.",
+    availableFrom: null,
+    minStayMonths: 1,
+    features: ["Furnished", "Air conditioning"],
+    idealFor: ["Short stays", "Someone new to Lisbon"],
+    gallery: [],
   },
   {
     ref: "QPH-2025-0311",
@@ -92,5 +132,19 @@ export const DEMO_MY_HOUSING_LISTINGS: MyHousingListingRow[] = [
     billsIncluded: true,
     accessibilityInfo: "Lift in the building.",
     listerKind: "agent",
+    decision: {
+      status: "question",
+      reason:
+        "Could you add a photo of the kitchen and say whether the rent includes water? Once that is in, this is good to go.",
+      at: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    blurb: "Two-month sublet in Graça while the tenant is away.",
+    description:
+      "A one-bedroom flat on the fourth floor with a lift, furnished, on a quiet street above the tram line.",
+    availableFrom: null,
+    minStayMonths: 2,
+    features: ["Furnished", "Lift", "Quiet street"],
+    idealFor: ["Short stays"],
+    gallery: [],
   },
 ];

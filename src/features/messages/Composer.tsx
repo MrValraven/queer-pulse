@@ -10,7 +10,9 @@ import { detectContactSafetySignals } from "./contactSafetyDetector";
 import { useComposerAutoGrow } from "./useComposerAutoGrow";
 import { useComposerPopovers } from "./useComposerPopovers";
 import { useComposerTyping } from "./useComposerTyping";
-import { clearDraft, loadDraft, saveDraft } from "./drafts";
+import { useDraftSync } from "./useDraftSync";
+import { useInsertMentionShortcut } from "./useInsertMentionShortcut";
+import { clearDraft, loadDraftOrServerFallback, saveDraft } from "./drafts";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { ChatMessage, Conversation } from "./data";
 import styles from "./MessagesPage.module.css";
@@ -45,14 +47,14 @@ interface ComposerProps {
  * the caller so it resets per thread) — a keystroke here never bubbles state
  * up to the page, so it can't re-render the thread list or the message log.
  * Seeds from, and persists to, the same per-conversation `drafts.ts` store a
- * thread switch used to rely on the controller for; unrelated to the
- * message-edit inline editor, which owns its own local text entirely (see
- * `InlineEditField`) and is untouched by this component.
+ * thread switch used to rely on the controller for, plus (SOC-16) the
+ * server's cross-device copy via `useDraftSync`; unrelated to the
+ * message-edit inline editor, which owns its own local text entirely.
  *
  * The throttled typing frames (`useComposerTyping`), the mutually-exclusive
  * GIF/shortcut popovers (`useComposerPopovers`), and the reply-quote banner
- * (`ComposerReplyPreview`) are split into colocated files so this component
- * stays under the line cap.
+ * (`ComposerReplyPreview`) are split into colocated files, same as the draft
+ * sync above, so this component stays under the line cap.
  */
 export function Composer({
   active,
@@ -68,11 +70,12 @@ export function Composer({
   const firstName = active.name.split(" ")[0]!;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { notifyTyping, stopTyping } = useComposerTyping(conversationId);
-  // The new-message draft, local to this component instance. Seeded once from
-  // the persisted per-conversation store; the caller remounts this component
-  // (via `key={active.id}`) on thread switch, so this lazy initializer re-runs
-  // per thread instead of needing an effect to resync it.
-  const [draft, setDraft] = useState(() => loadDraft(conversationId));
+  const { scheduleSync, syncNow } = useDraftSync(conversationId);
+  // Seeded local-first, server-fallback (SOC-16) — see `loadDraftOrServerFallback`.
+  // Remounted (via `key={active.id}`) on thread switch, so this re-seeds per thread.
+  const [draft, setDraft] = useState(() =>
+    loadDraftOrServerFallback(conversationId, active.draft),
+  );
   // Advisory-only, recomputed per keystroke — see `ComposerSafetyNotice`.
   const safetySignals = useMemo(
     () => detectContactSafetySignals(draft),
@@ -89,29 +92,19 @@ export function Composer({
   const { openPopover, popoverGroupRef, togglePopover, closePopover } =
     useComposerPopovers();
   useComposerAutoGrow(textareaRef, draft);
-
-  /** Drops a mention sigil into the draft (with a leading space when needed so
-   *  the sigil sits at a word boundary — where `detectTrigger` fires), then
-   *  focuses the input with the caret at the end so typeahead opens as the
-   *  member types. Closes the popover so the screen stays uncluttered. */
-  function insertShortcut(sigil: string) {
-    const needsSpace = draft.length > 0 && !/\s$/.test(draft);
-    const next = `${draft}${needsSpace ? " " : ""}${sigil}`;
-    setDraft(next);
-    saveDraft(conversationId, next);
-    closePopover();
-    requestAnimationFrame(() => {
-      const node = textareaRef.current;
-      if (!node) return;
-      node.focus();
-      node.setSelectionRange(node.value.length, node.value.length);
-    });
-  }
+  const insertShortcut = useInsertMentionShortcut(
+    conversationId,
+    draft,
+    setDraft,
+    scheduleSync,
+    closePopover,
+    textareaRef,
+  );
 
   /** Enter-to-send and the send button both funnel through here so a send
    *  always clears the idle timer and tells the counterpart we've stopped.
-   *  Clears the composer's own text (and its persisted draft) in the same
-   *  frame the message is handed up, so the input empties instantly. */
+   *  Clears the composer's own text (and its persisted + synced draft) in the
+   *  same frame the message is handed up, so the input empties instantly. */
   function handleSend() {
     const body = draft.trim();
     if (!body) return;
@@ -119,6 +112,10 @@ export function Composer({
     onSend(body);
     setDraft("");
     clearDraft(conversationId);
+    // Immediate, not debounced: sending is a deliberate action, not a
+    // keystroke — the server draft should clear right away rather than sit
+    // stale until the debounce window would have fired.
+    syncNow("");
   }
 
   function handleBlur() {
@@ -128,6 +125,7 @@ export function Composer({
   function handleChange(nextValue: string) {
     setDraft(nextValue);
     saveDraft(conversationId, nextValue);
+    scheduleSync(nextValue);
     notifyTyping();
   }
 

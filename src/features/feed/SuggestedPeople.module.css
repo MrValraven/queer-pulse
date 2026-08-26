@@ -1,0 +1,154 @@
+/* People you might know (SOC-05). A quiet band above the feed, not a
+   billboard: it sits on cream like the page, uses paper only for the cards,
+   and never competes with the feed itself. */
+
+.strip {
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+  background: rgba(var(--plum-rgb), 0.03);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.headIcon {
+  color: var(--accent);
+  flex: none;
+  margin-top: 2px;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.blurb {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+/* Pushes the header's hide control to the far edge without a second wrapper. */
+.hide {
+  margin-left: auto;
+}
+
+.hide,
+.dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-40);
+  cursor: pointer;
+  transition: background 0.18s var(--ease);
+}
+
+.hide:hover,
+.dismiss:hover,
+.hide:focus-visible,
+.dismiss:focus-visible {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--ink);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 18px 14px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+}
+
+/* The dismiss control overlaps the card's top-right corner. It is a sibling of
+   the profile link, never a child of it: a button inside a router link is
+   banned in this codebase. */
+.dismiss {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.tagline {
+  font-size: 12px;
+  color: var(--ink-60);
+  line-height: 1.35;
+  /* Two lines at most: the card is a nudge, and a long self-description would
+     push the reason and the action out of view. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+/* The whole point of the card: it says why. Kept visually distinct from the
+   tagline so the two are never mistaken for each other. */
+.reason {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.browse {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+  text-decoration: none;
+}
+
+.browse:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}

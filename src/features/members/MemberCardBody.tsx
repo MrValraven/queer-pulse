@@ -1,6 +1,8 @@
 import { Avatar, type AvatarTint } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { ActivityBandPill } from "./ActivityBandPill";
+import type { ActivityBand } from "./activityBand";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Most tags a result card shows before collapsing the rest into a "+N" chip.
@@ -25,6 +27,11 @@ export interface MemberCardBodyProps {
   isMe?: boolean;
   vouchCount?: number;
   mutualsCount?: number;
+  /** Coarse "recently active" band, already gated by the backend for this
+   *  viewer. `null`/absent renders nothing at all: the member opted out, or the
+   *  platform has never observed a session for them, and neither may be shown
+   *  as "not active recently". See `activityBand.ts`. */
+  activityBand?: ActivityBand | null;
 }
 
 /**
@@ -48,6 +55,7 @@ export function MemberCardBody({
   isMe = false,
   vouchCount,
   mutualsCount,
+  activityBand,
 }: MemberCardBodyProps) {
   const { t } = useTranslation();
   const visibleTags = tags.slice(0, MAX_CARD_TAGS);
@@ -110,6 +118,10 @@ export function MemberCardBody({
         {!!mutualsCount && (
           <span>{t("members:card.mutualsCount", { count: mutualsCount })}</span>
         )}
+        {/* Renders nothing when the band is null, which is the common case on
+            a fresh platform and the permanent case for a member who opted
+            out. */}
+        <ActivityBandPill band={activityBand} />
       </div>
     </>
   );

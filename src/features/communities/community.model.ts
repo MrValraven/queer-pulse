@@ -2,6 +2,7 @@ import type { Person } from "./communityDetails";
 import type { JoinInvolvement } from "./api/communityJoin.api";
 import type { AccessTier, CommunityRole } from "./membership.types";
 import type { ReasonCode } from "../safety/reportReasons";
+import type { CommunityReportSeverity } from "./api/communities.api";
 
 /** A named reaction; `key` maps to a react-icon in the ReactionBar. */
 export type ReactionKey = "heart" | "celebrate" | "support" | "fire";
@@ -138,35 +139,60 @@ export interface ModRequest {
   sharedCommunityCount?: number;
 }
 
-/** A flagged post or reply awaiting a mod decision. Demo mocks populate the
- *  rich fields below (`postExcerpt`/`author`/`reporter`/`reason`); live rows
- *  come from the backend's leaner `GET /communities/:slug/reports` (owner/mod
- *  only), which only ever carries the fields marked "live" — it has no
- *  content excerpt or reporter/author identity. `ModReportedPosts` renders
- *  whichever half is present. */
+/** A flagged post or reply awaiting a mod decision.
+ *
+ *  Both halves now carry the evidence: the demo mocks author
+ *  `postExcerpt`/`author`/`reporter`/`reason` by hand, and live rows come from
+ *  `GET /communities/:slug/reports` (owner/mod only), which resolves the
+ *  reported body, its author, its thread and its moderation state onto each
+ *  report. `reporter` stays demo-only: who filed a report is deliberately not
+ *  shown to a community moderator. `ModReportedPosts` renders whatever is
+ *  present. */
 export interface ModReport {
   id: string;
   /** ISO report timestamp (live). Formatted at render by `useCommunityTime`. */
   createdAt?: string;
   /** Legacy pre-rendered relative token, demo mock data only. */
   time?: string;
-  /** Demo-only excerpt of the flagged content. */
+  /** An excerpt of the flagged content (both modes). Plain text, already cut
+   *  server-side in live mode. */
   postExcerpt?: string;
-  /** Demo-only: who posted the flagged content. */
+  /** Live: the excerpt stops short of the full body, so the row offers a way
+   *  through to the thread for the rest. */
+  isExcerptTruncated?: boolean;
+  /** Who posted the flagged content (both modes). */
   author?: Person;
   /** Demo-only: who filed the report. */
   reporter?: Person;
   /** Demo-only free-text reason (the mock data authors this directly). */
   reason?: string;
-  /** Live: the report's stable reason code — resolve to a label via
+  /** Live: the report's stable reason code. Resolve it to a label via
    *  `REASON_LABEL_KEYS` + `t()` (see `../safety/reportReasons`). */
   reasonCode?: ReasonCode;
-  /** Live: what got reported. "Remove" only wires up for `"post"` — a reply
-   *  report can still be dismissed, but this queue has no way to reach the
-   *  reply's parent post id to delete it (see `ModReportedPosts`). */
+  /** Live: how urgent the platform judged this report, derived from the reason
+   *  code. Rendered as a badge with its own text, never as colour alone. */
+  severity?: CommunityReportSeverity;
+  /** Live: when the response window closes (ISO). */
+  slaDueAt?: string;
+  /** Live: that window has already closed and the report is still open. */
+  isOverdue?: boolean;
+  /** Live: what got reported. "Remove" only wires up for `"post"`. A reply
+   *  report is dismissible and links through to its thread (see
+   *  `ModReportedPosts`). */
   subjectType?: "post" | "reply";
-  /** Live: the post or reply id — the "Remove" action's delete target. */
+  /** Live: the post or reply id, the "Remove" action's delete target. */
   subjectId?: string;
+  /** Live: the thread to open. The post itself, or a reply's parent post. */
+  threadPostId?: string;
+  /** Live: the content is already tombstoned by its author or a moderator. */
+  isContentDeleted?: boolean;
+  /** Live: the content is moderation-hidden from members right now. */
+  isContentHidden?: boolean;
+  /** Live: the content is moderation-removed (a tombstone everyone sees). */
+  isContentRemoved?: boolean;
+  /** Live: the report points at a row that no longer exists, so there is no
+   *  body to show and nothing to link to. */
+  isContentMissing?: boolean;
 }
 
 /** The enriched, "living" data layered on top of the base Community + CommunityDetail. */

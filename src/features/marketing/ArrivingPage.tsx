@@ -11,9 +11,10 @@ import {
   HealthSection,
   HousingSection,
   OrgsSection,
-  FirstStepSection,
-  CommQuickSection,
 } from "./ArrivingSections";
+import { ArrivingChecklistSection } from "./ArrivingChecklist";
+import { ArrivingGatheringsSection } from "./ArrivingGatherings";
+import { ArrivingCommunitiesSection } from "./ArrivingCommunities";
 
 export function ArrivingPage() {
   const { t } = useTranslation();
@@ -42,12 +43,13 @@ export function ArrivingPage() {
         sub={t("marketing:arriving.hero.body")}
       />
 
+      <ArrivingChecklistSection />
       <NeighbourhoodsSection />
       <HealthSection />
       <HousingSection />
       <OrgsSection />
-      <FirstStepSection />
-      <CommQuickSection />
+      <ArrivingGatheringsSection />
+      <ArrivingCommunitiesSection />
 
       <Outro
         title={

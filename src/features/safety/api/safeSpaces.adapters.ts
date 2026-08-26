@@ -29,6 +29,11 @@ export function verifiedCardDtoToSpace(dto: SafeSpaceCardDTO): VerifiedSpace {
     rating: dto.rating,
     reviews: `${dto.reviews} reviews`,
     tier: dto.tier ?? 0,
+    // Whether the badge currently SPEAKS, which `status` cannot say: it stays
+    // "verified" through a suspension because it is the discriminant against
+    // a removed space. Anything rendering the badge reads these two.
+    isBadgeSuspended: dto.isBadgeSuspended ?? false,
+    isBadgeDueForReReview: dto.isBadgeDueForReReview ?? false,
     // detail-only fields — unused by the grid, filled by the detail fetch
     eyebrow: "",
     sub: "",
@@ -96,6 +101,8 @@ function verifiedDetailDtoToSpace(dto: SafeSpaceDetailDTO): VerifiedSpace {
     rating: dto.rating,
     reviews: `${dto.reviews} reviews`,
     tier: dto.tier ?? 0,
+    isBadgeSuspended: dto.isBadgeSuspended ?? false,
+    isBadgeDueForReReview: dto.isBadgeDueForReReview ?? false,
     eyebrow: dto.eyebrow,
     sub: dto.sub,
     metaPills: dto.metaPills,

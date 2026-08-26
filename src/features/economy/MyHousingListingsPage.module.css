@@ -99,3 +99,37 @@
 .deleteBtn {
   margin-left: auto;
 }
+
+/* ── Moderator decision note ─────────────────────────────────────────────
+ * What a moderator decided about this listing, and the reason they wrote for
+ * its owner. Amber-tinted so it reads as "something to act on" without the
+ * alarm of the destructive tone. */
+.decision {
+  margin-block: 12px 4px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(var(--amber-rgb), 0.09);
+  border: 1px solid rgba(var(--amber-rgb), 0.22);
+}
+.decisionHead {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.decisionBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.decisionHint {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}

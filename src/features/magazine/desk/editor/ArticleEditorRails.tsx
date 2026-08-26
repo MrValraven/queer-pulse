@@ -30,6 +30,10 @@ export interface ArticleEditorRailsProps {
   onMetaDescriptionChange: (value: string) => void;
   socialImage: string;
   onSocialImageChange: (value: string) => void;
+  /** CON-04 — the piece's lead art, as the reference currently held (a
+   *  resolved `/files/<key>` URL, or a bare key from a fresh upload). */
+  heroImageKey: string;
+  onHeroImageKeyChange: (value: string) => void;
   canonicalUrl: string;
   onCanonicalUrlChange: (value: string) => void;
   slug: string;
@@ -71,6 +75,8 @@ export function ArticleEditorRails(props: ArticleEditorRailsProps) {
         onMetaDescriptionChange={props.onMetaDescriptionChange}
         socialImage={props.socialImage}
         onSocialImageChange={props.onSocialImageChange}
+        heroImageKey={props.heroImageKey}
+        onHeroImageKeyChange={props.onHeroImageKeyChange}
         canonicalUrl={props.canonicalUrl}
         onCanonicalUrlChange={props.onCanonicalUrlChange}
         slug={props.slug}

@@ -6,79 +6,87 @@ import {
   FiPhone,
   FiBarChart2,
   FiUsers,
+  FiFileText,
   FiGlobe,
   FiMessageCircle,
 } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import type { InfoCard as InfoCardBase } from "./arrivingPage.data";
+import type { ArrivingLink, ArrivingTone } from "./arrivingPage.data";
 
-export type InfoCard = Omit<InfoCardBase, "icon"> & { icon: IconType };
-
-const CHANGEMAKERS = routes.changemakers;
-const VOLUNTEER = routes.volunteer;
-const PLATFORMS = routes.platforms;
+/**
+ * The health + housing information cards on `/local/arriving`.
+ *
+ * Every string is an i18n key: the component reads `<keyPrefix>.title`,
+ * `.body` and (when a link is present) `.linkLabel`. Every link now names a
+ * real destination — a public QueerPulse guide, an official Portuguese
+ * service, or an organisation's own site — instead of a section index. Where
+ * a card had no honest destination it simply has no link.
+ */
+export interface InfoCard {
+  /** Full i18n key prefix, `ns:` included. */
+  keyPrefix: string;
+  icon: IconType;
+  tone: ArrivingTone;
+  link?: ArrivingLink;
+}
 
 export const HEALTH: InfoCard[] = [
   {
+    keyPrefix: "marketing:arriving.health.cards.sns",
     icon: FiActivity,
-    iconBg: "rgba(74,140,111,.1)",
-    title: "Registering with SNS",
-    body: "Register with the Serviço Nacional de Saúde (SNS) as soon as you have a NIF. You're entitled to a GP (médico de família). Ask at your local health centre (Centro de Saúde). Arroios, Mouraria, and Príncipe Real all have active centres.",
-    link: {
-      label: "sns.gov.pt",
-      href: "https://www.sns.gov.pt",
-      external: true,
-    },
+    tone: "jade",
+    link: { href: "https://www.sns.gov.pt", isExternal: true },
   },
   {
+    keyPrefix: "marketing:arriving.health.cards.trans",
     icon: FiHeart,
-    iconBg: "rgba(232,119,90,.1)",
-    title: "Trans-affirming care",
-    body: "Portugal's Gender Identity Law is one of Europe's most progressive. The SNS provides trans healthcare including hormones. The Saúde Trans project (run by QueerPulse member Jonas Ferreira) trains GPs. Ask ILGA Portugal for a referral to an affirming GP.",
-    link: { label: "About Jonas's work", href: CHANGEMAKERS },
+    tone: "coral",
+    // The platform's own trans healthcare guide. Public, so a newcomer can
+    // read it before they have an account.
+    link: { href: routes.transHealthcare },
   },
   {
+    keyPrefix: "marketing:arriving.health.cards.mental",
     icon: FiSmile,
-    iconBg: "rgba(122,82,184,.1)",
-    title: "Mental health support",
-    body: "Opus Diversus provides peer support and mental health resources specifically for LGBTQ+ people in Lisbon. Mariana Loução (QueerPulse member) runs a monthly peer support group for queer professionals. ILGA Portugal also has a support line.",
-    link: { label: "Opus Diversus", href: VOLUNTEER },
+    tone: "violet",
+    link: { href: routes.mentalHealth },
   },
   {
+    keyPrefix: "marketing:arriving.health.cards.crisis",
     icon: FiPhone,
-    iconBg: "rgba(74,140,111,.1)",
-    title: "Crisis support",
-    body: "ILGA Portugal runs a support line for LGBTQ+ people facing crisis, discrimination, or violence. They can also help connect you with legal aid if needed. The line is Portuguese-language with limited English support. Bring a friend if needed.",
-    link: { label: "ILGA Portugal", href: PLATFORMS },
+    tone: "jade",
+    link: { href: "https://ilga-portugal.pt", isExternal: true },
   },
 ];
 
 export const HOUSING: InfoCard[] = [
   {
+    keyPrefix: "marketing:arriving.housing.cards.market",
     icon: FiBarChart2,
-    iconBg: "rgba(232,119,90,.1)",
-    title: "The reality of the market",
-    body: "Lisbon rents have increased significantly over the past five years. Budget €800–1100 for a room in central neighbourhoods. Arroios and Mouraria offer better value. Move fast. Good listings go in days. Airbnb has reduced long-term rental stock dramatically.",
+    tone: "coral",
   },
   {
+    keyPrefix: "marketing:arriving.housing.cards.board",
     icon: FiUsers,
-    iconBg: "rgba(74,140,111,.1)",
-    title: "Community housing network",
-    body: "The Queer Housing Justice Network (run by Catarina Vaz) tracks queer-safe sublets and short-term shares within the community. Check the QueerPulse board. Several members post housing regularly. The best leads come through the network.",
-    link: { label: "Queer Housing Network", href: CHANGEMAKERS },
+    tone: "jade",
+    link: { href: routes.housing, isMemberOnly: true },
   },
   {
+    keyPrefix: "marketing:arriving.housing.cards.rights",
+    icon: FiFileText,
+    tone: "neutral",
+    link: { href: routes.tenantRights, isMemberOnly: true },
+  },
+  {
+    keyPrefix: "marketing:arriving.housing.cards.visas",
     icon: FiGlobe,
-    iconBg: "rgba(45,27,61,.08)",
-    title: "Queer immigrant support",
-    body: "If you're new to Portugal and navigating residency alongside housing, the Queer Immigrant Support Network (founded by Fátima Mendes) connects LGBTQ+ newcomers with legal aid, housing leads, and practical help getting settled.",
-    link: { label: "Find support", href: VOLUNTEER },
+    tone: "violet",
+    link: { href: routes.visas },
   },
   {
+    keyPrefix: "marketing:arriving.housing.cards.ask",
     icon: FiMessageCircle,
-    iconBg: "rgba(232,119,90,.1)",
-    title: "Ask on the board",
-    body: '"Looking for a room or short-term sublet, arriving in June" is a completely valid post. The community is genuinely helpful about this. Someone will know someone.',
-    link: { label: "Go to the board", href: "/#board" },
+    tone: "coral",
+    link: { href: routes.forum, isMemberOnly: true },
   },
 ];

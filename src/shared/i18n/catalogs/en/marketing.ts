@@ -63,6 +63,66 @@ export const marketing: Catalog = {
   "about.values.accessNotEarned.title": "Access isn't earned by performing",
   "about.values.accessNotEarned.body":
     "You get in through trust: a vouch, or an invitation from someone already here.",
+  "about.stand.eyebrow": "Where we stand",
+  "about.stand.title": "Queer liberation is <em>indivisible.</em>",
+  "about.stand.p1":
+    "Intersectionality is the whole of queer politics. Race, class, disability, migration status, and gender all shape who gets safety and who gets asked to wait for it. A platform that serves only white, cis, able-bodied, documented, comfortable queer people has misunderstood the word community.",
+  "about.stand.p2":
+    "That belief has to cost us something to be real. It shapes who we invite, who moderates, whose complaints get taken seriously, and which struggles we are willing to name out loud when naming them is expensive.",
+  "about.stand.intersectionalityLink":
+    "Read how members describe living at those intersections",
+  "about.stand.trans.title": "On trans lives",
+  "about.stand.trans.p1":
+    "Trans women are women. Trans men are men. Nonbinary people are nonbinary, and intersex people exist. We hold none of that tentatively, and none of it is open for debate on this platform.",
+  "about.stand.trans.p2":
+    "There is a project that claims to speak for LGB people while lobbying against the T. It arrives dressed as a defence of women, or of children, or of same-sex attraction, and it works by asking everyone else to treat trans membership of this community as an open question. We treat it as settled. A group organising to split the T away from the rest of us is organising against our members, and we will name it as that.",
+  "about.stand.trans.p3":
+    "The move is a familiar one. Pinkwashing borrows our rights to make a state look civilised; this borrows women's safety to make exclusion look like protection. Both spend somebody else's dignity to buy respectability.",
+  "about.stand.trans.commitment.notADebate.title":
+    "Trans membership is not a debate topic.",
+  "about.stand.trans.commitment.notADebate.body":
+    "We host no \u201cboth sides\u201d discussion about whether members deserve rights, and we will not run one for the sake of balance.",
+  "about.stand.trans.commitment.exclusion.title":
+    "Trans-exclusionary advocacy is a Code of Conduct matter.",
+  "about.stand.trans.commitment.exclusion.body":
+    "Criticising a state is political speech. Campaigning to remove a class of member is something else, and calling it gender-critical leaves it exactly what it was.",
+  "about.stand.trans.commitment.exclusion.link": "Read the guidelines",
+  "about.stand.trans.commitment.selfId.title":
+    "Self-identification is the standard here.",
+  "about.stand.trans.commitment.selfId.body":
+    "No member is asked to prove their gender, to a moderator or to anyone else, at any point.",
+  "about.stand.trans.commitment.selfId.link": "Read the trans healthcare guide",
+  "about.stand.position.sexWork.title": "Sex work is work.",
+  "about.stand.position.sexWork.body":
+    "Sex workers are members here on the same terms as everyone else. Decriminalisation is the position that keeps people alive, and the politics that wants sex workers out of queer spaces runs on the same engine as the politics that wants trans people out of them.",
+  "about.stand.position.migration.title": "Migration is a queer issue.",
+  "about.stand.position.migration.body":
+    "Queer people move to survive. Portugal's asylum and residency system is slow in ways that ruin lives, and racism toward Brazilian, PALOP, and South Asian members shows up in queer spaces here as readily as anywhere else. A far right that has grown fast in this country wants all of it worse.",
+  "about.stand.position.migration.link": "Read the intersectionality guide",
+  "about.stand.position.hiv.title": "U = U, and serophobia is discrimination.",
+  "about.stand.position.hiv.body":
+    "Undetectable means untransmittable. A member's HIV status belongs to them, disclosure is never owed to anyone, and treating serostatus as grounds to exclude someone falls under the same hard line as any other discrimination.",
+  "about.stand.position.hiv.link": "Sexual health resources",
+  "about.stand.principle.title": "When we speak, and when we don't",
+  "about.stand.principle.body":
+    "We speak where our community is directly implicated, and where queer identity is being used as cover for harm. That is the whole test. It is why these positions are on this page and most of the news is not, and it is the standard to hold us to when you think we have gone quiet about something we should not have.",
+  "about.stand.palestine.title": "On Palestine",
+  "about.stand.palestine.p1":
+    "Israel is committing a genocide against Palestinians in Gaza. We say it plainly, because the pressure to soften it is the point. QueerPulse stands with Palestinians, and with everyone working toward an end to the occupation and the siege.",
+  "about.stand.palestine.p2":
+    "We also refuse the use of our lives as cover for it. Pinkwashing holds LGBTQ+ rights up as proof that a state is civilised while that same state bombs, starves, and displaces. Our safety has never been an argument for anyone else's destruction, and we will not lend it out as one.",
+  "about.stand.commitment.speech.title": "Palestine advocacy is welcome here.",
+  "about.stand.commitment.speech.body":
+    "Criticising a state, its military, or its ideology is political speech, and we moderate it as such. Antisemitism and anti-Palestinian racism are both Code of Conduct breaches, enforced the same way.",
+  "about.stand.commitment.speech.link": "Read the guidelines",
+  "about.stand.commitment.money.title": "We take no complicit money.",
+  "about.stand.commitment.money.body":
+    "No sponsorship, funding, or partnership from companies or institutions materially complicit in the occupation.",
+  "about.stand.commitment.mutualAid.title":
+    "The mutual-aid pot can fund solidarity work.",
+  "about.stand.commitment.mutualAid.body":
+    "Palestinian solidarity and relief work is eligible, decided in the open like every other allocation.",
+  "about.stand.commitment.mutualAid.link": "See how allocations are made",
   "about.who.eyebrow": "Who's behind this",
   "about.who.title": "Built by <em>community, for community.</em>",
   "about.who.p1":
@@ -517,6 +577,24 @@ export const marketing: Catalog = {
   "guidelines.clause07.reportLead": "Report it. You'll be supported.",
   "guidelines.clause07.reportBody":
     "If someone crosses one of these lines, report them or the post from its menu. Moderators read every report, and you're never left to handle it alone. Confirmed breaches lead to a warning, suspension, or removal, and we cooperate with the authorities where someone's safety is at risk. You are never overreacting by reporting.",
+  "guidelines.clause08.titlePre": "Political speech ",
+  "guidelines.clause08.titleEm": "stays political",
+  "guidelines.clause08.p1":
+    "Criticising a state, its government, its military, or its ideology is political speech, and we moderate it as political speech. That includes advocacy for Palestinian liberation, which is welcome here and will not be removed for making people uncomfortable.",
+  "guidelines.clause08.p2":
+    "It becomes a Code of Conduct matter when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines above. The same goes for advocacy aimed at a class of member rather than at a state: criticism of a government is political speech, and campaigning to remove trans members is not, however it is labelled.",
+  "guidelines.clause08.li4":
+    "Campaigning for the exclusion of trans members from this community, whatever vocabulary it borrows",
+  "guidelines.clause08.hardLinesHead": "Still a Code of Conduct matter",
+  "guidelines.clause08.li1":
+    "Antisemitism, including conspiracy framing and holding Jewish members answerable for a state's actions",
+  "guidelines.clause08.li2":
+    "Anti-Palestinian racism, including treating Palestinian or Arab members as suspect by default",
+  "guidelines.clause08.li3":
+    "Harassment of any member over their nationality, ethnicity, or religion",
+  "guidelines.clause08.p3Lead": "Both directions are enforced the same way.",
+  "guidelines.clause08.p3Rest":
+    "Moderators apply one test: is this about a state and its conduct, or about a person and who they are. QueerPulse's own position on Palestine is set out on the About page, and it does not change how a report is handled.",
   "guidelines.final.p2": "Thanks for building this with us.",
   "guidelines.modalDone": "I've read it, done",
   "guidelines.modalScrollHint": "Scroll to the end to continue.",
@@ -604,9 +682,9 @@ export const marketing: Catalog = {
   "help.qa.perks.q": "What do I get as a Sustainer?",
   "help.qa.perks.a":
     "Early access to events, a supporter badge, and the knowledge that your membership keeps the platform ad-free.",
-  "help.qa.emailNotifications.q": "How do I control email notifications?",
+  "help.qa.emailNotifications.q": "How do I control notifications?",
   "help.qa.emailNotifications.a":
-    "In <settingsLink>Settings</settingsLink> → Notifications, toggle each category independently.",
+    "In <settingsLink>Settings</settingsLink> → Notifications, toggle each category independently. QueerPulse notifies you in the app and, if you allow it, by push. It sends no email.",
   "help.qa.browserSupport.q": "Which browsers does QueerPulse support?",
   "help.qa.browserSupport.a":
     "Current versions of Chrome, Firefox, Safari, and Edge. Older browsers may have display issues.",
@@ -667,13 +745,13 @@ export const marketing: Catalog = {
   "partners.outro.sub": "Tell us. We're always looking for aligned partners.",
 
   // ── Press Kit ──────────────────────────────────────────────────────────
-  "pressKit.meta.title": "QueerPulse press kit: logos, facts, photography",
+  "pressKit.meta.title": "QueerPulse press kit: logos, facts, boilerplate",
   "pressKit.meta.description":
-    "Everything a journalist needs to write about QueerPulse, pre-cleared boilerplate, marks, photography, key facts, and a direct press contact.",
+    "Everything a journalist needs to write about QueerPulse, pre-cleared boilerplate, marks, key facts, and a direct press contact.",
   "pressKit.hero.eyebrow": "Press",
   "pressKit.hero.title": "Everything you need to <em>write about us.</em>",
   "pressKit.hero.dek":
-    "Boilerplate, marks, photography, and facts, <b>pre-cleared</b> for direct use, no sign-off required.",
+    "Boilerplate, marks, colour, and facts, <b>pre-cleared</b> for direct use, no sign-off required.",
   "pressKit.hero.downloadKitCta": "Download the full kit",
   "pressKit.hero.askPersonCta": "Ask a real person",
   "pressKit.contact.deskLabel": "<b>Press desk:</b>",
@@ -692,7 +770,7 @@ export const marketing: Catalog = {
   "pressKit.downloadModal.eyebrow": "Full kit · ZIP",
   "pressKit.downloadModal.title": "Download the <em>complete kit.</em>",
   "pressKit.downloadModal.lead":
-    "Everything on this page in one file, <b>38 MB</b>, ready for your CMS.",
+    "Every brand asset on this page in one archive, <b>with a README and the licence</b>, ready for your CMS.",
   "pressKit.downloadModal.buttonLabel": "Download · ZIP",
   "pressKit.subpageIndex.title": "Related",
   "pressKit.subpageIndex.archive.label": "Press archive",
@@ -705,51 +783,25 @@ export const marketing: Catalog = {
     "<b>{filename}</b> should be in your downloads folder now.",
   "pressKit.modal.closeCta": "Close",
   "pressKit.modal.cancelCta": "Cancel",
-  "pressKit.readme.heading": "QUEERPULSE PRESS KIT",
-  "pressKit.readme.updated":
-    "Updated regularly. See queerpulse.app/press for the latest.",
-  "pressKit.readme.licenceHeading": "LICENCE",
-  "pressKit.readme.licenceBody":
-    "All assets are released under CC BY 4.0 for editorial use. Contact hello@queerpulse.com for commercial licensing.",
-  "pressKit.readme.contentsHeading": "CONTENTS",
-  "pressKit.readme.contents.boilerplate": "Boilerplate (3 lengths)",
-  "pressKit.readme.contents.marks": "Marks (SVG)",
-  "pressKit.readme.contents.colour": "Colour system",
-  "pressKit.readme.contents.photography": "Photography (6 images)",
-  "pressKit.readme.contents.spokespeople": "Spokespeople",
-  "pressKit.readme.contents.factSheet": "Fact sheet",
-  "pressKit.readme.contents.transparencyReport": "2025 transparency report",
-  "pressKit.readme.pressDeskHeading": "PRESS DESK",
-  "pressKit.readme.hours": "9am–6pm WET",
-  "pressKit.readme.responseTime": "We respond within 48 hours.",
-  "pressKit.readme.prototypeNote":
-    "This is a prototype download. The production file will match the web page exactly.",
-  "pressKit.readme.boilerHeading": "QUEERPULSE: APPROVED BOILERPLATE",
-  "pressKit.readme.boilerCleared":
-    "Both lengths are cleared for direct quotation without further sign-off.",
   "pressKit.preview.readme.title": "README + licence",
   "pressKit.preview.readme.desc": "Usage terms and file index",
-  "pressKit.preview.marks.title": "Marks · SVG",
-  "pressKit.preview.marks.desc": "3 variations, vector",
-  "pressKit.preview.marksPng.title": "Marks · PNG @ 2x",
-  "pressKit.preview.marksPng.desc": "For docs and slides",
-  "pressKit.preview.photography.title": "Photography",
-  "pressKit.preview.photography.desc": "6 model-released images",
-  "pressKit.preview.boilerplate.title": "Boilerplate",
-  "pressKit.preview.boilerplate.desc": "Short and medium lengths",
-  "pressKit.preview.factSheet.title": "Fact sheet",
-  "pressKit.preview.factSheet.desc": "One-page printable PDF",
+  "pressKit.preview.marks.title": "Mark · SVG",
+  "pressKit.preview.marks.desc": "Full colour and monochrome, vector",
+  "pressKit.preview.marksPng.title": "Wordmark · PNG",
+  "pressKit.preview.marksPng.desc": "Three colourways, 2048 px wide",
+  "pressKit.preview.appIcon.title": "App icon · PNG",
+  "pressKit.preview.appIcon.desc": "512 px, as it ships on devices",
+  "pressKit.preview.brandReference.title": "Colour and type reference",
+  "pressKit.preview.brandReference.desc":
+    "Printable PDF, straight from the design tokens",
+  "pressKit.preview.colour.title": "Brand colours",
+  "pressKit.preview.colour.desc": "Every hex and RGB value as plain text",
   "pressKit.boiler.short.wc": "25 words · 196 char",
   "pressKit.boiler.short.text":
     "QueerPulse is a small, invite-based queer community platform rooted in Lisbon, connecting professionals, creatives, activists and community members for work, community, culture and mutual support.",
   "pressKit.boiler.med.wc": "60 words · 424 char",
   "pressKit.boiler.med.text":
     "QueerPulse is a small, invite-based queer community platform rooted in Lisbon, founded in 2024 by professionals, organisers and artists building an alternative to attention-driven networks: no ads, no algorithm deciding what members see. Members are vouched in by someone already there. Not backed by venture capital, the platform runs on memberships, donations and grants, and publishes a member magazine for its community.",
-  "pressKit.downloads.boilerplate.title": "Boilerplate",
-  "pressKit.placeholderFile.line1":
-    "This is a placeholder file generated for the prototype.",
-  "pressKit.placeholderFile.line2":
-    "The production kit will include the real production-ready asset.",
 
   // ── Communities Explainer ──────────────────────────────────────────────
   "communitiesAbout.meta.title": "How communities work on QueerPulse",
@@ -1084,12 +1136,12 @@ export const marketing: Catalog = {
     "<b>Inverse · plum</b> · for dark backgrounds",
   "pressKit.mark.logo.coral.meta":
     "<b>Coral · solidarity</b> · use sparingly · pride contexts",
-  "pressKit.mark.downloadLinkLabel": "SVG · PNG",
-  "pressKit.mark.modal.eyebrow": "Brand mark · SVG",
+  "pressKit.mark.downloadLinkLabel": "PNG",
+  "pressKit.mark.modal.eyebrow": "Wordmark · PNG",
   "pressKit.mark.modal.title": "The <em>mark</em>, ready to use.",
   "pressKit.mark.modal.lead":
-    "Preview the {variant} variant below. Download generates a real, clean <b>.svg</b> file, vector, recolour-safe, with the pulse dot intact.",
-  "pressKit.mark.modal.buttonLabel": "Download · SVG",
+    "What you see below is the file itself: <b>{filename}</b>, 2048 px wide with a transparent background, set in the wordmark's real typeface.",
+  "pressKit.mark.modal.buttonLabel": "Download · PNG",
   "pressKit.mark.usageNote":
     "<b>Spacing:</b> always leave one full <em>P</em>-height of clear space around the mark. <b>Minimum size:</b> 88px wide on screen, 18 mm in print. <b>Don't:</b> stretch, recolour, set on busy photos, or pair with rainbow gradients we didn't make.",
   "pressKit.colour.section.title": "Colour, <em>full system</em>",
@@ -1099,15 +1151,6 @@ export const marketing: Catalog = {
   "pressKit.colour.coral.meta": "Accent · CTAs, italic emphasis, the pulse dot",
   "pressKit.colour.cream.meta": "Page background · never pure white",
   "pressKit.colour.jade.meta": "Verified · live · success",
-  "pressKit.photography.section.title": "Cleared <em>photography</em>",
-  "pressKit.photography.section.lead":
-    "Six images, model-released and pre-cleared for editorial use. Credit: <em>photographs by André Bento for QueerPulse</em>. Resolution: 3000 × 2000 px JPG.",
-  "pressKit.photography.image1": "01 · Founding members, early days",
-  "pressKit.photography.image2": "02 · Open clinic night, in progress",
-  "pressKit.photography.image3": "03 · The print magazine, fanned",
-  "pressKit.photography.image4": "04 · Trans Hub office · Mouraria",
-  "pressKit.photography.image5": "05 · A gathering · Atelier Pulso",
-  "pressKit.photography.image6": "06 · Map detail · safe spaces",
   "pressKit.team.section.title": "Named <em>spokespeople</em>",
   "pressKit.team.section.lead":
     "Three founding members are available for press comment. Quote them on their stated topics; don't paraphrase. <em>Other members are not available without explicit consent</em>. Please don't approach members directly through the platform.",
@@ -1141,27 +1184,26 @@ export const marketing: Catalog = {
     "Once QueerPulse is written about, we'll link the pieces here. For interviews or press enquiries, email hello@queerpulse.com.",
   "pressKit.downloads.section.title": "<em>Downloads</em>",
   "pressKit.downloads.section.lead":
-    "Direct file links. The full kit is a 38 MB ZIP with everything below; individual files are smaller.",
+    "Direct file links, served straight from the site. The complete kit bundles every file below with a README and the licence.",
   "pressKit.downloads.completeKit.title": "Complete press kit",
   "pressKit.downloads.completeKit.desc":
-    "Marks, photography, boilerplate, fact sheet · 38 MB",
-  "pressKit.downloads.marksSvg.title": "Marks · SVG bundle",
-  "pressKit.downloads.marksSvg.desc":
-    "3 variations · cleared for editorial use · 18 KB",
-  "pressKit.downloads.marksPng.title": "Marks · PNG @ 2x",
-  "pressKit.downloads.marksPng.desc": "For Word docs, slides, web · 8 MB",
-  "pressKit.downloads.photography.title": "Photography · 6 images",
-  "pressKit.downloads.photography.desc":
-    "3000 × 2000 px · model-released · 24 MB",
-  "pressKit.downloads.factSheet.title": "Fact sheet",
-  "pressKit.downloads.factSheet.desc":
-    "One-page printable · EN & PT versions · 380 KB",
-  "pressKit.downloads.transparency.title": "2025 transparency report",
-  "pressKit.downloads.transparency.desc": "84 pages · 4.2 MB",
-  "pressKit.downloads.boilerplate.desc": "Short and medium lengths",
+    "Mark, wordmark, app icon, colour and type reference, README",
+  "pressKit.downloads.markSvg.title": "Mark · SVG",
+  "pressKit.downloads.markSvg.desc": "Vector, full colour, recolour-safe",
+  "pressKit.downloads.markMonochrome.title": "Monochrome mark · SVG",
+  "pressKit.downloads.markMonochrome.desc":
+    "Vector silhouette, for one-colour printing",
+  "pressKit.downloads.wordmarkPng.title": "Wordmark · PNG",
+  "pressKit.downloads.wordmarkPng.desc":
+    "2048 px wide, transparent, for docs and slides",
+  "pressKit.downloads.appIcon.title": "App icon · PNG",
+  "pressKit.downloads.appIcon.desc": "512 px, as it ships on devices",
+  "pressKit.downloads.brandReference.title": "Colour and type reference",
+  "pressKit.downloads.brandReference.desc":
+    "Printable PDF, every value read from the design tokens",
   "pressKit.downloads.modal.eyebrow": "Download · {format}",
   "pressKit.downloads.modal.lead":
-    "{desc}. Download now generates a real <b>{filename}</b> in your browser, a working stand-in for the production asset.",
+    "{desc}. The download is the real <b>{filename}</b>, served straight from the site.",
   "pressKit.downloads.modal.buttonLabel": "Download · {format}",
 
   // ── List Your Business — wizard ───────────────────────────────────────
@@ -1462,7 +1504,7 @@ export const marketing: Catalog = {
   "listBusiness.step4.contactEmailPlaceholder":
     "So we can reach you about this listing",
   "listBusiness.step4.notifyNote":
-    "We'll email you when your listing goes live, and if the team has a question about it.",
+    "A QueerPulse notification tells you when your listing goes live, and the team's questions arrive as a QueerPulse message.",
   "listBusiness.step4.consent":
     "You're in control of what's public. <b>Contact details you leave blank stay off the listing.</b> Want your name kept private? Pick “role only” or “anonymous” above. That's completely fine.",
   // Relationship options
@@ -1535,7 +1577,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.consentGuide.sub":
     "I've read the community guidelines and how my data is used.",
   "listBusiness.step5.submitNote":
-    "<b>A human reviews every listing.</b> This keeps the directory community-verified. Nothing auto-publishes. We'll read it within a few days and email you when it's live (or if we have a question). You can edit or withdraw it any time before then.",
+    "<b>A human reviews every listing.</b> This keeps the directory community-verified. Nothing auto-publishes. We'll read it within a few days, and QueerPulse tells you when it's live (or the team messages you if we have a question). You can edit or withdraw it any time before then.",
   // Success panel
   "listBusiness.success.stage.review": "In review",
   "listBusiness.success.stage.question": "Quick question",
@@ -1547,9 +1589,9 @@ export const marketing: Catalog = {
   "listBusiness.success.title.live.text": "You're",
   "listBusiness.success.title.live.em": "on the map.",
   "listBusiness.success.note.review":
-    "Thank you for adding to the directory. <b>A real person on the community team reads every listing</b> before it goes live. That's the promise behind our community-verified badge. We'll review within <b>a few days</b> and email you the moment it's live.",
+    "Thank you for adding to the directory. <b>A real person on the community team reads every listing</b> before it goes live. That's the promise behind our community-verified badge. We'll review within <b>a few days</b>, and a QueerPulse notification reaches you the moment it's live.",
   "listBusiness.success.note.question":
-    "<b>The team has a small question</b> before it goes live. Check your email. Nothing's wrong; a quick reply is all it takes and you're back on track.",
+    "<b>The team has a small question</b> before it goes live. It's waiting in your QueerPulse messages. Nothing's wrong; a quick reply is all it takes and you're back on track.",
   "listBusiness.success.note.live":
     "<b>It's live in the directory.</b> Your place is now searchable by the community. Thank you for making the map a little fuller.",
   "listBusiness.success.fallbackName": "Your place",
@@ -1993,6 +2035,7 @@ export const marketing: Catalog = {
   "changelog.badge.improvement": "Improvement",
   "changelog.badge.infrastructure": "Infrastructure",
   "changelog.badge.fix": "Fix",
+  "changelog.tag.about": "Read where we stand",
   "changelog.tag.aboutCommunities": "See how communities work",
   "changelog.tag.work": "Open your Work hub",
   "changelog.tag.settings": "Notification settings",
@@ -2084,10 +2127,185 @@ export const marketing: Catalog = {
     "Your active sessions can now reach a person",
   "changelog.entries.sessions-page-links-reach-a-person.body":
     "\u201cSomething looks wrong? Tell us what happened\u201d on your active sessions opened a page announcing that your account was locked, which was alarming and untrue. Both links on that page now land where they say they will: \u201cwhat to do next\u201d opens the Account section of Help, which walks through an unfamiliar device, and \u201ctell us what happened\u201d opens the contact form with its topic already set to account access, so your message reaches the team. The Back link at the top of the page returns to Settings \u2192 Account, where you opened it from.",
+  "changelog.entries.skills-and-learning-workshops-retired.title":
+    "Skills & learning has closed",
+  "changelog.entries.skills-and-learning-workshops-retired.body":
+    "Skills & learning listed member-run workshops with seats, waitlists and a page for each host, and it never got far enough to be worth your time: a handful of sample courses, no way to actually pay, and no one on the other end when you reserved a spot. Rather than leave it sitting in the Work menu looking open for business, we have taken the whole board down. The two places where teaching and learning already work are still there. The Skills Exchange swaps time and talent with no money involved, and hosting a gathering covers a workshop or a talk with everything a real event needs, including a guest list and a date.",
+  "changelog.entries.mod-tools-sections-fade-in-as-you-switch.title":
+    "Mod tools sections arrive instead of snapping into place",
+  "changelog.entries.mod-tools-sections-fade-in-as-you-switch.body":
+    "Moving between Overview, Requests, Reports, Members, Invites and the rest of the moderation console swapped the whole panel in one frame, which made every switch feel like the page had jumped rather than turned. Each section now fades and rises into place over a fraction of a second, so the eye can follow the highlight on the left across to the surface it just opened. If you have asked your device to reduce motion, the panel still changes instantly with no animation at all.",
+  "changelog.entries.member-rows-in-mod-tools-hold-their-actions-in-one-menu.title":
+    "Managing a community's members reads as a list of people again",
+  "changelog.entries.member-rows-in-mod-tools-hold-their-actions-in-one-menu.body":
+    "The Members section of mod tools put every role control on the row itself, so each person arrived behind three buttons competing for attention and the name you were actually looking for got squeezed into whatever space was left. Making someone a mod, handing over co-ownership and removing them from the community now live behind a single ⋯ button at the end of the row, opening as a short menu when you want it. The row shows the person, their avatar and their role, and the actions you are allowed to take are still exactly the ones offered: nothing appears in the menu that your own role would not let you do.",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.title":
     "Studio and Cinema speak Portuguese in more places",
   "changelog.entries.studio-and-cinema-speak-portuguese-in-more-places.body":
     "Switching the site to Portuguese left parts of Studio and Cinema still reading in English. The buttons, headings, tab labels, empty states and image descriptions across the music and film sections now follow the language you picked, along with the founder setup screen, the glossary, the invoice and contract tools, and several magazine and partner pages. What has deliberately stayed in English is the work itself: track and album titles, lyrics, artist biographies, film synopses, credits and curator notes. Those are written by the people who made them, and translating someone\u2019s own words without asking would be the wrong call, so they read exactly as their author wrote them in either language.",
+  "changelog.tag.magazineSearch": "Search the magazine",
+  "changelog.tag.resources": "Browse the guides",
+  "changelog.tag.readingGroups": "Find a reading group",
+
+  "changelog.tag.arriving": "Just arrived in Lisbon?",
+  "changelog.tag.housingGroups": "See housing groups",
+  "changelog.entries.post-a-room-in-a-housing-group.title":
+    "Share a room inside a housing group",
+  "changelog.entries.post-a-room-in-a-housing-group.body":
+    "You can post a room straight into a vetted housing group, with the rent and the access details the group asks for. A moderator reads it before it goes on the group page, and your own rooms now sit in one place showing exactly where each one stands, including anything a moderator wrote back to you.",
+  "changelog.entries.the-housing-board-is-open.title":
+    "The housing board is open",
+  "changelog.entries.the-housing-board-is-open.body":
+    "Rooms and homes listed by members now actually reach the board. Every listing goes to a moderator first, and you see the decision and the reason on your own listing rather than waiting in the dark. Listings carry photos, a description, an available-from date and what the place is like, and saved-search alerts fire again.",
+  "changelog.entries.gatherings-say-where-and-what-they-cost.title":
+    "Gatherings say where they are and what they cost",
+  "changelog.entries.gatherings-say-where-and-what-they-cost.body":
+    "The address, arrival directions, neighbourhood and access details a host fills in are kept and shown, instead of being thrown away at the last step. The exact address is shared with the people who are going. A gathering can say it is free, or name a sliding scale, and you can filter what is on by date, neighbourhood, kind and cost.",
+  "changelog.entries.hosts-run-their-own-door.title":
+    "Hosts run their own door",
+  "changelog.entries.hosts-run-their-own-door.body":
+    "You can message everyone coming, check people in at the door, see the access needs your guests chose to share, and bar someone from one gathering without cancelling it. Someone you have blocked can no longer turn up. And if you are going somewhere new, you can tell one person you trust where you will be.",
+  "changelog.entries.the-safe-space-badge-has-a-mechanism.title":
+    "The safe-space badge means what the page says",
+  "changelog.entries.the-safe-space-badge-has-a-mechanism.body":
+    "Nominations are acknowledged on a clock, three members with no stake in a place have to visit it, and a decision carries a written reason. Any member can raise a concern about a badged space: three separate flags pause the badge straight away and open a review. Your name never reaches the venue.",
+  "changelog.entries.the-directory-answers-is-it-open-and-can-i-get-in.title":
+    "Is it open, and can I get in?",
+  "changelog.entries.the-directory-answers-is-it-open-and-can-i-get-in.body":
+    "The directory now shows whether a place is open right now, and you can filter to only what is open. You can also filter by the access you need, step-free entry, an accessible toilet, a gender-neutral toilet and more, without opening every listing one at a time. And if you turn it on, the list can sort by what is nearest with a walking time; your location stays on your device.",
+  "changelog.entries.a-venue-is-asked-before-it-hosts-you.title":
+    "A venue is asked before it hosts you",
+  "changelog.entries.a-venue-is-asked-before-it-hosts-you.body":
+    "Anyone could name a business as the venue for their gathering and the owner was never told. Now the owner is asked, can confirm or remove it, and an unconfirmed gathering stays off the venue's public page.",
+  "changelog.entries.arriving-points-at-real-things.title":
+    "Arriving in Lisbon points at real things",
+  "changelog.entries.arriving-points-at-real-things.body":
+    "The page for people who just moved here used to advertise one invented gathering on a date that had already passed. It now shows real gatherings coming up, links to real places and communities, and gives you a first-fortnight checklist you can tick off. It reads in Portuguese too.",
+  "changelog.entries.what-you-send-in-now-gets-an-answer.title":
+    "What you send in now gets an answer",
+  "changelog.entries.what-you-send-in-now-gets-an-answer.body":
+    "Several things you could submit reached us and then stopped. A proposed reading group now becomes a real community with you as its owner. Rooms posted into a housing group, landlord suggestions and introduction requests all get a decision, with the reason, and you are told either way.",
+  "changelog.entries.the-magazine-has-pictures.title":
+    "The magazine has pictures",
+  "changelog.entries.the-magazine-has-pictures.body":
+    "It is a magazine, and photography and illustration are half of it, but there was no way for an editor to get a commissioned image onto a page. Every card and every article header fell back to a coloured placeholder. Editors can now upload lead art for a piece and place real photographs inside the body of a story, and that art runs on the article, on the front page and on every card pointing at it.",
+  "changelog.entries.an-older-piece-tells-you-where-it-stands.title":
+    "An older piece tells you where it stands",
+  "changelog.entries.an-older-piece-tells-you-where-it-stands.body":
+    "We publish about legal rights, healthcare access and organisations, and all of that changes. Until now the only options were leaving a piece looking current or taking it down, which also removed it from the archive. A piece can now be marked as under review, archived, or replaced by a newer one, and it stays readable with a dated note at the top saying how old it is, when we last looked at it and what we would say about it today. Articles can also be published in Portuguese as their own piece, with the translator credited and a language switcher on the page.",
+  "changelog.entries.corrections-and-content-notes-reach-the-reader.title":
+    "Corrections and content notes now reach you",
+  "changelog.entries.corrections-and-content-notes-reach-the-reader.body":
+    "The magazine promises that a correction is published as a dated note at the foot of the piece and that we never edit silently. Until now editors filed those corrections and no reader ever saw one. They appear on the article from today, dated, in the order they were made. Content notes have the same story: a piece cannot be published without one, and they were being collected and then withheld from the people they are for. They now sit above the body where you can read them first and dismiss them if you would rather not.",
+  "changelog.entries.the-magazine-front-page-is-editors-work.title":
+    "The magazine front page is the editors' work again",
+  "changelog.entries.the-magazine-front-page-is-editors-work.body":
+    "The front page used to be the nine newest pieces in the order they happened to publish. It now opens on the story the editors led with and follows the current issue's own running order, grouped into its sections, with everything else below. The masthead names the issue you are reading and the date it came out.",
+  "changelog.entries.search-the-whole-magazine-archive.title":
+    "Search everything the magazine has published",
+  "changelog.entries.search-the-whole-magazine-archive.body":
+    "There was no way to search inside the magazine, so anything below the front page's first screen was effectively gone. You can now search the full archive by headline, standfirst, body and tag, ranked by how well each piece matches. Every article's tags are links too, so you can follow one to see what else we have run on the subject.",
+  "changelog.entries.a-byline-is-a-person-now.title":
+    "A magazine byline is a real person",
+  "changelog.entries.a-byline-is-a-person-now.body":
+    "A byline used to be a name and nothing else: no photo, no biography, no way to edit it without a database, and no link back to the member who wrote the piece. Writers now have an author profile they can edit, bylines link to member profiles where the writer is one of us, and published pieces are credited on the writer's own profile.",
+  "changelog.entries.your-story-submission-gets-an-answer.title":
+    "Your story submission gets a real answer",
+  "changelog.entries.your-story-submission-gets-an-answer.body":
+    "Writing for the magazine meant filling in a full piece, uploading a cover, and then watching the tracker say “submitted” forever, because nothing on the other side could accept or decline it. Editors can now accept, decline or commission a submission and write you a note back. The outcome reaches you on your tracker and in your notifications, and a commissioned piece goes straight onto the desk. Your deck, your body text and your cover image are all kept now instead of being flattened into one field.",
+  "changelog.entries.every-guide-says-when-it-was-last-checked.title":
+    "Every guide says when it was last checked",
+  "changelog.entries.every-guide-says-when-it-was-last-checked.body":
+    "Our guides cover healthcare pathways, harm reduction, sexual health, crisis lines and legal aid, and none of them told you whether anyone had looked at them this year. Every guide now carries a review date, and the team can see which ones are due. Editors can also update guide text and the glossary directly instead of waiting for a release. There is a new index at the guides page listing all of them, including around seventeen that previously had no link anywhere and could only be reached by typing the address.",
+  "changelog.entries.the-reading-group-directory-is-real.title":
+    "The reading group directory is real",
+  "changelog.entries.the-reading-group-directory-is-real.body":
+    "Reading groups lived only in the browser: the directory emptied on refresh, and asking to join was switched off. An approved proposal now becomes a real group you can find, open and ask to join, with the person who proposed it as its host.",
+  "changelog.entries.in-this-issue-replaces-the-members-digest.title":
+    "“In this issue” replaces the members' digest",
+  "changelog.entries.in-this-issue-replaces-the-members-digest.body":
+    "The desk had been curating a digest that was set up to be emailed. QueerPulse sends no email and never will, so that whole path is gone. The curation stays and now has somewhere to land: every issue page carries an “In this issue” panel in the order the editors chose, and one notification tells you when an issue ships.",
+  "changelog.entries.the-press-kit-carries-real-brand-assets.title":
+    "The press kit carries real brand assets",
+  "changelog.entries.the-press-kit-carries-real-brand-assets.body":
+    "Every download in the press kit was a placeholder built in your browser, so a journalist asking for the logo got a file that said so. The kit now serves real files: the mark in vector and high resolution, a monochrome version, the app icon, and a printable colour and typography reference generated from the platform's own design tokens.",
+  "changelog.entries.cinema-and-culture-say-what-they-are.title":
+    "Cinema and Culture stopped advertising what does not exist",
+  "changelog.entries.cinema-and-culture-say-what-they-are.body":
+    "Cinema was publicly offering monthly memberships and quoting a ledger of money paid to filmmakers, with no way to pay and no catalogue behind it. Culture sat in the menu as four empty sections with the contribute buttons switched off. Both now say plainly that they are not open yet. The magazine also stopped telling logged-out visitors it was coming soon when it has been publishing for a while: it asks you to sign in and takes you back to the piece you wanted.",
+  "changelog.entries.an-issue-stays-under-wraps-until-it-ships.title":
+    "An issue stays under wraps until it ships",
+  "changelog.entries.an-issue-stays-under-wraps-until-it-ships.body":
+    "The number, title, theme and cover of an issue that had not been published yet were readable by anyone with an account, and the issue showed up in the archive. Unpublished issues are now held back everywhere a reader can look, and the desk keeps its full view.",
+
+  "changelog.entries.the-directory-stopped-going-blank.title":
+    "The local directory stopped going blank",
+  "changelog.entries.the-directory-stopped-going-blank.body":
+    "Depending on which page you arrived from, the directory and the list-your-business form could load to an empty screen instead of the places. Two files each needed the other before either had finished loading, so whichever went first found the opening hours half-built and stopped. The category names now live on their own, so nothing waits on anything.",
+  "changelog.entries.notification-previews-stay-hidden-on-iphone.title":
+    "Hidden notification previews now work on iPhone",
+  "changelog.entries.notification-previews-stay-hidden-on-iphone.body":
+    "The setting was honoured only by browsers that run our code in the background, which iPhone never does, so a lock screen kept naming who wrote to you while the toggle read “on”. Your choice now travels with your account, and the notification leaves our side already stripped: it says something arrived without saying who from or what it said. It is on by default, on every device you are signed in on.",
+  "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.title":
+    "Leaving no longer deletes other people’s gatherings",
+  "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.body":
+    "Erasing an account used to take every gathering that person had ever hosted with it, including future ones, along with everyone’s RSVPs. Now a future gathering passes to a co-host, or is cancelled with a notification to everyone who said they were coming. Listings, jobs and volunteering close rather than vanish, and reviews stay readable without the author’s name.",
+  "changelog.entries.a-new-device-signing-in-tells-you.title":
+    "You hear about it when a new device signs in",
+  "changelog.entries.a-new-device-signing-in-tells-you.body":
+    "If your account is opened on a device it has not seen before, you now get a notification saying which kind of device and when. Your active sessions list names each one, like “Chrome on macOS”, and marks the one you are reading on, so you can tell your own laptop from someone else’s.",
+  "changelog.entries.nothing-promises-you-an-email-any-more.title":
+    "Nothing promises you an email any more",
+  "changelog.entries.nothing-promises-you-an-email-any-more.body":
+    "QueerPulse sends no email, so every screen that said it would was asking you to wait for something that was never coming. The gathering waitlist, directory listings, Culture submissions, grant applications and the sober-host checklist now name where the answer actually arrives, in your QueerPulse notifications and messages.",
+  "changelog.entries.the-status-page-works-without-an-account.title":
+    "The status page works without an account",
+  "changelog.entries.the-status-page-works-without-an-account.body":
+    "If you cannot sign in, the hardest question is whether the problem is ours or yours. The status page now shows real service health and any incidents we have written up, and it works with no account at all, so you can tell an outage apart from something wrong with your own sign-in.",
+  "changelog.entries.data-requests-get-a-real-answer.title":
+    "Data requests get a real answer",
+  "changelog.entries.data-requests-get-a-real-answer.body":
+    "A request about your data used to be recorded and then sit where nobody could see the clock running on it. It now lands in a review queue sorted by its legal deadline, and when we reach a decision you get a notification naming your request and its reference number.",
+  "changelog.entries.we-ask-again-when-the-rules-change.title":
+    "We ask again when the Terms or Guidelines change",
+  "changelog.entries.we-ask-again-when-the-rules-change.body":
+    "Agreeing once at sign-up was treated as agreeing forever, so a rule could change without anyone ever seeing it. When either document moves materially, you are now asked to read what changed and agree again, and we keep a dated record of it. This matters most if you are ever moderated under a rule added after you joined.",
+  "changelog.entries.iphone-notifications-explain-the-install-step.title":
+    "iPhone notifications explain the install step",
+  "changelog.entries.iphone-notifications-explain-the-install-step.body":
+    "Safari only delivers notifications to QueerPulse once it is added to your Home Screen, and nothing said so: turning them on simply failed with a note that your browser could not do this yet. The setting now explains the install step and links straight to it.",
+  "changelog.entries.a-heads-up-before-your-account-is-deleted.title":
+    "A heads-up before your account is deleted",
+  "changelog.entries.a-heads-up-before-your-account-is-deleted.body":
+    "Asking to delete your account starts a grace period that was easy to forget about entirely, with nothing heard until it was gone. You now get one notification three days before it becomes permanent, while cancelling is still a single step.",
+  "changelog.entries.moderators-see-the-positions-at-the-queue.title":
+    "Moderators see the positions at the queue",
+  "changelog.entries.moderators-see-the-positions-at-the-queue.body":
+    "Both report queues, the community mod console and the platform staff one, now open with the three rules a moderator has to get right: criticism of a state is political speech and Palestine advocacy is welcome, advocacy against a class of member is not, whether a member deserves rights is not a debate we host, and nobody is ever asked to prove their gender. Until now no moderation surface linked the Guidelines at all.",
+  "changelog.entries.where-we-stand-intersectionality-and-palestine.title":
+    "Where we stand: trans lives, Palestine, and the rest of it",
+  "changelog.entries.where-we-stand-intersectionality-and-palestine.body":
+    "The About page now carries a position rather than only a set of product values. A new \u201cWhere we stand\u201d section says why intersectionality is inseparable from queer liberation, names the genocide in Gaza plainly, refuses pinkwashing, and sets out three commitments we can be held to: Palestine advocacy is political speech and moderated as such, we take no money from entities complicit in the occupation, and the mutual-aid pot can fund solidarity work. It leads on trans lives (self-identification as the standard, no \u201cboth sides\u201d debate about whether members deserve rights, and trans-exclusionary campaigning treated as a Code of Conduct matter), then Palestine, then shorter positions on sex work, migration and racism in Portugal, and serophobia. It closes on the test that decides when we speak at all. The homepage manifesto links to it, and the Community Guidelines gained a matching clause spelling out where political speech ends and a Code of Conduct matter begins.",
+  "changelog.entries.directory-cards-show-who-runs-the-place.title":
+    "The person who runs a place now shows their face on its card",
+  "changelog.entries.directory-cards-show-who-runs-the-place.body":
+    "Every card in the local directory ends with a line naming the member who runs the place, and beside that name sat a small circle holding the business’s initials. A card for Maison Du Tiago, run by Tiago, showed MD next to Tiago, which read as a second logo where a person should be. That circle now carries the member’s own profile photo, the same picture their profile shows, and falls back to their initial when they have not set one. The photo follows exactly the same rules as the name beside it: a listing whose owner chose to stay anonymous, or to appear only by their role, still shows neither, and a member who has turned their photo off across the site keeps it off here too.",
+  "changelog.entries.members-can-put-something-to-a-vote.title":
+    "You can put something to a vote",
+  "changelog.entries.members-can-put-something-to-a-vote.body":
+    "Governance votes were something you could take part in but never start. The proposals on the governance page were opened by admins, so if you thought the community should decide something, there was no button anywhere that let you say so. You can now file a motion: a title, a description, and the question you want put to the community. A motion has to earn its way onto a ballot. Ten members need to put their names to it, and you count as the first, so nine other people have to agree it deserves a vote. Once it reaches ten it goes to the team for a look, and if they approve it they set the voting window and it opens as an ordinary vote like any other. If they turn it down, the reason is written on the motion where everyone can read it. A motion that never reaches ten members closes on its own after thirty days. You can also add your name to someone else's motion, and take it back off again while the drive is still running.",
+  "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.title":
+    "A governance vote now needs enough people to count",
+  "changelog.entries.a-governance-vote-now-needs-enough-people-to-count.body":
+    "A proposal used to pass on two thirds of whoever happened to vote, with no floor under how many that was. One person voting in favour and nobody voting against was two thirds of the votes cast, so it passed. That is not a community decision, and the governance page was describing it as one. Every vote now also has to clear a quorum: a minimum number of ballots before the result counts at all, set at a tenth of the active membership or ten people, whichever is larger. The number a proposal was measured against is recorded on it when it closes, so an old result always shows the bar it actually cleared rather than a bar that moved afterwards. Proposals now show turnout against quorum while voting is open, and a proposal that failed because too few people voted says exactly that, so it is never mistaken for one that lost the argument.",
+  "changelog.entries.anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet.title":
+    "Anyone in a community can flag an owner who has gone quiet",
+  "changelog.entries.anyone-in-a-community-can-flag-an-owner-who-has-gone-quiet.body":
+    "When a community's owner disappears, the community freezes: nobody can change the settings, hand ownership on, or appoint a moderator to unstick it. Reporting an absent owner was limited to moderators and co-owners, which missed the case it was most needed for, because a small community whose owner vanished before appointing anyone had nobody who could file. Any member of a community can now raise it, once a day, and one open review at a time per community. Two related things also changed. If an owner erases their account, ownership now passes to a co-owner first if there is one, since that is the person the owner had already trusted with owner-level powers, and only then to the longest-standing moderator. And a community whose owner has not been seen in a long time is now flagged for the team automatically, so an abandoned community surfaces even when nobody inside thinks to report it.",
+  "changelog.entries.the-constitution-links-through-to-the-code-of-conduct.title":
+    "The Constitution links through to the Code of Conduct",
+  "changelog.entries.the-constitution-links-through-to-the-code-of-conduct.body":
+    "The foot of the Constitution offered three things to click and none of them did anything. Read the Code of Conduct now goes to the Code of Conduct. The other two, Download PDF and See the Assembly, pointed at a file and a page that do not exist, so they have been taken off rather than left sitting there looking like something you could open.",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.title":
     "Your devices list stops collecting old sign-ins",
   "changelog.entries.your-devices-list-stops-collecting-old-sign-ins.body":
@@ -5312,6 +5530,14 @@ export const marketing: Catalog = {
   "directory.card.online": "Online",
   "directory.card.visit": "Visit",
   "directory.card.verifiedBadge": "Verified safe space",
+  // The safe-space mark on a card, in the two states that are not a plain
+  // "verified". Both are statements about the BADGE. A card in a public grid
+  // is the last place to imply something about a real business on a real
+  // street that nobody has concluded yet.
+  "directory.card.safeSpaceDueBadge":
+    "Verified safe space, due for its yearly check",
+  "directory.card.safeSpacePausedBadge":
+    "Safe-space badge paused while we take another look",
   "directory.card.photoComing": "Photo coming",
   "directory.card.openTill": "Open till {time}",
   "directory.card.closedNow": "Closed",
@@ -5322,6 +5548,12 @@ export const marketing: Catalog = {
   "directory.card.state.moved": "Moved",
   "directory.card.saveAriaLabel": "Save {name}",
   "directory.card.unsaveAriaLabel": "Remove {name} from saved",
+  // The needs a listing has answered YES to, shown on its grid card. Never a
+  // complete account: a "no" and a "nobody has told us" are different answers
+  // that both need the room the listing page gives them.
+  "directory.card.access": "Accessibility this place has confirmed",
+  "directory.card.accessMore_one": "{count} more",
+  "directory.card.accessMore_other": "{count} more",
   "directory.card.savedToast": "Saved {name}",
   "directory.card.unsavedToast": "Removed {name} from saved",
   "directory.submitStrip.title": "Know a place worth <em>adding?</em>",
@@ -5760,10 +5992,13 @@ export const marketing: Catalog = {
 
   "directory.editThisListing": "Edit this listing",
 
-  // ── Arriving (new-to-Lisbon guide) — page/section chrome only. Neighbourhood
-  //    blurbs, org descriptions, community-group blurbs (`arrivingPage.data.ts`,
-  //    `arrivingPageCards.data.ts`) are Lisbon city-guide content — left
-  //    English, same precedent as the Cities page's per-city blurbs.
+  // ── Arriving (new-to-Lisbon guide) — fully translated (LOC-13). The
+  //    neighbourhood, health, housing, organisation and checklist copy used to
+  //    be hardcoded English inside `arrivingPage.data.ts` /
+  //    `arrivingPageCards.data.ts` and could not be translated at all. It now
+  //    lives here in both catalogs. What stays in the data files is the
+  //    non-translatable spine: Lisbon place names and organisation names
+  //    (proper nouns, identical in both languages), destinations, and icons.
   "arriving.meta.title": "New to Lisbon? A queer newcomer's guide",
   "arriving.meta.description":
     "A practical starting guide for LGBTQ+ people new to Lisbon, welcoming neighbourhoods, health resources, housing basics, key organisations, and first steps.",
@@ -5771,37 +6006,191 @@ export const marketing: Catalog = {
   "arriving.hero.title": "Queer and new to Lisbon? <em>Welcome.</em>",
   "arriving.hero.body":
     "This city has a lot for us, a real, rooted queer community, welcoming neighbourhoods, organisations doing serious work, and people who will genuinely help you settle in. Here's what to know first.",
+
+  // Shown beside a link whose destination needs a QueerPulse account, so a
+  // logged-out reader knows before they click.
+  "arriving.memberOnly": "Members only",
+
+  // ── Arrival checklist. Ticks are stored in the reader's own browser; there
+  //    is no account behind it and nothing is sent anywhere.
+  "arriving.checklist.eyebrow": "Your first fortnight",
+  "arriving.checklist.title": "The things worth doing <em>early.</em>",
+  "arriving.checklist.intro":
+    "Paperwork, a doctor, a room, and one room full of people. Tick these off as you go. The list stays in this browser, so you can close the tab and come back to it.",
+  "arriving.checklist.progress": "{done} of {total} done",
+  "arriving.checklist.reset": "Start over",
+  "arriving.checklist.storedHere":
+    "Saved in this browser, on this device. Nothing is sent anywhere and nobody else can see it.",
+  "arriving.checklist.steps.nif.title": "Get a NIF",
+  "arriving.checklist.steps.nif.note":
+    "The Portuguese tax number. Almost nothing else works without it: a lease, a phone contract, a bank account. Make it the first errand.",
+  "arriving.checklist.steps.nif.linkLabel": "Visas and residency",
+  "arriving.checklist.steps.sns.title": "Register with the SNS",
+  "arriving.checklist.steps.sns.note":
+    "Once you have a NIF, register at your local Centro de Saúde. That is what gets you a médico de família on the national health service.",
+  "arriving.checklist.steps.sns.linkLabel": "sns.gov.pt",
+  "arriving.checklist.steps.doctor.title": "Ask for an affirming GP",
+  "arriving.checklist.steps.doctor.note":
+    "The health service covers trans healthcare, and which doctor you land with still matters a lot. Sort this while nothing is urgent.",
+  "arriving.checklist.steps.doctor.linkLabel": "The trans healthcare guide",
+  "arriving.checklist.steps.room.title": "Start the room search early",
+  "arriving.checklist.steps.room.note":
+    "Central rooms go within days. Begin looking before you arrive if you can, and keep looking after you take the first one.",
+  "arriving.checklist.steps.room.linkLabel": "The housing board",
+  "arriving.checklist.steps.rights.title":
+    "Read the tenant basics before you sign",
+  "arriving.checklist.steps.rights.note":
+    "What a landlord can ask for, what a deposit can be, and what has to be in writing. Ten minutes now saves a bad year.",
+  "arriving.checklist.steps.rights.linkLabel": "Tenant rights",
+  "arriving.checklist.steps.crisis.title": "Save one number for a bad day",
+  "arriving.checklist.steps.crisis.note":
+    "ILGA Portugal runs a support line for discrimination, violence and crisis, and can point you towards legal aid. Put it in your phone while everything is calm.",
+  "arriving.checklist.steps.crisis.linkLabel": "ilga-portugal.pt",
+  "arriving.checklist.steps.gathering.title":
+    "Go to one gathering in your first two weeks",
+  "arriving.checklist.steps.gathering.note":
+    "Reading about a city is a different thing from standing in a room in it. One evening changes how the whole month feels.",
+  "arriving.checklist.steps.gathering.linkLabel": "What's coming up",
+  "arriving.checklist.steps.community.title":
+    "Join one community that meets in person",
+  "arriving.checklist.steps.community.note":
+    "Pick the one that meets near you. Turning up twice is what turns strangers into people you know.",
+  "arriving.checklist.steps.community.linkLabel": "Browse communities",
+
+  // ── Neighbourhoods. The notes used to name-drop members who exist only in
+  //    the demo registry and could never be linked to a real profile; they now
+  //    say something true about the place instead.
   "arriving.neighbourhoods.eyebrow": "Lisbon's neighbourhoods",
   "arriving.neighbourhoods.title": "Where queer life <em>happens.</em>",
   "arriving.neighbourhoods.intro":
     "Lisbon doesn't have one queer neighbourhood. It has several pockets, each with its own character. Here's an honest guide to where the community is.",
+  "arriving.hoods.principeReal.tag": "Social · Creative",
+  "arriving.hoods.principeReal.body":
+    "The heart of queer social life in Lisbon. A garden square, wine bars, independent bookshops, and a lot of queer creatives. The most visible of the pockets and the easiest to walk into.",
+  "arriving.hoods.principeReal.note":
+    "A good first walk if you want to feel the city without planning anything.",
+  "arriving.hoods.mouraria.tag": "Activism · Community",
+  "arriving.hoods.mouraria.body":
+    "A neighbourhood that has always made room for the outsider. Fado roots, a large immigrant community, and much of the city's queer organising.",
+  "arriving.hoods.mouraria.note":
+    "Where a lot of the organising and mutual aid actually happens.",
+  "arriving.hoods.bairroAlto.tag": "Nightlife · Arts",
+  "arriving.hoods.bairroAlto.body":
+    "Small bars, independent music venues, late nights, and a long queer history. Where queer Lisbon goes to dance.",
+  "arriving.hoods.bairroAlto.note":
+    "Loud after 10pm and very quiet in the morning.",
+  "arriving.hoods.caisDoSodre.tag": "Creative · Riverside",
+  "arriving.hoods.caisDoSodre.body":
+    "Creative energy by the river. Independent studios, cultural spaces, and Pink Street. Where new Lisbon meets old Lisbon.",
+  "arriving.hoods.caisDoSodre.note":
+    "Home to Pink Street, the city's best-known queer bar strip.",
+  "arriving.hoods.arroios.tag": "Growing · Affordable",
+  "arriving.hoods.arroios.body":
+    "More affordable, more diverse, and growing fast as a home for queer newcomers and creatives priced out of Príncipe Real. Excellent food, tight community.",
+  "arriving.hoods.arroios.note":
+    "One of the most diverse neighbourhoods in the city, and a sensible place to look for a room.",
+  "arriving.hoods.marvila.tag": "Industrial · New Lisbon",
+  "arriving.hoods.marvila.body":
+    "Warehouses, studios, and a quieter kind of creative life. Further out, and increasingly home to people who want space to make things.",
+  "arriving.hoods.marvila.note":
+    "Good for studios and larger rooms at lower rent.",
+
+  // ── Health. Every card links to a real destination: an official Portuguese
+  //    service, a public QueerPulse guide, or an organisation's own site.
   "arriving.health.eyebrow": "Health",
   "arriving.health.title":
     "Healthcare in Lisbon, <em>what you need to know.</em>",
   "arriving.health.intro":
     "Portugal has a national health service (SNS) that you can register with. Trans-affirming care has improved significantly, but it takes knowing where to go.",
+  "arriving.health.cards.sns.title": "Registering with the SNS",
+  "arriving.health.cards.sns.body":
+    "Register with the Serviço Nacional de Saúde once you have a NIF. You are entitled to a médico de família. Ask at your local Centro de Saúde: Arroios, Mouraria and Príncipe Real all have active ones.",
+  "arriving.health.cards.sns.linkLabel": "sns.gov.pt",
+  "arriving.health.cards.trans.title": "Trans-affirming care",
+  "arriving.health.cards.trans.body":
+    "Portugal's Gender Identity Law is among the most progressive in Europe, and the SNS provides trans healthcare including hormones. Finding a GP who is comfortable with it is the part worth preparing for.",
+  "arriving.health.cards.trans.linkLabel": "The trans healthcare guide",
+  "arriving.health.cards.mental.title": "Mental health support",
+  "arriving.health.cards.mental.body":
+    "Moving is heavy even when it is the right move: a new language, a new kind of visibility, and nobody who has known you for years. Peer support and lower-cost options exist here.",
+  "arriving.health.cards.mental.linkLabel": "Mental health resources",
+  "arriving.health.cards.crisis.title": "Crisis and discrimination",
+  "arriving.health.cards.crisis.body":
+    "ILGA Portugal runs a support line for LGBTQ+ people facing crisis, discrimination or violence, and can connect you with legal aid. The line is mostly Portuguese-language, so bring someone who speaks it if that helps.",
+  "arriving.health.cards.crisis.linkLabel": "ilga-portugal.pt",
+
+  // ── Housing. The market card carries no link on purpose: it describes a
+  //    situation rather than pointing at a destination.
   "arriving.housing.eyebrow": "Housing",
   "arriving.housing.title": "Finding a place to live, <em>honestly.</em>",
   "arriving.housing.intro":
     "Lisbon's housing market is expensive and competitive. Here's an honest picture of what to expect, and where to get help.",
+  "arriving.housing.cards.market.title": "What the market is actually like",
+  "arriving.housing.cards.market.body":
+    "Rents have risen steeply over the past five years. Budget roughly 800 to 1100 euros for a room in a central neighbourhood. Arroios and Mouraria still offer better value. Good listings go within days, so move quickly when you see one.",
+  "arriving.housing.cards.board.title": "Rooms shared inside the community",
+  "arriving.housing.cards.board.body":
+    "Members post rooms, sublets and shares on the QueerPulse housing board. The best leads usually arrive through people rather than portals.",
+  "arriving.housing.cards.board.linkLabel": "The housing board",
+  "arriving.housing.cards.rights.title": "Know what you are signing",
+  "arriving.housing.cards.rights.body":
+    "Portuguese tenancy law gives you more than a rushed landlord will mention: what a deposit can be, how much notice you are owed, and what has to be in writing.",
+  "arriving.housing.cards.rights.linkLabel": "Tenant rights",
+  "arriving.housing.cards.visas.title": "Residency and housing at once",
+  "arriving.housing.cards.visas.body":
+    "If you are sorting a residency permit at the same time as a lease, the order of the paperwork matters. The NIF comes first, and almost everything else follows it.",
+  "arriving.housing.cards.visas.linkLabel": "Visas and residency",
+  "arriving.housing.cards.ask.title": "Ask out loud",
+  "arriving.housing.cards.ask.body":
+    "Saying you're looking for a room or a short sublet and arriving next month is a completely normal thing to post here. People answer it. Someone usually knows someone.",
+  "arriving.housing.cards.ask.linkLabel": "Go to the forum",
+
+  // ── Organisations. Each row links to the organisation's own site, which is
+  //    reachable without a QueerPulse account.
   "arriving.orgs.eyebrow": "Organisations",
   "arriving.orgs.title": "Know these <em>three first.</em>",
   "arriving.orgs.intro":
-    "These are the organisations most likely to be useful within your first weeks in Lisbon, for legal support, mental health, or simply connecting to the community.",
+    "These three are the most likely to be useful in your first weeks, for legal support, mental health, or simply finding the community. Each one opens the organisation's own site.",
+  "arriving.orgs.items.ilga.body":
+    "Portugal's leading LGBTQ+ rights organisation. Legal support, anti-discrimination advice, housing referrals, a support line, and community programming. The first call for anything serious.",
+  "arriving.orgs.items.opusDiversus.body":
+    "Mental health and peer support for LGBTQ+ people, plus training for allied health professionals. A good place to start if the move or the new visibility is weighing on you.",
+  "arriving.orgs.items.redeExAequo.body":
+    "A youth-focused LGBTQ+ association with active groups in Lisbon. Peer support, advocacy, and a gentle room for people who are younger or still working things out.",
+
+  // ── First step. Real upcoming gatherings, live in both modes. This section
+  //    used to advertise one hardcoded card dated 14 June 2026.
   "arriving.firstStep.eyebrow": "Your first step",
   "arriving.firstStep.title": "Come to something <em>in person.</em>",
   "arriving.firstStep.intro":
-    "Everything on this page is useful. But the best thing you can do is show up to a gathering. Next one coming up:",
-  "arriving.firstStep.rsvpCta": "I'll be there",
-  "arriving.firstStep.example.title": "Portfolio Night",
-  "arriving.firstStep.example.subtitle": "Designers & Photographers",
-  "arriving.firstStep.example.details":
-    "Príncipe Real · From 7pm · Casual, warm, no agenda. Bring your work or just yourself.",
+    "Everything above helps. The thing that changes a first month is walking into a room. Here's what's coming up.",
+  "arriving.firstStep.eventMeta": "{hood} · {time}",
+  "arriving.firstStep.loading": "Loading what's coming up",
+  "arriving.firstStep.error":
+    "The gathering list didn't load just now. Try again in a moment.",
+  "arriving.firstStep.retry": "Try again",
+  "arriving.firstStep.empty":
+    "Nothing is on the calendar right now. New gatherings go up most weeks, so it's worth looking again soon.",
+  "arriving.firstStep.emptyCta": "See the gatherings page",
+  "arriving.firstStep.allCta": "See every gathering",
+  "arriving.firstStep.locked":
+    "The gathering calendar lives inside QueerPulse. Members can see what's on this week and say they're coming.",
+  "arriving.firstStep.lockedCta": "Request an invite",
+
+  // ── Communities. Real communities from the same source the discover grid
+  //    reads, each linking to its own page.
   "arriving.commQuick.eyebrow": "Where to start",
-  "arriving.commQuick.title": "Three communities for <em>new arrivals.</em>",
+  "arriving.commQuick.title": "Communities for <em>new arrivals.</em>",
   "arriving.commQuick.intro":
-    "Not sure where to begin? These three communities are particularly welcoming to people who are new to Lisbon.",
+    "Beginner-friendly rooms that meet in person, here in the city. Pick one and turn up twice.",
   "arriving.commQuick.browseCta": "Browse all communities",
+  "arriving.commQuick.loading": "Loading communities",
+  "arriving.commQuick.empty":
+    "Nothing is open for new arrivals right now. The full list is still worth a browse.",
+  "arriving.commQuick.locked":
+    "Communities live inside QueerPulse, so members can talk to each other without an audience.",
+  "arriving.commQuick.lockedCta": "Request an invite",
+
   "arriving.outro.title": "Ready to meet <em>the community?</em>",
   "arriving.outro.sub":
     "Request an invite to QueerPulse and get access to the full network, members, gatherings, board, and everything else on this page.",
@@ -6071,6 +6460,25 @@ export const marketing: Catalog = {
   "local.filter.vibeVenueNote": "Vibe filters apply to venues",
   "local.filter.verifiedSafeSpaces": "Verified safe spaces",
   "local.filter.filters": "Filters",
+  "local.filter.quickFiltersLabel": "Quick filters",
+  "local.filter.openNow": "Open now",
+  "local.filter.accessLabel": "Access needs",
+  "local.filter.accessNote":
+    "Shows places that have answered yes to everything you pick. A place nobody has asked about stays out of the results.",
+  // ── Use my location. Opt-in, reversible, and never leaves the device.
+  "local.nearMe.on": "Use my location",
+  "local.nearMe.off": "Turn off my location",
+  "local.nearMe.asking": "Finding you…",
+  "local.nearMe.privacy": "Your location stays on this device.",
+  "local.nearMe.onNote":
+    "Sorted by how close it is. Your location stays on this device.",
+  "local.nearMe.denied":
+    "Location is off for this site. You can turn it back on in your browser settings.",
+  "local.nearMe.timeout": "That took too long. Try again whenever you like.",
+  "local.nearMe.unavailable":
+    "Your device could not work out where you are right now.",
+  "local.nearMe.walkChip": "{minutes} min walk",
+  "local.nearMe.walkAria": "About {minutes} minutes on foot from you",
   "local.filter.showResults_one": "Show {count} place",
   "local.filter.showResults_other": "Show {count} places",
   "local.venue.back": "Back to the map",
@@ -6165,7 +6573,7 @@ export const marketing: Catalog = {
   "constitution.art6.clause2":
     "The annual budget is approved by the Assembly. The finance circle may rebalance within categories during the year without re-approval, up to 10% per category.",
   "constitution.art6.clause3":
-    "Annual accounts are <strong>published in full,</strong> in plain language, as part of the Transparency Report. Figures are self-reported by the volunteer team.",
+    "Annual accounts are <strong>published in full,</strong> in plain language, as part of the <a>Transparency Report</a>. Figures are self-reported by the volunteer team.",
   "constitution.art6.clause4":
     "The collective may not enter into debt arrangements above €10,000 without explicit Assembly approval.",
 
@@ -6176,7 +6584,7 @@ export const marketing: Catalog = {
   "constitution.art7.clause2":
     "<strong>QueerPulse does not moderate criticism of itself.</strong> Posts critical of QueerPulse, its decisions, or its organisers may not be removed under any clause of the Code of Conduct.",
   "constitution.art7.clause3":
-    "Moderation decisions are appealable to a standing appeals panel composed of three members not from the deciding circle. Appeals overturn decisions in approximately 11% of cases (2025 figure).",
+    "Moderation decisions are appealable to a standing appeals panel composed of three members from outside the deciding circle. The share of decisions overturned on appeal is counted from the moderation record and published every quarter in the <a>Transparency Report</a>.",
 
   "constitution.art8.toc": "VIII · Removal",
   "constitution.art8.title": "Removal",
@@ -6220,9 +6628,7 @@ export const marketing: Catalog = {
     "Versioning is sequential (v1.0, v1.1…). The current version's full text is published at all times.",
 
   "constitution.footer.version":
-    "<b>Constitution v1.4</b> · adopted 14 Nov 2025 · in force since 1 Jan 2026 ·",
-  "constitution.footer.downloadPdf": "Download PDF",
-  "constitution.footer.seeAssembly": "See the Assembly",
+    "<b>Constitution v1.4</b> · adopted 14 Nov 2025 · in force since 1 Jan 2026",
   "constitution.footer.readCodeOfConduct": "Read the Code of Conduct",
 
   // ── Resource Library — page/filter/card chrome. `RESOURCES` entries
@@ -6387,4 +6793,33 @@ export const marketing: Catalog = {
     "A closer look at housing and personas on the homepage",
   "changelog.entries.homepage-housing-personas-showcase.body":
     'The homepage\'s Housing and Personas sections now show what the features actually feel like: two real listing cards with a room and a landlord tab (reviews, verdicts, an honest "no reviews yet" when a landlord is new), and an interactive persona deck you can switch between to see how a public page changes per persona.',
+
+  // Trust, safety and moderation (section 1 build).
+  "changelog.tag.transparency": "Read the transparency report",
+  "changelog.tag.constitution": "Read the constitution",
+  "changelog.tag.codeOfConduct": "Read the code of conduct",
+  "changelog.entries.the-transparency-report-is-published.title":
+    "The transparency report is published",
+  "changelog.entries.the-transparency-report-is-published.body":
+    "Our constitution has always named a transparency report. Now there is one. Every quarter it publishes what was reported and why, how long decisions took, what actions were taken, and how many appeals were upheld. Numbers only, counted from the moderation record. Small counts are withheld so that no figure can be traced back to a person.",
+  "changelog.entries.a-permanent-ban-needs-two-moderators.title":
+    "A permanent ban now needs a second moderator",
+  "changelog.entries.a-permanent-ban-needs-two-moderators.body":
+    "Article VIII said a removal has to be ratified by another moderator. Now the software holds it to that. When a moderator bans someone permanently, harmful content comes down straight away and the account decision waits for a second, different moderator to confirm it. If nobody confirms within 72 hours, the hold lapses on its own.",
+  "changelog.entries.appeals-have-a-deadline.title":
+    "Appeals have a deadline that is measured",
+  "changelog.entries.appeals-have-a-deadline.body":
+    "The code of conduct gives you 14 days to appeal and promises a decision within 7. Both windows are now recorded on every appeal, and the review queue is sorted by what is due first, so an appeal cannot quietly sit there. You can also appeal a community ban and a restriction, which were unreachable before.",
+  "changelog.entries.a-community-ban-can-end.title":
+    "A community ban can have an end date",
+  "changelog.entries.a-community-ban-can-end.body":
+    "Being asked to leave a community used to be permanent and silent. Moderators can now set an end date, and you are told what happened: the reason, the house rule it rests on, and the day it lifts. A bad week no longer has to mean losing a room for good.",
+  "changelog.entries.a-warning-now-reaches-you.title":
+    "A warning now actually reaches you",
+  "changelog.entries.a-warning-now-reaches-you.body":
+    "If a post, a reply, a message or a comment of yours was warned about, nobody told you. The report closed, the record said you had been warned, and you never heard a word. Warnings now reach the person who wrote the thing, with the reason attached.",
+  "changelog.entries.community-mods-can-read-what-was-reported.title":
+    "Community moderators can read what was reported",
+  "changelog.entries.community-mods-can-read-what-was-reported.body":
+    "A moderator opening a report used to see a reason and a timestamp, then had to decide whether to remove something they could not read. Reports now carry the post itself, who wrote it, how urgent it is and when it is due. Urgent reports about outing or personal details go to trained staff instead.",
 };

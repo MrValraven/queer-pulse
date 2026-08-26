@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { PageShell, PageHero } from "../../shared/components/layout";
 import { HubBackLink } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
@@ -104,11 +105,10 @@ export function ConstitutionPage() {
           i18nKey="marketing:constitution.footer.version"
           components={{ b: <b /> }}
         />{" "}
-        <span className={styles.versionStrong}>
-          {t("marketing:constitution.footer.downloadPdf")}
-        </span>{" "}
-        · {t("marketing:constitution.footer.seeAssembly")} ·{" "}
-        {t("marketing:constitution.footer.readCodeOfConduct")}
+        ·{" "}
+        <Link to={routes.codeOfConduct} className={styles.versionLink}>
+          {t("marketing:constitution.footer.readCodeOfConduct")}
+        </Link>
       </div>
     </PageShell>
   );

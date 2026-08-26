@@ -18,6 +18,7 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
     status: "pending",
     decidedAt: null,
     decisionNote: null,
+    createdCommunitySlug: null,
   },
   {
     id: "rgp_4002",
@@ -30,6 +31,7 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
     status: "approved",
     decidedAt: "2026-07-21T09:00:00.000Z",
     decisionNote: null,
+    createdCommunitySlug: "stone-butch-blues-reading-group",
   },
   {
     id: "rgp_4003",
@@ -42,5 +44,6 @@ export const ADMIN_READING_GROUP_PROPOSALS: AdminReadingGroupProposalDTO[] = [
     status: "pending",
     decidedAt: null,
     decisionNote: null,
+    createdCommunitySlug: null,
   },
 ];

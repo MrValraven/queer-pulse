@@ -10,9 +10,15 @@ import type { FeedItem } from "./feed.api";
 export { formatRelative as relativeTime } from "../../../shared/lib/date";
 
 // Map a backend `FeedItem` onto the EXISTING `FeedPost` view-model the feed
-// cards render. Interaction fields the aggregate doesn't carry (likeCount,
-// replies) default to empty seeds — the card layers local interaction state,
-// exactly as the prototype does.
+// cards render.
+//
+// SOC-04: `likeCount` is no longer hardcoded to zero — the aggregate now
+// carries `reactionCount`, so the card shows the real number instead of
+// pretending nobody has reacted. `replies` stays an empty seed on purpose:
+// `FeedPost.replies` is the prototype's full reply LIST, which the feed
+// deliberately does not fetch (a card shows the count and opens the thread
+// for the rest). The true count rides alongside on `FeedItem.replyCount` and
+// is passed to the card as a signal.
 
 const AUTHOR_TINTS = ["jade", "coral", "plum"] as const;
 
@@ -38,7 +44,7 @@ export function feedItemToPost(item: FeedItem, fmt: Formatters): FeedPost {
     time: formatRelative(item.createdAt, fmt),
     context: item.title,
     body: item.summary,
-    likeCount: 0,
+    likeCount: item.reactionCount ?? 0,
     replies: [],
     link: item.link,
     avatarUrl: actor?.avatarUrl ?? null,

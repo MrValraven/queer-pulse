@@ -1,0 +1,49 @@
+/* CON-12 — an article's tags, rendered as links into the magazine's search
+   page (`?tag=`). Visually a `Tag` pill (same radius, ink and tint), but a
+   real anchor rather than a span, so it gets a hover/focus affordance. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+}
+
+.tag {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-60);
+  background: rgba(var(--plum-rgb), 0.05);
+  border-radius: var(--radius-tag);
+  padding: 5px 10px;
+  text-decoration: none;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
+}
+
+.tag:hover,
+.tag:focus-visible {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+/* The tag the reader is already browsing. Carries `aria-current="page"` too,
+   so the state is not colour-only. */
+.tagActive {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.16);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tag {
+    transition: none;
+  }
+}

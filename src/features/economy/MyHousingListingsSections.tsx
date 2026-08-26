@@ -1,4 +1,4 @@
-import { FiAlertCircle, FiHome } from "react-icons/fi";
+import { FiAlertCircle, FiHome, FiMessageSquare } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import {
@@ -15,27 +15,84 @@ import { FILTERS } from "./housing.data";
 import type { MyHousingListingRow } from "./myHousingListings.data";
 import styles from "./MyHousingListingsPage.module.css";
 
-/** Status pill shown on a row — filled/expired take priority over the raw
- * moderation `status` (a filled-but-still-"live" listing reads as "Filled",
- * not "Live", since that's the state that actually matters to the owner). */
+/** Every non-live moderation state, with the pill it renders as. A listing
+ * that is refused, pulled, or waiting on the lister is the fact that matters
+ * most to its owner, so these win over "expired" (approval refreshes the
+ * window anyway) and are the states the decision note below explains. */
+const MODERATION_PILLS: Partial<
+  Record<MyHousingListingRow["status"], { labelKey: string; tone: BadgeTone }>
+> = {
+  review: {
+    labelKey: "economy:myHousingListings.status.review",
+    tone: "amber",
+  },
+  question: {
+    labelKey: "economy:myHousingListings.status.question",
+    tone: "amber",
+  },
+  rejected: {
+    labelKey: "economy:myHousingListings.status.rejected",
+    tone: "danger",
+  },
+  taken_down: {
+    labelKey: "economy:myHousingListings.status.takenDown",
+    tone: "danger",
+  },
+};
+
+/** Status pill shown on a row. "Filled" wins outright (the owner said they
+ * found someone), then the moderation state, then the TTL. */
 function StatusPill({ listing }: { listing: MyHousingListingRow }) {
   const { t } = useTranslation();
   let labelKey = "economy:myHousingListings.status.live";
   let tone: BadgeTone = "jade";
+  const moderationPill = MODERATION_PILLS[listing.status];
   if (listing.filledAt !== null) {
     labelKey = "economy:myHousingListings.status.filled";
     tone = "plum";
+  } else if (moderationPill) {
+    labelKey = moderationPill.labelKey;
+    tone = moderationPill.tone;
   } else if (listing.expired) {
     labelKey = "economy:myHousingListings.status.expired";
     tone = "danger";
-  } else if (listing.status === "review") {
-    labelKey = "economy:myHousingListings.status.review";
-    tone = "amber";
-  } else if (listing.status === "question") {
-    labelKey = "economy:myHousingListings.status.question";
-    tone = "amber";
   }
   return <Badge tone={tone}>{t(labelKey)}</Badge>;
+}
+
+/**
+ * What a moderator decided, and why, in the moderator's own words.
+ *
+ * Without this a lister whose home was sent back for changes, refused, or
+ * pulled saw only a pill and had no way to learn what to fix. The reason is
+ * shown verbatim: it is one person writing to another, so it is never
+ * flattened into a canned platform sentence.
+ */
+function DecisionNote({ listing }: { listing: MyHousingListingRow }) {
+  const { t } = useTranslation();
+  const reason = listing.decision?.reason?.trim();
+  const headingKey =
+    listing.status === "question"
+      ? "economy:myHousingListings.decision.question"
+      : listing.status === "rejected"
+        ? "economy:myHousingListings.decision.rejected"
+        : "economy:myHousingListings.decision.takenDown";
+  if (!reason) return null;
+
+  return (
+    <div className={styles.decision}>
+      <p className={styles.decisionHead}>
+        <FiMessageSquare aria-hidden />
+        {t(headingKey)}
+      </p>
+      <p className={styles.decisionBody}>{reason}</p>
+      {listing.status === "question" && (
+        <p className={styles.decisionHint}>
+          {t("economy:myHousingListings.decision.questionHint")}
+        </p>
+      )}
+    </div>
+  );
 }
 
 export function MyHousingListingCard({
@@ -85,6 +142,10 @@ export function MyHousingListingCard({
           })}
         </span>
       </div>
+      {(listing.status === "question" ||
+        listing.status === "rejected" ||
+        listing.status === "taken_down") && <DecisionNote listing={listing} />}
+
       {hidden ? (
         <p className={styles.cardHint}>
           {t(

@@ -1,22 +1,17 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import {
-  Avatar,
-  Button,
-  FadeIn,
-  SkeletonLine,
-} from "../../shared/components/ui";
+import { Button, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
-import { memberRowAvatar } from "./searchAvatar";
 import { linkToPath, routes } from "../../app/routeMap";
+import { Group } from "./SearchResultCard";
+import { SearchLoadMore } from "./SearchLoadMore";
+import type { LiveResultType } from "./api/search.api";
 import {
-  TYPE_BG,
-  TYPE_ICON,
   TYPE_LABEL_KEY,
   NO_LIVE_SEARCH_TYPES,
   SEARCH_PER_TYPE_CAP,
+  SEARCH_TAB_PAGE_SIZE,
   type ResultType,
   type SearchItem,
 } from "./search.data";
@@ -53,40 +48,6 @@ function SkeletonGroup() {
   );
 }
 
-function ResultCard({ item }: { item: SearchItem }) {
-  const { t } = useTranslation();
-  const TypeIcon = item.icon ?? TYPE_ICON[item.t];
-  const avatar = memberRowAvatar(item);
-  return (
-    <Link to={linkToPath(item.href)} className={styles.card}>
-      {avatar ? (
-        <Avatar
-          initials={avatar.initials}
-          tint={avatar.tint}
-          src={avatar.photo}
-          alt={item.name}
-          size={42}
-        />
-      ) : (
-        <div
-          className={styles.cardIcon}
-          style={{ background: TYPE_BG[item.t] }}
-        >
-          <TypeIcon />
-        </div>
-      )}
-      <div className={styles.cardBody}>
-        <div className={styles.cardType}>{t(TYPE_LABEL_KEY[item.t])}</div>
-        <div className={styles.nameRow}>
-          <div className={styles.cardName}>{item.name}</div>
-          <MemberStaffBadge slug={item.slug} />
-        </div>
-        <div className={styles.cardSub}>{item.sub}</div>
-      </div>
-    </Link>
-  );
-}
-
 /** Live-mode logged-out state — search requires a session. */
 function SearchSignInPrompt() {
   const { t } = useTranslation();
@@ -107,40 +68,6 @@ function SearchSignInPrompt() {
       <Button variant="primary" to={routes.signIn}>
         {t("nav:signIn")}
       </Button>
-    </div>
-  );
-}
-
-function Group({
-  items,
-  label,
-  onSeeAll,
-}: {
-  items: SearchItem[];
-  label: string;
-  /** Set when this type is at its per-type cap on the "all" view — renders a
-   *  link that switches to this type's own tab, where the backend is asked
-   *  for the full result set instead of the capped one (DISC-10). */
-  onSeeAll?: () => void;
-}) {
-  const { t } = useTranslation();
-  if (!items.length) return null;
-  return (
-    <div className={styles.section}>
-      <div className={styles.secHead}>{label}</div>
-      <div className={styles.grid}>
-        {items.map((item, i) => (
-          <FadeIn key={item.name} delay={Math.min(i, 8) * 60}>
-            <ResultCard item={item} />
-          </FadeIn>
-        ))}
-      </div>
-      {onSeeAll && (
-        <button type="button" className={styles.seeAll} onClick={onSeeAll}>
-          {t("members:search.seeAllIn", { category: label })}
-          <FiArrowRight aria-hidden />
-        </button>
-      )}
     </div>
   );
 }
@@ -296,12 +223,12 @@ function HitsView({
       "community",
       "event",
       "forum",
+      "forumPost",
       "business",
       "magazine",
       "job",
       "housing",
       "resource",
-      "workshop",
       "subprofile",
       "board",
       "page",
@@ -331,11 +258,21 @@ function HitsView({
       </>
     );
   }
+  // A single category tab. Once it comes back exactly full, there is a next
+  // page to fetch by offset rather than a cap to stop at (SOC-08).
+  // `tab` is already narrowed to a single `ResultType` here: the "all" branch
+  // returned above.
+  const canPage =
+    !NO_LIVE_SEARCH_TYPES.has(tab) && hits.length >= SEARCH_TAB_PAGE_SIZE;
   return (
     <>
       {banner}
       {countEl}
-      <Group items={hits} label={t(TYPE_LABEL_KEY[tab])} />
+      <Group items={hits} label={t(TYPE_LABEL_KEY[tab])}>
+        {canPage && (
+          <SearchLoadMore query={query.trim()} type={tab as LiveResultType} />
+        )}
+      </Group>
     </>
   );
 }

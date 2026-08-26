@@ -204,7 +204,6 @@ function registerSessionHandlers() {
         tenureDays: 0,
         publishedPieces: [],
         hostedOpenEvents: [],
-        workshopsTaught: 0,
         publishedSubprofiles: 0,
         vouchCount: 0,
         endorsementCount: 0,
@@ -470,6 +469,13 @@ describe("request budget (live mode)", () => {
       http.get(`${API_V1}/listings/co-manager-invites`, () =>
         HttpResponse.json([]),
       ),
+      // ProfileWritingSection (CON-11) asks whether this member has a
+      // magazine byline. `null` is the honest answer for the overwhelming
+      // majority of members, and it short-circuits the section: no byline
+      // means no follow-up GET /magazine/articles?author=… either.
+      http.get(`${API_V1}/magazine/authors/by-member/${SLUG}`, () =>
+        HttpResponse.json(null),
+      ),
       // The following four are route-scoped composition-hook reads
       // PlacesSection's siblings pull in on the self view of /account/profile
       // — see the comment on the assertion below for how each was found.
@@ -563,6 +569,12 @@ describe("request budget (live mode)", () => {
         `/v1/directory/by-member/${SLUG}`,
         "/v1/listings/co-manager-invites",
         "/v1/listings/mine",
+        // ProfileBelowHeroSections → ProfileWritingSection →
+        // useMemberWriting(slug) → GET /magazine/authors/by-member/{slug}
+        // (CON-11's "Writing" credit). Nullable, so it goes through
+        // apiGetNullable; a null byline renders nothing and fires no
+        // article list.
+        `/v1/magazine/authors/by-member/${SLUG}`,
         "/v1/me/communities",
         "/v1/me/recognition",
         "/v1/me/vouches/given",

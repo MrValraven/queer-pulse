@@ -34,6 +34,40 @@
   min-width: 0;
 }
 
+/* Switching sections swaps the whole pane, which without this reads as a hard
+   cut: the rail highlight moves and a different surface is simply *there*.
+   The pane is re-keyed on the open section (see ModToolsTab), so this entrance
+   replays on every switch and gives the eye something to follow from the rail
+   to the surface it just opened.
+
+   Deliberately no `both` fill: a filled `transform: none` is still a transform
+   declaration, and the settled pane holding a stacking context would trap the
+   row menus inside it (ModMemberRow's dropdown). Unfilled, the pane is plain
+   again the moment the animation ends. */
+.paneIn {
+  animation: qpTabIn var(--dur-base) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paneIn {
+    animation: none;
+  }
+}
+
+/* Local copy of the shared keyframe (see src/styles/tokens/effects.css). A CSS
+   module scopes the animation-name it references, so naming the global one
+   here would resolve to a dangling hash and silently never run. */
+@keyframes qpTabIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* A pane's own heading is the first thing in it now, so the top margin those
    section labels carried to separate them from the section above is dead
    space here. Two rules because some sections return their label as a bare

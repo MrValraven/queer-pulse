@@ -1,6 +1,5 @@
-import { FiActivity } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { Button, EmptyState, Outro } from "../../shared/components/ui";
+import { Button, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
@@ -12,23 +11,35 @@ import {
   IncidentsSection,
   SubscribeStrip,
 } from "./StatusComponents";
+import { StatusLive } from "./StatusLive";
 
+/**
+ * `/system/status` — the one page that has to answer while the platform does
+ * not.
+ *
+ * QueerPulse delivers no email, so a member who cannot sign in has no channel
+ * that can reach them: without this page, "the platform is down", "I have been
+ * suspended" and "my account is broken" are one indistinguishable silence.
+ * The route is deliberately absent from `GATED_PATTERNS` in `authGate.ts`, so
+ * it renders for a signed-out visitor and for a suspended or locked-out member
+ * alike, and the endpoint behind it (`GET /status`) is unauthenticated too.
+ *
+ * DEMO vs LIVE. The demo build has no backend to probe, and its fabricated
+ * 90-day uptime chart and postmortem history exist to show the shape of the
+ * page, so that path is unchanged. LIVE mode used to collapse all four sections
+ * into a "coming soon" empty state; it now renders `StatusLive`, fed by the
+ * real endpoint.
+ *
+ * `SubscribeStrip` stays demo-only, and permanently. It offers "one email when
+ * something breaks, one when it's fixed", and this platform delivers no email
+ * and never will — there is nothing to wire it to. The live answer to "tell me
+ * when it's back" is this page plus the poll and refresh control inside
+ * `StatusLive`.
+ */
 export function StatusPage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
 
-  // The service-health grid, 90-day uptime chart and incident history are all
-  // fabricated demo fixtures — there is no live status/health backend yet. In
-  // live mode we show an honest "coming soon" state in their place.
-  //
-  // `SubscribeStrip` is demo-only for the same reason. It promises "one email
-  // when something breaks, one when it's fixed", and there is no incident
-  // notification list to add an address to: its submit handler only ever
-  // showed a success toast. The one real subscription endpoint the platform
-  // has (`POST /newsletter/subscribe`) is the community newsletter, a
-  // different thing from incident alerts, so wiring the form to it would trade
-  // one false promise for another. The live empty state says instead that
-  // incident alerts are still being built.
   return (
     <PageShell>
       <StatusHero />
@@ -40,13 +51,7 @@ export function StatusPage() {
           <SubscribeStrip />
         </>
       ) : (
-        <section className="wrap" style={{ padding: "60px 0" }}>
-          <EmptyState
-            icon={<FiActivity />}
-            title={t("system:status.live.title")}
-            description={t("system:status.live.description")}
-          />
-        </section>
+        <StatusLive />
       )}
 
       <Outro

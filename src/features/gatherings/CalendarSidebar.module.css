@@ -59,30 +59,8 @@
 }
 
 .subStrip p {
-  margin-bottom: 16px;
+  margin-bottom: 0;
   font-size: 14px;
   line-height: 1.6;
   color: var(--ink-60);
-}
-
-.subForm {
-  display: flex;
-  gap: 8px;
-}
-
-.subInput {
-  flex: 1;
-  padding: 10px 14px;
-  font-family: var(--sans);
-  font-size: 16px;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: 10px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.subInput:focus {
-  border-color: var(--accent);
 }

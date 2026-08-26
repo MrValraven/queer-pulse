@@ -86,6 +86,20 @@
   border-radius: 16px;
   padding: 24px 26px;
 }
+.valChip {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  margin-bottom: 14px;
+}
+.valChip svg {
+  width: 20px;
+  height: 20px;
+}
 .valTitle {
   font-family: var(--serif);
   font-weight: 500;
@@ -136,21 +150,137 @@
   flex-wrap: wrap;
 }
 
+/* ── Where we stand: intersectionality lead-in + Palestine plum panel ── */
+.standLink,
+.standPanelLink {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.standLink:hover,
+.standPanelLink:hover {
+  text-decoration-thickness: 2px;
+}
+
+.standPanel {
+  background: var(--plum);
+  border-radius: 20px;
+  padding: 34px 34px 30px;
+  margin-top: 28px;
+  max-width: var(--maxw-text);
+}
+.standPanelAccent {
+  border-inline-start: 4px solid var(--accent);
+}
+.standPanelTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 25px;
+  letter-spacing: -0.015em;
+  color: rgba(var(--cream-rgb), 1);
+  margin-bottom: 16px;
+}
+.standPanelBody {
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(var(--cream-rgb), 0.82);
+  margin-bottom: 14px;
+}
+.standPanelLink {
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.standCommitments {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--cream-rgb), 0.14);
+}
+.standCommitment {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(var(--cream-rgb), 0.82);
+}
+.standCommitmentTitle {
+  font-weight: 500;
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.standPositions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+.standPosition {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+  padding: 24px 26px;
+}
+.standPositionTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.standPositionBody {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+
+.standPrinciple {
+  max-width: var(--maxw-text);
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+}
+.standPrincipleTitle {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--text-strong);
+  margin-bottom: 8px;
+}
+.standPrinciple p {
+  font-size: 14.5px;
+  color: var(--ink-60);
+  line-height: 1.7;
+}
+
 @media (--compact) {
   .contrastGrid {
     grid-template-columns: 1fr;
+  }
+  .standPanel {
+    padding: 26px 22px 24px;
+  }
+  .standPositions {
+    grid-template-columns: 1fr 1fr;
   }
   .valuesGrid {
     grid-template-columns: 1fr 1fr;
   }
 }
 @media (--sm) {
-  .valuesGrid {
+  .valuesGrid,
+  .standPositions {
     grid-template-columns: 1fr;
   }
 }
 
 :global([data-theme="dark"]) .contrastCol,
+:global([data-theme="dark"]) .standPosition,
 :global([data-theme="dark"]) .valCard {
   border-color: rgba(var(--cream-rgb), 0.1);
 }

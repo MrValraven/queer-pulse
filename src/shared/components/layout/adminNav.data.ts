@@ -1,33 +1,35 @@
 import {
-  FiGrid,
-  FiShield,
-  FiUsers,
-  FiHome,
-  FiGlobe,
+  FiActivity,
   FiAward,
-  FiInbox,
-  FiSettings,
-  FiHeart,
-  FiMapPin,
-  FiLayers,
-  FiCpu,
-  FiFileText,
-  FiMap,
-  FiMail,
-  FiUserPlus,
-  FiFeather,
-  FiBookOpen,
-  FiEdit3,
-  FiRadio,
-  FiImage,
-  FiUserCheck,
-  FiFlag,
-  FiKey,
   FiBarChart2,
-  FiThumbsUp,
-  FiPhoneCall,
+  FiBookOpen,
+  FiCpu,
+  FiEdit3,
+  FiFeather,
+  FiFileText,
+  FiFlag,
+  FiGlobe,
+  FiGrid,
+  FiHash,
+  FiHeart,
+  FiHome,
+  FiImage,
+  FiInbox,
+  FiKey,
+  FiLayers,
+  FiMail,
+  FiMap,
+  FiMapPin,
   FiMessageSquare,
+  FiPhoneCall,
+  FiRadio,
+  FiSettings,
+  FiShield,
   FiTag,
+  FiThumbsUp,
+  FiUserCheck,
+  FiUserPlus,
+  FiUsers,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -87,6 +89,22 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "shared:adminNav.items.concerns",
         to: routes.adminConcerns,
         icon: FiFlag,
+      },
+      {
+        // TS-16: the reason-keyed library a moderator prefills a decision note
+        // from. It sits beside the queue that consumes it.
+        labelKey: "admin:moderation.templates.navLabel",
+        to: routes.adminModResponseTemplates,
+        icon: FiMessageSquare,
+      },
+      {
+        // ID-04: the DSAR queue. Filed under Trust & safety rather than
+        // People & access: a data-subject request is a statutory obligation
+        // with a running clock, the same kind of work as concerns and
+        // moderation, not roster administration.
+        labelKey: "admin:adminDsar.navLabel",
+        to: routes.adminDsar,
+        icon: FiFileText,
       },
       {
         labelKey: "shared:adminNav.items.verifications",
@@ -151,6 +169,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiHome,
       },
       {
+        labelKey: "shared:adminNav.items.housingGroupListings",
+        to: routes.adminHousingGroupListings,
+        icon: FiHome,
+        tone: "warn",
+      },
+      {
         labelKey: "shared:adminNav.items.readingGroupProposals",
         to: routes.adminReadingGroupProposals,
         icon: FiBookOpen,
@@ -167,9 +191,29 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiMapPin,
       },
       {
+        labelKey: "shared:adminNav.items.topics",
+        to: routes.adminTopics,
+        icon: FiHash,
+      },
+      {
         labelKey: "shared:adminNav.items.listings",
         to: routes.adminListings,
         icon: FiFileText,
+      },
+      {
+        labelKey: "shared:adminNav.items.housingListings",
+        to: routes.adminHousingListings,
+        icon: FiHome,
+      },
+      {
+        labelKey: "shared:adminNav.items.landlords",
+        to: routes.adminLandlords,
+        icon: FiKey,
+      },
+      {
+        labelKey: "shared:adminNav.items.resourceGuides",
+        to: routes.adminResourceGuides,
+        icon: FiBookOpen,
       },
       {
         labelKey: "shared:adminNav.items.resourceListings",
@@ -271,6 +315,14 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "shared:adminNav.items.reports",
         to: routes.adminReports,
         icon: FiBarChart2,
+      },
+      {
+        // ID-16 — the status-incident desk. Filed under Platform next to
+        // Reports: it is operations work, and what it publishes is read by
+        // people with no session at all.
+        labelKey: "system:statusAdmin.navLabel",
+        to: routes.adminStatusIncidents,
+        icon: FiActivity,
       },
       {
         labelKey: "shared:adminNav.items.systemAccounts",

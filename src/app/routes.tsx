@@ -108,7 +108,7 @@ export function AppRoutes() {
           {gatheringRoutes(demoMode)}
           {magazineRoutes()}
           {topicRoutes()}
-          {cultureRoutes()}
+          {cultureRoutes(demoMode)}
           {marketingRoutes()}
           {governanceRoutes()}
           {resourceRoutes()}
@@ -116,7 +116,7 @@ export function AppRoutes() {
           {authRoutes()}
           {onboardingRoutes()}
           {economyRoutes()}
-          {cinemaRoutes()}
+          {cinemaRoutes(demoMode)}
           {studioRoutes(demoMode)}
           {forumRoutes()}
           {settingsRoutes()}

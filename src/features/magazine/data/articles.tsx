@@ -1,5 +1,6 @@
 import { isValidElement, type ReactNode } from "react";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
+import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import type { ImageSlotTint } from "../../../shared/components/ui/ImageSlot";
 import type { TFunction } from "../../../shared/i18n/types";
 // The block-editor's typed block union (Phase 3 §7.3) — distinct from the
@@ -7,6 +8,14 @@ import type { TFunction } from "../../../shared/i18n/types";
 // which predates the block editor and stays supported for back-compat.
 // Aliased to avoid colliding with this file's own `ArticleBlock` export.
 import type { ArticleBlock as TypedReadBlock } from "../api/pieces.api";
+// CON-16 — the lifecycle/translation shapes the reader surfaces render. Types
+// only; nothing at runtime is imported from the api layer here.
+import type {
+  ArticleLifecycle,
+  ArticleLifecycleNoticeDTO,
+  ArticleTranslationDTO,
+  ContentLocale,
+} from "../api/magazine.api";
 
 /**
  * A rich body block. The model is a discriminated union (each variant carries a
@@ -91,6 +100,18 @@ export function firstPlainText(body: ArticleBlock[]): string | undefined {
   return undefined;
 }
 
+/**
+ * A published correction against this piece (CON-02). Rendered as a dated note
+ * at the foot of the article, keeping the desk's "we never edit silently"
+ * promise true for the reader.
+ */
+export interface ArticleCorrection {
+  id: string;
+  text: string;
+  /** YYYY-MM-DD, formatted for display at the render site. */
+  publishedOn: string;
+}
+
 export interface Article {
   id: string;
   kicker: string;
@@ -105,6 +126,14 @@ export interface Article {
   imgDesc: string;
   /** Optional hero image URL; falls back to the tinted placeholder when absent. */
   image?: string;
+  /**
+   * CON-04 — the reframe crop a staff editor saved for `image`, passed to
+   * `ImageSlot` as `focus` (a focal point), never as `crop` (an exact frame):
+   * the hero is a full-bleed 480px band whose aspect never matches an
+   * arbitrary crop, and the exact-frame prop would stretch the art. Absent on
+   * a demo mock and whenever the art was never reframed.
+   */
+  imageFocus?: CropRect;
   authorBio: string;
   /** Topical tags used both for display and to explain why pieces relate. */
   tags: string[];
@@ -117,6 +146,38 @@ export interface Article {
    * reader (`ArticlePage.tsx`) falls back to `body` in that case.
    */
   blocks?: TypedReadBlock[];
+  /**
+   * CON-06 — the care-tab content notes, shown as a dismissible block above the
+   * body. Absent on a demo mock and on the list-item adapter.
+   */
+  contentNotes?: string[];
+  /** CON-02 — published corrections, newest first. */
+  corrections?: ArticleCorrection[];
+  /**
+   * CON-17 — the SEO rail's three fields, fed straight into `PageMeta`. Each
+   * falls back to the derived behaviour (first paragraph, hero image, the
+   * article route) when the editor left it blank.
+   */
+  metaDescription?: string;
+  socialImage?: string | null;
+  canonicalUrl?: string;
+  /**
+   * CON-16 — where this piece stands today, and everything the dated banner
+   * says about it. Absent on a demo mock and on the list-item adapter, where
+   * the reader simply sees no banner.
+   */
+  lifecycle?: ArticleLifecycle;
+  lifecycleNotice?: ArticleLifecycleNoticeDTO;
+  /**
+   * CON-16 — the language this piece is written in, every language it is
+   * readable in, the original it translates, and who translated it. The
+   * switcher renders from `translations`; a single entry means this piece has
+   * no translation, which it says plainly.
+   */
+  locale?: ContentLocale;
+  translations?: ArticleTranslationDTO[];
+  translationOf?: { locale: ContentLocale; slug: string } | null;
+  translatorName?: string | null;
   /**
    * Optional closing plum CTA band (the shared `Outro`). Fields are i18n keys so
    * the band's copy stays translated — the title is rendered through

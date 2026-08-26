@@ -13,12 +13,25 @@ import {
   type ConnectionView,
   type TabId,
 } from "../connections.data";
-import { getConnections, type ConnectionsPageDTO } from "./connections.api";
+import { filterAndSortViews } from "../connectionsFilter";
+import {
+  getConnections,
+  type ConnectionSort,
+  type ConnectionsPageDTO,
+} from "./connections.api";
 import {
   API_TAB,
   blockDtoToView,
   connectionDtoToView,
 } from "./connections.adapters";
+
+/** The search term and ordering the page is asking for. */
+export interface ConnectionsListFilters {
+  searchTerm: string;
+  sort: ConnectionSort;
+}
+
+const NO_FILTERS: ConnectionsListFilters = { searchTerm: "", sort: "recent" };
 
 export interface ConnectionsListResult {
   /** The cards to render for this tab (all pages fetched so far in live mode). */
@@ -61,8 +74,12 @@ interface ConnPageVM {
  * row. It must never fall through to the demo registry: a real block names a
  * member the mock registry has never heard of, and the tab would render empty.
  */
-export function useConnectionsList(tab: TabId): ConnectionsListResult {
+export function useConnectionsList(
+  tab: TabId,
+  filters: ConnectionsListFilters = NO_FILTERS,
+): ConnectionsListResult {
   const { demoMode } = useDemoMode();
+  const { searchTerm, sort } = filters;
   const { t, language } = useTranslation();
   const fmt = useFormat();
   const { connected, incoming, sent } = useConnections();
@@ -107,7 +124,11 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
     // `language` is part of the key because the adapted rows now carry a
     // localized "sent 3 days ago" label — switching language must rebuild the
     // list rather than serve the previous language's strings.
-    queryKey: ["connections", tab, demoMode, language],
+    // The term and the ordering are part of the key: they change WHICH rows
+    // the server returns and in what order, so a change must start a fresh
+    // infinite query rather than append a differently-filtered page 2 onto
+    // pages fetched under the old filter.
+    queryKey: ["connections", tab, demoMode, language, searchTerm.trim(), sort],
     // Blocked has no /connections endpoint; demo mode never fetches. In both
     // cases we short out to the resolved views below and keep the query idle.
     enabled: !demoMode && apiTab !== undefined,
@@ -116,6 +137,7 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
       const res: ConnectionsPageDTO = await getConnections(
         apiTab!,
         pageParam as number,
+        { searchTerm, sort },
       );
       return {
         views: res.items.map((dto) => connectionDtoToView(dto, t, fmt)),
@@ -129,12 +151,26 @@ export function useConnectionsList(tab: TabId): ConnectionsListResult {
     },
   });
 
-  const demoViews = useMemo(() => connectionViews(demoSlugs), [demoSlugs]);
+  // Demo mode has no server to filter or order for it, so the same rules the
+  // backend applies in SQL are applied here to the mock relationships. Live
+  // mode never runs this: the server already did the work, and re-filtering
+  // would drop a row it matched on a field the local matcher does not read.
+  const demoViews = useMemo(
+    () => filterAndSortViews(connectionViews(demoSlugs), searchTerm, sort),
+    [demoSlugs, searchTerm, sort],
+  );
 
   // Live blocked: the /blocks resource, never the mock registry.
   if (isLiveBlocked) {
     return {
-      views: (blocksQuery.data?.items ?? []).map(blockDtoToView),
+      // `GET /blocks` takes no query params, so the Blocked tab's search and
+      // ordering are applied to the fetched rows. The tab is small by nature
+      // (it lists people you had to block), so there is no page to miss.
+      views: filterAndSortViews(
+        (blocksQuery.data?.items ?? []).map(blockDtoToView),
+        searchTerm,
+        sort,
+      ),
       loading: blocksQuery.isPending,
       hasNextPage: false,
       fetchNextPage: () => {},

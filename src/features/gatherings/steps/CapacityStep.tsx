@@ -1,12 +1,12 @@
 import { useId } from "react";
-import { FiCheck } from "react-icons/fi";
 import { Select } from "../../../shared/components/ui";
 import { useMyCommunityOptions } from "../../communities/api/useMyCommunityOptions";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AudienceScopeField } from "../AudienceScopeField";
-import { ACCESS_OPTIONS, LANGS } from "../createGathering.data";
+import { LANGS } from "../createGathering.data";
 import type { GatheringForm } from "../useGatheringForm";
+import { AccessibilityAnswersField } from "./AccessibilityAnswersField";
 import styles from "../CreateGatheringPage.module.css";
 
 export function CapacityStep({ form }: { form: GatheringForm }) {
@@ -53,40 +53,27 @@ export function CapacityStep({ form }: { form: GatheringForm }) {
           />
         </div>
       </div>
+      <label className={styles.label} htmlFor={`${fieldId}-cost`}>
+        {t("gatherings:create.step3.costLabel")}
+      </label>
+      <p className={styles.hint}>{t("gatherings:create.step3.costHint")}</p>
+      <input
+        id={`${fieldId}-cost`}
+        className={styles.input}
+        type="text"
+        maxLength={120}
+        placeholder={t("gatherings:create.step3.costPlaceholder")}
+        value={form.cost}
+        onChange={(event) => form.setCost(event.target.value)}
+      />
       <div className={styles.label} id={`${fieldId}-access-label`}>
         {t("gatherings:create.step3.accessLabel")}
       </div>
       <p className={styles.hint}>{t("gatherings:create.step3.accessHint")}</p>
-      <div
-        className={styles.accessList}
-        role="group"
-        aria-labelledby={`${fieldId}-access-label`}
-      >
-        {ACCESS_OPTIONS.map((option) => {
-          const on = form.access.has(option.value);
-          return (
-            <div
-              key={option.value}
-              className={[styles.accessItem, on && styles.accessItemSelected]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => form.toggleAccess(option.value)}
-              role="checkbox"
-              aria-checked={on}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  form.toggleAccess(option.value);
-                }
-              }}
-            >
-              <div className={styles.accessCheck}>{on ? <FiCheck /> : ""}</div>
-              <span className={styles.accessName}>{t(option.labelKey)}</span>
-            </div>
-          );
-        })}
-      </div>
+      <AccessibilityAnswersField
+        answers={form.accessibilityAnswers}
+        onAnswer={form.setAccessibilityAnswer}
+      />
       <label className={styles.label} htmlFor={`${fieldId}-notes`}>
         {t("gatherings:create.step3.notesLabel")}
       </label>

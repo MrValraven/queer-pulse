@@ -4,6 +4,10 @@ import { routes } from "../../app/routeMap";
  * i18n Pattern A — `issueNumber`/`date` are data (formatted through
  * `issueLabelText()` / `useFormat()` in the component); `taglineKey` is
  * platform chrome.
+ *
+ * DEMO ONLY since CON-13: live mode names the real current issue from
+ * `GET /magazine/current-issue` (`useCurrentIssueLabel`). `taglineKey` is the
+ * one entry both modes still share.
  */
 export const MASTHEAD_META = {
   issueNumber: 18,
@@ -50,5 +54,13 @@ export const MASTHEAD_NAV: MastheadNavItem[] = [
     key: "sections",
     labelKey: "magazine:masthead.nav.sections",
     href: routes.magazineSections,
+  },
+  // CON-12 — search the whole published archive, and browse by tag. Last in
+  // the row on purpose: it is a tool, and the sections/authors/issues entries
+  // before it are the magazine's actual contents.
+  {
+    key: "search",
+    labelKey: "magazine:masthead.nav.search",
+    href: routes.magazineSearch,
   },
 ];

@@ -1,33 +1,31 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
 import { routes } from "../../app/routeMap";
-import {
-  Avatar,
-  Button,
-  FadeIn,
-  ImageSlot,
-  Outro,
-  SkeletonLine,
-  Tag,
-} from "../../shared/components/ui";
+import { Avatar, Button, ImageSlot, Outro } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { MagazineMasthead } from "./MagazineMasthead";
-import {
-  defaultArticleId,
-  firstPlainText,
-  relationReason,
-} from "./data/articles";
+import { defaultArticleId, firstPlainText } from "./data/articles";
 import { ArticleReaderBody } from "./ArticleReaderBody";
 import { ArticleToolbar, type TextSize } from "./ArticleToolbar";
 import { AuthorLink } from "./AuthorLink";
 import { useArticle } from "./api/useArticle";
-import { ArticleLoadFailed, ArticleNotFound } from "./ArticleStates";
+import { ApiError } from "../../shared/api/client";
+import {
+  ArticleLoadFailed,
+  ArticleNotFound,
+  ArticleSignInRequired,
+} from "./ArticleStates";
+import { ArticleContentNotes, ArticleCorrections } from "./ArticleNotes";
+import { ArticleLifecycleBanner } from "./ArticleLifecycleBanner";
+import { ArticleLanguageSwitcher } from "./ArticleLanguageSwitcher";
+import { ArticleTagList } from "./ArticleTagList";
+import { ArticleRelatedRail } from "./ArticleRelatedRail";
 import { clampDescription, nodeToText } from "./nodeText";
 import { ArticleComments } from "./comments/ArticleComments";
 
@@ -35,29 +33,30 @@ import styles from "./ArticlePage.module.css";
 
 const SIZE_PX: Record<TextSize, number> = { sm: 17, md: 19, lg: 22 };
 
-function RelatedCardSkeleton({ className }: { className: string }) {
-  return (
-    <div className={className} aria-hidden>
-      <SkeletonLine width="40%" height={11} />
-      <SkeletonLine width="90%" height={17} style={{ marginTop: 2 }} />
-      <SkeletonLine width="65%" height={13} style={{ marginTop: 2 }} />
-      <SkeletonLine
-        width={90}
-        height={22}
-        style={{ borderRadius: 999, marginTop: 4 }}
-      />
-    </div>
-  );
-}
-
 export function ArticlePage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { demoMode } = useDemoMode();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const [textSize, setTextSize] = useState<TextSize>("md");
   const simLoading = useSimulatedLoad();
   const id = params.get("id") ?? defaultArticleId;
-  const { data, isLoading, isError, refetch } = useArticle(id);
+  // CON-16 — the reader's chosen content language. It lives in the URL so a
+  // Portuguese link stays Portuguese when it is shared, and it falls back to
+  // the chrome language so a member who has set the interface to Portuguese
+  // gets the Portuguese piece without asking twice.
+  const lang = params.get("lang") ?? language;
+  const { data, error, isLoading, isError, refetch } = useArticle(id, lang);
+  // CON-16 — the server can answer with a TRANSLATION of the piece the URL
+  // names, since a translation is a first-class article at its own slug. Point
+  // the URL at the piece actually on screen, so refreshing, bookmarking or
+  // sharing it lands on the same text rather than resolving again.
+  const servedSlug = data?.article?.id ?? null;
+  useEffect(() => {
+    if (!servedSlug || servedSlug === id) return;
+    const nextParams = new URLSearchParams(params);
+    nextParams.set("id", servedSlug);
+    setParams(nextParams, { replace: true });
+  }, [servedSlug, id, params, setParams]);
   // The hook resolves the article in both modes — demo from the code-split mock
   // registry (dynamically imported, never statically bundled into live), live
   // from GET /magazine/articles/:slug. It never leaks demo articles into live.
@@ -67,8 +66,17 @@ export function ArticlePage() {
   const loading = demoMode ? simLoading || isLoading : isLoading;
 
   // A failed request is NOT a missing article (FE-CNT-08): offer a retry
-  // rather than telling the reader the piece does not exist.
-  if (isError) return <ArticleLoadFailed onRetry={() => void refetch()} />;
+  // rather than telling the reader the piece does not exist. And a 401 is not
+  // a failure at all (CON-07) — every magazine read sits behind
+  // `ActiveMemberGuard`, so a logged-out visitor following a shared link lands
+  // here. They get the members-only wall with a `?next=` back to this article
+  // rather than a retry button that can never succeed.
+  if (isError) {
+    if (error instanceof ApiError && error.status === 401) {
+      return <ArticleSignInRequired />;
+    }
+    return <ArticleLoadFailed onRetry={() => void refetch()} />;
+  }
   if (!article) return <ArticleNotFound isLoading={loading} />;
 
   const related = data?.related ?? [];
@@ -78,13 +86,21 @@ export function ArticlePage() {
 
   const plainTitle = nodeToText(article.title).replace(/\s+/g, " ").trim();
 
+  // CON-17 — the SEO rail's three fields, each falling back to what the page
+  // derived before they were served: the first paragraph, the hero image, and
+  // the article's own route.
+  const metaDescription = article.metaDescription?.trim();
+  const canonicalUrl = article.canonicalUrl?.trim();
+
   return (
     <PageShell>
       <PageMeta
         title={`${plainTitle}${t("magazine:article.pageTitleSuffix")}`}
-        description={blurb ? clampDescription(blurb) : undefined}
-        canonical={`${routes.article}?id=${id}`}
-        image={article.image}
+        description={
+          metaDescription || (blurb ? clampDescription(blurb) : undefined)
+        }
+        canonical={canonicalUrl || `${routes.article}?id=${id}`}
+        image={article.socialImage ?? article.image}
         type="article"
       />
       <MagazineMasthead />
@@ -111,6 +127,15 @@ export function ArticlePage() {
               <span className={styles.pill}>{article.readTime}</span>
             </div>
           </div>
+          <ArticleTagList tags={article.tags} />
+          {/* CON-16 — every language this piece is readable in. When there is
+              only one and it is not the reader's, it says so plainly instead
+              of leaving them looking for a control that is not there. */}
+          <ArticleLanguageSwitcher
+            translations={article.translations}
+            currentLocale={article.locale}
+            translatorName={article.translatorName}
+          />
         </div>
       </div>
 
@@ -122,6 +147,11 @@ export function ArticlePage() {
           src={article.image}
           alt={article.imgDesc}
           placeholder={article.imgDesc}
+          // CON-04 — `focus`, never `crop`: this band is full-bleed and 480px
+          // tall, so its aspect never matches the editor's saved rect and the
+          // exact-frame prop would stretch the art. `focus` keeps the cover
+          // fit and only pans to what the editor framed.
+          focus={article.imageFocus}
           loading="eager"
           fetchPriority="high"
         />
@@ -141,6 +171,15 @@ export function ArticlePage() {
             articleDescription={blurb}
             articleReadTime={article.readTime}
           />
+          {/* CON-16 — where the desk stands on this piece today. A live piece
+              draws nothing; an archived or superseded one stays readable and
+              carries a dated note instead of disappearing. */}
+          <ArticleLifecycleBanner
+            lifecycle={article.lifecycle}
+            notice={article.lifecycleNotice}
+            publishedLabel={article.date}
+          />
+          <ArticleContentNotes notes={article.contentNotes ?? []} />
           <div
             className={styles.body}
             style={
@@ -151,6 +190,8 @@ export function ArticlePage() {
           >
             <ArticleReaderBody article={article} />
           </div>
+
+          <ArticleCorrections corrections={article.corrections ?? []} />
 
           <div className={styles.bio}>
             <Avatar initials={article.initials} tint={article.tint} size={48} />
@@ -164,45 +205,11 @@ export function ArticlePage() {
         </article>
       </div>
 
-      {related.length > 0 && (
-        <div className={styles.related}>
-          <div className="wrap">
-            <div className={styles.relatedHead}>
-              <Translation
-                i18nKey="magazine:article.relatedHeading"
-                components={{ em: <em /> }}
-              />
-            </div>
-            <div className={styles.relGrid}>
-              {loading
-                ? related.map((rel) => (
-                    <RelatedCardSkeleton
-                      key={rel.id}
-                      className={styles.relCard!}
-                    />
-                  ))
-                : related.map((rel, i) => (
-                    <FadeIn
-                      as={Link}
-                      key={rel.id}
-                      to={`${routes.article}?id=${rel.id}`}
-                      className={styles.relCard}
-                      delay={Math.min(i, 8) * 60}
-                    >
-                      <div className={styles.relKicker}>{rel.section}</div>
-                      <div className={styles.relTitle}>{rel.title}</div>
-                      <div className={styles.relMeta}>
-                        {rel.byline} · {rel.readTime}
-                      </div>
-                      <Tag className={styles.relReason}>
-                        {relationReason(article, rel, t)}
-                      </Tag>
-                    </FadeIn>
-                  ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <ArticleRelatedRail
+        article={article}
+        related={related}
+        isLoading={loading}
+      />
 
       <ArticleComments articleSlug={article.id} />
 

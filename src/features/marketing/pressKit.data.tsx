@@ -1,13 +1,14 @@
 import { type ReactNode } from "react";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
+import { PRESS_ASSETS, type PressAsset } from "./pressKitAssets.data";
 
 /**
  * i18n Pattern B — several fields carry inline `<em>`/`<b>` runs, so this file
  * exports `buildX(t)` functions rather than plain-string Pattern A arrays.
  *
  * Scope split (see `docs/i18n/extraction-brief.md` §1):
- * - Boilerplate, logo/colour/photography metadata: platform-authored press-kit
+ * - Boilerplate, logo and colour metadata: platform-authored press-kit
  *   chrome → translated.
  * - Swatch `name`/`hex`: proper nouns → left as-is.
  *
@@ -41,13 +42,20 @@ export function buildBoiler(
   ];
 }
 
+/**
+ * The three published wordmark colourways. Each card's `asset` is the real
+ * PNG generated from the same values the card itself renders with, so what a
+ * journalist sees on the page is what the download hands them.
+ */
 export function buildLogos(): {
+  asset: PressAsset;
   display: string;
   mark: string;
   meta: ReactNode;
 }[] {
   return [
     {
+      asset: PRESS_ASSETS.logoPrimary,
       display: "displayCream",
       mark: "markDark",
       meta: (
@@ -58,6 +66,7 @@ export function buildLogos(): {
       ),
     },
     {
+      asset: PRESS_ASSETS.logoInverse,
       display: "displayPlum",
       mark: "markLight",
       meta: (
@@ -68,6 +77,7 @@ export function buildLogos(): {
       ),
     },
     {
+      asset: PRESS_ASSETS.logoCoral,
       display: "displayCoral",
       mark: "markLight markCoral",
       meta: (
@@ -121,56 +131,48 @@ export function buildSwatches(t: TFunction): {
   ];
 }
 
-export function buildImages(t: TFunction): { tint: string; label: string }[] {
-  return [
-    { tint: "tintA", label: t("marketing:pressKit.photography.image1") },
-    { tint: "tintB", label: t("marketing:pressKit.photography.image2") },
-    { tint: "tintC", label: t("marketing:pressKit.photography.image3") },
-    { tint: "tintA", label: t("marketing:pressKit.photography.image4") },
-    { tint: "tintB", label: t("marketing:pressKit.photography.image5") },
-    { tint: "tintC", label: t("marketing:pressKit.photography.image6") },
-  ];
-}
-
-export function buildDownloads(
-  t: TFunction,
-): { ic: string; icCls: string; title: string; description: string }[] {
+export function buildDownloads(t: TFunction): {
+  asset: PressAsset;
+  icCls: string;
+  title: string;
+  description: string;
+}[] {
   return [
     {
-      ic: "ZIP",
+      asset: PRESS_ASSETS.completeKit,
       icCls: "dlZip",
       title: t("marketing:pressKit.downloads.completeKit.title"),
       description: t("marketing:pressKit.downloads.completeKit.desc"),
     },
     {
-      ic: "SVG",
+      asset: PRESS_ASSETS.markSvg,
       icCls: "",
-      title: t("marketing:pressKit.downloads.marksSvg.title"),
-      description: t("marketing:pressKit.downloads.marksSvg.desc"),
+      title: t("marketing:pressKit.downloads.markSvg.title"),
+      description: t("marketing:pressKit.downloads.markSvg.desc"),
     },
     {
-      ic: "PNG",
+      asset: PRESS_ASSETS.markMonochromeSvg,
       icCls: "",
-      title: t("marketing:pressKit.downloads.marksPng.title"),
-      description: t("marketing:pressKit.downloads.marksPng.desc"),
+      title: t("marketing:pressKit.downloads.markMonochrome.title"),
+      description: t("marketing:pressKit.downloads.markMonochrome.desc"),
     },
     {
-      ic: "JPG",
+      asset: PRESS_ASSETS.logoPrimary,
       icCls: "",
-      title: t("marketing:pressKit.downloads.photography.title"),
-      description: t("marketing:pressKit.downloads.photography.desc"),
+      title: t("marketing:pressKit.downloads.wordmarkPng.title"),
+      description: t("marketing:pressKit.downloads.wordmarkPng.desc"),
     },
     {
-      ic: "PDF",
+      asset: PRESS_ASSETS.appIcon,
       icCls: "",
-      title: t("marketing:pressKit.downloads.factSheet.title"),
-      description: t("marketing:pressKit.downloads.factSheet.desc"),
+      title: t("marketing:pressKit.downloads.appIcon.title"),
+      description: t("marketing:pressKit.downloads.appIcon.desc"),
     },
     {
-      ic: "PDF",
+      asset: PRESS_ASSETS.brandReference,
       icCls: "",
-      title: t("marketing:pressKit.downloads.transparency.title"),
-      description: t("marketing:pressKit.downloads.transparency.desc"),
+      title: t("marketing:pressKit.downloads.brandReference.title"),
+      description: t("marketing:pressKit.downloads.brandReference.desc"),
     },
   ];
 }

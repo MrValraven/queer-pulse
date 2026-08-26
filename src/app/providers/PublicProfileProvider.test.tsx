@@ -9,7 +9,6 @@ const SIGNALS_DTO: PublicEligibilitySignalsDto = {
   tenureDays: 400,
   publishedPieces: ["2026-07-01T00:00:00.000Z"],
   hostedOpenEvents: ["2026-06-01T00:00:00.000Z"],
-  workshopsTaught: 2,
   publishedSubprofiles: 2,
   vouchCount: 4,
   vouchesGivenCount: 1,

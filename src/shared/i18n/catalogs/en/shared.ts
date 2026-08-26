@@ -182,7 +182,9 @@ export const shared: Catalog = {
   "adminNav.items.staff": "Staff & roles",
   "adminNav.items.concerns": "Concerns",
   "adminNav.items.safeSpaces": "Safe spaces",
+  "adminNav.items.topics": "Topics",
   "adminNav.items.listings": "Listings",
+  "adminNav.items.housingListings": "Housing review",
   "adminNav.items.media": "Uploaded images",
   "adminNav.items.invites": "Invites",
   "adminNav.items.changemakerNominations": "Nominations",
@@ -194,6 +196,7 @@ export const shared: Catalog = {
   "adminNav.items.partnerships": "Partnerships",
   "adminNav.items.verifications": "Verifications",
   "adminNav.items.orgTiers": "Partnership tiers",
+  "adminNav.items.resourceGuides": "Resource guides",
   "adminNav.items.resourceListings": "Resource listings",
   "adminNav.items.resourceSuggestions": "Resource suggestions",
   "adminNav.items.communityTagRequests": "Community tag requests",
@@ -210,6 +213,8 @@ export const shared: Catalog = {
   // setQueryErrorTranslator so non-React modules can stay i18n-aware.
   "apiError.server": "Something went wrong on our end. Please try again.",
   "apiError.forbidden": "You don't have access to that.",
+  "apiError.accountRestricted":
+    "You can't do that while a moderation restriction is in effect. You can appeal it from your account settings.",
   "apiError.generic": "Something went wrong.",
   "apiError.genericRetry": "Something went wrong. Please try again.",
   "apiError.tryAgainTail": " Please try again.",
@@ -374,6 +379,7 @@ export const shared: Catalog = {
   "megaNav.resources.col.safety.safetyGuide": "Safety Guide",
   "megaNav.resources.col.learn.head": "Learn & belong",
   "megaNav.resources.col.learn.resourceLibrary": "Resource Library",
+  "megaNav.resources.col.learn.guideIndex": "All guides A–Z",
   "megaNav.resources.col.learn.transNbHub": "Trans & NB Hub",
   "megaNav.resources.col.learn.comingOut": "Coming Out",
   "megaNav.resources.col.learn.familyParenting": "Family & parenting",
@@ -545,4 +551,8 @@ export const shared: Catalog = {
   // mounted in both AppShell and PageShell — shown to every visitor, signed
   // in or not (ADM-25).
   "announcement.dismiss": "Dismiss this announcement",
+
+  // en/shared.ts
+  "adminNav.items.housingGroupListings": "Group listings",
+  "adminNav.items.landlords": "Landlords",
 };

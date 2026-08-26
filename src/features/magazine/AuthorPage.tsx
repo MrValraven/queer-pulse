@@ -9,6 +9,7 @@ import { MagazineMasthead } from "./MagazineMasthead";
 import { AuthorHeader } from "./AuthorHeader";
 import { AuthorWork } from "./AuthorWork";
 import { AUTHORS, DEFAULT_AUTHOR_SLUG } from "./authorContent.data";
+import { getMember } from "../members/data/members";
 import { useAuthorPageData } from "./api/useAuthorPageData";
 import { MagazineLoadError } from "./MagazineLoadError";
 import { clampDescription, nodeToText, nodeToTitleText } from "./nodeText";
@@ -69,7 +70,18 @@ export function AuthorPage() {
   // live mode uses ONLY the merged live author — never the mock — so a failed
   // or unknown live fetch falls through to the not-found wall below instead of
   // silently rendering fabricated content.
-  const author = demoMode ? AUTHORS[slug] : liveAuthor;
+  //
+  // CON-11: the demo registry keys its writers by member slug for the ones who
+  // are also members, so the byline/member link is a real lookup here rather
+  // than a guess. Live mode gets `memberSlug` off the DTO.
+  const demoAuthor = AUTHORS[slug];
+  const author = demoMode
+    ? demoAuthor && {
+        ...demoAuthor,
+        memberSlug: getMember(slug) ? slug : null,
+        pieceCount: demoAuthor.articles.length,
+      }
+    : liveAuthor;
 
   if (!demoMode && isLoading) {
     return <AuthorLoadingState />;

@@ -1,6 +1,6 @@
 /**
  * Per-domain react-query key factory for the economy domain (jobs, employers,
- * workshops, landlords). Both the read site (where a query is DEFINED) and the
+ * landlords). Both the read site (where a query is DEFINED) and the
  * write site (where a mutation INVALIDATES) go through this one source of truth,
  * so the two can never drift — e.g. the pre-factory bug where `useJob` keyed on
  * `["job", slug, demoMode, language]` but `useJobMutations` invalidated a
@@ -19,9 +19,9 @@
  * invalidation (react-query matches queries by key prefix), matching exactly the
  * partial keys the mutations passed by hand before.
  *
- * These same string prefixes are also invalidated by two providers outside this
- * folder (`PostedJobsProvider`, `WorkshopsProvider`); the shapes above are the
- * contract they rely on, so they keep matching without change.
+ * These same string prefixes are also invalidated by a provider outside this
+ * folder (`PostedJobsProvider`); the shapes above are the contract it relies on,
+ * so it keeps matching without change.
  */
 export const economyKeys = {
   // Jobs board (list) — read by `useJobs`; invalidated on job create.
@@ -58,18 +58,6 @@ export const economyKeys = {
     ["company-reviews", slug, demoMode] as const,
   companyReviewsBySlug: (slug: string) => ["company-reviews", slug] as const,
 
-  // Workshops catalogue (list) — read by `useWorkshops`; invalidated on
-  // RSVP/edit/delete.
-  workshopsRoot: ["workshops"] as const,
-  workshops: (demoMode: boolean, language: string, params: { cat?: string }) =>
-    ["workshops", demoMode, language, params] as const,
-
-  // A single workshop (detail) — read by `useWorkshop`; invalidated by id (the
-  // FE's slug) on RSVP/edit/delete.
-  workshop: (slug: string | undefined, demoMode: boolean, language: string) =>
-    ["workshop", slug, demoMode, language] as const,
-  workshopById: (id: string) => ["workshop", id] as const,
-
   // Landlord (detail) — read by `useLandlord`; live-only invalidation on
   // recommend passes `demoMode: false` to hit exactly the live cache entry.
   landlord: (demoMode: boolean, slug: string | undefined) =>
@@ -101,6 +89,14 @@ export const economyKeys = {
   housingGroupRoot: ["housing-group"] as const,
   housingGroup: (slug: string | undefined, demoMode: boolean) =>
     ["housing-group", slug, demoMode] as const,
+
+  // The caller's OWN rooms inside one vetted group, in any moderation state
+  // (LOC-19) — read by `useMyGroupListings`; patched in place by the poster's
+  // submit/edit/withdraw mutations and invalidated after them, so the review
+  // bounce comes back from the server rather than from a guess.
+  myGroupListingsRoot: ["my-group-listings"] as const,
+  myGroupListings: (slug: string | undefined, demoMode: boolean) =>
+    ["my-group-listings", slug, demoMode] as const,
 
   // A job's applications, poster-side (BE-HSG-16) — read by
   // `useJobApplications`; patched in place by the decide mutation.

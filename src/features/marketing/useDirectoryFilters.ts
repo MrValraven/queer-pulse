@@ -1,13 +1,20 @@
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import type { MyLocationCoordinates } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { LOCAL_CATEGORY_LABEL_KEYS } from "./localCategories";
 import {
   filterLocalPlaces,
   sortLocalPlaces,
-  LOCAL_CATEGORY_LABEL_KEYS,
   type LocalPlace,
   type LocalSort,
 } from "./localPlaces";
+import {
+  ACCESSIBILITY_QUESTIONS,
+  ACCESSIBILITY_QUESTION_SLUGS,
+  type AccessibilitySlug,
+} from "./listBusiness/listingAccessibility.data";
+import { distancesFrom, sortByDistance } from "./nearMePlaces";
 import { VIBE_LABEL_KEYS } from "./map.data";
 import type { ActiveFilter } from "./DirectoryResultsHeader";
 
@@ -19,6 +26,49 @@ function toSort(value: string | null): LocalSort {
     : "default";
 }
 
+const ACCESS_SLUG_SET: ReadonlySet<string> = new Set(
+  ACCESSIBILITY_QUESTION_SLUGS,
+);
+
+/** The catalog key for each accessibility slug, so a removable filter chip
+ *  reads in the same words the detail page uses for the same question. */
+const ACCESS_LABEL_KEYS: Record<AccessibilitySlug, string> = Object.fromEntries(
+  ACCESSIBILITY_QUESTIONS.map((question) => [question.slug, question.labelKey]),
+) as Record<AccessibilitySlug, string>;
+
+/**
+ * Read `?access=` into the six canonical slugs.
+ *
+ * Anything unrecognised is dropped here rather than forwarded. The endpoint
+ * answers 400 to a misspelt slug on purpose (a silently ignored accessibility
+ * filter is the failure mode that hurts someone), so a hand-edited or stale
+ * URL must never turn the whole grid into an error. Duplicates collapse, and
+ * the order is the canonical question order rather than typing order, so two
+ * equivalent URLs produce one cache key.
+ */
+function toAccess(raw: string | null): AccessibilitySlug[] {
+  if (!raw) return [];
+  const wanted = new Set(
+    raw.split(",").filter((slug) => ACCESS_SLUG_SET.has(slug)),
+  );
+  return ACCESSIBILITY_QUESTION_SLUGS.filter((slug) => wanted.has(slug));
+}
+
+/**
+ * The accessibility needs currently being filtered on, read straight from the
+ * URL.
+ *
+ * Exported on its own so a card deep in the grid can lead with the need the
+ * member actually asked for without four levels of prop drilling: the filter
+ * lives in the URL, which is already shared state, so reading it where it is
+ * needed is both cheaper and harder to get out of sync than threading it.
+ */
+export function useAccessFilter(): AccessibilitySlug[] {
+  const [searchParams] = useSearchParams();
+  const raw = searchParams.get("access");
+  return useMemo(() => toAccess(raw), [raw]);
+}
+
 export interface DirectoryFilterParams {
   view: "list" | "map";
   category: string;
@@ -26,12 +76,18 @@ export interface DirectoryFilterParams {
   sort: LocalSort;
   vibes: string[];
   safe: "verified" | null;
+  /** Only places open right now, on their own clock. */
+  openNow: boolean;
+  /** Accessibility needs that must ALL be met, in canonical question order. */
+  access: AccessibilitySlug[];
   selectView: (next: string) => void;
   setCategory: (next: string) => void;
   setQuery: (next: string) => void;
   setSort: (next: string) => void;
   toggleVibe: (vibe: string) => void;
   setSafe: (next: boolean) => void;
+  setOpenNow: (next: boolean) => void;
+  toggleAccess: (slug: AccessibilitySlug) => void;
   clearFilters: () => void;
 }
 
@@ -56,6 +112,8 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     [searchParams],
   );
   const safe = searchParams.get("safe") === "verified" ? "verified" : null;
+  const openNow = searchParams.get("open") === "now";
+  const access = useAccessFilter();
 
   const mutateParams = useCallback(
     (mutate: (params: URLSearchParams) => void, push = false) => {
@@ -113,6 +171,21 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     (next: boolean) => setParam("safe", "verified", !next),
     [setParam],
   );
+  const setOpenNow = useCallback(
+    (next: boolean) => setParam("open", "now", !next),
+    [setParam],
+  );
+  const toggleAccess = useCallback(
+    (slug: AccessibilitySlug) => {
+      const next = access.includes(slug)
+        ? access.filter((entry) => entry !== slug)
+        : ACCESSIBILITY_QUESTION_SLUGS.filter(
+            (entry) => entry === slug || access.includes(entry),
+          );
+      setParam("access", next.join(","), next.length === 0);
+    },
+    [access, setParam],
+  );
   const clearFilters = useCallback(
     () =>
       mutateParams((params) => {
@@ -120,6 +193,8 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
         params.delete("q");
         params.delete("vibe");
         params.delete("safe");
+        params.delete("open");
+        params.delete("access");
       }),
     [mutateParams],
   );
@@ -131,12 +206,16 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     sort,
     vibes,
     safe,
+    openNow,
+    access,
     selectView,
     setCategory,
     setQuery,
     setSort,
     toggleVibe,
     setSafe,
+    setOpenNow,
+    toggleAccess,
     clearFilters,
   };
 }
@@ -144,14 +223,25 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
 /**
  * Derives the displayed list, chip counts, and active-filter pills from an
  * already-fetched `places` array plus the URL state from
- * `useDirectoryFilterParams`. `query`/`safe` are ALSO applied here (even
- * though the network fetch already filtered by them server-side) purely as a
- * cheap, harmless no-op safety net; `category`/`vibe` are the two filters that
- * genuinely only ever apply here client-side (see that hook's doc comment).
+ * `useDirectoryFilterParams`. `query`/`safe`/`access` are ALSO applied here
+ * (even though the network fetch already filtered by them server-side) purely
+ * as a cheap, harmless no-op safety net, and so the demo fixture answers the
+ * same filters with no backend at all. `category`/`vibe`/`open` are the three
+ * that genuinely only ever apply here client-side: the first two for the
+ * reasons in that hook's doc comment, and `open` because the grid is CDN-cached
+ * and a server-computed open state would go stale in the dangerous direction.
  */
 export function useDirectoryFilterResults(
   places: LocalPlace[],
   params: DirectoryFilterParams,
+  /**
+   * The member's own position, when they have opted in to "near me". It comes
+   * from `useMyLocation`, lives in React state only, and is used here for one
+   * thing: ordering the already-loaded places and labelling each card with a
+   * walking time. Passing `null` (the default, and what turning the control
+   * off produces) restores the previous ordering exactly.
+   */
+  origin: MyLocationCoordinates | null = null,
 ) {
   const { t } = useTranslation();
   const {
@@ -159,20 +249,47 @@ export function useDirectoryFilterResults(
     query,
     vibes,
     safe,
+    openNow,
+    access,
     sort,
     setCategory,
     toggleVibe,
     setSafe,
+    setOpenNow,
+    toggleAccess,
     setQuery,
   } = params;
 
-  const filtered = useMemo(
+  const matched = useMemo(
     () =>
       sortLocalPlaces(
-        filterLocalPlaces(places, { category, query, vibes, safe }),
+        filterLocalPlaces(places, {
+          category,
+          query,
+          vibes,
+          safe,
+          openNow,
+          access,
+        }),
         sort,
       ),
-    [places, category, query, vibes, safe, sort],
+    [places, category, query, vibes, safe, openNow, access, sort],
+  );
+
+  // Distances are measured only over what is already on screen, and only once
+  // the member has opted in. A place with no coordinates never appears in this
+  // map, so it never gets a walking time and never sorts as if it were here.
+  const distanceById = useMemo(
+    () => (origin ? distancesFrom(origin, matched) : null),
+    [origin, matched],
+  );
+
+  // "Near me" REPLACES the chosen sort while it is on, because a distance
+  // order and an alphabetical one cannot both be the answer. Turning it off
+  // hands the previous ordering straight back.
+  const filtered = useMemo(
+    () => (distanceById ? sortByDistance(matched, distanceById) : matched),
+    [matched, distanceById],
   );
 
   // Chip counts reflect the query + vibe + safe filters but NOT the category,
@@ -186,13 +303,15 @@ export function useDirectoryFilterResults(
       query,
       vibes,
       safe,
+      openNow,
+      access,
     });
     const counts: Record<string, number> = { all: base.length };
     for (const place of base) {
       counts[place.category] = (counts[place.category] ?? 0) + 1;
     }
     return counts;
-  }, [places, query, vibes, safe]);
+  }, [places, query, vibes, safe, openNow, access]);
 
   const mappableCount = useMemo(
     () => filtered.filter((place) => place.coords !== null).length,
@@ -222,6 +341,20 @@ export function useDirectoryFilterResults(
         onRemove: () => setSafe(false),
       });
     }
+    if (openNow) {
+      list.push({
+        key: "open",
+        label: t("marketing:local.filter.openNow"),
+        onRemove: () => setOpenNow(false),
+      });
+    }
+    access.forEach((slug) => {
+      list.push({
+        key: `access:${slug}`,
+        label: t(ACCESS_LABEL_KEYS[slug]),
+        onRemove: () => toggleAccess(slug),
+      });
+    });
     if (query.trim()) {
       list.push({
         key: "query",
@@ -234,13 +367,23 @@ export function useDirectoryFilterResults(
     category,
     vibes,
     safe,
+    openNow,
+    access,
     query,
     t,
     setCategory,
     toggleVibe,
     setSafe,
+    setOpenNow,
+    toggleAccess,
     setQuery,
   ]);
 
-  return { filtered, categoryCounts, mappableCount, activeFilters };
+  return {
+    filtered,
+    categoryCounts,
+    mappableCount,
+    activeFilters,
+    distanceById,
+  };
 }

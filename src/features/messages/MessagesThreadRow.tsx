@@ -1,5 +1,5 @@
 import { memo, useRef } from "react";
-import { FiBellOff, FiHeart } from "react-icons/fi";
+import { FiArchive, FiBellOff, FiHeart } from "react-icons/fi";
 import { TbPinnedFilled } from "react-icons/tb";
 import { Avatar } from "../../shared/components/ui";
 import { useIsOnline } from "../../shared/api/realtime";
@@ -7,6 +7,7 @@ import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
 import {
+  useToggleArchive,
   useToggleFavorite,
   useToggleMute,
   useTogglePin,
@@ -68,9 +69,11 @@ function MessagesThreadRowImpl({
   const isPinned = !!thread.pinnedAt;
   const isFavorite = !!thread.favorite;
   const isMuted = !!thread.muted;
+  const isArchived = !!thread.archivedAt;
   const togglePin = useTogglePin();
   const toggleFavorite = useToggleFavorite();
   const toggleMute = useToggleMute();
+  const toggleArchive = useToggleArchive();
   const displayedTime = useThreadRowTimeLabel(thread.time, thread.updatedAt);
 
   // Shared by BOTH the ⋯ menu items and the mobile swipe gesture below — one
@@ -85,6 +88,8 @@ function MessagesThreadRowImpl({
     toggleFavorite.mutate({ conversationId: thread.id, favorite: isFavorite });
   const handleToggleMute = () =>
     toggleMute.mutate({ conversationId: thread.id, muted: isMuted });
+  const handleToggleArchive = () =>
+    toggleArchive.mutate({ conversationId: thread.id, archived: isArchived });
 
   const rowRef = useRef<HTMLButtonElement>(null);
   const leadingIconRef = useRef<HTMLSpanElement>(null);
@@ -146,6 +151,14 @@ function MessagesThreadRowImpl({
                 <MemberStaffBadge slug={thread.slug} />
               </span>
               <span className={styles.trIndicators}>
+                {isArchived && (
+                  <span
+                    className={styles.trArchivedIcon}
+                    title={t("messages:thread.archivedIndicator")}
+                  >
+                    <FiArchive aria-hidden />
+                  </span>
+                )}
                 {isMuted && (
                   <span
                     className={styles.trMutedIcon}
@@ -201,6 +214,7 @@ function MessagesThreadRowImpl({
         onTogglePin={handleTogglePin}
         onToggleFavorite={handleToggleFavorite}
         onToggleMute={handleToggleMute}
+        onToggleArchive={handleToggleArchive}
         onDelete={() => onRequestDelete(thread)}
       />
     </div>

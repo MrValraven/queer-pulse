@@ -32,15 +32,32 @@ import s from "./DirectorySpacePage.module.css";
  * the same one `SafeSpaceDetailPage`'s `VerifiedView` uses for the identical
  * arrangement.
  *
- * Guard: renders nothing unless `place.safeSpaceStatus === "verified"` — a
- * "none"/"removed"/absent status (a listing that was never reviewed, or one
- * that lost its verification) shows no trust section at all here.
+ * Two different gates, and keeping them apart is the point:
+ *
+ * - The BANNER always renders. It is `SafeSpaceBadgeStatus`, which reads the
+ *   live per-slug state and shows nothing at all for a place with no badge, so
+ *   a space still collecting its three visits gets to say "under review" and a
+ *   suspended badge gets to say it is on hold. Gating that on
+ *   `safeSpaceStatus === "verified"` would leave the last-known verified
+ *   narrative on screen with nothing to qualify it.
+ * - The STATIC narrative below it (promises, vouches, the aside) renders only
+ *   for a listing that carries a badge at all: `"verified"` or `"suspended"`.
+ *   A suspended badge is a real grant on hold, so the promises the place made
+ *   and the vouches members wrote are still a true record and stay, under a
+ *   banner that has already said the badge is not currently speaking. A
+ *   never-reviewed listing used to print empty "What you can rely on here" and
+ *   "Where" headings with nothing under them.
  */
 export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const [vouchOpen, setVouchOpen] = useState(false);
 
-  if (place.safeSpaceStatus !== "verified") return null;
+  // "Is there a badge at all", never "is it verified": a suspended badge is a
+  // real grant on hold, and dropping its record would leave a member who saw it
+  // yesterday with no explanation.
+  const hasBadgeRecord =
+    place.safeSpaceStatus === "verified" ||
+    place.safeSpaceStatus === "suspended";
 
   const vouches = directoryVouchesToSafetyVouches(place.safeSpaceVouches ?? []);
   const asideData = directoryTrustToAsideData({
@@ -53,22 +70,26 @@ export function DirectorySpaceTrust({ place }: { place: DirectoryPlace }) {
   return (
     <div className={s.trustSection}>
       <SafeSpaceTrustBanner
+        slug={place.slug}
+        spaceName={place.name}
         tier={place.safeSpaceTier ?? 0}
         reVerified={place.safeSpaceReVerifiedAt ?? ""}
         verifier={place.safeSpaceVerifier ?? ""}
       />
 
-      <div className={safetyStyles.grid}>
-        <div>
-          <SafeSpacePromisesList promises={place.safeSpacePromises ?? []} />
-          <SafeSpaceVouchesList
-            vouches={vouches}
-            onAddVouch={() => setVouchOpen(true)}
-          />
-        </div>
+      {hasBadgeRecord && (
+        <div className={safetyStyles.grid}>
+          <div>
+            <SafeSpacePromisesList promises={place.safeSpacePromises ?? []} />
+            <SafeSpaceVouchesList
+              vouches={vouches}
+              onAddVouch={() => setVouchOpen(true)}
+            />
+          </div>
 
-        <SafeSpaceVerifiedAside space={asideData} showBackLink={false} />
-      </div>
+          <SafeSpaceVerifiedAside space={asideData} showBackLink={false} />
+        </div>
+      )}
 
       <p className={s.trustHowLine}>
         {t("marketing:directory.detail.trust.howLine")}{" "}

@@ -304,4 +304,42 @@ export const forum: Catalog = {
   "toast.pinCapReached":
     "Só podes fixar 3 tópicos ao mesmo tempo. Desafixa um primeiro.",
   "toast.error": "Algo correu mal. Tenta novamente daqui a pouco.",
+
+  // ── Following a thread (SOC-13) ───────────────────────────────────────────
+  "follow.followCta": "Seguir",
+  "follow.unfollowCta": "A seguir",
+  "follow.followedToast": "Vais saber das novas respostas aqui.",
+  "follow.unfollowedToast": "Deixaste de seguir este tópico.",
+
+  // ── Accepted answer (SOC-13) ──────────────────────────────────────────────
+  "replies.acceptedBadge": "Resposta aceite",
+  "replies.markAnswer": "Marcar como resposta",
+  "replies.unmarkAnswer": "Desmarcar resposta",
+  "replies.quote": "Citar",
+  "answer.acceptedToast": "Marcada como a resposta.",
+  "answer.clearedToast": "Marca de resposta removida.",
+
+  // ── Tag editing (SOC-13) ──────────────────────────────────────────────────
+  "tagsEdit.title": "Editar etiquetas",
+  "tagsEdit.body":
+    "As etiquetas são como as pessoas encontram este tópico mais tarde. Até cinco, em minúsculas.",
+  "tagsEdit.editCta": "Editar etiquetas",
+  "tagsEdit.addCta": "Adicionar etiquetas",
+  "tagsEdit.save": "Guardar etiquetas",
+  "tagsEdit.saving": "A guardar…",
+  "tagsEdit.cancel": "Cancelar",
+  "tagsEdit.savedToast": "Etiquetas atualizadas.",
+
+  // ── Composer photo + autosave (SOC-13) ────────────────────────────────────
+  "compose.imageAttachCta": "Adicionar uma foto",
+  "compose.imageUploading": "A carregar…",
+  "compose.imageRemoveAria": "Remover a foto anexada",
+  "compose.imageAttachThreadAria": "Adicionar uma foto a esta publicação",
+  "compose.imageAttachReplyAria": "Adicionar uma foto a esta resposta",
+  "post.imageAlt": "Foto anexada a esta publicação",
+  "draft.saving": "A guardar…",
+  "draft.saved": "Rascunho guardado",
+  "draft.restored": "Rascunho recuperado",
+  "draft.threadKind": "PUBLICAÇÃO",
+  "draft.replyKind": "RESPOSTA",
 };

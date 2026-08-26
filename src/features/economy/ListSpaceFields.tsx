@@ -1,5 +1,7 @@
 import { Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { HOUSING_CITY } from "./api/housingListing.api";
+import { ListSpaceDetailFields } from "./ListSpaceDetailFields";
 import type { ListSpaceForm } from "./useListSpaceForm";
 import styles from "./ApplicationModals.module.css";
 import check from "./ListSpaceFields.module.css";
@@ -11,10 +13,18 @@ const SPACE_TYPES = [
   { value: "studio", labelKey: "economy:listSpace.type.studio" },
 ];
 
-/** The "list a space" form body — text fields plus the transparency + broker
- * disclosures (P2.6). Presentational: all state lives in `useListSpaceForm`. */
+/**
+ * The "list a space" form body: the basics, then everything that carries the
+ * home itself (`ListSpaceDetailFields`), then the transparency + broker
+ * disclosures (P2.6). Presentational: all state lives in `useListSpaceForm`.
+ *
+ * The neighbourhood field is the NEIGHBOURHOOD only. Lisbon is the one city
+ * this product serves, so it is stated rather than asked for, and the form no
+ * longer copies the neighbourhood into the city column.
+ */
 export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
   const { t } = useTranslation();
+  const { values, setField } = form;
   return (
     <>
       <div className={styles.field}>
@@ -22,8 +32,8 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
         <input
           id="ls-title"
           type="text"
-          value={form.title}
-          onChange={(event) => form.setTitle(event.target.value)}
+          value={values.title}
+          onChange={(event) => setField("title", event.target.value)}
           placeholder={t("economy:listSpace.titlePlaceholder")}
         />
       </div>
@@ -32,43 +42,49 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
         <input
           id="ls-area"
           type="text"
-          value={form.area}
-          onChange={(event) => form.setArea(event.target.value)}
+          value={values.area}
+          onChange={(event) => setField("area", event.target.value)}
           placeholder={t("economy:listSpace.areaPlaceholder")}
+          aria-describedby="ls-area-hint"
         />
+        <p id="ls-area-hint" className={check.fieldHint}>
+          {t("economy:listSpace.areaHint", { city: HOUSING_CITY })}
+        </p>
       </div>
-      <div className={styles.field}>
-        <label htmlFor="ls-rent">{t("economy:listSpace.rentLabel")}</label>
-        <input
-          id="ls-rent"
-          type="number"
-          min={0}
-          value={form.rent}
-          onChange={(event) => form.setRent(event.target.value)}
-          placeholder={t("economy:listSpace.rentPlaceholder")}
-        />
-      </div>
-      <div className={styles.field}>
-        <label htmlFor="ls-bedrooms">
-          {t("economy:listSpace.bedroomsLabel")}
-        </label>
-        <input
-          id="ls-bedrooms"
-          type="number"
-          min={0}
-          max={20}
-          value={form.bedrooms}
-          onChange={(event) => form.setBedrooms(event.target.value)}
-          placeholder={t("economy:listSpace.bedroomsPlaceholder")}
-        />
+      <div className={styles.fieldRow}>
+        <div className={styles.field}>
+          <label htmlFor="ls-rent">{t("economy:listSpace.rentLabel")}</label>
+          <input
+            id="ls-rent"
+            type="number"
+            min={0}
+            value={values.rent}
+            onChange={(event) => setField("rent", event.target.value)}
+            placeholder={t("economy:listSpace.rentPlaceholder")}
+          />
+        </div>
+        <div className={styles.field}>
+          <label htmlFor="ls-bedrooms">
+            {t("economy:listSpace.bedroomsLabel")}
+          </label>
+          <input
+            id="ls-bedrooms"
+            type="number"
+            min={0}
+            max={20}
+            value={values.bedrooms}
+            onChange={(event) => setField("bedrooms", event.target.value)}
+            placeholder={t("economy:listSpace.bedroomsPlaceholder")}
+          />
+        </div>
       </div>
       <div className={styles.field}>
         <label htmlFor="ls-type">{t("economy:listSpace.typeLabel")}</label>
         <Select
           id="ls-type"
           placeholder={t("economy:listSpace.chooseOne")}
-          value={form.type || null}
-          onChange={(value) => form.setType(value ?? "")}
+          value={values.type || null}
+          onChange={(value) => setField("type", value ?? "")}
           options={SPACE_TYPES.map((spaceType) => ({
             value: spaceType.value,
             label: t(spaceType.labelKey),
@@ -79,22 +95,13 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
         <label htmlFor="ls-access">{t("economy:listSpace.accessLabel")}</label>
         <textarea
           id="ls-access"
-          value={form.accessibility}
-          onChange={(event) => form.setAccessibility(event.target.value)}
+          value={values.accessibility}
+          onChange={(event) => setField("accessibility", event.target.value)}
           placeholder={t("economy:listSpace.accessPlaceholder")}
         />
       </div>
 
-      <div className={check.guide}>
-        <p className={check.guideTitle}>
-          {t("economy:listSpace.photoGuide.title")}
-        </p>
-        <ul className={check.guideList}>
-          <li>{t("economy:listSpace.photoGuide.lit")}</li>
-          <li>{t("economy:listSpace.photoGuide.rooms")}</li>
-          <li>{t("economy:listSpace.photoGuide.consent")}</li>
-        </ul>
-      </div>
+      <ListSpaceDetailFields form={form} />
 
       <div className={styles.field}>
         <label htmlFor="ls-tour">{t("economy:listSpace.tourLabel")}</label>
@@ -102,15 +109,15 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
           id="ls-tour"
           type="url"
           inputMode="url"
-          value={form.virtualTour}
-          onChange={(event) => form.setVirtualTour(event.target.value)}
+          value={values.virtualTour}
+          onChange={(event) => setField("virtualTour", event.target.value)}
           placeholder={t("economy:listSpace.tourPlaceholder")}
-          aria-invalid={form.virtualTourInvalid || undefined}
+          aria-invalid={form.isVirtualTourInvalid || undefined}
           aria-describedby={
-            form.virtualTourInvalid ? "ls-tour-error" : "ls-tour-hint"
+            form.isVirtualTourInvalid ? "ls-tour-error" : "ls-tour-hint"
           }
         />
-        {form.virtualTourInvalid ? (
+        {form.isVirtualTourInvalid ? (
           <p id="ls-tour-error" className={check.fieldError} role="alert">
             {t("economy:listSpace.tourError")}
           </p>
@@ -124,8 +131,8 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
       <label className={check.check}>
         <input
           type="checkbox"
-          checked={form.billsIncluded}
-          onChange={(event) => form.setBillsIncluded(event.target.checked)}
+          checked={values.billsIncluded}
+          onChange={(event) => setField("billsIncluded", event.target.checked)}
         />
         <span className={check.checkText}>
           {t("economy:listSpace.billsLabel")}
@@ -138,8 +145,8 @@ export function ListSpaceFields({ form }: { form: ListSpaceForm }) {
       <label className={check.check}>
         <input
           type="checkbox"
-          checked={form.isAgent}
-          onChange={(event) => form.setIsAgent(event.target.checked)}
+          checked={values.isAgent}
+          onChange={(event) => setField("isAgent", event.target.checked)}
         />
         <span className={check.checkText}>
           {t("economy:listSpace.agentLabel")}

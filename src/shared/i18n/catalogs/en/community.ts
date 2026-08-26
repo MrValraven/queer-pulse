@@ -767,4 +767,21 @@ export const community: Catalog = {
   "readingGroups.listGroup.defaultWhereIrl": "Lisbon (TBC)",
   "readingGroups.listGroup.defaultFrequency": "Monthly",
   "readingGroups.listGroup.defaultLang": "EN / PT",
+
+  // ── Live directory (a reading group IS a community tagged `book-club`) ────
+  "readingGroups.card.formatPrefix.either": "In person or online · ",
+  "readingGroups.card.members_one": "{count} member",
+  "readingGroups.card.members_other": "{count} members",
+  "readingGroups.card.openGroupCta": "Open the group",
+  "readingGroups.card.requestPendingCta": "Sending…",
+  "readingGroups.card.requestSentCta": "Request sent",
+  "readingGroups.card.joinedToast": "You're in. Say hello in the group",
+  "readingGroups.card.requestedToast":
+    "Request sent. The person who runs the group decides who joins",
+  "readingGroups.card.joinErrorToast":
+    "Couldn't send your request. Please try again.",
+  "readingGroups.liveError.title": "The directory didn't load",
+  "readingGroups.liveError.description":
+    "Something went wrong fetching the groups. This is usually momentary.",
+  "readingGroups.liveError.retryCta": "Try again",
 };

@@ -6,12 +6,90 @@ import type { GovernanceProposalDTO } from "./api/governanceProposals.api";
  * starts fresh, `myVote` is always `null`, and the vote buttons track "just
  * voted" locally per card rather than persisting). One open proposal of each
  * type, plus one resolved example of each outcome, so every visual state
- * (open/passed/failed, council/funding) renders in demo mode.
+ * renders in demo mode.
+ *
+ * GOV-01 adds the member-motion lifecycle to that set: a motion mid-drive on
+ * the gathering shelf, one that cleared its threshold and is waiting on
+ * review, one a reviewer turned down (with the public reason), one that ran
+ * out of gathering time, and one that went to a vote and failed on turnout
+ * rather than on the two-thirds line.
  */
 const now = Date.now();
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** Co-signatures a member motion needs before it reaches screening. */
+export const DEMO_COSIGNATURE_THRESHOLD = 10;
+
+/** Ballots a vote needs for the result to count, in this demo community. */
+const DEMO_QUORUM_REQUIRED = 60;
+
 export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
+  {
+    id: "demo-member-motion-gathering",
+    type: "member_motion",
+    title: "Publish the moderation rota alongside the quarterly report",
+    description:
+      "Members can read what moderation decided, but not who was on duty when. Publishing the rota next to the quarterly figures would let us see whether the workload is spread fairly across the team, and would make it easier to ask an informed question about a specific week.",
+    targetMemberId: null,
+    targetMember: null,
+    status: "gathering",
+    opensAt: new Date(now - 12 * DAY_MS).toISOString(),
+    closesAt: new Date(now + 18 * DAY_MS).toISOString(),
+    tally: {
+      for: 0,
+      against: 0,
+      forPercent: 0,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 0,
+    },
+    myVote: null,
+    cosignatureCount: 7,
+    cosignatureThreshold: DEMO_COSIGNATURE_THRESHOLD,
+    hasCosigned: false,
+    proposedByMemberId: "demo-rita",
+    proposedByMember: {
+      slug: "rita-abreu",
+      firstName: "Rita",
+      lastName: "Abreu",
+      avatarUrl: null,
+    },
+    gatheringClosesAt: new Date(now + 18 * DAY_MS).toISOString(),
+    screeningNote: null,
+    failedForQuorum: false,
+  },
+  {
+    id: "demo-member-motion-screening",
+    type: "member_motion",
+    title: "Add a sliding-scale line to every paid gathering listing",
+    description:
+      "The sliding scale exists, but you only find it once you open the ticket step. Putting the lowest available price on the listing card itself would tell someone whether an evening is within reach before they invest any hope in it.",
+    targetMemberId: null,
+    targetMember: null,
+    status: "screening",
+    opensAt: new Date(now - 26 * DAY_MS).toISOString(),
+    closesAt: new Date(now + 4 * DAY_MS).toISOString(),
+    tally: {
+      for: 0,
+      against: 0,
+      forPercent: 0,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 0,
+    },
+    myVote: null,
+    cosignatureCount: 14,
+    cosignatureThreshold: DEMO_COSIGNATURE_THRESHOLD,
+    hasCosigned: true,
+    proposedByMemberId: "demo-nuno",
+    proposedByMember: {
+      slug: "nuno-salgado",
+      firstName: "Nuno",
+      lastName: "Salgado",
+      avatarUrl: null,
+    },
+    gatheringClosesAt: new Date(now - 2 * DAY_MS).toISOString(),
+    screeningNote: null,
+    failedForQuorum: false,
+  },
   {
     id: "demo-council-removal-open",
     type: "council_removal",
@@ -28,8 +106,22 @@ export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
     status: "open",
     opensAt: new Date(now - 2 * DAY_MS).toISOString(),
     closesAt: new Date(now + 5 * DAY_MS).toISOString(),
-    tally: { for: 34, against: 11, forPercent: 76 },
+    tally: {
+      for: 34,
+      against: 11,
+      forPercent: 76,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 45,
+    },
     myVote: null,
+    cosignatureCount: 0,
+    cosignatureThreshold: null,
+    hasCosigned: false,
+    proposedByMemberId: null,
+    proposedByMember: null,
+    gatheringClosesAt: null,
+    screeningNote: null,
+    failedForQuorum: false,
   },
   {
     id: "demo-funding-change-open",
@@ -42,8 +134,22 @@ export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
     status: "open",
     opensAt: new Date(now - 4 * DAY_MS).toISOString(),
     closesAt: new Date(now + 3 * DAY_MS).toISOString(),
-    tally: { for: 58, against: 22, forPercent: 73 },
+    tally: {
+      for: 58,
+      against: 22,
+      forPercent: 73,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 80,
+    },
     myVote: null,
+    cosignatureCount: 0,
+    cosignatureThreshold: null,
+    hasCosigned: false,
+    proposedByMemberId: null,
+    proposedByMember: null,
+    gatheringClosesAt: null,
+    screeningNote: null,
+    failedForQuorum: false,
   },
   {
     id: "demo-council-removal-passed",
@@ -61,8 +167,22 @@ export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
     status: "passed",
     opensAt: new Date(now - 21 * DAY_MS).toISOString(),
     closesAt: new Date(now - 14 * DAY_MS).toISOString(),
-    tally: { for: 61, against: 4, forPercent: 94 },
+    tally: {
+      for: 61,
+      against: 4,
+      forPercent: 94,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 65,
+    },
     myVote: "for",
+    cosignatureCount: 0,
+    cosignatureThreshold: null,
+    hasCosigned: false,
+    proposedByMemberId: null,
+    proposedByMember: null,
+    gatheringClosesAt: null,
+    screeningNote: null,
+    failedForQuorum: false,
   },
   {
     id: "demo-funding-change-failed",
@@ -75,7 +195,121 @@ export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
     status: "failed",
     opensAt: new Date(now - 40 * DAY_MS).toISOString(),
     closesAt: new Date(now - 33 * DAY_MS).toISOString(),
-    tally: { for: 9, against: 71, forPercent: 11 },
+    tally: {
+      for: 9,
+      against: 71,
+      forPercent: 11,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 80,
+    },
     myVote: "against",
+    cosignatureCount: 0,
+    cosignatureThreshold: null,
+    hasCosigned: false,
+    proposedByMemberId: null,
+    proposedByMember: null,
+    gatheringClosesAt: null,
+    screeningNote: null,
+    failedForQuorum: false,
+  },
+  {
+    id: "demo-member-motion-failed-quorum",
+    type: "member_motion",
+    title: "Move the monthly open call to a weekday evening",
+    description:
+      "The open call has run on Saturday afternoons since it started, which rules out anyone working weekend shifts. This motion asked to move it to a Wednesday evening for a six-month trial.",
+    targetMemberId: null,
+    targetMember: null,
+    status: "failed",
+    opensAt: new Date(now - 30 * DAY_MS).toISOString(),
+    closesAt: new Date(now - 23 * DAY_MS).toISOString(),
+    tally: {
+      for: 25,
+      against: 6,
+      forPercent: 81,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 31,
+    },
+    myVote: "for",
+    cosignatureCount: 11,
+    cosignatureThreshold: DEMO_COSIGNATURE_THRESHOLD,
+    hasCosigned: true,
+    proposedByMemberId: "demo-ines",
+    proposedByMember: {
+      slug: "ines-mota",
+      firstName: "Inês",
+      lastName: "Mota",
+      avatarUrl: null,
+    },
+    gatheringClosesAt: null,
+    screeningNote: null,
+    failedForQuorum: true,
+  },
+  {
+    id: "demo-member-motion-rejected",
+    type: "member_motion",
+    title: "Publish the full name of every member who files a report",
+    description:
+      "This motion asked that report filings be attributed publicly, so that members can see who raised what.",
+    targetMemberId: null,
+    targetMember: null,
+    status: "rejected",
+    opensAt: new Date(now - 55 * DAY_MS).toISOString(),
+    closesAt: new Date(now - 48 * DAY_MS).toISOString(),
+    tally: {
+      for: 0,
+      against: 0,
+      forPercent: 0,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 0,
+    },
+    myVote: null,
+    cosignatureCount: 12,
+    cosignatureThreshold: DEMO_COSIGNATURE_THRESHOLD,
+    hasCosigned: false,
+    proposedByMemberId: "demo-bruno",
+    proposedByMember: {
+      slug: "bruno-teles",
+      firstName: "Bruno",
+      lastName: "Teles",
+      avatarUrl: null,
+    },
+    gatheringClosesAt: null,
+    screeningNote:
+      "Reporter confidentiality is written into the Code of Conduct and into the moderation process members were told they could rely on. A vote cannot be opened on removing it without first amending the Code of Conduct itself, which is a separate route. The reviewer suggested refiling as a motion on publishing anonymised report categories instead.",
+    failedForQuorum: false,
+  },
+  {
+    id: "demo-member-motion-lapsed",
+    type: "member_motion",
+    title: "Run a second book club slot in the north of the city",
+    description:
+      "A motion to fund a second monthly book club in a northern neighbourhood, so members outside the centre have a group within reach.",
+    targetMemberId: null,
+    targetMember: null,
+    status: "lapsed",
+    opensAt: new Date(now - 70 * DAY_MS).toISOString(),
+    closesAt: new Date(now - 40 * DAY_MS).toISOString(),
+    tally: {
+      for: 0,
+      against: 0,
+      forPercent: 0,
+      quorumRequired: DEMO_QUORUM_REQUIRED,
+      totalVotes: 0,
+    },
+    myVote: null,
+    cosignatureCount: 4,
+    cosignatureThreshold: DEMO_COSIGNATURE_THRESHOLD,
+    hasCosigned: false,
+    proposedByMemberId: "demo-alex",
+    proposedByMember: {
+      slug: "alex-pinto",
+      firstName: "Alex",
+      lastName: "Pinto",
+      avatarUrl: null,
+    },
+    gatheringClosesAt: new Date(now - 40 * DAY_MS).toISOString(),
+    screeningNote: null,
+    failedForQuorum: false,
   },
 ];

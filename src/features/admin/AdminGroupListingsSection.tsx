@@ -1,4 +1,7 @@
+import { Link } from "react-router-dom";
+import { FiArrowRight } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
@@ -16,6 +19,11 @@ import styles from "./AdminHousingCoopsPage.module.css";
  * norms (hidden price, broker post, hate speech) and un-hide it if it was a
  * mistake — wired to useSetGroupListingHidden. Hiding is instant in the UI via
  * query invalidation; it's a no-op in demo mode (the demo table is empty).
+ *
+ * Hiding is the POST-publication takedown and nothing else. Whether a listing
+ * ever becomes public is the separate pre-publication review, which lives on
+ * its own console (LOC-19) and is linked from the section head so the two
+ * decisions never get collapsed into one control.
  */
 export function AdminGroupListingsSection() {
   const { t } = useTranslation();
@@ -45,6 +53,13 @@ export function AdminGroupListingsSection() {
       <h2 className={styles.sectionTitle}>
         {t("admin:housingGroups.listings.title")}
       </h2>
+      <p className={styles.emptyText}>
+        {t("admin:housingGroups.listings.reviewQueueNote")}{" "}
+        <Link to={routes.adminHousingGroupListings}>
+          {t("admin:housingGroups.listings.reviewQueueCta")}
+          <FiArrowRight aria-hidden />
+        </Link>
+      </p>
       {isError ? (
         <div className={styles.notice}>
           <p className={styles.noticeText}>

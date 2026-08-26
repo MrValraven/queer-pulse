@@ -32,8 +32,15 @@ export type PulseReportTarget = {
  * backs it. Extracted from `PulseTab` (now layout only) so that component
  * stays under the repo's 200-line-per-component limit; a plain hook returns no
  * JSX, so the limit doesn't apply here.
+ *
+ * The parameter is narrowed to the two fields actually read (`slug` for every
+ * mutation, `roster` for the author role badge) so a full `LivingCommunity`
+ * still satisfies it while the single-post permalink page, which has a post
+ * and a roster but no assembled community view-model, can call it too.
  */
-export function usePulseTabActions(community: LivingCommunity) {
+export function usePulseTabActions(
+  community: Pick<LivingCommunity, "slug" | "roster">,
+) {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();

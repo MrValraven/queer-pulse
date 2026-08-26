@@ -63,6 +63,20 @@
   color: var(--ink-60);
 }
 
+/* The cover a member uploaded with their magazine story, so a decider can see
+   the art before accepting. Capped rather than full-bleed: this is a queue
+   row, and the story's own words are what the decision turns on. */
+.rowCover {
+  display: block;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  object-fit: cover;
+}
+
 /* Decision row-actions column (reading-group proposals): a status chip above
    the approve/decline/archive buttons. Sits to the right of .rowMain. */
 .rowActions {

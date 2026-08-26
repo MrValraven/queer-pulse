@@ -1,6 +1,17 @@
+import type { ComponentType } from "react";
 import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
+import { ManagedGuide } from "./ManagedGuide";
+
+const GuideIndexPage = lazyNamed(
+  () => import("./GuideIndexPage"),
+  "GuideIndexPage",
+);
+const ResourceGuidePage = lazyNamed(
+  () => import("./ResourceGuidePage"),
+  "ResourceGuidePage",
+);
 
 const WellbeingPage = lazyNamed(
   () => import("./WellbeingPage"),
@@ -113,27 +124,134 @@ const SpoonTheoryPage = lazyNamed(
   "SpoonTheoryPage",
 );
 
+/**
+ * Every guide route, paired with the `resources.slug` its database row uses.
+ *
+ * Each one renders through `ManagedGuide`, which serves the guide from the
+ * database once an editor has taken it over and otherwise falls through to
+ * the hardcoded page below. Keeping the pairing in one table rather than 31
+ * hand-written `<Route>` blocks is what lets the review footer and the
+ * managed-body lookup reach every guide from a single place.
+ */
+const GUIDE_ROUTES: { path: string; slug: string; Page: ComponentType }[] = [
+  { path: routes.wellbeing, slug: "wellbeing", Page: WellbeingPage },
+  { path: routes.mentalHealth, slug: "mental-health", Page: MentalHealthPage },
+  {
+    path: routes.transHealthcare,
+    slug: "trans-healthcare",
+    Page: TransHealthcarePage,
+  },
+  {
+    path: routes.harmReduction,
+    slug: "harm-reduction",
+    Page: HarmReductionPage,
+  },
+  { path: routes.sexualHealth, slug: "sexual-health", Page: SexualHealthPage },
+  { path: routes.sober, slug: "sober", Page: SoberPage },
+  { path: routes.queer101, slug: "queer-101", Page: Queer101Page },
+  {
+    path: routes.pronounsGuide,
+    slug: "pronouns-guide",
+    Page: PronounsGuidePage,
+  },
+  { path: routes.microGrants, slug: "micro-grants", Page: MicroGrantsPage },
+  {
+    path: routes.intersectionality,
+    slug: "intersectionality",
+    Page: IntersectionalityPage,
+  },
+  { path: routes.transHub, slug: "trans-hub", Page: TransHubPage },
+  { path: routes.legal, slug: "legal", Page: LegalPage },
+  { path: routes.runningGuide, slug: "running-guide", Page: RunningGuidePage },
+  {
+    path: routes.accessibleLisbon,
+    slug: "accessible-lisbon",
+    Page: AccessibleLisbonPage,
+  },
+  { path: routes.peerSupport, slug: "peer-support", Page: PeerSupportPage },
+  { path: routes.artCritGuide, slug: "art-crit-guide", Page: ArtCritGuidePage },
+  {
+    path: routes.sharedEquipment,
+    slug: "shared-equipment",
+    Page: SharedEquipmentPage,
+  },
+  {
+    path: routes.groupShowArchive,
+    slug: "group-show-archive",
+    Page: GroupShowArchivePage,
+  },
+  {
+    path: routes.firstMeetupGuide,
+    slug: "first-meetup-guide",
+    Page: FirstMeetupGuidePage,
+  },
+  {
+    path: routes.queerPaediatricians,
+    slug: "queer-paediatricians",
+    Page: QueerPaediatriciansPage,
+  },
+  {
+    path: routes.schoolFormsGuide,
+    slug: "school-forms-guide",
+    Page: SchoolFormsGuidePage,
+  },
+  {
+    path: routes.communityPrivacy,
+    slug: "community-privacy",
+    Page: CommunityPrivacyPage,
+  },
+  {
+    path: routes.comingOutAtWork,
+    slug: "coming-out-at-work",
+    Page: ComingOutAtWorkPage,
+  },
+  {
+    path: routes.lgbtqAgingGuide,
+    slug: "lgbtq-aging-guide",
+    Page: LgbtqAgingGuidePage,
+  },
+  {
+    path: routes.oralHistoryProject,
+    slug: "oral-history-project",
+    Page: OralHistoryProjectPage,
+  },
+  {
+    path: routes.ingredientsMap,
+    slug: "ingredients-map",
+    Page: IngredientsMapPage,
+  },
+  {
+    path: routes.qtipocOrganisations,
+    slug: "qtipoc-organisations",
+    Page: QtipocOrganisationsPage,
+  },
+  {
+    path: routes.qtipocArchive,
+    slug: "qtipoc-archive",
+    Page: QtipocArchivePage,
+  },
+  {
+    path: routes.disabilityHealthcare,
+    slug: "disability-healthcare",
+    Page: DisabilityHealthcarePage,
+  },
+  { path: routes.spoonTheory, slug: "spoon-theory", Page: SpoonTheoryPage },
+  { path: routes.safety, slug: "safety", Page: SafetyPage },
+];
+
 /** Resources & wellbeing: health guides, the therapist directory, glossary,
  *  identity/community guides, and the general safety overview. */
 export function resourceRoutes() {
   return (
     <>
-      <Route path={routes.wellbeing} element={<WellbeingPage />} />
-      <Route path={routes.mentalHealth} element={<MentalHealthPage />} />
-      <Route path={routes.transHealthcare} element={<TransHealthcarePage />} />
-      <Route path={routes.harmReduction} element={<HarmReductionPage />} />
-      <Route path={routes.sexualHealth} element={<SexualHealthPage />} />
-      <Route path={routes.sober} element={<SoberPage />} />
-      <Route path={routes.queer101} element={<Queer101Page />} />
+      {GUIDE_ROUTES.map(({ path, slug, Page }) => (
+        <Route
+          key={path}
+          path={path}
+          element={<ManagedGuide slug={slug} fallback={<Page />} />}
+        />
+      ))}
       <Route path={routes.glossary} element={<GlossaryPage />} />
-      <Route path={routes.pronounsGuide} element={<PronounsGuidePage />} />
-      <Route path={routes.microGrants} element={<MicroGrantsPage />} />
-      <Route
-        path={routes.intersectionality}
-        element={<IntersectionalityPage />}
-      />
-      <Route path={routes.transHub} element={<TransHubPage />} />
-      <Route path={routes.legal} element={<LegalPage />} />
       {/* CNT-11: retired in favor of the one real, backend-driven library at
           routes.resources ("/resources", features/marketing/ResourceLibraryPage) —
           old links/bookmarks land there instead of a second, static-mock
@@ -142,52 +260,16 @@ export function resourceRoutes() {
         path={routes.library}
         element={<Navigate to={routes.resources} replace />}
       />
-      <Route path={routes.runningGuide} element={<RunningGuidePage />} />
+      {/* CON-10: the category-grouped index of EVERY guide route. */}
+      <Route path={routes.guideIndex} element={<GuideIndexPage />} />
+      {/* CON-08: the slug-addressable renderer for a database-managed guide,
+          and the honest landing place for a guide whose curated route is
+          missing. It shares no path prefix with the static guide routes
+          above, so neither can shadow the other. */}
       <Route
-        path={routes.accessibleLisbon}
-        element={<AccessibleLisbonPage />}
+        path={`${routes.resourceGuide}/:slug`}
+        element={<ResourceGuidePage />}
       />
-      <Route path={routes.peerSupport} element={<PeerSupportPage />} />
-      <Route path={routes.artCritGuide} element={<ArtCritGuidePage />} />
-      <Route path={routes.sharedEquipment} element={<SharedEquipmentPage />} />
-      <Route
-        path={routes.groupShowArchive}
-        element={<GroupShowArchivePage />}
-      />
-      <Route
-        path={routes.firstMeetupGuide}
-        element={<FirstMeetupGuidePage />}
-      />
-      <Route
-        path={routes.queerPaediatricians}
-        element={<QueerPaediatriciansPage />}
-      />
-      <Route
-        path={routes.schoolFormsGuide}
-        element={<SchoolFormsGuidePage />}
-      />
-      <Route
-        path={routes.communityPrivacy}
-        element={<CommunityPrivacyPage />}
-      />
-      <Route path={routes.comingOutAtWork} element={<ComingOutAtWorkPage />} />
-      <Route path={routes.lgbtqAgingGuide} element={<LgbtqAgingGuidePage />} />
-      <Route
-        path={routes.oralHistoryProject}
-        element={<OralHistoryProjectPage />}
-      />
-      <Route path={routes.ingredientsMap} element={<IngredientsMapPage />} />
-      <Route
-        path={routes.qtipocOrganisations}
-        element={<QtipocOrganisationsPage />}
-      />
-      <Route path={routes.qtipocArchive} element={<QtipocArchivePage />} />
-      <Route
-        path={routes.disabilityHealthcare}
-        element={<DisabilityHealthcarePage />}
-      />
-      <Route path={routes.spoonTheory} element={<SpoonTheoryPage />} />
-      <Route path={routes.safety} element={<SafetyPage />} />
     </>
   );
 }

@@ -1,10 +1,17 @@
 import { apiGet, apiPost } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
+import type {
+  GuideBlock,
+  GuideBlockKind,
+  GuideSection,
+} from "../../../shared/contracts/contracts";
+
+export type { GuideBlock, GuideBlockKind, GuideSection };
 
 // ── Backend DTOs ────────────────────────────────────────────────────────────
-// Shapes the NestJS `resources` domain returns (GET /resources, /resources/:slug,
-// GET /glossary, /glossary/:slug). Read-only + seeded — there is no authoring
-// endpoint on either resource kind.
+// Shapes the NestJS `resources` domain returns (GET /resources,
+// /resources/index, /resources/:slug, GET /glossary, /glossary/:slug). The
+// write side is staff-only and lives under /admin/resources (CON-08).
 
 /** A single guide row, as returned by both GET /resources (list) and
  *  GET /resources/:slug (detail) — the backend declares no separate
@@ -20,6 +27,36 @@ export interface ResourceResponseDTO {
   externalUrl: string | null;
   /** ISO timestamp of the last editorial verification, or null if never verified. */
   lastVerifiedAt: string | null;
+  /** Portuguese copy, or null when the guide has no translation yet. */
+  titlePt: string | null;
+  descriptionPt: string | null;
+  /** The editor-authored prose (CON-08). An EMPTY array is meaningful: this
+   *  guide is not managed yet, so `ManagedGuide` keeps rendering its
+   *  hardcoded page. */
+  sections: GuideSection[];
+  sectionsPt: GuideSection[] | null;
+  /** Site-relative path the guide is addressable at. Replaces the old
+   *  title-string lookup the library grid used to guess links with. */
+  routePath: string | null;
+  /** Editorial review trail (CON-09). All null means never reviewed, which
+   *  the guide footer states plainly rather than inventing a date. */
+  lastReviewedOn: string | null;
+  reviewedBy: string | null;
+  reviewDueOn: string | null;
+}
+
+/** One row of `GET /resources/index`: every published guide, in one request,
+ *  for the category-grouped guide index (CON-10). */
+export interface ResourceIndexEntryDTO {
+  slug: string;
+  category: string;
+  title: string;
+  description: string;
+  routePath: string | null;
+  lastReviewedOn: string | null;
+  /** True when the body lives in the database and the renderer takes the
+   *  page over; false while the hardcoded page is still the source. */
+  isManaged: boolean;
 }
 
 export interface Paginated<T> {
@@ -35,6 +72,8 @@ export interface GlossaryTermResponseDTO {
   slug: string;
   term: string;
   definition: string;
+  /** Portuguese definition, or null when the term has no translation yet. */
+  definitionPt: string | null;
   category: string | null;
 }
 
@@ -62,6 +101,18 @@ export async function getResources(
     ResourceResponseDTO[] | Paginated<ResourceResponseDTO>
   >(`/resources${qs ? `?${qs}` : ""}`);
   return toItemsPage(res);
+}
+
+/** One guide by slug. 404s when the slug is unknown or the guide is
+ *  unpublished — `useManagedGuide` treats that as "not managed yet" and
+ *  falls through to the hardcoded page rather than surfacing an error. */
+export function getResourceGuide(slug: string) {
+  return apiGet<ResourceResponseDTO>(`/resources/${encodeURIComponent(slug)}`);
+}
+
+/** Every published guide, unpaginated, for the guide index. */
+export function getResourceIndex() {
+  return apiGet<ResourceIndexEntryDTO[]>("/resources/index");
 }
 
 export function getGlossaryTerms(params: { category?: string } = {}) {

@@ -111,7 +111,8 @@ export const gatherings: Catalog = {
   "rsvpControl.goingCount_one": "{count} pessoa confirmada até agora",
   "rsvpControl.goingCount_other": "{count} pessoas confirmadas até agora",
   "rsvpControl.waitlistPosition": "És o número {position} na fila",
-  "rsvpControl.waitlistNote": "Avisamos-te assim que abrir uma vaga.",
+  "rsvpControl.waitlistNote":
+    "Recebes uma notificação da QueerPulse assim que abrir uma vaga.",
   "rsvpControl.cancelCta": "Cancelar presença",
   "rsvpControl.goingToast": "Vais estar lá",
   "rsvpControl.waitlistToast": "Estás na lista de espera",
@@ -131,6 +132,7 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Convívios",
   "common.hostedBy": "Organização de",
+  "common.hostRemoved": "Uma pessoa que já não está por cá",
   "common.timeRangeTo": "às",
   "common.connectCta": "Ligar",
 
@@ -173,38 +175,36 @@ export const gatherings: Catalog = {
   "event.rsvp.headTitleFull": "Este convívio está esgotado",
   "event.rsvp.headTitle": "Reserva o teu lugar",
   "event.rsvp.headSubFull":
-    "Entra na lista de espera. Avisamos-te por email se surgir uma vaga.",
+    "Entra na lista de espera. Recebes uma notificação da QueerPulse se surgir uma vaga.",
   "event.rsvp.headSub": "Paga o que puderes. Todos os escalões incluem tudo.",
   "event.rsvp.spotsRemaining_one": "<strong>Resta {count} vaga</strong>",
   "event.rsvp.spotsRemaining_other": "<strong>Restam {count} vagas</strong>",
   "event.rsvp.filledOfCapacity": "{filled} de {capacity} preenchidos",
   "event.rsvp.namePlaceholder": "O teu nome *",
-  "event.rsvp.emailPlaceholder": "O teu email *",
   "event.rsvp.dietaryPlaceholder": "Restrições alimentares (opcional)",
   "event.rsvp.requiredHintFull":
-    "Nome e email são obrigatórios. É para lá que enviamos a atualização da lista de espera.",
+    "O nome é obrigatório. As atualizações da lista de espera chegam às tuas notificações da QueerPulse.",
   "event.rsvp.requiredHint":
-    "Nome e email são obrigatórios. É para lá que enviamos a tua confirmação.",
+    "O nome é obrigatório. O teu lugar fica guardado na tua conta.",
   "event.rsvp.joinWaitlistCta": "Entrar na lista de espera",
   "event.rsvp.reserveCta": "Reservar o meu lugar",
-  "event.rsvp.disabledHint":
-    "Indica o teu nome e um email válido para continuar",
+  "event.rsvp.disabledHint": "Indica o teu nome para continuar",
   "event.rsvp.noteFull":
-    "Enviamos-te um email assim que surgir uma vaga. Sair da lista de espera é só um clique.",
-  "event.rsvp.confirmationEmailNote":
+    "Recebes uma notificação da QueerPulse assim que surgir uma vaga. Sair da lista de espera é só um clique.",
+  "event.rsvp.confirmationNote":
     "O teu lugar está guardado. Encontra-lo nos teus convívios.",
   "event.rsvp.cancelPolicy": "Podes cancelar até 48 horas antes do evento.",
   "event.rsvp.waitlistTitle": "Estás na <em>lista de espera.</em>",
   "event.rsvp.errorToast": "Não foi possível concluir. Tenta daqui a pouco.",
   "event.rsvp.waitlistBody":
-    "Este convívio está esgotado, mas <strong>enviamos um email para {email}</strong> assim que surgir uma vaga, normalmente um ou dois dias depois de alguém cancelar.",
+    "Este convívio está esgotado, mas <strong>recebes uma notificação da QueerPulse</strong> assim que surgir uma vaga, normalmente um ou dois dias depois de alguém cancelar.",
   "event.rsvp.waitlistMeta":
     "Podes sair da lista de espera a qualquer momento.",
   "event.rsvp.leaveWaitlistCta": "Sair da lista de espera",
   "event.rsvp.reservedTitle": "Vais <em>estar lá.</em>",
   "event.rsvp.reservedTier": "Reservado no escalão <strong>{tier}</strong>",
-  "event.rsvp.confirmationOnWay":
-    "Uma confirmação está a caminho de <strong>{email}</strong>.",
+  "event.rsvp.confirmationSaved":
+    "O teu lugar está confirmado. Encontra-lo quando quiseres nos <strong>teus convívios</strong>.",
   "event.rsvp.addToCalendarCta": "Adicionar ao calendário",
   "event.rsvp.messageHostCta": "Mensagem à pessoa anfitriã",
   "event.rsvp.cancelReservationCta": "Cancelar a minha reserva",
@@ -406,10 +406,7 @@ export const gatherings: Catalog = {
   "calendar.noEventsDay": "Sem eventos neste dia.",
   "calendar.subscribeTitle": "Subscrever o calendário",
   "calendar.subscribeBody":
-    "Recebe todos os eventos da comunidade queer na tua aplicação de calendário. Funciona com Google Calendar, Apple Calendar e Outlook.",
-  "calendar.emailPlaceholder": "teu@email.com",
-  "calendar.subscribeCta": "Subscrever",
-  "calendar.subscribedCta": "Subscrito",
+    "Ainda estamos a construir um feed que possas subscrever no Google Calendar, no Apple Calendar ou no Outlook. Até lá, abre um convívio e adiciona-o ao teu calendário a partir da página dele.",
   "calendar.hostCta": "Organiza o teu convívio",
 
   // Events
@@ -1157,6 +1154,9 @@ export const gatherings: Catalog = {
   "manage.invite.sub":
     "Escolhe as pessoas que gostavas de ter neste convívio. Vão receber um convite caloroso que podem aceitar ou não, sem pressão.",
   "manage.invite.searchLabel": "Procurar pessoas para convidar",
+  "manage.invite.loadingPeople": "A procurar as pessoas com quem tens ligação.",
+  "manage.invite.noConnections":
+    "Podes convidar as pessoas com quem tens ligação. Assim que tiveres ligações, aparecem aqui.",
   "manage.invite.noneSelected": "Ainda não escolheste ninguém",
   "manage.invite.selectedCount_one": "Selecionaste <b>{count}</b>",
   "manage.invite.selectedCount_other": "Selecionaste <b>{count}</b>",
@@ -1327,4 +1327,184 @@ export const gatherings: Catalog = {
     "Atuaste como {name}, {craft}. Queres uma página para isso?",
   "performerNudge.startCta": "Começar",
   "performerNudge.dismissCta": "Agora não",
+  // ── LOC-18: quanto custa um convívio (só apresentação, sem pagamentos) ────
+  "create.step3.costLabel": "Quanto custa",
+  "create.step3.costHint":
+    "Diz por palavras tuas. Ninguém paga através da QueerPulse, por isso o que escreveres aqui é o que as pessoas devem esperar à porta.",
+  "create.step3.costPlaceholder":
+    "Gratuito, paga o que puderes, escala de 5 a 15 EUR…",
+  "create.step5.row.cost": "Custo",
+  "create.step5.costFree": "Gratuito",
+  "create.step5.accessAnswer": "{question}: {answer}",
+  "create.step5.accessUnanswered_one": "1 pergunta ainda por responder",
+  "create.step5.accessUnanswered_other":
+    "{count} perguntas ainda por responder",
+  "events.freeTag": "Gratuito",
+
+  // ── LOC-03: a porta ───────────────────────────────────────────────────────
+  "door.expectedSeats": "Lugares esperados",
+  "door.checkInCta": "Registar entrada",
+  "door.checkInAria": "Registar a entrada de {name}",
+  "door.arrivedAt": "Chegou às {time}",
+  "door.undoCta": "Anular",
+  "door.undoAria": "Anular a entrada de {name}",
+  "door.undoneToast": "Entrada anulada",
+  "door.failedToast": "Não resultou. Tenta outra vez daqui a pouco.",
+  "door.emptyTitle": "Ainda ninguém na lista",
+  "door.emptyDescription":
+    "À medida que as pessoas confirmam presença aparecem aqui, prontas para registar a entrada.",
+  "door.notYoursTitle": "Esta porta não é tua",
+  "door.notYoursDescription":
+    "Só quem organiza ou co-organiza um convívio pode ver quem vai lá.",
+  "door.scan.heading": "À porta",
+  "door.scan.lead":
+    "Lê o cartão de quem chega, ou procura a pessoa na lista abaixo.",
+  "door.scan.openCta": "Ler um cartão",
+  "door.scan.eyebrow": "Registar entrada",
+  "door.scan.title": "Ler um cartão de membro",
+  "door.scan.viewfinderAria": "Vista da câmara para ler um cartão de membro",
+  "door.scan.startingHint": "A acordar a câmara…",
+  "door.scan.pointHint": "Coloca o código do cartão dentro do quadro",
+  "door.scan.deniedHint":
+    "Este navegador não recebeu acesso à câmara. Escreve antes o código do cartão.",
+  "door.scan.unsupportedHint":
+    "Este navegador não consegue ler códigos pela câmara. Escreve antes o código do cartão.",
+  "door.scan.failedHint":
+    "A câmara não arrancou. Escreve antes o código do cartão.",
+  "door.scan.codeLabel": "Código do cartão",
+  "door.scan.codeHelper":
+    "Todos os cartões de membro têm este código por baixo. Colar ou escrever funciona da mesma maneira.",
+  "door.scan.codePlaceholder": "Cola ou escreve o código",
+  "door.scan.checkInCta": "Registar entrada",
+  "door.scan.checkingCta": "A registar…",
+  "door.scan.doneCta": "Pronto",
+
+  // ── LOC-04: onde é, e quem consegue entrar ────────────────────────────────
+  "gathering.where.heading": "Como chegar",
+  "gathering.where.placeLabel": "Onde",
+  "gathering.where.addressLabel": "Morada",
+  "gathering.where.addressWithheld":
+    "A morada exata é partilhada com quem vai. Confirma presença e aparece aqui.",
+  "gathering.where.arrivalLabel": "Encontrar a porta",
+  "gathering.where.languageLabel": "Língua",
+  "gathering.where.costLabel": "Custo",
+  "gathering.where.costFree": "Gratuito",
+  "gathering.where.costNote":
+    "O que pagares fica entre ti e quem organiza. A QueerPulse não recebe dinheiro.",
+  "gathering.access.heading": "Acessibilidade",
+  "gathering.access.lead":
+    "O que quem organiza nos disse sobre entrar e estar à vontade. Uma pergunta sem resposta quer dizer que ninguém nos disse, por isso pergunta se precisares de saber.",
+
+  // ── LOC-06: o que quem organiza já disse ──────────────────────────────────
+  "gathering.announcements.heading": "De quem organiza",
+  "gathering.announcements.lead":
+    "Avisos que a organização enviou a toda a gente que vai.",
+  "gathering.announcements.from": "{name}",
+  "gathering.announcements.fromOrganiser": "Alguém da organização",
+  "manage.announcements.composerLabel": "Avisa quem vai",
+  "manage.announcements.placeholder":
+    "Mudámos para a sala das traseiras. O código da porta é 4471, sobe as escadas à esquerda.",
+  "manage.announcements.deliveryHint":
+    "Chega como notificação e push a quem tem presença confirmada ou convite.",
+  "manage.announcements.sendCta": "Enviar",
+  "manage.announcements.sendingCta": "A enviar…",
+  "manage.announcements.sentToast": "Enviado a toda a gente que vai",
+  "manage.announcements.errorToast":
+    "Não foi enviado. Tenta outra vez daqui a pouco.",
+  "manage.announcements.previousHeading": "O que já enviaste",
+  "manage.announcements.emptyTitle": "Ainda não enviaste nada",
+  "manage.announcements.emptyDescription":
+    "O que enviares fica também aqui, para as pessoas voltarem a encontrar à porta.",
+  "manage.announcements.reached_one": "Chegou a 1 pessoa",
+  "manage.announcements.reached_other": "Chegou a {count} pessoas",
+  "manage.messageModal.bodyHelper":
+    "Quem tem presença confirmada ou convite recebe isto como notificação e push.",
+  "manage.messageModal.sendingCta": "A enviar…",
+  "manage.messageModal.errorToast":
+    "Não foi enviado. Tenta outra vez daqui a pouco.",
+
+  // ── LOC-07: o que as pessoas disseram, e quantos lugares isso ocupa ───────
+  "manage.attendees.seatsFilled": "{seats} de {capacity} lugares ocupados",
+  "manage.attendees.seatsFromGuests_one":
+    "1 pessoa confirmada, acompanhantes incluídos",
+  "manage.attendees.seatsFromGuests_other":
+    "{count} pessoas confirmadas, acompanhantes incluídos",
+  "manage.attendees.needs.privateLabel": "Privado, só para a organização",
+  "manage.attendees.needs.guests_one": "Traz 1 acompanhante",
+  "manage.attendees.needs.guests_other": "Traz {count} acompanhantes",
+  "manage.attendees.needs.accessLabel": "Acessibilidade:",
+  "manage.attendees.needs.dietaryLabel": "Comida:",
+  "manage.attendees.needs.withheld":
+    "Esta pessoa preferiu manter as respostas privadas",
+
+  // ── LOC-08: a porta de quem organiza ──────────────────────────────────────
+  "manage.bans.eyebrow": "Só neste convívio",
+  "manage.bans.title": "Impedir {name} de vir a este convívio",
+  "manage.bans.sub":
+    "Esta pessoa não é avisada e deixa de poder confirmar presença.",
+  "manage.bans.explainer":
+    "Isto vale para este convívio e mais nada. Não diz nada sobre esta pessoa no resto da QueerPulse. Se a quiseres fora do teu espaço todo, bloqueia-a a partir do perfil.",
+  "manage.bans.reasonLabel": "Uma nota para ti",
+  "manage.bans.reasonHelper":
+    "Só a organização vê isto. Nunca é enviado a esta pessoa.",
+  "manage.bans.reasonPlaceholder": "O que aconteceu, por palavras tuas",
+  "manage.bans.barCta": "Impedir",
+  "manage.bans.barringCta": "A impedir…",
+  "manage.bans.barShortCta": "Impedir",
+  "manage.bans.barAria": "Impedir {name} de vir a este convívio",
+  "manage.bans.barredToast": "{name} está impedida de vir a este convívio",
+  "manage.bans.errorToast": "Não resultou. Tenta outra vez daqui a pouco.",
+  "manage.bans.listHeading_one": "Impedidas (1)",
+  "manage.bans.listHeading_other": "Impedidas ({count})",
+  "manage.bans.emptyTitle": "Ninguém está impedido",
+  "manage.bans.emptyDescription":
+    "Se alguma vez precisares de manter alguém longe deste convívio, podes fazê-lo na linha dessa pessoa acima.",
+  "manage.bans.barredOn": "Impedida a {date}",
+  "manage.bans.liftCta": "Levantar",
+  "manage.bans.liftAria": "Levantar o impedimento de {name}",
+  "manage.bans.liftedToast": "{name} pode voltar a confirmar presença",
+  "rsvpControl.refusedToast": "Quem organiza retirou-te deste convívio.",
+  "rsvpControl.goneToast": "Este convívio já não existe.",
+  "rsvpControl.errorToast": "Não resultou. Tenta outra vez daqui a pouco.",
+  "sharePlans.panelHeading": "Diz a alguém onde vais estar",
+  "sharePlans.panelLead":
+    "Envia a uma pessoa de confiança a hora e o sítio. Vai como uma mensagem normal e só ela vê.",
+  "sharePlans.openCta": "Partilhar os meus planos",
+  "sharePlans.eyebrow": "Só entre vocês",
+  "sharePlans.title": "Diz a alguém <em>onde vais estar</em>",
+  "sharePlans.sub":
+    "Escolhe uma das tuas ligações. Recebe como mensagem normal, que ficam ambas a poder reler.",
+  "sharePlans.searchLabel": "Procurar nas tuas ligações",
+  "sharePlans.loadingConnections": "A procurar as tuas ligações…",
+  "sharePlans.noConnections":
+    "Ainda não tens ligações. Liga-te a alguém e essa pessoa aparece aqui.",
+  "sharePlans.messageLabel": "O que essa pessoa vai receber",
+  "sharePlans.messageHint": "Muda o texto como quiseres antes de enviar.",
+  "sharePlans.sendCta": "Enviar",
+  "sharePlans.sendingCta": "A enviar…",
+  "sharePlans.errorToast": "Não foi enviado. Tenta outra vez daqui a pouco.",
+  "sharePlans.successTitle": "Já <em>sabe</em>",
+  "sharePlans.successSub": "{name} tem os teus planos para este.",
+  "sharePlans.successMeta":
+    "Está nas tuas mensagens, se quiseres acrescentar alguma coisa.",
+  "sharePlans.template.opening": "Vou a {title} em {when}.",
+  "sharePlans.template.place": "É em {place}.",
+  "sharePlans.template.link": "Detalhes: {link}",
+
+  // ── LOC-17: filtros da lista ──────────────────────────────────────────────
+  "hub.browse.when.groupLabel": "Quando",
+  "hub.browse.when.any": "Qualquer altura",
+  "hub.browse.when.today": "Hoje",
+  "hub.browse.when.weekend": "Este fim de semana",
+  "hub.browse.when.week": "Próximos 7 dias",
+  "hub.browse.when.month": "Próximos 30 dias",
+  "hub.browse.hoodLabel": "Bairro",
+  "hub.browse.hoodAny": "Em qualquer parte de Lisboa",
+  "hub.browse.typeLabel": "Tipo de convívio",
+  "hub.browse.typeAny": "Qualquer tipo",
+  "hub.browse.cost.groupLabel": "Custo",
+  "hub.browse.cost.any": "Qualquer custo",
+  "hub.browse.cost.free": "Gratuito",
+  "hub.browse.cost.paid": "Tem entrada paga",
+  "hub.browse.clearFilters": "Limpar filtros",
 };

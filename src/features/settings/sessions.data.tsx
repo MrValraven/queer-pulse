@@ -27,6 +27,18 @@ export interface Session {
    * restate `signedIn` (see `api/sessions.adapters.ts`).
    */
   lastActivity?: string;
+  /**
+   * The raw User-Agent the device sent at sign-in, shown only inside the card's
+   * expandable "technical detail" disclosure.
+   *
+   * `device` is the line a member actually reads; this is the string that line
+   * was derived from, kept reachable for the one case where it matters — a
+   * member comparing two devices that produce the same coarse label, or
+   * pasting the exact string into a support message. Undefined when the client
+   * sent no UA, which collapses the disclosure entirely rather than showing an
+   * empty one.
+   */
+  userAgent?: string;
   extra?: string;
 }
 
@@ -43,6 +55,8 @@ export const ACTIVE_SESSIONS: Session[] = [
     ),
     signedIn: "4 hours ago",
     lastActivity: "2 min ago",
+    userAgent:
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15",
   },
   {
     id: "iphone",
@@ -56,6 +70,8 @@ export const ACTIVE_SESSIONS: Session[] = [
     ),
     signedIn: "23 days ago",
     lastActivity: "40 min ago",
+    userAgent:
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1",
   },
   {
     id: "imac",
@@ -82,6 +98,8 @@ export const ACTIVE_SESSIONS: Session[] = [
     ),
     signedIn: "14h ago",
     lastActivity: "11h ago",
+    userAgent:
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:132.0) Gecko/20100101 Firefox/132.0",
     extra: "New location",
   },
   {

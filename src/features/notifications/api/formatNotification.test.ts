@@ -66,6 +66,18 @@ const KINDS: NotificationKind[] = [
   "introduction_made",
   "writer_application_approved",
   "writer_application_declined",
+  // Account and security (ID-06). Listed with an empty payload on purpose:
+  // these three carry interpolated tokens, and the point of including them is
+  // that a row missing its payload still reads as a sentence rather than
+  // leaving `{deviceLabel}` or `{daysRemaining}` on screen.
+  "security_new_sign_in",
+  "account_export_ready",
+  "account_deletion_final_warning",
+  // The two kinds that used to borrow `concern_update`. Also listed with an
+  // empty payload: a row missing its `kind`/`reference` must still read as a
+  // sentence rather than leaving `{form}` or `{reference}` on screen.
+  "intake_reviewed",
+  "dsar_resolved",
 ];
 
 describe("formatNotification", () => {

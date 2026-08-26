@@ -60,7 +60,14 @@ export function issueArticlesText(
   });
 }
 
-/** "Issue {number}" on its own (masthead, toolbars). */
-export function issueLabelText(issueNumber: number, t: TFunction): string {
+/**
+ * "Issue {number}" on its own (masthead, toolbars). Takes a string too: the
+ * backend's issue `number` is the zero-padded DISPLAY number ("09"), and
+ * coercing it to `9` would print a label the issue page never uses.
+ */
+export function issueLabelText(
+  issueNumber: number | string,
+  t: TFunction,
+): string {
   return t("magazine:format.issueLabel", { number: issueNumber });
 }

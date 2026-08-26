@@ -10,6 +10,7 @@ import { useDemoMode } from "./DemoModeProvider";
 import { useAuth } from "./authContext";
 import { setMonitoringConsent } from "../../shared/observability/sentry";
 import { useLocalStorage } from "../../shared/hooks";
+import { usePlatformStatus } from "../../shared/api/usePlatformStatus";
 import {
   POLICY_VERSION,
   fetchMyConsent,
@@ -51,6 +52,12 @@ function isStoredConsent(v: unknown): v is StoredConsent {
 export function ConsentProvider({ children }: { children: ReactNode }) {
   const { demoMode } = useDemoMode();
   const { loggedIn, checking } = useAuth();
+  // The privacy-policy revision in effect, from the backend, which is the
+  // single source of truth for it (ID-14). `POLICY_VERSION` is the fallback for
+  // the moment before this public query resolves and for demo mode; the two are
+  // deliberately kept equal so a cold load never re-prompts and then settles.
+  const { data: platformStatus } = usePlatformStatus();
+  const policyVersion = platformStatus?.privacyPolicyVersion ?? POLICY_VERSION;
   const [stored, setStored] = useLocalStorage<StoredConsent | null>(
     STORAGE_KEY,
     null,
@@ -61,7 +68,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
 
   // A stored choice made under an older policy no longer applies → re-prompt.
   const active =
-    stored && stored.policyVersion === POLICY_VERSION ? stored : null;
+    stored && stored.policyVersion === policyVersion ? stored : null;
   const consent: ConsentCategories = useMemo(
     () => ({
       necessary: true,
@@ -103,7 +110,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
 
   const setConsent = useCallback(
     (next: Record<OptInCategory, boolean>, source: ConsentSource) => {
-      setStored({ ...next, policyVersion: POLICY_VERSION });
+      setStored({ ...next, policyVersion });
       // `analytics` is retired from the UI but kept in the record, pinned false.
       const categories: ConsentCategories = {
         necessary: true,
@@ -112,11 +119,11 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
       };
       setPending(true);
       void recordConsent(
-        { categories, policyVersion: POLICY_VERSION, source },
+        { categories, policyVersion, source },
         demoMode,
       ).finally(() => setPending(false));
     },
-    [demoMode, setStored],
+    [demoMode, policyVersion, setStored],
   );
 
   const acceptAll = useCallback(

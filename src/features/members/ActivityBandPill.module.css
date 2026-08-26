@@ -1,0 +1,27 @@
+/* The coarse "recently active" band, rendered as a quiet meta line.
+
+   Deliberately NOT a status dot, a coloured chip or anything that reads as
+   live presence: the value behind it is a month, and a design that looks
+   real-time would be the interface lying about how precise the data is. Same
+   ink-60 meta register as ProfileTrustSignals' `.row`, so it sits with the
+   other "who this person is" facts rather than announcing itself. */
+.band {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-60);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.band svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Dormant is the one band that could be read as a judgement, so it is quieter
+   still: no emphasis, no warning colour, nothing that turns "we have not seen
+   them lately" into a mark against the member. */
+.dormant {
+  opacity: 0.75;
+}

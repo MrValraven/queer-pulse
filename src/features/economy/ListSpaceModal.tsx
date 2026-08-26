@@ -29,7 +29,7 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
   const sending = submitListing.isPending;
 
   const handleSubmit = () => {
-    if (!form.valid) return;
+    if (!form.isValid) return;
     submitListing.mutate(form.buildBody(), {
       onSuccess: () => setDone(true),
       // Neither gate is a failure — open the matching prompt so the member can
@@ -78,7 +78,7 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
         >
           <Translation
             i18nKey="economy:listSpace.success.body"
-            values={{ title: form.title }}
+            values={{ title: form.values.title }}
             components={{ strong: <strong /> }}
           />
         </SuccessPanel>
@@ -106,7 +106,7 @@ export function ListSpaceModal({ onClose }: { onClose: () => void }) {
             <Button
               variant="primary"
               size="lg"
-              disabled={!form.valid || sending}
+              disabled={!form.isValid || sending}
               onClick={handleSubmit}
             >
               {sending ? (

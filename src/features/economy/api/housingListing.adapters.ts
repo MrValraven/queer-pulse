@@ -2,6 +2,7 @@ import type { HousingListing, Poster, Tint } from "../housingListings";
 import type { MyHousingListingRow } from "../myHousingListings.data";
 import type { HousingListingDTO } from "./housingListing.api";
 import { initialsFromParts } from "../../../shared/lib/initials";
+import { tintForSlug } from "../../../shared/api/refs";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 
@@ -33,10 +34,18 @@ const TYPE_STYLE: Record<
 };
 
 /**
- * `HousingListingDTO.lister` carries no join date and no response metric, so
- * `memberSince` stays empty and `responseTime` is left undefined. The detail
- * page and the message-sent confirmation both omit their line rather than
- * promise a reply speed for a lister who may never have answered anyone.
+ * The lister block the detail page renders beside the enquiry button.
+ *
+ * `memberSince` and `bio` are the member's own profile values, which the
+ * listing DTO now carries (`HousingListerRefDTO`). They used to be hardcoded
+ * to `""` for every lister, and the avatar tint to `"coral"`, so a live
+ * listing rendered a fabricated profile where a real one exists. The tint is
+ * now derived from the member's slug, the same deterministic palette every
+ * other domain's avatars use, so one person keeps one colour across the app.
+ *
+ * `responseTime` stays undefined: nothing measures it, and the detail page
+ * omits the line rather than promise a reply speed for a lister who may never
+ * have answered anyone.
  */
 function posterFrom(
   lister: HousingListingDTO["lister"],
@@ -60,9 +69,13 @@ function posterFrom(
     initials: initialsFromParts(lister.firstName, lister.lastName),
     name: `${lister.firstName} ${lister.lastName.charAt(0)}.`.trim(),
     fullName: full,
-    tint: "coral",
-    memberSince: "",
-    bio: "",
+    tint: tintForSlug(lister.slug),
+    memberSince: lister.memberSince
+      ? t("economy:housing.lister.memberSince", {
+          year: new Date(lister.memberSince).getFullYear(),
+        })
+      : "",
+    bio: lister.bio ?? "",
     verificationLevel,
   };
 }
@@ -177,6 +190,7 @@ export function dtoToMyHousingListingRow(
     ref: dto.ref,
     slug: dto.slug,
     status: dto.status,
+    decision: dto.decision,
     filledAt: dto.filledAt,
     expiresAt: dto.expiresAt,
     expired: dto.expired,
@@ -191,5 +205,12 @@ export function dtoToMyHousingListingRow(
     accessibilityInfo: dto.accessibilityInfo,
     listerKind: dto.listerKind,
     virtualTourUrl: dto.virtualTourUrl ?? undefined,
+    blurb: dto.blurb,
+    description: dto.description,
+    availableFrom: dto.availableFrom,
+    minStayMonths: dto.minStayMonths,
+    features: dto.features,
+    idealFor: dto.idealFor,
+    gallery: dto.gallery,
   };
 }

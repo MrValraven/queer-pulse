@@ -108,6 +108,10 @@ export const DEMO_ARTICLE: ArticleDraftDto = {
   section: "Cover",
   role: "",
   metaDescription: "",
+  // Demo pieces carry no lead art: the desk mock exists to exercise the
+  // editor, and inventing a photograph here would put art on a demo article
+  // that nobody chose.
+  heroImageUrl: null,
   socialImage: "",
   canonicalUrl: "",
   tags: ["Chosen family", "Ageing", "Lisbon"],

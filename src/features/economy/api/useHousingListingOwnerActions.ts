@@ -66,6 +66,27 @@ function applyDemoTransition(
         ...(input.body.virtualTourUrl !== undefined
           ? { virtualTourUrl: input.body.virtualTourUrl }
           : {}),
+        // Everything the form gained with LOC-09, so a demo edit shows the
+        // same result a live one would.
+        ...(input.body.blurb !== undefined ? { blurb: input.body.blurb } : {}),
+        ...(input.body.description !== undefined
+          ? { description: input.body.description }
+          : {}),
+        ...(input.body.availableFrom !== undefined
+          ? { availableFrom: input.body.availableFrom }
+          : {}),
+        ...(input.body.minStayMonths !== undefined
+          ? { minStayMonths: input.body.minStayMonths }
+          : {}),
+        ...(input.body.features !== undefined
+          ? { features: input.body.features }
+          : {}),
+        ...(input.body.idealFor !== undefined
+          ? { idealFor: input.body.idealFor }
+          : {}),
+        ...(input.body.gallery !== undefined
+          ? { gallery: input.body.gallery }
+          : {}),
       };
   }
 }

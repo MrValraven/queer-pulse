@@ -222,6 +222,45 @@ export interface Appeal {
   /** The member's own argument, shown as a coral-bordered serif quote. */
   argument: string;
   supporters: AppealSupporter[];
+  /**
+   * When the Code of Conduct's published 7-day decision window closes on this
+   * appeal (TS-11). Optional because the demo seed predates the deadline and
+   * carries none; live rows always have one.
+   */
+  slaDueAt?: string;
+  /** Awaiting and already past that window. */
+  isOverdue?: boolean;
+  /** When it was decided, on the decided tab. */
+  decidedAt?: string | null;
+  /** The moderator's decision text, once there is one. */
+  decision?: string | null;
+}
+
+/**
+ * One permanent ban waiting on a second moderator (TS-12), as the queue renders
+ * it. Mirrors `BanRatificationDTO` with the timestamps kept raw so the card can
+ * format them per locale.
+ */
+export interface Ratification {
+  id: string;
+  targetName: string;
+  targetUserId: string;
+  requestedByName: string;
+  requestedById: string | null;
+  /** The first moderator's exact member-facing reason. This is the field that
+   *  makes the queue usable: nobody should put their name to a removal without
+   *  reading why it was asked for. */
+  note: string | null;
+  reasonCode: string | null;
+  interimAction: string;
+  requestedAt: string;
+  expiresAt: string;
+  isExpired: boolean;
+  status: "pending" | "ratified" | "declined" | "expired" | "withdrawn";
+  decidedByName: string | null;
+  decidedAt: string | null;
+  decisionNote: string | null;
+  reportId: string | null;
 }
 
 export interface ResolvedItem {
@@ -398,6 +437,88 @@ export const OTHER_REPORTS: ModReport[] = [
     age: "8h",
     risk: { tone: "amber", key: "admin:moderation.risk.medium" },
   },
+  /* TS-06 demo: one member reported five times inside ten minutes by five
+     different people. The flat queue showed this as five unrelated rows with
+     five SLA clocks; it now collapses into a single cluster whose header says
+     "5 open reports" AND "from 5 different members", which is the pair of
+     numbers that separates a real emergency from a pile-on. Live mode gets the
+     same counts from the server. */
+  {
+    id: "r-brigade-1",
+    subjectType: "member",
+    subjectId: "lua-vento",
+    severity: "medium",
+    category: "Off-topic",
+    chips: [{ tone: "amber", labelKey: "admin:moderation.chip.offTopic" }],
+    title: "Kept arguing in a thread about a venue's door policy",
+    preview:
+      "Member says the discussion went in circles and got personal. Reported minutes after a heated exchange.",
+    reporterName: "Iris N.",
+    reportedName: "@lua-vento",
+    community: "Lisbon Queers",
+    age: "12m",
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+  },
+  {
+    id: "r-brigade-2",
+    subjectType: "member",
+    subjectId: "lua-vento",
+    severity: "medium",
+    category: "Off-topic",
+    chips: [{ tone: "amber", labelKey: "admin:moderation.chip.offTopic" }],
+    title: "Same thread, second report",
+    preview: "Reported for derailing the thread. Filed four minutes later.",
+    reporterName: "Pedro C.",
+    reportedName: "@lua-vento",
+    community: "Lisbon Queers",
+    age: "10m",
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+  },
+  {
+    id: "r-brigade-3",
+    subjectType: "member",
+    subjectId: "lua-vento",
+    severity: "low",
+    category: "Spam",
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.spam" }],
+    title: "Same thread, third report",
+    preview: "Reported as spam by someone else in the same conversation.",
+    reporterName: "Nadia B.",
+    reportedName: "@lua-vento",
+    community: "Lisbon Queers",
+    age: "9m",
+    risk: { tone: "jade", key: "admin:moderation.risk.low" },
+  },
+  {
+    id: "r-brigade-4",
+    subjectType: "member",
+    subjectId: "lua-vento",
+    severity: "low",
+    category: "Off-topic",
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.offTopic" }],
+    title: "Same thread, fourth report",
+    preview: "Reported minutes after the third, wording almost identical.",
+    reporterName: "Kai S.",
+    reportedName: "@lua-vento",
+    community: "Lisbon Queers",
+    age: "7m",
+    risk: { tone: "jade", key: "admin:moderation.risk.low" },
+  },
+  {
+    id: "r-brigade-5",
+    subjectType: "member",
+    subjectId: "lua-vento",
+    severity: "low",
+    category: "Off-topic",
+    chips: [{ tone: "jade", labelKey: "admin:moderation.chip.offTopic" }],
+    title: "Same thread, fifth report",
+    preview: "Fifth report in ten minutes, all from people in the same thread.",
+    reporterName: "Vera D.",
+    reportedName: "@lua-vento",
+    community: "Lisbon Queers",
+    age: "6m",
+    risk: { tone: "jade", key: "admin:moderation.risk.low" },
+  },
   {
     id: "r-listing-dispute",
     subjectType: "listing",
@@ -465,6 +586,19 @@ export const OTHER_REPORTS: ModReport[] = [
 
 /* ── Appeals ─────────────────────────────────────────────────────────────── */
 
+/**
+ * A demo deadline `days` from now, as an ISO string. Negative days are already
+ * past.
+ *
+ * Computed at module load rather than hardcoded because these fixtures outlive
+ * any date written into them: a frozen "due 2026-01-09" reads as years overdue
+ * the moment the demo is opened later, which would make every appeal in the
+ * seed look like a failure of the very promise the feature is about.
+ */
+function demoDueInDays(days: number): string {
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+}
+
 export const APPEALS: Appeal[] = [
   {
     id: "a-1",
@@ -482,6 +616,13 @@ export const APPEALS: Appeal[] = [
     community: "Lisbon Queers",
     age: "2d",
     status: { tone: "amber", key: "admin:moderation.status.awaiting" },
+    // TS-11 demo deadlines. Relative to load rather than a frozen date, so the
+    // "due in / past its window" line reads correctly whenever the demo is
+    // opened rather than showing a deadline years in the past.
+    slaDueAt: demoDueInDays(5),
+    isOverdue: false,
+    decidedAt: null,
+    decision: null,
     original: {
       action: "Restricted · 7 days",
       by: "Inês M.",
@@ -511,6 +652,12 @@ export const APPEALS: Appeal[] = [
     community: "Newly Arrived",
     age: "3d",
     status: { tone: "jade", key: "admin:moderation.status.awaiting" },
+    // Deliberately past its window: without one overdue appeal in the seed,
+    // the overdue chip and the "Past its window" filter are invisible offline.
+    slaDueAt: demoDueInDays(-1),
+    isOverdue: true,
+    decidedAt: null,
+    decision: null,
     original: {
       action: "Removed content",
       by: "Júlia S.",
@@ -536,6 +683,10 @@ export const APPEALS: Appeal[] = [
     community: "Trans & Friends",
     age: "20h",
     status: { tone: "jade", key: "admin:moderation.status.awaiting" },
+    slaDueAt: demoDueInDays(6),
+    isOverdue: false,
+    decidedAt: null,
+    decision: null,
     original: {
       action: "Warned · spam",
       by: "Sofia A.",
@@ -546,6 +697,58 @@ export const APPEALS: Appeal[] = [
     argument:
       "\"It was a GoFundMe for a member's top surgery, posted because someone asked how to help. I should've added context, that's on me, but calling it spam stings. Happy to repost it properly.\"",
     supporters: [{ initials: "KS", name: "Kai S.", tone: "plum" }],
+  },
+];
+
+/* ── Pending ratifications (TS-12) ───────────────────────────────────────── */
+
+/**
+ * Two permanent bans waiting on a second moderator.
+ *
+ * The seed exists because without it the feature is invisible offline: a queue
+ * that only ever fills when a real moderator asks for a real ban cannot be
+ * demonstrated, reviewed, or designed against. Both rows carry the first
+ * moderator's actual words, which is the field the whole surface is built
+ * around — nobody should put their name to removing an account without reading
+ * why it was asked for.
+ */
+export const PENDING_RATIFICATIONS: Ratification[] = [
+  {
+    id: "br-1",
+    targetName: "Rui Andrade",
+    targetUserId: "demo-user-rui",
+    requestedByName: "Inês M.",
+    requestedById: "demo-mod-ines",
+    note: "Third account traced to the same person after two bans for targeting trans members in DMs. Evidence is in the linked report: same phrasing, same three targets, new handle each time.",
+    reasonCode: "harassment",
+    interimAction: "suspended_pending_ratification",
+    requestedAt: demoDueInDays(-1),
+    expiresAt: demoDueInDays(2),
+    isExpired: false,
+    status: "pending",
+    decidedByName: null,
+    decidedAt: null,
+    decisionNote: null,
+    reportId: "r-2",
+  },
+  {
+    id: "br-2",
+    targetName: "Unknown member",
+    targetUserId: "demo-user-unknown",
+    requestedByName: "Júlia S.",
+    requestedById: "demo-mod-julia",
+    note: "Posted another member's address and workplace in a public thread after being asked twice to take it down.",
+    reasonCode: "doxxing",
+    interimAction: "suspended_pending_ratification",
+    requestedAt: demoDueInDays(-2),
+    // Hours from lapsing, so the "about to lapse" state is visible offline.
+    expiresAt: demoDueInDays(0.2),
+    isExpired: false,
+    status: "pending",
+    decidedByName: null,
+    decidedAt: null,
+    decisionNote: null,
+    reportId: null,
   },
 ];
 
@@ -604,11 +807,6 @@ export interface ModAction {
   kind: ActionKind;
   /** Past-tense phrase catalog key, used in the confirmation toast. */
   doneKey: string;
-  /** True for actions that land on a member's account (`restrict`/`ban`). The
-   *  backend 400s these unless the report's `subjectType` is `"member"` (see
-   *  `account-enforcement.service.ts`), so `modActionsFor` only offers them for
-   *  member reports. */
-  memberOnly?: boolean;
 }
 
 export const MOD_ACTIONS: ModAction[] = [
@@ -627,13 +825,6 @@ export const MOD_ACTIONS: ModAction[] = [
     doneKey: "admin:moderation.actions.hide.done",
   },
   {
-    id: "shield",
-    labelKey: "admin:moderation.actions.shield.label",
-    descriptionKey: "admin:moderation.actions.shield.desc",
-    kind: "protect",
-    doneKey: "admin:moderation.actions.shield.done",
-  },
-  {
     id: "warn",
     labelKey: "admin:moderation.actions.warn.label",
     descriptionKey: "admin:moderation.actions.warn.desc",
@@ -646,7 +837,6 @@ export const MOD_ACTIONS: ModAction[] = [
     descriptionKey: "admin:moderation.actions.restrict.desc",
     kind: "neutral",
     doneKey: "admin:moderation.actions.restrict.done",
-    memberOnly: true,
   },
   {
     id: "remove",
@@ -661,21 +851,19 @@ export const MOD_ACTIONS: ModAction[] = [
     descriptionKey: "admin:moderation.actions.ban.desc",
     kind: "destruct",
     doneKey: "admin:moderation.actions.ban.done",
-    memberOnly: true,
   },
 ];
 
 /**
- * The action tiles that actually apply to a report's subject (P0-14). Ban and
- * restrict land on a member's account — the backend rejects them with a 400
- * for any report whose `subjectType` isn't `"member"` (a post, reply, listing,
- * venue, …), so offering them there just sets the moderator up to fail. Every
- * other action (dismiss, hide, shield, warn, remove) has no such subject-type
- * restriction on the server and stays available everywhere.
+ * The action tiles that apply to a report's subject. Since TS-03 that is all of
+ * them: `restrict` and `ban` resolve a content report to its AUTHOR server-side
+ * (`account-enforcement.service.ts`) instead of 400ing, so a post that outs
+ * someone can now be acted on without leaving the queue. The backend still
+ * answers 400 when the subject genuinely has no author, such as a venue report
+ * describing a place in prose, an unclaimed listing, or an erased author.
  */
-export function modActionsFor(subjectType: ReportSubjectType): ModAction[] {
-  if (subjectType === "member") return MOD_ACTIONS;
-  return MOD_ACTIONS.filter((action) => !action.memberOnly);
+export function modActionsFor(_subjectType: ReportSubjectType): ModAction[] {
+  return MOD_ACTIONS;
 }
 
 export interface ModReason {

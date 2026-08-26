@@ -1,8 +1,15 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { FiEdit2, FiUser } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSocial } from "../../app/providers/useSocial";
+import { routes } from "../../app/routeMap";
 import { MemberStaffBadge } from "../../shared/staff/MemberStaffBadge";
+import { AuthorProfileEditor } from "./AuthorProfileEditor";
+import { useAuthorEditPermission } from "./api/useAuthorMutations";
+import { nodeToText, nodeToTitleText } from "./nodeText";
 import type { Author } from "./authorContent.data";
 import styles from "./AuthorPage.module.css";
 
@@ -12,6 +19,14 @@ export function AuthorHeader({ author }: { author: Author }) {
   const { isFollowing, toggleFollow, followEnabled } = useSocial();
   const following = isFollowing(author.slug);
   const label = author.firstName;
+  // CON-11 — who may fill in this byline's bio and portrait, and through
+  // which endpoint (staff go through the admin route, the linked member
+  // through /authors/me).
+  const { canEdit, canEditName, isStaffEditor } = useAuthorEditPermission({
+    slug: author.slug,
+    memberSlug: author.memberSlug,
+  });
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   return (
     <>
@@ -23,7 +38,10 @@ export function AuthorHeader({ author }: { author: Author }) {
           <h1 className={styles.name}>
             <span className={styles.nameRow}>
               {author.name}
-              <MemberStaffBadge slug={author.slug} />
+              {/* Badge the MEMBER behind the byline, not the byline slug: an
+                  auto-created byline slug is a slugified name, which only
+                  coincidentally matches a member slug. */}
+              <MemberStaffBadge slug={author.memberSlug ?? undefined} />
             </span>
           </h1>
           <div className={styles.role}>{author.role}</div>
@@ -51,6 +69,35 @@ export function AuthorHeader({ author }: { author: Author }) {
             )}
             <span className={styles.pronouns}>{author.pronouns}</span>
           </div>
+
+          {/* CON-11 — the byline as a person: a link back to their member
+              profile when the byline is a real account, and the editor for
+              whoever is allowed to fill it in. */}
+          {(author.memberSlug || canEdit) && (
+            <div className={styles.identityRow}>
+              {author.memberSlug && (
+                <Link
+                  className={styles.memberLink}
+                  to={`${routes.members}/${author.memberSlug}`}
+                >
+                  <FiUser aria-hidden />
+                  {t("magazine:author.viewMemberProfile", { name: label })}
+                </Link>
+              )}
+              {canEdit && (
+                <button
+                  type="button"
+                  className={styles.editByline}
+                  onClick={() => setIsEditorOpen(true)}
+                >
+                  <FiEdit2 aria-hidden />
+                  {isStaffEditor
+                    ? t("magazine:author.editBylineCta")
+                    : t("magazine:author.editMyBylineCta")}
+                </button>
+              )}
+            </div>
+          )}
         </div>
         <ImageSlot
           tint="coral"
@@ -84,6 +131,23 @@ export function AuthorHeader({ author }: { author: Author }) {
           </span>
         ))}
       </div>
+
+      {isEditorOpen && (
+        <AuthorProfileEditor
+          initial={{
+            slug: author.slug,
+            // The view model carries the display name as a node (the curated
+            // registry splits a coral <em> into the surname), so flatten it
+            // for the text input.
+            name: nodeToTitleText(author.name),
+            bio: nodeToText(author.bio),
+            avatarUrl: author.portrait,
+          }}
+          canEditName={canEditName}
+          asStaff={isStaffEditor}
+          onClose={() => setIsEditorOpen(false)}
+        />
+      )}
     </>
   );
 }

@@ -1,0 +1,101 @@
+/* Two panels, one per state. They look different on purpose: a list with a live
+   link is not a quieter version of a private one, it is a different thing. */
+
+.panel {
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.private {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.shared {
+  background: var(--plum);
+  border: 1px solid var(--line-strong);
+  color: rgba(var(--cream-rgb), 0.85);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.private .head {
+  color: var(--ink-60);
+}
+.shared .head {
+  color: var(--accent);
+}
+.head svg {
+  width: 14px;
+  height: 14px;
+}
+
+.body {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+.private .body {
+  color: var(--ink-60);
+}
+.shared .body {
+  color: rgba(var(--cream-rgb), 0.75);
+}
+
+/* The sentence a member must read before a link exists. Louder than the rest of
+   the panel because on this platform a list of places is a record of where
+   somebody goes. */
+.warning {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-strong);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 0;
+}
+.warning svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+
+.points {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-60);
+}
+.shared .points {
+  color: rgba(var(--cream-rgb), 0.75);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.since {
+  font-size: 12px;
+  color: rgba(var(--cream-rgb), 0.55);
+}

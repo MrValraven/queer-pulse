@@ -18,7 +18,6 @@ export function demoEligibilitySignals(nowIso: string): EligibilitySignals {
     hostedOpenEvents: CURRENT_USER_PUBLIC.hosting.map(() => ({
       at: "2026-06-01T00:00:00.000Z",
     })),
-    workshopsTaught: 1,
     publishedSubprofiles: 1,
     vouchCount: 3,
     endorsementCount: 4,
@@ -45,7 +44,6 @@ export function liveEligibilitySignals(
     tenureDays: dto.tenureDays,
     publishedPieces: dto.publishedPieces.map((at) => ({ at })),
     hostedOpenEvents: dto.hostedOpenEvents.map((at) => ({ at })),
-    workshopsTaught: dto.workshopsTaught,
     publishedSubprofiles: dto.publishedSubprofiles,
     vouchCount: dto.vouchCount,
     endorsementCount: dto.endorsementCount,

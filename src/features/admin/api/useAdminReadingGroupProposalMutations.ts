@@ -30,18 +30,32 @@ const STATUS_BY_DECISION: Record<
   archive: "archived",
 };
 
+/**
+ * How each decision reaches the backend. `decline` is separate because its
+ * reason is REQUIRED and is the message the proposer is sent, so an empty one
+ * is refused here rather than handed to the server to 400 on.
+ */
 const LIVE_CALL: Record<
   ReadingGroupProposalDecision,
   (id: string, note?: string) => Promise<unknown>
 > = {
   approve: approveReadingGroupProposal,
-  decline: declineReadingGroupProposal,
+  decline: (id, note) => {
+    const reason = note?.trim() ?? "";
+    if (!reason) {
+      return Promise.reject(
+        new Error("A declined proposal needs a reason the proposer can read."),
+      );
+    }
+    return declineReadingGroupProposal(id, reason);
+  },
   archive: archiveReadingGroupProposal,
 };
 
 export interface DecideReadingGroupProposalVars {
   id: string;
   decision: ReadingGroupProposalDecision;
+  /** Required on `decline` (the proposer reads it), optional otherwise. */
   note?: string;
 }
 
@@ -63,7 +77,11 @@ export function useAdminReadingGroupProposalMutations() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
 
-  const patchStatus = (id: string, status: ReadingGroupProposalStatus) => {
+  const patchStatus = (
+    id: string,
+    status: ReadingGroupProposalStatus,
+    note?: string,
+  ) => {
     queryClient.setQueriesData<ProposalsData>(
       { queryKey: PROPOSALS_QUERY_KEY },
       (data) =>
@@ -78,6 +96,7 @@ export function useAdminReadingGroupProposalMutations() {
                         ...item,
                         status,
                         decidedAt: item.decidedAt ?? new Date().toISOString(),
+                        decisionNote: note ?? item.decisionNote,
                       }
                     : item,
                 ),
@@ -106,12 +125,12 @@ export function useAdminReadingGroupProposalMutations() {
       await LIVE_CALL[decision](id, note);
       return status;
     },
-    onMutate: async ({ id, decision }) => {
+    onMutate: async ({ id, decision, note }) => {
       await queryClient.cancelQueries({ queryKey: PROPOSALS_QUERY_KEY });
       const previous = queryClient.getQueriesData<ProposalsData>({
         queryKey: PROPOSALS_QUERY_KEY,
       });
-      patchStatus(id, STATUS_BY_DECISION[decision]);
+      patchStatus(id, STATUS_BY_DECISION[decision], note?.trim() || undefined);
       return { previous };
     },
     onError: (_error, _vars, context) => {

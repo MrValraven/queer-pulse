@@ -178,11 +178,23 @@ export function articleListItemToArticle(
     initials: initialsFor(dto.author.displayName),
     tint: tintFor(dto.author.handle),
     imgDesc: dto.title,
+    // CON-04 — the piece's lead art. `undefined` (never `null`) when the desk
+    // commissioned none, so `ImageSlot` falls back to its tinted placeholder
+    // instead of rendering a broken image.
+    image: dto.heroImageUrl ?? undefined,
     authorBio: "",
     tags: dto.tags,
     related: [],
-    body: [],
+    // The list read carries no body, but it does carry the dek, and every card
+    // blurb reads `body[0]` through `firstPlainText`. Without this a live row
+    // prints as a bare headline while the demo registry shows a blurb.
+    body: dto.dek ? [dto.dek] : [],
     blocks: [],
+    // CON-16 — the list row states where the piece stands and what language it
+    // is in, so a card can mark an archived guide rather than presenting it as
+    // current.
+    lifecycle: dto.lifecycle,
+    locale: dto.locale,
   };
 }
 
@@ -203,6 +215,27 @@ export function articleResponseToArticle(
     // Non-empty on articles authored/edited via the block editor — the
     // reader (`ArticlePage.tsx`) prefers these over `body` when present.
     blocks: dto.blocks,
+    // CON-06 / CON-02 / CON-17: everything the desk collects and the reader
+    // was never shown. Each stays optional so a demo mock without them still
+    // satisfies `Article`.
+    contentNotes: dto.contentNotes,
+    corrections: dto.corrections,
+    metaDescription: dto.metaDescription,
+    socialImage: dto.socialImage,
+    canonicalUrl: dto.canonicalUrl,
+    // CON-16 — the dated banner and the language switcher. `translations`
+    // always carries at least the piece the reader is on, so the switcher can
+    // say "English only" rather than rendering an empty control.
+    lifecycleNotice: dto.lifecycleNotice,
+    translations: dto.translations,
+    translationOf: dto.translationOf,
+    // The byline stays the WRITER's (`articleListItemToArticle` sets it). The
+    // translator is a second contributor with their own credit line.
+    translatorName: dto.translator?.displayName ?? null,
+    // CON-04 — the reframe crop for the hero, as a FOCAL POINT. The hero band
+    // is full-bleed and its aspect never matches an arbitrary crop, so the
+    // exact-frame `crop` prop would distort the art (see `ImageSlot`).
+    imageFocus: dto.heroCrop,
   };
 }
 
@@ -316,7 +349,12 @@ export function authorFromDto(
     readingBlurb: "",
     reading: [],
     elsewhere: [],
+    // CON-11: `avatarUrl` already falls back to the linked member's profile
+    // photo server-side, so a writer with a member avatar and no author
+    // portrait no longer renders as an empty slot.
     portrait: dto.avatarUrl ?? "",
+    memberSlug: dto.memberSlug,
+    pieceCount: dto.pieceCount,
   };
 }
 
@@ -339,6 +377,9 @@ export function mergeAuthor(
     ...base,
     bio: dto.bio ?? base.bio,
     portrait: dto.avatarUrl ?? base.portrait,
+    // CON-11 — the byline/member link is live data, never the mock's.
+    memberSlug: dto.memberSlug,
+    pieceCount: dto.pieceCount,
     featured: featured
       ? {
           kicker: featured.issueNumber

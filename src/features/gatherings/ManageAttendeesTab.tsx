@@ -3,28 +3,46 @@ import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { BarFromGatheringModal } from "./BarFromGatheringModal";
 import { InviteMembersModal } from "./InviteMembersModal";
+import { ManageBarredList } from "./ManageBarredList";
+import {
+  GoingAttendeeActions,
+  WaitlistAttendeeActions,
+} from "./ManageAttendeeActions";
 import { useAttendees } from "./api/useAttendees";
-import { useRemoveAttendee, usePromoteAttendee } from "./api/useEventMutations";
 import { AttendeeSection } from "./ManageGatheringAttendees";
 import styles from "./ManageGatheringPage.module.css";
+
+/** Which attendee the "bar from this gathering" prompt is open for. */
+interface BarTarget {
+  slug: string;
+  name: string;
+}
 
 export function AttendeesTab({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [barTarget, setBarTarget] = useState<BarTarget | null>(null);
   const [loadingMoreGoing, setLoadingMoreGoing] = useState(false);
   const [loadingMoreWaitlist, setLoadingMoreWaitlist] = useState(false);
   const { data, loadMoreGoing, loadMoreWaitlist } = useAttendees(slug);
-  const removeAttendee = useRemoveAttendee(slug);
-  const promoteAttendee = usePromoteAttendee(slug);
   const going = data?.going ?? [];
   const waitlist = data?.waitlist ?? [];
   const goingCount = data?.goingCount ?? going.length;
   const waitlistCount = data?.waitlistCount ?? waitlist.length;
   const capacity = data?.capacity ?? 20;
-  const pct = capacity ? Math.round((goingCount / capacity) * 100) : 0;
+  // Seats, never rows (LOC-07). "Ten going" on a twenty-seat gathering can
+  // mean thirty people once the declared plus-ones are counted, so the bar
+  // measures what capacity actually measures.
+  const seatsTaken = data?.seatsTaken ?? goingCount;
+  const percentFilled = capacity
+    ? Math.min(100, Math.round((seatsTaken / capacity) * 100))
+    : 0;
   const hasMoreGoing = data?.hasMoreGoing ?? false;
   const hasMoreWaitlist = data?.hasMoreWaitlist ?? false;
   const onLoadMoreGoing = async () => {
@@ -37,6 +55,7 @@ export function AttendeesTab({ slug }: { slug: string }) {
     await loadMoreWaitlist();
     setLoadingMoreWaitlist(false);
   };
+
   return (
     <div>
       <div className={styles.attToolbar}>
@@ -63,25 +82,37 @@ export function AttendeesTab({ slug }: { slug: string }) {
           {t("gatherings:manage.attendees.inviteCta")}
         </Button>
       </div>
+
       <div className={styles.capWrap}>
         <div className={styles.capLabel}>
           <span>
-            {t("gatherings:manage.attendees.spotsFilled", {
-              going: goingCount,
+            {t("gatherings:manage.attendees.seatsFilled", {
+              seats: seatsTaken,
               capacity,
             })}
+            {seatsTaken !== goingCount && (
+              <span className={styles.capNote}>
+                {t("gatherings:manage.attendees.seatsFromGuests", {
+                  count: goingCount,
+                })}
+              </span>
+            )}
           </span>
           <span className={styles.capPct}>
-            {fmt.number(pct / 100, {
+            {fmt.number(percentFilled / 100, {
               style: "percent",
               maximumFractionDigits: 0,
             })}
           </span>
         </div>
         <div className={styles.capBar}>
-          <div className={styles.capFill} style={{ width: `${pct}%` }} />
+          <div
+            className={styles.capFill}
+            style={{ width: `${percentFilled}%` }}
+          />
         </div>
       </div>
+
       <AttendeeSection
         heading={t("gatherings:manage.attendees.goingHeading", {
           count: goingCount,
@@ -91,30 +122,12 @@ export function AttendeesTab({ slug }: { slug: string }) {
         loadingMore={loadingMoreGoing}
         onLoadMore={() => void onLoadMoreGoing()}
         renderAction={(attendee) => (
-          <Button
-            variant="ghost"
-            aria-label={t("gatherings:manage.attendees.removeAria", {
-              name: attendee.name,
-            })}
-            className={`${styles.attActionBtn} ${styles.remove}`}
-            disabled={removeAttendee.isPending}
-            onClick={() => {
-              removeAttendee.mutate(attendee.slug, {
-                onSuccess: () =>
-                  showToast(
-                    t("gatherings:manage.attendees.removedToast"),
-                    "info",
-                  ),
-                onError: () =>
-                  showToast(
-                    t("gatherings:manage.attendees.actionErrorToast"),
-                    "error",
-                  ),
-              });
-            }}
-          >
-            {t("gatherings:manage.attendees.removeCta")}
-          </Button>
+          <GoingAttendeeActions
+            slug={slug}
+            attendee={attendee}
+            canBar={!demoMode}
+            onBar={setBarTarget}
+          />
         )}
       />
       <AttendeeSection
@@ -127,36 +140,22 @@ export function AttendeesTab({ slug }: { slug: string }) {
         loadingMore={loadingMoreWaitlist}
         onLoadMore={() => void onLoadMoreWaitlist()}
         renderAction={(attendee) => (
-          <Button
-            variant="ghost"
-            aria-label={t("gatherings:manage.attendees.promoteAria", {
-              name: attendee.name,
-            })}
-            className={`${styles.attActionBtn} ${styles.promote}`}
-            disabled={promoteAttendee.isPending}
-            onClick={() => {
-              promoteAttendee.mutate(attendee.slug, {
-                onSuccess: () =>
-                  showToast(
-                    t("gatherings:manage.attendees.promotedToast", {
-                      name: attendee.name.split(" ")[0]!,
-                    }),
-                    "success",
-                  ),
-                onError: () =>
-                  showToast(
-                    t("gatherings:manage.attendees.actionErrorToast"),
-                    "error",
-                  ),
-              });
-            }}
-          >
-            {t("gatherings:manage.attendees.promoteCta")}
-          </Button>
+          <WaitlistAttendeeActions slug={slug} attendee={attendee} />
         )}
       />
+
+      <ManageBarredList slug={slug} demoMode={demoMode} />
+
       {inviteOpen && (
         <InviteMembersModal slug={slug} onClose={() => setInviteOpen(false)} />
+      )}
+      {barTarget && (
+        <BarFromGatheringModal
+          slug={slug}
+          memberSlug={barTarget.slug}
+          memberName={barTarget.name}
+          onClose={() => setBarTarget(null)}
+        />
       )}
     </div>
   );

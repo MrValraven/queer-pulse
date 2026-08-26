@@ -25,8 +25,8 @@ import { IssueRail } from "./desk/issue/IssueRail";
 import styles from "./IssueProductionPage.module.css";
 
 /**
- * The issue-production surface — running order, cover & contents, digest &
- * social, and archive — behind `/magazine/editor/issue/:number`. Composes
+ * The issue-production surface — running order, cover & contents, issue panel
+ * & social, and archive — behind `/magazine/editor/issue/:number`. Composes
  * the Phase 5 tabs (Task 6/7) and data hooks (Task 4) into the live page;
  * shipping is a two-step confirm (`ShipChecklistCard` opens `ShipIssueModal`)
  * since pieces behind the publish gate hold and publish later rather than
@@ -43,7 +43,6 @@ export function IssueProductionPage() {
     saveContentsBlurb,
     saveSchedule,
     ship,
-    sendDigestTest,
   } = useIssueMutations(number!);
   const { showToast } = useToast();
   const { t } = useTranslation();
@@ -185,14 +184,13 @@ export function IssueProductionPage() {
           <DigestSocialTab
             digest={production.digest}
             pieces={contentsPieces}
+            issueNumber={production.number}
             digestSendOnPublish={production.digestSendOnPublish}
             digestSentAt={production.digestSentAt}
             onSaveDigest={(items) => saveDigest.mutate({ items })}
             onToggleSendOnPublish={(sendOnPublish) =>
               saveDigest.mutate({ items: production.digest, sendOnPublish })
             }
-            onSendTest={() => sendDigestTest.mutateAsync()}
-            sendTestPending={sendDigestTest.isPending}
           />
         );
       case "archive":

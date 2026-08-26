@@ -49,6 +49,58 @@ const en: Record<string, string> = {
   // naming who it is from or what it said.
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "You have a new notification.",
+  // The DM variant. "A message" is the most this can narrow without leaking:
+  // it tells the member whether to unlock now, and tells a bystander only that
+  // this platform has messages in it.
+  "push:preview.hidden.message": "You have a new message.",
+
+  // ── Decisions on something the member submitted ───────────────────────────
+  // The housing review queue (LOC-01) and the four approval queues (LOC-19).
+  // Each of these is the platform's answer to a member's own submission, so
+  // the copy names the thing they submitted and never leaves them guessing.
+  "push:housing.decision.approved.title": "Your home is live",
+  "push:housing.decision.approved.body": "{title} is now on the housing board.",
+  "push:housing.decision.changesRequested.title": "Your listing needs a change",
+  "push:housing.decision.changesRequested.body":
+    "A moderator asked for a change to {title}. Open it to see what.",
+  "push:housing.decision.rejected.title": "Your listing was not published",
+  "push:housing.decision.rejected.body":
+    "{title} was not published. Open it to see why.",
+  "push:housing.decision.takenDown.title": "Your listing was removed",
+  "push:housing.decision.takenDown.body":
+    "{title} was removed from the housing board. Open it to see why.",
+  "push:readingGroupProposal.approved.title": "Your reading group is live",
+  "push:readingGroupProposal.approved.body":
+    "{book} has its own space now, and you own it.",
+  "push:readingGroupProposal.declined.title":
+    "About your reading group proposal",
+  "push:readingGroupProposal.declined.body":
+    "We could not take {book} forward. Tap to read why.",
+  "push:groupListing.live.title": "Your listing is live",
+  "push:groupListing.live.body": "{title} is now on the group's board.",
+  "push:groupListing.question.title": "A question about your listing",
+  "push:groupListing.question.body":
+    "Moderators need one thing cleared up about {title}.",
+  "push:groupListing.declined.title": "About your listing",
+  "push:groupListing.declined.body":
+    "{title} was not published. Tap to read why.",
+  "push:landlordSuggestion.live.title": "Your landlord suggestion is live",
+  "push:landlordSuggestion.live.body":
+    "{name} is in the directory now. Thank you.",
+  "push:landlordSuggestion.notLive.title": "About your landlord suggestion",
+  "push:landlordSuggestion.notLive.body":
+    "{name} did not make it into the directory. Tap to read why.",
+  "push:landlordIntro.accepted.title": "Your introduction is being made",
+  "push:landlordIntro.accepted.body":
+    "Someone is putting you in touch with {name}.",
+  "push:landlordIntro.declined.title": "About your introduction request",
+  "push:landlordIntro.declined.body":
+    "We could not make the introduction to {name}. Tap to read why.",
+  // A gathering has named this member's venue (LOC-16). The one prompt to
+  // confirm or detach before it reaches the venue's public page.
+  "push:venue.attachment.title": "A gathering at your venue",
+  "push:venue.attachment.body":
+    '{listingName} has been named as the venue for "{eventTitle}".',
 };
 
 const pt: Record<string, string> = {
@@ -82,6 +134,53 @@ const pt: Record<string, string> = {
   "push:topic.newPost.body": "{name} publicou em #{topic}.",
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "Tens uma notificação nova.",
+  "push:preview.hidden.message": "Tens uma mensagem nova.",
+
+  // ── Decisões sobre algo que a pessoa submeteu ─────────────────────────────
+  "push:housing.decision.approved.title": "A tua casa está publicada",
+  "push:housing.decision.approved.body":
+    "{title} já está no quadro de alojamento.",
+  "push:housing.decision.changesRequested.title":
+    "O teu anúncio precisa de uma alteração",
+  "push:housing.decision.changesRequested.body":
+    "A moderação pediu uma alteração a {title}. Abre para veres qual.",
+  "push:housing.decision.rejected.title": "O teu anúncio não foi publicado",
+  "push:housing.decision.rejected.body":
+    "{title} não foi publicado. Abre para veres porquê.",
+  "push:housing.decision.takenDown.title": "O teu anúncio foi retirado",
+  "push:housing.decision.takenDown.body":
+    "{title} foi retirado do quadro de alojamento. Abre para veres porquê.",
+  "push:readingGroupProposal.approved.title":
+    "O teu grupo de leitura está criado",
+  "push:readingGroupProposal.approved.body":
+    "{book} já tem espaço próprio, e é teu.",
+  "push:readingGroupProposal.declined.title":
+    "Sobre a tua proposta de grupo de leitura",
+  "push:readingGroupProposal.declined.body":
+    "Não conseguimos avançar com {book}. Toca para leres porquê.",
+  "push:groupListing.live.title": "O teu anúncio está publicado",
+  "push:groupListing.live.body": "{title} já está no quadro do grupo.",
+  "push:groupListing.question.title": "Uma questão sobre o teu anúncio",
+  "push:groupListing.question.body":
+    "A moderação precisa de esclarecer uma coisa sobre {title}.",
+  "push:groupListing.declined.title": "Sobre o teu anúncio",
+  "push:groupListing.declined.body":
+    "{title} não foi publicado. Toca para leres porquê.",
+  "push:landlordSuggestion.live.title":
+    "A tua sugestão de senhorio está publicada",
+  "push:landlordSuggestion.live.body": "{name} já está no diretório. Obrigada.",
+  "push:landlordSuggestion.notLive.title": "Sobre a tua sugestão de senhorio",
+  "push:landlordSuggestion.notLive.body":
+    "{name} não entrou no diretório. Toca para leres porquê.",
+  "push:landlordIntro.accepted.title": "A tua apresentação está a ser feita",
+  "push:landlordIntro.accepted.body":
+    "Alguém vai pôr-te em contacto com {name}.",
+  "push:landlordIntro.declined.title": "Sobre o teu pedido de apresentação",
+  "push:landlordIntro.declined.body":
+    "Não conseguimos fazer a apresentação a {name}. Toca para leres porquê.",
+  "push:venue.attachment.title": "Um convívio no teu espaço",
+  "push:venue.attachment.body":
+    '{listingName} foi indicado como o espaço de "{eventTitle}".',
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };

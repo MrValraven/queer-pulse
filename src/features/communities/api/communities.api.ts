@@ -245,21 +245,58 @@ export const freezeCommunity = (slug: string) =>
 export const transferCommunityOwnership = (slug: string, memberSlug: string) =>
   apiPost<CommunityDetailDTO>(`/communities/${slug}/transfer`, { memberSlug });
 
+/** How severe the platform judged a report, derived server-side from its
+ *  reason code (`reports/report-severity.ts`). Drives the queue badge and the
+ *  SLA window behind `isOverdue`. */
+export type CommunityReportSeverity = "emergency" | "high" | "medium" | "low";
+
+/** The reported post or reply itself, resolved onto the report by the backend
+ *  so a moderator reads what they are judging. Mirrors
+ *  `CommunityReportContentDTO` in
+ *  `queerpulse-backend/src/communities/community-report-response.ts`. `null`
+ *  when the row the report points at no longer exists. */
+export interface CommunityReportContentDTO {
+  kind: "post" | "reply";
+  /** The reported row's own id (post id, or reply id). */
+  id: string;
+  /** The thread to open: the post itself, or a reply's parent post. */
+  postId: string;
+  /** Plain text, whitespace-collapsed, cut server-side. Carries no ellipsis;
+   *  `isExcerptTruncated` is what says there is more. */
+  excerpt: string;
+  isExcerptTruncated: boolean;
+  /** When the content was written, distinct from when it was reported. */
+  authoredAt: string;
+  author: MemberRefDTO | null;
+  /** Already tombstoned by its author or a moderator. */
+  isDeleted: boolean;
+  /** Moderation-hidden: members cannot see it right now. */
+  isHidden: boolean;
+  /** Moderation-removed: everyone sees a tombstone. */
+  isRemoved: boolean;
+}
+
 /** One open report on this community's own posts/replies (`GET
- *  /communities/:slug/reports`, owner/mod-only). Deliberately leaner than the
- *  platform admin queue's `ModReportDTO` (`features/admin/api/moderation.api.ts`):
- *  no reporter/reported identity or content excerpt, just enough to triage —
- *  see `communityReportToModReport`. */
+ *  /communities/:slug/reports`, owner/mod-only). Mirrors
+ *  `CommunityReportDTO` in
+ *  `queerpulse-backend/src/communities/community-report-response.ts` exactly.
+ *  A community moderator already reads hidden content in their own community,
+ *  so the reported body travels with the report. See
+ *  `communityReportToModReport`. */
 export interface CommunityReportDTO {
   id: string;
   subjectType: "post" | "reply";
   subjectId: string;
   reasonCode: ReasonCode;
-  severity: "emergency" | "high" | "medium" | "low";
+  severity: CommunityReportSeverity;
   status: "open" | "resolved" | "escalated";
   createdAt: string;
   slaDueAt: string;
+  /** The SLA window closed while the report is still open. Derived server-side
+   *  so every row on a page agrees about the clock. */
+  isOverdue: boolean;
   acknowledgement: string;
+  content: CommunityReportContentDTO | null;
 }
 
 /** GET /communities/:slug/reports — open reports whose subject is a post or
@@ -267,19 +304,48 @@ export interface CommunityReportDTO {
 export const getCommunityReports = (slug: string) =>
   apiGet<CommunityReportDTO[]>(`/communities/${slug}/reports`);
 
-/** PATCH /mod/reports/:id — dismiss a report from a community's reports
- *  queue. Reuses the platform-wide moderation-action endpoint with a fixed
- *  "dismiss" action and generic reason/note, mirroring the admin queue's own
- *  plain-dismiss default (`useModerationQueue.ts`'s `resolveReport`).
+/** What a community owner/mod may do to a report on their own community's post
+ *  or reply, without holding a platform Moderator/Admin role. The server's
+ *  carve-out (`ModerationService.COMMUNITY_MOD_ACTIONS`) accepts exactly these
+ *  three; everything else is an account-level consequence and stays with
+ *  trained staff. */
+export type CommunityModAction = "dismiss" | "remove_content" | "escalate";
+
+export interface CommunityModActionInput {
+  action: CommunityModAction;
+  reasonCode: ReasonCode;
+  /** The moderator's own words. Recorded on the report and in the audit trail,
+   *  so "why this came down" survives the moderator who decided it. */
+  note: string;
+}
+
+/**
+ * PATCH /mod/reports/:id — act on a report from a community's own reports
+ * queue. The same endpoint the admin queue uses; the server decides what a
+ * community owner/mod is allowed to send.
  *
- *  NOTE: that endpoint is gated to a platform Moderator/Admin role
- *  (`RolesGuard`), which a community-level owner/mod does not necessarily
- *  hold — a plain community mod calling this can get a 403. That's a real,
- *  unresolved backend authorization gap, not something to paper over here:
- *  the call goes through as-is and a 403 surfaces as the normal global error
- *  toast (`useCommunityMutations.ts`'s `useDismissCommunityReport`). */
+ * TS-08: `remove_content` is what a takedown is now filed as. The console used
+ * to delete the post through the community endpoint and then close the report
+ * with `action: "dismiss", reasonCode: "other", note: ""`, so the audit log,
+ * the resolution block and the admin badge all read "Dismissed" for the most
+ * common community action there is, and no `content_moderation` row was ever
+ * written. Anyone auditing a community read "dismissed" over and over and
+ * concluded its moderators did nothing. Sending the real action means the
+ * takedown and the report close commit in one transaction server-side, so the
+ * separate delete call is gone.
+ *
+ * TS-07: `escalate` is how a community moderator hands an outing or doxxing
+ * report to trained staff. The server refuses to let them settle one.
+ */
+export const actOnCommunityReport = (
+  id: string,
+  body: CommunityModActionInput,
+) => apiPatch<{ id: string; status: string }>(`/mod/reports/${id}`, body);
+
+/** PATCH /mod/reports/:id — plain dismiss, the "no rule was broken" answer.
+ *  Thin wrapper over `actOnCommunityReport` so the two paths cannot drift. */
 export const dismissReport = (id: string) =>
-  apiPatch<{ id: string; status: string }>(`/mod/reports/${id}`, {
+  actOnCommunityReport(id, {
     action: "dismiss",
     reasonCode: "other",
     note: "",
@@ -294,6 +360,13 @@ export async function getCommunityPosts(slug: string, page?: number) {
   );
   return toItemsPage(res);
 }
+
+/** GET /communities/:slug/posts/:id — one post, for its permalink page.
+ *  404s under exactly the conditions the timeline withholds the same row: a
+ *  private community the viewer is not in, a blocked/muted author, or a
+ *  moderator-hidden post read by a non-staff viewer. */
+export const getCommunityPost = (slug: string, postId: string) =>
+  apiGet<CommunityPostDTO>(`/communities/${slug}/posts/${postId}`);
 
 export const createPost = (slug: string, dto: CreatePostDto) =>
   apiPost<CommunityPostDTO>(`/communities/${slug}/posts`, dto);

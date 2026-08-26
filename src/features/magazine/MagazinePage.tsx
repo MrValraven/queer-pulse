@@ -20,10 +20,11 @@ export function MagazinePage() {
       />
       <MagazineMasthead active="current" />
 
-      {/* The in-issue anchor nav and the cover story are the fabricated
-          front-of-book — they point at / show article rails that only exist in
-          demo. Live mode drops them and lets MagazineSections render the honest
-          "coming soon" state below. */}
+      {/* Demo's front-of-book: a fixed anchor nav and a hand-written cover
+          story, both pointing at article rails that only exist in demo. Live
+          mode builds its own from the current issue's run order, inside
+          `MagazineLiveSections` (CON-13), which is why this block stays
+          demo-only rather than being shared. */}
       {demoMode && (
         <>
           <div className="wrap">

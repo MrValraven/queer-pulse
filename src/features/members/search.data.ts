@@ -7,6 +7,7 @@ import {
   FiHash,
   FiLayers,
   FiMessageSquare,
+  FiMessageCircle,
   FiShoppingBag,
   FiMapPin,
   FiBell,
@@ -23,7 +24,6 @@ import {
   FiFileText,
   FiShield,
   FiBriefcase,
-  FiTool,
 } from "react-icons/fi";
 import { personaPath, routes, topicPath } from "../../app/routeMap";
 import { gatheringPath } from "../gatherings/data";
@@ -34,12 +34,12 @@ export type ResultType =
   | "community"
   | "event"
   | "forum"
+  | "forumPost"
   | "business"
   | "magazine"
   | "job"
   | "housing"
   | "resource"
-  | "workshop"
   | "subprofile"
   | "topic"
   | "page"
@@ -550,20 +550,6 @@ export const SEARCH_DATA: SearchItem[] = [
     kw: "resource guide coming out work rights workplace",
   },
   {
-    t: "workshop",
-    name: "Intro to Film Photography",
-    sub: "6 weeks · In person",
-    href: `${routes.skills}/film-photography`,
-    kw: "workshop skills class film photography learn course",
-  },
-  {
-    t: "workshop",
-    name: "Ceramics for Beginners",
-    sub: "4 weeks · Graça studio",
-    href: `${routes.skills}/ceramics-beginners`,
-    kw: "workshop skills class ceramics pottery learn course",
-  },
-  {
     t: "subprofile",
     name: "Rui builds things",
     sub: "Persona · Software & hardware",
@@ -584,12 +570,12 @@ export const TYPE_BG: Record<ResultType, string> = {
   event: "rgba(74,140,111,.1)",
   community: "rgba(232,119,90,.1)",
   forum: "rgba(122,82,184,.1)",
+  forumPost: "rgba(122,82,184,.1)",
   business: "rgba(74,140,111,.1)",
   magazine: "rgba(232,119,90,.1)",
   job: "rgba(74,140,111,.1)",
   housing: "rgba(122,82,184,.1)",
   resource: "rgba(74,140,111,.1)",
-  workshop: "rgba(232,119,90,.1)",
   subprofile: "rgba(122,82,184,.1)",
   board: "rgba(122,82,184,.1)",
   topic: "rgba(232,119,90,.1)",
@@ -600,12 +586,12 @@ export const TYPE_ICON: Record<ResultType, IconType> = {
   event: FiCalendar,
   community: FiUsers,
   forum: FiMessageSquare,
+  forumPost: FiMessageCircle,
   business: FiShoppingBag,
   magazine: FiBookOpen,
   job: FiBriefcase,
   housing: FiHome,
   resource: FiLifeBuoy,
-  workshop: FiTool,
   subprofile: FiLayers,
   board: FiClipboard,
   topic: FiHash,
@@ -619,12 +605,12 @@ export const TYPE_LABEL_KEY: Record<ResultType, string> = {
   event: "members:search.type.event",
   community: "members:search.type.community",
   forum: "members:search.type.forum",
+  forumPost: "members:search.type.forumPost",
   business: "members:search.type.business",
   magazine: "members:search.type.magazine",
   job: "members:search.type.job",
   housing: "members:search.type.housing",
   resource: "members:search.type.resource",
-  workshop: "members:search.type.workshop",
   subprofile: "members:search.type.subprofile",
   board: "members:search.type.board",
   topic: "members:search.type.topic",
@@ -644,12 +630,12 @@ export const TABS: { id: ResultType | "all"; labelKey: string }[] = [
   { id: "community", labelKey: "members:search.type.community" },
   { id: "event", labelKey: "members:search.type.event" },
   { id: "forum", labelKey: "members:search.type.forum" },
+  { id: "forumPost", labelKey: "members:search.type.forumPost" },
   { id: "business", labelKey: "members:search.type.business" },
   { id: "magazine", labelKey: "members:search.type.magazine" },
   { id: "job", labelKey: "members:search.type.job" },
   { id: "housing", labelKey: "members:search.type.housing" },
   { id: "resource", labelKey: "members:search.type.resource" },
-  { id: "workshop", labelKey: "members:search.type.workshop" },
   { id: "subprofile", labelKey: "members:search.type.subprofile" },
   { id: "topic", labelKey: "members:search.type.topic" },
   { id: "page", labelKey: "members:search.type.page" },
@@ -667,3 +653,9 @@ export const NO_LIVE_SEARCH_TYPES = new Set<ResultType>(["page", "board"]);
  *  view. Used to show a "see all in [category]" affordance instead of
  *  silently truncating (DISC-10). */
 export const SEARCH_PER_TYPE_CAP = 6;
+
+/** Mirrors `useSearchData`'s `SEE_ALL_LIMIT` — how many hits of one type a
+ *  category tab asks the backend for in one go. A tab that comes back exactly
+ *  this full has a next page, which `SearchLoadMore` fetches by `offset`
+ *  (SOC-08). */
+export const SEARCH_TAB_PAGE_SIZE = 50;

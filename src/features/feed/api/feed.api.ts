@@ -1,6 +1,9 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 import { toPage } from "../../../shared/api/pagination";
-import type { FeedItem, Paginated } from "../../../shared/contracts/contracts";
+import type {
+  FeedItem as ContractFeedItem,
+  Paginated,
+} from "../../../shared/contracts/contracts";
 import type { FeedTab } from "../feed.data";
 
 // ── Feed DTOs + raw calls ────────────────────────────────────────────────────
@@ -9,7 +12,49 @@ import type { FeedTab } from "../feed.data";
 // (infinite scroll). Post interactions target the underlying community-posts
 // domain, which the backend owns; we call those endpoints directly here.
 
-export type { FeedItem };
+/**
+ * Why an item is in this member's feed (SOC-04). The backend ranks the "All"
+ * tab on three explicit facts the member created — they joined a community,
+ * they accepted a connection, they followed a topic — and names the strongest
+ * one here so the card can say it out loud. `recent` means no fact matched:
+ * the item is simply new. Absent on the scoped tabs, where the tab is the
+ * explanation.
+ *
+ * There is no behavioural input behind any of this, and there must never be.
+ */
+export type FeedReason = "membership" | "connection" | "topic" | "recent";
+
+/**
+ * The feed item the backend actually sends, which is the shared contract plus
+ * the ranking and interaction signals the feed alone consumes (SOC-04).
+ * Declared here rather than in `shared/contracts/contracts.ts` because no
+ * other feature reads them.
+ *
+ * Every added field is OPTIONAL: a `gathering` carries no reaction count, a
+ * scoped tab carries no reason, and an older backend carries neither.
+ */
+/** A source the member can turn down in their own feed (SOC-18). Muting it
+ *  never touches membership: it quiets the room in this one member's feed. */
+export interface FeedItemSource {
+  kind: "community" | "forum_thread";
+  id: string;
+  name: string;
+}
+
+export interface FeedItem extends ContractFeedItem {
+  /** Present on every tab, since muting is a reader's preference rather than
+   *  a ranking concept. Null for a flat item with no room behind it. */
+  source?: FeedItemSource | null;
+  reason?: FeedReason;
+  /** The community, person or topic `reason` names, ready to render. */
+  reasonSubject?: string | null;
+  /** Likes on a `community_post` — the counter the inline action toggles. */
+  reactionCount?: number;
+  /** Replies on a `community_post`, or a `forum_thread`'s stored count. */
+  replyCount?: number;
+  /** The viewer's own reaction key, or null when they haven't reacted. */
+  myReaction?: string | null;
+}
 
 /** Map the page's tab chips onto the backend `tab` query param. */
 function tabParam(tab: FeedTab): string | undefined {
@@ -42,8 +87,24 @@ export async function getFeed(tab: FeedTab, cursor?: string) {
   return toPage(res);
 }
 
-// `likePost` / `replyToPost` used to live here, behind `useFeedMutations`'s
-// `useLikePost` / `useReplyToPost`. Neither hook ever had a consumer: the feed
-// cards route their like and reply actions through the COMMUNITIES feature's
-// `useCommunityMutations` instead. Both the hooks and these two calls were
-// removed rather than left as a second, divergent path to the same endpoints.
+// ── Inline card actions (SOC-04) ────────────────────────────────────────────
+// The feed's cards used to be read-only: the adapter hardcoded a zero like
+// count and an empty reply list, so reacting or replying meant leaving the
+// page. These two calls hit the FLAT `community-posts` aliases rather than the
+// slug-scoped `/communities/:slug/posts/...` routes, because a feed card holds
+// a post id and a permalink, not always a community slug (a flat/global post
+// has no community at all).
+//
+// `POST /community-posts/:id/like` is an idempotent toggle that returns the
+// authoritative count, which is what the optimistic update rolls back to.
+
+export interface FeedLikeResponse {
+  liked: boolean;
+  likeCount: number;
+}
+
+export const likeFeedPost = (postId: string, liked: boolean) =>
+  apiPost<FeedLikeResponse>(`/community-posts/${postId}/like`, { liked });
+
+export const replyToFeedPost = (postId: string, body: string) =>
+  apiPost<{ id: string }>(`/community-posts/${postId}/replies`, { body });

@@ -1,5 +1,13 @@
 import type { IconType } from "react-icons";
-import { FiBell, FiCalendar, FiUsers } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiBell,
+  FiCalendar,
+  FiFlag,
+  FiInbox,
+  FiShield,
+  FiUsers,
+} from "react-icons/fi";
 import {
   businessPath,
   communityPath,
@@ -7,6 +15,7 @@ import {
   thread,
 } from "../../../app/routeMap";
 import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
+import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -34,6 +43,70 @@ const KIND_ICON_BACKGROUND: Record<NotifType, string> = {
   community: "rgba(var(--plum-rgb), .07)",
   platform: "rgba(var(--plum-rgb), .07)",
 };
+
+/**
+ * The icon a newly-filed report renders with, or `undefined` for every other
+ * kind. This is the ONE place a row overrides the three-icon category map
+ * above, and it earns it: a moderator's bell is otherwise a wall of identical
+ * platform bells, and an emergency report (outing or doxxing, the two reasons
+ * carrying a 1-hour SLA) has to be pickable out of that wall at a glance.
+ *
+ * Emergency gets a warning triangle on a coral wash; every other severity gets
+ * a flag on the ordinary platform ground, so the emphasis stays meaningful
+ * instead of shouting on every report.
+ */
+/**
+ * The icon an account/security row renders with, or `undefined` for every other
+ * kind. The second and last override of the three-icon category map, on the
+ * same reasoning as `reportIconFor`: a member scanning a wall of identical
+ * platform bells has to be able to pick out the one telling them their account
+ * was signed in to somewhere they do not recognise.
+ *
+ * A shield, not a warning triangle. The row is not an accusation — most new
+ * sign-ins are the member buying a laptop — and dressing it as an alarm every
+ * time is how a real one stops being noticed.
+ */
+function securityIconFor(
+  kind: NotificationKind | null,
+): { Glyph: IconType; background: string } | undefined {
+  if (
+    kind !== "security_new_sign_in" &&
+    kind !== "account_export_ready" &&
+    kind !== "account_deletion_final_warning" &&
+    kind !== "dsar_resolved"
+  ) {
+    return undefined;
+  }
+  return { Glyph: FiShield, background: KIND_ICON_BACKGROUND.platform };
+}
+
+/**
+ * The icon a reviewed intake submission renders with, or `undefined` for every
+ * other kind. An inbox tray, deliberately not the shield above: the member sent
+ * something in and it came back with an answer, which is a different feeling
+ * from anything about their account's safety. Keeping the two apart is what
+ * stops the shield from becoming the generic "platform" glyph it would be if
+ * every system row borrowed it.
+ */
+function intakeIconFor(
+  kind: NotificationKind | null,
+): { Glyph: IconType; background: string } | undefined {
+  if (kind !== "intake_reviewed") return undefined;
+  return { Glyph: FiInbox, background: KIND_ICON_BACKGROUND.platform };
+}
+
+function reportIconFor(
+  kind: NotificationKind | null,
+  payload: Record<string, unknown> | null | undefined,
+): { Glyph: IconType; background: string } | undefined {
+  if (kind !== "report_filed" && kind !== "community_report_filed") {
+    return undefined;
+  }
+  const isEmergency = payload?.severity === "emergency";
+  return isEmergency
+    ? { Glyph: FiAlertTriangle, background: "rgba(var(--accent-rgb), .18)" }
+    : { Glyph: FiFlag, background: KIND_ICON_BACKGROUND.platform };
+}
 
 /**
  * Map a backend notification to the prototype's rich Notification view-model,
@@ -89,6 +162,9 @@ export function notificationDtoToView(
     dto.type,
     dto.payload,
     t,
+    // `security_new_sign_in` prints the wall-clock time of the sign-in in the
+    // member's own language; every other kind ignores this argument.
+    fmt,
   );
   const view: Notification = {
     // Backend ids are uuids — pass through as-is. Coercing with Number() would
@@ -142,7 +218,24 @@ export function notificationDtoToView(
     view.icon = undefined;
   }
 
-  view.sourceHref = sourceHrefFromPayload(dto.payload);
+  view.sourceHref = sourceHrefFromPayload(dto.type, dto.payload);
+
+  // A report row keeps its icon even though it resolves no actor (it never
+  // names the reporter), so the override is applied last, after the actor
+  // branch above would have cleared `icon` for an actor-bearing row.
+  const reportIcon = reportIconFor(kind, dto.payload);
+  if (reportIcon) view.icon = reportIcon;
+
+  // Same placement, same reason: an account/security row resolves no actor, so
+  // the actor branch above never cleared its icon, but the override still has
+  // to come after it to be the last word on which glyph wins.
+  const securityIcon = securityIconFor(kind);
+  if (securityIcon) view.icon = securityIcon;
+
+  // Same placement, same reason as the two overrides above: an intake outcome
+  // resolves no actor, and this has to be the last word on its glyph.
+  const intakeIcon = intakeIconFor(kind);
+  if (intakeIcon) view.icon = intakeIcon;
 
   // `subprofile_credit` (Personas discovery Phase 5, Decision §3): the FIRST
   // live notification kind to populate `.actions` — every other kind above
@@ -177,20 +270,47 @@ export function notificationDtoToView(
 
 /**
  * Deep-link to the thread/discussion a notification originated from, built
- * from `payload.source` + its slug field — `thread(threadSlug)` for a forum
- * mention, `communityPath(communitySlug)` for a community one. `payload` is
+ * from `payload.source` + its slug field: `thread(threadSlug)` for a forum
+ * mention, and for a community one the POST'S OWN PERMALINK,
+ * `communityPostPath(communitySlug, postId)` (SOC-02). `payload` is
  * `Record<string, unknown>` (server-trusted but untyped on this side), so
  * every field is read defensively.
  *
+ * "Ana replied to your post" used to resolve to `communityPath(communitySlug)`
+ * and throw `postId` away, which dropped the member at the top of a paginated
+ * timeline to hunt for the post they had just been told about. `postId` was
+ * already in the payload for both the nested and the flat write paths; this
+ * simply stops discarding it. A community row with no `postId` still falls
+ * back to the community page, which is the honest destination for a
+ * notification about the community itself.
+ *
  * Returns `undefined` — never a broken link — whenever the needed slug is
- * missing. In particular, the community FLAT post/reply paths
- * (`createFlatPost`/`addFlatReply`) write a payload with `postId` but no
- * `communitySlug`; those rows fall back to no source href (the row still
- * shows the actor link) rather than inventing one.
+ * missing. A genuinely global post (`createFlatPost` with no `communitySlug`,
+ * reachable only by calling the API directly) has no community to be read
+ * inside and therefore no page to open, so those rows still get no source
+ * href; the row itself still reads and still links the actor.
  */
 function sourceHrefFromPayload(
+  type: string,
   payload: Record<string, unknown> | null | undefined,
 ): string | undefined {
+  // A newly-filed report is the one kind whose destination is a QUEUE rather
+  // than the thing that was reported: the responder needs the surface where
+  // they can act, and the reported content is one click from there. Platform
+  // staff go to the moderation queue; a community's staff go to their own mod
+  // tools with the reports pane already open. Keyed on `type` rather than on a
+  // payload `source` field precisely because neither destination is the
+  // community/thread page a `source` value would resolve to.
+  if (type === "report_filed") return routes.adminModeration;
+  if (type === "community_report_filed") {
+    const communitySlug = payload?.communitySlug;
+    // No slug means no destination: this row only ever reaches a community's
+    // own staff, who have no access to the platform queue, so falling back
+    // there would hand them a link into a redirect. The row still reads.
+    return typeof communitySlug === "string" && communitySlug
+      ? `${communityPath(communitySlug)}?tab=modtools&mod=reports`
+      : undefined;
+  }
   if (!payload) return undefined;
   if (payload.source === "forum") {
     const threadSlug = payload.threadSlug;
@@ -200,9 +320,11 @@ function sourceHrefFromPayload(
   }
   if (payload.source === "community") {
     const communitySlug = payload.communitySlug;
-    return typeof communitySlug === "string" && communitySlug
-      ? communityPath(communitySlug)
-      : undefined;
+    if (typeof communitySlug !== "string" || !communitySlug) return undefined;
+    const postId = payload.postId;
+    return typeof postId === "string" && postId
+      ? communityPostPath(communitySlug, postId)
+      : communityPath(communitySlug);
   }
   // A real cohost invite (SDD 2026-08-18 "cohost invite flow") has its own
   // `source` value, distinct from plain event/event_rsvp notifications. It
@@ -236,6 +358,44 @@ function sourceHrefFromPayload(
     const listingSlug = payload.listingSlug;
     return typeof listingSlug === "string" && listingSlug
       ? businessPath(listingSlug)
+      : undefined;
+  }
+  // Account and security rows (ID-06). Each goes to the page where the member
+  // can DO the thing the row is about, which is the whole reason to notify:
+  // an unrecognised sign-in is only actionable next to a "Sign out" button.
+  // None needs a slug.
+  if (payload.source === "security") {
+    return routes.sessions;
+  }
+  if (payload.source === "account_data") {
+    return routes.dataExport;
+  }
+  if (payload.source === "account") {
+    return routes.deleteAccount;
+  }
+  // A decision on a data-subject request → the data-request page, which lists
+  // the member's own reference history, so the row they were just handed can be
+  // matched to the case it is about. Its own `source` value rather than
+  // `account`, which already means "the delete-account page".
+  if (payload.source === "account_dsar") {
+    return routes.dsar;
+  }
+  // A reviewed intake submission has NO destination, on purpose. There is no
+  // member-facing page for a Culture submission, a micro-grant application or a
+  // sober-host listing: the row carries the whole outcome. Linking back to the
+  // form would read as "fill this in again", which is the opposite of what just
+  // happened, so the row stays text-only.
+  if (payload.source === "intake") {
+    return undefined;
+  }
+  // A shipped magazine issue (CON-05) → that issue's own page, where the
+  // desk's curated "In this issue" panel lives. The issue number is the route
+  // segment, so a row missing it drops the link rather than landing on the
+  // bare current-issue route and showing the wrong issue.
+  if (payload.source === "magazine") {
+    const issueNumber = payload.issueNumber;
+    return typeof issueNumber === "string" && issueNumber
+      ? `${routes.issue}/${encodeURIComponent(issueNumber)}`
       : undefined;
   }
   // Roadmap idea status → the public roadmap; appeal outcome → the member's

@@ -34,6 +34,9 @@ interface CreationDeps {
   createGroupMutation: ReturnType<typeof useCreateGroup>;
   /** From the navigation sub-hook — opens (and marks read) an existing thread. */
   openThread: (id: string) => void;
+  /** From the navigation sub-hook — opens a thread and arms a scroll-to +
+   *  highlight of one of its messages. */
+  openThreadAtMessage: (conversationId: string, messageId?: string) => void;
   /** From the sending sub-hook — appends an optimistic bubble to a conversation. */
   appendOptimistic: (convId: string, message: ChatMessage) => void;
   /** From the sending sub-hook — drives a message down the send ladder. */
@@ -94,6 +97,7 @@ export function useMessageCreation({
   startConversation,
   createGroupMutation,
   openThread,
+  openThreadAtMessage,
   appendOptimistic,
   deliver,
   migrateOutboxConversation,
@@ -141,7 +145,12 @@ export function useMessageCreation({
     migrateOutboxConversation,
   });
 
-  useMessageDeepLinks({ allThreads, openThread, startThread });
+  useMessageDeepLinks({
+    allThreads,
+    openThread,
+    openThreadAtMessage,
+    startThread,
+  });
 
   return { startThread, startGroup, forwardMessage };
 }
