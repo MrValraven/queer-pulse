@@ -123,6 +123,196 @@ export const marketing: Catalog = {
   "about.stand.commitment.mutualAid.body":
     "Palestinian solidarity and relief work is eligible, decided in the open like every other allocation.",
   "about.stand.commitment.mutualAid.link": "See how allocations are made",
+  // ── About link dialogs ──────────────────────────────────────────────────
+  // Each block is the digest shown when one of the page's reference links opens
+  // <AboutLinkModal> instead of navigating. Written for the claim that raised
+  // it, so the two guidelines entries differ even though both land on the same
+  // clause. Registry: aboutLinks.data.ts.
+  "about.linkModal.intersections.eyebrow": "Intersectionality",
+  "about.linkModal.intersections.label": "Living at the intersections",
+  "about.linkModal.intersections.title":
+    "More than one thing <em>at once.</em>",
+  "about.linkModal.intersections.lead":
+    "The guide this position rests on: how race, faith, class and disability meet queerness in Lisbon, in members' own words.",
+  "about.linkModal.intersections.p1":
+    "Being queer and a person of colour, queer and religious, queer and working class, queer and disabled: these identities do not stack neatly. The guide exists for the members living that, and as a visible commitment that queerness covers many kinds of person.",
+  "about.linkModal.intersections.p2":
+    "It is built around member voices, with organisations and resources attached to each section, and it grows as members add to it.",
+  "about.linkModal.intersections.point.race.title": "Race and ethnicity.",
+  "about.linkModal.intersections.point.race.body":
+    "Portugal's colonial history shapes this city in ways that are obvious if you are living them. The section covers navigating queer spaces as a person of colour, and the QTIPOC groups that exist here.",
+  "about.linkModal.intersections.point.faith.title": "Faith and religion.",
+  "about.linkModal.intersections.point.faith.body":
+    "A changing Catholic context, other traditions, and the members who hold faith and queerness together. Being secular sits there too.",
+  "about.linkModal.intersections.point.class.title": "Class and economics.",
+  "about.linkModal.intersections.point.class.body":
+    "Queer social life carries an unspoken class character. The section names Lisbon's cost shift and what we do about access: sliding-scale gatherings, a free forum, and membership that stays free for anyone who cannot contribute.",
+  "about.linkModal.intersections.cta": "Read the full intersectionality guide",
+
+  "about.linkModal.guidelinesExclusion.eyebrow": "Community guidelines",
+  "about.linkModal.guidelinesExclusion.label": "Where political speech ends",
+  "about.linkModal.guidelinesExclusion.title":
+    "Political speech <em>stays political.</em>",
+  "about.linkModal.guidelinesExclusion.lead":
+    "The guidelines clause this commitment rests on, and the hard lines it sits next to.",
+  "about.linkModal.guidelinesExclusion.p1":
+    "Criticising a state, its government, its military, or its ideology is political speech, and moderators handle it as political speech. It becomes a Code of Conduct matter when it lands on a person.",
+  "about.linkModal.guidelinesExclusion.p2":
+    "Advocacy aimed at a class of member sits on the far side of that line. Campaigning for the exclusion of trans members from this community is a Code of Conduct breach, whatever vocabulary it borrows.",
+  "about.linkModal.guidelinesExclusion.point.hardLines.title":
+    "Always a Code of Conduct matter.",
+  "about.linkModal.guidelinesExclusion.point.hardLines.body":
+    "Harassment, doxxing, outing someone without their consent, threats, sharing private conversations or photos, and discrimination on any protected basis.",
+  "about.linkModal.guidelinesExclusion.point.bothDirections.title":
+    "One test, applied by moderators.",
+  "about.linkModal.guidelinesExclusion.point.bothDirections.body":
+    "Is this about a state and its conduct, or about a person and who they are. That question decides every report of this kind.",
+  "about.linkModal.guidelinesExclusion.point.reporting.title":
+    "Reporting is supported.",
+  "about.linkModal.guidelinesExclusion.point.reporting.body":
+    "Moderators read every report. Confirmed breaches lead to a warning, suspension, or removal, and the person who filed is updated at each stage.",
+  "about.linkModal.guidelinesExclusion.cta": "Read the full guidelines",
+
+  "about.linkModal.transHealthcare.eyebrow": "Trans healthcare · Portugal",
+  "about.linkModal.transHealthcare.label": "Trans healthcare in Portugal",
+  "about.linkModal.transHealthcare.title":
+    "Your journey, <em>step by step.</em>",
+  "about.linkModal.transHealthcare.lead":
+    "A practical guide to gender-affirming healthcare in Portugal, built from community knowledge and kept current by members.",
+  "about.linkModal.transHealthcare.p1":
+    "It walks the real pathways: HRT through the SNS, HRT privately, legal name change, gender marker, and surgery access. Each one breaks into the steps you actually take, with what to bring, who to call, and what to expect at every appointment.",
+  "about.linkModal.transHealthcare.p2":
+    "It reflects the system as of June 2026 and it is community knowledge, so verify current waiting times with ILGA Portugal or your GP. ILGA Portugal also offers free legal accompaniment through the SNS process, and the guide says so on every path.",
+  "about.linkModal.transHealthcare.point.hrt.title":
+    "HRT, through the SNS or privately.",
+  "about.linkModal.transHealthcare.point.hrt.body":
+    "Registering with a centro de saúde, the GP referral, the gender clinic assessment, the prescription, and the blood tests that follow.",
+  "about.linkModal.transHealthcare.point.legal.title":
+    "Legal name and gender marker.",
+  "about.linkModal.transHealthcare.point.legal.body":
+    "The Lei n.º 38/2018 process at the Conservatória do Registo Civil, the waiting period, and updating your documents afterwards.",
+  "about.linkModal.transHealthcare.point.clinicians.title":
+    "Affirming clinicians.",
+  "about.linkModal.transHealthcare.point.clinicians.body":
+    "Key contacts, plus the Solidarity Pricing Registry for trans-affirming GPs and psychiatrists.",
+  "about.linkModal.transHealthcare.cta": "Read the full trans healthcare guide",
+
+  "about.linkModal.guidelinesSpeech.eyebrow": "Community guidelines",
+  "about.linkModal.guidelinesSpeech.label":
+    "How Palestine advocacy is moderated",
+  "about.linkModal.guidelinesSpeech.title":
+    "One test, <em>both directions.</em>",
+  "about.linkModal.guidelinesSpeech.lead":
+    "The guidelines clause that governs political speech, and the hard lines it sits next to.",
+  "about.linkModal.guidelinesSpeech.p1":
+    "Advocacy for Palestinian liberation is welcome here and will not be removed for making people uncomfortable. Criticising a state, its government, its military, or its ideology is political speech, and moderators handle it as political speech.",
+  "about.linkModal.guidelinesSpeech.p2":
+    "It becomes a Code of Conduct matter when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines.",
+  "about.linkModal.guidelinesSpeech.point.antisemitism.title":
+    "Antisemitism is a breach.",
+  "about.linkModal.guidelinesSpeech.point.antisemitism.body":
+    "Including conspiracy framing, and holding Jewish members answerable for a state's actions.",
+  "about.linkModal.guidelinesSpeech.point.antiPalestinian.title":
+    "Anti-Palestinian racism is a breach.",
+  "about.linkModal.guidelinesSpeech.point.antiPalestinian.body":
+    "Including treating Palestinian or Arab members as suspect by default, and harassment of any member over their nationality, ethnicity, or religion.",
+  "about.linkModal.guidelinesSpeech.point.test.title":
+    "One question decides it.",
+  "about.linkModal.guidelinesSpeech.point.test.body":
+    "Moderators ask whether a post is about a state and its conduct, or about a person and who they are. QueerPulse's own position on Palestine leaves that question untouched.",
+  "about.linkModal.guidelinesSpeech.cta": "Read the full guidelines",
+
+  "about.linkModal.governanceAllocations.eyebrow": "Governance & transparency",
+  "about.linkModal.governanceAllocations.label": "How allocations are decided",
+  "about.linkModal.governanceAllocations.title":
+    "What comes in, <em>where it goes.</em>",
+  "about.linkModal.governanceAllocations.lead":
+    "Finances are published every quarter, and the decisions that move money are made in the open.",
+  "about.linkModal.governanceAllocations.p1":
+    "QueerPulse is funded by the people who use it. Income and expenditure are published each quarter, line by line, with no investor interests and no growth targets sitting behind them.",
+  "about.linkModal.governanceAllocations.p2":
+    "Quarterly surpluses go into an operational reserve targeted at three months of running costs. Once that target is met, additional surplus goes in full to the community micro-grants fund. Capital gets redistributed.",
+  "about.linkModal.governanceAllocations.point.partners.title":
+    "Partner money is restricted.",
+  "about.linkModal.governanceAllocations.point.partners.body":
+    "It is tied to a named scope, such as the Mental Health Fund or community events, and carries no editorial, governance, or platform influence.",
+  "about.linkModal.governanceAllocations.point.votes.title":
+    "Funding changes go to a vote.",
+  "about.linkModal.governanceAllocations.point.votes.body":
+    "Accepting funding outside our usual sources needs a majority member vote. Every open proposal is listed with its tally, and past ones stay visible with their result.",
+  "about.linkModal.governanceAllocations.point.record.title":
+    "The record stays up.",
+  "about.linkModal.governanceAllocations.point.record.body":
+    "Community health figures, moderation outcomes, and appeals are published alongside the money, every quarter.",
+  "about.linkModal.governanceAllocations.cta": "See the full governance page",
+
+  "about.linkModal.migration.eyebrow": "Intersectionality",
+  "about.linkModal.migration.label": "Race, migration and queer Lisbon",
+  "about.linkModal.migration.title":
+    "Race, migration, and <em>queer Lisbon.</em>",
+  "about.linkModal.migration.lead":
+    "The part of the intersectionality guide this position draws on.",
+  "about.linkModal.migration.p1":
+    "Being a queer person of colour in Lisbon means navigating two things at once that mainstream spaces rarely design for at the same time. Portugal's colonial history shapes this city in ways that are visible if you are living them and invisible if you are not.",
+  "about.linkModal.migration.p2":
+    "The guide covers what to know arriving here, what happens when queer spaces treat race as an afterthought, and the community groups that exist for QTIPOC members.",
+  "about.linkModal.migration.point.queerSpaces.title":
+    "When queer isn't enough.",
+  "about.linkModal.migration.point.queerSpaces.body":
+    "What members describe about racism inside queer spaces here, and the guidelines that make it reportable.",
+  "about.linkModal.migration.point.arriving.title": "Arriving in Portugal.",
+  "about.linkModal.migration.point.arriving.body":
+    "Colonial history, how it lands on Brazilian, PALOP and South Asian members, and where to find people who have done this before you.",
+  "about.linkModal.migration.point.cost.title": "Cost as a barrier.",
+  "about.linkModal.migration.point.cost.body":
+    "Lisbon's cost shift, the class character of queer social life, and the access measures we hold ourselves to.",
+  "about.linkModal.migration.cta": "Read the full intersectionality guide",
+
+  "about.linkModal.sexualHealth.eyebrow": "Sexual health",
+  "about.linkModal.sexualHealth.label": "Sexual health resources",
+  "about.linkModal.sexualHealth.title":
+    "Undetectable = <em>Untransmittable.</em>",
+  "about.linkModal.sexualHealth.lead":
+    "Testing, PrEP and HIV resources in Lisbon, with a community-reviewed clinic directory.",
+  "about.linkModal.sexualHealth.p1":
+    "People living with HIV who are on effective treatment and have an undetectable viral load cannot sexually transmit HIV to their partners. It is scientifically established and endorsed by the CDC, the WHO, and more than 400 health organisations worldwide.",
+  "about.linkModal.sexualHealth.p2":
+    "HIV treatment is free for every resident through the SNS, and 97% of people on treatment in Portugal reach an undetectable viral load within six months.",
+  "about.linkModal.sexualHealth.point.testing.title": "Where to get tested.",
+  "about.linkModal.sexualHealth.point.testing.body":
+    "Community-reviewed clinics across Lisbon, filterable by free/SNS, NGO, pharmacy and private, with what each one tests for and what to bring.",
+  "about.linkModal.sexualHealth.point.prep.title": "PrEP through the SNS.",
+  "about.linkModal.sexualHealth.point.prep.body":
+    "Free for eligible people and over 99% effective when taken correctly. The guide walks the eligibility check, the blood tests, and the prescription.",
+  "about.linkModal.sexualHealth.point.living.title": "Living with HIV.",
+  "about.linkModal.sexualHealth.point.living.body":
+    "Current information, support services, and answers to the questions people are most afraid to ask.",
+  "about.linkModal.sexualHealth.cta": "Read the full sexual health guide",
+
+  "about.linkModal.governanceOverview.eyebrow": "Governance & transparency",
+  "about.linkModal.governanceOverview.label": "How QueerPulse is governed",
+  "about.linkModal.governanceOverview.title":
+    "How we run this, and who <em>decides.</em>",
+  "about.linkModal.governanceOverview.lead":
+    "The record of how QueerPulse is governed, how decisions get made, and what happens when things go wrong.",
+  "about.linkModal.governanceOverview.p1":
+    "Moderation is done by a small team of members who agreed to take on the role. They answer to the advisory council, and any decision can be appealed within 14 days. The advisory council hears the appeal, and its outcome is final.",
+  "about.linkModal.governanceOverview.p2":
+    "Reports are reviewed within 48 hours, same-day where someone's safety is at risk, and the figures behind that process are published every quarter.",
+  "about.linkModal.governanceOverview.point.council.title":
+    "The advisory council.",
+  "about.linkModal.governanceOverview.point.council.body":
+    "It reviews appeals, proposes platform changes, and serves as the accountability layer. Members serve one-year terms and can be removed by a two-thirds community vote.",
+  "about.linkModal.governanceOverview.point.finances.title":
+    "Finances in the open.",
+  "about.linkModal.governanceOverview.point.finances.body":
+    "Income and expenditure published quarterly, an operational reserve targeted at three months of running costs, and surplus beyond it redirected to micro-grants.",
+  "about.linkModal.governanceOverview.point.proposals.title":
+    "Proposals and votes.",
+  "about.linkModal.governanceOverview.point.proposals.body":
+    "Council removals and funding changes go to a member vote. Every proposal stays visible with its result.",
+  "about.linkModal.governanceOverview.cta": "See the full governance page",
+
   "about.who.eyebrow": "Who's behind this",
   "about.who.title": "Built by <em>community, for community.</em>",
   "about.who.p1":
@@ -136,7 +326,7 @@ export const marketing: Catalog = {
   "about.contactStrip.governanceCta": "Read our governance",
   "about.outro.title": "Come see for <em>yourself.</em>",
   "about.outro.sub":
-    "The best way to understand QueerPulse is to be inside it.",
+    "The best way to understand QueerPulse is to be part of it.",
   "about.outro.cta": "Request an invite",
 
   // ── Activism ───────────────────────────────────────────────────────────
@@ -6842,6 +7032,10 @@ export const marketing: Catalog = {
   "changelog.tag.accountSecurity": "Open account security",
   "changelog.tag.dataExport": "Download your data",
   "changelog.tag.contact": "Get in touch",
+  "changelog.entries.the-about-page-shows-its-work-in-place.title":
+    "The About page shows its work in place",
+  "changelog.entries.the-about-page-shows-its-work-in-place.body":
+    "Every reference link on the About page used to take you off it mid-argument, so checking what backed up a position meant losing your place in it. Those links now open a dialog over the page: a digest of the guidelines clause, healthcare guide, intersectionality section, or governance record they point at, written for the claim that raised it, with a button to the full page if you want the whole thing. The two “read the guidelines” links in the Where we stand section now open different summaries, because one is reached from the trans position and the other from Palestine, and the clause answers a different question in each place.",
   "changelog.entries.perks-that-grant-something-real.title":
     "Perks that grant something real",
   "changelog.entries.perks-that-grant-something-real.body":

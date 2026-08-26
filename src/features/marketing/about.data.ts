@@ -4,7 +4,10 @@
  * is a catalog key that AboutPage.tsx resolves with `t()`.
  */
 import {
+  FiBriefcase,
   FiEyeOff,
+  FiGlobe,
+  FiHeart,
   FiHome,
   FiKey,
   FiRepeat,
@@ -12,7 +15,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
-import { routes } from "../../app/routeMap";
+import type { AboutLinkTopicId } from "./aboutLinks.data";
 
 export const WHY_PARAGRAPH_KEYS = [
   "marketing:about.why.p1",
@@ -87,7 +90,8 @@ export const STAND_PARAGRAPH_KEYS = [
 export interface StandCommitment {
   titleKey: string;
   bodyKey: string;
-  link?: { labelKey: string; href: string };
+  /** Opens `<AboutLinkModal>` on this topic rather than navigating away. */
+  link?: { labelKey: string; topic: AboutLinkTopicId };
 }
 
 /**
@@ -122,7 +126,7 @@ export const STAND_PANELS: StandPanel[] = [
         bodyKey: "marketing:about.stand.trans.commitment.exclusion.body",
         link: {
           labelKey: "marketing:about.stand.trans.commitment.exclusion.link",
-          href: routes.guidelines,
+          topic: "guidelinesExclusion",
         },
       },
       {
@@ -130,7 +134,7 @@ export const STAND_PANELS: StandPanel[] = [
         bodyKey: "marketing:about.stand.trans.commitment.selfId.body",
         link: {
           labelKey: "marketing:about.stand.trans.commitment.selfId.link",
-          href: routes.transHealthcare,
+          topic: "transHealthcare",
         },
       },
     ],
@@ -148,7 +152,7 @@ export const STAND_PANELS: StandPanel[] = [
         bodyKey: "marketing:about.stand.commitment.speech.body",
         link: {
           labelKey: "marketing:about.stand.commitment.speech.link",
-          href: routes.guidelines,
+          topic: "guidelinesSpeech",
         },
       },
       {
@@ -160,37 +164,46 @@ export const STAND_PANELS: StandPanel[] = [
         bodyKey: "marketing:about.stand.commitment.mutualAid.body",
         link: {
           labelKey: "marketing:about.stand.commitment.mutualAid.link",
-          href: routes.governance,
+          topic: "governanceAllocations",
         },
       },
     ],
   },
 ];
 
-/** Shorter positions, rendered as cards beneath the two full panels. */
+/**
+ * Shorter positions, rendered as cards beneath the two full panels. Each card
+ * carries a decorative icon, the same way the values grid does, so the three
+ * read as distinct stances rather than one wall of text.
+ */
 export const STAND_POSITIONS: {
+  icon: IconType;
   titleKey: string;
   bodyKey: string;
-  link?: { labelKey: string; href: string };
+  /** Opens `<AboutLinkModal>` on this topic rather than navigating away. */
+  link?: { labelKey: string; topic: AboutLinkTopicId };
 }[] = [
   {
+    icon: FiBriefcase,
     titleKey: "marketing:about.stand.position.sexWork.title",
     bodyKey: "marketing:about.stand.position.sexWork.body",
   },
   {
+    icon: FiGlobe,
     titleKey: "marketing:about.stand.position.migration.title",
     bodyKey: "marketing:about.stand.position.migration.body",
     link: {
       labelKey: "marketing:about.stand.position.migration.link",
-      href: routes.intersectionality,
+      topic: "migration",
     },
   },
   {
+    icon: FiHeart,
     titleKey: "marketing:about.stand.position.hiv.title",
     bodyKey: "marketing:about.stand.position.hiv.body",
     link: {
       labelKey: "marketing:about.stand.position.hiv.link",
-      href: routes.sexualHealth,
+      topic: "sexualHealth",
     },
   },
 ];

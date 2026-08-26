@@ -37,10 +37,12 @@ function Wordmark({ to }: { to: string }) {
   return (
     <Link to={to} className={styles.brand}>
       <span className={styles.pulseDot} aria-hidden />
-      <Translation
-        i18nKey="shared:brand.wordmark"
-        components={{ em: <span className={styles.brandItalic} /> }}
-      />
+      <span>
+        <Translation
+          i18nKey="shared:brand.wordmark"
+          components={{ em: <span className={styles.brandItalic} /> }}
+        />
+      </span>
     </Link>
   );
 }

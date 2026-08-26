@@ -15,10 +15,12 @@ export function AuthLoader() {
     <div className={styles.wrap} role="status" aria-live="polite">
       <div className={styles.brand}>
         <span className={styles.dot} aria-hidden />
-        <Translation
-          i18nKey="shared:brand.wordmark"
-          components={{ em: <span className={styles.brandItalic} /> }}
-        />
+        <span>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <span className={styles.brandItalic} /> }}
+          />
+        </span>
       </div>
       <p className={styles.caption}>{t("shared:loading.label")}</p>
     </div>

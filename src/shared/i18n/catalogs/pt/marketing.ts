@@ -135,6 +135,199 @@ export const marketing: Catalog = {
     "O trabalho de solidariedade e de ajuda humanitária à Palestina é elegível, decidido às claras como qualquer outra atribuição.",
   "about.stand.commitment.mutualAid.link":
     "Vê como as atribuições são decididas",
+  // ── Diálogos dos links da página Sobre ──────────────────────────────────
+  // Cada bloco é o resumo mostrado quando um dos links de referência da página
+  // abre o <AboutLinkModal> em vez de navegar. Escrito para a afirmação que o
+  // levantou, por isso as duas entradas das diretrizes diferem embora ambas
+  // apontem para a mesma cláusula. Registo: aboutLinks.data.ts.
+  "about.linkModal.intersections.eyebrow": "Interseccionalidade",
+  "about.linkModal.intersections.label": "Viver nas interseções",
+  "about.linkModal.intersections.title":
+    "Mais do que uma coisa <em>ao mesmo tempo.</em>",
+  "about.linkModal.intersections.lead":
+    "O guia em que esta posição assenta: como a raça, a fé, a classe e a deficiência se cruzam com a experiência queer em Lisboa, nas palavras de quem a vive.",
+  "about.linkModal.intersections.p1":
+    "Ser queer e pessoa racializada, queer e religiosa, queer e da classe trabalhadora, queer e com deficiência: estas identidades não se empilham de forma arrumada. O guia existe para as pessoas membras que vivem isso, e como compromisso visível de que ser queer abrange muitos tipos de pessoa.",
+  "about.linkModal.intersections.p2":
+    "É construído a partir de vozes da comunidade, com organizações e recursos ligados a cada secção, e cresce à medida que as pessoas membras lhe acrescentam coisas.",
+  "about.linkModal.intersections.point.race.title": "Raça e etnia.",
+  "about.linkModal.intersections.point.race.body":
+    "A história colonial de Portugal molda esta cidade de formas que são óbvias para quem as vive. A secção fala de atravessar espaços queer como pessoa racializada, e dos grupos QTIPOC que existem por cá.",
+  "about.linkModal.intersections.point.faith.title": "Fé e religião.",
+  "about.linkModal.intersections.point.faith.body":
+    "Um contexto católico em mudança, outras tradições, e as pessoas membras que conciliam fé e experiência queer. Ser laica também cabe aqui.",
+  "about.linkModal.intersections.point.class.title": "Classe e economia.",
+  "about.linkModal.intersections.point.class.body":
+    "A vida social queer carrega um carácter de classe que ninguém nomeia. A secção nomeia a subida de custos em Lisboa e o que fazemos quanto ao acesso: encontros com preço solidário, um fórum gratuito, e uma adesão que continua gratuita para quem não pode contribuir.",
+  "about.linkModal.intersections.cta":
+    "Lê o guia completo de interseccionalidade",
+
+  "about.linkModal.guidelinesExclusion.eyebrow": "Diretrizes da comunidade",
+  "about.linkModal.guidelinesExclusion.label": "Onde acaba o discurso político",
+  "about.linkModal.guidelinesExclusion.title":
+    "O discurso político <em>continua político.</em>",
+  "about.linkModal.guidelinesExclusion.lead":
+    "A cláusula das diretrizes em que este compromisso assenta, e as linhas vermelhas ao lado dela.",
+  "about.linkModal.guidelinesExclusion.p1":
+    "Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político, e a moderação trata-o como discurso político. Passa a ser um assunto do Código de Conduta quando aterra numa pessoa.",
+  "about.linkModal.guidelinesExclusion.p2":
+    "A defesa dirigida a uma classe inteira de pessoas membras fica do outro lado dessa linha. Fazer campanha pela exclusão de pessoas trans desta comunidade é uma violação do Código de Conduta, seja qual for o vocabulário que pede emprestado.",
+  "about.linkModal.guidelinesExclusion.point.hardLines.title":
+    "Sempre um assunto do Código de Conduta.",
+  "about.linkModal.guidelinesExclusion.point.hardLines.body":
+    "Assédio, divulgação de dados pessoais, expor a orientação ou identidade de alguém sem consentimento, ameaças, partilhar conversas ou fotografias privadas, e discriminação em qualquer base protegida.",
+  "about.linkModal.guidelinesExclusion.point.bothDirections.title":
+    "Um teste, aplicado pela moderação.",
+  "about.linkModal.guidelinesExclusion.point.bothDirections.body":
+    "Isto é sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela é. É essa pergunta que decide cada denúncia deste tipo.",
+  "about.linkModal.guidelinesExclusion.point.reporting.title":
+    "Quem denuncia tem apoio.",
+  "about.linkModal.guidelinesExclusion.point.reporting.body":
+    "A moderação lê todas as denúncias. As violações confirmadas levam a advertência, suspensão ou expulsão, e quem denunciou é informado em cada etapa.",
+  "about.linkModal.guidelinesExclusion.cta": "Lê as diretrizes completas",
+
+  "about.linkModal.transHealthcare.eyebrow": "Saúde trans · Portugal",
+  "about.linkModal.transHealthcare.label": "Saúde trans em Portugal",
+  "about.linkModal.transHealthcare.title":
+    "O teu percurso, <em>passo a passo.</em>",
+  "about.linkModal.transHealthcare.lead":
+    "Um guia prático de cuidados de saúde de afirmação de género em Portugal, feito de conhecimento comunitário e mantido atual pelas pessoas membras.",
+  "about.linkModal.transHealthcare.p1":
+    "Percorre os caminhos reais: hormonoterapia pelo SNS, hormonoterapia no privado, mudança legal de nome, menção de género e acesso a cirurgia. Cada um está dividido nos passos que dás mesmo, com o que levar, a quem ligar e o que esperar em cada consulta.",
+  "about.linkModal.transHealthcare.p2":
+    "Reflete o sistema tal como estava em junho de 2026 e é conhecimento comunitário, por isso confirma os tempos de espera atuais com a ILGA Portugal ou com o teu médico de família. A ILGA Portugal também oferece acompanhamento jurídico gratuito no processo do SNS, e o guia diz isso em todos os caminhos.",
+  "about.linkModal.transHealthcare.point.hrt.title":
+    "Hormonoterapia, pelo SNS ou no privado.",
+  "about.linkModal.transHealthcare.point.hrt.body":
+    "Inscrição no centro de saúde, a referenciação pelo médico de família, a avaliação na consulta de género, a prescrição e as análises que se seguem.",
+  "about.linkModal.transHealthcare.point.legal.title":
+    "Nome legal e menção de género.",
+  "about.linkModal.transHealthcare.point.legal.body":
+    "O processo da Lei n.º 38/2018 na Conservatória do Registo Civil, o prazo de espera, e a atualização dos documentos depois disso.",
+  "about.linkModal.transHealthcare.point.clinicians.title":
+    "Profissionais que afirmam quem és.",
+  "about.linkModal.transHealthcare.point.clinicians.body":
+    "Contactos essenciais, mais o Registo de Preços Solidários para médicos de família e psiquiatras trans-afirmativos.",
+  "about.linkModal.transHealthcare.cta": "Lê o guia completo de saúde trans",
+
+  "about.linkModal.guidelinesSpeech.eyebrow": "Diretrizes da comunidade",
+  "about.linkModal.guidelinesSpeech.label":
+    "Como é moderada a defesa da Palestina",
+  "about.linkModal.guidelinesSpeech.title":
+    "Um teste, <em>nos dois sentidos.</em>",
+  "about.linkModal.guidelinesSpeech.lead":
+    "A cláusula das diretrizes que rege o discurso político, e as linhas vermelhas ao lado dela.",
+  "about.linkModal.guidelinesSpeech.p1":
+    "A defesa da libertação da Palestina é bem-vinda aqui e não será removida por incomodar. Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político, e a moderação trata-o como discurso político.",
+  "about.linkModal.guidelinesSpeech.p2":
+    "Passa a ser um assunto do Código de Conduta quando aterra numa pessoa. Responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade é discriminação ao abrigo das linhas vermelhas.",
+  "about.linkModal.guidelinesSpeech.point.antisemitism.title":
+    "O antissemitismo é uma violação.",
+  "about.linkModal.guidelinesSpeech.point.antisemitism.body":
+    "Incluindo enquadramentos conspirativos, e responsabilizar pessoas membras judias pelos atos de um Estado.",
+  "about.linkModal.guidelinesSpeech.point.antiPalestinian.title":
+    "O racismo antipalestiniano é uma violação.",
+  "about.linkModal.guidelinesSpeech.point.antiPalestinian.body":
+    "Incluindo tratar pessoas membras palestinianas ou árabes como suspeitas à partida, e o assédio a qualquer pessoa membra pela sua nacionalidade, etnia ou religião.",
+  "about.linkModal.guidelinesSpeech.point.test.title": "Uma pergunta decide.",
+  "about.linkModal.guidelinesSpeech.point.test.body":
+    "A moderação pergunta se uma publicação é sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela é. A posição da própria QueerPulse sobre a Palestina deixa essa pergunta intacta.",
+  "about.linkModal.guidelinesSpeech.cta": "Lê as diretrizes completas",
+
+  "about.linkModal.governanceAllocations.eyebrow": "Governação e transparência",
+  "about.linkModal.governanceAllocations.label":
+    "Como são decididas as atribuições",
+  "about.linkModal.governanceAllocations.title":
+    "O que entra, <em>para onde vai.</em>",
+  "about.linkModal.governanceAllocations.lead":
+    "As contas são publicadas todos os trimestres, e as decisões que mexem com dinheiro são tomadas às claras.",
+  "about.linkModal.governanceAllocations.p1":
+    "A QueerPulse é financiada por quem a usa. As receitas e as despesas são publicadas a cada trimestre, linha a linha, sem interesses de investidores e sem metas de crescimento por trás.",
+  "about.linkModal.governanceAllocations.p2":
+    "Os excedentes trimestrais vão para uma reserva operacional com a meta de três meses de custos de funcionamento. Assim que essa meta é atingida, o excedente adicional vai por inteiro para o fundo comunitário de microfinanciamentos. O capital é redistribuído.",
+  "about.linkModal.governanceAllocations.point.partners.title":
+    "O dinheiro de parceiros é restrito.",
+  "about.linkModal.governanceAllocations.point.partners.body":
+    "Está preso a um âmbito nomeado, como o Fundo de Saúde Mental ou os eventos da comunidade, e não traz qualquer influência editorial, de governação ou sobre a plataforma.",
+  "about.linkModal.governanceAllocations.point.votes.title":
+    "As mudanças de financiamento vão a votação.",
+  "about.linkModal.governanceAllocations.point.votes.body":
+    "Aceitar financiamento fora das nossas fontes habituais exige uma votação por maioria das pessoas membras. Cada proposta aberta está listada com a sua contagem, e as anteriores continuam visíveis com o resultado.",
+  "about.linkModal.governanceAllocations.point.record.title":
+    "O registo fica de pé.",
+  "about.linkModal.governanceAllocations.point.record.body":
+    "Os números de saúde da comunidade, os desfechos de moderação e os recursos são publicados ao lado das contas, todos os trimestres.",
+  "about.linkModal.governanceAllocations.cta":
+    "Vê a página de governação completa",
+
+  "about.linkModal.migration.eyebrow": "Interseccionalidade",
+  "about.linkModal.migration.label": "Raça, migração e a Lisboa queer",
+  "about.linkModal.migration.title":
+    "Raça, migração e a <em>Lisboa queer.</em>",
+  "about.linkModal.migration.lead":
+    "A parte do guia de interseccionalidade em que esta posição se apoia.",
+  "about.linkModal.migration.p1":
+    "Ser uma pessoa queer racializada em Lisboa significa atravessar duas coisas ao mesmo tempo que os espaços dominantes raramente pensam em conjunto. A história colonial de Portugal molda esta cidade de formas visíveis para quem as vive e invisíveis para quem não as vive.",
+  "about.linkModal.migration.p2":
+    "O guia fala do que é preciso saber ao chegar, do que acontece quando os espaços queer tratam a raça como pormenor, e dos grupos comunitários que existem para pessoas membras QTIPOC.",
+  "about.linkModal.migration.point.queerSpaces.title":
+    "Quando ser queer não chega.",
+  "about.linkModal.migration.point.queerSpaces.body":
+    "O que as pessoas membras descrevem sobre o racismo dentro dos espaços queer daqui, e as diretrizes que tornam isso denunciável.",
+  "about.linkModal.migration.point.arriving.title": "Chegar a Portugal.",
+  "about.linkModal.migration.point.arriving.body":
+    "A história colonial, como ela cai sobre pessoas membras brasileiras, dos PALOP e do sul da Ásia, e onde encontrar quem já fez este caminho antes de ti.",
+  "about.linkModal.migration.point.cost.title": "O custo como barreira.",
+  "about.linkModal.migration.point.cost.body":
+    "A subida de custos em Lisboa, o carácter de classe da vida social queer, e as medidas de acesso a que nos obrigamos.",
+  "about.linkModal.migration.cta": "Lê o guia completo de interseccionalidade",
+
+  "about.linkModal.sexualHealth.eyebrow": "Saúde sexual",
+  "about.linkModal.sexualHealth.label": "Recursos de saúde sexual",
+  "about.linkModal.sexualHealth.title":
+    "Indetetável = <em>Intransmissível.</em>",
+  "about.linkModal.sexualHealth.lead":
+    "Testagem, PrEP e recursos sobre VIH em Lisboa, com um diretório de clínicas avaliado pela comunidade.",
+  "about.linkModal.sexualHealth.p1":
+    "As pessoas que vivem com VIH e estão em tratamento eficaz, com carga viral indetetável, não podem transmitir o VIH sexualmente. Está cientificamente estabelecido e é reconhecido pelo CDC, pela OMS e por mais de 400 organizações de saúde em todo o mundo.",
+  "about.linkModal.sexualHealth.p2":
+    "O tratamento para o VIH é gratuito para todas as pessoas residentes através do SNS, e 97% de quem está em tratamento em Portugal atinge carga viral indetetável em seis meses.",
+  "about.linkModal.sexualHealth.point.testing.title": "Onde fazer o teste.",
+  "about.linkModal.sexualHealth.point.testing.body":
+    "Clínicas em Lisboa avaliadas pela comunidade, filtráveis por gratuito/SNS, ONG, farmácia e privado, com o que cada uma testa e o que levar.",
+  "about.linkModal.sexualHealth.point.prep.title": "PrEP através do SNS.",
+  "about.linkModal.sexualHealth.point.prep.body":
+    "Gratuita para quem é elegível e mais de 99% eficaz quando tomada corretamente. O guia percorre a avaliação de elegibilidade, as análises e a prescrição.",
+  "about.linkModal.sexualHealth.point.living.title": "Viver com VIH.",
+  "about.linkModal.sexualHealth.point.living.body":
+    "Informação atual, serviços de apoio, e respostas às perguntas que mais medo dá fazer.",
+  "about.linkModal.sexualHealth.cta": "Lê o guia completo de saúde sexual",
+
+  "about.linkModal.governanceOverview.eyebrow": "Governação e transparência",
+  "about.linkModal.governanceOverview.label": "Como a QueerPulse é governada",
+  "about.linkModal.governanceOverview.title":
+    "Como gerimos isto, e quem <em>decide.</em>",
+  "about.linkModal.governanceOverview.lead":
+    "O registo de como a QueerPulse é governada, como as decisões são tomadas, e o que acontece quando algo corre mal.",
+  "about.linkModal.governanceOverview.p1":
+    "A moderação é feita por uma pequena equipa de pessoas membras que aceitaram esse papel. Respondem perante o conselho consultivo, e qualquer decisão pode ser contestada em 14 dias. É o conselho consultivo que analisa o recurso, e o desfecho é final.",
+  "about.linkModal.governanceOverview.p2":
+    "As denúncias são analisadas em 48 horas, no próprio dia quando a segurança de alguém está em risco, e os números por trás desse processo são publicados todos os trimestres.",
+  "about.linkModal.governanceOverview.point.council.title":
+    "O conselho consultivo.",
+  "about.linkModal.governanceOverview.point.council.body":
+    "Analisa recursos, propõe mudanças na plataforma e serve de camada de responsabilização. Os seus lugares têm mandatos de um ano e podem ser retirados por votação de dois terços da comunidade.",
+  "about.linkModal.governanceOverview.point.finances.title":
+    "Contas às claras.",
+  "about.linkModal.governanceOverview.point.finances.body":
+    "Receitas e despesas publicadas trimestralmente, uma reserva operacional com a meta de três meses de custos de funcionamento, e o excedente acima disso encaminhado para microfinanciamentos.",
+  "about.linkModal.governanceOverview.point.proposals.title":
+    "Propostas e votações.",
+  "about.linkModal.governanceOverview.point.proposals.body":
+    "A retirada de lugares no conselho e as mudanças de financiamento vão a votação das pessoas membras. Cada proposta continua visível com o seu resultado.",
+  "about.linkModal.governanceOverview.cta":
+    "Vê a página de governação completa",
+
   "about.who.eyebrow": "Quem está por trás disto",
   "about.who.title": "Construída pela <em>comunidade, para a comunidade.</em>",
   "about.who.p1":
@@ -148,7 +341,7 @@ export const marketing: Catalog = {
   "about.contactStrip.governanceCta": "Lê a nossa governação",
   "about.outro.title": "Vem ver <em>com os teus próprios olhos.</em>",
   "about.outro.sub":
-    "A melhor forma de perceber a QueerPulse é estar dentro dela.",
+    "A melhor forma de perceber a QueerPulse é fazer parte dela.",
   "about.outro.cta": "Pedir um convite",
 
   // ── Ativismo ───────────────────────────────────────────────────────────
@@ -6992,6 +7185,10 @@ export const marketing: Catalog = {
   "changelog.tag.accountSecurity": "Abrir segurança da conta",
   "changelog.tag.dataExport": "Transferir os teus dados",
   "changelog.tag.contact": "Fala connosco",
+  "changelog.entries.the-about-page-shows-its-work-in-place.title":
+    "A página Sobre mostra o seu trabalho ali mesmo",
+  "changelog.entries.the-about-page-shows-its-work-in-place.body":
+    "Todos os links de referência da página Sobre te levavam para fora dela a meio do argumento, por isso ir confirmar o que sustentava uma posição significava perder o teu lugar. Esses links passam a abrir um diálogo por cima da página: um resumo da cláusula das diretrizes, do guia de saúde, da secção de interseccionalidade ou do registo de governação para onde apontam, escrito para a afirmação que o levantou, com um botão para a página completa se quiseres tudo. Os dois links “lê as diretrizes” da secção Onde nos posicionamos abrem agora resumos diferentes, porque um chega-te a partir da posição sobre as vidas trans e o outro a partir da Palestina, e a cláusula responde a uma pergunta diferente em cada sítio.",
   "changelog.entries.perks-that-grant-something-real.title":
     "Vantagens que dão algo real",
   "changelog.entries.perks-that-grant-something-real.body":

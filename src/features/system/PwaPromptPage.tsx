@@ -85,10 +85,12 @@ export function PwaPromptPage() {
         <div className={styles.ic}>
           <div className={styles.icInner}>
             <span className={styles.icDot} />
-            <Translation
-              i18nKey="shared:brand.wordmark"
-              components={{ em: <em /> }}
-            />
+            <span>
+              <Translation
+                i18nKey="shared:brand.wordmark"
+                components={{ em: <em /> }}
+              />
+            </span>
           </div>
         </div>
 

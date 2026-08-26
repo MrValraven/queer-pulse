@@ -118,10 +118,12 @@ export function RoomLoader() {
       <div className={styles.inner}>
         <div className={styles.brand}>
           <span className={styles.dot} aria-hidden />
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <span className={styles.brandItalic} /> }}
-          />
+          <span>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <span className={styles.brandItalic} /> }}
+            />
+          </span>
         </div>
 
         <h2 className={styles.title}>

@@ -45,10 +45,12 @@ export function MaintenanceScreen({
           guaranteed to exist. */}
       <a href={routes.homepage} className={maintenancePageStyles.brand}>
         <span className={maintenancePageStyles.pulseDot} aria-hidden />
-        <Translation
-          i18nKey="shared:brand.wordmark"
-          components={{ em: <em /> }}
-        />
+        <span>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
+        </span>
       </a>
 
       <div className={maintenancePageStyles.wrap}>

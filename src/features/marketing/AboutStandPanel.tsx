@@ -1,7 +1,7 @@
 import { FiCheck } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import { Reveal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { AboutLinkTrigger } from "./AboutLinkTrigger";
 import type { StandPanel } from "./about.data";
 import s from "./AboutPage.module.css";
 
@@ -41,9 +41,12 @@ export function AboutStandPanel({ panel, delay }: AboutStandPanelProps) {
               </span>{" "}
               {t(commitment.bodyKey)}{" "}
               {commitment.link && (
-                <Link className={s.standPanelLink} to={commitment.link.href}>
+                <AboutLinkTrigger
+                  topic={commitment.link.topic}
+                  className={s.standPanelLink}
+                >
                   {t(commitment.link.labelKey)}
-                </Link>
+                </AboutLinkTrigger>
               )}
             </div>
           </li>

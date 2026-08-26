@@ -1,0 +1,14 @@
+/* Strips the UA button chrome so an <button> that opens the About page's link
+   dialog still reads as a link inside a running sentence. The colour and
+   underline come from the About page's own .standLink / .standPanelLink, passed
+   in as `className`. */
+.trigger {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}

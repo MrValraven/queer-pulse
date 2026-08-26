@@ -69,10 +69,12 @@ export function ServerErrorPage() {
         <div className={styles.cardTop}>
           <div className={styles.brand}>
             <span className={styles.dot} aria-hidden />
-            <Translation
-              i18nKey="shared:brand.wordmark"
-              components={{ em: <em /> }}
-            />
+            <span>
+              <Translation
+                i18nKey="shared:brand.wordmark"
+                components={{ em: <em /> }}
+              />
+            </span>
           </div>
           <div className={styles.codeBg} aria-hidden>
             {isMaint ? "—" : "500"}

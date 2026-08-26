@@ -34,10 +34,12 @@ export function CinemaShell({ children }: { children: ReactNode }) {
       >
         <Link to={routes.cinema} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <em /> }}
-          />
+          <span>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
+          </span>
           <span className={styles.brandTag}>{t("cinema:brand.tag")}</span>
         </Link>
         <div className={styles.links}>
@@ -74,10 +76,12 @@ export function CinemaShell({ children }: { children: ReactNode }) {
             <div className={styles.footBrand}>
               <Link to={routes.homepage} className={styles.brand}>
                 <span className={styles.pulseDot} aria-hidden />
-                <Translation
-                  i18nKey="shared:brand.wordmark"
-                  components={{ em: <em /> }}
-                />
+                <span>
+                  <Translation
+                    i18nKey="shared:brand.wordmark"
+                    components={{ em: <em /> }}
+                  />
+                </span>
               </Link>
               <p>{t("cinema:footer.tagline")}</p>
             </div>

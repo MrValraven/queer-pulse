@@ -45,10 +45,12 @@ export function InviteLoadingView() {
     <div className={styles.root}>
       <div className={styles.loader}>
         <div className={styles.loaderBrand}>
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <em /> }}
-          />
+          <span>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
+          </span>
         </div>
         <p className={styles.loaderStatus} role="status" aria-live="polite">
           {t("system:inviteLanding.loader.verifying")}
@@ -80,10 +82,12 @@ export function InviteSealedView({
           <InviterAvatar view={view} className={styles.sealAvatar} />
         </div>
         <div className={styles.loaderBrand}>
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <em /> }}
-          />
+          <span>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
+          </span>
         </div>
         <div className={styles.sealedEyebrow}>
           {t("system:inviteLanding.sealed.eyebrow")}
@@ -129,10 +133,12 @@ export function InviteOpeningView({
           <InviterAvatar view={view} className={styles.sealAvatar} />
         </div>
         <div className={styles.loaderBrand}>
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <em /> }}
-          />
+          <span>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em /> }}
+            />
+          </span>
         </div>
         <h1 className={styles.loaderTitle}>
           <Translation
@@ -178,10 +184,12 @@ export function InviteCardView({
         <div className={styles.header}>
           <Link to={routes.homepage} className={styles.brand}>
             <span className={styles.brandDot} aria-hidden />
-            <Translation
-              i18nKey="shared:brand.wordmark"
-              components={{ em: <em /> }}
-            />
+            <span>
+              <Translation
+                i18nKey="shared:brand.wordmark"
+                components={{ em: <em /> }}
+              />
+            </span>
           </Link>
           <div className={styles.inviterRow}>
             <InviterAvatar view={view} className={styles.inviterAvatar} />

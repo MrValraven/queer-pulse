@@ -23,8 +23,10 @@ export function AuthLayout({
       <div className={`${styles.orb} ${styles.orbB}`} />
       <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
-        {"Queer"}
-        <em>{"Pulse"}</em>
+        <span>
+          {"Queer"}
+          <em>{"Pulse"}</em>
+        </span>
       </Link>
       <BackToSettingsLink />
       {/* The auth pages sit outside PageShell/AppShell, so this is the only

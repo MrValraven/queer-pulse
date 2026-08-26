@@ -146,8 +146,10 @@ export function OnboardingPage() {
       </div>
       <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
-        {"Queer"}
-        <em>{"Pulse"}</em>
+        <span>
+          {"Queer"}
+          <em>{"Pulse"}</em>
+        </span>
       </Link>
 
       <div className={styles.page}>

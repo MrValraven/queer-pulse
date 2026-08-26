@@ -17,8 +17,10 @@ function RsvpFrame({ children }: { children: ReactNode }) {
         <div className={styles.brand}>
           <Link to={routes.homepage} className={styles.brandLink}>
             <span className={styles.pulseDot} aria-hidden />
-            {"Queer"}
-            <span className={styles.brandItalic}>{"Pulse"}</span>
+            <span>
+              {"Queer"}
+              <span className={styles.brandItalic}>{"Pulse"}</span>
+            </span>
           </Link>
         </div>
         {children}

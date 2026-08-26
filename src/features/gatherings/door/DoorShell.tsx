@@ -75,8 +75,10 @@ export function DoorShell({
         <div className={styles.topbar}>
           <Link to={routes.homepage} className={styles.brand}>
             <span className={styles.brandDot} />
-            {BRAND_QUEER}
-            <span className={styles.brandQ}>{BRAND_PULSE}</span>
+            <span>
+              {BRAND_QUEER}
+              <span className={styles.brandQ}>{BRAND_PULSE}</span>
+            </span>
           </Link>
           <Link to={manageTo} className={styles.backLink}>
             <FiArrowLeft aria-hidden /> {t("gatherings:dashboard.backToManage")}

@@ -24,10 +24,12 @@ export function MaintenancePage() {
 
       <Link to={routes.homepage} className={styles.brand}>
         <span className={styles.pulseDot} aria-hidden />
-        <Translation
-          i18nKey="shared:brand.wordmark"
-          components={{ em: <em /> }}
-        />
+        <span>
+          <Translation
+            i18nKey="shared:brand.wordmark"
+            components={{ em: <em /> }}
+          />
+        </span>
       </Link>
 
       <div className={styles.wrap}>

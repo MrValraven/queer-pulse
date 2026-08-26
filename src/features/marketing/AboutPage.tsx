@@ -13,6 +13,7 @@ import {
   WHO_PARAGRAPH_KEYS,
   WHY_PARAGRAPH_KEYS,
 } from "./about.data";
+import { AboutContactStrip } from "./AboutContactStrip";
 import { AboutStandSection } from "./AboutStandSection";
 import { MarketingSection } from "./MarketingSection";
 import m from "./marketing.module.css";
@@ -141,25 +142,7 @@ export function AboutPage() {
           ))}
         </Reveal>
 
-        <Reveal className={s.contactStrip} delay={60}>
-          <div className={s.csText}>
-            <h3>
-              <Translation
-                i18nKey="marketing:about.contactStrip.title"
-                components={{ em: <em /> }}
-              />
-            </h3>
-            <p>{t("marketing:about.contactStrip.body")}</p>
-          </div>
-          <div className={s.csActions}>
-            <Button to={routes.contact}>
-              {t("marketing:about.contactStrip.contactCta")}
-            </Button>
-            <Button variant="ghost" to={routes.governance}>
-              {t("marketing:about.contactStrip.governanceCta")}
-            </Button>
-          </div>
-        </Reveal>
+        <AboutContactStrip />
       </MarketingSection>
 
       <Outro

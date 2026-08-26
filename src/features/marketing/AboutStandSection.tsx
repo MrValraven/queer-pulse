@@ -1,13 +1,12 @@
-import { Link } from "react-router-dom";
 import { Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import {
   STAND_PANELS,
   STAND_PARAGRAPH_KEYS,
   STAND_POSITIONS,
 } from "./about.data";
+import { AboutLinkTrigger } from "./AboutLinkTrigger";
 import { AboutStandPanel } from "./AboutStandPanel";
 import { MarketingSection } from "./MarketingSection";
 import s from "./AboutPage.module.css";
@@ -39,9 +38,9 @@ export function AboutStandSection() {
           <p key={key}>{t(key)}</p>
         ))}
         <p>
-          <Link className={s.standLink} to={routes.intersectionality}>
+          <AboutLinkTrigger topic="intersections" className={s.standLink}>
             {t("marketing:about.stand.intersectionalityLink")}
-          </Link>
+          </AboutLinkTrigger>
         </p>
       </Reveal>
 
@@ -54,18 +53,24 @@ export function AboutStandSection() {
       ))}
 
       <div className={s.standPositions}>
-        {STAND_POSITIONS.map((position, index) => (
+        {STAND_POSITIONS.map(({ icon: Icon, ...position }, index) => (
           <Reveal
             key={position.titleKey}
             className={s.standPosition}
             delay={index * 60}
           >
+            <span className={s.standPositionChip} aria-hidden>
+              <Icon />
+            </span>
             <div className={s.standPositionTitle}>{t(position.titleKey)}</div>
             <p className={s.standPositionBody}>{t(position.bodyKey)}</p>
             {position.link && (
-              <Link className={s.standLink} to={position.link.href}>
+              <AboutLinkTrigger
+                topic={position.link.topic}
+                className={s.standLink}
+              >
                 {t(position.link.labelKey)}
-              </Link>
+              </AboutLinkTrigger>
             )}
           </Reveal>
         ))}

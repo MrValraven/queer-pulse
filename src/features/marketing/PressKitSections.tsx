@@ -115,8 +115,10 @@ export function MarkSection() {
                 ].join(" ")}
               >
                 <span className={styles.logoDot} />
-                {BRAND_QUEER}
-                <span className={styles.q}>{BRAND_PULSE}</span>
+                <span>
+                  {BRAND_QUEER}
+                  <span className={styles.q}>{BRAND_PULSE}</span>
+                </span>
               </span>
             </div>
             <div className={styles.logoMeta}>

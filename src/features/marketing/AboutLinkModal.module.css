@@ -1,0 +1,96 @@
+/* The About page's reference dialog. Mirrors the destination page's PageHero
+   (eyebrow + serif title with a coral <em> + lead) at modal scale, then the
+   digest paragraphs and the commitments-style point list. The sheet's own
+   padding and scrolling come from Modal.module.css. */
+.head {
+  /* Clear the sheet's own close button, which floats at the top right. */
+  padding-right: 44px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 8px;
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  margin: 0;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+.body {
+  margin-top: 20px;
+  max-width: var(--maxw-text);
+}
+.body p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink-60);
+}
+.body p:last-child {
+  margin-bottom: 0;
+}
+
+/* The three things the destination actually gives you, in the same
+   check-marked shape the stand panels use for their commitments. */
+.points {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 24px 0 0;
+  padding: 22px 0 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  max-width: var(--maxw-text);
+}
+.point {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.pointIcon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--jade);
+}
+.pointTitle {
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+/* Full-bleed footer bar at the true bottom of the sheet (the negative side
+   margins cancel the sheet's own padding, restored via padding-inline), holding
+   the way out to the full page. */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin: 26px -32px 0;
+  padding: 18px 32px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+}
+@media (min-width: 720px) {
+  .footer {
+    margin-inline: -48px;
+    padding-inline: 48px;
+  }
+}

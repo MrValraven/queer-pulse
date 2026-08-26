@@ -16,10 +16,12 @@ export function WatchShell({ children }: { children: ReactNode }) {
       <nav className={styles.nav}>
         <Link to={routes.cinemaBrowse} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          <Translation
-            i18nKey="shared:brand.wordmark"
-            components={{ em: <em style={{ fontStyle: "italic" }} /> }}
-          />
+          <span>
+            <Translation
+              i18nKey="shared:brand.wordmark"
+              components={{ em: <em style={{ fontStyle: "italic" }} /> }}
+            />
+          </span>
         </Link>
         <div className={styles.navLinks}>
           <Link to={routes.cinemaBrowse}>
