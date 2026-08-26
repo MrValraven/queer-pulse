@@ -341,6 +341,7 @@ export const communities: Catalog = {
   "detail.modtools.nav.reports": "Reports",
   "detail.modtools.nav.members": "Members",
   "detail.modtools.nav.invites": "Invites",
+  "detail.modtools.nav.support": "Support",
   "detail.modtools.nav.card": "Member card",
   "detail.modtools.nav.danger": "Danger zone",
   "detail.modtools.overview.attention.label": "Needs attention",
@@ -352,6 +353,10 @@ export const communities: Catalog = {
     "One post has been reported",
   "detail.modtools.overview.attention.reports_other":
     "{count} posts have been reported",
+  "detail.modtools.overview.attention.support_one":
+    "Someone from QueerPulse has offered you a hand",
+  "detail.modtools.overview.attention.support_other":
+    "{count} offers of support are waiting on you",
   "detail.modtools.overview.attention.clear.title": "Nothing waiting on you",
   "detail.modtools.overview.attention.clear.description":
     "No join requests and no reports. Anything new will show up here.",
@@ -546,6 +551,39 @@ export const communities: Catalog = {
     "Weekly totals for the whole community. Each member's own activity stays private.",
 
   // ── Mod tools · ban list ──────────────────────────────────────────────────
+  // OPS-05: what platform staff have offered this community, and the two
+  // answers its moderators can give. Written to the people being offered the
+  // help, which is why these labels differ from the admin console's
+  // `admin:communities.support.option.*` copy.
+  "detail.modtools.support.label": "Support from QueerPulse",
+  "detail.modtools.support.intro":
+    "When the platform team think this community could use a hand, they say so here. Take up what helps and pass on what doesn't.",
+  "detail.modtools.support.option.message":
+    "Someone from the platform team writes to you directly",
+  "detail.modtools.support.option.buddy":
+    "A staff buddy stays alongside you for two weeks",
+  "detail.modtools.support.option.toolkit":
+    "The de-escalation toolkit, shared with your moderators",
+  "detail.modtools.support.option.recruit":
+    "Help finding another moderator to share the load",
+  "detail.modtools.support.status.new": "Waiting on you",
+  "detail.modtools.support.status.acknowledged": "Taken up",
+  "detail.modtools.support.status.declined": "Passed on",
+  "detail.modtools.support.byOn": "Offered by {name} on {date}",
+  "detail.modtools.support.note": "Their note: {note}",
+  "detail.modtools.support.answeredOn": "You answered on {date}.",
+  "detail.modtools.support.formerStaff": "Someone from QueerPulse",
+  "detail.modtools.support.acceptCta": "Yes, please",
+  "detail.modtools.support.declineCta": "Not right now",
+  "detail.modtools.support.acceptedToast":
+    "Taken up. The platform team can see your answer.",
+  "detail.modtools.support.declinedToast":
+    "Passed on. The platform team can see your answer.",
+  "detail.modtools.support.errorToast":
+    "That answer didn't save. Please try again.",
+  "detail.modtools.support.empty.title": "No offers yet",
+  "detail.modtools.support.empty.description":
+    "Nobody from the platform team has offered this community support. If they do, it lands here.",
   "detail.modtools.bans.label": "Barred from this community",
   "detail.modtools.bans.intro":
     "Everyone currently barred, newest first. Lifting a ban reopens the door to this community.",

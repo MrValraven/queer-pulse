@@ -221,6 +221,9 @@ export function previewCard(
       photoStyle: extras.photoStyle ?? "color",
       allowsPronouns: extras.allowsPronouns ?? false,
       textBackdrop: extras.textBackdrop ?? "shade",
+      // The preview card is never renewable: it does not exist yet, and the
+      // preview draws the card's face rather than the wallet's controls.
+      allowsSelfRenew: false,
       serialPrefix: extras.serialPrefix ?? "ABC",
     },
   };

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   closeOpportunity,
+  completeSignup,
   createOpportunity,
   decideSignup,
   signUpForOpportunity,
@@ -10,6 +11,7 @@ import {
   type CreateOpportunityDto,
   type UpdateOpportunityDto,
 } from "./volunteering.api";
+import { formatDate } from "../../../shared/lib/date";
 import type { SignupRow } from "./volunteering.adapters";
 import { opportunityKeys } from "./opportunityKeys";
 
@@ -187,4 +189,72 @@ export function useDecideSignup(slug: string) {
       },
     },
   );
+}
+
+export interface CompleteSignupVars {
+  signupId: string;
+  attended: boolean;
+  hours: number;
+}
+
+/**
+ * POST /volunteering/:slug/signups/:signupId/complete: the poster confirms an
+ * accepted volunteer turned up, and for how long.
+ *
+ * NO OPTIMISTIC PATCH, unlike `useDecideSignup` above. Confirming a session
+ * writes attested hours that a funder is eventually shown and that award the
+ * volunteer recognition, so the row must only change once the server has
+ * actually recorded it. Showing a confirmed state before the write lands would
+ * be exactly the fake success this codebase keeps removing. The caller reads
+ * `isPending` for the busy state and `error` for the failure, and the cache is
+ * refreshed from the server on success.
+ *
+ * Demo mode keeps a short "saving" beat, patches its own cached row so the
+ * prototype reflects the confirmation, and never calls the network.
+ */
+export function useCompleteSignup(slug: string) {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  const queryKey = opportunityKeys.signups(slug, demoMode);
+
+  return useMutation<void, Error, CompleteSignupVars>({
+    // The dashboard renders its own inline error, so silence the global toast.
+    meta: { silentError: true },
+    mutationFn: async ({ signupId, attended, hours }) => {
+      if (demoMode) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const completedAt = new Date().toISOString();
+        queryClient.setQueryData<SignupRow[]>(queryKey, (rows) =>
+          rows?.map((row) =>
+            row.id === signupId
+              ? {
+                  ...row,
+                  attended,
+                  hoursContributed: attended ? hours : 0,
+                  completedWhen: formatDate(new Date(completedAt), undefined, {
+                    day: "numeric",
+                    month: "short",
+                  }),
+                  isAwaitingCompletion: false,
+                }
+              : row,
+          ),
+        );
+        return;
+      }
+      await completeSignup(slug, signupId, { attended, hours });
+    },
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.signupsRoot,
+      });
+      // The confirmer can be the volunteer on another opportunity, and the
+      // hours the volunteer sees come from the same write.
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.contributionRoot,
+      });
+      void queryClient.invalidateQueries({ queryKey: ["my-opportunities"] });
+    },
+  });
 }

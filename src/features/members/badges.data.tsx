@@ -33,6 +33,10 @@ export interface Badge {
   verifiedBy?: BadgeVerification;
   /** Present only for time-limited badges; drives the seasonal band. */
   seasonal?: { when: string };
+  /** Own view only: the member has hidden this earned badge from how other
+   *  people see them. Server-backed since SUS-04 (`recognition_awards`), so
+   *  another member's read of this profile omits the badge entirely. */
+  hiddenFromProfile?: boolean;
 }
 
 /** One dated entry in a member's XP history — see `XpLedgerEntryDTO`. `createdAt`
@@ -109,6 +113,15 @@ export const levelLadder: LadderPill[] = [
 
 export { earnedBadges, lockedBadges, seasonalBadges } from "./badges.icons";
 
+/**
+ * DEMO fixture for the "what each level opens" ladder. Mirrors the backend's
+ * `BASE_PERKS_BY_LEVEL` + `PERK_CATALOG` after SUS-04 cut both down to what
+ * the code really does: everything a member can do is open at Level 1 (nothing
+ * in the backend gates messaging, saving, joining or hosting on a level), and
+ * the only level-gated grants left are the two invite-quota rungs. Levels with
+ * no entry open nothing extra, and say so by staying empty rather than listing
+ * a perk that was never built.
+ */
 export const perksLadder: PerkLadderRow[] = [
   {
     number: 1,
@@ -122,7 +135,11 @@ export const perksLadder: PerkLadderRow[] = [
     perks: [
       "Browse the member directory",
       "Join gatherings & RSVP",
-      "Access the resource library",
+      "Message other members directly",
+      "Save articles & resources",
+      "Join communities",
+      "Host a gathering",
+      "Vouch access",
     ],
   },
   {
@@ -134,11 +151,7 @@ export const perksLadder: PerkLadderRow[] = [
         <FiCheck /> Done
       </>
     ),
-    perks: [
-      "Message other members directly",
-      "Save articles & resources",
-      "Join communities",
-    ],
+    perks: [],
   },
   {
     number: 3,
@@ -149,49 +162,34 @@ export const perksLadder: PerkLadderRow[] = [
         <FiCheck /> Done
       </>
     ),
-    perks: [
-      "Vouch for new members on the waitlist",
-      "Apply to host a gathering",
-    ],
+    perks: [],
   },
   {
     number: 4,
     name: "Familiar",
     state: "current",
     status: "Current",
-    perks: [
-      "48-hour early RSVP access to new gatherings",
-      "Access to the Trusted Lounge community",
-    ],
+    perks: ["More invites each month"],
   },
   {
     number: 5,
     name: "Trusted",
     state: "locked",
     status: "320 XP away",
-    perks: [
-      "Host gatherings without approval review",
-      "Monthly invite quota increases to 3",
-    ],
+    perks: ["The highest invite allowance"],
   },
   {
     number: 6,
     name: "Anchor",
     state: "locked",
     status: "Locked",
-    perks: [
-      "Permanent founding discount on future paid features",
-      '"Anchor" legendary badge unlocked',
-    ],
+    perks: [],
   },
   {
     number: 7,
     name: "Pillar",
     state: "locked",
     status: "Locked",
-    perks: [
-      "Advisory board eligibility",
-      'Lifetime "Pillar" status, permanent badge',
-    ],
+    perks: [],
   },
 ];

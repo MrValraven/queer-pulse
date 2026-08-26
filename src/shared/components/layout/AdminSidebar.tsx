@@ -1,7 +1,10 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
+import { useAuth } from "../../../app/providers/authContext";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { AdminAccountMenu } from "./AdminAccountMenu";
@@ -10,7 +13,7 @@ import { AdminNavGroup, AdminNavLink } from "./AdminNavGroup";
 import { useAdminNavBadges } from "./useAdminNavBadges";
 import { useAdminNavSections } from "./useAdminNavSections";
 import { rememberNavScroll, useAdminNavScroll } from "./useAdminNavScroll";
-import { ADMIN_NAV_OVERVIEW, ADMIN_NAV_SECTIONS } from "./adminNav.data";
+import { ADMIN_NAV_OVERVIEW, visibleAdminNavSections } from "./adminNav.data";
 import styles from "./AdminShell.module.css";
 
 export function AdminSidebar({
@@ -22,6 +25,17 @@ export function AdminSidebar({
   onNavigate?: () => void;
 } = {}) {
   const { t } = useTranslation();
+
+  const { role } = useAuth();
+  const { demoMode } = useDemoMode();
+  const staffRoles = useMyStaffRoles();
+  // A grant holder who is neither admin nor moderator sees only the sections
+  // their grants open (OPS-03); every tier keeps the rail it had.
+  const isFullConsole = demoMode || role === "admin" || role === "moderator";
+  const sections = useMemo(
+    () => visibleAdminNavSections({ isFullConsole, staffRoles }),
+    [isFullConsole, staffRoles],
+  );
 
   const navRef = useRef<HTMLElement>(null);
   const badgeCounts = useAdminNavBadges();
@@ -52,13 +66,18 @@ export function AdminSidebar({
         ref={navRef}
         onScroll={(event) => rememberNavScroll(event.currentTarget.scrollTop)}
       >
-        <AdminNavLink
-          item={ADMIN_NAV_OVERVIEW}
-          count={0}
-          onNavigate={onNavigate}
-        />
+        {/* The overview is admin-only on the backend (`admin/overview`), so a
+            viewer who is here on a grant alone is not offered a link that
+            would bounce them straight back out. */}
+        {isFullConsole && (
+          <AdminNavLink
+            item={ADMIN_NAV_OVERVIEW}
+            count={0}
+            onNavigate={onNavigate}
+          />
+        )}
 
-        {ADMIN_NAV_SECTIONS.map((section) => (
+        {sections.map((section) => (
           <AdminNavGroup
             key={section.id}
             section={section}

@@ -78,6 +78,46 @@ export const DATA_TYPES: DataType[] = [
     subKey: "settings:dataExport.type.consent.sub",
     defaultChecked: false,
   },
+  {
+    id: "magazine",
+    labelKey: "settings:dataExport.type.magazine.label",
+    subKey: "settings:dataExport.type.magazine.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "communities",
+    labelKey: "settings:dataExport.type.communities.label",
+    subKey: "settings:dataExport.type.communities.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "volunteering",
+    labelKey: "settings:dataExport.type.volunteering.label",
+    subKey: "settings:dataExport.type.volunteering.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "governance",
+    labelKey: "settings:dataExport.type.governance.label",
+    subKey: "settings:dataExport.type.governance.sub",
+    defaultChecked: false,
+  },
+  {
+    id: "reviews",
+    labelKey: "settings:dataExport.type.reviews.label",
+    subKey: "settings:dataExport.type.reviews.sub",
+    defaultChecked: false,
+  },
+  // `media` is the one category whose contents are files rather than rows. The
+  // archive always lists them; the actual photos only travel inside a zip,
+  // which is what the CSV and Both formats produce. Its `sub` says so, because
+  // a member who picks JSON and finds no photos has been misled by the label.
+  {
+    id: "media",
+    labelKey: "settings:dataExport.type.media.label",
+    subKey: "settings:dataExport.type.media.sub",
+    defaultChecked: false,
+  },
 ];
 
 export interface AccordionItem {

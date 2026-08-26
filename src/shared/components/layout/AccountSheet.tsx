@@ -3,6 +3,7 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
+  type ReactNode,
 } from "react";
 import { Link } from "react-router-dom";
 import { FiX, FiLogOut } from "react-icons/fi";
@@ -31,6 +32,7 @@ import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
+import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import { InstallAppModal } from "../system/InstallAppModal";
 import menu from "./AccountMenu.module.css";
@@ -195,6 +197,14 @@ function AccountSheetBody({
   const { t } = useTranslation();
   const personaBadge = usePersonaBadge();
   const gettingStartedBadge = useGettingStartedBadge();
+  const inviteQuotaBadge = useInviteQuotaBadge();
+  // Same per-row badge map the desktop `AccountMenuPanel` builds, kept in step
+  // with it: live counts can't sit in the static ACCOUNT_GROUPS array.
+  const badgeByRoute: Record<string, ReactNode> = {
+    [routes.subprofilesDashboard]: personaBadge,
+    [routes.gettingStarted]: gettingStartedBadge,
+    [routes.invite]: inviteQuotaBadge,
+  };
   const { isInstalled } = useDisplayMode();
   const [installOpen, setInstallOpen] = useState(false);
   return (
@@ -237,12 +247,7 @@ function AccountSheetBody({
               {group.map((item) => {
                 const ItemIcon = item.icon;
                 const badge =
-                  item.badge ??
-                  (item.to === routes.subprofilesDashboard
-                    ? personaBadge
-                    : item.to === routes.gettingStarted
-                      ? gettingStartedBadge
-                      : undefined);
+                  item.badge ?? (item.to ? badgeByRoute[item.to] : undefined);
                 if (item.action === INSTALL_APP_ACTION) {
                   return (
                     <button

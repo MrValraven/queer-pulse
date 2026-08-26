@@ -311,6 +311,16 @@ function sourceHrefFromPayload(
       ? `${communityPath(communitySlug)}?tab=modtools&mod=reports`
       : undefined;
   }
+  // Same shape, same reason: an offer of support is answered in the community's
+  // own mod-tools console, so that pane is the destination rather than the
+  // community page. This row only ever reaches a community's staff, who can
+  // open it (OPS-05).
+  if (type === "community_support_offered") {
+    const communitySlug = payload?.communitySlug;
+    return typeof communitySlug === "string" && communitySlug
+      ? `${communityPath(communitySlug)}?tab=modtools&mod=support`
+      : undefined;
+  }
   if (!payload) return undefined;
   if (payload.source === "forum") {
     const threadSlug = payload.threadSlug;
@@ -369,6 +379,13 @@ function sourceHrefFromPayload(
   }
   if (payload.source === "account_data") {
     return routes.dataExport;
+  }
+  // A card nearing expiry → the member's own wallet, which is where the Renew
+  // control lives and where the expiry is spelled out on the card itself. Its
+  // own `source` value rather than `account`, which already means the
+  // delete-account page. No slug needed.
+  if (payload.source === "card") {
+    return routes.myCards;
   }
   if (payload.source === "account") {
     return routes.deleteAccount;

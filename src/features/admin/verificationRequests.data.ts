@@ -75,6 +75,18 @@ const STAFF_REVIEWER: MemberRefDTO = {
 
 const IDENTITY: VerificationType = "identity";
 
+const DAY_MS = 86_400_000;
+
+/**
+ * The OPS-04 due date as an offset from right now, so an OPEN demo row shows a
+ * live clock every time the fixture is opened. A frozen ISO string would read
+ * as overdue forever once the date passed, and the queue needs to show both a
+ * late request and one with time left.
+ */
+function dueDaysFromNow(days: number): string {
+  return new Date(Date.now() + days * DAY_MS).toISOString();
+}
+
 export const DEMO_VERIFICATION_REQUESTS: AdminVerificationRequestDTO[] = [
   {
     id: "request-pending-1",
@@ -86,6 +98,8 @@ export const DEMO_VERIFICATION_REQUESTS: AdminVerificationRequestDTO[] = [
     createdAt: "2026-08-10T09:20:00.000Z",
     updatedAt: "2026-08-10T09:20:00.000Z",
     hasDuplicateSignal: false,
+    assignedStaffId: null,
+    dueAt: dueDaysFromNow(2),
   },
   {
     id: "request-review-1",
@@ -99,6 +113,9 @@ export const DEMO_VERIFICATION_REQUESTS: AdminVerificationRequestDTO[] = [
     // The one duplicate-fingerprint case in this fixture — shows the row's
     // warn chip (VerificationRequestRows) and the drawer's duplicate banner.
     hasDuplicateSignal: true,
+    assignedStaffId: "staff-ana",
+    assignedStaffName: "Ana Ribeiro",
+    dueAt: dueDaysFromNow(-1),
   },
   {
     id: "request-approved-1",
@@ -110,6 +127,8 @@ export const DEMO_VERIFICATION_REQUESTS: AdminVerificationRequestDTO[] = [
     createdAt: "2026-08-05T11:30:00.000Z",
     updatedAt: "2026-08-06T16:45:00.000Z",
     hasDuplicateSignal: false,
+    assignedStaffId: null,
+    dueAt: null,
   },
   {
     id: "request-rejected-1",
@@ -121,6 +140,8 @@ export const DEMO_VERIFICATION_REQUESTS: AdminVerificationRequestDTO[] = [
     createdAt: "2026-08-03T08:00:00.000Z",
     updatedAt: "2026-08-04T09:10:00.000Z",
     hasDuplicateSignal: false,
+    assignedStaffId: null,
+    dueAt: null,
   },
   {
     id: "request-appealing-1",
@@ -132,6 +153,8 @@ export const DEMO_VERIFICATION_REQUESTS: AdminVerificationRequestDTO[] = [
     createdAt: "2026-07-28T13:15:00.000Z",
     updatedAt: "2026-08-08T17:30:00.000Z",
     hasDuplicateSignal: false,
+    assignedStaffId: null,
+    dueAt: dueDaysFromNow(-3),
   },
   {
     id: "request-withdrawn-1",
@@ -143,6 +166,8 @@ export const DEMO_VERIFICATION_REQUESTS: AdminVerificationRequestDTO[] = [
     createdAt: "2026-07-25T10:00:00.000Z",
     updatedAt: "2026-07-26T12:00:00.000Z",
     hasDuplicateSignal: false,
+    assignedStaffId: null,
+    dueAt: null,
   },
 ];
 
@@ -416,11 +441,24 @@ export function filterDemoVerificationRequests(filter: {
   type?: VerificationType;
   query: string;
   sort: VerificationRequestSort;
+  /** OPS-04. `"me"` is the signed-in demo reviewer, whose id the caller passes
+   *  as `currentUserId` — demo mode has no session on this side of the wire,
+   *  and live mode resolves the same word against the real one. */
+  assignedTo?: "me" | "unassigned";
+  currentUserId?: string | null;
 }): AdminVerificationRequestListDTO {
   const typeMatched = filter.type
     ? DEMO_VERIFICATION_REQUESTS.filter((row) => row.type === filter.type)
     : DEMO_VERIFICATION_REQUESTS;
-  const queryMatched = typeMatched.filter((row) =>
+  const assignmentMatched =
+    filter.assignedTo === "unassigned"
+      ? typeMatched.filter((row) => row.assignedStaffId === null)
+      : filter.assignedTo === "me"
+        ? typeMatched.filter(
+            (row) => row.assignedStaffId === (filter.currentUserId ?? null),
+          )
+        : typeMatched;
+  const queryMatched = assignmentMatched.filter((row) =>
     matchesVerificationRequestQuery(row, filter.query),
   );
   const statusAndQueryMatched =

@@ -14,7 +14,12 @@ import { apiGet } from "../../../shared/api/client";
 /**
  * The backend's `GovernanceLogAction` enum, over the wire as its string
  * values. Order here is the order the action filter offers them in: roster
- * actions first, then lifecycle, then settings.
+ * actions first, then lifecycle, then settings, then the platform's offers of
+ * support and what the moderators answered.
+ *
+ * Every value the backend can write belongs here. An action missing from this
+ * list is missing from the filter, has no chip tone, and resolves no copy, so
+ * the reader prints the raw key on screen.
  */
 export const GOVERNANCE_LOG_ACTIONS = [
   "role_changed",
@@ -26,6 +31,8 @@ export const GOVERNANCE_LOG_ACTIONS = [
   "archived",
   "unarchived",
   "settings_changed",
+  "support_offered",
+  "support_offer_answered",
 ] as const;
 
 export type GovernanceLogAction = (typeof GOVERNANCE_LOG_ACTIONS)[number];
@@ -52,7 +59,13 @@ export interface AdminGovernanceLogEntryDTO {
    *  change, `{ changes: { field: { from, to } } }` for a settings diff,
    *  `{ adminOverride: true }` when platform staff acted over the community's
    *  own owner. Never written by a client. */
-  metadata: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
+  /** Served INSTEAD of `metadata` to a caller who reaches this page through the
+   *  `communities` staff grant rather than the platform Moderator/Admin tier:
+   *  the same allowlisted read a community's own moderators get, so a grant
+   *  never sees more about a sanction than the people who issued it. Exactly
+   *  one of the two is present on any entry. */
+  details?: Record<string, unknown> | null;
   createdAt: string;
 }
 

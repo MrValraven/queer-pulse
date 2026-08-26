@@ -8,6 +8,8 @@ export type PerkFooter =
   | { type: "claimed"; date: string };
 
 export interface Perk {
+  /** Stable catalogue key, and the path segment the claim endpoint takes. */
+  key: string;
   category: string;
   title: string;
   description: string;
@@ -20,44 +22,34 @@ export interface PerkGroup {
   perks: Perk[];
 }
 
+/**
+ * DEMO fixtures only. They mirror the backend's `PERK_CATALOG`, which SUS-04
+ * cut down to the perks the backend really enforces: `early-rsvp` (no RSVP
+ * window exists, and QueerPulse sends no email), `trusted-lounge` (no such
+ * community) and `host-without-approval` (there is no host review to skip)
+ * were deleted rather than advertised. What is left is vouch access, which
+ * every active member genuinely has, and the two invite-quota rungs, which
+ * `invites.service.ts` enforces once claimed.
+ *
+ * The invite numbers here are the demo deployment's: live mode never reads
+ * this file, it renders the numbers the backend computed from its own
+ * configured quota.
+ */
 export const perkGroups: PerkGroup[] = [
   {
     label: "Available to claim",
     perks: [
       {
-        category: "Early Access",
-        title: "Early RSVP Access",
+        key: "invite-quota-level-4",
+        category: "Membership",
+        title: "More invites each month",
         description:
-          "Get 48-hour early access to all new gathering RSVPs before they open to the community. You'll receive an email the moment a new gathering is approved, before the public link goes live.",
-        state: "available",
-        footer: {
-          type: "active-auto",
-          autoLabel: "Applied automatically at Level 4",
-        },
-      },
-      {
-        category: "Community",
-        title: "Trusted Lounge",
-        description:
-          "Access to the Trusted members-only community: a smaller, quieter space for Level 4+ members to connect. Less noise, more depth. Not indexed or visible to the general directory.",
+          "Claim it and your monthly invite allowance goes from 5 to 7. Invites reset on the first of each month.",
         state: "available",
         footer: {
           type: "button",
-          label: "Join the lounge",
-          toast: "Welcome to the Trusted Lounge",
-        },
-      },
-      {
-        category: "Membership",
-        title: "Increased Invite Quota",
-        description:
-          "Your monthly invite allowance increases from 1 to 2. You know people who belong here. Now you can bring more of them in. Invites reset on the first of each month.",
-        state: "available",
-        footer: {
-          type: "link-auto",
-          label: "Send an invite",
-          to: "/auth/invite",
-          autoLabel: "Requires action",
+          label: "Claim the higher allowance",
+          toast: "Claimed. Your monthly invite allowance is higher from now on",
         },
       },
     ],
@@ -66,18 +58,11 @@ export const perkGroups: PerkGroup[] = [
     label: "Coming at Level 5 · Trusted",
     perks: [
       {
-        category: "Hosting",
-        title: "Host without approval",
-        description:
-          "Skip the host application review. Your gatherings go live immediately. You've earned the trust. We're just formalising it.",
-        state: "locked",
-        footer: { type: "lock", label: "Unlocks at Level 5 · Trusted" },
-      },
-      {
+        key: "invite-quota-level-5",
         category: "Membership",
-        title: "Invite quota increases to 3",
+        title: "The highest invite allowance",
         description:
-          "Bring even more people in. At Level 5, your monthly quota goes to 3 invites. The community grows because of people like you.",
+          "Claim it and your monthly invite allowance goes from 5 to 10. The community grows because of people like you.",
         state: "locked",
         footer: { type: "lock", label: "Unlocks at Level 5 · Trusted" },
       },
@@ -87,14 +72,13 @@ export const perkGroups: PerkGroup[] = [
     label: "Already claimed",
     perks: [
       {
+        key: "vouch-access",
         category: "Community",
+        // Matches the backend catalogue: vouching has no level gate — every
+        // active member already has this from day one (COM-15).
         title: "Vouch access",
-        // Matches the backend catalog: vouching has no level gate — every
-        // active member already has this from day one (COM-15). Kept in the
-        // "claimed" demo state purely to showcase that UI variant; the copy
-        // itself no longer claims a Level 3 unlock that never existed.
         description:
-          "The ability to vouch for other members, a trust signal that helps them stand out. Available to every active member from day one, no level required.",
+          "The ability to vouch for other members, a trust signal that helps them stand out. Every active member has it from day one.",
         state: "claimed",
         footer: { type: "claimed", date: "Claimed 14 Feb 2026" },
       },

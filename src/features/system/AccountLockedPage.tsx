@@ -7,10 +7,17 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./AccountLockedPage.module.css";
 
-/** Fixed demo incident identifiers — not language, kept as data. */
-const INCIDENT_ID = "QP-8423-LOCK";
-const INCIDENT_TIME = "14:08 WET";
-
+/**
+ * The temporary account-lock screen.
+ *
+ * It used to print `Incident QP-8423-LOCK · 14:08 WET` in its footer. Nothing
+ * mints that reference: it was two hard-coded strings, identical for every
+ * member and every lock. A member quoting it to support would be quoting a
+ * number that means nothing, on the one screen where being able to trust what
+ * is written matters most. There is no incident-id endpoint to derive a real
+ * one from, so the line is gone and the footer leads with the next step that
+ * does exist: writing to the team.
+ */
 export function AccountLockedPage() {
   const { t } = useTranslation();
 
@@ -94,15 +101,6 @@ export function AccountLockedPage() {
         </div>
 
         <div className={styles.foot}>
-          <span>
-            <Translation
-              i18nKey="system:accountLocked.foot.incident"
-              values={{ id: INCIDENT_ID, time: INCIDENT_TIME }}
-              components={{
-                idTag: <span className={styles.incidentId} />,
-              }}
-            />
-          </span>
           <span>
             <Link to={routes.help}>
               {t("system:accountLocked.foot.whyLink")}

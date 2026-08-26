@@ -419,10 +419,90 @@ export const settings: Catalog = {
   "account.sessions.desc":
     "Vê todos os dispositivos com sessão iniciada na tua conta e termina sessão em qualquer um que não reconheças.",
   "account.sessions.cta": "Gerir sessões",
+  "account.securityHub.title": "A segurança da tua conta",
+  "account.securityHub.desc":
+    "Como inicias sessão, que dispositivos estão com sessão iniciada agora, quais recebem notificações e os controlos de exportação e eliminação.",
+  "account.securityHub.cta": "Abrir segurança",
   "account.disclosure.title": "Comunicar uma vulnerabilidade de segurança",
   "account.disclosure.desc":
     "Encontraste uma falha ou uma fragilidade no QueerPulse? A nossa política de divulgação explica como comunicá-la e o que acontece a seguir.",
   "account.disclosure.cta": "Ler a política",
+
+  // ── AccountSecurityPage.tsx — o painel de segurança da própria pessoa (ID-15)
+  // Cada linha descreve algo com um endpoint real por trás. As capacidades que
+  // a plataforma não tem estão nomeadas em `notYet.*` como texto, nunca como um
+  // controlo. Não há canal de email e nunca haverá, por isso o texto dos
+  // alertas nomeia os dois canais que existem.
+  "accountSecurity.back": "Voltar às definições da conta",
+  "accountSecurity.eyebrow": "Segurança da conta",
+  "accountSecurity.h1": "Quem consegue <em>entrar na tua conta.</em>",
+  "accountSecurity.lead":
+    "Tudo sobre a forma como inicias sessão e que dispositivos estão a levar a tua conta neste momento, num só sítio. Cada linha leva à página que a altera.",
+  "accountSecurity.counting": "A verificar…",
+  "accountSecurity.countUnavailable": "Não conseguimos carregar isto agora.",
+
+  "accountSecurity.section.signIn": "Como inicias sessão",
+  "accountSecurity.section.devices": "Dispositivos com a tua conta",
+  "accountSecurity.section.data": "Os teus dados",
+  "accountSecurity.section.more": "Noutro sítio",
+
+  "accountSecurity.signIn.title": "Google",
+  "accountSecurity.signIn.value":
+    "Inicias sessão com a Google, como <strong>{email}</strong>.",
+  "accountSecurity.signIn.noEmail": "a tua conta Google",
+  "accountSecurity.signIn.note":
+    "Esta é a única forma de entrar na tua conta, por isso não há palavra-passe para mudar aqui. Mantém a tua própria conta Google bem protegida.",
+
+  "accountSecurity.alerts.title": "Avisar-me sobre novos inícios de sessão",
+  "accountSecurity.alerts.desc":
+    "Quando a tua conta iniciar sessão a partir de um dispositivo que ainda não usaste, dizemos-te aqui e nos dispositivos onde autorizaste notificações. Não enviamos email.",
+
+  "accountSecurity.sessions.title": "Com sessão iniciada agora",
+  "accountSecurity.sessions.count_one": "{count} sessão ativa.",
+  "accountSecurity.sessions.count_other": "{count} sessões ativas.",
+  "accountSecurity.sessions.note":
+    "Uma por cada navegador ou aplicação onde tens sessão iniciada. Podes terminar qualquer uma, ou todas as outras de uma vez.",
+  "accountSecurity.sessions.cta": "Ver sessões",
+
+  "accountSecurity.push.title": "Dispositivos com notificações",
+  "accountSecurity.push.count_one":
+    "{count} dispositivo registado para notificações.",
+  "accountSecurity.push.count_other":
+    "{count} dispositivos registados para notificações.",
+  "accountSecurity.push.note":
+    "As notificações, incluindo os alertas de novos inícios de sessão, chegam a estes dispositivos. Remover um corta as notificações aí de imediato.",
+  "accountSecurity.push.cta": "Gerir dispositivos",
+
+  "accountSecurity.export.title": "Descarregar os teus dados",
+  "accountSecurity.export.value":
+    "Leva uma cópia de tudo o que guardamos sobre ti, em JSON ou CSV.",
+  "accountSecurity.export.note":
+    "Inicias sessão com a Google outra vez antes de o arquivo ser criado, para que uma sessão emprestada não leve os teus dados.",
+  "accountSecurity.export.cta": "Começar uma exportação",
+
+  "accountSecurity.erasure.title": "Desativar ou eliminar",
+  "accountSecurity.erasure.value":
+    "Esconde a tua conta e volta mais tarde, ou pede-nos para a apagar de vez.",
+  "accountSecurity.erasure.note":
+    "A eliminação abre um período de 30 dias que podes cancelar e termina a sessão em todo o lado. Também te pede para iniciares sessão com a Google outra vez.",
+  "accountSecurity.erasure.cta": "Ver as opções",
+  "accountSecurity.erasure.ctaPending": "Rever o pedido",
+  "accountSecurity.erasure.pending":
+    "<strong>A tua conta está marcada para ser apagada a {date}.</strong> Podes cancelar até lá.",
+
+  "accountSecurity.disclosure.title": "Encontraste uma vulnerabilidade?",
+  "accountSecurity.disclosure.value":
+    "A nossa política de divulgação responsável explica o que está dentro do âmbito, como comunicar e o que acontece a seguir.",
+  "accountSecurity.disclosure.cta": "Ler a política",
+
+  "accountSecurity.notYet.title": "Ainda não disponível",
+  "accountSecurity.notYet.twoFactor":
+    "Um segundo fator. Hoje, quem protege o início de sessão é a verificação em dois passos da tua própria conta Google.",
+  "accountSecurity.notYet.recovery":
+    "Uma segunda forma de entrar. Se perderes o acesso à tua conta Google, perdes o acesso ao QueerPulse, por isso escreve-nos antes que isso aconteça.",
+
+  "accountSecurity.compromised":
+    "<strong>Achas que mais alguém está na tua conta?</strong> <sessions>Termina todas as outras sessões</sessions> primeiro, o que deixa apenas o navegador onde estás a ler isto com sessão iniciada, e depois <contact>diz-nos</contact> para podermos ver o que aconteceu.",
 
   // ── MyUploadsPane.tsx — imagens que a própria pessoa enviou ──────────────
   "uploads.title": "As tuas imagens",
@@ -759,6 +839,24 @@ export const settings: Catalog = {
     "O teu histórico e preferências de notificações",
   "dataExport.type.consent.label": "Registos de consentimento",
   "dataExport.type.consent.sub": "A que deste consentimento, e quando",
+  "dataExport.type.magazine.label": "Escrita na revista",
+  "dataExport.type.magazine.sub":
+    "Os teus artigos e rascunhos, na íntegra, e tudo o que submeteste",
+  "dataExport.type.communities.label": "Comunidades",
+  "dataExport.type.communities.sub":
+    "Comunidades que geres, e todas as publicações que escreveste numa delas",
+  "dataExport.type.volunteering.label": "Voluntariado",
+  "dataExport.type.volunteering.sub":
+    "Funções a que te candidataste, e o que aconteceu a cada uma",
+  "dataExport.type.governance.label": "Governação",
+  "dataExport.type.governance.sub":
+    "Os teus votos e as propostas que apresentaste",
+  "dataExport.type.reviews.label": "Avaliações que escreveste",
+  "dataExport.type.reviews.sub":
+    "Avaliações de espaços, de empregadores e de visitas a casas",
+  "dataExport.type.media.label": "Ficheiros carregados",
+  "dataExport.type.media.sub":
+    "As tuas fotografias e imagens. Os ficheiros vêm com os formatos CSV e Ambos, que chegam num zip. O JSON lista-os sem os ficheiros.",
 
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "O teu arquivo está pronto",
@@ -1073,91 +1171,4 @@ export const settings: Catalog = {
     "Cada integração tem um âmbito restrito. Nenhuma consegue ler as tuas mensagens diretas, rascunhos, faturação ou associações a comunidades.",
   "integrationsModal.connectedTag": "Ligada",
   "integrationsModal.connectCta": "Ligar",
-
-  // ── SecurityPage.tsx — divulgação de vulnerabilidades ────────────────────
-  // Os créditos de agradecimento (security.data.ts SECURITY_HALL_OF_FAME) são
-  // registos de atribuição: nomes dos investigadores e o tipo/data da
-  // vulnerabilidade. Ficam em inglês, como os restantes valores de registo
-  // indicados no topo deste ficheiro, e a grelha fica escondida enquanto a
-  // lista estiver vazia.
-  "security.hero.eyebrow": "Divulgação de vulnerabilidades",
-  "security.hero.titleTop": "Encontraste algo?",
-  "security.hero.titleEm": "Diz-nos.",
-  "security.hero.sub":
-    "Levamos a segurança a sério. Se encontraste uma vulnerabilidade no QueerPulse, queremos saber. Esta página explica como comunicá-la, o que esperar e como tratamos as divulgações.",
-
-  "security.commitment.eyebrow": "O nosso compromisso",
-  "security.commitment.title": "Não <em>penalizamos</em> a boa fé.",
-  "security.commitment.body1":
-    "Os investigadores de segurança que comunicam vulnerabilidades de boa fé não sofrerão qualquer ação legal da nossa parte. Não contactaremos a tua entidade patronal, o teu fornecedor de internet nem as autoridades, a menos que uses o teu acesso para prejudicar membros. Acreditamos que a investigação de segurança torna toda a gente mais segura, e ficamos gratos quando alguém dedica tempo a comunicar o que encontra.",
-  "security.commitment.body2":
-    "Pedimos-te que nos dês um prazo razoável para corrigir um problema antes de o divulgares publicamente. Em troca, comprometemo-nos a confirmar a receção da tua comunicação em 48 horas, a manter-te a par do progresso e a creditar-te nos nossos agradecimentos de segurança, se assim o quiseres.",
-
-  "security.scope.eyebrow": "Âmbito",
-  "security.scope.title": "O que está <em>no âmbito.</em>",
-  "security.scope.inLabel": "No âmbito",
-  "security.scope.outLabel": "Fora do âmbito",
-  "security.scope.in.1": "queerpulse.com e *.queerpulse.com",
-  "security.scope.in.2": "Autenticação e gestão de sessões",
-  "security.scope.in.3": "Acesso a dados e escalada de privilégios",
-  "security.scope.in.4": "XSS armazenado e refletido",
-  "security.scope.in.5": "CSRF em endpoints autenticados",
-  "security.scope.in.6": "Injeção de SQL",
-  "security.scope.in.7": "Referências diretas a objetos inseguras",
-  "security.scope.in.8": "Exposição de dados sensíveis",
-  "security.scope.out.1": "Ataques de negação de serviço",
-  "security.scope.out.2": "Engenharia social da nossa equipa",
-  "security.scope.out.3": "Ataques físicos à infraestrutura",
-  "security.scope.out.4": "Spam ou contorno dos limites de tráfego",
-  "security.scope.out.5":
-    "Infraestrutura de terceiros (Hetzner, Postmark, Backblaze)",
-  "security.scope.out.6": "Clickjacking em páginas não sensíveis",
-  "security.scope.out.7":
-    "Cabeçalhos de segurança em falta (apenas comunicação)",
-
-  "security.process.eyebrow": "Processo",
-  "security.process.aria": "O que acontece depois de comunicares",
-  "security.process.title": "O que acontece <em>depois de comunicares.</em>",
-  "security.process.step1.title": "Confirmação",
-  "security.process.step1.text":
-    "Confirmamos a receção em 48 horas e avisamos-te de que estamos a analisar. Atribuímos um número de referência para podermos acompanhá-la em conjunto.",
-  "security.process.step1.note": "Objetivo: 48 horas",
-  "security.process.step2.title": "Avaliação",
-  "security.process.step2.text":
-    "Investigamos e avaliamos a gravidade. Mantemos-te a par e poderemos colocar perguntas de seguimento. Se não conseguirmos reproduzir o problema, explicamos-te porquê.",
-  "security.process.step2.note": "Objetivo: 5 dias úteis",
-  "security.process.step3.title": "Correção",
-  "security.process.step3.text":
-    "Para vulnerabilidades confirmadas, corrigimos e implementamos uma atualização. O prazo depende da gravidade. Os problemas críticos são tratados como emergências.",
-  "security.process.step3.note":
-    "Crítico: <72h · Elevado: <7 dias · Médio/Baixo: próxima versão",
-  "security.process.step4.title": "Divulgação",
-  "security.process.step4.text":
-    "Coordenamos contigo um calendário de divulgação. Creditamos-te nos nossos agradecimentos de segurança, a não ser que prefiras o anonimato.",
-  "security.process.step4.note": "Por omissão: divulgação coordenada a 90 dias",
-
-  "security.ack.eyebrow": "Agradecimentos",
-  "security.ack.title": "<em>Investigadores</em> de segurança que ajudaram.",
-  "security.ack.body":
-    "Estamos gratos aos seguintes investigadores que divulgaram vulnerabilidades de forma responsável. (Listados com autorização.)",
-  "security.ack.empty":
-    "Ainda não há ninguém creditado aqui. Reporta algo e, se quiseres o crédito, o teu nome fica registado.",
-
-  "security.report.titleTop": "Comunicar uma",
-  "security.report.titleEm": "vulnerabilidade",
-  "security.report.body":
-    "Cifra a tua comunicação com a nossa chave PGP e envia-nos um email. Inclui os passos para reproduzir, o impacto potencial e qualquer prova de conceito.",
-  "security.report.cta": "Enviar email à equipa de segurança",
-  "security.pgp.label": "Chave pública PGP",
-  "security.pgp.copyCta": "Copiar chave",
-  "security.pgp.copied": "Chave PGP copiada.",
-  "security.pgp.copyFailed": "Falha ao copiar. Seleciona e copia manualmente.",
-  "security.pgp.unavailable":
-    "Ainda não publicámos uma chave. Escreve-nos em texto simples e combinamos um canal encriptado antes de enviares qualquer detalhe.",
-
-  "security.outro.titleTop": "A segurança é",
-  "security.outro.titleEm": "trabalho de comunidade.",
-  "security.outro.sub":
-    "Obrigade a todas as pessoas que ajudam a manter o QueerPulse seguro.",
-  "security.outro.cta": "Contactar a equipa de segurança",
 };

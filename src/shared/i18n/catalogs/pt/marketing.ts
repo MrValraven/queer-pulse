@@ -2126,6 +2126,7 @@ export const marketing: Catalog = {
   "changelog.tag.studio": "Visitar o Studio",
   "changelog.tag.search": "Experimentar a pesquisa global",
   "changelog.tag.topics": "Ver os tópicos",
+  "changelog.tag.perks": "Vê as tuas vantagens",
   "changelog.tag.volunteer": "Encontra o teu caminho",
   "changelog.tag.postVolunteer": "Publicar oportunidade",
   "changelog.tag.notifications": "Abrir as tuas notificações",
@@ -5148,6 +5149,22 @@ export const marketing: Catalog = {
   "volunteer.signups.closing": "A encerrar…",
   "volunteer.signups.closeCta": "Encerrar oportunidade",
   "volunteer.signups.reviewCta": "{count} para rever",
+
+  // ── A contribuição confirmada da própria pessoa (SUS-05). Sessões e horas
+  // confirmadas por quem publicou, nunca autodeclaradas.
+  "volunteer.contribution.title": "O que já contribuíste",
+  "volunteer.contribution.loading": "A carregar o teu voluntariado…",
+  "volunteer.contribution.sessions": "sessões confirmadas",
+  "volunteer.contribution.hours": "horas contribuídas",
+  "volunteer.contribution.lastOne": "Sessão confirmada mais recente: {when}",
+  "volunteer.contribution.awaiting_one":
+    "1 candidatura aceite está à espera de que quem publicou confirme a sessão.",
+  "volunteer.contribution.awaiting_other":
+    "{count} candidaturas aceites estão à espera de que quem publicou confirme a sessão.",
+  "volunteer.contribution.empty":
+    "Ainda não há nada confirmado. Assim que alguém registar uma sessão em que compareceste, as horas aparecem aqui.",
+  "volunteer.contribution.note":
+    "As horas são confirmadas por quem publicou a oportunidade, por isso este registo tem outra pessoa a garanti-lo.",
   "volunteer.adapter.eyebrow": "Voluntariado · {cause} · {org}",
   "volunteer.adapter.recruitingNow": "A recrutar agora",
   "volunteer.adapter.closedNotRecruiting": "Encerrado · sem recrutamento",
@@ -5175,6 +5192,27 @@ export const marketing: Catalog = {
   "volunteerManage.status.declined": "Recusada",
   "volunteerManage.accept": "Aceitar",
   "volunteerManage.decline": "Recusar",
+
+  // ── Conclusão de sessão de voluntariado (SUS-05). Quem publicou regista o
+  // que aconteceu, por isso as horas são atestadas por outra pessoa. Nenhum
+  // texto aqui promete uma mensagem à pessoa voluntária: não é enviada nenhuma.
+  "volunteerManage.completion.title": "Registar a sessão",
+  "volunteerManage.completion.attendedLabel": "Compareceu?",
+  "volunteerManage.completion.attendedYes": "Compareceu",
+  "volunteerManage.completion.attendedNo": "Não compareceu",
+  "volunteerManage.completion.hoursLabel": "Horas contribuídas",
+  "volunteerManage.completion.hoursHelper":
+    "Até 24 numa sessão. Podes usar quartos de hora.",
+  "volunteerManage.completion.confirm": "Confirmar sessão",
+  "volunteerManage.completion.confirming": "A confirmar…",
+  "volunteerManage.completion.why":
+    "As horas confirmadas contam para o total de horas de voluntariado que a QueerPulse pode reportar e para o reconhecimento desta pessoa.",
+  "volunteerManage.completion.error":
+    "Não foi possível guardar. Verifica a ligação e tenta outra vez.",
+  "volunteerManage.completion.alreadyDone":
+    "Esta sessão já tinha sido confirmada.",
+  "volunteerManage.completion.confirmedHours": "Confirmado: {hours} h a {when}",
+  "volunteerManage.completion.confirmedNoShow": "Registado como falta a {when}",
 
   // ── Publicar uma oportunidade de voluntariado — chrome do formulário
   //    (tudo interface da plataforma).
@@ -6949,6 +6987,67 @@ export const marketing: Catalog = {
   "changelog.tag.transparency": "Ler o relatório de transparência",
   "changelog.tag.constitution": "Ler a constituição",
   "changelog.tag.codeOfConduct": "Ler o código de conduta",
+  // ACQ-01..04, ACQ-08, ACQ-11, ID-11, ID-12, ID-15: the applicant funnel,
+  // account security and export depth.
+  "changelog.tag.accountSecurity": "Abrir segurança da conta",
+  "changelog.tag.dataExport": "Transferir os teus dados",
+  "changelog.tag.contact": "Fala connosco",
+  "changelog.entries.perks-that-grant-something-real.title":
+    "Vantagens que dão algo real",
+  "changelog.entries.perks-that-grant-something-real.body":
+    "A escada de reconhecimento dava um número e não mudava nada. As vantagens ao teu alcance passam a poder ser reclamadas, e uma vantagem de convites reclamada aumenta mesmo a tua quota mensal. As vantagens que a plataforma não conseguia cumprir saíram da página.",
+  "changelog.entries.renew-your-card-before-it-runs-out.title":
+    "Renova o teu cartão antes de expirar",
+  "changelog.entries.renew-your-card-before-it-runs-out.body":
+    "Quando a tua comunidade o permite, podes renovar um cartão de membro a partir da tua conta, sem esperar que a organização volte a emitir a lista toda. Recebes também um aviso na aplicação trinta dias antes de o cartão terminar.",
+  "changelog.entries.volunteering-that-counts.title": "Voluntariado que conta",
+  "changelog.entries.volunteering-that-counts.body":
+    "Quem publicou a oportunidade pode agora confirmar que apareceste e registar as horas. As sessões confirmadas dão pontos de reconhecimento, e o teu total fica na página de voluntariado. Organizar um encontro e publicar na revista também contam.",
+  "changelog.entries.support-offers-a-community-receives.title":
+    "Ofertas de apoio que a comunidade recebe",
+  "changelog.entries.support-offers-a-community-receives.body":
+    "Quando a equipa oferece ajuda a uma comunidade em dificuldade, ela chega agora ao destino. A moderação recebe uma notificação e vê o que foi oferecido nas Ferramentas de moderação, onde pode responder sim ou agora não.",
+  "changelog.entries.see-how-often-your-cards-are-checked.title":
+    "Vê quantas vezes os cartões são verificados",
+  "changelog.entries.see-how-often-your-cards-are-checked.body":
+    "Se a tua comunidade emite cartões de membro, as Ferramentas de moderação mostram agora quantas vezes foram verificados, e cada cartão tem a sua própria contagem. Não fica registado quem verificou nem onde, e o registo é mantido durante noventa dias.",
+  "changelog.entries.check-what-happened-to-your-invite-request.title":
+    "Podes saber o que aconteceu ao teu pedido de convite",
+  "changelog.entries.check-what-happened-to-your-invite-request.body":
+    "Pedir para entrar acabava em silêncio. Agora, quando envias um pedido, ficas com um código de referência. Introduz esse código quando quiseres e a página de estado diz-te com clareza como está: ainda em leitura, aprovado ou recusado. Se for sim, o teu convite está lá à tua espera, por isso uma aprovação já não se pode perder pelo caminho.",
+  "changelog.entries.an-invite-you-can-address-to-a-person.title":
+    "Um convite que podes dirigir a uma pessoa",
+  "changelog.entries.an-invite-you-can-address-to-a-person.body":
+    "Ao criares um convite podes agora indicar o email da pessoa a quem se destina. É opcional. Se o preencheres, só quem iniciar sessão com esse endereço consegue usar o link, por isso um convite reencaminhado ou fotografado não deixa entrar mais ninguém. Isto conta, porque quem usa o teu convite chega com o teu nome como quem responde por essa pessoa. Se deixares em branco, o link continua a funcionar para qualquer pessoa que o tenha. Em qualquer dos casos não enviamos nada para esse endereço: o link passas tu.",
+  "changelog.entries.your-invites-are-where-you-can-find-them.title":
+    "Os teus convites estão onde os irias procurar",
+  "changelog.entries.your-invites-are-where-you-can-find-them.body":
+    'Convidar alguém estava escondido atrás de um único botão na página de ligações, e por isso os convites por usar expiravam sem ninguém dar conta. Passa a haver uma linha "Convidar alguém" no menu da conta, com a contagem do que te resta este mês, e um pequeno cartão no teu perfil a dizer quando o limite renova. Os convites enviados mostram também a quem se destinavam, com um botão para copiar cada link ainda válido.',
+  "changelog.entries.account-security-has-a-real-home.title":
+    "A segurança da conta tem finalmente uma página sua",
+  "changelog.entries.account-security-has-a-real-home.body":
+    'Carregar em "segurança" nas definições abria a nossa política de divulgação de vulnerabilidades para investigadores, que não é o que ninguém andava à procura. Essa política mudou para a secção de políticas, onde faz sentido. No lugar dela está agora uma página sobre a tua conta: como inicias sessão, quantas sessões estão abertas, que dispositivos recebem notificações e onde transferir ou apagar os teus dados. Onde ainda não existe alguma coisa, a página diz isso mesmo em vez de fingir.',
+  "changelog.entries.your-photos-come-with-your-export.title":
+    "As tuas fotografias vão com a exportação de dados",
+  "changelog.entries.your-photos-come-with-your-export.body":
+    "A exportação descrevia as tuas imagens sem as incluir, e os links deixavam de funcionar assim que a conta desaparecia. Todos os ficheiros que carregaste vão agora dentro do arquivo, com um índice a dizer o que é cada um. Os teus textos e rascunhos da revista, as comunidades de que és dono e as publicações que lá escreveste, o teu voluntariado, os teus votos de governança e as tuas avaliações vão também. Escolhe o formato CSV ou Ambos para receberes os ficheiros.",
+  "changelog.entries.every-page-announces-itself.title":
+    "Cada página anuncia-se a um leitor de ecrã",
+  "changelog.entries.every-page-announces-itself.body":
+    "Mudar de página era silencioso para quem usa um leitor de ecrã, o que tornava a aplicação difícil de acompanhar. Cada página diz agora o seu nome ao abrir e coloca-te no início do conteúdo. Os ecrãs de administração e de início de sessão ganharam uma ligação para saltar para o conteúdo e uma zona principal em condições, e os editores de governança podem ser reordenados com botões, por isso arrumar uma lista já não obriga a arrastar com o rato.",
+  "changelog.entries.the-contact-form-reaches-a-person.title":
+    "O formulário de contacto chega a uma pessoa",
+  "changelog.entries.the-contact-form-reaches-a-person.body":
+    "As mensagens enviadas pelos formulários de contacto e de parcerias ficavam guardadas onde ninguém as podia ler, e o mesmo acontecia com onze dos doze formulários de candidatura e sugestão espalhados pelo site. Candidaturas a apoios, sugestões de correção, ofertas para acolher encontros sem álcool, inscrições em painéis e as submissões da Cultura chegam agora todas a uma consola que a equipa percorre, com registo de quem tratou de cada uma e quando.",
+  "changelog.entries.an-approved-invite-can-be-found-again.title":
+    "Um convite aprovado volta a poder ser encontrado",
+  "changelog.entries.an-approved-invite-can-be-found-again.body":
+    "Quando alguém da equipa aceitava uma pessoa, o link do convite aparecia uma vez e desaparecia no refrescar seguinte, deixando quem esperava sem nada. Os pedidos já decididos passam a ter o seu próprio separador, com o link guardado ao lado, a validade à vista e uma forma de emitir de novo o que expirou. Qualquer moderador o pode fazer, quando antes só conseguia quem tinha tomado a decisão original.",
+  "changelog.entries.no-stock-photo-on-a-real-application.title":
+    "Nenhuma fotografia de arquivo numa candidatura real",
+  "changelog.entries.no-stock-photo-on-a-real-application.body":
+    "Os ecrãs de administração associavam pessoas pelo nome a um conjunto de fotografias de exemplo usadas na nossa demonstração, o que significa que uma candidata real podia aparecer a quem a avaliava com a cara de um estranho. Onde há pessoas reais em lista passa a usar-se a fotografia delas, ou as iniciais quando não têm nenhuma.",
+
   "changelog.entries.the-transparency-report-is-published.title":
     "O relatório de transparência foi publicado",
   "changelog.entries.the-transparency-report-is-published.body":
@@ -6973,4 +7072,98 @@ export const marketing: Catalog = {
     "A moderação de uma comunidade passa a ver o que foi denunciado",
   "changelog.entries.community-mods-can-read-what-was-reported.body":
     "Ao abrir uma denúncia, a moderação via um motivo e uma data e tinha de decidir se removia algo que não conseguia ler. As denúncias passam a incluir a publicação, quem a escreveu, o grau de urgência e o prazo. As denúncias urgentes sobre exposição ou dados pessoais seguem para a equipa com formação.",
+
+  // ── SecurityPolicyPage.tsx — divulgação de vulnerabilidades ────────────────────
+  // Os créditos de agradecimento (securityPolicy.data.ts SECURITY_HALL_OF_FAME) são
+  // registos de atribuição: nomes dos investigadores e o tipo/data da
+  // vulnerabilidade. Ficam em inglês, como os restantes valores de registo
+  // indicados no topo deste ficheiro, e a grelha fica escondida enquanto a
+  // lista estiver vazia.
+  "securityPolicy.meta.title": "Segurança e divulgação de vulnerabilidades",
+  "securityPolicy.meta.description":
+    "Como comunicar uma vulnerabilidade de segurança no QueerPulse, o que está dentro do âmbito e o que acontece depois de comunicares.",
+  "securityPolicy.hero.eyebrow": "Divulgação de vulnerabilidades",
+  "securityPolicy.hero.titleTop": "Encontraste algo?",
+  "securityPolicy.hero.titleEm": "Diz-nos.",
+  "securityPolicy.hero.sub":
+    "Levamos a segurança a sério. Se encontraste uma vulnerabilidade no QueerPulse, queremos saber. Esta página explica como comunicá-la, o que esperar e como tratamos as divulgações.",
+
+  "securityPolicy.commitment.eyebrow": "O nosso compromisso",
+  "securityPolicy.commitment.title": "Não <em>penalizamos</em> a boa fé.",
+  "securityPolicy.commitment.body1":
+    "Os investigadores de segurança que comunicam vulnerabilidades de boa fé não sofrerão qualquer ação legal da nossa parte. Não contactaremos a tua entidade patronal, o teu fornecedor de internet nem as autoridades, a menos que uses o teu acesso para prejudicar membros. Acreditamos que a investigação de segurança torna toda a gente mais segura, e ficamos gratos quando alguém dedica tempo a comunicar o que encontra.",
+  "securityPolicy.commitment.body2":
+    "Pedimos-te que nos dês um prazo razoável para corrigir um problema antes de o divulgares publicamente. Em troca, comprometemo-nos a confirmar a receção da tua comunicação em 48 horas, a manter-te a par do progresso e a creditar-te nos nossos agradecimentos de segurança, se assim o quiseres.",
+
+  "securityPolicy.scope.eyebrow": "Âmbito",
+  "securityPolicy.scope.title": "O que está <em>no âmbito.</em>",
+  "securityPolicy.scope.inLabel": "No âmbito",
+  "securityPolicy.scope.outLabel": "Fora do âmbito",
+  "securityPolicy.scope.in.1": "queerpulse.com e *.queerpulse.com",
+  "securityPolicy.scope.in.2": "Autenticação e gestão de sessões",
+  "securityPolicy.scope.in.3": "Acesso a dados e escalada de privilégios",
+  "securityPolicy.scope.in.4": "XSS armazenado e refletido",
+  "securityPolicy.scope.in.5": "CSRF em endpoints autenticados",
+  "securityPolicy.scope.in.6": "Injeção de SQL",
+  "securityPolicy.scope.in.7": "Referências diretas a objetos inseguras",
+  "securityPolicy.scope.in.8": "Exposição de dados sensíveis",
+  "securityPolicy.scope.out.1": "Ataques de negação de serviço",
+  "securityPolicy.scope.out.2": "Engenharia social da nossa equipa",
+  "securityPolicy.scope.out.3": "Ataques físicos à infraestrutura",
+  "securityPolicy.scope.out.4": "Spam ou contorno dos limites de tráfego",
+  "securityPolicy.scope.out.5":
+    "Infraestrutura de terceiros (Hetzner, Postmark, Backblaze)",
+  "securityPolicy.scope.out.6": "Clickjacking em páginas não sensíveis",
+  "securityPolicy.scope.out.7":
+    "Cabeçalhos de segurança em falta (apenas comunicação)",
+
+  "securityPolicy.process.eyebrow": "Processo",
+  "securityPolicy.process.aria": "O que acontece depois de comunicares",
+  "securityPolicy.process.title":
+    "O que acontece <em>depois de comunicares.</em>",
+  "securityPolicy.process.step1.title": "Confirmação",
+  "securityPolicy.process.step1.text":
+    "Confirmamos a receção em 48 horas e avisamos-te de que estamos a analisar. Atribuímos um número de referência para podermos acompanhá-la em conjunto.",
+  "securityPolicy.process.step1.note": "Objetivo: 48 horas",
+  "securityPolicy.process.step2.title": "Avaliação",
+  "securityPolicy.process.step2.text":
+    "Investigamos e avaliamos a gravidade. Mantemos-te a par e poderemos colocar perguntas de seguimento. Se não conseguirmos reproduzir o problema, explicamos-te porquê.",
+  "securityPolicy.process.step2.note": "Objetivo: 5 dias úteis",
+  "securityPolicy.process.step3.title": "Correção",
+  "securityPolicy.process.step3.text":
+    "Para vulnerabilidades confirmadas, corrigimos e implementamos uma atualização. O prazo depende da gravidade. Os problemas críticos são tratados como emergências.",
+  "securityPolicy.process.step3.note":
+    "Crítico: <72h · Elevado: <7 dias · Médio/Baixo: próxima versão",
+  "securityPolicy.process.step4.title": "Divulgação",
+  "securityPolicy.process.step4.text":
+    "Coordenamos contigo um calendário de divulgação. Creditamos-te nos nossos agradecimentos de segurança, a não ser que prefiras o anonimato.",
+  "securityPolicy.process.step4.note":
+    "Por omissão: divulgação coordenada a 90 dias",
+
+  "securityPolicy.ack.eyebrow": "Agradecimentos",
+  "securityPolicy.ack.title":
+    "<em>Investigadores</em> de segurança que ajudaram.",
+  "securityPolicy.ack.body":
+    "Estamos gratos aos seguintes investigadores que divulgaram vulnerabilidades de forma responsável. (Listados com autorização.)",
+  "securityPolicy.ack.empty":
+    "Ainda não há ninguém creditado aqui. Reporta algo e, se quiseres o crédito, o teu nome fica registado.",
+
+  "securityPolicy.report.titleTop": "Comunicar uma",
+  "securityPolicy.report.titleEm": "vulnerabilidade",
+  "securityPolicy.report.body":
+    "Cifra a tua comunicação com a nossa chave PGP e envia-nos um email. Inclui os passos para reproduzir, o impacto potencial e qualquer prova de conceito.",
+  "securityPolicy.report.cta": "Enviar email à equipa de segurança",
+  "securityPolicy.pgp.label": "Chave pública PGP",
+  "securityPolicy.pgp.copyCta": "Copiar chave",
+  "securityPolicy.pgp.copied": "Chave PGP copiada.",
+  "securityPolicy.pgp.copyFailed":
+    "Falha ao copiar. Seleciona e copia manualmente.",
+  "securityPolicy.pgp.unavailable":
+    "Ainda não publicámos uma chave. Escreve-nos em texto simples e combinamos um canal encriptado antes de enviares qualquer detalhe.",
+
+  "securityPolicy.outro.titleTop": "A segurança é",
+  "securityPolicy.outro.titleEm": "trabalho de comunidade.",
+  "securityPolicy.outro.sub":
+    "Obrigade a todas as pessoas que ajudam a manter o QueerPulse seguro.",
+  "securityPolicy.outro.cta": "Contactar a equipa de segurança",
 };

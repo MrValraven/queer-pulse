@@ -53,6 +53,7 @@ import { PolicyReacceptanceGate } from "../features/auth/PolicyReacceptanceGate"
 import { PwaUpdatePrompt } from "../shared/components/system/PwaUpdatePrompt";
 import { OfflineGate } from "../features/system/OfflineGate";
 import { ScrollManager } from "./ScrollManager";
+import { RouteAnnouncer } from "./RouteAnnouncer";
 import { AppRoutes } from "./routes";
 import { useVisualViewportKeyboard } from "../shared/hooks";
 
@@ -189,6 +190,12 @@ export function App() {
       <ErrorBoundary level="app">
         <BrowserRouter>
           <ScrollManager />
+          {/* Speaks each route change into a polite live region and lands
+              focus in the new page's <main>. Mounted directly after
+              ScrollManager so that sibling's scroll work is committed first;
+              its own focus move is `preventScroll`, so it never disturbs a
+              restored offset. See RouteAnnouncer.tsx for the full ordering. */}
+          <RouteAnnouncer />
           <ShellFrameProvider>
             <DataProviders>
               {/* The one full-height frame the whole routed app lives in.

@@ -14,6 +14,7 @@ import { ProfileLayoutSwitch } from "./ProfileLayoutSwitch";
 import { ProfileBackBar, ProfilePreviewBanner } from "./ProfilePageChrome";
 import { ProfileSubprofilesSection } from "./ProfileSubprofilesSection";
 import { ProfileEditBar } from "./ProfileEditBar";
+import { ProfileInviteCard } from "./ProfileInviteCard";
 import { WhoSeesWhatSheet } from "./WhoSeesWhatSheet";
 import { AccountDataSheet } from "./AccountDataSheet";
 import { useProfileEditGuard } from "./useProfileEditGuard";
@@ -196,6 +197,11 @@ export function ProfilePage() {
         onOpenAccountData={sheets.openAccountData}
         onToggleHidden={toggleHidden}
       />
+
+      {/* ACQ-08 — owner-only, and last on the page so it pushes nothing down.
+          Hidden while editing (the sticky save bar owns the foot of the screen
+          then) and silent unless there are invites actually left to give. */}
+      {selfView && !isEditing && <ProfileInviteCard />}
 
       {selfView && <ProfileEditBar />}
 

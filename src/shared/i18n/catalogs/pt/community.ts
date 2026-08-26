@@ -812,4 +812,8 @@ export const community: Catalog = {
   "readingGroups.liveError.description":
     "Algo correu mal ao procurar os grupos. Normalmente é momentâneo.",
   "readingGroups.liveError.retryCta": "Tentar de novo",
+  // OPS-05, a janela "Oferecer apoio" da consola de administração.
+  "supportOffer.admin.sendingCta": "A enviar…",
+  "supportOffer.admin.conflictToast":
+    "{name} já tem uma oferta à espera de resposta. Dá tempo à moderação para responder.",
 };

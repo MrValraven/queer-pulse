@@ -1313,6 +1313,22 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.gettingStarted": "Passos dos primeiros dias",
   "badges.xpBreakdown.sources.gettingStartedDesc":
     "Concluíres um passo dos primeiros dias.",
+  // ── O lado da contribuição (SUS-05): ver a nota no catálogo EN. ──
+  "badges.xpBreakdown.sources.volunteering": "Sessões de voluntariado",
+  "badges.xpBreakdown.sources.volunteeringDesc":
+    "Uma sessão de voluntariado confirmada por quem publicou a oportunidade.",
+  "badges.xpBreakdown.sources.hosting": "Convívios que organizaste",
+  "badges.xpBreakdown.sources.hostingDesc":
+    "Organizares ou coorganizares um convívio aberto.",
+  "badges.xpBreakdown.sources.magazine": "Peças publicadas na revista",
+  "badges.xpBreakdown.sources.magazineDesc":
+    "Uma peça tua publicada na revista.",
+  "badges.xpBreakdown.sources.answers": "Perguntas respondidas no diretório",
+  "badges.xpBreakdown.sources.answersDesc":
+    "Responderes a uma pergunta na ficha de um espaço do diretório.",
+  "badges.xpBreakdown.sources.resources": "Recursos aprovados",
+  "badges.xpBreakdown.sources.resourcesDesc":
+    "Um recurso que sugeriste e que foi aprovado.",
   "badges.xpBreakdown.sources.badges": "Bónus de emblemas",
   "badges.xpBreakdown.sources.badgesDesc": "Os emblemas que já ganhaste.",
   "badges.xpBreakdown.sources.other": "Outro",
@@ -1368,6 +1384,7 @@ export const members: Catalog = {
   "badges.case.mutedNotePlural":
     "{categories} estão silenciadas. Nada delas te será sugerido.",
   "badges.case.unmute": "Reativar",
+  "badges.case.hiddenFlag": "Escondido",
   "badges.case.rarestFlag": "O mais raro do teu espólio",
   "badges.case.rarityCommon": "Comum",
   "badges.case.rarityRare": "Raro",
@@ -1405,7 +1422,9 @@ export const members: Catalog = {
   "badges.drawer.visibleOnProfile": "Visível no teu perfil",
   "badges.drawer.privateToYou": "Privado, só para ti",
   "badges.drawer.visibilityNote":
-    "Guardado só neste dispositivo. Ainda estamos a construir a parte que o esconde de como outras pessoas veem o teu perfil.",
+    "Se o esconderes, os outros membros deixam de o ver no teu perfil. Fica sempre aqui para ti.",
+  "badges.drawer.visibilityErrorToast":
+    "Não conseguimos mudar a visibilidade desse emblema. Tenta novamente daqui a pouco.",
   "badges.drawer.earnedThisWeek": "esta semana",
   "badges.drawer.progressCount": "{units} de {target} feitos",
   "badges.drawer.previous": "Emblema anterior",
@@ -1424,7 +1443,7 @@ export const members: Catalog = {
   "badges.ladderV2.eyebrow": "A escada",
   "badges.ladderV2.heading": "O que cada nível <em>desbloqueia</em>",
   "badges.ladderV2.sub":
-    "Os níveis são permissões que desbloqueias. Cada degrau compra-te uma coisa que passas a poder fazer, e esse é o essencial; o resto são detalhes.",
+    "Quase tudo o que o QueerPulse oferece está aberto desde o Nível 1. Estes degraus mostram o que cada nível acrescenta a isso, e nada que não esteja construído.",
   "badges.ladderV2.passed": "Ultrapassado",
   "badges.ladderV2.youAreHere": "Estás aqui",
   "badges.ladderV2.ahead": "Por vir",
@@ -1450,23 +1469,23 @@ export const members: Catalog = {
   "badges.ledger.showLess": "Mostrar menos",
   "badges.ledger.emptyTitle": "Ainda sem histórico.",
   "badges.ledger.emptyBody":
-    "Cada ponto fica aqui com uma data e um motivo, para o veres, e para podermos anulá-lo se algo foi contado por engano.",
+    "Cada ponto fica aqui com uma data e uma descrição, para veres sempre de onde veio o teu nível.",
   "badges.ledger.integrityHeading": "Porque podes confiar nisto",
-  "badges.ledger.integrity1Title": "Os anfitriões confirmam presenças.",
+  "badges.ledger.integrity1Title": "Contado a partir do que já fizeste.",
   "badges.ledger.integrity1Body":
-    "Não podes marcar-te presente numa mesa onde nunca te sentaste.",
-  "badges.ledger.integrity2Title": "Uma pessoa revê os contributos.",
+    "As presenças vêm da tua própria confirmação num encontro que já começou. Não há nada extra para entregar.",
+  "badges.ledger.integrity2Title": "Cada ponto tem uma linha.",
   "badges.ledger.integrity2Body":
-    "Guias, anúncios e avais passam por um humano antes de contarem.",
-  "badges.ledger.integrity3Title": "Privado por defeito.",
+    "Cada aumento entra nesta lista com data e descrição, para o total poder ser conferido com ela.",
+  "badges.ledger.integrity3Title": "Os pontos nunca são retirados.",
   "badges.ledger.integrity3Body":
-    "Nada aparece no teu perfil até tu o ativares, emblema a emblema.",
-  "badges.ledger.integrity4Title": "Sem tabela de classificação.",
+    "O teu total só sobe. Um aval retirado ou uma publicação apagada deixam-no onde estava.",
+  "badges.ledger.integrity4Title": "Escolhes o que se vê.",
   "badges.ledger.integrity4Body":
-    "Os membros nunca são comparados entre si. A raridade descreve o próprio emblema.",
-  "badges.ledger.integrity5Title": "As correções ficam visíveis.",
+    "Qualquer emblema que ganhes pode ser escondido do teu perfil, um a um. Um emblema escondido fica nesta página para ti.",
+  "badges.ledger.integrity5Title": "Sem tabela de classificação.",
   "badges.ledger.integrity5Body":
-    "Quando pontos são retirados, a linha e o motivo permanecem na lista.",
+    "Os membros nunca são comparados entre si. A raridade descreve o próprio emblema.",
   "badges.ledger.footnoteCount":
     "{badges} emblemas · {levels} níveis · um extrato que podes auditar.",
   "badges.ledger.footnoteContact":
@@ -1504,7 +1523,7 @@ export const members: Catalog = {
   "perks.sidebar.xpSummary":
     "{xp} / {xpMax} XP · {xpToNext} para o Nível {nextLevel}",
   "perks.sidebar.nextUnlockNote":
-    "As próximas vantagens desbloqueiam no <strong>Nível {nextLevel} · {nextName}</strong>: organizar sem aprovação e mais convites por mês.",
+    "O teu próximo degrau é o <strong>Nível {nextLevel} · {nextName}</strong>. O que ele abre está listado na escada.",
   "perks.sidebar.seeAllBadgesCta": "Ver todos os emblemas e níveis",
   "perks.sidebar.explainedTitle": "Vantagens explicadas",
   "perks.sidebar.suggestTitle": "Sugerir uma vantagem",
@@ -1515,8 +1534,9 @@ export const members: Catalog = {
   "perks.claim.alreadyActive": "Já ativo",
   "perks.claim.active": "Ativo",
   "perks.claim.claimed": "Resgatado",
-  "perks.claim.unavailableToast":
-    "Resgatar vantagens ainda não está disponível. Ainda estamos a preparar isto.",
+  "perks.claim.claiming": "A resgatar…",
+  "perks.claim.errorToast":
+    "Não conseguimos resgatar essa vantagem. Tenta novamente daqui a pouco.",
 
   // ── A tua rede (ProfileNetworkStats + NetworkListModal) — só do dono ─────────
   "network.title": "A tua rede",

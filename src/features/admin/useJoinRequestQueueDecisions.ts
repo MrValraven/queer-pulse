@@ -13,9 +13,8 @@ import { useJoinRequestQueueSelection } from "./useJoinRequestQueueSelection";
  * `useModToolsActions` makes for the community mod tools).
  *
  * The shape every decision follows: fire the write, and announce it ONLY in
- * `onSuccess`. Approving a request also sends the real invite email
- * server-side, so a toast fired before the server answered asserted a welcome
- * that had not happened; on a 403 or a 5xx the reviewer then got a second,
+ * `onSuccess`. A toast fired before the server answered asserted a welcome that
+ * had not happened; on a 403 or a 5xx the reviewer then got a second,
  * contradicting error toast on top of it with the card still sitting pending.
  *
  * Only one decision may be in flight at a time. A second click, or an Enter on
@@ -39,6 +38,13 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
   );
   // Approved rows keep their place, now carrying the invite code to hand over.
   const [approved, setApproved] = useState<JoinRequestView[]>([]);
+  // Every row this session decided either way, in the shape the Decided tab
+  // renders. Held for the same reason `waitlistedLocally` is: demo mode's mock
+  // queue never mutates its own backing array, so a refetched `approved` /
+  // `declined` query would not otherwise carry a decision just taken. In live
+  // mode the server copy arrives on the next refetch and supersedes these —
+  // `displayedDecided` prefers it, so nothing is ever rendered twice.
+  const [decidedLocally, setDecidedLocally] = useState<JoinRequestView[]>([]);
   // The row a reviewer just clicked "decline" on, still waiting on a reason.
   const [decliningItem, setDecliningItem] = useState<JoinRequestView | null>(
     null,
@@ -83,6 +89,15 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     });
   }
 
+  /** Records one just-decided row for the Decided tab, keyed by id so a repeat
+   *  decision on the same request replaces rather than duplicates it. */
+  function rememberDecision(row: JoinRequestView) {
+    setDecidedLocally((list) => [
+      row,
+      ...list.filter((existing) => existing.id !== row.id),
+    ]);
+  }
+
   function unmarkLeaving(id: string) {
     setLeaving((current) => {
       const next = new Set(current);
@@ -99,11 +114,23 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
       {
         onSuccess: (dto) => {
           if (status === "approved") {
+            // The server's own decision fields, not a guess: the invite's
+            // lifecycle and expiry are what the approved card and the Decided
+            // tab both print, and only the response knows them.
+            const approvedRow: JoinRequestView = {
+              ...item,
+              status: dto.status,
+              reviewedAt: dto.reviewedAt,
+              inviteCode: dto.inviteCode,
+              inviteStatus: dto.inviteStatus,
+              inviteExpiresAt: dto.inviteExpiresAt,
+            };
             setApproved((list) =>
               list.some((row) => row.id === item.id)
                 ? list
-                : [{ ...item, inviteCode: dto.inviteCode }, ...list],
+                : [approvedRow, ...list],
             );
+            rememberDecision(approvedRow);
             showToast(
               t("admin:members.verify.approvedToast", { name: item.name }),
               "success",
@@ -141,7 +168,13 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     reviewJoinRequest.mutate(
       { id: item.id, status: "declined", declineReason: reason },
       {
-        onSuccess: () => {
+        onSuccess: (dto) => {
+          rememberDecision({
+            ...item,
+            status: dto.status,
+            reviewedAt: dto.reviewedAt,
+            declineReason: dto.declineReason,
+          });
           showToast(
             t("admin:members.verify.declinedToast", { name: item.name }),
             "info",
@@ -175,6 +208,19 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     ];
   }
 
+  /** Merges this session's decisions with the server's decided history, the
+   *  same way `displayedWaitlisted` does. A row the server already carries wins
+   *  (it is the authoritative copy, and it is the one that survives a refresh),
+   *  so a just-approved applicant appears in the tab immediately and exactly
+   *  once once the refetch lands. */
+  function displayedDecided(serverRows: JoinRequestView[]) {
+    const serverIds = new Set(serverRows.map((row) => row.id));
+    return [
+      ...decidedLocally.filter((row) => !serverIds.has(row.id)),
+      ...serverRows,
+    ];
+  }
+
   return {
     queue,
     approved,
@@ -184,6 +230,7 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     selection,
     isPending: reviewJoinRequest.isPending,
     displayedWaitlisted,
+    displayedDecided,
     handleBulkSuccess,
     resolve,
     requestDecline,

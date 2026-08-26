@@ -121,7 +121,6 @@
 .foot {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding-top: 22px;
   margin-top: 24px;
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
@@ -142,9 +141,4 @@
   .foot a:hover {
     color: var(--text-strong);
   }
-}
-
-.incidentId {
-  font-family: var(--sans);
-  letter-spacing: 0.04em;
 }

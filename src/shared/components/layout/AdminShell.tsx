@@ -7,6 +7,7 @@ import { useTranslation } from "../../i18n/useTranslation";
 import { useMediaQuery, useScrollLock } from "../../hooks";
 import { mediaMax } from "../../theme/breakpoints";
 import { AdminSidebar } from "./AdminSidebar";
+import { MAIN_CONTENT_ID, SkipToContentLink } from "./SkipToContentLink";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import styles from "./AdminShell.module.css";
 
@@ -84,6 +85,7 @@ export function AdminShell({
 
   return (
     <div className={styles.shell}>
+      <SkipToContentLink />
       {isDrawerActive && (
         <div
           className={styles.scrim}
@@ -179,7 +181,26 @@ export function AdminShell({
           </div>
         </header>
 
-        <main className={styles.content}>{children}</main>
+        {/* Same landmark contract as every member shell: the shared
+            MAIN_CONTENT_ID that <SkipToContentLink> targets, `tabIndex={-1}`
+            so that fragment jump (and RouteAnnouncer's post-navigation focus
+            move) actually lands focus here, and `data-page-main` so the app's
+            one page landmark is findable — which is also what the drawer's
+            focus-restore fallback in useNavDrawerFocus looks for. Like
+            MagazineDeskShell, this shell renders its own left rail instead of
+            the floating Navbar, so `data-shell="rail"` opts out of the chrome
+            offsets `data-page-main` otherwise carries (base.css's `--nav-band`
+            padding, nav-mode.css's rail indent, standalone.css's mobile
+            app-bar margin and tab-bar padding). */}
+        <main
+          id={MAIN_CONTENT_ID}
+          tabIndex={-1}
+          data-page-main
+          data-shell="rail"
+          className={styles.content}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

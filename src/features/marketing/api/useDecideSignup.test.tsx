@@ -26,6 +26,10 @@ describe("useDecideSignup", () => {
     note: "Excited to help!",
     status: "pending",
     when: "16 Aug",
+    attended: null,
+    hoursContributed: null,
+    completedWhen: "",
+    isAwaitingCompletion: false,
   };
 
   beforeEach(() => {
@@ -47,6 +51,9 @@ describe("useDecideSignup", () => {
       status: "accepted",
       decidedAt: "2026-08-18T00:00:00.000Z",
       createdAt: "2026-08-16T00:00:00.000Z",
+      attended: null,
+      hoursContributed: null,
+      completedAt: null,
     });
 
     const { result } = renderHook(() => useDecideSignup(slug), { wrapper });

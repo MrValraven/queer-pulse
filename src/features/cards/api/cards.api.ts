@@ -47,8 +47,37 @@ export interface CardProgramDTO {
   /** Which legibility treatment a flag or photo ground carries. Ignored by
    *  the five flat skins, which carry their own curated contrast. */
   textBackdrop: CardTextBackdrop;
+  /**
+   * Whether a holder may put their own card back in date near expiry, instead
+   * of waiting for an owner to run the roster bulk issue. This decides what to
+   * SHOW: the server re-checks it, plus live roster membership and the card's
+   * own status, on every renewal.
+   */
+  allowsSelfRenew: boolean;
   serialPrefix: string;
 }
+
+/** What a member-initiated renewal did to one card. Deliberately thin: the
+ *  page refetches its wallet after a success, so only the two values that
+ *  moved come back. */
+export interface RenewedCardDTO {
+  id: string;
+  status: EffectiveCardStatus;
+  expiresAt: string | null;
+}
+
+/**
+ * Why the server refused a renewal, as carried on the error body's
+ * `reasonCode`. Each one is a different sentence to the member, so the page
+ * branches on it rather than showing one generic failure.
+ */
+export type RenewCardReasonCode =
+  | "self_renew_not_allowed"
+  | "card_withdrawn"
+  | "not_a_member"
+  | "programme_paused"
+  | "no_expiry"
+  | "not_due";
 
 export interface MyCardDTO {
   id: string;
@@ -121,6 +150,37 @@ export interface IssuerCardDTO {
    * issuer reading a member's card sees the same code that member shows.
    */
   token: string | null;
+  /**
+   * How many times THIS card has been verified inside the 90 day window the
+   * backend keeps. Per-CARD, never per-member: a card checked far more often
+   * than the rest of the roster is how an issuer notices a copy of it is
+   * circulating. There is no history behind it and no way to ask this about a
+   * person.
+   *
+   * A COUNT, AND DELIBERATELY NOT A TIMESTAMP. This row already carries the
+   * holder's name, photo and pronouns; "and they last showed it at 19:42 on
+   * Tuesday" would turn a fraud signal into an attendance log for a named
+   * member. The server no longer sends one. The programme aggregate below
+   * keeps its `lastVerifiedAt`, where it belongs to no one person.
+   */
+  verificationCount: number;
+}
+
+/**
+ * How often a community's cards have actually been checked. Aggregate only:
+ * two counts and one timestamp. Nothing here says who showed a card or where,
+ * and no endpoint exists that could answer that.
+ */
+export interface CardVerificationCountsDTO {
+  /** Every verification still inside the backend's retention window. */
+  total: number;
+  /** Verifications inside the recent window below. */
+  recent: number;
+  /** How many days `recent` covers, sent by the server so the copy states the
+   *  real window instead of hard-coding one. */
+  recentDays: number;
+  /** The most recent verification of any card in this programme, or null. */
+  lastVerifiedAt: string | null;
 }
 
 export interface CardVerificationDTO {
@@ -171,6 +231,9 @@ export interface UpsertCardProgramBody {
   /** Which legibility treatment the ground carries. Same
    *  absent-leaves-it-alone contract as the switches above. */
   textBackdrop?: CardTextBackdrop;
+  /** Whether holders may renew their own card near expiry. Same
+   *  absent-leaves-it-alone contract as the switches above. */
+  allowsSelfRenew?: boolean;
 }
 
 export const getMyCards = () => apiGet<MyCardDTO[]>("/me/cards");
@@ -190,6 +253,17 @@ export const updateMyCard = (
 
 export const deleteMyCard = (cardId: string) =>
   apiDelete<{ ok: true }>(`/me/cards/${cardId}`);
+
+/**
+ * Puts one of the member's own cards back in date, in its last 30 days.
+ *
+ * Refused, with a `reasonCode` on the error body, when the programme does not
+ * allow self renewal, the member has left the roster, the card was suspended
+ * or revoked by its issuer, the programme is paused, or the term still has
+ * more than 30 days to run.
+ */
+export const renewMyCard = (cardId: string) =>
+  apiPost<RenewedCardDTO>(`/me/cards/${cardId}/renew`, {});
 
 export const getCardProgram = (slug: string) =>
   apiGetNullable<CardProgramDTO>(`/communities/${slug}/card`);
@@ -219,6 +293,11 @@ export const issueAllCards = (slug: string) =>
 
 export const getCardHolders = (slug: string) =>
   apiGet<IssuerCardDTO[]>(`/communities/${slug}/card/holders`);
+
+/** Owner and mod only, enforced server-side. An aggregate and only ever an
+ *  aggregate: there is no per-member verification history to fetch. */
+export const getCardVerificationCounts = (slug: string) =>
+  apiGet<CardVerificationCountsDTO>(`/communities/${slug}/card/verifications`);
 
 export const setCardHolderStatus = (
   slug: string,

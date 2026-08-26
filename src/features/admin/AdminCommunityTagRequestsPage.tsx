@@ -46,9 +46,14 @@ function TagRequestRow({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const requesterName = request.requestedBy
-    ? `${request.requestedBy.firstName} ${request.requestedBy.lastName}`.trim()
-    : t("admin:adminCommunityTagRequests.unknownRequester");
+  // Withheld from a `communities` grant holder reads differently from an
+  // erased account; see the DTO.
+  const isRequesterWithheld = !("requestedBy" in request);
+  const requesterName = isRequesterWithheld
+    ? t("admin:adminCommunityTagRequests.withheldRequester")
+    : request.requestedBy
+      ? `${request.requestedBy.firstName} ${request.requestedBy.lastName}`.trim()
+      : t("admin:adminCommunityTagRequests.unknownRequester");
 
   return (
     <div className={styles.row}>

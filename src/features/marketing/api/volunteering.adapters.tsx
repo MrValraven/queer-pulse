@@ -367,6 +367,15 @@ export interface SignupRow {
   note: string | null;
   status: SignupStatus;
   when: string;
+  /** Null until the poster confirms the session. `false` is a recorded
+   *  no-show, which is confirmed, so the control does not come back. */
+  attended: boolean | null;
+  hoursContributed: number | null;
+  /** Formatted like `when`, empty when the session is not confirmed yet. */
+  completedWhen: string;
+  /** The one condition the completion control appears on: accepted, and
+   *  nobody has recorded the session yet. */
+  isAwaitingCompletion: boolean;
 }
 
 /** A signup DTO → a render-ready row for the poster's roster / manage-applicants views. */
@@ -375,6 +384,12 @@ export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
   const tint = TEAM_TINTS[i % TEAM_TINTS.length]!;
   const when = dto.createdAt
     ? formatDate(new Date(dto.createdAt), undefined, {
+        day: "numeric",
+        month: "short",
+      })
+    : "";
+  const completedWhen = dto.completedAt
+    ? formatDate(new Date(dto.completedAt), undefined, {
         day: "numeric",
         month: "short",
       })
@@ -389,5 +404,9 @@ export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
     note: dto.note,
     status: dto.status,
     when,
+    attended: dto.attended,
+    hoursContributed: dto.hoursContributed,
+    completedWhen,
+    isAwaitingCompletion: dto.status === "accepted" && dto.completedAt === null,
   };
 }

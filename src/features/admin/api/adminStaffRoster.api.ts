@@ -1,7 +1,19 @@
 import { apiGet } from "../../../shared/api/client";
 import type { PlatformStaffRowDTO } from "../../../shared/staff/staff.api";
+import type { StaffRoleId } from "../staffRoles.registry";
+import { STAFF_ROLE_IDS } from "../staffRoles.registry";
 
 export type { PlatformStaffRowDTO };
+
+/** One member holding at least one additive staff grant. */
+export interface AdminStaffRoleHolderDTO {
+  id: string;
+  slug: string;
+  firstName: string;
+  lastName: string;
+  platformRole: "member" | "moderator" | "admin";
+  staffRoles: StaffRoleId[];
+}
 
 /**
  * The full staff roster for the admin console's staff page — the same
@@ -12,4 +24,29 @@ export type { PlatformStaffRowDTO };
 export async function getAdminStaffRoster(): Promise<PlatformStaffRowDTO[]> {
   const rows = await apiGet<PlatformStaffRowDTO[]>("/platform/staff");
   return Array.isArray(rows) ? rows : [];
+}
+
+/**
+ * `GET /admin/members/staff-roles`: everyone holding an additive staff grant,
+ * with what they hold. Deliberately a different endpoint from the roster
+ * above: `/platform/staff` is readable by every active member (it badges
+ * moderators and admins across the app), while who holds which functional
+ * grant is operational information and stays behind the admin-only members
+ * controller. Unknown role ids (a backend that shipped a grant this build does
+ * not know yet) are dropped rather than rendered as raw keys.
+ */
+export async function getAdminStaffRoleHolders(): Promise<
+  AdminStaffRoleHolderDTO[]
+> {
+  const rows = await apiGet<AdminStaffRoleHolderDTO[]>(
+    "/admin/members/staff-roles",
+  );
+  if (!Array.isArray(rows)) return [];
+  return rows.map((row) => ({
+    ...row,
+    staffRoles: (row.staffRoles ?? []).filter(
+      (staffRole): staffRole is StaffRoleId =>
+        STAFF_ROLE_IDS.includes(staffRole),
+    ),
+  }));
 }

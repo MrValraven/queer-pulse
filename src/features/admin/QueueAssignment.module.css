@@ -1,0 +1,63 @@
+/* OPS-04 — the claim/release strip shared by every staff queue that is not
+   moderation. Deliberately small: the visual language is the moderation
+   queue's (an `AdminChip` for the overdue clock, a quiet pill button for the
+   claim), so this file carries only the layout those need in a row. Tokens
+   follow `ui/adminUi.module.css` exactly rather than inventing new ones. */
+
+.assignment {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--ink-60);
+}
+
+.assignedTo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.cta {
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  background: var(--paper);
+  color: var(--ink-60);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.cta:hover:not(:disabled) {
+  border-color: rgba(var(--line-rgb), 0.3);
+  color: var(--text-strong);
+}
+
+.cta:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* The "Everything / Assigned to me / Unclaimed" row that sits above a queue.
+   Its own class rather than one added to a queue's page module, so the
+   control looks the same wherever it is mounted. */
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+
+.filterLabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-60);
+}

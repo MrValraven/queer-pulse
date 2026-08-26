@@ -113,6 +113,14 @@ export const auth: Catalog = {
   "invite.deliveryMethod.email": "Email",
   "invite.deliveryMethod.link": "Share a link",
 
+  "invite.compose.recipientEmail.label": "Who is this for",
+  "invite.compose.recipientEmail.placeholder": "them@example.com",
+  "invite.compose.recipientEmail.help":
+    "Whoever redeems this invite joins with you on record as their voucher, and connected to you from day one. Fill in an address and only the person signing in with that Google account can redeem it, so a forwarded or screenshotted link gets nobody else in; leave it blank and anyone holding the link can use it.",
+  "invite.compose.recipientEmail.noSend":
+    "Filling this in sends nothing to that address. You still pass the link on yourself.",
+  "invite.compose.recipientEmail.invalid":
+    "That doesn't look like an email address. Check it, or leave the field empty.",
   "invite.compose.vouch.label": "Your vouch",
   "invite.compose.vouch.placeholder":
     "Why should they join? A sentence or two goes a long way.",
@@ -162,6 +170,10 @@ export const auth: Catalog = {
 
   "invite.ready.headline": "Your invite is <em>ready</em>",
   "invite.ready.sub": "Share it however feels natural. It's good for one use.",
+  "invite.ready.pinnedTo":
+    "Set aside for {email}. Only a Google account with that address can redeem it.",
+  "invite.ready.pinnedSend":
+    "Nothing was sent to them. Pass the link on yourself, however feels natural.",
   "invite.ready.linkCopied": "Link copied",
   "invite.ready.copyFailed": "Couldn't copy. Try selecting the link instead",
   "invite.ready.copyLinkAriaLabel": "Copy invite link",
@@ -190,6 +202,13 @@ export const auth: Catalog = {
   "invite.sentList.detail.sentExpires": "Sent {sent} · expires {expires}",
   "invite.sentList.detail.sentExpired": "Sent {sent} · expired {expires}",
   "invite.sentList.detail.sent": "Sent {sent}",
+  "invite.sentList.anyoneWithLink": "Anyone with the link",
+  "invite.sentList.pinnedNote": "Only this address can redeem it",
+  "invite.sentList.copyLinkCta": "Copy link",
+  "invite.sentList.copyLinkAriaLabel": "Copy link for the invite to {invite}",
+  "invite.sentList.linkCopied": "Invite link copied",
+  "invite.sentList.copyFailed":
+    "Couldn't copy the link. Try selecting it instead.",
   "invite.sentList.revokeCta": "Revoke",
   "invite.sentList.revoking": "Revoking…",
   "invite.sentList.revokedToast": "Invite revoked. The link no longer works.",
@@ -286,6 +305,7 @@ export const auth: Catalog = {
   "requestInvite.sub":
     "QueerPulse grows through trust. The surest way in is a member who'll vouch for you, so if you know someone here, ask them. If you don't, tell us a little about you and we'll take it from there.",
   "requestInvite.alreadyMember": "Already a member? Sign in",
+  "requestInvite.checkStatusLink": "Already asked? Check on your request",
   "requestInvite.field.name.label": "Your name",
   "requestInvite.field.name.placeholder": "Alex",
   "requestInvite.field.name.error": "Tell us what to call you.",
@@ -328,9 +348,9 @@ export const auth: Catalog = {
   "requestInvite.under18BackLabel": "Back to the form",
   "requestInvite.sent.title": "You're on the <em>list.</em>",
   "requestInvite.sent.sub_withName":
-    "Thanks, {name}. Your request to join QueerPulse is in, and here's what happens from here.",
+    "Thanks, {name}. Your request to join QueerPulse is in. Keep the code below somewhere safe, it's how you check back on it.",
   "requestInvite.sent.sub_noName":
-    "Thanks. Your request to join QueerPulse is in, and here's what happens from here.",
+    "Thanks. Your request to join QueerPulse is in. Keep the code below somewhere safe, it's how you check back on it.",
   "requestInvite.sent.backHome": "Back to home",
   // The 409 case: an open request already exists for this email. Nothing went
   // wrong, so this reads as a confirmation, never as a failure.
@@ -341,18 +361,38 @@ export const auth: Catalog = {
     "You've asked us before. Your request is still with us and still being read, so there's no need to send another.",
   "requestInvite.whatNext.readsIt.title": "A real person reads it",
   "requestInvite.whatNext.readsIt.body":
-    "A member of the community looks at every request, by hand.",
+    "A member of the community looks at every request, by hand. That's why it can take a few days.",
   "requestInvite.whatNext.connection.title": "We look for a connection",
   "requestInvite.whatNext.connection.body":
     "If someone already here can vouch for you, that's the surest way in. Sharing their email helps us match them.",
-  // Honest about the real mechanism: there is no mail service, so an approval
-  // is a person sending a link by hand, and a decline sends nothing at all.
-  // Promising "you hear back either way" would be a quiet lie to someone who
-  // then waits for a reply that can never arrive.
-  "requestInvite.whatNext.hearBack.title":
-    "If it's a yes, someone gets in touch",
-  "requestInvite.whatNext.hearBack.body":
-    "A member sends your invite link to the address you gave us, usually within a couple of weeks. We can't reply to every request, so if it stays quiet, asking someone you already know here is the surest way in.",
+  // Replaces the old `hearBack` step, which promised a message no mail service
+  // exists to send and then told anyone without an inside contact that silence
+  // meant giving up. The mechanism is real now: they hold a code, and the
+  // answer waits for them on their own status page.
+  "requestInvite.whatNext.checkBack.title": "You check back with your code",
+  "requestInvite.whatNext.checkBack.body":
+    "Nothing gets emailed, so your reference code is how you find out. Open your status page whenever you like, and if it's a yes, your invite link is waiting there.",
+
+  // ── The reference code, handed over on the confirmation screen ──
+  // The backend keeps only a hash of this token and nothing ever re-sends it,
+  // so this block is the whole delivery mechanism. Calm, and plain about why
+  // it matters: frightening someone who has just asked to be let in would be
+  // both unkind and counterproductive.
+  "requestInvite.reference.title": "Your reference code",
+  "requestInvite.reference.fieldLabel": "Reference code",
+  "requestInvite.reference.copy": "Copy",
+  "requestInvite.reference.copied": "Copied",
+  "requestInvite.reference.copiedToast": "Reference code copied.",
+  "requestInvite.reference.copyErrorToast":
+    "We couldn't copy it. Select the code and copy it by hand.",
+  "requestInvite.reference.body":
+    "This code is how you check back on your request. Save it somewhere you'll find it again: nothing gets emailed, and we can't issue the code a second time.",
+  "requestInvite.reference.checkCta": "Check on my request",
+  // The 409 branch: an open request already exists, so no new row and no new
+  // token. Never show an empty code slot; point at the code they already have.
+  "requestInvite.reference.noCode":
+    "Your first request already has a code, from the day you sent it. There's no new one here, because there's no new request.",
+  "requestInvite.reference.enterCodeCta": "Check on my request with that code",
 
   // Pre-emptive states, rendered from GET /platform-status BEFORE submit so
   // nobody fills in the whole form only to be rejected on submit.
@@ -361,6 +401,127 @@ export const auth: Catalog = {
     "We’re not taking new invite requests at the moment. Please check back soon.",
   "requestInvite.closedError":
     "Invite requests were paused while you were filling this in. Please try again later.",
+
+  // ── Join-request status (/auth/request-invite/status) ──
+  // The applicant's own view of their request. Public: whoever needs this page
+  // has no account by definition. Six states, one calm frame. Never write copy
+  // implying a waiting list exists — the backend deliberately reports a
+  // waitlisted request as "under review", because being told you are on a list
+  // is a decision we have not actually made.
+  "joinRequestStatus.eyebrow": "Your request",
+  "joinRequestStatus.backHome": "Back to home",
+  "joinRequestStatus.contactCta": "Get in touch",
+  "joinRequestStatus.loading": "Looking up your request…",
+
+  // The recovery path: they saved the code and lost the link.
+  "joinRequestStatus.form.title": "Check on your <em>request.</em>",
+  "joinRequestStatus.form.lead":
+    "Enter the reference code you were given when you sent your request, and we'll tell you where it stands.",
+  "joinRequestStatus.form.label": "Reference code",
+  "joinRequestStatus.form.placeholder": "Paste your code here",
+  "joinRequestStatus.form.helper":
+    "It's the long code from the screen you saw right after sending your request.",
+  "joinRequestStatus.form.error": "Enter the reference code you were given.",
+  "joinRequestStatus.form.submit": "Check my request",
+
+  // Still with a reviewer. No promised date, because we do not have one.
+  "joinRequestStatus.underReview.eyebrow": "Still with us",
+  "joinRequestStatus.underReview.title": "Your request is <em>being read.</em>",
+  "joinRequestStatus.underReview.lead":
+    "You sent it {ago}, on {date}. A member of the community reads every request by hand, and that can take a few days.",
+  "joinRequestStatus.underReview.leadNoDate":
+    "Your request is with a member of the community. They read every request by hand, and that can take a few days.",
+  "joinRequestStatus.underReview.leadDateOnly":
+    "You sent it on {date}. A member of the community reads every request by hand, and that can take a few days.",
+  "joinRequestStatus.underReview.note":
+    "There's nothing for you to do while you wait. Come back to this page whenever you like, your code keeps working.",
+  "joinRequestStatus.underReview.foot":
+    "Something changed, or you'd like to add to your request? <a>Get in touch</a>",
+
+  // Approved, invite still live. The actual win.
+  "joinRequestStatus.approved.eyebrow": "You're in",
+  "joinRequestStatus.approved.title": "You're <em>welcome here.</em>",
+  "joinRequestStatus.approved.lead":
+    "Your request was approved on {date}. Your invite is below. Open it to make your account.",
+  "joinRequestStatus.approved.leadNoDate":
+    "Your request was approved. Your invite is below. Open it to make your account.",
+  "joinRequestStatus.approved.linkLabel": "Your invite link",
+  "joinRequestStatus.approved.copy": "Copy",
+  "joinRequestStatus.approved.copied": "Copied",
+  "joinRequestStatus.approved.copiedToast": "Invite link copied.",
+  "joinRequestStatus.approved.copyErrorToast":
+    "We couldn't copy it. Select the link and copy it by hand.",
+  "joinRequestStatus.approved.cta": "Open my invite",
+  "joinRequestStatus.approved.note":
+    "This invite brings one person in, and that person is you. Keep the link to yourself.",
+  "joinRequestStatus.approved.foot": "Trouble opening it? <a>Get in touch</a>",
+
+  // Approved, but the invite behind it has since been used, revoked or expired.
+  // A real state with its own recovery path, never folded into the live one.
+  "joinRequestStatus.approvedSpent.eyebrow": "Approved",
+  "joinRequestStatus.approvedSpent.title": "Your invite <em>has run out.</em>",
+  "joinRequestStatus.approvedSpent.lead":
+    "You were approved on {date}, but the invite behind this code has since been used or has expired. Tell us and we'll issue a fresh one.",
+  "joinRequestStatus.approvedSpent.leadNoDate":
+    "You were approved, but the invite behind this code has since been used or has expired. Tell us and we'll issue a fresh one.",
+  "joinRequestStatus.approvedSpent.cta": "Ask for a new invite",
+  "joinRequestStatus.approvedSpent.signInCta": "I already made my account",
+  "joinRequestStatus.approvedSpent.foot":
+    "The yes still stands. Only the link expired.",
+
+  // Declined. The state that needs the most care: say what happened, keep the
+  // limitation on our side of the table wherever that is honest, and always
+  // leave a person to talk to.
+  "joinRequestStatus.declined.eyebrow": "We've read it",
+  "joinRequestStatus.declined.title": "Not this <em>time.</em>",
+  "joinRequestStatus.declined.lead":
+    "A member read your request on {date}, and we couldn't bring you in this time.",
+  "joinRequestStatus.declined.leadNoDate":
+    "A member read your request, and we couldn't bring you in this time.",
+  // `underage` gets its own heading and lead, and renders the platform's
+  // existing supportive 18+ notice in place of a reason: a young person must
+  // meet an open door with a date on it, never a verdict on who they are.
+  "joinRequestStatus.declined.titleUnderage":
+    "We'll be here <em>when you're 18.</em>",
+  "joinRequestStatus.declined.leadUnderage":
+    "A member read your request on {date}. QueerPulse is 18+ for now, so we can't bring you in yet.",
+  "joinRequestStatus.declined.leadUnderageNoDate":
+    "A member read your request. QueerPulse is 18+ for now, so we can't bring you in yet.",
+  "joinRequestStatus.declined.reasonTitle": "What we can tell you",
+  "joinRequestStatus.declined.contactCta": "Get in touch",
+
+  // Applicant-facing wording for the same closed reason keys the mod queue
+  // picks from (`joinRequestDeclineReason.ts`). The admin labels are a
+  // reviewer's shorthand and would land as an accusation here, so these say
+  // what happened, whose limitation it was, and what to do next.
+  "joinRequestStatus.declineReason.spam_pattern":
+    "Your request arrived in a shape our reviewers mostly see from automated senders, so it didn't get the read it deserved. If you wrote it yourself, get in touch and we'll look at it again.",
+  "joinRequestStatus.declineReason.underage":
+    "QueerPulse is 18+ for now. That's about the law and about keeping adult spaces adult, and it says nothing about you.",
+  "joinRequestStatus.declineReason.implausible":
+    "The reviewer couldn't place enough of what you wrote to feel sure, and a short form gives them very little to go on. If someone already here knows you, ask them to vouch for you, and you're welcome to write to us in the meantime.",
+  "joinRequestStatus.declineReason.safety_concern":
+    "Something in the request raised a safety question for the people already here, so we held back. If you'd like to talk it through, write to us and a person will read it.",
+  "joinRequestStatus.declineReason.other":
+    "The reviewer didn't leave a reason we can show you here. If you'd like to understand it, write to us and a person will reply.",
+
+  // One answer for both the 400 (malformed code) and the 404 (no such
+  // request), so probing codes reveals nothing about which ones exist.
+  "joinRequestStatus.notFound.eyebrow": "No match",
+  "joinRequestStatus.notFound.title": "We couldn't <em>find that.</em>",
+  "joinRequestStatus.notFound.lead":
+    "We couldn't find a request for that code. Check it for a missing character or a stray space and try again. If it still doesn't work, get in touch and a person will help.",
+  "joinRequestStatus.notFound.retryCta": "Try another code",
+
+  // The server did not answer. Distinct from "no match": nothing is known
+  // either way, and retrying is worth doing.
+  "joinRequestStatus.unavailable.eyebrow": "No answer",
+  "joinRequestStatus.unavailable.title":
+    "We couldn't <em>reach QueerPulse.</em>",
+  "joinRequestStatus.unavailable.lead":
+    "The server didn't answer, so we can't tell you anything right now. Your request is untouched. Give it a moment and try again.",
+  "joinRequestStatus.unavailable.retryCta": "Try again",
+  "joinRequestStatus.unavailable.foot": "Still nothing? <a>Get in touch</a>",
 
   // ── Onboarding (the 7-step post-signup flow at /onboarding) ──
   "onboarding.stepLabel": "Step {current} of {total}",

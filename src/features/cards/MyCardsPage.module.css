@@ -84,3 +84,17 @@
   color: var(--plum);
   opacity: 0.85;
 }
+
+/* The in-date and never-expires lines. Quieter than `.statusNotice`, which is
+   reserved for a card that cannot prove anything today: a card that works is
+   reporting a fact, not raising a problem, and giving both the same weight is
+   how a real warning stops being noticed. */
+.expiryNotice {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  font-size: 0.82rem;
+  color: var(--plum);
+  opacity: 0.6;
+  margin: 0;
+}

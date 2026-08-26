@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -24,10 +26,19 @@ type PaneId = "nominations" | "flags" | "listings";
  *    on its own, kept for the correction a nomination has nothing to hang on.
  *
  * The queue lands first because it is the pane with a clock running on it.
+ *
+ * FLAGS is the one pane a `directory_moderator` grant does not open: it is the
+ * only place a flagger's identity and free text are served, so the backend
+ * keeps it at the moderator tier. The tab is hidden rather than shown broken
+ * for a grant holder, and the pane falls back to the queue if it was selected.
  */
 export function AdminSafeSpacesPage() {
   const { t } = useTranslation();
+  const { role } = useAuth();
+  const { demoMode } = useDemoMode();
   const [pane, setPane] = useState<PaneId>("nominations");
+  const canReadFlags = demoMode || role === "admin" || role === "moderator";
+  const activePane = pane === "flags" && !canReadFlags ? "nominations" : pane;
 
   return (
     <AdminShell
@@ -56,22 +67,24 @@ export function AdminSafeSpacesPage() {
 
       <FadeIn delay={50}>
         <AdminTabs
-          active={pane}
+          active={activePane}
           onChange={(id) => setPane(id as PaneId)}
           tabs={[
             {
               id: "nominations",
               label: t("safety:governance.tab.nominations"),
             },
-            { id: "flags", label: t("safety:governance.tab.flags") },
+            ...(canReadFlags
+              ? [{ id: "flags", label: t("safety:governance.tab.flags") }]
+              : []),
             { id: "listings", label: t("safety:governance.tab.listings") },
           ]}
         />
       </FadeIn>
 
-      {pane === "nominations" && <AdminSafeSpaceNominationsPanel />}
-      {pane === "flags" && <AdminSafeSpaceFlagsPanel />}
-      {pane === "listings" && <AdminSafeSpaceListingsPanel />}
+      {activePane === "nominations" && <AdminSafeSpaceNominationsPanel />}
+      {activePane === "flags" && <AdminSafeSpaceFlagsPanel />}
+      {activePane === "listings" && <AdminSafeSpaceListingsPanel />}
     </AdminShell>
   );
 }

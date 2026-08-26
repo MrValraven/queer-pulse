@@ -91,6 +91,7 @@ function badgeFromDto(b: BadgeDTO): Badge {
     progress: b.progress,
     verifiedBy: b.verifiedBy,
     seasonal: b.seasonal,
+    hiddenFromProfile: b.hiddenFromProfile ?? false,
   };
 }
 
@@ -122,12 +123,13 @@ export function recognitionToModel(dto: RecognitionDTO): Recognition {
       availableCount: dto.perks.availableCount,
       groups: dto.perks.groups.map((g) => ({
         label: g.label,
-        perks: g.perks.map((p) => ({
-          category: p.cat,
-          title: p.title,
-          description: p.desc,
-          state: p.state,
-          footer: p.footer,
+        perks: g.perks.map((perk) => ({
+          key: perk.key,
+          category: perk.cat,
+          title: perk.title,
+          description: perk.desc,
+          state: perk.state,
+          footer: perk.footer,
         })),
       })),
       ladder: dto.perks.ladder.map((r) => ({

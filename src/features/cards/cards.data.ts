@@ -1,5 +1,10 @@
 import { currentUser } from "../members/data/members";
-import type { CardProgramDTO, IssuerCardDTO, MyCardDTO } from "./api/cards.api";
+import type {
+  CardProgramDTO,
+  CardVerificationCountsDTO,
+  IssuerCardDTO,
+  MyCardDTO,
+} from "./api/cards.api";
 
 export const DEMO_CARD_PROGRAM: CardProgramDTO = {
   isEnabled: true,
@@ -25,6 +30,9 @@ export const DEMO_CARD_PROGRAM: CardProgramDTO = {
   // The default treatment. The demo programme runs on a flat skin, where no
   // treatment applies at all, so this is only here to keep the shape whole.
   textBackdrop: "shade",
+  // On, so the demo reaches the Renew control on the expired second card
+  // below. Live programmes default it off: a community opts in.
+  allowsSelfRenew: true,
   serialPrefix: "LQC",
 };
 
@@ -93,6 +101,9 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     avatarUrl: currentUser.photo ?? null,
     role: "member",
     token: "demo-card-token",
+    // Checked at a door a few times. High enough that the roster has
+    // something to show, low enough that it reads as ordinary use.
+    verificationCount: 6,
     // Already gated, matching the live contract: this programme allows
     // photos and this holder has not vetoed theirs, so the card prints one.
     cardPhotoUrl: currentUser.photo ?? null,
@@ -111,9 +122,30 @@ export const DEMO_CARD_HOLDERS: IssuerCardDTO[] = [
     avatarUrl: null,
     role: "mod",
     token: "demo-card-token",
+    // Never checked. The roster's empty per-card state is reachable in demo
+    // without editing a fixture.
+    verificationCount: 0,
     // Null on purpose: the second demo holder's card carries no photo, so
     // the issuer's view of it shows the empty slot a real card would.
     cardPhotoUrl: null,
     cardPronouns: "she/her",
   },
 ];
+
+/**
+ * The demo programme's aggregate. Two counts and a timestamp, the same shape
+ * the live endpoint returns, so the panel renders the real component in demo
+ * rather than a stand-in.
+ *
+ * THE NUMBERS AGREE WITH THE ROSTER ON THE SAME SCREEN. The programme holds
+ * two cards, checked 6 times and 0 times, so the programme total is 6 and the
+ * recent window is a subset of it. It used to read 148 and 23 beside a roster
+ * that added up to 6, which is the kind of demo number a reader stops
+ * trusting the moment they add the column up.
+ */
+export const DEMO_CARD_VERIFICATION_COUNTS: CardVerificationCountsDTO = {
+  total: 6,
+  recent: 3,
+  recentDays: 30,
+  lastVerifiedAt: "2026-08-21T20:15:00Z",
+};

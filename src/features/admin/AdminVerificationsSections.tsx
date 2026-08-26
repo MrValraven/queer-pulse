@@ -165,6 +165,10 @@ export function ReviewQueueResults({
   hasNextPage,
   isFetchingNextPage,
   onLoadMore,
+  currentUserId,
+  isAssignmentBusy,
+  onClaim,
+  onRelease,
 }: {
   rows: AdminVerificationRequestDTO[];
   isLoading: boolean;
@@ -180,6 +184,13 @@ export function ReviewQueueResults({
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   onLoadMore: () => void;
+  /** OPS-04. The signed-in reviewer, so a row can tell "you have this" from
+   *  "a colleague has this". Null while the session is still loading. */
+  currentUserId: string | null;
+  /** True while any claim/release in this queue is in flight. */
+  isAssignmentBusy: boolean;
+  onClaim: (requestId: string) => void;
+  onRelease: (requestId: string) => void;
 }) {
   const { t } = useTranslation();
 
@@ -205,6 +216,10 @@ export function ReviewQueueResults({
         onToggleAll={onToggleAll}
         atSelectionCap={atSelectionCap}
         focusedRequestId={focusedRequestId}
+        currentUserId={currentUserId}
+        isAssignmentBusy={isAssignmentBusy}
+        onClaim={onClaim}
+        onRelease={onRelease}
       />
       {selectedIds.size > 0 && (
         <VerificationBulkActionBar

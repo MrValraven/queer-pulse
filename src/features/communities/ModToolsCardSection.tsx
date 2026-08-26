@@ -12,6 +12,7 @@ import { MembershipCardFace } from "../cards/MembershipCardFace";
 import { CardDesignerModal } from "../cards/CardDesignerModal";
 import { CardHoldersPanel } from "../cards/CardHoldersPanel";
 import { CardIssueAction } from "../cards/CardIssueAction";
+import { CardVerificationSummary } from "../cards/CardVerificationSummary";
 import { previewCard } from "../cards/cardDesigner.data";
 import type { CommunityRole } from "./membership.types";
 import detail from "./CommunityDetailPage.module.css";
@@ -152,6 +153,11 @@ export function ModToolsCardSection({
               {t("cards:modTools.pausedNotice")}
             </p>
           )}
+          {/* How often the cards this programme issued have actually been
+              checked. Sits above the roster because it is a fact about the
+              programme, and it is an aggregate: there is no per-member
+              verification history anywhere in the product. */}
+          <CardVerificationSummary slug={slug} />
           <div className={styles.holders}>
             {/* The programme is handed down rather than re-fetched: the panel
                 draws each holder's real card from it, and both surfaces must

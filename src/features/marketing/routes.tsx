@@ -6,6 +6,12 @@ import { lazyNamed } from "../../app/routeHelpers";
 const PrivacyPage = lazyNamed(() => import("./PrivacyPage"), "PrivacyPage");
 const TermsPage = lazyNamed(() => import("./TermsPage"), "TermsPage");
 const DsarPage = lazyNamed(() => import("./DsarPage"), "DsarPage");
+// ID-15: the responsible-disclosure policy, moved off `/account/security` so
+// that path can be the member's own security hub.
+const SecurityPolicyPage = lazyNamed(
+  () => import("./SecurityPolicyPage"),
+  "SecurityPolicyPage",
+);
 const ConstitutionPage = lazyNamed(
   () => import("./ConstitutionPage"),
   "ConstitutionPage",
@@ -108,6 +114,7 @@ export function marketingRoutes() {
       <Route path={routes.terms} element={<TermsPage />} />
       <Route path={routes.dsar} element={<DsarPage />} />
       <Route path={routes.cookies} element={<CookiesPage />} />
+      <Route path={routes.policiesSecurity} element={<SecurityPolicyPage />} />
       <Route path={routes.imprint} element={<ImprintPage />} />
       <Route path={routes.constitution} element={<ConstitutionPage />} />
       <Route path={routes.codeOfConduct} element={<CodeOfConductPage />} />

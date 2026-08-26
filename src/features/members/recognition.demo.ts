@@ -27,6 +27,16 @@ const demoXpBreakdown: XpBreakdownItem[] = [
   { key: "tenure", units: 60, cap: 365, perUnit: 1, xp: 60 },
   { key: "verified", units: 1, cap: 1, perUnit: 50, xp: 50 },
   { key: "gettingStarted", units: 6, cap: 6, perUnit: 25, xp: 150 },
+  // The contribution side (SUS-05). Same per-unit values and caps as the
+  // backend's XP_RULES, so demo mode shows the ratio the real engine pays:
+  // one published piece (150) outweighs six community posts. `resources` is
+  // left at zero on purpose, so the "earned or still open" list keeps an
+  // untouched source in it.
+  { key: "volunteering", units: 2, cap: 12, perUnit: 120, xp: 240 },
+  { key: "hosting", units: 1, cap: 8, perUnit: 100, xp: 100 },
+  { key: "magazine", units: 1, cap: 6, perUnit: 150, xp: 150 },
+  { key: "answers", units: 3, cap: 12, perUnit: 25, xp: 75 },
+  { key: "resources", units: 0, cap: 5, perUnit: 60, xp: 0 },
   {
     key: "badges",
     units: earnedBadges.length,

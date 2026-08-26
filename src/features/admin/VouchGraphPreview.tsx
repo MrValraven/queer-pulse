@@ -1,7 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import type { AvatarTone } from "./ui";
-import { portrait } from "./adminPeople.data";
 import type {
   GraphNode,
   MemberDetail,
@@ -155,7 +154,10 @@ export function VouchGraphPreview({
         y={CY}
         r={CENTER_R}
         focus
-        src={graph.center.avatarUrl ?? portrait(name)}
+        // The node's own photo or nothing, exactly like the peripheral
+        // nodes above. Demo loses nothing: its fixture people already carry
+        // an `avatarUrl` from the registry.
+        src={graph.center.avatarUrl ?? undefined}
       />
     </svg>
   );

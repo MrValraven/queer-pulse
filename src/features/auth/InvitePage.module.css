@@ -131,6 +131,24 @@
   color: var(--ink-40);
   text-align: right;
 }
+
+/* Persistent explainer under the optional "who is this for?" address. It has to
+   be readable without interaction, so it is body copy, not a tooltip. */
+.fieldHelp {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+/* The "we deliver nothing to that address" fact, set apart from the explainer
+   above it because it is the one thing a member must not misread. */
+.fieldHelpStrong {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  font-weight: 600;
+  color: var(--ink);
+}
 .epLabel {
   font-size: 11px;
   font-weight: 700;
@@ -285,6 +303,19 @@
   line-height: 1.7;
   max-width: 40ch;
   margin: 0 auto 24px;
+}
+/* Only rendered when the member pinned the invite to one address: who it is for,
+   plus the reminder that QueerPulse delivered nothing to them. */
+.readyPinned {
+  font-size: 13.5px;
+  color: rgba(var(--cream-rgb), 0.72);
+  line-height: 1.7;
+  max-width: 44ch;
+  margin: -14px auto 22px;
+}
+.readyPinnedTo {
+  color: rgba(var(--cream-rgb), 0.95);
+  font-weight: 600;
 }
 .readyLinkRow {
   display: flex;

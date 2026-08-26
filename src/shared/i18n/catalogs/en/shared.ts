@@ -81,6 +81,9 @@ export const shared: Catalog = {
   // AccountMenu
   "accountMenu.items.profile": "Profile",
   "accountMenu.items.connections": "Connections",
+  // ACQ-08 — the member-minted invite flow's home in the account menu, with a
+  // live count of unspent invites attached by `useInviteQuotaBadge`.
+  "accountMenu.items.invite": "Invite someone",
   "accountMenu.items.messages": "Messages",
   "accountMenu.items.applications": "Applications",
   "accountMenu.items.work": "Work",
@@ -105,6 +108,18 @@ export const shared: Catalog = {
   "accountMenu.ariaLabel": "Account menu",
   "accountMenu.header.subtitle": "Profile & account",
   "accountSheet.title": "Your account",
+  // ProfileInviteCard — the quiet invite strip at the foot of a member's own
+  // profile (ACQ-08). Lives in `shared:` beside `accountMenu.*` because the two
+  // are one entry-point pair. Never rendered with nothing left to give, so
+  // there is no zero case here.
+  "inviteCard.ariaLabel": "Your invites",
+  "inviteCard.title_one": "{count} invite left this month",
+  "inviteCard.title_other": "{count} invites left this month",
+  "inviteCard.body": "Bring in someone you'd want here.",
+  "inviteCard.resets_one": "The allowance resets tomorrow.",
+  "inviteCard.resets_other": "The allowance resets in {count} days.",
+  "inviteCard.resets_zero": "The allowance resets today.",
+  "inviteCard.cta": "Invite someone",
   "accountSheet.viewProfile": "View profile",
   "accountMenu.staff.magazineEditor": "Magazine editor",
   "accountMenu.staff.magazineWriter": "Writer workspace",
@@ -181,6 +196,7 @@ export const shared: Catalog = {
   "adminNav.items.moderation": "Moderation",
   "adminNav.items.staff": "Staff & roles",
   "adminNav.items.concerns": "Concerns",
+  "adminNav.items.intakes": "Intakes & messages",
   "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.topics": "Topics",
   "adminNav.items.listings": "Listings",
@@ -201,6 +217,7 @@ export const shared: Catalog = {
   "adminNav.items.resourceSuggestions": "Resource suggestions",
   "adminNav.items.communityTagRequests": "Community tag requests",
   "adminNav.items.housingGroups": "Housing groups",
+  "adminNav.items.housingCoops": "Housing co-ops",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
   "adminNav.items.governance": "Governance",
   "adminNav.items.roadmap": "Roadmap",
@@ -240,6 +257,11 @@ export const shared: Catalog = {
 
   // SkipToContentLink
   "skipToContent.label": "Skip to main content",
+
+  // RouteAnnouncer (app/RouteAnnouncer.tsx) — the polite live region that
+  // speaks each route change. Used only when the incoming page names itself
+  // neither through <PageMeta> nor through an <h1>.
+  "routeAnnouncer.pageLoaded": "Page loaded",
 
   // Avatar
   "avatar.verified": "Verified member",
@@ -555,4 +577,5 @@ export const shared: Catalog = {
   // en/shared.ts
   "adminNav.items.housingGroupListings": "Group listings",
   "adminNav.items.landlords": "Landlords",
+  "adminNav.items.volunteerHours": "Volunteer hours",
 };

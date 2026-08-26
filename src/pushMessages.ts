@@ -101,6 +101,11 @@ const en: Record<string, string> = {
   "push:venue.attachment.title": "A gathering at your venue",
   "push:venue.attachment.body":
     '{listingName} has been named as the venue for "{eventTitle}".',
+  // Platform staff offering a struggling community a hand (OPS-05). Reaches
+  // only that community's owner, co-owners and moderators.
+  "push:community.supportOffered.title": "An offer of support",
+  "push:community.supportOffered.body":
+    "Someone from QueerPulse has offered {communityName} a hand. Tap to read it.",
 };
 
 const pt: Record<string, string> = {
@@ -181,6 +186,9 @@ const pt: Record<string, string> = {
   "push:venue.attachment.title": "Um convívio no teu espaço",
   "push:venue.attachment.body":
     '{listingName} foi indicado como o espaço de "{eventTitle}".',
+  "push:community.supportOffered.title": "Uma oferta de apoio",
+  "push:community.supportOffered.body":
+    "Alguém da QueerPulse ofereceu ajuda a {communityName}. Toca para leres.",
 };
 
 const CATALOG: Record<PushLang, Record<string, string>> = { en, pt };

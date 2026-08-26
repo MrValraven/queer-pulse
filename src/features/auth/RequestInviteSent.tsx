@@ -5,6 +5,7 @@ import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { RequestInviteOutcome } from "./RequestInviteForm";
+import { RequestInviteReference } from "./RequestInviteReference";
 import { WHAT_NEXT } from "./requestInvite.data";
 import styles from "./auth.module.css";
 
@@ -12,14 +13,22 @@ import styles from "./auth.module.css";
  * The confirmation after a request is submitted. `outcome: "already"` is the
  * 409 case — they'd asked before — and it deliberately lands on this same calm
  * confirmation rather than an error: nothing went wrong, we simply already have
- * it. Only the headline and the lead sentence change.
+ * it. Only the headline, the lead sentence and the reference block change.
+ *
+ * This screen is also the ONLY delivery of the applicant's status token (see
+ * `RequestInviteReference`): it is never emailed, never re-issued, and exists
+ * nowhere on the server in readable form. Everything else here is reassurance;
+ * that block is the product.
  */
 export function RequestInviteSent({
   first,
   outcome = "sent",
+  statusToken = null,
 }: {
   first: string;
   outcome?: RequestInviteOutcome;
+  /** The one-time status token. Null on the 409 path, which mints none. */
+  statusToken?: string | null;
 }) {
   const { t } = useTranslation();
   const trimmedFirst = first.trim();
@@ -60,6 +69,8 @@ export function RequestInviteSent({
         >
           {t(subKey, { name: trimmedFirst })}
         </p>
+
+        <RequestInviteReference token={already ? null : statusToken} />
 
         <ol className={styles.nextList}>
           {WHAT_NEXT.map((step, i) => (

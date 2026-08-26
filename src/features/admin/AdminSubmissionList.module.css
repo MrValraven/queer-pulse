@@ -216,3 +216,170 @@
   margin-inline-end: 3px;
   vertical-align: -1px;
 }
+
+/* ── Intake console (ACQ-03) ─────────────────────────────────────────────
+   The generalised intake + inquiry console at /admin/intakes shares this
+   stylesheet with the concerns page and the other submission queues, so a
+   message that arrives through one inbox never looks like a different class
+   of thing in another. */
+
+/* How long a still-waiting row has been waiting. Same three-tone treatment as
+   the join-request queue's `.queueWaiting`, on a gentler ramp: these inboxes
+   have no SLA, so neutral runs to three days, amber to a week, and only a
+   week or more reads as overdue. Colour never carries it alone — the chip
+   always spells the wait out in words next to the clock icon. */
+.waiting {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.waitingIcon {
+  width: 12px;
+  height: 12px;
+}
+
+.waiting--neutral {
+  color: var(--ink-40);
+  background: transparent;
+}
+
+.waiting--approaching {
+  color: var(--amber-ink);
+  background: rgba(var(--amber-rgb), 0.12);
+}
+
+.waiting--overdue {
+  color: var(--accent-text);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+/* The per-kind payload read-out. A definition list rather than a table: the
+   field set differs per kind and a row may carry fields no renderer names, so
+   there is no stable column grid to align to. */
+.payload {
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.payloadLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.payloadLabel {
+  flex: 0 0 auto;
+  color: var(--ink-60);
+  font-weight: 600;
+}
+
+.payloadValue {
+  flex: 1 1 240px;
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.payloadEmpty {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  color: var(--ink-40);
+  font-style: italic;
+}
+
+/* An inquiry's own subject line, above its body. */
+.rowSubject {
+  margin-top: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* Cross-link out of a confidential stub row into the concerns worklist. */
+.rowCrossLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rowCrossLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Kind + status selects above a browse list. */
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.filterNote {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-60);
+}
+
+/* The standing reminder that answering happens in somebody's own inbox: this
+   platform delivers no email, and the console must never imply otherwise. */
+.noEmailNote {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--ink-60);
+  max-width: 60ch;
+}
+
+.waitingSections {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 12px;
+}
+
+.waitingSection {
+  min-width: 0;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.sectionNote {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+/* Nothing is waiting: the answer this console exists to give on a good day. */
+.allClear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.allClearIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--jade);
+}

@@ -9,8 +9,8 @@ import type { GovernanceLogAction } from "./api/adminCommunityGovernanceLog.api"
  */
 
 /** Chip colour per action: red for anything that takes something away, jade
- *  for anything that gives it back, violet for a handover, amber for a role
- *  move, plum for a settings edit. */
+ *  for anything that gives it back or offers help, violet for a handover,
+ *  amber for a role move, plum for a settings edit or a moderator's reply. */
 export const GOVERNANCE_ACTION_TONE: Record<GovernanceLogAction, AdminTone> = {
   role_changed: "amber",
   member_removed: "danger",
@@ -21,6 +21,8 @@ export const GOVERNANCE_ACTION_TONE: Record<GovernanceLogAction, AdminTone> = {
   archived: "danger",
   unarchived: "jade",
   settings_changed: "plum",
+  support_offered: "jade",
+  support_offer_answered: "plum",
 };
 
 const TONE_CYCLE: AvatarTone[] = ["plum", "coral", "jade", "violet", "amber"];
@@ -47,6 +49,12 @@ export const HANDLED_METADATA_KEYS = new Set([
   "toRole",
   "reason",
   "changes",
+  // The narrowed `details` shape a non-Moderator/Admin caller is served
+  // instead of raw `metadata` carries the settings diff as an array under
+  // this name. `metadataLines` renders it through the same field-by-field
+  // path as `changes`, so it must not also fall through to the humanized
+  // catch-all and print as JSON.
+  "changedSettings",
 ]);
 
 /** Roster roles the backend records in a `role_changed` entry. */

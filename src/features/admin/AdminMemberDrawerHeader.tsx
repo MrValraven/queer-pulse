@@ -1,6 +1,6 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminAvatar, AdminChip } from "./ui";
-import { portrait } from "./adminPeople.data";
+import { useDemoPortrait } from "./useDemoPortrait";
 import { type AdminMember } from "./adminMembers.data";
 import styles from "./AdminMembersPage.module.css";
 
@@ -15,6 +15,7 @@ import styles from "./AdminMembersPage.module.css";
  */
 export function AdminMemberDrawerHeader({ member }: { member: AdminMember }) {
   const { t } = useTranslation();
+  const demoPortrait = useDemoPortrait();
   return (
     <div className={styles.dHead}>
       <AdminAvatar
@@ -23,8 +24,9 @@ export function AdminMemberDrawerHeader({ member }: { member: AdminMember }) {
         size="lg"
         verified={member.verified}
         // Their real photo first; the demo portrait registry only stands in
-        // for fixture members, who have no `avatarUrl`.
-        src={member.avatarUrl ?? portrait(member.name)}
+        // for fixture members, who have no `avatarUrl`. It is keyed by name,
+        // so it must stay behind the demo gate.
+        src={member.avatarUrl ?? demoPortrait(member.name)}
       />
       <div>
         <h2 className={styles.dName}>{member.name}</h2>

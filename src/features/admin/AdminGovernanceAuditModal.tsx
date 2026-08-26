@@ -2,7 +2,7 @@ import { FiShield } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminModal, AdminChip, AdminAvatar } from "./ui";
-import { portrait } from "./adminPeople.data";
+import { useDemoPortrait } from "./useDemoPortrait";
 import type { AuditRowView } from "./api/useAdminAudit";
 import styles from "./AdminGovernancePage.module.css";
 
@@ -14,6 +14,7 @@ export function AdminGovernanceAuditModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  const demoPortrait = useDemoPortrait();
   return (
     <AdminModal
       eyebrow={t("admin:governance.audit.entryModal.eyebrow")}
@@ -30,7 +31,9 @@ export function AdminGovernanceAuditModal({
           initials={entry.moderatorInitials}
           tone={entry.moderatorTone}
           size="md"
-          src={portrait(entry.moderatorName)}
+          // Demo fixtures only: the registry is keyed by name, and a live
+          // audit row names a real moderator.
+          src={demoPortrait(entry.moderatorName)}
         />
         <div className={styles.entryModTx}>
           <span className={styles.entryModName}>{entry.moderatorName}</span>

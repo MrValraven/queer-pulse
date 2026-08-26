@@ -91,7 +91,6 @@ export const system: Catalog = {
   "accountLocked.whatNow.contact.title": "Contact the team",
   "accountLocked.whatNow.contact.desc":
     "If none of the above work, write to us and we'll verify you by hand.",
-  "accountLocked.foot.incident": "Incident <idTag>{id}</idTag> · {time}",
   "accountLocked.foot.whyLink": "Why does this happen?",
 
   // ── AccountSuspendedPage.tsx ──────────────────────────────────────────────
@@ -125,29 +124,6 @@ export const system: Catalog = {
   "accountSuspended.actions.messageModCta": "Message the mod team",
   "accountSuspended.foot":
     "{percent}% of appeals are overturned. We publish the number annually. <a>See 2025 moderation stats</a>",
-
-  // ── GeoRestrictedPage.tsx ─────────────────────────────────────────────────
-  "geoRestricted.eyebrow": "Region restricted",
-  "geoRestricted.h1": "QueerPulse isn't <em>fully available</em> here yet.",
-  "geoRestricted.lead":
-    "It looks like you're connecting from a country where some QueerPulse features are restricted: most often because we don't have moderators in your timezone, or because we're working through local legal review. <em>Crisis support and safety resources are still open to you.</em>",
-  "geoRestricted.why.title": "Why this happens",
-  "geoRestricted.why.body":
-    "We open access to a new region only when we have <em>at least one moderator in-country</em> and have reviewed the local legal framework for queer expression. It is intentionally slow. We don't want to advertise queer community to a place where members would be put at risk by joining.",
-  "geoRestricted.can.title": "What you can still do · right now",
-  "geoRestricted.can.readArticles.label":
-    "Read all public articles & the magazine",
-  "geoRestricted.can.readArticles.detail":
-    "The full editorial archive is open · <a>browse</a>",
-  "geoRestricted.can.resources.label": "Browse vetted international resources",
-  "geoRestricted.can.resources.detail":
-    "Hotlines, queer-friendly legal aid, and emergency contacts in 14 other countries · <a>resource library</a>",
-  "geoRestricted.can.askUs.label": "Ask us to open access here",
-  "geoRestricted.can.askUs.detail":
-    "Tell us where you are (no need for your name) and what would help · <a>write to the team</a>",
-  "geoRestricted.detect":
-    "Detected: <b>Portugal · Lisbon</b> · this is a demo of the region-restricted view.",
-  "geoRestricted.goHome": "Go home",
 
   // ── InviteExpiredPage.tsx (invite state: expired / used / revoked / not found) ─
   "inviteState.expired.eyebrow": "Invite expired",

@@ -37,11 +37,21 @@ function dtoToView(dto: InviteQuotaDTO): InviteQuotaView {
 /**
  * The current member's invite allowance for this month. Demo mode returns the
  * colocated mock; live mode calls GET /invites/quota. Works with no backend.
+ *
+ * `enabled` (default `true`) lets a caller that mounts on every page — the
+ * account-menu invite badge — hold the request until the session is settled
+ * and the member is active, exactly as `useSubprofiles` does for the persona
+ * badge. `retry: false` goes with it, so a guard rejection isn't hard-retried
+ * on every navigation. The page itself passes neither and behaves as before.
  */
-export function useInviteQuota() {
+export function useInviteQuota(
+  options: { enabled?: boolean; retry?: boolean } = {},
+) {
   const { demoMode } = useDemoMode();
   return useQuery<InviteQuotaView>({
     queryKey: ["invite-quota", demoMode],
+    enabled: options.enabled ?? true,
+    ...(options.retry !== undefined ? { retry: options.retry } : {}),
     queryFn: async () => {
       // Demo mock is loaded on demand so it stays out of the live bundle.
       const dto = demoMode

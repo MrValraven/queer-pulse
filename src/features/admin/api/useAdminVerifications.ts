@@ -8,6 +8,7 @@ import {
   type QueryKey,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { logInfo } from "../../../shared/observability/logger";
@@ -168,6 +169,14 @@ export interface UseVerificationRequestsFilter {
   type?: VerificationType;
   query: string;
   sort: VerificationRequestSort;
+  /**
+   * OPS-04's "Assigned to me" filter. Applied SERVER-side in live mode (and
+   * over the fixture in demo mode, so the two agree): this queue is keyset
+   * paginated, and narrowing after the fetch would hide claimed rows that had
+   * simply not loaded yet. Part of the query key, so switching it starts a new
+   * keyset rather than reusing a cursor issued under the other value.
+   */
+  assignedTo?: "me" | "unassigned";
 }
 
 /**
@@ -185,7 +194,8 @@ export interface UseVerificationRequestsFilter {
  */
 export function useVerificationRequests(filter: UseVerificationRequestsFilter) {
   const { demoMode } = useDemoMode();
-  const { status, type, query, sort } = filter;
+  const { user } = useAuth();
+  const { status, type, query, sort, assignedTo } = filter;
 
   const infiniteQuery = useInfiniteQuery<AdminVerificationRequestListDTO>({
     queryKey: [ADMIN_VERIFICATION_REQUESTS_KEY, demoMode, filter],
@@ -193,7 +203,16 @@ export function useVerificationRequests(filter: UseVerificationRequestsFilter) {
     queryFn: ({ pageParam }) => {
       if (demoMode) {
         return Promise.resolve(
-          filterDemoVerificationRequests({ status, type, query, sort }),
+          filterDemoVerificationRequests({
+            status,
+            type,
+            query,
+            sort,
+            assignedTo,
+            // Demo mode has no server to resolve "me" against, so the signed-in
+            // demo user is passed in. The live branch never sends an id at all.
+            currentUserId: user?.id ?? null,
+          }),
         );
       }
       return getAdminVerificationRequests({
@@ -201,6 +220,7 @@ export function useVerificationRequests(filter: UseVerificationRequestsFilter) {
         type,
         query: query || undefined,
         sort,
+        assignedTo,
         cursor: pageParam as string | undefined,
       });
     },

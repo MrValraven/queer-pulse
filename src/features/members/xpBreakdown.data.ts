@@ -12,6 +12,11 @@ import {
   FiShield,
   FiCheckSquare,
   FiAward,
+  FiTool,
+  FiHome,
+  FiBookOpen,
+  FiMessageCircle,
+  FiLifeBuoy,
 } from "react-icons/fi";
 
 export interface XpSourceMeta {
@@ -85,6 +90,31 @@ export const XP_SOURCE_META: Record<string, XpSourceMeta> = {
     labelKey: "members:badges.xpBreakdown.sources.gettingStarted",
     descKey: "members:badges.xpBreakdown.sources.gettingStartedDesc",
     icon: FiCheckSquare,
+  },
+  volunteering: {
+    labelKey: "members:badges.xpBreakdown.sources.volunteering",
+    descKey: "members:badges.xpBreakdown.sources.volunteeringDesc",
+    icon: FiTool,
+  },
+  hosting: {
+    labelKey: "members:badges.xpBreakdown.sources.hosting",
+    descKey: "members:badges.xpBreakdown.sources.hostingDesc",
+    icon: FiHome,
+  },
+  magazine: {
+    labelKey: "members:badges.xpBreakdown.sources.magazine",
+    descKey: "members:badges.xpBreakdown.sources.magazineDesc",
+    icon: FiBookOpen,
+  },
+  answers: {
+    labelKey: "members:badges.xpBreakdown.sources.answers",
+    descKey: "members:badges.xpBreakdown.sources.answersDesc",
+    icon: FiMessageCircle,
+  },
+  resources: {
+    labelKey: "members:badges.xpBreakdown.sources.resources",
+    descKey: "members:badges.xpBreakdown.sources.resourcesDesc",
+    icon: FiLifeBuoy,
   },
   badges: {
     labelKey: "members:badges.xpBreakdown.sources.badges",

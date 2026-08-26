@@ -78,6 +78,10 @@ const KINDS: NotificationKind[] = [
   // sentence rather than leaving `{form}` or `{reference}` on screen.
   "intake_reviewed",
   "dsar_resolved",
+  // A card nearing expiry (SUS-07). Listed with an empty payload for the same
+  // reason: its flat form has to read as a sentence when the row carries
+  // neither a day count nor a community name.
+  "card_expiring",
 ];
 
 describe("formatNotification", () => {

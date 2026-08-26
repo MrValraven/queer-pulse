@@ -15,6 +15,7 @@ import { routes } from "../../app/routeMap";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { CAUSE_FILTERS } from "./volunteerPage.data";
 import { VolunteerRoles } from "./VolunteerRoles";
+import { VolunteerContributionCard } from "./VolunteerContributionCard";
 import s from "./VolunteerPage.module.css";
 
 export function VolunteerPage() {
@@ -122,6 +123,12 @@ export function VolunteerPage() {
           </div>
         </div>
       </section>
+
+      {/* Signed-in only: `GET /volunteering/me/contribution` is behind
+          `ActiveMemberGuard` and would 401 for a visitor, the same reason
+          `useMyOpportunities` is gated above. The card renders nothing when
+          the member has nothing confirmed and nothing pending. */}
+      {user && <VolunteerContributionCard />}
 
       <VolunteerRoles
         filter={filter}

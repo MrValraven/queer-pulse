@@ -1,0 +1,166 @@
+/* The applicant-facing join-request status page. One calm frame, six states:
+   under review, approved (live invite), approved (spent invite), declined,
+   "we could not find that", and "we could not reach the server". */
+
+.state {
+  text-align: center;
+}
+
+.icon {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+}
+
+.icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.iconJade {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+
+.iconQuiet {
+  background: rgba(var(--line-rgb), 0.08);
+  color: var(--ink-60);
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin: 0 0 10px;
+}
+
+.title {
+  margin: 0 0 12px;
+}
+
+.lead {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 42ch;
+  margin: 0 auto 22px;
+}
+
+/* A note under the lead — quieter still, for the "nothing to do" reassurance
+   and the "keep this to yourself" warning. */
+.note {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 42ch;
+  margin: 0 auto 20px;
+}
+
+/* The reviewer's reason, in the applicant's own words rather than the queue's. */
+.reason {
+  text-align: left;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-card);
+  background: rgba(var(--line-rgb), 0.04);
+  padding: 16px 18px;
+  margin: 0 0 22px;
+}
+
+.reasonTitle {
+  margin: 0 0 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.reasonBody {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* The invite hand-over on the approved state. */
+.invite {
+  text-align: left;
+  border: 1.5px solid rgba(var(--jade-rgb), 0.28);
+  border-radius: var(--radius-card);
+  background: rgba(var(--jade-rgb), 0.08);
+  padding: 16px 18px 18px;
+  margin: 0 0 20px;
+}
+
+.inviteLabel {
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 0 0 6px;
+}
+
+.foot {
+  margin: 18px 0 0;
+  font-size: 13px;
+  color: var(--ink-60);
+}
+
+.foot a {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+/* Paste-a-code recovery form. */
+.form {
+  text-align: left;
+  max-width: 30rem;
+  margin: 0 auto;
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 4px 0 0;
+}
+
+.codeInput {
+  font-family: var(--mono);
+  letter-spacing: 0.02em;
+}
+
+/* Loading. Deliberately a sentence rather than a bare spinner: this page is
+   often opened weeks later, and "we are looking" is the reassurance. */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 0;
+  font-size: 14px;
+  color: var(--ink-60);
+}
+
+@media (max-width: 480px) {
+  .reason,
+  .invite {
+    padding: 14px;
+  }
+}

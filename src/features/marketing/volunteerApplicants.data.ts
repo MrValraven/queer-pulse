@@ -19,6 +19,9 @@ export const VOLUNTEER_APPLICANTS_DEMO: VolunteerSignupDTO[] = [
     status: "pending",
     decidedAt: null,
     createdAt: "2026-08-16T10:00:00.000Z",
+    attended: null,
+    hoursContributed: null,
+    completedAt: null,
   },
   {
     id: "demo-signup-2",
@@ -32,6 +35,11 @@ export const VOLUNTEER_APPLICANTS_DEMO: VolunteerSignupDTO[] = [
     status: "accepted",
     decidedAt: "2026-08-14T09:00:00.000Z",
     createdAt: "2026-08-12T15:30:00.000Z",
+    // Accepted and NOT yet confirmed, so the demo roster always has a row the
+    // completion control appears on.
+    attended: null,
+    hoursContributed: null,
+    completedAt: null,
   },
   {
     id: "demo-signup-3",
@@ -45,5 +53,37 @@ export const VOLUNTEER_APPLICANTS_DEMO: VolunteerSignupDTO[] = [
     status: "declined",
     decidedAt: "2026-08-11T09:00:00.000Z",
     createdAt: "2026-08-10T08:00:00.000Z",
+    attended: null,
+    hoursContributed: null,
+    completedAt: null,
+  },
+  {
+    id: "demo-signup-4",
+    member: {
+      slug: "kai-monteiro",
+      firstName: "Kai",
+      lastName: "Monteiro",
+      avatarUrl: null,
+    },
+    note: "Did the June market with you.",
+    status: "accepted",
+    decidedAt: "2026-07-02T09:00:00.000Z",
+    createdAt: "2026-07-01T08:00:00.000Z",
+    // Already confirmed, so the roster shows the settled state next to the
+    // row that still needs confirming.
+    attended: true,
+    hoursContributed: 4.5,
+    completedAt: "2026-07-20T18:00:00.000Z",
   },
 ];
+
+/**
+ * Demo-only stand-in for `GET /volunteering/me/contribution`. Never read in a
+ * live path: `useMyContribution` branches on `demoMode` before touching it.
+ */
+export const VOLUNTEER_CONTRIBUTION_DEMO = {
+  sessionCount: 6,
+  hoursContributed: 23.5,
+  lastCompletedAt: "2026-08-15T18:00:00.000Z",
+  awaitingConfirmationCount: 1,
+};

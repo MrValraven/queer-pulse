@@ -63,6 +63,13 @@ export type ListingPreviewSource = Omit<
   | "operatingState"
   | "movedToListingId"
   | "detailsConfirmedAt"
+  // The owner as a person rather than the business as a business. None of the
+  // three is public-page content, none is read below, and the moderation queue
+  // no longer serves them to a `directory_moderator` grant holder at all, so
+  // requiring them here would make the narrowed queue row unpreviewable.
+  | "contactEmail"
+  | "consentOuting"
+  | "consentGuide"
 >;
 
 interface OwnerIdentityView {

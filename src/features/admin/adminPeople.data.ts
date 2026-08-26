@@ -25,7 +25,17 @@ export const PORTRAITS: Record<string, string> = {
   "Théo M.": U("1500648767791-00dcc994a43e"),
 };
 
-/** Portrait URL for a named person, or undefined (→ initials fallback). */
+/**
+ * Portrait URL for a named person, or undefined (→ initials fallback).
+ *
+ * DEMO ONLY. This is a name-keyed lookup into a fixture registry, so it must
+ * never be given data a real person submitted or a real account carries: a
+ * live applicant or member whose name happens to match a fixture would be
+ * shown a stranger's face, on the very screens where a human decides whether
+ * to admit or act on them. Live surfaces use the person's own `avatarUrl` and
+ * otherwise render initials; surfaces that run in both modes go through
+ * `useDemoPortrait()`, which returns nothing outside demo.
+ */
 export function portrait(name?: string): string | undefined {
   return name ? PORTRAITS[name] : undefined;
 }

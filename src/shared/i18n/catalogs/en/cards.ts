@@ -54,6 +54,9 @@ export const cards: Catalog = {
 
   "status.expired":
     "This card expired. Ask the community to issue you a new one.",
+  // The same fact, where the programme lets the member act on it themselves.
+  "status.expiredRenewable":
+    "This card expired. Renewing puts it back in date.",
   "status.suspended": "This card is paused. The community can tell you more.",
   "status.revoked":
     "This card is no longer valid. The community can tell you more.",
@@ -61,6 +64,35 @@ export const cards: Catalog = {
   "status.tag.expired": "Expired",
   "status.tag.suspended": "Paused",
   "status.tag.revoked": "Revoked",
+
+  // The expiry line under each card. A card that works reports a fact; a card
+  // running out asks for something. The two are deliberately worded that way.
+  "expiry.never": "This card does not expire.",
+  "expiry.inDate": "Valid until {date}.",
+  "expiry.soon_one": "This card expires in {count} day.",
+  "expiry.soon_other": "This card expires in {count} days.",
+  "expiry.soonRenewable_one":
+    "This card expires in {count} day. You can renew it now.",
+  "expiry.soonRenewable_other":
+    "This card expires in {count} days. You can renew it now.",
+
+  "renew.cta": "Renew card",
+  "renew.ctaAria": "Renew your {community} card",
+  "renew.pending": "Renewing…",
+  "renew.toast": "Card renewed. It is valid until {date}.",
+  "renew.error.notAllowed":
+    "This community issues its own renewals. Ask an owner or moderator for a new card.",
+  "renew.error.withdrawn":
+    "This card was withdrawn by its community, so only they can bring it back.",
+  "renew.error.notAMember":
+    "You are no longer a member of this community, so this card cannot be renewed.",
+  "renew.error.paused":
+    "This card programme is paused right now. Try again once the community resumes it.",
+  "renew.error.noExpiry":
+    "This card does not expire, so there is nothing to renew.",
+  "renew.error.notDue":
+    "This card is still in date. You can renew it in its last 30 days.",
+  "renew.error.generic": "The card could not be renewed. Try again.",
 
   "role.owner": "Owner",
   "role.coOwner": "Co-owner",
@@ -180,6 +212,10 @@ export const cards: Catalog = {
   "designer.pronounsHelper":
     "The pronouns come from the member's own profile, so a card only shows what they have already set there. Anyone can turn theirs off on their own card.",
   "designer.pronounsStandIn": "your pronouns",
+  "designer.selfRenewLabel": "Renewals",
+  "designer.selfRenewCheck": "Let members renew their own card near expiry",
+  "designer.selfRenewHelper":
+    "In its last 30 days, a member can put their own card back in date without waiting for you to issue cards across the roster. Being on your roster is the only condition. A card you paused or revoked stays that way, and only you can bring it back.",
   "designer.printLabel": "Printed cards",
   "designer.printCheck": "Let owners and moderators print these cards",
   "designer.printHelper":
@@ -244,6 +280,9 @@ export const cards: Catalog = {
   "holders.replaceModal.confirm": "Replace card",
   "holders.replaceModal.cancel": "Keep this card",
   "holders.replaceToast": "{name}'s card has a new code.",
+  "holders.verifiedNever": "Never checked.",
+  "holders.verifiedCount_one": "Checked once.",
+  "holders.verifiedCount_other": "Checked {count} times.",
   "holders.reasonLabel": "Reason",
   "holders.reasonPlaceholder": "Why is this card changing?",
   "holders.reasonHint":
@@ -305,4 +344,13 @@ export const cards: Catalog = {
     "{count} paused or revoked cards were left as they are.",
   "modTools.pausedToast": "Card programme paused.",
   "modTools.resumedToast": "Card programme resumed.",
+  "verifications.title": "Card checks",
+  "verifications.total_one": "{count} check",
+  "verifications.total_other": "{count} checks",
+  "verifications.recent_one": "{count} in the last {days} days",
+  "verifications.recent_other": "{count} in the last {days} days",
+  "verifications.last": "Last checked {date}.",
+  "verifications.empty": "No card from this programme has been checked yet.",
+  "verifications.note":
+    "A count of how often these cards were checked, kept for 90 days and then deleted. QueerPulse keeps no record of who checked a card, or where.",
 };

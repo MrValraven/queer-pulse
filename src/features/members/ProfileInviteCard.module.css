@@ -1,0 +1,48 @@
+/* The owner-only invite strip at the foot of their own profile (ACQ-08).
+   A single quiet row — icon, one line of state, one link — so it reads as a
+   footnote to the profile rather than another section competing with it. */
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0 8px;
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  font-size: 18px;
+  color: var(--accent-ink);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.meta {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60, var(--ink));
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 560px) {
+  .card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .body {
+    flex-basis: calc(100% - 32px);
+  }
+}

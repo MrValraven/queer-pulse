@@ -22,6 +22,10 @@ const AdminConcernsPage = lazyNamed(
   () => import("./AdminConcernsPage"),
   "AdminConcernsPage",
 );
+const AdminIntakesPage = lazyNamed(
+  () => import("./AdminIntakesPage"),
+  "AdminIntakesPage",
+);
 const AdminDsarPage = lazyNamed(
   () => import("./AdminDsarPage"),
   "AdminDsarPage",
@@ -73,6 +77,10 @@ const AdminCommissionInterestsPage = lazyNamed(
 const AdminReadingGroupProposalsPage = lazyNamed(
   () => import("./AdminReadingGroupProposalsPage"),
   "AdminReadingGroupProposalsPage",
+);
+const AdminVolunteerHoursPage = lazyNamed(
+  () => import("./AdminVolunteerHoursPage"),
+  "AdminVolunteerHoursPage",
 );
 const AdminGuideFeedbackPage = lazyNamed(
   () => import("./AdminGuideFeedbackPage"),
@@ -183,6 +191,7 @@ export function adminRoutes() {
         element={<AdminResponseTemplatesPage />}
       />
       <Route path={routes.adminConcerns} element={<AdminConcernsPage />} />
+      <Route path={routes.adminIntakes} element={<AdminIntakesPage />} />
       <Route path={routes.adminDsar} element={<AdminDsarPage />} />
       <Route path={routes.adminMembers} element={<AdminMembersPage />} />
       <Route
@@ -278,6 +287,12 @@ export function adminRoutes() {
       <Route path={routes.adminRoadmap} element={<AdminRoadmapPage />} />
       <Route path={routes.adminSettings} element={<AdminSettingsPage />} />
       <Route path={routes.adminReports} element={<AdminReportsPage />} />
+      {/* SUS-05: the volunteer-hours report, filed beside Reports because it
+          is the same kind of surface — figures the team can show a partner. */}
+      <Route
+        path={routes.adminVolunteerHours}
+        element={<AdminVolunteerHoursPage />}
+      />
       <Route
         path={routes.adminStatusIncidents}
         element={<AdminStatusIncidentsPage />}

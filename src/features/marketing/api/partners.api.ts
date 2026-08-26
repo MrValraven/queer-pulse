@@ -86,6 +86,16 @@ export interface PartnerApplicationDTO extends PartnerDetailDTO {
   submittedBy: MemberRefDTO | null;
   reviewNote: string | null;
   createdAt: string;
+  /** OPS-04. The staff member currently working this application, or null when
+   *  nobody has claimed it. Meaningful while `status` is `pending`. */
+  assignedStaffId: string | null;
+  /** Only present when `assignedStaffId` is set. "Deleted member" after that
+   *  reviewer's erasure. */
+  assignedStaffName?: string;
+  /** OPS-04. ISO 8601. When the application should have been answered by.
+   *  NULL means NO CLOCK and is never overdue: applications settled before
+   *  OPS-04 existed carry none. */
+  dueAt: string | null;
 }
 
 // ── Create / triage payloads ─────────────────────────────────────────────────
@@ -158,9 +168,22 @@ export const getPartner = (slug: string) =>
 export const createPartnerApplication = (dto: CreatePartnerApplicationDto) =>
   apiPost<PartnerApplicationDTO>("/partner-applications", dto);
 
-/** GET /admin/partners/applications — admin only; 403 for a non-admin viewer. */
-export const getPartnerApplications = () =>
-  apiGet<PartnerApplicationDTO[]>("/admin/partners/applications");
+/**
+ * GET /admin/partners/applications — admin only; 403 for a non-admin viewer.
+ *
+ * `assignedTo` is OPS-04's "Assigned to me" narrowing, resolved server-side:
+ * `me` against the caller's own session, `unassigned` against a NULL assignee.
+ * The wire never carries a reviewer's id, so one reviewer cannot ask what
+ * another is holding.
+ */
+export const getPartnerApplications = (
+  params: { assignedTo?: "me" | "unassigned" } = {},
+) =>
+  apiGet<PartnerApplicationDTO[]>(
+    `/admin/partners/applications${
+      params.assignedTo ? `?assignedTo=${params.assignedTo}` : ""
+    }`,
+  );
 
 /** PATCH /admin/partners/applications/:id — admin only approve/reject. */
 export const triagePartnerApplication = (

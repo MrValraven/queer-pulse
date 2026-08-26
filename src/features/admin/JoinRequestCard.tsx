@@ -12,8 +12,11 @@ import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
 import { AdminBanEvasionFlag } from "./AdminBanEvasionFlag";
 import type { BanEvasionAssessmentDTO } from "./api/adminInvites.api";
+import {
+  QueueAssignmentControl,
+  QueueOverdueChip,
+} from "./QueueAssignmentControls";
 import { AdminAvatar } from "./ui";
-import { portrait } from "./adminPeople.data";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import styles from "./AdminMembersPage.module.css";
@@ -47,6 +50,10 @@ export function JoinRequestCard({
   onToggleSelect,
   isBusy = false,
   banEvasion,
+  currentUserId,
+  isAssignmentBusy = false,
+  onClaim,
+  onRelease,
 }: {
   item: JoinRequestView;
   leaving: boolean;
@@ -68,6 +75,13 @@ export function JoinRequestCard({
    *  where there is nothing to say. Advisory: the panel never gates a
    *  decision, it only tells the reviewer which removed account to read. */
   banEvasion?: BanEvasionAssessmentDTO;
+  /** OPS-04. The signed-in reviewer, so "you have this" can be told apart from
+   *  "a colleague has this". Null while the session is still loading. */
+  currentUserId: string | null;
+  /** True while a claim/release for any row in this queue is in flight. */
+  isAssignmentBusy?: boolean;
+  onClaim: () => void;
+  onRelease: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -86,12 +100,11 @@ export function JoinRequestCard({
             className={styles.queueSelect}
           />
         )}
-        <AdminAvatar
-          initials={item.initials}
-          tone={item.tone}
-          size="md"
-          src={portrait(item.name)}
-        />
+        {/* Initials only, never a photo: an applicant has no account and so
+            no avatar of their own, and the demo portrait registry is keyed by
+            name — it would put a stranger's face on the record a reviewer is
+            deciding about. */}
+        <AdminAvatar initials={item.initials} tone={item.tone} size="md" />
         <div>
           <div className={styles.queueName}>{item.name}</div>
           <div className={styles.queueApplied}>{item.appliedLine}</div>
@@ -101,8 +114,27 @@ export function JoinRequestCard({
             <FiClock aria-hidden />
             {t("admin:members.verify.waitingDays", { count: item.daysWaiting })}
           </span>
+          {/* OPS-04. The stored due date, distinct from the wait length beside
+              it: one is how long they have waited, the other is the promise
+              this queue made. A request with no stored clock renders nothing
+              here rather than an "on time" nobody committed to. */}
+          <QueueOverdueChip dueAt={item.dueAt} />
         </div>
       </div>
+
+      {/* OPS-04. Sits directly under the applicant's name, above the triage
+          signals, because "who is already on this" is the first thing a second
+          reviewer needs to know: reading the case and then finding out a
+          colleague had it is the exact waste the claim exists to prevent. */}
+      <QueueAssignmentControl
+        assignedStaffId={item.assignedStaffId}
+        assignedStaffName={item.assignedStaffName}
+        currentUserId={currentUserId}
+        rowLabel={item.name}
+        isBusy={isAssignmentBusy}
+        onClaim={onClaim}
+        onRelease={onRelease}
+      />
 
       {item.flagLabels.length > 0 && (
         <div className={styles.queueFlags}>

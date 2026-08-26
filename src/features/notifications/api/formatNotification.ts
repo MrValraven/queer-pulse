@@ -225,6 +225,24 @@ export type NotificationKind =
   // the outing/doxxing case the SLA is written for.
   | "report_filed"
   | "community_report_filed"
+  // Sent to a community's owner, co-owners and moderators when PLATFORM STAFF
+  // offer that community support (mirrors the backend `notifications_type_enum`
+  // value added in
+  // `AddCommunitySupportOfferedNotificationType1795660200000`, emitted from
+  // `AdminCommunitySupportService.create`). OPS-05: the admin console's "Offer
+  // support" button used to write nothing at all, so the community it was
+  // offered to never heard a word.
+  //
+  // System-driven, no actor: the bell never names which staff member typed the
+  // offer, so a moderator's personal block of them cannot swallow it. The
+  // payload carries `communityName` and `communitySlug` and nothing else — the
+  // staff member's note lives behind the community's own mod-tools
+  // authentication, which is also where the offer is answered, and where this
+  // row deep-links to.
+  //
+  // In-app plus web push. QueerPulse sends no email, so no copy here may say
+  // anything is on its way.
+  | "community_support_offered"
   // Sent to a member when their account is signed in to from a device they
   // have not used before (mirrors the backend `notifications_type_enum` value
   // added in `AddSecurityAlertsAndDeviceLabel1794610100000`, emitted from
@@ -264,7 +282,23 @@ export type NotificationKind =
   // `interpolationTokens`, and `source: "magazine"` + `issueNumber` deep-link
   // the row to that issue's page, where the desk's curated "In this issue"
   // panel is.
-  | "magazine_issue_published";
+  | "magazine_issue_published"
+  // A membership card thirty days from expiry (SUS-07; mirrors the backend
+  // `notifications_type_enum` value added in
+  // `AddCardSelfRenewAndExpiryWarning1795620000000`, emitted from
+  // `CardExpiryWarningService`). Before this, a card expired in silence and its
+  // holder found out at a door.
+  //
+  // System-driven, no actor. Payload carries `{ source: "card", communitySlug,
+  // communityName, daysRemaining, canSelfRenew }`. `daysRemaining` is a NUMBER
+  // mirrored onto `count` below for CLDR pluralisation, the same way
+  // `account_deletion_final_warning` does it, and `canSelfRenew` picks between
+  // the copy that points at the member's own Renew button and the copy that
+  // points at their community. `source: "card"` deep-links to /account/cards.
+  //
+  // IN-APP. QueerPulse sends no email, so no copy for this type may say
+  // anything is on its way by any other channel.
+  | "card_expiring";
 
 /** The i18n key root used when `type` is one we don't know how to render. */
 const FALLBACK_KEY = "unknown";
@@ -351,6 +385,11 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // -links into mod tools rather than into the community's own activity.
   report_filed: "platform",
   community_report_filed: "platform",
+  // An offer of support sits beside `community_report_filed` for the same
+  // reason: it is the platform handing a community's staff something to
+  // answer, and it deep-links into mod tools rather than into the community's
+  // own activity.
+  community_support_offered: "platform",
   // Account and security news is the platform's word about your own account,
   // same tab as moderation_outcome/verification_update. There is no separate
   // "security" tab and these three do not earn one: a member who is being told
@@ -362,6 +401,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // A new issue is the magazine speaking to the whole membership — platform
   // tab, same as roadmap_status.
   magazine_issue_published: "platform",
+  // A credential of the member's own running out is the platform's word about
+  // their own standing, same tab as account_deletion_final_warning.
+  card_expiring: "platform",
 };
 
 /** Every kind we have copy for. Anything else routes to the fallback. */
@@ -727,6 +769,23 @@ function reportFiledKeyFor(type: string, payload: unknown): string {
  * than one hedged string, and a cited house rule adds a `.rule` variant so the
  * member can read the grounds instead of guessing at them.
  */
+/**
+ * Which half of the card-expiry copy this row gets.
+ *
+ * The two say different things to do. Where the issuing programme allows self
+ * renewal the member has a Renew button waiting on /account/cards; where it
+ * does not, the community issues the new card and the copy has to say so
+ * rather than pointing at a control that is not there. A payload missing the
+ * flag falls back to the community wording, which is the answer that is true
+ * of every programme that never opted in.
+ */
+function cardExpiringKeyFor(type: string, payload: unknown): string {
+  if (type !== "card_expiring") return type;
+  const canSelfRenew = (payload as { canSelfRenew?: unknown } | null)
+    ?.canSelfRenew;
+  return canSelfRenew === true ? `${type}.renewable` : type;
+}
+
 function communityBannedKeyFor(type: string, payload: unknown): string {
   if (type !== "community_banned") return type;
   const banned = payload as {
@@ -860,6 +919,8 @@ export function formatNotification(
     key = reportFiledKeyFor(type, payload);
   } else if (type === "community_banned") {
     key = communityBannedKeyFor(type, payload);
+  } else if (type === "card_expiring") {
+    key = cardExpiringKeyFor(type, payload);
   } else {
     // `mentionKeyFor` passes every non-`mention` type through unchanged.
     key = mentionKeyFor(type, payload);
@@ -889,6 +950,17 @@ export function formatNotification(
     // same number is mirrored onto `count` for the plural to resolve. Without
     // this the row would fall through to the `_other` form and read "in 1
     // days".
+    const daysRemaining = (payload as { daysRemaining?: unknown } | null)
+      ?.daysRemaining;
+    if (typeof daysRemaining === "number") {
+      tokens.count = daysRemaining;
+    }
+  }
+  if (type === "card_expiring") {
+    // Same reason as `account_deletion_final_warning` above: the copy is
+    // pluralised ("in 1 day" / "in 30 days") and CLDR selection keys off
+    // `count`, while the payload names the value `daysRemaining` because that
+    // is what the copy interpolates. Both names carry the same number.
     const daysRemaining = (payload as { daysRemaining?: unknown } | null)
       ?.daysRemaining;
     if (typeof daysRemaining === "number") {

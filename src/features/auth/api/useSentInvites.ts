@@ -29,6 +29,9 @@ export interface SentInviteView {
   sentAt: Date;
   /** When the invite stops working, or null when it has no set expiry. */
   expiresAt: Date | null;
+  /** The address the invite is pinned to, when the member addressed it to one
+   *  person. Undefined means a bearer link anyone holding it can redeem. */
+  recipientEmail?: string;
   note?: string;
   /** Name of the person who accepted, if this invite was used. */
   acceptedByName?: string;
@@ -55,6 +58,7 @@ function dtoToView(dto: SentInviteDTO): SentInviteView {
     statusTone: meta.tone,
     sentAt: new Date(dto.createdAt),
     expiresAt: dto.expiresAt ? new Date(dto.expiresAt) : null,
+    recipientEmail: dto.email ?? undefined,
     note: dto.note ?? undefined,
     // Non-null only on a `used` row (backend contract), so this "joined by
     // {name}" line appears exactly when someone actually redeemed the code.
@@ -184,6 +188,7 @@ export function useResendInvite() {
           statusTone: valid.tone,
           sentAt: current?.sentAt ?? new Date(),
           expiresAt: new Date(Date.now() + SEVEN_DAYS_MS),
+          recipientEmail: current?.recipientEmail,
           note: current?.note,
           acceptedByName: undefined,
         };

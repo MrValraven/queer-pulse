@@ -11,10 +11,6 @@ const MaintenancePage = lazyNamed(
   "MaintenancePage",
 );
 const OfflinePage = lazyNamed(() => import("./OfflinePage"), "OfflinePage");
-const GeoRestrictedPage = lazyNamed(
-  () => import("./GeoRestrictedPage"),
-  "GeoRestrictedPage",
-);
 const PwaPromptPage = lazyNamed(
   () => import("./PwaPromptPage"),
   "PwaPromptPage",
@@ -53,7 +49,6 @@ export function systemRoutes() {
       <Route path={routes.serverError} element={<ServerErrorPage />} />
       <Route path={routes.maintenance} element={<MaintenancePage />} />
       <Route path={routes.offline} element={<OfflinePage />} />
-      <Route path={routes.geoRestricted} element={<GeoRestrictedPage />} />
       <Route path={routes.pwaPrompt} element={<PwaPromptPage />} />
       <Route path={routes.accountBanned} element={<AccountBannedPage />} />
       <Route path={routes.accountLocked} element={<AccountLockedPage />} />

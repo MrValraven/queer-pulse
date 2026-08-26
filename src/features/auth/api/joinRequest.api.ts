@@ -45,6 +45,15 @@ export interface JoinRequestDTO {
    * the client builds the shareable link from the route map (`inviteLink`).
    */
   inviteCode: string | null;
+  /**
+   * Lifecycle of that invite, recomputed by the backend on every read. Null
+   * when no invite was minted. An approval invite lapses after 7 days, and
+   * QueerPulse sends no email, so a reviewer looking back at a past approval
+   * needs to know whether the link they are about to copy still works.
+   */
+  inviteStatus: "valid" | "used" | "expired" | "revoked" | null;
+  /** ISO timestamp the invite stops working, or null when it has no expiry. */
+  inviteExpiresAt: string | null;
   /** Closed-set reason key the reviewer picked when declining. Null for
    *  approvals, waitlists, and legacy declines that predate this field. */
   declineReason: string | null;
@@ -59,6 +68,23 @@ export interface JoinRequestDTO {
   referenceMemberName: string | null;
   /** The resolved member's profile slug, for a link. */
   referenceMemberSlug: string | null;
+  /**
+   * OPS-04. The reviewer currently working this request, or null when nobody
+   * has claimed it. Distinct from `reviewedBy`, which is who DECIDED it: a
+   * claim says "I have this open" so two reviewers do not open the same
+   * applicant, and it is given back by releasing.
+   */
+  assignedStaffId: string | null;
+  /** The claiming reviewer's display name. Absent on an unclaimed request,
+   *  and "Deleted member" after their erasure. */
+  assignedStaffName?: string;
+  /**
+   * ISO timestamp this request should have been answered by (3 days from
+   * submission — `join-request-sla.ts` on the backend owns the window). Null
+   * means NO CLOCK, never overdue: requests decided before OPS-04 existed
+   * carry none.
+   */
+  dueAt: string | null;
 }
 
 /** Payload for a prospective member's request to join. */
@@ -94,6 +120,106 @@ export interface CreateJoinRequestResult {
   id: string;
   status: "pending";
   createdAt: string;
+  /**
+   * The applicant's opaque status token (base64url, 43 chars) — the key to
+   * {@link getJoinRequestStatus}.
+   *
+   * **This 201 is the one and only time it ever exists.** The backend stores
+   * only its sha256 hash, so it cannot be looked up, re-derived or re-issued,
+   * and QueerPulse sends no email and never will, so nothing else will ever
+   * carry it to the applicant. If the client does not both SHOW it and PERSIST
+   * it at this moment (see `rememberJoinRequestStatusToken`), the applicant has
+   * permanently lost the only route to their own decision.
+   *
+   * Absent from the 409 duplicate path, which creates no row and mints no
+   * token — the confirmation screen must render without a code there rather
+   * than showing an empty slot.
+   */
+  statusToken: string;
+}
+
+/**
+ * What the public status endpoint answers with. Every key is always present;
+ * the three nullable ones arrive as `null` rather than absent.
+ */
+export interface JoinRequestStatusDTO {
+  /**
+   * The applicant-facing state. Deliberately NARROWER than
+   * {@link JoinRequestDTO.status}: the backend collapses `waitlisted` into
+   * `under_review` and forces `decidedAt` to null for it, because a waiting
+   * list is an internal triage tool and telling someone they are on one is a
+   * decision we have not actually made. Never write copy implying one exists.
+   */
+  status: "under_review" | "approved" | "declined";
+  /** ISO 8601, always present — when they sent the request. */
+  submittedAt: string;
+  /** ISO 8601. Null while under review. */
+  decidedAt: string | null;
+  /** A closed-set reason key (see `joinRequestDeclineReason.ts`). Non-null
+   *  only when declined. */
+  declineReason: string | null;
+  /**
+   * The invite CODE (never a URL — the client builds the link with
+   * `inviteFullUrlFor`). Non-null only when approved AND the invite is still
+   * redeemable, so `status: "approved"` with a null code is a real, reachable
+   * state: approved, but the invite has since been used, revoked or expired.
+   */
+  inviteCode: string | null;
+}
+
+/**
+ * The shape the backend's status DTO accepts: base64url, 32–128 chars. Guarding
+ * on it client-side turns an obvious typo into an instant answer instead of
+ * spending one of the endpoint's 20 requests/hour on a certain 400.
+ */
+export const JOIN_REQUEST_STATUS_TOKEN_PATTERN = /^[A-Za-z0-9_-]{32,128}$/;
+
+/** True when `token` could plausibly be a status token at all. */
+export function isWellFormedStatusToken(token: string): boolean {
+  return JOIN_REQUEST_STATUS_TOKEN_PATTERN.test(token);
+}
+
+/**
+ * Where a specific join request stands. **Public route — no session**: the
+ * applicant has no account, which is the whole point. Keyed solely on the
+ * opaque token from {@link CreateJoinRequestResult.statusToken}, throttled at
+ * 20 requests/hour per IP.
+ *
+ * Only two failures exist, and both mean "we cannot show you anything":
+ * - `400` — the token is malformed or missing ({@link isMalformedStatusToken})
+ * - `404` — a single indistinguishable miss ({@link isJoinRequestStatusNotFound}),
+ *   which deliberately never reveals whether a given code exists.
+ */
+export const getJoinRequestStatus = (token: string) =>
+  apiGet<JoinRequestStatusDTO>(
+    `/join-requests/status?token=${encodeURIComponent(token)}`,
+  );
+
+/**
+ * True for the `404` from {@link getJoinRequestStatus}. Not an error in the
+ * usual sense: it is the endpoint's honest "we cannot find that", so the UI
+ * renders a calm "check the code" state rather than a failure. Callers must not
+ * sniff `err.status` themselves — a 404 anywhere else in this file would mean
+ * something different.
+ */
+export function isJoinRequestStatusNotFound(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 404;
+}
+
+/** True for the `400` a malformed or absent token gets. Same answer to the
+ *  applicant as a 404 — one message that confirms nothing either way. */
+export function isMalformedStatusToken(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 400;
+}
+
+/**
+ * True when the status lookup can never succeed for this code, however the
+ * backend phrased it. Both branches get one identical message, so an attacker
+ * probing codes learns nothing from the difference, and retrying is pointless
+ * — which is exactly the rule the query hook's `retry` needs.
+ */
+export function isUnresolvableStatusToken(err: unknown): boolean {
+  return isJoinRequestStatusNotFound(err) || isMalformedStatusToken(err);
 }
 
 /**
@@ -106,6 +232,10 @@ export interface CreateJoinRequestResult {
  * - `409` — an open request already exists for that email ({@link isDuplicateJoinRequest})
  * - `403 { code: "UNDER_18" }` — a supplied DOB computes to under 18 ({@link isUnder18Error})
  * - `429` — the public route's per-IP throttle (3/hour) tripped ({@link isRateLimitedError})
+ *
+ * On success the 201 carries `statusToken`, which exists nowhere else, ever.
+ * Every caller of this function is responsible for persisting it — see
+ * {@link CreateJoinRequestResult.statusToken}.
  */
 export const createJoinRequest = (input: CreateJoinRequestInput) =>
   apiPost<CreateJoinRequestResult>("/join-requests", input);
@@ -152,23 +282,51 @@ export function isRateLimitedError(err: unknown): boolean {
   return err instanceof ApiError && err.status === 429;
 }
 
+/** Read options the queue list accepts beyond the status filter. */
+export interface GetJoinRequestsOptions {
+  /** Page size, 1–100 on the backend. Omit for its own default (200). */
+  limit?: number;
+  /** Queue order. The backend defaults to "oldest" (fair triage of the waiting
+   *  queue); a history view wants "newest" so the last decision reads first. */
+  sort?: "oldest" | "newest";
+  /**
+   * OPS-04's "Assigned to me" filter, applied server-side. `"me"` resolves to
+   * the CALLER on the backend, from the session, so no reviewer's id ever
+   * travels on the wire and nobody can ask what a named colleague is holding.
+   * `"unassigned"` narrows to what nobody has picked up. Omit for everything.
+   */
+  assignedTo?: "me" | "unassigned";
+}
+
 /**
  * List join requests for the moderator queue (Mod/Admin only). Optional `status`
  * filters the queue (defaults to the backend's own default, typically "pending").
+ *
+ * There is no server-side text search on this route, so a caller wanting to
+ * find one applicant by name filters over what it has loaded and says so.
  */
-export const getJoinRequests = (status?: JoinRequestDTO["status"]) =>
-  apiGet<JoinRequestDTO[]>(
-    status
-      ? `/join-requests?status=${encodeURIComponent(status)}`
-      : "/join-requests",
+export const getJoinRequests = (
+  status?: JoinRequestDTO["status"],
+  options: GetJoinRequestsOptions = {},
+) => {
+  const params = new URLSearchParams();
+  if (status) params.set("status", status);
+  if (options.limit != null) params.set("limit", String(options.limit));
+  if (options.sort) params.set("sort", options.sort);
+  if (options.assignedTo) params.set("assignedTo", options.assignedTo);
+  const query = params.toString();
+  return apiGet<JoinRequestDTO[]>(
+    query ? `/join-requests?${query}` : "/join-requests",
   );
+};
 
 /**
  * A moderator's decision on a join request (Mod/Admin only). Declining
  * requires `declineReason` — the backend rejects a decline with none.
- * Approving also fires an automatic invite email; the approved response
- * still carries `inviteCode` so the reviewer can send the resulting link
- * themselves as a manual backup.
+ *
+ * Approving puts NOTHING in the applicant's inbox: QueerPulse runs no mail
+ * service and never will. The approved response carries `inviteCode`, and
+ * carrying that link over to the applicant is the reviewer's own job.
  */
 export const reviewJoinRequest = (
   id: string,
@@ -200,6 +358,23 @@ export const bulkReviewJoinRequests = (
     status,
     declineReason,
   });
+
+/**
+ * Re-mint the expired invite an approval already handed out (Mod/Admin only),
+ * addressed by the JOIN REQUEST id. Refreshes the same code's expiry, so a
+ * link a reviewer copied earlier starts working again.
+ *
+ * The member-facing `POST /invites/:code/resend` cannot be used here: it is
+ * scoped to the inviter, and the inviter on an approval invite is whichever
+ * reviewer approved it. Failure modes each deserve their own message:
+ * - `404` — unknown request, or one that never minted an invite;
+ * - `409` — the invite was accepted or revoked, or is still valid;
+ * - `403` — the caller is not a moderator or admin.
+ */
+export const reissueJoinRequestInvite = (id: string) =>
+  apiPost<JoinRequestDTO>(
+    `/join-requests/${encodeURIComponent(id)}/invite/reissue`,
+  );
 
 /** A random sample of past-reviewed requests, for the periodic peer quality
  *  pass (Mod/Admin only). */

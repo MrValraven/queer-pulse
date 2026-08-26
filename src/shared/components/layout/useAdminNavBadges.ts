@@ -2,6 +2,7 @@ import { useModReports } from "../../../features/admin/api/useModReports";
 import { useJoinRequests } from "../../../features/admin/api/useJoinRequests";
 import { usePartnerApplications } from "../../../features/marketing/api/usePartnerApplications";
 import { useVerificationRequests } from "../../../features/admin/api/useAdminVerifications";
+import { useAdminJoinRequests } from "../../../features/admin/api/useAdminHousingCoops";
 import type { AdminNavBadgeCounts } from "./AdminNavGroup";
 
 /**
@@ -13,6 +14,10 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   const modReports = useModReports();
   const joinRequests = useJoinRequests("pending");
   const partnerApplications = usePartnerApplications();
+  // OPS-06: the cross-co-op join-request queue on /admin/housing. Same query
+  // key the page itself uses, so this is served from cache rather than a
+  // second request.
+  const housingCoopJoinRequests = useAdminJoinRequests();
 
   // Phase 2's review queue is live, so the badge counts the actual review-queue
   // backlog: every request still waiting on a moderator, at any stage of that
@@ -38,5 +43,9 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
       partnerApplications.data?.filter((a) => a.status === "pending").length ??
       0,
     verifications: pendingRequestCount,
+    housingCoops:
+      housingCoopJoinRequests.data?.filter(
+        (request) => request.status === "pending",
+      ).length ?? 0,
   };
 }

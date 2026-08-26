@@ -40,6 +40,8 @@ export interface CardDesignerDraft {
   photoStyle: CardPhotoStyle;
   /** Whether these cards print each holder's pronouns beside their name. */
   allowsPronouns: boolean;
+  /** Whether holders may renew their own card in its last 30 days. */
+  allowsSelfRenew: boolean;
   /** Which legibility treatment the ground carries. Kept in the draft even
    *  while the card is on a flat skin, so an owner who tries a flag, switches
    *  back to a colour and returns to the flag finds their choice intact. */
@@ -65,6 +67,7 @@ function draftFrom(program: CardProgramDTO | null): CardDesignerDraft {
     allowsMemberPhoto: program?.allowsMemberPhoto ?? false,
     photoStyle: program?.photoStyle ?? "color",
     allowsPronouns: program?.allowsPronouns ?? false,
+    allowsSelfRenew: program?.allowsSelfRenew ?? false,
     textBackdrop: program?.textBackdrop ?? "shade",
   };
 }
@@ -82,6 +85,7 @@ function isSameDraft(a: CardDesignerDraft, b: CardDesignerDraft): boolean {
     a.allowsMemberPhoto === b.allowsMemberPhoto &&
     a.photoStyle === b.photoStyle &&
     a.allowsPronouns === b.allowsPronouns &&
+    a.allowsSelfRenew === b.allowsSelfRenew &&
     a.textBackdrop === b.textBackdrop
   );
 }
@@ -177,6 +181,7 @@ export function cardProgramUpsertBody(
     allowsMemberPhoto: draft.allowsMemberPhoto,
     photoStyle: draft.photoStyle,
     allowsPronouns: draft.allowsPronouns,
+    allowsSelfRenew: draft.allowsSelfRenew,
     textBackdrop: draft.textBackdrop,
   };
 }

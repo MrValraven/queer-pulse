@@ -2065,6 +2065,7 @@ export const marketing: Catalog = {
   "changelog.tag.studio": "Visit the Studio",
   "changelog.tag.search": "Try global search",
   "changelog.tag.topics": "Browse topics",
+  "changelog.tag.perks": "See your perks",
   "changelog.tag.volunteer": "Find a way in",
   "changelog.tag.postVolunteer": "Post an opportunity",
   "changelog.tag.comingOut": "Read the coming-out guide",
@@ -5049,6 +5050,22 @@ export const marketing: Catalog = {
   "volunteer.signups.closing": "Closing…",
   "volunteer.signups.closeCta": "Close opportunity",
   "volunteer.signups.reviewCta": "{count} to review",
+
+  // ── The volunteer's own confirmed contribution (SUS-05). Sessions and hours
+  // a poster confirmed, never self-declared.
+  "volunteer.contribution.title": "What you've contributed",
+  "volunteer.contribution.loading": "Loading your volunteering…",
+  "volunteer.contribution.sessions": "confirmed sessions",
+  "volunteer.contribution.hours": "hours contributed",
+  "volunteer.contribution.lastOne": "Most recent confirmed session: {when}",
+  "volunteer.contribution.awaiting_one":
+    "1 accepted signup is waiting for the poster to confirm the session.",
+  "volunteer.contribution.awaiting_other":
+    "{count} accepted signups are waiting for the poster to confirm the session.",
+  "volunteer.contribution.empty":
+    "Nothing confirmed yet. Once a poster records a session you turned up for, the hours land here.",
+  "volunteer.contribution.note":
+    "Hours are confirmed by whoever posted the opportunity, so this is a record someone else stands behind.",
   "volunteer.adapter.eyebrow": "Volunteer · {cause} · {org}",
   "volunteer.adapter.recruitingNow": "Recruiting now",
   "volunteer.adapter.closedNotRecruiting": "Closed · not recruiting",
@@ -5076,6 +5093,28 @@ export const marketing: Catalog = {
   "volunteerManage.status.declined": "Declined",
   "volunteerManage.accept": "Accept",
   "volunteerManage.decline": "Decline",
+
+  // ── Volunteer session completion (SUS-05). The poster records what actually
+  // happened, so hours are attested by someone other than the volunteer. No
+  // copy here promises the volunteer a message: nothing sends one.
+  "volunteerManage.completion.title": "Record the session",
+  "volunteerManage.completion.attendedLabel": "Did they turn up?",
+  "volunteerManage.completion.attendedYes": "They turned up",
+  "volunteerManage.completion.attendedNo": "They did not turn up",
+  "volunteerManage.completion.hoursLabel": "Hours contributed",
+  "volunteerManage.completion.hoursHelper":
+    "Up to 24 for one session. Quarter hours are fine.",
+  "volunteerManage.completion.confirm": "Confirm session",
+  "volunteerManage.completion.confirming": "Confirming…",
+  "volunteerManage.completion.why":
+    "Confirmed hours count towards the volunteer hours QueerPulse can report, and towards this member's recognition.",
+  "volunteerManage.completion.error":
+    "That didn't save. Check your connection and try again.",
+  "volunteerManage.completion.alreadyDone":
+    "This session was already confirmed.",
+  "volunteerManage.completion.confirmedHours": "Confirmed: {hours} h on {when}",
+  "volunteerManage.completion.confirmedNoShow":
+    "Recorded as a no-show on {when}",
 
   // ── Post a Volunteer Opportunity — form chrome (all platform UI).
   "postOpportunity.hero.eyebrow": "Volunteer · Post a role",
@@ -6798,6 +6837,68 @@ export const marketing: Catalog = {
   "changelog.tag.transparency": "Read the transparency report",
   "changelog.tag.constitution": "Read the constitution",
   "changelog.tag.codeOfConduct": "Read the code of conduct",
+  // ACQ-01..04, ACQ-08, ACQ-11, ID-11, ID-12, ID-15: the applicant funnel,
+  // account security and export depth.
+  "changelog.tag.accountSecurity": "Open account security",
+  "changelog.tag.dataExport": "Download your data",
+  "changelog.tag.contact": "Get in touch",
+  "changelog.entries.perks-that-grant-something-real.title":
+    "Perks that grant something real",
+  "changelog.entries.perks-that-grant-something-real.body":
+    "The recognition ladder used to hand out a number and change nothing. Perks you can reach are now claimable, and a claimed invite perk really does raise your monthly invite allowance. Perks the platform could not honour are gone from the page.",
+  "changelog.entries.renew-your-card-before-it-runs-out.title":
+    "Renew your card before it runs out",
+  "changelog.entries.renew-your-card-before-it-runs-out.body":
+    "When your community allows it, you can renew a membership card yourself from your account instead of waiting for an organiser to re-issue the whole roster. You also get a notice in the app thirty days before a card's term ends.",
+  "changelog.entries.volunteering-that-counts.title":
+    "Volunteering that counts",
+  "changelog.entries.volunteering-that-counts.body":
+    "Whoever posted the opportunity can now confirm you turned up and record the hours. Confirmed sessions earn recognition points, and your own total sits on the volunteering page. Hosting a gathering and publishing in the magazine count too.",
+  "changelog.entries.support-offers-a-community-receives.title":
+    "Support offers a community receives",
+  "changelog.entries.support-offers-a-community-receives.body":
+    "When the team offers a struggling community a hand, it now arrives. The moderators get a notification and see what was offered in their Mod tools, where they can answer yes please or not right now.",
+  "changelog.entries.see-how-often-your-cards-are-checked.title":
+    "See how often your cards are checked",
+  "changelog.entries.see-how-often-your-cards-are-checked.body":
+    "If your community issues membership cards, Mod tools now shows how many times they have been checked, and each card carries its own count. Nothing records who checked a card or where, and the log is kept for ninety days.",
+  "changelog.entries.check-what-happened-to-your-invite-request.title":
+    "You can check what happened to your invite request",
+  "changelog.entries.check-what-happened-to-your-invite-request.body":
+    "Asking to join used to end in silence. Now, when you send a request, you get a reference code to keep. Enter it any time and the status page tells you plainly where things stand: still being read, approved, or turned down. If it is a yes, your invite link is waiting there for you, so an approval can no longer go astray on its way to you.",
+  "changelog.entries.an-invite-you-can-address-to-a-person.title":
+    "An invite you can address to one person",
+  "changelog.entries.an-invite-you-can-address-to-a-person.body":
+    "When you make an invite you can now add the email address of the person it is for. It is optional. Fill it in and only someone signing in with that address can use the link, so a forwarded or screenshotted invite lets nobody else in. That matters because whoever redeems your invite arrives with you on record as their voucher. Leave it blank and the link keeps working for anyone holding it. Either way, nothing is sent to that address: you still pass the link on yourself.",
+  "changelog.entries.your-invites-are-where-you-can-find-them.title":
+    "Your invites are where you would look for them",
+  "changelog.entries.your-invites-are-where-you-can-find-them.body":
+    'Inviting someone was hidden behind a single button on your connections page, so unspent invites quietly expired. There is now an "Invite someone" row in your account menu with a count of what you have left this month, and a small card on your own profile telling you when the allowance resets. Your sent invites also show who each one was for, with a copy button on every link that still works.',
+  "changelog.entries.account-security-has-a-real-home.title":
+    "Account security has a real home",
+  "changelog.entries.account-security-has-a-real-home.body":
+    'Clicking "security" in your settings used to open our vulnerability policy for security researchers, which is not what anyone was looking for. That policy has moved to the policies section, where it belongs. In its place is a page about your account: how you sign in, how many sessions are open, which devices get push, and where to download or delete your data. Where something does not exist yet, the page says so instead of pretending.',
+  "changelog.entries.your-photos-come-with-your-export.title":
+    "Your photos come with your data export",
+  "changelog.entries.your-photos-come-with-your-export.body":
+    "The export described your pictures without including them, so the links stopped working the moment an account was gone. Every file you have uploaded now travels inside the archive, with an index saying what each one is. Your magazine writing and drafts, the communities you own and the posts you wrote in them, your volunteering, your governance votes and your reviews are all in there too. Choose the CSV or Both format to get the files themselves.",
+  "changelog.entries.every-page-announces-itself.title":
+    "Every page announces itself to a screen reader",
+  "changelog.entries.every-page-announces-itself.body":
+    "Moving between pages used to be silent for anyone using a screen reader, which made the whole app hard to follow. Each page now says its name on arrival and puts you at the start of the content. The admin and sign-in layouts gained a skip link and a proper main landmark, and the governance editors can be reordered with buttons, so arranging a list no longer needs a mouse drag.",
+  "changelog.entries.the-contact-form-reaches-a-person.title":
+    "The contact form reaches a person",
+  "changelog.entries.the-contact-form-reaches-a-person.body":
+    "Messages sent through the contact and partnership forms were being stored where nobody could read them, and the same was true of eleven of the twelve application and suggestion forms across the site. Grant applications, edit suggestions, sober host offers, panel signups and the Culture submissions all now land in one console the team works through, with a record of who picked each one up and when.",
+  "changelog.entries.an-approved-invite-can-be-found-again.title":
+    "An approved invite can be found again",
+  "changelog.entries.an-approved-invite-can-be-found-again.body":
+    "When a reviewer welcomed someone in, the invite link appeared once and vanished on the next refresh, which could strand the person waiting for it. Decided requests now have their own tab with the link kept alongside them, its expiry shown, and a way to reissue one that ran out. Any moderator can do it, where before only the person who made the original decision could.",
+  "changelog.entries.no-stock-photo-on-a-real-application.title":
+    "No stock photo on a real application",
+  "changelog.entries.no-stock-photo-on-a-real-application.body":
+    "Admin screens were matching people by name against a set of sample photos used in our demo, which meant a real applicant could be shown to a reviewer wearing a stranger's face. Anywhere real people are listed now uses their own picture, or their initials when they have none.",
+
   "changelog.entries.the-transparency-report-is-published.title":
     "The transparency report is published",
   "changelog.entries.the-transparency-report-is-published.body":
@@ -6822,4 +6923,93 @@ export const marketing: Catalog = {
     "Community moderators can read what was reported",
   "changelog.entries.community-mods-can-read-what-was-reported.body":
     "A moderator opening a report used to see a reason and a timestamp, then had to decide whether to remove something they could not read. Reports now carry the post itself, who wrote it, how urgent it is and when it is due. Urgent reports about outing or personal details go to trained staff instead.",
+
+  // ── SecurityPolicyPage.tsx — vulnerability disclosure ──────────────────────────
+  // The acknowledgement credits (securityPolicy.data.ts SECURITY_HALL_OF_FAME) are
+  // attribution records: researcher names plus the vuln type/date they
+  // reported. They stay in English like the other stored/record values noted at
+  // the top of this file, and the grid is hidden entirely while the list is
+  // empty, so no credit is ever invented.
+  "securityPolicy.meta.title": "Security & vulnerability disclosure",
+  "securityPolicy.meta.description":
+    "How to report a security vulnerability in QueerPulse, what is in scope, and what happens after you report it.",
+  "securityPolicy.hero.eyebrow": "Vulnerability disclosure",
+  "securityPolicy.hero.titleTop": "Found something?",
+  "securityPolicy.hero.titleEm": "Tell us.",
+  "securityPolicy.hero.sub":
+    "We take security seriously. If you've found a vulnerability in QueerPulse, we want to know about it. This page explains how to report it, what to expect, and how we handle disclosures.",
+
+  "securityPolicy.commitment.eyebrow": "Our commitment",
+  "securityPolicy.commitment.title": "We won't <em>punish</em> good faith.",
+  "securityPolicy.commitment.body1":
+    "Security researchers who report vulnerabilities in good faith will not face legal action from us. We will not contact your employer, ISP, or law enforcement unless you use your access to harm members. We believe security research makes everyone safer, and we're grateful when people take the time to report what they find.",
+  "securityPolicy.commitment.body2":
+    "We ask that you give us reasonable time to fix an issue before disclosing it publicly. In return, we commit to acknowledging your report within 48 hours, keeping you updated on progress, and crediting you in our security acknowledgements if you'd like.",
+
+  "securityPolicy.scope.eyebrow": "Scope",
+  "securityPolicy.scope.title": "What's <em>in scope.</em>",
+  "securityPolicy.scope.inLabel": "In scope",
+  "securityPolicy.scope.outLabel": "Out of scope",
+  "securityPolicy.scope.in.1": "queerpulse.com and *.queerpulse.com",
+  "securityPolicy.scope.in.2": "Authentication & session management",
+  "securityPolicy.scope.in.3": "Data access & privilege escalation",
+  "securityPolicy.scope.in.4": "Stored and reflected XSS",
+  "securityPolicy.scope.in.5": "CSRF on authenticated endpoints",
+  "securityPolicy.scope.in.6": "SQL injection",
+  "securityPolicy.scope.in.7": "Insecure direct object references",
+  "securityPolicy.scope.in.8": "Sensitive data exposure",
+  "securityPolicy.scope.out.1": "Denial of service attacks",
+  "securityPolicy.scope.out.2": "Social engineering of our team",
+  "securityPolicy.scope.out.3": "Physical attacks against infrastructure",
+  "securityPolicy.scope.out.4": "Spam or rate-limiting bypass",
+  "securityPolicy.scope.out.5":
+    "Third-party infrastructure (Hetzner, Postmark, Backblaze)",
+  "securityPolicy.scope.out.6": "Clickjacking on non-sensitive pages",
+  "securityPolicy.scope.out.7": "Missing security headers (report only)",
+
+  "securityPolicy.process.eyebrow": "Process",
+  "securityPolicy.process.aria": "What happens after you report",
+  "securityPolicy.process.title": "What happens <em>after you report.</em>",
+  "securityPolicy.process.step1.title": "Acknowledgement",
+  "securityPolicy.process.step1.text":
+    "We'll confirm receipt within 48 hours and let you know we're looking at it. We'll assign a reference number so we can track it together.",
+  "securityPolicy.process.step1.note": "Target: 48 hours",
+  "securityPolicy.process.step2.title": "Assessment",
+  "securityPolicy.process.step2.text":
+    "We'll investigate and assess the severity. We'll keep you updated and may ask follow-up questions. If we can't reproduce it, we'll tell you why.",
+  "securityPolicy.process.step2.note": "Target: 5 working days",
+  "securityPolicy.process.step3.title": "Fix",
+  "securityPolicy.process.step3.text":
+    "For confirmed vulnerabilities, we'll fix and deploy a patch. The timeline depends on severity. Critical issues are treated as emergencies.",
+  "securityPolicy.process.step3.note":
+    "Critical: <72h · High: <7 days · Medium/Low: next release",
+  "securityPolicy.process.step4.title": "Disclosure",
+  "securityPolicy.process.step4.text":
+    "We'll coordinate a disclosure timeline with you. We'll credit you in our security acknowledgements unless you prefer anonymity.",
+  "securityPolicy.process.step4.note": "Default: 90-day coordinated disclosure",
+
+  "securityPolicy.ack.eyebrow": "Acknowledgements",
+  "securityPolicy.ack.title": "Security <em>researchers</em> who've helped.",
+  "securityPolicy.ack.body":
+    "We're grateful to the following researchers who disclosed vulnerabilities responsibly. (Listed with permission.)",
+  "securityPolicy.ack.empty":
+    "Nobody is credited here yet. Report something and, if you'd like the credit, your name goes up.",
+
+  "securityPolicy.report.titleTop": "Report a",
+  "securityPolicy.report.titleEm": "vulnerability",
+  "securityPolicy.report.body":
+    "Encrypt your report using our PGP key and email us. Please include steps to reproduce, the potential impact, and any proof of concept.",
+  "securityPolicy.report.cta": "Email security team",
+  "securityPolicy.pgp.label": "PGP public key",
+  "securityPolicy.pgp.copyCta": "Copy key",
+  "securityPolicy.pgp.copied": "PGP key copied.",
+  "securityPolicy.pgp.copyFailed": "Copy failed. Select and copy manually.",
+  "securityPolicy.pgp.unavailable":
+    "We haven't published a key yet. Email us in plain text and we'll agree on an encrypted channel before you send any detail.",
+
+  "securityPolicy.outro.titleTop": "Security is",
+  "securityPolicy.outro.titleEm": "community work.",
+  "securityPolicy.outro.sub":
+    "Thank you to everyone who helps keep QueerPulse safe.",
+  "securityPolicy.outro.cta": "Contact the security team",
 };

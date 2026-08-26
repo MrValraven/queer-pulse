@@ -127,6 +127,15 @@
   font-style: italic;
 }
 
+/* One quiet line under the serial: how often this card has been checked. It
+   is an abuse signal for the issuer, so it must be readable without pulling
+   attention off the name and status. */
+.usage {
+  margin: 4px 0 0;
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
 .statusTag {
   flex-shrink: 0;
 }

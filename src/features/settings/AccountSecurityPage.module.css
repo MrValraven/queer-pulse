@@ -1,0 +1,250 @@
+/* AccountSecurityPage — the member's own security hub (/account/security).
+   Chrome deliberately mirrors SessionsPage/PushDevicesPage, the two pages this
+   one routes to, so moving between them reads as one surface. */
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  /* nav band reserved by shell (base.css); this is only breathing room */
+  padding: 28px 28px 80px;
+}
+.back {
+  font-size: 13px;
+  color: var(--ink-40);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 22px;
+  transition: color 0.2s;
+}
+@media (hover: hover) {
+  .back:hover {
+    color: var(--text-strong);
+  }
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 5vw, 52px);
+  color: var(--text-strong);
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  margin-bottom: 14px;
+  max-width: 20ch;
+}
+.h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.lead {
+  font-size: 15.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  max-width: 58ch;
+  margin-bottom: 32px;
+}
+
+/* Section header, identical to the sessions list's. */
+.sectionH {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin: 36px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.1);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* One posture row: icon, what it is + where it stands, and the way through. */
+.row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 16px;
+  padding: 20px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 18px;
+  align-items: center;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .row:hover {
+    border-color: rgba(var(--line-rgb), 0.18);
+    box-shadow: 0 12px 26px -22px rgba(var(--plum-rgb), 0.4);
+  }
+}
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 40px 1fr;
+    align-items: flex-start;
+  }
+  .rowAction {
+    grid-column: 2;
+  }
+}
+
+.ic {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(var(--plum-rgb), 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.ic svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--plum);
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (max-width: 640px) {
+  .ic {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+  .ic svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+.rowTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.rowValue {
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.6;
+  /* Device labels and email addresses have long unbreakable stretches. */
+  overflow-wrap: anywhere;
+}
+.rowValue b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.rowNote {
+  margin-top: 5px;
+  font-size: 12.5px;
+  color: var(--ink-40);
+  line-height: 1.55;
+}
+.rowAction {
+  flex: none;
+}
+
+/* Danger-tinted variant for the erasure row. */
+.rowDanger {
+  border-color: rgba(var(--accent-rgb), 0.3);
+  background: rgba(var(--accent-rgb), 0.04);
+}
+.rowDanger .ic {
+  background: rgba(var(--accent-rgb), 0.12);
+}
+.rowDanger .ic svg {
+  stroke: var(--accent-ink);
+}
+
+/* A pending erasure is the loudest thing on the page while it exists. */
+.pending {
+  padding: 18px 22px;
+  background: rgba(var(--accent-rgb), 0.07);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: 14px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+  margin-bottom: 12px;
+}
+.pending b {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+/* "What we cannot do yet" — prose, never a control. */
+.notYet {
+  margin-top: 14px;
+  padding: 18px 22px;
+  background: rgba(var(--plum-rgb), 0.04);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 14px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+}
+.notYetTitle {
+  font-weight: 700;
+  color: var(--text-strong);
+  margin-bottom: 6px;
+}
+.notYetList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.notYetList li {
+  padding-left: 16px;
+  position: relative;
+}
+.notYetList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(var(--line-rgb), 0.35);
+}
+.notYetList li + li {
+  margin-top: 5px;
+}
+
+/* Compromised-account footnote, same treatment as the sessions page's. */
+.footNote {
+  margin-top: 32px;
+  padding: 18px 22px;
+  background: rgba(var(--accent-rgb), 0.05);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: var(--ink-60);
+  line-height: 1.65;
+}
+.footNote b {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.footNote a {
+  color: var(--text-strong);
+  font-weight: 600;
+  text-decoration: none;
+}

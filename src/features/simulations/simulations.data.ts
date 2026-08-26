@@ -305,13 +305,6 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
         to: routes.offline,
       },
       {
-        id: "geo-restricted",
-        title: "Geo-restricted",
-        description:
-          "See the screen shown when content isn’t available in the member’s region.",
-        to: routes.geoRestricted,
-      },
-      {
         id: "server-error",
         title: "Server error",
         description:

@@ -18,7 +18,11 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/drafts", routes.drafts],
   ["/settings", routes.settings],
   ["/edit-profile", routes.editProfile],
-  ["/security", routes.security],
+  // `/security` was the disclosure policy's original short path and the one the
+  // public footer resolved from, so it follows the policy to `/policies/security`
+  // rather than the member hub that now holds `/account/security` (which a
+  // logged-out researcher would only be bounced off). ID-15.
+  ["/security", routes.policiesSecurity],
   ["/sessions", routes.sessions],
   ["/data-export", routes.dataExport],
   ["/delete-account", routes.deleteAccount],
@@ -127,7 +131,6 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/500", routes.serverError],
   ["/maintenance", routes.maintenance],
   ["/offline", routes.offline],
-  ["/geo-restricted", routes.geoRestricted],
   ["/pwa-prompt", routes.pwaPrompt],
   ["/account-banned", routes.accountBanned],
   ["/account-locked", routes.accountLocked],

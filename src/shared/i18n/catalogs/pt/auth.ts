@@ -110,6 +110,14 @@ export const auth: Catalog = {
   "invite.deliveryMethod.email": "Email",
   "invite.deliveryMethod.link": "Partilhar um link",
 
+  "invite.compose.recipientEmail.label": "Para quem é",
+  "invite.compose.recipientEmail.placeholder": "pessoa@exemplo.com",
+  "invite.compose.recipientEmail.help":
+    "Quem usar este convite entra com o teu aval registado e fica ligade a ti desde o primeiro dia. Se preencheres um endereço, só quem iniciar sessão com essa conta Google o pode usar, por isso um link reencaminhado ou fotografado não deixa entrar mais ninguém; se deixares em branco, qualquer pessoa com o link o pode usar.",
+  "invite.compose.recipientEmail.noSend":
+    "Preencher isto não envia nada para esse endereço. O link continua a ser partilhado por ti.",
+  "invite.compose.recipientEmail.invalid":
+    "Isto não parece um endereço de email. Verifica ou deixa o campo vazio.",
   "invite.compose.vouch.label": "O teu aval",
   "invite.compose.vouch.placeholder":
     "Porque é que devia entrar? Uma ou duas frases já ajudam bastante.",
@@ -161,6 +169,10 @@ export const auth: Catalog = {
   "invite.ready.headline": "O teu convite está <em>pronto</em>",
   "invite.ready.sub":
     "Partilha da forma que fizer mais sentido. É válido para uma utilização.",
+  "invite.ready.pinnedTo":
+    "Reservado para {email}. Só uma conta Google com esse endereço o pode usar.",
+  "invite.ready.pinnedSend":
+    "Não foi enviado nada a essa pessoa. O link é partilhado por ti, da forma que fizer mais sentido.",
   "invite.ready.linkCopied": "Link copiado",
   "invite.ready.copyFailed": "Não foi possível copiar. Tenta selecionar o link",
   "invite.ready.copyLinkAriaLabel": "Copiar link de convite",
@@ -189,6 +201,13 @@ export const auth: Catalog = {
   "invite.sentList.detail.sentExpires": "Enviado {sent} · expira {expires}",
   "invite.sentList.detail.sentExpired": "Enviado {sent} · expirou {expires}",
   "invite.sentList.detail.sent": "Enviado {sent}",
+  "invite.sentList.anyoneWithLink": "Qualquer pessoa com o link",
+  "invite.sentList.pinnedNote": "Só este endereço o pode usar",
+  "invite.sentList.copyLinkCta": "Copiar link",
+  "invite.sentList.copyLinkAriaLabel": "Copiar link do convite para {invite}",
+  "invite.sentList.linkCopied": "Link do convite copiado",
+  "invite.sentList.copyFailed":
+    "Não foi possível copiar o link. Tenta selecioná-lo.",
   "invite.sentList.revokeCta": "Revogar",
   "invite.sentList.revoking": "A revogar…",
   "invite.sentList.revokedToast":
@@ -280,6 +299,7 @@ export const auth: Catalog = {
   "requestInvite.sub":
     "O QueerPulse cresce através de confiança. A forma mais certa de entrar é uma pessoa que já cá está avalizar-te, por isso se conheces alguém aqui, pede-lhe. Se não conheces, conta-nos um pouco sobre ti e tratamos do resto.",
   "requestInvite.alreadyMember": "Já fazes parte? Entrar",
+  "requestInvite.checkStatusLink": "Já pediste? Consulta o teu pedido",
   "requestInvite.field.name.label": "O teu nome",
   "requestInvite.field.name.placeholder": "Alex",
   "requestInvite.field.name.error": "Diz-nos como te chamas.",
@@ -321,9 +341,9 @@ export const auth: Catalog = {
   "requestInvite.under18BackLabel": "Voltar ao formulário",
   "requestInvite.sent.title": "Estás na <em>lista.</em>",
   "requestInvite.sent.sub_withName":
-    "Obrigade, {name}. O teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
+    "Obrigade, {name}. O teu pedido para entrar no QueerPulse foi enviado. Guarda o código aqui em baixo num sítio seguro, é assim que voltas a saber dele.",
   "requestInvite.sent.sub_noName":
-    "Obrigade. O teu pedido para entrar no QueerPulse foi enviado. Aqui está o que acontece a seguir.",
+    "Obrigade. O teu pedido para entrar no QueerPulse foi enviado. Guarda o código aqui em baixo num sítio seguro, é assim que voltas a saber dele.",
   "requestInvite.sent.backHome": "Voltar ao início",
   // O caso 409: já existe um pedido em aberto para este email. Não correu nada
   // mal, por isso isto lê-se como confirmação e nunca como falha.
@@ -334,14 +354,39 @@ export const auth: Catalog = {
     "Já nos tinhas pedido. O teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
   "requestInvite.whatNext.readsIt.title": "Uma pessoa real lê-o",
   "requestInvite.whatNext.readsIt.body":
-    "Uma pessoa da comunidade vê cada pedido, sem algoritmo e sem pontuação de lista de espera.",
+    "Uma pessoa da comunidade vê cada pedido, à mão. É por isso que pode demorar alguns dias.",
   "requestInvite.whatNext.connection.title": "Procuramos uma ligação",
   "requestInvite.whatNext.connection.body":
     "Se já houver alguém aqui que te possa avalizar, essa é a forma mais certa de entrar. Partilhar o email dessa pessoa ajuda-nos a encontrá-la.",
-  "requestInvite.whatNext.hearBack.title":
-    "Se for que sim, alguém entra em contacto",
-  "requestInvite.whatNext.hearBack.body":
-    "Uma pessoa da comunidade envia o teu link de convite para o endereço que nos deste, normalmente dentro de umas semanas. Não conseguimos responder a todos os pedidos, por isso, se ficar tudo calado, pedir a alguém que já conheces aqui é a forma mais certa de entrar.",
+  // Substitui o antigo passo `hearBack`, que prometia uma mensagem que nenhum
+  // serviço de email existe para enviar e depois dizia a quem não tem contactos
+  // cá dentro que o silêncio significava desistir. Agora o mecanismo é real:
+  // ficam com um código, e a resposta espera por elas na página de estado.
+  "requestInvite.whatNext.checkBack.title": "Consultas com o teu código",
+  "requestInvite.whatNext.checkBack.body":
+    "Não enviamos nada por email, por isso o teu código de referência é a forma de saberes. Abre a tua página de estado quando quiseres, e se for que sim, o teu link de convite está lá à espera.",
+
+  // ── O código de referência, entregue no ecrã de confirmação ──
+  // O backend guarda apenas um hash deste código e nada o reenvia, por isso
+  // este bloco é todo o mecanismo de entrega. Calmo, e claro sobre a razão:
+  // assustar alguém que acabou de pedir para entrar seria pouco simpático e
+  // ainda menos eficaz.
+  "requestInvite.reference.title": "O teu código de referência",
+  "requestInvite.reference.fieldLabel": "Código de referência",
+  "requestInvite.reference.copy": "Copiar",
+  "requestInvite.reference.copied": "Copiado",
+  "requestInvite.reference.copiedToast": "Código de referência copiado.",
+  "requestInvite.reference.copyErrorToast":
+    "Não conseguimos copiar. Seleciona o código e copia à mão.",
+  "requestInvite.reference.body":
+    "Este código é a forma de consultares o teu pedido. Guarda-o num sítio onde o voltes a encontrar: não enviamos nada por email, e não conseguimos emitir o código uma segunda vez.",
+  "requestInvite.reference.checkCta": "Consultar o meu pedido",
+  // O caso 409: já existe um pedido em aberto, por isso não há linha nova nem
+  // código novo. Nunca mostrar um espaço vazio; apontar para o que já têm.
+  "requestInvite.reference.noCode":
+    "O teu primeiro pedido já tem um código, do dia em que o enviaste. Não há um novo aqui, porque não há um pedido novo.",
+  "requestInvite.reference.enterCodeCta":
+    "Consultar o meu pedido com esse código",
 
   // Estados antecipados, mostrados a partir de GET /platform-status ANTES do
   // envio, para ninguém preencher o formulário todo só para ser rejeitade ao
@@ -351,6 +396,132 @@ export const auth: Catalog = {
     "Não estamos a receber novos pedidos de convite neste momento. Volta a passar por aqui em breve.",
   "requestInvite.closedError":
     "Os pedidos de convite ficaram em pausa enquanto preenchias isto. Tenta novamente mais tarde.",
+
+  // ── Estado do pedido de entrada (/auth/request-invite/status) ──
+  // A vista que a própria pessoa tem do seu pedido. Pública: quem precisa desta
+  // página não tem conta, por definição. Seis estados, uma moldura calma. Nunca
+  // escrever nada que sugira uma lista de espera: o backend reporta de propósito
+  // um pedido em lista de espera como "em análise", porque dizer a alguém que
+  // está numa lista é uma decisão que ainda não tomámos.
+  "joinRequestStatus.eyebrow": "O teu pedido",
+  "joinRequestStatus.backHome": "Voltar ao início",
+  "joinRequestStatus.contactCta": "Falar connosco",
+  "joinRequestStatus.loading": "A consultar o teu pedido…",
+
+  // O caminho de recuperação: guardaram o código e perderam o link.
+  "joinRequestStatus.form.title": "Consulta o teu <em>pedido.</em>",
+  "joinRequestStatus.form.lead":
+    "Introduz o código de referência que recebeste quando enviaste o pedido, e dizemos-te em que ponto está.",
+  "joinRequestStatus.form.label": "Código de referência",
+  "joinRequestStatus.form.placeholder": "Cola aqui o teu código",
+  "joinRequestStatus.form.helper":
+    "É o código comprido do ecrã que viste logo depois de enviares o pedido.",
+  "joinRequestStatus.form.error":
+    "Introduz o código de referência que recebeste.",
+  "joinRequestStatus.form.submit": "Consultar o meu pedido",
+
+  // Ainda com quem revê. Sem data prometida, porque não temos nenhuma.
+  "joinRequestStatus.underReview.eyebrow": "Ainda connosco",
+  "joinRequestStatus.underReview.title":
+    "O teu pedido está a <em>ser lido.</em>",
+  "joinRequestStatus.underReview.lead":
+    "Enviaste-o {ago}, a {date}. Uma pessoa da comunidade lê cada pedido à mão, e isso pode demorar alguns dias.",
+  "joinRequestStatus.underReview.leadNoDate":
+    "O teu pedido está com uma pessoa da comunidade. Cada pedido é lido à mão, e isso pode demorar alguns dias.",
+  "joinRequestStatus.underReview.leadDateOnly":
+    "Enviaste-o a {date}. Uma pessoa da comunidade lê cada pedido à mão, e isso pode demorar alguns dias.",
+  "joinRequestStatus.underReview.note":
+    "Não tens de fazer nada enquanto esperas. Volta a esta página quando quiseres, o teu código continua a funcionar.",
+  "joinRequestStatus.underReview.foot":
+    "Mudou alguma coisa, ou queres acrescentar algo ao teu pedido? <a>Falar connosco</a>",
+
+  // Aprovado, convite ainda válido. A boa notícia.
+  "joinRequestStatus.approved.eyebrow": "Estás dentro",
+  "joinRequestStatus.approved.title": "És <em>bem-vinde aqui.</em>",
+  "joinRequestStatus.approved.lead":
+    "O teu pedido foi aprovado a {date}. O teu convite está aqui em baixo. Abre-o para criares a tua conta.",
+  "joinRequestStatus.approved.leadNoDate":
+    "O teu pedido foi aprovado. O teu convite está aqui em baixo. Abre-o para criares a tua conta.",
+  "joinRequestStatus.approved.linkLabel": "O teu link de convite",
+  "joinRequestStatus.approved.copy": "Copiar",
+  "joinRequestStatus.approved.copied": "Copiado",
+  "joinRequestStatus.approved.copiedToast": "Link de convite copiado.",
+  "joinRequestStatus.approved.copyErrorToast":
+    "Não conseguimos copiar. Seleciona o link e copia à mão.",
+  "joinRequestStatus.approved.cta": "Abrir o meu convite",
+  "joinRequestStatus.approved.note":
+    "Este convite traz uma pessoa, e essa pessoa és tu. Guarda o link só para ti.",
+  "joinRequestStatus.approved.foot":
+    "Problemas a abri-lo? <a>Falar connosco</a>",
+
+  // Aprovado, mas o convite já foi usado, revogado ou expirou. Um estado real,
+  // com o seu próprio caminho de recuperação, nunca misturado com o anterior.
+  "joinRequestStatus.approvedSpent.eyebrow": "Aprovado",
+  "joinRequestStatus.approvedSpent.title":
+    "O teu convite <em>já não está válido.</em>",
+  "joinRequestStatus.approvedSpent.lead":
+    "Foste aprovade a {date}, mas o convite por trás deste código já foi usado ou expirou. Diz-nos e emitimos um novo.",
+  "joinRequestStatus.approvedSpent.leadNoDate":
+    "Foste aprovade, mas o convite por trás deste código já foi usado ou expirou. Diz-nos e emitimos um novo.",
+  "joinRequestStatus.approvedSpent.cta": "Pedir um novo convite",
+  "joinRequestStatus.approvedSpent.signInCta": "Já criei a minha conta",
+  "joinRequestStatus.approvedSpent.foot":
+    "O sim mantém-se. Só o link é que expirou.",
+
+  // Recusado. O estado que exige mais cuidado: dizer o que aconteceu, manter a
+  // limitação do nosso lado sempre que isso for honesto, e deixar sempre uma
+  // pessoa com quem falar.
+  "joinRequestStatus.declined.eyebrow": "Já o lemos",
+  "joinRequestStatus.declined.title": "Desta vez <em>não.</em>",
+  "joinRequestStatus.declined.lead":
+    "Uma pessoa da comunidade leu o teu pedido a {date}, e desta vez não conseguimos receber-te.",
+  "joinRequestStatus.declined.leadNoDate":
+    "Uma pessoa da comunidade leu o teu pedido, e desta vez não conseguimos receber-te.",
+  // `underage` tem título e entrada próprios, e mostra o aviso 18+ de apoio que
+  // a plataforma já tem em vez de um motivo: uma pessoa jovem tem de encontrar
+  // uma porta aberta com uma data, nunca um veredicto sobre quem é.
+  "joinRequestStatus.declined.titleUnderage":
+    "Estamos cá <em>quando fizeres 18.</em>",
+  "joinRequestStatus.declined.leadUnderage":
+    "Uma pessoa da comunidade leu o teu pedido a {date}. O QueerPulse é 18+ por agora, por isso ainda não te podemos receber.",
+  "joinRequestStatus.declined.leadUnderageNoDate":
+    "Uma pessoa da comunidade leu o teu pedido. O QueerPulse é 18+ por agora, por isso ainda não te podemos receber.",
+  "joinRequestStatus.declined.reasonTitle": "O que te podemos dizer",
+  "joinRequestStatus.declined.contactCta": "Falar connosco",
+
+  // Formulação virada para a pessoa que pediu, sobre as mesmas chaves fechadas
+  // que a fila de moderação usa (`joinRequestDeclineReason.ts`). As etiquetas de
+  // admin são notação de quem revê e aqui soariam a acusação, por isso estas
+  // dizem o que aconteceu, de quem foi a limitação, e o que fazer a seguir.
+  "joinRequestStatus.declineReason.spam_pattern":
+    "O teu pedido chegou com um formato que quem revê vê sobretudo em envios automáticos, por isso não teve a leitura que merecia. Se foste tu a escrevê-lo, fala connosco e voltamos a olhar para ele.",
+  "joinRequestStatus.declineReason.underage":
+    "O QueerPulse é 18+ por agora. Isso tem que ver com a lei e com manter espaços de adultos como espaços de adultos, e não diz nada sobre ti.",
+  "joinRequestStatus.declineReason.implausible":
+    "Quem reviu não conseguiu situar o suficiente do que escreveste para ficar segure, e um formulário curto dá muito pouco por onde pegar. Se alguém que já cá está te conhece, pede-lhe que te avalize, e podes escrever-nos entretanto.",
+  "joinRequestStatus.declineReason.safety_concern":
+    "Algo no pedido levantou uma questão de segurança para as pessoas que já cá estão, por isso travámos. Se quiseres falar sobre isso, escreve-nos e uma pessoa vai ler.",
+  "joinRequestStatus.declineReason.other":
+    "Quem reviu não deixou um motivo que possamos mostrar aqui. Se quiseres perceber, escreve-nos e uma pessoa responde.",
+
+  // Uma só resposta para o 400 (código malformado) e para o 404 (pedido
+  // inexistente), para que testar códigos não revele quais existem.
+  "joinRequestStatus.notFound.eyebrow": "Sem correspondência",
+  "joinRequestStatus.notFound.title": "Não <em>encontrámos isso.</em>",
+  "joinRequestStatus.notFound.lead":
+    "Não encontrámos nenhum pedido para esse código. Vê se falta um carácter ou se ficou um espaço a mais e tenta outra vez. Se mesmo assim não resultar, fala connosco e uma pessoa ajuda-te.",
+  "joinRequestStatus.notFound.retryCta": "Tentar outro código",
+
+  // O servidor não respondeu. Diferente de "sem correspondência": não se sabe
+  // nada em nenhum sentido, e vale a pena tentar de novo.
+  "joinRequestStatus.unavailable.eyebrow": "Sem resposta",
+  "joinRequestStatus.unavailable.title":
+    "Não <em>conseguimos chegar ao QueerPulse.</em>",
+  "joinRequestStatus.unavailable.lead":
+    "O servidor não respondeu, por isso não te podemos dizer nada neste momento. O teu pedido está intacto. Espera um pouco e tenta novamente.",
+  "joinRequestStatus.unavailable.retryCta": "Tentar novamente",
+  "joinRequestStatus.unavailable.foot":
+    "Continua sem resposta? <a>Falar connosco</a>",
 
   // ── Onboarding (fluxo de 7 passos após o registo, em /onboarding) ──
   "onboarding.stepLabel": "Passo {current} de {total}",

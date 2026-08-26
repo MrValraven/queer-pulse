@@ -31,32 +31,12 @@ export function useMutedBadgeCategories() {
   };
 }
 
-/**
- * A member's intent to hide an earned badge from their profile, keyed by
- * badge key. Stored client-side only — there's no backend field to enforce
- * this on another viewer's request yet, so callers must surface that this
- * hides the badge here, not on the public profile (see BadgeDrawer).
- */
-export function useBadgeVisibilityPrefs() {
-  const [hiddenBadgeKeys, setHiddenBadgeKeys] = useLocalStorage<string[]>(
-    "qp-badges-hidden-from-profile-intent",
-    [],
-    isStringArray,
-  );
-
-  const toggleHidden = (badgeKey: string) => {
-    setHiddenBadgeKeys((previous) =>
-      previous.includes(badgeKey)
-        ? previous.filter((entry) => entry !== badgeKey)
-        : [...previous, badgeKey],
-    );
-  };
-
-  return {
-    isHidden: (badgeKey: string) => hiddenBadgeKeys.includes(badgeKey),
-    toggleHidden,
-  };
-}
+// Per-badge profile visibility used to live here as a `localStorage` list of
+// hidden badge keys, which changed nothing for any other viewer. It is a real
+// server column now (`recognition_awards.hidden_from_profile`, SUS-04) written
+// through `useSetBadgeVisibility` and honoured on the read path, so the
+// client-only hook is gone rather than left as a second, weaker source of
+// truth.
 
 const isStringRecord = (value: unknown): value is Record<string, string> =>
   typeof value === "object" &&

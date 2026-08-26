@@ -44,6 +44,10 @@ export function AdminVerifyQueueCards({
   onWaitlist,
   onToggleSelect,
   banEvasionBySubjectId,
+  currentUserId,
+  isAssignmentBusy,
+  onClaim,
+  onRelease,
 }: {
   /** Rows already welcomed in this session, held on screen for the invite link. */
   approved: JoinRequestView[];
@@ -60,6 +64,13 @@ export function AdminVerifyQueueCards({
    *  Advisory signals for the reviewer; empty for every applicant with
    *  nothing to check. */
   banEvasionBySubjectId: Map<string, BanEvasionAssessmentDTO>;
+  /** OPS-04. The signed-in reviewer, so a card can tell "you have this" from
+   *  "a colleague has this". Null while the session is still loading. */
+  currentUserId: string | null;
+  /** True while any claim/release in this queue is in flight. */
+  isAssignmentBusy: boolean;
+  onClaim: (item: JoinRequestView) => void;
+  onRelease: (item: JoinRequestView) => void;
 }) {
   return (
     <div className={styles.queueGrid}>
@@ -88,6 +99,10 @@ export function AdminVerifyQueueCards({
               onToggleSelect={onToggleSelect}
               isBusy={isDeciding}
               banEvasion={banEvasionBySubjectId.get(item.id)}
+              currentUserId={currentUserId}
+              isAssignmentBusy={isAssignmentBusy}
+              onClaim={() => onClaim(item)}
+              onRelease={() => onRelease(item)}
             />
           </FadeIn>
         );
@@ -102,12 +117,23 @@ export function AdminVerifyQueueWaitlist({
   onApprove,
   onDecline,
   banEvasionBySubjectId,
+  currentUserId,
+  isAssignmentBusy,
+  onClaim,
+  onRelease,
 }: {
   items: JoinRequestView[];
   decidingId: string | null;
   onApprove: (item: JoinRequestView) => void;
   onDecline: (item: JoinRequestView) => void;
   banEvasionBySubjectId: Map<string, BanEvasionAssessmentDTO>;
+  /** OPS-04. The signed-in reviewer, so a card can tell "you have this" from
+   *  "a colleague has this". Null while the session is still loading. */
+  currentUserId: string | null;
+  /** True while any claim/release in this queue is in flight. */
+  isAssignmentBusy: boolean;
+  onClaim: (item: JoinRequestView) => void;
+  onRelease: (item: JoinRequestView) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -135,6 +161,10 @@ export function AdminVerifyQueueWaitlist({
                 onToggleSelect={() => {}}
                 isBusy={isDeciding}
                 banEvasion={banEvasionBySubjectId.get(item.id)}
+                currentUserId={currentUserId}
+                isAssignmentBusy={isAssignmentBusy}
+                onClaim={() => onClaim(item)}
+                onRelease={() => onRelease(item)}
               />
             </FadeIn>
           );

@@ -166,6 +166,14 @@ export interface PartnerApplicationView {
   /** "Submitted by <name> · <date>" line for the card meta. */
   submittedLine: string;
   createdAt: string;
+  /** OPS-04. The reviewer holding this application, or null when nobody is. */
+  assignedStaffId: string | null;
+  /** Their display name; absent on an unclaimed application. */
+  assignedStaffName?: string;
+  /** ISO timestamp the application should have been answered by, or null when
+   *  it carries no clock. Read through `queueClock.ts`, never compared
+   *  inline. */
+  dueAt: string | null;
 }
 
 /** Format an ISO timestamp to a short "6 Jul 2026"; "" when absent/invalid. */
@@ -210,5 +218,10 @@ export function applicationToView(
     submittedBy,
     submittedLine,
     createdAt: dto.createdAt,
+    assignedStaffId: dto.assignedStaffId ?? null,
+    ...(dto.assignedStaffName
+      ? { assignedStaffName: dto.assignedStaffName }
+      : {}),
+    dueAt: dto.dueAt ?? null,
   };
 }

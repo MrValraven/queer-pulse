@@ -78,13 +78,27 @@ export function useForumComposerDraft({
   // The latest metadata, read inside the debounced save without making the
   // effect re-run (and so restart the timer) on every keystroke of the title.
   const metaRef = useRef<ForumDraftInput>({ title, body, href, kind });
-  metaRef.current = { title, body, href, kind };
   // Held in a ref so the restore effect does not depend on the caller passing a
   // referentially stable callback: a composer that recreated it each render
   // would otherwise re-read (and re-announce) its draft on every keystroke.
   const onRestoreRef = useRef(onRestore);
-  onRestoreRef.current = onRestore;
   const isMountedRef = useRef(true);
+
+  // Both refs are synced in an effect rather than assigned during render:
+  // writing a ref while rendering is what `react-hooks/refs` forbids, because
+  // a render React throws away (a Strict Mode double-invoke, or an abandoned
+  // concurrent attempt) would still have mutated it.
+  //
+  // Declared FIRST and with no dependency array on purpose. Effects run in
+  // declaration order after every commit, so both refs are current before the
+  // restore and autosave effects below read them, and `useRef`'s initial value
+  // already carries the first render's props, so the mount pass is covered
+  // too. Both consumers read these long after paint (a debounce timer and an
+  // async restore), so the one-commit lag is not observable.
+  useEffect(() => {
+    metaRef.current = { title, body, href, kind };
+    onRestoreRef.current = onRestore;
+  });
 
   useEffect(() => {
     isMountedRef.current = true;

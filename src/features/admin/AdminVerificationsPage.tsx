@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
 import { routes } from "../../app/routeMap";
+import { useAuth } from "../../app/providers/authContext";
 import { AdminVerificationRows } from "./AdminVerificationRows";
 import { VerificationDetailDrawer } from "./VerificationDetailDrawer";
 import { VerificationRequestDrawer } from "./VerificationRequestDrawer";
@@ -21,6 +22,12 @@ import {
 import { useReviewQueueKeyboardShortcuts } from "./useReviewQueueKeyboardShortcuts";
 import { useReviewQueueNextInQueue } from "./useReviewQueueNextInQueue";
 import { useReviewQueueSelection } from "./useReviewQueueSelection";
+import { useVerificationRequestAssignment } from "./useVerificationRequestAssignment";
+import { QueueAssignmentFilter } from "./QueueAssignmentFilter";
+import {
+  assignedToParam,
+  type QueueAssignmentScope,
+} from "./queueAssignmentScope";
 import {
   AdminVerificationsHeader,
   type AdminVerificationsHeaderValue,
@@ -129,17 +136,23 @@ export function AdminVerificationsPage() {
  */
 function ReviewQueueSegment() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { showToast } = useToast();
   const [status, setStatus] = useState<VerificationRequestStatusFilter>("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<VerificationRequestSort>("recent");
+  // OPS-04. Narrowed server-side (see `UseVerificationRequestsFilter`), so a
+  // claimed request that has not loaded yet still counts as mine.
+  const [assignmentFilter, setAssignmentFilter] =
+    useState<QueueAssignmentScope>("all");
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(
     null,
   );
   const searchWrapperRef = useRef<HTMLDivElement>(null);
+  const assignment = useVerificationRequestAssignment();
 
   const {
-    rows,
+    rows: fetchedRows,
     counts,
     isLoading,
     isError,
@@ -147,7 +160,15 @@ function ReviewQueueSegment() {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useVerificationRequests({ status, query, sort });
+  } = useVerificationRequests({
+    status,
+    query,
+    sort,
+    assignedTo: assignedToParam(assignmentFilter),
+  });
+  // A claim taken this session is overlaid before anything downstream reads a
+  // row, so the row list, the selection and the drawer all see one truth.
+  const rows = fetchedRows.map(assignment.withAssignment);
   const { bulkDecide, pending: bulkPending } =
     useBulkDecideVerificationRequests();
   const {
@@ -173,6 +194,13 @@ function ReviewQueueSegment() {
   // `handleHeaderChange`, rather than from an effect keyed on the filters.
   function handleStatusChange(nextStatus: VerificationRequestStatusFilter) {
     setStatus(nextStatus);
+    resetSelectionAndFocus();
+  }
+
+  function handleAssignmentFilterChange(next: QueueAssignmentScope) {
+    setAssignmentFilter(next);
+    // Same reset every other filter setter here does: a selection built under
+    // one narrowing is meaningless under the next.
     resetSelectionAndFocus();
   }
 
@@ -250,6 +278,14 @@ function ReviewQueueSegment() {
         />
       </FadeIn>
 
+      {/* Above the rows rather than among them: "Assigned to me" can
+          legitimately match nothing, and a control that vanished with the rows
+          would leave a reviewer no way back to "everything". */}
+      <QueueAssignmentFilter
+        value={assignmentFilter}
+        onChange={handleAssignmentFilterChange}
+      />
+
       <p className={styles.keyboardHint}>
         {t("admin:verifications.requests.keyboard.hint")}
       </p>
@@ -270,6 +306,10 @@ function ReviewQueueSegment() {
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           onLoadMore={() => void fetchNextPage()}
+          currentUserId={user?.id ?? null}
+          isAssignmentBusy={assignment.isPending}
+          onClaim={assignment.claim}
+          onRelease={assignment.release}
         />
       </FadeIn>
 

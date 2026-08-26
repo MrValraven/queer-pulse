@@ -10,6 +10,27 @@ import type { Catalog } from "../../types";
  * `*.data.ts` files — see docs/i18n/extraction-brief.md §1.
  */
 export const admin: Catalog = {
+  // ── Queue assignment + waiting-time clock (OPS-04) ────────────────────────
+  // Shared by every staff queue: invite requests, verification requests,
+  // intakes and partner applications. The moderation queue keeps its own
+  // `moderation.*` wording, which predates these and is already translated.
+  "queueClock.overdue": "Overdue",
+  "queueClock.overdueBy": "Overdue by {age}",
+  "queueAssignment.unassigned": "Nobody has this yet",
+  "queueAssignment.assignedToYou": "You have this",
+  "queueAssignment.assignedTo": "{name} has this",
+  "queueAssignment.someone": "Another reviewer",
+  "queueAssignment.claimCta": "Claim",
+  "queueAssignment.releaseCta": "Release",
+  "queueAssignment.claimAria": "Claim {row}",
+  "queueAssignment.releaseAria": "Release {row}",
+  "queueAssignment.errorToast": "That could not be saved. Try again.",
+  "queueAssignment.demoYou": "You",
+  "queueAssignment.filterLabel": "Show",
+  "queueAssignment.filter.all": "Everything",
+  "queueAssignment.filter.mine": "Assigned to me",
+  "queueAssignment.filter.unassigned": "Unclaimed",
+
   // ── Identity verification console ─────────────────────────────────────────
   "verifications.eyebrow": "Trust & safety",
   "verifications.title": "Identity <em>verification</em>",
@@ -456,6 +477,66 @@ export const admin: Catalog = {
   "members.verify.status.approved": "Approved",
   "members.verify.status.declined": "Declined",
 
+  // The queue has two halves: what is still waiting on a reviewer, and what has
+  // already been settled.
+  "members.verify.tabs.waiting": "Waiting",
+  "members.verify.tabs.decided": "Decided",
+
+  // Decided tab. It reads from the server, so a decision and the invite link it
+  // minted are still here after a refresh, a navigation away, or a bulk
+  // approval. Nothing is ever emailed, so that link is the reviewer's to carry
+  // over by hand, and an approval invite lapses after seven days.
+  "members.verify.decided.intro":
+    "Requests that have already been settled. An approval keeps its invite link here, so you can still hand it over.",
+  "members.verify.decided.searchLabel": "Search decided requests",
+  "members.verify.decided.searchPlaceholder": "Search by name or email",
+  "members.verify.decided.searchScopeNote_one":
+    "This searches the {count} decided request loaded here.",
+  "members.verify.decided.searchScopeNote_other":
+    "This searches the {count} decided requests loaded here.",
+  "members.verify.decided.empty":
+    "Nothing has been decided yet. Approvals and declines collect here.",
+  "members.verify.decided.noMatches":
+    "No decided request loaded here matches “{query}”.",
+  "members.verify.decided.appliedOn": "Applied {date}",
+  "members.verify.decided.decidedOn": "Decided {date}",
+  "members.verify.decided.decidedUnknown": "Decision date not recorded",
+  "members.verify.decided.declineReasonLine": "Reason: {reason}",
+
+  // The state of the invite an approval minted. It expires seven days after it
+  // is minted, and only an expired one can be reissued.
+  "members.verify.invite.chip.valid": "Link active",
+  "members.verify.invite.chip.used": "Link used",
+  "members.verify.invite.chip.expired": "Link expired",
+  "members.verify.invite.chip.revoked": "Link revoked",
+  "members.verify.invite.validDaysLeft_one":
+    "This link works for {count} more day. Send it to them.",
+  "members.verify.invite.validDaysLeft_other":
+    "This link works for {count} more days. Send it to them.",
+  "members.verify.invite.validToday":
+    "This link stops working today. Send it to them now.",
+  "members.verify.invite.validNoExpiry": "This link has no expiry on it.",
+  "members.verify.invite.expired":
+    "This link expired before anyone used it. Reissue it and the same link works again.",
+  "members.verify.invite.used":
+    "They used this link, so they are already here.",
+  "members.verify.invite.revoked":
+    "This link was revoked, so it no longer opens.",
+  "members.verify.invite.noneMinted":
+    "No invite code is on record for this approval. Ask an admin to look into it.",
+  "members.verify.invite.reissueCta": "Reissue link",
+  "members.verify.invite.reissuing": "Reissuing",
+  "members.verify.invite.reissuedToast":
+    "That link works again. Send it to {email}.",
+  "members.verify.invite.reissueError.forbidden":
+    "Reissuing an invite is for moderators and admins. Ask one of them to do it.",
+  "members.verify.invite.reissueError.notFound":
+    "There is no invite on this request to reissue. Refresh the tab and look again.",
+  "members.verify.invite.reissueError.notReissuable":
+    "This link was used or revoked, or it still works. There is nothing to reissue.",
+  "members.verify.invite.reissueError.generic":
+    "Could not reissue that link. Please try again.",
+
   // Quality-sampling tab: a periodic read-only look at past decisions for a
   // second admin to compare notes on. Not a signoff workflow — say so.
   "members.sample.intro":
@@ -530,7 +611,9 @@ export const admin: Catalog = {
   "staff.title": "Staff & <em>roles</em>",
   "staff.header.eyebrow": "Who runs QueerPulse",
   "staff.header.sub":
-    "Every moderator and admin on the platform. To change someone's role, open their profile in Members.",
+    "Every moderator and admin on the platform, plus everyone holding a staff grant. To change a role or a grant, open that person's profile in Members.",
+  "staff.grantsLabel": "Grants",
+  "staff.tier.member": "Member",
   "staff.empty": "Nobody holds a staff role right now.",
   "staff.loadError": "Couldn't load the staff roster.",
 
@@ -549,6 +632,21 @@ export const admin: Catalog = {
   "staffRoles.housingModerator.label": "Housing Moderator",
   "staffRoles.housingModerator.desc":
     "Can moderate Housing listings and groups.",
+  "staffRoles.directoryModerator.label": "Directory Moderator",
+  "staffRoles.directoryModerator.desc":
+    "Reviews the local directory queue and safe-space nominations, and manages safe-space badges. Flag reports stay with moderators.",
+  "staffRoles.resourceCurator.label": "Resource Curator",
+  "staffRoles.resourceCurator.desc":
+    "Writes and reviews the resource guides, service listings, suggestions and glossary. Publishing a guide stays with admins.",
+  "staffRoles.editorial.label": "Editorial",
+  "staffRoles.editorial.desc":
+    "Triages story submissions and writer applications, and keeps the film club, press kit and landing page current.",
+  "staffRoles.communities.label": "Communities",
+  "staffRoles.communities.desc":
+    "Works the community tag requests, topics and reading-group proposals, and sets community safety options. Freezing or reassigning a community stays with admins.",
+  "staffRoles.partnerships.label": "Partnerships",
+  "staffRoles.partnerships.desc":
+    "Reviews partner applications and keeps the partner directory, organisation tiers and changemakers current.",
   "staffRoles.adminSuperset": "Admins already have every staff capability.",
   "staffRoles.systemLocked": "System accounts can't hold staff roles.",
 
@@ -798,6 +896,7 @@ export const admin: Catalog = {
   "adminChangemakerNominations.error":
     "We couldn't load nominations. Please try again.",
   "adminChangemakerNominations.unknownMember": "A former member",
+  "adminChangemakerNominations.withheldMember": "Not shown here",
   "adminChangemakerNominations.row.by": "Nominated by {name}",
   "adminChangemakerNominations.row.sent": "Sent {date}",
   "adminChangemakerNominations.row.reviewedBy": "Reviewed by {name}",
@@ -883,6 +982,133 @@ export const admin: Catalog = {
   "adminConcerns.toast.error": "That didn't go through. Please try again.",
   "adminConcerns.loadMore": "Load more",
   "adminConcerns.loadingMore": "Loading…",
+
+  // ── ACQ-03: the intake console at /admin/intakes ────────────────────
+  // One reader for the two inboxes that had none: the eleven generic intake
+  // kinds (the twelfth, governance concerns, keeps its own page above) and the
+  // public contact/partnership messages. Nothing here sends anything: this
+  // platform delivers no email, so "handled" only ever means a person read it.
+  "adminIntakes.title": "Everything <em>people sent</em>",
+  "adminIntakes.header.eyebrow": "Front desk",
+  "adminIntakes.header.title": "What people <em>sent us</em>",
+  "adminIntakes.header.sub":
+    "Every form on the platform files into one of two inboxes: the intake forms (grants, edit suggestions, sober hosting, panel signups, incubator and culture submissions) and the messages sent through the contact page. This is where a person reads them.",
+  "adminIntakes.header.noEmailNote":
+    "QueerPulse sends no email. Marking something handled records that a person read it. Any answer goes out from your own inbox, to the address on the message.",
+
+  "adminIntakes.tab.waiting": "Waiting",
+  "adminIntakes.tab.intakes": "Intake forms",
+  "adminIntakes.tab.inquiries": "Inquiries",
+
+  "adminIntakes.waiting.allClear":
+    "Nothing is waiting. Every message and every submission has been picked up.",
+  "adminIntakes.waiting.inquiriesHeading_one": "{count} message waiting",
+  "adminIntakes.waiting.inquiriesHeading_other": "{count} messages waiting",
+  "adminIntakes.waiting.inquiriesNote":
+    "Sent through the contact page. Some are from people who could not sign in or could not get an invite, so they had nowhere else to go.",
+  "adminIntakes.waiting.inquiriesEmpty": "No messages are waiting.",
+  "adminIntakes.waiting.intakesHeading_one": "{count} submission waiting",
+  "adminIntakes.waiting.intakesHeading_other": "{count} submissions waiting",
+  "adminIntakes.waiting.intakesNote":
+    "Grant applications, edit suggestions, signups, and everything the incubator and culture forms collect.",
+  "adminIntakes.waiting.intakesEmpty": "No submissions are waiting.",
+  "adminIntakes.waiting.today": "Arrived today",
+  "adminIntakes.waiting.days_one": "Waiting {count} day",
+  "adminIntakes.waiting.days_other": "Waiting {count} days",
+
+  "adminIntakes.filter.allKinds": "All kinds",
+  "adminIntakes.filter.allStatuses": "All statuses",
+  "adminIntakes.filter.kindLabel": "Filter by kind",
+  "adminIntakes.filter.statusLabel": "Filter by status",
+  "adminIntakes.inquiryWaitingNote_one": "{count} message still waiting.",
+  "adminIntakes.inquiryWaitingNote_other": "{count} messages still waiting.",
+
+  "adminIntakes.empty": "No submissions match these filters.",
+  "adminIntakes.error": "We couldn't load submissions. Please try again.",
+  "adminIntakes.inquiryEmpty": "No messages match these filters.",
+  "adminIntakes.inquiryError": "We couldn't load messages. Please try again.",
+  "adminIntakes.loadMore": "Load more",
+  "adminIntakes.loadingMore": "Loading…",
+
+  "adminIntakes.kind.grant": "Micro-grant application",
+  "adminIntakes.kind.suggest_edit": "Edit suggestion",
+  "adminIntakes.kind.sober_host": "Sober event offer",
+  "adminIntakes.kind.panel_signup": "Grant panel signup",
+  "adminIntakes.kind.incubator_cohort": "Incubator application",
+  "adminIntakes.kind.incubator_mentor": "Mentor offer",
+  "adminIntakes.kind.incubator_session": "Mentoring session request",
+  "adminIntakes.kind.culture_suggest_pick": "Book club suggestion",
+  "adminIntakes.kind.culture_post_project": "Commission board project",
+  "adminIntakes.kind.culture_submit_work": "Showcase submission",
+  "adminIntakes.kind.culture_submit_playlist": "Playlist submission",
+  "adminIntakes.kind.governance_concern": "Governance concern",
+
+  "adminIntakes.status.new": "Waiting",
+  "adminIntakes.status.reviewed": "Read",
+  "adminIntakes.status.reviewing": "Being looked at",
+  "adminIntakes.status.resolved": "Resolved",
+  "adminIntakes.status.dismissed": "Dismissed",
+
+  "adminIntakes.inquiryKind.contact": "Contact",
+  "adminIntakes.inquiryKind.partner": "Partnership",
+  "adminIntakes.inquiryStatus.new": "Waiting",
+  "adminIntakes.inquiryStatus.handled": "Handled",
+
+  "adminIntakes.row.fromMember": "From",
+  "adminIntakes.row.contactEmail": "Reach them at {email}",
+  "adminIntakes.row.contactName": "Left their name: {name}",
+  "adminIntakes.row.noContact": "No way to reach them was left.",
+  "adminIntakes.row.org": "Organisation: {org}",
+  "adminIntakes.row.arrived": "Arrived {date}",
+  "adminIntakes.row.reviewedBy": "Read {date} by {name}",
+  "adminIntakes.row.reviewedNoOne": "Read {date}. No reviewer was recorded.",
+  "adminIntakes.row.handledBy": "Handled {date} by {name}",
+  "adminIntakes.row.handledNoOne": "Handled {date}. No handler was recorded.",
+
+  "adminIntakes.confidential.body":
+    "A governance concern arrived. What it says stays on the concerns page, where it can be triaged in full.",
+  "adminIntakes.confidential.openCta": "Open in Concerns",
+
+  "adminIntakes.action.reviewed": "Mark read",
+  "adminIntakes.action.markHandled": "Mark handled",
+  "adminIntakes.action.reopen": "Reopen",
+
+  "adminIntakes.toast.reviewed": "Marked as read.",
+  "adminIntakes.toast.handled": "Marked as handled.",
+  "adminIntakes.toast.reopened": "Moved back to waiting.",
+  "adminIntakes.toast.error": "That didn't go through. Please try again.",
+
+  "adminIntakes.payload.empty":
+    "This submission arrived with no fields filled in.",
+  "adminIntakes.field.about": "About the work",
+  "adminIntakes.field.applicantName": "Applicant",
+  "adminIntakes.field.author": "Author",
+  "adminIntakes.field.budgetItems": "Budget lines",
+  "adminIntakes.field.budgetTotal": "Budget total",
+  "adminIntakes.field.change": "Suggested change",
+  "adminIntakes.field.context": "Page",
+  "adminIntakes.field.description": "Description",
+  "adminIntakes.field.detail": "Details",
+  "adminIntakes.field.email": "Email",
+  "adminIntakes.field.expertise": "Expertise",
+  "adminIntakes.field.format": "Format",
+  "adminIntakes.field.link": "Link",
+  "adminIntakes.field.lookingFor": "Looking for",
+  "adminIntakes.field.medium": "Medium",
+  "adminIntakes.field.mentorName": "Mentor",
+  "adminIntakes.field.mentorRole": "Mentor's field",
+  "adminIntakes.field.message": "Message",
+  "adminIntakes.field.mode": "Offering",
+  "adminIntakes.field.name": "Name",
+  "adminIntakes.field.note": "Note",
+  "adminIntakes.field.pitch": "Pitch",
+  "adminIntakes.field.projectName": "Project",
+  "adminIntakes.field.projectSummary": "What it is",
+  "adminIntakes.field.term": "Entry",
+  "adminIntakes.field.title": "Title",
+  "adminIntakes.field.vibes": "Vibes",
+  "adminIntakes.field.when": "Availability",
+  "adminIntakes.field.why": "Why",
 
   "adminMagazineSubmissions.title": "Story <em>submissions</em>",
   "adminMagazineSubmissions.header.eyebrow": "Magazine",
@@ -1612,6 +1838,8 @@ export const admin: Catalog = {
   "communities.governanceLog.action.archived": "Archived",
   "communities.governanceLog.action.unarchived": "Unarchived",
   "communities.governanceLog.action.settings_changed": "Settings changed",
+  "communities.governanceLog.action.support_offered": "Support offered",
+  "communities.governanceLog.action.support_offer_answered": "Support answered",
 
   "communities.governanceLog.summary.role_changed": "{name}'s role changed",
   "communities.governanceLog.summary.member_removed":
@@ -1627,6 +1855,10 @@ export const admin: Catalog = {
     "The community was restored from the archive",
   "communities.governanceLog.summary.settings_changed":
     "Community settings changed",
+  "communities.governanceLog.summary.support_offered":
+    "Platform staff offered this community support",
+  "communities.governanceLog.summary.support_offer_answered":
+    "The moderators answered an offer of support",
 
   "communities.governanceLog.unknownMember": "A former member",
   "communities.governanceLog.byLine": "by {name}",
@@ -1720,7 +1952,6 @@ export const admin: Catalog = {
   "communities.support.cancelCta": "Cancel",
   "communities.support.sendCta": "Send support",
   "communities.support.sentToast": "Support sent to {name}'s moderators",
-  "communities.support.withdrawnToast": "Support request withdrawn",
   "communities.support.option.message.title": "Message the moderators",
   "communities.support.option.message.sub":
     "A warm check-in to {names}. How can we help?",
@@ -3615,6 +3846,7 @@ export const admin: Catalog = {
   "adminCommunityTagRequests.row.by": "Requested by {name}",
   "adminCommunityTagRequests.row.sent": "Sent {date}",
   "adminCommunityTagRequests.unknownRequester": "A member",
+  "adminCommunityTagRequests.withheldRequester": "Not shown here",
   "adminCommunityTagRequests.action.resolve": "Resolve",
   "adminCommunityTagRequests.empty": "No tag requests yet.",
   "adminCommunityTagRequests.error": "Couldn't load tag requests.",
@@ -3660,6 +3892,15 @@ export const admin: Catalog = {
   "governance.overview.badge.editedBy": "Edited by {name} on {date}",
   "governance.overview.edit.dragToReorder": "Drag to reorder",
   "governance.overview.edit.removeRow": "Remove this row",
+  // The row action cluster names the item it acts on, so a screen reader
+  // walking a section hears which row each button belongs to (ID-11).
+  "governance.overview.edit.removeRowNamed": "Remove {label}",
+  "governance.overview.edit.moveRowUp": "Move {label} up",
+  "governance.overview.edit.moveRowDown": "Move {label} down",
+  // Polite live region after a move button: the drag path is visible, the
+  // button path needs its result spoken.
+  "governance.overview.edit.rowMoved":
+    "{label} moved to position {position} of {total}",
   "governance.overview.edit.addRow": "Add a row",
   "governance.overview.edit.section.note": "Reason (optional)",
   "governance.overview.edit.save": "Save section",
@@ -4594,4 +4835,45 @@ export const admin: Catalog = {
   "appeal.live.decidedLabel": "Decided on",
   "appeal.live.dueLabel": "A decision is due by",
   "moderation.tabs.ratification": "Waiting on a second look",
+
+  // ââ Volunteer hours report (SUS-05) âââââââââââââââââââââââââââââââââââââââ
+  // Admin oversight of volunteering: confirmed sessions and hours over a
+  // period. Aggregates only. There is no per-member ranking here and there is
+  // no string for one.
+  "volunteerHours.title": "Volunteer <em>hours</em>",
+  "volunteerHours.header.eyebrow": "Reporting",
+  "volunteerHours.header.title": "Volunteer <em>hours</em>",
+  "volunteerHours.header.sub":
+    "Confirmed volunteer sessions and the hours they added up to, so the team can answer a partner with a figure.",
+  "volunteerHours.periodLabel": "Period",
+  "volunteerHours.period.days30": "Last 30 days",
+  "volunteerHours.period.days90": "Last 90 days",
+  "volunteerHours.period.months12": "Last 12 months",
+  "volunteerHours.period.all": "All time",
+  "volunteerHours.headline.hours": "Hours contributed",
+  "volunteerHours.headline.sessions": "Confirmed sessions",
+  "volunteerHours.headline.volunteers": "People who volunteered",
+  "volunteerHours.method":
+    "Only sessions a poster confirmed as attended are counted. A recorded no-show stays out of every figure here. These are platform totals: this page holds no record of who volunteered most, and it never will.",
+  "volunteerHours.empty":
+    "Nothing has been confirmed in this period yet. Hours appear here once a poster confirms somebody turned up.",
+  "volunteerHours.error":
+    "These figures could not be loaded. Try again in a moment.",
+  "volunteerHours.sessionsHeader": "Sessions",
+  "volunteerHours.hoursHeader": "Hours",
+  "volunteerHours.capped":
+    "This list shows the top {limit} rows. The totals above cover everything in the period.",
+  "volunteerHours.byOpportunity.caption": "By opportunity",
+  "volunteerHours.byOpportunity.roleHeader": "Role",
+  "volunteerHours.byOpportunity.empty":
+    "No opportunity has confirmed hours in this period.",
+  "volunteerHours.byCommunity.caption": "By community",
+  "volunteerHours.byCommunity.communityHeader": "Community",
+  "volunteerHours.byCommunity.empty":
+    "No community has confirmed hours in this period. Opportunities posted without a community still count in the totals above.",
+  "volunteerHours.byCommunity.unresolved": "Community no longer on file",
+
+  // Partner-application queue, once OPS-04's filter can empty it (Task B).
+  "partners.emptyFiltered":
+    "Nothing matches this filter. Switch back to Everything to see the whole queue.",
 };

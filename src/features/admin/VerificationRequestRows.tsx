@@ -5,6 +5,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { formatRelative } from "../../shared/lib/date";
 import { memberRefToPerson } from "../../shared/api/refs";
+import {
+  QueueAssignmentControl,
+  QueueOverdueChip,
+} from "./QueueAssignmentControls";
 import { AdminAvatar, AdminChip, type AvatarTone } from "./ui";
 import { VERIFICATION_STATUS_TONE } from "./verificationStatusTone";
 import { VERIFICATION_REQUEST_STATUS_TONE } from "./verificationRequestStatusTone";
@@ -39,6 +43,10 @@ export function VerificationRequestRows({
   onToggleAll,
   atSelectionCap,
   focusedRequestId,
+  currentUserId,
+  isAssignmentBusy,
+  onClaim,
+  onRelease,
 }: {
   rows: AdminVerificationRequestDTO[];
   onOpen: (requestId: string) => void;
@@ -56,6 +64,13 @@ export function VerificationRequestRows({
   /** The id the J/K keyboard shortcuts have focused, or `null` before the
    *  reviewer has pressed either key yet. */
   focusedRequestId: string | null;
+  /** OPS-04. The signed-in reviewer, so a row can tell "you have this" from
+   *  "a colleague has this". Null while the session is still loading. */
+  currentUserId: string | null;
+  /** True while any claim/release in this queue is in flight. */
+  isAssignmentBusy: boolean;
+  onClaim: (requestId: string) => void;
+  onRelease: (requestId: string) => void;
 }) {
   const { t } = useTranslation();
   const selectAllRef = useRef<HTMLInputElement>(null);
@@ -102,6 +117,10 @@ export function VerificationRequestRows({
           focused={row.id === focusedRequestId}
           onOpen={onOpen}
           onToggle={onToggle}
+          currentUserId={currentUserId}
+          isAssignmentBusy={isAssignmentBusy}
+          onClaim={onClaim}
+          onRelease={onRelease}
         />
       ))}
     </div>
@@ -115,6 +134,10 @@ function VerificationRequestRow({
   focused,
   onOpen,
   onToggle,
+  currentUserId,
+  isAssignmentBusy,
+  onClaim,
+  onRelease,
 }: {
   row: AdminVerificationRequestDTO;
   selected: boolean;
@@ -125,6 +148,10 @@ function VerificationRequestRow({
   focused: boolean;
   onOpen: (requestId: string) => void;
   onToggle: (id: string) => void;
+  currentUserId: string | null;
+  isAssignmentBusy: boolean;
+  onClaim: (requestId: string) => void;
+  onRelease: (requestId: string) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -196,6 +223,10 @@ function VerificationRequestRow({
               {t("admin:verifications.requests.duplicateChip")}
             </AdminChip>
           )}
+          {/* OPS-04. The queue's own promise about this request, alongside the
+              chips that describe it. A request with no stored clock renders
+              nothing here rather than an "on time" nobody committed to. */}
+          <QueueOverdueChip dueAt={row.dueAt} />
         </div>
         {submittedText && (
           <div className={styles.rowMeta}>
@@ -204,6 +235,18 @@ function VerificationRequestRow({
             })}
           </div>
         )}
+        {/* OPS-04. Under the row's own facts, before the Review button: who is
+            already on this is what stops a second reviewer opening the same
+            request and reaching a different answer. */}
+        <QueueAssignmentControl
+          assignedStaffId={row.assignedStaffId}
+          assignedStaffName={row.assignedStaffName}
+          currentUserId={currentUserId}
+          rowLabel={name}
+          isBusy={isAssignmentBusy}
+          onClaim={() => onClaim(row.id)}
+          onRelease={() => onRelease(row.id)}
+        />
       </div>
       <div className={styles.rowActions}>
         <Button variant="ghost" size="sm" onClick={() => onOpen(row.id)}>

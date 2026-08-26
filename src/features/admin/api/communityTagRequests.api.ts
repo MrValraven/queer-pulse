@@ -17,7 +17,10 @@ export interface AdminCommunityTagRequestDTO {
   label: string;
   note: string | null;
   status: CommunityTagRequestStatus;
-  requestedBy: MemberRefDTO | null;
+  /** ABSENT (not null) for a reader holding the `communities` staff grant
+   *  without the Moderator/Admin tier: deciding a tag is a decision about a
+   *  word, so the requester is not named. `null` means their account is gone. */
+  requestedBy?: MemberRefDTO | null;
   createdAt: string;
   resolvedAt: string | null;
 }

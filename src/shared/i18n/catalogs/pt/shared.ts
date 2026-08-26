@@ -72,6 +72,9 @@ export const shared: Catalog = {
   // AccountMenu
   "accountMenu.items.profile": "Perfil",
   "accountMenu.items.connections": "Ligações",
+  // ACQ-08 — o convite feito por quem já é membro, com a contagem de convites
+  // por usar colada pelo `useInviteQuotaBadge`.
+  "accountMenu.items.invite": "Convidar alguém",
   "accountMenu.items.messages": "Mensagens",
   "accountMenu.items.applications": "Candidaturas",
   "accountMenu.items.work": "Trabalho",
@@ -96,6 +99,18 @@ export const shared: Catalog = {
   "accountMenu.ariaLabel": "Menu da conta",
   "accountMenu.header.subtitle": "Perfil e conta",
   "accountSheet.title": "A sua conta",
+  // ProfileInviteCard — a faixa discreta de convites no fim do perfil de quem
+  // é dono dele (ACQ-08). Fica em `shared:` ao lado de `accountMenu.*` porque
+  // as duas entradas são um par. Nunca aparece sem convites por dar, por isso
+  // não há caso de zero aqui.
+  "inviteCard.ariaLabel": "Os teus convites",
+  "inviteCard.title_one": "Resta-te {count} convite este mês",
+  "inviteCard.title_other": "Restam-te {count} convites este mês",
+  "inviteCard.body": "Traz alguém que gostavas de ver por aqui.",
+  "inviteCard.resets_one": "O limite renova amanhã.",
+  "inviteCard.resets_other": "O limite renova daqui a {count} dias.",
+  "inviteCard.resets_zero": "O limite renova hoje.",
+  "inviteCard.cta": "Convidar alguém",
   "accountSheet.viewProfile": "Ver perfil",
   "accountMenu.staff.magazineEditor": "Editor da revista",
   "accountMenu.staff.magazineWriter": "Espaço de quem escreve",
@@ -163,6 +178,7 @@ export const shared: Catalog = {
   "adminNav.items.moderation": "Moderação",
   "adminNav.items.staff": "Equipa e papéis",
   "adminNav.items.concerns": "Preocupações",
+  "adminNav.items.intakes": "Submissões e mensagens",
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.topics": "Tópicos",
   "adminNav.items.listings": "Espaços",
@@ -183,6 +199,7 @@ export const shared: Catalog = {
   "adminNav.items.resourceSuggestions": "Sugestões de recursos",
   "adminNav.items.communityTagRequests": "Pedidos de etiquetas de comunidades",
   "adminNav.items.housingGroups": "Grupos de habitação",
+  "adminNav.items.housingCoops": "Cooperativas de habitação",
   "adminNav.items.governance": "Governação",
   "adminNav.items.roadmap": "Roteiro",
   "adminNav.items.reports": "Relatórios",
@@ -220,6 +237,9 @@ export const shared: Catalog = {
 
   // SkipToContentLink
   "skipToContent.label": "Saltar para o conteúdo principal",
+
+  // RouteAnnouncer
+  "routeAnnouncer.pageLoaded": "Página carregada",
 
   // Avatar
   "avatar.verified": "Pessoa verificada",
@@ -523,4 +543,5 @@ export const shared: Catalog = {
   // pt/shared.ts
   "adminNav.items.housingGroupListings": "Anúncios de grupo",
   "adminNav.items.landlords": "Senhorios",
+  "adminNav.items.volunteerHours": "Horas de voluntariado",
 };

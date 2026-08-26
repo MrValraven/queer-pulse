@@ -1,0 +1,70 @@
+/* The decided (history) half of the join-request queue. Rows themselves come
+   from AdminSubmissionList.module.css, the shared admin row family; this file
+   owns only the search header and the invite block inside an approved row. */
+
+.intro {
+  max-width: 60ch;
+  margin: 0 0 16px;
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.searchRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+}
+
+.search {
+  flex: 1 1 260px;
+  max-width: 360px;
+}
+
+/* Says out loud that the filter only reaches the rows already loaded, so a
+   reviewer never reads an empty result as "this person never applied". */
+.scopeNote {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-40);
+}
+
+/* The invite an approval minted: its status, its countdown, the link itself,
+   and the one action left when it has lapsed. */
+.invite {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(var(--jade-rgb), 0.07);
+}
+
+.inviteHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.inviteNote {
+  flex: 1 1 220px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.reissue {
+  align-self: flex-start;
+}
+
+.inviteError {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--accent-text);
+}

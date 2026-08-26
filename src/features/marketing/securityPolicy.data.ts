@@ -1,7 +1,7 @@
 /**
  * Real values for the security / responsible-disclosure page.
  *
- * These used to be hard-coded placeholders in `SecurityPage.tsx`: a truncated
+ * These used to be hard-coded placeholders in `SecurityPolicyPage.tsx`: a truncated
  * PGP block that no client could import, and three invented researcher credits.
  * On a page whose whole job is to be trusted by security researchers, a
  * non-importable key wastes their time and fabricated credits assert reports

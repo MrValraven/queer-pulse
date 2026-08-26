@@ -16,6 +16,27 @@ import type { Catalog } from "../../types";
  * gramatical sem genderizar quem de facto ocupa o papel.
  */
 export const admin: Catalog = {
+  // ── Atribuição de fila + relógio de espera (OPS-04) ───────────────────────
+  // Partilhado por todas as filas da equipa: pedidos de convite, pedidos de
+  // verificação, formulários e candidaturas de parceria. A fila de moderação
+  // mantém a redação própria em `moderation.*`, anterior a estas chaves.
+  "queueClock.overdue": "Fora do prazo",
+  "queueClock.overdueBy": "Fora do prazo há {age}",
+  "queueAssignment.unassigned": "Ainda ninguém ficou com isto",
+  "queueAssignment.assignedToYou": "Ficaste com isto",
+  "queueAssignment.assignedTo": "{name} ficou com isto",
+  "queueAssignment.someone": "Outra pessoa da equipa",
+  "queueAssignment.claimCta": "Ficar com isto",
+  "queueAssignment.releaseCta": "Largar",
+  "queueAssignment.claimAria": "Ficar com {row}",
+  "queueAssignment.releaseAria": "Largar {row}",
+  "queueAssignment.errorToast": "Não foi possível guardar. Tenta outra vez.",
+  "queueAssignment.demoYou": "Tu",
+  "queueAssignment.filterLabel": "Mostrar",
+  "queueAssignment.filter.all": "Tudo",
+  "queueAssignment.filter.mine": "Atribuído a mim",
+  "queueAssignment.filter.unassigned": "Sem responsável",
+
   // ── Consola de verificação de identidade ──────────────────────────────────
   "verifications.eyebrow": "Confiança e segurança",
   "verifications.title": "Verificação de <em>identidade</em>",
@@ -458,6 +479,67 @@ export const admin: Catalog = {
   "members.verify.status.approved": "Aprovado",
   "members.verify.status.declined": "Recusado",
 
+  // A fila tem duas metades: o que ainda espera por quem revê e o que já ficou
+  // resolvido.
+  "members.verify.tabs.waiting": "A aguardar",
+  "members.verify.tabs.decided": "Decididos",
+
+  // Separador Decididos. Lê do servidor, por isso a decisão e a ligação de
+  // convite que ela criou continuam aqui depois de atualizar a página, de sair
+  // ou de uma aprovação em lote. Nada segue por email, por isso essa ligação
+  // cabe a quem revê levar à mão, e um convite de aprovação caduca ao fim de
+  // sete dias.
+  "members.verify.decided.intro":
+    "Pedidos que já ficaram resolvidos. Uma aprovação guarda aqui a sua ligação de convite, para que a possas entregar.",
+  "members.verify.decided.searchLabel": "Procurar pedidos decididos",
+  "members.verify.decided.searchPlaceholder": "Procura por nome ou email",
+  "members.verify.decided.searchScopeNote_one":
+    "Isto procura no {count} pedido decidido carregado aqui.",
+  "members.verify.decided.searchScopeNote_other":
+    "Isto procura nos {count} pedidos decididos carregados aqui.",
+  "members.verify.decided.empty":
+    "Ainda não há nada decidido. As aprovações e as recusas juntam-se aqui.",
+  "members.verify.decided.noMatches":
+    "Nenhum pedido decidido carregado aqui corresponde a “{query}”.",
+  "members.verify.decided.appliedOn": "Candidatou-se a {date}",
+  "members.verify.decided.decidedOn": "Decidido a {date}",
+  "members.verify.decided.decidedUnknown": "Data da decisão não registada",
+  "members.verify.decided.declineReasonLine": "Motivo: {reason}",
+
+  // O estado da ligação de convite criada por uma aprovação. Caduca sete dias
+  // depois de ser criada, e só uma ligação caducada pode ser reemitida.
+  "members.verify.invite.chip.valid": "Ligação ativa",
+  "members.verify.invite.chip.used": "Ligação usada",
+  "members.verify.invite.chip.expired": "Ligação caducada",
+  "members.verify.invite.chip.revoked": "Ligação revogada",
+  "members.verify.invite.validDaysLeft_one":
+    "Esta ligação funciona por mais {count} dia. Envia-lha.",
+  "members.verify.invite.validDaysLeft_other":
+    "Esta ligação funciona por mais {count} dias. Envia-lha.",
+  "members.verify.invite.validToday":
+    "Esta ligação deixa de funcionar hoje. Envia-lha agora.",
+  "members.verify.invite.validNoExpiry": "Esta ligação não tem data de fim.",
+  "members.verify.invite.expired":
+    "Esta ligação caducou antes de alguém a usar. Reemite-a e a mesma ligação volta a funcionar.",
+  "members.verify.invite.used":
+    "Usaram esta ligação, por isso já estão connosco.",
+  "members.verify.invite.revoked":
+    "Esta ligação foi revogada, por isso já não abre.",
+  "members.verify.invite.noneMinted":
+    "Não há nenhum código de convite registado nesta aprovação. Pede a um admin para verificar.",
+  "members.verify.invite.reissueCta": "Reemitir ligação",
+  "members.verify.invite.reissuing": "A reemitir",
+  "members.verify.invite.reissuedToast":
+    "Essa ligação volta a funcionar. Envia-a para {email}.",
+  "members.verify.invite.reissueError.forbidden":
+    "Reemitir um convite é para moderadores e admins. Pede a alguém dessa equipa.",
+  "members.verify.invite.reissueError.notFound":
+    "Não há nenhum convite neste pedido para reemitir. Atualiza o separador e vê outra vez.",
+  "members.verify.invite.reissueError.notReissuable":
+    "Esta ligação foi usada ou revogada, ou ainda funciona. Não há nada para reemitir.",
+  "members.verify.invite.reissueError.generic":
+    "Não foi possível reemitir essa ligação. Tenta outra vez.",
+
   // Separador de amostra de qualidade: uma verificação periódica e só de
   // leitura de decisões passadas, para outro admin comparar notas. Não é um
   // fluxo de aprovação — dizê-lo com clareza.
@@ -529,7 +611,9 @@ export const admin: Catalog = {
   "staff.title": "Equipa e <em>papéis</em>",
   "staff.header.eyebrow": "Quem gere a QueerPulse",
   "staff.header.sub":
-    "Todos os moderadores e admins da plataforma. Para alterar o papel de alguém, abre o perfil dessa pessoa em Membros.",
+    "Todos os moderadores e admins da plataforma, e ainda quem tem papéis de equipa atribuídos. Para alterar um papel ou uma atribuição, abre o perfil dessa pessoa em Membros.",
+  "staff.grantsLabel": "Atribuições",
+  "staff.tier.member": "Membro",
   "staff.empty": "Ninguém tem um papel de equipa neste momento.",
   "staff.loadError": "Não foi possível carregar a lista de equipa.",
 
@@ -548,6 +632,21 @@ export const admin: Catalog = {
   "staffRoles.housingModerator.label": "Moderador de Habitação",
   "staffRoles.housingModerator.desc":
     "Pode moderar anúncios e grupos de Habitação.",
+  "staffRoles.directoryModerator.label": "Moderação do diretório",
+  "staffRoles.directoryModerator.desc":
+    "Analisa a fila do diretório local e as nomeações de espaços seguros, e gere os selos desses espaços. As sinalizações continuam com a moderação.",
+  "staffRoles.resourceCurator.label": "Curadoria de recursos",
+  "staffRoles.resourceCurator.desc":
+    "Escreve e revê os guias de recursos, os contactos de serviços, as sugestões e o glossário. Publicar um guia continua reservado à administração.",
+  "staffRoles.editorial.label": "Editorial",
+  "staffRoles.editorial.desc":
+    "Tria as histórias submetidas e as candidaturas a redator, e mantém o clube de cinema, o kit de imprensa e a página inicial atualizados.",
+  "staffRoles.communities.label": "Comunidades",
+  "staffRoles.communities.desc":
+    "Trata dos pedidos de etiquetas, dos tópicos e das propostas de clubes de leitura, e define as opções de segurança de cada comunidade. Congelar ou transferir uma comunidade continua reservado à administração.",
+  "staffRoles.partnerships.label": "Parcerias",
+  "staffRoles.partnerships.desc":
+    "Analisa candidaturas de parceiros e mantém o diretório de parceiros, os níveis de organização e os changemakers atualizados.",
   "staffRoles.adminSuperset":
     "A administração já tem todas as capacidades de equipa.",
   "staffRoles.systemLocked":
@@ -807,6 +906,7 @@ export const admin: Catalog = {
   "adminChangemakerNominations.error":
     "Não foi possível carregar as nomeações. Tenta novamente.",
   "adminChangemakerNominations.unknownMember": "Um antigo membro",
+  "adminChangemakerNominations.withheldMember": "Não visível aqui",
   "adminChangemakerNominations.row.by": "Nomeado por {name}",
   "adminChangemakerNominations.row.sent": "Enviado {date}",
   "adminChangemakerNominations.row.reviewedBy": "Revisto por {name}",
@@ -893,6 +993,133 @@ export const admin: Catalog = {
   "adminConcerns.toast.error": "Não foi possível concluir. Tenta novamente.",
   "adminConcerns.loadMore": "Carregar mais",
   "adminConcerns.loadingMore": "A carregar…",
+
+  // ── ACQ-03: consola de submissões em /admin/intakes ────────────────
+  "adminIntakes.title": "Tudo o que <em>nos enviaram</em>",
+  "adminIntakes.header.eyebrow": "Receção",
+  "adminIntakes.header.title": "O que as pessoas <em>nos enviaram</em>",
+  "adminIntakes.header.sub":
+    "Todos os formulários da plataforma vão parar a uma de duas caixas: os formulários de submissão (bolsas, sugestões de correção, ofertas para eventos sem álcool, inscrições no painel, incubadora e cultura) e as mensagens enviadas pela página de contacto. É aqui que uma pessoa as lê.",
+  "adminIntakes.header.noEmailNote":
+    "A QueerPulse não envia email. Marcar como tratada regista que alguém leu. Qualquer resposta sai da tua própria caixa de correio, para o endereço que vem na mensagem.",
+
+  "adminIntakes.tab.waiting": "À espera",
+  "adminIntakes.tab.intakes": "Formulários",
+  "adminIntakes.tab.inquiries": "Mensagens",
+
+  "adminIntakes.waiting.allClear":
+    "Nada está à espera. Todas as mensagens e todas as submissões já foram vistas.",
+  "adminIntakes.waiting.inquiriesHeading_one": "{count} mensagem à espera",
+  "adminIntakes.waiting.inquiriesHeading_other": "{count} mensagens à espera",
+  "adminIntakes.waiting.inquiriesNote":
+    "Enviadas pela página de contacto. Algumas são de pessoas que não conseguiram entrar na conta ou obter um convite, por isso não tinham outro sítio para onde ir.",
+  "adminIntakes.waiting.inquiriesEmpty": "Nenhuma mensagem está à espera.",
+  "adminIntakes.waiting.intakesHeading_one": "{count} submissão à espera",
+  "adminIntakes.waiting.intakesHeading_other": "{count} submissões à espera",
+  "adminIntakes.waiting.intakesNote":
+    "Candidaturas a bolsas, sugestões de correção, inscrições e tudo o que os formulários da incubadora e da cultura recolhem.",
+  "adminIntakes.waiting.intakesEmpty": "Nenhuma submissão está à espera.",
+  "adminIntakes.waiting.today": "Chegou hoje",
+  "adminIntakes.waiting.days_one": "À espera há {count} dia",
+  "adminIntakes.waiting.days_other": "À espera há {count} dias",
+
+  "adminIntakes.filter.allKinds": "Todos os tipos",
+  "adminIntakes.filter.allStatuses": "Todos os estados",
+  "adminIntakes.filter.kindLabel": "Filtrar por tipo",
+  "adminIntakes.filter.statusLabel": "Filtrar por estado",
+  "adminIntakes.inquiryWaitingNote_one": "{count} mensagem ainda à espera.",
+  "adminIntakes.inquiryWaitingNote_other": "{count} mensagens ainda à espera.",
+
+  "adminIntakes.empty": "Nenhuma submissão corresponde a estes filtros.",
+  "adminIntakes.error":
+    "Não foi possível carregar as submissões. Tenta novamente.",
+  "adminIntakes.inquiryEmpty": "Nenhuma mensagem corresponde a estes filtros.",
+  "adminIntakes.inquiryError":
+    "Não foi possível carregar as mensagens. Tenta novamente.",
+  "adminIntakes.loadMore": "Carregar mais",
+  "adminIntakes.loadingMore": "A carregar…",
+
+  "adminIntakes.kind.grant": "Candidatura a microbolsa",
+  "adminIntakes.kind.suggest_edit": "Sugestão de correção",
+  "adminIntakes.kind.sober_host": "Oferta para evento sem álcool",
+  "adminIntakes.kind.panel_signup": "Inscrição no painel de bolsas",
+  "adminIntakes.kind.incubator_cohort": "Candidatura à incubadora",
+  "adminIntakes.kind.incubator_mentor": "Oferta para mentoria",
+  "adminIntakes.kind.incubator_session": "Pedido de sessão de mentoria",
+  "adminIntakes.kind.culture_suggest_pick": "Sugestão para o clube de leitura",
+  "adminIntakes.kind.culture_post_project": "Projeto no mural de encomendas",
+  "adminIntakes.kind.culture_submit_work": "Submissão para a montra",
+  "adminIntakes.kind.culture_submit_playlist": "Submissão de playlist",
+  "adminIntakes.kind.governance_concern": "Preocupação de governação",
+
+  "adminIntakes.status.new": "À espera",
+  "adminIntakes.status.reviewed": "Lida",
+  "adminIntakes.status.reviewing": "Em análise",
+  "adminIntakes.status.resolved": "Resolvida",
+  "adminIntakes.status.dismissed": "Descartada",
+
+  "adminIntakes.inquiryKind.contact": "Contacto",
+  "adminIntakes.inquiryKind.partner": "Parceria",
+  "adminIntakes.inquiryStatus.new": "À espera",
+  "adminIntakes.inquiryStatus.handled": "Tratada",
+
+  "adminIntakes.row.fromMember": "De",
+  "adminIntakes.row.contactEmail": "Contacta em {email}",
+  "adminIntakes.row.contactName": "Deixou o nome: {name}",
+  "adminIntakes.row.noContact": "Não ficou nenhuma forma de contacto.",
+  "adminIntakes.row.org": "Organização: {org}",
+  "adminIntakes.row.arrived": "Chegou a {date}",
+  "adminIntakes.row.reviewedBy": "Lida a {date} por {name}",
+  "adminIntakes.row.reviewedNoOne":
+    "Lida a {date}. Não ficou registado quem a leu.",
+  "adminIntakes.row.handledBy": "Tratada a {date} por {name}",
+  "adminIntakes.row.handledNoOne":
+    "Tratada a {date}. Não ficou registado quem a tratou.",
+
+  "adminIntakes.confidential.body":
+    "Chegou uma preocupação de governação. O conteúdo fica na página de preocupações, onde pode ser tratado por inteiro.",
+  "adminIntakes.confidential.openCta": "Abrir em Preocupações",
+
+  "adminIntakes.action.reviewed": "Marcar como lida",
+  "adminIntakes.action.markHandled": "Marcar como tratada",
+  "adminIntakes.action.reopen": "Reabrir",
+
+  "adminIntakes.toast.reviewed": "Marcada como lida.",
+  "adminIntakes.toast.handled": "Marcada como tratada.",
+  "adminIntakes.toast.reopened": "Voltou para à espera.",
+  "adminIntakes.toast.error": "Não foi possível concluir. Tenta novamente.",
+
+  "adminIntakes.payload.empty":
+    "Esta submissão chegou sem nenhum campo preenchido.",
+  "adminIntakes.field.about": "Sobre o trabalho",
+  "adminIntakes.field.applicantName": "Quem se candidata",
+  "adminIntakes.field.author": "Autoria",
+  "adminIntakes.field.budgetItems": "Linhas do orçamento",
+  "adminIntakes.field.budgetTotal": "Total do orçamento",
+  "adminIntakes.field.change": "Alteração sugerida",
+  "adminIntakes.field.context": "Página",
+  "adminIntakes.field.description": "Descrição",
+  "adminIntakes.field.detail": "Detalhes",
+  "adminIntakes.field.email": "Email",
+  "adminIntakes.field.expertise": "Área",
+  "adminIntakes.field.format": "Formato",
+  "adminIntakes.field.link": "Ligação",
+  "adminIntakes.field.lookingFor": "Procura",
+  "adminIntakes.field.medium": "Meio",
+  "adminIntakes.field.mentorName": "Quem dá mentoria",
+  "adminIntakes.field.mentorRole": "Área da mentoria",
+  "adminIntakes.field.message": "Mensagem",
+  "adminIntakes.field.mode": "Oferece",
+  "adminIntakes.field.name": "Nome",
+  "adminIntakes.field.note": "Nota",
+  "adminIntakes.field.pitch": "Proposta",
+  "adminIntakes.field.projectName": "Projeto",
+  "adminIntakes.field.projectSummary": "O que é",
+  "adminIntakes.field.term": "Entrada",
+  "adminIntakes.field.title": "Título",
+  "adminIntakes.field.vibes": "Ambiente",
+  "adminIntakes.field.when": "Disponibilidade",
+  "adminIntakes.field.why": "Porquê",
 
   "adminMagazineSubmissions.title": "Propostas de <em>histórias</em>",
   "adminMagazineSubmissions.header.eyebrow": "Revista",
@@ -1631,6 +1858,8 @@ export const admin: Catalog = {
   "communities.governanceLog.action.archived": "Arquivada",
   "communities.governanceLog.action.unarchived": "Desarquivada",
   "communities.governanceLog.action.settings_changed": "Definições alteradas",
+  "communities.governanceLog.action.support_offered": "Apoio oferecido",
+  "communities.governanceLog.action.support_offer_answered": "Apoio respondido",
 
   "communities.governanceLog.summary.role_changed": "O papel de {name} mudou",
   "communities.governanceLog.summary.member_removed":
@@ -1646,6 +1875,10 @@ export const admin: Catalog = {
     "A comunidade foi restaurada do arquivo",
   "communities.governanceLog.summary.settings_changed":
     "As definições da comunidade mudaram",
+  "communities.governanceLog.summary.support_offered":
+    "A equipa da plataforma ofereceu apoio a esta comunidade",
+  "communities.governanceLog.summary.support_offer_answered":
+    "A moderação respondeu a uma oferta de apoio",
 
   "communities.governanceLog.unknownMember": "um membro anterior",
   "communities.governanceLog.byLine": "por {name}",
@@ -1741,7 +1974,6 @@ export const admin: Catalog = {
   "communities.support.cancelCta": "Cancelar",
   "communities.support.sendCta": "Enviar apoio",
   "communities.support.sentToast": "Apoio enviado à equipa de {name}",
-  "communities.support.withdrawnToast": "Pedido de apoio retirado",
   "communities.support.option.message.title": "Enviar mensagem à moderação",
   "communities.support.option.message.sub":
     "Um contacto próximo com {names}. Como podemos ajudar?",
@@ -3672,6 +3904,7 @@ export const admin: Catalog = {
   "adminCommunityTagRequests.row.by": "Pedido por {name}",
   "adminCommunityTagRequests.row.sent": "Enviado a {date}",
   "adminCommunityTagRequests.unknownRequester": "Um membro",
+  "adminCommunityTagRequests.withheldRequester": "Não visível aqui",
   "adminCommunityTagRequests.action.resolve": "Resolver",
   "adminCommunityTagRequests.empty": "Ainda não há pedidos de etiquetas.",
   "adminCommunityTagRequests.error":
@@ -3719,6 +3952,11 @@ export const admin: Catalog = {
   "governance.overview.badge.editedBy": "Editado por {name} em {date}",
   "governance.overview.edit.dragToReorder": "Arrasta para reordenar",
   "governance.overview.edit.removeRow": "Remover esta linha",
+  "governance.overview.edit.removeRowNamed": "Remover {label}",
+  "governance.overview.edit.moveRowUp": "Mover {label} para cima",
+  "governance.overview.edit.moveRowDown": "Mover {label} para baixo",
+  "governance.overview.edit.rowMoved":
+    "{label} passou para a posição {position} de {total}",
   "governance.overview.edit.addRow": "Adicionar uma linha",
   "governance.overview.edit.section.note": "Motivo (opcional)",
   "governance.overview.edit.save": "Guardar secção",
@@ -4667,4 +4905,45 @@ export const admin: Catalog = {
   "appeal.live.decidedLabel": "Decidido a",
   "appeal.live.dueLabel": "Decisão devida até",
   "moderation.tabs.ratification": "À espera de segunda opinião",
+
+  // ── Relatório de horas de voluntariado (SUS-05) ────────────────────────
+  // Supervisão do voluntariado: sessões e horas confirmadas num período.
+  // Só agregados. Não há aqui nenhum ranking por pessoa nem string para um.
+  "volunteerHours.title": "Horas de <em>voluntariado</em>",
+  "volunteerHours.header.eyebrow": "Relatórios",
+  "volunteerHours.header.title": "Horas de <em>voluntariado</em>",
+  "volunteerHours.header.sub":
+    "Sessões de voluntariado confirmadas e as horas que somaram, para a equipa poder responder a um parceiro com um número.",
+  "volunteerHours.periodLabel": "Período",
+  "volunteerHours.period.days30": "Últimos 30 dias",
+  "volunteerHours.period.days90": "Últimos 90 dias",
+  "volunteerHours.period.months12": "Últimos 12 meses",
+  "volunteerHours.period.all": "Desde sempre",
+  "volunteerHours.headline.hours": "Horas contribuídas",
+  "volunteerHours.headline.sessions": "Sessões confirmadas",
+  "volunteerHours.headline.volunteers": "Pessoas que fizeram voluntariado",
+  "volunteerHours.method":
+    "Só contam as sessões que quem publicou confirmou como comparecidas. Uma falta registada fica de fora de todos os números aqui. Estes são totais da plataforma: esta página não guarda registo de quem fez mais voluntariado, e nunca guardará.",
+  "volunteerHours.empty":
+    "Ainda não foi confirmado nada neste período. As horas aparecem aqui assim que quem publicou confirmar que alguém apareceu.",
+  "volunteerHours.error":
+    "Não foi possível carregar estes números. Tenta outra vez daqui a pouco.",
+  "volunteerHours.sessionsHeader": "Sessões",
+  "volunteerHours.hoursHeader": "Horas",
+  "volunteerHours.capped":
+    "Esta lista mostra as {limit} linhas principais. Os totais acima cobrem tudo o que existe no período.",
+  "volunteerHours.byOpportunity.caption": "Por oportunidade",
+  "volunteerHours.byOpportunity.roleHeader": "Função",
+  "volunteerHours.byOpportunity.empty":
+    "Nenhuma oportunidade tem horas confirmadas neste período.",
+  "volunteerHours.byCommunity.caption": "Por comunidade",
+  "volunteerHours.byCommunity.communityHeader": "Comunidade",
+  "volunteerHours.byCommunity.empty":
+    "Nenhuma comunidade tem horas confirmadas neste período. As oportunidades publicadas sem comunidade continuam a contar nos totais acima.",
+  "volunteerHours.byCommunity.unresolved": "Comunidade já não consta",
+
+  // Fila de candidaturas de parceria, agora que o filtro do OPS-04 a pode
+  // deixar vazia (tarefa B).
+  "partners.emptyFiltered":
+    "Nada corresponde a este filtro. Volta a Tudo para veres a fila inteira.",
 };

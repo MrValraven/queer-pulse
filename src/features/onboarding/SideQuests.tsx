@@ -35,10 +35,9 @@ function BadgeQuestCard({ badge, to }: { badge: Badge; to?: string }) {
 }
 
 /** An unlocked-but-unclaimed perk: same card shell as a badge quest, but the
- *  CTA claims the perk directly instead of routing elsewhere — reuses the
- *  same `ClaimButton` the Perks page renders, so a live 'button'-type perk
- *  behaves identically here (including its honest "not wired up yet" toast
- *  when there's no real claim endpoint — see `PerksSections.tsx`). */
+ *  CTA claims the perk directly instead of routing elsewhere. Reuses the same
+ *  `ClaimButton` the Perks page renders, so a live 'button'-type perk hits the
+ *  real claim endpoint here too (see `PerksSections.tsx`). */
 function PerkQuestCard({ perk }: { perk: Perk }) {
   const f = perk.footer;
   return (
@@ -48,7 +47,9 @@ function PerkQuestCard({ perk }: { perk: Perk }) {
         <span className={styles.questName}>{perk.title}</span>
         <span className={styles.questDesc}>{perk.description}</span>
       </div>
-      {f.type === "button" && <ClaimButton label={f.label} toast={f.toast} />}
+      {f.type === "button" && (
+        <ClaimButton perkKey={perk.key} label={f.label} toast={f.toast} />
+      )}
       {f.type === "link-auto" && (
         <Button to={f.to} variant="ghost" size="sm">
           {f.label}

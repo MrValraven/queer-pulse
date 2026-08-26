@@ -186,6 +186,13 @@ export const notifications: Catalog = {
   "type.community_report_filed.text":
     "Something in {communityName} has been reported.",
   "type.community_report_filed.meta": "Report in your community",
+  // OPS-05. Reaches a community's owner, co-owners and moderators when
+  // platform staff offer that community a hand. In-app and web push only:
+  // QueerPulse sends no email, so this copy promises none. The row deep-links
+  // to the mod-tools pane where the offer is read in full and answered.
+  "type.community_support_offered.text":
+    "Someone from QueerPulse has offered {communityName} a hand.",
+  "type.community_support_offered.meta": "An offer of support",
   "type.community_report_filed.emergency.text":
     "An urgent report in {communityName} needs a decision within the hour.",
   "type.community_report_filed.emergency.meta": "Urgent report",
@@ -251,6 +258,33 @@ export const notifications: Catalog = {
   "type.account_deletion_final_warning.text_other":
     "Your account is deleted in {daysRemaining} days. You can still cancel until then.",
   "type.account_deletion_final_warning.meta": "Deletion scheduled",
+
+  // A membership card thirty days from expiry (SUS-07). `{communityName}` and
+  // `{daysRemaining}` come straight from the payload; `daysRemaining` is also
+  // mirrored onto `count` so CLDR picks the plural.
+  //
+  // Two sets, because the two say different things to do. The `.renewable`
+  // pair is used where the issuing programme lets a member renew their own
+  // card, so the copy points at the button waiting for them. The plain pair is
+  // used where it does not, so the copy points at the community instead of at
+  // a control that is not there.
+  //
+  // Nothing here mentions any channel outside the app: the card, the count and
+  // the action all live on the member's own cards page.
+  "type.card_expiring.text":
+    "Your membership card expires soon. The community issues the new one.",
+  "type.card_expiring.text_one":
+    "Your {communityName} card expires in {daysRemaining} day. The community issues the new one.",
+  "type.card_expiring.text_other":
+    "Your {communityName} card expires in {daysRemaining} days. The community issues the new one.",
+  "type.card_expiring.meta": "Card expiring",
+  "type.card_expiring.renewable.text":
+    "Your membership card expires soon. You can renew it yourself.",
+  "type.card_expiring.renewable.text_one":
+    "Your {communityName} card expires in {daysRemaining} day. You can renew it yourself.",
+  "type.card_expiring.renewable.text_other":
+    "Your {communityName} card expires in {daysRemaining} days. You can renew it yourself.",
+  "type.card_expiring.renewable.meta": "Card expiring",
 
   "type.appeal_resolved.text": "There's a decision on your appeal.",
   "type.appeal_resolved.meta": "Appeal update",

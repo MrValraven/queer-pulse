@@ -53,3 +53,20 @@
   line-height: 1.5;
   color: var(--ink-60);
 }
+
+/* Additive staff grants under a roster row's name (OPS-03): who has been
+   handed which admin domain, read at a glance next to their account tier. */
+.rowGrants {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.rowGrantsLabel {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}

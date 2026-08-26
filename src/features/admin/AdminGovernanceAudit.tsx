@@ -7,7 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { AdminChip, AdminAvatar } from "./ui";
-import { portrait } from "./adminPeople.data";
+import { useDemoPortrait } from "./useDemoPortrait";
 import {
   DEFAULT_AUDIT_FILTERS,
   type AuditFilterState,
@@ -163,6 +163,7 @@ function AuditRow({
   entry: AuditRowView;
   onOpen: () => void;
 }) {
+  const demoPortrait = useDemoPortrait();
   return (
     <div
       className={styles.auditRow}
@@ -181,7 +182,9 @@ function AuditRow({
           initials={entry.moderatorInitials}
           tone={entry.moderatorTone}
           size="sm"
-          src={portrait(entry.moderatorName)}
+          // Demo fixtures only: the registry is keyed by name, and a live
+          // audit row names a real moderator.
+          src={demoPortrait(entry.moderatorName)}
         />
         {entry.moderatorName}
       </span>

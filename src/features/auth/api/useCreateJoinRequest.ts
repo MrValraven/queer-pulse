@@ -5,6 +5,7 @@ import {
   type CreateJoinRequestResult,
 } from "./joinRequest.api";
 import type { JoinRequestSource } from "./joinRequestSource";
+import { rememberJoinRequestStatus } from "./joinRequestStatusToken";
 import { TERMS_VERSION } from "./ageAttestation.api";
 import { usePlatformStatus } from "../../../shared/api/usePlatformStatus";
 
@@ -30,6 +31,12 @@ export interface JoinRequestVars {
  * shows with no backend. Live mode POSTs the **public** /join-requests route
  * with name/email/city plus the 18+ attestation — no session needed, since the
  * applicant has no account yet.
+ *
+ * On success the token from the 201 is written to storage HERE rather than in
+ * the form, so no future caller of this mutation can submit a request and
+ * silently drop the applicant's only route back to their own decision. The
+ * confirmation screen still shows the code: storage can be unavailable (private
+ * window, blocked site data) and the token is never re-issued.
  */
 export function useCreateJoinRequest() {
   const { demoMode } = useDemoMode();
@@ -51,10 +58,16 @@ export function useCreateJoinRequest() {
       source,
     }) => {
       if (demoMode) {
+        // The demo token is a real fixture code, so the confirmation screen's
+        // "check your request" link lands on a populated status page instead of
+        // a dead end. Loaded on demand to stay out of the live bundle.
+        const { DEMO_STATUS_TOKENS } =
+          await import("../joinRequestStatus.data");
         return {
           id: "demo-join-request",
           status: "pending",
           createdAt: new Date().toISOString(),
+          statusToken: DEMO_STATUS_TOKENS.underReview,
         };
       }
       return createJoinRequest({
@@ -66,6 +79,12 @@ export function useCreateJoinRequest() {
         ageAttested: true,
         termsVersion,
         source,
+      });
+    },
+    onSuccess: (result) => {
+      rememberJoinRequestStatus({
+        token: result.statusToken,
+        submittedAt: result.createdAt,
       });
     },
   });

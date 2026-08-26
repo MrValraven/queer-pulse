@@ -19,17 +19,22 @@ export function ModToolsOverview({
   slug,
   requestCount,
   reportCount,
+  supportCount,
   onOpenSection,
 }: {
   slug: string;
   requestCount: number;
   reportCount: number;
+  /** Offers of support from platform staff that nobody here has answered yet
+   *  (OPS-05). Counted alongside the two queues because it is the same
+   *  question: is anything waiting on us? */
+  supportCount: number;
   /** Jumps the rail to a queue. Same handler the rail itself uses, so the
    *  URL's `?mod=` stays the single source of truth for which pane is open. */
   onOpenSection: (section: ModSection) => void;
 }) {
   const { t } = useTranslation();
-  const hasWork = requestCount > 0 || reportCount > 0;
+  const hasWork = requestCount > 0 || reportCount > 0 || supportCount > 0;
 
   return (
     <div>
@@ -60,6 +65,18 @@ export function ModToolsOverview({
               )}
               count={reportCount}
               onClick={() => onOpenSection("reports")}
+            />
+          )}
+          {supportCount > 0 && (
+            <AttentionRow
+              label={t(
+                "communities:detail.modtools.overview.attention.support",
+                {
+                  count: supportCount,
+                },
+              )}
+              count={supportCount}
+              onClick={() => onOpenSection("support")}
             />
           )}
         </div>

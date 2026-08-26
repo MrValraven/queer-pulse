@@ -1,99 +1,96 @@
+import { useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useBanEvasionAssessments } from "./AdminBanEvasionSignals";
 import { useJoinRequests } from "./api/useJoinRequests";
+import { useJoinRequestAssignment } from "./useJoinRequestAssignment";
 import { useJoinRequestQueueDecisions } from "./useJoinRequestQueueDecisions";
+import { QueueAssignmentFilter } from "./QueueAssignmentFilter";
 import {
-  AdminVerifyQueueCards,
-  AdminVerifyQueueSkeleton,
-  AdminVerifyQueueWaitlist,
-} from "./AdminVerifyQueueCards";
+  assignedToParam,
+  type QueueAssignmentScope,
+} from "./queueAssignmentScope";
+import { AdminVerifyDecided } from "./AdminVerifyDecided";
+import { AdminVerifyQueueWaiting } from "./AdminVerifyQueueWaiting";
 import { JoinRequestDeclineModal } from "./JoinRequestDeclineModal";
-import { JoinRequestBulkActionBar } from "./JoinRequestBulkActionBar";
-import styles from "./AdminMembersPage.module.css";
-import { ModerationStanceNote } from "../safety/ModerationStanceNote";
+import { AdminTabs } from "./ui";
 
 /**
- * Moderator review of incoming platform join requests. Sourced from
- * useJoinRequests (GET /join-requests?status=pending), with approve/decline wired
- * to useReviewJoinRequest (PATCH /join-requests/:id). The mutation invalidates the
- * ["join-requests"] query so the list refetches; declines drop the row locally
- * with a short leave animation so the action reads instantly in either mode.
+ * Moderator review of incoming platform join requests, in two halves.
  *
- * Approvals do *not* drop: the response carries an invite code, and while
- * approval fires an automatic invite email, the reviewer can still copy that
- * link and send it as a backup. The approved card is held in local state so
- * it survives the refetch that removes the row from the pending list.
+ * WAITING reads `GET /join-requests?status=pending` and `…=waitlisted`, with
+ * approve/decline wired to `useReviewJoinRequest` (PATCH /join-requests/:id).
+ * DECIDED reads `…=approved` and `…=declined`, so a decision survives a
+ * refresh: the invite link an approval mints used to live only in a card held
+ * in local React state, and QueerPulse sends no email, so closing the tab
+ * stranded everyone whose link had not been copied and sent yet.
+ *
+ * Approving does NOT put anything in the applicant's inbox. The reviewer copies
+ * the link and sends it themselves; the approved card keeps its place in the
+ * waiting half so it can be copied straight away, and the same row is in
+ * Decided (once, see `displayedDecided`) for every time after that.
  *
  * Every decision, its toast and its local bookkeeping live in
- * `useJoinRequestQueueDecisions`; the card lists live in
- * `AdminVerifyQueueCards`. This component is the layout between them.
+ * `useJoinRequestQueueDecisions` — held HERE rather than inside either half, so
+ * switching tabs cannot throw away a decision this session took.
  */
 export function AdminVerifyQueue() {
   const { t } = useTranslation();
-  const { data, isLoading } = useJoinRequests("pending");
-  const { data: waitlisted } = useJoinRequests("waitlisted");
-  const decisions = useJoinRequestQueueDecisions(data ?? []);
-  // One assessment call covers every row on screen, pending and waitlisted
-  // alike: a waitlisted applicant is exactly the one a reviewer comes back to
-  // later, so the signal has to still be there when they do.
-  const banEvasionBySubjectId = useBanEvasionAssessments([
-    ...(data ?? []).map((item) => item.id),
-    ...(waitlisted ?? []).map((item) => item.id),
-  ]);
+  const [activeTab, setActiveTab] = useState<"waiting" | "decided">("waiting");
+  // OPS-04. Held here, beside the queries it narrows, and applied to BOTH the
+  // pending and waitlisted reads so one control governs everything the waiting
+  // tab shows. The Decided tab is deliberately unfiltered: a settled request
+  // has no holder and no clock left to run.
+  const [assignmentFilter, setAssignmentFilter] =
+    useState<QueueAssignmentScope>("all");
+  const assignedTo = assignedToParam(assignmentFilter);
+  const { data, isLoading } = useJoinRequests("pending", { assignedTo });
+  const { data: waitlisted } = useJoinRequests("waitlisted", { assignedTo });
+  const assignment = useJoinRequestAssignment();
+  // A claim taken this session is overlaid before the rows reach any decision
+  // bookkeeping, so the card, the filter and the queue all read one row.
+  const pendingRows = (data ?? []).map(assignment.withAssignment);
+  const waitlistedRows = (waitlisted ?? []).map(assignment.withAssignment);
+  const decisions = useJoinRequestQueueDecisions(pendingRows);
 
-  if (isLoading) return <AdminVerifyQueueSkeleton />;
-
-  const waitlistedRows = decisions.displayedWaitlisted(waitlisted ?? []);
-
-  if (
-    decisions.queue.length === 0 &&
-    decisions.approved.length === 0 &&
-    waitlistedRows.length === 0
-  ) {
-    return (
-      <div className={styles.queueEmpty}>
-        <p className={styles.queueIntro}>{t("admin:members.verify.empty")}</p>
-      </div>
-    );
-  }
+  const waitingCount =
+    decisions.queue.length +
+    decisions.displayedWaitlisted(waitlistedRows).length;
 
   return (
     <div>
-      <ModerationStanceNote variant="applicants" />
-      <p className={styles.queueIntro}>{t("admin:members.verify.intro")}</p>
-      <p className={styles.queueIntroEm}>
-        <em>{t("admin:members.verify.introEm")}</em>
-      </p>
-
-      <AdminVerifyQueueCards
-        approved={decisions.approved}
-        queue={decisions.queue}
-        leavingIds={decisions.leaving}
-        decidingId={decisions.decidingId}
-        selectedIds={decisions.selection.selectedIds}
-        onApprove={(item) => decisions.resolve(item, "approved")}
-        onDecline={decisions.requestDecline}
-        onWaitlist={(item) => decisions.resolve(item, "waitlisted")}
-        onToggleSelect={decisions.selection.toggleSelected}
-        banEvasionBySubjectId={banEvasionBySubjectId}
+      <AdminTabs
+        tabs={[
+          {
+            id: "waiting",
+            label: t("admin:members.verify.tabs.waiting"),
+            count: waitingCount,
+          },
+          { id: "decided", label: t("admin:members.verify.tabs.decided") },
+        ]}
+        active={activeTab}
+        onChange={(id) =>
+          setActiveTab(id === "decided" ? "decided" : "waiting")
+        }
       />
 
-      {decisions.selection.selectedIds.size > 0 && (
-        <JoinRequestBulkActionBar
-          selectedIds={decisions.selection.selectedIds}
-          onClear={() => decisions.selection.setSelectedIds(new Set())}
-          onSuccess={decisions.handleBulkSuccess}
-        />
-      )}
-
-      {waitlistedRows.length > 0 && (
-        <AdminVerifyQueueWaitlist
-          items={waitlistedRows}
-          decidingId={decisions.decidingId}
-          onApprove={(item) => decisions.resolve(item, "approved")}
-          onDecline={decisions.requestDecline}
-          banEvasionBySubjectId={banEvasionBySubjectId}
-        />
+      {activeTab === "waiting" ? (
+        <>
+          {/* Above the queue rather than inside it: "Assigned to me" can
+              legitimately match nothing, and a control that vanished with the
+              rows would leave a reviewer no way back to "everything". */}
+          <QueueAssignmentFilter
+            value={assignmentFilter}
+            onChange={setAssignmentFilter}
+          />
+          <AdminVerifyQueueWaiting
+            pending={pendingRows}
+            waitlisted={waitlistedRows}
+            isLoading={isLoading}
+            decisions={decisions}
+            assignment={assignment}
+          />
+        </>
+      ) : (
+        <AdminVerifyDecided displayedDecided={decisions.displayedDecided} />
       )}
 
       {decisions.decliningItem && (

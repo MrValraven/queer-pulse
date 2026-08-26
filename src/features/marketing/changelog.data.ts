@@ -90,6 +90,126 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "perks-that-grant-something-real",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("perks-that-grant-something-real"),
+        tag: {
+          labelKey: "marketing:changelog.tag.perks",
+          to: routes.perks,
+        },
+      },
+      {
+        id: "renew-your-card-before-it-runs-out",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("renew-your-card-before-it-runs-out"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myCards",
+          to: routes.myCards,
+        },
+      },
+      {
+        id: "volunteering-that-counts",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("volunteering-that-counts"),
+        tag: {
+          labelKey: "marketing:changelog.tag.volunteer",
+          to: routes.volunteer,
+        },
+      },
+      {
+        id: "support-offers-a-community-receives",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("support-offers-a-community-receives"),
+      },
+      {
+        id: "see-how-often-your-cards-are-checked",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("see-how-often-your-cards-are-checked"),
+      },
+      {
+        id: "check-what-happened-to-your-invite-request",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("check-what-happened-to-your-invite-request"),
+        tag: {
+          labelKey: "marketing:changelog.tag.requestInvite",
+          to: routes.requestInvite,
+        },
+      },
+      {
+        id: "an-invite-you-can-address-to-a-person",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("an-invite-you-can-address-to-a-person"),
+        tag: {
+          labelKey: "marketing:changelog.tag.invite",
+          to: routes.invite,
+        },
+      },
+      {
+        id: "your-invites-are-where-you-can-find-them",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("your-invites-are-where-you-can-find-them"),
+        tag: {
+          labelKey: "marketing:changelog.tag.invite",
+          to: routes.invite,
+        },
+      },
+      {
+        id: "account-security-has-a-real-home",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("account-security-has-a-real-home"),
+        tag: {
+          labelKey: "marketing:changelog.tag.accountSecurity",
+          to: routes.security,
+        },
+      },
+      {
+        id: "your-photos-come-with-your-export",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("your-photos-come-with-your-export"),
+        tag: {
+          labelKey: "marketing:changelog.tag.dataExport",
+          to: routes.dataExport,
+        },
+      },
+      {
+        id: "every-page-announces-itself",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("every-page-announces-itself"),
+      },
+      {
+        id: "the-contact-form-reaches-a-person",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("the-contact-form-reaches-a-person"),
+        tag: {
+          labelKey: "marketing:changelog.tag.contact",
+          to: routes.contact,
+        },
+      },
+      {
+        id: "an-approved-invite-can-be-found-again",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("an-approved-invite-can-be-found-again"),
+      },
+      {
+        id: "no-stock-photo-on-a-real-application",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("no-stock-photo-on-a-real-application"),
+      },
+      {
         id: "the-transparency-report-is-published",
         category: "feature",
         date: "26 Aug 2026",

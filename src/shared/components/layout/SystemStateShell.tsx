@@ -21,7 +21,7 @@ const ORB_B: Record<OrbTone, string> = {
 
 /**
  * Shared shell for full-screen "state" pages (pending review, invite expired,
- * account banned/locked/suspended, offline, geo-restricted, PWA prompt). Owns
+ * account banned/locked/suspended, offline, PWA prompt). Owns
  * the cream background, decorative orbs, brand mark, centering, and the
  * entrance motion. Pass only the page's `.card` markup as children.
  *

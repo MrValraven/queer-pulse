@@ -1,0 +1,54 @@
+/* The issuer's card-check aggregate. A quiet panel of plain figures: it
+   answers "is this card actually used?" and nothing else. */
+
+.panel {
+  margin-top: var(--gap-lg);
+  padding: var(--gap-sm);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.figures {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--gap-xs) var(--gap-sm);
+  margin: var(--gap-xs) 0 0;
+}
+
+.total {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.recent {
+  font-size: 0.9rem;
+  color: var(--ink-60);
+}
+
+.last,
+.empty {
+  margin: var(--gap-xs) 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-60);
+}
+
+.note {
+  margin: var(--gap-sm) 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ink-60);
+}

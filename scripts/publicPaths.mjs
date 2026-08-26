@@ -176,6 +176,9 @@ export const QUIET_PUBLIC_PATHS = [
   "/policies/terms",
   "/policies/cookies",
   "/policies/guidelines",
+  // The responsible-disclosure policy. Public by design: a security researcher
+  // reporting a vulnerability has no account. ID-15.
+  "/policies/security",
 
   // ── Local — arrival + safe-space guides (directory/map are gated) ────────
   "/local/safe-spaces",

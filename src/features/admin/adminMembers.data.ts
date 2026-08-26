@@ -45,7 +45,8 @@ export interface AdminMember {
    *  role control in the drawer. */
   role: MemberRole;
   /** The member's own profile photo (live mode). When absent, the row falls
-   *  back to the demo `portrait(name)` lookup and then to initials. */
+   *  back to `useDemoPortrait()` — which yields a fixture face in demo mode
+   *  and nothing in live mode — and then to initials. */
   avatarUrl?: string | null;
   /** Open reports against this member, when not verified. */
   openReportsCount?: number;

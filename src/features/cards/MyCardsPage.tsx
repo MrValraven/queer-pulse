@@ -9,11 +9,14 @@ import {
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDeleteMyCard, useMyCards, useUpdateMyCard } from "./api/useMyCards";
 import type { MyCardDTO } from "./api/cards.api";
+import { isCardSelfRenewable } from "./cardExpiry";
 import { CardPhotoConsent } from "./CardPhotoConsent";
 import { CardPronounConsent } from "./CardPronounConsent";
+import { CardRenewAction } from "./CardRenewAction";
 import { CardStatusNotice } from "./CardStatusNotice";
 import { DiscreetGate } from "./DiscreetGate";
 import { MembershipCardFace } from "./MembershipCardFace";
@@ -33,7 +36,13 @@ export function MyCardsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { cards, isLoading } = useMyCards();
+  const { demoMode } = useDemoMode();
   const [revealedCardId, setRevealedCardId] = useState<string | null>(null);
+  // Demo mode writes nothing, so a renewal there has to be remembered here or
+  // the card would sit visibly expired under a success toast. In live mode the
+  // wallet refetches and the server is the only source of the card's next
+  // state, so nothing is overridden.
+  const [demoRenewals, setDemoRenewals] = useState<Record<string, string>>({});
   const [cardPendingRemoval, setCardPendingRemoval] =
     useState<MyCardDTO | null>(null);
   const deleteCard = useDeleteMyCard();
@@ -43,6 +52,15 @@ export function MyCardsPage() {
   // a pointer to where to set them.
   const { pronouns } = useAccountIdentity();
   const hasProfilePronouns = Boolean(pronouns?.trim());
+
+  const visibleCards: MyCardDTO[] = demoMode
+    ? cards.map((card) => {
+        const renewedExpiry = demoRenewals[card.id];
+        return renewedExpiry
+          ? { ...card, status: "active", expiresAt: renewedExpiry }
+          : card;
+      })
+    : cards;
 
   const confirmRemoval = () => {
     if (!cardPendingRemoval || deleteCard.isPending) return;
@@ -69,7 +87,7 @@ export function MyCardsPage() {
             <SkeletonCard />
             <SkeletonCard />
           </div>
-        ) : cards.length === 0 ? (
+        ) : visibleCards.length === 0 ? (
           <div className={styles.empty}>
             <FiCreditCard className={styles.emptyIcon} aria-hidden="true" />
             <p className={styles.emptyTitle}>{t("cards:empty.title")}</p>
@@ -77,7 +95,7 @@ export function MyCardsPage() {
           </div>
         ) : (
           <ul className={styles.grid}>
-            {cards.map((card) => (
+            {visibleCards.map((card) => (
               <li key={card.id} className={styles.cell}>
                 <DiscreetGate
                   isRevealed={revealedCardId === card.id}
@@ -95,7 +113,7 @@ export function MyCardsPage() {
                     />
                   )}
                 </DiscreetGate>
-                <CardStatusNotice status={card.status} />
+                <CardStatusNotice card={card} />
                 {/* Only where the issuing community actually runs photo
                     cards. A community that does not has nothing here for a
                     member to decide. */}
@@ -129,6 +147,24 @@ export function MyCardsPage() {
                             showToast(t("common:toast.saveFailed"), "error"),
                         },
                       )
+                    }
+                  />
+                )}
+                {/* Only where the issuing community opted in and the term is
+                    inside its last thirty days (or already past). A card an
+                    issuer paused or revoked is deliberately excluded: they
+                    took it away on purpose, and the server refuses it too. */}
+                {isCardSelfRenewable(card) && (
+                  <CardRenewAction
+                    card={card}
+                    onRenewed={
+                      demoMode
+                        ? (expiresAt) =>
+                            setDemoRenewals((current) => ({
+                              ...current,
+                              [card.id]: expiresAt,
+                            }))
+                        : undefined
                     }
                   />
                 )}

@@ -43,6 +43,15 @@ export const getInvite = (code: string) =>
 
 /** What the member types when generating a share link. */
 export interface CreateInvitePayload {
+  /**
+   * Optional address the invite is pinned to. When set, the backend stores it on
+   * the invite row and `validateInviteForSignup` refuses any sign-up whose Google
+   * account is a different address (typed `invite_email_mismatch` refusal), so a
+   * forwarded or screenshotted link admits nobody else. Omitted, the invite stays
+   * a bearer link anyone holding it can redeem. Pinning delivers NOTHING to the
+   * address: QueerPulse sends no email, the member passes the link on themselves.
+   */
+  email?: string;
   /** Optional personal note shown in the link preview (max 200 chars). */
   note?: string;
   /** Optional vouch — why they're inviting this person — shown at onboarding (max 280). */

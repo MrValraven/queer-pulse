@@ -1,4 +1,8 @@
-import type { PlatformStaffRowDTO } from "./api/adminStaffRoster.api";
+import type {
+  AdminStaffRoleHolderDTO,
+  PlatformStaffRowDTO,
+} from "./api/adminStaffRoster.api";
+import { DEMO_STAFF_GRANTS } from "../../shared/staff/staffRegistry.data";
 
 /**
  * Demo fallback for the admin staff-roster page (`/admin/staff`). Mirrors
@@ -33,3 +37,20 @@ export const ADMIN_STAFF_ROSTER_DEMO: PlatformStaffRowDTO[] = [
     platformRole: "moderator",
   },
 ];
+
+/**
+ * Demo fallback for `GET /admin/members/staff-roles`. Built from the roster
+ * above plus `DEMO_STAFF_GRANTS`, so the two demo fixtures can never drift
+ * into naming different people.
+ */
+export const ADMIN_STAFF_GRANTS_DEMO: AdminStaffRoleHolderDTO[] =
+  ADMIN_STAFF_ROSTER_DEMO.filter(
+    (staffMember) => DEMO_STAFF_GRANTS[staffMember.slug]?.length,
+  ).map((staffMember) => ({
+    id: staffMember.slug,
+    slug: staffMember.slug,
+    firstName: staffMember.firstName,
+    lastName: staffMember.lastName,
+    platformRole: staffMember.platformRole,
+    staffRoles: DEMO_STAFF_GRANTS[staffMember.slug] ?? [],
+  }));

@@ -20,8 +20,16 @@ export type AdminChangemakerNominationStatus =
 
 export interface AdminChangemakerNominationDTO {
   id: string;
-  /** The member who submitted the nomination (null if their profile is gone). */
-  nominator: AdminPersonDTO | null;
+  /**
+   * The member who submitted the nomination.
+   *
+   * ABSENT (not null) when the reader holds the `partnerships` staff grant
+   * without the Moderator/Admin tier: a nomination is a private submission
+   * about a third party who never opted in, so the pairing of the two names
+   * stays with platform staff. `null` is the different case where the
+   * nominator's account is gone. The UI must say something different for each.
+   */
+  nominator?: AdminPersonDTO | null;
   /** The free-text name the member put forward. */
   nomineeName: string;
   /** The nominator's own words on why (COM-16) — null for nominations

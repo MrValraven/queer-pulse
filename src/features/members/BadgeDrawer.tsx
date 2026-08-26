@@ -1,13 +1,13 @@
+import { useState } from "react";
 import { FiCheck, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Button, SideSheet } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { BadgeDrawerEntry, BadgeVerification } from "./badges.data";
 import { progressPercent, RARITY_LABEL_KEY } from "./badgeSelectors";
 import { BadgeMedallion } from "./BadgeMedallion";
-import {
-  useBadgeStoryNotes,
-  useBadgeVisibilityPrefs,
-} from "./useBadgePreferences";
+import { useBadgeStoryNotes } from "./useBadgePreferences";
+import { useSetBadgeVisibility } from "./api/useRecognitionMutations";
 import styles from "./BadgesPage.module.css";
 
 const VERIFY_COPY: Record<
@@ -56,13 +56,44 @@ export function BadgeDrawer({
   onClose,
 }: BadgeDrawerProps) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const { getStoryNote, setStoryNote } = useBadgeStoryNotes();
-  const { isHidden, toggleHidden } = useBadgeVisibilityPrefs();
+  const setVisibility = useSetBadgeVisibility();
+  // What the member just asked for, keyed by badge so paging prev/next keeps
+  // each card's own pending answer. The server value underneath it is the
+  // truth; this only bridges the gap until the recognition query refetches
+  // (and it is the whole answer in demo mode, which never calls the API).
+  const [pendingHiddenByKey, setPendingHiddenByKey] = useState<
+    Record<string, boolean>
+  >({});
   const current = entries[index];
   if (!current) return null;
   const { badge, earned } = current;
   const percent = progressPercent(badge);
-  const visible = !isHidden(badge.key);
+  const isHiddenFromProfile =
+    pendingHiddenByKey[badge.key] ?? badge.hiddenFromProfile === true;
+  const isVisibleOnProfile = !isHiddenFromProfile;
+
+  const toggleVisibility = () => {
+    const badgeKey = badge.key;
+    const nextHidden = isVisibleOnProfile;
+    setPendingHiddenByKey((previous) => ({
+      ...previous,
+      [badgeKey]: nextHidden,
+    }));
+    setVisibility.mutate(
+      { badgeKey, hiddenFromProfile: nextHidden },
+      {
+        onError: () => {
+          setPendingHiddenByKey((previous) => ({
+            ...previous,
+            [badgeKey]: !nextHidden,
+          }));
+          showToast(t("members:badges.drawer.visibilityErrorToast"), "error");
+        },
+      },
+    );
+  };
 
   return (
     <SideSheet title={badge.name} onClose={onClose}>
@@ -187,7 +218,7 @@ export function BadgeDrawer({
         <div className={styles.drFoot}>
           <div className={styles.drPriv}>
             <span>
-              {visible
+              {isVisibleOnProfile
                 ? t("members:badges.drawer.visibleOnProfile")
                 : t("members:badges.drawer.privateToYou")}
               <span className={styles.drPrivNote}>
@@ -198,9 +229,10 @@ export function BadgeDrawer({
               type="button"
               className={styles.swSwitch}
               role="switch"
-              aria-checked={visible}
+              aria-checked={isVisibleOnProfile}
               aria-label={t("members:badges.drawer.visibleOnProfile")}
-              onClick={() => toggleHidden(badge.key)}
+              disabled={setVisibility.isPending}
+              onClick={toggleVisibility}
             >
               <span className={styles.swTrack} />
             </button>

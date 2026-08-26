@@ -74,14 +74,21 @@
   gap: 0.75rem;
 }
 
-.applicantRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.85rem;
+/* The card around one applicant: the identity row, plus the completion step
+   or its recorded outcome underneath. The border/background moved here from
+   `.applicantRow` when the completion step was added, so the form sits inside
+   the same card rather than floating below it. */
+.applicantEntry {
   padding: 1rem;
   border-radius: 0.85rem;
   border: 1px solid rgba(var(--line-rgb), 0.1);
   background: var(--paper);
+}
+
+.applicantRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
 }
 
 .applicantBody {
@@ -105,4 +112,64 @@
   display: flex;
   gap: 0.5rem;
   flex-shrink: 0;
+}
+
+/* ── Volunteer session completion (SUS-05) ───────────────────────────────── */
+
+.completion {
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
+}
+
+.completionTitle {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--plum-rgb), 0.6);
+}
+
+.completionControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+/* Narrow enough that a two-digit hours entry does not read as a text field,
+   with `max-width` rather than a definite width so it still shrinks on a
+   phone. */
+.completionHours {
+  width: 9rem;
+  max-width: 100%;
+}
+
+.completionWhy {
+  margin: 0.7rem 0 0;
+  font-size: 0.8rem;
+  color: rgba(var(--plum-rgb), 0.55);
+}
+
+.completionError {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.completionDone {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--jade);
+}
+
+.completionNoShow {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  color: rgba(var(--plum-rgb), 0.55);
 }

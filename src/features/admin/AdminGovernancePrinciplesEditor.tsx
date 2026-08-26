@@ -4,10 +4,9 @@ import { Button, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { useRowDragReorder } from "../subprofiles/useRowDragReorder";
 import { OverviewEditedBadge } from "./OverviewEditedBadge";
 import { OverviewEditorRow } from "./OverviewEditorRow";
-import { reorder } from "./overviewEditorRow.utils";
+import { useOverviewRowReorder } from "./useOverviewRowReorder";
 import { useUpdateAdminOverview } from "./api/useAdminGovernanceOverview";
 import type {
   AdminOverviewSectionMeta,
@@ -45,8 +44,9 @@ export function AdminGovernancePrinciplesEditor({
   const update = useUpdateAdminOverview();
   const [draft, setDraft] = useState<PrincipleDTO[]>(rows);
 
-  const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(
-    (from, to) => setDraft((prev) => reorder(prev, from, to)),
+  const { containerRef, rowProps, announcement } = useOverviewRowReorder(
+    draft,
+    setDraft,
   );
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(rows);
@@ -107,8 +107,10 @@ export function AdminGovernancePrinciplesEditor({
         {draft.map((row, index) => (
           <OverviewEditorRow
             key={row.key}
-            gripHandlers={gripHandlers(index)}
-            isDragging={draggingIndex === index}
+            {...rowProps(
+              index,
+              t(`admin:governance.overview.principles.key.${row.key}`),
+            )}
             onRemove={() => onRemove(index)}
           >
             <span className={styles.editLineLabel}>
@@ -134,6 +136,11 @@ export function AdminGovernancePrinciplesEditor({
           </OverviewEditorRow>
         ))}
       </div>
+      {/* Polite live region for the row move buttons: a drag is visible,
+          a button press is not, so the row's new position is spoken. */}
+      <p className="visuallyHidden" role="status" aria-live="polite">
+        {announcement}
+      </p>
 
       <Button
         variant="ghost"

@@ -4,7 +4,11 @@ import { PageShell } from "../../shared/components/layout";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyOpportunities } from "./api/useMyOpportunities";
 import { useSignups } from "./api/useSignups";
-import { useDecideSignup } from "./api/useOpportunityMutations";
+import {
+  useCompleteSignup,
+  useDecideSignup,
+} from "./api/useOpportunityMutations";
+import { ApiError } from "../../shared/api/client";
 import { VolunteerApplicantsOpportunityList } from "./VolunteerApplicantsOpportunityList";
 import { VolunteerApplicantsList } from "./VolunteerApplicantsList";
 import styles from "./VolunteerApplicantsDashboardPage.module.css";
@@ -33,6 +37,40 @@ export function VolunteerApplicantsDashboardPage() {
 
   const signups = useSignups(activeSlug ?? undefined, Boolean(activeSlug));
   const decide = useDecideSignup(activeSlug ?? "");
+
+  // Which row is currently being written, so one confirmation cannot put every
+  // other row into a busy state, and the failure renders under the row it
+  // belongs to instead of as a page-wide toast.
+  const [completingSignupId, setCompletingSignupId] = useState<string | null>(
+    null,
+  );
+  const [completionErrorSignupId, setCompletionErrorSignupId] = useState<
+    string | null
+  >(null);
+  const complete = useCompleteSignup(activeSlug ?? "");
+
+  // A 409 means the server already has this session recorded, which is a
+  // different fact from "it did not save" and deserves its own sentence.
+  const completionError = complete.error
+    ? complete.error instanceof ApiError && complete.error.status === 409
+      ? t("marketing:volunteerManage.completion.alreadyDone")
+      : t("marketing:volunteerManage.completion.error")
+    : null;
+
+  const handleComplete = (
+    signupId: string,
+    values: { attended: boolean; hours: number },
+  ) => {
+    setCompletingSignupId(signupId);
+    setCompletionErrorSignupId(null);
+    complete.mutate(
+      { signupId, attended: values.attended, hours: values.hours },
+      {
+        onError: () => setCompletionErrorSignupId(signupId),
+        onSettled: () => setCompletingSignupId(null),
+      },
+    );
+  };
 
   return (
     <PageShell>
@@ -65,6 +103,10 @@ export function VolunteerApplicantsDashboardPage() {
                 decide.mutate({ signupId, status: "declined" })
               }
               deciding={decide.isPending}
+              onComplete={handleComplete}
+              completingSignupId={completingSignupId}
+              completionErrorSignupId={completionErrorSignupId}
+              completionError={completionError}
             />
           </div>
         )}

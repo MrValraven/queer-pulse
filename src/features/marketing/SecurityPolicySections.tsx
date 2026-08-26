@@ -4,61 +4,71 @@ import type { StepperStep } from "../../shared/components/ui";
 import { useClipboard } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { SECURITY_HALL_OF_FAME, SECURITY_PGP_KEY } from "./security.data";
-import { IN_SCOPE, OUT_SCOPE, PROCESS_STEPS } from "./securityContent.data";
-import styles from "./SecurityPage.module.css";
+import { SECURITY_HALL_OF_FAME, SECURITY_PGP_KEY } from "./securityPolicy.data";
+import {
+  IN_SCOPE,
+  OUT_SCOPE,
+  PROCESS_STEPS,
+} from "./securityPolicyContent.data";
+import styles from "./SecurityPolicyPage.module.css";
 
 /** Plum hero banner at the top of the security / responsible-disclosure page. */
-export function SecurityHero() {
+export function SecurityPolicyHero() {
   const { t } = useTranslation();
   return (
     <header className={styles.hero} data-plum>
       <div className="wrap">
         <div className={styles.heroEye}>
-          {t("settings:security.hero.eyebrow")}
+          {t("marketing:securityPolicy.hero.eyebrow")}
         </div>
         <h1 className={styles.heroH}>
-          {t("settings:security.hero.titleTop")}
+          {t("marketing:securityPolicy.hero.titleTop")}
           <br />
-          <em>{t("settings:security.hero.titleEm")}</em>
+          <em>{t("marketing:securityPolicy.hero.titleEm")}</em>
         </h1>
-        <p className={styles.heroSub}>{t("settings:security.hero.sub")}</p>
+        <p className={styles.heroSub}>
+          {t("marketing:securityPolicy.hero.sub")}
+        </p>
       </div>
     </header>
   );
 }
 
 /** "Our commitment" prose section. */
-export function SecurityCommitmentSection() {
+export function SecurityPolicyCommitmentSection() {
   const { t } = useTranslation();
   return (
     <div className={styles.proseSection}>
       <div className={styles.proseEye}>
-        {t("settings:security.commitment.eyebrow")}
+        {t("marketing:securityPolicy.commitment.eyebrow")}
       </div>
       <h2 className={styles.proseH}>
         <Translation
-          i18nKey="settings:security.commitment.title"
+          i18nKey="marketing:securityPolicy.commitment.title"
           components={{ em: <em /> }}
         />
       </h2>
-      <p className={styles.prose}>{t("settings:security.commitment.body1")}</p>
-      <p className={styles.prose}>{t("settings:security.commitment.body2")}</p>
+      <p className={styles.prose}>
+        {t("marketing:securityPolicy.commitment.body1")}
+      </p>
+      <p className={styles.prose}>
+        {t("marketing:securityPolicy.commitment.body2")}
+      </p>
     </div>
   );
 }
 
 /** In-scope / out-of-scope grid. */
-export function SecurityScopeSection() {
+export function SecurityPolicyScopeSection() {
   const { t } = useTranslation();
   return (
     <div className={styles.proseSection}>
       <div className={styles.proseEye}>
-        {t("settings:security.scope.eyebrow")}
+        {t("marketing:securityPolicy.scope.eyebrow")}
       </div>
       <h2 className={styles.proseH}>
         <Translation
-          i18nKey="settings:security.scope.title"
+          i18nKey="marketing:securityPolicy.scope.title"
           components={{ em: <em /> }}
         />
       </h2>
@@ -66,7 +76,7 @@ export function SecurityScopeSection() {
         <div className={`${styles.scopeCard} ${styles.scopeIn}`}>
           <div className={styles.scopeHead}>
             <div className={styles.scopeDot} />
-            {t("settings:security.scope.inLabel")}
+            {t("marketing:securityPolicy.scope.inLabel")}
           </div>
           <ul className={styles.scopeList}>
             {IN_SCOPE.map((key) => (
@@ -77,7 +87,7 @@ export function SecurityScopeSection() {
         <div className={`${styles.scopeCard} ${styles.scopeOut}`}>
           <div className={styles.scopeHead}>
             <div className={styles.scopeDot} />
-            {t("settings:security.scope.outLabel")}
+            {t("marketing:securityPolicy.scope.outLabel")}
           </div>
           <ul className={styles.scopeList}>
             {OUT_SCOPE.map((key) => (
@@ -91,7 +101,7 @@ export function SecurityScopeSection() {
 }
 
 /** Disclosure-process timeline (acknowledge → assess → fix → disclose). */
-export function SecurityProcessSection() {
+export function SecurityPolicyProcessSection() {
   const { t } = useTranslation();
   const processSteps: StepperStep[] = PROCESS_STEPS.map((step) => ({
     key: step.key,
@@ -107,11 +117,11 @@ export function SecurityProcessSection() {
   return (
     <div className={styles.proseSection}>
       <div className={styles.proseEye}>
-        {t("settings:security.process.eyebrow")}
+        {t("marketing:securityPolicy.process.eyebrow")}
       </div>
       <h2 className={styles.proseH}>
         <Translation
-          i18nKey="settings:security.process.title"
+          i18nKey="marketing:securityPolicy.process.title"
           components={{ em: <em /> }}
         />
       </h2>
@@ -122,7 +132,7 @@ export function SecurityProcessSection() {
         orientation="vertical"
         size="lg"
         showFill={false}
-        ariaLabel={t("settings:security.process.aria")}
+        ariaLabel={t("marketing:securityPolicy.process.aria")}
         className={styles.timeline}
       />
     </div>
@@ -133,24 +143,26 @@ export function SecurityProcessSection() {
  * Researcher acknowledgements. Credits appear only once a real disclosure has
  * been made. An invented Hall of Fame asserts vulnerabilities nobody reported.
  */
-export function SecurityAcknowledgmentsSection() {
+export function SecurityPolicyAcknowledgmentsSection() {
   const { t } = useTranslation();
   const hasCredits = SECURITY_HALL_OF_FAME.length > 0;
 
   return (
     <div className={styles.proseSection}>
       <div className={styles.proseEye}>
-        {t("settings:security.ack.eyebrow")}
+        {t("marketing:securityPolicy.ack.eyebrow")}
       </div>
       <h2 className={styles.proseH}>
         <Translation
-          i18nKey="settings:security.ack.title"
+          i18nKey="marketing:securityPolicy.ack.title"
           components={{ em: <em /> }}
         />
       </h2>
       {hasCredits ? (
         <>
-          <p className={styles.prose}>{t("settings:security.ack.body")}</p>
+          <p className={styles.prose}>
+            {t("marketing:securityPolicy.ack.body")}
+          </p>
           <div className={styles.hallGrid}>
             {SECURITY_HALL_OF_FAME.map((researcher) => (
               <div key={researcher.initials} className={styles.hallCard}>
@@ -162,14 +174,16 @@ export function SecurityAcknowledgmentsSection() {
           </div>
         </>
       ) : (
-        <p className={styles.prose}>{t("settings:security.ack.empty")}</p>
+        <p className={styles.prose}>
+          {t("marketing:securityPolicy.ack.empty")}
+        </p>
       )}
     </div>
   );
 }
 
 /** Report-a-vulnerability card + PGP key card. */
-export function SecuritySidebar() {
+export function SecurityPolicySidebar() {
   const { showToast } = useToast();
   const { t } = useTranslation();
   const { copy } = useClipboard();
@@ -180,8 +194,8 @@ export function SecuritySidebar() {
     const didCopy = await copy(SECURITY_PGP_KEY);
     showToast(
       didCopy
-        ? t("settings:security.pgp.copied")
-        : t("settings:security.pgp.copyFailed"),
+        ? t("marketing:securityPolicy.pgp.copied")
+        : t("marketing:securityPolicy.pgp.copyFailed"),
       didCopy ? "success" : "error",
     );
   }
@@ -190,20 +204,20 @@ export function SecuritySidebar() {
     <aside className={styles.sidebar}>
       <div className={styles.reportCard}>
         <h3>
-          {t("settings:security.report.titleTop")}
+          {t("marketing:securityPolicy.report.titleTop")}
           <br />
-          <em>{t("settings:security.report.titleEm")}</em>
+          <em>{t("marketing:securityPolicy.report.titleEm")}</em>
         </h3>
-        <p>{t("settings:security.report.body")}</p>
+        <p>{t("marketing:securityPolicy.report.body")}</p>
         <Button variant="ghost-dark" href="mailto:hello@queerpulse.com">
-          {t("settings:security.report.cta")}
+          {t("marketing:securityPolicy.report.cta")}
         </Button>
       </div>
       {/* No key published yet: say so rather than hand a researcher a
           truncated block they cannot import. */}
       <div className={styles.pgpCard}>
         <div className={styles.pgpLabel}>
-          {t("settings:security.pgp.label")}
+          {t("marketing:securityPolicy.pgp.label")}
         </div>
         {hasPgpKey ? (
           <>
@@ -213,12 +227,12 @@ export function SecuritySidebar() {
               onClick={() => void copyPgpKey()}
               style={{ width: "100%", justifyContent: "center" }}
             >
-              {t("settings:security.pgp.copyCta")}
+              {t("marketing:securityPolicy.pgp.copyCta")}
             </Button>
           </>
         ) : (
           <p className={styles.pgpUnavailable}>
-            {t("settings:security.pgp.unavailable")}
+            {t("marketing:securityPolicy.pgp.unavailable")}
           </p>
         )}
       </div>

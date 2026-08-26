@@ -201,6 +201,23 @@ export interface AdminVerificationRequestDTO {
   createdAt: string;
   updatedAt: string;
   hasDuplicateSignal: boolean;
+  /**
+   * OPS-04. The reviewer currently working this request, or null when nobody
+   * has claimed it. Distinct from the detail DTO's `reviewedBy`, which is who
+   * DECIDED it: a claim says "I have this open" so two reviewers do not
+   * duplicate the work, and it is given back by releasing.
+   */
+  assignedStaffId: string | null;
+  /** Their display name; absent on an unclaimed request, and "Deleted member"
+   *  after that reviewer's erasure. */
+  assignedStaffName?: string;
+  /**
+   * ISO timestamp this request should have been decided by (5 days from
+   * submission, 3 for an appeal — the backend's `verification-sla.ts` owns the
+   * windows). Null means NO CLOCK, never overdue: requests decided before
+   * OPS-04 existed carry none.
+   */
+  dueAt: string | null;
 }
 
 /** `GET /admin/verifications/requests/:id` response — the list row's fields
@@ -266,6 +283,14 @@ export interface GetAdminVerificationRequestsFilter {
   query?: string;
   sort?: VerificationRequestSort;
   cursor?: string;
+  /**
+   * OPS-04's "Assigned to me" filter, applied server-side. `"me"` resolves to
+   * the CALLER on the backend, from the session, so no reviewer's id ever
+   * travels on the wire and nobody can ask what a named colleague is holding.
+   * `"unassigned"` narrows to what nobody has picked up. Part of the keyset,
+   * so a cursor issued under one value must not be reused under another.
+   */
+  assignedTo?: "me" | "unassigned";
 }
 
 /** The manual-review request queue, filterable by status, type, free-text
@@ -274,13 +299,14 @@ export interface GetAdminVerificationRequestsFilter {
 export async function getAdminVerificationRequests(
   filter: GetAdminVerificationRequestsFilter = {},
 ): Promise<AdminVerificationRequestListDTO> {
-  const { status, type, query, sort, cursor } = filter;
+  const { status, type, query, sort, cursor, assignedTo } = filter;
   const searchParams = new URLSearchParams();
   if (status && status !== "all") searchParams.set("status", status);
   if (type) searchParams.set("type", type);
   if (query) searchParams.set("q", query);
   if (sort) searchParams.set("sort", sort);
   if (cursor) searchParams.set("cursor", cursor);
+  if (assignedTo) searchParams.set("assignedTo", assignedTo);
   const queryString = searchParams.toString();
   const raw = await apiGet<Partial<AdminVerificationRequestListDTO>>(
     `/admin/verifications/requests${queryString ? `?${queryString}` : ""}`,

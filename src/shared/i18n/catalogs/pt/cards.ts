@@ -56,6 +56,9 @@ export const cards: Catalog = {
   "qrNotice.revoked": "Este cartão já não é válido",
 
   "status.expired": "Este cartão expirou. Pede um novo à comunidade.",
+  // O mesmo facto, quando o programa deixa a pessoa resolver isto sozinha.
+  "status.expiredRenewable":
+    "Este cartão expirou. Renová-lo põe-no outra vez válido.",
   "status.suspended":
     "Este cartão está suspenso. A comunidade pode explicar-te.",
   "status.revoked":
@@ -64,6 +67,36 @@ export const cards: Catalog = {
   "status.tag.expired": "Expirado",
   "status.tag.suspended": "Suspenso",
   "status.tag.revoked": "Revogado",
+
+  // A linha de validade por baixo de cada cartão. Um cartão que funciona
+  // comunica um facto; um cartão a acabar pede alguma coisa. Estão redigidos
+  // assim de propósito.
+  "expiry.never": "Este cartão não caduca.",
+  "expiry.inDate": "Válido até {date}.",
+  "expiry.soon_one": "Este cartão caduca dentro de {count} dia.",
+  "expiry.soon_other": "Este cartão caduca dentro de {count} dias.",
+  "expiry.soonRenewable_one":
+    "Este cartão caduca dentro de {count} dia. Já o podes renovar.",
+  "expiry.soonRenewable_other":
+    "Este cartão caduca dentro de {count} dias. Já o podes renovar.",
+
+  "renew.cta": "Renovar cartão",
+  "renew.ctaAria": "Renovar o teu cartão de {community}",
+  "renew.pending": "A renovar…",
+  "renew.toast": "Cartão renovado. É válido até {date}.",
+  "renew.error.notAllowed":
+    "Esta comunidade trata das renovações. Pede um cartão novo a quem a gere ou modera.",
+  "renew.error.withdrawn":
+    "Este cartão foi retirado pela comunidade, por isso só ela o pode devolver.",
+  "renew.error.notAMember":
+    "Já não pertences a esta comunidade, por isso este cartão não pode ser renovado.",
+  "renew.error.paused":
+    "Este programa de cartões está em pausa. Tenta outra vez quando a comunidade o retomar.",
+  "renew.error.noExpiry":
+    "Este cartão não caduca, por isso não há nada a renovar.",
+  "renew.error.notDue":
+    "Este cartão ainda está válido. Podes renová-lo nos últimos 30 dias.",
+  "renew.error.generic": "Não foi possível renovar o cartão. Tenta outra vez.",
 
   "role.owner": "Responsável",
   "role.coOwner": "Cotitular",
@@ -183,6 +216,11 @@ export const cards: Catalog = {
   "designer.pronounsHelper":
     "Os pronomes vêm do perfil de cada sócie, por isso o cartão só mostra o que já está definido lá. Qualquer pessoa pode desligar os seus no próprio cartão.",
   "designer.pronounsStandIn": "os teus pronomes",
+  "designer.selfRenewLabel": "Renovações",
+  "designer.selfRenewCheck":
+    "Deixar cada pessoa renovar o próprio cartão perto do fim",
+  "designer.selfRenewHelper":
+    "Nos últimos 30 dias, cada pessoa pode voltar a pôr o próprio cartão válido sem esperar que emitas cartões para toda a lista. A única condição é estar na tua lista de membros. Um cartão que puseste em pausa ou revogaste fica como está, e só tu o podes devolver.",
   "designer.printLabel": "Cartões impressos",
   "designer.printCheck":
     "Permitir que dones e moderadores imprimam estes cartões",
@@ -251,6 +289,9 @@ export const cards: Catalog = {
   "holders.replaceModal.confirm": "Substituir cartão",
   "holders.replaceModal.cancel": "Manter este cartão",
   "holders.replaceToast": "O cartão de {name} tem um código novo.",
+  "holders.verifiedNever": "Nunca verificado.",
+  "holders.verifiedCount_one": "Verificado uma vez.",
+  "holders.verifiedCount_other": "Verificado {count} vezes.",
   "holders.reasonLabel": "Motivo",
   "holders.reasonPlaceholder": "Porque é que este cartão está a mudar?",
   "holders.reasonHint":
@@ -312,4 +353,14 @@ export const cards: Catalog = {
     "{count} cartões pausados ou revogados ficaram como estavam.",
   "modTools.pausedToast": "Cartão de sócio pausado.",
   "modTools.resumedToast": "Cartão de sócio retomado.",
+  "verifications.title": "Verificações de cartões",
+  "verifications.total_one": "{count} verificação",
+  "verifications.total_other": "{count} verificações",
+  "verifications.recent_one": "{count} nos últimos {days} dias",
+  "verifications.recent_other": "{count} nos últimos {days} dias",
+  "verifications.last": "Última verificação a {date}.",
+  "verifications.empty":
+    "Ainda não foi verificado nenhum cartão deste programa.",
+  "verifications.note":
+    "Uma contagem de quantas vezes estes cartões foram verificados, guardada durante 90 dias e depois apagada. A QueerPulse não guarda registo de quem verificou um cartão, nem de onde.",
 };

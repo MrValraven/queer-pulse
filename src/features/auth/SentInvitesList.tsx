@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FiChevronDown } from "react-icons/fi";
+import { FiCheck, FiChevronDown, FiCopy } from "react-icons/fi";
 import {
   Button,
   ConfirmDialog,
@@ -9,6 +9,8 @@ import {
   type Tab,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useClipboard } from "../../shared/hooks";
+import { inviteFullUrlFor } from "../../shared/lib/inviteUrl";
 import { ApiError } from "../../shared/api/client";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -61,8 +63,11 @@ function dateAndTime(fmt: Formatters, value: Date): string {
   });
 }
 
-/** One sent-invite row: code, status chip, and the send/expiry or accepted line.
- *  A still-Pending invite (`status === "valid"`) also gets a Revoke control. */
+/** One sent-invite row: who it is for, status chip, and the send/expiry or
+ *  accepted line. A pinned invite leads with the address it is bound to and
+ *  demotes the code; an unpinned one keeps the code and says plainly that
+ *  anyone holding the link can redeem it. A still-Pending invite
+ *  (`status === "valid"`) also gets Copy link and Revoke controls. */
 function SentInviteRow({
   invite,
   t,
@@ -80,6 +85,23 @@ function SentInviteRow({
   onResend: (invite: SentInviteView) => void;
   isResending: boolean;
 }) {
+  const { showToast } = useToast();
+  // The shared clipboard primitive, so this row never grows a second copy of
+  // the reset-timer / permission handling `CopyLinkRow` already owns.
+  const { copy, copied: hasCopied } = useClipboard();
+  // What the invite is called out loud: the address it is bound to, or its code.
+  const inviteLabel = invite.recipientEmail ?? invite.code;
+
+  async function copyInviteLink() {
+    const didCopy = await copy(inviteFullUrlFor(invite.code));
+    showToast(
+      didCopy
+        ? t("auth:invite.sentList.linkCopied")
+        : t("auth:invite.sentList.copyFailed"),
+      didCopy ? "success" : "error",
+    );
+  }
+
   const sent = dateAndTime(fmt, invite.sentAt);
   // `expiresAt` can be null (invite with no set expiry) — fall back to a
   // send-only line rather than printing an "Invalid Date".
@@ -98,7 +120,21 @@ function SentInviteRow({
   return (
     <div className={styles.row}>
       <div className={styles.main}>
-        <div className={styles.code}>{invite.code}</div>
+        {invite.recipientEmail ? (
+          <>
+            <div className={styles.recipient}>{invite.recipientEmail}</div>
+            <div className={styles.codeSecondary}>
+              {invite.code} · {t("auth:invite.sentList.pinnedNote")}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles.code}>{invite.code}</div>
+            <div className={styles.bearer}>
+              {t("auth:invite.sentList.anyoneWithLink")}
+            </div>
+          </>
+        )}
         {invite.note && <div className={styles.note}>"{invite.note}"</div>}
         <div className={styles.detail}>{detail}</div>
       </div>
@@ -106,6 +142,22 @@ function SentInviteRow({
         <span className={`${styles.chip} ${styles[invite.statusTone]}`}>
           {t(invite.statusKey)}
         </span>
+        {invite.status === "valid" && (
+          <Button
+            variant="ghost"
+            size="md"
+            className={styles.copy}
+            aria-label={t("auth:invite.sentList.copyLinkAriaLabel", {
+              invite: inviteLabel,
+            })}
+            onClick={() => void copyInviteLink()}
+          >
+            {hasCopied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
+            {hasCopied
+              ? t("auth:common.copied")
+              : t("auth:invite.sentList.copyLinkCta")}
+          </Button>
+        )}
         {invite.status === "valid" && (
           <Button
             variant="ghost"

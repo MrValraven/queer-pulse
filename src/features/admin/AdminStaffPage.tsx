@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -5,8 +6,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminPageHeader } from "./ui";
 import { routes } from "../../app/routeMap";
 import { ApiError } from "../../shared/api/client";
-import { useAdminStaffRoster } from "./api/useAdminStaffRoster";
-import { AdminStaffRows } from "./AdminStaffRows";
+import {
+  useAdminStaffRoleHolders,
+  useAdminStaffRoster,
+} from "./api/useAdminStaffRoster";
+import { AdminStaffRows, type StaffRosterRow } from "./AdminStaffRows";
 import styles from "./AdminStaffPage.module.css";
 
 /**
@@ -22,10 +26,38 @@ import styles from "./AdminStaffPage.module.css";
 export function AdminStaffPage() {
   const { t } = useTranslation();
   const { data, isLoading, isError, error } = useAdminStaffRoster();
+  const { data: grantHolders } = useAdminStaffRoleHolders();
 
   const forbidden =
     isError && error instanceof ApiError && error.status === 403;
-  const staff = data ?? [];
+
+  // One list: the account tiers from the platform roster, each carrying the
+  // additive grants that person holds, plus every grant holder who is on the
+  // ordinary member tier and so appears on no roster of their own (OPS-03).
+  // The grants query failing degrades to tiers alone rather than emptying the
+  // page.
+  const staff = useMemo<StaffRosterRow[]>(() => {
+    const holders = grantHolders ?? [];
+    const grantsBySlug = new Map(
+      holders.map((holder) => [holder.slug, holder.staffRoles]),
+    );
+    const rosterSlugs = new Set((data ?? []).map((member) => member.slug));
+    return [
+      ...(data ?? []).map((member) => ({
+        ...member,
+        staffRoles: grantsBySlug.get(member.slug) ?? [],
+      })),
+      ...holders
+        .filter((holder) => !rosterSlugs.has(holder.slug))
+        .map((holder) => ({
+          slug: holder.slug,
+          firstName: holder.firstName,
+          lastName: holder.lastName,
+          platformRole: holder.platformRole,
+          staffRoles: holder.staffRoles,
+        })),
+    ];
+  }, [data, grantHolders]);
 
   return (
     <AdminShell

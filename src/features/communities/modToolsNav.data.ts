@@ -15,11 +15,12 @@ export type ModSection =
   | "reports"
   | "members"
   | "invites"
+  | "support"
   | "card"
   | "danger";
 
 /** Which queue's pending count rides on a rail item, when it has one. */
-export type ModNavBadge = "requests" | "reports";
+export type ModNavBadge = "requests" | "reports" | "support";
 
 export interface ModNavItem {
   id: ModSection;
@@ -42,6 +43,14 @@ export const MOD_NAV: ModNavItem[] = [
   },
   { id: "members", labelKey: "communities:detail.modtools.nav.members" },
   { id: "invites", labelKey: "communities:detail.modtools.nav.invites" },
+  {
+    // What platform staff have offered this community (OPS-05). Badged like
+    // the two queues above, because an unanswered offer of help is something
+    // waiting on the moderators in exactly the same sense.
+    id: "support",
+    labelKey: "communities:detail.modtools.nav.support",
+    badge: "support",
+  },
   { id: "card", labelKey: "communities:detail.modtools.nav.card" },
   { id: "danger", labelKey: "communities:detail.modtools.nav.danger" },
 ];

@@ -9,6 +9,12 @@ const RequestInvitePage = lazyNamed(
   () => import("./RequestInvitePage"),
   "RequestInvitePage",
 );
+// The applicant-facing "what happened to my request?" page. Public like the
+// request form itself: whoever needs it has no account by definition.
+const JoinRequestStatusPage = lazyNamed(
+  () => import("./JoinRequestStatusPage"),
+  "JoinRequestStatusPage",
+);
 const OnboardingPage = lazyNamed(
   () => import("./OnboardingPage"),
   "OnboardingPage",
@@ -33,6 +39,12 @@ export function authRoutes() {
       <Route
         path={routes.requestInvite}
         element={auth(<RequestInvitePage />)}
+      />
+      {/* `/auth/request-invite` is an exact path with no wildcard, so this
+          nested route is reached on its own terms and order does not matter. */}
+      <Route
+        path={routes.joinRequestStatus}
+        element={auth(<JoinRequestStatusPage />)}
       />
       <Route path={routes.onboarding} element={auth(<OnboardingPage />)} />
       {/* `/auth/welcome` is a legacy alias for the one-time onboarding wizard.

@@ -78,6 +78,10 @@ export const routes = {
   adminModeration: "/admin/moderation",
   adminModResponseTemplates: "/admin/mod-response-templates",
   adminConcerns: "/admin/concerns",
+  /** ACQ-03: the generalised intake console — every `intakes` kind plus the
+   *  public contact/partnership inquiries, filtered by kind and triage state.
+   *  `adminConcerns` above is the governance-concern view of the same console. */
+  adminIntakes: "/admin/intakes",
   /** ID-04: the data-subject request (DSAR) review queue. Statutory 30-day
    *  clock per request, so the queue is sorted by deadline, never by arrival. */
   adminDsar: "/admin/dsar",
@@ -106,6 +110,10 @@ export const routes = {
   adminPartnerApplications: "/admin/partner-applications",
   adminSettings: "/admin/settings",
   adminReports: "/admin/reports",
+  /** SUS-05: confirmed volunteer sessions and hours over a period, with
+   *  per-opportunity and per-community breakdowns. The answer to "how many
+   *  volunteer hours did QueerPulse contribute". Aggregates only. */
+  adminVolunteerHours: "/admin/volunteer-hours",
   adminStatusIncidents: "/admin/status-incidents",
   about: "/about",
   account: "/account",
@@ -284,6 +292,11 @@ export const routes = {
   safety: "/safety",
   search: "/search",
   security: "/account/security",
+  /** ID-15: the responsible-disclosure policy for security researchers. It
+   *  used to live at `security` above, which a member reasonably expects to
+   *  be their own account-security hub; the policy is a public document, so
+   *  it sits with the other policies. */
+  policiesSecurity: "/policies/security",
   sessions: "/account/sessions",
   settings: "/account/settings",
   sexualHealth: "/resources/sexual-health",
@@ -343,6 +356,10 @@ export const routes = {
   // Additional typed entry points (auth, lifecycle, studio & system states),
   // used by the settings → Simulations panel to launch real member journeys.
   requestInvite: "/auth/request-invite",
+  /** ACQ-01: an applicant checks what happened to their request, keyed on
+   *  the opaque token shown once at submission (`?token=`). Public: there is
+   *  no account behind an applicant. */
+  joinRequestStatus: "/auth/request-invite/status",
   inviteExpired: "/system/invite-expired",
   verificationNeeded: "/system/verification-needed",
   rsvp: "/rsvp",
@@ -376,7 +393,6 @@ export const routes = {
   accountSuspended: "/system/account-suspended",
   maintenance: "/system/maintenance",
   offline: "/system/offline",
-  geoRestricted: "/system/geo-restricted",
   serverError: "/system/500",
   pwaPrompt: "/system/pwa-prompt",
   feed: "/feed",

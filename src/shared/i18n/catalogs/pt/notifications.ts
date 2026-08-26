@@ -189,6 +189,12 @@ export const notifications: Catalog = {
 
   "type.community_report_filed.text": "Algo em {communityName} foi denunciado.",
   "type.community_report_filed.meta": "Denúncia na tua comunidade",
+  // OPS-05. Chega a quem tem a comunidade a seu cargo quando a equipa da
+  // plataforma oferece ajuda. Só na aplicação e por push: a QueerPulse não
+  // envia e-mail nenhum.
+  "type.community_support_offered.text":
+    "Alguém da QueerPulse ofereceu ajuda a {communityName}.",
+  "type.community_support_offered.meta": "Uma oferta de apoio",
   "type.community_report_filed.emergency.text":
     "Uma denúncia urgente em {communityName} precisa de uma decisão dentro de uma hora.",
   "type.community_report_filed.emergency.meta": "Denúncia urgente",
@@ -257,6 +263,29 @@ export const notifications: Catalog = {
   "type.account_deletion_final_warning.text_other":
     "A tua conta é eliminada dentro de {daysRemaining} dias. Até lá ainda podes cancelar.",
   "type.account_deletion_final_warning.meta": "Eliminação agendada",
+
+  // Cartão de sócie a trinta dias de caducar (SUS-07). `{communityName}` e
+  // `{daysRemaining}` vêm diretamente do payload; `daysRemaining` também é
+  // espelhado em `count` para o CLDR escolher o plural.
+  //
+  // Dois conjuntos, porque cada um pede uma coisa diferente. O par
+  // `.renewable` é usado quando o programa deixa a pessoa renovar o próprio
+  // cartão, e aponta para o botão que está à espera dela. O par simples é
+  // usado quando não deixa, e aponta para a comunidade.
+  "type.card_expiring.text":
+    "O teu cartão de sócie caduca em breve. É a comunidade que emite o novo.",
+  "type.card_expiring.text_one":
+    "O teu cartão de {communityName} caduca dentro de {daysRemaining} dia. É a comunidade que emite o novo.",
+  "type.card_expiring.text_other":
+    "O teu cartão de {communityName} caduca dentro de {daysRemaining} dias. É a comunidade que emite o novo.",
+  "type.card_expiring.meta": "Cartão a caducar",
+  "type.card_expiring.renewable.text":
+    "O teu cartão de sócie caduca em breve. Podes renová-lo tu.",
+  "type.card_expiring.renewable.text_one":
+    "O teu cartão de {communityName} caduca dentro de {daysRemaining} dia. Podes renová-lo tu.",
+  "type.card_expiring.renewable.text_other":
+    "O teu cartão de {communityName} caduca dentro de {daysRemaining} dias. Podes renová-lo tu.",
+  "type.card_expiring.renewable.meta": "Cartão a caducar",
 
   "type.appeal_resolved.text": "Há uma decisão sobre o teu recurso.",
   "type.appeal_resolved.meta": "Atualização de recurso",

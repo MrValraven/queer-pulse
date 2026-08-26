@@ -294,3 +294,17 @@
   display: inline-flex;
   align-items: center;
 }
+
+/* The kinds of help one support offer names (OPS-05). A list rather than a
+   sentence: an offer of three separate things reads as three lines, and a
+   moderator scanning the pane can see at a glance what is on the table. */
+.offerOptions {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}

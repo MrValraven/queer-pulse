@@ -4,7 +4,7 @@ import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { AdminAvatar, AdminChip } from "./ui";
-import { portrait } from "./adminPeople.data";
+import { useDemoPortrait } from "./useDemoPortrait";
 import { STAFF_ROLES } from "./staffRoles.registry";
 import type {
   AdminMember,
@@ -31,6 +31,7 @@ export function AdminMemberRows({
   onSelect: (member: AdminMember) => void;
 }) {
   const { t } = useTranslation();
+  const demoPortrait = useDemoPortrait();
   if (members.length === 0) {
     return <p className={styles.emptyLine}>{t("admin:members.empty")}</p>;
   }
@@ -56,7 +57,9 @@ export function AdminMemberRows({
               tone={member.tone}
               size="md"
               verified={member.verified}
-              src={member.avatarUrl ?? portrait(member.name)}
+              // Their own photo in live mode; the name-keyed registry only
+              // stands in for demo fixtures, which have no `avatarUrl`.
+              src={member.avatarUrl ?? demoPortrait(member.name)}
             />
             <div className={styles.rowMain}>
               <div className={styles.rowTop}>

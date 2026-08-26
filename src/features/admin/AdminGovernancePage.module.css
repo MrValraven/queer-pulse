@@ -1269,6 +1269,36 @@
   margin: 2px 0 0;
   line-height: 1.4;
 }
+/* The row's action cluster: move up / move down / remove, held together at the
+   end of the row so the two reorder buttons read as one control pair. */
+.ovRowActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+/* Keyboard and assistive-tech reorder path, alongside the pointer grip (ID-11).
+   Same 28px round target as the remove button beside it, but plum rather than
+   accent on hover: moving a row is not destructive. */
+.ovMoveBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: rgba(var(--plum-rgb), 0.5);
+  transition: color var(--dur-base) var(--ease);
+}
+.ovMoveBtn:hover:not(:disabled) {
+  color: var(--plum);
+  background: rgba(var(--plum-rgb), 0.08);
+}
+.ovMoveBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 .ovRemoveBtn {
   display: inline-flex;
   align-items: center;

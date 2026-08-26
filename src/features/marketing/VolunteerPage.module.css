@@ -245,3 +245,21 @@
   justify-content: center;
   margin-top: 12px;
 }
+
+/* ── The volunteer's own confirmed contribution (SUS-05) ─────────────────── */
+
+.contribution {
+  padding: 2rem 0 0;
+}
+
+.contributionTitle {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  margin: 0 0 1rem;
+}
+
+.contributionNote {
+  margin: 0.9rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(var(--plum-rgb), 0.6);
+}

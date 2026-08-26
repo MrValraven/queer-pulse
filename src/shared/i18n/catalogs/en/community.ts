@@ -784,4 +784,11 @@ export const community: Catalog = {
   "readingGroups.liveError.description":
     "Something went wrong fetching the groups. This is usually momentary.",
   "readingGroups.liveError.retryCta": "Try again",
+  // OPS-05, the admin console's "Offer support" modal. These two live in this
+  // namespace rather than in `admin` for the same reason `changemakers.admin.*`
+  // does: they are admin-facing copy about a community, and the `admin`
+  // catalog owns the rest of that modal's strings already.
+  "supportOffer.admin.sendingCta": "Sending…",
+  "supportOffer.admin.conflictToast":
+    "{name} already has an offer waiting for an answer. Give their moderators time to reply.",
 };

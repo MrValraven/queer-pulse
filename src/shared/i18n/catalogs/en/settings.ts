@@ -415,10 +415,88 @@ export const settings: Catalog = {
   "account.sessions.desc":
     "See every device signed into your account right now, and sign out anywhere you don't recognize.",
   "account.sessions.cta": "Manage sessions",
+  "account.securityHub.title": "Your account security",
+  "account.securityHub.desc":
+    "How you sign in, which devices are signed in right now, which ones get push, and the export and deletion controls.",
+  "account.securityHub.cta": "Open security",
   "account.disclosure.title": "Report a security vulnerability",
   "account.disclosure.desc":
     "Found a bug or a weakness in QueerPulse? Our disclosure policy explains how to report it and what happens next.",
   "account.disclosure.cta": "Read the policy",
+
+  // ── AccountSecurityPage.tsx — the member's own security hub (ID-15) ───────
+  // Every line here describes something with a real endpoint behind it. The
+  // capabilities the platform does not have are named in `notYet.*` as prose,
+  // never as a control. There is no email channel and never will be, so the
+  // alert copy names the two channels that exist.
+  "accountSecurity.back": "Back to account settings",
+  "accountSecurity.eyebrow": "Account security",
+  "accountSecurity.h1": "Who can get <em>into your account.</em>",
+  "accountSecurity.lead":
+    "Everything about how you sign in and which devices are carrying your account right now, in one place. Each line links to the page that changes it.",
+  "accountSecurity.counting": "Checking…",
+  "accountSecurity.countUnavailable": "We couldn't load this just now.",
+
+  "accountSecurity.section.signIn": "How you sign in",
+  "accountSecurity.section.devices": "Devices carrying your account",
+  "accountSecurity.section.data": "Your data",
+  "accountSecurity.section.more": "Elsewhere",
+
+  "accountSecurity.signIn.title": "Google",
+  "accountSecurity.signIn.value":
+    "You sign in with Google, as <strong>{email}</strong>.",
+  "accountSecurity.signIn.noEmail": "your Google account",
+  "accountSecurity.signIn.note":
+    "This is the only way into your account, so there is no password to change here. Keep your Google account itself well protected.",
+
+  "accountSecurity.alerts.title": "Tell me about new sign-ins",
+  "accountSecurity.alerts.desc":
+    "When your account is signed in to from a device you have not used before, we say so here and on the devices you have given push permission to. We send no email.",
+
+  "accountSecurity.sessions.title": "Signed in right now",
+  "accountSecurity.sessions.count_one": "{count} active session.",
+  "accountSecurity.sessions.count_other": "{count} active sessions.",
+  "accountSecurity.sessions.note":
+    "One per browser or app you are signed in on. You can end any of them, including all the others at once.",
+  "accountSecurity.sessions.cta": "Review sessions",
+
+  "accountSecurity.push.title": "Devices getting push",
+  "accountSecurity.push.count_one": "{count} device registered for push.",
+  "accountSecurity.push.count_other": "{count} devices registered for push.",
+  "accountSecurity.push.note":
+    "Notifications, including new sign-in alerts, reach these devices. Removing one stops push there straight away.",
+  "accountSecurity.push.cta": "Manage devices",
+
+  "accountSecurity.export.title": "Download your data",
+  "accountSecurity.export.value":
+    "Take a copy of everything we hold on you, in JSON or CSV.",
+  "accountSecurity.export.note":
+    "You sign in with Google again before the archive is built, so a borrowed session cannot walk off with your data.",
+  "accountSecurity.export.cta": "Start an export",
+
+  "accountSecurity.erasure.title": "Deactivate or delete",
+  "accountSecurity.erasure.value":
+    "Hide your account and come back later, or ask us to erase it for good.",
+  "accountSecurity.erasure.note":
+    "Deletion opens a 30-day grace period you can cancel, and signs you out everywhere. It also asks you to sign in with Google again first.",
+  "accountSecurity.erasure.cta": "Open the options",
+  "accountSecurity.erasure.ctaPending": "Review the request",
+  "accountSecurity.erasure.pending":
+    "<strong>Your account is scheduled to be erased on {date}.</strong> You can still cancel it until then.",
+
+  "accountSecurity.disclosure.title": "Found a vulnerability?",
+  "accountSecurity.disclosure.value":
+    "Our responsible-disclosure policy explains what is in scope, how to report it, and what happens next.",
+  "accountSecurity.disclosure.cta": "Read the policy",
+
+  "accountSecurity.notYet.title": "Not available yet",
+  "accountSecurity.notYet.twoFactor":
+    "A second factor. Your Google account's own two-step verification is what protects the sign-in today.",
+  "accountSecurity.notYet.recovery":
+    "A second way in. Lose access to your Google account and you lose access to QueerPulse, so write to us before that happens.",
+
+  "accountSecurity.compromised":
+    "<strong>Think somebody else is in your account?</strong> <sessions>End every other session</sessions> first, which leaves only the browser you are reading this on signed in, then <contact>tell us</contact> so we can look at what happened.",
 
   // ── MyUploadsPane.tsx — signed-in member's own uploaded images ──────────
   "uploads.title": "My uploads",
@@ -743,6 +821,24 @@ export const settings: Catalog = {
     "Your notification history and preferences",
   "dataExport.type.consent.label": "Consent records",
   "dataExport.type.consent.sub": "What you've agreed to, and when",
+  "dataExport.type.magazine.label": "Magazine writing",
+  "dataExport.type.magazine.sub":
+    "Your articles and drafts, in full, plus anything you submitted",
+  "dataExport.type.communities.label": "Communities",
+  "dataExport.type.communities.sub":
+    "Communities you run, and every post you wrote in one",
+  "dataExport.type.volunteering.label": "Volunteering",
+  "dataExport.type.volunteering.sub":
+    "Roles you signed up for, and what came of each",
+  "dataExport.type.governance.label": "Governance",
+  "dataExport.type.governance.sub":
+    "Your votes and the proposals you put forward",
+  "dataExport.type.reviews.label": "Reviews you wrote",
+  "dataExport.type.reviews.sub":
+    "Reviews of listings, employers, and housing viewings",
+  "dataExport.type.media.label": "Uploaded files",
+  "dataExport.type.media.sub":
+    "Your photos and images. The files themselves come with the CSV and Both formats, which arrive as a zip. JSON lists them without the files.",
 
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "Your archive is ready",
@@ -1062,89 +1158,4 @@ export const settings: Catalog = {
     "Each integration is scoped narrowly. None can read your DMs, drafts, billing, or community memberships.",
   "integrationsModal.connectedTag": "Connected",
   "integrationsModal.connectCta": "Connect",
-
-  // ── SecurityPage.tsx — vulnerability disclosure ──────────────────────────
-  // The acknowledgement credits (security.data.ts SECURITY_HALL_OF_FAME) are
-  // attribution records: researcher names plus the vuln type/date they
-  // reported. They stay in English like the other stored/record values noted at
-  // the top of this file, and the grid is hidden entirely while the list is
-  // empty, so no credit is ever invented.
-  "security.hero.eyebrow": "Vulnerability disclosure",
-  "security.hero.titleTop": "Found something?",
-  "security.hero.titleEm": "Tell us.",
-  "security.hero.sub":
-    "We take security seriously. If you've found a vulnerability in QueerPulse, we want to know about it. This page explains how to report it, what to expect, and how we handle disclosures.",
-
-  "security.commitment.eyebrow": "Our commitment",
-  "security.commitment.title": "We won't <em>punish</em> good faith.",
-  "security.commitment.body1":
-    "Security researchers who report vulnerabilities in good faith will not face legal action from us. We will not contact your employer, ISP, or law enforcement unless you use your access to harm members. We believe security research makes everyone safer, and we're grateful when people take the time to report what they find.",
-  "security.commitment.body2":
-    "We ask that you give us reasonable time to fix an issue before disclosing it publicly. In return, we commit to acknowledging your report within 48 hours, keeping you updated on progress, and crediting you in our security acknowledgements if you'd like.",
-
-  "security.scope.eyebrow": "Scope",
-  "security.scope.title": "What's <em>in scope.</em>",
-  "security.scope.inLabel": "In scope",
-  "security.scope.outLabel": "Out of scope",
-  "security.scope.in.1": "queerpulse.com and *.queerpulse.com",
-  "security.scope.in.2": "Authentication & session management",
-  "security.scope.in.3": "Data access & privilege escalation",
-  "security.scope.in.4": "Stored and reflected XSS",
-  "security.scope.in.5": "CSRF on authenticated endpoints",
-  "security.scope.in.6": "SQL injection",
-  "security.scope.in.7": "Insecure direct object references",
-  "security.scope.in.8": "Sensitive data exposure",
-  "security.scope.out.1": "Denial of service attacks",
-  "security.scope.out.2": "Social engineering of our team",
-  "security.scope.out.3": "Physical attacks against infrastructure",
-  "security.scope.out.4": "Spam or rate-limiting bypass",
-  "security.scope.out.5":
-    "Third-party infrastructure (Hetzner, Postmark, Backblaze)",
-  "security.scope.out.6": "Clickjacking on non-sensitive pages",
-  "security.scope.out.7": "Missing security headers (report only)",
-
-  "security.process.eyebrow": "Process",
-  "security.process.aria": "What happens after you report",
-  "security.process.title": "What happens <em>after you report.</em>",
-  "security.process.step1.title": "Acknowledgement",
-  "security.process.step1.text":
-    "We'll confirm receipt within 48 hours and let you know we're looking at it. We'll assign a reference number so we can track it together.",
-  "security.process.step1.note": "Target: 48 hours",
-  "security.process.step2.title": "Assessment",
-  "security.process.step2.text":
-    "We'll investigate and assess the severity. We'll keep you updated and may ask follow-up questions. If we can't reproduce it, we'll tell you why.",
-  "security.process.step2.note": "Target: 5 working days",
-  "security.process.step3.title": "Fix",
-  "security.process.step3.text":
-    "For confirmed vulnerabilities, we'll fix and deploy a patch. The timeline depends on severity. Critical issues are treated as emergencies.",
-  "security.process.step3.note":
-    "Critical: <72h · High: <7 days · Medium/Low: next release",
-  "security.process.step4.title": "Disclosure",
-  "security.process.step4.text":
-    "We'll coordinate a disclosure timeline with you. We'll credit you in our security acknowledgements unless you prefer anonymity.",
-  "security.process.step4.note": "Default: 90-day coordinated disclosure",
-
-  "security.ack.eyebrow": "Acknowledgements",
-  "security.ack.title": "Security <em>researchers</em> who've helped.",
-  "security.ack.body":
-    "We're grateful to the following researchers who disclosed vulnerabilities responsibly. (Listed with permission.)",
-  "security.ack.empty":
-    "Nobody is credited here yet. Report something and, if you'd like the credit, your name goes up.",
-
-  "security.report.titleTop": "Report a",
-  "security.report.titleEm": "vulnerability",
-  "security.report.body":
-    "Encrypt your report using our PGP key and email us. Please include steps to reproduce, the potential impact, and any proof of concept.",
-  "security.report.cta": "Email security team",
-  "security.pgp.label": "PGP public key",
-  "security.pgp.copyCta": "Copy key",
-  "security.pgp.copied": "PGP key copied.",
-  "security.pgp.copyFailed": "Copy failed. Select and copy manually.",
-  "security.pgp.unavailable":
-    "We haven't published a key yet. Email us in plain text and we'll agree on an encrypted channel before you send any detail.",
-
-  "security.outro.titleTop": "Security is",
-  "security.outro.titleEm": "community work.",
-  "security.outro.sub": "Thank you to everyone who helps keep QueerPulse safe.",
-  "security.outro.cta": "Contact the security team",
 };

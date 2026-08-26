@@ -19,6 +19,10 @@ export function RequestInvitePage() {
   const [first, setFirst] = useState("");
   // null until submitted; "already" when the backend told us (409) we have it.
   const [outcome, setOutcome] = useState<RequestInviteOutcome | null>(null);
+  // The applicant's status token, held only for as long as this screen lives —
+  // the durable copy is written to storage by the mutation. Null on the 409
+  // path, where no new request (and so no token) was created.
+  const [statusToken, setStatusToken] = useState<string | null>(null);
 
   // Pre-emptive closed state, read BEFORE the form is filled in. Fails open by
   // construction: outside demo mode there is no `initialData`, so while the
@@ -30,7 +34,13 @@ export function RequestInvitePage() {
   const joinRequestsClosed = platformStatus?.joinRequestsOpen === false;
 
   if (outcome) {
-    return <RequestInviteSent first={first} outcome={outcome} />;
+    return (
+      <RequestInviteSent
+        first={first}
+        outcome={outcome}
+        statusToken={statusToken}
+      />
+    );
   }
 
   return (
@@ -59,7 +69,10 @@ export function RequestInvitePage() {
         <RequestInviteForm
           first={first}
           setFirst={setFirst}
-          onSent={setOutcome}
+          onSent={(nextOutcome, nextStatusToken) => {
+            setStatusToken(nextStatusToken);
+            setOutcome(nextOutcome);
+          }}
         />
       )}
 
@@ -69,6 +82,16 @@ export function RequestInvitePage() {
           style={{ fontSize: 13.5, color: "var(--ink-60)", fontWeight: 500 }}
         >
           {t("auth:requestInvite.alreadyMember")}
+        </Link>
+        {/* The only in-app way back to the status page for someone who kept
+            their reference code but lost the link that carried it, and whose
+            browser storage has since been cleared. Without it that applicant
+            would have to know the URL by heart. */}
+        <Link
+          to={routes.joinRequestStatus}
+          style={{ fontSize: 13.5, color: "var(--ink-60)", fontWeight: 500 }}
+        >
+          {t("auth:requestInvite.checkStatusLink")}
         </Link>
       </div>
     </AuthLayout>

@@ -77,6 +77,19 @@ function CardHolderRow({
         {holder.revokedReason ? (
           <p className={styles.reason}>{holder.revokedReason}</p>
         ) : null}
+        {/* How often THIS card has been checked, which is the signal that a
+            copy of it is circulating. A count and nothing more: no date, no
+            place, no history. The minute a named member last presented their
+            card is an attendance log, and the platform keeps none. The
+            programme-wide "last checked" lives on CardVerificationSummary,
+            where it points at nobody. */}
+        <p className={styles.usage}>
+          {holder.verificationCount === 0
+            ? t("cards:holders.verifiedNever")
+            : t("cards:holders.verifiedCount", {
+                count: holder.verificationCount,
+              })}
+        </p>
       </div>
       <Tag className={styles.statusTag}>
         {t(`cards:status.tag.${holder.status}`)}

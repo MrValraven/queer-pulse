@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiLogOut, FiChevronDown } from "react-icons/fi";
 import { Avatar, Tooltip } from "../ui";
@@ -22,6 +22,7 @@ import { useAccountIdentity } from "./useAccountIdentity";
 import { RoleLinks, AccountMenuControls } from "./accountMenuShared";
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
+import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
 import styles from "./AccountMenu.module.css";
 
 /** Profile chip in the logged-in nav that opens a menu: profile, settings, sign out. */
@@ -187,6 +188,15 @@ function AccountMenuPanel({
   const { t } = useTranslation();
   const personaBadge = usePersonaBadge();
   const gettingStartedBadge = useGettingStartedBadge();
+  const inviteQuotaBadge = useInviteQuotaBadge();
+  // Live counts can't live in the static ACCOUNT_GROUPS array, so each badge
+  // hook is attached to its row here, matched by `to` (see `AccountItem.badge`).
+  // `AccountSheet` keeps an identical map so the two surfaces never drift.
+  const badgeByRoute: Record<string, ReactNode> = {
+    [routes.subprofilesDashboard]: personaBadge,
+    [routes.gettingStarted]: gettingStartedBadge,
+    [routes.invite]: inviteQuotaBadge,
+  };
   return (
     <div
       className={[styles.menu, placement === "rail" && styles.menuRail]
@@ -243,13 +253,7 @@ function AccountMenuPanel({
               <div className={styles.grid}>
                 {group.map((item) => {
                   const Icon = item.icon;
-                  const badge =
-                    item.badge ??
-                    (item.to === routes.subprofilesDashboard
-                      ? personaBadge
-                      : item.to === routes.gettingStarted
-                        ? gettingStartedBadge
-                        : undefined);
+                  const badge = item.badge ?? badgeByRoute[item.to];
                   return (
                     <Link
                       key={item.to}

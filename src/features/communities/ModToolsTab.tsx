@@ -14,9 +14,11 @@ import {
 import { ModToolsOverview } from "./ModToolsOverview";
 import { ModToolsInvites } from "./ModToolsInvites";
 import { ModToolsBans } from "./ModToolsBans";
+import { ModToolsSupport } from "./ModToolsSupport";
 import { ModToolsConfirmDialog } from "./ModToolsConfirmDialog";
 import { CommunityDangerZone } from "./CommunityDangerZone";
 import { useModToolsActions } from "./useModToolsActions";
+import { useCommunitySupportOffers } from "./api/useCommunitySupportOffers";
 import { MOD_NAV, isModSection, type ModSection } from "./modToolsNav.data";
 import styles from "./ModToolsShell.module.css";
 
@@ -55,6 +57,13 @@ export function ModToolsTab({
   const { t } = useTranslation();
   const railId = useId();
   const actions = useModToolsActions(living);
+  // Read here rather than inside the pane so the rail can badge an unanswered
+  // offer of support, and Overview can name it, without either of them having
+  // to be open for the moderators to notice it (OPS-05). Same query key the
+  // pane itself uses, so this is one request, not two.
+  const { openCount: openSupportCount } = useCommunitySupportOffers(
+    living.slug,
+  );
 
   // The open section lives in the URL beside the tab (?tab=modtools&mod=…),
   // so a pane is deep-linkable, survives a refresh, and the back button walks
@@ -78,6 +87,7 @@ export function ModToolsTab({
   const counts: Partial<Record<ModSection, number>> = {
     requests: actions.requests.length,
     reports: actions.reports.length,
+    support: openSupportCount,
   };
 
   return (
@@ -116,6 +126,7 @@ export function ModToolsTab({
             communityName={communityName}
             rosterPaging={rosterPaging}
             actions={actions}
+            supportCount={openSupportCount}
             onOpenSection={openSection}
           />
         </div>
@@ -146,6 +157,7 @@ function ModToolsPane({
   communityName,
   rosterPaging,
   actions,
+  supportCount,
   onOpenSection,
 }: {
   section: ModSection;
@@ -154,6 +166,7 @@ function ModToolsPane({
   communityName: string;
   rosterPaging: RosterPaging;
   actions: ReturnType<typeof useModToolsActions>;
+  supportCount: number;
   onOpenSection: (section: ModSection) => void;
 }) {
   const { setConfirming } = actions;
@@ -164,6 +177,7 @@ function ModToolsPane({
         slug={living.slug}
         requestCount={actions.requests.length}
         reportCount={actions.reports.length}
+        supportCount={supportCount}
         onOpenSection={onOpenSection}
       />
     );
@@ -219,6 +233,9 @@ function ModToolsPane({
   }
   if (section === "invites") {
     return <ModToolsInvites slug={living.slug} />;
+  }
+  if (section === "support") {
+    return <ModToolsSupport slug={living.slug} />;
   }
   if (section === "card") {
     return (

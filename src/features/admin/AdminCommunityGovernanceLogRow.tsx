@@ -69,7 +69,10 @@ export function AdminCommunityGovernanceLogRow({
           })}
         </p>
 
-        <AdminCommunityGovernanceLogMeta metadata={entry.metadata} />
+        <AdminCommunityGovernanceLogMeta
+          metadata={entry.metadata}
+          details={entry.details}
+        />
 
         <p className={styles.entryFooter}>
           {actorName ? (

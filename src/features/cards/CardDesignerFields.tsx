@@ -54,6 +54,9 @@ export interface CardDesignerFieldsProps {
   /** Whether these cards print each holder's pronouns beside their name. */
   allowsPronouns: boolean;
   onAllowsPronounsChange: (allows: boolean) => void;
+  /** Whether holders may put their own card back in date near expiry. */
+  allowsSelfRenew: boolean;
+  onAllowsSelfRenewChange: (allows: boolean) => void;
   /** How a flag or photo ground keeps the card's own text readable. */
   textBackdrop: CardTextBackdrop;
   onTextBackdropChange: (backdrop: CardTextBackdrop) => void;
@@ -86,6 +89,8 @@ export function CardDesignerFields({
   onAllowsPrintChange,
   allowsPronouns,
   onAllowsPronounsChange,
+  allowsSelfRenew,
+  onAllowsSelfRenewChange,
   textBackdrop,
   onTextBackdropChange,
 }: CardDesignerFieldsProps) {
@@ -253,6 +258,25 @@ export function CardDesignerFields({
           }))}
         />
       </FormField>
+
+      {/* Only where a card can expire at all. A programme with no expiry has
+          nothing to renew, so the question would have no answer. */}
+      {validityMonths !== null && (
+        <div className={styles.group}>
+          <div className={styles.groupLabel}>
+            {t("cards:designer.selfRenewLabel")}
+          </div>
+          {/* Says exactly what it does and does not open up: staying on the
+              roster is the whole condition, and a card this community paused
+              or revoked stays that way. */}
+          <CheckLine
+            checked={allowsSelfRenew}
+            onChange={onAllowsSelfRenewChange}
+            title={t("cards:designer.selfRenewCheck")}
+            sub={t("cards:designer.selfRenewHelper")}
+          />
+        </div>
+      )}
     </div>
   );
 }

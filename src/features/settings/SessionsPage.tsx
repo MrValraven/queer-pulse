@@ -254,8 +254,9 @@ export function SessionsPage() {
     <AppShell>
       <div className={styles.page}>
         {/* Back to the pane this page is opened from: Settings → Account,
-            which holds the "Active sessions" card. NOT /account/security,
-            which is the public vulnerability-disclosure policy. */}
+            which holds the "Active sessions" card. The security hub at
+            /account/security also links here; going back to the pane keeps one
+            predictable target whichever way the member arrived. */}
         <Link to={`${routes.settings}?pane=account`} className={styles.back}>
           <FiArrowLeft aria-hidden /> {t("settings:sessions.backToAccount")}
         </Link>

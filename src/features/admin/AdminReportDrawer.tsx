@@ -18,7 +18,7 @@ import {
   AdminSeg,
   type AdminSegOption,
 } from "./ui";
-import { portrait } from "./adminPeople.data";
+import { useDemoPortrait } from "./useDemoPortrait";
 import {
   MOD_REASONS,
   SEVERITY,
@@ -55,6 +55,9 @@ function modActionCodeFor(action: string | null) {
 /** Reported content + surrounding thread + people involved (read-only context). */
 function ReportContext({ detail }: { detail: ReportDetail }) {
   const { t } = useTranslation();
+  // Demo fixtures only. The registry is keyed by name, and in live mode every
+  // name in a report belongs to a real member the moderator is judging.
+  const demoPortrait = useDemoPortrait();
   return (
     <>
       <section className={styles.dSec}>
@@ -119,7 +122,7 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
                 initials={m.initials}
                 tone={m.tone}
                 size="sm"
-                src={portrait(m.author)}
+                src={demoPortrait(m.author)}
               />
               <div className={styles.dMsgBody}>
                 <div className={styles.dMsgMeta}>
@@ -151,7 +154,7 @@ function ReportContext({ detail }: { detail: ReportDetail }) {
                 tone={p.tone}
                 size="md"
                 verified={p.verified}
-                src={portrait(p.name)}
+                src={demoPortrait(p.name)}
               />
               <div className={styles.dPersonTx}>
                 <span className={styles.dPersonName}>
@@ -235,6 +238,8 @@ function ReportContextLoading() {
  *  rather than the report auto-resolving out from under them. */
 function ReportContextFallback({ report }: { report: ModReport }) {
   const { t } = useTranslation();
+  // Demo fixtures only — see `ReportContext`.
+  const demoPortrait = useDemoPortrait();
   const anonReporter = isAnonymousReporter(report.reporterName);
   const reportedInitials = (
     report.reportedName.replace(/^@/, "")[0] ?? "?"
@@ -291,7 +296,7 @@ function ReportContextFallback({ report }: { report: ModReport }) {
               initials={reportedInitials}
               tone="coral"
               size="md"
-              src={portrait(report.reportedName)}
+              src={demoPortrait(report.reportedName)}
             />
             <div className={styles.dPersonTx}>
               <span className={styles.dPersonName}>{report.reportedName}</span>

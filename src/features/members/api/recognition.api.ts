@@ -1,4 +1,4 @@
-import { apiGet } from "../../../shared/api/client";
+import { apiGet, apiPatch, apiPost } from "../../../shared/api/client";
 
 /** Current level + progress toward the next one. */
 export interface LevelDTO {
@@ -45,6 +45,10 @@ export interface BadgeDTO {
   verifiedBy?: BadgeVerificationDTO;
   /** Present only for time-limited badges. */
   seasonal?: { when: string };
+  /** Own view only, and only when true: the member has hidden this badge from
+   *  how other people see them. Another member's read omits the badge itself,
+   *  so this field never appears there. */
+  hiddenFromProfile?: boolean;
 }
 
 /** One dated row in the member's XP history. `[]` until the backend adds
@@ -75,6 +79,8 @@ export type PerkFooterDTO =
   | { type: "lock"; label: string }
   | { type: "claimed"; date: string };
 export interface PerkDTO {
+  /** Stable catalogue key. The path segment the claim endpoint takes. */
+  key: string;
   cat: string;
   title: string;
   desc: string;
@@ -123,6 +129,40 @@ export interface RecognitionDTO {
   xpBreakdown: XpBreakdownItemDTO[];
   xpLedger: XpLedgerEntryDTO[];
 }
+
+/** The answer to a perk claim: the claim itself plus the rebuilt perks block,
+ *  so the page can re-bucket the card without waiting on a refetch. */
+export interface PerkClaimDTO {
+  key: string;
+  state: "claimed";
+  /** ISO timestamp — the UI formats it locally. */
+  claimedAt: string;
+  perks: PerksDTO;
+}
+
+/** POST /me/recognition/perks/:key/claim. The backend recomputes the caller's
+ *  level from stored XP and refuses a claim below the perk's unlock level with
+ *  a 403 carrying `code: "PERK_LEVEL_NOT_REACHED"`. Claiming twice returns the
+ *  first claim rather than erroring. */
+export const claimPerk = (key: string) =>
+  apiPost<PerkClaimDTO>(
+    `/me/recognition/perks/${encodeURIComponent(key)}/claim`,
+  );
+
+/** The answer to a badge-visibility change. */
+export interface BadgeVisibilityDTO {
+  key: string;
+  hiddenFromProfile: boolean;
+}
+
+/** PATCH /me/recognition/badges/:key/visibility. Server-side and real: a
+ *  hidden badge is dropped from `GET /profiles/:slug/recognition` entirely,
+ *  and stays on the owner's own read flagged `hiddenFromProfile`. */
+export const setBadgeVisibility = (key: string, hiddenFromProfile: boolean) =>
+  apiPatch<BadgeVisibilityDTO>(
+    `/me/recognition/badges/${encodeURIComponent(key)}/visibility`,
+    { hiddenFromProfile },
+  );
 
 /** Own recognition (GET /me/recognition) or another member's public subset
  *  (GET /profiles/:slug/recognition — perks omitted for non-owners). `force`

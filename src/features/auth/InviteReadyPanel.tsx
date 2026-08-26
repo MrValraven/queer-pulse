@@ -11,8 +11,18 @@ import { InviteQrCode } from "./InviteQrCode";
 import { useInviteSender } from "./useInviteSender";
 import styles from "./InvitePage.module.css";
 
+interface InviteReadyPanelProps {
+  invite: CreatedInvite;
+  /** Set when the member pinned the invite to one address, so the panel can say
+   *  who it is for and that nothing was delivered to them. */
+  pinnedEmail?: string;
+}
+
 /** Ready: the invite exists. Quiet plum success panel with the live link. */
-export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
+export function InviteReadyPanel({
+  invite,
+  pinnedEmail,
+}: InviteReadyPanelProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const sender = useInviteSender();
@@ -30,6 +40,14 @@ export function InviteReadyPanel({ invite }: { invite: CreatedInvite }) {
         />
       </h2>
       <p className={styles.readySub}>{t("auth:invite.ready.sub")}</p>
+      {pinnedEmail && (
+        <p className={styles.readyPinned}>
+          <span className={styles.readyPinnedTo}>
+            {t("auth:invite.ready.pinnedTo", { email: pinnedEmail })}
+          </span>{" "}
+          {t("auth:invite.ready.pinnedSend")}
+        </p>
+      )}
 
       <CopyLinkRow
         className={styles.readyLinkRow}

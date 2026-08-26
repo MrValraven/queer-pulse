@@ -35,3 +35,23 @@ export function declineReasonLabelKey(reason: string | null): string {
   }
   return "admin:members.verify.declineReason.other";
 }
+
+/**
+ * The i18n key for a decline reason as the APPLICANT should read it.
+ *
+ * Same closed key set, deliberately different words: the admin labels above are
+ * a reviewer's shorthand ("Looks like spam", "Details don't add up") and would
+ * land as an accusation on the person who wrote the request. The applicant-side
+ * strings live in `auth:joinRequestStatus.declineReason.*` and say what
+ * happened, whose limitation it was, and what they can do next.
+ *
+ * `underage` is handled by the status page BEFORE this helper is reached: it
+ * renders the existing `Under18Notice` instead, so a young person meets the
+ * platform's supportive 18+ copy rather than a decline reason.
+ */
+export function applicantDeclineReasonKey(reason: string | null): string {
+  if (reason && KNOWN.has(reason)) {
+    return `auth:joinRequestStatus.declineReason.${reason}`;
+  }
+  return "auth:joinRequestStatus.declineReason.other";
+}

@@ -1290,6 +1290,25 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.gettingStarted": "Getting-started steps",
   "badges.xpBreakdown.sources.gettingStartedDesc":
     "Finishing a Getting Started step.",
+  // ── The contribution side (SUS-05). These five count work that keeps the
+  //    platform running, so each carries a high per-unit value and a low cap
+  //    in the backend's XP_RULES. Every description below states exactly what
+  //    the backend counts: read `recognition.scoring.ts` before editing one. ──
+  "badges.xpBreakdown.sources.volunteering": "Volunteer sessions",
+  "badges.xpBreakdown.sources.volunteeringDesc":
+    "A volunteer session confirmed by the person who posted it.",
+  "badges.xpBreakdown.sources.hosting": "Gatherings hosted",
+  "badges.xpBreakdown.sources.hostingDesc":
+    "Hosting or co-hosting an open gathering.",
+  "badges.xpBreakdown.sources.magazine": "Magazine pieces published",
+  "badges.xpBreakdown.sources.magazineDesc":
+    "A piece of yours published in the magazine.",
+  "badges.xpBreakdown.sources.answers": "Directory questions answered",
+  "badges.xpBreakdown.sources.answersDesc":
+    "Answering a question on a directory listing.",
+  "badges.xpBreakdown.sources.resources": "Resources approved",
+  "badges.xpBreakdown.sources.resourcesDesc":
+    "A resource you suggested that was approved.",
   "badges.xpBreakdown.sources.badges": "Badge bonuses",
   "badges.xpBreakdown.sources.badgesDesc":
     "The badges you've earned along the way.",
@@ -1346,6 +1365,7 @@ export const members: Catalog = {
   "badges.case.mutedNotePlural":
     "{categories} are muted. Nothing from them will be suggested to you.",
   "badges.case.unmute": "Unmute",
+  "badges.case.hiddenFlag": "Hidden",
   "badges.case.rarestFlag": "Rarest in your case",
   "badges.case.rarityCommon": "Common",
   "badges.case.rarityRare": "Rare",
@@ -1383,7 +1403,9 @@ export const members: Catalog = {
   "badges.drawer.visibleOnProfile": "Visible on your profile",
   "badges.drawer.privateToYou": "Private to you",
   "badges.drawer.visibilityNote":
-    "Saved on this device only. We're still building the part that hides it from how other people see your profile.",
+    "Hide it and other members stop seeing it on your profile. It stays here for you either way.",
+  "badges.drawer.visibilityErrorToast":
+    "We couldn't change that badge's visibility. Please try again in a moment.",
   "badges.drawer.earnedThisWeek": "this week",
   "badges.drawer.progressCount": "{units} of {target} done",
   "badges.drawer.previous": "Previous badge",
@@ -1402,7 +1424,7 @@ export const members: Catalog = {
   "badges.ladderV2.eyebrow": "The ladder",
   "badges.ladderV2.heading": "What each level <em>opens</em>",
   "badges.ladderV2.sub":
-    "Levels are permissions you unlock. Each rung buys you one thing you can do, and that's the headline; everything else is detail.",
+    "Almost everything QueerPulse offers is open from Level 1. These rungs list what each level adds on top of that, and nothing that isn't built.",
   "badges.ladderV2.passed": "Passed",
   "badges.ladderV2.youAreHere": "You are here",
   "badges.ladderV2.ahead": "Ahead",
@@ -1428,23 +1450,23 @@ export const members: Catalog = {
   "badges.ledger.showLess": "Show less",
   "badges.ledger.emptyTitle": "No history yet.",
   "badges.ledger.emptyBody":
-    "Every point lands here with a date and a reason, so you can see it, and we can take it back if something was miscounted.",
+    "Every point lands here with a date and a description, so you can always see where your level came from.",
   "badges.ledger.integrityHeading": "Why this can be trusted",
-  "badges.ledger.integrity1Title": "Hosts confirm attendance.",
+  "badges.ledger.integrity1Title": "Counted from what you already did.",
   "badges.ledger.integrity1Body":
-    "You can't mark yourself present at a table you never sat at.",
-  "badges.ledger.integrity2Title": "A person reviews contributions.",
+    "Attendance comes from your own RSVP on a gathering that has already started. There is nothing extra to file.",
+  "badges.ledger.integrity2Title": "Every point has a row.",
   "badges.ledger.integrity2Body":
-    "Guides, listings, and vouches pass a human before they count.",
-  "badges.ledger.integrity3Title": "Private by default.",
+    "Each increase lands in this list with a date and a description, so the total can be checked against it.",
+  "badges.ledger.integrity3Title": "Points are never taken back.",
   "badges.ledger.integrity3Body":
-    "Nothing appears on your profile until you switch it on, badge by badge.",
-  "badges.ledger.integrity4Title": "No leaderboard.",
+    "Your total only moves up. A withdrawn vouch or a deleted post leaves it where it was.",
+  "badges.ledger.integrity4Title": "You choose what shows.",
   "badges.ledger.integrity4Body":
-    "Members are never ranked against each other. Rarity describes the badge itself.",
-  "badges.ledger.integrity5Title": "Corrections stay visible.",
+    "Any badge you earn can be hidden from your profile, one at a time. A hidden badge stays on this page for you.",
+  "badges.ledger.integrity5Title": "No leaderboard.",
   "badges.ledger.integrity5Body":
-    "When points are taken back, the row and the reason stay in the list.",
+    "Members are never ranked against each other. Rarity describes the badge itself.",
   "badges.ledger.footnoteCount":
     "{badges} badges · {levels} levels · one ledger you can audit.",
   "badges.ledger.footnoteContact":
@@ -1480,7 +1502,7 @@ export const members: Catalog = {
   "perks.sidebar.xpSummary":
     "{xp} / {xpMax} XP · {xpToNext} to Level {nextLevel}",
   "perks.sidebar.nextUnlockNote":
-    "Next perks unlock at <strong>Level {nextLevel} · {nextName}</strong>: host without approval & an increased invite quota.",
+    "Your next rung is <strong>Level {nextLevel} · {nextName}</strong>. What it opens is listed on the ladder.",
   "perks.sidebar.seeAllBadgesCta": "See all badges & levels",
   "perks.sidebar.explainedTitle": "Perks explained",
   "perks.sidebar.suggestTitle": "Suggest a perk",
@@ -1491,8 +1513,9 @@ export const members: Catalog = {
   "perks.claim.alreadyActive": "Already active",
   "perks.claim.active": "Active",
   "perks.claim.claimed": "Claimed",
-  "perks.claim.unavailableToast":
-    "Claiming perks isn't available yet. We're still wiring this up.",
+  "perks.claim.claiming": "Claiming…",
+  "perks.claim.errorToast":
+    "We couldn't claim that perk. Please try again in a moment.",
 
   // ── Your network (ProfileNetworkStats chips + NetworkListModal) — owner-only ─
   "network.title": "Your network",

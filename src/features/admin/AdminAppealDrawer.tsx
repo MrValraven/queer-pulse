@@ -4,7 +4,7 @@ import { Button, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminDrawer, AdminChip, AdminCat, AdminAvatar } from "./ui";
-import { portrait } from "./adminPeople.data";
+import { useDemoPortrait } from "./useDemoPortrait";
 import { chipKey, chipLabel, type Appeal } from "./adminModeration.data";
 import { useOriginalReport } from "./api/useOriginalReport";
 import {
@@ -84,6 +84,9 @@ export function AdminAppealDrawer({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  // Demo fixtures only. The registry is keyed by name, and an appeal names a
+  // real member and their real supporters.
+  const demoPortrait = useDemoPortrait();
   const [decision, setDecision] = useState<Decision | null>(null);
   const [reason, setReason] = useState("");
 
@@ -124,7 +127,7 @@ export function AdminAppealDrawer({
               initials={appeal.initials}
               tone={appeal.tone}
               size="sm"
-              src={portrait(appeal.appealBy)}
+              src={demoPortrait(appeal.appealBy)}
             />
             <span>
               {appeal.appealBy}
@@ -202,7 +205,7 @@ export function AdminAppealDrawer({
                   initials={s.initials}
                   tone={s.tone}
                   size="sm"
-                  src={portrait(s.name)}
+                  src={demoPortrait(s.name)}
                 />
                 {s.name}
               </span>

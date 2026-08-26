@@ -38,9 +38,15 @@ export function AdminChangemakerNominationsRow({
   const fmt = useFormat();
   const { triage, pending } = useTriageChangemakerNomination();
   const [reviewNote, setReviewNote] = useState("");
-  const nominatorName =
-    nomination.nominator?.name ??
-    t("admin:adminChangemakerNominations.unknownMember");
+  // Three states, not two: a name, an erased account, and a nominator the
+  // server withheld from a `partnerships` grant holder. Collapsing the last
+  // two would tell a reviewer the nominator is gone when they are simply not
+  // theirs to see.
+  const isNominatorWithheld = !("nominator" in nomination);
+  const nominatorName = isNominatorWithheld
+    ? t("admin:adminChangemakerNominations.withheldMember")
+    : (nomination.nominator?.name ??
+      t("admin:adminChangemakerNominations.unknownMember"));
 
   return (
     <div className={styles.row}>

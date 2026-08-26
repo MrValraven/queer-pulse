@@ -25,12 +25,19 @@ export interface ListingQueueRow {
   submitterName: string;
   submitterSlug: string;
   createdAt: string;
-  /** The full listing, for the moderation preview drawer. */
-  detail: ListingDTO;
+  /** The listing, for the moderation preview drawer. As narrow as what the
+   *  queue served: a `directory_moderator` grant holder's copy carries no
+   *  owner contact email and no outing/guide consent decisions. */
+  detail: ModeratedListingDTO;
 }
 
 /** Map a backend listing to the queue row shape. */
-export function listingDtoToQueueRow(dto: ListingDTO): ListingQueueRow {
+export function listingDtoToQueueRow(
+  // `ModeratedListingDTO`, not `ListingDTO`: the queue serves the narrowed
+  // shape, and this adapter reads none of the three owner-personal fields the
+  // server withholds. A full `ListingDTO` still satisfies it.
+  dto: ModeratedListingDTO,
+): ListingQueueRow {
   const submitter = dto.submittedBy;
   return {
     ref: dto.ref,
@@ -72,9 +79,21 @@ export interface ListingQueueCounts {
   live: number;
 }
 
+/**
+ * The listing shape the moderation queue actually serves. A reader holding the
+ * `directory_moderator` staff grant without the Moderator/Admin tier gets the
+ * business without the owner as a person: no contact email, and neither outing
+ * consent decision. Modelled as an `Omit` rather than three optional fields so
+ * a component cannot read one by accident, following `CoManagerUpdateListingDto`.
+ */
+export type ModeratedListingDTO = Omit<
+  ListingDTO,
+  "contactEmail" | "consentOuting" | "consentGuide"
+>;
+
 /** `GET /admin/listings/queue` response envelope. */
 export interface ListingQueuePage {
-  items: ListingDTO[];
+  items: ModeratedListingDTO[];
   total: number;
   page: number;
   pageSize: number;
@@ -111,7 +130,7 @@ export interface AdminListingsPageVM {
 /** Group listings by status, for the demo fixture's fallback counts and as a
  *  defensive fallback if a payload ever arrives without `counts`. */
 export function countListingsByStatus(
-  items: ListingDTO[] | ListingQueueRow[],
+  items: ModeratedListingDTO[] | ListingQueueRow[],
 ): ListingQueueCounts {
   const counts: ListingQueueCounts = {
     all: items.length,

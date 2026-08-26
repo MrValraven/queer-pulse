@@ -1,3 +1,4 @@
+import { FiEyeOff } from "react-icons/fi";
 import type { Badge } from "./badges.data";
 import { progressPercent, RARITY_LABEL_KEY } from "./badgeSelectors";
 import { BadgeMedallion } from "./BadgeMedallion";
@@ -53,6 +54,14 @@ export function BadgeGridCard({
               >
                 {t(RARITY_LABEL_KEY[badge.rarity])}
               </span>
+              {/* Owner view only: the backend omits a hidden badge from any
+                  other member's read, so this flag can only ever appear on
+                  your own case. */}
+              {badge.hiddenFromProfile && (
+                <span className={styles.bcRare}>
+                  <FiEyeOff aria-hidden /> {t("members:badges.case.hiddenFlag")}
+                </span>
+              )}
             </>
           ) : badge.verifiedBy === "peer" ? (
             <span className={styles.bcRare}>

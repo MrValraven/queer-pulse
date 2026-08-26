@@ -15,6 +15,7 @@ import {
   FiCompass,
   FiDownload,
   FiCreditCard,
+  FiKey,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
 
@@ -92,6 +93,17 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       labelKey: "shared:accountMenu.items.connections",
       to: routes.connections,
       icon: FiUserPlus,
+    },
+    // ACQ-08 — the member-minted invite flow used to hang off a single button
+    // in the Connections page header, so unspent invites expired unseen. It
+    // sits right after Connections: this is the "people" cluster, and inviting
+    // someone is the same move as connecting, one step earlier. NOT `liveOnly`
+    // — `inviteQuota.data.ts` gives the demo sandbox a real allowance to show.
+    // The trailing count comes from `useInviteQuotaBadge`.
+    {
+      labelKey: "shared:accountMenu.items.invite",
+      to: routes.invite,
+      icon: FiKey,
     },
     { labelKey: "nav:communities", to: routes.communities, icon: FiUsers },
     {

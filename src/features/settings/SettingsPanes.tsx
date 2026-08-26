@@ -441,11 +441,20 @@ export function AccountPane({ onChange }: { onChange: () => void }) {
             button={t("settings:account.sessions.cta")}
             to={routes.sessions}
           />
+          {/* The member's own hub: devices, sign-in alerts, export, erasure. */}
+          <DataCard
+            title={t("settings:account.securityHub.title")}
+            description={t("settings:account.securityHub.desc")}
+            button={t("settings:account.securityHub.cta")}
+            to={routes.security}
+          />
+          {/* The public responsible-disclosure policy, which used to hold the
+              `routes.security` path this card pointed at. ID-15. */}
           <DataCard
             title={t("settings:account.disclosure.title")}
             description={t("settings:account.disclosure.desc")}
             button={t("settings:account.disclosure.cta")}
-            to={routes.security}
+            to={routes.policiesSecurity}
           />
         </div>
       </Section>

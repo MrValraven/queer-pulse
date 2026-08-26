@@ -32,7 +32,12 @@ export function RequestInviteForm({
 }: {
   first: string;
   setFirst: (v: string) => void;
-  onSent: (outcome: RequestInviteOutcome) => void;
+  /**
+   * `statusToken` is the applicant's one-and-only key to their own status, and
+   * it exists solely inside the 201 this form just received. It is null on the
+   * `"already"` (409) path, which creates no row and therefore mints no token.
+   */
+  onSent: (outcome: RequestInviteOutcome, statusToken: string | null) => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -94,7 +99,7 @@ export function RequestInviteForm({
       return;
     }
     try {
-      await createJoinRequest.mutateAsync({
+      const created = await createJoinRequest.mutateAsync({
         name: first.trim(),
         email: email.trim(),
         city: city.trim() || undefined,
@@ -102,11 +107,13 @@ export function RequestInviteForm({
         mutualMemberEmail: mutual.trim() || undefined,
         source: source ?? undefined,
       });
-      onSent("sent");
+      onSent("sent", created.statusToken);
     } catch (err) {
       // 409: they already asked. That is not a mistake — confirm, don't scold.
+      // No new row means no new token, so the confirmation renders without a
+      // reference code rather than with an empty one.
       if (isDuplicateJoinRequest(err)) {
-        onSent("already");
+        onSent("already", null);
         return;
       }
       // 403 UNDER_18: the same humane pause the attestation checkbox leads to.

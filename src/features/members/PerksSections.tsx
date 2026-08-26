@@ -9,6 +9,7 @@ import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { type Perk, sidebarCopy } from "./perks.data";
 import { useRecognition } from "./api/useRecognition";
+import { useClaimPerk } from "./api/useRecognitionMutations";
 import styles from "./PerksPage.module.css";
 
 const barClass = {
@@ -73,10 +74,18 @@ function LockMini() {
   );
 }
 
+/**
+ * Claims one perk. Demo simulates the redemption locally, as it always has.
+ * LIVE now calls the real endpoint (`POST /me/recognition/perks/:key/claim`,
+ * added in SUS-04) and only shows the claimed state once the server has
+ * written the row — a failed claim shows the failure, never a fake success.
+ */
 export function ClaimButton({
+  perkKey,
   label,
   toast,
 }: {
+  perkKey: string;
   label: string;
   toast: string;
 }) {
@@ -84,6 +93,7 @@ export function ClaimButton({
   const { demoMode } = useDemoMode();
   const { showToast } = useToast();
   const [claimed, setClaimed] = useState(false);
+  const claim = useClaimPerk();
 
   if (claimed) {
     return (
@@ -94,18 +104,24 @@ export function ClaimButton({
   }
   return (
     <Button
+      disabled={claim.isPending}
       onClick={() => {
-        // No claim endpoint exists yet. Demo simulates the redemption; live must
-        // not fake a "claimed" success — say plainly it isn't wired up.
-        if (!demoMode) {
-          showToast(t("members:perks.claim.unavailableToast"), "info");
+        if (demoMode) {
+          setClaimed(true);
+          showToast(toast, "success");
           return;
         }
-        setClaimed(true);
-        showToast(toast, "success");
+        claim.mutate(perkKey, {
+          onSuccess: () => {
+            setClaimed(true);
+            showToast(toast, "success");
+          },
+          onError: () =>
+            showToast(t("members:perks.claim.errorToast"), "error"),
+        });
       }}
     >
-      {label}
+      {claim.isPending ? t("members:perks.claim.claiming") : label}
     </Button>
   );
 }
@@ -128,7 +144,7 @@ function PerkFooter({ perk }: { perk: Perk }) {
     case "button":
       return (
         <div className={styles.actionRow}>
-          <ClaimButton label={f.label} toast={f.toast} />
+          <ClaimButton perkKey={perk.key} label={f.label} toast={f.toast} />
         </div>
       );
     case "link-auto":

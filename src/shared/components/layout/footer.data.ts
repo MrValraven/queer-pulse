@@ -119,7 +119,13 @@ export const BASE_LINKS: FooterLink[] = [
   { labelKey: "shared:footerData.base.cookies", href: routes.cookies },
   { labelKey: "shared:footerData.base.imprint", href: routes.imprint },
   { labelKey: "shared:footerData.base.guidelines", href: routes.guidelines },
-  { labelKey: "shared:footerData.base.security", href: routes.security },
+  // The public responsible-disclosure policy, not the member's account-security
+  // hub (`routes.security`, which is gated and would bounce a researcher to
+  // sign-in). ID-15.
+  {
+    labelKey: "shared:footerData.base.security",
+    href: routes.policiesSecurity,
+  },
   { labelKey: "shared:adminNav.items.governance", href: routes.governance },
   {
     labelKey: "marketing:roadmap.subpageIndex.changelog.label",

@@ -9,12 +9,14 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useAuth } from "../../../app/providers/authContext";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { TFunction } from "../../../shared/i18n/types";
 import { formatDate } from "../../../shared/lib/date";
 import { initialsFromName } from "../../../shared/lib/initials";
 import {
   getJoinRequests,
+  type GetJoinRequestsOptions,
   type JoinRequestDTO,
 } from "../../auth/api/joinRequest.api";
 import { sourceLabelKey } from "../../auth/api/joinRequestSource";
@@ -49,6 +51,19 @@ export interface JoinRequestView {
   daysWaiting: number;
   /** Set once approved; the reviewer builds the invite link from it. */
   inviteCode: string | null;
+  /** Lifecycle of that invite, so a history row can say whether the link it is
+   *  offering still works. Null when no invite was minted. */
+  inviteStatus: JoinRequestDTO["inviteStatus"];
+  /** ISO timestamp the invite lapses, or null when it has no expiry. */
+  inviteExpiresAt: string | null;
+  /** ISO timestamp the request was submitted — the raw value, for a history
+   *  row that wants an absolute date rather than `appliedLine`'s relative one. */
+  createdAt: string;
+  /** ISO timestamp of the decision, or null while the request is still open. */
+  reviewedAt: string | null;
+  /** The closed-set reason key a reviewer picked when declining. Null on every
+   *  other status. Rendered through `declineReasonLabelKey`. */
+  declineReason: string | null;
   /** Confidence-tiered triage flags, already localized labels — computed here
    *  so the card never has to know the raw flag keys. */
   flagLabels: string[];
@@ -64,6 +79,13 @@ export interface JoinRequestView {
    *  sampling page mixes approved and declined rows, so it has to display
    *  which is which. */
   status: JoinRequestDTO["status"];
+  /** OPS-04. The reviewer holding this request, or null when nobody is. */
+  assignedStaffId: string | null;
+  /** Their display name; absent on an unclaimed request. */
+  assignedStaffName?: string;
+  /** ISO timestamp the request should have been answered by, or null when it
+   *  carries no clock. Read through `queueClock.ts`, never compared inline. */
+  dueAt: string | null;
 }
 
 const TONES: AvatarTone[] = ["coral", "jade", "violet", "amber", "plum"];
@@ -153,11 +175,21 @@ export function dtoToView(
     appliedLine: appliedLine(dto.createdAt, t),
     daysWaiting,
     inviteCode: dto.inviteCode,
+    inviteStatus: dto.inviteStatus,
+    inviteExpiresAt: dto.inviteExpiresAt,
+    createdAt: dto.createdAt,
+    reviewedAt: dto.reviewedAt,
+    declineReason: dto.declineReason,
     flagLabels,
     priorDeclineLine,
     referenceLine,
     referenceMemberSlug: dto.referenceMemberSlug,
     status: dto.status,
+    assignedStaffId: dto.assignedStaffId ?? null,
+    ...(dto.assignedStaffName
+      ? { assignedStaffName: dto.assignedStaffName }
+      : {}),
+    dueAt: dto.dueAt ?? null,
   };
 }
 
@@ -165,19 +197,57 @@ export function dtoToView(
  * Incoming platform join requests for the mod/admin review queue. Demo mode
  * returns the colocated mock queue; live mode calls GET /join-requests?status and
  * adapts each row. Works with no backend.
+ *
+ * `options` reaches the same `limit`/`sort` the backend list already accepts —
+ * the waiting queue wants the oldest request first (fair triage), while the
+ * decided history wants the newest decision first. Both are part of the query
+ * key, so two callers asking for different orders never share a cache entry.
+ * Demo mode honours them over the mock array so the two modes agree.
  */
-export function useJoinRequests(status: JoinRequestDTO["status"] = "pending") {
+export function useJoinRequests(
+  status: JoinRequestDTO["status"] = "pending",
+  options: GetJoinRequestsOptions = {},
+) {
   const { demoMode } = useDemoMode();
+  const { user } = useAuth();
   const { t, language } = useTranslation();
+  const { limit, sort, assignedTo } = options;
   return useQuery<JoinRequestView[]>({
-    queryKey: ["join-requests", demoMode, status, language],
+    queryKey: [
+      "join-requests",
+      demoMode,
+      status,
+      limit,
+      sort,
+      assignedTo,
+      language,
+    ],
     queryFn: async () => {
       let rows: JoinRequestDTO[];
       if (demoMode) {
         const { JOIN_REQUESTS } = await import("./joinRequests.data");
         rows = JOIN_REQUESTS.filter((r) => r.status === status);
+        // OPS-04's filter, applied over the fixture so demo mode agrees with
+        // live. `me` is the signed-in demo user, matching what
+        // `useQueueAssignment` writes when a demo claim is simulated.
+        if (assignedTo === "unassigned") {
+          rows = rows.filter((row) => row.assignedStaffId === null);
+        } else if (assignedTo === "me") {
+          const demoStaffId = user?.id ?? "demo-staff";
+          rows = rows.filter((row) => row.assignedStaffId === demoStaffId);
+        }
+        if (sort) {
+          const direction = sort === "newest" ? -1 : 1;
+          rows = [...rows].sort(
+            (first, second) =>
+              direction *
+              (new Date(first.createdAt).getTime() -
+                new Date(second.createdAt).getTime()),
+          );
+        }
+        if (limit != null) rows = rows.slice(0, limit);
       } else {
-        rows = await getJoinRequests(status);
+        rows = await getJoinRequests(status, options);
       }
       return rows.map((row) => dtoToView(row, t, language));
     },

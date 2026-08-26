@@ -103,6 +103,22 @@ function metadataLines(
     });
   }
 
+  // A caller without the platform Moderator/Admin tier is served the narrowed
+  // `details` shape rather than raw `metadata` (see the backend's
+  // `toCommunityGovernanceLogDetails`), which carries the same settings diff
+  // as an array of `{ field, from, to }`. Rendered through the same line
+  // shape so both readers see one format.
+  if (Array.isArray(metadata.changedSettings)) {
+    for (const change of metadata.changedSettings) {
+      if (!isRecord(change) || typeof change.field !== "string") continue;
+      lines.push({
+        key: `change:${change.field}`,
+        label: fieldLabel(change.field, t),
+        value: fromToValue(change.from, change.to, t),
+      });
+    }
+  }
+
   if (isRecord(metadata.changes)) {
     for (const [field, change] of Object.entries(metadata.changes)) {
       lines.push({
@@ -131,13 +147,20 @@ function metadataLines(
  *  when there is nothing to say beyond the action itself. */
 export function AdminCommunityGovernanceLogMeta({
   metadata,
+  details,
 }: {
-  metadata: Record<string, unknown> | null;
+  metadata?: Record<string, unknown> | null;
+  /** The allowlisted read served INSTEAD of `metadata` to a caller holding the
+   *  `communities` staff grant without the Moderator/Admin tier. Exactly one of
+   *  the two arrives; without this the panel rendered an empty entry for every
+   *  grant holder. */
+  details?: Record<string, unknown> | null;
 }) {
   const { t } = useTranslation();
-  if (!metadata) return null;
+  const source = metadata ?? details;
+  if (!source) return null;
 
-  const lines = metadataLines(metadata, t);
+  const lines = metadataLines(source, t);
   if (lines.length === 0) return null;
 
   return (

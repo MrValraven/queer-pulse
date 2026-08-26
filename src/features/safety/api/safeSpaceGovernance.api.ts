@@ -146,7 +146,11 @@ export interface AdminNominationListingSummaryDTO {
 }
 
 export interface AdminSafeSpaceNominationDTO extends SafeSpaceNominationDTO {
-  nominatorId: string | null;
+  /** ABSENT for a reader holding the `directory_moderator` staff grant without
+   *  the Moderator/Admin tier: the place, the nominator's own written reason,
+   *  the 48-hour clock and the visit tally are the review; who nominated is
+   *  not. Nothing renders it, so it is optional rather than removed. */
+  nominatorId?: string | null;
   acknowledgedBy: string | null;
   assignedAt: string | null;
   assignedBy: string | null;

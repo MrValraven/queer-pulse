@@ -73,6 +73,24 @@ export interface VolunteerSignupDTO {
   status: SignupStatus;
   decidedAt: string | null;
   createdAt: string;
+  /**
+   * The completion record. All three are null until the poster confirms the
+   * session, then all three are set. `attended: false` is a recorded no-show,
+   * which is a confirmed state, not an unconfirmed one.
+   */
+  attended: boolean | null;
+  hoursContributed: number | null;
+  completedAt: string | null;
+}
+
+/** GET /volunteering/me/contribution: the viewer's own confirmed sessions and
+ *  hours. Only ever about the caller themselves. */
+export interface MyVolunteerContributionDTO {
+  sessionCount: number;
+  hoursContributed: number;
+  lastCompletedAt: string | null;
+  /** Accepted signups nobody has confirmed a session for yet. */
+  awaitingConfirmationCount: number;
 }
 
 /** A row of GET /volunteering/mine — an opportunity the viewer posted, with
@@ -179,6 +197,25 @@ export const decideSignup = (
     status,
   });
 
+/**
+ * Poster-only: confirm an accepted volunteer turned up, and for how long.
+ * Idempotent server-side, so a second call for the same signup returns 409
+ * rather than double-counting the hours.
+ */
+export const completeSignup = (
+  slug: string,
+  signupId: string,
+  body: { attended: boolean; hours: number },
+) =>
+  apiPost<VolunteerSignupDTO>(
+    `/volunteering/${slug}/signups/${signupId}/complete`,
+    body,
+  );
+
 /** Opportunities the viewer has posted, with pending/accepted counts. */
 export const getMyOpportunities = () =>
   apiGet<MyOpportunitySummaryDTO[]>(`/volunteering/mine`);
+
+/** The viewer's own confirmed volunteer sessions and hours. */
+export const getMyContribution = () =>
+  apiGet<MyVolunteerContributionDTO>(`/volunteering/me/contribution`);

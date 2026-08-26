@@ -306,6 +306,13 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   `${routes.adminHousingGroupListings}/*`,
   routes.adminLandlords,
   `${routes.adminLandlords}/*`,
+  // SUS-05. The volunteer-hours report is `@Roles(Moderator, Admin)` on the
+  // backend, so it belongs here rather than behind the blanket admin-only
+  // match: a moderator already sees the whole rail, and the link would
+  // otherwise bounce them off a page their own session is authorized for.
+  // It carries no capability grant (see `adminNav.data.ts`), so it appears in
+  // this list only, never in CAPABILITY_ELEVATED_PATTERNS.
+  routes.adminVolunteerHours,
 ];
 
 /**
@@ -358,6 +365,84 @@ const CAPABILITY_ELEVATED_PATTERNS: {
       `${routes.adminHousingGroupListings}/*`,
     ],
     capability: "housing_moderator",
+  },
+  // OPS-03. Each entry below matches one `@StaffRoles(...)` on the backend,
+  // where `RolesOrStaffGuard` passes the account tier OR the grant. Keep this
+  // list and `adminNav.data.ts`'s `capabilities` in step: the rail decides what
+  // a holder is offered, this decides what they can open.
+  {
+    // `AdminListingsController`, `AdminSafeSpaceNominationsController` and
+    // `AdminSafeSpaceBadgesController`. The flag queue is NOT included (it is
+    // the only place a flagger's identity and free text are served), so the
+    // safe-spaces page hides that tab for a holder without the mod tier.
+    patterns: [
+      routes.adminListings,
+      `${routes.adminListings}/*`,
+      routes.adminSafeSpaces,
+      `${routes.adminSafeSpaces}/*`,
+    ],
+    capability: "directory_moderator",
+  },
+  {
+    // The resource library: guides, service listings, member suggestions and
+    // the feedback ratings. Publishing or deleting a guide stays admin-only,
+    // enforced per method on the backend.
+    patterns: [
+      routes.adminResourceGuides,
+      `${routes.adminResourceGuides}/*`,
+      routes.adminResourceListings,
+      `${routes.adminResourceListings}/*`,
+      routes.adminResourceSuggestions,
+      `${routes.adminResourceSuggestions}/*`,
+      routes.adminGuideFeedback,
+      `${routes.adminGuideFeedback}/*`,
+    ],
+    capability: "resource_curator",
+  },
+  {
+    // Story submissions, writer applications, commission interest, and the two
+    // public-face content surfaces (press kit, landing slots).
+    patterns: [
+      routes.adminMagazineSubmissions,
+      `${routes.adminMagazineSubmissions}/*`,
+      routes.adminWriterApplications,
+      `${routes.adminWriterApplications}/*`,
+      routes.adminCommissionInterests,
+      `${routes.adminCommissionInterests}/*`,
+      routes.adminPressKit,
+      `${routes.adminPressKit}/*`,
+      routes.adminLanding,
+      `${routes.adminLanding}/*`,
+    ],
+    capability: "editorial",
+  },
+  {
+    // Community care work. The last-resort overrides (freeze, archive,
+    // reassign owner, remove a member) stay admin-only per method.
+    patterns: [
+      routes.adminCommunities,
+      `${routes.adminCommunities}/*`,
+      routes.adminCommunityTagRequests,
+      `${routes.adminCommunityTagRequests}/*`,
+      routes.adminTopics,
+      `${routes.adminTopics}/*`,
+      routes.adminReadingGroupProposals,
+      `${routes.adminReadingGroupProposals}/*`,
+    ],
+    capability: "communities",
+  },
+  {
+    patterns: [
+      routes.adminPartnerApplications,
+      `${routes.adminPartnerApplications}/*`,
+      routes.adminOrgTiers,
+      `${routes.adminOrgTiers}/*`,
+      routes.adminChangemakers,
+      `${routes.adminChangemakers}/*`,
+      routes.adminChangemakerNominations,
+      `${routes.adminChangemakerNominations}/*`,
+    ],
+    capability: "partnerships",
   },
 ];
 

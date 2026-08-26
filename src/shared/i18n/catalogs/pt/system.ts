@@ -92,7 +92,6 @@ export const system: Catalog = {
   "accountLocked.whatNow.contact.title": "Contactar a equipa",
   "accountLocked.whatNow.contact.desc":
     "Se nada disto resultar, escreve-nos e verificamos-te manualmente.",
-  "accountLocked.foot.incident": "Incidente <idTag>{id}</idTag> · {time}",
   "accountLocked.foot.whyLink": "Porque é que isto acontece?",
 
   // ── AccountSuspendedPage.tsx ──────────────────────────────────────────────
@@ -129,31 +128,6 @@ export const system: Catalog = {
     "Enviar mensagem à equipa de moderação",
   "accountSuspended.foot":
     "{percent}% dos recursos são revertidos. Publicamos este número todos os anos. <a>Ver as estatísticas de moderação de 2025</a>",
-
-  // ── GeoRestrictedPage.tsx ─────────────────────────────────────────────────
-  "geoRestricted.eyebrow": "Região restrita",
-  "geoRestricted.h1":
-    "A QueerPulse ainda não está <em>totalmente disponível</em> aqui.",
-  "geoRestricted.lead":
-    "Parece que estás a ligar-te a partir de um país onde algumas funcionalidades da QueerPulse estão restritas: normalmente porque não temos pessoas moderadoras no teu fuso horário, ou porque ainda estamos a analisar o enquadramento legal local. <em>O apoio em crise e os recursos de segurança continuam abertos para ti.</em>",
-  "geoRestricted.why.title": "Porque é que isto acontece",
-  "geoRestricted.why.body":
-    "Só abrimos acesso a uma nova região quando temos <em>pelo menos uma pessoa moderadora no país</em> e revemos o enquadramento legal local para a expressão queer. É intencionalmente lento. Não queremos divulgar a comunidade queer num lugar onde as pessoas ficariam em risco ao entrar.",
-  "geoRestricted.can.title": "O que ainda podes fazer · agora mesmo",
-  "geoRestricted.can.readArticles.label":
-    "Ler todos os artigos públicos e a revista",
-  "geoRestricted.can.readArticles.detail":
-    "O arquivo editorial completo está aberto · <a>explorar</a>",
-  "geoRestricted.can.resources.label":
-    "Explorar recursos internacionais verificados",
-  "geoRestricted.can.resources.detail":
-    "Linhas de apoio, apoio jurídico queer-friendly e contactos de emergência em 14 outros países · <a>biblioteca de recursos</a>",
-  "geoRestricted.can.askUs.label": "Pede-nos para abrir o acesso aqui",
-  "geoRestricted.can.askUs.detail":
-    "Diz-nos onde estás (não precisas do teu nome) e o que ajudaria · <a>escreve à equipa</a>",
-  "geoRestricted.detect":
-    "Detetado: <b>Portugal · Lisboa</b> · esta é uma demonstração da vista de região restrita.",
-  "geoRestricted.goHome": "Ir para o início",
 
   // ── InviteExpiredPage.tsx (estado do convite: expirado / usado / cancelado / inválido) ─
   "inviteState.expired.eyebrow": "Convite expirado",

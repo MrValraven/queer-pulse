@@ -344,6 +344,7 @@ export const communities: Catalog = {
   "detail.modtools.nav.reports": "Denúncias",
   "detail.modtools.nav.members": "Pessoas",
   "detail.modtools.nav.invites": "Convites",
+  "detail.modtools.nav.support": "Apoio",
   "detail.modtools.nav.card": "Cartão de membro",
   "detail.modtools.nav.danger": "Zona de risco",
   "detail.modtools.overview.attention.label": "A precisar de ti",
@@ -355,6 +356,10 @@ export const communities: Catalog = {
     "Uma publicação foi denunciada",
   "detail.modtools.overview.attention.reports_other":
     "{count} publicações foram denunciadas",
+  "detail.modtools.overview.attention.support_one":
+    "Alguém da QueerPulse ofereceu-vos ajuda",
+  "detail.modtools.overview.attention.support_other":
+    "{count} ofertas de apoio estão à vossa espera",
   "detail.modtools.overview.attention.clear.title": "Nada à tua espera",
   "detail.modtools.overview.attention.clear.description":
     "Sem pedidos para entrar e sem denúncias. O que aparecer de novo fica aqui.",
@@ -545,6 +550,37 @@ export const communities: Catalog = {
     "Totais semanais de toda a comunidade. A atividade de cada pessoa continua privada.",
 
   // ── Ferramentas de moderação · lista de bloqueios ─────────────────────────
+  // OPS-05: o que a equipa da plataforma ofereceu a esta comunidade, e as duas
+  // respostas que a moderação pode dar.
+  "detail.modtools.support.label": "Apoio da QueerPulse",
+  "detail.modtools.support.intro":
+    "Quando a equipa da plataforma acha que esta comunidade pode precisar de uma ajuda, diz aqui. Aceitem o que vos servir e recusem o resto.",
+  "detail.modtools.support.option.message":
+    "Alguém da equipa da plataforma escreve-vos diretamente",
+  "detail.modtools.support.option.buddy":
+    "Uma pessoa da equipa acompanha-vos durante duas semanas",
+  "detail.modtools.support.option.toolkit":
+    "O guia de desanuviamento, partilhado com a vossa moderação",
+  "detail.modtools.support.option.recruit":
+    "Ajuda a encontrar mais uma pessoa para moderar convosco",
+  "detail.modtools.support.status.new": "À vossa espera",
+  "detail.modtools.support.status.acknowledged": "Aceite",
+  "detail.modtools.support.status.declined": "Recusado",
+  "detail.modtools.support.byOn": "Oferecido por {name} a {date}",
+  "detail.modtools.support.note": "Nota: {note}",
+  "detail.modtools.support.answeredOn": "Responderam a {date}.",
+  "detail.modtools.support.formerStaff": "Alguém da QueerPulse",
+  "detail.modtools.support.acceptCta": "Sim, por favor",
+  "detail.modtools.support.declineCta": "Agora não",
+  "detail.modtools.support.acceptedToast":
+    "Aceite. A equipa da plataforma vê a vossa resposta.",
+  "detail.modtools.support.declinedToast":
+    "Recusado. A equipa da plataforma vê a vossa resposta.",
+  "detail.modtools.support.errorToast":
+    "A resposta não ficou guardada. Tenta de novo.",
+  "detail.modtools.support.empty.title": "Ainda sem ofertas",
+  "detail.modtools.support.empty.description":
+    "Ninguém da equipa da plataforma ofereceu apoio a esta comunidade. Se o fizerem, aparece aqui.",
   "detail.modtools.bans.label": "Pessoas barradas desta comunidade",
   "detail.modtools.bans.intro":
     "Quem está barrado neste momento, do mais recente para o mais antigo. Levantar um bloqueio reabre a porta desta comunidade.",

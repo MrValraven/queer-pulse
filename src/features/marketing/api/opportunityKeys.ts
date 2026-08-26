@@ -24,4 +24,10 @@ export const opportunityKeys = {
   signupsRoot: ["opportunity-signups"] as const,
   signups: (slug: string | undefined, demoMode: boolean) =>
     ["opportunity-signups", slug, demoMode] as const,
+
+  /** The viewer's own confirmed sessions/hours. Invalidated after a poster
+   *  confirms a session, since the same viewer can be both. */
+  contributionRoot: ["volunteer-contribution"] as const,
+  contribution: (demoMode: boolean) =>
+    ["volunteer-contribution", demoMode] as const,
 };
