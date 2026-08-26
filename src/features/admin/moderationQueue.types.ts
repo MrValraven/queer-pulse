@@ -7,8 +7,14 @@ import type { Severity } from "./adminModeration.data";
  * no second moderator has confirmed yet. It sits alongside the queue rather
  * than inside the open tab because nothing on it is a report, and the action it
  * takes is a signature on someone else's decision.
+ *
+ * `health` is TS-04's tab: moderator workload and SLA health across every
+ * queue, including the four that are not this console's. It sits here because
+ * `/admin/moderation` is one of the surfaces `authGate.ts` opens to the
+ * moderator tier, and the workload reading is for the people carrying the
+ * work. It reads; it never acts on a row.
  */
-export type TabId = "open" | "appeals" | "resolved" | "ratification";
+export type TabId = "open" | "appeals" | "resolved" | "ratification" | "health";
 
 /**
  * The appeals queue's two tabs (TS-11). They used to be one undifferentiated

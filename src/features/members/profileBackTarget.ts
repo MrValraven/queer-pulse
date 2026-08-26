@@ -71,7 +71,6 @@ const ORIGINS: Array<{
     labelKey: "profile.backTo.events",
     deepLabelKey: "profile.backTo.event",
   },
-  { prefix: routes.event, labelKey: "profile.backTo.event" },
   { prefix: routes.feed, labelKey: "profile.backTo.feed" },
   { prefix: routes.messages, labelKey: "profile.backTo.messages" },
   { prefix: routes.search, labelKey: "profile.backTo.search" },

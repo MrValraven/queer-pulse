@@ -68,23 +68,6 @@ export const settings: Catalog = {
   "controls.deleteModal.continue": "Continuar para eliminar",
 
   // ── SuggestEditModal (guia de terminologia) ─────────
-  "modals.suggestEdit.ariaLabel": "Sugerir uma alteração a {term}",
-  "modals.suggestEdit.success.title": "Agradecemos, <em>anotado.</em>",
-  "modals.suggestEdit.success.body":
-    "A tua sugestão de alteração a <strong>{term}</strong> está com a nossa equipa editorial da comunidade. As alterações de terminologia são revistas antes de serem publicadas; iremos avisar-te do que acontece.",
-  "modals.suggestEdit.eyebrow": "Terminologia · sugerir uma alteração",
-  "modals.suggestEdit.title": "Refina <em>{term}.</em>",
-  "modals.suggestEdit.desc":
-    "Este guia é editado pela comunidade. Sugere uma redação mais clara ou uma correção. Todas as alterações são revistas antes de serem publicadas.",
-  "modals.suggestEdit.wordingLabel": "A tua sugestão de redação",
-  "modals.suggestEdit.wordingPlaceholder":
-    "Uma definição mais clara de «{term}»…",
-  "modals.suggestEdit.whyLabel": "Porquê mudar?",
-  "modals.suggestEdit.optional": "(opcional)",
-  "modals.suggestEdit.whyPlaceholder": "Contexto que ajude a equipa editorial",
-  "modals.suggestEdit.sending": "A enviar…",
-  "modals.suggestEdit.send": "Enviar sugestão",
-  "modals.suggestEdit.cancel": "Cancelar",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
   "personalisation.theme.title": "Tema do <em>perfil.</em>",
@@ -166,11 +149,13 @@ export const settings: Catalog = {
   "interests.age.35to45": "35–45",
   "interests.age.45plus": "45+",
 
-  // ── interests.data.ts — frequência de email (o id "daily"/"weekly"/
-  // "important" é o valor guardado; só título/descrição são traduzidos) ───
+  // ── interests.data.ts: com que frequência o resumo do feed se junta (o
+  // id "daily"/"weekly"/"important" é o valor guardado; só título/descrição
+  // são traduzidos). Não fala de email: a QueerPulse não envia nenhum e nunca
+  // vai enviar, por isso "ter notícias nossas" é o que chega na app. ───────
   "interests.freq.daily.title": "Resumo diário",
   "interests.freq.daily.desc":
-    "Um email por dia com as tuas atualizações principais",
+    "Um resumo por dia com as tuas atualizações principais",
   "interests.freq.weekly.title": "Resumo semanal",
   "interests.freq.weekly.desc": "Um resumo semanal com o que importa",
   "interests.freq.important.title": "Só o importante",
@@ -542,9 +527,7 @@ export const settings: Catalog = {
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Perfil",
-  "editProfile.nav.group.privacy": "Privacidade",
   "editProfile.nav.identity.label": "Identidade e foto",
-  "editProfile.nav.pronouns.label": "Pronomes e nome",
   "editProfile.nav.bio.label": "Biografia e ocupação",
   "editProfile.nav.links.label": "Ligações e redes sociais",
   "editProfile.nav.skills.label": "Competências e interesses",
@@ -595,8 +578,6 @@ export const settings: Catalog = {
   "editProfile.pronouns.label": "Pronomes",
   "editProfile.pronouns.writeOwnLabel": "Escreve os teus",
   "editProfile.pronouns.writeOwnPlaceholder": "Ou escreve os teus…",
-  "editProfile.pronouns.hint":
-    "Podes selecionar várias etiquetas acima. Os pronomes só são mostrados no teu perfil, nunca em meta tags nem em URLs.",
   "editProfile.pronouns.removeCustomAriaLabel": "Remover {pronoun}",
 
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
@@ -943,20 +924,11 @@ export const settings: Catalog = {
     "Exportação de demonstração gerada no navegador. Nenhum dado pessoal saiu deste dispositivo.",
 
   // ── SaveButton.tsx — controlo de guardar reutilizável ────────────────────
-  "saveButton.defaultLabel": "Guardar alterações",
-  "saveButton.savingLabel": "A guardar…",
-  "saveButton.savedLabel": "Guardado",
 
   // ── AccessibilityPreferencesPage.tsx + Sections — a página completa de
   // acessibilidade. Só a Redução de movimento é funcional; o resto são
   // etiquetas em interruptores não funcionais — só as etiquetas são traduzidas.
   "a11y.instantSaveHint": "Guardado neste dispositivo assim que o alteras.",
-  "a11y.sidebar.preferences": "Preferências",
-  "a11y.sidebar.display": "Visualização",
-  "a11y.sidebar.motion": "Movimento",
-  "a11y.sidebar.reading": "Leitura",
-  "a11y.sidebar.interaction": "Interação",
-  "a11y.sidebar.reset": "Repor",
   "a11y.section.display.eyebrow": "Visualização",
   "a11y.section.display.desc":
     "Estas definições aplicam-se a toda a plataforma.",
@@ -1025,10 +997,8 @@ export const settings: Catalog = {
   "deleteAccount.pending.sub":
     "Pediste para eliminarmos a tua conta. Eis a situação atual.",
   "deleteAccount.pauseStrip.text":
-    "Não tens a certeza? Considera <strong>pausar as notificações</strong> durante um mês em vez disso. Continuas a fazer parte sem o ruído.",
-  "deleteAccount.pauseStrip.cta": "Desativar todos os emails e resumos",
-  "deleteAccount.toast.pausedEmails":
-    "Todas as notificações por email foram pausadas durante 30 dias.",
+    "Não tens a certeza? Podes antes <strong>baixar o volume</strong>. Escolhe que notificações te chegam e define horas de silêncio para o telemóvel descansar de noite. O teu lugar aqui fica, com menos ruído.",
+  "deleteAccount.pauseStrip.cta": "Escolher as tuas notificações",
   "deleteAccount.whatHappens.title.deactivate":
     "O que acontece quando desativas",
   "deleteAccount.whatHappens.title.delete": "O que acontece quando eliminas",
@@ -1146,29 +1116,4 @@ export const settings: Catalog = {
   "themeStudio.badge.sustainer": "Apoiante (Raro)",
   "themeStudio.badge.regular": "Regular (Raro)",
   "themeStudio.badge.vouch": "Voto de confiança (Raro)",
-  "themeStudio.backToProfile": "O meu perfil",
-  "themeStudio.saveTheme": "Guardar tema",
-  "themeStudio.toast.saved": "Tema guardado",
-
-  // ── LinkProviderModal.tsx ─────────────────────────────────────────────────
-  "linkProvider.ariaLabel": "Autorizar {provider}",
-  "linkProvider.eyebrow": "Autorizar · {provider}",
-  "linkProvider.continueWith": "Continuar com {provider}",
-  "linkProvider.requestingAccess": "A QueerPulse está a pedir acesso",
-  "linkProvider.authorizing": "A autorizar…",
-  "linkProvider.authorizeCta": "Autorizar {provider}",
-  "linkProvider.cancel": "Cancelar",
-  "linkProvider.linkedTitle": "Ligação com {provider} <em>concluída.</em>",
-  "linkProvider.linkedSub":
-    "Já podes entrar na QueerPulse com {provider}. Revoga o acesso quando quiseres, a partir desta página. As tuas mensagens e associações a comunidades nunca foram partilhadas.",
-  "linkProvider.done": "Concluído",
-
-  // ── IntegrationsModal.tsx ─────────────────────────────────────────────────
-  "integrationsModal.ariaLabel": "Integrações disponíveis",
-  "integrationsModal.eyebrow": "Ligar outra",
-  "integrationsModal.title": "Integrações <em>disponíveis.</em>",
-  "integrationsModal.desc":
-    "Cada integração tem um âmbito restrito. Nenhuma consegue ler as tuas mensagens diretas, rascunhos, faturação ou associações a comunidades.",
-  "integrationsModal.connectedTag": "Ligada",
-  "integrationsModal.connectCta": "Ligar",
 };

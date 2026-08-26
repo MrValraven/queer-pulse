@@ -352,7 +352,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Hosting an archive screening",
         sub: "O Crime do Padre Amaro · Casa do Comum · 28 June",
-        to: routes.event,
+        to: routes.events,
       },
     ],
     shapings: {
@@ -478,7 +478,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Hosting a portfolio review night",
         sub: "Atelier Pulso · 21 June",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -586,7 +586,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Attending a build night",
         sub: "Open Source Queers · 18 June",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiBookOpen,
@@ -690,7 +690,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Screening at a community night",
         sub: "O Café das Seis · 27 June",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -768,7 +768,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Hosting the 13th supper club",
         sub: "Twelve seats · Mouraria · 28 June",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -845,7 +845,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Running a monthly peer group",
         sub: "Queer professionals · waitlist open",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -946,7 +946,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Free portrait day",
         sub: "For trans & nonbinary members · 15 June",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -1047,7 +1047,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Attending a product meetup",
         sub: "Ethical Product Lisbon · 20 June",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiBookOpen,
@@ -1142,7 +1142,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Opening a small exhibition",
         sub: "Slow Objects · late summer",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -1245,7 +1245,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Resident DJ set",
         sub: "Queer Thursdays at Lux",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -1472,7 +1472,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Hosting 'Cook & co-design'",
         sub: "Open studio dinner in Marvila",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiCamera,
@@ -1668,7 +1668,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Opened the Facilitation Lab",
         sub: "Six-week cohort, free",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -1956,7 +1956,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Opening a post-surgery movement class",
         sub: "Small group, Estrela",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiFileText,
@@ -2065,7 +2065,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Hosted the Arroios drop-in",
         sub: "Tuesday · 14 people",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiFileText,
@@ -2167,7 +2167,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Ran a tenants' assembly",
         sub: "Graça · standing room only",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -2275,7 +2275,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Ran a testing night",
         sub: "Cais do Sodré · 31 tests",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -2403,7 +2403,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Ran a free rights clinic",
         sub: "Estrela · drop-in",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -2507,7 +2507,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Taught a riso workshop",
         sub: "Mouraria · 8 first-timers",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiCamera,
@@ -2606,7 +2606,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Shot a community fundraiser",
         sub: "Marvila · donated the prints",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -2719,7 +2719,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Co-ran a beginner code night",
         sub: "Marvila · 12 learners",
-        to: routes.event,
+        to: routes.events,
       },
     ],
   },
@@ -3013,7 +3013,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Ran a documents workshop",
         sub: "Legal recognition, step by step",
-        to: routes.event,
+        to: routes.events,
       },
     ],
   },
@@ -3104,7 +3104,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Opened a tenants' clinic",
         sub: "Drop-in legal advice",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -3389,7 +3389,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Joined QueerPulse",
         sub: "New this week, say hi",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiCamera,
@@ -3486,7 +3486,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiCalendar,
         title: "Joined QueerPulse",
         sub: "New this week, say hi",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiMessageCircle,
@@ -3686,13 +3686,13 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
         icon: FiMusic,
         title: "DJ set as Hot Mess Express",
         sub: "Queer party · with Camila",
-        to: routes.event,
+        to: routes.events,
       },
       {
         icon: FiCalendar,
         title: "Organised a community gathering",
         sub: "Queer + non-monogamy meetup",
-        to: routes.event,
+        to: routes.events,
       },
     ],
     shapings: {

@@ -1,16 +1,13 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { logError } from "../../shared/observability/logger";
 import { useCreateReport } from "../safety/api/useCreateReport";
-import {
-  REASON_LABEL_KEYS,
-  SUBJECT_REASONS,
-  type ReasonCode,
-  type ReportSubjectType,
-} from "../safety/reportReasons";
+import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
+import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
+import type { ReportSubjectType } from "../safety/reportReasons";
 import { ModalShell, SuccessPanel } from "./ModalKit";
 import shell from "./ApplicationModals.module.css";
 import styles from "./ReportListingModal.module.css";
@@ -40,18 +37,14 @@ export function ReportListingModal({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const reasons = useMemo(
-    () =>
-      SUBJECT_REASONS[subjectType].map((code) => ({
-        code,
-        label: t(REASON_LABEL_KEYS[code]),
-      })),
-    [t, subjectType],
-  );
-  const [reason, setReason] = useState<ReasonCode>(reasons[0]!.code);
+  // Server-owned taxonomy when it answers, the local one instantly and
+  // silently when it does not. Never a spinner, never an empty list.
+  const reasons = useReportReasons(subjectType);
+  const [reason, setReason] = useState<string>(reasons[0]!.code);
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
   const createReport = useCreateReport();
+  const describeReportError = useReportSubmissionError();
 
   const canSubmit = detail.trim().length >= 10;
   const charsLeft = 10 - detail.trim().length;
@@ -62,7 +55,7 @@ export function ReportListingModal({
       {
         subjectType,
         subjectId,
-        reasonCode: reason,
+        reasonCode: asReasonCode(reason),
         detail: detail.trim(),
       },
       {
@@ -70,8 +63,16 @@ export function ReportListingModal({
         onError: (err) => {
           logError(err, { scope: "economy.reportListing" });
           // Never show "report received" for a report that didn't land —
-          // surface an honest error and keep the form filled in to retry.
-          showToast(t("economy:housingListing.reportModal.error"), "error");
+          // surface an honest error and keep the form filled in to retry. A
+          // rolling flood cap answers with its own member-facing explanation,
+          // which `describeReportError` shows in place of the generic line.
+          showToast(
+            describeReportError(
+              err,
+              t("economy:housingListing.reportModal.error"),
+            ),
+            "error",
+          );
         },
       },
     );

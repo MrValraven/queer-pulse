@@ -1,0 +1,87 @@
+/* ── Quality sample: a read-only look back at decided join requests, so the
+   review team can check its own bar is being applied consistently. ─────── */
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+}
+
+.sizeField {
+  min-width: 190px;
+}
+
+/* Wider than the size picker: it holds people's names, which are longer and
+   less uniform than "10 decisions". */
+.reviewerField {
+  min-width: 230px;
+  max-width: 320px;
+}
+
+.note {
+  margin: 0 0 6px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: rgba(var(--line-rgb), 0.72);
+}
+
+.card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 18px;
+  background: var(--paper);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.name {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--plum);
+}
+
+.message {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.facts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.factLabel {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(var(--line-rgb), 0.62);
+}
+
+.factValue {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+}

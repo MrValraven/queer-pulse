@@ -15,6 +15,7 @@
     "check:tokens": "node scripts/check-design-tokens.mjs",
     "lint:fix": "eslint . --fix",
     "lint:a11y": "node scripts/report-a11y.mjs",
+    "lint:i18n-unused": "node scripts/report-unused-i18n.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",

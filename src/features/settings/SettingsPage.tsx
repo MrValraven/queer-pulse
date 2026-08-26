@@ -187,7 +187,11 @@ export function SettingsPage() {
             {pane === "blockedUsers" && <BlockedUsersPane />}
             {pane === "account" && <AccountPane onChange={markChanged} />}
             {pane === "uploads" && <MyUploadsPane />}
-            {pane === "delete" && <DeleteAccountSection />}
+            {pane === "delete" && (
+              <DeleteAccountSection
+                onOpenNotificationSettings={() => setPane("notifications")}
+              />
+            )}
           </FadeIn>
         </div>
       </div>

@@ -120,7 +120,7 @@ export const APPS: Application[] = [
     ],
     status: (
       <>
-        <b>Round 2 scheduled · Wed 11 Jun, 16:00</b> with João (CTO) and Liv
+        <b>Round 2 scheduled · Thu 11 Jun, 16:00</b> with João (CTO) and Liv
         (Design lead) · <span className="ago">arranged 2 days ago</span>
       </>
     ),
@@ -139,7 +139,7 @@ export const APPS: Application[] = [
         from: "them",
         name: "João",
         when: "9 Jun",
-        text: "Really strong first round. We'd like to invite you to a round two. Does Wed 11 Jun at 16:00 work?",
+        text: "Really strong first round. We'd like to invite you to a round two. Does Thu 11 Jun at 16:00 work?",
       },
       {
         from: "you",
@@ -149,12 +149,12 @@ export const APPS: Application[] = [
       {
         from: "system",
         when: "9 Jun",
-        text: "Round 2 scheduled · Wed 11 Jun, 16:00.",
+        text: "Round 2 scheduled · Thu 11 Jun, 16:00.",
       },
     ],
     interview: {
       title: "Round 2 · Senior Product Designer",
-      when: "Wednesday 11 June 2026, 16:00–17:00 WEST",
+      when: "Thursday 11 June 2026, 16:00–17:00 WEST",
       durationMin: 60,
       location: "Google Meet (link sent the morning of)",
       attendees: ["João Tavares, CTO", "Liv Andersson, Design lead"],
@@ -194,7 +194,7 @@ export const APPS: Application[] = [
     status: (
       <>
         <b>Offer received · €42k + 25 days holiday</b> ·{" "}
-        <span className="ago">3 days ago</span> · respond by Sat 14 Jun
+        <span className="ago">3 days ago</span> · respond by Sun 14 Jun
       </>
     ),
     badge: { kind: "offer", label: "Offer · respond" },
@@ -219,12 +219,12 @@ export const APPS: Application[] = [
         from: "them",
         name: "Inês",
         when: "15 May",
-        text: "Sofia, your portfolio is wonderful. Could we talk this Thursday afternoon?",
+        text: "Sofia, your portfolio is wonderful. Could we talk Tuesday afternoon?",
       },
       {
         from: "you",
         when: "15 May",
-        text: "Absolutely, Thursday works. Looking forward to it.",
+        text: "Absolutely, Tuesday works. Looking forward to it.",
       },
       {
         from: "system",
@@ -247,7 +247,7 @@ export const APPS: Application[] = [
       salary: "€42,000 / year (pro-rata, 4 days)",
       holiday: "25 days + public holidays",
       start: "Flexible, ideally September 2026",
-      respondBy: "Saturday 14 June 2026",
+      respondBy: "Sunday 14 June 2026",
       market:
         "Editorial leads in Lisbon earn €40–52k. Your offer sits at the lower-middle. There's room.",
       terms: [
@@ -282,7 +282,7 @@ export const APPS: Application[] = [
     status: (
       <>
         <b>Offer received · €48k + 23 days holiday</b> ·{" "}
-        <span className="ago">yesterday</span> · respond by Fri 20 Jun
+        <span className="ago">yesterday</span> · respond by Sat 20 Jun
       </>
     ),
     badge: { kind: "offer", label: "Offer · respond" },
@@ -300,7 +300,7 @@ export const APPS: Application[] = [
       salary: "€48,000 / year",
       holiday: "23 days + public holidays",
       start: "As soon as you're free",
-      respondBy: "Friday 20 June 2026",
+      respondBy: "Saturday 20 June 2026",
       market:
         "Senior designers in Lisbon earn €44–58k. This sits comfortably in range.",
       terms: [

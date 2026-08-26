@@ -644,7 +644,7 @@ export const marketing: Catalog = {
     "Obtém uma cópia de tudo o que a QueerPulse guarda sobre ti.",
   "dsar.rights.access.formTitle": "Pedir uma cópia dos teus dados",
   "dsar.rights.access.formSub":
-    "Reunimos tudo o que está associado à tua conta e enviamos-te.",
+    "Reunimos tudo o que está associado à tua conta e disponibilizamo-lo aqui para descarregares.",
   "dsar.rights.rectification.label": "Direito de retificação",
   "dsar.rights.rectification.desc":
     "Corrige informação sobre ti que esteja incorreta ou incompleta.",
@@ -659,7 +659,7 @@ export const marketing: Catalog = {
     "Isto é diferente de eliminar a conta. Diz-nos exatamente o que queres removido.",
   "dsar.rights.objection.label": "Direito de <em>oposição</em>",
   "dsar.rights.objection.desc":
-    "Opõe-te a uma forma específica de usarmos os teus dados, como a análise de utilização.",
+    "Opõe-te a uma forma específica de usarmos os teus dados, como a monitorização de erros.",
   "dsar.rights.objection.formTitle": "Opor-te a um uso dos teus dados",
   "dsar.rights.objection.formSub":
     "Diz-nos a que processamento te estás a opor.",
@@ -679,15 +679,12 @@ export const marketing: Catalog = {
   "dsar.scopes.connections.s": "Avais, convites, a tua rede",
   "dsar.scopes.activity.b": "Atividade",
   "dsar.scopes.activity.s": "Publicações, comentários, confirmações, mensagens",
-  "dsar.scopes.billing.b": "Faturação",
-  "dsar.scopes.billing.s": "Escalão de adesão, histórico de pagamentos",
+  "dsar.scopes.membership.b": "Adesão",
+  "dsar.scopes.membership.s":
+    "O teu escalão, data de entrada, e quem te convidou",
   "dsar.scopes.moderation.b": "Moderação",
   "dsar.scopes.moderation.s":
     "Denúncias que fizeste ou em que foste mencionade",
-  "dsar.form.docs.label": "Documentos de suporte",
-  "dsar.form.docs.optional": "(opcional)",
-  "dsar.form.docs.helper":
-    "Anexa o que ajudar a verificar ou processar o pedido, <em>nunca obrigatório</em> para submeter.",
   "dsar.form.contextLabel": "Mais alguma coisa que devamos saber?",
   "dsar.form.contextPlaceholder": "Contexto adicional para a nossa equipa",
   "dsar.legalStrip":
@@ -699,7 +696,6 @@ export const marketing: Catalog = {
   "dsar.past.heading": "Os teus pedidos anteriores",
   "dsar.past.submitted": "Submetido em {date}",
   "dsar.past.responded": "Respondido em {date}",
-  "dsar.past.respondedWithDuration": "Respondido em {date} · {duration}",
   "dsar.past.resolved": "Resolvido",
   "dsar.past.status.received": "Recebido",
   "dsar.past.status.inReview": "Em análise",
@@ -708,7 +704,6 @@ export const marketing: Catalog = {
   "dsar.past.error":
     "Não foi possível carregar os teus pedidos anteriores. Tenta novamente daqui a pouco.",
   "dsar.past.empty": "Ainda não submeteste nenhum pedido.",
-  "dsar.past.objectAnalytics": "Oposição · Análise",
   "dsar.toast.submitted": "Pedido submetido: referência {ref}",
   "dsar.toast.submitError":
     "Não conseguimos registar esse pedido. Nada foi enviado. Importas-te de tentar outra vez?",
@@ -1027,14 +1022,11 @@ export const marketing: Catalog = {
 
   // ── Explicador de Comunidades ──────────────────────────────────────────
   "communitiesAbout.meta.title": "Como funcionam as comunidades no QueerPulse",
-  "communitiesAbout.meta.description":
-    "Salas reais, cuidadas por pessoas reais, sem anúncios e sem algoritmo. Vê como funcionam as comunidades do QueerPulse e como encontrar aquela que parece tua.",
   "communitiesAbout.hero.eyebrow": "Comunidades",
   "communitiesAbout.hero.title":
     "Como funcionam as comunidades, e porque <em>importam</em>",
   "communitiesAbout.hero.sub":
     "Salas reais, cuidadas por pessoas reais. Sem feeds, sem algoritmo. Eis o que isso significa, e como encontrar aquela que parece tua.",
-  "communitiesAbout.hero.browseCta": "Explorar comunidades",
   "communitiesAbout.outro.title": "Pronto para encontrar a tua gente?",
   "communitiesAbout.outro.sub":
     "Pede um convite e ajudamos-te a encontrar as salas que parecem casa.",
@@ -1089,7 +1081,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.account.item1":
     "<strong>Detalhes do perfil</strong> que adicionas: nome, pronomes, descrição, biografia, fotos.",
   "privacy.whatWeCollect.account.item2":
-    "<strong>Informação de contacto</strong>: o teu email, usado para iniciar sessão e enviar as notificações que ativaste.",
+    "<strong>Informação de contacto</strong>: o teu email, que vem da tua conta Google e serve para iniciares sessão. A QueerPulse não envia email.",
   "privacy.whatWeCollect.account.item3":
     "<strong>Dados de adesão</strong>: o teu escalão, data de entrada, quem te convidou e quem te avalizou.",
   "privacy.whatWeCollect.signInHeading": "Como inicias sessão",
@@ -1132,7 +1124,8 @@ export const marketing: Catalog = {
     "Entregar as tuas mensagens, notificações e as ligações que crias",
   "privacy.howWeUse.item4":
     "Manter a plataforma segura: investigar denúncias, aplicar o Código de Conduta",
-  "privacy.howWeUse.item5": "Enviar-te notificações que ativaste",
+  "privacy.howWeUse.item5":
+    "Enviar-te as notificações na aplicação e push que ativaste",
   "privacy.howWeUse.item6":
     "Resolver problemas e manter a plataforma fiável, com o teu consentimento, através de monitorização de erros que respeita a privacidade",
   "privacy.howWeUse.p1":
@@ -1143,16 +1136,43 @@ export const marketing: Catalog = {
   "privacy.whoSees.p2":
     "<strong>A nossa pequena equipa</strong> pode aceder a dados da conta para dar apoio, investigar denúncias e manter a plataforma a funcionar.",
   "privacy.whoSees.p3":
-    "<strong>Fornecedores de serviços</strong>, as empresas que alojam a plataforma, guardam os teus envios, entregam o nosso email e (com o teu consentimento) monitorizam erros, veem só o necessário para a sua função específica, ao abrigo de contrato.",
+    "<strong>Fornecedores de serviços</strong>, as empresas que alojam a plataforma, guardam os teus envios, colocam moradas num mapa e (com o teu consentimento) monitorizam erros, veem só o necessário para a sua função específica.",
   "privacy.whoSees.p4":
     "<strong>Mais ninguém.</strong> Nunca vendemos nem alugamos os teus dados a terceiros.",
   "privacy.retention.title": "Por quanto tempo guardamos",
   "privacy.retention.p1":
-    "Os dados da conta são guardados enquanto a tua conta estiver ativa.",
-  "privacy.retention.p2":
-    "Se eliminares a tua conta, a maioria dos dados pessoais é removida em 30 dias, exceto quando somos legalmente obrigados a retê-los (por exemplo, registos de faturação).",
+    "O teu perfil, as tuas mensagens, as tuas publicações, as tuas ligações e os teus envios são guardados enquanto a tua conta estiver aberta. As tuas confirmações de presença também, para que um convívio a que foste continue no teu histórico e quem o organizou mantenha a sua contagem. O que desaparece sozinho são os detalhes de presença listados abaixo.",
+  "privacy.retention.clearsHeading": "Coisas que desaparecem sozinhas",
   "privacy.retention.p3":
-    "Algumas coisas desaparecem sozinhas: a presença em convívios 30 dias após o evento, as notificações lidas ao fim de 90 dias, e os registos de notificações push não usados ao fim de 90 dias.",
+    "Estas acontecem automaticamente, faças alguma coisa ou não:",
+  "privacy.retention.clears.gathering":
+    "<strong>O que disseste a quem organiza sobre necessidades de acesso ou alimentares, e o registo de que fizeste check-in</strong>: 30 dias depois do convívio. A tua confirmação de presença em si permanece, para que os convívios passados mantenham a sua contagem.",
+  "privacy.retention.clears.notifications":
+    "<strong>Notificações lidas</strong>: 90 dias. As não lidas ficam até as veres.",
+  "privacy.retention.clears.push":
+    "<strong>Registos de notificações push não usados</strong>: 90 dias.",
+  "privacy.retention.clears.cardVerification":
+    "<strong>Registos de verificação de cartão</strong>: 90 dias.",
+  "privacy.retention.clears.export":
+    "<strong>Uma exportação de dados que pediste</strong>: a ligação de descarga funciona durante 7 dias, e a cópia é eliminada ao fim de 30.",
+  "privacy.retention.clears.sessions":
+    "<strong>Sessões</strong>: 30 dias depois de terminares sessão ou de expirarem.",
+  "privacy.retention.clears.invites":
+    "<strong>Convites que envias</strong>: 7 dias, depois expiram.",
+  "privacy.retention.clears.housing":
+    "<strong>Anúncios de alojamento</strong>: deixam de aparecer nas pesquisas ao fim de 60 dias. Nunca são eliminados, e podes prolongar ou voltar a publicar.",
+  "privacy.retention.deleteHeading": "Se eliminares a tua conta",
+  "privacy.retention.p2":
+    "Eliminar a tua conta abre um período de tolerância de 30 dias, e podes cancelar a qualquer momento dentro dele bastando iniciar sessão outra vez. Avisamos-te 3 dias antes do prazo. Depois disso, a tua conta e os dados a ela associados são apagados de forma permanente, incluindo os ficheiros que enviaste.",
+  "privacy.retention.deleted.keptIntro":
+    "Três coisas são deliberadamente mantidas:",
+  "privacy.retention.deleted.keptModeration":
+    "<strong>Os registos de moderação</strong> permanecem, com o teu nome removido, para que eliminar uma conta não possa apagar o registo das denúncias que fizeste sobre outras pessoas.",
+  "privacy.retention.deleted.keptContent":
+    "<strong>Conteúdo de que outras pessoas dependem</strong> permanece, como um convívio que estavas a organizar ou um anúncio que publicaste, com o teu nome removido.",
+  "privacy.retention.beyondHeading": "O que guardamos para além da tua conta",
+  "privacy.retention.beyond.body":
+    "Os registos de moderação, os registos de consentimento e os registos dos pedidos de dados que fizeste são guardados como prova, com o teu nome removido sempre que é possível.",
   "privacy.retention.p4":
     "Quando uma conta é eliminada, guardamos uma <strong>impressão unidirecional</strong> do email, que nunca pode voltar a ser o endereço em si, apenas para impedir que uma conta removida seja recriada em silêncio.",
   "privacy.yourRights.title": "Os teus direitos",
@@ -1169,8 +1189,29 @@ export const marketing: Catalog = {
     "<strong>Portabilidade</strong>: receber os teus dados num formato portátil",
   "privacy.yourRights.item6":
     "<strong>Limitação</strong>: limitar como processamos os teus dados enquanto um litígio é resolvido",
+  "privacy.yourRights.item7":
+    "<strong>Retirar o consentimento</strong>: desativar aquilo em que tenhas consentido",
+  "privacy.yourRights.howHeading": "Como exercer cada um",
+  "privacy.yourRights.how.access":
+    "<strong>Acesso</strong>: descarrega os teus dados nas Definições, ou apresenta um pedido através do formulário.",
+  "privacy.yourRights.how.rectification":
+    "<strong>Retificação</strong>: edita o teu próprio perfil, ou apresenta um pedido para o que não conseguires editar.",
+  "privacy.yourRights.how.erasure":
+    "<strong>Apagamento</strong>: elimina a tua conta nas Definições, ou apresenta um pedido para remover dados específicos.",
+  "privacy.yourRights.how.objection":
+    "<strong>Oposição</strong>: apresenta um pedido através do formulário. Para te opores à monitorização de erros, desativa-a nas tuas definições de privacidade.",
+  "privacy.yourRights.how.portability":
+    "<strong>Portabilidade</strong>: descarrega os teus dados nas Definições. Vêm em JSON, ou num zip de ficheiros CSV com os teus envios.",
+  "privacy.yourRights.how.restriction":
+    "<strong>Limitação</strong>: apresenta um pedido através do formulário e descreve o que queres limitar.",
+  "privacy.yourRights.how.withdrawConsent":
+    "<strong>Retirar o consentimento</strong>: desativa onde ativaste. As tuas definições de privacidade para a monitorização de erros, o teu perfil de partilha de casa para os campos de identidade, o teu navegador para as notificações push.",
   "privacy.yourRights.p1":
     "Para exerceres qualquer um destes direitos, usa o nosso formulário de pedido de dados. É gratuito e respondemos no prazo de 30 dias.",
+  "privacy.yourRights.slaExtension":
+    "Se um pedido for invulgarmente complexo, podemos precisar de mais tempo, e dizemos-te porquê dentro do primeiro mês.",
+  "privacy.yourRights.responseChannel":
+    "Um pedido resolvido chega como notificação na aplicação, com uma nota sobre o resultado. Nada é enviado por email.",
   "privacy.yourRights.p2":
     "Também podes apresentar uma reclamação junto da Comissão Nacional de Proteção de Dados (CNPD), a autoridade portuguesa de proteção de dados.",
   "privacy.cookiesSection.title": "Cookies",
@@ -1182,21 +1223,34 @@ export const marketing: Catalog = {
     "Consulta a <strong>Política de Cookies</strong> completa para a lista integral, e <em>gere as tuas preferências</em> quando quiseres.",
   "privacy.thirdParties.title": "Terceiros",
   "privacy.thirdParties.intro":
-    "Trabalhamos com um pequeno número de fornecedores de serviços, cada um vinculado por contrato a usar os teus dados apenas para o serviço que presta:",
-  "privacy.thirdParties.item1":
+    "Trabalhamos com um pequeno número de fornecedores de serviços. Cada um vê apenas o que precisa para a função que desempenha:",
+  "privacy.thirdParties.google":
     "<strong>Google</strong>: dá suporte ao Iniciar sessão com o Google, o nosso único método de acesso. O Google confirma quem és e partilha o teu nome, email e foto de perfil.",
-  "privacy.thirdParties.item2":
-    "<strong>Alojamento e armazenamento na cloud</strong>: onde a plataforma funciona e onde os teus envios são guardados, num espaço privado.",
-  "privacy.thirdParties.item3":
-    "<strong>Envio de email</strong>: para emails de conta e as notificações que ativaste.",
-  "privacy.thirdParties.item4":
-    "<strong>Mapas</strong>: mosaicos de mapa do OpenFreeMap e pesquisas de morada via OpenStreetMap, para mostrar espaços num mapa. Veem a área do mapa em visualização. Quem és fica privado.",
-  "privacy.thirdParties.item5":
+  "privacy.thirdParties.railway":
+    "<strong>Railway</strong>: aloja a plataforma e a base de dados onde fica guardado tudo o que publicas.",
+  "privacy.thirdParties.tigris":
+    "<strong>Tigris</strong>: guarda os ficheiros que envias, num espaço privado, acedido através do serviço de buckets da Railway.",
+  "privacy.thirdParties.vercel":
+    "<strong>Vercel</strong>: serve o site da QueerPulse ao teu navegador.",
+  "privacy.thirdParties.openFreeMap":
+    "<strong>OpenFreeMap</strong>: fornece os mosaicos de mapa que vês. É o teu navegador que os vai buscar, por isso o OpenFreeMap vê a área do mapa em visualização.",
+  "privacy.thirdParties.openStreetMap":
+    "<strong>OpenStreetMap</strong>: transforma uma morada escrita num ponto no mapa. Enviamos a morada a partir do nosso próprio servidor, por isso o OpenStreetMap nunca vê quem perguntou.",
+  "privacy.thirdParties.googleMaps":
+    "<strong>Google Maps</strong>: quando colas uma ligação do Google Maps num anúncio, seguimo-la a partir do nosso servidor para ler a localização.",
+  "privacy.thirdParties.klipy":
     "<strong>Klipy</strong>: dá suporte à pesquisa de GIFs nas mensagens. Quando pesquisas um GIF, o teu termo de pesquisa chega ao Klipy; as tuas mensagens nunca.",
+  "privacy.thirdParties.pushService":
+    "<strong>O serviço de push do teu navegador</strong>: Google, Mozilla, Apple ou Microsoft, consoante o navegador. Entrega as notificações push que ativaste, e recebe apenas a notificação cifrada.",
+  "privacy.thirdParties.embeds":
+    "Alguns anúncios de alojamento incluem uma visita virtual alojada no YouTube ou no Matterport. Abrir uma dessas visitas carrega-a a partir dos servidores dessa empresa, o que significa que veem o teu endereço IP. Mais nada sobre ti é partilhado com elas.",
   "privacy.thirdParties.optInIntro":
     "Com o teu <strong>consentimento explícito</strong>, também usamos:",
   "privacy.thirdParties.optItem1":
-    "<strong>Monitorização de erros</strong>: um serviço que respeita a privacidade e nos alerta para falhas, sem publicidade e sem qualquer perfil sobre ti.",
+    "<strong>Sentry</strong>: monitorização de erros. Nada é enviado a menos que a ativies. Não recebe dados publicitários nem constrói qualquer perfil sobre ti.",
+  "privacy.thirdParties.transfersLabel": "Por confirmar",
+  "privacy.thirdParties.transfers":
+    "Onde cada um destes fornecedores trata os dados, e a salvaguarda que cobre o que for tratado fora do Espaço Económico Europeu, tem de ser preenchido aqui por uma pessoa que o tenha confirmado com cada fornecedor. Preferimos deixar isto em aberto a publicar uma localização que não verificámos.",
   "privacy.thirdParties.outro":
     "Nunca partilhamos os teus dados com corretores de dados nem redes publicitárias.",
   "privacy.changes.title": "Alterações a esta política",
@@ -1382,21 +1436,6 @@ export const marketing: Catalog = {
   "pressKit.team.section.title": "<em>Porta-vozes</em> identificades",
   "pressKit.team.section.lead":
     "Três pessoas fundadoras estão disponíveis para comentário à imprensa. Cita-as sobre os temas indicados; não parafraseies. <em>As restantes pessoas da comunidade não estão disponíveis sem consentimento explícito</em>. Por favor não as contactes diretamente através da plataforma.",
-  "pressKit.team.marta.role": "Cofundadora · Editora-chefe",
-  "pressKit.team.marta.desc":
-    "Para: decisões editoriais, a revista, governação, o manifesto. <em>Não para: histórias individuais de pessoas da comunidade, decisões de moderação.</em>",
-  "pressKit.team.marta.langs":
-    "<b>EN · PT · ES</b> · disponível com 48h de antecedência",
-  "pressKit.team.catarina.role": "Cofundadora · Cotesoureira · Trans Hub",
-  "pressKit.team.catarina.desc":
-    "Para: cuidados de saúde trans-afirmativos, finanças, transparência, entreajuda, parceria de apoio jurídico.",
-  "pressKit.team.catarina.langs":
-    "<b>EN · PT</b> · disponível com 24h de antecedência",
-  "pressKit.team.andre.role": "Cofundador · Cotesoureiro · Design",
-  "pressKit.team.andre.desc":
-    "Para: design da plataforma, decisões técnicas, parcerias, infraestrutura. Fotógrafo das imagens internas.",
-  "pressKit.team.andre.langs":
-    "<b>EN · PT</b> · disponível com 72h de antecedência",
   "pressKit.facts.section.title": "<em>Factos</em> rápidos · a {date}",
   "pressKit.facts.section.lead":
     "Fonte: relatório de transparência de 2025. <em>Por favor liga à página de transparência quando citares.</em>",
@@ -1409,10 +1448,6 @@ export const marketing: Catalog = {
   "pressKit.coverage.section.title": "<em>Cobertura</em> recente",
   "pressKit.coverage.section.lead":
     "Peças selecionadas em inglês e português, de 2024 a 2026. <em>Contagens de visitas são bem-vindas mas não necessárias</em>. Liga antes à página de Imprensa.",
-  "pressKit.coverage.openingToast": "A abrir a peça em {source}…",
-  "pressKit.coverage.emptyLive.title": "A cobertura vai aparecer aqui",
-  "pressKit.coverage.emptyLive.description":
-    "Assim que se escrever sobre a QueerPulse, ligamos as peças aqui. Para entrevistas ou pedidos de imprensa, escreve para hello@queerpulse.com.",
   "pressKit.downloads.section.title": "<em>Descarregáveis</em>",
   "pressKit.downloads.section.lead":
     "Links diretos para os ficheiros, servidos a partir do próprio site. O kit completo junta tudo o que está abaixo, com um leia-me e a licença.",
@@ -1557,14 +1592,6 @@ export const marketing: Catalog = {
   "listBusiness.step1.blurbPlaceholder":
     "Uma pastelaria queer de dia, sala da comunidade à noite.",
   // Categorias
-  "listBusiness.cat.foodDrink": "Comer e beber",
-  "listBusiness.cat.designCraft": "Design e ofícios",
-  "listBusiness.cat.healthCare": "Saúde e cuidados",
-  "listBusiness.cat.spaces": "Espaços",
-  "listBusiness.cat.culture": "Cultura",
-  "listBusiness.cat.tech": "Tecnologia",
-  "listBusiness.cat.barbershopSalon": "Barbearia e cabeleireiro",
-  "listBusiness.cat.gymFitness": "Ginásio e desporto",
   // Escalões de preço
   "listBusiness.price.free": "Gratuito",
   "listBusiness.price.affordable": "Acessível",
@@ -1863,7 +1890,6 @@ export const marketing: Catalog = {
   "listBusiness.missing.hoursInvalid": "uma correção no horário",
   "listBusiness.missing.hoursExceptionsInvalid":
     "uma correção nas exceções por data",
-  "listBusiness.missing.social": "links de contacto válidos",
   "listBusiness.missing.socialFormat":
     "o formato dos links de contacto corrigido",
   "listBusiness.missing.rel": "a tua ligação",
@@ -2544,10 +2570,6 @@ export const marketing: Catalog = {
     "As tuas sessões ativas já conseguem chegar a uma pessoa",
   "changelog.entries.sessions-page-links-reach-a-person.body":
     "\u201cAlgo parece errado? Conta-nos o que aconteceu\u201d, nas tuas sessões ativas, abria uma página a anunciar que a tua conta estava bloqueada, o que era assustador e falso. Os dois links dessa página passam a levar-te ao que prometem: \u201co que fazer a seguir\u201d abre a secção Conta da Ajuda, que explica o que fazer com um dispositivo estranho, e \u201cconta-nos o que aconteceu\u201d abre o formulário de contacto com o tema já definido como acesso à conta, para a tua mensagem chegar à equipa. O link Voltar, no topo da página, regressa a Definições \u2192 Conta, de onde a abriste.",
-  "changelog.entries.skills-and-learning-workshops-retired.title":
-    "Compet\u00eancias e aprendizagem foi encerrado",
-  "changelog.entries.skills-and-learning-workshops-retired.body":
-    "Compet\u00eancias e aprendizagem listava oficinas dinamizadas por membros, com lugares, listas de espera e uma p\u00e1gina para cada pessoa que ensinava, e nunca chegou a um ponto que justificasse o teu tempo: meia d\u00fazia de cursos de exemplo, nenhuma forma real de pagar e ningu\u00e9m do outro lado quando reservavas um lugar. Em vez de o deixar no menu Trabalho com ar de estar aberto, retir\u00e1mos o quadro por completo. Os dois lugares onde ensinar e aprender j\u00e1 funcionam continuam c\u00e1. A Troca de Sabres troca tempo e talento sem dinheiro envolvido, e organizar um conv\u00edvio cobre uma oficina ou uma conversa com tudo o que um evento a s\u00e9rio precisa, incluindo lista de presen\u00e7as e data.",
   "changelog.entries.mod-tools-sections-fade-in-as-you-switch.title":
     "As sec\u00e7\u00f5es das ferramentas de modera\u00e7\u00e3o chegam em vez de aparecerem de repente",
   "changelog.entries.mod-tools-sections-fade-in-as-you-switch.body":
@@ -3084,10 +3106,11 @@ export const marketing: Catalog = {
   "changelog.entries.side-quests-getting-started.body":
     "Terminar a lista de primeiros passos costumava ser um beco sem saída. Agora abre-se em missões secundárias: os crachás que ainda não ganhaste, cada um com um botão direto para onde precisas de ir, mais qualquer regalia que já desbloqueaste mas ainda não reclamaste. Vieram também quatro novos crachás, para explorares o diretório Local, guardares artigos, entrares numa segunda comunidade e preencheres o teu Perfil de Trabalho.",
 
+  // Ver a nota em en/marketing.ts: entrada corrigida a 26 de agosto de 2026.
   "changelog.entries.join-request-invite-email.title":
-    "Quem é aprovade agora recebe um email de convite",
+    "Correção: quem foi aprovade nunca recebeu um email de convite",
   "changelog.entries.join-request-invite-email.body":
-    "Aprovar um pedido de participação só criava uma ligação de convite na fila de administração, por isso quem se candidatava só entrava se a pessoa responsável pela revisão copiasse essa ligação e a enviasse à mão por email. A aprovação agora envia a ligação de convite diretamente para quem se candidatou, de forma automática. Copiar a ligação continua disponível como recurso manual.",
+    "Esta entrada dizia que a aprovação enviava a ligação de convite diretamente a quem se candidatou. Nunca houve código a fazer isso, e a QueerPulse não envia email nenhum, por isso a entrada estava errada no dia em que foi escrita. O que é verdade: aprovar um pedido cria a ligação de convite na fila de revisão, e é quem revê que a faz chegar à pessoa. Corrigimos a entrada em vez de a retirar em silêncio.",
   "changelog.entries.article-editor-header-and-send-on.title":
     "Cabeçalho do editor de artigos corrigido, e o botão Enviar já funciona",
   "changelog.entries.article-editor-header-and-send-on.body":
@@ -3129,10 +3152,11 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-sections-browse.body":
     "Cada artigo e edição já tinha uma secção editorial real (Reportagens, Entrevista, Ensaios, entre outras). Agora há uma página de Secções que agrupa tudo por ela, em vez de teres de tropeçar num tema através da pesquisa.",
 
+  // Ver a nota em en/marketing.ts: entrada corrigida a 26 de agosto de 2026.
   "changelog.entries.magazine-digest-real-send.title":
-    "Os resumos de edição já enviam um teste real e saem com a edição",
+    "Correção: os resumos de edição nunca chegaram a ser enviados",
   "changelog.entries.magazine-digest-real-send.body":
-    'As ferramentas de resumo da redação da revista mostravam apenas um aviso de confirmação. "Enviar teste" agora envia mesmo o rascunho atual por email a quem clicou, e "Agendar com a edição" agora põe mesmo o resumo na fila para sair aos subscritores da newsletter no momento em que a edição é publicada.',
+    "Esta entrada dizia que a redação da revista podia enviar por email um resumo de teste a quem clicasse, e agendar o resumo para sair com a edição. Nunca chegou nada a ninguém. A QueerPulse não envia email, e o serviço de envio que por poucos dias fez isso parecer possível foi removido a 26 de agosto de 2026. A redação continua a montar o resumo de uma edição; não sai nada para nenhuma caixa de correio. Corrigimos a entrada em vez de a apagar, porque apagá-la esconderia o que te foi dito.",
 
   "changelog.entries.magazine-deck-convert-to-article.title":
     "Os decks podem converter-se em artigos",
@@ -3376,8 +3400,9 @@ export const marketing: Catalog = {
 
   "changelog.entries.newsletter-unsubscribe.title":
     "Cancela a subscrição da newsletter tu mesmo/a",
+  // Ver a nota em en/marketing.ts: corpo corrigido a 26 de agosto de 2026.
   "changelog.entries.newsletter-unsubscribe.body":
-    "Não havia forma de parar os emails da newsletter depois de confirmares a subscrição. Existe agora uma ligação e página reais de cancelamento, a seguir o mesmo fluxo de confirmação que tens ao subscrever.",
+    "Subscrever a newsletter regista o teu endereço, e não havia forma de o tirares da lista sem ajuda. Existe agora uma ligação e uma página reais de cancelamento: abre-a com o teu código e o endereço sai da lista. A QueerPulse não envia email, por isso nunca chegou nada. Isto é sobre o teu endereço não ficar numa lista onde não querias estar.",
 
   "changelog.entries.resources-crisis-hotline-coverage.title":
     "Linhas de crise aparecem agora em todas as páginas próximas de crise",
@@ -4370,8 +4395,9 @@ export const marketing: Catalog = {
 
   "changelog.entries.forms-that-really-submit.title":
     "Os formulários da aplicação passam a enviar mesmo",
+  // Ver a nota em en/marketing.ts: corpo corrigido a 26 de agosto de 2026.
   "changelog.entries.forms-that-really-submit.body":
-    "A subscrição da newsletter, os formulários de contacto e de parcerias, as candidaturas a bolsas / painéis / anfitrião sóbrio e as nomeações de espaços seguros passam a ser enviadas de verdade, em vez de mostrarem uma pré-visualização. As tuas predefinições de eventos (visibilidade e email) também ficam guardadas.",
+    "A subscrição da newsletter, os formulários de contacto e de parcerias, as candidaturas a bolsas / painéis / anfitrião sóbrio e as nomeações de espaços seguros deixaram de mostrar uma pré-visualização e passaram a guardar mesmo o que escreves, onde a equipa lhes pega dentro da aplicação. Não chega nada a ninguém por email: a QueerPulse não envia email. As tuas predefinições de eventos também ficam guardadas.",
 
   "changelog.entries.save-events-for-later.title":
     "Guarda convívios para mais tarde",
@@ -5358,18 +5384,6 @@ export const marketing: Catalog = {
     "Ainda não há nada confirmado. Assim que alguém registar uma sessão em que compareceste, as horas aparecem aqui.",
   "volunteer.contribution.note":
     "As horas são confirmadas por quem publicou a oportunidade, por isso este registo tem outra pessoa a garanti-lo.",
-  "volunteer.adapter.eyebrow": "Voluntariado · {cause} · {org}",
-  "volunteer.adapter.recruitingNow": "A recrutar agora",
-  "volunteer.adapter.closedNotRecruiting": "Encerrado · sem recrutamento",
-  "volunteer.adapter.perWeek": "Por semana",
-  "volunteer.adapter.commitment": "Compromisso",
-  "volunteer.adapter.spotsStillOpen": "Vagas ainda disponíveis",
-  "volunteer.adapter.roleLabel": "Função",
-  "volunteer.adapter.locationLabel": "Local",
-  "volunteer.adapter.applyConfirm":
-    "Candidatura submetida para {role}. A equipa entrará em contacto com os próximos passos.",
-  "volunteer.adapter.inPartnershipWith": "Em parceria com {name}.",
-  "volunteer.adapter.anonMember": "Uma pessoa da comunidade",
   "volunteer.hero.manageCta": "Gerir candidaturas",
   "volunteerManage.title": "Gerir candidaturas",
   "volunteerManage.sub":
@@ -5492,7 +5506,6 @@ export const marketing: Catalog = {
     "Atualiza os detalhes que as pessoas voluntárias veem no anúncio.",
   "postOpportunity.edit.saveCta": "Guardar alterações",
   "postOpportunity.edit.saving": "A guardar…",
-  "postOpportunity.edit.cancelCta": "Cancelar",
   "postOpportunity.edit.successToast": "As tuas alterações estão guardadas.",
   "postOpportunity.edit.errorToast":
     "Não foi possível guardar as alterações. Tenta novamente.",
@@ -5598,7 +5611,6 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.editCta": "Editar esta oportunidade",
   "volunteerDetail.sidebar.notRightFit": "Não é a vaga certa para ti?",
   "volunteerDetail.sidebar.otherWays": "Outras formas de ajudar agora:",
-  "volunteerDetail.sidebar.fundInstead": "Financiar este trabalho em vez disso",
   "volunteerDetail.signupModal.ariaLabel": "Candidatar a {role}",
   "volunteerDetail.signupModal.eyebrow": "A tua candidatura",
   "volunteerDetail.signupModal.title":
@@ -5661,10 +5673,6 @@ export const marketing: Catalog = {
   "contact.sent.body":
     "Vamos lê-la e responder, normalmente dentro de um ou dois dias. Se for uma preocupação de segurança, entramos em contacto dentro de 24 horas.",
   "contact.sent.backCta": "Voltar à QueerPulse",
-  "contact.comingSoon.title": "Este formulário ainda não está <em>ligado.</em>",
-  "contact.comingSoon.body":
-    "Ainda não ligámos este formulário à nossa caixa de entrada, por isso não consegue enviar a tua mensagem. Nada foi submetido. Escreve-nos diretamente; todos os endereços à esquerda são reais e lidos por uma pessoa.",
-  "contact.comingSoon.emailCta": "Escrever para hello@queerpulse.com",
   "contact.form.title": "Escreve-<em>nos.</em>",
   "contact.form.sub":
     "Se preferires um formulário a um email, usa este. Lemos da mesma forma.",
@@ -5677,6 +5685,7 @@ export const marketing: Catalog = {
   "contact.form.topic.general": "Pergunta geral ou feedback",
   "contact.form.topic.account": "Acesso à conta ou segurança",
   "contact.form.topic.safety": "Preocupação de segurança",
+  "contact.form.topic.accessibility": "Barreira de acessibilidade",
   "contact.form.topic.press": "Pedido de imprensa ou investigação",
   "contact.form.topic.partnership": "Proposta de parceria",
   "contact.form.topic.other": "Outra coisa",
@@ -5736,10 +5745,6 @@ export const marketing: Catalog = {
   "forOrgs.tiers.title": "O que <em>oferecemos</em>",
   "forOrgs.tiers.sub":
     "Três níveis, cada um um tipo diferente de relação. Todos incluem o essencial: revisão prévia à publicação, divulgação transparente do financiamento, e a possibilidade de qualquer um dos lados discordar publicamente.",
-  "forOrgs.tiers.employer.name": "Empregador verificado",
-  "forOrgs.tiers.employer.pricePeriod": "/ ano · publica vagas ilimitadas",
-  "forOrgs.tiers.employer.dek":
-    'Para empregadores que querem publicar no nosso quadro de Vagas com o selo "verificado queer-friendly". Requer um compromisso de 12 meses e uma avaliação conduzida por uma pessoa da comunidade.',
   "forOrgs.tiers.employer.list1": "Vagas ilimitadas · <b>publicadas em 24h</b>",
   "forOrgs.tiers.employer.list2":
     "Selo de empregador verificado no perfil da empresa",
@@ -5748,16 +5753,6 @@ export const marketing: Catalog = {
   "forOrgs.tiers.employer.list4": "Presença nas Avaliações de Empregadores",
   "forOrgs.tiers.employer.list5":
     "Horário de atendimento trimestral sobre contratação com dois elementos da equipa",
-  "forOrgs.tiers.employer.footnote":
-    "Para: organizações com mais de 20 pessoas a contratar ativamente talento queer. Escala progressiva para equipas com menos de 50 pessoas.",
-  "forOrgs.tiers.employer.reviewCta": "Iniciar a avaliação",
-  "forOrgs.tiers.employer.reviewToast": "A abrir o formulário de avaliação…",
-  "forOrgs.tiers.employer.exampleCta": "Ver um exemplo de perfil de empresa",
-  "forOrgs.tiers.partner.name": "Parceiro <em>operacional</em>",
-  "forOrgs.tiers.partner.price": "Por <em>acordo</em>",
-  "forOrgs.tiers.partner.pricePeriod": "recíproco · normalmente não pago",
-  "forOrgs.tiers.partner.dek":
-    "Para organizações que deviam estar operacionalmente ligadas à QueerPulse: organizações de apoio jurídico, serviços de saúde, serviços cívicos, associações aliadas. Construímos infraestrutura em conjunto.",
   "forOrgs.tiers.partner.list1":
     "<b>Ligação operacional:</b> ponte de casos, encaminhamento da linha de apoio, protocolo conjunto",
   "forOrgs.tiers.partner.list2":
@@ -5768,13 +5763,6 @@ export const marketing: Catalog = {
     "Listado em Parceiros com uma página de caso dedicada",
   "forOrgs.tiers.partner.list5":
     "<b>Pagamento por caso</b> para serviços prestados pelo parceiro (ex.: 45 €/consulta jurídica)",
-  "forOrgs.tiers.partner.footnote":
-    "Para: organizações cívicas, de advocacia, de saúde, e alinhadas com a missão. A seleção é lenta e rara. <b>No máximo dois novos parceiros operacionais por ano.</b>",
-  "forOrgs.tiers.partner.proposeCta": "Propor uma parceria",
-  "forOrgs.tiers.funder.name": "Financiador de programa",
-  "forOrgs.tiers.funder.pricePeriod": "/ ano · programa específico",
-  "forOrgs.tiers.funder.dek":
-    "Para fundações, entidades públicas, e organizações financiadoras a apoiar um programa específico: o fundo de microapoios, a revista, os espaços seguros, o acesso a cuidados de saúde trans.",
   "forOrgs.tiers.funder.list1":
     "Relatórios específicos do programa · trimestrais",
   "forOrgs.tiers.funder.list2":
@@ -5784,11 +5772,6 @@ export const marketing: Catalog = {
   "forOrgs.tiers.funder.list4": "Auditoria independente anual incluída",
   "forOrgs.tiers.funder.list5":
     "Discriminação pública no relatório de transparência",
-  "forOrgs.tiers.funder.footnote":
-    "Para: organizações do nível da Fundação Calouste Gulbenkian e programas da UE. Já recusámos mais de 60 mil euros quando as condições não encaixavam.",
-  "forOrgs.tiers.funder.discussCta": "Discutir um financiamento",
-  "forOrgs.tiers.funder.discussToast":
-    "A abrir a conversa sobre financiamento…",
   "forOrgs.cta.title": "Começa uma <em>conversa.</em>",
   "forOrgs.cta.body":
     'Conta-nos sobre a tua organização num parágrafo. Lemos todas as mensagens no prazo de 5 dias úteis e respondemos pessoalmente, mesmo que a resposta seja "isto não é para nós, para já".',
@@ -5822,11 +5805,6 @@ export const marketing: Catalog = {
     "Vai diretamente para a nossa equipa de parcerias. Sem funil de vendas, sem sequência de seguimento. Só uma resposta no prazo de 5 dias úteis.",
   "forOrgs.form.toast":
     "Enviado à nossa equipa de parcerias. Vão responder no prazo de 5 dias úteis",
-  "forOrgs.form.comingSoon.title":
-    "Este formulário ainda não está <em>ligado.</em>",
-  "forOrgs.form.comingSoon.body":
-    "Ainda não ligámos o formulário de parcerias, por isso não consegue enviar os teus dados. Nada foi submetido. Escreve diretamente à equipa de parcerias e tratamos do resto.",
-  "forOrgs.form.comingSoon.emailCta": "Escrever para hello@queerpulse.com",
 
   // ── Diretório — chrome do diretório de negócios + página de detalhe. Os
   //    registos de locais (`directoryPlaces.ts`: nomes, taglines,
@@ -5842,7 +5820,6 @@ export const marketing: Catalog = {
     "Negócios queer e profissionais queer-friendly em Lisboa. Avaliados pela comunidade, mantidos pela comunidade. Quer tenhas acabado de chegar, quer já cá estejas há anos.",
   "directory.hero.note": "Verificado pela comunidade · atualizado mensalmente",
   "directory.search.placeholder": "Pesquisa por nome, bairro, ou tipo…",
-  "directory.filterAria": "Filtrar lugares por categoria",
   "directory.cat.all": "Tudo",
   "directory.cat.food": "Comida e bebida",
   "directory.cat.design": "Design e artesanato",
@@ -5925,7 +5902,6 @@ export const marketing: Catalog = {
   "directory.outro.sub":
     "Junta-te à rede e tem acesso ao diretório completo, recomendações da comunidade, e a uma comunidade que conhece a cidade.",
   "directory.outro.cta": "Pedir um convite",
-  "directory.detail.backCta": "Diretório",
   "directory.detail.breadcrumbAria": "Trilho de navegação",
   "directory.detail.breadcrumbHome": "Diretório",
   "directory.detail.relatedTitle": "Mais {category} por perto",
@@ -6119,6 +6095,7 @@ export const marketing: Catalog = {
   "directory.detail.getInTouch": "Entrar em contacto",
   "directory.detail.backToDirectory": "Voltar ao diretório",
   "directory.detail.claimCta": "És tu que geres este espaço? Reivindica-o",
+  "directory.detail.claimsFiledLink": "Ver os pedidos que enviaste",
   "directory.detail.loader.ariaLabel": "A abrir este espaço",
   "directory.detail.loader.title": "A abrir este espaço",
   "directory.detail.loader.caption": "Vale a pena ver tudo de uma vez.",
@@ -6151,7 +6128,7 @@ export const marketing: Catalog = {
   "directory.detail.reportReview.retryCta": "Tentar novamente",
   "directory.detail.reportQuestion.title": "Denunciar esta pergunta",
   "directory.detail.reportQuestion.sub":
-    "Diz-nos o que está errado na pergunta de {name}. Um moderador analisa todas as denúncias, e não será dito quem a fez.",
+    "Diz-nos o que está errado nesta pergunta ou na resposta por baixo. Um moderador analisa todas as denúncias, e não será dito quem a fez.",
   "directory.detail.questions.title":
     "Pergunta a quem gere, <em>em público</em>",
   "directory.detail.questions.sub_one":
@@ -6199,8 +6176,6 @@ export const marketing: Catalog = {
   "directory.detail.questions.loadingMore": "A carregar…",
   "directory.detail.questions.loadError":
     "Não foi possível carregar as restantes perguntas. Tenta novamente.",
-  "directory.detail.suggestEdit.cta": "Sugerir uma correção",
-  "directory.detail.suggestEdit.ariaLabel": "Sugerir uma correção para {name}",
   "directory.detail.suggestEdit.title": "Sugerir uma correção",
   "directory.detail.suggestEdit.sub":
     "Reparaste em algo que não bate certo? Diz à pessoa responsável o que corrigir. Só ela vê.",
@@ -6310,8 +6285,52 @@ export const marketing: Catalog = {
   "directory.detail.claim.successTitle": "Recebido. Estamos",
   "directory.detail.claim.successEm": "a tratar disto.",
   "directory.detail.claim.successBody":
-    "Uma moderadora vai analisar o teu pedido sobre {name} e avisa-te do que se segue.",
+    "Uma pessoa moderadora vai analisar o teu pedido sobre {name}. Podes ver em que ponto está sempre que quiseres.",
   "directory.detail.claim.doneCta": "Concluído",
+  "directory.detail.claim.policyTitle": "O que ajuda, e quanto tempo demora",
+  "directory.detail.claim.policyTurnaround_one":
+    "Uma pessoa moderadora decide no prazo de {count} dia depois de enviares.",
+  "directory.detail.claim.policyTurnaround_other":
+    "Uma pessoa moderadora decide no prazo de {count} dias depois de enviares.",
+  "directory.detail.claim.policyHintsLabel":
+    "Algo assim na tua nota torna a análise mais rápida:",
+  "directory.detail.claim.trackCta": "Ver os pedidos que enviaste",
+  "directory.myClaims.backLabel": "Diretório local",
+  "directory.myClaims.title": "Pedidos que enviaste",
+  "directory.myClaims.sub":
+    "Todos os pedidos que fizeste para assumir uma listagem criada por outra pessoa, e em que ponto está cada um.",
+  "directory.myClaims.turnaround_one":
+    "Cada pedido é decidido no prazo de {count} dia a contar da data de envio.",
+  "directory.myClaims.turnaround_other":
+    "Cada pedido é decidido no prazo de {count} dias a contar da data de envio.",
+  "directory.myClaims.checkBack":
+    "Volta aqui sempre que quiseres ver em que ponto está um pedido.",
+  "directory.myClaims.loading": "A carregar os teus pedidos…",
+  "directory.myClaims.announceEmpty": "Ainda não há pedidos.",
+  "directory.myClaims.announceCount_one": "1 pedido.",
+  "directory.myClaims.announceCount_other": "{count} pedidos.",
+  "directory.myClaims.empty.title": "Ainda não reclamaste nenhuma listagem",
+  "directory.myClaims.empty.description":
+    "Se geres um espaço que já está no diretório local, abre a página dele e escolhe reclamar a listagem. Uma pessoa moderadora lê todos os pedidos e, se estiver tudo certo, a listagem passa a ser tua: as avaliações, os detalhes, tudo.",
+  "directory.myClaims.empty.action": "Ver o diretório local",
+  "directory.myClaims.status.pending": "À espera de análise",
+  "directory.myClaims.status.approved": "Aprovado",
+  "directory.myClaims.status.declined": "Recusado",
+  "directory.myClaims.reference": "Referência {reference}",
+  "directory.myClaims.filedOn": "Enviado a {date}",
+  "directory.myClaims.waiting_one": "À espera há {count} dia.",
+  "directory.myClaims.waiting_other": "À espera há {count} dias.",
+  "directory.myClaims.decisionDue": "A decisão é esperada até {date}.",
+  "directory.myClaims.decisionOverdue":
+    "Este pedido era esperado até {date}. Continua na fila e uma pessoa moderadora vai chegar lá.",
+  "directory.myClaims.reviewedOn": "Analisado a {date}.",
+  "directory.myClaims.outcome.approved":
+    "A listagem é tua. Já a podes editar, e fica com os teus espaços no teu perfil.",
+  "directory.myClaims.outcome.declined":
+    "Este pedido não foi aprovado. Podes voltar a reclamar a listagem se entretanto algo tiver mudado.",
+  "directory.myClaims.noteLabel": "O que disseste à moderação",
+  "directory.myClaims.viewListing": "Ver {name} no diretório",
+  "directory.myClaims.editListing": "Editar {name}",
   "directory.detail.mapAria": "Mapa a mostrar onde fica {name}",
   "directory.detail.languagesLabel": "Idiomas",
   "directory.detail.accessLabel": "Acessibilidade",
@@ -6817,7 +6836,6 @@ export const marketing: Catalog = {
   "map.venueCard.beenThere": "Já estiveste aqui",
   "map.venueCard.markBeen": "Já estive aqui",
   "map.venueCard.accessible": "Acesso para cadeira de rodas",
-  "map.svg.filterByAria": "Filtrar o mapa por {bairro}",
   "map.mapError":
     "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
   "map.mapLoading": "A dar <em>vida</em> ao mapa…",
@@ -7103,8 +7121,6 @@ export const marketing: Catalog = {
   "submitPartner.actions.sending": "A enviar…",
   "submitPartner.actions.submit": "Submeter candidatura",
   "submitPartner.actions.cancel": "Cancelar",
-  "submitPartner.error.toast":
-    "Não foi possível enviar a tua candidatura. Tenta novamente.",
 
   "submitPartner.fields.sectionOrg": "A tua organização",
   "submitPartner.fields.name.label": "Nome da organização",
@@ -7185,6 +7201,73 @@ export const marketing: Catalog = {
   "changelog.tag.accountSecurity": "Abrir segurança da conta",
   "changelog.tag.dataExport": "Transferir os teus dados",
   "changelog.tag.contact": "Fala connosco",
+  // Lote de 26 de agosto de 2026: o acompanhamento de reivindicações e a
+  // declaração de acessibilidade.
+  "changelog.tag.listingClaims": "Acompanhar o teu pedido",
+  "changelog.tag.accessibility": "Ler a declaração de acessibilidade",
+  // Segundo lote de 26 de agosto de 2026. `changelog.tag.safety` já aponta
+  // para `routes.report` numa entrada antiga com o rótulo "A nossa abordagem
+  // à segurança", que se lê como explicação e não como o próprio formulário.
+  "changelog.tag.reportForm": "Abrir o formulário de denúncia",
+
+  // ── 26 de agosto de 2026 ──────────────────────────────────────────────────
+  "changelog.entries.reporting-that-someone-outed-you.title":
+    "Denunciar que alguém te expôs",
+  "changelog.entries.reporting-that-someone-outed-you.body":
+    "Dois formulários de denúncia não ofereciam outing nem doxxing como motivo: o formulário principal de denúncia, que qualquer pessoa alcança sem sequer ter sessão iniciada, e a caixa de denúncia nas perguntas públicas de um anúncio de negócio. Esses dois motivos são os únicos que enviam uma denúncia diretamente para a fila de emergência. Feita como assédio ou como outra coisa qualquer, a mesma denúncia era lida num relógio mais lento. Se foi contigo, a culpa não foi tua de forma nenhuma. Faltavam ao formulário as palavras para o que aconteceu. Ambos os formulários passam a ter os dois motivos, escritos como aquilo que te aconteceu e não no nosso vocabulário: “Alguém revelou que sou LGBTQ+ sem o meu consentimento”. Denunciar um convívio ganhou assédio e discriminação, e denunciar uma persona ganhou discriminação. A lista de motivos em oito formulários passa a vir do servidor em vez de uma segunda cópia guardada aqui, para que as opções não voltem a ficar atrás daquilo que a plataforma trata. Se a ligação cair enquanto estás a denunciar, o formulário continua a abrir com a lista completa e a tua denúncia segue à mesma.",
+  "changelog.entries.a-quieter-option-before-you-go.title":
+    "Uma opção mais calma antes de apagares a conta",
+  "changelog.entries.a-quieter-option-before-you-go.body":
+    "Ao lado de desativar e apagar estava uma oferta para pôr todas as notificações em pausa durante 30 dias. Era um botão ligado a nada: esse interruptor não existia, e a QueerPulse não envia email nenhum para pôr em pausa. À frente de quem está a pesar se fica ou se vai embora é o pior sítio possível para uma promessa que não podemos cumprir, por isso essa faixa leva-te agora às tuas definições de notificações, onde podes escolher que tipos chegam até ti e definir horas de silêncio para o telemóvel ficar quieto durante a noite. Essas duas coisas existem mesmo.",
+  "changelog.entries.a-refused-moderation-action-says-why.title":
+    "Quem modera fica a saber porque é que uma ação foi recusada",
+  "changelog.entries.a-refused-moderation-action-says-why.body":
+    "Avisar, restringir, suspender ou banir recai sobre quem escreveu aquilo que foi denunciado, e às vezes não há uma única pessoa sobre quem isso possa recair: não há ninguém por trás de um anúncio não reivindicado nem de uma conta apagada, uma denúncia pode abranger uma pergunta e a resposta por baixo dela escritas por duas pessoas diferentes, e as contas da casa e da equipa nunca são alvo desta fila. Tudo isto falhava com “Não foi possível contactar o serviço de segurança”, o que era falso nas duas metades. O serviço respondia, e recusava por um motivo concreto que quem modera nunca chegava a ver. Cada caso passa a dizer o que aconteceu e o que fazer em vez disso, e não oferece tentar de novo, porque tentar de novo dá a mesma resposta. O caso da pergunta e da resposta é o mais importante: era resolvido para quem tinha feito a pergunta mesmo quando o que fora denunciado era a resposta, por isso uma sanção podia cair na pessoa errada. Esconder, remover, arquivar e escalar continuam disponíveis na denúncia em todos os casos. A gaveta também deixou de dizer que banir estava indisponível enquanto mostrava um botão Banir.",
+  "changelog.entries.the-decision-sample-says-who-decided.title":
+    "A amostra de decisões diz quem decidiu cada uma",
+  "changelog.entries.the-decision-sample-says-who-decided.body":
+    "A amostra de decisões recentes sobre convites identificava cada uma com uma referência de conta, o que não dizia nada de útil a quem revê. Passa a nomear quem decidiu, e as tuas próprias decisões leem-se como “Tu”. Podes reduzir a mesma amostra a uma só pessoa, que é assim que uma leitura incoerente das diretrizes de revisão se torna visível. Nada aqui conta, ordena ou pontua ninguém: a única pergunta a que um nome responde é de quem é a leitura das diretrizes que estás a ver.",
+  "changelog.entries.communities-your-connections-already-joined.title":
+    "Comunidades onde as tuas pessoas já estão",
+  "changelog.entries.communities-your-connections-already-joined.body":
+    "A página de comunidades passa a mostrar uma lista curta de grupos onde as pessoas com quem tens ligação já entraram e tu não, por ordem de quantas delas estão em cada um. É a pergunta que farias a uma amiga de qualquer forma. Quando não há nada que valha a pena sugerir, a secção sai da frente em vez de ficar ali vazia.",
+  "changelog.entries.follow-your-listing-claim.title":
+    "Acompanha a reivindicação do teu anúncio do princípio ao fim",
+  "changelog.entries.follow-your-listing-claim.body":
+    "Se reivindicaste um anúncio de negócio, passa a haver uma página para isso. Mostra em que ponto está cada pedido, há quanto tempo espera e a data em que dissemos que decidiríamos. O formulário diz-te esse mesmo prazo antes de submeteres, e também que provas tornam um pedido simples de aprovar. Não te é enviado nenhum email: voltas aqui para ver.",
+  "changelog.entries.the-accessibility-statement-is-published.title":
+    "A declaração de acessibilidade está publicada",
+  "changelog.entries.the-accessibility-statement-is-published.body":
+    "Passa a existir uma declaração de acessibilidade publicada, com ligação no rodapé e na navegação principal. Diz o que a plataforma faz por quem usa leitor de ecrã, teclado ou movimento reduzido, e é direta sobre o que ainda não foi auditado, em vez de reclamar um selo que ninguém verificou. Também expõe onde está mesmo a lei portuguesa: o Decreto-Lei 82/2022 muito provavelmente não alcança uma plataforma como esta, por isso publicamos a declaração por escolha nossa, e se a nossa resposta não te chegar ela diz-te exatamente onde seguir.",
+  "changelog.entries.the-privacy-policy-says-what-it-keeps.title":
+    "A política de privacidade diz o que guarda, e por quanto tempo",
+  "changelog.entries.the-privacy-policy-says-what-it-keeps.body":
+    "A secção de retenção eram três frases. Passa a ser um calendário completo: cada tipo de dados e o momento em que deixa de ser guardado. Estão nomeados dez fornecedores de serviços. Desapareceu um subcontratante que estava listado mas nunca chegou a ser usado. Cada direito que a política enumera aponta agora para uma página onde o podes exercer, em vez de apontar para um endereço.",
+  "changelog.entries.what-we-said-we-would-delete-gets-deleted.title":
+    "O que dissemos que apagávamos passa a ser apagado",
+  "changelog.entries.what-we-said-we-would-delete-gets-deleted.body":
+    "As necessidades de acesso e as notas alimentares que dás a quem organiza são apagadas 30 dias depois do encontro, juntamente com o registo de que fizeste check-in. A tua confirmação de presença fica, para um encontro passado manter a contagem. Depois de os check-ins desaparecerem, quem organiza vê “já não é guardado” onde antes estava o número de chegadas, para que um encontro já limpo nunca seja lido como um encontro a que ninguém foi, e o ecrã da porta deixa de registar novas chegadas num encontro com essa idade. As ligações de exportação de dados passam a expirar ao fim dos sete dias prometidos na política, em vez de continuarem a funcionar durante trinta.",
+  "changelog.entries.reporting-says-why-it-is-slowing-you-down.title":
+    "As denúncias dizem porque te estão a travar",
+  "changelog.entries.reporting-says-why-it-is-slowing-you-down.body":
+    "Fazer várias denúncias seguidas devolvia um erro genérico, que se lê exatamente como ser mandade embora. Agora diz com clareza que te está a travar por uns instantes, e porquê, para que um limite de ritmo nunca pareça uma denúncia rejeitada. Foi corrigida também uma falha que mostrava uma mensagem técnica em bruto em vez de uma frase.",
+  "changelog.entries.bulk-invite-decisions-ask-before-they-fire.title":
+    "As decisões em lote sobre pedidos de convite passam a pedir confirmação",
+  "changelog.entries.bulk-invite-decisions-ask-before-they-fire.body":
+    "Aprovar ou pôr em lista de espera um lote de pedidos de convite acontecia logo ao primeiro clique, sem confirmação e sem volta atrás. Agora pergunta primeiro. Quando parte do lote falha, quem modera vê que pedido falhou e porquê, e esses pedidos ficam selecionados para só esses serem tentados de novo. Chegou com isto o selecionar tudo, e o limite de quantos podem ser selecionados está à vista em vez de ser aplicado em silêncio.",
+  "changelog.entries.decision-sampling-sits-with-the-queue.title":
+    "A amostragem de decisões passou para a fila que analisa",
+  "changelog.entries.decision-sampling-sits-with-the-queue.body":
+    "A amostra de decisões recentes sobre convites, a verificação de que quem revê está a decidir de forma coerente entre si, vivia numa página só de administração. Quem modera, cujo trabalho ela analisa, não conseguia abri-la. Passa a estar na própria fila de pedidos de convite, onde quem faz a revisão a pode ler.",
+  "changelog.entries.every-moderation-queue-reports-its-health.title":
+    "Cada fila de moderação dá conta do seu estado",
+  "changelog.entries.every-moderation-queue-reports-its-health.body":
+    "Um painel novo mostra de uma vez tudo o que está à espera na moderação: a dimensão de cada fila, há quanto tempo espera o item mais antigo, quanto já passou um prazo que publicámos e quanto é que ainda ninguém pegou. Quando uma fila passa um limite, quem modera recebe um aviso dentro da aplicação, e outro quando a fila desanuvia. Não vai nada para o telemóvel de ninguém.",
+  "changelog.entries.housekeeping-the-mailer-and-two-dead-ends.title":
+    "Arrumação: o serviço de email e dois becos sem saída",
+  "changelog.entries.housekeeping-the-mailer-and-two-dead-ends.body":
+    "O serviço de envio de email que existiu por pouco tempo no backend desapareceu, o que volta a pôr o código de acordo com a decisão de que a QueerPulse não envia email. Foi-se com ele a página do protótipo de evento já retirada: a ligação leva-te agora ao quadro de convívios. Foi também removido um endpoint de terminar sessão que não era usado.",
+
   "changelog.entries.the-about-page-shows-its-work-in-place.title":
     "A página Sobre mostra o seu trabalho ali mesmo",
   "changelog.entries.the-about-page-shows-its-work-in-place.body":
@@ -7363,4 +7446,132 @@ export const marketing: Catalog = {
   "securityPolicy.outro.sub":
     "Obrigade a todas as pessoas que ajudam a manter o QueerPulse seguro.",
   "securityPolicy.outro.cta": "Contactar a equipa de segurança",
+
+  // ── Declaração de acessibilidade (/policies/accessibility) ─────────────
+  // LG-01. Espelha en/marketing.ts chave a chave. Cada afirmação vem de algo
+  // verificável no repositório; não acrescentes aqui nada que o código não
+  // sustente.
+  "accessibilityStatement.meta.title":
+    "Declaração de acessibilidade do QueerPulse",
+  "accessibilityStatement.meta.description":
+    "Quão acessível é hoje o QueerPulse, medido face ao WCAG 2.2 nível AA: o que verificamos, o que sabemos que fica aquém, como comunicar uma barreira e o que fazer se a nossa resposta não chegar.",
+  "accessibilityStatement.title": "Declaração de <em>acessibilidade</em>",
+  "accessibilityStatement.meta.prepared": "Preparada a {date}",
+  "accessibilityStatement.meta.reviewed": "Última revisão a {date}",
+  "accessibilityStatement.meta.standard": "Medida face a {standard}",
+  "accessibilityStatement.standard": "WCAG 2.2 nível AA",
+  "accessibilityStatement.plain.text":
+    "Apontamos ao WCAG 2.2 nível AA e estamos lá em parte. As verificações automáticas correm em cada build e são mantidas a zero falhas. Ainda ninguém testou esta plataforma com um leitor de ecrã numa sessão que possamos mostrar, e parte da nossa cor de marca fica abaixo do contraste que exigimos a nós próprias. Ambas as coisas estão escritas em baixo, com uma forma de nos dizeres o que nos escapou.",
+
+  "accessibilityStatement.commitment.title": "O nosso compromisso",
+  "accessibilityStatement.commitment.p1":
+    "Publicamos isto porque há pessoas que contam com isto. Uma plataforma cujo sentido inteiro é poderes ser quem és nalgum lado tem de ser utilizável por todas essas pessoas, e escrever onde estamos mesmo é a única forma de sermos responsabilizadas por isso.",
+  "accessibilityStatement.commitment.p2":
+    "Trabalhamos segundo as Diretrizes de Acessibilidade para o Conteúdo Web (WCAG) 2.2, nível AA. A norma europeia de acessibilidade EN 301 549 exige o nível AA do WCAG 2.1. O WCAG 2.2 contém tudo o que está no 2.1 e acrescenta mais, por isso apontamos à versão mais recente.",
+  "accessibilityStatement.commitment.p3":
+    "Publicamos isto por escolha nossa. A nossa leitura da lei portuguesa, exposta na secção seguinte, é a de que nada nos obriga a isso hoje. Preferimos ser mensuráveis a estar isentas.",
+  "accessibilityStatement.commitment.p4":
+    "Quase tudo o que se segue é imposto pelo build e não deixado à boa vontade. Onde não é, dizemo-lo.",
+
+  "accessibilityStatement.scope.title": "O que esta declaração cobre",
+  "accessibilityStatement.scope.p1":
+    "Esta declaração aplica-se à aplicação web do QueerPulse, incluindo a experiência no telemóvel e a aplicação instalável, que são a mesma aplicação.",
+  "accessibilityStatement.scope.p2":
+    "O Cinema, o Studio e a Cultura ficam de fora. Nenhum deles abriu, cada um resolve para uma página simples a dizer que ainda não abriu, e não há conteúdo por trás para tornar acessível. Esta declaração será alargada a cada um no dia em que abrir.",
+  "accessibilityStatement.scope.p3":
+    "O que os membros escrevem e carregam pertence-lhes. Damos os campos e as perguntas que permitem descrever uma imagem ou explicar como se entra num espaço. Não podemos prometer que toda a gente os preenche.",
+
+  "accessibilityStatement.legal.title": "Onde está a lei",
+  "accessibilityStatement.legal.p1":
+    "Portugal transpôs o Ato Europeu da Acessibilidade, a Diretiva (UE) 2019/882, através do <lei>Decreto-Lei n.º 82/2022</lei>. Entrou em vigor a 7 de dezembro de 2022 e aplica-se aos serviços prestados a partir de 28 de junho de 2025. Duas coisas nesse diploma fazem com que, muito provavelmente, ele não alcance hoje o QueerPulse.",
+  "accessibilityStatement.legal.services":
+    "<strong>A lista de serviços que abrange.</strong> O artigo 2.º, n.º 3 nomeia os serviços de comunicações eletrónicas; o acesso a serviços de comunicação social audiovisual; determinados elementos do transporte aéreo, de autocarro, ferroviário, marítimo e por vias navegáveis interiores de passageiros; os terminais interativos de transporte; os serviços bancários e financeiros destinados aos consumidores; os livros eletrónicos e os programas informáticos dedicados; os serviços de comércio eletrónico; e o atendimento das chamadas de emergência para o 112. Uma plataforma comunitária sem fins comerciais não está em nenhuma dessas listas. A única alínea em que poderia caber é a do comércio eletrónico, e o QueerPulse não tem nenhum processador de pagamentos nem recebe dinheiro de ninguém.",
+  "accessibilityStatement.legal.microenterprise":
+    "<strong>A isenção das microempresas.</strong> O artigo 2.º, n.º 5, alínea b) diz que o decreto-lei não se aplica às microempresas que prestam os serviços previstos no n.º 3. Uma microempresa, na definição que o decreto-lei vai buscar à Diretiva, emprega menos de 10 pessoas e tem um volume de negócios anual ou um balanço total anual não superior a 2 milhões de euros.",
+  "accessibilityStatement.legal.p2":
+    "A bilhética paga nos encontros é uma questão de produto ainda em aberto. Se o QueerPulse alguma vez vender fosse o que fosse, passa plausivelmente a ser um serviço de comércio eletrónico ao abrigo do artigo 2.º, n.º 3, alínea g). O artigo 13.º, n.º 2, alínea b) passaria então a pedir-nos que explicássemos publicamente, por escrito e oralmente, de que forma o serviço cumpre os requisitos de acessibilidade aplicáveis, a menos que a isenção das microempresas continuasse a cobrir-nos. Escrevemos isto como um sinal para irmos verificar, e não fazemos nenhuma previsão sobre qual seria a resposta.",
+  "accessibilityStatement.legal.p3":
+    "A declaração de acessibilidade em que a maior parte das pessoas pensa vem de outra lei. A Diretiva sobre a Acessibilidade da Web, a (UE) 2016/2102, transposta cá pelo Decreto-Lei n.º 83/2018, vincula os organismos do setor público. O QueerPulse não é um deles.",
+  "accessibilityStatement.legal.disclaimerLabel":
+    "Isto não é aconselhamento jurídico",
+  "accessibilityStatement.legal.disclaimer":
+    "Esta secção é um resumo de como as pessoas que gerem o QueerPulse leem a lei na parte que nos toca. Nenhuma advogada a reviu, não é aconselhamento jurídico e não deves apoiar-te nela para a tua própria situação. Se achas que lemos a lei mal, diz-nos e vamos verificar.",
+
+  "accessibilityStatement.status.title": "Estado de conformidade",
+  "accessibilityStatement.status.p1":
+    "O QueerPulse está <strong>parcialmente conforme</strong> com o WCAG 2.2 nível AA. Parcialmente conforme quer dizer que a maior parte da norma é cumprida e que algumas partes não são. As partes que sabemos ficarem aquém estão listadas mais abaixo, uma a uma.",
+  "accessibilityStatement.status.p2":
+    "Não temos nenhuma certificação de acessibilidade e não reclamamos nenhuma. Nenhuma entidade externa avaliou esta plataforma.",
+
+  "accessibilityStatement.works.title": "O que funciona hoje",
+  "accessibilityStatement.works.intro":
+    "Cada um destes pontos está no produto agora e tem por trás uma verificação que faria o build falhar se fosse retirada.",
+  "accessibilityStatement.works.keyboard":
+    "<strong>Teclado.</strong> Cada página abre com uma ligação que salta a navegação e vai direta ao conteúdo, e tudo o que alcanças com o Tab desenha um contorno de foco visível. Esse contorno tem dois tons para se manter visível tanto nas páginas claras como nos painéis escuros: 5,38:1 sobre o fundo creme, 12,6:1 sobre o ameixa.",
+  "accessibilityStatement.works.dialogs":
+    "<strong>Caixas de diálogo.</strong> Abrir um diálogo leva o foco para dentro dele, o Tab fica lá dentro, o Escape fecha o que está por cima e fechar devolve o foco ao controlo que o abriu.",
+  "accessibilityStatement.works.forms":
+    "<strong>Formulários.</strong> Cada etiqueta visível está ligada ao seu campo, o texto de erro é anunciado e ligado ao campo a que pertence, o texto de ajuda é anunciado com o campo, e os campos obrigatórios estão marcados para os leitores de ecrã e não só para os olhos.",
+  "accessibilityStatement.works.landmarks":
+    "<strong>Estrutura e navegação.</strong> Cada página tem exatamente uma região principal. Um teste verifica isso diretamente na página inicial, e a passagem do axe aplica a mesma regra às outras dez páginas que cobre. As páginas fora dessas onze não são verificadas. Mudar de página anuncia a página nova e coloca lá o foco, coisa que uma aplicação de página única não faz sozinha.",
+  "accessibilityStatement.works.motion":
+    "<strong>Movimento.</strong> Quando o teu dispositivo pede movimento reduzido, as animações e o deslizamento suave desligam-se em toda a interface. As Definições têm também um interruptor de Reduzir movimento para quem tenha o dispositivo a dizer outra coisa.",
+  "accessibilityStatement.works.status":
+    "<strong>Mensagens de estado.</strong> As confirmações são anunciadas com calma e as falhas interrompem, para que um erro seja difícil de escapar.",
+  "accessibilityStatement.works.language":
+    "<strong>Idioma.</strong> A página declara o seu idioma e atualiza-o quando trocas entre inglês e português, para que um leitor de ecrã a leia com a voz certa.",
+
+  "accessibilityStatement.shortfalls.title":
+    "O que não está totalmente acessível",
+  "accessibilityStatement.shortfalls.intro":
+    "Estas são as falhas que conhecemos. Cada uma indica a razão e a alternativa que existe hoje. Se encontrares alguma coisa que não esteja nesta lista, diz-nos, porque quer dizer que não sabíamos.",
+  "accessibilityStatement.shortfalls.colour":
+    "<strong>O nosso coral, usado para dar ênfase.</strong> Medido sobre o fundo creme das páginas chega a 2,63:1, e sobre branco a 2,91:1, abaixo dos 4,5:1 que o nível AA pede para texto corrido. As palavras enfatizadas estão sempre também em itálico, por isso a cor nunca é o único sinal. Onde a cor carrega significado que tens de ler, como um erro de formulário, uma marca de campo obrigatório ou uma linha de sucesso, usamos variantes mais escuras de coral e de jade que passam. A revisão do resto da interface ainda não foi feita.",
+  "accessibilityStatement.shortfalls.preferences":
+    "<strong>Definições de acessibilidade que ainda não fazem nada.</strong> A secção de Acessibilidade das Definições lista alto contraste, texto maior, um tipo de letra amigo da dislexia, espaçamento mais largo, contornos de foco mais fortes, alvos de toque maiores e um tema de cor. Todos estão marcados como Em breve e desativados na interface, para que não possam anunciar uma mudança que não fazemos. Dois controlos ali são reais: Reduzir movimento e a ligação para saltar para o conteúdo.",
+  "accessibilityStatement.shortfalls.textSize":
+    "<strong>Tamanho do texto.</strong> O texto está definido em pixels em toda a aplicação, por isso mudar o tamanho de letra por omissão do teu navegador não o aumenta. O zoom do navegador e do sistema funciona normalmente e o layout reorganiza-se até à largura de um telemóvel. O controlo de tamanho de texto nas Definições é um dos que estão Em breve.",
+  "accessibilityStatement.shortfalls.focusAfterError":
+    "<strong>Foco depois de um envio falhado.</strong> Existe um auxiliar que leva o foco ao primeiro campo com erro e está ligado a um formulário até agora. Em todos os outros o erro continua a ser anunciado e continua ligado ao seu campo, e o foco fica onde o deixaste.",
+  "accessibilityStatement.shortfalls.sample":
+    "<strong>As verificações automáticas cobrem uma amostra de páginas.</strong> A suite de testes corre o axe-core sobre onze páginas representativas e a passagem de contraste corre num navegador real sobre seis. A aplicação tem cerca de 140 componentes de página, por isso a maioria nunca foi verificada por máquina uma a uma. A amostra foi escolhida para cobrir as peças partilhadas, que é onde vive a maior parte dos defeitos.",
+  "accessibilityStatement.shortfalls.assistiveTech":
+    "<strong>Nenhum teste com tecnologia de apoio registado.</strong> Nunca foi feita e escrita uma sessão com leitor de ecrã, dispositivo de comutação ou controlo por voz nesta plataforma. As ferramentas automáticas encontram uma minoria dos problemas de acessibilidade, por isso esta é a maior lacuna no que sabemos, e fechá-la é o próximo ponto desta lista.",
+  "accessibilityStatement.shortfalls.pdf":
+    "<strong>Um PDF para descarregar.</strong> O kit de imprensa oferece uma referência de marca imprimível em PDF, e essa não foi verificada quanto a etiquetagem ou ordem de leitura. Os mesmos valores de cor seguem ao lado num ficheiro de texto simples, que qualquer tecnologia de apoio lê corretamente.",
+  "accessibilityStatement.shortfalls.language":
+    "<strong>Duas línguas de interface.</strong> A interface está disponível em inglês e em português. O que um membro ou uma pessoa da redação escreve fica na língua em que foi escrito, e nós não o traduzimos.",
+
+  "accessibilityStatement.prepared.title": "Como esta declaração foi preparada",
+  "accessibilityStatement.prepared.p1":
+    "Esta é uma autoavaliação, preparada por quem constrói o QueerPulse a partir das ferramentas de acessibilidade que estão no código e das auditorias escritas guardadas ao lado. Nenhuma entidade externa participou e nenhum teste com pessoas utilizadoras a informou.",
+  "accessibilityStatement.prepared.lint":
+    "<strong>Regras de lint que bloqueiam o build.</strong> Todas as regras de acessibilidade do eslint-plugin-jsx-a11y correm sobre todo o código. Nove são erros duros, e cobrem alternativas em texto para imagens, atributos e papéis ARIA válidos, e etiquetas ligadas aos seus campos. As restantes são mantidas num orçamento de zero avisos por uma verificação que corre em primeiro lugar no build, por isso um único aviso novo em qualquer sítio faz o build falhar.",
+  "accessibilityStatement.prepared.axe":
+    "<strong>axe-core na suite de testes.</strong> Onze páginas representativas são desenhadas através do router real e analisadas com o axe-core, sem nada em quarentena e sem nenhuma regra suprimida, tirando a única que um motor sem desenho não consegue calcular.",
+  "accessibilityStatement.prepared.contrast":
+    "<strong>Medição de contraste de cor.</strong> Cada par de cores que a interface desenha na realidade foi calculado com a fórmula do WCAG em vez de julgado a olho, foi escrito, e foi corrigido ou recebeu uma variante que passa. Uma passagem de contraste em navegador sobre seis páginas protege contra regressões.",
+  "accessibilityStatement.prepared.p2":
+    "As ferramentas automáticas apanham uma minoria dos problemas de acessibilidade, normalmente estimada entre um terço e metade. Tudo o que uma máquina não vê, e toda a questão de saber se esta plataforma é mesmo utilizável com um leitor de ecrã, continua por verificar. É por isso que a secção seguinte importa mais do que as duas anteriores.",
+
+  "accessibilityStatement.feedback.title": "Diz-nos onde está a barreira",
+  "accessibilityStatement.feedback.p1":
+    "Se alguma coisa aqui te bloqueia, diz-nos. Não precisas de conta e não precisas de saber porque está partido. Descreve o que estavas a tentar fazer e o que aconteceu em vez disso, e indica a página se conseguires.",
+  "accessibilityStatement.feedback.p2":
+    "Usa o formulário de contacto e escolhe <strong>Acessibilidade</strong> como tema. A mensagem fica guardada para quem gere a plataforma, que lê todas.",
+  "accessibilityStatement.feedback.p3":
+    "O QueerPulse não envia email automático, por isso qualquer resposta é escrita por uma pessoa para o endereço que nos deres. Procuramos responder em {days} dias úteis. Se o teu relato for sobre algo que te está a deixar de fora da tua própria conta, diz-o e passa à frente.",
+  "accessibilityStatement.feedback.cta": "Comunicar uma barreira de acesso",
+
+  "accessibilityStatement.enforcement.title": "Se a nossa resposta não chegar",
+  "accessibilityStatement.enforcement.p1":
+    "Se não respondermos, ou se a resposta deixar a barreira de pé, é aqui que podes seguir, pela ordem com mais hipóteses de te ajudar.",
+  "accessibilityStatement.enforcement.tellUs":
+    "<strong>Diz-nos primeiro.</strong> O formulário de contacto, no tópico Acessibilidade, guarda o teu relato para as pessoas que gerem a plataforma, e é o caminho mais rápido para a barreira ser vista. Tudo o que vem a seguir parte do princípio de que esse caminho já te falhou.",
+  "accessibilityStatement.enforcement.idipd":
+    "<strong>IDiPD.</strong> O Instituto para os Direitos das Pessoas com Deficiência, I. P. é a entidade portuguesa que acompanha a aplicação do Decreto-Lei 82/2022 e promove os direitos das pessoas com deficiência. O artigo 36.º faz dele também a entidade que encaminha para o regulador competente as queixas que lhe cheguem diretamente. Chamava-se Instituto Nacional para a Reabilitação, I. P. até o Decreto-Lei n.º 60/2026 lhe mudar o nome. Os contactos estão <idipd>no site do próprio instituto</idipd>, onde se mantêm atualizados.",
+  "accessibilityStatement.enforcement.regulator":
+    "<strong>O regulador setorial, se alguma vez cairmos no artigo 28.º.</strong> O Decreto-Lei 82/2022 entrega a fiscalização a um regulador diferente por cada categoria de serviço, em vez de a entregar a uma única entidade de acessibilidade. Os serviços de comércio eletrónico cabem à ANACOM. Como está dito acima, não cremos que o QueerPulse seja hoje um serviço abrangido pelo decreto-lei, por isso é bem possível que este caminho não esteja aberto para ti neste momento. Preferimos dizer-te isso com clareza a mandar-te a um regulador que te vai ter de dispensar.",
+  "accessibilityStatement.enforcement.p2":
+    "Nada disto substitui os tribunais nem qualquer outro direito que tenhas. Se quiseres apresentar queixa e não souberes por onde começar, o IDiPD é a primeira porta certa.",
 };

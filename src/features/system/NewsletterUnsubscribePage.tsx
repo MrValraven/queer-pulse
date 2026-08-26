@@ -38,12 +38,14 @@ function LinkOffIcon() {
 const HOME_CTA_KEY = "system:newsletterUnsubscribe.goHomeCta";
 
 /**
- * Self-serve newsletter unsubscribe landing (CNT-19). Reached from the token
- * link a real newsletter email would carry (`?token=...`) — unlike
- * `GET /newsletter/confirm`, which the raw email link hits directly on the
- * API, this route lets the frontend show real success/already-unsubscribed/
- * invalid-link states instead of bare JSON. The backend call itself mirrors
- * confirm's token mechanism exactly (see `useNewsletterUnsubscribe`).
+ * Self-serve newsletter unsubscribe landing (CNT-19). Reached with a
+ * subscription token in the URL (`?token=...`). Unlike `GET /newsletter/confirm`,
+ * which answers on the API as bare JSON, this route shows real
+ * success/already-unsubscribed/invalid-link states. The backend call itself
+ * mirrors confirm's token mechanism exactly (see `useNewsletterUnsubscribe`).
+ *
+ * QueerPulse delivers no email, so nothing hands anyone this link: the page
+ * exists so a token holder can always opt out, however they came by the token.
  */
 export function NewsletterUnsubscribePage() {
   const { t } = useTranslation();

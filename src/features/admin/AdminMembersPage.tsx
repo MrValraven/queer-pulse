@@ -12,7 +12,6 @@ import { useFormat } from "../../shared/i18n/format";
 import { AdminPageHeader, AdminTabs, type AdminTab } from "./ui";
 import { AdminMemberRows, AdminFlaggedRows } from "./AdminMemberRows";
 import { AdminVerifyQueue } from "./AdminVerifyQueue";
-import { AdminJoinRequestSamplePage } from "./AdminJoinRequestSamplePage";
 import { AdminMemberDrawer } from "./AdminMemberDrawer";
 import { AdminMemberCardLoadingDrawer } from "./AdminMemberCardSelection";
 import { useAdminMemberCardSelection } from "./useAdminMemberCardSelection";
@@ -24,7 +23,11 @@ import { useAdminMembers, useAdminFlagged } from "./api/useAdminMembers";
 import { useJoinRequests } from "./api/useJoinRequests";
 import styles from "./AdminMembersPage.module.css";
 
-type TabId = "all" | "pending" | "flagged" | "sample";
+// No "sample" tab here. The quality sample lives beside the queue it reviews,
+// as a tab of `AdminVerifyQueue`, reachable at /admin/join-requests, which
+// `authGate.ts` opens to moderators, while this page stays admin-only. It was
+// rendered in both places, so an admin saw the same view twice.
+type TabId = "all" | "pending" | "flagged";
 
 export function AdminMembersPage() {
   const { t } = useTranslation();
@@ -112,7 +115,6 @@ export function AdminMembersPage() {
       label: t("admin:members.tabs.flagged"),
       count: flagged.length,
     },
-    { id: "sample", label: t("admin:members.tabs.sample") },
   ];
 
   return (
@@ -198,7 +200,6 @@ export function AdminMembersPage() {
             onOpenMember={flaggedSelection.selectMember}
           />
         )}
-        {tab === "sample" && <AdminJoinRequestSamplePage />}
       </FadeIn>
 
       {drawerMember && (

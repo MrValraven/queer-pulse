@@ -140,6 +140,12 @@ export const LEGACY_REDIRECTS: [string, string][] = [
   ["/status", routes.status],
   // Communities (2026-08-10): /communities/home merged into /communities.
   ["/communities/home", routes.communities],
+  // Gatherings: `/event` fronted a standalone prototype detail page pinned to
+  // one mock gathering, with no live subject behind it. It is retired: the
+  // real detail surface is `/gatherings/:slug`, so old bookmarks and prototype
+  // links land on the events board instead of a 404. Kept as a string literal
+  // because `routes.event` no longer exists.
+  ["/event", routes.events],
   // Local / Lisbon
   ["/safe-spaces", routes.safeSpaces],
   ["/visas", routes.visas],

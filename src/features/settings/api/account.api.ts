@@ -17,13 +17,15 @@ import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 /* ────────────────────────────────────────────────────────────────────────
  * Email template catalogue (spec 11 — transactional email).
  *
- * ⚠️ NONE OF THIS IS BUILT. There is no mail service in the backend — no
- * provider, no dependency, no sender. This block is a DESIGN for spec 11, kept
- * because the trigger endpoints below are real and the templates should stay in
- * lockstep with them when email does land. Postmark is the intended provider,
- * not a wired one. Do not write UI copy that promises any of these arrive: the
- * export and deletion screens each shipped such a promise and both had to be
- * rewritten. All would be TRANSACTIONAL (no unsubscribe) unless noted.
+ * ⚠️ NONE OF THIS IS BUILT, AND IT IS NOT PLANNED. QueerPulse delivers no email
+ * and never will: there is no mail service in the backend, no provider, no
+ * dependency, no sender. A nodemailer-backed one was added and removed again on
+ * 2026-08-26; see `queerpulse-backend/docs/ops/no-mailer-at-launch.md`. This
+ * block is kept only as the DESIGN sketch for spec 11, because the trigger
+ * endpoints below are real. Do not write UI copy that promises any of these
+ * arrive: the export and deletion screens each shipped such a promise and both
+ * had to be rewritten. All would be TRANSACTIONAL (no unsubscribe) unless
+ * noted.
  *
  *   Template                     Server trigger (enqueues send)        Key data
  *   ─────────────────────────    ──────────────────────────────────    ─────────────────────────────
@@ -35,8 +37,9 @@ import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
  *   gdpr-dsar-received           POST  /account/dsar                   reference, 30-day due date
  *   gdpr-dsar-resolved           DSAR closed by staff                  outcome summary, appeal link
  *
- * Idempotency: every send carries a deterministic `messageKey` server-side so a
- * "Resend" re-delivers the SAME keyed message rather than spamming.
+ * Idempotency, were any of it ever built: every send would carry a
+ * deterministic `messageKey` server-side so a "Resend" re-delivers the SAME
+ * keyed message rather than spamming.
  * ──────────────────────────────────────────────────────────────────────── */
 
 /* ── Step-up re-authentication ─────────────────────────────────────────── */

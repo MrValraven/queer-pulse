@@ -1,5 +1,5 @@
 import { useId, type FormEvent } from "react";
-import { FiAlertCircle } from "react-icons/fi";
+import { FiAlertCircle, FiBell, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -216,5 +216,67 @@ export function DeleteConfirmForm({
         </Button>
       </div>
     </form>
+  );
+}
+
+/**
+ * The gentler alternative offered beside deactivation: a way into the
+ * Notifications pane.
+ *
+ * This was a decorative button offering a 30-day bulk pause of "all emails and
+ * digests". Nothing backed either half. No endpoint silences everything
+ * (preferences are per-category through `putNotificationPreference`, plus a
+ * quiet-hours window through `putNotificationDelivery`), and QueerPulse
+ * delivers no email at all. In front of someone weighing up deletion is the
+ * worst possible place for a promise the platform cannot keep, so the strip
+ * points at the controls that genuinely exist.
+ *
+ * `onOpenNotificationSettings` arrives when this renders as a pane INSIDE
+ * SettingsPage. That page reads `?pane=` once, in a `useState` initializer, so
+ * a link to `?pane=notifications` from within it would change the URL and
+ * leave the pane where it was; switching panes in place is the working move.
+ * The standalone `/account/delete` page passes no callback, and a real link
+ * navigates there, mounting SettingsPage fresh on the right pane.
+ */
+export function PauseNotificationsStrip({
+  onOpenNotificationSettings,
+}: {
+  onOpenNotificationSettings?: () => void;
+}) {
+  const { t } = useTranslation();
+  const label = (
+    <>
+      <FiBell aria-hidden="true" /> {t("settings:deleteAccount.pauseStrip.cta")}
+    </>
+  );
+  return (
+    <div className={styles.pauseStrip}>
+      <FiClock className={styles.pauseStripIcon} aria-hidden="true" />
+      <div>
+        <p className={styles.pauseStripText}>
+          <Translation
+            i18nKey="settings:deleteAccount.pauseStrip.text"
+            components={{ strong: <strong /> }}
+          />
+        </p>
+        {onOpenNotificationSettings ? (
+          <Button
+            variant="ghost"
+            onClick={onOpenNotificationSettings}
+            style={{ marginTop: 12 }}
+          >
+            {label}
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            to={`${routes.settings}?pane=notifications`}
+            style={{ marginTop: 12 }}
+          >
+            {label}
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }

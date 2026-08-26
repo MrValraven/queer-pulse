@@ -59,6 +59,40 @@ export function overdueByLabel(
   return relativeAgeLabel(dueAt as string, fmt);
 }
 
+/** How urgently a still-open row's wait should read. */
+export type QueueRowUrgency = "neutral" | "approaching" | "overdue";
+
+/** How long before the due date a row starts reading as "approaching". */
+const APPROACHING_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * The urgency tint for a still-open row, derived from the SERVER's due date.
+ *
+ * This replaced a local `daysWaiting >= 3` in `JoinRequestCard`, which was the
+ * last place in the admin surfaces that restated a review window the backend
+ * already owns (`join-request-sla.ts`). It sat directly beside
+ * `QueueOverdueChip`, which reads `dueAt`, so one card could show a
+ * server-owned due date and a client-computed urgency that disagreed with it
+ * the moment the window moved.
+ *
+ * The boundaries are the same ones that local rule produced against the shipped
+ * three-day window, so no row changes colour today: past due is overdue, the
+ * last day before due is approaching. The one deliberate difference is a row
+ * with NO clock, which now reads neutral rather than red. That is this module's
+ * standing rule (see `isQueueRowOverdue`): rows predating OPS-04 carry no due
+ * date, and no promise was made about them to break.
+ */
+export function queueRowUrgency(
+  dueAt: string | null | undefined,
+): QueueRowUrgency {
+  if (!dueAt) return "neutral";
+  const dueAtMs = Date.parse(dueAt);
+  if (Number.isNaN(dueAtMs)) return "neutral";
+  const now = Date.now();
+  if (dueAtMs < now) return "overdue";
+  return dueAtMs - now <= APPROACHING_WINDOW_MS ? "approaching" : "neutral";
+}
+
 /** How many rows in a set are past due — the count behind a queue header's
  *  "3 overdue" line. */
 export function overdueCountOf(rows: QueueClockRow[]): number {

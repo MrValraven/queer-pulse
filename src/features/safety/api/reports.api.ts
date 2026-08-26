@@ -1,4 +1,4 @@
-import { apiPost } from "../../../shared/api/client";
+import { apiGet, apiPost } from "../../../shared/api/client";
 import type {
   ReasonCode,
   ReasonOption,
@@ -49,5 +49,29 @@ export interface ReportDTO {
 /** Create a report from any surface. Reporter may be anonymous. */
 export const createReport = (body: CreateReportInput) =>
   apiPost<ReportDTO>("/reports", body);
+
+/**
+ * One option as `GET /reports/reasons` returns it.
+ *
+ * `code` is typed `string`, NOT `ReasonCode`, on purpose. The whole reason to
+ * ask the server is that it may know a code this build does not, and typing it
+ * as the local union would make the compiler agree that cannot happen right
+ * where it is most likely to.
+ *
+ * `label` is server-authored and ENGLISH: it comes from `REASON_LABELS` in the
+ * backend's `reason-catalogue.ts`, which has no localization of its own. See
+ * `useReportReasons` for why a known code renders the local translated label
+ * instead.
+ */
+export interface ServerReasonOption {
+  code: string;
+  label: string;
+}
+
+/** The server-owned reason taxonomy for one subject type. */
+export const fetchReportReasons = (subjectType: ReportSubjectType) =>
+  apiGet<ServerReasonOption[]>(
+    `/reports/reasons?subjectType=${encodeURIComponent(subjectType)}`,
+  );
 
 export type { ReasonOption };

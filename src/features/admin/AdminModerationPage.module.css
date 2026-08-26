@@ -350,15 +350,33 @@ button.reportMain:focus-visible {
   width: 11px;
   height: 11px;
 }
+/* Carried by a real <button> now that the affordance is a sibling of the card
+   button rather than nested inside it, so it resets the UA button box back to
+   the .priorFlag pill. */
 .priorFlagLink {
   cursor: pointer;
   border: none;
   font: inherit;
+  color: inherit;
+  -webkit-appearance: none;
+  appearance: none;
 }
-.priorFlagLink:hover,
+.priorFlagLink:hover {
+  background: rgba(var(--amber-rgb), 0.28);
+}
+/* A background shift alone is not a focus indicator. Matches the card
+   button's own ring so the two read as the same keyboard affordance. */
 .priorFlagLink:focus-visible {
   background: rgba(var(--amber-rgb), 0.28);
-  outline: none;
+  outline: 2px solid var(--line-strong);
+  outline-offset: 3px;
+}
+/* In the right-hand rail the pill is a right-aligned column item, so the
+   inline nudge away from the meta text before it is no longer wanted, and the
+   narrow column must not break the count across two lines. */
+.priorFlagRail {
+  margin-left: 0;
+  white-space: nowrap;
 }
 .assignedFlag {
   display: inline-flex;
@@ -665,6 +683,27 @@ button.reportMain:focus-visible {
   height: 14px;
   margin-top: 1px;
   color: var(--jade);
+}
+
+/* "The author named above may not have written the reported half." Shares
+   .dRedact's quiet footnote shape, in amber rather than jade: this is a
+   caution about who a sanction would land on, where .dRedact is a
+   reassurance that something was already handled. */
+.dAmbiguous {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.dAmbiguous svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  color: var(--amber-ink);
 }
 
 /* Listing-dispute context (dispute reason / ownership evidence). A calmer,

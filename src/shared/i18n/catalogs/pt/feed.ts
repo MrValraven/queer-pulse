@@ -89,19 +89,10 @@ export const feed: Catalog = {
   "greeting.evening": "Boa noite",
   "greeting.dateLine": "{weekday} · {city} · {date}",
   "greeting.city": "Lisboa",
-  "greeting.newMessages_one": "{count} mensagem nova",
-  "greeting.newMessages_other": "{count} mensagens novas",
-  "greeting.messagesLink": "Mensagens",
 
   // ── FeedCards: GatheringCard ────────────────────────────────────────────
-  "card.gathering.upcomingIn_one": "Em breve · {count} dia",
-  "card.gathering.upcomingIn_other": "Em breve · {count} dias",
-  "card.gathering.goingCount": "+{count} vão",
-  "card.gathering.youAreGoing": "Vais",
 
   // ── FeedCards: NewMemberCard ────────────────────────────────────────────
-  "card.newMember.tag": "Nova pessoa",
-  "card.newMember.joined": "Entrou {when}",
   "card.newMember.today": "hoje",
 
   // ── FeedCards: SavedArticleCard / RecapCard ─────────────────────────────
@@ -110,11 +101,8 @@ export const feed: Catalog = {
 
   // ── Etiquetas de ação partilhadas ────────────────────────────────────────
   "action.connect": "Ligar",
-  "action.viewProfile": "Ver perfil",
   "action.cancel": "Cancelar",
   "action.reply": "Responder",
-  "action.save": "Guardar",
-  "action.saved": "Guardado",
   "action.done": "Concluído",
   "action.continueReading": "Continuar a ler",
   "action.readRecap": "Ler o resumo",
@@ -128,10 +116,6 @@ export const feed: Catalog = {
   "post.likeAria": "Gostar da publicação",
   "post.replyCount": "Responder · {count}",
   "post.replyAria": "Responder à publicação",
-  "post.unsaveAria": "Remover dos guardados",
-  "post.saveAria": "Guardar publicação",
-  "post.emptyReplies.title": "Ainda sem respostas",
-  "post.emptyReplies.description": "Sê quem diz a primeira coisa simpática.",
 
   // ── FeedModeration: MoreMenu / BlockConfirmModal / ReportModal ──────────
   "moderation.reportPost": "Denunciar publicação",
@@ -143,7 +127,6 @@ export const feed: Catalog = {
   "moderation.unmutedToast": "Deixaste de silenciar {name}",
   "moderation.unblockedToast": "Desbloqueaste {name}",
   "moderation.postOptionsAria": "Opções da publicação",
-  "moderation.notNowToast": "Lembramos-te mais tarde",
 
   "moderation.blockConfirm.title": "Bloqueaste <em>{name}</em>",
   "moderation.blockConfirm.body":
@@ -204,9 +187,6 @@ export const feed: Catalog = {
   "action.countMeIn": "Conta comigo · {count}",
   "action.openThread": "Abrir conversa",
   "proof.communitiesInCommon": "{count} comunidades em comum",
-  "proof.alsoIn": "Também em {community}",
-  "proof.vouchedBy": "Recomendade por {count} pessoas que segues",
-  "badge.vouched": "Recomendade",
   "gathering.spots": "{going} vão · {spots} vagas livres",
   "gathering.full": "{going} vão · esgotado",
   "gathering.hostedBy": "Organizado por {host}",

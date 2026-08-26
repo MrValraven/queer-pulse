@@ -21,9 +21,6 @@ export const messages: Catalog = {
   "thread.composeTooltip": "New message",
   "thread.searchPlaceholder": "Search messages and people…",
   "thread.searchAria": "Search messages and conversations",
-  "thread.emptySearchTitle": "No conversations found",
-  "thread.emptySearchDescription":
-    "No one matches “{query}”. Try a different name.",
   "thread.clearSearch": "Clear search",
   "thread.emptyTitle": "No conversations yet",
   "thread.emptyDescription":
@@ -82,7 +79,6 @@ export const messages: Catalog = {
   "attachments.open": "Send a photo",
   "attachments.imageAlt": "Photo message",
   "attachments.fallbackText": "Photo",
-  "attachments.uploading": "Sending photo…",
   "attachments.previewUnavailable": "Photo preview unavailable",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
@@ -131,7 +127,6 @@ export const messages: Catalog = {
   "conversation.connectedSinceSuffix": " · Connected since {date}",
   "conversation.viewProfile": "View profile",
   "conversation.you": "You",
-  "conversation.newMessages": "New messages",
   // Counted jump-to-latest pill (CLDR plural: _one / _other).
   "conversation.newMessagesCount_one": "{count} new message",
   "conversation.newMessagesCount_other": "{count} new messages",
@@ -193,7 +188,6 @@ export const messages: Catalog = {
   "actions.editing": "Editing message",
   "actions.editSave": "Save",
   "actions.editCancel": "Cancel",
-  "actions.replyingTo": "Replying to {name}",
   replyDeleted: "Message deleted",
   tombstone: "This message was deleted",
   "delete.confirmTitle": "Delete this message?",
@@ -225,7 +219,6 @@ export const messages: Catalog = {
   // Starred messages view (StarredMessagesModal)
   "starred.title": "Starred messages",
   "starred.open": "Starred messages",
-  "starred.close": "Close",
   "starred.sub": "Messages you've saved. Only you can see these.",
   "starred.loading": "Loading your starred messages…",
   "starred.empty":
@@ -233,7 +226,6 @@ export const messages: Catalog = {
 
   // New-message recipient picker (NewMessageModal)
   "newMessage.title": "New message",
-  "newMessage.close": "Close",
   "newMessage.sub": "Pick a connection, or search for someone new to message.",
   "newMessage.searchPlaceholder": "Search connections or people…",
   "newMessage.searchAria": "Search connections and members",
@@ -277,7 +269,6 @@ export const messages: Catalog = {
   "group.namePlaceholder": "Group name",
   "group.nameAria": "Group name",
   "group.searchPlaceholder": "Search connections to add…",
-  "group.searchAria": "Search connections to add",
   "group.createCta": "Create group ({count})",
   "group.info": "Group info",
   "group.infoTitle": "Group info",
@@ -293,7 +284,6 @@ export const messages: Catalog = {
   "group.add": "Add members",
   "group.addTitle": "Add members",
   "group.addCta": "Add ({count})",
-  "group.addNone": "No more connections to add.",
   "group.promote": "Make admin",
   "group.demote": "Remove admin",
   "group.remove": "Remove",

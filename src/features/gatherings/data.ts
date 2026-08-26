@@ -432,6 +432,141 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     ctaKey: "gatherings:cta.rsvp",
     body: "This month we're reading a queer classic and meeting in the courtyard at LX Factory to talk it over. You don't need to have finished the book, or even started it, to come along. Wine, snacks, and an easy conversation from 6pm. The next read gets picked together at the end.",
   },
+  // ── Community calendar gatherings that had no detail page ──
+  // These four calendar cards used to link at the retired standalone `/event`
+  // prototype. They now open their own detail, so no two cards in the demo
+  // calendar resolve to the same gathering. `peer-support-circle` is also the
+  // target of the peer-support story in `topics.data.tsx`.
+  "lgbtq-support-circle": {
+    slug: "lgbtq-support-circle",
+    type: "Support Circle",
+    date: new Date(2026, 5, 18),
+    title: "LGBTQ+ Support Circle",
+    hood: "Intendente",
+    host: "Lisbon Queer Support",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.openToAll" },
+    ctaKey: "gatherings:cta.rsvp",
+    body: "A facilitated evening circle for whatever you are carrying: coming out, family, work, dysphoria, or nothing you can name yet. Two trained facilitators hold the room and read the safer-space norms at the start. Nobody has to speak. Tea from 6:15pm, circle at 6:30, finished by 8.",
+  },
+  "queer-film-moonlight": {
+    slug: "queer-film-moonlight",
+    type: "Film Night",
+    date: new Date(2026, 5, 25),
+    title: "Queer Film Screening: “Moonlight”",
+    hood: "Príncipe Real",
+    host: "QueerPulse Cinema",
+    hostSlug: "",
+    spots: {
+      key: "gatherings:spots.goingWithPrice",
+      values: { count: 55, priceEur: 8 },
+    },
+    ctaKey: "gatherings:cta.reserveSeat",
+    body: "Barry Jenkins' “Moonlight” on a proper screen, followed by a slow conversation in the bar for anyone who wants to stay. Content note: childhood neglect and a scene of homophobic violence. Doors at 7:30, film at 8. Tickets are €8 in advance or on the door; no one is turned away for lack of funds.",
+  },
+  "queer-youth-monthly": {
+    slug: "queer-youth-monthly",
+    type: "Meetup",
+    date: new Date(2026, 6, 7),
+    title: "Queer Youth: Monthly Gathering",
+    hood: "Lisbon",
+    host: "Queer Youth Network",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.ages1625" },
+    ctaKey: "gatherings:cta.rsvp",
+    body: "The Queer Youth Network's regular monthly meet, picking up where the opening gathering left off. For LGBTQ+ people aged 16-25: a check-in, games, and whatever the group chose to do this month. Facilitated by trained volunteers. Snacks provided, and the venue goes out to members a week ahead.",
+  },
+  "peer-support-circle": {
+    slug: "peer-support-circle",
+    type: "Support Circle",
+    date: new Date(2026, 6, 19),
+    title: "Peer Support Circle: Open Session",
+    hood: "Estrela",
+    host: "Lisbon Queer Support",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.dropIn" },
+    ctaKey: "gatherings:cta.rsvp",
+    body: "The open-door session of a circle that has run every week for over a year. Confidential, facilitated, and yours to use as you need it: come once, come every week, or sit quietly at the back. No referral and no commitment. Doors from 6:15pm, circle at 6:30. Step-free venue.",
+  },
+  // ── Subjects for stories and lifecycle demos that link a gathering ──
+  // The first four back the "event" posts in `topics.data.tsx`; the last two
+  // are the subjects `DEMO_GATHERING_SLUGS` puts in the URL for the recap,
+  // manage, cancelled, photos and co-host-invite demos. Those pages render
+  // their own static data, so they never showed a wrong gathering, but the
+  // slug still reaches `resolveGathering` through `useEvent`, and the detail
+  // page reads it if anyone opens one of those URLs directly.
+  "coop-info-night": {
+    slug: "coop-info-night",
+    type: "Info Night",
+    date: new Date(2026, 5, 17),
+    title: "Co-op Info Night: Buying a Building Together",
+    hood: "Arroios",
+    host: "Rainbow Roots Co-op",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.spotsLeft", values: { count: 5 } },
+    ctaKey: "gatherings:cta.rsvp",
+    body: "Nine households have committed to a shared-ownership co-op, and the second round is opening. This is the evening where the numbers get shown in full: the deposit per household, what the bank actually said, and what happens if someone needs to leave. Bring your questions and your scepticism. Nobody signs anything on the night.",
+  },
+  "name-change-clinic": {
+    slug: "name-change-clinic",
+    type: "Clinic",
+    date: new Date(2026, 5, 21),
+    title: "Name-Change Clinic",
+    hood: "Arroios",
+    host: "Trans Hub",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.spotsLeft", values: { count: 9 } },
+    ctaKey: "gatherings:cta.bookSlot",
+    body: "One-to-one sessions with volunteers who have been through the Portuguese name-change process themselves. You leave with your own route mapped: which office, which form, which order, and what each step costs. Free and trans-led, running monthly since 2024. Bring whatever paperwork you already have. No records are kept.",
+  },
+  "open-clinic-night": {
+    slug: "open-clinic-night",
+    type: "Clinic",
+    date: new Date(2026, 5, 12),
+    title: "Open Clinic Night",
+    hood: "Arroios",
+    host: "Trans Hub",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.spotsLeft", values: { count: 14 } },
+    ctaKey: "gatherings:cta.rsvp",
+    body: "Dr. Inês Pereira and a pharmacist from Farmácia do Carmo take over the community café's back room for two hours of free consultation. Prescriptions, interactions, and monitoring are the questions that come up most. Twenty-two slots, RSVP required so the queue stays short. No records are kept. Bring a list; nothing is too small to ask.",
+  },
+  "trans-djs-warehouse": {
+    slug: "trans-djs-warehouse",
+    type: "Nightlife",
+    date: new Date(2026, 5, 26),
+    title: "Warehouse Party: Trans DJs Only",
+    hood: "Marvila",
+    host: "Trans DJs Lisboa",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.going", values: { count: 62 } },
+    ctaKey: "gatherings:cta.illBeThere",
+    body: "A night in a Marvila warehouse with a trans-only booth and a door policy that is actually enforced. Trained welfare staff are on site until the end, there is a quiet room upstairs whenever you need it, and water stays free all night. The address goes out to confirmed guests on the day. Bring your people and look after each other.",
+  },
+  "pride-brunch-jun": {
+    slug: "pride-brunch-jun",
+    type: "Brunch",
+    date: new Date(2026, 5, 21),
+    title: "Pride Brunch: June Edition",
+    hood: "Príncipe Real",
+    host: "Sofia Rodrigues",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.going", values: { count: 38 } },
+    ctaKey: "gatherings:cta.rsvp",
+    body: "Three hours on the terrace at A Cevicheria: one long table, food that keeps arriving, and the easy work of introducing people who have so far only seen each other's profiles. Thirty-eight came in June. Come on your own if you like; you will not be on your own for long.",
+  },
+  "atelier-pulso-jul": {
+    slug: "atelier-pulso-jul",
+    type: "Studio Visit",
+    date: new Date(2026, 6, 19),
+    title: "Atelier Pulso: July Open Hours",
+    hood: "Largo do Carmo",
+    host: "Marta Reis",
+    hostSlug: "",
+    spots: { key: "gatherings:spots.spotsLeft", values: { count: 6 } },
+    ctaKey: "gatherings:cta.requestSpot",
+    body: "The rescheduled open hours at Atelier Pulso, after a chest cold took June out. Marta walks through the presses, the paper stock, and what riso actually costs to run, with the new press installed in time. Small group, five euros on the door, and every cent of it goes back into ink.",
+  },
   // ── Detail pages for the member's own "My Events" dashboard ──
   // Each card in /account/events links here via its `slug`.
   "stone-butch-blues": {
@@ -644,7 +779,35 @@ export const DEMO_GATHERING_SLUGS = {
   coHostInvite: "open-clinic-night",
 } as const;
 
-/** Resolve a `:slug` route param (`<slug>-<shortId>`) back to a gathering. */
+/** Slugs already reported by `warnIfUnresolvedGathering`, so a re-render or a
+ *  second visit to the same bad link warns once rather than every time. */
+const warnedGatheringSlugs = new Set<string>();
+
+/**
+ * The demo registry answers every slug, because a visitor must never meet an
+ * error page in a prototype. That safety net also hides a mistyped or
+ * never-written slug: the link works, and quietly opens the wrong gathering.
+ * In dev, say so, so a bad `gatheringPath("...")` surfaces while it is being
+ * written instead of at review. Silent in production, by design.
+ */
+function warnIfUnresolvedGathering(param: string): void {
+  if (!import.meta.env.DEV || warnedGatheringSlugs.has(param)) return;
+  warnedGatheringSlugs.add(param);
+  console.warn(
+    `[gatherings] "${param}" matches no key of gatheringDetails; the demo ` +
+      `falls back to "${defaultGatheringSlug}", so this link opens the wrong ` +
+      `gathering. Add the entry, or point the link at a real slug.`,
+  );
+}
+
+/**
+ * Resolve a `:slug` route param (`<slug>-<shortId>`) back to a gathering.
+ *
+ * The final `return` is a deliberate fallback, and it MASKS A BAD SLUG: any
+ * param that matches nothing still renders the default gathering. Callers must
+ * verify their own slug is a key of `gatheringDetails` (a dev-only warning
+ * fires when it is not).
+ */
 export function resolveGathering(param: string | undefined): GatheringDetail {
   if (param) {
     for (const slug of Object.keys(gatheringDetails)) {
@@ -653,6 +816,7 @@ export function resolveGathering(param: string | undefined): GatheringDetail {
     }
     const base = param.replace(/-[a-z0-9]+$/i, "");
     if (gatheringDetails[base]) return gatheringDetails[base];
+    warnIfUnresolvedGathering(param);
   }
   return gatheringDetails[defaultGatheringSlug]!;
 }
@@ -800,7 +964,7 @@ export const calendarEvents: CalendarEvent[] = [
     orgColor: COMMUNITY,
     title: "LGBTQ+ Support Circle",
     hood: "Intendente",
-    to: "/event",
+    to: gatheringPath("lgbtq-support-circle"),
     kind: "gathering",
     coverImageUrl:
       "https://images.unsplash.com/photo-1591115765373-5207764f72e7?q=80&w=1200&auto=format&fit=crop",
@@ -847,7 +1011,7 @@ export const calendarEvents: CalendarEvent[] = [
     orgColor: COMMUNITY,
     title: "Queer Film Screening: Moonlight",
     hood: "Príncipe Real",
-    to: "/event",
+    to: gatheringPath("queer-film-moonlight"),
     kind: "gathering",
     ticketed: true,
     priceMin: 8,
@@ -910,7 +1074,7 @@ export const calendarEvents: CalendarEvent[] = [
     orgColor: COMMUNITY,
     title: "Queer Youth: Monthly Gathering",
     hood: "Lisbon",
-    to: "/event",
+    to: gatheringPath("queer-youth-monthly"),
     kind: "gathering",
     coverImageUrl:
       "https://images.unsplash.com/photo-1543007630-9710e4a00a20?q=80&w=1200&auto=format&fit=crop",
@@ -966,7 +1130,7 @@ export const calendarEvents: CalendarEvent[] = [
     orgColor: COMMUNITY,
     title: "Peer Support Circle: Open Session",
     hood: "Estrela",
-    to: "/event",
+    to: gatheringPath("peer-support-circle"),
     kind: "gathering",
     coverImageUrl:
       "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?q=80&w=1200&auto=format&fit=crop",

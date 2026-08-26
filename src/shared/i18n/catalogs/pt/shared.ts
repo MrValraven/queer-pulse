@@ -65,9 +65,6 @@ export const shared: Catalog = {
   "social.genericError": "Não conseguimos atualizar isso. Tenta outra vez.",
 
   // AppNav
-  "appNav.links.home": "Início",
-  "appNav.links.subprofiles": "Subperfis",
-  "appNav.links.messages": "Mensagens",
 
   // AccountMenu
   "accountMenu.items.profile": "Perfil",
@@ -76,16 +73,13 @@ export const shared: Catalog = {
   // por usar colada pelo `useInviteQuotaBadge`.
   "accountMenu.items.invite": "Convidar alguém",
   "accountMenu.items.messages": "Mensagens",
-  "accountMenu.items.applications": "Candidaturas",
   "accountMenu.items.work": "Trabalho",
-  "accountMenu.items.subprofiles": "Subperfis",
   // Descoberta de personas, Fase 5, Momento 3 — a linha "As tuas personas"
   // (badge via usePersonaBadge). Separado de `accountMenu.items.subprofiles`
   // acima, uma entrada pré-existente com outro texto.
   "accountMenu.items.personas": "As tuas personas",
   "accountMenu.items.events": "Eventos",
   "accountMenu.items.cards": "Cartões",
-  "accountMenu.items.feed": "Feed",
   "accountMenu.items.drafts": "Rascunhos",
   "accountMenu.items.pitches": "Propostas",
   "accountMenu.items.saved": "Guardados",
@@ -205,8 +199,6 @@ export const shared: Catalog = {
   "adminNav.items.reports": "Relatórios",
   "adminNav.items.systemAccounts": "Contas de sistema",
 
-  "adminNav.items.joinRequests": "Pedidos de adesão",
-
   // errorHandling.ts / errorMessage.ts
   "apiError.server": "Algo correu mal do nosso lado. Tenta outra vez.",
   "apiError.forbidden": "Não tens acesso a isso.",
@@ -217,10 +209,8 @@ export const shared: Catalog = {
   "apiError.tryAgainTail": " Tenta outra vez.",
 
   // PullToRefresh live region
-  "pullToRefresh.refreshing": "A atualizar…",
 
   // deviceUserAgent.ts
-  "device.unknown": "Dispositivo desconhecido",
 
   // BackToSettingsLink
   "backToSettingsLink.label": "Voltar às definições",
@@ -326,10 +316,7 @@ export const shared: Catalog = {
   // ("Convívios"), already the platform's term for the events feature.
   "megaNav.community.col.people.dating": "Dating",
   "megaNav.community.col.gather.head": "Convívios",
-  "megaNav.community.col.gather.allGatherings": "Convívios",
   "megaNav.community.col.gather.events": "Eventos",
-  "megaNav.community.col.gather.hostGathering": "Organizar um convívio",
-  "megaNav.community.col.organise.head": "Organizar",
   "megaNav.community.col.organise.activismVolunteering":
     "Ativismo e Voluntariado",
   "megaNav.community.col.organise.changeMakers": "Agentes de mudança",
@@ -408,7 +395,6 @@ export const shared: Catalog = {
   "megaNav.work.col.career.head": "Carreira",
   "megaNav.work.col.career.yourWork": "O teu Trabalho",
   "megaNav.work.col.career.jobBoard": "Bolsa de emprego",
-  "megaNav.work.col.career.skillsLearning": "Competências e aprendizagem",
   "megaNav.work.col.career.mentorship": "Mentoria",
   "megaNav.work.col.career.employerReviews":
     "Avaliações de entidades empregadoras",
@@ -437,6 +423,8 @@ export const shared: Catalog = {
   "megaNav.about.col.legal.privacyPolicy": "Política de privacidade",
   "megaNav.about.col.legal.termsOfUse": "Termos de utilização",
   "megaNav.about.col.legal.dataRequest": "Pedir os teus dados",
+  /** LG-01: a declaração de acessibilidade publicada em /policies/accessibility. */
+  "megaNav.about.col.legal.accessibility": "Declaração de acessibilidade",
   "megaNav.about.col.legal.pressKit": "Kit de imprensa",
   "megaNav.about.col.legal.contact": "Contacto",
 
@@ -452,6 +440,7 @@ export const shared: Catalog = {
   "footerData.base.privacy": "Privacidade",
   "footerData.base.cookies": "Cookies",
   "footerData.base.guidelines": "Diretrizes da comunidade",
+  "footerData.base.accessibility": "Acessibilidade",
   "footerData.base.security": "Segurança",
   "footerData.base.imprint": "Informação legal",
 

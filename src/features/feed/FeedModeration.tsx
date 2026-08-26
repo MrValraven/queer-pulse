@@ -18,12 +18,9 @@ import { useSocial } from "../../app/providers/useSocial";
 import { useFeedMutes, type FeedMuteTarget } from "./api/useFeedMutes";
 import { SAFETY_EMAIL } from "./feed.data";
 import { useCreateReport } from "../safety/api/useCreateReport";
-import {
-  reasonsFor,
-  REASON_LABEL_KEYS,
-  type ReasonCode,
-  type ReportSubjectType,
-} from "../safety/reportReasons";
+import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
+import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
+import type { ReportSubjectType } from "../safety/reportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./FeedPage.module.css";
 
@@ -317,16 +314,22 @@ export function ReportModal({
 }: ReportModalProps) {
   const { t } = useTranslation();
   useScrollLock();
-  const [reason, setReason] = useState<ReasonCode | "">("");
+  const [reason, setReason] = useState<string>("");
   const [detail, setDetail] = useState("");
   const [sent, setSent] = useState(false);
   // A report that FAILED must never render the "we received your report"
   // confirmation: the reporter would believe moderators had it when nothing was
   // persisted. Failure keeps the form (and their reason/detail) on screen with
-  // an honest retry note instead.
-  const [hasFailed, setHasFailed] = useState(false);
+  // an honest retry note instead. The note holds the words to show: a rolling
+  // flood cap refusal carries its own member-facing explanation from the
+  // server, and that explanation replaces the generic line.
+  const [failureMessage, setFailureMessage] = useState<string | null>(null);
+  const hasFailed = failureMessage !== null;
   const createReport = useCreateReport();
-  const reasons = reasonsFor(subjectType);
+  const describeReportError = useReportSubmissionError();
+  // Server-owned taxonomy, falling back to the local one instantly and
+  // silently. Never a spinner, never an empty reason list.
+  const reasons = useReportReasons(subjectType);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -339,16 +342,23 @@ export function ReportModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!reason) return;
-    setHasFailed(false);
+    setFailureMessage(null);
     // Live mode POSTs /reports; demo resolves locally. Only a resolved request
     // confirms.
     createReport.mutate(
-      { subjectType, subjectId, reasonCode: reason, detail: detail.trim() },
+      {
+        subjectType,
+        subjectId,
+        reasonCode: asReasonCode(reason),
+        detail: detail.trim(),
+      },
       {
         onSuccess: () => setSent(true),
         onError: (err) => {
           logError(err, { scope: "feed.report" });
-          setHasFailed(true);
+          setFailureMessage(
+            describeReportError(err, t("feed:moderation.reportDialog.failed")),
+          );
         },
       },
     );
@@ -414,7 +424,7 @@ export function ReportModal({
                     checked={reason === r.code}
                     onChange={() => setReason(r.code)}
                   />
-                  {t(REASON_LABEL_KEYS[r.code])}
+                  {r.label}
                 </label>
               ))}
             </div>
@@ -426,10 +436,10 @@ export function ReportModal({
               onChange={(e) => setDetail(e.target.value)}
               rows={3}
             />
-            {hasFailed && (
+            {failureMessage !== null && (
               <p className={styles.reportError} role="alert">
                 <FiAlertTriangle aria-hidden />
-                {t("feed:moderation.reportDialog.failed")}
+                {failureMessage}
               </p>
             )}
             <div className={styles.dialogActions}>

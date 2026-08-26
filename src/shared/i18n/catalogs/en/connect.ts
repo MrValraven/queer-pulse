@@ -52,7 +52,6 @@ export const connect: Catalog = {
   "moreMenu.blockConfirm.action": "Block",
 
   // Card chrome (ConnectionCards)
-  "card.profileAria": "{name}'s profile",
   "card.blockedBadge": "Blocked",
   "card.message": "Message",
   "card.viewProfile": "View profile",

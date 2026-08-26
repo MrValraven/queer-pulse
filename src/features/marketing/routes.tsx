@@ -12,6 +12,12 @@ const SecurityPolicyPage = lazyNamed(
   () => import("./SecurityPolicyPage"),
   "SecurityPolicyPage",
 );
+// LG-01: the published accessibility statement. QueerPulse publishes it by
+// choice; the legal reasoning is in accessibilityStatement.data.tsx.
+const AccessibilityStatementPage = lazyNamed(
+  () => import("./AccessibilityStatementPage"),
+  "AccessibilityStatementPage",
+);
 const ConstitutionPage = lazyNamed(
   () => import("./ConstitutionPage"),
   "ConstitutionPage",
@@ -73,6 +79,10 @@ const ListBusinessPage = lazyNamed(
   () => import("./listBusiness/ListBusinessPage"),
   "ListBusinessPage",
 );
+const ListingClaimsPage = lazyNamed(
+  () => import("./listBusiness/claims/ListingClaimsPage"),
+  "ListingClaimsPage",
+);
 const ResourceLibraryPage = lazyNamed(
   () => import("./ResourceLibraryPage"),
   "ResourceLibraryPage",
@@ -115,6 +125,10 @@ export function marketingRoutes() {
       <Route path={routes.dsar} element={<DsarPage />} />
       <Route path={routes.cookies} element={<CookiesPage />} />
       <Route path={routes.policiesSecurity} element={<SecurityPolicyPage />} />
+      <Route
+        path={routes.policiesAccessibility}
+        element={<AccessibilityStatementPage />}
+      />
       <Route path={routes.imprint} element={<ImprintPage />} />
       <Route path={routes.constitution} element={<ConstitutionPage />} />
       <Route path={routes.codeOfConduct} element={<CodeOfConductPage />} />
@@ -183,6 +197,9 @@ export function marketingRoutes() {
           react-router's route ranking resolves it correctly regardless of
           declaration order. */}
       <Route path={routes.listBusinessEdit} element={<ListBusinessPage />} />
+      {/* The claimant's own ownership claims. A static segment, so react-router
+          ranks it above the `:slug` detail route below regardless of order. */}
+      <Route path={routes.listingClaims} element={<ListingClaimsPage />} />
       <Route path={`${routes.venue}/:id`} element={<VenueDetailPage />} />
       <Route
         path={`${routes.directory}/:slug`}

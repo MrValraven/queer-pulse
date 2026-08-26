@@ -3,15 +3,11 @@ import type { Catalog } from "../../types";
 /** Shared chrome: brand, primary CTAs, cross-cutting UI verbs, and examples. */
 export const common: Catalog = {
   // Brand
-  "brand.name": "QueerPulse",
-  "brand.tagline": "A queer professional network, rooted in Lisbon.",
 
   // Primary CTAs
   "cta.requestInvite": "Request an invite",
-  "cta.exploreMembers": "Explore profiles",
   "cta.backHome": "Back to home",
   "cta.signIn": "Sign in",
-  "cta.signOut": "Sign out",
   "cta.search": "Search",
 
   // Language switcher

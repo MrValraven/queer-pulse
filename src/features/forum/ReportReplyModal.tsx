@@ -1,14 +1,12 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FiCheck, FiAlertTriangle } from "react-icons/fi";
 import { Button, ModalSheet, Sending } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
-import {
-  reasonsFor,
-  type ReasonCode,
-  type ReportSubjectType,
-} from "../safety/reportReasons";
+import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
+import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
+import type { ReportSubjectType } from "../safety/reportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./ReportReplyModal.module.css";
 
@@ -34,30 +32,42 @@ export function ReportReplyModal({
   onClose,
 }: ReportReplyModalProps) {
   const { t } = useTranslation();
-  const [reason, setReason] = useState<ReasonCode | null>(null);
+  const [reason, setReason] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
     "idle",
   );
   const createReport = useCreateReport();
+  const describeReportError = useReportSubmissionError();
+  // What the failure panel says. A rolling flood cap refusal carries its own
+  // member-facing explanation from the server, so the panel shows that instead
+  // of the generic body copy; every other failure keeps the generic line.
+  const [failureMessage, setFailureMessage] = useState<string | null>(null);
 
   // Reasons are subject-specific (post vs reply); recompute if the target
   // changes while mounted.
-  const REASONS = useMemo(() => reasonsFor(subjectType), [subjectType]);
+  // Server-owned taxonomy, falling back to the local one instantly and
+  // silently. Also fixes the labels: `reasonsFor()` returned the plain-English
+  // `REASON_LABELS`, so this modal showed English reasons in every locale.
+  const REASONS = useReportReasons(subjectType);
 
   const firstName = authorName.split(" ")[0] ?? authorName;
 
   const submit = () => {
     if (!reason) return;
     setStatus("sending");
+    setFailureMessage(null);
     // Demo resolves after a short delay; live POSTs /reports. Same confirmation.
     createReport.mutate(
-      { subjectType, subjectId, reasonCode: reason },
+      { subjectType, subjectId, reasonCode: asReasonCode(reason) },
       {
         onSuccess: () => setStatus("done"),
         onError: (err) => {
           // A failed report must NOT show the success panel — surface a distinct
           // retry state so the member knows nothing was submitted.
           logError(err, { scope: "forum.reportReply" });
+          setFailureMessage(
+            describeReportError(err, t("forum:reportReply.errorBody")),
+          );
           setStatus("error");
         },
       },
@@ -104,7 +114,9 @@ export function ReportReplyModal({
           <h2 className={styles.errorTitle}>
             {t("forum:reportReply.errorTitle")}
           </h2>
-          <p className={styles.errorBody}>{t("forum:reportReply.errorBody")}</p>
+          <p className={styles.errorBody} role="alert">
+            {failureMessage ?? t("forum:reportReply.errorBody")}
+          </p>
           <div className={styles.errorActions}>
             <Button variant="ghost" type="button" onClick={onClose}>
               {t("forum:reportReply.cancel")}

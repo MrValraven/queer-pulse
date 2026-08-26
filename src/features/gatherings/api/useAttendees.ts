@@ -29,8 +29,16 @@ export interface AttendeesResult {
    * thirty arrived.
    */
   seatsTaken: number;
-  /** How many going members have been checked in at the door (LOC-03). */
-  checkedInCount: number;
+  /**
+   * How many going members have been checked in at the door (LOC-03).
+   *
+   * NULLABLE, AND THE NULL IS LOAD-BEARING. `null` means the platform no
+   * longer keeps this gathering's check-in records: they are cleared 30 days
+   * after it ends, so past that point no count can be stated. `0` still means
+   * nobody arrived. Coalescing the null to zero is the exact bug the server
+   * side of this was changed to remove, so every consumer branches on it.
+   */
+  checkedInCount: number | null;
   goingPage: number;
   hasMoreGoing: boolean;
   waitlistPage: number;
@@ -57,7 +65,9 @@ async function mockRows(): Promise<AttendeesResult> {
     waitlistCount: waitlist.length,
     capacity: 20,
     // The demo roster declares no guests and nobody has walked through a
-    // demo door, so seats equal rows and the door count starts at zero.
+    // demo door, so seats equal rows and the door count starts at zero. Zero
+    // rather than null on purpose: a demo gathering is inside its retention
+    // window and genuinely had no arrivals.
     seatsTaken: going.length,
     checkedInCount: 0,
     goingPage: 1,
@@ -101,7 +111,10 @@ export function useAttendees(slug: string | undefined) {
         // seat tally, which reads exactly as this did before LOC-07 rather
         // than silently reporting zero seats taken.
         seatsTaken: goingPage.seatsTaken ?? goingPage.total,
-        checkedInCount: goingPage.checkedInCount ?? 0,
+        // Passed through untouched. A `?? 0` here would turn "no longer
+        // recorded" back into "nobody came", which is precisely the reading
+        // an organiser opening a year-old gathering must not be given.
+        checkedInCount: goingPage.checkedInCount ?? null,
         goingPage: 1,
         hasMoreGoing: goingPage.items.length < goingPage.total,
         waitlistPage: 1,

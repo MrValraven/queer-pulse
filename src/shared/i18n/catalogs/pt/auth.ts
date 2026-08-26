@@ -10,20 +10,13 @@ export const auth: Catalog = {
   "common.backToProfile": "Voltar ao perfil",
   "common.copied": "Copiado",
   "common.copy": "Copiar",
-  "common.delete": "Eliminar",
   "common.notAMemberYet": "Ainda não fazes parte?",
   "common.optionalSuffix": "(opcional)",
-  "common.resume": "Retomar",
-  "common.saving": "A guardar…",
 
   // ── Entrar ──
   "signIn.title": "Bem-vinde de <em>volta</em>",
   "signIn.subtitle": "Entra para continuar de onde ficaste.",
   "signIn.artCaption": "Uma rede queer, <em>enraizada em Lisboa.</em>",
-  "signIn.email": "Email",
-  "signIn.password": "Palavra-passe",
-  "signIn.submit": "Entrar",
-  "signIn.forgot": "Esqueceste-te da palavra-passe?",
   "signIn.connecting": "A ligar…",
   "signIn.googleCta": "Continuar com o Google",
   "signIn.notice.inviteRequired.title": "Vais precisar de um convite",
@@ -106,9 +99,6 @@ export const auth: Catalog = {
   "invite.quota.resets_one": "Renova amanhã",
   "invite.quota.resets_other": "Renova daqui a {count} dias",
   "invite.quota.resets_zero": "Renova hoje",
-  "invite.deliveryMethod.ariaLabel": "Escolhe como enviar o convite",
-  "invite.deliveryMethod.email": "Email",
-  "invite.deliveryMethod.link": "Partilhar um link",
 
   "invite.compose.recipientEmail.label": "Para quem é",
   "invite.compose.recipientEmail.placeholder": "pessoa@exemplo.com",
@@ -123,35 +113,6 @@ export const auth: Catalog = {
     "Porque é que devia entrar? Uma ou duas frases já ajudam bastante.",
   "invite.compose.note.label": "Nota pessoal",
   "invite.compose.note.placeholder": "Adiciona uma nota pessoal (opcional)",
-
-  "invite.draft.title": "Convite para {name}",
-  "invite.draft.titleFallbackName": "alguém novo",
-  "invite.draft.descFallback": "Um rascunho de convite em progresso",
-  "invite.draft.savedJustNow": "Guardado agora mesmo",
-  "invite.draft.savedToast": "Rascunho guardado",
-
-  "invite.email.firstName.label": "Primeiro nome",
-  "invite.email.firstName.placeholder": "Alex",
-  "invite.email.lastName.label": "Apelido",
-  "invite.email.lastName.placeholder": "Morais",
-  "invite.email.email.label": "Email",
-  "invite.email.email.placeholder": "tu@exemplo.com",
-  "invite.email.howYouKnowThem.label": "Como a conheces",
-  "invite.email.howYouKnowThem.helper":
-    "Ajuda-nos a perceber a ligação. Nunca é mostrado publicamente.",
-  "invite.email.howYouKnowThem.placeholder": "Conhecemo-nos em…",
-  "invite.email.note.label": "Nota pessoal",
-  "invite.email.note.placeholder": "Adiciona uma nota pessoal (opcional)",
-  "invite.email.preview.label": "Pré-visualização",
-  "invite.email.preview.subject": "{name} convidou-te para o QueerPulse",
-  "invite.email.preview.noteFallback": "Achei que ias pertencer aqui.",
-  "invite.email.preview.openCta": "Abrir o teu convite",
-  "invite.email.preview.expiresIn7Days": "Expira em 7 dias",
-  "invite.email.submit": "Enviar convite",
-  "invite.email.saveAsDraft": "Guardar como rascunho",
-  "invite.email.savedToDrafts": "Guardado em Rascunhos",
-  "invite.email.formNote":
-    "Vai receber um link de utilização única, só para essa pessoa.",
 
   "invite.link.previewLabel": "Pré-visualização",
   "invite.link.generateCta": "Gerar link de convite",
@@ -175,7 +136,6 @@ export const auth: Catalog = {
     "Não foi enviado nada a essa pessoa. O link é partilhado por ti, da forma que fizer mais sentido.",
   "invite.ready.linkCopied": "Link copiado",
   "invite.ready.copyFailed": "Não foi possível copiar. Tenta selecionar o link",
-  "invite.ready.copyLinkAriaLabel": "Copiar link de convite",
   "invite.ready.shareThrough": "Partilhar através de",
   "invite.ready.qrHint": "Ou deixa que o leiam",
   "invite.ready.qrLabel":
@@ -183,13 +143,6 @@ export const auth: Catalog = {
   "invite.ready.oneTimeLink": "Link de utilização única",
   "invite.ready.expiresIn7Days": "Expira em 7 dias",
   "invite.ready.expiresOn": "Expira a {date}",
-
-  "invite.sent.headline": "Convite enviado para <em>{name}</em>",
-  "invite.sent.sub": "Avisamos-te quando {name} entrar.",
-  "invite.sent.summary.invited": "Convite para",
-  "invite.sent.summary.sent": "Enviado",
-  "invite.sent.summary.sentToday": "Hoje às {time}",
-  "invite.sent.summary.expires": "Expira",
 
   "invite.sentList.label": "Convites que enviaste",
   "invite.sentList.filter.all": "Todos",
@@ -318,8 +271,6 @@ export const auth: Catalog = {
   "requestInvite.field.mutual.placeholder": "membro@exemplo.com",
   "requestInvite.field.mutual.error":
     "Introduz um email válido, ou deixa em branco.",
-  "requestInvite.field.mutual.messagePrefix":
-    "Um membro que me pode avalizar: {name}",
   "requestInvite.field.why.label": "Porquê o QueerPulse",
   "requestInvite.field.why.placeholder":
     "O que procuras, e o que te traz aqui. Umas frases sinceras já chegam.",

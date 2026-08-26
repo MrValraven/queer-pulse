@@ -1,10 +1,14 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FiCheck, FiAlertTriangle } from "react-icons/fi";
 import { Button, ModalSheet, Sending } from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useCreateReport } from "../../safety/api/useCreateReport";
-import { reasonsFor, type ReasonCode } from "../../safety/reportReasons";
+import { useReportSubmissionError } from "../../safety/api/reportSubmissionError";
+import {
+  asReasonCode,
+  useReportReasons,
+} from "../../safety/api/useReportReasons";
 import { logError } from "../../../shared/observability/logger";
 import styles from "./ArticleComments.module.css";
 
@@ -26,23 +30,38 @@ export function ReportCommentModal({
   onClose,
 }: ReportCommentModalProps) {
   const { t } = useTranslation();
-  const [reason, setReason] = useState<ReasonCode | null>(null);
+  const [reason, setReason] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
     "idle",
   );
   const createReport = useCreateReport();
-  const REASONS = useMemo(() => reasonsFor("magazine_comment"), []);
+  const describeReportError = useReportSubmissionError();
+  // What the failure panel says. A rolling flood cap refusal carries its own
+  // member-facing explanation from the server, so the panel shows that instead
+  // of the generic body copy; every other failure keeps the generic line.
+  const [failureMessage, setFailureMessage] = useState<string | null>(null);
+  // See `ReportReplyModal`: server taxonomy, local instant fallback, and the
+  // labels are now translated rather than the English `REASON_LABELS`.
+  const REASONS = useReportReasons("magazine_comment");
   const firstName = authorName.split(" ")[0] ?? authorName;
 
   const submit = () => {
     if (!reason) return;
     setStatus("sending");
+    setFailureMessage(null);
     createReport.mutate(
-      { subjectType: "magazine_comment", subjectId, reasonCode: reason },
+      {
+        subjectType: "magazine_comment",
+        subjectId,
+        reasonCode: asReasonCode(reason),
+      },
       {
         onSuccess: () => setStatus("done"),
         onError: (err) => {
           logError(err, { scope: "magazine.reportComment" });
+          setFailureMessage(
+            describeReportError(err, t("magazine:comments.report.errorBody")),
+          );
           setStatus("error");
         },
       },
@@ -92,8 +111,8 @@ export function ReportCommentModal({
           <h2 className={styles.errorTitle}>
             {t("magazine:comments.report.errorTitle")}
           </h2>
-          <p className={styles.errorBody}>
-            {t("magazine:comments.report.errorBody")}
+          <p className={styles.errorBody} role="alert">
+            {failureMessage ?? t("magazine:comments.report.errorBody")}
           </p>
           <div className={styles.errorActions}>
             <Button variant="ghost" type="button" onClick={onClose}>

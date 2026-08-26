@@ -98,6 +98,16 @@ export function DirectoryAsideOwner({ place, preview, ownerRef }: Props) {
             <FiArrowRight aria-hidden />
           </Link>
         ))}
+      {/* Someone who has already claimed this place is a non-owner looking at
+          it again, so the claim CTA above still shows them. This is the way
+          back to the claim they filed. Live only: a demo persona's claim never
+          leaves the browser, so there is nothing server-side to track. */}
+      {!ownerRef && !preview && !demoMode && (
+        <Link to={routes.listingClaims} className={s.claimLink}>
+          {t("marketing:directory.detail.claimsFiledLink")}{" "}
+          <FiArrowRight aria-hidden />
+        </Link>
+      )}
       {claiming && (
         <DirectoryClaimModal
           listingRef={listingRef ?? place.slug}

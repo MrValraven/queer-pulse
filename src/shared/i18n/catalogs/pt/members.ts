@@ -144,7 +144,6 @@ export const members: Catalog = {
   "profile.hero.location": "{hood}, Lisboa",
   "profile.hero.editCta": "Editar perfil",
   "profile.hero.previewCta": "Ver como visitante",
-  "profile.hero.requestIntroCta": "Pedir uma apresentação",
   "profile.hero.sayHelloCta": "Dizer olá",
   "profile.hero.vouchedFor": "Deste um voto de confiança a {first}",
   "profile.hero.vouchedShort": "Com voto de confiança",
@@ -152,11 +151,8 @@ export const members: Catalog = {
   "profile.hero.vouchForCta": "Dar voto de confiança a {first}",
   "profile.hero.levelLabel": "Nível {number}",
   "profile.hero.badgesChip": "{earned} / {total} emblemas",
-  "profile.hero.badgesDesc": "{earned} conquistados · {discover} por descobrir",
-  "profile.hero.badgesArrow": "Ver emblemas e nível",
   "profile.hero.perksChip": "{count} vantagens",
   "profile.hero.perksTitle": "Vantagens",
-  "profile.hero.perksArrow": "Resgatar as tuas vantagens",
   "profile.hero.hearPronunciation": "Ouvir como se diz o nome de {name}",
   "profile.hero.notHereFor.label": "Não estou aqui para",
   "profile.hero.writtenBy.en": "{name} escreveu isto em inglês",
@@ -336,7 +332,6 @@ export const members: Catalog = {
   "profileEdit.field.lookingFor": "À procura de",
   "profileEdit.customPronounPlaceholder": "personalizado…",
   "profileEdit.customPronounsLabel": "Pronomes personalizados",
-  "profileEdit.addTagPlaceholder": "Adicionar uma etiqueta…",
   "profileEdit.searchTagPlaceholder": "Procurar competências…",
   "profileEdit.popularTagsLabel": "Populares",
 
@@ -573,8 +568,6 @@ export const members: Catalog = {
     "Um perfil público é algo em que <em>cresces aos poucos.</em>",
   "publicProfile.control.locked.lede":
     "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse: quem escreve, organiza convívios ou lidera projetos. É aqui que estás:",
-  "publicProfile.control.locked.progress":
-    "{met} de {total} cumpridos. Continua a aparecer e isto desbloqueia-se sozinho.",
   "publicProfile.control.unlocked.eyebrow": "Perfil público · desbloqueado",
   "publicProfile.control.unlocked.title":
     "Já podes partilhar um <em>perfil público.</em>",
@@ -657,7 +650,6 @@ export const members: Catalog = {
 
   // ── Pesquisa global (SearchPage) ────────────────────────────────────────────
   "search.type.member": "Pessoas",
-  "search.type.gathering": "Convívios",
   "search.type.community": "Comunidades",
   "search.type.event": "Eventos",
   "search.type.forum": "Fórum",
@@ -859,7 +851,6 @@ export const members: Catalog = {
   "directory.profession.biologist": "Biologia",
   "directory.profession.ecologist": "Ecologia",
   "directory.profession.labResearcher": "Investigação laboratorial",
-  "directory.profession.unspecified": "Não especificado",
 
   // ── Vocabulário partilhado "disponível para" (openTo.data → OPEN_TO_PRESETS).
   //    Um id → um rótulo, reutilizado pelos chips do perfil
@@ -1031,7 +1022,6 @@ export const members: Catalog = {
   "drafts.controls.searchAriaLabel": "Pesquisar rascunhos",
   "drafts.controls.clearSearchLabel": "Limpar pesquisa",
   "drafts.controls.sortLabel": "Ordenar",
-  "drafts.controls.sortAriaLabel": "Ordenar rascunhos",
 
   // ── Chrome da página de rascunhos (DraftsPage) ──────────────────────────────
   "drafts.tabsAriaLabel": "Tipos de rascunho",
@@ -1262,17 +1252,6 @@ export const members: Catalog = {
   "badges.backToProfile": "Voltar ao perfil",
   "badges.pageTitle": "Emblemas e <em>nível</em>",
   "badges.howToEarnXp": "Como ganhar XP",
-  "badges.earnedHeading": "Os teus <em>emblemas</em>",
-  "badges.lockedHeading": "Emblemas <em>bloqueados</em>",
-  "badges.lockedSub":
-    "Ganha XP e participa em convívios para desbloquear estes.",
-  "badges.hideMore": "Esconder",
-  "badges.showMore": "Mostrar mais {count}",
-  "badges.perksUnlockHeading": "O que o teu nível <em>desbloqueia</em>",
-  "badges.perksUnlockSub":
-    "Cada nível dá acesso a novas vantagens da comunidade.",
-  "badges.xpToNextLevel":
-    "{xp} / {xpMax} XP para o Nível {nextLevel} · {nextName}",
   "badges.loading": "A carregar os teus emblemas…",
   "badges.errorTitle": "Não conseguimos carregar os teus emblemas",
   "badges.errorDescription":
@@ -1286,7 +1265,6 @@ export const members: Catalog = {
   "badges.xpBreakdown.sub":
     "Todas as fontes de XP, ganhas ou ainda por ganhar.",
   "badges.xpBreakdown.progress": "{units} de {cap}",
-  "badges.xpBreakdown.amount": "+{xp} XP",
   "badges.xpBreakdown.perUnitAmount": "+{xp} XP cada",
   "badges.xpBreakdown.sources.profile": "Perfil completo",
   "badges.xpBreakdown.sources.profileDesc": "Uma foto e uma bio no teu perfil.",
@@ -1383,7 +1361,6 @@ export const members: Catalog = {
     "{category} está silenciada. Nada dela te será sugerido.",
   "badges.case.mutedNotePlural":
     "{categories} estão silenciadas. Nada delas te será sugerido.",
-  "badges.case.unmute": "Reativar",
   "badges.case.hiddenFlag": "Escondido",
   "badges.case.rarestFlag": "O mais raro do teu espólio",
   "badges.case.rarityCommon": "Comum",
@@ -1445,9 +1422,7 @@ export const members: Catalog = {
   "badges.ladderV2.sub":
     "Quase tudo o que o QueerPulse oferece está aberto desde o Nível 1. Estes degraus mostram o que cada nível acrescenta a isso, e nada que não esteja construído.",
   "badges.ladderV2.passed": "Ultrapassado",
-  "badges.ladderV2.youAreHere": "Estás aqui",
   "badges.ladderV2.ahead": "Por vir",
-  "badges.ladderV2.toNext": "{xp} para {name}",
   "badges.ladderV2.beyondTitle": "Depois de {name}",
   "badges.ladderV2.beyondBody": "A escada acaba. A comunidade, não.",
 
@@ -1464,7 +1439,6 @@ export const members: Catalog = {
   "badges.ledger.colWhat": "O que aconteceu",
   "badges.ledger.colXp": "XP",
   "badges.ledger.colTotal": "Total",
-  "badges.ledger.why": "Porquê",
   "badges.ledger.showAll": "Mostrar todos os {count} eventos",
   "badges.ledger.showLess": "Mostrar menos",
   "badges.ledger.emptyTitle": "Ainda sem histórico.",
@@ -1540,8 +1514,6 @@ export const members: Catalog = {
 
   // ── A tua rede (ProfileNetworkStats + NetworkListModal) — só do dono ─────────
   "network.title": "A tua rede",
-  "network.subtitle":
-    "Com quem estás ligade e a confiança que construíram juntes.",
   "network.group.connected": "Ligações",
   "network.group.vouchedGiven": "Votos de confiança que deste",
   "network.group.vouchedReceived": "Votos de confiança que recebeste",
@@ -1551,7 +1523,6 @@ export const members: Catalog = {
   "network.row.vouchedGivenNoTime": "deste um voto de confiança",
   "network.row.vouchedReceived": "deu-te um voto de confiança {time}",
   "network.row.vouchedReceivedNoTime": "deu-te um voto de confiança",
-  "network.viewAll": "Ver todas {count}",
   "network.viewAllAria": "Ver todas as {count} em {group}",
   "network.modalSub_one": "{count} pessoa",
   "network.modalSub_other": "{count} pessoas",

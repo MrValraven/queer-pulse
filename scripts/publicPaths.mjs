@@ -24,6 +24,10 @@ const GATED_PATTERNS = [
   "/admin",
   "/admin/*",
   "/mod/*",
+  "/magazine/editor",
+  "/magazine/editor/*",
+  "/magazine/writer",
+  "/magazine/writer/*",
   "/feed",
   "/search",
   "/members",
@@ -34,38 +38,28 @@ const GATED_PATTERNS = [
   "/family",
   "/messages",
   "/notifications",
-  "/mentions",
-  "/notification-deep-link",
   "/communities",
   "/communities/*",
   "/community/*",
   "/calendar",
   "/events",
-  "/event",
-  "/gathering",
-  "/gathering/*",
   "/gatherings",
+  "/gatherings/*",
   "/rsvp",
-  "/rsvp-ticket",
-  "/gathering-recap",
-  "/gathering-cancelled",
-  "/gathering-dashboard",
-  "/gathering-photos",
   "/host",
   "/create-gathering",
-  "/manage-gathering",
-  "/co-host-invite",
   "/forum",
   "/thread",
   "/thread/*",
+  // `/coming-out` is deliberately NOT here: authGate keeps the coming-out guide
+  // public so it reaches a questioning visitor who isn't signed in.
   "/changemakers",
   "/changemaker/*",
-  "/coming-out",
   "/parents",
   "/caregivers",
   "/vouch",
-  "/qr-scanner",
   "/magazine/submit-story",
+  "/magazine/apply-to-write",
   // Organiser-side volunteer surfaces. The listing (/about/volunteer) and each
   // opportunity's detail page stay public; posting, editing and triaging do not.
   "/about/volunteer/post",
@@ -84,6 +78,10 @@ const GATED_PATTERNS = [
   "/local/directory",
   "/local/directory/*",
   "/local/map",
+  "/local/venue",
+  "/local/venue/*",
+  "/local/housing",
+  "/local/housing/*",
   "/business-directory",
   "/spaces-map",
   "/cinema/watch",
@@ -103,6 +101,9 @@ const PUBLIC_EXCEPTIONS = [
   "/studio/help",
   "/studio/press",
   "/studio/end-card",
+  // Housing co-ops stay public even though the rest of /local/housing/* is gated.
+  "/local/housing/coop",
+  "/local/housing/coop/*",
 ];
 
 /** matchPath-equivalent for our patterns: exact, or `/base/*` prefix. */
@@ -168,7 +169,6 @@ export const QUIET_PUBLIC_PATHS = [
   "/about/press-kit",
   "/about/for-organisations",
   "/about/help",
-  "/about/help/accessibility",
   "/about/volunteer",
 
   // ── Policies ─────────────────────────────────────────────────────────────
@@ -179,6 +179,10 @@ export const QUIET_PUBLIC_PATHS = [
   // The responsible-disclosure policy. Public by design: a security researcher
   // reporting a vulnerability has no account. ID-15.
   "/policies/security",
+  // The accessibility statement. Public by design and deliberately indexable:
+  // a legally required document is no use if only signed-in members find it.
+  // LG-01.
+  "/policies/accessibility",
 
   // ── Local — arrival + safe-space guides (directory/map are gated) ────────
   "/local/safe-spaces",
@@ -243,19 +247,46 @@ export function assertNoGatedPaths(paths) {
  * (`GET /subprofiles/public-handles`) and turn them into dynamic `/p/:handle`
  * sitemap/prerender entries.
  *
- * NEVER throws: a demo/offline build must still succeed with no API
- * reachable, so any failure (missing apiUrl, network error, non-2xx, bad
- * JSON) is swallowed into a `console.warn` + an empty array.
+ * BACKEND ROUTE: `GET /subprofiles/public-handles`, declared in
+ * queerpulse-backend `src/subprofiles/subprofiles.controller.ts` (`@Public()`,
+ * throttled) and served by `SubprofilePublicReadService.listPublicHandles`.
+ * This script is that route's ONLY consumer, and it runs at BUILD time, so the
+ * route has no call site anywhere under `src/`. A scan that diffs backend
+ * routes against frontend `src/` call sites therefore reports it as orphaned.
+ * It is not. Deleting it breaks every persona page's discoverability. The
+ * backend route carries a matching CONSUMER note pointing back here.
+ *
+ * NEVER FAILS THE BUILD. A demo or offline build has to succeed with no API
+ * reachable, so a missing `apiUrl`, a network error, a non-2xx, or bad JSON
+ * all return an empty array. That is deliberate, and it is also the trap: an
+ * empty return used to be indistinguishable from a healthy backend with
+ * nothing published, which is how a silent SEO regression hides inside a green
+ * build. So the three outcomes now log distinctly, and a genuine FAILURE logs
+ * at `console.error` naming the URL and the reason.
+ *
+ * The one thing that DOES throw is `assertNoGatedPaths`. A gated path reaching
+ * the sitemap is a privacy leak rather than a fetch problem, and it is held
+ * outside the try below so `generate-sitemap.mjs` exits non-zero on it, exactly
+ * as it already does for the static `QUIET_PUBLIC_PATHS` list.
  */
 export async function fetchSubprofilePublicPaths(apiUrl) {
-  if (!apiUrl) return [];
-  try {
-    const response = await fetch(
-      `${apiUrl.replace(/\/$/, "")}/subprofiles/public-handles`,
+  if (!apiUrl) {
+    console.log(
+      "[publicPaths] No API URL configured, so persona handles were never requested. This build gets zero /p/* paths, which is expected for a demo or offline build.",
     );
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return [];
+  }
+
+  const endpointUrl = `${apiUrl.replace(/\/$/, "")}/subprofiles/public-handles`;
+  let entries;
+
+  try {
+    const response = await fetch(endpointUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status} ${response.statusText}`.trim());
+    }
     const body = await response.json();
-    const entries = (body.items ?? [])
+    entries = (body.items ?? [])
       .filter(
         (item) =>
           item && typeof item.handle === "string" && item.handle.length > 0,
@@ -264,12 +295,32 @@ export async function fetchSubprofilePublicPaths(apiUrl) {
         path: `/p/${item.handle}`,
         lastmod: item.updatedAt ?? null,
       }));
-    assertNoGatedPaths(entries.map((entry) => entry.path));
-    return entries;
   } catch (error) {
-    console.warn(
-      `[publicPaths] Could not fetch persona handles: ${error.message}. Skipping dynamic /p/* paths.`,
+    console.error(
+      `[publicPaths] PERSONA HANDLES UNAVAILABLE. GET ${endpointUrl} failed: ${error.message}`,
+    );
+    console.error(
+      "[publicPaths] Every /p/:handle page is missing from the sitemap and the prerender set for this build.",
+    );
+    console.error(
+      "[publicPaths] The build is allowed to continue so that demo and offline builds still succeed. On a production build, treat this as broken and re-run once the API answers.",
     );
     return [];
   }
+
+  // Deliberately outside the try: this is the privacy guard, and it must be
+  // able to fail the build instead of being downgraded to a fetch warning.
+  assertNoGatedPaths(entries.map((entry) => entry.path));
+
+  if (entries.length === 0) {
+    console.warn(
+      `[publicPaths] GET ${endpointUrl} answered OK and returned zero published persona handles, so this build has no /p/* paths. The endpoint is healthy and simply has nothing published yet.`,
+    );
+  } else {
+    console.log(
+      `[publicPaths] Fetched ${entries.length} persona handle(s) from ${endpointUrl}.`,
+    );
+  }
+
+  return entries;
 }

@@ -1,81 +1,52 @@
-import { useState } from "react";
-import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { describeError } from "../../shared/api/errorMessage";
-import { useBulkReviewJoinRequests } from "./api/useBulkReviewJoinRequests";
+import type { JoinRequestView } from "./api/useJoinRequests";
 import { JoinRequestBulkDeclineModal } from "./JoinRequestBulkDeclineModal";
+import { JoinRequestBulkResult } from "./JoinRequestBulkResult";
+import { useJoinRequestBulkDecision } from "./useJoinRequestBulkDecision";
 import { JOIN_REQUEST_BULK_ACTION_CAP } from "../auth/api/joinRequest.api";
 import styles from "./AdminMembersPage.module.css";
 
 /**
- * Floating bulk-action bar for the pending join-request queue's multi-select
- * (Task 6). Mirrors `VerificationBulkActionBar` one-for-one, adapted to this
- * queue's three decisions: approve, waitlist, decline (reason required).
+ * The bulk-action bar for the join-request queue's multi-select: approve,
+ * waitlist and decline, matching the three decisions already on a single card.
  *
- * `onSuccess` reports back which ids actually succeeded (a bulk decide is
- * per-item, not all-or-nothing — see `useBulkReviewJoinRequests`). This is a
- * deliberate addition over the plan's original sketch: `AdminVerifyQueue`
- * needs the succeeded ids to drop those rows from the pending view the same
- * way it already does for a single approve/decline, since demo mode's mock
- * queue never mutates its own backing array on a mutation and so wouldn't
- * otherwise reflect the bulk decision at all.
+ * Every one of them goes through a confirmation naming the count and the action
+ * before anything reaches the server, and a decline names the reason that will
+ * be recorded against all of them. These are real people's applications and no
+ * decision here is undoable from this screen.
+ *
+ * The decision itself lives in `useJoinRequestBulkDecision`, which keeps the
+ * partial result whole. See `JoinRequestBulkResult` for why a bulk call
+ * regularly half-applies.
  */
 export function JoinRequestBulkActionBar({
   selectedIds,
+  rows,
   onClear,
-  onSuccess,
+  onOutcome,
 }: {
   selectedIds: Set<string>;
+  /** The pending rows on screen, so a failed id can be named. */
+  rows: JoinRequestView[];
   onClear: () => void;
-  onSuccess: (ids: string[]) => void;
+  /** Succeeded ids leave the queue; failed ids stay selected for a retry. */
+  onOutcome: (succeededIds: string[], failedIds: string[]) => void;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const { bulkReview, pending } = useBulkReviewJoinRequests();
-  const [confirmingDecline, setConfirmingDecline] = useState(false);
   const ids = Array.from(selectedIds);
   const count = ids.length;
-
-  async function approve() {
-    try {
-      const result = await bulkReview(ids, "approved");
-      onSuccess(result.succeeded);
-      onClear();
-    } catch (caught) {
-      showToast(
-        describeError(t("admin:members.verify.bulk.action.approve"), caught),
-        "error",
-      );
-    }
-  }
-
-  async function waitlist() {
-    try {
-      const result = await bulkReview(ids, "waitlisted");
-      onSuccess(result.succeeded);
-      onClear();
-    } catch (caught) {
-      showToast(
-        describeError(t("admin:members.verify.bulk.action.waitlist"), caught),
-        "error",
-      );
-    }
-  }
-
-  async function confirmDecline(reason: string) {
-    try {
-      const result = await bulkReview(ids, "declined", reason);
-      onSuccess(result.succeeded);
-      setConfirmingDecline(false);
-      onClear();
-    } catch (caught) {
-      showToast(
-        describeError(t("admin:members.verify.bulk.action.decline"), caught),
-        "error",
-      );
-    }
-  }
+  const decision = useJoinRequestBulkDecision({ ids, onOutcome });
+  const isDecliningOpen = decision.confirming === "declined";
+  // Approve and waitlist share the plain ConfirmDialog; a decline needs the
+  // reason picker, so it gets its own modal below.
+  const simpleConfirmStatus =
+    decision.confirming !== null && !isDecliningOpen
+      ? decision.confirming
+      : null;
+  const simpleConfirmCopyKey = simpleConfirmStatus
+    ? decision.confirmCopyKey
+    : null;
 
   return (
     <>
@@ -97,36 +68,62 @@ export function JoinRequestBulkActionBar({
         <div className={styles.bulkActions}>
           <Button
             variant="jade"
-            onClick={() => void approve()}
-            disabled={pending}
+            onClick={() => decision.request("approved")}
+            disabled={decision.pending}
           >
             {t("admin:members.verify.bulk.approveCta")}
           </Button>
           <Button
             variant="ghost-dark"
-            onClick={() => void waitlist()}
-            disabled={pending}
+            onClick={() => decision.request("waitlisted")}
+            disabled={decision.pending}
           >
             {t("admin:members.verify.bulk.waitlistCta")}
           </Button>
           <Button
             variant="danger"
-            onClick={() => setConfirmingDecline(true)}
-            disabled={pending}
+            onClick={() => decision.request("declined")}
+            disabled={decision.pending}
           >
             {t("admin:members.verify.bulk.declineCta")}
           </Button>
-          <Button variant="ghost-dark" onClick={onClear} disabled={pending}>
+          <Button
+            variant="ghost-dark"
+            onClick={onClear}
+            disabled={decision.pending}
+          >
             {t("admin:members.verify.bulk.clearCta")}
           </Button>
         </div>
       </div>
-      {confirmingDecline && (
+
+      {decision.outcome && (
+        <JoinRequestBulkResult
+          outcome={decision.outcome}
+          rows={rows}
+          onDismiss={decision.dismissOutcome}
+        />
+      )}
+
+      {simpleConfirmStatus && simpleConfirmCopyKey && (
+        <ConfirmDialog
+          open
+          onClose={decision.cancel}
+          onConfirm={() => void decision.run(simpleConfirmStatus)}
+          loading={decision.pending}
+          title={t(`${simpleConfirmCopyKey}.title`, { count })}
+          description={t(`${simpleConfirmCopyKey}.body`, { count })}
+          confirmLabel={t(`${simpleConfirmCopyKey}.confirmCta`)}
+          cancelLabel={t("admin:common.cancel")}
+        />
+      )}
+
+      {isDecliningOpen && (
         <JoinRequestBulkDeclineModal
           count={count}
-          pending={pending}
-          onConfirm={(reason) => void confirmDecline(reason)}
-          onClose={() => setConfirmingDecline(false)}
+          pending={decision.pending}
+          onConfirm={(reason) => void decision.run("declined", reason)}
+          onClose={decision.cancel}
         />
       )}
     </>

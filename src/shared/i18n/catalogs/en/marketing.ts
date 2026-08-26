@@ -628,7 +628,7 @@ export const marketing: Catalog = {
     "Get a copy of everything QueerPulse holds about you.",
   "dsar.rights.access.formTitle": "Request a copy of your data",
   "dsar.rights.access.formSub":
-    "We'll compile everything tied to your account and send it to you.",
+    "We'll compile everything tied to your account and make it available to download here.",
   "dsar.rights.rectification.label": "Right to rectification",
   "dsar.rights.rectification.desc":
     "Correct information about you that's inaccurate or incomplete.",
@@ -643,7 +643,7 @@ export const marketing: Catalog = {
     "This is separate from deleting your account. Tell us exactly what you want removed.",
   "dsar.rights.objection.label": "Right to <em>object</em>",
   "dsar.rights.objection.desc":
-    "Object to a specific way we're using your data, such as analytics.",
+    "Object to a specific way we're using your data, such as error monitoring.",
   "dsar.rights.objection.formTitle": "Object to a use of your data",
   "dsar.rights.objection.formSub":
     "Tell us which processing you're objecting to.",
@@ -663,14 +663,10 @@ export const marketing: Catalog = {
   "dsar.scopes.connections.s": "Vouches, invites, your network",
   "dsar.scopes.activity.b": "Activity",
   "dsar.scopes.activity.s": "Posts, comments, RSVPs, messages",
-  "dsar.scopes.billing.b": "Billing",
-  "dsar.scopes.billing.s": "Membership tier, payment history",
+  "dsar.scopes.membership.b": "Membership",
+  "dsar.scopes.membership.s": "Your tier, join date, and who invited you",
   "dsar.scopes.moderation.b": "Moderation",
   "dsar.scopes.moderation.s": "Reports you filed or were named in",
-  "dsar.form.docs.label": "Supporting documents",
-  "dsar.form.docs.optional": "(optional)",
-  "dsar.form.docs.helper":
-    "Attach anything that helps us verify or process the request, <em>never required</em> to submit.",
   "dsar.form.contextLabel": "Anything else we should know?",
   "dsar.form.contextPlaceholder": "Extra context for our team",
   "dsar.legalStrip":
@@ -682,7 +678,6 @@ export const marketing: Catalog = {
   "dsar.past.heading": "Your past requests",
   "dsar.past.submitted": "Submitted {date}",
   "dsar.past.responded": "Responded {date}",
-  "dsar.past.respondedWithDuration": "Responded {date} · {duration}",
   "dsar.past.resolved": "Resolved",
   "dsar.past.status.received": "Received",
   "dsar.past.status.inReview": "In review",
@@ -691,7 +686,6 @@ export const marketing: Catalog = {
   "dsar.past.error":
     "We couldn't load your past requests. Please try again shortly.",
   "dsar.past.empty": "You haven't filed any requests yet.",
-  "dsar.past.objectAnalytics": "Objection · Analytics",
   "dsar.toast.submitted": "Request submitted: reference {ref}",
   "dsar.toast.submitError":
     "We couldn't record that request. Nothing was sent. Mind trying again?",
@@ -995,14 +989,11 @@ export const marketing: Catalog = {
 
   // ── Communities Explainer ──────────────────────────────────────────────
   "communitiesAbout.meta.title": "How communities work on QueerPulse",
-  "communitiesAbout.meta.description":
-    "Real rooms, kept by real people, no ads and no algorithm. See how QueerPulse communities work, and how to find the one that feels like yours.",
   "communitiesAbout.hero.eyebrow": "Communities",
   "communitiesAbout.hero.title":
     "How communities work, and why they <em>matter</em>",
   "communitiesAbout.hero.sub":
     "Real rooms, kept by real people. No feeds, no algorithm. Here's what that means, and how to find the one that feels like yours.",
-  "communitiesAbout.hero.browseCta": "Browse communities",
   "communitiesAbout.outro.title": "Ready to find your people?",
   "communitiesAbout.outro.sub":
     "Request an invite and we'll help you find the rooms that feel like home.",
@@ -1056,7 +1047,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.account.item1":
     "<strong>Profile details</strong> you add: name, pronouns, tagline, bio, photos.",
   "privacy.whatWeCollect.account.item2":
-    "<strong>Contact information</strong>: your email address, used to sign you in and send the notifications you've turned on.",
+    "<strong>Contact information</strong>: your email address, which comes from your Google account and is used to sign you in. QueerPulse does not send email.",
   "privacy.whatWeCollect.account.item3":
     "<strong>Membership data</strong>: your tier, join date, who invited you, and who vouched for you.",
   "privacy.whatWeCollect.signInHeading": "How you sign in",
@@ -1099,7 +1090,8 @@ export const marketing: Catalog = {
     "Deliver your messages, notifications, and the connections you make",
   "privacy.howWeUse.item4":
     "Keep the platform safe: investigating reports, enforcing the Code of Conduct",
-  "privacy.howWeUse.item5": "Send you notifications you've opted into",
+  "privacy.howWeUse.item5":
+    "Send you the in-app and push notifications you've turned on",
   "privacy.howWeUse.item6":
     "Fix problems and keep the platform reliable, with your consent, through privacy-respecting error monitoring",
   "privacy.howWeUse.p1":
@@ -1110,16 +1102,42 @@ export const marketing: Catalog = {
   "privacy.whoSees.p2":
     "<strong>Our small team</strong> can access account data to provide support, investigate reports, and keep the platform running.",
   "privacy.whoSees.p3":
-    "<strong>Service providers</strong>, the companies that host the platform, store your uploads, deliver our email, and (with your consent) monitor for errors, see only what's needed for their specific job, under contract.",
+    "<strong>Service providers</strong>, the companies that host the platform, store your uploads, place addresses on a map and (with your consent) monitor for errors, see only what's needed for their specific job.",
   "privacy.whoSees.p4":
     "<strong>Nobody else.</strong> We don't sell or rent your data to any third party, ever.",
   "privacy.retention.title": "How long we keep it",
   "privacy.retention.p1":
-    "Account data is kept for as long as your account is active.",
-  "privacy.retention.p2":
-    "If you delete your account, most personal data is removed within 30 days, except where we're legally required to retain it (e.g. billing records).",
+    "Your profile, your messages, your posts, your connections and your uploads are kept for as long as your account is open. Your RSVPs are kept too, so a gathering you went to stays in your own history and its host keeps their headcount. What clears on its own is the attendance detail listed below.",
+  "privacy.retention.clearsHeading": "Things that clear on their own",
   "privacy.retention.p3":
-    "Some things clear on their own, gathering attendance 30 days after the event, read notifications after 90 days, and unused push-notification registrations after 90 days.",
+    "These run on a schedule, whether or not you do anything:",
+  "privacy.retention.clears.gathering":
+    "<strong>What you told a host about access or dietary needs, and the record that you checked in</strong>: 30 days after the gathering. Your RSVP row itself stays, so past gatherings keep their attendance count.",
+  "privacy.retention.clears.notifications":
+    "<strong>Read notifications</strong>: 90 days. Unread ones are kept until you have seen them.",
+  "privacy.retention.clears.push":
+    "<strong>Unused push-notification registrations</strong>: 90 days.",
+  "privacy.retention.clears.cardVerification":
+    "<strong>Card verification records</strong>: 90 days.",
+  "privacy.retention.clears.export":
+    "<strong>A data export you asked for</strong>: the download link works for 7 days, and the copy is deleted after 30.",
+  "privacy.retention.clears.sessions":
+    "<strong>Sessions</strong>: 30 days after you sign out or they expire.",
+  "privacy.retention.clears.invites":
+    "<strong>Invites you send</strong>: 7 days, then they expire.",
+  "privacy.retention.clears.housing":
+    "<strong>Housing listings</strong>: hidden from browsing after 60 days. They are never deleted, and you can extend or repost one.",
+  "privacy.retention.deleteHeading": "If you delete your account",
+  "privacy.retention.p2":
+    "Deleting your account opens a 30-day grace period, and you can cancel any time inside it by signing back in. We warn you 3 days before the deadline. After that your account and the data attached to it are permanently erased, including the files you uploaded.",
+  "privacy.retention.deleted.keptIntro": "Three things are deliberately kept:",
+  "privacy.retention.deleted.keptModeration":
+    "<strong>Moderation records</strong> stay, with your name removed from them, so that deleting an account cannot erase the record of reports you filed about other people.",
+  "privacy.retention.deleted.keptContent":
+    "<strong>Content other members depend on</strong> stays, such as a gathering you were hosting or a listing you posted, with your name removed from it.",
+  "privacy.retention.beyondHeading": "What we keep beyond your account",
+  "privacy.retention.beyond.body":
+    "Moderation records, consent records and records of the data requests you made are kept as evidence, with your name removed from them where it can be.",
   "privacy.retention.p4":
     "When an account is deleted we keep a <strong>one-way fingerprint</strong> of the email that can never be turned back into the address itself, only to stop a removed account being quietly recreated.",
   "privacy.yourRights.title": "Your rights",
@@ -1136,8 +1154,29 @@ export const marketing: Catalog = {
     "<strong>Portability</strong>: receive your data in a portable format",
   "privacy.yourRights.item6":
     "<strong>Restriction</strong>: limit how we process your data while a dispute is resolved",
+  "privacy.yourRights.item7":
+    "<strong>Withdraw consent</strong>: switch off anything you opted into",
+  "privacy.yourRights.howHeading": "How to exercise each one",
+  "privacy.yourRights.how.access":
+    "<strong>Access</strong>: download your data from Settings, or file a request through the form.",
+  "privacy.yourRights.how.rectification":
+    "<strong>Rectification</strong>: edit your own profile, or file a request for anything you cannot edit yourself.",
+  "privacy.yourRights.how.erasure":
+    "<strong>Erasure</strong>: delete your account from Settings, or file a request to remove specific data.",
+  "privacy.yourRights.how.objection":
+    "<strong>Objection</strong>: file a request through the form. To object to error monitoring, switch it off in your privacy settings.",
+  "privacy.yourRights.how.portability":
+    "<strong>Portability</strong>: download your data from Settings. It comes as JSON, or as a zip of CSV files with your uploads.",
+  "privacy.yourRights.how.restriction":
+    "<strong>Restriction</strong>: file a request through the form and describe what you want restricted.",
+  "privacy.yourRights.how.withdrawConsent":
+    "<strong>Withdraw consent</strong>: switch it off wherever you switched it on. Your privacy settings for error monitoring, your flatmate profile for identity fields, your browser for push.",
   "privacy.yourRights.p1":
     "To exercise any of these, use our data request form. It's free and we respond within 30 days.",
+  "privacy.yourRights.slaExtension":
+    "If a request is unusually complex we may need longer, and we will tell you why inside the first month.",
+  "privacy.yourRights.responseChannel":
+    "A resolved request arrives as an in-app notification with a note on the outcome. Nothing is emailed.",
   "privacy.yourRights.p2":
     "You can also lodge a complaint with the Comissão Nacional de Proteção de Dados (CNPD), Portugal's data protection authority.",
   "privacy.cookiesSection.title": "Cookies",
@@ -1149,21 +1188,34 @@ export const marketing: Catalog = {
     "See the full <strong>Cookie Policy</strong> for the complete list, and <em>manage your preferences</em> any time.",
   "privacy.thirdParties.title": "Third parties",
   "privacy.thirdParties.intro":
-    "We work with a small number of service providers, each bound by contract to use your data only for the service they provide:",
-  "privacy.thirdParties.item1":
-    "<strong>Google</strong>: powers Sign in with Google, our only login. Google confirms who you are and shares your name, email, and profile photo.",
-  "privacy.thirdParties.item2":
-    "<strong>Cloud hosting & storage</strong>: where the platform runs and where your uploads are kept, in a private store.",
-  "privacy.thirdParties.item3":
-    "<strong>Email delivery</strong>: for account emails and the notifications you've turned on.",
-  "privacy.thirdParties.item4":
-    "<strong>Maps</strong>: map tiles from OpenFreeMap and address lookups via OpenStreetMap, to place venues on a map. They see the map area being viewed. Who you are stays private.",
-  "privacy.thirdParties.item5":
+    "We work with a small number of service providers. Each sees only what it needs for the job it does:",
+  "privacy.thirdParties.google":
+    "<strong>Google</strong>: powers Sign in with Google, our only login. Google confirms who you are and shares your name, email address and profile photo.",
+  "privacy.thirdParties.railway":
+    "<strong>Railway</strong>: hosts the platform and the database where everything you post is stored.",
+  "privacy.thirdParties.tigris":
+    "<strong>Tigris</strong>: stores the files you upload, in a private store, reached through Railway's bucket service.",
+  "privacy.thirdParties.vercel":
+    "<strong>Vercel</strong>: serves the QueerPulse website to your browser.",
+  "privacy.thirdParties.openFreeMap":
+    "<strong>OpenFreeMap</strong>: supplies the map tiles you see. Your browser fetches them, so OpenFreeMap sees the map area being viewed.",
+  "privacy.thirdParties.openStreetMap":
+    "<strong>OpenStreetMap</strong>: turns a typed address into a point on a map. We send the address from our own server, so OpenStreetMap never sees who asked.",
+  "privacy.thirdParties.googleMaps":
+    "<strong>Google Maps</strong>: when you paste a Google Maps link into a listing, we follow it from our server to read the location out of it.",
+  "privacy.thirdParties.klipy":
     "<strong>Klipy</strong>: powers GIF search in messages. When you search for a GIF your search term reaches Klipy; your messages never do.",
+  "privacy.thirdParties.pushService":
+    "<strong>Your browser's push service</strong>: Google, Mozilla, Apple or Microsoft, depending on the browser. It delivers the push notifications you have turned on, and receives only the encrypted notification.",
+  "privacy.thirdParties.embeds":
+    "Some housing listings include a virtual tour hosted on YouTube or Matterport. Opening one loads it from that company's servers, which means they see your IP address. Nothing else about you is shared with them.",
   "privacy.thirdParties.optInIntro":
     "With your <strong>explicit opt-in</strong>, we also use:",
   "privacy.thirdParties.optItem1":
-    "<strong>Error monitoring</strong>: a privacy-respecting service that alerts us to crashes, with no advertising and no profile of you.",
+    "<strong>Sentry</strong>: error monitoring. Nothing is sent unless you turn it on. It receives no advertising data and builds no profile of you.",
+  "privacy.thirdParties.transfersLabel": "To be confirmed",
+  "privacy.thirdParties.transfers":
+    "Where each of these providers processes data, and the safeguard that covers anything processed outside the European Economic Area, has to be filled in here by a person who has checked it with each provider. We would rather leave this open than publish a location we have not verified.",
   "privacy.thirdParties.outro":
     "We never share your data with data brokers or advertising networks.",
   "privacy.changes.title": "Changes to this policy",
@@ -1344,18 +1396,6 @@ export const marketing: Catalog = {
   "pressKit.team.section.title": "Named <em>spokespeople</em>",
   "pressKit.team.section.lead":
     "Three founding members are available for press comment. Quote them on their stated topics; don't paraphrase. <em>Other members are not available without explicit consent</em>. Please don't approach members directly through the platform.",
-  "pressKit.team.marta.role": "Co-founder · Editor in chief",
-  "pressKit.team.marta.desc":
-    "For: editorial decisions, the magazine, governance, the manifesto. <em>Not for: individual member stories, moderation decisions.</em>",
-  "pressKit.team.marta.langs": "<b>EN · PT · ES</b> · available on 48h notice",
-  "pressKit.team.catarina.role": "Co-founder · Co-treasurer · Trans Hub",
-  "pressKit.team.catarina.desc":
-    "For: trans-affirming healthcare, finances, transparency, mutual aid, legal-aid partnership.",
-  "pressKit.team.catarina.langs": "<b>EN · PT</b> · available on 24h notice",
-  "pressKit.team.andre.role": "Co-founder · Co-treasurer · Design",
-  "pressKit.team.andre.desc":
-    "For: platform design, technical decisions, partnerships, infrastructure. Photographer for in-house imagery.",
-  "pressKit.team.andre.langs": "<b>EN · PT</b> · available on 72h notice",
   "pressKit.facts.section.title": "Quick <em>facts</em> · as of {date}",
   "pressKit.facts.section.lead":
     "Sourced from the 2025 transparency report. <em>Please link to the transparency page when citing.</em>",
@@ -1368,10 +1408,6 @@ export const marketing: Catalog = {
   "pressKit.coverage.section.title": "Recent <em>coverage</em>",
   "pressKit.coverage.section.lead":
     "Selected English- and Portuguese-language pieces from 2024–2026. <em>Hit-counts welcome but not necessary</em>. Link to Press instead.",
-  "pressKit.coverage.openingToast": "Opening coverage in {source}…",
-  "pressKit.coverage.emptyLive.title": "Coverage will appear here",
-  "pressKit.coverage.emptyLive.description":
-    "Once QueerPulse is written about, we'll link the pieces here. For interviews or press enquiries, email hello@queerpulse.com.",
   "pressKit.downloads.section.title": "<em>Downloads</em>",
   "pressKit.downloads.section.lead":
     "Direct file links, served straight from the site. The complete kit bundles every file below with a README and the licence.",
@@ -1512,14 +1548,6 @@ export const marketing: Catalog = {
   "listBusiness.step1.blurbPlaceholder":
     "A queer-run pastelaria by day, community room by night.",
   // Categories
-  "listBusiness.cat.foodDrink": "Food & drink",
-  "listBusiness.cat.designCraft": "Design & craft",
-  "listBusiness.cat.healthCare": "Health & care",
-  "listBusiness.cat.spaces": "Spaces",
-  "listBusiness.cat.culture": "Culture",
-  "listBusiness.cat.tech": "Tech",
-  "listBusiness.cat.barbershopSalon": "Barbershop & Salon",
-  "listBusiness.cat.gymFitness": "Gym & Fitness",
   // Price bands
   "listBusiness.price.free": "Free",
   "listBusiness.price.affordable": "Affordable",
@@ -1813,7 +1841,6 @@ export const marketing: Catalog = {
   "listBusiness.missing.hoursInvalid": "a fix to the opening hours",
   "listBusiness.missing.hoursExceptionsInvalid":
     "a fix to the dated exceptions",
-  "listBusiness.missing.social": "valid contact links",
   "listBusiness.missing.socialFormat": "the contact-link format fixed",
   "listBusiness.missing.rel": "your connection",
   "listBusiness.missing.ownerName": "your name",
@@ -2318,10 +2345,6 @@ export const marketing: Catalog = {
     "Your active sessions can now reach a person",
   "changelog.entries.sessions-page-links-reach-a-person.body":
     "\u201cSomething looks wrong? Tell us what happened\u201d on your active sessions opened a page announcing that your account was locked, which was alarming and untrue. Both links on that page now land where they say they will: \u201cwhat to do next\u201d opens the Account section of Help, which walks through an unfamiliar device, and \u201ctell us what happened\u201d opens the contact form with its topic already set to account access, so your message reaches the team. The Back link at the top of the page returns to Settings \u2192 Account, where you opened it from.",
-  "changelog.entries.skills-and-learning-workshops-retired.title":
-    "Skills & learning has closed",
-  "changelog.entries.skills-and-learning-workshops-retired.body":
-    "Skills & learning listed member-run workshops with seats, waitlists and a page for each host, and it never got far enough to be worth your time: a handful of sample courses, no way to actually pay, and no one on the other end when you reserved a spot. Rather than leave it sitting in the Work menu looking open for business, we have taken the whole board down. The two places where teaching and learning already work are still there. The Skills Exchange swaps time and talent with no money involved, and hosting a gathering covers a workshop or a talk with everything a real event needs, including a guest list and a date.",
   "changelog.entries.mod-tools-sections-fade-in-as-you-switch.title":
     "Mod tools sections arrive instead of snapping into place",
   "changelog.entries.mod-tools-sections-fade-in-as-you-switch.body":
@@ -3020,10 +3043,12 @@ export const marketing: Catalog = {
   "changelog.entries.side-quests-getting-started.body":
     "Finishing the getting-started checklist used to be a dead end. Now it opens onto side quests: the badges you haven't earned yet, each with a button straight to where you'd go to work on it, plus any perk you've unlocked but haven't claimed. Four new badges came with it, for exploring the Local directory, saving articles, joining a second community, and filling out your Work Profile.",
 
+  // Corrected on 26 Aug 2026. This entry described a send that no code path
+  // ever performed. It was wrong on the day it was published.
   "changelog.entries.join-request-invite-email.title":
-    "Approved applicants now get an invite email",
+    "Correction: approved applicants were never emailed an invite",
   "changelog.entries.join-request-invite-email.body":
-    "Approving a join request used to only mint an invite link inside the admin queue, so an applicant only got in if the reviewer copied that link and emailed it by hand. Approval now sends the invite link straight to the applicant automatically. Copying the link is still there as a manual backup.",
+    "This entry claimed approval sent the invite link straight to the applicant. No code ever did that, and QueerPulse sends no email at all, so the entry was wrong the day it was written. What is true: approving a join request mints the invite link in the review queue, and a reviewer passes it on themselves. We have corrected the entry rather than quietly removing it.",
   "changelog.entries.article-editor-header-and-send-on.title":
     "Article editor header fixed, and Send on now works",
   "changelog.entries.article-editor-header-and-send-on.body":
@@ -3065,10 +3090,13 @@ export const marketing: Catalog = {
   "changelog.entries.magazine-sections-browse.body":
     "Every article and issue already carried a real editorial section (Features, Interview, Essays, and the rest). Now there's a Sections page that groups everything by it, instead of leaving you to stumble onto a topic through search.",
 
+  // Corrected on 26 Aug 2026. This entry announced a real send that never
+  // reached anybody; the correction stays in place of a deletion so the record
+  // shows what readers were told.
   "changelog.entries.magazine-digest-real-send.title":
-    "Issue digests can send a real test and go out with the issue",
+    "Correction: issue digests never really sent",
   "changelog.entries.magazine-digest-real-send.body":
-    'The magazine desk\'s digest tools used to just show a confirmation toast. "Send test" now really emails the current draft to the editor who clicked it, and "Schedule with issue" now really queues the digest to go out to newsletter subscribers the moment the issue ships.',
+    "This entry first said the magazine desk could email a test digest to the editor who clicked, and queue the digest to go out with the issue. Neither ever reached you. QueerPulse sends no email, and the mailer that briefly made it look possible was removed on 26 August 2026. The desk still assembles an issue's digest; nothing leaves for an inbox. We have corrected the entry rather than deleting it, because deleting it would hide what you were told.",
 
   "changelog.entries.magazine-deck-convert-to-article.title":
     "Decks can convert into articles",
@@ -3311,8 +3339,9 @@ export const marketing: Catalog = {
 
   "changelog.entries.newsletter-unsubscribe.title":
     "Unsubscribe from the newsletter yourself",
+  // Body corrected on 26 Aug 2026: the original implied a confirmation email.
   "changelog.entries.newsletter-unsubscribe.body":
-    "There was no way to stop newsletter emails once you'd confirmed. There's now a real unsubscribe link and page, matching the same confirmation flow you get when you sign up.",
+    "Signing up for the newsletter records your address, and there was no way to take it back off the list yourself. There's now a real unsubscribe link and page: open it with your unsubscribe token and the address comes off. QueerPulse sends no email, so nothing was arriving in the first place. This is about your address not sitting on a list you didn't want to be on.",
 
   "changelog.entries.resources-crisis-hotline-coverage.title":
     "Crisis hotlines now show on every crisis-adjacent resource page",
@@ -4296,8 +4325,10 @@ export const marketing: Catalog = {
 
   "changelog.entries.forms-that-really-submit.title":
     "Forms across the app now really submit",
+  // Body corrected on 26 Aug 2026: "send" read as email. They store; the team
+  // picks the submissions up in the app.
   "changelog.entries.forms-that-really-submit.body":
-    "Newsletter signup, the contact and partner enquiry forms, grant / panel / sober-host applications, and safe-space nominations now genuinely send instead of showing a preview. Your event defaults (visibility and email) also save for real.",
+    "Newsletter signup, the contact and partner enquiry forms, grant / panel / sober-host applications, and safe-space nominations stopped showing a preview and started really storing what you write, where the team picks it up in the app. Nothing reaches anyone by email: QueerPulse sends no email. Your event defaults also save for real.",
 
   "changelog.entries.save-events-for-later.title": "Save events for later",
   "changelog.entries.save-events-for-later.body":
@@ -5256,18 +5287,6 @@ export const marketing: Catalog = {
     "Nothing confirmed yet. Once a poster records a session you turned up for, the hours land here.",
   "volunteer.contribution.note":
     "Hours are confirmed by whoever posted the opportunity, so this is a record someone else stands behind.",
-  "volunteer.adapter.eyebrow": "Volunteer · {cause} · {org}",
-  "volunteer.adapter.recruitingNow": "Recruiting now",
-  "volunteer.adapter.closedNotRecruiting": "Closed · not recruiting",
-  "volunteer.adapter.perWeek": "Per week",
-  "volunteer.adapter.commitment": "Commitment",
-  "volunteer.adapter.spotsStillOpen": "Spots still open",
-  "volunteer.adapter.roleLabel": "Role",
-  "volunteer.adapter.locationLabel": "Location",
-  "volunteer.adapter.applyConfirm":
-    "Application submitted for {role}. The team will be in touch with next steps.",
-  "volunteer.adapter.inPartnershipWith": "In partnership with {name}.",
-  "volunteer.adapter.anonMember": "A member",
   "volunteer.hero.manageCta": "Manage applicants",
   "volunteerManage.title": "Manage applicants",
   "volunteerManage.sub":
@@ -5388,7 +5407,6 @@ export const marketing: Catalog = {
     "Update the details volunteers see on the listing.",
   "postOpportunity.edit.saveCta": "Save changes",
   "postOpportunity.edit.saving": "Saving…",
-  "postOpportunity.edit.cancelCta": "Cancel",
   "postOpportunity.edit.successToast": "Your changes are saved.",
   "postOpportunity.edit.errorToast":
     "Couldn't save your changes. Please try again.",
@@ -5491,7 +5509,6 @@ export const marketing: Catalog = {
   "volunteerDetail.sidebar.editCta": "Edit this opportunity",
   "volunteerDetail.sidebar.notRightFit": "Not the right fit?",
   "volunteerDetail.sidebar.otherWays": "Other ways to help right now:",
-  "volunteerDetail.sidebar.fundInstead": "Fund this work instead",
   "volunteerDetail.signupModal.ariaLabel": "Apply to volunteer for {role}",
   "volunteerDetail.signupModal.eyebrow": "Your application",
   "volunteerDetail.signupModal.title": "Tell us why you'd be a good fit",
@@ -5551,10 +5568,6 @@ export const marketing: Catalog = {
   "contact.sent.body":
     "We'll read it and write back, usually within a day or two. If it's a safety concern, we'll be in touch within 24 hours.",
   "contact.sent.backCta": "Back to QueerPulse",
-  "contact.comingSoon.title": "This form isn't <em>wired up yet.</em>",
-  "contact.comingSoon.body":
-    "We haven't connected this form to our inbox yet, so it can't send your message. Nothing was submitted. Email us directly instead; every address on the left is real and read by a person.",
-  "contact.comingSoon.emailCta": "Email hello@queerpulse.com",
   "contact.form.title": "Write to <em>us.</em>",
   "contact.form.sub":
     "If you prefer a form to an email, use this. We read it the same way.",
@@ -5567,6 +5580,7 @@ export const marketing: Catalog = {
   "contact.form.topic.general": "General question or feedback",
   "contact.form.topic.account": "Account access or security",
   "contact.form.topic.safety": "Safety concern",
+  "contact.form.topic.accessibility": "Accessibility barrier",
   "contact.form.topic.press": "Press or research inquiry",
   "contact.form.topic.partnership": "Partnership proposal",
   "contact.form.topic.other": "Something else",
@@ -5626,10 +5640,6 @@ export const marketing: Catalog = {
   "forOrgs.tiers.title": "What we <em>do offer</em>",
   "forOrgs.tiers.sub":
     "Three tiers, each a different kind of relationship. All include the basics: pre-listing review, transparent funding disclosure, and the ability for either side to disagree publicly.",
-  "forOrgs.tiers.employer.name": "Verified employer",
-  "forOrgs.tiers.employer.pricePeriod": "/ year · post unlimited jobs",
-  "forOrgs.tiers.employer.dek":
-    'For employers who want to post on our Jobs board with the "verified queer-friendly" badge. Requires a 12-month engagement and one member-conducted review.',
   "forOrgs.tiers.employer.list1":
     "Unlimited job listings · <b>posted within 24h</b>",
   "forOrgs.tiers.employer.list2":
@@ -5639,16 +5649,6 @@ export const marketing: Catalog = {
   "forOrgs.tiers.employer.list4": "Listing in Employer Reviews",
   "forOrgs.tiers.employer.list5":
     "Quarterly hiring office-hours with two team members",
-  "forOrgs.tiers.employer.footnote":
-    "For: 20+ person organisations actively hiring queer talent. Sliding scale for under-50-person teams.",
-  "forOrgs.tiers.employer.reviewCta": "Start the review",
-  "forOrgs.tiers.employer.reviewToast": "Opening the review form…",
-  "forOrgs.tiers.employer.exampleCta": "See an example company profile",
-  "forOrgs.tiers.partner.name": "Operational <em>partner</em>",
-  "forOrgs.tiers.partner.price": "By <em>arrangement</em>",
-  "forOrgs.tiers.partner.pricePeriod": "reciprocal · usually unpaid",
-  "forOrgs.tiers.partner.dek":
-    "For organisations that should be operationally connected to QueerPulse, legal-aid organisations, health services, civic-service agencies, allied associations. We build infrastructure together.",
   "forOrgs.tiers.partner.list1":
     "<b>Operational seam:</b> case bridge, helpline handoff, joint protocol",
   "forOrgs.tiers.partner.list2": "Shared moderation channel where appropriate",
@@ -5658,22 +5658,11 @@ export const marketing: Catalog = {
     "Listed on Partners with a dedicated case page",
   "forOrgs.tiers.partner.list5":
     "<b>Per-case payment</b> for partner-provided services (e.g. €45/legal-consult)",
-  "forOrgs.tiers.partner.footnote":
-    "For: civic, advocacy, healthcare, and mission-aligned orgs. Selection is slow and rare. <b>Two new operational partners per year, max.</b>",
-  "forOrgs.tiers.partner.proposeCta": "Propose a partnership",
-  "forOrgs.tiers.funder.name": "Programme funder",
-  "forOrgs.tiers.funder.pricePeriod": "/ year · specific programme",
-  "forOrgs.tiers.funder.dek":
-    "For foundations, public agencies, and grant-making organisations funding a specific programme, micro-grants, the magazine, safe spaces, trans-health access.",
   "forOrgs.tiers.funder.list1": "Programme-specific reporting · quarterly",
   "forOrgs.tiers.funder.list2": "Credit on the programme page in plain text",
   "forOrgs.tiers.funder.list3": "No platform-wide placement, no co-branding",
   "forOrgs.tiers.funder.list4": "Annual independent audit included",
   "forOrgs.tiers.funder.list5": "Public itemisation in the transparency report",
-  "forOrgs.tiers.funder.footnote":
-    "For: Fundação Calouste Gulbenkian-tier orgs and EU programmes. We've turned down €60k+ when the strings didn't fit.",
-  "forOrgs.tiers.funder.discussCta": "Discuss a grant",
-  "forOrgs.tiers.funder.discussToast": "Opening grant discussion…",
   "forOrgs.cta.title": "Start a <em>conversation.</em>",
   "forOrgs.cta.body":
     'Tell us about your organisation in a paragraph. We read every message within 5 working days and reply personally, even if the answer is "this isn\'t right for us right now."',
@@ -5706,10 +5695,6 @@ export const marketing: Catalog = {
     "Goes directly to our partnerships team. No sales funnel, no follow-up sequence. Just a reply within 5 working days.",
   "forOrgs.form.toast":
     "Sent to our partnerships team. They'll reply within 5 working days",
-  "forOrgs.form.comingSoon.title": "This form isn't <em>wired up yet.</em>",
-  "forOrgs.form.comingSoon.body":
-    "We haven't connected the partnerships form yet, so it can't send your details. Nothing was submitted. Email the partnerships team directly and we'll take it from there.",
-  "forOrgs.form.comingSoon.emailCta": "Email hello@queerpulse.com",
 
   // ── Directory — business directory + detail page chrome. Place records
   //    (`directoryPlaces.ts`: names, taglines, reviews, owner bios) are each
@@ -5724,7 +5709,6 @@ export const marketing: Catalog = {
     "Queer-owned businesses and queer-friendly professionals in Lisbon. Vetted by the community, maintained by the community. Whether you just arrived or you've been here for years.",
   "directory.hero.note": "Community-verified · updated monthly",
   "directory.search.placeholder": "Search by name, neighbourhood, or type…",
-  "directory.filterAria": "Filter places by category",
   "directory.cat.all": "All",
   "directory.cat.food": "Food & drink",
   "directory.cat.design": "Design & craft",
@@ -5808,7 +5792,6 @@ export const marketing: Catalog = {
   "directory.outro.sub":
     "Join the network and get access to the full directory, member recommendations, and a community that knows the city.",
   "directory.outro.cta": "Request an invite",
-  "directory.detail.backCta": "Directory",
   "directory.detail.breadcrumbAria": "Breadcrumb",
   "directory.detail.breadcrumbHome": "Directory",
   "directory.detail.relatedTitle": "More {category} nearby",
@@ -5991,6 +5974,7 @@ export const marketing: Catalog = {
   "directory.detail.getInTouch": "Get in touch",
   "directory.detail.backToDirectory": "Back to directory",
   "directory.detail.claimCta": "Do you run this place? Claim it",
+  "directory.detail.claimsFiledLink": "See the claims you've filed",
   "directory.detail.loader.ariaLabel": "Opening this place",
   "directory.detail.loader.title": "Opening this place",
   "directory.detail.loader.caption": "Worth seeing it all at once.",
@@ -6020,8 +6004,13 @@ export const marketing: Catalog = {
     "Something went wrong on our end. Please try again.",
   "directory.detail.reportReview.retryCta": "Try again",
   "directory.detail.reportQuestion.title": "Report this question",
+  // A public question and the answer under it are one reportable thing, and
+  // they are often written by two different people. Naming the asker told
+  // somebody reporting the ANSWER that they were reporting the asker's
+  // question, which is both wrong and unsettling to read while deciding to
+  // report something. This names neither of them and covers both halves.
   "directory.detail.reportQuestion.sub":
-    "Tell us what's wrong with {name}'s question. A moderator reviews every report, and they won't be told who filed it.",
+    "Tell us what's wrong with this question or the answer under it. A moderator reviews every report, and they won't be told who filed it.",
   "directory.detail.questions.title": "Ask the owner, <em>in public</em>",
   "directory.detail.questions.sub_one": "{count} question, newest first.",
   "directory.detail.questions.sub_other": "{count} questions, newest first.",
@@ -6064,8 +6053,6 @@ export const marketing: Catalog = {
   "directory.detail.questions.loadingMore": "Loading…",
   "directory.detail.questions.loadError":
     "Couldn't load the rest of the questions. Please try again.",
-  "directory.detail.suggestEdit.cta": "Suggest an edit",
-  "directory.detail.suggestEdit.ariaLabel": "Suggest an edit for {name}",
   "directory.detail.suggestEdit.title": "Suggest an edit",
   "directory.detail.suggestEdit.sub":
     "Spot something off? Let the owner know what to fix. Only the owner sees it.",
@@ -6173,8 +6160,58 @@ export const marketing: Catalog = {
   "directory.detail.claim.successTitle": "Got it. We're",
   "directory.detail.claim.successEm": "on it.",
   "directory.detail.claim.successBody":
-    "A moderator will review your claim on {name} and let you know what happens next.",
+    "A moderator will review your claim on {name}. You can see where it stands whenever you like.",
   "directory.detail.claim.doneCta": "Done",
+  // The published claim policy, served by GET /listings/claim-policy. The day
+  // count is the server's; only the sentence around it ships in the bundle.
+  "directory.detail.claim.policyTitle": "What helps, and how long it takes",
+  "directory.detail.claim.policyTurnaround_one":
+    "A moderator decides within {count} day of you sending this.",
+  "directory.detail.claim.policyTurnaround_other":
+    "A moderator decides within {count} days of you sending this.",
+  "directory.detail.claim.policyHintsLabel":
+    "Anything like this in your note makes the review quicker:",
+  "directory.detail.claim.trackCta": "See the claims you've filed",
+  // BF-05: /local/directory/claims, where a claimant follows their own claims.
+  "directory.myClaims.backLabel": "Local directory",
+  "directory.myClaims.title": "Claims you've filed",
+  "directory.myClaims.sub":
+    "Every request you've sent to take over a listing somebody else added, and where each one stands.",
+  "directory.myClaims.turnaround_one":
+    "A moderator decides each claim within {count} day of it being filed.",
+  "directory.myClaims.turnaround_other":
+    "A moderator decides each claim within {count} days of it being filed.",
+  "directory.myClaims.checkBack":
+    "Come back here whenever you want to see where a claim has got to.",
+  "directory.myClaims.loading": "Loading your claims…",
+  // Read out by the page's persistent status region once the list settles.
+  // Never rendered on screen: the visible page already says both of these in
+  // its own words.
+  "directory.myClaims.announceEmpty": "No claims yet.",
+  "directory.myClaims.announceCount_one": "1 claim.",
+  "directory.myClaims.announceCount_other": "{count} claims.",
+  "directory.myClaims.empty.title": "You haven't claimed a listing yet",
+  "directory.myClaims.empty.description":
+    "If you run a place that is already in the local directory, open its page and choose to claim it. A moderator reads every request, and if it checks out the listing becomes yours: its reviews, its details, everything.",
+  "directory.myClaims.empty.action": "Browse the local directory",
+  "directory.myClaims.status.pending": "Waiting for review",
+  "directory.myClaims.status.approved": "Approved",
+  "directory.myClaims.status.declined": "Declined",
+  "directory.myClaims.reference": "Reference {reference}",
+  "directory.myClaims.filedOn": "Filed on {date}",
+  "directory.myClaims.waiting_one": "Waiting {count} day so far.",
+  "directory.myClaims.waiting_other": "Waiting {count} days so far.",
+  "directory.myClaims.decisionDue": "A decision is due by {date}.",
+  "directory.myClaims.decisionOverdue":
+    "This one was due by {date}. It is still in the queue, and a moderator will get to it.",
+  "directory.myClaims.reviewedOn": "Reviewed on {date}.",
+  "directory.myClaims.outcome.approved":
+    "The listing is yours. You can edit it now, and it sits with your places on your profile.",
+  "directory.myClaims.outcome.declined":
+    "This one was not approved. You can claim it again if something has changed since.",
+  "directory.myClaims.noteLabel": "What you told the moderators",
+  "directory.myClaims.viewListing": "See {name} in the directory",
+  "directory.myClaims.editListing": "Edit {name}",
   "directory.detail.mapAria": "Map showing where {name} is",
   "directory.detail.languagesLabel": "Languages",
   "directory.detail.accessLabel": "Access",
@@ -6669,7 +6706,6 @@ export const marketing: Catalog = {
   "map.venueCard.accessible": "Wheelchair accessible",
   // Bairro is a Lisbon proper noun — identical in both catalogs, only the
   // surrounding phrase is translated.
-  "map.svg.filterByAria": "Filter the map by {bairro}",
   "map.mapError": "The map could not load. The venue list below still works.",
   "map.mapLoading": "Bringing the map to <em>life</em>…",
   "map.pinAria": "{name}, {type}",
@@ -6953,8 +6989,6 @@ export const marketing: Catalog = {
   "submitPartner.actions.sending": "Sending…",
   "submitPartner.actions.submit": "Submit application",
   "submitPartner.actions.cancel": "Cancel",
-  "submitPartner.error.toast":
-    "Couldn't send your application. Please try again.",
 
   "submitPartner.fields.sectionOrg": "Your organisation",
   "submitPartner.fields.name.label": "Organisation name",
@@ -7032,6 +7066,72 @@ export const marketing: Catalog = {
   "changelog.tag.accountSecurity": "Open account security",
   "changelog.tag.dataExport": "Download your data",
   "changelog.tag.contact": "Get in touch",
+  // 26 Aug 2026 batch: the claim tracker and the accessibility statement.
+  "changelog.tag.listingClaims": "Track your claim",
+  "changelog.tag.accessibility": "Read the accessibility statement",
+  // Second 26 Aug 2026 batch. `changelog.tag.safety` already points at
+  // `routes.report` on an older entry with the label "See our safety
+  // approach", which reads as an explainer rather than the form itself.
+  "changelog.tag.reportForm": "Open the report form",
+
+  // ── 26 Aug 2026 ───────────────────────────────────────────────────────────
+  "changelog.entries.reporting-that-someone-outed-you.title":
+    "Reporting that someone outed you",
+  "changelog.entries.reporting-that-someone-outed-you.body":
+    "Two report forms did not offer outing or doxxing as a reason: the main report form, which anyone can reach without signing in, and the report box on a business listing's public questions. Those two reasons are the only ones that send a report straight to the emergency queue. Filed as harassment or as something else, the same report was read on a slower clock. If that was you, nothing about it was your fault. The form was missing the words for what happened. Both forms now carry both reasons, worded as what happened to you rather than in our vocabulary: “Someone shared that I'm LGBTQ+ without my consent”. Reporting a gathering gained harassment and discrimination, and reporting a persona gained discrimination. The reason list on eight report forms now comes from the server instead of a second copy kept here, so the options can't fall behind what the platform handles again. If the connection drops while you're filing, the form still opens with a full list and your report still goes through.",
+  "changelog.entries.a-quieter-option-before-you-go.title":
+    "A quieter option before you delete your account",
+  "changelog.entries.a-quieter-option-before-you-go.body":
+    "Beside deactivating and deleting sat an offer to pause all notifications for 30 days. It was a button attached to nothing: no such switch existed, and QueerPulse sends no email to pause. In front of someone weighing up leaving is the worst possible place for a promise we can't keep, so the strip now takes you to your notification settings, where you can choose which kinds reach you and set quiet hours so your phone stays still overnight. Both of those are real.",
+  "changelog.entries.a-refused-moderation-action-says-why.title":
+    "Moderators are told why an action was refused",
+  "changelog.entries.a-refused-moderation-action-says-why.body":
+    "Warning, restricting, suspending or banning lands on whoever wrote the reported thing, and sometimes there is no single person for it to land on: nobody is behind an unclaimed listing or an erased account, a report can cover a question and the answer under it written by two different people, and house and staff accounts are never targets for this queue. All of those used to fail with “Couldn't reach the safety service”, which was untrue in both halves. The service answered, and it refused for a specific reason the moderator never saw. Each case now says what happened and what to do instead, and offers no retry, because a retry gets the same answer. The question-and-answer case matters most: it used to resolve to whoever asked the question even when the answer was what was reported, so a sanction could have reached the wrong person. Hiding, removing, dismissing and escalating stay available on the report in every case. The drawer also stopped saying ban was unavailable while showing a Ban button.",
+  "changelog.entries.the-decision-sample-says-who-decided.title":
+    "The decision sample says who made each call",
+  "changelog.entries.the-decision-sample-says-who-decided.body":
+    "The sample of recent invite decisions labelled each one with an account reference, which told a reviewer nothing useful. It now names the reviewer who decided, and your own calls read as “You”. You can narrow the same sample to one person, which is how an inconsistent reading of the review guidelines becomes visible. Nothing here counts, ranks or scores anyone: the only question a name answers is whose reading of the guidelines you are looking at.",
+  "changelog.entries.communities-your-connections-already-joined.title":
+    "Communities your people are already in",
+  "changelog.entries.communities-your-connections-already-joined.body":
+    "The communities page now shows a short list of groups the people you're connected to have joined and you haven't, ordered by how many of them are in each. It's the question you'd have asked a friend anyway. When there's nothing worth suggesting, the section stays out of your way entirely rather than sitting there empty.",
+  "changelog.entries.follow-your-listing-claim.title":
+    "Follow your listing claim from start to finish",
+  "changelog.entries.follow-your-listing-claim.body":
+    "If you've claimed a business listing, there's now a page for it. It shows where each claim stands, how long it has been waiting, and the date we said we'd decide by. The claim form tells you that same turnaround before you submit, along with the evidence that makes a claim straightforward to approve. Nothing is emailed to you: you check back here.",
+  "changelog.entries.the-accessibility-statement-is-published.title":
+    "The accessibility statement is published",
+  "changelog.entries.the-accessibility-statement-is-published.body":
+    "There's now a published accessibility statement, linked from the footer and the main navigation. It says what the platform does for people using a screen reader, a keyboard, or reduced motion, and it's straight about what hasn't been audited yet instead of claiming a badge nobody checked. It also sets out where Portuguese law actually stands: Decreto-Lei 82/2022 very likely does not reach a platform like this one, so we publish the statement by choice, and if our answer to you is not enough it tells you exactly where to go next.",
+  "changelog.entries.the-privacy-policy-says-what-it-keeps.title":
+    "The privacy policy says what it keeps, and for how long",
+  "changelog.entries.the-privacy-policy-says-what-it-keeps.body":
+    "The retention section used to be three sentences. It's now a full schedule: each kind of data, and the point at which it stops being kept. Ten service providers are named. A sub-processor that was listed but never actually used is gone. Every right the policy lists now points at a page where you can exercise it, rather than at an address.",
+  "changelog.entries.what-we-said-we-would-delete-gets-deleted.title":
+    "What we said we'd delete now gets deleted",
+  "changelog.entries.what-we-said-we-would-delete-gets-deleted.body":
+    "The access needs and dietary notes you hand a host are cleared 30 days after the gathering, along with the record that you checked in. Your RSVP stays, so a past gathering keeps its headcount. Once the check-ins are gone the host sees “no longer kept” where the number of arrivals used to be, so a cleared gathering can never be misread as one nobody came to, and the door screen stops recording new arrivals for a gathering that old. Data export links now expire after the seven days the policy promised, instead of quietly working for thirty.",
+  "changelog.entries.reporting-says-why-it-is-slowing-you-down.title":
+    "Reporting says why it's slowing you down",
+  "changelog.entries.reporting-says-why-it-is-slowing-you-down.body":
+    "Filing several reports in quick succession used to answer with a generic failure, which reads exactly like being turned away. It now says plainly that it's pausing you for a moment, and why, so a rate limit never looks like a rejected report. A related bug that showed a raw technical error string instead of a sentence is fixed.",
+  "changelog.entries.bulk-invite-decisions-ask-before-they-fire.title":
+    "Bulk decisions on invite requests ask before they fire",
+  "changelog.entries.bulk-invite-decisions-ask-before-they-fire.body":
+    "Approving or waitlisting a batch of invite requests happened on the first click, with nothing to confirm and no way back. It asks first now. When part of a batch fails, moderators see which applicant and why, and those requests stay selected so only they get retried. Select-all arrived with it, and the cap on how many can be selected is shown rather than silently applied.",
+  "changelog.entries.decision-sampling-sits-with-the-queue.title":
+    "Decision sampling sits with the queue it samples",
+  "changelog.entries.decision-sampling-sits-with-the-queue.body":
+    "The sample of recent invite decisions, the check that reviewers are deciding consistently with one another, lived on an admin-only page. The moderators whose work it samples couldn't open it. It now sits on the invite-request queue itself, where the people doing the reviewing can read it.",
+  "changelog.entries.every-moderation-queue-reports-its-health.title":
+    "Every moderation queue reports its own health",
+  "changelog.entries.every-moderation-queue-reports-its-health.body":
+    "A new panel shows what's waiting across all of moderation at once: how deep each queue is, the longest anything has been sitting, how much is past a window we published, and how much nobody has picked up yet. When a queue crosses a threshold, staff get a notice in the app, and a second one when it clears. Nothing is pushed to anyone's phone.",
+  "changelog.entries.housekeeping-the-mailer-and-two-dead-ends.title":
+    "Housekeeping: the mailer, and two dead ends",
+  "changelog.entries.housekeeping-the-mailer-and-two-dead-ends.body":
+    "The transactional mailer that briefly existed in the backend is gone, which puts the code back in line with the standing decision that QueerPulse sends no email. The retired standalone event prototype page went with it; its link now takes you to the gatherings board. An unused sign-out endpoint was removed too.",
+
   "changelog.entries.the-about-page-shows-its-work-in-place.title":
     "The About page shows its work in place",
   "changelog.entries.the-about-page-shows-its-work-in-place.body":
@@ -7206,4 +7306,136 @@ export const marketing: Catalog = {
   "securityPolicy.outro.sub":
     "Thank you to everyone who helps keep QueerPulse safe.",
   "securityPolicy.outro.cta": "Contact the security team",
+
+  // ── Accessibility statement (/policies/accessibility) ──────────────────
+  // LG-01. A published accessibility statement. QueerPulse publishes it by
+  // choice: our reading of Decreto-Lei n.º 82/2022 (the Portuguese
+  // transposition of the European Accessibility Act) is that its Article 2(3)
+  // service list and its Article 2(5)(b) microenterprise exemption both put
+  // this platform outside its scope today. See the `legal.*` keys below and
+  // queerpulse-backend/docs/ops/accessibility-legal-basis.md. Every
+  // claim below is drawn from something checkable in this repository
+  // (eslint.a11y.config.js, scripts/report-a11y.mjs, src/test/a11y.test.tsx,
+  // e2e/contrast.spec.ts, docs/production-readiness/contrast-audit.md). Do not
+  // add a claim here that nothing in the codebase backs.
+  "accessibilityStatement.meta.title": "QueerPulse accessibility statement",
+  "accessibilityStatement.meta.description":
+    "How accessible QueerPulse is today, measured against WCAG 2.2 Level AA: what we check, what we know falls short, how to report a barrier, and what to do if our answer is not good enough.",
+  "accessibilityStatement.title": "Accessibility <em>statement</em>",
+  "accessibilityStatement.meta.prepared": "Prepared {date}",
+  "accessibilityStatement.meta.reviewed": "Last reviewed {date}",
+  "accessibilityStatement.meta.standard": "Measured against {standard}",
+  "accessibilityStatement.standard": "WCAG 2.2 Level AA",
+  "accessibilityStatement.plain.text":
+    "We aim for WCAG 2.2 Level AA and we are partly there. Automated checks run on every build and are held at zero failures. Nobody has yet tested this platform with a screen reader in a session we can point to, and some of our brand colour falls short of the contrast we ask of ourselves. Both are written out below, with a way to tell us what we missed.",
+
+  "accessibilityStatement.commitment.title": "Our commitment",
+  "accessibilityStatement.commitment.p1":
+    "We publish this because members rely on it. A platform whose whole point is that you can be yourself somewhere has to be usable by all of you, and writing down where we actually are is the only way to be held to that.",
+  "accessibilityStatement.commitment.p2":
+    "We work to the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA. EN 301 549, the European accessibility standard, requires Level AA of WCAG 2.1. WCAG 2.2 contains everything in 2.1 and adds to it, so we aim at the newer version.",
+  "accessibilityStatement.commitment.p3":
+    "We publish this by choice. Our reading of the Portuguese law, set out in the next section, is that nothing currently obliges us to. We would rather be measurable than be exempt.",
+  "accessibilityStatement.commitment.p4":
+    "Most of what follows is enforced by the build rather than left to good intentions. Where it is not, we say so.",
+
+  "accessibilityStatement.scope.title": "What this statement covers",
+  "accessibilityStatement.scope.p1":
+    "This statement applies to the QueerPulse web application, including the phone experience and the installable app, which are the same application.",
+  "accessibilityStatement.scope.p2":
+    "Cinema, Studio and Culture are excluded. None of them has launched, each resolves to a plain not-launched page, and there is no content behind them to make accessible yet. This statement will be extended to cover each one on the day it opens.",
+  "accessibilityStatement.scope.p3":
+    "What members write and upload belongs to them. We provide the fields and the prompts that let someone describe an image or spell out how to get into a venue. We cannot promise that every member fills them in.",
+
+  "accessibilityStatement.legal.title": "Where the law stands",
+  "accessibilityStatement.legal.p1":
+    "Portugal transposed the European Accessibility Act, Directive (EU) 2019/882, as <lei>Decreto-Lei n.º 82/2022</lei>. It came into force on 7 December 2022 and applies to services provided from 28 June 2025. Two things in it mean it very likely does not reach QueerPulse today.",
+  "accessibilityStatement.legal.services":
+    "<strong>The list of services it covers.</strong> Article 2(3) names electronic communications; access to audiovisual media services; specified parts of air, bus, rail and waterborne passenger transport; interactive transport terminals; consumer banking and financial services; e-books and their dedicated software; e-commerce services; and the handling of 112 emergency calls. A non-commercial community platform is on none of those lists. The only heading it could fall under is e-commerce, and QueerPulse has no payment processor of any kind and takes no money from anyone.",
+  "accessibilityStatement.legal.microenterprise":
+    "<strong>The microenterprise exemption.</strong> Article 2(5)(b) says the decree-law does not apply to microenterprises providing the services in Article 2(3). A microenterprise, in the definition the decree-law takes from the Directive, employs fewer than 10 people and has an annual turnover or annual balance sheet total of no more than 2 million euros.",
+  "accessibilityStatement.legal.p2":
+    "Paid ticketing on gatherings is an open product question here. If QueerPulse ever sells anything, it plausibly becomes an e-commerce service under Article 2(3)(g). Article 13(2)(b) would then ask us to explain publicly, in writing and orally, how the service meets the applicable accessibility requirements, unless the microenterprise exemption still covered us. We write that down as a trigger to go and check, and we make no prediction about what the answer would be.",
+  "accessibilityStatement.legal.p3":
+    "The accessibility statement most people have in mind comes from a different law. The Web Accessibility Directive, (EU) 2016/2102, transposed here as Decreto-Lei n.º 83/2018, binds public sector bodies. QueerPulse is not one.",
+  "accessibilityStatement.legal.disclaimerLabel": "Not legal advice",
+  "accessibilityStatement.legal.disclaimer":
+    "This section is a summary of how the people who run QueerPulse read the law as it applies to us. No lawyer has reviewed it, it is not legal advice, and you should not rely on it for your own situation. If you think we have read it wrong, tell us and we will go and check.",
+
+  "accessibilityStatement.status.title": "Conformance status",
+  "accessibilityStatement.status.p1":
+    "QueerPulse is <strong>partially conformant</strong> with WCAG 2.2 Level AA. Partially conformant means most of the standard is met and some parts are not. The parts we know fall short are listed further down, by name.",
+  "accessibilityStatement.status.p2":
+    "We hold no accessibility certification and we claim none. No external auditor has assessed this platform.",
+
+  "accessibilityStatement.works.title": "What works today",
+  "accessibilityStatement.works.intro":
+    "Each of these is in the product now and has a check behind it that would fail the build if it were removed.",
+  "accessibilityStatement.works.keyboard":
+    "<strong>Keyboard.</strong> Every page opens with a skip-to-content link that jumps past the navigation, and anything you can reach with Tab draws a visible focus outline. That outline is drawn in two tones so it stays visible on our light pages and on our dark panels alike: 5.38:1 on the cream background, 12.6:1 on plum.",
+  "accessibilityStatement.works.dialogs":
+    "<strong>Dialogs.</strong> Opening a dialog moves focus into it, Tab stays inside it, Escape closes the topmost one, and closing returns focus to the control that opened it.",
+  "accessibilityStatement.works.forms":
+    "<strong>Forms.</strong> Every visible label is tied to its control, error text is announced and linked to the field it belongs to, helper text is announced with the field, and required fields are marked for screen readers as well as for the eye.",
+  "accessibilityStatement.works.landmarks":
+    "<strong>Structure and navigation.</strong> Each page carries exactly one main landmark. A test asserts that directly on the homepage, and the axe pass enforces the same rule across the other ten pages it covers. Pages outside those eleven are unchecked. Moving between pages announces the new page and lands focus in its content, which a single-page application does not do on its own.",
+  "accessibilityStatement.works.motion":
+    "<strong>Motion.</strong> When your device asks for reduced motion, animation and smooth scrolling switch off across the whole interface. Settings also carries a Reduce motion switch for anyone whose device says otherwise.",
+  "accessibilityStatement.works.status":
+    "<strong>Status messages.</strong> Confirmations are announced politely and failures interrupt, so an error is hard to miss.",
+  "accessibilityStatement.works.language":
+    "<strong>Language.</strong> The page declares its language and updates it when you switch between English and Portuguese, so a screen reader reads it in the right voice.",
+
+  "accessibilityStatement.shortfalls.title": "What is not fully accessible",
+  "accessibilityStatement.shortfalls.intro":
+    "These are the shortfalls we know about. Each names the reason and whatever alternative exists today. If you hit something that is not on this list, please tell us, because it means we did not know.",
+  "accessibilityStatement.shortfalls.colour":
+    "<strong>Our coral, used for emphasis.</strong> Measured against our cream page background it reaches 2.63:1, and against white 2.91:1, below the 4.5:1 that Level AA asks for body text. Emphasised words are always italic too, so the colour is never the only signal. Wherever the colour carries meaning you have to read, such as a form error, a required-field mark or a success line, we use darker coral and jade variants that pass. The sweep across the rest of the interface has not been done.",
+  "accessibilityStatement.shortfalls.preferences":
+    "<strong>Accessibility settings that do nothing yet.</strong> The Accessibility section of Settings lists high contrast, larger text, a dyslexia-friendly typeface, wider letter spacing, stronger focus rings, larger touch targets and a colour theme. Every one of those is labelled Coming soon and is switched off in the interface, so it cannot report a change we do not make. Two controls there are real: Reduce motion and the skip-to-content link.",
+  "accessibilityStatement.shortfalls.textSize":
+    "<strong>Text sizing.</strong> Type is set in pixels throughout, so changing your browser's default font size does not resize it. Browser and system zoom work normally and the layout reflows down to phone widths. The text-size control in Settings is one of the Coming soon ones.",
+  "accessibilityStatement.shortfalls.focusAfterError":
+    "<strong>Focus after a failed submit.</strong> A helper that moves focus to the first field with an error exists and is wired into one form so far. Everywhere else the error is still announced and still linked to its field, and focus stays where you left it.",
+  "accessibilityStatement.shortfalls.sample":
+    "<strong>Automated checks cover a sample of pages.</strong> The test suite runs axe-core over eleven representative pages and the colour-contrast pass runs in a real browser over six. The application has around 140 page components, so most pages have never been machine-checked one by one. The sample was chosen to cover the shared building blocks, which is where most defects live.",
+  "accessibilityStatement.shortfalls.assistiveTech":
+    "<strong>No assistive-technology testing on record.</strong> No screen reader, switch device or voice-control session has been run through this platform and written down. Automated tools find a minority of accessibility problems, so this is the largest gap in what we know, and closing it is the next thing on this list.",
+  "accessibilityStatement.shortfalls.pdf":
+    "<strong>One downloadable PDF.</strong> The press kit offers a printable brand reference as a PDF, and it has not been checked for tagging or reading order. The same colour values ship beside it as a plain text file, which any assistive technology reads correctly.",
+  "accessibilityStatement.shortfalls.language":
+    "<strong>Two interface languages.</strong> The interface is available in English and Portuguese. Anything a member or an editor writes stays in the language they wrote it in, and we do not translate it.",
+
+  "accessibilityStatement.prepared.title": "How this statement was prepared",
+  "accessibilityStatement.prepared.p1":
+    "This is a self-assessment, prepared by the people who build QueerPulse from the accessibility tooling in the codebase and the written audits kept beside it. No external body was involved and no user testing informed it.",
+  "accessibilityStatement.prepared.lint":
+    "<strong>Lint rules that block the build.</strong> Every accessibility rule from eslint-plugin-jsx-a11y runs over the whole codebase. Nine are hard errors, covering text alternatives for images, valid ARIA attributes and roles, and labels tied to their controls. The rest are held to a budget of zero warnings by a check that runs first in the build, so a single new warning anywhere fails it.",
+  "accessibilityStatement.prepared.axe":
+    "<strong>axe-core in the test suite.</strong> Eleven representative pages are rendered through the real router and scanned with axe-core, with nothing quarantined and no rule suppressed except the one a headless renderer cannot compute.",
+  "accessibilityStatement.prepared.contrast":
+    "<strong>Colour-contrast measurement.</strong> Every colour pair the interface actually renders was computed against the WCAG formula rather than judged by eye, written up, and either fixed or given a variant that passes. A browser-based contrast pass over six pages guards against regressions.",
+  "accessibilityStatement.prepared.p2":
+    "Automated tools catch a minority of accessibility problems, commonly put at somewhere between a third and a half. Everything a machine cannot see, and the whole question of whether this platform is genuinely usable with a screen reader, remains unverified. That is why the next section matters more than the two above it.",
+
+  "accessibilityStatement.feedback.title": "Tell us about a barrier",
+  "accessibilityStatement.feedback.p1":
+    "If something here blocks you, tell us. You do not need an account and you do not need to know why it is broken. Describe what you were trying to do and what happened instead, and name the page if you can.",
+  "accessibilityStatement.feedback.p2":
+    "Use the contact form and pick <strong>Accessibility</strong> as the topic. The message is stored for the people who run the platform, who read every one.",
+  "accessibilityStatement.feedback.p3":
+    "QueerPulse sends no automatic email, so any reply is written by a person to the address you give us. We aim to answer within {days} working days. If your report is about something that is keeping you out of your own account, say so and it moves to the front.",
+  "accessibilityStatement.feedback.cta": "Report an access barrier",
+
+  "accessibilityStatement.enforcement.title": "If our answer is not enough",
+  "accessibilityStatement.enforcement.p1":
+    "If we do not reply, or the reply leaves the barrier standing, here is where to go next, in the order that is most likely to help you.",
+  "accessibilityStatement.enforcement.tellUs":
+    "<strong>Tell us first.</strong> The contact form on the Accessibility topic stores your report for the people who run the platform, and it is the fastest route to getting the barrier looked at. Everything below assumes that route has already failed you.",
+  "accessibilityStatement.enforcement.idipd":
+    "<strong>IDiPD.</strong> The Instituto para os Direitos das Pessoas com Deficiência, I. P. is the Portuguese body that follows the implementation of Decreto-Lei 82/2022 and promotes the rights of disabled people. Article 36 also makes it the body that forwards complaints sent to it directly on to whichever regulator is responsible. It was called the Instituto Nacional para a Reabilitação, I. P. until Decreto-Lei n.º 60/2026 renamed it. Its contact details live on <idipd>its own site</idipd>, where they stay current.",
+  "accessibilityStatement.enforcement.regulator":
+    "<strong>The sectoral regulator, if we ever fall under Article 28.</strong> Decreto-Lei 82/2022 gives enforcement to a different regulator for each category of service rather than to one accessibility body. E-commerce services fall to ANACOM. As set out above, we do not believe QueerPulse is a service the decree-law currently covers, so this route may well not be open to you today. We would rather say that plainly than send you to a regulator who has to turn you away.",
+  "accessibilityStatement.enforcement.p2":
+    "None of this replaces the courts or any other right you hold. If you want to complain and you are not sure where to start, IDiPD is the right first door.",
 };

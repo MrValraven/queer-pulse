@@ -5,7 +5,7 @@ export const GATHERING_DETAILS = [
   {
     id: "date",
     labelKey: "gatherings:manage.details.date",
-    value: "Saturday 21 June 2026",
+    value: "Sunday 21 June 2026",
   },
   {
     id: "time",
@@ -20,7 +20,7 @@ export const GATHERING_DETAILS = [
   {
     id: "capacity",
     labelKey: "gatherings:manage.details.capacity",
-    value: "20 people",
+    value: "45 people",
   },
 ];
 

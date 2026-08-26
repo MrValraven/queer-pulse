@@ -119,6 +119,13 @@ export const BASE_LINKS: FooterLink[] = [
   { labelKey: "shared:footerData.base.cookies", href: routes.cookies },
   { labelKey: "shared:footerData.base.imprint", href: routes.imprint },
   { labelKey: "shared:footerData.base.guidelines", href: routes.guidelines },
+  // LG-01: the published accessibility statement. It sits in the legal row
+  // beside the other policies because that is where someone looks for it, and
+  // because a person who needs it should not have to hunt for it.
+  {
+    labelKey: "shared:footerData.base.accessibility",
+    href: routes.policiesAccessibility,
+  },
   // The public responsible-disclosure policy, not the member's account-security
   // hub (`routes.security`, which is gated and would bounce a researcher to
   // sign-in). ID-15.

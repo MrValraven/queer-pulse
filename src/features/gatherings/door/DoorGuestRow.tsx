@@ -16,15 +16,25 @@ import styles from "../GatheringDashboardPage.module.css";
  * The attendee's own answers ride along (LOC-07) because the door is exactly
  * where "I need step-free entry" has to be readable, and they are marked as
  * private to the organisers for the same reason.
+ *
+ * ONCE THE ATTENDANCE WINDOW HAS CLOSED the check-in affordance goes away
+ * entirely (`canCheckIn={false}`), because the server refuses the write and a
+ * button that cannot work is worse at a door than no button. Undo stays: it
+ * removes an arrival stamp rather than creating one, the endpoint keeps
+ * honouring it past the window, and a stray stamp the sweep has not reached
+ * yet has to stay removable.
  */
 export function DoorGuestRow({
   attendee,
   isPending,
+  canCheckIn,
   onCheckIn,
   onUndo,
 }: {
   attendee: AttendeeRow;
   isPending: boolean;
+  /** False once this gathering is past its attendance window. */
+  canCheckIn: boolean;
   onCheckIn: (memberSlug: string) => void;
   onUndo: (memberSlug: string) => void;
 }) {
@@ -65,7 +75,7 @@ export function DoorGuestRow({
               <FiRotateCcw aria-hidden /> {t("gatherings:door.undoCta")}
             </Button>
           </>
-        ) : (
+        ) : canCheckIn ? (
           <Button
             variant="primary"
             disabled={isPending}
@@ -76,7 +86,7 @@ export function DoorGuestRow({
           >
             {t("gatherings:door.checkInCta")}
           </Button>
-        )}
+        ) : null}
       </div>
     </div>
   );

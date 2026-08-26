@@ -266,7 +266,6 @@ export const forum: Catalog = {
   // ── Inline reply edit ────────────────────────────────────────────────────
   "replyEdit.save": "Guardar",
   "replyEdit.cancel": "Cancelar",
-  "replyEdit.saving": "A guardar…",
   "replyEdit.textareaAria": "Edita a tua resposta",
 
   // ── OP (original post) edit ──────────────────────────────────────────────

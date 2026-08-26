@@ -241,7 +241,6 @@ export const notifications: Catalog = {
   // The lock-screen line for the same alert. Deliberately shorter and vaguer
   // than the bell copy: a push preview is read by whoever is holding the phone,
   // so it names no device and no time, only that there is something to open.
-  "type.security_new_sign_in.push": "A new device signed in to your account.",
 
   "type.account_export_ready.text":
     "Your data export has finished and is ready to download.",
@@ -593,10 +592,6 @@ export const notifications: Catalog = {
   "mentions.day.today": "Today",
   "mentions.day.yesterday": "Yesterday",
   "mentions.day.thisWeek": "This week",
-  "mentions.eyebrow": "Mentions · {handle}",
-  "mentions.heading": "When somebody <em>tagged you in.</em>",
-  "mentions.lead":
-    "Posts, replies, and articles that @-mention you. Distinct from Notifications. This is just the mentions thread.",
   "mentions.tabs.all": "All",
   "mentions.tabs.unread": "Unread",
   "mentions.tabs.posts": "In posts",
@@ -615,9 +610,6 @@ export const notifications: Catalog = {
     "Nothing in this view right now. When someone tags you, it’ll show up here. No need to go looking.",
   // Live has no mentions inbox endpoint yet — shown instead of a silent empty
   // list so the surface reads as honestly unfinished, not broken (MentionsPanel).
-  "mentions.comingSoon.title": "Mentions are on the way",
-  "mentions.comingSoon.description":
-    "We’re still building the place where every @-mention lands. Until then, you’ll still be told the moment someone tags you.",
   "mentions.composer.placeholder": "Reply to {name}…",
   "mentions.row.read": "Read",
   "mentions.row.going": "Going",
@@ -647,50 +639,5 @@ export const notifications: Catalog = {
   "mentions.liveActor.unknown": "Someone",
 
   // Notification deep-link preview (NotificationDeepLinkPage.tsx / Cards.tsx)
-  "deepLink.back": "Notifications",
-  "deepLink.types.connection": "Connection",
-  "deepLink.types.gathering": "Gathering",
-  "deepLink.types.reply": "Reply",
-  "deepLink.types.mention": "Mention",
-  "deepLink.types.moderation": "Moderation",
-  "deepLink.summary.connection": "{name} wants to connect with you",
-  "deepLink.summary.gathering": "Your RSVP to {event} was accepted",
-  "deepLink.summary.reply": "{name} replied to your post",
-  "deepLink.summary.mention": "{name} mentioned you in a post",
-  "deepLink.summary.moderation": "An update on your account: appeal {ref}",
-  "deepLink.connection.toastConnected": "Connected with {name}",
-  "deepLink.connection.toastDeclined": "Request declined",
-  "deepLink.connection.connectedTitle": "You’re <em>connected</em>",
-  "deepLink.connection.connectedBody":
-    "{name} is now part of your network. Messaging and tagged updates are open between you.",
-  "deepLink.connection.viewConnections": "View your connections",
-  "deepLink.connection.wantsToConnect": "{name} wants to <em>connect</em>",
-  "deepLink.connection.noteIntro": "They sent you a note with their request:",
-  "deepLink.connection.mutualConnections_one": "{count} mutual connection",
-  "deepLink.connection.mutualConnections_other": "{count} mutual connections",
-  "deepLink.connection.accept": "Accept",
-  "deepLink.connection.decline": "Decline",
-  "deepLink.connection.notNow": "Not now, decide later",
-  "deepLink.connection.remindLaterToast": "We’ll remind you later",
-  "deepLink.gathering.badge": "You’re in",
-  "deepLink.gathering.guestListConfirmed": "You’re on the guest list.",
-  "deepLink.gathering.confirmedByHost":
-    "Your RSVP has been confirmed by the host.",
-  "deepLink.gathering.addToCalendar": "Add to calendar",
-  "deepLink.gathering.addedToastCalendar": "Added to your calendar",
-  "deepLink.gathering.viewDetails": "View event details",
-  "deepLink.reply.yourPost": "Your post",
-  "deepLink.reply.theirReply": "{name}’s reply",
-  "deepLink.reply.meta": "Replied to your post · {when}",
-  "deepLink.mention.theirPost": "{name}’s post",
-  "deepLink.mention.meta": "Mentioned you in a post · {when}",
-  "deepLink.composer.placeholder": "Reply to {name}…",
-  "deepLink.composer.send": "Send",
   "deepLink.sentReply.you": "You",
-  "deepLink.sentReply.justNow": "Just now",
-  "deepLink.moderation.heading": "An update on your account",
-  "deepLink.moderation.reference":
-    "Reference <refNum>{ref}</refNum> · Updated {updated}",
-  "deepLink.moderation.viewOutcome": "View appeal outcome",
-  "deepLink.moderation.howItWorks": "How moderation works",
 };

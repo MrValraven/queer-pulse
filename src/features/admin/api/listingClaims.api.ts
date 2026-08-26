@@ -22,6 +22,21 @@ export interface ListingClaimDTO {
   reviewedAt: string | null;
   /** ISO 8601 timestamp. */
   createdAt: string;
+  /**
+   * The published review turnaround in calendar days, carried on every claim
+   * so the queue and the claimant's own status line quote one number
+   * (`listing-claim-policy.ts` on the backend owns it).
+   */
+  reviewTurnaroundDays: number;
+  /**
+   * ISO 8601 date the claimant was promised a decision by, or null once the
+   * claim has been reviewed and the promise no longer applies. This is the
+   * queue-agnostic `dueAt` the OPS-04 clock reads, which is why a decided
+   * claim stops showing an overdue chip. Derived server-side, never stored.
+   */
+  expectedDecisionBy: string | null;
+  /** Whole days this claim has waited, frozen at its decision date. */
+  ageDays: number;
 }
 
 /** GET /admin/listings/claims — the pending claim review queue, oldest first.

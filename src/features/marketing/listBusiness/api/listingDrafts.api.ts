@@ -57,18 +57,10 @@ export const deleteListingDraft = (id: string) =>
 
 /**
  * GET /listing-drafts/resume/:token — resolve a `?draft=<token>` deep link to
- * the draft it points at, so a member can pick up on another device.
+ * the draft it points at, so a member can pick up on another device. Nothing
+ * hands that link out: QueerPulse delivers no email, so it works only for a URL
+ * the member carries themselves, and the drafts LIST is the path that needs no
+ * link at all.
  */
 export const resumeListingDraft = (token: string) =>
   apiGet<ListingDraftRecord>(`/listing-drafts/resume/${token}`);
-
-/**
- * POST /listing-drafts/:id/resume-link — ask the backend to email a resume
- * link (204). The platform ships WITHOUT a mailer at launch, so this is a
- * logged no-op server-side; the drafts LIST is the real cross-device path.
- * Declared for contract completeness; the client intentionally exposes no
- * "email me a link" button around it (nothing would arrive), so it stays a
- * best-effort secondary rather than a promise the product can't keep.
- */
-export const sendListingDraftResumeLink = (id: string) =>
-  apiPost<void>(`/listing-drafts/${id}/resume-link`);

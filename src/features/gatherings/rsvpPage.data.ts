@@ -7,7 +7,7 @@ import { downloadBlob } from "../../shared/lib/downloadBlob";
  * `value` is either plain organizer-authored content (location, host name —
  * leave English) or a `Date` for the one row that's a timestamp, so
  * `RsvpPage` can format it with `useFormat()` instead of a baked
- * "Sunday 22 June · 7:00 PM" string.
+ * "Monday 22 June · 7:00 PM" string.
  */
 export const RSVP_DETAILS: {
   icon: IconType;

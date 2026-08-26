@@ -66,17 +66,35 @@
   background: rgba(var(--line-rgb), 0.2);
 }
 
+/* A real <button> sitting inside the meta text run, so it resets the UA button
+   box back to inline text; `position`/`z-index` lift it above .cardOpen, which
+   covers the card and would otherwise swallow its clicks. */
 .uploaderChip {
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
   color: var(--violet);
   font-weight: 600;
   cursor: pointer;
   border-radius: 4px;
   text-underline-offset: 2px;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.uploaderChip:hover,
+.uploaderChip:hover {
+  text-decoration: underline;
+}
+
+/* An underline alone is not a focus indicator. The ring is inset because the
+   card clips its overflow. */
 .uploaderChip:focus-visible {
   text-decoration: underline;
+  outline: 2px solid var(--violet);
+  outline-offset: 1px;
 }
 
 .grid {
@@ -87,6 +105,10 @@
 }
 
 .card {
+  /* Anchors .cardOpen, the overlay that carries the card's own action. The
+     card is a <div> because the uploader chip inside it is a second control
+     and must not be a focusable descendant of a <button>. */
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -97,6 +119,26 @@
   background: var(--paper);
   cursor: pointer;
   text-align: left;
+}
+
+/* Covers the whole card so the click target is unchanged. Above the static
+   content, below .uploaderChip. */
+.cardOpen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+/* Inset, because .card clips its overflow and an outward ring on a
+   full-bleed child would be cut off entirely. */
+.cardOpen:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: -2px;
 }
 
 .thumb {

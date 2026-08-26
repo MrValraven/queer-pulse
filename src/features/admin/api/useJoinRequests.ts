@@ -61,6 +61,20 @@ export interface JoinRequestView {
   createdAt: string;
   /** ISO timestamp of the decision, or null while the request is still open. */
   reviewedAt: string | null;
+  /**
+   * The id of the reviewer who DECIDED this request, or null while it is still
+   * open. Kept beside `reviewedByName` because it is the stable half: the
+   * quality-sample view groups and filters a reviewer's decisions on this, and
+   * compares it with the signed-in reviewer to say "You".
+   */
+  reviewedBy: string | null;
+  /**
+   * That reviewer's display name, resolved by the backend. Absent while the
+   * request is open, and absent once that reviewer has erased their account
+   * (the id goes with them, so nothing can put the name back). Render the
+   * fallback rather than an empty space.
+   */
+  reviewedByName?: string;
   /** The closed-set reason key a reviewer picked when declining. Null on every
    *  other status. Rendered through `declineReasonLabelKey`. */
   declineReason: string | null;
@@ -179,6 +193,8 @@ export function dtoToView(
     inviteExpiresAt: dto.inviteExpiresAt,
     createdAt: dto.createdAt,
     reviewedAt: dto.reviewedAt,
+    reviewedBy: dto.reviewedBy,
+    ...(dto.reviewedByName ? { reviewedByName: dto.reviewedByName } : {}),
     declineReason: dto.declineReason,
     flagLabels,
     priorDeclineLine,

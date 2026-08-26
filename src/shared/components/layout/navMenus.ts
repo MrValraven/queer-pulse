@@ -500,6 +500,13 @@ export const NAV_MENUS: MegaMenu[] = [
             href: routes.imprint,
           },
           {
+            // LG-01: the published accessibility statement. Reachable from the
+            // main navigation as well as the footer legal row, because a person
+            // who needs it should not have to hunt for it.
+            labelKey: "shared:megaNav.about.col.legal.accessibility",
+            href: routes.policiesAccessibility,
+          },
+          {
             labelKey: "shared:megaNav.about.col.legal.pressKit",
             href: routes.pressKit,
           },

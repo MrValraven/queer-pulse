@@ -45,10 +45,6 @@ export const resources: Catalog = {
   "suggestEdit.success.title": "Sugestão <em>recebida.</em>",
   "suggestEdit.success.sub":
     "A equipa editorial vê as sugestões semanalmente e discute alterações maiores na assembleia mensal. Este é um documento vivo precisamente por causa de sugestões como a tua.",
-  "suggestEdit.comingSoon.title":
-    "As edições ainda não estão <em>abertas.</em>",
-  "suggestEdit.comingSoon.sub":
-    "As sugestões ao glossário ainda não estão ligadas à equipa editorial no site em produção, por isso não chegariam a ninguém. Preferimos ser honestes a fingir um recibo. Volta cá em breve.",
   "suggestEdit.body.intro":
     "Editado pela comunidade. Se uma definição parecer incompleta ou incorreta, diz-nos qual o termo e o que mudarias.",
   "suggestEdit.body.introSubject":
@@ -548,7 +544,6 @@ export const resources: Catalog = {
   "mentalHealth.therapists.waitlist": "Lista de espera",
   "mentalHealth.therapists.viewProfileAriaLabel": "Ver o perfil de {name}",
   "mentalHealth.therapists.viewProfileCta": "Ver perfil",
-  "mentalHealth.therapists.comingSoon.badge": "Brevemente",
   "mentalHealth.therapists.comingSoon.title":
     "O diretório está <em>quase a chegar.</em>",
   "mentalHealth.therapists.comingSoon.body":
@@ -1029,10 +1024,6 @@ export const resources: Catalog = {
     "Um coordenador vai confirmar a listagem sem álcool e adicioná-la ao calendário dentro de um dia. A checklist de anfitrião chega-te por mensagem na QueerPulse.",
   "sober.host.success.attendSub":
     "Guardámos o teu lugar. A localização privada e um lembrete simpático vão chegar-te no dia anterior, e nada é partilhado publicamente.",
-  "sober.host.comingSoon.title":
-    "Os convívios sem álcool estão <em>a chegar.</em>",
-  "sober.host.comingSoon.sub":
-    "Organizar e confirmar presença ainda não está ligado no site em produção, por isso nada do que escreveres aqui chegaria a uma coordenação. Preferimos dizê-lo com clareza: isto abre em breve.",
   "sober.host.intro":
     "Começa um convívio sem álcool, ou junta-te a uma reunião de pares já existente. De qualquer forma, decides tu quão visível queres estar.",
   "sober.host.modeLabel": "O que gostarias de fazer?",
@@ -1058,9 +1049,6 @@ export const resources: Catalog = {
   // ── Grade da biblioteca de guias — partilhada por marketing/ResourceLibraryPage
   // (a página real "/resources", ligada à navegação, consolidada pela CNT-11)
   // e o seu cromado de pesquisa/filtro/cartão. ────────────────────────────
-  "library.search.placeholder":
-    "Pesquisar guias: pronomes, PrEP, arrendamento…",
-  "library.filterAria": "Filtrar guias por tema",
   "library.category.all": "Todos os guias",
   "library.category.housing": "Habitação",
   "library.category.health": "Saúde",
@@ -1070,11 +1058,9 @@ export const resources: Catalog = {
   "library.category.safety": "Segurança e privacidade",
   "library.category.community": "Vida em comunidade",
   "library.category.culture": "Cultura e arquivo",
-  "library.empty": "Ainda não há guias que correspondam. Tenta outra pesquisa.",
   "library.readGuideCta": "Ler o guia",
   "library.loadingMore": "A carregar mais guias…",
   "library.loadMoreCta": "Carregar mais guias",
-  "library.popularLabel": "Mais lidos:",
   // Sinal de atualidade da CNT-13, mostrado em cada cartão de guia.
   "library.card.verifiedOn": "Verificado a {date}",
   "library.card.notYetVerified": "Ainda não verificado",
@@ -1309,10 +1295,6 @@ export const resources: Catalog = {
   "microGrants.apply.success.sub":
     "A tua candidatura fica registada e segue para o painel de avaliação, que reúne em meados de julho. O painel decide esta ronda antes de 31 de julho e responde por mensagem na QueerPulse, seja qual for o resultado.",
   "microGrants.apply.success.closeCta": "Fechar",
-  "microGrants.apply.comingSoon.title":
-    "As candidaturas abrem <em>em breve.</em>",
-  "microGrants.apply.comingSoon.sub":
-    "A receção de candidaturas ainda não está ligada no site em produção, por isso nada do que escrevesses aqui chegaria ao painel de avaliação. Preferimos dizê-lo com clareza. A ronda do 2.º trimestre abre em breve: volta cá, ou contacta o coletivo se for urgente.",
 
   "microGrants.apply.category.stepTitle": "Que tipo de <em>projeto?</em>",
   "microGrants.apply.category.stepSub":
@@ -1394,10 +1376,6 @@ export const resources: Catalog = {
   "microGrants.panel.success.title": "Estás na <em>lista.</em>",
   "microGrants.panel.success.sub":
     "Obrigade. A coordenação do painel avalia as novas pessoas voluntárias antes de cada trimestre e contacta-te antes de a ronda do 3.º trimestre abrir. Os painéis rodam para o trabalho se manter partilhado.",
-  "microGrants.panel.comingSoon.title":
-    "Ainda não aceitamos <em>inscrições.</em>",
-  "microGrants.panel.comingSoon.sub":
-    "A inscrição no painel ainda não está ligada no site em produção, por isso este formulário não chegaria a ninguém. Preferimos dizê-lo com clareza. O painel abre a novas pessoas voluntárias antes de cada trimestre: volta cá em breve.",
   "microGrants.panel.intro":
     "O painel lê as candidaturas e decide as bolsas em conjunto. Mantemo-lo pequeno, rotativo e deliberadamente diverso, sem gatekeepers profissionais.",
   "microGrants.panel.nameLabel": "Nome",
@@ -2374,7 +2352,6 @@ export const resources: Catalog = {
   "legal.lawyers.live.title": "O diretório de advogados está para breve.",
   "legal.lawyers.live.body":
     "Estamos a validar advogados afirmativos para pessoas LGBTQ+ antes de os listarmos, para não te encaminharmos para alguém que não possamos apoiar. Entretanto, podes denunciar discriminação e ajudamos-te a encontrar apoio.",
-  "legal.lawyers.live.cta": "Denunciar um problema",
 
   "sexualHealth.testing.live.title": "O diretório de clínicas está para breve.",
   "sexualHealth.testing.live.body":

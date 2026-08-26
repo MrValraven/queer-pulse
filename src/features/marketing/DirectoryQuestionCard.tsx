@@ -87,10 +87,11 @@ export function DirectoryQuestionCard({
       )}
       {!preview && (
         <div className={s.questionActions}>
+          {/* No `authorName`: this control reports the question AND the
+              answer under it, and the answer is often someone else's. */}
           <DirectoryReportControl
             subjectId={question.id}
             subjectKind="question"
-            authorName={question.askerName}
           />
         </div>
       )}

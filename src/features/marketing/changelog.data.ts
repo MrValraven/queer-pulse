@@ -89,6 +89,131 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
   {
     year: "2026",
     entries: [
+      // Second batch of 26 Aug 2026. The reporting entry leads the day: it
+      // corrects a gap on the platform's most sensitive surface, and a member
+      // who tried to report being outed in the last few months should meet it
+      // first rather than find it below a feature announcement.
+      {
+        id: "reporting-that-someone-outed-you",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("reporting-that-someone-outed-you"),
+        tag: {
+          labelKey: "marketing:changelog.tag.reportForm",
+          to: routes.report,
+        },
+      },
+      {
+        id: "a-quieter-option-before-you-go",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("a-quieter-option-before-you-go"),
+        tag: {
+          labelKey: "marketing:changelog.tag.settings",
+          to: routes.settings,
+        },
+      },
+      // Staff-facing, same rationale as the first batch's moderator entries:
+      // a member reading them learns how a report about them is handled.
+      {
+        id: "a-refused-moderation-action-says-why",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("a-refused-moderation-action-says-why"),
+      },
+      {
+        id: "the-decision-sample-says-who-decided",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("the-decision-sample-says-who-decided"),
+      },
+      {
+        id: "communities-your-connections-already-joined",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("communities-your-connections-already-joined"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "follow-your-listing-claim",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("follow-your-listing-claim"),
+        tag: {
+          labelKey: "marketing:changelog.tag.listingClaims",
+          to: routes.listingClaims,
+        },
+      },
+      {
+        id: "the-accessibility-statement-is-published",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("the-accessibility-statement-is-published"),
+        tag: {
+          labelKey: "marketing:changelog.tag.accessibility",
+          to: routes.policiesAccessibility,
+        },
+      },
+      {
+        id: "the-privacy-policy-says-what-it-keeps",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("the-privacy-policy-says-what-it-keeps"),
+        tag: {
+          labelKey: "marketing:changelog.tag.privacy",
+          to: routes.privacy,
+        },
+      },
+      {
+        id: "what-we-said-we-would-delete-gets-deleted",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("what-we-said-we-would-delete-gets-deleted"),
+        tag: {
+          labelKey: "marketing:changelog.tag.dataExport",
+          to: routes.dataExport,
+        },
+      },
+      {
+        id: "reporting-says-why-it-is-slowing-you-down",
+        category: "fix",
+        date: "26 Aug 2026",
+        ...entryKeys("reporting-says-why-it-is-slowing-you-down"),
+        tag: {
+          labelKey: "marketing:changelog.tag.safety",
+          to: routes.safety,
+        },
+      },
+      // Staff-facing work. The changelog already carries admin and moderator
+      // entries, so these belong in the same timeline rather than a separate
+      // one. A member reading them learns how their request is handled.
+      {
+        id: "bulk-invite-decisions-ask-before-they-fire",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("bulk-invite-decisions-ask-before-they-fire"),
+      },
+      {
+        id: "decision-sampling-sits-with-the-queue",
+        category: "improvement",
+        date: "26 Aug 2026",
+        ...entryKeys("decision-sampling-sits-with-the-queue"),
+      },
+      {
+        id: "every-moderation-queue-reports-its-health",
+        category: "feature",
+        date: "26 Aug 2026",
+        ...entryKeys("every-moderation-queue-reports-its-health"),
+      },
+      {
+        id: "housekeeping-the-mailer-and-two-dead-ends",
+        category: "infrastructure",
+        date: "26 Aug 2026",
+        ...entryKeys("housekeeping-the-mailer-and-two-dead-ends"),
+      },
       {
         id: "the-about-page-shows-its-work-in-place",
         category: "improvement",

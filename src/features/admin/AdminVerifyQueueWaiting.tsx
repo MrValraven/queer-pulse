@@ -10,6 +10,7 @@ import {
   AdminVerifyQueueWaitlist,
 } from "./AdminVerifyQueueCards";
 import { JoinRequestBulkActionBar } from "./JoinRequestBulkActionBar";
+import { JoinRequestSelectAllRow } from "./JoinRequestSelectAllRow";
 import styles from "./AdminMembersPage.module.css";
 import { ModerationStanceNote } from "../safety/ModerationStanceNote";
 
@@ -71,12 +72,28 @@ export function AdminVerifyQueueWaiting({
         <em>{t("admin:members.verify.introEm")}</em>
       </p>
 
+      {/* Above the cards, so the set it names ("the requests waiting here") is
+          the set directly under it. */}
+      {decisions.queue.length > 1 && (
+        <JoinRequestSelectAllRow
+          visibleCount={decisions.queue.length}
+          selectedVisibleCount={
+            decisions.queue.filter((item) =>
+              decisions.selection.selectedIds.has(item.id),
+            ).length
+          }
+          isAtCap={decisions.selection.atSelectionCap}
+          onToggleAll={decisions.selection.toggleSelectAll}
+        />
+      )}
+
       <AdminVerifyQueueCards
         approved={decisions.approved}
         queue={decisions.queue}
         leavingIds={decisions.leaving}
         decidingId={decisions.decidingId}
         selectedIds={decisions.selection.selectedIds}
+        isAtSelectionCap={decisions.selection.atSelectionCap}
         onApprove={(item) => decisions.resolve(item, "approved")}
         onDecline={decisions.requestDecline}
         onWaitlist={(item) => decisions.resolve(item, "waitlisted")}
@@ -91,8 +108,9 @@ export function AdminVerifyQueueWaiting({
       {decisions.selection.selectedIds.size > 0 && (
         <JoinRequestBulkActionBar
           selectedIds={decisions.selection.selectedIds}
-          onClear={() => decisions.selection.setSelectedIds(new Set())}
-          onSuccess={decisions.handleBulkSuccess}
+          rows={decisions.queue}
+          onClear={decisions.selection.resetSelection}
+          onOutcome={decisions.handleBulkOutcome}
         />
       )}
 

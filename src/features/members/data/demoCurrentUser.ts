@@ -131,13 +131,13 @@ export const currentUser: Member = {
       icon: FiMusic,
       title: "DJ set as Hot Mess Express",
       sub: "Queer party · with Camila",
-      to: routes.event,
+      to: routes.events,
     },
     {
       icon: FiCalendar,
       title: "Organised a community gathering",
       sub: "Queer + non-monogamy meetup",
-      to: routes.event,
+      to: routes.events,
     },
   ],
   shapings: {

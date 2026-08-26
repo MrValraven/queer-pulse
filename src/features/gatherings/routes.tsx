@@ -1,7 +1,6 @@
 import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
-import { GatheringComingSoon } from "./GatheringComingSoon";
 
 const GatheringPage = lazyNamed(
   () => import("./GatheringPage"),
@@ -31,7 +30,6 @@ const CoHostInvitePage = lazyNamed(
   () => import("./CoHostInvitePage"),
   "CoHostInvitePage",
 );
-const EventPage = lazyNamed(() => import("./EventPage"), "EventPage");
 const RsvpPage = lazyNamed(() => import("./RsvpPage"), "RsvpPage");
 const RsvpRedirect = lazyNamed(() => import("./RsvpRedirect"), "RsvpRedirect");
 const HostPage = lazyNamed(() => import("./HostPage"), "HostPage");
@@ -49,10 +47,9 @@ const CreateGatheringPage = lazyNamed(
  *  update / cancel / cohost / attach-photo hooks against that real id, keeping
  *  its colocated
  *
- *  One prototype stays demo-only and resolves to an honest coming-soon in LIVE
- *  mode: the standalone `/event` detail, pinned to a single mock event with no
- *  live subject. The real event surface is `/gatherings/:slug`; every other
- *  route here is really wired too. */
+ *  The real event surface is `/gatherings/:slug`; every route here is really
+ *  wired. The standalone `/event` prototype detail was retired and now
+ *  redirects to the events board. */
 export function gatheringRoutes(demoMode: boolean) {
   return (
     <>
@@ -98,12 +95,10 @@ export function gatheringRoutes(demoMode: boolean) {
         path={`${routes.gatherings}/:slug/co-host-invite/:inviteId`}
         element={<CoHostInvitePage />}
       />
-      <Route
-        path={routes.event}
-        element={
-          demoMode ? <EventPage /> : <GatheringComingSoon variant="event" />
-        }
-      />
+      {/* The standalone `/event` prototype detail page is retired: it was
+          pinned to a single mock gathering with no live subject, and the real
+          detail surface is `/gatherings/:slug`. `/event` now redirects to the
+          events board (see `LEGACY_REDIRECTS` in `routes.redirects.data.ts`). */}
       {/* RSVP is now an action INSIDE the gathering detail (GatheringRsvpControl),
           so the standalone confirmation page is retired in LIVE: `/rsvp`
           redirects to the originating gathering (`?event=<slug>`) or the

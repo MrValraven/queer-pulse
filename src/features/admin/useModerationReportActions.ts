@@ -8,6 +8,10 @@ import {
   useModBulkAction,
   type ModBulkVars,
 } from "./api/useModAction";
+import {
+  summarizeBulkFailures,
+  useEnforcementRefusal,
+} from "./api/enforcementTargetError";
 import type { ModActionCode } from "./api/moderation.api";
 import {
   ACTION_CODE,
@@ -50,6 +54,9 @@ export function useModerationReportActions({
 }: UseModerationReportActionsParams) {
   const modAction = useModAction();
   const modBulk = useModBulkAction();
+  // Turns a typed enforcement refusal into the sentence a moderator reads. A
+  // genuine outage keeps the caller's own generic copy.
+  const describeRefusal = useEnforcementRefusal();
 
   const resolveReport = (id: string, opts: ResolveOpts = {}) => {
     const verb = opts.verb ?? "resolved";
@@ -76,9 +83,24 @@ export function useModerationReportActions({
           onSuccess: () => pendingOpenRemoval.current.delete(id),
           // Failed: the row is still open server-side. Drop the shield and
           // refetch so server truth rolls the row back into view.
-          onError: () => {
+          //
+          // The optimistic toast above has already told this moderator the
+          // action landed, so this is a CORRECTION and has to say what really
+          // happened. A refused enforcement (no account behind the content,
+          // two possible authors, the house or a staff account) is a decision
+          // the backend made on purpose, and calling it "couldn't reach the
+          // safety service" was false twice over: the service answered, and it
+          // answered deliberately. Deterministic, so no retry is offered: the
+          // same request would be refused the same way.
+          onError: (error) => {
             pendingOpenRemoval.current.delete(id);
-            showToast(t("admin:moderation.queue.serviceErrorToast"), "error");
+            showToast(
+              describeRefusal(
+                error,
+                t("admin:moderation.queue.serviceErrorToast"),
+              ),
+              "error",
+            );
             void refetch();
           },
         },
@@ -140,11 +162,12 @@ export function useModerationReportActions({
           onSuccess: (data) => {
             ids.forEach((id) => pendingOpenRemoval.current.delete(id));
             if (data.failed.length > 0) {
-              const reasons = [
-                ...new Set(data.failed.map((failure) => failure.reason)),
-              ]
-                .slice(0, 2)
-                .join("; ");
+              // Shown exactly as the server sent them. A bulk `failed[]` entry
+              // carries the message string and nothing else, so the typed
+              // `code`/`target` the single-report path reads is unavailable
+              // here. See `summarizeBulkFailures` for why text-matching them
+              // back into a case is off the table.
+              const reasons = summarizeBulkFailures(data.failed);
               showToast(
                 t("admin:moderation.queue.bulkPartialToast", {
                   succeededCount: data.updated.length,
@@ -156,9 +179,19 @@ export function useModerationReportActions({
               void refetch();
             }
           },
-          onError: () => {
+          // Reached when the whole request throws rather than partitioning,
+          // so the same correction applies: say what the backend actually
+          // refused, offer no retry, and let the refetch bring every
+          // optimistically removed row back.
+          onError: (error) => {
             ids.forEach((id) => pendingOpenRemoval.current.delete(id));
-            showToast(t("admin:moderation.queue.serviceErrorToast"), "error");
+            showToast(
+              describeRefusal(
+                error,
+                t("admin:moderation.queue.serviceErrorToast"),
+              ),
+              "error",
+            );
             void refetch();
           },
         },

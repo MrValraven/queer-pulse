@@ -4,7 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { AdminModal } from "./ui";
 import type { Ratification } from "./adminModeration.data";
-import type { RatifyDecision } from "./AdminModerationCards";
+import type { RatifyDecision } from "./AdminRatificationCard";
 import styles from "./AdminModerationPage.module.css";
 
 /**

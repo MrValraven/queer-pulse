@@ -3,6 +3,69 @@ import type { TFunction } from "../../shared/i18n/types";
 import type { LegalSection } from "./LegalDoc";
 import s from "./LegalDoc.module.css";
 
+/**
+ * One `<strong>`-led bullet. A plain function rather than a component, because
+ * this module also exports the table of contents and the section builder and a
+ * PascalCase component beside them trips `react-refresh/only-export-components`.
+ */
+function leadBullet(key: string) {
+  return (
+    <li key={key}>
+      <Translation
+        i18nKey={`marketing:privacy.${key}`}
+        components={{ strong: <strong /> }}
+      />
+    </li>
+  );
+}
+
+/**
+ * The retention periods that a sweeper actually enforces. Every one is cited in
+ * `queerpulse-backend/docs/ops/retention-periods.md` §1. Do not add a period
+ * here that no scheduled job clears.
+ */
+const RETENTION_CLEARS_KEYS = [
+  "gathering",
+  "notifications",
+  "push",
+  "cardVerification",
+  "export",
+  "sessions",
+  "invites",
+  "housing",
+].map((id) => `retention.clears.${id}`);
+
+/** The seven GDPR rights, and the route by which each is actually exercised. */
+const RIGHTS_KEYS = [1, 2, 3, 4, 5, 6, 7].map((n) => `yourRights.item${n}`);
+const RIGHTS_HOW_KEYS = [
+  "access",
+  "rectification",
+  "erasure",
+  "objection",
+  "portability",
+  "restriction",
+  "withdrawConsent",
+].map((id) => `yourRights.how.${id}`);
+
+/**
+ * The sub-processors, in the order the copy lists them. Taken from
+ * `queerpulse-backend/docs/ops/sub-processors-and-processing.md`. Two rules:
+ * never add a processor the code does not call, and never write that any of
+ * them is bound by contract. No Data Processing Agreement is recorded in
+ * either repository, so that claim is unverifiable today.
+ */
+const SUB_PROCESSOR_KEYS = [
+  "google",
+  "railway",
+  "tigris",
+  "vercel",
+  "openFreeMap",
+  "openStreetMap",
+  "googleMaps",
+  "klipy",
+  "pushService",
+].map((id) => `thirdParties.${id}`);
+
 export const PRIVACY_TOC = [
   { id: "who-we-are", titleKey: "privacy.whoWeAre.title" },
   { id: "what-we-collect", titleKey: "privacy.whatWeCollect.title" },
@@ -204,14 +267,26 @@ function rightsSections(t: TFunction): LegalSection[] {
       body: (
         <>
           <p>{t("marketing:privacy.retention.p1")}</p>
-          <p>{t("marketing:privacy.retention.p2")}</p>
+
+          <h4>{t("marketing:privacy.retention.clearsHeading")}</h4>
           <p>{t("marketing:privacy.retention.p3")}</p>
-          <p>
-            <Translation
-              i18nKey="marketing:privacy.retention.p4"
-              components={{ strong: <strong /> }}
-            />
-          </p>
+          <ul>{RETENTION_CLEARS_KEYS.map(leadBullet)}</ul>
+
+          <h4>{t("marketing:privacy.retention.deleteHeading")}</h4>
+          <p>{t("marketing:privacy.retention.p2")}</p>
+          <p>{t("marketing:privacy.retention.deleted.keptIntro")}</p>
+          <ul>
+            {leadBullet("retention.deleted.keptModeration")}
+            {/* `retention.p4` is the email-fingerprint claim, verified accurate
+                against the backend. It reads as the second of the three kept
+                things, so it lives here rather than as a loose paragraph. Do
+                not reword it. */}
+            {leadBullet("retention.p4")}
+            {leadBullet("retention.deleted.keptContent")}
+          </ul>
+
+          <h4>{t("marketing:privacy.retention.beyondHeading")}</h4>
+          <p>{t("marketing:privacy.retention.beyond.body")}</p>
         </>
       ),
     },
@@ -221,45 +296,19 @@ function rightsSections(t: TFunction): LegalSection[] {
       body: (
         <>
           <p>{t("marketing:privacy.yourRights.intro")}</p>
-          <ul>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.yourRights.item1"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.yourRights.item2"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.yourRights.item3"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.yourRights.item4"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.yourRights.item5"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.yourRights.item6"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-          </ul>
+          <ul>{RIGHTS_KEYS.map(leadBullet)}</ul>
+
+          {/* The request form itself accepts Articles 15, 16, 17 and 21 only.
+              Restriction and portability are still real rights, exercised
+              through the form's free text and through the self-service export,
+              so the page says how to reach each one rather than quietly
+              dropping the two the form has no radio button for. */}
+          <h4>{t("marketing:privacy.yourRights.howHeading")}</h4>
+          <ul>{RIGHTS_HOW_KEYS.map(leadBullet)}</ul>
+
           <p>{t("marketing:privacy.yourRights.p1")}</p>
+          <p>{t("marketing:privacy.yourRights.slaExtension")}</p>
+          <p>{t("marketing:privacy.yourRights.responseChannel")}</p>
           <p>{t("marketing:privacy.yourRights.p2")}</p>
         </>
       ),
@@ -292,52 +341,28 @@ function policySections(t: TFunction): LegalSection[] {
       body: (
         <>
           <p>{t("marketing:privacy.thirdParties.intro")}</p>
-          <ul>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.thirdParties.item1"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.thirdParties.item2"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.thirdParties.item3"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.thirdParties.item4"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.thirdParties.item5"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-          </ul>
+          <ul>{SUB_PROCESSOR_KEYS.map(leadBullet)}</ul>
+          <p>{t("marketing:privacy.thirdParties.embeds")}</p>
           <p>
             <Translation
               i18nKey="marketing:privacy.thirdParties.optInIntro"
               components={{ strong: <strong /> }}
             />
           </p>
-          <ul>
-            <li>
-              <Translation
-                i18nKey="marketing:privacy.thirdParties.optItem1"
-                components={{ strong: <strong /> }}
-              />
-            </li>
-          </ul>
+          <ul>{leadBullet("thirdParties.optItem1")}</ul>
+          {/* Deliberately unfilled. Processing regions and the transfer
+              safeguard for anything outside the EEA are a factual matter a
+              person has to confirm with each provider; a guess here would be a
+              claim about where members' data lives. The label is carried by
+              the words "To be confirmed", never by the panel's colour alone. */}
+          <div className={s.highlight}>
+            <p>
+              <strong>
+                {t("marketing:privacy.thirdParties.transfersLabel")}
+              </strong>{" "}
+              {t("marketing:privacy.thirdParties.transfers")}
+            </p>
+          </div>
           <p>{t("marketing:privacy.thirdParties.outro")}</p>
         </>
       ),

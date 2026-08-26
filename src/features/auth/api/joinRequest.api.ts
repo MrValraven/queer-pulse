@@ -41,6 +41,15 @@ export interface JoinRequestDTO {
   reviewedAt: string | null;
   reviewedBy: string | null;
   /**
+   * The deciding reviewer's display name, resolved server-side from
+   * `reviewedBy` in the same batched lookup that resolves `assignedStaffName`.
+   * Absent when `reviewedBy` is null, including after that reviewer's erasure,
+   * which NULLs the id, so no name can come back from a decision they made.
+   * The id stays beside this because a display name is not stable enough to
+   * group a reviewer's decisions on.
+   */
+  reviewedByName?: string;
+  /**
    * Populated on approve. The backend returns the **code only, never a URL** —
    * the client builds the shareable link from the route map (`inviteLink`).
    */

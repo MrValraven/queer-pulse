@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { FiCalendar } from "react-icons/fi";
-import {
-  Button,
-  EmptyState,
-  SkeletonLine,
-} from "../../../shared/components/ui";
+import { EmptyState, SkeletonLine } from "../../../shared/components/ui";
 import { PageShell } from "../../../shared/components/layout";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -13,8 +9,10 @@ import { routes } from "../../../app/routeMap";
 import { useEvent } from "../api/useEvent";
 import { useAttendees } from "../api/useAttendees";
 import { useCheckIn, useUndoCheckIn } from "../api/useCheckIn";
+import { isAttendanceWindowClosed } from "../api/checkInError";
 import { manageGatheringPath } from "../data";
 import { DoorGuestList } from "./DoorGuestList";
+import { DoorClosedNotice, DoorScanCard } from "./DoorScanCard";
 import { DoorScanModal } from "./DoorScanModal";
 import { DoorShell } from "./DoorShell";
 import styles from "../GatheringDashboardPage.module.css";
@@ -76,14 +74,29 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
   const [scanError, setScanError] = useState<string | null>(null);
   const [pendingSlug, setPendingSlug] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  // Set when the server refuses a check-in because this gathering is past its
+  // attendance window. Sticky for the life of the screen: the refusal is
+  // deterministic, so the reason stays on the page rather than passing by in a
+  // toast, and no retry is offered.
+  const [wasRefusedPastWindow, setWasRefusedPastWindow] = useState(false);
 
   if (!gathering || !gathering.viewerIsOrganizer) {
     return <DoorUnavailable isLoading={isLoading} />;
   }
 
   const going = roster?.going ?? [];
-  const checkedInCount = roster?.checkedInCount ?? 0;
+  // Three states, deliberately kept apart. A number is a number, including
+  // zero, which means nobody has arrived yet. `null` means the platform no
+  // longer keeps this gathering's check-ins, which is the answer past the
+  // 30-day retention window. No roster yet is neither, and reads as 0 for the
+  // moment the skeleton is up, exactly as it did before.
+  const checkedInCount = roster ? roster.checkedInCount : 0;
+  const isCheckInKept = checkedInCount !== null;
   const seatsTaken = roster?.seatsTaken ?? roster?.goingCount ?? 0;
+  // Two ways to learn the door is shut, and both close the same affordances.
+  // The count going null is the ambient signal on load; the 403 is what a tab
+  // that was already open finds out when a tap lands.
+  const canCheckIn = isCheckInKept && !wasRefusedPastWindow;
 
   const failed = (error: unknown) =>
     error instanceof ApiError && error.message
@@ -102,7 +115,16 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
             }),
             "success",
           ),
-        onError: (error) => showToast(failed(error), "error"),
+        onError: (error) => {
+          // A closed window is permanent, so it is stated in place and the
+          // buttons come down. Everything else is worth another tap and keeps
+          // the toast it always had.
+          if (isAttendanceWindowClosed(error)) {
+            setWasRefusedPastWindow(true);
+            return;
+          }
+          showToast(failed(error), "error");
+        },
         onSettled: () => setPendingSlug(null),
       },
     );
@@ -131,7 +153,18 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
             "success",
           );
         },
-        onError: (error) => setScanError(failed(error)),
+        onError: (error) => {
+          // The scan modal's own submit would happily be pressed again, and
+          // this refusal will never succeed. Close it and put the reason on
+          // the page behind it instead of leaving a live-looking button.
+          if (isAttendanceWindowClosed(error)) {
+            setIsScanOpen(false);
+            setScanError(null);
+            setWasRefusedPastWindow(true);
+            return;
+          }
+          setScanError(failed(error));
+        },
       },
     );
   };
@@ -140,9 +173,19 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
     <DoorShell
       title={gathering.title}
       manageTo={manageGatheringPath(gathering.slug)}
+      statsNote={
+        isCheckInKept ? undefined : t("gatherings:door.checkInsNotKeptNote")
+      }
       stats={[
         {
-          value: checkedInCount,
+          value:
+            checkedInCount !== null ? (
+              checkedInCount
+            ) : (
+              <span className={styles.hsUnavailable}>
+                {t("gatherings:door.checkInsNotKept")}
+              </span>
+            ),
           labelKey: "gatherings:dashboard.checkedIn",
         },
         { value: seatsTaken, labelKey: "gatherings:door.expectedSeats" },
@@ -153,25 +196,24 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
         },
       ]}
     >
-      <div className={styles.doorLayout}>
-        <div className={styles.card}>
-          <div className={styles.cardHead}>
-            {t("gatherings:door.scan.heading")}
-          </div>
-          <div className={styles.cardBody}>
-            <p className={styles.doorLead}>{t("gatherings:door.scan.lead")}</p>
-            <Button
-              variant="primary"
-              className={styles.scanBtn}
-              onClick={() => {
-                setScanError(null);
-                setIsScanOpen(true);
-              }}
-            >
-              {t("gatherings:door.scan.openCta")}
-            </Button>
-          </div>
-        </div>
+      {wasRefusedPastWindow && <DoorClosedNotice />}
+
+      <div
+        className={[
+          styles.doorLayout,
+          canCheckIn ? "" : styles.doorLayoutSingle,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {canCheckIn && (
+          <DoorScanCard
+            onOpen={() => {
+              setScanError(null);
+              setIsScanOpen(true);
+            }}
+          />
+        )}
 
         {isRosterLoading ? (
           <div className={styles.card}>
@@ -184,6 +226,7 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
           <DoorGuestList
             attendees={going}
             checkedInCount={checkedInCount}
+            canCheckIn={canCheckIn}
             pendingSlug={pendingSlug}
             hasMore={roster?.hasMoreGoing ?? false}
             isLoadingMore={isLoadingMore}
@@ -197,7 +240,7 @@ export function LiveDoorDashboard({ param }: { param: string | undefined }) {
         )}
       </div>
 
-      {isScanOpen && (
+      {isScanOpen && canCheckIn && (
         <DoorScanModal
           onToken={checkInByCard}
           isPending={checkIn.isPending}

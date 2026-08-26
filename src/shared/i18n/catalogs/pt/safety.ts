@@ -68,6 +68,10 @@ export const safety: Catalog = {
     "Usa este formulário para preocupações de segurança, assédio, abuso, ou qualquer situação que te tenha feito sentir insegure. Todas as denúncias são tratadas com total seriedade. Não existe um limiar mínimo para o que justifica uma denúncia.",
   "report.form.categoryLabel": "O que estás a denunciar?",
   "report.form.categoryPlaceholder": "Seleciona uma categoria",
+  "report.category.outing":
+    "Alguém revelou que sou LGBTQ+ sem o meu consentimento",
+  "report.category.doxxing":
+    "Alguém partilhou os meus dados pessoais ou a minha localização",
   "report.category.harassment": "Assédio ou ameaças",
   "report.category.unwantedContact": "Contacto ou mensagens indesejados",
   "report.category.impersonation": "Falsa identidade ou personificação",
@@ -131,6 +135,9 @@ export const safety: Catalog = {
     "Denúncia recebida. Entraremos em contacto no prazo de 24 horas.",
   "report.toast.submitError":
     "Não foi possível enviar a tua denúncia. Não chegou até nós. Verifica a ligação e tenta novamente.",
+  // Ver o comentário na versão EN: só cobre o limite de rajada de 60 segundos.
+  "report.tooFast":
+    "Estás a enviar denúncias mais depressa do que conseguimos recebê-las. Espera um momento e envia esta outra vez.",
 
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
@@ -152,18 +159,18 @@ export const safety: Catalog = {
   "reason.notAffirming":
     "Não é afirmativo LGBTQ+: quebrou o compromisso da comunidade",
   "reason.offPlatform": "Pediram para pagar ou sair da plataforma",
+  "reason.listingDispute": "Contestação ou reivindicação de um anúncio",
+  "reason.listingOwnerNotify":
+    "Contacto com quem gere: anúncio sugerido ou amigo",
   "reason.other": "Outra coisa, explicada em detalhe",
 
   // ── FlagModal.tsx ──────────────────────────────────────────────────────
-  "flag.modal.ariaLabel": "Sinalizar este emblema",
-  "flag.modal.closeAriaLabel": "Fechar",
   "flag.success.title": "Sinalização <em>recebida.</em>",
   "flag.success.body":
     "Obrigade. Uma pessoa moderadora vai ler a tua denúncia. <b>Três sinalizações independentes desencadeiam uma revisão imediata e a suspensão temporária do emblema</b>. A tua denúncia conta para isso. Podemos contactar-te para mais detalhe, mas nunca o espaço.",
   "flag.success.doneCta": "Concluído",
   "flag.error":
     "Não foi possível enviar essa sinalização. Não chegou até nós. Verifica a ligação e tenta novamente.",
-  "flag.form.eyebrow": "Sinalizar um espaço seguro",
   "flag.form.title": "O que aconteceu em <em>{spaceName}?</em>",
   "flag.form.lead":
     "As sinalizações são como sabemos quando um espaço falha. Conta-nos o que viste: detalhes ajudam o painel de revisão. O teu nome nunca é partilhado com o espaço.",
@@ -175,12 +182,9 @@ export const safety: Catalog = {
   "flag.form.charsRemaining_other": "Faltam {count} carateres para submeter",
   "flag.form.charsCount_one": "{count} carácter",
   "flag.form.charsCount_other": "{count} carateres",
-  "flag.form.confidentialNote":
-    "As denúncias são confidenciais. As pessoas moderadoras veem o teu nome; o espaço nunca o vê. Em caso de emergência, liga primeiro para o <strong>112</strong>.",
   "flag.form.cancelCta": "Cancelar",
   "flag.form.submitting": "A submeter…",
   "flag.form.submitCta": "Submeter sinalização",
-  "flag.reasonFallback": "preocupação",
 
   // ── BlockMutePage.tsx / BlockMuteScreens.tsx / blockMute.data.ts ──────
   "blockMute.meta.title": "Silenciar ou bloquear alguém na QueerPulse",
@@ -564,15 +568,9 @@ export const safety: Catalog = {
   "spaces.dir.updated":
     "Última atualização em junho de 2025 · Mantido pela comunidade",
   "spaces.dir.nominateCta": "+ Nomear um espaço",
-  "spaces.dir.filterAria": "Filtrar espaços por categoria",
   "spaces.dir.browseLead":
     "Todos os espaços verificados estão agora no diretório local, filtrados apenas para os que conquistaram o emblema.",
   "spaces.dir.browseCta": "Ver espaços verificados",
-  "spaces.empty.title": "Ainda não há espaços verificados nesta categoria",
-  "spaces.empty.description":
-    "A lista cresce à medida que as pessoas visitam e avaliam espaços. Experimenta outra categoria, ou nomeia um lugar em que já confies, e nós tratamos de o fazer avaliar.",
-  "spaces.empty.clearCta": "Limpar filtros",
-  "spaces.empty.nominateCta": "Nomear um espaço",
   "spaces.outro.title": "A segurança é <em>coletiva.</em>",
   "spaces.outro.sub":
     "Cada avaliação, cada sinalização, cada nomeação torna esta lista mais útil para todas as pessoas. Só funciona porque a comunidade a mantém.",
@@ -631,11 +629,6 @@ export const safety: Catalog = {
   "spaces.nominate.thanks.subInfo":
     "Aqui está o que acontece a seguir: confirmamos a receção de todas as nomeações no prazo de <strong>48 horas</strong>. Depois, três pessoas verificadas visitam de forma independente e avaliam-no segundo os critérios, antes de um painel de voluntáries decidir. Vamos manter-te informade.",
   "spaces.nominate.anotherCta": "Nomear outro espaço",
-  "spaces.nominate.comingSoon.badge": "Brevemente",
-  "spaces.nominate.comingSoon.title":
-    "As nomeações estão <em>a chegar em breve.</em>",
-  "spaces.nominate.comingSoon.body":
-    "Ainda estamos a construir o processo de revisão por trás das nomeações de espaços. Ative a plataforma de demonstração para pré-visualizar o fluxo completo, ou volte em breve.",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "Espaços seguros",
@@ -653,15 +646,6 @@ export const safety: Catalog = {
   "spaces.detail.vouchedSub":
     "Avaliações de segurança independentes de pessoas verificadas.",
   "spaces.detail.addVouchCta": "Adicionar a tua",
-  "spaces.detail.incidentTitle": "Se algo acontecer <em>aqui</em>",
-  "spaces.detail.dangerTitle": "Estás em perigo imediato",
-  "spaces.detail.dangerBody":
-    "Diz a qualquer pessoa da equipa que precisas de ajuda para sair. Os espaços verificados acompanham-te até à saída, sem perguntas. Se conseguires, liga também para o <strong>112</strong>.",
-  "spaces.detail.emergencyGuideCta": "Guia de emergência",
-  "spaces.detail.offTitle": "Algo pareceu estranho (não urgente)",
-  "spaces.detail.offBody":
-    "Até as coisas pequenas importam. É assim que sabemos quando um espaço começa a falhar. Faz uma denúncia discreta; as pessoas moderadoras leem todas, e o espaço é informado sem o teu nome associado.",
-  "spaces.detail.quietReportCta": "Fazer uma denúncia discreta",
   "spaces.detail.whereTitle": "Onde",
   "spaces.detail.backAllCta": "Voltar a todos os espaços",
   "spaces.detail.glanceTitle": "Num relance",
@@ -718,12 +702,6 @@ export const safety: Catalog = {
   "vouchModal.form.submitting": "A submeter…",
   "vouchModal.form.submitCta": "Adicionar o meu voto de confiança",
   "vouchModal.form.error": "Não foi possível submeter. Tenta novamente.",
-  "vouchModal.comingSoon.badge": "Brevemente",
-  "vouchModal.comingSoon.title":
-    "Os votos de confiança estão <em>a chegar em breve.</em>",
-  "vouchModal.comingSoon.body":
-    "Ainda estamos a construir o processo de confiança por trás dos votos de confiança de membros. Ativa a plataforma de demonstração para pré-visualizar o fluxo completo, ou volta em breve.",
-  "vouchModal.comingSoon.doneCta": "Fechar",
 
   // ── SafeSpaceBadgeStatus.tsx — os estados honestos do emblema ─────────
   "badge.state.none.title": "Sem emblema de espaço seguro",
@@ -800,7 +778,6 @@ export const safety: Catalog = {
   "flag.done.closeCta": "Fechar",
 
   // ── AdminSafeSpaceNominationsPage.tsx — a fila de revisão ──────────────
-  "governance.nominations.eyebrow": "Espaços seguros",
   "governance.nominations.title": "Fila de <em>nomeações.</em>",
   "governance.nominations.sub":
     "Mais antigas primeiro, porque a promessa publicada é uma nomeação confirmada no prazo de 48 horas. Tudo o que passou a janela fica marcado.",
@@ -912,7 +889,6 @@ export const safety: Catalog = {
   "governance.tab.flags": "Sinalizações",
   "governance.tab.listings": "Fichas",
   "governance.tab.reReview": "Emblemas a rever",
-  "governance.flags.eyebrow": "Espaços seguros",
   "governance.flags.title": "Sinalizações e <em>suspensões.</em>",
   "governance.flags.sub":
     "O que membres assinalaram sobre espaços com emblema, e que emblemas estão suspensos ou passaram a verificação anual.",

@@ -74,9 +74,6 @@ export const shared: Catalog = {
   "social.genericError": "We couldn't update that. Please try again.",
 
   // AppNav (logged-in top bar) — links not already covered by nav:members/nav:communities
-  "appNav.links.home": "Home",
-  "appNav.links.subprofiles": "Subprofiles",
-  "appNav.links.messages": "Messages",
 
   // AccountMenu
   "accountMenu.items.profile": "Profile",
@@ -85,16 +82,13 @@ export const shared: Catalog = {
   // live count of unspent invites attached by `useInviteQuotaBadge`.
   "accountMenu.items.invite": "Invite someone",
   "accountMenu.items.messages": "Messages",
-  "accountMenu.items.applications": "Applications",
   "accountMenu.items.work": "Work",
-  "accountMenu.items.subprofiles": "Subprofiles",
   // Personas discovery Phase 5, Moment 3 — the "Your personas" row (badge via
   // usePersonaBadge). Separate from `accountMenu.items.subprofiles` above,
   // which is a pre-existing, differently-worded entry.
   "accountMenu.items.personas": "Your personas",
   "accountMenu.items.events": "Events",
   "accountMenu.items.cards": "Cards",
-  "accountMenu.items.feed": "Feed",
   "accountMenu.items.drafts": "Drafts",
   "accountMenu.items.pitches": "Pitches",
   "accountMenu.items.saved": "Saved",
@@ -224,8 +218,6 @@ export const shared: Catalog = {
   "adminNav.items.reports": "Reports",
   "adminNav.items.systemAccounts": "System accounts",
 
-  "adminNav.items.joinRequests": "Join requests",
-
   // errorHandling.ts / errorMessage.ts — API failure copy, resolved through
   // setQueryErrorTranslator so non-React modules can stay i18n-aware.
   "apiError.server": "Something went wrong on our end. Please try again.",
@@ -237,10 +229,8 @@ export const shared: Catalog = {
   "apiError.tryAgainTail": " Please try again.",
 
   // PullToRefresh live region
-  "pullToRefresh.refreshing": "Refreshing…",
 
   // deviceUserAgent.ts
-  "device.unknown": "Unknown device",
 
   // BackToSettingsLink
   "backToSettingsLink.label": "Back to settings",
@@ -346,10 +336,7 @@ export const shared: Catalog = {
   "megaNav.community.col.people.topics": "Topics",
   "megaNav.community.col.people.dating": "Dating",
   "megaNav.community.col.gather.head": "Gather",
-  "megaNav.community.col.gather.allGatherings": "Gatherings",
   "megaNav.community.col.gather.events": "Events",
-  "megaNav.community.col.gather.hostGathering": "Host a gathering",
-  "megaNav.community.col.organise.head": "Organise",
   "megaNav.community.col.organise.activismVolunteering":
     "Activism & Volunteering",
   "megaNav.community.col.organise.changeMakers": "Change Makers",
@@ -438,7 +425,6 @@ export const shared: Catalog = {
   "megaNav.work.col.career.head": "Career",
   "megaNav.work.col.career.yourWork": "Your Work",
   "megaNav.work.col.career.jobBoard": "Job Board",
-  "megaNav.work.col.career.skillsLearning": "Skills & Learning",
   "megaNav.work.col.career.mentorship": "Mentorship",
   "megaNav.work.col.career.employerReviews": "Employer Reviews",
   "megaNav.work.col.economy.head": "Economy",
@@ -469,6 +455,8 @@ export const shared: Catalog = {
   // kept in "shared" (not "marketing") since MegaNav is part of the always-
   // mounted shell and can't wait on a lazy namespace chunk.
   "megaNav.about.col.legal.dataRequest": "Request your data",
+  /** LG-01: the published accessibility statement at /policies/accessibility. */
+  "megaNav.about.col.legal.accessibility": "Accessibility statement",
   "megaNav.about.col.legal.pressKit": "Press Kit",
   // Reused by footer.data.ts BASE_LINKS.
   "megaNav.about.col.legal.contact": "Contact",
@@ -487,6 +475,10 @@ export const shared: Catalog = {
   "footerData.base.privacy": "Privacy",
   "footerData.base.cookies": "Cookies",
   "footerData.base.guidelines": "Community guidelines",
+  // LG-01. The short legal-row form. The meganav carries the longer
+  // "Accessibility statement" under megaNav.about.col.legal.accessibility,
+  // the same split as Privacy / Privacy Policy above.
+  "footerData.base.accessibility": "Accessibility",
   "footerData.base.security": "Security",
   "footerData.base.imprint": "Legal notice",
 

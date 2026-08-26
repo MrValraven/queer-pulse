@@ -12,14 +12,9 @@ import type { Catalog } from "../../types";
  */
 export const gatherings: Catalog = {
   // ── Landing page (GatheringsPage) ─────────────────────────────────────────
-  "landing.hero.eyebrow": "Gatherings",
   "landing.hero.title": "The community, <em>in the same room.</em>",
-  "landing.hero.lead":
-    "Supper clubs, mixers, studio visits, screenings, and skill swaps: real-world gatherings across Lisbon, hosted by members for members. This is where the platform stops being a screen.",
 
   "landing.ways.title": "Find your way <em>in.</em>",
-  "landing.ways.lead":
-    "Whether you're turning up for the first time or hosting your tenth supper club, start here.",
   "landing.ways.browse.title": "Browse what's on",
   "landing.ways.browse.body":
     "Supper clubs, mixers, studio visits, screenings, and skill swaps: filter by neighbourhood, type, and date.",
@@ -36,16 +31,6 @@ export const gatherings: Catalog = {
   "landing.ways.recap.body":
     "Photos, notes, and the headcount from gatherings that have already happened.",
   "landing.ways.recap.cta": "See recaps",
-
-  "landing.featured.title": "Happening <em>soon.</em>",
-  "landing.featured.lead":
-    "A taste of the next few weeks. The full board lives on the events page.",
-
-  "landing.outro.title": "Bring people <em>together.</em>",
-  "landing.outro.sub":
-    "Every gathering started with one member deciding to host. The platform handles the rest: tickets, sliding scale, and a listing on the board.",
-  "landing.outro.browseCta": "Browse all events",
-  "landing.outro.hostCta": "Host a gathering",
 
   // ── Lisbon neighbourhoods ─────────────────────────────────────────────────
   // Proper nouns: identical in both catalogs. Keyed anyway so the rail stays
@@ -135,78 +120,6 @@ export const gatherings: Catalog = {
   "common.connectCta": "Connect",
   "common.timeRangeTo": "to",
 
-  // EventPage — About / Details / Guidelines / hero / members-only / pills
-  "event.about.title": "About this gathering",
-  "event.about.accessibilityLabel": "Accessibility",
-  "event.details.title": "Event details",
-  "event.details.dateTime": "Date & time",
-  "event.details.location": "Location",
-  "event.details.foodDrink": "Food & drink",
-  "event.details.language": "Language",
-  "event.details.locationNote":
-    "The exact address and door details are shared with confirmed guests after you RSVP.",
-  "event.guidelines.title": "Community guidelines for this event",
-  "event.guidelines.body1":
-    "This is a private QueerPulse event. Everyone here has been invited because someone vouched for them or because they are already a member. The Code of Care applies. Be warm. Be present. Don't take photos of people without asking.",
-  "event.guidelines.body2":
-    "The sliding scale is not a suggestion. If you can pay the higher tier, please do. It directly subsidises someone else's ticket.",
-  "event.hero.viewProfileCta": "View profile",
-  "event.save.cta": "Save event",
-  "event.save.saved": "Saved",
-  "event.save.savedToast": "Event saved to your gatherings.",
-  "event.save.removedToast": "Event removed from saved.",
-  "event.save.saveAriaLabel": "Save {title}",
-  "event.save.unsaveAriaLabel": "Remove {title} from saved",
-  "event.membersOnly.title": "QueerPulse members only",
-  "event.membersOnly.body":
-    "This event is private. If someone forwarded you this link, ask them to invite you to the network first.",
-  "event.pills.slidingScale": "Sliding scale · €{min}–{max}",
-
-  // EventPage — sliding-scale ticket tiers (fixed platform chrome)
-  "event.tiers.free.name": "Free",
-  "event.tiers.free.desc": "No barriers to attending",
-  "event.tiers.standard.name": "Standard",
-  "event.tiers.standard.desc": "Covers the cost of your dinner",
-  "event.tiers.supporter.name": "Supporter",
-  "event.tiers.supporter.desc": "Subsidises someone else's place",
-
-  // EventRsvpCard + EventRsvpSuccess
-  "event.rsvp.headTitleFull": "This gathering is full",
-  "event.rsvp.headTitle": "Reserve your place",
-  "event.rsvp.headSubFull":
-    "Join the waitlist. A QueerPulse notification reaches you if a spot opens.",
-  "event.rsvp.headSub": "Pay what you can. All tiers include everything.",
-  "event.rsvp.spotsRemaining_one": "<strong>{count} spot</strong> remaining",
-  "event.rsvp.spotsRemaining_other": "<strong>{count} spots</strong> remaining",
-  "event.rsvp.filledOfCapacity": "{filled} of {capacity} filled",
-  "event.rsvp.namePlaceholder": "Your name *",
-  "event.rsvp.dietaryPlaceholder": "Dietary requirements (optional)",
-  "event.rsvp.requiredHintFull":
-    "Your name is required. Waitlist updates arrive in your QueerPulse notifications.",
-  "event.rsvp.requiredHint":
-    "Your name is required. Your place is saved to your account.",
-  "event.rsvp.joinWaitlistCta": "Join the waitlist",
-  "event.rsvp.reserveCta": "Reserve my place",
-  "event.rsvp.disabledHint": "Enter your name to continue",
-  "event.rsvp.noteFull":
-    "A QueerPulse notification reaches you the moment a spot opens. Leaving the waitlist is one click.",
-  "event.rsvp.confirmationNote":
-    "Your place is saved. You'll find it under your gatherings.",
-  "event.rsvp.cancelPolicy": "You can cancel up to 48 hours before the event.",
-  "event.rsvp.waitlistTitle": "You're on the <em>waitlist.</em>",
-  "event.rsvp.errorToast": "That didn't go through. Try again in a moment.",
-  "event.rsvp.waitlistBody":
-    "This gathering is full, but <strong>a QueerPulse notification reaches you</strong> the moment a spot opens, usually within a day or two of someone cancelling.",
-  "event.rsvp.waitlistMeta": "You can leave the waitlist at any time.",
-  "event.rsvp.leaveWaitlistCta": "Leave the waitlist",
-  "event.rsvp.reservedTitle": "You're <em>going.</em>",
-  "event.rsvp.reservedTier": "Reserved on the <strong>{tier}</strong> tier",
-  "event.rsvp.confirmationSaved":
-    "Your place is confirmed. Find it any time under <strong>your gatherings</strong>.",
-  "event.rsvp.addToCalendarCta": "Add to calendar",
-  "event.rsvp.messageHostCta": "Message host",
-  "event.rsvp.cancelReservationCta": "Cancel my reservation",
-
   // GatheringPage
   "gathering.badge.event": "QueerPulse event",
   "gathering.badge.gathering": "Member gathering",
@@ -245,12 +158,6 @@ export const gatherings: Catalog = {
   "rsvp.withLabel": "You're going with",
   "rsvp.othersCount_one": "and {count} other member",
   "rsvp.othersCount_other": "and {count} other members",
-  "rsvp.live.goingWith_one":
-    "You're going, along with <strong>{count} other member</strong>.",
-  "rsvp.live.goingWith_other":
-    "You're going, along with <strong>{count} other members</strong>.",
-  "rsvp.live.waitlistNote_one": "{count} more is on the waitlist.",
-  "rsvp.live.waitlistNote_other": "{count} more are on the waitlist.",
   "rsvp.host.roleLabel": "Reading group organiser",
   "rsvp.calendar.label": "Add to calendar",
   "rsvp.calendar.googleCta": "Google Calendar",
@@ -325,37 +232,19 @@ export const gatherings: Catalog = {
     "You declined this one. {host} can always invite you to the next.",
   "cohostInvite.eyebrow": "Co-host invitation",
   "cohostInvite.title": "{host} wants you to <em>co-host</em> with her.",
-  "cohostInvite.readThroughHint":
-    "Read it through, decide tomorrow if you'd rather sleep on it.",
   "cohostInvite.hostedCount_one": "Hosted {count} gathering",
   "cohostInvite.hostedCount_other": "Hosted {count} gatherings",
-  "cohostInvite.ratingFromAttendees": "from attendees",
-  "cohostInvite.attendedCount": "You've been to {count} of hers",
   "cohostInvite.mutualsCount_one": "{count} mutual",
   "cohostInvite.mutualsCount_other": "{count} mutuals",
-  "cohostInvite.invitedAgo": "Invited {time}",
   "cohostInvite.replyBy": "Reply by {date}",
   "cohostInvite.rsvpsAndWaitlist": "{rsvps} RSVPs · {waitlist} waitlist",
   "cohostInvite.rolesTitle": "What being <em>co-host</em> would mean",
-  "cohostInvite.permRequired": "Required",
-  "cohostInvite.permGranted": "Granted",
-  "cohostInvite.permHostOnly": "{host} only",
-  "cohostInvite.commitTitle": "The honest <em>commitment</em>",
-  "cohostInvite.commitSub":
-    "What this actually costs you. We'd rather you say no than show up tired.",
-  "cohostInvite.outclauseBold":
-    "If something comes up, you can step back any time before the day-of",
-  "cohostInvite.sleepCta": "Sleep on it",
-  "cohostInvite.snoozedToast": "Snoozed. Will remind you tomorrow",
   "cohostInvite.declineCta": "Decline politely",
   "cohostInvite.acceptCta": "Yes, co-host with {host}",
   "cohostInvite.acceptedToast":
     "You're co-hosting with {host}. Host tools unlocked",
   "cohostInvite.declinedToast":
     "Polite no sent to {host}. She'll find another second pair of hands.",
-  "cohostInvite.actionMeta":
-    "Either choice messages {host} directly. She'll see your decision but not be notified by push. <b>This is meant to be relaxed</b>.",
-  "cohostInvite.openMessagesCta": "Open messages",
   "cohostInvite.permissionsNote":
     "Accepting lets you edit the page, message guests and manage RSVPs. <b>Cancelling the gathering and the host fund stay with {host}.</b>",
 
@@ -391,10 +280,6 @@ export const gatherings: Catalog = {
 
   // ── Calendar, events board, recap, photo album ────────────────────────────
   // Calendar
-  "calendar.eyebrow": "Community Calendar",
-  "calendar.heroTitle": "Everything happening <em>in one place.</em>",
-  "calendar.heroSub":
-    "Every QueerPulse gathering and community-run event across Lisbon (dinners, workshops, support circles, screenings, and more) in one shared calendar.",
   "calendar.prevMonth": "Previous month",
   "calendar.nextMonth": "Next month",
   "calendar.upcomingTitle": "All upcoming events",
@@ -414,27 +299,11 @@ export const gatherings: Catalog = {
   "events.eyebrow": "What's on",
   "events.subtitle":
     "Every event here is hosted by QueerPulse or by people in the community. Browse the season and find your people.",
-  "events.categoryAll": "All events",
-  "events.categoryQueerpulse": "QueerPulse",
-  "events.categoryCommunity": "Community",
-  "events.heroTitle": "Everything happening <em>this season</em>",
-  "events.viewCalendarCta": "View as calendar",
-  "events.filterAriaLabel": "Filter events",
   "events.kindEvent": "Event",
   "events.kindGathering": "Gathering",
   "events.ticketedTag": "Ticketed",
-  "events.buyTicketCta": "Buy ticket",
   "events.priceSingle": "{price}",
   "events.priceRange": "{min}–{max}",
-  "events.emptyTitle": "Nothing on just yet",
-  "events.emptyDescription":
-    "No events are scheduled right now. New gatherings and partner events land here all the time. Check back soon.",
-  "events.emptyFilterTitle": "Nothing in this category yet",
-  "events.emptyFilterDescription":
-    "No events match this filter for the season. Try another category, or browse everything that's on.",
-  "events.showAllCta": "Show all events",
-  "events.loadingMore": "Loading…",
-  "events.loadMoreCta": "Load more events",
 
   // Recap
   "recap.eyebrow": "Gathering recap",
@@ -526,7 +395,6 @@ export const gatherings: Catalog = {
   "create.pill.datePlace": "Date & place",
   "create.pill.repeats": "Repeats",
   "create.pill.capacity": "Capacity",
-  "create.pill.pricing": "Pricing",
   "create.pill.review": "Review",
 
   // createGathering.data.ts — sidebar tips (per step)
@@ -538,8 +406,6 @@ export const gatherings: Catalog = {
     "A standing weekly or monthly meetup builds a real following. Each date is still its own gathering: attendees RSVP, and you can edit or cancel one date without touching the rest.",
   "create.tip.capacity":
     "Be honest about accessibility. Attendees plan around it. Only tick what you can genuinely confirm.",
-  "create.tip.pricing":
-    "QueerPulse takes 0% of ticket revenue. Every euro goes to you. The sliding scale is required: it makes the community more accessible.",
   "create.tip.review":
     "Once you publish, you can still edit the listing. You cannot reduce capacity below the number of existing RSVPs.",
 
@@ -574,17 +440,10 @@ export const gatherings: Catalog = {
   "create.lang.other": "Other",
 
   // createGathering.data.ts — accessibility options
-  "create.access.stepFree": "Step-free access throughout",
-  "create.access.toilet": "Accessible toilet",
-  "create.access.seating": "Seating available throughout",
-  "create.access.lowSensory": "Low sensory / quiet option available",
-  "create.access.dietary": "Dietary requirements can be accommodated",
 
   // createGathering.data.ts — publish confirmation checklist
   "create.confirm.codeOfCare":
     "This gathering follows the QueerPulse Code of Care.",
-  "create.confirm.slidingScale":
-    "The sliding scale (if ticketed) is genuine. The free tier will be honoured.",
   "create.confirm.accessibility":
     "The accessibility information I've provided is accurate to the best of my knowledge.",
 
@@ -643,8 +502,6 @@ export const gatherings: Catalog = {
   "create.step2.hoodLabel": "Neighbourhood",
   "create.step2.hoodPlaceholder": "Select…",
   "create.step2.venueLabel": "Venue name",
-  "create.step2.venuePlaceholder":
-    "e.g. Casa da Mariquinhas, My studio, Jardim do Torel",
   "create.step2.addressLabel":
     "Full address (shared only with confirmed attendees)",
   "create.step2.addressPlaceholder": "Street address",
@@ -706,34 +563,6 @@ export const gatherings: Catalog = {
   "audienceScope.inviteOnly.helper": "Only the people you invite.",
 
   // CreateGatheringSteps.tsx — step 4: pricing
-  "create.step4.title": "Tickets and <em>pricing.</em>",
-  "create.step4.sub":
-    "QueerPulse takes 0% of ticket revenue. All money goes directly to you. Sliding scale is mandatory for any paid event.",
-  "create.step4.freeLabel": "Free event, no tickets needed",
-  "create.step4.tiersHint":
-    "Set three tiers. The sliding scale is not optional. If your event is paid, all three tiers must be offered. Members choose their tier privately.",
-  "create.step4.priceColHead": "Price / person",
-  "create.step4.spotsColHead": "Spots",
-  "create.step4.tier.solidarity.name": "Free / solidarity",
-  "create.step4.tier.solidarity.priceAria": "Free / solidarity price in euros",
-  "create.step4.tier.solidarity.spotsAria": "Free / solidarity number of spots",
-  "create.step4.spotsSuffix": "ppl",
-  "create.step4.tier.solidarity.note":
-    "This tier is for members who cannot afford to pay. Set aside at least 2–3 spots.",
-  "create.step4.tier.standard.name": "Standard",
-  "create.step4.tier.standard.priceAria": "Standard price in euros",
-  "create.step4.tier.standard.spotsAria": "Standard number of spots",
-  "create.step4.tier.supporter.name": "Supporter",
-  "create.step4.tier.supporter.priceAria": "Supporter price in euros",
-  "create.step4.tier.supporter.spotsAria": "Supporter number of spots",
-  "create.step4.tier.supporterHint":
-    "Supporter tier income subsidises the free tier. Suggested: standard × 1.8.",
-  "create.step4.includedLabel": "What's included in the ticket?",
-  "create.step4.includedPlaceholder":
-    "e.g. Shared dinner and wine, materials provided, just your time",
-  "create.step4.bringLabel": "Anything to bring / prepare?",
-  "create.step4.bringPlaceholder":
-    "Optional: e.g. Bring something to share, wear comfortable shoes",
 
   // CreateGatheringSteps.tsx — step 5: review
   "create.step5.title": "Review and <em>publish.</em>",
@@ -748,14 +577,11 @@ export const gatherings: Catalog = {
   "create.step5.row.location": "Location",
   "create.step5.row.capacity": "Capacity",
   "create.step5.row.audience": "Who can see this",
-  "create.step5.row.pricing": "Pricing",
   "create.step5.row.accessibility": "Accessibility",
   "create.step5.row.repeats": "Repeats",
   "create.step5.repeatsOff": "No, just this once",
   "create.step5.repeatsUntilCount": "{occurrences} dates",
   "create.step5.repeatsUntilDate": "until {date}",
-  "create.step5.pricingFree": "Free event",
-  "create.step5.pricingSliding": "Sliding scale · Free / {std} / {sup}",
   "create.step5.confirmHeading": "Before you publish: confirm all three",
   "create.step5.confirmIntro":
     "Tick each box to confirm. The <strong>Publish gathering</strong> button stays disabled until all three are checked.",
@@ -952,28 +778,8 @@ export const gatherings: Catalog = {
   "manage.linkCopyFailedToast":
     "We couldn't reach your clipboard. Copy the link from the share card instead.",
 
-  // ── Manage: live-mode coming-soon (host tools not wired yet) ─────────────────
-  "manageComingSoon.title": "Host tools are <em>coming soon</em>",
-  "manageComingSoon.description":
-    "Managing a gathering from here isn't live yet. You can still browse and RSVP to what's happening. The hosting dashboard lands soon.",
-  "manageComingSoon.browseCta": "Browse gatherings",
-  "manageComingSoon.backHome": "Back to home",
-
   // ── Prototype pages: live-mode coming-soon (demo-only, no live gathering) ─────
   "prototypeComingSoon.browseCta": "Browse gatherings",
-  "prototypeComingSoon.backHome": "Back to home",
-  "eventComingSoon.title": "This gathering is <em>coming soon</em>",
-  "eventComingSoon.description":
-    "This is a preview of how a gathering looks. It isn't a live event yet, so there's nothing here to RSVP to. Browse what's actually happening and reserve your spot there.",
-  "rsvpComingSoon.title": "RSVPs are <em>coming soon</em>",
-  "rsvpComingSoon.description":
-    "This confirmation page is part of the prototype and isn't tied to a live RSVP yet. Browse what's on and reserve a real spot. Your confirmation will land here once hosting is live.",
-  "cohostInviteComingSoon.title": "Co-hosting is <em>coming soon</em>",
-  "cohostInviteComingSoon.description":
-    "Inviting and accepting a co-host isn't live yet. Browse what's happening in the meantime. Co-hosting tools land alongside the hosting dashboard soon.",
-  "recapComingSoon.title": "Recaps are <em>coming soon</em>",
-  "recapComingSoon.description":
-    "Sharing photos and notes from a gathering isn't live yet, so nothing you add here would be saved. Browse what's on. Recaps arrive with the hosting tools soon.",
 
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Going",
@@ -993,7 +799,6 @@ export const gatherings: Catalog = {
   "manage.attendees.exportCta": "Export list",
   "manage.attendees.exportedToast": "CSV exported",
   "manage.attendees.inviteCta": "Invite members",
-  "manage.attendees.spotsFilled": "{going} of {capacity} spots filled",
   "manage.attendees.goingHeading_one": "Going ({count})",
   "manage.attendees.goingHeading_other": "Going ({count})",
   "manage.attendees.waitlistHeading_one": "Waitlist ({count})",
@@ -1024,9 +829,6 @@ export const gatherings: Catalog = {
   "manage.messages.openedOf": "{opened} / {total} opened",
   "manage.messages.sentToast_one": "Update sent to {count} attendee",
   "manage.messages.sentToast_other": "Update sent to {count} attendees",
-  "manage.messages.liveUnavailableTitle": "Messaging attendees is on the way",
-  "manage.messages.liveUnavailableBody":
-    "Sending updates to everyone who's coming isn't switched on yet. In the meantime, share news on the gathering page or message guests you're connected with.",
 
   // ── Manage: settings tab ─────────────────────────────────────────────────────
   "manage.settings.optionsHeading": "Gathering options",
@@ -1036,12 +838,6 @@ export const gatherings: Catalog = {
   "manage.settings.showAttendeeCount.title": "Show attendee count publicly",
   "manage.settings.showAttendeeCount.desc":
     "Visitors can see how many people are going",
-  "manage.settings.allowQuestions.title": "Allow questions from attendees",
-  "manage.settings.allowQuestions.desc":
-    "Guests can message you with questions before the event",
-  "manage.settings.requireApproval.title": "Require approval for RSVPs",
-  "manage.settings.requireApproval.desc":
-    "You manually approve each RSVP before it's confirmed",
   "manage.settings.dangerZoneHeading": "Danger zone",
   "manage.settings.cancelLabel": "Cancel this gathering",
   "manage.settings.cancelText":
@@ -1065,7 +861,6 @@ export const gatherings: Catalog = {
 
   // ── Manage: shared modal chrome ───────────────────────────────────────────────
   "manage.cancelCta": "Cancel",
-  "manage.closeAria": "Close",
 
   // ── Manage: edit-details modal ────────────────────────────────────────────────
   "manage.editModal.eyebrow": "Edit details",
@@ -1103,9 +898,6 @@ export const gatherings: Catalog = {
   "manage.messageModal.title": "Write to your guests",
   "manage.messageModal.sub":
     "This reaches everyone who's confirmed for this gathering. Keep it short: a venue note, a schedule change, or a warm hello.",
-  "manage.messageModal.subjectLabel": "Subject",
-  "manage.messageModal.subjectPlaceholder":
-    "e.g. One small change to the start time",
   "manage.messageModal.bodyLabel": "Message",
   "manage.messageModal.sendCta_one": "Send to {count} attendee",
   "manage.messageModal.sendCta_other": "Send to {count} attendees",
@@ -1166,7 +958,6 @@ export const gatherings: Catalog = {
   "cohost.emptyState":
     "No cohosts yet. Adding one means you're not carrying the night alone.",
   "cohost.roleCohost": "Cohost",
-  "cohost.addedToast": "{name} added as a cohost",
   "cohost.inviteSentToast": "Co-host invite sent to {name}",
   "cohost.removedToast": "{name} removed as a cohost",
   "cohost.confirmPrompt": "Remove?",
@@ -1174,7 +965,6 @@ export const gatherings: Catalog = {
   "cohost.confirmKeep": "Keep",
   "cohost.removeCta": "Remove",
   "cohost.removeAria": "Remove {name} as a cohost",
-  "cohost.closeAria": "Close",
   "cohost.addModal.eyebrow": "Add a cohost",
   "cohost.addModal.title": "Share the <em>load</em>",
   "cohost.addModal.sub":
@@ -1324,6 +1114,18 @@ export const gatherings: Catalog = {
   "door.notYoursTitle": "This door isn't yours to open",
   "door.notYoursDescription":
     "Only the host and co-hosts of a gathering can see who's coming to it.",
+  // Shown in place of the arrived count once a gathering is past its
+  // attendance retention window. A deliberate privacy choice, so it reads as
+  // something the platform does rather than something that went wrong. Zero
+  // still means zero, and never uses these.
+  "door.checkInsNotKept": "No longer kept",
+  "door.checkInsNotKeptNote":
+    "Check-ins are no longer kept for past gatherings. We clear them 30 days after a gathering ends.",
+  // Shown in place when the server refuses a check-in on a gathering past its
+  // attendance window. The host did nothing wrong, so it states what the
+  // platform did rather than reading as a failure, and it offers no retry.
+  "door.checkInClosedNotice":
+    "Check-in is closed for this gathering. We cleared its arrival records once the check-in window passed, so no new ones can be added.",
   "door.scan.heading": "At the door",
   "door.scan.lead":
     "Read someone's membership card, or find them on the list below.",

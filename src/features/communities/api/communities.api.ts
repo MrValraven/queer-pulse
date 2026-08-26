@@ -218,6 +218,15 @@ export const getCommunity = (slug: string) =>
 export const getFeaturedCommunity = () =>
   apiGet<CommunityCardDTO | null>("/communities/featured");
 
+/** GET /communities/suggested: up to 6 communities the caller's accepted
+ *  connections have joined and the caller has not, ranked by how many of those
+ *  connections are on each roster. Always an array: the endpoint returns `[]`
+ *  (never null) when the caller has no connections, or when their connections
+ *  are only in communities the caller already belongs to. See
+ *  `CommunitiesService.suggestedCommunities`. */
+export const getSuggestedCommunities = () =>
+  apiGet<CommunityCardDTO[]>("/communities/suggested");
+
 export const createCommunity = (dto: CreateCommunityDto) =>
   apiPost<CommunityDetailDTO>("/communities", dto);
 

@@ -60,7 +60,7 @@ export const ALTS: {
   },
   {
     primary: false,
-    date: new Date(2026, 5, 22),
+    date: new Date(2026, 5, 21),
     title: (
       <>
         {"Sunday risograph workshop · "}
@@ -68,7 +68,7 @@ export const ALTS: {
       </>
     ),
     venue: "Editora Anjos",
-    time: new Date(2026, 5, 22, 11, 0),
+    time: new Date(2026, 5, 21, 11, 0),
     note: "open to 8 people",
     spots: { key: "gatherings:spots.spotsLeft", values: { count: 3 } },
   },

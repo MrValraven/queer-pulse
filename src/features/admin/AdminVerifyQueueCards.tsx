@@ -39,6 +39,7 @@ export function AdminVerifyQueueCards({
   leavingIds,
   decidingId,
   selectedIds,
+  isAtSelectionCap,
   onApprove,
   onDecline,
   onWaitlist,
@@ -56,6 +57,9 @@ export function AdminVerifyQueueCards({
   leavingIds: Set<string>;
   decidingId: string | null;
   selectedIds: Set<string>;
+  /** True once the selection has reached the bulk cap, so an unselected row's
+   *  checkbox refuses instead of quietly ignoring the click. */
+  isAtSelectionCap: boolean;
   onApprove: (item: JoinRequestView) => void;
   onDecline: (item: JoinRequestView) => void;
   onWaitlist: (item: JoinRequestView) => void;
@@ -93,6 +97,7 @@ export function AdminVerifyQueueCards({
               leaving={leavingIds.has(item.id)}
               stage="pending"
               selected={selectedIds.has(item.id)}
+              disableSelect={isAtSelectionCap && !selectedIds.has(item.id)}
               onApprove={() => onApprove(item)}
               onDecline={() => onDecline(item)}
               onWaitlist={() => onWaitlist(item)}

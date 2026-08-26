@@ -95,9 +95,13 @@ const SCOPES = [
     sKey: "marketing:dsar.scopes.activity.s",
   },
   {
-    id: "billing",
-    bKey: "marketing:dsar.scopes.billing.b",
-    sKey: "marketing:dsar.scopes.billing.s",
+    // Was "billing". There is no member billing or payment history anywhere in
+    // the backend, so the scope now names what the account actually holds. The
+    // id travels to `POST /account/dsar` as a free string, so renaming it only
+    // changes what a reviewing human reads on the request.
+    id: "membership",
+    bKey: "marketing:dsar.scopes.membership.b",
+    sKey: "marketing:dsar.scopes.membership.s",
   },
   {
     id: "moderation",

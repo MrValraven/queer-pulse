@@ -213,7 +213,6 @@ export const routes = {
   editProfile: "/account/edit-profile",
   employerReviews: "/work/employer-reviews",
   caregivers: "/caregivers",
-  event: "/event",
   events: "/events",
   family: "/family",
   flatmates: "/local/housing/flatmates",
@@ -247,6 +246,11 @@ export const routes = {
   library: "/resources/library",
   listBusiness: "/local/directory/list",
   listBusinessEdit: "/local/directory/list/:ref/edit",
+  /** BF-05: where a member tracks an ownership claim they filed on a listing
+   *  somebody else added (`GET /listings/claims/mine`). Under the directory
+   *  because a pending claim is not yet a place they run; once approved, the
+   *  listing itself shows up in "Places you run" on their profile. */
+  listingClaims: "/local/directory/claims",
   magazine: "/magazine",
   magazineEditor: "/magazine/editor",
   magazineWriter: "/magazine/writer",
@@ -292,6 +296,11 @@ export const routes = {
   safety: "/safety",
   search: "/search",
   security: "/account/security",
+  /** LG-01: the published accessibility statement. Public by design: someone
+   *  who cannot get past the sign-in is exactly who needs to read it. No law
+   *  currently requires the document; see the `legal` section of
+   *  `src/features/marketing/accessibilityStatement.data.tsx`. */
+  policiesAccessibility: "/policies/accessibility",
   /** ID-15: the responsible-disclosure policy for security researchers. It
    *  used to live at `security` above, which a member reasonably expects to
    *  be their own account-security hub; the policy is a public document, so

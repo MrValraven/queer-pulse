@@ -122,7 +122,7 @@ export const SUBS: Sub[] = [
     note: "i'm a 56-year-old former dock worker. i bought a piano at 49 and i'm writing the songs i should have written at 24. this is the first one i'd be proud to send out. four minutes and forty seconds. piano and one voice, plain.",
     meta: [
       <>
-        Submitted <em>Sat 31 May</em>
+        Submitted <em>Sun 31 May</em>
       </>,
       "FLAC · 24/48 · 38.4 MB",
       "−14.1 LUFS · ready",
@@ -147,7 +147,7 @@ export const SUBS: Sub[] = [
     note: "we're the porto cousin of coro de outubro. four songs of our own, all in mirandês, with PT side-by-side. recorded in casa do povo de miranda do douro, one mic, two takes each.",
     meta: [
       <>
-        Submitted <em>Mon 2 Jun</em>
+        Submitted <em>Tue 2 Jun</em>
       </>,
       "FLAC · 24/96 · 412 MB",
       "−15.2 LUFS · ready",
@@ -172,7 +172,7 @@ export const SUBS: Sub[] = [
     note: "sapatão-sci-fi mix, 38 minutes, all heard from below the dancefloor. last submission got a thoughtful pass. this one starts differently.",
     meta: [
       <>
-        Submitted <em>Wed 5 Jun</em>
+        Submitted <em>Fri 5 Jun</em>
       </>,
       "FLAC · 24/44.1 · 1.8 GB",
       "Cleared 18 source artists",
@@ -199,7 +199,7 @@ export const SUBS: Sub[] = [
     note: "two minutes and forty-six seconds. a piano and a small fire. you know me as the translator on Mariana's record; i'd like to try the other side, this once.",
     meta: [
       <>
-        Submitted <em>Thu 30 May</em>
+        Submitted <em>Sat 30 May</em>
       </>,
       "WAV · 24/48 · 23.4 MB",
       "−13.8 LUFS · ready",

@@ -45,14 +45,8 @@ export const communities: Catalog = {
   "category.support": "Apoio",
   "category.sports": "Desporto",
   "category.professional": "Profissional",
-  "category.community": "Comunidade",
 
   // ── Diretório de descoberta (CommunitiesPage) ─────────────────────────────
-  "discover.hero.eyebrow": "Comunidades e Coletivos",
-  "discover.hero.title": "Encontra a tua <em>gente.</em>",
-  "discover.hero.lead":
-    "Um diretório vivo de comunidades e coletivos queer por toda a Lisboa. Clubes sociais, coletivos de artes, grupos de ativismo, equipas desportivas, círculos de apoio e redes profissionais: algo para o momento em que estás agora.",
-  "discover.hero.cta": "Ir para o teu hub",
   "discover.search.placeholder": "Pesquisar comunidades por nome ou foco",
   "discover.search.ariaLabel": "Pesquisar comunidades",
   "discover.sort.label": "Ordenar por",
@@ -89,6 +83,11 @@ export const communities: Catalog = {
   "discover.featured.youreIn": "Já fazes parte",
   "discover.featured.openCta": "Abrir comunidade",
 
+  // ── Faixa "Sugestões para ti" (SuggestedCommunitiesSection) ───────────────
+  "discover.suggested.heading": "Sugestões para ti",
+  "discover.suggested.subtitle":
+    "Comunidades onde já estão pessoas com quem tens ligação.",
+
   // ── Cartão de comunidade / textos do botão de entrada ─────────────────────
   "card.join.public": "Junta-te",
   "card.join.invite": "Junta-te com convite",
@@ -96,11 +95,8 @@ export const communities: Catalog = {
   "card.joined": "Já és membro",
   "card.youreIn": "Já entraste",
   "card.enterQuietly": "Entra em silêncio",
-  "card.view": "Ver",
   "card.stats.active_one": "{count} pessoa ativa esta semana",
   "card.stats.active_other": "{count} pessoas ativas esta semana",
-  "card.stats.posts_one": "{count} publicação",
-  "card.stats.posts_other": "{count} publicações",
 
   // ── Hub de comunidades (CommunitiesHomePage + digest + feed + sidebar) ───
   "hub.eyebrow": "As tuas comunidades e coletivos",
@@ -283,7 +279,6 @@ export const communities: Catalog = {
   "detail.thread.tombstone": "Esta mensagem foi eliminada.",
   "detail.thread.editSave": "Guardar",
   "detail.thread.editCancel": "Cancelar",
-  "detail.thread.editSaving": "A guardar…",
   "detail.thread.editAria": "Edita a tua mensagem",
   "detail.thread.upvoteAria": "Votar a favor deste tópico",
   "detail.thread.editSavedToast": "A tua edição está publicada.",
@@ -422,7 +417,6 @@ export const communities: Catalog = {
     "Nada foi assinalado. A comunidade cuida de si mesma.",
   "detail.modtools.reports.meta":
     "De {author} · denunciado por {reporter} · há {time}",
-  "detail.modtools.reports.metaLive": "Denunciado há {time}",
   "detail.modtools.reports.metaAuthor": "De {author} · denunciado há {time}",
   "detail.modtools.reports.metaErasedAuthor":
     "De uma conta entretanto removida · denunciado há {time}",
@@ -448,8 +442,6 @@ export const communities: Catalog = {
   // Sem uso desde a TS-08: remover uma resposta passa agora pela própria
   // denúncia, tal como remover uma publicação. Mantida para que nada que ainda
   // a resolva mostre a chave em bruto.
-  "detail.modtools.reports.replyNote":
-    "Esta denúncia é sobre uma resposta. Pode ser ignorada aqui; para a remover é preciso abrir a publicação onde está.",
   "detail.modtools.members.label": "Pessoas",
   "detail.modtools.members.makeModCta": "Tornar mod",
   "detail.modtools.members.demoteCta": "Remover como mod",
@@ -813,7 +805,6 @@ export const communities: Catalog = {
   "badges.reaction.ariaLabel": "{label}: {count}",
 
   // ── Modal de adesão ────────────────────────────────────────────────────────
-  "join.close": "Fechar",
   "join.progress": "Passo {step} de {total}",
   "join.ariaLabel": "Junta-te a {name}",
   "join.intro.eyebrow.request": "A pedir para entrar",
@@ -830,9 +821,7 @@ export const communities: Catalog = {
   "join.about.submitting": "A enviar…",
   "join.about.errorFallback":
     "Não foi possível concluir. Tenta novamente daqui a pouco.",
-  "join.involvement.eyebrow": "Quase pronto",
   "join.involvement.title": "Como gostarias de participar?",
-  "join.involvement.emailPlaceholder": "O teu endereço de email",
   "join.involvement.levelLabel": "Nível de envolvimento",
   "join.involvement.sendRequestCta": "Enviar pedido",
   "join.involvement.joinCta": "Junta-te à comunidade",
@@ -1046,7 +1035,6 @@ export const communities: Catalog = {
   "start.running.addStewardModal.loadMore": "Mostrar mais ligações",
   "start.running.addStewardModal.searchPlaceholder":
     "Pesquisa por nome ou @slug…",
-  "start.running.addStewardModal.closeAria": "Fechar",
   "start.running.addStewardModal.empty":
     "Podes adicionar pessoas corresponsáveis assim que estiveres ligada a outros membros. Vai a Ligações para aumentar o teu círculo primeiro.",
   "start.running.insideHeading": "O que está incluído",
@@ -1175,7 +1163,6 @@ export const communities: Catalog = {
   "start.category.sports.badge": "Equipa desportiva",
   "start.category.professional.label": "Profissional",
   "start.category.professional.badge": "Rede profissional",
-  "start.category.fallbackBadge": "Comunidade",
 
   // ── Painel de sucesso (StartCommunitySuccess) ─────────────────────────────
   "start.success.title": "As tuas portas estão",

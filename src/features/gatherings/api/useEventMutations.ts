@@ -115,7 +115,7 @@ export function useCancelEvent(slug: string) {
 export type RsvpIntent = "going" | "maybe" | "waitlisted";
 
 /**
- * POST /events/:slug/rsvp — EventRsvpCard / RsvpPage.
+ * POST /events/:slug/rsvp: GatheringRsvpControl / GatheringPage.
  *
  * Optimistic: the going head-count bumps immediately (and rolls back if the
  * request fails), then `onSettled` re-syncs from the server. The attendees

@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
 import { memberRefToPerson } from "../../shared/api/refs";
 import { AdminChip, AdminAvatar, type AdminTone, type AvatarTone } from "./ui";
+import { QueueOverdueChip } from "./QueueAssignmentControls";
 import { useReviewListingClaim } from "./api/useReviewListingClaim";
 import type {
   ListingClaimDTO,
@@ -76,6 +77,17 @@ function ListingClaimRow({
           <AdminChip tone={STATUS_TONE[claim.status]} dot>
             {t(`admin:listingClaims.status.${claim.status}`)}
           </AdminChip>
+          {/* The claim's own promised decision date IS the queue-agnostic
+              `dueAt` the OPS-04 clock reads, so this queue escalates on age
+              like every other staff queue instead of showing a six-week-old
+              claim as though it were filed this morning.
+              Asked only of a row that is still open, per `queueClock.ts`: a
+              decided claim's clock has stopped. The server already nulls the
+              promise on review, and this keeps the demo queue honest too,
+              where an approved row is a local copy of the pending one. */}
+          <QueueOverdueChip
+            dueAt={claim.status === "pending" ? claim.expectedDecisionBy : null}
+          />
         </div>
         <div className={styles.rowMeta}>
           {claim.listingRef} · {formatDate(claim.createdAt, language)}

@@ -42,11 +42,7 @@ export const system: Catalog = {
   // ── src/pages/PlaceholderPage.tsx ─────────────────────────────────────────
   // `{title}` is derived from the URL slug (titleFromPath) — an unmapped route
   // name, not authored copy, so it stays English regardless of locale.
-  "placeholder.eyebrow": "Coming soon",
   "placeholder.title": "{title} is <em>on the way.</em>",
-  "placeholder.sub":
-    "This part of QueerPulse is still being built. The homepage is live. Explore members, gatherings, and the community there in the meantime.",
-  "placeholder.backCta": "Back to home",
 
   // ── AccountBannedPage.tsx ─────────────────────────────────────────────────
   "accountBanned.kicker": "Account removed · final action",
@@ -440,17 +436,14 @@ export const system: Catalog = {
   "verificationNeeded.actionCard":
     "You're about to <b>cancel your Sustainer membership</b>",
   "verificationNeeded.foot": "This re-auth expires in <b>{time}</b>.",
-  "verificationNeeded.magicLink.intro":
-    "We'll email a one-time confirmation link to <b>{email}</b>. Open it on this device to confirm it's you.",
-  "verificationNeeded.magicLink.sendingCta": "Sending link…",
-  "verificationNeeded.magicLink.sendCta": "Email me a confirmation link",
-  "verificationNeeded.magicLink.sentTitle": "Link on its way",
-  "verificationNeeded.magicLink.sentCopy":
-    "Tap the link we sent to <b>{email}</b>, then come back here.",
-  "verificationNeeded.magicLink.verifyingCta": "Verifying…",
-  "verificationNeeded.magicLink.confirmCta": "I've opened the link",
-  "verificationNeeded.magicLink.resendCountdown": "Resend in {seconds}s",
-  "verificationNeeded.magicLink.resendCta": "Resend link",
+  // Step-up re-auth on QueerPulse is a Google sign-in round trip (see
+  // features/settings/api/useReauthToken.ts). The pane that used to sit here
+  // offered to email a one-time link; QueerPulse delivers no email, so it was
+  // describing something that could never arrive.
+  "verificationNeeded.confirm.intro":
+    "Confirming means signing in with Google again as <b>{email}</b>, so a session someone else left open can't carry this through. Nothing is emailed.",
+  "verificationNeeded.confirm.cta": "Confirm it's me",
+  "verificationNeeded.confirm.verifyingCta": "Confirming…",
   "verificationNeeded.success.title": "It's you, <em>verified.</em>",
   "verificationNeeded.success.sub":
     "Re-authentication confirmed. Taking you on to cancel your membership…",
@@ -484,17 +477,17 @@ export const system: Catalog = {
   "newsletterUnsubscribe.success.eyebrow": "Unsubscribed",
   "newsletterUnsubscribe.success.heading": "You're off the <em>list.</em>",
   "newsletterUnsubscribe.success.lead":
-    "We've stopped the weekly digest for this address. Subscribe again from the homepage whenever you want it back.",
+    "This address is off the list. QueerPulse sends no email, so nothing was arriving here in the first place: this is about your address not sitting on a list you didn't want to be on. You can add it again from the homepage whenever you like.",
   "newsletterUnsubscribe.alreadyUnsubscribed.eyebrow": "Already unsubscribed",
   "newsletterUnsubscribe.alreadyUnsubscribed.heading":
     "Already <em>taken care of.</em>",
   "newsletterUnsubscribe.alreadyUnsubscribed.lead":
-    "This address was unsubscribed already. No digest is going out to it.",
+    "This address came off the list already, and it has stayed off. Nothing is going out to it here or anywhere else: QueerPulse sends no email.",
   "newsletterUnsubscribe.invalid.eyebrow": "Link not recognised",
   "newsletterUnsubscribe.invalid.heading":
     "We couldn't <em>place this link.</em>",
   "newsletterUnsubscribe.invalid.lead":
-    "This unsubscribe link doesn't match anything on our side. It may be old or mistyped. If digest emails are still reaching this address, let the team know and we'll sort it.",
+    "This unsubscribe link doesn't match anything on our side. It may be old or mistyped. Nothing is going out to the address either way, since QueerPulse sends no email, but tell the team if something looks wrong and we'll sort it.",
   "newsletterUnsubscribe.goHomeCta": "Back to homepage",
   "newsletterUnsubscribe.contactCta": "Talk to the team",
 

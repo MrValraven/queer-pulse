@@ -2,6 +2,7 @@ import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminPageHeader } from "./ui";
 import { AdminVerifyQueue } from "./AdminVerifyQueue";
+import { ModerationHealthIndicator } from "./ModerationHealthIndicator";
 
 /**
  * The incoming join-request queue as a route of its own.
@@ -29,6 +30,10 @@ export function AdminJoinRequestsPage() {
         eyebrow={t("admin:members.tabs.pending")}
         title={t("admin:settings.joinRequests.title")}
       />
+      {/* TS-04. The other surface `authGate.ts` opens to the moderator tier,
+          so the workload reading is here too. Silent unless a queue is at
+          warning or critical. */}
+      <ModerationHealthIndicator />
       <AdminVerifyQueue />
     </AdminShell>
   );

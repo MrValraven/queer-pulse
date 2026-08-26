@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { ReportReplyModal } from "./ReportReplyModal";
 import type { CreateReportInput } from "../safety/api/reports.api";
+import { ApiError } from "../../shared/api/client";
 
 /**
  * Forum report flow (audit P1-1 / P1-2). Two guarantees the modal must keep:
@@ -110,6 +111,111 @@ describe("ReportReplyModal", () => {
     ).toBeInTheDocument();
     // ...and the success confirmation must never appear.
     expect(screen.queryByText(/we're on it/i)).not.toBeInTheDocument();
+  });
+
+  /**
+   * TS-05, the rolling flood caps. `POST /reports` answers 429 in three
+   * different situations and only two of them are written for a member to
+   * read. `code: "REPORT_FLOOD_CAP"` on the error body is what tells them
+   * apart; the burst throttle carries no `code` (see
+   * `safety/api/reportSubmissionError.ts`).
+   */
+  describe("a 429 refusal", () => {
+    /** Verbatim `REPORT_PER_SUBJECT_CAP_MESSAGE` from the backend's
+     *  `report-flood-limits.ts`. Server-authored, member-facing, and the whole
+     *  point of the refusal. */
+    const PER_SUBJECT_CAP_MESSAGE =
+      "You have already reported this a few times recently. Those reports are with the moderation team, so there is no need to send another one. Reach out to a moderator directly if something urgent is happening.";
+
+    it("shows the server's own explanation when a flood cap refuses the filing", async () => {
+      mutate.mockImplementation((_input, opts) =>
+        opts?.onError?.(
+          new ApiError(429, PER_SUBJECT_CAP_MESSAGE, {
+            statusCode: 429,
+            error: "Too Many Requests",
+            code: "REPORT_FLOOD_CAP",
+            // Additive detail the frontend must ignore rather than branch on.
+            cap: "subject",
+            message: PER_SUBJECT_CAP_MESSAGE,
+          }),
+        ),
+      );
+      renderModal();
+
+      await pickReasonAndSubmit();
+
+      const explanation = await screen.findByText(PER_SUBJECT_CAP_MESSAGE);
+      expect(explanation).toBeInTheDocument();
+      // Announced, never only shown.
+      expect(explanation).toHaveAttribute("role", "alert");
+      // The generic body copy is replaced, not appended to.
+      expect(
+        screen.queryByText(/check your connection/i),
+      ).not.toBeInTheDocument();
+      // And a refusal is still a failure: never the success sheet.
+      expect(screen.queryByText(/we're on it/i)).not.toBeInTheDocument();
+    });
+
+    it("never shows the framework's throttler wording on a 429 with no code", async () => {
+      // What `@nestjs/throttler` actually ships: the canonical envelope, its
+      // own exception string as the message, and no `code`. Its wording is the
+      // one 429 text that must never be passed through. (The human line that
+      // replaces it is asserted in `messages/MessageReportModal.test.tsx`,
+      // where the `safety` namespace is already resident.)
+      mutate.mockImplementation((_input, opts) =>
+        opts?.onError?.(
+          new ApiError(429, "ThrottlerException: Too Many Requests", {
+            statusCode: 429,
+            error: "Too Many Requests",
+            message: "ThrottlerException: Too Many Requests",
+          }),
+        ),
+      );
+      renderModal();
+
+      await pickReasonAndSubmit();
+
+      expect(await screen.findByText("That didn't send")).toBeInTheDocument();
+      expect(screen.queryByText(/ThrottlerException/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/too many requests/i)).not.toBeInTheDocument();
+    });
+
+    it("does not treat a 429 carrying some other code as member copy", async () => {
+      // Only `REPORT_FLOOD_CAP` means "server-authored, show verbatim". Any
+      // other code is a refusal this surface has no copy for, so it falls
+      // through to the burst line rather than leaking an unowned message.
+      mutate.mockImplementation((_input, opts) =>
+        opts?.onError?.(
+          new ApiError(429, "Slow down there, friend.", {
+            statusCode: 429,
+            error: "Too Many Requests",
+            code: "SOME_OTHER_LIMIT",
+            message: "Slow down there, friend.",
+          }),
+        ),
+      );
+      renderModal();
+
+      await pickReasonAndSubmit();
+
+      expect(await screen.findByText("That didn't send")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Slow down there, friend."),
+      ).not.toBeInTheDocument();
+    });
+
+    it("keeps the generic message for a failure that carries no member copy", async () => {
+      mutate.mockImplementation((_input, opts) =>
+        opts?.onError?.(new Error("network down")),
+      );
+      renderModal();
+
+      await pickReasonAndSubmit();
+
+      expect(
+        await screen.findByText(/check your connection/i),
+      ).toBeInTheDocument();
+    });
   });
 
   it("re-submits from the retry panel", async () => {

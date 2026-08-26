@@ -12,25 +12,11 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useCreateReport } from "./api/useCreateReport";
-import type { ReasonCode, ReportSubjectType } from "./reportReasons";
+import { useReportSubmissionError } from "./api/reportSubmissionError";
+import type { ReasonCode } from "./reportReasons";
+import { CATEGORIES, subjectTypeForCategory } from "./reportCategories";
 import { logError } from "../../shared/observability/logger";
 import s from "./ReportPage.module.css";
-
-/** The standalone form's categories, mapped to the shared reason taxonomy. */
-const CATEGORIES: { code: ReasonCode; labelKey: string }[] = [
-  { code: "harassment", labelKey: "safety:report.category.harassment" },
-  {
-    code: "unwanted_contact",
-    labelKey: "safety:report.category.unwantedContact",
-  },
-  {
-    code: "impersonation",
-    labelKey: "safety:report.category.impersonation",
-  },
-  { code: "discrimination", labelKey: "safety:report.category.discrimination" },
-  { code: "venue_safety", labelKey: "safety:report.category.venueSafety" },
-  { code: "other", labelKey: "safety:report.category.other" },
-];
 
 /** i18n Pattern A — chrome list, sole consumer is `ReportFormSection`. */
 const FLOW = [
@@ -100,17 +86,6 @@ const LOG = [
  */
 const UNLINKED_SUBJECT_ID = "unspecified";
 
-/**
- * The reported category is the only real signal about what KIND of thing a
- * report concerns: venue-safety reports are about a place, everything else
- * about a person. This is a straight read of the reporter's own choice, not
- * the old heuristic that turned "contains a slash" into `subjectType: "post"`.
- * Neither branch carries an id — see {@link UNLINKED_SUBJECT_ID}.
- */
-function subjectTypeForCategory(reason: ReasonCode): ReportSubjectType {
-  return reason === "venue_safety" ? "venue" : "member";
-}
-
 /** The "how reporting works" preamble — flow steps 01–04. Lives on the
  *  guidelines page (ReportingGuidePage), separate from the form. */
 export function ReportFlowSection() {
@@ -143,6 +118,7 @@ export function ReportFormSection() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const createReport = useCreateReport();
+  const describeReportError = useReportSubmissionError();
   const [category, setCategory] = useState<ReasonCode | "">("");
   const [involved, setInvolved] = useState("");
   const [detail, setDetail] = useState("");
@@ -187,8 +163,13 @@ export function ReportFormSection() {
         onError: (err) => {
           logError(err, { scope: "safety.reportPage" });
           // Never tell a reporter "received" when the report didn't land —
-          // surface an honest error and leave the form filled in to retry.
-          showToast(t("safety:report.toast.submitError"), "error");
+          // surface an honest error and leave the form filled in to retry. A
+          // rolling flood cap answers with its own member-facing explanation,
+          // which `describeReportError` shows in place of the generic line.
+          showToast(
+            describeReportError(err, t("safety:report.toast.submitError")),
+            "error",
+          );
         },
       },
     );

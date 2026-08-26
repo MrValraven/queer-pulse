@@ -19,7 +19,12 @@ const CLOCK_TICK_MS = 10000;
 
 /** One of the three numbers across the top of the door. */
 export interface DoorStat {
-  value: number;
+  /**
+   * The number, or a short phrase when there is no number to give. A count the
+   * platform deliberately no longer keeps is stated in words, so it can never
+   * be misread as a zero or an empty slot.
+   */
+  value: ReactNode;
   labelKey: string;
   /** Draw the number as the coral emphasis. At most one stat should. */
   emphasis?: boolean;
@@ -50,11 +55,16 @@ export function DoorShell({
   title,
   manageTo,
   stats,
+  statsNote,
   children,
 }: {
   title: string;
   manageTo: string;
   stats: DoorStat[];
+  /** One line under the numbers, for when a stat needs explaining rather than
+   *  reading. Used to say that check-ins are no longer kept for a gathering
+   *  past its retention window. */
+  statsNote?: ReactNode;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
@@ -105,6 +115,9 @@ export function DoorShell({
                 </div>
               ))}
             </div>
+            {statsNote ? (
+              <p className={styles.heroStatsNote}>{statsNote}</p>
+            ) : null}
           </div>
         </div>
 

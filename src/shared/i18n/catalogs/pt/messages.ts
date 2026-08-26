@@ -9,9 +9,6 @@ export const messages: Catalog = {
   "thread.composeTooltip": "Nova mensagem",
   "thread.searchPlaceholder": "Pesquisar mensagens e pessoas…",
   "thread.searchAria": "Pesquisar mensagens e conversas",
-  "thread.emptySearchTitle": "Nenhuma conversa encontrada",
-  "thread.emptySearchDescription":
-    "Ninguém corresponde a “{query}”. Tenta outro nome.",
   "thread.clearSearch": "Limpar pesquisa",
   "thread.emptyTitle": "Ainda sem conversas",
   "thread.emptyDescription":
@@ -70,7 +67,6 @@ export const messages: Catalog = {
   "attachments.open": "Enviar uma foto",
   "attachments.imageAlt": "Mensagem com foto",
   "attachments.fallbackText": "Foto",
-  "attachments.uploading": "A enviar foto…",
   "attachments.previewUnavailable": "Pré-visualização indisponível",
 
   // Connection status strip (ConnectionStatusBanner) at the top of the open
@@ -122,7 +118,6 @@ export const messages: Catalog = {
   "conversation.connectedSinceSuffix": " · Ligação desde {date}",
   "conversation.viewProfile": "Ver perfil",
   "conversation.you": "Tu",
-  "conversation.newMessages": "Novas mensagens",
   // Pílula "saltar para o fim" com contagem (plural CLDR: _one / _other).
   "conversation.newMessagesCount_one": "{count} mensagem nova",
   "conversation.newMessagesCount_other": "{count} mensagens novas",
@@ -184,7 +179,6 @@ export const messages: Catalog = {
   "actions.editing": "A editar mensagem",
   "actions.editSave": "Guardar",
   "actions.editCancel": "Cancelar",
-  "actions.replyingTo": "A responder a {name}",
   replyDeleted: "Mensagem eliminada",
   tombstone: "Esta mensagem foi eliminada",
   "delete.confirmTitle": "Eliminar esta mensagem?",
@@ -217,7 +211,6 @@ export const messages: Catalog = {
   // Vista de mensagens guardadas (StarredMessagesModal)
   "starred.title": "Mensagens guardadas",
   "starred.open": "Mensagens guardadas",
-  "starred.close": "Fechar",
   "starred.sub": "Mensagens que guardaste. Só tu as vês.",
   "starred.loading": "A carregar as tuas mensagens guardadas…",
   "starred.empty":
@@ -225,7 +218,6 @@ export const messages: Catalog = {
 
   // Escolha de destinatário para nova mensagem (NewMessageModal)
   "newMessage.title": "Nova mensagem",
-  "newMessage.close": "Fechar",
   "newMessage.sub":
     "Escolhe uma ligação, ou procura alguém novo para contactar.",
   "newMessage.searchPlaceholder": "Pesquisar ligações ou pessoas…",
@@ -272,7 +264,6 @@ export const messages: Catalog = {
   "group.namePlaceholder": "Nome do grupo",
   "group.nameAria": "Nome do grupo",
   "group.searchPlaceholder": "Pesquisar ligações para adicionar…",
-  "group.searchAria": "Pesquisar ligações para adicionar",
   "group.createCta": "Criar grupo ({count})",
   "group.info": "Informações do grupo",
   "group.infoTitle": "Informações do grupo",
@@ -288,7 +279,6 @@ export const messages: Catalog = {
   "group.add": "Adicionar membros",
   "group.addTitle": "Adicionar membros",
   "group.addCta": "Adicionar ({count})",
-  "group.addNone": "Não há mais ligações para adicionar.",
   "group.promote": "Tornar admin",
   "group.demote": "Remover admin",
   "group.remove": "Remover",

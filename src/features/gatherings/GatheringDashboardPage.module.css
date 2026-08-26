@@ -161,6 +161,31 @@
   font-weight: 600;
 }
 
+/* A stat the platform deliberately no longer keeps, sitting in the number's
+   own slot. Styled down to a readable phrase in the UI face so it can never be
+   scanned as a numeral, and never leaves the slot looking empty. */
+.hsUnavailable {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+  color: rgba(var(--cream-rgb), 0.72);
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+/* The one line that explains a stat rather than counting it. */
+.heroStatsNote {
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(var(--cream-rgb), 0.58);
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+
 .body {
   flex: 1;
   padding: 36px 0 0;
@@ -354,6 +379,16 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
+}
+/* Same explanation as .heroStatsNote, on the cream card under the guest list's
+   filter bar, where the arrival filters have been withdrawn. */
+.doorRetentionNote {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-60);
+  max-width: 56ch;
+  text-wrap: pretty;
 }
 .attSearch {
   width: 100%;
@@ -673,6 +708,38 @@
   .doorLayout {
     grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
   }
+  /* Past the attendance window the scan card is gone, so the roster is the
+     only child and takes the full width rather than sitting in the narrow
+     first track with a hole beside it. */
+  .doorLayoutSingle {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The door refused a check-in because this gathering is past its attendance
+   window. A statement of what the platform did, so it is toned as information
+   on paper rather than as an error, and it persists: the refusal is
+   deterministic and there is nothing to retry. */
+.doorClosedAlert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.doorClosedAlert svg {
+  flex: none;
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
 }
 .doorLead {
   font-size: 14px;

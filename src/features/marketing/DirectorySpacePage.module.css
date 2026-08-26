@@ -1310,8 +1310,8 @@
   }
   /* Clear the fixed bar so page content (and the footer) never sits under it.
      The installed-PWA tab-bar reserve is already applied once by
-     standalone.css on main[data-page-main] (same pattern as EventPage's
-     .rsvpStickyBar) — don't add var(--bottom-inset) again here. */
+     standalone.css on main[data-page-main], so don't add var(--bottom-inset)
+     again here. */
   .page {
     padding-bottom: calc(80px + 60px + env(safe-area-inset-bottom));
   }

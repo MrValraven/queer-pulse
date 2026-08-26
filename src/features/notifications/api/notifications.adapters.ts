@@ -1,8 +1,11 @@
 import type { IconType } from "react-icons";
 import {
+  FiActivity,
+  FiAlertOctagon,
   FiAlertTriangle,
   FiBell,
   FiCalendar,
+  FiCheckCircle,
   FiFlag,
   FiInbox,
   FiShield,
@@ -106,6 +109,39 @@ function reportIconFor(
   return isEmergency
     ? { Glyph: FiAlertTriangle, background: "rgba(var(--accent-rgb), .18)" }
     : { Glyph: FiFlag, background: KIND_ICON_BACKGROUND.platform };
+}
+
+/**
+ * The icon a TS-04 queue-health alert renders with, or `undefined` for every
+ * other kind. The fourth and last override of the three-icon category map.
+ *
+ * The glyph tracks the payload's severity, so the row carries the level in a
+ * second channel beside its words: a recovery notice and an emergency must not
+ * look alike in a list being scanned. An unrecognised level falls to the
+ * neutral activity glyph rather than claiming either extreme.
+ */
+function moderationQueueAlertIconFor(
+  kind: NotificationKind | null,
+  payload: Record<string, unknown> | null | undefined,
+): { Glyph: IconType; background: string } | undefined {
+  if (kind !== "moderation_queue_alert") return undefined;
+  const severity = payload?.severity;
+  if (severity === "critical") {
+    return {
+      Glyph: FiAlertOctagon,
+      background: "rgba(var(--danger-rgb), .18)",
+    };
+  }
+  if (severity === "warning") {
+    return {
+      Glyph: FiAlertTriangle,
+      background: "rgba(var(--amber-rgb), .22)",
+    };
+  }
+  if (severity === "ok") {
+    return { Glyph: FiCheckCircle, background: "rgba(var(--jade-rgb), .18)" };
+  }
+  return { Glyph: FiActivity, background: KIND_ICON_BACKGROUND.platform };
 }
 
 /**
@@ -237,6 +273,13 @@ export function notificationDtoToView(
   const intakeIcon = intakeIconFor(kind);
   if (intakeIcon) view.icon = intakeIcon;
 
+  // Same placement, same reason as the three overrides above: a queue-health
+  // alert has no actor by design (it is duty mail about the state of the work,
+  // and an actor would run the recipients' own block and mute lists over an
+  // operational alert), so this has to be the last word on its glyph.
+  const queueHealthIcon = moderationQueueAlertIconFor(kind, dto.payload);
+  if (queueHealthIcon) view.icon = queueHealthIcon;
+
   // `subprofile_credit` (Personas discovery Phase 5, Decision §3): the FIRST
   // live notification kind to populate `.actions` — every other kind above
   // leaves it `undefined`, which `NotificationItem` already renders fine
@@ -302,6 +345,12 @@ function sourceHrefFromPayload(
   // payload `source` field precisely because neither destination is the
   // community/thread page a `source` value would resolve to.
   if (type === "report_filed") return routes.adminModeration;
+  // TS-04. `payload.source` is `"moderation"`, and the destination is the
+  // console's own queue-health tab: the alert is about the state of the work,
+  // so it opens the reading rather than one of the queues it summarises.
+  if (type === "moderation_queue_alert") {
+    return `${routes.adminModeration}?tab=health`;
+  }
   if (type === "community_report_filed") {
     const communitySlug = payload?.communitySlug;
     // No slug means no destination: this row only ever reaches a community's

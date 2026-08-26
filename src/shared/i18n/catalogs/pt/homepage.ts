@@ -61,12 +61,6 @@ export const homepage: Catalog = {
     "Quando algo corre mal, não devias ter de gritar para o vazio. As denúncias são revistas por pessoas reais e respondidas o mais depressa possível.",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
-  "trustStrip.vouched": "Só por convite e voto de confiança",
-  "trustStrip.encrypted": "Encriptação de ponta a ponta",
-  "trustStrip.moderation": "Moderação ativa",
-  "trustStrip.blockMuteReport": "Bloquear, silenciar, denunciar",
-  "trustStrip.privacyControls": "Controlos de privacidade detalhados",
-  "trustStrip.reportCta": "Lê a nossa política de segurança",
 
   // ── PainPoints ("porque construímos isto") ──────────────────────────────────
   "painPoints.eyebrow": "Porque construímos isto",
@@ -165,7 +159,6 @@ export const homepage: Catalog = {
   "discovery.featuredMember": "Pessoa em destaque",
   "discovery.vouchedBy": "Com voto de confiança de {name}",
   "discovery.viewProfile": "Ver perfil",
-  "discovery.sayHello": "Diz olá",
   "membersExplainer.eyebrow": "Só para a comunidade",
   "membersExplainer.title": "A comunidade <em>move</em> a QueerPulse",
   "membersExplainer.titlePlain": "A comunidade move a QueerPulse",

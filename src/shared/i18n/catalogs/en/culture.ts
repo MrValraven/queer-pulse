@@ -111,7 +111,6 @@ export const culture: Catalog = {
 
   // ── Shared modal chrome ────────────────────────────────────────────────
   "modal.dialogAriaLabel": "Dialog",
-  "modal.close": "Close",
   "modal.done": "Done",
   "common.cancel": "Cancel",
   "common.sending": "Sending…",

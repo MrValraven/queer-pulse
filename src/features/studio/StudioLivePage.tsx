@@ -11,7 +11,7 @@ import s from "./live.module.css";
 // duration) — comes from the broadcast record in live mode.
 const SHOW_TITLE = "Vespertina, vol. iv";
 const SHOW_HOST = "Sara Marques";
-const SHOW_SCHEDULE_LINE = "Wed 9 Jun · ";
+const SHOW_SCHEDULE_LINE = "Wed 10 Jun · ";
 const SHOW_TIME = "21:18 Lisbon";
 const SHOW_DURATION_SUFFIX = " · 1h 42m show, 22 min in";
 

@@ -9,15 +9,11 @@ import type { Catalog } from "../../types";
  */
 export const common: Catalog = {
   // Brand
-  "brand.name": "QueerPulse",
-  "brand.tagline": "Uma rede profissional queer, com raízes em Lisboa.",
 
   // Primary CTAs (imperativo na segunda pessoa — evita marcação de género)
   "cta.requestInvite": "Pedir um convite",
-  "cta.exploreMembers": "Explorar perfis",
   "cta.backHome": "Voltar ao início",
   "cta.signIn": "Entrar",
-  "cta.signOut": "Sair",
   "cta.search": "Pesquisar",
 
   // Seletor de idioma

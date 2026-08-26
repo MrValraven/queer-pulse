@@ -1,4 +1,8 @@
-import { REASON_LABEL_KEYS } from "../../safety/reportReasons";
+import {
+  REASON_LABEL_KEYS,
+  SUBJECT_REASONS,
+  type ReportSubjectType,
+} from "../../safety/reportReasons";
 import type { TFunction } from "../../../shared/i18n/types";
 import type {
   PriorReports,
@@ -99,6 +103,61 @@ function reporterCredibilityFrom(
 }
 
 /**
+ * Every subject type this build can represent, as a runtime set.
+ *
+ * Derived from `SUBJECT_REASONS`'s own keys rather than written out again, so
+ * there is exactly one list to keep in step with the backend enum and it is
+ * the one the compiler already checks is total over `ReportSubjectType`.
+ */
+const KNOWN_SUBJECT_TYPES: ReadonlySet<string> = new Set(
+  Object.keys(SUBJECT_REASONS),
+);
+
+/** Subject types already reported by {@link toSubjectType}, so a page of forty
+ *  rows sharing one unknown type warns once rather than forty times. */
+const warnedSubjectTypes = new Set<string>();
+
+/**
+ * Narrow a DTO's `subjectType` to the union, and say so in dev when it is not
+ * in it.
+ *
+ * `ModReportDTO.subjectType` is DECLARED as `ReportSubjectType`, but a DTO
+ * type is a claim about JSON rather than a check on it. So when the backend
+ * enum grew `listing_public_question` and this union did not, the value
+ * travelled all the way to the drawer while the compiler was satisfied: a
+ * missing union member became a silent runtime lie instead of a type error,
+ * and any code switching exhaustively on it would have been reasoning about a
+ * value set that does not match reality.
+ *
+ * The value is passed through UNCHANGED even when unknown. Coercing a
+ * moderation report's subject to some other type would be a worse lie than
+ * carrying an unrecognised one, and dropping the row would hide a real report
+ * from the queue. The dev warning is the fix signal, and it names the fix.
+ * Silent in production, by design, matching `warnIfUnresolvedGathering`.
+ */
+function toSubjectType(
+  subjectType: string,
+  reportId: string,
+): ReportSubjectType {
+  if (
+    !KNOWN_SUBJECT_TYPES.has(subjectType) &&
+    import.meta.env.DEV &&
+    !warnedSubjectTypes.has(subjectType)
+  ) {
+    warnedSubjectTypes.add(subjectType);
+    console.warn(
+      `[moderation] report ${reportId} has subjectType "${subjectType}", ` +
+        `which ReportSubjectType cannot represent. It is passed through ` +
+        `unchanged, so anything branching on it will miss this case. Add it ` +
+        `to ReportSubjectType and SUBJECT_REASONS in ` +
+        `src/features/safety/reportReasons.ts, mirroring the backend's ` +
+        `reason-catalogue.ts entry for it.`,
+    );
+  }
+  return subjectType as ReportSubjectType;
+}
+
+/**
  * TS-06: the server's cluster summary, as the queue's own view model.
  *
  * A near-identity map, deliberately kept: it is the one place the DTO's
@@ -111,7 +170,10 @@ export function modReportClusterDtoToView(
   dto: ModReportClusterDTO,
 ): ModReportCluster {
   return {
-    subjectType: dto.subjectType,
+    subjectType: toSubjectType(
+      dto.subjectType,
+      `cluster ${dto.subjectType}:${dto.subjectId}`,
+    ),
     subjectId: dto.subjectId,
     openCount: dto.openCount,
     distinctReporterCount: dto.distinctReporterCount,
@@ -136,7 +198,7 @@ export function modReportDtoToView(
   ];
   const view: ModReportView = {
     id: dto.id,
-    subjectType: dto.subjectType,
+    subjectType: toSubjectType(dto.subjectType, dto.id),
     subjectId: dto.subjectId,
     severity,
     category: t(categoryKey),

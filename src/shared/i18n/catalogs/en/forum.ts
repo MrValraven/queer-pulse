@@ -260,7 +260,6 @@ export const forum: Catalog = {
   // ── Inline reply edit ────────────────────────────────────────────────────
   "replyEdit.save": "Save",
   "replyEdit.cancel": "Cancel",
-  "replyEdit.saving": "Saving…",
   "replyEdit.textareaAria": "Edit your reply",
 
   // ── OP (original post) edit ──────────────────────────────────────────────

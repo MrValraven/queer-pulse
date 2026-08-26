@@ -4,8 +4,8 @@ import { AuthLayout } from "../auth/AuthLayout";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import {
+  ConfirmMethod,
   ExpiredPanel,
-  MagicLinkMethod,
   SuccessPanel,
 } from "./VerificationNeededSections";
 import { REAUTH_SECONDS } from "./verificationNeeded.data";
@@ -108,10 +108,12 @@ export function VerificationNeededPage() {
         </span>
       </div>
 
-      {/* One method, so no tablist. The password and authenticator tabs that
-          used to sit here verified nothing — see VerificationNeededSections. */}
+      {/* One step, so no tablist. The password and authenticator tabs that
+          used to sit here verified nothing, and the magic-link pane that
+          replaced them promised an email QueerPulse never sends. See
+          VerificationNeededSections. */}
       <div className={styles.methodBody}>
-        <MagicLinkMethod busy={busy} onVerify={handleVerify} />
+        <ConfirmMethod busy={busy} onVerify={handleVerify} />
       </div>
 
       <p className={styles.foot}>

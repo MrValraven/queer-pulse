@@ -41,14 +41,8 @@ export const communities: Catalog = {
   "category.support": "Support",
   "category.sports": "Sports",
   "category.professional": "Professional",
-  "category.community": "Community",
 
   // ── Discover directory (CommunitiesPage) ──────────────────────────────────
-  "discover.hero.eyebrow": "Communities & Collectives",
-  "discover.hero.title": "Find your <em>people.</em>",
-  "discover.hero.lead":
-    "A living directory of queer communities and collectives across Lisbon. Social clubs, arts collectives, activist groups, sports teams, support circles, and professional networks: something for where you are right now.",
-  "discover.hero.cta": "Go to your hub",
   "discover.search.placeholder": "Search communities by name or focus",
   "discover.search.ariaLabel": "Search communities",
   "discover.sort.label": "Sort by",
@@ -85,6 +79,13 @@ export const communities: Catalog = {
   "discover.featured.youreIn": "You're in",
   "discover.featured.openCta": "Open community",
 
+  // ── "Suggested for you" band (SuggestedCommunitiesSection) ────────────────
+  // The card DTO carries no per-community overlap count, so the copy stays
+  // general and never claims a number.
+  "discover.suggested.heading": "Suggested for you",
+  "discover.suggested.subtitle":
+    "Communities where people you are connected to have already landed.",
+
   // ── Community card / join CTA labels ───────────────────────────────────────
   // Shared by the discover grid and the community-detail hero.
   "card.join.public": "Join",
@@ -94,12 +95,9 @@ export const communities: Catalog = {
   // Shoulder badge on a card for a community you already belong to, where a
   // stranger's card shows its access tier instead.
   "card.youreIn": "You're in",
-  "card.view": "View",
   "card.enterQuietly": "Enter quietly",
   "card.stats.active_one": "{count} active this week",
   "card.stats.active_other": "{count} active this week",
-  "card.stats.posts_one": "{count} post",
-  "card.stats.posts_other": "{count} posts",
 
   // ── Communities hub (CommunitiesHomePage + digest + feed + sidebar) ───────
   "hub.eyebrow": "Your communities & collectives",
@@ -281,7 +279,6 @@ export const communities: Catalog = {
   "detail.thread.tombstone": "This message was deleted.",
   "detail.thread.editSave": "Save",
   "detail.thread.editCancel": "Cancel",
-  "detail.thread.editSaving": "Saving…",
   "detail.thread.editAria": "Edit your message",
   "detail.thread.upvoteAria": "Upvote this thread",
   "detail.thread.editSavedToast": "Your edit is live.",
@@ -420,7 +417,6 @@ export const communities: Catalog = {
     "Nothing has been flagged. The community looks after each other.",
   "detail.modtools.reports.meta":
     "From {author} · flagged by {reporter} · {time} ago",
-  "detail.modtools.reports.metaLive": "Flagged {time} ago",
   "detail.modtools.reports.metaAuthor": "From {author} · flagged {time} ago",
   "detail.modtools.reports.metaErasedAuthor":
     "From an account that has since been removed · flagged {time} ago",
@@ -450,8 +446,6 @@ export const communities: Catalog = {
   // Unused since TS-08: removing a reply now goes through the report itself,
   // the same way removing a post does. Kept so nothing that still resolves it
   // renders a raw key.
-  "detail.modtools.reports.replyNote":
-    "This report is on a reply. It can be dismissed here; removing it means opening the post it sits under.",
   "detail.modtools.members.label": "Members",
   "detail.modtools.members.makeModCta": "Make mod",
   "detail.modtools.members.demoteCta": "Remove mod",
@@ -809,7 +803,6 @@ export const communities: Catalog = {
   "badges.reaction.ariaLabel": "{label}: {count}",
 
   // ── Join modal ─────────────────────────────────────────────────────────────
-  "join.close": "Close",
   "join.progress": "Step {step} of {total}",
   "join.ariaLabel": "Join {name}",
   "join.intro.eyebrow.request": "Asking to join",
@@ -826,9 +819,7 @@ export const communities: Catalog = {
     "A sentence about yourself: what brings you here?",
   "join.about.submitting": "Sending…",
   "join.about.errorFallback": "That didn't go through. Try again in a moment.",
-  "join.involvement.eyebrow": "Almost done",
   "join.involvement.title": "How would you like to be involved?",
-  "join.involvement.emailPlaceholder": "Your email address",
   "join.involvement.levelLabel": "Level of involvement",
   "join.involvement.sendRequestCta": "Send request",
   "join.involvement.joinCta": "Join the community",
@@ -1041,7 +1032,6 @@ export const communities: Catalog = {
   "start.running.addStewardModal.searchLabel": "Search your connections",
   "start.running.addStewardModal.loadMore": "Show more connections",
   "start.running.addStewardModal.searchPlaceholder": "Search by name or @slug…",
-  "start.running.addStewardModal.closeAria": "Close",
   "start.running.addStewardModal.empty":
     "You can add co-stewards once you're connected with other members. Head to Connections to grow your circle first.",
   "start.running.insideHeading": "What's inside",
@@ -1168,7 +1158,6 @@ export const communities: Catalog = {
   "start.category.sports.badge": "Sports team",
   "start.category.professional.label": "Professional",
   "start.category.professional.badge": "Professional network",
-  "start.category.fallbackBadge": "Community",
 
   // ── Success panel (StartCommunitySuccess) ─────────────────────────────────
   "start.success.title": "Your doors are",

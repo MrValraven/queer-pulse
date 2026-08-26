@@ -21,7 +21,7 @@ const STATUS_STYLE: Record<HousingViewingStatus, string | undefined> = {
 };
 
 /**
- * A viewing slot as "Sat, 12 Jul, 14:30". Formatted through `fmt` so it
+ * A viewing slot as "Sun, 12 Jul, 14:30". Formatted through `fmt` so it
  * follows the app language: the old `toLocaleString(undefined, …)` followed
  * the browser's locale instead, so a member reading QueerPulse in Portuguese
  * could still be shown an English weekday and a 12-hour clock. Letting `Intl`

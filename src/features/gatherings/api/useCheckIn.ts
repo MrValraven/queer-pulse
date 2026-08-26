@@ -7,6 +7,7 @@ import {
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import { attendeeToRow } from "./events.adapters";
+import { isAttendanceWindowClosed } from "./checkInError";
 import type { AttendeesResult } from "./useAttendees";
 
 /** What the door is asking for: a name the host tapped, or a card they read. */
@@ -58,8 +59,18 @@ export function useCheckIn(slug: string) {
       }
       return { previous };
     },
-    onError: (_error, _input, context) => {
+    onError: (error, _input, context) => {
       if (context) queryClient.setQueryData(key, context.previous);
+      // A closed attendance window means this tab is looking at a stale
+      // roster: the gathering crossed its retention boundary while the page
+      // sat open, or it was opened for a gathering that was already past it.
+      // Refetch so the count flips to "no longer recorded" and the door's
+      // affordances go with it, instead of leaving a live-looking button that
+      // the server will refuse again. Failure path only, so the door's hot
+      // path is untouched.
+      if (isAttendanceWindowClosed(error)) {
+        void queryClient.invalidateQueries({ queryKey: key });
+      }
     },
     onSuccess: (result) => {
       if (!result) return;
@@ -124,7 +135,14 @@ function patchArrival(
   return {
     ...roster,
     going,
-    checkedInCount: Math.max(0, roster.checkedInCount + delta),
+    // A count the platform no longer keeps stays unkept. `null + 1` is `1`,
+    // which would conjure an arrival total for a gathering whose check-in
+    // records were cleared. The live door always holds a real number here, so
+    // this costs one comparison on the hot path.
+    checkedInCount:
+      roster.checkedInCount === null
+        ? null
+        : Math.max(0, roster.checkedInCount + delta),
   };
 }
 
@@ -156,6 +174,8 @@ function applyServerResult(
       goingCount: result.goingCount,
       seatsTaken: result.seatsTaken,
       waitlistCount: result.waitlistCount,
+      // The server's own answer, null included: it decides from the
+      // gathering's date whether a check-in count can still be stated.
       checkedInCount: result.checkedInCount,
     };
   });

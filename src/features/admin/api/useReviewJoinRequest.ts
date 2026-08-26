@@ -73,6 +73,10 @@ export function useReviewJoinRequest() {
       declineReason: status === "declined" ? (declineReason ?? null) : null,
       reviewedAt: new Date().toISOString(),
       reviewedBy: "demo-moderator",
+      // The name the live backend resolves from `reviewedBy`, so a decision
+      // made in demo mode reads the same way on the quality sample as the
+      // pre-decided fixture rows do.
+      reviewedByName: "Inês Duarte",
       inviteCode: status === "approved" ? demoInviteCode(id) : null,
       // A freshly minted approval invite is valid by construction, and the
       // backend's INVITE_TTL is 7 days — mirror both so the demo card shows

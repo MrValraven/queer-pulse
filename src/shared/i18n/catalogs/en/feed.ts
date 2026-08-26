@@ -83,19 +83,10 @@ export const feed: Catalog = {
   "greeting.evening": "Good evening",
   "greeting.dateLine": "{weekday} · {city} · {date}",
   "greeting.city": "Lisbon",
-  "greeting.newMessages_one": "{count} new message",
-  "greeting.newMessages_other": "{count} new messages",
-  "greeting.messagesLink": "Messages",
 
   // ── FeedCards: GatheringCard ────────────────────────────────────────────
-  "card.gathering.upcomingIn_one": "Upcoming · {count} day",
-  "card.gathering.upcomingIn_other": "Upcoming · {count} days",
-  "card.gathering.goingCount": "+{count} going",
-  "card.gathering.youAreGoing": "You're going",
 
   // ── FeedCards: NewMemberCard ────────────────────────────────────────────
-  "card.newMember.tag": "New member",
-  "card.newMember.joined": "Joined {when}",
   "card.newMember.today": "today",
 
   // ── FeedCards: SavedArticleCard / RecapCard ─────────────────────────────
@@ -104,11 +95,8 @@ export const feed: Catalog = {
 
   // ── Shared action labels ────────────────────────────────────────────────
   "action.connect": "Connect",
-  "action.viewProfile": "View profile",
   "action.cancel": "Cancel",
   "action.reply": "Reply",
-  "action.save": "Save",
-  "action.saved": "Saved",
   "action.done": "Done",
   "action.continueReading": "Continue reading",
   "action.readRecap": "Read the recap",
@@ -122,10 +110,6 @@ export const feed: Catalog = {
   "post.likeAria": "Like post",
   "post.replyCount": "Reply · {count}",
   "post.replyAria": "Reply to post",
-  "post.unsaveAria": "Remove from saved",
-  "post.saveAria": "Save post",
-  "post.emptyReplies.title": "No replies yet",
-  "post.emptyReplies.description": "Be the first to say something kind.",
 
   // ── FeedModeration: MoreMenu / BlockConfirmModal / ReportModal ──────────
   "moderation.reportPost": "Report post",
@@ -137,7 +121,6 @@ export const feed: Catalog = {
   "moderation.unmutedToast": "Unmuted {name}",
   "moderation.unblockedToast": "Unblocked {name}",
   "moderation.postOptionsAria": "Post options",
-  "moderation.notNowToast": "We'll remind you later",
 
   "moderation.blockConfirm.title": "You blocked <em>{name}</em>",
   "moderation.blockConfirm.body":
@@ -198,9 +181,6 @@ export const feed: Catalog = {
   "action.countMeIn": "Count me in · {count}",
   "action.openThread": "Open thread",
   "proof.communitiesInCommon": "{count} communities in common",
-  "proof.alsoIn": "Also in {community}",
-  "proof.vouchedBy": "Vouched by {count} members you follow",
-  "badge.vouched": "Vouched",
   "gathering.spots": "{going} going · {spots} spots left",
   "gathering.full": "{going} going · full",
   "gathering.hostedBy": "Hosted by {host}",

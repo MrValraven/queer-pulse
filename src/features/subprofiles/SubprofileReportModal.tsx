@@ -5,26 +5,27 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { logError } from "../../shared/observability/logger";
 import { useCreateReport } from "../safety/api/useCreateReport";
+import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { PERSONA_REPORT_REASONS } from "./subprofileReportModal.data";
 import styles from "./SubprofileReportModal.module.css";
 
 /**
- * Report a persona (member subprofile) — the design prototype's quiet,
+ * Report a persona (member subprofile). The design prototype's quiet,
  * mask-icon "Report" affordance opens this. Self-contained: owns its own
  * state, uses the shared `Modal` (scroll-lock + focus-trap + Esc-to-close +
  * portal, see `shared/components/ui/Modal.tsx`), so it needs no extra wiring
  * beyond mounting it while open.
  *
  * A reason list is required, a note is optional. Every submission POSTs a
- * real report through the existing `/reports` endpoint (`useCreateReport`) —
- * this is NOT a stub. The chosen reason's own persona-specific label always
+ * real report through the existing `/reports` endpoint (`useCreateReport`).
+ * This is NOT a stub. The chosen reason's own persona-specific label always
  * rides along in `detail` (see subprofileReportModal.data.ts) so moderators
  * see the exact wording the reporter picked even where two options share one
  * underlying `ReasonCode`.
  *
  * Wired from `SubprofilePage` (Task 5): `SubprofileHeroActions`' "Report this
  * persona" button calls `onAction("report")`, which the page host turns into
- * mounting this modal — it replaced the generic `ReportSubjectControl` →
+ * mounting this modal. It replaced the generic `ReportSubjectControl` ->
  * `ReportListingModal` path that used to sit there.
  */
 export function SubprofileReportModal({
@@ -49,16 +50,20 @@ export function SubprofileReportModal({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const createReport = useCreateReport();
-  const [reasonKey, setReasonKey] = useState(PERSONA_REPORT_REASONS[0]!.key);
+  const describeReportError = useReportSubmissionError();
+  // No option is preselected. The list is ordered severity-descending (see
+  // subprofileReportModal.data.ts), so a preselected first option would make
+  // the most serious reason the one a hurried reporter sends without reading.
+  const [reasonKey, setReasonKey] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [done, setDone] = useState(false);
 
-  const selectedReason =
-    PERSONA_REPORT_REASONS.find((option) => option.key === reasonKey) ??
-    PERSONA_REPORT_REASONS[0]!;
+  const selectedReason = PERSONA_REPORT_REASONS.find(
+    (option) => option.key === reasonKey,
+  );
 
   const submit = () => {
-    if (createReport.isPending) return;
+    if (!selectedReason || createReport.isPending) return;
     const selectedLabel = t(selectedReason.labelKey);
     const trimmedNote = note.trim();
     createReport.mutate(
@@ -74,10 +79,15 @@ export function SubprofileReportModal({
         onSuccess: () => setDone(true),
         onError: (error) => {
           logError(error, { scope: "subprofiles.reportPersona" });
-          // Never claim "report received" for one that didn't land — surface
+          // Never claim "report received" for one that didn't land: surface
           // an honest error and keep the form filled in so the reporter can
-          // retry without re-picking a reason.
-          showToast(t("subprofiles:reportModal.error"), "error");
+          // retry without re-picking a reason. A rolling flood cap answers
+          // with its own member-facing explanation, which
+          // `describeReportError` shows in place of the generic line.
+          showToast(
+            describeReportError(error, t("subprofiles:reportModal.error")),
+            "error",
+          );
         },
       },
     );
@@ -160,7 +170,7 @@ export function SubprofileReportModal({
         <Button
           variant="danger"
           onClick={submit}
-          disabled={createReport.isPending}
+          disabled={createReport.isPending || !selectedReason}
         >
           {createReport.isPending
             ? t("subprofiles:reportModal.submitting")

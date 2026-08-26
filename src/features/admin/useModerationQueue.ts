@@ -50,7 +50,11 @@ export function useModerationQueue() {
         ? "resolved"
         : deepLink === "ratification"
           ? "ratification"
-          : "open",
+          : // TS-04. `?tab=health` is what the queue-alert notification and the
+            // compact indicator both deep-link to.
+            deepLink === "health"
+            ? "health"
+            : "open",
   );
   // TS-11: which half of the appeals queue is showing, and whether it is
   // narrowed to the appeals already past their published decision window.

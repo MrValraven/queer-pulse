@@ -12,8 +12,9 @@ interface Props {
   /** The subject's own uuid, sent as the report's `subjectId`. */
   subjectId: string;
   subjectKind: DirectoryReportSubject;
-  /** The author's display name, for the modal heading. */
-  authorName: string;
+  /** The author's display name, for the modal heading. Reviews only. See
+   *  `DirectoryReportModal`'s own note on why a question names nobody. */
+  authorName?: string;
 }
 
 /**

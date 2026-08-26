@@ -5,11 +5,8 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { FiClock, FiPause } from "react-icons/fi";
-import { Button, ComingSoon } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useAuth } from "../../app/providers/authContext";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { logError } from "../../shared/observability/logger";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -20,6 +17,7 @@ import {
   DeleteConfirmForm,
   DeleteOptionCards,
   DeletePendingBanner,
+  PauseNotificationsStrip,
 } from "./DeleteAccountSections";
 import type { DeletionRequest } from "./api/account.api";
 import {
@@ -31,11 +29,19 @@ import {
 } from "./api/useAccountMutations";
 import styles from "./DeleteAccountPage.module.css";
 
-export function DeleteAccountSection() {
+/**
+ * `onOpenNotificationSettings` is supplied only when this renders as the
+ * "delete" pane inside SettingsPage, so the pause strip can switch panes in
+ * place there. See `PauseNotificationsStrip`.
+ */
+export function DeleteAccountSection({
+  onOpenNotificationSettings,
+}: {
+  onOpenNotificationSettings?: () => void;
+} = {}) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { signOut } = useAuth();
-  const { demoMode } = useDemoMode();
   const { getReauthToken, beginReauth } = useReauth();
   const requestDeletion = useRequestDeletion();
   const deactivate = useDeactivate();
@@ -142,40 +148,9 @@ export function DeleteAccountSection() {
       <DeleteOptionCards option={option} setOption={setOption} />
 
       {option === "deactivate" && (
-        <div className={styles.pauseStrip}>
-          <FiClock className={styles.pauseStripIcon} aria-hidden />
-          <div>
-            <p className={styles.pauseStripText}>
-              <Translation
-                i18nKey="settings:deleteAccount.pauseStrip.text"
-                components={{ strong: <strong /> }}
-              />
-            </p>
-            {/* Email delivery has no backend yet (the Notifications pane marks
-                the same controls "coming soon"). Demo keeps the prototype
-                confirmation; live must not claim a save nothing performs. */}
-            {demoMode ? (
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  showToast(
-                    t("settings:deleteAccount.toast.pausedEmails"),
-                    "success",
-                  )
-                }
-                style={{ marginTop: 12 }}
-              >
-                <FiPause aria-hidden="true" />{" "}
-                {t("settings:deleteAccount.pauseStrip.cta")}
-              </Button>
-            ) : (
-              <Button variant="ghost" disabled style={{ marginTop: 12 }}>
-                <FiPause aria-hidden="true" />{" "}
-                {t("settings:deleteAccount.pauseStrip.cta")} <ComingSoon />
-              </Button>
-            )}
-          </div>
-        </div>
+        <PauseNotificationsStrip
+          onOpenNotificationSettings={onOpenNotificationSettings}
+        />
       )}
 
       <div className={styles.whatHappens}>

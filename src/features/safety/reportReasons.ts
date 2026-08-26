@@ -26,7 +26,14 @@ export type ReportSubjectType =
   | "company"
   | "job"
   | "subprofile"
-  | "magazine_comment";
+  // A review of a directory listing (`listing_reviews`).
+  | "review"
+  | "magazine_comment"
+  // A member's PUBLIC question on a business listing, OR the answer posted
+  // under it (`listing_public_questions`). One subject covers the pair, so a
+  // report of it can name two different authors, which is why account-level
+  // enforcement refuses it (`admin/api/enforcementTargetError.ts`).
+  | "listing_public_question";
 
 export type ReasonCode =
   | "outing"
@@ -45,6 +52,17 @@ export type ReasonCode =
   | "housing_scam"
   | "not_affirming"
   | "off_platform"
+  // System-filed listing codes, NEVER member-selectable. `ListingsService`
+  // sets them when it files through the reports pipeline: `listing_dispute`
+  // when somebody contests an unclaimed listing, `listing_owner_notify` for
+  // the owner-outreach task a friendly listing enqueues. They are deliberately
+  // absent from every `SUBJECT_REASONS` entry, mirroring the backend, which
+  // also keeps them out of the `REASON_CODES` list `POST /reports` validates
+  // against. They are here because reports carrying them DO reach the
+  // moderation queue, and a code the label tables cannot resolve renders a
+  // blank title on a live row.
+  | "listing_dispute"
+  | "listing_owner_notify"
   | "other";
 
 /** Stable code → human label. Labels are the only thing that gets localized. */
@@ -65,6 +83,10 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   housing_scam: "Scam or fake listing",
   not_affirming: "Not LGBTQ+ affirming: broke the community pledge",
   off_platform: "Asked to pay or move off-platform",
+  // System-filed (see the `ReasonCode` union). Labelled so any code to label
+  // lookup is total, never offered as a report option.
+  listing_dispute: "Dispute or claim of a business listing",
+  listing_owner_notify: "Owner outreach: friendly or suggested listing",
   other: "Something else, explained in detail",
 };
 
@@ -93,6 +115,8 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
   housing_scam: "safety:reason.housingScam",
   not_affirming: "safety:reason.notAffirming",
   off_platform: "safety:reason.offPlatform",
+  listing_dispute: "safety:reason.listingDispute",
+  listing_owner_notify: "safety:reason.listingOwnerNotify",
   other: "safety:reason.other",
 };
 
@@ -221,10 +245,46 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "spam",
     "other",
   ],
+  // A directory-listing review. Mirrors the backend's
+  // `ReportSubjectType.Review` reason set exactly, with no new codes:
+  // `harassment` covers an abusive review, `hate_speech` a slur,
+  // `discrimination` a discriminatory one, `housing_scam` ("Scam or fake
+  // listing") a fake/planted review, `spam` self-promotion abuse, and `other`
+  // (free-text) anything else.
+  review: [
+    "harassment",
+    "hate_speech",
+    "discrimination",
+    "housing_scam",
+    "spam",
+    "other",
+  ],
   // A public reader comment on a magazine article (CNT-10). Mirrors the
   // backend's `ReportSubjectType.MagazineComment` reason set exactly — same
   // shape as `reply`.
   magazine_comment: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
+    "discrimination",
+    "spam",
+    "off_topic",
+    "other",
+  ],
+  // A public question on a business listing, or the answer under it. Mirrors
+  // the backend's `ReportSubjectType.ListingPublicQuestion` set exactly, which
+  // is shaped like `magazine_comment` rather than like `review`: a question
+  // box on a venue's page is where someone gets asked, in public, whether they
+  // were at a place or who they went with, so `outing` and `doxxing` belong
+  // here in a way they do not on a star review. `off_topic` covers the
+  // question that is really an advertisement for somewhere else.
+  //
+  // This surface used to render the REVIEW list, which offered neither
+  // `outing` nor `doxxing` (the only two codes `deriveSeverity` maps to
+  // emergency), so somebody outed in a public question could file it only as
+  // "Something else" and it reached the ordinary queue.
+  listing_public_question: [
     "outing",
     "doxxing",
     "harassment",

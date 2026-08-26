@@ -1,14 +1,6 @@
-.card {
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: 24px;
-  padding: 42px 40px 32px;
-  width: 100%;
-  max-width: 440px;
-  box-shadow: 0 6px 52px -10px rgba(var(--plum-rgb), 0.16);
-  position: relative;
-  z-index: 1;
-}
+/* The card frame itself belongs to AuthLayout (`auth.module.css` .card, which
+   also owns `.card h1`). Nothing here carries this module's own `.card`, so no
+   local copy of those rules can ever match. */
 
 .icon {
   width: 64px;
@@ -29,21 +21,6 @@
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.card h1 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 32px;
-  color: var(--text-strong);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin-bottom: 10px;
-}
-
-.card h1 em {
-  font-style: italic;
-  color: var(--accent);
 }
 
 .lead {
@@ -95,74 +72,6 @@
   font-weight: 700;
 }
 
-.methods {
-  display: flex;
-  gap: 4px;
-  background: var(--cream);
-  padding: 4px;
-  border-radius: 11px;
-  margin-bottom: 18px;
-}
-
-.methodTab {
-  flex: 1;
-  padding: 9px 10px;
-  background: transparent;
-  border: none;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 700;
-  color: var(--ink-60);
-  cursor: pointer;
-  border-radius: 8px;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease),
-    box-shadow 0.2s var(--ease);
-}
-
-.methodTabActive {
-  background: var(--paper);
-  color: var(--text-strong);
-  box-shadow: 0 1px 4px rgba(var(--plum-rgb), 0.08);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-bottom: 14px;
-}
-
-.field label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
-.field input {
-  font-family: var(--sans);
-  font-size: 14.5px;
-  color: var(--ink);
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 11px;
-  padding: 11px 14px;
-  outline: none;
-  transition:
-    border-color 0.2s,
-    background 0.2s;
-  width: 100%;
-}
-
-.field input:focus {
-  border-color: var(--line-strong);
-  background: var(--paper);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
-}
-
 .confirmBtn {
   width: 100%;
   justify-content: center;
@@ -182,18 +91,10 @@
   line-height: 1.55;
 }
 
-.foot a,
-.resetLine a {
+.foot a {
   color: var(--text-strong);
   font-weight: 600;
   text-decoration: none;
-}
-
-.resetLine {
-  margin-top: 12px;
-  font-size: 12.5px;
-  color: var(--ink-40);
-  text-align: center;
 }
 
 /* method body fade between tabs */
@@ -241,92 +142,8 @@
   }
 }
 
-/* ── 2FA code ── */
-.codeBlock {
-  margin-bottom: 4px;
-}
-
-.codeLabel {
-  font-size: 13px;
-  color: var(--ink-60);
-  line-height: 1.5;
-  margin-bottom: 14px;
-}
-
-.codeRow {
-  display: flex;
-  gap: 9px;
-  justify-content: space-between;
-}
-
-.codeRow input {
-  width: 100%;
-  aspect-ratio: 1 / 1.05;
-  max-width: 56px;
-  text-align: center;
-  font-family: var(--serif);
-  font-weight: 500;
-  font-size: 28px;
-  color: var(--text-strong);
-  background: var(--cream);
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 13px;
-  outline: none;
-  transition:
-    border-color 0.22s,
-    box-shadow 0.22s,
-    background 0.22s;
-}
-
-.codeRow input:focus {
-  border-color: var(--line-strong);
-  box-shadow: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
-  background: var(--paper);
-}
-
-.codeRowError input {
-  border-color: var(--accent-ink);
-  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.1);
-  animation: vnShake 0.42s var(--ease);
-}
-
-@keyframes vnShake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  20% {
-    transform: translateX(-6px);
-  }
-  40% {
-    transform: translateX(6px);
-  }
-  60% {
-    transform: translateX(-3px);
-  }
-  80% {
-    transform: translateX(3px);
-  }
-}
-
-.codeHint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  margin-top: 14px;
-  font-size: 12.5px;
-  color: var(--ink-40);
-}
-
-.codeHintError {
-  color: var(--accent-ink);
-  font-weight: 600;
-}
-
-/* ── magic link ── */
-.magicIntro,
-.sentBox {
+/* ── confirm step ── */
+.magicIntro {
   text-align: center;
 }
 
@@ -340,75 +157,6 @@
 .magicCopy b {
   color: var(--text-strong);
   font-weight: 600;
-}
-
-.sentBox {
-  animation: vnFade 0.3s var(--ease) both;
-}
-
-.sentIc {
-  width: 60px;
-  height: 60px;
-  border-radius: 18px;
-  background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 16px;
-  position: relative;
-}
-
-.sentIc svg {
-  width: 24px;
-  height: 24px;
-}
-
-.sentIc::after {
-  content: "";
-  position: absolute;
-  inset: -8px;
-  border-radius: 24px;
-  border: 2px solid rgba(var(--jade-rgb), 0.22);
-  animation: vnRipple 2.2s ease-out infinite;
-}
-
-@keyframes vnRipple {
-  0% {
-    transform: scale(0.85);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.3);
-    opacity: 0;
-  }
-}
-
-.sentTitle {
-  font-family: var(--serif);
-  font-size: 21px;
-  font-weight: 400;
-  color: var(--text-strong);
-  margin-bottom: 8px;
-}
-
-.resendBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-  background: none;
-  border: none;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-strong);
-  cursor: pointer;
-}
-
-.resendBtn:disabled {
-  color: var(--ink-40);
-  cursor: not-allowed;
 }
 
 /* ── success (plum panel) ── */
@@ -576,10 +324,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .methodBody,
-  .sentBox,
   .spinner,
-  .codeRowError input,
-  .sentIc::after,
   .successIc,
   .successIc svg,
   .successIc::after,
@@ -587,14 +332,5 @@
   .successSub,
   .successBtn {
     animation: none;
-  }
-}
-
-@media (max-width: 500px) {
-  .card {
-    padding: 32px 22px 24px;
-  }
-  .card h1 {
-    font-size: 26px;
   }
 }

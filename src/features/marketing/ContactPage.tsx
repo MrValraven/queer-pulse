@@ -34,6 +34,10 @@ const TOPICS = [
   "general",
   "account",
   "safety",
+  // LG-01: the route the published accessibility statement
+  // (/policies/accessibility) sends people down. It deep-links here as
+  // `?topic=accessibility`, so this value is part of that page's contract.
+  "accessibility",
   "press",
   "partnership",
   "other",

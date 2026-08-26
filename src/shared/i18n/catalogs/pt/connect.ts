@@ -53,7 +53,6 @@ export const connect: Catalog = {
   "moreMenu.blockConfirm.action": "Bloquear",
 
   // Texto dos cartões (ConnectionCards)
-  "card.profileAria": "Perfil de {name}",
   "card.blockedBadge": "Bloqueio",
   "card.message": "Mensagem",
   "card.viewProfile": "Ver perfil",

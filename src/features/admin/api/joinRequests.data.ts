@@ -139,6 +139,10 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
   },
   // Already-reviewed rows, so the quality-sampling page (Task 7) has
   // something to show in demo mode: one approved, one declined.
+  //
+  // Decided rows deliberately carry MORE THAN ONE reviewer between them, so the
+  // sample page's reviewer filter has something to filter by. The names here
+  // are attribution and nothing else. The sample never counts or ranks anyone.
   {
     id: "jr-sample-approved",
     name: "Priya Costa",
@@ -151,6 +155,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     source: "directory",
     reviewedAt: "2026-06-21T08:30:00.000Z",
     reviewedBy: "demo-moderator",
+    reviewedByName: "Inês Duarte",
     inviteCode: "QP-7F3K-2026",
     // Still redeemable: the reviewer can copy this link and it will work.
     inviteStatus: "valid",
@@ -178,6 +183,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     source: null,
     reviewedAt: "2026-06-16T09:00:00.000Z",
     reviewedBy: "demo-moderator",
+    reviewedByName: "Inês Duarte",
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,
@@ -205,7 +211,8 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "magazine",
     reviewedAt: "2026-05-31T17:45:00.000Z",
-    reviewedBy: "demo-moderator",
+    reviewedBy: "mod-ana",
+    reviewedByName: "Ana Reis",
     inviteCode: "QP-M4NB-2026",
     // Approved, then nobody sent the link on. This is the case the decided tab
     // exists for: the reissue action makes the same code work again.
@@ -233,7 +240,8 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "public_profile",
     reviewedAt: "2026-05-13T09:20:00.000Z",
-    reviewedBy: "demo-moderator",
+    reviewedBy: "mod-ana",
+    reviewedByName: "Ana Reis",
     inviteCode: "QP-Q8XT-2026",
     // Redeemed — they are already a member, so there is nothing left to hand
     // over and no reissue to offer.
@@ -262,7 +270,11 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "sign_in",
     reviewedAt: "2026-05-09T10:05:00.000Z",
-    reviewedBy: "demo-moderator",
+    // Decided, but the row carries no reviewer. This is also exactly what an
+    // erased reviewer's past decisions look like: `join_requests.reviewed_by`
+    // is ON DELETE SET NULL, so the id goes with the account and no name can
+    // come back. Covers the sample card's "not recorded" branch.
+    reviewedBy: null,
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,
@@ -287,7 +299,10 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "homepage_hero",
     reviewedAt: "2026-04-28T11:00:00.000Z",
-    reviewedBy: "demo-moderator",
+    // An id the server could not put a name to (no profile row behind the
+    // account). Covers the card's short-reference fallback, which still groups
+    // this reviewer's calls without claiming to identify them.
+    reviewedBy: "mod-unresolved",
     inviteCode: null,
     inviteStatus: null,
     inviteExpiresAt: null,

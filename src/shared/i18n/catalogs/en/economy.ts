@@ -391,7 +391,6 @@ export const economy: Catalog = {
 
   // ── JobDetailPage (+ header / body / sidebar) ──────────────────────────
   "jobDetail.breadcrumb.jobs": "Jobs",
-  "jobDetail.saveTitle": "Save listing",
   "jobDetail.savedToast": "Listing saved to your profile.",
   "jobDetail.unsavedToast": "Listing removed from saved.",
   "jobDetail.chip.applyBy": "Apply by {date}",
@@ -568,7 +567,6 @@ export const economy: Catalog = {
   "housing.outro.askForum": "Ask the forum",
 
   // ── HousingModals (message the lister / recommend a landlord) ─────────
-  "housingModal.close": "Close",
   "housingModal.charsToSend_one": "{count} more character to send",
   "housingModal.charsToSend_other": "{count} more characters to send",
   "housingModal.charsToSubmit_one": "{count} more character to submit",
@@ -838,7 +836,6 @@ export const economy: Catalog = {
   "housingListing.messageCtaArrow": "Message {name}",
   "housingListing.messageCta": "Message {name}",
   "housingListing.listedBy": "Listed by",
-  "housingListing.verifiedMember": "Verified member",
 
   // ── Identity verification — honest badges + step-up ────────────────────
   "verification.badge.id.label": "ID-verified",
@@ -928,8 +925,6 @@ export const economy: Catalog = {
   "housingListing.moreOnBoard": "More on the board",
   "housingListing.save": "Save",
   "housingListing.saved": "Saved",
-  "housingListing.saveAriaLabel": "Save {title}",
-  "housingListing.unsaveAriaLabel": "Remove {title} from saved",
   "housingListing.savedToast": "Saved {title}",
   "housingListing.unsavedToast": "Removed {title} from saved",
   // Fetch-error state (non-404): show a retry rather than silently redirecting.
@@ -1126,15 +1121,12 @@ export const economy: Catalog = {
   "landlordPage.intro.fallbackName": "A member",
   "landlordPage.save": "Save",
   "landlordPage.saved": "Saved",
-  "landlordPage.saveAriaLabel": "Save {name}",
-  "landlordPage.unsaveAriaLabel": "Remove {name} from saved",
   "landlordPage.savedToast": "Saved {name}",
   "landlordPage.unsavedToast": "Removed {name} from saved",
   "landlordPage.report": "Report",
   "landlordPage.reportAriaLabel": "Report {name}",
 
   // ── ModalKit (shared modal shell + success panel used across Economy) ──
-  "modalKit.closeAriaLabel": "Close",
   "modalKit.close": "Close",
 
   // ── FlatmatesBoard / FlatmatesFilterBar / FlatmateCard ─────────────────
@@ -1186,11 +1178,8 @@ export const economy: Catalog = {
   "flatmates.card.matchScore": "{score}% match",
   "flatmates.card.save": "Save",
   "flatmates.card.saved": "Saved",
-  "flatmates.card.saveAriaLabel": "Save {name}'s profile",
-  "flatmates.card.unsaveAriaLabel": "Remove {name}'s profile from saved",
   "flatmates.card.savedToast": "Saved {name}'s profile",
   "flatmates.card.unsavedToast": "Removed {name}'s profile from saved",
-  "flatmates.card.reportCta": "Report",
   "flatmates.card.reportAriaLabel": "Report {name}'s profile",
   "flatmates.card.safeSpaceLabel": "Safe-space needs",
   "flatmates.card.householdLabel": "Household",
@@ -2115,7 +2104,6 @@ export const economy: Catalog = {
   "mentorship.match.findMentorAria": "Find a mentor",
   "mentorship.match.becomeMentorAria": "Become a mentor",
   "mentorship.match.closeAria": "Close",
-  "mentorship.match.done": "Done!",
   "mentorship.match.stepOf": "Step {step} of {total}",
 
   "mentorship.match.success.mentee.title": "Request received.",
@@ -2949,7 +2937,6 @@ export const economy: Catalog = {
   "housingCoop.templates.title": "Templates & <em>tools</em>",
   "housingCoop.templates.sub":
     "Every document we wish someone had given us. Drafted with QueerPulse legal, translated PT & EN, stress-tested by Casa Sambizanga's first two years.",
-  "housingCoop.templates.download": "Download",
   "housingCoop.templates.read": "Read",
   "housingCoop.startCta.eyebrow": "Start a co-op",
   "housingCoop.startCta.title": "Don't have <em>your people yet</em>?",
@@ -3433,7 +3420,6 @@ export const economy: Catalog = {
   "housingCoop.toast.updates": "You'll get {name}'s updates in your feed.",
   "housingCoop.toast.mentoring": "Mentoring request sent to Casa Sambizanga.",
   "housingCoop.toast.seeAll": "The full co-op directory is coming soon.",
-  "housingCoop.toast.preparingDownload": "Preparing “{name}” for download…",
   "housingCoop.toast.postHelp":
     "We'll help you find your people. Check your inbox.",
   "housingCoop.toast.story": "Casa Sambizanga's story is coming soon.",
@@ -3647,36 +3633,18 @@ export const economy: Catalog = {
   "housingSafety.rights.lease.title": "A written, registered lease",
   "housingSafety.rights.lease.point.1":
     "Your tenancy should be a written contract, a verbal deal leaves you with far less to stand on.",
-  "housingSafety.rights.lease.point.2":
-    "The landlord has to register the lease with Finanças. Since 2025, if they don't, you can register it yourself through the Portal das Finanças.",
-  "housingSafety.rights.lease.point.3":
-    "The minimum term is one year, unless you both agree otherwise in writing.",
-  "housingSafety.rights.lease.point.4":
-    "Keep your signed copy and the registration, they're what prove your rights later.",
   "housingSafety.rights.deposit.title": "Deposit and rent up front",
   "housingSafety.rights.deposit.point.1":
     "A security deposit is capped at two months' rent.",
-  "housingSafety.rights.deposit.point.2":
-    "Landlords also commonly ask for around two months' rent in advance, anything far beyond that isn't standard.",
   "housingSafety.rights.rentIncrease.title": "Rent increases",
   "housingSafety.rights.rentIncrease.point.1":
     "Rent can go up at most once every 12 months, and only with 30 days' written notice.",
-  "housingSafety.rights.rentIncrease.point.2":
-    "The yearly rise is capped by the INE coefficient, for 2026 that's 2.24%.",
-  "housingSafety.rights.rentIncrease.point.3":
-    "A jump bigger than the cap, or more than once a year, isn't allowed.",
   "housingSafety.rights.eviction.title": "Eviction and your home",
   "housingSafety.rights.eviction.point.1":
     "You can only be evicted through a court or the Balcão Nacional do Arrendamento, never on the spot.",
-  "housingSafety.rights.eviction.point.2":
-    "A landlord may not change the locks, cut your water or power, or remove your belongings to push you out.",
-  "housingSafety.rights.eviction.point.3":
-    "That kind of harassment is a crime under Lei n.º 12/2019, you're entitled to report it.",
   "housingSafety.rights.discrimination.title": "If you're treated unfairly",
   "housingSafety.rights.discrimination.point.1":
     "The rental law doesn't list specific LGBTQ+ protections, but discrimination can still be reported to an equality body.",
-  "housingSafety.rights.discrimination.point.2":
-    "Keep the messages and notes, a written record helps if you decide to raise it.",
   "housingSafety.disclaimer.title": "Guidance, not <em>legal advice</em>",
   "housingSafety.disclaimer.body":
     "We've kept this accurate and plain, but every situation is its own. For anything that really matters, talk to a tenants' association or a lawyer.",

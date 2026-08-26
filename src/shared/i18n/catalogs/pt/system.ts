@@ -44,11 +44,7 @@ export const system: Catalog = {
   "notFound.searchCta": "Pesquisar",
 
   // ── src/pages/PlaceholderPage.tsx ─────────────────────────────────────────
-  "placeholder.eyebrow": "Brevemente",
   "placeholder.title": "{title} está <em>a caminho.</em>",
-  "placeholder.sub":
-    "Esta parte da QueerPulse ainda está a ser construída. A página inicial já está no ar. Explora as pessoas, os convívios e a comunidade por lá, entretanto.",
-  "placeholder.backCta": "Voltar ao início",
 
   // ── AccountBannedPage.tsx ─────────────────────────────────────────────────
   "accountBanned.kicker": "Conta removida · ação final",
@@ -449,18 +445,13 @@ export const system: Catalog = {
   "verificationNeeded.actionCard":
     "Estás prestes a <b>cancelar a tua subscrição Sustainer</b>",
   "verificationNeeded.foot": "Esta verificação expira em <b>{time}</b>.",
-  "verificationNeeded.magicLink.intro":
-    "Vamos enviar uma ligação de confirmação única para <b>{email}</b>. Abre-a neste dispositivo para confirmares que és tu.",
-  "verificationNeeded.magicLink.sendingCta": "A enviar ligação…",
-  "verificationNeeded.magicLink.sendCta":
-    "Enviar-me uma ligação de confirmação",
-  "verificationNeeded.magicLink.sentTitle": "Ligação a caminho",
-  "verificationNeeded.magicLink.sentCopy":
-    "Toca na ligação que enviámos para <b>{email}</b> e depois volta aqui.",
-  "verificationNeeded.magicLink.verifyingCta": "A verificar…",
-  "verificationNeeded.magicLink.confirmCta": "Já abri a ligação",
-  "verificationNeeded.magicLink.resendCountdown": "Reenviar em {seconds}s",
-  "verificationNeeded.magicLink.resendCta": "Reenviar ligação",
+  // Ver a nota em en/system.ts: a nova autenticação passa por iniciar sessão
+  // no Google outra vez, e não por uma ligação enviada por email, que a
+  // QueerPulse nunca entrega.
+  "verificationNeeded.confirm.intro":
+    "Confirmar significa iniciar sessão no Google outra vez como <b>{email}</b>, para que uma sessão que outra pessoa tenha deixado aberta não leve isto por diante. Não é enviado nenhum email.",
+  "verificationNeeded.confirm.cta": "Confirmar que sou eu",
+  "verificationNeeded.confirm.verifyingCta": "A confirmar…",
   "verificationNeeded.success.title": "És mesmo tu, <em>confirmado.</em>",
   "verificationNeeded.success.sub":
     "Verificação confirmada. A encaminhar-te para cancelares a subscrição…",
@@ -491,17 +482,17 @@ export const system: Catalog = {
   "newsletterUnsubscribe.success.eyebrow": "Subscrição cancelada",
   "newsletterUnsubscribe.success.heading": "Saíste da <em>lista.</em>",
   "newsletterUnsubscribe.success.lead":
-    "Deixámos de enviar o resumo semanal para este endereço. Podes voltar a subscrever a partir da página inicial sempre que quiseres.",
+    "Este endereço saiu da lista. A QueerPulse não envia email, por isso nunca chegou nada aqui: isto é sobre o teu endereço não ficar numa lista onde não querias estar. Podes voltar a inscrevê-lo a partir da página inicial sempre que quiseres.",
   "newsletterUnsubscribe.alreadyUnsubscribed.eyebrow": "Já sem subscrição",
   "newsletterUnsubscribe.alreadyUnsubscribed.heading":
     "Já estava <em>tratado.</em>",
   "newsletterUnsubscribe.alreadyUnsubscribed.lead":
-    "Este endereço já tinha cancelado a subscrição. Não está a receber o resumo semanal.",
+    "Este endereço já tinha saído da lista, e continua fora. Não está a sair nada para ele, aqui nem em lado nenhum: a QueerPulse não envia email.",
   "newsletterUnsubscribe.invalid.eyebrow": "Ligação não reconhecida",
   "newsletterUnsubscribe.invalid.heading":
     "Não conseguimos <em>reconhecer esta ligação.</em>",
   "newsletterUnsubscribe.invalid.lead":
-    "Esta ligação para cancelar a subscrição não corresponde a nada do nosso lado. Pode estar desatualizada ou mal copiada. Se ainda estás a receber o resumo semanal, avisa a equipa e nós tratamos disso.",
+    "Esta ligação para cancelar a subscrição não corresponde a nada do nosso lado. Pode estar desatualizada ou mal copiada. De qualquer forma não está a sair nada para o endereço, porque a QueerPulse não envia email, mas avisa a equipa se algo te parecer errado e nós tratamos disso.",
   "newsletterUnsubscribe.goHomeCta": "Voltar à página inicial",
   "newsletterUnsubscribe.contactCta": "Falar com a equipa",
 

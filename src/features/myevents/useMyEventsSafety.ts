@@ -3,6 +3,7 @@ import { useSocial } from "../../app/providers/useSocial";
 import type { TFunction } from "../../shared/i18n/types";
 import { logError } from "../../shared/observability/logger";
 import { useCreateReport } from "../safety/api/useCreateReport";
+import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import type { ReasonCode } from "../safety/reportReasons";
 import type { MyEvent } from "./myEvents.types";
 
@@ -44,6 +45,7 @@ export function useMyEventsSafety({
     host: string;
   }>({ open: false, eventId: null, host: "" });
   const createReport = useCreateReport();
+  const describeReportError = useReportSubmissionError();
   // Dual-mode already (no-op in demo, real `POST/DELETE /blocks/:slug` in
   // live) — the same primitive `ProfileSafetyMenu`'s "Block" wires to.
   // `toggleBlock` is a TOGGLE, so `isBlocked` has to gate it: this surface only
@@ -88,12 +90,15 @@ export function useMyEventsSafety({
           },
           onError: (error) => {
             logError(error, { scope: "myevents.reportEvent" });
-            toast(t("safety:flag.error"), "error");
+            // A rolling flood cap answers with its own member-facing
+            // explanation; `describeReportError` shows it in place of the
+            // generic line.
+            toast(describeReportError(error, t("safety:flag.error")), "error");
           },
         },
       );
     },
-    [report.eventId, createReport, t, toast],
+    [report.eventId, createReport, describeReportError, t, toast],
   );
   const openBlock = useCallback(
     (eventId: string) => {

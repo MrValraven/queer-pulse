@@ -1,4 +1,11 @@
-import { FiAward, FiClipboard, FiHome, FiStar, FiTag } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiAward,
+  FiClipboard,
+  FiHome,
+  FiStar,
+  FiTag,
+} from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { memberName } from "../members/data/members";
 import { Translation } from "../../shared/i18n/Translation";
@@ -74,7 +81,7 @@ function buildUnreadNotifications(
         {
           label: t("notifications:actions.viewEvent"),
           variant: "primary",
-          href: routes.event,
+          href: routes.events,
         },
       ],
     },
@@ -153,6 +160,44 @@ function buildUnreadNotifications(
         },
       ],
     },
+    {
+      // The demo counterpart of the live `moderation_queue_alert` row (TS-04).
+      // Staff-only in live mode, and the ONE kind whose copy lives outside the
+      // `notifications:` namespace. The whole vocabulary is the queue-health
+      // panel's, so this row reuses `admin:moderationHealth.*` verbatim rather
+      // than minting demo-only strings. Icon and destination mirror
+      // `notifications.adapters.ts`: amber triangle for `warning`, and the
+      // console's health tab rather than the queue it summarises.
+      id: 14,
+      type: "platform",
+      unread: true,
+      icon: {
+        Glyph: FiAlertTriangle,
+        background: "rgba(var(--amber-rgb), .22)",
+      },
+      text: t("admin:moderationHealth.notification.warning.text", {
+        count: 12,
+        queue: t("admin:moderationHealth.queue.reports"),
+        overdue: t("admin:moderationHealth.notification.overdueToken", {
+          count: 3,
+          value: fmt.number(3),
+        }),
+        oldest: t("admin:moderationHealth.notification.oldestToken", {
+          count: 19,
+          value: fmt.number(19),
+        }),
+      }),
+      meta: t("admin:moderationHealth.notification.warning.meta"),
+      time: fmt.relativeTime(-3, "hour"),
+      createdAtIso: agoIso(3, "hour"),
+      actions: [
+        {
+          label: t("notifications:actions.seeDetails"),
+          variant: "ghost",
+          href: `${routes.adminModeration}?tab=health`,
+        },
+      ],
+    },
     ...buildUnreadActivityNotifications(t, fmt),
   ];
 }
@@ -206,7 +251,7 @@ function buildReadNotifications(t: TFunction, fmt: Formatters): Notification[] {
         {
           label: t("notifications:actions.viewEvent"),
           variant: "ghost",
-          href: routes.event,
+          href: routes.events,
         },
       ],
     },
@@ -258,7 +303,7 @@ function buildReadNotifications(t: TFunction, fmt: Formatters): Notification[] {
 
 /**
  * Composes the demo feed from its two order-preserving sections — the unread
- * rows (ids 2–7, 13) followed by the already-read rows (ids 8, 9, 11, 12).
+ * rows (ids 2-7, 13, 14) followed by the already-read rows (ids 8, 9, 11, 12).
  * Splitting the builder by read-state keeps each section small. (Ids 1 and 10
  * were private-message rows, removed when the "messages" category was retired.)
  */
@@ -274,4 +319,4 @@ export function buildNotifications(
 
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
-export const DEMO_UNREAD_IDS = [2, 3, 13, 4, 5, 6, 7];
+export const DEMO_UNREAD_IDS = [2, 3, 13, 14, 4, 5, 6, 7];

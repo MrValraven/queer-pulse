@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { DeleteAccountSection } from "./DeleteAccountSection";
 
@@ -91,5 +91,46 @@ describe("DeleteAccountSection", () => {
         screen.queryByRole("button", { name: "Permanently delete my account" }),
       ).not.toBeInTheDocument(),
     );
+  });
+
+  it("offers a real way into notification settings, never a control that saves nothing", async () => {
+    render(
+      <TestProviders>
+        <DeleteAccountSection />
+      </TestProviders>,
+    );
+
+    // The gentler alternative to deleting is a link into the Notifications
+    // pane, where per-category switches and quiet hours genuinely exist. It
+    // replaced a decorative button offering a 30-day bulk pause of "all emails
+    // and digests" that no endpoint has ever backed.
+    const link = await screen.findByRole("link", {
+      name: /Choose your notifications/,
+    });
+    expect(link).toHaveAttribute(
+      "href",
+      "/account/settings?pane=notifications",
+    );
+
+    // Nothing in this strip advertises a build that does not exist.
+    expect(screen.queryByText(/Coming soon/i)).not.toBeInTheDocument();
+  });
+
+  it("switches panes in place when it renders inside Settings", async () => {
+    // SettingsPage reads `?pane=` once, in a useState initializer, so a link
+    // would move the URL and leave the pane put. It passes a callback instead.
+    const onOpenNotificationSettings = vi.fn();
+    render(
+      <TestProviders>
+        <DeleteAccountSection
+          onOpenNotificationSettings={onOpenNotificationSettings}
+        />
+      </TestProviders>,
+    );
+
+    fireEvent.click(
+      await screen.findByRole("button", { name: /Choose your notifications/ }),
+    );
+    expect(onOpenNotificationSettings).toHaveBeenCalledTimes(1);
   });
 });

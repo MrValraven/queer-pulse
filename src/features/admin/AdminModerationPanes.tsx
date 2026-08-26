@@ -3,18 +3,15 @@ import { FiAlertTriangle, FiClock } from "react-icons/fi";
 import { Button, EmptyState, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { ReportCard, ClusterRow } from "./AdminModerationCards";
 import {
-  ReportCard,
   BulkBar,
-  ClusterRow,
   EmergencyBand,
   SectionLabel,
   CaughtUpPanel,
-  AppealCard,
-  RatificationCard,
-  ResolvedRow,
-  type RatifyDecision,
-} from "./AdminModerationCards";
+} from "./AdminModerationQueueChrome";
+import { AppealCard, ResolvedRow } from "./AdminModerationOutcomeCards";
+import { RatificationCard, type RatifyDecision } from "./AdminRatificationCard";
 import { RatificationConfirmModal } from "./AdminRatificationModal";
 import type { Ratification } from "./adminModeration.data";
 import { BulkActionModal } from "./AdminModerationBulkModal";

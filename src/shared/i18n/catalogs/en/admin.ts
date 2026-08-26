@@ -49,7 +49,6 @@ export const admin: Catalog = {
   "verifications.level.id_verified": "ID-verified",
   "verifications.toast.updated": "Verification level updated.",
   "verifications.toast.error": "Couldn't update that verification",
-  "verifications.loadError": "Couldn't load verifications",
   "verifications.empty": "No verification records yet.",
   "verifications.tabs.all": "All",
   "verifications.reviewCta": "Review",
@@ -203,7 +202,6 @@ export const admin: Catalog = {
   // ── Shared verbs, reused across many modals/drawers ───────────────────────
   "common.cancel": "Cancel",
   "common.close": "Close",
-  "common.back": "Back",
   "common.undo": "Undo",
   "common.edit": "Edit",
   "common.delete": "Delete",
@@ -268,7 +266,6 @@ export const admin: Catalog = {
   "dashboard.metrics.footNeedsHand_other": "{count} communities need a hand",
 
   "dashboard.triage.title": "Needs <em>a human</em>",
-  "dashboard.triage.sortedToast": "Sorted by urgency",
   "dashboard.triage.safetyEmergencies.title": "Safety emergencies",
   "dashboard.triage.safetyEmergencies.sub": "Outing & doxxing",
   "dashboard.triage.safetyEmergencies.subEm": "handle these first",
@@ -370,8 +367,6 @@ export const admin: Catalog = {
   "members.verify.approvedToast": "{name} was welcomed in",
   "members.verify.declinedToast": "{name}'s request wasn't approved this time",
   "members.verify.errorToast": "Could not save that decision. Please try again",
-  "members.verify.mutualLine": "Named {name} as a mutual",
-  "members.verify.noMutual": "No mutual named yet",
   "members.verify.appliedToday": "Applied today",
   "members.verify.appliedRecently": "Applied recently",
   "members.verify.appliedDaysAgo_one": "Applied {count} day ago",
@@ -445,7 +440,7 @@ export const admin: Catalog = {
   "members.verify.declineReason.other": "Other",
   "members.verify.declineModal.title": "Decline {name}'s request?",
   "members.verify.declineModal.body":
-    "Pick the closest reason. This isn't shown to the applicant. They'll get a short, generic note instead.",
+    "Pick the closest reason. Nothing is sent to the applicant. If they check their request status themselves, they see a short, generic note instead of this.",
   "members.verify.declineModal.reasonLabel": "Reason",
   "members.verify.declineModal.reasonPlaceholder": "Choose a reason",
   "members.verify.declineModal.confirmCta": "Decline request",
@@ -463,17 +458,67 @@ export const admin: Catalog = {
   "members.verify.bulk.waitlistCta": "Waitlist",
   "members.verify.bulk.declineCta": "Decline",
   "members.verify.bulk.clearCta": "Clear",
-  "members.verify.bulk.partialFailure_one":
-    "{count} request could not be updated",
-  "members.verify.bulk.partialFailure_other":
-    "{count} requests could not be updated",
-  "members.verify.bulk.action.approve": "Approve requests",
-  "members.verify.bulk.action.waitlist": "Waitlist requests",
-  "members.verify.bulk.action.decline": "Decline requests",
+  // Frames for `describeError`, so they read as a failure with the server's
+  // reason appended, so they read as a failure rather than an instruction.
+  "members.verify.bulk.action.approve": "Could not approve those requests",
+  "members.verify.bulk.action.waitlist": "Could not waitlist those requests",
+  "members.verify.bulk.action.decline": "Could not decline those requests",
+
+  // Select-all names the exact set it takes: the requests waiting on this page,
+  // never the whole queue and never the waitlisted section below it.
+  "members.verify.bulk.selectAll.label_one":
+    "Select the {count} request waiting here",
+  "members.verify.bulk.selectAll.label_other":
+    "Select all {count} requests waiting here",
+  "members.verify.bulk.capReached":
+    "That is {cap} at a time, the most one action can take. Clear some to pick others.",
+
+  // Confirmation. Nothing reaches the server until one of these is confirmed.
+  "members.verify.bulk.confirmApprove.title": "Approve {count} requests?",
+  "members.verify.bulk.confirmApprove.body":
+    "Each approval mints an invite link. Nothing is sent to anyone: you copy each link from the Decided tab and pass it on yourself.",
+  "members.verify.bulk.confirmApprove.confirmCta": "Approve all",
+  "members.verify.bulk.confirmWaitlist.title": "Waitlist {count} requests?",
+  "members.verify.bulk.confirmWaitlist.body":
+    "They stay open and move to the waitlist, so you can come back to them.",
+  "members.verify.bulk.confirmWaitlist.confirmCta": "Waitlist all",
   "members.verify.bulk.confirmDecline.title": "Decline {count} requests?",
   "members.verify.bulk.confirmDecline.body":
     "Pick the closest reason. It applies to all {count} selected requests.",
+  "members.verify.bulk.confirmDecline.reasonLine_one":
+    "This records “{reason}” against the {count} request selected.",
+  "members.verify.bulk.confirmDecline.reasonLine_other":
+    "This records “{reason}” against all {count} selected requests.",
   "members.verify.bulk.confirmDecline.confirmCta": "Decline all",
+
+  // Announced only when the whole batch went through. A batch that half-applied
+  // is reported by the result panel below, never as a success.
+  "members.verify.bulk.approvedToast_one":
+    "{count} request approved. Its invite link is in Decided, for you to send on.",
+  "members.verify.bulk.approvedToast_other":
+    "{count} requests approved. Their invite links are in Decided, for you to send on.",
+  "members.verify.bulk.waitlistedToast_one":
+    "{count} request moved to the waitlist.",
+  "members.verify.bulk.waitlistedToast_other":
+    "{count} requests moved to the waitlist.",
+  "members.verify.bulk.declinedToast_one": "{count} request declined.",
+  "members.verify.bulk.declinedToast_other": "{count} requests declined.",
+
+  // The per-item result. A bulk review is applied one request at a time on the
+  // server, so a batch commonly half-lands: someone else may have settled a
+  // request while this one was open.
+  "members.verify.bulk.result.title": "What went through",
+  "members.verify.bulk.result.succeeded_one": "{count} request went through.",
+  "members.verify.bulk.result.succeeded_other":
+    "{count} requests went through.",
+  "members.verify.bulk.result.noneSucceeded": "None of them went through.",
+  "members.verify.bulk.result.failedTitle_one": "{count} was left as it was",
+  "members.verify.bulk.result.failedTitle_other":
+    "{count} were left as they were",
+  "members.verify.bulk.result.unknownApplicant": "Request {id}",
+  "members.verify.bulk.result.retryNote":
+    "These are still selected. Try again, or open them one at a time.",
+  "members.verify.bulk.result.dismissCta": "Dismiss",
   "members.verify.status.approved": "Approved",
   "members.verify.status.declined": "Declined",
 
@@ -540,12 +585,42 @@ export const admin: Catalog = {
   // Quality-sampling tab: a periodic read-only look at past decisions for a
   // second admin to compare notes on. Not a signoff workflow — say so.
   "members.sample.intro":
-    "A periodic check on past decisions, so two admins can compare notes.",
+    "A random handful of decisions this queue has already made, so the people working it can read each other's calls and keep one shared bar.",
   "members.sample.explainer":
-    "This shows past decisions for discussion. It doesn't record a second signoff.",
+    "Read a few beside the review guidelines and talk them through together. The subject is the bar this queue holds, and everyone here is holding it.",
+  "members.sample.readOnlyNote":
+    "Read-only. Nothing here can be changed from this view, and no second signoff is recorded.",
   "members.sample.resampleCta": "Show a different sample",
-  "members.sample.decisionLabel": "Decision",
+  "members.sample.sizeLabel": "How many to draw",
+  "members.sample.sizeOption_one": "{count} decision",
+  "members.sample.sizeOption_other": "{count} decisions",
+  "members.sample.decidedOnLabel": "Decided",
+  "members.sample.appliedLabel": "Applied",
+  "members.sample.reasonLabel": "Reason",
+  "members.sample.noReason": "No reason recorded",
+  "members.sample.reviewerLabel": "Decided by",
+  "members.sample.reviewerYou": "You",
+  // Fallback only. The queue now resolves a display name for whoever decided,
+  // so this short, stable reference is what a row shows when the server sent an
+  // id with no name behind it: enough to group one reviewer's calls together,
+  // never presented as an identity.
+  "members.sample.reviewerOther": "Reviewer {reference}",
+  // No reviewer on the row at all. Also where a reviewer who has since erased
+  // their account lands: erasure takes the id with it, so there is nothing left
+  // to name and nothing here may invent one.
+  "members.sample.reviewerUnknown": "Not recorded",
+  // The reviewer filter. Reads decisions, never people: no counts, no ranking,
+  // no throughput. The whole question it answers is "let me read this person's
+  // calls in a row and see whether they match mine".
+  "members.sample.reviewerFilterLabel": "Show decisions by",
+  "members.sample.reviewerFilterAll": "Everyone",
+  "members.sample.reviewerFilterHint":
+    "Reading one person's calls together makes a different reading of the guidelines easier to spot.",
+  "members.sample.reviewerFilterEmpty":
+    "Nothing by that reviewer in this draw. Draw another sample, or go back to everyone.",
   "members.sample.empty": "No reviewed requests yet to sample.",
+  "members.sample.loadError":
+    "Could not draw a sample just now. Try again in a moment.",
 
   "members.drawer.verifiedChip": "Verified member",
   "members.drawer.verifyCta": "Verify",
@@ -583,7 +658,6 @@ export const admin: Catalog = {
   "members.suspension.confirm.body":
     "This lifts {name}'s suspension and restores full access immediately. It's logged in the audit trail under your name. You can suspend again if needed.",
   "members.suspension.confirm.confirmCta": "Lift suspension",
-  "members.role.sectionTitle": "Role & permissions",
   "members.role.currentLabel": "Current role",
   "members.role.description":
     "Moderators can act on reports and moderate content across the platform. Admins can do everything, including managing who holds these roles.",
@@ -1164,8 +1238,6 @@ export const admin: Catalog = {
   "adminWriterApplications.status.pending": "Pending",
   "adminWriterApplications.status.approved": "Approved",
   "adminWriterApplications.status.declined": "Declined",
-  "adminWriterApplications.row.by": "From {name}",
-  "adminWriterApplications.row.sample": "Sample",
   "adminWriterApplications.row.sampleLink": "Linked sample",
   "adminWriterApplications.row.approveCta": "Approve",
   "adminWriterApplications.row.declineCta": "Decline",
@@ -1309,6 +1381,12 @@ export const admin: Catalog = {
   "media.kinds.group-avatars": "Group avatars",
   "media.kinds.listing-photos": "Listing photos",
   "media.unowned": "Unowned",
+  // The object key is the only thing that identifies one tile from another:
+  // the thumbnail is decorative and the card carries no filename.
+  "media.openAriaLabel": "Inspect {key}",
+  // Leads with the visible name so speech input can still activate it by what
+  // it reads, then says what pressing it does.
+  "media.uploaderFilterAriaLabel": "{name}. Show only their uploads.",
   "media.unknown": "Unknown",
   "media.loadMore": "Load more",
   "media.openFile": "Open file URL",
@@ -1497,8 +1575,19 @@ export const admin: Catalog = {
   "moderation.reportDrawer.noteAriaLabel": "Note to the member",
   "moderation.reportDrawer.transparency":
     "{name} will be told exactly what was actioned and why, with a link to appeal. Nothing happens silently.",
-  "moderation.reportDrawer.accountActionsHidden":
-    "Restrict and ban aren't shown here because this report is about content, not a member account. Use hide, remove, warn or dismiss instead.",
+  // Read on a non-member report, directly under the action tiles, at the
+  // moment a moderator is choosing one. Since TS-03 restrict and ban DO apply
+  // here: the backend resolves the content to its author. What a moderator
+  // needs to know is who the sanction lands on, and that it can refuse when
+  // there is nobody behind the content.
+  // Sits beside the author name in the drawer, on the one subject type whose
+  // report can name two people. It fires BEFORE the moderator acts, so the
+  // matching refusal (`moderation.refusal.ambiguousAuthors`) confirms what
+  // they already read instead of contradicting it.
+  "moderation.reportDrawer.ambiguousAuthorsNote":
+    "This is a question and the answer under it, and different people can have written them. The report doesn't record which one was reported, so restrict and ban won't go through here.",
+  "moderation.reportDrawer.accountActionsTarget":
+    "Restrict and ban act on whoever posted this. Hide and remove act on the content itself. With no account behind it, an unclaimed listing or an erased one, restrict and ban will not go through.",
   "moderation.reportDrawer.restrictDurationLabel": "Restriction length",
   "moderation.reportDrawer.restrictDuration.24h": "24 hours",
   "moderation.reportDrawer.restrictDuration.7d": "7 days",
@@ -1524,8 +1613,6 @@ export const admin: Catalog = {
   "moderation.appealDrawer.recordCta": "Record decision",
   "moderation.appealDrawer.originalTitle": "The original decision",
   "moderation.appealDrawer.decidedByLine": "Decided by {name} · {when}",
-  "moderation.appealDrawer.viewOriginalCta":
-    "View the original report & thread",
   "moderation.appealDrawer.originalContentTitle":
     "What was originally reported",
   "moderation.appealDrawer.originalContentUnavailable":
@@ -1557,9 +1644,6 @@ export const admin: Catalog = {
   "moderation.actions.hide.label": "Hide content",
   "moderation.actions.hide.desc": "Remove from view, keep for records",
   "moderation.actions.hide.done": "hidden",
-  "moderation.actions.shield.label": "Shield member",
-  "moderation.actions.shield.desc": "Protect the person reported about",
-  "moderation.actions.shield.done": "shielded",
   "moderation.actions.warn.label": "Warn",
   "moderation.actions.warn.desc": "Send a formal warning",
   "moderation.actions.warn.done": "warned",
@@ -1583,6 +1667,11 @@ export const admin: Catalog = {
   "moderation.priorReports.count_one": "{count} prior report",
   "moderation.priorReports.count_other": "{count} prior reports",
   "moderation.priorReports.newAccount": "New account · {vouches} vouches",
+  // Read on its own by a screen reader, out of the row it sits in, so it names
+  // whose history opens. `{flag}` is the visible pill text and leads the label
+  // so speech input can activate the control by what it says.
+  "moderation.priorReports.viewAriaLabel":
+    "{flag}, about {name}. View their earlier reports.",
   "moderation.reporterCredibility.new": "New reporter",
   "moderation.reporterCredibility.history":
     "{filed} filed · {dismissed} dismissed",
@@ -1626,6 +1715,26 @@ export const admin: Catalog = {
   "moderation.queue.restoredToast": "Restored the report.",
   "moderation.queue.serviceErrorToast":
     "Couldn't reach the safety service. Restored.",
+
+  // The four deterministic enforcement refusals (see
+  // `admin/api/enforcementTargetError.ts`). Each is read mid-decision by a
+  // volunteer, moments after an optimistic toast said the action landed, so
+  // each opens by correcting that, then says what to do instead. In every one
+  // of them the platform is the thing that cannot answer: none of them imply
+  // the moderator picked wrong, and all of them leave hide, remove, dismiss
+  // and escalate available on the same report.
+  "moderation.refusal.noAccount":
+    "That didn't go through: there's no account behind what was reported, so there's nobody to restrict or ban. Take the content down, dismiss the report, or escalate it.",
+  // Carries the reconciliation the drawer can't: the drawer names whoever
+  // asked, because it has to name somebody and they opened the exchange, so a
+  // refusal saying two people wrote it would otherwise contradict what the
+  // moderator just read.
+  "moderation.refusal.ambiguousAuthors":
+    "That didn't go through: this report covers a question and the answer under it, and two different people wrote them. The drawer names whoever asked, so open the listing to see who wrote the part you mean and act from their drawer, or act on the content.",
+  "moderation.refusal.houseAccount":
+    "That didn't go through: what was reported traces back to the house account, which is never a moderation target. Act on the content, or dismiss the report.",
+  "moderation.refusal.staffAccount":
+    "That didn't go through: what was reported traces back to a staff account, which this queue can't action. Raise it with an admin.",
   "moderation.queue.bulkPartialToast":
     "{succeededCount} succeeded, {failedCount} failed: {reasons}",
   "moderation.queue.bulkToast_one": "{count} report {verb}",
@@ -1652,7 +1761,11 @@ export const admin: Catalog = {
   "communities.grid.sub":
     "Every community has a moderator who knows it by name. Health is how steady each one feels: reports answered, members held, no one slipping through.",
   "communities.grid.loadError": "Couldn’t load the communities.",
-  "communities.grid.healthAriaLabel": "Health {score}, see breakdown",
+  // Names the community, because the card's own action and this one are two
+  // separate controls and a bare "Health 72" says nothing about whose.
+  "communities.grid.healthAriaLabel":
+    "Health {score} for {name}, see breakdown",
+  "communities.grid.openAriaLabel": "Open {name}",
   "communities.grid.needsHand": "· needs a hand",
   "communities.grid.stat.members": "Members",
   "communities.grid.stat.activity": "Activity",
@@ -1981,8 +2094,6 @@ export const admin: Catalog = {
   "governance.header.publishError":
     "Couldn't publish the report. Please try again.",
   // Retained for compatibility; live no longer disables the publish button.
-  "governance.header.publishComingSoonToast":
-    "Publishing transparency reports isn't available yet.",
   "governance.tabs.finances": "Finances",
   "governance.tabs.policy": "Policy & versions",
   "governance.tabs.proposals": "Proposals",
@@ -2105,8 +2216,6 @@ export const admin: Catalog = {
   "governance.finances.provenance.computed": "Computed",
   "governance.finances.provenance.seeded.hint":
     "Seeded placeholder. Not yet checked against real figures.",
-  "governance.finances.provenance.manual.hint":
-    "Entered by an admin. {editor} on {date}.",
   "governance.finances.provenance.manual.hintPlain": "Entered by an admin.",
   "governance.finances.provenance.computed.hint":
     "Calculated from income minus spending. Not edited directly.",
@@ -2180,36 +2289,7 @@ export const admin: Catalog = {
   "governance.mrrPanel.live": "Sustainer MRR · reported",
   "governance.mrrPanel.lead":
     "Every euro comes from members alone. <em>We will never sell member data</em>. That's written into our constitution, so it holds us to it.",
-  "governance.mrrPanel.breakdown.care": "Care",
-  "governance.mrrPanel.breakdown.platform": "Platform",
-  "governance.mrrPanel.breakdown.mutualAid": "Mutual aid",
-  "governance.mrrPanel.breakdown.health": "Health",
-  "governance.mrrPanel.breakdown.magazine": "Magazine",
   "governance.mrrPanel.readCta": "Read the constitution",
-
-  "governance.policy.versionsTitle": "Policy <em>decision log</em>",
-  "governance.policy.versionsSub":
-    "Every change to how we keep each other safe, dated and open.",
-  "governance.policy.seeDiffCta": "See what changed",
-  "governance.policy.principlesTitle": "Our <em>principles</em>",
-  "governance.policy.transparencyNote":
-    "Policy changes are proposed in the open and ratified at the community assembly. Anyone can read the full edit history. Nothing here is decided behind closed doors.",
-  "governance.policy.principle.noSell": "We will never sell member data.",
-  "governance.policy.principle.visibility":
-    "Visibility is always the member's choice.",
-  "governance.policy.principle.noSilent":
-    "No silent removals. Every action carries a reason.",
-  "governance.policy.principle.accessNeverConditional":
-    "Access is never conditional on ability to pay.",
-
-  "governance.diff.eyebrow": "Policy change",
-  "governance.diff.title": "v4.1 → <em>v4.2</em>",
-  "governance.diff.closeCta": "Close",
-  "governance.diff.readFullCta": "Read full v4.2",
-  "governance.diff.introTitle": "Section 3: Harm we treat as urgent.",
-  "governance.diff.introDate": "Ratified 12 Jun 2026, 89% in favour.",
-  "governance.diff.note":
-    "Proposed by the Trans & Friends moderators · voted on by the whole community at the Annual Assembly.",
 
   "governance.audit.title": "Every action, <em>on the record</em>",
   "governance.audit.metaZero": "No entries match these filters.",
@@ -2219,8 +2299,6 @@ export const admin: Catalog = {
   "governance.audit.exportError":
     "Couldn't export the audit log. Please try again.",
   // Retained for compatibility; live no longer disables the export button.
-  "governance.audit.exportComingSoonToast":
-    "Exporting the audit log isn't available yet.",
   "governance.audit.exportCta": "Export CSV",
   "governance.audit.columns.moderator": "Moderator",
   "governance.audit.columns.action": "Action",
@@ -2258,12 +2336,10 @@ export const admin: Catalog = {
   "governance.audit.emptyText":
     "No moderation actions match these filters yet. Try widening them.",
   "governance.audit.pagerMeta": "Showing {start}–{end} of {total} entries",
-  "governance.audit.pagerMatch": " ({count} match)",
   "governance.audit.prevPage": "Previous page",
   "governance.audit.nextPage": "Next page",
   "governance.audit.entryModal.eyebrow": "Audit entry",
   "governance.audit.entryModal.actedWhen": "acted {when}",
-  "governance.audit.entryModal.openLinkCta": "Open {label}",
   "governance.audit.entryModal.subject": "Subject",
   "governance.audit.entryModal.reasonGiven": "Reason given to the member",
   "governance.audit.entryModal.note":
@@ -2462,13 +2538,9 @@ export const admin: Catalog = {
   "vouchGraph.inspector.reportsBanner.title_other": "{count} reports on record",
   "vouchGraph.inspector.reportsBanner.body":
     "Open the member's moderation history before acting.",
-  "vouchGraph.inspector.reportsBanner.viewCta": "View in moderation queue",
   "vouchGraph.inspector.privateBanner.title": "Network kept private",
   "vouchGraph.inspector.privateBanner.body":
     "This member has chosen to hide their vouch graph. Respect it. Don't work around it.",
-  "vouchGraph.inspector.anonBanner.title": "Identity shielded",
-  "vouchGraph.inspector.anonBanner.body":
-    "An anonymous voucher. Their identity is protected and cannot be revealed.",
   "vouchGraph.inspector.vouchesIn": "vouches in",
   "vouchGraph.inspector.vouchesOut": "vouches out",
   "vouchGraph.inspector.joined": "joined",
@@ -2528,8 +2600,6 @@ export const admin: Catalog = {
   "vouchGraph.canvas.fitToView": "Fit to view",
   "vouchGraph.canvas.resetLayout": "Reset layout",
 
-  "vouchGraph.graph.ariaLabel":
-    "Vouch network: {count} people connected to {initials}",
   "vouchGraph.preview.ariaLabel_one":
     "Trust network for {name}: {count} direct vouch connection",
   "vouchGraph.preview.ariaLabel_other":
@@ -2623,7 +2693,6 @@ export const admin: Catalog = {
   "settings.note.label": "Note (optional)",
   "settings.note.placeholder": "Why are you making this change?",
   "settings.note.hint": "Applies to the next change you make below.",
-  "settings.saved": "Settings saved.",
   "settings.saveError": "Couldn’t save that. Nothing was changed.",
 
   "settings.history.title": "Recent changes",
@@ -2869,13 +2938,8 @@ export const admin: Catalog = {
 
   // ── Roadmap (/admin/roadmap) — board, idea queue, hero stats ───────────────
   "roadmap.title": "Roadmap · <em>what's next</em>",
-  "roadmap.header.eyebrow": "Roadmap",
-  "roadmap.header.title": "Shape the <em>roadmap</em>",
-  "roadmap.header.sub":
-    "Manage the shipped/building/planned board, triage member ideas, and edit the public page's hero stats.",
   "roadmap.loading": "Loading the roadmap…",
   "roadmap.tabs.board": "Board",
-  "roadmap.tabs.ideas": "Ideas",
   "roadmap.tabs.heroStats": "Hero stats",
 
   // AdminRoadmapBoard.tsx, AdminRoadmapItemRow.tsx, AdminRoadmapItemModal.tsx,
@@ -2883,101 +2947,19 @@ export const admin: Catalog = {
   "roadmap.board.column.shipped": "Shipped",
   "roadmap.board.column.building": "Building now",
   "roadmap.board.column.planned": "Planned",
-  "roadmap.board.empty": "Nothing in this column yet.",
-  "roadmap.board.addItemCta": "Add item",
-  "roadmap.board.toast.removed": "{name} removed from the roadmap.",
-  "roadmap.board.toast.updated": "{name} saved.",
-  "roadmap.board.toast.created": "{name} added to the roadmap.",
-  "roadmap.board.delete.title": "Remove {name}?",
-  "roadmap.board.delete.body":
-    "This takes it off the roadmap for good. Members won't see it in any column anymore.",
-  "roadmap.board.delete.confirmCta": "Remove item",
-  "roadmap.board.modal.createEyebrow": "New item",
-  "roadmap.board.modal.editEyebrow": "Edit item",
-  "roadmap.board.modal.createTitle": "Add a roadmap item",
-  "roadmap.board.modal.createCta": "Add item",
-  "roadmap.board.field.column": "Column",
   "roadmap.board.field.category": "Category",
-  "roadmap.board.field.name": "Name",
-  "roadmap.board.field.description": "Description",
-  "roadmap.board.field.date": "Date",
-  "roadmap.board.field.date.placeholder": "e.g. July 2026",
-  "roadmap.board.field.requested.title": "Member requested",
-  "roadmap.board.field.requested.sub":
-    'Shows a "Member requested" tag on the public card.',
-  "roadmap.board.field.stage": "Stage",
-  "roadmap.board.field.stage.placeholder": "e.g. In design",
-  "roadmap.board.field.eta": "ETA",
-  "roadmap.board.field.eta.placeholder": "e.g. Q4 2026",
-  "roadmap.board.field.progress": "Progress (%)",
-  "roadmap.board.field.votes": "Starting votes",
-  "roadmap.board.field.hot.title": "Most wanted",
-  "roadmap.board.field.hot.sub":
-    "Highlights this item as most wanted on the public page.",
-  "roadmap.board.item.etaLabel": "ETA {eta}",
-  "roadmap.board.item.progressLabel": "{progress}% done",
-  "roadmap.board.item.votesLabel": "{votes} votes",
-  "roadmap.board.item.liveVotesLabel": "{count} live",
-  "roadmap.board.item.moveUpAriaLabel": "Move {name} up",
-  "roadmap.board.item.moveDownAriaLabel": "Move {name} down",
-  "roadmap.board.item.requestedTag": "Member requested",
-  "roadmap.board.item.hotTag": "Most wanted",
 
   // AdminRoadmapIdeasQueue.tsx, AdminRoadmapIdeaRows.tsx — member-submitted
   // idea triage + the published Top-ideas list the public page reads.
-  "roadmap.ideas.pending.title": "Pending review",
-  "roadmap.ideas.pending.empty": "Nothing waiting. Every idea's been triaged.",
-  "roadmap.ideas.published.title": "Published",
-  "roadmap.ideas.published.empty": "Nothing published yet.",
-  "roadmap.ideas.fromMemberTag": "From a member",
-  "roadmap.ideas.submittedLabel": "Submitted {date}",
   "roadmap.ideas.promoteCta": "Promote",
-  "roadmap.ideas.dismissCta": "Dismiss",
-  "roadmap.ideas.addPlaceholder": "Add an idea to the published list…",
-  "roadmap.ideas.addAriaLabel": "New idea text",
-  "roadmap.ideas.addCta": "Add idea",
-  "roadmap.ideas.moveUpAriaLabel": 'Move "{text}" up',
-  "roadmap.ideas.moveDownAriaLabel": 'Move "{text}" down',
-  "roadmap.ideas.editAriaLabel": 'Edit "{text}"',
-  "roadmap.ideas.tallyLabel_one": "{count} vote",
-  "roadmap.ideas.tallyLabel_other": "{count} votes",
-  "roadmap.ideas.toast.promoted": "Idea promoted to the published list.",
-  "roadmap.ideas.toast.dismissed": "Idea dismissed.",
-  "roadmap.ideas.toast.removed": "Idea removed.",
-  "roadmap.ideas.toast.updated": "Idea saved.",
-  "roadmap.ideas.toast.added": "Idea added.",
   // Shared confirm dialog (IdeaQueueConfirmModal) — `kind` is "dismiss" or
   // "delete", interpolated into the key (`roadmap.ideas.${kind}.*`).
-  "roadmap.ideas.dismiss.title": "Dismiss this idea?",
-  "roadmap.ideas.dismiss.body":
-    "It moves out of the pending queue without being published. The member who submitted it won't be notified.",
-  "roadmap.ideas.dismiss.confirmCta": "Dismiss idea",
-  "roadmap.ideas.delete.title": "Remove this idea?",
-  "roadmap.ideas.delete.body":
-    "This takes it off the public roadmap page for good.",
-  "roadmap.ideas.delete.confirmCta": "Remove idea",
 
   // AdminRoadmapHeroStats.tsx — editable chip row for the public page's hero.
-  "roadmap.heroStats.empty":
-    "No stat chips yet. Add one below or auto-fill from item counts.",
-  "roadmap.heroStats.autofillCta": "Auto-fill from item counts",
-  "roadmap.heroStats.addCta": "Add stat",
-  "roadmap.heroStats.removeRowCta": "Remove",
-  "roadmap.heroStats.labelPlaceholder": "e.g. 12 shipped this year",
-  "roadmap.heroStats.labelAriaLabel": "Stat label",
-  "roadmap.heroStats.moveUpAriaLabel": "Move stat up",
-  "roadmap.heroStats.moveDownAriaLabel": "Move stat down",
-  "roadmap.heroStats.jadeToggle.title": "Highlight in jade",
-  "roadmap.heroStats.toast.saved": "Hero stats saved.",
   // Auto-fill labels — the labels are rendered with a { count } so i18next
   // resolves the plural form; English doesn't inflect these, so the _one and
   // _other forms carry identical copy (the PT catalog inflects them). "building"
   // stays a single bare key since "in progress" reads the same at any count.
-  "roadmap.heroStats.autofill.shipped_one": "{count} shipped",
-  "roadmap.heroStats.autofill.shipped_other": "{count} shipped",
-  "roadmap.heroStats.autofill.building": "{count} in progress",
-  "roadmap.heroStats.autofill.planned_one": "{count} planned",
-  "roadmap.heroStats.autofill.planned_other": "{count} planned",
 
   // ═══════════════════════════════════════════════════════════════════════
   // Roadmap redesign (9-view board, deep drawer, saved views, modals).
@@ -3101,8 +3083,6 @@ export const admin: Catalog = {
   "roadmap.drawer.field.target": "Target",
   "roadmap.drawer.field.owner": "Owner",
   "roadmap.drawer.field.priority": "Priority",
-  "roadmap.drawer.field.scope": "Scope",
-  "roadmap.drawer.field.scopeAll": "All communities",
   "roadmap.drawer.saveCta": "Save & publish",
   "roadmap.drawer.saveEditCta": "Save",
   "roadmap.drawer.archiveCta": "Archive",
@@ -3227,8 +3207,6 @@ export const admin: Catalog = {
   // Drawer · Comments section
   "roadmap.drawer.comments.title": "Comments",
   "roadmap.drawer.comments.empty": "No comments yet.",
-  "roadmap.drawer.comments.hideCta": "Hide",
-  "roadmap.drawer.comments.unhideCta": "Unhide",
   "roadmap.drawer.comments.hiddenStatus": "Hidden",
 
   // Drawer · Internal notes / Public one-liner
@@ -3367,7 +3345,6 @@ export const admin: Catalog = {
   "roadmap.capacityView.loadSummary": "{building} building, {planned} planned",
   "roadmap.capacityView.paidTag": "Paid",
   "roadmap.capacityView.volunteerTag": "Volunteer",
-  "roadmap.capacityView.atOnceTag": "{count} at once",
   "roadmap.capacityView.unassignedActiveLabel": "Unassigned, active",
   "roadmap.capacityView.unassignedActiveWarn": "{count} are P0/P1",
   "roadmap.capacityView.unassignedActiveOk": "None urgent",
@@ -3404,7 +3381,6 @@ export const admin: Catalog = {
   "roadmap.ideasView.ageSuffix": "{age} ago",
   "roadmap.ideasView.submittedByMember": "From a member",
   "roadmap.ideasView.submittedByTeam": "From the team",
-  "roadmap.ideasView.voteSpike": "Vote spike: {votes} votes in {hours}h",
   "roadmap.ideasView.duplicateHint": "Looks like a duplicate of {name}",
   "roadmap.ideasView.mergeInsteadCta": "Merge instead",
   "roadmap.ideasView.votesLabel": "votes",
@@ -3470,11 +3446,9 @@ export const admin: Catalog = {
     "No public note yet. Members won't see anything here until you add one.",
   "roadmap.publicPreview.movedOnce": "Moved once: {from} → {to}.",
   "roadmap.publicPreview.movedMultiple": "Moved {count}×: {from} → {to}.",
-  "roadmap.publicPreview.blockedNote": "Blocked on {by}.",
   "roadmap.publicPreview.noDateHonest": "No date, honestly",
   "roadmap.publicPreview.liveLabel": "Live",
   "roadmap.publicPreview.editItemTooltip": "Edit this item",
-  "roadmap.publicPreview.copyPermalinkTooltip": "Copy permalink",
   "roadmap.publicPreview.subscribeHeading": "Get told when this changes",
   "roadmap.publicPreview.subscribeBody":
     "One email a month with what shipped, what moved and what we said no to. No product marketing, ever.",
@@ -3523,14 +3497,8 @@ export const admin: Catalog = {
     "{count} voters notified. One email, no follow-ups",
   "roadmap.toasts.digestCopied":
     "Digest copied. Paste it into the monthly email",
-  "roadmap.toasts.permalinkCopied": "Copied {url}",
-  "roadmap.toasts.rssInfo": "RSS: {url}",
   "roadmap.toasts.auditExported": "Audit log exported for governance",
   "roadmap.toasts.boardReset": "Board reset to the seeded roadmap",
-  "roadmap.toasts.safetyReviewNeededInfo_one":
-    "{count} item needs a safety review first",
-  "roadmap.toasts.safetyReviewNeededInfo_other":
-    "{count} items need a safety review first",
 
   // ── Landing page (/admin/landing) ───────────────────────────────────────
   "landing.header.eyebrow": "Live site",
@@ -3717,21 +3685,6 @@ export const admin: Catalog = {
   // Admin-facing labels for a housing listing's pre-publish risk score, the
   // machine reasons behind it, and the report evidence snapshot. Server sends
   // stable codes; these turn them into human column/labels for a reviewer.
-  "housing.risk.title": "Risk score",
-  "housing.risk.reasonsLabel": "Why it's flagged",
-  "housing.risk.evidenceLabel": "Reported listing snapshot",
-  "housing.risk.reason.rent_far_below_market": "Rent far below the local range",
-  "housing.risk.reason.rent_below_market": "Rent below the local range",
-  "housing.risk.reason.contact_info_in_text": "Contact details in the text",
-  "housing.risk.reason.off_platform_payment_language":
-    "Off-platform or advance-payment language",
-  "housing.risk.reason.discriminatory_language":
-    "Possible discriminatory wording",
-  "housing.risk.reason.lister_unverified": "Lister not phone- or ID-verified",
-  "housing.risk.reason.lister_phone_only": "Lister phone-verified only",
-  "housing.risk.reason.incomplete_listing": "Sparse description",
-  "housing.risk.reason.no_photos": "No photos",
-  "housing.risk.reason.missing_accessibility_info": "No accessibility info",
 
   // ── Consolidated platform reports (ADM-17/ADM-19) — /admin/reports ──
   "reports.title": "Platform <em>reports</em>",
@@ -4263,7 +4216,6 @@ export const admin: Catalog = {
   // ── AdminHousingListingsPage — the housing review console (LOC-01) ──────
   // Every member listing lands in `review` and public browse serves `live`
   // only, so nothing reached the board until this console existed.
-  "housingListings.nav": "Housing listings",
   "housingListings.title": "Housing <em>review.</em>",
   "housingListings.eyebrow": "Housing board",
   "housingListings.header.title": "Homes waiting on a <em>decision.</em>",
@@ -4832,9 +4784,111 @@ export const admin: Catalog = {
   "moderation.ratification.title": "Remove {name} from QueerPulse",
 
   // Remaining section 1 moderation keys.
-  "appeal.live.decidedLabel": "Decided on",
-  "appeal.live.dueLabel": "A decision is due by",
   "moderation.tabs.ratification": "Waiting on a second look",
+  "moderation.tabs.health": "Queue health",
+
+  // ── TS-04. Moderator workload and SLA health. ─────────────────────────────
+  // The tone rule for every string below: it describes the STATE OF THE WORK
+  // and never the performance of a person. Nothing here counts what anyone got
+  // through, ranks anyone, or implies that a backlog is somebody's fault. This
+  // surface exists to catch a rota being overloaded before it burns out, and
+  // copy that reads as pressure would cause the thing it is here to prevent.
+  "moderationHealth.intro":
+    "What is waiting across every queue, and how each one reads against the windows we publish. This is about the size of the work, so it can be shared out before it gets heavy.",
+  "moderationHealth.summaryAriaLabel": "Overall queue health",
+  "moderationHealth.overallExplainer":
+    "The worst queue sets this, so nothing gets averaged away.",
+  "moderationHealth.activeModerators_one":
+    "{count} person can work these queues",
+  "moderationHealth.activeModerators_other":
+    "{count} people can work these queues",
+  "moderationHealth.measuredAt": "Measured at {time}",
+  "moderationHealth.loadError":
+    "Could not read the queues just now. Try again in a moment.",
+
+  // Three levels and no more. `ok` means nothing to say, `warning` means plan
+  // to work it, `critical` means a published window has already passed.
+  "moderationHealth.severity.ok": "Clear",
+  "moderationHealth.severity.warning": "Getting busy",
+  "moderationHealth.severity.critical": "Needs someone now",
+
+  // The client owns these names: the wire carries only the stable queue key.
+  "moderationHealth.queue.invite_requests": "Invite requests",
+  "moderationHealth.queue.reports": "Reports",
+  "moderationHealth.queue.appeals": "Appeals",
+  "moderationHealth.queue.verification": "Verification requests",
+  "moderationHealth.queue.ban_ratifications": "Bans waiting on a second look",
+  "moderationHealth.queue.unknown": "Another queue",
+
+  // Which of the three axes tripped, said as what it means rather than as the
+  // field name.
+  "moderationHealth.breachesLabel": "What tipped it:",
+  "moderationHealth.breach.depth": "a lot is waiting",
+  "moderationHealth.breach.oldest": "something has waited a long time",
+  "moderationHealth.breach.overdue": "windows we published have passed",
+
+  "moderationHealth.stat.depth": "Waiting",
+  "moderationHealth.stat.oldest": "Longest wait",
+  // Null oldest means the queue is EMPTY, which is the best news here.
+  "moderationHealth.stat.oldestEmpty": "Nothing waiting",
+  "moderationHealth.stat.overdue": "Past its window",
+  "moderationHealth.stat.unassigned": "Unclaimed",
+  // Null unassigned means this queue has no claiming at all. A zero would read
+  // as "everything is claimed", which is the opposite of what the null says.
+  "moderationHealth.stat.unassignedNotApplicable": "Not applicable",
+  "moderationHealth.stat.unassignedNoClaiming":
+    "This queue has no claiming step",
+  "moderationHealth.stat.perModerator": "Each, if shared out",
+  // Null per-moderator means there are zero active moderators.
+  "moderationHealth.stat.noModerators": "Nobody on rota",
+  "moderationHealth.stat.noModeratorsNote":
+    "No active moderator or admin accounts",
+  "moderationHealth.stat.median": "Usual turnaround",
+
+  // Read off the response, never restated here: the bands move in one backend
+  // edit and this line moves with them.
+  "moderationHealth.threshold.warnsAt": "Flags at {value}",
+  "moderationHealth.threshold.criticalAt": "Needs someone at {value}",
+  "moderationHealth.threshold.pastCritical": "Already past {value}",
+
+  "moderationHealth.hours_one": "{value} hour",
+  "moderationHealth.hours_other": "{value} hours",
+
+  // The compact reading, shown only at warning or critical.
+  "moderationHealth.indicator.warning_one": "{count} queue is getting busy.",
+  "moderationHealth.indicator.warning_other":
+    "{count} queues are getting busy.",
+  "moderationHealth.indicator.critical_one": "{count} queue needs someone now.",
+  "moderationHealth.indicator.critical_other":
+    "{count} queues need someone now.",
+  "moderationHealth.indicator.cta": "See queue health",
+
+  // The staff notification. `ok` is the recovery notice, so it closes the
+  // alert rather than opening one. No copy here asks anyone to hurry.
+  "moderationHealth.notification.warning.text_one":
+    "{queue} has {count} item waiting, {overdue}. Longest wait: {oldest}.",
+  "moderationHealth.notification.warning.text_other":
+    "{queue} has {count} items waiting, {overdue}. Longest wait: {oldest}.",
+  "moderationHealth.notification.warning.meta":
+    "Worth a look when someone has time.",
+  "moderationHealth.notification.critical.text_one":
+    "{queue} has {count} item waiting, {overdue}. Longest wait: {oldest}.",
+  "moderationHealth.notification.critical.text_other":
+    "{queue} has {count} items waiting, {overdue}. Longest wait: {oldest}.",
+  "moderationHealth.notification.critical.meta":
+    "Past a window we published. If nobody is free, say so in the staff room.",
+  "moderationHealth.notification.ok.text_one":
+    "{queue} is back to normal, with {count} item waiting.",
+  "moderationHealth.notification.ok.text_other":
+    "{queue} is back to normal, with {count} items waiting.",
+  "moderationHealth.notification.ok.meta":
+    "Nothing to do. Thanks for clearing it.",
+  "moderationHealth.notification.overdueToken_one": "{value} past its window",
+  "moderationHealth.notification.overdueToken_other":
+    "{value} past their window",
+  "moderationHealth.notification.oldestToken_one": "{value} hour",
+  "moderationHealth.notification.oldestToken_other": "{value} hours",
+  "moderationHealth.notification.oldestNone": "nothing waiting",
 
   // ââ Volunteer hours report (SUS-05) âââââââââââââââââââââââââââââââââââââââ
   // Admin oversight of volunteering: confirmed sessions and hours over a

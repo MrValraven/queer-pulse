@@ -225,6 +225,20 @@ export type NotificationKind =
   // the outing/doxxing case the SLA is written for.
   | "report_filed"
   | "community_report_filed"
+  // TS-04. Sent to platform staff when a moderation queue crosses its own
+  // published threshold, and again with `severity: "ok"` when it recovers.
+  // Payload: `{ source: "moderation", queue, severity, depth, overdueCount,
+  // oldestItemHours }`. Staff-only, unmutable, no actor, never pushed to a
+  // phone: it is duty mail about the state of the work, and a phone buzzing
+  // about a backlog at midnight is the burnout this feature exists to reduce.
+  //
+  // Its copy lives in the `admin:` namespace rather than `notifications:`,
+  // which is the one exception in this file. Every word of it (the queue
+  // names, the severity levels) is admin vocabulary shared with the queue
+  // health panel, it is served only to moderators and admins, and there is
+  // deliberately no member-facing counterpart to any of it. See
+  // `moderationQueueAlertKey` below.
+  | "moderation_queue_alert"
   // Sent to a community's owner, co-owners and moderators when PLATFORM STAFF
   // offer that community support (mirrors the backend `notifications_type_enum`
   // value added in
@@ -385,6 +399,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   // -links into mod tools rather than into the community's own activity.
   report_filed: "platform",
   community_report_filed: "platform",
+  // A queue crossing its threshold is platform duty mail, same tab as
+  // report_filed, and it deep-links into the moderation console.
+  moderation_queue_alert: "platform",
   // An offer of support sits beside `community_report_filed` for the same
   // reason: it is the platform handing a community's staff something to
   // answer, and it deep-links into mod tools rather than into the community's
@@ -874,6 +891,80 @@ function signInTimeToken(
   return `${fmt.date(date, { day: "numeric", month: "short" })}, ${fmt.time(date)}`;
 }
 
+/** The queues TS-04 measures. Guarded so a queue key this build has no copy
+ *  for degrades to a neutral phrase instead of printing a snake_case token. */
+const MODERATION_QUEUE_KEYS = [
+  "invite_requests",
+  "reports",
+  "appeals",
+  "verification",
+  "ban_ratifications",
+] as const;
+
+/**
+ * The `admin:` key prefix a `moderation_queue_alert` row's copy lives under.
+ *
+ * The payload's `severity` carries the level, exactly as `report_filed` keeps
+ * its four urgency levels in the payload rather than minting a notification
+ * type per level, and `ok` is the RECOVERY notice rather than an absence of
+ * one. An unrecognised level resolves to `warning`: it says "look at this"
+ * without claiming either that the platform is failing somebody or that a
+ * queue has recovered, neither of which this row would know.
+ */
+function moderationQueueAlertKey(payload: unknown): string {
+  const severity = (payload as { severity?: string } | null)?.severity;
+  const level =
+    severity === "ok" || severity === "critical" ? severity : "warning";
+  return `admin:moderationHealth.notification.${level}`;
+}
+
+/**
+ * The queue name, the overdue count and the oldest wait as ready phrases.
+ *
+ * Three numbers and one `{count}` slot: CLDR selection in `translate.ts` keys
+ * off `count` alone, so the headline number (the depth) takes it and the other
+ * two are pluralised here into their own tokens. `oldestItemHours` is nullable
+ * on the wire, and a null means the queue is EMPTY, which the recovery copy
+ * has to be able to say.
+ */
+function moderationQueueAlertTokens(
+  payload: unknown,
+  t: TFunction,
+  fmt?: Formatters,
+): Record<string, string | number> {
+  const alert = payload as {
+    queue?: string;
+    depth?: number;
+    overdueCount?: number;
+    oldestItemHours?: number | null;
+  } | null;
+  const queue = alert?.queue;
+  const isKnownQueue = MODERATION_QUEUE_KEYS.some((key) => key === queue);
+  const overdueCount =
+    typeof alert?.overdueCount === "number" ? alert.overdueCount : 0;
+  const oldestItemHours =
+    typeof alert?.oldestItemHours === "number" ? alert.oldestItemHours : null;
+  const formatNumber = (value: number) =>
+    fmt ? fmt.number(value) : String(value);
+  return {
+    count: typeof alert?.depth === "number" ? alert.depth : 0,
+    queue: isKnownQueue
+      ? t(`admin:moderationHealth.queue.${queue}`)
+      : t("admin:moderationHealth.queue.unknown"),
+    overdue: t("admin:moderationHealth.notification.overdueToken", {
+      count: overdueCount,
+      value: formatNumber(overdueCount),
+    }),
+    oldest:
+      oldestItemHours === null
+        ? t("admin:moderationHealth.notification.oldestNone")
+        : t("admin:moderationHealth.notification.oldestToken", {
+            count: oldestItemHours,
+            value: formatNumber(oldestItemHours),
+          }),
+  };
+}
+
 /**
  * Render a backend notification (`type` + structured `payload`) into display
  * text, through i18n keys rather than hardcoded English — this is why the
@@ -896,6 +987,21 @@ export function formatNotification(
   fmt?: Formatters,
 ): FormattedNotification {
   const known = isKnownKind(type);
+  // TS-04 is the ONE type whose copy lives outside the `notifications:`
+  // namespace. Its whole vocabulary is admin vocabulary shared with the queue
+  // health panel, and it is served only to moderators and admins, so it is
+  // resolved here and returns early rather than falling through to the
+  // `notifications:type.*` lookup every other kind uses.
+  if (type === "moderation_queue_alert") {
+    const key = moderationQueueAlertKey(payload);
+    const tokens = moderationQueueAlertTokens(payload, t, fmt);
+    return {
+      text: t(`${key}.text`, tokens),
+      meta: t(`${key}.meta`, tokens),
+      category: "platform",
+      kind: "moderation_queue_alert",
+    };
+  }
   let key: string;
   if (!known) {
     key = FALLBACK_KEY;

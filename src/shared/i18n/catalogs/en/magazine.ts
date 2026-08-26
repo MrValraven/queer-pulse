@@ -242,8 +242,6 @@ export const magazine: Catalog = {
   "deck.editor.tint.jade": "Jade",
   "deck.editor.tint.plum": "Plum",
   "deck.editor.tint.auth": "Solid",
-  "deck.editor.newTitle": "New deck",
-  "deck.editor.editTitle": "Edit deck",
   "deck.editor.saveDraft": "Save draft",
   "deck.editor.publish": "Publish",
   "deck.editor.unpublish": "Unpublish",
@@ -289,8 +287,6 @@ export const magazine: Catalog = {
   "deck.editor.convertModal.body":
     "Text and image slides carry straight over into article blocks, and each stat becomes a stats block. Interactive slides (before/after, reveal) have no article equivalent and will be dropped. This can't be undone.",
   "deck.editor.convertModal.cta": "Convert to article",
-  "deck.editor.convertModal.toast":
-    "Deck-to-article conversion isn't wired up yet.",
   "deck.editor.convertModal.successToast": "Converted to an article draft.",
   "deck.editor.convertModal.partialToast":
     "Converted, but {dropped} couldn't carry over and were dropped.",
@@ -503,198 +499,33 @@ export const magazine: Catalog = {
   // Only the platform-authored dashboard UI is translated below.
 
   // ── Stage vocabulary — label-key indirection (Stage stays the stored id) ──
-  "editor.stage.commissioned": "Commissioned",
-  "editor.stage.drafting": "Drafting",
-  "editor.stage.inReview": "In review",
-  "editor.stage.firstEdit": "First edit",
-  "editor.stage.copyedit": "Copyedit",
-  "editor.stage.factCheck": "Fact-check",
-  "editor.stage.sensitivityRead": "Sensitivity read",
-  "editor.stage.ready": "Ready",
 
   // ── dueInfo() / blockedLine() composers (editorDashboard.data.ts) ─────────
-  "editor.due.ready": "Ready",
-  "editor.due.today": "Today",
-  "editor.due.late": "Late · {days}d",
-  "editor.due.inDays": "in {days}d",
-  "editor.blocked.inYourCourt": "→ in your court",
-  "editor.blocked.inEditorsCourt": "→ in {editor}’s court",
-  "editor.blocked.waitingOnWriter": "waiting on {name}",
 
   // ── EditorDashboardHeader ──────────────────────────────────────────────
-  "editor.header.eyebrow": "Editorial · Issue {number} dashboard",
   "editor.header.title": "Issue {number} · <em>{theme}</em>",
   "editor.header.meta":
     "Closes <b>{closes}</b> · publishes <b>{publishes}</b> · <b>{editors}</b> editing",
-  "editor.header.viewingAs": "Viewing as",
-  "editor.header.viewingAsAria": "View the dashboard as this editor",
-  "editor.header.commissionCta": "+ Commission",
 
   // ── EditorStats ────────────────────────────────────────────────────────
-  "editor.stats.piecesInFlight": "Pieces in flight",
-  "editor.stats.readyToLayOut": "Ready to lay out",
-  "editor.stats.behindSchedule": "Behind schedule",
-  "editor.stats.pitchesInInbox": "Pitches in inbox",
 
   // ── EditorBulkBar ──────────────────────────────────────────────────────
-  "editor.bulkBar.selected_one": "{count} pitch selected",
-  "editor.bulkBar.selected_other": "{count} pitches selected",
-  "editor.bulkBar.accept": "Accept",
-  "editor.bulkBar.maybe": "Maybe",
-  "editor.bulkBar.decline": "Decline",
-  "editor.bulkBar.clear": "Clear",
-  "editor.bulkBar.note":
-    "Accepting or declining sends each writer a templated reply automatically.",
 
   // ── EditorToolbar ──────────────────────────────────────────────────────
-  "editor.toolbar.searchPlaceholder": "Search pieces, pitches, contributors…",
-  "editor.toolbar.searchAria": "Search",
-  "editor.toolbar.clearSearchAria": "Clear search",
-  "editor.toolbar.filterEditorAria": "Filter by editor",
-  "editor.toolbar.allEditors": "All editors",
-  "editor.toolbar.filterStatusAria": "Filter by status",
-  "editor.toolbar.status.all": "All statuses",
-  "editor.toolbar.status.late": "Late",
-  "editor.toolbar.status.blocked": "In an editor’s court",
-  "editor.toolbar.status.ready": "Ready",
-  "editor.toolbar.filterSectionAria": "Filter by section",
-  "editor.toolbar.allSections": "All sections",
-  "editor.toolbar.sortAria": "Sort pieces",
-  "editor.toolbar.sort.due": "Sort · deadline",
-  "editor.toolbar.sort.status": "Sort · stage",
-  "editor.toolbar.sort.editor": "Sort · editor",
-  "editor.toolbar.sort.section": "Sort · section",
-  "editor.toolbar.sort.words": "Sort · length",
-  "editor.toolbar.myQueueOn": "My queue · on",
-  "editor.toolbar.myQueue": "My queue",
-  "editor.toolbar.shortcutsHint": "Press <kbd>?</kbd> for shortcuts",
 
   // ── EditorPiecesTable ──────────────────────────────────────────────────
-  "editor.piecesTable.heading": "Pieces · <em>in flight</em>",
-  "editor.piecesTable.countLabel": "{count} · {sort}",
-  "editor.piecesTable.columnPieceEditorArt": "Piece · editor · art",
-  "editor.piecesTable.columnStage": "Stage",
-  "editor.piecesTable.columnDue": "Due",
-  "editor.piecesTable.emptyNoneTitle": "Nothing in flight yet",
-  "editor.piecesTable.emptyNoneBody":
-    "No pieces are in the pipeline right now. Accept a pitch below or commission one, and it'll land here to edit.",
-  "editor.piecesTable.emptyFilteredTitle": "No pieces match",
-  "editor.piecesTable.emptyFilteredBody": "Try clearing the search or filters.",
-  "editor.piecesTable.clearFiltersCta": "Clear filters",
 
   // ── EditorPieceRow ─────────────────────────────────────────────────────
-  "editor.pieceRow.withEditor": "with {editor}",
-  "editor.pieceRow.newVoice": "new voice",
-  "editor.pieceRow.open": "Open",
-  "editor.pieceRow.moreActionsAria": "More actions",
 
   // ── EditorPopover (Popover / StageMenu / AssignMenu / MoreMenu) ───────────
-  "editor.popover.movePiece": "Move “{title}”",
-  "editor.popover.current": "current",
-  "editor.popover.editorForPiece": "Editor for this piece",
-  "editor.popover.piecesCount_one": "{count} piece",
-  "editor.popover.piecesCount_other": "{count} pieces",
-  "editor.popover.piecesCountCurrent_one": "{count} piece · current",
-  "editor.popover.piecesCountCurrent_other": "{count} pieces · current",
-  "editor.popover.handOffWithNote": "Hand off with a note…",
-  "editor.popover.nudge": "Nudge {name}…",
-  "editor.popover.handOffToCoEditor": "Hand off to co-editor…",
-  "editor.popover.previewInLayout": "Preview in layout",
-  "editor.popover.duplicateBrief": "Duplicate brief",
 
   // ── EditorPitchInbox ───────────────────────────────────────────────────
-  "editor.pitchInbox.heading": "Pitch inbox · <em>{total}</em>",
-  "editor.pitchInbox.subhead": "avg response 6 days · triage in bulk ↓",
-  "editor.pitchInbox.emptyMatch": "No pitches match “{query}”",
-  "editor.pitchInbox.selectAria": "Select pitch from {name}",
-  "editor.pitchInbox.showMore": "Show {count} more pitches",
-  "editor.pitchInbox.yes": "Yes",
-  "editor.pitchInbox.maybe": "Maybe",
-  "editor.pitchInbox.no": "No",
 
   // ── EditorNeedsStrip ───────────────────────────────────────────────────
-  "editor.needsStrip.allClear":
-    "You’re all clear, {name}. Nothing late and nothing waiting in your court. <emph>Nice.</emph>",
-  "editor.needsStrip.heading": "Needs you now · <em>{count}</em>",
-  "editor.needsStrip.yourCourt": "Your court",
-  "editor.needsStrip.writerHasntFiled": "Writer hasn’t filed",
-  "editor.needsStrip.overdueAt": "Overdue at {stage}",
-  "editor.needsStrip.sittingInCourt": "Sitting in your court · {stage}",
-  "editor.needsStrip.chase": "Chase {name}",
-  "editor.needsStrip.pickUp": "Pick up",
 
   // ── EditorModals: Chase / Handoff / Shortcuts ─────────────────────────
-  "editor.modals.chase.eyebrowFirstTime": "Nudge · first-time contributor",
-  "editor.modals.chase.eyebrow": "Nudge · contributor",
-  "editor.modals.chase.title": "Message {name}",
-  "editor.modals.chase.cancel": "Cancel",
-  "editor.modals.chase.send": "Send nudge",
-  "editor.modals.chase.softHint":
-    "Softer tone: this is one of their first pieces with us.",
-  "editor.modals.chase.messageAria": "Message to contributor",
-  "editor.modals.chase.offerExtension": "Offer a deadline extension",
-  "editor.modals.chase.bodyNewVoice":
-    "Hi {name}, no pressure at all, just checking in on “{title}”. How's it feeling? Happy to hop on a call or push the date if that would help. We're really glad to have you in this issue.",
-  "editor.modals.chase.bodyReturning":
-    "Hi {name}, gentle nudge on “{title}”, currently at {stage} and due {due}. Let me know if anything's getting in the way, and we'll sort it together.",
-  "editor.modals.handoff.eyebrow": "Hand off",
-  "editor.modals.handoff.title": "Pass “{title}”",
-  "editor.modals.handoff.cancel": "Cancel",
-  "editor.modals.handoff.cta": "Hand off",
-  "editor.modals.handoff.handTo": "Hand to",
-  "editor.modals.handoff.noteLabel": "Note",
-  "editor.modals.handoff.noteWriterWaiting":
-    "@{editor} handing this over. It's at {stage}, still waiting on the writer. Shout if you want context.",
-  "editor.modals.handoff.noteReady":
-    "@{editor} handing this over. It's at {stage}, ready for your eyes. Shout if you want context.",
-  "editor.modals.shortcuts.eyebrow": "Keyboard",
-  "editor.modals.shortcuts.title": "Shortcuts",
-  "editor.modals.shortcuts.gotIt": "Got it",
-  "editor.modals.shortcuts.moveBetweenPieces": "Move between pieces",
-  "editor.modals.shortcuts.openFocusedPiece": "Open focused piece",
-  "editor.modals.shortcuts.nudgeWriter": "Nudge writer of focused piece",
-  "editor.modals.shortcuts.acceptDeclineMaybe":
-    "Accept / decline / maybe top pitch",
-  "editor.modals.shortcuts.search": "Search",
-  "editor.modals.shortcuts.thisHelp": "This help",
 
   // ── EditorSideCards ────────────────────────────────────────────────────
-  "editor.sideCards.progressHeading": "Issue {number} progress",
-  "editor.sideCards.piecesReady": "Pieces ready",
-  "editor.sideCards.wordCount": "Word count",
-  "editor.sideCards.timeToClose": "Time to close",
-  "editor.sideCards.daysLeft_one": "{count} day",
-  "editor.sideCards.daysLeft_other": "{count} days",
-  "editor.sideCards.editorLoadHeading": "Editor load",
-  "editor.sideCards.you": "you",
-  "editor.sideCards.piecesWords": "{count} pieces · {words}w",
-  "editor.sideCards.lateCount_one": "{count} late",
-  "editor.sideCards.lateCount_other": "{count} late",
-  "editor.sideCards.loadHintOtherMore":
-    "{editor} is carrying {amount} more words. Reassign to balance.",
-  "editor.sideCards.loadHintBalanced":
-    "Load is evenly balanced across editors.",
-  "editor.sideCards.sectionBudgetHeading": "Section budget",
-  "editor.sideCards.slotsOpen_one": "{count} slot open",
-  "editor.sideCards.slotsOpen_other": "{count} slots open",
-  "editor.sideCards.needCount": "need {count}",
-  "editor.sideCards.filledAria": "filled",
-  "editor.sideCards.contributorsHeading": "Contributors · this issue",
-  "editor.sideCards.newVoices": "new voices",
-  "editor.sideCards.returning": "returning",
-  "editor.sideCards.contributorPay": "Contributor pay",
-  "editor.sideCards.paid": "paid",
-  "editor.sideCards.awaiting": "awaiting",
-  "editor.sideCards.toInvoice": "to invoice",
-  "editor.sideCards.matching": "Matching: {names}",
-  "editor.sideCards.noContributorMatch": "No contributor matches",
-  "editor.sideCards.seeContributorProfiles": "See contributor profiles",
-  "editor.sideCards.recentActivity": "Recent activity",
-  "editor.sideCards.quickActions": "Quick actions",
-  "editor.sideCards.sendPitchDecisions": "Send pitch decisions in bulk",
-  "editor.sideCards.emailContributorsWaiting": "Email contributors waiting",
-  "editor.sideCards.previewIssueLayout": "Preview issue layout",
-  "editor.sideCards.exportContributorList": "Export contributor list (CSV)",
 
   // ── EditorDecksSection ──────────────────────────────────────────────────
   "editor.decks.title": "Interactive decks",
@@ -711,32 +542,8 @@ export const magazine: Catalog = {
   "editor.decks.edit": "Edit",
 
   // ── EditorDashboardPage ────────────────────────────────────────────────
-  "editor.page.emptyTitle": "The desk is clear",
-  "editor.page.emptyDescription":
-    "No pieces in flight and no pitches waiting. When writers pitch or you commission a piece, it'll show up here to triage and edit.",
-  "editor.page.everyPitchLoaded": "That’s every pitch loaded in this prototype",
 
   // ── useEditorDashboard / useEditorKeyboard toasts ──────────────────────
-  "editor.toast.stageChanged": "“{title}” → {stage}",
-  "editor.toast.reassigned": "Reassigned to {editor}",
-  "editor.toast.handedOff": "Handed to {editor} with a note",
-  "editor.toast.triageAccepted": "Accepted",
-  "editor.toast.triageMaybeSaved": "Saved to Maybe",
-  "editor.toast.triageDeclined": "Declined",
-  "editor.toast.triageSingle": "{verdict} · {name}",
-  "editor.toast.bulkAccepted": "Accepted",
-  "editor.toast.bulkMaybeMoved": "Moved to Maybe",
-  "editor.toast.bulkDeclined": "Declined",
-  "editor.toast.bulkResult_one":
-    "{verdict} {count} pitch · templated replies sent",
-  "editor.toast.bulkResult_other":
-    "{verdict} {count} pitches · templated replies sent",
-  "editor.toast.nudgeSent": "Nudge sent to {name}",
-  "editor.toast.briefDuplicated": "Brief duplicated to drafts",
-  "editor.toast.openingBulkTriage": "Opening bulk pitch triage",
-  "editor.toast.draftingReminders":
-    "Drafting reminders to {count} contributors",
-  "editor.toast.contributorListExported": "Contributor list exported (CSV)",
 
   // ══════════════════ Editor desk (Phase 1 redesign) ═══════════════════════
   // The desk/* components render a newer, more detailed dashboard than the
@@ -1014,10 +821,8 @@ export const magazine: Catalog = {
   "desk.modals.handoff.toLabel": "To",
 
   // ── DeskView ─────────────────────────────────────────────────────────────
-  "desk.view.notificationsAria": "Notifications",
 
   // ── EditorDashboardPage ──────────────────────────────────────────────────
-  "desk.page.stubOpensLater": "Opens in a later release.",
   "desk.page.savingViewsUnavailable":
     "Saving custom views isn't available yet.",
 
@@ -1429,9 +1234,6 @@ export const magazine: Catalog = {
   // treatment as `data/articles.tsx`. Only the connecting byline word, the
   // shared "more from the community" heading, the profile-link CTA and the
   // closing Outro CTAs are platform chrome, translated below.
-  "story.wordsBy": "Words by",
-  "story.moreHeading": "More from <em>the community</em>",
-  "story.viewProfileCta": "View profile",
   "story.outro.studio.title":
     "Want to be part of what <em>gets written about next?</em>",
   "story.outro.studio.sub":
@@ -1445,7 +1247,6 @@ export const magazine: Catalog = {
     "We're not for everyone. But if this resonates, you might be for us.",
   // Byline author for the safety piece — the platform team, not an individual
   // writer, so it is chrome and translated (read time and date stay editorial).
-  "story.safety.byline": "The QueerPulse team",
 
   // ══════════════════ Article editor (ArticleEditorPage + desk/editor/*) ═══
   // Chrome for the block-based article-writing surface. The headline/
@@ -1862,8 +1663,6 @@ export const magazine: Catalog = {
   "writer.work.paymentLabel": "Payment",
   "writer.work.fileDraft": "File a draft",
   "writer.work.readBrief": "Read the brief",
-  "writer.work.readBriefToast":
-    "The full brief lives on the piece record. Coming soon here.",
   "writer.work.messageEditor": "Message editor",
   "writer.work.activeBadge": "Active",
   "writer.work.setActive": "Use for byline & terms",
@@ -1872,7 +1671,6 @@ export const magazine: Catalog = {
   "writer.brief.title": "Brief: {title}",
   "writer.brief.angleLabel": "Angle",
   "writer.brief.wantsLabel": "What we want",
-  "writer.brief.emptyWants": "No specific asks noted.",
   "writer.brief.avoidLabel": "What to avoid",
   "writer.brief.wordCountLabel": "Target length",
   "writer.brief.rateLabel": "Rate",
@@ -1958,7 +1756,6 @@ export const magazine: Catalog = {
   "pieceThread.sentToast": "Message sent.",
 
   // ══════════════════ Apply to write ═══════════════════════════════════════
-  "applyToWrite.intro.eyebrow": "Write for us",
   "applyToWrite.intro.title": "Show us <em>what you've got.</em>",
   "applyToWrite.intro.lead":
     "Every story that reaches an editor starts here. Tell us why you want to write for QueerPulse and share a sample of your writing: pasted in, or a link to something you've already published.",
@@ -1985,7 +1782,6 @@ export const magazine: Catalog = {
   "applyToWrite.approved.body":
     "Your application was approved. Head over to the submission page to send your first pitch.",
   "applyToWrite.approved.cta": "Start writing",
-  "applyToWrite.backCta": "Back to the magazine",
 
   // ── ArticleComments (comments/) — CNT-10 reader comments ────────────────
   "comments.heading_one": "{count} comment",

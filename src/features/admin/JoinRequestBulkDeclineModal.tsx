@@ -5,6 +5,7 @@ import {
   DECLINE_REASONS,
   declineReasonLabelKey,
 } from "../auth/api/joinRequestDeclineReason";
+import styles from "./JoinRequestBulk.module.css";
 
 /**
  * The bulk sibling of `JoinRequestDeclineModal` (Task 1) — a SEPARATE
@@ -67,6 +68,19 @@ export function JoinRequestBulkDeclineModal({
           placeholder={t("admin:members.verify.declineModal.reasonPlaceholder")}
         />
       </FormField>
+      {/* The confirmation proper: one line naming the reason that will be
+          written against every selected request, so the reviewer confirms
+          against what is about to be recorded rather than against a dropdown
+          they might have mis-clicked. Announced, since it appears only once a
+          reason is chosen. */}
+      {reason && (
+        <p className={styles.reasonLine} role="status">
+          {t("admin:members.verify.bulk.confirmDecline.reasonLine", {
+            count,
+            reason: t(declineReasonLabelKey(reason)),
+          })}
+        </p>
+      )}
     </Modal>
   );
 }

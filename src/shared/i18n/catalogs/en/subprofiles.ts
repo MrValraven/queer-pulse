@@ -46,7 +46,6 @@ export const subprofiles: Catalog = {
   "card.followerCount_one": "{count} follower",
   "card.followerCount_other": "{count} followers",
   "card.openPersona": "Open this persona",
-  "card.view": "View",
 
   // Main-profile "Also as…" block (ProfileSubprofilesSection)
   "alsoAs.title": "Also working as",
@@ -62,8 +61,6 @@ export const subprofiles: Catalog = {
   "alsoAs.featuredEyebrow": "Featured",
   "alsoAs.addAnother": "Add another persona",
   "alsoAs.edit": "Edit",
-  "alsoAs.moveUp": "Move up",
-  "alsoAs.moveDown": "Move down",
   "alsoAs.expandCard": "Show details",
   "alsoAs.filterLabel": "Filter by craft",
   "alsoAs.filterAll": "All",
@@ -86,12 +83,6 @@ export const subprofiles: Catalog = {
   "alsoAs.sidesPrompt.notNow": "Not now",
 
   // Nav + command palette
-  "nav.browse": "Personas",
-  "nav.mine": "Your personas",
-  "command.mine.name": "My personas",
-  "command.mine.sub": "Your professional personas",
-  "command.browse.name": "Browse personas",
-  "command.browse.sub": "The persona directory",
 
   // Directory headline (SubprofileDirectoryPage) — the coral <em> left raw
   // JSX before <Translation> existed; now routed through it.
@@ -426,7 +417,6 @@ export const subprofiles: Catalog = {
   "mine.count": "{n} of {max}",
   "mine.atCap": "You've reached the most personas one account can hold.",
   "mine.untitled": "Untitled persona",
-  "mine.defaultName": "That persona",
   "mine.toastDeleted": "{name} deleted",
   "mine.toastDeleteError": "We couldn't delete that just now. Try again.",
   "mine.deleteModalTitle": "Delete this persona?",
@@ -474,11 +464,9 @@ export const subprofiles: Catalog = {
   "editor.notFoundDescription":
     "It may have been removed, or the link isn't quite right.",
   "editor.notFoundAction": "Back to your personas",
-  "editor.backLink": "Your personas",
 
   // Meta editor (useSubprofileMetaEditor, fed to the Identity/Presence/
   // Address rail panes)
-  "metaForm.sectionTitle": "The basics",
   "metaForm.avatarLabel": "Avatar",
   "metaForm.avatarPlaceholder": "Avatar",
   "metaForm.displayNameLabel": "Display name",
@@ -494,7 +482,6 @@ export const subprofiles: Catalog = {
   "metaForm.bioPlaceholder": "A few sentences in your own words.",
   "metaForm.linkLabel": "Link to your main profile",
   "metaForm.addressLabel": "Profile address",
-  "metaForm.livesAt": "Lives at",
   "metaForm.addressPlaceholder": "e.g. engineering",
   "metaForm.handleLabel": "Handle",
   "metaForm.visibilityLabel": "Who can see it",
@@ -520,15 +507,10 @@ export const subprofiles: Catalog = {
     "Add both a label and a link to show a button on your page.",
   "metaForm.ctaMismatch": "Add both a label and a link, or leave both blank.",
 
-  "metaForm.save": "Save details",
-  "metaForm.saving": "Saving…",
   "metaForm.leaveConfirm":
     "You have unsaved changes to this profile. Leave without saving them?",
-  "metaForm.toastSaved": "Details saved",
-  "metaForm.toastError": "We couldn't save that just now. Try again.",
 
   // Item drawer (SubprofileItemDrawerFields, opened by SubprofileItemDrawer)
-  "itemEditor.itemNumber": "Item {n}",
   // Fallback label in a reorder row for an image-only item with no title
   // (e.g. a photo-gallery photo) — sits beside its thumbnail preview.
   "itemEditor.untitledPhoto": "Photo",
@@ -539,7 +521,6 @@ export const subprofiles: Catalog = {
   "itemEditor.tagsHelper": "Separate with commas",
   "itemEditor.feature": "Make this the spotlight",
   "itemEditor.unfeature": "Remove from spotlight",
-  "itemEditor.featuredBadge": "Featured",
 
   // Collaborator member picker (CollaboratorSelect, inside SubprofileItemDrawerFields)
   "itemEditor.collaboratorsLabel": "Collaborators",
@@ -558,10 +539,6 @@ export const subprofiles: Catalog = {
   "socialEditor.linkFor": "{platform} link",
   "socialEditor.removeLinkFor": "Remove {platform} link",
   "socialEditor.other": "Other link",
-  "socialEditor.save": "Save links",
-  "socialEditor.saving": "Saving…",
-  "socialEditor.saved": "Links saved",
-  "socialEditor.error": "We couldn't save that just now. Try again.",
   "socialEditor.capHint": "That's the most links you can add.",
 
   // Per-item links editor (projects / open-source items)
@@ -573,10 +550,6 @@ export const subprofiles: Catalog = {
   "sectionEditor.empty": "Nothing here yet. Add your first when you're ready.",
   "sectionEditor.addTo": "Add to {section}",
   "sectionEditor.capHint": "That's the most you can add to one section.",
-  "sectionEditor.save": "Save section",
-  "sectionEditor.saving": "Saving…",
-  "sectionEditor.toastSaved": "{section} saved",
-  "sectionEditor.toastError": "We couldn't save that just now. Try again.",
 
   // Publish panel (SubprofilePublishPanel)
   "publishPanel.successTitle": "You're",
@@ -693,8 +666,6 @@ export const subprofiles: Catalog = {
   // and the in-editor "Insert examples" affordance (SubprofileSectionEditor).
   // Section-item copy reads as friendly, editable placeholders — a creator
   // is meant to replace them with their own work, not keep them as-is.
-  "template.helper":
-    "Templates fill your sections with a couple of example items and a suggested tagline. Everything's yours to edit or clear.",
   "template.insertExamples": "Insert examples",
 
   // Per-kind suggested taglines — applied alongside the section templates,
@@ -867,15 +838,11 @@ export const subprofiles: Catalog = {
   "hero.endorse.endorsed": "Endorsed",
   "hero.endorse.count_one": "{count} endorsement",
   "hero.endorse.count_other": "{count} endorsements",
-  "hero.endorse.addNote": "Add a note",
-  "hero.endorse.notePlaceholder": "Say a word about why (optional)",
-  "hero.endorse.send": "Send",
   "hero.endorse.error": "We couldn't save that just now. Try again.",
   "hero.endorse.endorsedByNames": "Endorsed by {names}",
 
   // Endorse-with-note modal (EndorseSubprofileModal, EndorseSubprofileModalParts)
   "hero.endorse.modal.ariaLabel": "Endorse {name}",
-  "hero.endorse.modal.close": "Close",
   "hero.endorse.modal.eyebrow": "Add your endorsement",
   "hero.endorse.modal.title": "Endorse <em>{name}</em>",
   "hero.endorse.modal.sub":
@@ -920,14 +887,12 @@ export const subprofiles: Catalog = {
 
   // Share-card modal (SubprofileShareCard) + QR code (SubprofileQR) —
   // entry points in SubprofileHero (public) and MySubprofilesPage (owner).
-  "shareCard.cta": "QR code",
   "shareCard.title": "Take it with you",
   "shareCard.subtitle":
     "Scan to open {name}'s page on another device, or save the details below.",
   "shareCard.download": "Download contact card",
   "shareCard.qrAria": "QR code linking to {name}'s persona page",
   "shareCard.copyLink": "Copy link",
-  "qr.loading": "Generating QR code…",
   "qr.error": "Couldn't generate a QR code. Here's the link instead.",
 
   // Featured item spotlight (SubprofileSpotlight)
@@ -977,13 +942,11 @@ export const subprofiles: Catalog = {
   // Public persona page (SubprofilePage.tsx)
   "page.loading": "Loading persona…",
   "page.ownerTie": "Another persona from <em>{name}</em>",
-  "page.visit": "Visit",
   "page.notFoundTitle": "This persona isn't here",
   "page.notFoundMetaTitle": "Persona not found · QueerPulse",
   "page.notFoundDescription":
     "It may have been unpublished, kept private, or this link could be out of date. Nothing's wrong on your end.",
   "page.notFoundAction": "Browse personas",
-  "page.notFoundBack": "Go back",
 
   // The other three "can't show you this" walls (SubprofilePageStates) —
   // built and ready, not yet reachable from the current data layer (see
@@ -1060,10 +1023,6 @@ export const subprofiles: Catalog = {
     "We'll check it matches a real event or community when you save.",
   "affiliationsEditor.add": "Add a link",
   "affiliationsEditor.capHint": "That's the most links you can add.",
-  "affiliationsEditor.save": "Save links",
-  "affiliationsEditor.saving": "Saving…",
-  "affiliationsEditor.saved": "Links saved",
-  "affiliationsEditor.error": "We couldn't save that just now. Try again.",
 
   // Co-owners panel (SubprofileOwnersPanel, in the editor)
   "owners.title": "Co-owners",
@@ -1096,9 +1055,7 @@ export const subprofiles: Catalog = {
   "invite.title": "Invite a co-owner",
   "invite.sub": "They'll need to accept before they can manage this persona.",
   "invite.searchPlaceholder": "Search your connections",
-  "invite.searchAria": "Search your connections",
   "invite.empty": "No connections left to invite.",
-  "invite.cta": "Invite",
   "invite.inviting": "Inviting…",
   "invite.toastSent":
     "Invite sent. They'll need to accept before they can manage this persona.",
@@ -1164,6 +1121,7 @@ export const subprofiles: Catalog = {
   "reportModal.reasonLabel": "What's the concern?",
   "reportModal.reasons.impersonating": "Impersonating",
   "reportModal.reasons.hateOrHarassment": "Hate or harassment",
+  "reportModal.reasons.discrimination": "Discrimination or misgendering",
   "reportModal.reasons.notReal": "Not a real practice or service",
   "reportModal.reasons.sexualContent": "Sexual content without a warning",
   "reportModal.reasons.spam": "Spam",
@@ -1188,12 +1146,9 @@ export const subprofiles: Catalog = {
   "peopleModal.endorsementsTitle_other": "{count} endorsements",
   "peopleModal.loading": "Loading…",
   "peopleModal.noEndorsements": "No endorsements yet",
-  "peopleModal.noEndorsementsBody":
-    "When someone backs this persona's work, they'll show up here.",
   "peopleModal.noFollowers": "No followers yet",
   "peopleModal.noNote": "Endorsed without a note",
   "peopleModal.removeAriaLabel": "Remove your endorsement of {name}",
-  "peopleModal.removeCta": "Remove",
   "peopleModal.removeError": "We couldn't remove that just now. Try again.",
   "peopleModal.followersPrivateTitle": "Followers are private",
   "peopleModal.followersPrivateBody":
@@ -1439,7 +1394,6 @@ export const subprofiles: Catalog = {
   "editorRail.content": "Content",
   "editorRail.people": "People",
   "editorRail.publishGroup": "Publish",
-  "editorRail.publish": "Publish",
   "editorRail.getItLive": "Get it live",
 
   // Editor pane headers (EditorPaneRouter, editorPaneHeaders.data.ts) — the
@@ -1477,7 +1431,6 @@ export const subprofiles: Catalog = {
   "pending.area.socials": "Social links",
   "pending.area.affiliations": "Part of",
   "pending.metaEdited": "{field} edited",
-  "pending.metaSet": "{field} → {value}",
   "pending.metaImage": "{field} changed",
   "pending.metaImageRemoved": "{field} removed",
   "pending.rowSummary": "{area}: {summary}",

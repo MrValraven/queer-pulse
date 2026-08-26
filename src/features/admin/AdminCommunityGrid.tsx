@@ -119,7 +119,21 @@ function HealthCard({
   const color = healthColor(community.health);
 
   return (
-    <button type="button" className={styles.card} onClick={onOpen}>
+    <div className={styles.card}>
+      {/* The card's own action, as an overlay covering the card rather than a
+          wrapper around it. The health score below is a second control, and a
+          focusable element inside a `<button>` has no defined activation
+          behaviour and gets its text swallowed into the outer button's
+          accessible name. Overlaying also stops the whole card (name, tag,
+          score, three stats) being read out as one enormous button label. */}
+      <button
+        type="button"
+        className={styles.cardOpen}
+        onClick={onOpen}
+        aria-label={t("admin:communities.grid.openAriaLabel", {
+          name: community.name,
+        })}
+      />
       <div className={styles.cardHead}>
         <AdminAvatar
           initials={community.initials}
@@ -138,29 +152,21 @@ function HealthCard({
             )}
           </div>
         </div>
-        <span
-          role="button"
-          tabIndex={0}
+        {/* A sibling of the card's action, not a descendant of it, so it needs
+            no `stopPropagation`: there is no ancestor handler left to stop,
+            and a real `<button>` answers Enter and Space on its own. */}
+        <button
+          type="button"
           className={styles.scoreBtn}
           style={{ color }}
           aria-label={t("admin:communities.grid.healthAriaLabel", {
             score: community.health,
+            name: community.name,
           })}
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            onHealth();
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              event.stopPropagation();
-              onHealth();
-            }
-          }}
+          onClick={onHealth}
         >
           {community.health}
-        </span>
+        </button>
       </div>
 
       <Sparkline points={community.spark} color={color} />
@@ -180,7 +186,7 @@ function HealthCard({
           tone={community.reports > 0 ? "coral" : "jade"}
         />
       </div>
-    </button>
+    </div>
   );
 }
 

@@ -163,7 +163,7 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
 
 /**
  * Map the full `DirectoryDetailDTO` onto `DirectoryPlace` for the detail page.
- * `fmt` composes each upcoming event's localized "Sat 21 Jun · 20:00" line from
+ * `fmt` composes each upcoming event's localized "Sun 21 Jun · 20:00" line from
  * the DTO's ISO `startAt` (the server emits the primitive; the client formats).
  */
 export function detailDtoToPlace(

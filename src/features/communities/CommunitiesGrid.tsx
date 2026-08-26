@@ -4,6 +4,7 @@ import { useCommunityMembership } from "../../app/providers/useCommunityMembersh
 import { CommunityJoinFlowModal } from "./CommunityJoinFlowModal";
 import { CommunityCard } from "./CommunityCard";
 import { FeaturedCommunityCard } from "./FeaturedCommunityCard";
+import { SuggestedCommunitiesSection } from "./SuggestedCommunitiesSection";
 import { CommunitiesDiscoverControls } from "./CommunitiesDiscoverControls";
 import { CommunitiesDiscoverEmptyState } from "./CommunitiesDiscoverEmptyState";
 import { useDiscoverCommunities } from "./useDiscoverCommunities";
@@ -96,6 +97,19 @@ export function CommunitiesGrid({
             isJoined={isJoined(featured.slug, featured.myRole)}
           />
         </div>
+      )}
+
+      {/* "Suggested for you" sits between the featured hero and the browse
+          grid, the same slot the featured card occupies in the discovery
+          hierarchy. Discover only: on "My communities" every suggestion is by
+          definition a community the viewer has not joined, which is a stranger
+          in a list of your own. It also drops out the moment the member starts
+          narrowing the directory, same rule as the featured card: a
+          connection-ranked band is not an answer to a search they typed. The
+          section renders nothing when the list is empty, so most viewers see
+          no change here at all. */}
+      {scope === "discover" && !discover.hasActiveRefinement && (
+        <SuggestedCommunitiesSection excludeSlug={featured?.slug} />
       )}
 
       {!isShowingSkeletons && discover.visible.length === 0 ? (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Button,
   FormField,
@@ -9,7 +10,10 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useClaimListing } from "./api/useClaimListing";
+import { useListingClaimPolicy } from "./listBusiness/api/useListingClaims";
+import { routes } from "../../app/routeMap";
 import styles from "./DirectoryClaimModal.module.css";
 
 const NOTE_MAX_LENGTH = 2000;
@@ -33,7 +37,14 @@ export function DirectoryClaimModal({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { demoMode } = useDemoMode();
   const claim = useClaimListing(listingRef);
+  // The turnaround and the evidence hints come from GET /listings/claim-policy,
+  // never from a second copy in this component: the number promised here has to
+  // be the number the claim's own status line counts down against, and a
+  // moderation-queue commitment is a backend fact. Null in demo mode and while
+  // the read is in flight, which simply hides the block.
+  const { policy } = useListingClaimPolicy();
   const [note, setNote] = useState("");
   const [done, setDone] = useState(false);
 
@@ -62,6 +73,30 @@ export function DirectoryClaimModal({
           em={t("marketing:directory.detail.claim.successEm")}
           onClose={onClose}
           closeLabel={t("marketing:directory.detail.claim.doneCta")}
+          steps={
+            policy
+              ? [
+                  t("marketing:directory.detail.claim.policyTurnaround", {
+                    count: policy.reviewTurnaroundDays,
+                  }),
+                ]
+              : undefined
+          }
+          // Where the claim can be watched from here. QueerPulse sends no mail,
+          // so the claimant comes back to this page rather than waiting on a
+          // message that would never arrive.
+          //
+          // Live only, matching `DirectoryAsideOwner`'s guard on the same
+          // destination: a demo claim resolves in the browser and is never
+          // stored, so that page would answer this confirmation with "you
+          // haven't claimed a listing yet".
+          footer={
+            demoMode ? undefined : (
+              <Link className={styles.trackLink} to={routes.listingClaims}>
+                {t("marketing:directory.detail.claim.trackCta")}
+              </Link>
+            )
+          }
         >
           {t("marketing:directory.detail.claim.successBody", {
             name: placeName,
@@ -89,6 +124,34 @@ export function DirectoryClaimModal({
         />
       </h3>
       <p className={styles.sub}>{t("marketing:directory.detail.claim.sub")}</p>
+
+      {policy && (
+        <div className={styles.policy}>
+          <h4 className={styles.policyTitle}>
+            {t("marketing:directory.detail.claim.policyTitle")}
+          </h4>
+          <p className={styles.policyTurnaround}>
+            {t("marketing:directory.detail.claim.policyTurnaround", {
+              count: policy.reviewTurnaroundDays,
+            })}
+          </p>
+          {policy.evidenceHints.length > 0 && (
+            <>
+              <p className={styles.policyHintsLabel}>
+                {t("marketing:directory.detail.claim.policyHintsLabel")}
+              </p>
+              {/* Server-owned copy, rendered as written: the backend has no
+                  i18n layer, and these sentences are API-served content under
+                  the repo's scope rule, not shipped chrome. */}
+              <ul className={styles.policyHints}>
+                {policy.evidenceHints.map((hint) => (
+                  <li key={hint}>{hint}</li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      )}
 
       <FormField
         label={t("marketing:directory.detail.claim.noteLabel")}

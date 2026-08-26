@@ -19,6 +19,7 @@ type DoorFilter = "all" | "arrived" | "expected";
 export function DoorGuestList({
   attendees,
   checkedInCount,
+  canCheckIn,
   pendingSlug,
   hasMore,
   isLoadingMore,
@@ -27,7 +28,13 @@ export function DoorGuestList({
   onUndo,
 }: {
   attendees: AttendeeRow[];
-  checkedInCount: number;
+  /** How many have arrived, or `null` when the platform no longer keeps this
+   *  gathering's check-ins. Null withdraws the two arrival filters rather than
+   *  deriving them from a coerced zero. */
+  checkedInCount: number | null;
+  /** False once this gathering is past its attendance window, which withdraws
+   *  every row's check-in button. Undo is unaffected and stays live. */
+  canCheckIn: boolean;
   /** Whose row currently has a request in flight, if any. */
   pendingSlug: string | null;
   hasMore: boolean;
@@ -40,15 +47,22 @@ export function DoorGuestList({
   const [filter, setFilter] = useState<DoorFilter>("all");
   const [query, setQuery] = useState("");
 
+  // Once a gathering's check-ins are no longer kept, "arrived" and "expected"
+  // have no honest answer: the per-person arrival stamps were cleared along
+  // with the count, so both filters would read everyone as still to come.
+  // They are withdrawn, and the roster falls back to the whole list.
+  const isCheckInKept = checkedInCount !== null;
+  const activeFilter: DoorFilter = isCheckInKept ? filter : "all";
+
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return attendees.filter((attendee) => {
       const hasArrived = attendee.checkedInAt != null;
-      if (filter === "arrived" && !hasArrived) return false;
-      if (filter === "expected" && hasArrived) return false;
+      if (activeFilter === "arrived" && !hasArrived) return false;
+      if (activeFilter === "expected" && hasArrived) return false;
       return !needle || attendee.name.toLowerCase().includes(needle);
     });
-  }, [attendees, filter, query]);
+  }, [attendees, activeFilter, query]);
 
   const filterTabs: [DoorFilter, string][] = [
     [
@@ -57,19 +71,23 @@ export function DoorGuestList({
         count: attendees.length,
       }),
     ],
-    [
-      "arrived",
-      t("gatherings:dashboard.guestList.filterCheckedIn", {
-        count: checkedInCount,
-      }),
-    ],
-    [
-      "expected",
-      t("gatherings:dashboard.guestList.filterPending", {
-        count: Math.max(0, attendees.length - checkedInCount),
-      }),
-    ],
   ];
+  if (checkedInCount !== null) {
+    filterTabs.push(
+      [
+        "arrived",
+        t("gatherings:dashboard.guestList.filterCheckedIn", {
+          count: checkedInCount,
+        }),
+      ],
+      [
+        "expected",
+        t("gatherings:dashboard.guestList.filterPending", {
+          count: Math.max(0, attendees.length - checkedInCount),
+        }),
+      ],
+    );
+  }
 
   return (
     <div className={styles.card}>
@@ -82,8 +100,11 @@ export function DoorGuestList({
             <button
               key={id}
               type="button"
-              aria-pressed={filter === id}
-              className={[styles.afBtn, filter === id && styles.afBtnActive]
+              aria-pressed={activeFilter === id}
+              className={[
+                styles.afBtn,
+                activeFilter === id && styles.afBtnActive,
+              ]
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => setFilter(id)}
@@ -92,6 +113,11 @@ export function DoorGuestList({
             </button>
           ))}
         </div>
+        {isCheckInKept ? null : (
+          <p className={styles.doorRetentionNote}>
+            {t("gatherings:door.checkInsNotKeptNote")}
+          </p>
+        )}
         <input
           className={styles.attSearch}
           type="search"
@@ -131,6 +157,7 @@ export function DoorGuestList({
               key={attendee.slug}
               attendee={attendee}
               isPending={pendingSlug === attendee.slug}
+              canCheckIn={canCheckIn}
               onCheckIn={onCheckIn}
               onUndo={onUndo}
             />

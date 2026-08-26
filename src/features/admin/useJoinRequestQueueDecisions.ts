@@ -69,12 +69,20 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
   );
   const selection = useJoinRequestQueueSelection(queue);
 
-  function handleBulkSuccess(ids: string[]) {
+  /**
+   * What a bulk call actually did. The succeeded ids drop out of the pending
+   * view; the failed ids become the whole selection, so "try again" needs no
+   * re-selection and the reviewer can see exactly which applicants are still
+   * outstanding. A bulk review is per-item on the server, so both halves are
+   * routinely non-empty on one call.
+   */
+  function handleBulkOutcome(succeededIds: string[], failedIds: string[]) {
     setBulkResolved((current) => {
       const next = new Set(current);
-      for (const id of ids) next.add(id);
+      for (const id of succeededIds) next.add(id);
       return next;
     });
+    selection.setSelectedIds(new Set(failedIds));
   }
 
   // A row a single-row action just resolved stops belonging in the bulk
@@ -231,7 +239,7 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     isPending: reviewJoinRequest.isPending,
     displayedWaitlisted,
     displayedDecided,
-    handleBulkSuccess,
+    handleBulkOutcome,
     resolve,
     requestDecline,
     confirmDecline,

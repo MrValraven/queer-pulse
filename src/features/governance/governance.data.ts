@@ -9,6 +9,23 @@ import {
 import { MdAccessible } from "react-icons/md";
 import { MEMBERS, memberName } from "../members/data/members";
 import { routes } from "../../app/routeMap";
+import type { ConcernCategory } from "./api/governance.api";
+
+/**
+ * i18n Pattern A. The concern categories `RaiseSection` offers, in the order
+ * the select lists them. Each carries a stable payload value (persisted,
+ * localisation-independent) and the i18n key for its visible label.
+ */
+export const CONCERN_OPTIONS: { value: ConcernCategory; labelKey: string }[] = [
+  { value: "member", labelKey: "governance:sections.raise.option.member" },
+  {
+    value: "gathering",
+    labelKey: "governance:sections.raise.option.gathering",
+  },
+  { value: "content", labelKey: "governance:sections.raise.option.content" },
+  { value: "appeal", labelKey: "governance:sections.raise.option.appeal" },
+  { value: "other", labelKey: "governance:sections.raise.option.other" },
+];
 
 /**
  * i18n Pattern A. All chrome: a static nav rail (page-authored anchor labels).

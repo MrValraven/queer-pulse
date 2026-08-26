@@ -8,13 +8,17 @@ import {
   assignedToParam,
   type QueueAssignmentScope,
 } from "./queueAssignmentScope";
+import { AdminJoinRequestSamplePage } from "./AdminJoinRequestSamplePage";
 import { AdminVerifyDecided } from "./AdminVerifyDecided";
 import { AdminVerifyQueueWaiting } from "./AdminVerifyQueueWaiting";
 import { JoinRequestDeclineModal } from "./JoinRequestDeclineModal";
 import { AdminTabs } from "./ui";
 
+type QueueTabId = "waiting" | "decided" | "sample";
+
 /**
- * Moderator review of incoming platform join requests, in two halves.
+ * Moderator review of incoming platform join requests: two working halves plus
+ * a read-only look back at the queue's own decisions.
  *
  * WAITING reads `GET /join-requests?status=pending` and `…=waitlisted`, with
  * approve/decline wired to `useReviewJoinRequest` (PATCH /join-requests/:id).
@@ -34,7 +38,7 @@ import { AdminTabs } from "./ui";
  */
 export function AdminVerifyQueue() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<"waiting" | "decided">("waiting");
+  const [activeTab, setActiveTab] = useState<QueueTabId>("waiting");
   // OPS-04. Held here, beside the queries it narrows, and applied to BOTH the
   // pending and waitlisted reads so one control governs everything the waiting
   // tab shows. The Decided tab is deliberately unfiltered: a settled request
@@ -65,14 +69,20 @@ export function AdminVerifyQueue() {
             count: waitingCount,
           },
           { id: "decided", label: t("admin:members.verify.tabs.decided") },
+          // The peer quality sample sits beside the queue it reviews, on the
+          // one join-request path `authGate.ts` opens to moderators. It is
+          // their own work being sampled, so putting it behind the admin-only
+          // members page would have left the people it is about unable to look
+          // at it. Read-only, and a tab away from the working queue.
+          { id: "sample", label: t("admin:members.tabs.sample") },
         ]}
         active={activeTab}
-        onChange={(id) =>
-          setActiveTab(id === "decided" ? "decided" : "waiting")
-        }
+        onChange={(id) => setActiveTab(id as QueueTabId)}
       />
 
-      {activeTab === "waiting" ? (
+      {activeTab === "sample" ? (
+        <AdminJoinRequestSamplePage />
+      ) : activeTab === "waiting" ? (
         <>
           {/* Above the queue rather than inside it: "Assigned to me" can
               legitimately match nothing, and a control that vanished with the

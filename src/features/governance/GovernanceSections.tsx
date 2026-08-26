@@ -19,22 +19,9 @@ import { useFormat } from "../../shared/i18n/format";
 import { useGovernanceFinances } from "./api/useGovernanceFinances";
 import { useGovernanceOverview } from "./api/useGovernanceOverview";
 import { submitConcern, type ConcernCategory } from "./api/governance.api";
+import { CONCERN_OPTIONS } from "./governance.data";
 import { FinanceLines } from "./GovernanceFinance";
 import styles from "./GovernancePage.module.css";
-
-/** The concern categories, in the order the select lists them. Each carries a
- *  stable payload value (persisted, localisation-independent) and the i18n key
- *  for its visible label. */
-const CONCERN_OPTIONS: { value: ConcernCategory; labelKey: string }[] = [
-  { value: "member", labelKey: "governance:sections.raise.option.member" },
-  {
-    value: "gathering",
-    labelKey: "governance:sections.raise.option.gathering",
-  },
-  { value: "content", labelKey: "governance:sections.raise.option.content" },
-  { value: "appeal", labelKey: "governance:sections.raise.option.appeal" },
-  { value: "other", labelKey: "governance:sections.raise.option.other" },
-];
 
 /**
  * Distinct error/retry state for a governance section. Rendered in place of a

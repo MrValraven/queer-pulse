@@ -143,7 +143,6 @@ export const members: Catalog = {
   "profile.hero.location": "{hood}, Lisbon",
   "profile.hero.editCta": "Edit profile",
   "profile.hero.previewCta": "View as visitor",
-  "profile.hero.requestIntroCta": "Request an intro",
   "profile.hero.sayHelloCta": "Say hello",
   "profile.hero.vouchedFor": "Vouched for {first}",
   "profile.hero.vouchedShort": "Vouched",
@@ -151,11 +150,8 @@ export const members: Catalog = {
   "profile.hero.vouchForCta": "Vouch for {first}",
   "profile.hero.levelLabel": "Level {number}",
   "profile.hero.badgesChip": "{earned} / {total} badges",
-  "profile.hero.badgesDesc": "{earned} earned · {discover} to discover",
-  "profile.hero.badgesArrow": "See badges & level",
   "profile.hero.perksChip": "{count} perks",
   "profile.hero.perksTitle": "Member perks",
-  "profile.hero.perksArrow": "Redeem your perks",
   "profile.hero.hearPronunciation": "Hear how to say {name}'s name",
   "profile.hero.notHereFor.label": "Not here for",
   "profile.hero.writtenBy.en": "{name} wrote this in English",
@@ -333,7 +329,6 @@ export const members: Catalog = {
   "profileEdit.field.lookingFor": "Looking for",
   "profileEdit.customPronounPlaceholder": "custom…",
   "profileEdit.customPronounsLabel": "Custom pronouns",
-  "profileEdit.addTagPlaceholder": "Add a tag…",
   "profileEdit.searchTagPlaceholder": "Search skills…",
   "profileEdit.popularTagsLabel": "Popular",
 
@@ -562,8 +557,6 @@ export const members: Catalog = {
     "A public profile is something you <em>grow into.</em>",
   "publicProfile.control.locked.lede":
     "Public profiles are for members who help carry the public side of QueerPulse: writers, hosts, organisers. Here's where you are:",
-  "publicProfile.control.locked.progress":
-    "{met} of {total} met. Keep showing up and this unlocks on its own.",
   "publicProfile.control.unlocked.eyebrow": "Public profile · unlocked",
   "publicProfile.control.unlocked.title":
     "You can share a <em>public profile.</em>",
@@ -644,7 +637,6 @@ export const members: Catalog = {
 
   // ── Global search (SearchPage) ──────────────────────────────────────────────
   "search.type.member": "Members",
-  "search.type.gathering": "Gatherings",
   "search.type.community": "Communities",
   "search.type.event": "Events",
   "search.type.forum": "Forum",
@@ -843,7 +835,6 @@ export const members: Catalog = {
   "directory.profession.biologist": "Biologist",
   "directory.profession.ecologist": "Ecologist",
   "directory.profession.labResearcher": "Lab Researcher",
-  "directory.profession.unspecified": "Not specified",
 
   // ── Shared "open to" vocabulary (openTo.data → OPEN_TO_PRESETS). One id →
   //    label, reused by the profile chips (content.now.openLabel), the
@@ -1010,7 +1001,6 @@ export const members: Catalog = {
   "drafts.controls.searchAriaLabel": "Search drafts",
   "drafts.controls.clearSearchLabel": "Clear search",
   "drafts.controls.sortLabel": "Sort",
-  "drafts.controls.sortAriaLabel": "Sort drafts",
 
   // ── Drafts page chrome (DraftsPage) ──────────────────────────────────────────
   "drafts.tabsAriaLabel": "Draft types",
@@ -1239,14 +1229,6 @@ export const members: Catalog = {
   "badges.backToProfile": "Back to profile",
   "badges.pageTitle": "Badges & <em>level</em>",
   "badges.howToEarnXp": "How to earn XP",
-  "badges.earnedHeading": "Your <em>badges</em>",
-  "badges.lockedHeading": "<em>Locked</em> badges",
-  "badges.lockedSub": "Earn XP and attend gatherings to unlock these.",
-  "badges.hideMore": "Hide",
-  "badges.showMore": "Show {count} more",
-  "badges.perksUnlockHeading": "What your level <em>unlocks</em>",
-  "badges.perksUnlockSub": "Each level grants new access and member benefits.",
-  "badges.xpToNextLevel": "{xp} / {xpMax} XP to Level {nextLevel} · {nextName}",
   "badges.loading": "Loading your badges…",
   "badges.errorTitle": "We couldn't load your badges",
   "badges.errorDescription":
@@ -1261,7 +1243,6 @@ export const members: Catalog = {
   "badges.xpBreakdown.heading": "What <em>earned</em> it",
   "badges.xpBreakdown.sub": "Every source of XP, earned or still open.",
   "badges.xpBreakdown.progress": "{units} of {cap}",
-  "badges.xpBreakdown.amount": "+{xp} XP",
   "badges.xpBreakdown.perUnitAmount": "+{xp} XP each",
   "badges.xpBreakdown.sources.profile": "Profile complete",
   "badges.xpBreakdown.sources.profileDesc":
@@ -1364,7 +1345,6 @@ export const members: Catalog = {
     "{category} is muted. Nothing from it will be suggested to you.",
   "badges.case.mutedNotePlural":
     "{categories} are muted. Nothing from them will be suggested to you.",
-  "badges.case.unmute": "Unmute",
   "badges.case.hiddenFlag": "Hidden",
   "badges.case.rarestFlag": "Rarest in your case",
   "badges.case.rarityCommon": "Common",
@@ -1426,9 +1406,7 @@ export const members: Catalog = {
   "badges.ladderV2.sub":
     "Almost everything QueerPulse offers is open from Level 1. These rungs list what each level adds on top of that, and nothing that isn't built.",
   "badges.ladderV2.passed": "Passed",
-  "badges.ladderV2.youAreHere": "You are here",
   "badges.ladderV2.ahead": "Ahead",
-  "badges.ladderV2.toNext": "{xp} to {name}",
   "badges.ladderV2.beyondTitle": "After {name}",
   "badges.ladderV2.beyondBody": "The ladder stops. The room doesn't.",
 
@@ -1445,7 +1423,6 @@ export const members: Catalog = {
   "badges.ledger.colWhat": "What happened",
   "badges.ledger.colXp": "XP",
   "badges.ledger.colTotal": "Total",
-  "badges.ledger.why": "Why",
   "badges.ledger.showAll": "Show all {count} events",
   "badges.ledger.showLess": "Show less",
   "badges.ledger.emptyTitle": "No history yet.",
@@ -1519,8 +1496,6 @@ export const members: Catalog = {
 
   // ── Your network (ProfileNetworkStats chips + NetworkListModal) — owner-only ─
   "network.title": "Your network",
-  "network.subtitle":
-    "Who you're connected with, and the trust you've built together.",
   "network.group.connected": "Connected",
   "network.group.vouchedGiven": "You vouched for",
   "network.group.vouchedReceived": "Vouched for you",
@@ -1530,7 +1505,6 @@ export const members: Catalog = {
   "network.row.vouchedGivenNoTime": "you vouched",
   "network.row.vouchedReceived": "vouched for you {time}",
   "network.row.vouchedReceivedNoTime": "vouched for you",
-  "network.viewAll": "View all {count}",
   "network.viewAllAria": "View all {count} in {group}",
   "network.modalSub_one": "{count} person",
   "network.modalSub_other": "{count} people",

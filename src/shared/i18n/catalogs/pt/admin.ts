@@ -55,7 +55,6 @@ export const admin: Catalog = {
   "verifications.level.id_verified": "Identidade verificada",
   "verifications.toast.updated": "Nível de verificação atualizado.",
   "verifications.toast.error": "Não foi possível atualizar essa verificação",
-  "verifications.loadError": "Não foi possível carregar as verificações",
   "verifications.empty": "Ainda não há registos de verificação.",
   "verifications.tabs.all": "Todos",
   "verifications.reviewCta": "Rever",
@@ -212,7 +211,6 @@ export const admin: Catalog = {
   // ── Verbos partilhados, reutilizados em vários modais/gavetas ─────────────
   "common.cancel": "Cancelar",
   "common.close": "Fechar",
-  "common.back": "Voltar",
   "common.undo": "Desfazer",
   "common.edit": "Editar",
   "common.delete": "Eliminar",
@@ -268,7 +266,6 @@ export const admin: Catalog = {
     "{count} comunidades precisam de ajuda",
 
   "dashboard.triage.title": "Precisa de <em>uma pessoa</em>",
-  "dashboard.triage.sortedToast": "Ordenado por urgência",
   "dashboard.triage.safetyEmergencies.title": "Emergências de segurança",
   "dashboard.triage.safetyEmergencies.sub": "Outing e doxxing",
   "dashboard.triage.safetyEmergencies.subEm": "trata destas primeiro",
@@ -372,8 +369,6 @@ export const admin: Catalog = {
     "O pedido de {name} não foi aprovado desta vez",
   "members.verify.errorToast":
     "Não foi possível guardar essa decisão. Tenta novamente",
-  "members.verify.mutualLine": "Indicou {name} como conhecimento em comum",
-  "members.verify.noMutual": "Ainda sem conhecimento em comum indicado",
   "members.verify.appliedToday": "Pedido feito hoje",
   "members.verify.appliedRecently": "Pedido feito há pouco",
   "members.verify.appliedDaysAgo_one": "Pedido feito há {count} dia",
@@ -447,7 +442,7 @@ export const admin: Catalog = {
   "members.verify.declineReason.other": "Outro",
   "members.verify.declineModal.title": "Recusar o pedido de {name}?",
   "members.verify.declineModal.body":
-    "Escolhe o motivo mais próximo. Isto não é mostrado à pessoa candidata. Ela recebe uma nota curta e genérica.",
+    "Escolhe o motivo mais próximo. Não é enviado nada à pessoa candidata. Se ela própria for ver o estado do pedido, encontra uma nota curta e genérica em vez disto.",
   "members.verify.declineModal.reasonLabel": "Motivo",
   "members.verify.declineModal.reasonPlaceholder": "Escolhe um motivo",
   "members.verify.declineModal.confirmCta": "Recusar pedido",
@@ -465,17 +460,70 @@ export const admin: Catalog = {
   "members.verify.bulk.waitlistCta": "Lista de espera",
   "members.verify.bulk.declineCta": "Recusar",
   "members.verify.bulk.clearCta": "Limpar",
-  "members.verify.bulk.partialFailure_one":
-    "{count} pedido não pôde ser atualizado",
-  "members.verify.bulk.partialFailure_other":
-    "{count} pedidos não puderam ser atualizados",
-  "members.verify.bulk.action.approve": "Aprovar pedidos",
-  "members.verify.bulk.action.waitlist": "Colocar pedidos em lista de espera",
-  "members.verify.bulk.action.decline": "Recusar pedidos",
+  // Enquadramentos para `describeError`: leem-se como uma falha com o motivo do
+  // servidor a seguir, não como uma instrução.
+  "members.verify.bulk.action.approve":
+    "Não foi possível aprovar esses pedidos",
+  "members.verify.bulk.action.waitlist":
+    "Não foi possível colocar esses pedidos em lista de espera",
+  "members.verify.bulk.action.decline":
+    "Não foi possível recusar esses pedidos",
+
+  // Selecionar tudo diz o conjunto exato que leva: os pedidos que estão a
+  // aguardar nesta página, nunca a fila inteira nem a secção de lista de espera.
+  "members.verify.bulk.selectAll.label_one":
+    "Selecionar o {count} pedido que aguarda aqui",
+  "members.verify.bulk.selectAll.label_other":
+    "Selecionar os {count} pedidos que aguardam aqui",
+  "members.verify.bulk.capReached":
+    "São {cap} de cada vez, o máximo que uma ação leva. Limpa alguns para escolher outros.",
+
+  // Confirmação. Nada chega ao servidor antes de uma destas ser confirmada.
+  "members.verify.bulk.confirmApprove.title": "Aprovar {count} pedidos?",
+  "members.verify.bulk.confirmApprove.body":
+    "Cada aprovação cria uma ligação de convite. Não é enviado nada a ninguém: copias cada ligação no separador Decididos e entrega-la tu.",
+  "members.verify.bulk.confirmApprove.confirmCta": "Aprovar todos",
+  "members.verify.bulk.confirmWaitlist.title":
+    "Colocar {count} pedidos em lista de espera?",
+  "members.verify.bulk.confirmWaitlist.body":
+    "Continuam em aberto e passam para a lista de espera, para lhes voltares mais tarde.",
+  "members.verify.bulk.confirmWaitlist.confirmCta": "Colocar todos em espera",
   "members.verify.bulk.confirmDecline.title": "Recusar {count} pedidos?",
   "members.verify.bulk.confirmDecline.body":
     "Escolhe o motivo mais próximo. Aplica-se aos {count} pedidos selecionados.",
+  "members.verify.bulk.confirmDecline.reasonLine_one":
+    "Isto regista “{reason}” no {count} pedido selecionado.",
+  "members.verify.bulk.confirmDecline.reasonLine_other":
+    "Isto regista “{reason}” em todos os {count} pedidos selecionados.",
   "members.verify.bulk.confirmDecline.confirmCta": "Recusar todos",
+
+  // Anunciado só quando o lote inteiro passou. Um lote que ficou a meio é
+  // relatado pelo painel de resultado abaixo, nunca como sucesso.
+  "members.verify.bulk.approvedToast_one":
+    "{count} pedido aprovado. A ligação de convite está em Decididos, para lha enviares.",
+  "members.verify.bulk.approvedToast_other":
+    "{count} pedidos aprovados. As ligações de convite estão em Decididos, para lhas enviares.",
+  "members.verify.bulk.waitlistedToast_one":
+    "{count} pedido passou para a lista de espera.",
+  "members.verify.bulk.waitlistedToast_other":
+    "{count} pedidos passaram para a lista de espera.",
+  "members.verify.bulk.declinedToast_one": "{count} pedido recusado.",
+  "members.verify.bulk.declinedToast_other": "{count} pedidos recusados.",
+
+  // O resultado item a item. No servidor uma revisão em lote é aplicada um
+  // pedido de cada vez, por isso é normal um lote ficar a meio: outra pessoa
+  // pode ter resolvido um pedido enquanto este estava aberto.
+  "members.verify.bulk.result.title": "O que passou",
+  "members.verify.bulk.result.succeeded_one": "{count} pedido passou.",
+  "members.verify.bulk.result.succeeded_other": "{count} pedidos passaram.",
+  "members.verify.bulk.result.noneSucceeded": "Nenhum deles passou.",
+  "members.verify.bulk.result.failedTitle_one": "{count} ficou como estava",
+  "members.verify.bulk.result.failedTitle_other":
+    "{count} ficaram como estavam",
+  "members.verify.bulk.result.unknownApplicant": "Pedido {id}",
+  "members.verify.bulk.result.retryNote":
+    "Estes continuam selecionados. Tenta outra vez, ou abre-os um a um.",
+  "members.verify.bulk.result.dismissCta": "Fechar",
   "members.verify.status.approved": "Aprovado",
   "members.verify.status.declined": "Recusado",
 
@@ -544,12 +592,42 @@ export const admin: Catalog = {
   // leitura de decisões passadas, para outro admin comparar notas. Não é um
   // fluxo de aprovação — dizê-lo com clareza.
   "members.sample.intro":
-    "Uma verificação periódica de decisões passadas, para dois admins compararem notas.",
+    "Um punhado aleatório de decisões que esta fila já tomou, para quem a trabalha ler as decisões umas das outras e manter um critério comum.",
   "members.sample.explainer":
-    "Isto mostra decisões passadas para discussão. Não regista uma segunda aprovação.",
+    "Lê algumas ao lado das orientações de revisão e falem sobre elas em conjunto. O assunto é o critério que esta fila mantém, e toda a gente aqui o mantém.",
+  "members.sample.readOnlyNote":
+    "Só de leitura. Nada aqui pode ser alterado a partir desta vista, e não fica registada nenhuma segunda aprovação.",
   "members.sample.resampleCta": "Mostrar outra amostra",
-  "members.sample.decisionLabel": "Decisão",
+  "members.sample.sizeLabel": "Quantas mostrar",
+  "members.sample.sizeOption_one": "{count} decisão",
+  "members.sample.sizeOption_other": "{count} decisões",
+  "members.sample.decidedOnLabel": "Decidido",
+  "members.sample.appliedLabel": "Candidatou-se",
+  "members.sample.reasonLabel": "Motivo",
+  "members.sample.noReason": "Sem motivo registado",
+  "members.sample.reviewerLabel": "Decidido por",
+  "members.sample.reviewerYou": "Tu",
+  // Só alternativa. A fila já resolve o nome de quem decidiu, por isso esta
+  // referência curta e estável é o que a linha mostra quando o servidor enviou
+  // um id sem nome: chega para agrupar as decisões de quem revê, nunca é uma
+  // identidade.
+  "members.sample.reviewerOther": "Quem revê {reference}",
+  // Sem ninguém registado na linha. É também onde fica quem revia e entretanto
+  // apagou a conta: o apagamento leva o id, por isso não sobra nome nenhum e
+  // nada aqui pode inventar um.
+  "members.sample.reviewerUnknown": "Não registado",
+  // O filtro por quem revê. Lê decisões, nunca pessoas: sem contagens, sem
+  // classificações, sem produtividade. A única pergunta que responde é "deixa-me
+  // ler as decisões desta pessoa seguidas e ver se batem certo com as minhas".
+  "members.sample.reviewerFilterLabel": "Mostrar decisões de",
+  "members.sample.reviewerFilterAll": "Toda a gente",
+  "members.sample.reviewerFilterHint":
+    "Ler as decisões de uma pessoa seguidas torna mais fácil notar uma leitura diferente das orientações.",
+  "members.sample.reviewerFilterEmpty":
+    "Nada dessa pessoa nesta amostra. Tira outra amostra ou volta a toda a gente.",
   "members.sample.empty": "Ainda não há pedidos revistos para amostrar.",
+  "members.sample.loadError":
+    "Não foi possível tirar uma amostra agora. Tenta daqui a pouco.",
 
   "members.drawer.verifiedChip": "Pessoa verificada",
   "members.drawer.verifyCta": "Verificar",
@@ -583,7 +661,6 @@ export const admin: Catalog = {
   "members.suspension.confirm.body":
     "Isto levanta a suspensão de {name} e restaura o acesso total de imediato. Fica registado na trilha de auditoria em teu nome. Podes voltar a suspender se necessário.",
   "members.suspension.confirm.confirmCta": "Levantar suspensão",
-  "members.role.sectionTitle": "Papel e permissões",
   "members.role.currentLabel": "Papel atual",
   "members.role.description":
     "Moderadores podem agir sobre denúncias e moderar conteúdo em toda a plataforma. Admins podem fazer tudo, incluindo gerir quem tem estes papéis.",
@@ -1172,8 +1249,6 @@ export const admin: Catalog = {
   "adminWriterApplications.status.pending": "Pendente",
   "adminWriterApplications.status.approved": "Aprovada",
   "adminWriterApplications.status.declined": "Recusada",
-  "adminWriterApplications.row.by": "De {name}",
-  "adminWriterApplications.row.sample": "Amostra",
   "adminWriterApplications.row.sampleLink": "Amostra ligada",
   "adminWriterApplications.row.approveCta": "Aprovar",
   "adminWriterApplications.row.declineCta": "Recusar",
@@ -1319,6 +1394,9 @@ export const admin: Catalog = {
   "media.kinds.group-avatars": "Avatares de grupo",
   "media.kinds.listing-photos": "Fotos de espaços",
   "media.unowned": "Sem dono",
+  "media.openAriaLabel": "Inspecionar {key}",
+  "media.uploaderFilterAriaLabel":
+    "{name}. Mostrar apenas os ficheiros desta pessoa.",
   "media.unknown": "Desconhecido",
   "media.loadMore": "Ver mais",
   "media.openFile": "Abrir URL do ficheiro",
@@ -1508,8 +1586,10 @@ export const admin: Catalog = {
   "moderation.reportDrawer.noteAriaLabel": "Nota para a pessoa",
   "moderation.reportDrawer.transparency":
     "Vamos dizer a {name} exatamente o que foi feito e porquê, com uma ligação para recorrer. Nada acontece em silêncio.",
-  "moderation.reportDrawer.accountActionsHidden":
-    "Restringir e banir não aparecem aqui porque esta denúncia é sobre conteúdo, não sobre uma conta. Usa ocultar, remover, avisar ou dispensar.",
+  "moderation.reportDrawer.ambiguousAuthorsNote":
+    "Isto é uma pergunta e a resposta por baixo, e podem ter sido escritas por pessoas diferentes. A denúncia não regista qual delas foi denunciada, por isso restringir e banir não vão avançar aqui.",
+  "moderation.reportDrawer.accountActionsTarget":
+    "Restringir e banir atuam sobre quem publicou isto. Ocultar e remover atuam sobre o próprio conteúdo. Sem uma conta por trás, um anúncio sem dono ou uma conta apagada, restringir e banir não vão avançar.",
   "moderation.reportDrawer.restrictDurationLabel": "Duração da restrição",
   "moderation.reportDrawer.restrictDuration.24h": "24 horas",
   "moderation.reportDrawer.restrictDuration.7d": "7 dias",
@@ -1535,8 +1615,6 @@ export const admin: Catalog = {
   "moderation.appealDrawer.recordCta": "Registar decisão",
   "moderation.appealDrawer.originalTitle": "A decisão original",
   "moderation.appealDrawer.decidedByLine": "Decidido por {name} · {when}",
-  "moderation.appealDrawer.viewOriginalCta":
-    "Ver a denúncia original e a conversa",
   "moderation.appealDrawer.originalContentTitle":
     "O que foi originalmente denunciado",
   "moderation.appealDrawer.originalContentUnavailable":
@@ -1569,9 +1647,6 @@ export const admin: Catalog = {
   "moderation.actions.hide.label": "Ocultar conteúdo",
   "moderation.actions.hide.desc": "Remove da vista, mantém para registo",
   "moderation.actions.hide.done": "ocultação",
-  "moderation.actions.shield.label": "Proteger pessoa",
-  "moderation.actions.shield.desc": "Protege a pessoa denunciada",
-  "moderation.actions.shield.done": "proteção",
   "moderation.actions.warn.label": "Avisar",
   "moderation.actions.warn.desc": "Enviar um aviso formal",
   "moderation.actions.warn.done": "aviso",
@@ -1597,6 +1672,8 @@ export const admin: Catalog = {
   "moderation.priorReports.count_other": "{count} denúncias anteriores",
   "moderation.priorReports.newAccount":
     "Conta nova · {vouches} votos de confiança",
+  "moderation.priorReports.viewAriaLabel":
+    "{flag}, sobre {name}. Ver as denúncias anteriores.",
   "moderation.reporterCredibility.new": "Nova pessoa denunciante",
   "moderation.reporterCredibility.history":
     "{filed} denúncias apresentadas · {dismissed} arquivadas",
@@ -1640,6 +1717,15 @@ export const admin: Catalog = {
   "moderation.queue.restoredToast": "Denúncia restaurada.",
   "moderation.queue.serviceErrorToast":
     "Não foi possível contactar o serviço de segurança. Restaurado.",
+
+  "moderation.refusal.noAccount":
+    "Isto não avançou: não há nenhuma conta por trás do que foi denunciado, por isso não há ninguém para restringir ou banir. Remove o conteúdo, arquiva a denúncia ou encaminha-a.",
+  "moderation.refusal.ambiguousAuthors":
+    "Isto não avançou: esta denúncia cobre uma pergunta e a resposta por baixo, e foram duas pessoas diferentes a escrevê-las. O painel mostra quem perguntou, por isso abre o anúncio para veres quem escreveu a parte que queres e age a partir do perfil dessa pessoa, ou age sobre o conteúdo.",
+  "moderation.refusal.houseAccount":
+    "Isto não avançou: o que foi denunciado remete para a conta da casa, que nunca é alvo de moderação. Age sobre o conteúdo ou arquiva a denúncia.",
+  "moderation.refusal.staffAccount":
+    "Isto não avançou: o que foi denunciado remete para uma conta de equipa, que esta fila não pode moderar. Fala com um administrador.",
   "moderation.queue.bulkPartialToast":
     "{succeededCount} com sucesso, {failedCount} falharam: {reasons}",
   "moderation.queue.bulkToast_one": "{verb} de {count} denúncia",
@@ -1666,7 +1752,8 @@ export const admin: Catalog = {
   "communities.grid.sub":
     "Cada comunidade tem uma pessoa moderadora que a conhece pelo nome. A saúde é o quão estável cada uma se sente: denúncias respondidas, pessoas acompanhadas, ninguém a passar despercebido.",
   "communities.grid.loadError": "Não foi possível carregar as comunidades.",
-  "communities.grid.healthAriaLabel": "Saúde {score}, ver detalhe",
+  "communities.grid.healthAriaLabel": "Saúde {score} de {name}, ver detalhe",
+  "communities.grid.openAriaLabel": "Abrir {name}",
   "communities.grid.needsHand": "· precisa de uma ajuda",
   "communities.grid.stat.members": "Pessoas",
   "communities.grid.stat.activity": "Atividade",
@@ -2003,8 +2090,6 @@ export const admin: Catalog = {
   "governance.header.publishedToast": "Relatório de transparência publicado.",
   "governance.header.publishError":
     "Não foi possível publicar o relatório. Tente novamente.",
-  "governance.header.publishComingSoonToast":
-    "A publicação de relatórios de transparência ainda não está disponível.",
   "governance.tabs.finances": "Finanças",
   "governance.tabs.policy": "Política e versões",
   "governance.tabs.proposals": "Propostas",
@@ -2128,8 +2213,6 @@ export const admin: Catalog = {
   "governance.finances.provenance.computed": "Calculado",
   "governance.finances.provenance.seeded.hint":
     "Valor de exemplo. Ainda não confirmado com os números reais.",
-  "governance.finances.provenance.manual.hint":
-    "Introduzido por um administrador. {editor} em {date}.",
   "governance.finances.provenance.manual.hintPlain":
     "Introduzido por um administrador.",
   "governance.finances.provenance.computed.hint":
@@ -2205,36 +2288,7 @@ export const admin: Catalog = {
   "governance.mrrPanel.live": "MRR de apoiantes · reportado",
   "governance.mrrPanel.lead":
     "Cada euro vem apenas das pessoas. <em>Nunca vamos vender dados de ninguém</em>. Está escrito na nossa constituição, por isso obriga-nos a cumpri-lo.",
-  "governance.mrrPanel.breakdown.care": "Cuidado",
-  "governance.mrrPanel.breakdown.platform": "Plataforma",
-  "governance.mrrPanel.breakdown.mutualAid": "Entreajuda",
-  "governance.mrrPanel.breakdown.health": "Saúde",
-  "governance.mrrPanel.breakdown.magazine": "Revista",
   "governance.mrrPanel.readCta": "Ler a constituição",
-
-  "governance.policy.versionsTitle": "Registo de <em>decisões</em>",
-  "governance.policy.versionsSub":
-    "Cada mudança em como nos protegemos, datada e aberta.",
-  "governance.policy.seeDiffCta": "Ver o que mudou",
-  "governance.policy.principlesTitle": "Os nossos <em>princípios</em>",
-  "governance.policy.transparencyNote":
-    "As mudanças de política são propostas em aberto e ratificadas na assembleia da comunidade. Qualquer pessoa pode ler o histórico completo de edições. Nada aqui é decidido à porta fechada.",
-  "governance.policy.principle.noSell": "Nunca vamos vender dados de ninguém.",
-  "governance.policy.principle.visibility":
-    "A visibilidade é sempre escolha da pessoa.",
-  "governance.policy.principle.noSilent":
-    "Sem remoções silenciosas. Cada ação carrega um motivo.",
-  "governance.policy.principle.accessNeverConditional":
-    "O acesso nunca depende da capacidade de pagar.",
-
-  "governance.diff.eyebrow": "Mudança de política",
-  "governance.diff.title": "v4.1 → <em>v4.2</em>",
-  "governance.diff.closeCta": "Fechar",
-  "governance.diff.readFullCta": "Ler a v4.2 completa",
-  "governance.diff.introTitle": "Secção 3: Dano que tratamos como urgente.",
-  "governance.diff.introDate": "Ratificado a 12 jun 2026, 89% a favor.",
-  "governance.diff.note":
-    "Proposto pelas pessoas moderadoras de Trans & Friends · votado por toda a comunidade na Assembleia Anual.",
 
   "governance.audit.title": "Cada ação, <em>registada</em>",
   "governance.audit.metaZero": "Nenhuma entrada corresponde a estes filtros.",
@@ -2242,8 +2296,6 @@ export const admin: Catalog = {
   "governance.audit.exportToast": "Exportadas {total} entradas em CSV",
   "governance.audit.exportError":
     "Não foi possível exportar o registo de auditoria. Tente novamente.",
-  "governance.audit.exportComingSoonToast":
-    "A exportação do registo de auditoria ainda não está disponível.",
   "governance.audit.exportCta": "Exportar CSV",
   "governance.audit.columns.moderator": "Pessoa moderadora",
   "governance.audit.columns.action": "Ação",
@@ -2281,12 +2333,10 @@ export const admin: Catalog = {
   "governance.audit.emptyText":
     "Nenhuma ação de moderação corresponde a estes filtros. Tenta alargá-los.",
   "governance.audit.pagerMeta": "A mostrar {start}–{end} de {total} entradas",
-  "governance.audit.pagerMatch": " ({count} correspondem)",
   "governance.audit.prevPage": "Página anterior",
   "governance.audit.nextPage": "Página seguinte",
   "governance.audit.entryModal.eyebrow": "Entrada de auditoria",
   "governance.audit.entryModal.actedWhen": "agiu {when}",
-  "governance.audit.entryModal.openLinkCta": "Abrir {label}",
   "governance.audit.entryModal.subject": "Assunto",
   "governance.audit.entryModal.reasonGiven": "Motivo dado à pessoa",
   "governance.audit.entryModal.note":
@@ -2487,13 +2537,9 @@ export const admin: Catalog = {
     "{count} denúncias registadas",
   "vouchGraph.inspector.reportsBanner.body":
     "Consulta o histórico de moderação desta pessoa antes de agires.",
-  "vouchGraph.inspector.reportsBanner.viewCta": "Ver na fila de moderação",
   "vouchGraph.inspector.privateBanner.title": "Rede mantida privada",
   "vouchGraph.inspector.privateBanner.body":
     "Esta pessoa escolheu esconder a sua rede de votos de confiança. Respeita isso. Não tentes contornar.",
-  "vouchGraph.inspector.anonBanner.title": "Identidade protegida",
-  "vouchGraph.inspector.anonBanner.body":
-    "Um voto de confiança anónimo. A identidade está protegida e não pode ser revelada.",
   "vouchGraph.inspector.vouchesIn": "votos de confiança recebidos",
   "vouchGraph.inspector.vouchesOut": "votos de confiança dados",
   "vouchGraph.inspector.joined": "entrou",
@@ -2555,8 +2601,6 @@ export const admin: Catalog = {
   "vouchGraph.canvas.fitToView": "Ajustar à vista",
   "vouchGraph.canvas.resetLayout": "Repor disposição",
 
-  "vouchGraph.graph.ariaLabel":
-    "Rede de votos de confiança: {count} pessoas ligadas a {initials}",
   "vouchGraph.preview.ariaLabel_one":
     "Rede de confiança de {name}: {count} ligação de voto de confiança direta",
   "vouchGraph.preview.ariaLabel_other":
@@ -2653,7 +2697,6 @@ export const admin: Catalog = {
   "settings.note.label": "Nota (opcional)",
   "settings.note.placeholder": "Porque estás a fazer esta alteração?",
   "settings.note.hint": "Aplica-se à próxima alteração que fizeres abaixo.",
-  "settings.saved": "Definições guardadas.",
   "settings.saveError": "Não foi possível guardar. Nada foi alterado.",
 
   "settings.history.title": "Alterações recentes",
@@ -2902,13 +2945,8 @@ export const admin: Catalog = {
 
   // ── Roteiro (/admin/roadmap) — quadro, fila de ideias, estatísticas ────────
   "roadmap.title": "Roteiro · <em>o que vem a seguir</em>",
-  "roadmap.header.eyebrow": "Roteiro",
-  "roadmap.header.title": "Molda o <em>roteiro</em>",
-  "roadmap.header.sub":
-    "Gere o quadro lançado/em construção/planeado, tria ideias de membros e edita as estatísticas da página pública.",
   "roadmap.loading": "A carregar o roteiro…",
   "roadmap.tabs.board": "Quadro",
-  "roadmap.tabs.ideas": "Ideias",
   "roadmap.tabs.heroStats": "Estatísticas",
 
   // AdminRoadmapBoard.tsx, AdminRoadmapItemRow.tsx, AdminRoadmapItemModal.tsx,
@@ -2916,100 +2954,17 @@ export const admin: Catalog = {
   "roadmap.board.column.shipped": "Lançado",
   "roadmap.board.column.building": "Em construção",
   "roadmap.board.column.planned": "Planeado",
-  "roadmap.board.empty": "Ainda não há nada nesta coluna.",
-  "roadmap.board.addItemCta": "Adicionar item",
-  "roadmap.board.toast.removed": "{name} foi removido do roteiro.",
-  "roadmap.board.toast.updated": "{name} foi guardado.",
-  "roadmap.board.toast.created": "{name} foi adicionado ao roteiro.",
-  "roadmap.board.delete.title": "Remover {name}?",
-  "roadmap.board.delete.body":
-    "Isto remove-o do roteiro definitivamente. Deixa de aparecer em qualquer coluna.",
-  "roadmap.board.delete.confirmCta": "Remover item",
-  "roadmap.board.modal.createEyebrow": "Novo item",
-  "roadmap.board.modal.editEyebrow": "Editar item",
-  "roadmap.board.modal.createTitle": "Adicionar um item ao roteiro",
-  "roadmap.board.modal.createCta": "Adicionar item",
-  "roadmap.board.field.column": "Coluna",
   "roadmap.board.field.category": "Categoria",
-  "roadmap.board.field.name": "Nome",
-  "roadmap.board.field.description": "Descrição",
-  "roadmap.board.field.date": "Data",
-  "roadmap.board.field.date.placeholder": "ex.: julho de 2026",
-  "roadmap.board.field.requested.title": "Pedido por membros",
-  "roadmap.board.field.requested.sub":
-    'Mostra a etiqueta "Pedido por membros" no cartão público.',
-  "roadmap.board.field.stage": "Fase",
-  "roadmap.board.field.stage.placeholder": "ex.: Em desenho",
-  "roadmap.board.field.eta": "Previsão",
-  "roadmap.board.field.eta.placeholder": "ex.: T4 2026",
-  "roadmap.board.field.progress": "Progresso (%)",
-  "roadmap.board.field.votes": "Votos iniciais",
-  "roadmap.board.field.hot.title": "Mais pedido",
-  "roadmap.board.field.hot.sub":
-    "Destaca este item como o mais pedido na página pública.",
-  "roadmap.board.item.etaLabel": "Previsão {eta}",
-  "roadmap.board.item.progressLabel": "{progress}% concluído",
-  "roadmap.board.item.votesLabel": "{votes} votos",
-  "roadmap.board.item.liveVotesLabel": "{count} ao vivo",
-  "roadmap.board.item.moveUpAriaLabel": "Mover {name} para cima",
-  "roadmap.board.item.moveDownAriaLabel": "Mover {name} para baixo",
-  "roadmap.board.item.requestedTag": "Pedido por membros",
-  "roadmap.board.item.hotTag": "Mais pedido",
 
   // AdminRoadmapIdeasQueue.tsx, AdminRoadmapIdeaRows.tsx — triagem de ideias
   // submetidas por membros + a lista publicada que a página pública lê.
-  "roadmap.ideas.pending.title": "Por rever",
-  "roadmap.ideas.pending.empty":
-    "Nada à espera. Todas as ideias foram triadas.",
-  "roadmap.ideas.published.title": "Publicadas",
-  "roadmap.ideas.published.empty": "Ainda não há nada publicado.",
-  "roadmap.ideas.fromMemberTag": "De um membro",
-  "roadmap.ideas.submittedLabel": "Submetida a {date}",
   "roadmap.ideas.promoteCta": "Promover",
-  "roadmap.ideas.dismissCta": "Rejeitar",
-  "roadmap.ideas.addPlaceholder": "Adicionar uma ideia à lista publicada…",
-  "roadmap.ideas.addAriaLabel": "Texto da nova ideia",
-  "roadmap.ideas.addCta": "Adicionar ideia",
-  "roadmap.ideas.moveUpAriaLabel": 'Mover "{text}" para cima',
-  "roadmap.ideas.moveDownAriaLabel": 'Mover "{text}" para baixo',
-  "roadmap.ideas.editAriaLabel": 'Editar "{text}"',
-  "roadmap.ideas.tallyLabel_one": "{count} voto",
-  "roadmap.ideas.tallyLabel_other": "{count} votos",
-  "roadmap.ideas.toast.promoted": "Ideia promovida para a lista publicada.",
-  "roadmap.ideas.toast.dismissed": "Ideia rejeitada.",
-  "roadmap.ideas.toast.removed": "Ideia removida.",
-  "roadmap.ideas.toast.updated": "Ideia guardada.",
-  "roadmap.ideas.toast.added": "Ideia adicionada.",
   // Diálogo de confirmação partilhado (IdeaQueueConfirmModal) — `kind` é
   // "dismiss" ou "delete", interpolado na chave (`roadmap.ideas.${kind}.*`).
-  "roadmap.ideas.dismiss.title": "Rejeitar esta ideia?",
-  "roadmap.ideas.dismiss.body":
-    "Sai da fila de pendentes sem ser publicada. A pessoa que a submeteu não é notificada.",
-  "roadmap.ideas.dismiss.confirmCta": "Rejeitar ideia",
-  "roadmap.ideas.delete.title": "Remover esta ideia?",
-  "roadmap.ideas.delete.body":
-    "Isto remove-a da página pública do roteiro definitivamente.",
-  "roadmap.ideas.delete.confirmCta": "Remover ideia",
 
   // AdminRoadmapHeroStats.tsx — lista editável de estatísticas do hero público.
-  "roadmap.heroStats.empty":
-    "Ainda não há estatísticas. Adiciona uma abaixo ou preenche a partir das contagens.",
-  "roadmap.heroStats.autofillCta": "Preencher a partir das contagens",
-  "roadmap.heroStats.addCta": "Adicionar estatística",
-  "roadmap.heroStats.removeRowCta": "Remover",
-  "roadmap.heroStats.labelPlaceholder": "ex.: 12 lançados este ano",
-  "roadmap.heroStats.labelAriaLabel": "Texto da estatística",
-  "roadmap.heroStats.moveUpAriaLabel": "Mover estatística para cima",
-  "roadmap.heroStats.moveDownAriaLabel": "Mover estatística para baixo",
-  "roadmap.heroStats.jadeToggle.title": "Destacar em jade",
-  "roadmap.heroStats.toast.saved": "Estatísticas guardadas.",
   // Etiquetas de preenchimento automático — "lançado"/"planeado" concordam em
   // número (_one/_other); "em curso" é invariável, por isso fica só a chave base.
-  "roadmap.heroStats.autofill.shipped_one": "{count} lançado",
-  "roadmap.heroStats.autofill.shipped_other": "{count} lançados",
-  "roadmap.heroStats.autofill.building": "{count} em curso",
-  "roadmap.heroStats.autofill.planned_one": "{count} planeado",
-  "roadmap.heroStats.autofill.planned_other": "{count} planeados",
 
   // ═══════════════════════════════════════════════════════════════════════
   // Reformulação do roteiro (quadro de 9 vistas, painel lateral, vistas
@@ -3136,8 +3091,6 @@ export const admin: Catalog = {
   "roadmap.drawer.field.target": "Meta",
   "roadmap.drawer.field.owner": "Responsável",
   "roadmap.drawer.field.priority": "Prioridade",
-  "roadmap.drawer.field.scope": "Âmbito",
-  "roadmap.drawer.field.scopeAll": "Todas as comunidades",
   "roadmap.drawer.saveCta": "Guardar e publicar",
   "roadmap.drawer.saveEditCta": "Guardar",
   "roadmap.drawer.archiveCta": "Arquivar",
@@ -3266,8 +3219,6 @@ export const admin: Catalog = {
   // Painel · secção Comentários
   "roadmap.drawer.comments.title": "Comentários",
   "roadmap.drawer.comments.empty": "Ainda sem comentários.",
-  "roadmap.drawer.comments.hideCta": "Ocultar",
-  "roadmap.drawer.comments.unhideCta": "Reexibir",
   "roadmap.drawer.comments.hiddenStatus": "Oculto",
 
   // Painel · Notas internas / Frase pública
@@ -3413,7 +3364,6 @@ export const admin: Catalog = {
     "{building} em construção, {planned} planeados",
   "roadmap.capacityView.paidTag": "Pago",
   "roadmap.capacityView.volunteerTag": "Voluntariado",
-  "roadmap.capacityView.atOnceTag": "{count} ao mesmo tempo",
   "roadmap.capacityView.unassignedActiveLabel": "Sem responsável, ativos",
   "roadmap.capacityView.unassignedActiveWarn": "{count} são P0/P1",
   "roadmap.capacityView.unassignedActiveOk": "Nenhum urgente",
@@ -3450,7 +3400,6 @@ export const admin: Catalog = {
   "roadmap.ideasView.ageSuffix": "há {age}",
   "roadmap.ideasView.submittedByMember": "De um membro",
   "roadmap.ideasView.submittedByTeam": "Da equipa",
-  "roadmap.ideasView.voteSpike": "Pico de votos: {votes} votos em {hours}h",
   "roadmap.ideasView.duplicateHint": "Parece um duplicado de {name}",
   "roadmap.ideasView.mergeInsteadCta": "Juntar em vez disso",
   "roadmap.ideasView.votesLabel": "votos",
@@ -3519,12 +3468,9 @@ export const admin: Catalog = {
     "Ainda sem nota pública. Os membros não vão ver nada aqui até adicionares uma.",
   "roadmap.publicPreview.movedOnce": "Adiada uma vez: {from} → {to}.",
   "roadmap.publicPreview.movedMultiple": "Adiada {count}×: {from} → {to}.",
-  "roadmap.publicPreview.blockedNote": "Bloqueado à espera de {by}.",
   "roadmap.publicPreview.noDateHonest": "Sem data, sinceramente",
   "roadmap.publicPreview.liveLabel": "Ativo",
   "roadmap.publicPreview.editItemTooltip": "Editar este item",
-  "roadmap.publicPreview.copyPermalinkTooltip":
-    "Copiar hiperligação permanente",
   "roadmap.publicPreview.subscribeHeading": "Sabe quando isto mudar",
   "roadmap.publicPreview.subscribeBody":
     "Um email por mês com o que foi lançado, o que mudou e ao que dissemos não. Nunca marketing de produto.",
@@ -3574,15 +3520,9 @@ export const admin: Catalog = {
   "roadmap.toasts.notified_other":
     "{count} pessoas notificadas. Um email, sem seguimentos",
   "roadmap.toasts.digestCopied": "Resumo copiado. Cola-o no email mensal",
-  "roadmap.toasts.permalinkCopied": "{url} copiado",
-  "roadmap.toasts.rssInfo": "RSS: {url}",
   "roadmap.toasts.auditExported":
     "Registo de auditoria exportado para a governança",
   "roadmap.toasts.boardReset": "Quadro reposto com o roteiro semeado",
-  "roadmap.toasts.safetyReviewNeededInfo_one":
-    "{count} item precisa de revisão de segurança primeiro",
-  "roadmap.toasts.safetyReviewNeededInfo_other":
-    "{count} itens precisam de revisão de segurança primeiro",
 
   // ── Página inicial (/admin/landing) ─────────────────────────────────────
   "landing.header.eyebrow": "Site público",
@@ -3769,24 +3709,6 @@ export const admin: Catalog = {
   "pressKit.facts.empty": "Ainda sem factos disponíveis.",
 
   // ── Integridade dos anúncios de habitação (Wave B1) — fila por risco ──
-  "housing.risk.title": "Pontuação de risco",
-  "housing.risk.reasonsLabel": "Porque está sinalizado",
-  "housing.risk.evidenceLabel": "Cópia do anúncio denunciado",
-  "housing.risk.reason.rent_far_below_market":
-    "Renda muito abaixo do intervalo local",
-  "housing.risk.reason.rent_below_market": "Renda abaixo do intervalo local",
-  "housing.risk.reason.contact_info_in_text": "Contactos no texto",
-  "housing.risk.reason.off_platform_payment_language":
-    "Linguagem de pagamento antecipado ou fora da plataforma",
-  "housing.risk.reason.discriminatory_language":
-    "Possível linguagem discriminatória",
-  "housing.risk.reason.lister_unverified":
-    "Anunciante sem verificação de telefone ou identidade",
-  "housing.risk.reason.lister_phone_only":
-    "Anunciante só com telefone verificado",
-  "housing.risk.reason.incomplete_listing": "Descrição escassa",
-  "housing.risk.reason.no_photos": "Sem fotografias",
-  "housing.risk.reason.missing_accessibility_info": "Sem informação de acessos",
 
   // ── Relatórios consolidados da plataforma (ADM-17/ADM-19) — /admin/reports ──
   "reports.title": "<em>Relatórios</em> da plataforma",
@@ -4324,7 +4246,6 @@ export const admin: Catalog = {
   "adminResourceGuides.review.confirmCta": "Marcar como revisto",
 
   // ── AdminHousingListingsPage — consola de revisão de habitação (LOC-01) ──
-  "housingListings.nav": "Anúncios de habitação",
   "housingListings.title": "Revisão de <em>habitação.</em>",
   "housingListings.eyebrow": "Quadro de habitação",
   "housingListings.header.title": "Casas à espera de uma <em>decisão.</em>",
@@ -4902,9 +4823,111 @@ export const admin: Catalog = {
   "moderation.ratification.title": "Expulsar {name} da QueerPulse",
 
   // Remaining section 1 moderation keys.
-  "appeal.live.decidedLabel": "Decidido a",
-  "appeal.live.dueLabel": "Decisão devida até",
   "moderation.tabs.ratification": "À espera de segunda opinião",
+  "moderation.tabs.health": "Estado das filas",
+
+  // ── TS-04. Carga de trabalho de moderação e estado dos prazos. ────────────
+  // A regra de tom para tudo aqui: descreve o ESTADO DO TRABALHO e nunca o
+  // desempenho de uma pessoa. Nada aqui conta o que alguém despachou, nem
+  // ordena ninguém, nem sugere que uma fila acumulada é culpa de alguém. Esta
+  // vista existe para apanhar uma equipa sobrecarregada antes do esgotamento, e
+  // texto que soasse a pressão causaria aquilo que ela vem evitar.
+  "moderationHealth.intro":
+    "O que está à espera em cada fila, e como cada uma se lê face aos prazos que publicamos. Isto é sobre o tamanho do trabalho, para se poder repartir antes de pesar.",
+  "moderationHealth.summaryAriaLabel": "Estado geral das filas",
+  "moderationHealth.overallExplainer":
+    "É a pior fila que o define, para nada se diluir numa média.",
+  "moderationHealth.activeModerators_one":
+    "{count} pessoa pode trabalhar estas filas",
+  "moderationHealth.activeModerators_other":
+    "{count} pessoas podem trabalhar estas filas",
+  "moderationHealth.measuredAt": "Medido às {time}",
+  "moderationHealth.loadError":
+    "Não foi possível ler as filas agora. Tenta daqui a pouco.",
+
+  // Três níveis e mais nenhum. `ok` é não haver nada a dizer, `warning` é
+  // planear trabalhá-la, `critical` é um prazo publicado que já passou.
+  "moderationHealth.severity.ok": "Em dia",
+  "moderationHealth.severity.warning": "A encher",
+  "moderationHealth.severity.critical": "Precisa de alguém agora",
+
+  // Estes nomes são do cliente: a resposta traz só a chave estável da fila.
+  "moderationHealth.queue.invite_requests": "Pedidos de convite",
+  "moderationHealth.queue.reports": "Denúncias",
+  "moderationHealth.queue.appeals": "Recursos",
+  "moderationHealth.queue.verification": "Pedidos de verificação",
+  "moderationHealth.queue.ban_ratifications":
+    "Banimentos à espera de segunda opinião",
+  "moderationHealth.queue.unknown": "Outra fila",
+
+  // Qual dos três eixos disparou, dito pelo que significa e não pelo nome do
+  // campo.
+  "moderationHealth.breachesLabel": "O que a fez disparar:",
+  "moderationHealth.breach.depth": "está muita coisa à espera",
+  "moderationHealth.breach.oldest": "há algo à espera há muito tempo",
+  "moderationHealth.breach.overdue": "passaram prazos que publicámos",
+
+  "moderationHealth.stat.depth": "À espera",
+  "moderationHealth.stat.oldest": "Espera mais longa",
+  // Um valor nulo aqui quer dizer que a fila está VAZIA, a melhor notícia.
+  "moderationHealth.stat.oldestEmpty": "Nada à espera",
+  "moderationHealth.stat.overdue": "Fora do prazo",
+  "moderationHealth.stat.unassigned": "Por atribuir",
+  // Um valor nulo quer dizer que esta fila não tem atribuição nenhuma. Um zero
+  // leria-se como "está tudo atribuído", o contrário do que o nulo diz.
+  "moderationHealth.stat.unassignedNotApplicable": "Não se aplica",
+  "moderationHealth.stat.unassignedNoClaiming":
+    "Esta fila não tem passo de atribuição",
+  "moderationHealth.stat.perModerator": "Cada, se repartido",
+  // Um valor nulo quer dizer que não há moderação ativa nenhuma.
+  "moderationHealth.stat.noModerators": "Ninguém de serviço",
+  "moderationHealth.stat.noModeratorsNote":
+    "Sem contas ativas de moderação ou administração",
+  "moderationHealth.stat.median": "Tempo habitual de resposta",
+
+  // Lidos da resposta, nunca repetidos aqui: os limites mudam numa só edição
+  // no servidor e esta linha muda com eles.
+  "moderationHealth.threshold.warnsAt": "Assinala aos {value}",
+  "moderationHealth.threshold.criticalAt": "Precisa de alguém aos {value}",
+  "moderationHealth.threshold.pastCritical": "Já passou dos {value}",
+
+  "moderationHealth.hours_one": "{value} hora",
+  "moderationHealth.hours_other": "{value} horas",
+
+  // A leitura compacta, mostrada só em alerta ou crítico.
+  "moderationHealth.indicator.warning_one": "{count} fila está a encher.",
+  "moderationHealth.indicator.warning_other": "{count} filas estão a encher.",
+  "moderationHealth.indicator.critical_one":
+    "{count} fila precisa de alguém agora.",
+  "moderationHealth.indicator.critical_other":
+    "{count} filas precisam de alguém agora.",
+  "moderationHealth.indicator.cta": "Ver estado das filas",
+
+  // A notificação para a equipa. `ok` é o aviso de recuperação, por isso fecha
+  // o alerta em vez de abrir um. Nada aqui pede pressa a ninguém.
+  "moderationHealth.notification.warning.text_one":
+    "{queue}: {count} item à espera, {overdue}. Espera mais longa: {oldest}.",
+  "moderationHealth.notification.warning.text_other":
+    "{queue}: {count} itens à espera, {overdue}. Espera mais longa: {oldest}.",
+  "moderationHealth.notification.warning.meta":
+    "Vale uma vista de olhos quando alguém tiver tempo.",
+  "moderationHealth.notification.critical.text_one":
+    "{queue}: {count} item à espera, {overdue}. Espera mais longa: {oldest}.",
+  "moderationHealth.notification.critical.text_other":
+    "{queue}: {count} itens à espera, {overdue}. Espera mais longa: {oldest}.",
+  "moderationHealth.notification.critical.meta":
+    "Passou um prazo que publicámos. Se ninguém estiver livre, diz na sala da equipa.",
+  "moderationHealth.notification.ok.text_one":
+    "{queue} voltou ao normal, com {count} item à espera.",
+  "moderationHealth.notification.ok.text_other":
+    "{queue} voltou ao normal, com {count} itens à espera.",
+  "moderationHealth.notification.ok.meta":
+    "Nada a fazer. Obrigada por a teres despachado.",
+  "moderationHealth.notification.overdueToken_one": "{value} fora do prazo",
+  "moderationHealth.notification.overdueToken_other": "{value} fora do prazo",
+  "moderationHealth.notification.oldestToken_one": "{value} hora",
+  "moderationHealth.notification.oldestToken_other": "{value} horas",
+  "moderationHealth.notification.oldestNone": "nada à espera",
 
   // ── Relatório de horas de voluntariado (SUS-05) ────────────────────────
   // Supervisão do voluntariado: sessões e horas confirmadas num período.

@@ -316,9 +316,20 @@ export interface AttendeesPageDTO {
   seatsTaken?: number;
   /** Members on the waitlist, whichever status page was requested. */
   waitlistCount?: number;
-  /** How many going members have been checked in at the door (LOC-03).
-   *  Always 0 for a viewer who is not an organiser. */
-  checkedInCount?: number;
+  /**
+   * How many going members have been checked in at the door (LOC-03).
+   *
+   * `null` means NO LONGER RECORDED: the platform clears a gathering's
+   * per-person check-in records 30 days after it ends, so past that window a
+   * count cannot be stated. `0` keeps its literal meaning of nobody arrived.
+   * Telling those two apart is the whole point of the nullable type, so never
+   * coalesce the null to a number.
+   *
+   * Always `0` for a viewer who is not an organiser: they never see check-in
+   * state, and "no longer recorded" would be the wrong explanation for someone
+   * who was never entitled to the number.
+   */
+  checkedInCount?: number | null;
 }
 
 // ── Create / update payloads ────────────────────────────────────────────────
@@ -743,7 +754,10 @@ export interface CheckInResultDTO {
   goingCount: number;
   seatsTaken: number;
   waitlistCount: number;
-  checkedInCount: number;
+  /** `null` once the gathering is past the attendance retention window and its
+   *  check-in records have been cleared. A door desk is inside that window by
+   *  definition, so this is a real number on the live check-in path. */
+  checkedInCount: number | null;
 }
 
 /**

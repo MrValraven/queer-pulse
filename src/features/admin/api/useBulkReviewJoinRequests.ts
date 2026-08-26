@@ -1,7 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useToast } from "../../../shared/components/feedback/useToast";
-import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   bulkReviewJoinRequests,
   type BulkReviewResult,
@@ -15,25 +13,27 @@ interface BulkReviewJoinRequestsVars {
 }
 
 /**
- * Bulk approve/waitlist/decline for the join-request queue (Task 6) — built
- * on `useDemoAwareMutation`, matching the real established pattern
- * (`useBulkDecideVerificationRequests`, the verification-requests queue's own
- * bulk hook) rather than a bare `useMutation`.
+ * Bulk approve/waitlist/decline for the join-request queue, built on
+ * `useDemoAwareMutation`, matching the established pattern
+ * (`useBulkDecideVerificationRequests`, the verification queue's own bulk hook)
+ * rather than a bare `useMutation`.
  *
- * Unlike that sibling hook, there is no query-cache row to patch for the demo
- * optimistic update: `useJoinRequests`'s demo path re-derives its list from
+ * THE RESULT IS PER-ITEM, and this hook hands it back untouched. It reports
+ * nothing itself: `useJoinRequestBulkDecision` decides what to announce, because
+ * only it knows whether the batch swept cleanly (a toast) or half-applied (the
+ * result panel, naming each applicant the server refused and why). A toast here
+ * would double up on that announcement in a screen reader.
+ *
+ * Unlike the verification sibling there is no query-cache row to patch for a
+ * demo optimistic update: `useJoinRequests`'s demo path re-derives its list from
  * the plain imported `JOIN_REQUESTS` array on every queryFn call rather than
- * reading the query cache, the same reason the single-row
- * `useReviewJoinRequest` leaves it to `AdminVerifyQueue`'s own local state to
- * drop a reviewed row from view instead of a cache patch. So demo mode here
- * simply reports every id as succeeded; `AdminVerifyQueue` does the same
- * local-state bookkeeping for a bulk decision that it already does for a
- * single one.
+ * reading the query cache, the same reason the single-row `useReviewJoinRequest`
+ * leaves it to the queue's own local state to drop a reviewed row from view. So
+ * demo mode reports every id as succeeded and `useJoinRequestQueueDecisions`
+ * does the same bookkeeping for a bulk decision it already does for a single one.
  */
 export function useBulkReviewJoinRequests() {
   const { demoMode } = useDemoMode();
-  const { t } = useTranslation();
-  const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   const mutation = useDemoAwareMutation<
@@ -48,19 +48,21 @@ export function useBulkReviewJoinRequests() {
     live: ({ ids, status, declineReason }) =>
       bulkReviewJoinRequests(ids, status, declineReason),
     // Invalidates in BOTH modes, same reasoning as the single-row hook: the
-    // demo queue's queryFn re-derives from the mock registry on every
-    // refetch, so there's nothing this invalidation loses by also running in
-    // demo mode.
-    onSuccess: (result) => {
+    // demo queue's queryFn re-derives from the mock registry on every refetch,
+    // so there is nothing this invalidation loses by also running in demo mode.
+    //
+    // Two keys, because a decision moves a request between them. The prefix
+    // `["join-requests"]` is every status, filter and sort of the queue plus
+    // the pending count the members page reads off it, exactly what the
+    // single-decision mutation invalidates. `["join-requests-sample"]` is the
+    // peer-review pool, which only holds decided requests: a bulk approve or
+    // decline adds to it, so a stale sample would be missing the decisions most
+    // worth looking at.
+    onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["join-requests"] });
-      if (result.failed.length > 0) {
-        showToast(
-          t("admin:members.verify.bulk.partialFailure", {
-            count: result.failed.length,
-          }),
-          "warning",
-        );
-      }
+      void queryClient.invalidateQueries({
+        queryKey: ["join-requests-sample"],
+      });
     },
     meta: { silentError: true },
   });

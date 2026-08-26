@@ -12,6 +12,8 @@ import {
   RatificationPane,
   ResolvedPane,
 } from "./AdminModerationPanes";
+import { ModerationHealthIndicator } from "./ModerationHealthIndicator";
+import { ModerationQueueHealthPanel } from "./ModerationQueueHealthPanel";
 import {
   useModerationQueue,
   type TabId,
@@ -120,6 +122,9 @@ export function AdminModerationPage() {
               label: t("admin:moderation.tabs.ratification"),
               count: q.counts.ratification,
             },
+            // TS-04. No count: this tab is not a pile of items to work
+            // through, it is the reading on the four piles that are.
+            { id: "health", label: t("admin:moderation.tabs.health") },
           ]}
           active={tab}
           onChange={(id) => q.setTab(id as TabId)}
@@ -157,10 +162,17 @@ export function AdminModerationPage() {
         )}
       </div>
 
+      {/* TS-04. Above the queue a moderator came here to work, and silent
+          unless a queue is at warning or critical, so it reads as news rather
+          than as standing pressure. Suppressed on the health tab itself, which
+          is the thing it links to. */}
+      {tab !== "health" && <ModerationHealthIndicator />}
+
       {tab === "open" && <OpenPane q={q} />}
       {tab === "appeals" && <AppealsPane q={q} />}
       {tab === "resolved" && <ResolvedPane q={q} />}
       {tab === "ratification" && <RatificationPane q={q} />}
+      {tab === "health" && <ModerationQueueHealthPanel />}
 
       {q.selected && (
         <AdminReportDrawer

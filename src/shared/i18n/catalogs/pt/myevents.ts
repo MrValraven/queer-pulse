@@ -15,7 +15,6 @@ export const myevents: Catalog = {
     "Tudo a que vais e tudo o que organizas: reunido num só lugar acolhedor.",
   "header.settingsAria": "Preferências de eventos",
   "header.notifAria": "Notificações",
-  "header.createCta": "Criar um convívio",
 
   // ── Cabeçalho global de eventos (EventsHeader) ────────────────────────────
   "eventsHeader.title": "Eventos",
@@ -206,7 +205,6 @@ export const myevents: Catalog = {
 
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Lembrete ativo",
-  "tools.remindMe": "Lembrar-me",
   "tools.reminderInfoTooltip":
     "Vais receber um lembrete antes disto começar, de acordo com a tua definição de antecedência em Preferências",
   "tools.addToCalendar": "Adicionar ao calendário",
@@ -328,11 +326,6 @@ export const myevents: Catalog = {
 
   // ── Recommendations strip (Discovery) ─────────────────────────────────────
   "discovery.title": "Talvez <em>gostes</em>",
-  "discovery.imGoingCta": "Eu vou",
-  "discovery.imGoingToast": "Vais. Adicionado aos teus eventos",
-  "discovery.saveCta": "Guardar",
-  "discovery.saveToast": "Guardado para depois",
-  "discovery.hideCta": "Ocultar",
 
   // ── "Your year so far" (InsightsCard) ─────────────────────────────────────
   "insights.eyebrow": "O teu ano até agora",
@@ -392,20 +385,13 @@ export const myevents: Catalog = {
   "bulk.broughtBackToast": "Repuseste",
 
   // ── Notifications panel (NotifPanel) ──────────────────────────────────────
-  "notif.panelAria": "Notificações",
   "notif.title": "O que mudou",
   "notif.markAllRead": "Marcar tudo como lido",
   "notif.empty": "Estás em dia.",
 
   // ── Modal aria-labels (MyEventsBody → ModalShell) ─────────────────────────
-  "modal.rsvpDetailsLabel": "Os detalhes da tua confirmação",
-  "modal.preferencesLabel": "Preferências de eventos",
-  "modal.cancelRsvpLabel": "Cancelar confirmação",
-  "modal.reportLabel": "Denunciar este evento",
-  "modal.blockLabel": "Bloquear quem organiza",
 
   // ── Accept-invite confirmation panel (AcceptInviteConfirm) ────────────────
-  "acceptConfirm.ariaLabel": "Vais",
   "acceptConfirm.eyebrow": "Vais",
   "acceptConfirm.title": "Disseste que <em>sim.</em>",
   "acceptConfirm.addToCalendarCta": "Adicionar ao calendário",
@@ -476,11 +462,12 @@ export const myevents: Catalog = {
   "settingsModal.byDefaultWhoSees": "Por norma, quem vê onde vais",
   "settingsModal.howWeReachYou": "Como chegamos até ti",
   "settingsModal.email": "Email",
-  "settingsModal.emailDesc": "Lembretes, alterações e convites por email.",
+  // Ver a nota em en/myevents.ts: o botão guarda mesmo a preferência, mas
+  // nada a lê para enviar seja o que for, porque a QueerPulse não envia email.
+  "settingsModal.emailDesc":
+    "A QueerPulse não envia email, por isso hoje não chega nada por aqui. A tua escolha fica guardada para se isso mudar. Os lembretes chegam-te na aplicação.",
   "settingsModal.emailToggleLabel": "Lembretes por email",
   "settingsModal.push": "Notificações push",
-  "settingsModal.pushDesc": "No teu telemóvel, para alterações urgentes.",
-  "settingsModal.pushToggleLabel": "Notificações push",
   "settingsModal.syncTickets": "Sincronização e bilhetes",
   "settingsModal.connectCalendar": "Liga o teu calendário",
   "settingsModal.connectCalendarSub":
@@ -505,8 +492,10 @@ export const myevents: Catalog = {
   "reportModal.eyebrow": "Denúncia",
   "reportModal.title": "O que está <em>errado?</em>",
   "reportModal.whyReporting": "Porque estás a denunciar isto?",
-  "reportModal.reason.hate": "Discurso de ódio ou assédio",
-  "reportModal.reason.unsafe": "Comportamento inseguro ou ameaçador",
+  "reportModal.reason.harassment": "Alguém está a sofrer assédio ou ameaças",
+  "reportModal.reason.unsafe": "Aconteceu algo inseguro neste evento",
+  "reportModal.reason.hate": "Discurso de ódio ou um insulto",
+  "reportModal.reason.discrimination": "Discriminação ou uso do género errado",
   "reportModal.reason.spam": "Spam, burla ou enganoso",
   "reportModal.reason.shouldntBeHere": "Este evento não devia estar aqui",
   "reportModal.reason.somethingElse": "Outra coisa",
@@ -522,7 +511,6 @@ export const myevents: Catalog = {
     "Denúncia enviada. A nossa equipa de segurança trata do resto",
 
   // ── Block-host confirm (BlockHostConfirm) ─────────────────────────────────
-  "blockModal.eyebrow": "Bloquear",
   "blockModal.titleNamed": "Bloquear <em>{host}?</em>",
   "blockModal.titleFallback": "Bloquear <em>quem organiza?</em>",
   "blockModal.bodyNamed":
@@ -537,8 +525,6 @@ export const myevents: Catalog = {
     "Já tens esta pessoa bloqueada. Nada mudou.",
 
   // ── Toasts from RSVP/notification lifecycle (useMyEventsState.ts) ────────
-  "toast.reminderSet": "Lembrete definido: {lead} antes",
-  "toast.reminderOff": "Lembrete desativado",
   "toast.markedMaybe":
     "Marcade como talvez. Quem organiza vê que ainda não tens a certeza",
   "toast.fullyIn": "Estás dentro. Até já",

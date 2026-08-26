@@ -63,6 +63,11 @@ export const safety: Catalog = {
     "Use this form for safety concerns, harassment, abuse, or any situation that made you feel unsafe. All reports are treated with full seriousness. There is no minimum threshold for what warrants a report.",
   "report.form.categoryLabel": "What are you reporting?",
   "report.form.categoryPlaceholder": "Select a category",
+  // The two emergency-severity categories. Worded so somebody scanning the
+  // list in a bad moment recognises what happened to them without having to
+  // know the words "outing" or "doxxing".
+  "report.category.outing": "Someone shared that I'm LGBTQ+ without my consent",
+  "report.category.doxxing": "Someone shared my personal details or location",
   "report.category.harassment": "Harassment or threats",
   "report.category.unwantedContact": "Unwanted contact or messages",
   "report.category.impersonation": "Misrepresentation or impersonation",
@@ -121,6 +126,12 @@ export const safety: Catalog = {
   "report.toast.received": "Report received. We'll follow up within 24 hours.",
   "report.toast.submitError":
     "Couldn't send your report. It didn't reach us. Check your connection and try again.",
+  // Shown when POST /reports is refused by the 60-second burst throttle, whose
+  // own message is framework wording no member should ever read. The rolling
+  // flood caps carry their own member-facing copy from the server instead, so
+  // this string covers the burst case only. See api/reportSubmissionError.ts.
+  "report.tooFast":
+    "You're sending reports faster than we can take them in. Wait a moment, then send this one again.",
 
   // ── reportReasons.ts — SAFETY-CRITICAL: stable server ids, only the label
   // is translated. Never let a translated label leak into the stored value.
@@ -140,18 +151,19 @@ export const safety: Catalog = {
   "reason.housingScam": "Scam or fake listing",
   "reason.notAffirming": "Not LGBTQ+ affirming: broke the community pledge",
   "reason.offPlatform": "Asked to pay or move off-platform",
+  // System-filed by the listings pipeline, never offered to a member. Read
+  // only by a moderator, on the queue row and in the report drawer.
+  "reason.listingDispute": "Dispute or claim of a business listing",
+  "reason.listingOwnerNotify": "Owner outreach: friendly or suggested listing",
   "reason.other": "Something else, explained in detail",
 
   // ── FlagModal.tsx ──────────────────────────────────────────────────────
-  "flag.modal.ariaLabel": "Flag this badge",
-  "flag.modal.closeAriaLabel": "Close",
   "flag.success.title": "Flag <em>received.</em>",
   "flag.success.body":
     "Thank you. A moderator will read your report. <b>Three independent flags trigger an immediate review and temporary suspension of the badge</b>. Your report counts toward that. We may contact you for detail, but never the venue.",
   "flag.success.doneCta": "Done",
   "flag.error":
     "Couldn't send that flag. It didn't reach us. Check your connection and try again.",
-  "flag.form.eyebrow": "Flag a safe space",
   "flag.form.title": "What happened at <em>{spaceName}?</em>",
   "flag.form.lead":
     "Flags are how we know when a space slips. Tell us what you saw: specifics help the review panel. Your name is never shared with the venue.",
@@ -163,12 +175,9 @@ export const safety: Catalog = {
   "flag.form.charsRemaining_other": "{count} more characters to submit",
   "flag.form.charsCount_one": "{count} character",
   "flag.form.charsCount_other": "{count} characters",
-  "flag.form.confidentialNote":
-    "Reports are confidential. Moderators see your name; the venue never does. In an emergency, call <strong>112</strong> first.",
   "flag.form.cancelCta": "Cancel",
   "flag.form.submitting": "Submitting…",
   "flag.form.submitCta": "Submit flag",
-  "flag.reasonFallback": "concern",
 
   // ── BlockMutePage.tsx / BlockMuteScreens.tsx / blockMute.data.ts ──────
   "blockMute.meta.title": "Blocking and muting someone on QueerPulse",
@@ -544,15 +553,9 @@ export const safety: Catalog = {
   "spaces.dir.title": "Verified <em>spaces.</em>",
   "spaces.dir.updated": "Last updated June 2025 · Member-maintained",
   "spaces.dir.nominateCta": "+ Nominate a space",
-  "spaces.dir.filterAria": "Filter spaces by category",
   "spaces.dir.browseLead":
     "Every verified space now lives in the local directory, filtered to just the ones that earned the badge.",
   "spaces.dir.browseCta": "Browse verified spaces",
-  "spaces.empty.title": "No verified spaces in this category yet",
-  "spaces.empty.description":
-    "The list grows as members visit and review places. Try another category, or nominate somewhere you already trust, and we'll get it reviewed.",
-  "spaces.empty.clearCta": "Clear filters",
-  "spaces.empty.nominateCta": "Nominate a space",
   "spaces.outro.title": "Safety is <em>collective.</em>",
   "spaces.outro.sub":
     "Every review, every flag, every nomination makes this list more useful for everyone. It only works because the community maintains it.",
@@ -610,10 +613,6 @@ export const safety: Catalog = {
   "spaces.nominate.thanks.subInfo":
     "Here's what happens next: we acknowledge every nomination within <strong>48 hours</strong>. Then three verified members visit independently and review it against the criteria before a volunteer panel decides. We'll keep you posted.",
   "spaces.nominate.anotherCta": "Nominate another space",
-  "spaces.nominate.comingSoon.badge": "Coming soon",
-  "spaces.nominate.comingSoon.title": "Nominations are <em>coming soon.</em>",
-  "spaces.nominate.comingSoon.body":
-    "We're still building the review pipeline behind space nominations. Switch on the demo platform to preview the full flow, or check back soon.",
 
   // ── SafeSpaceDetailPage.tsx ────────────────────────────────────────────
   "spaces.detail.backLink": "Safe spaces",
@@ -629,15 +628,6 @@ export const safety: Catalog = {
   "spaces.detail.vouchedSub":
     "Independent safety reviews from verified members.",
   "spaces.detail.addVouchCta": "Add yours",
-  "spaces.detail.incidentTitle": "If something happens <em>here</em>",
-  "spaces.detail.dangerTitle": "You're in immediate danger",
-  "spaces.detail.dangerBody":
-    "Tell any staff member you need help leaving. Verified spaces will escort you out, no questions asked. If you can, also call <strong>112</strong>.",
-  "spaces.detail.emergencyGuideCta": "Emergency guide",
-  "spaces.detail.offTitle": "Something felt off (not urgent)",
-  "spaces.detail.offBody":
-    "Even small things matter. They're how we know when a space slips. File a quiet report; moderators read every one and the venue is told without your name attached.",
-  "spaces.detail.quietReportCta": "File a quiet report",
   "spaces.detail.whereTitle": "Where",
   "spaces.detail.backAllCta": "Back to all spaces",
   "spaces.detail.glanceTitle": "At a glance",
@@ -692,11 +682,6 @@ export const safety: Catalog = {
   "vouchModal.form.submitting": "Submitting…",
   "vouchModal.form.submitCta": "Add my vouch",
   "vouchModal.form.error": "That didn't go through. Please try again.",
-  "vouchModal.comingSoon.badge": "Coming soon",
-  "vouchModal.comingSoon.title": "Vouches are <em>coming soon.</em>",
-  "vouchModal.comingSoon.body":
-    "We're still building the trust pipeline behind member vouches. Switch on the demo platform to preview the full flow, or check back soon.",
-  "vouchModal.comingSoon.doneCta": "Close",
 
   // ── SafeSpaceBadgeStatus.tsx — the honest badge states ────────────────
   "badge.state.none.title": "No safe-space badge",
@@ -774,7 +759,6 @@ export const safety: Catalog = {
   "flag.done.closeCta": "Close",
 
   // ── AdminSafeSpaceNominationsPage.tsx — the review queue ───────────────
-  "governance.nominations.eyebrow": "Safe spaces",
   "governance.nominations.title": "Nomination <em>queue.</em>",
   "governance.nominations.sub":
     "Oldest first, because the published promise is a nomination acknowledged within 48 hours. Anything past the window is marked.",
@@ -884,7 +868,6 @@ export const safety: Catalog = {
   "governance.tab.flags": "Flags",
   "governance.tab.listings": "Listings",
   "governance.tab.reReview": "Badges due",
-  "governance.flags.eyebrow": "Safe spaces",
   "governance.flags.title": "Flags and <em>suspensions.</em>",
   "governance.flags.sub":
     "What members raised about badged spaces, and which badges are on hold or past their yearly check.",

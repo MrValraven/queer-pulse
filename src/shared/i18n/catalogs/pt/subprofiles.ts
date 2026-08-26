@@ -42,7 +42,6 @@ export const subprofiles: Catalog = {
   "card.followerCount_one": "{count} seguidor",
   "card.followerCount_other": "{count} seguidores",
   "card.openPersona": "Abrir esta persona",
-  "card.view": "Ver",
 
   // Bloco "Também como…" no perfil principal (ProfileSubprofilesSection)
   "alsoAs.title": "Também a trabalhar como",
@@ -58,8 +57,6 @@ export const subprofiles: Catalog = {
   "alsoAs.featuredEyebrow": "Destaque",
   "alsoAs.addAnother": "Adicionar outra persona",
   "alsoAs.edit": "Editar",
-  "alsoAs.moveUp": "Mover para cima",
-  "alsoAs.moveDown": "Mover para baixo",
   "alsoAs.expandCard": "Ver detalhes",
   "alsoAs.filterLabel": "Filtrar por ofício",
   "alsoAs.filterAll": "Todas",
@@ -82,12 +79,6 @@ export const subprofiles: Catalog = {
   "alsoAs.sidesPrompt.notNow": "Agora não",
 
   // Navegação + paleta de comandos
-  "nav.browse": "Personas",
-  "nav.mine": "As tuas personas",
-  "command.mine.name": "As minhas personas",
-  "command.mine.sub": "As tuas personas profissionais",
-  "command.browse.name": "Explorar personas",
-  "command.browse.sub": "O diretório de personas",
 
   // Título do diretório (SubprofileDirectoryPage) — o <em> a coral ficou como
   // JSX em bruto antes de existir o <Translation>; agora passa por ele.
@@ -426,7 +417,6 @@ export const subprofiles: Catalog = {
   "mine.count": "{n} de {max}",
   "mine.atCap": "Chegaste ao máximo de personas que uma conta pode ter.",
   "mine.untitled": "Persona sem nome",
-  "mine.defaultName": "Essa persona",
   "mine.toastDeleted": "{name} eliminada",
   "mine.toastDeleteError":
     "Não conseguimos eliminar isso agora. Tenta outra vez.",
@@ -476,11 +466,9 @@ export const subprofiles: Catalog = {
   "editor.notFoundDescription":
     "Pode ter sido removida, ou o link não está certo.",
   "editor.notFoundAction": "Voltar às tuas personas",
-  "editor.backLink": "As tuas personas",
 
   // Editor base (useSubprofileMetaEditor, usado pelos painéis Identidade/
   // Presença/Endereço)
-  "metaForm.sectionTitle": "O essencial",
   "metaForm.avatarLabel": "Avatar",
   "metaForm.avatarPlaceholder": "Avatar",
   "metaForm.displayNameLabel": "Nome apresentado",
@@ -497,7 +485,6 @@ export const subprofiles: Catalog = {
   "metaForm.bioPlaceholder": "Umas frases nas tuas próprias palavras.",
   "metaForm.linkLabel": "Ligar ao teu perfil principal",
   "metaForm.addressLabel": "Endereço do perfil",
-  "metaForm.livesAt": "Fica em",
   "metaForm.addressPlaceholder": "por ex. engenharia",
   "metaForm.handleLabel": "Identificador",
   "metaForm.visibilityLabel": "Quem pode ver",
@@ -524,15 +511,10 @@ export const subprofiles: Catalog = {
   "metaForm.ctaMismatch":
     "Adiciona os dois, texto e link, ou deixa ambos em branco.",
 
-  "metaForm.save": "Guardar detalhes",
-  "metaForm.saving": "A guardar…",
   "metaForm.leaveConfirm":
     "Tens alterações por guardar neste perfil. Queres sair sem as guardar?",
-  "metaForm.toastSaved": "Detalhes guardados",
-  "metaForm.toastError": "Não conseguimos guardar isso agora. Tenta outra vez.",
 
   // Gaveta de item (SubprofileItemDrawerFields, aberta pela SubprofileItemDrawer)
-  "itemEditor.itemNumber": "Item {n}",
   "itemEditor.untitledPhoto": "Foto",
   "itemEditor.moveUp": "Mover para cima",
   "itemEditor.moveDown": "Mover para baixo",
@@ -541,7 +523,6 @@ export const subprofiles: Catalog = {
   "itemEditor.tagsHelper": "Separa com vírgulas",
   "itemEditor.feature": "Tornar isto o destaque",
   "itemEditor.unfeature": "Remover do destaque",
-  "itemEditor.featuredBadge": "Destaque",
 
   // Seletor de pessoas colaboradoras (CollaboratorSelect, dentro de SubprofileItemDrawerFields)
   "itemEditor.collaboratorsLabel": "Pessoas colaboradoras",
@@ -562,10 +543,6 @@ export const subprofiles: Catalog = {
   "socialEditor.linkFor": "Link de {platform}",
   "socialEditor.removeLinkFor": "Remover link de {platform}",
   "socialEditor.other": "Outro link",
-  "socialEditor.save": "Guardar links",
-  "socialEditor.saving": "A guardar…",
-  "socialEditor.saved": "Links guardados",
-  "socialEditor.error": "Não conseguimos guardar isso agora. Tenta outra vez.",
   "socialEditor.capHint": "É o máximo de links que podes acrescentar.",
 
   // Editor de links por item (projetos / código aberto)
@@ -578,11 +555,6 @@ export const subprofiles: Catalog = {
     "Ainda nada aqui. Acrescenta o primeiro quando quiseres.",
   "sectionEditor.addTo": "Acrescentar a {section}",
   "sectionEditor.capHint": "É o máximo que podes acrescentar a uma secção.",
-  "sectionEditor.save": "Guardar secção",
-  "sectionEditor.saving": "A guardar…",
-  "sectionEditor.toastSaved": "Alterações guardadas em {section}",
-  "sectionEditor.toastError":
-    "Não conseguimos guardar isso agora. Tenta outra vez.",
 
   // Painel de publicação (SubprofilePublishPanel)
   "publishPanel.successTitle": "Estás",
@@ -701,8 +673,6 @@ export const subprofiles: Catalog = {
   // (SubprofileSectionEditor). O texto dos exemplos lê-se como um
   // preenchimento simpático e editável — a ideia é que a pessoa o substitua
   // pelo seu próprio trabalho, não que o mantenha tal como está.
-  "template.helper":
-    "Os modelos preenchem as tuas secções com alguns exemplos e sugerem uma frase de apresentação. Tudo pode ser editado ou apagado.",
   "template.insertExamples": "Inserir exemplos",
 
   // Frases de apresentação sugeridas por ofício — aplicadas junto com os
@@ -878,15 +848,11 @@ export const subprofiles: Catalog = {
   "hero.endorse.endorsed": "Recomendaste",
   "hero.endorse.count_one": "{count} recomendação",
   "hero.endorse.count_other": "{count} recomendações",
-  "hero.endorse.addNote": "Adicionar nota",
-  "hero.endorse.notePlaceholder": "Diz uma palavra sobre porquê (opcional)",
-  "hero.endorse.send": "Enviar",
   "hero.endorse.error": "Não conseguimos guardar isso agora. Tenta outra vez.",
   "hero.endorse.endorsedByNames": "Com recomendação de {names}",
 
   // Endorse-with-note modal (EndorseSubprofileModal, EndorseSubprofileModalParts)
   "hero.endorse.modal.ariaLabel": "Recomendar {name}",
-  "hero.endorse.modal.close": "Fechar",
   "hero.endorse.modal.eyebrow": "Adiciona a tua recomendação",
   "hero.endorse.modal.title": "Recomendar <em>{name}</em>",
   "hero.endorse.modal.sub":
@@ -932,14 +898,12 @@ export const subprofiles: Catalog = {
   // Modal de cartão de partilha (SubprofileShareCard) + código QR
   // (SubprofileQR) — pontos de entrada no SubprofileHero (público) e no
   // MySubprofilesPage (responsável).
-  "shareCard.cta": "Código QR",
   "shareCard.title": "Leva contigo",
   "shareCard.subtitle":
     "Digitaliza para abrir a página de {name} noutro dispositivo, ou guarda os detalhes abaixo.",
   "shareCard.download": "Transferir cartão de contacto",
   "shareCard.qrAria": "Código QR que liga à página da persona de {name}",
   "shareCard.copyLink": "Copiar link",
-  "qr.loading": "A gerar código QR…",
   "qr.error":
     "Não conseguimos gerar o código QR. Aqui tens o link em alternativa.",
 
@@ -998,13 +962,11 @@ export const subprofiles: Catalog = {
   // Página pública da persona (SubprofilePage.tsx)
   "page.loading": "A carregar persona…",
   "page.ownerTie": "Outra persona de <em>{name}</em>",
-  "page.visit": "Visitar",
   "page.notFoundTitle": "Esta persona não está aqui",
   "page.notFoundMetaTitle": "Persona não encontrada · QueerPulse",
   "page.notFoundDescription":
     "Pode ter sido despublicada, mantida privada, ou este link pode estar desatualizado. Não há nada de errado do teu lado.",
   "page.notFoundAction": "Explorar personas",
-  "page.notFoundBack": "Voltar atrás",
 
   // As outras três páginas de "não podemos mostrar isto" (SubprofilePageStates)
   // — já construídas, ainda não alcançáveis pelos dados atuais (ver
@@ -1083,11 +1045,6 @@ export const subprofiles: Catalog = {
     "Vamos verificar que corresponde a um evento ou comunidade reais quando guardares.",
   "affiliationsEditor.add": "Adicionar um link",
   "affiliationsEditor.capHint": "É o máximo de links que podes acrescentar.",
-  "affiliationsEditor.save": "Guardar links",
-  "affiliationsEditor.saving": "A guardar…",
-  "affiliationsEditor.saved": "Links guardados",
-  "affiliationsEditor.error":
-    "Não conseguimos guardar isso agora. Tenta outra vez.",
 
   // Painel de responsáveis conjuntos (SubprofileOwnersPanel, no editor)
   "owners.title": "Responsáveis conjuntos",
@@ -1124,9 +1081,7 @@ export const subprofiles: Catalog = {
   "invite.sub":
     "A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
   "invite.searchPlaceholder": "Procura nas tuas ligações",
-  "invite.searchAria": "Procura nas tuas ligações",
   "invite.empty": "Não há mais ligações para convidar.",
-  "invite.cta": "Convidar",
   "invite.inviting": "A convidar…",
   "invite.toastSent":
     "Convite enviado. A pessoa vai precisar de aceitar antes de poder gerir esta persona.",
@@ -1196,6 +1151,7 @@ export const subprofiles: Catalog = {
   "reportModal.reasonLabel": "Qual é o problema?",
   "reportModal.reasons.impersonating": "A fingir ser outra pessoa",
   "reportModal.reasons.hateOrHarassment": "Discurso de ódio ou assédio",
+  "reportModal.reasons.discrimination": "Discriminação ou uso do género errado",
   "reportModal.reasons.notReal": "Não é uma prática ou serviço real",
   "reportModal.reasons.sexualContent": "Conteúdo sexual sem aviso",
   "reportModal.reasons.spam": "Spam",
@@ -1221,12 +1177,9 @@ export const subprofiles: Catalog = {
   "peopleModal.endorsementsTitle_other": "{count} recomendações",
   "peopleModal.loading": "A carregar…",
   "peopleModal.noEndorsements": "Ainda sem recomendações",
-  "peopleModal.noEndorsementsBody":
-    "Quando alguém recomendar o trabalho desta persona, aparece aqui.",
   "peopleModal.noFollowers": "Ainda sem seguidores",
   "peopleModal.noNote": "Recomendou sem deixar nota",
   "peopleModal.removeAriaLabel": "Remover a tua recomendação a {name}",
-  "peopleModal.removeCta": "Remover",
   "peopleModal.removeError":
     "Não conseguimos remover isso agora. Tenta outra vez.",
   "peopleModal.followersPrivateTitle": "Seguidores são privados",
@@ -1477,7 +1430,6 @@ export const subprofiles: Catalog = {
   "editorRail.content": "Conteúdo",
   "editorRail.people": "Pessoas",
   "editorRail.publishGroup": "Publicar",
-  "editorRail.publish": "Publicar",
   "editorRail.getItLive": "Pôr no ar",
 
   // Cabeçalhos dos painéis do editor (EditorPaneRouter, editorPaneHeaders.data.ts)
@@ -1517,7 +1469,6 @@ export const subprofiles: Catalog = {
   "pending.area.socials": "Links sociais",
   "pending.area.affiliations": "Parte de",
   "pending.metaEdited": "Alteração em {field}",
-  "pending.metaSet": "{field} → {value}",
   "pending.metaImage": "Atualização em {field}",
   "pending.metaImageRemoved": "Remoção de {field}",
   "pending.rowSummary": "{area}: {summary}",

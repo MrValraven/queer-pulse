@@ -54,12 +54,6 @@ export const homepage: Catalog = {
     "When something goes wrong, you should not have to shout into the void. Reports are reviewed by real people and responded to as quickly as possible.",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
-  "trustStrip.vouched": "Invite-only & vouched",
-  "trustStrip.encrypted": "End-to-end encrypted",
-  "trustStrip.moderation": "Actively moderated",
-  "trustStrip.blockMuteReport": "Block, mute, report",
-  "trustStrip.privacyControls": "Granular privacy controls",
-  "trustStrip.reportCta": "Read our safety policy",
 
   // ── PainPoints ("why we built this") ───────────────────────────────────────
   "painPoints.eyebrow": "Why we built this",
@@ -149,7 +143,6 @@ export const homepage: Catalog = {
   "discovery.featuredMember": "Featured member",
   "discovery.vouchedBy": "Vouched by {name}",
   "discovery.viewProfile": "View profile",
-  "discovery.sayHello": "Say hello",
   "membersExplainer.eyebrow": "Members-only",
   "membersExplainer.title": "Members <em>power</em> QueerPulse",
   "membersExplainer.titlePlain": "Members power QueerPulse",

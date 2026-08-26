@@ -1,30 +1,40 @@
-import { useEffect, useRef, useState } from "react";
-import { FiArrowRight, FiCheck, FiMail, FiRefreshCw } from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { REAUTH_EMAIL, RESEND_COOLDOWN } from "./verificationNeeded.data";
+import { REAUTH_EMAIL } from "./verificationNeeded.data";
 import styles from "./VerificationNeededPage.module.css";
 
 /**
  * Re-authentication panes.
  *
  * This page once offered three "methods": a password box, a 6-digit
- * authenticator code, and a magic link. Two of them were fiction. The password
+ * authenticator code, and a magic link. All three were fiction. The password
  * input verified nothing — its submit handler called `onVerify()` straight
  * through, and QueerPulse accounts have no password at all (Google OAuth +
  * invite), so it existed only to make password managers offer to save a
  * credential that doesn't exist. The authenticator pane matched against a
- * hardcoded demo constant and referenced 2FA the platform has never had. Both
- * are gone; the magic link is the one method whose story matches reality.
+ * hardcoded demo constant and referenced 2FA the platform has never had. The
+ * magic link offered to "email a one-time confirmation link": its send button
+ * was a `setTimeout`, and QueerPulse delivers no email, so the link it
+ * promised could never arrive.
+ *
+ * All three are gone. What is left is a single confirm step that tells the
+ * truth about the real mechanism: step-up re-auth on QueerPulse is a Google
+ * sign-in round trip (`beginReauth()` in `features/settings/api/
+ * useReauthToken.ts`), which is what the live surfaces that need it
+ * (DeleteAccountSection, AccountDataExport, useDsar) actually call. This
+ * page itself is a prototype preview: nothing links to it outside the
+ * dev-only simulations gallery, and its confirm button still resolves
+ * locally rather than leaving for Google.
  */
 
 function Spinner() {
   return <span className={styles.spinner} aria-hidden />;
 }
 
-/* ── Magic link ───────────────────────────────────────────── */
-export function MagicLinkMethod({
+/* ── Confirm it's you ─────────────────────────────────────── */
+export function ConfirmMethod({
   busy,
   onVerify,
 }: {
@@ -32,86 +42,11 @@ export function MagicLinkMethod({
   onVerify: () => void;
 }) {
   const { t } = useTranslation();
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
-  // Both timers are held in refs so unmounting clears them. Without this the
-  // cooldown interval kept ticking after a member navigated away, calling
-  // setCooldown on a component that no longer exists until it hit zero.
-  // Mirrors VerificationNeededPage's own timer cleanup.
-  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
-    null,
-  );
-  const sendTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(
-    () => () => {
-      if (cooldownIntervalRef.current)
-        clearInterval(cooldownIntervalRef.current);
-      if (sendTimeoutRef.current) clearTimeout(sendTimeoutRef.current);
-    },
-    [],
-  );
-
-  function startCooldown() {
-    let secondsRemaining = RESEND_COOLDOWN;
-    setCooldown(secondsRemaining);
-    if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
-    cooldownIntervalRef.current = setInterval(() => {
-      secondsRemaining--;
-      setCooldown(secondsRemaining);
-      if (secondsRemaining <= 0 && cooldownIntervalRef.current) {
-        clearInterval(cooldownIntervalRef.current);
-        cooldownIntervalRef.current = null;
-      }
-    }, 1000);
-  }
-
-  function send() {
-    if (sending) return;
-    setSending(true);
-    sendTimeoutRef.current = setTimeout(() => {
-      sendTimeoutRef.current = null;
-      setSending(false);
-      setSent(true);
-      startCooldown();
-    }, 1000);
-  }
-
-  if (!sent) {
-    return (
-      <div className={styles.magicIntro}>
-        <p className={styles.magicCopy}>
-          <Translation
-            i18nKey="system:verificationNeeded.magicLink.intro"
-            values={{ email: REAUTH_EMAIL }}
-            components={{ b: <b /> }}
-          />
-        </p>
-        <Button className={styles.confirmBtn} onClick={send} disabled={sending}>
-          {sending ? (
-            <>
-              <Spinner /> {t("system:verificationNeeded.magicLink.sendingCta")}
-            </>
-          ) : (
-            <>{t("system:verificationNeeded.magicLink.sendCta")}</>
-          )}
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <div className={styles.sentBox}>
-      <div className={styles.sentIc}>
-        <FiMail aria-hidden />
-      </div>
-      <p className={styles.sentTitle}>
-        {t("system:verificationNeeded.magicLink.sentTitle")}
-      </p>
+    <div className={styles.magicIntro}>
       <p className={styles.magicCopy}>
         <Translation
-          i18nKey="system:verificationNeeded.magicLink.sentCopy"
+          i18nKey="system:verificationNeeded.confirm.intro"
           values={{ email: REAUTH_EMAIL }}
           components={{ b: <b /> }}
         />
@@ -119,28 +54,15 @@ export function MagicLinkMethod({
       <Button className={styles.confirmBtn} onClick={onVerify} disabled={busy}>
         {busy ? (
           <>
-            <Spinner /> {t("system:verificationNeeded.magicLink.verifyingCta")}
+            <Spinner /> {t("system:verificationNeeded.confirm.verifyingCta")}
           </>
         ) : (
           <>
-            {t("system:verificationNeeded.magicLink.confirmCta")}{" "}
+            {t("system:verificationNeeded.confirm.cta")}{" "}
             <FiArrowRight aria-hidden />
           </>
         )}
       </Button>
-      <button
-        type="button"
-        className={styles.resendBtn}
-        onClick={send}
-        disabled={cooldown > 0 || sending}
-      >
-        <FiRefreshCw aria-hidden />
-        {cooldown > 0
-          ? t("system:verificationNeeded.magicLink.resendCountdown", {
-              seconds: cooldown,
-            })
-          : t("system:verificationNeeded.magicLink.resendCta")}
-      </button>
     </div>
   );
 }

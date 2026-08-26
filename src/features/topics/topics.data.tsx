@@ -185,7 +185,7 @@ const healthcare: Topic = {
       author: "Trans Hub",
       initials: "TH",
       tone: "coral",
-      meta: "Hosted gathering · Thu 12 Jun, 19:00",
+      meta: "Hosted gathering · Fri 12 Jun, 19:00",
       kind: "event",
       category: "event",
       title: (
@@ -356,7 +356,7 @@ const trans: Topic = {
       author: "Trans Hub",
       initials: "TH",
       tone: "coral",
-      meta: "Hosted gathering · Sat 21 Jun, 16:00",
+      meta: "Hosted gathering · Sun 21 Jun, 16:00",
       kind: "event",
       category: "event",
       title: (
@@ -502,12 +502,12 @@ const mentalhealth: Topic = {
       author: "Peer Support Circle",
       initials: "PS",
       tone: "coral",
-      meta: "Weekly gathering · Tue 19:30",
+      meta: "Weekly gathering · Sun 18:30",
       kind: "event",
       category: "event",
       title: (
         <>
-          Thursday peer circle: <em>no fixing, just being heard.</em>
+          Sunday peer circle: <em>no fixing, just being heard.</em>
         </>
       ),
       body: "A facilitated, confidential room for whatever you're carrying. Drop in when you need it, no commitment. Held by trained community facilitators.",

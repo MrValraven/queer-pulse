@@ -18,8 +18,8 @@ import styles from "./AccountSuspendedPage.module.css";
  */
 const SUSPENSION_DAYS = 7;
 const CHANNEL = "#trans-mutual-aid";
-const STARTED_AT = "Mon 9 Jun · 14:08 WET";
-const LIFTS_AT = "Mon 16 Jun · 14:08";
+const STARTED_AT = "Tue 9 Jun · 14:08 WET";
+const LIFTS_AT = "Tue 16 Jun · 14:08";
 const REVIEWER_NAME = "Sofia C.";
 const CASE_ID = "QP-MOD-2026-1184";
 const OVERTURNED_PERCENT = 11;

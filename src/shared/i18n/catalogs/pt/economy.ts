@@ -404,7 +404,6 @@ export const economy: Catalog = {
 
   // ── JobDetailPage (+ cabeçalho / corpo / barra lateral) ────────────────
   "jobDetail.breadcrumb.jobs": "Vagas",
-  "jobDetail.saveTitle": "Guardar anúncio",
   "jobDetail.savedToast": "Anúncio guardado no teu perfil.",
   "jobDetail.unsavedToast": "Anúncio removido das guardadas.",
   "jobDetail.chip.applyBy": "Candidaturas até {date}",
@@ -585,7 +584,6 @@ export const economy: Catalog = {
   "housing.outro.askForum": "Perguntar no fórum",
 
   // ── HousingModals (mensagem à pessoa anunciante / recomendar) ──────────
-  "housingModal.close": "Fechar",
   "housingModal.charsToSend_one": "Falta mais {count} caráter para enviar",
   "housingModal.charsToSend_other": "Faltam mais {count} carateres para enviar",
   "housingModal.charsToSubmit_one": "Falta mais {count} caráter para submeter",
@@ -860,7 +858,6 @@ export const economy: Catalog = {
   "housingListing.messageCtaArrow": "Enviar mensagem a {name}",
   "housingListing.messageCta": "Enviar mensagem a {name}",
   "housingListing.listedBy": "Anunciado por",
-  "housingListing.verifiedMember": "Pessoa membro verificada",
 
   // ── Verificação de identidade — selos honestos + verificação em degraus ─
   "verification.badge.id.label": "Identidade verificada",
@@ -952,8 +949,6 @@ export const economy: Catalog = {
   "housingListing.moreOnBoard": "Mais no quadro",
   "housingListing.save": "Guardar",
   "housingListing.saved": "Guardada",
-  "housingListing.saveAriaLabel": "Guardar {title}",
-  "housingListing.unsaveAriaLabel": "Remover {title} das guardadas",
   "housingListing.savedToast": "{title} guardada",
   "housingListing.unsavedToast": "{title} removida das guardadas",
   // Estado de erro de carregamento (não 404): mostra tentar de novo em vez de
@@ -1153,15 +1148,12 @@ export const economy: Catalog = {
   "landlordPage.intro.fallbackName": "Uma pessoa da comunidade",
   "landlordPage.save": "Guardar",
   "landlordPage.saved": "Guardada",
-  "landlordPage.saveAriaLabel": "Guardar {name}",
-  "landlordPage.unsaveAriaLabel": "Remover {name} das guardadas",
   "landlordPage.savedToast": "{name} guardada",
   "landlordPage.unsavedToast": "{name} removida das guardadas",
   "landlordPage.report": "Denunciar",
   "landlordPage.reportAriaLabel": "Denunciar {name}",
 
   // ── ModalKit (moldura de modal partilhada + painel de sucesso) ──────────
-  "modalKit.closeAriaLabel": "Fechar",
   "modalKit.close": "Fechar",
 
   // ── FlatmatesBoard / FlatmatesFilterBar / FlatmateCard ─────────────────
@@ -1214,11 +1206,8 @@ export const economy: Catalog = {
   "flatmates.card.matchScore": "{score}% compatível",
   "flatmates.card.save": "Guardar",
   "flatmates.card.saved": "Guardado",
-  "flatmates.card.saveAriaLabel": "Guardar o perfil de {name}",
-  "flatmates.card.unsaveAriaLabel": "Remover o perfil de {name} dos guardados",
   "flatmates.card.savedToast": "Perfil de {name} guardado",
   "flatmates.card.unsavedToast": "Perfil de {name} removido dos guardados",
-  "flatmates.card.reportCta": "Denunciar",
   "flatmates.card.reportAriaLabel": "Denunciar o perfil de {name}",
   "flatmates.card.safeSpaceLabel": "Necessidades de espaço seguro",
   "flatmates.card.householdLabel": "Casa",
@@ -2136,7 +2125,6 @@ export const economy: Catalog = {
   "mentorship.match.findMentorAria": "Encontrar um mentor",
   "mentorship.match.becomeMentorAria": "Tornar-te mentor",
   "mentorship.match.closeAria": "Fechar",
-  "mentorship.match.done": "Concluído!",
   "mentorship.match.stepOf": "Passo {step} de {total}",
 
   "mentorship.match.success.mentee.title": "Pedido recebido.",
@@ -2971,7 +2959,6 @@ export const economy: Catalog = {
   "housingCoop.templates.title": "Modelos & <em>ferramentas</em>",
   "housingCoop.templates.sub":
     "Todos os documentos que gostávamos que nos tivessem dado. Preparados com a equipa jurídica da QueerPulse, traduzidos PT & EN, testados nos primeiros dois anos da Casa Sambizanga.",
-  "housingCoop.templates.download": "Descarregar",
   "housingCoop.templates.read": "Ler",
   "housingCoop.startCta.eyebrow": "Começa uma cooperativa",
   "housingCoop.startCta.title": "Ainda não tens <em>o teu grupo</em>?",
@@ -3465,8 +3452,6 @@ export const economy: Catalog = {
     "Pedido de mentoria enviado à Casa Sambizanga.",
   "housingCoop.toast.seeAll":
     "O diretório completo de cooperativas está a chegar.",
-  "housingCoop.toast.preparingDownload":
-    "A preparar “{name}” para descarregar…",
   "housingCoop.toast.postHelp":
     "Vamos ajudar-te a encontrar o teu grupo. Confirma a tua caixa de entrada.",
   "housingCoop.toast.story": "A história da Casa Sambizanga está a chegar.",
@@ -3684,37 +3669,19 @@ export const economy: Catalog = {
   "housingSafety.rights.lease.title": "Um contrato escrito e registado",
   "housingSafety.rights.lease.point.1":
     "O teu arrendamento deve ser um contrato escrito, um acordo verbal deixa-te com muito menos para te defenderes.",
-  "housingSafety.rights.lease.point.2":
-    "O senhorio tem de registar o contrato nas Finanças. Desde 2025, se não o fizer, podes registá-lo tu através do Portal das Finanças.",
-  "housingSafety.rights.lease.point.3":
-    "O prazo mínimo é de um ano, salvo acordo diferente por escrito entre ambos.",
-  "housingSafety.rights.lease.point.4":
-    "Guarda a tua cópia assinada e o registo. São eles que provam os teus direitos mais tarde.",
   "housingSafety.rights.deposit.title": "Caução e renda adiantada",
   "housingSafety.rights.deposit.point.1":
     "A caução está limitada a duas rendas.",
-  "housingSafety.rights.deposit.point.2":
-    "Os senhorios costumam ainda pedir cerca de duas rendas adiantadas, algo muito além disso não é o habitual.",
   "housingSafety.rights.rentIncrease.title": "Aumentos de renda",
   "housingSafety.rights.rentIncrease.point.1":
     "A renda pode subir no máximo uma vez a cada 12 meses, e só com 30 dias de aviso por escrito.",
-  "housingSafety.rights.rentIncrease.point.2":
-    "O aumento anual está limitado pelo coeficiente do INE, em 2026 é de 2,24%.",
-  "housingSafety.rights.rentIncrease.point.3":
-    "Um aumento acima do limite, ou mais do que uma vez por ano, não é permitido.",
   "housingSafety.rights.eviction.title": "Despejo e a tua casa",
   "housingSafety.rights.eviction.point.1":
     "Só podes ser despejado através de um tribunal ou do Balcão Nacional do Arrendamento. Nunca de imediato.",
-  "housingSafety.rights.eviction.point.2":
-    "O senhorio não pode mudar as fechaduras, cortar-te a água ou a luz, nem retirar os teus bens para te obrigar a sair.",
-  "housingSafety.rights.eviction.point.3":
-    "Esse tipo de assédio é crime segundo a Lei n.º 12/2019. Tens o direito de denunciar.",
   "housingSafety.rights.discrimination.title":
     "Se fores tratado de forma injusta",
   "housingSafety.rights.discrimination.point.1":
     "A lei do arrendamento não prevê proteções específicas para pessoas LGBTQ+, mas a discriminação pode na mesma ser denunciada a um organismo para a igualdade.",
-  "housingSafety.rights.discrimination.point.2":
-    "Guarda as mensagens e os apontamentos, um registo escrito ajuda se decidires avançar.",
   "housingSafety.disclaimer.title":
     "Orientação, não <em>aconselhamento jurídico</em>",
   "housingSafety.disclaimer.body":

@@ -1,6 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { apiPost } from "../../../shared/api/client";
+import { MY_LISTING_CLAIMS_KEY } from "../listBusiness/api/useListingClaims";
 
 export interface ClaimListingInput {
   /** Free-text note a moderator reads in the claim queue. Optional. */
@@ -17,6 +18,7 @@ export interface ClaimListingInput {
  */
 export function useClaimListing(ref: string) {
   const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
 
   return useMutation<void, Error, ClaimListingInput>({
     // DirectoryClaimModal renders its own error state, so silence the global
@@ -30,6 +32,12 @@ export function useClaimListing(ref: string) {
       await apiPost(`/listings/${ref}/claim`, {
         ...(input.note ? { note: input.note } : {}),
       });
+    },
+    // So the claim is already on "Claims you've filed" when the claimant
+    // follows the link out of the confirmation panel.
+    onSuccess: () => {
+      if (demoMode) return;
+      void queryClient.invalidateQueries({ queryKey: MY_LISTING_CLAIMS_KEY });
     },
   });
 }

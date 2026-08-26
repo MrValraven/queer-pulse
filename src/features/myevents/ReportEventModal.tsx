@@ -2,22 +2,11 @@ import { useState } from "react";
 import { Button, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { ReasonCode } from "../safety/reportReasons";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
+import { EVENT_REPORT_REASONS } from "./reportEventModal.data";
 
-// Each local reason radio maps to a stable, server-owned `ReasonCode` from the
-// shared taxonomy (`safety/reportReasons.ts`, `SUBJECT_REASONS.event`). The
-// human labels stay localized here; only the code is sent to `POST /reports`.
-const EVENT_REASONS: { key: string; code: ReasonCode }[] = [
-  { key: "myevents:reportModal.reason.hate", code: "hate_speech" },
-  { key: "myevents:reportModal.reason.unsafe", code: "venue_safety" },
-  { key: "myevents:reportModal.reason.spam", code: "spam" },
-  { key: "myevents:reportModal.reason.shouldntBeHere", code: "off_topic" },
-  { key: "myevents:reportModal.reason.somethingElse", code: "other" },
-];
-
-/** Report-an-event flow — pick a reason, add context, send to the safety team. */
+/** Report-an-event flow: pick a reason, add context, send to the safety team. */
 export function ReportEventModal() {
   const { t } = useTranslation();
   const { report, byId, submitReport, closeReport } = useMyEvents();
@@ -49,7 +38,7 @@ export function ReportEventModal() {
             disabled={reason === null}
             onClick={() => {
               if (reason === null) return;
-              submitReport(EVENT_REASONS[reason]!.code, note);
+              submitReport(EVENT_REPORT_REASONS[reason]!.code, note);
             }}
           >
             {t("myevents:reportModal.sendCta")}
@@ -66,7 +55,7 @@ export function ReportEventModal() {
           role="radiogroup"
           aria-labelledby="report-reason-label"
         >
-          {EVENT_REASONS.map((option, index) => (
+          {EVENT_REPORT_REASONS.map((option, index) => (
             <button
               key={option.key}
               type="button"

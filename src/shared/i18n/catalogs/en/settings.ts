@@ -72,22 +72,6 @@ export const settings: Catalog = {
   "controls.deleteModal.continue": "Continue to delete",
 
   // ── SuggestEditModal (terminology guide) ────────────
-  "modals.suggestEdit.ariaLabel": "Suggest an edit to {term}",
-  "modals.suggestEdit.success.title": "Thank you, <em>noted.</em>",
-  "modals.suggestEdit.success.body":
-    "Your suggested edit to <strong>{term}</strong> is with our community editors. Terminology changes are reviewed before going live; we'll let you know what happens.",
-  "modals.suggestEdit.eyebrow": "Terminology · suggest an edit",
-  "modals.suggestEdit.title": "Refine <em>{term}.</em>",
-  "modals.suggestEdit.desc":
-    "This guide is edited by the community. Suggest a clearer wording or a correction. Every change is reviewed before publishing.",
-  "modals.suggestEdit.wordingLabel": "Your suggested wording",
-  "modals.suggestEdit.wordingPlaceholder": 'A clearer definition of "{term}"…',
-  "modals.suggestEdit.whyLabel": "Why change it?",
-  "modals.suggestEdit.optional": "(optional)",
-  "modals.suggestEdit.whyPlaceholder": "Context that helps the editors",
-  "modals.suggestEdit.sending": "Sending…",
-  "modals.suggestEdit.send": "Send suggestion",
-  "modals.suggestEdit.cancel": "Cancel",
 
   // ── SettingsPersonalisation.tsx — ProfileThemePane ───────────────────────
   "personalisation.theme.title": "Profile <em>theme.</em>",
@@ -171,10 +155,12 @@ export const settings: Catalog = {
   "interests.age.35to45": "35–45",
   "interests.age.45plus": "45+",
 
-  // ── interests.data.ts — email frequency (id "daily"/"weekly"/"important"
-  // is the stored value; only title/desc are translated) ───────────────────
+  // ── interests.data.ts: how often the feed digest gathers up (id
+  // "daily"/"weekly"/"important" is the stored value; only title/desc are
+  // translated). Names no email: QueerPulse delivers none and never will, so
+  // "hear from us" here means what lands in the app. ───────────────────────
   "interests.freq.daily.title": "Daily digest",
-  "interests.freq.daily.desc": "One email per day with your top updates",
+  "interests.freq.daily.desc": "One roundup a day with your top updates",
   "interests.freq.weekly.title": "Weekly roundup",
   "interests.freq.weekly.desc": "A curated weekly summary of what matters",
   "interests.freq.important.title": "Only important",
@@ -534,9 +520,7 @@ export const settings: Catalog = {
 
   // ── EditProfileSidebar.tsx / editProfileNav.data.tsx ─────────────────────
   "editProfile.nav.group.profile": "Profile",
-  "editProfile.nav.group.privacy": "Privacy",
   "editProfile.nav.identity.label": "Identity & photo",
-  "editProfile.nav.pronouns.label": "Pronouns & name",
   "editProfile.nav.bio.label": "Bio & occupation",
   "editProfile.nav.links.label": "Links & social",
   "editProfile.nav.skills.label": "Skills & interests",
@@ -585,8 +569,6 @@ export const settings: Catalog = {
   "editProfile.pronouns.label": "Pronouns",
   "editProfile.pronouns.writeOwnLabel": "Write your own",
   "editProfile.pronouns.writeOwnPlaceholder": "Or write your own…",
-  "editProfile.pronouns.hint":
-    "You can select multiple chips above. Pronouns are shown on your profile only, never in meta tags or URLs.",
   "editProfile.pronouns.removeCustomAriaLabel": "Remove {pronoun}",
 
   // ── EditProfileSections.tsx — BioSection ─────────────────────────────────
@@ -925,9 +907,6 @@ export const settings: Catalog = {
     "Demo export generated in-browser. No personal data left this device.",
 
   // ── SaveButton.tsx — reusable save control, shared across several panes ──
-  "saveButton.defaultLabel": "Save changes",
-  "saveButton.savingLabel": "Saving…",
-  "saveButton.savedLabel": "Saved",
 
   // ── AccessibilityPrefSections.tsx — the accessibility pane's rows.
   // Only "Reduce motion" and "Skip to content link" are backed by a store and
@@ -936,12 +915,6 @@ export const settings: Catalog = {
   // Shown under the two preferences that are really backed by a store, so the
   // absence of a save bar on this pane reads as intent rather than a bug.
   "a11y.instantSaveHint": "Saved to this device the moment you flip it.",
-  "a11y.sidebar.preferences": "Preferences",
-  "a11y.sidebar.display": "Display",
-  "a11y.sidebar.motion": "Motion",
-  "a11y.sidebar.reading": "Reading",
-  "a11y.sidebar.interaction": "Interaction",
-  "a11y.sidebar.reset": "Reset",
   "a11y.section.display.eyebrow": "Display",
   "a11y.section.display.desc":
     "These settings apply across the whole platform.",
@@ -1012,10 +985,8 @@ export const settings: Catalog = {
   "deleteAccount.pending.sub":
     "You asked us to delete your account. Here's where that stands.",
   "deleteAccount.pauseStrip.text":
-    "Not sure? Consider <strong>pausing notifications</strong> for a month instead. You stay a member without the noise.",
-  "deleteAccount.pauseStrip.cta": "Turn off all emails and digests",
-  "deleteAccount.toast.pausedEmails":
-    "All email notifications paused for 30 days.",
+    "Not sure? You can <strong>turn the volume down</strong> instead. Choose which notifications reach you, and set quiet hours so your phone stays still overnight. You keep your place here, with less noise in it.",
+  "deleteAccount.pauseStrip.cta": "Choose your notifications",
   "deleteAccount.whatHappens.title.deactivate":
     "What happens when you deactivate",
   "deleteAccount.whatHappens.title.delete": "What happens when you delete",
@@ -1133,29 +1104,4 @@ export const settings: Catalog = {
   "themeStudio.badge.sustainer": "Sustainer (Rare)",
   "themeStudio.badge.regular": "Regular (Rare)",
   "themeStudio.badge.vouch": "Vouch (Rare)",
-  "themeStudio.backToProfile": "My profile",
-  "themeStudio.saveTheme": "Save theme",
-  "themeStudio.toast.saved": "Theme saved",
-
-  // ── LinkProviderModal.tsx ─────────────────────────────────────────────────
-  "linkProvider.ariaLabel": "Authorize {provider}",
-  "linkProvider.eyebrow": "Authorize · {provider}",
-  "linkProvider.continueWith": "Continue with {provider}",
-  "linkProvider.requestingAccess": "QueerPulse is requesting access",
-  "linkProvider.authorizing": "Authorizing…",
-  "linkProvider.authorizeCta": "Authorize {provider}",
-  "linkProvider.cancel": "Cancel",
-  "linkProvider.linkedTitle": "{provider} <em>linked.</em>",
-  "linkProvider.linkedSub":
-    "You can now sign in to QueerPulse with {provider}. Revoke it any time from this page. Your messages and memberships were never shared.",
-  "linkProvider.done": "Done",
-
-  // ── IntegrationsModal.tsx ─────────────────────────────────────────────────
-  "integrationsModal.ariaLabel": "Available integrations",
-  "integrationsModal.eyebrow": "Connect another",
-  "integrationsModal.title": "Available <em>integrations.</em>",
-  "integrationsModal.desc":
-    "Each integration is scoped narrowly. None can read your DMs, drafts, billing, or community memberships.",
-  "integrationsModal.connectedTag": "Connected",
-  "integrationsModal.connectCta": "Connect",
 };

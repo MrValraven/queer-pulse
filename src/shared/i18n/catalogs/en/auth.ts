@@ -13,20 +13,13 @@ export const auth: Catalog = {
   "common.backToProfile": "Back to profile",
   "common.copied": "Copied",
   "common.copy": "Copy",
-  "common.delete": "Delete",
   "common.notAMemberYet": "Not a member yet?",
   "common.optionalSuffix": "(optional)",
-  "common.resume": "Resume",
-  "common.saving": "Saving…",
 
   // ── Sign in ──
   "signIn.title": "Welcome <em>back</em>",
   "signIn.subtitle": "Sign in to pick up where you left off.",
   "signIn.artCaption": "A queer network, <em>rooted in Lisbon.</em>",
-  "signIn.email": "Email",
-  "signIn.password": "Password",
-  "signIn.submit": "Sign in",
-  "signIn.forgot": "Forgot your password?",
   "signIn.connecting": "Connecting…",
   "signIn.googleCta": "Continue with Google",
   "signIn.notice.inviteRequired.title": "You'll need an invite",
@@ -109,9 +102,6 @@ export const auth: Catalog = {
   "invite.quota.resets_one": "Resets tomorrow",
   "invite.quota.resets_other": "Resets in {count} days",
   "invite.quota.resets_zero": "Resets today",
-  "invite.deliveryMethod.ariaLabel": "Choose how to send the invite",
-  "invite.deliveryMethod.email": "Email",
-  "invite.deliveryMethod.link": "Share a link",
 
   "invite.compose.recipientEmail.label": "Who is this for",
   "invite.compose.recipientEmail.placeholder": "them@example.com",
@@ -126,34 +116,6 @@ export const auth: Catalog = {
     "Why should they join? A sentence or two goes a long way.",
   "invite.compose.note.label": "Personal note",
   "invite.compose.note.placeholder": "Add a personal note (optional)",
-
-  "invite.draft.title": "Invite to {name}",
-  "invite.draft.titleFallbackName": "someone new",
-  "invite.draft.descFallback": "An invite draft in progress",
-  "invite.draft.savedJustNow": "Saved just now",
-  "invite.draft.savedToast": "Draft saved",
-
-  "invite.email.firstName.label": "First name",
-  "invite.email.firstName.placeholder": "Alex",
-  "invite.email.lastName.label": "Last name",
-  "invite.email.lastName.placeholder": "Morais",
-  "invite.email.email.label": "Email",
-  "invite.email.email.placeholder": "you@example.com",
-  "invite.email.howYouKnowThem.label": "How you know them",
-  "invite.email.howYouKnowThem.helper":
-    "Helps us understand the connection. Never shown publicly.",
-  "invite.email.howYouKnowThem.placeholder": "We met at…",
-  "invite.email.note.label": "Personal note",
-  "invite.email.note.placeholder": "Add a personal note (optional)",
-  "invite.email.preview.label": "Preview",
-  "invite.email.preview.subject": "{name} invited you to QueerPulse",
-  "invite.email.preview.noteFallback": "Thought you'd belong here.",
-  "invite.email.preview.openCta": "Open your invite",
-  "invite.email.preview.expiresIn7Days": "Expires in 7 days",
-  "invite.email.submit": "Send invite",
-  "invite.email.saveAsDraft": "Save as draft",
-  "invite.email.savedToDrafts": "Saved to Drafts",
-  "invite.email.formNote": "They'll get a one-time link that's just for them.",
 
   "invite.link.previewLabel": "Preview",
   "invite.link.generateCta": "Generate invite link",
@@ -176,7 +138,6 @@ export const auth: Catalog = {
     "Nothing was sent to them. Pass the link on yourself, however feels natural.",
   "invite.ready.linkCopied": "Link copied",
   "invite.ready.copyFailed": "Couldn't copy. Try selecting the link instead",
-  "invite.ready.copyLinkAriaLabel": "Copy invite link",
   "invite.ready.shareThrough": "Share through",
   "invite.ready.qrHint": "Or let them scan it",
   "invite.ready.qrLabel":
@@ -184,13 +145,6 @@ export const auth: Catalog = {
   "invite.ready.oneTimeLink": "One-time link",
   "invite.ready.expiresIn7Days": "Expires in 7 days",
   "invite.ready.expiresOn": "Expires {date}",
-
-  "invite.sent.headline": "Invite sent to <em>{name}</em>",
-  "invite.sent.sub": "We'll let you know when {name} joins.",
-  "invite.sent.summary.invited": "Invited",
-  "invite.sent.summary.sent": "Sent",
-  "invite.sent.summary.sentToday": "Today at {time}",
-  "invite.sent.summary.expires": "Expires",
 
   "invite.sentList.label": "Invites you've sent",
   "invite.sentList.filter.all": "All",
@@ -326,8 +280,6 @@ export const auth: Catalog = {
     "Enter a valid email, or leave this blank.",
   // Appended to the message so the reviewer sees who to match against — there is
   // no separate field for it on POST /join-requests.
-  "requestInvite.field.mutual.messagePrefix":
-    "A member who can vouch for me: {name}",
   "requestInvite.field.why.label": "Why QueerPulse",
   "requestInvite.field.why.placeholder":
     "What you're looking for, and what brings you here. A few honest sentences is plenty.",

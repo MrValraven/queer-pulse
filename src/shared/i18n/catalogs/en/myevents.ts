@@ -17,7 +17,6 @@ export const myevents: Catalog = {
     "Everything you're going to, everything you're running: gathered in one warm place.",
   "header.settingsAria": "Event preferences",
   "header.notifAria": "Notifications",
-  "header.createCta": "Create a gathering",
 
   // ── Global events header (EventsHeader) ───────────────────────────────────
   "eventsHeader.title": "Events",
@@ -210,7 +209,6 @@ export const myevents: Catalog = {
 
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Reminder on",
-  "tools.remindMe": "Remind me",
   "tools.reminderInfoTooltip":
     "You'll get a reminder before this starts, based on your reminder-lead setting in Preferences",
   "tools.addToCalendar": "Add to calendar",
@@ -331,11 +329,6 @@ export const myevents: Catalog = {
 
   // ── Recommendations strip (Discovery) ─────────────────────────────────────
   "discovery.title": "You might <em>like</em>",
-  "discovery.imGoingCta": "I'm going",
-  "discovery.imGoingToast": "You're going. Added to your events",
-  "discovery.saveCta": "Save",
-  "discovery.saveToast": "Saved for later",
-  "discovery.hideCta": "Hide",
 
   // ── "Your year so far" (InsightsCard) ─────────────────────────────────────
   "insights.eyebrow": "Your year so far",
@@ -391,20 +384,13 @@ export const myevents: Catalog = {
   "bulk.broughtBackToast": "Brought it back",
 
   // ── Notifications panel (NotifPanel) ──────────────────────────────────────
-  "notif.panelAria": "Notifications",
   "notif.title": "What's changed",
   "notif.markAllRead": "Mark all read",
   "notif.empty": "You're all caught up.",
 
   // ── Modal aria-labels (MyEventsBody → ModalShell) ─────────────────────────
-  "modal.rsvpDetailsLabel": "Your RSVP details",
-  "modal.preferencesLabel": "Event preferences",
-  "modal.cancelRsvpLabel": "Cancel RSVP",
-  "modal.reportLabel": "Report this event",
-  "modal.blockLabel": "Block this host",
 
   // ── Accept-invite confirmation panel (AcceptInviteConfirm) ────────────────
-  "acceptConfirm.ariaLabel": "You're going",
   "acceptConfirm.eyebrow": "You're going",
   "acceptConfirm.title": "You said <em>yes.</em>",
   "acceptConfirm.addToCalendarCta": "Add to calendar",
@@ -474,11 +460,14 @@ export const myevents: Catalog = {
   "settingsModal.byDefaultWhoSees": "By default, who sees what I'm attending",
   "settingsModal.howWeReachYou": "How we reach you",
   "settingsModal.email": "Email",
-  "settingsModal.emailDesc": "Reminders, changes, and invites by email.",
+  // The toggle is genuinely wired (it persists `eventEmailsEnabled` through
+  // `PUT /me/event-settings`), but nothing reads that column to send anything:
+  // QueerPulse delivers no email. The copy says so rather than offering a
+  // channel that does not exist.
+  "settingsModal.emailDesc":
+    "QueerPulse sends no email, so nothing arrives this way today. Your choice is saved for if that ever changes. Reminders reach you in the app.",
   "settingsModal.emailToggleLabel": "Email reminders",
   "settingsModal.push": "Push notifications",
-  "settingsModal.pushDesc": "On your phone, for time-sensitive changes.",
-  "settingsModal.pushToggleLabel": "Push notifications",
   "settingsModal.syncTickets": "Sync & tickets",
   "settingsModal.connectCalendar": "Connect your calendar",
   "settingsModal.connectCalendarSub": "Two-way sync with Google or Apple",
@@ -501,8 +490,15 @@ export const myevents: Catalog = {
   "reportModal.eyebrow": "Report",
   "reportModal.title": "What's <em>wrong?</em>",
   "reportModal.whyReporting": "Why are you reporting this?",
-  "reportModal.reason.hate": "Hate speech or harassment",
-  "reportModal.reason.unsafe": "Unsafe or threatening behaviour",
+  // Ordered severity-descending in reportEventModal.data.ts, which is where
+  // the code mapping and the reasoning live. `reason.hate` used to read "Hate
+  // speech or harassment" and `reason.unsafe` "Unsafe or threatening
+  // behaviour"; both absorbed the harassment report that now has its own
+  // option, so both were narrowed to the thing they actually store.
+  "reportModal.reason.harassment": "Someone is being harassed or threatened",
+  "reportModal.reason.unsafe": "Something unsafe happened at this event",
+  "reportModal.reason.hate": "Hate speech or a slur",
+  "reportModal.reason.discrimination": "Discrimination or misgendering",
   "reportModal.reason.spam": "Spam, scam, or misleading",
   "reportModal.reason.shouldntBeHere": "This event shouldn't be here",
   "reportModal.reason.somethingElse": "Something else",
@@ -517,7 +513,6 @@ export const myevents: Catalog = {
   "reportModal.sentToast": "Report sent. Our safety team takes it from here",
 
   // ── Block-host confirm (BlockHostConfirm) ─────────────────────────────────
-  "blockModal.eyebrow": "Block",
   "blockModal.titleNamed": "Block <em>{host}?</em>",
   "blockModal.titleFallback": "Block <em>this host?</em>",
   "blockModal.bodyNamed":
@@ -531,8 +526,6 @@ export const myevents: Catalog = {
     "You already have this host blocked. Nothing changed.",
 
   // ── Toasts from RSVP/notification lifecycle (useMyEventsState.ts) ────────
-  "toast.reminderSet": "Reminder set: {lead} before",
-  "toast.reminderOff": "Reminder off",
   "toast.markedMaybe": "Marked as maybe. The host can see you're tentative",
   "toast.fullyIn": "You're fully in. See you there",
   "toast.rsvpGoing": "You're going. See you there",

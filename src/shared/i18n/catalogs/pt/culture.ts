@@ -86,7 +86,6 @@ export const culture: Catalog = {
     "A reprodução ainda não está ativa. Isto mostra o que está no ar neste momento.",
 
   "modal.dialogAriaLabel": "Janela",
-  "modal.close": "Fechar",
   "modal.done": "Concluído",
   "common.cancel": "Cancelar",
   "common.sending": "A enviar…",

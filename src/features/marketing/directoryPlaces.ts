@@ -480,7 +480,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "Address shared with ticket · Mouraria",
     upcoming: [
       {
-        when: "Sat 21 Jun · 20:00",
+        when: "Sun 21 Jun · 20:00",
         title: "June dinner: early summer, the market decides",
         // Maps to the real demo gathering "Queer Supper Club №12" (same
         // host, Tomás) so the deep link resolves to a real event page
@@ -489,7 +489,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         startAt: "2026-06-21T20:00:00",
       },
       {
-        when: "Sat 19 Jul · 20:00",
+        when: "Sun 19 Jul · 20:00",
         title: "July dinner: stone fruit & the grill",
         // No second demo supper-club slug exists; "sober-queers-supper" is
         // the closest distinct supper-club-themed demo gathering.
@@ -639,7 +639,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. do Benformoso 140 · Intendente",
     upcoming: [
       {
-        when: "Thu 12 Jun · 19:00",
+        when: "Fri 12 Jun · 19:00",
         title: "Peer-support drop-in (open)",
         // Closest real demo gathering: an open, no-agenda peer meetup.
         slug: "trans-hub-meetup",
@@ -792,7 +792,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     upcoming: [
       {
-        when: "Fri 13 Jun · 19:00",
+        when: "Sat 13 Jun · 19:00",
         title: "Reading: new queer poetry in translation",
         // No dedicated demo "reading" gathering; the closest distinct
         // literary demo event is the book club.
@@ -800,7 +800,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         startAt: "2026-06-13T19:00:00",
       },
       {
-        when: "Sun 22 Jun · 17:00",
+        when: "Mon 22 Jun · 17:00",
         title: 'Book club · "Stone Butch Blues"',
         // Exact match: gatheringDetails has a "Stone Butch Blues" book club.
         slug: "stone-butch-blues",
@@ -1441,7 +1441,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "R. do Açúcar 76 · Marvila",
     upcoming: [
       {
-        when: "Sat 28 Jun · 18:00",
+        when: "Sun 28 Jun · 18:00",
         title: "Opening: group show, eight emerging artists",
         // Closest real demo gathering with an emerging-artists showcase feel.
         slug: "portfolio-night",
@@ -1902,7 +1902,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     address: "Beco do Mexias 4 · Alfama",
     upcoming: [
       {
-        when: "Sun 15 Jun · 10:00",
+        when: "Mon 15 Jun · 10:00",
         title: "Open capoeira roda: all levels, free",
         // Closest real demo gathering: free, all-levels group movement.
         slug: "queer-runners-run",

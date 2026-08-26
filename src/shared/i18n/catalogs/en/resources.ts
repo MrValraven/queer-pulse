@@ -36,9 +36,6 @@ export const resources: Catalog = {
   "suggestEdit.success.title": "Suggestion <em>received.</em>",
   "suggestEdit.success.sub":
     "The editors look at suggestions weekly and discuss bigger changes at the monthly assembly. This is a living document precisely because of edits like yours.",
-  "suggestEdit.comingSoon.title": "Edits aren't open <em>yet.</em>",
-  "suggestEdit.comingSoon.sub":
-    "Glossary suggestions aren't wired to the editors on the live site yet, so this wouldn't reach anyone. We'd rather be honest than fake a receipt. Check back soon.",
   "suggestEdit.body.intro":
     "Community-edited. If a definition feels incomplete or wrong, tell us which term and what you'd change.",
   // Shown when the modal is scoped to a fixed subject (a whole page).
@@ -533,7 +530,6 @@ export const resources: Catalog = {
   "mentalHealth.therapists.waitlist": "Waitlist",
   "mentalHealth.therapists.viewProfileAriaLabel": "View {name}'s profile",
   "mentalHealth.therapists.viewProfileCta": "View profile",
-  "mentalHealth.therapists.comingSoon.badge": "Coming soon",
   "mentalHealth.therapists.comingSoon.title":
     "The directory is <em>almost here.</em>",
   "mentalHealth.therapists.comingSoon.body":
@@ -1027,9 +1023,6 @@ export const resources: Catalog = {
     "A coordinator will confirm the alcohol-free listing and add it to the calendar within a day. The host checklist reaches you as a QueerPulse message.",
   "sober.host.success.attendSub":
     "We've saved your spot. The private location and a gentle reminder will reach you the day before, and nothing is shared publicly.",
-  "sober.host.comingSoon.title": "Sober meet-ups are <em>coming.</em>",
-  "sober.host.comingSoon.sub":
-    "Hosting and RSVP aren't connected on the live site yet, so nothing you enter here would reach a coordinator. Rather than fake it, we'll say it plainly: this opens soon.",
   "sober.host.intro":
     "Start an alcohol-free meet-up, or join an existing peer meeting. Either way, you decide how visible you are.",
   "sober.host.modeLabel": "What would you like to do?",
@@ -1059,8 +1052,6 @@ export const resources: Catalog = {
   // POPULAR search shortcuts double as the literal query string matched
   // against that English guide content, so they stay English in both
   // languages too (translating them would silently break the search).
-  "library.search.placeholder": "Search guides: pronouns, PrEP, tenancy…",
-  "library.filterAria": "Filter guides by topic",
   "library.category.all": "All guides",
   "library.category.housing": "Housing",
   "library.category.health": "Health",
@@ -1070,11 +1061,9 @@ export const resources: Catalog = {
   "library.category.safety": "Safety & privacy",
   "library.category.community": "Community life",
   "library.category.culture": "Culture & archive",
-  "library.empty": "No guides match that yet. Try a different search.",
   "library.readGuideCta": "Read the guide",
   "library.loadingMore": "Loading more guides…",
   "library.loadMoreCta": "Load more guides",
-  "library.popularLabel": "Most read:",
   // CNT-13 freshness signal, shown on every guide card.
   "library.card.verifiedOn": "Verified {date}",
   "library.card.notYetVerified": "Not yet verified",
@@ -1302,9 +1291,6 @@ export const resources: Catalog = {
   "microGrants.apply.success.sub":
     "Your application is recorded and goes to the review panel, which meets in mid-July. The panel decides this round before 31 July and replies as a QueerPulse message either way.",
   "microGrants.apply.success.closeCta": "Close",
-  "microGrants.apply.comingSoon.title": "Applications open <em>soon.</em>",
-  "microGrants.apply.comingSoon.sub":
-    "Grant intake isn't wired up on the live site yet, so nothing you'd enter here would reach the review panel. We'd rather say that plainly than fake a receipt. The Q2 round opens soon, so check back, or reach the collective if it's urgent.",
 
   "microGrants.apply.category.stepTitle": "What kind of <em>project?</em>",
   "microGrants.apply.category.stepSub":
@@ -1384,9 +1370,6 @@ export const resources: Catalog = {
   "microGrants.panel.success.title": "You're on the <em>list.</em>",
   "microGrants.panel.success.sub":
     "Thank you. The panel coordinator reviews new volunteers ahead of each quarter and will be in touch before the Q3 round opens. Panels rotate so the work stays shared.",
-  "microGrants.panel.comingSoon.title": "Not taking sign-ups <em>yet.</em>",
-  "microGrants.panel.comingSoon.sub":
-    "Panel sign-up isn't connected on the live site yet, so this form wouldn't reach anyone. We didn't want to pretend otherwise. The panel opens to new volunteers before each quarter, so check back soon.",
   "microGrants.panel.intro":
     "The panel reads applications and decides grants together. We keep it small, rotating, and deliberately mixed, with no professional gatekeepers.",
   "microGrants.panel.nameLabel": "Name",
@@ -2361,7 +2344,6 @@ export const resources: Catalog = {
   "legal.lawyers.live.title": "The lawyer directory is coming soon.",
   "legal.lawyers.live.body":
     "We're vetting LGBTQ+-affirming lawyers before listing them, so we don't send you to someone we can't stand behind. In the meantime, you can report discrimination and we'll help you find support.",
-  "legal.lawyers.live.cta": "Report an issue",
 
   "sexualHealth.testing.live.title": "The clinic directory is coming soon.",
   "sexualHealth.testing.live.body":

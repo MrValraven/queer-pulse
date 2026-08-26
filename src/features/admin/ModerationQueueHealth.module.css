@@ -1,0 +1,172 @@
+/* ── TS-04 moderator workload and SLA health. Staff-only; nothing in this file
+   is ever rendered on a member surface. ─────────────────────────────────── */
+
+.panel {
+  display: grid;
+  gap: 16px;
+}
+
+.intro {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 68ch;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+  background: var(--paper);
+}
+
+.summaryFact {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  color: rgba(var(--line-rgb), 0.72);
+}
+
+.rows {
+  display: grid;
+  gap: 12px;
+}
+
+.row {
+  display: grid;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 18px;
+  background: var(--paper);
+}
+
+/* The left edge restates the severity as a shape, so the level survives a
+   greyscale print and a monochrome display. It is never the only carrier: the
+   chip beside it says the word. */
+.rowWarning {
+  border-left: 4px solid var(--amber);
+}
+
+.rowCritical {
+  border-left: 4px solid var(--danger);
+}
+
+.rowHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.queueName {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--plum);
+  text-decoration: none;
+}
+
+.queueName:hover {
+  text-decoration: underline;
+}
+
+.breaches {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.breachLabel {
+  font-weight: 600;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.stat {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--cream);
+}
+
+.statLabel {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(var(--line-rgb), 0.62);
+}
+
+.statValue {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 17px;
+  color: var(--ink);
+}
+
+/* The "not applicable" and "queue is empty" readings. Quieter than a number,
+   because neither is one. */
+.statValueMuted {
+  font-size: 14px;
+  color: rgba(var(--line-rgb), 0.68);
+}
+
+.statNote {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: rgba(var(--line-rgb), 0.62);
+}
+
+/* ── The compact indicator, for surfaces a moderator already opens. ─────── */
+
+.indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-left-width: 4px;
+  border-radius: 14px;
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.indicatorWarning {
+  border-left-color: var(--amber);
+}
+
+.indicatorCritical {
+  border-left-color: var(--danger);
+}
+
+.indicatorIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.indicatorLink {
+  margin-left: auto;
+  color: var(--plum);
+  font-weight: 600;
+}

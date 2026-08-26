@@ -366,7 +366,7 @@ export const INITIAL_EVENTS: MyEvent[] = [
     venue: "Damas, Graça",
     from: "Rita F.",
     going: 19,
-    deadline: "Reply by Sun 6 Jul",
+    deadline: "Reply by Mon 6 Jul",
     access: ["content", "safer"],
     contentNote: "Content note: comedy may touch on adult themes.",
     paid: "€5",

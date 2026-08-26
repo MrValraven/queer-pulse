@@ -1,38 +1,18 @@
-import {
-  FiCheckCircle,
-  FiClock,
-  FiCompass,
-  FiFlag,
-  FiMail,
-  FiMapPin,
-  FiUserCheck,
-  FiUsers,
-} from "react-icons/fi";
-import { Link } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { FiCheckCircle, FiClock, FiFlag } from "react-icons/fi";
 import { AdminBanEvasionFlag } from "./AdminBanEvasionFlag";
+import { JoinRequestDecisionActions } from "./JoinRequestDecisionActions";
+import { JoinRequestFacts } from "./JoinRequestFacts";
+import { JoinRequestSelectCheckbox } from "./JoinRequestSelectCheckbox";
 import type { BanEvasionAssessmentDTO } from "./api/adminInvites.api";
 import {
   QueueAssignmentControl,
   QueueOverdueChip,
 } from "./QueueAssignmentControls";
+import { queueRowUrgency } from "./queueClock";
 import { AdminAvatar } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import styles from "./AdminMembersPage.module.css";
-
-/**
- * How urgently a pending request's wait time should read, against the
- * 3-business-day SLA the guideline audit settled on: under 2 days is
- * neutral, 2-3 is approaching, past 3 is overdue.
- */
-function waitingTone(
-  daysWaiting: number,
-): "neutral" | "approaching" | "overdue" {
-  if (daysWaiting >= 3) return "overdue";
-  if (daysWaiting >= 2) return "approaching";
-  return "neutral";
-}
 
 /**
  * One pending applicant in the mod review queue: everything a reviewer needs to
@@ -44,6 +24,7 @@ export function JoinRequestCard({
   leaving,
   stage,
   selected,
+  disableSelect = false,
   onApprove,
   onDecline,
   onWaitlist,
@@ -62,6 +43,8 @@ export function JoinRequestCard({
    *  while `stage === "pending"`; waitlisted rows aren't part of the same
    *  bulk batch (Task 6). */
   selected: boolean;
+  /** True at the bulk cap when this row is outside the selection. */
+  disableSelect?: boolean;
   onApprove: () => void;
   onDecline: () => void;
   onWaitlist?: () => void;
@@ -90,14 +73,12 @@ export function JoinRequestCard({
     >
       <div className={styles.queueHead}>
         {stage === "pending" && (
-          <input
-            type="checkbox"
-            checked={selected}
-            onChange={() => onToggleSelect(item.id)}
-            aria-label={t("admin:members.verify.selectAria", {
-              name: item.name,
-            })}
-            className={styles.queueSelect}
+          <JoinRequestSelectCheckbox
+            applicantName={item.name}
+            requestId={item.id}
+            isSelected={selected}
+            isDisabled={disableSelect}
+            onToggleSelect={onToggleSelect}
           />
         )}
         {/* Initials only, never a photo: an applicant has no account and so
@@ -109,7 +90,7 @@ export function JoinRequestCard({
           <div className={styles.queueName}>{item.name}</div>
           <div className={styles.queueApplied}>{item.appliedLine}</div>
           <span
-            className={`${styles.queueWaiting} ${styles[`queueWaiting--${waitingTone(item.daysWaiting)}`]}`}
+            className={`${styles.queueWaiting} ${styles[`queueWaiting--${queueRowUrgency(item.dueAt)}`]}`}
           >
             <FiClock aria-hidden />
             {t("admin:members.verify.waitingDays", { count: item.daysWaiting })}
@@ -150,63 +131,7 @@ export function JoinRequestCard({
           after it as a verdict. */}
       <AdminBanEvasionFlag assessment={banEvasion} />
 
-      <dl className={styles.queueFacts}>
-        <div className={styles.queueFact}>
-          <dt className={styles.queueFactLabel}>
-            <FiMail aria-hidden />
-            {t("admin:members.verify.emailLabel")}
-          </dt>
-          <dd className={styles.queueFactValue}>
-            <a href={`mailto:${item.email}`}>{item.email}</a>
-          </dd>
-        </div>
-        <div className={styles.queueFact}>
-          <dt className={styles.queueFactLabel}>
-            <FiMapPin aria-hidden />
-            {t("admin:members.verify.cityLabel")}
-          </dt>
-          <dd className={styles.queueFactValue}>
-            {item.city ?? t("admin:members.verify.noCity")}
-          </dd>
-        </div>
-        <div className={styles.queueFact}>
-          <dt className={styles.queueFactLabel}>
-            <FiCompass aria-hidden />
-            {t("admin:members.verify.sourceLabel")}
-          </dt>
-          <dd className={styles.queueFactValue}>{item.sourceLabel}</dd>
-        </div>
-        {item.mutualMemberEmail && (
-          <div className={styles.queueFact}>
-            <dt className={styles.queueFactLabel}>
-              <FiUserCheck aria-hidden />
-              {t("admin:members.verify.mutualLabel")}
-            </dt>
-            <dd className={styles.queueFactValue}>
-              <a href={`mailto:${item.mutualMemberEmail}`}>
-                {item.mutualMemberEmail}
-              </a>
-            </dd>
-          </div>
-        )}
-        {item.referenceLine && (
-          <div className={styles.queueFact}>
-            <dt className={styles.queueFactLabel}>
-              <FiUsers aria-hidden />
-              {t("admin:members.verify.referenceLabel")}
-            </dt>
-            <dd className={styles.queueFactValue}>
-              {item.referenceMemberSlug ? (
-                <Link to={`/members/${item.referenceMemberSlug}`}>
-                  {item.referenceLine}
-                </Link>
-              ) : (
-                item.referenceLine
-              )}
-            </dd>
-          </div>
-        )}
-      </dl>
+      <JoinRequestFacts item={item} />
 
       <p className={styles.queueMsg}>“{item.message}”</p>
 
@@ -219,40 +144,13 @@ export function JoinRequestCard({
         {t("admin:members.verify.identityReminder")}
       </p>
 
-      {/* The three labels are `white-space: nowrap` and together outrun a
-          narrow queue column, so the row wraps: the two quiet options share
-          the first line and "welcome in" gets a full-width line below. */}
-      <div className={styles.queueActions}>
-        <Button
-          variant="ghost"
-          size="md"
-          className={styles.queueActionSecondary}
-          disabled={isBusy}
-          onClick={onDecline}
-        >
-          {t("admin:members.verify.declineCta")}
-        </Button>
-        {stage === "pending" && onWaitlist && (
-          <Button
-            variant="ghost"
-            size="md"
-            className={styles.queueActionSecondary}
-            disabled={isBusy}
-            onClick={onWaitlist}
-          >
-            {t("admin:members.verify.waitlistCta")}
-          </Button>
-        )}
-        <Button
-          variant="jade"
-          size="md"
-          className={styles.queueActionPrimary}
-          disabled={isBusy}
-          onClick={onApprove}
-        >
-          {t("admin:members.verify.approveCta")}
-        </Button>
-      </div>
+      <JoinRequestDecisionActions
+        stage={stage}
+        isBusy={isBusy}
+        onApprove={onApprove}
+        onDecline={onDecline}
+        onWaitlist={onWaitlist}
+      />
     </div>
   );
 }

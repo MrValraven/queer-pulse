@@ -1,15 +1,12 @@
 // src/features/messages/ConversationReportModal.tsx
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useCreateReport } from "../safety/api/useCreateReport";
-import {
-  REASON_LABEL_KEYS,
-  SUBJECT_REASONS,
-  type ReasonCode,
-} from "../safety/reportReasons";
+import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
+import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import { logError } from "../../shared/observability/logger";
 import styles from "./MessagesPage.module.css";
 
@@ -39,19 +36,15 @@ export function ConversationReportModal({
 }: ConversationReportModalProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const reasons = useMemo(
-    () =>
-      SUBJECT_REASONS.member.map((code) => ({
-        code,
-        label: t(REASON_LABEL_KEYS[code]),
-      })),
-    [t],
-  );
-  const [reason, setReason] = useState<ReasonCode>(reasons[0]!.code);
+  // Server-owned taxonomy when it answers, the local one instantly and
+  // silently when it does not. Never a spinner, never an empty list.
+  const reasons = useReportReasons("member");
+  const [reason, setReason] = useState<string>(reasons[0]!.code);
   const detailFieldId = useId();
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
   const createReport = useCreateReport();
+  const describeReportError = useReportSubmissionError();
 
   const canSubmit = detail.trim().length >= 10;
   const charsLeft = 10 - detail.trim().length;
@@ -62,7 +55,7 @@ export function ConversationReportModal({
       {
         subjectType: "member",
         subjectId,
-        reasonCode: reason,
+        reasonCode: asReasonCode(reason),
         detail: detail.trim(),
       },
       {
@@ -70,8 +63,13 @@ export function ConversationReportModal({
         onError: (error) => {
           logError(error, { scope: "messages.reportMember" });
           // Never tell a reporter "received" when the report didn't land —
-          // surface an honest error and keep the form filled in to retry.
-          showToast(t("safety:flag.error"), "error");
+          // surface an honest error and keep the form filled in to retry. A
+          // rolling flood cap answers with its own member-facing explanation,
+          // which `describeReportError` shows in place of the generic line.
+          showToast(
+            describeReportError(error, t("safety:flag.error")),
+            "error",
+          );
         },
       },
     );

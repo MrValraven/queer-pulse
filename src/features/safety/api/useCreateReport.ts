@@ -36,6 +36,15 @@ function demoReport(body: CreateReportInput): ReportDTO {
 export function useCreateReport() {
   const { demoMode } = useDemoMode();
   return useMutation<ReportDTO, Error, CreateReportInput>({
+    // Every report surface renders its own failure UI in `onError` (a toast, a
+    // retry panel, an inline note) and routes it through
+    // `useReportSubmissionError`, which is what decides between the server's
+    // own flood-cap copy and the surface's generic line. Without this opt-out
+    // the cache-level handler toasts a SECOND, different message on top of it,
+    // and for the 60-second burst throttle that second message is
+    // `reasonFor(error)`: the framework's raw "ThrottlerException: Too Many
+    // Requests", put straight in front of a member.
+    meta: { silentError: true },
     mutationFn: async (body) => {
       if (demoMode) {
         await new Promise((r) => setTimeout(r, DEMO_LATENCY_MS));

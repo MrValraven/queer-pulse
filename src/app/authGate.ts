@@ -64,7 +64,6 @@ const GATED_PATTERNS: string[] = [
   // Gatherings, events & the social calendar
   "/calendar",
   "/events",
-  "/event",
   "/gatherings",
   "/gatherings/*",
   "/rsvp",
