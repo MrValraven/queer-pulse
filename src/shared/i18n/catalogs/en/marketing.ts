@@ -2300,6 +2300,7 @@ export const marketing: Catalog = {
   "changelog.tag.pushDevices": "Manage your devices",
   "changelog.tag.magazineDesk": "Open the desk",
   "changelog.tag.guidelines": "Read the community guidelines",
+  "changelog.tag.guideIndex": "Browse every guide",
   "changelog.tag.requestInvite": "Ask to come in",
   "changelog.tag.privacy": "Read the privacy policy",
   "changelog.tag.flatmates": "See the flatmate board",
@@ -6921,6 +6922,8 @@ export const marketing: Catalog = {
   "resourceLibrary.results_one": "{count} result",
   "resourceLibrary.results_other": "{count} results",
   "resourceLibrary.empty": "No resources match. Try a broader filter.",
+  "resourceLibrary.emptyUnreviewed":
+    "No guides have been through editorial review yet. A guide appears here once an editor has read it end to end and confirmed it is accurate.",
   "resourceLibrary.card.visitSite": "Visit site",
   "resourceLibrary.orgs.title": "Organisations doing this <em>every day.</em>",
   "resourceLibrary.orgs.lead":
@@ -7081,6 +7084,10 @@ export const marketing: Catalog = {
     "The admin console that lists every uploaded image can now filter to files nothing on the platform points at, and to files that are still in use. Each tile already said whether it was referenced, so finding the ones safe to clear away meant reading the grid card by card. The filter narrows what has been loaded and keeps loading further into the bucket while nothing matches, so it never answers “nothing unused here” from a half-loaded list. The standing caution still holds where some reference checks couldn't run: an empty reference set is unverified, so reload before treating a file as safe to delete.",
 
   // ── 26 Aug 2026 ───────────────────────────────────────────────────────────
+  "changelog.entries.guides-appear-once-an-editor-has-checked-them.title":
+    "Guides appear once an editor has checked them",
+  "changelog.entries.guides-appear-once-an-editor-has-checked-them.body":
+    "A guide reaches you only after an editor has read it end to end and confirmed it is accurate. That covers the guide index, the library, search, and the guide pages themselves: opening one that has not been through review shows the crisis lines and an honest note about where it is. These are pages people open in a crisis, so the bar for showing one is that a named person has taken responsibility for the words. Every guide is in the review queue right now, so the shelves start bare and fill as each one is signed off. Two smaller things came with it. A guide whose review has merely fallen due stays up and says so in its footer. And a logged-out visitor now gets the same guide text and the same review dates a member does, because a questioning teenager should not have to sign up to read a health guide.",
   "changelog.entries.the-rules-open-without-leaving-the-queue.title":
     "The moderation rules open without leaving the queue",
   "changelog.entries.the-rules-open-without-leaving-the-queue.body":

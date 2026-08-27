@@ -2408,7 +2408,8 @@ export const resources: Catalog = {
   "guideIndex.hero.title": "Everything we've <em>written down.</em>",
   "guideIndex.hero.lead":
     "Every guide on QueerPulse, grouped by what it is for. Some of these were hard to find before this page existed.",
-  "guideIndex.empty": "No guides are published yet.",
+  "guideIndex.empty":
+    "No guides have been through editorial review yet. A guide is listed here once an editor has read it end to end and confirmed it is accurate.",
   "guideIndex.card.reviewedOn": "Reviewed {date}",
   "guideIndex.card.notReviewed": "Not reviewed yet",
   "guideIndex.linkCta": "Browse every guide",
@@ -2426,4 +2427,16 @@ export const resources: Catalog = {
   "guide.missing.sub":
     "This guide is listed but has nothing written in it so far. The index has everything that does.",
   "guide.missing.indexCta": "See every guide",
+
+  // The editorial review gate. A guide reaches a reader only once an editor
+  // has read it end to end, so a page that has not been through review says
+  // so, above the crisis lines it might have been opened for.
+  "guide.underReview.meta.title": "This guide is being checked",
+  "guide.underReview.meta.description":
+    "This guide is with an editor for review. It goes back up once someone has read it end to end and confirmed it is accurate.",
+  "guide.underReview.title": "An editor is <em>reading this one.</em>",
+  "guide.underReview.sub":
+    "We put a guide in front of you only after somebody has read it end to end and confirmed every phone number, deadline and clinic detail in it. This one is still waiting for that, so we would rather show you nothing than show you something we have not checked. It comes back the moment it is signed off.",
+  "guide.underReview.indexCta": "See what has been checked",
+  "guide.underReview.libraryCta": "Browse the library",
 };

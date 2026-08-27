@@ -103,9 +103,16 @@ export function ResourceLibraryPage() {
               Array.from({ length: 9 }).map((_, index) => (
                 <ResourceCardSkeleton key={index} />
               ))}
+            {/* Two different emptinesses, and telling them apart matters: a
+                filter that matches nothing is the reader's to fix, whereas a
+                library holding nothing at all means no guide has passed
+                editorial review yet, and "try a broader filter" would send
+                someone hunting for a filter that would not help. */}
             {!loading && visible.length === 0 && (
               <div className={s.empty}>
-                {t("marketing:resourceLibrary.empty")}
+                {guides.length === 0
+                  ? t("marketing:resourceLibrary.emptyUnreviewed")
+                  : t("marketing:resourceLibrary.empty")}
               </div>
             )}
             {!loading &&

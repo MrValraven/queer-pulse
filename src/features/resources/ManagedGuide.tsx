@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useManagedGuide } from "./api/useManagedGuide";
 import { GuideBody } from "./GuideBody";
+import { GuideUnderReview } from "./GuideUnderReview";
 import { GuideReviewFooter } from "./GuideReviewFooter";
 import { ResourceHero } from "./ResourceHero";
 import { SuggestEditTrigger } from "./SuggestEditTrigger";
@@ -31,14 +32,24 @@ export interface ManagedGuideProps {
  * one component in front of all of them: "Reviewed {date}" reaches all ~31
  * guides from here rather than from 31 separate page edits.
  *
+ * It is also the single gate for editorial review. A guide the backend will
+ * not serve publicly — unpublished, or never read end to end by an editor —
+ * renders `GuideUnderReview` instead of its page, and because every guide
+ * route in `routes.tsx` goes through here, that is one condition rather than
+ * 31. A guide with no visible row is hidden even when a hardcoded page for it
+ * still exists in this bundle: the database is the authority on what a reader
+ * is allowed to be told. `useManagedGuide` only reports `isGated` when the
+ * server said so, so an outage leaves every page exactly as it was.
+ *
  * The fallback is passed as an already-created element. React.lazy only
  * imports on render, so creating the element costs nothing and the hardcoded
  * page's chunk is fetched only if it is actually the one that renders.
  */
 export function ManagedGuide({ slug, fallback }: ManagedGuideProps) {
-  const { guide, hasManagedBody, isLoading } = useManagedGuide(slug);
+  const { guide, hasManagedBody, isGated, isLoading } = useManagedGuide(slug);
 
   if (isLoading) return <ManagedGuideSkeleton />;
+  if (isGated) return <GuideUnderReview />;
   if (guide && hasManagedBody) {
     return <ManagedGuideBody slug={slug} guide={guide} />;
   }

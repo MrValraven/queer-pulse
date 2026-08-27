@@ -150,6 +150,10 @@ function GuideIndexCard({
         <div className={styles.cardTitle}>{entry.title}</div>
         <div className={styles.cardDesc}>{entry.description}</div>
         <div className={styles.cardFoot}>
+          {/* The "not reviewed yet" branch reads as dead code in live mode and
+              is not: the backend only serves reviewed guides now, but the demo
+              manifest carries `lastReviewedOn: null` on every entry, so demo
+              still renders it. Deleting it would blank the chip in demo. */}
           <span className={styles.reviewed}>
             {entry.lastReviewedOn ? (
               <>

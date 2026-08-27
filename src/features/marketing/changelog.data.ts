@@ -93,6 +93,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
       // moderator entries below do: a member reading it learns what a
       // moderator has in front of them when a case about them is decided.
       {
+        id: "guides-appear-once-an-editor-has-checked-them",
+        category: "improvement",
+        date: "27 Aug 2026",
+        ...entryKeys("guides-appear-once-an-editor-has-checked-them"),
+        tag: {
+          labelKey: "marketing:changelog.tag.guideIndex",
+          to: routes.guideIndex,
+        },
+      },
+      {
         id: "the-rules-open-without-leaving-the-queue",
         category: "improvement",
         date: "27 Aug 2026",

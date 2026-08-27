@@ -2416,7 +2416,8 @@ export const resources: Catalog = {
   "guideIndex.hero.title": "Tudo o que já <em>escrevemos.</em>",
   "guideIndex.hero.lead":
     "Todos os guias da QueerPulse, agrupados por aquilo que servem. Alguns eram difíceis de encontrar antes desta página existir.",
-  "guideIndex.empty": "Ainda não há guias publicados.",
+  "guideIndex.empty":
+    "Ainda nenhum guia passou pela revisão editorial. Um guia aparece nesta lista assim que uma editora o ler de ponta a ponta e confirmar que está correto.",
   "guideIndex.card.reviewedOn": "Revisto a {date}",
   "guideIndex.card.notReviewed": "Ainda sem revisão",
   "guideIndex.linkCta": "Ver todos os guias",
@@ -2432,4 +2433,16 @@ export const resources: Catalog = {
   "guide.missing.sub":
     "Este guia está listado mas ainda não tem nada escrito. O índice tem tudo o que já tem.",
   "guide.missing.indexCta": "Ver todos os guias",
+
+  // O controlo de revisão editorial. Um guia só chega a quem lê depois de uma
+  // editora o ler de ponta a ponta, por isso uma página que ainda não passou
+  // pela revisão diz isso mesmo, por cima das linhas de apoio.
+  "guide.underReview.meta.title": "Este guia está a ser verificado",
+  "guide.underReview.meta.description":
+    "Este guia está com uma editora para revisão. Volta ao ar assim que alguém o ler de ponta a ponta e confirmar que está correto.",
+  "guide.underReview.title": "Uma editora está a <em>ler este guia.</em>",
+  "guide.underReview.sub":
+    "Só te mostramos um guia depois de alguém o ler de ponta a ponta e confirmar cada número de telefone, prazo e informação de clínica que ele tem. Este ainda está à espera disso, por isso preferimos não te mostrar nada a mostrar-te uma coisa que não verificámos. Volta assim que for aprovado.",
+  "guide.underReview.indexCta": "Ver o que já foi verificado",
+  "guide.underReview.libraryCta": "Ver a biblioteca",
 };

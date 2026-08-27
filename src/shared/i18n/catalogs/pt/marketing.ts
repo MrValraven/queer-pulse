@@ -2363,6 +2363,7 @@ export const marketing: Catalog = {
   "changelog.tag.magazineDesk": "Abrir a redação",
   "changelog.tag.comingOut": "Ler o guia de sair do armário",
   "changelog.tag.guidelines": "Ler as diretrizes da comunidade",
+  "changelog.tag.guideIndex": "Ver todos os guias",
   "changelog.tag.requestInvite": "Pedir para entrar",
   "changelog.tag.privacy": "Ler a política de privacidade",
   "changelog.tag.flatmates": "Ver o quadro de colegas de casa",
@@ -7052,6 +7053,8 @@ export const marketing: Catalog = {
   "resourceLibrary.results_other": "{count} resultados",
   "resourceLibrary.empty":
     "Nenhum recurso corresponde. Tenta um filtro mais amplo.",
+  "resourceLibrary.emptyUnreviewed":
+    "Ainda nenhum guia passou pela revisão editorial. Um guia aparece aqui assim que uma editora o ler de ponta a ponta e confirmar que está correto.",
   "resourceLibrary.card.visitSite": "Visitar site",
   "resourceLibrary.orgs.title":
     "Organizações que fazem isto <em>todos os dias.</em>",
@@ -7217,6 +7220,10 @@ export const marketing: Catalog = {
     "A consola de admin que lista todas as imagens enviadas passa a poder filtrar pelos ficheiros que nada na plataforma referencia, e também pelos que continuam em uso. Cada cartão já dizia se estava referenciado, por isso encontrar os que se podem limpar obrigava a ler a grelha cartão a cartão. O filtro reduz o que já foi carregado e continua a carregar mais do bucket enquanto nada corresponde, para nunca responder “nada sem uso aqui” a partir de uma lista carregada pela metade. Onde algumas verificações de referência não correram, o aviso de sempre mantém-se: um conjunto de referências vazio fica por verificar, por isso recarrega antes de tratar um ficheiro como seguro para eliminar.",
 
   // ── 26 de agosto de 2026 ──────────────────────────────────────────────────
+  "changelog.entries.guides-appear-once-an-editor-has-checked-them.title":
+    "Os guias aparecem depois de uma editora os verificar",
+  "changelog.entries.guides-appear-once-an-editor-has-checked-them.body":
+    "Um guia só te chega depois de uma editora o ler de ponta a ponta e confirmar que está correto. Isto abrange o índice de guias, a biblioteca, a pesquisa e as próprias páginas dos guias: abrir uma que ainda não passou pela revisão mostra as linhas de apoio e uma nota honesta sobre o ponto em que está. Estas são páginas que se abrem numa crise, por isso a exigência para mostrar uma é que alguém com nome tenha assumido a responsabilidade pelas palavras. Todos os guias estão neste momento na fila de revisão, por isso as prateleiras começam vazias e enchem à medida que cada um for aprovado. Vieram mais duas coisas com isto. Um guia cuja revisão apenas ficou em atraso mantém-se no ar e diz isso no rodapé. E quem não tem sessão iniciada passa a ver o mesmo texto e as mesmas datas de revisão que um membro vê, porque um adolescente com dúvidas não devia ter de se inscrever para ler um guia de saúde.",
   "changelog.entries.the-rules-open-without-leaving-the-queue.title":
     "As regras de moderação abrem sem sair da fila",
   "changelog.entries.the-rules-open-without-leaving-the-queue.body":
