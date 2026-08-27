@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { FiCompass } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { ReferenceDigestModal } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   MODERATION_STANCE_HEAD,
@@ -16,7 +17,9 @@ import styles from "./ModerationStanceNote.module.css";
  * same case. `variant` picks the rule set for the decision being made.
  *
  * Deliberately not dismissible: the whole point is that it is in front of
- * whoever is deciding, every time.
+ * whoever is deciding, every time. Its two references open a digest dialog
+ * rather than navigating, for the same reason: a moderator halfway through a
+ * report or an application should not have to leave it to check the rule.
  */
 export function ModerationStanceNote({
   variant = "reports",
@@ -24,7 +27,10 @@ export function ModerationStanceNote({
   variant?: ModerationStanceVariant;
 } = {}) {
   const { t } = useTranslation();
+  const [openDigestIndex, setOpenDigestIndex] = useState<number | null>(null);
   const headingId = `moderation-stance-${variant}`;
+  const openDigest =
+    openDigestIndex === null ? null : MODERATION_STANCE_LINKS[openDigestIndex];
 
   return (
     <aside className={styles.note} aria-labelledby={headingId}>
@@ -41,12 +47,23 @@ export function ModerationStanceNote({
         ))}
       </ul>
       <div className={styles.links}>
-        {MODERATION_STANCE_LINKS.map((link) => (
-          <Link key={link.href} className={styles.link} to={link.href}>
+        {MODERATION_STANCE_LINKS.map((link, index) => (
+          <button
+            key={link.labelKey}
+            type="button"
+            className={styles.link}
+            onClick={() => setOpenDigestIndex(index)}
+          >
             {t(link.labelKey)}
-          </Link>
+          </button>
         ))}
       </div>
+      {openDigest && (
+        <ReferenceDigestModal
+          topic={openDigest.topic}
+          onClose={() => setOpenDigestIndex(null)}
+        />
+      )}
     </aside>
   );
 }

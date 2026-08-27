@@ -19,6 +19,11 @@ export { FeatureHelp } from "./FeatureHelp";
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";
 export { Modal, ModalSheet, SideSheet } from "./Modal";
+export {
+  ReferenceDigestModal,
+  type ReferenceDigestTopic,
+  type ReferenceDigestPoint,
+} from "./ReferenceDigestModal";
 export { useDismiss, useScrimDismiss } from "./useDismiss";
 export { SuccessPanel } from "./SuccessPanel";
 export { Spinner, Sending } from "./Spinner";

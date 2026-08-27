@@ -1,4 +1,5 @@
-/* The About page's reference dialog. Mirrors the destination page's PageHero
+/* The reference-digest dialog shared by the About page's link modals and the
+   moderation queue's stance note. Mirrors the destination page's PageHero
    (eyebrow + serif title with a coral <em> + lead) at modal scale, then the
    digest paragraphs and the commitments-style point list. The sheet's own
    padding and scrolling come from Modal.module.css. */

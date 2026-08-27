@@ -943,4 +943,50 @@ export const safety: Catalog = {
     "Avalia o que a pessoa escreveu. Um nome, uma fotografia, uma forma de escrever ou um sotaque nas respostas n\u00e3o s\u00e3o prova de nada, e agir com base nisso \u00e9 a falha mais prov\u00e1vel nesta fila.",
   "moderationStance.link.guidelines": "Diretrizes: as linhas vermelhas",
   "moderationStance.link.stand": "Onde nos posicionamos",
+  "moderationStance.digest.guidelines.eyebrow": "Diretrizes da comunidade",
+  "moderationStance.digest.guidelines.label": "As linhas vermelhas",
+  "moderationStance.digest.guidelines.title":
+    "Conhece as <em>linhas vermelhas</em>",
+  "moderationStance.digest.guidelines.lead":
+    "A conduta que é sempre assunto do Código de Conduta, e a cláusula que separa dela o discurso político.",
+  "moderationStance.digest.guidelines.p1":
+    "As diretrizes descrevem a cultura. As linhas vermelhas são a parte delas que se aplica: assédio ou ataques pessoais dirigidos, divulgar dados identificativos de alguém, expor a identidade de alguém sem consentimento, ameaças ou intimidação, partilhar conversas ou fotografias privadas sem consentimento, e discriminação com base em qualquer característica protegida.",
+  "moderationStance.digest.guidelines.p2":
+    "A cláusula do discurso político fica ao lado delas. Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político e é moderado como discurso político, incluindo a defesa da libertação da Palestina. Passa a ser assunto do Código de Conduta quando recai sobre uma pessoa: responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade, ou fazer campanha pela exclusão de uma classe de pessoas membras, seja qual for o vocabulário que use.",
+  "moderationStance.digest.guidelines.point.oneTest.title":
+    "Um único teste decide.",
+  "moderationStance.digest.guidelines.point.oneTest.body":
+    "Isto é sobre um Estado e a sua conduta, ou sobre uma pessoa e quem ela é. É essa a pergunta toda.",
+  "moderationStance.digest.guidelines.point.bothDirections.title":
+    "Os dois sentidos são aplicados da mesma forma.",
+  "moderationStance.digest.guidelines.point.bothDirections.body":
+    "O antissemitismo e o racismo antipalestiniano são ambos violações, e a posição da própria plataforma sobre a Palestina não altera o tratamento de um caso.",
+  "moderationStance.digest.guidelines.point.outcomes.title":
+    "Uma violação confirmada tem consequências.",
+  "moderationStance.digest.guidelines.point.outcomes.body":
+    "Um aviso, uma suspensão ou a remoção, e cooperação com as autoridades quando a segurança de alguém está em risco.",
+  "moderationStance.digest.guidelines.cta": "Ler as diretrizes completas",
+  "moderationStance.digest.stand.eyebrow": "Onde nos posicionamos",
+  "moderationStance.digest.stand.label": "Onde nos posicionamos",
+  "moderationStance.digest.stand.title":
+    "A libertação queer é <em>indivisível.</em>",
+  "moderationStance.digest.stand.lead":
+    "Em resumo, as posições publicadas com que se mede uma decisão tomada aqui.",
+  "moderationStance.digest.stand.p1":
+    "As mulheres trans são mulheres, os homens trans são homens, as pessoas não binárias são não binárias e as pessoas intersexo existem. Nada disto é dito com reservas nem está aberto a debate nesta plataforma. A norma é a autodeterminação, por isso nunca se pede a uma pessoa membra ou candidata que prove o seu género.",
+  "moderationStance.digest.stand.p2":
+    "Israel está a cometer um genocídio contra os palestinianos em Gaza, e a QueerPulse está com o povo palestiniano. A defesa da libertação da Palestina é bem-vinda aqui e é moderada como discurso político. O trabalho sexual é trabalho, a migração é uma questão queer, e I = I: a serofobia cai sob a mesma linha vermelha que qualquer outra discriminação.",
+  "moderationStance.digest.stand.point.notADebate.title":
+    "Pertencer a esta comunidade não é um tema de debate.",
+  "moderationStance.digest.stand.point.notADebate.body":
+    "Não há discussão dos dois lados sobre se uma pessoa membra merece direitos, e nenhuma denúncia é arquivada em nome do equilíbrio.",
+  "moderationStance.digest.stand.point.speechVsExclusion.title":
+    "Criticar um Estado é discurso; fazer campanha contra uma classe de pessoas membras é assunto do Código de Conduta.",
+  "moderationStance.digest.stand.point.speechVsExclusion.body":
+    "Chamar-lhe crítica de género deixa-o exatamente aquilo que era.",
+  "moderationStance.digest.stand.point.whenWeSpeak.title":
+    "Falamos onde a nossa comunidade está implicada.",
+  "moderationStance.digest.stand.point.whenWeSpeak.body":
+    "É esse teste que explica por que razão estas posições estão publicadas, e é a norma a que deves sujeitar a tua própria decisão.",
+  "moderationStance.digest.stand.cta": "Ler a posição completa",
 };

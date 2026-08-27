@@ -7210,7 +7210,17 @@ export const marketing: Catalog = {
   // à segurança", que se lê como explicação e não como o próprio formulário.
   "changelog.tag.reportForm": "Abrir o formulário de denúncia",
 
+  // ── 27 de agosto de 2026 ──────────────────────────────────────────────────
+  "changelog.entries.unused-uploads-filter.title":
+    "Encontrar uploads que ninguém usa",
+  "changelog.entries.unused-uploads-filter.body":
+    "A consola de admin que lista todas as imagens enviadas passa a poder filtrar pelos ficheiros que nada na plataforma referencia, e também pelos que continuam em uso. Cada cartão já dizia se estava referenciado, por isso encontrar os que se podem limpar obrigava a ler a grelha cartão a cartão. O filtro reduz o que já foi carregado e continua a carregar mais do bucket enquanto nada corresponde, para nunca responder “nada sem uso aqui” a partir de uma lista carregada pela metade. Onde algumas verificações de referência não correram, o aviso de sempre mantém-se: um conjunto de referências vazio fica por verificar, por isso recarrega antes de tratar um ficheiro como seguro para eliminar.",
+
   // ── 26 de agosto de 2026 ──────────────────────────────────────────────────
+  "changelog.entries.the-rules-open-without-leaving-the-queue.title":
+    "As regras de moderação abrem sem sair da fila",
+  "changelog.entries.the-rules-open-without-leaving-the-queue.body":
+    "A nota que está no topo de cada fila de moderação remete para as linhas vermelhas e para onde a plataforma se posiciona, e até agora ler qualquer uma delas obrigava a sair da página a meio de uma decisão, com uma denúncia ou um pedido de adesão por ler. As duas referências passam a abrir uma janela por cima da fila: um resumo curto escrito para a decisão que está a ser tomada, com o único teste que separa a crítica a um Estado de um assunto do Código de Conduta, o que significa a autodeterminação para quem avalia uma candidatura, e o que resulta de uma violação confirmada. Um botão na janela leva à página completa para quem quiser o texto todo.",
   "changelog.entries.reporting-that-someone-outed-you.title":
     "Denunciar que alguém te expôs",
   "changelog.entries.reporting-that-someone-outed-you.body":

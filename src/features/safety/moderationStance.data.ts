@@ -1,3 +1,4 @@
+import type { ReferenceDigestTopic } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 
 /** Which decision a moderator is making, and so which rules they need. */
@@ -39,13 +40,51 @@ export const MODERATION_STANCE_HEAD: Record<ModerationStanceVariant, string> = {
   applicants: "safety:moderationStance.applicantHead",
 };
 
-export const MODERATION_STANCE_LINKS = [
+/** One reference the note links, and the digest its trigger opens. */
+export interface ModerationStanceLink {
+  labelKey: string;
+  topic: ReferenceDigestTopic;
+}
+
+/**
+ * The two references sit behind a dialog rather than a link because of where
+ * they are: a moderator reading them is mid-decision, with a report or an
+ * application open, and following a link means abandoning that. Each digest is
+ * written for the call being made rather than for the page it stands in for,
+ * and its footer button is still the way through to the full text.
+ */
+function digest(id: string, href: string, pointIds: string[]) {
+  const base = `safety:moderationStance.digest.${id}`;
+  return {
+    eyebrowKey: `${base}.eyebrow`,
+    labelKey: `${base}.label`,
+    titleKey: `${base}.title`,
+    leadKey: `${base}.lead`,
+    paragraphKeys: [`${base}.p1`, `${base}.p2`],
+    points: pointIds.map((pointId) => ({
+      titleKey: `${base}.point.${pointId}.title`,
+      bodyKey: `${base}.point.${pointId}.body`,
+    })),
+    href,
+    ctaKey: `${base}.cta`,
+  };
+}
+
+export const MODERATION_STANCE_LINKS: ModerationStanceLink[] = [
   {
     labelKey: "safety:moderationStance.link.guidelines",
-    href: routes.guidelines,
+    topic: digest("guidelines", routes.guidelines, [
+      "oneTest",
+      "bothDirections",
+      "outcomes",
+    ]),
   },
   {
     labelKey: "safety:moderationStance.link.stand",
-    href: `${routes.about}#stand`,
+    topic: digest("stand", `${routes.about}#stand`, [
+      "notADebate",
+      "speechVsExclusion",
+      "whenWeSpeak",
+    ]),
   },
 ];

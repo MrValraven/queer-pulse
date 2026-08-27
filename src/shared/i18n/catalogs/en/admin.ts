@@ -1380,6 +1380,29 @@ export const admin: Catalog = {
   "media.kinds.gathering-photos": "Gathering photos",
   "media.kinds.group-avatars": "Group avatars",
   "media.kinds.listing-photos": "Listing photos",
+  // Second filter over the same grid: "is anything still pointing at this?".
+  // It narrows the pages already loaded (every object arrives with its
+  // references resolved), which is why the copy says how much of the bucket
+  // has actually been checked instead of implying a whole-bucket answer.
+  "media.usage.filterAriaLabel": "Filter by whether the file is still used",
+  "media.usage.all": "All",
+  "media.usage.inUse": "In use",
+  "media.usage.unused": "Not in use",
+  "media.usage.scanning_one":
+    "No match in the first file. Loading more of the bucket…",
+  "media.usage.scanning_other":
+    "No match in the first {count} files. Loading more of the bucket…",
+  "media.usage.scannedNote_one":
+    "Checked one file so far. Load more to keep looking.",
+  "media.usage.scannedNote_other":
+    "Checked {count} files so far. Load more to keep looking.",
+  "media.usage.noMatchYet": "No match yet",
+  "media.usage.empty.unused.title": "Nothing unused here",
+  "media.usage.empty.unused.body":
+    "Every file in this view is still referenced somewhere.",
+  "media.usage.empty.in-use.title": "Nothing in use here",
+  "media.usage.empty.in-use.body":
+    "Nothing in this view is referenced anywhere.",
   "media.unowned": "Unowned",
   // The object key is the only thing that identifies one tile from another:
   // the thumbnail is decorative and the card carries no filename.

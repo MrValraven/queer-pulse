@@ -1393,6 +1393,25 @@ export const admin: Catalog = {
   "media.kinds.gathering-photos": "Fotos de encontros",
   "media.kinds.group-avatars": "Avatares de grupo",
   "media.kinds.listing-photos": "Fotos de espaços",
+  "media.usage.filterAriaLabel": "Filtrar por ficheiros ainda em uso",
+  "media.usage.all": "Tudo",
+  "media.usage.inUse": "Em uso",
+  "media.usage.unused": "Sem uso",
+  "media.usage.scanning_one":
+    "Nada corresponde no primeiro ficheiro. A carregar mais do bucket…",
+  "media.usage.scanning_other":
+    "Nada corresponde nos primeiros {count} ficheiros. A carregar mais do bucket…",
+  "media.usage.scannedNote_one":
+    "Verificado um ficheiro até agora. Vê mais para continuar a procurar.",
+  "media.usage.scannedNote_other":
+    "Verificados {count} ficheiros até agora. Vê mais para continuar a procurar.",
+  "media.usage.noMatchYet": "Sem correspondência por agora",
+  "media.usage.empty.unused.title": "Nada sem uso aqui",
+  "media.usage.empty.unused.body":
+    "Todos os ficheiros desta vista continuam referenciados algures.",
+  "media.usage.empty.in-use.title": "Nada em uso aqui",
+  "media.usage.empty.in-use.body":
+    "Nenhum ficheiro desta vista está referenciado em lado nenhum.",
   "media.unowned": "Sem dono",
   "media.openAriaLabel": "Inspecionar {key}",
   "media.uploaderFilterAriaLabel":

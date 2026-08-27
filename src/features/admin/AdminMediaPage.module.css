@@ -14,6 +14,12 @@
   overflow-x: auto;
 }
 
+/* Same content-width + scroll-on-narrow treatment as the kind pill. */
+.usageFilter {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 /* Only the uploader search/active-filter row keeps the narrow column width. */
 .uploaderRow {
   width: 100%;
@@ -174,8 +180,21 @@
 
 .loadMore {
   display: flex;
-  justify-content: center;
+  /* Column, so the "checked N so far" note sits above the button rather than
+     beside it and the button stays centred. */
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   margin-top: 20px;
+}
+
+/* The usage filter narrows what is already loaded, so it says how much of the
+   bucket it has actually looked at. Also the auto-scan's live status line. */
+.scanNote {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-60);
+  text-align: center;
 }
 
 .drawerImage {

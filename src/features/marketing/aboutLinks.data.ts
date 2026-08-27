@@ -10,27 +10,15 @@
  * but one is reached from the trans position and the other from Palestine).
  * `href` is the escape hatch the dialog's footer button uses.
  */
+import type {
+  ReferenceDigestPoint,
+  ReferenceDigestTopic,
+} from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 
-export interface AboutLinkPoint {
-  titleKey: string;
-  bodyKey: string;
-}
-
-export interface AboutLinkTopic {
-  /** Small caps line above the title. */
-  eyebrowKey: string;
-  /** Plain-text accessible name for the dialog (`titleKey` carries `<em>`). */
-  labelKey: string;
-  /** Serif display title; its catalog value carries an `<em>` run. */
-  titleKey: string;
-  leadKey: string;
-  paragraphKeys: string[];
-  points: AboutLinkPoint[];
-  /** The full page this digest stands in for. */
-  href: string;
-  ctaKey: string;
-}
+/** Structurally the shared digest shape; aliased so the two never drift. */
+export type AboutLinkPoint = ReferenceDigestPoint;
+export type AboutLinkTopic = ReferenceDigestTopic;
 
 export type AboutLinkTopicId =
   | "intersections"

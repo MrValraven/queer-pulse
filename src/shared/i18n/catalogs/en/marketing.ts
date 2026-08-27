@@ -7074,7 +7074,17 @@ export const marketing: Catalog = {
   // approach", which reads as an explainer rather than the form itself.
   "changelog.tag.reportForm": "Open the report form",
 
+  // ── 27 Aug 2026 ───────────────────────────────────────────────────────────
+  "changelog.entries.unused-uploads-filter.title":
+    "Finding uploads nothing points at",
+  "changelog.entries.unused-uploads-filter.body":
+    "The admin console that lists every uploaded image can now filter to files nothing on the platform points at, and to files that are still in use. Each tile already said whether it was referenced, so finding the ones safe to clear away meant reading the grid card by card. The filter narrows what has been loaded and keeps loading further into the bucket while nothing matches, so it never answers “nothing unused here” from a half-loaded list. The standing caution still holds where some reference checks couldn't run: an empty reference set is unverified, so reload before treating a file as safe to delete.",
+
   // ── 26 Aug 2026 ───────────────────────────────────────────────────────────
+  "changelog.entries.the-rules-open-without-leaving-the-queue.title":
+    "The moderation rules open without leaving the queue",
+  "changelog.entries.the-rules-open-without-leaving-the-queue.body":
+    "The note above every moderation queue points at the hard lines and at where the platform stands, and until now reading either one meant navigating away mid-decision with a report or a join request half-read behind you. Both references now open a dialog over the queue: a short digest written for the call being made, covering the one test that separates criticism of a state from a Code of Conduct matter, what self-identification means for someone reviewing an applicant, and what a confirmed breach leads to. A button in the dialog goes through to the full page for anyone who wants the whole text.",
   "changelog.entries.reporting-that-someone-outed-you.title":
     "Reporting that someone outed you",
   "changelog.entries.reporting-that-someone-outed-you.body":

@@ -26,9 +26,15 @@
     )
   );
 }
+/* `height: 100%` (never a fixed height) so every tile in a row matches the
+   tallest one, including when a consumer wraps each tile in a stagger element
+   like `<FadeIn>`: the wrapper is then the grid item that stretches, so the
+   tile has to fill it. Against an auto-height parent this resolves to auto,
+   leaving a tile used outside a grid unaffected. */
 .tile {
   display: flex;
   flex-direction: column;
+  height: 100%;
   padding: 20px 22px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);

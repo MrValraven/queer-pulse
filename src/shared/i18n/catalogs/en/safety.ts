@@ -920,4 +920,49 @@ export const safety: Catalog = {
     "Judge what the person wrote. A name, a photo, a way of writing, or an accent in their answers is not evidence of anything, and acting on it is the failure this queue is most prone to.",
   "moderationStance.link.guidelines": "Guidelines: the hard lines",
   "moderationStance.link.stand": "Where we stand",
+  "moderationStance.digest.guidelines.eyebrow": "Community Guidelines",
+  "moderationStance.digest.guidelines.label": "The hard lines",
+  "moderationStance.digest.guidelines.title": "Know the <em>hard lines</em>",
+  "moderationStance.digest.guidelines.lead":
+    "The conduct that is always a Code of Conduct matter, and the clause that separates political speech from it.",
+  "moderationStance.digest.guidelines.p1":
+    "The guidelines describe the culture. The hard lines are the enforceable part of them: harassment or targeted personal attacks, doxxing, outing someone without their consent, threats or intimidation, sharing private conversations or photos without consent, and discrimination on any protected basis.",
+  "moderationStance.digest.guidelines.p2":
+    "The political-speech clause sits beside them. Criticising a state, its government, its military, or its ideology is political speech and is moderated as political speech, advocacy for Palestinian liberation included. It becomes a Code of Conduct matter when it lands on a person: holding a member answerable for a state's actions because of their ethnicity, religion, or nationality, or campaigning for the exclusion of a class of member, whatever vocabulary it borrows.",
+  "moderationStance.digest.guidelines.point.oneTest.title":
+    "One test decides it.",
+  "moderationStance.digest.guidelines.point.oneTest.body":
+    "Is this about a state and its conduct, or about a person and who they are. That is the whole question.",
+  "moderationStance.digest.guidelines.point.bothDirections.title":
+    "Both directions are enforced the same way.",
+  "moderationStance.digest.guidelines.point.bothDirections.body":
+    "Antisemitism and anti-Palestinian racism are both breaches, and the platform's own position on Palestine does not change how a case is handled.",
+  "moderationStance.digest.guidelines.point.outcomes.title":
+    "A confirmed breach carries a consequence.",
+  "moderationStance.digest.guidelines.point.outcomes.body":
+    "A warning, a suspension, or removal, and cooperation with the authorities where someone's safety is at risk.",
+  "moderationStance.digest.guidelines.cta": "Read the full guidelines",
+  "moderationStance.digest.stand.eyebrow": "Where we stand",
+  "moderationStance.digest.stand.label": "Where we stand",
+  "moderationStance.digest.stand.title":
+    "Queer liberation is <em>indivisible.</em>",
+  "moderationStance.digest.stand.lead":
+    "The published positions a decision here is measured against, in short.",
+  "moderationStance.digest.stand.p1":
+    "Trans women are women, trans men are men, nonbinary people are nonbinary, and intersex people exist. None of it is held tentatively and none of it is open for debate on this platform. Self-identification is the standard, so no member and no applicant is ever asked to prove their gender.",
+  "moderationStance.digest.stand.p2":
+    "Israel is committing a genocide against Palestinians in Gaza, and QueerPulse stands with Palestinians. Advocacy for Palestinian liberation is welcome here and is moderated as political speech. Sex work is work, migration is a queer issue, and U = U: serophobia falls under the same hard line as any other discrimination.",
+  "moderationStance.digest.stand.point.notADebate.title":
+    "Membership is not a debate topic.",
+  "moderationStance.digest.stand.point.notADebate.body":
+    "There is no both-sides discussion about whether a member deserves rights, and no report is dismissed for the sake of balance.",
+  "moderationStance.digest.stand.point.speechVsExclusion.title":
+    "Criticising a state is speech; campaigning against a class of member is a Code of Conduct matter.",
+  "moderationStance.digest.stand.point.speechVsExclusion.body":
+    "Calling it gender-critical leaves it exactly what it was.",
+  "moderationStance.digest.stand.point.whenWeSpeak.title":
+    "We speak where our community is implicated.",
+  "moderationStance.digest.stand.point.whenWeSpeak.body":
+    "That test is why these positions are published at all, and it is the standard to hold your own decision to.",
+  "moderationStance.digest.stand.cta": "Read the full position",
 };

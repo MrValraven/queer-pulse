@@ -89,6 +89,19 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
   {
     year: "2026",
     entries: [
+      // Staff-facing, and it stays on the public log for the same reason the
+      // moderator entries below do: a member reading it learns what a
+      // moderator has in front of them when a case about them is decided.
+      {
+        id: "the-rules-open-without-leaving-the-queue",
+        category: "improvement",
+        date: "27 Aug 2026",
+        ...entryKeys("the-rules-open-without-leaving-the-queue"),
+        tag: {
+          labelKey: "marketing:changelog.tag.guidelines",
+          to: routes.guidelines,
+        },
+      },
       // Second batch of 26 Aug 2026. The reporting entry leads the day: it
       // corrects a gap on the platform's most sensitive surface, and a member
       // who tried to report being outed in the last few months should meet it

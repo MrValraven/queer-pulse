@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FiAlertTriangle,
   FiExternalLink,
@@ -13,7 +13,6 @@ import {
   DetailRows,
   EmptyState,
   FadeIn,
-  SegmentedControl,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
@@ -24,7 +23,7 @@ import {
   type AdminMediaDeleteRefusal,
 } from "./AdminMediaDeleteConfirm";
 import { AdminMediaReferenceList } from "./AdminMediaReferences";
-import { AdminMediaUploaderPicker } from "./AdminMediaUploaderPicker";
+import { AdminMediaFilters } from "./AdminMediaFilters";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -33,7 +32,6 @@ import { absoluteFileUrl } from "./adminMedia.format";
 import { ApiError } from "../../shared/api/client";
 import { describeError } from "../../shared/api/errorMessage";
 import {
-  ADMIN_MEDIA_KINDS,
   getAdminMediaHead,
   type AdminMediaDeleteConflict,
   type AdminMediaHead,
@@ -42,6 +40,7 @@ import {
   type AdminMediaUploader,
 } from "./api/adminMedia.api";
 import { useAdminMedia, useDeleteAdminMedia } from "./api/useAdminMedia";
+import { matchesUsage, type AdminMediaUsage } from "./adminMediaUsage";
 import styles from "./AdminMediaPage.module.css";
 
 /**
@@ -56,6 +55,7 @@ export function AdminMediaPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [kind, setKind] = useState<AdminMediaKind>("all");
+  const [usage, setUsage] = useState<AdminMediaUsage>("all");
   const [uploaderFilter, setUploaderFilter] =
     useState<AdminMediaUploader | null>(null);
   const [openObject, setOpenObject] = useState<AdminMediaObject | null>(null);
@@ -67,9 +67,36 @@ export function AdminMediaPage() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     isDemo,
     degraded,
   } = useAdminMedia({ kind, uploaderId: uploaderFilter?.id });
+
+  const visibleObjects = objects.filter((object) =>
+    matchesUsage(object, usage),
+  );
+
+  // The usage filter hides every object loaded so far and the bucket has more
+  // pages: keep scanning rather than reporting "none" from a partial list. A
+  // page fetch that failed leaves `hasNextPage` true, so `isFetchNextPageError`
+  // stops the scan instead of letting it retry the same request forever; the
+  // empty state then offers the load-more button as a manual retry.
+  const isScanningForMatches =
+    usage !== "all" &&
+    !isLoading &&
+    !isFetchNextPageError &&
+    visibleObjects.length === 0 &&
+    hasNextPage === true;
+
+  useEffect(() => {
+    if (!isScanningForMatches || isFetchingNextPage) return;
+    void fetchNextPage();
+  }, [isScanningForMatches, isFetchingNextPage, fetchNextPage]);
+
+  // The filter hid everything loaded, the scan stopped, and the bucket still
+  // has pages: "nothing unused" would be a claim the console can't make.
+  const isUsageScanIncomplete =
+    usage !== "all" && !isScanningForMatches && hasNextPage === true;
 
   async function copyToClipboard(value: string, confirmationLabel: string) {
     await navigator.clipboard.writeText(value);
@@ -98,48 +125,14 @@ export function AdminMediaPage() {
         />
       </FadeIn>
 
-      <FadeIn delay={60}>
-        <div className={styles.filters}>
-          <div className={styles.kindFilter}>
-            <SegmentedControl
-              label={t("admin:media.filterAriaLabel")}
-              value={kind}
-              onChange={(next) => setKind(next as AdminMediaKind)}
-              options={ADMIN_MEDIA_KINDS.map((kindValue) => ({
-                value: kindValue,
-                label: t(`admin:media.kinds.${kindValue}`),
-              }))}
-              // While filtering by uploader, kind tabs are inert — the uploader
-              // view spans every kind (the backend ignores `prefix`).
-              disabledOptions={uploaderFilter ? ADMIN_MEDIA_KINDS : undefined}
-            />
-          </div>
-          <div className={styles.uploaderRow}>
-            {uploaderFilter ? (
-              <div className={styles.activeFilter}>
-                <span className={styles.activeFilterLabel}>
-                  <FiUser aria-hidden />
-                  <Translation
-                    i18nKey="admin:media.filterByUploader.activePill"
-                    values={{ name: uploaderFilter.displayName }}
-                    components={{ strong: <strong /> }}
-                  />
-                </span>
-                <button
-                  type="button"
-                  className={styles.activeFilterClear}
-                  onClick={() => setUploaderFilter(null)}
-                  aria-label={t("admin:media.filterByUploader.clearAria")}
-                >
-                  <FiX aria-hidden />
-                </button>
-              </div>
-            ) : (
-              <AdminMediaUploaderPicker onPick={setUploaderFilter} />
-            )}
-          </div>
-        </div>
-      </FadeIn>
+      <AdminMediaFilters
+        kind={kind}
+        onKindChange={setKind}
+        usage={usage}
+        onUsageChange={setUsage}
+        uploaderFilter={uploaderFilter}
+        onUploaderFilterChange={setUploaderFilter}
+      />
 
       {!isDemo && degraded && (
         <p className={styles.degradedBanner} role="status">
@@ -170,22 +163,57 @@ export function AdminMediaPage() {
             onClick: () => void refetch(),
           }}
         />
-      ) : objects.length === 0 ? (
-        <EmptyState
-          icon={<FiSearch />}
-          title={t("admin:media.empty.title")}
-          description={
-            uploaderFilter
-              ? t("admin:media.filterByUploader.emptyForUser", {
-                  name: uploaderFilter.displayName,
-                })
-              : t("admin:media.empty.body")
-          }
-        />
+      ) : isScanningForMatches ? (
+        <>
+          <p className={styles.scanNote} role="status">
+            {t("admin:media.usage.scanning", { count: objects.length })}
+          </p>
+          <div className={styles.grid} aria-busy="true">
+            {Array.from({ length: 4 }).map((_, skeletonIndex) => (
+              <SkeletonLine key={skeletonIndex} height={160} />
+            ))}
+          </div>
+        </>
+      ) : visibleObjects.length === 0 ? (
+        // Three different "nothing here" answers, and only one of them is
+        // final. With pages left unscanned the honest answer is "no match in
+        // what's loaded", with the load-more button as the way to keep going
+        // (and as the manual retry after a failed page fetch).
+        isUsageScanIncomplete ? (
+          <EmptyState
+            icon={<FiSearch />}
+            title={t("admin:media.usage.noMatchYet")}
+            description={t("admin:media.usage.scannedNote", {
+              count: objects.length,
+            })}
+            action={{
+              label: t("admin:media.loadMore"),
+              onClick: () => void fetchNextPage(),
+            }}
+          />
+        ) : (
+          <EmptyState
+            icon={<FiSearch />}
+            title={
+              usage === "all"
+                ? t("admin:media.empty.title")
+                : t(`admin:media.usage.empty.${usage}.title`)
+            }
+            description={
+              usage !== "all"
+                ? t(`admin:media.usage.empty.${usage}.body`)
+                : uploaderFilter
+                  ? t("admin:media.filterByUploader.emptyForUser", {
+                      name: uploaderFilter.displayName,
+                    })
+                  : t("admin:media.empty.body")
+            }
+          />
+        )
       ) : (
         <>
           <div className={styles.grid}>
-            {objects.map((object) => (
+            {visibleObjects.map((object) => (
               <AdminMediaCard
                 key={object.key}
                 object={object}
@@ -196,6 +224,13 @@ export function AdminMediaPage() {
           </div>
           {hasNextPage && (
             <div className={styles.loadMore}>
+              {usage !== "all" && (
+                <p className={styles.scanNote}>
+                  {t("admin:media.usage.scannedNote", {
+                    count: objects.length,
+                  })}
+                </p>
+              )}
               <Button
                 variant="ghost"
                 disabled={isFetchingNextPage}
