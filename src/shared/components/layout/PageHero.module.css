@@ -69,3 +69,32 @@
 .plum .sub {
   color: rgba(var(--cream-rgb), 0.68);
 }
+
+/* ── Compact variant ──────────────────────────────────────────────────────
+   For pages that lead with a filter bar and a list. Every part stays — the
+   eyebrow at full size, the display title, the sub — and the title stays big
+   enough to carry the page; what goes is the dead vertical space around them,
+   which is what was pushing the first results off the screen. Roughly two
+   thirds the height of the standard hero, with none of its parts missing. */
+.compact {
+  padding: 40px 0 36px;
+}
+.compact .title {
+  font-size: clamp(34px, 4.6vw, 58px);
+  max-width: 20ch;
+}
+.compact .eyebrow {
+  margin-bottom: 12px;
+}
+.compact .sub {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+/* The decorative glow is sized for a full-height hero; keep it in proportion
+   so it doesn't read as a hard edge across a shorter band. */
+.compact.plum::before {
+  width: 380px;
+  height: 380px;
+}

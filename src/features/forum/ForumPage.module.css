@@ -1,6 +1,9 @@
 .hero {
-  /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 48px 0 32px;
+  /* nav band reserved by shell (base.css); this is only breathing room.
+     Tightened (was 48px 0 32px) for the same reason as the other board
+     surfaces: the forum is a page you come back to, and the threads should be
+     on screen when it loads. Title, lead and search all stay. */
+  padding: 32px 0 26px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
 }
 .heroRow {
@@ -18,10 +21,19 @@
   color: var(--accent);
   margin-bottom: 14px;
 }
+/* Title + info chip on one line. The chip is a sibling of the h1, never a
+   child: inside it, it joined the heading's accessible name and rode the
+   display font-size. */
+.titleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(36px, 5vw, 60px);
+  font-size: clamp(34px, 4.6vw, 54px);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1;
@@ -33,8 +45,8 @@
 .hero p {
   font-size: 15px;
   color: var(--ink-60);
-  max-width: 52ch;
-  margin-top: 14px;
+  max-width: 60ch;
+  margin-top: 12px;
   line-height: 1.6;
 }
 .heroLink {
@@ -54,7 +66,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin-top: 24px;
+  margin-top: 18px;
   max-width: 420px;
 }
 .searchIcon {
@@ -119,7 +131,7 @@
 }
 
 .body {
-  padding: 32px 0 80px;
+  padding: 24px 0 80px;
 }
 .layout {
   display: grid;

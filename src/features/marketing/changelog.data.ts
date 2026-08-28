@@ -89,6 +89,76 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
   {
     year: "2026",
     entries: [
+      {
+        id: "the-communities-filters-fold-away",
+        category: "improvement",
+        date: "28 Aug 2026",
+        ...entryKeys("the-communities-filters-fold-away"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "your-sort-and-your-location-both-count",
+        category: "improvement",
+        date: "28 Aug 2026",
+        ...entryKeys("your-sort-and-your-location-both-count"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "one-line-of-controls-on-the-directory",
+        category: "improvement",
+        date: "28 Aug 2026",
+        ...entryKeys("one-line-of-controls-on-the-directory"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "an-empty-partner-roster-says-so",
+        category: "fix",
+        date: "28 Aug 2026",
+        ...entryKeys("an-empty-partner-roster-says-so"),
+        tag: {
+          labelKey: "marketing:changelog.tag.partners",
+          to: routes.partners,
+        },
+      },
+      {
+        id: "the-tag-filter-opens-in-line",
+        category: "fix",
+        date: "28 Aug 2026",
+        ...entryKeys("the-tag-filter-opens-in-line"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "pages-that-get-to-the-point",
+        category: "improvement",
+        date: "28 Aug 2026",
+        ...entryKeys("pages-that-get-to-the-point"),
+        tag: {
+          labelKey: "marketing:changelog.tag.events",
+          to: routes.events,
+        },
+      },
+      {
+        id: "your-communities-start-at-the-cards",
+        category: "improvement",
+        date: "28 Aug 2026",
+        ...entryKeys("your-communities-start-at-the-cards"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
       // Staff-facing, and it stays on the public log for the same reason the
       // moderator entries below do: a member reading it learns what a
       // moderator has in front of them when a case about them is decided.

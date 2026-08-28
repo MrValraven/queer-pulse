@@ -32,7 +32,10 @@ export function ArrivingPage() {
           { name: pageTitle, path: routes.arriving },
         ])}
       />
+      {/* Compact: the arrival checklist is the first thing a newcomer needs,
+          and the full display hero pushed it below the fold. */}
       <PageHero
+        compact
         eyebrow={t("marketing:arriving.hero.eyebrow")}
         title={
           <Translation

@@ -3,15 +3,17 @@
   border-bottom: 2px solid var(--line-strong);
   /* Masthead is the first child inside PageShell/AppShell on the magazine
      pages, so the nav band is reserved once by `main[data-page-main]`
-     (base.css); this is only its own breathing room below the band. */
-  padding: 48px 0 0;
+     (base.css); this is only its own breathing room below the band. Kept
+     tight (was 48px): the masthead is the front's hero, and every pixel here
+     is spent before the reader sees a single headline. */
+  padding: 26px 0 0;
 }
 .mmTop {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 14px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
   flex-wrap: wrap;
 }
@@ -20,7 +22,10 @@
   text-decoration: none;
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(42px, 7vw, 96px);
+  /* Wordmark still leads the page, one step down from the original
+     clamp(42px, 7vw, 96px): at 96px the two lines alone ate ~173px of the
+     first screen and pushed the cover story under the fold. */
+  font-size: clamp(36px, 5vw, 64px);
   color: var(--text-strong);
   letter-spacing: -0.03em;
   line-height: 0.9;
@@ -54,6 +59,8 @@
 .magNav {
   display: flex;
   gap: 24px;
+  /* Stays 12px: `.mnLink`'s -12px margin-bottom is paired with this padding so
+     the active underline lands exactly on the nav's bottom border. */
   padding: 12px 0;
   border-bottom: 2px solid var(--line-strong);
   overflow-x: auto;

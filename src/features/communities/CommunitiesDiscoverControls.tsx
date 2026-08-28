@@ -1,26 +1,42 @@
-import type { Dispatch, ReactNode, SetStateAction } from "react";
 import {
+  useId,
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
+import {
+  ActiveFilters,
   Button,
-  Reveal,
+  RefineGroup,
+  RefinePanel,
+  RefineSplit,
+  RefineToggle,
   SearchInput,
   Select,
 } from "../../shared/components/ui";
+import { useRefineDrawer } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CommunityType } from "../homepage/data/types";
+import { CommunitiesCategoryFilter } from "./CommunitiesCategoryFilter";
 import { CommunitiesTagsFilter } from "./CommunitiesTagsFilter";
+import { useCommunitiesActiveFilters } from "./useCommunitiesActiveFilters";
 import type { DiscoverCategoryCounts } from "./useDiscoverCategoryCounts";
-import {
-  FILTERS,
-  SORT_OPTIONS,
-  type DiscoverSort,
-} from "./communitiesDiscover.data";
+import { SORT_OPTIONS, type DiscoverSort } from "./communitiesDiscover.data";
 import styles from "./CommunitiesPage.module.css";
 
 /**
- * The communities grid's whole filter/sort bar: search, the two pill toggles
- * ("Open to all" / "Busy this week"), the sort select, the category chips
- * (with their stable, whole-pool counts), and the results line underneath.
- * Split out of `CommunitiesDiscover` purely to keep that component under the
+ * The communities grid's whole filter/sort bar: a search field and one
+ * "Refine" toggle on a single row, with every group (category, sort, the two
+ * pill toggles, tags) in the drawer below, and the results line underneath.
+ *
+ * The groups live behind the toggle for the same reason the Local directory's
+ * do: seven category chips, a tags tray and two toggles standing open pushed
+ * the first community card most of the way down the fold, for controls most
+ * visitors set once or never. What IS always on screen is the chip row saying
+ * what is currently narrowing the list, so a closed drawer hides the controls
+ * without hiding their state.
+ *
+ * Split out of `CommunitiesGrid` purely to keep that component under the
  * repo's 200-line cap — every prop below is either page-level state or its
  * own `setState` (passed straight through, no wrapper callbacks needed).
  */
@@ -39,7 +55,6 @@ export function CommunitiesDiscoverControls({
   setTagIds,
   categoryCounts,
   resultCount,
-  hasActiveRefinement,
   onReset,
   isShowingResline,
   afterFilters,
@@ -59,16 +74,38 @@ export function CommunitiesDiscoverControls({
   /** Per-type totals, `null` for a chip whose count hasn't landed yet. */
   categoryCounts: DiscoverCategoryCounts;
   resultCount: number;
-  hasActiveRefinement: boolean;
+  /** Drops every refinement at once, behind the chip row's "Clear all". */
   onReset: () => void;
   /** Hidden while the initial load or a "Most active"/"Busy this week" drain
    *  is in flight — the count would otherwise flash a wrong partial number. */
   isShowingResline: boolean;
-  /** Slot between the category chips and the results line — the "My
-   *  communities" tab puts its weekly digest here. */
+  /** Slot between the filter bar and the results line — the "My communities"
+   *  tab puts its weekly digest here. */
   afterFilters?: ReactNode;
 }) {
   const { t } = useTranslation();
+  const refine = useRefineDrawer("qp.communities.refineOpen");
+  const sortLabelId = useId();
+  const togglesLabelId = useId();
+  const activeFilters = useCommunitiesActiveFilters({
+    searchInput,
+    setSearchInput,
+    filter,
+    setFilter,
+    isOpenOnly,
+    setIsOpenOnly,
+    isBusyOnly,
+    setIsBusyOnly,
+    tagIds,
+    setTagIds,
+  });
+  // The search term shows in the field itself, so the badge counts only what
+  // the shut drawer is actually hiding.
+  const hiddenFilterCount =
+    (filter === "all" ? 0 : 1) +
+    (isOpenOnly ? 1 : 0) +
+    (isBusyOnly ? 1 : 0) +
+    tagIds.length;
 
   return (
     <>
@@ -80,82 +117,77 @@ export function CommunitiesDiscoverControls({
           placeholder={t("communities:discover.search.placeholder")}
           ariaLabel={t("communities:discover.search.ariaLabel")}
         />
-
-        <div className={styles.toggles}>
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-pressed={isOpenOnly}
-            className={[styles.toggle, isOpenOnly && styles.toggleOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => setIsOpenOnly((value) => !value)}
-          >
-            <span className={styles.toggleDot} aria-hidden />
-            {t("communities:discover.toggle.openOnly")}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-pressed={isBusyOnly}
-            className={[styles.toggle, isBusyOnly && styles.toggleOn]
-              .filter(Boolean)
-              .join(" ")}
-            onClick={() => setIsBusyOnly((value) => !value)}
-          >
-            <span className={styles.toggleDot} aria-hidden />
-            {t("communities:discover.toggle.busyOnly")}
-          </Button>
-        </div>
-
-        <label className={styles.sort}>
-          <span className={styles.sortLabel}>
-            {t("communities:discover.sort.label")}
-          </span>
-          <Select
-            size="sm"
-            value={sort}
-            options={SORT_OPTIONS.map((option) => ({
-              value: option,
-              label: t(`communities:discover.sort.${option}`),
-            }))}
-            onChange={(next) => setSort((next as DiscoverSort) ?? sort)}
-          />
-        </label>
+        <RefineToggle {...refine.toggleProps} activeCount={hiddenFilterCount} />
       </div>
 
-      <Reveal className={styles.filters}>
-        {FILTERS.map((option) => {
-          const count = categoryCounts[option.value];
-          return (
-            <Button
-              variant="ghost"
-              size="sm"
-              key={option.value}
-              // The chips are a single-select filter, so each one announces
-              // whether it is the one currently applied.
-              aria-pressed={filter === option.value}
-              className={[
-                styles.chip,
-                filter === option.value && styles.chipActive,
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => setFilter(option.value)}
-            >
-              {t(option.labelKey)}
-              {count !== null && (
-                <span className={styles.chipCount}>{count}</span>
-              )}
-            </Button>
-          );
-        })}
-      </Reveal>
+      <RefinePanel {...refine.panelProps}>
+        <CommunitiesCategoryFilter
+          filter={filter}
+          setFilter={setFilter}
+          categoryCounts={categoryCounts}
+        />
 
-      <CommunitiesTagsFilter selectedTagIds={tagIds} onChange={setTagIds} />
+        <RefineSplit>
+          <RefineGroup
+            label={t("communities:discover.sort.label")}
+            labelId={sortLabelId}
+          >
+            <Select
+              size="sm"
+              labelledBy={sortLabelId}
+              value={sort}
+              options={SORT_OPTIONS.map((option) => ({
+                value: option,
+                label: t(`communities:discover.sort.${option}`),
+              }))}
+              onChange={(next) => setSort((next as DiscoverSort) ?? sort)}
+            />
+          </RefineGroup>
+
+          <RefineGroup
+            label={t("communities:discover.toggle.groupLabel")}
+            labelId={togglesLabelId}
+            role="group"
+            aria-labelledby={togglesLabelId}
+          >
+            <div className={styles.toggles}>
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-pressed={isOpenOnly}
+                className={[styles.toggle, isOpenOnly && styles.toggleOn]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setIsOpenOnly((value) => !value)}
+              >
+                <span className={styles.toggleDot} aria-hidden />
+                {t("communities:discover.toggle.openOnly")}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                aria-pressed={isBusyOnly}
+                className={[styles.toggle, isBusyOnly && styles.toggleOn]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => setIsBusyOnly((value) => !value)}
+              >
+                <span className={styles.toggleDot} aria-hidden />
+                {t("communities:discover.toggle.busyOnly")}
+              </Button>
+            </div>
+          </RefineGroup>
+        </RefineSplit>
+
+        <CommunitiesTagsFilter selectedTagIds={tagIds} onChange={setTagIds} />
+      </RefinePanel>
+
+      <ActiveFilters filters={activeFilters} onClearFilters={onReset} />
 
       {afterFilters}
 
+      {/* Just the count and the active sort now: clearing lives on the chip row
+          above, beside the chips it clears, rather than in two places. */}
       {isShowingResline && (
         <div className={styles.resline}>
           {/* The middot between the two halves lives in CSS, so no catalog
@@ -166,16 +198,6 @@ export function CommunitiesDiscoverControls({
               {t(`communities:discover.sort.${sort}`)}
             </span>
           </span>
-          {hasActiveRefinement && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className={styles.reset}
-              onClick={onReset}
-            >
-              {t("communities:discover.resline.reset")}
-            </Button>
-          )}
         </div>
       )}
     </>

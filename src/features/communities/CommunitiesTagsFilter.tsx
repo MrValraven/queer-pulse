@@ -10,8 +10,10 @@ import styles from "./CommunitiesPage.module.css";
  * chips it sits beside) that opens onto the full curated tag vocabulary — a
  * search-narrowed `ChipSelect`, the same "search widens/narrows a curated
  * multi-select pool" pattern the member directory's "What they do" filter
- * uses (`FilterProfessions.tsx`). Kept collapsed by default since 49 tags
- * would otherwise dominate the toolbar above the grid.
+ * uses (`FilterProfessions.tsx`). Kept collapsed by default since 53 tags
+ * would otherwise dominate the toolbar above the grid; open, the tray
+ * expands in flow and pushes the grid down (see `.tagsPanel`) rather than
+ * floating over the cards.
  */
 export function CommunitiesTagsFilter({
   selectedTagIds,

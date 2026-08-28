@@ -1,7 +1,6 @@
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { OfflineBanner } from "./OfflineBanner";
-import { MyEventsHeader } from "./MyEventsHeader";
 import { MobileViewToggle } from "./MobileViewToggle";
 import { EventPills } from "./EventPills";
 import { EventToolbar } from "./EventToolbar";
@@ -30,7 +29,6 @@ export function MyEventsBody() {
       <OfflineBanner />
       <div className={sx("ev-page")}>
         <div className="wrap">
-          <MyEventsHeader />
           <MobileViewToggle />
           <div className={layoutCls}>
             <div className={sx("agenda-col")}>

@@ -1,7 +1,18 @@
 import { lazy, Suspense, useEffect } from "react";
 import { PageHero, PageShell } from "../../shared/components/layout";
-import { Button, FeatureHelp, Outro, Reveal } from "../../shared/components/ui";
-import { useMyLocation, useSimulatedLoad } from "../../shared/hooks";
+import {
+  ActiveFilters,
+  Button,
+  FeatureHelp,
+  Outro,
+  Reveal,
+} from "../../shared/components/ui";
+import {
+  useMediaQuery,
+  useMyLocation,
+  useSimulatedLoad,
+} from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta } from "../../shared/seo/PageMeta";
@@ -62,6 +73,18 @@ export function DirectoryPage() {
   // both the ordering and the walking times, and so turning it off is a single
   // state change that hands the previous ordering straight back.
   const myLocation = useMyLocation();
+  // Where the "use my location" control lives. On desktop it rides the search
+  // row, between the field and "Refine". On phones that row collapses into the
+  // Filters sheet, and distance is too central to bury behind a tap — so there
+  // it stays in the results header. Same breakpoint the bar itself switches on,
+  // so exactly one of the two renders.
+  const isMobile = useMediaQuery(mediaMax("mobile"));
+  const nearMe = (
+    <DirectoryNearMe
+      location={myLocation}
+      layout={isMobile ? "stack" : "inline"}
+    />
+  );
   const {
     filtered,
     categoryCounts,
@@ -71,6 +94,13 @@ export function DirectoryPage() {
   } = useDirectoryFilterResults(places, filterParams, myLocation.coordinates);
   const loading = useSimulatedLoad() || placesLoading;
   const hasActiveFilters = activeFilters.length > 0;
+  // What is narrowing the list right now, as removable chips. Placed the same
+  // way as `nearMe` above: on the search row on desktop, where it answers
+  // "what's on?" without opening the drawer, and in the results header on
+  // phones, where the sticky bar has no room for a wrapping row.
+  const activeFilterChips = hasActiveFilters ? (
+    <ActiveFilters filters={activeFilters} onClearFilters={clearFilters} />
+  ) : null;
 
   // Map view has no scroll-driven "load more" of its own (unlike the list's
   // incremental reveal in `DirectoryListView`), and wants every matching pin
@@ -89,7 +119,10 @@ export function DirectoryPage() {
         title={t("marketing:directory.meta.title")}
         description={t("marketing:directory.meta.description")}
       />
+      {/* Compact: this page is a search box and a result list, and the full
+          display hero pushed the first places below the fold. */}
       <PageHero
+        compact
         eyebrow={t("marketing:directory.hero.eyebrow")}
         title={
           <Translation
@@ -119,10 +152,15 @@ export function DirectoryPage() {
         onToggleOpenNow={() => setOpenNow(!openNow)}
         access={access}
         onToggleAccess={toggleAccess}
+        sort={sort}
+        onSortChange={setSort}
+        isLocationOn={myLocation.coordinates !== null}
         view={view}
         onViewChange={selectView}
         activeFilterCount={activeFilters.length}
         resultCount={filtered.length}
+        nearMeSlot={isMobile ? undefined : nearMe}
+        activeFiltersSlot={isMobile ? undefined : activeFilterChips}
       />
 
       <DirectoryResultsHeader
@@ -131,12 +169,8 @@ export function DirectoryPage() {
         mappableCount={mappableCount}
         loading={loading}
         view={view}
-        onViewChange={selectView}
-        sort={sort}
-        onSortChange={setSort}
-        activeFilters={activeFilters}
-        onClearFilters={clearFilters}
-        nearMeSlot={<DirectoryNearMe location={myLocation} />}
+        nearMeSlot={isMobile ? nearMe : undefined}
+        activeFiltersSlot={isMobile ? activeFilterChips : undefined}
       />
 
       {view === "list" ? (

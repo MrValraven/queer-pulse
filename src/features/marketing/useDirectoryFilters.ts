@@ -14,9 +14,13 @@ import {
   ACCESSIBILITY_QUESTION_SLUGS,
   type AccessibilitySlug,
 } from "./listBusiness/listingAccessibility.data";
-import { distancesFrom, sortByDistance } from "./nearMePlaces";
+import {
+  distancesFrom,
+  sortByDistance,
+  sortByNeighbourhoodDistance,
+} from "./nearMePlaces";
 import { VIBE_LABEL_KEYS } from "./map.data";
-import type { ActiveFilter } from "./DirectoryResultsHeader";
+import type { ActiveFilter } from "../../shared/components/ui";
 
 const SORT_VALUES: LocalSort[] = ["default", "name", "hood"];
 
@@ -284,13 +288,30 @@ export function useDirectoryFilterResults(
     [origin, matched],
   );
 
-  // "Near me" REPLACES the chosen sort while it is on, because a distance
-  // order and an alphabetical one cannot both be the answer. Turning it off
-  // hands the previous ordering straight back.
-  const filtered = useMemo(
-    () => (distanceById ? sortByDistance(matched, distanceById) : matched),
-    [matched, distanceById],
-  );
+  // The chosen sort and "use my location" BOTH stay in force, rather than one
+  // quietly replacing the other. What that means depends on what the sort has
+  // an opinion about:
+  //
+  // - "By neighbourhood" groups the list, and says nothing about the order of
+  //   the groups or of what is inside them — so distance decides both, and the
+  //   member gets the shape they asked for with the ordering they turned on.
+  // - "A to Z" is a lookup order: every position is already taken, and there is
+  //   nothing for distance to refine. It is kept exactly as chosen, and the
+  //   position still feeds the walking time on every card.
+  // - No sort chosen (the curated "Featured" order) is the one place with no
+  //   member preference to protect, so distance takes the list. The picker
+  //   names that state "Nearest first" while the location is on, so the control
+  //   always says what the list is actually doing.
+  //
+  // Turning the location off hands every ordering straight back.
+  const filtered = useMemo(() => {
+    if (!distanceById) return matched;
+    if (sort === "hood") {
+      return sortByNeighbourhoodDistance(matched, distanceById);
+    }
+    if (sort === "name") return matched;
+    return sortByDistance(matched, distanceById);
+  }, [matched, distanceById, sort]);
 
   // Chip counts reflect the query + vibe + safe filters but NOT the category,
   // so each chip shows how many of the LOADED places it would surface right

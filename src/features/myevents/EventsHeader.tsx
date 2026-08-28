@@ -4,15 +4,21 @@ import { Button, FeatureHelp } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { EventsTopTabs } from "./EventsTopTabs";
+import { MyEventsQuickActions } from "./MyEventsQuickActions";
 import type { TopTab } from "./useEventsTopTab";
 import styles from "./EventsHeader.module.css";
 
 /**
- * Compact, utility-first header for the merged `/events` page. Carries the
- * page's single <h1>, the My events | Discover switch, a search jump, and the
- * persistent Host action. Reserves the top nav band (the job the old hero did —
- * see `src/styles/nav-mode.css`), so the switch clears the floating nav instead
- * of hiding behind it. Not sticky; the Discover sub-tabs stay sticky.
+ * Compact, utility-first header for the merged `/events` page, and the only
+ * header either tab has: the page's single <h1>, the My events | Discover
+ * switch, a search jump, the persistent Host action, and — on "My events" —
+ * the dashboard's settings and notification actions, which used to sit beside
+ * a second full-height hero below this one. The agenda now starts a few dozen
+ * pixels down the page rather than most of a screen down.
+ *
+ * `MyEventsQuickActions` reads the dashboard context, so on that tab
+ * `EventsPage` renders this header inside `MyEventsProvider`. Not sticky; the
+ * Discover sub-tabs stay sticky.
  */
 export function EventsHeader({
   active,
@@ -49,6 +55,7 @@ export function EventsHeader({
             <EventsTopTabs active={active} onChange={onChange} />
           </div>
           <div className={styles.actions}>
+            {active === "mine" && <MyEventsQuickActions />}
             <button
               type="button"
               className={styles.searchBtn}

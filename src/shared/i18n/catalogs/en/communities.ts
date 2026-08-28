@@ -62,12 +62,15 @@ export const communities: Catalog = {
   "discover.empty.filtered.cta": "Clear filters",
   "discover.loadingMore": "Loading…",
   "discover.loadMoreCta": "Load more communities",
+  // Band headings inside the "Refine" drawer, over the chips and toggles they
+  // name.
+  "discover.filter.categoryLabel": "Category",
+  "discover.toggle.groupLabel": "Quick filters",
   "discover.toggle.openOnly": "Open to all",
   "discover.toggle.busyOnly": "Busy this week",
   "discover.sort.active": "Most active",
   "discover.resline.count_one": "{count} community",
   "discover.resline.count_other": "{count} communities",
-  "discover.resline.reset": "Clear filters",
   "discover.outro.title": "Not finding the right <em>space</em>?",
   "discover.outro.body":
     "The communities here exist because someone decided to start one. If you can't find what you're looking for, maybe it's time to make it yourself.",

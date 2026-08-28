@@ -18,6 +18,12 @@
   padding: 32px 0 80px;
 }
 .count {
+  /* Centred inside one control-height box so the count sits on the same line as
+     the controls opposite it, whatever they stack underneath themselves. */
+  display: flex;
+  align-items: center;
+  min-height: var(--results-control-h, 40px);
+  margin: 0;
   font-size: 13.5px;
   color: var(--ink-40);
 }
@@ -345,154 +351,38 @@
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 
-/* Shared results header: "showing X of Y" on the left, sort + List/Map switcher
-   on the right; an active-filters row below. Wraps on narrow screens. */
+/* Shared results header: "showing X of Y" on the left; on phones the near-me
+   control on the right, and an active-filters row below. Wraps on narrow
+   screens. Sort and the List/Map switcher live up on the filter bar's search
+   row, so this header only reports what the controls found. */
 .resultsHeader {
   padding: 22px 0 0;
 }
 .resultsRow {
+  /* One shared height for the controls on this line, so the near-me button
+     keeps the same 40px it has on the desktop search row — and so the privacy
+     note hanging below it can't shift that line off centre. */
+  --results-control-h: 40px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px 20px;
   flex-wrap: wrap;
+}
+@media (pointer: coarse) {
+  .resultsRow {
+    --results-control-h: 44px;
+  }
 }
 .countNote {
   color: var(--ink-40);
 }
 .resultsControls {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   flex-wrap: wrap;
 }
-/* The List/Map switcher shows here on desktop; on phones (≤860px) it moves into
-   the sticky filter bar so it stays reachable while scrolled into the list. */
-@media (--mobile) {
-  .viewSwitcherDesktop {
-    display: none;
-  }
-}
-
-/* Sort — a native select styled to the token system for a familiar control. */
-.sort {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-.sortLabel {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-.sortSelect {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-strong);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
-  padding: 7px 12px;
-  cursor: pointer;
-  transition: border-color 0.18s var(--ease);
-}
-.sortSelect:hover {
-  border-color: var(--line-strong);
-}
-:global([data-theme="dark"]) .sortSelect {
-  border-color: rgba(var(--cream-rgb), 0.14);
-}
-/* Touch: lift the native select to the ≥44px target minimum while the resting
-   control stays visually compact. */
-@media (pointer: coarse) {
-  .sortSelect {
-    min-height: 44px;
-  }
-}
-
-/* Active filters — removable chips + Clear all. */
-.activeRow {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
-.activeLabel {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-}
-.activeChip {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--accent-ink);
-  background: rgba(var(--accent-rgb), 0.1);
-  border: 1px solid rgba(var(--accent-rgb), 0.22);
-  border-radius: 999px;
-  padding: 5px 10px;
-  cursor: pointer;
-  transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.activeChip svg {
-  width: 13px;
-  height: 13px;
-  opacity: 0.7;
-}
-/* Touch: extend the ~26px chip's hit area to the ≥44px minimum without growing
-   the ink, so the remove-tap clears the WCAG/Apple/Material target floor. */
-@media (pointer: coarse) {
-  .activeChip::before {
-    content: "";
-    position: absolute;
-    inset: -9px;
-  }
-}
-@media (hover: hover) {
-  .activeChip:hover {
-    background: rgba(var(--accent-rgb), 0.16);
-    border-color: rgba(var(--accent-rgb), 0.4);
-  }
-}
-.clearAll {
-  position: relative;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink-60);
-  background: none;
-  border: none;
-  padding: 5px 6px;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-/* Touch: extend the text link's hit area to the ≥44px minimum, ink unchanged. */
-@media (pointer: coarse) {
-  .clearAll::before {
-    content: "";
-    position: absolute;
-    inset: -9px -4px;
-  }
-}
-@media (hover: hover) {
-  .clearAll:hover {
-    color: var(--text-strong);
-  }
-}
-
 .srOnly {
   position: absolute;
   width: 1px;
@@ -563,9 +453,10 @@
 }
 
 /* ── "Use my location" ─────────────────────────────────────────────────────
-   Sits in the results header beside the sort, because that is where ordering
-   is decided. The note under it carries the privacy promise while the feature
-   is on, so it stays part of the control rather than fine print elsewhere. */
+   Rides the desktop search row with the other result-shaping controls; on
+   phones it sits in the results header instead. The note under it carries the
+   privacy promise while the feature is on, so it stays part of the control
+   rather than fine print elsewhere. */
 .nearMe {
   display: flex;
   flex-direction: column;
@@ -573,9 +464,35 @@
   gap: 4px;
   min-width: 0;
 }
+/* Inline (the desktop search row): no box of its own, so the button and the
+   note are placed straight into that row's grid — the button on the field's
+   line, the note on a second line, where its height can't stretch the field or
+   the "Refine" toggle beside it. */
+.nearMeInline {
+  display: contents;
+}
+.nearMeInline > .nearMeNote {
+  grid-row: 2;
+  /* Spans the three controls to its right (near-me, "Refine", List/Map), which
+     is every column but the search field. */
+  grid-column: 2 / span 3;
+  /* The two columns it sits under are about as wide as the 34ch cap was for, so
+     let the note use them: a refusal message is long, and capping it narrower
+     than its own grid area only buys an extra wrapped line. */
+  max-width: none;
+}
+/* On the search row the resting control sits between two paper surfaces (the
+   field and "Refine"), so it takes the same ground rather than the transparent
+   one it uses against the cream results header. The "on" state keeps its plum. */
+.nearMeInline > .nearMeButton:not(.nearMeButtonOn) {
+  background: var(--paper);
+}
 .nearMeButton {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  /* Same height as the search field and the "Refine" toggle beside it. */
+  min-height: var(--results-control-h, 40px);
   gap: 6px;
   font-family: var(--sans);
   font-size: 12.5px;
@@ -584,7 +501,7 @@
   background: transparent;
   border: 1px solid rgba(var(--line-rgb), 0.16);
   border-radius: 999px;
-  padding: 6px 13px;
+  padding: 6px 15px;
   cursor: pointer;
   touch-action: manipulation;
   transition:
@@ -596,13 +513,6 @@
   .nearMeButton:not(.nearMeButtonOn):hover {
     border-color: var(--line-strong);
     color: var(--text-strong);
-  }
-}
-/* Touch: lift the resting ~32px control to the 44px target minimum, matching
-   the filter chips. Padding is unchanged so the ink stays compact on desktop. */
-@media (pointer: coarse) {
-  .nearMeButton {
-    min-height: 44px;
   }
 }
 .nearMeButtonOn {
@@ -618,7 +528,9 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  margin: 0;
+  /* Indented to the button's own text, so the caption reads as belonging to it
+     rather than starting at the pill's outer edge. */
+  margin: 0 0 0 2px;
   max-width: 34ch;
   font-size: 11.5px;
   line-height: 1.45;

@@ -72,7 +72,11 @@ export function VolunteerPage() {
           { name: pageTitle, path: routes.volunteer },
         ])}
       />
+      {/* Compact: the roles list is what people come here for, and the full
+          display hero plus the note and both CTAs filled the first screen on
+          its own. Title, sub and actions all stay. */}
       <PageHero
+        compact
         eyebrow={t("marketing:volunteer.hero.eyebrow")}
         title={
           <Translation

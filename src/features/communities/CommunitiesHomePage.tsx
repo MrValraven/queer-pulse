@@ -1,11 +1,9 @@
 import { FiUsers } from "react-icons/fi";
-import { EmptyState, SkeletonLine } from "../../shared/components/ui";
-import { Translation } from "../../shared/i18n/Translation";
+import { EmptyState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useProfileData } from "../../app/providers/useProfile";
 import { CommunitiesGrid } from "./CommunitiesGrid";
 import { CommunitiesHomeDigest } from "./CommunitiesHomeDigest";
 import { CommunitiesHomeSidebar } from "./CommunitiesHomeSidebar";
@@ -18,6 +16,10 @@ import styles from "./CommunitiesHomePage.module.css";
 
 /**
  * The `/communities?tab=mine` body.
+ *
+ * The greeting, the count line and the tab switch all live one level up in
+ * `CommunitiesHubHeader` — this body starts straight at the cards, so the
+ * first community is visible without scrolling.
  *
  * The communities you belong to lead the page as real cards, through the same
  * `CommunitiesGrid` (and the same filters, chips and sort) that Discover uses
@@ -33,9 +35,6 @@ export function CommunitiesHome() {
   // waiting half a second for nothing.
   const isSimulatedLoading = useSimulatedLoad(500);
   const isPulseLoading = demoMode && isSimulatedLoading;
-  // The signed-in member (real profile live, mock currentUser in demo mode).
-  const { profile } = useProfileData();
-  const firstName = profile.first;
   const {
     isLoading: isMembershipsLoading,
     pulse,
@@ -50,31 +49,6 @@ export function CommunitiesHome() {
   return (
     <div className={styles.page}>
       <div className="wrap">
-        <div className={styles.head}>
-          <div>
-            <div className={styles.eyebrow}>{t("communities:hub.eyebrow")}</div>
-            <h2 className={styles.h1}>
-              <Translation
-                i18nKey="communities:hub.welcome"
-                values={{ name: firstName }}
-                components={{ em: <em /> }}
-              />
-            </h2>
-            {/* The lead line is a count, so it can't render until the count is
-                known: "across your 0 communities" for the length of the
-                membership fetch is a wrong number, not a loading state. */}
-            {isMembershipsLoading ? (
-              <div className={styles.sub} aria-hidden>
-                <SkeletonLine width="min(42ch, 100%)" height={15} />
-              </div>
-            ) : (
-              <p className={styles.sub}>
-                {t("communities:hub.sub", { count: myCommunities.length })}
-              </p>
-            )}
-          </div>
-        </div>
-
         {/* Only an empty membership map we've actually resolved earns the
             empty state. While it's still in flight we fall through to the
             grid, which carries its own card skeletons, so a member who does

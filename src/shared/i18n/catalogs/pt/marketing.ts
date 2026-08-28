@@ -930,14 +930,13 @@ export const marketing: Catalog = {
   "partners.hero.title": "Organizações com quem <em>estamos.</em>",
   "partners.hero.sub":
     "Parceiros avaliados em Portugal e mais além, a trabalhar lado a lado com a QueerPulse no terreno.",
-  "partners.interstitial.quote":
-    "Não fazemos parceria com quem quer que peça. <em>Fazemos parceria com quem já está a fazer o trabalho.</em>",
-  "partners.interstitial.body":
-    "Cada organização abaixo foi avaliada quanto ao alinhamento com os nossos valores antes de aqui aparecer.",
   "partners.section.title": "Os nossos <em>parceiros</em>",
   "partners.section.sub":
     "Ainda não há filtro disponível. Aqui está a lista completa.",
   "partners.card.viewCta": "Ver perfil",
+  "partners.empty.title": "Ainda não há parceiros listados",
+  "partners.empty.body":
+    "Estamos a construir a lista. Se a tua organização trabalha connosco no terreno, candidata-te e avaliamos o alinhamento antes de a listar aqui.",
   "partners.loadingMore": "A carregar mais parceiros…",
   "partners.loadMoreCta": "Carregar mais parceiros",
   "partners.why.title": "Porque fazemos <em>parcerias</em>",
@@ -2316,6 +2315,7 @@ export const marketing: Catalog = {
   "changelog.badge.infrastructure": "Infraestrutura",
   "changelog.badge.fix": "Correção",
   "changelog.tag.about": "L\u00ea onde nos posicionamos",
+  "changelog.tag.partners": "Vê os nossos parceiros",
   "changelog.tag.aboutCommunities": "Ver como funcionam as comunidades",
   "changelog.tag.work": "Abrir o teu Trabalho",
   "changelog.tag.settings": "Definições de notificações",
@@ -5846,6 +5846,9 @@ export const marketing: Catalog = {
   "directory.onMap": "{count} no mapa",
   "directory.sort.label": "Ordenar",
   "directory.sort.default": "Em destaque",
+  // A mesma opção, com outro nome enquanto a localização está ligada: com uma
+  // posição conhecida, a ordem em destaque É a ordem por proximidade.
+  "directory.sort.nearest": "Mais perto primeiro",
   "directory.sort.name": "A–Z",
   "directory.sort.hood": "Por bairro",
   "directory.badge.queerOwnedVerified": "Negócio queer verificado",
@@ -6862,13 +6865,20 @@ export const marketing: Catalog = {
   "local.filter.accessLabel": "Necessidades de acesso",
   "local.filter.accessNote":
     "Mostra os locais que responderam sim a tudo o que escolheres. Um local sobre o qual ninguém perguntou fica de fora dos resultados.",
+  // Mostrado sob o controlo de ordenação enquanto a localização está ligada,
+  // a dizer o que a posição faz pela ordenação escolhida. As duas funcionam
+  // em conjunto; nenhuma substitui a outra.
+  "local.filter.sortNoteHood":
+    "Os bairros estão ordenados pela proximidade, e os locais dentro de cada um também.",
+  "local.filter.sortNoteName":
+    "Mantém-se alfabético. A tua localização continua a pôr o tempo a pé em cada cartão.",
   // ── Usar a minha localização. Opcional, reversível e nunca sai do dispositivo.
   "local.nearMe.on": "Usar a minha localização",
   "local.nearMe.off": "Desligar a minha localização",
   "local.nearMe.asking": "A encontrar-te…",
   "local.nearMe.privacy": "A tua localização fica neste dispositivo.",
   "local.nearMe.onNote":
-    "Ordenado por proximidade. A tua localização fica neste dispositivo.",
+    "Os tempos a pé estão ligados. A tua localização fica neste dispositivo.",
   "local.nearMe.denied":
     "A localização está desligada para este site. Podes voltar a ligá-la nas definições do navegador.",
   "local.nearMe.timeout":
@@ -7212,6 +7222,42 @@ export const marketing: Catalog = {
   // para `routes.report` numa entrada antiga com o rótulo "A nossa abordagem
   // à segurança", que se lê como explicação e não como o próprio formulário.
   "changelog.tag.reportForm": "Abrir o formulário de denúncia",
+
+  // ── 28 de agosto de 2026 ──────────────────────────────────────────────────
+  "changelog.entries.the-communities-filters-fold-away.title":
+    "Os filtros das comunidades recolhem-se",
+  "changelog.entries.the-communities-filters-fold-away.body":
+    "Sete etiquetas de categoria, uma gaveta de tags, dois interruptores e um controlo de ordenação estavam todos abertos por cima da grelha de comunidades, empurrando o primeiro cartão quase para fora do ecrã por causa de definições que a maioria das pessoas escolhe uma vez ou nunca. Passam a viver atrás de um único controlo Refinar, no mesmo painel que o diretório de Lisboa usa. O que está a restringir a lista, o teu termo de pesquisa incluído, aparece em etiquetas removíveis por baixo do campo de pesquisa, para que um painel fechado esconda os controlos sem esconder o que está ligado.",
+
+  "changelog.entries.your-sort-and-your-location-both-count.title":
+    "A tua ordenação e a tua localização contam as duas",
+  "changelog.entries.your-sort-and-your-location-both-count.body":
+    'Ligar a localização deitava fora a ordenação que tinhas escolhido. Agora as duas trabalham juntas. Por bairro mantém o agrupamento, e a tua posição ordena os bairros e os locais dentro de cada um pela proximidade. A–Z mantém-se alfabético, porque é uma ordem de consulta que a distância não melhora, e a tua posição continua a pôr o tempo a pé em cada cartão. Sem ordenação escolhida, a lista vai do mais perto para o mais longe e o controlo diz "Mais perto primeiro", para nunca prometer uma ordem que a lista não tem.',
+
+  "changelog.entries.one-line-of-controls-on-the-directory.title":
+    "Uma linha de controlos no diretório",
+  "changelog.entries.one-line-of-controls-on-the-directory.body":
+    "O diretório de negócios espalhava os seus controlos por duas linhas: pesquisa, localização e Refinar em cima, ordenação e o seletor Lista/Mapa em baixo, ao lado da contagem de resultados. Agora partilham uma só linha. A ordenação passou para dentro de Refinar, onde vive o resto da filtragem, e a própria gaveta é um painel com secções: tipo de local, ordenação, filtros rápidos e necessidades de acesso. Tudo o que está a restringir a lista, o teu termo de pesquisa incluído, aparece em etiquetas removíveis logo por baixo da linha de pesquisa, para que uma gaveta fechada nunca esconda o que está ligado.",
+
+  "changelog.entries.an-empty-partner-roster-says-so.title":
+    "Uma lista de parceiros vazia di-lo",
+  "changelog.entries.an-empty-partner-roster-says-so.body":
+    "Sem parceiros aprovados, a página de Parceiros mostrava um título, uma linha a prometer a lista completa e depois nada. A página passa a dizer com clareza que ainda não há parceiros listados e a oferecer o caminho: um botão direto para a candidatura a parceiro. A promessa da lista só aparece quando há lista.",
+
+  "changelog.entries.the-tag-filter-opens-in-line.title":
+    "O filtro de etiquetas abre em linha",
+  "changelog.entries.the-tag-filter-opens-in-line.body":
+    "Abrir as Etiquetas na página das comunidades fazia aparecer um painel flutuante por cima da página. Tapava o resumo da semana e a primeira fila de cartões de comunidades, e como o painel tinha altura fixa cortava também ao meio a sua própria última fila de etiquetas contra o limite de baixo, o que fazia com que parecesse avariado em vez de aberto. As etiquetas passam a abrir em linha: o painel fica por baixo do botão Etiquetas, empurra a grelha para baixo enquanto está aberto e mostra as 53 etiquetas de uma vez. No telemóvel, onde as mesmas etiquetas ocupam vários ecrãs, o painel mantém o seu próprio deslocamento para os cartões continuarem à mão.",
+
+  "changelog.entries.pages-that-get-to-the-point.title":
+    "Páginas que vão direto ao assunto",
+  "changelog.entries.pages-that-get-to-the-point.body":
+    "Havia uma série de páginas a abrir com um título a ocupar o ecrã todo em vez de abrirem naquilo que te levou lá. A página de eventos tinha um cabeçalho e logo a seguir um segundo, muito maior, a dizer o mesmo, com uma faixa de creme vazio por cima dos dois, e por isso a tua agenda começava bem abaixo da dobra. Agora o cabeçalho é só um, e os botões de preferências e de notificações que estavam ao lado do título antigo subiram para lá: a página abre nos teus separadores e no teu próximo evento. Outras dez páginas mantêm os títulos, as primeiras linhas e tudo o resto que já tinham, incluindo os quatro números nas pessoas que mudam as coisas, a nota e os dois botões no voluntariado, o seletor de vias nos vistos, e o cabeçalho e a história de capa na revista. O que saiu à volta foi espaço vazio, para que o primeiro lugar, o primeiro rosto, a primeira vaga e o primeiro título estejam no ecrã mal a página chega. O diretório de negócios, os temas, a habitação, o guia de chegada e os parceiros levaram o mesmo tratamento. Fora a repetição, não se tirou nada de nenhuma delas.",
+
+  "changelog.entries.your-communities-start-at-the-cards.title":
+    "As tuas comunidades começam nos cartões",
+  "changelog.entries.your-communities-start-at-the-cards.body":
+    "A página das comunidades abria com dois títulos empilhados um sobre o outro: o título da página e a sua entrada, e logo a seguir uma segunda saudação a dizer quase o mesmo. Juntos ocupavam quase todo o primeiro ecrã, por isso num portátil as comunidades a que pertences ficavam abaixo da dobra e era preciso rolar para chegar às tuas. Agora há um só cabeçalho. Tem a saudação, a linha sobre o que tem acontecido nas tuas comunidades e o seletor As minhas comunidades / Descobrir, e a caixa de pesquisa, os filtros e os cartões vêm logo a seguir. O Descobrir começa mais acima na página pela mesma razão.",
 
   // ── 27 de agosto de 2026 ──────────────────────────────────────────────────
   "changelog.entries.unused-uploads-filter.title":

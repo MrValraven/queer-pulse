@@ -1,7 +1,9 @@
 .hero {
   background: var(--plum);
-  /* nav band reserved by shell (base.css); this is only breathing room */
-  padding: 60px 0 88px;
+  /* nav band reserved by shell (base.css); this is only breathing room.
+     Tightened (was 60px 0 88px) so the tab bar and the first listings are
+     above the fold on load. The hero keeps every part, just less air. */
+  padding: 40px 0 40px;
   position: relative;
   overflow: hidden;
 }
@@ -10,8 +12,9 @@
   position: absolute;
   top: -10%;
   right: -5%;
-  width: 460px;
-  height: 460px;
+  /* scaled with the shorter hero so the glow still reads as a corner wash */
+  width: 400px;
+  height: 400px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
@@ -26,12 +29,22 @@
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+/* Title + info chip on one line. The chip sits beside the heading rather than
+   inside it, so it never eats into the h1's `ch` measure. */
+.titleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(38px, 5.8vw, 80px);
+  /* top of the clamp pulled in (was 80px) to match the compact PageHero.
+     Still the biggest thing on the page, ~1/4 shorter per line. */
+  font-size: clamp(34px, 4.6vw, 58px);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 0.98;
@@ -43,11 +56,12 @@
   font-weight: 400;
 }
 .hero p {
-  font-size: 16.5px;
+  font-size: 16px;
   color: rgba(var(--cream-rgb), 0.68);
-  max-width: 52ch;
-  margin-top: 20px;
-  line-height: 1.65;
+  /* wider measure (was 52ch) so the same lead sets in one fewer line */
+  max-width: 62ch;
+  margin-top: 16px;
+  line-height: 1.6;
 }
 .note {
   display: inline-flex;
@@ -55,7 +69,7 @@
   gap: 8px;
   font-size: 13.5px;
   color: rgba(var(--cream-rgb), 0.68);
-  margin-top: 24px;
+  margin-top: 16px;
 }
 .noteDot {
   width: 7px;
@@ -71,8 +85,10 @@
   padding: 18px 0;
 }
 
+/* First section under the hero: top padding trimmed (was 72px) to buy more
+   above-the-fold room; the bottom keeps the page's normal section rhythm. */
 .body {
-  padding: 72px 0 90px;
+  padding: 48px 0 90px;
 }
 .top {
   display: flex;
@@ -620,10 +636,10 @@
 @media (max-width: 700px) {
   .hero {
     /* nav band reserved by shell (base.css); this is only breathing room */
-    padding: 36px 0 64px;
+    padding: 28px 0 32px;
   }
   .body {
-    padding: 48px 0 72px;
+    padding: 32px 0 72px;
   }
 }
 

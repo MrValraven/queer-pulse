@@ -22,13 +22,18 @@ export function ForumHero({
       <div className="wrap">
         <div className={styles.heroRow}>
           <div>
-            <h1>
-              <Translation
-                i18nKey="forum:hero.title"
-                components={{ em: <em /> }}
-              />{" "}
+            {/* FeatureHelp beside the h1, not inside it, so it stays out of
+                the heading's accessible name and off the display type scale
+                (same pattern as CommunityDetailHero and PageHero). */}
+            <div className={styles.titleRow}>
+              <h1>
+                <Translation
+                  i18nKey="forum:hero.title"
+                  components={{ em: <em /> }}
+                />
+              </h1>
               <FeatureHelp id="forum.hub" />
-            </h1>
+            </div>
             <p>
               {t("forum:hero.lead")}{" "}
               <Link to={routes.communities} className={styles.heroLink}>

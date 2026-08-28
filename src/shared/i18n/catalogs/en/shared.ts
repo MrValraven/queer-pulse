@@ -270,6 +270,12 @@ export const shared: Catalog = {
   "searchInput.clearAria": "Clear search",
 
   // Select — unified searchable dropdown
+  // The "Refine" drawer and the active-filter chips under it, shared by
+  // every filter bar that keeps its controls behind one toggle.
+  "refine.label": "Refine",
+  "filters.activeLabel": "Filtered by",
+  "filters.clearAll": "Clear all",
+  "filters.remove": "Remove filter",
   "select.placeholder": "Select…",
   "select.searchPlaceholder": "Type to filter…",
   "select.noResults": "No matches",

@@ -1,27 +1,14 @@
 import type { ReactNode } from "react";
-import { FiList, FiMap, FiX } from "react-icons/fi";
-import { SegmentedControl, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import type { LocalSort } from "./localPlaces";
 import s from "./DirectoryPage.module.css";
-
-export interface ActiveFilter {
-  /** Stable react key. */
-  key: string;
-  /** Chip label (category / vibe name / quoted query). */
-  label: ReactNode;
-  /** Remove just this filter. */
-  onRemove: () => void;
-}
-
-const SORT_OPTIONS: LocalSort[] = ["default", "name", "hood"];
 
 /**
  * Results header shared by both Local views: the "showing X of Y places" count
- * on the left, and the "use my location" control, sort and List/Map view
- * switcher on the right. A second row of removable chips appears whenever any
- * filter is active, with a Clear all.
+ * on the left, and on phones the "use my location" control on the right, with
+ * the active-filter chips below. Sort, the List/Map switcher and (on desktop)
+ * those chips live up in the filter bar instead, so every control that shapes
+ * the results sits together and this header only reports what they found.
  */
 export function DirectoryResultsHeader({
   shown,
@@ -29,27 +16,23 @@ export function DirectoryResultsHeader({
   mappableCount,
   loading,
   view,
-  onViewChange,
-  sort,
-  onSortChange,
-  activeFilters,
-  onClearFilters,
   nearMeSlot,
+  activeFiltersSlot,
 }: {
   shown: number;
   total: number;
   mappableCount: number;
   loading: boolean;
+  /** Only read for the map view's "N of these are on the map" note. */
   view: string;
-  onViewChange: (next: string) => void;
-  sort: LocalSort;
-  onSortChange: (next: string) => void;
-  activeFilters: ActiveFilter[];
-  onClearFilters: () => void;
   /** The "use my location" control, passed in rather than built here so this
    *  header stays presentational and the member's position never travels
-   *  further than the one component that owns it. */
+   *  further than the one component that owns it. Filled on phones only — on
+   *  desktop the control rides the search row instead (see `DirectoryPage`). */
   nearMeSlot?: ReactNode;
+  /** The active-filter chips. Filled on phones only: on desktop they ride the
+   *  filter bar, under the search row that sets them (see `DirectoryPage`). */
+  activeFiltersSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
   return (
@@ -57,94 +40,35 @@ export function DirectoryResultsHeader({
       <div className="wrap">
         <div className={s.resultsRow}>
           <p className={s.count} aria-live="polite">
-            {loading ? (
-              <>{t("marketing:directory.loading")}</>
-            ) : (
-              <>
-                <Translation
-                  i18nKey="marketing:directory.count"
-                  components={{ b: <b /> }}
-                  values={{ shown, total }}
-                />
-                {view === "map" && shown !== mappableCount && (
-                  <span className={s.countNote}>
-                    {" · "}
-                    {t("marketing:directory.onMap", { count: mappableCount })}
-                  </span>
-                )}
-              </>
-            )}
+            {/* One inline child, so the count keeps its own spacing: the box
+                around it is a flex line (it centres the sentence against the
+                controls opposite), and a flex container would drop the spaces
+                between "Showing", the bold number and "of". */}
+            <span>
+              {loading ? (
+                <>{t("marketing:directory.loading")}</>
+              ) : (
+                <>
+                  <Translation
+                    i18nKey="marketing:directory.count"
+                    components={{ b: <b /> }}
+                    values={{ shown, total }}
+                  />
+                  {view === "map" && shown !== mappableCount && (
+                    <span className={s.countNote}>
+                      {" · "}
+                      {t("marketing:directory.onMap", { count: mappableCount })}
+                    </span>
+                  )}
+                </>
+              )}
+            </span>
           </p>
 
-          <div className={s.resultsControls}>
-            {nearMeSlot}
-            <label className={s.sort}>
-              <span className={s.sortLabel}>
-                {t("marketing:directory.sort.label")}
-              </span>
-              <Select
-                size="sm"
-                options={SORT_OPTIONS.map((option) => ({
-                  value: option,
-                  label: t(`marketing:directory.sort.${option}`),
-                }))}
-                value={sort}
-                onChange={(value) => onSortChange(value ?? "default")}
-              />
-            </label>
-
-            {/* Desktop only: on phones the switcher rides in the sticky filter
-                bar so it stays reachable while scrolled into the list. */}
-            <div className={s.viewSwitcherDesktop}>
-              <SegmentedControl
-                label={t("marketing:local.view.toggleAria")}
-                options={[
-                  {
-                    value: "list",
-                    label: t("marketing:local.view.list"),
-                    icon: <FiList />,
-                  },
-                  {
-                    value: "map",
-                    label: t("marketing:local.view.map"),
-                    icon: <FiMap />,
-                  },
-                ]}
-                value={view}
-                onChange={onViewChange}
-              />
-            </div>
-          </div>
+          {nearMeSlot && <div className={s.resultsControls}>{nearMeSlot}</div>}
         </div>
 
-        {activeFilters.length > 0 && (
-          <div className={s.activeRow}>
-            <span className={s.activeLabel}>
-              {t("marketing:directory.activeFilters")}
-            </span>
-            {activeFilters.map((filter) => (
-              <button
-                key={filter.key}
-                type="button"
-                className={s.activeChip}
-                onClick={filter.onRemove}
-              >
-                {filter.label}
-                <FiX aria-hidden />
-                <span className={s.srOnly}>
-                  {t("marketing:directory.removeFilter")}
-                </span>
-              </button>
-            ))}
-            <button
-              type="button"
-              className={s.clearAll}
-              onClick={onClearFilters}
-            >
-              {t("marketing:directory.clearAll")}
-            </button>
-          </div>
-        )}
+        {activeFiltersSlot}
       </div>
     </div>
   );

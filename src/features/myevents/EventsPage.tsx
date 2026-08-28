@@ -1,15 +1,21 @@
 import { AppShell } from "../../shared/components/layout";
 import { EventsDiscover } from "../gatherings/EventsHubPage";
 import { EventsHeader } from "./EventsHeader";
-import { MyEventsDashboard } from "./MyEventsPage";
+import { MyEventsBody } from "./MyEventsBody";
+import { MyEventsProvider } from "./MyEventsProvider";
 import { useEventsTopTab } from "./useEventsTopTab";
 
 /**
  * Merged `/events` surface. A top-level "My events | Discover" switch sits
- * above two reused bodies: the personal dashboard (MyEventsDashboard) and the
+ * above two reused bodies: the personal dashboard (MyEventsBody) and the
  * discovery hub (EventsDiscover). The active tab lives in `?tab=`, defaulting
  * smartly to the dashboard when the member has events and discovery when they
  * don't. Both surfaces are auth-gated, so there is no signed-out case.
+ *
+ * On "My events" the header renders INSIDE `MyEventsProvider` along with the
+ * body: the dashboard's settings and notification actions live in the header
+ * now, and they read that context. The provider's lifetime is unchanged — it
+ * still mounts only while that tab is active.
  */
 export function EventsPage() {
   const { tab, setTab, resolving } = useEventsTopTab();
@@ -18,8 +24,8 @@ export function EventsPage() {
   // an honest loading state — rather than flashing Discover then swapping.
   const active = resolving ? "mine" : tab;
 
-  return (
-    <AppShell>
+  const surface = (
+    <>
       <EventsHeader active={active} onChange={setTab} />
       <div
         role="tabpanel"
@@ -27,8 +33,18 @@ export function EventsPage() {
         aria-labelledby={`events-top-tab-${active}`}
         tabIndex={0}
       >
-        {active === "mine" ? <MyEventsDashboard /> : <EventsDiscover />}
+        {active === "mine" ? <MyEventsBody /> : <EventsDiscover />}
       </div>
+    </>
+  );
+
+  return (
+    <AppShell>
+      {active === "mine" ? (
+        <MyEventsProvider>{surface}</MyEventsProvider>
+      ) : (
+        surface
+      )}
     </AppShell>
   );
 }

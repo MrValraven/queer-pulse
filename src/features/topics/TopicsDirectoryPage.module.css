@@ -1,9 +1,14 @@
+/* On a directory page the search field and the first row of topic cards have
+   to land on screen at load, so this head is tuned to the shared PageHero
+   `.compact` proportions (a ~40px band, a lower title cap, tighter gaps).
+   Every part stays: eyebrow, serif display title, lead. What came down is
+   vertical space and the top end of the title clamp. */
 .body {
-  padding: 80px 0 120px;
+  padding: 40px 0 96px;
 }
 
 .head {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 .eyebrow {
   font-size: 11px;
@@ -11,12 +16,15 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(36px, 5vw, 56px);
+  /* Only a little under the original 56px cap: the height on this page came
+     from the 80px band above, not from the title, and the title is what
+     carries the page. */
+  font-size: clamp(34px, 4.6vw, 54px);
   color: var(--text-strong);
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -25,14 +33,14 @@
 .sub {
   font-size: 15.5px;
   color: var(--ink-60);
-  line-height: 1.65;
+  line-height: 1.6;
   max-width: 60ch;
   margin-top: 12px;
 }
 
 .search {
   max-width: 420px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .grid {

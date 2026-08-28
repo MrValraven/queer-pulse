@@ -1,38 +1,38 @@
+/* Matches the "My communities" body: the shared hub header owns the heading
+   and its breathing room, so this is just the gap down to the filter bar. */
 .body {
-  padding: 80px 0 120px;
+  padding: var(--gap-sm) 0 120px;
 }
 
-/* Search + toggles + sort read as one control row; the type chips sit in
-   their own row right below (still "one coherent filter/sort bar" — see
-   .filters). */
+/* The whole bar is one row: the search field and the "Refine" toggle. Every
+   group (category, sort, the two pill toggles, tags) lives in the drawer the
+   toggle opens, and the chips saying what is currently applied sit under it.
+   Spacing down to the grid is carried by whichever of those actually renders
+   (the panel and the chip row each bring their own top margin) plus the
+   results line's, so a bar with nothing open stays compact. */
 .controlsRow {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 22px;
+  margin-bottom: 12px;
 }
 .search {
   flex: 1 1 260px;
   min-width: 0;
   max-width: 420px;
 }
-.sort {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  flex: none;
-}
-.sortLabel {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-40);
+/* On a phone the 260px basis pushed "Refine" onto a line of its own, leaving a
+   full-width field beside nothing. Letting the field shrink instead keeps the
+   bar the one row it is meant to be. */
+@media (--mobile) {
+  .search {
+    flex: 1 1 0;
+  }
 }
 
 /* "Open to all" / "Busy this week" — pill toggles, same border/radius/padding
-   scale as .chip below so the whole control row reads as one family. */
+   scale as .chip below so the whole drawer reads as one family. */
 .toggles {
   display: inline-flex;
   gap: 9px;
@@ -57,10 +57,17 @@
     border-color var(--dur-base) var(--ease),
     background var(--dur-base) var(--ease);
 }
+/* Same ghost-Button weight problem as .chipActive below: without the :not()
+   tail, the ghost hover overrides .toggleOn's jade ground with a plum wash and
+   hovering an active toggle reads as "off". */
 @media (hover: hover) {
-  .toggle:not(.toggleOn):hover {
+  .toggle:not(.toggleOn):hover:not(:disabled):not([aria-disabled="true"]) {
     color: var(--ink);
     border-color: rgba(var(--line-rgb), 0.4);
+  }
+  .toggle.toggleOn:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--jade-rgb), 0.18);
+    border-color: rgba(var(--jade-rgb), 0.5);
   }
 }
 .toggleDot {
@@ -82,11 +89,11 @@
   background: var(--jade);
 }
 
+/* The category chips, one band of the "Refine" drawer. */
 .filters {
   display: flex;
   gap: 9px;
   flex-wrap: wrap;
-  margin-bottom: 18px;
 }
 .chip {
   display: inline-flex;
@@ -104,16 +111,28 @@
     color var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease);
 }
-@media (hover: hover) {
-  .chip:not(.chipActive):hover {
-    color: var(--ink);
-    border-color: rgba(var(--line-rgb), 0.4);
-  }
-}
 .chipActive {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
+}
+/* Every chip is a ghost <Button>, and Button.module.css hovers a ghost with
+   `.ghost:hover:not(:disabled):not([aria-disabled="true"])`. That is four
+   selectors, so it outweighs a bare `.chipActive` and repaints the active
+   chip's plum ground as a 4% wash while the label stays cream: the label
+   vanishes. Both hover states below carry the same :not() tail plus `.chip`,
+   so they outrank the ghost rule whichever stylesheet the bundler emits
+   first. */
+@media (hover: hover) {
+  .chip:not(.chipActive):hover:not(:disabled):not([aria-disabled="true"]) {
+    color: var(--ink);
+    border-color: rgba(var(--line-rgb), 0.4);
+  }
+  .chip.chipActive:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--plum);
+    color: rgba(var(--cream-rgb), 1);
+    border-color: var(--line-strong);
+  }
 }
 /* Stable across search/sort/toggles — reads against the whole discover pool
    (see CommunitiesPage.tsx's `allForCounts`), omitted (not "0") until that
@@ -134,11 +153,16 @@
 
 /* The tags filter disclosure — its trigger reuses .chip/.chipActive so it
    reads as part of the same category-chip family; only the icon gap and the
-   dropdown panel below are its own. */
+   panel below are its own.
+
+   The panel expands IN FLOW, the way the member directory's filter sections
+   this mirrors do — never as a floating overlay. As a 420px absolute dropdown
+   it landed on top of the digest banner and the first row of community cards,
+   and its own max-height sliced the last visible chip row in half against the
+   panel's rounded edge. In flow it pushes the grid down instead, so all 53
+   tags are readable at once and nothing is covered or cut. */
 .tagsFilter {
-  display: inline-block;
-  position: relative;
-  margin: 0 0 18px;
+  margin: 0;
 }
 .tagsFilter .chip {
   gap: 7px;
@@ -148,24 +172,34 @@
   height: 14px;
 }
 .tagsPanel {
-  position: absolute;
-  z-index: 3;
-  top: calc(100% + 8px);
-  left: 0;
-  width: min(420px, 90vw);
-  max-height: 340px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 10px;
   padding: 16px;
-  background: var(--paper);
+  /* Cream, because this tray now opens INSIDE the paper "Refine" panel: on
+     paper it read as a flat continuation of the surface it sits on, so it
+     takes the ground the panel is standing on instead and reads as an inset
+     well. */
+  background: var(--cream);
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
 }
+/* Narrow screens fit ~2 chips a row, so the same 53 tags run past 1300px of
+   flow — a wall the grid sits behind. There, and only there, the tray keeps
+   its own scroll; desktop stays a single unbroken block with no nested
+   scroller. */
+@media (max-width: 720px) {
+  .tagsPanel {
+    max-height: 58vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+/* The tray is as wide as the grid; the search box shouldn't be. */
 .tagsSearch {
   flex: none;
+  width: min(420px, 100%);
 }
 .tagsChips {
   gap: 7px;
@@ -176,8 +210,7 @@
   margin: 0;
 }
 
-/* Below the chips, above the grid: a quiet count + active sort, with a
-   reset only when some refinement is actually narrowing the view. */
+/* Below the filter bar, above the grid: a quiet count + active sort. */
 .resline {
   display: flex;
   align-items: center;
@@ -186,7 +219,7 @@
   flex-wrap: wrap;
   font-size: 13px;
   color: var(--ink-40);
-  margin: 0 0 28px;
+  margin: 22px 0 28px;
 }
 .reslineText {
   display: inline-flex;
@@ -197,23 +230,6 @@
 .reslineSort::before {
   content: "\00b7";
   margin: 0 6px;
-}
-/* A shared <Button variant="ghost" size="sm"> reduced back to a quiet inline
-   link-alike; the primitive keeps the focus ring and disabled treatment. */
-.reset {
-  font-size: 13px;
-  color: var(--accent-ink);
-  background: none;
-  border: none;
-  padding: 0;
-  min-height: 0;
-}
-@media (hover: hover) {
-  .reset:hover {
-    background: none;
-    color: var(--accent-ink);
-    text-decoration: underline;
-  }
 }
 
 .featured {

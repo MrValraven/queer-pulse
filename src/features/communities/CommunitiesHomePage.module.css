@@ -1,38 +1,10 @@
+/* The tab's heading lives in CommunitiesHubHeader, which already carries its
+   own bottom breathing room — this only adds the gap between that header and
+   the filter bar, so the first cards sit near the top of the viewport. */
 .page {
   background: var(--cream);
   min-height: 70vh;
-  padding: 56px 0 100px;
-}
-
-.head {
-  margin-bottom: 36px;
-}
-.eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin-bottom: 10px;
-}
-.h1 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(32px, 5vw, 52px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 1;
-  margin: 0 0 10px;
-}
-.h1 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.sub {
-  font-size: 15px;
-  color: var(--ink-60);
-  margin: 0;
-  max-width: 50ch;
+  padding: var(--gap-sm) 0 100px;
 }
 
 /* A plum band, not a white card: the week's numbers are the one place on this

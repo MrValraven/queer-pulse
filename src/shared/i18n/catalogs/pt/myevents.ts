@@ -8,11 +8,10 @@ import type { Catalog } from "../../types";
  * `docs/i18n/glossary-pt.md`. Register is tu throughout.
  */
 export const myevents: Catalog = {
-  // ── Page shell (MyEventsPage / MyEventsHeader) ────────────────────────────
-  "page.eyebrow": "A tua conta · Eventos",
-  "page.title": "Os teus <em>eventos</em>",
-  "page.sub":
-    "Tudo a que vais e tudo o que organizas: reunido num só lugar acolhedor.",
+  // ── Ações em ícone do painel (MyEventsQuickActions) ───────────────────────
+  // O antigo herói "Os teus eventos" ao lado do qual este par estava
+  // desapareceu: o EventsHeader nomeia a página uma vez, por isso
+  // `page.eyebrow` / `page.title` / `page.sub` saíram com ele.
   "header.settingsAria": "Preferências de eventos",
   "header.notifAria": "Notificações",
 

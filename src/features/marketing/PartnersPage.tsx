@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiMapPin } from "react-icons/fi";
+import { FiArrowRight, FiMapPin, FiUsers } from "react-icons/fi";
 import { PageHero, PageShell } from "../../shared/components/layout";
 import {
   Button,
+  EmptyState,
   FadeIn,
   Outro,
   SkeletonLine,
@@ -63,6 +64,9 @@ export function PartnersPage() {
   // shows it until the query resolves. Approved partners only (the endpoint and
   // the mock registry both already exclude anything not live).
   const loading = useSimulatedLoad() || isLoading;
+  // An empty roster is a real state, not a bug: nothing has been approved yet.
+  // It replaces the grid with a way in rather than leaving a blank band.
+  const isRosterEmpty = !loading && partners.length === 0;
   const pageTitle = t("marketing:partners.meta.title");
   const pageDescription = t("marketing:partners.meta.description");
 
@@ -75,7 +79,10 @@ export function PartnersPage() {
           { name: pageTitle, path: routes.partners },
         ])}
       />
+      {/* Compact: the roster is the page, and the full display hero held it a
+          scroll away. */}
       <PageHero
+        compact
         eyebrow={t("marketing:partners.hero.eyebrow")}
         title={
           <Translation
@@ -86,18 +93,6 @@ export function PartnersPage() {
         sub={t("marketing:partners.hero.sub")}
       />
 
-      <section className={s.interStrip}>
-        <div className="wrap">
-          <blockquote>
-            <Translation
-              i18nKey="marketing:partners.interstitial.quote"
-              components={{ em: <em /> }}
-            />
-          </blockquote>
-          <p>{t("marketing:partners.interstitial.body")}</p>
-        </div>
-      </section>
-
       <section className={s.section}>
         <div className="wrap">
           <div className={s.head}>
@@ -107,59 +102,72 @@ export function PartnersPage() {
                 components={{ em: <em /> }}
               />
             </h2>
-            <p>{t("marketing:partners.section.sub")}</p>
+            {!isRosterEmpty && <p>{t("marketing:partners.section.sub")}</p>}
           </div>
-          <div className={s.grid}>
-            {loading
-              ? Array.from({ length: 6 }).map((_, i) => (
-                  <PartnerCardSkeleton key={i} />
-                ))
-              : partners.map((p, i) => (
-                  <FadeIn
-                    key={p.slug}
-                    delay={Math.min(i, 8) * 60}
-                    style={{ height: "100%" }}
-                  >
-                    <Link
-                      to={`${routes.partner}/${p.slug}`}
-                      className={s.card}
+          {isRosterEmpty ? (
+            <EmptyState
+              className={s.emptyRoster}
+              icon={<FiUsers />}
+              title={t("marketing:partners.empty.title")}
+              description={t("marketing:partners.empty.body")}
+              action={{
+                label: t("marketing:partners.become.applyCta"),
+                to: routes.partnerApply,
+              }}
+            />
+          ) : (
+            <div className={s.grid}>
+              {loading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <PartnerCardSkeleton key={i} />
+                  ))
+                : partners.map((p, i) => (
+                    <FadeIn
+                      key={p.slug}
+                      delay={Math.min(i, 8) * 60}
                       style={{ height: "100%" }}
                     >
-                      <div className={s.top}>
-                        <span
-                          className={s.av}
-                          style={{ background: p.background, color: p.color }}
-                        >
-                          {p.avatar}
-                        </span>
-                        <span
-                          className={`${s.region} ${regionClass[p.region]}`}
-                        >
-                          {p.regionLabel}
-                        </span>
-                      </div>
-                      <div>
-                        <div className={s.name}>{p.name}</div>
-                        <div className={s.city}>
-                          <FiMapPin /> {p.city}
-                        </div>
-                      </div>
-                      <div className={s.desc}>{p.description}</div>
-                      <div className={s.tags}>
-                        {p.tags.map((tag) => (
-                          <span key={tag} className={s.tag}>
-                            {tag}
+                      <Link
+                        to={`${routes.partner}/${p.slug}`}
+                        className={s.card}
+                        style={{ height: "100%" }}
+                      >
+                        <div className={s.top}>
+                          <span
+                            className={s.av}
+                            style={{ background: p.background, color: p.color }}
+                          >
+                            {p.avatar}
                           </span>
-                        ))}
-                      </div>
-                      <div className={s.foot}>
-                        {t("marketing:partners.card.viewCta")}{" "}
-                        <FiArrowRight aria-hidden />
-                      </div>
-                    </Link>
-                  </FadeIn>
-                ))}
-          </div>
+                          <span
+                            className={`${s.region} ${regionClass[p.region]}`}
+                          >
+                            {p.regionLabel}
+                          </span>
+                        </div>
+                        <div>
+                          <div className={s.name}>{p.name}</div>
+                          <div className={s.city}>
+                            <FiMapPin /> {p.city}
+                          </div>
+                        </div>
+                        <div className={s.desc}>{p.description}</div>
+                        <div className={s.tags}>
+                          {p.tags.map((tag) => (
+                            <span key={tag} className={s.tag}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <div className={s.foot}>
+                          {t("marketing:partners.card.viewCta")}{" "}
+                          <FiArrowRight aria-hidden />
+                        </div>
+                      </Link>
+                    </FadeIn>
+                  ))}
+            </div>
+          )}
 
           {hasNextPage && (
             <div className={s.loadMore}>

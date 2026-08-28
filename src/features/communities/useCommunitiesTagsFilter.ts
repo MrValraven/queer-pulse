@@ -23,6 +23,14 @@ function parseTagsParam(raw: string | null): string[] {
  * This is the one filter on the Discover page that round-trips through the
  * URL — search, sort, category, and the two toggles stay page-local state,
  * same as before this hook existed.
+ *
+ * The sync effect writes ONLY when the param would actually change. An
+ * unconditional write mints a fresh `location.key` for a URL identical to the
+ * one already on screen, and ScrollManager reads a same-path navigation whose
+ * search string did NOT change as a real page change and scrolls to the top
+ * (see `isSameRouteQueryChange`). Because this hook lives inside
+ * `CommunitiesGrid`, which both `/communities` tabs mount, that fired on every
+ * "My communities | Discover" switch and yanked the visitor back to the top.
  */
 export function useCommunitiesTagsFilter(): [
   string[],
@@ -33,17 +41,25 @@ export function useCommunitiesTagsFilter(): [
     parseTagsParam(searchParams.get("tags")),
   );
 
+  // Both sides as the plain string the URL carries, so the comparison is the
+  // same one the router would make. `null` on both sides means "no `?tags=`".
+  // A URL holding ids this build doesn't recognize normalizes on mount, which
+  // is a real change and still writes once.
+  const currentTagsParam = searchParams.get("tags");
+  const nextTagsParam = tagIds.length > 0 ? tagIds.join(",") : null;
+
   useEffect(() => {
+    if (currentTagsParam === nextTagsParam) return;
     setSearchParams(
       (previous) => {
         const next = new URLSearchParams(previous);
-        if (tagIds.length) next.set("tags", tagIds.join(","));
+        if (nextTagsParam !== null) next.set("tags", nextTagsParam);
         else next.delete("tags");
         return next;
       },
       { replace: true },
     );
-  }, [tagIds, setSearchParams]);
+  }, [currentTagsParam, nextTagsParam, setSearchParams]);
 
   return [tagIds, setTagIds];
 }

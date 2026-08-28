@@ -34,7 +34,7 @@ function CommunityCardSkeleton() {
  * memberships (see `useDiscoverCommunities`). Renders bare, with no page
  * background or `.wrap` of its own, so each tab's body can place it.
  *
- * `afterFilters` is a slot between the category chips and the results line —
+ * `afterFilters` is a slot between the filter bar and the results line —
  * the "My communities" tab drops its weekly digest in there, which is why the
  * digest sits inside the filter bar rather than above the whole page.
  *
@@ -84,7 +84,6 @@ export function CommunitiesGrid({
         resultCount={
           discover.gridItems.length + (discover.isShowingFeatured ? 1 : 0)
         }
-        hasActiveRefinement={discover.hasActiveRefinement}
         onReset={discover.resetRefinements}
         isShowingResline={!isShowingSkeletons}
         afterFilters={afterFilters}

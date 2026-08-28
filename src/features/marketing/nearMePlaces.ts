@@ -65,3 +65,58 @@ export function sortByDistance(
     return firstMetres - secondMetres;
   });
 }
+
+/**
+ * The same places grouped by neighbourhood, with distance deciding the order at
+ * both levels: the neighbourhoods themselves come nearest-first (each one
+ * judged by its closest place), and inside each neighbourhood the places do
+ * too.
+ *
+ * This is how "By neighbourhood" and "use my location" both stay in force at
+ * once. The chosen sort still decides the SHAPE of the list (one neighbourhood
+ * at a time, which is what the member asked for), and the position decides the
+ * order within that shape, so neither answer has to be thrown away.
+ *
+ * The same rule as `sortByDistance` covers what cannot be measured: a place
+ * with no coordinates sits at the end of its own neighbourhood, and a
+ * neighbourhood where nothing could be measured sits at the end of the list,
+ * alphabetically among its like. Nothing is given a fabricated distance.
+ */
+export function sortByNeighbourhoodDistance(
+  places: LocalPlace[],
+  metresById: ReadonlyMap<string, number>,
+): LocalPlace[] {
+  const nearestByNeighbourhood = new Map<string, number>();
+  for (const place of places) {
+    const metres = metresById.get(place.id);
+    if (metres === undefined) continue;
+    const nearest = nearestByNeighbourhood.get(place.neighbourhood);
+    if (nearest === undefined || metres < nearest) {
+      nearestByNeighbourhood.set(place.neighbourhood, metres);
+    }
+  }
+
+  return [...places].sort((first, second) => {
+    if (first.neighbourhood !== second.neighbourhood) {
+      const firstNearest = nearestByNeighbourhood.get(first.neighbourhood);
+      const secondNearest = nearestByNeighbourhood.get(second.neighbourhood);
+      if (firstNearest === undefined && secondNearest === undefined) {
+        return first.neighbourhood.localeCompare(second.neighbourhood);
+      }
+      if (firstNearest === undefined) return 1;
+      if (secondNearest === undefined) return -1;
+      return (
+        firstNearest - secondNearest ||
+        first.neighbourhood.localeCompare(second.neighbourhood)
+      );
+    }
+    const firstMetres = metresById.get(first.id);
+    const secondMetres = metresById.get(second.id);
+    if (firstMetres === undefined && secondMetres === undefined) {
+      return first.name.localeCompare(second.name);
+    }
+    if (firstMetres === undefined) return 1;
+    if (secondMetres === undefined) return -1;
+    return firstMetres - secondMetres || first.name.localeCompare(second.name);
+  });
+}

@@ -2,7 +2,7 @@
   display: flex;
   align-items: baseline;
   gap: 8px 18px;
-  padding: 14px 0 16px;
+  padding: 10px 0 12px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
   flex-wrap: wrap;
 }
@@ -35,7 +35,9 @@
 .csImage {
   background: var(--plum);
   position: relative;
-  min-height: 340px;
+  /* Only governs the stacked (--lg) layout, where the plate sits above the
+     text instead of beside it; was 340px. */
+  min-height: 280px;
   display: flex;
   align-items: flex-end;
 }
@@ -50,7 +52,10 @@
   color: rgba(var(--cream-rgb), 0.5);
 }
 .csText {
-  padding: 44px 48px;
+  /* Was 44px 48px. The lead plate is the front's hero, so the trim here is
+     space between its parts, never a part: kicker, headline, byline,
+     standfirst and the read link all stay. */
+  padding: 32px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,16 +67,16 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .csTitle {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.8vw, 52px);
+  font-size: clamp(26px, 3.2vw, 44px);
   color: var(--text-strong);
   letter-spacing: -0.025em;
   line-height: 1.02;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .csTitle em {
   font-style: italic;
@@ -80,7 +85,7 @@
 .csByline {
   font-size: 13px;
   color: var(--ink-40);
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 .csExcerpt {
   font-size: 15.5px;
@@ -92,7 +97,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-top: 22px;
+  margin-top: 18px;
   font-size: 14px;
   font-weight: 700;
   color: var(--text-strong);
@@ -114,11 +119,18 @@
   display: grid;
   grid-template-columns: 1.35fr 1fr;
   border-bottom: 2px solid var(--line-strong);
-  min-height: 540px;
+  /* Was 540px, which was taller than the text column ever needs and was the
+     single biggest reason the front opened below the fold. 340px still
+     carries the full-bleed plate as a floor; the text column's own content
+     takes over above it, so a longer headline or standfirst still gets the
+     room it needs. */
+  min-height: 340px;
 }
 
 .body {
-  padding: 56px 0 100px;
+  /* Top trimmed (was 56px) so the first section reads as part of the opening
+     screen; the 64px rhythm between later sections is untouched. */
+  padding: 40px 0 100px;
 }
 .section {
   margin-bottom: 64px;

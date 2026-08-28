@@ -10,11 +10,10 @@ import type { Catalog } from "../../types";
  * `docs/i18n/extraction-brief.md` §1.
  */
 export const myevents: Catalog = {
-  // ── Page shell (MyEventsPage / MyEventsHeader) ────────────────────────────
-  "page.eyebrow": "Your account · Events",
-  "page.title": "Your <em>events</em>",
-  "page.sub":
-    "Everything you're going to, everything you're running: gathered in one warm place.",
+  // ── Dashboard icon actions (MyEventsQuickActions) ─────────────────────────
+  // The old "Your events" hero this pair sat beside is gone: EventsHeader
+  // names the page once, so `page.eyebrow` / `page.title` / `page.sub` went
+  // with it.
   "header.settingsAria": "Event preferences",
   "header.notifAria": "Notifications",
 

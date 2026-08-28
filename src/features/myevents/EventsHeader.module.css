@@ -1,10 +1,10 @@
-/* Reserves the top nav band (--nav-top + --nav-height = 80px, plus breathing
-   room) so the header clears the fixed floating nav — the job the old hero did.
-   Sidebar nav mode clips this band via main[data-page-main]'s negative margin,
-   same as heroes (see src/styles/nav-mode.css). Not sticky; the Discover
+/* main[data-page-main] (base.css) already reserves the nav band once, and
+   sidebar mode cancels it there too (src/styles/nav-mode.css) — this header
+   used to reserve a second one on top, which is most of why the page opened
+   on empty cream. Only its own breathing room now. Not sticky; the Discover
    sub-tabs keep their own sticky behaviour further down the page. */
 .header {
-  padding-block: clamp(88px, 12vw, 116px) var(--gap-grid);
+  padding-block: var(--gap-grid);
 }
 
 .row {
@@ -32,9 +32,12 @@
   color: var(--text-strong);
 }
 
+/* Four items on the "My events" tab (settings, notifications, search, host),
+   so this row wraps rather than pushing the Host button off a narrow screen. */
 .actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--gap-sm);
 }
 

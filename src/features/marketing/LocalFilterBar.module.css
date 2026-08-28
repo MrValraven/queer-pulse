@@ -165,102 +165,30 @@
 
 /* Desktop bar row: the search field and the "Refine" pill share one line, so
    the bar is a single compact strip until the drawer is opened. */
+/* Search field, "use my location", "Refine", List/Map — one line, every control
+   the same height, so everything that shapes the results sits together and the
+   results header below is left to report what they found. A grid rather than a
+   flex row because the location control brings a note with it: that note is
+   placed on a second line (see `nearMeInline` in DirectoryPage.module.css),
+   where it can't stretch the field above it. */
 .barRow {
-  display: flex;
-  align-items: stretch;
-  gap: 12px;
-}
-.barRow .search {
-  flex: 1;
-  min-width: 0;
-}
-.barRow .refineToggle {
-  flex: none;
-}
-
-/* "Refine" toggle: opens the drawer holding every filter (place type, verified
-   safe spaces, vibe) so the bar itself stays one row. */
-.refineToggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink-60);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: 999px;
-  padding: 7px 14px;
-  cursor: pointer;
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.refineToggle svg {
-  width: 15px;
-  height: 15px;
-  color: var(--ink-40);
-}
-@media (hover: hover) {
-  .refineToggle:hover {
-    border-color: var(--line-strong);
-    color: var(--text-strong);
-  }
-}
-/* Touch: lift the ~29px toggle to the ≥44px target minimum, ink unchanged. */
-@media (pointer: coarse) {
-  .refineToggle {
-    min-height: 44px;
-  }
-}
-/* Count of active-but-hidden refinements, so a collapsed drawer still signals
-   that filters are applied. */
-.refineCount {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
-}
-.refineChevron {
-  color: var(--ink-40);
-  font-size: 11px;
-  line-height: 1;
-  transition: transform 0.2s var(--ease);
-}
-.refineChevronOpen {
-  transform: rotate(180deg);
-}
-/* Height-animated collapse without measuring: a 1-row grid whose track eases
-   between 0fr (collapsed) and 1fr (its content's height). */
-.refineWrap {
   display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.28s var(--ease);
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: stretch;
+  gap: 6px 12px;
 }
-.refineWrapOpen {
-  grid-template-rows: 1fr;
+/* The view switcher closes the row. A little extra air and a hairline set it
+   apart from the three controls that narrow the results: this one chooses how
+   they are drawn. */
+.viewSlot {
+  display: inline-flex;
+  align-items: center;
+  padding-inline-start: 14px;
+  margin-inline-start: 2px;
+  border-inline-start: 1px solid rgba(var(--line-rgb), 0.12);
 }
-.refineBody {
-  /* Clipped so nothing spills while the track is < its height; a BFC so the
-     first row's top margin stays inside (and thus collapses to nothing when
-     the drawer is shut) rather than leaking above the toggle. */
-  overflow: hidden;
-  min-height: 0;
-}
-@media (prefers-reduced-motion: reduce) {
-  .refineChevron,
-  .refineWrap {
-    transition: none;
-  }
+:global([data-theme="dark"]) .viewSlot {
+  border-inline-start-color: rgba(var(--cream-rgb), 0.12);
 }
 
 /* ── Mobile: compact sticky toolbar ──────────────────────────────────────────
@@ -305,6 +233,23 @@
   transition:
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
+}
+/* Count of active filters on the collapsed mobile control, so a shut sheet
+   still signals that some are applied. (Desktop's equivalent rides the shared
+   `RefineToggle`.) */
+.filtersCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
 }
 .filtersButton svg {
   width: 16px;
@@ -368,4 +313,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+/* The quick-filter chip row is spaced by its group label inside the drawer, so
+   it drops the standalone margin it carries for the flat mobile sheet. */
+.quickGroup > .safeRow {
+  margin-top: 0;
 }

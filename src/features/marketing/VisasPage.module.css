@@ -1,5 +1,5 @@
 .heroNote {
-  margin-top: 28px;
+  margin-top: 18px;
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -18,8 +18,10 @@
   flex: none;
 }
 
+/* Less air above the route picker so it lands just under the compact hero
+   rather than a scroll below it. */
 .routeSection {
-  padding: 72px 0 0;
+  padding: 44px 0 0;
 }
 .routeLabel {
   font-family: var(--serif);

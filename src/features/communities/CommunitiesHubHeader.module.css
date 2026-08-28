@@ -22,6 +22,26 @@
   min-width: 0;
 }
 
+/* Eyebrow → title → lead as one tight block, so `.identity`'s wider gap only
+   has to separate the heading from the tab switch below it. */
+.headingGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* The page name on the "My communities" tab, where the greeting takes the h1. */
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
 .titleRow {
   display: flex;
   align-items: center;

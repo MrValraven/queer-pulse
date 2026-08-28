@@ -52,7 +52,11 @@ export function VisasPage() {
           { name: pageTitle, path: routes.visas },
         ])}
       />
+      {/* Compact: someone opens this page to find their route, so the route
+          picker should be on screen when it loads. Title, sub and the note
+          under them all stay. */}
       <PageHero
+        compact
         eyebrow={t("marketing:visas.hero.eyebrow")}
         title={
           <Translation

@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  margin-top: 22px;
+  margin-top: 16px;
   font-size: 13px;
   color: rgba(var(--cream-rgb), 0.7);
   position: relative;
@@ -17,7 +17,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px 12px;
-  margin-top: 26px;
+  margin-top: 20px;
 }
 .heroCta svg {
   margin-right: 2px;

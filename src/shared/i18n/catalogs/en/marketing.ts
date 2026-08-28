@@ -903,13 +903,12 @@ export const marketing: Catalog = {
   "partners.hero.title": "Organisations we <em>stand with.</em>",
   "partners.hero.sub":
     "Vetted partners across Portugal and beyond, working alongside QueerPulse on the ground.",
-  "partners.interstitial.quote":
-    "We don't partner with everyone who asks. <em>We partner with people already doing the work.</em>",
-  "partners.interstitial.body":
-    "Every organisation below has been reviewed for alignment with our values before appearing here.",
   "partners.section.title": "Our <em>partners</em>",
   "partners.section.sub": "Filter isn't available yet. Here's the full roster.",
   "partners.card.viewCta": "View profile",
+  "partners.empty.title": "No partners listed yet",
+  "partners.empty.body":
+    "We're still building the roster. If your organisation works alongside us on the ground, apply and we'll vet it for alignment before listing it here.",
   "partners.loadingMore": "Loading more partners…",
   "partners.loadMoreCta": "Load more partners",
   "partners.why.title": "Why we <em>partner</em>",
@@ -2253,6 +2252,7 @@ export const marketing: Catalog = {
   "changelog.badge.infrastructure": "Infrastructure",
   "changelog.badge.fix": "Fix",
   "changelog.tag.about": "Read where we stand",
+  "changelog.tag.partners": "See our partners",
   "changelog.tag.aboutCommunities": "See how communities work",
   "changelog.tag.work": "Open your Work hub",
   "changelog.tag.settings": "Notification settings",
@@ -5735,6 +5735,9 @@ export const marketing: Catalog = {
   "directory.onMap": "{count} on map",
   "directory.sort.label": "Sort",
   "directory.sort.default": "Featured",
+  // The same option, renamed while "use my location" is on: with a position
+  // known the curated order IS the distance order, so the control says so.
+  "directory.sort.nearest": "Nearest first",
   "directory.sort.name": "A–Z",
   "directory.sort.hood": "By neighbourhood",
   "directory.badge.queerOwnedVerified": "Verified queer-owned",
@@ -6731,13 +6734,20 @@ export const marketing: Catalog = {
   "local.filter.accessLabel": "Access needs",
   "local.filter.accessNote":
     "Shows places that have answered yes to everything you pick. A place nobody has asked about stays out of the results.",
+  // Shown under the sort control while "use my location" is on, saying what the
+  // position is doing for the sort the member picked. The two work together;
+  // neither replaces the other.
+  "local.filter.sortNoteHood":
+    "Neighbourhoods are ordered by how close they are, and so are the places in each one.",
+  "local.filter.sortNoteName":
+    "Kept alphabetical. Your location still puts a walking time on every card.",
   // ── Use my location. Opt-in, reversible, and never leaves the device.
   "local.nearMe.on": "Use my location",
   "local.nearMe.off": "Turn off my location",
   "local.nearMe.asking": "Finding you…",
   "local.nearMe.privacy": "Your location stays on this device.",
   "local.nearMe.onNote":
-    "Sorted by how close it is. Your location stays on this device.",
+    "Walking times are on. Your location stays on this device.",
   "local.nearMe.denied":
     "Location is off for this site. You can turn it back on in your browser settings.",
   "local.nearMe.timeout": "That took too long. Try again whenever you like.",
@@ -7076,6 +7086,42 @@ export const marketing: Catalog = {
   // `routes.report` on an older entry with the label "See our safety
   // approach", which reads as an explainer rather than the form itself.
   "changelog.tag.reportForm": "Open the report form",
+
+  // ── 28 Aug 2026 ───────────────────────────────────────────────────────────
+  "changelog.entries.the-communities-filters-fold-away.title":
+    "The communities filters fold away",
+  "changelog.entries.the-communities-filters-fold-away.body":
+    "Seven category chips, a tags tray, two toggles and a sort control all stood open above the communities grid, pushing the first card most of the way down the page for settings most people set once or never. They now live behind one Refine control, in the same panel the Lisbon directory uses. What is currently narrowing the list, your search term included, shows as removable chips under the search field, so a closed panel hides the controls without hiding what is on.",
+
+  "changelog.entries.your-sort-and-your-location-both-count.title":
+    "Your sort and your location both count",
+  "changelog.entries.your-sort-and-your-location-both-count.body":
+    'Turning on your location used to throw away whatever sort you had picked. Now the two work together. By neighbourhood keeps its grouping, and your position orders the neighbourhoods and the places inside each one by how close they are. A to Z stays alphabetical, because that is a lookup order distance cannot improve, and your position still puts a walking time on every card. With no sort picked, the list goes nearest first and the control says "Nearest first", so it never claims an order the list does not have.',
+
+  "changelog.entries.one-line-of-controls-on-the-directory.title":
+    "One line of controls on the directory",
+  "changelog.entries.one-line-of-controls-on-the-directory.body":
+    "The business directory split its controls across two rows: search, location and Refine up top, sort and the List/Map switch down beside the result count. They now share one line. Sort has moved inside Refine, where the rest of the filtering lives, and the drawer itself is a proper panel with named sections for place type, sort, quick filters and access needs. Everything currently narrowing the list, your search term included, now shows as removable chips right under the search row, so a closed drawer never hides what is on.",
+
+  "changelog.entries.an-empty-partner-roster-says-so.title":
+    "An empty partner roster says so",
+  "changelog.entries.an-empty-partner-roster-says-so.body":
+    "With no approved partners yet, the Partners page showed a heading, a line promising the full roster, and then nothing. The page now says plainly that no partners are listed yet and offers the way in: a button straight to the partner application. The promise of a roster only appears when there is one.",
+
+  "changelog.entries.the-tag-filter-opens-in-line.title":
+    "The tag filter opens in line",
+  "changelog.entries.the-tag-filter-opens-in-line.body":
+    "Opening Tags on the communities page dropped a floating panel on top of the page. It covered the week's digest and the first row of community cards, and because the panel had a fixed height it also sliced its own last row of tags in half against its bottom edge, so the whole thing read as broken rather than open. The tags now open in line: the tray sits under the Tags button, pushes the grid down while it is open, and shows all 53 tags at once. On phones, where the same tags run several screens long, the tray keeps its own scroll so the cards stay within reach.",
+
+  "changelog.entries.pages-that-get-to-the-point.title":
+    "Pages that get to the point",
+  "changelog.entries.pages-that-get-to-the-point.body":
+    "A run of pages opened on a full-height title instead of on the thing you came for. The events page had a header and then a second, much larger one saying the same thing, with a band of empty cream above both, so your agenda started well below the fold. The header is now the only one, and the settings and notification buttons that hung off the old title moved up into it: the page opens on your buckets and your next event. Ten more pages keep their titles, their opening lines and everything else they carried, including the four numbers on changemakers, the note and both buttons on volunteering, the route picker on visas, and the wordmark and cover story on the magazine. What came out around them is empty space, so the first place, the first face, the first role and the first headline are on screen when the page arrives. The business directory, topics, housing, the arrival guide and partners got the same treatment. Nothing was removed from any of them beyond the repetition.",
+
+  "changelog.entries.your-communities-start-at-the-cards.title":
+    "Your communities start at the cards",
+  "changelog.entries.your-communities-start-at-the-cards.body":
+    "The communities page opened with two headings stacked on top of each other: the page title and its lead, then a second greeting saying much the same thing underneath. Between them they filled most of a first screen, so on a laptop the communities you belong to sat below the fold and you had to scroll to reach your own. There is one header now. It carries the greeting, the line about what has been happening across your communities, and the My communities / Discover switch, and the search box, the filters and the cards follow straight after it. Discover starts higher up the page for the same reason.",
 
   // ── 27 Aug 2026 ───────────────────────────────────────────────────────────
   "changelog.entries.unused-uploads-filter.title":

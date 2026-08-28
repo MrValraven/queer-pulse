@@ -50,13 +50,20 @@ export function HousingPage() {
           <Reveal as="div" className={styles.cat}>
             {t("economy:housing.hero.eyebrow")}
           </Reveal>
-          <Reveal as="h1" delay={60}>
-            <Translation
-              i18nKey="economy:housing.hero.title"
-              components={{ em: <em /> }}
-            />{" "}
+          {/* FeatureHelp is a SIBLING of the h1, not a child: inside it the
+              chip counted against the title's `max-width: 15ch` and wrapped
+              onto a line of its own under "share it with.", and it also
+              polluted the h1's accessible name (same pattern as
+              CommunityDetailHero and PageHero's `titleAction`). */}
+          <div className={styles.titleRow}>
+            <Reveal as="h1" delay={60}>
+              <Translation
+                i18nKey="economy:housing.hero.title"
+                components={{ em: <em /> }}
+              />
+            </Reveal>
             <FeatureHelp id="housing.hub" />
-          </Reveal>
+          </div>
           <Reveal as="p" delay={120}>
             {t("economy:housing.hero.lead")}
           </Reveal>

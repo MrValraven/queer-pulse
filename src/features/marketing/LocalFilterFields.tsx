@@ -1,11 +1,18 @@
-import { useId } from "react";
-import { FiChevronDown, FiClock, FiShield, FiSliders } from "react-icons/fi";
+import type { ReactNode } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { useLocalStorage } from "../../shared/hooks";
+import {
+  RefinePanel,
+  RefineSplit,
+  RefineToggle,
+} from "../../shared/components/ui";
+import { useRefineDrawer } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LocalAccessFilter } from "./LocalAccessFilter";
 import { LocalCategoryFilter } from "./LocalCategoryFilter";
+import { LocalQuickFilters } from "./LocalQuickFilters";
+import { LocalSortFilter } from "./LocalSortFilter";
 import { LocalVibeFilter } from "./LocalVibeFilter";
+import type { LocalSort } from "./localPlaces";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
 import s from "./LocalFilterBar.module.css";
 
@@ -28,6 +35,26 @@ export interface LocalFilterFieldsProps {
    *  place must meet to appear. */
   access: AccessibilitySlug[];
   onToggleAccess: (slug: AccessibilitySlug) => void;
+  /** How the results are ordered. Sorting is a refinement, so the control lives
+   *  inside the drawer with the filters rather than out on the results header,
+   *  which leaves that header to say what it found. */
+  sort: LocalSort;
+  onSortChange: (next: string) => void;
+  /** True while "use my location" is on. The sort control needs it because a
+   *  known position changes what some sorts mean (see `LocalSortFilter`), and
+   *  never because it overrides them. */
+  isLocationOn: boolean;
+  /** The "use my location" control, which rides the search row between the
+   *  field and "Refine" — ordering the results is a refinement, and that row is
+   *  where the other two live. Rendered by the `"bar"` variant only: the mobile
+   *  sheet is itself behind a tap, and distance is too central to bury there,
+   *  so on phones the Local page keeps it in the results header instead. */
+  nearMeSlot?: ReactNode;
+  /** The List/Map switcher, which rides the far end of the search row so every
+   *  control that shapes the results sits on one line. Rendered by the `"bar"`
+   *  variant only: on phones the switcher lives in the sticky toolbar, where it
+   *  stays reachable while scrolled deep into the list. */
+  viewSlot?: ReactNode;
 }
 
 interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
@@ -62,17 +89,18 @@ export function LocalFilterFields({
   onToggleOpenNow,
   access,
   onToggleAccess,
+  sort,
+  onSortChange,
+  isLocationOn,
+  nearMeSlot,
+  viewSlot,
   variant = "bar",
 }: LocalFilterFieldsVariantProps) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
-  const refineBodyId = useId();
-  // Every filter collapses behind one toggle so the sticky bar stays a single
-  // row; the visitor's open/closed choice sticks per device.
-  const [refineOpen, setRefineOpen] = useLocalStorage(
-    "qp.local.refineOpen",
-    false,
-  );
+  // Every filter collapses behind one toggle so the bar stays a single row;
+  // the visitor's open/closed choice sticks per device.
+  const refine = useRefineDrawer("qp.local.refineOpen");
   // Vibe (Cozy/Loud/Chill) only ever has data on demo-only venues (`map.data`'s
   // `VENUES.vibe`) — a real business has no vibe-tag field at all (its
   // `photos.vibe` is an unrelated photo-caption slot, not a mood tag), so the
@@ -114,7 +142,9 @@ export function LocalFilterFields({
   );
 
   // The groups, in one place: the bar renders them inside the refine drawer,
-  // the sheet renders them straight into its body.
+  // the sheet renders them straight into its body. Each one is a band with the
+  // same uppercase label, so the drawer reads as a stack of named sections
+  // instead of loose chips.
   const groups = (
     <>
       <LocalCategoryFilter
@@ -122,33 +152,22 @@ export function LocalFilterFields({
         onCategoryChange={onCategoryChange}
         categoryCounts={categoryCounts}
       />
-      {/* The two one-tap narrowings, side by side: is it open right now, and
-          has it been verified as a safe space. Each chip names itself, so the
-          group only needs a name for the set as a whole. */}
-      <div
-        className={s.safeRow}
-        role="group"
-        aria-label={t("marketing:local.filter.quickFiltersLabel")}
-      >
-        <button
-          type="button"
-          aria-pressed={openNow}
-          className={[s.chip, openNow && s.chipOn].filter(Boolean).join(" ")}
-          onClick={onToggleOpenNow}
-        >
-          <FiClock aria-hidden />
-          {t("marketing:local.filter.openNow")}
-        </button>
-        <button
-          type="button"
-          aria-pressed={safeOnly}
-          className={[s.chip, safeOnly && s.chipOn].filter(Boolean).join(" ")}
-          onClick={onToggleSafeOnly}
-        >
-          <FiShield aria-hidden />
-          {t("marketing:local.filter.verifiedSafeSpaces")}
-        </button>
-      </div>
+      {/* Ordering and the two one-tap narrowings share a band: all three are
+          short controls, and side by side they fill a line the place-type chips
+          have already made wide. */}
+      <RefineSplit>
+        <LocalSortFilter
+          sort={sort}
+          onSortChange={onSortChange}
+          isLocationOn={isLocationOn}
+        />
+        <LocalQuickFilters
+          openNow={openNow}
+          onToggleOpenNow={onToggleOpenNow}
+          safeOnly={safeOnly}
+          onToggleSafeOnly={onToggleSafeOnly}
+        />
+      </RefineSplit>
       <LocalAccessFilter access={access} onToggleAccess={onToggleAccess} />
       {showVibeFilter && (
         <LocalVibeFilter vibes={vibes} onToggleVibe={onToggleVibe} />
@@ -169,46 +188,11 @@ export function LocalFilterFields({
     <>
       <div className={s.barRow}>
         {search}
-        <button
-          type="button"
-          className={s.refineToggle}
-          aria-expanded={refineOpen}
-          aria-controls={refineBodyId}
-          onClick={() => setRefineOpen((open) => !open)}
-        >
-          <FiSliders aria-hidden />
-          {t("marketing:local.filter.refine")}
-          {activeRefineCount > 0 && (
-            <span className={s.refineCount} aria-hidden>
-              {activeRefineCount}
-            </span>
-          )}
-          <span
-            className={[s.refineChevron, refineOpen && s.refineChevronOpen]
-              .filter(Boolean)
-              .join(" ")}
-            aria-hidden
-          >
-            <FiChevronDown />
-          </span>
-        </button>
+        {nearMeSlot}
+        <RefineToggle {...refine.toggleProps} activeCount={activeRefineCount} />
+        {viewSlot && <div className={s.viewSlot}>{viewSlot}</div>}
       </div>
-      {/* Body stays mounted so it can animate open AND closed. The grid-rows
-          0fr↔1fr trick collapses it without measuring; `inert` keeps the
-          hidden refinements out of tab order and off screen readers. */}
-      <div
-        className={[s.refineWrap, refineOpen && s.refineWrapOpen]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <div
-          id={refineBodyId}
-          className={s.refineBody}
-          inert={!refineOpen || undefined}
-        >
-          {groups}
-        </div>
-      </div>
+      <RefinePanel {...refine.panelProps}>{groups}</RefinePanel>
     </>
   );
 }

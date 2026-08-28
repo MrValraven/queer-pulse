@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { FiList, FiMap, FiSliders } from "react-icons/fi";
 import {
   Button,
@@ -16,17 +16,18 @@ import s from "./LocalFilterBar.module.css";
 
 /**
  * Shared filter bar for the Local page (both list + map views). On desktop it's
- * an inline bar that scrolls away with the page: one row of search + a "Refine"
- * toggle, with every filter group (place type, safe spaces, vibe) in the drawer
- * below. On phones the whole set collapses behind a single "Filters" sheet, and
- * the List/Map switcher rides in a compact sticky bar so it stays reachable
- * while scrolled.
+ * an inline bar that scrolls away with the page: one row of search, "use my
+ * location", a "Refine" toggle and the List/Map switcher, with every filter
+ * group (place type, sort, safe spaces, access, vibe) in the drawer below. On
+ * phones that row collapses behind a single "Filters" sheet, and the List/Map
+ * switcher rides in a compact sticky bar so it stays reachable while scrolled.
  */
 export function LocalFilterBar({
   view,
   onViewChange,
   activeFilterCount,
   resultCount,
+  activeFiltersSlot,
   ...fields
 }: LocalFilterFieldsProps & {
   /** Current List/Map view — the switcher rides in the mobile sticky bar. */
@@ -36,6 +37,11 @@ export function LocalFilterBar({
   activeFilterCount: number;
   /** How many places the current filters surface — shown on the sheet's close CTA. */
   resultCount: number;
+  /** The active-filter chips, shown under the search row so what is currently
+   *  narrowing the list reads at a glance with the drawer shut. Desktop only:
+   *  the mobile bar is a compact sticky toolbar with no room for a wrapping
+   *  chip row, so there they sit in the results header instead. */
+  activeFiltersSlot?: ReactNode;
 }) {
   const { t } = useTranslation();
   // On phones the full filter set lives in a bottom sheet so the sticky bar
@@ -79,7 +85,7 @@ export function LocalFilterBar({
                 <FiSliders aria-hidden />
                 {t("marketing:local.filter.filters")}
                 {activeFilterCount > 0 && (
-                  <span className={s.refineCount} aria-hidden>
+                  <span className={s.filtersCount} aria-hidden>
                     {activeFilterCount}
                   </span>
                 )}
@@ -115,7 +121,8 @@ export function LocalFilterBar({
   return (
     <div className={s.bar}>
       <div className="wrap">
-        <LocalFilterFields {...fields} />
+        <LocalFilterFields {...fields} viewSlot={viewSwitcher} />
+        {activeFiltersSlot}
       </div>
     </div>
   );

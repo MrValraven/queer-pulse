@@ -1,0 +1,170 @@
+/* The "Refine" toggle and the drawer it opens. Shared by every filter bar that
+   keeps its groups behind one control (the Local directory, the communities
+   grid), so the collapse behaviour and the panel's band rhythm can't drift
+   apart between them. */
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition:
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.toggle svg {
+  width: 15px;
+  height: 15px;
+  color: var(--ink-40);
+}
+@media (hover: hover) {
+  .toggle:hover {
+    border-color: var(--line-strong);
+    color: var(--text-strong);
+  }
+}
+/* Touch: lift the ~29px toggle to the ≥44px target minimum, ink unchanged. */
+@media (pointer: coarse) {
+  .toggle {
+    min-height: 44px;
+  }
+}
+:global([data-theme="dark"]) .toggle {
+  border-color: rgba(var(--cream-rgb), 0.14);
+}
+
+/* Count of active-but-hidden refinements, so a collapsed drawer still signals
+   that filters are applied. */
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+.chevron {
+  color: var(--ink-40);
+  font-size: 11px;
+  line-height: 1;
+  transition: transform 0.2s var(--ease);
+}
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Height-animated collapse without measuring: a 1-row grid whose track eases
+   between 0fr (collapsed) and 1fr (its content's height). */
+.wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s var(--ease);
+}
+.wrapOpen {
+  grid-template-rows: 1fr;
+}
+.body {
+  /* Clipped so nothing spills while the track is < its height; a BFC so the
+     panel's top margin stays inside (and thus collapses to nothing when the
+     drawer is shut) rather than leaking above the toggle. */
+  overflow: hidden;
+  min-height: 0;
+}
+/* Once the drawer has finished opening the clip is lifted, so a Select panel
+   inside can hang past the drawer instead of being cropped. Set from React
+   after the transition (see `useRefineDrawer`), because `overflow` cannot be
+   animated. */
+.bodyOpen {
+  overflow: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .wrap {
+    transition: none;
+  }
+}
+
+/* The groups sit on a paper card rather than loose on the page, so an opened
+   drawer reads as one surface hanging off the bar. */
+.panel {
+  margin-top: 14px;
+  padding: 18px 20px 20px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: 16px;
+  background: var(--paper);
+}
+:global([data-theme="dark"]) .panel {
+  border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* Two short groups side by side. The first column is capped so a select can't
+   stretch to the width of the row. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  gap: 16px 28px;
+  align-items: start;
+}
+@media (--mobile) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.group {
+  min-width: 0;
+}
+.groupLabel {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.note {
+  margin: 7px 0 0;
+  max-width: 34ch;
+  font-size: 11.5px;
+  line-height: 1.45;
+  font-style: italic;
+  color: var(--ink-40);
+}
+
+/* The bands. Last in the file on purpose: a group brought in from a feature
+   ships its own `margin-top` for whatever flat layout it also appears in (the
+   Local page's mobile Filters sheet), and these single-class rules only win
+   over it by source order.
+
+   The hairline hangs off the BOTTOM of each band rather than the top of the
+   next one, because a group may be a real `<fieldset>`: a fieldset renders its
+   legend inside its block-start border area, so a `border-top` + `padding-top`
+   there would strand the legend up on the rule and push its content a band's
+   worth of space below it. */
+.panel > * {
+  margin-top: 0;
+}
+.panel > * + * {
+  margin-top: 18px;
+}
+.panel > *:not(:last-child) {
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+:global([data-theme="dark"]) .panel > *:not(:last-child) {
+  border-bottom-color: rgba(var(--cream-rgb), 0.08);
+}

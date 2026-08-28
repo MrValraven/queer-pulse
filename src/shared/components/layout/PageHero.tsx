@@ -24,6 +24,13 @@ interface PageHeroProps {
    * marketing/content pages). Set `false` for the light hero on cream.
    */
   plum?: boolean;
+  /**
+   * Utility variant: same hero, smaller. A page whose job is a search box and
+   * a result list (a directory, a board) is opened to be used, not to be read
+   * — the full display scale pushes the first result off the screen. Keeps the
+   * eyebrow, title and sub, at a size that leaves room for the content.
+   */
+  compact?: boolean;
   /** Extra content rendered under the sub, inside the wrap (filter bars, stats, notes). */
   children?: ReactNode;
   /** Extra class on the `<header>` for one-off overrides. */
@@ -42,12 +49,18 @@ export function PageHero({
   titleAction,
   sub,
   plum = true,
+  compact = false,
   children,
   className,
 }: PageHeroProps) {
   return (
     <header
-      className={[styles.hero, plum && styles.plum, className]
+      className={[
+        styles.hero,
+        plum && styles.plum,
+        compact && styles.compact,
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       // Plain data attribute (not a CSS-module class) so base.css's

@@ -27,7 +27,17 @@ const STATUS_MESSAGE_KEYS: Record<string, string> = {
  * invites another go, and a device that cannot answer says so. None of them
  * re-ask on their own.
  */
-export function DirectoryNearMe({ location }: { location: MyLocation }) {
+export function DirectoryNearMe({
+  location,
+  layout = "stack",
+}: {
+  location: MyLocation;
+  /** `"stack"` keeps the button and its note in their own column, for the
+   *  results header. `"inline"` dissolves the wrapper so both become items of
+   *  the search row's grid: the button sits on the field's line, the note drops
+   *  to a second line of its own and so can't stretch the field. */
+  layout?: "stack" | "inline";
+}) {
   const { t } = useTranslation();
   // Nothing to offer on a browser without the API, or outside a secure
   // context, where the control could only ever fail.
@@ -48,7 +58,7 @@ export function DirectoryNearMe({ location }: { location: MyLocation }) {
       : t("marketing:local.nearMe.on");
 
   return (
-    <div className={s.nearMe}>
+    <div className={layout === "inline" ? s.nearMeInline : s.nearMe}>
       <button
         type="button"
         className={[s.nearMeButton, isOn && s.nearMeButtonOn]

@@ -1,40 +1,18 @@
-.interStrip {
-  background: var(--plum);
-  color: rgba(var(--cream-rgb), 1);
-  padding: 64px 0;
-}
-.interStrip blockquote {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(26px, 4vw, 42px);
-  color: rgba(var(--cream-rgb), 1);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  max-width: 22ch;
-  margin: 0;
-}
-.interStrip blockquote em {
-  font-style: italic;
-  color: var(--accent);
-}
-.interStrip p {
-  font-size: 15.5px;
-  color: rgba(var(--cream-rgb), 0.68);
-  line-height: 1.7;
-  max-width: 60ch;
-  margin-top: 20px;
+/* The roster follows the hero directly now, so it opens with a normal gap
+   instead of a full band of air. */
+.section {
+  padding: 36px 0 48px;
 }
 
-.section {
-  padding: 64px 0 40px;
-}
+/* Labels the roster under a hero that has already named the page, so it sits
+   a step below the hero's scale rather than competing with it. */
 .head h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(28px, 3.6vw, 44px);
+  font-size: clamp(24px, 2.8vw, 34px);
   color: var(--text-strong);
   letter-spacing: -0.02em;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .head h2 em {
   font-style: italic;
@@ -43,9 +21,15 @@
 .head p {
   font-size: 15px;
   color: var(--ink-60);
-  max-width: 52ch;
+  max-width: 60ch;
   line-height: 1.6;
-  margin-bottom: 32px;
+  margin-bottom: 22px;
+}
+
+/* The roster sub-line is hidden when there is nothing to list, so the empty
+   state carries the spacing the paragraph's margin used to. */
+.emptyRoster {
+  margin-top: 16px;
 }
 
 .grid {

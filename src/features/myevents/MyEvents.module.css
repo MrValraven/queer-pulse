@@ -4,8 +4,10 @@
    Class names are kept kebab-case and referenced via the `sx`
    helper in myEvents.styles.ts (styles['ev-card'] etc.).
    ============================================================ */
+/* The page is named once, in EventsHeader, which carries its own breathing
+   room — this is just the gap from it down to the bucket pills. */
 .ev-page {
-  padding: 12px 0 110px;
+  padding: var(--gap-sm) 0 110px;
 }
 
 /* shared keyframes (were global in the prototype) */
@@ -38,48 +40,6 @@
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.4s ease-in-out infinite;
-}
-
-/* ---------- Page header ---------- */
-.ev-head {
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
-  margin-bottom: 34px;
-}
-.ev-eyebrow {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-40);
-  margin-bottom: 14px;
-}
-.ev-head-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.ev-title {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: clamp(38px, 5vw, 62px);
-  color: var(--text-strong);
-  letter-spacing: -0.025em;
-  line-height: 0.98;
-  margin-bottom: 12px;
-}
-.ev-title em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
-.ev-sub {
-  font-size: 16px;
-  color: var(--ink-60);
-  max-width: 46ch;
-  line-height: 1.6;
 }
 
 /* ---------- Layout ---------- */
@@ -1929,35 +1889,38 @@ button.cal-cell.has {
   flex-wrap: wrap;
   justify-content: flex-end;
 }
+/* These two sit in EventsHeader's action row now, next to its search jump —
+   so they mirror that button (`.searchBtn`, EventsHeader.module.css): a plain
+   44px round icon button rather than a bordered chip. */
 .notif-btn,
 .gear-btn {
   position: relative;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(var(--line-rgb), 0.16);
-  background: var(--paper);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: rgba(var(--plum-rgb), 0.06);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-strong);
+  color: var(--ink-60);
   transition:
     background 0.2s var(--ease),
-    border-color 0.2s var(--ease);
+    color 0.2s var(--ease);
   flex: none;
 }
 @media (hover: hover) {
   .notif-btn:hover,
   .gear-btn:hover {
-    border-color: var(--line-strong);
-    background: rgba(var(--plum-rgb), 0.03);
+    color: var(--text-strong);
+    background: rgba(var(--plum-rgb), 0.12);
   }
 }
 .notif-btn svg,
 .gear-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 .notif-count {
   position: absolute;
@@ -1978,7 +1941,8 @@ button.cal-cell.has {
 }
 .notif-panel {
   position: absolute;
-  top: 58px;
+  /* Clears the 44px bell it hangs from (see `.notif-btn`) plus a small gap. */
+  top: 52px;
   right: 0;
   width: 344px;
   max-width: calc(100vw - 40px);

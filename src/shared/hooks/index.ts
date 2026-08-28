@@ -15,6 +15,7 @@ export { useScrollLock } from "./useScrollLock";
 export { useFocusOnMount } from "./useFocusOnMount";
 export { useOutsideDismiss } from "./useOutsideDismiss";
 export { useLocalStorage } from "./useLocalStorage";
+export { useRefineDrawer } from "./useRefineDrawer";
 export { useSubmitFlow, type FlowStatus } from "./useSubmitFlow";
 export {
   useInstallPrompt,
