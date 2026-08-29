@@ -147,8 +147,31 @@
   text-decoration: underline;
 }
 
+/* On a phone the strip stays a nudge. Stacking six cards down the page would
+   bury the feed under people the member never asked to see, so the grid
+   becomes one swipeable row inside the panel, sized so the edge of the next
+   card always shows, which is the affordance. The scroller stays within the
+   strip's padding, so the panel border still closes around it. */
 @media (max-width: 640px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    display: flex;
+    grid-template-columns: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge */
+  }
+
+  .grid::-webkit-scrollbar {
+    display: none; /* WebKit: the peeking card is the affordance */
+  }
+
+  .card {
+    /* Clamped so a wide phone gets a wider card instead of a wider gap, and a
+       narrow one still shows the edge of the next card. */
+    flex: 0 0 clamp(140px, 46%, 180px);
+    scroll-snap-align: start;
   }
 }

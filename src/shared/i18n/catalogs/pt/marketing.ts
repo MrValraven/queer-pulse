@@ -7229,6 +7229,11 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nomear um Agente de Mudança eram duas caixas em forma de comprimido lado a lado por baixo do título: sem etiquetas, sem noção de quanto podias escrever na segunda e com um botão que ficava morto até as duas terem alguma coisa, sem nunca o dizer. O texto passa a ficar ao lado de um cartão a sério. Os dois campos têm etiqueta e uma pista, a caixa do porquê tem espaço para escrever e uma contagem de 500 caracteres, e carregar no botão com um campo vazio diz-te qual deles falta. Ao lado do formulário, três linhas explicam o que acontece a seguir: alguém da moderação lê, recebes uma notificação com a decisão e a pessoa nomeada nunca é avisada.",
 
+  "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.title":
+    "As pessoas que talvez conheças passam a deslizar de lado no telemóvel",
+  "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.body":
+    "No telemóvel, as sugestões por cima do teu mural empilhavam um cartão por linha, por isso seis pessoas empurravam o mural quase um ecrã inteiro para baixo e tinhas de passar por caras que não pediste até chegares ao que as tuas comunidades publicaram. Essa fila passa a deslizar de lado. Os cartões têm um tamanho que deixa sempre ver a beira do seguinte, a faixa mantém a mesma altura seja o que for que tenha dentro, e dentro de cada cartão nada muda: a mesma cara, a mesma linha a dizer porque está ali e as mesmas duas saídas, dizer olá ou dispensar a pessoa de vez.",
+
   "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.title":
     "Os filtros de membros mostram quantas pessoas estão por trás de cada um",
   "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.body":

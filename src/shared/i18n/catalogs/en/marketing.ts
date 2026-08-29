@@ -7093,6 +7093,11 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
 
+  "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.title":
+    "People you might know swipes sideways on a phone",
+  "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.body":
+    "On a phone, the suggestions above your feed stacked one card per row, so six people pushed the feed most of a screen further down and you scrolled past faces you had not asked for to reach what your communities had posted. That row now scrolls sideways. Cards are sized so the edge of the next one always shows, the strip keeps the same height whatever it holds, and everything inside a card is unchanged: the same face, the same line saying why that person is there, and the same two ways out, saying hello or dismissing them for good.",
+
   "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.title":
     "Member filters show how many people are behind each one",
   "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.body":
