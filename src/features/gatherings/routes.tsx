@@ -5,6 +5,7 @@ import { lazyNamed } from "../../app/routeHelpers";
 const GatheringPage = lazyNamed(
   () => import("./GatheringPage"),
   "GatheringPage",
+  `${routes.gatherings}/:slug`,
 );
 const GatheringRecapPage = lazyNamed(
   () => import("./GatheringRecapPage"),

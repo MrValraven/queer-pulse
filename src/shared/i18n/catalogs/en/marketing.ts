@@ -7093,6 +7093,11 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
 
+  "changelog.entries.pages-open-the-moment-you-click-them.title":
+    "Pages open the moment you click them",
+  "changelog.entries.pages-open-the-moment-you-click-them.body":
+    "Clicking a link used to leave you watching a spinner where the page should be. Nothing about that page had reached your browser yet, so the click was the moment it started downloading, and only once it arrived did anything begin loading its content. The app now fetches a page quietly as soon as you hover over, tab to, or touch the link that leads there, and the tabs at the bottom of the screen are ready before you press them. The page frame now appears straight away, with its own placeholders where the content is still on its way, so you can see where you are while it fills in.",
+
   "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.title":
     "People you might know swipes sideways on a phone",
   "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.body":

@@ -3,10 +3,14 @@ import { routes } from "../../app/routeMap";
 import { MemberProfileRedirect } from "../../app/routes.redirects";
 import { lazyNamed } from "../../app/routeHelpers";
 
-const ProfilePage = lazyNamed(() => import("./ProfilePage"), "ProfilePage");
+const ProfilePage = lazyNamed(() => import("./ProfilePage"), "ProfilePage", [
+  routes.accountProfile,
+  `${routes.members}/:slug`,
+]);
 const MemberDirectoryFilterPage = lazyNamed(
   () => import("./MemberDirectoryFilterPage"),
   "MemberDirectoryFilterPage",
+  routes.members,
 );
 const SearchPage = lazyNamed(() => import("./SearchPage"), "SearchPage");
 const PublicProfilePage = lazyNamed(

@@ -7229,6 +7229,11 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nomear um Agente de Mudança eram duas caixas em forma de comprimido lado a lado por baixo do título: sem etiquetas, sem noção de quanto podias escrever na segunda e com um botão que ficava morto até as duas terem alguma coisa, sem nunca o dizer. O texto passa a ficar ao lado de um cartão a sério. Os dois campos têm etiqueta e uma pista, a caixa do porquê tem espaço para escrever e uma contagem de 500 caracteres, e carregar no botão com um campo vazio diz-te qual deles falta. Ao lado do formulário, três linhas explicam o que acontece a seguir: alguém da moderação lê, recebes uma notificação com a decisão e a pessoa nomeada nunca é avisada.",
 
+  "changelog.entries.pages-open-the-moment-you-click-them.title":
+    "As páginas abrem no momento em que carregas",
+  "changelog.entries.pages-open-the-moment-you-click-them.body":
+    "Carregar num link deixava-te a olhar para um indicador de espera no lugar da página. Nada dessa página tinha ainda chegado ao teu navegador, por isso era o clique que dava início ao descarregamento, e só quando ele terminava é que alguma coisa começava a carregar o conteúdo. A aplicação passa a ir buscar a página em silêncio assim que passas o rato, chegas com o teclado ou tocas no link que lá leva, e os separadores no fundo do ecrã ficam prontos antes de carregares neles. A estrutura da página aparece logo, com marcações no lugar do conteúdo que ainda vem a caminho, para veres onde estás enquanto a página se preenche.",
+
   "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.title":
     "As pessoas que talvez conheças passam a deslizar de lado no telemóvel",
   "changelog.entries.people-you-might-know-swipes-sideways-on-a-phone.body":

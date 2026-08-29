@@ -1,4 +1,20 @@
+/* Hold the whole fallback invisible for its first 200ms.
+ *
+ * Now that route chunks are prefetched on hover/focus/touch (app/routePrefetch.ts),
+ * most navigations resolve their lazy import in a microtask — but React still
+ * suspends for that microtask, so without this the member gets a one-frame
+ * strobe of spinner between two pages that were both ready. Below 200ms nothing
+ * is shown at all and the new page simply appears; past it, the wait is real and
+ * deserves the status region.
+ *
+ * A 1ms duration rather than a fade, so this is a delay and never motion: the
+ * reduced-motion resets in base.css clamp `animation-duration`, which leaves the
+ * behaviour here identical instead of fighting it. `both` is what makes the
+ * delay do the hiding, by applying the 0% frame before the animation starts.
+ * The keyframe is declared in this module on purpose — a CSS-module
+ * `animation:` naming a keyframe defined globally silently never runs. */
 .wrap {
+  animation: routeFallbackReveal 1ms linear 200ms both;
   min-height: 60vh;
   display: flex;
   flex-direction: column;
@@ -16,4 +32,13 @@
 .label {
   font-size: 14px;
   color: rgba(var(--ink-rgb), 0.7);
+}
+
+@keyframes routeFallbackReveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

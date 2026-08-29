@@ -5,6 +5,7 @@ import { lazyNamed } from "../../app/routeHelpers";
 const CommunitiesHubPage = lazyNamed(
   () => import("./CommunitiesHubPage"),
   "CommunitiesHubPage",
+  routes.communities,
 );
 const StartCommunityPage = lazyNamed(
   () => import("./startCommunity/StartCommunityPage"),
@@ -13,6 +14,7 @@ const StartCommunityPage = lazyNamed(
 const CommunityDetailPage = lazyNamed(
   () => import("./CommunityDetailPage"),
   "CommunityDetailPage",
+  "/community/:slug",
 );
 const CommunityPostPage = lazyNamed(
   () => import("./CommunityPostPage"),

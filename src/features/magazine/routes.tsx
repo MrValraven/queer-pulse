@@ -2,7 +2,11 @@ import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 
-const MagazinePage = lazyNamed(() => import("./MagazinePage"), "MagazinePage");
+const MagazinePage = lazyNamed(
+  () => import("./MagazinePage"),
+  "MagazinePage",
+  routes.magazine,
+);
 const ArticlePage = lazyNamed(() => import("./ArticlePage"), "ArticlePage");
 const DeckPage = lazyNamed(() => import("./DeckPage"), "DeckPage");
 const AuthorPage = lazyNamed(() => import("./AuthorPage"), "AuthorPage");

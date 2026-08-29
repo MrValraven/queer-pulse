@@ -3,7 +3,7 @@ import { lazyNamed } from "../../app/routeHelpers";
 
 import { FEED_MUTED_PATH } from "./feedMutedPath";
 
-const FeedPage = lazyNamed(() => import("./FeedPage"), "FeedPage");
+const FeedPage = lazyNamed(() => import("./FeedPage"), "FeedPage", "/feed");
 const FeedMutedSourcesPage = lazyNamed(
   () => import("./FeedMutedSourcesPage"),
   "FeedMutedSourcesPage",

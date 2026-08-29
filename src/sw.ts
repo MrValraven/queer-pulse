@@ -56,6 +56,15 @@ precacheAndRoute(self.__WB_MANIFEST, { directoryIndex: null });
 // Lazy JS/CSS chunks (everything not precached): stale-while-revalidate so a
 // route that was opened once keeps working offline, and refreshes in the
 // background on the next online visit. Bounded so storage can't grow forever.
+//
+// maxEntries was 120, which was well under what one session actually touches:
+// the production entry chunk references ~556 lazy chunks, and a page pulls its
+// own JS plus its CSS plus whatever shared chunks it imports, so a member who
+// browses for a while evicted (LRU) chunks they were about to navigate back to.
+// Every eviction turns a would-be instant navigation back into a network round
+// trip. 400 covers a deep session without letting the cache grow without limit,
+// and purgeOnQuotaError below still empties it rather than failing writes if a
+// device is tight on storage.
 registerRoute(
   ({ request }) =>
     request.destination === "script" || request.destination === "style",
@@ -63,7 +72,7 @@ registerRoute(
     cacheName: "qp-assets",
     plugins: [
       new ExpirationPlugin({
-        maxEntries: 120,
+        maxEntries: 400,
         maxAgeSeconds: 30 * 24 * 60 * 60,
         purgeOnQuotaError: true,
       }),

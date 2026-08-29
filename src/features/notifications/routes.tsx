@@ -5,6 +5,7 @@ import { lazyNamed } from "../../app/routeHelpers";
 const NotificationsPage = lazyNamed(
   () => import("./NotificationsPage"),
   "NotificationsPage",
+  routes.notifications,
 );
 
 /** The member notifications inbox. */

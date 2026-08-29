@@ -66,6 +66,7 @@ const VolunteerApplicantsDashboardPage = lazyNamed(
 const DirectoryPage = lazyNamed(
   () => import("./DirectoryPage"),
   "DirectoryPage",
+  routes.directory,
 );
 const DirectorySpacePage = lazyNamed(
   () => import("./DirectorySpacePage"),
@@ -86,6 +87,7 @@ const ListingClaimsPage = lazyNamed(
 const ResourceLibraryPage = lazyNamed(
   () => import("./ResourceLibraryPage"),
   "ResourceLibraryPage",
+  routes.resources,
 );
 const PartnersPage = lazyNamed(() => import("./PartnersPage"), "PartnersPage");
 const SubmitPartnerApplicationPage = lazyNamed(

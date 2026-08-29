@@ -55,6 +55,7 @@ import { OfflineGate } from "../features/system/OfflineGate";
 import { ScrollManager } from "./ScrollManager";
 import { RouteAnnouncer } from "./RouteAnnouncer";
 import { AppRoutes } from "./routes";
+import { RoutePrefetcher } from "./routePrefetch";
 import { useVisualViewportKeyboard } from "../shared/hooks";
 
 // Lazy so the demo mock corpus its search data hook pulls in (members +
@@ -188,6 +189,14 @@ export function App() {
           fallback themes correctly, but around the router so any page/provider
           throw is contained instead of blanking the whole app. */}
       <ErrorBoundary level="app">
+        {/* Warms a destination's lazy route chunk on hover/focus/touch, so the
+            click that follows renders the page's own frame and skeletons
+            instead of holding the whole content area on the Suspense spinner
+            for a network round trip. Listens at the document (no per-link
+            prop) and renders nothing; inside RootProviders because it reads
+            the session to decide which tab destinations to warm at idle, and
+            outside BrowserRouter because it needs no router context. */}
+        <RoutePrefetcher />
         <BrowserRouter>
           <ScrollManager />
           {/* Speaks each route change into a polite live region and lands

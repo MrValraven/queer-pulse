@@ -52,6 +52,7 @@ import { simulationRoutes } from "../features/simulations/routes";
 const HomePage = lazyNamed(
   () => import("../features/homepage/HomePage"),
   "HomePage",
+  routes.homepage,
 );
 const NotFoundPage = lazyNamed(
   () => import("../pages/NotFoundPage"),
