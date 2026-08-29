@@ -32,6 +32,16 @@ export interface AdminChangemakerNominationDTO {
   nominator?: AdminPersonDTO | null;
   /** The free-text name the member put forward. */
   nomineeName: string;
+  /**
+   * The nominee's own member profile, when the nominator picked them out of
+   * the form's member search (COM-18). `null` when they aren't a member here,
+   * or when the account behind the stored link is gone. ABSENT for a
+   * `partnerships` grant holder, on the same rule as `nominator`.
+   */
+  nominee?: AdminPersonDTO | null;
+  /** Where else to find the nominee, in the nominator's own words (COM-18) —
+   *  a handle, a link, an email. ABSENT on the same rule as `nominator`. */
+  nomineeContact?: string | null;
   /** The nominator's own words on why (COM-16) — null for nominations
    *  submitted before this field existed. */
   reason: string | null;

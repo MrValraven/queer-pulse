@@ -740,6 +740,11 @@ export const members: Catalog = {
   "directory.filter.ageNote":
     'Anos na QueerPulse. <em>Pessoas mais recentes aparecem com um emblema de "primeiro ano" por definição.</em>',
   "directory.filter.languagesTitle": "Idiomas",
+  // Nome acessível de uma opção de filtro com contagem. O emblema visível é
+  // aria-hidden para que isto possa ser uma frase: um leitor de ecrã a ler a
+  // marcação em bruto ouviria "Mentoria 7".
+  "directory.filter.optionWithCount_one": "{label}, {count} pessoa",
+  "directory.filter.optionWithCount_other": "{label}, {count} pessoas",
   "directory.clearAllFiltersCta": "Limpar todos os filtros",
   "directory.appliedCount_one": "{count} aplicado",
   "directory.appliedCount_other": "{count} aplicados",

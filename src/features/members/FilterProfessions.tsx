@@ -6,9 +6,11 @@ import {
   FIELD_BY_PROFESSION,
   PROFESSIONS_BY_FIELD,
   professionsForFields,
+  type DirectoryFacetCounts,
   type FilterState,
 } from "./memberDirectoryFilter.data";
 import { FilterSection } from "./FilterSection";
+import { useChipCount } from "./useChipCount";
 import { type SectionKey } from "./filterSectionKeys";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
@@ -26,17 +28,25 @@ function toggle(arr: string[], value: string): string[] {
  *  in the "What they do" card but drives the Profession card below it too. */
 export function FilterProfessions({
   filters,
+  counts,
+  countsAreStale,
   onChange,
   sectionsOpen,
   onToggleSection,
 }: {
   filters: FilterState;
+  /** Per-option availability counts, or `undefined` when none are available —
+   *  see `DirectoryFacetCounts`. Both cards read from the same object so a
+   *  field and the professions under it can never be counted differently. */
+  counts?: DirectoryFacetCounts;
+  countsAreStale: boolean;
   onChange: (next: FilterState) => void;
   sectionsOpen: Record<SectionKey, boolean>;
   onToggleSection: (key: SectionKey) => void;
 }) {
   const { t } = useTranslation();
   const uid = useId();
+  const chipCount = useChipCount(counts?.disciplines);
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
 
@@ -72,10 +82,12 @@ export function FilterProfessions({
         />
         {disciplineOptions.length > 0 ? (
           <ChipSelect
+            className={countsAreStale ? styles.chipsStale : undefined}
             labelledBy={`${uid}-fields`}
             options={disciplineOptions.map((o) => ({
               value: o.id,
               label: t(o.labelKey),
+              ...chipCount(o.id, t(o.labelKey)),
             }))}
             selected={new Set(filters.disciplines)}
             onToggle={(value) =>
@@ -94,6 +106,8 @@ export function FilterProfessions({
 
       <ProfessionFilterCard
         filters={filters}
+        counts={counts}
+        countsAreStale={countsAreStale}
         onChange={onChange}
         query={query}
         open={sectionsOpen.professions}
@@ -112,12 +126,16 @@ export function FilterProfessions({
  *     entire flattened pool. */
 function ProfessionFilterCard({
   filters,
+  counts,
+  countsAreStale,
   onChange,
   query,
   open,
   onToggle,
 }: {
   filters: FilterState;
+  counts?: DirectoryFacetCounts;
+  countsAreStale: boolean;
   onChange: (next: FilterState) => void;
   query: string;
   open: boolean;
@@ -125,6 +143,7 @@ function ProfessionFilterCard({
 }) {
   const { t } = useTranslation();
   const uid = useId();
+  const chipCount = useChipCount(counts?.professions);
   const q = query.trim().toLowerCase();
 
   // While searching, professions are grouped under their parent field (fields
@@ -208,10 +227,12 @@ function ProfessionFilterCard({
                     {t(group.labelKey)}
                   </p>
                   <ChipSelect
+                    className={countsAreStale ? styles.chipsStale : undefined}
                     labelledBy={groupLabelId}
                     options={group.professions.map((o) => ({
                       value: o.id,
                       label: t(o.labelKey),
+                      ...chipCount(o.id, t(o.labelKey)),
                     }))}
                     selected={selectedProfessions}
                     onToggle={toggleProfession}
@@ -229,10 +250,12 @@ function ProfessionFilterCard({
         )
       ) : filters.disciplines.length ? (
         <ChipSelect
+          className={countsAreStale ? styles.chipsStale : undefined}
           labelledBy={`${uid}-professions`}
           options={scopedProfessions.map((o) => ({
             value: o.id,
             label: t(o.labelKey),
+            ...chipCount(o.id, t(o.labelKey)),
           }))}
           selected={selectedProfessions}
           onToggle={toggleProfession}

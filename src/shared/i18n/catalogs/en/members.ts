@@ -727,6 +727,12 @@ export const members: Catalog = {
   "directory.filter.ageNote":
     'Years on QueerPulse. <em>Newer members appear with a "first year" badge by default.</em>',
   "directory.filter.languagesTitle": "Languages",
+  // The accessible name of a filter option that carries an availability count.
+  // The visible badge is aria-hidden precisely so this can be a sentence: a
+  // screen reader hearing the raw markup would get "Mentoring 7", which reads
+  // as a quantity of Mentorings rather than as how many members are there.
+  "directory.filter.optionWithCount_one": "{label}, {count} member",
+  "directory.filter.optionWithCount_other": "{label}, {count} members",
   "directory.clearAllFiltersCta": "Clear all filters",
   "directory.appliedCount_one": "{count} applied",
   "directory.appliedCount_other": "{count} applied",

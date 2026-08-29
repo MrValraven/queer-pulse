@@ -21,14 +21,21 @@ export interface ActiveFilter {
  * this row holds their state, and it stays on screen whether the drawer is open
  * or closed. Give it EVERY narrowing, the search term included, so nothing
  * shaping the results can be invisible.
+ *
+ * `trailing` rides at the end of the row, before "Clear all". It exists for
+ * the result count on pages that have no separate results line: once the count
+ * only differs from the total while something is narrowing, this row is the
+ * only place it needs to appear.
  */
 export function ActiveFilters({
   filters,
   onClearFilters,
+  trailing,
   className,
 }: {
   filters: ActiveFilter[];
   onClearFilters: () => void;
+  trailing?: ReactNode;
   className?: string;
 }) {
   const { t } = useTranslation();
@@ -49,6 +56,7 @@ export function ActiveFilters({
           <span className={styles.srOnly}>{t("shared:filters.remove")}</span>
         </button>
       ))}
+      {trailing != null && <span className={styles.trailing}>{trailing}</span>}
       <button
         type="button"
         className={styles.clearAll}

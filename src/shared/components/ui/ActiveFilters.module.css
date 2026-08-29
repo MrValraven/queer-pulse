@@ -91,3 +91,15 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* The optional end-of-row slot (a result count). Quiet, and separated from
+   "Clear all" by a middot drawn here so no catalog value carries punctuation. */
+.trailing {
+  margin-inline-start: 4px;
+  font-size: 12.5px;
+  color: var(--ink-40);
+}
+.trailing::after {
+  content: "\00b7";
+  margin-inline-start: 8px;
+}

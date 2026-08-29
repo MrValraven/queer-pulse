@@ -1,4 +1,4 @@
-import type { MyEvent, Notif } from "./myEvents.types";
+import type { MyEvent } from "./myEvents.types";
 
 // Heavy demo-only My Events registries. Imported *only* via the demo-gated
 // dynamic import() in api/useMyEventsData.ts so they code-split out of the
@@ -383,59 +383,5 @@ export const INITIAL_EVENTS: MyEvent[] = [
     invitee: "Alex M.",
     going: 1,
     community: "Trans Lisbon",
-  },
-];
-
-export const INITIAL_NOTIFS: Notif[] = [
-  {
-    id: "n-film",
-    bold: "Queer Film Night",
-    tail: " moved to 20:00. It was 19:30.",
-    time: "2 hours ago",
-    eventId: "film",
-    unread: true,
-  },
-  {
-    id: "n-supper",
-    lead: "A spot may open soon for ",
-    bold: "Sober Queers Supper Club",
-    tail: ". You’re #3 in line.",
-    time: "Yesterday",
-    eventId: "supper",
-    unread: true,
-  },
-  {
-    id: "n-comedy",
-    bold: "Rita F.",
-    tail: " invited you to Queer Comedy Open Mic.",
-    time: "Yesterday",
-    eventId: "comedy",
-    unread: true,
-  },
-  {
-    id: "n-workshop",
-    bold: "Zine-making Workshop",
-    tail: " was cancelled by the host.",
-    time: "Yesterday",
-    eventId: "workshop",
-    unread: false,
-  },
-  {
-    id: "n-picnic",
-    lead: "4 new people joined the waitlist for your ",
-    bold: "Trans Joy Picnic",
-    tail: ".",
-    time: "2 days ago",
-    eventId: "picnic",
-    unread: false,
-  },
-  {
-    id: "n-brunch",
-    lead: "Your RSVP to ",
-    bold: "Drag Brunch",
-    tail: " is confirmed.",
-    time: "3 days ago",
-    eventId: "brunch",
-    unread: false,
   },
 ];

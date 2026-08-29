@@ -156,8 +156,34 @@ export const community: Catalog = {
     "Conheces alguém que devia <em>estar aqui?</em>",
   "changemakers.nominate.lead":
     "Acrescentamos agentes de mudança através de nomeações da comunidade. Se conheces alguém a fazer um trabalho significativo pelas pessoas queer em Lisboa, um nome e uma frase já chegam para começar.",
-  "changemakers.nominate.namePlaceholder": "O nome dessa pessoa…",
-  "changemakers.nominate.reasonPlaceholder": "Numa frase, porquê?",
+  "changemakers.nominate.stepSend":
+    "Envias um nome e uma frase. O resto é opcional.",
+  "changemakers.nominate.stepRead":
+    "Alguém da moderação lê e decide se abre uma história.",
+  "changemakers.nominate.stepHear": "Recebes uma notificação com a decisão.",
+  "changemakers.nominate.formTitle": "Nomear alguém",
+  "changemakers.nominate.nameLabel": "O nome dessa pessoa",
+  "changemakers.nominate.namePlaceholder": "O nome pelo qual é conhecida",
+  "changemakers.nominate.nameError":
+    "Escreve o nome da pessoa que estás a nomear.",
+  "changemakers.nominate.memberLabel": "Já está na QueerPulse?",
+  "changemakers.nominate.memberPlaceholder": "Procurar membros pelo nome",
+  "changemakers.nominate.memberSearchAria": "Procurar membros pelo nome",
+  "changemakers.nominate.memberHelper":
+    "Opcional. Salta isto se ainda não se juntou.",
+  "changemakers.nominate.memberClearAria": "Retirar {name} desta nomeação",
+  "changemakers.nominate.contactLabel":
+    "Onde mais podemos encontrar esta pessoa?",
+  "changemakers.nominate.contactPlaceholder": "Instagram, um site, um email…",
+  "changemakers.nominate.contactHelper":
+    "Opcional, e só o que já é público. Ajuda quem modera a conhecer o trabalho.",
+  "changemakers.nominate.reasonLabel": "Porquê esta pessoa?",
+  "changemakers.nominate.reasonPlaceholder": "O que faz, e a quem chega.",
+  "changemakers.nominate.reasonHelper": "Uma ou duas frases chegam.",
+  "changemakers.nominate.reasonCount": "{used}/{max}",
+  "changemakers.nominate.reasonError":
+    "Escreve uma frase sobre porque é que esta pessoa devia estar aqui.",
+  "changemakers.nominate.privacyNote": "A pessoa nomeada não é avisada.",
   "changemakers.nominate.submitCta": "Nomear",
   "changemakers.nominate.submitPending": "A enviar…",
   "changemakers.nominate.successToast": "Obrigade. Vamos investigar {name}.",

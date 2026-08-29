@@ -238,7 +238,7 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   padding: 88px 0;
-  text-align: center;
+  text-align: left;
   position: relative;
   overflow: hidden;
 }
@@ -269,12 +269,12 @@
 .nominate h2 {
   font-family: var(--serif);
   font-weight: 300;
-  font-size: clamp(30px, 5vw, 62px);
+  font-size: clamp(30px, 4.4vw, 54px);
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.04;
-  max-width: 18ch;
-  margin: 0 auto;
+  max-width: 16ch;
+  margin: 0;
   position: relative;
 }
 .nominate h2 em {
@@ -284,34 +284,188 @@
 .nominate p {
   font-size: 16px;
   color: rgba(var(--cream-rgb), 0.62);
-  max-width: 48ch;
-  margin: 20px auto 34px;
+  max-width: 46ch;
+  margin: 20px 0 0;
   line-height: 1.65;
   position: relative;
 }
-.nomForm {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 480px;
-  margin: 0 auto;
+/* The pitch on the left, the form card on the right: the copy no longer pushes
+   the fields below the fold, and the fields get a column narrow enough to read
+   as a form rather than a row of pills. */
+.nomGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 440px;
+  gap: 60px;
+  align-items: start;
   position: relative;
 }
-.nomInput {
-  flex: 1;
-  min-width: 180px;
-  background: rgba(var(--cream-rgb), 0.08);
-  border: 1px solid rgba(var(--cream-rgb), 0.22);
-  border-radius: 999px;
-  padding: 14px 22px;
-  font-family: var(--sans);
-  font-size: 16px;
-  color: rgba(var(--cream-rgb), 1);
-  outline: none;
+.nomIntro {
+  position: relative;
 }
-.nomInput::placeholder {
-  color: rgba(var(--cream-rgb), 0.5);
+/* What happens after you press the button — the section used to end at the
+   button and say nothing about where a nomination goes. */
+.nomSteps {
+  list-style: none;
+  counter-reset: nomStep;
+  max-width: 44ch;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+  position: relative;
+}
+.nomSteps li {
+  counter-increment: nomStep;
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 13px;
+  align-items: start;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(var(--cream-rgb), 0.72);
+}
+.nomSteps li::before {
+  content: counter(nomStep);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.16);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--sans);
+}
+.nomPanel {
+  position: relative;
+}
+.nomCard {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: 22px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 24px 60px rgba(var(--plum-rgb), 0.3);
+}
+.nomCardTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  margin: 0 0 22px;
+}
+/* COM-18: the optional "are they already here?" member picker, sitting between
+   two FormFields. Its label and helper restate the FormField scale rather than
+   inventing a second one, because the picker is deliberately NOT wrapped in a
+   FormField: a custom child gets no `htmlFor` wiring (so the label would name
+   nothing), and FormField's descendant selectors would inflate the SearchInput
+   inside it to a full-size 16px text input. */
+.nomPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+.nomPickerLabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.nomPickedInfo {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.nomPickedName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nomPickedSlug {
+  font-size: 12px;
+  color: var(--ink-40);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* A paragraph on the paper card, so it has to beat `.nominate p`'s
+   cream-on-plum rule on specificity — same reason as `.nominate .nomNote`
+   below. */
+.nominate .nomPickerHelper {
+  max-width: none;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+.nomPicked {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: 12px;
+  background: var(--cream);
+}
+.nomPickedClear {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-60);
+  font-size: 15px;
+  cursor: pointer;
+  transition:
+    background 0.18s var(--ease),
+    color 0.18s var(--ease);
+}
+.nomPickedClear:hover {
+  background: rgba(var(--plum-rgb), 0.08);
+  color: var(--ink);
+}
+
+.nomSubmit {
+  width: 100%;
+  justify-content: center;
+}
+/* Sits inside `.nominate`, whose `p` rule is cream-on-plum — this one is on the
+   paper card, so it needs ink and has to beat that rule on specificity. */
+.nominate .nomNote {
+  max-width: none;
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-align: center;
+}
+
+@media (--compact) {
+  .nomGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 34px;
+  }
+  .nominate h2 {
+    max-width: 20ch;
+  }
+}
+
+@media (--sm) {
+  .nomCard {
+    padding: 24px 20px 20px;
+  }
 }
 
 @media (--mobile) {

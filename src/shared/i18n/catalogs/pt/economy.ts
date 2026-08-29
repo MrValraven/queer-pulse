@@ -3669,19 +3669,37 @@ export const economy: Catalog = {
   "housingSafety.rights.lease.title": "Um contrato escrito e registado",
   "housingSafety.rights.lease.point.1":
     "O teu arrendamento deve ser um contrato escrito, um acordo verbal deixa-te com muito menos para te defenderes.",
+  "housingSafety.rights.lease.point.2":
+    "Deve identificar as duas partes, o imóvel, a renda e a duração. Guarda a tua cópia assinada.",
+  "housingSafety.rights.lease.point.3":
+    "O senhorio tem de registar o contrato nas Finanças. Desde 2025 podes registá-lo tu, se ele não o fizer.",
+  "housingSafety.rights.lease.point.4":
+    "Um contrato de habitação dura pelo menos um ano, salvo se um prazo mais curto for algo que tu pediste.",
   "housingSafety.rights.deposit.title": "Caução e renda adiantada",
   "housingSafety.rights.deposit.point.1":
     "A caução está limitada a duas rendas.",
+  "housingSafety.rights.deposit.point.2":
+    "A renda pedida por antecipação tem o mesmo limite, ou seja, cerca de duas rendas é o teto do que te podem pedir à cabeça. Acima disso, pede a justificação por escrito.",
   "housingSafety.rights.rentIncrease.title": "Aumentos de renda",
   "housingSafety.rights.rentIncrease.point.1":
     "A renda pode subir no máximo uma vez a cada 12 meses, e só com 30 dias de aviso por escrito.",
+  "housingSafety.rights.rentIncrease.point.2":
+    "O aumento está limitado ao coeficiente que o INE publica todos os anos. Para 2026 é de 2,24%.",
+  "housingSafety.rights.rentIncrease.point.3":
+    "Uma subida acima desse limite, ou sem o aviso, merece ser questionada. Pede o valor por escrito antes de o pagares.",
   "housingSafety.rights.eviction.title": "Despejo e a tua casa",
   "housingSafety.rights.eviction.point.1":
     "Só podes ser despejado através de um tribunal ou do Balcão Nacional do Arrendamento. Nunca de imediato.",
+  "housingSafety.rights.eviction.point.2":
+    "Mudar a fechadura, cortar-te a água ou a luz, ou tirar-te as coisas de casa é crime, ao abrigo da Lei n.º 12/2019.",
+  "housingSafety.rights.eviction.point.3":
+    "Se algo disto acontecer, é matéria criminal. Fotografa tudo, guarda as mensagens e vai à polícia ou a uma associação de inquilinos.",
   "housingSafety.rights.discrimination.title":
     "Se fores tratado de forma injusta",
   "housingSafety.rights.discrimination.point.1":
     "A lei do arrendamento não prevê proteções específicas para pessoas LGBTQ+, mas a discriminação pode na mesma ser denunciada a um organismo para a igualdade.",
+  "housingSafety.rights.discrimination.point.2":
+    "Guarda o anúncio, as mensagens e qualquer recusa que te tenham dado. É o registo escrito que sustenta uma queixa.",
   "housingSafety.disclaimer.title":
     "Orientação, não <em>aconselhamento jurídico</em>",
   "housingSafety.disclaimer.body":

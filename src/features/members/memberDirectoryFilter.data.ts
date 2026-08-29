@@ -56,8 +56,9 @@ export interface MemberCard {
 }
 
 /** The filter's checkbox rows — now the same vocabulary the profile chips use.
- *  Counts are never authored here: they're counted off the members actually
- *  loaded (`facetCounts`), so an empty directory shows no numbers. */
+ *  Counts are never authored here: they come from `directoryFacetCounts` (demo)
+ *  or `GET /members`' `facets` (live), so an empty directory shows honest
+ *  zeroes rather than invented numbers. */
 export const OPEN_TO_OPTIONS: FilterOption[] = OPEN_TO_PRESETS.map(
   (preset) => ({
     id: preset.id,
@@ -403,17 +404,108 @@ export const IDENTITY_LABEL_KEY: Record<string, string> = Object.fromEntries(
   IDENTITY_OPTIONS.map((o) => [o.id, o.labelKey]),
 );
 
-/** How many of `members` declare each value of a multi-select facet. Only
- *  values someone actually declares get a key, so a caller can tell "nobody"
- *  (absent) apart from a real zero it never asked about. */
-export function facetCounts(
+/**
+ * Per-option availability counts for the sidebar's filter groups — the numbers
+ * beside each option ("Mentoring 7").
+ *
+ * "Availability" is the contract: each group's counts are taken with THAT
+ * group's own selections lifted and every other group's still applied, so the
+ * number answers "how many of my current results would I get if I ticked this".
+ * Keeping a group's own selections would zero every unticked sibling the moment
+ * one was ticked, which reads as the directory emptying rather than as a filter
+ * narrowing.
+ *
+ * Every known option carries an entry, `0` included. An ABSENT key means "not
+ * counted" and renders no badge at all; a `0` means "counted, and empty" and
+ * renders a dimmed, unpickable option. Collapsing the two would make an
+ * unavailable option indistinguishable from an uncounted one — which is exactly
+ * how the live directory used to behave, showing no numbers rather than wrong
+ * ones. Live mode fills this from `GET /members`; see `directoryFacetCounts`
+ * for the demo-mode equivalent.
+ */
+export interface DirectoryFacetCounts {
+  openTo: Record<string, number>;
+  identities: Record<string, number>;
+  disciplines: Record<string, number>;
+  professions: Record<string, number>;
+  languages: Record<string, number>;
+}
+
+/** Which `FilterState` key a counted group narrows — the key lifted when
+ *  counting that group. `hoods` is absent: neighbourhoods carry no counts,
+ *  because they match by substring over free-text locations and would cost a
+ *  scan per neighbourhood to count. */
+type CountedGroup = keyof DirectoryFacetCounts;
+
+/**
+ * DEMO-MODE facet counts, computed in the browser over the whole mock list.
+ *
+ * The live directory cannot do this — it holds one 20-card page of a set that
+ * may run to hundreds — so live mode reads the server's counts instead. Both
+ * paths must mean the SAME thing, hence the shared `DirectoryFacetCounts`
+ * contract and this function's mirroring of the backend's "lift my own group"
+ * rule; demo used to count the whole mock list flat, which quietly showed
+ * population figures where live now shows availability.
+ */
+export function directoryFacetCounts(
   members: MemberCard[],
-  field: "openTo" | "identities",
-): Record<string, number> {
-  const counts: Record<string, number> = {};
-  for (const member of members)
-    for (const value of member[field]) counts[value] = (counts[value] ?? 0) + 1;
-  return counts;
+  filters: FilterState,
+): DirectoryFacetCounts {
+  // One filtered population per group, each with only that group's own
+  // selections lifted.
+  const population = (group: CountedGroup): MemberCard[] =>
+    members.filter((member) =>
+      matchesFilters(member, { ...filters, [group]: [] }),
+    );
+
+  // Seeded with a zero for every known option, so an option nobody holds comes
+  // back as a truthful 0 rather than as a missing key.
+  const tally = (
+    group: CountedGroup,
+    optionIds: string[],
+    valuesOf: (member: MemberCard) => readonly string[],
+  ): Record<string, number> => {
+    const counts: Record<string, number> = Object.fromEntries(
+      optionIds.map((id) => [id, 0]),
+    );
+    for (const member of population(group))
+      for (const value of valuesOf(member))
+        // A value outside the known option list (a stale card, a vocabulary
+        // the sidebar no longer offers) is counted under nothing rather than
+        // conjuring an option row that has no checkbox.
+        if (counts[value] !== undefined) counts[value] += 1;
+    return counts;
+  };
+
+  return {
+    openTo: tally(
+      "openTo",
+      OPEN_TO_OPTIONS.map((o) => o.id),
+      (member) => member.openTo,
+    ),
+    identities: tally(
+      "identities",
+      IDENTITY_OPTIONS.map((o) => o.id),
+      (member) => member.identities,
+    ),
+    // Demo cards carry ONE discipline and ONE profession each (the live DTO
+    // carries arrays); wrapping keeps both sides on the same tally.
+    disciplines: tally(
+      "disciplines",
+      DISCIPLINES.map((o) => o.id),
+      (member) => [member.discipline],
+    ),
+    professions: tally(
+      "professions",
+      Object.keys(FIELD_BY_PROFESSION),
+      (member) => [member.profession],
+    ),
+    languages: tally(
+      "languages",
+      LANGUAGES.map((o) => o.label),
+      (member) => member.languages,
+    ),
+  };
 }
 
 export const LANGUAGES: ChipOption[] = [

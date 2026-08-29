@@ -1,34 +1,46 @@
+import { useId } from "react";
+import { RefineGroup } from "../../shared/components/ui";
 import { sx } from "./myEvents.styles";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyEvents } from "./MyEventsContext";
-import type { Pill } from "./myEvents.types";
+import { MY_EVENTS_PILLS } from "./myEvents.filters";
 
-const PILLS: { key: Pill; labelKey: string }[] = [
-  { key: "upcoming", labelKey: "myevents:pills.upcoming" },
-  { key: "going", labelKey: "myevents:pills.going" },
-  { key: "hosting", labelKey: "myevents:pills.hosting" },
-  { key: "waitlisted", labelKey: "myevents:pills.waitlisted" },
-  { key: "past", labelKey: "myevents:pills.past" },
-  { key: "saved", labelKey: "myevents:pills.saved" },
-];
-
-/** The primary bucket pills with live counts. */
+/**
+ * The primary bucket pills with live counts, the first band of the agenda's
+ * "Refine" drawer.
+ *
+ * Exactly one is on at a time, so this is a radio-style choice rather than a
+ * set of filters. It still lives in the drawer, because the six pills and the
+ * five filter chips standing open cost two rows above the first event. Which
+ * bucket is showing survives the drawer being shut: anything other than the
+ * default reads as a chip on the active-filter row.
+ */
 export function EventPills() {
   const { t } = useTranslation();
   const { pill, setPill, counts } = useMyEvents();
+  const labelId = useId();
+
   return (
-    <div className={sx("pill-row")}>
-      {PILLS.map((p) => (
-        <button
-          key={p.key}
-          type="button"
-          className={sx(`pill${pill === p.key ? " active" : ""}`)}
-          onClick={() => setPill(p.key)}
-        >
-          {t(p.labelKey)}{" "}
-          <span className={sx("pc")}>{counts[p.key] || ""}</span>
-        </button>
-      ))}
-    </div>
+    <RefineGroup
+      label={t("myevents:pills.groupLabel")}
+      labelId={labelId}
+      role="group"
+      aria-labelledby={labelId}
+    >
+      <div className={sx("pill-row")}>
+        {MY_EVENTS_PILLS.map((entry) => (
+          <button
+            key={entry.key}
+            type="button"
+            className={sx(`pill${pill === entry.key ? " active" : ""}`)}
+            aria-pressed={pill === entry.key}
+            onClick={() => setPill(entry.key)}
+          >
+            {t(entry.labelKey)}{" "}
+            <span className={sx("pc")}>{counts[entry.key] || ""}</span>
+          </button>
+        ))}
+      </div>
+    </RefineGroup>
   );
 }

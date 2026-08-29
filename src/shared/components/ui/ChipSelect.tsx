@@ -5,6 +5,16 @@ import styles from "./ChipSelect.module.css";
 export interface ChipOption {
   value: string;
   label?: ReactNode;
+  /** Availability count shown as a trailing badge (`ChipSelect` only). `0`
+   *  renders the chip dimmed and unpickable — unless it is already selected,
+   *  which must always stay clickable or a member could trap themselves in a
+   *  filter they cannot undo. */
+  count?: number;
+  /** Accessible name for the chip. Required alongside `count`: the badge is
+   *  `aria-hidden`, so without this a screen reader hears the bare label and
+   *  loses the number entirely (and with the badge exposed it would hear
+   *  "Design 12", which reads as a quantity of Designs). */
+  ariaLabel?: string;
 }
 
 /** Active-chip colour: plum fill (default) or jade tint. */
@@ -123,16 +133,32 @@ export function ChipSelect({
     >
       {normalize(options).map((o) => {
         const on = selected.has(o.value);
+        // Nobody left to find under this chip. Disabled rather than merely
+        // dimmed, so the affordance matches the outcome — but never while it
+        // is selected, or unticking it would be impossible.
+        const isUnavailable = o.count === 0 && !on;
         return (
           <button
             key={o.value}
             type="button"
             aria-pressed={on}
-            className={chipClass(on, tone, tint)}
+            aria-label={o.ariaLabel}
+            disabled={isUnavailable}
+            className={[
+              chipClass(on, tone, tint),
+              isUnavailable && styles.chipEmpty,
+            ]
+              .filter(Boolean)
+              .join(" ")}
             onClick={() => onToggle(o.value)}
           >
             {tick && on && <FiCheck aria-hidden />}
             {o.label}
+            {o.count !== undefined && (
+              <span className={styles.chipCount} aria-hidden>
+                {o.count}
+              </span>
+            )}
           </button>
         );
       })}

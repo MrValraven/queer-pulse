@@ -2,24 +2,15 @@ import type { Catalog } from "../../types";
 
 /**
  * My Events — the "your events" dashboard (pills/toolbar/agenda/calendar,
- * event-card chrome, notifications, and the RSVP/settings/report/block
- * modals). Scope: platform chrome only. Mock event titles, venues, community
- * names, organiser/attendee names, and notification copy about a specific
- * event stay in English in the data files — in live mode those arrive over
- * the wire as the organizer's/member's own authored text. See
- * `docs/i18n/extraction-brief.md` §1.
+ * event-card chrome, and the RSVP/report/block modals). Scope: platform
+ * chrome only. Mock event titles, venues, community names, and
+ * organiser/attendee names stay in English in the data files — in live mode
+ * those arrive over the wire as the organizer's/member's own authored text.
+ * See `docs/i18n/extraction-brief.md` §1.
  */
 export const myevents: Catalog = {
-  // ── Dashboard icon actions (MyEventsQuickActions) ─────────────────────────
-  // The old "Your events" hero this pair sat beside is gone: EventsHeader
-  // names the page once, so `page.eyebrow` / `page.title` / `page.sub` went
-  // with it.
-  "header.settingsAria": "Event preferences",
-  "header.notifAria": "Notifications",
-
   // ── Global events header (EventsHeader) ───────────────────────────────────
   "eventsHeader.title": "Events",
-  "eventsHeader.searchAria": "Search events",
   "eventsHeader.hostCta": "Host a gathering",
 
   // ── Top-level My events | Discover switch (EventsTopTabs) ─────────────────
@@ -28,6 +19,7 @@ export const myevents: Catalog = {
   "topTabs.ariaLabel": "Events views",
 
   // ── Primary bucket pills (EventPills) ─────────────────────────────────────
+  "pills.groupLabel": "Showing",
   "pills.upcoming": "All upcoming",
   "pills.going": "Going",
   "pills.hosting": "Hosting",
@@ -43,10 +35,12 @@ export const myevents: Catalog = {
   "toolbar.filter.free": "Free",
   "toolbar.filter.paid": "Ticketed",
   "toolbar.filter.month": "This calendar month",
+  "toolbar.filter.groupLabel": "Filters",
   "toolbar.sortAria": "Sort events",
-  "toolbar.sort.date": "Sort: by date",
-  "toolbar.sort.community": "Sort: by community",
-  "toolbar.sort.status": "Sort: by status",
+  "toolbar.sort.label": "Sort",
+  "toolbar.sort.date": "By date",
+  "toolbar.sort.community": "By community",
+  "toolbar.sort.status": "By status",
   "toolbar.density.compact": "Compact",
   "toolbar.density.comfortable": "Comfortable",
   "toolbar.select.select": "Select",
@@ -209,7 +203,7 @@ export const myevents: Catalog = {
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Reminder on",
   "tools.reminderInfoTooltip":
-    "You'll get a reminder before this starts, based on your reminder-lead setting in Preferences",
+    "You'll get a reminder in the app before this starts",
   "tools.addToCalendar": "Add to calendar",
   "tools.addedToCalendarToast": "Added to your calendar",
   "tools.addToCalendarModalTitle": "Add to calendar",
@@ -382,11 +376,6 @@ export const myevents: Catalog = {
   "bulk.undoCta": "Undo",
   "bulk.broughtBackToast": "Brought it back",
 
-  // ── Notifications panel (NotifPanel) ──────────────────────────────────────
-  "notif.title": "What's changed",
-  "notif.markAllRead": "Mark all read",
-  "notif.empty": "You're all caught up.",
-
   // ── Modal aria-labels (MyEventsBody → ModalShell) ─────────────────────────
 
   // ── Accept-invite confirmation panel (AcceptInviteConfirm) ────────────────
@@ -438,43 +427,6 @@ export const myevents: Catalog = {
   "ticketModal.withLabel": "Who's coming",
   "ticketModal.addToCalendarCta": "Add to calendar",
   "ticketModal.addedToCalendarToast": "Added to your calendar",
-
-  // ── Event preferences modal (EventSettingsModal) ──────────────────────────
-  "settingsModal.eyebrow": "Preferences",
-  "settingsModal.title": "How your events <em>reach you</em>",
-  "settingsModal.comingSoonNote":
-    "Calendar sync and tickets are still on the way. You'll be able to connect them once they're live.",
-  "settingsModal.pushLiveNote":
-    "Reminder timing, phone push, your default visibility, and email are all live. Calendar sync and tickets are a preview of what's coming.",
-  "settingsModal.pushLiveDesc":
-    "On this device: a notification when an event you're going to is about to start.",
-  "settingsModal.pushUnsupported":
-    "This browser doesn't support push notifications.",
-  "settingsModal.pushBlocked":
-    "Notifications are blocked in your browser settings.",
-  "settingsModal.remindBefore": "Remind me before an event",
-  "settingsModal.lead.hour": "1 hour",
-  "settingsModal.lead.day": "1 day",
-  "settingsModal.lead.week": "1 week",
-  "settingsModal.byDefaultWhoSees": "By default, who sees what I'm attending",
-  "settingsModal.howWeReachYou": "How we reach you",
-  "settingsModal.email": "Email",
-  // The toggle is genuinely wired (it persists `eventEmailsEnabled` through
-  // `PUT /me/event-settings`), but nothing reads that column to send anything:
-  // QueerPulse delivers no email. The copy says so rather than offering a
-  // channel that does not exist.
-  "settingsModal.emailDesc":
-    "QueerPulse sends no email, so nothing arrives this way today. Your choice is saved for if that ever changes. Reminders reach you in the app.",
-  "settingsModal.emailToggleLabel": "Email reminders",
-  "settingsModal.push": "Push notifications",
-  "settingsModal.syncTickets": "Sync & tickets",
-  "settingsModal.connectCalendar": "Connect your calendar",
-  "settingsModal.connectCalendarSub": "Two-way sync with Google or Apple",
-  "settingsModal.ticketsReceipts": "Tickets & receipts",
-  "settingsModal.ticketsReceiptsSub": "All your tickets and payment records",
-  "settingsModal.privacyNote":
-    "QueerPulse never sells your data. Visibility is always your choice.",
-  "settingsModal.closeCta": "Close",
 
   // ── Series-scope modal (SeriesScopeModal) ─────────────────────────────────
   "seriesModal.eyebrow": "Stepping out",
@@ -534,5 +486,4 @@ export const myevents: Catalog = {
   "toast.leftWaitlist": "You've left the waitlist.",
   "toast.skippedThisOne": "Skipped this one. You're still in the series.",
   "toast.leftWholeSeries": "Left the whole series.",
-  "toast.preferencesSaved": "Preferences saved",
 };

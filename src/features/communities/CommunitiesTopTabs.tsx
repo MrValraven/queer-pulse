@@ -20,9 +20,11 @@ const TOP_TABS: { key: TopTab; labelKey: string }[] = [
 export function CommunitiesTopTabs({
   active,
   onChange,
+  className,
 }: {
   active: TopTab;
   onChange: (next: TopTab) => void;
+  className?: string;
 }) {
   const { t } = useTranslation();
   const counts = useCommunitiesTabCounts();
@@ -62,7 +64,7 @@ export function CommunitiesTopTabs({
 
   return (
     <div
-      className={styles.list}
+      className={[styles.list, className].filter(Boolean).join(" ")}
       role="tablist"
       aria-label={t("communities:topTabs.ariaLabel")}
     >

@@ -1,34 +1,8 @@
-/* Matches the "My communities" body: the shared hub header owns the heading
-   and its breathing room, so this is just the gap down to the filter bar. */
+/* Matches the "My communities" body: the shared hub header owns the heading,
+   the toolbar and their breathing room, so this is just the gap down to the
+   first card. */
 .body {
   padding: var(--gap-sm) 0 120px;
-}
-
-/* The whole bar is one row: the search field and the "Refine" toggle. Every
-   group (category, sort, the two pill toggles, tags) lives in the drawer the
-   toggle opens, and the chips saying what is currently applied sit under it.
-   Spacing down to the grid is carried by whichever of those actually renders
-   (the panel and the chip row each bring their own top margin) plus the
-   results line's, so a bar with nothing open stays compact. */
-.controlsRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-.search {
-  flex: 1 1 260px;
-  min-width: 0;
-  max-width: 420px;
-}
-/* On a phone the 260px basis pushed "Refine" onto a line of its own, leaving a
-   full-width field beside nothing. Letting the field shrink instead keeps the
-   bar the one row it is meant to be. */
-@media (--mobile) {
-  .search {
-    flex: 1 1 0;
-  }
 }
 
 /* "Open to all" / "Busy this week" — pill toggles, same border/radius/padding
@@ -208,28 +182,6 @@
   font-size: 13px;
   color: var(--ink-40);
   margin: 0;
-}
-
-/* Below the filter bar, above the grid: a quiet count + active sort. */
-.resline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  font-size: 13px;
-  color: var(--ink-40);
-  margin: 22px 0 28px;
-}
-.reslineText {
-  display: inline-flex;
-  align-items: center;
-}
-/* Separator as a styled element, never a glyph baked into the JSX or (worse) a
-   translated string. */
-.reslineSort::before {
-  content: "\00b7";
-  margin: 0 6px;
 }
 
 .featured {

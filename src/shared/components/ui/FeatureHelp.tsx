@@ -29,13 +29,20 @@ import styles from "./FeatureHelp.module.css";
  * chip that sits inline beside a screen title; `"icon"` is a 44px borderless
  * icon button that matches sibling icon buttons in an action cluster (e.g. the
  * conversation header's action row).
+ *
+ * `action` adds a "read more" button to the footer for screens that own a
+ * deeper explainer of their own (the communities hub's "How communities work",
+ * say). It closes this modal in the same commit that fires the callback, so
+ * the two dialogs swap rather than stack.
  */
 export function FeatureHelp({
   id,
   variant = "chip",
+  action,
 }: {
   id: string;
   variant?: "chip" | "icon";
+  action?: { label: string; onClick: () => void };
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -74,9 +81,22 @@ export function FeatureHelp({
           eyebrow={t("help:eyebrow")}
           onClose={() => setOpen(false)}
           footer={
-            <Button variant="ghost" onClick={() => setOpen(false)}>
-              {t("help:got")}
-            </Button>
+            <>
+              {action && (
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setOpen(false);
+                    action.onClick();
+                  }}
+                >
+                  {action.label}
+                </Button>
+              )}
+              <Button variant="ghost" onClick={() => setOpen(false)}>
+                {t("help:got")}
+              </Button>
+            </>
           }
         >
           <p className={styles.intro}>{t(`help:${id}.intro`)}</p>

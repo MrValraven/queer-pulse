@@ -67,3 +67,18 @@
     transition: none;
   }
 }
+
+/* On a phone the switch takes the toolbar's first row on its own and the two
+   tabs split it evenly, so "My communities" keeps its label instead of the
+   pair overflowing a 375px screen. */
+@media (--mobile) {
+  .list {
+    display: flex;
+    width: 100%;
+  }
+  .tab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 12px;
+  }
+}

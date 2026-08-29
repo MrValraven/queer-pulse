@@ -104,3 +104,29 @@
     transition: none;
   }
 }
+
+/* ── availability counts ─────────────────────────────────────────────────── */
+/* The trailing number on a filter chip ("Design 12"). Sits quieter than the
+   label it follows: it is a hint about what a tap would yield, never the
+   thing being read. `aria-hidden` in the markup — the chip carries the whole
+   phrase as its accessible name instead. */
+.chipCount {
+  font-size: 11.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.55;
+}
+/* Nobody matches this chip under the current filters. Dimmed rather than
+   hidden: an option that disappears makes the vocabulary feel unstable, and
+   "0" is a real answer to "who is here?". */
+.chipEmpty {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .chipEmpty:hover {
+    border-color: rgba(var(--line-rgb), 0.16);
+    color: var(--ink-60);
+    background: var(--paper);
+  }
+}

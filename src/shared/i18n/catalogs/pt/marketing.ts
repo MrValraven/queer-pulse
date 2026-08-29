@@ -7224,6 +7224,56 @@ export const marketing: Catalog = {
   "changelog.tag.reportForm": "Abrir o formulário de denúncia",
 
   // ── 28 de agosto de 2026 ──────────────────────────────────────────────────
+  "changelog.entries.the-nomination-form-becomes-a-form.title":
+    "O formulário de nomeação passa a ser um formulário",
+  "changelog.entries.the-nomination-form-becomes-a-form.body":
+    "Nomear um Agente de Mudança eram duas caixas em forma de comprimido lado a lado por baixo do título: sem etiquetas, sem noção de quanto podias escrever na segunda e com um botão que ficava morto até as duas terem alguma coisa, sem nunca o dizer. O texto passa a ficar ao lado de um cartão a sério. Os dois campos têm etiqueta e uma pista, a caixa do porquê tem espaço para escrever e uma contagem de 500 caracteres, e carregar no botão com um campo vazio diz-te qual deles falta. Ao lado do formulário, três linhas explicam o que acontece a seguir: alguém da moderação lê, recebes uma notificação com a decisão e a pessoa nomeada nunca é avisada.",
+
+  "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.title":
+    "Os filtros de membros mostram quantas pessoas estão por trás de cada um",
+  "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.body":
+    'Filtrar o diretório de membros era adivinhar. Escolhias "Mentoria", depois "Designer gráfico", depois um idioma, e só descobrias que tinhas reduzido tudo a ninguém quando os resultados ficavam vazios. Agora cada opção da barra lateral traz o número de pessoas por trás dela, contado ao vivo em relação a tudo o resto que já escolheste, para veres que uma combinação é um beco sem saída antes de gastares um clique nela. Uma opção que ninguém preenche fica esbatida em vez de desaparecer, porque zero é uma resposta verdadeira à pergunta "quem está aqui?" e um vocabulário que muda de forma é mais difícil de ler do que um que não muda.',
+
+  "changelog.entries.an-empty-browse-stops-blaming-your-filters.title":
+    "Um Explorar vazio deixa de culpar os teus filtros",
+  "changelog.entries.an-empty-browse-stops-blaming-your-filters.body":
+    'O Explorar, nos Eventos, dizia a quem o encontrava vazio que "nada corresponde a esse filtro, experimenta outro", mesmo quando nenhum filtro estava escolhido e simplesmente não havia nada. Punha as pessoas à procura de uma definição para alargar que não existia. Agora os dois vazios dizem coisas diferentes: com filtros escolhidos, aponta para as datas, o bairro e o tipo de convívio que podes alargar; sem nenhum, diz que o calendário está vazio e oferece-se para te ajudar a organizar a primeira coisa que lá esteja.',
+
+  "changelog.entries.one-row-of-tabs-on-events.title":
+    "Uma só linha de separadores nos Eventos",
+  "changelog.entries.one-row-of-tabs-on-events.body":
+    'Os Eventos tinham duas barras de separadores, uma por cima da outra: "Os meus eventos | Descobrir" no cabeçalho e, por baixo, outra barra fixa para Destaques, Explorar e Calendário. Dois níveis, duas barras e uma faixa de página vazia pelo meio. As três vistas de Descobrir passam a estar na própria linha do cabeçalho, logo a seguir ao botão que as abre e antes de "Organizar um convívio", para que todas as escolhas se leiam numa linha. As ligações para uma vista específica continuam a funcionar como antes.',
+
+  "changelog.entries.the-recap-card-leaves-ways-to-gather.title":
+    "O cartão das retrospetivas sai das formas de nos juntarmos",
+  "changelog.entries.the-recap-card-leaves-ways-to-gather.body":
+    'A faixa "formas de nos juntarmos", nos destaques do Hub de Eventos, oferecia quatro portas: ver tudo, abrir o calendário, organizar o teu, e "Revive o último", que prometia fotografias, notas e quantas pessoas apareceram nos convívios que já aconteceram. Essa última apontava para uma página de retrospetiva que ainda não existe. Quem a seguia ia parar a lado nenhum. O cartão saiu da faixa, que passa a mostrar as três portas que levam mesmo a algum lado, todas com a mesma largura e altura e com a ligação na mesma linha. Quando as retrospetivas forem reais, o cartão volta.',
+
+  "changelog.entries.a-nomination-can-say-where-to-find-them.title":
+    "Uma nomeação pode dizer onde encontrar a pessoa",
+  "changelog.entries.a-nomination-can-say-where-to-find-them.body":
+    'Nomear alguém para os Change Makers pedia um nome e uma frase, e era tudo o que chegava a quem modera. Há pessoas diferentes com o mesmo nome próprio, um nome artístico não é o nome que está nos documentos, e "organiza o grupo de apoio às terças" não é algo que se procure. Uma nomeação só era mesmo acionável quando quem modera já sabia de quem se tratava. O formulário passa a ter dois campos opcionais no meio. Se a pessoa já é membro aqui, podes procurá-la e ligar o perfil, e a fila de moderação mostra uma ligação direta. Se não é, há uma linha para onde já está em público: um Instagram, um site, um email. Ambos são opcionais e nenhum bloqueia o botão, por isso um nome e uma frase continuam a ser uma nomeação completa. Nada mudou em quem vê o quê: a nomeação continua privada, a pessoa nomeada continua a não ser avisada, e os contactos seguem a mesma regra do nome de quem nomeia, ou seja, só moderação e administração da plataforma os leem.',
+
+  "changelog.entries.the-communities-toolbar-becomes-one-line.title":
+    "A barra das comunidades passa a uma linha",
+  "changelog.entries.the-communities-toolbar-becomes-one-line.body":
+    "Tudo o que estava por cima dos cartões das comunidades ocupava quatro faixas empilhadas: o alternador As minhas comunidades e Descobrir com dois botões afastados à direita, depois um campo de pesquisa sozinho na sua própria linha, depois uma linha com a contagem de resultados e a ordenação. Juntas empurravam o primeiro cartão quase um ecrã para baixo e diziam o mesmo número duas vezes, já que o separador ativo trazia a sua própria contagem. Passam a ser uma linha: o alternador, o campo de pesquisa com o Refinar ao lado, e Começar uma comunidade. O Como funcionam as comunidades mudou-se para o botão de informação junto ao título da página, que já era a explicação da página a um polegar de distância. A contagem de resultados aparece na fila de etiquetas assim que algo restringe a lista, ao lado das etiquetas que a explicam, e a ordenação junta-se a essas etiquetas sempre que sai de Mais recentes, para que um painel Refinar fechado nunca esconda como a lista está ordenada. Uma pesquisa ou um filtro sobrevive agora à troca entre As minhas comunidades e Descobrir, por isso procurar o mesmo noutro sítio é um clique.",
+
+  "changelog.entries.three-icons-leave-the-events-header.title":
+    "Três ícones saem do cabeçalho dos eventos",
+  "changelog.entries.three-icons-leave-the-events-header.body":
+    "O cabeçalho dos eventos tinha uma roda dentada, um sino e uma lupa antes do botão Organizar um convívio. A roda abria um painel de preferências, o sino abria uma segunda lista de notificações mais pequena e a lupa levava-te ao separador Descobrir com o campo de pesquisa focado. Entre os três, repetiam as notificações que já recebes no sino principal e a pesquisa que já alcanças a partir de Descobrir, e o painel oferecia definições que quase ninguém o abria para encontrar. Os três desapareceram. O cabeçalho passa a ser o nome da página, o alternador Os meus eventos e Descobrir, e Organizar um convívio. Os lembretes continuam a chegar-te na app antes de um evento começar.",
+
+  "changelog.entries.browse-events-gets-the-same-refine.title":
+    "Explorar eventos ganha o mesmo Refinar",
+  "changelog.entries.browse-events-gets-the-same-refine.body":
+    "O quadro de exploração do Descobrir abre agora como os teus próprios eventos: uma linha com um campo de pesquisa e um controlo Refinar, e quando, bairro, tipo de encontro e custo como faixas lá dentro. O que escolheste aparece em etiquetas removíveis por baixo do campo de pesquisa, cada uma a voltar para qualquer em vez de para nada, e o Limpar tudo passa a ficar ao lado dessas etiquetas em vez de junto a controlos que o painel pode estar a esconder. Os filtros em si não mudaram, continuam aplicados pelo servidor, por isso um quadro restringido continua a aguentar o scroll e a partilhar-se como link.",
+
+  "changelog.entries.your-events-filters-fold-away.title":
+    "Os filtros dos teus eventos recolhem-se",
+  "changelog.entries.your-events-filters-fold-away.body":
+    "Seis etiquetas de secção, cinco etiquetas de filtro e um controlo de ordenação estavam todos abertos por cima dos teus eventos, deixando o primeiro evento muito abaixo na página por causa de escolhas que a maioria das pessoas faz uma vez ou nunca. Passam a viver atrás de um único controlo Refinar, o mesmo que a grelha de comunidades e o diretório de Lisboa usam, e ele mostra um número para que um painel fechado continue a dizer que há algo ligado. O que está a restringir a lista aparece em etiquetas removíveis por baixo do campo de pesquisa: primeiro a secção em que estás, depois os filtros, depois o teu termo de pesquisa, com um Limpar tudo ao lado. Confortável e Selecionar ficam na linha, porque nenhum deles muda que eventos vês.",
+
   "changelog.entries.the-communities-filters-fold-away.title":
     "Os filtros das comunidades recolhem-se",
   "changelog.entries.the-communities-filters-fold-away.body":

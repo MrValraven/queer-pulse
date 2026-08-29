@@ -1,99 +1,60 @@
-import { useState } from "react";
-import { Button, Reveal } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import { Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useCreateChangemakerNomination } from "./api/useCreateChangemakerNomination";
+import { NominateChangemakerForm } from "./NominateChangemakerForm";
 import styles from "./ChangemakersPage.module.css";
 
+/** What happens after the button, in order — the section used to stop at the
+ *  button and say nothing about where a nomination goes. */
+const STEP_KEYS = [
+  "community:changemakers.nominate.stepSend",
+  "community:changemakers.nominate.stepRead",
+  "community:changemakers.nominate.stepHear",
+] as const;
+
 /**
- * The Change Makers page's "Nominate them" form. The directory itself
+ * The Change Makers page's "Nominate them" section. The directory itself
  * (`CHANGEMAKERS`) is curated editorial content, but a nomination is real
- * member data — it calls `POST /changemakers/nominations` in live mode (see
- * `useCreateChangemakerNomination`); demo mode keeps the prototype's
+ * member data — the form calls `POST /changemakers/nominations` in live mode
+ * (see `useCreateChangemakerNomination`); demo mode keeps the prototype's
  * simulated success toast.
+ *
+ * The pitch and the steps sit on the left, the form card on the right: the
+ * copy no longer pushes the fields down the page, and each field carries its
+ * own label, limit and error instead of leaning on a placeholder. There is no
+ * signed-out branch because `/changemakers` is member-gated in `authGate.ts` —
+ * a logged-out visitor is redirected before this renders.
  */
 export function NominateChangemakerSection() {
-  const { showToast } = useToast();
   const { t } = useTranslation();
-  const [nominee, setNominee] = useState("");
-  const [reason, setReason] = useState("");
-  const nominationMutation = useCreateChangemakerNomination();
 
   return (
     <section className={styles.nominate}>
       <div className="wrap">
-        <Reveal as="div" className={styles.nomEye}>
-          {t("community:changemakers.nominate.eyebrow")}
-        </Reveal>
-        <Reveal as="h2" delay={60}>
-          <Translation
-            i18nKey="community:changemakers.nominate.heading"
-            components={{ em: <em /> }}
-          />
-        </Reveal>
-        <Reveal as="p" delay={120}>
-          {t("community:changemakers.nominate.lead")}
-        </Reveal>
-        <form
-          className={styles.nomForm}
-          onSubmit={(e) => {
-            e.preventDefault();
-            const nomineeName = nominee.trim();
-            const nominationReason = reason.trim();
-            if (!nomineeName || !nominationReason) return;
-            nominationMutation.mutate(
-              { nomineeName, reason: nominationReason },
-              {
-                onSuccess: () => {
-                  showToast(
-                    t("community:changemakers.nominate.successToast", {
-                      name: nomineeName,
-                    }),
-                    "success",
-                  );
-                  setNominee("");
-                  setReason("");
-                },
-                onError: () =>
-                  showToast(
-                    t("community:changemakers.nominate.errorToast"),
-                    "error",
-                  ),
-              },
-            );
-          }}
-        >
-          <input
-            className={styles.nomInput}
-            type="text"
-            autoComplete="off"
-            aria-label={t("community:changemakers.nominate.namePlaceholder")}
-            placeholder={t("community:changemakers.nominate.namePlaceholder")}
-            value={nominee}
-            onChange={(e) => setNominee(e.target.value)}
-          />
-          <input
-            className={styles.nomInput}
-            type="text"
-            autoComplete="off"
-            enterKeyHint="send"
-            aria-label={t("community:changemakers.nominate.reasonPlaceholder")}
-            placeholder={t("community:changemakers.nominate.reasonPlaceholder")}
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-          />
-          <Button
-            type="submit"
-            disabled={
-              nominationMutation.isPending || !nominee.trim() || !reason.trim()
-            }
-          >
-            {nominationMutation.isPending
-              ? t("community:changemakers.nominate.submitPending")
-              : t("community:changemakers.nominate.submitCta")}
-          </Button>
-        </form>
+        <div className={styles.nomGrid}>
+          <div className={styles.nomIntro}>
+            <Reveal as="div" className={styles.nomEye}>
+              {t("community:changemakers.nominate.eyebrow")}
+            </Reveal>
+            <Reveal as="h2" delay={60}>
+              <Translation
+                i18nKey="community:changemakers.nominate.heading"
+                components={{ em: <em /> }}
+              />
+            </Reveal>
+            <Reveal as="p" delay={120}>
+              {t("community:changemakers.nominate.lead")}
+            </Reveal>
+            <Reveal as="ol" className={styles.nomSteps} delay={180}>
+              {STEP_KEYS.map((key) => (
+                <li key={key}>{t(key)}</li>
+              ))}
+            </Reveal>
+          </div>
+          <Reveal className={styles.nomPanel} delay={120}>
+            <NominateChangemakerForm />
+          </Reveal>
+        </div>
       </div>
     </section>
   );

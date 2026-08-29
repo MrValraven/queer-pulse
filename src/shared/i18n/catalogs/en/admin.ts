@@ -972,6 +972,8 @@ export const admin: Catalog = {
   "adminChangemakerNominations.unknownMember": "A former member",
   "adminChangemakerNominations.withheldMember": "Not shown here",
   "adminChangemakerNominations.row.by": "Nominated by {name}",
+  "adminChangemakerNominations.row.memberLabel": "Their profile",
+  "adminChangemakerNominations.row.contactLabel": "Find them at",
   "adminChangemakerNominations.row.sent": "Sent {date}",
   "adminChangemakerNominations.row.reviewedBy": "Reviewed by {name}",
   "adminChangemakerNominations.status.pending": "Pending",

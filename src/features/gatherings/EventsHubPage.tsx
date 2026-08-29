@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
 import { FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, PullToRefresh } from "../../shared/components/ui";
@@ -9,13 +8,11 @@ import { useEvents } from "./api/useEvents";
 import { eventKeys } from "./api/eventKeys";
 import { pickHighlights } from "./hub/pickHighlights";
 import { FeaturedEventCard } from "./hub/FeaturedEventCard";
-import { EventsHubTabs } from "./hub/EventsHubTabs";
+import { useEventsHubView } from "./hub/useEventsHubView";
 import { HighlightsView } from "./hub/HighlightsView";
 import { BrowseView } from "./hub/BrowseView";
 import { CalendarView } from "./hub/CalendarView";
 import styles from "./EventsHubPage.module.css";
-
-type HubView = "highlights" | "browse" | "calendar";
 
 /**
  * Canonical Events Hub content (`/events`) — merges the old Events /
@@ -25,12 +22,10 @@ type HubView = "highlights" | "browse" | "calendar";
  * same `items`/`now` into whichever view is active, so switching tabs never
  * re-fetches.
  *
- * The active view round-trips through `?view=` (`browse` | `calendar`), with
- * `replace: true` so tab-switches don't pile up in browser history; the
- * `highlights` default is never written to the URL (an explicit
- * `?view=highlights` still resolves to it via the fallback below, it's just
- * not the form `setView` produces). This is also the redirect target for the
- * old `/calendar` route (`?view=calendar`) — see Task 9.
+ * The active view lives in `?view=` (see `useEventsHubView`). Its tablist is
+ * NOT rendered here: it sits in the page header, beside the My events |
+ * Discover switch, so both tab levels read as one row. This page only reads
+ * the view and renders the matching panel.
  *
  * When the (live) `useEvents` fetch fails, `isError` swaps the whole board for a
  * branded error state with a "Try again" action (audit P1-14) — an outage must
@@ -45,21 +40,7 @@ type HubView = "highlights" | "browse" | "calendar";
 export function EventsDiscover() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [params, setParams] = useSearchParams();
-  const raw = params.get("view");
-  const view: HubView =
-    raw === "browse" || raw === "calendar" ? raw : "highlights";
-  const setView = (next: HubView) => {
-    setParams(
-      (prev) => {
-        const nextParams = new URLSearchParams(prev);
-        if (next === "highlights") nextParams.delete("view");
-        else nextParams.set("view", next);
-        return nextParams;
-      },
-      { replace: true },
-    );
-  };
+  const { view } = useEventsHubView();
   const now = useMemo(() => new Date(), []);
   const { items, isLoading, isError, refetch } = useEvents({
     filter: "upcoming",
@@ -87,7 +68,6 @@ export function EventsDiscover() {
   return (
     <div className={styles.root}>
       <FeaturedEventCard lead={lead} />
-      <EventsHubTabs active={view} onChange={setView} />
       <div
         role="tabpanel"
         id={`events-hub-panel-${view}`}

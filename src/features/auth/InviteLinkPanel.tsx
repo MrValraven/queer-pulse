@@ -107,54 +107,64 @@ export function InviteLinkPanel({
 
   // ── Compose: write the optional note, preview the unfurl, then generate. ──
   return (
-    <div>
-      <InviteComposeFields
-        recipientEmail={recipientEmail}
-        setRecipientEmail={(value) => {
-          setRecipientEmail(value);
-          // Clear the refusal the moment they start fixing it.
-          if (hasRecipientEmailError) setHasRecipientEmailError(false);
-        }}
-        hasRecipientEmailError={hasRecipientEmailError}
-        vouch={vouch}
-        setVouch={setVouch}
-        note={note}
-        setNote={setNote}
-      />
-
-      <div className={styles.epLabel}>{t("auth:invite.link.previewLabel")}</div>
-      <SharePreviewCard
-        senderName={sender.full}
-        description={description}
-        url={INVITE_URL}
-        memberCount={memberCount}
-      />
-
-      {isBlockedByQuota && (
-        <div className={styles.quotaError} role="alert">
-          <FiAlertCircle aria-hidden />
-          {t("auth:invite.link.error.quota")}
-        </div>
-      )}
-
-      <div className={styles.actions}>
-        <Button
-          type="button"
-          onClick={() => void generate()}
-          disabled={generating || isBlockedByQuota}
-          aria-busy={generating}
-        >
-          {generating ? (
-            <Sending label={t("auth:invite.link.generating")} />
-          ) : (
-            <>
-              <FiLink aria-hidden style={{ marginRight: 8 }} />
-              {t("auth:invite.link.generateCta")}
-            </>
-          )}
-        </Button>
+    // Source order is the stacked reading order (fields, preview, action); on
+    // desktop the grid moves the preview alongside, next to what fills it in.
+    <div className={styles.composeGrid}>
+      <div className={styles.composeFields}>
+        <InviteComposeFields
+          recipientEmail={recipientEmail}
+          setRecipientEmail={(value) => {
+            setRecipientEmail(value);
+            // Clear the refusal the moment they start fixing it.
+            if (hasRecipientEmailError) setHasRecipientEmailError(false);
+          }}
+          hasRecipientEmailError={hasRecipientEmailError}
+          vouch={vouch}
+          setVouch={setVouch}
+          note={note}
+          setNote={setNote}
+        />
       </div>
-      <div className={styles.formNote}>{t("auth:invite.link.formNote")}</div>
+
+      <div className={styles.composePreview}>
+        <div className={styles.epLabel}>
+          {t("auth:invite.link.previewLabel")}
+        </div>
+        <SharePreviewCard
+          senderName={sender.full}
+          description={description}
+          url={INVITE_URL}
+          memberCount={memberCount}
+        />
+      </div>
+
+      <div className={styles.composeAction}>
+        {isBlockedByQuota && (
+          <div className={styles.quotaError} role="alert">
+            <FiAlertCircle aria-hidden />
+            {t("auth:invite.link.error.quota")}
+          </div>
+        )}
+
+        <div className={styles.actions}>
+          <Button
+            type="button"
+            onClick={() => void generate()}
+            disabled={generating || isBlockedByQuota}
+            aria-busy={generating}
+          >
+            {generating ? (
+              <Sending label={t("auth:invite.link.generating")} />
+            ) : (
+              <>
+                <FiLink aria-hidden style={{ marginRight: 8 }} />
+                {t("auth:invite.link.generateCta")}
+              </>
+            )}
+          </Button>
+        </div>
+        <div className={styles.formNote}>{t("auth:invite.link.formNote")}</div>
+      </div>
     </div>
   );
 }

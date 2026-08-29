@@ -25,6 +25,8 @@ export interface MemberSelectListProps {
   /** Max selections; unselected rows disable once reached. */
   cap?: number;
   searchPlaceholder?: string;
+  /** Accessible name for the search field. Defaults to SearchInput's own. */
+  searchAriaLabel?: string;
   /**
    * Lift the search box out of this component, for a caller whose `people`
    * come from a server search rather than a list it already holds. Pass both
@@ -55,6 +57,7 @@ export function MemberSelectList({
   excludeSlugs,
   cap,
   searchPlaceholder,
+  searchAriaLabel,
   searchQuery,
   onSearchChange,
   isSearching = false,
@@ -82,6 +85,11 @@ export function MemberSelectList({
   }, [people, excluded, query, isSearchControlled]);
 
   const atCap = multiSelect && cap != null && selected.size >= cap;
+  const isIdleControlledSearch =
+    isSearchControlled &&
+    !emptyHint &&
+    !isSearching &&
+    query.trim().length === 0;
 
   return (
     <div className={styles.wrap}>
@@ -89,15 +97,21 @@ export function MemberSelectList({
         value={query}
         onChange={setQuery}
         placeholder={searchPlaceholder}
+        ariaLabel={searchAriaLabel}
       />
       {visible.length === 0 ? (
-        <p className={styles.empty} aria-live="polite">
-          {isSearching
-            ? t("shared:memberSelect.searching")
-            : emptyHint && query.trim().length === 0
-              ? emptyHint
-              : t("shared:memberSelect.noResults")}
-        </p>
+        // A controlled search with an empty box has not asked the server
+        // anything yet, so "no members match" would be a lie. Callers that
+        // want to fill that space pass an `emptyHint`; the rest get nothing.
+        isIdleControlledSearch ? null : (
+          <p className={styles.empty} aria-live="polite">
+            {isSearching
+              ? t("shared:memberSelect.searching")
+              : emptyHint && query.trim().length === 0
+                ? emptyHint
+                : t("shared:memberSelect.noResults")}
+          </p>
+        )
       ) : (
         <div
           className={styles.list}

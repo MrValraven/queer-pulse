@@ -5,6 +5,7 @@ import { CommunitiesHubHeader } from "./CommunitiesHubHeader";
 import { CommunitiesHome } from "./CommunitiesHomePage";
 import { CommunitiesDiscover } from "./CommunitiesPage";
 import { useCommunitiesTopTab } from "./useCommunitiesTopTab";
+import { useDiscoverCommunities } from "./useDiscoverCommunities";
 
 /**
  * Merged `/communities` surface. A top-level "My communities | Discover" switch
@@ -12,6 +13,11 @@ import { useCommunitiesTopTab } from "./useCommunitiesTopTab";
  * directory (CommunitiesDiscover). The active tab lives in `?tab=`, defaulting
  * smartly to the hub when the member belongs to a community and the directory
  * when they don't. Both surfaces are auth-gated, so there is no signed-out case.
+ *
+ * The grid's state is owned here rather than inside each body, because the
+ * toolbar that drives it lives in the header (one bar over both pools) while
+ * the cards it feeds live in the tab panel. Switching tabs therefore keeps the
+ * search and filters, and re-runs them against the other pool.
  */
 export function CommunitiesHubPage() {
   const { t } = useTranslation();
@@ -19,6 +25,7 @@ export function CommunitiesHubPage() {
   // While the smart default is still resolving, show the hub — its data hook
   // owns an honest loading state — rather than flashing Discover then swapping.
   const active = resolving ? "mine" : tab;
+  const discover = useDiscoverCommunities(active);
 
   return (
     <AppShell>
@@ -26,14 +33,22 @@ export function CommunitiesHubPage() {
         title={t("communities:seo.hub.title")}
         description={t("communities:seo.hub.description")}
       />
-      <CommunitiesHubHeader active={active} onChange={setTab} />
+      <CommunitiesHubHeader
+        discover={discover}
+        active={active}
+        onChange={setTab}
+      />
       <div
         role="tabpanel"
         id={`communities-top-panel-${active}`}
         aria-labelledby={`communities-top-tab-${active}`}
         tabIndex={0}
       >
-        {active === "mine" ? <CommunitiesHome /> : <CommunitiesDiscover />}
+        {active === "mine" ? (
+          <CommunitiesHome discover={discover} />
+        ) : (
+          <CommunitiesDiscover discover={discover} />
+        )}
       </div>
     </AppShell>
   );

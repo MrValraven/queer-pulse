@@ -90,6 +90,106 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "member-filters-show-how-many-people-are-behind-each-one",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("member-filters-show-how-many-people-are-behind-each-one"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "an-empty-browse-stops-blaming-your-filters",
+        category: "fix",
+        date: "29 Aug 2026",
+        ...entryKeys("an-empty-browse-stops-blaming-your-filters"),
+        tag: {
+          labelKey: "marketing:changelog.tag.events",
+          to: routes.events,
+        },
+      },
+      {
+        id: "one-row-of-tabs-on-events",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("one-row-of-tabs-on-events"),
+        tag: {
+          labelKey: "marketing:changelog.tag.events",
+          to: routes.events,
+        },
+      },
+      {
+        id: "the-recap-card-leaves-ways-to-gather",
+        category: "fix",
+        date: "29 Aug 2026",
+        ...entryKeys("the-recap-card-leaves-ways-to-gather"),
+        tag: {
+          labelKey: "marketing:changelog.tag.events",
+          to: routes.events,
+        },
+      },
+      {
+        id: "a-nomination-can-say-where-to-find-them",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("a-nomination-can-say-where-to-find-them"),
+        tag: {
+          labelKey: "marketing:changelog.tag.changemakers",
+          to: routes.changemakers,
+        },
+      },
+      {
+        id: "the-communities-toolbar-becomes-one-line",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("the-communities-toolbar-becomes-one-line"),
+        tag: {
+          labelKey: "marketing:changelog.tag.communities",
+          to: routes.communities,
+        },
+      },
+      {
+        id: "three-icons-leave-the-events-header",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("three-icons-leave-the-events-header"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
+      },
+      {
+        id: "browse-events-gets-the-same-refine",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("browse-events-gets-the-same-refine"),
+        tag: {
+          labelKey: "marketing:changelog.tag.events",
+          to: routes.events,
+        },
+      },
+      {
+        id: "your-events-filters-fold-away",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("your-events-filters-fold-away"),
+        tag: {
+          labelKey: "marketing:changelog.tag.myEvents",
+          to: routes.myEvents,
+        },
+      },
+      {
+        id: "the-nomination-form-becomes-a-form",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("the-nomination-form-becomes-a-form"),
+        tag: {
+          labelKey: "marketing:changelog.tag.changemakers",
+          to: routes.changemakers,
+        },
+      },
+      {
         id: "the-communities-filters-fold-away",
         category: "improvement",
         date: "28 Aug 2026",

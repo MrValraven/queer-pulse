@@ -5,16 +5,8 @@ import type {
   EventSeriesDTO,
   RecurrenceCadence,
 } from "../../gatherings/api/events.api";
-import { formatNotification } from "../../notifications/api/formatNotification";
-import type { NotificationDTO } from "../../notifications/api/notifications.api";
-import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
-import type {
-  EventCategory,
-  EventSeries,
-  MyEvent,
-  Notif,
-} from "../myEvents.types";
+import type { EventCategory, EventSeries, MyEvent } from "../myEvents.types";
 
 // Map each backend DTO onto the EXISTING mock view-model type (`MyEvent`) the
 // dashboard already renders and mutates locally. Fields the prototype invents
@@ -162,85 +154,6 @@ export function eventCardToMyEvent(
     maybe: dto.myRsvp === "maybe",
     series: toMyEventSeries(dto.series, t),
   };
-}
-
-/**
- * Backend notification kinds that belong in the My Events "What's changed"
- * panel — a material change to an event the member has a stake in. Mirrors the
- * `notifications_type_enum` values the backend fans out on an organizer edit
- * (`event_updated`), a cancellation (`event_cancelled`), and a waitlist
- * promotion (`waitlist_promoted`). Every other notification kind stays in the
- * main notifications centre only. Verified against `formatNotification`'s
- * `NotificationKind` union (the frontend mirror of the backend enum).
- */
-export const EVENT_PANEL_NOTIF_KINDS = new Set<string>([
-  "event_updated",
-  "event_cancelled",
-  "waitlist_promoted",
-]);
-
-/**
- * A GET /notifications row → the panel's local `Notif` shape. The API serves no
- * display text, so the copy is rendered here through the shared
- * `formatNotification` (the same i18n keys the main notifications centre uses)
- * and dropped whole into `bold`: the backend payload carries no separate
- * event-name field to isolate as the demo mock does, so the full translated
- * sentence is the notification's primary content.
- *
- * `eventId` powers the panel deep-link (`notifGo` → `goToEvent` scrolls + flashes
- * the matching card). It reads the payload's event reference defensively,
- * preferring the `eventSlug` (which matches `MyEvent.id` for filter-fetched
- * events) and falling back to the raw `eventId`. The `event_updated`,
- * `event_cancelled`, and `waitlist_promoted` payloads all carry `eventSlug`, so
- * the deep-link resolves to the card. If a reference is ever missing it no-ops
- * gracefully (`goToEvent` returns when no card matches) while the row still
- * marks read + dismisses.
- */
-export function eventNotificationToNotif(
-  dto: NotificationDTO,
-  t: TFunction,
-  fmt: Formatters,
-): Notif {
-  const { text } = formatNotification(dto.type, dto.payload, t);
-  return {
-    id: dto.id,
-    bold: text,
-    time: formatNotifTime(dto.createdAt, fmt),
-    eventId: eventReferenceFromPayload(dto.payload),
-    // The backend sends `read`; the panel is phrased the other way round.
-    // Anything but an explicit `true` degrades to unread so a row is never
-    // silently swallowed.
-    unread: dto.read !== true,
-  };
-}
-
-/**
- * The event a notification points at, for the panel deep-link. `payload` is
- * server-trusted but untyped on this side, so every field is read defensively.
- * Returns "" when neither reference is present — `goToEvent` treats that as a
- * no-op rather than scrolling to nothing.
- */
-function eventReferenceFromPayload(payload: unknown): string {
-  if (typeof payload !== "object" || payload === null) return "";
-  const record = payload as Record<string, unknown>;
-  const eventSlug = record.eventSlug;
-  if (typeof eventSlug === "string" && eventSlug) return eventSlug;
-  const eventId = record.eventId;
-  if (typeof eventId === "string" && eventId) return eventId;
-  return "";
-}
-
-/**
- * Short localized date label for a notification's timestamp; "" when absent or
- * unparseable. Mirrors the main feed's `formatTime` (notifications.adapters) so
- * the two surfaces read the same, and goes through the locale-bound `fmt` rather
- * than the browser's system locale.
- */
-function formatNotifTime(iso: string | undefined, fmt: Formatters): string {
-  if (!iso) return "";
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "";
-  return fmt.date(date, { month: "short", day: "numeric" });
 }
 
 /** GET /event-invites entry → `MyEvent` (the "invite" category, under the Saved pill).

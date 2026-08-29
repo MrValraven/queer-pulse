@@ -573,11 +573,12 @@ button.cal-cell.has {
 }
 
 /* ---------- Filter pills ---------- */
+/* A band inside the "Refine" drawer now, so the panel owns the space beneath
+   it and the row carries no margin of its own. */
 .pill-row {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 8px;
 }
 .pill {
   font-family: var(--sans);
@@ -619,14 +620,24 @@ button.cal-cell.has {
 }
 
 /* ---------- Search + secondary filters ---------- */
+/* No flex gap here: the "Refine" panel stays mounted so it can animate shut,
+   and a gap would keep reserving space around a collapsed drawer. Each row
+   below carries its own top margin instead. */
 .ev-toolbar {
   margin-top: 16px;
+}
+/* The one row that is always on screen: the search field and the toggle that
+   opens everything else. */
+.ev-search-row {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 .ev-search-wrap {
   position: relative;
+  flex: 1 1 260px;
+  min-width: 0;
 }
 .ev-search-wrap > svg {
   position: absolute;
@@ -686,12 +697,15 @@ button.cal-cell.has {
   color: var(--jade);
 }
 
-/* toolbar row 2: sort / density / select */
+/* toolbar row 2: density / select / timezone note. Sorting and the filter
+   chips moved into the "Refine" drawer; what is left only changes how the
+   agenda is drawn, never which events it holds. */
 .ev-controls {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  margin-top: 14px;
 }
 .ev-sort {
   font-family: var(--sans);
@@ -1880,176 +1894,6 @@ button.cal-cell.has {
   width: 35%;
 }
 
-/* ---------- Notifications ---------- */
-.ev-head-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-/* These two sit in EventsHeader's action row now, next to its search jump —
-   so they mirror that button (`.searchBtn`, EventsHeader.module.css): a plain
-   44px round icon button rather than a bordered chip. */
-.notif-btn,
-.gear-btn {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-pill);
-  border: none;
-  background: rgba(var(--plum-rgb), 0.06);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ink-60);
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
-  flex: none;
-}
-@media (hover: hover) {
-  .notif-btn:hover,
-  .gear-btn:hover {
-    color: var(--text-strong);
-    background: rgba(var(--plum-rgb), 0.12);
-  }
-}
-.notif-btn svg,
-.gear-btn svg {
-  width: 18px;
-  height: 18px;
-}
-.notif-count {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  min-width: 19px;
-  height: 19px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--paper);
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--cream);
-}
-.notif-panel {
-  position: absolute;
-  /* Clears the 44px bell it hangs from (see `.notif-btn`) plus a small gap. */
-  top: 52px;
-  right: 0;
-  width: 344px;
-  max-width: calc(100vw - 40px);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.1);
-  border-radius: 18px;
-  box-shadow: 0 24px 60px -20px rgba(var(--plum-rgb), 0.42);
-  z-index: 140;
-  animation: qpTabIn 0.2s var(--ease) both;
-  overflow: hidden;
-}
-.notif-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 18px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
-}
-.notif-h-title {
-  font-family: var(--serif);
-  font-size: 18px;
-  color: var(--text-strong);
-  letter-spacing: -0.01em;
-}
-.notif-clear {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--accent-ink);
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-}
-@media (hover: hover) {
-  .notif-clear:hover {
-    opacity: 0.7;
-  }
-}
-.notif-list {
-  max-height: 360px;
-  overflow-y: auto;
-}
-.notif-item {
-  display: flex;
-  gap: 11px;
-  padding: 13px 18px;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
-  border-left: none;
-  border-right: none;
-  border-top: none;
-  cursor: pointer;
-  transition: background 0.15s;
-  text-align: left;
-  width: 100%;
-  background: none;
-  font-family: var(--sans);
-}
-.notif-item:last-child {
-  border-bottom: none;
-}
-@media (hover: hover) {
-  .notif-item:hover {
-    background: rgba(var(--plum-rgb), 0.03);
-  }
-}
-.notif-item.unread {
-  background: rgba(var(--accent-rgb), 0.045);
-}
-.ni-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex: none;
-  margin-top: 6px;
-}
-.notif-item:not(.unread) .ni-dot {
-  background: transparent;
-  border: 1.5px solid rgba(var(--line-rgb), 0.18);
-}
-.ni-body {
-  flex: 1;
-  min-width: 0;
-}
-.ni-text {
-  font-size: 13px;
-  color: var(--ink);
-  line-height: 1.5;
-}
-.ni-text strong {
-  font-weight: 700;
-  color: var(--text-strong);
-}
-.ni-time {
-  font-size: 11.5px;
-  color: var(--ink-40);
-  margin-top: 3px;
-}
-.notif-empty {
-  padding: 34px 18px;
-  text-align: center;
-  font-size: 13px;
-  color: var(--ink-40);
-  line-height: 1.6;
-}
-
 /* ---------- Modal (shared) ---------- */
 .modal-overlay {
   position: fixed;
@@ -2239,27 +2083,6 @@ button.cal-cell.has {
   color: var(--ink-40);
   line-height: 1.45;
   flex: 1;
-}
-
-/* "Coming soon" preview for the not-yet-wired preferences modal */
-.set-coming-note {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-  font-size: 12.5px;
-  color: var(--ink-60, rgba(var(--plum-rgb), 0.6));
-  line-height: 1.45;
-}
-.set-preview {
-  opacity: 0.55;
-}
-/* A single live control that is momentarily unavailable (push unsupported,
-   blocked at the OS/browser level, or mid-request) — dimmed like the preview
-   block but rendered inert rather than faked. */
-.set-control-off {
-  opacity: 0.55;
 }
 
 /* toggle rows (settings/details) */
@@ -2505,20 +2328,6 @@ button.cal-cell.has {
     transform 0.2s;
 }
 
-/* Deep-link target: a card jumped to from a notification flashes a ring. */
-@keyframes evFlash {
-  0% {
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.55);
-  }
-  100% {
-    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0);
-  }
-}
-.ev-card.flash {
-  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.5);
-  animation: evFlash 1s var(--ease) 2;
-}
-
 /* Report-an-event reason picker. */
 .report-reasons {
   display: flex;
@@ -2581,8 +2390,6 @@ button.cal-cell.has {
 .cal-arrow:focus-visible,
 .cal-today-btn:focus-visible,
 .cal-sub-btn:focus-visible,
-.notif-btn:focus-visible,
-.gear-btn:focus-visible,
 .dayfilter-clear:focus-visible,
 .ev-link:focus-visible,
 .guest-row:focus-visible,
@@ -2590,7 +2397,6 @@ button.cal-cell.has {
 .ev-search:focus-visible,
 .meta-link:focus-visible,
 .soon-link:focus-visible,
-.notif-item:focus-visible,
 .acc-chip:focus-visible,
 .ev-series:focus-visible,
 .ctrl-btn:focus-visible,
@@ -2619,10 +2425,8 @@ button.cal-cell.has {
   .modal-overlay .modal,
   .collapse.show,
   .ev-card,
-  .ev-card.flash,
   .soon-bar .live,
   .undo-toast,
-  .notif-panel,
   .cal-peek,
   .dayof.show,
   .more-menu,

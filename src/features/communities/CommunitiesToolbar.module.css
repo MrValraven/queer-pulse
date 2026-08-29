@@ -1,0 +1,55 @@
+/* The single `/communities` control row: switch on the left, find-and-refine
+   flexing through the middle, one primary action on the right. The pieces used
+   to total ~1232px against a ~1184px `.wrap`, which is why "How communities
+   work" moved into the ⓘ beside the title rather than shrinking anything. */
+.bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+/* The middle takes every pixel the switch and the action leave, so the field
+   runs the width of the row and Refine lands just short of the action. The
+   only thing held back is the trailing margin: one deliberate gutter so the
+   toggle and the primary action read as two things rather than a pair. */
+.find {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 320px;
+  min-width: 0;
+  margin-inline-end: var(--gap-lg);
+}
+.search {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Holds the action right even on the empty-pool layout, where `.find` is not
+   rendered and there is nothing else to push it over. */
+.startCta {
+  margin-inline-start: auto;
+}
+
+/* On a phone the one row becomes three short ones: the switch across the top
+   (its own module splits the two tabs evenly there), then find-and-refine,
+   then the action full width. Still fewer bands than the four this replaced. */
+@media (--mobile) {
+  .bar {
+    gap: 10px;
+  }
+  .tabs {
+    flex: 1 0 100%;
+  }
+  .find {
+    flex: 1 1 100%;
+    margin-inline-end: 0;
+  }
+  .startCta {
+    flex: 1 0 100%;
+    width: 100%;
+    margin-inline-start: 0;
+    justify-content: center;
+  }
+}

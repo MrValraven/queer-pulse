@@ -7,6 +7,7 @@ import {
 } from "../../../shared/api/client";
 import { validateProfile } from "../../../shared/api/validation";
 import type { VouchRelationship } from "../vouchMember.data";
+import type { DirectoryFacetCounts } from "../memberDirectoryFilter.data";
 import type { CommunityType } from "../../homepage/data/types";
 export type Visibility = "open" | "network" | "private";
 
@@ -66,6 +67,12 @@ export interface MembersPage {
   total: number;
   page: number;
   pageSize: number;
+  /** Per-option availability counts for the directory sidebar's filter groups,
+   *  each counted with its own group's filter lifted — see
+   *  `DirectoryFacetCounts`. Optional because the offset-paginated caller
+   *  (global search) has no filter sidebar and the backend skips the work; a
+   *  backend older than this build simply omits it and no badges render. */
+  facets?: DirectoryFacetCounts;
 }
 
 export interface SocialLinkDTO {

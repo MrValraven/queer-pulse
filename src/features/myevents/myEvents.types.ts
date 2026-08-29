@@ -90,28 +90,11 @@ export interface MyEvent {
   noShow?: boolean;
 }
 
-export interface Notif {
-  id: string;
-  lead?: string;
-  bold: string;
-  tail?: string;
-  time: string;
-  eventId: string;
-  unread: boolean;
-}
-
 export type Pill =
   "upcoming" | "going" | "hosting" | "waitlisted" | "past" | "saved";
 export type CalView = "month" | "week" | "year";
 export type SortBy = "date" | "community" | "status";
 export type Density = "comfortable" | "compact";
 export type MobileView = "list" | "cal";
-
-export interface Prefs {
-  reminderLead: string;
-  visibility: string;
-  email: boolean;
-  push: boolean;
-}
 
 export type FilterKey = "inperson" | "online" | "free" | "paid" | "month";

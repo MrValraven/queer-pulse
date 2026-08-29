@@ -191,14 +191,13 @@ export function EventTools({
   };
   // Purely informational — NOT a per-event toggle. The real reminder cron
   // (`EventRemindersService`) reminds every going/maybe attendee
-  // unconditionally, by each member's own GLOBAL lead-time preference
-  // (`EventReminderLeadRow`/`GET /me/event-reminder-preferences`); there is
-  // no per-event opt-out to flip. A clickable on/off bell here would imply
-  // control this app doesn't have, so it renders as a static `<span>` (never
-  // a `<button>`) with a title explaining what actually governs it. Shown
-  // only for the "going" category — that's the one place `MyEvent.category`
-  // reliably means an active going/maybe RSVP, the exact condition the cron
-  // reminds on.
+  // unconditionally, on a lead time the server owns; there is no per-event
+  // opt-out to flip and no member-facing setting for the lead time. A
+  // clickable on/off bell here would imply control this app doesn't have, so
+  // it renders as a static `<span>` (never a `<button>`) with a title
+  // explaining what actually governs it. Shown only for the "going" category
+  // — that's the one place `MyEvent.category` reliably means an active
+  // going/maybe RSVP, the exact condition the cron reminds on.
   const ReminderIndicator = (
     <span
       className={sx("tool-btn on")}

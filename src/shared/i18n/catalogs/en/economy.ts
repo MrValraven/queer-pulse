@@ -3633,18 +3633,36 @@ export const economy: Catalog = {
   "housingSafety.rights.lease.title": "A written, registered lease",
   "housingSafety.rights.lease.point.1":
     "Your tenancy should be a written contract, a verbal deal leaves you with far less to stand on.",
+  "housingSafety.rights.lease.point.2":
+    "It should name both of you, the property, the rent and how long it runs for. Keep your signed copy.",
+  "housingSafety.rights.lease.point.3":
+    "The landlord has to register the lease with Finanças. Since 2025 you can register it yourself if they don't.",
+  "housingSafety.rights.lease.point.4":
+    "A home lease runs for at least a year, unless a shorter term is something you asked for.",
   "housingSafety.rights.deposit.title": "Deposit and rent up front",
   "housingSafety.rights.deposit.point.1":
     "A security deposit is capped at two months' rent.",
+  "housingSafety.rights.deposit.point.2":
+    "Rent asked for in advance is capped the same way, so around two months up front is the ceiling. Anything above that, ask why in writing.",
   "housingSafety.rights.rentIncrease.title": "Rent increases",
   "housingSafety.rights.rentIncrease.point.1":
     "Rent can go up at most once every 12 months, and only with 30 days' written notice.",
+  "housingSafety.rights.rentIncrease.point.2":
+    "The increase is capped by the coefficient the INE publishes each year. For 2026 that is 2.24%.",
+  "housingSafety.rights.rentIncrease.point.3":
+    "A jump past that cap, or one that skips the notice, is worth questioning. Ask for the figure in writing before you pay it.",
   "housingSafety.rights.eviction.title": "Eviction and your home",
   "housingSafety.rights.eviction.point.1":
     "You can only be evicted through a court or the Balcão Nacional do Arrendamento, never on the spot.",
+  "housingSafety.rights.eviction.point.2":
+    "Changing the locks, cutting your water or power, or moving your things out is a crime under Lei n.º 12/2019.",
+  "housingSafety.rights.eviction.point.3":
+    "If any of that happens, it is a criminal matter. Photograph everything, keep the messages, and go to the police or a tenants' association.",
   "housingSafety.rights.discrimination.title": "If you're treated unfairly",
   "housingSafety.rights.discrimination.point.1":
     "The rental law doesn't list specific LGBTQ+ protections, but discrimination can still be reported to an equality body.",
+  "housingSafety.rights.discrimination.point.2":
+    "Save the ad, the messages and any refusal you were given. A written record is what carries a complaint.",
   "housingSafety.disclaimer.title": "Guidance, not <em>legal advice</em>",
   "housingSafety.disclaimer.body":
     "We've kept this accurate and plain, but every situation is its own. For anything that really matters, talk to a tenants' association or a lawyer.",

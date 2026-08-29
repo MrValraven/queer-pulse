@@ -69,6 +69,10 @@ export const communities: Catalog = {
   "discover.toggle.openOnly": "Open to all",
   "discover.toggle.busyOnly": "Busy this week",
   "discover.sort.active": "Most active",
+  // Sort as a removable chip on the active-filters row: the toolbar keeps the
+  // sort control inside the Refine drawer, so this is where a shut drawer
+  // still shows how the list is ordered.
+  "discover.sort.chip": "Sorted by {label}",
   "discover.resline.count_one": "{count} community",
   "discover.resline.count_other": "{count} communities",
   "discover.outro.title": "Not finding the right <em>space</em>?",

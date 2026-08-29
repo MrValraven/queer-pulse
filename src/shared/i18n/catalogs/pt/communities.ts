@@ -73,6 +73,7 @@ export const communities: Catalog = {
   "discover.toggle.openOnly": "Abertas a todas as pessoas",
   "discover.toggle.busyOnly": "Com atividade esta semana",
   "discover.sort.active": "Mais ativas",
+  "discover.sort.chip": "Ordenado por {label}",
   "discover.resline.count_one": "{count} comunidade",
   "discover.resline.count_other": "{count} comunidades",
   "discover.outro.title": "Não encontraste o <em>espaço</em> certo?",

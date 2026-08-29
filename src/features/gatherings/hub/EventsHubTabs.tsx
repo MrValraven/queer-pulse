@@ -2,9 +2,8 @@ import { useLayoutEffect, useRef, type KeyboardEvent } from "react";
 import { HUB_TABS } from "./hub.data";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { usePrefersReducedMotion } from "../../../shared/hooks";
+import type { HubView } from "./useEventsHubView";
 import styles from "./EventsHubTabs.module.css";
-
-type HubView = "highlights" | "browse" | "calendar";
 
 /** Stable panel id per view — the parent shell should set this as the `id`
  * on whichever view it renders so `aria-controls` resolves to something real. */
@@ -20,6 +19,10 @@ function hubPanelId(view: HubView): string {
  * The active pill is a single element that FLIPs (transform-only) between
  * tab positions/widths, so the moving indicator never animates a layout
  * property.
+ *
+ * It renders inline in the `/events` header row (after the My events |
+ * Discover switch, before the Host action), so it is a bare tablist with no
+ * bar of its own. It used to be a sticky full-bleed bar under the hero.
  */
 export function EventsHubTabs({
   active,
@@ -108,38 +111,41 @@ export function EventsHubTabs({
   };
 
   return (
-    <div className={styles.sticky}>
-      <div className={styles.list} role="tablist" ref={listRef}>
-        <span
-          ref={indicatorRef}
-          className={styles.indicator}
-          aria-hidden="true"
-        />
-        {HUB_TABS.map((tab, index) => {
-          const isActive = tab.key === active;
-          return (
-            <button
-              key={tab.key}
-              ref={(node) => {
-                tabRefs.current[index] = node;
-              }}
-              type="button"
-              role="tab"
-              id={`events-hub-tab-${tab.key}`}
-              aria-selected={isActive}
-              aria-controls={hubPanelId(tab.key)}
-              tabIndex={isActive ? 0 : -1}
-              className={[styles.tab, isActive && styles.tabOn]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => onChange(tab.key)}
-              onKeyDown={(event) => handleKeyDown(event, index)}
-            >
-              {t(tab.labelKey)}
-            </button>
-          );
-        })}
-      </div>
+    <div
+      className={styles.list}
+      role="tablist"
+      ref={listRef}
+      aria-label={t("gatherings:hub.tabs.ariaLabel")}
+    >
+      <span
+        ref={indicatorRef}
+        className={styles.indicator}
+        aria-hidden="true"
+      />
+      {HUB_TABS.map((tab, index) => {
+        const isActive = tab.key === active;
+        return (
+          <button
+            key={tab.key}
+            ref={(node) => {
+              tabRefs.current[index] = node;
+            }}
+            type="button"
+            role="tab"
+            id={`events-hub-tab-${tab.key}`}
+            aria-selected={isActive}
+            aria-controls={hubPanelId(tab.key)}
+            tabIndex={isActive ? 0 : -1}
+            className={[styles.tab, isActive && styles.tabOn]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={() => onChange(tab.key)}
+            onKeyDown={(event) => handleKeyDown(event, index)}
+          >
+            {t(tab.labelKey)}
+          </button>
+        );
+      })}
     </div>
   );
 }

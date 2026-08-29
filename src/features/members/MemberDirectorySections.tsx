@@ -16,6 +16,7 @@ import {
   SORTS,
   SORT_LABEL_KEY,
   type AppliedChip,
+  type DirectoryFacetCounts,
   type FilterState,
   type SortKey,
   type MemberCard,
@@ -259,6 +260,8 @@ export function MemberResultsColumn({
 export function MemberFiltersSheet({
   filters,
   members,
+  facets,
+  countsAreStale,
   appliedCount,
   filteredCount,
   sectionsOpen,
@@ -269,6 +272,8 @@ export function MemberFiltersSheet({
 }: {
   filters: FilterState;
   members: MemberCard[];
+  facets?: DirectoryFacetCounts;
+  countsAreStale: boolean;
   appliedCount: number;
   filteredCount: number;
   sectionsOpen: Record<SectionKey, boolean>;
@@ -290,6 +295,8 @@ export function MemberFiltersSheet({
         inSheet
         filters={filters}
         members={members}
+        facets={facets}
+        countsAreStale={countsAreStale}
         appliedCount={appliedCount}
         sectionsOpen={sectionsOpen}
         onToggleSection={onToggleSection}

@@ -7088,6 +7088,56 @@ export const marketing: Catalog = {
   "changelog.tag.reportForm": "Open the report form",
 
   // ── 28 Aug 2026 ───────────────────────────────────────────────────────────
+  "changelog.entries.the-nomination-form-becomes-a-form.title":
+    "The nomination form becomes a form",
+  "changelog.entries.the-nomination-form-becomes-a-form.body":
+    "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
+
+  "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.title":
+    "Member filters show how many people are behind each one",
+  "changelog.entries.member-filters-show-how-many-people-are-behind-each-one.body":
+    'Filtering the member directory meant guessing. You ticked "Mentoring", then "Graphic designer", then a language, and only found out you had narrowed it to nobody once the results went empty. Every option in the sidebar now carries the number of members behind it, counted live against everything else you have already chosen, so you can see a combination is a dead end before you spend a click on it. An option nobody matches greys out rather than disappearing, because zero is a real answer to "who is here?" and a vocabulary that keeps changing shape is harder to read than one that does not.',
+
+  "changelog.entries.an-empty-browse-stops-blaming-your-filters.title":
+    "An empty Browse stops blaming your filters",
+  "changelog.entries.an-empty-browse-stops-blaming-your-filters.body":
+    'Browse under Events told anyone who found it empty that "nothing matches that filter, try another" even when no filter was set and there was simply nothing on. It sent people hunting for a setting to loosen that did not exist. Now the two nothings say different things: with filters on, it points at the dates, the neighbourhood and the kind of gathering you could widen; with none on, it says the calendar is empty and offers to help you host the first thing on it.',
+
+  "changelog.entries.one-row-of-tabs-on-events.title":
+    "One row of tabs on Events",
+  "changelog.entries.one-row-of-tabs-on-events.body":
+    'Events had two stacked bars of tabs: "My events | Discover" up in the header, then a separate sticky bar underneath for Highlights, Browse and Calendar. Two levels, two bars, and a stripe of empty page between them. The three Discover views now sit in the header row itself, right after the switch that opens them and before "Host a gathering", so the whole set of choices reads in one line. Links into a specific view still work exactly as before.',
+
+  "changelog.entries.the-recap-card-leaves-ways-to-gather.title":
+    "The recaps card leaves ways to gather",
+  "changelog.entries.the-recap-card-leaves-ways-to-gather.body":
+    'The "ways to gather" strip under the Events Hub highlights offered four doors: browse everything, open the calendar, host your own, and "Relive the last one", which promised photos, notes and the headcount from gatherings that had already happened. That last one pointed at a recap page that does not exist yet. Anyone who followed it went somewhere empty. The card is gone from the strip, which now shows the three doors that actually lead somewhere, each one the same width and height with its link on the same line as its neighbours. When recaps are real, the card comes back.',
+
+  "changelog.entries.a-nomination-can-say-where-to-find-them.title":
+    "A nomination can say where to find them",
+  "changelog.entries.a-nomination-can-say-where-to-find-them.body":
+    'Nominating a change maker asked for a name and a sentence, and that was everything the moderator reading it ever got. Two people share a first name, a stage name is not the name on anything official, and "runs the Tuesday support group" is not something you can look up. So a nomination was really only actionable when the moderator already happened to know who was meant. The form now has two optional fields in the middle. If the person is already a member here, you can search for them and attach their profile, and the queue shows a link straight to it. If they are not, there is a line for wherever they already are in public: an Instagram, a website, an email. Both are optional and neither gates the button, so a name and a sentence is still a complete nomination. Nothing about who sees this changed: the nomination stays private, the person named is still never told, and the contact details are held to the same rule as the nominator\'s own name, which means only platform moderators and admins can read them.',
+
+  "changelog.entries.the-communities-toolbar-becomes-one-line.title":
+    "The communities toolbar becomes one line",
+  "changelog.entries.the-communities-toolbar-becomes-one-line.body":
+    "Everything above the community cards stood in four stacked bands: the My communities and Discover switch with two buttons floating off to the right, then a search field alone on its own row, then a line reading the result count and the sort. Together they pushed the first card most of a screen down, and they said the same number twice, since the active tab already carried its own count. They are now one row: the switch, the search field with Refine beside it, and Start a community. How communities work moved into the info button next to the page title, which was already the page explainer sitting a thumb away from it. The result count appears on the chip row the moment something is narrowing the list, next to the chips that explain it, and the sort joins those chips whenever it is off Newest, so a closed Refine panel never hides how the list is ordered. A search or a filter now survives switching between My communities and Discover, so looking somewhere else for the same thing is one click.",
+
+  "changelog.entries.three-icons-leave-the-events-header.title":
+    "Three icons leave the events header",
+  "changelog.entries.three-icons-leave-the-events-header.body":
+    "The events header carried a gear, a bell and a magnifier before the Host a gathering button. The gear opened a preferences panel, the bell opened a second, smaller notifications list, and the magnifier jumped you to the Discover tab with the search field focused. Between them they duplicated the notifications you already get in the main bell and the search you already reach from Discover, and the panel offered settings almost nobody opened it to find. All three are gone. The header is now the page name, the My events and Discover switch, and Host a gathering. Reminders still reach you in the app before an event starts.",
+
+  "changelog.entries.browse-events-gets-the-same-refine.title":
+    "Browse events gets the same Refine",
+  "changelog.entries.browse-events-gets-the-same-refine.body":
+    "Discover's browse board now opens the way your own events do: one row with a search field and a Refine control, and when, neighbourhood, kind of gathering and cost as bands inside it. Whatever you have picked shows as removable chips under the search field, each one dropping back to any rather than to nothing, and Clear all now sits beside those chips instead of off next to controls the panel may be hiding. The filters themselves are unchanged, still applied by the server, so a narrowed board still survives scrolling and still shares as a link.",
+
+  "changelog.entries.your-events-filters-fold-away.title":
+    "Your events filters fold away",
+  "changelog.entries.your-events-filters-fold-away.body":
+    "Six bucket pills, five filter chips and a sort control all stood open above your events, so the first event sat a long way down the page for choices most people make once or never. They now live behind one Refine control, the same one the communities grid and the Lisbon directory use, and it carries a count so a closed panel still says something is on. What is currently narrowing the list shows as removable chips under the search field: the bucket you are in first, then the filters, then your search term, with a Clear all beside them. Comfortable and Select stay on the row, because neither changes which events you see.",
+
   "changelog.entries.the-communities-filters-fold-away.title":
     "The communities filters fold away",
   "changelog.entries.the-communities-filters-fold-away.body":

@@ -1,16 +1,19 @@
-import { Button, FeatureHelp, SkeletonLine } from "../../shared/components/ui";
+import { FeatureHelp, SkeletonLine } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { useProfileData } from "../../app/providers/useProfile";
 import { useHowCommunitiesWorkModal } from "../marketing/useHowCommunitiesWorkModal";
-import { CommunitiesTopTabs } from "./CommunitiesTopTabs";
+import { CommunitiesToolbar } from "./CommunitiesToolbar";
 import {
   useMyCommunities,
   useMyCommunitiesResolving,
 } from "./api/useMyCommunities";
+import type { DiscoverCommunities } from "./useDiscoverCommunities";
 import type { TopTab } from "./useCommunitiesTopTab";
 import styles from "./CommunitiesHubHeader.module.css";
+
+/** The ⓘ's read-more button: the page's own deeper explainer. */
+type HubHelpAction = { label: string; onClick: () => void };
 
 /**
  * The "My communities" heading block: the page name steps down to an eyebrow
@@ -18,7 +21,7 @@ import styles from "./CommunitiesHubHeader.module.css";
  * part of the header that needs the membership map — mounted on this tab
  * alone, so Discover never pays for `GET /me/communities`.
  */
-function HubMineHeading() {
+function HubMineHeading({ helpAction }: { helpAction: HubHelpAction }) {
   const { t } = useTranslation();
   const { profile } = useProfileData();
   const memberships = useMyCommunities();
@@ -35,7 +38,7 @@ function HubMineHeading() {
             components={{ em: <em /> }}
           />
         </h1>
-        <FeatureHelp id="communities.hub" />
+        <FeatureHelp id="communities.hub" action={helpAction} />
       </div>
       {/* The lead line is a count, so it can't render until the count is
           known: "across your 0 communities" for the length of the membership
@@ -54,7 +57,7 @@ function HubMineHeading() {
 }
 
 /** Discover's heading block: the platform-wide title and its standing lead. */
-function HubDiscoverHeading() {
+function HubDiscoverHeading({ helpAction }: { helpAction: HubHelpAction }) {
   const { t } = useTranslation();
 
   return (
@@ -68,7 +71,7 @@ function HubDiscoverHeading() {
           {t("communities:hubShell.title")}{" "}
           <em>{t("communities:hubShell.titleEm")}</em>
         </h1>
-        <FeatureHelp id="communities.hub" />
+        <FeatureHelp id="communities.hub" action={helpAction} />
       </div>
       <p className={styles.lead}>{t("communities:hubShell.subtitle")}</p>
     </div>
@@ -76,43 +79,58 @@ function HubDiscoverHeading() {
 }
 
 /**
+ * The ⓘ beside the title is now the page's only explainer affordance: "About
+ * this screen" first, with "How communities work" as its read-more. That
+ * explainer used to be a ghost button on the control row, one of two
+ * explain-this-page controls a thumb's width apart, and the ~215px it took is
+ * what let the row collapse to a single line.
+ */
+function useHubHelp() {
+  const { t } = useTranslation();
+  const { openModal, modalElement } = useHowCommunitiesWorkModal();
+  return {
+    action: { label: t("communities:hub.howItWorksCta"), onClick: openModal },
+    modalElement,
+  };
+}
+
+/**
  * Header for the merged `/communities` page. Carries the page's single <h1>
- * (with its lead line), the My communities | Discover switch, and the
- * persistent "Start a community" action. It is the tab's ONLY header: on "My
- * communities" the greeting lives here rather than in a second hero below,
- * which used to push the cards most of a screen down. The floating nav's band
- * is already reserved once by `main[data-page-main]` (base.css); this only
- * adds its own breathing room on top of that. Not sticky.
+ * (with its lead line) and the whole control bar beneath it. It is the tab's
+ * ONLY header: on "My communities" the greeting lives here rather than in a
+ * second hero below, which used to push the cards most of a screen down. The
+ * floating nav's band is already reserved once by `main[data-page-main]`
+ * (base.css); this only adds its own breathing room on top of that. Not
+ * sticky.
  */
 export function CommunitiesHubHeader({
+  discover,
   active,
   onChange,
 }: {
+  discover: DiscoverCommunities;
   active: TopTab;
   onChange: (next: TopTab) => void;
 }) {
-  const { t } = useTranslation();
-  const { openModal, modalElement } = useHowCommunitiesWorkModal();
+  const help = useHubHelp();
 
   return (
     <header className={styles.header}>
       <div className="wrap">
-        <div className={styles.row}>
-          <div className={styles.identity}>
-            {active === "mine" ? <HubMineHeading /> : <HubDiscoverHeading />}
-            <CommunitiesTopTabs active={active} onChange={onChange} />
-          </div>
-          <div className={styles.actions}>
-            <Button variant="ghost" onClick={openModal}>
-              {t("communities:hub.howItWorksCta")}
-            </Button>
-            <Button variant="primary" to={routes.startCommunity}>
-              {t("communities:hub.startCta")}
-            </Button>
-          </div>
+        {active === "mine" ? (
+          <HubMineHeading helpAction={help.action} />
+        ) : (
+          <HubDiscoverHeading helpAction={help.action} />
+        )}
+        <div className={styles.controls}>
+          <CommunitiesToolbar
+            discover={discover}
+            active={active}
+            onChange={onChange}
+          />
         </div>
       </div>
-      {modalElement}
+      {help.modalElement}
     </header>
   );
 }

@@ -9,6 +9,17 @@
   width: 100%;
   max-width: 540px;
 }
+/* Desktop only: the compose step puts the form and the link preview side by
+   side. The content then lines up edge-to-edge with the floating nav pill:
+   same 1180px cap, same 20px gutters as Navbar.module.css. */
+@media (min-width: 900px) {
+  .page {
+    padding-inline: 20px;
+  }
+  .inner {
+    max-width: 1180px;
+  }
+}
 .backLink {
   display: inline-flex;
   align-items: center;
@@ -75,6 +86,39 @@
   color: var(--ink-40);
 }
 
+/* Compose step layout. Stacked on narrow screens (fields, preview, action);
+   on desktop the preview moves alongside and spans both left-column rows. */
+.composeGrid {
+  display: grid;
+}
+.composeFields {
+  min-width: 0;
+}
+.composePreview {
+  min-width: 0;
+}
+@media (min-width: 900px) {
+  .composeGrid {
+    /* The preview column is given nearly as much room as the form so the
+       unfurl hero renders at a readable size, its headline on two lines. */
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-areas:
+      "fields preview"
+      "action preview";
+    align-items: start;
+    column-gap: 32px;
+  }
+  .composeFields {
+    grid-area: fields;
+  }
+  .composePreview {
+    grid-area: preview;
+  }
+  .composeAction {
+    grid-area: action;
+  }
+}
+
 .card {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -136,6 +180,7 @@
    be readable without interaction, so it is body copy, not a tooltip. */
 .fieldHelp {
   margin: 2px 0 0;
+  max-width: 62ch;
   font-size: 12.5px;
   line-height: 1.6;
   color: var(--ink-60);
@@ -144,6 +189,7 @@
    above it because it is the one thing a member must not misread. */
 .fieldHelpStrong {
   margin: 0;
+  max-width: 62ch;
   font-size: 12.5px;
   line-height: 1.6;
   font-weight: 600;
@@ -243,6 +289,8 @@
 
 /* ── Ready state: plum success panel revealed after generating the link ── */
 .ready {
+  max-width: 540px;
+  margin: 0 auto;
   background: var(--plum);
   border-radius: var(--radius-card);
   padding: 38px 36px 30px;

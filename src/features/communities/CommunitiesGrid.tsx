@@ -5,10 +5,8 @@ import { CommunityJoinFlowModal } from "./CommunityJoinFlowModal";
 import { CommunityCard } from "./CommunityCard";
 import { FeaturedCommunityCard } from "./FeaturedCommunityCard";
 import { SuggestedCommunitiesSection } from "./SuggestedCommunitiesSection";
-import { CommunitiesDiscoverControls } from "./CommunitiesDiscoverControls";
 import { CommunitiesDiscoverEmptyState } from "./CommunitiesDiscoverEmptyState";
-import { useDiscoverCommunities } from "./useDiscoverCommunities";
-import type { CommunitiesScope } from "./communitiesDiscover.data";
+import type { DiscoverCommunities } from "./useDiscoverCommunities";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./CommunitiesPage.module.css";
 
@@ -28,15 +26,16 @@ function CommunityCardSkeleton() {
 }
 
 /**
- * The communities card grid with its whole filter/sort bar — shared verbatim
- * by both `/communities` tabs. `scope` is the only difference between them:
+ * The communities card grid — shared verbatim by both `/communities` tabs. The
+ * `discover` state driving it is owned by `CommunitiesHubPage` and shared with
+ * the toolbar in the page header, which is where the search, Refine drawer and
+ * chip row live. Its `scope` is the only difference between the two tabs:
  * "discover" draws from the platform directory, "mine" from the viewer's own
  * memberships (see `useDiscoverCommunities`). Renders bare, with no page
  * background or `.wrap` of its own, so each tab's body can place it.
  *
- * `afterFilters` is a slot between the filter bar and the results line —
- * the "My communities" tab drops its weekly digest in there, which is why the
- * digest sits inside the filter bar rather than above the whole page.
+ * `beforeGrid` is a slot above the cards — the "My communities" tab drops its
+ * weekly digest in there.
  *
  * `isPending` lets the host hold the grid on its skeletons past its own
  * fetch. The "My communities" tab needs it: its membership map (a separate
@@ -45,18 +44,17 @@ function CommunityCardSkeleton() {
  * before the host even knows whether the member has any.
  */
 export function CommunitiesGrid({
-  scope = "discover",
-  afterFilters,
+  discover,
+  beforeGrid,
   isPending = false,
 }: {
-  scope?: CommunitiesScope;
-  afterFilters?: ReactNode;
+  discover: DiscoverCommunities;
+  beforeGrid?: ReactNode;
   isPending?: boolean;
 }) {
   const { t } = useTranslation();
   const { isMember } = useCommunityMembership();
-  const discover = useDiscoverCommunities(scope);
-  const { demoMode, featured } = discover;
+  const { demoMode, featured, scope } = discover;
   const isShowingSkeletons = discover.isShowingSkeletons || isPending;
 
   /** Demo reads the session membership store; live trusts the card's own DTO. */
@@ -67,27 +65,7 @@ export function CommunitiesGrid({
 
   return (
     <>
-      <CommunitiesDiscoverControls
-        searchInput={discover.searchInput}
-        setSearchInput={discover.setSearchInput}
-        isOpenOnly={discover.isOpenOnly}
-        setIsOpenOnly={discover.setIsOpenOnly}
-        isBusyOnly={discover.isBusyOnly}
-        setIsBusyOnly={discover.setIsBusyOnly}
-        sort={discover.sort}
-        setSort={discover.setSort}
-        filter={discover.filter}
-        setFilter={discover.setFilter}
-        tagIds={discover.tagIds}
-        setTagIds={discover.setTagIds}
-        categoryCounts={discover.categoryCounts}
-        resultCount={
-          discover.gridItems.length + (discover.isShowingFeatured ? 1 : 0)
-        }
-        onReset={discover.resetRefinements}
-        isShowingResline={!isShowingSkeletons}
-        afterFilters={afterFilters}
-      />
+      {beforeGrid}
 
       {discover.isShowingFeatured && featured && (
         <div className={styles.featured}>

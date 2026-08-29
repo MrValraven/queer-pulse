@@ -12,13 +12,14 @@ import {
   CommunitiesHomeTodos,
 } from "./CommunitiesHomeFeed";
 import { useCommunitiesHomeData } from "./useCommunitiesHomeData";
+import type { DiscoverCommunities } from "./useDiscoverCommunities";
 import styles from "./CommunitiesHomePage.module.css";
 
 /**
  * The `/communities?tab=mine` body.
  *
- * The greeting, the count line and the tab switch all live one level up in
- * `CommunitiesHubHeader` — this body starts straight at the cards, so the
+ * The greeting, the tab switch and the whole filter bar all live one level up
+ * in `CommunitiesHubHeader` — this body starts straight at the cards, so the
  * first community is visible without scrolling.
  *
  * The communities you belong to lead the page as real cards, through the same
@@ -27,7 +28,11 @@ import styles from "./CommunitiesHomePage.module.css";
  * underneath: the mod to-do list, the cross-community pulse, and the events /
  * suggestions rail.
  */
-export function CommunitiesHome() {
+export function CommunitiesHome({
+  discover,
+}: {
+  discover: DiscoverCommunities;
+}) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   // The placeholder skeleton is a demo-prototype device: the pulse feed it
@@ -66,9 +71,9 @@ export function CommunitiesHome() {
         ) : (
           <>
             <CommunitiesGrid
-              scope="mine"
+              discover={discover}
               isPending={isMembershipsLoading}
-              afterFilters={
+              beforeGrid={
                 /* The weekly digest is derived entirely from the `getLiving`
                    mock — there's no live feed backend — so it only renders in
                    demo mode rather than showing a misleading all-zero week. */

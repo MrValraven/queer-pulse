@@ -17,12 +17,23 @@ import {
  * is layout only and stays under the repo's 200-line-per-component limit. A
  * plain hook (no JSX), so the limit doesn't apply here.
  *
+ * Called ONCE per `/communities` visit, up in `CommunitiesHubPage`, because
+ * the toolbar that drives it now lives in the page header while the cards it
+ * feeds live in the tab body. One consequence is deliberate: a search or a
+ * filter survives the My communities / Discover switch, so "nothing in mine,
+ * show me everyone's" is one click rather than a retype.
+ *
  * `scope` picks the pool the grid draws from. "discover" is the whole
  * directory; "mine" is the same grid, the same facets and the same cards over
  * only the communities the viewer belongs to — the `/communities?tab=mine`
  * body. Everything scope-specific funnels through the list endpoint's
  * `filter` param, so the two tabs cannot drift in behaviour.
  */
+/** Everything `CommunitiesToolbar` and `CommunitiesGrid` need, as one object,
+ *  so the hub page can thread the shared state through both without 20 props
+ *  at every level. */
+export type DiscoverCommunities = ReturnType<typeof useDiscoverCommunities>;
+
 export function useDiscoverCommunities(scope: CommunitiesScope = "discover") {
   const { demoMode } = useDemoMode();
   const isMineScope = scope === "mine";

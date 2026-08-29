@@ -151,8 +151,35 @@ export const community: Catalog = {
   "changemakers.nominate.heading": "Know someone who should <em>be here?</em>",
   "changemakers.nominate.lead":
     "We add change makers through community nominations. If you know someone doing meaningful work for queer people in Lisbon, a name and a sentence is enough to start.",
-  "changemakers.nominate.namePlaceholder": "Their name…",
-  "changemakers.nominate.reasonPlaceholder": "In a sentence, why?",
+  "changemakers.nominate.stepSend":
+    "Send a name and a sentence. Anything else is optional.",
+  "changemakers.nominate.stepRead":
+    "A moderator reads it and decides whether to open a story.",
+  "changemakers.nominate.stepHear": "You get a notification with the decision.",
+  "changemakers.nominate.formTitle": "Nominate someone",
+  "changemakers.nominate.nameLabel": "Their name",
+  "changemakers.nominate.namePlaceholder": "The name they go by",
+  "changemakers.nominate.nameError":
+    "Add the name of the person you're nominating.",
+  "changemakers.nominate.memberLabel": "Are they already on QueerPulse?",
+  "changemakers.nominate.memberPlaceholder": "Search members by name",
+  "changemakers.nominate.memberSearchAria": "Search members by name",
+  "changemakers.nominate.memberHelper":
+    "Optional. Skip it if they haven't joined.",
+  "changemakers.nominate.memberClearAria": "Remove {name} from this nomination",
+  "changemakers.nominate.contactLabel": "Where else can we find them?",
+  "changemakers.nominate.contactPlaceholder": "Instagram, a website, an email…",
+  "changemakers.nominate.contactHelper":
+    "Optional, and only what's already public. It helps a moderator read their work.",
+  "changemakers.nominate.reasonLabel": "Why them?",
+  "changemakers.nominate.reasonPlaceholder":
+    "What they do, and who it reaches.",
+  "changemakers.nominate.reasonHelper": "One or two sentences is plenty.",
+  "changemakers.nominate.reasonCount": "{used}/{max}",
+  "changemakers.nominate.reasonError":
+    "Add a sentence about why they belong here.",
+  "changemakers.nominate.privacyNote":
+    "The person you nominate isn't told about it.",
   "changemakers.nominate.submitCta": "Nominate them",
   "changemakers.nominate.submitPending": "Sending…",
   "changemakers.nominate.successToast": "Thank you. We'll look into {name}.",

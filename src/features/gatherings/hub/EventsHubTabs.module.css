@@ -1,29 +1,15 @@
-/* Sticky tablist under the hub hero. Frosted cream bar; flips to a dark
-   frost in dark mode because --cream-rgb is intentionally not theme-switched
-   (see tokens/colors.css). z-index sits above page content but below the
-   floating Navbar pill (100). */
-.sticky {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(var(--cream-rgb), 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-block-end: 1px solid rgba(var(--line-rgb), 0.08);
-}
-:global([data-theme="dark"]) .sticky {
-  background: rgba(26, 16, 40, 0.86);
-}
-
+/* Bare tablist for the Discover sub-views. It renders inline in the /events
+   header row, after the My events | Discover switch, so it carries no bar,
+   ground or sticky behaviour of its own; the header owns the row. Vertical
+   sizing (4px + 44px + 4px = 52px) matches EventsTopTabs so the two tab
+   levels line up on one baseline. */
 .list {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--gap-xs);
-  max-width: var(--maxw-page);
-  margin-inline: auto;
-  padding-inline: var(--wrap-px);
-  padding-block: 10px;
+  padding-block: 4px;
+  min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -37,7 +23,7 @@
    never animate a layout property. */
 .indicator {
   position: absolute;
-  inset-block: 10px;
+  inset-block: 4px;
   inset-inline-start: 0;
   inline-size: 0;
   border-radius: var(--radius-pill);

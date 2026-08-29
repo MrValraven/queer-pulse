@@ -1,10 +1,25 @@
-/* The browse board's four filter axes. Chips for the two small closed sets
-   (when, cost) and selects for the two long ones (neighbourhood, type), so a
-   thumb reaches the common choices without opening anything. */
+/* The browse board's search row, its "Refine" drawer and the chips saying what
+   is on. Inside the drawer: chips for the two small closed sets (when, cost)
+   and selects for the two long ones (neighbourhood, type), so a thumb reaches
+   the common choices without opening a second thing. */
 .bar {
-  display: grid;
-  gap: 12px;
   margin-block: 4px 22px;
+}
+
+/* The one row that is always on screen. No grid gap on `.bar` around it: the
+   drawer stays mounted so it can animate shut, and a gap would keep reserving
+   space around a collapsed panel. */
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search {
+  flex: 1 1 260px;
+  min-width: 0;
+  max-width: 420px;
 }
 
 .group {
@@ -48,30 +63,9 @@
   color: var(--cream);
 }
 
-.selects {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-  gap: 10px;
-}
-
-.field {
-  display: grid;
-  gap: 5px;
-  min-width: 0;
-}
-
-.fieldLabel {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-}
-
-.trailing {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+/* The split's second column is a 1fr track, so a lone select in it would
+   stretch the width of the panel. Cap it to read as a sibling of the
+   neighbourhood one in the capped first column. */
+.typeField {
+  max-width: 260px;
 }

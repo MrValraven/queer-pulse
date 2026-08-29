@@ -27,10 +27,6 @@ export const gatherings: Catalog = {
   "landing.ways.host.body":
     "A step-by-step guide to running a supper club, workshop, or screening, with partner spaces and member support.",
   "landing.ways.host.cta": "Host a gathering",
-  "landing.ways.recap.title": "Relive the last one",
-  "landing.ways.recap.body":
-    "Photos, notes, and the headcount from gatherings that have already happened.",
-  "landing.ways.recap.cta": "See recaps",
 
   // ── Lisbon neighbourhoods ─────────────────────────────────────────────────
   // Proper nouns: identical in both catalogs. Keyed anyway so the rail stays
@@ -1035,6 +1031,7 @@ export const gatherings: Catalog = {
   "table.legend": "Seats fill as more people reserve.",
 
   // ── Events Hub (EventsHubPage + hub/*) ────────────────────────────────────
+  "hub.tabs.ariaLabel": "Discover views",
   "hub.tabs.highlights": "Highlights",
   "hub.tabs.browse": "Browse",
   "hub.tabs.calendar": "Calendar",
@@ -1047,10 +1044,11 @@ export const gatherings: Catalog = {
   "hub.highlights.heading": "Worth showing up for",
   "hub.browse.heading": "Everything that's on",
   "hub.browse.loadMore": "Show more",
-  "hub.browse.empty": "Nothing matches that filter. Try another.",
   "hub.browse.searchLabel": "Search events",
   "hub.browse.searchPlaceholder": "Search by name or neighbourhood",
-  "hub.browse.searchEmpty": "No events match your search.",
+  "hub.browse.noMatch.title": "Nothing matches those filters.",
+  "hub.browse.noMatch.body":
+    "Try a wider stretch of dates, another neighbourhood, or any kind of gathering.",
   "hub.calendar.heading": "The month at a glance",
   "hub.host.title": "Hosting <em>something</em>?",
   "hub.host.body":
@@ -1272,5 +1270,4 @@ export const gatherings: Catalog = {
   "hub.browse.cost.any": "Any cost",
   "hub.browse.cost.free": "Free",
   "hub.browse.cost.paid": "Has a door price",
-  "hub.browse.clearFilters": "Clear filters",
 };

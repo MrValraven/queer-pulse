@@ -13,8 +13,7 @@ import { useEventsTopTab } from "./useEventsTopTab";
  * don't. Both surfaces are auth-gated, so there is no signed-out case.
  *
  * On "My events" the header renders INSIDE `MyEventsProvider` along with the
- * body: the dashboard's settings and notification actions live in the header
- * now, and they read that context. The provider's lifetime is unchanged — it
+ * body, so the whole tab shares one provider. Its lifetime is unchanged — it
  * still mounts only while that tab is active.
  */
 export function EventsPage() {

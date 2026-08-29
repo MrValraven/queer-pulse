@@ -985,6 +985,8 @@ export const admin: Catalog = {
   "adminChangemakerNominations.unknownMember": "Um antigo membro",
   "adminChangemakerNominations.withheldMember": "Não visível aqui",
   "adminChangemakerNominations.row.by": "Nomeado por {name}",
+  "adminChangemakerNominations.row.memberLabel": "Perfil na QueerPulse",
+  "adminChangemakerNominations.row.contactLabel": "Onde encontrar",
   "adminChangemakerNominations.row.sent": "Enviado {date}",
   "adminChangemakerNominations.row.reviewedBy": "Revisto por {name}",
   "adminChangemakerNominations.status.pending": "Pendente",

@@ -1,6 +1,7 @@
 import { PullToRefresh } from "../../shared/components/ui";
 import type {
   AppliedChip,
+  DirectoryFacetCounts,
   FilterState,
   MemberCard,
   SortKey,
@@ -12,9 +13,14 @@ import styles from "./MemberDirectoryFilterPage.module.css";
 
 export interface MemberDirectoryLayoutProps {
   filters: FilterState;
-  /** Every member loaded so far — the population the sidebar's facet counts
-   *  are taken from (unfiltered, unlike `shown`). */
+  /** Every member loaded so far. DEMO mode counts the sidebar's facets off
+   *  this (there it is the whole directory); live mode uses `facets` — see
+   *  `FiltersSidebar`. */
   sourceMembers: MemberCard[];
+  /** LIVE: the server's per-option availability counts for the sidebar. */
+  facets?: DirectoryFacetCounts;
+  /** The sidebar's counts describe the previous filter run. */
+  countsAreStale: boolean;
   sort: SortKey;
   onSort: (sort: SortKey) => void;
   chips: AppliedChip[];
@@ -46,6 +52,8 @@ export interface MemberDirectoryLayoutProps {
 export function MemberDirectoryLayout({
   filters,
   sourceMembers,
+  facets,
+  countsAreStale,
   sort,
   onSort,
   chips,
@@ -87,6 +95,8 @@ export function MemberDirectoryLayout({
           <FiltersSidebar
             filters={filters}
             members={sourceMembers}
+            facets={facets}
+            countsAreStale={countsAreStale}
             appliedCount={chips.length}
             onChange={onApplyFilters}
             onClearAll={onClearAllFilters}

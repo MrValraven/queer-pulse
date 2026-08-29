@@ -16,8 +16,6 @@ import { useMyEventsModals } from "./useMyEventsModals";
 import { useMyEventsRsvp } from "./useMyEventsRsvp";
 import { useMyEventsData } from "./api/useMyEventsData";
 import { useMyEventsSync } from "./useMyEventsSync";
-import { useMyEventsFocus } from "./useMyEventsFocus";
-import { useMyEventsNotifications } from "./useMyEventsNotifications";
 
 /** Central state + actions for the My Events dashboard. */
 export function useMyEventsState(): MyEventsValue {
@@ -37,20 +35,16 @@ export function useMyEventsState(): MyEventsValue {
 
   // Demo mode returns the page's own mock registry; live mode fetches from
   // GET /events (per category-bearing filter) + GET /event-invites. The
-  // dirty-tracked local mirror (so RSVP/bulk/notification actions can keep
-  // mutating it optimistically without a background refetch clobbering
-  // in-flight edits) lives in `useMyEventsSync`.
+  // dirty-tracked local mirror (so RSVP/bulk actions can keep mutating it
+  // optimistically without a background refetch clobbering in-flight edits)
+  // lives in `useMyEventsSync`.
   const {
     events: sourceEvents,
-    notifs: sourceNotifs,
     loading: dataLoading,
     hasError,
     retry,
   } = useMyEventsData();
-  const { events, notifs, setEvents, setNotifs, byId } = useMyEventsSync({
-    sourceEvents,
-    sourceNotifs,
-  });
+  const { events, setEvents, byId } = useMyEventsSync({ sourceEvents });
 
   const [pill, setPillState] = useState<Pill>("upcoming");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -78,9 +72,8 @@ export function useMyEventsState(): MyEventsValue {
 
   // calendar + toolbar (state + actions live in focused sub-hooks)
   const cal = useMyEventsCalendar();
-  const { setViewY, setViewM, setCalViewRaw } = cal;
   const tb = useMyEventsToolbar();
-  const { clearSecondary, setMobileView } = tb;
+  const { setMobileView } = tb;
 
   // select + bulk (state + actions live in a focused sub-hook)
   const selection = useMyEventsSelection({
@@ -122,8 +115,8 @@ export function useMyEventsState(): MyEventsValue {
   const clearDay = useCallback(() => setSelectedDate(null), []);
   const loadMorePast = useCallback(() => setPastShown((n) => n + 5), []);
 
-  // modals + preferences + more-menu (focused sub-hook)
-  const modals = useMyEventsModals({ toast, t });
+  // modals + more-menu (focused sub-hook)
+  const modals = useMyEventsModals();
   const { closeMore } = modals;
 
   // rsvp lifecycle + confirm/scope modals (focused sub-hook)
@@ -138,44 +131,15 @@ export function useMyEventsState(): MyEventsValue {
     closeMore,
   });
 
-  // deep-link focus (notification → jump the view + flash the target card)
-  const { focusId, goToEvent } = useMyEventsFocus({
-    byId,
-    setViewY,
-    setViewM,
-    setCalViewRaw,
-    clearSecondary,
-    setMobileView,
-    setPillState,
-    setSelectedDate,
-  });
-
-  // notifications (bell + "What's changed" panel, focused sub-hook)
-  const {
-    notifOpen,
-    setNotifOpen,
-    offline,
-    unreadCount,
-    markAllRead,
-    notifGo,
-  } = useMyEventsNotifications({ notifs, setNotifs, goToEvent });
-
   // ── safety flows (report + block live in a focused sub-hook) ──
   const safety = useMyEventsSafety({ byId, toast, closeMore, t });
 
   return {
     events,
-    notifs,
-    unreadCount,
     counts,
     byId,
     hasError,
     retry,
-    // Bell + "What's changed" panel are live in both modes now that event-change
-    // notifications exist end-to-end (P2-7): demo reads the mock registry, live
-    // reads GET /notifications (see `useMyEventsData`). No changes → honest empty
-    // state + zero badge, not a hidden feature.
-    notificationsEnabled: true,
     pill,
     selectedDate,
     loading,
@@ -188,14 +152,8 @@ export function useMyEventsState(): MyEventsValue {
     ...tb,
     ...selection,
     ...rsvp,
-    markAllRead,
-    notifGo,
-    notifOpen,
-    setNotifOpen,
     ...modals,
     ...safety,
-    focusId,
-    offline,
     toast,
   };
 }

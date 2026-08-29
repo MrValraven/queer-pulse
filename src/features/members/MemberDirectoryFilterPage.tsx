@@ -70,6 +70,8 @@ export function MemberDirectoryFilterPage() {
   const {
     items: sourceMembers,
     total: totalMembers,
+    facets,
+    isShowingPreviousResults,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -182,6 +184,8 @@ export function MemberDirectoryFilterPage() {
         <MemberDirectoryLayout
           filters={filters}
           sourceMembers={sourceMembers}
+          facets={facets}
+          countsAreStale={isShowingPreviousResults}
           sort={sort}
           onSort={setSort}
           chips={chips}
@@ -212,6 +216,8 @@ export function MemberDirectoryFilterPage() {
         <MemberFiltersSheet
           filters={filters}
           members={sourceMembers}
+          facets={facets}
+          countsAreStale={isShowingPreviousResults}
           appliedCount={chips.length}
           filteredCount={filtered.length}
           sectionsOpen={sectionsOpen}

@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "../../shared/components/ui";
+import { routes } from "../../app/routeMap";
 import { AdminChip, type AdminTone } from "./ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -28,6 +30,12 @@ const STATUS_TONE: Record<AdminChangemakerNominationDTO["status"], AdminTone> =
  * state plus approve/dismiss actions while it's still pending. Mirrors
  * `AdminWriterApplicationsRow` exactly: same status-chip pattern, same
  * optional-note-then-two-buttons row action shape.
+ *
+ * COM-18 adds the "how to find them" lines: a link to the nominee's own
+ * profile when the nominator picked them out of the member search, and
+ * whatever contact detail they typed. Both ride the same withholding rule as
+ * the nominator, so a `partnerships` grant holder simply doesn't see the
+ * block — that is a deliberate omission, never a rendering bug.
  */
 export function AdminChangemakerNominationsRow({
   nomination,
@@ -61,6 +69,38 @@ export function AdminChangemakerNominationsRow({
         </div>
         {nomination.reason && (
           <div className={styles.rowNote}>{nomination.reason}</div>
+        )}
+        {(nomination.nominee || nomination.nomineeContact) && (
+          <dl className={styles.payload}>
+            {nomination.nominee && (
+              <div className={styles.payloadLine}>
+                <dt className={styles.payloadLabel}>
+                  {t("admin:adminChangemakerNominations.row.memberLabel")}
+                </dt>
+                <dd className={styles.payloadValue}>
+                  <Link
+                    className={styles.rowCrossLink}
+                    to={`${routes.members}/${nomination.nominee.slug}`}
+                  >
+                    {nomination.nominee.name}
+                  </Link>
+                </dd>
+              </div>
+            )}
+            {nomination.nomineeContact && (
+              <div className={styles.payloadLine}>
+                <dt className={styles.payloadLabel}>
+                  {t("admin:adminChangemakerNominations.row.contactLabel")}
+                </dt>
+                {/* Plain text on purpose: this is a string a member typed
+                    about a third party, so it is never turned into a link the
+                    reviewer could follow by reflex. */}
+                <dd className={styles.payloadValue}>
+                  {nomination.nomineeContact}
+                </dd>
+              </div>
+            )}
+          </dl>
         )}
         <div className={styles.rowDates}>
           {t("admin:adminChangemakerNominations.row.sent", {

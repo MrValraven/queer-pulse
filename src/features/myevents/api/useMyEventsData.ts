@@ -1,24 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { useFormat } from "../../../shared/i18n/format";
 import {
   getEventInvites,
   getEvents,
   type EventFilter,
 } from "../../gatherings/api/events.api";
-import { getNotifications } from "../../notifications/api/notifications.api";
-import type { MyEvent, Notif } from "../myEvents.types";
-import {
-  EVENT_PANEL_NOTIF_KINDS,
-  eventInviteToMyEvent,
-  eventNotificationToNotif,
-  mergeEventPages,
-} from "./myEvents.adapters";
+import type { MyEvent } from "../myEvents.types";
+import { eventInviteToMyEvent, mergeEventPages } from "./myEvents.adapters";
 
 export interface MyEventsDataResult {
   events: MyEvent[];
-  notifs: Notif[];
   /** True while the initial fetch is in flight (both modes resolve via the query). */
   loading: boolean;
   /** True once the live fetch has failed — so the dashboard can surface a
@@ -31,11 +23,10 @@ export interface MyEventsDataResult {
 /** What the query resolves to in either mode. */
 interface MyEventsPayload {
   events: MyEvent[];
-  notifs: Notif[];
 }
 
 /** Stable empty payload so the "no data yet" case doesn't churn identity every render. */
-const EMPTY_PAYLOAD: MyEventsPayload = { events: [], notifs: [] };
+const EMPTY_PAYLOAD: MyEventsPayload = { events: [] };
 
 /** Every category-bearing filter the dashboard needs — "upcoming" is a client-derived
  *  pill (see `inPill`), never fetched directly.
@@ -56,10 +47,10 @@ const LIVE_FILTERS: EventFilter[] = [
 /**
  * Data source for the My Events dashboard.
  *
- * Demo mode resolves the page's own `INITIAL_EVENTS` / `INITIAL_NOTIFS`
- * registries, but they're pulled in with a demoMode-gated dynamic `import()`
- * inside the query so the mock registry is code-split off the eager path
- * instead of being statically bundled here. The demo experience is unchanged:
+ * Demo mode resolves the page's own `INITIAL_EVENTS` registry, but it's pulled
+ * in with a demoMode-gated dynamic `import()` inside the query so the mock
+ * registry is code-split off the eager path instead of being statically
+ * bundled here. The demo experience is unchanged:
  * the module resolves on a microtask, well before the dashboard's simulated
  * load-in beat clears its skeleton.
  *
@@ -70,23 +61,15 @@ const LIVE_FILTERS: EventFilter[] = [
  * locally. "Sent" (outgoing invites you sent) still has no backend contract and
  * is simply absent in live rather than faked.
  *
- * The "What's changed" panel is now live (tracker P2-7): the backend emits
- * event-change notifications (`event_updated` / `event_cancelled` /
- * `waitlist_promoted`) to members with a stake in the event, so live mode reads
- * GET /notifications, keeps only those event kinds (see
- * `EVENT_PANEL_NOTIF_KINDS`), and maps each into the local `Notif` shape via
- * `eventNotificationToNotif`. The copy is rendered through the shared
- * `formatNotification` i18n keys, which is why `language` is part of the
- * queryKey — a language switch must re-render the panel in the new language
- * rather than serve a stale cache entry. Demo mode is unchanged: it resolves the
- * page's own `INITIAL_NOTIFS` registry.
+ * `language` is part of the queryKey because the adapters translate a few
+ * fields (an online gathering's venue label, an invite with no event summary),
+ * so a language switch must refetch rather than serve a stale cache entry.
  */
 export function useMyEventsData(options?: {
   enabled?: boolean;
 }): MyEventsDataResult {
   const { demoMode } = useDemoMode();
   const { t, language } = useTranslation();
-  const fmt = useFormat();
 
   const query = useQuery<MyEventsPayload>({
     queryKey: ["my-events", demoMode, language],
@@ -95,14 +78,12 @@ export function useMyEventsData(options?: {
       if (demoMode) {
         // Demo mock is code-split: the registry loads only when the demo
         // dashboard actually mounts, never on the eager import path.
-        const { INITIAL_EVENTS, INITIAL_NOTIFS } =
-          await import("../myEvents.mock");
-        return { events: INITIAL_EVENTS, notifs: INITIAL_NOTIFS };
+        const { INITIAL_EVENTS } = await import("../myEvents.mock");
+        return { events: INITIAL_EVENTS };
       }
-      const [pages, invites, notifications] = await Promise.all([
+      const [pages, invites] = await Promise.all([
         Promise.all(LIVE_FILTERS.map((filter) => getEvents({ filter }))),
         getEventInvites(),
-        getNotifications(),
       ]);
       // A member who's both hosting an event and RSVP'd to it gets the same
       // slug back under two filters (e.g. "going" and "hosting") — merge
@@ -111,21 +92,13 @@ export function useMyEventsData(options?: {
       const fromInvites = invites.map((invite) =>
         eventInviteToMyEvent(invite, t),
       );
-      // Keep only the event-change kinds the "What's changed" panel is about;
-      // every other notification stays in the main notifications centre.
-      const notifs = notifications
-        .filter((notification) =>
-          EVENT_PANEL_NOTIF_KINDS.has(notification.type),
-        )
-        .map((notification) => eventNotificationToNotif(notification, t, fmt));
-      return { events: [...fromFilters, ...fromInvites], notifs };
+      return { events: [...fromFilters, ...fromInvites] };
     },
   });
 
   const payload = query.data ?? EMPTY_PAYLOAD;
   return {
     events: payload.events,
-    notifs: payload.notifs,
     loading: query.isPending,
     hasError: query.isError,
     retry: () => void query.refetch(),

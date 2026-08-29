@@ -1,4 +1,4 @@
-import type { Prefs, Pill } from "./myEvents.types";
+import type { Pill } from "./myEvents.types";
 
 /** Pill buckets, in display order. */
 export const PILLS: Pill[] = [
@@ -37,11 +37,4 @@ export const ACCESS_LABEL_KEYS: Record<string, string> = {
   interpret: "myevents:access.label.interpret",
   bsl: "myevents:access.label.bsl",
   masks: "myevents:access.label.masks",
-};
-
-export const DEFAULT_PREFS: Prefs = {
-  reminderLead: "1 day",
-  visibility: "connections",
-  email: true,
-  push: true,
 };

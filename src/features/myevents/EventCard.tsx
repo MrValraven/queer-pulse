@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
-import { usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Icons } from "./MyEventsIcons";
@@ -22,10 +21,9 @@ import type { MyEvent } from "./myEvents.types";
 export function EventCard({ ev }: { ev: MyEvent }) {
   const { t } = useTranslation();
   const fmt = useFormat();
-  const { selected, toggleSelect, removingId, focusId } = useMyEvents();
+  const { selected, toggleSelect, removingId } = useMyEvents();
   const [dayofShown, setDayofShown] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const reduce = usePrefersReducedMotion();
 
   const dt = parseDate(ev.date);
   const soon = !!(
@@ -36,19 +34,9 @@ export function EventCard({ ev }: { ev: MyEvent }) {
   );
   const showExtras = ev.category !== "past" && ev.category !== "sent";
   const isOn = !!selected[ev.id];
-  const focused = focusId === ev.id;
-
-  // Deep-link from a notification: bring this card into view and flash it.
-  useEffect(() => {
-    if (focused)
-      cardRef.current?.scrollIntoView({
-        behavior: reduce ? "auto" : "smooth",
-        block: "center",
-      });
-  }, [focused, reduce]);
 
   const cardCls = sx(
-    `ev-card ${ev.category}${ev.cancelled ? " cancelled" : ""}${soon ? " soon" : ""}${removingId === ev.id ? " removing" : ""}${focused ? " flash" : ""}`,
+    `ev-card ${ev.category}${ev.cancelled ? " cancelled" : ""}${soon ? " soon" : ""}${removingId === ev.id ? " removing" : ""}`,
   );
 
   return (

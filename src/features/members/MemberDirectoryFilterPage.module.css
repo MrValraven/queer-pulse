@@ -265,7 +265,28 @@
 .filterRow .ct {
   margin-left: auto;
   font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
   color: var(--ink-40);
+}
+/* Nobody matches this option under the current filters. Dimmed and disabled
+   rather than removed: an option that disappears makes the vocabulary feel
+   unstable, and "0" is a real answer to "who is here?". A CHECKED option never
+   gets this treatment — its count was taken with itself lifted, so it is the
+   one zero that is still worth clicking (to undo). */
+.filterRowEmpty {
+  color: var(--ink-40);
+  cursor: not-allowed;
+}
+/* The counts on screen still describe the previous filter run. Quieting them
+   for the moment reads better than blanking them: a number that vanishes and
+   returns on every click is harder to follow than one that briefly fades. */
+.filterRowStale .ct,
+.ctStale {
+  opacity: 0.45;
+}
+.chipsStale {
+  opacity: 0.6;
+  transition: opacity 0.16s var(--ease);
 }
 /* Bottom gap below the shared <SearchInput> in the "What they do" card,
    preserving the spacing the old inline search had above the chip rows. */

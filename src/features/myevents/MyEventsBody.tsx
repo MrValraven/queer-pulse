@@ -2,7 +2,6 @@ import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import { OfflineBanner } from "./OfflineBanner";
 import { MobileViewToggle } from "./MobileViewToggle";
-import { EventPills } from "./EventPills";
 import { EventToolbar } from "./EventToolbar";
 import { DayFilterChip } from "./DayFilterChip";
 import { EventAgenda } from "./EventAgenda";
@@ -10,7 +9,6 @@ import { CalendarCard } from "./CalendarCard";
 import { AcceptInviteConfirm } from "./AcceptInviteConfirm";
 import { RsvpDetailsModal } from "./RsvpDetailsModal";
 import { EventTicketModal } from "./EventTicketModal";
-import { EventSettingsModal } from "./EventSettingsModal";
 import { SeriesScopeModal } from "./SeriesScopeModal";
 import { ReportEventModal } from "./ReportEventModal";
 import { BlockHostConfirm } from "./BlockHostConfirm";
@@ -32,7 +30,6 @@ export function MyEventsBody() {
           <MobileViewToggle />
           <div className={layoutCls}>
             <div className={sx("agenda-col")}>
-              <EventPills />
               <EventToolbar />
               <DayFilterChip />
               <EventAgenda />
@@ -48,7 +45,6 @@ export function MyEventsBody() {
       <AcceptInviteConfirm />
       {c.details.open && <RsvpDetailsModal key={c.details.eventId ?? "none"} />}
       {c.ticket.open && <EventTicketModal key={c.ticket.eventId ?? "none"} />}
-      {c.settingsOpen && <EventSettingsModal />}
       {c.scope.open && <SeriesScopeModal />}
       {c.report.open && <ReportEventModal key={c.report.eventId ?? "none"} />}
       <BlockHostConfirm />

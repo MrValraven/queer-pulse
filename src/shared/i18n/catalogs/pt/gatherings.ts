@@ -29,10 +29,6 @@ export const gatherings: Catalog = {
   "landing.ways.host.body":
     "Um guia passo a passo para organizares um jantar, uma oficina ou uma sessão de cinema, com espaços parceiros e apoio da comunidade.",
   "landing.ways.host.cta": "Organizar um convívio",
-  "landing.ways.recap.title": "Revive o último",
-  "landing.ways.recap.body":
-    "Fotografias, notas e quantas pessoas apareceram nos convívios que já aconteceram.",
-  "landing.ways.recap.cta": "Ver retrospetivas",
 
   // ── Bairros de Lisboa ─────────────────────────────────────────────────────
   // Nomes próprios: iguais em ambos os catálogos.
@@ -1059,6 +1055,7 @@ export const gatherings: Catalog = {
   "table.legend": "Os lugares enchem à medida que mais pessoas reservam.",
 
   // ── Events Hub (EventsHubPage + hub/*) ────────────────────────────────────
+  "hub.tabs.ariaLabel": "Vistas de descoberta",
   "hub.tabs.highlights": "Destaques",
   "hub.tabs.browse": "Explorar",
   "hub.tabs.calendar": "Calendário",
@@ -1071,10 +1068,11 @@ export const gatherings: Catalog = {
   "hub.highlights.heading": "Vale a pena aparecer",
   "hub.browse.heading": "Tudo o que há",
   "hub.browse.loadMore": "Mostrar mais",
-  "hub.browse.empty": "Nada com esse filtro. Experimenta outro.",
   "hub.browse.searchLabel": "Procurar eventos",
   "hub.browse.searchPlaceholder": "Procura por nome ou zona",
-  "hub.browse.searchEmpty": "Nenhum evento corresponde à tua procura.",
+  "hub.browse.noMatch.title": "Nada corresponde a esses filtros.",
+  "hub.browse.noMatch.body":
+    "Experimenta um intervalo de datas maior, outro bairro, ou qualquer tipo de convívio.",
   "hub.calendar.heading": "O mês de relance",
   "hub.host.title": "Estás a <em>organizar</em> algo?",
   "hub.host.body":
@@ -1297,5 +1295,4 @@ export const gatherings: Catalog = {
   "hub.browse.cost.any": "Qualquer custo",
   "hub.browse.cost.free": "Gratuito",
   "hub.browse.cost.paid": "Tem entrada paga",
-  "hub.browse.clearFilters": "Limpar filtros",
 };

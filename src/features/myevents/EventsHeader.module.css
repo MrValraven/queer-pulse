@@ -32,53 +32,10 @@
   color: var(--text-strong);
 }
 
-/* Four items on the "My events" tab (settings, notifications, search, host),
-   so this row wraps rather than pushing the Host button off a narrow screen. */
+/* Wraps rather than pushing the Host button off a narrow screen. */
 .actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--gap-sm);
-}
-
-/* Mirrors FeatureHelp's `.iconTrigger` — a plain 44px round icon button so it
-   reads as one set with sibling icon buttons rather than a bordered chip. */
-.searchBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.06);
-  color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    color var(--dur-fast, 0.15s) var(--ease),
-    background var(--dur-fast, 0.15s) var(--ease);
-}
-
-.searchBtn svg {
-  width: 18px;
-  height: 18px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .searchBtn:hover {
-    color: var(--text-strong);
-    background: rgba(var(--plum-rgb), 0.12);
-  }
-}
-
-.searchBtn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .searchBtn {
-    transition: none;
-  }
 }

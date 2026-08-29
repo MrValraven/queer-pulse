@@ -2,13 +2,11 @@ import { createContext, useContext } from "react";
 import type { ReasonCode } from "../safety/reportReasons";
 import type {
   MyEvent,
-  Notif,
   Pill,
   CalView,
   SortBy,
   Density,
   MobileView,
-  Prefs,
   FilterKey,
 } from "./myEvents.types";
 
@@ -22,8 +20,6 @@ export interface MoreMenuState {
 export interface MyEventsValue {
   // data
   events: MyEvent[];
-  notifs: Notif[];
-  unreadCount: number;
   counts: Record<Pill, number>;
   byId: (id: string) => MyEvent | undefined;
   /** True once the live fetch has failed — agenda shows an error/retry state
@@ -31,9 +27,6 @@ export interface MyEventsValue {
   hasError: boolean;
   /** Re-run the live fetch (bound to the agenda's retry button). */
   retry: () => void;
-  /** Whether the notifications bell + "What's changed" panel are available.
-   *  Demo-only until a notifications endpoint exists (Phase 2). */
-  notificationsEnabled: boolean;
 
   // primary view
   pill: Pill;
@@ -91,12 +84,6 @@ export interface MyEventsValue {
   softRemove: (id: string, msg: string) => void;
   removingId: string | null;
 
-  // notifications
-  markAllRead: () => void;
-  notifGo: (i: number) => void;
-  notifOpen: boolean;
-  setNotifOpen: (open: boolean) => void;
-
   // modals
   confirm: { open: boolean; title: string; meta: string };
   closeConfirm: () => void;
@@ -106,17 +93,9 @@ export interface MyEventsValue {
   ticket: { open: boolean; eventId: string | null };
   openTicket: (id: string) => void;
   closeTicket: () => void;
-  settingsOpen: boolean;
-  openSettings: () => void;
-  closeSettings: () => void;
   scope: { open: boolean; eventId: string | null; title: string };
   closeScope: () => void;
   scopeChoice: (which: "one" | "all") => void;
-
-  // preferences
-  prefs: Prefs;
-  setPref: (key: keyof Prefs, value: Prefs[keyof Prefs]) => void;
-  saveSettings: (next: Partial<Prefs>) => void;
 
   // more menu
   moreMenu: MoreMenuState;
@@ -133,11 +112,7 @@ export interface MyEventsValue {
   closeBlock: () => void;
   confirmBlock: () => void;
 
-  // deep-link focus (notification → scroll + flash the target card)
-  focusId: string | null;
-
   // misc
-  offline: boolean;
   toast: (msg: string, type?: "success" | "info" | "error") => void;
 }
 

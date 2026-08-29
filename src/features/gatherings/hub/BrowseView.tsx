@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { routes } from "../../../app/routeMap";
 import { Button, Reveal } from "../../../shared/components/ui";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -7,7 +8,6 @@ import type { CalendarEvent } from "../data";
 import { useEvents } from "../api/useEvents";
 import { BrowseFilterBar } from "./BrowseFilterBar";
 import {
-  EMPTY_BROWSE_FILTERS,
   hasActiveBrowseFilters,
   readBrowseFilters,
   toEventBrowseFilters,
@@ -94,7 +94,6 @@ export function BrowseView() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
   const [params, setParams] = useSearchParams();
   const filters = useMemo(() => readBrowseFilters(params), [params]);
   // Captured once so the date presets resolve against a stable "now" instead
@@ -140,19 +139,6 @@ export function BrowseView() {
   const isFiltered = hasActiveBrowseFilters(filters);
 
   useEffect(() => {
-    if (params.get("focus") !== "1") return;
-    searchRef.current?.focus();
-    setParams(
-      (previous) => {
-        const next = new URLSearchParams(previous);
-        next.delete("focus");
-        return next;
-      },
-      { replace: true },
-    );
-  }, [params, setParams]);
-
-  useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
     const observer = new IntersectionObserver(
@@ -172,26 +158,11 @@ export function BrowseView() {
       <div className="wrap">
         <h2 className={styles.heading}>{t("gatherings:hub.browse.heading")}</h2>
 
-        <div className={styles.search}>
-          <label className={styles.searchLabel} htmlFor="events-browse-search">
-            {t("gatherings:hub.browse.searchLabel")}
-          </label>
-          <input
-            id="events-browse-search"
-            ref={searchRef}
-            type="search"
-            className={styles.searchInput}
-            placeholder={t("gatherings:hub.browse.searchPlaceholder")}
-            value={searchDraft}
-            onChange={(event) => setSearchDraft(event.target.value)}
-          />
-        </div>
-
         <BrowseFilterBar
           filters={filters}
-          hasActiveFilters={isFiltered}
           onChange={applyFilters}
-          onClear={() => applyFilters(EMPTY_BROWSE_FILTERS)}
+          searchDraft={searchDraft}
+          onSearchDraftChange={setSearchDraft}
         />
 
         {isLoading ? (
@@ -205,16 +176,25 @@ export function BrowseView() {
               <MonthGroup key={label} label={label} events={monthEvents} />
             ))}
 
-            {items.length === 0 && (
-              <HubEmptyState
-                titleKey={
-                  isFiltered
-                    ? "gatherings:hub.browse.searchEmpty"
-                    : "gatherings:hub.browse.empty"
-                }
-                compact
-              />
-            )}
+            {/* Two different nothings, and saying the wrong one is a lie: with
+                filters on, the list is narrowed and widening it may help; with
+                none on, Lisbon simply has no upcoming gatherings posted and
+                there is no filter to try. */}
+            {items.length === 0 &&
+              (isFiltered ? (
+                <HubEmptyState
+                  titleKey="gatherings:hub.browse.noMatch.title"
+                  bodyKey="gatherings:hub.browse.noMatch.body"
+                  compact
+                />
+              ) : (
+                <HubEmptyState
+                  titleKey="gatherings:hub.empty.title"
+                  bodyKey="gatherings:hub.empty.body"
+                  ctaLabelKey="gatherings:hub.host.cta"
+                  ctaTo={routes.host}
+                />
+              ))}
 
             {isFetchingNextPage && <SkeletonRows count={3} />}
 

@@ -8,16 +8,8 @@ import type { Catalog } from "../../types";
  * `docs/i18n/glossary-pt.md`. Register is tu throughout.
  */
 export const myevents: Catalog = {
-  // ── Ações em ícone do painel (MyEventsQuickActions) ───────────────────────
-  // O antigo herói "Os teus eventos" ao lado do qual este par estava
-  // desapareceu: o EventsHeader nomeia a página uma vez, por isso
-  // `page.eyebrow` / `page.title` / `page.sub` saíram com ele.
-  "header.settingsAria": "Preferências de eventos",
-  "header.notifAria": "Notificações",
-
   // ── Cabeçalho global de eventos (EventsHeader) ────────────────────────────
   "eventsHeader.title": "Eventos",
-  "eventsHeader.searchAria": "Pesquisar eventos",
   "eventsHeader.hostCta": "Organizar um convívio",
 
   // ── Interruptor de topo My events | Discover (EventsTopTabs) ──────────────
@@ -26,6 +18,7 @@ export const myevents: Catalog = {
   "topTabs.ariaLabel": "Vistas de eventos",
 
   // ── Primary bucket pills (EventPills) ─────────────────────────────────────
+  "pills.groupLabel": "A mostrar",
   "pills.upcoming": "Todos os próximos",
   "pills.going": "Vais",
   "pills.hosting": "Organizas",
@@ -41,10 +34,12 @@ export const myevents: Catalog = {
   "toolbar.filter.free": "Gratuito",
   "toolbar.filter.paid": "Com bilhete",
   "toolbar.filter.month": "Este mês",
+  "toolbar.filter.groupLabel": "Filtros",
   "toolbar.sortAria": "Ordenar eventos",
-  "toolbar.sort.date": "Ordenar: por data",
-  "toolbar.sort.community": "Ordenar: por comunidade",
-  "toolbar.sort.status": "Ordenar: por estado",
+  "toolbar.sort.label": "Ordenar",
+  "toolbar.sort.date": "Por data",
+  "toolbar.sort.community": "Por comunidade",
+  "toolbar.sort.status": "Por estado",
   "toolbar.density.compact": "Compacto",
   "toolbar.density.comfortable": "Confortável",
   "toolbar.select.select": "Selecionar",
@@ -205,7 +200,7 @@ export const myevents: Catalog = {
   // ── Card tools row (EventCardActions EventTools) ──────────────────────────
   "tools.reminderOn": "Lembrete ativo",
   "tools.reminderInfoTooltip":
-    "Vais receber um lembrete antes disto começar, de acordo com a tua definição de antecedência em Preferências",
+    "Vais receber um lembrete na app antes disto começar",
   "tools.addToCalendar": "Adicionar ao calendário",
   "tools.addedToCalendarToast": "Adicionado ao teu calendário",
   "tools.addToCalendarModalTitle": "Adicionar ao calendário",
@@ -383,11 +378,6 @@ export const myevents: Catalog = {
   "bulk.undoCta": "Desfazer",
   "bulk.broughtBackToast": "Repuseste",
 
-  // ── Notifications panel (NotifPanel) ──────────────────────────────────────
-  "notif.title": "O que mudou",
-  "notif.markAllRead": "Marcar tudo como lido",
-  "notif.empty": "Estás em dia.",
-
   // ── Modal aria-labels (MyEventsBody → ModalShell) ─────────────────────────
 
   // ── Accept-invite confirmation panel (AcceptInviteConfirm) ────────────────
@@ -440,43 +430,6 @@ export const myevents: Catalog = {
   "ticketModal.withLabel": "Quem vai",
   "ticketModal.addToCalendarCta": "Adicionar ao calendário",
   "ticketModal.addedToCalendarToast": "Adicionado ao teu calendário",
-
-  // ── Event preferences modal (EventSettingsModal) ──────────────────────────
-  "settingsModal.eyebrow": "Preferências",
-  "settingsModal.title": "Como os teus eventos <em>chegam até ti</em>",
-  "settingsModal.comingSoonNote":
-    "A sincronização de calendário e os bilhetes ainda estão a caminho. Vais poder ligá-los assim que estiverem disponíveis.",
-  "settingsModal.pushLiveNote":
-    "O tempo do lembrete, o push no telemóvel, a tua visibilidade padrão e o email estão todos ativos. A sincronização de calendário e os bilhetes são uma pré-visualização do que aí vem.",
-  "settingsModal.pushLiveDesc":
-    "Neste dispositivo: uma notificação quando um evento a que vais está prestes a começar.",
-  "settingsModal.pushUnsupported":
-    "Este navegador não suporta notificações push.",
-  "settingsModal.pushBlocked":
-    "As notificações estão bloqueadas nas definições do navegador.",
-  "settingsModal.remindBefore": "Lembrar-me antes de um evento",
-  "settingsModal.lead.hour": "1 hora",
-  "settingsModal.lead.day": "1 dia",
-  "settingsModal.lead.week": "1 semana",
-  "settingsModal.byDefaultWhoSees": "Por norma, quem vê onde vais",
-  "settingsModal.howWeReachYou": "Como chegamos até ti",
-  "settingsModal.email": "Email",
-  // Ver a nota em en/myevents.ts: o botão guarda mesmo a preferência, mas
-  // nada a lê para enviar seja o que for, porque a QueerPulse não envia email.
-  "settingsModal.emailDesc":
-    "A QueerPulse não envia email, por isso hoje não chega nada por aqui. A tua escolha fica guardada para se isso mudar. Os lembretes chegam-te na aplicação.",
-  "settingsModal.emailToggleLabel": "Lembretes por email",
-  "settingsModal.push": "Notificações push",
-  "settingsModal.syncTickets": "Sincronização e bilhetes",
-  "settingsModal.connectCalendar": "Liga o teu calendário",
-  "settingsModal.connectCalendarSub":
-    "Sincronização bidirecional com Google ou Apple",
-  "settingsModal.ticketsReceipts": "Bilhetes e recibos",
-  "settingsModal.ticketsReceiptsSub":
-    "Todos os teus bilhetes e registos de pagamento",
-  "settingsModal.privacyNote":
-    "A QueerPulse nunca vende os teus dados. A visibilidade é sempre uma escolha tua.",
-  "settingsModal.closeCta": "Fechar",
 
   // ── Series-scope modal (SeriesScopeModal) ─────────────────────────────────
   "seriesModal.eyebrow": "A sair",
@@ -534,5 +487,4 @@ export const myevents: Catalog = {
   "toast.leftWaitlist": "Saíste da lista de espera.",
   "toast.skippedThisOne": "Saltaste esta. Continuas na série.",
   "toast.leftWholeSeries": "Saíste da série toda.",
-  "toast.preferencesSaved": "Preferências guardadas",
 };

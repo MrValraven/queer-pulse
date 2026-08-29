@@ -2,8 +2,8 @@
  * Reconcile-by-id helpers for the My Events dashboard's local mirror of a
  * react-query source list.
  *
- * The dashboard copies the fetched `events`/`notifs` into local state so RSVP,
- * bulk-remove, and read toggles can update rows optimistically. The hazard is
+ * The dashboard copies the fetched `events` into local state so RSVP,
+ * bulk-remove, and soft-remove can update rows optimistically. The hazard is
  * the query-mirror antipattern: a *background* refetch (window refocus,
  * reconnect, or an `eventKeys` invalidation from another mutation) produces a
  * fresh source array, and a naive `setState(source)` resync clobbers every

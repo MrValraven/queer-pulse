@@ -21,13 +21,16 @@ import {
   LANGUAGES,
   NEIGHBOURHOODS,
   OPEN_TO_OPTIONS,
-  facetCounts,
+  directoryFacetCounts,
+  type DirectoryFacetCounts,
+  type FilterOption,
   type FilterState,
   type MemberCard,
 } from "./memberDirectoryFilter.data";
 import { FilterProfessions } from "./FilterProfessions";
 import { FilterSection } from "./FilterSection";
 import { type SectionKey } from "./filterSectionKeys";
+import { useChipCount } from "./useChipCount";
 import styles from "./MemberDirectoryFilterPage.module.css";
 
 /** Toggle a value within a string[] immutably. */
@@ -35,9 +38,105 @@ function toggle(arr: string[], value: string): string[] {
   return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
 }
 
+/** A whole checkbox filter card: the collapsible section plus one row per
+ *  option, each carrying its availability count.
+ *
+ *  Both of the sidebar's checkbox groups ("What they're open to" and
+ *  "Identity") are this component. Sharing it is what stops their count
+ *  treatment from drifting apart — the zero rule below is subtle enough that
+ *  two copies of it would not stay the same for long. */
+function FilterCheckboxSection({
+  title,
+  options,
+  selected,
+  counts,
+  countsAreStale,
+  open,
+  onToggle,
+  onToggleOption,
+}: {
+  title: string;
+  options: FilterOption[];
+  /** The ids currently ticked in this group. */
+  selected: string[];
+  /** This group's availability counts, or `undefined` when none are available
+   *  — in which case no badges render at all. A missing count must never be
+   *  drawn as a zero: "not counted" and "nobody" are different answers. */
+  counts?: Record<string, number>;
+  countsAreStale: boolean;
+  open: boolean;
+  onToggle: () => void;
+  onToggleOption: (id: string) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <FilterSection
+      title={title}
+      open={open}
+      onToggle={onToggle}
+      activeCount={selected.length}
+    >
+      {options.map((option) => {
+        const label = t(option.labelKey);
+        const count = counts?.[option.id];
+        const isChecked = selected.includes(option.id);
+        // Nobody is left under this option, so it is a dead end — disabled, not
+        // merely dimmed, so the affordance matches the outcome. Never while it
+        // is CHECKED, though: that count was taken with this very box lifted, so
+        // a ticked zero is the one zero still worth clicking (to untick), and
+        // disabling it would trap a member in a filter they cannot undo.
+        const isUnavailable = count === 0 && !isChecked;
+        return (
+          <label
+            key={option.id}
+            className={[
+              styles.filterRow,
+              isUnavailable && styles.filterRowEmpty,
+              countsAreStale && styles.filterRowStale,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <input
+              type="checkbox"
+              checked={isChecked}
+              disabled={isUnavailable}
+              // The visible label and badge are decorative for assistive tech;
+              // the control carries the whole phrase, so a screen reader hears
+              // "Mentoring, 7 members" rather than "Mentoring 7".
+              aria-label={
+                count === undefined
+                  ? label
+                  : t("members:directory.filter.optionWithCount", {
+                      label,
+                      count,
+                    })
+              }
+              onChange={() => onToggleOption(option.id)}
+            />
+            {label}
+            {count !== undefined && (
+              <span
+                className={[styles.ct, countsAreStale && styles.ctStale]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-hidden
+              >
+                {count}
+              </span>
+            )}
+          </label>
+        );
+      })}
+    </FilterSection>
+  );
+}
+
 export function FiltersSidebar({
   filters,
   members,
+  facets,
+  countsAreStale = false,
   appliedCount,
   onChange,
   onClearAll,
@@ -46,8 +145,15 @@ export function FiltersSidebar({
   inSheet = false,
 }: {
   filters: FilterState;
-  /** Every member loaded so far — the population the counts are taken from. */
+  /** DEMO ONLY: the whole mock directory, which demo mode counts itself. Live
+   *  mode holds one page of a much larger set and must never count it — see
+   *  `facets`. */
   members: MemberCard[];
+  /** LIVE: the server's per-option availability counts. */
+  facets?: DirectoryFacetCounts;
+  /** The counts on screen describe the previous filter run; the new one is
+   *  still in flight. Dimmed rather than blanked — see `useMembers`. */
+  countsAreStale?: boolean;
   appliedCount: number;
   onChange: (next: FilterState) => void;
   onClearAll: () => void;
@@ -60,50 +166,33 @@ export function FiltersSidebar({
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const uid = useId();
-  // Counts are read off the loaded directory, never authored.
-  //
-  // DEMO-ONLY, because only there does "the loaded directory" mean the whole
-  // of it: the mock list arrives as one synthetic page. In live mode
-  // `useMembers` has fetched page 1 (20 cards) of the CURRENT filter, so a
-  // badge reading "Lesbian 3" beside a 400-member directory is not a population
-  // figure at all — and it shrank as filters narrowed, which read as the
-  // community shrinking. Better no number than a wrong one. Bring the badges
-  // back when `GET /members` returns facet totals alongside `total`.
-  const openToCounts = useMemo<Record<string, number>>(
-    () => (demoMode ? facetCounts(members, "openTo") : {}),
-    [members, demoMode],
+  // Counts are counted, never authored — and never counted off the cards on
+  // screen. Live mode fetched page 1 (20 cards) of the CURRENT filter, so
+  // tallying those would put "Lesbian 3" beside a 400-member directory, a badge
+  // that shrank as filters narrowed and read as the community shrinking. The
+  // server counts the whole matching set instead (`facets`), and demo mode —
+  // where the mock list genuinely IS the whole directory — counts it here to
+  // the same contract. Either way `undefined` means "no counts available" and
+  // renders no badges at all, which stays better than a wrong number.
+  const counts = useMemo<DirectoryFacetCounts | undefined>(
+    () => (demoMode ? directoryFacetCounts(members, filters) : facets),
+    [demoMode, members, filters, facets],
   );
-  const identityCounts = useMemo<Record<string, number>>(
-    () => (demoMode ? facetCounts(members, "identities") : {}),
-    [members, demoMode],
-  );
+  const languageChipCount = useChipCount(counts?.languages);
   return (
     <aside className={inSheet ? styles.filtersSheet : styles.filters}>
-      <FilterSection
+      <FilterCheckboxSection
         title={t("members:directory.filter.openToTitle")}
+        options={OPEN_TO_OPTIONS}
+        selected={filters.openTo}
+        counts={counts?.openTo}
+        countsAreStale={countsAreStale}
         open={sectionsOpen.openTo}
         onToggle={() => onToggleSection("openTo")}
-        activeCount={filters.openTo.length}
-      >
-        {OPEN_TO_OPTIONS.map((option) => (
-          <label key={option.id} className={styles.filterRow}>
-            <input
-              type="checkbox"
-              checked={filters.openTo.includes(option.id)}
-              onChange={() =>
-                onChange({
-                  ...filters,
-                  openTo: toggle(filters.openTo, option.id),
-                })
-              }
-            />
-            {t(option.labelKey)}
-            {openToCounts[option.id] !== undefined && (
-              <span className={styles.ct}>{openToCounts[option.id]}</span>
-            )}
-          </label>
-        ))}
-      </FilterSection>
+        onToggleOption={(id) =>
+          onChange({ ...filters, openTo: toggle(filters.openTo, id) })
+        }
+      />
 
       <FilterSection
         title={t("members:directory.filter.hoodTitle")}
@@ -129,36 +218,25 @@ export function FiltersSidebar({
 
       <FilterProfessions
         filters={filters}
+        counts={counts}
+        countsAreStale={countsAreStale}
         onChange={onChange}
         sectionsOpen={sectionsOpen}
         onToggleSection={onToggleSection}
       />
 
-      <FilterSection
+      <FilterCheckboxSection
         title={t("members:directory.filter.identityTitle")}
+        options={IDENTITY_OPTIONS}
+        selected={filters.identities}
+        counts={counts?.identities}
+        countsAreStale={countsAreStale}
         open={sectionsOpen.identities}
         onToggle={() => onToggleSection("identities")}
-        activeCount={filters.identities.length}
-      >
-        {IDENTITY_OPTIONS.map((option) => (
-          <label key={option.id} className={styles.filterRow}>
-            <input
-              type="checkbox"
-              checked={filters.identities.includes(option.id)}
-              onChange={() =>
-                onChange({
-                  ...filters,
-                  identities: toggle(filters.identities, option.id),
-                })
-              }
-            />
-            {t(option.labelKey)}
-            {identityCounts[option.id] !== undefined && (
-              <span className={styles.ct}>{identityCounts[option.id]}</span>
-            )}
-          </label>
-        ))}
-      </FilterSection>
+        onToggleOption={(id) =>
+          onChange({ ...filters, identities: toggle(filters.identities, id) })
+        }
+      />
 
       <FilterSection
         title={t("members:directory.filter.ageTitle")}
@@ -220,8 +298,13 @@ export function FiltersSidebar({
         activeCount={filters.languages.length}
       >
         <ChipSelect
+          className={countsAreStale ? styles.chipsStale : undefined}
           labelledBy={`${uid}-languages`}
-          options={LANGUAGES.map((o) => o.label)}
+          options={LANGUAGES.map((o) => ({
+            value: o.label,
+            label: o.label,
+            ...languageChipCount(o.label, o.label),
+          }))}
           selected={new Set(filters.languages)}
           onToggle={(value) =>
             onChange({
