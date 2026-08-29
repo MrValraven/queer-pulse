@@ -7093,6 +7093,11 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
 
+  "changelog.entries.a-persona-leads-with-its-name.title":
+    "A persona leads with its name",
+  "changelog.entries.a-persona-leads-with-its-name.body":
+    "The card for whichever persona you were looking at opened with an uppercase craft badge and a handle. The name and the line describing the work only turned up underneath all of that, starting further left than everything above them, so the photo sat next to nothing in particular. The photo now sits beside the name it belongs to, with the description directly under it, and the whole block reads as one person. The craft has moved to the head of that description line, printed darker than the words around it so it still catches your eye, and the badge is gone.",
+
   "changelog.entries.pages-open-the-moment-you-click-them.title":
     "Pages open the moment you click them",
   "changelog.entries.pages-open-the-moment-you-click-them.body":

@@ -40,8 +40,9 @@ interface SubprofileFeatureCardProps {
    *  `aria-labelledby` so assistive tech announces which persona this panel
    *  belongs to. */
   ariaLabelledby?: string;
-  /** Owner-only status (draft/published), rendered as a badge near the kind
-   *  badge. `undefined` on the public path — a visitor never sees drafts. */
+  /** Owner-only status (draft/published), rendered as a badge in the identity
+   *  block's meta row, beside the handle. `undefined` on the public path — a
+   *  visitor never sees drafts. */
   status?: SubprofileStatus;
   /** Owner-only visibility (open/network/private), rendered alongside `status`. */
   visibility?: Visibility;
@@ -152,41 +153,59 @@ export function SubprofileFeatureCard({
         )}
 
         <div className={styles.featureBody}>
+          {/* Name and tagline live in a column beside the avatar (the same
+              identity-block shape as a switch-list row), so the avatar anchors
+              them rather than floating above a second, further-left text edge.
+              The craft leads the tagline instead of wearing its own badge, and
+              `.featureKind` gives it back the weight the pill used to carry —
+              without it the craft would sink into muted secondary text. */}
           <div className={styles.featureTop}>
             <Avatar
               initials={initialsFromName(persona.displayName, "?")}
               src={persona.avatarUrl ?? undefined}
               tint="plum"
-              size={56}
+              size={64}
               className={styles.featureAvatar}
             />
-            <div className={styles.featureTopMeta}>
-              <span className={styles.kindBadge}>
-                {t(KIND_LABEL_KEYS[persona.kind])}
-              </span>
-              <SubprofileOwnerBadges
-                status={status}
-                visibility={visibility}
-                className={styles.ownerBadges}
-              />
-              {persona.handle && (
-                <span className={styles.handle}>@{persona.handle}</span>
+            <div className={styles.featureIdentity}>
+              <h3 className={styles.featureName}>
+                <Link className={styles.featureLink} to={href}>
+                  {persona.displayName}
+                </Link>
+              </h3>
+
+              <p className={styles.featureTagline}>
+                <span className={styles.featureKind}>
+                  {t(KIND_LABEL_KEYS[persona.kind])}
+                </span>
+                {persona.tagline && (
+                  <>
+                    {" \u00b7 "}
+                    {persona.tagline}
+                  </>
+                )}
+              </p>
+
+              {/* SubprofileOwnerBadges renders nothing on the public path, so
+                  the row is gated on having real content — otherwise every
+                  visitor gets an empty flex row taking up the gap. */}
+              {(persona.handle || status || visibility) && (
+                <div className={styles.featureIdentityMeta}>
+                  <SubprofileOwnerBadges
+                    status={status}
+                    visibility={visibility}
+                    className={styles.ownerBadges}
+                  />
+                  {persona.handle && (
+                    <span className={styles.handle}>@{persona.handle}</span>
+                  )}
+                </div>
               )}
             </div>
             {ownerControls && (
               <div className={styles.ownerControlsRow}>{ownerControls}</div>
             )}
           </div>
-
-          <h3 className={styles.featureName}>
-            <Link className={styles.featureLink} to={href}>
-              {persona.displayName}
-            </Link>
-          </h3>
-
-          {persona.tagline && (
-            <p className={styles.featureTagline}>{persona.tagline}</p>
-          )}
 
           {persona.featured && (
             <SubprofileFeaturedStrip item={persona.featured} accent={accent} />

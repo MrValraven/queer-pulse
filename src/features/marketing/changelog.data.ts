@@ -90,6 +90,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "a-persona-leads-with-its-name",
+        category: "improvement",
+        date: "29 Aug 2026",
+        ...entryKeys("a-persona-leads-with-its-name"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
         id: "pages-open-the-moment-you-click-them",
         category: "improvement",
         date: "29 Aug 2026",

@@ -7229,6 +7229,11 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nomear um Agente de Mudança eram duas caixas em forma de comprimido lado a lado por baixo do título: sem etiquetas, sem noção de quanto podias escrever na segunda e com um botão que ficava morto até as duas terem alguma coisa, sem nunca o dizer. O texto passa a ficar ao lado de um cartão a sério. Os dois campos têm etiqueta e uma pista, a caixa do porquê tem espaço para escrever e uma contagem de 500 caracteres, e carregar no botão com um campo vazio diz-te qual deles falta. Ao lado do formulário, três linhas explicam o que acontece a seguir: alguém da moderação lê, recebes uma notificação com a decisão e a pessoa nomeada nunca é avisada.",
 
+  "changelog.entries.a-persona-leads-with-its-name.title":
+    "Uma persona passa a começar pelo nome",
+  "changelog.entries.a-persona-leads-with-its-name.body":
+    "O cartão da persona que estavas a ver abria com um distintivo em maiúsculas com o ofício e com o nome de utilizador. O nome e a linha que descreve o trabalho só apareciam por baixo de tudo isso, a começar mais à esquerda do que aquilo que estava por cima, por isso a fotografia ficava ao lado de nada em concreto. A fotografia passa a ficar ao lado do nome a que pertence, com a descrição logo por baixo, e o bloco inteiro lê-se como uma pessoa só. O ofício passou para o início dessa linha de descrição, escrito mais escuro do que as palavras à volta para continuar a saltar à vista, e o distintivo desapareceu.",
+
   "changelog.entries.pages-open-the-moment-you-click-them.title":
     "As páginas abrem no momento em que carregas",
   "changelog.entries.pages-open-the-moment-you-click-them.body":

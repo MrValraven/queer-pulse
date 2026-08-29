@@ -183,10 +183,14 @@
   width: 100%;
 }
 
+/* The hero's identity block: avatar beside a column of name + tagline + meta.
+   `flex-start` rather than `center` — the column runs to three lines, and a
+   centred 64px avatar would float in the middle of them instead of anchoring
+   the name it belongs to. */
 .featureTop {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 14px;
   width: 100%;
   min-width: 0;
 }
@@ -199,23 +203,22 @@
     0 0 0 4px color-mix(in srgb, var(--accent-tint) 40%, var(--paper));
 }
 
-.featureTopMeta {
+.featureIdentity {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: 6px;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
-.kindBadge {
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--accent-tint);
-  color: var(--accent-on);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+/* Handle + owner status badges, below the tagline. */
+.featureIdentityMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .handle {
@@ -229,11 +232,15 @@
   max-width: 100%;
 }
 
+/* Pinned to the top-right of the identity block — the row is `flex-start`
+   aligned now, so without `align-self` Edit would sit level with the tagline
+   rather than with the name it acts on. */
 .ownerControlsRow {
   display: flex;
   align-items: center;
   gap: var(--gap-xs);
   margin-inline-start: auto;
+  align-self: flex-start;
   flex: none;
 }
 
@@ -281,6 +288,14 @@
   color: var(--ink-60);
   font-size: 0.95rem;
   line-height: 1.45;
+}
+
+/* The craft leads the tagline in place of the old accent pill. Weight and full
+   ink keep it scannable as this persona's classification; at the tagline's own
+   muted colour it would read as part of the sentence. */
+.featureKind {
+  font-weight: 600;
+  color: var(--ink);
 }
 
 /* ── Featured-work strip (SubprofileFeaturedStrip) ─────────────────────────── */
