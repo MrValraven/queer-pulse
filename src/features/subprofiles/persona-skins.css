@@ -290,6 +290,53 @@
   line-height: 1.45;
   max-width: 48ch;
 }
+/* The craft chip and the tagline share ONE line under the display name — the
+   chip reads as a qualifier on the sentence beside it rather than a lone label
+   floating above the headline. `baseline` alignment sits the chip's own text on
+   the tagline's first baseline (right for the pill skins and the flat
+   letterspaced ones alike), and the row wraps so a long tagline drops under the
+   chip instead of squeezing it.
+
+   Two skins opt out with `display:contents`, which dissolves the wrapper and
+   leaves both children as direct `.pp-text` children exactly as before:
+   • gallery places `.pp-kind` and `.pp-tagline` itself, in separate cells of
+     its own `.pp-text` grid;
+   • page hides the chip entirely, so there is no second thing to pair. */
+.pp-taglineRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.pp[data-skin="gallery"] .pp-taglineRow,
+.pp[data-skin="page"] .pp-taglineRow {
+  display: contents;
+}
+/* `.pp-kind`'s base `align-self:flex-start` existed to stop the pill stretching
+   across the `.pp-text` COLUMN; inside the row it would pin the chip to the top
+   edge instead, so hand it back to the row's baseline. `:where()` keeps this at
+   the same specificity as the mobile `align-self:center` rule further down,
+   which sits later in the file and so still wins on narrow widths. Skipped on
+   the two `display:contents` skins, where the chip is still a `.pp-text` child
+   and its alignment belongs to that layout. */
+.pp:where(:not([data-skin="gallery"]):not([data-skin="page"]))
+  .pp-taglineRow
+  > .pp-kind {
+  align-self: baseline;
+}
+.pp:where(:not([data-skin="gallery"]):not([data-skin="page"]))
+  .pp-taglineRow
+  > .pp-tagline {
+  min-width: 0;
+}
+/* The skins that centre the identity column centre the paired row as a group
+   (`text-align` alone only centres the tagline's own lines, not the two boxes
+   inside the flex row). */
+.pp[data-skin="table"] .pp-taglineRow,
+.pp[data-skin="chart"] .pp-taglineRow,
+.pp[data-skin="chair"] .pp-taglineRow {
+  justify-content: center;
+}
 .pp-acts {
   display: flex;
   gap: 9px;
@@ -394,12 +441,18 @@
     height: 96px;
     margin-top: -48px;
   }
-  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-kind {
-    align-self: center;
+  /* Centre the chip + tagline PAIR (they share a line now, `.pp-taglineRow`);
+     the chip's own horizontal centring came from `.pp-text{align-items:center}`
+     below and is now the row's job. Its cross-axis alignment stays the base
+     baseline, so a tagline that wraps to two lines keeps the chip on the first
+     line rather than floating to the vertical middle. */
+  .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"]))
+    .pp-taglineRow {
+    justify-content: center;
   }
   /* Stretch the text column full-width (so the action row can fill it) while
      centering its own children. Tighten the base rhythm to 10px so the identity
-     cluster (kind → name → tagline → social) reads as ONE group; the action row
+     cluster (name → kind + tagline → social) reads as ONE group; the action row
      and stat line below reopen their own space (padding-top) so grouping shows
      through as graduated spacing rather than one flat, ungrouped gap. */
   .pp:where(:not([data-skin="studio"]):not([data-skin="workshop"])) .pp-text {

@@ -90,6 +90,26 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "see-your-persona-the-way-a-visitor-does",
+        category: "feature",
+        date: "30 Aug 2026",
+        ...entryKeys("see-your-persona-the-way-a-visitor-does"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "filters-you-add-ease-in-and-out",
+        category: "improvement",
+        date: "30 Aug 2026",
+        ...entryKeys("filters-you-add-ease-in-and-out"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "every-neighbourhood-says-how-many-people-are-there",
         category: "improvement",
         date: "30 Aug 2026",

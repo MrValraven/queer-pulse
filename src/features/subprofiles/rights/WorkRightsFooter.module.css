@@ -36,3 +36,14 @@
 .page .provenance {
   margin-top: 0.25rem;
 }
+/* The shield rides inline with the © line here, so it drops the hanging
+   offset it needs in the `item` variant. */
+.page .copyright {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: center;
+}
+.page .icon {
+  margin-top: 0;
+}

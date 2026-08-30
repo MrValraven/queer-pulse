@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import { FiCheck, FiEdit2, FiUserCheck, FiUserPlus } from "react-icons/fi";
+import {
+  FiCheck,
+  FiEdit2,
+  FiEye,
+  FiUserCheck,
+  FiUserPlus,
+} from "react-icons/fi";
 import { safeHref } from "../../shared/lib/safeHref";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -34,9 +40,12 @@ function InertAction({ icon, label }: { icon: ReactNode; label: string }) {
  * Task 5): `"report"` opens `SubprofileReportModal`, and the controls that
  * already have real, self-contained behaviour (follow/endorse/share/message)
  * keep using their own hooks directly rather than routing through it.
- * `preview` mode (the Phase-3 editor) mounts no mutating widgets at all —
- * only inert look-alikes — so previewing a draft never fires a real
- * follow/endorse/API call.
+ * `preview` mode (the Phase-3 editor) and `visitor` mode (the owner reading
+ * their own page as a stranger, entered from the `View as visitor` control in
+ * the owner row) mount no mutating widgets at all — only inert look-alikes —
+ * so neither ever fires a real follow/endorse/API call. They share this branch
+ * because the action row is the one place where both want the same answer:
+ * show the visitor's controls, don't let them do anything.
  */
 export function SubprofileHeroActions({
   view,
@@ -66,13 +75,27 @@ export function SubprofileHeroActions({
         >
           <FiEdit2 aria-hidden /> {t("subprofiles:hero.edit")}
         </Button>
+        {/* Only a published persona has a visitor to be viewed as: a draft
+            answers 404 for everyone but its owner, so offering the preview
+            there would promise a page nobody can actually reach. The draft
+            banner above already says so. */}
+        {view.status === "published" && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="md"
+            onClick={() => onAction("preview:enter")}
+          >
+            <FiEye aria-hidden /> {t("subprofiles:hero.viewAsVisitor")}
+          </Button>
+        )}
         <SubprofileShare view={view} />
         <SubprofileAvailability value={view.availability} accent={accent} />
       </div>
     );
   }
 
-  if (mode === "preview") {
+  if (mode === "preview" || mode === "visitor") {
     return (
       <div className="pp-acts">
         {view.ctaLabel && (
@@ -105,6 +128,14 @@ export function SubprofileHeroActions({
               : "subprofiles:hero.endorse.cta",
           )}
         />
+        {/* A stranger gets the overflow menu, so the owner previewing as one
+            gets it too — with Share live (sharing your own persona is exactly
+            what a visitor would do) and Report inert, since there is nobody to
+            report yourself to. The editor's docked pane mounts no menu at
+            all: it is a thumbnail, not the page. */}
+        {mode === "visitor" && (
+          <SubprofileMoreMenu view={view} onAction={onAction} inertReport />
+        )}
         <SubprofileAvailability value={view.availability} accent={accent} />
       </div>
     );

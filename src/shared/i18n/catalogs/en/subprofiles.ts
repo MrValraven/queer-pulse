@@ -818,6 +818,7 @@ export const subprofiles: Catalog = {
   // Persona hero (SubprofileHero)
   "hero.message": "Message",
   "hero.edit": "Edit persona",
+  "hero.viewAsVisitor": "View as visitor",
   "hero.report.cta": "Report this persona",
   "hero.more.ariaLabel": "More actions for {name}",
   "hero.viewPhotoAria": "View photo of {name}",
@@ -947,6 +948,9 @@ export const subprofiles: Catalog = {
   "page.notFoundDescription":
     "It may have been unpublished, kept private, or this link could be out of date. Nothing's wrong on your end.",
   "page.notFoundAction": "Browse personas",
+  "page.previewBanner":
+    "You're seeing this persona as a <strong>visitor</strong> does.",
+  "page.exitPreview": "Exit preview",
 
   // The other three "can't show you this" walls (SubprofilePageStates) —
   // built and ready, not yet reachable from the current data layer (see

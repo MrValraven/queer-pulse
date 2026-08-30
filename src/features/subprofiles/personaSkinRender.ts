@@ -10,27 +10,41 @@ import { VISUAL_SECTIONS } from "./subprofile-skins";
 /**
  * How the persona-page renderer (`SubprofileHero`/`SubprofileSections`/
  * `SubprofileSpotlight`/`SubprofileSkinExtras`) is being shown: a public
- * visitor, the persona's own owner, or the Phase-3 editor's non-interactive
+ * visitor, the persona's own owner, the owner reading their own persona
+ * exactly as a stranger does, or the Phase-3 editor's non-interactive
  * preview. Shared here so every renderer component references the same
  * literal union instead of redeclaring it.
+ *
+ * `"visitor"` and `"preview"` are deliberately NOT the same thing. `"preview"`
+ * is the editor's docked pane: the whole tree goes inert, because a click
+ * inside a small preview pane that opened a lightbox or a real social profile
+ * would be a surprise. `"visitor"` is the full page — the owner asking "what
+ * does a stranger actually get here?" — so everything a stranger can do stays
+ * live (lightbox, poem reader, spotlight CTA, social links, rights footer) and
+ * only the mutating controls (message/follow/endorse/report/the CTA link) drop
+ * to inert look-alikes. That is why every `mode !== "preview"` interactivity
+ * check in this feature stays spelled that way rather than listing modes:
+ * `"visitor"` is an interactive mode.
  */
-export type PersonaViewMode = "public" | "owner" | "preview";
+export type PersonaViewMode = "public" | "owner" | "visitor" | "preview";
 
 /**
  * The intents a viewer's persona-page controls dispatch up to the page host
  * (`SubprofilePage.handleAction`) via the `onAction` callback, threaded through
  * `SubprofilePageBody` → `SubprofileHero`/`SubprofileHeroActions`/
  * `SubprofileMoreMenu`/`SubprofileAffiliations`. `"report"` opens the report
- * modal; the `"people:*"` pair opens the endorsers/followers modal; the
- * navigation intents (`"edit"`/`"cta"`/`"message"`) accompany controls that
- * also carry their own `to`/`href`/handler. Replaces the former bare `string`
- * so every hop is checked against the same closed set.
+ * modal; the `"people:*"` pair opens the endorsers/followers modal;
+ * `"preview:enter"` flips the page into `mode="visitor"`; the navigation
+ * intents (`"edit"`/`"cta"`/`"message"`) accompany controls that also carry
+ * their own `to`/`href`/handler. Replaces the former bare `string` so every
+ * hop is checked against the same closed set.
  */
 export type PersonaAction =
   | "edit"
   | "cta"
   | "message"
   | "report"
+  | "preview:enter"
   | "people:endorsers"
   | "people:followers";
 

@@ -1,5 +1,7 @@
 import { useId } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { FiSearch, FiSliders, FiUsers, FiX } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import {
   Button,
   EmptyState,
@@ -141,6 +143,7 @@ export function MemberResultsColumn({
   const { t } = useTranslation();
   const fmt = useFormat();
   const sortLabelId = useId();
+  const { reducedMotion } = useMotionPrefs();
 
   return (
     <div>
@@ -188,12 +191,24 @@ export function MemberResultsColumn({
         </div>
       </div>
 
-      {chips.length > 0 && (
-        <div className={styles.appliedRow}>
+      {/* Always mounted so a chip removed one at a time can play its exit
+          animation; `.appliedRow:empty` hides the row once the last exit
+          finishes. `initial={false}` keeps chips already applied on arrival
+          from animating in on mount — only chips added later do. */}
+      <div className={styles.appliedRow}>
+        <AnimatePresence initial={false}>
           {chips.map((chip) => (
-            <span
+            <m.span
               key={`${chip.group}:${chip.value}`}
               className={styles.applied}
+              layout={!reducedMotion}
+              initial={{ opacity: 0, scale: 0.86 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.86 }}
+              transition={{
+                duration: reducedMotion ? 0 : 0.22,
+                ease: [0.22, 1, 0.36, 1],
+              }}
             >
               {chip.label}
               <button
@@ -205,10 +220,10 @@ export function MemberResultsColumn({
               >
                 <FiX aria-hidden />
               </button>
-            </span>
+            </m.span>
           ))}
-        </div>
-      )}
+        </AnimatePresence>
+      </div>
 
       {loading ? (
         <div className={styles.mGrid}>

@@ -812,6 +812,7 @@ export const subprofiles: Catalog = {
   // Cabeçalho da persona (SubprofileHero)
   "hero.message": "Mensagem",
   "hero.edit": "Editar persona",
+  "hero.viewAsVisitor": "Ver como visitante",
   // Reposicionamento do banner (PersonaCoverReposition).
   "cover.reposition.cta": "Reposicionar",
   "cover.reposition.hint": "Arrasta o banner para cima ou para baixo",
@@ -967,6 +968,9 @@ export const subprofiles: Catalog = {
   "page.notFoundDescription":
     "Pode ter sido despublicada, mantida privada, ou este link pode estar desatualizado. Não há nada de errado do teu lado.",
   "page.notFoundAction": "Explorar personas",
+  "page.previewBanner":
+    "Estás a ver esta persona como um <strong>visitante</strong> a vê.",
+  "page.exitPreview": "Sair da pré-visualização",
 
   // As outras três páginas de "não podemos mostrar isto" (SubprofilePageStates)
   // — já construídas, ainda não alcançáveis pelos dados atuais (ver

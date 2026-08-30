@@ -1,0 +1,59 @@
+/* Owner-previewing-own-persona-as-a-visitor pill. Fixed to the foot of the
+   viewport (a persona page is long, and the exit has to stay reachable while
+   the owner scrolls it like a stranger would), and shaped to match the member
+   profile's ProfilePreviewBanner so the two previews read as one affordance. */
+.bar {
+  position: fixed;
+  /* Anchored to BOTH edges, then sized to content and centred with auto
+     margins: with `left: 50%` the shrink-to-fit width caps at ~50vw, narrower
+     than the label, and the global `overflow-wrap: anywhere` collapses it to a
+     one-character column on phones. */
+  left: 0;
+  right: 0;
+  /* Clear the mobile bottom tab bar; `--bottom-inset` already folds in the
+     home-indicator inset (0 on desktop). */
+  bottom: calc(22px + var(--bottom-inset, 0px));
+  width: max-content;
+  max-width: calc(100% - 24px);
+  margin-inline: auto;
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  padding: 11px 12px 11px 20px;
+  border-radius: 999px;
+  box-shadow: 0 16px 40px -16px rgba(var(--plum-rgb), 0.8);
+  animation: personaPreviewSlideUp 0.3s var(--ease);
+}
+
+.text {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+.text strong {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Declared in this module, not borrowed from a global sheet: a CSS-module
+   `animation:` naming a keyframe it doesn't own silently never runs. */
+@keyframes personaPreviewSlideUp {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    animation: none;
+  }
+}

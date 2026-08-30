@@ -494,11 +494,17 @@
   width: 100%;
 }
 
+/* Always rendered by MemberResultsColumn so the last chip can play its exit
+   animation before the row goes; `:empty` takes the row (and its margin) out
+   of flow once no chips are left. */
 .appliedRow {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 18px;
+}
+.appliedRow:empty {
+  display: none;
 }
 .applied {
   display: inline-flex;

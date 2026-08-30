@@ -13,6 +13,7 @@ import { SubprofilePageBody } from "./SubprofilePageBody";
 import { SubprofilePageStates } from "./SubprofilePageStates";
 import { SubprofilePageSkeleton } from "./SubprofilePageSkeleton";
 import { SubprofileDraftBanner } from "./SubprofileDraftBanner";
+import { SubprofilePreviewBanner } from "./SubprofilePreviewBanner";
 import { SubprofileReportModal } from "./SubprofileReportModal";
 import { SubprofilePeopleModal } from "./SubprofilePeopleModal";
 import { StudioLightbox } from "./skins/StudioLightbox";
@@ -59,10 +60,11 @@ const RESTRICTED_TO_PAGE_STATE: Record<RestrictedState, PersonaPageState> = {
  *
  * Mode is co-ownership aware: `viewerIsMember` covers the creator AND any
  * invited co-owner (not just "am I the creator"), so an invited co-owner
- * sees the same "owner" actions the creator does. This page only ever
- * renders `"public"` or `"owner"` — `"preview"` is the Phase-3 editor's
- * concern, reusing the same components with a different `mode`, never
- * mounted here.
+ * sees the same "owner" actions the creator does. An owner can also flip
+ * themselves into `"visitor"` — their own page exactly as a stranger reads it
+ * — from the hero's `View as visitor`. `"preview"` is the Phase-3 editor's
+ * concern, reusing the same components with a different `mode`, never mounted
+ * here.
  */
 export function SubprofilePage() {
   const { t } = useTranslation();
@@ -86,12 +88,22 @@ export function SubprofilePage() {
   const [reportOpen, setReportOpen] = useState(false);
   const [peopleModalMode, setPeopleModalMode] =
     useState<PeopleModalMode | null>(null);
+  // The owner reading their own persona as a stranger would. Page-local and
+  // deliberately not in the URL: it is a way of looking, not an address — and
+  // a shared link that dropped someone else into "preview" would be nonsense.
+  const [previewingAsVisitor, setPreviewingAsVisitor] = useState(false);
   const { poemItem, openPoem, closePoem } = usePoemDeepLink(sections);
 
   function handleAction(action: PersonaAction) {
     if (action === "report") setReportOpen(true);
     else if (action === "people:endorsers") setPeopleModalMode("endorsements");
     else if (action === "people:followers") setPeopleModalMode("followers");
+    else if (action === "preview:enter") {
+      setPreviewingAsVisitor(true);
+      // A stranger arrives at the top of the page; start the preview there
+      // rather than wherever the owner happened to be scrolled to.
+      window.scrollTo({ top: 0 });
+    }
   }
 
   if (result.state === "loading") {
@@ -127,7 +139,12 @@ export function SubprofilePage() {
   // result.state === "ok" from here on — every other branch returned above.
   const { data } = result;
   const skin = skinFor(data.kind);
-  const mode: PersonaViewMode = data.viewerIsMember ? "owner" : "public";
+  const isOwnerPreviewingAsVisitor = data.viewerIsMember && previewingAsVisitor;
+  const mode: PersonaViewMode = !data.viewerIsMember
+    ? "public"
+    : previewingAsVisitor
+      ? "visitor"
+      : "owner";
   const isOwnerDraftPreview = data.status === "draft" && data.viewerIsMember;
   const skinStyle = skinVars(data.accent ?? DEFAULT_ACCENT);
 
@@ -241,10 +258,15 @@ export function SubprofilePage() {
         />
       )}
 
+      {isOwnerPreviewingAsVisitor && (
+        <SubprofilePreviewBanner onExit={() => setPreviewingAsVisitor(false)} />
+      )}
+
       {peopleModalMode && (
         <SubprofilePeopleModal
           persona={data}
           mode={peopleModalMode}
+          asVisitor={isOwnerPreviewingAsVisitor}
           onClose={() => setPeopleModalMode(null)}
         />
       )}

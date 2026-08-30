@@ -232,18 +232,6 @@
   max-width: 100%;
 }
 
-/* Pinned to the top-right of the identity block — the row is `flex-start`
-   aligned now, so without `align-self` Edit would sit level with the tagline
-   rather than with the name it acts on. */
-.ownerControlsRow {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-xs);
-  margin-inline-start: auto;
-  align-self: flex-start;
-  flex: none;
-}
-
 /* Self-view status/visibility badges (SubprofileOwnerBadges), shown near the
    kind badge on the hero and inline in a switch-list row. The component
    itself renders nothing when neither prop is set (the public path), so
@@ -392,6 +380,17 @@ a.featuredStripLink:focus-visible {
   flex-wrap: wrap;
   gap: var(--gap-xs);
   min-width: 0;
+}
+
+/* The action group (owner-only Edit, Visit, optional CTA) trails the row until
+   the two groups no longer fit side by side; once `.footer` wraps it takes the
+   whole line and starts at the card's left edge, so the buttons never land in a
+   ragged half-line on a phone. `flex-grow` only bites after the wrap — before
+   it, `justify-content: space-between` still has both groups on one line and
+   there is no free space left to grow into. */
+.footerRight {
+  flex-grow: 1;
+  justify-content: flex-end;
 }
 
 /* ── Switch list (SubprofileSwitchList) ────────────────────────────────────── */

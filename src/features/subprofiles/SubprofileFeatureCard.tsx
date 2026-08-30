@@ -24,9 +24,10 @@ interface SubprofileFeatureCardProps {
    *  `qpPersonaInDown`/`qpPersonaInUp` entrance keyframe (or a plain fade for
    *  `"none"`, e.g. first render). */
   direction?: "up" | "down" | "none";
-  /** Owner-only controls (edit / reorder), rendered inline when the viewer is
-   *  the persona's owner. `undefined` on the public path (the default) — this
-   *  card never fetches or infers ownership itself. */
+  /** Owner-only controls (edit / reorder), handed to the card footer so they
+   *  sit on the same action line as Visit rather than floating up beside the
+   *  name. `undefined` on the public path (the default) — this card never
+   *  fetches or infers ownership itself. */
   ownerControls?: ReactNode;
   /** DOM id for the hero root, set by `SubprofileShowcase` so the switch
    *  list's tabs can `aria-controls` this element. `undefined` when there's
@@ -202,9 +203,6 @@ export function SubprofileFeatureCard({
                 </div>
               )}
             </div>
-            {ownerControls && (
-              <div className={styles.ownerControlsRow}>{ownerControls}</div>
-            )}
           </div>
 
           {persona.featured && (
@@ -237,6 +235,7 @@ export function SubprofileFeatureCard({
             href={href}
             ctaHref={ctaHref}
             isOwnerViewing={isOwnerViewing}
+            ownerControls={ownerControls}
           />
         </div>
       </div>

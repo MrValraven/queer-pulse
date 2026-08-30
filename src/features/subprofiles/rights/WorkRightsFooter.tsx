@@ -17,6 +17,10 @@ export interface WorkRightsFooterProps {
  * Copyright + provenance notice: a "© {year} {author}. All rights reserved."
  * line plus a "First published on QueerPulse · {date}" line. Tokens only.
  *
+ * The shield hangs to the left of both lines in the inline `item` variant. In
+ * the centred `page` variant it sits inline with the © line, so it reads as
+ * part of the notice rather than floating beside a centred block.
+ *
  * It is deliberately NOT rendered per row/spotlight/menu-card on a persona
  * page — repeating it beside every item read as spam. The page shows it once
  * at the end via `PersonaRightsFooter`; the only other places it appears are
@@ -37,15 +41,19 @@ export function WorkRightsFooter({
     year: "numeric",
   });
 
+  const isPageVariant = variant === "page";
+  const shieldIcon = <FiShield aria-hidden className={styles.icon} />;
+
   return (
     <footer
       className={
-        variant === "page" ? `${styles.rights} ${styles.page}` : styles.rights
+        isPageVariant ? `${styles.rights} ${styles.page}` : styles.rights
       }
     >
-      <FiShield aria-hidden className={styles.icon} />
+      {isPageVariant ? null : shieldIcon}
       <div>
         <p className={styles.copyright}>
+          {isPageVariant ? shieldIcon : null}
           {t("subprofiles:rights.copyright", { year, author: authorName })}
         </p>
         <p className={styles.provenance}>

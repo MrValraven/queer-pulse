@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { FiArrowRight, FiExternalLink } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,20 +10,28 @@ import styles from "./SubprofileShowcase.module.css";
 
 /**
  * The hero's footer: social proof (follow/endorse counts) on the left, the
- * always-present "Visit" link plus an optional external CTA button on the
- * right. Extracted from `SubprofileFeatureCard` to keep it under the
- * 200-line cap.
+ * card's actions on the right — the owner-only Edit control (when the viewer
+ * owns the persona), the always-present "Visit" link, and an optional external
+ * CTA button. Every action the card offers lives on this one line, so an owner
+ * reads the card the same way a visitor does instead of hunting for Edit up
+ * beside the name. Edit leads so Visit and the CTA keep the same trailing
+ * position they hold on the public path. Extracted from
+ * `SubprofileFeatureCard` to keep it under the 200-line cap.
  */
 export function SubprofileCardFooter({
   persona,
   href,
   ctaHref,
   isOwnerViewing,
+  ownerControls,
 }: {
   persona: PublicSubprofileView;
   href: string;
   ctaHref: string | null;
   isOwnerViewing: boolean;
+  /** Owner-only controls (Edit) from `SubprofileFeatureCard`; `undefined` on
+   *  the public path, where the row is just Visit (+ CTA). */
+  ownerControls?: ReactNode;
 }) {
   const { t } = useTranslation();
   return (
@@ -48,6 +57,7 @@ export function SubprofileCardFooter({
         />
       </div>
       <div className={styles.footerRight}>
+        {ownerControls}
         <Button variant="ghost" size="md" to={href}>
           {t("subprofiles:alsoAs.viewPersona")}
           <FiArrowRight aria-hidden />

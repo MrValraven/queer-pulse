@@ -85,3 +85,15 @@
     transition: none;
   }
 }
+
+/* Report while the owner previews as a visitor — `aria-disabled`, so it keeps
+   its place in the roving keyboard order and only loses its click. */
+.itemInert {
+  opacity: 0.45;
+  cursor: default;
+}
+@media (hover: hover) {
+  .itemInert:hover {
+    background: transparent;
+  }
+}

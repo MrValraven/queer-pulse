@@ -108,10 +108,19 @@ function PersonRow({
 export function SubprofilePeopleModal({
   persona,
   mode,
+  asVisitor = false,
   onClose,
 }: {
   persona: PersonaPeopleSummary;
   mode: PeopleModalMode;
+  /** Set while the owner reads their own persona as a visitor
+   *  (`mode="visitor"` on the page). The stat buttons that open this modal
+   *  stay live in that mode — a stranger can press them — so the modal has to
+   *  answer as it would for a stranger: the followers list is owner-only, and
+   *  showing the owner their own follower names inside a preview of the
+   *  visitor's view would be the exact wrong answer. Drops the owner powers,
+   *  which also stops the owner-only `getFollowers` fetch from firing. */
+  asVisitor?: boolean;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -121,7 +130,7 @@ export function SubprofilePeopleModal({
   const { withdraw } = useEndorsement(persona.id);
   const [removingSlug, setRemovingSlug] = useState<string | null>(null);
   const viewerSlug = user?.profile.slug ?? null;
-  const isOwner = persona.viewerIsMember;
+  const isOwner = persona.viewerIsMember && !asVisitor;
 
   const { data: endorsersResult, isLoading: endorsersLoading } = useEndorsers(
     persona.id,

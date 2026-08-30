@@ -87,7 +87,6 @@ export function SubprofileHero({
         )}
 
         <div className="pp-text">
-          <span className="pp-kind">{t(KIND_LABEL_KEYS[view.kind])}</span>
           {/* The FeatureHelp chip is a sibling of the `<h1>`, never a child, so
               the heading's accessible name is exactly the display name.
               `.pp-nameRow` keeps them on one line (persona-skins.css). */}
@@ -95,7 +94,15 @@ export function SubprofileHero({
             <h1 className="pp-name">{view.displayName}</h1>
             <FeatureHelp id="subprofiles.detail" />
           </div>
-          {view.tagline && <p className="pp-tagline">{view.tagline}</p>}
+          {/* The craft chip reads as a qualifier on the tagline, so the two
+              share one line under the name (`.pp-taglineRow`) instead of the
+              chip sitting alone above the headline. The row is `display:
+              contents` on the skins that place the chip themselves (gallery's
+              grid) or hide it (page), so their layouts are untouched. */}
+          <div className="pp-taglineRow">
+            <span className="pp-kind">{t(KIND_LABEL_KEYS[view.kind])}</span>
+            {view.tagline && <p className="pp-tagline">{view.tagline}</p>}
+          </div>
 
           <SubprofileSocialRow
             links={view.socialLinks}

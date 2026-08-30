@@ -7091,6 +7091,16 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
 
+  "changelog.entries.see-your-persona-the-way-a-visitor-does.title":
+    "See your persona the way a visitor does",
+  "changelog.entries.see-your-persona-the-way-a-visitor-does.body":
+    "Your own persona page shows you the controls of the person who runs it: Edit persona, the banner repositioner, the names of everyone following it. That made the one question worth asking before you share the link, which is what a stranger actually gets, hard to answer. There is now a View as visitor button beside Edit persona. It swaps your controls for the ones a visitor sees, hides everything that is yours alone, and keeps the page itself live, so you can open a photo, read a poem and follow a link exactly as someone arriving for the first time would. Message, follow, recommend and report are all shown in their proper places and none of them can be pressed, so nothing you do in there counts. A bar at the foot of the screen takes you back out. Drafts do not offer it: nobody else can open a draft yet, so there is no visitor view to show.",
+
+  "changelog.entries.filters-you-add-ease-in-and-out.title":
+    "Filters you add ease in and out",
+  "changelog.entries.filters-you-add-ease-in-and-out.body":
+    "In Find members, every filter you pick shows up as a pill above the results. It used to arrive fully formed the instant you ticked the box, and vanish the same way when you took it off. The pill now grows in as it appears and shrinks away as it leaves, and the pills beside it slide across to close the gap, so you can see which one you just added and which one you just dropped. With Reduce motion on, or if your device asks for it, the pills still appear and disappear with no movement at all.",
+
   "changelog.entries.every-neighbourhood-says-how-many-people-are-there.title":
     "Every neighbourhood says how many people are there",
   "changelog.entries.every-neighbourhood-says-how-many-people-are-there.body":

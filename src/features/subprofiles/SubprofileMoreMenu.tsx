@@ -19,9 +19,17 @@ import styles from "./SubprofileMoreMenu.module.css";
 export function SubprofileMoreMenu({
   view,
   onAction,
+  inertReport = false,
 }: {
   view: PublicSubprofileView;
   onAction: (action: PersonaAction) => void;
+  /** Render Report as a visible but disabled item. Set while the owner reads
+   *  their own persona as a visitor (`mode="visitor"`): the menu has to show
+   *  the shape a stranger gets, but there is nobody to report yourself to, and
+   *  a menu item that silently does nothing on click is worse than one that
+   *  says it can't. Share stays live — sharing your own persona is exactly
+   *  what a visitor would do with it. */
+  inertReport?: boolean;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -134,12 +142,20 @@ export function SubprofileMoreMenu({
             <FiShare2 aria-hidden />
             {t("subprofiles:share.cta")}
           </button>
+          {/* `aria-disabled`, never the `disabled` attribute: a disabled
+              button drops out of the tab order, and the roving arrow/Home/End
+              navigation above walks `[role="menuitem"]` and calls `.focus()`
+              on them, so a truly-disabled item would swallow the keyboard
+              focus ring. APG wants disabled menu items focusable anyway. */}
           <button
             type="button"
             role="menuitem"
             tabIndex={-1}
-            className={`${styles.item} ${styles.danger}`}
-            onClick={handleReport}
+            aria-disabled={inertReport || undefined}
+            className={`${styles.item} ${styles.danger} ${
+              inertReport ? styles.itemInert : ""
+            }`}
+            onClick={inertReport ? undefined : handleReport}
           >
             <FiFlag aria-hidden />
             {t("subprofiles:hero.report.cta")}

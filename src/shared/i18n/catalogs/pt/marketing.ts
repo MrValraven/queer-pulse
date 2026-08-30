@@ -7226,6 +7226,16 @@ export const marketing: Catalog = {
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nomear um Agente de Mudança eram duas caixas em forma de comprimido lado a lado por baixo do título: sem etiquetas, sem noção de quanto podias escrever na segunda e com um botão que ficava morto até as duas terem alguma coisa, sem nunca o dizer. O texto passa a ficar ao lado de um cartão a sério. Os dois campos têm etiqueta e uma pista, a caixa do porquê tem espaço para escrever e uma contagem de 500 caracteres, e carregar no botão com um campo vazio diz-te qual deles falta. Ao lado do formulário, três linhas explicam o que acontece a seguir: alguém da moderação lê, recebes uma notificação com a decisão e a pessoa nomeada nunca é avisada.",
 
+  "changelog.entries.see-your-persona-the-way-a-visitor-does.title":
+    "Vê a tua persona como um visitante a vê",
+  "changelog.entries.see-your-persona-the-way-a-visitor-does.body":
+    "A tua própria página de persona mostra-te os controlos de quem a gere: Editar persona, o reposicionamento do banner, os nomes de quem a segue. Isso tornava difícil responder à pergunta que interessa antes de partilhares o link, que é o que uma pessoa desconhecida vê ali. Passa a haver um botão Ver como visitante ao lado de Editar persona. Troca os teus controlos pelos que um visitante vê, esconde tudo o que é só teu e mantém a página viva, para poderes abrir uma foto, ler um poema e seguir uma ligação tal como quem lá chega pela primeira vez. Mensagem, Seguir, Recomendar e Denunciar aparecem todos no seu lugar e nenhum deles pode ser premido, por isso nada do que fizeres ali conta. Uma barra no fundo do ecrã leva-te de volta. Os rascunhos não o oferecem: ainda mais ninguém consegue abrir um rascunho, por isso não há vista de visitante para mostrar.",
+
+  "changelog.entries.filters-you-add-ease-in-and-out.title":
+    "Os filtros que acrescentas entram e saem com calma",
+  "changelog.entries.filters-you-add-ease-in-and-out.body":
+    "Em Encontrar membros, cada filtro que escolhes aparece como uma pastilha por cima dos resultados. Antes surgia já feita no instante em que marcavas a caixa e desaparecia da mesma maneira quando a tiravas. Agora a pastilha cresce ao aparecer e encolhe ao sair, e as pastilhas ao lado deslizam para fechar o espaço, para veres qual acabaste de acrescentar e qual acabaste de largar. Com o Reduzir movimento ligado, ou se o teu aparelho o pedir, as pastilhas continuam a aparecer e a desaparecer sem qualquer movimento.",
+
   "changelog.entries.every-neighbourhood-says-how-many-people-are-there.title":
     "Cada bairro diz quantas pessoas lá estão",
   "changelog.entries.every-neighbourhood-says-how-many-people-are-there.body":
