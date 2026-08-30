@@ -136,7 +136,9 @@ export const community: Catalog = {
   "changemakers.hero.title":
     "Pessoas que tornam o futuro <em>vivível</em> para toda a gente.",
   "changemakers.hero.lead":
-    "Não são ativistas a tempo inteiro. São pessoas que trabalham em design, advocacia, cuidados e ensino, e que também estão a mudar as coisas: bairro a bairro, política a política, uma conversa difícil de cada vez.",
+    "Têm empregos, famílias, projetos e vidas para lá do ativismo. Mas são também as pessoas que aparecem quando é preciso mudar alguma coisa.",
+  "changemakers.hero.meet":
+    "Conhece quem põe esse cuidado em prática por Lisboa.",
   "changemakers.stat.profiled": "Agentes de mudança já retratados",
   "changemakers.stat.causeAreas": "Áreas de causa ativas em Lisboa",
   "changemakers.stat.peopleHelped":

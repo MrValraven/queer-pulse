@@ -940,14 +940,11 @@ export const marketing: Catalog = {
   "partners.loadingMore": "A carregar mais parceiros…",
   "partners.loadMoreCta": "Carregar mais parceiros",
   "partners.why.title": "Porque fazemos <em>parcerias</em>",
-  "partners.why.p1":
-    "A QueerPulse não consegue fazer tudo: apoio jurídico, saúde, trabalho com jovens exigem competência dedicada que não temos internamente.",
+  "partners.why.p1": "Há coisas maiores do que a QueerPulse.",
   "partners.why.p2":
-    "Fazer parcerias significa podermos encaminhar pessoas para organizações que avaliámos de facto, em vez de um resultado de pesquisa genérico.",
+    "Apoio jurídico, saúde, trabalho com jovens e outros serviços especializados são melhor tratados por organizações com experiência para os fazer bem. Preferimos ligar-te a pessoas que conhecemos e em quem confiamos a mandar-te procurar por ti.",
   "partners.why.p3":
-    "Significa também que recursos reais se movem: <strong>encaminhamentos, horas de voluntariado e, nalguns casos, financiamento.</strong>",
-  "partners.why.p4":
-    "Nenhuma destas organizações paga para estar listada aqui.",
+    "Quando fazemos parceria com uma organização, queremos que a relação seja nos dois sentidos. Encaminhamentos, pessoas voluntárias, recursos partilhados e, por vezes, financiamento ajudam a transformar uma listagem em algo mais útil.",
   "partners.become.title": "Queres <em>ser nosso parceiro?</em>",
   "partners.become.body":
     "Se a tua organização faz um trabalho alinhado em Lisboa ou arredores, gostaríamos de saber de ti.",
@@ -7228,6 +7225,11 @@ export const marketing: Catalog = {
     "O formulário de nomeação passa a ser um formulário",
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nomear um Agente de Mudança eram duas caixas em forma de comprimido lado a lado por baixo do título: sem etiquetas, sem noção de quanto podias escrever na segunda e com um botão que ficava morto até as duas terem alguma coisa, sem nunca o dizer. O texto passa a ficar ao lado de um cartão a sério. Os dois campos têm etiqueta e uma pista, a caixa do porquê tem espaço para escrever e uma contagem de 500 caracteres, e carregar no botão com um campo vazio diz-te qual deles falta. Ao lado do formulário, três linhas explicam o que acontece a seguir: alguém da moderação lê, recebes uma notificação com a decisão e a pessoa nomeada nunca é avisada.",
+
+  "changelog.entries.every-neighbourhood-says-how-many-people-are-there.title":
+    "Cada bairro diz quantas pessoas lá estão",
+  "changelog.entries.every-neighbourhood-says-how-many-people-are-there.body":
+    "Onde estão baseadas era o único filtro em Encontrar membros sem números. Era uma fila de pastilhas, por isso escolhias um bairro, esperavas e só depois descobrias se lá estava alguém. Passa a ter o aspeto dos filtros acima e abaixo: uma caixa por bairro, cada uma com a contagem de quantos dos teus resultados atuais lá estão, apagada e impossível de escolher quando não está ninguém. Toda a Lisboa leva o número completo, para veres o que ganharias ao largar o filtro de bairro antes de o largares.",
 
   "changelog.entries.a-persona-leads-with-its-name.title":
     "Uma persona passa a começar pelo nome",

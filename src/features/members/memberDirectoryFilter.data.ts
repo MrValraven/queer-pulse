@@ -55,6 +55,16 @@ export interface MemberCard {
   activityBand?: ActivityBand | null;
 }
 
+/** One checkbox row in the sidebar. `labelKey` is optional because one group's
+ *  ids are already their own label: the neighbourhoods are Lisbon proper nouns
+ *  and stay identical in every language (i18n sweep §6), so there is nothing to
+ *  translate and the id is what a member reads. Every other group carries a
+ *  key, and a row without one falls back to its id. */
+export interface CheckboxOption {
+  id: string;
+  labelKey?: string;
+}
+
 /** The filter's checkbox rows — now the same vocabulary the profile chips use.
  *  Counts are never authored here: they come from `directoryFacetCounts` (demo)
  *  or `GET /members`' `facets` (live), so an empty directory shows honest
@@ -96,14 +106,22 @@ export const HOOD_LABEL_KEY: Partial<Record<string, string>> = {
   [ALL_OF_LISBON]: "members:directory.hood.all",
 };
 
+/** The "Where they're based" rows, as checkbox options: the same shape and the
+ *  same count treatment as "What they're open to" and "Identity". They were
+ *  chips once, which made them the one group in the sidebar with no numbers on
+ *  it and no way to see which neighbourhoods were empty before clicking. */
+export const HOOD_OPTIONS: CheckboxOption[] = NEIGHBOURHOODS.map((hood) => ({
+  id: hood.label,
+  labelKey: HOOD_LABEL_KEY[hood.label],
+}));
+
 /** A "What they do" / "Profession" filter chip. The `id` is the stable,
  *  canonical value stored in `FilterState` / `MemberCard.discipline` /
  *  `MemberCard.profession` and never changes with language; `labelKey`
  *  resolves via `t()` at render only. Splitting these was a deliberate fix —
  *  see the i18n sweep §5.1 note on `memberDirectoryFilter.data.ts` for why a
  *  plain translated `label` used to double as the compared/stored value. */
-export interface FilterOption {
-  id: string;
+export interface FilterOption extends CheckboxOption {
   labelKey: string;
   active?: boolean;
 }
@@ -425,6 +443,7 @@ export const IDENTITY_LABEL_KEY: Record<string, string> = Object.fromEntries(
  */
 export interface DirectoryFacetCounts {
   openTo: Record<string, number>;
+  hoods: Record<string, number>;
   identities: Record<string, number>;
   disciplines: Record<string, number>;
   professions: Record<string, number>;
@@ -432,9 +451,7 @@ export interface DirectoryFacetCounts {
 }
 
 /** Which `FilterState` key a counted group narrows — the key lifted when
- *  counting that group. `hoods` is absent: neighbourhoods carry no counts,
- *  because they match by substring over free-text locations and would cost a
- *  scan per neighbourhood to count. */
+ *  counting that group. */
 type CountedGroup = keyof DirectoryFacetCounts;
 
 /**
@@ -477,12 +494,24 @@ export function directoryFacetCounts(
     return counts;
   };
 
+  // "All of Lisbon" is the "no hood restriction" row, so no member's `hood`
+  // ever equals it and a plain tally would leave it on a permanent 0, which the
+  // sidebar draws as an unpickable dead end. Its count is the whole population
+  // it is counted against, which is exactly what ticking it returns.
+  const hoods = tally(
+    "hoods",
+    NEIGHBOURHOODS.map((hood) => hood.label),
+    (member) => [member.hood],
+  );
+  hoods[ALL_OF_LISBON] = population("hoods").length;
+
   return {
     openTo: tally(
       "openTo",
       OPEN_TO_OPTIONS.map((o) => o.id),
       (member) => member.openTo,
     ),
+    hoods,
     identities: tally(
       "identities",
       IDENTITY_OPTIONS.map((o) => o.id),

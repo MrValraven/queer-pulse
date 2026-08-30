@@ -912,13 +912,11 @@ export const marketing: Catalog = {
   "partners.loadingMore": "Loading more partners…",
   "partners.loadMoreCta": "Load more partners",
   "partners.why.title": "Why we <em>partner</em>",
-  "partners.why.p1":
-    "QueerPulse can't do everything: legal aid, healthcare, youth work all need dedicated expertise we don't have in-house.",
+  "partners.why.p1": "Some things are bigger than QueerPulse.",
   "partners.why.p2":
-    "Partnering means we can point members toward organisations we've actually vetted, instead of a generic search result.",
+    "Legal support, healthcare, youth work, and other specialist services are best handled by organisations with the experience to do them properly. We'd rather connect you with people we know and trust than send you off to search for yourself.",
   "partners.why.p3":
-    "It also means real resources move: <strong>referrals, volunteer hours, and in some cases funding.</strong>",
-  "partners.why.p4": "None of these organisations pay to be listed here.",
+    "When we partner with an organisation, we want the relationship to go both ways. Referrals, volunteers, shared resources, and sometimes funding can help turn a listing into something more useful.",
   "partners.become.title": "Want to <em>partner with us?</em>",
   "partners.become.body":
     "If your organisation does aligned work in or around Lisbon, we'd like to hear from you.",
@@ -7092,6 +7090,11 @@ export const marketing: Catalog = {
     "The nomination form becomes a form",
   "changelog.entries.the-nomination-form-becomes-a-form.body":
     "Nominating a Change Maker was two pill-shaped boxes side by side under the heading: no labels, no sense of how much you could write in the second one, and a button that sat dead until both boxes had something in them without ever saying so. The pitch now sits beside a proper card. Both fields carry a label and a hint, the why box has room to write and a 500-character count, and pressing the button on an empty field tells you which one it is waiting on. Three lines beside the form say what happens next: a moderator reads it, you get a notification with the decision, and the person you nominate is never told.",
+
+  "changelog.entries.every-neighbourhood-says-how-many-people-are-there.title":
+    "Every neighbourhood says how many people are there",
+  "changelog.entries.every-neighbourhood-says-how-many-people-are-there.body":
+    "Where they're based was the one filter in Find members with no numbers on it. It was a row of pills, so you picked a neighbourhood, waited, and only then found out whether anyone was in it. It now looks like the filters above and below it: a tick box per neighbourhood, each with a count of how many of your current results are there, greyed out and unpickable when nobody is. All of Lisbon carries the full number, so you can see what dropping the neighbourhood filter would give you back before you drop it.",
 
   "changelog.entries.a-persona-leads-with-its-name.title":
     "A persona leads with its name",

@@ -193,13 +193,7 @@ export function PartnersPage() {
             </h2>
             <p>{t("marketing:partners.why.p1")}</p>
             <p>{t("marketing:partners.why.p2")}</p>
-            <p>
-              <Translation
-                i18nKey="marketing:partners.why.p3"
-                components={{ strong: <b /> }}
-              />
-            </p>
-            <p>{t("marketing:partners.why.p4")}</p>
+            <p>{t("marketing:partners.why.p3")}</p>
           </div>
 
           <div className={s.become}>

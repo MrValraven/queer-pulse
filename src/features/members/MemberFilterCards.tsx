@@ -16,14 +16,13 @@ import { MemberCardBody } from "./MemberCardBody";
 import { initialsOf, tintForSlug } from "./api/members.adapters";
 import {
   EMPTY_FILTERS,
-  HOOD_LABEL_KEY,
+  HOOD_OPTIONS,
   IDENTITY_OPTIONS,
   LANGUAGES,
-  NEIGHBOURHOODS,
   OPEN_TO_OPTIONS,
   directoryFacetCounts,
+  type CheckboxOption,
   type DirectoryFacetCounts,
-  type FilterOption,
   type FilterState,
   type MemberCard,
 } from "./memberDirectoryFilter.data";
@@ -41,10 +40,10 @@ function toggle(arr: string[], value: string): string[] {
 /** A whole checkbox filter card: the collapsible section plus one row per
  *  option, each carrying its availability count.
  *
- *  Both of the sidebar's checkbox groups ("What they're open to" and
- *  "Identity") are this component. Sharing it is what stops their count
- *  treatment from drifting apart — the zero rule below is subtle enough that
- *  two copies of it would not stay the same for long. */
+ *  All three of the sidebar's checkbox groups ("What they're open to", "Where
+ *  they're based" and "Identity") are this component. Sharing it is what stops
+ *  their count treatment from drifting apart: the zero rule below is subtle
+ *  enough that two copies of it would not stay the same for long. */
 function FilterCheckboxSection({
   title,
   options,
@@ -56,7 +55,7 @@ function FilterCheckboxSection({
   onToggleOption,
 }: {
   title: string;
-  options: FilterOption[];
+  options: CheckboxOption[];
   /** The ids currently ticked in this group. */
   selected: string[];
   /** This group's availability counts, or `undefined` when none are available
@@ -77,7 +76,9 @@ function FilterCheckboxSection({
       activeCount={selected.length}
     >
       {options.map((option) => {
-        const label = t(option.labelKey);
+        // A row with no `labelKey` is one whose id already reads as its label
+        // in every language: the Lisbon neighbourhoods. See `CheckboxOption`.
+        const label = option.labelKey ? t(option.labelKey) : option.id;
         const count = counts?.[option.id];
         const isChecked = selected.includes(option.id);
         // Nobody is left under this option, so it is a dead end — disabled, not
@@ -194,27 +195,18 @@ export function FiltersSidebar({
         }
       />
 
-      <FilterSection
+      <FilterCheckboxSection
         title={t("members:directory.filter.hoodTitle")}
-        headingId={`${uid}-hoods`}
+        options={HOOD_OPTIONS}
+        selected={filters.hoods}
+        counts={counts?.hoods}
+        countsAreStale={countsAreStale}
         open={sectionsOpen.hoods}
         onToggle={() => onToggleSection("hoods")}
-        activeCount={filters.hoods.length}
-      >
-        <ChipSelect
-          labelledBy={`${uid}-hoods`}
-          options={NEIGHBOURHOODS.map((o) => ({
-            value: o.label,
-            label: HOOD_LABEL_KEY[o.label]
-              ? t(HOOD_LABEL_KEY[o.label]!)
-              : o.label,
-          }))}
-          selected={new Set(filters.hoods)}
-          onToggle={(value) =>
-            onChange({ ...filters, hoods: toggle(filters.hoods, value) })
-          }
-        />
-      </FilterSection>
+        onToggleOption={(id) =>
+          onChange({ ...filters, hoods: toggle(filters.hoods, id) })
+        }
+      />
 
       <FilterProfessions
         filters={filters}

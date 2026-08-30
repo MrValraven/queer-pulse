@@ -55,6 +55,9 @@ export function ChangemakersPage() {
           <Reveal as="p" delay={120}>
             {t("community:changemakers.hero.lead")}
           </Reveal>
+          <Reveal as="p" delay={170}>
+            {t("community:changemakers.hero.meet")}
+          </Reveal>
           {/* Only real numbers go in the hero: live mode has none until the
               list request lands (and none at all if it fails), so the row is
               absent rather than filled with placeholder figures. */}
@@ -65,7 +68,7 @@ export function ChangemakersPage() {
                   as="div"
                   key={stat.labelKey}
                   className={styles.stat}
-                  delay={160 + index * 60}
+                  delay={210 + index * 60}
                 >
                   <div className={styles.n}>{stat.value}</div>
                   <div className={styles.l}>{t(stat.labelKey)}</div>

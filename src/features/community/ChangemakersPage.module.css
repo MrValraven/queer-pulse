@@ -42,7 +42,13 @@
   color: rgba(var(--cream-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
-  max-width: 16ch;
+  /* Two lines, in both languages: 16ch broke the English title over three and
+     the (longer) Portuguese one over three as well. 26ch is the measured fit
+     for the longest of the two ("Pessoas que tornam o futuro vivível para toda
+     a gente.") down to a ~600px viewport, where the clamp floor takes over and
+     a phone gets three lines regardless. `balance` evens the two lines. */
+  max-width: 26ch;
+  text-wrap: balance;
   position: relative;
 }
 .hero h1 em {
@@ -156,6 +162,12 @@
 
 .profiles {
   padding: 0 0 80px;
+}
+/* With no featured changemaker above it (an empty list, or a list with nothing
+   promoted) this section sits straight under the plum hero, so it takes the
+   top padding `.featured` would otherwise have carried. */
+.hero + .profiles {
+  padding-top: 48px;
 }
 .grid {
   display: grid;

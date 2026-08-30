@@ -129,7 +129,9 @@ export const community: Catalog = {
   "changemakers.hero.title":
     "People making the future <em>liveable</em> for all of us.",
   "changemakers.hero.lead":
-    "They're not full-time activists. They're designers, lawyers, carers, and teachers who also happen to be changing things: neighbourhood by neighbourhood, policy by policy, one hard conversation at a time.",
+    "They have day jobs, families, projects, and lives outside their activism. But they're also the people who show up when something needs changing.",
+  "changemakers.hero.meet":
+    "Meet the people putting that care into practice across Lisbon.",
   "changemakers.stat.profiled": "Change makers profiled so far",
   "changemakers.stat.causeAreas": "Cause areas active in Lisbon",
   "changemakers.stat.peopleHelped": "People directly helped by their work",

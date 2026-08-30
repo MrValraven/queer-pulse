@@ -90,6 +90,16 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "every-neighbourhood-says-how-many-people-are-there",
+        category: "improvement",
+        date: "30 Aug 2026",
+        ...entryKeys("every-neighbourhood-says-how-many-people-are-there"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "a-persona-leads-with-its-name",
         category: "improvement",
         date: "29 Aug 2026",
